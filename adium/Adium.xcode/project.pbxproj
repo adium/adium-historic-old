@@ -231,6 +231,7 @@
 				3499F45006309AC80035B468,
 				3499F45106309AC80035B468,
 				C4243CAD0638EEFA007AD2D9,
+				4947F5CB0655E85200B791E5,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -266,6 +267,12 @@
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 4947F5EA0655E90C00B791E5;
+					ProjectRef = 4947F5E90655E90C00B791E5;
+				},
+			);
 			targets = (
 				34BD9CD1053146CC000AB133,
 				4B7F78B40597F42400162728,
@@ -284,6 +291,7 @@
 				346C9C4806004517000F5A8A,
 				346C9C5306004525000F5A8A,
 				C4243CA00638EEFA007AD2D9,
+				4947F5BC0655E85200B791E5,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -387,6 +395,51 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		34010BCD06569A8B00D323AA = {
+			fileType = "compiled.mach-o.dylib";
+			isa = PBXReferenceProxy;
+			path = libezv.dylib;
+			refType = 3;
+			remoteRef = 34010C2506569ABC00D323AA;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34010BCE06569A8B00D323AA = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libexpat.a;
+			refType = 3;
+			remoteRef = 34010C2606569ABC00D323AA;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34010BCF06569A8B00D323AA = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 34010C2706569ABC00D323AA;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34010C2506569ABC00D323AA = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
+			remoteInfo = libezv;
+		};
+		34010C2606569ABC00D323AA = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
+			remoteInfo = expat;
+		};
+		34010C2706569ABC00D323AA = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
 		};
 		3401925B06406D9200192BC4 = {
 			isa = PBXFileReference;
@@ -4257,12 +4310,12 @@
 				520FE47005BE2494002D063D,
 				4B7845EC059B50820048A8BA,
 				B774EFC4058C48F6009C7C67,
+				4B90B54E064220B400D23731,
 				34BD9D0D053146CC000AB133,
 				520FE46A05BE2118002D063D,
 				346C9D46060046AB000F5A8A,
 				4B6EA1BE058FA6900070A9A1,
 				4B215DB0059896B000305B3C,
-				4B90B54E064220B400D23731,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
@@ -8214,6 +8267,995 @@
 //402
 //403
 //404
+//490
+//491
+//492
+//493
+//494
+		4947F5BB0655E7C400B791E5 = {
+			children = (
+				4947F5CE0655E90C00B791E5,
+				4947F5CF0655E90C00B791E5,
+				4947F5CC0655E90C00B791E5,
+				4947F5CD0655E90C00B791E5,
+				4947F5D00655E90C00B791E5,
+			);
+			isa = PBXGroup;
+			name = Rendezvous;
+			path = Plugins/Rendezvous;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5BC0655E85200B791E5 = {
+			buildPhases = (
+				4947F5BF0655E85200B791E5,
+				4947F5C20655E85200B791E5,
+				4947F5C30655E85200B791E5,
+				4947F5C60655E85200B791E5,
+				4947F5CA0655E85200B791E5,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				INFOPLIST_FILE = Plists/Rendezvous.plist;
+				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
+				PRODUCT_NAME = Rendezvous;
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4947F5BD0655E85200B791E5,
+				4947F5BE0655E85200B791E5,
+			);
+			isa = PBXNativeTarget;
+			name = Rendezvous;
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = Rendezvous;
+			productReference = 4947F5CB0655E85200B791E5;
+			productType = "com.apple.product-type.bundle";
+		};
+		4947F5BD0655E85200B791E5 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = 34BD98D10531467B000AB133;
+		};
+		4947F5BE0655E85200B791E5 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 34BD99080531467B000AB133;
+		};
+		4947F5BF0655E85200B791E5 = {
+			buildActionMask = 2147483647;
+			files = (
+				4947F5C00655E85200B791E5,
+				4947F5C10655E85200B791E5,
+				4947F6060655E90D00B791E5,
+				4947F6080655E90D00B791E5,
+				4947F60A0655E90D00B791E5,
+				4947F60C0655E90D00B791E5,
+				4947F60F0655E90D00B791E5,
+				4947F6100655E90D00B791E5,
+				4947F6110655E90D00B791E5,
+				4947F6120655E90D00B791E5,
+				4947F6130655E90D00B791E5,
+				4947F6140655E90D00B791E5,
+				4947F6150655E90D00B791E5,
+				4947F6160655E90D00B791E5,
+				4947F6170655E90D00B791E5,
+				4947F61A0655E90D00B791E5,
+				4947F61C0655E90D00B791E5,
+				4947F6200655E90D00B791E5,
+				4947F6210655E90D00B791E5,
+				4947F6230655E90D00B791E5,
+				4947F6240655E90D00B791E5,
+				4947F6260655E90D00B791E5,
+				4947F6280655E90D00B791E5,
+				4947F62A0655E90D00B791E5,
+				4947F62C0655E90D00B791E5,
+				4947F62E0655E90D00B791E5,
+				4947F6300655E90D00B791E5,
+				4947F6320655E90D00B791E5,
+				4947F6340655E90D00B791E5,
+				4947F6370655E90D00B791E5,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4947F5C00655E85200B791E5 = {
+			fileRef = 4BC15BE90524CE5E00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F5C10655E85200B791E5 = {
+			fileRef = 4BC15BEB0524CE5E00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F5C20655E85200B791E5 = {
+			buildActionMask = 2147483647;
+			files = (
+				4947F60E0655E90D00B791E5,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4947F5C30655E85200B791E5 = {
+			buildActionMask = 2147483647;
+			files = (
+				4947F9530655F2E600B791E5,
+				4947F9540655F2E600B791E5,
+				4947F60B0655E90D00B791E5,
+				4947F60D0655E90D00B791E5,
+				4947F6180655E90D00B791E5,
+				4947F6190655E90D00B791E5,
+				4947F61B0655E90D00B791E5,
+				4947F6220655E90D00B791E5,
+				4947F6250655E90D00B791E5,
+				4947F6270655E90D00B791E5,
+				4947F6290655E90D00B791E5,
+				4947F62B0655E90D00B791E5,
+				4947F62D0655E90D00B791E5,
+				4947F62F0655E90D00B791E5,
+				4947F6310655E90D00B791E5,
+				4947F6330655E90D00B791E5,
+				4947F6350655E90D00B791E5,
+				4947F6360655E90D00B791E5,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4947F5C60655E85200B791E5 = {
+			buildActionMask = 2147483647;
+			files = (
+				4947F5C70655E85200B791E5,
+				4947F5C80655E85200B791E5,
+				4947F5C90655E85200B791E5,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4947F5C70655E85200B791E5 = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F5C80655E85200B791E5 = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F5C90655E85200B791E5 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F5CA0655E85200B791E5 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4947F5CB0655E85200B791E5 = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = Rendezvous.AdiumPlugin;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4947F5CC0655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWRendezvousAccount.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5CD0655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWRendezvousAccount.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5CE0655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWRendezvousPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5CF0655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWRendezvousPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5D00655E90C00B791E5 = {
+			children = (
+				4947F5D10655E90C00B791E5,
+				4947F5D60655E90C00B791E5,
+				4947F5E90655E90C00B791E5,
+				4947F5EB0655E90C00B791E5,
+				4947F5EC0655E90C00B791E5,
+				4947F5F10655E90D00B791E5,
+			);
+			isa = PBXGroup;
+			path = libezv;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5D10655E90C00B791E5 = {
+			children = (
+				4947F5D20655E90C00B791E5,
+				4947F5D30655E90C00B791E5,
+				4947F5D40655E90C00B791E5,
+				4947F5D50655E90C00B791E5,
+			);
+			isa = PBXGroup;
+			path = Classes;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5D20655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWEzv.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5D30655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWEzv.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5D40655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWEzvContact.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5D50655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWEzvContact.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5D60655E90C00B791E5 = {
+			children = (
+				4947F5D70655E90C00B791E5,
+				4947F5D80655E90C00B791E5,
+				4947F5D90655E90C00B791E5,
+			);
+			isa = PBXGroup;
+			path = expat;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5D70655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text;
+			path = COPYING;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5D80655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = expat_config.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5D90655E90C00B791E5 = {
+			children = (
+				4947F5DA0655E90C00B791E5,
+				4947F5DB0655E90C00B791E5,
+				4947F5DC0655E90C00B791E5,
+				4947F5DD0655E90C00B791E5,
+				4947F5DE0655E90C00B791E5,
+				4947F5DF0655E90C00B791E5,
+				4947F5E00655E90C00B791E5,
+				4947F5E10655E90C00B791E5,
+				4947F5E20655E90C00B791E5,
+				4947F5E30655E90C00B791E5,
+				4947F5E40655E90C00B791E5,
+				4947F5E50655E90C00B791E5,
+				4947F5E60655E90C00B791E5,
+				4947F5E70655E90C00B791E5,
+				4947F5E80655E90C00B791E5,
+			);
+			isa = PBXGroup;
+			path = lib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5DA0655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = ascii.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5DB0655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = asciitab.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5DC0655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = expat.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5DD0655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = iasciitab.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5DE0655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = internal.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5DF0655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = latin1tab.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5E00655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = nametab.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5E10655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = utf8tab.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5E20655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.c;
+			path = xmlparse.c;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5E30655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.c;
+			path = xmlrole.c;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5E40655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = xmlrole.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5E50655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.c;
+			path = xmltok.c;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5E60655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = xmltok.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5E70655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.c;
+			path = xmltok_impl.c;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5E80655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = xmltok_impl.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5E90655E90C00B791E5 = {
+			isa = PBXFileReference;
+			lastKnownFileType = "wrapper.pb-project";
+			path = libezv.xcode;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5EA0655E90C00B791E5 = {
+			children = (
+				34010BCD06569A8B00D323AA,
+				34010BCE06569A8B00D323AA,
+				34010BCF06569A8B00D323AA,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5EB0655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text;
+			path = LICENSE;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5EC0655E90C00B791E5 = {
+			children = (
+				4947F5ED0655E90C00B791E5,
+				4947F5EE0655E90C00B791E5,
+				4947F5EF0655E90D00B791E5,
+				4947F5F00655E90D00B791E5,
+			);
+			isa = PBXGroup;
+			path = "Other Sources";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5ED0655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWEzvDefines.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5EE0655E90C00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWEzvSupportRoutines.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5EF0655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWEzvSupportRoutines.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5F00655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = libezv_Prefix.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5F10655E90D00B791E5 = {
+			children = (
+				4947F5F20655E90D00B791E5,
+				4947F5F30655E90D00B791E5,
+				4947F5F40655E90D00B791E5,
+				4947F5F50655E90D00B791E5,
+				4947F5F60655E90D00B791E5,
+				4947F5F70655E90D00B791E5,
+				4947F5F80655E90D00B791E5,
+				4947F5F90655E90D00B791E5,
+				4947F5FA0655E90D00B791E5,
+				4947F5FB0655E90D00B791E5,
+				4947F5FC0655E90D00B791E5,
+				4947F5FD0655E90D00B791E5,
+				4947F5FE0655E90D00B791E5,
+				4947F5FF0655E90D00B791E5,
+				4947F6000655E90D00B791E5,
+				4947F6010655E90D00B791E5,
+				4947F6020655E90D00B791E5,
+				4947F6030655E90D00B791E5,
+				4947F6040655E90D00B791E5,
+				4947F6050655E90D00B791E5,
+			);
+			isa = PBXGroup;
+			path = "Private Classes";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5F20655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWEzvContactManager.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5F30655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWEzvContactManager.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5F40655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWEzvContactManagerListener.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5F50655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWEzvContactManagerListener.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5F60655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWEzvContactManagerRendezvous.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5F70655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWEzvContactManagerRendezvous.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5F80655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWEzvContactPrivate.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5F90655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWEzvContactPrivate.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5FA0655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWEzvPrivate.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5FB0655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWEzvPrivate.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5FC0655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWEzvRendezvousData.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5FD0655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWEzvRendezvousData.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5FE0655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWEzvStack.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F5FF0655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWEzvStack.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F6000655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWEzvXMLNode.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F6010655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWEzvXMLNode.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F6020655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWEzvXMLStream.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F6030655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWEzvXMLStream.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F6040655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.c;
+			path = sha1.c;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F6050655E90D00B791E5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = sha1.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4947F6060655E90D00B791E5 = {
+			fileRef = 4947F5CC0655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6080655E90D00B791E5 = {
+			fileRef = 4947F5CE0655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F60A0655E90D00B791E5 = {
+			fileRef = 4947F5D20655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F60B0655E90D00B791E5 = {
+			fileRef = 4947F5D30655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F60C0655E90D00B791E5 = {
+			fileRef = 4947F5D40655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F60D0655E90D00B791E5 = {
+			fileRef = 4947F5D50655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F60E0655E90D00B791E5 = {
+			fileRef = 4947F5D70655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F60F0655E90D00B791E5 = {
+			fileRef = 4947F5D80655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6100655E90D00B791E5 = {
+			fileRef = 4947F5DA0655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6110655E90D00B791E5 = {
+			fileRef = 4947F5DB0655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6120655E90D00B791E5 = {
+			fileRef = 4947F5DC0655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6130655E90D00B791E5 = {
+			fileRef = 4947F5DD0655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6140655E90D00B791E5 = {
+			fileRef = 4947F5DE0655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6150655E90D00B791E5 = {
+			fileRef = 4947F5DF0655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6160655E90D00B791E5 = {
+			fileRef = 4947F5E00655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6170655E90D00B791E5 = {
+			fileRef = 4947F5E10655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6180655E90D00B791E5 = {
+			fileRef = 4947F5E20655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6190655E90D00B791E5 = {
+			fileRef = 4947F5E30655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F61A0655E90D00B791E5 = {
+			fileRef = 4947F5E40655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F61B0655E90D00B791E5 = {
+			fileRef = 4947F5E50655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F61C0655E90D00B791E5 = {
+			fileRef = 4947F5E60655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6200655E90D00B791E5 = {
+			fileRef = 4947F5ED0655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6210655E90D00B791E5 = {
+			fileRef = 4947F5EE0655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6220655E90D00B791E5 = {
+			fileRef = 4947F5EF0655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6230655E90D00B791E5 = {
+			fileRef = 4947F5F00655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6240655E90D00B791E5 = {
+			fileRef = 4947F5F20655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6250655E90D00B791E5 = {
+			fileRef = 4947F5F30655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6260655E90D00B791E5 = {
+			fileRef = 4947F5F40655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6270655E90D00B791E5 = {
+			fileRef = 4947F5F50655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6280655E90D00B791E5 = {
+			fileRef = 4947F5F60655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6290655E90D00B791E5 = {
+			fileRef = 4947F5F70655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F62A0655E90D00B791E5 = {
+			fileRef = 4947F5F80655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F62B0655E90D00B791E5 = {
+			fileRef = 4947F5F90655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F62C0655E90D00B791E5 = {
+			fileRef = 4947F5FA0655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F62D0655E90D00B791E5 = {
+			fileRef = 4947F5FB0655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F62E0655E90D00B791E5 = {
+			fileRef = 4947F5FC0655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F62F0655E90D00B791E5 = {
+			fileRef = 4947F5FD0655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6300655E90D00B791E5 = {
+			fileRef = 4947F5FE0655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6310655E90D00B791E5 = {
+			fileRef = 4947F5FF0655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6320655E90D00B791E5 = {
+			fileRef = 4947F6000655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6330655E90D00B791E5 = {
+			fileRef = 4947F6010655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6340655E90D00B791E5 = {
+			fileRef = 4947F6020655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6350655E90D00B791E5 = {
+			fileRef = 4947F6030655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6360655E90D00B791E5 = {
+			fileRef = 4947F6040655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F6370655E90D00B791E5 = {
+			fileRef = 4947F6050655E90D00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F9530655F2E600B791E5 = {
+			fileRef = 4947F5CD0655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4947F9540655F2E600B791E5 = {
+			fileRef = 4947F5CF0655E90C00B791E5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//490
+//491
+//492
+//493
+//494
 //4A0
 //4A1
 //4A2
@@ -12760,6 +13802,7 @@
 		4BD672C406001B530049CAF7 = {
 			children = (
 				4B7F278605440C6200CDFC90,
+				4947F5BB0655E7C400B791E5,
 				4BA88A4C0524AFD700A8010A,
 			);
 			isa = PBXGroup;
