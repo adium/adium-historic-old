@@ -17,7 +17,7 @@
 #import "AITooltipUtilities.h"
 #import "AIAttributedStringAdditions.h"
 
-#define TOOLTIP_MAX_WIDTH           1000
+#define TOOLTIP_MAX_WIDTH           300
 #define TOOLTIP_INSET               4.0
 #define TOOLTIP_TITLE_BODY_MARGIN   10.0
 #define IMAGE_DIMENSION             48.0
@@ -133,7 +133,7 @@ static	AITooltipOrientation	tooltipOrientation;
     [textStorage addLayoutManager:layoutManager];
     [layoutManager release];
     
-    NSTextContainer *container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(10000000.0,10000000.0)];
+    NSTextContainer *container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(TOOLTIP_MAX_WIDTH,10000000.0)];
     [container setLineFragmentPadding:1.0]; //so widths will caclulate properly
     [layoutManager addTextContainer:container];
     [container release];
@@ -151,7 +151,7 @@ static	AITooltipOrientation	tooltipOrientation;
     [textStorage addLayoutManager:layoutManager];
     [layoutManager release];
     
-    container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(10000000.0,10000000.0)];
+    container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(TOOLTIP_MAX_WIDTH,10000000.0)];
     [container setLineFragmentPadding:0.0]; //so widths will caclulate properly
     [layoutManager addTextContainer:container];
     [container release];
@@ -190,7 +190,6 @@ static	AITooltipOrientation	tooltipOrientation;
     BOOL hasBody = tooltipBody && [tooltipBody length];
     if (hasTitle) {
         //Make sure we're not wrapping by default
-        [[textView_tooltipTitle textContainer] setContainerSize:NSMakeSize(10000000.0,10000000.0)];
         //Set up the tooltip's bounds
         [[textView_tooltipTitle layoutManager] glyphRangeForTextContainer:[textView_tooltipTitle textContainer]]; //void - need to force it to lay out the glyphs for an accurate measurement
         tooltipTitleRect = [[textView_tooltipTitle layoutManager] usedRectForTextContainer:[textView_tooltipTitle textContainer]];
@@ -200,7 +199,6 @@ static	AITooltipOrientation	tooltipOrientation;
     
     if (hasBody) {
         //Make sure we're not wrapping by default
-        [[textView_tooltipBody textContainer] setContainerSize:NSMakeSize(10000000.0,10000000.0)];
         //Set up the tooltip's bounds
         [[textView_tooltipBody layoutManager] glyphRangeForTextContainer:[textView_tooltipBody textContainer]]; //void - need to force it to lay out the glyphs for an accurate measurement
         tooltipBodyRect = [[textView_tooltipBody layoutManager] usedRectForTextContainer:[textView_tooltipBody textContainer]];
@@ -208,24 +206,6 @@ static	AITooltipOrientation	tooltipOrientation;
         tooltipBodyRect = NSMakeRect(0,0,0,0);   
     }
     
-    //Limit the tooltip width - recalculate the height for the new (maxiumum) width as necessary
-    if(tooltipBodyRect.size.width > TOOLTIP_MAX_WIDTH || tooltipTitleRect.size.width > TOOLTIP_MAX_WIDTH){
-        if (hasTitle) {
-            [[textView_tooltipTitle textContainer] setContainerSize:NSMakeSize(TOOLTIP_MAX_WIDTH,10000000.0)];
-            [[textView_tooltipTitle layoutManager] glyphRangeForTextContainer:[textView_tooltipTitle textContainer]]; //void - need to force it to lay out the glyphs for an accurate measurement
-            tooltipTitleRect = [[textView_tooltipTitle layoutManager] usedRectForTextContainer:[textView_tooltipTitle textContainer]];
-        } else {
-            tooltipTitleRect = NSMakeRect(0,0,0,0);
-        }
-        if (hasBody) {
-            [[textView_tooltipBody textContainer] setContainerSize:NSMakeSize(TOOLTIP_MAX_WIDTH,10000000.0)];
-            [[textView_tooltipBody layoutManager] glyphRangeForTextContainer:[textView_tooltipBody textContainer]]; //void - need to force it to lay out the glyphs for an accurate measurement
-            tooltipBodyRect = [[textView_tooltipBody layoutManager] usedRectForTextContainer:[textView_tooltipBody textContainer]];
-        } else {
-            tooltipBodyRect = NSMakeRect(0,0,0,0);   
-        }
-    }
-
     float titleAndBodyMargin = (hasTitle && hasBody) ? TOOLTIP_TITLE_BODY_MARGIN : 0;
     //width is the greater of the body and title widths
     float windowWidth = TOOLTIP_INSET*2 + ((tooltipBodyRect.size.width > tooltipTitleRect.size.width) ? tooltipBodyRect.size.width : tooltipTitleRect.size.width);

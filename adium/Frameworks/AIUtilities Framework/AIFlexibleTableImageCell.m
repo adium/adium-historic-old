@@ -14,7 +14,10 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIFlexibleTableImageCell.h"
+#import "CSBezierPathAdditions.h"
 
+#define ALIAS_SHIFT_X		0.5
+#define ALIAS_SHIFT_Y		0.5
 
 @interface AIFlexibleTableImageCell (PRIVATE)
 - (id)initWithImage:(NSImage *)inImage;
@@ -35,8 +38,15 @@
 
     image = [inImage retain];
     [image setFlipped:YES];
+    
+    //contentSize defaults to the size of the image
     contentSize = [image size];
+    
+    imageSize = [image size];
 
+    drawFrame = NO;
+    borderColor = nil;
+    
     return(self);
 }
 
@@ -48,13 +58,48 @@
     [super dealloc];
 }
 
+- (void)setDesiredFrameSize:(NSSize)inSize
+{
+    contentSize = inSize;
+}
+
+- (void)setFrameColor:(NSColor *)inBorderColor
+{
+    if(borderColor != inBorderColor){
+        [borderColor release];
+        borderColor = [inBorderColor retain];
+    }
+}
+
+- (void)setDrawsFrame:(BOOL)inDrawFrame
+{
+    drawFrame = inDrawFrame;    
+}
+
 //Draw our custom content
 - (void)drawContentsWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
-{
-    NSSize	imageSize = [image size];
-
-    cellFrame.size.height = imageSize.height;
+{    
+    //Set up a shift transformation to align our lines to a pixel (and prevent anti-aliasing)
+    NSAffineTransform * aliasShift = [NSAffineTransform transform];
+    [aliasShift translateXBy:ALIAS_SHIFT_X yBy:ALIAS_SHIFT_Y];
+    
     [image drawInRect:cellFrame fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height) operation:NSCompositeSourceOver fraction:1.0];
+    if (drawFrame) {
+        NSBezierPath * internalPath = [NSBezierPath bezierPathWithRoundedRect:cellFrame radius:4];
+        
+        [internalPath transformUsingAffineTransform:aliasShift];
+        
+        [backgroundColor set]; 
+        NSBezierPath * externalPath = [NSBezierPath bezierPathWithRect:NSInsetRect(cellFrame,-1,-1)];
+        [externalPath transformUsingAffineTransform:aliasShift];
+        [externalPath appendBezierPath:internalPath];
+        [externalPath setWindingRule:NSEvenOddWindingRule];
+        
+        [externalPath fill];
+        
+        [borderColor set];
+        [internalPath stroke];
+    }
 }
 
 @end

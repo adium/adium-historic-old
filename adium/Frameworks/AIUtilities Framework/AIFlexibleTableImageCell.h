@@ -18,8 +18,16 @@
 
 @interface AIFlexibleTableImageCell : AIFlexibleTableCell {
     NSImage	*image;
+    NSSize	imageSize;
+    
+    BOOL        drawFrame;
+    NSColor     *borderColor;
 }
 
 + (AIFlexibleTableImageCell *)cellWithImage:(NSImage *)inImage;
+
+- (void)setDrawsFrame:(BOOL)inDrawFrame;
+- (void)setDesiredFrameSize:(NSSize)inSize;
+- (void)setFrameColor:(NSColor *)inBorderColor;
 
 @end
