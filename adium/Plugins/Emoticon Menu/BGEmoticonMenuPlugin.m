@@ -30,8 +30,8 @@ static NSMenu       *eContextualMenu = nil;
 - (void)installPlugin
 {
     //init the menues and menuItems
-    quickMenuItem = [[NSMenuItem alloc] initWithTitle:@"Emoticons" target:self action:nil keyEquivalent:@""];
-    quickContextualMenuItem = [[NSMenuItem alloc] initWithTitle:@"Emoticons" target:self action:nil keyEquivalent:@""];
+    quickMenuItem = [[NSMenuItem alloc] initWithTitle:@"Insert Emoticon" target:self action:nil keyEquivalent:@""];
+    quickContextualMenuItem = [[NSMenuItem alloc] initWithTitle:@"Insert Emoticon" target:self action:nil keyEquivalent:@""];
     eMenu = [[NSMenu alloc] initWithTitle:@""];
     eContextualMenu = [[NSMenu alloc] initWithTitle:@""];
     
@@ -43,7 +43,7 @@ static NSMenu       *eContextualMenu = nil;
     
     //add the items to their menus.
     [[adium menuController] addContextualMenuItem:quickContextualMenuItem toLocation:Context_TextView_EmoticonAction];    
-    [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Format_Additions];
+    [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Edit_Additions];
     
     //Observe prefs    
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
