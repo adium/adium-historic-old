@@ -31,6 +31,13 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 
 }
 
++ (void)closeSharedInstance
+{
+    if(sharedJoinChatInstance){
+        [sharedJoinChatInstance closeWindow:nil];
+    }
+}
+
 - (IBAction)joinChat:(id)sender
 {
 	// If there is a controller, it handles all of the join-chat work
@@ -38,7 +45,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 		[controller joinChatWithAccount:[[popUp_service selectedItem] representedObject]];
 	}
 	
-	[[sharedJoinChatInstance window] orderOut:nil];
+	[self closeWindow:nil];
 }
 
 - (void)configureForAccount:(AIAccount *)inAccount
@@ -84,20 +91,22 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 {
 	
     //Configure the handle type menu
-    [popUp_service setMenu:[[adium accountController] menuOfAccountsWithTarget:self includeOffline:NO]];
-	
+    [popUp_service setMenu:[[adium accountController] menuOfAccountsWithTarget:self
+																includeOffline:NO 
+											onlyIfCreatingGroupChatIsSupported:YES]];
+
     //Select the last used account / Available online account
 	AIAccount   *preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																						   toContact:nil];
 	int			serviceIndex = [popUp_service indexOfItemWithRepresentedObject:preferredAccount];
-	
+
     if(serviceIndex < [popUp_service numberOfItems] && serviceIndex >= 0){
 		[popUp_service selectItemAtIndex:serviceIndex];
 	}
-	
+
 	AIAccount *account = [[popUp_service selectedItem] representedObject];
 	[self configureForAccount:account];
-	
+
     //Center the window
     [[self window] center];
 }
@@ -115,7 +124,9 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 
 - (BOOL)windowShouldClose:(id)sender
 {
-    [sharedJoinChatInstance autorelease]; sharedJoinChatInstance = nil; //Close the shared instance
+	sharedJoinChatInstance = nil;
+    [self autorelease]; //Close the shared instance
+	
     return(YES);
 }
 
