@@ -66,7 +66,7 @@
 	BOOL					success = NO;
 	AIAccount				*account;
 	NSString				*destUniqueID;
-	AIListContact			*contact = nill
+	AIListContact			*contact = nil;
 	BOOL					useAnotherAccount;
 		
 	//Intended source and dest
