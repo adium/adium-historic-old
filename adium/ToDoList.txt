@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.52 2004/04/16 23:43:39 adamiser Exp $
+$Id: ToDoList.txt,v 1.53 2004/04/17 03:33:18 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -36,6 +36,7 @@ Bugs
 * Place contact list on external monitor, quit, reboot without external monitor.  Contact list is gone...gone..gone.gone :)
    - (Confirmed by Hanji)
 * Contact list transparency is incorrect (the background is black/opaque) when the window is first opened.
+* Jabber behaves incorrectly when you connect from another location (on, off, on, off, ...) (I've heard that yahoo does this as well) 
 
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
