@@ -102,30 +102,21 @@
 
 - (void)_openChatToContactWithName:(NSString *)UID onService:(NSString *)serviceID withMessage:(NSString *)message
 {
-	AIListContact		*contact;
-	AIChat				*chat;
-
+	AIListContact   *contact;
+	AIChat			*chat;
+	
 	contact = [[adium contactController] preferredContactWithUID:UID
 													andServiceID:serviceID 
 										   forSendingContentType:CONTENT_MESSAGE_TYPE];
 	if (contact){
+		//Open the chat and set it as active
 		chat = [[adium contentController] openChatWithContact:contact];
 		[[adium interfaceController] setActiveChat:chat];
 		
-		if (message){
-			AIContentMessage	*contentMessage;
-			AIAccount			*account;
-			
-			account = [[adium accountController] accountWithObjectID:[contact accountID]];
-			
-			contentMessage = [AIContentMessage messageInChat:chat
-												  withSource:account
-												 destination:contact
-														date:nil
-													 message:[[[NSAttributedString alloc] initWithString:message 
-																							  attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
-												   autoreply:NO];
-			[[adium contentController] sendContentObject:contentMessage];
+		//Insert the message text as if the user had typed it after opening the chat
+		NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+		if(message && [responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]){
+			[responder insertText:message];
 		}
 	}
 }
