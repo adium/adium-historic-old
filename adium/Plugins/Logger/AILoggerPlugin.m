@@ -217,8 +217,8 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 
     //Log the message and flag it for re-indexing
     if(logMessage != nil){
-	[self _markChatLogAsDirty:chat
-			   atPath:[self _addMessage:logMessage betweenAccount:account andObject:object onDate:date]];
+	[self markChatLogAsDirty:chat
+			  atPath:[self _addMessage:logMessage betweenAccount:account andObject:object onDate:date]];
     }
     
 }
