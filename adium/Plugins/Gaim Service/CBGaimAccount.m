@@ -330,8 +330,8 @@
 	
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0) {
         AIContentMessage *cm = (AIContentMessage*)object;
-        NSString *body = [self encodedStringFromAttributedString:[cm message]];
         AIChat *chat = [cm chat];
+        NSString *body = [self encodedAttributedString:[cm message] forListObject:[chat listObject]];
         GaimConversation *conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
         
         //create a new conv if necessary - this happens, for example, if an existing chat is suddenly our responsibility
@@ -984,7 +984,7 @@
     
     //Convert the away message to HTML, and pass it to libgaim
     if(awayMessage){
-        awayHTML = (char *)[[self encodedStringFromAttributedString:awayMessage] UTF8String];
+        awayHTML = (char *)[[self encodedAttributedString:awayMessage forListObject:nil] UTF8String];
     }
     serv_set_away(gc, GAIM_AWAY_CUSTOM, awayHTML);
     
@@ -999,7 +999,7 @@
     
     //Convert the profile to HTML, and pass it to libgaim
     if(profile){
-        profileHTML = (char *)[[self encodedStringFromAttributedString:profile] UTF8String];
+        profileHTML = (char *)[[self encodedAttributedString:profile forListObject:nil] UTF8String];
     }
     serv_set_info(gc, profileHTML);
     

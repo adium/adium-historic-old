@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.31 2004/01/08 14:51:57 adamiser Exp $
+// $Id: AIAccount.m,v 1.32 2004/01/13 00:24:22 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -216,15 +216,18 @@
 - (void)setAttributedStatusString:(NSAttributedString *)inAttributedString forKey:(NSString *)key{};
 
 //Functions subclasses may choose to override
--(NSString *)encodedStringFromAttributedString:(NSAttributedString *)inAttributedString
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
-    return ([AIHTMLDecoder encodeHTML:inAttributedString
+    return([inAttributedString string]);
+		   
+		   /*[AIHTMLDecoder encodeHTML:inAttributedString
                               headers:YES
                              fontTags:YES   closeFontTags:YES
                             styleTags:YES   closeStyleTagsOnFontChange:YES
                        encodeNonASCII:NO
-                           imagesPath:nil]);
+                           imagesPath:nil]*/
 }
+
 
 //Auto-Reconnect -------------------------------------------------------------------------------------
 #pragma mark Auto-Reconnect

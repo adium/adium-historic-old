@@ -310,14 +310,23 @@
 
 //AIM doesn't require we close our tags, so don't waste the characters
 //TOC2 doesn't support non-ASCII characters, so encode them
--(NSString *)encodedStringFromAttributedString:(NSAttributedString *)inAttributedString
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
-    return ([AIHTMLDecoder encodeHTML:inAttributedString
-                              headers:YES
-                             fontTags:YES   closeFontTags:NO
-                            styleTags:YES   closeStyleTagsOnFontChange:NO
-                       encodeNonASCII:YES
-                           imagesPath:nil]);
+	BOOL	isICQ = NO;
+	
+	if(inListObject){
+		char	firstCharacter = [[inListObject UID] characterAtIndex:0];
+		isICQ = (firstCharacter >= '0' && firstCharacter <= '9');
+	}
+	
+    return((isICQ ? [inAttributedString string] : [AIHTMLDecoder encodeHTML:inAttributedString
+																	headers:YES
+																   fontTags:YES
+															  closeFontTags:NO
+																  styleTags:YES
+												 closeStyleTagsOnFontChange:NO
+															 encodeNonASCII:YES
+																 imagesPath:nil]));
 }
 
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
@@ -462,7 +471,7 @@
 - (void)setAccountAwayTo:(NSAttributedString *)awayMessage
 {
     if (awayMessage){
-        [self AIM_SetAway:[self encodedStringFromAttributedString:awayMessage]];
+        [self AIM_SetAway:[self encodedAttributedString:awayMessage forListObject:nil]];
         [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Away" notify:NO];
         [self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
         
@@ -479,7 +488,7 @@
         [[adium interfaceController] handleErrorMessage:@"Info Size Error"
                                         withDescription:[NSString stringWithFormat:@"Your info is too large, and could not be set.\r\rThis service limits info to 1024 characters (Your current info is %i characters)",[profile length]]];
     }else{
-        [self AIM_SetProfile:[self encodedStringFromAttributedString:profile]];
+        [self AIM_SetProfile:[self encodedAttributedString:profile forListObject:nil]];
         [self setStatusObject:profile forKey:@"TextProfile" notify:YES];
     }
 }
@@ -737,7 +746,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.109 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.110 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
