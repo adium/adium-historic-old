@@ -26,7 +26,9 @@
 - Metacontacts display no service icon
 - The window min/max sizes don't seem to be getting updated as auto-resizing
 	is being toggled off.. resulting in a non-resizable window until closed
-
+- Creating a new layout and then saving it leads to proper preference application
+	but the table doesn't change selections properly.
+	
 [Other]
 - Metacontact drawer in get info crashes upon dragging
 
