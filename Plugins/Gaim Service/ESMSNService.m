@@ -52,7 +52,7 @@
 	return(@"MSN");
 }
 - (NSString *)longDescription{
-	return(@"MSN");
+	return(@"MSN Messenger");
 }
 - (NSCharacterSet *)allowedCharacters{
 	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._-"]);

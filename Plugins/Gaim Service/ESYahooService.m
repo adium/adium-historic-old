@@ -42,7 +42,7 @@
 	return(@"Yahoo!");
 }
 - (NSString *)longDescription{
-	return(@"Yahoo!");
+	return(@"Yahoo! Messenger");
 }
 - (NSCharacterSet *)allowedCharacters{
 	return([NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789_@.-"]);

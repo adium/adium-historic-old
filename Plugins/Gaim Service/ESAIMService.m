@@ -22,7 +22,7 @@
 	return(@"AIM");
 }
 - (NSString *)longDescription{
-	return(@"AIM");
+	return(@"AOL Instant Messenger");
 }
 - (NSCharacterSet *)ignoredCharacters{
 	return([NSCharacterSet characterSetWithCharactersInString:@" "]);
