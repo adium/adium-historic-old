@@ -177,6 +177,8 @@ typedef enum {
 #define Interface_WillSendEnteredMessage 			@"Interface_WillSendEnteredMessage"
 #define Interface_DidSendEnteredMessage				@"Interface_DidSendEnteredMessage"
 #define Interface_ErrorMessageReceived				@"Interface_ErrorMessageRecieved"
+#define Interface_ContactListDidBecomeMain                      @"Interface_ContactListDidBecomeMain"
+#define Interface_ContactListDidResignMain                      @"Interface_contactListDidResignMain"
 #define Content_ContentObjectAdded				@"Content_ContentObjectAdded"
 #define Content_WillSendContent					@"Content_WillSendContent"
 #define Content_DidSendContent					@"Content_DidSendContent"
@@ -621,6 +623,8 @@ typedef enum {
     IBOutlet	NSMenuItem	*menu_Contact_Additions;
     IBOutlet	id		menu_Dock_Status;
         
+    IBOutlet    NSMenuItem      *menuItem_Format_Italics;
+    
     NSMutableArray		*locationArray;
 
     NSMenu			*contextualMenu;
@@ -639,6 +643,10 @@ typedef enum {
 - (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(CONTEXT_MENU_LOCATION)location;
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forContact:(AIListContact *)inContact;
 - (AIListContact *)contactualMenuContact;
+
+//Control over the italics menu item
+- (void)removeItalicsKeyEquivalent;
+- (void)restoreItalicsKeyEquivalent;
 
 @end
 

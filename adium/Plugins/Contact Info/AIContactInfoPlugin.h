@@ -10,6 +10,7 @@
 
 @interface AIContactInfoPlugin : AIPlugin <AIMiniToolbarItemDelegate> {
     NSMenuItem				*viewContactInfoMenuItem;
+    NSMenuItem				*viewContactInfoMenuItem_alternate;
     NSMenuItem				*getInfoContextMenuItem;
 }
 

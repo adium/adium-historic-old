@@ -354,12 +354,14 @@
 - (void)windowDidBecomeMain:(NSNotification *)notification
 {
     [interface containerDidBecomeActive:self];
+    [[owner notificationCenter] postNotificationName:Interface_ContactListDidBecomeMain object:self];
 }
 
 //
 - (void)windowDidResignMain:(NSNotification *)notification
 {
     [interface containerDidBecomeActive:nil];
+    [[owner notificationCenter] postNotificationName:Interface_ContactListDidResignMain object:self];
 }
 
 @end

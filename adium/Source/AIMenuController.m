@@ -42,20 +42,6 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
     contextualMenu = [[NSMenu alloc] init];
     contextualMenuItemDict = [[NSMutableDictionary alloc] init];
     contactualMenuContact = nil;
-    
-//#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_3
-#ifdef MAC_OS_X_VERSION_10_3
-    if ([NSApp isOnPantherOrBetter]) {
-        NSLog(@"settin' it up");
-        //observe tracking beginning
-  //      [[[NSApplication sharedApplication] mainMenu] setDelegate:self];
-         //observe tracking ending
-    //     [[owner notificationCenter] addObserver:self selector:@selector(menuDidEndTracking:) name:NSMenuDidEndTrackingNotification object:[[NSApplication sharedApplication] mainMenu]];
-//         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuDidEndTracking:) name:NSMenuDidEndTrackingNotification object:[[NSApplication sharedApplication] mainMenu]];
-         
-         
-    }
-#endif
 }
 
 //close
@@ -160,17 +146,6 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
 	    targetIndex++;
 	}
 	[targetMenu insertItem:newItem atIndex:targetIndex+1];
-        
-    /*    
-#ifdef MAC_OS_X_VERSION_10_3
-        if ([NSApp isOnPantherOrBetter]) {
-            NSLog(@"settin' it up");
-            //observe tracking beginning
-            [targetMenu setDelegate:self];
-        }
-#endif
-*/
-        
     }else{
 	//If it's attached to an NSMenu (and not an NSMenuItem), insert at the top of the menu
 	[(NSMenu *)menuItem addItem:newItem];
@@ -283,46 +258,15 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
     return(contactualMenuContact);
 }
 
-
-- (void)flagsChanged:(NSEvent *)theEvent
+- (void)removeItalicsKeyEquivalent
 {
-    NSLog(@"flags changed");    
+    [menuItem_Format_Italics setKeyEquivalent:@""];
 }
 
-//NSMenuDelegate
-- (void)menuNeedsUpdate:(NSMenu *)menu
+- (void)restoreItalicsKeyEquivalent
 {
-    isTracking = YES;
-    /*NSLog(@"menu needs update");
-    while (isTracking) {
-        //look for the option key
-     //   NSEvent *nextEvent = [NSApp nextEventMatchingMask:NSFlagsChangedMask untilDate:nil inMode:NSDefaultRunLoopMode dequeue:NO];
-     //   NSEvent *nextEvent = [NSApp currentEvent];
-        NSLog(@"%@",nextEvent);
-        if (nextEvent) {
-        //update the menu items
-        NSEnumerator *enumerator = [[menu itemArray] objectEnumerator];
-        NSMenuItem *item;
-        while (item = [enumerator nextObject]) {
-            if (item && [item target]) {
-                if ([[item target] respondsToSelector:@selector(validateMenuItem:)]){
-                    [item setEnabled:[[item target] validateMenuItem:item]]; 
-                }
-            }
-        }
-        }
-    }*/
+    [menuItem_Format_Italics setKeyEquivalent:@"i"];    
 }
-
-//Called by NSMenuDidEndTrackingNotification
-- (void)menuDidEndTracking:(NSNotification *)notification
-{
-    NSLog(@"ended!");
-    isTracking = NO;
-    //post an event?
-}
-
-
 
 @end
 
