@@ -60,7 +60,7 @@ static AIInfoWindowController *sharedInstance = nil;
     [sharedInstance configureWindowForContact:activeContactObject];
 }
 
-//Called as profiles are set on a handle, update our display
+//Called as changes are made to a handle, update our display
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
     //If we're currently displaying this handle, and it's profile or other displayed information changed...
@@ -178,6 +178,7 @@ static AIInfoWindowController *sharedInstance = nil;
             [infoString appendString:[NSString stringWithFormat:@"%@, %@", signonDay, signonTime] withAttributes:valueAttributes];
         }
     }
+    
     //Online
     /*    int online = [[inContact statusArrayForKey:@"Online"] greatestIntegerValue];
     [infoString appendString:@"\r\tOnline:\t" withAttributes:labelAttributes];
@@ -230,33 +231,37 @@ static AIInfoWindowController *sharedInstance = nil;
         [infoString appendString:@"\r\r\tWarning:\t" withAttributes:labelAttributes];
         [infoString appendString:[NSString stringWithFormat:@"%i%%",warning] withAttributes:valueAttributes];
     }
-
+    
     //Text Profile
     ownerArray = [inContact statusArrayForKey:@"TextProfile"];
     if(ownerArray && [ownerArray count]){
-        NSMutableParagraphStyle		*indentStyle;
         NSMutableAttributedString 	*textProfile = [[ownerArray objectAtIndex:0] mutableCopy];
-        NSRange				firstLineRange = [[textProfile string] lineRangeForRange:NSMakeRange(0,0)];
-        AIContentMessage		*message = [self contentMessageForAttributedString:textProfile];
-        //Run the profile through the filters, do both incoming and outgoing filters so we get linked and emoticons
-        [[owner contentController] filterObject:message isOutgoing:YES];
-        [[owner contentController] filterObject:message isOutgoing:NO];
-        
-        textProfile = [[message message] mutableCopy];
-        
-        //Set correct indent & tabbing on the first line of the profile
-        [textProfile addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,firstLineRange.length)];
-
-        //Indent the remaining lines of profile
-        indentStyle = [paragraphStyle mutableCopy];
-        [indentStyle setFirstLineHeadIndent:InfoIndentB];
-        [textProfile addAttribute:NSParagraphStyleAttributeName value:indentStyle range:NSMakeRange(firstLineRange.length, [textProfile length] - firstLineRange.length)];
-
-        //
-        [infoString appendString:@"\r\r\tProfile:\t" withAttributes:labelAttributes];
-        [infoString appendAttributedString:textProfile];
+        //Only show the profile is one exists
+        if (textProfile && [textProfile length]) {
+            NSMutableParagraphStyle		*indentStyle;
+            NSRange				firstLineRange = [[textProfile string] lineRangeForRange:NSMakeRange(0,0)];
+            AIContentMessage                    *message = [self contentMessageForAttributedString:textProfile];
+            
+            //Run the profile through the filters, do both incoming and outgoing filters so we get linked and emoticons
+            [[owner contentController] filterObject:message isOutgoing:YES];
+            [[owner contentController] filterObject:message isOutgoing:NO];
+            
+            textProfile = [[message message] mutableCopy];
+            
+            //Set correct indent & tabbing on the first line of the profile
+            [textProfile addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,firstLineRange.length)];
+            
+            //Indent the remaining lines of profile
+            indentStyle = [paragraphStyle mutableCopy];
+            [indentStyle setFirstLineHeadIndent:InfoIndentB];
+            [textProfile addAttribute:NSParagraphStyleAttributeName value:indentStyle range:NSMakeRange(firstLineRange.length, [textProfile length] - firstLineRange.length)];
+            
+            //
+            [infoString appendString:@"\r\r\tProfile:\t" withAttributes:labelAttributes];
+            [infoString appendAttributedString:textProfile];
+        }
     }
-
+    
     //
     [self displayInfo:infoString];
     
