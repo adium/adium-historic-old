@@ -826,9 +826,9 @@ DeclareString(AppendNextMessage);
 //
 - (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content
 {
-	NSDate  *date = nil;
-	NSRange	range;
-	
+	NSDate			*date = nil;
+	NSRange			range;
+		
 	//date
 	if([content isKindOfClass:[AIContentMessage class]]){
 		date = [(AIContentMessage *)content date];
@@ -873,15 +873,18 @@ DeclareString(AppendNextMessage);
 	
 	//message stuff
 	if ([content isKindOfClass:[AIContentMessage class]]) {
+		
+		AIListObject	*contentSource = [content source];
+		
 		do{
 			range = [inString rangeOfString:@"%userIconPath%"];
 			if(range.location != NSNotFound){
 				NSString    *userIconPath ;
 				NSString	*replacementString;
 				
-				userIconPath = [[content source] statusObjectForKey:KEY_WEBKIT_USER_ICON];
+				userIconPath = [contentSource statusObjectForKey:KEY_WEBKIT_USER_ICON];
 				if (!userIconPath){
-					userIconPath = [[content source] statusObjectForKey:@"UserIconPath"];
+					userIconPath = [contentSource statusObjectForKey:@"UserIconPath"];
 				}
 					
 				if (showUserIcons && userIconPath){
@@ -900,7 +903,8 @@ DeclareString(AppendNextMessage);
 		do{
 			range = [inString rangeOfString:@"%senderScreenName%"];
 			if(range.location != NSNotFound){
-				[inString replaceCharactersInRange:range withString:[[[content source] formattedUID] stringByEscapingForHTML]];
+				NSString *formattedUID = [contentSource formattedUID];
+				[inString replaceCharactersInRange:range withString:[(formattedUID ? formattedUID : [contentSource displayName]) stringByEscapingForHTML]];
 			}
 		} while(range.location != NSNotFound);
         
@@ -908,12 +912,11 @@ DeclareString(AppendNextMessage);
 			range = [inString rangeOfString:@"%sender%"];
 			if(range.location != NSNotFound){
 				NSString		*senderDisplay = nil;
-				AIListObject	*source = [content source];
 				if (useCustomNameFormat){
-					NSString		*displayName = [source displayName];
-					NSString		*formattedUID = [source formattedUID];
+					NSString		*displayName = [contentSource displayName];
+					NSString		*formattedUID = [contentSource formattedUID];
 					
-					if (![displayName isEqualToString:formattedUID]){
+					if (formattedUID && ![displayName isEqualToString:formattedUID]){
 						switch (nameFormat) {
 							case Display_Name_Screen_Name: {
 								senderDisplay = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
@@ -933,7 +936,7 @@ DeclareString(AppendNextMessage);
 						senderDisplay = displayName;
 					}
 				}else{
-					senderDisplay = [source longDisplayName];
+					senderDisplay = [contentSource longDisplayName];
 				}
 				
 				if ([(AIContentMessage *)content isAutoreply]){
@@ -947,7 +950,8 @@ DeclareString(AppendNextMessage);
 		do{
 			range = [inString rangeOfString:@"%service%"];
 			if(range.location != NSNotFound){
-				[inString replaceCharactersInRange:range withString:[[content source] displayServiceID]];
+				NSString	*displayServiceID = [contentSource displayServiceID];
+				[inString replaceCharactersInRange:range withString:displayServiceID];
 			}
 		} while(range.location != NSNotFound);	
 		
