@@ -48,7 +48,7 @@
 }
 - (NSString *)description
 {
-    return(@"AOL Instant Messenger (TOC2)");
+    return(@"AIM / ICQ - TOC2");
 }
 
 // Return an ID, description, and image for handles owned by accounts of this type
