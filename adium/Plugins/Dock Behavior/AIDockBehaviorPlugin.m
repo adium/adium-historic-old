@@ -19,11 +19,11 @@
     forGroup:@"DockBehavior"];
     
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys: 
-        [NSNumber numberWithDouble:0.0], @"dock_bounce_onDidReceiveContent_delay", nil]
+        [NSNumber numberWithDouble:2.0], @"dock_bounce_onDidReceiveContent_delay", nil]
     forGroup:@"DockBehavior"];
     
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys: 
-        [NSNumber numberWithInt:4], @"dock_bounce_onDidReceiveContent_num", nil]
+        [NSNumber numberWithBool:YES], @"dock_bounce_onDidReceiveContent_forever", nil]
     forGroup:@"DockBehavior"];
     
     //install our observers
@@ -34,7 +34,7 @@
 {
     if([[[owner preferenceController] preferenceForKey:@"dock_bounce_onDidReceiveContent" group:@"DockBehavior" object:[notification object]] boolValue]) // are we bouncing at all?
     {
-        if([[[owner preferenceController] preferenceForKey:@"dock_bounce_onDidReceiveContent_num" group:@"DockBehavior" object:[notification object]] intValue] == 1 && [[[owner preferenceController] preferenceForKey:@"dock_bounce_onDidReceiveContent_num" group:@"DockBehavior" object:[notification object]] doubleValue] > 0.0) //if we only bounce once, and don't have a delay, use the method with less overhead
+        if(![[[owner preferenceController] preferenceForKey:@"dock_bounce_onDidReceiveContent_forever" group:@"DockBehavior" object:[notification object]] boolValue] && [[[owner preferenceController] preferenceForKey:@"dock_bounce_onDidReceiveContent_delay" group:@"DockBehavior" object:[notification object]] doubleValue] == 0.0) //if we only bounce once, and don't have a delay, use the method with less overhead
         {
             [[owner dockController] bounce];
         }
@@ -42,7 +42,7 @@
         {
             [[owner dockController] 
                 bounceWithInterval:[[[owner preferenceController] preferenceForKey:@"dock_bounce_onDidReceiveContent_delay" group:@"DockBehavior" object:[notification object]] doubleValue] 
-                times:[[[owner preferenceController] preferenceForKey:@"dock_bounce_onDidReceiveContent_num" group:@"DockBehavior" object:[notification object]] intValue]
+                forever:[[[owner preferenceController] preferenceForKey:@"dock_bounce_onDidReceiveContent_forever" group:@"DockBehavior" object:[notification object]] boolValue]
             ];
         }
     }
