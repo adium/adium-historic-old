@@ -229,15 +229,13 @@
 //Delete a handle
 - (void)deleteHandle:(AIContactHandle *)inHandle
 {
-    NSArray		*accountArray;
-    AIContactGroup	*group;
-    int			loop;
+    NSEnumerator	*enumerator;
+    AIAccount		*account;
+    AIContactGroup	*containingGroup = [inHandle containingGroup];
 
     //notify account(s) that the handle will be deleted
-    accountArray = [[owner accountController] accountArray];
-    for(loop = 0;loop < [accountArray count];loop++){
-        AIAccount<AIAccount_Handles>	*account = [accountArray objectAtIndex:loop];
-        
+    enumerator = [[[owner accountController] accountArray] objectEnumerator];
+    while((account = [enumerator nextObject])){                
         if([inHandle belongsToAccount:account]){
             if([account conformsToProtocol:@protocol(AIAccount_GroupedHandles)]){
                 [(AIAccount<AIAccount_GroupedHandles> *)account removeHandle:inHandle fromGroup:[inHandle containingGroup]];
@@ -249,29 +247,25 @@
         }
     }
 
-    group = [inHandle containingGroup];
-
     //Delete the handle
-    [group removeObject:inHandle];
+    [containingGroup removeObject:inHandle];
     
     //Re-order and update the list
-    [self updateListForObject:group];
+    [self updateListForObject:containingGroup];
 }
 
 //Rename a handle
 - (void)renameHandle:(AIContactHandle *)inHandle to:(NSString *)newName
 {
-    NSArray		*accountArray;
-    int			loop;
+    NSEnumerator	*enumerator;
+    AIAccount		*account;
 
     //Filter the UID (force lowercase, and/or remove invalid characters)
     newName = [[inHandle service] filterUID:newName];
 
     //notify the account(s) that the handle will been renamed
-    accountArray = [[owner accountController] accountArray];
-    for(loop = 0;loop < [accountArray count];loop++){
-        AIAccount *account = [accountArray objectAtIndex:loop];
-        
+    enumerator = [[[owner accountController] accountArray] objectEnumerator];
+    while((account = [enumerator nextObject])){        
         if([inHandle belongsToAccount:account]){
             if([account conformsToProtocol:@protocol(AIAccount_GroupedHandles)]){
                 [(AIAccount<AIAccount_GroupedHandles> *)account renameHandle:inHandle inGroup:[inHandle containingGroup] to:newName];
@@ -289,6 +283,34 @@
     //Re-order and update the list
     [self updateListForObject:inHandle];
 }
+
+//Rename a handle
+- (void)moveHandle:(AIContactHandle *)inHandle toGroup:(AIContactGroup *)inGroup
+{
+    NSEnumerator	*enumerator;
+    AIAccount		*account;
+    AIContactGroup	*containingGroup = [inHandle containingGroup];
+
+    if(!inGroup) inGroup = [self contactList]; //If no group is specified, we move to the root level
+    
+    //notify the account(s) that the handle will been moved
+    enumerator = [[[owner accountController] accountArray] objectEnumerator];
+    while((account = [enumerator nextObject])){
+        if([inHandle belongsToAccount:account] && [account conformsToProtocol:@protocol(AIAccount_GroupedHandles)]){
+            [(AIAccount<AIAccount_GroupedHandles> *)account moveHandle:inHandle fromGroup:containingGroup toGroup:inGroup];
+        }
+    }
+
+    //move the handle
+    [inHandle retain];				//Hold onto the handle so it doesn't accidentally get released
+    [containingGroup removeObject:inHandle];
+    [inGroup addObject:inHandle];
+    [inHandle release];
+    
+    //Re-order and update the list
+    [self updateListForObject:inHandle];    
+}
+    
  
 // List Searching --------------------------------------------------------------------------------
 //Finds a group with the specified name

@@ -48,6 +48,8 @@
     BOOL			editorOpen;			//YES if the editor is currently open
     AIContactObject		*editedObject;			//The contact being edited
     NSTableColumn		*editedColumn;			//The column being edited
+
+    NSMutableArray		*dragItems;
 }
 
 + (id)contactListEditorWindowControllerWithOwner:(id)inOwner;

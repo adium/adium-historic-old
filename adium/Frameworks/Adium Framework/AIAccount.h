@@ -71,7 +71,7 @@ typedef enum {
     // Rename a handle
     - (BOOL)renameHandle:(AIContactHandle *)handle inGroup:(AIContactGroup *)group to:(NSString *)inName;
     // Move a Handle
-    //- (BOOL)moveHandle:(AIContactHandle *)handle from: to:
+- (BOOL)moveHandle:(AIContactHandle *)handle fromGroup:(AIContactGroup *)sourceGroup toGroup:(AIContactGroup *)destGroup;
     
     // Create a group
     - (BOOL)addGroup:(AIContactGroup *)newGroup;

@@ -179,7 +179,13 @@ static char *hash_password(const char * const password);
     return(YES);
 }
 
-// AIAccount_Messaging
+- (BOOL)moveHandle:(AIContactHandle *)handle fromGroup:(AIContactGroup *)sourceGroup toGroup:(AIContactGroup *)destGroup
+{
+    NSLog(@"Move '%@' from '%@' to '%@'",[handle UID],[sourceGroup displayName],[destGroup displayName]);
+}
+
+
+// AIAccount_Messaging ---------------------------------------------------------------------------
 - (BOOL)sendContentObject:(id <AIContentObject>)object toHandle:(AIContactHandle *)inHandle
 {
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){

@@ -123,6 +123,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
     [self installToolbar];
     [self buildAccountColumns];
+    [outlineView_contactList registerForDraggedTypes:[NSArray arrayWithObject:@"AIContactObjects"]];
 
     [outlineView_contactList setNeedsDisplay:YES];
 }
@@ -384,6 +385,74 @@ static AIContactListEditorWindowController *sharedInstance = nil;
             [[owner contactController] renameHandle:item to:object];
         }
     }
+}
+
+- (BOOL)outlineView:(NSOutlineView *)olv writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
+{
+    NSEnumerator	*enumerator;
+    AIContactHandle	*handle;
+
+    [pboard declareTypes:[NSArray arrayWithObjects:@"AIContactObjects",nil] owner:self];
+
+    //Build a list of all the highlighted objects
+    if(dragItems) [dragItems release];
+    dragItems = [items copy];
+
+    //put it on the pasteboard
+    [pboard setString:@"Private" forType:@"AIContactObjects"];
+
+    return(YES);
+}
+
+- (NSDragOperation)outlineView:(NSOutlineView*)olv validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
+{
+    NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIContactObjects"]];
+    
+    if([avaliableType compare:@"AIContactObjects"] == 0){
+        if((item == nil ||					//(handles can be dragged to the root level
+            index != -1 ||					// to anywhere in a group
+            [item isKindOfClass:[AIContactGroup class]])	// or onto a group)
+           && ([dragItems indexOfObject:item] == NSNotFound)){	//(But they cannot be dragged into themselves)
+
+            return(NSDragOperationPrivate);
+
+        }else{
+            return(NSDragOperationNone);
+
+        }
+    }else{
+        return(NSDragOperationMove);
+
+    }
+}
+
+- (BOOL)outlineView:(NSOutlineView*)olv acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
+{
+    NSString 	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIContactObjects"]];
+
+    if([availableType compare:@"AIContactObjects"] == 0){ //handles
+        NSEnumerator	*enumerator;
+        AIContactObject	*object;
+
+        //Move the groups first
+        enumerator = [dragItems objectEnumerator];
+        while((object = [enumerator nextObject])){
+            if([object isKindOfClass:[AIContactGroup class]]){
+//                [[owner contactController] moveGroup:handle toGroup:item];
+            }
+        }
+        
+        //Then move the handles
+        enumerator = [dragItems objectEnumerator];
+        while((object = [enumerator nextObject])){
+            if([object isKindOfClass:[AIContactHandle class]]){
+                [[owner contactController] moveHandle:(AIContactHandle *)object toGroup:item];
+            }
+        }
+    }
+
+    [dragItems release]; dragItems = nil;
+    return(YES);
 }
 
 

@@ -204,10 +204,10 @@
 			);
 			buildSettings = {
 				DEBUGGING_SYMBOLS = NO;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" /Users/adamiser/Code/Adium/build /Users/adamiser/Desktop";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
 				HEADER_SEARCH_PATHS = "";
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "/Users/adamiser/Documents/Programming/SampleCode/gaim-0_11_0pre14_0/gaim-0.11.0pre14/libfaim";
+				LIBRARY_SEARCH_PATHS = "";
 				OPTIMIZATION_CFLAGS = "-O3";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
