@@ -44,11 +44,11 @@ static AINewMessagePromptController *sharedNewMessageInstance = nil;
 	AIListContact	*contact;
 	
     if(contact = [self contactFromTextField]){
-        //Close the prompt
-        [AINewMessagePromptController closeSharedInstance];
-		
         //Initiate the message
         [[adium interfaceController] setActiveChat:[[adium contentController] openChatWithContact:contact]];
+		
+		//Close the prompt
+        [[self class] closeSharedInstance];
     }
 }
 

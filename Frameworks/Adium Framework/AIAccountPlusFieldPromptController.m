@@ -21,7 +21,7 @@
 - (IBAction)okay:(id)sender {};
 
 
-+ (void)newPrompt
++ (void)showPrompt
 {
 	AIAccountPlusFieldPromptController *sharedInstance = [self sharedInstance];
 	
