@@ -85,6 +85,13 @@
 - (IBAction)showForums:(id)sender;
 - (IBAction)confirmQuit:(id)sender;
 
+//create a resource folder in the Library/Application\ Support/Adium\ 2.0 folder.
+//pass it the name of the folder (e.g. @"Scripts").
+//if it is found to already in a library folder, returns that pathname (using
+//  the same order of preference as resourcePathsForName:).
+//otherwise, creates it in the user library and returns the pathname to it.
+- (NSString *)createResourcePathForName:(NSString *)name;
+
 //return zero or more pathnames to objects in the Application Support folders,
 //  as well as within the Resources/ directory of the Adium bundle.
 //only those pathnames that exist are returned.
