@@ -6,7 +6,7 @@
 
 @class AIAbstractListController;
 
-@interface AIListController : AIAbstractListController {
+@interface AIListController : AIAbstractListController <AIListObjectObserver> {
 	
     NSSize								minWindowSize;
     BOOL								autoResizeVertically;
@@ -15,9 +15,11 @@
 	int									forcedWindowWidth;
 
 	BOOL 								dockToBottomOfScreen;
+	
+	BOOL								needsAutoResize;
 }
 
-- (void)contactListDesiredSizeChanged:(NSNotification *)notification;
+- (void)contactListDesiredSizeChanged;
 
 - (void)setMinWindowSize:(NSSize)inSize;
 - (void)setMaxWindowWidth:(int)inWidth;
