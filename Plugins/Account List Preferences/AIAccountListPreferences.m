@@ -23,7 +23,7 @@
 
 @interface AIAccountListPreferences (PRIVATE)
 - (void)configureViewForAccount:(AIAccount *)inAccount;
-- (void)configureViewForService:(id <AIServiceController>)inService;
+- (void)configureViewForService:(AIService *)inService;
 - (void)_addCustomViewAndTabsForController:(AIAccountViewController *)inControler;
 - (void)_removeCustomViewAndTabs;
 - (void)enableDisableControls;
@@ -114,10 +114,8 @@
 }
 
 //Configure the account preferences for a service.  This determines which controls are loaded and the allowed values
-- (void)configureViewForService:(id <AIServiceController>)inService
+- (void)configureViewForService:(AIService *)inService
 {
-	AIServiceType	*serviceType = [inService handleServiceType];
-
 	//Select the new service
 	configuredForService = inService;
     [popupMenu_serviceList selectItemAtIndex:[popupMenu_serviceList indexOfItemWithRepresentedObject:inService]];
@@ -128,9 +126,9 @@
 	
 	//Restrict the account name field to valid characters and length
     [textField_accountName setFormatter:
-		[AIStringFormatter stringFormatterAllowingCharacters:[serviceType allowedCharacters]
-													  length:[serviceType allowedLength]
-											   caseSensitive:[serviceType caseSensitive]
+		[AIStringFormatter stringFormatterAllowingCharacters:[inService allowedCharacters]
+													  length:[inService allowedLength]
+											   caseSensitive:[inService caseSensitive]
 												errorMessage:@"The characters you're entering are not valid for an account name on this service."]];
 }
 
@@ -485,8 +483,6 @@
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     AIAccount   *account = [accountArray objectAtIndex:row];
-    NSImage		*image = [account image];
-	if (!image) image = [NSImage imageNamed:@"DefaultAccountIcon" forClass:[self class]];
 	NSString	*status = nil;
 	
 	//Update the 'connect' button's title to match it's action
@@ -498,8 +494,10 @@
 		status = @"Disconnecting";
 	}
 	
-	[cell setImage:image];
-	[cell setSubString:(status ? [NSString stringWithFormat:@"%@ - %@", [account displayServiceID], status] : [account displayServiceID])];
+	[cell setImage:[AIServiceIcons serviceIconForObject:account type:AIServiceIconLarge direction:AIIconNormal]];
+	[cell setSubString:(status ?
+						[NSString stringWithFormat:@"%@ - %@", [[account service] shortDescription], status] :
+						[[account service] shortDescription])];
 	[cell setDrawsGradientHighlight:YES];
 }
 
