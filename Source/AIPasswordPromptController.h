@@ -24,7 +24,7 @@
 	id			context;
 }
 
-- (id)initWithWindowNibName:(NSString *)windowNibName notifyingTarget:(id)inTarget selector:(SEL)inSelector;
+- (id)initWithWindowNibName:(NSString *)windowNibName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
 - (void)windowDidLoad;
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
