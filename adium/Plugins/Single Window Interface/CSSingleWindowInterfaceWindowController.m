@@ -84,9 +84,6 @@
     [scrollView_currentChatsList setBorderType:NSBezelBorder];
 	
     [box_messageView setContentView:view_noActiveChat];
-	
-	//Register for the selection notification
-    [[adium notificationCenter] addObserver:self selector:@selector(contactSelectionChanged:) name:Interface_ContactSelectionChanged object:contactListView];
 }
 
 - (void)collapseContactList:(id)sender
@@ -105,16 +102,6 @@
 			[scrollView_contactList setFrame:newFrame];
 		}
 	}
-}
-
-#pragma mark Contact Selection
-
-//Called when the user selects a new contact object
-- (void)contactSelectionChanged:(NSNotification *)notification
-{
-    //AIListObject	*object = [[notification userInfo] objectForKey:@"Object"];
-
-    //Configure our toolbar for the new object
 }
 
 #pragma mark Chatting

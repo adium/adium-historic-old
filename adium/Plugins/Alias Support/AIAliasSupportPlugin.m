@@ -258,9 +258,7 @@
 
 - (void)_delayedSetAlias:(NSTimer *)inTimer
 {
-    [(AIContactInfoWindowController *)[[[contactView view] window] windowController] ignoreSelectionChanges:YES];
     [self setAlias:nil];
-    [(AIContactInfoWindowController *)[[[contactView view] window] windowController] ignoreSelectionChanges:NO];
 }
 
 @end

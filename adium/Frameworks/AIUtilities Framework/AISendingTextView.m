@@ -408,14 +408,10 @@ static NSImage *pushIndicatorImage = nil;
 - (AIChat *)chat{
     return(chat);
 }
-//Return the selected countact (to auto-configure the contact menu)
-- (AIListContact *)contact
+//Return the selected list object (to auto-configure the contact menu)
+- (AIListObject *)listObject
 {
-    if([[chat listObject] isKindOfClass:[AIListContact class]]){
-        return((AIListContact *)[chat listObject]);
-    }else{
-        return(nil);
-    }
+	return([chat listObject]);
 }
 
 

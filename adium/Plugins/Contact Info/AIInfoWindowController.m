@@ -21,7 +21,7 @@
 
 //Open a new info window
 static AIInfoWindowController *sharedInstance = nil;
-+ (id)showInfoWindowForContact:(AIListContact *)inContact
++ (id)showInfoWindowForContact:(AIListObject *)inContact
 {
     if(!sharedInstance){
         sharedInstance = [[self alloc] initWithWindowNibName:INFO_WINDOW_NIB];

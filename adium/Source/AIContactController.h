@@ -102,12 +102,11 @@ typedef enum {
 
 //Contact info
 - (IBAction)showContactInfo:(id)sender;
-- (void)showInfoForContact:(AIListContact *)inContact;
 - (void)addContactInfoView:(AIPreferenceViewController *)inView;
 - (void)updateListContactStatus:(AIListContact *)inContact;
 
 //Interface selection
-- (AIListContact *)selectedContact;
+- (AIListObject *)selectedListObject;
 
 //Private
 - (void)initController;

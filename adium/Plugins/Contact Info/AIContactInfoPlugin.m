@@ -74,7 +74,7 @@
 
 - (IBAction)showContactInfo:(id)sender
 {
-    [AIInfoWindowController showInfoWindowForContact:[[adium contactController] selectedContact]];
+    [AIInfoWindowController showInfoWindowForContact:[[adium contactController] selectedListObject]];
 }
 
 - (IBAction)showContextContactInfo:(id)sender
@@ -99,10 +99,10 @@
     BOOL valid = YES;
 
     if(menuItem == viewContactInfoMenuItem || menuItem == viewContactInfoMenuItem_alternate){
-        AIListContact	*selectedContact = [[adium contactController] selectedContact];
+        AIListObject	*selectedObject = [[adium contactController] selectedListObject];
 
-        if(selectedContact && [selectedContact isKindOfClass:[AIListContact class]]){
-            [menuItem setTitle:[NSString stringWithFormat:@"View %@'s Info",[selectedContact displayName]]];
+        if(selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
+            [menuItem setTitle:[NSString stringWithFormat:@"View %@'s Info",[selectedObject displayName]]];
         }else{
             [menuItem setTitle:@"View Contact's Info"];
             valid = NO;

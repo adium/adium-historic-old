@@ -48,7 +48,7 @@
 - (void)setFont:(NSFont *)inFont;
 - (NSFont *)font;
 - (NSSize)desiredSize;
-- (AIListContact *)contact;
+- (AIListObject *)listObject;
 
 - (void)setColor:(NSColor *)inColor;
 - (NSColor *)color;

@@ -20,8 +20,6 @@
 
 @interface AIContactInfoWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory;
-- (void)configureForContact:(AIListContact *)inContact;
-- (void)configureForNoContact;
 @end
 
 @implementation AIContactInfoWindowController
@@ -46,17 +44,14 @@ static AIContactInfoWindowController *sharedInstance = nil;
     }
 }
 
+
 // Internal --------------------------------------------------------------------
 //init
 - (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory
-{
-    changeWithSelectionChanges = YES;
-    
+{    
     [super initWithWindowNibName:windowNibName];
     mainCategory = [inCategory retain];
-
-    [[self window] setLevel:NSNormalWindowLevel];
-    [[adium notificationCenter] addObserver:self selector:@selector(selectionChanged:) name:Interface_ContactSelectionChanged object:nil];
+	displayedObject = nil;
         
     return(self);    
 }
@@ -64,7 +59,7 @@ static AIContactInfoWindowController *sharedInstance = nil;
 - (void)dealloc
 {
     [mainCategory release];
-    [sharedInstance autorelease]; sharedInstance = nil;
+	[displayedObject release];
     
     [super dealloc];
 }
@@ -72,54 +67,41 @@ static AIContactInfoWindowController *sharedInstance = nil;
 //When the contact list selection changes, then configure the window for the new contact
 - (void)selectionChanged:(NSNotification *)notification
 {
-    if (changeWithSelectionChanges) {
-        if ([[adium contactController] selectedContact] != nil) {
-            //install the category
-            [scrollView_contents setDocumentView:[mainCategory contentView]];
-            [[self window] setContentView:view_contact];
-            
-            [self configureForContact:[[adium contactController] selectedContact]];
-        }else{
-            [self configureForNoContact];
-        }
-    }
+	[self configureForListObject:[[adium contactController] selectedListObject]];
 }
 
-//Configure our views for the specified contact
-- (void)configureForContact:(AIListContact *)inContact
+//Configure our views for the specified list object
+- (void)configureForListObject:(AIListObject *)inObject
 {
-    //Configure the preference views
-    [mainCategory configureForObject:inContact];
+	if(inObject == nil || displayedObject != inObject){
+		[displayedObject release];
+		displayedObject = [inObject retain];
+		
+		if(inObject == nil){
+			[[self window] setContentView:view_noContact];
+			[[self window] setTitle:@"Contact Info"];
 
-    [[self window] setTitle:([inContact serviceID] ?
-       [NSString stringWithFormat:@"%@ (%@) Info",[inContact UID], [inContact serviceID]] : 
-       [NSString stringWithFormat:@"%@ Info",[inContact UID]])];
-}
+		}else{
+			[mainCategory configureForObject:inObject];
+			[scrollView_contents setDocumentView:[mainCategory contentView]];
+			[[self window] setContentView:view_contact];
+			[[self window] setTitle:[NSString stringWithFormat:@"%@ Info",[inObject longDisplayName]]];
 
-- (void)configureForNoContact
-{
-    //show the "No Contact Selected" view
-    [[self window] setContentView:view_noContact];
-
-    [[self window] setTitle:@"Contact Info"];
+		}
+	}
 }
 
 //Setup the window before it is displayed
 - (void)windowDidLoad
-{
-    if ([[adium contactController] selectedContact]) {
-        //install the category
-        [scrollView_contents setDocumentView:[mainCategory contentView]];
-        [[self window] setContentView:view_contact];
-        
-        [self configureForContact:[[adium contactController] selectedContact]];
-    }else{
-        [self configureForNoContact];
-    }
-    
+{    
     NSString	*savedFrame;
     
-    //Restore the window position
+	//Initial selection
+    [[self window] setLevel:NSNormalWindowLevel];
+    [[adium notificationCenter] addObserver:self selector:@selector(selectionChanged:) name:Interface_ContactSelectionChanged object:nil];
+	[self selectionChanged:nil];
+    
+	//Restore the window position
     savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_CONTACT_INSPECTOR_WINDOW_FRAME];
     if(savedFrame){
         [[self window] setFrameFromString:savedFrame];
@@ -137,15 +119,17 @@ static AIContactInfoWindowController *sharedInstance = nil;
 //called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
+	[[adium notificationCenter] removeObserver:self];
+	
     //Save the window position
     [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_CONTACT_INSPECTOR_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
+	
+	//Close down our shared instance
+    [sharedInstance autorelease]; sharedInstance = nil;
+
     return(YES);
 }
 
-- (void)ignoreSelectionChanges:(BOOL)inValue
-{
-    changeWithSelectionChanges = !(inValue);
-}
 @end
