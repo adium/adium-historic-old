@@ -718,7 +718,7 @@
 {
 	[super setStatusState:statusState withGaimStatusType:gaimStatusType andMessage:statusMessage];
 
-	if(!strcmp(gaimStatusType, "Available")){
+	if(gaimStatusType && !strcmp(gaimStatusType, "Available")){
 		/*
 		 * As of gaim 1.x, setting/changing an available message in OSCAR requires a special, additional call */
 		
