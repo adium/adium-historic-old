@@ -31,13 +31,19 @@
 	
 	slayerScript = [[NSAppleScript alloc] initWithSource:@"tell application \"UserNotificationCenter\" to quit"];
 	crashLog = nil;
-    
+	buildUser = nil;
+	buildDate = nil;
+	buildNumber = nil;
+	
     return(self);
 } 
 
 //
 - (void)dealloc
 {
+    [buildUser release];
+    [buildDate release];
+    [buildNumber release];
     [crashLog release];
     [super dealloc];
 }
@@ -182,9 +188,11 @@
     [self _loadBuildInformation];
     
     //Build the report
+    //NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%m-%d %H:%M" allowNaturalLanguage:NO] autorelease];
+    
     NSDictionary	*crashReport = [NSDictionary dictionaryWithObjectsAndKeys:
-        [[NSDate date] description], @"time",
-        [NSString stringWithFormat:@"%@	(%@)",buildDate,buildNumber], @"build",
+        /*[dateFormatter stringForObjectValue:[NSDate date]]*/[[NSDate date] description], @"time",
+        [NSString stringWithFormat:@"%@	(%@)",buildDate,(buildUser ? buildUser : buildNumber)], @"build",
         [textField_emailAddress stringValue], @"email",
         [textField_accountIM stringValue], @"uid",
         shortDescription, @"short_desc",
@@ -260,11 +268,11 @@
 - (void)_loadBuildInformation
 {
     //Grab the info from our buildnum script
-    char *path, unixDate[256], num[256];
+    char *path, unixDate[256], num[256],whoami[256];
     if(path = (char *)[[[[NSBundle mainBundle] resourcePath] stringByAppendingString:@"/../../../buildnum"] fileSystemRepresentation])
     {
         FILE *f = fopen(path, "r");
-        fscanf(f, "%s | %s", num, unixDate);
+        fscanf(f, "%s | %s | %s", num, unixDate, whoami);
         fclose(f);
 	
         if(*num){
@@ -272,11 +280,20 @@
 	}
 	
 	if(*unixDate){
-	    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%m-%d-%y" allowNaturalLanguage:NO] autorelease];
+	    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%m-%d" allowNaturalLanguage:NO] autorelease];
             NSDate	    *date;
 	    
 	    date = [NSDate dateWithTimeIntervalSince1970:[[NSString stringWithCString:unixDate] doubleValue]];
             buildDate = [[dateFormatter stringForObjectValue:date] retain];
+	}
+	
+	if (*whoami){
+	    buildUser = [[NSString stringWithFormat:@"%s", whoami] retain];
+	    if ([buildUser isEqualToString:@"adamiser"] || [buildUser isEqualToString:@"evands"] || 
+		[buildUser isEqualToString:@"jmelloy"]){
+		buildUser = nil;
+	    }
+	    
 	}
     }
     

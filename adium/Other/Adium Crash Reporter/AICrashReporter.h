@@ -3,7 +3,6 @@
 //  Adium XCode
 //
 //  Created by Adam Iser on Mon Dec 22 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -22,8 +21,8 @@
     
     NSString                                *crashLog;		//Current crash log
     
-    NSString                                *buildNumber, *buildDate;
-	NSAppleScript							*slayerScript;
+    NSString                                *buildNumber, *buildDate, *buildUser;
+    NSAppleScript			    *slayerScript;
 }
 
 - (void)awakeFromNib;
