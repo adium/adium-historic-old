@@ -24,6 +24,12 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {
+            ACTIONS = {pasteAsRichText = id; scrollPageDown = id; scrollPageUp = id; }; 
+            CLASS = AIMessageEntryTextView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AISendingTextView; 
+        }, 
+        {
             CLASS = AIMiniToolbar; 
             LANGUAGE = ObjC; 
             OUTLETS = {representedObject = id; }; 
