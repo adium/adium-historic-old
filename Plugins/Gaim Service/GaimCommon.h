@@ -1,5 +1,5 @@
 //Extensive debug logging
-#define GAIM_DEBUG  FALSE
+#define GAIM_DEBUG  TRUE
 
 #if GAIM_DEBUG
 	#define GaimDebug NSLog
