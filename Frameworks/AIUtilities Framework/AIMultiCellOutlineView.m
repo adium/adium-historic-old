@@ -32,6 +32,8 @@
 
 - (void)_initMultiCellOutlineView
 {
+	contentCell = nil;
+	groupCell = nil;
 	rowHeightCache = nil;
 	rowOriginCache = nil;
 	cacheSize = 2;
@@ -44,6 +46,7 @@
 	
 	backgroundImage = nil;
 	backgroundFade = 1.0;
+	backgroundColor = nil;
 }
 
 - (void)dealloc
@@ -59,7 +62,10 @@
 
 //Cell used for content rows
 - (void)setContentCell:(id)cell{
-	[contentCell release]; contentCell = [cell retain];
+	if(contentCell != cell){
+		[contentCell release];
+		contentCell = [cell retain];
+	}
 	contentRowHeight = [contentCell cellSize].height;
 	[self setRowHeight:contentRowHeight];
 	[self resetRowHeightCache];
@@ -70,7 +76,10 @@
 
 //Cell used for group rows
 - (void)setGroupCell:(id)cell{
-	[groupCell release]; groupCell = [cell retain];
+	if(groupCell != cell){
+		[groupCell release];
+		groupCell = [cell retain];
+	}
 	groupRowHeight = [groupCell cellSize].height;
 	[self resetRowHeightCache];
 }
@@ -260,10 +269,11 @@
 //
 - (void)setBackgroundImage:(NSImage *)inImage
 {
-	[backgroundImage release]; backgroundImage = nil;
-	
-	backgroundImage = [inImage retain];
-	[backgroundImage setFlipped:YES];
+	if(backgroundImage != inImage){
+		[backgroundImage release];
+		backgroundImage = [inImage retain];		
+		[backgroundImage setFlipped:YES];
+	}
 	
 	[(NSClipView *)[self superview] setCopiesOnScroll:(!backgroundImage)];
 	[self setNeedsDisplay:YES];
