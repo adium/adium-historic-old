@@ -17,6 +17,7 @@
 - (void)addColumn:(AIBrowserColumn *)column;
 - (void)removeLastColumn;
 - (id)selectedItemInColumn:(AIBrowserColumn *)column;
+- (NSArray *)selectedItemsInColumn:(AIBrowserColumn *)column;
 @end
 
 @implementation AIBrowser
@@ -153,22 +154,35 @@
 	
 	enumerator = [columnArray reverseObjectEnumerator];
 	while(column = [enumerator nextObject]){
+		NSArray			*selectedRows = [[[[column tableView] selectedRowEnumerator]allObjects] copy];
+		NSEnumerator	*enumerator;
+		NSNumber		*rowNumber;
+		
 		[[column tableView] reloadData];
+
+		//Reselect rows
+		[[column tableView] deselectAll:nil];
+		enumerator = [selectedRows objectEnumerator];
+		while(rowNumber = [enumerator nextObject]){
+			int row = [rowNumber intValue];
+			if(row >= 0 && row < [[column tableView] numberOfRows]){
+				[[column tableView] selectRow:row byExtendingSelection:YES];
+			}
+		}
 	}
 }
 
 //returns the rightmost selected item
-- (id)selectedItem
+- (id)selectedItems
 {
 	NSEnumerator	*enumerator;
 	AIBrowserColumn	*column;
 	
 	//Walk right to left, looking for a selection
-	NSLog(@"%@",[[self window] firstResponder]);
 	enumerator = [columnArray reverseObjectEnumerator];
 	while(column = [enumerator nextObject]){
 		if([[self window] firstResponder] == [column tableView]){
-			return([self selectedItemInColumn:column]);
+			return([self selectedItemsInColumn:column]);
 		}
 	}
 	
@@ -238,6 +252,25 @@
 	
 	return(selectedItem);
 }
+
+//
+- (NSArray *)selectedItemsInColumn:(AIBrowserColumn *)column
+{
+	NSMutableArray	*selectedItems = [NSMutableArray array];
+	NSEnumerator	*enumerator = [[column tableView] selectedRowEnumerator];
+	NSNumber		*rowIndex;
+	id				selectedItem = nil;
+	
+	while(rowIndex = [enumerator nextObject]){
+		[selectedItems addObject:[dataSource browserView:self
+												   child:[rowIndex intValue]
+												  ofItem:[column representedObject]]];
+	}
+	
+	return(selectedItems);
+}
+
+
 
 - (void)drawRect:(NSRect)rect
 {

@@ -97,7 +97,7 @@ typedef enum {
 - (void)sortListObject:(AIListObject *)inObject;
 
 //Editing
-- (void)removeListObject:(AIListObject *)object fromGroup:(AIListGroup *)group;
+- (void)removeListObjects:(NSArray *)objectArray fromGroup:(AIListGroup *)group;
 
 
 //Contact info
@@ -112,7 +112,5 @@ typedef enum {
 - (void)initController;
 - (void)finishIniting;
 - (void)closeController;
-- (void)addMessageObject:(AIMessageObject *)inObject toHandle:(AIContactHandle *)inHandle;
-- (IBAction)showContactListEditor:(id)sender;
 
 @end

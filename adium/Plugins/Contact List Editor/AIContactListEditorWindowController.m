@@ -123,8 +123,11 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //    [browser_contactList setAction: @selector(browserSingleClick:)];
 //    [browser_contactList setDoubleAction: @selector(browserDoubleClick:)];
 	
-	
-	
+	//Observe list changes
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(contactListChanged:)
+									   name:Contact_ListChanged
+									 object:nil];
 	
 	
 	
@@ -153,6 +156,19 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     [self installToolbar];
 //    [self collectionArrayChanged:nil];
 }
+
+- (void)contactListChanged:(NSNotification *)notification
+{
+	NSLog(@"%@ changed",[[notification object] displayName]);
+	
+	[browser_contactList reloadData];
+	
+	
+}
+
+
+
+
 //
 //- (void)_configureContactListView
 //{
@@ -810,11 +826,11 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //Delete the selection
 - (IBAction)delete:(id)sender
 {
-	AIListObject	*object = [browser_contactList selectedItem];
+	NSArray			*objects = [browser_contactList selectedItems];
 	AIListGroup		*group = [[browser_contactList selectedColumn] representedObject];
 	
-	if(object && group){
-		[[adium contactController] removeListObject:object fromGroup:group];
+	if(objects && [objects count] && group){
+		[[adium contactController] removeListObjects:objects fromGroup:group];
 	}
 	
 	
