@@ -170,9 +170,7 @@
     NSPoint		clickLocation, rowClickLocation;
     NSPoint		rowOrigin;
     NSMutableArray      *tableViewItemArray = [[[NSMutableArray alloc] init] autorelease];
-
     NSMenu              *menu = nil;
-    NSArray             *menuItemArray;
     NSEnumerator        *enumerator;
     NSMenuItem          *menuItem;
     
@@ -182,14 +180,14 @@
     rowClickLocation = NSMakePoint(clickLocation.x - rowOrigin.x, clickLocation.y - rowOrigin.y); //Local to the row
     
     NSArray *rowContextArray = [clickedRow menuItemsForEvent:theEvent atPoint:rowClickLocation offset:rowOrigin];
-    if (rowContextArray && [rowContextArray count]) {
+    if(rowContextArray && [rowContextArray count]){
         [tableViewItemArray addObjectsFromArray:rowContextArray];
     }
     
     //[returnArray addObject:[NSMenuItem separatorItem]];
     
     //Copy
-    if ([clickedRow pointIsSelected:rowClickLocation offset:rowOrigin]) {
+    if([clickedRow pointIsSelected:rowClickLocation offset:rowOrigin]) {
         [tableViewItemArray addObject:[[[NSMenuItem alloc] initWithTitle:COPY_MENU_ITEM
                                                                   target:self
                                                                   action:@selector(copy:)
@@ -202,16 +200,15 @@
     }
     
     //Add any table-specific menu items to the front of the menu
-    if (menuItemArray && [menuItemArray count]) {
-    
+    if(tableViewItemArray && [tableViewItemArray count]) {
         //If the delegate didn't respond or responded nil, initialize a menu
         //Otherwise, prepend a separator
-        if (!menu) {
+        if(!menu){
             menu = [[[NSMenu alloc] init] autorelease];
-        } else {
+        }else{
             [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
         }
-        enumerator = [menuItemArray reverseObjectEnumerator];
+        enumerator = [tableViewItemArray reverseObjectEnumerator];
         while (menuItem = [enumerator nextObject]) {
             [menu insertItem:menuItem atIndex:0];
         }
