@@ -103,98 +103,106 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     unsigned int	glyphIndex;
     unsigned int	charIndex;
     NSRectArray		linkRects = nil;
-
+	
     [self _setMouseOverLink:NO atPoint:NSMakePoint(0,0)]; //Remove any tooltips
-
+	
     //Find clicked char index
     mouseLoc = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
     mouseLoc.x -= offset.x;
     mouseLoc.y -= offset.y;
-
+	
     glyphIndex = [layoutManager glyphIndexForPoint:mouseLoc inTextContainer:textContainer fractionOfDistanceThroughGlyph:nil];
     charIndex = [layoutManager characterIndexForGlyphAtIndex:glyphIndex];
-
+	
     if(charIndex >= 0 && charIndex < [textStorage length]){
         NSString	*linkString;
         NSURL		*linkURL;
         NSRange		linkRange;
-
+		
         //Check if click is in valid link attributed range, and is inside the bounds of that style range, else fall back to default handler
         linkString = [textStorage attribute:NSLinkAttributeName atIndex:charIndex effectiveRange:&linkRange];
-        if(linkString != nil && [linkString length] != 0){
-            //add http:// to the link string if a protocol wasn't specified
-            if([linkString rangeOfString:@"://"].location == NSNotFound && [linkString rangeOfString:@"mailto:"].location == NSNotFound){
-                linkURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@",linkString]];
-            }else{
-                linkURL = [NSURL URLWithString:linkString];
-            }
-
-            //bail if a link couldn't be made
-            if(linkURL){
-                unsigned int	eventMask;
-                NSDate			*distantFuture;
-                int				linkCount;
-                BOOL			done = NO;
-                BOOL			inRects = NO;
-
-                //Setup Tracking Info
-                distantFuture = [NSDate distantFuture];
-                eventMask = NSLeftMouseUpMask | NSRightMouseUpMask | NSLeftMouseDraggedMask | NSRightMouseDraggedMask;
-
-                //Find region of clicked link
-                linkRects = [layoutManager rectArrayForCharacterRange:linkRange
-                                         withinSelectedCharacterRange:linkRange
-                                                      inTextContainer:textContainer
-                                                            rectCount:&linkCount];
-                linkRects = _copyRectArray(linkRects, linkCount);
-
-                //One last check to make sure we're really in the bounds of the link. Useful when the link runs up to the end of the document and a click in the blank area below still pases the style range test above.
-                if(_mouseInRects(mouseLoc, linkRects, linkCount, NO)){
-                    //Draw ourselves as clicked and kick off tracking
-                    [textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor orangeColor] range:linkRange];
-                    [controlView setNeedsDisplay:YES];
-
-                    while(!done){
-                        //Get the next event and mouse location
-                        theEvent = [NSApp nextEventMatchingMask:eventMask untilDate:distantFuture inMode:NSEventTrackingRunLoopMode dequeue:YES];
-                        mouseLoc = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
-                        mouseLoc.x -= offset.x;
-                        mouseLoc.y -= offset.y;
-
-                        switch([theEvent type]){
-                            case NSRightMouseUp:		//Done Tracking Clickscr
-                            case NSLeftMouseUp:
-                                //If we were still inside the link, draw unclicked and open link
-                                if(_mouseInRects(mouseLoc, linkRects, linkCount, NO)){
-                                    [[NSWorkspace sharedWorkspace] openURL:linkURL];
-                                }
-                                [textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:linkRange];
-                                [controlView setNeedsDisplay:YES];
-                                done = YES;
-                                break;
-                            case NSLeftMouseDragged:	//Mouse Moved
-                            case NSRightMouseDragged:
-                                //Check if we crossed the link region edge
-                                if(_mouseInRects(mouseLoc, linkRects, linkCount, NO) && inRects == NO){
-                                    [textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor orangeColor] range:linkRange];
-                                    [controlView setNeedsDisplay:YES];
-                                    inRects = YES;
-                                }else if(!_mouseInRects(mouseLoc, linkRects, linkCount, NO) && inRects == YES){
-                                    [textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:linkRange];
-                                    [controlView setNeedsDisplay:YES];
-                                    inRects = NO;
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    success = YES;
-                }
-            }
-        }
+		
+		// The string might already have been filtered (i.e. in Context objects)
+		if( [linkString isKindOfClass:[NSURL class]] ) {
+			linkString = [(NSURL *)linkString absoluteString];
+		}
+		
+		if(linkString != nil && [linkString length] != 0){
+			//add http:// to the link string if a protocol wasn't specified
+			if([linkString rangeOfString:@"://"].location == NSNotFound && [linkString rangeOfString:@"mailto:"].location == NSNotFound){
+				linkURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@",linkString]];
+			}else{
+				linkURL = [NSURL URLWithString:linkString];
+			}
+			
+			//bail if a link couldn't be made
+			if(linkURL){
+				unsigned int	eventMask;
+				NSDate			*distantFuture;
+				int				linkCount;
+				BOOL			done = NO;
+				BOOL			inRects = NO;
+				
+				//Setup Tracking Info
+				distantFuture = [NSDate distantFuture];
+				eventMask = NSLeftMouseUpMask | NSRightMouseUpMask | NSLeftMouseDraggedMask | NSRightMouseDraggedMask;
+				
+				//Find region of clicked link
+				linkRects = [layoutManager rectArrayForCharacterRange:linkRange
+										 withinSelectedCharacterRange:linkRange
+													  inTextContainer:textContainer
+															rectCount:&linkCount];
+				linkRects = _copyRectArray(linkRects, linkCount);
+				
+				//One last check to make sure we're really in the bounds of the link. Useful when the link runs up to the end of the document and a click in the blank area below still pases the style range test above.
+				if(_mouseInRects(mouseLoc, linkRects, linkCount, NO)){
+					//Draw ourselves as clicked and kick off tracking
+					[textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor orangeColor] range:linkRange];
+					[controlView setNeedsDisplay:YES];
+					
+					while(!done){
+						//Get the next event and mouse location
+						theEvent = [NSApp nextEventMatchingMask:eventMask untilDate:distantFuture inMode:NSEventTrackingRunLoopMode dequeue:YES];
+						mouseLoc = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
+						mouseLoc.x -= offset.x;
+						mouseLoc.y -= offset.y;
+						
+						switch([theEvent type]){
+							case NSRightMouseUp:		//Done Tracking Clickscr
+							case NSLeftMouseUp:
+								//If we were still inside the link, draw unclicked and open link
+								if(_mouseInRects(mouseLoc, linkRects, linkCount, NO)){
+									[[NSWorkspace sharedWorkspace] openURL:linkURL];
+								}
+								[textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:linkRange];
+								[controlView setNeedsDisplay:YES];
+								done = YES;
+								break;
+							case NSLeftMouseDragged:	//Mouse Moved
+							case NSRightMouseDragged:
+								//Check if we crossed the link region edge
+								if(_mouseInRects(mouseLoc, linkRects, linkCount, NO) && inRects == NO){
+									[textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor orangeColor] range:linkRange];
+									[controlView setNeedsDisplay:YES];
+									inRects = YES;
+								}else if(!_mouseInRects(mouseLoc, linkRects, linkCount, NO) && inRects == YES){
+									[textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:linkRange];
+									[controlView setNeedsDisplay:YES];
+									inRects = NO;
+								}
+								break;
+							default:
+								break;
+						}
+					}
+					success = YES;
+				}
+			}
+			
+		}
+		
     }
-
+	
     //Free our copy of the link region
     if(linkRects) free(linkRects);
     return(success);
@@ -258,6 +266,13 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
         linkURL = [textStorage attribute:NSLinkAttributeName
                                  atIndex:NSMaxRange(scanRange)
                           effectiveRange:&scanRange];
+		
+		
+		// The string might already have been filtered (i.e. in Context objects)
+		if( [linkURL isKindOfClass:[NSURL class]] ) {
+			linkURL = [(NSURL *)linkURL absoluteString];
+		}
+		
 		if(linkURL){
             NSRectArray linkRects;
             int			index;
@@ -395,7 +410,13 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize)
     
         //Check if click is in valid link attributed range, and is inside the bounds of that style range, else fall back to default handler
         linkString = [textStorage attribute:NSLinkAttributeName atIndex:charIndex effectiveRange:&linkRange];
-        if(linkString != nil && [linkString length] != 0){
+
+		// The string might already have been filtered (i.e. in Context objects)
+		if( [linkString isKindOfClass:[NSURL class]] ) {
+			linkString = [(NSURL *)linkString absoluteString];
+		}
+		
+		if(linkString != nil && [linkString length] != 0){
             //add http:// to the link string if a protocol wasn't specified
             if([linkString rangeOfString:@"://"].location == NSNotFound && [linkString rangeOfString:@"mailto:"].location == NSNotFound){
                 linkURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@",linkString]];
