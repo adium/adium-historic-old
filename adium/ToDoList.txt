@@ -12,6 +12,7 @@ If you are working on something big and it may take a while, please tag it with 
 Bugs
 -------------------------------------------------------------------------------------------------------
 * Don't spawn new windows when we're hidden, doing so will unhide us
+    What should we do with the new content then? Throw it in the trash? Feed it to Laura's geckos?
 * Libgaim disconnect errors are being displayed, and not ignored (since they are handled internally)
 * Preference window crashes if you have a color picker open, close the window, and then click inside the picker.  The colorwell just needs to be told activate:NO in viewWillClose.  Fixing this requires verifying that viewWillClose is being called on advanced preference panes.
 * In certain fonts, the tails of letters will stain in the text entry field after it clears.  This is visible with HoeflerText(size 12) - type a few j's and then press esc to clear the field.
@@ -39,7 +40,7 @@ Contact List:
 Accounts:
 	+ Allow user to cancel connecting of accounts
 	+ Auto-complete aliases in log viewer
-    	+ Add account specific proxy fields (Type, host, port) for all libgaim connections
+    + Add account specific proxy fields (Type, host, port) for all libgaim connections
 	
 WebKit Message View:
 	+ Add preference to switch active style, preview styles
@@ -48,6 +49,7 @@ WebKit Message View:
 Message Window:
 	+ Insert/Edit link menu item, accompanying link entry panel, edit link context menu
 	+ Open new windows behind the frontmost window (When not opening in tabs) [Colin]
+        I don't know quite what to do here. I'd like some guideance.
 	+ Insert emoticon menu item, contextual menu item
 	+ Tab-complete usernames in messages and chat
 	+ Remember last X lines of previous conversation, restore to new message windows [Dave]
@@ -59,6 +61,7 @@ Contact List Display:
 Other:
 	+ Create a plugin to hide the AIM "Your screen name is now signed in 2 locations" messages
 	# Rename all the classes in AIUtilities to have the prefix "AI" so that the framework is uniform.  This framework is designed to be Adium-independent, so we should make it easier to use in this way.
+        Possibly use a different prefix, such as "AU", and rename the framework AdiumUtilities? The prefix has come to signify ownership/creatorship, so an "unused" prefix would seem more neutral/fair. Maybe I'm just being anal :P -Colin
 
 
 -------------------------------------------------------------------------------------------------------
