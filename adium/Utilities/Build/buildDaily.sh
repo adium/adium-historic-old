@@ -334,9 +334,9 @@ if [ "$copy_to_sourceforge" == "yes" ] ; then
        /home/groups/a/ad/adium/htdocs/downloads/Adium2.dmg
 
  	$adium_co_dir/Utilities/listToHTML.py $adium_co_dir/theList.txt theList.html
-	scp theList.html $username@shell.sf.net:/home/groups/a/ad/Adium/htdocs/theList.html
+	scp theList.html $username@shell.sf.net:/home/groups/a/ad/adium/htdocs/theList.html
 
-	scp $adium_co_dir/build/version.plist  $username@shell.sf.net:/home/groups/a/ad/Adium/htdocs/version.plist
+	scp $adium_co_dir/build/version.plist  $username@shell.sf.net:/home/groups/a/ad/adium/htdocs/version.plist
 fi
 
 # Get rid of old lastbuild log
