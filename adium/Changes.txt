@@ -10,6 +10,7 @@ Version 0.53 (4/  /2004)
 - Added an 'add contact' menu item for message tabs
 - Added the ability to cancel connecting accounts
 - Added hourly level preferences for message history
+- Added custom hyperlink insertion and editing
 - Updated /music script to work with mp3 streams
 - Improved the 'Add Contact' window
 - Improved appearance of source list gradients
