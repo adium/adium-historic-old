@@ -1,17 +1,17 @@
 /*-------------------------------------------------------------------------------------------------------*\
 | Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
-                                              \---------------------------------------------------------------------------------------------------------/
-                                              | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
-                                              | General Public License as published by the Free Software Foundation; either version 2 of the License,
-                                              | or (at your option) any later version.
-                                              |
-                                              | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
-                                              | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
-                                              | Public License for more details.
-                                              |
-                                              | You should have received a copy of the GNU General Public License along with this program; if not,
-                                              | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-                                              \------------------------------------------------------------------------------------------------------ */
+\---------------------------------------------------------------------------------------------------------/
+| This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+| General Public License as published by the Free Software Foundation; either version 2 of the License,
+| or (at your option) any later version.
+|
+| This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+| the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+| Public License for more details.
+|
+| You should have received a copy of the GNU General Public License along with this program; if not,
+| write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+\------------------------------------------------------------------------------------------------------ */
 
 #import "AIEnterAwayWindowController.h"
 #import "AIAwayMessagesPlugin.h"
@@ -104,16 +104,21 @@ AIEnterAwayWindowController	*sharedInstance = nil;
         NSMutableArray * tempArray;
         NSEnumerator * enumerator;
         NSDictionary * dict;
-        BOOL notFound = YES;
+        BOOL found = NO;
 
 	NSString * theTitle = [textField_title stringValue];
 
 	
         //Load the saved away messages
         tempArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
+
+        // Or create a blank list if we've never saved one before
+        if (tempArray == nil)
+            tempArray = [NSMutableArray array];
+
         //Test for replacement of an existing away
         enumerator = [tempArray objectEnumerator];
-        while( (dict = [enumerator nextObject]) && notFound)
+        while( (dict = [enumerator nextObject]) && !found)
         {
             NSString * storedTitle = [dict objectForKey:@"Title"];
             if ( storedTitle && ([storedTitle compare:theTitle] == 0) )
@@ -122,13 +127,13 @@ AIEnterAwayWindowController	*sharedInstance = nil;
                 NSMutableDictionary * newdict = [[dict mutableCopy] autorelease];
                 [newdict setObject:[[textView_awayMessage textStorage] dataRepresentation] forKey:@"Message"];
                 [tempArray replaceObjectAtIndex:index withObject:newdict];
-                notFound = NO;
+                found = YES;
             }
         }
 
-        if (notFound) { //never found one to replace then add it
-                [tempArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Away", @"Type", [[textView_awayMessage textStorage] dataRepresentation], @"Message", theTitle, @"Title", nil]];
-            }
+        if (!found) { //never found one to replace then add it
+            [tempArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Away", @"Type", [[textView_awayMessage textStorage] dataRepresentation], @"Message", theTitle, @"Title", nil]];
+        }
 
 	//Save the away message array
         [[owner preferenceController] setPreference:tempArray forKey:KEY_SAVED_AWAYS group:PREF_GROUP_AWAY_MESSAGES];
