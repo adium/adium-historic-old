@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on Sun Apr 18 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIModularPane.h"
@@ -16,5 +15,7 @@
 + (AIActionDetailsPane *)actionDetailsPaneForPlugin:(id)inPlugin;
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject;
 - (NSDictionary *)actionDetails;
+
+- (void)detailsForHeaderChanged;
 
 @end
