@@ -18,7 +18,7 @@
                                                       description:@"AIM, AOL, and .Mac"
                                                             image:nil
                                                     caseSensitive:NO
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@. "]
+                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._ "]
 													allowedLength:24] retain];
     
     //Register this service
