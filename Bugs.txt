@@ -12,6 +12,8 @@ Meta Contacts
 [MEDIUM]
 Contact List
 	- Extended Status to the right of names is misaligned with baseline.
+Logs
+        - View Logs searches for screename instead of using the newer filtering style.
 
 [LOW]
   - Adding contact that already exists
