@@ -486,7 +486,7 @@ static NSImage *pushIndicatorImage = nil;
 		[indicator setBordered:NO];
         [[self superview] addSubview:indicator];
 		[indicator setTarget:self];
-		[indicator setAction:@selector(_popContent)];
+		[indicator setAction:@selector(popContent)];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_positionIndicator:) name:NSViewBoundsDidChangeNotification object:[self superview]];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_positionIndicator:) name:NSViewFrameDidChangeNotification object:[self superview]];
