@@ -101,6 +101,7 @@
 #import <AIUtilities/ESDateFormatterAdditions.h>
 #import <AIUtilities/ESDelayedTextField.h>
 #import <AIUtilities/ESFileWrapperExtension.h>
+#import <AIUtilities/ESFlexibleToolbarItem.h>
 #import <AIUtilities/ESFloater.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/ESImageViewWithImagePicker.h>
@@ -112,6 +113,7 @@
 #import <AIUtilities/IconFamily.h>
 #import <AIUtilities/JVFontPreviewField.h>
 #import <AIUtilities/MVMenuButton.h>
+#import <AIUtilities/ESImageButton.h>
 #import <AIUtilities/NDRunLoopMessenger.h>
 #import <AIUtilities/NEHMutableStringAdditions.h>
 #import <AIUtilities/NSString+CarbonFSSpecCreation.h>
