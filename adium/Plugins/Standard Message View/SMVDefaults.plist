@@ -21,7 +21,7 @@
 	<key>Incoming Prefix Color Name</key>
 	<string>Blue</string>
 	<key>Incoming Prefix Light Color</key>
-	<string>64,112,255</string>
+	<string>229,242,255</string>
 	<key>Outgoing Alias</key>
 	<string></string>
 	<key>Outgoing Prefix Color</key>
@@ -29,7 +29,7 @@
 	<key>Outgoing Prefix Color Name</key>
 	<string>Green</string>
 	<key>Outgoing Prefix Light Color</key>
-	<string>64,255,64</string>
+	<string>230,255,234</string>
 	<key>Prefix Font</key>
 	<string>LucidaGrande-Bold,11</string>
 	<key>Prefix Incoming</key>
@@ -50,5 +50,15 @@
 	<true/>
 	<key>Show icons</key>
 	<true/>
+	<key>Custom Incoming Prefix Color</key>
+	<string>0,32,127</string>
+	<key>Custom Incoming Prefix Light Color</key>
+	<string>229,242,255</string>
+	<key>Custom Outgoing Prefix Color</key>
+	<string>0,127,0</string>
+	<key>Custom Outgoing Prefix Light Color</key>
+	<string>230,255,234</string>
+	<key>Message Style Name</key>
+	<string>Blue and Green</string>
 </dict>
 </plist>
