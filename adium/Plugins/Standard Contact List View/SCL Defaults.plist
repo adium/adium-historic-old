@@ -27,10 +27,12 @@
 	<key>Show Labels</key>
 	<true/>
         <key>Borderless</key>
-        <true/>
+        <false/>
         <key>Row Spacing</key>
         <real>2.0</real>
         <key>Tooltips In Background</key>
+        <false/>
+        <key>Label Around Contact</key>
         <false/>
 </dict>
 </plist>
