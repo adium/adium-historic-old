@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/simpleViewer.jsp $-->
-<!--$Rev: 829 $ $Date: 2004/06/30 05:19:55 $ -->
+<!--$Rev: 843 $ $Date: 2004/07/21 19:31:02 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -202,7 +202,7 @@ a:hover {
     if (from_sn != null && to_sn != null) {
         queryText += " and ((sender_sn like ? " +
         " and recipient_sn like ?) or " +
-        "(sender_sn like ? and recipient_sn like ?)) or ";
+        "(sender_sn like ? and recipient_sn like ?)) ";
         commandArray[aryCount++] = new String(to_sn);
         commandArray[aryCount++] = new String(from_sn);
         commandArray[aryCount++] = new String(from_sn);
@@ -227,8 +227,10 @@ a:hover {
     }
 
     if (meta_id != 0) {
-        queryText += " and (send.meta_id = ? or rec.meta_id = ?)";
+        queryText += " and (send.meta_id = ? or rec.meta_id = ?) ";
     }
+
+    queryText += " and not exists (select 'x' from im.message_notes b where b.message_id = message_notes.message_id and b.date_added > message_notes.date_added) ";
 
     queryText += " order by message_date, message_id";
 
@@ -323,7 +325,7 @@ a:hover {
         message = message.replaceAll("\r|\n", "<br />");
         message = message.replaceAll("   ", " &nbsp; ");
 
-        out.println("(" + rset.getTime("message_date") + ")&nbsp;");
+        out.println("<p>(" + rset.getTime("message_date") + ")&nbsp;");
 
         out.print("<a href=\"#\"");
 
@@ -377,6 +379,7 @@ a:hover {
         }
 
         out.println("</p>\n");
+
 
     }
 
