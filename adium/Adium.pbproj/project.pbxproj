@@ -656,6 +656,12 @@
 //4B2
 //4B3
 //4B4
+		4B02853003C1DE0500A8010A = {
+			fileRef = 4B28907C03C1D17500A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B0D1C9903B8A89400A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -673,6 +679,7 @@
 			children = (
 				4B28909B03C1D2F900A8010A,
 				4B28909E03C1D37700A8010A,
+				4B2890A103C1D57A00A8010A,
 			);
 			isa = PBXGroup;
 			name = "Alias Support";
@@ -690,6 +697,7 @@
 		4B28907703C1D17500A8010A = {
 			buildActionMask = 2147483647;
 			files = (
+				4B2890A203C1D57A00A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -729,7 +737,6 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -781,18 +788,12 @@
 		};
 		4B28907C03C1D17500A8010A = {
 			isa = PBXBundleReference;
-			path = "Alias Support.bundle";
+			path = "Alias Support.AdiumPlugin";
 			refType = 3;
 		};
 		4B28907D03C1D17500A8010A = {
 			isa = PBXTargetDependency;
 			target = 4B28907B03C1D17500A8010A;
-		};
-		4B28907E03C1D17500A8010A = {
-			fileRef = 4B28907C03C1D17500A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B28907F03C1D19300A8010A = {
 			fileRef = F5D2FB7D03B6643B01A8010A;
@@ -967,6 +968,18 @@
 		};
 		4B2890A003C1D37700A8010A = {
 			fileRef = 4B28909E03C1D37700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B2890A103C1D57A00A8010A = {
+			isa = PBXFileReference;
+			name = ContactAlias.nib;
+			path = "Plugins/Alias Support/ContactAlias.nib";
+			refType = 4;
+		};
+		4B2890A203C1D57A00A8010A = {
+			fileRef = 4B2890A103C1D57A00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1320,6 +1333,7 @@
 				F50A326F03B579C801A8010A,
 				F50A327003B579C801A8010A,
 				F50A327103B579C801A8010A,
+				4B02853003C1DE0500A8010A,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2982,7 +2996,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				4B28907E03C1D17500A8010A,
 				4B28907F03C1D19300A8010A,
 				4B28908003C1D19300A8010A,
 				4B28908103C1D19400A8010A,
@@ -7228,8 +7241,8 @@
 		F5B53FBF0333ABA701A8010A = {
 			children = (
 				F5B53FCC0333B01601A8010A,
-				F55B413A03AB895501A8010A,
 				F55B413C03AB895501A8010A,
+				F55B413A03AB895501A8010A,
 				F55B413803AB895501A8010A,
 				F55B414203AB897201A8010A,
 			);

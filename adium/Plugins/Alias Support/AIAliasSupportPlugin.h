@@ -10,7 +10,9 @@
 #import <Adium/Adium.h>
 
 @interface AIAliasSupportPlugin : AIPlugin {
+    IBOutlet    NSView		*view_contactAliasInfoView;
 
+    AIContactInfoViewController		*contactView;
 }
 
 @end
