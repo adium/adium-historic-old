@@ -128,7 +128,7 @@
 			if(awayMessage && [awayMessage length] != 0){
 				AIChat	*chat = [contentObject chat];
 				//Create and send an idle bounce message (If the sender hasn't received one already)
-				if(([receivedAwayMessage indexOfObjectIdenticalTo:chat] == NSNotFound) && ([chat listObject])){
+				if((![receivedAwayMessage containsObjectIdenticalTo:chat]) && ([chat listObject])){
 					[receivedAwayMessage addObject:chat];
 					
 					AIContentMessage	*responseContent;
@@ -154,7 +154,7 @@
     if([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE]){
         AIChat	*chat = [contentObject chat];
         
-        if([receivedAwayMessage indexOfObjectIdenticalTo:chat] == NSNotFound){
+        if(![receivedAwayMessage containsObjectIdenticalTo:chat]){
             [receivedAwayMessage addObject:chat];
         }
     }
@@ -163,10 +163,8 @@
 - (void)chatWillClose:(NSNotification *)notification
 {
     AIChat *chat = [notification object];
-    int chatIndex = [receivedAwayMessage indexOfObjectIdenticalTo:chat];
-    
-    if (chatIndex != NSNotFound)
-	[receivedAwayMessage removeObjectAtIndex:chatIndex];
+
+    [receivedAwayMessage removeObjectIdenticalTo:chat];
 }
 
 //Away Menu ----------------------------------------------------------------------------------
