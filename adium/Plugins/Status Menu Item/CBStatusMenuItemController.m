@@ -42,9 +42,9 @@ CBStatusMenuItemController *sharedInstance = nil;
     
         [statusItem setHighlightMode:YES];
         [statusItem setImage:[AIImageUtilities imageNamed:@"adium.png" forClass:[self class]]];
-        if(kRunningUnderPanther)
+        if([NSApp isOnPantherOrBetter])
         {
-            [statusItem setAlternateImage:[AIUtilities imageNamed:@"adiumHighlight.png" forClass:[self class]]];
+            [statusItem setAlternateImage:[AIImageUtilities imageNamed:@"adiumHighlight.png" forClass:[self class]]];
         }
         //[statusItem setMenu:itemMenu];
         [statusItem setEnabled:YES];
