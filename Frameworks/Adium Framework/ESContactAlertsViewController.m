@@ -67,7 +67,8 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	[button_edit setEnabled:NO];
 
 	configureForGlobal = NO;
-	
+	showEventsInEditSheet = YES;
+
 	//
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_ALERTS];
 }
