@@ -114,7 +114,7 @@
 
 		//Also apply the state icon to our contact if this is a one-on-one chat
 		if([inChat listObject]){
-			AIListContact *contact = [[adium contactController] parentContactForListObject:[inChat listObject]];
+			AIListObject *contact = [[adium contactController] parentContactForListObject:[inChat listObject]];
 			
 			NSImage	*icon = [AIStatusIcons statusIconForChat:inChat
 														type:AIStatusIconList
