@@ -287,18 +287,46 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 //Insert the selected script (CALL BY MENU ONLY)
 - (IBAction)selectScript:(id)sender
 {
-	NSString	*replacementText = [[sender representedObject] objectForKey:@"Keyword"];
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-	NSString	*arguments = [[sender representedObject] objectForKey:@"Arguments"];
-	
-	//Append arg list to replacement string, to show the user what they can pass
-	if(arguments){
-		replacementText = [NSString stringWithFormat:@"%@%@", replacementText, arguments];
-	}
 	
 	//Append our string into the responder if possible
 	if(responder && [responder isKindOfClass:[NSTextView class]]){
+		NSString	*arguments = [[sender representedObject] objectForKey:@"Arguments"];
+		NSString	*replacementText = [[sender representedObject] objectForKey:@"Keyword"];
+		
 		[(NSTextView *)responder insertText:replacementText];
+		
+		//Append arg list to replacement string, to show the user what they can pass
+		if(arguments){
+			NSEnumerator		*argumentEnumerator = [[arguments componentsSeparatedByString:@","] objectEnumerator];
+			NSDictionary		*originalTypingAttributes = [(NSTextView *)responder typingAttributes];
+			NSMutableDictionary *italicizedTypingAttributes = [originalTypingAttributes mutableCopy];
+			NSString			*anArgument;
+			BOOL				insertedFirst = NO;
+			
+			[italicizedTypingAttributes setObject:[[NSFontManager sharedFontManager] convertFont:[originalTypingAttributes objectForKey:NSFontAttributeName]
+																					 toHaveTrait:NSItalicFontMask]
+										   forKey:NSFontAttributeName];
+			
+			[(NSTextView *)responder insertText:@"{"];
+			
+			//Will that be a five minute argument or the full half hour?
+			while (anArgument = [argumentEnumerator nextObject]){
+				//Insert a comma after each argument past the first
+				if (insertedFirst){
+					[(NSTextView *)responder insertText:@","];					
+				}else{
+					insertedFirst = YES;
+				}
+				
+				//Turn on the italics version, insert the argument, then go back to normal for either the comma or the ending
+				[(NSTextView *)responder setTypingAttributes:italicizedTypingAttributes];
+				[(NSTextView *)responder insertText:anArgument];
+				[(NSTextView *)responder setTypingAttributes:originalTypingAttributes];
+			}
+
+			[(NSTextView *)responder insertText:@"}"];
+		}
 	}
 }
 
