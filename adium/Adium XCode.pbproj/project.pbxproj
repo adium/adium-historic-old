@@ -344,6 +344,7 @@
 				3419F44D05314C4C00C68BA3,
 				3419F45B05314C5A00C68BA3,
 				3419F47005314C6900C68BA3,
+				4B7F278305440C0800CDFC90,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -375,6 +376,7 @@
 				34BD9CD1053146CC000AB133,
 				34BD9DAF05314751000AB133,
 				34BD9DE205314755000AB133,
+				4B7F278205440C0800CDFC90,
 				34BD9E9405314758000AB133,
 				34BD9EB50531475B000AB133,
 				34BD9ECB0531475E000AB133,
@@ -6335,7 +6337,7 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				INSTALL_PATH = /;
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "\"/Users/adamiser/Desktop/adium/Plugins/Gaim Service/LIBS\"";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = Adium;
 				SECTORDER_FLAGS = "";
@@ -7267,6 +7269,11 @@
 			files = (
 				3419FE230531586A00C68BA3,
 				3419FE240531586A00C68BA3,
+				4B7F279B05440CB900CDFC90,
+				4B7F279C05440CB900CDFC90,
+				4B7F279D05440CB900CDFC90,
+				4B7F279E05440CB900CDFC90,
+				4B7F279F05440CB900CDFC90,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7338,6 +7345,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				4B7F27C705440DE900CDFC90,
 				3419FDE10531585600C68BA3,
 				3419FDE30531585600C68BA3,
 				3419FDE40531585600C68BA3,
@@ -16394,6 +16402,7 @@
 		};
 		4B4F5B30042D64A100A8010A = {
 			children = (
+				4B7F278605440C6200CDFC90,
 				F53EA2B502C8020E01A8010A,
 				6576A001050269A6000EB664,
 				4BA88A4C0524AFD700A8010A,
@@ -17579,6 +17588,330 @@
 			path = "Plugins/Manual Sort/AIManualSort.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B7F277E05440C0800CDFC90 = {
+			buildActionMask = 2147483647;
+			files = (
+				4B7F278B05440C8D00CDFC90,
+				4B7F278D05440C8D00CDFC90,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B7F277F05440C0800CDFC90 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B7F278005440C0800CDFC90 = {
+			buildActionMask = 2147483647;
+			files = (
+				4B7F278C05440C8D00CDFC90,
+				4B7F278E05440C8D00CDFC90,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B7F278105440C0800CDFC90 = {
+			buildActionMask = 2147483647;
+			files = (
+				4B7F279605440CB900CDFC90,
+				4B7F279705440CB900CDFC90,
+				4B7F279805440CB900CDFC90,
+				4B7F279905440CB900CDFC90,
+				4B7F279A05440CB900CDFC90,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B7F278205440C0800CDFC90 = {
+			buildPhases = (
+				4B7F277E05440C0800CDFC90,
+				4B7F277F05440C0800CDFC90,
+				4B7F278005440C0800CDFC90,
+				4B7F278105440C0800CDFC90,
+				4B7F27C005440D4F00CDFC90,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS/include\" \"Plugins/Gaim Service/LIBS/include/libgaim\" \"Plugins/Gaim Service/LIBS/include/glib-2.0\"";
+				INFOPLIST_FILE = Plists/Gaim_Service.plist;
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\"";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = Gaim;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = Gaim;
+			productName = Gaim;
+			productReference = 4B7F278305440C0800CDFC90;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Gaim</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Gaim</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		4B7F278305440C0800CDFC90 = {
+			expectedFileType = folder;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = Gaim.AdiumPlugin;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B7F278605440C6200CDFC90 = {
+			children = (
+				4B7F278905440C8D00CDFC90,
+				4B7F278A05440C8D00CDFC90,
+				4B7F278705440C8D00CDFC90,
+				4B7F278805440C8D00CDFC90,
+				4B7F279005440CA100CDFC90,
+			);
+			isa = PBXGroup;
+			name = Gaim;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7F278705440C8D00CDFC90 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = CBGaimAccount.h;
+			path = "Plugins/Gaim Service/CBGaimAccount.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7F278805440C8D00CDFC90 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = CBGaimAccount.m;
+			path = "Plugins/Gaim Service/CBGaimAccount.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7F278905440C8D00CDFC90 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = CBGaimServicePlugin.h;
+			path = "Plugins/Gaim Service/CBGaimServicePlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7F278A05440C8D00CDFC90 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = CBGaimServicePlugin.m;
+			path = "Plugins/Gaim Service/CBGaimServicePlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7F278B05440C8D00CDFC90 = {
+			fileRef = 4B7F278705440C8D00CDFC90;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F278C05440C8D00CDFC90 = {
+			fileRef = 4B7F278805440C8D00CDFC90;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F278D05440C8D00CDFC90 = {
+			fileRef = 4B7F278905440C8D00CDFC90;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F278E05440C8D00CDFC90 = {
+			fileRef = 4B7F278A05440C8D00CDFC90;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F279005440CA100CDFC90 = {
+			children = (
+				4B7F279105440CB800CDFC90,
+				4B7F279205440CB800CDFC90,
+				4B7F279305440CB900CDFC90,
+				4B7F279405440CB900CDFC90,
+				4B7F279505440CB900CDFC90,
+				4B7F27A005440CC900CDFC90,
+			);
+			isa = PBXGroup;
+			name = Libraries;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7F279105440CB800CDFC90 = {
+			expectedFileType = "compiled.mach-o.dylib";
+			isa = PBXFileReference;
+			name = libgaim.0.0.0.dylib;
+			path = "Plugins/Gaim Service/LIBS/libgaim.0.0.0.dylib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7F279205440CB800CDFC90 = {
+			expectedFileType = "compiled.mach-o.dylib";
+			isa = PBXFileReference;
+			name = "libglib-2.0.0.dylib";
+			path = "Plugins/Gaim Service/LIBS/libglib-2.0.0.dylib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7F279305440CB900CDFC90 = {
+			expectedFileType = "compiled.mach-o.dylib";
+			isa = PBXFileReference;
+			name = "libgmodule-2.0.0.dylib";
+			path = "Plugins/Gaim Service/LIBS/libgmodule-2.0.0.dylib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7F279405440CB900CDFC90 = {
+			expectedFileType = "compiled.mach-o.dylib";
+			isa = PBXFileReference;
+			name = libiconv.2.dylib;
+			path = "Plugins/Gaim Service/LIBS/libiconv.2.dylib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7F279505440CB900CDFC90 = {
+			expectedFileType = "compiled.mach-o.dylib";
+			isa = PBXFileReference;
+			name = libintl.2.dylib;
+			path = "Plugins/Gaim Service/LIBS/libintl.2.dylib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7F279605440CB900CDFC90 = {
+			fileRef = 4B7F279105440CB800CDFC90;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F279705440CB900CDFC90 = {
+			fileRef = 4B7F279205440CB800CDFC90;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F279805440CB900CDFC90 = {
+			fileRef = 4B7F279305440CB900CDFC90;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F279905440CB900CDFC90 = {
+			fileRef = 4B7F279405440CB900CDFC90;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F279A05440CB900CDFC90 = {
+			fileRef = 4B7F279505440CB900CDFC90;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F279B05440CB900CDFC90 = {
+			fileRef = 4B7F279105440CB800CDFC90;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F279C05440CB900CDFC90 = {
+			fileRef = 4B7F279205440CB800CDFC90;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F279D05440CB900CDFC90 = {
+			fileRef = 4B7F279305440CB900CDFC90;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F279E05440CB900CDFC90 = {
+			fileRef = 4B7F279405440CB900CDFC90;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F279F05440CB900CDFC90 = {
+			fileRef = 4B7F279505440CB900CDFC90;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F27A005440CC900CDFC90 = {
+			expectedFileType = folder;
+			isa = PBXFileReference;
+			name = Protocols;
+			path = "Plugins/Gaim Service/Protocols";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7F27BD05440D3900CDFC90 = {
+			fileRef = 4B7F27A005440CC900CDFC90;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7F27C005440D4F00CDFC90 = {
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4B7F27BD05440D3900CDFC90,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B7F27C705440DE900CDFC90 = {
+			fileRef = 4B7F278305440C0800CDFC90;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B7FAEA1047D6A3400A8010A = {
 			expectedFileType = sourcecode.c.h;
