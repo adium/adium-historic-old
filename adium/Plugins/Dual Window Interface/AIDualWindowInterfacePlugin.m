@@ -619,6 +619,26 @@
 														  action:@selector(nextMessage:)
 												   keyEquivalent:rightKey];
         [[adium menuController] addMenuItem:menuItem_nextMessage toLocation:LOC_Window_Commands];
+        
+        //two hidden menuitmes for shift arrowkeys
+        menuItem_shiftPreviousMessage = [[NSMenuItem alloc] initWithTitle:@"super secret hidden switch left" 
+															  target:self 
+															  action:@selector(previousMessage:)
+													   keyEquivalent:leftKey];
+        [menuItem_shiftPreviousMessage setKeyEquivalentModifierMask:NSCommandKeyMask|NSShiftKeyMask];
+        [menuItem_shiftPreviousMessage setHidden:YES];
+        [[adium menuController] addMenuItem:menuItem_shiftPreviousMessage toLocation:LOC_Window_Commands];
+		
+        menuItem_shiftNextMessage = [[NSMenuItem alloc] initWithTitle:@"super secret hidden switch right" 
+														  target:self
+														  action:@selector(nextMessage:)
+												   keyEquivalent:rightKey];
+        [menuItem_shiftNextMessage setKeyEquivalentModifierMask:NSCommandKeyMask|NSShiftKeyMask];
+        [menuItem_shiftNextMessage setHidden:YES];
+        [[adium menuController] addMenuItem:menuItem_shiftNextMessage toLocation:LOC_Window_Commands];
+
+        
+        
     }
 	
     //Add contextual menu items

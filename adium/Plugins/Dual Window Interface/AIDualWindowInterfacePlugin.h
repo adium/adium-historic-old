@@ -52,6 +52,9 @@
     NSMenuItem				*menuItem_closeTab;
     NSMenuItem				*menuItem_nextMessage;
     NSMenuItem				*menuItem_previousMessage;
+    NSMenuItem				*menuItem_shiftNextMessage;
+    NSMenuItem				*menuItem_shiftPreviousMessage;
+
 
     NSMenuItem				*menuItem_openInNewWindow;
     NSMenuItem				*menuItem_openInPrimaryWindow;
