@@ -253,7 +253,7 @@ int _indexSort(AIEditorListHandle *objectA, AIEditorListHandle *objectB, void *c
 
     }else{
         //Create a new handle
-        handle = [[AIEditorListHandle alloc] initWithUID:inName temporary:temporary];
+        handle = [[AIEditorListHandle alloc] initWithUID:inName serviceID:[self serviceID] temporary:temporary];
         [self _addHandle:handle toGroup:group index:index];
 
     }

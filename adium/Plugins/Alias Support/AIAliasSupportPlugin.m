@@ -128,7 +128,7 @@
 - (BOOL)editorColumnSetStringValue:(NSString *)value forServiceID:(NSString *)inServiceID UID:(NSString *)inUID
 {
     AIListContact	*contact;
-    
+
     contact = [[owner contactController] contactInGroup:nil
                                             withService:inServiceID
                                                     UID:inUID];

@@ -434,7 +434,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         
     }else if([identifier conformsToProtocol:@protocol(AIListEditorColumnController)]){
         if([item isKindOfClass:[AIEditorListHandle class]]){
-            value = [(id <AIListEditorColumnController>)identifier editorColumnStringForServiceID:[selectedCollection serviceID] UID:[item UID]];
+            value = [(id <AIListEditorColumnController>)identifier editorColumnStringForServiceID:[(AIEditorListHandle *)item serviceID] UID:[item UID]];
         }
     }
 
@@ -519,7 +519,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     }else if([identifier conformsToProtocol:@protocol(AIListEditorColumnController)]){ //custom column
         //Pass the new value to the column controller
         if([item isKindOfClass:[AIEditorListHandle class]]){
-            [(id <AIListEditorColumnController>)identifier editorColumnSetStringValue:object forServiceID:[selectedCollection serviceID] UID:[(AIEditorListHandle *)item UID]];
+            [(id <AIListEditorColumnController>)identifier editorColumnSetStringValue:object forServiceID:[(AIEditorListHandle *)item serviceID] UID:[(AIEditorListHandle *)item UID]];
         }
     }
 
