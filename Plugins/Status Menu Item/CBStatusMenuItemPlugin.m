@@ -7,7 +7,6 @@
 //
 
 #import "CBStatusMenuItemPlugin.h"
-#import "CBStatusMenuItemPreferences.h"
 
 @interface CBStatusMenuItemPlugin(PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -27,8 +26,6 @@
         [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_MENU_ITEM_DEFAULT_PREFS 
                                               forClass:[self class]]
                                               forGroup:PREF_GROUP_STATUS_MENU_ITEM];
-        //Create the preferences
-        preferences = [[CBStatusMenuItemPreferences preferencePane] retain];
 
         //Observe
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_STATUS_MENU_ITEM];
@@ -40,7 +37,6 @@
     if([NSApp isOnPantherOrBetter]){
 		[[adium preferenceController] unregisterPreferenceObserver:self];
         [itemController release]; itemController = nil;
-        [preferences release];
     }
 }
 
