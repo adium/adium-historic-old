@@ -164,15 +164,16 @@
 {
 	NSURL			*versionURL = [NSURL URLWithString:VERSION_PLIST_URL];
 	NSDictionary 	*productVersionDict = [NSDictionary dictionaryWithContentsOfURL:versionURL];
-        
-        // if everything works out ok, then pass the date along as usual.
-        if(nil != (productVersionDict = [NSDictionary dictionaryWithContentsOfURL:versionURL])){
-            return([NSDate dateWithTimeIntervalSince1970:[[productVersionDict objectForKey:VERSION_PLIST_KEY] doubleValue]]);
-        }else{
-            //if the dictionary is, for some reason, invalid or we can't connect to server,
-            //so pass a nil for the date
-            return(nil);
-        }
+	NSString		*number = [productVersionDict objectForKey:VERSION_PLIST_KEY];
+	
+	//if everything works out ok, then pass the date along as usual.
+	if(productVersionDict && number){
+		return([NSDate dateWithTimeIntervalSince1970:[number doubleValue]]);
+	}else{
+		//if the dictionary is, for some reason, invalid or we can't connect to server,
+		//so pass a nil for the date
+		return(nil);
+	}
 }
 
 @end
