@@ -66,8 +66,8 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     //Close our window
     [self closeWindow:nil];
 
-    // Open the "you're away" window
-    [[AIAwayStatusWindowController awayStatusWindowControllerForOwner:owner] showWindow:nil];
+    // Open an away status window
+    [AIAwayStatusWindowController awayStatusWindowControllerForOwner:owner];
     // Tell it to update in case we were already away
     [AIAwayStatusWindowController updateAwayStatusWindow];
 }

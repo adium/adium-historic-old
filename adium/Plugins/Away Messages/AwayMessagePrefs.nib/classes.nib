@@ -1,12 +1,22 @@
 {
     IBClasses = (
         {
-            ACTIONS = {deleteAwayMessage = id; newAwayMessage = id; }; 
+            ACTIONS = {
+                deleteAwayMessage = id; 
+                newAwayMessage = id; 
+                toggleFloatAway = id; 
+                toggleHideInBackground = id; 
+                toggleShowAway = id; 
+            }; 
             CLASS = AIAwayMessagePreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_delete" = NSButton; 
+                "checkBox_floatAway" = NSButton; 
+                "checkBox_hideInBackground" = NSButton; 
+                "checkBox_showAway" = NSButton; 
                 "tableView_aways" = AIFlexibleTableView; 
+                "view_awayWindowPrefView" = NSView; 
                 "view_prefView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 
