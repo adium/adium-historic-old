@@ -265,6 +265,21 @@ static BOOL didInitOscar = NO;
 	return KEY_OSCAR_PORT;
 }
 
+- (oneway void)accountConnectionConnected
+{
+	NSString	*formattedUID;
+	
+	[super accountConnectionConnected];
+
+	//Set our capitilization properly if necessary
+	formattedUID = [self formattedUID];
+
+	if (![[formattedUID lowercaseString] isEqualToString:formattedUID]){
+		[[self gaimThread] OSCARSetFormatTo:formattedUID
+								  onAccount:self];
+	}
+}
+
 #pragma mark Buddy updates
 - (oneway void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
 {
