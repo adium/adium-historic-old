@@ -6,14 +6,7 @@
             SUPERCLASS = NSOutlineView; 
         }, 
         {CLASS = AIColoredBoxView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
-        {CLASS = AIFlippedCategoryView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
-        {
-            ACTIONS = {restoreDefaults = id; }; 
-            CLASS = AIPreferenceViewController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {"button_restoreDefaults" = NSButton; }; 
-            SUPERCLASS = NSObject; 
-        }, 
+        {CLASS = AIPreferenceCategoryView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {
             ACTIONS = {closeWindow = id; restoreDefaults = id; }; 
             CLASS = AIPreferenceWindowController; 

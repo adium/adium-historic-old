@@ -5323,7 +5323,6 @@
 				34BD9DC005314751000AB133,
 				34BD9DC105314751000AB133,
 				34BD9DC205314751000AB133,
-				34BD9DC305314751000AB133,
 				348862D205645EB6003C9627,
 				4BFC33DF058D4430008F7FA2,
 				4BFC3414058D48A8008F7FA2,
@@ -5425,26 +5424,13 @@
 			settings = {
 			};
 		};
-		34BD9DC305314751000AB133 = {
-			fileRef = F57938F1033E745F01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34BD9DC505314751000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34BD9DC605314751000AB133,
 				349DDD5306406A7D00542726,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9DC605314751000AB133 = {
-			fileRef = F5793915033E748F01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34BD9DC805314751000AB133 = {
 			buildActionMask = 2147483647;
@@ -5461,7 +5447,6 @@
 				34BD9DD605314751000AB133,
 				34BD9DD705314751000AB133,
 				34BD9DD805314751000AB133,
-				34BD9DD905314751000AB133,
 				348862D105645EB5003C9627,
 				4BFC33E0058D4430008F7FA2,
 				4BFC3415058D48A8008F7FA2,
@@ -5549,12 +5534,6 @@
 		};
 		34BD9DD805314751000AB133 = {
 			fileRef = 4B82139E049CC3A000A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9DD905314751000AB133 = {
-			fileRef = F57938BA033E739101A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -21511,15 +21490,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F57938BA033E739101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIPreferenceCategory.m;
-			path = Source/AIPreferenceCategory.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F57938BB033E739101A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -21578,15 +21548,6 @@
 			lastKnownFileType = sourcecode.c.h;
 			name = AIPreferenceWindowController.h;
 			path = Source/AIPreferenceWindowController.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F57938F1033E745F01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIPreferenceCategory.h;
-			path = Source/AIPreferenceCategory.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -21695,14 +21656,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIServiceType.m;
 			path = "Frameworks/Adium Framework/AIServiceType.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5793915033E748F01A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = PreferenceView.nib;
-			path = "Frameworks/Adium Framework/PreferenceView.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -22494,7 +22447,6 @@
 				4BAA1B360632ED8B00D8B92C,
 				F5793923033E74C301A8010A,
 				F5793913033E748F01A8010A,
-				F5793915033E748F01A8010A,
 			);
 			isa = PBXGroup;
 			name = Panes;
@@ -22639,8 +22591,6 @@
 			children = (
 				F57938F0033E745F01A8010A,
 				F57938BB033E739101A8010A,
-				F57938F1033E745F01A8010A,
-				F57938BA033E739101A8010A,
 				4BBF41E906611994001D31E1,
 				4BBF41EA06611994001D31E1,
 				F57938BC033E739101A8010A,
