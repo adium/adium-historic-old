@@ -340,8 +340,12 @@
 {
     AIChat *chat = (AIChat*) conv->ui_data;
     if (chat) {
-        AIListContact *listContact = (AIListContact*) [chat listObject];
-        if(listContact) [self setTypingFlagOfContact:listContact to:NO];
+        AIListObject *listObject = [chat listObject];
+        if(listObject){
+			[self setTypingFlagOfContact:(AIListContact *)listContact to:NO];
+		}
+
+		[chat release]; conv->ui_data = nil;
     }
 }
 
@@ -468,7 +472,7 @@
 		NSAssert(chat != nil, @"Failed to generate a chat");
 		
 		//Associate the gaim conv with the AIChat
-		conv->ui_data = chat;
+		conv->ui_data = [chat retain];
 	}else{
 		NSAssert(sourceContact != nil, @"Existing chat yet no existing handle?");
 	}
@@ -507,7 +511,7 @@
 											 onAccount:self
 										 initialStatus:[NSDictionary dictionaryWithObject:[NSValue valueWithPointer:conv]
 																				   forKey:@"GaimConv"]];
-		conv->ui_data = chat;
+		conv->ui_data = [chat retain];
 	}
 	
 	NSString		*sourceUID = [NSString stringWithUTF8String:source];
@@ -691,7 +695,7 @@
 				conv = gaim_conversation_new(GAIM_CONV_IM, account, destination);
 				
 				//associate the AIChat with the gaim conv
-				conv->ui_data = chat;
+				conv->ui_data = [chat retain];
 				[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
 				
 				[chatDict setObject:chat forKey:[listObject uniqueObjectID]];                
@@ -768,7 +772,7 @@
 			GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_IM, [self gaimAccount], [[listObject UID] UTF8String]);
 			NSAssert(conv != nil, @"openChat: GAIM_CONV_IM: gaim_conversation_new returned nil");
 			
-			conv->ui_data = chat;
+			conv->ui_data = [chat retain];
 			[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
 		}
 		
@@ -819,7 +823,7 @@
 				NSAssert(conv != nil, @"openChat: GAIM_CONV_CHAT: gaim_conversation_new returned nil");
 				
 				[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
-				conv->ui_data = chat;
+				conv->ui_data = [chat retain];
 			}
 		}
 	}
