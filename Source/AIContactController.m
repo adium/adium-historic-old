@@ -73,7 +73,8 @@
 //MetaContacts
 - (AIMetaContact *)metaContactWithObjectID:(NSNumber *)inObjectID;
 - (void)_restoreContactsToMetaContact:(AIMetaContact *)metaContact;
-- (void)addListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact saving:(BOOL)shouldSave;
+- (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray;
+- (void)addListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact;
 - (BOOL)_performAddListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact;
 - (void)removeListObject:(AIListObject *)listObject fromMetaContact:(AIMetaContact *)metaContact;
 - (NSArray *)allMetaContactsInGroup:(AIListGroup *)inGroup;
@@ -432,7 +433,7 @@ DeclareString(UID);
 				
 				//If we found a metaContact to which we should add, do it.
 				if (metaContact){
-					[self addListObject:inObject toMetaContact:metaContact saving:NO];
+					[self addListObject:inObject toMetaContact:metaContact];
 					performedGrouping = YES;
 				}
 				
@@ -639,7 +640,7 @@ DeclareString(UID);
 
 //Add a list object to a meta contact, setting preferences and such 
 //so the association is lasting across program launches.
-- (void)addListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact saving:(BOOL)shouldSave
+- (void)addListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact
 {
 	AIMetaContact		*oldMetaContact;
 	
@@ -815,12 +816,12 @@ DeclareString(UID);
 																		   UID:[UIDsArray objectAtIndex:i]]];
 	}
 
-	return([self groupListContacts:contactsToGroupArray saving:NO]);
+	return([self groupListContacts:contactsToGroupArray]);
 }
 
 //Group an NSArray of AIListContacts, returning the meta contact into which they are added.
 //This will reuse an existing metacontact (for one of the contacts in the array) if possible.
-- (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray saving:(BOOL)shouldSave
+- (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray
 {
 	NSEnumerator	*enumerator;
 	AIListContact   *listContact;
@@ -846,7 +847,7 @@ DeclareString(UID);
 	//but that's fine, as nothing will happen).
 	enumerator = [contactsToGroupArray objectEnumerator];
 	while (listContact = [enumerator nextObject]){
-		[self addListObject:listContact toMetaContact:metaContact saving:shouldSave];
+		[self addListObject:listContact toMetaContact:metaContact];
 	}
 	
 	return(metaContact);
