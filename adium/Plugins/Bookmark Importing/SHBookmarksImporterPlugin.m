@@ -29,57 +29,65 @@ static NSMenu       *bookmarkSets;
 
 - (void)installPlugin
 {
+    NSURL   *appURL = nil; // file URL to the web browser application path
     importerArray = [[[NSMutableArray alloc] init] autorelease];
     
-    // install new importer classes here - very similar to AIPluginController
-    NSURL *appURL;
-    //only load importer for default browser
+    // We ask Launch services to tell us the default handler for the text/html MIME type.
+    // That'd better be the default web brower on the system - if it's not, the user has bigger problems
+    // This should also get us the most likely set of relevant bookmarks, while sparing us from generating
+    // a menu from each existing bookmark.
+    // If that's not the case, then we really have to ask why the user doesn't keep bookmarks in their default browser.
     if(noErr == LSCopyApplicationForMIMEType((CFStringRef)@"text/html",kLSRolesViewer,(CFURLRef *)&appURL)){
+        // test that the substring exists somewhere in the path then use that importer
+        // Ideally, these should be ordered with the most statistically likely on top. (no sense in doing more work)
+        // This is my best guess for that order.
         if(NSNotFound != [[appURL path] rangeOfString:@"Safari"].location){
             [self installImporterClass:[SHSafariBookmarksImporter class]];
         }else if(NSNotFound != [[appURL path] rangeOfString:@"Camino"].location){
             [self installImporterClass:[SHCaminoBookmarksImporter class]];
-        }else if(NSNotFound != [[appURL path] rangeOfString:@"Mozilla"].location){
-            [self installImporterClass:[SHMozillaBookmarksImporter class]];
         }else if(NSNotFound != [[appURL path] rangeOfString:@"Firefox"].location){
             [self installImporterClass:[SHFireFoxBookmarksImporter class]];
+        }else if(NSNotFound != [[appURL path] rangeOfString:@"Mozilla"].location){
+            [self installImporterClass:[SHMozillaBookmarksImporter class]];
         }else if(NSNotFound != [[appURL path] rangeOfString:@"Internet Explorer"].location){
             [self installImporterClass:[SHMSIEBookmarksImporter class]];
         }else if(NSNotFound != [[appURL path] rangeOfString:@"OmniWeb"].location){
             [self installImporterClass:[SHOmniWebBookmarksImporter class]];
         }
     }
+    
+    // observe for the Adium_PluginsDidFinishLoading notification
+    // this lets us delay the thread until after our controllers have fully init'd.
+    [[adium notificationCenter] addObserver:self
+                                   selector:@selector(_forkBookmarkThread:)
+                                       name:Adium_PluginsDidFinishLoading
+                                     object:nil];
 
+    // We delay the thread build, but attach our menus on plugin init.
+    // So we need to have something to attach -- or else we'll have problems
     bookmarkRootMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
                                                        target:self
                                                        action:@selector(dummyTarget:)
                                                 keyEquivalent:@""] autorelease];
     [bookmarkRootMenuItem setRepresentedObject:self];
-                                               
+    
     bookmarkRootContextualMenuItem = [[[NSMenuItem alloc] initWithTitle:ROOT_MENU_TITLE
                                                                  target:self
                                                                  action:@selector(dummyTarget:)
                                                           keyEquivalent:@""] autorelease];
     [bookmarkRootContextualMenuItem setRepresentedObject:self];
     
+    // init our lock, to make sure the configureMenus: method/thread isn't entered twice
     bookmarksLock = [[NSLock alloc] init];
-    // initial menu configuration
-//    [NSThread detachNewThreadSelector:@selector(configureMenus:)
-//                             toTarget:self
-//                           withObject:nil];
     
-     
-    [[adium notificationCenter] addObserver:self
-                                   selector:@selector(_forkBookmarkThread:)
-                                       name:Adium_PluginsDidFinishLoading
-                                     object:nil];
-    
+    // pop those menus in the menu.
     [[adium menuController] addMenuItem:bookmarkRootMenuItem toLocation:LOC_Edit_Additions];
     [[adium menuController] addContextualMenuItem:bookmarkRootContextualMenuItem toLocation:Context_TextView_LinkAction];
 }
 
 - (void)uninstallPlugin
 {
+    // remove our observer for Adium_PluginsDidFinishLoading
     [[adium notificationCenter] removeObserver:self
                                           name:Adium_PluginsDidFinishLoading
                                         object:nil];
@@ -90,6 +98,7 @@ static NSMenu       *bookmarkSets;
     //nothing to see here...
 }
 
+// wraper method to give the notification selector so we can nicely detach our thread.
 - (void)_forkBookmarkThread:(NSNotification *)notification
 {
     if([[notification name] isEqualToString:Adium_PluginsDidFinishLoading]){
@@ -132,14 +141,20 @@ static NSMenu       *bookmarkSets;
     
     unsigned int activeCount = [activeImporters count];
     
+    // are we building for 1 or more (or none) importers?
     if(1 == activeCount){
+        // a singular menu - just attach directly to the root.
         singularMenu = YES;
         firstMenuItem = bookmarkRootMenuItem;
     }else if(activeCount > 1){
+        // many menus - attach to items in a submenu
         singularMenu = NO;
     }else{
-        [bookmarkRootMenuItem setEnabled:NO];
-        [bookmarkRootContextualMenuItem setEnabled:NO];
+        // no menus.  remove our items, then return
+        [[adium menuController] removeMenuItem:bookmarkRootMenuItem];
+        [[adium menuController] removeMenuItem:bookmarkRootContextualMenuItem];
+//        [bookmarkRootMenuItem setEnabled:NO];
+//        [bookmarkRootContextualMenuItem setEnabled:NO];
         return;
     }
     
@@ -147,15 +162,17 @@ static NSMenu       *bookmarkSets;
     // iterate through each importer, and build a menu if it's bookmark file exists
     while(importer = [enumerator nextObject]){
         if(!singularMenu){
+            // make a new menu item for the browser list submenu, and attach it.
             firstMenuItem = [[[NSMenuItem alloc] initWithTitle:[importer menuTitle]
                                                         target:self
                                                         action:nil
                                                  keyEquivalent:@""] autorelease];
             [bookmarkSets addItem:firstMenuItem];
         }
+        // set up the menu.
         [firstMenuItem setRepresentedObject:importer];
         
-        firstSubmenu = [self buildBookmarkMenuFor:firstMenuItem];
+        firstSubmenu = [self buildBookmarkMenuFor:firstMenuItem]; // build bookmarks menu.
         [firstMenuItem setSubmenu:firstSubmenu];
     }
     
@@ -170,10 +187,10 @@ static NSMenu       *bookmarkSets;
     [pool release];
 }
 
-- (NSMenu *)buildBookmarkMenuFor:(id <NSMenuItem>)menuItem
+- (NSMenu *)buildBookmarkMenuFor:(NSMenuItem *)menuItem
 {
     // fetch the importer class from the menu item and call its parsing method
-    id <SHBookmarkImporter> importer = [menuItem representedObject];
+    NSObject <SHBookmarkImporter> *importer = [menuItem representedObject];
     return [[importer parseBookmarksForOwner:self] retain];
 }
 
@@ -269,12 +286,18 @@ static NSMenu       *bookmarkSets;
             [[topView textStorage] replaceCharactersInRange:selRange withAttributedString:linkString];
             
             // special cases for insertion:
+            NSAttributedString  *tmpString = [[[NSAttributedString alloc] initWithString:@" "
+                                                                              attributes:typingAttributes] autorelease];
             if([[topView string] characterAtIndex:(selRange.location + [markedLink range].length + 1)] != ' '){
                 // if we insert a link and the next char isn't a space, insert one.
-                NSAttributedString  *tmpString = [[[NSAttributedString alloc] initWithString:@" "
-                                                                                  attributes:typingAttributes] autorelease];
                 [[topView textStorage] insertAttributedString:tmpString
                                                       atIndex:(selRange.location + [markedLink range].length)];
+            }
+            if(selRange.location > 0 && [[topView string] characterAtIndex:(selRange.location - 1)] != ' '){
+                // if we insert a link and the previous char isn't a space (or the beginning of the text storage),
+                // insert one.
+                [[topView textStorage] insertAttributedString:tmpString
+                                                      atIndex:selRange.location];
             }
         }
     }
