@@ -6,9 +6,9 @@
 //  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
 //
 
-#include "ESGaimAccountViewController.h"
+#include "AIAccountViewController.h"
 
-@interface ESGaimNapsterAccountViewController : ESGaimAccountViewController {
+@interface ESGaimNapsterAccountViewController : AIAccountViewController {
     
 }
 
