@@ -105,7 +105,8 @@
     [contactListView setDataSource:self];
     [contactListView setDelegate:self];
     [contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
-
+	[contactListView setHidesSelectionWhenNotMain:YES];
+	
 	//Fetch and update the contact list
     [self contactListChanged:nil];
 	
@@ -462,7 +463,7 @@
     [self hideTooltip];
 
     //Return the context menu
-	AIListObject	*listObject = [contactListView listObject];
+	AIListObject	*listObject = (AIListObject *)[contactListView firstSelectedItem];
 	NSArray			*locationsArray;
 	if ([listObject isKindOfClass:[AIListGroup class]]){
 		locationsArray = [NSArray arrayWithObjects:
