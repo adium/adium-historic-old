@@ -64,7 +64,6 @@
 	[TARGET_CONTROL sizeToFit];
 	
 	newFrame = [TARGET_CONTROL frame];
-	//NSLog(@"%@: original %@ old %@ new %@",inStringValue,NSStringFromRect(originalFrame),NSStringFromRect(oldFrame),NSStringFromRect(newFrame));
 	//Enforce a minimum width of the original frame width
 	if(newFrame.size.width < originalFrame.size.width){
 		newFrame.size.width = originalFrame.size.width;
@@ -78,14 +77,12 @@
 		case NSRightTextAlignment:
 			//Keep the right edge in the same place at all times if we are right aligned
 			newFrame.origin.x = oldFrame.origin.x + oldFrame.size.width - newFrame.size.width;
-			//NSLog(@"%@: shift left to %f",inStringValue,newFrame.origin.x);
 			break;
 		case NSCenterTextAlignment:
 		{
 			//Keep the center in the same place
 			float windowMaxX = NSMaxX([[TARGET_CONTROL window] frame]);
 			
-			//NSLog(@"%@: CENTER: newFrame was %@, oldFrame was %@",inStringValue,NSStringFromRect(newFrame),NSStringFromRect(oldFrame));
 			newFrame.origin.x = oldFrame.origin.x + (oldFrame.size.width - newFrame.size.width)/2;
 			
 			if(NSMaxX(newFrame) + 17 > windowMaxX){
@@ -94,33 +91,28 @@
 
 			//Only use integral origins to keep alignment correct;
 			//round up as an extra pixel of whitespace never hurt anybody
-			newFrame.origin.x = round(newFrame.origin.x + 0.5);
-			
-			//NSLog(@"%@: CENTER: newFrame is now %@, oldFrame was %@",inStringValue,NSStringFromRect(newFrame),NSStringFromRect(oldFrame));
+			newFrame.origin.x = round(newFrame.origin.x + 0.5);			
 			break;
 		}
+		case NSLeftTextAlignment:
 		default:
 			break;
 	}
 	
-	//NSLog(@"%@: initial setFrame: %@",inStringValue,NSStringFromRect(newFrame));
 	[TARGET_CONTROL setFrame:newFrame];
 	[TARGET_CONTROL setNeedsDisplay:YES];
 	
 	//Resize the window to fit the contactNameLabel if the current size is not correct
-	//NSLog(@"%@: %f != %f ?",inStringValue,newFrame.size.width,oldFrame.size.width);
 	if(newFrame.size.width != oldFrame.size.width){
 		
 		//Too close on left; need to expand window left
 		if(window_anchorOnLeftSide && newFrame.origin.x < 17){
 			float		difference = 17 - newFrame.origin.x;
 			
-			//NSLog(@"%@: Move %@ left by %f",inStringValue,window_anchorOnLeftSide,difference);
 			[self _resizeWindow:window_anchorOnLeftSide leftBy:difference];				
 			
 			//Fix the origin - autosizing will end up moving this into the proper location
 			newFrame.origin.x = 17;
-			//NSLog(@"%@: 1 initial setFrame: %@",inStringValue,NSStringFromRect(newFrame));
 
 			[TARGET_CONTROL setFrame:newFrame];
 			[TARGET_CONTROL setNeedsDisplay:YES];
@@ -168,15 +160,23 @@
 				
 				if(leftAnchorFrame.origin.x < 0){
 					float	overshoot = -leftAnchorFrame.origin.x;
+
+					/* We needed to move our left anchored object to the left, but that put it outside its
+					 * superview. Use a 0 X origin. */
 					leftAnchorFrame.origin.x = 0;
 					
-					//NSLog(@"%@: 3 origin is to the left, and less than zero: %@",NSStringFromRect(leftAnchorFrame));
 					[view_anchorToLeftSide setFrame:leftAnchorFrame];
 					[view_anchorToLeftSide setNeedsDisplay:YES];
 					
-					[self _resizeWindow:[TARGET_CONTROL window] leftBy:overshoot];
+					/* If we have a window we can resize to the left, do so.  Otherwise, log a warning */
+					if(window_anchorOnLeftSide){
+						[self _resizeWindow:window_anchorOnLeftSide leftBy:overshoot];
+
+					}else{
+						NSLog(@"*** Localization warning: \"%@\"",inStringValue);
+					}
+					
 				}else{
-					//NSLog(@"%@: 4 origin is to the left, not less than zero, moving to %@",inStringValue,NSStringFromRect(leftAnchorFrame));
 					[view_anchorToLeftSide setFrame:leftAnchorFrame];
 					[view_anchorToLeftSide setNeedsDisplay:YES];
 				}
@@ -200,7 +200,6 @@
 					}
 					*/
 					
-					//NSLog(@"%@: 5 origin.x is >=, moving view_anchorToRightSide to %@",inStringValue,NSStringFromRect(rightAnchorFrame));
 					[view_anchorToRightSide setFrame:rightAnchorFrame];
 					[view_anchorToRightSide setNeedsDisplay:YES];
 					
@@ -234,16 +233,12 @@
 					float	overshoot = -leftAnchorFrame.origin.x;
 					leftAnchorFrame.origin.x = 0;
 
-					//NSLog(@"%@: 6 origin.x is >=, leftAnchorFrame.origin.x < 0, moving view_anchorToLeftSide to %@",inStringValue,NSStringFromRect(leftAnchorFrame));
-
 					[view_anchorToLeftSide setFrame:leftAnchorFrame];
 					[view_anchorToLeftSide setNeedsDisplay:YES];
 					
 					[self _resizeWindow:[TARGET_CONTROL window] leftBy:overshoot];
-				}else{
-					
-					//NSLog(@"%@: 7 origin.x is >=, moving view_anchorToLeftSide to %@",inStringValue,NSStringFromRect(leftAnchorFrame));
 
+				}else{	
 					[view_anchorToLeftSide setFrame:leftAnchorFrame];
 					[view_anchorToLeftSide setNeedsDisplay:YES];
 				}
@@ -267,12 +262,10 @@
 					if(window_anchorOnLeftSide && newFrame.origin.x < 17){
 						float		difference = 17 - newFrame.origin.x;
 						
-						//NSLog(@"%@: Move %@ left by %f",inStringValue,window_anchorOnLeftSide,difference);
 						[self _resizeWindow:window_anchorOnLeftSide leftBy:difference];				
 						
 						//Fix the origin - autosizing will end up moving this into the proper location
 						newFrame.origin.x = 17;
-						//NSLog(@"%@: 1 initial setFrame: %@",inStringValue,NSStringFromRect(newFrame));
 						
 						[TARGET_CONTROL setFrame:newFrame];
 						[TARGET_CONTROL setNeedsDisplay:YES];
