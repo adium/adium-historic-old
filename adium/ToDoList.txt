@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.100 2004/05/06 23:09:19 evands Exp $
+$Id: ToDoList.txt,v 1.101 2004/05/07 17:35:18 eevyl Exp $
 
 
 Legend
@@ -44,7 +44,7 @@ Contact List:
 Unconfirmed bugs
 -------------------------------------------------------------------------------------------------------
 * Simple webkit style has some bottom redraw/margin issues and is not displaying some of the dividing lines above a status change?
-    (Jorge: The dividing lines are not displaying because that was the way if was in SMV, and it is meant to be a carbon copy of that. The bug AFAIK is not such, please someone provide a way to trigger it, I tried with no succes.)
+    (Jorge: The dividing lines are not displaying because that was the way if was in SMV, and it is meant to be a carbon copy of that. The bug AFAIK is not such, please someone provide a way to trigger it, I tried with no success.)
     
 * Tooltips are flashing when the contact list auto-resizes?
 * Deleting an idle contact may cause a crash when the idle updates next? http://www.visualdistortion.org/crash/view.jsp?crash=10088
@@ -61,7 +61,6 @@ Unconfirmed bugs
 	- Evan: No, gaim proxy support is ancient.
 * Yahoo ignore list is being ignored?
 * Message history and 'ignore formatting' option is doing some odd stuff (ignoring the ignore?)
-* We can crash MSN Messenger by sending it links copied from safari?
 
 * Apple scripts can stall Adium when iTunes 4.5's Print dialogue is open
 * Changing timezone doesn't update time stamps immediately (I'm not surprised, but this would be cool)
@@ -97,7 +96,8 @@ Message Window:
 	+ Insert emoticon menu item, contextual menu item [Brian]
             // Brian: if you want to work on it before I get back to it I'll send the files, just needs insert functionality and some clean-up (namely dynamism)
 	+ Tab-complete usernames in messages and chat
-	+ Make 'save as' menu item work	
+	+ Make 'save as' menu item work
+	+ Accept dragged items and do wonderful things on them, like if it is text append it in the input field or if it is a file send it to the contact.
 
 Contact List Display:
 	+ Small contact list icon to identify mobile device users
