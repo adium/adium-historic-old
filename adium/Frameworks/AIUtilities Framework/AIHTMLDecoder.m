@@ -298,16 +298,17 @@ DeclareString(TagCharStartString);
 					NSString *fileSafeChunk = [[attachment string] safeFilenameString];
 					NSString *shortFileName;
 					NSString *fileName;
-					
+					NSString *fileURL;
+                                        
 					shortFileName = [fileSafeChunk stringByAppendingPathExtension:@"png"];
 					fileName = [imagesPath stringByAppendingPathComponent:shortFileName];
-					
+					fileURL = [[NSURL fileURLWithPath:fileName] absoluteString];
 					//create the images directory if it doesn't exist
 					[AIFileUtilities createDirectory:imagesPath];
 					
 					if([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:fileName atomically:YES]){
 						[string appendString:@"<img src=\""];
-						[string appendString:fileName];
+						[string appendString:fileURL];
 						[string appendString:@"\" alt=\""];
 						[string appendString:[attachment string]];
 						[string appendString:@"\">"];
