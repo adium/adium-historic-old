@@ -1049,8 +1049,8 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
-			name = ESGaimRequestActionWindowController.h;
-			path = "Plugins/Gaim Service/ESGaimRequestActionWindowController.h";
+			name = ESGaimRequestActionController.h;
+			path = "Plugins/Gaim Service/ESGaimRequestActionController.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -1058,16 +1058,8 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
-			name = ESGaimRequestActionWindowController.m;
-			path = "Plugins/Gaim Service/ESGaimRequestActionWindowController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		341E886A0648FF1B00E0C828 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = GaimActionRequestWindow.nib;
-			path = "Plugins/Gaim Service/GaimActionRequestWindow.nib";
+			name = ESGaimRequestActionController.m;
+			path = "Plugins/Gaim Service/ESGaimRequestActionController.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -1079,12 +1071,6 @@
 		};
 		341E886C0648FF1B00E0C828 = {
 			fileRef = 341E88690648FF1B00E0C828;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		341E886D0648FF1B00E0C828 = {
-			fileRef = 341E886A0648FF1B00E0C828;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -7165,6 +7151,7 @@
 				4B588C9D07AC23B3001832A9,
 				3448055107AC5151006A7F7B,
 				34AC36BB07B5C51500145239,
+				34E00F7607B92B2F000DF265,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7289,6 +7276,7 @@
 				4BDD81EB07A0B6D30057DB2C,
 				4BDD81EC07A0B6D30057DB2C,
 				4B588C9907AC23A9001832A9,
+				34E00F8707B92B89000DF265,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7354,6 +7342,7 @@
 				4B588C9E07AC23B3001832A9,
 				3448055007AC5151006A7F7B,
 				34AC36BC07B5C51500145239,
+				34E00F7707B92B2F000DF265,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7974,7 +7963,6 @@
 				3499F4A606309AF60035B468,
 				341E88680648FF1B00E0C828,
 				341E88690648FF1B00E0C828,
-				341E886A0648FF1B00E0C828,
 				34C2CF85063340540018E5D2,
 				34C2CF86063340540018E5D2,
 			);
@@ -9100,6 +9088,92 @@
 			settings = {
 			};
 		};
+		34E00F7107B92AD0000DF265 = {
+			children = (
+				34E00F7407B92B2E000DF265,
+				34E00F7507B92B2F000DF265,
+				34E00F8607B92B88000DF265,
+			);
+			isa = PBXGroup;
+			name = "Text and Buttons Window";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E00F7407B92B2E000DF265 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESTextAndButtonsWindowController.h;
+			path = "Frameworks/Adium Framework/ESTextAndButtonsWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E00F7507B92B2F000DF265 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESTextAndButtonsWindowController.m;
+			path = "Frameworks/Adium Framework/ESTextAndButtonsWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E00F7607B92B2F000DF265 = {
+			fileRef = 34E00F7407B92B2E000DF265;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E00F7707B92B2F000DF265 = {
+			fileRef = 34E00F7507B92B2F000DF265;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E00F8607B92B88000DF265 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = TextAndButtonsWindow.nib;
+			path = "Frameworks/Adium Framework/TextAndButtonsWindow.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E00F8707B92B89000DF265 = {
+			fileRef = 34E00F8607B92B88000DF265;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E0103207B956F6000DF265 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimNotifyEmailController.m;
+			path = "Plugins/Gaim Service/ESGaimNotifyEmailController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E0103307B956F6000DF265 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimNotifyEmailController.h;
+			path = "Plugins/Gaim Service/ESGaimNotifyEmailController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E0103407B956F6000DF265 = {
+			fileRef = 34E0103207B956F6000DF265;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E0103507B956F6000DF265 = {
+			fileRef = 34E0103307B956F6000DF265;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34E29FCE07AF091C006735BC = {
 			children = (
 				F5B53FBF0333ABA701A8010A,
@@ -9991,59 +10065,14 @@
 		};
 		34F59B760667A33900F01E8C = {
 			children = (
-				34F59B8A0667A38D00F01E8C,
-				34F59B8B0667A38D00F01E8C,
-				34F59BFD0667A99300F01E8C,
+				34E0103207B956F6000DF265,
+				34E0103307B956F6000DF265,
 			);
 			isa = PBXGroup;
 			name = "Notify UI";
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		34F59B8A0667A38D00F01E8C = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESGaimNotifyEmailWindowController.h;
-			path = "Plugins/Gaim Service/ESGaimNotifyEmailWindowController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34F59B8B0667A38D00F01E8C = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESGaimNotifyEmailWindowController.m;
-			path = "Plugins/Gaim Service/ESGaimNotifyEmailWindowController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34F59B8C0667A38D00F01E8C = {
-			fileRef = 34F59B8A0667A38D00F01E8C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34F59B8D0667A38D00F01E8C = {
-			fileRef = 34F59B8B0667A38D00F01E8C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34F59BFD0667A99300F01E8C = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = GaimNotifyEmailWindow.nib;
-			path = "Plugins/Gaim Service/GaimNotifyEmailWindow.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34F59BFE0667A99300F01E8C = {
-			fileRef = 34F59BFD0667A99300F01E8C;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34F6A92D0710E20000F485C4 = {
 			isa = PBXFileReference;
@@ -13774,7 +13803,6 @@
 				34E3C8890638D40500AA3EF7,
 				34E3C8A70638D50F00AA3EF7,
 				341E886B0648FF1B00E0C828,
-				34F59B8C0667A38D00F01E8C,
 				343A7F2F06935DC500150CEC,
 				343A7F3106935DC500150CEC,
 				343A7F3A06935DD700150CEC,
@@ -13815,6 +13843,7 @@
 				34BBE1B407A2F36400663CC9,
 				34BBE1BA07A2F4C500663CC9,
 				34BBE55607A342AF00663CC9,
+				34E0103507B956F6000DF265,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13829,8 +13858,6 @@
 				34B91980062DEC99004F1223,
 				34C2CF87063340540018E5D2,
 				34C2CF88063340540018E5D2,
-				341E886D0648FF1B00E0C828,
-				34F59BFE0667A99300F01E8C,
 				343A7F2706935DB600150CEC,
 				6E4D961806B73A96005235E9,
 				6E4D961E06B73B38005235E9,
@@ -13899,7 +13926,6 @@
 				34E3C88A0638D40500AA3EF7,
 				34E3C8A80638D50F00AA3EF7,
 				341E886C0648FF1B00E0C828,
-				34F59B8D0667A38D00F01E8C,
 				343A7F2E06935DC500150CEC,
 				343A7F3006935DC500150CEC,
 				343A7F3906935DD700150CEC,
@@ -13940,6 +13966,7 @@
 				34BBE1B507A2F36400663CC9,
 				34BBE1BB07A2F4C500663CC9,
 				34BBE55707A342AF00663CC9,
+				34E0103407B956F6000DF265,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17586,6 +17613,7 @@
 		};
 		4BE5AC7F07AFD46800422AD5 = {
 			children = (
+				34E00F7107B92AD0000DF265,
 				4BFC3412058D48A8008F7FA2,
 				4BFC3413058D48A8008F7FA2,
 			);
@@ -23463,9 +23491,9 @@
 		F5B53FBF0333ABA701A8010A = {
 			children = (
 				F55B413B03AB895501A8010A,
-				F55B413C03AB895501A8010A,
 				4B15ED2E057AED8600A3B3D3,
 				4B15ED2F057AED8600A3B3D3,
+				F55B413C03AB895501A8010A,
 				4BCAB5EE07B59967006641B9,
 				4B7A567707A1754400BDC540,
 				4B7A567807A1754400BDC540,
