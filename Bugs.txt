@@ -25,7 +25,12 @@
 	if somebody can think of one)
 - Metacontacts display no service icon
 - Metacontact drawer is using the user's text coloring, it should be using
-	the coloring defined in its theme file instead.
+	the coloring defined in its theme file instead.  This is due to how coloring
+	is applied to contacts by a separate plugin, instead of being derived from
+	their status in the cell drawing code.  Not sure this would be wise to
+	change so perhaps just a toggle to turn text coloring on/off (like we
+	currently have for background coloring) that the info drawer could flip
+	to off.
 - In Mockie style, with offline contacts hidden and a contact from an empty group (the
     contact is the first to connect from that group) signs on, the vertical scrollbar
     appears although it is not needed.
