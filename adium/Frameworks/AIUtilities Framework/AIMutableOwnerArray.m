@@ -24,83 +24,225 @@
 #import "AIMutableOwnerArray.h"
 
 @interface AIMutableOwnerArray (PRIVATE)
+- (id)_objectWithHighestPriority;
+- (void)_moveObjectToFront:(int)objectIndex;
 - (void)_createArrays;
-- (void)_createSubArraysForPriority:(int)priority;
 - (void)_destroyArrays;
-- (void)_destroySubArraysForPriority:(int)priority;
-- (void)_buildOwnerAndContentArrays;
-- (void)_removeObjectFromSubArraysWithOwner:(id)inOwner;
 @end
 
 @implementation AIMutableOwnerArray
 
-//inits the array
+//Init
 - (id)init
 {
     [super init];
 
-	int i;
-	for (i=0; i<11; i++) {
-		contentSubArray[i] = nil;
-		ownerSubArray[i] = nil;
-	}
-	
     contentArray = nil;
     ownerArray = nil;
-    
+    priorityArray = nil;
+	valueIsSortedToFront = NO;
+	
     return(self);
 }
 
+//Dealloc
 - (void)dealloc
 {
     [self _destroyArrays];
-
     [super dealloc];
 }
 
+
+//Returns the owner of the specified object
+//- (id)ownerWithObject:(id)inObject
+//{
+//    if(ownerArray && contentArray){
+//        int	index = [contentArray indexOfObject:inObject];
+//        if(index != NSNotFound) return([ownerArray objectAtIndex:index]);
+//    }
+//    
+//    return(nil);
+//}
+
+
+//Value Storage --------------------------------------------------------------------------------------------------------
+#pragma mark Value Storage
 //Adds an object with a specified owner at medium priority (Pass nil to remove the object)
 - (void)setObject:(id)anObject withOwner:(id)inOwner
 {
 	[self setObject:anObject withOwner:inOwner priorityLevel:Medium_Priority];
 }
 
-
 //Adds an object with a specified owner (Pass nil to remove the object)
-- (void)setObject:(id)anObject withOwner:(id)inOwner priorityLevel:(int)priority
+- (void)setObject:(id)anObject withOwner:(id)inOwner priorityLevel:(float)priority
 {
-	//Keep priority in bounds
-	if (priority < 0) priority = 0;
-	if (priority > 10) priority = 10;
-	
     int	ownerIndex;
+	//Keep priority in bounds
+	if(priority < Highest_Priority || priority > Lowest_Priority) priority = Medium_Priority;
 	
-	if(!ownerArray) [self _createArrays];
-    if(!ownerSubArray[priority]) [self _createSubArraysForPriority:priority];
-	
-    //Remove any existing objects
+	//Remove any existing objects from this owner
 	ownerIndex = [ownerArray indexOfObject:inOwner];
 	if(ownerIndex != NSNotFound){
-		//Remove object and owner from the main arrays
 		[ownerArray removeObjectAtIndex:ownerIndex];
 		[contentArray removeObjectAtIndex:ownerIndex];
-		
-		//Remove object and owner from their current subArrays
-		[self _removeObjectFromSubArraysWithOwner:inOwner];
+		[priorityArray removeObjectAtIndex:ownerIndex];
 	}
 	
-    //Add the new object
-    if(anObject != nil){
-        [contentSubArray[priority] addObject:anObject];
-        [ownerSubArray[priority] addObject:inOwner];
+	//Add the new object
+	if(anObject){
+		//If we haven't created arrays yet, do so now
+		if(!ownerArray) [self _createArrays];
 		
-		[self _buildOwnerAndContentArrays];
+		//Add the object
+        [ownerArray addObject:inOwner];
+        [contentArray addObject:anObject];
+        [priorityArray addObject:[NSNumber numberWithFloat:priority]];
+	}
+
+	//Our array may no longer have the return value sorted to the front, clear this flag so it can be sorted again
+	valueIsSortedToFront = NO;
+}
+
+
+//Value Retrieval ------------------------------------------------------------------------------------------------------
+#pragma mark Value Retrieval
+//Returns the object with the highest priority
+- (id)objectValue
+{
+    return([ownerArray count] ? [self _objectWithHighestPriority] : nil);
+}
+
+//Returns the greatest double value
+- (int)intValue
+{
+	int		count = [ownerArray count];
+	
+	//If we have more than one object and the object we want is not already in the front of our arrays, 
+	//we need to find the object with largest int value and move it to the front
+	if(count != 1 && !valueIsSortedToFront){
+		int 	currentMax = 0;
+		int		indexOfMax = 0;
+		int		index = 0;
 		
-    }else{
-		//Destory the main arrays if necessary
-        if(ownerArray && ([ownerArray count] == 0)) [self _destroyArrays];
-		//Destroy this subarray if necessary
-		if([ownerSubArray[priority] count] == 0) [self _destroySubArraysForPriority:priority];
-    }
+		//Find the object with the largest int value
+		for(index = 0;index < count;index++){
+			int	value = [[contentArray objectAtIndex:index] intValue];
+			
+			if(value > currentMax){
+				currentMax = value;
+				indexOfMax = index;
+			}
+		}
+		
+		//Move the object to the front, so we don't have to find it next time
+		[self _moveObjectToFront:indexOfMax];
+		
+		return(currentMax);
+	}else{
+		return([[contentArray objectAtIndex:0] intValue]);
+	}
+}
+
+//Returns the greatest double value
+- (double)doubleValue
+{
+	int		count = [ownerArray count];
+	
+	//If we have more than one object and the object we want is not already in the front of our arrays, 
+	//we need to find the object with largest double value and move it to the front
+	if(count != 1 && !valueIsSortedToFront){
+		double  currentMax = 0;
+		int		indexOfMax = 0;
+		int		index = 0;
+		
+		//Find the object with the largest double value
+		for(index = 0;index < count;index++){
+			double	value = [[contentArray objectAtIndex:index] doubleValue];
+			
+			if(value > currentMax){
+				currentMax = value;
+				indexOfMax = index;
+			}
+		}
+		
+		//Move the object to the front, so we don't have to find it next time
+		[self _moveObjectToFront:indexOfMax];
+		
+		return(currentMax);
+	}else{
+		return([[contentArray objectAtIndex:0] doubleValue]);
+	}
+}
+
+//Returns the earliest date
+- (NSDate *)date
+{
+	int		count = [ownerArray count];
+	
+	//If we have more than one object and the object we want is not already in the front of our arrays, 
+	//we need to find the object with largest double value and move it to the front
+	if(count != 1 && !valueIsSortedToFront){
+		NSDate  *currentMax = nil;
+		int		indexOfMax = 0;
+		int		index = 0;
+		
+		//Find the object with the earliest date
+		for(index = 0;index < count;index++){
+			NSDate	*value = [contentArray objectAtIndex:index];
+			
+			if([currentMax timeIntervalSinceDate:value] > 0){
+				currentMax = value;
+				indexOfMax = index;
+			}
+		}
+		
+		//Move the object to the front, so we don't have to find it next time
+		[self _moveObjectToFront:indexOfMax];
+		
+		return(currentMax);
+	}else{
+		return([contentArray objectAtIndex:0]);
+	}
+}
+
+//Return the object with highest priority in our arrays
+- (id)_objectWithHighestPriority
+{
+	//If we have more than one object and the object we want is not already in the front of our arrays, 
+	//we need to find the object with highest priority and move it to the front
+	if([priorityArray count] != 1 && !valueIsSortedToFront){
+		NSEnumerator	*enumerator = [priorityArray objectEnumerator];
+		NSNumber		*priority;
+		float			currentMax = Lowest_Priority;
+		int				indexOfMax = 0;
+		int				index = 0;
+		
+		//Find the object with highest priority
+		while(priority = [enumerator nextObject]){
+			float	value = [priority floatValue];
+			if(value < currentMax){
+				currentMax = value;
+				indexOfMax = index;
+			}
+			index++;
+		}
+
+		//Move the object to the front, so we don't have to find it next time
+		[self _moveObjectToFront:indexOfMax];
+	}
+
+	return([contentArray objectAtIndex:0]); 
+}
+
+//Move an object to the front of our arrays
+- (void)_moveObjectToFront:(int)objectIndex
+{
+	if(objectIndex != 0){
+		[contentArray exchangeObjectAtIndex:objectIndex withObjectAtIndex:0];
+		[ownerArray exchangeObjectAtIndex:objectIndex withObjectAtIndex:0];
+		[priorityArray exchangeObjectAtIndex:objectIndex withObjectAtIndex:0];
+	}
+	valueIsSortedToFront = YES;
 }
 
 //Returns an object with the specified owner
@@ -114,17 +256,6 @@
     return(nil);
 }
 
-//Returns the owner of the specified object
-- (id)ownerWithObject:(id)inObject
-{
-    if(ownerArray && contentArray){
-        int	index = [contentArray indexOfObject:inObject];
-        if(index != NSNotFound) return([ownerArray objectAtIndex:index]);
-    }
-    
-    return(nil);
-}
-
 //
 - (NSEnumerator *)objectEnumerator
 {
@@ -132,16 +263,16 @@
 }
 
 //
-- (NSEnumerator *)ownerEnumerator
-{
-	return([ownerArray objectEnumerator]);
-}
-//
 - (NSArray *)allValues
 {
 	return(contentArray);
 }
 
+//
+//- (NSEnumerator *)ownerEnumerator
+//{
+//	return([ownerArray objectEnumerator]);
+//}
 
 //Return the number of objects
 - (unsigned)count
@@ -150,179 +281,36 @@
 }
 
 //Return the specified object
-- (id)objectAtIndex:(unsigned)index
-{
-    return([contentArray objectAtIndex:index]);
-}
+//- (id)objectAtIndex:(unsigned)index
+//{
+//    return([contentArray objectAtIndex:index]);
+//}
+//
+////Return the specific owner
+//- (id)ownerAtIndex:(unsigned)index
+//{
+//    return ([ownerArray objectAtIndex:index]);   
+//}
 
-//Return the specific owner
-- (id)ownerAtIndex:(unsigned)index
-{
-    return ([ownerArray objectAtIndex:index]);   
-}
 
-//Return the average color
-- (NSColor *)averageColor
-{
-    NSColor	*average = nil;
-    int		loop;
-
-    for(loop = 0;loop < [ownerArray count];loop++){
-        average = [contentArray objectAtIndex:loop];
-    }
-
-    return(average);
-}
-
-- (NSDate *)earliestDate
-{
-    if([ownerArray count] != 0){
-        NSDate	*earlyDate = [contentArray objectAtIndex:0];
-        int		loop;
-
-        for(loop = 1;loop < [ownerArray count];loop++){
-            NSDate	*date = [contentArray objectAtIndex:loop];
-
-            if([earlyDate timeIntervalSinceDate:date] > 0){
-                earlyDate = date;
-            }
-        }
-
-        return(earlyDate);
-    }else{
-        return(nil);
-    }
-}
-
-//Returns YES if the array contains the specified integer value
-- (BOOL)containsAnyIntegerValueOf:(int)inValue
-{
-    int	loop;
-
-    for(loop = 0;loop < [ownerArray count];loop++){
-        if([[contentArray objectAtIndex:loop] intValue] == inValue){
-            return(YES);
-        }
-    }
-
-    return(NO);
-}
-
-//Returns the greatest integer value
-- (int)greatestIntegerValue
-{
-    int	loop;
-    int	count = [ownerArray count];
-    int	greatest = 0;
-
-    if(count != 0){
-        greatest = [[contentArray objectAtIndex:0] intValue];
-
-        for(loop = 1;loop < count;loop++){
-            int	current = [[contentArray objectAtIndex:loop] intValue];
-
-            if(current > greatest){
-                greatest = current;
-            }
-        }
-    }
-    
-    return(greatest);
-}
-
-//Returns the greatest double value
-- (double)greatestDoubleValue
-{
-    int		loop;
-    int		count = [ownerArray count];
-    double	greatest = 0;
-
-    if(count != 0){
-        greatest = [[contentArray objectAtIndex:0] doubleValue];
-
-        for(loop = 1;loop < [ownerArray count];loop++){
-            double	current = [[contentArray objectAtIndex:loop] doubleValue];
-
-            if(current > greatest){
-            greatest = current;
-            }
-        }
-    }
-
-    return(greatest);
-}
-
-//Returns the first image
-- (NSImage *)firstImage
-{
-    return([ownerArray count] ? [contentArray objectAtIndex:0] : nil);
-}
-
+//Array creation / Destruction -----------------------------------------------------------------------------------------
+#pragma mark Array creation / Destruction
+//We don't actually create our arrays until needed.  There are many places where a mutable owner array
+//is created and not actually used to store anything, so this saves us a bit of ram.
+//Destroy our storage arrays
 - (void)_createArrays
 {
     contentArray = [[NSMutableArray alloc] init];
     ownerArray = [[NSMutableArray alloc] init];
-}
-- (void)_createSubArraysForPriority:(int)priority
-{
-    contentSubArray[priority] = [[NSMutableArray alloc] init];
-    ownerSubArray[priority] = [[NSMutableArray alloc] init];
-}
-- (void)_buildOwnerAndContentArrays
-{
-	NSMutableArray *thisOwnerArray, *thisContentArray;
-	int i, index;
-	
-	//Remove all the owners and content objects from the main arrays
-	[ownerArray removeAllObjects];
-	[contentArray removeAllObjects];
-	
-	//Check each subArray, adding from priority 0 to priority 10
-	for (i=0; i<11; i++) {
-		thisOwnerArray = ownerSubArray[i];
-		
-		//If arrays exist at this priority level, add them to the main arrays
-		if (thisOwnerArray) {
-			thisContentArray = contentSubArray[i];
-			
-			[ownerArray addObjectsFromArray:thisOwnerArray];
-			[contentArray addObjectsFromArray:thisContentArray];
-		}
-	}
+    priorityArray = [[NSMutableArray alloc] init];
 }
 
+//Destroy our storage arrays
 - (void)_destroyArrays
 {
     [contentArray release]; contentArray = nil;
     [ownerArray release]; ownerArray = nil;
-}
-- (void)_destroySubArraysForPriority:(int)priority
-{
-	[ownerSubArray[priority] release]; ownerSubArray[priority] = nil;
-	[contentSubArray[priority] release]; contentSubArray[priority] = nil;
+    [priorityArray release]; priorityArray = nil;
 }
 
-- (void)_removeObjectFromSubArraysWithOwner:(id)inOwner
-{
-	NSMutableArray *thisOwnerArray, *thisContentArray;
-	int i, index;
-	
-	//Check each subArray
-	for (i=0; i<11; i++) {
-		thisOwnerArray = ownerSubArray[i];
-		
-		if (thisOwnerArray) {
-			index = [thisOwnerArray indexOfObject:inOwner];
-			
-			if (index != NSNotFound) {
-				thisContentArray = contentSubArray[i];
-				
-				//Remove the object and owner
-				[thisOwnerArray removeObjectAtIndex:index];
-				[thisContentArray removeObjectAtIndex:index];
-				break;
-			}
-		}
-	}
-}
 @end

@@ -127,7 +127,7 @@
         }
     }
     if (success) { //we're good so far...
-            if ([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) {
+            if ([[contact statusArrayForKey:@"Online"] intValue]) {
                 AIChat	*chat = [[adium contentController] openChatWithContact:contact];
                 
                 [[adium interfaceController] setActiveChat:chat];

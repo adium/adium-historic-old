@@ -65,8 +65,8 @@
 				[iconArray setObject:statusIcon withOwner:self];
 			}
 			
-			idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
-			away = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
+			idle = [[inObject statusArrayForKey:@"Idle"] doubleValue];
+			away = [[inObject statusArrayForKey:@"Away"] intValue];
 			
 			if((away != 0) && (idle != 0)){
 				imageArray = [NSArray arrayWithObjects:awayImage, idleImage, nil];

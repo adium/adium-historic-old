@@ -140,15 +140,15 @@
             //Update the 'connect / disconnect' menu item
             connectToggleItem = (NSMenuItem *)[[targetMenuItem submenu] itemAtIndex:0];
 			
-			if([[[account statusArrayForKey:@"Online"] objectWithOwner:account] boolValue]){
+			if([[account statusObjectForKey:@"Online"] boolValue]){
 				[targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Online" forClass:[self class]]];
 				[connectToggleItem setTitle:ACCOUNT_DISCONNECT_MENU_TITLE];
 				[connectToggleItem setEnabled:YES];
-			}else if([[[account statusArrayForKey:@"Connecting"] objectWithOwner:account] boolValue]){
+			}else if([[account statusObjectForKey:@"Connecting"] boolValue]){
 				[targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Connecting" forClass:[self class]]];
 				[connectToggleItem setTitle:ACCOUNT_CONNECTING_MENU_TITLE];
 				[connectToggleItem setEnabled:NO];
-			}else if([[[account statusArrayForKey:@"Disconnecting"] objectWithOwner:account] boolValue]){
+			}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
 				[targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Connecting" forClass:[self class]]];
 				[connectToggleItem setTitle:ACCOUNT_DISCONNECTING_MENU_TITLE];
 				[connectToggleItem setEnabled:NO];

@@ -96,9 +96,9 @@
 		   [inModifiedKeys containsObject:@"Signed On"] ||
 		   [inModifiedKeys containsObject:@"Signed Off"]){
 			
-			if((showContent && [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]) ||
-			   (showStatus && [[inObject statusArrayForKey:@"Signed On"] greatestIntegerValue]) ||
-			   (showStatus && [[inObject statusArrayForKey:@"Signed Off"] greatestIntegerValue])){
+			if((showContent && [[inObject statusArrayForKey:@"UnviewedContent"] intValue]) ||
+			   (showStatus && [[inObject statusArrayForKey:@"Signed On"] intValue]) ||
+			   (showStatus && [[inObject statusArrayForKey:@"Signed Off"] intValue])){
 				
 				//Ignore any objects within a meta contact
 				if(![[inObject containingGroup] isKindOfClass:[AIMetaContact class]]){
@@ -209,7 +209,7 @@
 		 }
 		 */
 		
-        if([[contact statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]){ //Unviewed
+        if([[contact statusArrayForKey:@"UnviewedContent"] intValue]){ //Unviewed
 			if(flash){
                 backColor = [NSColor whiteColor];
                 textColor = [NSColor blackColor];
@@ -217,11 +217,11 @@
                 backColor = backUnviewedContentColor;
                 textColor = unviewedContentColor;
             }
-        }else if([[contact statusArrayForKey:@"Signed On"] greatestIntegerValue]){ //Signed on
+        }else if([[contact statusArrayForKey:@"Signed On"] intValue]){ //Signed on
             backColor = backSignedOnColor;
             textColor = signedOnColor;
 			
-        }else if([[contact statusArrayForKey:@"Signed Off"] greatestIntegerValue]){ //Signed off
+        }else if([[contact statusArrayForKey:@"Signed Off"] intValue]){ //Signed off
             backColor = backSignedOffColor;
             textColor = signedOffColor;
 			

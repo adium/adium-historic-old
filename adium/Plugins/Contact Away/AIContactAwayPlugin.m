@@ -26,19 +26,16 @@
 //Tooltip entry ---------------------------------------------------------------------------------------
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    NSString		*entry = nil;
+    NSString			*entry = nil;
     NSAttributedString 	*statusMessage = nil;
     AIMutableOwnerArray	*ownerArray;
-    BOOL		away;
+    BOOL				away;
     
     //Get the away state
-    away = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
+    away = [[inObject statusArrayForKey:@"Away"] intValue];
     
     //Get the status message
-    ownerArray = [inObject statusArrayForKey:@"StatusMessage"];
-    if([ownerArray count] != 0){
-		statusMessage = [ownerArray objectAtIndex:0];
-    }
+    statusMessage = [[inObject statusArrayForKey:@"StatusMessage"] objectValue];
     
     //Return the correct string
     if(statusMessage != nil && [statusMessage length] != 0){
@@ -58,17 +55,13 @@
 {
     NSAttributedString	*entry = nil;
     NSAttributedString 	*statusMessage = nil;
-    AIMutableOwnerArray	*ownerArray;
     BOOL		away;
 	
     //Get the away state
-    away = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
+    away = [[inObject statusArrayForKey:@"Away"] intValue];
 	
     //Get the status message
-    ownerArray = [inObject statusArrayForKey:@"StatusMessage"];
-    if([ownerArray count] != 0){
-		statusMessage = [ownerArray objectAtIndex:0];
-    }
+    statusMessage = [[inObject statusArrayForKey:@"StatusMessage"] objectValue];
 	
     //Return the correct string
     if(statusMessage != nil && [statusMessage length] != 0){

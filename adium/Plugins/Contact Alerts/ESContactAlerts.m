@@ -388,8 +388,8 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
 //Sorting function
 int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *context)
 {
-    BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
-    BOOL	invisibleB = [[objectB displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
+    BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] intValue];
+    BOOL	invisibleB = [[objectB displayArrayForKey:@"Hidden"] intValue];
     BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
     BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
     

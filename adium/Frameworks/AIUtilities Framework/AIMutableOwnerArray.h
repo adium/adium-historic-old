@@ -13,35 +13,32 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-typedef enum {
-    Highest_Priority = 0,
-    Medium_Priority = 5,
-    Lowest_Priority = 10
-} PriorityLevel;
+#define Highest_Priority  	0.0
+#define High_Priority  		0.25
+#define Medium_Priority  	0.5
+#define Low_Priority  		0.75
+#define Lowest_Priority  	1.0
 
 @interface AIMutableOwnerArray : NSObject {
     NSMutableArray	*contentArray;
     NSMutableArray	*ownerArray;
+    NSMutableArray	*priorityArray;
 	
-	NSMutableArray *contentSubArray[11];
-	NSMutableArray *ownerSubArray[11];    
+	BOOL			valueIsSortedToFront;
 }
 
+//Value Storage
 - (void)setObject:(id)anObject withOwner:(id)inOwner;
-- (void)setObject:(id)anObject withOwner:(id)inOwner priorityLevel:(int)priority;
-- (unsigned)count;
-- (BOOL)containsAnyIntegerValueOf:(int)inValue;
-- (NSColor *)averageColor;
-- (id)objectAtIndex:(unsigned)index;
+- (void)setObject:(id)anObject withOwner:(id)inOwner priorityLevel:(float)priority;
+
+//Value Retrieval
+- (id)objectValue;
+- (int)intValue;
+- (double)doubleValue;
+- (NSDate *)date;
 - (id)objectWithOwner:(id)inOwner;
-- (id)ownerAtIndex:(unsigned)index;
-- (id)ownerWithObject:(id)inObject;
-- (int)greatestIntegerValue;
-- (double)greatestDoubleValue;
-- (NSDate *)earliestDate;
-- (NSImage *)firstImage;
 - (NSEnumerator *)objectEnumerator;
-- (NSEnumerator *)ownerEnumerator;
 - (NSArray *)allValues;
+- (unsigned)count;
 
 @end

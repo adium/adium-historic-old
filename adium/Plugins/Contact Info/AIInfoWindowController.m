@@ -28,13 +28,14 @@ static AIListObject				*activeListObject = nil;
 - (void)configureWindow
 {
     NSMutableAttributedString	*infoString;
+	NSString					*value;
     NSDictionary				*labelAttributes, *valueAttributes, *bigValueAttributes;
     NSMutableParagraphStyle		*paragraphStyle;
     AIMutableOwnerArray			*ownerArray;
     NSTextAttachmentCell 		*imageAttatchment;
     NSTextAttachment 			*attatchment;
     NSImage 					*buddyImage;
-    BOOL                        online = [[activeListObject statusArrayForKey:@"Online"] greatestIntegerValue];
+    BOOL                        online = [[activeListObject statusArrayForKey:@"Online"] intValue];
     
 	//
     [timer invalidate]; [timer release];
@@ -74,10 +75,8 @@ static AIListObject				*activeListObject = nil;
         nil];
     
     //Buddy Icon
-    ownerArray = [activeListObject displayArrayForKey:@"UserIcon"];
-    if(ownerArray && [ownerArray count]){
-        buddyImage = [[[ownerArray objectAtIndex:0] copy] autorelease]; 
-        // resize to default buddy icon size for consistency
+    if(buddyImage = [[activeListObject displayArrayForKey:@"UserIcon"] objectValue]){
+        //resize to default buddy icon size for consistency
         [buddyImage setScalesWhenResized:YES];
         [buddyImage setSize:NSMakeSize(48,48)];
     }else{
@@ -104,14 +103,14 @@ static AIListObject				*activeListObject = nil;
     }
     
     //Client
-    ownerArray = [activeListObject statusArrayForKey:@"Client"];
-    if(ownerArray && [ownerArray count]){
+    value = [[activeListObject statusArrayForKey:@"Client"] objectValue];
+    if(value && [value length]){
         [infoString appendString:@"\r\r\tClient:\t" withAttributes:labelAttributes];
-        [infoString appendString:[ownerArray objectAtIndex:0] withAttributes:valueAttributes];
+        [infoString appendString:value withAttributes:valueAttributes];
     }
     
     //Signon Date
-    NSDate *signonDate = [[activeListObject statusArrayForKey:@"Signon Date"] earliestDate];
+    NSDate *signonDate = [[activeListObject statusArrayForKey:@"Signon Date"] objectValue];
     if(signonDate && online){
         NSString        *currentDay, *signonDay, *signonTime;
         NSDateFormatter	*dayFormatter, *timeFormatter;
@@ -148,12 +147,8 @@ static AIListObject				*activeListObject = nil;
     
     //Away & Status
     NSAttributedString *status = nil;
-    int away = [[activeListObject statusArrayForKey:@"Away"] greatestIntegerValue];
-    ownerArray = [activeListObject statusArrayForKey:@"StatusMessage"];
-    
-    if(ownerArray && [ownerArray count]){
-        status = [ownerArray objectAtIndex:0];
-    }
+    int away = [[activeListObject statusArrayForKey:@"Away"] intValue];
+	status = [[activeListObject statusArrayForKey:@"StatusMessage"] objectValue];
     
     if(status || away){ //If away or w/ status message
         if(away){
@@ -192,7 +187,7 @@ static AIListObject				*activeListObject = nil;
     }
     
     //Idle Since
-    int idle = (int)[[activeListObject statusArrayForKey:@"Idle"] greatestDoubleValue];
+    int idle = (int)[[activeListObject statusArrayForKey:@"Idle"] doubleValue];
     if(idle != 0){
         int	hours = (int)(idle / 60);
         int	minutes = (int)(idle % 60);
@@ -214,43 +209,39 @@ static AIListObject				*activeListObject = nil;
     }
 
     //Warning
-    int warning = [[activeListObject statusArrayForKey:@"Warning"] greatestIntegerValue];
+    int warning = [[activeListObject statusArrayForKey:@"Warning"] intValue];
     if(warning > 0){
         [infoString appendString:@"\r\r\tWarning:\t" withAttributes:labelAttributes];
         [infoString appendString:[NSString stringWithFormat:@"%i%%",warning] withAttributes:valueAttributes];
     }
     
     //Text Profile
-    ownerArray = [activeListObject statusArrayForKey:@"TextProfile"];
-    if(ownerArray && [ownerArray count]){
-        NSAttributedString 	*textProfile = [ownerArray objectAtIndex:0];
-        //Only show the profile is one exists
-        if (textProfile && [textProfile length]) {
-            [infoString appendString:@"\r\r\tProfile:\t" withAttributes:labelAttributes];
-            NSMutableAttributedString   *textProfileString = [[[adium contentController] fullyFilteredAttributedString:textProfile listObjectContext:activeListObject] mutableCopy];
-            NSMutableParagraphStyle     *indentStyle;
-            
-            NSRange                     firstLineRange = [[textProfileString string] lineRangeForRange:NSMakeRange(0,0)];
-            
-            //Strip some attributes from info (?)
-            //[textProfileString addAttributes:valueAttributes range:NSMakeRange(0,[textProfileString length])];
-            
-            //Set correct indent & tabbing on the first line of the profile
-            [textProfileString addAttribute:NSParagraphStyleAttributeName 
-									  value:paragraphStyle 
-									  range:NSMakeRange(0,firstLineRange.length)];
-            
-            //Indent the remaining lines of profile
-            indentStyle = [paragraphStyle mutableCopy];
-            [indentStyle setFirstLineHeadIndent:InfoIndentB];
-            [textProfileString addAttribute:NSParagraphStyleAttributeName 
-									  value:indentStyle 
-									  range:NSMakeRange(firstLineRange.length, [textProfileString length] - firstLineRange.length)];
-            [indentStyle release];
-            
-            [infoString appendAttributedString:textProfileString];
-            [textProfileString release];
-        }
+	NSAttributedString 	*textProfile = [[activeListObject statusArrayForKey:@"TextProfile"] objectValue];
+    if(textProfile && [textProfile length]){
+		[infoString appendString:@"\r\r\tProfile:\t" withAttributes:labelAttributes];
+		NSMutableAttributedString   *textProfileString = [[[adium contentController] fullyFilteredAttributedString:textProfile listObjectContext:activeListObject] mutableCopy];
+		NSMutableParagraphStyle     *indentStyle;
+		
+		NSRange                     firstLineRange = [[textProfileString string] lineRangeForRange:NSMakeRange(0,0)];
+		
+		//Strip some attributes from info (?)
+		//[textProfileString addAttributes:valueAttributes range:NSMakeRange(0,[textProfileString length])];
+		
+		//Set correct indent & tabbing on the first line of the profile
+		[textProfileString addAttribute:NSParagraphStyleAttributeName 
+								  value:paragraphStyle 
+								  range:NSMakeRange(0,firstLineRange.length)];
+		
+		//Indent the remaining lines of profile
+		indentStyle = [paragraphStyle mutableCopy];
+		[indentStyle setFirstLineHeadIndent:InfoIndentB];
+		[textProfileString addAttribute:NSParagraphStyleAttributeName 
+								  value:indentStyle 
+								  range:NSMakeRange(firstLineRange.length, [textProfileString length] - firstLineRange.length)];
+		[indentStyle release];
+		
+		[infoString appendAttributedString:textProfileString];
+		[textProfileString release];
     }
     
     //

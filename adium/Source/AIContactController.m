@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.101 2004/02/17 07:08:19 eevyl Exp $
+// $Id: AIContactController.m,v 1.102 2004/02/21 20:53:01 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -631,7 +631,7 @@
 	if (![inObject isKindOfClass: [AIAccount class]]) {
 
 		if([modifiedKeys containsObject:@"Online"]){ //Sign on/off
-			BOOL		newStatus = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
+			BOOL		newStatus = [[inObject statusArrayForKey:@"Online"] intValue];
 			NSNumber	*oldStatusNumber = [onlineDict objectForKey:[inObject UIDAndServiceID]];
 			BOOL		oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
 
@@ -647,7 +647,7 @@
 		}
 
 		if([modifiedKeys containsObject:@"Away"]){ //Away / Unaway
-			BOOL 	newStatus = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
+			BOOL 	newStatus = [[inObject statusArrayForKey:@"Away"] intValue];
 			NSNumber	*oldStatusNumber = [awayDict objectForKey:[inObject UIDAndServiceID]];
 			BOOL	oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
 			
@@ -664,7 +664,7 @@
 		}
 		
 		if([modifiedKeys containsObject:@"IdleSince"]){ //Idle / UnIdle
-			NSDate 		*idleSince = [[inObject statusArrayForKey:@"IdleSince"] earliestDate];
+			NSDate 		*idleSince = [[inObject statusArrayForKey:@"IdleSince"] objectValue];
 			NSNumber	*oldStatusNumber = [idleDict objectForKey:[inObject UIDAndServiceID]];
 			BOOL		oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
 			BOOL		newStatus = (idleSince != nil);

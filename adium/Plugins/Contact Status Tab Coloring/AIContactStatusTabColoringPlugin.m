@@ -83,7 +83,7 @@
 
     //Update our flash array
     if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"UnviewedContent"]){
-        int unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
+        int unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] intValue];
 
         if(unviewedContent && ![flashingListObjectArray containsObject:inObject]){ //Start flashing
             [self _addToFlashArray:inObject];
@@ -103,7 +103,7 @@
     double	idle;
 
     //Prefetch the value for unviewed content, we need it multiple times below
-    unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
+    unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] intValue];
 
     //Unviewed content
     if(!color && (unviewedContentEnabled && unviewedContent)){
@@ -114,14 +114,14 @@
     
     //Signed off, signed on, or typing (These do not show if there is unviewed content)
     if(!color && (!unviewedContentEnabled || !unviewedContent)){
-        if(signedOffEnabled && ([[inObject statusArrayForKey:@"Signed Off"] greatestIntegerValue] ||
-                                ![[inObject statusArrayForKey:@"Online"] greatestIntegerValue])){
+        if(signedOffEnabled && ([[inObject statusArrayForKey:@"Signed Off"] intValue] ||
+                                ![[inObject statusArrayForKey:@"Online"] intValue])){
             color = signedOffColor;
         
-        }else if(signedOnEnabled && [[inObject statusArrayForKey:@"Signed On"] greatestIntegerValue]){
+        }else if(signedOnEnabled && [[inObject statusArrayForKey:@"Signed On"] intValue]){
             color = signedOnColor;
 
-        }else if(typingEnabled && [[inObject statusArrayForKey:@"Typing"] greatestIntegerValue]){
+        }else if(typingEnabled && [[inObject statusArrayForKey:@"Typing"] intValue]){
             color = typingColor;
 
         }
@@ -129,8 +129,8 @@
 
     if(!color){
         //Prefetch these values, we need them multiple times below
-        away = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
-        idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
+        away = [[inObject statusArrayForKey:@"Away"] intValue];
+        idle = [[inObject statusArrayForKey:@"Idle"] doubleValue];
 
         //Idle And Away, Away, or Idle
         if(idleAndAwayEnabled && away && idle != 0){

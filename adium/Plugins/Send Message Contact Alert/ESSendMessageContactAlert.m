@@ -211,7 +211,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
             */
             if (firstOfflineSearch)
             {
-                if ( !([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) ) //look for the first offline contact
+                if ( !([[contact statusArrayForKey:@"Online"] intValue]) ) //look for the first offline contact
                 {
                     NSMenuItem	*separatorItem;
                     separatorItem = [[[NSMenuItem alloc] initWithTitle:OFFLINE

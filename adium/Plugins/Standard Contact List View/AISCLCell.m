@@ -132,16 +132,14 @@
 - (NSAttributedString *)displayNameStringWithAttributes:(BOOL)applyAttributes inView:(AISCLOutlineView *)controlView
 {
 	NSFont				*font = (isGroup ? [controlView groupFont] : [controlView font]);
-    AIMutableOwnerArray *leftTextArray = [listObject displayArrayForKey:@"Left Text"];
-    AIMutableOwnerArray *rightTextArray = [listObject displayArrayForKey:@"Right Text"];
 	NSString 			*displayString;
 	NSDictionary		*attributes;
 	
 	//Apply left and right text attachments
-	if([leftTextArray count] || [rightTextArray count]){
-		NSString *leftText = [leftTextArray count] > 0 ? [leftTextArray objectAtIndex:0] : nil;
-		NSString *rightText = [rightTextArray count] > 0 ? [rightTextArray objectAtIndex:0] : nil;
+	NSString *leftText = [[listObject displayArrayForKey:@"Left Text"] objectValue];
+	NSString *rightText = [[listObject displayArrayForKey:@"Right Text"] objectValue];
 
+	if(leftText || rightText){
 		displayString = (NSString *)[NSMutableString string];
 
 		//Combine left text, the object name, and right text
@@ -183,7 +181,7 @@
 	NSColor	*textColor;
 	
 	if(![self isHighlighted] || ![[controlView window] isKeyWindow] || [[controlView window] firstResponder] != controlView){
-		textColor = [[listObject displayArrayForKey:@"Text Color"] averageColor];
+		textColor = [[listObject displayArrayForKey:@"Text Color"] objectValue];
 		if(!textColor){
 			if(isGroup) textColor = [(AISCLOutlineView *)controlView groupColor];
 			else textColor = [(AISCLOutlineView *)controlView color];
@@ -241,7 +239,7 @@
             if(isGroup){
                 labelColor = [[outlineView labelGroupColor] colorWithAlphaComponent:[outlineView labelOpacity]];
             }else{
-                labelColor = [[[listObject displayArrayForKey:@"Label Color"] averageColor] colorWithAlphaComponent:[outlineView labelOpacity]];
+                labelColor = [[[listObject displayArrayForKey:@"Label Color"] objectValue] colorWithAlphaComponent:[outlineView labelOpacity]];
             }
         }
 		

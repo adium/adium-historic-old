@@ -27,7 +27,7 @@
     NSAttributedString	*entry = nil;
 	
     //Get the away state
-    client = [[inObject statusArrayForKey:@"Client"] objectAtIndex:0];
+    client = [[inObject statusArrayForKey:@"Client"] objectValue];
     
     //Return the correct string
     if(client){

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.50 2004/02/08 00:23:00 adamiser Exp $
+// $Id: AIContentController.m,v 1.51 2004/02/21 20:53:01 adamiser Exp $
 
 #import "AIContentController.h"
 
@@ -508,7 +508,7 @@
     
 	//Lower the chat count for this contact
 	if(listObject = [inChat listObject]){
-        int currentCount = [[listObject statusArrayForKey:@"ChatsCount"] greatestIntegerValue];
+        int currentCount = [[listObject statusArrayForKey:@"ChatsCount"] intValue];
         if(currentCount > 0) {
 			[listObject setStatusObject:[NSNumber numberWithInt:(currentCount - 1)]
 								 forKey:@"ChatsCount"
@@ -589,7 +589,7 @@
 //Switch to a chat with the most recent unviewed content.  Returns YES if one existed
 - (BOOL)switchToMostRecentUnviewedContent
 {
-    if(mostRecentChat && [mostRecentChat listObject] && [[[mostRecentChat listObject] statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]){
+    if(mostRecentChat && [mostRecentChat listObject] && [[[mostRecentChat listObject] statusArrayForKey:@"UnviewedContent"] intValue]){
 		[[owner interfaceController] setActiveChat:mostRecentChat];
 		return(YES);
     }else{

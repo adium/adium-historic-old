@@ -3,7 +3,7 @@
 //  Adium XCode
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.15 2004/01/10 22:31:39 evands Exp $
+//  $Id: ESContactAlertsController.m,v 1.16 2004/02/21 20:53:01 adamiser Exp $
 
 
 /*
@@ -241,7 +241,7 @@ Alert Execution
         //if the action isn't in the completed action types yet
         if ([completedActionTypes indexOfObject:action] == NSNotFound) {
             event = [actionDict objectForKey:KEY_EVENT_NOTIFICATION];
-            status = [[inObject statusArrayForKey:event] greatestIntegerValue];
+            status = [[inObject statusArrayForKey:event] intValue];
             event_status = [[actionDict objectForKey:KEY_EVENT_STATUS] intValue];
             status_matches = (status && event_status) || (!status && !event_status); //XOR
             
@@ -290,20 +290,14 @@ Internal
 ******/
 -(id)_ownerOfContactAlert:(ESContactAlert *)contactAlert
 {
-    NSArray *alertsArray;
-    id inOwner = nil;
-    int index;
-    int count = [arrayOfAlertsArrays count];
+	NSEnumerator	*enumerator = [arrayOfAlertsArrays objectEnumerator];
+    NSArray 		*alertsArray = nil;
     
-    for (index = 0; index < count; index++) {
-        alertsArray = [arrayOfAlertsArrays objectAtIndex:index];
-        if ([alertsArray indexOfObject:contactAlert] != NSNotFound) {
-            inOwner = [arrayOfAlertsArrays ownerAtIndex:index];
-            break;
-        }
-    }
-    
-    return inOwner;
+	while(alertsArray = [enumerator nextObject]){
+        if([alertsArray containsObject:contactAlert]) break;
+	}
+
+    return(alertsArray);
 }
 
 @end

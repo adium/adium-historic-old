@@ -158,7 +158,6 @@
     BOOL                        isFirstMessage = NO;
     NSString                    *notificationName = [notification name];
     NSString                    *tempEvent = nil;
-    AIMutableOwnerArray         *ownerArray =nil;
     NSImage                     *tempBuddyIcon = nil;
     NSString                    *statusMessage = nil;
     NSDictionary                *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
@@ -187,10 +186,7 @@
             [NSApp unhideWithoutActivation];
         }
         
-        ownerArray = [contact displayArrayForKey:@"UserIcon"];
-        if(ownerArray && [ownerArray count]) {
-            tempBuddyIcon = [ownerArray objectAtIndex:0];
-        }
+        tempBuddyIcon = [[contact displayArrayForKey:@"UserIcon"] objectValue];
         if (isFirstMessage) {
             AIContentMessage    *contentMessage = [[notification userInfo] objectForKey:@"Object"];
             statusMessage = [[[contentMessage message] safeString] string];
