@@ -68,6 +68,7 @@
 - (NSArray *)accountArray;
 - (AIAccount *)accountWithAccountNumber:(int)accountNumber;
 - (NSArray *)accountsWithService:(AIService *)service;
+- (NSArray *)accountsWithServiceClass:(NSString *)serviceClass;
 - (AIAccount *)defaultAccount;
 - (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID accountNumber:(int)inAccountNumber;
 - (NSArray *)accountsWithServiceClassOfService:(AIService *)service;

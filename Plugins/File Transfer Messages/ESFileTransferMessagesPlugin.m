@@ -42,8 +42,8 @@
 {
 	ESFileTransfer	*fileTransfer = (ESFileTransfer *)[notification userInfo];
 	AIListContact	*listContact = [notification object];
-	NSString		*message;
-	NSString		*type;
+	NSString		*message = nil;
+	NSString		*type = nil;
 	
 	NSString		*filename = [[fileTransfer localFilename] lastPathComponent];
 	
