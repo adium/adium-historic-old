@@ -204,10 +204,11 @@
 //Frame changed, reinstall cursor tracking rect
 - (void)frameDidChange:(NSNotification *)notification
 {
-    NSView	*windowContentView = [[contactListView window] contentView];
-    NSView	*scrollView = [contactListView enclosingScrollView];
-    NSPoint	localPoint;
-    BOOL	mouseInside;
+    NSView		*windowContentView = [[contactListView window] contentView];
+    NSScrollView	*scrollView = [contactListView enclosingScrollView];
+    NSPoint		localPoint;
+    BOOL		mouseInside;
+    NSRect		trackingRect;
     
     [self _endTrackingMouse]; //Hide any open tooltips
 
@@ -223,7 +224,9 @@
     }
     
     //Add a new tracking rect, remembering the view we added it to
-    tooltipTrackingTag = [windowContentView addTrackingRect:[scrollView frame]
+    trackingRect = [scrollView frame];
+    trackingRect.size.width = [scrollView contentSize].width; //Adjust to not include the scrollbar
+    tooltipTrackingTag = [windowContentView addTrackingRect:trackingRect
                                                       owner:self
                                                    userData:scrollView
                                                assumeInside:mouseInside];

@@ -471,7 +471,6 @@
 
     //Resize and redisplay
     [self resizeContents];
-#warning do I need this?    [self resizeToFillContainerView];
     [self setNeedsDisplay:YES];
 }
 
@@ -795,7 +794,6 @@
     }
     if(!NSEqualSizes([self frame].size, size)){
         [self setFrameSize:size];
-#warning because that calls this, which leads to another frameChanged notification, which puts us back in resizeToFillContainerView
     }
 
     //If the user was near the bottom, move them back to the bottom (autoscroll)

@@ -96,9 +96,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
             int	minutes = (int)(idle % 60);
                         
             if(hours){
-                entry = [NSString stringWithFormat:@"%i hours, %i minutes", hours, minutes];
+                entry = [NSString stringWithFormat:@"%i hour%@, %i minute%@", hours, (hours == 1 ? @"": @"s"), minutes, (minutes == 1 ? @"": @"s")];
             }else{
-                entry = [NSString stringWithFormat:@"%i minutes", minutes];
+                entry = [NSString stringWithFormat:@"%i minute%@", minutes, (minutes == 1 ? @"": @"s")];
             }
         }
     }
