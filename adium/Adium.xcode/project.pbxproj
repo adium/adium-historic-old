@@ -269,6 +269,7 @@
 		};
 		29B97314FDCFA39411CA2CEA = {
 			children = (
+				3448717006D1E57700DA778C,
 				4B191D8C0611C11000E8A4E7,
 				34B5EBA106589A88007B9A56,
 				4B191D8E0611C11400E8A4E7,
@@ -305,6 +306,7 @@
 				F5819CE9032124CE01A8010A,
 				34E839050583207E00F2AADB,
 				9C103FAE057127A500F3C158,
+				4B4493BE06D50AD50083E9D7,
 			);
 			isa = PBXGroup;
 			name = "Linked Frameworks";
@@ -1982,12 +1984,6 @@
 		};
 		3448761706D1EC6300DA778C = {
 			fileRef = 3448758D06D1EBDF00DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3448761806D1ECE100DA778C = {
-			fileRef = 3448717206D1E57700DA778C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -4429,7 +4425,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" \"Plugins/Gaim Service\" Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" \"Plugins/Gaim Service\" Frameworks build /Users/adamiser/Code/adium/build";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5463,6 +5459,7 @@
 				34B588A1058D833A00E7EF0D,
 				34C18B0D06CAC95400FF5FF9,
 				348E5ACB06D2A74C004C051C,
+				4B4493BF06D50AD50083E9D7,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5487,8 +5484,8 @@
 			files = (
 				7E6642F7065336BA0050E8C8,
 				3419FE230531586A00C68BA3,
-				3448761806D1ECE100DA778C,
 				520FE46305BE20EB002D063D,
+				4B4492AE06D504280083E9D7,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9955,6 +9952,26 @@
 			settings = {
 			};
 		};
+		4B4492AE06D504280083E9D7 = {
+			fileRef = 3448717206D1E57700DA778C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B4493BE06D50AD50083E9D7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = AIUtilities.framework;
+			path = build/AIUtilities.framework;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B4493BF06D50AD50083E9D7 = {
+			fileRef = 4B4493BE06D50AD50083E9D7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B494B44063AB63000E2EF06 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -10077,7 +10094,6 @@
 				7E6642FD065337090050E8C8,
 				F53B9A1302CCEDCA01A8010A,
 				520FE3B305BE206D002D063D,
-				3448717006D1E57700DA778C,
 			);
 			isa = PBXGroup;
 			name = Frameworks;
