@@ -42,8 +42,8 @@ typedef int(*sortfunc)(id, id, BOOL);
 //For subclasses to override
 - (NSString *)identifier;
 - (NSString *)displayName;
-- (NSArray *)statusKeysRequiringResort;
-- (NSArray *)attributeKeysRequiringResort;
+- (NSSet *)statusKeysRequiringResort;
+- (NSSet *)attributeKeysRequiringResort;
 - (sortfunc)sortFunction;
 - (NSString *)configureSortMenuItemTitle;
 - (NSString *)configureSortWindowTitle;

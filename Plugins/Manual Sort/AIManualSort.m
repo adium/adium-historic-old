@@ -33,10 +33,10 @@ int manualSort(id objectA, id objectB, BOOL groups);
 - (NSString *)configureSortMenuItemTitle{ 
 	return(nil);
 }
-- (NSArray *)statusKeysRequiringResort{
+- (NSSet *)statusKeysRequiringResort{
 	return(nil);
 }
-- (NSArray *)attributeKeysRequiringResort{
+- (NSSet *)attributeKeysRequiringResort{
 	return(nil);
 }
 - (BOOL)alwaysSortGroupsToTopByDefault{
