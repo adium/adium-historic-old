@@ -606,7 +606,7 @@
     NSEnumerator 		*tabViewEnumerator;
     NSEnumerator		*windowEnumerator;
     AIMessageWindowController 	*messageWindowController;
-    int 			windowKey = 2;
+    int 			windowKey = 1;
 
     //Remove any existing menus
     enumerator = [windowMenuArray objectEnumerator];
@@ -655,7 +655,7 @@
 
 		    //Prepare a key equivalent for the controller
 		    if(windowKey < 10){
-			windowKeyString = [NSString stringWithFormat:@"%i",(windowKey-1)];
+			windowKeyString = [NSString stringWithFormat:@"%i",(windowKey)];
 		    }else if (windowKey == 10){
 			windowKeyString = [NSString stringWithString:@"0"];
 		    }else{

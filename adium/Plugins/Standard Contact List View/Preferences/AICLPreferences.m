@@ -44,7 +44,7 @@
 {
 
     if(sender == button_setFont){
-        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
         NSFontManager	*fontManager = [NSFontManager sharedFontManager];
         NSFont		*contactListFont = [[preferenceDict objectForKey:KEY_SCL_FONT] representedFont];
 
@@ -59,32 +59,32 @@
     }else if(sender == checkBox_alternatingGrid){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SCL_ALTERNATING_GRID
-                                              group:PREF_GROUP_CONTACT_LIST];
+                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
 
     }else if(sender == checkBox_showLabels){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SCL_SHOW_LABELS
-                                              group:PREF_GROUP_CONTACT_LIST];
+                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
 
     }else if(sender == colorWell_group){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_GROUP_COLOR
-                                              group:PREF_GROUP_CONTACT_LIST];        
+                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];        
 
     }else if(sender == colorWell_contact){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_CONTACT_COLOR
-                                              group:PREF_GROUP_CONTACT_LIST];
+                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
 
     }else if(sender == colorWell_grid){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_GRID_COLOR
-                                              group:PREF_GROUP_CONTACT_LIST];
+                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
         
     }else if(sender == colorWell_background){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_BACKGROUND_COLOR
-                                              group:PREF_GROUP_CONTACT_LIST];    
+                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];    
 
 /*    }else if(sender == slider_opacity){
         float	opacity = (100.0 - [sender floatValue]) * 0.01;
@@ -92,23 +92,23 @@
         [self showOpacityPercent];
         [[adium preferenceController] setPreference:[NSNumber numberWithFloat:opacity]
                                              forKey:KEY_SCL_OPACITY
-                                              group:PREF_GROUP_CONTACT_LIST];
+                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
         */
     }else if(sender == checkBox_boldGroups){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SCL_BOLD_GROUPS
-                                              group:PREF_GROUP_CONTACT_LIST];
+                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
 
     }else if(sender == checkBox_customGroupColor){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SCL_CUSTOM_GROUP_COLOR
-                                              group:PREF_GROUP_CONTACT_LIST];
+                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
         [self configureControlDimming];
         
     }else if(sender == colorWell_group){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_GROUP_COLOR
-                                              group:PREF_GROUP_CONTACT_LIST];
+                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
     }
     
 }
@@ -123,7 +123,7 @@
 
     //Update the displayed font string & preferences
     [self showFont:contactListFont inField:textField_fontName];
-    [[adium preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_SCL_FONT group:PREF_GROUP_CONTACT_LIST];
+    [[adium preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_SCL_FONT group:PREF_GROUP_CONTACT_LIST_DISPLAY];
 }
 
 //init
@@ -189,7 +189,7 @@
 //Configure our view for the current preferences
 - (void)configureView
 {
-    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 
     //Display
     [self showFont:[[preferenceDict objectForKey:KEY_SCL_FONT] representedFont] inField:textField_fontName];

@@ -2833,6 +2833,7 @@
 				3419F3F005314C1200C68BA3,
 				3419F3F105314C1200C68BA3,
 				3419F3F205314C1200C68BA3,
+				3484645205910E5F00241F68,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2872,6 +2873,7 @@
 			files = (
 				3419F3F405314C1200C68BA3,
 				3419F3F505314C1200C68BA3,
+				3484645405910E7E00241F68,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2896,6 +2898,7 @@
 				3419F3F905314C1200C68BA3,
 				3419F3FA05314C1200C68BA3,
 				3419F3FB05314C1200C68BA3,
+				3484645105910E5F00241F68,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6117,6 +6120,64 @@
 			settings = {
 			};
 		};
+		3484644C05910DFF00241F68 = {
+			children = (
+				F544A5DE03B3628B01A8010A,
+				F544A5DF03B3628B01A8010A,
+				F544A5E003B3628B01A8010A,
+				3484645005910E5F00241F68,
+				3484644F05910E5F00241F68,
+				3484645305910E7E00241F68,
+			);
+			isa = PBXGroup;
+			name = Preferences;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3484644F05910E5F00241F68 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESCLViewAdvancedPreferences.m;
+			path = "Plugins/Standard Contact List View/Preferences/ESCLViewAdvancedPreferences.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3484645005910E5F00241F68 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESCLViewAdvancedPreferences.h;
+			path = "Plugins/Standard Contact List View/Preferences/ESCLViewAdvancedPreferences.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3484645105910E5F00241F68 = {
+			fileRef = 3484644F05910E5F00241F68;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3484645205910E5F00241F68 = {
+			fileRef = 3484645005910E5F00241F68;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3484645305910E7E00241F68 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = CLViewAdvancedPrefs.nib;
+			path = "Plugins/Standard Contact List View/Preferences/CLViewAdvancedPrefs.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3484645405910E7E00241F68 = {
+			fileRef = 3484645305910E7E00241F68;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34878F710518289B003B2F21 = {
 			children = (
 				34878F7505182ACD003B2F21,
@@ -7621,13 +7682,6 @@
 			remoteGlobalIDString = 4B28907B03C1D17500A8010A;
 			remoteInfo = "Alias Support";
 		};
-		34BD99370531467C000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 4B1F0F3404AE303600A8010A;
-			remoteInfo = "Adium 1x Log Importer";
-		};
 		34BD99380531467C000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -7702,7 +7756,6 @@
 				34BD9CD6053146CC000AB133,
 				34BD9CD7053146CC000AB133,
 				343C896A05704C3C005E0632,
-				34BD9CD8053146CC000AB133,
 				34BD9CD9053146CC000AB133,
 				34BD9CDA053146CC000AB133,
 				34BD9CDB053146CC000AB133,
@@ -7805,10 +7858,6 @@
 			isa = PBXTargetDependency;
 			target = 34BD9F1C0531477A000AB133;
 			targetProxy = 34BD98AD0531467B000AB133;
-		};
-		34BD9CD8053146CC000AB133 = {
-			isa = PBXTargetDependency;
-			targetProxy = 34BD99370531467C000AB133;
 		};
 		34BD9CD9053146CC000AB133 = {
 			isa = PBXTargetDependency;
@@ -26679,9 +26728,7 @@
 				F57939A0033E75CB01A8010A,
 				F579399D033E75CB01A8010A,
 				F579399E033E75CB01A8010A,
-				F544A5DE03B3628B01A8010A,
-				F544A5DF03B3628B01A8010A,
-				F544A5E003B3628B01A8010A,
+				3484644C05910DFF00241F68,
 				4BBC89A803B964B800A8010A,
 			);
 			isa = PBXGroup;

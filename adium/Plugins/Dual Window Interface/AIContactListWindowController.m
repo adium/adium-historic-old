@@ -18,6 +18,7 @@
 #import "AIStatusSelectionView.h"
 
 #define CONTACT_LIST_WINDOW_NIB			@"ContactListWindow"		//Filename of the contact list window nib
+#define CONTACT_LIST_WINDOW_TRANSPARENT_NIB     @"ContactListWindowTransparent" //Filename of the minimalist transparent version
 #define CONTACT_LIST_TOOLBAR			@"ContactList"			//ID of the contact list toolbar
 #define	KEY_DUAL_CONTACT_LIST_WINDOW_FRAME	@"Dual Contact List Frame"
 #define TOOLBAR_CONTACT_LIST			@"ContactList"			//Toolbar identifier
@@ -28,11 +29,13 @@
 #define SCROLL_VIEW_PADDING_Y		2
 
 #define PREF_GROUP_CONTACT_LIST			@"Contact List"
+#define PREF_GROUP_CONTACT_LIST_DISPLAY         @"Contact List Display"
 #define KEY_CLWH_ALWAYS_ON_TOP			@"Always on Top"
 #define KEY_CLWH_HIDE				@"Hide While in Background"
+#define KEY_SCL_BORDERLESS                      @"Borderless"
 
 @interface AIContactListWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName interface:(id <AIContainerInterface>)inInterface;
+- (id)initWithInterface:(id <AIContainerInterface>)inInterface;
 - (void)contactSelectionChanged:(NSNotification *)notification;
 - (void)contactListDesiredSizeChanged:(NSNotification *)notification;
 - (void)windowDidLoad;
@@ -48,7 +51,7 @@
 //Return a new contact list window controller
 + (AIContactListWindowController *)contactListWindowControllerForInterface:(id <AIContainerInterface>)inInterface
 {
-    return([[[self alloc] initWithWindowNibName:CONTACT_LIST_WINDOW_NIB interface:inInterface] autorelease]);
+    return([[[self alloc] initWithInterface:inInterface] autorelease]);
 }
 
 //Make this container active
@@ -71,15 +74,19 @@
 
 //Private ----------------------------------------------------------------
 //init the contact list window controller
-- (id)initWithWindowNibName:(NSString *)windowNibName interface:(id <AIContainerInterface>)inInterface
+- (id)initWithInterface:(id <AIContainerInterface>)inInterface
 {
-    [super initWithWindowNibName:windowNibName];
-
+    NSNumber *borderlessNum = [[[AIObject sharedAdiumInstance] preferenceController] preferenceForKey:KEY_SCL_BORDERLESS group:PREF_GROUP_CONTACT_LIST_DISPLAY];
+    borderless = (borderlessNum ? [borderlessNum boolValue] : NO);
+    
+    [super initWithWindowNibName:(borderless ? CONTACT_LIST_WINDOW_TRANSPARENT_NIB : CONTACT_LIST_WINDOW_NIB)];
+    //NSTexturedBackgroundWindowMask?
+        
     interface = [inInterface retain];
 
     //Observe preference changes
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-
+    
     return(self);
 }
 
@@ -117,6 +124,17 @@
 
         [self _configureAutoResizing];
     }
+    
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST_DISPLAY] == 0){
+        BOOL        newBorderless = [[[adium preferenceController] preferenceForKey:KEY_SCL_BORDERLESS group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
+
+        if (borderless != newBorderless) {
+            borderless = newBorderless;
+            [[self window] performClose:nil];
+            [(AIDualWindowInterfacePlugin *)interface showContactList:nil];
+        }
+        
+    }    
 }
 
 //Called when the user selects a new contact object
@@ -280,21 +298,29 @@
     //Restore the window position
     savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME];
     if(savedFrame){
-        [[self window] setFrameFromString:savedFrame];
+        NSRect savedFrameRect = NSRectFromString(savedFrame);
+
+        if (borderless) {
+            //NSLog(@"%f %f %f %f",savedFrameRect.origin.x,savedFrameRect.origin.y,savedFrameRect.size.width,savedFrameRect.size.height);
+            [[self window] setFrameOrigin:savedFrameRect.origin];
+        } else {
+            [[self window] setFrame:savedFrameRect display:YES];            
+        }
+
     }
 
     //Remember the mininum size set for our list within interface builder
     minWindowSize = [[self window] minSize];
     
     //Add the status selection view
-/*    contactListFrame = [scrollView_contactList frame];
+    /*    contactListFrame = [scrollView_contactList frame];
     view_statusSelection = [[[AIStatusSelectionView alloc] initWithFrame:NSMakeRect(contactListFrame.origin.x, contactListFrame.origin.y + contactListFrame.size.height - 16 + 1, contactListFrame.size.width, 16) owner:owner] autorelease];
     
     [view_statusSelection setAutoresizingMask:(NSViewMaxXMargin | NSViewMinYMargin | NSViewWidthSizable)];
     [[[self window] contentView] addSubview:view_statusSelection];
-
+    
     [scrollView_contactList setFrameSize:NSMakeSize(contactListFrame.size.width, contactListFrame.size.height - 16)];
-*/
+    */
     //Swap in the contact list view
     contactListViewController = [[[adium interfaceController] contactListViewController] retain];
     contactListView = [[contactListViewController contactListView] retain];
@@ -306,24 +332,27 @@
     //Grrr
     //[scrollView_contactList setHasVerticalScroller:YES];
     //[[scrollView_contactList verticalScroller] setControlSize:NSSmallControlSize];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contactListDesiredSizeChanged:) name:AIViewDesiredSizeDidChangeNotification object:contactListView];
     
     //Register for the selection notification
     [[adium notificationCenter] addObserver:self selector:@selector(contactSelectionChanged:) name:Interface_ContactSelectionChanged object:contactListView];
-
+    
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
-
-    //
-    [toolbar_bottom setIdentifier:CONTACT_LIST_TOOLBAR];
-
-    //Toolbar
-    [self _configureToolbar];
+    
+    
+    //Toolbar (can not be added to a borderless window)
+    if (!borderless) {
+        //
+        [toolbar_bottom setIdentifier:CONTACT_LIST_TOOLBAR];
+        
+        [self _configureToolbar];
+    }
     
     //Apply initial preference-based settings
     [self preferencesChanged:nil];
-
+    
     //Tell the interface to open our window
     [interface containerDidOpen:self];
 }

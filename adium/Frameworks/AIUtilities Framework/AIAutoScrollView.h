@@ -18,6 +18,8 @@
     
     BOOL	autoScrollToBottom;
     BOOL	autoHideScrollBar;
+    
+    BOOL        updateShadowsWhileScrolling;
 }
 
 - (void)setAutoHideScrollBar:(BOOL)inValue;
@@ -25,5 +27,6 @@
 - (void)scrollToTop;
 - (void)scrollToBottom;
 - (void)setCorrectScrollbarVisibility;
+- (void)setUpdateShadowsWhileScrolling:(BOOL)inValue;
 
 @end

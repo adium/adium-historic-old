@@ -15,6 +15,7 @@
 
 #import "AISCLCell.h"
 #import "AISCLOutlineView.h"
+#import "AISCLViewPlugin.h"
 
 #define LEFT_MARGIN		12
 #define RIGHT_MARGIN		8
@@ -28,12 +29,22 @@
 @interface AISCLCell (PRIVATE)
 - (NSSize)leftViewSizeForHeight:(float)height;
 - (NSSize)rightViewSizeForHeight:(float)height;
+//- (void)highlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView usingColor:(NSColor *)inColor;
+- (void)highlightUsingColor:(NSColor *)inColor;
 @end
 
 @implementation AISCLCell
 
+- (id)init
+{
+    [super init];
+    
+    return self;
+}
+
 - (void)setContact:(AIListObject *)inObject
 {
+//    textSize = NSMakeSize(0,0);
     listObject = inObject;
     isGroup = [listObject isKindOfClass:[AIListGroup class]];
 }
@@ -96,8 +107,9 @@
     //Add Bold for Groups
     if(isGroup){
 	font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSBoldFontMask];
+        if (TRANSPARENT_SKIN)
+            font = [[NSFontManager sharedFontManager] convertFont:font toSize:([font pointSize]+2.0)];
     }
-    
     
     if(isGroup){ //move text away from flippy triangle
         cellSize.width += INDENTATION_OFFSET + 4;
@@ -157,7 +169,10 @@
     AIMutableOwnerArray     *leftViewArray, *rightViewArray, *leftTextArray, *rightTextArray;
     NSParagraphStyle	    *paragraphStyle;
     int			    loop;
-
+    
+    BOOL showLabels = [(AISCLOutlineView *)controlView showLabels];
+    BOOL labelAroundContactOnly = [(AISCLOutlineView *)controlView labelAroundContactOnly];
+    
     if(isGroup){ //move text away from flippy triangle
         cellFrame.origin.x += GROUP_PADDING;
         cellFrame.size.width -= GROUP_PADDING;
@@ -168,24 +183,90 @@
     
     //Pad the right side of our view
     cellFrame.size.width -= RIGHT_MARGIN;
-
-    //Background Color (If this cell is selected, we don't display the background color)
-    if((![self isHighlighted] || ![[controlView window] isKeyWindow] || [[controlView window] firstResponder] != controlView) && [(AISCLOutlineView *)controlView showLabels]){
-        backgroundColor = [[listObject displayArrayForKey:@"Label Color"] averageColor];
+    
+    if (showLabels) {
+        //Background Color (If this cell is selected, we don't display the background color)
+        if ([self isHighlighted] && ([[controlView window] isKeyWindow] && [[controlView window] firstResponder] == controlView)){
+            if ([(AISCLOutlineView *)controlView labelAroundContactOnly]) {
+                backgroundColor = [NSColor selectedControlColor];
+            } else {
+                backgroundColor = nil;
+            }
+        } else {
+            backgroundColor = [[listObject displayArrayForKey:@"Label Color"] averageColor];
+        }
+    }
+    
+    //Create a paragraph Style (To turn off clipping by word)
+    paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment lineBreakMode:NSLineBreakByClipping];
+    
+    //Text Font
+    if(!isGroup){
+        font = [(AISCLOutlineView *)controlView font];
+    }else{
+        font = [(AISCLOutlineView *)controlView groupFont];
+    }
+    
+    //Text Color (If this cell is selected, use the inverted color, or white)
+    if(![self isHighlighted] || ![[controlView window] isKeyWindow] || [[controlView window] firstResponder] != controlView || backgroundColor){
+        textColor = [[listObject displayArrayForKey:@"Text Color"] averageColor];
+        if(!textColor){
+            if(isGroup) textColor = [(AISCLOutlineView *)controlView groupColor];
+            else textColor = [(AISCLOutlineView *)controlView color];
+        }
+    }else{ //use the regular color, or black
+        textColor = [[listObject displayArrayForKey:@"Inverted Text Color"] averageColor];
+        if(!textColor){
+            if(isGroup) textColor = [(AISCLOutlineView *)controlView invertedGroupColor];
+            else textColor = [(AISCLOutlineView *)controlView invertedColor];
+        }
+    }    
+    
+    //Get the name string and build our displayString with all its attributes
+    leftTextArray = [listObject displayArrayForKey:@"Left Text"];
+    rightTextArray = [listObject displayArrayForKey:@"Right Text"];
+    displayString = [NSMutableString stringWithString:@""];
+    leftText = [leftTextArray count] > 0 ? [leftTextArray objectAtIndex:0] : nil;
+    rightText = [rightTextArray count] > 0 ? [rightTextArray objectAtIndex:0] : nil;
+    
+    if(leftText){
+        [displayString appendString:leftText];
+    }
+    
+    [displayString appendString:[listObject longDisplayName]];
+    
+    if(rightText){
+        [displayString appendString:rightText];
     }
 
+    NSDictionary *attributesDict = [NSDictionary dictionaryWithObjectsAndKeys:textColor, NSForegroundColorAttributeName, font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+    
+    displayName = [[NSAttributedString alloc] initWithString:(NSString *)displayString attributes:attributesDict];
+    
     //Background
     if(backgroundColor){
+        
         int 		innerLeft, innerRight, innerTop, innerBottom;
         float 		centerY, circleRadius;
         NSBezierPath	*pillPath;
-
+        NSSize          backgroundSize;
+        
+        if (labelAroundContactOnly) {
+            backgroundSize = [displayName size];
+        } else {
+            backgroundSize = cellFrame.size;   
+        }
+        
         //Calculate some points
         innerLeft = cellFrame.origin.x + BACK_CELL_INDENT;
-        innerRight = cellFrame.origin.x + cellFrame.size.width - BACK_CELL_INDENT;
+        innerRight = cellFrame.origin.x + backgroundSize.width - BACK_CELL_INDENT;
         innerTop = cellFrame.origin.y;
-        innerBottom = cellFrame.origin.y + cellFrame.size.height;
+        innerBottom = cellFrame.origin.y + backgroundSize.height;
         circleRadius = -(innerTop - innerBottom) / 2.0;
+        
+        if (isGroup)
+            innerLeft -= (LEFT_MARGIN - 3);
+        
         centerY = (innerTop + innerBottom) / 2.0;
         
         //Create the circle path
@@ -194,14 +275,22 @@
         [pillPath lineToPoint: NSMakePoint(innerRight, innerTop)];
         [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerRight, centerY) radius:circleRadius startAngle:270 endAngle:90 clockwise:NO];
         [pillPath lineToPoint: NSMakePoint(innerLeft, innerBottom)];
-        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerLeft, centerY)radius:circleRadius startAngle:90 endAngle:270 clockwise:NO];
+        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerLeft, centerY)radius:circleRadius     startAngle:90 endAngle:270 clockwise:NO];
 
-        //Draw
+        
+        //Fill the label background
         [backgroundColor set];
         [pillPath fill];
+        
+        //Stroke the outline
+        if (labelAroundContactOnly) {
+            [pillPath setLineWidth:0.5];
+            [textColor set];
+            [pillPath stroke];
+        }
     }
 
-    //Display all 'Left Views'
+    //Display all Left Views
     leftViewArray = [listObject displayArrayForKey:@"Left View"];
     if(leftViewArray && [leftViewArray count]){
         //Indent into the margin to save space
@@ -230,7 +319,7 @@
         }
     }
     
-    //Display all right views
+    //Display all Right Views
     rightViewArray = [listObject displayArrayForKey:@"Right View"];
     if(rightViewArray && [rightViewArray count]){//Right aligned icon(s)
         for(loop = 0;loop < [rightViewArray count];loop++){
@@ -253,58 +342,31 @@
             cellFrame.size.width -= (width + RIGHT_VIEW_PADDING);
         }
     }
-
-    //Text Color (If this cell is selected, use the inverted color, or white)
-    if(![self isHighlighted] || ![[controlView window] isKeyWindow] || [[controlView window] firstResponder] != controlView || backgroundColor){
-        textColor = [[listObject displayArrayForKey:@"Text Color"] averageColor];
-        if(!textColor){
-            if(isGroup) textColor = [(AISCLOutlineView *)controlView groupColor];
-            else textColor = [(AISCLOutlineView *)controlView color];
-        }
-
-    }else{ //use the regular color, or black
-        textColor = [[listObject displayArrayForKey:@"Inverted Text Color"] averageColor];
-        if(!textColor){
-            if(isGroup) textColor = [(AISCLOutlineView *)controlView invertedGroupColor];
-            else textColor = [(AISCLOutlineView *)controlView invertedColor];
-        }
-
-    }
-
-    //Text Font
-    if(!isGroup){
-        font = [(AISCLOutlineView *)controlView font];
-    }else{
-        font = [(AISCLOutlineView *)controlView groupFont];
-    }
-
-    //Create a paragraph Style (To turn off clipping by word)
-    paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment lineBreakMode:NSLineBreakByClipping];
-
-    //Get the name string
-    leftTextArray = [listObject displayArrayForKey:@"Left Text"];
-    rightTextArray = [listObject displayArrayForKey:@"Right Text"];
-    displayString = [NSMutableString stringWithString:@""];
-    leftText = [leftTextArray count] > 0 ? [leftTextArray objectAtIndex:0] : nil;
-    rightText = [rightTextArray count] > 0 ? [rightTextArray objectAtIndex:0] : nil;
     
-    if(leftText)
-    {
-    	[displayString appendString:leftText];
+    //Outline the group name as per preferences if not highlighted by the system or we are doing custom highlighting
+    if (isGroup && (![self isHighlighted] || labelAroundContactOnly) && [(AISCLOutlineView *)controlView outlineGroupColor]) {
+        NSColor *outlineGroupColor = [(AISCLOutlineView *)controlView outlineGroupColor];
+        NSDictionary * attributesDict_two = [NSDictionary dictionaryWithObjectsAndKeys:
+            outlineGroupColor, NSForegroundColorAttributeName, 
+            font, NSFontAttributeName, 
+            paragraphStyle, NSParagraphStyleAttributeName, 
+            outlineGroupColor, NSStrokeColorAttributeName, 
+            [NSNumber numberWithFloat:15.0], NSStrokeWidthAttributeName, nil];
+  
+        [(NSAttributedString *)[[[NSAttributedString alloc] initWithString:(NSString *)displayString attributes:attributesDict_two] autorelease] drawInRect:NSOffsetRect(cellFrame, 0, [(AISCLOutlineView *)controlView labelAroundContactOnly] ? 0 : -1)];//Adjust the strings up 1 pixel
     }
     
-    [displayString appendString:[listObject longDisplayName]];
-    
-    if(rightText)
-    {
-    	[displayString appendString:rightText];
-    }
-    
-    displayName = [[NSAttributedString alloc] initWithString:(NSString *)displayString attributes:[NSDictionary dictionaryWithObjectsAndKeys:textColor, NSForegroundColorAttributeName, font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil]];
-
     //Draw the name
-    [displayName drawInRect:NSOffsetRect(cellFrame, 0, -1)];//Adjust the strings up 1 pixel
+    [displayName drawInRect:NSOffsetRect(cellFrame, 0, [(AISCLOutlineView *)controlView labelAroundContactOnly] ? 0 : -1)];//Adjust the strings up 1 pixel
     [displayName release];
+}
+
+//Private NSCell method which needs to be overridden to do custom highlighting properly, regardless of the false claims of the documentation.
+- (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+{
+    if (![(AISCLOutlineView *)controlView labelAroundContactOnly]) {
+        [(id)super _drawHighlightWithFrame:cellFrame inView:controlView];   
+    }
 }
 
 @end

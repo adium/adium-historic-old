@@ -19,7 +19,7 @@
     return(AIPref_Advanced_Messages);
 }
 - (NSString *)label{
-    return(@"Message Display Preferences");
+    return(AILocalizedString(@"Display Preferences",nil));
 }
 - (NSString *)nibName{
     return(@"ESSMAdvancedPrefView");

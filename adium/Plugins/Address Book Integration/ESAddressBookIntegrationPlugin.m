@@ -158,7 +158,7 @@
 - (void)consumeImageData:(NSData *)inData forTag:(int)tag
 {
     if (inData) {
-        NSImage *image = [[[NSImage alloc] initWithData:inData] autorelease];        
+        NSImage *image = [[[NSImage alloc] initWithData:inData] autorelease];
         NSNumber * tagNumber = [NSNumber numberWithInt:tag];
         
         //Get the object from our tracking dictionary

@@ -23,4 +23,14 @@
     return(([self styleMask] & NSTexturedBackgroundWindowMask) != 0);
 }
 
+- (void)compatibleInvalidateShadow
+{
+    if ([NSApp isOnPantherOrBetter])
+        [self invalidateShadow];
+    else {
+        [self setHasShadow:NO];
+        [self setHasShadow:YES];
+    }
+}
+
 @end

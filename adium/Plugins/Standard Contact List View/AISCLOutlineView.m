@@ -43,13 +43,15 @@
     [super initWithFrame:frameRect];
 
     showLabels = YES;
+    isBorderless = NO;
     font = nil;
     groupFont = nil;
     color = nil;
     invertedColor = nil;
     groupColor = nil;
     invertedGroupColor = nil;
-    
+    outlineGroupColor = nil;
+    selectedItem = nil;
     int i;
     for (i=0 ; i < 3; i++) {
         desiredWidth[i] = 0;
@@ -68,7 +70,7 @@
     [self setHeaderView:nil];
     [self setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
     [self setIndentationPerLevel:10];
-    
+
     return(self);
 }
 
@@ -184,7 +186,7 @@
     //This is handled automatically by AISCLViewPlugin when the transparency preference is altered - but the first time preferences are applied our view is not yet installed.  The solution is to re-set the window transparency here, as our view is being inserted into the window.
     //Needed for proper transparency... but not the cleanest way.
     backgroundAlpha = [[[self backgroundColor] colorUsingColorSpaceName:NSDeviceRGBColorSpace] alphaComponent];
-    [inWindow setAlphaValue:(backgroundAlpha == 100.0 ? 1.0 : 0.9999999)];
+    [inWindow setAlphaValue:(backgroundAlpha == 1.0 ? 1.0 : 0.9999999)];
 }
 
 
@@ -402,6 +404,16 @@
     return(invertedGroupColor);
 }
 
+- (void)setOutlineGroupColor:(NSColor *)inOutlineGroupColor{
+    if (inOutlineGroupColor != outlineGroupColor) {
+        [outlineGroupColor release];
+        outlineGroupColor = [inOutlineGroupColor retain];
+    }
+}
+- (NSColor *)outlineGroupColor{
+    return outlineGroupColor;
+}
+
 - (void)setShowLabels:(BOOL)inValue{
     showLabels = inValue;
     [self setNeedsDisplay:YES];
@@ -409,6 +421,18 @@
 - (BOOL)showLabels{
     return(showLabels);
 }
+
+- (void)setIsBorderless:(BOOL)inIsBorderless{
+    isBorderless = inIsBorderless;
+}
+
+- (void)setLabelAroundContactOnly:(BOOL)inLabelAroundContactOnly{
+    labelAroundContactOnly = inLabelAroundContactOnly;
+}
+- (BOOL)labelAroundContactOnly{
+    return labelAroundContactOnly;   
+}
+
 
 
 //No available contacts -----------------------------------------------------------------
@@ -438,12 +462,47 @@
     }
 }*/
 
+//We do custom highlight management when putting the label around the contact only
+- (void)highlightSelectionInClipRect:(NSRect)clipRect
+{
+    if (!labelAroundContactOnly) {
+        [super highlightSelectionInClipRect:clipRect];
+    }
+    
+}
 
-
+//highlightedCell
 //Custom mouse tracking ----------------------------------------------------------------------
 - (void)mouseMoved:(NSEvent *)theEvent
 {
     [[self delegate] mouseMoved:theEvent];
 }
+
+- (void)mouseDown:(NSEvent *)theEvent
+{
+    //If it's borderless, handle passing the cmdKey along to the window or making the window key, as the OS won't do this for us
+    if (isBorderless) {
+        if ([theEvent cmdKey]) {
+            if ([[self delegate] respondsToSelector:@selector(_endTrackingMouse)])
+                [[self delegate] performSelector:@selector(_endTrackingMouse)];
+            
+            [[self window] mouseDown:theEvent];
+        } else {
+            [[self window] makeKeyWindow];
+            [super mouseDown:theEvent];
+        }
+    } else {
+        [super mouseDown:theEvent];   
+    }
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent
+{
+    if (isBorderless && [theEvent cmdKey])
+        [[self window] mouseDragged:theEvent];   
+    else
+        [super mouseDragged:theEvent];
+}
+
 
 @end

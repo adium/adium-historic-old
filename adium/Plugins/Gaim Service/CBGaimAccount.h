@@ -37,6 +37,8 @@
     
     NSTimer *signonTimer;
     BOOL silentAndDelayed;
+    
+    BOOL needToRemoveGaimObjects;
 }
 
 - (const char*)protocolPlugin;

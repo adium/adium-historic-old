@@ -22,11 +22,16 @@
 
     NSTrackingRectTag	tooltipTrackingTag;
     BOOL		trackingMouseMovedEvents;
-
+    
+    BOOL                isBorderless;
+    
     BOOL                horizontalResizingEnabled;
     
     NSTimer 		*tooltipTimer;
     int 		tooltipCount;
+    BOOL                allowTooltipsInBackground;
+    
+    BOOL                fixedShadows;
 }
 
 + (AISCLViewController *)contactListViewController;
@@ -35,4 +40,6 @@
 - (void)view:(NSView *)inView didMoveToSuperview:(NSView *)inSuperview;
 - (NSMenu *)outlineView:(NSOutlineView *)outlineView menuForEvent:(NSEvent *)theEvent;
 
+//Relatively private
+- (void)_endTrackingMouse;
 @end

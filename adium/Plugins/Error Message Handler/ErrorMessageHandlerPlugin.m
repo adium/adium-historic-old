@@ -19,6 +19,8 @@
 
 @implementation ErrorMessageHandlerPlugin
 
+
+
 - (void)installPlugin
 {
     //Install our observers
