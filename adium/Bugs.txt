@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------------
 // Already Fixed, awaiting the next Adium release
 //------------------------------------------------------------------------------------
-
+- Crash when re-arranging emoticon packs
 
 
 
@@ -34,9 +34,6 @@
 
 - User icons occasionally display upside-down
 	We cannot find a pattern to when or why this happens
-	
-- Crash when re-arranging emoticon packs
-	Might be related to the code trying to make a multiple selection after the drag?
 
 - Crashes with chat rooms and conferences
 	We don't support chats at this time.  But we're still displaying the invite panels
