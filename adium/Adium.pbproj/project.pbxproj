@@ -119,8 +119,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				114A79B30470C383001F3502,
-				114A79B40470C385001F3502,
 				114A79B50470C3DA001F3502,
+				114A79B40470C385001F3502,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -141,6 +141,8 @@
 				115C72050470BD91007DDD3A,
 			);
 			buildSettings = {
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -155,6 +157,7 @@
 			);
 			isa = PBXBundleTarget;
 			name = "Idle Sort";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
 			productName = "Idle Sort";
 			productReference = 115C72070470BD91007DDD3A;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -197,12 +200,6 @@
 		115C72080470BD91007DDD3A = {
 			isa = PBXTargetDependency;
 			target = 115C72060470BD91007DDD3A;
-		};
-		115C72090470BD91007DDD3A = {
-			fileRef = 115C72070470BD91007DDD3A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		115C720A0470BE34007DDD3A = {
 			isa = PBXTargetDependency;
@@ -614,7 +611,6 @@
 				4BF290CB03F9FE8D00A8010A,
 				4BDF17250450CBDE00A8010A,
 				4B1CA9D80458D76E00A8010A,
-				115C72090470BD91007DDD3A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
