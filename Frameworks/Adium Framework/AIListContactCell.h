@@ -18,6 +18,7 @@
 	int					labelFontHeight;
 			
 	BOOL				backgroundColorIsStatus;
+	BOOL				backgroundColorIsEvents;
 	BOOL				shouldUseContactTextColors;
 
 	LIST_POSITION		userIconPosition;
@@ -62,6 +63,7 @@
 - (float)backgroundOpacity;
 - (void)setFont:(NSFont *)inFont;
 - (void)setBackgroundColorIsStatus:(BOOL)isStatus;
+- (void)setBackgroundColorIsEvents:(BOOL)isEvents;
 - (void)setShouldUseContactTextColors:(BOOL)flag;
 
 //Drawing

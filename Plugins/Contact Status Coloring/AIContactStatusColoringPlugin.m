@@ -126,6 +126,7 @@
     int				unviewedContent, away;
     int				idle;
 	float			opacity = FULL_IMAGE_OPACITY;
+	BOOL			isEvent = NO;
 
     //Prefetch the value for unviewed content, we need it multiple times below
     unviewedContent = [inObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
@@ -136,6 +137,7 @@
             color = unviewedContentColor;
             invertedColor = unviewedContentInvertedColor;
             labelColor = unviewedContentLabelColor;
+			isEvent = YES;
         }
     }
 
@@ -152,16 +154,19 @@
             color = signedOffColor;
             invertedColor = signedOffInvertedColor;
             labelColor = signedOffLabelColor;
-            
+			isEvent = YES;
+    
         }else if(signedOnEnabled && [inObject integerStatusObjectForKey:@"Signed On"]){
             color = signedOnColor;
             invertedColor = signedOnInvertedColor;
             labelColor = signedOnLabelColor;
-            
+			isEvent = YES;
+
         }else if(typingEnabled && ([inObject integerStatusObjectForKey:KEY_TYPING] == AITyping)){
             color = typingColor;
             invertedColor = typingInvertedColor;
             labelColor = typingLabelColor;
+			isEvent = YES;
         }
     }
 
@@ -198,6 +203,7 @@
     [[inObject displayArrayForKey:@"Inverted Text Color"] setObject:invertedColor withOwner:self];
     [[inObject displayArrayForKey:@"Label Color"] setObject:labelColor withOwner:self];
 	[[inObject displayArrayForKey:@"Image Opacity"] setObject:[NSNumber numberWithFloat:opacity] withOwner:self];
+	[[inObject displayArrayForKey:@"Is Event"] setObject:[NSNumber numberWithBool:isEvent] withOwner:self];
 }
 
 //Flash all handles with unviewed content

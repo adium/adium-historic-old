@@ -291,6 +291,10 @@
 {
 	backgroundColorIsStatus = isStatus;
 }
+- (void)setBackgroundColorIsEvents:(BOOL)isEvents
+{
+	backgroundColorIsEvents = isEvents;
+}
 
 - (void)setShouldUseContactTextColors:(BOOL)flag
 {
@@ -491,18 +495,15 @@
 //Contact label color
 - (NSColor *)labelColor
 {
-	if(backgroundColorIsStatus){
-		NSColor *labelColor = [listObject displayArrayObjectForKey:@"Label Color"];		
+	BOOL	isEvent = [[listObject displayArrayObjectForKey:@"Is Event"] boolValue];
+	
+	if((isEvent && backgroundColorIsEvents) || (!isEvent && backgroundColorIsStatus)){
+		NSColor *labelColor = [listObject displayArrayObjectForKey:@"Label Color"];	
 		return([labelColor colorWithAlphaComponent:backgroundOpacity]);
 	}else{
 		return(nil);
 	}
 }
-
-
-
-
-
 
 //Contact text color
 - (NSColor *)textColor
