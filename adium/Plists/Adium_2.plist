@@ -29,6 +29,8 @@
 			<array>
 				<string>AdiumTheme</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AdiumTheme.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Adium Theme</string>
 			<key>CFBundleTypeOSTypes</key>
