@@ -279,6 +279,12 @@ static NSString                             *filterForContactName = nil;	//Conta
 - (void)windowDidLoad
 {
 	[super windowDidLoad];
+    
+    //Set emoticon filtering
+    showEmoticons = [[[adium preferenceController] preferenceForKey:KEY_LOG_VIEWER_EMOTICONS
+                                                              group:PREF_GROUP_LOGGING] boolValue];
+    [[toolbarItems objectForKey:@"toggleemoticons"] setLabel:(showEmoticons ? HIDE_EMOTICONS : SHOW_EMOTICONS)];
+    [[toolbarItems objectForKey:@"toggleemoticons"] setImage:[NSImage imageNamed:(showEmoticons ? IMAGE_EMOTICONS_ON : IMAGE_EMOTICONS_OFF) forClass:[self class]]];
 
 	//Toolbar
 	[self installToolbar];
@@ -419,7 +425,13 @@ static NSString                             *filterForContactName = nil;	//Conta
         // set preference for drawer size
         [[adium preferenceController] setPreference:[NSNumber numberWithFloat:[drawer_contacts contentSize].width]
                                              forKey:KEY_LOG_VIEWER_DRAWER_SIZE
+                                              group:PREF_GROUP_LOGGING];       
+        
+        // set preference for emoticon filtering
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:showEmoticons]
+                                             forKey:KEY_LOG_VIEWER_EMOTICONS
                                               group:PREF_GROUP_LOGGING];        
+        
 
     //Disable the search field.  If we don't disable the search field, it will often try to call its target action
     //after the window has closed (and we are gone).  I'm not sure why this happens, but disabling the field
