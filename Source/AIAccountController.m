@@ -48,6 +48,8 @@
 - (NSMenuItem *)_menuItemForAccount:(AIAccount *)account fromArray:(NSArray *)accountMenuItemArray;
 - (void)rebuildAllAccountMenuItems;
 
+- (BOOL)_account:(AIAccount *)account canSendContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred includeOffline:(BOOL)includeOffline;
+
 @end
 
 @implementation AIAccountController
@@ -767,10 +769,35 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	AIAccount		*account;
 	
 	while(account = [enumerator nextObject]){
-		if(!inObject && !inPreferred){
-			[sourceAccounts addObject:account];
+		if((!inObject && !inPreferred) || 
+		   ([self _account:account canSendContentType:inType toListObject:inObject preferred:inPreferred includeOffline:includeOffline])){
 			
-		}else if([[[inObject service] serviceClass] isEqualToString:[[account service] serviceClass]]){
+			[sourceAccounts addObject:account];
+		}
+	}
+	
+	return(sourceAccounts);
+}
+
+- (BOOL)_account:(AIAccount *)account canSendContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred includeOffline:(BOOL)includeOffline
+{
+	BOOL			canSend = NO;
+	
+	if ([inObject isKindOfClass:[AIMetaContact class]]){		
+		NSEnumerator	*enumerator = [(AIMetaContact *)inObject listContacts];
+		AIListObject	*containedObject;
+		
+		//canSend is YES if any of the contained contacts of the meta contact return YES
+		while (containedObject = [enumerator nextObject]){
+			if ([self _account:account canSendContentType:inType toListObject:containedObject preferred:inPreferred includeOffline:includeOffline]){
+				
+				canSend = YES;
+				break;
+			}
+		}
+
+	}else{
+		if ([[inObject serviceClass] isEqualToString:[account serviceClass]]){
 			BOOL			knowsObject = NO;
 			BOOL			canFindObject = NO;
 			AIListContact	*contactForAccount = [[owner contactController] existingContactWithService:[inObject service]
@@ -789,13 +816,12 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 			if((inPreferred && knowsObject) ||						//Online and can see the object
 			   (!inPreferred && !knowsObject && canFindObject) ||	//Online and may be able to see the object
 			   (!inPreferred && !knowsObject && includeOffline)){	//Offline, but may be able to see the object if online
-				[sourceAccounts addObject:account];
+				canSend = YES;
 			}
-			
 		}
 	}
-			
-	return(sourceAccounts);
+	
+	return(canSend);
 }
 
 //Watch outgoing content, remembering the user's choice of source account
