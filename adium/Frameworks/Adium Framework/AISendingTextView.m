@@ -148,23 +148,12 @@ static NSImage *pushIndicatorImage = nil;
 //Send messages on a command-return
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent
 {
-    BOOL result = NO;
-	
-    unichar theChar = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
-    //check for command-return to send the message
-    switch (theChar)
-    {
-	case '\r':
-	    if(availableForSending) [self _sendContent]; //Send the content
-	    result = YES;
-		break;
-	case '\E':
-	    //Reset entry
-	    [self setString:@""];
-	    result = YES;
-	    break;
-    }
-    return(result);
+    if([[theEvent charactersIgnoringModifiers] characterAtIndex:0] == '\r'){
+	    if(availableForSending) [self _sendContent];
+		return(YES);
+	}else{
+		return(NO);
+	}
 }
 
 //Catch new lines as they're inserted
@@ -618,7 +607,12 @@ static NSImage *pushIndicatorImage = nil;
 			frame.size.height = 0;
 			[[associatedScrollView documentView] scrollRectToVisible:frame];
 		}
+		else if(inChar == '\E')
+		{
+			[self setString:@""];
+		}
 		else [super keyDown:inEvent];
+		
 	}
 }
 
