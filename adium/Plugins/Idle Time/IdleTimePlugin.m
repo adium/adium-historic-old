@@ -147,6 +147,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
     [self _closeIdleState:idleState]; //Close down current state
     [self _openIdleState:inState]; //Start up new state
     idleState = inState;
+    if ([NSApp isOnPantherOrBetter]) {
+        [self updateIdleMenu];
+    }
 }
 
 - (void)_openIdleState:(AIIdleState)inState
@@ -282,34 +285,63 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 - (void)installIdleMenu
 {
     //Create the menu item
-    menuItem = [[[NSMenuItem alloc] initWithTitle:IDLE_SET_IDLE_TITLE
+    menuItem_setIdle = [[NSMenuItem alloc] initWithTitle:IDLE_SET_IDLE_TITLE
                                            target:self
                                            action:@selector(selectIdleMenu:)
-                                    keyEquivalent:@"I"] autorelease];
-
-    
+                                    keyEquivalent:@""];
     //Add it to the menubar
-    [[owner menuController] addMenuItem:menuItem toLocation:LOC_File_Status];
+    [[owner menuController] addMenuItem:menuItem_setIdle toLocation:LOC_File_Status];
+
+    //On panther, set up our extra menu items
+    if ([NSApp isOnPantherOrBetter]) {
+        //currently shows setIdle
+        idleMenuState = SetIdle;
+        
+        //Create the remove menu item
+        menuItem_removeIdle = [[NSMenuItem alloc] initWithTitle:IDLE_REMOVE_IDLE_TITLE
+                                                         target:self
+                                                         action:@selector(selectIdleMenu:)
+                                                  keyEquivalent:@""];    
+        
+        //Create the custom menu item
+        menuItem_alternate = [[NSMenuItem alloc] initWithTitle:IDLE_SET_CUSTOM_IDLE_TITLE 
+                                                         target:self 
+                                                         action:@selector(selectIdleMenu:) 
+                                                  keyEquivalent:@""];
+        [menuItem_alternate setAlternate:YES];
+        [menuItem_alternate setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
+        [[owner menuController] addMenuItem:menuItem_alternate toLocation:LOC_File_Status];
+    }
 }
 
 //Update the idle time menu
 - (void)updateIdleMenu
 {
-    if(idleState != AINotIdle){ //Remove Idle
-        [menuItem setTitle:IDLE_REMOVE_IDLE_TITLE];
-        
-    }else if([NSEvent optionKey]){ //Set custom idle...
-        [menuItem setTitle:IDLE_SET_CUSTOM_IDLE_TITLE];
-        
-    }else{ //Set idle
-        [menuItem setTitle:IDLE_SET_IDLE_TITLE];
-        
+    if ([NSApp isOnPantherOrBetter]) {
+        if( (idleState != AINotIdle) && (idleMenuState == SetIdle) ) { //Remove Idle    
+            [NSMenu swapMenuItem:menuItem_setIdle with:menuItem_removeIdle];
+            [NSMenu swapMenuItem:menuItem_alternate with:menuItem_alternate];
+            idleMenuState = RemoveIdle;
+        } else if (idleMenuState == RemoveIdle) {
+            [NSMenu swapMenuItem:menuItem_removeIdle with:menuItem_setIdle];
+            [NSMenu swapMenuItem:menuItem_alternate with:menuItem_alternate];
+            idleMenuState = SetIdle;
+        }
+    } else {
+        if(idleState != AINotIdle){ //Remove Idle
+            [menuItem_setIdle setTitle:IDLE_REMOVE_IDLE_TITLE];
+        }else if([NSEvent optionKey]){ //Set custom idle... (JAGUAR)
+            [menuItem_setIdle setTitle:IDLE_SET_CUSTOM_IDLE_TITLE];
+        }else{ //Set idle
+        [menuItem_setIdle setTitle:IDLE_SET_IDLE_TITLE];
+        }
     }
 }
 
 //User selected the idle menu
 - (void)selectIdleMenu:(id)sender
 {
+    NSLog(@"set idle state");
     if(idleState != AINotIdle){ //Remove Idle
         [self setIdleState:AINotIdle];
         
@@ -324,8 +356,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-    [self updateIdleMenu];
-
+    if (![NSApp isOnPantherOrBetter]) {
+        [self updateIdleMenu];
+    }
     return(YES);
 }
 
