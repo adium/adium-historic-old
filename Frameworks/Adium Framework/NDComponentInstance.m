@@ -14,6 +14,8 @@ const OSType		kFinderCreatorCode = 'MACS';
 const NSString		* NDAppleScriptOffendingObject = @"Error Offending Object",
 						* NDAppleScriptPartialResult = @"Error Partial Result";
 
+static OSErr		AppleScriptActiveProc( long aRefCon );
+
 /*
  * category interface NDComponentInstance (Private)
  */
