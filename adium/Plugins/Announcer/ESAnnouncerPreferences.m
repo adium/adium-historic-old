@@ -15,7 +15,7 @@
     return(AIPref_Messages_Display);
 }
 - (NSString *)label{
-    return(@"Speak Messages");
+    return(@"z");
 }
 - (NSString *)nibName{
     return(@"AnnouncerPrefs");
