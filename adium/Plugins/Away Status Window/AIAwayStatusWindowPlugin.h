@@ -27,5 +27,6 @@
 }
 
 - (void)installPlugin;
+- (void)uninstallPlugin;
 
 @end

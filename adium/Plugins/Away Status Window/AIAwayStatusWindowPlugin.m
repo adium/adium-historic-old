@@ -37,6 +37,11 @@
     [self preferencesChanged:nil];
 }
 
+- (void)uninstallPlugin
+{
+	[[AIAwayStatusWindowController awayStatusWindowController] closeWindow];
+}
+
 //Update our away window when the away status changes
 - (void)preferencesChanged:(NSNotification *)notification
 {
