@@ -73,7 +73,7 @@
 	}
 
 
-#warning Hook this to the account for listobject
+//XXX - Hook this to the account for listobject
 	[[adium contactAlertsController] generateEvent:ACCOUNT_RECEIVED_EMAIL
 									 forListObject:nil
 										  userInfo:nil

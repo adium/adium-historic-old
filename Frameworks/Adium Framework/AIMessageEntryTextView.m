@@ -678,7 +678,7 @@ static NSImage *pushIndicatorImage = nil;
 	}
 }
 
-#warning Another bit of image code not ready for prime time yet :)
+//XXX - Another bit of image code not ready for prime time yet :)
 #define ALLOW_INSERTION_OF_IMAGES   FALSE
 
 //The textView's method of inserting into the view is insufficient; we can do better.

@@ -464,7 +464,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 //This makes the UID and service information presented to the user as accurate as possible for at-a-glance
 //knowlege of the metaContact's effective contents
 
-#warning rework to handle containsOnlyOneService checking simultaneously
+// XXX - rework to handle containsOnlyOneService checking simultaneously
 - (void)_determineIfWeShouldAppearToContainOnlyOneContact
 {
 	BOOL oldOnlyOne = containsOnlyOneUniqueContact;

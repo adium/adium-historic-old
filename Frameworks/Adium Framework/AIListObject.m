@@ -458,7 +458,7 @@ DeclareString(FormattedUID);
 		//Save the alias
 		[self setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];
 
-		#warning There must be a cleaner way to do this alias stuff!  This works for now :)
+		//XXX - There must be a cleaner way to do this alias stuff!  This works for now :)
 		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
 												  object:self
 												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]

@@ -176,7 +176,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		[[adium contactController] listObjectAttributesChanged:theContact
 												  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
 		
-#warning There must be a cleaner way to do this alias stuff!  This works for now
+//XXX - There must be a cleaner way to do this alias stuff!  This works for now
 		//Request an alias change
 		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
 												  object:theContact
@@ -736,7 +736,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		if (![source isEqualToString:[self UID]]){
 			AIListContact	*listContact;
 			
-#warning source can be (null) for system messages like topic changes
+			//source may be (null) for system messages like topic changes
 			listContact = (source ? [self contactWithUID:source] : nil);
 			GaimDebug (@"receivedMultiChatMessage: Received %@ from %@ in %@",[attributedMessage string],[listContact UID],[chat name]);
 

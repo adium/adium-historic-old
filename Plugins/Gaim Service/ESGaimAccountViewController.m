@@ -118,12 +118,12 @@
 		NSString	*hostName = [textField_hostName stringValue];
 
 		[account setPreference:([hostName length] ? hostName : nil)
-						forKey:[account hostKey]
+						forKey:[(CBGaimAccount *)account hostKey]
 						 group:GROUP_ACCOUNT_STATUS];	
 		
 	}else if (sender == textField_portNumber){		
 		[account setPreference:([[textField_portNumber stringValue] length] ? [NSNumber numberWithInt:[textField_portNumber intValue]] : nil)
-						forKey:[account portKey]
+						forKey:[(CBGaimAccount *)account portKey]
 						 group:GROUP_ACCOUNT_STATUS];
 		
 	}else if (sender == textField_proxyHostName){
@@ -165,7 +165,7 @@
 		int			length = [hostName length];
 		
 		if (!length){
-			[textField_hostName setStringValue:[account host]];
+			[textField_hostName setStringValue:[(CBGaimAccount *)account host]];
 		}
 		
 	}else if (sender == textField_portNumber){
@@ -244,16 +244,17 @@
 }
 
 //Update display for account status change
-- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
-{
-	if(inObject == nil || inObject == account){
-		if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"]){
-			[self configureConnectionControlDimming];
-			
-		}
-	}
-	
-	return([super updateListObject:inObject keys:inModifiedKeys silent:silent]);
-}
+//XXX - We're not doing any dynamic disabling/enabling at the moment in account views -ai
+//- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
+//{
+//	if(inObject == nil || inObject == account){
+//		if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"]){
+//			[self configureConnectionControlDimming];
+//			
+//		}
+//	}
+//	
+//	return([super updateListObject:inObject keys:inModifiedKeys silent:silent]);
+//}
 
 @end

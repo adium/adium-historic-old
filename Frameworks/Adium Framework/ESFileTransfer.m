@@ -246,7 +246,7 @@
 	
 	if(extension && [extension length]){
 
-#warning Test for file transfer type, overlay a light up arrow or down arrow?
+		//XXX - Test for file transfer type, overlay a light up arrow or down arrow?
 		iconImage = [[NSWorkspace sharedWorkspace] iconForFileType:extension];
 	}
 

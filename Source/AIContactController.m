@@ -1909,7 +1909,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	}
 }
 
-#warning This is ridiculous.
+//XXX - This is ridiculous.
 - (AIListContact *)preferredContactWithUID:(NSString *)inUID andServiceID:(NSString *)inService forSendingContentType:(NSString *)inType
 {
 	AIService		*theService = [[adium accountController] firstServiceWithServiceID:inService];
