@@ -17,6 +17,7 @@
 #import "AIContactController.h"
 #import "ESAccountEvents.h"
 #import "ESContactAlertsController.h"
+#import <AIUtilities/ESImageAdditions.h>
 #import <Adium/AIAccount.h>
 
 #define ACCOUNT_CONNECTION_STATUS_GROUPING  2.0
