@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.124 2004/05/12 22:22:40 the_tick Exp $
+$Id: ToDoList.txt,v 1.125 2004/05/12 22:41:31 the_tick Exp $
 
 
 Legend
@@ -262,6 +262,14 @@ Contact List import/export:
 
 Sorting:  Allow a 'minor' sort option like iChat?  (iChat uses the last selected as the subsort).  Not sure if this would be useful.
 
+Too many tabs issue:
+	It seems that if you have too many tabs, then the tabs come to a point of not being usable. Tabs rock, but with 15 open windows intrinsic issues with this approach start to appear. We could:
+
+	1) Offer a side list/drawer as an option.
+	2) Have the arrows thing like in gaim and other clients.
+	3) I have no idea, someone fill this in.
+
+	This will require a great deal of thought probably, and may not be resolvable for all parties.
 -------------------------------------------------------------------------------------------------------
 Unfixable(?) Issues
 -------------------------------------------------------------------------------------------------------
@@ -278,6 +286,7 @@ http://www.mirrors.wiretapped.net/security/steganography/stegdetect/stegdetect-0
 * Fix the Output Device Control plugin so it doesn't crash on Jaguar (unfixable?) Alternatively, figure out a way to have it be on by default in Panther, but off in Jaguar.
 
 * WebKit caching is meaning that buddy icons don't update until Adium restarts.
+
 
 -------------------------------------------------------------------------------------------------------
 Waiting On
