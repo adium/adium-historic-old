@@ -122,7 +122,6 @@
 {
     NSDictionary	*iconPackDict;
     NSDictionary	*stateDict;
-    NSString		*title, *creator;
     NSEnumerator	*previewEnumerator, *stateEnumerator;
     NSArray			*stateArray;
     NSString		*state;
