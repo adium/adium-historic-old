@@ -1873,6 +1873,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 														   target:self
 														   action:@selector(performContactMenuAction:)
 													keyEquivalent:@""] autorelease];
+					[menuItem setImage:[AIServiceIcons serviceIconForService:[self service]
+																	type:AIServiceIconSmall
+															   direction:AIIconNormal]];
 					dict = [NSDictionary dictionaryWithObjectsAndKeys:
 						[NSValue valueWithPointer:act],@"GaimBlistNodeAction",
 						[NSValue valueWithPointer:buddy],@"GaimBuddy",
