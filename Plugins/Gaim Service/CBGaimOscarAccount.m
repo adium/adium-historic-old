@@ -75,6 +75,7 @@ static BOOL didInitOscar = NO;
 	[encoderAttachmentsAsText setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
 	[encoderAttachmentsAsText setOnlyUsesSimpleTags:NO];
 	
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_NOTES];
 }
 
 - (void)dealloc
@@ -775,28 +776,24 @@ aim_srv_setavailmsg(od->sess, text);
 	
 	return(serversideComment);
 }
-- (void)preferencesChanged:(NSNotification *)notification
+
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-	[super preferencesChanged:notification];
+	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict];
 	
-	NSDictionary	*userInfo = [notification userInfo];
-	NSString		*prefGroup = [userInfo objectForKey:@"Group"];
-	
-    if([prefGroup isEqualToString:PREF_GROUP_NOTES]){
-		AIListObject *listObject = [notification object];
-		
+	if([group isEqualToString:PREF_GROUP_NOTES]){
 		//If the notification object is a listContact belonging to this account, update the serverside information
 		if (account &&
-			[listObject isKindOfClass:[AIListContact class]] && 
-			[(AIListContact *)listObject account] == self){
+			[object isKindOfClass:[AIListContact class]] && 
+			[(AIListContact *)object account] == self){
 			
-			if ([[userInfo objectForKey:@"Key"] isEqualToString:@"Notes"]){
+			if ([key isEqualToString:@"Notes"]){
+				NSString  *comment = [object preferenceForKey:@"Notes" 
+														group:PREF_GROUP_NOTES
+										ignoreInheritedValues:YES];
 				
-				NSString  *comment = [listObject preferenceForKey:@"Notes" 
-															group:PREF_GROUP_NOTES
-											ignoreInheritedValues:YES];
-				
-				[[super gaimThread] OSCAREditComment:comment forUID:[listObject UID] onAccount:self];
+				[[super gaimThread] OSCAREditComment:comment forUID:[object UID] onAccount:self];
 			}			
 		}
 	}
