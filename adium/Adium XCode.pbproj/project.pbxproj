@@ -450,8 +450,6 @@
 		};
 		29B97314FDCFA39411CA2CEA = {
 			children = (
-				F5385CF601BEB9F901A80165,
-				4BE9FFE7055981AB00359B15,
 				F59DB3D6033EA9CD01A8010A,
 				F59DB3D7033EA9CD01A8010A,
 				F5741745033E731F01A8010A,
@@ -7013,8 +7011,6 @@
 		34BD9D24053146CC000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34BD9D25053146CC000AB133,
-				34BD9D26053146CC000AB133,
 				34BD9D27053146CC000AB133,
 				34BD9D28053146CC000AB133,
 				34BD9D29053146CC000AB133,
@@ -7046,21 +7042,11 @@
 				34E8FA34054D9CE8008BB262,
 				4BE9FFE8055981AB00359B15,
 				4B584E1B055DD7FD00E89D48,
+				4BBEC8B90563E7CD0013C8F7,
+				4BBEC8BA0563E7CD0013C8F7,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9D25053146CC000AB133 = {
-			fileRef = F574173F033E72AC01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9D26053146CC000AB133 = {
-			fileRef = F5741740033E72AC01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34BD9D27053146CC000AB133 = {
 			fileRef = F57938BC033E739101A8010A;
@@ -17652,90 +17638,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B7764CB03C4A03700A8010A = {
-			expectedFileType = text.rtf;
-			isa = PBXFileReference;
-			path = "Adium Framework.rtf";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7764CC03C4A03700A8010A = {
-			expectedFileType = text.rtf;
-			isa = PBXFileReference;
-			path = AIAccountController.rtf;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7764CD03C4A03700A8010A = {
-			expectedFileType = text.rtf;
-			isa = PBXFileReference;
-			path = AIContactController.rtf;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7764CE03C4A03700A8010A = {
-			expectedFileType = text.rtf;
-			isa = PBXFileReference;
-			path = AIContentController.rtf;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7764CF03C4A03800A8010A = {
-			expectedFileType = text.rtf;
-			isa = PBXFileReference;
-			path = AIInterfaceController.rtf;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7764D003C4A03800A8010A = {
-			expectedFileType = text.rtf;
-			isa = PBXFileReference;
-			path = AILoginController.rtf;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7764D103C4A03800A8010A = {
-			expectedFileType = text.rtf;
-			isa = PBXFileReference;
-			path = AIMenuController.rtf;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7764D203C4A03800A8010A = {
-			expectedFileType = text.rtf;
-			isa = PBXFileReference;
-			path = AIPreferenceController.rtf;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7764D303C4A03800A8010A = {
-			expectedFileType = text.rtf;
-			isa = PBXFileReference;
-			path = AISoundController.rtf;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7764D403C4A03800A8010A = {
-			expectedFileType = text.rtf;
-			isa = PBXFileReference;
-			path = "Creating Plugins.rtf";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7764D503C4A03800A8010A = {
-			expectedFileType = text.rtf;
-			isa = PBXFileReference;
-			path = "Creating service code.rtf";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7764D603C4A03800A8010A = {
-			expectedFileType = text.rtf;
-			isa = PBXFileReference;
-			path = "Mutable owner arrays.rtf";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B776A2004C981C700A8010A = {
 			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
@@ -19294,6 +19196,33 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4BBEC8B70563E7CC0013C8F7 = {
+			expectedFileType = text;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = " LICENSE.txt";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4BBEC8B80563E7CC0013C8F7 = {
+			expectedFileType = text.rtf;
+			isa = PBXFileReference;
+			path = " README.rtf";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4BBEC8B90563E7CD0013C8F7 = {
+			fileRef = 4BBEC8B70563E7CC0013C8F7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BBEC8BA0563E7CD0013C8F7 = {
+			fileRef = 4BBEC8B80563E7CC0013C8F7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BC02D310452C69100A8010A = {
 			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
@@ -20438,8 +20367,8 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			path = Adium.pch;
-			refType = 4;
-			sourceTree = "<group>";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		4BE9FFE8055981AB00359B15 = {
 			fileRef = 4BE9FFE7055981AB00359B15;
@@ -23101,9 +23030,12 @@
 		};
 		9EB3C52204F94D96001D1F74 = {
 			children = (
+				4BBEC8B70563E7CC0013C8F7,
+				4BBEC8B80563E7CC0013C8F7,
+				4BE9FFE7055981AB00359B15,
+				F59DB6AD033EB74801A8010A,
 				6C1CC23105415D5700B64925,
 				6C1CC23205415D5700B64925,
-				F59DB6AD033EB74801A8010A,
 				9EB3C52304F94DB7001D1F74,
 			);
 			isa = PBXGroup;
@@ -24109,18 +24041,6 @@
 			);
 			isa = PBXGroup;
 			name = "Status Circles";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5385CF601BEB9F901A80165 = {
-			children = (
-				F5E6713603B4D12601A8010A,
-				F574173F033E72AC01A8010A,
-				F5741740033E72AC01A8010A,
-			);
-			isa = PBXGroup;
-			name = Docs;
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
@@ -25352,23 +25272,6 @@
 			isa = PBXFileReference;
 			name = AISendingTextView.m;
 			path = "Frameworks/AIUtilities Framework/AISendingTextView.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F574173F033E72AC01A8010A = {
-			expectedFileType = text;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = gpl.txt;
-			path = Documentation/gpl.txt;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5741740033E72AC01A8010A = {
-			expectedFileType = text.rtf;
-			isa = PBXFileReference;
-			name = ReadMe.rtf;
-			path = Documentation/ReadMe.rtf;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -26762,27 +26665,6 @@
 			isa = PBXFileReference;
 			name = Bold_On.tiff;
 			path = "Plugins/Text Toolbar Items/Bold_On.tiff";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5E6713603B4D12601A8010A = {
-			children = (
-				4B7764CC03C4A03700A8010A,
-				4B7764CD03C4A03700A8010A,
-				4B7764CE03C4A03700A8010A,
-				4B7764CF03C4A03800A8010A,
-				4B7764D003C4A03800A8010A,
-				4B7764D103C4A03800A8010A,
-				4B7764D203C4A03800A8010A,
-				4B7764D303C4A03800A8010A,
-				4B7764CB03C4A03700A8010A,
-				4B7764D403C4A03800A8010A,
-				4B7764D503C4A03800A8010A,
-				4B7764D603C4A03800A8010A,
-			);
-			isa = PBXGroup;
-			name = developer;
-			path = Documentation/developer;
 			refType = 4;
 			sourceTree = "<group>";
 		};
