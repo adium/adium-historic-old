@@ -103,9 +103,6 @@
     contents = [[[inTextEntryView attributedString] mutableCopy] autorelease];
     [contents setAttributes:attributes range:NSMakeRange(0,[contents length])];
     [inTextEntryView setAttributedString:contents];
-	
-	//Let the inTextEntryView know about its defaults
-	[inTextEntryView setDefaultTypingAttributes:attributes];
 }
 
 

@@ -146,11 +146,6 @@ static NSImage *pushIndicatorImage = nil;
         [[adium contentController] contentsChangedInTextEntryView:self];
     }
     
-    //reset any link attribs if they exist
-    if((0 == [self selectedRange].location) && (0 == [self selectedRange].length) && [self defaultTypingAttributes]){
-        [self resetToDefaultTypingAttributes];
-    }
-        
     //Reset cache and resize
 	[self _resetCacheAndPostSizeChanged];
 }
@@ -174,21 +169,6 @@ static NSImage *pushIndicatorImage = nil;
 }
 - (NSView *)associatedView{
 	return(associatedView);
-}
-
-//Typing attributes
-- (void)setDefaultTypingAttributes:(NSDictionary *)dict
-{
-	[defaultTypingAttributes release];
-	defaultTypingAttributes = [dict retain];
-}
-- (NSDictionary *)defaultTypingAttributes
-{
-	return defaultTypingAttributes;
-}
-- (void)resetToDefaultTypingAttributes
-{
-	[self setTypingAttributes:defaultTypingAttributes];
 }
 
 
@@ -417,11 +397,15 @@ static NSImage *pushIndicatorImage = nil;
 	//Send the content
 	[super sendContent:sender];
 	
-	//clear the undo/redo stack as it makes no sense to carry between sends (the history is for that)
+	//Clear the undo/redo stack as it makes no sense to carry between sends (the history is for that)
 	[[self undoManager] removeAllActions];
         
-        //reset typing attribs
-        [self resetToDefaultTypingAttributes];
+	//Remove the link attribute (If present) so it doesn't bleed
+	if([[self typingAttributes] objectForKey:NSLinkAttributeName]){
+		NSMutableDictionary	*typingAttributes = [[[self typingAttributes] mutableCopy] autorelease];
+		[typingAttributes removeObjectForKey:NSLinkAttributeName];
+		[self setTypingAttributes:typingAttributes];
+	}
 }
 
 
