@@ -75,7 +75,7 @@
 	stateMenuPluginsArray = [[NSMutableArray alloc] init];
 	stateMenuItemsNeedingUpdating = [[NSMutableSet alloc] init];
 	stateMenuUpdateDelays = 0;
-	_stateArrayForMenuItems = nil;
+	_sortedFullStateArray = nil;
 	_activeStatusState = nil;
 	_allActiveStatusStates = nil;
 
@@ -179,7 +179,7 @@
 - (void)dealloc
 {
 	[stateArray release]; stateArray = nil;
-	[_stateArrayForMenuItems release]; _stateArrayForMenuItems = nil;
+	[_sortedFullStateArray release]; _sortedFullStateArray = nil;
 }
 
 #pragma mark Status registration
@@ -585,6 +585,64 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	return(builtInStateArray);
 }
 
+//Sort the status array
+int _statusArraySort(id objectA, id objectB, void *context)
+{
+	AIStatusType statusTypeA = [objectA statusType];
+	AIStatusType statusTypeB = [objectB statusType];
+	
+	//We treat Invisible statuses as being the same as Away for purposes of the menu
+	if(statusTypeA == AIInvisibleStatusType) statusTypeA = AIAwayStatusType;
+	if(statusTypeB == AIInvisibleStatusType) statusTypeB = AIAwayStatusType;
+	
+	if(statusTypeA > statusTypeB){
+		return NSOrderedDescending;
+	}else if(statusTypeB > statusTypeA){
+		return NSOrderedAscending;
+	}else{
+		AIStatusMutabilityType mutabilityTypeA = [objectA mutabilityType];
+		AIStatusMutabilityType mutabilityTypeB = [objectB mutabilityType];
+		
+		if(mutabilityTypeA != mutabilityTypeB){
+			//Sort locked status states to the top, as these are our built-in presets
+			if(mutabilityTypeA == AILockedStatusState){
+				return NSOrderedAscending;
+			}else{
+				return NSOrderedDescending;				
+			}
+		}else{
+			NSArray	*originalArray = (NSArray *)context;
+			
+			//Return them in the same relative order as the original array if they are of the same type
+			int indexA = [originalArray indexOfObjectIdenticalTo:objectA];
+			int indexB = [originalArray indexOfObjectIdenticalTo:objectB];
+			
+			if(indexA > indexB){
+				return NSOrderedDescending;
+			}else{
+				return NSOrderedAscending;
+			}
+		}
+	}
+}
+
+/*!
+* @brief Return a sorted state array for use in menu item creation
+ *
+ * The array is created by adding the built in states to the user states, then sorting using _statusArraySort
+ *
+ * @result A cached NSArray which is sorted by status type (available, away), built-in vs. user-made, and then original ordering.
+ */
+- (NSArray *)sortedFullStateArray
+{
+	if(!_sortedFullStateArray){
+		NSArray	*tempArray = [[self stateArray] arrayByAddingObjectsFromArray:[self builtInStateArray]];
+		_sortedFullStateArray = [[tempArray sortedArrayUsingFunction:_statusArraySort context:tempArray] retain];
+	}
+	
+	return _sortedFullStateArray;
+}
+
 /*!
  * @brief Retrieve active status state
  *
@@ -715,7 +773,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  */
 - (AIStatus *)statusStateWithUniqueStatusID:(NSNumber *)uniqueStatusID
 {
-	NSEnumerator	*enumerator = [[self stateArray] objectEnumerator];
+	NSEnumerator	*enumerator = [[self sortedFullStateArray] objectEnumerator];
 	AIStatus		*statusState;
 	while(statusState = [enumerator nextObject]){
 		if([[statusState uniqueStatusID] compare:uniqueStatusID] == NSOrderedSame)
@@ -808,7 +866,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 - (void)_saveStateArrayAndNotifyOfChanges
 {
 	//Clear the sorted menu items array since our state array changed.
-	[_stateArrayForMenuItems release]; _stateArrayForMenuItems = nil;
+	[_sortedFullStateArray release]; _sortedFullStateArray = nil;
 	
 	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:stateArray]
 										 forKey:KEY_SAVED_STATUS
@@ -983,64 +1041,6 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	[stateMenuItemsNeedingUpdating  addObjectsFromArray:addedMenuItems];
 }
 
-//Sort the status array
-int _statusArraySort(id objectA, id objectB, void *context)
-{
-	AIStatusType statusTypeA = [objectA statusType];
-	AIStatusType statusTypeB = [objectB statusType];
-	
-	//We treat Invisible statuses as being the same as Away for purposes of the menu
-	if(statusTypeA == AIInvisibleStatusType) statusTypeA = AIAwayStatusType;
-	if(statusTypeB == AIInvisibleStatusType) statusTypeB = AIAwayStatusType;
-	
-	if(statusTypeA > statusTypeB){
-		return NSOrderedDescending;
-	}else if(statusTypeB > statusTypeA){
-		return NSOrderedAscending;
-	}else{
-		AIStatusMutabilityType mutabilityTypeA = [objectA mutabilityType];
-		AIStatusMutabilityType mutabilityTypeB = [objectB mutabilityType];
-
-		if(mutabilityTypeA != mutabilityTypeB){
-			//Sort locked status states to the top, as these are our built-in presets
-			if(mutabilityTypeA == AILockedStatusState){
-				return NSOrderedAscending;
-			}else{
-				return NSOrderedDescending;				
-			}
-		}else{
-			NSArray	*originalArray = (NSArray *)context;
-			
-			//Return them in the same relative order as the original array if they are of the same type
-			int indexA = [originalArray indexOfObjectIdenticalTo:objectA];
-			int indexB = [originalArray indexOfObjectIdenticalTo:objectB];
-			
-			if(indexA > indexB){
-				return NSOrderedDescending;
-			}else{
-				return NSOrderedAscending;
-			}
-		}
-	}
-}
-
-/*!
- * @brief Return a sorted state array for use in menu item creation
- *
- * The array is created by adding the built in states to the user states, then sorting using _statusArraySort
- *
- * @result A cached NSArray which is sorted by status type (available, away), built-in vs. user-made, and then original ordering.
- */
- - (NSArray *)stateArrayForMenuItems
-{
-	if(!_stateArrayForMenuItems){
-		NSArray	*tempArray = [[self stateArray] arrayByAddingObjectsFromArray:[self builtInStateArray]];
-		_stateArrayForMenuItems = [[tempArray sortedArrayUsingFunction:_statusArraySort context:tempArray] retain];
-	}
-
-	return _stateArrayForMenuItems;
-}
-
 /*!
  * @brief Add state menu items
  *
@@ -1058,7 +1058,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 
 	//Create a menu item for each state.  States must first be sorted such that states of the same AIStatusType 
 	//are grouped together.
-	enumerator = [[self stateArrayForMenuItems] objectEnumerator];
+	enumerator = [[self sortedFullStateArray] objectEnumerator];
 	while(statusState = [enumerator nextObject]){
 		AIStatusType thisStatusType = [statusState statusType];
 		
@@ -1330,7 +1330,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 					* in our array of states from which we made menu items, we'll be searching to match it.  If it isn't,
 					* we have a custom state and will be searching for the custom item of the right type, switching all other
 					* menu items to NSOffState. */
-				if([[self stateArrayForMenuItems] containsObjectIdenticalTo:appropiateActiveStatusState]){
+				if([[self sortedFullStateArray] containsObjectIdenticalTo:appropiateActiveStatusState]){
 					//If the search state is in the array so is a saved state, search for the match
 					if(menuItemStatusState == appropiateActiveStatusState){
 						if([menuItem state] != NSOnState) [menuItem setState:NSOnState];
@@ -1366,14 +1366,14 @@ int _statusArraySort(id objectA, id objectB, void *context)
 				}else{
 					//If it doesn't, check the tag to see if it should be on or off by looking for a matching custom state
 					NSEnumerator	*activeStatusStatesEnumerator = [allActiveStatusStates objectEnumerator];
-					NSArray			*stateArrayForMenuItems = [self stateArrayForMenuItems];
+					NSArray			*sortedFullStateArray = [self sortedFullStateArray];
 					AIStatus		*statusState;
 					BOOL			foundCorrectStatusState = NO;
 					
 					while(!foundCorrectStatusState && (statusState = [activeStatusStatesEnumerator nextObject])){
 						//We found a custom match if our array of menu item states doesn't contain this state and 
 						//its statusType matches the menuItem's tag.
-						foundCorrectStatusState = (![stateArrayForMenuItems containsObjectIdenticalTo:statusState] &&
+						foundCorrectStatusState = (![sortedFullStateArray containsObjectIdenticalTo:statusState] &&
 												   ([menuItem tag] == [statusState statusType]));
 					}
 					
@@ -1587,7 +1587,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		
 	//Create a menu item for each state.  States must first be sorted such that states of the same AIStatusType 
 	//are grouped together.
-	enumerator = [[self stateArrayForMenuItems] objectEnumerator];
+	enumerator = [[self sortedFullStateArray] objectEnumerator];
 	while(statusState = [enumerator nextObject]){
 		AIStatusType thisStatusType = [statusState statusType];
 		
