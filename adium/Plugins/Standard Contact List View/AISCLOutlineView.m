@@ -22,6 +22,10 @@
 #import "AISCLViewController.h"
 
 #define	CONTACT_LIST_EMPTY_MESSAGE		@"No Available Contacts"		//Message to display when the contact list is empty
+#define DESIRED_MIN_WIDTH	40
+#define DESIRED_MIN_HEIGHT	20
+#define EMPTY_HEIGHT		20
+#define EMPTY_WIDTH		140
 
 @interface AISCLOutlineView (PRIVATE)
 - (void)configureView;
@@ -125,6 +129,47 @@
     //Needed for proper transparency... but not the cleanest way.
     backgroundAlpha = [[[self backgroundColor] colorUsingColorSpaceName:NSDeviceRGBColorSpace] alphaComponent];
     [inWindow setAlphaValue:(backgroundAlpha == 100.0 ? 1.0 : 0.9999999)];
+}
+
+
+// Auto Sizing --------------------------------------------------------------------------
+// Returns our desired size
+- (NSSize)desiredSize
+{
+    if([self numberOfRows] == 0){
+        return( NSMakeSize(EMPTY_WIDTH, EMPTY_HEIGHT) );
+
+    }else{
+        int	desiredHeight;//, desiredWidth;
+
+        desiredHeight = [self numberOfRows] * ([self rowHeight] + [self intercellSpacing].height);
+
+        int i;
+        int desiredWidth = 50;
+
+        for(i = 0; i < [self numberOfRows]; i++){
+            NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
+            NSCell 		*cell = [column dataCell];
+            NSSize		cellSize;
+
+            [[self delegate] outlineView:self willDisplayCell:cell forTableColumn:column item:[self itemAtRow:i]];
+            //    NSLog(@"%i",(int)[cell cellSize].width);
+
+            cellSize = [cell cellSizeForBounds:NSMakeRect(0,0,0,[self rowHeight])];
+
+            cellSize.width += [self intercellSpacing].width;
+            cellSize.width += [self levelForRow:i] * [self indentationPerLevel];
+
+            if(cellSize.width > desiredWidth){
+                desiredWidth = cellSize.width;
+            }
+        }
+
+        if(desiredWidth < DESIRED_MIN_WIDTH) desiredWidth = DESIRED_MIN_WIDTH;
+        if(desiredHeight < DESIRED_MIN_HEIGHT) desiredHeight = DESIRED_MIN_HEIGHT;
+
+        return( NSMakeSize(desiredWidth, desiredHeight) );
+    }
 }
 
 

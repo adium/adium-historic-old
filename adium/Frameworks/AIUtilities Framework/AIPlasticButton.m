@@ -34,13 +34,13 @@
 
 - (void)drawRect:(NSRect)rect
 {
-    NSRect	sourceRect, destRect;
+    NSRect	sourceRect, destRect, frame;
     int		capWidth;
     int		capHeight;
     int		middleRight;
     NSImage	*caps;
     NSImage	*middle;
-
+    
     //Get the correct images
     if(![[self cell] isHighlighted]){
         if([[self keyEquivalent] compare:@"\r"] == 0){
@@ -56,18 +56,19 @@
     }
 
     //Precalc some sizes
+    frame = [self bounds];
     capWidth = [caps size].width / 2.0;
     capHeight = [caps size].height;
-    middleRight = ((rect.origin.x + rect.size.width) - capWidth);
+    middleRight = ((frame.origin.x + frame.size.width) - capWidth);
 
     //Draw the left cap
-    [caps compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y + rect.size.height)
+    [caps compositeToPoint:NSMakePoint(frame.origin.x, frame.origin.y + frame.size.height)
                   fromRect:NSMakeRect(0, 0, capWidth, capHeight)
                  operation:NSCompositeSourceOver];
 
     //Draw the middle
     sourceRect = NSMakeRect(0, 0, [middle size].width, [middle size].height);
-    destRect = NSMakeRect(rect.origin.x + capWidth, rect.origin.y + rect.size.height, sourceRect.size.width, sourceRect.size.height);
+    destRect = NSMakeRect(frame.origin.x + capWidth, frame.origin.y + frame.size.height, sourceRect.size.width, sourceRect.size.height);
 
     while(destRect.origin.x < middleRight && sourceRect.size.width != 0){
         //Crop
@@ -82,7 +83,7 @@
     }
 
     //Draw right mask
-    [caps compositeToPoint:NSMakePoint(middleRight, rect.origin.y + rect.size.height)
+    [caps compositeToPoint:NSMakePoint(middleRight, frame.origin.y + frame.size.height)
                   fromRect:NSMakeRect(capWidth, 0, capWidth, capHeight)
                  operation:NSCompositeSourceOver];
 
@@ -93,8 +94,8 @@
         NSPoint	centeredPoint;
 
 
-        centeredPoint = NSMakePoint(rect.origin.x + ((rect.size.width - size.width) / 2.0) + LABEL_OFFSET_X,
-                                    rect.origin.y + ((capHeight - size.height) / 2.0) + LABEL_OFFSET_Y);
+        centeredPoint = NSMakePoint(frame.origin.x + ((frame.size.width - size.width) / 2.0) + LABEL_OFFSET_X,
+                                    frame.origin.y + ((capHeight - size.height) / 2.0) + LABEL_OFFSET_Y);
 
         [[self title] drawAtPoint:centeredPoint withAttributes:attributes];
     }
@@ -104,8 +105,8 @@
         NSSize	size = [[self image] size];
         NSRect	centeredRect;
 
-        centeredRect = NSMakeRect(rect.origin.x + ((rect.size.width - size.width) / 2.0) + IMAGE_OFFSET_X,
-                                  rect.origin.y + ((capHeight - size.height) / 2.0) + IMAGE_OFFSET_Y,
+        centeredRect = NSMakeRect(frame.origin.x + ((frame.size.width - size.width) / 2.0) + IMAGE_OFFSET_X,
+                                  frame.origin.y + ((capHeight - size.height) / 2.0) + IMAGE_OFFSET_Y,
                                   size.width,
                                   size.height);
 

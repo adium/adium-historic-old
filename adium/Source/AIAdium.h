@@ -139,6 +139,7 @@ typedef enum {
 #define Interface_WillSendEnteredMessage 			@"Interface_WillSendEnteredMessage"
 #define Interface_DidSendEnteredMessage				@"Interface_DidSendEnteredMessage"
 #define Interface_ErrorMessageReceived				@"Interface_ErrorMessageRecieved"
+#define Interface_ViewDesiredSizeDidChange			@"Interface_ViewDesiredSizeDidChange"
 #define Content_ContentObjectAdded				@"Content_ContentObjectAdded"
 #define Content_WillSendContent					@"Content_WillSendContent"
 #define Content_DidSendContent					@"Content_DidSendContent"
@@ -154,6 +155,10 @@ typedef enum {
 // Public core controller protocols ------------------------------------------------------------
 @protocol AIListObjectObserver //notified of changes
     - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys;
+@end
+
+@protocol AIAutoSizingView //Sends Interface_ViewDesiredSizeDidChange notifications
+    - (NSSize)desiredSize;
 @end
 
 @protocol AIListObjectLeftView //Draws to the left of a handle

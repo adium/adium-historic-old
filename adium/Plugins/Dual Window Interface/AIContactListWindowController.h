@@ -28,9 +28,11 @@
 
     id <AIContactListViewController>	contactListViewController;
     NSView				*contactListView;
+    NSSize				contactViewPadding;
 
     id <AIContainerInterface>		interface;
     AIAdium				*owner;
+
 }
 
 + (AIContactListWindowController *)contactListWindowControllerForInterface:(id <AIContainerInterface>)inInterface owner:(id)inOwner;

@@ -35,6 +35,7 @@
 - (void)mouseMoved:(NSEvent *)theEvent;
 - (void)_showTooltipAtPoint:(NSPoint)screenPoint;
 - (void)updateTooltipTrackingRect;
+- (void)_desiredSizeChanged;
 @end
 
 @implementation AISCLViewController
@@ -114,8 +115,9 @@
     //Fetch the new contact list
     [contactList release]; contactList = [[[owner contactController] contactList] retain];
 
-    //Redisplay
+    //Redisplay and resize
     [contactListView reloadData];
+    [self _desiredSizeChanged];
 }
 
 //Reload the contact list (if updates aren't delayed)
@@ -123,6 +125,7 @@
 {
     if(![[owner contactController] holdContactListUpdates]){        
         [contactListView reloadData]; //Redisplay
+        [self _desiredSizeChanged]; //Resize
     }
 }
 
@@ -326,24 +329,24 @@
 }
 
 
-//Manual Ordering support
-/*- (BOOL)outlineView:(NSOutlineView *)olv writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
+
+//Auto-resizing support -----------------------------------------------------------------
+- (void)outlineViewItemDidExpand:(NSNotification *)notification
 {
-    return(YES);
+    [self _desiredSizeChanged];
 }
 
-- (NSDragOperation)outlineView:(NSOutlineView*)olv validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
+- (void)outlineViewItemDidCollapse:(NSNotification *)notification
 {
-    return(NSDragOperationPrivate);
+    [self _desiredSizeChanged];
 }
 
-- (BOOL)outlineView:(NSOutlineView*)olv acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
+- (void)_desiredSizeChanged
 {
-    return(YES);
-}*/
-
-
-
+    NSLog(@"desiredFrameChanged");
+    [[owner notificationCenter] postNotificationName:Interface_ViewDesiredSizeDidChange
+                                              object:contactListView];
+}
 
 
 // Tooltips ------------------------------------------------------------------------------------
