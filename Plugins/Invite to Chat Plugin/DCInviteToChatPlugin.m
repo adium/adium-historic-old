@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by David Clark on Sun Aug 01 2004.
-//  Copyright (c) 2004 The Adium Team. All rights reserved.
+//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
 #import "DCInviteToChatPlugin.h"

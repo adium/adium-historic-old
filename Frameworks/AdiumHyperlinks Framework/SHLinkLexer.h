@@ -3,7 +3,8 @@
 //  Adium
 //
 //  Created by Stephen Holt on Wed Apr 21 2004.
-
+//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
+//
 
 typedef enum {
     SH_URL_INVALID = -1,

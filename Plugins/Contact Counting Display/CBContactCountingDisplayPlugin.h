@@ -3,6 +3,7 @@
 //  Adium
 //
 //  Created by Colin Barrett on Sun Jan 11 2004.
+//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
 #define PREF_GROUP_CONTACT_LIST     @"Contact List"

@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Adam Iser on 12/30/04.
-//  Copyright 2004 __MyCompanyName__. All rights reserved.
+//  Copyright 2004-2005 The Adium Team. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>

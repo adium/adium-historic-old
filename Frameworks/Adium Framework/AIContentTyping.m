@@ -3,6 +3,7 @@
 //  Adium
 //
 //  Created by Adam Iser on Sun Jun 08 2003.
+//  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
 //
 
 #import "AIContentObject.h"

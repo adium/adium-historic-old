@@ -3,6 +3,7 @@
 //  Adium
 //
 //  Created by Adam Iser on Fri Feb 27 2004.
+//  Copyright 2004-2005 The Adium Team. All rights reserved.
 //
 
 #import "AIWebKitMessageViewController.h"

@@ -3,6 +3,7 @@
 //  Adium
 //
 //  Created by Adam Iser on Mon Dec 22 2003.
+//  Copyright 2003-2005 The Adium Team. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

@@ -3,6 +3,8 @@
 //  Adium
 //
 //  Created by Stephen Holt on Wed May 19 2004.
+//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
+//
 
 #define SH_BOOKMARK_DICT_TITLE      @"Title"
 #define SH_BOOKMARK_DICT_CONTENT    @"Content"

@@ -3,6 +3,8 @@
 //  Adium
 //
 //  Created by Colin Barrett on Sun Oct 19 2003.
+//  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
+//
 
 #import "GaimCommon.h"
 #import "SLGaimCocoaAdapter.h"

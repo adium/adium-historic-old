@@ -5,6 +5,7 @@
 //  Requires Mac OS X 10.2.
 //
 //  Event loop code by Scott Lamb on Sun Nov 2 2003.
+//  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
 //
 
 #import  <Foundation/Foundation.h>
