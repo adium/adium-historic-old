@@ -146,30 +146,23 @@
 			
 			enumerator = [contactNames objectEnumerator];		
 			while (aContactName = [enumerator nextObject]){
-				
-				NSLog(@"0 UID: %@",aContactName);
-				
+								
 				UID = [[inAccount service] filterUID:[self impliedCompletion:aContactName] removeIgnoredCharacters:YES];
 				
-				NSLog(@"#### 1 UID: %@",UID);
 				//If the service is not case sensitive, compact the string before proceeding so our UID will be correct
 				if (![[inAccount service] caseSensitive]){
 					UID = [UID compactedString];
 				}
 				
-				NSLog(@"#### 2 UID: %@",UID);
-				
 				if(listContact = [[adium contactController] contactWithService:[inAccount service] 
 																	   account:inAccount 
 																		   UID:UID]){
 					[contactsArray addObject:listContact];
-					NSLog(@"#### 3 UID: %@",listContact);
 				}
 			}
 		}
 	}
 	
-	NSLog(@"#### 4 contactsArray: %@",contactsArray);
 	return(contactsArray);
 }
 

@@ -13,18 +13,25 @@
 
 @interface DCGaimJabberJoinChatViewController (PRIVATE)
 - (void)validateEnteredText;
+- (void)_configureTextField;
 @end
 
 @implementation DCGaimJabberJoinChatViewController
 
 - (void)configureForAccount:(AIAccount *)inAccount
 {
+	account = inAccount;
+
 	[delegate setJoinChatEnabled:NO];
 	[[view window] makeFirstResponder:textField_roomName];
 
 	if([[textField_server cell] respondsToSelector:@selector(setPlaceholderString:)])
 		[[textField_server cell] setPlaceholderString:DEFAULT_CONFERENCE_SERVER];
 		
+	[textField_inviteUsers setMinStringLength:2];
+	[textField_inviteUsers setCompletesOnlyAfterSeparator:YES];
+	[self _configureTextField];
+
 	[super configureForAccount:inAccount];
 }
 
@@ -85,4 +92,29 @@
 		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:enabled];
 }
 
+- (NSString *)impliedCompletion:(NSString *)aString
+{
+	return [textField_inviteUsers impliedStringValueForString:aString];
+}
+
+- (void)_configureTextField
+{
+	NSEnumerator		*enumerator;
+    AIListContact		*contact;
+	
+	//Clear the completing strings
+	[textField_inviteUsers setCompletingStrings:nil];
+	
+	//Configure the auto-complete view to autocomplete for contacts matching the selected account's service
+    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
+    while((contact = [enumerator nextObject])){
+		if([contact service] == [account service]){
+			NSString *UID = [contact UID];
+			[textField_inviteUsers addCompletionString:[contact formattedUID] withImpliedCompletion:UID];
+			[textField_inviteUsers addCompletionString:[contact displayName] withImpliedCompletion:UID];
+			[textField_inviteUsers addCompletionString:UID];
+		}
+    }
+	
+}
 @end
