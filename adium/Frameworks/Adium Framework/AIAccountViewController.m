@@ -100,7 +100,7 @@
         //Get the array of tabs
         NSArray *tabViewItems = [inTabView tabViewItems];
 		[auxTabs addObjectsFromArray:tabViewItems];
-		
+        
         //Now release the tabs and the window they came from
         NSEnumerator    *enumerator = [tabViewItems objectEnumerator];
         NSTabViewItem   *tabViewItem;
