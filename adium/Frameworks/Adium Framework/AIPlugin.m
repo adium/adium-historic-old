@@ -19,7 +19,6 @@
 @interface AIPlugin (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
 - (void)installPlugin;
-- (void)uninstallPlugin;
 @end
 
 @implementation AIPlugin
