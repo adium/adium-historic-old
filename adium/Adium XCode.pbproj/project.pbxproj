@@ -343,6 +343,7 @@
 				BF0F5BCB05A2B0070034AD18,
 				BF380C3105A8FF9000A74E9F,
 				52AEBD6105ABA95700B19C56,
+				9E57136305B2146200283CAD,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -403,6 +404,7 @@
 				BF380C3005A8FF9000A74E9F,
 				34BD9FD1053147A6000AB133,
 				34BD9FF1053147AE000AB133,
+				9E57136205B2146200283CAD,
 				34BDA001053147B4000AB133,
 				34BDA011053147B9000AB133,
 				34BDA026053147BF000AB133,
@@ -18290,6 +18292,7 @@
 				BF380C2805A8FF6F00A74E9F,
 				F5148D9404C8B3BF018B6CC7,
 				4BD7D0CA04620D7C00A8010A,
+				9E57141405B2168100283CAD,
 				34878F710518289B003B2F21,
 				4BAE85A40498194200A8010A,
 				4BD7D0CB04620D8800A8010A,
@@ -26660,6 +26663,135 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		9E57135E05B2146200283CAD = {
+			buildActionMask = 2147483647;
+			files = (
+				9EBAC45305B21CD300A98ADC,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E57135F05B2146200283CAD = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E57136005B2146200283CAD = {
+			buildActionMask = 2147483647;
+			files = (
+				9EBAC45405B21CD300A98ADC,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E57136105B2146200283CAD = {
+			buildActionMask = 2147483647;
+			files = (
+				9E57140E05B2165400283CAD,
+				9E57140F05B2165400283CAD,
+				9E57141005B2165400283CAD,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E57136205B2146200283CAD = {
+			buildPhases = (
+				9E57135E05B2146200283CAD,
+				9E57135F05B2146200283CAD,
+				9E57136005B2146200283CAD,
+				9E57136105B2146200283CAD,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = Plists/Contact_Counting_Display.plist;
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Contact Counting Display";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = "Contact Counting Display";
+			productName = "Contact Counting Display";
+			productReference = 9E57136305B2146200283CAD;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Contact Counting Display</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Contact_Counting_Display</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		9E57136305B2146200283CAD = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Contact Counting Display.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9E57140E05B2165400283CAD = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E57140F05B2165400283CAD = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E57141005B2165400283CAD = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E57141405B2168100283CAD = {
+			children = (
+				9EBAC45105B21CD200A98ADC,
+				9EBAC45205B21CD300A98ADC,
+			);
+			isa = PBXGroup;
+			name = "Contact Counting Display";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		9E791D8505768A3000547562 = {
 			children = (
 				9EAD72ED0579E678002927C7,
@@ -27179,6 +27311,36 @@
 			path = "Plugins/Dock Behavior/AIDockBehaviorPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		9EBAC45105B21CD200A98ADC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CBContactCountingDisplayPlugin.h;
+			path = "Plugins/Contact Counting Display/CBContactCountingDisplayPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9EBAC45205B21CD300A98ADC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CBContactCountingDisplayPlugin.m;
+			path = "Plugins/Contact Counting Display/CBContactCountingDisplayPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9EBAC45305B21CD300A98ADC = {
+			fileRef = 9EBAC45105B21CD200A98ADC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EBAC45405B21CD300A98ADC = {
+			fileRef = 9EBAC45205B21CD300A98ADC;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		9EE0586F055483DE00505F31 = {
 			fileEncoding = 4;
