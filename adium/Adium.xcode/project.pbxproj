@@ -537,7 +537,7 @@
 				HEADER_SEARCH_PATHS = /usr/local/pgsql/include;
 				INFOPLIST_FILE = Plists/SQL_Logger.plist;
 				INSTALL_PATH = /Adium.app/Contents/Plugins/;
-				LIBRARY_SEARCH_PATHS = "/usr/local/pgsql/lib /sw/lib";
+				LIBRARY_SEARCH_PATHS = "/usr/local/pgsql/lib /sw/lib /opt/local/lib";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lpq -lssl -lcrypto";
 				OTHER_REZFLAGS = "";
