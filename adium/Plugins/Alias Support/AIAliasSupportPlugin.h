@@ -17,10 +17,10 @@
 
 @protocol AIListEditorColumnController;
 
-#define DISPLAY_NAME			1
+#define DISPLAY_NAME				1
 #define DISPLAY_NAME_SCREEN_NAME	2
 #define SCREEN_NAME_DISPLAY_NAME	3	
-#define SCREEN_NAME			4
+#define SCREEN_NAME					4
 
 #define	PREF_GROUP_DISPLAYFORMAT		@"Display Format"		//Preference group to store aliases in
 

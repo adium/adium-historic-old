@@ -82,7 +82,7 @@
         while(account = [accountEnumerator nextObject]) {
 			
 			//Enable it as soon as we find an account which is online
-            if([[account supportedPropertyKeys] containsObject:@"Online"] && [[account statusObjectForKey:@"Online"] boolValue]){
+            if([[account statusObjectForKey:@"Online"] boolValue]){
 				return YES;
             }
         }
@@ -96,10 +96,10 @@
         }
     }else if(menuItem == cancelConnectItem) {
         while(account = [accountEnumerator nextObject]) {
-        
-                        //Enable it as soon as we find an account which is connecting
-            if([[account supportedPropertyKeys] containsObject:@"Online"] && [[account statusObjectForKey:@"Connecting"] boolValue]){
-                                return YES;
+			
+			//Enable it as soon as we find an account which is connecting
+            if([[account statusObjectForKey:@"Connecting"] boolValue]){
+				return YES;
             }
         }
     }

@@ -28,10 +28,8 @@
     outgoing = ([source isKindOfClass:[AIAccount class]]);
     
     //Store the date
-    date = inDate;
-	if(inDate) [inDate retain];
-	
-    
+    date = [inDate retain];	
+
     return(self);
 }
 

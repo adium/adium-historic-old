@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.60 2004/04/14 23:01:29 evands Exp $
+// $Id: AIInterfaceController.m,v 1.61 2004/05/08 08:27:59 evands Exp $
 
 #import "AIInterfaceController.h"
 
@@ -567,11 +567,12 @@
 {
     if(menuItem == menuItem_bold || menuItem == menuItem_italic){
 		NSResponder		*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder]; 
-		NSFont			*selectedFont = [[NSFontManager sharedFontManager] selectedFont];
 		NSFontManager	*fontManager = [NSFontManager sharedFontManager];
+		NSFont			*selectedFont = [fontManager selectedFont];
 		
 		//We must be in a text view, have text on the pasteboard, and have a font that supports bold or italic
 		if([responder isKindOfClass:[NSTextView class]]){
+#warning Evan: This should be cached by the font manager additions.
 			if(selectedFont != [fontManager convertFont:selectedFont toHaveTrait:(menuItem == menuItem_bold ? NSBoldFontMask : NSItalicFontMask)] || 
 			   selectedFont != [fontManager convertFont:selectedFont toHaveTrait:(menuItem == menuItem_bold ? NSUnboldFontMask : NSUnitalicFontMask)]){
 				return(YES);

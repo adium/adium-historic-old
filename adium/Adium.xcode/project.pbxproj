@@ -2272,6 +2272,7 @@
 				346C9D1206004645000F5A8A,
 				346C9D3006004650000F5A8A,
 				34C2D70506338E2E0018E5D2,
+				3498914C064C48020095598E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2285,6 +2286,7 @@
 				34C2DF02063498ED0018E5D2,
 				34C2DF03063498EF0018E5D2,
 				344804D00634EFDE00A843F6,
+				34989147064C47F20095598E,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2297,6 +2299,7 @@
 				346C9D1006004644000F5A8A,
 				346C9D1606004646000F5A8A,
 				34C2D70606338E2E0018E5D2,
+				3498914D064C48020095598E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3070,6 +3073,50 @@
 		};
 		348E556B053A188C0021E541 = {
 			fileRef = 348E556A053A188C0021E541;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34989146064C47F20095598E = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = WebKitAdvancedPreferencesView.nib;
+			path = "Plugins/WebKit Message View/WebKitAdvancedPreferencesView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34989147064C47F20095598E = {
+			fileRef = 34989146064C47F20095598E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3498914A064C48020095598E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESWKMVAdvancedPreferences.h;
+			path = "Plugins/WebKit Message View/ESWKMVAdvancedPreferences.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3498914B064C48020095598E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESWKMVAdvancedPreferences.m;
+			path = "Plugins/WebKit Message View/ESWKMVAdvancedPreferences.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3498914C064C48020095598E = {
+			fileRef = 3498914A064C48020095598E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3498914D064C48020095598E = {
+			fileRef = 3498914B064C48020095598E;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -17485,7 +17532,10 @@
 				4B539C5205EFD6FB00E5921A,
 				34C2D70306338E2E0018E5D2,
 				34C2D70406338E2E0018E5D2,
+				3498914A064C48020095598E,
+				3498914B064C48020095598E,
 				34C2D8C00633BBA80018E5D2,
+				34989146064C47F20095598E,
 				347065E406015DC5004F0D20,
 				34C2DBE5063449AF0018E5D2,
 				34C2DF00063498ED0018E5D2,

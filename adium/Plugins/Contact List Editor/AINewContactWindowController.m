@@ -25,7 +25,6 @@
 - (void)updateAccountList;
 - (void)enterContactName;
 - (void)setContactName:(NSString *)contact;
-- (BOOL)validateMenuItem:(NSMenuItem *)menuItem;
 @end
 
 @implementation AINewContactWindowController
@@ -396,10 +395,11 @@
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	if([[menuItem representedObject] isKindOfClass:[AIServiceType class]]) {
-		AIServiceType   * serviceType = [menuItem representedObject];
-		NSEnumerator	* enumerator;
+		AIServiceType   *serviceType = [menuItem representedObject];
+		NSEnumerator	*enumerator;
+		AIAccount		*account;
+		
 		enumerator = [[[adium accountController] accountsWithServiceID:[serviceType identifier]] objectEnumerator];
-		AIAccount		* account;
 		while(account = [enumerator nextObject]) {
 			if([account conformsToProtocol:@protocol(AIAccount_List)] &&
 			   [(AIAccount<AIAccount_List> *)account contactListEditable]) {
