@@ -14,15 +14,20 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface AICompletingTextField : NSTextField {
-    NSMutableArray	*stringArray;
-    int			minLength;
-    int			oldUserLength;
+    NSMutableArray			*stringArray;
+	NSMutableDictionary		*impliedCompletionDictionary;
+	
+    int						minLength;
+    int						oldUserLength;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder;
 - (id)initWithFrame:(NSRect)frameRect;
+
 - (void)setMinStringLength:(int)length;
 - (void)setCompletingStrings:(NSArray *)strings;
 - (void)addCompletionString:(NSString *)string;
+- (void)addCompletionString:(NSString *)string withImpliedCompletion:(NSString *)impliedCompletion;
 
+- (NSString *)impliedStringValue;
 @end
