@@ -56,7 +56,8 @@
     //Get the selected group    
 
     //Create the new away entry
-    newAwayString = [[[NSAttributedString alloc] initWithString:AWAY_NEW_MESSAGE_STRING attributes:defaultAttributes] autorelease];
+    newAwayString = [[[NSAttributedString alloc] initWithString:AWAY_NEW_MESSAGE_STRING 
+                                                     attributes:defaultAttributes] autorelease];
     newAwayDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Away",@"Type",newAwayString,@"Message",nil];
     
     //Add the new away
@@ -77,7 +78,7 @@
 - (IBAction)deleteAwayMessage:(id)sender
 {
     NSDictionary	*selectedAway;
-    int			selectedRow;
+    int             selectedRow;
     
     //Delete the selected away
     selectedRow = [outlineView_aways selectedRow];
@@ -112,9 +113,9 @@
     [outlineView_aways setNeedsDisplay:YES];
 
     if ([notification object] == textView_message) {
-	if (!([displayedMessage objectForKey:@"Autoresponse"])) {
-	    [[textView_autoresponse textStorage] setAttributedString:[textView_message textStorage]];
-	}
+        if (!([displayedMessage objectForKey:@"Autoresponse"])) {
+            [[textView_autoresponse textStorage] setAttributedString:[textView_message textStorage]];
+        }
     }
 }
 
@@ -161,7 +162,6 @@
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
 {
     [view_prefView release]; view_prefView = nil;
-
 }
 
 //Configure our preference view
@@ -176,7 +176,10 @@
     [scrollView_awayText setAutoScrollToBottom:NO];
 
 	//Observe preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self 
+                                  selector:@selector(preferencesChanged:)
+                                      name:Preference_GroupChanged 
+                                    object:nil];
     [self preferencesChanged:nil];
 	
     //Load our aways
@@ -196,11 +199,9 @@
     if(tempArray){
         //Load the aways
         awayMessageArray = [[self _loadAwaysFromArray:tempArray] retain];
-
     }else{
         //If no aways exist, create an empty array
         awayMessageArray = [[NSMutableArray alloc] init];
-
     }
 
     //Refresh our view
@@ -241,9 +242,14 @@
         [defaultAttributes release];
         //Setup the attributes
         if(!subBackgroundColor){
-            defaultAttributes = [[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, nil] retain];
+            defaultAttributes = [[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName,
+                textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, 
+                nil] retain];
         }else{
-            defaultAttributes = [[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, subBackgroundColor, NSBackgroundColorAttributeName, nil] retain];
+            defaultAttributes = [[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, 
+                textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, 
+                subBackgroundColor, NSBackgroundColorAttributeName, 
+                nil] retain];
         }
     }
 }
@@ -267,18 +273,21 @@
                 nil]];
 
         }else if([type compare:@"Away"] == 0){
-	    NSMutableDictionary     *newDict = [NSMutableDictionary dictionary];
-	    NSString                *title = [dict objectForKey:@"Title"];
-	    NSData                  *autoresponse = [dict objectForKey:@"Autoresponse"];
-	    
-	    [newDict setObject:@"Away" forKey:@"Type"];
-	    [newDict setObject:[NSAttributedString stringWithData:[dict objectForKey:@"Message"]] forKey:@"Message"];
-	    if(title && [title length]) {
-		[newDict setObject:title forKey:@"Title"];
-	    }
-	    if(autoresponse) {
-		[newDict setObject:[NSAttributedString stringWithData:autoresponse] forKey:@"Autoresponse"];
-	    }
+            NSMutableDictionary     *newDict = [NSMutableDictionary dictionary];
+            NSString                *title = [dict objectForKey:@"Title"];
+            NSData                  *autoresponse = [dict objectForKey:@"Autoresponse"];
+            
+            [newDict setObject:@"Away" forKey:@"Type"];
+            [newDict setObject:[NSAttributedString stringWithData:[dict objectForKey:@"Message"]] forKey:@"Message"];
+            
+            if(title && [title length]){
+                [newDict setObject:title forKey:@"Title"];
+            }
+            
+            if(autoresponse){
+                [newDict setObject:[NSAttributedString stringWithData:autoresponse] forKey:@"Autoresponse"];
+            }
+            
             [mutableArray addObject:newDict];
         }
     }
@@ -304,18 +313,21 @@
                 nil]];
 
         }else if([type compare:@"Away"] == 0){
-	    NSMutableDictionary     *newDict = [NSMutableDictionary dictionary];
-	    NSString                *title = [dict objectForKey:@"Title"];
-	    NSData                  *autoresponse = [[dict objectForKey:@"Autoresponse"] dataRepresentation];
-	    
-	    [newDict setObject:@"Away" forKey:@"Type"];
-	    [newDict setObject:[[dict objectForKey:@"Message"] dataRepresentation] forKey:@"Message"];
-	    if (title && [title length]) {
-		[newDict setObject:title forKey:@"Title"];
-	    }
-	    if (autoresponse) {
-		[newDict setObject:autoresponse forKey:@"Autoresponse"];
-	    }
+            NSMutableDictionary     *newDict = [NSMutableDictionary dictionary];
+            NSString                *title = [dict objectForKey:@"Title"];
+            NSData                  *autoresponse = [[dict objectForKey:@"Autoresponse"] dataRepresentation];
+            
+            [newDict setObject:@"Away" forKey:@"Type"];
+            [newDict setObject:[[dict objectForKey:@"Message"] dataRepresentation] forKey:@"Message"];
+            
+            if(title && [title length]){
+                [newDict setObject:title forKey:@"Title"];
+            }
+            
+            if(autoresponse){
+                [newDict setObject:autoresponse forKey:@"Autoresponse"];
+            }
+            
             [saveArray addObject:newDict];
         }
     }
@@ -435,7 +447,6 @@
 {
     if(item == nil){ //Root
         return([awayMessageArray count]);
-
     }else{
         NSString *type = [item objectForKey:@"Type"];
 
@@ -452,7 +463,6 @@
 {
     if(item == nil){
         return([awayMessageArray objectAtIndex:index]);
-
     }else{
         NSString *type = [item objectForKey:@"Type"];
 
@@ -492,14 +502,11 @@
 
     if([type compare:@"Group"] == 0){ //Group
         return([item objectForKey:@"Name"]);
-
     }else if([type compare:@"Away"] == 0){ //Away message
         NSString * title = [item objectForKey:@"Title"];
         return(title ? title : [[item objectForKey:@"Message"] string]);
-
     }else{
         return(nil);
-
     }
 }
 
@@ -534,7 +541,7 @@
         [button_delete setEnabled:YES];
 
     }else{
-	[self _displayAwayMessage:nil];
+        [self _displayAwayMessage:nil];
 	
         //Disable delete button
         [button_delete setEnabled:NO];
@@ -572,7 +579,6 @@
             if(item == nil || [itemType compare:@"Group"] == 0){ //To root, or onto/into a group
                 return(NSDragOperationPrivate);
             }
-
         }
     }
 
@@ -586,10 +592,11 @@
 
     if([availableType compare:@"AIAwayMessage"] == 0){
         NSString *type = [dragItem objectForKey:@"Type"];
-        //        NSString *itemType = [item objectForKey:@"Type"];
+      //NSString *itemType = [item objectForKey:@"Type"];
 
         if([type compare:@"Group"] == 0){ //If they are dragging a group
-            /*            if(item == nil){ //To root
+            /*            
+            if(item == nil){ //To root
 
             }else if([itemType compare:@"Group"] == 0){
                 if(index == -1){ //Onto a group
@@ -597,10 +604,9 @@
                 }else{ //Into a group
 
                 }
-            }*/
-
+            }
+            */
         }else if([type compare:@"Away"] == 0){ //If they are dragging an away
-
             if(item == nil){ //To root
                 [dragItem retain];
                 [self removeObject:dragItem fromArray:awayMessageArray]; //Remove from old location.  We can't use removeObject, since it will treat similar aways as identical and remove them all!
@@ -614,7 +620,6 @@
 
                 }
             }*/
-
         }
     }
 
@@ -633,7 +638,3 @@
 }
 
 @end
-
-
-
-
