@@ -165,23 +165,14 @@ jmelloy $] psql &lt; tsearch2.sql</pre></div>
     &lt;/database&gt;</pre></div><br />
 <div class="important">Make sure you move the "--&gt;" to above the
   &lt;database&gt;.  Otherwise you will comment out the entire file.</div>
-<p>Next, find the part referring to the document directory.  The document
-  directory tells where to look for files.  It needs to be changed to wherever
-  you wish to put the JSPs.</p>
-<div class="tutorialcode">
-  <pre>&lt;!-- configures the default host, matching any host name --&gt;
-&lt;host id=''&gt;
-  &lt;document-directory&gt;<b>doc</b>&lt;/document-directory&gt;</pre>
-</div>
-   <p>That's all it takes to set Resin up.</p>
+   <p>That's all it takes to set Resin up.  Simply drop sqllogger.war in the
+     <code>webapps</code>directory, and you're done.</p>
   <div class="tutorialcode">
     <pre>bin/httpd.sh</pre>
   </div>
   <p>To test it out, fire up a web browser and go to <a
- href="http://localhost:8080/">http://localhost:8080/</a>.  You should see a
-  directory listing of your files, or if you've already moved the JSP files
-  into the directory, the front page.  If you have an index.html file in
-  there, that may be served.</p>
+      href="http://localhost:8080/">http://localhost:8080/sqllogger/</a>.
+    You should see the sql logger page.</p>
 <h3>Installing the Plugin</h3>
 <p>All that is left is installing the plugin itself.</p>
 </body>
