@@ -214,8 +214,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
         //Font (If the color, font, or size has changed)
         if(includeFontTags && (pointSize != currentSize ||
 							   ![familyName isEqualToString:currentFamily] ||
-							   ![color isEqualToString:currentColor] ||
-							   (currentColor && !color))){
+							   (color && ![color isEqualToString:currentColor]) ||
+							   (!color && currentColor))){
 		
 			/*
 			 NSLog(@"%i %i %i %i",pointSize != currentSize,
@@ -234,7 +234,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			}
 
             //Family
-            if([familyName caseInsensitiveCompare:currentFamily] != 0 || closeFontTags){
+            if(![familyName isEqualToString:currentFamily] || closeFontTags){
                 
 				if (simpleOnly){
 					[string appendString:[NSString stringWithFormat:@"<FONT FACE=\"%@\">",familyName]];
