@@ -97,14 +97,17 @@
 //Shadow our text to make it prettier
 - (NSDictionary *)additionalLabelAttributes
 {
-#warning 10.3 only
-	NSShadow	*shadow = [[[NSShadow alloc] init] autorelease];
-	
-	[shadow setShadowOffset:NSMakeSize(0.0, -1.0)];
-	[shadow setShadowBlurRadius:2.0];
-	[shadow setShadowColor:shadowColor];
-	
-	return([NSDictionary dictionaryWithObject:shadow forKey:NSShadowAttributeName]);
+	if([NSApp isOnPantherOrBetter]){
+		NSShadow	*shadow = [[[NSShadow alloc] init] autorelease];
+		
+		[shadow setShadowOffset:NSMakeSize(0.0, -1.0)];
+		[shadow setShadowBlurRadius:2.0];
+		[shadow setShadowColor:shadowColor];
+		
+		return([NSDictionary dictionaryWithObject:shadow forKey:NSShadowAttributeName]);
+	}else{
+		return(nil);
+	}
 }
 
 @end
