@@ -245,9 +245,7 @@
 - (IBAction)toggleContactList:(id)sender
 {
     if(contactListWindowController){ //The window is loaded
-        NSLog(@"perform close..");
-//        [[contactListWindowController window] performClose:nil];
-        [contactListWindowController close:nil];
+        [[contactListWindowController window] performClose:nil];
     } else {
         contactListWindowController = [[AIContactListWindowController contactListWindowControllerForInterface:self owner:owner] retain];   
         [contactListWindowController makeActive:nil];
@@ -260,18 +258,6 @@
 - (IBAction)close:(id)sender
 {
     [[[NSApplication sharedApplication] keyWindow] performClose:nil];
-  /*  if ([window styleMask] && NSClosableWindowMask) {
-        [window performClose:nil];
-    } else {
-        BOOL shouldClose = YES;
-        if ([[window delegate] respondsToSelector:@selector(windowShouldClose:)])
-            shouldClose = [(id)[window delegate] windowShouldClose:nil];
-        else if ([window respondsToSelector:@selector(windowShouldClose:)])
-            shouldClose = [(id)window windowShouldClose:nil];
-        if (shouldClose)
-            [window close];    
-    }
-*/
 }
 
 //Close the active tab
@@ -436,7 +422,6 @@
 //A container was closed
 - (void)containerDidClose:(id <AIInterfaceContainer>)inContainer
 {
-        NSLog(@"container did close");
     if(inContainer == contactListWindowController){
         [contactListWindowController release]; contactListWindowController = nil;
     }
