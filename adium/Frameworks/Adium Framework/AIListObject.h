@@ -99,6 +99,9 @@ typedef enum {
 - (int)indexOfObject:(AIListObject *)inObject;
 - (NSArray *)containedObjects;
 - (unsigned)containedObjectsCount;
+- (NSArray *)listContacts;
+- (NSDictionary *)dictionaryOfServicesAndListContacts;
+- (NSArray *)arrayOfServices;
 - (AIListObject *)objectWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
 
 //mutableOwnerArray delegate and methods

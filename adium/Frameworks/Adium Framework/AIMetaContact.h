@@ -23,6 +23,7 @@
 - (NSNumber *)objectID;
 
 - (AIListContact *)preferredContact;
+- (AIListContact *)preferredContactWithServiceID:(NSString *)inServiceID;
 
 - (id)statusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject;
 - (NSDate *)earliestDateStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject;
