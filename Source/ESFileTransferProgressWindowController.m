@@ -309,20 +309,28 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 
 #pragma mark Window zoom
 //Size for window zoom
-- (NSRect)windowWillUseStandardFrame:(NSWindow *)sender defaultFrame:(NSRect)defaultFrame
+- (NSRect)windowWillUseStandardFrame:(NSWindow *)inWindow defaultFrame:(NSRect)defaultFrame
 {
-	NSRect frame = [sender frame];
-
+	NSRect	windowFrame = [inWindow frame];
+	NSSize	minSize = [inWindow minSize];
+	NSSize	maxSize = [inWindow maxSize];
+				
 	//Take the desired height and add the parts of the window which aren't in the scrollView.
-	int desiredHeight = ([outlineView totalHeight] + (frame.size.height - [scrollView frame].size.height));
+	int desiredHeight = ([outlineView totalHeight] + (windowFrame.size.height - [scrollView frame].size.height));
 	
 	//Keep the top-left corner the same
-	frame.origin.y = frame.origin.y + frame.size.height - desiredHeight;
-	frame.size.height = desiredHeight;
+	windowFrame.origin.y = windowFrame.origin.y + windowFrame.size.height - desiredHeight;
+	windowFrame.size.height = desiredHeight;
 	
-	frame.size.width = 300;
+	windowFrame.size.width = 300;
 	
-    return(frame);
+	//Respect the min and max sizes
+	if(windowFrame.size.width < minSize.width) windowFrame.size.width = minSize.width;
+	if(windowFrame.size.height < minSize.height) windowFrame.size.height = minSize.height;
+	if(windowFrame.size.width > maxSize.width) windowFrame.size.width = maxSize.width;
+	if(windowFrame.size.height > maxSize.height) windowFrame.size.height = maxSize.height;
+				
+    return(windowFrame);
 }
 
 @end

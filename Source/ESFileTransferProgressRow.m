@@ -9,8 +9,14 @@
 #import "ESFileTransferProgressRow.h"
 #import "ESFileTransferProgressWindowController.h"
 
+#define	BYTES_RECEIVED		[NSString stringWithFormat:AILocalizedString(@"%@ received","(a bytes string) received"),bytesString]
+#define	BYTES_SENT			[NSString stringWithFormat:AILocalizedString(@"%@ sent","(a bytes string) sent"),bytesString]
+#define	TRANSFER_COMPLETE	AILocalizedString(@"Transfer complete: %@","Transfer complete: (bytes sent or received string)")
+#define	ZERO_BYTES			AILocalizedString( @"Zero bytes", "no file size" )
+
 @interface ESFileTransferProgressRow (PRIVATE)
 - (NSString *)stringForSize:(unsigned long long)size;
+- (NSString *)stringForSize:(unsigned long long)inSize of:(unsigned long long)totalSize ofString:(NSString *)totalSizeString;
 - (NSString *)readableTimeForSecs:(NSTimeInterval)secs inLongFormat:(BOOL)longFormat;
 - (id)initForFileTransfer:(ESFileTransfer *)inFileTransfer withOwner:(id)owner;
 - (void)updateIconImage;
@@ -124,7 +130,6 @@
 
 	unsigned long long	bytesSent = [inFileTransfer bytesSent];
 	NSString			*transferBytesStatus = nil, *transferSpeedStatus = nil, *transferRemainingStatus = nil;
-	NSString			*bytesString = [self stringForSize:bytesSent];
 	FileTransferType	type = [inFileTransfer type];
 	
 	if(!size){
@@ -133,7 +138,7 @@
 		[sizeString release];
 		sizeString = [[self stringForSize:size] retain];		
 	}
-	
+
 	switch(status){
 		case Unknown_Status_FileTransfer:
 		case Not_Started_FileTransfer:
@@ -162,19 +167,21 @@
 	
 	if(type == Unknown_FileTransfer || status == Unknown_Status_FileTransfer || status == Not_Started_FileTransfer){
 		transferBytesStatus = [NSString stringWithFormat:AILocalizedString(@"Initiating file transfer...",nil)];		
-	}else{
+	}else{		
 		switch(status){
 			case Accepted_FileTransfer:
 				transferBytesStatus = [NSString stringWithFormat:AILocalizedString(@"Accepted file transfer...",nil)];		
 			break;
 			case In_Progress_FileTransfer:
 			{
+				NSString			*bytesString = [self stringForSize:bytesSent of:size ofString:sizeString];
+
 				switch(type){
 					case Incoming_FileTransfer:
-						transferBytesStatus = [NSString stringWithFormat:AILocalizedString(@"%@ of %@ received","bytes of bytes total received"),bytesString,sizeString];
+						transferBytesStatus = BYTES_RECEIVED;
 						break;
 					case Outgoing_FileTransfer:
-						transferBytesStatus = [NSString stringWithFormat:AILocalizedString(@"%@ of %@ sent","bytes of bytes total received"),bytesString,sizeString];
+						transferBytesStatus = BYTES_SENT;
 						break;
 					default:
 						break;
@@ -184,12 +191,13 @@
 			}
 			case Complete_FileTransfer:
 			{
+				NSString			*bytesString = [self stringForSize:bytesSent];
 				switch(type){
 					case Incoming_FileTransfer:
-						transferBytesStatus = [NSString stringWithFormat:AILocalizedString(@"File receiption complete: %@ received","File reception complete: (total bytes) received"),bytesString];
+						transferBytesStatus = [NSString stringWithFormat:TRANSFER_COMPLETE, BYTES_RECEIVED];
 						break;
 					case Outgoing_FileTransfer:
-						transferBytesStatus = [NSString stringWithFormat:AILocalizedString(@"File send complete: %@ sent","File send complete: (total bytes) received"),bytesString];
+						transferBytesStatus = [NSString stringWithFormat:TRANSFER_COMPLETE, BYTES_SENT];
 						break;
 					default:
 						break;
@@ -287,13 +295,61 @@
 {
 	NSString *ret = nil;
 
-	if( inSize == 0. ) ret = AILocalizedString( @"Zero bytes", "no file size" );
+	if( inSize == 0. ) ret = ZERO_BYTES;
 	else if( inSize > 0. && inSize < 1024. ) ret = [NSString stringWithFormat:AILocalizedString( @"%lu bytes", "file size measured in bytes" ), inSize];
 	else if( inSize >= 1024. && inSize < pow( 1024., 2. ) ) ret = [NSString stringWithFormat:AILocalizedString( @"%.1f KB", "file size measured in kilobytes" ), ( inSize / 1024. )];
 	else if( inSize >= pow( 1024., 2. ) && inSize < pow( 1024., 3. ) ) ret = [NSString stringWithFormat:AILocalizedString( @"%.2f MB", "file size measured in megabytes" ), ( inSize / pow( 1024., 2. ) )];
 	else if( inSize >= pow( 1024., 3. ) && inSize < pow( 1024., 4. ) ) ret = [NSString stringWithFormat:AILocalizedString( @"%.3f GB", "file size measured in gigabytes" ), ( inSize / pow( 1024., 3. ) )];
 	else if( inSize >= pow( 1024., 4. ) ) ret = [NSString stringWithFormat:AILocalizedString( @"%.4f TB", "file size measured in terabytes" ), ( inSize / pow( 1024., 4. ) )];
 
+	return(ret);
+}
+
+- (NSString *)stringForSize:(unsigned long long)inSize of:(unsigned long long)totalSize ofString:(NSString *)totalSizeString
+{
+	NSString *ret = nil;
+	
+	if( inSize == 0. ){
+		ret = ZERO_BYTES;
+	}else if( inSize > 0. && inSize < 1024. ){
+		if( totalSize > 0. && totalSize < 1024. ){
+			ret = [NSString stringWithFormat:AILocalizedString( @"%lu of %lu bytes", "file sizes both measured in bytes" ), inSize, totalSize];
+			
+		}else{
+			ret = [NSString stringWithFormat:AILocalizedString( @"%lu bytes of %@", "file size measured in bytes out of some other measurement" ), inSize, totalSizeString];
+			
+		}
+	}else if( inSize >= 1024. && inSize < pow( 1024., 2. ) ){
+		if( totalSize >= 1024. && totalSize < pow( 1024., 2. ) ){
+			ret = [NSString stringWithFormat:AILocalizedString( @"%.1f of %.1f KB", "file sizes both measured in kilobytes" ), ( inSize / 1024. ), ( totalSize / 1024. )];
+			
+		}else{
+			ret = [NSString stringWithFormat:AILocalizedString( @"%.1f KB of %@", "file size measured in kilobytes out of some other measurement" ), ( inSize / 1024. ), totalSizeString];
+		}
+	}
+	else if( inSize >= pow( 1024., 2. ) && inSize < pow( 1024., 3. ) ){
+		if( totalSize >= pow( 1024., 2. ) && totalSize < pow( 1024., 3. ) ){
+			ret = [NSString stringWithFormat:AILocalizedString( @"%.2f of %.2f MB", "file sizes both measured in megabytes" ), ( inSize / pow( 1024., 2. ) ), ( totalSize / pow( 1024., 2. ) )];
+		}else{
+			ret = [NSString stringWithFormat:AILocalizedString( @"%.2f MB of %@", "file size measured in megabytes out of some other measurement" ), ( inSize / pow( 1024., 2. ) ), totalSizeString];	
+		}
+	}
+	else if( inSize >= pow( 1024., 3. ) && inSize < pow( 1024., 4. ) ){
+		if( totalSize >= pow( 1024., 3. ) && totalSize < pow( 1024., 4. ) ){
+			ret = [NSString stringWithFormat:AILocalizedString( @"%.3f of %.3f GB", "file sizes both measured in gigabytes" ), ( inSize / pow( 1024., 3. ) ), ( totalSize / pow( 1024., 3. ) )];
+		}else{
+			ret = [NSString stringWithFormat:AILocalizedString( @"%.3f GB of %@", "file size measured in gigabytes out of some other measurement" ), ( inSize / pow( 1024., 3. ) ), totalSizeString];
+			
+		}
+	}
+	else if( inSize >= pow( 1024., 4. ) ){
+		if( totalSize >= pow( 1024., 4. ) ){
+			ret = [NSString stringWithFormat:AILocalizedString( @"%.4f of %.4f TB", "file sizes both measured in terabytes" ), ( inSize / pow( 1024., 4. ) ),  ( totalSize / pow( 1024., 4. ) )];
+		}else{
+			ret = [NSString stringWithFormat:AILocalizedString( @"%.4f TB of %@", "file size measured in terabytes out of some other measurement" ), ( inSize / pow( 1024., 4. ) ), totalSizeString];			
+		}
+	}
+	
 	return(ret);
 }
 
