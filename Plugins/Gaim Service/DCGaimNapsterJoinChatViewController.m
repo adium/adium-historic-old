@@ -6,6 +6,7 @@
 //
 
 #import "DCGaimNapsterJoinChatViewController.h"
+#import "DCJoinChatWindowController.h"
 
 @implementation DCGaimNapsterJoinChatViewController
 
@@ -13,7 +14,7 @@
 {
 	[super configureForAccount:inAccount];
 	if( delegate )
-		[delegate setJoinChatEnabled:NO];
+		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:NO];
 }
 
 - (NSString *)nibName
