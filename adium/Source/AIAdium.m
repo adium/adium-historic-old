@@ -126,7 +126,10 @@ void Adium_HandleSignal(int i){
 // Specific notifications can be given a human-readable name and registered as events - which can be used to trigger various actions
 - (void)registerEventNotification:(NSString *)inNotification displayName:(NSString *)displayName
 {
-    [eventNotifications setObject:[NSDictionary dictionaryWithObjectsAndKeys:inNotification, KEY_EVENT_NOTIFICATION, displayName, KEY_EVENT_DISPLAY_NAME, nil] forKey:inNotification];
+    [eventNotifications setObject:[NSDictionary dictionaryWithObjectsAndKeys:
+										inNotification, KEY_EVENT_NOTIFICATION, 
+										displayName, KEY_EVENT_DISPLAY_NAME, nil]
+						   forKey:inNotification];
 }
 
 
@@ -257,6 +260,9 @@ void Adium_HandleSignal(int i){
     // Ignore SIGPIPE, which is a harmless error signal
     // sent when write() or similar function calls fail due to a broken pipe in the network connection
     signal(SIGPIPE, SIG_IGN);
+	
+	// I think SIGABRT is an exception... maybe we should ignore it? I'm really not sure.
+	signal(SIGABRT, SIG_IGN);
 }
 
 //If Adium was launched by double-clicking an associated file, we get this call after willFinishLaunching but before didFinishLaunching
