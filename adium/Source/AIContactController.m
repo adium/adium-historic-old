@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.163 2004/08/02 07:11:25 evands Exp $
+// $Id: AIContactController.m,v 1.164 2004/08/03 06:23:27 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -1106,6 +1106,8 @@ DeclareString(UID);
 - (void)setActiveSortController:(AISortController *)inController
 {
     activeSortController = inController;
+	
+	[activeSortController didBecomeActive];
 	
     //Resort the list
     [self sortContactList];
