@@ -2,6 +2,7 @@
 // Adium 0.8
 //-------------------------------------------------------------------------------------------------------
 Log Viewer - fix "View X's Logs" to use the new filtering style [brian]
+Log Viewer - contacts drawer to use Alias (SN) format instead [brian]
 Preferences -> Keys - ability to add Shift mask for Return/Enter [brian]
 Standardize/enhance Xtras pref panes [brian]
 
