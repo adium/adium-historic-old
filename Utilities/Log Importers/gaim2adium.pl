@@ -37,8 +37,8 @@ sub usage
 sub process_log
 {
 	-f or return;
-	#gaim logs are LOG_BASE/Protocol/Account/Contact/YYYY-MM-DD-<JUNK>.(html|txt)
-	if($File::Find::name =~ m!^$inDir/(.*?)/(.*?)/(.*?)/(\d{4})-(\d{2})-(\d{2})\.\d+\.(html|txt)!)
+	#gaim logs are LOG_BASE/Protocol/Account/Contact/YYYY-MM-DD-TIME.(html|txt)
+	if($File::Find::name =~ m!^$inDir(?:/)?(.*?)/(.*?)/(.*?)/(\d{4})-(\d{2})-(\d{2})\.\d+\.(html|txt)!)
 	{
 		my ($proto,$acct,$contact,$year,$month,$day,$ext) = ($1,$2,$3,$4,$5,$6,$7);
 		return unless defined ($proto = $Protocols{lc $proto});
@@ -50,19 +50,29 @@ sub process_log
 		my $file = "$outDir/$proto.$acct/$contact/$outFN";
 		if(-e $file && !$force)
 		{
-			print "$adiumUser already has a log from $proto.$acct to $contact on $day/$month/$year. Overwrite[Y/n/a]?";
-			my $line = <>;
-			if(lc substr($line,0,1) eq "a")
-			{
-				$force = 1;
-			}
-			elsif(lc substr($line,0,1) ne "y")
-			{
-				return;
-			}
+#			print(($adiumUser?"$adiumUser already has":"There already exists"),
+#			 " a log from $proto.$acct to $contact on $day/$month/$year.\n");
+			`cat '$File::Find::name' >> '$file'`;
+		} else {
+			copy($File::Find::name,$file);
 		}
-		copy($File::Find::name,$file);
 	}
+}
+
+#Sort a list of log files by time
+sub sort_logs
+{
+	my @files = @_;
+	return sort logcmp @files;
+}
+
+sub logcmp
+{
+	my ($t1,$t2);
+	$t1 = $& if $a =~ /\d{6}/;
+	$t2 = $& if $b =~ /\d{6}/;
+	return 0 unless defined($t1) && defined($t2);
+	return $t1 <=> $t2;
 }
 
 
@@ -77,17 +87,22 @@ usage("You must supply at most one of adiumUser and outDir") if defined($outDir)
 
 $outDir ||= "$ENV{HOME}/Library/Application Support/Adium 2.0/Users/$adiumUser/Logs" if defined $adiumUser;
 $outDir ||= "$ENV{PWD}/Logs";
+
+$inDir ||= shift;
 $inDir ||= "$ENV{HOME}/.gaim/logs";
+
+print "NOTE: Output directory exists, existing logs will be appended to.\n" if(-d $outDir);
 
 mkdir($outDir) unless -e $outDir;
 usage("Output dir must be a directory") unless -d $outDir;
 usage("Output dir must be writeable") unless -w $outDir;
 
-usage("Input directory does not exist") unless -d $inDir;
-usage("Input directory is not readable") unless -r $inDir;
+usage("Input directory '$inDir' does not exist") unless -d $inDir;
+usage("Input directory '$inDir' is not readable") unless -r $inDir;
 
 #Spider the logs dir
-find(\&process_log,$inDir);
+find({wanted => \&process_log,
+		preprocess => \&sort_logs}, $inDir);
 
 #Warn if we didn't find any logs
 unless($foundLogs)
