@@ -841,7 +841,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 		[chatArray addObject:chat];
 		
 		//Inform the account of its creation and post a notification if successful
-		if([account openChat:chat]){
+		if([[targetContact account] openChat:chat]){
 			[[owner notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
 		}else{
 			[chatArray removeObject:chat];
