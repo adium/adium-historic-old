@@ -543,7 +543,7 @@ void Adium_HandleSignal(int i){
 
 //return zero or more pathnames to objects in the Application Support folders
 //  and the resources folder of the application bundle.
-//only those pathnames that exist are returned.
+//only those pathnames that exist are returned.  The Adium bundle's resource path should be the last item in the array.
 - (NSArray *)resourcePathsForName:(NSString *)name
 {
 	NSArray			*librarySearchPaths;
