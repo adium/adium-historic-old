@@ -6,7 +6,6 @@
 //
 
 #import "CBGaimAccount.h"
-#import "GaimService.h"
 
 #define NO_GROUP						@"__NoGroup__"
 #define ACCOUNT_IMAGE_CACHE_PATH		@"~/Library/Caches/Adium"
@@ -71,7 +70,9 @@ static id<GaimThread> gaimThread = nil;
 
 - (void)initSSL
 {
-	if (!didInitSSL) didInitSSL = gaim_init_ssl_gnutls_plugin();
+	if (!didInitSSL) {
+		didInitSSL = gaim_init_ssl_gnutls_plugin();
+	}
 }
 
 // Subclasses must override this
@@ -357,7 +358,7 @@ static id<GaimThread> gaimThread = nil;
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact
 {	
     //Request profile
-    if ([[inContact statusObjectForKey:@"Online"] boolValue]){
+    if ([[inContact numberStatusObjectForKey:@"Online"] boolValue]){
 		[gaimThread getInfoFor:[inContact UID] onAccount:self];
     }
 }
@@ -816,6 +817,7 @@ static id<GaimThread> gaimThread = nil;
 		
 		//Set the filename
 		gaim_xfer_set_local_filename(xfer, [[fileTransfer localFilename] UTF8String]);
+		gaim_xfer_set_filename(xfer, [[[fileTransfer localFilename] lastPathComponent] UTF8String]);
 		
 		//request that the transfer begins
 		[gaimThread xferRequest:xfer];
@@ -998,7 +1000,7 @@ static id<GaimThread> gaimThread = nil;
 	proxy_info = gaim_proxy_info_new();
 	gaim_account_set_proxy_info(account, proxy_info);
 	
-	proxyType = (proxyPref ? [proxyPref intValue] : Gaim_Proxy_Default);
+	proxyType = (proxyPref ? [proxyPref intValue] : Gaim_Proxy_Default_SOCKS);
 	
 	if (proxyType == Gaim_Proxy_None){
 		//No proxy
@@ -1006,21 +1008,32 @@ static id<GaimThread> gaimThread = nil;
 		
 		[self continueConnectWithConfiguredProxy];
 		
-	}else if (proxyType == Gaim_Proxy_Default) {
+	}else if ((proxyType == Gaim_Proxy_Default_SOCKS) || (proxyType == Gaim_Proxy_Default_HTTP)) {
 		//Load and use systemwide proxy settings
-		NSDictionary *systemSOCKSSettingsDictionary;
+		NSDictionary *systemProxySettingsDictionary;
+		ProxyType adiumProxyType = Proxy_None;
 		
-		if((systemSOCKSSettingsDictionary = [(GaimService *)service systemSOCKSSettingsDictionary])) {
+		if (proxyType == Gaim_Proxy_Default_SOCKS){
 			gaimAccountProxyType = GAIM_PROXY_SOCKS5;
+			adiumProxyType = Proxy_SOCKS5;
 			
-			host = [systemSOCKSSettingsDictionary objectForKey:@"Host"];
-			port = [[systemSOCKSSettingsDictionary objectForKey:@"Port"] intValue];
+		}else if (proxyType == Gaim_Proxy_Default_HTTP){
+			gaimAccountProxyType = GAIM_PROXY_HTTP;
+			adiumProxyType = Proxy_HTTP;
 			
-			proxyUserName = [systemSOCKSSettingsDictionary objectForKey:@"Username"];
-			proxyPassword = [systemSOCKSSettingsDictionary objectForKey:@"Password"];
+		}
+		
+		
+		if((systemProxySettingsDictionary = [ESSystemNetworkDefaults systemProxySettingsDictionaryForType:adiumProxyType])) {
+			
+			host = [systemProxySettingsDictionary objectForKey:@"Host"];
+			port = [[systemProxySettingsDictionary objectForKey:@"Port"] intValue];
+			
+			proxyUserName = [systemProxySettingsDictionary objectForKey:@"Username"];
+			proxyPassword = [systemProxySettingsDictionary objectForKey:@"Password"];
 			
 		}else{
-			//Using system wide defaults, and no SOCKS proxy is set in the system preferences
+			//Using system wide defaults, and no proxy of the specified type is set in the system preferences
 			gaimAccountProxyType = GAIM_PROXY_NONE;
 		}
 		
@@ -1151,8 +1164,6 @@ static id<GaimThread> gaimThread = nil;
 	
 	[gaimThread addAdiumAccount:self];
 	   
-	[(GaimService *)service addAccount:self forGaimAccountPointer:account];	
-	
 	[self configureGaimAccount];
 }
 
@@ -1381,7 +1392,7 @@ static id<GaimThread> gaimThread = nil;
 				NSSize					imageSize = [image size];
 				BOOL					acceptableSize, prplScales;
 				
-				if (GAIM_DEBUG) NSLog(@"image of size %f %f",imageSize.width,imageSize.height);
+				if (GAIM_DEBUG) NSLog(@"Original image of size %f %f",imageSize.width,imageSize.height);
 				
 				/* 
 					We need to scale it down if:
@@ -1419,29 +1430,29 @@ static id<GaimThread> gaimThread = nil;
 					[newImage unlockFocus];
 					
 					image = newImage;
-					if (GAIM_DEBUG) NSLog(@"image of size %f %f",newImageSize.width,newImageSize.height);
+					if (GAIM_DEBUG) NSLog(@"Scaled image of size %f %f",newImageSize.width,newImageSize.height);
 				}
 				
 				for (i = 0; prpl_formats[i]; i++) {
 					if (strcmp(prpl_formats[i],"png") == 0){
 						buddyIconData = [image PNGRepresentation];
-						break;
+						if (buddyIconData)
+							break;
 						
 					}else if ((strcmp(prpl_formats[i],"jpeg") == 0) || (strcmp(prpl_formats[i],"jpg") == 0)){
 						buddyIconData = [image JPEGRepresentation];
-						break;
+						if (buddyIconData)
+							break;
 						
 					}else if ((strcmp(prpl_formats[i],"tiff") == 0) || (strcmp(prpl_formats[i],"tif") == 0)){
 						buddyIconData = [image TIFFRepresentation];
-						break;
+						if (buddyIconData)
+							break;
 						
 					}else if (strcmp(prpl_formats[i],"bmp") == 0){
-						NSData				*imageTIFFData = [image TIFFRepresentation];
-						NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
-						
-						//Get the bitmap rep as PNG data
-						buddyIconData = [bitmapRep representationUsingType:NSBMPFileType properties:nil];
-						break;
+						buddyIconData = [image BMPRepresentation];
+						if (buddyIconData)
+							break;
 					}
 				}
 				
@@ -1478,9 +1489,6 @@ static id<GaimThread> gaimThread = nil;
     //ensure our user icon cache path exists
 	[[NSFileManager defaultManager] createDirectoriesForPath:[ACCOUNT_IMAGE_CACHE_PATH stringByExpandingTildeInPath]];
 	
-	insideDealloc = NO;
-	
-	
 	//Observe preferences changes
     [[adium notificationCenter] addObserver:self 
 								   selector:@selector(preferencesChanged:) 
@@ -1489,16 +1497,7 @@ static id<GaimThread> gaimThread = nil;
 }
 
 - (void)dealloc
-{
-	//Protections are needed since removeAccount will remove us from the service account dict which will release us
-	//which will call dealloc which will... and halcyon and on and on.
-	[self retain];
-	if (!insideDealloc) {
-		insideDealloc = YES;
-		[(GaimService *)service removeAccount:account];
-	}
-    [self autorelease];
-	
+{	
     [chatDict release];
     [filesToSendArray release];
 	

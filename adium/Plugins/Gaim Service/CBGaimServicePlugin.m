@@ -5,7 +5,6 @@
 //  Created by Colin Barrett on Sun Oct 19 2003.
 //
 
-#import <SystemConfiguration/SystemConfiguration.h>
 #import "CBGaimServicePlugin.h"
 #import "SLGaimCocoaAdapter.h"
 
@@ -27,25 +26,7 @@ static CBGaimServicePlugin  *servicePluginInstance;
 @implementation CBGaimServicePlugin
 
 - (void)_initGaim
-{	
-	/*
-	//Handle libgaim events with the Cocoa event loop
-	NSArray *portArray;
-	NSPort  *port1,*port2;
-	port1 = [NSPort port];
-    port2 = [NSPort port];
-    kitConnection = [[NSConnection alloc] initWithReceivePort:port1
-													 sendPort:port2];
-    [kitConnection setRootObject:self];
-	
-    // Ports switched here. 
-    portArray = [NSArray arrayWithObjects:port2, port1, nil];
-
-	[NSThread detachNewThreadSelector:@selector(createThreadedGaimCocoaAdapter:)
-							 toTarget:[SLGaimCocoaAdapter class]
-						   withObject:portArray];
-	 */
-//	 [SLGaimCocoaAdapter createThreadedGaimCocoaAdapter];
+{
 	[NSThread detachNewThreadSelector:@selector(createThreadedGaimCocoaAdapter)
 							 toTarget:[SLGaimCocoaAdapter class]
 						   withObject:nil];
@@ -70,23 +51,13 @@ static CBGaimServicePlugin  *servicePluginInstance;
 	[self _initGaim];
 
     //Install the services
-/*    OscarService	= [[[CBOscarService alloc] initWithService:self] retain];
-    GaduGaduService = [[[ESGaduGaduService alloc] initWithService:self] retain];
-    MSNService		= [[[ESMSNService alloc] initWithService:self] retain];
-    NapsterService  = [[[ESNapsterService alloc] initWithService:self] retain];
-	NovellService   = [[[ESNovellService alloc] initWithService:self] retain];
-	JabberService   = [[[ESJabberService alloc] initWithService:self] retain];
-//	TrepiaService   = [[[ESTrepiaService alloc] initWithService:self] retain];
-    YahooService	= [[[ESYahooService alloc] initWithService:self] retain];
-	YahooJapanService = [[[ESYahooJapanService alloc] initWithService:self] retain];
-*/
 	OscarService		= [[CBOscarService alloc] initWithService:self];
 	GaduGaduService		= [[ESGaduGaduService alloc] initWithService:self];
 	MSNService			= [[ESMSNService alloc] initWithService:self];
 	NapsterService		= [[ESNapsterService alloc] initWithService:self];
 	NovellService		= [[ESNovellService alloc] initWithService:self];
 	JabberService		= [[ESJabberService alloc] initWithService:self];
-	TrepiaService		= [[ESTrepiaService alloc] initWithService:self];
+//	TrepiaService		= [[ESTrepiaService alloc] initWithService:self];
 	YahooService		= [[ESYahooService alloc] initWithService:self];
 	YahooJapanService	= [[ESYahooJapanService alloc] initWithService:self];
 }
@@ -123,92 +94,5 @@ static CBGaimServicePlugin  *servicePluginInstance;
 {
 //    [_accountDict removeObjectForKey:inPointer];	
 }
-
-#pragma mark Systemwide Proxy Settings
-// Proxy ---------------------------------------------------------------------------------------------------------------
-
-- (NSDictionary *)systemSOCKSSettingsDictionary
-{
-	NSMutableDictionary *systemSOCKSSettingsDictionary = nil;
-	
-    Boolean             result;
-    CFDictionaryRef     proxyDict = nil;
-    CFNumberRef         enableNum = nil;
-    int                 enable;
-    CFStringRef         hostStr = nil;
-    CFNumberRef         portNum = nil;
-    int                 portInt;
-    
-    char    host[300];
-    size_t  hostSize;
-		
-    proxyDict = SCDynamicStoreCopyProxies(NULL);
-    result = (proxyDict != NULL);
-     
-    // Get the enable flag.  This isn't a CFBoolean, but a CFNumber.
-    // Check if SOCKS is enabled
-    if (result) {
-        enableNum = (CFNumberRef) CFDictionaryGetValue(proxyDict,
-                                                       kSCPropNetProxiesSOCKSEnable);
-        
-        result = (enableNum != NULL)
-            && (CFGetTypeID(enableNum) == CFNumberGetTypeID());
-    }
-    if (result) {
-        result = CFNumberGetValue(enableNum, kCFNumberIntType,
-                                  &enable) && (enable != 0);
-    }
-    
-    // Get the proxy host.  DNS names must be in ASCII.  If you 
-    // put a non-ASCII character  in the "Secure Web Proxy"
-    // field in the Network preferences panel, the CFStringGetCString
-    // function will fail and this function will return false.
-    if (result) {
-        hostStr = (CFStringRef) CFDictionaryGetValue(proxyDict,
-                                                     kSCPropNetProxiesSOCKSProxy);
-        
-        result = (hostStr != NULL)
-            && (CFGetTypeID(hostStr) == CFStringGetTypeID());
-    }
-    if (result) {
-        result = CFStringGetCString(hostStr, host,
-                                    (CFIndex) hostSize, [NSString defaultCStringEncoding]);
-    }
-    
-    //Get the proxy port
-    if (result) {
-        portNum = (CFNumberRef) CFDictionaryGetValue(proxyDict,
-                                                     kSCPropNetProxiesSOCKSPort);
-        
-        result = (portNum != NULL)
-            && (CFGetTypeID(portNum) == CFNumberGetTypeID());
-    }
-    if (result) {
-        result = CFNumberGetValue(portNum, kCFNumberIntType, &portInt);
-    }
-    if (result) {
-		NSString		*hostString = [NSString stringWithCString:host];
-		NSDictionary	*authDict = [AIKeychain getDictionaryFromKeychainForKey:hostString];
-		
-		systemSOCKSSettingsDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-											hostString,@"Host",
-											[NSNumber numberWithInt:portInt],@"Port",nil];
-		
-        if(authDict) {            
-			[systemSOCKSSettingsDictionary setObject:[authDict objectForKey:@"username"] forKey:@"Username"];
-			[systemSOCKSSettingsDictionary setObject:[authDict objectForKey:@"password"] forKey:@"Password"];
-            
-        } else {
-            //No username/password.  I think this doesn't need to be an error or anything since it should have been set in the system prefs
-        }
-    }    
-    
-    //Clean up
-    if (proxyDict != NULL) {
-        CFRelease(proxyDict);
-    }
-	
-    return systemSOCKSSettingsDictionary;
-}    
 
 @end

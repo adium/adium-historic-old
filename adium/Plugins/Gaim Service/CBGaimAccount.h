@@ -21,7 +21,7 @@
 - (NSString *)uniqueObjectID;
 @end
 
-@interface CBGaimAccount : AIAccount <AIAccount_List, AIAccount_Content, AIAccount_Privacy,AdiumGaimDO>
+@interface CBGaimAccount : AIAccount <AIAccount_List, AIAccount_Content, AIAccount_Privacy, AdiumGaimDO>
 {     
     NSMutableDictionary *chatDict;
 
@@ -33,12 +33,8 @@
     
     int                 reconnectAttemptsRemaining;
 	
-	BOOL				insideDealloc;
-	
 	NSMutableArray		*permittedContactsArray;
 	NSMutableArray		*deniedContactsArray;
-	
-//	SLGaimCocoaAdapter	*gaimThread;
 }
 
 - (const char*)protocolPlugin;
