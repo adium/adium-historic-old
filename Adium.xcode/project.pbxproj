@@ -142,7 +142,6 @@
 				7E6642C20653363A0050E8C8,
 				34BD9EB405314758000AB133,
 				4B7F278305440C0800CDFC90,
-				B72537BC058C4577004BA969,
 				34BD9EF10531476E000AB133,
 				346C9DA406004754000F5A8A,
 				6C5C3C2505F6532600490341,
@@ -6078,11 +6077,9 @@
 				7E6642F9065336C70050E8C8,
 				34BD9CD2053146CC000AB133,
 				4B7845EC059B50820048A8BA,
-				B774EFC4058C48F6009C7C67,
 				4B90B54E064220B400D23731,
 				34BD9D0D053146CC000AB133,
 				346C9D46060046AB000F5A8A,
-				4B6EA1BE058FA6900070A9A1,
 				4B215DB0059896B000305B3C,
 				344C0F0806B7099F00DA7200,
 			);
@@ -7028,7 +7025,6 @@
 			dstSubfolderSpec = 13;
 			files = (
 				4B7F27C705440DE900CDFC90,
-				B774EFC9058C4948009C7C67,
 				344C0F0D06B709AC00DA7200,
 				3419FDE40531585600C68BA3,
 				4B90B54C064220AB00D23731,
@@ -13248,18 +13244,6 @@
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B6EA1BD058FA6900070A9A1 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9F2C0531477E000AB133;
-			remoteInfo = "Adium 1.6 Pref Importer";
-		};
-		4B6EA1BE058FA6900070A9A1 = {
-			isa = PBXTargetDependency;
-			target = 34BD9F2C0531477E000AB133;
-			targetProxy = 4B6EA1BD058FA6900070A9A1;
 		};
 		4B70F28903D1CA1C00A8010A = {
 			fileEncoding = 4;
@@ -21081,7 +21065,8 @@
 			explicitFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
-			path = "Latex Plugin.AdiumPlugin";
+			name = "Latex Plugin.AdiumPlugin";
+			path = "/Users/adamiser/Desktop/adium/build/Latex Plugin.AdiumPlugin";
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -21129,24 +21114,6 @@
 		};
 		B747E987058D144C00A9F037 = {
 			fileRef = B747E985058D144C00A9F037;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		B774EFC3058C48F6009C7C67 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = B72537BB058C4577004BA969;
-			remoteInfo = "Latex Plugin";
-		};
-		B774EFC4058C48F6009C7C67 = {
-			isa = PBXTargetDependency;
-			target = B72537BB058C4577004BA969;
-			targetProxy = B774EFC3058C48F6009C7C67;
-		};
-		B774EFC9058C4948009C7C67 = {
-			fileRef = B72537BC058C4577004BA969;
 			isa = PBXBuildFile;
 			settings = {
 			};
