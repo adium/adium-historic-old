@@ -68,19 +68,16 @@
         [inModifiedKeys containsObject:@"Label Color"] ||
         [inModifiedKeys containsObject:@"Typing"] ||
         [inModifiedKeys containsObject:@"UnviewedContent"] ||
-        [inModifiedKeys containsObject:@"UnrespondedContent"] ||
         [inModifiedKeys containsObject:@"Away"] ||
         [inModifiedKeys containsObject:@"Idle"] ||
         [inModifiedKeys containsObject:@"Online"] ||
-        [inModifiedKeys containsObject:@"Open Tab"] ||
         [inModifiedKeys containsObject:@"Signed On"] ||
         [inModifiedKeys containsObject:@"Signed Off"]){
 
-        AIMutableOwnerArray	*iconArray, *tabIconArray;
-        AIStatusCircle		*statusCircle, *tabStatusCircle;
+        AIMutableOwnerArray	*iconArray;
+        AIStatusCircle		*statusCircle;
         NSColor			*circleColor;
 
-	int 			typing, unrespondedContent, unviewedContent;
         double			idle;
 
 	if(displayStatusCircleOnLeft){
@@ -101,10 +98,6 @@
 		statusCircle = [AIStatusCircle statusCircle];
 		[iconArray setObject:statusCircle withOwner:self];
 	    }
-    
-	    unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
-	    unrespondedContent = [[inObject statusArrayForKey:@"UnrespondedContent"] greatestIntegerValue];
-	    idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
 	        
 	    circleColor = [[inObject displayArrayForKey:@"Label Color"] averageColor];
     
@@ -113,7 +106,8 @@
 	    }
     
 	    [statusCircle setColor:circleColor];
-	    //[statusCircle setFlashColor:unviewedContentColor];
+
+	    idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
     
 	    //Embedded idle time
 	    if(displayIdleTime && idle != 0){

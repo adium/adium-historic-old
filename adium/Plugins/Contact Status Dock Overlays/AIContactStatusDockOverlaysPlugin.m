@@ -54,21 +54,20 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-/*
+///*
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:@"Contact Status Coloring"] == 0){
         NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:@"Contact Status Coloring"];
-
+	
         //Snatch colors from status coloring plugin's prefs    
         signedOffColor = [[[prefDict objectForKey:@"Signed Off Color"] representedColor] retain];
         signedOnColor = [[[prefDict objectForKey:@"Signed On Color"] representedColor] retain];
         unviewedContentColor = [[[prefDict objectForKey:@"Unviewed Content Color"] representedColor] retain];
-    
+
         backSignedOffColor = [[[prefDict objectForKey:@"Signed Off Label Color"] representedColor] retain];
         backSignedOnColor = [[[prefDict objectForKey:@"Signed On Label Color"] representedColor] retain];
         backUnviewedContentColor = [[[prefDict objectForKey:@"Unviewed Content Label Color"] representedColor] retain];
-
     }
- */
+ //*/
     
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DOCK_OVERLAYS] == 0){
         NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DOCK_OVERLAYS];
@@ -203,21 +202,16 @@
         //Display
         [image lockFocus];
 
+/*
         //Get our colors
         if(!([[contact statusArrayForKey:@"UnviewedContent"] greatestIntegerValue] && flash)){
             backColor = [[contact displayArrayForKey:@"Label Color"] averageColor];
             textColor = [[contact displayArrayForKey:@"Text Color"] averageColor];
         }
-
-	if(!backColor){
-	    backColor = [NSColor whiteColor];
-	}
-	if(!textColor){
-	    textColor = [NSColor blackColor];
-	}
-/*
+ */
+	
         if([[contact statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]){ //Unviewed
-            if(flash){
+	    if(flash){
                 backColor = [NSColor whiteColor];
                 textColor = [NSColor blackColor];
             }else{
@@ -231,9 +225,15 @@
         }else if([[contact statusArrayForKey:@"Signed Off"] greatestIntegerValue]){ //Signed off
             backColor = backSignedOffColor;
             textColor = signedOffColor;
-
+	    
         }
- */
+
+	if(!backColor){
+	    backColor = [NSColor whiteColor];
+	}
+	if(!textColor){
+	    textColor = [NSColor blackColor];
+	}
 
         //Lighten/Darken the back color slightly
         if([backColor colorIsDark]){
