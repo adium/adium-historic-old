@@ -29,6 +29,8 @@ static NSDictionary		*presetStatusesDictionary = nil;
 
 - (void)initAccount
 {
+	[super initAccount];
+	
 	if (!presetStatusesDictionary){
 		presetStatusesDictionary = [[NSDictionary dictionaryWithObjectsAndKeys:
 			AILocalizedString(@"Be Right Back",nil),	[NSNumber numberWithInt:YAHOO_STATUS_BRB],
