@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.55 2004/03/16 03:38:16 evands Exp $
+// $Id: AIContentController.m,v 1.56 2004/03/24 06:21:47 dchoby98 Exp $
 
 #import "AIContentController.h"
 
@@ -432,6 +432,11 @@
 {
 	AIChat	*chat = [self chatWithContact:inContact initialStatus:nil];
 	if(chat) [[owner interfaceController] openChat:chat]; 
+	
+	#warning dchoby98: Is there a better place to post the Chat_DidOpen notification?
+	[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
+	NSLog(@"----New Chat Created: %@",chat);
+	
 	return(chat);	
 }
 

@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #define Chat_WillClose								@"Chat_WillClose"
+#define Chat_DidOpen								@"Chat_DidOpen"
 #define Content_ContentObjectAdded					@"Content_ContentObjectAdded"
 #define Content_WillSendContent						@"Content_WillSendContent"
 #define Content_DidSendContent						@"Content_DidSendContent"

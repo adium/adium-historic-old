@@ -50,7 +50,7 @@ Message Window:
 	+ Open new windows behind the frontmost window (When not opening in tabs) [Colin]
 	+ Insert emoticon menu item, contextual menu item
 	+ Tab-complete usernames in messages and chat
-	+ Remember last X lines of previous conversation, restore to new message windows
+	+ Remember last X lines of previous conversation, restore to new message windows [Dave]
 	
 Contact List Display:
 	+ Small contact list icon to identify mobile device users
