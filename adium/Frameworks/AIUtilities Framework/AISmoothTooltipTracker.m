@@ -27,6 +27,7 @@
 - (AISmoothTooltipTracker *)initForView:(NSView *)inView withDelegate:(id)inDelegate
 {
 	[super init];
+	NSLog(@"%@ _init",self);
 	
 	view = inView;
 	delegate = inDelegate;
@@ -44,6 +45,9 @@
 
 - (void)dealloc
 {
+	NSLog(@"%@ dealloc",self);
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	[self removeCursorRect];
 	[self _stopTrackingMouse];
 	

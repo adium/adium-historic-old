@@ -11,18 +11,14 @@
 
 @implementation AIListContactCell
 
-#define SHOW_USER_ICON			YES
 #define USER_ICON_ON_LEFT		YES
-#define USER_ICON_SIZE			28
 #define VERTICAL_ICON_PADDING	1
 #define ICON_LEFT_PADDING 		4
 #define ICON_RIGHT_PADDING 		1
 #define ICON_TEXT_PADDING		3
-#define SHOW_STATUS_ICON		YES
 #define STATUS_ICON_ON_LEFT		NO
 #define CONTACT_FONT 			[NSFont systemFontOfSize:11]
 
-#define SHOW_EXTENDED_STATUS	YES
 #define EXTENDED_STATUS_FONT	[NSFont systemFontOfSize:9]
 #define EXTENDED_STATUS_COLOR	[NSColor grayColor]
 
@@ -42,16 +38,50 @@
 
 
 
+//User Icon Visibility
+- (void)setUserIconVisible:(BOOL)inShowIcon
+{
+	userIconVisible = inShowIcon;
+}
+- (BOOL)userIconVisible{
+	return(userIconVisible);
+}
 
+//User Icon Size
+- (void)setUserIconSize:(int)inSize
+{
+	userIconSize = inSize;
+}
+- (int)userIconSize{
+	return(userIconSize);
+}
 
+//Extended Status Visibility
+- (void)setExtendedStatusVisible:(BOOL)inShowStatus
+{
+	extendedStatusVisible = inShowStatus;
+}
+- (BOOL)extendedStatusVisible{
+	return(extendedStatusVisible);
+}
 
+//Status Icon Visibility
+- (void)setStatusIconsVisible:(BOOL)inShowStatus
+{
+	statusIconsVisible = inShowStatus;
+}
+- (BOOL)statusIconsVisible{
+	return(statusIconsVisible);
+}
 
-
-
-
-
-
-
+//Service Icon Visibility
+- (void)setServiceIconsVisible:(BOOL)inShowService
+{
+	serviceIconsVisible = inShowService;
+}
+- (BOOL)serviceIconsVisible{
+	return(serviceIconsVisible);
+}
 
 
 
@@ -97,8 +127,8 @@
 
 - (NSSize)cellSize
 {
-	if(SHOW_USER_ICON){
-		return(NSMakeSize(0, USER_ICON_SIZE + (VERTICAL_ICON_PADDING * 2)));
+	if(userIconVisible){
+		return(NSMakeSize(0, userIconSize + (VERTICAL_ICON_PADDING * 2)));
 	}else{
 		
 #warning I hate OS X font sizing
@@ -116,52 +146,52 @@ int		textHeight = [attrString heightWithWidth:1e7];
 	NSRect	iconRect;
 
 	//Draw the user image
-	if(SHOW_USER_ICON){
+	if(userIconVisible){
 		//Indent
 		rect.origin.x += ICON_LEFT_PADDING;
 		rect.size.width -= ICON_LEFT_PADDING;
 		
 		if(USER_ICON_ON_LEFT){
 			iconRect = NSMakeRect(rect.origin.x,
-								  rect.origin.y + (rect.size.height - USER_ICON_SIZE) / 2.0,
-								  USER_ICON_SIZE,
-								  USER_ICON_SIZE);
+								  rect.origin.y + (rect.size.height - userIconSize) / 2.0,
+								  userIconSize,
+								  userIconSize);
 		}else{
-			iconRect = NSMakeRect(rect.origin.x + rect.size.width - ICON_RIGHT_PADDING - USER_ICON_SIZE,
-								  rect.origin.y + (rect.size.height - USER_ICON_SIZE) / 2.0,
-								  USER_ICON_SIZE,
-								  USER_ICON_SIZE);
+			iconRect = NSMakeRect(rect.origin.x + rect.size.width - ICON_RIGHT_PADDING - userIconSize,
+								  rect.origin.y + (rect.size.height - userIconSize) / 2.0,
+								  userIconSize,
+								  userIconSize);
 		}
 		
 		[self drawUserIconInRect:iconRect];
 
-		if(USER_ICON_ON_LEFT) rect.origin.x += USER_ICON_SIZE + ICON_RIGHT_PADDING;
+		if(USER_ICON_ON_LEFT) rect.origin.x += userIconSize + ICON_RIGHT_PADDING;
 		if(USER_ICON_ON_LEFT) rect.origin.x += ICON_TEXT_PADDING;
-		rect.size.width -= USER_ICON_SIZE + ICON_RIGHT_PADDING;
+		rect.size.width -= userIconSize + ICON_RIGHT_PADDING;
 	}
 
 	//Service badge
-//	if(SHOW_STATUS_ICON){
-//		if(STATUS_ICON_ON_LEFT){
-//			iconRect = iconRect = NSMakeRect(rect.origin.x,
-//											 rect.origin.y,
-//											 badgewidth,
-//											 rect.size.height);
-//		}else{
-//			iconRect = iconRect = NSMakeRect(rect.origin.x + rect.size.width - badgewidth,
-//											 rect.origin.y,
-//											 badgewidth,
-//											 rect.size.height);
-//		}
-//		
-//		[self drawUserServiceIconInRect:iconRect];
-//		
-//		if(STATUS_ICON_ON_LEFT) rect.origin.x += badgewidth;
-//		rect.size.width -= badgewidth;
-//	}
+	if(serviceIconsVisible){
+		if(STATUS_ICON_ON_LEFT){
+			iconRect = iconRect = NSMakeRect(rect.origin.x,
+											 rect.origin.y,
+											 badgewidth,
+											 rect.size.height);
+		}else{
+			iconRect = iconRect = NSMakeRect(rect.origin.x + rect.size.width - badgewidth,
+											 rect.origin.y,
+											 badgewidth,
+											 rect.size.height);
+		}
+		
+		[self drawUserServiceIconInRect:iconRect];
+		
+		if(STATUS_ICON_ON_LEFT) rect.origin.x += badgewidth;
+		rect.size.width -= badgewidth;
+	}
 
 	//Status badge
-	if(SHOW_STATUS_ICON){
+	if(statusIconsVisible){
 		if(STATUS_ICON_ON_LEFT){
 			iconRect = iconRect = NSMakeRect(rect.origin.x,
 											 rect.origin.y,
@@ -180,7 +210,8 @@ int		textHeight = [attrString heightWithWidth:1e7];
 		rect.size.width -= badgewidth;
 	}
 
-	if(SHOW_EXTENDED_STATUS){
+	//Extended Status
+	if(extendedStatusVisible){
 		int	halfHeight = rect.size.height / 2;
 		
 		rect.origin.y += halfHeight;

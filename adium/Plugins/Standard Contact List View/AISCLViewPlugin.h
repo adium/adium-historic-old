@@ -54,6 +54,8 @@
 	AICLGroupPreferences			*preferencesGroup;
     ESCLViewAdvancedPreferences     *preferencesAdvanced;
     ESCLViewLabelsAdvancedPrefs     *preferencesLabelsAdvanced;
+	
+	int				windowStyle;
 }
 
 - (void)contactListDidClose;

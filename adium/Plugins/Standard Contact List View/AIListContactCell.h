@@ -9,7 +9,11 @@
 #import "AIListCell.h"
 
 @interface AIListContactCell : AIListCell {
-
+	BOOL		userIconVisible;
+	BOOL		extendedStatusVisible;
+	BOOL		statusIconsVisible;
+	BOOL		serviceIconsVisible;
+	int			userIconSize;
 }
 
 - (void)drawUserIconInRect:(NSRect)inRect;

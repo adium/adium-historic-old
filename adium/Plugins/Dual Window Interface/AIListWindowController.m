@@ -90,13 +90,14 @@
 - (id)init
 {	
     [super initWithWindowNibName:[self nibName]];
-	
+	NSLog(@"%@ initWithWindowNibName",self);
     return(self);
 }
 
 //Dealloc
 - (void)dealloc
 {
+	NSLog(@"%@ dealloc",self);
     [super dealloc];
 }
 
@@ -119,7 +120,7 @@
 	if(frameString){
 		NSRect		windowFrame = NSRectFromString(frameString);
 		
-		//Don't allow the window to shrink smaller than it's toolbar
+		//Don't allow the window to shrink smaller than its toolbar
 		
 		NSRect 		contentFrame = [NSWindow contentRectForFrameRect:windowFrame
 														   styleMask:[[self window] styleMask]];
@@ -182,6 +183,7 @@
     [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
+	[tooltipTracker release];
     
 	//Save the window position
 	[[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
@@ -241,14 +243,22 @@
 	
 	
 	//Layout ------------
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_LAYOUT]){
+    if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_LAYOUT])){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
 		
 		//Alignment
 		[contentCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue]];
 		[groupCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue]];
+		[contentCell setUserIconSize:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue]];
+
+		[contentCell setUserIconVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
+		[contentCell setExtendedStatusVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
+		[contentCell setStatusIconsVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue]];
+		[contentCell setServiceIconsVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS] boolValue]];
 		
 		//Redisplay
+		[contactListView setGroupCell:groupCell];
+		[contactListView setContentCell:contentCell];
 		[contactListView setNeedsDisplay:YES];
 	}
 	
