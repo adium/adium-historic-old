@@ -63,8 +63,8 @@ static NSMenu			*menu_Games;
 
 - (void)endGameWith:(AIListContact*)contact fromAccount:(AIAccount*)account;
 {
-	[[gamesForAccounts objectForKey:[account uniqueObjectID]]
-			removeObjectForKey:[contact uniqueObjectID]];
+	[[gamesForAccounts objectForKey:[account internalObjectID]]
+			removeObjectForKey:[contact internalObjectID]];
 }
 
 - (IBAction)newGame: (id)sender
@@ -93,7 +93,7 @@ static NSMenu			*menu_Games;
     [popUp_account setMenu:[[adium accountController] menuOfAccountsWithTarget:self includeOffline:NO]];
 
     //Select the last used account / Available online account
-    int index = [popUp_account indexOfItemWithRepresentedObject:[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:selectedContact]];
+    int index = [popUp_account indexOfItemWithRepresentedObject:[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE toContact:(AIListContact *)selectedContact]];
     if(index < [popUp_account numberOfItems] && index >= 0){
 		[popUp_account selectItemAtIndex:index];
 	}
@@ -120,24 +120,24 @@ static NSMenu			*menu_Games;
 	[windowController close]; 
 	
     NSString		*UID;
-    AIServiceType	*serviceType;
+    AIService		*service;
 	AIAccount		*account;
 	AIListContact   *contact;
 
     //Get the service type and UID
     account = [[popUp_account selectedItem] representedObject];
-    serviceType = [[account service] handleServiceType];
-    UID = [serviceType filterUID:[textField_handle stringValue] removeIgnoredCharacters:YES];
+    service = [account service];
+    UID = [service filterUID:[textField_handle stringValue] removeIgnoredCharacters:YES];
         
     //Find the contact
-	contact = [[adium contactController] contactWithService:[serviceType identifier] accountID:[account uniqueObjectID] UID:UID];
-	NSMutableDictionary *contacts = [gamesForAccounts objectForKey:[account uniqueObjectID]];
+	contact = [[adium contactController] contactWithService:service account:account UID:UID];
+	NSMutableDictionary *contacts = [gamesForAccounts objectForKey:[account internalObjectID]];
 	if(contacts == nil) {
 		contacts = [[[NSMutableDictionary alloc] init] autorelease];
-		[gamesForAccounts setObject:contacts forKey:[account uniqueObjectID]];
+		[gamesForAccounts setObject:contacts forKey:[account internalObjectID]];
 	}
 	
-	if(contact && [contacts objectForKey:[contact uniqueObjectID]]) {
+	if(contact && [contacts objectForKey:[contact internalObjectID]]) {
 		NSBeep();
 		return;
 		//TODO: Put an error message here, perhaps
@@ -157,7 +157,7 @@ static NSMenu			*menu_Games;
 		control = [self newController];
 		[self willSendInvitation:control];
 		[control sendInvitation:playAs account:account contact:contact];
-        [contacts setObject:control	forKey:[contact uniqueObjectID]];
+        [contacts setObject:control	forKey:[contact internalObjectID]];
     } else {
 		NSRunAlertPanel(CONTACT_NOT_FOUND,[NSString stringWithFormat:CONTACT_NOT_FOUND_MESSAGE,[textField_handle stringValue]],BUTTON_ERR,nil,nil);
 	}
@@ -196,8 +196,8 @@ static NSMenu			*menu_Games;
 			contact = [inObj source];
 			account = [inObj destination];
 			
-			contacts = [gamesForAccounts objectForKey:[account uniqueObjectID]];
-			control = [contacts objectForKey:[contact uniqueObjectID]];
+			contacts = [gamesForAccounts objectForKey:[account internalObjectID]];
+			control = [contacts objectForKey:[contact internalObjectID]];
 			
 			if([type isEqualToString:MSG_TYPE_INVITE]) {
 				if(control) {
@@ -239,15 +239,15 @@ static NSMenu			*menu_Games;
 	NEHGameController   *control;
 	NSMutableDictionary *contacts;
 	
-	contacts = [gamesForAccounts objectForKey:[account uniqueObjectID]];
+	contacts = [gamesForAccounts objectForKey:[account internalObjectID]];
 	if(!contacts){
 		contacts = [NSMutableDictionary dictionary];
-		[gamesForAccounts setObject:contacts forKey:[account uniqueObjectID]];
+		[gamesForAccounts setObject:contacts forKey:[account internalObjectID]];
 	}
 				
 	control = [self newController];
 	[control handleInvitation:msg account:account contact:contact];
-	[contacts setObject:control forKey:[contact uniqueObjectID]];
+	[contacts setObject:control forKey:[contact internalObjectID]];
 }
 
 - (IBAction)cancelInvite:(id)sender
