@@ -51,6 +51,7 @@ static CBGaimServicePlugin  *servicePluginInstance;
 	YahooService		= [[ESYahooService alloc] initWithService:self];
 	YahooJapanService	= [[ESYahooJapanService alloc] initWithService:self];
 	MeanwhileService	= [[ESMeanwhileService alloc] initWithService:self];
+	ZephyrService		= [[ESZephyrService alloc] initWithService:self];
 }
 
 - (void)uninstallPlugin
@@ -66,6 +67,7 @@ static CBGaimServicePlugin  *servicePluginInstance;
 	[YahooJapanService release]; YahooJapanService = nil;
 	[NovellService release]; NovellService = nil;
 	[MeanwhileService release]; MeanwhileService = nil;
+	[ZephyrService release]; ZephyrService = nil;
 }
 
 @end
