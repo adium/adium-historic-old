@@ -10,7 +10,7 @@ while(<STDIN>) {
 }
 
 for(my $i = 0; $i < @ARGV; $i++) {
-    $args .= @ARGV[$i] . " ";
+    $args .= $ARGV[$i] . " ";
 }
 
 open(CIA,  "| /usr/bin/perl /cvsroot/adium/CVSROOT/ciabot.pl $args") or die "shit: $!";
