@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.168 2004/08/05 23:50:16 adamiser Exp $
+// $Id: AIContactController.m,v 1.169 2004/08/11 23:22:47 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -977,7 +977,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	}
 	
 	if (listObject){
-		[AIContactInfoWindowController showInfoWindowForListObject:listObject];
+		[NSApp activateIgnoringOtherApps:YES];
+		[[[AIContactInfoWindowController showInfoWindowForListObject:listObject] window] makeKeyAndOrderFront:nil];
 	}
 }
 
@@ -1686,44 +1687,38 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (void)moveListObjects:(NSArray *)objectArray toGroup:(AIListGroup *)group index:(int)index
 {
 	NSEnumerator	*enumerator;
-	AIListContact	*listObject;
+	AIListContact	*listContact;
 
 	enumerator = [objectArray objectEnumerator];
-	while(listObject = [enumerator nextObject]){
+	while(listContact = [enumerator nextObject]){
 		//Set the new index / position of the object
-		[self _positionObject:listObject atIndex:index inGroup:group];
+		[self _positionObject:listContact atIndex:index inGroup:group];
 
-		//Move the object to the new group if necessary
-		if(group != [listObject containingObject]){			
-
-			if([listObject isKindOfClass:[AIMetaContact class]]){
-				//This is a meta contact, move the objects within it
-				NSEnumerator	*metaEnumerator = [[(AIMetaContact *)listObject containedObjects] objectEnumerator];
-				AIListObject	*metaObject;
-				
-				while(metaObject = [metaEnumerator nextObject]){
-					[self _moveObject:metaObject toGroup:group];
-				}
-			}else if([listObject isKindOfClass:[AIListContact class]]){
-				//Move the object 
-				[self _moveObject:listObject toGroup:group];
-			}else if([listObject isKindOfClass:[AIListGroup class]]){
-//				NSString	*newNestName = [[[listObject UID] componentsSeparatedByString:@":"] lastObject];
-//				while(group && group != contactList){
-//					NSArray		*groupNest = [[group UID] componentsSeparatedByString:@":"];
-//					newNestName = [[groupNest lastObject] stringByAppendingFormat:@":%@",newNestName];
-//				
-//					group = [group containingObject];
-//				}
-//				
-//				//Rename the group to re-nest it
-//				[self _renameGroup:(AIListGroup *)listObject to:newNestName];
-			}
-
-		}
+		[self moveContact:listContact toGroup:group];
 			
 		//Resort to update for the new positioning
-		[[owner contactController] sortListObject:listObject];
+		[[owner contactController] sortListObject:listContact];
+	}
+}
+
+- (void)moveContact:(AIListContact *)listContact toGroup:(AIListGroup *)group
+{
+	//Move the object to the new group if necessary
+	if(group != [listContact containingObject]){			
+		
+		if([listContact isKindOfClass:[AIMetaContact class]]){
+			//This is a meta contact, move the objects within it
+#warning No no no.  Bad contact controller.
+			NSEnumerator	*metaEnumerator = [[(AIMetaContact *)listContact containedObjects] objectEnumerator];
+			AIListObject	*metaObject;
+			
+			while(metaObject = [metaEnumerator nextObject]){
+				[self _moveObject:metaObject toGroup:group];
+			}
+		}else if([listContact isKindOfClass:[AIListContact class]]){
+			//Move the object 
+			[self _moveObject:listContact toGroup:group];
+		}
 	}
 }
 

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.102 2004/08/05 09:18:08 evands Exp $
+// $Id: AIContentController.m,v 1.103 2004/08/11 23:22:47 evands Exp $
 
 #import "AIContentController.h"
 
@@ -304,17 +304,18 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 //Only called once, the first time a threaded filtering is requested
 - (void)thread_createFilterRunLoopMessenger
 {
-	NSLog(@"creation time");
+	NSLog(@"thread_createFilterRunLoopMessenger: creation time");
 	NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
 	
 	filterRunLoopMessenger = [NDRunLoopMessenger runLoopMessengerForCurrentRunLoop];
 	[filterRunLoopMessenger setMessageRetryTimeout:3.0];
-	
+	NSLog(@"thread_createFilterRunLoopMessenger: Got %@",filterRunLoopMessenger);
 	CFRunLoopRun();
 	
 	[pool release];
 	
 	filterRunLoopMessenger = nil;
+	NSLog(@"thread_createFilterRunLoopMessenger: destroyed it");
 }
 
 //Messaging ------------------------------------------------------------------------------------------------------------
@@ -353,9 +354,7 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 {
 	[inObject setMessage:filteredMessage];
 	
-	[self performSelector:@selector(finishReceiveContentObject:)
-			   withObject:inObject
-			   afterDelay:0.0000001];
+	[self finishReceiveContentObject:inObject];
 }
 
 - (void)finishReceiveContentObject:(AIContentObject *)inObject
@@ -413,9 +412,7 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 							 context:inObject];
 		
     }else{
-		[self performSelector:@selector(finishSendContentObject:)
-				   withObject:inObject
-				   afterDelay:0.000001];
+		[self finishSendContentObject:inObject];
 	}
 	
 	// XXX
@@ -436,9 +433,7 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 							selector:@selector(didFilterAttributedString:autoreplySendingContext:)
 							 context:inObject];
 	}else{		
-		[self performSelector:@selector(finishSendContentObject:)
-				   withObject:inObject
-				   afterDelay:0.000001];
+		[self finishSendContentObject:inObject];
 	}
 }
 
@@ -446,9 +441,7 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 {
 	[inObject setMessage:filteredString];
 
-	[self performSelector:@selector(finishSendContentObject:)
-			   withObject:inObject
-			   afterDelay:0.000001];
+	[self finishSendContentObject:inObject];
 }
 
 - (void)finishSendContentObject:(AIContentObject *)inObject
@@ -689,6 +682,7 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 	//If we're dealing with a meta contact, open a chat with the preferred contact for this meta contact
 	//It's a good idea for the caller to pick the preferred contact for us, since they know the content type
 	//being sent and more information - but we'll do it here as well just to be safe.
+#warning WRONG
 	if ([inContact isKindOfClass:[AIMetaContact class]]){
 		inContact = [[owner contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
 															   forListContact:inContact];

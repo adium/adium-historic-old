@@ -152,5 +152,5 @@
 #define FILE_TRANSFER_CANCELED			@"FileTransfer_Canceled"
 #define FILE_TRANSFER_COMPLETE			@"FileTransfer_Complete"
 
-#define Adium_Xtras_Changed				@"Adium_Xtras_Changed"
-#define Adium_CompletedApplicationLoad  @"Adium_CompletedApplicationLoad"
+#define Adium_Xtras_Changed					@"Adium_Xtras_Changed"
+#define Adium_CompletedApplicationLoad		@"Adium_CompletedApplicationLoad"

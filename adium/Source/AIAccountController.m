@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.96 2004/08/06 05:09:52 evands Exp $
+// $Id: AIAccountController.m,v 1.97 2004/08/11 23:22:47 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -59,7 +59,6 @@
 	availableServiceTypeDict = [[NSMutableDictionary alloc] init];
     accountArray = nil;
     lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];
-    sleepingOnlineAccounts = nil;
 	accountMenuItemArraysDict = [[NSMutableDictionary alloc] init];
 	accountMenuPluginsArray = [[NSMutableArray alloc] init];
 	_cachedActiveServiceTypes = nil;
@@ -67,16 +66,6 @@
 	//Default account preferences
 	[[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ACCOUNT_DEFAULT_PREFS forClass:[self class]]
 										  forGroup:PREF_GROUP_ACCOUNTS];
-	
-    //Monitor system sleep so we can cleanly disconnect / reconnect our accounts
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(systemWillSleep:)
-                                                 name:AISystemWillSleep_Notification
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(systemDidWake:)
-                                                 name:AISystemDidWake_Notification
-                                               object:nil];
 }
 
 //Finish initialization once other controllers have set themselves up
@@ -97,10 +86,6 @@
                                    selector:@selector(didSendContent:)
                                        name:Content_DidSendContent
                                      object:nil];
-    //Autoconnect
-	if(![NSEvent shiftKey]){
-		[self autoConnectAccounts];
-	}
 	
 	//First launch, open the account prefs
 	if([accountArray count] == 0){
@@ -117,7 +102,6 @@
     
     //Remove observers (otherwise, every account added will be a duplicate next time around)
     [[owner notificationCenter] removeObserver:self];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     //Cleanup
     [accountArray release];
@@ -745,21 +729,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 //Connection convenience methods ---------------------------------------------------------------------------------------
 #pragma mark Connection Convenience Methods
-//Automatically connect to accounts flagged with an auto connect property
-- (void)autoConnectAccounts
-{
-    NSEnumerator	*enumerator;
-    AIAccount		*account;
-	
-	enumerator = [accountArray objectEnumerator];
-	while((account = [enumerator nextObject])){
-		if([[account supportedPropertyKeys] containsObject:@"Online"] &&
-		   [[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]){
-			[account setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-		}
-	}
-}
-
 //Connects all the accounts
 - (void)connectAllAccounts
 {
@@ -807,49 +776,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	
 	return NO;
 }
-
-//Disconnect / Reconnect on sleep --------------------------------------------------------------------------------------
-#pragma mark Disconnect/Reconnect On Sleep
-//System is sleeping
-- (void)systemWillSleep:(NSNotification *)notification
-{
-    NSEnumerator	*enumerator;
-    AIAccount		*account;
-    
-    //Remove any existing online account array
-    [sleepingOnlineAccounts release]; sleepingOnlineAccounts = [[NSMutableArray alloc] init];
-    
-    //Process each account, looking for any that are online
-    enumerator = [accountArray objectEnumerator];
-    while((account = [enumerator nextObject])){
-        if([[account supportedPropertyKeys] containsObject:@"Online"] &&
-           [[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
-            //Remember that this account was online
-            [sleepingOnlineAccounts addObject:account];
-            
-            //Disconnect it
-            [account setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-        }
-    }
-}
-
-//System is waking
-- (void)systemDidWake:(NSNotification *)notification
-{
-    NSEnumerator	*enumerator;
-    AIAccount		*account;
-    
-    //Reconnect all sleeping online accounts
-    enumerator = [sleepingOnlineAccounts objectEnumerator];
-    while((account = [enumerator nextObject])){
-        //Connect it
-        [account setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-    }
-    
-    //Cleanup
-    [sleepingOnlineAccounts release]; sleepingOnlineAccounts = nil;
-}
-
 
 //Password Storage -----------------------------------------------------------------------------------------------------
 #pragma mark Password Storage
