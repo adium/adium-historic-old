@@ -20,6 +20,9 @@
     [[adium notificationCenter] addObserver:self selector:@selector(handleMessageEvent:) name:Content_DidSendContent object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(handleMessageEvent:) name:Content_DidReceiveContent object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(handleMessageEvent:) name:Content_FirstContentRecieved object:nil];
+
+	//Observe chat changes
+	[[adium contentController] registerChatObserver:self];
 }
 
 - (NSString *)shortDescriptionForEventID:(NSString *)eventID
@@ -113,6 +116,44 @@
 											  userInfo:chat];
 
 	}
+}
+
+
+- (NSArray *)updateChat:(AIChat *)inChat keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+{
+	if (inModifiedKeys == nil ||
+		[inModifiedKeys containsObject:KEY_CHAT_TIMED_OUT] ||
+		[inModifiedKeys containsObject:KEY_CHAT_CLOSED_WINDOW]){
+
+		NSString		*message = nil;
+		NSString		*type = nil;
+		AIListObject	*listObject = [inChat listObject];
+		AIContentStatus	*content;
+		
+		if ([inChat integerStatusObjectForKey:KEY_CHAT_CLOSED_WINDOW]){
+			message = [NSString stringWithFormat:AILocalizedString(@"%@ closed the conversation window.",nil),[listObject displayName]];
+			type = @"closed";
+		}else if ([inChat integerStatusObjectForKey:KEY_CHAT_TIMED_OUT]){
+			message = [NSString stringWithFormat:AILocalizedString(@"The conversation with %@ timed out.",nil),[listObject displayName]];			
+			type = @"timed_out";
+		}
+		
+		if (message){
+			//Create our content object
+			content = [AIContentStatus statusInChat:inChat
+										 withSource:listObject
+										destination:[inChat account]
+											   date:[NSDate date]
+											message:[[[NSAttributedString alloc] initWithString:message
+																					 attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
+										   withType:type];
+			
+			//Add the object
+			[[adium contentController] receiveContentObject:content];
+		}
+	}
+	
+	return(nil);
 }
 
 @end
