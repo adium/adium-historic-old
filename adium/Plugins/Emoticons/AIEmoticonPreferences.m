@@ -19,10 +19,10 @@
 #import "AIEmoticonPack.h"
 #import "AIEmoticonPackCell.h"
 
-#define	EMOTICON_PREF_NIB				@""
+#define	EMOTICON_PREF_NIB               @""
 #define	EMOTICON_PACK_DRAG_TYPE         @"AIEmoticonPack"
 #define EMOTICON_MIN_ROW_HEIGHT         17
-#define EMOTICON_PACKS_TOOLTIP			AILocalizedString(@"Reorder emoticon packs by dragging. Packs get prioritized from top to bottom.",nil)
+#define EMOTICON_PACKS_TOOLTIP          AILocalizedString(@"Reorder emoticon packs by dragging. Packs get used based on the order from top to bottom.",nil)
 @interface AIEmoticonPreferences (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureEmoticonListForSelection;
@@ -60,11 +60,7 @@
     [[table_emoticons tableColumnWithIdentifier:@"Enabled"] setDataCell:checkCell];
     [[table_emoticons tableColumnWithIdentifier:@"Image"] setDataCell:[[[NSImageCell alloc] init] autorelease]];
     [table_emoticons setDrawsAlternatingRows:YES];
-    
-    //Configure our buttons
-    [button_addEmoticons setImage:[NSImage imageNamed:@"plus" forClass:[self class]]];
-    [button_removeEmoticons setImage:[NSImage imageNamed:@"minus" forClass:[self class]]];
-    
+        
     //Observe prefs    
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
@@ -232,6 +228,30 @@
         }
     }else{
         return(NSDragOperationNone);
+    }
+}
+
+-(void)moveSelectedPacksToTrash
+{
+    NSBeginAlertSheet(@"Delete Emoticon Pack",@"Delete",@"Cancel",@"",[[self view] window], self, 
+                      @selector(trashConfirmSheetDidEnd:returnCode:contextInfo:), nil, nil, 
+                      @"Are you sure you want to delete the selected Emoticon Pack(s)? They will be moved to the Trash, which may take a moment, depending on their size.");
+}
+
+- (void)trashConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+    if(returnCode == NSOKButton)
+    {
+        NSEnumerator *selectedEnum = [table_emoticonPacks selectedRowEnumerator];
+        int object;
+        while(object = [[selectedEnum nextObject] intValue])
+        {
+            NSString *currentEPPath = [[[plugin availableEmoticonPacks] objectAtIndex:object] path];
+            // the plugin should then update and auto-propigate :)
+            [[NSFileManager defaultManager] trashFileAtPath:currentEPPath];
+    }
+        [plugin publicReset];
+        [table_emoticonPacks reloadData];            
     }
 }
 

@@ -15,17 +15,16 @@
 
 @class AIEmoticonPack;
 
+#import "BGEmoticonPackTableView.h"
+
 @interface AIEmoticonPreferences : AIPreferencePane
 {
-    IBOutlet    NSTableView                 *table_emoticonPacks;
+    IBOutlet    BGEmoticonPackTableView     *table_emoticonPacks;
     IBOutlet    AIAlternatingRowTableView   *table_emoticons;
     
     IBOutlet    NSTextField                 *textField_packTitle;
-    
-    IBOutlet    NSPopUpButton               *button_addEmoticons;
-    IBOutlet	NSButton                    *button_removeEmoticons;
-    
-	NSButtonCell							*checkCell;
+        
+    NSButtonCell                            *checkCell;
     AIEmoticonPack                          *selectedEmoticonPack;
 
     NSArray                                 *dragRows;

@@ -13,15 +13,14 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-#import <Foundation/Foundation.h>
-#import <AppKit/AppKit.h>
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
+#import "AIEmoticonPack.h"
 
 @interface BGEmoticonMenuPlugin : AIPlugin
 {
-    NSArray *emoticons;
+    NSArray *emoticonPacks;
     NSMenu *eMenu;
     NSMenuItem *toolbarMenu;
     NSMenuItem *quickMenuItem;
@@ -29,8 +28,7 @@
     NSToolbarItem *toolbarItem;
 }
 -(NSMenu *)eMenu;
--(void)buildMenu;
--(void)buildContextualMenu;
--(NSToolbarItem *)toolbarItem;
+-(NSMenu *)buildMenu:(AIEmoticonPack*)incomingPack;
+//-(NSToolbarItem *)toolbarItem;
 -(void)buildToolbarItem;
 @end

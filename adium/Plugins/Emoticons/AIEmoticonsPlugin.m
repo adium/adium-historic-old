@@ -390,6 +390,11 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     return(nil);
 }
 
+-(void)publicReset
+{
+    [self resetAvailableEmoticons];
+}
+
 //Returns an array of the emoticon packs at the specified path
 - (NSArray *)_emoticonsPacksAvailableAtPath:(NSString *)inPath
 {

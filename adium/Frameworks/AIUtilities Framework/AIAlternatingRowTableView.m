@@ -78,8 +78,6 @@
     }
 }
 
-
-// Delete key ---------------------------------------------------------------------
 - (void)setDataSource:(id)aSource
 {
     [super setDataSource:aSource];

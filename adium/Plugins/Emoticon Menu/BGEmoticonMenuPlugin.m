@@ -13,8 +13,6 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//  *currently only organized with AIM in mind, needs to be redone for all GAIM-based services, or at least more than AIM*
-
 #import "BGEmoticonMenuPlugin.h"
 
 @implementation BGEmoticonMenuPlugin
@@ -22,32 +20,46 @@
 - (void)installPlugin
 {
     // load active emoticons and create menu
-    emoticons = [[adium contentController] emoticonsArray];
-    if(emoticons != nil)
+    emoticonPacks = [[adium contentController] emoticonPacks];
+    if(emoticonPacks != nil && [emoticonPacks count] > 1)
     {
+        id object;
+        NSEnumerator *packEnum = [emoticonPacks objectEnumerator];
         eMenu = [[NSMenu alloc] initWithTitle:@""];
+        while(object = [packEnum nextObject])
+        {
+            // read out each pack, iterate it and add its contents to its menu, then add it to its menu item
+            NSMenuItem *packItem = [[NSMenuItem alloc] initWithTitle:[object name] action:nil keyEquivalent:@""];
+            [packItem setSubmenu:[self buildMenu:object]]; 
+            [eMenu addItem:packItem];
+        }
+        // create a menu item for the menu to attach to
+        quickMenuItem = [[NSMenuItem alloc] initWithTitle:@"Emoticons" target:self action:nil keyEquivalent:@""];
+        [quickMenuItem setSubmenu:eMenu];
+        // basically useless menu button stuff :P
         menuButton = [[NSPopUpButton alloc] init];
         [menuButton setImage:[NSImage imageNamed:@"EmoticonMenu"]];
-        [self buildMenu]; 
-        [self buildContextualMenu];
         //[self buildToolbarItem];
         // add popup button to window's toolbar
         // register for menus
         [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Format_Additions];
-        [[adium menuController] addMenuItem:quickMenuItem toLocation:Context_TextView_EmoticonAction];
+        //[[adium menuController] addMenuItem:quickMenuItem toLocation:Context_TextView_EmoticonAction];
+    }
+    else if([emoticonPacks count] == 1)
+    {
+        quickMenuItem = [[NSMenuItem alloc] initWithTitle:@"Emoticons" target:self action:nil keyEquivalent:@""];
+        eMenu = [self buildMenu:[emoticonPacks objectAtIndex:0]];
+        [quickMenuItem setSubmenu:eMenu];
+        [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Format_Additions];        
+        NSLog(@"i should just throw 'em straight in the menu");
     }
     else
     {
-        NSLog(@"polish nikes... there's no emoticons for this menu!!");
+        quickMenuItem = [[NSMenuItem alloc] initWithTitle:@"Emoticons" target:self action:nil keyEquivalent:@""];
+        [quickMenuItem setEnabled:NO];
+        [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Format_Additions];
     }
 }
-
--(void)buildContextualMenu
-{
-    // newContextMenu = [[[adium contentController] textEntryView] menu];
-    // [newContextMenu addItem:quickMenuItem];
-}
-
 
 -(void)buildToolbarItem
 {   
@@ -69,10 +81,11 @@
     [toolbarItem setMenuFormRepresentation: toolbarMenu];
 }
 
--(void)buildMenu
+-(NSMenu *)buildMenu:(AIEmoticonPack *)incomingPack
 {
-    NSEnumerator *emoteEnum = [emoticons objectEnumerator];
+    NSEnumerator *emoteEnum = [[incomingPack emoticons] objectEnumerator];
     AIEmoticon *anEmoticon;
+    NSMenu *packMenu = [[NSMenu alloc] initWithTitle:@""];
     // loop through each emoticon and add a menu item for each
     while(anEmoticon = [emoteEnum nextObject])
     {
@@ -80,21 +93,19 @@
         {
             NSMenuItem *newItem = [[NSMenuItem alloc] initWithTitle:[anEmoticon name] target:self action:@selector(insertEmoticon:) keyEquivalent:@""];
             [newItem setImage:[anEmoticon image]];
-            [eMenu addItem:[newItem copy]];
+            [packMenu addItem:newItem];
+            //[eMenu addItem:[newItem copy]];
         }
     }    
-    // create a menu item for the menu to attach to
-    quickMenuItem = [[NSMenuItem alloc] initWithTitle:@"Insert" target:self action:@selector(insertEmoticon:) keyEquivalent:@""];
-    [quickMenuItem setSubmenu:[eMenu copy]];
-
+    return packMenu;
 }
 
 -(void)insertEmoticon:(id)sender
 {
     // Actually, since sender can be a menu item or a button, it'd be better to look up the name in the emoticons array, then get
     // the emoticon itself and ask IT for the textEquivalents, instead of asking an id sender :P
-    AIEmoticon *selectedEmoticon = [emoticons objectAtIndex:[[sender menu] indexOfItem:sender]];
-    NSString *emoString = [[selectedEmoticon textEquivalents] objectAtIndex:0];
+    //AIEmoticon *selectedEmoticon = [emoticons objectAtIndex:[[sender menu] indexOfItem:sender]];
+    //NSString *emoString = [[selectedEmoticon textEquivalents] objectAtIndex:0];
     //     [[[[adium interfaceController] currentChat] textEntryView] insertText:emoString];
 }
 
@@ -115,7 +126,7 @@
 
 -(void)dealloc
 {
-    [emoticons release];
+    [emoticonPacks release];
     [eMenu release];
 }
 

@@ -114,6 +114,8 @@
 		};
 		11C157D504A88DE0008E0C76 = {
 			children = (
+				C41BF732063D006D0006C041,
+				C41BF733063D006D0006C041,
 				3C73F83E04D62A2900A80106,
 				3C73F83F04D62A2900A80106,
 				4B584E06055DD6A000E89D48,
@@ -3520,6 +3522,7 @@
 				7E824CE806387FAF00813072,
 				7E824CEA06387FAF00813072,
 				BF000238063A4D2E0019910B,
+				C41BF734063D006D0006C041,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4154,6 +4157,7 @@
 				7E824CE906387FAF00813072,
 				7E824CEB06387FAF00813072,
 				BF000239063A4D2E0019910B,
+				C41BF735063D006D0006C041,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18349,6 +18353,36 @@
 //C42
 //C43
 //C44
+		C41BF732063D006D0006C041 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = BGEmoticonPackTableView.h;
+			path = Plugins/Emoticons/BGEmoticonPackTableView.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C41BF733063D006D0006C041 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = BGEmoticonPackTableView.m;
+			path = Plugins/Emoticons/BGEmoticonPackTableView.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C41BF734063D006D0006C041 = {
+			fileRef = C41BF732063D006D0006C041;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C41BF735063D006D0006C041 = {
+			fileRef = C41BF733063D006D0006C041;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		C4243C8F0638E4C7007AD2D9 = {
 			children = (
 				C4243C920638E4EA007AD2D9,
