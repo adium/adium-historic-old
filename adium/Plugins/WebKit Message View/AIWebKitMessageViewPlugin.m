@@ -72,6 +72,40 @@
 	[timeStampFormatter release];
 }
 
+- (void)loadPreferencesForWebView:(ESWebView *)webView withStyleNamed:(NSString *)styleName
+{
+	NSString	*prefIdentifier = [NSString stringWithFormat:@"Adium Style %@ Preferences",styleName];
+	[webView setPreferencesIdentifier:prefIdentifier];
+	[[webView preferences] setAutosaves:YES];
+		
+	if (![[[adium preferenceController] preferenceForKey:prefIdentifier
+												   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue]){
+		//Load defaults from the bundle or our defaults, as appropriate
+		NSBundle	*style = [self messageStyleBundleWithName:styleName];
+		
+		NSString	*defaultFontFamily = [style objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_FAMILY];
+		if (!defaultFontFamily){
+			defaultFontFamily = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_DEFAULT_FONT_FAMILY
+																		 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		}
+				
+		NSNumber	*defaultSizeNumber = [style objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_SIZE];
+		if (!defaultSizeNumber){
+			defaultSizeNumber = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_DEFAULT_FONT_SIZE
+																		 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		}
+		
+		[webView setFontFamily:defaultFontFamily];
+		[[webView preferences] setDefaultFontSize:[defaultSizeNumber intValue]];
+		
+		
+		//We have no created a webView preferences object and configured its defaults, so no need to do it again
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
+											 forKey:prefIdentifier
+											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	}
+}
+
 #pragma mark Available Webkit Styles
 - (void)_loadAvailableWebkitStyles
 {	
@@ -154,8 +188,9 @@
 			//Add the date header
 			[self _addContentStatus:dateSeparator similar:NO toWebView:webView fromStylePath:stylePath];
 		}
-		
-	}else if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0 || [[content type] compare:CONTENT_CONTEXT_TYPE] == 0){
+	}
+	
+	if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0 || [[content type] compare:CONTENT_CONTEXT_TYPE] == 0){
 		[self _addContentMessage:(AIContentMessage *)content 
 						   similar:contentIsSimilar
 						 toWebView:webView
@@ -173,48 +208,48 @@
 {	
 	NSString		*currentStylePath;
 	NSMutableString	*newHTML;
-	NSString		*contentTemplate = nil;
-	NSString		*nextContentTemplate = nil;
+	NSString		*templateFile;
+	NSString		*template = nil;
+	BOOL			isContext = [[content type] isEqualToString:CONTENT_CONTEXT_TYPE];
 	
 	//
-	if([content isOutgoing]){
-		currentStylePath = [stylePath stringByAppendingPathComponent:@"Outgoing"];
-	}else{
-		currentStylePath = [stylePath stringByAppendingPathComponent:@"Incoming"];
-	}
+	currentStylePath = [stylePath stringByAppendingPathComponent:([content isOutgoing] ? @"Outgoing" : @"Incoming")];
 	
 	//Load context templates if appropriate
-	if([[content type] compare:CONTENT_CONTEXT_TYPE] == 0) {
-		contentTemplate = [NSString stringWithContentsOfFile:[currentStylePath stringByAppendingPathComponent:@"Context.html"]];
-		nextContentTemplate = [NSString stringWithContentsOfFile:[currentStylePath stringByAppendingPathComponent:@"NextContext.html"]];
+	if (contentIsSimilar){
+		templateFile = (isContext ? @"NextContext.html" : @"NextContent.html");
+	}else{
+		templateFile = (isContext ? @"Context.html" : @"Content.html");
 	}
 	
-	//Fall back on the content templates for normal content, or if there's no context template
-	if(contentTemplate == nil)	
-		contentTemplate = [NSString stringWithContentsOfFile:[currentStylePath stringByAppendingPathComponent:@"Content.html"]];
-	if(nextContentTemplate == nil)
-		nextContentTemplate = [NSString stringWithContentsOfFile:[currentStylePath stringByAppendingPathComponent:@"NextContent.html"]];
-	
+	template = [NSString stringWithContentsOfFile:[currentStylePath stringByAppendingPathComponent:templateFile]];
+	//Fall back on the content files if necessary
+	if (!template){
+		if (contentIsSimilar){
+			templateFile = @"NextContent.html";
+		}else{
+			templateFile = @"Content.html";
+		}
+		
+		template = [NSString stringWithContentsOfFile:[currentStylePath stringByAppendingPathComponent:templateFile]];
+	}
+
 	//
+	newHTML = [[template mutableCopy] autorelease];
+	newHTML = [self fillKeywords:newHTML forContent:content];
+	newHTML = [self escapeString:newHTML];
+		
 	if(!contentIsSimilar){
-		newHTML = [[contentTemplate mutableCopy] autorelease];
-		newHTML = [self fillKeywords:newHTML forContent:content];
-		newHTML = [self escapeString:newHTML];
-        
 		[webView stringByEvaluatingJavaScriptFromString:
 			[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();", newHTML]];
 		
 	}else{
-		newHTML = [[nextContentTemplate mutableCopy] autorelease];
-		newHTML = [self fillKeywords:newHTML forContent:content];
-		newHTML = [self escapeString:newHTML];
-		
 		[webView stringByEvaluatingJavaScriptFromString:
-			[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();", newHTML]];
-		
+			[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();", newHTML]];								
 	}
+	
 }
-
+	
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar toWebView:(WebView *)webView fromStylePath:(NSString *)stylePath
 {
 	NSMutableString *newHTML;
@@ -273,16 +308,15 @@
 			}
 		} while(range.location != NSNotFound);
 		
-#warning This disables any fonts in the webkit view other than what is specified by the template.
 		//We don't support the message being in a content display more than once.  That would be ridiculous.
         range = [inString rangeOfString:@"%message%"];
         if(range.location != NSNotFound){
             [inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)content message]
 																				  headers:NO 
-																				 fontTags:NO
-																			closeFontTags:NO
+																				 fontTags:YES
+																			closeFontTags:YES
 																				styleTags:YES   
-															   closeStyleTagsOnFontChange:NO
+															   closeStyleTagsOnFontChange:YES
 																		   encodeNonASCII:YES 
 																			   imagesPath:@"/tmp"
 																		attachmentsAsText:NO]];

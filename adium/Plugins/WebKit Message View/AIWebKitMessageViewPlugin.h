@@ -14,9 +14,13 @@
 \------------------------------------------------------------------------------------------------------ */
 
 #define PREF_GROUP_WEBKIT_MESSAGE_DISPLAY	@"WebKit Message Display"
+
 #define	KEY_WEBKIT_TIME_STAMP_FORMAT		@"Time Stamp"
 #define KEY_WEBKIT_SHOW_USER_ICONS			@"Show User Icons"
 #define KEY_WEBKIT_STYLE					@"Message Style"
+
+#define KEY_WEBKIT_DEFAULT_FONT_FAMILY		@"DefaultFontFamily"
+#define KEY_WEBKIT_DEFAULT_FONT_SIZE		@"DefaultFontSize"
 
 #define NEW_CONTENT_RETRY_DELAY				0.01
 
@@ -35,5 +39,6 @@
 - (NSBundle *)messageStyleBundleWithName:(NSString *)name;
 - (NSString *)keyForDesiredVariantOfStyle:(NSString *)desiredStyle;
 - (void)processContent:(AIContentObject *)content withPreviousContent:(AIContentObject *)previousContent forWebView:(WebView *)webView fromStylePath:(NSString *)stylePath;
+- (void)loadPreferencesForWebView:(ESWebView *)webView withStyleNamed:(NSString *)styleName;
 
 @end
