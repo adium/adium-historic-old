@@ -29,28 +29,27 @@
 
 - (void)installPlugin
 {
-    //init
+    //init (We cache all the colors to make things faster)
     awayColor = nil;
     idleColor = nil;
-    idleAwayColor = nil;
-    onlineColor = nil;
-    openTabColor = nil;
     signedOffColor = nil;
     signedOnColor = nil;
     typingColor = nil;
     unviewedContentColor = nil;
-    warningColor = nil;
 
     awayInvertedColor = nil;
     idleInvertedColor = nil;
-    idleAwayInvertedColor = nil;
-    onlineInvertedColor = nil;
-    openTabInvertedColor = nil;
     signedOffInvertedColor = nil;
     signedOnInvertedColor = nil;
     typingInvertedColor = nil;
     unviewedContentInvertedColor = nil;
-    warningInvertedColor = nil;
+
+    backAwayColor = nil;
+    backIdleColor = nil;
+    backSignedOffColor = nil;
+    backSignedOnColor = nil;
+    backTypingColor = nil;
+    backUnviewedContentColor = nil;
 
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_STATUS_COLORING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
@@ -79,16 +78,14 @@
         [inModifiedKeys containsObject:@"Away"] ||
         [inModifiedKeys containsObject:@"Idle"] ||
         [inModifiedKeys containsObject:@"Online"] || 
-        [inModifiedKeys containsObject:@"Open Tab"] || 
         [inModifiedKeys containsObject:@"Signed On"] || 
         [inModifiedKeys containsObject:@"Signed Off"] || 
         [inModifiedKeys containsObject:@"Typing"] || 
-        [inModifiedKeys containsObject:@"UnviewedContent"] || 
-        [inModifiedKeys containsObject:@"Warning"]){
+        [inModifiedKeys containsObject:@"UnviewedContent"]){
 
         //Update the handle's text color
         [self applyColorToObject:inObject];
-        modifiedAttributes = [NSArray arrayWithObjects:@"Text Color", @"Inverted Text Color", @"Tab Back Color", nil];
+        modifiedAttributes = [NSArray arrayWithObjects:@"Text Color", @"Inverted Text Color", @"Background Color", @"Tab Back Color", nil];
     }
 
     //Update our flash array
@@ -110,61 +107,48 @@
 {
     AIMutableOwnerArray		*colorArray = [inObject displayArrayForKey:@"Text Color"];
     AIMutableOwnerArray		*invertedColorArray = [inObject displayArrayForKey:@"Inverted Text Color"];
+    AIMutableOwnerArray		*backColorArray = [inObject displayArrayForKey:@"Background Color"];
     AIMutableOwnerArray		*tabBackColorArray = [inObject displayArrayForKey:@"Tab Back Color"];
-    int				away, warning, online, unviewedContent, signedOn, signedOff, openTab, typing;
+    int				away, online, unviewedContent, signedOn, signedOff, typing;
     double			idle;
-    NSColor			*color = nil, *invertedColor = nil, *tabBackColor = nil;
+    NSColor			*color = nil, *invertedColor = nil, *tabBackColor = nil, *backColor = nil;
 
     //Get all the values
     away = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
     idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
     online = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
-    openTab = [[inObject statusArrayForKey:@"Open Tab"] greatestIntegerValue];
     signedOn = [[inObject statusArrayForKey:@"Signed On"] greatestIntegerValue];
     signedOff = [[inObject statusArrayForKey:@"Signed Off"] greatestIntegerValue];
     typing = [[inObject statusArrayForKey:@"Typing"] greatestIntegerValue];
     unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
-    warning = [[inObject statusArrayForKey:@"Warning"] greatestIntegerValue];
 
     //Determine the correct color
     if(unviewedContent && ([[owner interfaceController] flashState] % 2)){
 	color = unviewedContentColor;
 	invertedColor = unviewedContentInvertedColor;
-    }else if(signedOff){
+        backColor = backUnviewedContentColor;
+    }else if( (signedOff || !online) && !unviewedContent){
 	color = signedOffColor;
 	invertedColor = signedOffInvertedColor;
-    }else if(!online){
-	color = signedOffColor;
-	invertedColor = signedOffInvertedColor;
-    }else if(signedOn){
+        backColor = backSignedOffColor;
+    }else if(signedOn && !unviewedContent){
 	color = signedOnColor;
 	invertedColor = signedOnInvertedColor;
-/*    }else if(typing){
+        backColor = backSignedOnColor;
+    }else if(typing && !unviewedContent){
 	color = typingColor;
-	invertedColor = typingInvertedColor;*/
-    }else if(idle != 0 && away){
-	color = idleAwayColor;
-	invertedColor = idleAwayInvertedColor;
+	invertedColor = typingInvertedColor;
+        backColor = backTypingColor;
+    }else if(away){
+        color = awayColor;
+        invertedColor = awayInvertedColor;
+        backColor = backAwayColor;
     }else if(idle != 0){
 	color = idleColor;
 	invertedColor = idleInvertedColor;
-    }else if(away){
-	color = awayColor;
-	invertedColor = awayInvertedColor;
-    }else if(warning){
-	color = warningColor;
-	invertedColor = warningInvertedColor;
-    }else if(openTab){
-	color = openTabColor;
-	invertedColor = openTabInvertedColor;
-    }else if(online){		// this should be the last 'if' before the final 'else'
-	color = onlineColor;
-	invertedColor = onlineInvertedColor;
-    }else{
-        color = [NSColor colorWithCalibratedRed:(0/255.0) green:(0/255.0) blue:(0/255.0) alpha:1.0];
-        invertedColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1.0];
+        backColor = backIdleColor;
     }
-
+    
     //Tab Back Color
     if(unviewedContent && !([[owner interfaceController] flashState] % 2)){
         tabBackColor = [NSColor colorWithCalibratedWhite:0.0 alpha:0.15];
@@ -173,6 +157,7 @@
     //Add the new color
     [colorArray setObject:color withOwner:self];
     [invertedColorArray setObject:invertedColor withOwner:self];
+    [backColorArray setObject:backColor withOwner:self];
     [tabBackColorArray setObject:tabBackColor withOwner:self];
 }
 
@@ -226,27 +211,27 @@
 	//Cache the preference values
 	signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
 	signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
-	onlineColor = [[[prefDict objectForKey:KEY_ONLINE_COLOR] representedColor] retain];
 	awayColor = [[[prefDict objectForKey:KEY_AWAY_COLOR] representedColor] retain];
 	idleColor = [[[prefDict objectForKey:KEY_IDLE_COLOR] representedColor] retain];
-	idleAwayColor = [[[prefDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor] retain];
-	openTabColor = [[[prefDict objectForKey:KEY_OPEN_TAB_COLOR] representedColor] retain];
 	typingColor = [[[prefDict objectForKey:KEY_TYPING_COLOR] representedColor] retain];
 	unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
-	warningColor = [[[prefDict objectForKey:KEY_WARNING_COLOR] representedColor] retain];
 
-	signedOffInvertedColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_INVERTED_COLOR] representedColor] retain];
-	signedOnInvertedColor = [[[prefDict objectForKey:KEY_SIGNED_ON_INVERTED_COLOR] representedColor] retain];
-	onlineInvertedColor = [[[prefDict objectForKey:KEY_ONLINE_INVERTED_COLOR] representedColor] retain];
-	awayInvertedColor = [[[prefDict objectForKey:KEY_AWAY_INVERTED_COLOR] representedColor] retain];
-	idleInvertedColor = [[[prefDict objectForKey:KEY_IDLE_INVERTED_COLOR] representedColor] retain];
-	idleAwayInvertedColor = [[[prefDict objectForKey:KEY_IDLE_AWAY_INVERTED_COLOR] representedColor] retain];
-	openTabInvertedColor = [[[prefDict objectForKey:KEY_OPEN_TAB_INVERTED_COLOR] representedColor] retain];
-	typingInvertedColor = [[[prefDict objectForKey:KEY_TYPING_INVERTED_COLOR] representedColor] retain];
-	unviewedContentInvertedColor = [[[prefDict objectForKey:KEY_UNVIEWED_INVERTED_COLOR] representedColor] retain];
-	warningInvertedColor = [[[prefDict objectForKey:KEY_WARNING_INVERTED_COLOR] representedColor] retain];
+	signedOffInvertedColor = [[signedOffColor colorWithInvertedLuminance] retain];
+	signedOnInvertedColor = [[signedOnColor colorWithInvertedLuminance] retain];
+	awayInvertedColor = [[awayColor colorWithInvertedLuminance] retain];
+	idleInvertedColor = [[idleColor colorWithInvertedLuminance] retain];
+	typingInvertedColor = [[typingColor colorWithInvertedLuminance] retain];
+	unviewedContentInvertedColor = [[unviewedContentColor colorWithInvertedLuminance] retain];
 
-	NSEnumerator		*enumerator;
+        backAwayColor = [[[prefDict objectForKey:KEY_BACK_AWAY_COLOR] representedColor] retain];
+        backIdleColor = [[[prefDict objectForKey:KEY_BACK_IDLE_COLOR] representedColor] retain];
+        backSignedOffColor = [[[prefDict objectForKey:KEY_BACK_SIGNED_OFF_COLOR] representedColor] retain];
+        backSignedOnColor = [[[prefDict objectForKey:KEY_BACK_SIGNED_ON_COLOR] representedColor] retain];
+        backTypingColor = [[[prefDict objectForKey:KEY_BACK_TYPING_COLOR] representedColor] retain];
+        backUnviewedContentColor = [[[prefDict objectForKey:KEY_BACK_UNVIEWED_COLOR] representedColor] retain];
+
+        
+        NSEnumerator		*enumerator;
 	AIListObject		*object;
 
 	enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];

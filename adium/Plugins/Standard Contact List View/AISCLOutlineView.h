@@ -27,16 +27,23 @@
     NSFont			*font;
     NSColor			*color;
     NSColor			*invertedColor;
+    NSColor			*groupColor;
+    NSColor			*invertedGroupColor;
+
+    int				lastSelectedRow;
 }
 
 - (void)setFont:(NSFont *)inFont;
 - (NSFont *)font;
-- (void)setColor:(NSColor *)inColor;
-- (void)setInvertedColor:(NSColor *)inInvertedColor;
-- (void)setColor:(NSColor *)inColor andInvertedColor:(NSColor *)inInvertedColor;
-- (NSColor *)color;
-- (NSColor *)invertedColor;
 - (NSSize)desiredSize;
 - (AIListContact *)contact;
+
+- (void)setColor:(NSColor *)inColor;
+- (NSColor *)color;
+- (NSColor *)invertedColor;
+
+- (void)setGroupColor:(NSColor *)inColor;
+- (NSColor *)groupColor;
+- (NSColor *)invertedGroupColor;
 
 @end

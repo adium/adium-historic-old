@@ -3,44 +3,28 @@
 <plist version="1.0">
 <dict>
     <key>Away Color</key>
-    <string>102,102,0</string>
-    <key>Away Inverted Color</key>
-    <string>255,255,191</string>
-    <key>Idle &amp; Away Color</key>
-    <string>153,153,102</string>
-    <key>Idle &amp; Away Inverted Color</key>
-    <string>216,216,143</string>
+    <string>49,49,49</string>
     <key>Idle Color</key>
-    <string>127,127,127</string>
-    <key>Idle Inverted Color</key>
-    <string>216,216,216</string>
-    <key>Online Color</key>
-    <string>0,0,0</string>
-    <key>Online Inverted Color</key>
-    <string>255,255,255</string>
-    <key>Open Tab Color</key>
-    <string>0,0,0</string>
-    <key>Open Tab Inverted Color</key>
-    <string>255,255,255</string>
+    <string>49,49,49</string>
     <key>Signed Off Color</key>
-    <string>102,0,0</string>
-    <key>Signed Off Inverted Color</key>
-    <string>255,216,216</string>
+    <string>255,255,255</string>
     <key>Signed On Color</key>
-    <string>0,0,102</string>
-    <key>Signed On Inverted Color</key>
-    <string>216,216,255</string>
+    <string>255,255,255</string>
     <key>Typing Color</key>
-    <string>0,255,0</string>
-    <key>Typing Inverted Color</key>
     <string>255,255,255</string>
     <key>Unviewed Content Color</key>
-    <string>0,102,0</string>
-    <key>Unviewed Content Inverted Color</key>
-    <string>255,233,191</string>
-    <key>Warning Color</key>
-    <string>102,0,0</string>
-    <key>Warning Inverted Color</key>
-    <string>255,216,216</string>
+    <string>255,255,255</string>
+    <key>Away Background Color</key>
+    <string>234,234,234</string>
+    <key>Idle Background Color</key>
+    <string>234,234,234</string>
+    <key>Signed Off Background Color</key>
+    <string>199,54,42</string>
+    <key>Signed On Background Color</key>
+    <string>91,187,99</string>
+    <key>Typing Background Color</key>
+    <string>255,145,71</string>
+    <key>Unviewed Content Background Color</key>
+    <string>0,144,197</string>
 </dict>
 </plist>

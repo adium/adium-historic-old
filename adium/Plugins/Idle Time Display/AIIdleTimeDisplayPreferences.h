@@ -15,22 +15,17 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface NSString (AIColorAdditions)
+@class AIAdium;
 
-- (NSColor *)hexColor;
-- (NSColor *)representedColor;
-- (NSColor *)representedColorWithAlpha:(float)alpha;
+@interface AIIdleTimeDisplayPreferences : NSObject {
+    AIAdium			*owner;
+    NSDictionary		*preferenceDict;
 
-@end
+    IBOutlet	NSView			*view_prefView;
+    IBOutlet	NSButton		*checkBox_displayIdle;
+}
 
-@interface NSColor (AIColorAdditions)
-
-- (BOOL)colorIsDark;
-- (NSColor *)darkenBy:(float)amount;
-- (NSString *)hexString;
-- (NSString *)stringRepresentation;
-- (void)getHue:(float *)hue luminance:(float *)luminance saturation:(float *)saturation;
-+ (NSColor *)colorWithCalibratedHue:(float)hue luminance:(float)luminance saturation:(float)saturation alpha:(float)alpha;
-- (NSColor *)colorWithInvertedLuminance;
++ (AIIdleTimeDisplayPreferences *)idleTimeDisplayPreferencesWithOwner:(id)inOwner;
+- (IBAction)changePreference:(id)sender;
 
 @end

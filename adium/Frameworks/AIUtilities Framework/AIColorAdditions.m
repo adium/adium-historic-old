@@ -19,8 +19,15 @@
 
 #import "AIColorAdditions.h"
 
+float ONE_THIRD = 1.0/3.0;
+float ONE_SIXTH = 1.0/6.0;
+float TWO_THIRD = 2.0/3.0;
+
 int hexToInt(char hex);
 char intToHex(int val);
+float min(float a, float b, float c);
+float max(float a, float b, float c);
+float _v(float m1, float m2, float hue);
 
 @implementation NSString (AIColorAdditions)
 
@@ -79,6 +86,115 @@ char intToHex(int val);
                                      alpha:[convertedColor alphaComponent]]);
 }
 
+//Inverts the luminance of this color so it looks good on selected/dark backgrounds
+- (NSColor *)colorWithInvertedLuminance
+{
+    float h,l,s;
+
+    //Get our HLS
+    [self getHue:&h luminance:&l saturation:&s];
+
+    //Invert L
+    l = 1.0 - l;
+
+    //Return the new color
+    return([NSColor colorWithCalibratedHue:h luminance:l saturation:s alpha:1.0]);
+}
+
+- (void)getHue:(float *)hue luminance:(float *)luminance saturation:(float *)saturation
+{
+    NSColor	*rgbColor;
+    float	r, g, b;
+    float	rc, gc, bc;
+    float	minValue, maxValue;
+    
+    //Get the current RGB values
+    rgbColor = [self colorUsingColorSpaceName:NSDeviceRGBColorSpace];
+    r = [rgbColor redComponent];
+    g = [rgbColor greenComponent];
+    b = [rgbColor blueComponent];
+
+    //Determine the smallest and largest color component
+    minValue = min(r, g, b);
+    maxValue = max(r, g, b);
+
+    //Calculate the luminance
+    *luminance = (minValue + maxValue) / 2.0;
+
+    //Special case for grays (They'll make us divide by zero below)
+    if(minValue == maxValue){
+        *hue = 0.0;
+        *saturation = 0.0;
+        return;
+    }
+
+    //Calculate Saturation
+    if(*luminance < 0.5){
+        *saturation = (maxValue - minValue) / (maxValue + minValue);
+    }else{
+        *saturation = (maxValue - minValue) / (2.0 - maxValue - minValue);
+    }
+
+    //Calculate hue
+    rc = (maxValue - r) / (maxValue - minValue);
+    gc = (maxValue - g) / (maxValue - minValue);
+    bc = (maxValue - b) / (maxValue - minValue);
+
+    if(r == maxValue){
+        *hue = bc - gc;
+    }else if(g == maxValue){
+        *hue = 2.0 + rc - bc;
+    }else{
+        *hue = 4.0 + gc - rc;
+    }
+
+    *hue = (*hue / 6.0);// % 1.0;
+
+    //hue = hue % 1.0
+    while(*hue < 0.0) *hue += 1.0;
+    while(*hue > 1.0) *hue -= 1.0;
+        
+}
+
++ (NSColor *)colorWithCalibratedHue:(float)hue luminance:(float)luminance saturation:(float)saturation alpha:(float)alpha
+{
+    float r, g, b;
+    float m1, m2;
+
+    //Special case for grays
+    if(saturation == 0){
+        r = luminance;
+        g = luminance;
+        b = luminance;
+        
+    }else{
+        //Generate some magic numbers
+        if(luminance <= 0.5) m2 = luminance * (1.0 + saturation);
+        else m2 = luminance + saturation - (luminance * saturation);
+        m1 = 2.0 * luminance - m2;
+
+        //Calculate the RGB
+        r = _v(m1, m2, hue + ONE_THIRD);
+        g = _v(m1, m2, hue);
+        b = _v(m1, m2, hue - ONE_THIRD);
+    }
+
+    return([NSColor colorWithCalibratedRed:r green:g blue:b alpha:alpha]);
+}
+
+//??
+float _v(float m1, float m2, float hue){
+
+    //hue = hue % 1.0
+    while(hue < 0.0) hue += 1.0;
+    while(hue > 1.0) hue -= 1.0;
+    
+    if(hue < ONE_SIXTH) 	return( m1 + (m2 - m1) * hue * 6.0);
+    else if(hue < 0.5) 		return( m2 );
+    else if(hue < TWO_THIRD) 	return( m1 + (m2 - m1) * (TWO_THIRD - hue) * 6.0);
+    else         		return( m1 );
+}
+
 - (NSString *)hexString
 {
     float 	red,green,blue;
@@ -120,6 +236,21 @@ char intToHex(int val);
 
 @end
 
+//Returns the min of 3 values
+float min(float a, float b, float c){
+    if(a < b && a < c) return(a);
+    if(b < a && b < c) return(b);
+    return(c);
+}
+
+//Returns the max of 3 values
+float max(float a, float b, float c){
+    if(a > b && a > c) return(a);
+    if(b > a && b > c) return(b);
+    return(c);
+}
+
+//Convert hex to an int
 int hexToInt(char hex){
     if(hex >= '0' && hex <= '9'){
         return (hex - '0');
@@ -138,6 +269,7 @@ int hexToInt(char hex){
     }
 }
 
+//Convert int to a hex
 char intToHex(int val){
 
     if(val < 10){

@@ -64,11 +64,11 @@
     }else if(sender == colorWell_group){
         [[owner preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_GROUP_COLOR
-                                              group:PREF_GROUP_CONTACT_LIST];
+                                              group:PREF_GROUP_CONTACT_LIST];        
 
-    }else if(sender == colorWell_group_inverted){
+    }else if(sender == colorWell_contact){
         [[owner preferenceController] setPreference:[[sender color] stringRepresentation]
-                                             forKey:KEY_SCL_GROUP_COLOR_INVERTED
+                                             forKey:KEY_SCL_CONTACT_COLOR
                                               group:PREF_GROUP_CONTACT_LIST];
 
     }else if(sender == colorWell_grid){
@@ -150,8 +150,8 @@
 {
     //Display
     [self showFont:[[preferenceDict objectForKey:KEY_SCL_FONT] representedFont] inField:textField_fontName];
+    [colorWell_contact setColor:[[preferenceDict objectForKey:KEY_SCL_CONTACT_COLOR] representedColor]];
     [colorWell_group setColor:[[preferenceDict objectForKey:KEY_SCL_GROUP_COLOR] representedColor]];
-    [colorWell_group_inverted setColor:[[preferenceDict objectForKey:KEY_SCL_GROUP_COLOR_INVERTED] representedColor]];
     [colorWell_background setColor:[[preferenceDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColor]];
 
     //Grid

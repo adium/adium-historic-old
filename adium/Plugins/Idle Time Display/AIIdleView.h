@@ -14,23 +14,22 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import "AIAdium.h"
 
-@interface NSString (AIColorAdditions)
+@interface AIIdleView : NSObject <AIListObjectLeftView> {
+    NSString		*string;
 
-- (NSColor *)hexColor;
-- (NSColor *)representedColor;
-- (NSColor *)representedColorWithAlpha:(float)alpha;
+    NSAttributedString	*_attributedString;
+    NSSize		_attributedStringSize;
+    float		_maxWidth;
+    float		cachedHeight;
+}
 
-@end
++ (id)idleView;
 
-@interface NSColor (AIColorAdditions)
+- (void)setStringContent:(NSString *)inString;
+- (void)drawInRect:(NSRect)inRect;
+- (float)widthForHeight:(int)inHeight computeMax:(BOOL)computeMax;
 
-- (BOOL)colorIsDark;
-- (NSColor *)darkenBy:(float)amount;
-- (NSString *)hexString;
-- (NSString *)stringRepresentation;
-- (void)getHue:(float *)hue luminance:(float *)luminance saturation:(float *)saturation;
-+ (NSColor *)colorWithCalibratedHue:(float)hue luminance:(float)luminance saturation:(float)saturation alpha:(float)alpha;
-- (NSColor *)colorWithInvertedLuminance;
-
+    
 @end

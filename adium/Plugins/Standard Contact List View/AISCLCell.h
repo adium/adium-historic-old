@@ -19,6 +19,7 @@
 
 @interface AISCLCell : NSCell {
     AIListObject	*listObject;
+    BOOL		isGroup;
 }
 
 - (void)setContact:(AIListObject *)inObject;
