@@ -20,7 +20,6 @@
 }
 
 /*!
- networkIsReachable
  * @brief Report on current network connectivity
  *
  * This method provides a means for checking the current network connectivity.  It will return the same result as the last <tt>AINetwork_ConnectivityChanged</tt> notification did.  The notification should be relied upon whenever possible; this method exists primarily to assist in debugging.

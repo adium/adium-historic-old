@@ -21,8 +21,6 @@
 
 - (void)setValidationDelegate:(id)inDelegate
 {
-	NSParameterAssert([inDelegate respondsToSelector:@selector(validateFlexibleToolbarItem:)]);
-
 	validationDelegate = inDelegate;
 }
 

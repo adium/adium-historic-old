@@ -1,3 +1,7 @@
+/*
+ * @file ESSystemNetworkDefaults.h
+ */
+
 //
 //  ESSystemNetworkDefaults.h
 //  Adium
@@ -7,23 +11,24 @@
 //
 
 //Proxy types
+/*
+ * Proxy types for <tt>ESSystemNetworkDefaults</tt>
+ */
 typedef enum
 {
-	Proxy_None		= 0, /* No proxy */
-	Proxy_HTTP		= 1, /* HTTP proxy */
-	Proxy_HTTPS		= 2, /* HTTPS proxy */
-	Proxy_SOCKS4	= 3, /* SOCKS4 proxy */
-	Proxy_SOCKS5	= 4, /* SOCKS5 proxy */
-	Proxy_FTP		= 5, /* FTP proxy */
-	Proxy_RTSP		= 6, /* RTSP proxy */
-	Proxy_Gopher	= 7 /* Gopher proxy */
+	Proxy_None		= 0, /**< No proxy */
+	Proxy_HTTP		= 1, /**< HTTP proxy */
+	Proxy_HTTPS		= 2, /**< HTTPS proxy */
+	Proxy_SOCKS4	= 3, /**< SOCKS4 proxy */
+	Proxy_SOCKS5	= 4, /**< SOCKS5 proxy */
+	Proxy_FTP		= 5, /**< FTP proxy */
+	Proxy_RTSP		= 6, /**< RTSP proxy */
+	Proxy_Gopher	= 7 /**< Gopher proxy */
 } ProxyType;
 
 /*!
  * @class ESSystemNetworkDefaults
- * @brief Class to provide access to the systemwide network proxy settings
- *
- * This class provides easy access to the systemwide network proxy settings of each type.
+ * @brief Class to provide easy access to the systemwide network proxy settings of each type
 */
 @interface ESSystemNetworkDefaults : NSObject {
 
