@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.137 2004/05/30 21:17:55 adamiser Exp $
+// $Id: AIContactController.m,v 1.138 2004/06/04 14:30:26 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -23,8 +23,8 @@
 #define KEY_FLAT_GROUPS				@"FlatGroups"			//Group storage
 #define KEY_FLAT_CONTACTS			@"FlatContacts"			//Contact storage
 
-#define VIEW_CONTACTS_INFO  AILocalizedString(@"View Contact's Info",nil)
-#define VIEW_INFO	    AILocalizedString(@"View Info",nil)
+#define VIEW_CONTACTS_INFO  		AILocalizedString(@"View Contact's Info",nil)
+#define VIEW_INFO	    			AILocalizedString(@"View Info",nil)
 
 #define UPDATE_CLUMP_INTERVAL		1.0
 
@@ -528,12 +528,12 @@
 	contactInfoPanes = [[NSMutableArray alloc] init];
 	
 	//Install the Get Info menu item
-	menuItem_getInfo = [[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_INFO
-												  target:self
-												  action:@selector(showContactInfo:)
-										   keyEquivalent:@"i"];
-	[menuItem_getInfo setKeyEquivalentModifierMask:(NSCommandKeyMask | NSShiftKeyMask)];
-	[[owner menuController] addMenuItem:menuItem_getInfo toLocation:LOC_Contact_Manage];
+//	menuItem_getInfo = [[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_INFO
+//												  target:self
+//												  action:@selector(showContactInfo:)
+//										   keyEquivalent:@"i"];
+//	[menuItem_getInfo setKeyEquivalentModifierMask:(NSCommandKeyMask | NSShiftKeyMask)];
+//	[[owner menuController] addMenuItem:menuItem_getInfo toLocation:LOC_Contact_Manage];
 	
 	//Add our get info contextual menu item
 	menuItem_getInfoContextual = [[NSMenuItem alloc] initWithTitle:VIEW_INFO target:self action:@selector(showContactInfo:) keyEquivalent:@""];
