@@ -19,7 +19,11 @@
 
 -(NSString *)validScreenNameCharacters
 {
-    return (@"abcdefghijklmnopqrstuvwxyz0123456789@. ");
+    return ([[super validScreenNameCharacters] stringByAppendingString:@"_@"]);
+}
+-(int)maximumScreenNameLength
+{
+    return (50);
 }
 
 @end
