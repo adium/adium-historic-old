@@ -492,4 +492,30 @@
     }
 }
 
+
+//Custom Bold / Italic menu items----------------------------------------------------------------------------------
+//The standard ones do not dim correctly when unavailable
+- (IBAction)toggleFontTrait:(id)sender
+{
+    NSFontManager	*fontManager = [NSFontManager sharedFontManager];
+    
+    if([fontManager traitsOfFont:[fontManager selectedFont]] & [sender tag]){
+        [fontManager removeFontTrait:sender];
+    }else{
+        [fontManager addFontTrait:sender];
+    }
+}
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+    if(menuItem == menuItem_bold || menuItem == menuItem_italic){
+	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+	return([responder isKindOfClass:[NSTextView class]]);
+    }else{
+	return(YES);
+    }
+}
+
 @end
+
+

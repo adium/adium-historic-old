@@ -461,6 +461,9 @@ typedef enum {
 
     IBOutlet	NSMenuItem	*menuItem_paste;
     IBOutlet	NSMenuItem	*menuItem_pasteFormatted;
+    
+    IBOutlet    NSMenuItem      *menuItem_bold;
+    IBOutlet    NSMenuItem      *menuItem_italic;
 
     NSMutableArray		*contactListViewArray;
     NSMutableArray		*messageViewArray;
@@ -515,6 +518,9 @@ typedef enum {
 //Custom pasting
 - (IBAction)paste:(id)sender;
 - (IBAction)pasteFormatted:(id)sender;
+
+//Custom font menus
+- (IBAction)toggleFontTrait:(id)sender;
 
 @end
 
