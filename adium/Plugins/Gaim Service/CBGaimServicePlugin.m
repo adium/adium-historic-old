@@ -619,6 +619,12 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
     return(nil);
 }
 
+static void *adiumGaimRequestFile(const char *title, const char *filename, GCallback ok_cb, GCallback cancel_cb, void *user_data)
+{
+	NSLog(@"adiumGaimRequestFile");
+	return(nil);
+}
+
 static void adiumGaimRequestClose(GaimRequestType type, void *uiHandle)
 {
 
@@ -629,6 +635,7 @@ static GaimRequestUiOps adiumGaimRequestOps = {
     adiumGaimRequestChoice,
     adiumGaimRequestAction,
     adiumGaimRequestFields,
+	adiumGaimRequestFile,
     adiumGaimRequestClose
 };
 
@@ -645,7 +652,7 @@ static void adiumGaimDestroy(GaimXfer *xfer)
 	[accountLookup(xfer->account) accountXferDestroy:xfer];
 }
 
-static void adiumGaimRequestFile(GaimXfer *xfer)
+static void adiumGaimRequestXfer(GaimXfer *xfer)
 {
     GaimXferType xferType = gaim_xfer_get_type(xfer);
     if (xferType == GAIM_XFER_RECEIVE) {
@@ -688,7 +695,7 @@ static void adiumGaimCancelRemote(GaimXfer *xfer)
 static GaimXferUiOps adiumGaimFileTrasnferOps = {
     adiumGaimNewXfer,
     adiumGaimDestroy,
-    adiumGaimRequestFile,
+    adiumGaimRequestXfer,
     adiumGaimAskCancel,
     adiumGaimAddXfer,
     adiumGaimUpdateProgress,

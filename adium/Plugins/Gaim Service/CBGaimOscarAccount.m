@@ -350,45 +350,16 @@ aim_srv_setavailmsg(od->sess, text);
 }*/
 
 #pragma mark File transfer
-- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
-{
-	//See if the super account can handle it
-	BOOL returnValue = [super availableForSendingContentType:inType toListObject:inListObject];
-	
-	//If not, check if we can
-	if (!returnValue) {
-		BOOL	weAreOnline = [[self statusObjectForKey:@"Online"] boolValue];
-		
-		//Check their capabilities here?
-		if([inType compare:FILE_TRANSFER_TYPE] == 0){
-			if(weAreOnline && (inListObject == nil || [[inListObject statusObjectForKey:@"Online"] boolValue])){ 
-				returnValue  = YES;
-			}
-		}
-	}
-	
-	return returnValue;
-}
 - (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
+	[super _beginSendOfFileTransfer:fileTransfer];
+}
+
+- (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
+{
 	char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
-
-	GaimXfer *xfer = oscar_xfer_new(gc,destsn);
 	
-	//Associate the fileTransfer and the xfer with each other
-	[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
-    xfer->ui_data = [fileTransfer retain];
-	
-	//Set the filename
-	gaim_xfer_set_local_filename(xfer, [[fileTransfer localFilename] UTF8String]);
-		
-    //request that the transfer begins
-	gaim_xfer_request(xfer);
-
-    //tell the fileTransferController to display appropriately
-    [[adium fileTransferController] performSelectorOnMainThread:@selector(beganFileTransfer:)
-													 withObject:fileTransfer
-												  waitUntilDone:NO];
+	return oscar_xfer_new(gc,destsn);
 }
 
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer

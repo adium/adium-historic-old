@@ -86,22 +86,14 @@ static BOOL didInitYahoo = NO;
 #pragma mark File transfer
 - (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
+	[super _beginSendOfFileTransfer:fileTransfer];
+}
+
+- (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
+{
 	char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
 	
-	GaimXfer *xfer = yahoo_xfer_new(gc,destsn);
-	
-	//Associate the fileTransfer and the xfer with each other
-	[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
-    xfer->ui_data = [fileTransfer retain];
-	
-	//Set the filename
-	gaim_xfer_set_local_filename(xfer, [[fileTransfer localFilename] UTF8String]);
-	
-    //request that the transfer begins
-	gaim_xfer_request(xfer);
-    
-    //tell the fileTransferController to display appropriately
-    [[adium fileTransferController] beganFileTransfer:fileTransfer];
+	return yahoo_xfer_new(gc,destsn);
 }
 
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
