@@ -8,10 +8,13 @@
 
 #import "AIListGroupGradientCell.h"
 
-#define MOCKIE_RADIUS		6
+#define MOCKIE_RADIUS		6		//Radius of the rounded mockie corners
 
 @interface AIListGroupMockieCell : AIListGroupGradientCell {
 
 }
+
+- (id)copyWithZone:(NSZone *)zone;
+- (void)drawBackgroundWithFrame:(NSRect)rect;
 
 @end
