@@ -14,8 +14,6 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESContactAlertsController.h"
-
 #define Content_ContentObjectAdded					@"Content_ContentObjectAdded"
 #define Content_WillSendContent						@"Content_WillSendContent"
 #define Content_WillReceiveContent					@"Content_WillReceiveContent"
@@ -23,9 +21,9 @@
 //Not displayed, but used for internal identification of the encryption menu
 #define ENCRYPTION_MENU_TITLE						@"Encryption Menu"
 
-@protocol AITextEntryView;
+@protocol AITextEntryView, AIEventHandler;
 
-@class AIAccount, AIChat, AIListContact, AIContentObject, NDRunLoopMessenger;
+@class AIAccount, AIChat, AIListContact, AIListObject, AIContentObject, NDRunLoopMessenger;
 
 typedef enum {
 	AIFilterContent = 0,		// Changes actual message and non-message content
