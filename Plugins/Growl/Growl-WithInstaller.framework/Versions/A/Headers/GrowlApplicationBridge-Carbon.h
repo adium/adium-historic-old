@@ -289,7 +289,7 @@ struct Growl_Notification {
 	 */
 	unsigned reserved: 31;
 
-	/*!	@field	sticky
+	/*!	@field	isSticky
 	 *	@abstract	Requests that a notification stay on-screen until dismissed
 	 *	 explicitly.
 	 *	@discussion	When the sticky bit is clear, in most displays,
@@ -447,6 +447,22 @@ struct Growl_Delegate *Growl_GetDelegate(void);
  *	 be displayed once Growl is installed and running.
  */
 void Growl_PostNotification(const struct Growl_Notification *notification);
+
+/*!	@function Growl_PostNotificationWithDictionary
+*	@abstract	Notifies using a userInfo dictionary suitable for passing to
+*	 CFDistributedNotificationCenter.
+*	@param	userInfo	The dictionary to notify with.
+*	@discussion	Before Growl 0.6, your application would have posted
+*	 notifications using CFDistributedNotificationCenter by creating a userInfo
+*	 dictionary with the notification data. This had the advantage of allowing
+*	 you to add other data to the dictionary for programs besides Growl that
+*	 might be listening.
+*	 
+*	 This method allows you to use such dictionaries without being restricted
+*	 to using CFDistributedNotificationCenter. The keys for this dictionary
+ *	 can be found in GrowlDefinesCarbon.h.
+*/
+void Growl_PostNotificationWithDictionary(CFDictionaryRef userInfo);
 
 /*!	@function	Growl_NotifyWithTitleDescriptionNameIconPriorityStickyClickContext
  *	@abstract	Posts a Growl notification using parameter values.
