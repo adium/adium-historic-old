@@ -19,7 +19,7 @@
 #define ALIAS_COLUMN_WIDTH	160		//Width of the alias column
 #define SUB_COLUMN_WIDTH	12		//Width of the account columns
 
-@class AIAdium, AIContactGroup, AIContactObject, AIAlternatingRowOutlineView, AISCLEditHeaderView, AIEditorCollection;
+@class AIAdium, AIContactGroup, AIContactObject, AIAlternatingRowOutlineView, AISCLEditHeaderView, AIEditorCollection, AIContactListEditorPlugin;
 @protocol AIEditorCollection;
 
 @interface AIContactListEditorWindowController : NSWindowController {
@@ -30,6 +30,7 @@
     IBOutlet	AISCLEditHeaderView		*customView_tableHeader;	//The custom table header view
 
     AIAdium			*owner;				//AIAdium
+    AIContactListEditorPlugin	*plugin;			//Our owning plugin
 
     NSImage			*folderImage;			//The image of a small folder
     NSMutableDictionary		*toolbarItems; 			//A dictionary of toolbar items for the login window
@@ -39,7 +40,7 @@
     id <AIEditorCollection>	selectedCollection;
 }
 
-+ (id)contactListEditorWindowControllerWithOwner:(id)inOwner;
++ (id)contactListEditorWindowControllerWithOwner:(id)inOwner plugin:(AIContactListEditorPlugin *)inPlugin;
 + (void)closeSharedInstance;
 - (IBAction)closeWindow:(id)sender;
 

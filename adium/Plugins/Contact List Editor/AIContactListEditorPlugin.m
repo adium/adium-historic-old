@@ -26,6 +26,9 @@
     AIMiniToolbarItem	*toolbarItem;
     NSMenuItem		*menuItem;
 
+    //
+    listEditorColumnControllerArray = [[NSMutableArray alloc] init];
+    
     //Install the 'edit contact list' menu item
     menuItem = [[[NSMenuItem alloc] initWithTitle:@"Edit Contact List…" target:self action:@selector(showContactListEditor:) keyEquivalent:@""] autorelease];
     [[owner menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
@@ -49,7 +52,27 @@
 //Show the contact list editor window
 - (IBAction)showContactListEditor:(id)sender
 {
-    [[AIContactListEditorWindowController contactListEditorWindowControllerWithOwner:owner] showWindow:nil];
+    [[AIContactListEditorWindowController contactListEditorWindowControllerWithOwner:owner plugin:self] showWindow:nil];
 }
+
+//Returns an array of the registered column controllers
+- (NSArray *)listEditorColumnControllers
+{
+    //Broadcast a CONTACT_EDITOR_REGISTER_COLUMNS notification, letting all the plugins who haven't had a change yet register their controllers
+    [[owner notificationCenter] postNotificationName:CONTACT_EDITOR_REGISTER_COLUMNS object:self];
+
+    //Now return the array of controllers
+    return(listEditorColumnControllerArray);
+}
+
+//Register a column controller
+- (void)registerListEditorColumnController:(id <AIListEditorColumnController>)inController
+{
+    //Just add it to our array
+    [listEditorColumnControllerArray addObject:inController];
+
+    NSLog(@"Register %@",[inController editorColumnLabel]);
+}
+
 
 @end

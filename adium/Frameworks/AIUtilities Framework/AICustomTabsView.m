@@ -253,6 +253,7 @@
     [dragImage unlockFocus];
 
     //
+    tabHasBeenDragged = NO;
     dragInitialOffset = inOffset;
     if(dragTab) [dragTab release];
     dragTab = [inTab retain];
@@ -285,6 +286,7 @@
 
             //Mark it
             dragIndex = index;
+            tabHasBeenDragged = YES;
         }
 
         index++;
@@ -339,7 +341,7 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:AITabView_DidChangeOrderOfItems object:tabView];
     }
 
-    return(tabsChanged);
+    return(tabsChanged || tabHasBeenDragged);
 }
 
 //Returns the total width of our tab tops

@@ -24,6 +24,7 @@
 #import "AIEditorListHandle.h"
 #import "AIEditorCollection.h"
 #import "AIEditorAccountCollection.h"
+#import "AIContactListEditorPlugin.h"
 
 #define CONTACT_LIST_EDITOR_NIB			@"ContactListEditorWindow"
 #define	HANDLE_DELETE_KEY			@"Handles"
@@ -31,7 +32,7 @@
 #define KEY_CONTACT_LIST_EDITOR_WINDOW_FRAME	@"Contact List Editor Frame"
 
 @interface AIContactListEditorWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
+- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner plugin:(AIContactListEditorPlugin *)inPlugin;
 - (void)windowDidLoad;
 - (void)buildAccountColumns;
 - (void)accountListChanged:(NSNotification *)notification;
@@ -66,10 +67,10 @@
 
 //Create and return a contact list editor window controller
 static AIContactListEditorWindowController *sharedInstance = nil;
-+ (id)contactListEditorWindowControllerWithOwner:(id)inOwner
++ (id)contactListEditorWindowControllerWithOwner:(id)inOwner plugin:(AIContactListEditorPlugin *)inPlugin
 {
     if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:CONTACT_LIST_EDITOR_NIB owner:inOwner];
+        sharedInstance = [[self alloc] initWithWindowNibName:CONTACT_LIST_EDITOR_NIB owner:inOwner plugin:inPlugin];
     }
 
     return(sharedInstance);
@@ -83,12 +84,14 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 }
 
 //init
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner plugin:(AIContactListEditorPlugin *)inPlugin
 {
     //init
     owner = [inOwner retain];
-    [super initWithWindowNibName:windowNibName owner:self];
+    plugin = inPlugin;
     selectedCollection = nil;
+
+    [super initWithWindowNibName:windowNibName owner:self];
     
     //Install observers
     [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
@@ -113,8 +116,10 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
-    AIImageTextCell	*newCell;
-    NSString		*savedFrame;
+    AIImageTextCell			*newCell;
+    NSString				*savedFrame;
+    NSEnumerator			*enumerator;
+    id <AIListEditorColumnController>	columnController;
     
     //Restore the window position
     savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_CONTACT_LIST_EDITOR_WINDOW_FRAME];
@@ -144,6 +149,16 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     [outlineView_contactList setAutoresizesOutlineColumn:NO];
     //[outlineView_contactList setIndentationPerLevel:10];
 
+    //Add the custom list editor columns
+    enumerator = [[plugin listEditorColumnControllers] objectEnumerator];
+    while((columnController = [enumerator nextObject])){
+        NSTableColumn	*tableColumn = [[[NSTableColumn alloc] initWithIdentifier:columnController] autorelease];
+
+        [outlineView_contactList addTableColumn:tableColumn];
+        [[tableColumn headerCell] setStringValue:[columnController editorColumnLabel]];
+//        [tableColumn setDataCell:[[[AIImageTextCell alloc] init] autorelease]];
+    }
+    
 
     //-- Setup the source table view --
     //Custom Image/Text cell
@@ -337,7 +352,20 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
-    return([item UID]);
+    id		identifier = [tableColumn identifier];
+    NSString	*value = nil;
+    
+    if([identifier isKindOfClass:[NSString class]]){
+        value = [item UID];
+
+    }else if([identifier conformsToProtocol:@protocol(AIListEditorColumnController)]){
+        if([item isKindOfClass:[AIEditorListHandle class]]){
+            value = [(id <AIListEditorColumnController>)identifier editorColumnStringForServiceID:[item serviceID] UID:[item UID]];
+    	}
+
+    }
+
+    return(value);
 }
 
 /*- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
@@ -359,29 +387,38 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 {
     NSString	*identifier = [tableColumn identifier];
 
-    if([item isKindOfClass:[AIEditorListGroup class]]){ //GROUP
-//        [[owner contactController] renameObject:item to:object];
-
-    }else{ //HANDLE
-        if([identifier compare:@"handle"] == 0){
-            if([item temporary]){
-                //Temporary items have not yet been added to the collection, so we can freely change its UID to the correct/new one before adding it.
-                [item setUID:object];                
-                [selectedCollection addObject:item];
-
-            }else{
-                [selectedCollection renameObject:item to:object];
-                [item setUID:object]; //Rename the object after the collection has had a chance to rename
+    if([identifier isKindOfClass:[NSString class]]){ //Handle/Group name column
+        if([item isKindOfClass:[AIEditorListGroup class]]){ //GROUP
+    //        [[owner contactController] renameObject:item to:object];
+    
+        }else{ //HANDLE
+            if([identifier compare:@"handle"] == 0){
+                if([item temporary]){
+                    //Temporary items have not yet been added to the collection, so we can freely change its UID to the correct/new one before adding it.
+                    [item setUID:object];                
+                    [selectedCollection addObject:item];
+    
+                }else{
+                    [selectedCollection renameObject:item to:object];
+                    [item setUID:object]; //Rename the object after the collection has had a chance to rename
+                }
+    
+                [[(AIEditorListHandle *)item containingGroup] sort]; //resort the containing group
+                [self refreshContentOutlineView]; //Refresh
+    
+            }else if([identifier compare:@"alias"] == 0){
+                // Set Alias
+                // No way yet
             }
-
-            [[(AIEditorListHandle *)item containingGroup] sort]; //resort the containing group
-            [self refreshContentOutlineView]; //Refresh
-
-        }else if([identifier compare:@"alias"] == 0){
-            // Set Alias
-            // No way yet
+        }
+        
+    }else if([identifier conformsToProtocol:@protocol(AIListEditorColumnController)]){ //custom column
+        //Pass the new value to the column controller
+        if([item isKindOfClass:[AIEditorListHandle class]]){
+            [(id <AIListEditorColumnController>)identifier editorColumnSetStringValue:object forServiceID:[(AIEditorListHandle *)item serviceID] UID:[(AIEditorListHandle *)item UID]];
         }
     }
+
 }
 
 - (BOOL)outlineView:(NSOutlineView *)olv writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard

@@ -16,8 +16,25 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-@interface AIContactListEditorPlugin : AIPlugin {
+#define CONTACT_EDITOR_REGISTER_COLUMNS		@"CONTACT_EDITOR_REGISTER_COLUMNS"
 
+@class AIEditorListObject;
+
+@protocol AIListEditorColumnController <NSObject>
+- (NSString *)editorColumnLabel;
+- (NSString *)editorColumnStringForServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
+- (BOOL)editorColumnSetStringValue:(NSString *)value forServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
+@end
+
+@protocol AIListEditor
+- (void)registerListEditorColumnController:(id <AIListEditorColumnController>)inController;
+@end
+
+@interface AIContactListEditorPlugin : AIPlugin {
+    NSMutableArray	*listEditorColumnControllerArray;
 }
+
+- (NSArray *)listEditorColumnControllers;
+- (void)registerListEditorColumnController:(id <AIListEditorColumnController>)inController;
 
 @end

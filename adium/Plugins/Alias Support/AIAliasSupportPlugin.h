@@ -9,12 +9,14 @@
 #import <Foundation/Foundation.h>
 #import <Adium/Adium.h>
 
-@interface AIAliasSupportPlugin : AIPlugin <AIPreferenceViewControllerDelegate, AIContactObserver> {
+@protocol AIListEditorColumnController;
+
+@interface AIAliasSupportPlugin : AIPlugin <AIPreferenceViewControllerDelegate, AIContactObserver, AIListEditorColumnController> {
     IBOutlet    NSView		*view_contactAliasInfoView;
     IBOutlet	NSTextField	*textField_alias;
 
     AIPreferenceViewController		*contactView;
-    AIListObject			*activeContactObject;
+    AIListContact			*activeContactObject;
 }
 
 - (void)installPlugin;

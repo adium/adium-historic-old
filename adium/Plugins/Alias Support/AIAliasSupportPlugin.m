@@ -10,13 +10,14 @@
 #import "AIAdium.h"
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
+#import "AIContactListEditorPlugin.h"
 
 #define	CONTACT_ALIAS_NIB		@"ContactAlias"		//Filename of the alias info view
-#define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
+#define	PREF_GROUP_ALIASES		@"Aliases"		//Preference group to store aliases in
 #define ALIASES_DEFAULT_PREFS		@"Alias Defaults"
 
 @interface AIAliasSupportPlugin (PRIVATE)
-- (void)applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject;
+- (void)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject;
 @end
 
 @implementation AIAliasSupportPlugin
@@ -34,6 +35,9 @@
     contactView = [[AIPreferenceViewController controllerWithName:@"Alias" categoryName:@"None" view:view_contactAliasInfoView delegate:self] retain];
     [[owner contactController] addContactInfoView:contactView];
 
+    //Wait for the contact list editor to init so we can add our column
+    [[owner notificationCenter] addObserver:self selector:@selector(registerColumn:) name:CONTACT_EDITOR_REGISTER_COLUMNS object:nil];
+    
     activeContactObject = nil;
 }
 
@@ -47,19 +51,19 @@
     NSString	*alias = [textField_alias stringValue];
     
     //Apply
-    [self applyAlias:alias toObject:activeContactObject];
+    [self _applyAlias:alias toObject:activeContactObject];
 
     //Save the alias
-    [[owner preferenceController] setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES object:activeContactObject];
+    [[owner preferenceController] setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES contact:activeContactObject];
 }
 
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
 {
     NSString	*alias;
-    
+
     //Hold onto the object
     [activeContactObject release]; activeContactObject = nil;
-    if([inObject isKindOfClass:[AIListObject class]]){
+    if([inObject isKindOfClass:[AIListContact class]]){
         activeContactObject = [inObject retain];
 
         //Fill in the current alias
@@ -80,16 +84,67 @@
         NSString	*alias = [[owner preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES object:inContact];
 
         if(alias != nil && [alias length] != 0){
-            [self applyAlias:alias toObject:inContact];
+            [self _applyAlias:alias toObject:inContact];
         }
     }
     
     return(nil);
 }
 
+
+//Contact Editor Column ----------------------------------------------------------------------
+//Called as the contact list editor opens.
+//In response to this notification, we need to register our editor column for editing aliases.
+- (void)registerColumn:(NSNotification *)notification
+{
+    id <AIListEditor>	editorController = [notification object];
+
+    //Register our editor column
+    [editorController registerListEditorColumnController:self];
+
+    //Remove the observer so we only register once
+    [[owner notificationCenter] removeObserver:self name:CONTACT_EDITOR_REGISTER_COLUMNS object:nil];
+}
+
+- (NSString *)editorColumnLabel
+{
+    return(@"Alias");
+}
+
+- (NSString *)editorColumnStringForServiceID:(NSString *)inServiceID UID:(NSString *)inUID
+{
+    NSString	*alias = [[owner preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES contactKey:[NSString stringWithFormat:@"(%@.%@)", inServiceID, inUID]];
+
+    return(alias != nil ? alias : @"");
+}
+
+- (BOOL)editorColumnSetStringValue:(NSString *)value forServiceID:(NSString *)inServiceID UID:(NSString *)inUID
+{
+    AIListContact	*contact;
+    
+    contact = [[owner contactController] contactInGroup:nil
+                                            withService:[[owner accountController] serviceTypeWithID:inServiceID]
+                                                    UID:inUID];
+
+    if(contact){
+        //Apply the alias
+        [self _applyAlias:value toObject:contact];
+
+        //Save the alias
+        [[owner preferenceController] setPreference:value
+                                             forKey:@"Alias"
+                                              group:PREF_GROUP_ALIASES
+                                         contactKey:[NSString stringWithFormat:@"(%@.%@)", inServiceID, inUID]];
+    }
+
+    return(YES);
+}
+
+
+
 //Private ---------------------------------------------------------------------------------------
-//Apply an alias to an object
-- (void)applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject
+//Apply an alias to an object (Does not save the alias!)
+- (void)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject
 {
     AIMutableOwnerArray	*displayNameArray;
     
