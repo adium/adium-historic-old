@@ -5,6 +5,7 @@
 - Crash when displaying/dismissing certain error messages
 - Crash when accepting an invitation to join a multiuser chat
 - Status messages have '{}' appended to them in Jaguar.
+- [MSN] Crash moving contacts between groups
 
 //------------------------------------------------------------------------------------
 // Bugs - Adium
@@ -40,9 +41,6 @@
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
 //------------------------------------------------------------------------------------
-- [MSN] Crash moving contacts between groups
-	I think this is libgaim side and already fixed in their source.  Not 100% sure.
-
 - [ICQ] Displaying raw HTML (Messages sent from iChat)
 	Libgaim is escaping all incoming HTML characters over ICQ. (Bug report filed 
 	on the Gaim tracker)
