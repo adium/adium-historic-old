@@ -84,18 +84,20 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 // Contacts ------------------------------------------------------------------------------------------------
 #pragma mark Contacts
-- (oneway void)newContact:(AIListContact *)theContact
+- (oneway void)newContact:(AIListContact *)theContact withName:(NSString *)inName
 {
-
-}
-
-//When a new contact is created, if we aren't already silent and delayed, set it for half a second to cover our initial
-//status updates
-- (oneway void)gotNewContact
-{
+	//When a new contact is created, if we aren't already silent and delayed, set it  a second to cover our initial
+	//status updates
 	if (!silentAndDelayed){
-		NSLog(@"&&&& Now delaying");
 		[self silenceAllContactUpdatesForInterval:1.0];
+	}
+	
+	//If the name we were passed differs from the current formatted UID of the contact, it's itself a formatted UID
+	//This is important since we may get an alias ("Evan Schoenberg") from the server but also want the formatted name
+	if(![inName isEqualToString:[theContact formattedUID]]){
+		[theContact setStatusObject:inName
+							 forKey:@"FormattedUID"
+							 notify:NotifyLater];
 	}
 }
 
@@ -112,7 +114,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[self gotGroupForContact:theContact];
 }
 
-- (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias name:(NSString *)inName
+- (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias
 {
 	BOOL changes = NO;
 	BOOL displayNameChanges = NO;
@@ -156,17 +158,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		}
 	}
 
-	//If the name we were passed differs from the current formatted UID of the contact, it's a formatted UID
-	//This is important since we may get an alias ("Evan Schoenberg") from the server but also want the formatted name
-	if(![inName isEqualToString:[theContact formattedUID]]){
-		[theContact setStatusObject:inName
-							 forKey:@"FormattedUID"
-							 notify:NO];
-		
-		changes = YES;
-	}
-	
-	
 	if(changes){
 		//Apply any changes
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
