@@ -142,7 +142,13 @@ typedef enum {
 - (void)deleteGroup:(AIListGroup *)group;
 - (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group;
 - (void)renameGroup:(AIListGroup *)group to:(NSString *)newName;
+
+//Contact-specific menu items
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact;
+
+//Secure messaging
+- (BOOL)allowSecureMessagingTogglingForChat:(AIChat *)inChat;
+- (NSString *)aboutEncryption;
 
 @end
 

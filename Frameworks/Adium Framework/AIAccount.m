@@ -381,4 +381,28 @@ Adium, Copyright 2001-2005, Adam Iser
 	return(nil);
 }
 
+/*!
+ * @brief Allow secure messaging toggling on a chat?
+ *
+ * Returns YES if secure (encrypted) messaging's status for this chat should be able to be changed.
+ * This allows the account to determine on a per-chat basis whether the chat's initial security setting should be permanently
+ * maintained.  If it returns NO, the user can not request for the chat to become encrypted or unencrypted.
+ * This is currently implemented by Gaim accounts to return YES for one-on-one chats and NO for group chats to indicate
+ * the functionality provided by Off-the-Record Messaging (OTR).
+ */
+- (BOOL)allowSecureMessagingTogglingForChat:(AIChat *)inChat
+{
+	return NO;
+}
+
+/*!
+ * @brief Provide a localized description of the encryption this account provides
+ *
+ * Returns a localized string which describes the encryption this account supports.
+ */
+- (NSString *)aboutEncryption
+{
+	return nil;
+}
+
 @end
