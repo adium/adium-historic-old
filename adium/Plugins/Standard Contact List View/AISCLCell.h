@@ -16,7 +16,12 @@
 @class AIListObject;
 
 @interface AISCLCell : NSCell {
+	NSTextStorage 	*textStorage;
+	NSLayoutManager	*layoutManager;
+	NSTextContainer	*textContainer;
+	
     AIListObject	*listObject;
+	
     BOOL		isGroup;
 }
 

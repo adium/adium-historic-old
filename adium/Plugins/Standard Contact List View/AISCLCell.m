@@ -26,6 +26,7 @@
 #define INDENTATION_OFFSET	-7
 #define CELL_SIZE_ADJUST_X	20	//Adjustment for the flippy triangles, and add some padding
 #define BACK_CELL_INDENT	2
+#define STRING_OFFSET_X		-5
 
 @interface AISCLCell (PRIVATE)
 - (NSSize)leftViewSizeForHeight:(float)height;
@@ -41,8 +42,24 @@
 - (id)init
 {
     [super init];
-    
+
+	//Set up our custom text system.  Using drawAtPoint places our text at a seemingly random vertical alignment.
+	textStorage = [[NSTextStorage alloc] init];
+	layoutManager = [[NSLayoutManager alloc] init];
+	textContainer = [[NSTextContainer alloc] init];
+	[layoutManager addTextContainer:textContainer];
+	[textStorage addLayoutManager:layoutManager];
+	
     return self;
+}
+
+- (void)dealloc
+{
+	[textStorage release];
+	[textContainer release];
+	[layoutManager release];
+	
+	[super dealloc];
 }
 
 - (void)setContact:(AIListObject *)inObject
@@ -162,7 +179,7 @@
 }
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
-{
+{	
     NSFont		    *font;
     NSAttributedString      *displayName;
     NSMutableString	    *displayString;
@@ -408,21 +425,24 @@
     }
    
     //Outline the group name as per preferences if not highlighted by the system or we are doing custom highlighting
-    
-    if (isGroup && (![self isHighlighted] || labelAroundContactOnly) && [(AISCLOutlineView *)controlView outlineGroupColor]) {
-        NSColor *outlineGroupColor = [(AISCLOutlineView *)controlView outlineGroupColor];
-        NSDictionary * attributesDict_two = [NSDictionary dictionaryWithObjectsAndKeys:
-            outlineGroupColor, NSForegroundColorAttributeName, 
-            font, NSFontAttributeName, 
-            paragraphStyle, NSParagraphStyleAttributeName, 
-            outlineGroupColor, NSStrokeColorAttributeName, 
-            [NSNumber numberWithFloat:15.0], NSStrokeWidthAttributeName, nil];
-  
-        [(NSAttributedString *)[[[NSAttributedString alloc] initWithString:(NSString *)displayString attributes:attributesDict_two] autorelease] drawInRect:NSOffsetRect(cellFrame, 0, [(AISCLOutlineView *)controlView labelAroundContactOnly] ? 0 : -1)];//Adjust the strings up 1 pixel
-    }
+	if (isGroup && (![self isHighlighted] || labelAroundContactOnly) && [(AISCLOutlineView *)controlView outlineGroupColor]) {
+		NSColor *outlineGroupColor = [(AISCLOutlineView *)controlView outlineGroupColor];
+		NSDictionary * attributesDict_two = [NSDictionary dictionaryWithObjectsAndKeys:
+			outlineGroupColor, NSForegroundColorAttributeName, 
+			font, NSFontAttributeName, 
+			paragraphStyle, NSParagraphStyleAttributeName, 
+			outlineGroupColor, NSStrokeColorAttributeName, 
+			[NSNumber numberWithFloat:15.0], NSStrokeWidthAttributeName, nil];
+		
+		[(NSAttributedString *)[[[NSAttributedString alloc] initWithString:(NSString *)displayString attributes:attributesDict_two] autorelease] drawInRect:NSOffsetRect(cellFrame, 0, [(AISCLOutlineView *)controlView labelAroundContactOnly] ? 0 : -1)];//Adjust the strings up 1 pixel
+	}
     
     //Draw the name
-    [displayName drawInRect:NSOffsetRect(cellFrame, 0, labelAroundContactOnly ? 0 : -1)];//Adjust the strings up 1 pixel
+	cellFrame.origin.x += STRING_OFFSET_X;
+	[textStorage setAttributedString:displayName];
+	NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
+	[layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:cellFrame.origin];
+
     [displayName release];
 }
 

@@ -211,7 +211,7 @@
         [contactListView setRowHeight:fontHeight];
         [contactListView setIntercellSpacing:NSMakeSize(3.0,[[prefDict objectForKey:KEY_SCL_SPACING] floatValue])];      
 		
-
+		
 		
 		
 		
@@ -219,8 +219,6 @@
 		
         NSColor		*backgroundColor = [[prefDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColorWithAlpha:alpha];
         NSColor		*gridColor = [[prefDict objectForKey:KEY_SCL_GRID_COLOR] representedColorWithAlpha:alpha];
-		
-		
           
         //Colors
         [contactListView setShowLabels:showLabels];
