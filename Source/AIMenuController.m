@@ -24,6 +24,7 @@
 #import <Adium/AIMetaContact.h>
 
 @interface AIMenuController (PRIVATE)
+- (void)localizeMenuTitles;
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray usingMenu:(NSMenu *)inMenu;
 - (void)addMenuItemsForContact:(AIListContact *)inContact toMenu:(NSMenu *)workingMenu separatorItem:(BOOL *)separatorItem;
 @end
@@ -51,6 +52,8 @@
     currentContextMenuObject = nil;
     textViewContextualMenu = [[NSMenu alloc] init];
     contextualMenu_TextView = nil;
+	
+	[self localizeMenuTitles];
 }
 
 //Close
@@ -277,6 +280,66 @@
 - (void)restoreItalicsKeyEquivalent
 {
     [menuItem_Format_Italics setKeyEquivalent:@"i"];    
+}
+
+- (void)localizeMenuTitles
+{
+	//Menu items in MainMenu.nib for localization purposes
+	[menuItem_file setTitle:AILocalizedString(@"File",nil)];
+	[menuItem_edit setTitle:AILocalizedString(@"Edit",nil)];
+	[menuItem_view setTitle:AILocalizedString(@"View",nil)];
+	[menuItem_status setTitle:AILocalizedString(@"Status",nil)];
+	[menuItem_contact setTitle:AILocalizedString(@"Contact",nil)];
+	[menuItem_format setTitle:AILocalizedString(@"Format",nil)];
+	[menuItem_window setTitle:AILocalizedString(@"Window",nil)];
+	[menuItem_help setTitle:AILocalizedString(@"Help",nil)];
+	
+	//Adium menu
+	[menuItem_aboutAdium setTitle:AILocalizedString(@"About Adium",nil)];
+	[menuItem_adiumXtras setTitle:AILocalizedString(@"Adium Xtras",nil)];
+	[menuItem_preferences setTitle:AILocalizedString(@"Preferences...",nil)];
+	[menuItem_hideAdium setTitle:AILocalizedString(@"Hide Adium",nil)];
+	[menuItem_hideOthers setTitle:AILocalizedString(@"Hide Others",nil)];
+	[menuItem_showAll setTitle:AILocalizedString(@"Show All",nil)];
+	[menuItem_quitAdium setTitle:AILocalizedString(@"Quit Adium",nil)];
+	
+	//File menu
+	[menuItem_close setTitle:AILocalizedString(@"Close",nil)];
+	[menuItem_closeChat setTitle:AILocalizedString(@"Close Chat",nil)];
+	[menuItem_saveAs setTitle:AILocalizedString(@"Save As...",nil)];
+	[menuItem_pageSetup setTitle:AILocalizedString(@"Page Setup...",nil)];
+	[menuItem_print setTitle:AILocalizedString(@"Print...",nil)];
+	
+	//Edit menu
+	[menuItem_cut setTitle:AILocalizedString(@"Cut",nil)];
+	[menuItem_copy setTitle:AILocalizedString(@"Copy",nil)];
+	[menuItem_paste setTitle:AILocalizedString(@"Paste",nil)];
+	[menuItem_pasteFormatted setTitle:AILocalizedString(@"Paste Formatted",nil)];
+	[menuItem_clear setTitle:AILocalizedString(@"Clear",nil)];
+	[menuItem_selectAll setTitle:AILocalizedString(@"Select All",nil)];
+	[menuItem_find setTitle:AILocalizedString(@"Find",nil)];
+	[menuItem_spelling setTitle:AILocalizedString(@"Spelling",nil)];
+	[menuItem_speech setTitle:AILocalizedString(@"Speech",nil)];
+	
+	//View menu
+	[menuItem_customizeToolbar setTitle:AILocalizedString(@"Customize Toolbar...",nil)];
+	
+	//Format menu
+	[menuItem_bold setTitle:AILocalizedString(@"Bold",nil)];
+	[menuItem_italic setTitle:AILocalizedString(@"Italic",nil)];
+	[menuItem_underline setTitle:AILocalizedString(@"Underline",nil)];
+	[menuItem_showFonts setTitle:AILocalizedString(@"Show Fonts",nil)];
+	[menuItem_showColors setTitle:AILocalizedString(@"Show Colors",nil)];
+	
+	//Window menu
+	[menuItem_minimize setTitle:AILocalizedString(@"Minimize",nil)];
+	[menuItem_bringAllToFront setTitle:AILocalizedString(@"Bring All to Front",nil)];
+	
+	//Help menu
+	[menuItem_adiumHelp setTitle:AILocalizedString(@"Adium Help",nil)];
+	[menuItem_reportABug setTitle:AILocalizedString(@"Report a Bug",nil)];
+	[menuItem_sendFeedback setTitle:AILocalizedString(@"Send Feedback",nil)];
+	[menuItem_adiumForums setTitle:AILocalizedString(@"Adium Forums",nil)];
 }
 
 @end
