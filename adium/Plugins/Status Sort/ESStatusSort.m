@@ -471,6 +471,9 @@ int statusSort(id objectA, id objectB, BOOL groups)
 							status = YES; //we can only get here if the person is online, anyways
 							onlyIfWeAintGotNothinBetter = YES;
 							break;
+						
+						default:
+							status = NO;
 					}
 
 					//If the object has the desired status and we want to use it, store the new index it should go to
