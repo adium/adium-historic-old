@@ -121,6 +121,10 @@
 	if (delegate && 
 		((percentDone != oldPercentDone) || (bytesSent != oldBytesSent))){
 		[delegate gotUpdateForFileTransfer:self];
+		
+		if (percentDone >= 1.0){
+			[[adium fileTransferController] transferComplete:fileTransfer];
+		}
 	}
 }
 - (float)percentDone

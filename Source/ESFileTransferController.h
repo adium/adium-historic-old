@@ -18,6 +18,7 @@
 
 - (void)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer;
 - (void)beganFileTransfer:(ESFileTransfer *)fileTransfer;
+- (void)transferCanceledRemotely:(ESFileTransfer *)fileTransfer;
 - (void)transferCanceled:(ESFileTransfer *)fileTransfer;
 - (void)transferComplete:(ESFileTransfer *)fileTransfer;
 
