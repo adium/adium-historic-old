@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.97 2004/08/02 07:08:19 evands Exp $
+// $Id: AIInterfaceController.m,v 1.98 2004/08/03 23:16:07 evands Exp $
 
 #import "AIInterfaceController.h"
 #import "AIStandardListWindowController.h"
@@ -595,7 +595,7 @@
 				windowKeyString = [NSString stringWithString:@""];
 			}
 			
-			item = [[[NSMenuItem alloc] initWithTitle:[chat name]
+			item = [[[NSMenuItem alloc] initWithTitle:[chat displayName]
 											   target:self
 											   action:@selector(showChatWindow:)
 										keyEquivalent:windowKeyString] autorelease];
