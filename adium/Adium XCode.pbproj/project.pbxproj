@@ -17206,6 +17206,16 @@
 			files = (
 				34D9C0E805AAACF400AC2E4D,
 				34D9C0EB05AAACF400AC2E4D,
+				6C8CCED605C93D8100B449CE,
+				6C8CCEE205C944D200B449CE,
+				6C8CCEE305C944D200B449CE,
+				6C8CCEE405C944D200B449CE,
+				6C8CCEE505C944D200B449CE,
+				6C8CCEE605C944D200B449CE,
+				6C8CCEE705C944D200B449CE,
+				6C8CCEE805C944D200B449CE,
+				6C8CCEE905C944D200B449CE,
+				6C8CCEEA05C944D200B449CE,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17314,6 +17324,16 @@
 				34D9C0E505AAACF300AC2E4D,
 				34D9C0E605AAACF300AC2E4D,
 				34D9C0E705AAACF400AC2E4D,
+				6C8CCED505C93D8100B449CE,
+				6C8CCED905C944CD00B449CE,
+				6C8CCEDA05C944CE00B449CE,
+				6C8CCEDB05C944CE00B449CE,
+				6C8CCEDC05C944CF00B449CE,
+				6C8CCEDD05C944CF00B449CE,
+				6C8CCEDE05C944D000B449CE,
+				6C8CCEDF05C944D100B449CE,
+				6C8CCEE005C944D100B449CE,
+				6C8CCEE105C944D200B449CE,
 			);
 			isa = PBXGroup;
 			name = "iTunes Integration";
@@ -24852,6 +24872,146 @@
 		};
 		6C644D3F05776BF000D79723 = {
 			fileRef = 6C644D3D05776BF000D79723;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C8CCED505C93D8100B449CE = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = getiTunesCurrentAlbum.scpt;
+			path = "Plugins/iTunes Integration/getiTunesCurrentAlbum.scpt";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C8CCED605C93D8100B449CE = {
+			fileRef = 6C8CCED505C93D8100B449CE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C8CCED905C944CD00B449CE = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = getiTunesCurrentArtist.scpt;
+			path = "Plugins/iTunes Integration/getiTunesCurrentArtist.scpt";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C8CCEDA05C944CE00B449CE = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = getiTunesCurrentComposer.scpt;
+			path = "Plugins/iTunes Integration/getiTunesCurrentComposer.scpt";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C8CCEDB05C944CE00B449CE = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = getiTunesCurrentGenre.scpt;
+			path = "Plugins/iTunes Integration/getiTunesCurrentGenre.scpt";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C8CCEDC05C944CF00B449CE = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = getiTunesCurrentName.scpt;
+			path = "Plugins/iTunes Integration/getiTunesCurrentName.scpt";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C8CCEDD05C944CF00B449CE = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = getiTunesCurrentPlayCount.scpt;
+			path = "Plugins/iTunes Integration/getiTunesCurrentPlayCount.scpt";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C8CCEDE05C944D000B449CE = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = getiTunesCurrentPosition.scpt;
+			path = "Plugins/iTunes Integration/getiTunesCurrentPosition.scpt";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C8CCEDF05C944D100B449CE = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = getiTunesCurrentRating.scpt;
+			path = "Plugins/iTunes Integration/getiTunesCurrentRating.scpt";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C8CCEE005C944D100B449CE = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = getiTunesCurrentStatus.scpt;
+			path = "Plugins/iTunes Integration/getiTunesCurrentStatus.scpt";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C8CCEE105C944D200B449CE = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = getiTunesCurrentYear.scpt;
+			path = "Plugins/iTunes Integration/getiTunesCurrentYear.scpt";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C8CCEE205C944D200B449CE = {
+			fileRef = 6C8CCED905C944CD00B449CE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C8CCEE305C944D200B449CE = {
+			fileRef = 6C8CCEDA05C944CE00B449CE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C8CCEE405C944D200B449CE = {
+			fileRef = 6C8CCEDB05C944CE00B449CE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C8CCEE505C944D200B449CE = {
+			fileRef = 6C8CCEDC05C944CF00B449CE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C8CCEE605C944D200B449CE = {
+			fileRef = 6C8CCEDD05C944CF00B449CE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C8CCEE705C944D200B449CE = {
+			fileRef = 6C8CCEDE05C944D000B449CE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C8CCEE805C944D200B449CE = {
+			fileRef = 6C8CCEDF05C944D100B449CE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C8CCEE905C944D200B449CE = {
+			fileRef = 6C8CCEE005C944D100B449CE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C8CCEEA05C944D200B449CE = {
+			fileRef = 6C8CCEE105C944D200B449CE;
 			isa = PBXBuildFile;
 			settings = {
 			};
