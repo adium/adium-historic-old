@@ -289,7 +289,7 @@ Adium, Copyright 2001-2004, Adam Iser
 //If a delegate chooses it can be notified when the user hovers an image in the grid.  This code handles the cursor
 //tracking and messaging required to make that happen.
 #pragma mark Cursor Tracking
-//Reset our cursor tracking (Only for the brushed variant)
+//Reset our cursor tracking
 - (void)resetCursorRects
 {
 	if(_respondsToImageHovered){
@@ -325,6 +325,7 @@ Adium, Copyright 2001-2004, Adam Iser
 //Cursor left our view, stop tracking its movement
 - (void)mouseExited:(NSEvent *)theEvent
 {
+#warning What if other views want mouse moved events?
 	[[self window] setAcceptsMouseMovedEvents:NO];
 	[self _setHoveredIndex:-1];
 }
