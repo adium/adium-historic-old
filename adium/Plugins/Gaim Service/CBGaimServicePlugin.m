@@ -5,7 +5,6 @@
 //  Created by Colin Barrett on Sun Oct 19 2003.
 //
 
-#import <Security/Security.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 #import "CBGaimServicePlugin.h"
 #import "SLGaimCocoaAdapter.h"
@@ -13,9 +12,7 @@
 #import "GaimServices.h"
 
 @interface CBGaimServicePlugin (PRIVATE)
-- (NSDictionary *)getDictionaryFromKeychainForKey:(NSString *)key;
 - (void)_initGaim;
-- (void)configureSignals;
 @end
 
 /*
@@ -163,7 +160,6 @@ static CBGaimServicePlugin  *servicePluginInstance;
     // field in the Network preferences panel, the CFStringGetCString
     // function will fail and this function will return false.
     if (result) {
-		if (GAIM_DEBUG) NSLog(@"configureGaimProxySettings: SOCKS is enabled; looking up kSCPropNetProxiesSOCKSProxy");
         hostStr = (CFStringRef) CFDictionaryGetValue(proxyDict,
                                                      kSCPropNetProxiesSOCKSProxy);
         
@@ -173,7 +169,6 @@ static CBGaimServicePlugin  *servicePluginInstance;
     if (result) {
         result = CFStringGetCString(hostStr, host,
                                     (CFIndex) hostSize, [NSString defaultCStringEncoding]);
-		if (GAIM_DEBUG) NSLog(@"configureGaimProxySettings: got a host of %s",host);
     }
     
     //Get the proxy port
@@ -186,136 +181,30 @@ static CBGaimServicePlugin  *servicePluginInstance;
     }
     if (result) {
         result = CFNumberGetValue(portNum, kCFNumberIntType, &portInt);
-		if (GAIM_DEBUG) NSLog(@"configureGaimProxySettings: got a port of %i",portInt);
     }
     if (result) {
-        //set what we've got so far
-        if (GAIM_DEBUG) NSLog(@"configureGaimProxySettings: setting socks5 settings: %s:%i",host,portInt);
+		NSString		*hostString = [NSString stringWithCString:host];
+		NSDictionary	*authDict = [AIKeychain getDictionaryFromKeychainForKey:hostString];
 		
-		NSString *hostString = [NSString stringWithCString:host];
-				
-		systemSOCKSSettingsDictionary = [[NSMutableDictionary alloc] init];
+		systemSOCKSSettingsDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+											hostString,@"Host",
+											[NSNumber numberWithInt:portInt],@"Port",nil];
 		
-		[systemSOCKSSettingsDictionary setObject:hostString forKey:@"Host"];
-		[systemSOCKSSettingsDictionary setObject:[NSNumber numberWithInt:portInt] forKey:@"Port"];
-        
-        NSDictionary* auth = [self getDictionaryFromKeychainForKey:hostString];
-        
-        if(auth) {
-            if (GAIM_DEBUG) NSLog(@"configureGaimProxySettings: proxy username='%@' password=(in the keychain)",[auth objectForKey:@"username"]);
-            
-			[systemSOCKSSettingsDictionary setObject:[auth objectForKey:@"username"] forKey:@"Username"];
-			[systemSOCKSSettingsDictionary setObject:[auth objectForKey:@"password"] forKey:@"Password"];
+        if(authDict) {            
+			[systemSOCKSSettingsDictionary setObject:[authDict objectForKey:@"username"] forKey:@"Username"];
+			[systemSOCKSSettingsDictionary setObject:[authDict objectForKey:@"password"] forKey:@"Password"];
             
         } else {
-            //No username/password.  I think this doesn't need to be an error or anythign since it should have been set in the system prefs
-            if (GAIM_DEBUG) NSLog(@"configureGaimProxySettings: No username/password found");
+            //No username/password.  I think this doesn't need to be an error or anything since it should have been set in the system prefs
         }
     }    
     
-    // Clean up.
+    //Clean up
     if (proxyDict != NULL) {
         CFRelease(proxyDict);
     }
 	
-    return [systemSOCKSSettingsDictionary autorelease];
+    return systemSOCKSSettingsDictionary;
 }    
 
-//Next two functions are from the http-mail project.
-static NSData *OWKCGetItemAttribute(KCItemRef item, KCItemAttr attrTag)
-{
-    SecKeychainAttribute    attr;
-    OSStatus                keychainStatus;
-    UInt32                  actualLength;
-    void                    *freeMe = NULL;
-    
-    attr.tag = attrTag;
-    actualLength = 256;
-    attr.length = actualLength; 
-    attr.data = alloca(actualLength);
-    
-    keychainStatus = KCGetAttribute(item, &attr, &actualLength);
-    if (keychainStatus == errKCBufferTooSmall) {
-        /* the attribute length will have been placed into actualLength */
-        freeMe = NSZoneMalloc(NULL, actualLength);
-        attr.length = actualLength;
-        attr.data = freeMe;
-        keychainStatus = KCGetAttribute(item, &attr, &actualLength);
-    }
-    if (keychainStatus == noErr) {
-        NSData *retval = [NSData dataWithBytes:attr.data length:actualLength];
-        if (freeMe != NULL)
-            NSZoneFree(NULL, freeMe);
-        return retval;
-    }
-    
-    if (freeMe != NULL)
-        NSZoneFree(NULL, freeMe);
-    
-    if (keychainStatus == errKCNoSuchAttr) {
-        /* An expected error. Return nil for nonexistent attributes. */
-        return nil;
-    }
-    
-    /* We shouldn't make it here */
-    [NSException raise:@"Error Reading Keychain" format:@"Error number %d.", keychainStatus];
-    
-    return nil;  // appease the dread compiler warning gods
-}
-
-- (NSDictionary *)getDictionaryFromKeychainForKey:(NSString *)key
-{
-    NSData              *data;
-    KCSearchRef         grepstate; 
-    KCItemRef           item;
-    UInt32              length;
-    void                *itemData;
-    NSMutableDictionary *result = nil;
-    
-    SecKeychainRef      keychain;
-    SecKeychainCopyDefault(&keychain);
-    
-        if(KCFindFirstItem(keychain, NULL, &grepstate, &item)==noErr) {  
-            do {
-                NSString    *server = nil;
-                
-                data = OWKCGetItemAttribute(item, kSecLabelItemAttr);
-                if(data) {
-                    server = [NSString stringWithCString: [data bytes] length: [data length]];
-                }
-                
-                if([key isEqualToString:server]) {
-                    NSString    *username;
-                    NSString    *password;
-                    
-                    data = OWKCGetItemAttribute(item, kSecAccountItemAttr);
-                    if(data) {
-                        username = [NSString stringWithCString: [data bytes] length: [data length]];
-                    } else {
-                        username = @"";
-                    }
-                    
-                    if(SecKeychainItemCopyContent(item, NULL, NULL, &length, &itemData) == noErr) {
-                        password = [NSString stringWithCString:itemData length:length];
-                        SecKeychainItemFreeContent(NULL, itemData);
-                    } else {
-                        password = @"";
-                    } 
-                    
-                    result = [NSDictionary dictionaryWithObjectsAndKeys:username,@"username",password,@"password",nil];
-                    
-                    KCReleaseItem(&item);
-                    
-                    break;
-                }
-                
-                KCReleaseItem(&item);
-            } while( KCFindNextItem(grepstate, &item)==noErr);
-            
-            KCReleaseSearch(&grepstate);
-        }
-    
-        CFRelease(keychain);
-    return result;   
-}
 @end
