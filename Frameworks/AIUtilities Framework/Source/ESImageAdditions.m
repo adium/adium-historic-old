@@ -108,8 +108,8 @@
 	
 	if(bm){
 		NSDictionary *properties =  [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSNumber numberWithBool:YES],
-			NSImageDitherTransparency, NULL];
+			[NSNumber numberWithBool:YES], NSImageDitherTransparency,
+			nil];
 		
 		NSSize size = [self size];
 		
