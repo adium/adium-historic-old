@@ -4781,6 +4781,7 @@
 				345DFF4A05564DB200CEE7B3,
 				4B030E52056C2D7E00C765F9,
 				344877B506D1F61A00DA778C,
+				6C15E63106DF3BB600E5A50E,
 			);
 			buildRules = (
 			);
@@ -17494,6 +17495,19 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		6C15E63106DF3BB600E5A50E = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			isa = PBXShellScriptBuildPhase;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "find $BUILD_ROOT/$WRAPPER_NAME -name '.svn' -print0 | xargs -0 rm -rf\nfind $BUILD_ROOT/$WRAPPER_NAME -name '.DS_Store' -print0 | xargs -0 rm -rf";
+		};
 		6C1CC23105415D5700B64925 = {
 			isa = PBXFileReference;
 			lastKnownFileType = "compiled.mach-o.executable";
@@ -20221,11 +20235,6 @@
 		};
 		9EB3C52304F94DB7001D1F74 = {
 			children = (
-				CA3D0EAD06DEA79500EB58DA,
-				CA3D0EAE06DEA79500EB58DA,
-				CA3D0EAF06DEA79500EB58DA,
-				CA3D0EB006DEA79600EB58DA,
-				CA3D0EB106DEA79600EB58DA,
 				9EB3C52E04F94F24001D1F74,
 				9EB3C53304F94FAE001D1F74,
 				9EB3C53404F94FAE001D1F74,
@@ -21488,41 +21497,6 @@
 			isa = PBXTargetDependency;
 			name = "AIUtilities (from AIUtilities.framework.xcode)";
 			targetProxy = CA0C977706DBFDA1004436BE;
-		};
-		CA3D0EAD06DEA79500EB58DA = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.icns;
-			path = Adium.icns;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		CA3D0EAE06DEA79500EB58DA = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			path = Awake.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		CA3D0EAF06DEA79500EB58DA = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			path = ErrorAlert.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		CA3D0EB006DEA79600EB58DA = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			path = notfound.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		CA3D0EB106DEA79600EB58DA = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			path = pref4.tif;
-			refType = 4;
-			sourceTree = "<group>";
 		};
 //CA0
 //CA1
