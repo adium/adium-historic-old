@@ -93,7 +93,7 @@
     //
     if([readBuffer length] >= inLength){ // this data is fully in the buffer
         //Return the correct bytes from the buffer
-        *outData = readBuffer;
+        *outData = [NSData dataWithBytes:[readBuffer bytes] length:inLength];// autorelease];
         allDataAvailable = YES;
         
 		//Remove the bytes from the read buffer (if desired)
