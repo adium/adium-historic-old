@@ -185,18 +185,18 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 	
 	//Append our string into the responder if possible
-	if(responder && [responder isKindOfClass:[NSText class]]){
+	if(responder && [responder isKindOfClass:[NSTextView class]]){
 		NSAttributedString	*attrString;
 		
 		//Use typing attributes if available
 		if([responder respondsToSelector:@selector(typingAttributes)]){
 			attrString = [[[NSAttributedString alloc] initWithString:keyword
-														  attributes:[responder typingAttributes]] autorelease];
+														  attributes:[(NSTextView *)responder typingAttributes]] autorelease];
 		}else{
 			attrString = [[[NSAttributedString alloc] initWithString:keyword
 														  attributes:[NSDictionary dictionary]] autorelease];
 		}
-		[[responder textStorage] appendAttributedString:attrString];
+		[[(NSTextView *)responder textStorage] appendAttributedString:attrString];
 	}
 }
 
