@@ -133,7 +133,14 @@
 {
 	//Disable 'delete selection' if nothing is selected or the contact list isn't in front
 	if(menuItem == menuItem_delete){
-		return([[adium contactController] selectedListObjectInContactList] != nil);
+		//return([[adium contactController] selectedListObjectInContactList] != nil);
+                //Update the menu titles to reflect the selected contact
+            if([[adium contactController] selectedListObjectInContactList] != nil){
+                [menuItem_delete setTitle:[NSString stringWithFormat:@"Delete %@",[[[adium contactController] selectedListObjectInContactList] displayName]]];
+            }else{
+                [menuItem_delete setTitle:@"Delete Selection"];
+                return NO;
+            }
 	}else if(menuItem == menuItem_tabAddContact){
 		return([[adium menuController] contactualMenuObject] != nil);
 	}
