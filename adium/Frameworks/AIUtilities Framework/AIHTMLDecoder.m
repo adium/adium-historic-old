@@ -29,6 +29,8 @@ int HTMLEquivalentForFontSize(int fontSize);
 + (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 + (void)processLinkTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 + (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
++ (BOOL)appendImage:(NSImage *)attachmentImage toString:(NSMutableString *)string withName:(NSString *)fileSafeChunk  altString:(NSString *)attachmentString imagesPath:(NSString *)imagesPath;
++ (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string;
 @end
 
 @implementation AIHTMLDecoder
@@ -173,6 +175,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
     NSMutableString *string = [NSMutableString stringWithString:(includeHeaders ? @"<HTML>" : @"")];
 
     //Setup the incoming message as a regular string, and get its length
+	NSLog(@"inMessage: %@",inMessage);
     NSString		*inMessageString = [inMessage string];
     int				messageLength = [inMessageString length];
 		
@@ -337,54 +340,112 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			int i;
 			
 			for(i = 0; (i < searchRange.length); i++){ //Each attachment takes a character.. they are grouped by the attribute scan
-				AITextAttachmentExtension *attachment = [[inMessage attributesAtIndex:searchRange.location+i effectiveRange:nil] objectForKey:NSAttachmentAttributeName];
-				if (attachment){
-					
-					if([attachment shouldSaveImageForLogging] && [[attachment attachmentCell] respondsToSelector:@selector(image)] && imagesPath){
-						//We have an NSImage but no file at which to point the img tag
+				NSTextAttachment *textAttachment = [[inMessage attributesAtIndex:searchRange.location+i effectiveRange:nil] objectForKey:NSAttachmentAttributeName];
+				if (textAttachment){
+					NSLog(@"it exists");
+					//We can work efficiently on an AITextAttachmentExtension
+					if ([textAttachment isKindOfClass:[AITextAttachmentExtension class]]){
+						NSLog(@"it is");
+						//Suppress compiler stupidity
+						AITextAttachmentExtension *attachment = (AITextAttachmentExtension *)textAttachment;
 						
-						NSImage *attachmentImage = [[attachment attachmentCell] performSelector:@selector(image)];
-						NSBitmapImageRep *bitmapRep = [NSBitmapImageRep imageRepWithData:[attachmentImage TIFFRepresentation]];
-						NSString *fileSafeChunk = [[attachment string] safeFilenameString];
-						NSString *shortFileName;
-						NSString *fileName;
-						NSString *fileURL;
-						
-						shortFileName = [fileSafeChunk stringByAppendingPathExtension:@"png"];
-						fileName = [imagesPath stringByAppendingPathComponent:shortFileName];
-						fileURL = [[NSURL fileURLWithPath:fileName] absoluteString];
-						//create the images directory if it doesn't exist
-						[[NSFileManager defaultManager] createDirectoriesForPath:imagesPath];
-						
-						if([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:fileName
-																							  atomically:YES]){
-							[string appendFormat:@"<img src=\"%@\" alt=\"%@\">", [fileURL stringByEscapingForHTML], [[attachment string] stringByEscapingForHTML]];
+						//
+						NSLog(@"%@ %i %i",imagesPath,[attachment shouldSaveImageForLogging],[[attachment attachmentCell] respondsToSelector:@selector(image)]);
+						if((imagesPath) &&
+						   ([attachment shouldSaveImageForLogging]) && 
+						   ([[attachment attachmentCell] respondsToSelector:@selector(image)])){
+
+							//We have an NSImage but no file at which to point the img tag
+							NSString			*attachmentString;
+							NSLog(@"using %@",attachment);
+							attachmentString = [attachment string];
+
+							if ([self appendImage:[[attachment attachmentCell] performSelector:@selector(image)]
+										 toString:string
+										 withName:[attachmentString safeFilenameString]
+										altString:attachmentString
+									   imagesPath:imagesPath]){
+								
+								//We were succesful appending the image tag, so release this chunk
+								[chunk release]; chunk = nil;	
+							}
+							
+						}else if(!attachmentsAsText &&
+								 (!attachmentImagesOnlyForSending || ![attachment shouldAlwaysSendAsText])){
+							//We want attachments as images where appropriate, and this attachment is not marked
+							//to always send as text.  The attachment will have an imagePath pointing to a file
+							//which we can link directly via an img tag.
+							NSLog(@"we want attachments as images where appropriate");
+							[string appendFormat:@"<img src=\"file://%@\" alt=\"%@\" width=\"%i\" height=\"%i\">",
+								[[attachment imagePath] stringByEscapingForHTML], [[attachment string] stringByEscapingForHTML],
+								(int)[attachment imageSize].width, (int)[attachment imageSize].height];
+							
+							//Release the chunk
+							[chunk release]; chunk = nil;
+							
+						}else{
+							//We should replace the attachment with its textual equivalent if possible
+							NSLog(@"//We should replace the attachment with its textual equivalent if possible");
+							NSString	*attachmentString = [attachment string];
+							if (attachmentString){
+								[string appendString:attachmentString];
+							}
 							
 							[chunk release]; chunk = nil;
 						}
-						else
-							NSLog(@"failed to write log image");
-						
-					}else if(!attachmentsAsText &&
-							 [attachment respondsToSelector:@selector(imagePath)] &&
-							 [attachment imagePath] &&
-							 (!attachmentImagesOnlyForSending || ![attachment shouldAlwaysSendAsText])){
-						//We have a file and should link to it with an img tag
-						
-						[string appendFormat:@"<img src=\"file://%@\" alt=\"%@\" width=\"%i\" height=\"%i\">",
-							[[attachment imagePath] stringByEscapingForHTML], [[attachment string] stringByEscapingForHTML],
-							(int)[attachment imageSize].width, (int)[attachment imageSize].height];
-						
-						[chunk release]; chunk = nil;
 					}else{
-						//We should replace the attachment with its textual equivalent if possible
-						NSString	*attachmentString = [attachment string];
-						if (attachmentString){
-							[string appendString:attachmentString];
-						}
+						//Our attachment is just a standard NSTextAttachment, which means we now have to deal with
+						//the fileWrapper.
+						NSFileWrapper   *fileWrapper = [textAttachment fileWrapper];
+						NSDictionary	*fileAttributes = [fileWrapper fileAttributes];
+						OSType			HFSTypeCode;
 						
-						[chunk release]; chunk = nil;
-					}					
+						HFSTypeCode = [[fileAttributes objectForKey:NSFileHFSTypeCode] unsignedLongValue];
+						
+						//Check the HFSTypeCode (encoded to the NSString format [NSImage imageFileTypes] uses)
+						if ([[NSImage imageFileTypes] containsObject:NSFileTypeForHFSTypeCode(HFSTypeCode)]){
+							NSLog(@"Standard NSTextAttachment: Image");
+							NSString	*imageName = [fileWrapper preferredFilename];
+							
+							//We've got an image, so the attachment's attachmentCell 
+							//already has the NSImage we want to append
+							if ([self appendImage:[[textAttachment attachmentCell] performSelector:@selector(image)]
+										 toString:string
+										 withName:imageName
+										altString:imageName
+									   imagesPath:imagesPath]){
+								
+								//We were succesful appending the image tag, so release this chunk
+								[chunk release]; chunk = nil;	
+							}
+						}else{
+							
+							NSLog(@"Standard NSTextAttachment: FIle TRANSFER WOOO! %@",fileWrapper);
+							//Got a non-image file.  Use a special Adium tag so code elsewhere knows to handle what
+							//was previously the attachment as a file transfer.
+							if ([fileWrapper isKindOfClass:[ESFileWrapperExtension class]]){
+								if ([fileWrapper isDirectory]){
+									// XXX got passed a directory.  Porbably want to process it recursively for now
+								}else if ([fileWrapper isSymbolicLink]){
+									// XXX got passed a symbolic link.  I guess maybe resolve it and use it like a regular file?
+								}else{
+									//Regular file.  It's go time.
+									NSString	*path = [(ESFileWrapperExtension *)fileWrapper originalPath];
+									NSLog(@"path %@",path);
+									if (path){
+										[self appendFileTransferReferenceFromPath:path
+																		 toString:string];
+										
+										//We were succesful appending the FT tag, so release this chunk
+										[chunk release]; chunk = nil;	
+									}
+								}
+								
+							}else{
+								NSLog(@"Look, NSFileWrapper is stupid.  I don't know how you got here, but I can't help.  Maybe your network administrator can, I dunno.");
+							}
+						}
+					}
 				}
 			}			
 		}
@@ -899,6 +960,46 @@ int HTMLEquivalentForFontSize(int fontSize)
     }
     
     return([argDict autorelease]);
+}
+
+#warning Currently always appends as png.  This is probably not always best as Windows DirectIM will not handle it.
++ (BOOL)appendImage:(NSImage *)attachmentImage
+		   toString:(NSMutableString *)string
+		   withName:(NSString *)fileSafeChunk 
+		  altString:(NSString *)attachmentString
+		 imagesPath:(NSString *)imagesPath
+{	
+	NSString			*shortFileName;
+	NSString			*fileName;
+	NSString			*fileURL;	
+	NSBitmapImageRep	*bitmapRep;
+	BOOL				success = NO;
+	
+	bitmapRep = [NSBitmapImageRep imageRepWithData:[attachmentImage TIFFRepresentation]];
+	shortFileName = [fileSafeChunk stringByAppendingPathExtension:@"png"];
+	fileName = [imagesPath stringByAppendingPathComponent:shortFileName];
+	fileURL = [[NSURL fileURLWithPath:fileName] absoluteString];
+	
+	//create the images directory if it doesn't exist
+	[[NSFileManager defaultManager] createDirectoriesForPath:imagesPath];
+	
+	if([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:fileName
+																		  atomically:YES]){
+		[string appendFormat:@"<img src=\"%@\" alt=\"%@\">", [fileURL stringByEscapingForHTML], [attachmentString stringByEscapingForHTML]];
+		success = YES;
+		
+	}else{
+		NSLog(@"failed to write log image");
+	}
+
+
+	return success;
+}
+
++ (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string
+{
+	[string appendFormat:@"<AdiumFT src=\"%@\">", path];	
+	NSLog(@"string is now %@",string);
 }
 
 @end
