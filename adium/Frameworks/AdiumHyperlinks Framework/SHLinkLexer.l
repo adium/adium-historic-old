@@ -47,6 +47,7 @@ yahooIMSpec	ymsgr:sendim\?.+
 
 <CANONICAL>{urlSpecifier}   {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
 <CANONICAL>{ipURL}          {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
+<CANONICAL>localhost(\/.*)? {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
 <CANONICAL>.*		    {SHStringOffset += SHleng; BEGIN INITIAL; return SH_URL_INVALID;}
 
 file:\/\/\/.*		    {SHStringOffset += SHleng; return SH_FILE_VALID;}
