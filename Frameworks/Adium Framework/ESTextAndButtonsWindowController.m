@@ -129,18 +129,10 @@
 }
 
 /*!
- * @brief Perform behaviors before the window closes
- *
- * If the user did not click a button to get us here, inform the target that the window closed
- * with no response, sending it the AITextAndButtonsClosedWithoutResponse return code (default behavior) or refuse to let
- * the window close, if allowsCloseWithoutResponse = NO.
- *
- * As our window is closing, we auto-release this window controller instance.
+ * @brief Refuse to let the window close, if allowsCloseWithoutResponse = NO
  */
-- (void)windowWillClose:(id)sender
+- (BOOL)windowShouldClose:(id)sender
 {
-	[super windowWillClose:sender];
-	
 	if(!userClickedButton){
 		if(allowsCloseWithoutResponse){
 			//Notify the target that the window closed with no response
@@ -153,10 +145,24 @@
 			return(NO);
 		}
 	}
-
-	[self autorelease];
+	
+	return(YES);
 }
 
+/*!
+ * @brief Perform behaviors before the window closes
+ *
+ * If the user did not click a button to get us here, inform the target that the window closed
+ * with no response, sending it the AITextAndButtonsClosedWithoutResponse return code (default behavior)
+ *
+ * As our window is closing, we auto-release this window controller instance.
+ */
+- (void)windowWillClose:(id)sender
+{
+	[super windowWillClose:sender];
+	
+	[self autorelease];
+}
 
 /*!
  * @brief Invoked as the sheet closes, dismiss the sheet
