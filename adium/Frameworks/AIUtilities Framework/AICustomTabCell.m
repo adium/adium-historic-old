@@ -281,6 +281,10 @@ static NSImage		*tabCloseFrontRollover = nil;
     NSDictionary    *eventData = [theEvent userData];
     NSView          *view = [eventData objectForKey:@"view"];
 
+	if ([theEvent modifierFlags] & NSControlKeyMask) {
+		[[tabViewItem tabView] selectTabViewItem:tabViewItem];
+	}
+	
     //Set ourself (or our close button) has hovered
     if((allowsInactiveTabClosing || selected || [NSEvent cmdKey]) && [[eventData objectForKey:@"close"] boolValue]){
         hoveringClose = YES;
