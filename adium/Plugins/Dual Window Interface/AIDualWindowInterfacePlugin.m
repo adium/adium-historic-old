@@ -85,8 +85,7 @@
 
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-        [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_WINDOW_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_WINDOW_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];    
     //Install Preference Views
     preferenceController = [[AIDualWindowPreferences preferencePaneWithOwner:owner] retain];
     preferenceAdvController = [[AIDualWindowAdvancedPrefs preferencePaneWithOwner:owner] retain];
@@ -215,6 +214,8 @@
             [self _transferMessageTabContainer:tabViewItem toWindow:targetMessageWindow];
         }
     }
+    
+    [self buildWindowMenu]; //Rebuild our window menu
 }
 
 //Show the message window (Must ONLY be called by a window menu item)
