@@ -387,7 +387,6 @@
 // When the user holds the mouse still over the contact list, tooltipCount will eventually get larger than TOOL_TIP_DELAY.  When this happens, we begin displaying tooltips.
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-    NSLog(@"mouseEntered");
     trackingMouseMovedEvents = YES;
     [contactListView setAcceptsMouseMovedEvents:YES]; //Start generating mouse-moved events
 
@@ -404,7 +403,6 @@
 - (void)tooltipTimer:(NSTimer *)inTimer
 {
     tooltipCount++;
-    NSLog(@"tooltipTimer %i",tooltipCount);
 
     if(tooltipCount > TOOL_TIP_DELAY){ //If the user has held still long enough
         [self _showTooltipAtPoint:[NSEvent mouseLocation]]; //Show the tooltip
@@ -434,11 +432,9 @@
     if(trackingMouseMovedEvents){
         if(tooltipCount > TOOL_TIP_DELAY){ //If we are displaying tooltips
             //Update the displayed tooltip
-            NSLog(@"mouseMoved (show)");
             [self _showTooltipAtPoint:[[theEvent window] convertBaseToScreen:[theEvent locationInWindow]]];
         }else{
             //Otherwise, reset tooltipCount to 0 since the mouse has moved
-            NSLog(@"mouseMoved (reset)");
             tooltipCount = 0;
         }
     }
@@ -448,7 +444,6 @@
 //Pass (0,0) to hide the tooltip
 - (void)_showTooltipAtPoint:(NSPoint)screenPoint
 {
-    NSLog(@"_showTooltipAtPoint");
     if(screenPoint.x != 0 && screenPoint.y != 0){
         if([[contactListView window] isKeyWindow]){
             NSPoint		viewPoint;
