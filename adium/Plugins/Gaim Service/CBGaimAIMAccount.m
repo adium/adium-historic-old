@@ -16,7 +16,7 @@
 
 - (NSArray *)supportedPropertyKeys
 {
-    NSMutableArray *arr = [NSArray arrayWithObjects:[super supportedPropertyKeys]];
+    NSMutableArray *arr = [NSMutableArray arrayWithArray:[super supportedPropertyKeys]];
     [arr addObject:@"Away"];
     return arr;
 }
@@ -113,7 +113,7 @@
 
 - (NSString *)accountDescription
 {
-    [self UIDAndServiceID];
+    return [self UIDAndServiceID];
 }
 
 @end
