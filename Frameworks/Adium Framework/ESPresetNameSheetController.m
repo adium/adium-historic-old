@@ -94,7 +94,7 @@
 		NSString	*nameInUseText;
 		
 		nameInUseText = [NSString stringWithFormat:(@"\n\n\"%@\" is already in use.",nil), newName];
-		[self configureExplanatoryTextWithString:[NSString stringWithFormat:@"%@\n\n%@", explanatoryText, nameInUseText];
+		[self configureExplanatoryTextWithString:[NSString stringWithFormat:@"%@\n\n%@", explanatoryText, nameInUseText]];
 
 		NSBeep();
 	}
