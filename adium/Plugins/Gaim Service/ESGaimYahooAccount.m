@@ -20,6 +20,7 @@
     return "prpl-yahoo";
 }
 
+#pragma mark Connection
 - (NSString *)connectionStringForStep:(int)step
 {
 	switch (step)
@@ -31,6 +32,26 @@
 	return nil;
 }
 
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
+{
+	if (([disconnectionError rangeOfString:@"different machine or device"].location != NSNotFound)) {
+		return NO;
+	}else{
+		return YES;
+	}
+}
+
+- (NSString *)hostKey
+{
+	return KEY_YAHOO_HOST;
+}
+
+- (NSString *)portKey
+{
+	return KEY_YAHOO_PORT;
+}
+
+#pragma mark Encoding
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
     //gaim's yahoo_html_to_codes seems to be messed up...
@@ -43,16 +64,6 @@
 					   encodeNonASCII:NO
 						   imagesPath:nil
 					attachmentsAsText:YES]);
-}
-
-- (NSString *)hostKey
-{
-	return KEY_YAHOO_HOST;
-}
-
-- (NSString *)portKey
-{
-	return KEY_YAHOO_PORT;
 }
 
 #pragma mark File transfer
