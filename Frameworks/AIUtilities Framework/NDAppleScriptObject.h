@@ -1,7 +1,7 @@
 /*!
 	@header NDAppleScriptObject
 	@abstract Header file for <tt>NDAppleScriptObject</tt>.
-	@discussion <tt>NDAppleScriptObject</tt> is used to represent compiled AppleScripts within Cocoa. The only restriction for use of this code is that you keep the comments with the head files especial my name. Use of this code is at your own risk yada yada yada...
+	@discussion <tt>NDAppleScriptObject</tt> is used to represent compiled AppleScripts within Cocoa. The only restriction for use of this code is that you keep the comments with the head files especially my name. Use of this code is at your own risk yada yada yada...
  */
 
 
@@ -18,192 +18,192 @@ extern const NSString	* NDAppleScriptPartialResult;
 /*!
 	@class NDAppleScriptObject
 	@abstract Class to represent an AppleScript.
-	@discussion As well as representing an AppleScript, <tt>NDAppleScriptObject</tt> also can maintain seperate context for each AppleScript, useful if you want to run each script within a seperate thread. <tt>NDAppleScriptObject</tt> is interface compatabile with <tt>NSAppleScript</tt>
+	@discussion As well as representing an AppleScript, <tt>NDAppleScriptObject</tt> also can maintain separate context for each AppleScript, useful if you want to run each script within a seperate thread. <tt>NDAppleScriptObject</tt> is interface compatible with <tt>NSAppleScript</tt>
   */
 @interface NDAppleScriptObject : NSObject
 {
 @private
 	OSAID							compiledScriptID,
 									resultingValueID;
-	NDComponentInstance		* componentInstance;
+	NDComponentInstance				* componentInstance;
 	NSString						* scriptSource;
 	long							executionModeFlags;
 }
 
 /*!
 	@method compileExecuteString:
-	@abstract compiles and executes the apple script within the passed string.
+	@abstract Compiles and executes the AppleScript within the passed string.
 	@discussion Executes the script by calling it&rsquo;s run handler.
-	@param string  A string that contains the  AppleScipt source to be compiled and executed.
+	@param string  A string that contains the AppleScript source to be compiled and executed.
 	@result  Returns the result of executing the AppleScript as a Objective-C object, see <tt> objectValue:</tt> for more details.
  */
 + (id)compileExecuteString:(NSString *)string;
 
 /*!
 	@method compileExecuteString:componentInstance:
-	@abstract compiles and executes the apple script within the passed string.
+	@abstract Compiles and executes the AppleScript within the passed string.
 	@discussion Executes the script by calling it&rsquo;s run handler.
-	@param string  A string that contains the AppleScipt source to be compiled and executed.
-	@param componentInstance The <tt>NDComponentInstance</tt> to use the AppleScipt with.
-	@result  Returns the result of executing the AppleScript as a Objective-C object, see <tt>resultObject</tt> for more details.
+	@param string  A string that contains the AppleScript source to be compiled and executed.
+	@param componentInstance The <tt>NDComponentInstance</tt> to use the AppleScript with.
+	@result  Returns the result of executing the AppleScript as a Objective-C object. See <tt>resultObject</tt> for more details.
  */
 + (id)compileExecuteString:(NSString *)string componentInstance:(NDComponentInstance *)componentInstance;
 
 /*!
 	@method appleScriptObjectWithString:
-	@abstract returns an <tt>NDAppleScriptObject</tt> compiled from passed string.
-	@discussion An autorelease version of <tt>initWithString:</tt> with mode flags set to <tt>kOSAModeCompileIntoContext</tt>.
-	@param string  A string that contains the AppleScipt source to be compiled.
+	@abstract Returns an <tt>NDAppleScriptObject</tt> compiled from passed string.
+	@discussion An autoreleasing version of <tt>initWithString:</tt> with mode flags set to <tt>kOSAModeCompileIntoContext</tt>.
+	@param string  A string that contains the AppleScript source to be compiled.
 	@result  Returns the <tt>NDAppleScriptObject</tt> instance.
  */
 + (id)appleScriptObjectWithString:(NSString *)string;
 /*!
 	@method appleScriptObjectWithString:componentInstance:
-	@abstract returns an <tt>NDAppleScriptObject</tt> compiled from passed string.
-	@discussion An autorelease version of <tt>initWithString:</tt> with mode flags set to <tt>kOSAModeCompileIntoContext</tt>.
-	@param string  A string that contains the AppleScipt source to be compiled.
-	@param componentInstance The <tt>NDComponentInstance</tt> to use the AppleScipt with.
+	@abstract Returns an <tt>NDAppleScriptObject</tt> compiled from passed string.
+	@discussion An autoreleasing version of <tt>initWithString:</tt> with mode flags set to <tt>kOSAModeCompileIntoContext</tt>.
+	@param string  A string that contains the AppleScript source to be compiled.
+	@param componentInstance The <tt>NDComponentInstance</tt> to use the AppleScript with.
 	@result  Returns the <tt>NDAppleScriptObject</tt> instance.
  */
 + (id)appleScriptObjectWithString:(NSString *)string componentInstance:(NDComponentInstance *)componentInstance;
 
 /*!
 	@method appleScriptObjectWithData:
-	@abstract returns an <tt>NDAppleScriptObject</tt> from the <tt>NSData</tt> containing a compiled AppleScript.
-	@discussion An autorelease version of <tt>initWithData:</tt>.
-	@param string  A string that contains the AppleScipt source to be compiled.
+	@abstract Returns an <tt>NDAppleScriptObject</tt> from the <tt>NSData</tt> containing a compiled AppleScript.
+	@discussion An autoreleasing version of <tt>initWithData:</tt>.
+	@param string  A string that contains the AppleScript source to be compiled.
 	@result  Returns the <tt>NDAppleScriptObject</tt> instance.
  */
 + (id)appleScriptObjectWithData:(NSData *)data;
 
 /*!
 	@method appleScriptObjectWithData:componentInstance:
-	@abstract returns an <tt>NDAppleScriptObject</tt> from the <tt>NSData</tt> containing a compiled AppleScript.
-	@discussion An autorelease version of initWithData:.
-	@param string  A string that contains the AppleScipt source to be compiled.
-	@param componentInstance The <tt>NDComponentInstance</tt> to use the AppleScipt with.
+	@abstract Returns an <tt>NDAppleScriptObject</tt> from the <tt>NSData</tt> containing a compiled AppleScript.
+	@discussion An autoreleasing version of initWithData:.
+	@param string  A string that contains the AppleScript source to be compiled.
+	@param componentInstance The <tt>NDComponentInstance</tt> to use the AppleScript with.
 	@result  Returns the <tt>NDAppleScriptObject</tt> instance.
  */
 + (id)appleScriptObjectWithData:(NSData *)data componentInstance:(NDComponentInstance *)componentInstance;
 /*!
 	@method appleScriptObjectWithContentsOfFile:
-	@abstract returns an <tt>NDAppleScriptObject</tt> by reading in the compiled AppleScipt at passed path.
-	@discussion An autorelease version of initWithContentsOfFile:.
-	@param path  A path to the compiled AppleScipt file.
+	@abstract Returns an <tt>NDAppleScriptObject</tt> by reading in the compiled AppleScript at passed path.
+	@discussion An autoreleasing version of initWithContentsOfFile:.
+	@param path  A path to the compiled AppleScript file.
 	@result  Returns the <tt>NDAppleScriptObject</tt> instance.
  */
 + (id)appleScriptObjectWithContentsOfFile:(NSString *)path;
 
 /*!
 	@method appleScriptObjectWithContentsOfFile:componentInstance:
-	@abstract returns an <tt>NDAppleScriptObject</tt> by reading in the compiled AppleScipt at passed path.
-	@discussion An autorelease version of initWithContentsOfFile:.
-	@param path  A path to the compiled AppleScipt file.
-	@param componentInstance The <tt>NDComponentInstance</tt> to use the AppleScipt with.
+	@abstract Returns an <tt>NDAppleScriptObject</tt> by reading in the compiled AppleScript at passed path.
+	@discussion An autoreleasing version of initWithContentsOfFile:.
+	@param path  A path to the compiled AppleScript file.
+	@param componentInstance The <tt>NDComponentInstance</tt> to use the AppleScript with.
 	@result  Returns the <tt>NDAppleScriptObject</tt> instance.
  */
 + (id)appleScriptObjectWithContentsOfFile:(NSString *)aPath componentInstance:(NDComponentInstance *)componentInstance;
 /*!
 	@method appleScriptObjectWithContentsOfURL:
-	@abstract returns an <tt>NDAppleScriptObject</tt> by reading in the compiled AppleScipt at passed file URL.
-	@discussion An autorelease version of initWithContentsOfURL:.
-	@param URL  A file url to the compiled AppleScipt file.
+	@abstract Returns an <tt>NDAppleScriptObject</tt> by reading in the compiled AppleScript at passed file URL.
+	@discussion An autoreleasing version of initWithContentsOfURL:.
+	@param URL  A file URL to the compiled AppleScript file.
 	@result  Returns the <tt>NDAppleScriptObject</tt> instance.
  */
 + (id)appleScriptObjectWithContentsOfURL:(NSURL *)URL;
 /*!
 	@method appleScriptObjectWithContentsOfURL:componentInstance:
-	@abstract returns an <tt>NDAppleScriptObject</tt> by reading in the compiled AppleScipt at passed file URL.
-	@discussion An autorelease version of initWithContentsOfURL:.
-	@param URL  A file url to the compiled AppleScipt file.
-	@param componentInstance The <tt>NDComponentInstance</tt> to use the AppleScipt with.
+	@abstract Returns an <tt>NDAppleScriptObject</tt> by reading in the compiled AppleScript at passed file URL.
+	@discussion An autoreleasing version of initWithContentsOfURL:.
+	@param URL  A file URL to the compiled AppleScript file.
+	@param componentInstance The <tt>NDComponentInstance</tt> to use the AppleScript with.
 	@result  Returns the <tt>NDAppleScriptObject</tt> instance.
  */
 + (id)appleScriptObjectWithContentsOfURL:(NSURL *)URL componentInstance:(NDComponentInstance *)componentInstance;
 
 /*!
 	@method initWithString:
-	@abstract returns an <tt>NDAppleScriptObject</tt> compiled from passed string.
-	@discussion initWithString: with the default component and mode flags of <tt>kOSAModeCompileIntoContext</tt>.
-	@param string  A string that contains the AppleScipt source to be compiled.
+	@abstract Returns an <tt>NDAppleScriptObject</tt> compiled from passed string.
+	@discussion initWithString:modeFlags: with the default component and mode flags of <tt>kOSAModeCompileIntoContext</tt>.
+	@param string  A string that contains the AppleScript source to be compiled.
 	@result  Returns the <tt>NDAppleScriptObject</tt> instance.
  */
 - (id)initWithString:(NSString *)string;
 
 /*!
 	@method initWithString:modeFlags:
-	@abstract returns an <tt>NDAppleScriptObject</tt> compiled from passed string.
+	@abstract Returns an <tt>NDAppleScriptObject</tt> compiled from passed string.
 	@discussion initWithString:modeFlags: with the default component.
-	@param string  A string that contains the AppleScipt source to be compiled.
+	@param string  A string that contains the AppleScript source to be compiled.
 	@param modeFlags  Mode flags passed to OSACompile (see Apple OSA documentation).
 	@result  Returns the <tt>NDAppleScriptObject</tt> instance.
  */
 - (id)initWithString:(NSString *)string modeFlags:(long)modeFlags;
 /*!
 	@method initWithContentsOfFile:
-	@abstract Intialises receiver with a compiled AppleScipt file.
-	@discussion Initialize the receiver with the compiled AppleScipt file at the supplied path, the compiled AppleScipt can be in either the resource fork or the data fork. If the file is not complied and is instead a AppleScipt as text then use the <tt>initWithString:modeFlags:</tt> method instead obtaining the string with the method<tt>-[NSString initWithFile:]</tt>. 
-	@param path The path for the compiled AppleScipt file.
+	@abstract Initialises receiver with a compiled AppleScript file.
+	@discussion Initialize the receiver with the compiled AppleScript file at the supplied path, the compiled AppleScript can be in either the resource fork or the data fork. If the file is not complied and is instead a AppleScript as text then you must read in the text of the file and pass it to <tt>initWithString:modeFlags:</tt>. 
+	@param path The path for the compiled AppleScript file.
 	@result An initialized <tt>NDAppleScriptObject</tt>
   */
 - (id)initWithContentsOfFile:(NSString *)path;
 /*!
 	@method initWithContentsOfFile:component:
-	@abstract Intialises receiver with a compiled AppleScipt file.
-	@discussion Initialize the receiver with the compiled AppleScipt file at the supplied path and a <tt>NDComponentInstance</tt> as returned from the method <tt>+[NDComponentInstance findNextComponent]</tt>, the compiled AppleScipt can be in either the resource fork or the data fork. If the file is not complied and is instead a AppleScipt as text then use the <tt>initWithString:modeFlags:</tt> method instead obtaining the string with the method<tt>-[NSString initWithFile:]</tt>.
-	@param path The path for the compiled AppleScipt file.
-	@param componentInstance The <tt>NDComponentInstance</tt> to use the AppleScipt with.
+	@abstract Initialises receiver with a compiled AppleScript file.
+	@discussion Initialize the receiver with the compiled AppleScript file at the supplied path and a <tt>NDComponentInstance</tt> as returned from the method <tt>+[NDComponentInstance findNextComponent]</tt>, the compiled AppleScript can be in either the resource fork or the data fork.  If the file is not complied and is instead a AppleScript as text then you must read in the text of the file and pass it to <tt>initWithString:modeFlags:</tt>. 
+	@param path The path for the compiled AppleScript file.
+	@param componentInstance The <tt>NDComponentInstance</tt> to use the AppleScript with.
 	@result An initialized <tt>NDAppleScriptObject</tt>
  */
 - (id)initWithContentsOfFile:(NSString *)path componentInstance:(NDComponentInstance *)componentInstance;
 /*!
 	@method initWithContentsOfURL:
-	@abstract Intialises receiver with a compiled AppleScipt file.
-	@discussion Initialize the receiver with the compiled AppleScipt file at the supplied file url, the compiled AppleScipt can be in either the resource fork or the data fork. If the file is not complied and is instead a AppleScipt as text then use the <tt>initWithString:modeFlags:</tt> method instead obtaining the string with the method<tt>-[NSString initWithURL:]</tt>.
-	@param URL The file url for the compiled AppleScipt file.
+	@abstract Initialises receiver with a compiled AppleScript file.
+	@discussion Initialize the receiver with the compiled AppleScript file at the supplied file URL, the compiled AppleScript can be in either the resource fork or the data fork. If the file is not complied and is instead a AppleScript as text then use the <tt>initWithString:modeFlags:</tt> method instead obtaining the string with the method<tt>-[NSString initWithURL:]</tt>.
+	@param URL The file URL for the compiled AppleScript file.
 	@result An initialized <tt>NDAppleScriptObject</tt>
  */
 - (id)initWithContentsOfURL:(NSURL *)URL;
 /*!
 	@method initWithContentsOfURL:component:
-	@abstract Intialises receiver with a compiled AppleScipt file.
-	@discussion Initialize the receiver with the compiled AppleScipt file at the supplied file url and a <tt>NDComponentInstance</tt> as returned from the method <tt>+[NDComponentInstance findNextComponent]</tt>, the compiled AppleScipt can be in either the resource fork or the data fork. If the file is not complied and is instead a AppleScipt as text then use the <tt>initWithString:modeFlags:</tt> method instead obtaining the string with the method<tt>-[NSString initWithURL:]</tt>.
-	@param URL The file url for the compiled AppleScipt file.
-	@param componentInstance The <tt>NDComponentInstance</tt> to use the AppleScipt with.
+	@abstract Initialises receiver with a compiled AppleScript file.
+	@discussion Initialize the receiver with the compiled AppleScript file at the supplied file URL and a <tt>NDComponentInstance</tt> as returned from the method <tt>+[NDComponentInstance findNextComponent]</tt>, the compiled AppleScript can be in either the resource fork or the data fork. If the file is not complied and is instead a AppleScript as text then use the <tt>initWithString:modeFlags:</tt> method instead obtaining the string with the method<tt>-[NSString initWithURL:]</tt>.
+	@param URL The file URL for the compiled AppleScript file.
+	@param componentInstance The <tt>NDComponentInstance</tt> to use the AppleScript with.
 	@result An initialized <tt>NDAppleScriptObject</tt>
  */
 - (id)initWithContentsOfURL:(NSURL *)URL componentInstance:(NDComponentInstance *)componentInstance;
 /*!
 	@method initWithData:
-	@abstract Intialises receiver with compiled AppleScipt data.
-	@discussion Initialize the with a <tt>NSData</tt> object containing the data for an compiled AppleScipt.
-	@param data A <tt>NSData</tt> object containing the compiled AppleScipt.
+	@abstract Initialises receiver with compiled AppleScript data.
+	@discussion Initialize the with a <tt>NSData</tt> object containing the data for an compiled AppleScript.
+	@param data A <tt>NSData</tt> object containing the compiled AppleScript.
 	@result An initialized <tt>NDAppleScriptObject</tt>
   */
 - (id)initWithData:(NSData *)data;
 
 /*!
 	@method initWithString:modeFlags:component:
-	@abstract returns an <tt>NDAppleScriptObject</tt> compiled from passed string.
+	@abstract Returns an <tt>NDAppleScriptObject</tt> compiled from passed string.
 	@discussion Initialzes the recieve by compiling the recieved source, if compilation failes then the error can be returned with the method <tt>error</tt> and the method <tt>isCompiled</tt> returns false.
-	@param URL  A file url to the compiled AppleScipt file.
+	@param URL  A file URL to the compiled AppleScript file.
 	@result  Returns the <tt>NDAppleScriptObject</tt> instance.
  */
 - (id)initWithString:(NSString *)string modeFlags:(long)modeFlags componentInstance:(NDComponentInstance *)componentInstance;
 /*!
 	@method initWithData:component:
-	@abstract Intialises receiver with compiled AppleScipt data.
-	@discussion Initialize the with a <tt>NSData</tt> object containing the data for an compiled AppleScipt and a <tt>NDComponentInstance</tt> as returned from the method <tt>+[NDComponentInstance findNextComponent]</tt>.
-	@param data A <tt>NSData</tt> object containing the compiled AppleScipt.
-	@param componentInstance The <tt>NDComponentInstance</tt> to use the AppleScipt with.
+	@abstract Initialises receiver with compiled AppleScript data.
+	@discussion Initialize the with a <tt>NSData</tt> object containing the data for an compiled AppleScript and a <tt>NDComponentInstance</tt> as returned from the method <tt>+[NDComponentInstance findNextComponent]</tt>.
+	@param data A <tt>NSData</tt> object containing the compiled AppleScript.
+	@param componentInstance The <tt>NDComponentInstance</tt> to use the AppleScript with.
 	@result An initialized <tt>NDAppleScriptObject</tt>
  */
 - (id)initWithData:(NSData *)data componentInstance:(NDComponentInstance *)componentInstance;
 
 /*!
 	@method data
-	@abstract returns the compiled script within a <tt>NSData</tt> instance.
-	@discussion the returned <tt>NSData</tt> instance contains a compiled script which can be
+	@abstract Returns the compiled script within a <tt>NSData</tt> instance.
+	@discussion The returned <tt>NSData</tt> instance contains a compiled script which can be
 				passed to the <tt>initWithData:component:</tt> method.
 	@result  Returns an <tt>NSData</tt> instance.
  */
@@ -211,17 +211,17 @@ extern const NSString	* NDAppleScriptPartialResult;
 
 /*!
 	@method execute
-	@abstract executes the script.
-	@discussion executes the script by calling it run handler.
-	@result  returns <tt>YES</tt> if execution was successful.
+	@abstract Executes the script.
+	@discussion Executes the script.
+	@result  Returns <tt>YES</tt> if execution was successful.
  */
 - (BOOL)execute;
 
 /*!
 	@method executeOpen
-	@abstract sends an open event.
-	@discussion executes the script by calling it open handler passing an alias list creaed from parameters.
-	@param parameters  an <tt>NSArray</tt> containing paths (<tt>NSString</tt>) or <tt>NSURL</tt>&rsquo;s which is
+	@abstract Sends an open event.
+	@discussion Executes the script by calling its open handler passing an alias list creaed from parameters.
+	@param parameters  An <tt>NSArray</tt> containing paths (<tt>NSString</tt>) or <tt>NSURL</tt>&rsquo;s which is
 			converted into an alias list.
 	@result  returns <tt>YES</tt> if execution was successful.
  */
@@ -229,36 +229,36 @@ extern const NSString	* NDAppleScriptPartialResult;
 
 /*!
 	@method executeEvent:
-	@abstract execute an AppleEvent.
-	@discussion sends an AppleEvent to the script.
-	@param event  an <tt>NSAppleEventDescriptor</tt> containing the apple event.
-	@result  returns <tt>YES</tt> if execution was successful.
+	@abstract Execute an AppleEvent.
+	@discussion Sends an AppleEvent to the script.
+	@param event  An <tt>NSAppleEventDescriptor</tt> containing the apple event.
+	@result  Returns <tt>YES</tt> if execution was successful.
  */
 - (BOOL)executeEvent:(NSAppleEventDescriptor *)event;
 
 /*!
 	@method executeSubroutineNamed:argumentsArray:
-	@abstract execute an AppleScript function.
-	@discussion Executs the AppleScript subroutine <tt><i>name</i></tt> passing the objects within <tt>array</tt> as positional arguments after being converted to <tt>NSAppleEventDescriptor</tt>s with the method <tt>-[NSAppleEventDescriptor descriptorWithObject:]</tt>.
+	@abstract Execute an AppleScript function.
+	@discussion Executes the AppleScript subroutine <tt><i>name</i></tt> passing the objects within <tt>array</tt> as positional arguments after being converted to <tt>NSAppleEventDescriptor</tt>s with the method <tt>-[NSAppleEventDescriptor descriptorWithObject:]</tt>.
 	@param name The function name, this is case insensitive.
 	@param array An array of arguments.
-	@result  returns <tt>YES</tt> if execution was successful.
+	@result  Returns <tt>YES</tt> if execution was successful.
  */
 - (BOOL)executeSubroutineNamed:(NSString *)name argumentsArray:(NSArray *)array;
 
 /*!
 	@method executeSubroutineNamed:arguments:...
-	@abstract execute an AppleScript function.
-	@discussion Executs the AppleScript subroutine <tt><i>name</i></tt> passing the objects starting with <tt><i>firstObject</i></tt> as positional arguments after being converted to <tt>NSAppleEventDescriptor</tt>s with the method <tt>-[NSAppleEventDescriptor descriptorWithObject:]</tt>.
+	@abstract Execute an AppleScript function.
+	@discussion Executes the AppleScript subroutine <tt><i>name</i></tt> passing the objects starting with <tt><i>firstObject</i></tt> as positional arguments after being converted to <tt>NSAppleEventDescriptor</tt>s with the method <tt>-[NSAppleEventDescriptor descriptorWithObject:]</tt>.
 	@param name The function name, this is case insensitive.
 	@param firstObject The first object of a list of arguments terminated with <tt>nil</tt>.
-	@result  returns <tt>YES</tt> if execution was successful.
+	@result  Returns <tt>YES</tt> if execution was successful.
  */
 - (BOOL)executeSubroutineNamed:(NSString *)name arguments:(id)firstObject, ...;
 
 /*!
 	@method executeSubroutineNamed:labelsAndArguments:
-	@abstract execute an AppleScript function.
+	@abstract Execute an AppleScript function.
 	@discussion <p><tt>executeSubroutineNamed:labelsAndArguments:</tt> executes an AppleScript subroutine with labeled arguments starting with the label <tt><i>label</i></tt>, if the keyword <tt>keyASPrepositionGiven</tt> is found the remaining arguments will be passed to the method <tt>userRecordDescriptorWithObjectAndKeys:arguments:</tt> and the result is given the keyword <tt>keyASUserRecordFields</tt>.</p>
 	<p>For example to execute the AppleScript subroutine
 	<blockquote>
@@ -317,15 +317,15 @@ extern const NSString	* NDAppleScriptPartialResult;
 	<p>To find out the rules for use of the key words see the AppleScript language documentation.</p>
 	@param name The function name, this is case insensitive.
 	@param label The first label of a list of labels and arguments, terminated with a 0 <tt>AEKeyword</tt> or <tt>nil</tt> if the end arguments follow the keyword <tt>keyASPrepositionGiven</tt>.
-	@result  returns <tt>YES</tt> if execution was successful.
+	@result  Returns <tt>YES</tt> if execution was successful.
  */
 - (BOOL)executeSubroutineNamed:(NSString *)name labelsAndArguments:(AEKeyword)label, ...;
 
 /*!
 	@method arrayOfEventIdentifier
-	@abstract returns all event identifies the script respondes to.
-	@discussion returns and <tt>NSArray</tt> of <tt>NSDictionary</tt>s with the keys "<tt>EventClass</tt>" and "<tt>EventID</tt>".
-	@result  returns an <tt>NSArray</tt> of event identifier <tt>NSDictionary</tt>s.
+	@abstract Returns all event identifiers the script responds to.
+	@discussion Returns an <tt>NSArray</tt> of <tt>NSDictionary</tt>s with the keys "<tt>EventClass</tt>" and "<tt>EventID</tt>".
+	@result  Returns an <tt>NSArray</tt> of event identifier <tt>NSDictionary</tt>s.
  */
 - (NSArray *)arrayOfEventIdentifier;
 
@@ -333,9 +333,9 @@ extern const NSString	* NDAppleScriptPartialResult;
 	@method respondsToEventClass:eventID:
 	@abstract Tests whether the script responds to an AppleEvent.
 	@discussion This method test whether the script responds to the passed event identifier.
-	@param eventClass  the event class.
-	@param eventID  the event identifier.
-	@result  returns true if the script reponds to the event identifier.
+	@param eventClass  The event class.
+	@param eventID  The event identifier.
+	@result  Returns true if the script reponds to the event identifier.
  */
 - (BOOL)respondsToEventClass:(AEEventClass)eventClass eventID:(AEEventID)eventID;
 
@@ -344,7 +344,7 @@ extern const NSString	* NDAppleScriptPartialResult;
 	@abstract Tests whether the script responds to a subroutine call.
 	@discussion This method test whether the script inplements the subroutine <tt><i>name</i></tt>, subroutine names are case insensitive and so the string <tt><i>name</i></tt> is converted to lower case first.
 	@param name The subroutine name.
-	@result  returns true if the script reponds to the subroutine call.
+	@result  Returns true if the script reponds to the subroutine call.
  */
 - (BOOL)respondsToSubroutine:(NSString *)name;
 
@@ -397,16 +397,16 @@ extern const NSString	* NDAppleScriptPartialResult;
 
 /*!
 	@method resultAppleEventDescriptor
-	@abstract Returs the result as an AppleEvent type..
-	@discussion returns the result of the last script execution as an AppleEvent type within an <tt>NSAppleEventDescriptor</tt>.
-	@result  the <tt>NSAppleEventDescriptor</tt> contains the AppleEvent type result.
+	@abstract Returns the result as an AppleEvent type..
+	@discussion Returns the result of the last script execution as an AppleEvent type within an <tt>NSAppleEventDescriptor</tt>.
+	@result  The <tt>NSAppleEventDescriptor</tt> contains the AppleEvent type result.
  */
 - (NSAppleEventDescriptor *)resultAppleEventDescriptor;
 
 /*!
 	@method resultObject
-	@abstract Returs the result as an Objective-C object.
-	@discussion converts the AppleEvent type returned from the last script execution into an
+	@abstract Returns the result as an Objective-C object.
+	@discussion Converts the AppleEvent type returned from the last script execution into an
 				Objective-C object. The types currently supported are
 	<blockquote>
 		<table border="1"  width="90%">
@@ -426,18 +426,18 @@ extern const NSString	* NDAppleScriptPartialResult;
 
 /*!
 	@method resultData
-	@abstract Returs the result as an <tt>NSData</tt> instance.
-	@discussion returns the raw bytes from the result AppleEvent type.
-	@result  the NSData instance.
+	@abstract Returns the result as an <tt>NSData</tt> instance.
+	@discussion Returns the raw bytes from the result AppleEvent type.
+	@result  The NSData instance.
  */
 - (id)resultData;
 
 /*!
 	@method resultAsString
-	@abstract returns the result as an OSA formated string.
-	@discussion returns the result as a string by calling OSA&rsquo;s <tt>OSADisplay</tt> function. The result is
+	@abstract Returns the result as an OSA formatted string.
+	@discussion Returns the result as a string by calling OSA&rsquo;s <tt>OSADisplay</tt> function. The result is
 				in the same format as seen in Script Editor&rsquo;s result window.
-	@result  the <tt>NSString</tt> result.
+	@result  The <tt>NSString</tt> result.
  */
 - (NSString *)resultAsString;
 
@@ -450,7 +450,7 @@ extern const NSString	* NDAppleScriptPartialResult;
 - (NDComponentInstance *)componentInstance;
 /*!
 	@method executionModeFlags
-	@abstract returns the execution mode flags.
+	@abstract Returns the execution mode flags.
 	@discussion The flags are eqivelent to AESend flags.
 	<blockquote><blockquote>
 		<table border="1"  width="90%">
@@ -482,13 +482,13 @@ extern const NSString	* NDAppleScriptPartialResult;
 		</table>
 	</blockquote></blockquote>
  
-	@result  a long contains the execution mode flag bits.
+	@result  A long int containing the execution mode flag bits.
  */
 - (long)executionModeFlags;
 /*!
 	@method setExecutionModeFlags:
-	@abstract sets the execution mode flags.
-	@discussion The flags are eqivelent to AESend flags.
+	@abstract Sets the execution mode flags.
+	@discussion The flags are equivalent to AESend flags.
 	<blockquote><blockquote>
 	<table border="1"  width="90%">
 		<thead><tr><th>Flag</th><th>Description</th></tr></thead>
@@ -524,7 +524,7 @@ extern const NSString	* NDAppleScriptPartialResult;
 
 /*!
 	@method appleEventTarget
-	@abstract returns an AppleEvent desriptor that can be used in constructing complete AppleEvents.
+	@abstract Returns an AppleEvent desriptor that can be used in constructing complete AppleEvents.
 	@discussion When construction AppleEvents using the <tt>NSAppleEventDescriptor</tt> method  <tt>appleEventWithEventClass:eventID:targetDescriptor:returnID:transactionID:</tt> to send to the script with the <tt>NDAppleScriptObject</tt> method <tt>executeEvent:</tt> the <tt>NSAppleEventDescriptor</tt> return from this method can be used as the target discriptor.
 	@result A <tt>NSAppleEventDescriptor</tt> to be used as an AppleEvent target.
  */
@@ -532,8 +532,8 @@ extern const NSString	* NDAppleScriptPartialResult;
 
 /*!
 	@method error
-	@abstract Get Apple Script Errors.
-	@discussion You can use <tt>error</tt> to get information about errors that occured durring execution or compilation. The returned error info dictionary may contain entries that use any combination of the following keys, including no entries at all. The dictionary returns all of the same keys as within the error dictionary returned with some of  Apples <tt>NSAppleScript</tt> methods.
+	@abstract Get AppleScript Errors.
+	@discussion You can use <tt>error</tt> to get information about errors that occurred durring execution or compilation. The returned error info dictionary may contain entries that use any combination of the following keys, including no entries at all. The dictionary returns all of the same keys as within the error dictionary returned with some of Apple&rsquo;s <tt>NSAppleScript</tt> methods.
 	<blockquote><blockquote>
 		<table border="1"  width="90%">
 			<thead><tr><th>Constant</th><th>Description</th></tr></thead>
@@ -573,8 +573,8 @@ extern const NSString	* NDAppleScriptPartialResult;
 
 /*!
 	@method compile
-	@abstract Compile a AppleScript.
-	@discussion Compiles the receiver with a mode flag of <tt>kOSAModeCompileIntoContext</tt>, if it is not already compiled. Returns <tt>YES</tt> for success or if the script was already compiled, <tt>NO</tt> otherwise. Currently <tt>NDAppleScriptObject</tt> compiles scripts at initalization an will only be uncompiled if compilation failed.
+	@abstract Compile a AppleScript with default mode flags.
+	@discussion Compiles the receiver with a mode flag of <tt>kOSAModeCompileIntoContext</tt>, if it is not already compiled. Returns <tt>YES</tt> for success or if the script was already compiled, <tt>NO</tt> otherwise. Currently <tt>NDAppleScriptObject</tt> compiles scripts at initialization and will only not be compiled if compilation failed.
 	@result Returns <tt>YES</tt> if successful.
  */
 - (BOOL)compile;
@@ -582,7 +582,7 @@ extern const NSString	* NDAppleScriptPartialResult;
 /*!
 	@method compileWithModeFlags:
 	@abstract Compile a AppleScript.
-	@discussion Compiles the receiver with the supplied mode flags, if it is not already compiled. Returns <tt>YES</tt> for success or if the script was already compiled, <tt>NO</tt> otherwise. Currently <tt>NDAppleScriptObject</tt> compiles scripts at initalization an will only be uncompiled if compilation failed.
+	@discussion Compiles the receiver with the supplied mode flags, if it is not already compiled. Returns <tt>YES</tt> for success or if the script was already compiled, <tt>NO</tt> otherwise. Currently <tt>NDAppleScriptObject</tt> compiles scripts at initialization and will only not be compiled if compilation faile.
 	@param modeFlags  Mode flags passed to OSACompile (see Apple OSA documentation).
 	@result Returns <tt>YES</tt> if successful.
  */
@@ -591,7 +591,7 @@ extern const NSString	* NDAppleScriptPartialResult;
 /*!
 	@method isCompiled
 	@abstract Is the AppleScript compiled.
-	@discussion Returns YES if the receiver is already compiled, NO otherwise.
+	@discussion Returns YES if the receiver is already compiled, NO otherwise. Currently <tt>NDAppleScriptObject</tt> compiles scripts at initialization and will only not be compiled if compilation faile
 	@result Returns <tt>YES</tt> if the receiver is compiled.
  */
 - (BOOL)isCompiled;
@@ -599,7 +599,7 @@ extern const NSString	* NDAppleScriptPartialResult;
 	/*!
 	@method source
 	@abstract Get the AppleScript source
-	@discussion Returns the source code of the receiver if it is available, nil otherwise. It is possible for an <tt>NDAppleScriptObject</tt> to be a script for which the source code is not available but is nonetheless executable.
+	@discussion Returns the source code of the receiver if it is available, nil otherwise. It is possible for an <tt>NDAppleScriptObject</tt> to be a script for which the source code is not available but is nonetheless executable (a read-only script).
 
 	@result A <tt>NSString</tt>
  */
@@ -608,56 +608,56 @@ extern const NSString	* NDAppleScriptPartialResult;
 /*!
 	@method writeToURL:
 	@abstract Writes the receiver as a complied AppleScript.
-	@discussion the compiled script is written to the <tt>'scpt'</tt> resource, id <tt>128</tt> of the resource fork of the file.
-	@param URL  A file url for the compiled AppleScipt file.
-	@result Returns <tt>YES</tt> if writting succeeded.
+	@discussion The compiled script is written to the <tt>'scpt'</tt> resource, id <tt>128</tt> of the resource fork of the file.
+	@param URL  A file URL for the compiled AppleScript file.
+	@result Returns <tt>YES</tt> if writing succeeded.
  */
 - (BOOL)writeToURL:(NSURL *)URL;
 /*!
 	@method writeToURL:inDataFork:atomically:
 	@abstract Writes the receiver as a complied AppleScript.
-	@discussion if <tt><i>inDataFork</i></tt> is <tt>YES</tt> then the compiled script is written to the data forke of the file otherwise the compiled script is written to the <tt>'scpt'</tt> resource, id <tt>128</tt> of the resource fork of the file. If <tt><i>atomically</i></tt> is <tt>YES</tt> and <tt><i>inDataFork</i></tt> is <tt>YES</tt> then the receiver is written to a copy of the file which then replaces the original.
-	@param URL  A file url for the compiled AppleScipt file.
+	@discussion If <tt><i>inDataFork</i></tt> is <tt>YES</tt> then the compiled script is written to the data fork of the file otherwise the compiled script is written to the <tt>'scpt'</tt> resource, id <tt>128</tt> of the resource fork of the file. If <tt><i>atomically</i></tt> is <tt>YES</tt> and <tt><i>inDataFork</i></tt> is <tt>YES</tt> then the receiver is written to a copy of the file which then replaces the original.
+	@param URL  A file URL for the compiled AppleScript file.
 	@param inDataFork <tt>YES</tt> to write the receiver to the data fork instead of the resource fork.
 	@param atomically Write the file attomically.
-	@result return <tt>YES</tt> if writting succeeded.
+	@result Return <tt>YES</tt> if writing succeeded.
  */
 - (BOOL)writeToURL:(NSURL *)URL inDataFork:(BOOL)inDataFork atomically:(BOOL)atomically;
 
 	/*!
 	@method writeToURL:Id:
 	@abstract Writes the receiver as a complied AppleScript.
-	@discussion the compiled script is written to the <tt>'scpt'</tt> resource, with the passed id of the resource fork of the file.
-	@param URL  A file url for the compiled AppleScipt file.
-	@param ID  The resource id for the compiled AppleScipt data.
-	@result return <tt>YES</tt> if writting succeeded.
+	@discussion The compiled script is written to the <tt>'scpt'</tt> resource, with the passed id of the resource fork of the file.
+	@param URL  A file URL for the compiled AppleScript file.
+	@param ID  The resource id for the compiled AppleScript data.
+	@result Return <tt>YES</tt> if writing succeeded.
  */
 - (BOOL)writeToURL:(NSURL *)URL Id:(short)ID;
 /*!
 	@method writeToFile:
 	@abstract Writes the receiver as a complied AppleScript.
-	@discussion the compiled script is written to the <tt>'scpt'</tt> resource, id <tt>128</tt> of the resource fork of the file.
-	@param path  A path for the compiled AppleScipt file.
-	@result return <tt>YES</tt> if writting succeeded.
+	@discussion The compiled script is written to the <tt>'scpt'</tt> resource, id <tt>128</tt> of the resource fork of the file.
+	@param path  A path for the compiled AppleScript file.
+	@result Return <tt>YES</tt> if writing succeeded.
  */
 - (BOOL)writeToFile:(NSString *)path;
 /*!
 	@method writeToFile:inDataFork:atomically:
 	@abstract Writes the receiver as a complied AppleScript.
-	@discussion if <tt><i>inDataFork</i></tt> is <tt>YES</tt> then the compiled script is written to the data fork of the file otherwise the compiled script is written to the <tt>'scpt'</tt> resource, id <tt>128</tt> of the resource fork of the file. If <tt><i>atomically</i></tt> is <tt>YES</tt> and <tt><i>inDataFork</i></tt> is <tt>YES</tt> then the receiver is written to a copy of the file which then replaces the original.
-	@param path  A path for the compiled AppleScipt file.
+	@discussion If <tt><i>inDataFork</i></tt> is <tt>YES</tt> then the compiled script is written to the data fork of the file otherwise the compiled script is written to the <tt>'scpt'</tt> resource, id <tt>128</tt> of the resource fork of the file. If <tt><i>atomically</i></tt> is <tt>YES</tt> and <tt><i>inDataFork</i></tt> is <tt>YES</tt> then the receiver is written to a copy of the file which then replaces the original.
+	@param path  A path for the compiled AppleScript file.
 	@param inDataFork <tt>YES</tt> to write the receiver to the data fork instead of the resource fork.
 	@param atomically Write the file attomically.
-	@result return <tt>YES</tt> if writting succeeded.
+	@result Return <tt>YES</tt> if writing succeeded.
  */
 - (BOOL)writeToFile:(NSString *)path inDataFork:(BOOL)inDataFork atomically:(BOOL)atomically;
 /*!
 	@method writeToFile:Id:
 	@abstract Writes the receiver as a complied AppleScript.
-	@discussion the compiled script is written to the <tt>'scpt'</tt> resource, with the passed id of the resource fork of the file.
-	@param path  A path for the compiled AppleScipt file.
-	@param ID  The resource id for the compiled AppleScipt data.
-	@result return <tt>YES</tt> if writting succeeded.
+	@discussion The compiled script is written to the <tt>'scpt'</tt> resource, with the passed id of the resource fork of the file.
+	@param path  A path for the compiled AppleScript file.
+	@param ID  The resource id for the compiled AppleScript data.
+	@result Return <tt>YES</tt> if writing succeeded.
 */
 - (BOOL)writeToFile:(NSString *)path Id:(short)ID;
 
@@ -665,31 +665,31 @@ extern const NSString	* NDAppleScriptPartialResult;
 
 /*!
 	@category NSAppleEventDescriptor(NDAppleScriptValueExtension)
-	@abstract category of <tt>NSAppleEventDescriptor</tt>.
-	@discussion adds a method to <tt>NSAppleEventDescriptor</tt> retrieve a <tt>NDAppleScriptObject</tt> from a <tt>NSAppleEventDescriptor</tt>.
+	@abstract Category of <tt>NSAppleEventDescriptor</tt>.
+	@discussion Adds a method to <tt>NSAppleEventDescriptor</tt> to retrieve a <tt>NDAppleScriptObject</tt> from a <tt>NSAppleEventDescriptor</tt>.
  */
 @interface NSAppleEventDescriptor (NDAppleScriptObjectValueExtension)
 /*!
 	@method appleScriptValue
 	@abstract Category method for <tt>NSAppleEventDescriptor (NDAppleScriptObjectValueExtension)</tt>, converts any script data within a AppleEvent descriptor into an <tt>NDAppleScriptObject</tt>
 	@discussion If an AppleScript return a AppleScript as it&rsquo;s result, this method can be used to convert the result <tt>NSAppleEventDescriptor</tt> into a <tt>NDAppleScriptObject</tt>. The <tt>NSAppleEventDescriptor</tt> method objectValue will use this method if available.
-	@result a <tt>NDAppleScriptObject</tt> object for the AppleScript contained within the AppleEvent descriptor.
+	@result A <tt>NDAppleScriptObject</tt> object for the AppleScript contained within the AppleEvent descriptor.
  */
 - (NDAppleScriptObject *)appleScriptValue;
 @end
 
 /*!
 	@category NDAppleScriptObject(NSAppleScriptCompatibility)
-	@abstract Provides interface compatability with Apples <tt>NSAppleScript</tt>
+	@abstract Provides interface compatibility with Apple&rsquo;s <tt>NSAppleScript</tt>
 	@discussion Adds methods to <tt>NDAppleScriptObject</tt> to make it interface compatible with <tt>NSAppleScript</tt>. The methods are <tt>initWithContentsOfURL:error:</tt>, <tt>initWithSource:</tt>, <tt>compileAndReturnError:</tt>, <tt>executeAndReturnError:</tt> and <tt>executeAppleEvent:error:</tt>.
  */
 @interface NDAppleScriptObject (NSAppleScriptCompatibility)
 /*!
 	@method initWithContentsOfURL:error:
 	@abstract Initialize a <tt>NDAppleScriptObject</tt>.
-	@discussion This method is for interface compatability with Apples <tt>NSAppleScript</tt>
-	@param url A file url for the compiled AppleScipt file.
-	@param errorInfo On return contains a <tt>NSDictionary</tt> contain errror information.
+	@discussion This method is for interface compatibility with Apple&rsquo;s <tt>NSAppleScript</tt>
+	@param url A file URL for the compiled AppleScript file.
+	@param errorInfo On return contains a <tt>NSDictionary</tt> contain error information.
 	@result An initalized <tt>NDAppleScriptObject</tt>
  */
 - (id)initWithContentsOfURL:(NSURL *)url error:(NSDictionary **)errorInfo;
@@ -697,16 +697,16 @@ extern const NSString	* NDAppleScriptPartialResult;
 /*!
 	@method initWithSource:
 	@abstract Initialize a <tt>NDAppleScriptObject</tt>.
-	@discussion This method is for interface compatability with Apples <tt>NSAppleScript</tt>, it is equivelent to <tt>initWithString:</tt> but without compiling of the source.
+	@discussion This method is for interface compatibility with Apple&rsquo;s <tt>NSAppleScript</tt>, it is equivalent to <tt>initWithString:</tt> but without compiling of the source.
 	@result A <tt>NDAppleScriptObject</tt> object.
  */
 - (id)initWithSource:(NSString *)source;
 
 /*!
 	@method compileAndReturnError:
-	@abstract Compile an AppleScipt.
-	@discussion This method is for interface compatability with Apples <tt>NSAppleScript</tt>
-	@param errorInfo On return contains a <tt>NSDictionary</tt> contain errror information.
+	@abstract Compile an AppleScript.
+	@discussion This method is for interface compatibility with Apple&rsquo;s <tt>NSAppleScript</tt>
+	@param errorInfo If compilation fails, this is set to an <tt>NSDictionary</tt> containing error information. Otherwise, it is set to nil.
 	@result Returns <tt>YES</tt> on success.
  */
 - (BOOL)compileAndReturnError:(NSDictionary **)errorInfo;
@@ -714,8 +714,8 @@ extern const NSString	* NDAppleScriptPartialResult;
 /*!
 	@method executeAndReturnError:
 	@abstract Execute an AppleScript.
-	@discussion This method is for interface compatability with Apples <tt>NSAppleScript</tt>
-	@param errorInfo On return contains a <tt>NSDictionary</tt> contain errror information.
+	@discussion This method is for interface compatibility with Apple&rsquo;s <tt>NSAppleScript</tt>
+	@param errorInfo If execution fails, this is set to an <tt>NSDictionary</tt> containing error information. Otherwise, it is set to nil.
 	@result Returns <tt>YES</tt> on success.
  */
 - (NSAppleEventDescriptor *)executeAndReturnError:(NSDictionary **)errorInfo;
@@ -723,9 +723,9 @@ extern const NSString	* NDAppleScriptPartialResult;
 /*!
 	@method executeAppleEvent:error:
 	@abstract Execute an AppleScript.
-	@discussion This method is for interface compatability with Apples <tt>NSAppleScript</tt>
-	@param event  an <tt>NSAppleEventDescriptor</tt> containing the apple event.
-	@param errorInfo On return contains a <tt>NSDictionary</tt> contain errror information.
+	@discussion This method is for interface compatibility with Apple&rsquo;s <tt>NSAppleScript</tt>
+	@param event  An <tt>NSAppleEventDescriptor</tt> containing the apple event.
+	@param errorInfo If execution fails, this is set to an <tt>NSDictionary</tt> containing error information. Otherwise, it is set to nil.
 	@result Returns the result <tt>NSAppleEventDescriptor</tt> on success, <tt>nil</tt> otherwise.
  */
 - (NSAppleEventDescriptor *)executeAppleEvent:(NSAppleEventDescriptor *)event error:(NSDictionary **)errorInfo;
