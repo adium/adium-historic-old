@@ -16,3 +16,4 @@
 #import "AIContactObject.h"
 #import "AIContentMessage.h"
 #import "AIPreferenceCategory.h"
+#import "AISendingTextView.h"

@@ -220,6 +220,7 @@
     while((tab = [enumerator nextObject])){
         if([tab tabViewItem] == tabViewItem){
             [tab setSelected:YES];
+            [self bringSubviewToFront:tab]; //Bring the selected view front (to avoid incorrect image overlap)
         }else{
             [tab setSelected:NO];
         }
