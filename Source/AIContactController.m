@@ -963,7 +963,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		if ([contact online] || includeOffline){
 			
 			if (!serviceImage){
-				menuServiceImage = [[contact service] menuImage];
+				menuServiceImage = [AIServiceIcons serviceIconForObject:contact type:AIServiceIconSmall
+					direction:AIIconNormal];
 			}
 			
 			NSMenuItem *tempItem = [[NSMenuItem alloc] initWithTitle:[contact formattedUID]
