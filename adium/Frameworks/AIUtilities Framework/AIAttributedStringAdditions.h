@@ -20,6 +20,7 @@
 
 - (void)appendString:(NSString *)aString withAttributes:(NSDictionary *)attrs;
 - (NSData *)dataRepresentation;
+- (NSString *)safeString;
 
 @end
 
