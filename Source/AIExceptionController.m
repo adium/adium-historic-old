@@ -66,12 +66,15 @@ static BOOL catchExceptions = NO;
 		   [theReason rangeOfString:@"NSRunStorage, _NSBlockNumberForIndex()"].location != NSNotFound || //NSLayoutManager throws this for fun in a purely-AppKit stack trace
 		   [theReason rangeOfString:@"Broken pipe"].location != NSNotFound || //libezv throws broken pipes as NSFileHandleOperationException with this in the reason; I'd rather we watched for "broken pipe" than ignore all file handle errors
 		   [theReason rangeOfString:@"incomprehensible archive"].location != NSNotFound || //NSKeyedUnarchiver can get confused and throw this; it's out of our control
+		   [theReason rangeOfString:@"-whiteComponent not defined"].location != NSNotFound || //Random NSColor exception for certain coded color values
+		   [theReason isEqualToString:@"Failed to get fache -4"] || //Thrown by NSFontManager when availableFontFamilies is called if it runs into a corrupt font
 		   !theName || //Harmless
 		   [theName isEqualToString:@"GIFReadingException"] || //GIF reader sucks
 		   [theName isEqualToString:@"NSPortTimeoutException"] || //Harmless - it timed out for a reason
 		   [theName isEqualToString:@"NSAccessibilityException"] || //Harmless - one day we should figure out how we aren't accessible, but not today
 		   [theName isEqualToString:@"NSImageCacheException"] || //NSImage is silly
 		   [theName isEqualToString:@"NSArchiverArchiveInconsistency"] || //Odd system hacks can lead to this one
+		   [theName isEqualToString:@"NSUnknownKeyException"] || //No reason to crash on invalid Applescript syntax
 		   [theName isEqualToString:@"NSObjectInaccessibleException"]){ //We don't use DO, but spell checking does; AppleScript execution requires multiple run loops, and the HIToolbox can get confused and try to spellcheck in the applescript thread. Silly Apple.
 			
 			[super raise];
