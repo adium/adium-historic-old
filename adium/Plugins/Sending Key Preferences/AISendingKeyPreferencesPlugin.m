@@ -23,41 +23,62 @@
 
 @interface AISendingKeyPreferencesPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
+- (void)_configureSendingKeysForObject:(id)inObject;
 @end
 
 @implementation AISendingKeyPreferencesPlugin
 
 - (void)installPlugin
 {
-    //Register our default preferences
+    //Setup our preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SENDING_KEY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
-
-    [self preferencesChanged:nil];
-
-    //Our preference view
     preferences = [[AISendingKeyPreferences sendingKeyPreferencesWithOwner:owner] retain];
 
-    //Observe
+    //Register as a text entry filter
+    [[owner contentController] registerTextEntryFilter:self];
+
+    //Observe preference changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
 
 }
 
-- (void)uninstallPlugin
+//
+- (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
-
+    [self _configureSendingKeysForObject:inTextEntryView]; //Configure the sending keys
 }
 
+//
+- (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+{
+    //Ignore
+}
+
+//Update all views in response to a preference change
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){
+        NSEnumerator	*enumerator;
+        id		entryView;
 
+        //Set sending keys of all open views
+        enumerator = [[[owner contentController] openTextEntryViews] objectEnumerator];
+        while(entryView = [enumerator nextObject]){
+            [self _configureSendingKeysForObject:entryView];
+        }
+    }
+}
+
+//Configure the message sending keys
+- (void)_configureSendingKeysForObject:(id)inObject
+{
+    if([inObject isKindOfClass:[AISendingTextView class]]){
+        [(AISendingTextView *)inObject setSendOnEnter:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:@"Send On Enter"] boolValue]];
+        [(AISendingTextView *)inObject setSendOnReturn:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:@"Send On Return"] boolValue]];
     }
 }
 
 @end
-
-
-
-
 
 
