@@ -15,21 +15,20 @@
 
 @protocol AIContactListViewController, AIInterfaceContainer;
 
-#import "AIAbstractListWindowController.h"
+#import "AIListController.h"
 
 #define PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
 #define KEY_SCL_BORDERLESS					@"Borderless"
 #define KEY_DUAL_RESIZE_VERTICAL			@"Autoresize Vertical"
 #define KEY_DUAL_RESIZE_HORIZONTAL			@"Autoresize Horizontal"
 
-@interface AIListWindowController : AIAbstractListWindowController <AIInterfaceContainer> {
+@interface AIListWindowController : AIWindowController <AIInterfaceContainer, AIListControllerDelegate> {
 	BOOL                                borderless;
-
-    NSSize								minWindowSize;
-    BOOL								autoResizeVertically;
-    BOOL								autoResizeHorizontally;
-	int									maxWindowWidth;
-	int									forcedWindowWidth;
+	
+	NSSize								minWindowSize;
+	IBOutlet	AIAutoScrollView		*scrollView_contactList;
+    IBOutlet	AIListOutlineView		*contactListView;
+	AIListController					*contactListController;
 }
 
 + (AIListWindowController *)listWindowController;
