@@ -62,19 +62,19 @@ static GaimDebugUiOps adiumGaimDebugOps = {
 // Connection ------------------------------------------------------------------------------------------------------
 static void adiumGaimConnConnectProgress(GaimConnection *gc, const char *text, size_t step, size_t step_count)
 {
-    NSLog(@"Connecting: gc=0x%x (%s) %i / %i", gc, text, step, step_count);
+    if(GAIM_DEBUG) NSLog(@"Connecting: gc=0x%x (%s) %i / %i", gc, text, step, step_count);
     
 }
 
 static void adiumGaimConnConnected(GaimConnection *gc)
 {
-    NSLog(@"Connected: gc=%x", gc);
+    if(GAIM_DEBUG) NSLog(@"Connected: gc=%x", gc);
     [accountLookup(gc->account) accountConnectionConnected];
 }
 
 static void adiumGaimConnDisconnected(GaimConnection *gc)
 {
-    NSLog(@"Disconnected: gc=%x", gc);
+    if(GAIM_DEBUG) NSLog(@"Disconnected: gc=%x", gc);
     if (_accountDict == nil) // if this has been destroyed, unloadPlugin has already been called
         return;
     [accountLookup(gc->account) accountConnectionDisconnected];
@@ -82,12 +82,12 @@ static void adiumGaimConnDisconnected(GaimConnection *gc)
 
 static void adiumGaimConnNotice(GaimConnection *gc, const char *text)
 {
-    NSLog(@"Connection Notice: gc=%x (%s)", gc, text);
+    if(GAIM_DEBUG) NSLog(@"Connection Notice: gc=%x (%s)", gc, text);
 }
 
 static void adiumGaimConnReportDisconnect(GaimConnection *gc, const char *text)
 {
-    NSLog(@"Connection Disconnected: gc=%x (%s)", gc, text);
+    if(GAIM_DEBUG) NSLog(@"Connection Disconnected: gc=%x (%s)", gc, text);
     [accountLookup(gc->account) accountConnectionReportDisconnect:text];
 }
 
