@@ -502,12 +502,17 @@ DeclareString(FormattedUID);
 }
 
 #pragma mark Key-Value Pairing
-- (NSData *)userIcon
+- (NSImage *)userIcon
 {
-	NSImage *userIcon = [[self displayArrayForKey:KEY_USER_ICON create:NO] objectValue];
+	return([[self displayArrayForKey:KEY_USER_ICON create:NO] objectValue]);
+}
+
+- (NSData *)userIconData
+{
+	NSImage *userIcon = [self userIcon];
 	return ([userIcon TIFFRepresentation]);
 }
-- (void)setUserIcon:(NSData *)inData
+- (void)setUserIconData:(NSData *)inData
 {
 	[self setPreference:inData
 				 forKey:KEY_USER_ICON

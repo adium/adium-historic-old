@@ -122,4 +122,8 @@ typedef enum {
 - (unsigned)containedObjectsCount;
 - (AIListObject *)objectWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
 
+//mutableOwnerArray delegate and methods
+- (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner;
+- (void)listObject:(AIListObject *)listObject mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(AIListObject *)anObject withOwner:(AIListObject *)inOwner;
+
 @end

@@ -10,6 +10,8 @@
 	NSNumber				*objectID;
 	
 	NSMutableDictionary		*statusCacheDict;	//Cache of the status of our contained objects
+	
+	AIListContact			*_preferredContact;
 }
 
 //The objectID is unique to a meta contact and is used as the UID for purposes of AIListContact inheritance

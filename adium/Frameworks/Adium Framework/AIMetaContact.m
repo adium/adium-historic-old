@@ -30,7 +30,8 @@
 {
 	objectID = [inObjectID retain];
 	statusCacheDict = [[NSMutableDictionary alloc] init];
-
+	_preferredContact = nil;
+	
 	[super initWithUID:[objectID stringValue] serviceID:nil];
 
 	containedObjects = [[NSMutableArray alloc] init];
@@ -92,40 +93,43 @@
 //Respecting the objectArray's order, find the first available contact. Failing that,
 //find the first online contact.  Failing that,
 //find the first contact.
-#warning Should cache so we can use it often
 - (AIListContact *)preferredContact
 {
-	AIListContact   *preferredContact = nil;
-	AIListContact   *thisContact;
-	unsigned		index;
-	unsigned		count = [containedObjects count];
-	
-	//Search for an available contact
-	for (index = 0; index < count; index++){
-		thisContact = [containedObjects objectAtIndex:index];
-		if ([thisContact statusSummary] == AIAvailableStatus){
-			preferredContact = thisContact;
-			break;
-		}
-	}			
-	
-	//If no available contacts, find the first online contact
-	if (!preferredContact){
+	if (!_preferredContact){
+		AIListContact   *preferredContact = nil;
+		AIListContact   *thisContact;
+		unsigned		index;
+		unsigned		count = [containedObjects count];
+		
+		//Search for an available contact
 		for (index = 0; index < count; index++){
 			thisContact = [containedObjects objectAtIndex:index];
-			if ([thisContact online]){
+			if ([thisContact statusSummary] == AIAvailableStatus){
 				preferredContact = thisContact;
 				break;
 			}
+		}			
+		
+		//If no available contacts, find the first online contact
+		if (!preferredContact){
+			for (index = 0; index < count; index++){
+				thisContact = [containedObjects objectAtIndex:index];
+				if ([thisContact online]){
+					preferredContact = thisContact;
+					break;
+				}
+			}
 		}
+		
+		//If no online contacts, find the first contact
+		if (!preferredContact && (count != 0)){
+			preferredContact = [containedObjects objectAtIndex:0];
+		}
+		
+		_preferredContact = preferredContact;
 	}
 	
-	//If no online contacts, find the first contact
-	if (!preferredContact && (count != 0)){
-		preferredContact = [containedObjects objectAtIndex:0];
-	}
-	
-	return preferredContact;
+	return _preferredContact;
 }
 
 //Status Object Handling -----------------------------------------------------------------------------------------------
@@ -136,6 +140,14 @@
 	//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
 	if([self _cacheStatusValue:value forObject:inObject key:key notify:notify]){
 		[super listObject:self didSetStatusObject:value forKey:key notify:notify];
+		
+		//Clear our cached _preferredContact if a contained object's online, away, or idle status changed
+		if ([key isEqualToString:@"Online"] ||
+			[key isEqualToString:@"Away"] ||
+			[key isEqualToString:@"IdleSince"]){
+			
+			_preferredContact = nil;
+		}
 	}
 }
 
