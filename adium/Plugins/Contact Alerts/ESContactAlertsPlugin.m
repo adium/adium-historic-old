@@ -20,11 +20,11 @@
     AIMiniToolbarItem *toolbarItem;
 
     //Install the 'contact alerts' menu item
-    editContactAlertsMenuItem = [[NSMenuItem alloc] initWithTitle:@"Edit Contact's Alerts" target:self action:@selector(editContactAlerts:) keyEquivalent:@""];
+    editContactAlertsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Edit Contact's Alerts" target:self action:@selector(editContactAlerts:) keyEquivalent:@""] autorelease];
     [[owner menuController] addMenuItem:editContactAlertsMenuItem toLocation:LOC_Contact_Action];
 
     //Add our 'contact alerts' contextual menu item
-    contactAlertsContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"Edit Alerts" target:self action:@selector(editContextContactAlerts:) keyEquivalent:@""];
+    contactAlertsContextMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Edit Alerts" target:self action:@selector(editContextContactAlerts:) keyEquivalent:@""] autorelease];
     [[owner menuController] addContextualMenuItem:contactAlertsContextMenuItem toLocation:Context_Contact_Action];
 
     //Add our 'contact alerts' toolbar item
@@ -47,6 +47,7 @@
 
 - (void)uninstallPlugin
 {
+    
     [[owner contactController] unregisterListObjectObserver:self];
 }
 
@@ -99,7 +100,7 @@
                 NSString * errorReason = nil;
                 NSDictionary * detailsDict = [actionDict objectForKey:KEY_EVENT_DETAILS_DICT];
 
-                NSAttributedString  *message = [[NSAttributedString alloc] initWithString:details];
+                NSAttributedString  *message = [[[NSAttributedString alloc] initWithString:details] autorelease];
                 int displayError = [[detailsDict objectForKey:KEY_MESSAGE_ERROR] intValue];
                 NSString * uid = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_UID];
                 NSString * service = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_SERVICE];
@@ -111,19 +112,16 @@
                     success = YES;
                 } else {
                     if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) { //use another account if necessary pref
-
                         account = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:contact];
 
                         if (!account) {//no appropriate accounts found
-
-                            errorReason = [[NSString alloc] initWithString:@"failed because no appropriate accounts are online."];
+                            errorReason = @"failed because no appropriate accounts are online.";
                             success = NO;
                         } else
                             success = YES;
                     }
                     else {
-
-                        errorReason = [[NSString alloc] initWithString:[NSString stringWithFormat:@"with %@ failed because the account %@ is currently offline.",[account accountDescription],[account accountDescription]]];
+                        errorReason = [NSString stringWithFormat:@"with %@ failed because the account %@ is currently offline.",[account accountDescription],[account accountDescription]];
                         success = NO;
                     }
                 }
@@ -142,11 +140,10 @@
                             success = [[owner contentController] sendContentObject:responseContent];
 
                             if (!success)
-                                errorReason = [[NSString alloc] initWithString:[NSString stringWithFormat:@"failed while sending the message."]];
+                                errorReason = @"failed while sending the message.";
                         }
                         else { //target contact is not online
-                            errorReason = [[NSString alloc] initWithString:[NSString stringWithFormat:@"failed because %@ is currently unavailable.",[contact displayName]]];
-                            success = NO;
+                            errorReason = [NSString stringWithFormat:@"failed because %@ is currently unavailable.",[contact displayName]];                            success = NO;
                         }
 
                     }
@@ -157,8 +154,8 @@
                 }
 
                 if (!success && displayError) { //Would have had it if it weren't for those pesky account and contact kids...
-                    NSString *alertMessage = [[NSString alloc] initWithString:[NSString stringWithFormat:@"The attempt to send \"%@\" to %@ %@",[message string],[contact displayName],errorReason]];
-                    NSString *title = [[NSString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", [inObject displayName], [actionDict objectForKey:KEY_EVENT_DISPLAYNAME]]];
+                    NSString *alertMessage = [NSString stringWithFormat:@"The attempt to send \"%@\" to %@ %@",[message string],[contact displayName],errorReason];
+                    NSString *title = [NSString stringWithFormat:@"%@ %@", [inObject displayName], [actionDict objectForKey:KEY_EVENT_DISPLAYNAME]];
                     [[owner interfaceController] handleMessage:title withDescription:alertMessage withWindowTitle:@"Error Sending Message"];
                 }
             }
@@ -175,7 +172,7 @@
                     }
 
                     else if ([action compare:@"Alert"] == 0) {
-                        NSString *title = [[NSString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", [inObject displayName], [actionDict objectForKey:KEY_EVENT_DISPLAYNAME]]];
+                        NSString *title = [[[NSString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", [inObject displayName], [actionDict objectForKey:KEY_EVENT_DISPLAYNAME]]] autorelease];
                         [[owner interfaceController] handleMessage:title withDescription:details withWindowTitle:@"Contact Alert"];
                         success = YES;
                     }
@@ -196,12 +193,11 @@
                         AIAccount * account = [[owner accountController] accountWithID:details];
                         success = YES;
                         if ([[account propertyForKey:@"Status"] intValue] == STATUS_OFFLINE) { //desired account not available
-                            success = NO; //as of now, we can't open our window
                             if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) { //use another account if necessary pref
                                 account = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:inObject];
-                                if (account)
-                                    success = YES; //now we can open our window
                             }
+                            if (!account)
+                                    success = NO;
                         }
                         if (success) {
                             AIChat	*chat = [[owner contentController] openChatOnAccount:account withListObject:inObject];

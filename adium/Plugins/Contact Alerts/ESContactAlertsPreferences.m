@@ -161,15 +161,15 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     NSMutableArray *contactArray =  [[owner contactController] allContactsInGroup:nil subgroups:YES];
     [contactArray sortUsingFunction:alphabeticalGroupOfflineSort context:nil];
     
-    NSEnumerator    *enumerator = 	[contactArray objectEnumerator];
-    NSString        *groupName = [[NSString alloc] init];
+    NSEnumerator    *enumerator = [contactArray objectEnumerator];
+    NSString        *groupName = nil;
         
     [prefAlertsArray release]; prefAlertsArray = [[NSMutableArray alloc] init];
 
     AIListContact * contact;
     while (contact = [enumerator nextObject]) {
         AIListGroup * theGroup = [contact containingGroup];
-        if ([groupName compare:[theGroup displayName]] != 0) {
+        if ([[theGroup displayName] compare:groupName] != 0) {
             [instance configForObject:theGroup];
             thisInstanceCount = [instance count];
             if (thisInstanceCount) {
@@ -195,7 +195,6 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 }
 -(IBAction)anInstanceChanged:(id)sender
 {
-    //    AIListObject * object = [[instance activeObject] autorelease];
     [self rebuildPrefAlertsArray];
     [self configureViewForContact:activeContactObject];
 }
@@ -414,6 +413,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [owner release];
     [prefAlertsArray release];
     [activeContactObject release];
+    [offsetDictionary release];
     [super dealloc];
 }
 
