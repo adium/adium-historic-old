@@ -1392,7 +1392,8 @@ static id<GaimThread> gaimThread = nil;
 								  prpl_info->icon_spec.max_width >= imageSize.width &&
 								  prpl_info->icon_spec.min_height <= imageSize.height &&
 								  prpl_info->icon_spec.max_height >= imageSize.height);
-				prplScales = (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_SEND);
+				prplScales = (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_SEND) || (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_DISPLAY);
+				
 				if (prplScales && !acceptableSize){
 					//Determine the scaled size
 					NSSize  newImageSize = imageSize;
@@ -1418,6 +1419,7 @@ static id<GaimThread> gaimThread = nil;
 					[newImage unlockFocus];
 					
 					image = newImage;
+					if (GAIM_DEBUG) NSLog(@"image of size %f %f",newImageSize.width,newImageSize.height);
 				}
 				
 				for (i = 0; prpl_formats[i]; i++) {
