@@ -14,22 +14,16 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
 
+@protocol AIContentFilter;
 
-@interface NSMutableAttributedString (AIAttributedStringAdditions)
-
-- (void)appendString:(NSString *)aString withAttributes:(NSDictionary *)attrs;
-- (NSData *)dataRepresentation;
-
-@end
-
-@interface NSAttributedString (AIAttributedStringAdditions)
-
-- (float)heightWithWidth:(float)width;
-- (NSData *)dataRepresentation;
-+ (NSAttributedString *)stringWithData:(NSData *)inData;
-- (NSString *)safeString;
+@interface AIEmoticonsPlugin : AIPlugin <AIContentFilter> {
+    BOOL		replaceEmoticons;
+    
+    NSMutableArray	*emoticons;
+    
+    NSMutableArray	*quickScanList;
+}
 
 @end
-
-

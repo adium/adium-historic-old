@@ -25,6 +25,7 @@
 {
     outgoingContentFilterArray = [[NSMutableArray alloc] init];
     incomingContentFilterArray = [[NSMutableArray alloc] init];
+    displayingContentFilterArray = [[NSMutableArray alloc] init];
     textEntryFilterArray = [[NSMutableArray alloc] init];
     chatDict = [[NSMutableDictionary alloc] init];
 
@@ -111,6 +112,11 @@
     [incomingContentFilterArray addObject:inFilter];
 }
 
+- (void)registerDisplayingContentFilter:(id <AIContentFilter>)inFilter
+{
+    [displayingContentFilterArray addObject:inFilter];
+}
+
 
 // Messaging --------------------------------------------------------------------------------
 //Add a message object to a handle
@@ -143,7 +149,8 @@
 
         if(displayContent){
             //Add the object
-            [chat addContentObject:inObject];
+	    [self displayContentObject:inObject];
+            //[chat addContentObject:inObject];
 
             //content object addeed
             [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
@@ -193,7 +200,8 @@
         if([(AIAccount <AIAccount_Content> *)[inObject source] sendContentObject:inObject]){
             if(displayContent){
                 //Add the object
-                [chat addContentObject:inObject];
+		[self displayContentObject:inObject];
+                //[chat addContentObject:inObject];
 
                 //Content object added
                 [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
@@ -214,6 +222,29 @@
     }
 
     return(sent);
+}
+
+- (void)displayContentObject:(AIContentObject *)inObject
+{
+    AIChat		*chat = [inObject chat];
+    AIListObject 	*listObject = [inObject destination];
+    BOOL		filterContent = [inObject filterContent]; //Adium should filter this content
+
+    if(listObject){
+        //Filter the content object
+        if(filterContent){
+            NSEnumerator	*enumerator;
+            id<AIContentFilter>	filter;
+
+            enumerator = [displayingContentFilterArray objectEnumerator];
+            while((filter = [enumerator nextObject])){
+                [filter filterContentObject:inObject];
+            }
+        }
+	
+	//Add the object
+	[chat addContentObject:inObject];
+    }
 }
 
 //Is an account/chat available for sending content?
