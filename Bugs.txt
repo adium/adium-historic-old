@@ -31,7 +31,7 @@ Contact List
 //------------------------------------------------------------------------------------
 - (AIM / Jabber) File transfers often fail to navigate firewalls and routers
 - (Yahoo) Files over 1 MB in size fail to send
-- (Jaber) Authorization problems
+- (Jabber) Authorization problems
 - (AIM) Contacts can get incorrectly tagged as being on an AOL Mobile Device
 - (AIM) Group Chat : Japanese (and probably other charsets) doesn't get sent properly, 
 	but can be received - only with certain default languages. English default language
