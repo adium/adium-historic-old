@@ -13,38 +13,36 @@
 {
     //Register us as a filter
     [[adium contentController] registerOutgoingContentFilter:self];
-  
+    
     //Build the dictionary
     //	Eventually This Dictionary will become mutable and be updated from a preference pane 
     hash = [[NSDictionary alloc] initWithObjectsAndKeys:@"$var$", @"%n", 
-							@"$var$", @"%m", 
-							@"$var$", @"%t", 
-							@"$var$", @"%d", 
-							@"$var$", @"%a",
-							nil];
+        @"$var$", @"%m", 
+        @"$var$", @"%t", 
+        @"$var$", @"%d", 
+        @"$var$", @"%a",
+        nil];
 }
 
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject
 {
     NSMutableAttributedString   *mesg = nil;
-    if (inAttributedString)
-    {
+    if (inAttributedString){
         NSString                *originalAttributedString = [inAttributedString string];
         NSEnumerator            *enumerator = [hash keyEnumerator];
         NSString                *pattern;	
         NSString                *replaceWith;
         
         //This loop gets run for every key in the dictionary
-	while (pattern = [enumerator nextObject])
-	{
+	while (pattern = [enumerator nextObject]){
             //if the original string contained this pattern
             if ([originalAttributedString rangeOfString:pattern].location != NSNotFound){
                 if (!mesg){
                     mesg = [[inAttributedString mutableCopyWithZone:nil] autorelease];
                 }
                 
-                if([(replaceWith = [hash objectForKey:pattern]) isEqualToString:@"$var$"])
-                {//if key is a var go find out what the replacement text should be
+                //if key is a var go find out what the replacement text should be
+                if([(replaceWith = [hash objectForKey:pattern]) isEqualToString:@"$var$"]){
                     replaceWith = [self hashLookup:pattern contentMessage:inObject];
                 }
                 
@@ -99,10 +97,10 @@
 	charHour[1] = [hour characterAtIndex:1];
 	
 	if(charHour[0] == '0') {
-		charHour[0] = charHour[1];
-		time = [[[NSMutableString alloc] initWithCharacters:charHour length:1] autorelease];
+            charHour[0] = charHour[1];
+            time = [[[NSMutableString alloc] initWithCharacters:charHour length:1] autorelease];
 	} else {
-		time = [[[NSMutableString alloc] initWithCharacters:charHour length:2] autorelease];
+            time = [[[NSMutableString alloc] initWithCharacters:charHour length:2] autorelease];
 	}
 	
 	free(charHour);
@@ -121,7 +119,7 @@
 
 - (void)uninstallPlugin
 {
-     [hash release];
+    [hash release];
 }
 
 - (void)dealloc
