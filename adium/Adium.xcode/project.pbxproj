@@ -4636,6 +4636,7 @@
 				4B2DC05A066F689A00AD5AAD,
 				4B2DC06D066F705800AD5AAD,
 				7E6FDD660672B89A00B5C3D4,
+				4B01180E0679172E00FCB992,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4949,6 +4950,7 @@
 				4B0CB2160670E07E005821CC,
 				4B0CB2170670E07E005821CC,
 				4B0118090679168700FCB992,
+				4B0118110679175400FCB992,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5261,6 +5263,7 @@
 				4B2DC05B066F689A00AD5AAD,
 				4B2DC06E066F705800AD5AAD,
 				7E6FDD670672B89A00B5C3D4,
+				4B01180F0679172E00FCB992,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9579,6 +9582,50 @@
 			settings = {
 			};
 		};
+		4B01180C0679172E00FCB992 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AITabSwitchingPreferences.h;
+			path = "Plugins/Dual Window Interface/AITabSwitchingPreferences.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B01180D0679172E00FCB992 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AITabSwitchingPreferences.m;
+			path = "Plugins/Dual Window Interface/AITabSwitchingPreferences.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B01180E0679172E00FCB992 = {
+			fileRef = 4B01180C0679172E00FCB992;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B01180F0679172E00FCB992 = {
+			fileRef = 4B01180D0679172E00FCB992;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B0118100679175400FCB992 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = TabSwitchPrefs.nib;
+			path = "Plugins/Dual Window Interface/TabSwitchPrefs.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B0118110679175400FCB992 = {
+			fileRef = 4B0118100679175400FCB992;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B030E52056C2D7E00C765F9 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -13005,6 +13052,9 @@
 				4B970BF80535B864002F28F9,
 				4B970BF90535B864002F28F9,
 				4B970BFC0535B879002F28F9,
+				4B01180C0679172E00FCB992,
+				4B01180D0679172E00FCB992,
+				4B0118100679175400FCB992,
 				4BA1300304C0A4E300A8010A,
 				C497516305BBAFE4009958A6,
 				34D43504051ADC10003B2F21,

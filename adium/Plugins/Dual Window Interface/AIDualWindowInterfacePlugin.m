@@ -109,7 +109,8 @@
     preferenceAdvController = [[AIDualWindowAdvancedPrefs preferencePane] retain];
     preferenceMessageController = [[ESDualWindowMessageWindowPreferences preferencePane] retain];
     preferenceMessageAdvController = [[ESDualWindowMessageAdvancedPreferences preferencePane] retain];
-	
+    preferenceTabKeysController = [[AITabSwitchingPreferences preferencePane] retain];
+		
     //Open the contact list window
     [self showContactList:nil];
 	
@@ -209,6 +210,35 @@
         //Cache the window spawning preferences
 		alwaysCreateNewWindows = [[preferenceDict objectForKey:KEY_ALWAYS_CREATE_NEW_WINDOWS] boolValue];
 		useLastWindow = [[preferenceDict objectForKey:KEY_USE_LAST_WINDOW] boolValue];
+		
+		//Configure our tab switching hotkeys
+		unichar 		left = NSLeftArrowFunctionKey;
+		unichar 		right = NSRightArrowFunctionKey;
+		NSString		*leftKey, *rightKey;
+		unsigned int	keyMask = NSCommandKeyMask;
+		
+		switch([[preferenceDict objectForKey:KEY_TAB_SWITCH_KEYS] intValue]){
+			case AISwitchArrows:
+				leftKey = [NSString stringWithCharacters:&left length:1];
+				rightKey = [NSString stringWithCharacters:&right length:1];
+			break;
+			case AISwitchShiftArrows:
+				leftKey = [NSString stringWithCharacters:&left length:1];
+				rightKey = [NSString stringWithCharacters:&right length:1];
+				keyMask = (NSCommandKeyMask | NSShiftKeyMask);
+			break;
+			default://case AIBrackets:
+				leftKey = @"[";
+				rightKey = @"]";
+			break;
+		}
+		[menuItem_previousMessage setKeyEquivalent:@""];
+		[menuItem_previousMessage setKeyEquivalent:leftKey];
+		[menuItem_previousMessage setKeyEquivalentModifierMask:keyMask];
+		[menuItem_nextMessage setKeyEquivalent:@""];
+		[menuItem_nextMessage setKeyEquivalent:rightKey];
+		[menuItem_nextMessage setKeyEquivalentModifierMask:keyMask];
+		[[menuItem_previousMessage menu] update];
 		
 		//Cache the tab sorting prefs
 		BOOL newKeepTabsArranged = [[preferenceDict objectForKey:KEY_KEEP_TABS_ARRANGED] boolValue];
@@ -723,26 +753,16 @@
 	
     //Add our other menu items
     {
-        // Using the cursor keys
-        unichar 	left = NSLeftArrowFunctionKey;
-        NSString	*leftKey = [NSString stringWithCharacters:&left length:1];
-        unichar 	right = NSRightArrowFunctionKey;
-        NSString	*rightKey = [NSString stringWithCharacters:&right length:1];
-		
-        /* Using the [ ] keys */
-		/*        NSString	*leftKey = @"[";
-        NSString	*rightKey = @"]";*/
-		
         menuItem_previousMessage = [[NSMenuItem alloc] initWithTitle:PREVIOUS_MESSAGE_MENU_TITLE
 															  target:self 
 															  action:@selector(previousMessage:)
-													   keyEquivalent:leftKey];
+													   keyEquivalent:@""];
         [[adium menuController] addMenuItem:menuItem_previousMessage toLocation:LOC_Window_Commands];
 		
         menuItem_nextMessage = [[NSMenuItem alloc] initWithTitle:NEXT_MESSAGE_MENU_TITLE 
 														  target:self
 														  action:@selector(nextMessage:)
-												   keyEquivalent:rightKey];
+												   keyEquivalent:@""];
         [[adium menuController] addMenuItem:menuItem_nextMessage toLocation:LOC_Window_Commands];
 		
 		menuItem_arrangeTabs = [[NSMenuItem alloc] initWithTitle:ARRANGE_MENU_TITLE
