@@ -37,6 +37,7 @@
 - (void)removeObject:(id)targetObject fromArray:(NSMutableArray *)array;
 - (int)indexOfObject:(id)targetObject inArray:(NSMutableArray *)array;
 - (void)configureView;
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification;
 @end
 
 @implementation AIAwayMessagePreferences
@@ -68,7 +69,7 @@
     [outlineView_aways reloadData];
     [outlineView_aways selectRow:[outlineView_aways rowForItem:newAwayDict] byExtendingSelection:NO];
     [outlineView_aways scrollRowToVisible:[outlineView_aways rowForItem:newAwayDict]];
-    [self outlineViewSelectionIsChanging:nil];
+    [self outlineViewSelectionDidChange:nil];
 
     //Put focus in the away message text view, and select any existing text
     [[textView_message window] makeFirstResponder:textView_message];
@@ -93,7 +94,7 @@
     if(selectedRow >= [outlineView_aways numberOfRows]){
         [outlineView_aways selectRow:[outlineView_aways numberOfRows]-1 byExtendingSelection:NO];
     }
-    [self outlineViewSelectionIsChanging:nil]; //Update the displayed away, since selection has changed
+    [self outlineViewSelectionDidChange:nil]; //Update the displayed away, since selection has changed
 
     //save
     [self saveAwayMessages];
@@ -197,7 +198,7 @@
 
     //Refresh our view
     [outlineView_aways reloadData];
-    [self outlineViewSelectionIsChanging:nil];
+    [self outlineViewSelectionDidChange:nil];
 }
 
 //Save the away messages
@@ -488,7 +489,7 @@
 
 }
 
-- (void)outlineViewSelectionIsChanging:(NSNotification *)notification
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
     if([outlineView_aways selectedRow] != -1){
         //
@@ -589,7 +590,7 @@
     [outlineView_aways reloadData];
     [outlineView_aways selectRow:[outlineView_aways rowForItem:dragItem] byExtendingSelection:NO];
     [outlineView_aways scrollRowToVisible:[outlineView_aways rowForItem:dragItem]];
-    [self outlineViewSelectionIsChanging:nil];
+    [self outlineViewSelectionDidChange:nil];
 
     return(YES);
 }
