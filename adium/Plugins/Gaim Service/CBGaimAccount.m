@@ -1462,6 +1462,9 @@ static id<GaimThread> gaimThread = nil;
 				}else{
 					NSLog(@"Error writing file %@",buddyIconFilename);   
 				}
+				
+				//Cleanup
+				g_strfreev(prpl_formats);
 			}
 		}
 	}
