@@ -12,5 +12,7 @@
 	<true/>
 	<key>AB Prefer AB Images</key>
 	<false/>
+	<key>AB Use AB Images</key>
+	<true>
 </dict>
 </plist>
