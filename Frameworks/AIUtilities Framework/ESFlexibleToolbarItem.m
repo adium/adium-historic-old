@@ -21,13 +21,14 @@
 
 - (void)setValidationDelegate:(id)inDelegate
 {
+	NSParameterAssert([inDelegate respondsToSelector:@selector(validateToolbarItem:)]);
+
 	validationDelegate = inDelegate;
 }
 
 - (void)validate
 {
 	[validationDelegate validateFlexibleToolbarItem:self];
-	
 	[super validate];
 }
 

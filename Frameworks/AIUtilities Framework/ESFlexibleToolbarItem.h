@@ -11,23 +11,13 @@
 @class ESFlexibleToolbarItem;
 
 /*!
- * @protocol ESFlexibleToolbarItemDelegate
- * @brief Required protocol for an ESFlexibleToolbarItem's validation delegate
- *
- * The delegate is sent - (void)validateToolbarItem:(ESFlexibleToolbarItem *)toolbarItem, which must be efficient
- */
-@protocol ESFlexibleToolbarItemDelegate
-- (void)validateFlexibleToolbarItem:(ESFlexibleToolbarItem *)toolbarItem;
-@end
-
-/*!
  * @class ESFlexibleToolbarItem
  * @brief Toolbar item with a validation delegate
  *
  * Normally, an NSToolbarItem does not validate if it has a custom view. <tt>ESFlexibleToolbarItem</tt> sends its delegate validate methods regardless of its configuration, allowing validation when using custom views.  Adium uses this, for example, to change the image on a toolbar button when conditions change in its window.
  */
 @interface ESFlexibleToolbarItem : NSToolbarItem {
-	id<ESFlexibleToolbarItemDelegate>	validationDelegate;
+	id	validationDelegate;
 }
 
 /*!
@@ -36,6 +26,6 @@
  * Set the validation delegate, which must implement the <tt>ESFlexibleToolbarItemDelegate/tt> protocol and will receive validation messages.
  * @param inDelegate The delegate
  */
-- (void)setValidationDelegate:(id<ESFlexibleToolbarItemDelegate>)inDelegate;
+- (void)setValidationDelegate:(id)inDelegate;
 
 @end
