@@ -95,6 +95,7 @@
  * @brief Deallocate
  */
 - (void)dealloc
+{
 	[menu_contactSubmenu release];
 	[super dealloc];
 }
