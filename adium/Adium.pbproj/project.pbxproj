@@ -116,6 +116,7 @@
 				4B55411C044DF01600A8010A,
 				4B13321B0459BA3900A8010A,
 				4B1332240459BA6F00A8010A,
+				4B18A5260459F8AF00A8010A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -176,6 +177,7 @@
 				4B55411B044DF01600A8010A,
 				4B13321A0459BA3900A8010A,
 				4B1332230459BA6F00A8010A,
+				4B18A5250459F8AF00A8010A,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -270,6 +272,7 @@
 				4B55411D044DF01600A8010A,
 				4B13321C0459BA3900A8010A,
 				4B1332250459BA6F00A8010A,
+				4B18A5270459F8B000A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -1321,6 +1324,7 @@
 		4B1332400459BEFD00A8010A = {
 			children = (
 				4B1332130459B98E00A8010A,
+				4B18A51F0459F89300A8010A,
 				4B0473B7043E43F200A8010A,
 				9EB7C05703D52AFA00415B22,
 			);
@@ -1462,6 +1466,181 @@
 			};
 		};
 		4B18A51E0459C76600A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B18A51F0459F89300A8010A = {
+			children = (
+				4B18A52B0459F8F200A8010A,
+				4B18A52C0459F8F200A8010A,
+			);
+			isa = PBXGroup;
+			name = "Contact Status Dock Overlays";
+			path = "";
+			refType = 4;
+		};
+		4B18A5200459F8AF00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B18A52D0459F8F200A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B18A5210459F8AF00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B18A5220459F8AF00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B18A52E0459F8F200A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B18A5230459F8AF00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B18A52F0459F8F700A8010A,
+				4B18A5300459F8F700A8010A,
+				4B18A5310459F8F700A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B18A5240459F8AF00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B18A5250459F8AF00A8010A = {
+			buildPhases = (
+				4B18A5200459F8AF00A8010A,
+				4B18A5210459F8AF00A8010A,
+				4B18A5220459F8AF00A8010A,
+				4B18A5230459F8AF00A8010A,
+				4B18A5240459F8AF00A8010A,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Contact Status Dock Overlays";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4B18A5290459F8D300A8010A,
+				4B18A52A0459F8D300A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Contact Status Dock Overlays";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Contact Status Dock Overlays";
+			productReference = 4B18A5260459F8AF00A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIContactStatusDockOverlaysPlugin</string>
+</dict>
+</plist>
+";
+		};
+		4B18A5260459F8AF00A8010A = {
+			isa = PBXBundleReference;
+			path = "Contact Status Dock Overlays.AdiumPlugin";
+			refType = 3;
+		};
+		4B18A5270459F8B000A8010A = {
+			isa = PBXTargetDependency;
+			target = 4B18A5250459F8AF00A8010A;
+		};
+		4B18A5280459F8B000A8010A = {
+			fileRef = 4B18A5260459F8AF00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B18A5290459F8D300A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4B18A52A0459F8D300A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4B18A52B0459F8F200A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContactStatusDockOverlaysPlugin.h;
+			path = "Plugins/Contact Status Dock Overlays/AIContactStatusDockOverlaysPlugin.h";
+			refType = 4;
+		};
+		4B18A52C0459F8F200A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContactStatusDockOverlaysPlugin.m;
+			path = "Plugins/Contact Status Dock Overlays/AIContactStatusDockOverlaysPlugin.m";
+			refType = 4;
+		};
+		4B18A52D0459F8F200A8010A = {
+			fileRef = 4B18A52B0459F8F200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B18A52E0459F8F200A8010A = {
+			fileRef = 4B18A52C0459F8F200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B18A52F0459F8F700A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B18A5300459F8F700A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B18A5310459F8F700A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
 			settings = {
@@ -1893,6 +2072,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				4B18A5280459F8B000A8010A,
 				4B1332260459BA6F00A8010A,
 				4B13321D0459BA3900A8010A,
 				4B40E1CB03DB5B9600A8010A,
