@@ -3,11 +3,10 @@
 //  Adium
 //
 //  Created by Adam Iser on Thu Jul 08 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIChatCyclingPlugin.h"
-#import "AIChatCyclingPreferences.h"
+#import "ESGeneralPreferencesPlugin.h"
 
 #define PREVIOUS_MESSAGE_MENU_TITLE		AILocalizedString(@"Previous Chat",nil)
 #define NEXT_MESSAGE_MENU_TITLE			AILocalizedString(@"Next Chat",nil)
@@ -34,7 +33,6 @@
 	[[adium menuController] addMenuItem:nextChatMenuItem toLocation:LOC_Window_Commands];
 	
 	//Prefs
-	preferences = [[AIChatCyclingPreferences preferencePane] retain];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CHAT_CYCLING];
 }
 
