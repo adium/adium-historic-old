@@ -16,6 +16,9 @@
 #import "AIListObject.h"
 #import "AIListGroup.h"
 
+//Uncomment to display ordering information in the contact list
+//#define	ORDERING_DEBUG
+
 @interface AIListObject (PRIVATE)
 - (NSMutableArray *)_recursivePreferencesForKey:(NSString *)inKey group:(NSString *)groupName;
 @end
@@ -47,7 +50,6 @@ DeclareString(FormattedUID);
     UID = [inUID retain];	
 	service = inService;
 	internalObjectID = nil;
-	orderIndex = -1;
 	delayedStatusTimers = nil;
 		
 	visible = YES;
@@ -61,6 +63,16 @@ DeclareString(FormattedUID);
 		//This whole formattedUID preference thing is basically just a hack for protocols which have a formatted UID we only get once we sign on; this way
 		//offline contacts display with the properly formatted UID instead of the compactedString version Adium generally uses for internal bookkeeping.
 		[statusDictionary setObject:formattedUID forKey:FormattedUID];
+	}
+
+	//Load the order index for this object (which will be appropriate for the last group it was in)
+	NSNumber	*orderIndexNumber = [self preferenceForKey:KEY_ORDER_INDEX
+													 group:ObjectStatusCache 
+									 ignoreInheritedValues:YES];
+	if (orderIndexNumber){
+		orderIndex = [orderIndexNumber floatValue];
+	}else{
+		[self setOrderIndex:[[adium contactController] nextOrderIndex]];
 	}
 	
     return(self);
@@ -140,7 +152,20 @@ DeclareString(FormattedUID);
 //Set the local grouping for this object (PRIVATE: These are for AIListGroup ONLY)
 - (void)setContainingObject:(AIListObject <AIContainingObject> *)inGroup
 {
+	BOOL hadContainingObject = (containingObject != nil);
+	
 	containingObject = inGroup;
+	
+	if (!hadContainingObject){
+		//When we get our first containing object, our ordering information is appropriate
+		[containingObject listObject:self didSetOrderIndex:orderIndex];
+	}else{
+		//Otherwise, clear it pending getting new ordering information, putting as the bottom of
+		//the containing object for now (but not saving that data)
+		orderIndex = ([containingObject largestOrder] + 1.0);
+
+		[containingObject listObject:self didSetOrderIndex:orderIndex];
+	}
 }
 
 //Returns our desired placement within a group
@@ -153,6 +178,13 @@ DeclareString(FormattedUID);
 - (void)setOrderIndex:(float)inIndex
 {
 	orderIndex = inIndex;
+	[[self containingObject] listObject:self didSetOrderIndex:orderIndex];
+	
+	//Save it
+	[self setPreference:[NSNumber numberWithFloat:orderIndex] forKey:KEY_ORDER_INDEX group:ObjectStatusCache];
+	
+	//Sort the contained object
+//	[[adium contactController] sortListObject:self];
 }
 
 
@@ -341,8 +373,14 @@ DeclareString(FormattedUID);
 - (NSString *)longDisplayName
 {
     NSString	*outName = [[self displayArrayForKey:LongDisplayName] objectValue];
+	
+#ifndef ORDERING_DEBUG
     return(outName ? outName : [self displayName]);
-//	return(outName ? [NSString stringWithFormat:@"%@ (%f)",outName,[self orderIndex]] : [self displayName]);
+#else
+	return(outName ?
+		   [NSString stringWithFormat:@"%@ (%f)",outName,[self orderIndex]] :
+		   [NSString stringWithFormat:@"%@ (%f)", [self displayName],[self orderIndex]]);
+#endif
 }
 
 //- (NSString *)displayServiceID
