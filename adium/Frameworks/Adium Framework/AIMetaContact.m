@@ -18,7 +18,9 @@
 @interface AIMetaContact (PRIVATE)
 - (void)_updateCachedStatusOfObject:(AIListObject *)inObject;
 - (void)_removeCachedStatusOfObject:(AIListObject *)inObject;
-- (void)_cacheStatusValue:(id)inObject forObject:(id)inOwner key:(NSString *)key;
+- (BOOL)_cacheStatusValue:(id)inObject forObject:(id)inOwner key:(NSString *)key notify:(BOOL)notify;
+
+- (id)_statusObjectForKey:(NSString *)key containedObjectSelector:(SEL)containedObjectSelector;
 @end
 
 @implementation AIMetaContact
@@ -90,6 +92,7 @@
 //Respecting the objectArray's order, find the first available contact. Failing that,
 //find the first online contact.  Failing that,
 //find the first contact.
+#warning Should cache so we can use it often
 - (AIListContact *)preferredContact
 {
 	AIListContact   *preferredContact = nil;
@@ -128,36 +131,85 @@
 //Status Object Handling -----------------------------------------------------------------------------------------------
 #pragma mark Status Object Handling
 //Update our status cache as object we contain change status
-- (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key
+- (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
 {
-	[self _cacheStatusValue:value forObject:inObject key:key];
-	
-	[super listObject:self didSetStatusObject:value forKey:key];
+	//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
+	if([self _cacheStatusValue:value forObject:inObject key:key notify:notify]){
+		[super listObject:self didSetStatusObject:value forKey:key notify:notify];
+	}
 }
 
-//Retrieve a status key for this object
+//---- Default status object behavior ----
+//Retrieve a status key for this object - return the value of our preferredContact, 
+//returning nil if our preferredContact returns nil.
+
 - (id)statusObjectForKey:(NSString *)key
 {
-	return ([[statusCacheDict objectForKey:key] objectValue]);
+	return([self statusObjectForKey:key fromAnyContainedObject:NO]);
 }
 - (int)integerStatusObjectForKey:(NSString *)key
 {
-	AIMutableOwnerArray *array = [statusCacheDict objectForKey:key];
-    return(array ? [array intValue] : 0);
+	return([self integerStatusObjectForKey:key fromAnyContainedObject:NO]);
 }
 - (NSDate *)earliestDateStatusObjectForKey:(NSString *)key
 {
-	return([[statusCacheDict objectForKey:key] date]);	
+	return([self earliestDateStatusObjectForKey:key fromAnyContainedObject:NO]);
 }
 - (NSNumber *)numberStatusObjectForKey:(NSString *)key
 {
-	return([[statusCacheDict objectForKey:key] numberValue]);
+	return([self numberStatusObjectForKey:key fromAnyContainedObject:NO]);
 }
 - (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key
 {
-	return([[[statusCacheDict objectForKey:key] objectValue] string]);
+	return([self stringFromAttributedStringStatusObjectForKey:key fromAnyContainedObject:NO]);
 }
 
+//---- fromAnyContainedObject status object behavior ----
+//If fromAnyContainedObject is YES, return the best value from any contained object if the preferred object returns nil.
+//If it is NO, only look at the preferred object.
+- (id)statusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+{
+	return [self _statusObjectForKey:key containedObjectSelector:(fromAnyContainedObject ? @selector(objectValue) : nil)];
+}
+- (NSDate *)earliestDateStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+{
+	NSDate *returnValue = [self _statusObjectForKey:key containedObjectSelector:(fromAnyContainedObject ? @selector(date) : nil)];
+	
+	return([[statusCacheDict objectForKey:key] date]);
+}
+- (NSNumber *)numberStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+{
+	return([self _statusObjectForKey:key containedObjectSelector:(fromAnyContainedObject ? @selector(numberValue) : nil)]);
+}
+
+// Convenience accessors utilizing other statusObjectForKey methods
+- (int)integerStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+{
+	NSNumber *returnValue = [self numberStatusObjectForKey:key fromAnyContainedObject:fromAnyContainedObject];
+	
+    return(returnValue ? [returnValue intValue] : 0);
+}
+- (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+{
+	return([[self statusObjectForKey:key fromAnyContainedObject:fromAnyContainedObject] string]);
+}
+
+//Returns the status object from the preferredContact for a given key.  If no such object is found, and containedObjectSelector is not nil,
+//queries the entire mutableOwnerArray using that selector
+- (id)_statusObjectForKey:(NSString *)key containedObjectSelector:(SEL)containedObjectSelector
+{
+	AIMutableOwnerArray *keyArray = [statusCacheDict objectForKey:key];
+	id					returnValue;
+	
+	returnValue = [keyArray objectWithOwner:[self preferredContact]];
+	
+	//If we got nil and we want to look at our contained objects, return the objectValue
+	if (!returnValue && containedObjectSelector){
+		returnValue = [keyArray performSelector:containedObjectSelector];
+	}
+	
+	return (returnValue);
+}
 //Sorting --------------------------------------------------------------------------------------------------------------
 #pragma mark Sorting
 //Sort one of our containing objects
@@ -197,7 +249,7 @@
 	NSString		*key;
 	
 	while(key = [enumerator nextObject]){
-		[self _cacheStatusValue:[inObject statusObjectForKey:key] forObject:inObject key:key];
+		[self _cacheStatusValue:[inObject statusObjectForKey:key] forObject:inObject key:key notify:YES];
 	}
 }
 
@@ -208,20 +260,52 @@
 	NSString		*key;
 	
 	while(key = [enumerator nextObject]){
-		[self _cacheStatusValue:nil  forObject:inObject key:key];
+		[self _cacheStatusValue:nil forObject:inObject key:key notify:YES];
 	}
 }
 
 //Update a value in our status cache
-- (void)_cacheStatusValue:(id)inObject forObject:(id)inOwner key:(NSString *)key
+- (BOOL)_cacheStatusValue:(id)inObject forObject:(id)inOwner key:(NSString *)key notify:(BOOL)notify
 {
 	AIMutableOwnerArray *array = [statusCacheDict objectForKey:key];
+	id					previousObjectValue;
+	id					newObjectValue;
+	BOOL				changed = NO;
+	
+	//Retrieve the current object value (before the caching) - retain since the set method might release the value
+	previousObjectValue = [[array objectValue] retain];
+	
 	if(!array){
 		array = [[AIMutableOwnerArray alloc] init];
 		[statusCacheDict setObject:array forKey:key];
 		[array release];
 	}
+	
+	//Store the new value in our mutableOwnerArray for this key
 	[array setObject:inObject withOwner:inOwner];
+	
+	//Retrieve the new object value
+	newObjectValue = [array objectValue];
+
+	if (newObjectValue != previousObjectValue){
+		
+		//If notify, send out the notification now; otherwise, add it to changedStatusKeys for later notification
+		if (notify){
+			[[adium contactController] listObjectStatusChanged:self
+											modifiedStatusKeys:[NSArray arrayWithObject:key]
+														silent:NO];
+		}else{
+			//AIListObject will handle sending out these notifications later for us.
+			if(!changedStatusKeys) changedStatusKeys = [[NSMutableArray alloc] init];
+			[changedStatusKeys addObject:key];
+		}
+		
+		changed = YES;
+	}
+	
+	[previousObjectValue release];
+	
+	return(changed);
 }
 
 //Preferences -------------------------------------------------------------------------------------------------
@@ -272,4 +356,14 @@
 	return returnValue;
 }
 
+#warning debugging
+- (NSString *)displayName
+{
+	return [[super displayName] stringByAppendingString:@"-Meta"];
+}
+
+- (NSString *)longDisplayName
+{
+	return [[super longDisplayName] stringByAppendingString:@"-Meta"];	
+}
 @end
