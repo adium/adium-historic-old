@@ -17,4 +17,25 @@
 {
     return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_1);
 }
+
+- (BOOL)isWebKitAvailable
+{
+    static BOOL _webkitAvailable=NO;
+    static BOOL _initialized=NO;
+    NSBundle	*webKitBundle;
+	
+    if (_initialized)
+        return _webkitAvailable;
+	
+    webKitBundle = [NSBundle bundleWithPath:@"/System/Library/Frameworks/WebKit.framework"];
+
+    if (webKitBundle){		
+        _webkitAvailable = [webKitBundle load];
+    }
+	
+    _initialized=YES;
+
+    return _webkitAvailable;	
+}
+
 @end
