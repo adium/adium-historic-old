@@ -34,6 +34,8 @@
 
 #define	CURRENT_LOG_VERSION			3 		//Version of the log index.  Increase this number to reset everyones index.
 
+#define	LOG_VIEWER_IDENTIFIER		@"LogViewer"
+
 @interface AILoggerPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)configureMenuItems;
@@ -88,6 +90,19 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 									   name:Preference_GroupChanged
 									 object:nil];
     [self preferencesChanged:nil];
+
+    //Toolbar item
+	NSToolbarItem	*toolbarItem;
+    toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:LOG_VIEWER_IDENTIFIER
+														  label:AILocalizedString(@"Logs",nil)
+												   paletteLabel:AILocalizedString(@"View Logs",nil)
+														toolTip:AILocalizedString(@"View logs of this contact or chat",nil)
+														 target:self
+												settingSelector:@selector(setImage:)
+													itemContent:[NSImage imageNamed:@"LogViewer" forClass:[self class]]
+														 action:@selector(showLogViewerToSelectedContact:)
+														   menu:nil];
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
 
     //Init index searching
     if([NSApp isOnPantherOrBetter]) [self initLogIndexing];
