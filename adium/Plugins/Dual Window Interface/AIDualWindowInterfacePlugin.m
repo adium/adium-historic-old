@@ -106,8 +106,11 @@
 	[messageWindowControllerArray removeAllObjects];
     }
     if(contactListWindowController){
+	NSLog(@"calling close:nil");
         [contactListWindowController close:nil];
-        [contactListWindowController release];
+	NSLog(@"releasing");
+        [contactListWindowController release];  //NOTE: causing a crash?
+	NSLog(@"done - contactListWindowController closed");
     }
 
     //Stop observing
@@ -217,7 +220,7 @@
 	theChat = [[owner contentController] openChatOnAccount:nil withListObject:inObject];
 	tabViewItem = [self _messageTabForListObject:inObject];
 	oldMesssageWindowController = [self messageWindowControllerForContainer:tabViewItem];
-		    [oldMesssageWindowController removeTabViewItemContainer:tabViewItem removingChat:NO];
+	[oldMesssageWindowController removeTabViewItemContainer:tabViewItem removingChat:NO];
 	[self _createMessageTabForChat:theChat inMessageWindowController:messageWindowController];
 	[self openChat:theChat]; //switch to it and configure as necessary
 	[self buildWindowMenu]; //Rebuild our window menu
@@ -251,7 +254,7 @@
 
 	tabViewItem = [AIMessageTabViewItem messageTabWithView:messageViewController owner:owner];
 	[messageWindowController addTabViewItemContainer:tabViewItem];
-
+	
     }
     [self buildWindowMenu]; //Rebuild our window menu   
 
