@@ -30,6 +30,9 @@
     NSMutableArray	*outQue;		// Que of outgoing packets
     NSMutableDictionary	*groupDict;		// Remembers the group each handle is in
 
+    NSMutableArray	*idleHandleArray;
+    NSTimer		*idleHandleTimer;
+    
     unsigned short	localSequence;		// Current local packet sequence
     unsigned short	remoteSequence;		// Current remote packet sequence
 

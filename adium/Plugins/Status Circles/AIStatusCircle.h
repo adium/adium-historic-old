@@ -28,6 +28,7 @@ typedef enum {
     NSColor		*color;
     NSColor		*flashColor;
     AICircleState	state;
+    NSString		*string;
 }
 
 + (id)statusCircle;
@@ -35,8 +36,9 @@ typedef enum {
 - (void)setState:(AICircleState)inState;
 - (void)setColor:(NSColor *)inColor;
 - (void)setFlashColor:(NSColor *)inColor;
+- (void)setStringContent:(NSString *)inString;
 
 - (void)drawInRect:(NSRect)inRect;
-- (int)widthForHeight:(int)inHeight;
+- (float)widthForHeight:(int)inHeight;
 
 @end

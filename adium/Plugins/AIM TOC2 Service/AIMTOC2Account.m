@@ -75,6 +75,7 @@ static char *hash_password(const char * const password);
     //Outgoing message que
     outQue = [[NSMutableArray alloc] init];
 
+    idleHandleArray = nil;
     pingTimer = nil;
     screenName = nil;
     password = nil;
@@ -330,6 +331,9 @@ static char *hash_password(const char * const password);
 {
     [screenName release];
     [password release];
+
+    [idleHandleArray release];
+    [idleHandleTimer invalidate]; [idleHandleTimer release];
 
     [outQue release];
     [screenName release];
@@ -847,6 +851,20 @@ static char *hash_password(const char * const password);
             [ownerArray removeObjectsWithOwner:self];
             [ownerArray addObject:[NSNumber numberWithDouble:idleTime] withOwner:self];
             [alteredStatusKeys addObject:@"Idle"];
+
+            if(idleTime == 0){
+                [idleHandleArray removeObject:handle];
+                if([idleHandleArray count] == 0){
+                    [idleHandleTimer invalidate]; [idleHandleTimer release];
+                    [idleHandleArray release];
+                }
+            }else{
+                if(!idleHandleArray){
+                    idleHandleArray = [[NSMutableArray alloc] init];
+                    idleHandleTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateIdleHandlesTimer:) userInfo:nil repeats:YES] retain];
+                }
+                [idleHandleArray addObject:handle];
+            }
         }
 
         //Sign on date
@@ -1251,5 +1269,26 @@ static char *hash_password(const char * const password) {
     }
 }
 
+- (void)updateIdleHandlesTimer:(NSTimer *)inTimer
+{
+    NSEnumerator	*enumerator;
+    AIContactHandle	*handle;
+        
+    enumerator = [idleHandleArray objectEnumerator];
+    while((handle = [enumerator nextObject])){
+        AIMutableOwnerArray	*ownerArray = [handle statusArrayForKey:@"Idle"];
+        double			idleValue = [[ownerArray objectWithOwner:self] doubleValue];   
+
+        //Increase the stored idle time
+        [ownerArray removeObjectsWithOwner:self];
+        [ownerArray addObject:[NSNumber numberWithDouble:++idleValue] withOwner:self];
+
+        //Post a status changed message
+        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Idle"]];
+    }
+}
 
 @end
+
+
+
