@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 730 $ $Date: 2004/05/09 17:13:19 $ -->
+<!--$Rev: 751 $ $Date: 2004/05/12 05:25:53 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -185,7 +185,10 @@ try {
         " scramble(username) " +
         " as username from adium.users " +
         " natural join adium.user_display_name udn" +
-        " where login = " + loginUsers +
+        " where case when true = " + loginUsers + 
+        " then login = true " +
+        " else 1 = 1 " + 
+        " end " +
         " and not exists (select 'x' from adium.user_display_name where " +
         " user_id = users.user_id and effdate > udn.effdate) " +
         " order by scramble(display_name), username");
