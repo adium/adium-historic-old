@@ -3,7 +3,6 @@
 //  Adium XCode
 //
 //  Created by Brian Ganninger on Sun Jan 11 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 #import "BGThemeManageView.h"
 #import "BGThemesPlugin.h"
@@ -19,13 +18,21 @@
 
 -(void)awakeFromNib
 {        
+	themes = nil;
+	
     [self buildThemesList];
     [table setDrawsAlternatingRows:YES];
     [table setTarget:self];
     [table setDoubleAction:@selector(showPreview:)];   
-    [[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self selector:@selector(themesChanged:) name:Themes_Changed object:nil];
     [table reloadData];
     [self configureControlDimming];
+	
+	[[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self selector:@selector(themesChanged:) name:Themes_Changed object:nil];
+}
+
+-(void)dealloc
+{
+	[[[AIObject sharedAdiumInstance] notificationCenter] removeObserver:self];
 }
 
 -(void)themesChanged:(NSNotification *)notification
@@ -36,18 +43,18 @@
 
 -(void)buildThemesList
 {
-    NSMutableArray *tempThemesList = [NSMutableArray arrayWithArray:[[NSFileManager defaultManager] subpathsAtPath:THEME_PATH]];
+    NSMutableArray *tempThemesList = [[[NSFileManager defaultManager] subpathsAtPath:THEME_PATH] mutableCopy];
     NSEnumerator *tempEnum = [tempThemesList objectEnumerator];
     NSString *object;
-    while(object = [tempEnum nextObject])
-    {  
-        if([object hasPrefix:@"."]) // remove hidden files from the list
-        {
+    while(object = [tempEnum nextObject]) {
+		
+        if([object hasPrefix:@"."]) { // remove hidden files from the list
             [tempThemesList removeObject:object];
         }
     }  
     themeCount = [tempThemesList count];
-    themes = (NSArray *)[tempThemesList copy]; // sync cleaned themes list to global variable
+
+	[themes release]; themes = tempThemesList;  // sync cleaned themes list to global variable
 }
 
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
