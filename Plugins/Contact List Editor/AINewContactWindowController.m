@@ -88,6 +88,9 @@
 	[textField_inGroup setStringValue:AILocalizedString(@"In Group:",nil)];
 	[textField_addToAccounts setStringValue:AILocalizedString(@"Add to Accounts:",nil)];
 
+	[button_add setTitle:AILocalizedString(@"Add",nil)];
+	[button_cancel setTitle:AILocalizedString(@"Cancel",nil)];
+
 	originalContactNameLabelFrame = [textField_contactNameLabel frame];
 	
 	[self buildContactTypeMenu];
@@ -149,7 +152,17 @@
 {
 	NSString		*UID = [textField_contactName stringValue];
 	NSEnumerator	*enumerator = [accounts objectEnumerator];
+	AIListGroup		*group ;
 	AIAccount		*account;
+	NSString		*alias;
+	NSMutableArray	*contactArray = [NSMutableArray array];
+	
+	alias = [textField_contactAlias stringValue];
+	if([alias length] == 0) alias = nil; 
+
+	group = ([popUp_targetGroup numberOfItems] ?
+			[[popUp_targetGroup selectedItem] representedObject] : 
+			nil);
 	
 	while(account = [enumerator nextObject]){
 		if([account contactListEditable] &&
@@ -157,27 +170,15 @@
 			AIListContact	*contact = [[adium contactController] contactWithService:service
 																			 account:account
 																				 UID:UID];
-			AIListGroup		*group = ([popUp_targetGroup numberOfItems] ?
-									  [[popUp_targetGroup selectedItem] representedObject] : 
-									  nil);
-
-			[[adium contactController] addContacts:[NSArray arrayWithObject:contact]
-										   toGroup:group];
+			if(alias) [contact setDisplayName:alias];
 			
-			// Add the alias, if it exists
-			NSString	*alias = [textField_contactAlias stringValue];
-			if([alias length] == 0) alias = nil; 
-
-			[contact setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];
-			
-			[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
-													  object:contact
-													userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
-																						 forKey:@"Notify"]];
-			
+			[contactArray addObject:contact];
 		}
 	}
-	
+
+	[[adium contactController] addContacts:contactArray
+								   toGroup:group];
+
 	if([[self window] isSheet]){
 		[NSApp endSheet:[self window]];
 	}else{

@@ -22,7 +22,9 @@
 	IBOutlet	NSTextField					*textField_contactName;
 	IBOutlet	NSTextField					*textField_contactAlias;
 	IBOutlet	NSTableView					*tableView_accounts;
-	IBOutlet	NSButton					*button_add;
+
+	IBOutlet	AILocalizationButton		*button_add;
+	IBOutlet	AILocalizationButton		*button_cancel;
 	
 	IBOutlet	AILocalizationTextField		*textField_type;
 	IBOutlet	AILocalizationTextField		*textField_alias;

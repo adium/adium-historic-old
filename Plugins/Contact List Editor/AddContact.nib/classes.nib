@@ -1,6 +1,17 @@
 {
     IBClasses = (
         {
+            CLASS = AILocalizationButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSButton; 
+        }, 
+        {
             CLASS = AILocalizationTextField; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -15,7 +26,8 @@
             CLASS = AINewContactWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "button_add" = NSButton; 
+                "button_add" = AILocalizationButton; 
+                "button_cancel" = AILocalizationButton; 
                 "popUp_contactType" = NSPopUpButton; 
                 "popUp_targetGroup" = NSPopUpButton; 
                 "tableView_accounts" = NSTableView; 
