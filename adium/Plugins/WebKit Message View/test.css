@@ -3,12 +3,6 @@ body {
     background: #FFFFFF url(background.png) repeat-x fixed;
 }
 
-.insert {
-    width: 5px;
-    height: 5px;
-    background: #FF0000;
-}
-
 .messagehead { /* Name & Time */
     position: relative;
     border-bottom: 1px solid #000;
