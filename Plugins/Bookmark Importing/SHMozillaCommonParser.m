@@ -161,10 +161,10 @@ DeclareString(bookmarkDictContent)
 +(SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString
 {
     NSString    *title = inString? inString : @"untitled";
-    return [[[SHMarkedHyperlink alloc] initWithString:inURLString
+    return([[[SHMarkedHyperlink alloc] initWithString:inURLString
                                  withValidationStatus:SH_URL_VALID
                                          parentString:title
-                                             andRange:NSMakeRange(0,[title length])] autorelease];
+                                             andRange:NSMakeRange(0,[title length])] autorelease]);
 }
 
 +(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
