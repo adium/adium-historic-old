@@ -214,19 +214,18 @@ extern void* objc_getClass(const char *name);
 }
 
 // Return YES if we're available for sending the specified content
-- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIChat *)inChat
+- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
-    AIListObject 	*listObject = [inChat object];
     BOOL 		available = NO;
 
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
         //If we are online
         if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE){
-            if(!inChat || !listObject){
+            if(!inChat || !inListObject){
                 available = YES;
 
             }else{
-                AIHandle	*handle = [(AIListContact *)listObject handleForAccount:self];
+                AIHandle	*handle = [(AIListContact *)inListObject handleForAccount:self];
 
                 if(![[handleDict allValues] containsObject:handle] || [[[handle statusDictionary] objectForKey:@"Online"] intValue]){
                     available = YES;
