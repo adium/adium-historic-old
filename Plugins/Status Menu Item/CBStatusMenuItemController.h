@@ -5,6 +5,12 @@
 //  Created by Colin Barrett on Thu Nov 27 2003.
 //
 
+typedef enum {
+	OFFLINE	= 0,
+	ONLINE = 1,
+	UNVIEWED = 2
+} SMI_Icon_State;
+
 @interface CBStatusMenuItemController : AIObject <AccountMenuPlugin, AIChatObserver>
 {
     NSStatusItem            *statusItem;
@@ -12,12 +18,16 @@
     
     NSMutableArray          *accountMenuItemsArray;
     NSMutableArray          *unviewedObjectsArray;
-    BOOL                    unviewedState;
     
     BOOL                    needsUpdate;
+	
+	SMI_Icon_State			iconState;
 }
 
 + (CBStatusMenuItemController *)statusMenuItemController;
+
+//Icon State
+- (void)setIconState:(SMI_Icon_State)state;
 
 //AccountMenuPlugin
 - (NSString *)identifier;
@@ -30,4 +40,5 @@
 
 //Chat Observer
 - (NSArray *)updateChat:(AIChat *)inChat keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
+
 @end
