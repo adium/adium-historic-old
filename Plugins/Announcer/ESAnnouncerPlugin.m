@@ -271,4 +271,9 @@
 	}
 }
 
+- (BOOL)allowMultipleActionsWithID:(NSString *)actionID
+{
+	return(YES);
+}
+
 @end
