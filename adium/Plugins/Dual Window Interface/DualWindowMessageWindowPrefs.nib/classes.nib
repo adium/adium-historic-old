@@ -6,12 +6,8 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "autohide_tabBar" = NSButton; 
-                lastUsedWindow = NSButtonCell; 
-                "matrix_tabPref" = NSMatrix; 
-                "matrix_windowMode" = NSMatrix; 
-                modeTab = NSButtonCell; 
-                modeWindow = NSButtonCell; 
-                primaryWindow = NSButtonCell; 
+                "createMessages_inTabs" = NSButton; 
+                "createTabs_inLastWindow" = NSButton; 
                 "view_pref" = NSView; 
             }; 
             SUPERCLASS = NSObject; 

@@ -20,7 +20,7 @@
 #import "AIDockBehaviorPlugin.h"
 
 #define DOCK_BEHAVIOR_PREF_NIB		@"DockBehaviorPreferences"
-#define DOCK_BEHAVIOR_PREF_TITLE	@"Dock Behavior"
+#define DOCK_BEHAVIOR_PREF_TITLE	@"Dock Bouncing"
 
 #define TABLE_COLUMN_BEHAVIOR		@"behavior"
 #define TABLE_COLUMN_EVENT		@"event"
