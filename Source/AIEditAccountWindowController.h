@@ -24,6 +24,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	IBOutlet	NSTextField					*textField_serviceName;
 	IBOutlet	ESImageViewWithImagePicker  *imageView_userIcon;
     IBOutlet	NSTabView					*tabView_auxiliary;
+	IBOutlet	NSButton					*checkBox_autoConnect;
 
 	//Replacable views
 	IBOutlet	NSView						*view_accountSetup;

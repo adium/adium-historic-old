@@ -29,6 +29,7 @@
             CLASS = AIEditAccountWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "checkBox_autoConnect" = NSButton; 
                 "imageView_userIcon" = ESImageViewWithImagePicker; 
                 "image_serviceIcon" = NSImageView; 
                 "tabView_auxiliary" = NSTabView; 
