@@ -63,9 +63,9 @@ Adium, Copyright 2001-2005, Adam Iser
 #define STATUS_NAME_NOT_AT_HOME				@"Adium: Not At Home"
 #define STATUS_DESCRIPTION_NOT_AT_HOME		AILocalizedString(@"Not at home",nil)
 #define STATUS_NAME_NOT_AT_DESK				@"Adium: Not At Desk"
-#define STATUS_DESCRIPTION_NOT_AT_DESK		AILocalizedString(@"Not at desk",nil)
+#define STATUS_DESCRIPTION_NOT_AT_DESK		AILocalizedString(@"Not at my desk",nil)
 #define STATUS_NAME_NOT_IN_OFFICE			@"Adium: Not In Office"
-#define STATUS_DESCRIPTION_NOT_IN_OFFICE	AILocalizedString(@"Not in office",nil)
+#define STATUS_DESCRIPTION_NOT_IN_OFFICE	AILocalizedString(@"Not in the office",nil)
 #define STATUS_NAME_VACATION				@"Adium: Vacation"
 #define STATUS_DESCRIPTION_VACATION			AILocalizedString(@"On vacation",nil)
 #define STATUS_NAME_STEPPED_OUT				@"Adium: Stepped Out"
