@@ -122,6 +122,8 @@
 - (void) sendTypingNotification:(AWEzvTyping)typingStatus {
     AWEzvXMLNode *messageNode, *bodyNode, *htmlNode, *htmlBodyNode, *xNode, *composingNode = nil, *idNode = nil;
     
+	if(_ipAddr != nil) {
+
     messageNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"message"];
     [messageNode addAttribute:@"to" withValue:_ipAddr];
     
@@ -160,7 +162,8 @@
     [htmlNode release];
     [bodyNode release];
     [messageNode release];
-    
+	
+	}
 }
 
 @end
