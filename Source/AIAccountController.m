@@ -358,7 +358,9 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 																action:@selector(selectServiceType:) 
 														 keyEquivalent:@""] autorelease];
 				[item setRepresentedObject:service];
-				[item setImage:[AIServiceIcons serviceIconForService:service  type:AIServiceIconSmall direction:AIIconNormal]];
+				[item setImage:[AIServiceIcons serviceIconForService:service
+																type:AIServiceIconSmall
+														   direction:AIIconNormal]];
 				[menu addItem:item];
 			}
 		}
@@ -704,7 +706,9 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 																action:@selector(selectAccount:)
 														 keyEquivalent:@""] autorelease];
 			[menuItem setRepresentedObject:account];
-			[menuItem setImage:[AIServiceIcons serviceIconForObject:account type:AIServiceIconSmall direction:AIIconNormal]];
+			[menuItem setImage:[AIServiceIcons serviceIconForObject:account
+															   type:AIServiceIconSmall
+														  direction:AIIconNormal]];
 			[menuItem setEnabled:available];
 			
 			[menuItems addObject:menuItem];
@@ -757,7 +761,9 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 															action:@selector(selectAccount:)
 													 keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:account];
-		[menuItem setImage:[AIServiceIcons serviceIconForObject:account type:AIServiceIconSmall direction:AIIconNormal]];
+		[menuItem setImage:[AIServiceIcons serviceIconForObject:account
+														   type:AIServiceIconSmall
+													  direction:AIIconNormal]];
 		[menu addItem:menuItem];
 	}
 }
@@ -784,7 +790,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	BOOL			canSend = NO;
 	
 	if ([inObject isKindOfClass:[AIMetaContact class]]){		
-		NSEnumerator	*enumerator = [(AIMetaContact *)inObject listContacts];
+		NSEnumerator	*enumerator = [[(AIMetaContact *)inObject listContacts] objectEnumerator];
 		AIListObject	*containedObject;
 		
 		//canSend is YES if any of the contained contacts of the meta contact return YES
@@ -1095,7 +1101,9 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		if(!accountTitle || ![accountTitle length]) accountTitle = NEW_ACCOUNT_DISPLAY_TEXT;
 		
 		//Dim image depending on connectivity
-		serviceImage = [AIServiceIcons serviceIconForObject:account type:AIServiceIconSmall direction:AIIconNormal];
+		serviceImage = [AIServiceIcons serviceIconForObject:account
+													   type:AIServiceIconSmall
+												  direction:AIIconNormal];
 		if([[account statusObjectForKey:@"Online"] boolValue]){
 			fraction = MENU_IMAGE_FRACTION_ONLINE;
 			titleFormat = ACCOUNT_DISCONNECT_MENU_TITLE;
