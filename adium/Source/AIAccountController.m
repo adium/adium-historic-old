@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.89 2004/07/10 06:20:42 evands Exp $
+// $Id: AIAccountController.m,v 1.90 2004/07/13 07:30:43 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -322,6 +322,18 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     }
     
     return(array);
+}
+
+- (AIAccount *)firstAccountWithServiceID:(NSString *)serviceID
+{
+    NSEnumerator	*enumerator = [accountArray objectEnumerator];
+    AIAccount		*account;
+    
+    while((account = [enumerator nextObject])){
+		if([serviceID isEqualToString:[account serviceID]]) break;
+    }
+    
+    return(account);
 }
 
 //Returns a new default account
