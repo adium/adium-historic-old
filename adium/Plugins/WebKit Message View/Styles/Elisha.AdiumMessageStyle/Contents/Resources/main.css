@@ -41,6 +41,7 @@ body {
     padding-top: 1px;
     margin-bottom: 5px;
     background: url(whitesquare.png) repeat-xy;
+    overflow: auto;
 }
 
 .messagemore {
