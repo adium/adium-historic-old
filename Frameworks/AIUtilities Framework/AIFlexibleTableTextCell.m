@@ -21,6 +21,9 @@
 #import "AILinkTrackingController.h"
 #import "AITextAttachmentExtension.h"
 #import "AIAttributedStringAdditions.h"
+#import "AIParagraphStyleAdditions.h"
+#import "AIStringUtilities.h"
+#import "AIMenuAdditions.h"
 
 #define USE_OPTIMIZED_LIVE_RESIZE   NO  //If YES, text layout will not be recalculated during a resize
 

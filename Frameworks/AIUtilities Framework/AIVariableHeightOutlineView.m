@@ -7,6 +7,9 @@
 //
 
 #import "AIVariableHeightOutlineView.h"
+#import "CBApplicationAdditions.h"
+#import "ESImageAdditions.h"
+#import "AIGradient.h"
 
 #define	DRAG_IMAGE_FRACTION	0.75
 

@@ -18,6 +18,7 @@
 */
 
 #import "AIImageTextCell.h"
+#import "AIParagraphStyleAdditions.h"
 
 #define DEFAULT_MAX_IMAGE_WIDTH 24
 #define IMAGE_TEXT_PADDING		2

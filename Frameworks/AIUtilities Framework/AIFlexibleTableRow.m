@@ -16,6 +16,7 @@
 #import "AIFlexibleTableRow.h"
 #import "AIFlexibleTableCell.h"
 #import "AIFlexibleTableSpanCell.h"
+#import "AIFlexibleTableView.h"
 
 @interface AIFlexibleTableRow (PRIVATE)
 - (id)initWithCells:(NSArray *)inCells representedObject:(id)inRepresentedObject;

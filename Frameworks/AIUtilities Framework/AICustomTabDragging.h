@@ -11,7 +11,7 @@
 #define AICustomTabDragWillBegin	@"AICustomTabDragWillBegin"
 #define AICustomTabDragDidComplete	@"AICustomTabDragDidComplete"
 
-@class AICustomTabDragWindow, AICustomTabsView;
+@class AICustomTabDragWindow, AICustomTabsView, AICustomTabCell;
 
 @interface AICustomTabDragging : NSObject {
 	AICustomTabCell         *dragTabCell;			//Custom tab cell being dragged

@@ -1,7 +1,5 @@
 //Adapted from Colloquy  (www.colloquy.info)
 
-#import <Cocoa/Cocoa.h>
-
 /*!
  * @class MVMenuButton
  * @brief Button with a popup menu for use with an NSToolbarItem

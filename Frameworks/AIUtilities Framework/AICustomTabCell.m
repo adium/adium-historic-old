@@ -16,6 +16,9 @@
 #import "AICustomTabCell.h"
 #import "AICustomTabsView.h"
 #import "AICursorAdditions.h"
+#import "ESImageAdditions.h"
+#import "AIEventAdditions.h"
+#import "AIParagraphStyleAdditions.h"
 
 #define SHOW_CLOSE_BUTTON_FOR_SINGLE_TAB	YES		//Show close button when there is only one tab?
 

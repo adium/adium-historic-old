@@ -19,6 +19,7 @@
 
 #import "AIGradient.h"
 #import "BZContextImageBridge.h"
+#import "AIColorAdditions.h"
 
 @interface AIGradient (PRIVATE)
 - (id)initWithFirstColor:(NSColor*)inColor1 secondColor:(NSColor*)inColor2 direction:(AIDirection)inDirection;

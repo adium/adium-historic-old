@@ -6,9 +6,6 @@
 //  Copyright 2004 The Adium Team. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-
-
 @interface AITree: NSObject
 {
 	CFTreeRef backing;

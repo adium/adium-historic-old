@@ -6,6 +6,7 @@
 //
 
 #import "ESOutlineViewAdditions.h"
+#import "CBApplicationAdditions.h"
 
 @implementation NSOutlineView (ESOutlineViewAdditions)
 

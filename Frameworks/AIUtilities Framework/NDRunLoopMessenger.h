@@ -7,8 +7,6 @@
 	Copyright &copy; 2002-2003 Nathan Day. All rights reserved.</p>
  */
 
-#import <Cocoa/Cocoa.h>
-
 /*!
 	@const kSendMessageException
  * @brief <tt>NDRunLoopMessenger</tt> exception

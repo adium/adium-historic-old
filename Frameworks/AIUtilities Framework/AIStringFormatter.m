@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIStringFormatter.h"
+#import "AIStringUtilities.h"
 
 #define ERRORS_BEFORE_DIALOG	3	//Number of mistakes that can be made before an error dialog will appear
 

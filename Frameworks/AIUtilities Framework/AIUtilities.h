@@ -13,24 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-//Localization
-#ifndef AILocalizedString
-#define AILocalizedString(key, comment) NSLocalizedStringFromTableInBundle(key,nil,[NSBundle bundleForClass: [self class]],comment)
-#define AILocalizedStringFromTable(key, table, comment) NSLocalizedStringFromTableInBundle(key,table,[NSBundle bundleForClass: [self class]],comment)
-#endif
-
-//Static strings
-//#ifndef DeclareString
-#define DeclareString(var)			static NSString * (var) = nil;
-//#endif
-//#ifndef InitString
-#define InitString(var,string)		if (! (var) ) (var) = [(string) retain];
-//#endif
-//#ifndef ReleaseString
-#define ReleaseString(var)			if ( (var) ) { [(var) release]; (var) = nil; } 
-//#endif
 
 #import <AIUtilities/AIFunctions.h>
+#import <AIUtilities/AIStringUtilities.h>
 
 #import <AIUtilities/AIAlternatingRowOutlineView.h>
 #import <AIUtilities/AIAlternatingRowTableView.h>

@@ -8,6 +8,8 @@
 
 #import "ESImageViewWithImagePicker.h"
 #import "NSImagePicker.h"
+#import "CBApplicationAdditions.h"
+#import "AIStringUtilities.h"
 
 /*
  An NSImageView subclass which supports:

@@ -9,6 +9,7 @@
 #import "AICustomTabDragging.h"
 #import "AICustomTabDragWindow.h"
 #import "AICustomTabsView.h"
+#import "AICustomTabCell.h"
 
 #define CUSTOM_TABS_INDENT		3					//Indent on left and right of tabbar
 

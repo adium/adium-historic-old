@@ -4,7 +4,6 @@
 	@discussion Declare the class <tt>NDComponentInstance</tt> which is used with <tt>NDAppleScriptObject</tt>
  */
 
-#import <Cocoa/Cocoa.h>
 #import "NDAppleScriptObject_Protocols.h"
 
 /*!

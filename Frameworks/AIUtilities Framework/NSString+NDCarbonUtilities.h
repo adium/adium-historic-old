@@ -4,7 +4,6 @@
 	@discussion Provides method for interacting with Carbon APIs.
  */
 
-#import <Cocoa/Cocoa.h>
 #import <Carbon/Carbon.h>
 
 /*!

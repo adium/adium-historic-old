@@ -6,8 +6,6 @@
 //  Copyright 2005 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-
 /*!
  * @class AISplitView
  * @brief <tt>NSSplitView</tt> subclass with additional customization

@@ -534,6 +534,7 @@
 		0867D691FE84028FC02AAC07 = {
 			children = (
 				34486BC906D1DF0400DA778C,
+				4B5CBF7607BC1887007E4075,
 				076CAD720785B64600250504,
 				4BD1EFBC06D2661200B3975E,
 				4BD1EFA506D264AC00B3975E,
@@ -4702,6 +4703,21 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B5CBF7607BC1887007E4075 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIStringUtilities.h;
+			path = "Frameworks/AIUtilities Framework/AIStringUtilities.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B5CBF7707BC1887007E4075 = {
+			fileRef = 4B5CBF7607BC1887007E4075;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B6DDA4A075A883B002E0BF4 = {
 			children = (
 				4B6DDA4D075A8879002E0BF4,
@@ -5850,6 +5866,7 @@
 				07B7AF9F0797A952003B71E1,
 				070959860798F1ED00B140BD,
 				4B84A63307B70A5000C2941D,
+				4B5CBF7707BC1887007E4075,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

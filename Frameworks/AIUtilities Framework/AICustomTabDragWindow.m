@@ -8,6 +8,9 @@
 
 #import "AICustomTabDragWindow.h"
 #import "ESFloater.h"
+#import "CBApplicationAdditions.h"
+#import "AICustomTabsView.h"
+#import "AICustomTabCell.h"
 
 #define CUSTOM_TABS_INDENT		3					//Indent on left and right of tabbar
 #define CONTENT_OFFSET_X		1					//Offset of content view relative to tabs

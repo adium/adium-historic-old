@@ -15,6 +15,10 @@
 
 #import "AIFlexibleTableView.h"
 #import "AIFlexibleTableCell.h"
+#import "AIStringUtilities.h"
+#import "AIMenuAdditions.h"
+#import "AIEventAdditions.h"
+#import "AIAutoScrollView.h"
 
 #define COPY_MENU_ITEM AILocalizedString(@"Copy","Copy to the clipboard")
 
