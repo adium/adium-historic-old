@@ -107,10 +107,10 @@
             }
         }else if([[url scheme] isEqualToString:@"xmpp"]){
             NSString *name = [NSString stringWithFormat:@"%@@%@",[[url user] compactedString],[[url host] compactedString]];
-
+			
             [self _openChatToContactWithName:name
-                                                onService:@"Jabber"
-                                                withMessage:nil];
+								   onService:@"Jabber"
+								 withMessage:nil];
         }else if ([[url scheme] isEqualToString:@"jabber"]){
 			//Not an official URL scheme, used for internal applescript and such communication
 			NSString *name = [[url queryArgumentForKey:@"openChatToScreenname"] compactedString];
