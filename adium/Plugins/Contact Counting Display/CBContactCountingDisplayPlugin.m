@@ -75,7 +75,7 @@
 			else if(allCount)
 				addString = [NSString stringWithFormat:@" (%i)", [[inObject statusObjectForKey:@"ObjectCount"] intValue]];
 			
-			[[inObject displayArrayForKey:@"Right Text"] setPrimaryObject:addString withOwner:self];
+			[[inObject displayArrayForKey:@"Right Text"] setObject:addString withOwner:self priorityLevel:Highest_Priority];
 			modifiedAttributes = [NSArray arrayWithObject:@"Right Text"];
 		}
 	}
