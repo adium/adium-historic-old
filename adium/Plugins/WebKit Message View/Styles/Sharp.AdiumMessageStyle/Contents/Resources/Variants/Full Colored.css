@@ -1,0 +1,26 @@
+@import url(../layout.css);
+@import url(../main.css);
+
+.incoming .nofocus {
+	background-color: rgba(230,233,242,0.8);
+	border: 1px solid #98A5CB;
+	border-bottom-style: none;
+	color: inherit;
+}
+
+.outgoing .nofocus {
+	background-color: rgba(231,242,231,0.8);
+	border: 1px solid #99CC99;
+	border-bottom-style: none;
+	color: inherit;
+}
+
+.context .focus, .context .nofocus {
+	background-color: rgba(0,0,0,0.05);
+	border: 1px dotted #D8D8D8;
+	color: gray;
+}
+
+.context .nofocus {
+	border-bottom-style: none;
+}
