@@ -574,12 +574,15 @@ void Adium_HandleSignal(int i){
 			if (error){
 				targetPath = nil;
 				
-				//Future expansion: provide a button to launch Disk Utility --boredzo
-				NSRunAlertPanel([NSString stringWithFormat:AILocalizedString(@"Could not create the %@ folder",nil), name],
-								AILocalizedString(@"Try running Repair Permissions from Disk Utility.",nil),
-								AILocalizedString(@"Okay",nil), 
-								nil, 
-								nil);
+				int result;
+				result = NSRunCriticalAlertPanel([NSString stringWithFormat:AILocalizedString(@"Could not create the %@ folder.",nil), name],
+												 AILocalizedString(@"Try running Repair Permissions from Disk Utility.",nil),
+												 AILocalizedString(@"OK",nil), 
+												 AILocalizedString(@"Launch Disk Utility",nil), 
+												 nil);
+				if (result == NSAlertAlternateReturn){
+					[[NSWorkspace sharedWorkspace] launchApplication:@"Disk Utility"];
+				}
 			}
 		}
     } else {
