@@ -44,8 +44,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 - (void)awakeFromNib
 {
-	image_O = [self loadImage:@"O"];
-	image_X = [self loadImage:@"X"];	
+	image_O = [NSImage imageNamed:@"O"];
+	image_X = [NSImage imageNamed:@"X"];
 }
 
 - (void)handleMessage:(NSString *)msg ofType:(NSString *)type
@@ -119,22 +119,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 - (NSString *)secondPlayerName
 {
 	return @"O";
-}
-
-
-- (NSImage *)loadImage:(NSString *)name
-{
-	NSString *path;
-	NSImage  *img    =  nil;
-	NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-
-	if(path = [bundle pathForImageResource:name]) {
-		img = [[NSImage alloc] initWithContentsOfFile:path];
-	} else {
-		NSLog(@"TTT:Unable to open image %@",name);
-	}
-
-	return img;
 }
 
 - (void)cleanup
