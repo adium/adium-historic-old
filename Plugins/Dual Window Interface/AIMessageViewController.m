@@ -179,9 +179,12 @@
 //
 - (void)dealloc
 {    
+	//Release the userListController to let it invalidate its tracking views before closing the window 
+	[userListController release];
+
     //Close the message entry text view
     [[adium contentController] willCloseTextEntryView:textView_outgoing];
-	
+
     //Close chat
     if(chat){
         [[adium contentController] closeChat:chat];
@@ -203,7 +206,6 @@
 	[scrollView_userList release];
 	[controllerView_messages release];
 	[view_contents release];
-	[userListController release];
 	
     [super dealloc];
 }
