@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.64 2004/04/08 20:16:15 dchoby98 Exp $
+// $Id: AIContentController.m,v 1.65 2004/04/11 06:07:51 dchoby98 Exp $
 
 #import "AIContentController.h"
 
@@ -448,7 +448,11 @@
 	if(chat) [[owner interfaceController] openChat:chat]; 
 
 	#warning dchoby98: Is there a better place to post the Chat_DidOpen notification?
-	[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
+	
+	// Only post Chat_DidOpen if it is a NEW chat
+	if( [[chat contentObjectArray] count] <= 1 ) {
+		[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
+	}
 	
 	return(chat);	
 }
