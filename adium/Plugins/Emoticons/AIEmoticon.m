@@ -49,6 +49,7 @@
 {
     [path release];
     [representedText release];
+    [attributedEmoticon release];
 
     [super dealloc];
 }
@@ -101,7 +102,7 @@
 
 - (void)updateAttributedEmoticon
 {
-    NSFileWrapper	*emoticonFileWrapper = [[[NSFileWrapper alloc] initWithPath:path] autorelease];
+    NSFileWrapper		*emoticonFileWrapper = [[[NSFileWrapper alloc] initWithPath:path] autorelease];
     AITextAttachmentExtension	*emoticonAttachment = [[[AITextAttachmentExtension alloc] init] autorelease];
 
     [emoticonAttachment setFileWrapper:emoticonFileWrapper];

@@ -58,6 +58,7 @@
     //Register our content filter
     [[owner contentController] registerDisplayingContentFilter:self];
     //[[owner contentController] registerIncomingContentFilter:self];
+ 
 }
 
 - (void)filterContentObject:(AIContentObject *)inObject
@@ -123,12 +124,12 @@
 				       //--make sure this emoticon's not inside a link--
 		if([tempMessage attribute:NSLinkAttributeName atIndex:emoticonRange.location effectiveRange:&attributeRange] == nil){
 
-		    NSMutableAttributedString *replacement = [[currentEmo attributedEmoticon] mutableCopy];
+		    NSMutableAttributedString *replacement = [[[currentEmo attributedEmoticon] mutableCopy] autorelease];
 
 		    [replacement addAttributes:[tempMessage attributesAtIndex:emoticonRange.location effectiveRange:nil] range:NSMakeRange(0,1)];
 
 		    //--insert the emoticon--
-		    [tempMessage replaceCharactersInRange:emoticonRange withAttributedString:[replacement copy]];
+                    [tempMessage replaceCharactersInRange:emoticonRange withAttributedString:replacement];
 
 		    //shrink the emoticon range to 1 character (the multicharacter chunk has been replaced with a single character/emoticon)
 		    emoticonRange.length = 1;

@@ -1108,6 +1108,7 @@
 				11C157D304A88D33008E0C76,
 				6E97F13604A94C1800472FFF,
 				9E4CF9F204AA6D5600415B22,
+				4B1F0F3504AE303600A8010A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -1137,6 +1138,7 @@
 				F53B9A0E02CCED8B01A8010A,
 				F53B9A0602CCED6401A8010A,
 				4B6688FE04A60CD800A8010A,
+				4B1F0F3404AE303600A8010A,
 				4BF48141049A804500A8010A,
 				4BAE85AA0498195800A8010A,
 				4B5B15280493BFB100A8010A,
@@ -1301,6 +1303,7 @@
 				11C157E104A8955B008E0C76,
 				6E97F13704A94C1800472FFF,
 				9E4CF9F304AA6D5600415B22,
+				4B1F0F3604AE303600A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -1736,57 +1739,6 @@
 		};
 		4B01CC0403FCA33300A8010A = {
 			fileRef = F53B9A0702CCED6401A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B037B79045B8E5600A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			name = AILogImporter.h;
-			path = Plugins/Logger/AILogImporter.h;
-			refType = 4;
-		};
-		4B037B7A045B8E5600A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			name = AILogImporter.m;
-			path = Plugins/Logger/AILogImporter.m;
-			refType = 4;
-		};
-		4B037B7B045B8E5600A8010A = {
-			fileRef = 4B037B79045B8E5600A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B037B7C045B8E5600A8010A = {
-			fileRef = 4B037B7A045B8E5600A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B037B7D045B904F00A8010A = {
-			isa = PBXFileReference;
-			name = LogImport.nib;
-			path = Plugins/Logger/LogImport.nib;
-			refType = 4;
-		};
-		4B037B7E045B904F00A8010A = {
-			fileRef = 4B037B7D045B904F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B037B7F045C05A600A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = LoggerDefaults.plist;
-			path = Plugins/Logger/LoggerDefaults.plist;
-			refType = 4;
-		};
-		4B037B80045C05A600A8010A = {
-			fileRef = 4B037B7F045C05A600A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2460,6 +2412,7 @@
 				B7AE664D0465778E0051E914,
 				4BDDCA01041104BB00A8010A,
 				9C8C7FA303CBA17B00267226,
+				4B1F0F2E04AE300500A8010A,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -2790,6 +2743,189 @@
 		};
 		4B18A5310459F8F700A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B1F0F2E04AE300500A8010A = {
+			children = (
+				4B1F0F3E04AE308200A8010A,
+				4B1F0F3F04AE308200A8010A,
+				4BEB416C04AE33D600A8010A,
+				4BEB416D04AE33D600A8010A,
+				4BEB416F04AE33D600A8010A,
+				4BEB416E04AE33D600A8010A,
+			);
+			isa = PBXGroup;
+			name = "Adium 1.x Log Importer";
+			path = "";
+			refType = 4;
+		};
+		4B1F0F2F04AE303600A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B1F0F4004AE308200A8010A,
+				4BEB417004AE33D600A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B1F0F3004AE303600A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BEB417204AE33D600A8010A,
+				4BEB417304AE33D600A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B1F0F3104AE303600A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B1F0F4104AE308200A8010A,
+				4BEB417104AE33D600A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B1F0F3204AE303600A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B1F0F4204AE330200A8010A,
+				4B1F0F4304AE330200A8010A,
+				4B1F0F4404AE330300A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B1F0F3304AE303600A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B1F0F3404AE303600A8010A = {
+			buildPhases = (
+				4B1F0F2F04AE303600A8010A,
+				4B1F0F3004AE303600A8010A,
+				4B1F0F3104AE303600A8010A,
+				4B1F0F3204AE303600A8010A,
+				4B1F0F3304AE303600A8010A,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Adium 1x Log Importer";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4B1F0F3804AE303F00A8010A,
+				4B1F0F3904AE303F00A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Adium 1x Log Importer";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Adium 1x Log Importer";
+			productReference = 4B1F0F3504AE303600A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIAdium1xLogImporterPlugin</string>
+</dict>
+</plist>
+";
+		};
+		4B1F0F3504AE303600A8010A = {
+			isa = PBXBundleReference;
+			path = "Adium 1x Log Importer.AdiumPlugin";
+			refType = 3;
+		};
+		4B1F0F3604AE303600A8010A = {
+			isa = PBXTargetDependency;
+			target = 4B1F0F3404AE303600A8010A;
+		};
+		4B1F0F3704AE303600A8010A = {
+			fileRef = 4B1F0F3504AE303600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B1F0F3804AE303F00A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4B1F0F3904AE303F00A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4B1F0F3E04AE308200A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAdium1xLogImporterPlugin.h;
+			path = "Plugins/Adium 1x Log Importer/AIAdium1xLogImporterPlugin.h";
+			refType = 4;
+		};
+		4B1F0F3F04AE308200A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAdium1xLogImporterPlugin.m;
+			path = "Plugins/Adium 1x Log Importer/AIAdium1xLogImporterPlugin.m";
+			refType = 4;
+		};
+		4B1F0F4004AE308200A8010A = {
+			fileRef = 4B1F0F3E04AE308200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B1F0F4104AE308200A8010A = {
+			fileRef = 4B1F0F3F04AE308200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B1F0F4204AE330200A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B1F0F4304AE330200A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B1F0F4404AE330300A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -3554,6 +3690,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				4B1F0F3704AE303600A8010A,
 				4B66890104A60CD900A8010A,
 				4BF48144049A804500A8010A,
 				F5D703B204995C9701BAF553,
@@ -8574,6 +8711,57 @@
 			settings = {
 			};
 		};
+		4BEB416C04AE33D600A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILogImporter.h;
+			path = "Plugins/Adium 1x Log Importer/AILogImporter.h";
+			refType = 4;
+		};
+		4BEB416D04AE33D600A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILogImporter.m;
+			path = "Plugins/Adium 1x Log Importer/AILogImporter.m";
+			refType = 4;
+		};
+		4BEB416E04AE33D600A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = LoggerDefaults.plist;
+			path = "Plugins/Adium 1x Log Importer/LoggerDefaults.plist";
+			refType = 4;
+		};
+		4BEB416F04AE33D600A8010A = {
+			isa = PBXFileReference;
+			name = LogImport.nib;
+			path = "Plugins/Adium 1x Log Importer/LogImport.nib";
+			refType = 4;
+		};
+		4BEB417004AE33D600A8010A = {
+			fileRef = 4BEB416C04AE33D600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BEB417104AE33D600A8010A = {
+			fileRef = 4BEB416D04AE33D600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BEB417204AE33D600A8010A = {
+			fileRef = 4BEB416E04AE33D600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BEB417304AE33D600A8010A = {
+			fileRef = 4BEB416F04AE33D600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BED5A2B03C32B5B00A8010A = {
 			fileRef = F57938F1033E745F01A8010A;
 			isa = PBXBuildFile;
@@ -10009,7 +10197,6 @@
 			files = (
 				9C8C7FA603CBA21B00267226,
 				4BD68229045B010D00A8010A,
-				4B037B7B045B8E5600A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10018,8 +10205,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B3DB8FE04547A8D00A8010A,
-				4B037B7E045B904F00A8010A,
-				4B037B80045C05A600A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10029,7 +10214,6 @@
 			files = (
 				9C8C7FA703CBA21B00267226,
 				4BD6822A045B010D00A8010A,
-				4B037B7C045B8E5600A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10128,13 +10312,9 @@
 			children = (
 				9C8C7FA403CBA21B00267226,
 				9C8C7FA503CBA21B00267226,
-				4B037B79045B8E5600A8010A,
-				4B037B7A045B8E5600A8010A,
 				4BD68227045B010D00A8010A,
 				4BD68228045B010D00A8010A,
 				4B3DB8FD04547A8D00A8010A,
-				4B037B7D045B904F00A8010A,
-				4B037B7F045C05A600A8010A,
 			);
 			isa = PBXGroup;
 			name = Logger;
@@ -13113,6 +13293,8 @@
 				F5793943033E74E401A8010A,
 				4B254C4203F6D8FC00A8010A,
 				4B254C4303F6D8FC00A8010A,
+				11F486D904A7F802007575DA,
+				11F486DA04A7F802007575DA,
 				F5793979033E755501A8010A,
 				F579397A033E755501A8010A,
 				4BC02D310452C69100A8010A,
@@ -15689,8 +15871,6 @@
 			children = (
 				F5793938033E74E401A8010A,
 				F5793939033E74E401A8010A,
-				11F486D904A7F802007575DA,
-				11F486DA04A7F802007575DA,
 				F579393A033E74E401A8010A,
 				F579393B033E74E401A8010A,
 				4B30ADFA044228BA00A8010A,

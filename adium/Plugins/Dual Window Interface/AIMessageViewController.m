@@ -383,7 +383,7 @@
 
         superFrame.size.width -= fixed_width + 6;
     }else{
-        [scrollView_userList setFrame:NSMakeRect(100000, 100000, 0, 0)]; //Shove it way off screen for now
+        [scrollView_userList setFrame:NSMakeRect(10000, 10000, 0, 0)]; //Shove it way off screen for now
     }
     
     //Messages

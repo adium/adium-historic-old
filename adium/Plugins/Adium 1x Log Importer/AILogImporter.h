@@ -20,10 +20,18 @@
 @interface AILogImporter : NSWindowController {
     AIAdium		*owner;
 
+    IBOutlet	NSTableView		*tableView_userList;
+    
+    IBOutlet	NSPanel			*panel_progress;
     IBOutlet	NSTextField		*textField_Goal;
     IBOutlet	NSTextField		*textField_Progress;
     IBOutlet	NSProgressIndicator	*progress_working;
 
+    //
+    NSArray		*availableUsers;
+    NSMutableArray	*usersToImport;
+    NSTimer		*importTimer;
+    
     //Adium 1.6 import
     NSMutableArray	*sourcePathArray;
     NSMutableArray	*destPathArray;
@@ -34,6 +42,6 @@
 + (id)logImporterWithOwner:(id)inOwner;
 - (IBAction)closeWindow:(id)sender;
 
-- (void)importAdium1xLogs;
+- (IBAction)importLogs:(id)sender;
 
 @end
