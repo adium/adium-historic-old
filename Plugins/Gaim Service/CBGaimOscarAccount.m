@@ -339,48 +339,6 @@ static BOOL didInitOscar = NO;
 
 #pragma mark Status
 /*
- * @brief Return the gaim status type to be used for a status
- *
- * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer
- * to the status message.  This method should handle any status whose statusNname this service set as well as any statusName
- * defined in  AIStatusController.h (which will correspond to the services handled by Adium by default).
- * It should also handle a status name not specified in either of these places with a sane default, most likely by loooking at
- * [statusState statusType] for a general idea of the status's type.
- *
- * @param statusState The status for which to find the gaim status equivalent
- * @param statusMessage A pointer to the statusMessage.  Set *statusMessage to nil if it should not be used directly for this status.
- *
- * @result The gaim status equivalent
- */
-- (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
-						  message:(NSAttributedString **)statusMessage
-{
-	AIStatusType	statusType = [statusState statusType];
-	char			*gaimStatusType = NULL;
-	
-	switch(statusType){
-		case AIAvailableStatusType:
-			gaimStatusType = "Available";
-			break;
-		case AIAwayStatusType:
-			gaimStatusType = GAIM_AWAY_CUSTOM;
-			
-			//AIM needs an away message to go away. Use the description of our state if we aren't given a status message.
-			//This means that if ICQ goes to Be Right Back and we aren't given a more specific message, we'll be Away: Be Right Back.
-			//That seems desirable. The description is localized, too.
-			if((*statusMessage == nil) || ([*statusMessage length] == 0)){
-				*statusMessage = [NSAttributedString stringWithString:[[adium statusController] descriptionForStateOfStatus:statusState]];
-			}
-			break;		
-	}
-
-	//If we didn't get a gaim status type, request one from super
-	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
-	
-	return gaimStatusType;
-}
-
-/*
  * @brief Perform the actual setting a state
  *
  * This is called by setStatusState.  It allows subclasses to perform any other behaviors, such as modifying a display
