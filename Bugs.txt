@@ -24,8 +24,8 @@
 	those options when using bubble-to-fit for now (pending a real solution,
 	if somebody can think of one)
 - Metacontacts display no service icon
-- Creating a new layout and then saving it leads to proper preference application
-	but the table doesn't change selections properly.
+- Metacontact drawer is using the user's text coloring, it should be using
+	the coloring defined in its theme file instead.
 - In Mockie style, with offline contacts hidden and a contact from an empty group (the
     contact is the first to connect from that group) signs on, the vertical scrollbar
     appears although it is not needed.
