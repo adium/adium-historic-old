@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIEventSoundsPlugin.h"
-#import "AIEventSoundPreferences.h"
 #import "ESEventSoundAlertDetailPane.h"
 
 #define EVENT_SOUNDS_ALERT_SHORT	AILocalizedString(@"Play a sound",nil)
