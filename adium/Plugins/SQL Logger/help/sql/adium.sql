@@ -9,7 +9,7 @@ unique(username,service)
 
 create table adium.messages (
 message_id serial primary key,
-message_date timestamp default 'now',
+message_date timestamp default now(),
 message varchar(8096),
 sender_id int references adium.users(user_id) not null,
 recipient_id int references adium.users(user_id) not null
@@ -18,6 +18,7 @@ recipient_id int references adium.users(user_id) not null
 create index adium_sender_recipient on adium.messages(sender_id, recipient_id);
 create index adium_msg_date_sender_recipient on
    adium.messages (message_date, sender_id, recipient_id);
+create index adium_recipient on adium.messages(recipient_id);
 
 create view adium.message_v as
 select message_id,
@@ -52,9 +53,11 @@ do instead  (
         where username = new.recipient_sn
         and service = coalesce(new.sender_service, 'AIM'));
 
-    insert into adium.messages 
-        (message,sender_id,recipient_id)
-    values (new.message, 
+    insert into adium.messages
+        (message,sender_id,recipient_id, message_date)
+    values (new.message,
     (select user_id from users where username = new.sender_sn),
-    (select user_id from users where username = new.recipient_sn));
+    (select user_id from users where username = new.recipient_sn),
+    coalesce(new.message_date, now() )
+    )
 );

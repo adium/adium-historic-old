@@ -2,7 +2,7 @@
 
 # Jeffrey Melloy <jmelloy@visualdistortion.org>
 # $URL: http://svn.visualdistortion.org/repos/projects/adium/parser-2.pl $
-# $Rev: 348 $ $Date: 2003/07/19 00:03:29 $
+# $Rev: 358 $ $Date: 2003/08/05 04:25:49 $
 #
 # Script will parse Adium logs >= 2.0 and put them in postgresql table.
 # Table is created with "adium.sql"
@@ -30,9 +30,11 @@ for (my $i = 0; $i < @ARGV; $i++) {
     if ($ARGV[$i] eq "--verbose") {
         $verbose = 1;
     }
+    
     if ($ARGV[$i] eq "--no-vacuum") {
         $vacuum = 0;
     }
+    
     if ($ARGV[$i] eq "--quiet") {
         $quiet = 1;
     }
@@ -55,13 +57,13 @@ foreach my $service_user (glob '*') {
     chdir "$service_user";
     print($service_user . "\n");
     $_ = $service_user;
-    ($service, $user) = /(\w*).(\w*)/;
+    ($service, $user) = /(\w*).([\w\.\_\@\+\-]*)/;
     foreach my $folder (glob '*') {
         !$quiet && print "\t" . $folder . "\n";
         chdir $folder;
         foreach my $file (glob '*adiumLog') {
             $verbose && print "\t\t" . $file . "\n";
-            
+
             my $date;
             my $recdName;
             my $sentName = $user;
@@ -72,7 +74,7 @@ foreach my $service_user (glob '*') {
            
             eval {
                 $_ = $file;
-                ($recdName, $date) = /([\w\@.]*)\s.*(\d\d\d\d\|\d\d\|\d\d)/
+                ($recdName, $date) = /([\w\@\.\_\+\-]*)\s.*(\d\d\d\d\|\d\d\|\d\d)/
                     or die "$!";
                 
                 undef $/;
@@ -81,7 +83,7 @@ foreach my $service_user (glob '*') {
                 close(FILE);
                 
                 $content = escapeHTML($content);
-                $content =~ s/\n((?!\(\d\d\:\d\d\:\d\d\)\w*|(\&lt\;\w*\s.*\d\d\:\d\d\:\d\d.*\&gt\;)))/<br>$1/g or die $!;
+                $content =~ s/\n((?!\(\d\d\:\d\d\:\d\d\)[\w\_\.\@\+\-]*|(\&lt\;\w*\s.*\d\d\:\d\d\:\d\d.*\&gt\;)))/<br>$1/g or die $!;
     
                 $dbh->begin_work;
     
@@ -91,7 +93,7 @@ foreach my $service_user (glob '*') {
     
                     $_ = $filecontents[$i];
     
-                    ($time, $sender) = /^\((\d\d\:\d\d\:\d\d)\)(\w*)\:/
+                    ($time, $sender) = /^\((\d\d\:\d\d\:\d\d)\)([\w\@\_\.\+\-]*)\:/
                        or ($time) = /^\&lt\;.*(\d\d\:\d\d\:\d\d)/
                        or die "$file:$_\n$!";
     
@@ -108,15 +110,15 @@ foreach my $service_user (glob '*') {
                         $receiver = $sentName;
                     }
             
-                    if(/\)\w*\:(.*)/) {
+                    if(/\)[\w\@\_\.\+\-]*\:(.*)/) {
                         $message = $1;
                     } else {
                         $message = $_;
                     }
-            
+
                     my $timestamp = $date . " " . $time;
-                 
-                    $sth->execute($sender, $receiver, $message, $timestamp, $service, $service);
+
+                    $sth->execute($sender, $receiver, $message, $timestamp, $service, $service) or die ($! . $message);
                 }
                 $dbh->commit;
                 my $backup = $file . ".bak";

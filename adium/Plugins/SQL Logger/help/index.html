@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
                       "http://www.w3.org/TR/html4/strict.dtd">
 <!-- $URL: http://svn.visualdistortion.org/repos/projects/adium/index.html $ -->
-<!-- $Rev: 348 $ $Date: 2003/07/19 00:03:29 $ -->
+<!-- $Rev: 359 $ $Date: 2003/08/05 04:25:49 $ -->
 <html>
   <head>
     <title>Adium SQL Logging Instructions</title>
@@ -84,7 +84,7 @@ jmelloy=#</pre></div>
   <p>To see the table you just created, you need to alter your search
   path.</p>
   <div class="tutorialcode">
-    <pre>alter user <i>username</i> set search_path=adium,public</pre></div>
+    <pre>alter user <i>username</i> set search_path=adium,public;</pre></div>
   <p>After typing that, you should see the confirmation message <code>ALTER
     USER</code>. Then type "\d" and you should see something like this:</p>
   <div class="tutorialcode"><pre>jmelloy=# \d
@@ -129,7 +129,7 @@ jmelloy=#</pre></div>
   <p>You should see the last five messages you sent/received.  To search for
   messages, you can do </p>
   <div class="tutorialcode">
-    <pre>select * from messages where message ~ '<i>search string</i>'</pre>
+    <pre>select * from messages where message ~ '<i>search string</i>';</pre>
   </div>
   <p>This interface is kind of a pain, and searching can
   be made faster.</p>

@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/search.jsp $-->
-<!--$Rev: 348 $ $Date: 2003/07/19 00:03:29 $ -->
+<!--$Rev: 353 $ $Date: 2003/08/05 04:25:49 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -182,10 +182,10 @@ try {
             if(searchKey.indexOf("AND") > 0 || 
                 searchKey.indexOf("OR") > 0 ||
                 searchKey.indexOf("NOT") > 0) {
-                searchKey = searchKey.replaceAll("AND", "&");
-                searchKey = searchKey.replaceAll("OR", "|");
-                searchKey = searchKey.replaceAll("NOT", "!");
-                searchKey = searchKey.replaceAll(" ", "");
+                searchKey = searchKey.replaceAll(" AND ", "&");
+                searchKey = searchKey.replaceAll(" OR ", "|");
+                searchKey = searchKey.replaceAll("NOT ", "!");
+                searchKey = searchKey.replaceAll(" ", "&");
             } else if (searchKey.indexOf("|") > 0 ||
                         searchKey.indexOf("&") > 0) {
                 searchKey = searchKey.replaceAll(" ", "");
@@ -207,13 +207,15 @@ try {
             cmdAry[cmdCntr++] = new String(searchKey);
             
             if (sender != null) {
-                queryString += "and sender_sn = ?";
+                queryString += "and s.username = ?";
                 cmdAry[cmdCntr++] = new String(sender);
             }
+            
             if (recipient != null) {
-                queryString += " and recipient_sn = ? ";
+                queryString += " and r.username = ? ";
                 cmdAry[cmdCntr++] = new String(recipient);
             }
+            
             for (int i=0; i < exactMatch.size(); i++) {
                 queryString += " and message ~* ? ";
                 cmdAry[cmdCntr++] = new String((String) exactMatch.get(i));
