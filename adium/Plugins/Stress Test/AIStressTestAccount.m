@@ -61,6 +61,10 @@
     return(@"Stress Test");
 }
 
+- (NSString *)displayName
+{
+    return(@"Stress Test");
+}
 
 // AIAccount_Messaging ---------------------------------------------------------------------------
 // Send a content object
@@ -263,7 +267,7 @@
 - (void)_echo:(NSString *)string
 {
     AIContentMessage *messageObject;
-    messageObject = [AIContentMessage messageInChat:commandChat
+    messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:commandContact initialStatus:nil]
                                          withSource:commandContact
                                         destination:self
                                                date:nil
