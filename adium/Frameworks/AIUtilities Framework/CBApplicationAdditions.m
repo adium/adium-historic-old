@@ -14,4 +14,8 @@
 {
     return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2);
 }
+- (BOOL)isOnJaguarOrBetter
+{
+    return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_1);
+}
 @end
