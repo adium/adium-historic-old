@@ -82,6 +82,7 @@
             NSView	*itemView = [toolbarItem view];
             NSRect	itemFrame = [itemView frame];
             NSImage	*itemImage = [[NSImage alloc] initWithSize:itemFrame.size];
+            [itemImage setFlipped:YES];
 
             [itemImage lockFocus];
             [itemView drawRect:NSMakeRect(0, 0, itemFrame.size.width, itemFrame.size.height)];
