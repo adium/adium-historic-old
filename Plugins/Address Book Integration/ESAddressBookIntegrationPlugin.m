@@ -265,57 +265,57 @@
 //Called when the address book completes an asynchronous image lookup
 - (void)consumeImageData:(NSData *)inData forTag:(int)tag
 {
-    if (inData) {
-		if (tag == meTag){
-			[[adium preferenceController] setPreference:inData
-												 forKey:KEY_USER_ICON 
-												  group:GROUP_ACCOUNT_STATUS];
-			meTag = -1;
-			
-		}else if(useABImages){
-			NSNumber                *tagNumber = [NSNumber numberWithInt:tag];
-			
-			//Apply the image to the appropriate listObject
-			NSImage                 *image= [[[NSImage alloc] initWithData:inData] autorelease];
-			
-			//Get the object from our tracking dictionary
-			AIListObject            *listObject = [trackingDict objectForKey:tagNumber];
-			
-			if (listObject){
-				//Apply the image at lowest priority
-				[listObject setDisplayUserIcon:image
-									 withOwner:self
-								 priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];
-			}
-			
-			//No further need for the dictionary entry
-			[trackingDict removeObjectForKey:tagNumber];
+	if (tag == meTag){
+		[[adium preferenceController] setPreference:inData
+											 forKey:KEY_USER_ICON 
+											  group:GROUP_ACCOUNT_STATUS];
+		meTag = -1;
+		
+	}else if(useABImages){
+		NSNumber                *tagNumber = [NSNumber numberWithInt:tag];
+		
+		//Apply the image to the appropriate listObject
+		NSImage                 *image= (inData ? [[[NSImage alloc] initWithData:inData] autorelease] : nil);
+		
+		//Get the object from our tracking dictionary
+		AIListObject            *listObject = [trackingDict objectForKey:tagNumber];
+		
+		if (listObject){
+			//Apply the image at lowest priority
+			[listObject setDisplayUserIcon:image
+								 withOwner:self
+							 priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];
 		}
+		
+		//No further need for the dictionary entry
+		[trackingDict removeObjectForKey:tagNumber];
 	}
 }
 
 #pragma mark Searching
 - (ABPerson *)searchForObject:(AIListObject *)inObject
 {
-	return([self _searchForUID:[inObject UID] serviceID:[[inObject service] serviceID]]);
+	ABPerson		*person = nil;
+	NSString		*UID = [inObject UID];
+	NSString		*serviceID = [[inObject service] serviceID];
 	
-//	ABPerson		*person = nil;
-//	NSString		*UID = [inObject UID];
-//	NSString		*serviceID = [inObject serviceID];
+	person = [self _searchForUID:UID serviceID:serviceID];
 	
-//	person = [self _searchForUID:UID serviceID:serviceID];
+	//If we don't find anything yet and inObject is an AIM account, try again using the ICQ property; ICQ, try again using AIM
+	if (!person){
+		if ([serviceID isEqualToString:@"AIM"]){
+			person = [self _searchForUID:UID serviceID:@"ICQ"];
+		}else if ([serviceID isEqualToString:@"ICQ"]){
+			person = [self _searchForUID:UID serviceID:@"AIM"];
+		}
+	}
 	
-	//If we don't find anything yet and inObject is an AIM account, try again using the ICQ property
-//	if (!person && [serviceID isEqualToString:@"AIM"]){
-//		person = [self _searchForUID:UID serviceID:@"ICQ"];
-//	}
-	
-//	return person;
+	return person;
 }
 - (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID
 {
 	ABPerson		*person = nil;
-	NSDictionary *dict;
+	NSDictionary	*dict;
 	
 	if ([serviceID isEqualToString:@"Mac"]) {
 		dict = [addressBookDict objectForKey:@"AIM"];
@@ -415,11 +415,11 @@
 #pragma mark Address book caching
 - (void)rebuildAddressBookDict
 {
-	NSMutableDictionary *mutableAddressBookDict = [[NSMutableDictionary alloc] init];
-
 	NSEnumerator		*peopleEnumerator = [[[ABAddressBook sharedAddressBook] people] objectEnumerator];
 	NSArray				*allServiceKeys = [serviceDict allKeys];
 	ABPerson			*person;
+	
+	[addressBookDict release]; addressBookDict = [[NSMutableDictionary alloc] init];
 	
 	while (person = [peopleEnumerator nextObject]){
 		
@@ -430,22 +430,25 @@
 		NSMutableArray		*servicesArray = [NSMutableArray array];
 		
 		while (serviceID = [servicesEnumerator nextObject]){
-			NSMutableDictionary  *dict = [mutableAddressBookDict objectForKey:serviceID];
-			if (!dict){
+			NSMutableDictionary		*dict;
+			NSString				*addressBookKey;
+			ABMultiValue			*names;
+			int						i, nameCount;
+			BOOL					isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
+											   [serviceID isEqualToString:@"ICQ"]);
+			
+			if (!(dict = [mutableAddressBookDict objectForKey:serviceID])){
 				dict = [[[NSMutableDictionary alloc] init] autorelease];
 				[mutableAddressBookDict setObject:dict forKey:serviceID];
 			}
 			
-			NSString *addressBookKey = [serviceDict objectForKey:serviceID];
+			addressBookKey = [serviceDict objectForKey:serviceID];
 			
 			//An ABPerson may have multiple names; iterate through them
-			ABMultiValue	*names = [person valueForProperty:addressBookKey];
-			int				nameCount = [names count];
-			int				i;
-			BOOL			isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
-									   [serviceID isEqualToString:@"ICQ"]);
+			names = [person valueForProperty:addressBookKey];
+			nameCount = [names count];
 				
-			for (i=0 ; i<nameCount ; i++){
+			for (i=0 ; i < nameCount ; i++){
 				NSString	*UID = [[names valueAtIndex:i] compactedString];
 				[dict setObject:[person uniqueId] forKey:UID];
 				
@@ -470,13 +473,16 @@
 		}
 		
 		if (([UIDsArray count] > 1) && createMetaContacts){
-			//Got a record with multiple names
-			AIMetaContact	*metaContact = [[adium contactController] groupUIDs:UIDsArray forServices:servicesArray];
+			/* Got a record with multiple names */
+			AIMetaContact		*metaContact;
+			AIMutableOwnerArray *displayNameArray;
+			NSString			*displayName;
+			
+			metaContact = [[adium contactController] groupUIDs:UIDsArray forServices:servicesArray];
 			
 			//Load the name if appropriate
-			AIMutableOwnerArray *displayNameArray = [metaContact displayArrayForKey:@"Display Name"];
-			
-			NSString			*displayName = [self nameForPerson:person];
+			displayNameArray = [metaContact displayArrayForKey:@"Display Name"];
+			displayName = [self nameForPerson:person];
 
 			//Apply the values 
 			NSString *oldValue = [displayNameArray objectWithOwner:self];
@@ -488,22 +494,38 @@
 														userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
 																							 forKey:@"Notify"]];				
 			}
+			
+			//Delayed lookup of image data
+			if (!listObjectArrayForImageData){
+				listObjectArrayForImageData = [[NSMutableArray alloc] init];
+				personArrayForImageData = [[NSMutableArray alloc] init];
+			}
+			
+			[listObjectArrayForImageData addObject:inObject];
+			[personArrayForImageData addObject:person];
+			if (!imageLookupTimer){
+				imageLookupTimer = [[NSTimer scheduledTimerWithTimeInterval:IMAGE_LOOKUP_INTERVAL
+																	 target:self 
+																   selector:@selector(imageFetchTimer:) 
+																   userInfo:nil
+																	repeats:YES] retain];				
+			}
 		}
 	}
-	
-	//After this point we only need immutable access, so make a copy and keep that around, for efficiency
-	[addressBookDict release]; addressBookDict = [mutableAddressBookDict copy];
-	[mutableAddressBookDict release];
 }
 
 - (void)imageFetchTimer:(NSTimer *)inTimer
 {
 	if ([listObjectArrayForImageData count]){
-		AIListObject	*inObject = [listObjectArrayForImageData objectAtIndex:0];
-		ABPerson		*person = [personArrayForImageData objectAtIndex:0];
+		AIListObject	*inObject;
+		ABPerson		*person;
+		int				tag;
+		
+		inObject = [listObjectArrayForImageData objectAtIndex:0];
+		person = [personArrayForImageData objectAtIndex:0];
 		
 		//Begin the image load
-		int tag = [person beginLoadingImageDataForClient:self];
+		tag = [person beginLoadingImageDataForClient:self];
 		[trackingDict setObject:inObject forKey:[NSNumber numberWithInt:tag]];
 		
 		[listObjectArrayForImageData removeObjectAtIndex:0];
