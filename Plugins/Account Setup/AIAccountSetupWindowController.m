@@ -54,11 +54,37 @@ AIAccountSetupWindowController *sharedAccountSetupWindowInstance = nil;
 - (void)windowDidLoad
 {	
 	//Start on overview
-	[self setActiveSetupView:view_overview];
-	
+	[self showAccountsOverview];
+
 	//Center this panel
 	[[self window] center];
 }
+
+
+//Account overview
+- (void)showAccountsOverview
+{
+	[self setActiveSetupView:view_overview];
+}
+
+//New account
+- (void)newAccountOnService:(AIService *)service
+{
+	[view_newAccount configureForService:service];
+	[self setActiveSetupView:view_newAccount];
+}
+
+//Edit account
+- (void)editExistingAccount:(AIAccount *)account
+{
+	[view_editAccount configureForAccount:account];
+	[self setActiveSetupView:view_editAccount];
+}
+
+
+
+
+
 
 //Close
 - (IBAction)closeWindow:(id)sender

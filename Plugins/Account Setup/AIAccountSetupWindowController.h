@@ -17,6 +17,8 @@
 
 @interface AIAccountSetupWindowController : AIWindowController {
 	IBOutlet	AIAccountSetupView	*view_overview;
+	IBOutlet	AIAccountSetupView	*view_newAccount;
+	IBOutlet	AIAccountSetupView	*view_editAccount;
 	
 	AIAccountSetupView				*activeView;
 }
@@ -25,5 +27,9 @@
 
 - (void)setActiveSetupView:(AIAccountSetupView *)inView;
 - (void)sizeWindowForContent;
+
+- (void)showAccountsOverview;
+- (void)newAccountOnService:(AIService *)service;
+- (void)editExistingAccount:(AIAccount *)account;
 
 @end

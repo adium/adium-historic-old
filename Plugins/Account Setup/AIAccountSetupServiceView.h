@@ -16,7 +16,6 @@
 	NSSize				serviceNameSize;
 	
 	BOOL				mouseIn;
-	NSTrackingRectTag	trackingTag;
 	
 	NSArray				*accounts;
 	NSSize				serviceIconSize;
@@ -24,11 +23,16 @@
 	AIAccount			*hoveredAccount;
 	
 	int 				accountNameHeight;
+	
+	id					delegate;
+	
+	
+	NSArray				*trackingRects;
 }
 
-- (id)initWithService:(AIService *)inService;
+- (id)initWithService:(AIService *)inService delegate:(id)inDelegate;
 - (void)setServiceIconSize:(NSSize)inSize;
-- (void)addAccounts:(NSArray *)array;
+- (void)setAccounts:(NSArray *)array;
 - (NSDictionary *)accountNameAttributes;
 
 @end

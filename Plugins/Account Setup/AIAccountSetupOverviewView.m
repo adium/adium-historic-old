@@ -32,9 +32,9 @@
 	//Build views for active services
 	enumerator = [activeServices objectEnumerator];
 	while(service = [enumerator nextObject]){
-		AIAccountSetupServiceView	*serviceView = [[AIAccountSetupServiceView alloc] initWithService:service];
+		AIAccountSetupServiceView	*serviceView = [[AIAccountSetupServiceView alloc] initWithService:service delegate:self];
 		[serviceView setFrame:NSMakeRect(0, 0, 240, 110)];
-		[serviceView addAccounts:[[adium accountController] accountsWithService:service]];
+		[serviceView setAccounts:[[adium accountController] accountsWithService:service]];
 		[serviceView setServiceIconSize:NSMakeSize(48,48)];
 		[grid_activeServices addView:serviceView];		
 		[serviceView release];
@@ -47,9 +47,9 @@
 	//Build views for inactive services
 	enumerator = [inactiveServices objectEnumerator];
 	while(service = [enumerator nextObject]){
-		AIAccountSetupServiceView	*serviceView = [[AIAccountSetupServiceView alloc] initWithService:service];
+		AIAccountSetupServiceView	*serviceView = [[AIAccountSetupServiceView alloc] initWithService:service delegate:self];
 		[serviceView setFrame:NSMakeRect(0, 0, 164, 34)];
-		[serviceView addAccounts:[[adium accountController] accountsWithService:service]];
+		[serviceView setAccounts:[[adium accountController] accountsWithService:service]];
 		//[serviceView setServiceIconSize:NSMakeSize(32,32)];
 		[grid_inactiveServices addView:serviceView];
 		[serviceView release];
@@ -60,7 +60,8 @@
 //View will close
 - (void)viewWillClose
 {
-	
+	[grid_activeServices removeAllViews];
+	[grid_inactiveServices removeAllViews];
 }
 
 //Desired size for this view
@@ -107,6 +108,18 @@
 	[textField_inactiveServicesToggle setStringValue:(visible ? @"Hide additional services" : @"Show additional services")];
 	[grid_inactiveServices setHidden:!visible];
 	[controller sizeWindowForContent];
+}
+
+//New account
+- (void)newAccountOnService:(AIService *)service
+{
+	[controller newAccountOnService:service];
+}
+
+//Edit account
+- (void)editExistingAccount:(AIAccount *)account
+{
+	[controller editExistingAccount:account];
 }
 
 @end

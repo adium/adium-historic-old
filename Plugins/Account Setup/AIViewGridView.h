@@ -16,5 +16,6 @@
 }
 
 - (void)addView:(NSView *)inView;
+- (void)removeAllViews;
 
 @end
