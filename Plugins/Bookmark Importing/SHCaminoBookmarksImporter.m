@@ -12,8 +12,6 @@
 #define CAMINO_DICT_TITLE_KEY   @"Title"
 #define CAMINO_DICT_URL_KEY     @"URL"
 
-#define CAMINO_ROOT_MENU_TITLE  AILocalizedString(@"Camino",nil)
-
 @interface SHCaminoBookmarksImporter(PRIVATE)
 -(NSArray *)drillPropertyList:(id)inObject;
 - (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems;

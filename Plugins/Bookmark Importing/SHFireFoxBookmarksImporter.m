@@ -11,8 +11,6 @@
 #define FIREFOX_9_BOOKMARKS_PATH @"~/Library/Application Support/Firefox/Profiles"
 #define FIREFOX_BOOKMARKS_FILE_NAME @"bookmarks.html"
 
-#define FIREFOX_ROOT_MENU_TITLE AILocalizedString(@"FireFox",nil)
-
 @class SHMozillaCommonParser;
 
 @interface SHFireFoxBookmarksImporter(PRIVATE)
