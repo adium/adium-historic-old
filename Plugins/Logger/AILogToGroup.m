@@ -149,20 +149,23 @@
 	//Create & add the log
 
 	if(date = [fileAttributes fileModificationDate]){
-		/*
-		 60*60*24*7*8 = 4838400 seconds = 2 months ago or earlier: 
-		 Don't trust the modification date in case we're using a restore-from-backup log folder; we don't want all those
-		 old logs to have the same date.
-		 
-		 Don't trust the modification date if it's in the future.
-		 */
-		NSTimeInterval dateTimeIntervalSinceNow = [date timeIntervalSinceNow];
-		if ((dateTimeIntervalSinceNow < -4838400) || (dateTimeIntervalSinceNow > 0)){
-			date = [AILog dateFromFileName:(fileName ?
-											fileName :
-											[relativeLogPath lastPathComponent])];
-		}
+		NSDate	*fileNameDate = [AILog dateFromFileName:(fileName ?
+														 fileName :
+														 [relativeLogPath lastPathComponent])];
 		
+		NSTimeInterval dateTimeIntervalSinceFileNameDate = [date timeIntervalSinceDate:fileNameDate];
+		if (dateTimeIntervalSinceFileNameDate < 0){
+			//Date is earlier than the filename date; simply use the fileNameDate. 
+			//This is clearly a misrepresentation; the date on which the log was written according to Adium
+			//will be more accurate.
+			date = fileNameDate;
+		}else if(dateTimeIntervalSinceFileNameDate >= 86400){
+			//Date is more than a day after the filename date, which will always start at 00:00:00
+			//Set up this date as being 11:59:59 on the filename date, so it is later than other logs on that date
+			//but still shows the correct start date
+			date = [NSDate dateWithTimeIntervalSinceReferenceDate:([fileNameDate timeIntervalSinceReferenceDate] + 86399)];
+		}
+
 		theLog = [[[AILog allocWithZone:nil] initWithPath:relativeLogPath
 													 from:from
 													   to:to

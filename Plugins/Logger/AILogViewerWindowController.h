@@ -19,6 +19,8 @@
 #define	KEY_LOG_VIEWER_DRAWER_STATE	@"Log Viewer Drawer State"
 #define	KEY_LOG_VIEWER_DRAWER_SIZE	@"Log Viewer Drawer Size"
 
+#define	LOG_VIEWER_DID_CREATE_LOG_ARRAYS	@"LogViewerDidCreateLogArrays"
+
 @class AIAlternatingRowOutlineView, AIListContact, AILoggerPlugin, AILog;
 
 typedef enum {
@@ -29,7 +31,7 @@ typedef enum {
 } LogSearchMode;
 
 @interface AILogViewerWindowController : AIWindowController {
-    AILoggerPlugin                                      *plugin;
+    AILoggerPlugin							*plugin;
 	
     IBOutlet	NSTableView                 *tableView_results;
     IBOutlet	NSTextView                  *textView_content;
@@ -47,38 +49,39 @@ typedef enum {
 	
     //Misc
     NSMutableArray		*availableLogArray;		//Array/tree of all available logs
-    NSMutableArray		*fromArray;			//Array of account names
+    NSMutableArray		*fromArray;				//Array of account names
     NSMutableArray		*fromServiceArray;		//Array of services for accounts
-    NSMutableArray		*toArray;			//Array of contacts
+    NSMutableArray		*toArray;				//Array of contacts
     NSMutableArray		*toServiceArray;		//Array of services for accounts
     NSTableColumn		*selectedColumn;		//Selected/active sort column
-    BOOL			sortDirection;			//Direction to sort
-    LogSearchMode		searchMode;			//Currently selected search mode
+    BOOL				sortDirection;			//Direction to sort
+    LogSearchMode		searchMode;				//Currently selected search mode
     NSDateFormatter		*dateFormatter;			//Format for dates displayed in the table
-    BOOL			automaticSearch;		//YES if this search was performed automatically for the user (view ___'s logs...)
-    BOOL			ignoreSelectionChange;          //Hack to prevent automatic table selection changes from clearing the automaticSearch flag
-    BOOL                        showEmoticons;			//Flag for whether or not to process emoticons
-    BOOL			windowIsClosing;		//YES only if windowShouldClose: has been called, to prevent actions after that point
+    BOOL				automaticSearch;		//YES if this search was performed automatically for the user (view ___'s logs...)
+    BOOL				ignoreSelectionChange;	//Hack to prevent automatic table selection changes from clearing the automaticSearch flag
+    BOOL				showEmoticons;			//Flag for whether or not to process emoticons
+    BOOL				windowIsClosing;		//YES only if windowShouldClose: has been called, to prevent actions after that point
+
+	//Array of selected / displayed logs.  (Locked access)
+    NSMutableArray		*selectedLogArray;		//Array of filtered/resulting logs
+    NSLock				*resultsLock;			//Lock before touching the array
+    AILog				*displayedLog;			//Currently selected/displayed log
 	
     //Search information
-    int				activeSearchID;                 //ID of the active search thread, all other threads should quit
-    NSLock			*searchingLock;			//Locked when a search is in progress
-    BOOL			searching;			//YES if a search is in progress
-    NSString			*activeSearchString;		//Current search string
-    NSString			*activeSearchStringEncoded;     //Current search string encoded into HTML
+    int					activeSearchID;			//ID of the active search thread, all other threads should quit
+    NSLock				*searchingLock;			//Locked when a search is in progress
+    BOOL				searching;				//YES if a search is in progress
+    NSString			*activeSearchString;	//Current search string
+    NSString			*activeSearchStringEncoded;	//Current search string encoded into HTML
 	
-    NSTimer			*aggregateLogIndexProgressTimer; //Used to update a content search as the index updates
+	//Used to update a content search as the index updates
+    NSTimer				*aggregateLogIndexProgressTimer; 
 	
-    //Array of selected / displayed logs.  (Locked access)
-    NSMutableArray		*selectedLogArray;		//Array of filtered/resulting logs
-    NSLock			*resultsLock;			//Lock before touching the array
-    AILog			*displayedLog;			//Currently selected/displayed log
-	
-    NSMutableDictionary         *toolbarItems;
-    NSImage			*blankImage;
+    NSMutableDictionary	*toolbarItems;
+    NSImage				*blankImage;
     
-    int                         sameSelection;
-    BOOL                        useSame;
+    int					sameSelection;
+    BOOL				useSame;
 }
 
 + (id)openForPlugin:(id)inPlugin;

@@ -99,15 +99,15 @@ static NSString                             *filterForContactName = nil;	//Conta
     [self openForPlugin:inPlugin];
     
 	if(inContact){
-		NSString	*searchString;
+		NSString	*contactName;
 		
 		if ([inContact isKindOfClass:[AIMetaContact class]]){
-			searchString = [[(AIMetaContact *)inContact preferredContact] UID];
+			contactName = [[(AIMetaContact *)inContact preferredContact] UID];
 		}else{
-			searchString = [inContact UID];
+			contactName = [inContact UID];
 		}
 		
-		[sharedLogViewerInstance setSearchString:searchString mode:LOG_SEARCH_TO];
+		[sharedLogViewerInstance filterForContactName:contactName];
 	}
 	
     return(sharedLogViewerInstance);
@@ -190,7 +190,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 {
     NSEnumerator			*enumerator;
     NSString				*folderName;
-    NSMutableDictionary                 *toDict = [NSMutableDictionary dictionary];
+    NSMutableDictionary		*toDict = [NSMutableDictionary dictionary];
     NSString				*basePath = [AILoggerPlugin logBasePath];
     NSString				*fromUID, *serviceClass;
 
@@ -265,8 +265,12 @@ static NSString                             *filterForContactName = nil;	//Conta
 			[toServiceArray addObject:serviceClass];
 		}
 	}
-        [textField_totalAccounts setIntValue:[fromArray count]];
-        [textField_totalContacts setIntValue:[toArray count]];
+	
+	[textField_totalAccounts setIntValue:[fromArray count]];
+	[textField_totalContacts setIntValue:[toArray count]];
+	
+	[[adium notificationCenter] postNotificationName:LOG_VIEWER_DID_CREATE_LOG_ARRAYS
+											  object:nil];
 }
 
 //
@@ -361,18 +365,10 @@ static NSString                             *filterForContactName = nil;	//Conta
 		[logAccessLock unlock];
 
 		//Rebuild the 'global' log indexes
-		[logFromGroupDict release]; logFromGroupDict = [[NSMutableDictionary alloc] init];
-		[toArray removeAllObjects]; //note: even if there are no logs, the name will remain [bug or feature?]
-		[toServiceArray removeAllObjects];
-		[fromArray removeAllObjects];
-		[fromServiceArray removeAllObjects];
-	
-		[self initLogFiltering];
+		[self rebuildIndices];
 
-		[tableView_results reloadData];
 		[self updateProgressDisplay];
-		[self selectDisplayedLog];
-
+		
 		[theLog release];
 	}
 }
@@ -389,7 +385,7 @@ static NSString                             *filterForContactName = nil;	//Conta
     [self initLogFiltering];
     
     [tableView_results reloadData];
-    [self selectDisplayedLog];    
+    [self selectDisplayedLog];
 }
 
 //Close the window
@@ -498,8 +494,8 @@ static NSString                             *filterForContactName = nil;	//Conta
 - (void)updateProgressDisplay
 {
     NSMutableString     *progress;
-    int			indexComplete, indexTotal;
-    BOOL		indexing;
+    int					indexComplete, indexTotal;
+    BOOL				indexing;
 
     //We always convey the number of logs being displayed
     [resultsLock lock];
@@ -515,13 +511,13 @@ static NSString                             *filterForContactName = nil;	//Conta
     //Append search progress
     if(searching && activeSearchString && [activeSearchString length]){
 		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" - Searching for '%@'",nil),activeSearchString]];
-
-		if (filterForAccountName && [filterForAccountName length]){
-			[progress appendString:[NSString stringWithFormat:AILocalizedString(@" in chats on %@",nil),filterForAccountName]];
-		}else if (filterForContactName && [filterForContactName length]){
-			[progress appendString:[NSString stringWithFormat:AILocalizedString(@" in chats with %@",nil),filterForContactName]];
-		}
-    }
+	}
+	
+	if(filterForAccountName && [filterForAccountName length]){
+		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" in chats on %@",nil),filterForAccountName]];
+	}else if(filterForContactName && [filterForContactName length]){
+		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" in chats with %@",nil),filterForContactName]];
+	}
 
     //Append indexing progress
     if(indexing = [plugin getIndexingProgress:&indexComplete outOf:&indexTotal]){
@@ -864,7 +860,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 - (IBAction)updateSearch:(id)sender
 {
     automaticSearch = NO;
-    [self setSearchString:[searchField_logs stringValue]];
+    [self setSearchString:[[[searchField_logs stringValue] copy] autorelease]];
     [self startSearchingClearingCurrentResults:YES];
 }
 
@@ -872,7 +868,14 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 - (IBAction)selectSearchType:(id)sender
 {
     automaticSearch = NO;
-    [self setSearchMode:[sender tag]];
+
+	//First, update the search mode to the newly selected type
+    [self setSearchMode:[sender tag]]; 
+	
+	//Then, ensure we are ready to search using the current string
+	[self setSearchString:activeSearchString];
+
+	//Now we are ready to start searching
     [self startSearchingClearingCurrentResults:YES];
 }
 
@@ -880,8 +883,10 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 - (void)setSearchString:(NSString *)inString mode:(LogSearchMode)inMode
 {
     automaticSearch = YES;
-    [self setSearchString:inString];
+	//Apply the search mode first since the behavior of setSearchString changes depending on the current mode
     [self setSearchMode:inMode];
+    [self setSearchString:inString];
+
     [self startSearchingClearingCurrentResults:YES];
 }
 
@@ -1003,7 +1008,9 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     if(![[searchField_logs stringValue] isEqualToString:inString]){
 		[searchField_logs setStringValue:(inString ? inString : @"")];
     }
-    [activeSearchString release]; activeSearchString = [[searchField_logs stringValue] copy];
+	
+	//Use autorelease so activeSearchString can be passed back to here
+    [activeSearchString autorelease]; activeSearchString = [inString retain];
 	
 	//Our logs are stored as HTML.  Non-ASCII characters are therefore HTML-encoded.  We need to have an
 	//encoded version of our search string with which to search when doing a content-based search, as that's
@@ -1198,6 +1205,10 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 	if (searchMode == LOG_SEARCH_TO){
 		[self setSearchMode:LOG_SEARCH_CONTENT];
 	}
+
+	//Update our search string; now that we may be on LOG_SEARCH_CONTENT the encoded string is needed,
+	//and we also want the rank column visibility to be updated
+	[self setSearchString:activeSearchString];
 	
     [self startSearchingClearingCurrentResults:YES];
 }
@@ -1214,6 +1225,10 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 		[self setSearchMode:LOG_SEARCH_CONTENT];
 	}
 
+	//Update our search string; now that we may be on LOG_SEARCH_CONTENT the encoded string is needed,
+	//and we also want the rank column visibility to be updated
+	[self setSearchString:activeSearchString];
+	
     [self startSearchingClearingCurrentResults:YES];	
 }
 
@@ -1225,8 +1240,8 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 		//Searching for a specific contact
 		NSString		*path = (NSString *)SKDocumentGetName(inDocument);
 		NSString		*toPath = [path stringByDeletingLastPathComponent];
-		AILogToGroup            *toGroup = [logToGroupDict objectForKey:toPath];
-		
+		AILogToGroup	*toGroup = [logToGroupDict objectForKey:toPath];
+
 		return([[toGroup to] caseInsensitiveCompare:filterForContactName] == NSOrderedSame);
 
 	}else if(filterForAccountName){
@@ -1234,26 +1249,25 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 		NSString		*path = (NSString *)SKDocumentGetName(inDocument);
 		NSString		*toPath = [path stringByDeletingLastPathComponent];
 		NSString		*fromPath = [toPath stringByDeletingLastPathComponent];
-		AILogFromGroup          *fromGroup = [logFromGroupDict objectForKey:fromPath];
+		AILogFromGroup	*fromGroup = [logFromGroupDict objectForKey:fromPath];
 
 		return([[fromGroup fromUID] caseInsensitiveCompare:filterForAccountName] == NSOrderedSame);
-		
+
 	}else{
-		return(true);
+		return(true); //Boolean, not BOOL
 	}
 }
-
 
 //Perform a content search of the indexed logs
 - (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID
 {
-	SKIndexRef		logSearchIndex = [plugin logContentIndex];
-	SKSearchGroupRef        searchGroup;
-	CFArrayRef		indexArray;
-	SKSearchResultsRef      searchResults;
-	int			resultCount;    
-	UInt32			lastUpdate = TickCount();
-	void			*indexPtr = &logSearchIndex;
+	SKIndexRef			logSearchIndex = [plugin logContentIndex];
+	SKSearchGroupRef	searchGroup;
+	CFArrayRef			indexArray;
+	SKSearchResultsRef	searchResults;
+	int					resultCount;    
+	UInt32				lastUpdate = TickCount();
+	void				*indexPtr = &logSearchIndex;
 	
 	//We utilize the logIndexAccessLock so we have exclusive access to the logs
 	NSLock			*logAccessLock = [plugin logAccessLock];
@@ -1262,19 +1276,17 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 	[logAccessLock lock];
 	indexArray = CFArrayCreate(NULL, indexPtr, 1, &kCFTypeArrayCallBacks);
 	searchGroup = SKSearchGroupCreate(indexArray);
+	
 	searchResults = SKSearchResultsCreateWithQuery(
-                                                        searchGroup,
-                                                        (CFStringRef)searchString,
-                                                        kSKSearchRanked,
-                                                        LOG_CONTENT_SEARCH_MAX_RESULTS,
-                                                        (void *)self,	/* Must have a context for the ContentResultsFilter */
-                                                       &ContentResultsFilter	/* Determines if a given document should be included */
-                                                        );
-	[logAccessLock unlock];
-	
+												   searchGroup,
+												   (CFStringRef)searchString,
+												   kSKSearchRanked,
+												   LOG_CONTENT_SEARCH_MAX_RESULTS,
+												   (void *)self,	/* Must have a context for the ContentResultsFilter */
+												   &ContentResultsFilter	/* Determines if a given document should be included */
+												   );
+
 	//Process the results
-	[logAccessLock lock];
-	
 	if(resultCount = SKSearchResultsGetCount(searchResults)){
 		SKDocumentRef   *outDocumentsArray = malloc(sizeof(SKDocumentRef) * LOG_RESULT_CLUMP_SIZE);
 		float		*outScoresArray = malloc(sizeof(float) * LOG_RESULT_CLUMP_SIZE);
@@ -1299,7 +1311,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 				AILog			*theLog;
 				
 				/*	
-					Add the log - if our index is currently out of date (for example, a log was just deleted) 
+				 Add the log - if our index is currently out of date (for example, a log was just deleted) 
 				 we may get a null log, so be careful.
 				 */
 				[resultsLock lock];
@@ -1321,12 +1333,12 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 			resultRange.length -= LOG_RESULT_CLUMP_SIZE;
 		}
 	}
-	
+
 	CFRelease(indexArray);
 	CFRelease(searchGroup);
 	CFRelease(searchResults);
-	
-	//Release the logsLock so the plugin can return to regularly scheduled programming if it wants to
+
+	//Release the logsLock so the plugin can return to regularly scheduled programming
 	[logAccessLock unlock];
 }
 
@@ -1435,6 +1447,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 
 - (IBAction)toggleDrawer:(id)sender
 {
+
     [drawer_contacts toggle:sender];
 }
 
