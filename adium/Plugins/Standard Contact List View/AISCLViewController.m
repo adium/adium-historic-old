@@ -118,6 +118,10 @@
     [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
+
+	//Make sure the view stops observing, too, in case the dealloc order is not the expected one
+    [[NSNotificationCenter defaultCenter] removeObserver:contactListView];
+	
 	
     //Hide any open tooltips
 	[self _removeCursorRect];
