@@ -351,7 +351,7 @@
 
 - (void)screenParametersChanged:(NSNotification *)notification
 {
-	[contactListController contactListDesiredSizeChanged:nil];
+	[contactListController contactListDesiredSizeChanged];
 }
 
 @end
