@@ -33,6 +33,7 @@
     NSMutableArray		*emoticons;
     
     NSMutableArray		*quickScanList;
+    NSMutableString		*quickScanString;
 	
     AIEmoticonPreferences	*prefs;
     NSMutableArray		*cachedPacks;
