@@ -1725,14 +1725,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountProfileTo:)];
 			
 		}else if([key isEqualToString:KEY_USER_ICON]){
-			NSData  *data;
+			NSData  *data = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
 
-			if(data = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
-				NSImage		*image = [[NSImage alloc] initWithData:data];
-				[self setAccountUserImage:image];
-				[image release];
-			}
-			
+			[self setAccountUserImage:(data ? [[[NSImage alloc] initWithData:data] autorelease] : nil)];
+
 		}else if([key isEqualToString:KEY_ACCOUNT_CHECK_MAIL]){
 			//Update the mail checking setting if the account is already made (if it isn't, we'll set it when it is made)
 			if(account){
@@ -1895,8 +1891,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-// *** USER IMAGE
-//Set our user image (Pass nil for no image)
+/*
+ * @brief Set our user image
+ *
+ * Pass nil for no image. This resizes and converts the image as needed for our protocol.
+ * After setting it with gaim, it sets it within Adium; if this is not called, the image will
+ * show up neither locally nor remotely.
+ */
 - (void)setAccountUserImage:(NSImage *)image
 {
 	if (account) {
