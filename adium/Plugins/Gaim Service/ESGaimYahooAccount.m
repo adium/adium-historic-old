@@ -84,17 +84,21 @@ static NSDictionary		*presetStatusesDictionary = nil;
 #pragma mark Encoding
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {	
-	return([AIHTMLDecoder encodeHTML:inAttributedString
-							 headers:NO
-							fontTags:YES
-				  includingColorTags:YES
-					   closeFontTags:YES
-						   styleTags:YES
-		  closeStyleTagsOnFontChange:YES
-					  encodeNonASCII:NO
-						  imagesPath:nil
-				   attachmentsAsText:YES
+	if (listObject){
+		return([AIHTMLDecoder encodeHTML:inAttributedString
+								 headers:NO
+								fontTags:YES
+					  includingColorTags:YES
+						   closeFontTags:YES
+							   styleTags:YES
+			  closeStyleTagsOnFontChange:YES
+						  encodeNonASCII:NO
+							  imagesPath:nil
+					   attachmentsAsText:YES
 						  simpleTagsOnly:YES]);
+	}else{
+		return [inAttributedString string];
+	}
 }
 
 #pragma mark File transfer
