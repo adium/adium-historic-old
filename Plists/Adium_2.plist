@@ -126,6 +126,34 @@
 			<key>LSTypeIsPackage</key>
 			<true/>
 		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>ListLayout</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>Adium List Layout</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>AdIM</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>ListTheme</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>Adium List Theme</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>AdIM</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>Adium</string>
