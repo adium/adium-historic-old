@@ -162,8 +162,10 @@ AIPresetStatusWindowController *sharedStatusWindowInstance = nil;
 	int		selectedIndex = [tableView_stateList selectedRow];
 	
 	if(selectedIndex >= 0 && selectedIndex < [stateArray count]){
-		[AIEditStateWindowController editCustomState:[stateArray objectAtIndex:selectedIndex]
-										  forAccount:nil
+		AIStatus	*statusState = [stateArray objectAtIndex:selectedIndex];
+		[AIEditStateWindowController editCustomState:statusState
+											 forType:[statusState statusType]
+										  andAccount:nil
 											onWindow:[self window]
 									 notifyingTarget:self];
 	}
@@ -207,7 +209,8 @@ AIPresetStatusWindowController *sharedStatusWindowInstance = nil;
 - (IBAction)newState:(id)sender
 {
 	[AIEditStateWindowController editCustomState:nil
-									  forAccount:nil
+										 forType:AIAwayStatusType
+									  andAccount:nil
 										onWindow:[self window]
 								 notifyingTarget:self];
 }

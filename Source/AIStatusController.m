@@ -24,15 +24,10 @@
 #import <Adium/AIService.h>
 #import <Adium/AIStatusIcons.h>
 
-//Localized status titles
-#define STATUS_TITLE_AWAY		@"Away"
-#define STATUS_TITLE_IDLE		@"Idle"
-#define STATUS_TITLE_INVISIBLE	@"Invisible"
-#define STATUS_TITLE_AVAILABLE	@"Available"
-
 //State menu
 #define ELIPSIS_STRING				[NSString stringWithUTF8String:"…"]
 #define STATE_TITLE_MENU_LENGTH		30
+#define STATUS_TITLE_CUSTOM			AILocalizedString(@"Custom...",nil)
 
 //Private idle function
 extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
@@ -276,6 +271,21 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 			}
 		}
 	}
+	
+	return nil;
+}
+
+- (NSString *)defaultStatusNameForType:(AIStatusType)statusType
+{
+	//Set the default status name
+	switch(statusType){
+		case AIAvailableStatusType:
+			return STATUS_NAME_AVAILABLE;
+			break;
+		case AIAwayStatusType:
+			return STATUS_NAME_AWAY;
+			break;
+	}	
 	
 	return nil;
 }
@@ -704,6 +714,31 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	[menuItemArray addObjectsFromArray:addedMenuItems];
 }
 
+//Sort the status array
+int _statusArraySort(id objectA, id objectB, void *context)
+{
+	AIStatusType statusTypeA = [objectA statusType];
+	AIStatusType statusTypeB = [objectB statusType];
+	
+	if(statusTypeA > statusTypeB){
+		return NSOrderedDescending;
+	}else if(statusTypeB > statusTypeA){
+		return NSOrderedAscending;
+	}else{
+		NSArray	*originalArray = (NSArray *)context;
+		
+		//Return them in the same relative order as the original array if they are of the same type
+		int indexA = [originalArray indexOfObjectIdenticalTo:objectA];
+		int indexB = [originalArray indexOfObjectIdenticalTo:objectB];
+
+		if(indexA > indexB){
+			return NSOrderedDescending;
+		}else{
+			return NSOrderedAscending;
+		}
+	}
+}
+
 /*!
  * @brief Add state menu items
  *
@@ -717,10 +752,31 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	NSEnumerator	*enumerator;
 	NSMenuItem		*menuItem;
 	AIStatus		*statusState;
-	
-	//Create a menu item for each state
-	enumerator = [[self stateArray] objectEnumerator];
+	AIStatusType	currentStatusType = AIAvailableStatusType;
+
+	//Create a menu item for each state.  States must first be sorted such that states of the same AIStatusType 
+	//are grouped together.
+	enumerator = [[[self stateArray] sortedArrayUsingFunction:_statusArraySort context:[self stateArray]] objectEnumerator];
 	while(statusState = [enumerator nextObject]){
+		AIStatusType thisStatusType = [statusState statusType];
+		
+		//Add the "Custom..." state option and a separatorItem before beginning to add items for a new statusType
+		if(currentStatusType != thisStatusType){
+			menuItem = [[NSMenuItem alloc] initWithTitle:STATUS_TITLE_CUSTOM
+												  target:self
+												  action:@selector(selectCustomState:)
+										   keyEquivalent:@""];
+#warning IMAGE
+			[menuItem setImage:[[[AIStatus statusIconForStatusType:currentStatusType] copy] autorelease]];
+			[menuItem setTag:currentStatusType];
+			[menuItemArray addObject:menuItem];
+
+			//Add a divider
+			[menuItemArray addObject:[NSMenuItem separatorItem]];
+
+			currentStatusType = thisStatusType;
+		}
+		
 		menuItem = [[NSMenuItem alloc] initWithTitle:[self _titleForMenuDisplayOfState:statusState]
 											  target:self
 											  action:@selector(selectState:)
@@ -735,14 +791,13 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		[menuItem release];
 	}
 	
-	//Add the "Custom..." state option
-	menuItem = [[NSMenuItem alloc] initWithTitle:@"Custom..."
+	//Add the last "Custom..." state option (for the last statusType we handled, which didn't get a "Custom..." item yet)
+	menuItem = [[NSMenuItem alloc] initWithTitle:STATUS_TITLE_CUSTOM
 										  target:self
 										  action:@selector(selectCustomState:)
 								   keyEquivalent:@""];
-	[menuItem setImage:[AIStatusIcons statusIconForStatusID:@"unknown"
-													   type:AIStatusIconList
-												  direction:AIIconNormal]];
+	[menuItem setImage:[[[AIStatus statusIconForStatusType:currentStatusType] copy] autorelease]];
+	[menuItem setTag:currentStatusType];
 	[menuItemArray addObject:menuItem];
 
 	//Now that we are done creating the menu items, tell the plugin about them
@@ -842,6 +897,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		NSDictionary	*dict = [menuItem representedObject];
 		AIAccount		*account;
 		AIStatus		*appropiateActiveStatusState;
+		AIStatus		*menuItemStatusState;
 		
 		//Search for the account or global status state as appropriate for this menu item.
 		if(account = [dict objectForKey:@"AIAccount"]){
@@ -858,10 +914,28 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 									appropiateActiveStatusState :
 									nil);
 
-		if([dict objectForKey:@"AIStatus"] == searchState){
-			if([menuItem state] != NSOnState) [menuItem setState:NSOnState];
+		menuItemStatusState = [dict objectForKey:@"AIStatus"];
+		
+		if(searchState){
+			//If the search state exists (is a saved state), search for the match
+			if(menuItemStatusState == searchState){
+				if([menuItem state] != NSOnState) [menuItem setState:NSOnState];
+			}else{
+				if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
+			}
 		}else{
-			if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
+			//If there is not a status state, we are in a Custom state. Search for the correct Custom item.
+			if(menuItemStatusState){
+				//If the menu item has an associated state, it's always off.
+				if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
+			}else{
+				//If it doesn't, check the tag to see if it should be on or off.
+				if([menuItem tag] == [searchState statusType]){
+					if([menuItem state] != NSOnState) [menuItem setState:NSOnState];
+				}else{
+					if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
+				}
+			}
 		}
 	}
 }
@@ -908,20 +982,27 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 {
 	NSDictionary	*dict = [sender representedObject];
 	AIAccount		*account = [dict objectForKey:@"AIAccount"];
-
+	AIStatusType	statusType = [sender tag];
+	AIStatus		*baseStatusState;
+	
 	if(account){
-		[AIEditStateWindowController editCustomState:[account statusState]
-										  forAccount:account
-											onWindow:nil
-									 notifyingTarget:self];
-
+		baseStatusState = [account statusState];
 	}else{
-		[AIEditStateWindowController editCustomState:[self activeStatusState]
-										  forAccount:nil
-											onWindow:nil
-									 notifyingTarget:self];
+		baseStatusState = [self activeStatusState];
+	}
+	
+	//If we are going to a custom state different from the current custom state,
+	//don't use the current status state as a base.  Going from Away to Available, don't autofill the Available
+	//status message with the old away message.
+	if([baseStatusState statusType] != statusType){
+		baseStatusState = nil;
 	}
 
+	[AIEditStateWindowController editCustomState:baseStatusState
+										 forType:statusType
+									  andAccount:account
+										onWindow:nil
+								 notifyingTarget:self];
 }
 
 /*!
