@@ -147,7 +147,7 @@
     cell = [self cellAtPoint:clickLocation row:&row column:&column];
 
     //Give the cell a chance to process the mouse down.  If it returns YES, we ignore the event.
-    if(![cell mouseDown:theEvent]){
+    if(![cell handleMouseDown:theEvent]){
         //Select the row
         [self selectRow:row];
     
@@ -178,10 +178,6 @@
     }
 }
 
-- (void)mouseUp:(NSEvent *)theEvent
-{
-
-}
 
 //Enable/disable mouse moved events
 - (void)setAcceptsMouseMovedEvents:(BOOL)flag

@@ -128,7 +128,7 @@
 }
 
 //Handle a mouse down
-- (BOOL)mouseDown:(NSEvent *)theEvent
+- (BOOL)handleMouseDown:(NSEvent *)theEvent
 {
     return(NO);
 }

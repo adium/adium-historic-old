@@ -54,7 +54,7 @@
 
 //Cursor Tracking
 - (BOOL)resetCursorRectsInView:(NSView *)controlView visibleRect:(NSRect)visibleRect;
-- (BOOL)mouseDown:(NSEvent *)theEvent;
+- (BOOL)handleMouseDown:(NSEvent *)theEvent;
 - (void)mouseMoved:(NSEvent *)theEvent;
 
 //Sizing
