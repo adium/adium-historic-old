@@ -275,9 +275,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 																					   group:PREF_GROUP_AWAY_MESSAGES];
 			if (autoAwayMessageIndex >= 2 && (autoAwayMessageIndex < [awaysArray count])){
 				//If the autoAwayMessageIndex corresponds to a valid away message, set us as away
-				NSDictionary		*awayDict = [awaysArray objectAtIndex:(autoAwayMessageIndex - 2)];
-				NSAttributedString  *awayMessage = [awayDict objectForKey:@"Message"];
-				NSAttributedString  *awayAutoResponse = [awayDict objectForKey:@"Autoresponse"];
+				NSDictionary	*awayDict = [awaysArray objectAtIndex:(autoAwayMessageIndex - 2)];
+				NSData			*awayMessage = [awayDict objectForKey:@"Message"];
+				NSData			*awayAutoResponse = [awayDict objectForKey:@"Autoresponse"];
 				
 				[[adium preferenceController] setPreference:awayMessage
 													 forKey:@"AwayMessage"
@@ -286,11 +286,12 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 													 forKey:@"Autoresponse" 
 													  group:GROUP_ACCOUNT_STATUS];
 			}else if(autoAwayMessageIndex == 0){
-				NSAttributedString *awayMessage;
+				NSData	*awayMessage;
 				awayMessage = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:@"Quick Away Message"];
 				
 				if(!awayMessage){
-				awayMessage = [[NSAttributedString alloc] initWithString:DEFAULT_AWAY_MESSAGE];
+					awayMessage = [[[[NSAttributedString alloc] initWithString:DEFAULT_AWAY_MESSAGE
+																	attributes:[[adium contentController] defaultFormattingAttributes]] autorelease] dataRepresentation];
 				}
 				
 				[[adium preferenceController] setPreference:awayMessage
