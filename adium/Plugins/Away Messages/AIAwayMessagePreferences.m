@@ -327,40 +327,39 @@
 - (void)_displayAwayMessage:(NSMutableDictionary *)awayDict
 {
     if(awayDict){
-	NSString	*type;
+        NSString	*type;
 
-	//Get the selected item
-	type = [awayDict objectForKey:@"Type"];
+        //Get the selected item
+        type = [awayDict objectForKey:@"Type"];
 
-	if([type compare:@"Group"] == 0){
-	    //Empty our text view, and disable it
-	    [textView_message setString:@""];
-	    [textView_message setEditable:NO];
-	    [textView_message setSelectable:NO];
-	    [textView_autoresponse setString:@""];
-	    [textView_autoresponse setEditable:NO];
-	    [textView_autoresponse setSelectable:NO];
-	    
-	}else if([type compare:@"Away"] == 0){
-	    //Show the away message in our text view, and enable it for editing
-	    NSAttributedString * autoresponse = [awayDict objectForKey:@"Autoresponse"];
-	    BOOL hasAutoresponse = ([[autoresponse string] length] > 0);
+        if([type compare:@"Group"] == 0){
+            //Empty our text view, and disable it
+            [textView_message setString:@""];
+            [textView_message setEditable:NO];
+            [textView_message setSelectable:NO];
+            [textView_autoresponse setString:@""];
+            [textView_autoresponse setEditable:NO];
+            [textView_autoresponse setSelectable:NO];
+        }else if([type compare:@"Away"] == 0){
+            //Show the away message in our text view, and enable it for editing
+            NSAttributedString * autoresponse = [awayDict objectForKey:@"Autoresponse"];
+            BOOL hasAutoresponse = ([[autoresponse string] length] > 0);
 
-	    [[textView_message textStorage] setAttributedString:[awayDict objectForKey:@"Message"]];
-	    [[textView_autoresponse textStorage] setAttributedString:hasAutoresponse ? autoresponse : [awayDict objectForKey:@"Message"]];
+            [[textView_message textStorage] setAttributedString:[awayDict objectForKey:@"Message"]];
+            [[textView_autoresponse textStorage] setAttributedString:hasAutoresponse ? autoresponse : [awayDict objectForKey:@"Message"]];
 
-	    [textView_message setEditable:YES];
-	    [textView_message setSelectable:YES];	    
-	    [textView_autoresponse setEditable:YES];
-	    [textView_autoresponse setSelectable:YES];
-	}
+            [textView_message setEditable:YES];
+            [textView_message setSelectable:YES];	    
+            [textView_autoresponse setEditable:YES];
+            [textView_autoresponse setSelectable:YES];
+        }
     }else{
         [textView_message setString:@""];
         [textView_message setEditable:NO];
         [textView_message setSelectable:NO];
-	[textView_autoresponse setString:@""];
-	[textView_autoresponse setEditable:NO];
-	[textView_autoresponse setSelectable:NO];
+        [textView_autoresponse setString:@""];
+        [textView_autoresponse setEditable:NO];
+        [textView_autoresponse setSelectable:NO];
     }
 
     displayedMessage = awayDict;
@@ -380,16 +379,18 @@
 
         }else if([type compare:@"Away"] == 0){
             //Set the new message
-	    NSAttributedString * awayMessage = [[[textView_message textStorage] copy] autorelease];
+            NSAttributedString * awayMessage = [[[textView_message textStorage] copy] autorelease];
             [displayedMessage setObject:awayMessage forKey:@"Message"];
 
-	    NSAttributedString * autoresponse = [[[textView_autoresponse textStorage] copy] autorelease];
-	    if ([autoresponse isEqualToAttributedString:awayMessage] || !([[autoresponse string] length]) ){ //same as the away message, or empty
-		[displayedMessage removeObjectForKey:@"Autoresponse"];
-	    }else{
-		[displayedMessage setObject:autoresponse forKey:@"Autoresponse"];
-	    }
-	}
+            NSAttributedString * autoresponse = [[[textView_autoresponse textStorage] copy] autorelease];
+            
+            //same as the away message, or empty
+            if ([autoresponse isEqualToAttributedString:awayMessage] || !([[autoresponse string] length])){                         
+                [displayedMessage removeObjectForKey:@"Autoresponse"];
+            }else{
+                [displayedMessage setObject:autoresponse forKey:@"Autoresponse"];
+            }
+        }
     }
 }
 
