@@ -65,7 +65,7 @@
     
     //Set up the table view
     tableColumn = [[[NSTableColumn alloc] init] autorelease];
-    [tableColumn setDataCell:/*[*/[[AISCLCell alloc] init]/* autorelease]*/];
+    [tableColumn setDataCell:[[[AISCLCell alloc] init] autorelease]];
     [tableColumn setEditable:NO];
     [tableColumn setResizable:NO];
     [self setDrawsGrid:NO];
