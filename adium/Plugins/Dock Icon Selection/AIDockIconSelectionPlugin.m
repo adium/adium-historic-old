@@ -23,7 +23,7 @@
 - (void)installPlugin
 {
     //Create Application Support directory
-    [AIFileUtilities createDirectory:[[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS]];
+    [adium createResourcePathForName:FOLDER_DOCK_ICONS];
     
     //Install our preference view
     preferences = [[AIDockIconPreferences preferencePane] retain];

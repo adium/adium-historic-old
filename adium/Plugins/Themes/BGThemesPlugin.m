@@ -10,16 +10,15 @@
 
 #define KEY_GROUP_SEPARATOR @"_BGTheme_"
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"
-#define THEME_PATH  [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:@"Themes"]
+#define THEME_FOLDER_NAME @"Themes"
+#define THEME_PATH  [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:THEME_FOLDER_NAME]
 
 @implementation BGThemesPlugin
 
 - (void)installPlugin
 { 
     // if there is no themes directory, create it
-    if([[NSFileManager defaultManager] fileExistsAtPath:THEME_PATH] == NO) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:THEME_PATH attributes:nil];
-    }    
+    [[AIObject sharedAdiumInstance] createResourcePathForName:THEME_FOLDER_NAME];
 	
     themePane = [[BGThemesPreferences preferencePane] retain];
     [themePane setPlugin:self];
@@ -53,8 +52,15 @@
 -(void)saveTheme:(NSMutableDictionary *)saveTheme
 {
     // write a file containing the theme's dictionary to the themes folder   
-    NSString *savePath = [THEME_PATH stringByAppendingPathComponent:[[saveTheme objectForKey:@"themeName"] stringByAppendingString:@".AdiumTheme"]];
-    [saveTheme writeToFile:savePath atomically:YES];
+    NSArray *resourcePaths = [[AIObject sharedAdiumInstance] resourcePathsForName:THEME_FOLDER_NAME];
+    if([resourcePaths count]) {
+        NSString *savePath = [[resourcePaths objectAtIndex:0] stringByAppendingPathComponent:[[saveTheme objectForKey:@"themeName"] stringByAppendingPathExtension:@"AdiumTheme"]];
+        [saveTheme writeToFile:savePath atomically:YES];
+#warning we should provide some kind of alert if this write fails. --boredzo
+    } else {
+        NSBeep();
+        NSLog(@"Could not find a folder in which to save the file\n");
+    }
     [themePane createDone];
 }
 

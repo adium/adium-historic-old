@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.41 2004/04/30 14:45:28 adamiser Exp $
+// $Id: AISoundController.m,v 1.42 2004/05/05 19:08:17 boredzo Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -60,7 +60,7 @@
     speaking = NO;
     
     //Create a custom sounds directory ~/Library/Application Support/Adium 2.0/Sounds
-    [AIFileUtilities createDirectory:[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_SOUNDS]];
+    [[AIObject sharedAdiumInstance] createResourcePathForName:PATH_SOUNDS];
     
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SOUND_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];

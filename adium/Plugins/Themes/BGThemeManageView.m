@@ -10,6 +10,7 @@
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"
 #define THEME_FOLDER_NAME @"Themes"
 #define THEME_PATH  [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:THEME_FOLDER_NAME]
+#define THEMES_ARE_DIRECTORIES NO
 
 @interface BGThemeManageView (PRIVATE)
 - (void)configureControlDimming;
@@ -86,24 +87,41 @@
 	if( [[themes objectAtIndex:row] isEqualToString:defaultThemePath] ) {
 		object = [NSDictionary dictionaryWithContentsOfFile:defaultThemePath];
 	} else {
-		object = [NSDictionary dictionaryWithContentsOfFile:[THEME_PATH stringByAppendingPathComponent:[themes objectAtIndex:row]]];
-    }
-	
-    // a good programmer would set this to return an italicized version when it's backup :)
-    if([[tableColumn identifier] isEqualToString:@"themeName"])
-    {
-        return [object objectForKey:@"themeName"];
-    }
-    else if([[tableColumn identifier] isEqualToString:@"themeAuthor"])
-    {
-        return [object objectForKey:@"themeAuthor"];
-    }
-    else if([[tableColumn identifier] isEqualToString:@"themeVersion"])
-    {
-        return [object objectForKey:@"themeVersion"];
-    }
-    else
-    {
+		NSArray            *resourcesPaths = [[AIObject sharedAdiumInstance] resourcePathsForName:THEME_FOLDER_NAME];
+		NSEnumerator       *tempEnum       = [resourcesPaths objectEnumerator];
+		NSString           *curResPath, *filePath;
+		NSFileManager      *mgr            = [NSFileManager defaultManager];
+		BOOL                isDirectory;
+
+		while(curResPath = [tempEnum nextObject]) {
+			filePath = [curResPath stringByAppendingPathComponent:[themes objectAtIndex:row]];
+			if([mgr fileExistsAtPath:filePath isDirectory:&isDirectory] && !isDirectory) {
+				//winner!
+				break;
+			} else {
+				filePath = nil;
+			}
+		}
+
+		if(filePath) {
+			object = [NSDictionary dictionaryWithContentsOfFile:filePath];
+		} else {
+			object = nil;
+		}
+	}
+
+	if(object) {
+		// a good programmer would set this to return an italicized version when it's backup :)
+		if([[tableColumn identifier] isEqualToString:@"themeName"]) {
+			return [object objectForKey:@"themeName"];
+		} else if([[tableColumn identifier] isEqualToString:@"themeAuthor"]) {
+			return [object objectForKey:@"themeAuthor"];
+		} else if([[tableColumn identifier] isEqualToString:@"themeVersion"]) {
+			return [object objectForKey:@"themeVersion"];
+		} else {
+			return nil;
+		}
+	} else {
         return nil;
     }
 }
@@ -111,11 +129,27 @@
 -(NSString *)selectedTheme
 {
 	int selectedRow = [table selectedRow];
+
 	if (selectedRow != -1) {
-		if( [[themes objectAtIndex:selectedRow] isEqualToString:defaultThemePath] ) {
+		NSString *selection = [themes objectAtIndex:selectedRow];
+
+		if( [selection isEqualToString:defaultThemePath] ) {
 			return defaultThemePath;
 		} else {
-			return [THEME_PATH stringByAppendingPathComponent:[themes objectAtIndex:selectedRow]];
+			NSFileManager *mgr = [NSFileManager defaultManager];
+			BOOL isDir;
+			NSString *curFolder, *curFile;
+			NSEnumerator *resPathsEnum = [[[AIObject sharedAdiumInstance] resourcePathsForName:THEME_FOLDER_NAME] objectEnumerator];
+
+			while(curFolder = [resPathsEnum nextObject]) {
+				curFile = [curFolder stringByAppendingPathComponent:selection];
+				if([mgr fileExistsAtPath:curFile isDirectory:&isDir] && isDir == THEMES_ARE_DIRECTORIES) {
+					break;
+				}
+			}
+			if(curFolder == nil) curFile = nil; //curFolder == nil if we exhausted the loop instead of breaking
+
+			return curFile;
 		}
 	} else {
 		return nil;

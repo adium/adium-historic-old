@@ -43,6 +43,8 @@ DeclareString(AppendNextMessage);
 		//Register ourself as a message view plugin
 		[[adium interfaceController] registerMessageViewPlugin:self];
 	}
+
+	[adium createResourcePathForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT];
 }
 
 //Return a message view controller
@@ -126,7 +128,7 @@ DeclareString(AppendNextMessage);
 	NSString		*filePath, *resourcePath;
 	NSArray			*resourcePaths;
 	
-	resourcePaths = [[adium resourcePathsForName:@"Message Styles"] arrayByAddingObject:[[[NSBundle bundleForClass:[self class]] resourcePath] stringByAppendingPathComponent:@"Styles"]];
+	resourcePaths = [[adium resourcePathsForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT] arrayByAddingObject:[[[NSBundle bundleForClass:[self class]] resourcePath] stringByAppendingPathComponent:@"Styles"]];
 	enumerator = [resourcePaths objectEnumerator];
 
 	NSString	*AdiumMessageStyle = @"AdiumMessageStyle";
@@ -329,14 +331,9 @@ DeclareString(AppendNextMessage);
 	newHTML = [self fillKeywords:newHTML forContent:content allowingColors:allowColors];
 	newHTML = [self escapeString:newHTML];
 
-	if(!contentIsSimilar){
-		[webView stringByEvaluatingJavaScriptFromString:
-			[NSString stringWithFormat:AppendMessage, newHTML]];
-		
-	}else{
-		[webView stringByEvaluatingJavaScriptFromString:
-			[NSString stringWithFormat:AppendNextMessage, newHTML]];								
-	}	
+	NSString *format = contentIsSimilar ? AppendNextMessage : AppendMessage;
+	[webView stringByEvaluatingJavaScriptFromString:
+		[NSString stringWithFormat:format, newHTML]];
 }
 	
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar toWebView:(WebView *)webView fromStylePath:(NSString *)stylePath
