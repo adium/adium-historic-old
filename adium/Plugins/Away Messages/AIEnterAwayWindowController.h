@@ -20,20 +20,27 @@
 @interface AIEnterAwayWindowController : NSWindowController {
     AIAdium	*owner;
 
-    IBOutlet 	NSComboBox		*comboBox_title;
+    IBOutlet 	NSPopUpButton		*popUp_title;
     IBOutlet	AISendingTextView	*textView_awayMessage;
     IBOutlet	NSButton		*button_setAwayMessage;
     IBOutlet	NSButton		*button_save;
     IBOutlet	NSScrollView		*scrollView_awayMessageContainer;
+
+    IBOutlet	NSPanel			*savePanel;
+    IBOutlet	NSButton		*savePanel_saveButton;
+    IBOutlet	NSTextField		*textField_title;
     
-    BOOL				edited_title;
     NSMutableArray			*awayMessageArray;
+
+    BOOL	loaded_message;
 }
 
 + (AIEnterAwayWindowController *)enterAwayWindowControllerForOwner:(id)inOwner;
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)cancel:(id)sender;
 - (IBAction)setAwayMessage:(id)sender;
-- (IBAction)toggleSave:(id)sender;
+- (IBAction)save:(id)sender;
 
+- (IBAction)endSheet:(id)sender;
+- (void)saveSheetClosed:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void  *)contextInfo;
 @end

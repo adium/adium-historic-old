@@ -31,6 +31,7 @@
 - (BOOL)windowShouldClose:(id)sender;
 - (void)loadAwayMessages;
 - (NSMutableArray *)_loadAwaysFromArray:(NSArray *)array;
+- (NSMenu *)savedAwaysMenu;
 @end
 
 @implementation AIEnterAwayWindowController
@@ -71,22 +72,43 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     //Set the away
     [[owner accountController] setProperty:newAway forKey:@"AwayMessage" account:nil];
 
-    //Save the away if requested
-    if ([button_save state] == NSOnState)
-    {
-        NSMutableArray * tempArray;
+    //Close our window
+    [self closeWindow:nil];
+}
+
+//Save the away
+- (IBAction)save:(id)sender
+{
+    NSString * title = [[[popUp_title selectedItem] representedObject] objectForKey:@"Title"];
+    NSString * message = [[textView_awayMessage textStorage] string];
+    [textField_title setStringValue:loaded_message ?  title: message];
+    [NSApp beginSheet:savePanel modalForWindow:[self window] modalDelegate:self didEndSelector:@selector(saveSheetClosed:returnCode:contextInfo:) contextInfo:nil];
+}
+
+- (IBAction)endSheet:(id)sender
+{
+    [savePanel orderOut:nil];
+    [NSApp endSheet:savePanel];
+}
+
+- (void)saveSheetClosed:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void  *)contextInfo
+{
+    NSMutableArray * tempArray;
         NSEnumerator * enumerator;
         NSDictionary * dict;
         BOOL notFound = YES;
+
+	NSString * theTitle = [textField_title stringValue];
+
+	
         //Load the saved away messages
         tempArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
-
         //Test for replacement of an existing away
         enumerator = [tempArray objectEnumerator];
         while( (dict = [enumerator nextObject]) && notFound)
         {
             NSString * storedTitle = [dict objectForKey:@"Title"];
-            if ([storedTitle compare:[comboBox_title stringValue]] == 0)
+            if ( storedTitle && ([storedTitle compare:theTitle] == 0) )
             {
                 int index = [tempArray indexOfObject:dict];
                 NSMutableDictionary * newdict = [[dict mutableCopy] autorelease];
@@ -97,23 +119,15 @@ AIEnterAwayWindowController	*sharedInstance = nil;
         }
 
         if (notFound) { //never found one to replace then add it
-            if(edited_title){
-                [tempArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Away", @"Type", [[textView_awayMessage textStorage] dataRepresentation], @"Message", [comboBox_title stringValue], @"Title", nil]];
-            }else{
-                [tempArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Away", @"Type", [[textView_awayMessage textStorage] dataRepresentation], @"Message", nil]];
+                [tempArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Away", @"Type", [[textView_awayMessage textStorage] dataRepresentation], @"Message", theTitle, @"Title", nil]];
             }
-        }
 
-
-
-        //Save the away message array
+	//Save the away message array
         [[owner preferenceController] setPreference:tempArray forKey:KEY_SAVED_AWAYS group:PREF_GROUP_AWAY_MESSAGES];
-    }
 
-    //Close our window
-    [self closeWindow:nil];
+	[popUp_title setMenu:[self savedAwaysMenu]];
+	[popUp_title selectItemWithTitle:theTitle];
 }
-
 
 //Private ----------------------------------------------------------------
 //init the window controller
@@ -154,9 +168,6 @@ AIEnterAwayWindowController	*sharedInstance = nil;
         [textView_awayMessage setString:DEFAULT_AWAY_MESSAGE];
     }
 
-    [comboBox_title setStringValue:[textView_awayMessage string]];
-
-
     //Select the away text
     [textView_awayMessage setSelectedRange:NSMakeRange(0,[[textView_awayMessage textStorage] length])];
 
@@ -168,11 +179,12 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     [textView_awayMessage setSendOnReturn:NO]; //Pref for these later :)
     [textView_awayMessage setSendOnEnter:YES]; //
     [textView_awayMessage setDelegate:self];
-    edited_title = NO;
+    loaded_message = NO;
 
     [self loadAwayMessages];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectionChanged:) name:NSComboBoxSelectionDidChangeNotification object:comboBox_title];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSControlTextDidChangeNotification object:comboBox_title];
+ //   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSControlTextDidChangeNotification object:comboBox_title];
+
+    [popUp_title setMenu:[self savedAwaysMenu]];
 
     [[self window] makeFirstResponder:textView_awayMessage];
 }
@@ -199,51 +211,19 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     return(NO);
 }
 
-- (void)textDidChange:(NSNotification *)notification
-{
-    if ([notification object] == textView_awayMessage) //User is editing an away message
-    {
-        if(!edited_title) //only do this if the user hasn't edited the title manually
-        {
-            [comboBox_title setStringValue:[textView_awayMessage string]];
-        }
-    }
-    else if ([notification object] == comboBox_title) //User is editing the away message title
-    {
-
-        if([[comboBox_title stringValue] length] != 0){
-            edited_title = YES;
-	    [button_save setState:YES];
-        }else{
-            edited_title = NO;
-        }
-    }
-}
-
 //the combo box changed selection - set the message appropriately
-- (void)selectionChanged:(NSNotification *)notification
+- (IBAction)loadSavedAway:(id) sender
 {
-    if ([comboBox_title indexOfSelectedItem] != -1)
-    {
-        NSDictionary * dict = [awayMessageArray objectAtIndex:[comboBox_title indexOfSelectedItem]];
-
-        [textView_awayMessage setAttributedString:[dict objectForKey:@"Message"]];
-        edited_title = YES;
-        [button_save setState:NO];
-
-        //make the text editing active
-        [[self window] makeFirstResponder:textView_awayMessage];
+    if (![sender representedObject]) {
+	[textView_awayMessage setString:@""];
+	loaded_message = NO;
+    } else {
+        [textView_awayMessage setAttributedString:[[sender representedObject] objectForKey:@"Message"]];
+        loaded_message = YES;
     }
-}
 
-//User toggled 'save' checkbox
-- (IBAction)toggleSave:(id)sender
-{
-    if([button_save state] == NSOnState){
-        [[comboBox_title window] makeFirstResponder:comboBox_title];
-    }else{
-        [[textView_awayMessage window] makeFirstResponder:textView_awayMessage];
-    }
+    //make the text editing active
+    [[self window] makeFirstResponder:textView_awayMessage];
 }
 
 //Private ----------------------------------------------------
@@ -326,19 +306,6 @@ AIEnterAwayWindowController	*sharedInstance = nil;
         awayMessageArray = [[NSMutableArray alloc] init];
     }
 
-    NSEnumerator *enumerator = [awayMessageArray objectEnumerator];
-    NSDictionary *dict;
-    while (dict = [enumerator nextObject])
-    {
-        NSString * title = [dict objectForKey:@"Title"];
-        if (title)
-	    [comboBox_title addItemWithObjectValue:title];
-	else
-	{
-	    NSString * message = [[dict objectForKey:@"Message"] string];
-	    if (message) [comboBox_title addItemWithObjectValue:message];
-	}
-    }
 }
 
 //Save the away messages
@@ -351,6 +318,48 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 
     //Save the away message array
     [[owner preferenceController] setPreference:tempArray forKey:KEY_SAVED_AWAYS group:PREF_GROUP_AWAY_MESSAGES];
+}
+
+- (NSMenu *)savedAwaysMenu
+{
+    NSMenu		*savedAwaysMenu = [[NSMenu alloc] init];
+    NSMenuItem		*menuItem;
+    
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"None"
+					   target:self
+					   action:@selector(loadSavedAway:)
+				    keyEquivalent:@"n"] autorelease];
+    [menuItem setRepresentedObject:nil];
+    [savedAwaysMenu addItem:menuItem];
+
+    [self loadAwayMessages]; //load the away messages into awayMessageArray
+
+    NSEnumerator *enumerator = [awayMessageArray objectEnumerator];
+    NSDictionary *dict;
+    while (dict = [enumerator nextObject])
+    {
+        NSString * title = [dict objectForKey:@"Title"];
+        if (title) {
+	    menuItem = [[[NSMenuItem alloc] initWithTitle:title
+						target:self
+						action:@selector(loadSavedAway:)
+						keyEquivalent:@""] autorelease];
+	} else {
+	    NSString * message = [[dict objectForKey:@"Message"] string];
+
+	    //Cap the away menu title (so they're not incredibly long)
+            if([message length] > MENU_AWAY_DISPLAY_LENGTH){
+                message = [[message substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:@"…"];
+            }
+	    menuItem = [[[NSMenuItem alloc] initWithTitle:message
+					    target:self
+					    action:@selector(loadSavedAway:)
+					    keyEquivalent:@""] autorelease];
+	}
+	[menuItem setRepresentedObject:dict];
+	[savedAwaysMenu addItem:menuItem];
+    }
+    return savedAwaysMenu;
 }
 
 @end

@@ -25,7 +25,7 @@
 #define	REMOVE_AWAY_MESSAGE_MENU_TITLE		@"Remove Away Message"
 #define	CUSTOM_AWAY_MESSAGE_MENU_TITLE		@"Custom Message…"
 #define AWAY_MENU_HOTKEY			@"y"
-#define MENU_AWAY_DISPLAY_LENGTH		30
+
 
 @interface AIAwayMessagesPlugin (PRIVATE)
 - (void)accountPropertiesChanged:(NSNotification *)notification;

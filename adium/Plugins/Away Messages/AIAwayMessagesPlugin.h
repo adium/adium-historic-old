@@ -19,6 +19,8 @@
 #define PREF_GROUP_AWAY_MESSAGES 			@"Away Messages"
 #define KEY_SAVED_AWAYS					@"Saved Away Messages"
 
+#define MENU_AWAY_DISPLAY_LENGTH		30
+
 @class AIAwayMessagePreferences;
 
 @interface AIAwayMessagesPlugin : AIPlugin {
