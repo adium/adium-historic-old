@@ -96,13 +96,6 @@ DeclareString(AppendNextMessage);
 									   name:Content_ContentObjectAdded 
 									 object:inChat];
 	
-	//Observe a changing participants list and apply our initial settings if needed
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(participatingListObjectsChanged:)
-									   name:Content_ChatParticipatingListObjectsChanged 
-									 object:inChat];
-	[self participatingListObjectsChanged:nil];
-	
 	//Create our webview
 	webView = [[ESWebView alloc] initWithFrame:NSMakeRect(0,0,100,100) //Arbitrary frame
 									 frameName:nil
@@ -122,6 +115,22 @@ DeclareString(AppendNextMessage);
 									 object:nil];
 
 	[self refreshView];
+	
+	
+	//Observe a changing participants list and apply our initial settings if needed
+	//This needs to be done AFTER refreshView
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(participatingListObjectsChanged:)
+									   name:Content_ChatParticipatingListObjectsChanged 
+									 object:inChat];
+	[self participatingListObjectsChanged:nil];
+	
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(accountChanged:)
+									   name:Content_ChatAccountChanged 
+									 object:inChat];
+	[self accountChanged:nil];
+	
 	
     return(self);
 }
@@ -197,12 +206,7 @@ DeclareString(AppendNextMessage);
 										   name:ListObject_AttributesChanged
 										 object:object];
 	}
-	
-	//First time through we also need to cache our account in case it's planning to animate
-	if (notification == nil){
-		[self _updateUserIconForObject:[chat account]];
-	}
-	
+
 	//Also observe our account
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(listObjectAttributesChanged:) 
@@ -212,6 +216,33 @@ DeclareString(AppendNextMessage);
 	//We've now masked every user currently in the pariticpating list objects
 	[objectsWithUserIconsArray release]; 
 	objectsWithUserIconsArray = [participatingListObjects mutableCopy];
+}
+
+- (void)accountChanged:(NSNotification *)notification
+{
+	NSEnumerator	*enumerator = [[chat participatingListObjects] objectEnumerator];
+	AIListObject	*object;
+	
+	//Remove all observers
+	[[adium notificationCenter] removeObserver:self
+										  name:ListObject_AttributesChanged
+										object:nil];
+	
+	while (object = [enumerator nextObject]){
+		//In the future, watch for changes
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(listObjectAttributesChanged:) 
+										   name:ListObject_AttributesChanged
+										 object:object];
+	}
+	
+	//Also observe our account
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(listObjectAttributesChanged:) 
+									   name:ListObject_AttributesChanged
+									 object:[chat account]];
+	
+	[self _updateUserIconForObject:[chat account]];
 }
 
 - (void)listObjectAttributesChanged:(NSNotification *)notification
@@ -230,37 +261,44 @@ DeclareString(AppendNextMessage);
 
 - (void)_updateUserIconForObject:(AIListObject *)inObject
 {
-	//We already have a userIcon waiting for us, the active display icon; use that
+	//We probably already have a userIcon waiting for us, the active display icon; use that
 	//rather than loading one from disk
 	AIMutableOwnerArray *userIconDisplayArray = [inObject displayArrayForKey:KEY_USER_ICON];
 	NSImage				*userIcon = [userIconDisplayArray objectValue];
 	NSString			*webKitUserIconPath;
 	NSImage				*webKitUserIcon;
 	
-	//Apply the mask
-	if (imageMask){
-		webKitUserIcon = [[imageMask copy] autorelease];
-		[webKitUserIcon lockFocus];
-		[userIcon drawInRect:NSMakeRect(0,0,[webKitUserIcon size].width,[webKitUserIcon size].height)
-					fromRect:NSMakeRect(0,0,[userIcon size].width,[userIcon size].height)
-				   operation:NSCompositeSourceIn
-					fraction:1.0];
-		[webKitUserIcon unlockFocus];
-	}else{
-		webKitUserIcon = userIcon;
+	//If that's not the case, try using the UserIconPath
+	if (!userIcon){
+		userIcon = [[[NSImage alloc] initWithContentsOfFile:[inObject statusObjectForKey:@"UserIconPath"]] autorelease];
 	}
 	
-	webKitUserIconPath = [self _webKitUserIconPathForObject:inObject];
-	if ([[webKitUserIcon TIFFRepresentation] writeToFile:webKitUserIconPath
-											  atomically:YES]){
+	//Apply the mask
+	if (userIcon){
+		if (imageMask){
+			webKitUserIcon = [[imageMask copy] autorelease];
+			[webKitUserIcon lockFocus];
+			[userIcon drawInRect:NSMakeRect(0,0,[webKitUserIcon size].width,[webKitUserIcon size].height)
+						fromRect:NSMakeRect(0,0,[userIcon size].width,[userIcon size].height)
+					   operation:NSCompositeSourceIn
+						fraction:1.0];
+			[webKitUserIcon unlockFocus];
+		}else{
+			webKitUserIcon = userIcon;
+		}
 		
-		[inObject setStatusObject:webKitUserIconPath
-						   forKey:KEY_WEBKIT_USER_ICON
-						   notify:NO];
-		
-		//Make sure it's known that this user has been handled (this will rarely be a problem, if ever)
-		if ([objectsWithUserIconsArray indexOfObjectIdenticalTo:inObject] == NSNotFound){
-			[objectsWithUserIconsArray addObject:inObject];
+		webKitUserIconPath = [self _webKitUserIconPathForObject:inObject];
+		if ([[webKitUserIcon TIFFRepresentation] writeToFile:webKitUserIconPath
+												  atomically:YES]){
+			
+			[inObject setStatusObject:webKitUserIconPath
+							   forKey:KEY_WEBKIT_USER_ICON
+							   notify:NO];
+			
+			//Make sure it's known that this user has been handled (this will rarely be a problem, if ever)
+			if ([objectsWithUserIconsArray indexOfObjectIdenticalTo:inObject] == NSNotFound){
+				[objectsWithUserIconsArray addObject:inObject];
+			}
 		}
 	}
 }
