@@ -8916,7 +8916,7 @@
 			children = (
 				4B149D4B0678FB5300D74D43,
 				4BF2DCC7067C919300743318,
-				4BB1EC19067F751F00D1DB86,
+				4B4A2855067FC148004E34E7,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -10995,6 +10995,21 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		4B4A2855067FC148004E34E7 = {
+			fileType = "compiled.mach-o.dylib";
+			isa = PBXReferenceProxy;
+			path = libezv.dylib;
+			refType = 3;
+			remoteRef = 4B4A2954067FC156004E34E7;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B4A2954067FC156004E34E7 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
+			remoteInfo = libezv;
 		};
 		4B4F5B23042D636700A8010A = {
 			children = (
@@ -13735,21 +13750,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		4BB1EC19067F751F00D1DB86 = {
-			fileType = "compiled.mach-o.dylib";
-			isa = PBXReferenceProxy;
-			path = libezv.dylib;
-			refType = 3;
-			remoteRef = 4BB1EC1A067F752100D1DB86;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4BB1EC1A067F752100D1DB86 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
 		};
 		4BB2C23A044605CE00A8010A = {
 			fileEncoding = 4;
