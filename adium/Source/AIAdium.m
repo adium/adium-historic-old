@@ -269,14 +269,23 @@ void Adium_HandleSignal(int i){
         fileDescription = AILocalizedString(@"Adium plugin",nil);
     }
     
-    //If the file has a valid destination, copy it there and display an alert
     if (destination){
+        NSString    *destinationFilePath = [destination stringByAppendingPathComponent:[filename lastPathComponent]];
+        
         NSString *alertTitle = nil;
-        
         //For example: "Installation of the Adium plugin MakeToast"
-        NSString *alertMsg = [NSString stringWithFormat:@"%@ %@ %@",AILocalizedString(@"Installation of the","Beginning of installation sentence"),fileDescription,[[filename lastPathComponent] stringByDeletingPathExtension]];
+        NSString *alertMsg = [NSString stringWithFormat:@"%@ %@ %@",
+            AILocalizedString(@"Installation of the","Beginning of installation sentence"),
+            fileDescription,
+            [[filename lastPathComponent] stringByDeletingPathExtension]];
         
-        if ([[NSFileManager defaultManager] copyPath:filename toPath:[destination stringByAppendingPathComponent:[filename lastPathComponent]] handler:nil]){
+        //Trash the old file if one exists
+        [[NSFileManager defaultManager] trashFileAtPath:destinationFilePath];
+        
+        //Perform the copy and display an alert informing the user of its success or failure
+        if ([[NSFileManager defaultManager] copyPath:filename 
+                                              toPath:destinationFilePath 
+                                             handler:nil]){
             
             alertTitle = AILocalizedString(@"Installation Successful","Title of installation successful window");
             alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" was successful.","End of installation succesful sentence")];
