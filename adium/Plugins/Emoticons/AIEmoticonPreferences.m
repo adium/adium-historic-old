@@ -26,6 +26,7 @@
 @interface AIEmoticonPreferences (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureEmoticonListForSelection;
+- (void)moveSelectedPacksToTrash;
 @end
 
 @implementation AIEmoticonPreferences
@@ -76,10 +77,14 @@
 	//Redisplay the emoticons after an small delay so the sample emoticons line up properly
 	//since the desired width isn't known by AIEmoticonPackCell until once through the list of packs
 	[table_emoticonPacks performSelector:@selector(display) withObject:nil afterDelay:0.0001];
+	
+	viewIsOpen = YES;
 }
 
 - (void)viewWillClose
 {
+	viewIsOpen = NO;
+	
 	[checkCell release]; checkCell = nil;
 	[selectedEmoticonPack release]; selectedEmoticonPack = nil;
 	
@@ -266,8 +271,7 @@
 		}
 		
 		[table_emoticonPacks deselectAll:nil];
-        [plugin publicReset];
-        [table_emoticonPacks reloadData];            
+        [plugin xtrasChanged:nil];
     }
 }
 
@@ -334,4 +338,13 @@
         [table_emoticons deselectAll:nil];
     }
 }
+
+- (void)emoticonXtrasDidChange
+{
+	if (viewIsOpen){
+		[table_emoticonPacks reloadData];
+		[table_emoticons reloadData];
+	}
+}
+
 @end

@@ -14,15 +14,15 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #define PREF_GROUP_EMOTICONS			@"Emoticons"
-#define KEY_EMOTICON_ACTIVE_PACKS               @"Active Emoticon Packs"
-#define KEY_EMOTICON_DISABLED                   @"Disabled Emoticons"
+#define KEY_EMOTICON_ACTIVE_PACKS		@"Active Emoticon Packs"
+#define KEY_EMOTICON_DISABLED			@"Disabled Emoticons"
 #define KEY_EMOTICON_PACK_ORDERING		@"Emoticon Pack Ordering"
 
 @protocol AIContentFilter;
 @class AIEmoticonPreferences, AIEmoticonPack, AIEmoticon;
 
 @interface AIEmoticonsPlugin : AIPlugin <AIContentFilter> {
-    AIEmoticonPreferences	*prefs;
+    AIEmoticonPreferences		*prefs;
     BOOL                        observingContent;
 
     NSMutableArray              *_availableEmoticonPacks;
@@ -41,6 +41,6 @@
 - (void)setEmoticonPack:(AIEmoticonPack *)inPack enabled:(BOOL)enabled;
 - (void)setEmoticon:(AIEmoticon *)inEmoticon inPack:(AIEmoticonPack *)inPack enabled:(BOOL)enabled;
 - (void)flushEmoticonImageCache;
-- (void)publicReset;
+- (void)xtrasChanged:(NSNotification *)notification;
 
 @end
