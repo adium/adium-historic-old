@@ -72,6 +72,9 @@
         [(AISendingTextView *)inObject setSendOnReturn:[[[[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:@"Send On Return"] boolValue]];
 		[(AISendingTextView *)inObject setSendOnEnter:[[[[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:@"Send On Enter"] boolValue]];
     }
+	if([inObject isKindOfClass:[AIMessageEntryTextView class]]) {
+		[(AIMessageEntryTextView *)inObject setHomeToStartOfLine:[[[[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:HOME_TO_START_OF_LINE] boolValue]];
+	}
 }
 
 @end

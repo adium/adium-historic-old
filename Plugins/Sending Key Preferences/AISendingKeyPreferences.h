@@ -16,6 +16,7 @@
 @interface AISendingKeyPreferences : AIPreferencePane {
     IBOutlet	NSButton	*checkBox_sendOnReturn;
 	IBOutlet	NSButton	*checkBox_sendOnEnter;
+	IBOutlet	NSButton	*checkBox_homeToStartOfLine;
 }
 
 @end

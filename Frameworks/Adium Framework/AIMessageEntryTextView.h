@@ -24,6 +24,7 @@
     
     BOOL                 clearOnEscape;
     BOOL                 pushPopEnabled;
+	BOOL				 homeToStartOfLine;
 
     NSMutableArray		*historyArray;
     int                  currentHistoryLocation;
@@ -45,6 +46,7 @@
 
 //Configure
 - (void)setClearOnEscape:(BOOL)inBool;
+- (void)setHomeToStartOfLine:(BOOL)inBool;
 - (void)setAssociatedView:(NSView *)inView;
 - (NSView *)associatedView;
 
