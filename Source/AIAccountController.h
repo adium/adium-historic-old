@@ -70,6 +70,7 @@
 - (NSArray *)accountsWithService:(AIService *)service;
 - (AIAccount *)defaultAccount;
 - (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID accountNumber:(int)inAccountNumber;
+- (NSArray *)accountsWithServiceClassOfService:(AIService *)service;
 
 //Account Editing
 - (AIAccount *)newAccountAtIndex:(int)index;
