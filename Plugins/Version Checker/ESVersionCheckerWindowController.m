@@ -46,6 +46,18 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
     [sharedVersionCheckerInstance showWindowFromBuild:nil toBuild:nil];
 }
 
+//
+- (void)windowDidLoad
+{
+	[super windowDidLoad];
+
+	//Disable the 'check automatically' button if we are in a beta build
+	if(BETA_RELEASE_EXPIRATION){
+		[checkBox_checkAutomatically setState:YES];
+		[checkBox_checkAutomatically setEnabled:NO];
+	}	
+}
+
 //Called as the window closes, release the shared window controller
 - (BOOL)windowShouldClose:(id)sender
 {    
