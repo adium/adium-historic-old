@@ -19,6 +19,8 @@
 
     BOOL 		mouseIn;
     NSTrackingRectTag 	trackingTag;
+
+    NSString		*popUpTitle;
 }
 
 @end

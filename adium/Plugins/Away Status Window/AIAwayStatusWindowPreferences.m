@@ -71,38 +71,44 @@
     [AIAwayStatusWindowController updateAwayStatusWindow];
 }
 
+
 //Private ---------------------------------------------------------------------------
 //init
 - (id)initWithOwner:(id)inOwner
 {
-    AIPreferenceViewController	*preferenceViewController;
-
     //Init
     [super init];
     owner = [inOwner retain];
 
-    //Load the pref view nib
-    [NSBundle loadNibNamed:AWAY_MESSAGE_WINDOW_PREF_NIB owner:self];
-
-    //Install Away Status Window preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:AWAY_MESSAGE_WINDOW_PREF_TITLE categoryName:PREFERENCE_CATEGORY_STATUS view:view_prefView];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
-
-    //Configure our view
-    [self configureView];
+    //Register our preference pane
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Status_Away withDelegate:self label:AWAY_MESSAGE_WINDOW_PREF_TITLE]];
 
     return(self);
+}
+
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_prefView){
+        [NSBundle loadNibNamed:AWAY_MESSAGE_WINDOW_PREF_NIB owner:self];
+
+        //Configure our view
+        [self configureView];
+    }
+
+    return(view_prefView);
 }
 
 //Configures our view for the current preferences
 - (void)configureView
 {
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW];
+    
     // Set the values of the checkboxes
-    [checkBox_showAway setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW] objectForKey:KEY_SHOW_AWAY_STATUS_WINDOW] boolValue]];
-
-    [checkBox_floatAway setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW] objectForKey:KEY_FLOAT_AWAY_STATUS_WINDOW] boolValue]];
-
-    [checkBox_hideInBackground setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW] objectForKey:KEY_HIDE_IN_BACKGROUND_AWAY_STATUS_WINDOW] boolValue]];
+    [checkBox_showAway setState:[[preferenceDict objectForKey:KEY_SHOW_AWAY_STATUS_WINDOW] boolValue]];
+    [checkBox_floatAway setState:[[preferenceDict objectForKey:KEY_FLOAT_AWAY_STATUS_WINDOW] boolValue]];
+    [checkBox_hideInBackground setState:[[preferenceDict objectForKey:KEY_HIDE_IN_BACKGROUND_AWAY_STATUS_WINDOW] boolValue]];
 
     // Enable or disable checkboxes based on the "show away" checkbox
     [checkBox_floatAway setEnabled:[checkBox_showAway state]];

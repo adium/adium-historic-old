@@ -15,7 +15,7 @@
 
 #import <AIUtilities/AIUtilities.h>
 #import "AIPreferenceWindowController.h"
-#import "AIPreferenceCategory.h"
+#import "AIPreferencePane.h"
 #import "AIPreferenceController.h"
 
 #define PREFERENCE_WINDOW_NIB		@"PreferenceWindow"	//Filename of the preference window nib
@@ -26,7 +26,8 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
 - (void)configureToolbarItems;
 - (void)installToolbar;
-- (void)showCategory:(AIPreferenceCategory *)inCategory;
+//- (void)showCategory:(AIPreferenceCategory *)inCategory;
+- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(NSView *)inView;
 @end
 
 @implementation AIPreferenceWindowController
@@ -51,7 +52,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
 //Make the specified preference view visible
 - (void)showView:(AIPreferenceViewController *)inView
 {
-    NSEnumerator 		*enumerator;
+/*    NSEnumerator 		*enumerator;
     AIPreferenceCategory	*category;
 
     [self window]; //make sure the window has loaded
@@ -69,7 +70,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
                 break;
             }    
         }
-    }
+    }*/
 }
 
 //Close the window
@@ -104,7 +105,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
 - (void)windowDidLoad
 {
     NSString	*savedFrame;
-    NSArray	*categoryArray;
+//    NSArray	*categoryArray;
 
     //Restore the window position
     savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_WINDOW_FRAME];
@@ -118,10 +119,10 @@ static AIPreferenceWindowController *sharedInstance = nil;
     [self installToolbar];
  
     //select the default category
-    categoryArray = [[owner preferenceController] categoryArray];
+/*    categoryArray = [[owner preferenceController] categoryArray];
     if([categoryArray count]){
         [self showCategory:[categoryArray objectAtIndex:0]];
-    }
+    }*/
 
     //Let everyone know we will open
     [[owner notificationCenter] postNotificationName:Preference_WindowWillOpen object:nil];
@@ -137,7 +138,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
 - (BOOL)windowShouldClose:(id)sender
 {
     //Take focus away from any controls to ensure that they register changes and save
-    [[self window] makeFirstResponder:scrollView_contents];
+    [[self window] makeFirstResponder:tabView_category];
 
     //Save the window position
     [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
@@ -175,25 +176,24 @@ static AIPreferenceWindowController *sharedInstance = nil;
 //Configure the toolbar items
 - (void)configureToolbarItems
 {
-    NSArray			*categoryArray;
-    NSEnumerator		*enumerator;
-    AIPreferenceCategory	*category;
+    NSEnumerator	*enumerator;
+    NSTabViewItem	*tabViewItem;
     
-    categoryArray = [[owner preferenceController] categoryArray];
-    enumerator = [categoryArray objectEnumerator];
+    enumerator = [[tabView_category tabViewItems] objectEnumerator];
     
-    while((category = [enumerator nextObject])){
-        NSString 	*name = [category name];
+    while((tabViewItem = [enumerator nextObject])){
+        NSString 	*identifier = [tabViewItem identifier];
+        NSString	*label = [tabViewItem label];
     
-        if(![toolbarItems objectForKey:name]){
+        if(![toolbarItems objectForKey:identifier]){
             [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
-                                    withIdentifier:name
-                                             label:name
-                                      paletteLabel:name
-                                           toolTip:name
+                                    withIdentifier:identifier
+                                             label:label
+                                      paletteLabel:label
+                                           toolTip:label
                                             target:self
                                    settingSelector:@selector(setImage:)
-                                       itemContent:[category image]
+                                       itemContent:[AIImageUtilities imageNamed:@"Placeholder" forClass:[self class]]
                                             action:@selector(selectCategory:)
                                               menu:NULL];
         }
@@ -205,34 +205,81 @@ static AIPreferenceWindowController *sharedInstance = nil;
 //Select the category that invoked this method
 - (IBAction)selectCategory:(id)sender
 {
-    NSArray			*categoryArray;
-    NSEnumerator		*enumerator;
-    AIPreferenceCategory	*category = nil;
-    NSString			*clickedName;
-
     //Take focus away from any controls to ensure that they register changes and save
-    [[self window] makeFirstResponder:scrollView_contents];
+    [[self window] makeFirstResponder:tabView_category];
     
-    //Get the name of the clicked category
-    clickedName = [sender itemIdentifier];
+    //Select the corresponding tab
+    [tabView_category selectTabViewItemWithIdentifier:[sender itemIdentifier]];
+}
 
-    //Find this category
-    categoryArray = [[owner preferenceController] categoryArray];
-    enumerator = [categoryArray objectEnumerator];
+- (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
+{
+    int	identifier = [[tabViewItem identifier] intValue];
+
+    switch(identifier){
+        case 1:
+            [self _insertPanesForCategory:AIPref_Accounts_Connections intoView:view_Accounts_Connections];
+            [self _insertPanesForCategory:AIPref_Accounts_Profile intoView:view_Accounts_Profile];
+            [self _insertPanesForCategory:AIPref_Accounts_Hosts intoView:view_Accounts_Hosts];
+        break;
+        case 2:
+            [self _insertPanesForCategory:AIPref_ContactList_General intoView:view_ContactList_General];
+            [self _insertPanesForCategory:AIPref_ContactList_Display intoView:view_ContactList_Display];
+        break;
+        case 3:
+            [self _insertPanesForCategory:AIPref_Messages_Display intoView:view_Messages_Display];
+            [self _insertPanesForCategory:AIPref_Messages_Sending intoView:view_Messages_Sending];
+            [self _insertPanesForCategory:AIPref_Messages_Receiving intoView:view_Messages_Receiving];
+        break;
+        case 4:
+            [self _insertPanesForCategory:AIPref_Status_Away intoView:view_Status_Away];
+            [self _insertPanesForCategory:AIPref_Status_Idle intoView:view_Status_Idle];
+        break;
+        case 5:
+            [self _insertPanesForCategory:AIPref_Dock intoView:view_Dock];
+        break;
+        case 6:
+            [self _insertPanesForCategory:AIPref_Sound intoView:view_Sound];
+        break;
+    }
+}
+
+- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
+{
     
-    while((category = [enumerator nextObject])){
-        if([clickedName compare:[category name]] == 0){
-            break;
+}
+
+- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(NSView *)inView
+{
+    NSEnumerator	*enumerator;
+    AIPreferencePane	*pane;
+    NSMutableArray	*paneArray = [NSMutableArray array];
+    int			yPos = 0;
+
+    //Get the panes for this category
+    enumerator = [[[owner preferenceController] paneArray] objectEnumerator];
+    while(pane = [enumerator nextObject]){
+        if([pane category] == inCategory){
+            [paneArray addObject:pane];
         }
     }
 
-    //Show the category that was selected
-    [self showCategory:category];
-}
+    //Alphabetize them
+    [paneArray sortUsingSelector:@selector(compare:)];
 
-- (void)showCategory:(AIPreferenceCategory *)inCategory
-{
-    [scrollView_contents setDocumentView:[inCategory contentView]];
+    //Add their views
+    enumerator = [paneArray objectEnumerator];
+    while(pane = [enumerator nextObject]){
+        NSView	*paneView = [pane view];
+    
+        //Add the view
+        [inView addSubview:paneView];
+        [paneView setFrameOrigin:NSMakePoint(0,yPos)];
+    
+        //Move down for the next view
+        yPos += [paneView frame].size.height;
+    }
+
 }
 
 
@@ -249,19 +296,20 @@ static AIPreferenceWindowController *sharedInstance = nil;
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
-    NSMutableArray		*defaultArray;
-    NSArray			*categoryArray;
-    NSEnumerator		*enumerator;
-    AIPreferenceCategory	*category;
+    NSMutableArray	*defaultArray;
+    NSEnumerator	*enumerator;
+    NSToolbarItem	*toolbarItem;
     
     defaultArray = [[NSMutableArray alloc] init];
-    toolbar = [[self window] toolbar];
-    categoryArray = [[owner preferenceController] categoryArray];
-    enumerator = [categoryArray objectEnumerator];
-    
-    while((category = [enumerator nextObject])){
-        [defaultArray addObject:[category name]];
+
+    //Build a list of all our toolbar item identifiers
+    enumerator = [toolbarItems objectEnumerator];
+    while((toolbarItem = [enumerator nextObject])){
+        [defaultArray addObject:[toolbarItem itemIdentifier]];
     }
+
+    //Sort
+    [defaultArray sortUsingSelector:@selector(compare:)];
     
     return([defaultArray autorelease]);
 }

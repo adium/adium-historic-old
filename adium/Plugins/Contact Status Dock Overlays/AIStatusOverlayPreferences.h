@@ -16,8 +16,6 @@
     IBOutlet	NSButton	*checkBox_showContentOverlays;
     IBOutlet	NSButton	*radioButton_topOfIcon;
     IBOutlet	NSButton	*radioButton_bottomOfIcon;
-
-    NSDictionary		*preferenceDict;
 }
 
 + (id)statusOverlayPreferencesWithOwner:(id)inOwner;

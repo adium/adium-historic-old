@@ -12,17 +12,18 @@
         }, 
         {CLASS = AIColoredBoxView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {
-            CLASS = AIPreferenceView; 
+            CLASS = AIPreferencePane; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                delegate = id; 
                 "textField_title" = NSTextField; 
-                "view_coloredBox" = AIColoredBoxView; 
                 "view_containerSubView" = NSView; 
                 "view_containerView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }

@@ -13,7 +13,7 @@
 
 - (void)drawRect:(NSRect)inRect
 {
-    NSFont			*font = [NSFont boldSystemFontOfSize:11];
+    NSFont			*font = [self font];//[NSFont boldSystemFontOfSize:11];
     NSRect			bounds = [self bounds];
     NSDictionary		*attributes;
     NSColor			*textColor;

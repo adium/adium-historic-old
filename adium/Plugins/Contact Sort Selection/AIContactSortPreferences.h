@@ -18,13 +18,11 @@
 @class AIAdium;
 
 @interface AIContactSortPreferences : NSObject {
+    AIAdium				*owner;
+
     IBOutlet	NSView			*view_prefView;
     IBOutlet	NSPopUpButton		*popUp_sortMode;
     IBOutlet	NSTextField		*textField_description;
-
-    AIAdium			*owner;
-    NSDictionary		*preferenceDict;
-        
 }
 
 + (AIContactSortPreferences *)contactSortPreferencesWithOwner:(id)inOwner;

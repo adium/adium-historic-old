@@ -17,8 +17,6 @@
     
     IBOutlet	NSButton	*checkBox_autoResize;
     IBOutlet	NSButton	*checkBox_horizontalResize;
-
-    NSDictionary		*preferenceDict;
 }
 
 + (AIDualWindowPreferences *)dualWindowInterfacePreferencesWithOwner:(id)inOwner;

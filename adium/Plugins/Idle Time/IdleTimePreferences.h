@@ -18,14 +18,11 @@
 @class AIAdium;
 
 @interface IdleTimePreferences : NSObject {
-    AIAdium			*owner;
+    AIAdium				*owner;
     
     IBOutlet	NSView			*view_prefView;
-
     IBOutlet	NSButton		*checkBox_enableIdle;
     IBOutlet	NSTextField		*textField_idleMinutes;
-
-    NSDictionary		*preferenceDict;
 }
 
 + (IdleTimePreferences *)idleTimePreferencesWithOwner:(id)inOwner;

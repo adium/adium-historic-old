@@ -21,8 +21,6 @@
 
     IBOutlet	NSView			*view_prefView;
     IBOutlet	NSSlider		*slider_volume;
-
-    NSDictionary		*preferenceDict;
 }
 
 + (AIVolumeControlPreferences *)volumeControlPreferencesWithOwner:(id)inOwner;

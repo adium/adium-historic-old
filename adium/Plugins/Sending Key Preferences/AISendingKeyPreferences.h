@@ -22,7 +22,6 @@
     IBOutlet	NSButton	*checkBox_sendOnReturn;
 
     AIAdium			*owner;
-    NSDictionary		*preferenceDict;
 
 }
 

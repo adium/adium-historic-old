@@ -42,7 +42,7 @@
 @end
 
 @implementation AIEventSoundPreferences
-
+//
 + (AIEventSoundPreferences *)eventSoundPreferencesWithOwner:(id)inOwner forPlugin:(id)inPlugin
 {
     return([[[self alloc] initWithOwner:inOwner forPlugin:inPlugin] autorelease]);
@@ -133,10 +133,7 @@
                                        [button_soundSetInfo window],
                                        nil, nil, nil, nil,
                                        description);
-        
     } 
-
-
 }
 
 
@@ -144,27 +141,29 @@
 //init
 - (id)initWithOwner:(id)inOwner forPlugin:(id)inPlugin
 {
-    AIPreferenceViewController	*preferenceViewController;
-
+    //Init
     [super init];
     owner = [inOwner retain];
     plugin = [inPlugin retain];
     
-    //Load the pref view nib
-    [NSBundle loadNibNamed:EVENT_SOUND_PREF_NIB owner:self];
-
-    //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:EVENT_SOUND_PREF_TITLE categoryName:PREFERENCE_CATEGORY_SOUNDS view:view_prefView];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
-
-    //Observer preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    
-    //Configure the view and load our preferences
-    [self configureView];
-    [self preferencesChanged:nil];
+    //Register our preference pane
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Sound withDelegate:self label:EVENT_SOUND_PREF_TITLE]];
 
     return(self);
+}
+
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_prefView){
+        [NSBundle loadNibNamed:EVENT_SOUND_PREF_NIB owner:self];
+
+        //Configure our view
+        [self configureView];
+    }
+
+    return(view_prefView);
 }
 
 //Configures our view for the current preferences
@@ -191,6 +190,10 @@
     [tableView_sounds setAlternatingRowColor:[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0]];
     [tableView_sounds setTarget:self];
     [tableView_sounds setDoubleAction:@selector(playSelectedSound:)];
+
+    //Observer preference changes
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
 }
 
 //Called when the preferences change, update our preference display

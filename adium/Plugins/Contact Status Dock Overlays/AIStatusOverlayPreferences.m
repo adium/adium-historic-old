@@ -22,7 +22,7 @@
 @end
 
 @implementation AIStatusOverlayPreferences
-
+//
 + (id)statusOverlayPreferencesWithOwner:(id)inOwner
 {
     return([[[self alloc] initWithOwner:inOwner] autorelease]);
@@ -31,28 +31,37 @@
 //init
 - (id)initWithOwner:(id)inOwner
 {
-    AIPreferenceViewController	*preferenceViewController;
-
+    //Init
     [super init];
     owner = [inOwner retain];
 
-    //Load the pref view nib
-    [NSBundle loadNibNamed:STATUS_OVERLAY_PREF_NIB owner:self];
-
-    //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:STATUS_OVERLAY_PREF_TITLE categoryName:PREFERENCE_CATEGORY_DOCK view:view_prefView];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
+    //Register our preference pane
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Receiving withDelegate:self label:STATUS_OVERLAY_PREF_TITLE]];
 
     //Configure the view
-    preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_DOCK_OVERLAYS] retain];
-    [self configureView];
 
     return(self);
+}
+
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_prefView){
+        [NSBundle loadNibNamed:STATUS_OVERLAY_PREF_NIB owner:self];
+
+        //Configure our view
+        [self configureView];
+    }
+
+    return(view_prefView);
 }
 
 //Configures our view for the current preferences
 - (void)configureView
 {
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DOCK_OVERLAYS];
+
     [checkBox_showStatusOverlays setState:[[preferenceDict objectForKey:KEY_DOCK_SHOW_STATUS] boolValue]];
     [checkBox_showContentOverlays setState:[[preferenceDict objectForKey:KEY_DOCK_SHOW_CONTENT] boolValue]];
 
@@ -86,7 +95,6 @@
         [radioButton_topOfIcon setState:NSOffState];
 
     }
-
 }
 
 

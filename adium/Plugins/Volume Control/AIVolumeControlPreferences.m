@@ -24,7 +24,6 @@
 
 @interface AIVolumeControlPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
-- (void)preferencesChanged:(NSNotification *)notification;
 - (void)configureView;
 @end
 
@@ -41,45 +40,35 @@
 //init
 - (id)initWithOwner:(id)inOwner
 {
-    AIPreferenceViewController	*preferenceViewController;
-
+    //Init
     [super init];
     owner = [inOwner retain];
-    preferenceDict = nil;
 
-    //Load the pref view nib
-    [NSBundle loadNibNamed:VOLUME_CONTROL_PREF_NIB owner:self];
-
-    //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:VOLUME_CONTROL_PREF_TITLE categoryName:PREFERENCE_CATEGORY_SOUNDS view:view_prefView];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
-
-    //Load the preferences, and configure our view
-    [self preferencesChanged:nil];
-
-    //Observe preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    //Register our preference pane
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Sound withDelegate:self label:VOLUME_CONTROL_PREF_TITLE]];
 
     return(self);
 }
 
-//called when the prefs change
-- (void)preferencesChanged:(NSNotification *)notification
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){
-
-        //Hold onto the pref dict
-        [preferenceDict release];
-        preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] retain];
+    //Load our preference view nib
+    if(!view_prefView){
+        [NSBundle loadNibNamed:VOLUME_CONTROL_PREF_NIB owner:self];
 
         //Configure our view
         [self configureView];
     }
+
+    return(view_prefView);
 }
 
 //Configures our view for the current preferences
 - (void)configureView
 {
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+    
     if([[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue] == YES){
         [slider_volume setFloatValue:0.0];
 
@@ -96,6 +85,7 @@
 //New value selected on the volume slider
 - (IBAction)selectVolume:(id)sender
 {
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
     float		value = [sender floatValue];
     BOOL		mute, custom;
     BOOL		playSample = NO;

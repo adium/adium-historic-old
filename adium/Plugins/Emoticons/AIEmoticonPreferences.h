@@ -23,9 +23,7 @@
 {
     AIAdium			*owner;
     AIEmoticonsPlugin		*plugin;
-    
-    NSDictionary		*preferenceDict;
-    
+        
     NSMutableArray		*packs;
     
     IBOutlet NSView		*view_prefView;

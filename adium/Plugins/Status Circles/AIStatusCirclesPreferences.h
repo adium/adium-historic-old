@@ -18,9 +18,7 @@
 @class AIAdium;
 
 @interface AIStatusCirclesPreferences : NSObject {
-    AIAdium			*owner;
-
-    NSDictionary		*preferenceDict;
+    AIAdium				*owner;
 
     IBOutlet	NSView			*view_prefView;
 

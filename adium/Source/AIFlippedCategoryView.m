@@ -24,7 +24,7 @@
 }
 
 //Draw
-- (void)drawRect:(NSRect)rect
+/*- (void)drawRect:(NSRect)rect
 {
     static NSColor *color;
     
@@ -38,7 +38,7 @@
     }
     [color set];
     [NSBezierPath fillRect:rect];
-}
+}*/
 
 
 - (void)dealloc

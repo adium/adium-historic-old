@@ -19,7 +19,6 @@
 
 @interface AIContactStatusColoringPreferences : NSObject {
     AIAdium			*owner;
-    NSDictionary		*preferenceDict;
 
     IBOutlet	NSView		*view_prefView;
     

@@ -300,7 +300,6 @@
             [awayMenu addItem:menuItem];
         }
     }
-
 }
 
 @end

@@ -15,12 +15,13 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAdium;
+@class AIAdium, AIPreferencePane;
 
 @interface AISMPreferences : NSObject {
     AIAdium			*owner;
 
     //Prefixes
+    AIPreferencePane		*prefixesPane;
     IBOutlet	NSView		*view_prefixes;
     IBOutlet	NSButton	*button_setPrefixFont;
     IBOutlet	NSTextField	*textField_prefixFontName;
@@ -29,12 +30,14 @@
     IBOutlet	NSPopUpButton	*popUp_outgoingPrefix;
     
     //TimeStamps
+    AIPreferencePane		*timeStampsPane;
     IBOutlet	NSView		*view_timeStamps;
     IBOutlet	NSButton	*checkBox_showTimeStamps;
     IBOutlet	NSButton	*checkBox_hideDuplicateTimeStamps;
     IBOutlet	NSButton	*checkBox_showSeconds;
     
     //Gridding
+    AIPreferencePane		*griddingPane;
     IBOutlet	NSView		*view_gridding;
     IBOutlet	NSButton	*checkBox_displayGridlines;
     IBOutlet	NSSlider	*slider_gridDarkness;
@@ -42,13 +45,11 @@
     IBOutlet	NSSlider	*slider_gradientDarkness;
 
     //Alias
+    AIPreferencePane		*aliasPane;
     IBOutlet	NSView		*view_alias;
     IBOutlet	NSTextField	*textField_alias;
     
-    
     NSDictionary		*prefixColors;
-
-    NSDictionary		*preferenceDict;
 }
 
 + (AISMPreferences *)messageViewPreferencesWithOwner:(id)inOwner;

@@ -19,33 +19,55 @@
 #import "AIMTOC2ServicePlugin.h"
 #import "AIMTOC2Account.h"
 
+@interface AIMTOC2ServicePlugin (PRIVATE)
+- (void)configureView;
+@end
+
 @implementation AIMTOC2ServicePlugin
 
 - (void)installPlugin
 {
     AIPreferenceController	*preferenceController = [owner preferenceController];
-    NSDictionary		*preferencesDict;
 
-
+    //Create our handle service type
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"AIM"
                           description:@"AIM, AOL, and .Mac"
                           image:[AIImageUtilities imageNamed:@"LilYellowDuck" forClass:[self class]]
                           caseSensitive:NO
                           allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
     
-    //Load and retain our preferences
+    //Register our default preferences
     [preferenceController registerDefaults:[NSDictionary dictionaryNamed:AIM_TOC2_DEFAULT_PREFS forClass:[self class]] forGroup:AIM_TOC2_PREFS];
-    preferencesDict = [preferenceController preferencesForGroup:AIM_TOC2_PREFS];
 
-    //Load, install, and configure our preference view
-    [NSBundle loadNibNamed:AIM_TOC2_PREFERENCE_VIEW owner:self];
-    [preferenceController addPreferenceView:[AIPreferenceViewController controllerWithName:AIM_TOC2_PREFERENCE_TITLE categoryName:PREFERENCE_CATEGORY_CONNECTIONS view:view_preferences]];
-    
-    [textField_host setStringValue:[preferencesDict objectForKey:AIM_TOC2_KEY_HOST]];
-    [textField_port setStringValue:[preferencesDict objectForKey:AIM_TOC2_KEY_PORT]];
+    //Register our preference pane
+    [preferenceController addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Accounts_Hosts withDelegate:self label:AIM_TOC2_PREFERENCE_TITLE]];
 
     //Register this service
     [[owner accountController] registerService:self];
+}
+
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_preferences){
+        [NSBundle loadNibNamed:AIM_TOC2_PREFERENCE_VIEW owner:self];
+
+        //Configure our view
+        [self configureView];
+    }
+
+    return(view_preferences);
+}
+
+//Configure our preference view
+- (void)configureView
+{
+    NSDictionary	*preferencesDict = [[owner preferenceController] preferencesForGroup:AIM_TOC2_PREFS];
+
+    //Fill in our host & port
+    [textField_host setStringValue:[preferencesDict objectForKey:AIM_TOC2_KEY_HOST]];
+    [textField_port setStringValue:[preferencesDict objectForKey:AIM_TOC2_KEY_PORT]];
 }
 
 - (void)uninstallPlugin

@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferenceView, AIMenuController, AILoginWindowController, AIAccountWindowController, AIAccount, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIIconFamily, AIDockController, AIHandle, AIListContact, AIListGroup, AIListObject, AIIconState, AIContactListGeneration, AIChat, AIContentObject;
+@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferencePane, AIMenuController, AILoginWindowController, AIAccountWindowController, AIAccount, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIIconFamily, AIDockController, AIHandle, AIListContact, AIListGroup, AIListObject, AIIconState, AIContactListGeneration, AIChat, AIContentObject;
 
 @interface AIAdium : NSObject {
 
@@ -87,13 +87,20 @@ typedef enum {
 } DOCK_BEHAVIOR;
 
 //Preference Categories
-#define PREFERENCE_CATEGORY_CONNECTIONS	@"Connections"
-#define PREFERENCE_CATEGORY_MESSAGES	@"Messages"
-#define PREFERENCE_CATEGORY_CONTACTLIST	@"Contact List"
-#define PREFERENCE_CATEGORY_STATUS	@"Status"
-#define PREFERENCE_CATEGORY_DOCK	@"Dock"
-#define PREFERENCE_CATEGORY_SOUNDS	@"Sounds"
-#define PREFERENCE_CATEGORY_OTHER	@"Other"
+typedef enum {
+    AIPref_Accounts_Connections = 0,
+    AIPref_Accounts_Profile,
+    AIPref_Accounts_Hosts,
+    AIPref_ContactList_General,
+    AIPref_ContactList_Display,
+    AIPref_Messages_Display,
+    AIPref_Messages_Sending,
+    AIPref_Messages_Receiving,
+    AIPref_Status_Away,
+    AIPref_Status_Idle,
+    AIPref_Dock,
+    AIPref_Sound
+} PREFERENCE_CATEGORY;
 
 //Preference groups
 #define PREF_GROUP_GENERAL 		@"General"
@@ -481,16 +488,19 @@ typedef enum {
 @interface AIPreferenceController : NSObject {
     IBOutlet	AIAdium			*owner;
 
-    NSMutableArray			*categoryArray;
+//    NSMutableArray			*categoryArray;
+
+    NSMutableArray			*paneArray;		//An array of preference panes
+    
     NSMutableDictionary			*groupDict;		//A dictionary of pref dictionaries
 }
 
 //Preference window
 - (IBAction)showPreferenceWindow:(id)sender;
-- (void)openPreferencesToView:(AIPreferenceViewController *)inView;
+- (void)openPreferencesToPane:(AIPreferencePane *)inPane;
 
 //Preference views
-- (void)addPreferenceView:(AIPreferenceViewController *)inView;
+- (void)addPreferencePane:(AIPreferencePane *)inPane;
 
 //Defaults and access to preferencecs
 - (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)groupName;

@@ -36,15 +36,17 @@
 - (void)_applyChangesToDisplayedMessage;
 - (void)removeObject:(id)targetObject fromArray:(NSMutableArray *)array;
 - (int)indexOfObject:(id)targetObject inArray:(NSMutableArray *)array;
+- (void)configureView;
 @end
 
 @implementation AIAwayMessagePreferences
-
+//
 + (AIAwayMessagePreferences *)awayMessagePreferencesWithOwner:(id)inOwner
 {
     return([[[self alloc] initWithOwner:inOwner] autorelease]);
 }
 
+//Create a new away message
 - (IBAction)newAwayMessage:(id)sender
 {
     NSAttributedString	*newAwayString;
@@ -73,6 +75,7 @@
     [textView_message setSelectedRange:NSMakeRange(0, [[textView_message textStorage] length])];       
 }
 
+//Delete the selected away message
 - (IBAction)deleteAwayMessage:(id)sender
 {
     NSDictionary	*selectedAway;
@@ -96,6 +99,7 @@
     [self saveAwayMessages];
 }
 
+//User finished editing an away message
 - (void)textDidEndEditing:(NSNotification *)notification
 {
     //Apply and save any changes made
@@ -103,6 +107,7 @@
     [self saveAwayMessages];
 }
 
+//User is editing an away message
 - (void)textDidChange:(NSNotification *)notification
 {
     //Redisplay
@@ -110,26 +115,40 @@
 }
 
 
-
 //Private ---------------------------------------------------------------------------
 //init
 - (id)initWithOwner:(id)inOwner
 {
-    AIPreferenceViewController	*preferenceViewController;
-
+    //Init
     [super init];
     owner = [inOwner retain];
     awayMessageArray = nil;
     displayedMessage = nil;
     dragItem = nil;
     
-    //Load the pref view nib
-    [NSBundle loadNibNamed:AWAY_MESSAGES_PREF_NIB owner:self];
-    
-    //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:AWAY_MESSAGES_PREF_TITLE categoryName:PREFERENCE_CATEGORY_STATUS view:view_prefView];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
+    //Register our preference pane
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Status_Away withDelegate:self label:AWAY_MESSAGES_PREF_TITLE]];
 
+    return(self);
+}
+
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_prefView){
+        [NSBundle loadNibNamed:AWAY_MESSAGES_PREF_NIB owner:self];
+
+        //Configure our view
+        [self configureView];
+    }
+
+    return(view_prefView);
+}
+
+//Configure our preference view
+- (void)configureView
+{
     //Configure our view
     [outlineView_aways setDrawsAlternatingRows:YES];
     [outlineView_aways setAlternatingRowColor:[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0]];
@@ -138,11 +157,9 @@
     [scrollView_awayList setAutoScrollToBottom:NO];
     [scrollView_awayText setAutoHideScrollBar:YES];
     [scrollView_awayText setAutoScrollToBottom:NO];
-    
+
     //Load our aways
     [self loadAwayMessages];
-    
-    return(self);
 }
 
 //Load the away messages
@@ -181,207 +198,6 @@
     //Save the away message array
     [[owner preferenceController] setPreference:tempArray forKey:KEY_SAVED_AWAYS group:PREF_GROUP_AWAY_MESSAGES];
 }
-
-
-
-
-
-
-
-
-
-
-//Flexible Table View Delegate ----------------------------------------------------
-- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
-{    
-    if(item == nil){ //Root
-        return([awayMessageArray count]);
-
-    }else{
-        NSString *type = [item objectForKey:@"Type"];
-
-        if([type compare:@"Group"] == 0){ //Group
-            return([[item objectForKey:@"Contents"] count]);
-        }else{
-            return(0);
-        }
-
-    }
-}
-
-- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
-{    
-    if(item == nil){
-        return([awayMessageArray objectAtIndex:index]);
-        
-    }else{
-        NSString *type = [item objectForKey:@"Type"];
-
-        if([type compare:@"Group"] == 0){ //Group
-            return([[item objectForKey:@"Contents"] objectAtIndex:index]);
-        }else{
-            return(nil);
-        }
-
-    }
-}
-
-- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
-{
-    NSString *type = [item objectForKey:@"Type"];
-
-    if([type compare:@"Group"] == 0){ //Group
-        return(YES);
-    }else{
-        return(NO);
-    }
-}
-
-- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
-{
-    NSString *type = [item objectForKey:@"Type"];
-
-    //If this item is the one we're editing, make it look as if the changes are applying live by pulling the text right from our text view
-    if(item == displayedMessage){
-        return([[textView_message textStorage] string]);
-    }
-    
-    if([type compare:@"Group"] == 0){ //Group
-        return([item objectForKey:@"Name"]);
-        
-    }else if([type compare:@"Away"] == 0){ //Away message
-        return([[item objectForKey:@"Message"] string]);
-
-    }else{
-        return(nil);
-        
-    }
-}
-
-- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
-{
-    
-}
-
-- (void)outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
-{
-/*    int	index = [awayMessageArray indexOfObject:item];
-
-    //Swap in the new away message
-    [awayMessageArray replaceObjectAtIndex:index withObject:object];
-
-    //Save & Refresh
-    [self saveAwayMessages];
-    [outlineView_aways reloadData];*/
-}
-
-- (void)outlineViewSelectionIsChanging:(NSNotification *)notification
-{
-    if([outlineView_aways selectedRow] != -1){
-        //
-        [self _displayAwayMessage:[outlineView_aways itemAtRow:[outlineView_aways selectedRow]]];
-
-        //Give focus to the text view
-        [[textView_message window] makeFirstResponder:textView_message];
-
-        //Enable delete button
-        [button_delete setEnabled:YES];
-        
-    }else{
-        //Disable delete button
-        [button_delete setEnabled:NO];
-
-    }
-    
-}
-
-- (BOOL)outlineView:(NSOutlineView *)olv writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
-{
-    [pboard declareTypes:[NSArray arrayWithObject:@"AIAwayMessage"] owner:self];
-
-    //Build a list of all the highlighted aways
-    dragItem = [items objectAtIndex:0];
-
-    //put it on the pasteboard
-    [pboard setString:@"Private" forType:@"AIAwayMessage"];
-
-    return(YES);
-}
-
-- (NSDragOperation)outlineView:(NSOutlineView*)olv validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
-{
-    NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIAwayMessage"]];
-
-    if([avaliableType compare:@"AIAwayMessage"] == 0){
-        NSString *type = [dragItem objectForKey:@"Type"];
-        NSString *itemType = [item objectForKey:@"Type"];
-        
-        if([type compare:@"Group"] == 0){ //If they are dragging a group
-            if(item == nil || [itemType compare:@"Group"] == 0){ //To root, or onto/into a group
-                return(NSDragOperationPrivate);
-            }
-            
-        }else if([type compare:@"Away"] == 0){ //If they are dragging an away
-            if(item == nil || [itemType compare:@"Group"] == 0){ //To root, or onto/into a group
-                return(NSDragOperationPrivate);
-            }
-
-        }
-    }
-
-    return(NSDragOperationNone);
-}
-
-- (BOOL)outlineView:(NSOutlineView*)olv acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
-{
-    NSString 		*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIContactObjects"]];
-    int			oldIndex = [self indexOfObject:dragItem inArray:awayMessageArray];
-    
-    if([availableType compare:@"AIAwayMessage"] == 0){
-        NSString *type = [dragItem objectForKey:@"Type"];
-//        NSString *itemType = [item objectForKey:@"Type"];
-
-        if([type compare:@"Group"] == 0){ //If they are dragging a group
-/*            if(item == nil){ //To root
-
-            }else if([itemType compare:@"Group"] == 0){
-                if(index == -1){ //Onto a group
-
-                }else{ //Into a group
-                    
-                }
-            }*/
-
-        }else if([type compare:@"Away"] == 0){ //If they are dragging an away
-
-            if(item == nil){ //To root
-                [dragItem retain];
-                [self removeObject:dragItem fromArray:awayMessageArray]; //Remove from old location.  We can't use removeObject, since it will treat similar aways as identical and remove them all!
-                [awayMessageArray insertObject:dragItem atIndex:(oldIndex > index ? index : index - 1)]; //Add to new location
-                [dragItem release];
-                
-            }/*else if([itemType compare:@"Group"] == 0){
-                if(index == -1){ //Onto a group
-
-                }else{ //Into a group
-
-                }
-            }*/
-            
-        }
-    }
-
-    //Select and scroll to the dragged object
-    [outlineView_aways reloadData];
-    [outlineView_aways selectRow:[outlineView_aways rowForItem:dragItem] byExtendingSelection:NO];
-    [outlineView_aways scrollRowToVisible:[outlineView_aways rowForItem:dragItem]];
-    [self outlineViewSelectionIsChanging:nil];
-
-    return(YES);
-}
-
-
-
 
 
 
@@ -489,7 +305,7 @@
     }
 }
 
-//We often can't use removeObject, since it will treat similar aways as identical and remove them all!
+//We often can't use removeObject, since it will treat similar aways as identical and remove them all!  This special version only compares instances, and not their content.
 - (void)removeObject:(id)targetObject fromArray:(NSMutableArray *)array
 {
     NSEnumerator	*enumerator;
@@ -506,7 +322,7 @@
     }
 }
 
-//We often can't use indexOfObject, since it will treat similar aways as identical and always return the first instance
+//We often can't use indexOfObject, since it will treat similar aways as identical and always return the first instance.  This special version only compares instances, and not their content.
 - (int)indexOfObject:(id)targetObject inArray:(NSMutableArray *)array
 {
     NSEnumerator	*enumerator;
@@ -522,6 +338,184 @@
     }
 
     return(-1);
+}
+
+
+//Flexible Table View Delegate ----------------------------------------------------
+- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+{
+    if(item == nil){ //Root
+        return([awayMessageArray count]);
+
+    }else{
+        NSString *type = [item objectForKey:@"Type"];
+
+        if([type compare:@"Group"] == 0){ //Group
+            return([[item objectForKey:@"Contents"] count]);
+        }else{
+            return(0);
+        }
+
+    }
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
+{
+    if(item == nil){
+        return([awayMessageArray objectAtIndex:index]);
+
+    }else{
+        NSString *type = [item objectForKey:@"Type"];
+
+        if([type compare:@"Group"] == 0){ //Group
+            return([[item objectForKey:@"Contents"] objectAtIndex:index]);
+        }else{
+            return(nil);
+        }
+
+    }
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
+{
+    NSString *type = [item objectForKey:@"Type"];
+
+    if([type compare:@"Group"] == 0){ //Group
+        return(YES);
+    }else{
+        return(NO);
+    }
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
+{
+    NSString *type = [item objectForKey:@"Type"];
+
+    //If this item is the one we're editing, make it look as if the changes are applying live by pulling the text right from our text view
+    if(item == displayedMessage){
+        return([[textView_message textStorage] string]);
+    }
+
+    if([type compare:@"Group"] == 0){ //Group
+        return([item objectForKey:@"Name"]);
+
+    }else if([type compare:@"Away"] == 0){ //Away message
+        return([[item objectForKey:@"Message"] string]);
+
+    }else{
+        return(nil);
+
+    }
+}
+
+- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
+
+}
+
+- (void)outlineViewSelectionIsChanging:(NSNotification *)notification
+{
+    if([outlineView_aways selectedRow] != -1){
+        //
+        [self _displayAwayMessage:[outlineView_aways itemAtRow:[outlineView_aways selectedRow]]];
+
+        //Give focus to the text view
+        [[textView_message window] makeFirstResponder:textView_message];
+
+        //Enable delete button
+        [button_delete setEnabled:YES];
+
+    }else{
+        //Disable delete button
+        [button_delete setEnabled:NO];
+
+    }
+
+}
+
+- (BOOL)outlineView:(NSOutlineView *)olv writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
+{
+    [pboard declareTypes:[NSArray arrayWithObject:@"AIAwayMessage"] owner:self];
+
+    //Build a list of all the highlighted aways
+    dragItem = [items objectAtIndex:0];
+
+    //put it on the pasteboard
+    [pboard setString:@"Private" forType:@"AIAwayMessage"];
+
+    return(YES);
+}
+
+- (NSDragOperation)outlineView:(NSOutlineView*)olv validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
+{
+    NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIAwayMessage"]];
+
+    if([avaliableType compare:@"AIAwayMessage"] == 0){
+        NSString *type = [dragItem objectForKey:@"Type"];
+        NSString *itemType = [item objectForKey:@"Type"];
+
+        if([type compare:@"Group"] == 0){ //If they are dragging a group
+            if(item == nil || [itemType compare:@"Group"] == 0){ //To root, or onto/into a group
+                return(NSDragOperationPrivate);
+            }
+
+        }else if([type compare:@"Away"] == 0){ //If they are dragging an away
+            if(item == nil || [itemType compare:@"Group"] == 0){ //To root, or onto/into a group
+                return(NSDragOperationPrivate);
+            }
+
+        }
+    }
+
+    return(NSDragOperationNone);
+}
+
+- (BOOL)outlineView:(NSOutlineView*)olv acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
+{
+    NSString 		*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIContactObjects"]];
+    int			oldIndex = [self indexOfObject:dragItem inArray:awayMessageArray];
+
+    if([availableType compare:@"AIAwayMessage"] == 0){
+        NSString *type = [dragItem objectForKey:@"Type"];
+        //        NSString *itemType = [item objectForKey:@"Type"];
+
+        if([type compare:@"Group"] == 0){ //If they are dragging a group
+            /*            if(item == nil){ //To root
+
+            }else if([itemType compare:@"Group"] == 0){
+                if(index == -1){ //Onto a group
+
+                }else{ //Into a group
+
+                }
+            }*/
+
+        }else if([type compare:@"Away"] == 0){ //If they are dragging an away
+
+            if(item == nil){ //To root
+                [dragItem retain];
+                [self removeObject:dragItem fromArray:awayMessageArray]; //Remove from old location.  We can't use removeObject, since it will treat similar aways as identical and remove them all!
+                [awayMessageArray insertObject:dragItem atIndex:(oldIndex > index ? index : index - 1)]; //Add to new location
+                [dragItem release];
+
+            }/*else if([itemType compare:@"Group"] == 0){
+                if(index == -1){ //Onto a group
+
+                }else{ //Into a group
+
+                }
+            }*/
+
+        }
+    }
+
+    //Select and scroll to the dragged object
+    [outlineView_aways reloadData];
+    [outlineView_aways selectRow:[outlineView_aways rowForItem:dragItem] byExtendingSelection:NO];
+    [outlineView_aways scrollRowToVisible:[outlineView_aways rowForItem:dragItem]];
+    [self outlineViewSelectionIsChanging:nil];
+
+    return(YES);
 }
 
 @end

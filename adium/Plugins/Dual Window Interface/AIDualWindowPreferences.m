@@ -21,6 +21,7 @@
 @end
 
 @implementation AIDualWindowPreferences
+//
 + (AIDualWindowPreferences *)dualWindowInterfacePreferencesWithOwner:(id)inOwner
 {
     return([[[self alloc] initWithOwner:inOwner] autorelease]);
@@ -29,24 +30,28 @@
 //init
 - (id)initWithOwner:(id)inOwner
 {
-    AIPreferenceViewController	*prefController;
-
     //Init
     [super init];
     owner = [inOwner retain];
 
-    //Install our preference views
-    [NSBundle loadNibNamed:AIDUAL_PREF_NIB owner:self];
-
-    //Resizing
-    prefController = [AIPreferenceViewController controllerWithName:AIDUAL_PREF_TITLE_RESIZE categoryName:PREFERENCE_CATEGORY_CONTACTLIST view:view_resizing];
-    [[owner preferenceController] addPreferenceView:prefController];
-
-    //Load the prefs and configure our view
-    preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE] retain];
-    [self configureView];
+    //Register our preference pane
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_General withDelegate:self label:AIDUAL_PREF_TITLE_RESIZE]];
 
     return(self);
+}
+
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_resizing){
+        [NSBundle loadNibNamed:AIDUAL_PREF_NIB owner:self];
+
+        //Configure our view
+        [self configureView];
+    }
+
+    return(view_resizing);
 }
 
 //Called in response to all preference controls, applies new settings
@@ -69,6 +74,8 @@
 //Configures our view for the current preferences
 - (void)configureView
 {
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+
     [checkBox_autoResize setState:[[preferenceDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue]];
     [checkBox_horizontalResize setState:[[preferenceDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue]];
 
@@ -82,9 +89,6 @@
 }
 
 @end
-
-
-
 
 
 

@@ -18,6 +18,7 @@
 #import "AIContactListWindowController.h"
 #import "AIAdium.h"
 #import "AIDualWindowInterfacePlugin.h"
+#import "AIStatusSelectionView.h"
 
 #define CONTACT_LIST_WINDOW_NIB			@"ContactListWindow"		//Filename of the contact list window nib
 #define CONTACT_LIST_TOOLBAR			@"ContactList"			//ID of the contact list toolbar
@@ -206,6 +207,7 @@
 - (void)windowDidLoad
 {
     NSString	*savedFrame;
+    NSRect	contactListFrame;
     
     //Restore the window position
     savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME];
@@ -213,6 +215,16 @@
         [[self window] setFrameFromString:savedFrame];
     }
 
+    //Add the status selection view
+    contactListFrame = [scrollView_contactList frame];
+    view_statusSelection = [[AIStatusSelectionView alloc] initWithFrame:NSMakeRect(contactListFrame.origin.x, contactListFrame.origin.y + contactListFrame.size.height - 16 + 1, contactListFrame.size.width, 16) owner:owner];
+    
+    [view_statusSelection setAutoresizingMask:(NSViewMaxXMargin | NSViewMinYMargin | NSViewWidthSizable)];
+    [[[self window] contentView] addSubview:view_statusSelection];
+
+    [scrollView_contactList setFrameSize:NSMakeSize(contactListFrame.size.width, contactListFrame.size.height - 16)];
+        
+    
     //Swap in the contact list view
     contactListViewController = [[[owner interfaceController] contactListViewController] retain];
     contactListView = [[contactListViewController contactListView] retain];
@@ -225,7 +237,6 @@
     contactViewPadding = NSMakeSize([[self window] frame].size.width - [scrollView_contactList frame].size.width,
                                     [[self window] frame].size.height - [scrollView_contactList frame].size.height);
     [[owner notificationCenter] addObserver:self selector:@selector(contactListDesiredSizeChanged:) name:Interface_ViewDesiredSizeDidChange object:contactListView];
-
     
     //Register for the selection notification
     [[owner notificationCenter] addObserver:self selector:@selector(contactSelectionChanged:) name:Interface_ContactSelectionChanged object:contactListView];

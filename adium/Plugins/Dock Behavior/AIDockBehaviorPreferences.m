@@ -37,7 +37,7 @@
 @end
 
 @implementation AIDockBehaviorPreferences
-
+//
 + (id)dockBehaviorPreferencesWithOwner:(id)inOwner
 {
     return [[[self alloc] initWithOwner:inOwner] autorelease];
@@ -97,30 +97,31 @@
     [self saveCustomBehavior];
 }
 
-
 //init
 - (id)initWithOwner:(id)inOwner
 {
-    AIPreferenceViewController	*preferenceViewController;
-
+    //Init
     [super init];
     owner = [inOwner retain];
 
-    //Load the pref view nib
-    [NSBundle loadNibNamed:DOCK_BEHAVIOR_PREF_NIB owner:self];
+    //Register our preference pane
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Dock withDelegate:self label:DOCK_BEHAVIOR_PREF_TITLE]];
 
-    //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:DOCK_BEHAVIOR_PREF_TITLE categoryName:PREFERENCE_CATEGORY_DOCK view:view_prefView];
-    [[owner preferenceController] addPreferenceView:preferenceViewController];
+    return(self);
+}
 
-    //Observer preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_prefView){
+        [NSBundle loadNibNamed:DOCK_BEHAVIOR_PREF_NIB owner:self];
 
-    //Configure the view and load our preferences
-    [self configureView];
-    [self preferencesChanged:nil];
+        //Configure our view
+        [self configureView];
+    }
 
-    return self;
+    return(view_prefView);
 }
 
 //configure our view
@@ -147,6 +148,9 @@
     [tableView_events setAlternatingRowColor:[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0]];
     [tableView_events setTarget:self];
 
+    //Observer preference changes
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
 }
 
 //Called when the preferences change, update our preference display

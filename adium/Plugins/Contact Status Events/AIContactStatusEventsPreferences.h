@@ -18,8 +18,6 @@
 @interface AIContactStatusEventsPreferences : NSObject {
     AIAdium			*owner;
 
-    NSDictionary		*preferenceDict;
-
     IBOutlet	NSView			*view_prefView;
 
     IBOutlet	NSTextField		*textField_signedOffLength;

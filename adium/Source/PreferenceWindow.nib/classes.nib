@@ -1,10 +1,26 @@
 {
     IBClasses = (
+        {CLASS = AIFlippedCategoryView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {
             ACTIONS = {closeWindow = id; }; 
             CLASS = AIPreferenceWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"scrollView_contents" = NSScrollView; }; 
+            OUTLETS = {
+                "scrollView_contents" = NSScrollView; 
+                "tabView_category" = NSTabView; 
+                "view_Accounts_Connections" = NSView; 
+                "view_Accounts_Hosts" = NSView; 
+                "view_Accounts_Profile" = NSView; 
+                "view_ContactList_Display" = NSView; 
+                "view_ContactList_General" = NSView; 
+                "view_Dock" = NSView; 
+                "view_Messages_Display" = NSView; 
+                "view_Messages_Receiving" = NSView; 
+                "view_Messages_Sending" = NSView; 
+                "view_Sound" = NSView; 
+                "view_Status_Away" = NSView; 
+                "view_Status_Idle" = NSView; 
+            }; 
             SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }

@@ -41,7 +41,7 @@
 - (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)op;
 - (void)deleteAccountSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (void)tableViewSelectionDidChange:(NSNotification *)notification;
-
+- (void)configureView;
 @end
 
 @implementation AIAccountListPreferencesPlugin
@@ -49,51 +49,63 @@
 // init the account view controller
 - (void)installPlugin
 {
-    AIPreferenceController	*preferenceController;
-    AIAccountController		*accountController;
-
     //init
-    preferenceController = [owner preferenceController];
-    accountController = [owner accountController];
-    accountArray = [[accountController accountArray] retain];
+    accountArray = [[[owner accountController] accountArray] retain];
 
-    //Install the preference view
-    [NSBundle loadNibNamed:ACCOUNT_PREFERENCE_VIEW_NIB owner:self];
-    preferenceView = [[AIPreferenceViewController controllerWithName:ACCOUNT_PREFERENCE_TITLE categoryName:PREFERENCE_CATEGORY_CONNECTIONS view:view_accountPreferences] retain];
-    [preferenceController addPreferenceView:preferenceView];
+    //Register our preference pane
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Accounts_Connections withDelegate:self label:ACCOUNT_PREFERENCE_TITLE]];
+}
+
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_accountPreferences){
+        [NSBundle loadNibNamed:ACCOUNT_PREFERENCE_VIEW_NIB owner:self];
+
+        //Configure our view
+        [self configureView];
+    }
+
+    return(view_accountPreferences);
+}
+
+//Configure our preference view
+- (void)configureView
+{
+    //Configure our tableView
     [[tableView_accountList tableColumnWithIdentifier:@"icon"] setDataCell:[[[NSImageCell alloc] init] autorelease]];
     [tableView_accountList registerForDraggedTypes:[NSArray arrayWithObjects:ACCOUNT_DRAG_TYPE,nil]];
 
     //Install our observers
     [[owner notificationCenter] addObserver:self
-                                  selector:@selector(refreshAccountList)
-                                      name:Account_PropertiesChanged
-                                    object:nil];
+                                   selector:@selector(refreshAccountList)
+                                       name:Account_PropertiesChanged
+                                     object:nil];
     [[owner notificationCenter] addObserver:self
-                                  selector:@selector(refreshAccountList)
-                                      name:Account_StatusChanged
-                                    object:nil];    
+                                   selector:@selector(refreshAccountList)
+                                       name:Account_StatusChanged
+                                     object:nil];
     [[owner notificationCenter] addObserver:self
-                                  selector:@selector(accountListChanged:)
-                                      name:Account_ListChanged
-                                    object:nil];
-                                             
+                                   selector:@selector(accountListChanged:)
+                                       name:Account_ListChanged
+                                     object:nil];
+    
 }
 
 - (void)uninstallPlugin
 {
-    //uninstall preference view, remove observers, etc
+
 }
 
 - (void)dealloc
 {
     [accountArray release];
-    [preferenceView release];
 
     [super dealloc];
 }
 
-// Delete the selected account
+//Delete the selected account
 - (IBAction)deleteAccount:(id)sender
 {
     int 	index;
@@ -109,7 +121,7 @@
     NSBeginAlertSheet(@"Delete Account",@"Delete",@"Cancel",@"",[view_accountPreferences window], self, @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, targetAccount, @"Delete the account %@?", [targetAccount accountDescription]);
 }
 
-// Create a new account
+//Create a new account
 - (IBAction)newAccount:(id)sender
 {
     int		index = [tableView_accountList selectedRow] + 1;
@@ -124,7 +136,7 @@
     [self editAccountCreatingNew:YES];
 }
 
-// edit an account
+//Edit an account
 - (IBAction)editAccount:(id)sender
 {
     [self editAccountCreatingNew:NO];
@@ -153,7 +165,7 @@
     }
 }
 
-// Selects the account, and starts editing it. Makes sure that we don't delete it when we hit cancel if its not a new account!
+//Selects the account, and starts editing it. Makes sure that we don't delete it when we hit cancel if its not a new account!
 -(void)editAccountCreatingNew:(BOOL)newo
 {
     AIAccount		*selectedAccount;
@@ -166,6 +178,7 @@
         [AIAccountListEditSheetController showAccountListEditSheetForAccount:selectedAccount onWindow:[view_accountPreferences window] owner:owner deleteOnCancel:newo];
     }
 }
+
 
 // Private ---------------------------------------------------------------------------
 // Finishes the delete action when the sheet is closed
@@ -219,7 +232,7 @@
     //if there are no accounts, open the prefs and create one
     if([[[owner accountController] accountArray] count] == 0){
         //open
-        [[owner preferenceController] openPreferencesToView:preferenceView];
+#warning        [[owner preferenceController] openPreferencesToView:preferenceView];
     
         //create
         [[owner accountController] newAccountAtIndex:0];
@@ -230,19 +243,19 @@
     }
 }
 
-//
+//Delete the selected row
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
     [self deleteAccount:nil]; //Delete them
 }
 
-// return the number of accounts
+//Return the number of accounts
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
     return([accountArray count]);
 }
 
-// return the account description or image
+//Return the account description or image
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     NSString	*identifier = [tableColumn identifier];

@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIPreferenceCategory, AIAdium, AIContactHandle;
+@class AIAdium, AIContactHandle;
 
 @interface AIContactInfoWindowController : NSWindowController {
     IBOutlet	NSScrollView	*scrollView_contents;
