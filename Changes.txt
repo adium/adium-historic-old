@@ -49,7 +49,7 @@ Version 0.70
 - Removed 25-character restriction on contact list display of MSN display names, adding an option to treat the display name as a status message
 - Many improvements to handling of group chats, including the ability to invite other users into chat rooms
 - Various other cosmetic and bug fixes
-- Updated to Libgaim 0.82.1
+- Updated to Libgaim 1.0.0
 - Significant stability improvements
 
 Version 0.63 (7/23/2004)
