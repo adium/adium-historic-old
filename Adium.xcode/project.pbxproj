@@ -1300,6 +1300,93 @@
 				);
 			};
 		};
+		3428328307D263F0004F01C9 = {
+			children = (
+				3428328407D2643E004F01C9,
+				3428328707D2643F004F01C9,
+				3428328607D2643F004F01C9,
+				3428328507D2643F004F01C9,
+				3428328C07D2644F004F01C9,
+			);
+			isa = PBXGroup;
+			name = "Status Preferences";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3428328407D2643E004F01C9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESStatusPreferencesPlugin.h;
+			path = Source/ESStatusPreferencesPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3428328507D2643F004F01C9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESStatusPreferences.m;
+			path = Source/ESStatusPreferences.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3428328607D2643F004F01C9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESStatusPreferences.h;
+			path = Source/ESStatusPreferences.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3428328707D2643F004F01C9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESStatusPreferencesPlugin.m;
+			path = Source/ESStatusPreferencesPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3428328807D2643F004F01C9 = {
+			fileRef = 3428328407D2643E004F01C9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3428328907D2643F004F01C9 = {
+			fileRef = 3428328507D2643F004F01C9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3428328A07D2643F004F01C9 = {
+			fileRef = 3428328607D2643F004F01C9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3428328B07D2643F004F01C9 = {
+			fileRef = 3428328707D2643F004F01C9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3428328C07D2644F004F01C9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = StatusPreferences.nib;
+			path = Resources/StatusPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3428328D07D2644F004F01C9 = {
+			fileRef = 3428328C07D2644F004F01C9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		342910CA07AE228600C815F6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -6882,6 +6969,8 @@
 				4BAE6D3C07CFA0BC007E2820,
 				4BAE6D4207CFA0CB007E2820,
 				4B08399407D2350D0034A001,
+				3428328807D2643F004F01C9,
+				3428328A07D2643F004F01C9,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7181,6 +7270,7 @@
 				4BF3CBED07D192F500A8112A,
 				4B082CCB07D2236E0034A001,
 				4B08399C07D235190034A001,
+				3428328D07D2644F004F01C9,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7373,6 +7463,8 @@
 				4BAE6D3D07CFA0BC007E2820,
 				4BAE6D4307CFA0CB007E2820,
 				4B08399507D2350D0034A001,
+				3428328907D2643F004F01C9,
+				3428328B07D2643F004F01C9,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14404,6 +14496,7 @@
 		};
 		4B587C3707ABFCA8001832A9 = {
 			children = (
+				3428328307D263F0004F01C9,
 				4BC32F7107AABC3500DDED66,
 				4B292D4707A9C92D00C5F882,
 				4B587C6F07ABFD31001832A9,

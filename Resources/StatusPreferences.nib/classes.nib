@@ -1,0 +1,66 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {
+            CLASS = AILocalizationTextField; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSTextField; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
+        {CLASS = AIPlasticMinusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {CLASS = AIPlasticPlusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
+        {CLASS = AISmartStepper; LANGUAGE = ObjC; SUPERCLASS = NSStepper; }, 
+        {
+            ACTIONS = {addAlert = id; deleteAlert = id; editAlert = id; }; 
+            CLASS = ESContactAlertsViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_add" = NSButton; 
+                "button_delete" = NSButton; 
+                "button_edit" = NSButton; 
+                "tableView_actions" = AIAlternatingRowTableView; 
+                view = NSView; 
+            }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {
+            CLASS = ESGlobalEventsPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                contactAlertsViewController = ESContactAlertsViewController; 
+                "label_bounceTheDockIcon" = NSTextField; 
+                "label_displayGrowlNotifications" = NSTextField; 
+                "label_soundSet" = NSTextField; 
+                "label_speech" = NSTextField; 
+                "popUp_dockBehaviorSet" = NSPopUpButton; 
+                "popUp_growlPreset" = NSPopUpButton; 
+                "popUp_soundSet" = NSPopUpButton; 
+                "popUp_speechPreset" = NSPopUpButton; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}
