@@ -4676,14 +4676,9 @@
 				4BD6758006001E410049CAF7,
 				4BD6758506001E450049CAF7,
 				4BD6758806001E460049CAF7,
-				4BD6759406001E4F0049CAF7,
-				4BD6759506001E4F0049CAF7,
-				4BD6759606001E500049CAF7,
 				4BD6759706001E510049CAF7,
 				4BD6759806001E510049CAF7,
 				4BD6759906001E510049CAF7,
-				4BD6759C06001E540049CAF7,
-				4BD6759D06001E540049CAF7,
 				4BD6759F06001E590049CAF7,
 				4BD675A206001E5D0049CAF7,
 				4B74D3340602641C00C21B7C,
@@ -14869,24 +14864,6 @@
 			settings = {
 			};
 		};
-		4BD6759406001E4F0049CAF7 = {
-			fileRef = 6C271CE40561719200057D9C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6759506001E4F0049CAF7 = {
-			fileRef = 6C60B14805605A3500CAD137;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6759606001E500049CAF7 = {
-			fileRef = 6C0FFB2205723F1B00E75F79;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6759706001E510049CAF7 = {
 			fileRef = 6C24112D05849DF400CECFC3;
 			isa = PBXBuildFile;
@@ -14901,18 +14878,6 @@
 		};
 		4BD6759906001E510049CAF7 = {
 			fileRef = 6C24112A05849DBB00CECFC3;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6759C06001E540049CAF7 = {
-			fileRef = 6C271CE30561719200057D9C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6759D06001E540049CAF7 = {
-			fileRef = 6C271CEA056177CA00057D9C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -16442,14 +16407,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		6C0FFB2205723F1B00E75F79 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = backdropDark.png;
-			path = "Plugins/Event Bezel/backdropDark.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		6C1CC23105415D5700B64925 = {
 			isa = PBXFileReference;
 			lastKnownFileType = "compiled.mach-o.executable";
@@ -16521,30 +16478,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		6C271CE30561719200057D9C = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = away.png;
-			path = "Plugins/Event Bezel/away.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C271CE40561719200057D9C = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = idle.png;
-			path = "Plugins/Event Bezel/idle.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C271CEA056177CA00057D9C = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = offline.png;
-			path = "Plugins/Event Bezel/offline.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		6C3E0151054445C000A4AE2E = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -16609,11 +16542,6 @@
 				6C60B15305605A3700CAD137,
 				6C60B15405605A3700CAD137,
 				6C60B15505605A3800CAD137,
-				6C271CEA056177CA00057D9C,
-				6C271CE30561719200057D9C,
-				6C271CE40561719200057D9C,
-				6C60B14805605A3500CAD137,
-				6C0FFB2205723F1B00E75F79,
 				6C24112705849D7900CECFC3,
 				6C24112A05849DBB00CECFC3,
 				6C24112D05849DF400CECFC3,
@@ -16623,14 +16551,6 @@
 			isa = PBXGroup;
 			name = "Event Bezel";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C60B14805605A3500CAD137 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = backdrop.png;
-			path = "Plugins/Event Bezel/backdrop.png";
 			refType = 4;
 			sourceTree = "<group>";
 		};
