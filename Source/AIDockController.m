@@ -197,9 +197,8 @@
 		AIIconState		*iconState;
 		
 		stateDict = [[iconPackDict objectForKey:@"State"] objectForKey:stateNameKey];
-		iconState = [self iconStateFromStateDict:stateDict folderPath:folderPath];
-		if (iconState){
-			[iconStateDict setObject:[self iconStateFromStateDict:stateDict folderPath:folderPath] forKey:stateNameKey];
+		if(iconState = [self iconStateFromStateDict:stateDict folderPath:folderPath]){
+			[iconStateDict setObject:iconState forKey:stateNameKey];
 		}
 	}
 	
@@ -261,11 +260,7 @@
 				if(image) [tempIconCache setObject:image forKey:imagePath];
 			}
 			
-			if(image && [image isValid] && [image size].width != 0 && [image size].height != 0){
-				[imageArray addObject:image];
-			}else{
-				NSLog(@"Failed to load image %@",imagePath);
-			}
+			[imageArray addObject:image];
 		}
 		
 		//Create the state
@@ -298,12 +293,7 @@
 		overlay = [[stateDict objectForKey:@"Overlay"] intValue];
 		
 		//Create the state
-		if(image && [image isValid] && [image size].width != 0 && [image size].height != 0){
-			iconState = [[AIIconState alloc] initWithImage:image overlay:overlay];
-		}else{
-			NSLog(@"Invalid static icon state (%@)",imagePath);
-		}
-		
+		iconState = [[AIIconState alloc] initWithImage:image overlay:overlay];		
 		[image release];
 	}
 
@@ -339,23 +329,17 @@
 //Scan for an icon pack with the specified name
 - (NSString *)_pathOfIconPackWithName:(NSString *)name
 {
-    NSEnumerator			*resPathEnumerator = [[[AIObject sharedAdiumInstance] resourcePathsForName:FOLDER_DOCK_ICONS] objectEnumerator];
-    NSDirectoryEnumerator	*dirEnumerator;
-    NSString				*iconsDir;
-    NSString				*iconPack;
+	NSFileManager	*fileManager = [NSFileManager defaultManager];
+    NSString		*packFileName = [name stringByAppendingPathExtension:@"AdiumIcon"];
+    NSEnumerator	*enumerator = [[[AIObject sharedAdiumInstance] resourcePathsForName:FOLDER_DOCK_ICONS] objectEnumerator];
+    NSString		*resourcePath;
 
-    while(iconsDir = [resPathEnumerator nextObject]) {
-        //Find the desired .AdiumIcon
-        dirEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:iconsDir];
-        while((iconPack = [dirEnumerator nextObject])){
-            if([[iconPack pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == 0 && [[[iconPack lastPathComponent] stringByDeletingPathExtension] caseInsensitiveCompare:name] == 0){
-                //Found a match, return the path
-                return([iconsDir stringByAppendingPathComponent:iconPack]);
-            }
-        }
-    }
+	//Search all our resource paths for the icon pack
+    while(resourcePath = [enumerator nextObject]){
+		NSString *iconPackPath = [resourcePath stringByAppendingPathComponent:packFileName];
+		if([fileManager fileExistsAtPath:iconPackPath]) return(iconPackPath);
+	}
 
-    //No match found
     return(nil);
 }
 
