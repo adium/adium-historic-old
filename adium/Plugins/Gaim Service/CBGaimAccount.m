@@ -1090,9 +1090,8 @@ static id<GaimThread> gaimThread = nil;
 	[[adium contactController] endListObjectNotificationDelay];
 	
 	[lastDisconnectionError release]; lastDisconnectionError = [text retain];
-
-//	[self accountConnectionDisconnected];
 }
+
 - (oneway void)accountConnectionNotice:(NSString *)connectionNotice
 {
     [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Connection Notice",[self UID],[self serviceID]]
@@ -1102,23 +1101,23 @@ static id<GaimThread> gaimThread = nil;
 //Our account has disconnected (called automatically by gaimServicePlugin)
 - (oneway void)accountConnectionDisconnected
 {
-    NSEnumerator    *enumerator;
-    BOOL			connectionIsSuicidal = (gc ? gc->wants_to_die : NO);
-
-	//We now longer have a connection
-	gc = NULL;
+	NSEnumerator    *enumerator;
+	BOOL			connectionIsSuicidal = (gc ? gc->wants_to_die : NO);
 	
     //We are now offline
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
-    
+	[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
+	[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
+	[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
+
+	//We no longer have a connection
+	gc = NULL;
+	
     //If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
 	//connectionIsSuicidal == TRUE when Gaim thinks we shouldn't attempt a reconnect.
-    if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
+	if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue] && lastDisconnectionError){
 		if (reconnectAttemptsRemaining && 
 			[self shouldAttemptReconnectAfterDisconnectionError:lastDisconnectionError] && !(connectionIsSuicidal)) {
-
+			
 			[self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
 			reconnectAttemptsRemaining--;
 		}else{
@@ -1131,7 +1130,7 @@ static id<GaimThread> gaimThread = nil;
 			//Reset reconnection attempts
 			reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
 		}
-    }
+	}
 }
 
 //By default, always attempt to reconnect.  Subclasses may override this to manage reconnect behavior.
@@ -1185,10 +1184,6 @@ static id<GaimThread> gaimThread = nil;
 
 - (void)createNewGaimAccount
 {
-//	gaimThread = [[NSConnection rootProxyForConnectionWithRegisteredName:@"GaimThread"
-//																	host:nil] retain];
-//  [gaimThread setProtocolForProxy:@protocol(GaimThread)];
-	
 	//Create a fresh version of the account
     account = gaim_account_new([UID UTF8String], [self protocolPlugin]);
 	
@@ -1196,68 +1191,10 @@ static id<GaimThread> gaimThread = nil;
 
     gaim_accounts_add(account);
 	
-//EDS THREAD?
-#if 0
-	{
-		NSPort 			*port1 = [NSPort port];
-		NSPort 			*port2 = [NSPort port];
-		//NSConnection 	*kitConnection = [[NSConnection alloc] initWithReceivePort:port1 sendPort:port2];
-/*		NSConnection	*kitConnection= [NSConnection rootProxyForConnectionWithRegisteredName:@"GaimThread"
-																						  host:nil];*/
-		if (!gaimThread){
-			gaimThread = [[NSConnection rootProxyForConnectionWithRegisteredName:@"GaimThread"
-																			host:nil] retain];
-			[gaimThread setProtocolForProxy:@protocol(GaimThread)];
-		}
-		
-		//[kitConnection enableMultipleThreads];
-		NSLog(@"1");
-		//[kitConnection setRootObject:self];
-				NSLog(@"2");
-	//			NSLog(@"%@",[[kitConnection  rootProxy] description]);
-//		[[kitConnection rootProxy] connectToAccountWithPorts:[NSArray arrayWithObjects:port2, port1, nil]];
-		//		[SLGaimCocoaAdapter connectToAccountWithPorts:[NSArray arrayWithObjects:port2, port1, nil]];
-				
-				NSLog(@"3");
-	//	gaimThread = [[kitConnection rootProxy] retain];
-				NSLog(@"4");
-				
-				NSPort 			*port3 = [NSPort port];
-				NSPort 			*port4 = [NSPort port];
-				
-		NSConnection *ourConnection = [[NSConnection connectionWithReceivePort:port3 sendPort:port4] retain];
-		[ourConnection enableMultipleThreads];
-		[ourConnection setRootObject:self];
-		NSArray *portArray = [NSArray arrayWithObjects:port4, port3, nil];
-		
-//		NSValue *theValue = [NSValue value:&account withObjCType:@encode(void *)];
-//	NSValue *theValue = [NSValue valueWithPointer:&account];
-			NSValue *theValue = [NSValue valueWithPointer:account];
-//			NSLog(@"CBGAIMACCOUNT addPortArray %x %@",account,portArray);
-//			GaimAccount **testAccount = [theValue pointerValue];
-//					NSLog(@"made value %x",*testAccount);
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"AddAccount"
-											  object:theValue
-												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:portArray,@"portArray",
-													self,@"adiumAccount",nil]];
-
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"ThreadTest"
-															object:nil
-														  userInfo:nil];
-		NSLog(@"5");
-//		[gaimThread addPortArray:portArray forAccountValue:theValue];
-		
-//		NSConnection	*incomingConnection = [[NSConnection connectionWithReceivePort:port4 sendPort:port3] retain] ;
-//		[incomingConnection enableMultipleThreads];
-		//[incomingConnection setRootObject:self];
-				NSLog(@"5");
-	//			NSLog(@"setting %@",incomingConnection);
-	//	account->ui_data = [[NSValue valueWithPointer:incomingConnection] retain];
-	}
-#endif
 	if (!gaimThread){
 		gaimThread = [[SLGaimCocoaAdapter sharedInstance] retain];
 	}
+	
 	[gaimThread addAdiumAccount:self];
 	   
 	[(GaimService *)service addAccount:self forGaimAccountPointer:account];	
@@ -1630,11 +1567,6 @@ static id<GaimThread> gaimThread = nil;
 - (AIListContact *)_contactWithUID:(NSString *)inUID
 {
 	return [super _contactWithUID:inUID];
-}
-
-- (oneway void)doSelector:(SEL)selector withObject:(id)firstObject withObject:(id)secondObject
-{
-	[self performSelector:selector withObject:firstObject withObject:secondObject];
 }
 
 @end

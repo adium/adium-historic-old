@@ -52,30 +52,24 @@
 	//Title
 	[textField_title setStringValue:(titleString ? titleString : @"")];
 
-	//Adjust the origin of the message, then change  the window size accordingly
+	//Set the message, then change the window size accordingly
 	{
-		oldFrame = [textView_msg frame];
 		[textView_msg setVerticallyResizable:YES];
 		[textView_msg setDrawsBackground:NO];
 		[scrollView_msg setDrawsBackground:NO];
+
+		NSRect  frame = [[self window] frame];
+		int		heightChange;
+
 		[textView_msg setString:(msg ? msg : @"")];
 		[textView_msg sizeToFit];
-		newFrame = [textView_msg frame];
+		heightChange = [textView_msg frame].size.height - [scrollView_msg documentVisibleRect].size.height;
 		
-		float msgFrameHeightChange = newFrame.size.height - oldFrame.size.height;
-	
-		//Scrollview containing textView_msg
-		oldFrame = [scrollView_msg frame];
-		newFrame = oldFrame;
-		newFrame.size = [scrollView_msg contentSize];
-		newFrame.origin.y -= (newFrame.size.height - oldFrame.size.height);
-		[scrollView_msg setFrame:newFrame];
+		frame.size.height += heightChange;
+		frame.origin.y -= heightChange;
 		
-		//Window
-		oldFrame = [[self window] frame];
-		oldFrame.size.height += msgFrameHeightChange;
-		oldFrame.origin.y -= msgFrameHeightChange;
-		[[self window] setFrame:oldFrame display:YES animate:NO];
+		//Resize the window to fit the message
+		[[self window] setFrame:frame display:YES animate:YES];
 	}
 	
 	//The last object in the array is the default
