@@ -11,13 +11,9 @@
 @implementation AIWebKitMessageViewPlugin
 
 - (void)installPlugin
-{
-	//[[adium pluginController] setWebkitPluginWasLoaded:YES];
-	
-	if([[adium interfaceController] preferredMessageView] == DCWebkitMessageView) {
-	//if(USE_WEBKIT_PLUGIN && [NSApp isOnPantherOrBetter]){
-		//Init
-
+{	
+	//This plugin will ONLY work in 10.3 or newer
+	if([NSApp isOnPantherOrBetter]){
 		styleDictionary = nil;
 		[self _scanAvailableWebkitStyles];
 		
