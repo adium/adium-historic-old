@@ -210,26 +210,40 @@
 		 (and therefore the min and max sizes aren't set there).
 		 */
 							  
-		[[self window] setMaxSize:NSMakeSize(maxWindowWidth, 10000)];
-
-		if (forcedWindowWidth == -1){
-			[[self window] setMinSize:minWindowSize];
-		}else{
-			[[self window] setMinSize:NSMakeSize(forcedWindowWidth,minWindowSize.height)];
-			
+		NSSize	thisMinimumSize = minWindowSize;
+		NSSize	thisMaximumSize = NSMakeSize(maxWindowWidth, 10000);
+		NSRect	currentFrame = [[self window] frame];
+	
+		if (forcedWindowWidth != -1){
 			/*
 			 If we have a forced width but we are doing no autoresizing, set our frame now so we don't have t be doing checks every time
 			contactListDesiredSizeChanged is called.
 			 */
+			
 			if(!(autoResizeVertically || autoResizeHorizontally)){
+				thisMinimumSize.width = forcedWindowWidth;
 				
-				NSRect	currentFrame = [[self window] frame];
 				[[self window] setFrame:NSMakeRect(currentFrame.origin.x,currentFrame.origin.y,forcedWindowWidth,currentFrame.size.height) 
 								display:YES
 								animate:NO];
 			}
 		}
 		
+		//If vertically resizing, make the minimum and maximum heights the current height
+		if (autoResizeVertically){
+			thisMinimumSize.height = currentFrame.size.height;
+			thisMaximumSize.height = currentFrame.size.height;
+		}
+
+		//If horizontally resizing, make the minimum and maximum widths the current width
+		if (autoResizeHorizontally){
+			thisMinimumSize.width = currentFrame.size.width;
+			thisMaximumSize.width = currentFrame.size.width;			
+		}
+				
+		[[self window] setMinSize:thisMinimumSize];
+		[[self window] setMaxSize:thisMaximumSize];
+
 		[contactListController setAutoresizeHorizontally:autoResizeHorizontally];
 		[contactListController setAutoresizeVertically:autoResizeVertically];
 		[contactListController setForcedWindowWidth:forcedWindowWidth];
