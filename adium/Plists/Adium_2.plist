@@ -106,7 +106,7 @@
 	<key>CFBundleIconFile</key>
 	<string>Adium.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.adiumX.adium</string>
+	<string>com.adiumX.adiumX</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -117,14 +117,6 @@
 	<string>2.0</string>
 	<key>CFBundleSignature</key>
 	<string>AdIM</string>
-	<key>CFBundleVersion</key>
-	<string>2.0</string>
-	<key>NSAppleScriptEnabled</key>
-	<true/>
-	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -136,5 +128,13 @@
 			</array>
 		</dict>
 	</array>
+	<key>CFBundleVersion</key>
+	<string>2.0</string>
+	<key>NSAppleScriptEnabled</key>
+	<true/>
+	<key>NSMainNibFile</key>
+	<string>MainMenu</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
 </dict>
 </plist>
