@@ -160,19 +160,14 @@
 //Draw a row
 - (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected
 {
-	NSRect	segmentRect = rect;
-	
 	if(colored && !selected){
-		segmentRect.origin.x = 0;
-		segmentRect.size.width = [self frame].size.width;
-		
 		//Whipe any existing color
 		[[NSColor clearColor] set];
-		NSRectFill(segmentRect); //fillRect: doesn't work here... must behave differently w/ alpha
+		NSRectFill(rect); //fillRect: doesn't work here... must behave differently w/ alpha
 		
 		//Draw our grid color
 		[[self alternatingRowColor] set];
-		[NSBezierPath fillRect:segmentRect];
+		[NSBezierPath fillRect:rect];
 	}
 }
 
