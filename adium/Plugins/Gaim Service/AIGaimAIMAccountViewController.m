@@ -27,12 +27,19 @@
     [super configureViewAfterLoad];
     
     //Full name
-    [textField_fullName setStringValue:[account preferenceForKey:@"FullName" group:GROUP_ACCOUNT_STATUS]];
+    NSString            *fullName = [account preferenceForKey:@"FullName" group:GROUP_ACCOUNT_STATUS];
+    if (fullName){
+        [textField_fullName setStringValue:fullName];
+    }
     
     //Profile
-    NSAttributedString	*profile = [NSAttributedString stringWithData:[account preferenceForKey:KEY_PROFILE group:GROUP_ACCOUNT_STATUS]];
-    if(!profile) profile = [[[NSAttributedString alloc] initWithString:@""] autorelease];
-    [[textView_textProfile textStorage] setAttributedString:profile];
+    NSData              *profileData = [account preferenceForKey:KEY_PROFILE group:GROUP_ACCOUNT_STATUS];
+    if (profileData) {
+        NSAttributedString	*profile = [NSAttributedString stringWithData:profileData];
+        if (profile && [profile length]){
+            [[textView_textProfile textStorage] setAttributedString:profile];
+        }
+    }
 }
 
 //Save changes made to a preference control
