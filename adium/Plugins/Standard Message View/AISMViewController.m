@@ -146,13 +146,32 @@
         timeStampFormat = [[prefDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT] retain];
         timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeStampFormat allowNaturalLanguage:NO];
 		
+		//Old?
+		outgoingSourceColor = [[[prefDict objectForKey:KEY_SMV_OUTGOING_PREFIX_COLOR] representedColor] retain];
+        outgoingLightSourceColor = [[[prefDict objectForKey:KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR] representedColor] retain];
+        incomingSourceColor = [[[prefDict objectForKey:KEY_SMV_INCOMING_PREFIX_COLOR] representedColor] retain];
+        incomingLightSourceColor = [[[prefDict objectForKey:KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR] representedColor] retain];
+		
+		prefixFont = [[[prefDict objectForKey:KEY_SMV_PREFIX_FONT] representedFont] retain];        
+		
+        colorOutgoing = [[[prefDict objectForKey:KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR] representedColor] retain];
+		colorOutgoingBorder = [[colorOutgoing adjustHue:0.0 saturation:+0.3 brightness:-0.3] retain];
+		colorOutgoingDivider = [[colorOutgoing adjustHue:0.0 saturation:+0.1 brightness:-0.1] retain];
+		
+        colorIncoming = [[[prefDict objectForKey:KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR] representedColor] retain];
+		colorIncomingBorder = [[colorIncoming adjustHue:0.0 saturation:+0.3 brightness:-0.3] retain];
+		colorIncomingDivider = [[colorIncoming adjustHue:0.0 saturation:+0.1 brightness:-0.1] retain];
+
+		
 		//Coloring
+		/*
 		colorIncoming = [[NSColor colorWithCalibratedRed:(229.0/255.0) green:(242.0/255.0) blue:(255.0/255.0) alpha:1.0] retain];
 		colorIncomingBorder = [[colorIncoming adjustHue:0.0 saturation:+0.3 brightness:-0.3] retain];
 		colorIncomingDivider = [[colorIncoming adjustHue:0.0 saturation:+0.1 brightness:-0.1] retain];
 		colorOutgoing = [[NSColor colorWithCalibratedRed:(230.0/255.0) green:(255.0/255.0) blue:(234.0/255.0) alpha:1.0] retain];
 		colorOutgoingBorder = [[colorOutgoing adjustHue:0.0 saturation:+0.3 brightness:-0.3] retain];
 		colorOutgoingDivider = [[colorOutgoing adjustHue:0.0 saturation:+0.1 brightness:-0.1] retain];
+		*/
 		
 		//Ignorance
 		ignoreTextStyles = [[prefDict objectForKey:KEY_SMV_IGNORE_TEXT_STYLES] boolValue];
@@ -165,14 +184,6 @@
 		
         //Indentation when combining messages in appropriate modes
         headIndent = [[prefDict objectForKey:KEY_SMV_COMBINE_MESSAGES_INDENT] floatValue];
-        
-		
-        //Old
-		outgoingSourceColor = [[[prefDict objectForKey:KEY_SMV_OUTGOING_PREFIX_COLOR] representedColor] retain];
-        outgoingLightSourceColor = [[[prefDict objectForKey:KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR] representedColor] retain];
-        incomingSourceColor = [[[prefDict objectForKey:KEY_SMV_INCOMING_PREFIX_COLOR] representedColor] retain];
-        incomingLightSourceColor = [[[prefDict objectForKey:KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR] representedColor] retain];
-        prefixFont = [[[prefDict objectForKey:KEY_SMV_PREFIX_FONT] representedFont] retain];        
         
         //Reset all content objects if a preference actually changed
 		if (notification)
@@ -648,18 +659,16 @@
 		if (emptyHeadIndentCell) {
 			
 			//dchoby98 -- empty indent space
-			NSColor *messageBackgroundColor;
-			if( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 )
-				messageBackgroundColor = [[messageCell contentBackgroundColor] darkenAndAdjustSaturationBy:-0.3];
-			else
-				messageBackgroundColor = [messageCell contentBackgroundColor];
+			//NSColor *messageBackgroundColor = [messageCell contentBackgroundColor];
+			//if( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 )
+			//	messageBackgroundColor = [messageBackgroundColor darkenAndAdjustSaturationBy:-0.3];
+							
+			//if (messageBackgroundColor) {
+			//	[leftmostCell setBackgroundColor:messageBackgroundColor];
 				
-			if (messageBackgroundColor) {
-				[leftmostCell setBackgroundColor:messageBackgroundColor];
-				
-				if ([leftmostCell isKindOfClass:[AIFlexibleTableFramedTextCell class]])
-					[(AIFlexibleTableFramedTextCell *)leftmostCell setFrameBackgroundColor:messageBackgroundColor];
-			}
+			//	if ([leftmostCell isKindOfClass:[AIFlexibleTableFramedTextCell class]])
+			//		[(AIFlexibleTableFramedTextCell *)leftmostCell setFrameBackgroundColor:messageBackgroundColor];
+			//}
 		}
 		
         cellArray = [NSArray arrayWithObjects:leftmostCell, messageCell, nil];
@@ -750,19 +759,24 @@
     AIFlexibleTableFramedTextCell * cell = [[AIFlexibleTableFramedTextCell alloc] init];
 	NSColor *currentOutgoingDividerColor = colorOutgoingDivider;
 	NSColor *currentIncomingDividerColor = colorIncomingDivider;
+	NSColor *currentIncomingColor = colorIncoming;
+	NSColor *currentOutgoingColor = colorOutgoing;
 	
 	if( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 ) {
 		currentOutgoingDividerColor = [currentOutgoingDividerColor darkenAndAdjustSaturationBy:-0.3];
 		currentIncomingDividerColor = [currentIncomingDividerColor darkenAndAdjustSaturationBy:-0.3];
+		currentIncomingColor = [currentIncomingColor darkenAndAdjustSaturationBy:-0.3];
+		currentOutgoingColor = [currentOutgoingColor darkenAndAdjustSaturationBy:-0.3];
 	}
+	
 	
     //size the cell for the previousRow headIndent value
     [cell sizeCellForWidth:[thePreviousRow headIndent]];
 	
     if([content isOutgoing]){
-        [cell setFrameBackgroundColor:colorOutgoing borderColor:colorOutgoingBorder dividerColor:currentOutgoingDividerColor];
+        [cell setFrameBackgroundColor:currentOutgoingColor borderColor:colorOutgoingBorder dividerColor:currentOutgoingDividerColor];
     }else{
-        [cell setFrameBackgroundColor:colorIncoming borderColor:colorIncomingBorder dividerColor:currentIncomingDividerColor];
+        [cell setFrameBackgroundColor:currentIncomingColor borderColor:colorIncomingBorder dividerColor:currentIncomingDividerColor];
     }
 	
     return ([cell autorelease]);
