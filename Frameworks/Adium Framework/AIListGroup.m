@@ -17,7 +17,7 @@
 #import "AIContactController.h"
 #import "AIListGroup.h"
 #import "AISortController.h"
-#import <AIUtilities/BZArrayAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
 
 @interface AIListGroup (PRIVATE)
 - (void)_setVisibleCount:(int)newCount;
