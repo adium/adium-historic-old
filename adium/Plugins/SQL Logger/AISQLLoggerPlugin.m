@@ -71,22 +71,29 @@
             if(!destUID) {
                 destUID = [[chat listObject] UID];
                 destDisplay = [[chat listObject] displayName];
-                destSrv = [[chat listObject] serviceID];
             }
             else {
-                destDisplay = [[chat listObject] displayName];
-                destSrv = nil;
+                destDisplay = destUID;
             }
+            destSrv = [[chat account] serviceID];
             srcDisplay = nil;
             srcUID = [source UID];
             srcSrv = [source serviceID];
         } else {
-            srcDisplay = [[chat listObject] displayName];
-            srcUID = [[chat listObject] UID];
-            srcSrv = [[chat listObject] serviceID];
-            destDisplay = nil;
-            destUID = [destination UID];
-            destSrv = [destination serviceID];
+            destUID = [[chat statusDictionary] objectForKey:@"DisplayName"];
+            if(!destUID) {
+                srcDisplay = [[chat listObject] displayName];
+                srcUID = [[chat listObject] UID];
+                destUID = [destination UID];
+                destDisplay = nil;
+            }
+            else {
+                srcUID = [source UID];
+                srcDisplay = srcUID;
+                destDisplay = destUID;
+            }
+            srcSrv = [[chat account] serviceID];
+            destSrv = srcSrv;
         }
         
         if(account && source){
