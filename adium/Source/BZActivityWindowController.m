@@ -39,21 +39,26 @@
 
 - (BOOL)addProgressTracker:(id <BZProgressTracker>)tracker
 {
-	BOOL successful = tracker && ![progressViews containsProgressViewWithTracker:tracker];
-	if(successful) {
-		NSRect frame = NSZeroRect;
-		frame.size.height = [BZProgressView height];
-		BZProgressView *progressView = [[BZProgressView alloc] initWithTracker:tracker inFrame:frame];
-		if(progressView) {
-			int newIdx = [progressViews count];
-			[table addSubview:progressView];
-			[progressViews addObject:progressView];
-			[self updateProgressTracker:tracker withViewIndex:newIdx];
+	unsigned idx = [progressViews indexOfProgressViewWithTracker:tracker];
+	if(idx == NSNotFound) {
+		if(tracker) { //don't add nil!
+			NSRect frame = NSZeroRect;
+			frame.size.height = [BZProgressView height];
+			BZProgressView *progressView = [[BZProgressView alloc] initWithTracker:tracker inFrame:frame];
+			if(progressView) {
+				idx = [progressViews count];
+				[table addSubview:progressView];
+				[progressViews addObject:progressView];
+				[self updateProgressTracker:tracker withViewIndex:idx];
 
-			[progressView release];
+				[progressView release];
+			}
 		}
+	} else {
+		//we have it already - update only
+		[self updateProgressTracker:tracker withViewIndex:idx];
 	}
-	return successful;
+	return idx != NSNotFound;
 }
 
 - (void)removeProgressTracker:(id <BZProgressTracker>)tracker
@@ -140,7 +145,7 @@
 
 - (void)removeProgressTracker:(id <BZProgressTracker>)tracker withViewIndex:(int)index
 {
-	if([tracker canCancel]) [tracker cancel];
+	if([tracker canDelete]) [tracker prepareForDelete];
 	BZProgressView *progressView = [progressViews objectAtIndex:index];
 	[progressView removeFromSuperview];
 	[progressViews removeObjectAtIndex:index];
@@ -330,7 +335,7 @@
 		} else if([identifier isEqualToString:TOOLBAR_ITEM_REVEAL_ID]) {
 			canDoIt = [tracker canReveal];
 		} else if([identifier isEqualToString:TOOLBAR_ITEM_DELETE_ID]) {
-			canDoIt = YES;
+			canDoIt = [tracker canDelete];
 		}
 		ADD_TOOLBAR_ITEMS_HERE
 	}
@@ -558,6 +563,17 @@ ADD_TOOLBAR_ITEMS_HERE
 	NSBeep();
 	return YES;
 }
+- (BOOL)canDelete
+{
+	return YES;
+}
+- (BOOL)prepareForDelete
+{
+	NSLog(@"DELETED %p!\n", self);
+	NSLog(@"(in -[DummyTracker prepareForDelete]) In a real tracker, there would be tear-down code here. DummyTracker just cancels itself.");
+	[self cancel];
+	return YES;
+}
 
 - (enum ProgressState)progressState
 {
@@ -595,6 +611,10 @@ ADD_TOOLBAR_ITEMS_HERE
 
 - (int)indexOfProgressViewWithTracker:(id <BZProgressTracker>)tracker
 {
+	if(!tracker) {
+		NSLog(@"-[BZActivityWindowController indexOfProgressViewWithTracker:%p] called!\n", tracker);
+		return NSNotFound;
+	}
 	NSEnumerator *selfEnum = [self objectEnumerator];
 	int idx = 0;
 	id object;
