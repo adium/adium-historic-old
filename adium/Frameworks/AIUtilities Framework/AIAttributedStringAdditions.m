@@ -405,12 +405,16 @@ NSAttributedString *_safeString(NSAttributedString *inString)
 
         while(attachmentRange.length != 0){ //if we found an attachment
 
-            NSString *replacement = [[safeString attribute:NSAttachmentAttributeName
-												   atIndex:attachmentRange.location
-											effectiveRange:nil] string];
-
-            if(replacement == nil){
-                replacement = @"<<NSAttachment>>";
+			NSTextAttachment	*attachment = [safeString attribute:NSAttachmentAttributeName
+															atIndex:attachmentRange.location
+													 effectiveRange:nil];
+            NSString *replacement = nil;
+			if ([attachment respondsToSelector:@selector(string)]){
+				replacement = [attachment performSelector:@selector(string)];
+			}
+				
+            if(!replacement){
+                replacement = @"<<Attachment>>";
             }
 
             //remove the attachment, replacing it with the original text
