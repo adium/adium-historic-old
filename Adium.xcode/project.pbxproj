@@ -2891,14 +2891,6 @@
 			settings = {
 			};
 		};
-		34575E2A07CBA70D004A4FFF = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = FileTransferRequestPrompt.nib;
-			path = Resources/FileTransferRequestPrompt.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34575E2B07CBA70D004A4FFF = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -2923,12 +2915,6 @@
 			path = Resources/FileTransferPrefs.nib;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		34575E2E07CBA70D004A4FFF = {
-			fileRef = 34575E2A07CBA70D004A4FFF;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34575E2F07CBA70D004A4FFF = {
 			fileRef = 34575E2B07CBA70D004A4FFF;
@@ -5321,7 +5307,6 @@
 				34FDD6E405632BFD00F5B30F,
 				3452A9F607891C8A00C3C494,
 				3452A9F707891C8A00C3C494,
-				34575E2A07CBA70D004A4FFF,
 				34575E2B07CBA70D004A4FFF,
 				34575E2C07CBA70D004A4FFF,
 				34575E2D07CBA70D004A4FFF,
@@ -7414,7 +7399,6 @@
 				347E786B07CA972100350507,
 				3402E03707CB0DFB0044F818,
 				3402E04207CB0E4D0044F818,
-				34575E2E07CBA70D004A4FFF,
 				34575E2F07CBA70D004A4FFF,
 				34575E3007CBA70D004A4FFF,
 				34575E3107CBA70D004A4FFF,
