@@ -339,11 +339,9 @@
 {
 	if(serviceIconsVisible){
 		NSImage *image = [self serviceImage];
-		[image setFlipped:![image isFlipped]];
 		rect = [image drawInRect:rect
 						  atSize:NSMakeSize(0, 0)
 						position:position];
-		[image setFlipped:![image isFlipped]];
 	}
 	return(rect);
 }
@@ -421,17 +419,8 @@
 //Contact user image
 - (NSImage *)userIconImageOfSize:(NSSize)inSize
 {
-	NSImage	*image = [listObject cachedListUserIconOfSize:inSize];
-	
-	if(!image){
-		if(!genericUserIcon){
-			genericUserIcon = [[NSImage imageNamed:@"DefaultIcon" forClass:[self class]] retain];
-			[genericUserIcon setFlipped:YES];
-		}
-		image = genericUserIcon;
-	}
-	
-	return(image);
+	[AIUserIcons setListUserIconSize:inSize];
+	return([AIUserIcons listUserIconForContact:listObject]);
 }
 
 //Contact status image
@@ -443,7 +432,7 @@
 //Contact service image
 - (NSImage *)serviceImage
 {
-	return([[(AIListContact *)listObject account] menuImage]);
+	return([AIServiceIcons serviceIconForContact:listObject flipped:YES]);
 }
 
 //YES if our status should draw below the label text

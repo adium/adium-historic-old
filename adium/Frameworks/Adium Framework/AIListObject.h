@@ -38,9 +38,6 @@ typedef enum {
 	
 	NSMutableArray			*containedObjects;			//Manually ordered array of contents
     BOOL					expanded;			//Exanded/Collapsed state of this object
-	
-	NSImage					*_listUserIcon;
-	NSSize					_listUserIconSize;
 }
 
 //
