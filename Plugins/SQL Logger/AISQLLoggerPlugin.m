@@ -26,8 +26,15 @@
 #import "JMSQLLoggerAdvancedPreferences.h"
 #import "libpq-fe.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIHTMLDecoder.h>
+#import "AIInterfaceController.h"
+#import "AIContentController.h"
+#import "AIContentMessage.h"
+#import "AIChat.h"
+#import "AIListContact.h"
+#import "AIService.h"
 
 #define SQL_LOG_VIEWER  AILocalizedString(@"SQL Log Viewer",nil)
 
@@ -40,7 +47,6 @@
 
 - (void)installPlugin
 {
-    NSMenuItem	*logViewerMenuItem;
 	NSString	*connInfo;
 	id			tmp;
 	
@@ -50,10 +56,6 @@
 										  forGroup:PREF_GROUP_SQL_LOGGING];
     advancedPreferences = [[JMSQLLoggerAdvancedPreferences preferencePane] retain];
     
-    //Install Menu item
-    //logViewerMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:SQL_LOG_VIEWER target:self action:@selector(showLogViewer:) keyEquivalent:@""] autorelease];
-    //[[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxiliary];
-
 	//Watch for pref changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SQL_LOGGING];
 	
@@ -246,7 +248,7 @@
 }
 
 - (NSString *)pluginURL {
-    return @"http://www.visualdistortion.org/adium/";
+    return @"http://www.visualdistortion.org/sqllogger/";
 }
 
 @end
