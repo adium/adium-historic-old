@@ -224,6 +224,11 @@ void Adium_HandleSignal(int i){
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
+	[AIHTMLDecoder decodeHTML:@"<HTML><BODY BGCOLOR=\"#ffffff\"><FONT COLOR=\"#0080c0\" FACE=\"Century Gothic\" LANG=\"0\" SIZE=2>   *    Let      it</FONT><FONT COLOR=\"#0080c0\" FACE=\"Century Gothic\" SIZE=3>          <B></FONT><FONT COLOR=\"#0080c0\" BACK=\"#ffffff\" FACE=\"Century Gothic\" SIZE=4>*</B></FONT><FONT COLOR=\"#0080c0\" FACE=\"Century Gothic\" SIZE=3>      </FONT><FONT COLOR=\"#0080c0\" FACE=\"Century Gothic\" SIZE=2>snow</FONT><FONT COLOR=\"#0080c0\" FACE=\"Century Gothic\" SIZE=3> <BR>                        </FONT><FONT COLOR=\"#0080c0\" FACE=\"Century Gothic\" SIZE=2>Let   it   </FONT><FONT COLOR=\"#0080c0\" FACE=\"Century Gothic\" SIZE=3>                  <B></FONT><FONT COLOR=\"#0080c0\" FACE=\"Century Gothic\" SIZE=5>*</B></FONT><FONT COLOR=\"#0080c0\" FACE=\"Century Gothic\" SIZE=3>                    *             </FONT><FONT COLOR=\"#0080c0\" FACE=\"Century Gothic\" SIZE=5>*</FONT><FONT COLOR=\"#0080c0\" FACE=\"Century Gothic\" SIZE=3>           *       </FONT><FONT COLOR=\"#0080c0\" FACE=\"Century Gothic\" SIZE=2>snow <BR></FONT><FONT COLOR=\"#0080c0\" FACE=\"Century Got"];
+	
+	
+	
+	
     //Remove any existing crash logs
     [[NSFileManager defaultManager] trashFileAtPath:EXCEPTIONS_PATH];
     [[NSFileManager defaultManager] trashFileAtPath:CRASHES_PATH];

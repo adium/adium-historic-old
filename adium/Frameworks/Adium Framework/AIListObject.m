@@ -29,6 +29,7 @@
     serviceID = [inServiceID retain];
     orderIndex = -1;
     statusDictionary = [[NSMutableDictionary alloc] init];
+	changedStatusKeys = nil;
 
     //
     prefDict = [[NSDictionary dictionaryAtPath:[self pathToPreferences] withName:[self UIDAndServiceID] create:NO] mutableCopy];
@@ -115,18 +116,93 @@
     return(array);
 }
 
-//Returns the requested status array for this object
+//Access to the status array for this object
 - (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey
 {
     AIMutableOwnerArray	*array = [statusDictionary objectForKey:inKey];
-
+	
     if(!array){
         array = [[AIMutableOwnerArray alloc] init];
         [statusDictionary setObject:array forKey:inKey];
         [array release];
     }
-
+	
     return(array);
+}
+
+//Quickly set a status key for this object (owned by this object)
+- (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
+{
+	[self setStatusObject:value withOwner:self forKey:key notify:notify];
+}
+
+//Quickly set a status key for this object
+- (void)setStatusObject:(id)value withOwner:(id)owner forKey:(NSString *)key notify:(BOOL)notify
+{
+	if(key){
+		[[self statusArrayForKey:key] setObject:value withOwner:owner];
+		if(!changedStatusKeys) changedStatusKeys = [[NSMutableArray alloc] init];
+		[changedStatusKeys addObject:key];
+	}
+    
+    if(notify && [changedStatusKeys count]){
+		[[adium contactController] listObjectStatusChanged:self
+										modifiedStatusKeys:changedStatusKeys
+													silent:NO];
+		[changedStatusKeys release]; changedStatusKeys = nil;
+    }
+}
+
+//Perform a status change after a short delay
+- (void)setStatusObject:(id)value withOwner:(id)owner forKey:(NSString *)key afterDelay:(NSTimeInterval)delay
+{
+	if(!delayedStatusTimers) delayedStatusTimers = [[NSMutableArray alloc] init];
+	NSTimer		*timer = [NSTimer scheduledTimerWithTimeInterval:delay
+														  target:self
+														selector:@selector(_applyDelayedStatus:)
+														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+															owner, @"Owner",
+															key, @"Key",
+															value, @"Value",
+															nil]
+														 repeats:NO];
+	[delayedStatusTimers addObject:timer];
+}
+- (void)_applyDelayedStatus:(NSTimer *)inTimer
+{
+	NSDictionary	*infoDict = [inTimer userInfo];
+	
+	[self setStatusObject:[infoDict objectForKey:@"Value"]
+				withOwner:[infoDict objectForKey:@"Owner"]
+				   forKey:[infoDict objectForKey:@"Key"]
+				   notify:YES];
+	[delayedStatusTimers removeObject:inTimer];
+	if([delayedStatusTimers count] == 0){
+		[delayedStatusTimers release]; delayedStatusTimers = nil;
+	}
+}
+
+//Nofity of any queued status changes
+- (void)notifyOfChangedStatusSilently:(BOOL)silent
+{
+    if([changedStatusKeys count]){
+		[[adium contactController] listObjectStatusChanged:self
+										modifiedStatusKeys:changedStatusKeys
+													silent:silent];
+		[changedStatusKeys release]; changedStatusKeys = nil;
+    }
+}
+
+//Quickly retrieve a status key for this object (owned by this object)
+- (id)statusObjectForKey:(NSString *)key
+{
+    return([[self statusArrayForKey:key] objectWithOwner:self]);
+}
+
+//Quickly retrieve a status key for this object
+- (id)statusObjectForKey:(NSString *)key withOwner:(id)owner
+{
+    return([[self statusArrayForKey:key] objectWithOwner:owner]);
 }
 
 

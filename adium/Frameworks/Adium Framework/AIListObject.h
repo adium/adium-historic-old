@@ -16,13 +16,14 @@
 @class AIMutableOwnerArray, AIListGroup;
 
 @interface AIListObject : AIObject {
-    NSMutableDictionary	*displayDictionary;	//A dictionary of values affecting this object's display
-    AIListGroup 	*containingGroup;	//The group this object is in
-    NSString		*UID;
-    float		orderIndex;
-    NSMutableDictionary	*statusDictionary;
-    NSString		*serviceID;
-    NSMutableDictionary *prefDict;
+    NSMutableDictionary		*displayDictionary;	//A dictionary of values affecting this object's display
+    AIListGroup 			*containingGroup;	//The group this object is in
+    NSString				*UID;
+    float					orderIndex;
+    NSMutableDictionary		*statusDictionary;
+    NSString				*serviceID;
+    NSMutableDictionary 	*prefDict;
+    NSMutableArray			*changedStatusKeys;		//Status keys that have changed since the last notification
 }
 
 - (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID;
@@ -54,6 +55,11 @@
 
 //Status
 - (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey;
-
+- (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify;
+- (void)setStatusObject:(id)value withOwner:(id)owner forKey:(NSString *)key notify:(BOOL)notify;
+- (void)setStatusObject:(id)value withOwner:(id)owner forKey:(NSString *)key afterDelay:(NSTimeInterval)delay;
+- (void)notifyOfChangedStatusSilently:(BOOL)silent;
+- (id)statusObjectForKey:(NSString *)key;
+- (id)statusObjectForKey:(NSString *)key withOwner:(id)owner;
 
 @end
