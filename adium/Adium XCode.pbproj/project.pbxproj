@@ -5340,6 +5340,7 @@
 				INFOPLIST_FILE = Plists/Address_Book_Integration.plist;
 				OTHER_CFLAGS = "";
 				OTHER_REZFLAGS = "";
+				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = "Address Book Integration";
 				REZ_EXECUTABLE = NO;
 				SECTORDER_FLAGS = "";
