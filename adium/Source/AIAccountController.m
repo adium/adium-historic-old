@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.56 2004/03/01 04:55:24 adamiser Exp $
+// $Id: AIAccountController.m,v 1.57 2004/03/02 04:10:48 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -348,14 +348,14 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 {
     AIAccount	*newAccount;
     NSString    *accountUID = [[[inAccount UID] copy] autorelease]; //Deleting the account will release the UID
-    int		index = [accountArray indexOfObject:inAccount];
+    int			index = [accountArray indexOfObject:inAccount];
 	
-    //Delete the existing account
-    [self deleteAccount:inAccount];
-    
-    //Add an account with the new UID
+    //Add an account with the new service
     newAccount = [self accountOfType:[inService identifier] withUID:accountUID];
     [self insertAccount:newAccount atIndex:index];
+    
+    //Delete the old account
+    [self deleteAccount:inAccount];
     
     return(newAccount);
 }

@@ -16,7 +16,7 @@
 #import "AIAccountListPreferences.h"
 
 #define	ACCOUNT_DRAG_TYPE					@"AIAccount"	    //ID for an account drag
-#define	ACCOUNT_CONNECT_BUTTON_TITLE		AILocalizedString(@"Connect","Connect an account")	    /Menu item title for the connect item
+#define	ACCOUNT_CONNECT_BUTTON_TITLE		AILocalizedString(@"Connect","Connect an account")	    //Menu item title for the connect item
 #define	ACCOUNT_DISCONNECT_BUTTON_TITLE		AILocalizedString(@"Disconnect","Disconnect an account")    //Menu item title
 #define	ACCOUNT_CONNECTING_BUTTON_TITLE		AILocaliedString(@"Connecting…",nil)		//Menu item title
 #define	ACCOUNT_DISCONNECTING_BUTTON_TITLE	AILocalizedString(@"Disconnecting…",nil)	//Menu item title
@@ -254,12 +254,13 @@
 - (void)accountListChanged:(NSNotification *)notification
 {
     //Update our reference to the accounts
-//    selectedAccount = nil;
     [accountArray release]; accountArray = [[[adium accountController] accountArray] retain];
     
     //Refresh the table (if the window is loaded)
     if(tableView_accountList != nil){
 		[tableView_accountList reloadData];
+
+		//Update selected account
 		[self tableViewSelectionDidChange:nil];
     }
 }
@@ -386,12 +387,10 @@
         }
 		
         //Configure for the newly selected account
-		AIAccount *previouslySelectedAccount = selectedAccount;
-		selectedAccount = [accountArray objectAtIndex:selectedRow];
-		
-		if (previouslySelectedAccount != selectedAccount){
+		if(selectedAccount != [accountArray objectAtIndex:selectedRow]){
 			[self configureAccountOptionsView];
 		}
+		selectedAccount = [accountArray objectAtIndex:selectedRow];
 		
     }else{
 		selectedAccount = nil;
