@@ -8,7 +8,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 506 $ $Date: 2003/12/20 02:54:57 $ -->
+<!--$Rev: 586 $ $Date: 2004/02/10 00:25:18 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -309,7 +309,7 @@ try {
     if (!rset.isBeforeFirst()) {
         out.print("<div align=\"center\"><i>No records found.</i></div>");
     } else {
-        out.print("<table border=\"0\"");
+        out.print("<table border=\"0\">");
     }
     ArrayList userArray = new java.util.ArrayList();
     String colorArray[] =
