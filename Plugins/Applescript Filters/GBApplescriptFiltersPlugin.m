@@ -18,7 +18,7 @@
 - (id)_filterString:(NSString *)inString originalObject:(id)originalObject;
 - (NSString *)_executeScript:(NSDictionary *)infoDict withArguments:(NSArray *)arguments;
 - (void)_replaceKeyword:(NSString *)keyword withScript:(NSDictionary *)infoDict inString:(NSString *)inString inAttributedString:(id)toObject;
-- (NSArray *)_argumentsFromString:(NSString *)inString;
+- (NSArray *)_argumentsFromString:(NSString *)inString forScript:(NSDictionary *)scriptDict;
 - (void)buildScriptMenu;
 @end
 
@@ -123,7 +123,8 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 				scriptEnumerator = [[scriptBundle objectForInfoDictionaryKey:@"Scripts"] objectEnumerator];
 				
 				while (scriptDict = [scriptEnumerator nextObject]){
-					NSString		*scriptFileName, *scriptFilePath, *keyword, *title, *arguments;
+					NSString		*scriptFileName, *scriptFilePath, *keyword, *title;
+					NSArray			*arguments;
 					NSURL			*scriptURL;
 					NSNumber		*prefixOnlyNumber;
 					NSNumber		*requiresUserInteractionNumber;
@@ -139,7 +140,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 						if(scriptURL && keyword && [keyword length] && title && [title length]){
 							NSMutableDictionary	*infoDict;
 							
-							arguments = [scriptDict objectForKey:@"Arguments"];
+							arguments = [[scriptDict objectForKey:@"Arguments"] componentsSeparatedByString:@","];
 							
 							//Assume "Prefix Only" is NO unless told otherwise
 							prefixOnlyNumber = [scriptDict objectForKey:@"Prefix Only"];
@@ -296,14 +297,14 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	
 	//Append our string into the responder if possible
 	if(responder && [responder isKindOfClass:[NSTextView class]]){
-		NSString	*arguments = [[sender representedObject] objectForKey:@"Arguments"];
+		NSArray		*arguments = [[sender representedObject] objectForKey:@"Arguments"];
 		NSString	*replacementText = [[sender representedObject] objectForKey:@"Keyword"];
 		
 		[(NSTextView *)responder insertText:replacementText];
 		
 		//Append arg list to replacement string, to show the user what they can pass
 		if(arguments){
-			NSEnumerator		*argumentEnumerator = [[arguments componentsSeparatedByString:@","] objectEnumerator];
+			NSEnumerator		*argumentEnumerator = [arguments objectEnumerator];
 			NSDictionary		*originalTypingAttributes = [(NSTextView *)responder typingAttributes];
 			NSMutableDictionary *italicizedTypingAttributes = [originalTypingAttributes mutableCopy];
 			NSString			*anArgument;
@@ -413,7 +414,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 				keywordStart = [scanner scanLocation] - [keyword length];
 				if([scanner scanString:@"{" intoString:nil]){				
 					if([scanner scanUpToString:@"}" intoString:&argString]){
-						argArray = [self _argumentsFromString:argString];
+						argArray = [self _argumentsFromString:argString forScript:infoDict];
 						[scanner scanString:@"}" intoString:nil];
 					}
 				}
@@ -454,14 +455,43 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 }
 
 //Return an NSData for each argument in the string
-- (NSArray *)_argumentsFromString:(NSString *)inString
+- (NSArray *)_argumentsFromString:(NSString *)inString forScript:(NSDictionary *)scriptDict
 {
+	NSArray			*scriptArguments = [scriptDict objectForKey:@"Arguments"];
 	NSMutableArray	*argArray = [NSMutableArray array];
-	NSEnumerator	*enumerator = [[inString componentsSeparatedByString:@","] objectEnumerator];
-	NSString		*arg;
+	NSArray			*inStringComponents = [inString componentsSeparatedByString:@","];
 	
-	while(arg = [enumerator nextObject]) {
-		[argArray addObject:arg];
+	unsigned		i = 0;
+	unsigned		count = (scriptArguments ? [scriptArguments count] : 0);
+	unsigned		inStringComponentsCount = [inStringComponents count];
+	
+	//Add each argument of inString to argArray so long as the number of arguments is less
+	//than the number of expected arguments for the script and the number of supplied arguments
+	while((i < count) && (i < inStringComponentsCount)){
+		[argArray addObject:[inStringComponents objectAtIndex:i]];
+		i++;
+	}
+	
+	//If more components were passed than were actually requested, the last argument gets the
+	//remainder
+	if (i < inStringComponentsCount){
+		NSRange	remainingRange;
+		
+		//i was incremented to end the while loop if i > 0, so subtract 1 to reexamine the last object
+		remainingRange.location = ((i > 0) ? i-1 : 0);
+		remainingRange.length = (inStringComponentsCount - remainingRange.location);
+
+		if (remainingRange.location >= 0){
+			NSString	*lastArgument;
+
+			//Remove that last, incomplete argument if it was added
+			if ([argArray count]) [argArray removeLastObject];
+
+			//Create the last argument by joining all remaining comma-separated arguments with a comma
+			lastArgument = [[inStringComponents subarrayWithRange:remainingRange] componentsJoinedByString:@","];
+
+			[argArray addObject:lastArgument];
+		}
 	}
 	
 	return(argArray);
