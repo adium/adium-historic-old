@@ -145,7 +145,6 @@
 		};
 		29B97314FDCFA39411CA2CEA = {
 			children = (
-				F5186B6703ABD62101A8010A,
 				F5385CF601BEB9F901A80165,
 				F5CDD1170350B92801A8010A,
 				F59DB3D6033EA9CD01A8010A,
@@ -1173,304 +1172,6 @@
 			name = "Out Of Sync Window";
 			refType = 4;
 		};
-		F5186B6703ABD62101A8010A = {
-			children = (
-				F5186B6903ABD62101A8010A,
-				F5186B7603ABD62101A8010A,
-				F5186B7703ABD62101A8010A,
-				F5186B7803ABD62101A8010A,
-				F5186B8403ABD62101A8010A,
-				F5186B8503ABD62101A8010A,
-				F5186B9E03ABD62101A8010A,
-				F5186B9F03ABD62101A8010A,
-				F5186BA003ABD62101A8010A,
-				F5186BA103ABD62101A8010A,
-				F5186BA203ABD62101A8010A,
-				F5186BA303ABD62101A8010A,
-				F5186BA403ABD62101A8010A,
-				F5186BA503ABD62101A8010A,
-				F5186BA603ABD62101A8010A,
-			);
-			isa = PBXGroup;
-			name = DeveloperDocs;
-			path = Documentation/DeveloperDocs;
-			refType = 4;
-		};
-		F5186B6903ABD62101A8010A = {
-			children = (
-				F5186B6B03ABD62101A8010A,
-				F5186B6C03ABD62101A8010A,
-				F5186B6D03ABD62101A8010A,
-				F5186B6E03ABD62101A8010A,
-				F5186B6F03ABD62101A8010A,
-				F5186B7003ABD62101A8010A,
-				F5186B7103ABD62101A8010A,
-				F5186B7203ABD62101A8010A,
-				F5186B7303ABD62101A8010A,
-				F5186B7403ABD62101A8010A,
-				F5186B7503ABD62101A8010A,
-			);
-			isa = PBXGroup;
-			path = adium;
-			refType = 4;
-		};
-		F5186B6B03ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = account.html;
-			refType = 4;
-		};
-		F5186B6C03ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = contactGroup.html;
-			refType = 4;
-		};
-		F5186B6D03ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = contactHandle.html;
-			refType = 4;
-		};
-		F5186B6E03ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = contactObject.html;
-			refType = 4;
-		};
-		F5186B6F03ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = contentMessage.html;
-			refType = 4;
-		};
-		F5186B7003ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = infoView.html;
-			refType = 4;
-		};
-		F5186B7103ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = plugin.html;
-			refType = 4;
-		};
-		F5186B7203ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = preferencePane.html;
-			refType = 4;
-		};
-		F5186B7303ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = prefView.html;
-			refType = 4;
-		};
-		F5186B7403ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = service.html;
-			refType = 4;
-		};
-		F5186B7503ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = serviceType.html;
-			refType = 4;
-		};
-		F5186B7603ABD62101A8010A = {
-			isa = PBXFileReference;
-			path = Available.rtf;
-			refType = 4;
-		};
-		F5186B7703ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = blank.html;
-			refType = 4;
-		};
-		F5186B7803ABD62101A8010A = {
-			children = (
-				F5186B7A03ABD62101A8010A,
-				F5186B7B03ABD62101A8010A,
-				F5186B7C03ABD62101A8010A,
-				F5186B7D03ABD62101A8010A,
-				F5186B7E03ABD62101A8010A,
-				F5186B7F03ABD62101A8010A,
-				F5186B8003ABD62101A8010A,
-				F5186B8103ABD62101A8010A,
-				F5186B8203ABD62101A8010A,
-				F5186B8303ABD62101A8010A,
-			);
-			isa = PBXGroup;
-			path = core;
-			refType = 4;
-		};
-		F5186B7A03ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = account.html;
-			refType = 4;
-		};
-		F5186B7B03ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = contact.html;
-			refType = 4;
-		};
-		F5186B7C03ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = content.html;
-			refType = 4;
-		};
-		F5186B7D03ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = interface.html;
-			refType = 4;
-		};
-		F5186B7E03ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = login.html;
-			refType = 4;
-		};
-		F5186B7F03ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = menu.html;
-			refType = 4;
-		};
-		F5186B8003ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = plugin.html;
-			refType = 4;
-		};
-		F5186B8103ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = preference.html;
-			refType = 4;
-		};
-		F5186B8203ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = sound.html;
-			refType = 4;
-		};
-		F5186B8303ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = toolbar.html;
-			refType = 4;
-		};
-		F5186B8403ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = header.html;
-			refType = 4;
-		};
-		F5186B8503ABD62101A8010A = {
-			children = (
-				F5186B9803ABD62101A8010A,
-				F5186B9903ABD62101A8010A,
-				F5186B9A03ABD62101A8010A,
-				F5186B9B03ABD62101A8010A,
-				F5186B9C03ABD62101A8010A,
-				F5186B9D03ABD62101A8010A,
-			);
-			isa = PBXGroup;
-			path = icons;
-			refType = 4;
-		};
-		F5186B9803ABD62101A8010A = {
-			isa = PBXFileReference;
-			path = adium.png;
-			refType = 4;
-		};
-		F5186B9903ABD62101A8010A = {
-			isa = PBXFileReference;
-			path = empty.png;
-			refType = 4;
-		};
-		F5186B9A03ABD62101A8010A = {
-			isa = PBXFileReference;
-			path = folder.png;
-			refType = 4;
-		};
-		F5186B9B03ABD62101A8010A = {
-			isa = PBXFileReference;
-			path = page.png;
-			refType = 4;
-		};
-		F5186B9C03ABD62101A8010A = {
-			isa = PBXFileReference;
-			path = sflipdown.png;
-			refType = 4;
-		};
-		F5186B9D03ABD62101A8010A = {
-			isa = PBXFileReference;
-			path = sflipright.png;
-			refType = 4;
-		};
-		F5186B9E03ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = index.html;
-			refType = 4;
-		};
-		F5186B9F03ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = line.html;
-			refType = 4;
-		};
-		F5186BA003ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = main.html;
-			refType = 4;
-		};
-		F5186BA103ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = style.css;
-			refType = 4;
-		};
-		F5186BA203ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = tree.html;
-			refType = 4;
-		};
-		F5186BA303ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = tree.js;
-			refType = 4;
-		};
-		F5186BA403ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = tree_items.js;
-			refType = 4;
-		};
-		F5186BA503ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = tree_tpl.js;
-			refType = 4;
-		};
-		F5186BA603ABD62101A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = treestyle.css;
-			refType = 4;
-		};
 		F51DEC0D03262FB501A8010A = {
 			children = (
 				F57938C2033E73AC01A8010A,
@@ -1817,6 +1518,7 @@
 		};
 		F5385CF601BEB9F901A80165 = {
 			children = (
+				F5E6713603B4D12601A8010A,
 				F552078B033F727F01A8010A,
 				F59DB6AD033EB74801A8010A,
 				F574173F033E72AC01A8010A,
@@ -7437,6 +7139,110 @@
 		F5DD9944032BE95301A8010A = {
 			isa = PBXTargetDependency;
 			target = F53B9A0E02CCED8B01A8010A;
+		};
+		F5E6713603B4D12601A8010A = {
+			children = (
+				F5E6713803B4D12601A8010A,
+				F5E6713903B4D12601A8010A,
+				F5E6713A03B4D12601A8010A,
+				F5E6713B03B4D12601A8010A,
+				F5E6713C03B4D12601A8010A,
+				F5E6713D03B4D12601A8010A,
+				F5E6713E03B4D12601A8010A,
+				F5E6713F03B4D12601A8010A,
+				F5E6714003B4D12601A8010A,
+				F5E6714103B4D12601A8010A,
+				F5E6714203B4D12601A8010A,
+				F5E6714303B4D12601A8010A,
+				F5E6714403B4D12601A8010A,
+				F5E6714503B4D12601A8010A,
+				F5E6714603B4D12601A8010A,
+				F5E6714703B4D12601A8010A,
+			);
+			isa = PBXGroup;
+			name = developer;
+			path = Documentation/developer;
+			refType = 4;
+		};
+		F5E6713803B4D12601A8010A = {
+			isa = PBXFileReference;
+			path = "Adium Framework.rtf";
+			refType = 4;
+		};
+		F5E6713903B4D12601A8010A = {
+			isa = PBXFileReference;
+			path = "Changing menu items.rtf";
+			refType = 4;
+		};
+		F5E6713A03B4D12601A8010A = {
+			isa = PBXFileReference;
+			path = "Contact object display.rtf";
+			refType = 4;
+		};
+		F5E6713B03B4D12601A8010A = {
+			isa = PBXFileReference;
+			path = "Contact status control.rtf";
+			refType = 4;
+		};
+		F5E6713C03B4D12601A8010A = {
+			isa = PBXFileReference;
+			path = Content.rtf;
+			refType = 4;
+		};
+		F5E6713D03B4D12601A8010A = {
+			isa = PBXFileReference;
+			path = "Core Controllers.rtf";
+			refType = 4;
+		};
+		F5E6713E03B4D12601A8010A = {
+			isa = PBXFileReference;
+			path = "Creating a plugin.rtf";
+			refType = 4;
+		};
+		F5E6713F03B4D12601A8010A = {
+			isa = PBXFileReference;
+			path = "Creating service code.rtf";
+			refType = 4;
+		};
+		F5E6714003B4D12601A8010A = {
+			isa = PBXFileReference;
+			path = "Custom Interfaces.rtf";
+			refType = 4;
+		};
+		F5E6714103B4D12601A8010A = {
+			isa = PBXFileReference;
+			path = "Mutable owner arrays.rtf";
+			refType = 4;
+		};
+		F5E6714203B4D12601A8010A = {
+			isa = PBXFileReference;
+			path = Notifications.rtf;
+			refType = 4;
+		};
+		F5E6714303B4D12601A8010A = {
+			isa = PBXFileReference;
+			path = "Observing handles.rtf";
+			refType = 4;
+		};
+		F5E6714403B4D12601A8010A = {
+			isa = PBXFileReference;
+			path = "Playing sounds.rtf";
+			refType = 4;
+		};
+		F5E6714503B4D12601A8010A = {
+			isa = PBXFileReference;
+			path = Preferences.rtf;
+			refType = 4;
+		};
+		F5E6714603B4D12601A8010A = {
+			isa = PBXFileReference;
+			path = "The contact list.rtf";
+			refType = 4;
+		};
+		F5E6714703B4D12601A8010A = {
+			isa = PBXFileReference;
+			path = "Working with accounts.rtf";
+			refType = 4;
 		};
 	};
 	rootObject = 29B97313FDCFA39411CA2CEA;
