@@ -59,7 +59,7 @@
 {
 	NSSize	size = [super cellSize];
 	
-	if(userIconVisible){
+	if(userIconVisible && userIconSize > labelFontHeight){
 		return(NSMakeSize(0, size.height + userIconSize));
 	}else{
 		return(NSMakeSize(0, size.height + labelFontHeight));
@@ -370,12 +370,8 @@
 //Contact text color
 - (NSColor *)textColor
 {
-	if([self isSelectionInverted]){
-		return([super textColor]);
-	}else{
-		NSColor	*textColor = [[listObject displayArrayForKey:@"Text Color"] objectValue];
-		return(textColor ? textColor : [NSColor blackColor]);
-	}
+	NSColor	*textColor = [[listObject displayArrayForKey:@"Text Color"] objectValue];
+	return(textColor ? textColor : [super textColor]);
 }
 
 //Contact user image
