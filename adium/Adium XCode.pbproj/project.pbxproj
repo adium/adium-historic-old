@@ -4994,6 +4994,36 @@
 			settings = {
 			};
 		};
+		348E54C00539D04C0021E541 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = CSDisconnectAllPlugin.h;
+			path = "Plugins/Disconnect All/CSDisconnectAllPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		348E54C10539D04C0021E541 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = CSDisconnectAllPlugin.m;
+			path = "Plugins/Disconnect All/CSDisconnectAllPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		348E54C40539D08E0021E541 = {
+			fileRef = 348E54C10539D04C0021E541;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		348E54C50539D08F0021E541 = {
+			fileRef = 348E54C00539D04C0021E541;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34ADDFFF05158D4B003B2F21 = {
 			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
@@ -13346,16 +13376,10 @@
 		34BDA1050531480E000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34BDA1060531480E000AB133,
+				348E54C50539D08F0021E541,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA1060531480E000AB133 = {
-			fileRef = BF9CEA9A052BCCE500000202;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34BDA1070531480E000AB133 = {
 			buildActionMask = 2147483647;
@@ -13367,16 +13391,10 @@
 		34BDA1080531480E000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34BDA1090531480E000AB133,
+				348E54C40539D08E0021E541,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BDA1090531480E000AB133 = {
-			fileRef = BF9CEA9B052BCCE500000202;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34BDA10A0531480E000AB133 = {
 			buildActionMask = 2147483647;
@@ -20726,29 +20744,11 @@
 //BF4
 		BF7BF5E7052BA0EF00000202 = {
 			children = (
-				BF9CEA9A052BCCE500000202,
-				BF9CEA9B052BCCE500000202,
+				348E54C00539D04C0021E541,
+				348E54C10539D04C0021E541,
 			);
 			isa = PBXGroup;
 			name = "Disconnect All";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF9CEA9A052BCCE500000202 = {
-			expectedFileType = sourcecode.c.h;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = DisconnectAllPlugin.h;
-			path = "Plugins/Disconnect All/DisconnectAllPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF9CEA9B052BCCE500000202 = {
-			expectedFileType = sourcecode.c.objc;
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = DisconnectAllPlugin.m;
-			path = "Plugins/Disconnect All/DisconnectAllPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
