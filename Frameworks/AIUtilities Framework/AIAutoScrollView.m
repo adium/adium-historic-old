@@ -48,6 +48,7 @@
 - (void)_initAutoScrollView
 {
     autoScrollToBottom = NO;
+	inAutoScrollToBottom= NO;
     autoHideScrollBar = NO;
     updateShadowsWhileScrolling = NO;
 	passKeysToDocumentView = NO;
@@ -113,13 +114,17 @@
 //When our document resizes
 - (void)documentFrameDidChange:(NSNotification *)notification
 {
-    if(autoScrollToBottom){
+	//We guard against a recursive call to this method, which may occur if the user is resizing the view at the same time
+	//content is being modified
+    if(autoScrollToBottom && !inAutoScrollToBottom){
         NSRect	documentVisibleRect = [self documentVisibleRect];
         NSRect	newDocumentFrame = [[self documentView] frame];
         
         //We autoscroll if the height of the document frame changed AND (Using the old frame to calculate) we're scrolled close to the bottom.
         if((newDocumentFrame.size.height != oldDocumentFrame.size.height) && ((documentVisibleRect.origin.y + documentVisibleRect.size.height) > (oldDocumentFrame.size.height - AUTOSCROLL_CATCH_SIZE))){
+			inAutoScrollToBottom = YES;
             [self scrollToBottom];
+			inAutoScrollToBottom = NO;
         }
     
         //Remember the new frame

@@ -17,6 +17,8 @@
     NSRect	oldDocumentFrame;
     
     BOOL	autoScrollToBottom;
+	BOOL	inAutoScrollToBottom;
+	
     BOOL	autoHideScrollBar;
     
     BOOL	updateShadowsWhileScrolling;
