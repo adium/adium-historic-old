@@ -262,7 +262,7 @@ static void adiumGaimConvDestroy(GaimConversation *conv)
 
 static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-    NSLog(@"adiumGaimConvWriteChat: %s: %s", who, message);
+    if (GAIM_DEBUG) NSLog(@"adiumGaimConvWriteChat: %s: %s", who, message);
 }
 
 static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
@@ -273,37 +273,37 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const 
 
 static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-    NSLog(@"adiumGaimConvWriteConv: %s: %s", who, message);
+	if (GAIM_DEBUG) NSLog(@"adiumGaimConvWriteConv: %s: %s", who, message);
 }
 
 static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user)
 {
-    NSLog(@"adiumGaimConvChatAddUser");
+    if (GAIM_DEBUG) NSLog(@"adiumGaimConvChatAddUser");
 }
 
 static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *users)
 {
-    NSLog(@"adiumGaimConvChatAddUsers");
+    if (GAIM_DEBUG) NSLog(@"adiumGaimConvChatAddUsers");
 }
 
 static void adiumGaimConvChatRenameUser(GaimConversation *conv, const char *oldName, const char *newName)
 {
-    NSLog(@"adiumGaimConvChatRenameUser");
+	if (GAIM_DEBUG) NSLog(@"adiumGaimConvChatRenameUser");
 }
 
 static void adiumGaimConvChatRemoveUser(GaimConversation *conv, const char *user)
 {
-    NSLog(@"adiumGaimConvChatRemoveUser");
+    if (GAIM_DEBUG) NSLog(@"adiumGaimConvChatRemoveUser");
 }
 
 static void adiumGaimConvChatRemoveUsers(GaimConversation *conv, GList *users)
 {
-    NSLog(@"adiumGaimConvChatRemoveUsers");
+    if (GAIM_DEBUG) NSLog(@"adiumGaimConvChatRemoveUsers");
 }
 
 static void adiumGaimConvSetTitle(GaimConversation *conv, const char *title)
 {
-    NSLog(@"adiumGaimConvSetTitle");
+    if (GAIM_DEBUG) NSLog(@"adiumGaimConvSetTitle");
 }
 
 static void adiumGaimConvUpdateProgress(GaimConversation *conv, float percent)
@@ -344,7 +344,7 @@ static void adiumGaimConvWindowNew(GaimConvWindow *win)
 
 static void adiumGaimConvWindowDestroy(GaimConvWindow *win)
 {
-    //Cleanup what we placed in win's ui_data earlier
+    //Clean up what we placed in win's ui_data earlier
 }
 
 static void adiumGaimConvWindowShow(GaimConvWindow *win)
@@ -354,7 +354,7 @@ static void adiumGaimConvWindowShow(GaimConvWindow *win)
 
 static void adiumGaimConvWindowHide(GaimConvWindow *win)
 {
-    NSLog(@"adiumGaimConvWindowHide");
+    if (GAIM_DEBUG) NSLog(@"adiumGaimConvWindowHide");
 }
 
 static void adiumGaimConvWindowRaise(GaimConvWindow *win)
@@ -367,7 +367,7 @@ static void adiumGaimConvWindowFlash(GaimConvWindow *win)
 
 static void adiumGaimConvWindowSwitchConv(GaimConvWindow *win, unsigned int index)
 {
-    NSLog(@"adiumGaimConvWindowSwitchConv");
+    if (GAIM_DEBUG) NSLog(@"adiumGaimConvWindowSwitchConv");
 }
 
 static void adiumGaimConvWindowAddConv(GaimConvWindow *win, GaimConversation *conv)
@@ -380,12 +380,12 @@ static void adiumGaimConvWindowRemoveConv(GaimConvWindow *win, GaimConversation 
 
 static void adiumGaimConvWindowMoveConv(GaimConvWindow *win, GaimConversation *conv, unsigned int newIndex)
 {
-    NSLog(@"adiumGaimConvWindowMoveConv");
+    if (GAIM_DEBUG) NSLog(@"adiumGaimConvWindowMoveConv");
 }
 
 static int adiumGaimConvWindowGetActiveIndex(const GaimConvWindow *win)
 {
-    NSLog(@"adiumGaimConvWindowGetActiveIndex");
+    if (GAIM_DEBUG) NSLog(@"adiumGaimConvWindowGetActiveIndex");
     return(0);
 }
 
