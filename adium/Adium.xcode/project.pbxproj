@@ -3954,8 +3954,6 @@
 				34327CA6060D4093003D7AD9,
 				4B191D8A0611C10800E8A4E7,
 				4B191D8B0611C10800E8A4E7,
-				4B191D8D0611C11000E8A4E7,
-				4B191D8F0611C11400E8A4E7,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7864,12 +7862,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B191D8D0611C11000E8A4E7 = {
-			fileRef = 4B191D8C0611C11000E8A4E7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B191D8E0611C11400E8A4E7 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -7877,12 +7869,6 @@
 			path = ToDoList.txt;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B191D8F0611C11400E8A4E7 = {
-			fileRef = 4B191D8E0611C11400E8A4E7;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B215D970598907100305B3C = {
 			fileEncoding = 4;
