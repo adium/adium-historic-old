@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.82 2004/07/18 17:29:26 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.83 2004/07/19 16:47:12 adamiser Exp $
 
 #import "AIInterfaceController.h"
 #import "AIContactListWindowController.h"
@@ -465,11 +465,15 @@ arrangeChats = YES;
 - (void)updateCloseMenuKeys
 {
 	if(activeChat && !closeMenuConfiguredForChat){
+		NSLog(@"%@ becomes W",menuItem_close);
         [menuItem_close setKeyEquivalent:@"W"];
         [menuItem_closeChat setKeyEquivalent:@"w"];
+		closeMenuConfiguredForChat = YES;
 	}else if(!activeChat && closeMenuConfiguredForChat){
+		NSLog(@"%@ becomes w",menuItem_close);
         [menuItem_close setKeyEquivalent:@"w"];
 		[menuItem_closeChat removeKeyEquivalent];		
+		closeMenuConfiguredForChat = NO;
 	}
 }
 
