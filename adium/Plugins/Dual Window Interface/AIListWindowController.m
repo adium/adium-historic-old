@@ -68,37 +68,31 @@
 {	
     [super initWithWindowNibName:[self nibName]];
 	
-    //Observe preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    
     return(self);
-}
-
-//Nib to load
-- (NSString *)nibName
-{
-    return(@"");    
 }
 
 //Dealloc
 - (void)dealloc
 {
-    [[adium notificationCenter] removeObserver:self];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
-	
-	[toolbarItems release];
-
     [super dealloc];
 }
 
-//Setup the window after it had loaded
+//Our window nib name
+- (NSString *)nibName
+{
+    return(@"");    
+}
+
+//Our contact list cell
+- (AIListCell *)outlineViewDataCell
+{
+	return([[AIListCell alloc] init]);
+}
+
+//Setup the window after it has loaded
 - (void)windowDidLoad
 {
     NSString	*frameString;
-    
-    //Toolbar (can not be added to a borderless window)
-    if(!borderless) [self _configureToolbar];
     
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
@@ -120,13 +114,11 @@
 	
     minWindowSize = [[self window] minSize];
 	
-    //Swap in the contact list view
-//    contactListViewController = [[AIStandardListWind contactListViewController] retain];
-//    contactListView = [[contactListViewController contactListView] retain];
+    //Configure the contact list view
+	tooltipTracker = [[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList withDelegate:self] retain];
+	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
     [scrollView_contactList setAutoScrollToBottom:NO];
     [scrollView_contactList setAutoHideScrollBar:YES];
-//    [[self window] makeFirstResponder:contactListView];
-//	[scrollView_contactList setAndSizeDocumentView:contactListView];
     [[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(contactListDesiredSizeChanged:)
 												 name:AIViewDesiredSizeDidChangeNotification
@@ -138,8 +130,7 @@
 															   name:NSApplicationDidChangeScreenParametersNotification 
 															 object:nil];
 	
-	
-	
+	//Observe contact list content and display changes
 	[[adium notificationCenter] addObserver:self selector:@selector(contactListChanged:) 
 									   name:Contact_ListChanged
 									 object:nil];
@@ -149,19 +140,13 @@
     [[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) 
 									   name:ListObject_AttributesChanged
 									 object:nil];
-	
-	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
-	
-	//Fetch and update the contact list
     [self contactListChanged:nil];
 	
-	
-	[[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList withDelegate:self] retain];
-
-	
-	
-	
-    //Apply initial preference-based settings
+    //Observe preference changes
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged
+									 object:nil];
     [self preferencesChanged:nil];
 }
 
@@ -171,10 +156,7 @@
     //Stop observing
     [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    //Close the contact list view
-//    [contactListViewController release];
-//    [contactListView release];
+	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
     
 	//Save the window position
 	[[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
@@ -231,6 +213,34 @@
 		}
 	}
 
+}
+
+//Double click in outline view
+- (IBAction)performDefaultActionOnSelectedContact:(id)sender
+{
+    AIListObject	*selectedObject = [sender itemAtRow:[sender selectedRow]];
+	
+    if([selectedObject isKindOfClass:[AIListGroup class]]){
+        //Expand or collapse the group
+        if([sender isItemExpanded:selectedObject]){
+            [sender collapseItem:selectedObject];
+        }else{
+            [sender expandItem:selectedObject];
+        }
+		
+    }else if([selectedObject isKindOfClass:[AIListContact class]]){
+        //Open a new message with the contact
+		AIListContact	*contact = (AIListContact *)selectedObject;
+		
+		//If the contact is a meta contact, find the preferred contact for it
+		if([contact isKindOfClass:[AIMetaContact class]]){
+			contact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
+																 forListContact:contact];
+		}
+		
+		[[adium interfaceController] setActiveChat:[[adium contentController] openChatWithContact:contact]];
+		
+    }
 }
 
 
@@ -411,12 +421,25 @@
 
 
 
+//Auto-resizing support ------------------------------------------------------------------------------------------------
+//#pragma mark Auto-resizing support
+//
+//- (void)screenParametersChanged:(NSNotification *)notification
+//{
+//#warning ###    [contactListView _performFullRecalculation];
+//}
+	
 
 
 
 
 
-//Notifications
+
+
+
+
+//Content Updating -----------------------------------------------------------------------------------------------------
+#pragma mark Content Updating
 //Reload the contact list
 - (void)contactListChanged:(NSNotification *)notification
 {
@@ -465,12 +488,6 @@
     NSArray			*keys = [[notification userInfo] objectForKey:@"Keys"];
 	
     //Redraw the modified object
-	//	if (object){
-	//		int row = [contactListView rowForItem:object];
-	//		if(row >= 0) [contactListView setNeedsDisplayInRect:[contactListView rectOfRow:row]];
-	//    }else{
-	//		[contactListView setNeedsDisplay:YES];
-	//	}
 	[contactListView redisplayItem:[notification object]];
 	
     //Resize the contact list horizontally
@@ -487,51 +504,9 @@
     }
 }
 
-
-
-
-
-
-
-
-
-//Double click in outline view
-- (IBAction)performDefaultActionOnSelectedContact:(id)sender
-{
-    AIListObject	*selectedObject = [sender itemAtRow:[sender selectedRow]];
-	
-    if([selectedObject isKindOfClass:[AIListGroup class]]){
-        //Expand or collapse the group
-        if([sender isItemExpanded:selectedObject]){
-            [sender collapseItem:selectedObject];
-        }else{
-            [sender expandItem:selectedObject];
-        }
-		
-    }else if([selectedObject isKindOfClass:[AIListContact class]]){
-        //Open a new message with the contact
-		AIListContact	*contact = (AIListContact *)selectedObject;
-		
-		//If the contact is a meta contact, find the preferred contact for it
-		if ([contact isKindOfClass:[AIMetaContact class]]){
-			contact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
-																 forListContact:contact];
-		}
-		
-		[[adium interfaceController] setActiveChat:[[adium contentController] openChatWithContact:contact]];
-		
-    }
-}
-
-- (AIListCell *)outlineViewDataCell
-{
-	return([[AIListCell alloc] init]);
-}
-
-
-
 //Outline View data source ---------------------------------------------------------------------------------------------
 #pragma mark Outline View data source
+//
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
     if(item == nil){
@@ -541,11 +516,13 @@
     }
 }
 
+//
 - (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForColumn:(NSTableColumn *)column
 {
 	return([self outlineViewDataCell]);
 }
 
+//
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
     if([item isKindOfClass:[AIListGroup class]]){
@@ -555,6 +532,7 @@
     }
 }
 
+//
 - (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
 {
     if(item == nil){
@@ -564,18 +542,19 @@
     }
 }
 
-// outlineView:willDisplayCell: The outline view is about to tell one of our cells to draw
+//Before one of our cells gets told to draw, we need to make sure it knows what contact it's drawing for.
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
-    //Before one of our cells gets told to draw, we need to make sure it knows what contact it's drawing for.
 	[(AIListCell *)cell setListObject:item];
 }
 
+//
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
     return(@"");
 }
 
+//
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {    
     //Post a 'contact list selection changed' notification on the interface center
@@ -588,22 +567,22 @@
 	[[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged object:nil];
 }
 
-
+//
 - (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
 {
     NSMutableArray      *contactArray = [[adium contactController] allContactsInGroup:item subgroups:YES onAccount:nil];
 
     [item setExpanded:state];
 #warning ###	[contactListView updateHorizontalSizeForObjects:contactArray]; 
-	
 }
 
+//
 - (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item
 {
     return([item isExpanded]);
 }
 
-
+//
 - (NSMenu *)outlineView:(NSOutlineView *)outlineView menuForEvent:(NSEvent *)theEvent
 {
     NSPoint	location;
@@ -624,22 +603,13 @@
 
     //Return the context menu
 	AIListObject	*listObject = (AIListObject *)[contactListView firstSelectedItem];
-	NSArray			*locationsArray;
-	if ([listObject isKindOfClass:[AIListGroup class]]){
-		locationsArray = [NSArray arrayWithObjects:
-			[NSNumber numberWithInt:Context_Group_Manage],
-			[NSNumber numberWithInt:Context_Contact_Action],
-			[NSNumber numberWithInt:Context_Contact_ListAction],
-			[NSNumber numberWithInt:Context_Contact_NegativeAction],
-			[NSNumber numberWithInt:Context_Contact_Additions], nil];
-	}else{
-		locationsArray = [NSArray arrayWithObjects:
-			[NSNumber numberWithInt:Context_Contact_Manage],
-			[NSNumber numberWithInt:Context_Contact_Action],
-			[NSNumber numberWithInt:Context_Contact_ListAction],
-			[NSNumber numberWithInt:Context_Contact_NegativeAction],
-			[NSNumber numberWithInt:Context_Contact_Additions], nil];	
-	}
+	BOOL			isGroup = [listObject isKindOfClass:[AIListGroup class]];
+	NSArray			*locationsArray = [NSArray arrayWithObjects:
+		[NSNumber numberWithInt:(isGroup ? Context_Group_Manage : Context_Contact_Manage)],
+		[NSNumber numberWithInt:Context_Contact_Action],
+		[NSNumber numberWithInt:Context_Contact_ListAction],
+		[NSNumber numberWithInt:Context_Contact_NegativeAction],
+		[NSNumber numberWithInt:Context_Contact_Additions], nil];
 	
     return([[adium menuController] contextualMenuWithLocations:locationsArray
 												 forListObject:listObject]);
@@ -647,27 +617,27 @@
 
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayOutlineCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
-#warning ###	float	capHeight = [[contactListView groupFont] capHeight];
-#warning ###	NSImage	*image, *altImage;
-#warning ###	
-#warning ###	//The triangle can only get so big before it starts to get clipped, so we restrict it's size as necessary
-#warning ###	if(capHeight > MAX_DISCLOSURE_HEIGHT) capHeight = MAX_DISCLOSURE_HEIGHT;
-#warning ###
-#warning ###	//Apply this new size to the images
-#warning ###	image = [cell image];
-#warning ###	altImage = [cell alternateImage];
+/*	float	capHeight = [[contactListView groupFont] capHeight];
+	NSImage	*image, *altImage;
 	
-#warning ###	//Resize the iamges
-#warning ###	[image setScalesWhenResized:YES];
-#warning ###	[image setSize:NSMakeSize(capHeight, capHeight)];
-#warning ###	[altImage setScalesWhenResized:YES];
-#warning ###	[altImage setSize:NSMakeSize(capHeight, capHeight)];
+	//The triangle can only get so big before it starts to get clipped, so we restrict it's size as necessary
+	if(capHeight > MAX_DISCLOSURE_HEIGHT) capHeight = MAX_DISCLOSURE_HEIGHT;
 
-#warning ###	//Set them back and center
-#warning ###	[cell setAlternateImage:altImage];
-#warning ###	[cell setImage:image];
-#warning ###	[cell setImagePosition:NSImageOnly];
-#warning ###	[cell setHighlightsBy:NSContentsCellMask];
+	//Apply this new size to the images
+	image = [cell image];
+	altImage = [cell alternateImage];
+	
+	//Resize the iamges
+	[image setScalesWhenResized:YES];
+	[image setSize:NSMakeSize(capHeight, capHeight)];
+	[altImage setScalesWhenResized:YES];
+	[altImage setSize:NSMakeSize(capHeight, capHeight)];
+
+	//Set them back and center
+	[cell setAlternateImage:altImage];
+	[cell setImage:image];
+	[cell setImagePosition:NSImageOnly];
+	[cell setHighlightsBy:NSContentsCellMask];*/
 } 
 
 
@@ -675,7 +645,6 @@
 {
 	//Kill any selections
 	[outlineView deselectAll:nil];
-#warning    [self _stopTrackingMouse];
 
 	//Begin the drag
 	if(dragItems) [dragItems release];
@@ -735,39 +704,12 @@
 		
 		//Move the list object to it's new location
 		if([item isKindOfClass:[AIListGroup class]]){
-			[[adium contactController] moveListObjects:dragItems
-											   toGroup:item
-												 index:index];
+			[[adium contactController] moveListObjects:dragItems toGroup:item index:index];
 		}
 	}
 
     return(YES);
 }
-
-
-//Auto-resizing support ------------------------------------------------------------------------------------------------
-#pragma mark Auto-resizing support
-- (void)outlineViewItemDidExpand:(NSNotification *)notification
-{
-    [self _desiredSizeChanged];
-}
-
-- (void)outlineViewItemDidCollapse:(NSNotification *)notification
-{
-    [self _desiredSizeChanged];
-}
-
-- (void)_desiredSizeChanged
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification
-														object:contactListView];
-}
-
-- (void)screenParametersChanged:(NSNotification *)notification
-{
-#warning ###    [contactListView _performFullRecalculation];
-}
-
 
 
 //Tooltip --------------------------------------------------------------------------------------------------------------
