@@ -5,6 +5,7 @@
             CLASS = AIPasswordPromptController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_OK" = NSButton; 
                 "checkBox_savePassword" = NSButton; 
                 target = id; 
                 "textField_password" = NSTextField; 

@@ -94,7 +94,14 @@
 - (void)savePassword:(NSString *)password
 {
 	//abstract method. subclasses can do things here.
-};
+}
+
+- (void)textDidChange:(NSNotification *)notification
+{
+	//if the password field is empty, disable the OK button.
+	//otherwise, enable it.
+	[button_OK setEnabled:([[textField_password secureStringValue] length] != 0)];
+}
 
 // closes this window
 - (IBAction)closeWindow:(id)sender
