@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.72 2004/03/27 04:47:49 ramoth4 Exp $
+// $Id: AIAccountController.m,v 1.73 2004/04/02 22:58:32 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -439,7 +439,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		//If we've messaged this object previously, and the account we used to message it is online, return that account
         accountID = [inObject preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT group:PREF_GROUP_PREFERRED_ACCOUNTS];
         if(accountID && (account = [self accountWithObjectID:accountID])){
-            if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
+            if([account availableForSendingContentType:inType toListObject:inObject]){
                 return(account);
             }
         }
@@ -447,7 +447,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		//If inObject is an AIListContact return the account the object is on
 		if([inObject isKindOfClass:[AIListContact class]]){ 
 			if(account = [self accountWithObjectID:[(AIListContact *)inObject accountID]]){
-				if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
+				if([account availableForSendingContentType:inType toListObject:inObject]){
 					return(account);
 				}
 			}
@@ -456,7 +456,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		//Return the last account used to message someone on this service
 		NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[inObject serviceID]];
 		if(lastAccountID && (account = [self accountWithObjectID:lastAccountID])){
-			if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
+			if([account availableForSendingContentType:inType toListObject:nil]){
 				return(account);
 			}
 		}
@@ -465,7 +465,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		NSEnumerator	*enumerator = [accountArray objectEnumerator];
 		while(account = [enumerator nextObject]){
 			if([[account serviceID] compare:[inObject serviceID]] == 0 &&
-			   [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
+			   [account availableForSendingContentType:inType toListObject:nil]){
 				return(account);
 			}
 		}
