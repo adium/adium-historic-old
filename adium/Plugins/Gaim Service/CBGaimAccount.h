@@ -56,6 +56,7 @@
 - (void)disconnect;
 - (NSString *)connectionStringForStep:(int)step;
 - (void)resetLibGaimAccount;
+- (void)configureGaimAccountForConnect;
 - (NSString *)host;
 - (int)port;
 - (NSString *)hostKey;
