@@ -43,7 +43,6 @@
 
     //Install our 'enter away message' submenu
     [self installAwayMenu];
-    [self updateAwayMenu];
 
     //Install our tooltip entry
     [[owner interfaceController] registerContactListTooltipEntry:self];
@@ -51,6 +50,8 @@
     //Observe
     [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+
+    [self accountStatusChanged:nil];
 }
 
 //Display the enter away message window
@@ -72,8 +73,74 @@
     [[owner accountController] setStatusObject:nil forKey:@"AwayMessage" account:nil]; //Remove the away status flag
 }
 
+//Update our menu when the away status changes
+- (void)accountStatusChanged:(NSNotification *)notification
+{
+    if(notification == nil || [notification object] == nil){ //We ignore account-specific status changes
+        NSString	*modifiedKey = [[notification userInfo] objectForKey:@"Key"];
 
-//Tooltip entry --
+        if([modifiedKey compare:@"AwayMessage"] == 0){
+            [self updateAwayMenu]; //Update our away menu
+
+            //Remove existing content sent/received observer, and install new (if away)
+            [[owner notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
+            [[owner notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
+            if([[owner accountController] statusObjectForKey:@"AwayMessage" account:nil] != nil){
+                [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
+                [[owner notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
+            }
+
+            //Flush our array of 'responded' contacts
+            [receivedAwayMessage release]; receivedAwayMessage = [[NSMutableArray alloc] init];
+        }
+    }
+}
+
+//Called when Adium receives content
+- (void)didReceiveContent:(NSNotification *)notification
+{
+    id <AIContentObject>	contentObject = [[notification userInfo] objectForKey:@"Object"];
+    NSAttributedString		*awayMessage = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"AwayMessage" account:nil]];
+    
+    //If the user received a message, send our away message to them
+    if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
+        if(awayMessage && [awayMessage length] != 0){
+            AIHandle	*handle = [contentObject source];
+
+            //Create and send an away bounce message (If the sender hasn't received one already)
+            if(![receivedAwayMessage containsObject:[handle UIDAndServiceID]]){
+                AIContentMessage	*responseContent;
+    
+                responseContent = [AIContentMessage messageWithSource:[contentObject destination]
+                                                          destination:handle
+                                                                 date:nil
+                                                              message:awayMessage];
+    
+                [[owner contentController] sendContentObject:responseContent];
+            }
+        }
+    }
+}
+
+//Called when Adium sends content
+- (void)didSendContent:(NSNotification *)notification
+{
+    id <AIContentObject>	contentObject = [[notification userInfo] objectForKey:@"Object"];
+
+    if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
+        AIHandle	*handle = [contentObject destination];
+        NSString 	*senderUID = [handle UIDAndServiceID];
+
+        //Add the handle's UID to our 'already received away message' array, so they only receive the message once.
+        if(![receivedAwayMessage containsObject:senderUID]){
+            [receivedAwayMessage addObject:senderUID];
+        }
+    }
+}
+
+
+
+//Tooltip entry ---------------------------------------------------------------------------------------
 - (NSString *)label
 {
     return(@"Away");
@@ -109,43 +176,7 @@
 }
 
 
-
-//Private ------------------------------------------------------------------------------
-//Update our menu when the away status changes
-- (void)accountStatusChanged:(NSNotification *)notification
-{
-    if([notification object] == nil){ //We ignore account-specific status changes
-        NSString	*modifiedKey = [[notification userInfo] objectForKey:@"Key"];
-
-        if([modifiedKey compare:@"AwayMessage"] == 0){
-            [self updateAwayMenu]; //Update our away menu
-        }
-    }
-}
-
-//Update our menu if the away list changes
-- (void)preferencesChanged:(NSNotification *)notification
-{
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_AWAY_MESSAGES] == 0 &&
-       [(NSString *)[[notification userInfo] objectForKey:@"Key"] compare:KEY_SAVED_AWAYS] == 0){
-
-        //Rebuild the away menu
-        [self rebuildSavedAways];
-    }
-}
-
-//Called as our menu item is displayed, update it to reflect option key status
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
-{
-    //It would be much better to update the menu in response to option being pressed, but I do not know of an easy way to do this :(
-
-//    if(menuItem == menuItem_away || menuItem == menuItem_removeAway){
-        [self updateAwayMenu]; //Update the away message menu
-//    }
-
-    return(YES);
-}
-
+//Away Menu ----------------------------------------------------------------------------------
 //Install the away message window
 - (void)installAwayMenu
 {
@@ -182,6 +213,18 @@
     }else{
         [[owner menuController] addMenuItem:menuItem_away toLocation:LOC_File_Status];
     }
+}
+
+//Called as our menu item is displayed, update it to reflect option key status
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+    //It would be much better to update the menu in response to option being pressed, but I do not know of an easy way to do this :(
+
+    //    if(menuItem == menuItem_away || menuItem == menuItem_removeAway){
+    [self updateAwayMenu]; //Update the away message menu
+                           //    }
+
+    return(YES);
 }
 
 //Update the away message menu
@@ -244,6 +287,17 @@
         menuItem = [[NSMenuItem alloc] initWithTitle:away  target:self action:@selector(setAwayMessage:) keyEquivalent:@""];
         [menuItem setRepresentedObject:awayData];        
         [menu_awaySubmenu addItem:menuItem];
+    }
+}
+
+//Update our menu if the away list changes
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_AWAY_MESSAGES] == 0 &&
+       [(NSString *)[[notification userInfo] objectForKey:@"Key"] compare:KEY_SAVED_AWAYS] == 0){
+
+        //Rebuild the away menu
+        [self rebuildSavedAways];
     }
 }
 
