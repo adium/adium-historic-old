@@ -7,8 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
 
 @class AIAdium, AIAlternatingRowTableView, AIListContact;
+
+#define KEY_CONTACT_ALERTS_WINDOW_FRAME		@"Contact Alerts Window"
 
 @interface AIContactAlertsWindowController : NSWindowController {
 
@@ -24,22 +27,26 @@
     
     AIAdium		*owner;
 
-    AIListContact	*activeContactObject;
+ //  AIListContact	*activeContactObject;
+    AIListObject	*activeContactObject;
 
+    
     NSMutableArray			*eventActionArray;
 
     NSMutableArray			*eventSoundArray;
 }
 
-+ (id)showContactAlertsWindowWithOwner:(id)inOwner forContact:(AIListContact *)inContact;
+//+ (id)showContactAlertsWindowWithOwner:(id)inOwner forContact:(AIListContact *)inContact;
+//- (void)configureWindowForContact:(AIListContact *)inContact;
++ (id)showContactAlertsWindowWithOwner:(id)inOwner forContact:(AIListObject *)inContact;
+- (void)configureWindowForContact:(AIListObject *)inContact;
+
 + (void)closeContactAlertsWindow;
-- (void)configureWindowForContact:(AIListContact *)inContact;
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)deleteEventAction:(id)sender;
 - (IBAction)newEvent:(id)sender;
 - (IBAction)actionPlaySound:(id)sender;
 - (IBAction)actionSendMessage:(id)sender;
 - (IBAction)selectSound:(id)sender;
-- (IBAction)endEditing:(id)sender;
 
 @end

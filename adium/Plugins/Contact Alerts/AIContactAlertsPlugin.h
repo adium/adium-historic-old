@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
+#import <AIUtilities/AIUtilities.h>
 #import "AIAdium.h"
 
 #define PREF_GROUP_ALERTS		@"Alerts"
@@ -24,7 +25,6 @@
 #define SOUND_EVENT_QUOTE		@"\""			//Character before and after event name
 #define SOUND_NEWLINE			@"\n"			//Newline character
 
-#define KEY_EVENT_CUSTOM_SOUNDSET	@"Event Custom Sounds"
 #define KEY_EVENT_SOUND_SET		@"Event Sound Set"
 #define	KEY_EVENT_SOUND_PATH		@"Path"
 #define	KEY_EVENT_SOUND_NOTIFICATION	@"Notification"
@@ -36,7 +36,6 @@
 @interface AIContactAlertsPlugin : AIPlugin <AIMiniToolbarItemDelegate,AIListObjectObserver> {
     NSMenuItem				*editContactAlertsMenuItem;
     NSMenuItem				*contactAlertsContextMenuItem;
-
 }
 
 @end
