@@ -21,6 +21,7 @@
 
 //Status State Notifications
 #define AIStatusStateArrayChangedNotification	@"AIStatusStateArrayChangedNotification"
+#define AIStatusActiveStateChangedNotification	@"AIStatusActiveStateChangedNotification"
 
 //Idle Notifications
 #define AIMachineIsIdleNotification				@"AIMachineIsIdleNotification"

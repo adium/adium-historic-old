@@ -506,6 +506,24 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 }
 
 /*!
+ * @brief Reset the active status state
+ *
+ * All active status states cache will also reset.  Posts an active status changed notification.  The active state
+ * will be regenerated the next time it is requested.
+ */
+- (void)_resetActiveStatusState
+{
+	//Clear the active status state.  It will be rebuilt next time it is requested
+	[_activeStatusState release]; _activeStatusState = nil;
+	[_allActiveStatusStates release]; _allActiveStatusStates = nil;
+	
+	//Let observers know the active state has changed
+	[[adium notificationCenter] postNotificationName:AIStatusActiveStateChangedNotification object:nil];
+}
+
+
+
+/*!
  * @brief Set the initial status state if necessary for each account
  *
  * Any account which does not currently have a status state will be set to [self defaultIniitalStatusState].
@@ -1216,9 +1234,8 @@ int _statusArraySort(id objectA, id objectB, void *context)
  */
 - (void)rebuildAllStateMenus
 {
-	[_activeStatusState release]; _activeStatusState = nil;
-	[_allActiveStatusStates release]; _allActiveStatusStates = nil;
-
+	[self _resetActiveStatusState];
+	
 	NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
 	id <StateMenuPlugin>	stateMenuPlugin;
 	
@@ -1339,8 +1356,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 
 		//Clear these caches now. Observers which get called before we do when an account actually connects
 		//will want to get a fresh value.
-		[_activeStatusState release]; _activeStatusState = nil;
-		[_allActiveStatusStates release]; _allActiveStatusStates = nil;
+		[self _resetActiveStatusState];
 	}
 }	
 
