@@ -240,7 +240,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 {
     [self configureForMenuDetails:@"Open window using account:" menuToDisplay:[self accountForOpenMessageMenu] identifier:@"Open Message"];
     AIAccount * account = [[owner accountController] accountWithID:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]];
-    if (account) [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:account];
+    if (account) [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:account]];
 }
 
 //setup display for sending a message
