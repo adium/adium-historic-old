@@ -50,7 +50,7 @@
             signonDay = [dayFormatter stringForObjectValue:signonDate];
             signonTime = [timeFormatter stringForObjectValue:signonDate];
             
-            if([currentDay compare:signonDay] == 0){ //Show time
+            if([currentDay isEqualToString:signonDay]){ //Show time
                 entry = [[NSAttributedString alloc] initWithString:signonTime];
                 
             }else{ //Show date and time

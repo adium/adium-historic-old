@@ -325,7 +325,7 @@
         //Set the new icon in preferences
         iconName = [[iconPath lastPathComponent] stringByDeletingPathExtension];
         [[adium preferenceController] setPreference:iconName forKey:KEY_ACTIVE_DOCK_ICON group:PREF_GROUP_GENERAL];
-        
+
         //Set the selected icon
         [self configureForSelectedIcon:[iconArray objectAtIndex:index]];
         
@@ -381,7 +381,7 @@
 
     enumerator = [iconArray objectEnumerator];
     while((iconDict = [enumerator nextObject])){
-        if([name compare:[[[iconDict objectForKey:@"Path"] lastPathComponent] stringByDeletingPathExtension]] == 0){
+        if([name isEqualToString:[[[iconDict objectForKey:@"Path"] lastPathComponent] stringByDeletingPathExtension]]){
             return(iconDict);
         }
     }

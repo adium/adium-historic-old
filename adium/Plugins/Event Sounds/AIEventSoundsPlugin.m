@@ -60,7 +60,7 @@
 //Called when the preferences change, reregister for the notifications
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_SOUNDS] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_SOUNDS]){
         NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
         NSString	*soundSetPath;
         NSEnumerator	*enumerator;
@@ -166,7 +166,7 @@
                 //Locate the notification associated with the given display name
                 enumerator = [[[adium eventNotifications] allValues] objectEnumerator];
                 while((eventDict = [enumerator nextObject])){
-                    if([event compare:[eventDict objectForKey:KEY_EVENT_DISPLAY_NAME]] == 0){
+                    if([event isEqualToString:[eventDict objectForKey:KEY_EVENT_DISPLAY_NAME]]){
                         //Add this sound to our array
                         [soundArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 			    [eventDict objectForKey:KEY_EVENT_NOTIFICATION], KEY_EVENT_SOUND_NOTIFICATION,

@@ -16,8 +16,8 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.44 $
- * $Date: 2004/06/01 18:32:58 $
+ * $Revision: 1.45 $
+ * $Date: 2004/06/07 16:09:46 $
  * $Author: evands $
  *
  */
@@ -76,7 +76,7 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [PREF_GROUP_SQL_LOGGING compare:[[notification userInfo] objectForKey:@"Group"]] == 0){
+    if(notification == nil || [PREF_GROUP_SQL_LOGGING isEqualToString:[[notification userInfo] objectForKey:@"Group"]]){
         NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SQL_LOGGING];
 		bool			newLogValue;
 		
@@ -110,7 +110,7 @@
     AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
     
     //Message Content
-    if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
+    if([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]){
         AIChat		*chat = [notification object];
         AIListObject	*source = [content source];
         AIListObject	*destination = [content destination];

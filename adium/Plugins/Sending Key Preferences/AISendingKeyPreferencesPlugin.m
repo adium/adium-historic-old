@@ -53,7 +53,7 @@
 //Update all views in response to a preference change
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_GENERAL]){
         NSEnumerator	*enumerator;
         id		entryView;
 

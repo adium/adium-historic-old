@@ -53,7 +53,7 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_FORMATTING] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_FORMATTING]){
 		NSDictionary		*prefDict;
 		NSMutableDictionary *attributes;
 		NSColor				*textColor;

@@ -128,7 +128,7 @@
 //Reflect new preferences in view
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [PREF_GROUP_EMOTICONS compare:[[notification userInfo] objectForKey:@"Group"]] == 0){        
+    if(notification == nil || [PREF_GROUP_EMOTICONS isEqualToString:[[notification userInfo] objectForKey:@"Group"]]){        
         //Refresh our emoticon tables
         [table_emoticonPacks reloadData];
         [self _configureEmoticonListForSelection];
@@ -170,15 +170,18 @@
 		NSString    *identifier = [tableColumn identifier];
         AIEmoticon  *emoticon = [[selectedEmoticonPack emoticons] objectAtIndex:row];
         
-        if([identifier compare:@"Enabled"] == 0){
+        if([identifier isEqualToString:@"Enabled"]){
             return([NSNumber numberWithBool:[emoticon isEnabled]]);
             
-        }else if([identifier compare:@"Image"] == 0){
+        }else if([identifier isEqualToString:@"Image"]){
             return([emoticon image]);
             
-        }else if([identifier compare:@"Name"] == 0){
-            if([selectedEmoticonPack isEnabled] && [emoticon isEnabled]) return([emoticon name]);
-            else return([self _dimString:[emoticon name] center:NO]);
+        }else if([identifier isEqualToString:@"Name"]){
+            if([selectedEmoticonPack isEnabled] && [emoticon isEnabled]){
+				return([emoticon name]);
+            }else{
+				return([self _dimString:[emoticon name] center:NO]);
+			}
             
         }else{// if([identifier compare:@"String"] == 0){
 			NSArray *textEquivalents = [emoticon textEquivalents];
@@ -265,7 +268,7 @@
     if(tableView == table_emoticonPacks){
         NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:EMOTICON_PACK_DRAG_TYPE]];
         
-        if([avaliableType compare:EMOTICON_PACK_DRAG_TYPE] == 0){
+        if([avaliableType isEqualToString:EMOTICON_PACK_DRAG_TYPE]){
             NSMutableArray  *movedPacks = [NSMutableArray array]; //Keep track of the packs we've moved
             NSEnumerator    *enumerator;
             NSNumber        *dragRow;

@@ -127,7 +127,7 @@
 //
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_STANDARD_MESSAGE_DISPLAY]){
 		
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         //Release the old preference cache
@@ -360,22 +360,22 @@
 //Add rows for a content object
 - (void)_addContentObject:(AIContentObject *)content
 {
-    if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
+    if([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]){
         [self _addContentMessage:(AIContentMessage *)content];
-	}else if([[content type] compare:CONTENT_CONTEXT_TYPE] == 0){
+	}else if([[content type] isEqualToString:CONTENT_CONTEXT_TYPE]){
         [self _addContentContext:(AIContentContext *)content];
-    }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
+    }else if([[content type] isEqualToString:CONTENT_STATUS_TYPE]){
         [self _addContentStatus:(AIContentStatus *)content];
     }
 }
 
 - (NSArray *)_rowsForAddingContentObject:(AIContentObject *)content
 {
-    if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
+    if([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]){
         return [self _rowsForAddingContentMessage:(AIContentMessage *)content];
-	} else if([[content type] compare:CONTENT_CONTEXT_TYPE] == 0){
+	} else if([[content type] isEqualToString:CONTENT_CONTEXT_TYPE]){
         return [self _rowsForAddingContentContext:(AIContentContext *)content];
-    }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
+    }else if([[content type] isEqualToString:CONTENT_STATUS_TYPE]){
         return [NSArray arrayWithObject:[self _rowForAddingContentStatus:(AIContentStatus *)content]];
     }
     

@@ -242,7 +242,7 @@
 // Send a content object
 - (BOOL)sendContentObject:(AIContentObject *)object
 {
-    if([[object type] compare:CONTENT_MESSAGE_TYPE] == NSOrderedSame) {
+    if([[object type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
 		NSString	*message = [[(AIContentMessage *)object message] string];
 		NSString	*htmlMessage = [AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message]
 													 headers:NO
@@ -261,22 +261,26 @@
 		AIListObject    *listObject = [chat listObject];
 		NSString		*to = [listObject UID];
 		
-		[libezv sendMessage:message to:to withHtml:htmlMessage];
-    } else if([[object type] compare:CONTENT_TYPING_TYPE] == NSOrderedSame) {
+		[libezv sendMessage:message 
+						 to:to 
+				   withHtml:htmlMessage];
+		
+    } else if([[object type] isEqualToString:CONTENT_TYPING_TYPE]) {
 		AIContentTyping *contentTyping = (AIContentTyping*)object;
 		AIChat			*chat = [contentTyping chat];
 		AIListObject    *listObject = [chat listObject];
 		NSString		*to = [listObject UID];
 		
-		[libezv sendTypingNotification:[contentTyping typing] ? AWEzvIsTyping : AWEzvNotTyping to:to];
+		[libezv sendTypingNotification:([contentTyping typing] ? AWEzvIsTyping : AWEzvNotTyping)
+									to:to];
     }
 }
 
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
-    if([inType compare:CONTENT_MESSAGE_TYPE] == NSOrderedSame){
-	return(YES);
+    if([inType isEqualToString:CONTENT_MESSAGE_TYPE]){
+		return(YES);
     }
     
     return NO;
@@ -305,13 +309,13 @@
     //Now look at keys which only make sense while online
     if(areOnline){
         NSData  *data;
-        if([key compare:@"IdleSince"] == NSOrderedSame){
+        if([key isEqualToString:@"IdleSince"]){
             NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			
 			[libezv setStatus:AWEzvIdle withMessage:[self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]];
             [self setAccountIdleTo:idleSince];
 			
-        } else if ( ([key compare:@"AwayMessage"] == NSOrderedSame)){
+        } else if ( ([key isEqualToString:@"AwayMessage"])){
             NSAttributedString	*attributedString = nil;
             
             if(data = [self preferenceForKey:key group:GROUP_ACCOUNT_STATUS]){

@@ -39,7 +39,7 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
 	
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTEXT_DISPLAY] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTEXT_DISPLAY]){
 
 		NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTEXT_DISPLAY];
 
@@ -200,7 +200,7 @@
 				type = [messageDict objectForKey:@"Type"];
 				
 				//Currently, we only add Message content objects
-				if( [type compare:CONTENT_MESSAGE_TYPE] == 0 ) {
+				if( [type isEqualToString:CONTENT_MESSAGE_TYPE] ) {
 					message = [NSAttributedString stringWithData:[messageDict objectForKey:@"Message"]];
 					
 					NSString *from = [messageDict objectForKey:@"From"];

@@ -51,8 +51,7 @@ static NSMenu       *eContextualMenu = nil;
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [PREF_GROUP_EMOTICONS compare:[[notification userInfo] objectForKey:@"Group"]] == 0)
-    {        
+    if(notification == nil || [PREF_GROUP_EMOTICONS isEqualToString:[[notification userInfo] objectForKey:@"Group"]]){
         [self configureEmoticonSupport];
     }
 }

@@ -63,11 +63,11 @@
 //Called when the preferences change, update our preference display
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DOCK_BEHAVIOR] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DOCK_BEHAVIOR]){
         NSString	*key = [[notification userInfo] objectForKey:@"Key"];
 
         //If the Behavior set changed
-        if(notification == nil || [key compare:KEY_DOCK_ACTIVE_BEHAVIOR_SET] == 0){
+        if(notification == nil || [key isEqualToString:KEY_DOCK_ACTIVE_BEHAVIOR_SET]){
             NSString	*activePreset = [plugin activePreset];
 
             if(activePreset && ([activePreset length] != 0)){

@@ -58,17 +58,17 @@
 {
 	NSString	*description = @"Unknown";
 	
-	if([eventID compare:CONTACT_STATUS_ONLINE_YES] == 0){
+	if([eventID isEqualToString:CONTACT_STATUS_ONLINE_YES]){
 		description = @"When %@ connects";
-	}else if([eventID compare:CONTACT_STATUS_ONLINE_NO] == 0){
+	}else if([eventID isEqualToString:CONTACT_STATUS_ONLINE_NO]){
 		description = @"When %@ disconnects";
-	}else if([eventID compare:CONTACT_STATUS_AWAY_YES] == 0){
+	}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_YES]){
 		description = @"When %@ goes away";
-	}else if([eventID compare:CONTACT_STATUS_AWAY_NO] == 0){
+	}else if([eventID isEqualToString:CONTACT_STATUS_AWAY_NO]){
 		description = @"When %@ returns from away";
-	}else if([eventID compare:CONTACT_STATUS_IDLE_YES] == 0){
+	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_YES]){
 		description = @"When %@ goes idle";
-	}else if([eventID compare:CONTACT_STATUS_IDLE_NO] == 0){
+	}else if([eventID isEqualToString:CONTACT_STATUS_IDLE_NO]){
 		description = @"When %@ returns from idle";
 	}
 	

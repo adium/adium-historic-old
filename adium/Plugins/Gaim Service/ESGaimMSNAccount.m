@@ -116,7 +116,7 @@ static BOOL didInitMSN = NO;
     //Now look at keys which only make sense while online
 	if([[self statusObjectForKey:@"Online"] boolValue]){
 
-		if([key compare:@"FullNameAttr"] == 0){
+		if([key isEqualToString:@"FullNameAttr"]){
 			if (GAIM_DEBUG) NSLog(@"Updating FullNameAttr to %@",[[self autoRefreshingOutgoingContentForStatusKey:key] string]);
 			[self _setFriendlyNameTo:[[self autoRefreshingOutgoingContentForStatusKey:key] string]];
 		}

@@ -173,7 +173,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	//Sort the scripts of any subgroups
 	enumerator = [sortArray objectEnumerator];
 	while(sortDict = [enumerator nextObject]){
-		if([(NSString *)[sortDict objectForKey:@"Type"] compare:@"Group"] == 0){
+		if([(NSString *)[sortDict objectForKey:@"Type"] isEqualToString:@"Group"]){
 			[self _sortScriptsByTitle:[sortDict objectForKey:@"Content"]];
 		}
 	}
@@ -193,7 +193,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 		NSString	*type = [appendDict objectForKey:@"Type"];
 		
 		//Get the item
-		if([type compare:@"Script"] == 0){
+		if([type isEqualToString:@"Script"]){
 			NSString	*title;
 			
 			if([appendDict objectForKey:@"Title"]){
@@ -211,7 +211,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 			if([item respondsToSelector:@selector(setIndentationLevel:)]) [item setIndentationLevel:level];
 			[menu addItem:item];
 			
-		}else if([type compare:@"Group"] == 0){
+		}else if([type isEqualToString:@"Group"]){
 			NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[appendDict objectForKey:@"Title"]
 															target:nil
 															action:nil

@@ -164,7 +164,7 @@ DeclareString(AppendNextMessage);
 //The plugin needs to know preferences which affect keyword filling
 - (void)preferencesChanged:(NSNotification *)notification
 {
-	if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] == 0){
+	if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]){
 		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		
 		//Release the old preference cache
@@ -307,7 +307,10 @@ DeclareString(AppendNextMessage);
     NSCalendarDate *currentDate = [[content date] dateWithCalendarFormat:nil 
                                                                 timeZone:nil];
 	// Should we merge consecutive messages?
-	if(previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source] && [currentDate timeIntervalSinceDate:previousDate] <= 300){
+	if((previousContent) &&
+	   ([[previousContent type] isEqualToString:[content type]]) && 
+	   ([content source] == [previousContent source]) &&
+	   ([currentDate timeIntervalSinceDate:previousDate] <= 300)){
 		contentIsSimilar = YES;
 	}
 	
@@ -363,14 +366,14 @@ DeclareString(AppendNextMessage);
 		}
 	}
 		
-	if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0 || [[content type] compare:CONTENT_CONTEXT_TYPE] == 0){
+	if([[content type] isEqualToString:CONTENT_MESSAGE_TYPE] || [[content type] isEqualToString:CONTENT_CONTEXT_TYPE]){
 		[self _addContentMessage:(AIContentMessage *)content 
 						   similar:contentIsSimilar
 						 toWebView:webView
 					 fromStylePath:stylePath
 				  allowingColors:allowColors];
 		
-	}else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
+	}else if([[content type] isEqualToString:CONTENT_STATUS_TYPE]){
 		[self _addContentStatus:(AIContentStatus *)content
 						  similar:contentIsSimilar
 						toWebView:webView

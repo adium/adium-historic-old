@@ -13,8 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /*
- * $Revision: 1.14 $
- * $Date: 2004/05/24 06:03:44 $
+ * $Revision: 1.15 $
+ * $Date: 2004/06/07 16:09:46 $
  * $Author: evands $
  */
 
@@ -175,8 +175,8 @@ static JMSQLLogViewerWindowController *sharedSQLViewerInstance = nil;
             contactEnumerator = [[groupDict objectForKey:@"Contents"] objectEnumerator];
             while((contactDict = [contactEnumerator nextObject])){
     
-                if([(NSString *)[contactDict objectForKey:@"UID"] compare:[contact UID]] == 0 &&
-                [(NSString *)[contactDict objectForKey:@"ServiceID"] compare:[contact serviceID]] == 0){
+                if([(NSString *)[contactDict objectForKey:@"UID"] isEqualToString:[contact UID]] &&
+                [(NSString *)[contactDict objectForKey:@"ServiceID"] isEqualToString:[contact serviceID]]){
                     
                     //Expand the containing group
                     [outlineView_contacts expandItem:groupDict];
@@ -361,11 +361,11 @@ static JMSQLLogViewerWindowController *sharedSQLViewerInstance = nil;
 
     //Resort the data
     identifier = [selectedColumn identifier];
-    if([identifier compare:@"To"] == 0 || [identifier compare:@"From"] == 0){
+    if([identifier isEqualToString:@"To"] || [identifier isEqualToString:@"From"]){
         [selectedLogArray sortUsingFunction:(sortDirection ? _sortStringWithKeyBackwards : _sortStringWithKey)
                                     context:identifier];
 
-    }else if([identifier compare:@"Date"] == 0){
+    }else if([identifier isEqualToString:@"Date"]){
         [selectedLogArray sortUsingFunction:(sortDirection ? _sortDateWithKeyBackwards : _sortDateWithKey)
                                     context:identifier];
 
@@ -523,13 +523,13 @@ static JMSQLLogViewerWindowController *sharedSQLViewerInstance = nil;
     NSString	*identifier = [tableColumn identifier];
     NSString	*value = nil;
     
-    if([identifier compare:@"To"] == 0){
+    if([identifier isEqualToString:@"To"]){
         value = [[selectedLogArray objectAtIndex:row] objectForKey:@"To"];
         
-    }else if([identifier compare:@"From"] == 0){
+    }else if([identifier isEqualToString:@"From"]){
         value = [[selectedLogArray objectAtIndex:row] objectForKey:@"From"];
 
-    }else if([identifier compare:@"Date"] == 0){
+    }else if([identifier isEqualToString:@"Date"]){
         value = [[[selectedLogArray objectAtIndex:row] objectForKey:@"Date"] descriptionWithCalendarFormat:@"%B %d, %Y"];
         
     }

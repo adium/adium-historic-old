@@ -119,7 +119,7 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
 //Called when the preferences change, update our preference display
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DOCK_BEHAVIOR] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DOCK_BEHAVIOR]){
 
         //Load the custom behavior
         [behaviorArray release];
@@ -219,7 +219,7 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
 {
     NSString	*identifier = [tableColumn identifier];
 
-    if([identifier compare:TABLE_COLUMN_EVENT] == 0){
+    if([identifier isEqualToString:TABLE_COLUMN_EVENT]){
         NSDictionary	*behaviorDict;
         NSString	*notification;
         NSDictionary	*eventDict;
@@ -246,7 +246,7 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
 {
     NSString	*identifier = [tableColumn identifier];
 
-    if([identifier compare:TABLE_COLUMN_BEHAVIOR] == 0){
+    if([identifier isEqualToString:TABLE_COLUMN_BEHAVIOR]){
         NSMenuItem			*selectedMenuItem;
         NSMutableDictionary	*selectedEventDict;
         NSNumber			*newBehavior;
@@ -261,7 +261,7 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
 				selectedEventDict = [[[behaviorArray objectAtIndex:row] mutableCopy] autorelease];
 				newBehavior = [selectedMenuItem representedObject];
 				
-				if([newBehavior compare:[selectedEventDict objectForKey:KEY_DOCK_EVENT_BEHAVIOR]] != 0){ //Ignore a duplicate selection
+				if([newBehavior compare:[selectedEventDict objectForKey:KEY_DOCK_EVENT_BEHAVIOR]] != NSOrderedSame){ //Ignore a duplicate selection
 																										 //Set the new behavior
 					[selectedEventDict setObject:newBehavior forKey:KEY_DOCK_EVENT_BEHAVIOR];
 					[behaviorArray replaceObjectAtIndex:row withObject:selectedEventDict];
@@ -279,7 +279,7 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
 {
     NSString	*identifier = [tableColumn identifier];
 
-    if([identifier compare:TABLE_COLUMN_BEHAVIOR] == 0){
+    if([identifier isEqualToString:TABLE_COLUMN_BEHAVIOR]){
         [cell selectItemWithRepresentedObject:[[behaviorArray objectAtIndex:row] objectForKey:KEY_DOCK_EVENT_BEHAVIOR]];
     }
 }

@@ -203,7 +203,7 @@
 //
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if (notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0) {
+    if (notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]) {
 		NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 		
         //Cache the window spawning preferences
@@ -247,7 +247,7 @@
 		}
 						
     } else if( contactListWindowController &&
-			   ([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST_DISPLAY] == 0) ){
+			   ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]) ){
 		
 		BOOL windowIsBorderless = [[contactListWindowController window] isBorderless];
 		BOOL borderlessPref = [[[adium preferenceController] preferenceForKey:KEY_SCL_BORDERLESS 

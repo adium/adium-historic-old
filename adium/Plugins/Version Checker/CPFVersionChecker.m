@@ -57,7 +57,7 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-	if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_UPDATING] == 0){
+	if([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_UPDATING]){
 		BOOL updateAutomatically = [[[adium preferenceController] preferenceForKey:KEY_CHECK_AUTOMATICALLY
 																			 group:PREF_GROUP_UPDATING] boolValue];
         if(updateAutomatically){

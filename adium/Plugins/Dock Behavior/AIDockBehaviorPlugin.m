@@ -69,7 +69,7 @@
 //Called when the preferences change, reregister for the notifications
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DOCK_BEHAVIOR] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DOCK_BEHAVIOR]){
         NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DOCK_BEHAVIOR];
         NSArray		*behaviorArray;
         NSString	*activeBehaviorSet;
@@ -145,7 +145,7 @@
     //Search for the desired set
     enumerator = [presetBehavior objectEnumerator];
     while((set = [enumerator nextObject])){
-        if([presetName compare:[set objectForKey:@"Name"]] == 0){
+        if([presetName isEqualToString:[set objectForKey:@"Name"]]){
             return([set objectForKey:@"Behavior"]);
         }
     }
