@@ -75,7 +75,7 @@
 }
 
 
-//Service Selection ----------------------------------------------------------------------------------------------------
+//Service And Account Name ---------------------------------------------------------------------------------------------
 #pragma mark Service Selection
 - (void)configureServiceSelection
 {
@@ -97,6 +97,7 @@
 
 	//Observe account list objects so we can enable/disable our service menu as necessary
     [[adium contactController] registerListObjectObserver:self];
+	
 }
 
 //Account status changed
@@ -105,7 +106,8 @@
     if(inObject == selectedAccount){
 		if([inModifiedKeys containsObject:@"Online"]){
 			[popupMenu_serviceList setEnabled:![[selectedAccount statusObjectForKey:@"Online"] boolValue]];
-		}
+			[textField_accountName setEnabled:![[selectedAccount statusObjectForKey:@"Online"] boolValue]];
+		}		
     }
     
     return(nil);
@@ -123,10 +125,22 @@
 - (IBAction)selectServiceType:(id)sender
 {
     id <AIServiceController>	service = [sender representedObject];
-    //Switch it
-//    [selectedAccount autorelease];
+	
+	//Switch account to the new service
     selectedAccount = [[[adium accountController] switchAccount:selectedAccount toService:service] retain];
 }
+
+- (void)controlTextDidChange:(NSNotification *)obj
+{
+	[selectedAccount changedUIDto:[textField_accountName stringValue]];
+}
+
+//User changed the account name
+- (IBAction)accountNameChanged:(id)sender
+{
+	[selectedAccount changedUIDto:[textField_accountName stringValue]];
+}
+
 
 
 //Account Options ------------------------------------------------------------------------------------------------------
@@ -134,7 +148,6 @@
 //Configure the account specific options
 - (void)configureAccountOptionsView
 {
-	NSLog(@"Configure!");
     NSEnumerator	*enumerator;
     NSTabViewItem	*tabViewItem;
     NSView			*accountView;
@@ -155,10 +168,22 @@
         [accountViewController release]; accountViewController = nil;
     }
 
-    //select the correct service in the service menu
+    //Select the correct service in the service menu
     [popupMenu_serviceList selectItemAtIndex:[popupMenu_serviceList indexOfItemWithRepresentedObject:[selectedAccount service]]];
 	[popupMenu_serviceList setEnabled:![[selectedAccount statusObjectForKey:@"Online"] boolValue]];
 
+	//Fill in the account name
+    NSString *accountName = [selectedAccount preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
+	[textField_accountName setStringValue:((accountName && [accountName length]) ? accountName : [selectedAccount UID])];
+	
+	//Restrict the account name field to valid characters and length
+	AIServiceType	*serviceType = [[selectedAccount service] handleServiceType];
+    [textField_accountName setFormatter:
+		[AIStringFormatter stringFormatterAllowingCharacters:[serviceType allowedCharacters]
+													  length:[serviceType allowedLength]
+											   caseSensitive:[serviceType caseSensitive]
+												errorMessage:@"The characters you're entering are not valid for an account name on this service."]];
+	
     //Configure the auto-connect button
     autoConnect = [[selectedAccount preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue];
     [button_autoConnect setState:autoConnect];
@@ -210,7 +235,6 @@
     }else{
         [tabView_auxiliary selectFirstTabViewItem:nil];
     }
-	NSLog(@"Done configuring...");
 }
 
 //User toggled the autoconnect preference
@@ -247,6 +271,7 @@
 								   selector:@selector(accountListChanged:) 
 									   name:Account_ListChanged 
 									 object:nil];
+	
 	[self accountListChanged:nil];
 }
 

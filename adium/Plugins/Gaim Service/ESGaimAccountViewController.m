@@ -29,9 +29,6 @@
 		//Add all auxiliary tabs
         [self loadAuxiliaryTabsFromTabView:view_auxiliaryGaimAccountTabView];
     }
-	
-    //Put focus on the account name
-    [[[view_accountView superview] window] setInitialFirstResponder:textField_accountName];	
 }
 
 //No auxiliary tabs by default

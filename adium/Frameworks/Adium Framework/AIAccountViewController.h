@@ -23,9 +23,8 @@
     
     IBOutlet		NSView			*view_accountView;              //Inline account preferences
 	IBOutlet		NSView			*view_auxiliaryAccountDetails;
-    IBOutlet		NSTextField		*textField_accountName;		//Account name
-    IBOutlet		NSTextField		*textField_password;		//Password
-    IBOutlet		NSTabView		*view_auxiliaryTabView;		//Tab view containing auxiliary tabs
+    IBOutlet		NSTextField		*textField_password;			//Password
+    IBOutlet		NSTabView		*view_auxiliaryTabView;			//Tab view containing auxiliary tabs
     
 }
 
@@ -33,9 +32,9 @@
 - (id)initForAccount:(id)inAccount;
 - (NSView *)view;
 - (void)configureViewAfterLoad;
-- (IBAction)accountNameChanged:(id)sender;
 - (IBAction)changedPreference:(id)sender;
 - (void)loadAuxiliaryTabsFromTabView:(NSTabView *)inTabView;
 - (NSString *)nibName;
 - (NSView *)auxiliaryAccountDetails;
+
 @end

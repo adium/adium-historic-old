@@ -19,6 +19,7 @@
     IBOutlet		NSView						*view_accountPreferences;
     IBOutlet		AIAlternatingRowTableView   *tableView_accountList;
     IBOutlet		AIAutoScrollView			*scrollView_accountList;
+	IBOutlet		NSTextField					*textField_accountName;		//Account name
     IBOutlet		NSButton					*button_newAccount;
     IBOutlet		NSButton					*button_deleteAccount;
     IBOutlet		NSPopUpButton				*popupMenu_serviceList;
@@ -27,7 +28,7 @@
     IBOutlet		NSTabView					*tabView_auxiliary;
     NSMutableDictionary							*toolbarItems;
     
-    AIAccount                                                   *selectedAccount;
+    AIAccount						*selectedAccount;
     id <AIAccountViewController>	accountViewController;
     
     NSArray							*serviceArray;
@@ -43,5 +44,6 @@
 - (IBAction)newAccount:(id)sender;
 - (IBAction)selectServiceType:(id)sender;
 - (IBAction)toggleAutoConnect:(id)sender;
+- (IBAction)accountNameChanged:(id)sender;
 
 @end
