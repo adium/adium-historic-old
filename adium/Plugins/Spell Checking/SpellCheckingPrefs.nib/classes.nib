@@ -2,12 +2,25 @@
     IBClasses = (
         {
             ACTIONS = {changePreference = id; }; 
-            CLASS = AISpellCheckingPreferences; 
+            CLASS = AIPreferencePane; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"checkBox_spellChecking" = NSButton; "view_prefView" = NSView; }; 
+            OUTLETS = {
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                view = NSView; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
+            }; 
             SUPERCLASS = NSObject; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {
+            CLASS = AISpellCheckingPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"checkBox_spellChecking" = NSButton; }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }
