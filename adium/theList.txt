@@ -38,6 +38,7 @@ Accounts:
 	+ Allow user to cancel connecting of accounts
 	- Remove account
 	+ Auto-complete aliases in log viewer
+    	+ Add account specific proxy fields (Type, host, port) for all libgaim connections
 	
 WebKit Message View:
 	+ Add preference to switch active style, preview styles
@@ -112,7 +113,7 @@ Contact list display:
 	+ User can choose whether icons are on left or right.  Status Badge always goes on opposite side
 	+ If icons are visible, extended status is displayed below user name, otherwise displayed next to user name
 
-    Status badges:
+Status badges:
 	- Remove status icons plugin
 	+ Add images based status badges to the contact list
 	+ Allow user to select icon sets (packaged in a bundle) in preferences
@@ -120,10 +121,10 @@ Contact list display:
 
 
 Event Info (Implement as a new plugin, to replace bezel):
-    Notify the user of status changes for specific contacts with a small, very visible, easy to position, non intrusive
-    floating 'bezel'
+    	Notify the user of status changes for specific contacts with a small, very visible, easy to position, non intrusive
+    	floating 'bezel'
 
-    Details:
+    	Details:
 	+ Give the notification window a titlebar, and allow it to be repositioned while visible.
 	+ Stack bezels when multiple events arrive
 	+ Color the entire bezel to match the event being displayed
@@ -132,28 +133,28 @@ Event Info (Implement as a new plugin, to replace bezel):
 
 
 Contact Blocking:
-    Allow the user to easily block/unblock users by name, or users on their list.  Provide a way for them to see
-    all blocked names and add/remove from the list.  Ignore the AIM specific block 'modes'.
+    	Allow the user to easily block/unblock users by name, or users on their list.  Provide a way for them to see
+    	all blocked names and add/remove from the list.  Ignore the AIM specific block 'modes'.
 
-    Steps:
+    	Steps:
 	+ Add block and unblock menu items which prompt for the service and name
 	+ Add block / unblock contextual menu items
 	+ Add "Block contacts not on my list" to AIM account preferences
 
 
 Contact Inspector:
-    Provide a contact inspector with a lot of room to grow, that is easy to use, organized, and lets the user
-    manage all their contact specific settigns in one place
+    	Provide a contact inspector with a lot of room to grow, that is easy to use, organized, and lets the user
+    	manage all their contact specific settigns in one place
 
-    Steps:
-    + Convert inspector to preference-like window with a toolbar of categories
-    + Update existing inspector views to use big controls, and place them in the inspector categories
-    + Move contact info into a category in the inspector
+    	Steps:
+    	+ Convert inspector to preference-like window with a toolbar of categories
+    	+ Update existing inspector views to use big controls, and place them in the inspector categories
+    	+ Move contact info into a category in the inspector
 
 
 Account / Connect panel[Adam]:
-    [Adam]Provide a simple interface for users first running Adium, and a convenient way for users to create a new guest
-    connection, or to make their own connections on launch.
+    	[Adam]Provide a simple interface for users first running Adium, and a convenient way for users to create a new guest
+    	connection, or to make their own connections on launch.
 
 
 -------------------------------------------------------------------------------------------------------
