@@ -9,4 +9,5 @@
 - (BOOL)isOnPantherOrBetter;
 - (BOOL)isOnJaguarOrBetter;
 - (BOOL)isWebKitAvailable;
+- (BOOL)isURLLoadingAvailable;
 @end
