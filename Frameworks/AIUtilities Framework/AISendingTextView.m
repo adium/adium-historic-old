@@ -24,12 +24,32 @@
 //order with the text, and the problem is illiminated.
 //
 
+@interface AISendingTextView (PRIVATE)
+- (void)_initSendingTextView;
+@end
+
 @implementation AISendingTextView
 //Init the text view
 - (id)initWithFrame:(NSRect)frameRect
 {
-    [super initWithFrame:frameRect];
+    self = [super initWithFrame:frameRect];
 
+	[self _initSendingTextView];
+	
+	return(self);
+}
+
+- (id)initWithCoder:(NSCoder *)coder
+{
+	self = [super initWithCoder:coder];
+	
+	[self _initSendingTextView];
+	
+	return(self);
+}
+
+- (void)_initSendingTextView
+{
     returnArray = [[NSMutableArray alloc] init];
     sendOnReturn = YES;
 	nextIsReturn = NO;
@@ -39,8 +59,6 @@
     target = nil;
     selector = nil;
     sendingEnabled = YES;
-
-    return(self);
 }
 
 - (void)dealloc
