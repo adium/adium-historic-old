@@ -14,7 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#define	BETA_RELEASE FALSE
+#import <Cocoa/Cocoa.h>
+
+#define	BETA_RELEASE TRUE
 
 @class  AISortController, AILoginController, AIAccountController, AIInterfaceController, AIContactController, 
 		AICorePluginLoader, AIPreferenceController, AIMenuController, AILoginWindowController,
