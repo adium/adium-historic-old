@@ -71,11 +71,15 @@
         NSString	*alias = [textField_alias stringValue];
         if([alias length] == 0) alias = nil; 
         
-        //Apply
-//        [self _applyAlias:alias toObject:activeListObject notify:YES];
-        
         //Save the alias
         [listObject setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];
+		
+#warning There must be a cleaner way to do this alias stuff!  This works for now :)
+		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+												  object:listObject
+												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+																					 forKey:@"Notify"]];
+		
     }
 }
 
