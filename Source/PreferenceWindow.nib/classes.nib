@@ -23,6 +23,7 @@
                 "view_ContactList" = AIModularPaneCategoryView; 
                 "view_Dock" = AIModularPaneCategoryView; 
                 "view_Emoticons" = AIModularPaneCategoryView; 
+                "view_Events" = AIModularPaneCategoryView; 
                 "view_FileTransfer" = AIModularPaneCategoryView; 
                 "view_Keys" = AIModularPaneCategoryView; 
                 "view_Messages" = AIModularPaneCategoryView; 

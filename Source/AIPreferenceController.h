@@ -38,7 +38,8 @@ typedef enum {
     AIPref_Advanced_Status,
     AIPref_Advanced_Service,
     AIPref_Advanced_Other,
-	AIPref_FileTransfer
+	AIPref_FileTransfer,
+	AIPref_Events
 } PREFERENCE_CATEGORY;
 
 @class AIPreferencePane, AIAdium;
