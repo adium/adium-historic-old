@@ -487,6 +487,14 @@ static BOOL didInitSSL = NO;
 
 - (void)renameGroup:(AIListGroup *)inGroup to:(NSString *)newName
 {
+	[gaimThread makeAccount:self 
+			performSelector:@selector(performRenameGroup:to:)
+				 withObject:inGroup
+				 withObject:newName];
+}
+
+- (void)performRenameGroup:(AIListGroup *)inGroup to:(NSString *)newName
+{
     GaimGroup *group = gaim_find_group([[self _mapOutgoingGroupName:[inGroup UID]] UTF8String]);
 	
 	//If we don't have a group with this name, just ignore the rename request
