@@ -21,7 +21,7 @@
 #define		ACCOUNT_EDIT_SHEET_NIB		@"AccountPrefEditSheet"
 
 @interface AIAccountListEditSheetController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount owner:(id)inOwner;
+- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount owner:(id)inOwner deleteOnCancel:(BOOL)delo;
 - (void)windowDidLoad;
 - (BOOL)shouldCascadeWindows;
 - (BOOL)windowShouldClose:(id)sender;
@@ -32,9 +32,9 @@
 
 @implementation AIAccountListEditSheetController
 
-+ (void)showAccountListEditSheetForAccount:(AIAccount *)inAccount onWindow:(NSWindow *)inWindow owner:(id)inOwner
++ (void)showAccountListEditSheetForAccount:(AIAccount *)inAccount onWindow:(NSWindow *)inWindow owner:(id)inOwner deleteOnCancel:(BOOL)delo
 {
-    AIAccountListEditSheetController	*controller = [[self alloc] initWithWindowNibName:ACCOUNT_EDIT_SHEET_NIB forAccount:inAccount owner:inOwner];
+    AIAccountListEditSheetController	*controller = [[self alloc] initWithWindowNibName:ACCOUNT_EDIT_SHEET_NIB forAccount:inAccount owner:inOwner deleteOnCancel:delo];
 
     [NSApp beginSheet:[controller window] modalForWindow:inWindow modalDelegate:controller didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:) contextInfo:nil];
 }
@@ -82,20 +82,31 @@
 // closes this window
 - (IBAction)closeWindow:(id)sender
 {
-    if([self windowShouldClose:nil]){
-        [[self window] close];
+    if(!del)
+    {
+        if([self windowShouldClose:nil])
+        {
+            [[self window] close];
+        }
+    }
+    else
+    {
+        if([self windowShouldClose:nil]) //this SHOULD delete the account instead. Doesn't currently
+        {
+            [[self window] close];
+        }
     }
 }
 
 
 // Private ------------------------------------------------------------------------------------
-- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount owner:(id)inOwner deleteOnCancel:(BOOL)delo;
 {
     [super initWithWindowNibName:windowNibName];
 
     owner = [inOwner retain];
     account = [inAccount retain];
-
+    del = delo;
     //observe
     [[[owner accountController] accountNotificationCenter] addObserver:self selector:@selector(configureStandardOptions) name:Account_PropertiesChanged object:nil];
 
@@ -108,7 +119,6 @@
     [account release];
     [owner release];
     [accountViewController release];
-
     [super dealloc];
 }
 
