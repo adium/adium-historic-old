@@ -37,9 +37,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 	
 	menuItem_invite = [[[NSMenuItem alloc] initWithTitle:MENU_TICTACTOE_INVITE target:control action:@selector(newGame:) keyEquivalent:@""] autorelease];
 	[[adium menuController] addContextualMenuItem:menuItem_invite toLocation:Context_Contact_Manage];
-	
-	menuItem_resetTTT = [[[NSMenuItem alloc] initWithTitle:MENU_TICTACTOE_RESET target:self action:@selector(resetTTT:) keyEquivalent:@""] autorelease];
-	[[adium menuController] addMenuItem:menuItem_resetTTT toLocation:LOC_File_Additions];
 }
 
 - (void)uninstallPlugin
@@ -49,11 +46,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 - (void)showBoard: (id)sender
 {
 	[NEHTicTacToeController showBoard];
-}
-
-- (void)resetTTT: (id)sender
-{
-	[[NEHTicTacToeController install] reset];
 }
 
 @end
