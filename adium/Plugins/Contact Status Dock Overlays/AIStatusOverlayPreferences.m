@@ -42,14 +42,51 @@
     preferenceViewController = [AIPreferenceViewController controllerWithName:STATUS_OVERLAY_PREF_TITLE categoryName:PREFERENCE_CATEGORY_DOCK view:view_prefView];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
 
-    //Observer preference changes
-//    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-
-    //Configure the view and load our preferences
-//    [self configureView];
-//    [self preferencesChanged:nil];
+    //Configure the view
+    preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_DOCK_OVERLAYS] retain];
+    [self configureView];
 
     return(self);
 }
+
+//Configures our view for the current preferences
+- (void)configureView
+{
+    [checkBox_showStatusOverlays setState:[[preferenceDict objectForKey:KEY_DOCK_SHOW_STATUS] boolValue]];
+    [checkBox_showContentOverlays setState:[[preferenceDict objectForKey:KEY_DOCK_SHOW_CONTENT] boolValue]];
+
+    [radioButton_topOfIcon setState:[[preferenceDict objectForKey:KEY_DOCK_OVERLAY_POSITION] boolValue]];
+    [radioButton_bottomOfIcon setState:![[preferenceDict objectForKey:KEY_DOCK_OVERLAY_POSITION] boolValue]];
+}
+
+//Called in response to all preference controls, applies new settings
+- (IBAction)changePreference:(id)sender
+{
+    if(sender == checkBox_showStatusOverlays){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_DOCK_SHOW_STATUS
+                                              group:PREF_GROUP_DOCK_OVERLAYS];
+        
+    }else if(sender == checkBox_showContentOverlays){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_DOCK_SHOW_CONTENT
+                                              group:PREF_GROUP_DOCK_OVERLAYS];
+
+    }else if(sender == radioButton_topOfIcon){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:YES]
+                                             forKey:KEY_DOCK_OVERLAY_POSITION
+                                              group:PREF_GROUP_DOCK_OVERLAYS];
+        [radioButton_bottomOfIcon setState:NSOffState];
+        
+    }else if(sender == radioButton_bottomOfIcon){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:NO]
+                                             forKey:KEY_DOCK_OVERLAY_POSITION
+                                              group:PREF_GROUP_DOCK_OVERLAYS];
+        [radioButton_topOfIcon setState:NSOffState];
+
+    }
+
+}
+
 
 @end
