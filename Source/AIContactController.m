@@ -700,15 +700,17 @@ DeclareString(UID);
 	
 	AIListObject *localGroup = [listObject containingObject];
 
+	//Remove the object from its previous containing group
+	if (localGroup && (localGroup != metaContact)){
+		[localGroup removeObject:listObject];
+		[self _listChangedGroup:localGroup object:listObject];
+	}
+	
 	//AIMetaContact will handle reassigning the list object's grouping to being itself
 	if (success = [metaContact addObject:listObject]){
 		[contactToMetaContactLookupDict setObject:metaContact forKey:[listObject internalObjectID]];
-		
-		//Remove the object from its previous containing group
-		if (localGroup){
-			[(AIMetaContact *)localGroup removeObject:listObject];
-			[self _listChangedGroup:localGroup object:listObject];
-		}
+
+		[self _listChangedGroup:metaContact object:listObject];
 		
 		//Update the meta contact's attributes
 		[self _updateAllAttributesOfObject:metaContact];
@@ -1757,6 +1759,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 				while(metaObject = [metaEnumerator nextObject]){
 					[self _moveObject:metaObject toGroup:(AIListGroup *)group];
 				}
+				
+				//Move the metaContact itself
+				[listContact setContainedObject:group];
+				
 			}else if([listContact isKindOfClass:[AIListContact class]]){
 				//Move the object 
 				[self _moveObject:listContact toGroup:(AIListGroup *)group];
