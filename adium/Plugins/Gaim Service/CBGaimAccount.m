@@ -115,30 +115,19 @@
                 setObject:[NSNumber numberWithInt:online] 
                 forKey:@"Online"];
             [modifiedKeys addObject:@"Online"];
-            
+ /*           
+                 //This doesn't work - buddy->signon is always 0.  not sure why.
+            NSLog(@"%i",buddy->signon);
             if (online && buddy->signon != 0) {
             //Set the signon time
-                NSLog(@"%i",buddy->signon);
+                NSLog(@"%i resolves to %@",buddy->signon,[[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->signon] description]);
                 NSMutableDictionary * statusDict = [theHandle statusDictionary];
                 
-                [statusDict
-                    setObject:[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->signon]
-                       forKey:@"Signon Date"];
+                [statusDict setObject:[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->signon] forKey:@"Signon Date"];
+                [modifiedKeys addObject:@"Signon Date"];
             }
+*/
         }
-        
-        
-    /*   //This doesn't work - buddy->signon is always 0.  not sure why.
-        if (online && ((time_t)(buddy->signon) != 0)) {
-                    NSLog(@"%i",(time_t)(buddy->signon));
-            //Set the signon time
-            NSMutableDictionary * statusDict = [theHandle statusDictionary];
-            
-            [statusDict
-                    setObject:[NSDate dateWithTimeIntervalSince1970:(time_t)(buddy->signon)]
-                       forKey:@"Signon Date"];
-        }
-    */
         
         //snag the correct alias, and the current display name
         char *alias = (char *)gaim_get_buddy_alias(buddy);
