@@ -53,11 +53,6 @@
 								   selector:@selector(preferencesChanged:)
 									   name:Preference_GroupChanged 
 									 object:nil];
-
-    //prefs = [[AIAliasSupportPreferences displayFormatPreferences] retain];
-
-    //load the formatting pref
-    //displayFormat = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_DISPLAYFORMAT] objectForKey:@"Long Display Format"] intValue];
     
     //Install the contact info view
     [NSBundle loadNibNamed:CONTACT_ALIAS_NIB owner:self];
