@@ -363,29 +363,34 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 //Filter messages for keywords to replace
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
-	NSString					*stringMessage = [inAttributedString string];
     NSMutableAttributedString   *filteredMessage = nil;
-	NSEnumerator				*enumerator;
-	NSDictionary				*infoDict;
+	NSString					*stringMessage;
 
-	//Replace all keywords
-	enumerator = [flatScriptArray objectEnumerator];
-	while(infoDict = [enumerator nextObject]){
-		NSString	*keyword = [infoDict objectForKey:@"Keyword"];
-		BOOL		prefixOnly = [[infoDict objectForKey:@"PrefixOnly"] boolValue];
+	if (stringMessage = [inAttributedString string]){
+		NSEnumerator				*enumerator;
+		NSDictionary				*infoDict;
 		
-		if((prefixOnly && ([stringMessage compare:keyword options:(NSCaseInsensitiveSearch | NSAnchoredSearch)] == NSOrderedSame)) ||
-		   (!prefixOnly && [stringMessage rangeOfString:keyword options:NSCaseInsensitiveSearch].location != NSNotFound)){
-						
-			if(!filteredMessage) filteredMessage = [[inAttributedString mutableCopy] autorelease];
-			[self _replaceKeyword:keyword withScript:infoDict inString:stringMessage inAttributedString:filteredMessage];
-			stringMessage = [filteredMessage string]; //Update our plain text string, since it most likely changed
-			
-			NSNumber	*shouldSendNumber = [infoDict objectForKey:@"ShouldSend"];
-			if ((shouldSendNumber) &&
-				(![shouldSendNumber boolValue]) &&
-				([context isKindOfClass:[AIContentObject class]])){
+		//Replace all keywords
+		enumerator = [flatScriptArray objectEnumerator];
+		while(infoDict = [enumerator nextObject]){
+			NSString	*keyword = [infoDict objectForKey:@"Keyword"];
+			BOOL		prefixOnly = [[infoDict objectForKey:@"PrefixOnly"] boolValue];
+
+			if((prefixOnly && ([stringMessage rangeOfString:keyword options:(NSCaseInsensitiveSearch | NSAnchoredSearch)].location == 0)) ||
+			   (!prefixOnly && [stringMessage rangeOfString:keyword options:NSCaseInsensitiveSearch].location != NSNotFound)){
+
+				NSNumber	*shouldSendNumber;
+				
+				if(!filteredMessage) filteredMessage = [[inAttributedString mutableCopy] autorelease];
+				[self _replaceKeyword:keyword withScript:infoDict inString:stringMessage inAttributedString:filteredMessage];
+				stringMessage = [filteredMessage string]; //Update our plain text string, since it most likely changed
+				
+				shouldSendNumber = [infoDict objectForKey:@"ShouldSend"];
+				if ((shouldSendNumber) &&
+					(![shouldSendNumber boolValue]) &&
+					([context isKindOfClass:[AIContentObject class]])){
 					[(AIContentObject *)context setSendContent:NO];
+				}
 			}
 		}
 	}
@@ -412,7 +417,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 				
 				//Scan arguments
 				keywordStart = [scanner scanLocation] - [keyword length];
-				if([scanner scanString:@"{" intoString:nil]){				
+				if([scanner scanString:@"{" intoString:nil]){
 					if([scanner scanUpToString:@"}" intoString:&argString]){
 						argArray = [self _argumentsFromString:argString forScript:infoDict];
 						[scanner scanString:@"}" intoString:nil];
