@@ -5553,6 +5553,7 @@
 				6C15E63106DF3BB600E5A50E,
 				345DFF4A05564DB200CEE7B3,
 				4B030E52056C2D7E00C765F9,
+				4B5325B70747FADD0073DF4D,
 			);
 			buildRules = (
 			);
@@ -11515,6 +11516,19 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		4B5325B70747FADD0073DF4D = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			isa = PBXShellScriptBuildPhase;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Create symlinks to the iChat emoticons\n#\ncd \"$SYMROOT/Adium.app/Contents/Resources/Emoticons/iChat.AdiumEmoticonset/\"\necho `cd`\n\necho \"Symlinking iChat emoticons...\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/angry.tiff\" \"angry.tiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/cool.tiff\" \"cool.tiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/cry.tiff\" \"cry.tiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/embarrassed.tiff\" \"embarrassed.tiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/footinmouth.tiff\" \"footinmouth.tiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/frown.tiff\" \"frown.tiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/gasp.tiff\" \"gasp.tiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/innocent.tiff\" \"innocent.tiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/kiss.tiff\" \"kiss.tiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/laugh.tiff\" \"laugh.tiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/moneymouth.tiff\" \"moneymouth.tiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/sealed.tiff\" \"sealed.tiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/slant.tiff\" \"slant.tiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/smile.tiff\" \"smile.tiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/wink.tiff\" \"wink.tiff\"\nln -fns \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/yuck.tiff\" \"yuck.tiff\"\necho \"Done\"";
 		};
 		4B539C4B05EFD6CD00E5921A = {
 			fileEncoding = 4;
