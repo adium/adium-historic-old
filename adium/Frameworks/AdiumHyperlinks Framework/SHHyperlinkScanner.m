@@ -57,16 +57,21 @@
     if(validStatus == SH_URL_VALID || validStatus == SH_MAILTO_VALID || validStatus == SH_FILE_VALID){
         SH_delete_buffer(buf);
         buf = NULL;
-        return YES;
+        if(SHleng == [inString length]){
+            return YES;
+        }
     }else if((validStatus == SH_URL_DEGENERATE || validStatus == SH_MAILTO_DEGENERATE) && !useStrictChecking){
         SH_delete_buffer(buf);
         buf = NULL;
-        return YES;
+        if(SHleng == [inString length]){
+            return YES;
+        }
     }else{
         SH_delete_buffer(buf);
         buf = NULL;
         return NO;
     }
+    return NO;
 }
 
 -(SHMarkedHyperlink *)nextURLFromString:(NSString *)inString
