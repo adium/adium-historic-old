@@ -343,7 +343,8 @@ int HTMLEquivalentForFontSize(int fontSize)
                 if(validTag){ 
                     //HTML
                     if([chunkString caseInsensitiveCompare:@"HTML"] == 0){
-                        //ignore
+						//We ignore stuff inside the HTML tag, but don't want to see the end of it
+                        [scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
                     }else if([chunkString caseInsensitiveCompare:@"/HTML"] == 0){
                         //ignore
 
@@ -453,6 +454,22 @@ int HTMLEquivalentForFontSize(int fontSize)
                     }else if([chunkString caseInsensitiveCompare:@"/U"] == 0){
                         [textAttributes setUnderline:NO];
 
+						/*
+						//Underline
+                    }else if([chunkString caseInsensitiveCompare:@"U"] == 0){
+						[textAttributes disableTrait:NSNoUnderlineStyle];
+						[textAttributes enableTrait:NSSingleUnderlineStyle];
+                    }else if([chunkString caseInsensitiveCompare:@"/U"] == 0){
+						[textAttributes disableTrait:NSNoUnderlineStyle];
+						[textAttributes enableTrait:NSSingleUnderlineStyle];
+						
+					}else  if([chunkString caseInsensitiveCompare:@"S"] == 0){
+                        [textAttributes setUnderline:YES];
+                    }else if([chunkString caseInsensitiveCompare:@"/S"] == 0){
+                        [textAttributes setUnderline:NO];
+						NSUnderlineStrikethroughMask
+							*/
+						
                     //Image
                     }else if([chunkString caseInsensitiveCompare:@"IMG"] == 0){
                         if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
