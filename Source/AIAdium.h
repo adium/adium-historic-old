@@ -30,6 +30,7 @@
 #import "AIToolbarController.h"
 #import "BZActivityWindowController.h"
 #import "ESApplescriptabilityController.h"
+#import "ESDebugController.h"
 
 @class  AISortController, AILoginController, AIAccountController, AIInterfaceController, AIContactController, 
 		AIPluginController, AIPreferenceController, AIPreferencePane, AIMenuController, AILoginWindowController,
@@ -55,6 +56,8 @@
     IBOutlet    ESFileTransferController                        *fileTransferController;
     IBOutlet    ESContactAlertsController                       *contactAlertsController;
     IBOutlet	ESApplescriptabilityController                  *applescriptabilityController;
+	IBOutlet	ESDebugController				*debugController;
+	
 //    IBOutlet    BZActivityWindowController  *activityWindowController;
     
     NSNotificationCenter                    *notificationCenter;
@@ -82,6 +85,7 @@
 - (AIDockController *)dockController;
 - (ESFileTransferController *)fileTransferController;
 - (ESContactAlertsController *)contactAlertsController;
+- (ESDebugController *)debugController;
 //- (BZActivityWindowController *)activityWindowController;
 
 - (NSNotificationCenter *)notificationCenter;
@@ -128,6 +132,13 @@
 //Localization
 #define AILocalizedString(key, comment) NSLocalizedStringFromTableInBundle(key,nil,[NSBundle bundleForClass: [self class]],comment)
 #define AILocalizedStringFromTable(key, table, comment) NSLocalizedStringFromTableInBundle(key,table,[NSBundle bundleForClass: [self class]],comment)
+
+//Debugging
+#ifdef DEBUG_BUILD
+#define	AILog(fmt, ...) [[[AIObject sharedAdiumInstance] debugController] adiumDebug:fmt, ## __VA_ARGS__]
+#else
+#define AILog(fmt, ...) //
+#endif
 
 //Static strings
 #define DeclareString(var)			static NSString * (var) = nil;

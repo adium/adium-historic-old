@@ -118,6 +118,9 @@
 - (ESApplescriptabilityController *)applescriptabilityController{
 	return(applescriptabilityController);
 }
+- (ESDebugController *)debugController{
+	return(debugController);
+}
 //- (BZActivityWindowController *)activityWindowController {
 //	return activityWindowController;
 //}
