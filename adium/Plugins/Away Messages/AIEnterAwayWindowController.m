@@ -81,14 +81,23 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 {
     NSString * title = [[[popUp_title selectedItem] representedObject] objectForKey:@"Title"];
     NSString * message = [[textView_awayMessage textStorage] string];
-    [textField_title setStringValue:(loaded_message ? title : message)];
+    if(loaded_message) {
+        [textField_title setStringValue:title];
+    } else {
+        [textField_title setStringValue:message];
+    }
+    
     [NSApp beginSheet:savePanel modalForWindow:[self window] modalDelegate:self didEndSelector:@selector(saveSheetClosed:returnCode:contextInfo:) contextInfo:nil];
 }
 
 - (IBAction)endSheet:(id)sender
 {
+    int retCode = 0;
+    if(sender != savePanel_cancelButton) {
+        retCode = 1;
+    }
     [savePanel orderOut:nil];
-    [NSApp endSheet:savePanel returnCode:([[sender title] isEqualToString:@"Cancel"] ? 0 : 1 )];
+    [NSApp endSheet:savePanel returnCode:retCode];
 }
 
 - (void)saveSheetClosed:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void  *)contextInfo
