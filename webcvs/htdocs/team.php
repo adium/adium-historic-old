@@ -101,7 +101,9 @@
                         <img class="teamAvatar" width="64" height="64" border="0" src="images/avatars/avatar_Adam Iser.png" alt="avatar" />
                         <span class="teamData">Email:</span><a href="mailto:adamiser@adiumx.com">adamiser@adiumx.com</a><br />
                         <span class="teamData">AIM:</span>resImadA<br />
-                        <span class="teamData">MSN:</span>adamiser@mac.com
+                        <span class="teamData">Jabber:</span>adamiser@jabber.org<br />
+                        <span class="teamData">MSN:</span>adamiser@mac.com<br />
+                        <span class="teamData">Yahoo:</span>resimada
                     </div>
                     <div class="teamMember">
                         <h2>Evan Schoenberg</h2>
