@@ -1,24 +1,24 @@
 /*-------------------------------------------------------------------------------------------------------*\
 | Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
-                                              \---------------------------------------------------------------------------------------------------------/
-                                              | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
-                                              | General Public License as published by the Free Software Foundation; either version 2 of the License,
-                                              | or (at your option) any later version.
-                                              |
-                                              | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
-                                              | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
-                                              | Public License for more details.
-                                              |
-                                              | You should have received a copy of the GNU General Public License along with this program; if not,
-                                              | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-                                              \------------------------------------------------------------------------------------------------------ */
+\---------------------------------------------------------------------------------------------------------/
+| This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+| General Public License as published by the Free Software Foundation; either version 2 of the License,
+| or (at your option) any later version.
+|
+| This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+| the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+| Public License for more details.
+|
+| You should have received a copy of the GNU General Public License along with this program; if not,
+| write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+\------------------------------------------------------------------------------------------------------ */
 
+#import <Adium/Adium.h>
+#import <AIUtilities/AIUtilities.h>
 #import "AICustomTabsView.h"
 #import "AICustomTabCell.h"
 #import "AIImageUtilities.h"
 #import "AIViewAdditions.h"
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
 #import "AIMessageWindowController.h"
 #import "AIMessageViewController.h"
 #import "AIMessageTabViewItem.h"
@@ -40,14 +40,16 @@
 - (void)insertDraggedTabAtIndex:(int)index overridingSelectionIfAppropriate:(BOOL)doNotSelect;
 @end
 
-#define TAB_DRAG_DISTANCE 	4               //Distance required before a drag kicks in
+#define TAB_DRAG_DISTANCE 	3               //Distance required before a drag kicks in
 #define TAB_CELL_IDENTIFIER     @"Tab Cell Identifier"
 
 #define CUSTOM_TABS_FPS		30.0		//Animation speed
 #define CUSTOM_TABS_OVERLAP	2		//Overlapped pixels between tabs
 #define CUSTOM_TABS_INDENT	3
-
-static  AICustomTabCell	*dragTabCell;
+#define SNAP_TO_TABBAR_PIXELS   5.0
+//objects shared by all instances of AICustomTabsView
+static  AICustomTabCell         *dragTabCell;
+static  AICustomTabsView        *activeTabBar;
 
 @implementation AICustomTabsView
 
@@ -468,18 +470,17 @@ static  AICustomTabCell	*dragTabCell;
 	} else if ([type isEqualToString:TAB_CELL_IDENTIFIER]) { //got a tab
             hoverSize = [[sender draggedImage] size]; //want to know how much space to allow for the hover
 	    [self setFocusedForDrag:YES];
-//            if (![tabCellArray containsObject:dragTabCell] ) {  //did not find the tab in our array
-//                operation = NSDragOperationCopy;
-//            } else {
-                operation = NSDragOperationPrivate;
-//            }
+            
+             //we're on a tab bar, so update the activeTabBar needed for snapping-to
+            activeTabBar = self;
+            
+            operation = NSDragOperationPrivate;
 	}
     }
     
     //pass along to the windowController, as well
     if ([[[self window] windowController] respondsToSelector:@selector(draggingEntered:)]){
         [[[self window] windowController] draggingEntered:sender];
-//        operation = NSDragOperationCopy;
     }
     
     return(operation);
@@ -505,44 +506,7 @@ static  AICustomTabCell	*dragTabCell;
 	    }
 	    
 	} else if ([type isEqualToString:TAB_CELL_IDENTIFIER]) { //got a tab
-	    NSEnumerator 	*enumerator = [tabCellArray objectEnumerator];
-	    AICustomTabCell	*tabCell;
-	    int			dragXLocation = [sender draggingLocation].x - [self frame].origin.x;
-	    int			lastLocation = 0;
-	    int			index = -1;
-            int                 foundIndex = -1;
-            
-	    //Figure out where the user is hovering the tabcell item
-	    while((tabCell = [enumerator nextObject])){
-                if (tabCell != dragTabCell) { //don't want to look at the cell we're dragging
-		NSRect	 frame = [tabCell frame];
-                index++;
-                if((dragXLocation > lastLocation) && (dragXLocation < frame.origin.x + (frame.size.width / 2.0) ) ){
-                    foundIndex = index;
-		    break;
-		}
-		lastLocation = frame.origin.x;
-                }
-	    }
-	    //If they're off to the right, the index is one past the last index - that is, the count
-	    if(foundIndex == -1 && dragXLocation > lastLocation) foundIndex = [tabCellArray count];
-
-	    //Set the new drag index if it's not already set
-	    if(hoverIndex != foundIndex){
-		hoverIndex = foundIndex;
-		if(!viewsRearranging){
-		    [self smoothlyArrangeCells];
-		}
-	    }
-
-	    if(foundIndex != -1){ //OperationPrivate if finding an index was sucessful
-
-//                if (![tabCellArray containsObject:dragTabCell] ) {  //did not find the tab in our array
-//                    operation = NSDragOperationCopy;
-//                } else {
-                    operation = NSDragOperationPrivate;
-//                }
-            }
+            operation = NSDragOperationPrivate;
 	}
     }
     
@@ -556,20 +520,51 @@ static  AICustomTabCell	*dragTabCell;
     NSString 		*type = [pboard availableTypeFromArray:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
 
     if(type){
-        //Stop tracking the drag
-        hoverIndex = -1;
-        [self setFocusedForDrag:NO];
-        
-        //Let all the views settle back into place
-        if(!viewsRearranging){
-            [self smoothlyArrangeCells];
-        }
-        
-        //pass along to the windowController, as well
+        //pass along to the windowController
         if ( [[[self window] windowController] respondsToSelector:@selector(draggingExited:)]){
             [[[self window] windowController] draggingExited:sender];
         }
     }
+}
+
+- (void)updateHoverAtScreenPoint:(NSPoint)inPoint
+{
+    NSEnumerator 	*enumerator = [tabCellArray objectEnumerator];
+    AICustomTabCell	*tabCell;
+    int			dragXLocation = inPoint.x - [[self window] frame].origin.x - [self frame].origin.x;
+    int			lastLocation = -1;
+    int			index = -1;
+    int                 foundIndex = -1;
+    
+    //Figure out where the user is hovering the tabcell item
+    while((tabCell = [enumerator nextObject])){
+        if (tabCell != dragTabCell) { //don't want to look at the cell we're dragging
+            NSRect	 frame = [tabCell frame];
+            index++;
+            if((dragXLocation > lastLocation) && (dragXLocation < frame.origin.x + (frame.size.width / 2.0) ) ){
+                foundIndex = index;
+                break;
+            }
+            lastLocation = frame.origin.x;
+        }
+    }
+    //If they're off to the right, the index is one past the last index - that is, the count
+    if(foundIndex == -1 && dragXLocation > lastLocation) foundIndex = [tabCellArray count];
+    
+    //Set the new drag index if it's not already set
+    if(hoverIndex != foundIndex){
+        hoverIndex = foundIndex;
+        if(!viewsRearranging){
+            [self smoothlyArrangeCells];
+        }
+    }
+}
+
+- (void)removeHover
+{
+    hoverIndex = -1;
+    [self setFocusedForDrag:NO];
+    [self smoothlyArrangeCells];
 }
 
 //Dragging Source ---------------------------------------------------------------------------------
@@ -584,11 +579,11 @@ static  AICustomTabCell	*dragTabCell;
     //dragging around outside the tabs but in the tab bar can trigger an event we don't want.  Make sure we've got a real tab.
     if(draggedIndex != NSNotFound) {
         NSImage		*image;
+        NSImage         *emptyImage;
         NSRect		imageRect;
         NSRect		frame = [inTabCell frame];
         
         draggingATabCell = YES;
-        tabHasBeenDragged = NO;
         
         dragTabCell = [inTabCell retain]; //we keep retaining until the window disappears... the possible interactions between windows are just too difficult to trace autorelease pools and such
         
@@ -598,44 +593,60 @@ static  AICustomTabCell	*dragTabCell;
         //Create an image of the tab to drag
         image = [[[NSImage alloc] initWithSize:frame.size] autorelease];
         imageRect = NSMakeRect(0,0,frame.size.width,frame.size.height);
+        emptyImage = [[[NSImage alloc] initWithSize:frame.size] autorelease];
+        [emptyImage setBackgroundColor:[NSColor clearColor]];
+        [emptyImage lockFocus];
+        [image dissolveToPoint:NSMakePoint(0,0) fraction:0.9];
+        [emptyImage unlockFocus];
+        
         [image lockFocus];
         [inTabCell drawWithFrame:imageRect inView:self];
         [image unlockFocus];
-        
         dragImage = [[[NSImage alloc] initWithSize:frame.size] autorelease];
         [dragImage setBackgroundColor:[NSColor clearColor]];
         [dragImage lockFocus];
         [image dissolveToPoint:NSMakePoint(0,0) fraction:0.9];
-        [dragImage unlockFocus];
-        
+        [dragImage unlockFocus];      
+
         NSPasteboard 	*pboard;
         
         //Put information on the pasteboard
         pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
         [pboard declareTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER, @"CommandKey",nil] owner:self];
+        
+        //could grab UID and Service, if appropriate, and include them on the pasteboard if we wanted to drag to, say, the contact list
         [pboard setString:TAB_CELL_IDENTIFIER forType:TAB_CELL_IDENTIFIER]; //useless data to satisfy the pboard; our important data is in the static dragTabCell
         [pboard setString:[[NSNumber numberWithInt:[NSEvent cmdKey]] stringValue] forType:@"CommandKey"]; //useful only when moving in the same window
         //Perform the drag
-        draggedOffset = NSMakeSize((clickLocation.x - frame.origin.x), (clickLocation.y - frame.origin.y));
-
+        draggedOffset = NSMakeSize((frame.origin.x-clickLocation.x), (frame.origin.y-clickLocation.y));
         if ([tabView numberOfTabViewItems] == 1)
             draggingLastItem = YES;
         else
             draggingLastItem = NO;
+
+        NSPoint startingPoint = NSMakePoint(clickLocation.x + draggedOffset.width, clickLocation.y + draggedOffset.height);
+     
+        tabBarHeight = [self frame].size.height; //so draggedImageDidMove need not keep finding out
+        activeTabBar = self;  //will change in draggingEntered: of each tab
+        
+        [NSCursor hide]; //with smoke, so it can come back
+        
+        dragFloater = [ESFloater floaterWithImage:dragImage at:startingPoint];
         
         [self retain];
-        [self dragImage:dragImage
-                     at:NSMakePoint(clickLocation.x - draggedOffset.width, clickLocation.y - draggedOffset.height)
+        [self dragImage:emptyImage
+                     at:startingPoint
                  offset:NSMakeSize(0,0)
                   event:theEvent pasteboard:pboard source:self slideBack:NO];
+        [NSCursor unhide];  //show the cursor again, before the release so it doesn't accidentally not happen, leaving us with a very confused user
         [self release];
         
         draggingATabCell = NO;
-        dragTabCell = nil;  //perhaps causing a release crash earlier; for memory optimization, check into this
+        dragTabCell = nil;
     }
 }
 
-//Invoked as the drag begins
+//Invoked in the dragging source as the drag begins
 - (void)draggedImage:(NSImage *)image beganAt:(NSPoint)screenPoint
 {
     //Arrange the views (without our friend the dragging tab - this should leave a 'hover' space for it in the present location)
@@ -645,31 +656,64 @@ static  AICustomTabCell	*dragTabCell;
     
 }
 
-//Invoked as the drag ends
+//Invoked in the dragging source whenever the image moves
+//our hover tracking occurs here so we can hover properly when snapping to the tab bar while outside the tab bar (but within SNAP_TO_TABBAR_PIXELS)
+//the drag image is actually the dragFloater, moved around from here
+- (void)draggedImage:(NSImage *)image movedTo:(NSPoint)screenPoint
+{
+    float draggingOnTabBarX = [[activeTabBar window] frame].origin.x;
+    float draggingOnTabBarY = [[activeTabBar window] frame].origin.y + [activeTabBar frame].origin.y;
+    
+    //if we're within SNAP_TO_TABBAR_PIXELS of the top or bottom, move the image to be in line w/ the other tabs
+    if ( (screenPoint.x >= draggingOnTabBarX) && (screenPoint.x <= draggingOnTabBarX + [[activeTabBar window] frame].size.width) &&
+         (screenPoint.y >= (draggingOnTabBarY - SNAP_TO_TABBAR_PIXELS)) && 
+         (screenPoint.y <= (draggingOnTabBarY + tabBarHeight + SNAP_TO_TABBAR_PIXELS)) ) {
+        [activeTabBar updateHoverAtScreenPoint:screenPoint];
+        screenPoint.y = draggingOnTabBarY;
+        hovering = YES;
+    } else if (hovering) {
+        [activeTabBar removeHover];   
+        hovering = NO;
+    }
+    
+    [dragFloater moveFloaterToPoint:screenPoint];
+}
+
+//Invoked in the dragging source as the drag ends
 - (void)draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation
 {
-    BOOL finishUp = NO;
-    
     //Dragged to no destination, open a new window and remove tab from this one
     if(operation == NSDragOperationNone) {
-        [[owner interfaceController] transferMessageTabContainer:[dragTabCell tabViewItem] toWindow:nil atIndex:-1 withTabBarAtPoint:screenPoint];
-        finishUp = YES;
+        float draggingOnTabBarX = [[activeTabBar window] frame].origin.x;
+        float draggingOnTabBarY = [[activeTabBar window] frame].origin.y + [activeTabBar frame].origin.y;
+        
+        //if we're within SNAP_TO_TABBAR_PIXELS of the top or bottom, drop into the toolbar
+        if ( (screenPoint.x >= draggingOnTabBarX) && (screenPoint.x <= draggingOnTabBarX + [[activeTabBar window] frame].size.width) &&
+             (screenPoint.y >= (draggingOnTabBarY - SNAP_TO_TABBAR_PIXELS)) && 
+             (screenPoint.y <= (draggingOnTabBarY + tabBarHeight + SNAP_TO_TABBAR_PIXELS)) ) {
+                    [activeTabBar updateHoverAtScreenPoint:screenPoint]; //must update hover the toolbar figures out its proper dropping index
+                    [activeTabBar acceptDropAtScreenPoint:screenPoint];
+        } else { //not close enough - make a new window
+            [[owner interfaceController] transferMessageTabContainer:[dragTabCell tabViewItem] toWindow:nil atIndex:-1 withTabBarAtPoint:screenPoint];
+        }
     }
     
     //Dragged to another tab bar
     if(operation == NSDragOperationPrivate && ![tabCellArray containsObject:dragTabCell]) {
-        finishUp = YES;
     }
     
+    [dragFloater endFloater];
+    
     //if we tried to do this dragging the last tab out of the window, this would crash nastily as delegate has been released but we don't know it yet
-    if (finishUp && !draggingLastItem) { 
+    if (!draggingLastItem) { 
         //Inform our delegate
         if ( [delegate respondsToSelector:@selector(customTabViewDidChangeNumberOfTabViewItems:)]){
             [delegate customTabViewDidChangeNumberOfTabViewItems:self];
         }
         
         draggedIndex = -1; //so smoothlyArrangeCells won't hide our cute lil' cell
-
+        hoverIndex = -1;
+        
         if(!viewsRearranging){
             [self smoothlyArrangeCells];
         }
@@ -719,31 +763,7 @@ static  AICustomTabCell	*dragTabCell;
         }
         
         else if ([type isEqualToString:TAB_CELL_IDENTIFIER]) { //got a tab
-            if(hoverIndex >= 0 && hoverIndex <= [tabCellArray count]){
-                int	dropIndex = hoverIndex;
-                
-                //Stop hovering
-                hoverIndex = -1;
-                
-                //Set the frame of the item that was dragged to where the user dropped it, so it will smoothly slide from that position to where it belongs.  This looks cleaner than just 'snapping' the item from where it used to be.
-                if(focusedForDrag && dragTabCell){
-                    NSPoint	localDrop;
-                    
-                    localDrop = [sender draggingLocation];
-                    
-                    //Set our frame to where we were dropped
-                    NSRect theFrame = [dragTabCell frame];
-                    theFrame.origin = NSMakePoint(localDrop.x - draggedOffset.width, localDrop.y - draggedOffset.height);
-                    [dragTabCell setFrame:theFrame];
-                }
-                
-                //Move/insert the item
-                BOOL doNotSelect = ([[pboard stringForType:@"CommandKey"] intValue]);
-                [self insertDraggedTabAtIndex:dropIndex overridingSelectionIfAppropriate:doNotSelect];            
-                [self setFocusedForDrag:NO];
-                
-                return(YES);
-            }
+            [self acceptDropAtScreenPoint:[sender draggingLocation]];
         }
     }
     return NO; //if we made it here, the drag operation didn't work
@@ -752,6 +772,30 @@ static  AICustomTabCell	*dragTabCell;
 //redisplay as necessary here
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
+}
+
+- (void)acceptDropAtScreenPoint:(NSPoint)inPoint
+{
+    if(hoverIndex >= 0 && hoverIndex <= [tabCellArray count]){
+        int	dropIndex = hoverIndex;
+        
+        //Stop hovering
+        hoverIndex = -1;
+        
+        //Set the frame of the item that was dragged to where the user dropped it, so it will smoothly slide from that position to where it belongs.  This looks cleaner than just 'snapping' the item from where it used to be.
+        if(focusedForDrag && dragTabCell){
+            //Set our frame to where we were dropped
+            NSRect theFrame = [dragTabCell frame];
+            theFrame.origin = NSMakePoint(inPoint.x - [[self window] frame].origin.x - draggedOffset.width,
+                                          inPoint.y - [[self window] frame].origin.y - draggedOffset.height);
+            [dragTabCell setFrame:theFrame];
+        }
+        
+        //Move/insert the item
+//        BOOL doNotSelect = ([[pboard stringForType:@"CommandKey"] intValue]);
+        [self insertDraggedTabAtIndex:dropIndex overridingSelectionIfAppropriate:NO];            
+        [self setFocusedForDrag:NO];
+    }
 }
 
 //Add the dragging tab to this tab bar
@@ -857,6 +901,7 @@ static  AICustomTabCell	*dragTabCell;
 {
     //Darken the clicked tab
     NSPoint		clickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+
     AICustomTabCell	*tabCell = [self _cellAtPoint:clickLocation];
 
     if(tabCell){
