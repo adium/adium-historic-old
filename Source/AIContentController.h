@@ -99,7 +99,7 @@ typedef enum {
     NSArray					*emoticonPacks;
 	
 	NSMutableArray			*contentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
-	
+	NSMutableArray			*threadedContentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
 }
 
 //Chats
@@ -157,15 +157,13 @@ typedef enum {
 //- (void)unregisterStringFilter:(id <AIStringFilter>)inFilter;
 
 //Filtering content
-//- (void)filterObject:(AIContentObject *)inObject isOutgoing:(BOOL)isOutgoing;
-//- (NSAttributedString *)filteredAttributedString:(NSAttributedString *)inString listObjectContext:(AIListObject *)inListObject isOutgoing:(BOOL)isOutgoing;
-//- (NSAttributedString *)fullyFilteredAttributedString:(NSAttributedString *)inString listObjectContext:(AIListObject *)inListObject;
-//- (NSString *)filteredString:(NSString *)inString listObjectContext:(AIListObject *)inListObject;
-
-
 - (void)registerContentFilter:(id <AIContentFilter>)inFilter
 					   ofType:(AIFilterType)type
 					direction:(AIFilterDirection)direction;
+- (void)registerContentFilter:(id <AIContentFilter>)inFilter
+					   ofType:(AIFilterType)type
+					direction:(AIFilterDirection)direction
+					 threaded:(BOOL)threaded;
 - (void)unregisterContentFilter:(id <AIContentFilter>)inFilter;
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)attributedString
 							   usingFilterType:(AIFilterType)type
