@@ -12,6 +12,8 @@
     IBOutlet AIAlternatingRowTableView *table;
     IBOutlet NSWindow *previewWindow;
     IBOutlet NSTextField *previewName;
+    IBOutlet NSButton *removeButton;
+    IBOutlet NSButton *applyButton;
     id themesPlugin;
     NSArray *themes;
     int themeCount;

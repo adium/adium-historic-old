@@ -24,12 +24,14 @@
             CLASS = BGThemeManageView; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                applyButton = NSButton; 
                 previewName = NSTextField; 
                 previewWindow = NSWindow; 
+                removeButton = NSButton; 
                 table = AIAlternatingRowTableView; 
                 themesPlugin = id; 
             }; 
-            SUPERCLASS = AIObject; 
+            SUPERCLASS = NSView; 
         }, 
         {
             ACTIONS = {applyTheme = id; removeTheme = id; }; 
