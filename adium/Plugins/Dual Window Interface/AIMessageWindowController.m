@@ -78,12 +78,13 @@
 	
 	
     //Prefs
+	[[adium notificationCenter] addObserver:self selector:@selector(updateTabArrangingBehavior) name:Interface_TabArrangingPreferenceChanged object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 
 	//Register as a tab drag observer so we know when tabs are dragged over our window and can show our tab bar
     [[self window] registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
-    
+    	
     return(self);
 }
 
@@ -205,8 +206,8 @@
 				
 		alwaysShowTabs = ![[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
 		[tabView_customTabs setAllowsInactiveTabClosing:[[preferenceDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
-		[tabView_customTabs setAllowsTabRearranging:[[adium interfaceController] allowChatOrdering]];
 			
+		[self updateTabArrangingBehavior];
 		[self updateTabBarVisibilityAndAnimate:(notification != nil)];
 		[self _updateWindowTitleAndIcon];
     }
@@ -218,6 +219,13 @@
 		[self _updateWindowTitleAndIcon];
 	}
 }
+
+//Update our tabs to match the current tab arranging behavior / limitations
+- (void)updateTabArrangingBehavior
+{
+	[tabView_customTabs setAllowsTabRearranging:[[adium interfaceController] allowChatOrdering]];
+}
+
 
 //Contained Chats ------------------------------------------------------------------------------------------------------
 #pragma mark Contained Chats

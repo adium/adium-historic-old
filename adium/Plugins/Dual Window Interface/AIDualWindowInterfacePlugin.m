@@ -58,7 +58,6 @@
 											 selector:@selector(applicationDidUnhide:)
 												 name:NSApplicationDidUnhideNotification
 											   object:NSApp];
-
 }
 
 //Close the interface
