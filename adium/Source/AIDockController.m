@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIDockController.m,v 1.62 2004/07/05 21:56:26 evands Exp $
+// $Id: AIDockController.m,v 1.63 2004/07/05 22:37:54 evands Exp $
 
 #import "AIDockController.h"
 
@@ -112,6 +112,8 @@
 			NSString		*lastLaunchedVersion = [[owner preferenceController] preferenceForKey:KEY_LAST_VERSION_LAUNCHED
 																							group:PREF_GROUP_GENERAL];
 			
+			lastLaunchedVersion = nil;
+			
 			//On launch we only need to update the icon file if this is a new version of Adium.  When preferences
 			//change we always want to update it
 			if(notification != nil || !lastLaunchedVersion || !version || ![lastLaunchedVersion isEqualToString:version]){
@@ -123,6 +125,10 @@
                 if(image){
                     iconFamily = [IconFamily iconFamilyWithThumbnailsOfImage:image usingImageInterpolation:NSImageInterpolationLow];
                     [iconFamily writeToFile:icnsPath];
+					
+					//Finder won't update Adium's icon to match the new one until it is restarted if we don't
+					//tell NSWorkspace to note the change.
+					[[NSWorkspace sharedWorkspace] noteFileSystemChanged:[[NSBundle mainBundle] bundlePath]];
                 }
 
 				//Remember the version of Adium this image was set for, so we don't need to do it again
