@@ -1,6 +1,9 @@
 				Adium X Version History
 				-----------------------
 Version 0.56
+- Added a submenu in the Edit and contextual menus for inserting emoticons
+- Added a new feature called Event Notifications (formerly known as the Event Bezel) that allows the user to be notified of contact status changes and new messages using a floating window. Can be activated using the contact alerts or globally using the advanced preference pane.
+- Improved Message View preferences
 - Fixed a crash when selecting a custom color for messages
 - Fixed a crash introduced in 0.54 with deleting contacts from the contact list
 - Fixed a bug with LaTeX operations with \; in them
@@ -8,8 +11,6 @@ Version 0.56
 - Fixed a beachballing issue
 - Fixed an issue with initial contact list display of contacts with names pulled from the address book
 - Profiles no longer revert to default font after changing the size or color
-- Added a submenu in the Edit and contextual menus for inserting emoticons
-- Improved Message View preferences
 
 Version 0.55 (5/8/2004)
 - Fixed a crash when connecting to a Yahoo account with privacy settings enabled
