@@ -8,6 +8,7 @@
 #import "AIListThemeWindowController.h"
 #import "AICLPreferences.h"
 #import "AITextColorPreviewView.h"
+#import "AISCLViewPlugin.h"
 
 @interface AIListThemeWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName withName:(NSString *)inName;
@@ -86,6 +87,10 @@
 //Cancel
 - (IBAction)cancel:(id)sender
 {
+	//Revert
+	[[adium preferenceController] setPreference:themeName
+										 forKey:KEY_LIST_THEME_NAME
+										  group:PREF_GROUP_CONTACT_LIST];
     [self closeWindow:sender];
 }
 
@@ -96,22 +101,22 @@
 	
 	//If the user has renamed this theme, delete the old one
 	if(![newName isEqualTo:themeName]){
-		[AICLPreferences deleteSetWithName:themeName
+		[AISCLViewPlugin deleteSetWithName:themeName
 								 extension:LIST_THEME_EXTENSION
 								  inFolder:LIST_THEME_FOLDER];
 	}
 	
 	//Save the theme
-	if([AICLPreferences createSetFromPreferenceGroup:PREF_GROUP_LIST_THEME
+	if([AISCLViewPlugin createSetFromPreferenceGroup:PREF_GROUP_LIST_THEME
 											withName:[textField_themeName stringValue]
 										   extension:LIST_THEME_EXTENSION
 											inFolder:LIST_THEME_FOLDER]){
-
+		[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:LIST_THEME_EXTENSION];
+		
 		[[adium preferenceController] setPreference:newName
 											 forKey:KEY_LIST_THEME_NAME
 											  group:PREF_GROUP_CONTACT_LIST];
 
-		[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:LIST_THEME_EXTENSION];
 		[self closeWindow:sender];
 	}
 }
