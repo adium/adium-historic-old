@@ -37,6 +37,7 @@
 
 @implementation CBGaimAccount
 
+// The GaimAccount associated with this Adium account
 - (GaimAccount*)gaimAccount
 {
     return account;
@@ -46,27 +47,27 @@
 - (const char*)protocolPlugin { return NULL; }
 
 
-/************************/
-/* accountBlist methods */
-/************************/
+	/************************/
+	/* accountBlist methods */
+	/************************/
 
 - (void)accountNewBuddy:(GaimBuddy*)buddy
 {
-//    NSLog(@"accountNewBuddy (%s)", buddy->name);
+	//    NSLog(@"accountNewBuddy (%s)", buddy->name);
     [self createHandleAssociatingWithBuddy:buddy];
 }
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {
-//    NSLog(@"accountUpdateBuddy (%s)", buddy->name);
+	//    NSLog(@"accountUpdateBuddy (%s)", buddy->name);
     int                     online;
     NSMutableDictionary     *statusDict;
     NSMutableArray          *modifiedKeys = [NSMutableArray array];
     AIHandle                *theHandle;
-
+	
     //Get the node's ui_data
     theHandle = (AIHandle*)buddy->node.ui_data;
-
+	
     //no associated handle - gaim has a buddy for us but we are no longer tracking that buddy
     if (!theHandle) { 
         theHandle = [handleDict objectForKey:[[NSString stringWithUTF8String:(buddy->name)] compactedString]];    
@@ -101,24 +102,24 @@
             //Notify
             [[adium notificationCenter] postNotificationName:Content_ChatStatusChanged object:chat userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Enabled"] forKey:@"Keys"]];            
         }
-/*           
-        //This doesn't work - buddy->signon is always 0.  evands has a patch to fix this gaimside, but the gaim pepople won't accept it since signon is apparently oscar-specific.
-        if (online && buddy->signon != 0) {
-        //Set the signon time
-            NSMutableDictionary * statusDict = [theHandle statusDictionary];
-            
-            [statusDict setObject:[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->signon] forKey:@"Signon Date"];
-            [modifiedKeys addObject:@"Signon Date"];
-        }
-*/
+		/*           
+			//This doesn't work - buddy->signon is always 0.  evands has a patch to fix this gaimside, but the gaim pepople won't accept it since signon is apparently oscar-specific.
+			if (online && buddy->signon != 0) {
+				//Set the signon time
+				NSMutableDictionary * statusDict = [theHandle statusDictionary];
+				
+				[statusDict setObject:[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->signon] forKey:@"Signon Date"];
+				[modifiedKeys addObject:@"Signon Date"];
+			}
+		*/
     }
-
+	
     //Display Name - use the serverside buddy_alias if present - do we want to be doing this?
     {
         char *alias = (char *)gaim_get_buddy_alias(buddy);
         char *disp_name = (char *)[[statusDict objectForKey:@"Display Name"] UTF8String];
         if(!disp_name) disp_name = "";
-    
+		
         if(alias && strcmp(disp_name, alias))
         {
             [statusDict setObject:[NSString stringWithUTF8String:alias]
@@ -126,7 +127,7 @@
             [modifiedKeys addObject:@"Display Name"];
         }
     }
-            
+	
     //Idletime
     {
         if(buddy->idle != (int)([[[theHandle statusDictionary] objectForKey:@"IdleSince"] timeIntervalSince1970])){
@@ -163,7 +164,7 @@
             //set the buddy image
             NSImage *image = [[[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_buddy_icon_get_data(buddyIcon, &(buddyIcon->len)) length:buddyIcon->len]] autorelease];
             [statusDict setObject:image forKey:@"UserIcon"];
-
+			
             //BuddyImagePointer is just for us, shh, keep it secret ;)
             [modifiedKeys addObject:@"UserIcon"];
         }
@@ -194,7 +195,7 @@
 {
     //stored the key as a compactedString originally
     [handleDict removeObjectForKey:[[NSString stringWithFormat:@"%s", buddy->name] compactedString]];
-
+	
     if (buddy->node.ui_data != NULL) {
         [(AIHandle *)buddy->node.ui_data release];
         buddy->node.ui_data = NULL;
@@ -236,17 +237,17 @@
     NSAssert(handle != nil, @"listContact without handle");
     switch (type) {
         case GAIM_CONV_UPDATE_TYPING:
-            {
-                [self setTypingFlagOfHandle:handle to:(gaim_conv_im_get_typing_state(im) == GAIM_TYPING)];
-            }
+		{
+			[self setTypingFlagOfHandle:handle to:(gaim_conv_im_get_typing_state(im) == GAIM_TYPING)];
+		}
             break;
         case GAIM_CONV_UPDATE_AWAY:
-            {
+		{
             //If the conversation update is UPDATE_AWAY, it seems to suppress the typing state being updated
             //Reset gaim's typing tracking, then update to receive a GAIM_CONV_UPDATE_TYPING message
             gaim_conv_im_set_typing_state(im, GAIM_NOT_TYPING);
             gaim_conv_im_update_typing(im);
-            }
+		}
             break;
         default:
         {
@@ -271,7 +272,7 @@
     }
     AIChat *chat = (AIChat*) conv->ui_data;
     NSString *uid = [NSString stringWithUTF8String: conv->name];
-//    AIChat *chat = [chatDict objectForKey:uid];
+	//    AIChat *chat = [chatDict objectForKey:uid];
     
     AIHandle *handle = [handleDict objectForKey:[uid compactedString]];    
     if (chat == nil) {
@@ -315,7 +316,7 @@
     handleDict = [[NSMutableDictionary alloc] init];
     chatDict = [[NSMutableDictionary alloc] init];
     filesToSendArray = [[NSMutableArray alloc] init];
-
+	
     //create an initial gaim account
     NSLog(@"Creating %@",[self UID]);
     account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
@@ -357,7 +358,7 @@
             attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, subBackgroundColor, NSBackgroundColorAttributeName, nil];
         }
         NSAttributedString *profile = [[[NSAttributedString alloc] initWithString:PROFILE_STRING attributes:attributes] autorelease];
-
+		
         [self setPreference:[profile dataRepresentation] forKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
     }
 }
@@ -375,92 +376,16 @@
         [signonTimer release];
         signonTimer = nil;
     }
-
+	
     //  is deleting the accoutn necessary?  this seems to throw an exception.
-//    gaim_accounts_delete(account); account = NULL;
+	//    gaim_accounts_delete(account); account = NULL;
     
     // TODO: remove this from the account dict that the ServicePlugin keeps
     
     [super dealloc];
 }
 
-- (NSArray *)supportedPropertyKeys
-{
-    return([NSArray arrayWithObjects:
-        @"Display Name",
-        @"Online",
-        @"Offline",
-        @"IdleSince",
-        @"IdleManuallySet",
-        @"UserIcon",
-        @"Away",
-        @"AwayMessage",
-        @"TextProfile",
-        @"UserIcon",
-        @"DefaultUserIconFilename",
-        nil]);
-}
 
-- (void)updateStatusForKey:(NSString *)key
-{
-    BOOL    areOnline = [[self statusObjectForKey:@"Online"] boolValue];
-
-    //Online status changed
-    if([key compare:@"Online"] == 0){
-        if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
-            if(!areOnline) [self connect];
-        }else{
-            if(areOnline) [self disconnect];
-        }
-    } 
-    
-    //Now look at keys which only make sense while online
-    if(areOnline){
-        if ([key compare:@"IdleSince"] == 0){
-            NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
-            // Even if we're setting a non-zero idle time, set it to zero first.
-            // Some clients ignore idle time changes unless it moves to/from 0.
-            serv_set_idle(gc, 0);
-            if (idleSince != nil) {
-                int newIdle = -[idleSince timeIntervalSinceNow];
-                serv_set_idle(gc, newIdle);
-            }
-            [self setStatusObject:idleSince forKey:@"IdleSince" notify:YES];
-        }
-        else if ([key compare:@"AwayMessage"] == 0) {
-	    NSAttributedString	*awayMessage = [NSAttributedString stringWithData:[self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]];
-            [self setAwayMessage:awayMessage];
-            [self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
-        }
-        else if([key compare:@"TextProfile"] == 0){
-            NSAttributedString	*profile = [NSAttributedString stringWithData:[self preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS]];
-	    [self setProfile:profile];
-	    [self setStatusObject:profile forKey:@"TextProfile" notify:YES];
-        }
-    }
-    
-    //User Icon can be set regardless of ONLINE state
-    if([key compare:@"UserIcon"] == 0) {
-	NSData	*newIconData = [self preferenceForKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
-	NSImage	*newIcon = [[[NSImage alloc] initWithData:newIconData] autorelease];
-	
-	[self setStatusObject:newIcon forKey:@"UserIcon" notify:YES];
-        
-	//gaim requires a file to be used as the userIcon.  Give it its file.
-        if(newIcon) {          
-            NSData 	*data = [[newIcon JPEGRepresentation] retain];
-            NSString    *buddyImageFilename = [[self _userIconCachePath] retain];
-            if([data writeToFile:buddyImageFilename atomically:YES]){
-                [self setBuddyImageFromFilename:(char *)[buddyImageFilename UTF8String]];
-            }else{
-                NSLog(@"Error writing file %@",buddyImageFilename);   
-            }
-            [buddyImageFilename release];
-        }else{
-            [self setBuddyImageFromFilename:nil];   
-        }
-    }
-}
 
 - (NSString *)accountID {
     return [NSString stringWithFormat:@"GAIM-%@.%@", [self serviceID], [self UID]];
@@ -474,14 +399,14 @@
 - (id <AIAccountViewController>)accountView{ return(nil); }
 
 
-/*********************/
-/* AIAccount_Content */
-/*********************/
+	/*********************/
+	/* AIAccount_Content */
+	/*********************/
 
 - (BOOL)sendContentObject:(AIContentObject*)object
 {
     BOOL            sent = NO;
-
+	
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0) {
         AIContentMessage *cm = (AIContentMessage*)object;
         NSString *body = [AIHTMLDecoder encodeHTML:[cm message]
@@ -542,7 +467,7 @@
 {
     AIHandle *handle;
     AIChat *chat = nil;
-
+	
     if ([inListObject isKindOfClass:[AIListContact class]]) {
         handle = [(AIListContact*)inListObject handleForAccount:self];
         if (!handle) {
@@ -558,15 +483,15 @@
 - (AIChat*)_openChatWithHandle:(AIHandle*)handle andConversation:(GaimConversation*)conv
 {
     AIChat *chat;
-
+	
     //create a chat if we're passed a null conversation or the conversation we're passed doesn't have a chat associated with it
-//    if(!(chat = [chatDict objectForKey:[handle UID]])){
+	//    if(!(chat = [chatDict objectForKey:[handle UID]])){
     if(!conv || !(chat = conv->ui_data)){
         chat = [AIChat chatForAccount:self];
         AIListContact   *contact = [handle containingContact];
         
         [chat addParticipatingListObject:contact];
-
+		
         BOOL handleIsOnline;        
         handleIsOnline = YES; // TODO
         [[chat statusDictionary] setObject:[NSNumber numberWithBool:handleIsOnline] forKey:@"Enabled"];
@@ -582,7 +507,7 @@
         [[adium contentController] noteChat:chat forAccount:self];
     } 
     return chat;
-}
+	}
 
 - (BOOL)closeChat:(AIChat*)inChat
 {
@@ -646,18 +571,18 @@
     if (buddy == NULL) {                                                //should always be null
         buddy = gaim_buddy_new(account, [handleUID UTF8String], NULL);  //create a GaimBuddy
     }
-
+	
     gaim_blist_add_buddy(buddy, NULL, group, NULL);                     //add the buddy to the gaimside list
     serv_add_buddy(gc,[handleUID UTF8String],group);                    //and add the buddy serverside
-
+	
     [handleDict setObject:handle forKey:[handle UID]];                  //Add it locally
-
+	
     //From TOC2
     //[self silenceUpdateFromHandle:handle]; //Silence the server's initial update command
     
     //Update the contact list
     [[adium contactController] handle:handle addedToAccount:self];
-        
+	
     return(handle);
 }
 
@@ -681,7 +606,7 @@
 {
     GaimGroup *group = gaim_group_new([inGroup UTF8String]);    //create the GaimGroup
     gaim_blist_add_group(group,NULL);                           //add it gaimside (server will make it as needed)
-//    NSLog(@"added group %@",inGroup);
+																//    NSLog(@"added group %@",inGroup);
     return NO;
 }
 // Remove a group
@@ -691,7 +616,7 @@
     
     GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
     gaim_blist_remove_group(group);                         //remove it gaimside
-//    NSLog(@"remove group %@",inGroup);
+															//    NSLog(@"remove group %@",inGroup);
     return YES;
 }
 // Rename a group
@@ -713,7 +638,7 @@
         GaimGroup *oldGroup = gaim_find_group([[handle serverGroup] UTF8String]);   //get the GaimGroup        
         GaimGroup *newGroup = gaim_find_group([inGroup UTF8String]);                //get the GaimGroup
         if (newGroup == NULL) {                                                        //if the group doesn't exist yet
- //           NSLog(@"Creating a new group");
+																					   //           NSLog(@"Creating a new group");
             newGroup = gaim_group_new([inGroup UTF8String]);                           //create the GaimGroup
         }
         
@@ -732,11 +657,11 @@
     GaimGroup   *group = gaim_find_buddys_group(buddy); //get the group
     NSString    *groupName;
     if (group)
-    groupName = [NSString stringWithCString:(group->name)];
+		groupName = [NSString stringWithCString:(group->name)];
     else
-    groupName = NO_GROUP;
-
-
+		groupName = NO_GROUP;
+	
+	
     AIHandle *handle = [AIHandle
         handleWithServiceID:[self serviceID]
                         UID:[[NSString stringWithUTF8String:buddy->name] compactedString]
@@ -744,11 +669,11 @@
                   temporary:NO
                  forAccount:self];
     [handleDict setObject:handle forKey:[[NSString stringWithFormat:@"%s", buddy->name] compactedString]];
-
+	
     //Associate the handle with ui_data and the buddy with our statusDictionary
     buddy->node.ui_data = [handle retain];
     [[handle statusDictionary] setObject:[NSValue valueWithPointer:buddy] forKey:@"GaimBuddy"];
- 
+	
     return handle;
 }
 
@@ -807,7 +732,7 @@
     //Load our buddy icon from a file
     NSImage *buddyImage = [[NSImage alloc] initWithContentsOfFile:OWN_BUDDY_IMAGE];
     if(buddyImage && [buddyImage isValid]){
-	[self setPreference:[buddyImage TIFFRepresentation] forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
+		[self setPreference:[buddyImage TIFFRepresentation] forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
     }
     [buddyImage release];
 }
@@ -824,136 +749,7 @@
     [[adium contactController] handlesChangedForAccount:self];
 }
 
-//connecting / disconnecting
-- (void)connect
-{
-    //get password
-    [[adium accountController] passwordForAccount:self 
-                                  notifyingTarget:self selector:@selector(finishConnect:)];
-}
-//Called by the accountController once a password is available
-- (void)finishConnect:(NSString *)inPassword
-{
-    if(inPassword && [inPassword length] != 0)
-    {
-        if(password != inPassword){
-            [password release]; password = [inPassword copy];
-        }
-        
-        //now we start to connect
-	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
-        
-        //setup the account, get things ready
-        gaim_account_set_password(account, [password UTF8String]);
-        
-        //configure at sign on time so we get the latest settings from the system
-        if ([(CBGaimServicePlugin *)service configureGaimProxySettings]) {
-            
-            //proxy info - once account prefs are in place, this should be able to use the gaim prefs (which are set by the service plugin and are our systemwide prefs) or account-specific prefs
-            GaimProxyInfo *proxy_info = gaim_proxy_info_new();
-            
-            char *type = (char *)gaim_prefs_get_string("/core/proxy/type");
-            int proxytype;
-            
-            if (!strcmp(type, "none"))
-                proxytype = GAIM_PROXY_NONE;
-            else if (!strcmp(type, "http"))
-                proxytype = GAIM_PROXY_HTTP;
-            else if (!strcmp(type, "socks4"))
-                proxytype = GAIM_PROXY_SOCKS4;
-            else if (!strcmp(type, "socks5"))
-                proxytype = GAIM_PROXY_SOCKS5;
-            else if (!strcmp(type, "envvar"))
-                proxytype = GAIM_PROXY_USE_ENVVAR;
-            else
-                proxytype = -1;
-            
-            proxy_info->type = proxytype;
-            
-            proxy_info->host = (char *)gaim_prefs_get_string("/core/proxy/host");
-            proxy_info->port = (int)gaim_prefs_get_int("/core/proxy/port");
-            
-            proxy_info->username = (char *)gaim_prefs_get_string("/core/proxy/username"),
-                proxy_info->password = (char *)gaim_prefs_get_string("/core/proxy/password");
-            
-            gaim_account_set_proxy_info(account,proxy_info);
-        }
-        //NSLog(@"%i %s %i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
-        
-        gc = gaim_account_connect(account);
-    }
-}
 
-- (void)disconnect
-{
-    NSEnumerator    *enumerator;
-    AIHandle        *handle;
-    
-    //signing off
-    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
-    
-    //tell gaim to disconnect    
-    silentAndDelayed = YES;
-    NSLog(@"Setting handle updates to silent and delayed (disconnecting)");
-
-    //Flush all our handle status flags
-    enumerator = [[handleDict allValues] objectEnumerator];
-    while((handle = [enumerator nextObject])){
-        [self removeAllStatusFlagsFromHandle:handle];
-    }
-    //Clear out the GaimConv pointers in the chat statusDictionaries, as they no longer have meaning
-    AIChat *chat;
-    enumerator = [chatDict objectEnumerator];
-    while (chat = [enumerator nextObject]) {
-        [[chat statusDictionary] removeObjectForKey:@"GaimConv"];
-    }       
-    
-    //Remove all our handles
-    [handleDict release]; handleDict = [[NSMutableDictionary alloc] init];
-    [[adium contactController] handlesChangedForAccount:self];
-    
-    //Remove our chat dictionary
-    [chatDict release]; chatDict = [[NSMutableDictionary alloc] init];
-    
-    //Disconnect if gaim still considers us connected
-    if (gaim_account_is_connected(account))
-        gaim_account_disconnect(account); 
-    
-    //We don't want gaim keeping tracking of our buddies between sessions - we do that.
-    //This will remove any gaimBuddies that belong to this account, and will also destroy account
-    //Remove the service's accountDict entry first
-    [(CBGaimServicePlugin *)service removeAccount:account];
-    gaim_accounts_delete(account); account = NULL;
-    gc = NULL;
-    
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
-    
-    //create a new account for next time
-    account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
-    gaim_accounts_add(account);
-    [(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
-}
-
-//Called automatically by gaimServicePlugin whenever we disconnected for any reason
-- (void)accountConnectionDisconnected
-{
-    if(signonTimer != nil) {
-        [signonTimer invalidate];
-        [signonTimer release];
-        signonTimer = nil;
-    }
-    
-    NSLog(@"reconnect?");
-    //If a gc object still exists, we were disconnected unexpectedly
-    if(gc != NULL) {
-        //clean up
-        [self disconnect];
-        //reconnect
-        [self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
-    }
-    NSLog(@"done");
-}
 
 // Auto-Reconnect -------------------------------------------------------------------------------------
 //Attempts to auto-reconnect (after an X second delay)
@@ -977,7 +773,7 @@
         NSLog(@"Attempting Auto-Reconnect");
         
         //Instead of calling connect, we directly call the second phase of connecting, passing it the user's password.  This prevents users who don't keychain passwords from having to enter them for a reconnect.
-        [self finishConnect:password];
+        [self connect];
     }
 }
 
@@ -1163,5 +959,236 @@
     NSString    *userIconCacheFilename = [NSString stringWithFormat:USER_ICON_CACHE_NAME, [self UIDAndServiceID]];
     return([[USER_ICON_CACHE_PATH stringByAppendingPathComponent:userIconCacheFilename] stringByExpandingTildeInPath]);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Account Connectivity -------------------------------------------------------------------------------------------------
+//Connect this account (Our password should be in the instance variable 'password' all ready for us)
+- (void)connect
+{
+	//now we start to connect
+	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
+	
+	//setup the account, get things ready
+	gaim_account_set_password(account, [password UTF8String]);
+	
+	//configure at sign on time so we get the latest settings from the system
+	if ([(CBGaimServicePlugin *)service configureGaimProxySettings]) {
+		
+		//proxy info - once account prefs are in place, this should be able to use the gaim prefs (which are set by the service plugin and are our systemwide prefs) or account-specific prefs
+		GaimProxyInfo *proxy_info = gaim_proxy_info_new();
+		
+		char *type = (char *)gaim_prefs_get_string("/core/proxy/type");
+		int proxytype;
+		
+		if (!strcmp(type, "none"))
+			proxytype = GAIM_PROXY_NONE;
+		else if (!strcmp(type, "http"))
+			proxytype = GAIM_PROXY_HTTP;
+		else if (!strcmp(type, "socks4"))
+			proxytype = GAIM_PROXY_SOCKS4;
+		else if (!strcmp(type, "socks5"))
+			proxytype = GAIM_PROXY_SOCKS5;
+		else if (!strcmp(type, "envvar"))
+			proxytype = GAIM_PROXY_USE_ENVVAR;
+		else
+			proxytype = -1;
+		
+		proxy_info->type = proxytype;
+		
+		proxy_info->host = (char *)gaim_prefs_get_string("/core/proxy/host");
+		proxy_info->port = (int)gaim_prefs_get_int("/core/proxy/port");
+		
+		proxy_info->username = (char *)gaim_prefs_get_string("/core/proxy/username"),
+			proxy_info->password = (char *)gaim_prefs_get_string("/core/proxy/password");
+		
+		gaim_account_set_proxy_info(account,proxy_info);
+	}
+	//NSLog(@"%i %s %i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
+	
+	gc = gaim_account_connect(account);
+}
+
+- (void)disconnect
+{
+    NSEnumerator    *enumerator;
+    AIHandle        *handle;
+    
+    //signing off
+    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
+    
+    //tell gaim to disconnect    
+    silentAndDelayed = YES;
+    NSLog(@"Setting handle updates to silent and delayed (disconnecting)");
+	
+    //Flush all our handle status flags
+    enumerator = [[handleDict allValues] objectEnumerator];
+    while((handle = [enumerator nextObject])){
+        [self removeAllStatusFlagsFromHandle:handle];
+    }
+    //Clear out the GaimConv pointers in the chat statusDictionaries, as they no longer have meaning
+    AIChat *chat;
+    enumerator = [chatDict objectEnumerator];
+    while (chat = [enumerator nextObject]) {
+        [[chat statusDictionary] removeObjectForKey:@"GaimConv"];
+    }       
+    
+    //Remove all our handles
+    [handleDict release]; handleDict = [[NSMutableDictionary alloc] init];
+    [[adium contactController] handlesChangedForAccount:self];
+    
+    //Remove our chat dictionary
+    [chatDict release]; chatDict = [[NSMutableDictionary alloc] init];
+    
+    //Disconnect if gaim still considers us connected
+    if (gaim_account_is_connected(account))
+        gaim_account_disconnect(account); 
+    
+    //We don't want gaim keeping tracking of our buddies between sessions - we do that.
+    //This will remove any gaimBuddies that belong to this account, and will also destroy account
+    //Remove the service's accountDict entry first
+    [(CBGaimServicePlugin *)service removeAccount:account];
+    gaim_accounts_delete(account); account = NULL;
+    gc = NULL;
+    
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
+    
+    //create a new account for next time
+    account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
+    gaim_accounts_add(account);
+    [(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
+}
+
+//Called automatically by gaimServicePlugin whenever we disconnected for any reason
+- (void)accountConnectionDisconnected
+{
+    if(signonTimer != nil) {
+        [signonTimer invalidate];
+        [signonTimer release];
+        signonTimer = nil;
+    }
+    
+    NSLog(@"reconnect?");
+    //If a gc object still exists, we were disconnected unexpectedly
+    if(gc != NULL) {
+        //clean up
+        [self disconnect];
+        //reconnect
+        [self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
+    }
+    NSLog(@"done");
+}
+
+
+
+
+
+
+//Account Status ------------------------------------------------------------------------------------------------------
+//Status keys this account supports
+- (NSArray *)supportedPropertyKeys
+{
+    return([NSArray arrayWithObjects:
+        @"Display Name",
+        @"Online",
+        @"Offline",
+        @"IdleSince",
+        @"IdleManuallySet",
+        @"UserIcon",
+        @"Away",
+        @"AwayMessage",
+        @"TextProfile",
+        @"UserIcon",
+        @"DefaultUserIconFilename",
+        nil]);
+}
+
+//Update our status for a key
+- (void)updateStatusForKey:(NSString *)key
+{    
+	[super updateStatusForKey:key];
+
+	BOOL    areOnline = [[self statusObjectForKey:@"Online"] boolValue];
+
+    //Now look at keys which only make sense while online
+    if(areOnline){
+        if ([key compare:@"IdleSince"] == 0){
+            NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+            // Even if we're setting a non-zero idle time, set it to zero first.
+            // Some clients ignore idle time changes unless it moves to/from 0.
+            serv_set_idle(gc, 0);
+            if (idleSince != nil) {
+                int newIdle = -[idleSince timeIntervalSinceNow];
+                serv_set_idle(gc, newIdle);
+            }
+            [self setStatusObject:idleSince forKey:@"IdleSince" notify:YES];
+        }
+        else if ([key compare:@"AwayMessage"] == 0) {
+			NSAttributedString	*awayMessage = [NSAttributedString stringWithData:[self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]];
+            [self setAwayMessage:awayMessage];
+			[self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:NO];
+			[self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
+        }
+		else if([key compare:@"TextProfile"] == 0){
+			NSAttributedString	*profile = [NSAttributedString stringWithData:[self preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS]];
+			[self setProfile:profile];
+			[self setStatusObject:profile forKey:@"TextProfile" notify:YES];
+		}
+    }
+	
+	//User Icon can be set regardless of ONLINE state
+	if([key compare:@"UserIcon"] == 0) {
+		NSData	*newIconData = [self preferenceForKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
+		NSImage	*newIcon = [[[NSImage alloc] initWithData:newIconData] autorelease];
+		
+		[self setStatusObject:newIcon forKey:@"UserIcon" notify:YES];
+		
+		//gaim requires a file to be used as the userIcon.  Give it its file.
+		if(newIcon) {          
+			NSData 	*data = [[newIcon JPEGRepresentation] retain];
+			NSString    *buddyImageFilename = [[self _userIconCachePath] retain];
+			if([data writeToFile:buddyImageFilename atomically:YES]){
+				[self setBuddyImageFromFilename:(char *)[buddyImageFilename UTF8String]];
+			}else{
+				NSLog(@"Error writing file %@",buddyImageFilename);   
+			}
+			[buddyImageFilename release];
+		}else{
+			[self setBuddyImageFromFilename:nil];   
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @end

@@ -97,10 +97,13 @@ typedef enum {
  * accounts, check out 'working with accounts' and 'creating service code'.
  */
 @interface AIAccount : AIListObject {
-    id <AIServiceController>	service;
+    id <AIServiceController>	service;				//The service controller that spawned us
+    NSMutableArray				*changedStatusKeys;		//Status keys that have changed since the last notification
+	NSString					*password;				//Password of this account
 
-    NSMutableArray		*changedStatusKeys;
-    NSImage                     *userIcon;
+	
+	//   NSImage                     *userIcon;
+	
 }
 
 - (id)initWithUID:(NSString *)inUID service:(id <AIServiceController>)inService;
@@ -128,5 +131,7 @@ typedef enum {
 - (void)updateStatusForKey:(NSString *)key; //The account's status did change
 - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify;
 - (id)statusObjectForKey:(NSString *)key;
+- (void)connect;
+- (void)disconnect;
 
 @end

@@ -26,10 +26,7 @@
 #include "util.h"
 
 @interface CBGaimAccount : AIAccount <AIAccount_Handles,AIAccount_Content>
-{    
-    NSString            *screenName;            // Current signed on screen name
-    NSString		*password;		// Current signed on password
- 
+{     
     NSMutableDictionary	*handleDict;
     NSMutableDictionary *chatDict;
 
