@@ -232,7 +232,8 @@
 					//Retrieve the user's password and then call connect
 					[[adium accountController] passwordForAccount:self 
 												  notifyingTarget:self
-														 selector:@selector(passwordReturnedForConnect:context:)];
+														 selector:@selector(passwordReturnedForConnect:context:)
+														  context:nil];
 				}else{
 					//Connect immediately without retrieving a password
 					[self connect];
