@@ -49,7 +49,7 @@
 		NSString	*scriptResult = [self _executeSafariLinkScript];
 
 		//If the script fails, do nothing
-		if (scriptResult){
+		if(scriptResult && [scriptResult length]){
 			//Insert the script result - it should have returned HTML, so process it first
 			NSAttributedString *attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult];
 			
