@@ -228,15 +228,15 @@ DeclareString(FormattedUID);
 #pragma mark AIMutableOwnerArray delegate
 
 //A mutable owner array (one of our displayArrays) set an object
-- (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner
+- (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner priorityLevel:(float)priority
 {
 	if (containingObject){
-		[containingObject listObject:self mutableOwnerArray:inArray didSetObject:anObject withOwner:inOwner];
+		[containingObject listObject:self mutableOwnerArray:inArray didSetObject:anObject withOwner:inOwner priorityLevel:priority];
 	}
 }
 
 //Empty implementation by default - we do not need to take any action when a mutable owner array changes
-- (void)listObject:(AIListObject *)listObject mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(AIListObject *)anObject withOwner:(AIListObject *)inOwner
+- (void)listObject:(AIListObject *)listObject mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(AIListObject *)anObject withOwner:(AIListObject *)inOwner priorityLevel:(float)priority
 {
 
 }

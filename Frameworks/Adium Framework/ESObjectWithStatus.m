@@ -231,7 +231,7 @@ DeclareString(Value);
 	
     if(!array){
         array = [[AIMutableOwnerArray alloc] init];
-		[array setDelegate:self];
+//		[array setDelegate:self];
         [displayDictionary setObject:array forKey:inKey];
         [array release];
     }
@@ -259,6 +259,12 @@ DeclareString(Value);
 	return ([[displayDictionary objectForKey:inKey] objectValue]);
 }
 
+//A mutable owner array (one of our displayArrays) set an object - not currently called; set the delegate 
+//when the owner array is created (above) to be able to use this method.
+- (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner priorityLevel:(float)priority
+{
+	
+}
 
 //Naming ---------------------------------------------------------------------------------------------------------------
 #pragma mark Naming

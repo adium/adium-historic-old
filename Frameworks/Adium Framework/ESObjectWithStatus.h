@@ -54,5 +54,7 @@ typedef enum {
 //Name
 - (NSString *)displayName;
 
+//Mutable owner array delegate method
+- (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner priorityLevel:(float)priority;
 
 @end
