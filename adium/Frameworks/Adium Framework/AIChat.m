@@ -31,7 +31,8 @@
 	_serviceImage = nil;
 	_cachedImage = nil;
 	_cachedMiniImage = nil;
-
+	isOpen = NO;
+	
     return(self);
 }
 
@@ -104,6 +105,10 @@
 	if(inAccount != account){
 		[account release];
 		account = [inAccount retain];
+		
+		//The uniqueChatID may depend upon the account, so clear it
+		[self clearUniqueChatID];
+		
 		[[adium notificationCenter] postNotificationName:Content_ChatAccountChanged object:self]; //Notify
 	}
 }
@@ -121,6 +126,14 @@
 	dateOpened = [inDate retain];
 }
 
+- (BOOL)isOpen
+{
+	return isOpen;
+}
+- (void)setIsOpen:(BOOL)flag
+{
+	isOpen = flag;
+}
 
 //Status ---------------------------------------------------------------------------------------------------------------
 #pragma mark Status
@@ -215,6 +228,10 @@
 - (void)setListObject:(AIListContact *)inListObject
 {
 	if([participatingListObjects count] == 1){
+		
+		//The uniqueChatID may depend upon the listObject, so clear it
+		[self clearUniqueChatID];
+		
 		[participatingListObjects removeObjectAtIndex:0];
 		[self addParticipatingListObject:inListObject];
 	}
@@ -227,18 +244,21 @@
 		if (listObject = [self listObject]){
 			uniqueChatID = [listObject uniqueObjectID];
 		}else{
-			uniqueChatID = [NSString stringWithFormat:@"%@.%@",name,[account uniqueObjectID]];
+			uniqueChatID = [AIChat uniqueChatIDForChatWithName:name
+													 onAccount:account];
 		}
 		
-		//If things go horribly awry, we can end up with no uniqueChatID here.  Simple guard so code elsewhere can work.
-		if (!uniqueChatID){
-			uniqueChatID = [NSString stringWithFormat:@"%@.%@",[NSString randomStringOfLength:4],[account uniqueObjectID]];
-		}
+		NSAssert(uniqueChatID != nil, @"nil uniqueChatID");
 		
 		[uniqueChatID retain];
 	}
 	
 	return (uniqueChatID);
+}
+
+- (void)clearUniqueChatID
+{
+	[uniqueChatID release]; uniqueChatID = nil;
 }
 
 + (NSString *)uniqueChatIDForChatWithName:(NSString *)inName onAccount:(AIAccount *)inAccount
