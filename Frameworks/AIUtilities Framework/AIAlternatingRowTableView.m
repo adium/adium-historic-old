@@ -91,7 +91,7 @@
     if([charString length] == 1) pressedChar = [charString characterAtIndex:0];
 
     //Check if 'delete' was pressed
-    if(pressedChar == NSDeleteFunctionKey || pressedChar == 127){ //Delete
+    if(pressedChar == NSDeleteFunctionKey || pressedChar == NSBackspaceCharacter){ //Delete
         if([[self dataSource] respondsToSelector:@selector(tableViewDeleteSelectedRows:)]){
 			[[self dataSource] tableViewDeleteSelectedRows:self]; //Delete the selection
 		}
