@@ -484,7 +484,7 @@
 	[cell setAlternateImage:altImage];
 	[cell setImage:image];
 	[cell setImagePosition:NSImageOnly];
-	[cell setHighlightsBy:NSChangeBackgroundCellMask];
+	[cell setHighlightsBy:NSContentsCellMask];
 } 
 
 

@@ -589,10 +589,10 @@
 													 rowRect.size.height*count + [self intercellSpacing].height*(count-1))];
 
 	
-NSEnumerator	*enumerator = [dragRows objectEnumerator];
-NSNumber		*rowNumber;
-int				row;
-float			yOffset = 0;
+    NSEnumerator	*enumerator = [dragRows objectEnumerator];
+    NSNumber		*rowNumber;
+    int				row;
+    float			yOffset = 0;
 
 	//Draw (Since the OLV is normally flipped, we have to be flipped when drawing)
 	[image setFlipped:YES];
