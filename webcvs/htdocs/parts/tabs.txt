@@ -1,0 +1,7 @@
+#ID, filename, Page title, show tab?
+#--------------------------------------------------
+home, index.php, Home, yes
+about, about.php, About, yes
+faq, faq.php, FAQ, yes
+team, team.php, Team, yes
+dev, development.php, Development, yes
