@@ -135,6 +135,7 @@ static AINewMessagePrompt *sharedInstance = nil;
         [[popUp_service menu] addItem:menuItem];
     }
 
+#warning evands: random crasher here for some reason (index 0 greater than bounds of array)
     //Select the last used account / Available online account
     [popUp_service selectItemAtIndex:[popUp_service indexOfItemWithRepresentedObject:[[adium accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]]];
 
