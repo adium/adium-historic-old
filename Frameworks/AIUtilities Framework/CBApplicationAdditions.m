@@ -21,6 +21,7 @@
 #endif
 
 @implementation NSApplication (CBApplicationAdditions)
+
 + (BOOL)isOnTigerOrBetter
 {
     return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3);	
@@ -80,6 +81,11 @@
 - (BOOL)isURLLoadingAvailable
 {
     return (NSFoundationVersionNumber >= 462.6);	
+}
+
+- (NSString *)applicationVersion
+{
+	return([[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]);
 }
 
 @end
