@@ -31,7 +31,12 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
 - (void)initController
 {
     //Build the array of menu locations
-    locationArray = [[NSMutableArray alloc] initWithObjects:menu_Adium_About, menu_Adium_Preferences, menu_File_New, menu_File_Close, menu_File_Save, menu_File_Accounts, menu_File_Additions, menu_File_Status, menu_Edit_Bottom, menu_Edit_Additions, menu_Format_Styles, menu_Format_Palettes, menu_Format_Additions, menu_Window_Top, menu_Window_Commands, menu_Window_Auxilary, menu_Window_Fixed, menu_Help_Local, menu_Help_Web, menu_Help_Additions, menu_Contact_Action, menu_Contact_Manage, menu_Contact_NegativeAction, menu_Contact_Additions, menu_Dock_Status, nil];
+    locationArray = [[NSMutableArray alloc] initWithObjects:menu_Adium_About, menu_Adium_Preferences,
+	menu_File_New, menu_File_Close, menu_File_Save, menu_File_Accounts, menu_File_Additions,
+	menu_File_Status, menu_Edit_Bottom, menu_Edit_Additions, menu_Format_Styles, menu_Format_Palettes,
+	menu_Format_Additions, menu_Window_Top, menu_Window_Commands, menu_Window_Auxilary,
+	menu_Window_Fixed, menu_Help_Local, menu_Help_Web, menu_Help_Additions, menu_Contact_Action,
+	menu_Contact_Manage, menu_Contact_NegativeAction, menu_Contact_Additions, menu_Dock_Status, nil];
 
     //Set up our contextual menu stuff
     contextualMenu = [[NSMenu alloc] init];
@@ -127,20 +132,26 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
     //Find the menu item (or the closest one above it)
     destination = location;
     menuItem = [locationArray objectAtIndex:destination];
-    while(menuItem == nilMenuItem){
-        destination--;
-        menuItem = [locationArray objectAtIndex:destination];
-    }
-    targetMenu = [menuItem menu];
-    targetIndex = [targetMenu indexOfItem:menuItem];
-    
-    //Insert the new item and a divider (if necessary)
-    if(location != destination){
-        [targetMenu insertItem:[NSMenuItem separatorItem] atIndex:targetIndex+1];
-        targetIndex++;
-    }
-    [targetMenu insertItem:newItem atIndex:targetIndex+1];
+    if([menuItem isKindOfClass:[NSMenuItem class]]){
+	while(menuItem == nilMenuItem){
+	    destination--;
+	    menuItem = [locationArray objectAtIndex:destination];
+	}
+	targetMenu = [menuItem menu];
+	targetIndex = [targetMenu indexOfItem:menuItem];
 
+	//Insert the new item and a divider (if necessary)
+	if(location != destination){
+	    [targetMenu insertItem:[NSMenuItem separatorItem] atIndex:targetIndex+1];
+	    targetIndex++;
+	}
+	[targetMenu insertItem:newItem atIndex:targetIndex+1];
+
+    }else{
+	//If it's attached to an NSMenu (and not an NSMenuItem), insert at the top of the menu
+	[(NSMenu *)menuItem addItem:newItem];
+    }
+    
     //update the location array
     [locationArray replaceObjectAtIndex:location withObject:newItem];
 }
@@ -157,15 +168,20 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
         NSMenuItem	*menuItem = [locationArray objectAtIndex:loop];
     
         //Move to the item above it, nil if a divider
-        if(menuItem == targetItem){
-            NSMenuItem	*previousItem = [targetMenu itemAtIndex:(targetIndex - 1)];
-            
-            if([previousItem isSeparatorItem]){
-                [locationArray replaceObjectAtIndex:loop withObject:nilMenuItem];
-            }else{
-                [locationArray replaceObjectAtIndex:loop withObject:previousItem];
-            }
-        }
+	if(targetIndex != 0){
+	    if(menuItem == targetItem){
+		NSMenuItem	*previousItem = [targetMenu itemAtIndex:(targetIndex - 1)];
+		
+		if([previousItem isSeparatorItem]){
+		    [locationArray replaceObjectAtIndex:loop withObject:nilMenuItem];
+		}else{
+		    [locationArray replaceObjectAtIndex:loop withObject:previousItem];
+		}
+	    }
+	}else{
+	    //If there are no more items, attach to the menu
+	    [locationArray replaceObjectAtIndex:loop withObject:targetMenu];
+	}
     }
     
     //Remove the item
