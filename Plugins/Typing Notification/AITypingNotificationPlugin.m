@@ -30,7 +30,6 @@
 - (void)installPlugin
 {
     //Preferences
-    preferences = [[AITypingNotificationPreferences preferencePane] retain];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_TYPING_NOTIFICATIONS];
 	
     //Register as an entry filter and observe content
@@ -144,9 +143,11 @@
 //Typing state ---------------------------------------------------------------------------------------------------------
 - (void)_sendTypingState:(AITypingState)typingState toChat:(AIChat *)chat
 {
+#warning Evan: May want to cache the typing preference lookup within the chat?
 	if(![chat integerStatusObjectForKey:SUPPRESS_TYPING_NOTIFICATIONS] &&
 	   (([chat integerStatusObjectForKey:WE_ARE_TYPING] != AINotTyping && typingState == AINotTyping) //We need this to allow 'stop typing' changes incase the user turns off the preference while they're typing
-		|| !disableTypingNotifications)){
+		|| ![[[chat account] preferenceForKey:KEY_DISABLE_TYPING_NOTIFICATIONS
+										group:GROUP_ACCOUNT_STATUS] boolValue])){
 		AIAccount		*account = [chat account];
 		AIContentTyping	*contentObject;
 		
