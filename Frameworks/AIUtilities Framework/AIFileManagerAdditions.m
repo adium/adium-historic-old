@@ -54,7 +54,12 @@
 				NSLog(@"Attempt to trash '%@' failed (full path: %@; full Trash path: %@).", fileName, sourcePath, destPath);
 				return NO;
 			}
+			destPath = destPathWithRandom;
 		}
+
+		NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
+		[workspace noteFileSystemChanged:sourcePath];
+		[workspace noteFileSystemChanged:destPath];
 	}		
 
 	return YES;
