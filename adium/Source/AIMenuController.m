@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIMenuController.h"
+#import <AIUtilities/AIUtilities.h>
 
 @interface AIMenuController (PRIVATE)
 @end
@@ -32,6 +33,10 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
 {
     //Build the array of menu locations
     locationArray = [[NSMutableArray alloc] initWithObjects:menu_Adium_About, menu_Adium_Preferences, menu_File_New, menu_File_Close, menu_File_Save, menu_File_Accounts, menu_File_Additions, menu_File_Status, menu_Edit_Bottom, menu_Edit_Additions, menu_Format_Styles, menu_Format_Palettes, menu_Format_Additions, menu_Window_Top, menu_Window_Commands, menu_Window_Auxilary, menu_Window_Fixed, menu_Help_Local, menu_Help_Web, menu_Help_Additions, menu_Contact_Manage, menu_Contact_Action, menu_Contact_NegativeAction, menu_Contact_Additions, nil];
+
+    //Set up our contextual menu stuff
+    contextualMenu = [[NSMenu alloc] init];
+    contextualMenuItemDict = [[NSMutableDictionary alloc] init];
 }
 
 //close
@@ -114,5 +119,66 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
     }
 }
 
+- (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(CONTEXT_MENU_LOCATION)location
+{
+    NSNumber			*key;
+    NSMutableArray		*itemArray;
+
+    //Search for an existing item array for menu items in this location
+    key = [NSNumber numberWithInt:location];
+    itemArray = [contextualMenuItemDict objectForKey:key];
+
+    //If one is not found, create it
+    if(!itemArray){
+        itemArray = [[NSMutableArray alloc] init];
+        [contextualMenuItemDict setObject:itemArray forKey:key];
+    }
+
+    //Add the passed menu item to the array
+    [itemArray addObject:newItem];
+}
+
+//Pass an array of NSNumbers corresponding to the desired contextual menu locations
+- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray
+{
+    NSEnumerator	*enumerator;
+    NSNumber		*location;
+    NSEnumerator	*itemEnumerator;
+    NSMenuItem		*menuItem;
+    BOOL		itemsAbove = NO;
+    
+    //Remove all items from the existing menu
+    [contextualMenu removeAllItems];
+
+    //Process each specified location
+    enumerator = [inLocationArray objectEnumerator];
+    while((location = [enumerator nextObject])){
+        //Add a seperator
+        if(itemsAbove){
+            [contextualMenu addItem:[NSMenuItem separatorItem]];
+            itemsAbove = NO;
+        }
+        
+        //Add each menu item in the location
+        itemEnumerator = [[contextualMenuItemDict objectForKey:location] objectEnumerator];
+        while((menuItem = [itemEnumerator nextObject])){
+            //Add the menu item
+            [contextualMenu addItem:menuItem];
+            itemsAbove = YES;
+        }
+    }
+
+    return(contextualMenu);
+}
+
 
 @end
+
+
+
+
+
+
+
+
+

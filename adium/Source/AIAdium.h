@@ -66,6 +66,10 @@ typedef enum {
 } MENU_LOCATION;
 
 typedef enum {
+    Context_Contact_Manage, Context_Contact_Action, Context_Contact_NegativeAction, Context_Contact_Additions    
+} CONTEXT_MENU_LOCATION;
+
+typedef enum {
     AISortGroup = 0,
     AISortGroupAndSubGroups,
     AISortGroupAndSuperGroups
@@ -334,6 +338,8 @@ typedef enum {
     int				largestOrder;
 
     AIContactListGeneration	*contactListGeneration;
+
+    NSMenuItem			*getInfoContextMenuItem;
 }
 
 //Account available handles changed
@@ -492,13 +498,20 @@ typedef enum {
     IBOutlet	NSMenuItem	*menu_Contact_Action;
     IBOutlet	NSMenuItem	*menu_Contact_NegativeAction;
     IBOutlet	NSMenuItem	*menu_Contact_Additions;
-
+        
     NSMutableArray		*locationArray;
+
+    NSMenu			*contextualMenu;
+    NSMutableDictionary		*contextualMenuItemDict;
 }
 
 //Custom menu items
 - (void)addMenuItem:(NSMenuItem *)newItem toLocation:(MENU_LOCATION)location;
 - (void)removeMenuItem:(NSMenuItem *)targetItem;
+
+//Contextual menu items
+- (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(CONTEXT_MENU_LOCATION)location;
+- (NSMenu *)contextualMenuWithLocations:(NSArray *)locationArray;
 
 @end
 

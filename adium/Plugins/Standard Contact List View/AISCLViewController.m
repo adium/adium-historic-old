@@ -302,6 +302,30 @@
     return([item isExpanded]);
 }
 
+
+- (NSMenu *)outlineView:(NSOutlineView *)outlineView menuForEvent:(NSEvent *)theEvent
+{
+    NSPoint	location;
+    int		row;
+    id		item;
+
+    //Get the clicked item
+    location = [outlineView convertPoint:[theEvent locationInWindow] fromView:[[outlineView window] contentView]];
+    row = [outlineView rowAtPoint:location];
+    item = [outlineView itemAtRow:row];
+
+    //Select the clicked row and bring the window forward
+    [outlineView selectRow:row byExtendingSelection:NO];
+    [[outlineView window] makeKeyAndOrderFront:nil];
+
+    //Stop tracking tooltips
+    [self _endTrackingMouse];
+
+    //Return the context menu
+    return([[owner menuController] contextualMenuWithLocations:[NSArray arrayWithObjects: [NSNumber numberWithInt:Context_Contact_Manage], [NSNumber numberWithInt:Context_Contact_Action], [NSNumber numberWithInt:Context_Contact_NegativeAction], [NSNumber numberWithInt:Context_Contact_Additions], nil]]);
+}
+
+
 //Manual Ordering support
 /*- (BOOL)outlineView:(NSOutlineView *)olv writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
 {
