@@ -921,12 +921,19 @@
         [titleString appendString:[NSString stringWithFormat:@"%@ (%@)", displayName, formattedUID] withAttributes:titleDict];
     }
     
-	
     if ([object isKindOfClass:[AIListContact class]]){
 		
 		//Add the serviceID, three spaces away
-		NSString	*displayServiceID = [[object service] shortDescription];
-		if (!displayServiceID) displayServiceID = META_SERVICE_STRING;
+		NSString	*displayServiceID;
+		if ([object isKindOfClass:[AIMetaContact class]]){
+			if ([(AIMetaContact *)object containsOnlyOneUniqueContact]){
+				displayServiceID = [[[(AIMetaContact *)object preferredContact] service] shortDescription];
+			}else{
+				displayServiceID = META_SERVICE_STRING;
+			}
+		}else{
+			displayServiceID = [[object service] shortDescription];
+		}
 		
         [titleString appendString:[NSString stringWithFormat:@"   %@",displayServiceID]
                    withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
