@@ -284,7 +284,7 @@ AIEventSoundCustom	*sharedInstance = nil;
     enumerator = [eventSoundArray objectEnumerator];
     while (soundRowDict = [enumerator nextObject]) {
         //add it if it's not already in the menu
-        NSString *soundPath = [[soundRowDict objectForKey:KEY_EVENT_SOUND_PATH] stringByExpandingBundlePath];
+        NSString *soundPath = [soundRowDict objectForKey:KEY_EVENT_SOUND_PATH];
         if(soundPath && ([soundPath length] != 0) && [soundMenu_cached indexOfItemWithRepresentedObject:soundPath] == -1) {
             NSImage	*soundImage;
             NSString	*soundTitle;
