@@ -266,7 +266,23 @@ static NSImage *pushIndicatorImage = nil;
 	[[adium contentController] stringAdded:theString toTextEntryView:self];
 }
 
-
+- (void)deleteBackward:(id)sender
+{
+	//Perform the delete
+	[super deleteBackward:sender];
+	
+	//If we are now an empty string, and we still have a link active, clear the link
+	if ([[self textStorage] length] == 0){
+		NSDictionary *typingAttributes = [self typingAttributes];
+		if ([typingAttributes objectForKey:NSLinkAttributeName]){
+			
+			NSMutableDictionary *newTypingAttributes = [[typingAttributes mutableCopy] autorelease];
+			[newTypingAttributes removeObjectForKey:NSLinkAttributeName];
+			[self setTypingAttributes:newTypingAttributes];
+		}
+	}
+	
+}
 //Contact menu ---------------------------------------------------------------------------------------------------------
 #pragma mark Contact menu
 //Set and return the selected chat (to auto-configure the contact menu)
@@ -613,6 +629,9 @@ static NSImage *pushIndicatorImage = nil;
 	}
 }
 
+#warning Another bit of image code not ready for prime time yet :)
+#define ALLOW_INSERTION_OF_IMAGES   FALSE
+
 //The textView's method of inserting into the view is insufficient; we can do better.
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
@@ -630,7 +649,7 @@ static NSImage *pushIndicatorImage = nil;
 		//use.
 		
 		///XXX some services only will support files, not images... so we should adjust accordingly
-		if (img /* && [delegate canInsertImageIntoMessageEntryTextView:self] */){
+		if (ALLOW_INSERTION_OF_IMAGES && img /* && [delegate canInsertImageIntoMessageEntryTextView:self] */){
 			AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
 			NSTextAttachmentCell		*cell = [[NSTextAttachmentCell alloc] initImageCell:img];
 			
