@@ -2,6 +2,12 @@
 
 #import "ESBorderlessWindow.h"
 
+#define BORDERLESS_WINDOW_DOCKING_DISTANCE 	20	//Distance in pixels before the window is snapped to an edge
+
+@interface ESBorderlessWindow (PRIVATE)
+- (BOOL)dockWindowFrame:(NSRect *)inFrame toScreenFrame:(NSRect)screenFrame movementX:(float)movementX movementY:(float)movementY;
+@end
+
 @implementation ESBorderlessWindow
 
 //In Interface Builder we set ESInvisibleWindow to be the class for our window, so our own initializer is called here.
@@ -49,19 +55,20 @@
 - (void)mouseDragged:(NSEvent *)theEvent
 {
     if ([theEvent cmdKey]) {
-        NSPoint currentLocation;
+        NSPoint		currentLocation;
 
-		NSScreen *currentScreen = [self screen];
-		//[[[currentScreen deviceDescription] objectForKey:@"NSScreenNumber"] intValue]
-        NSRect  windowFrame = [self frame];
-        NSPoint newOrigin = windowFrame.origin;
+		NSScreen	*currentScreen = [self screen];
+        NSRect		windowFrame = [self frame];
+        NSPoint		newOrigin = windowFrame.origin;
         
         //grab the current global mouse location; we could just as easily get the mouse location 
         //in the same way as we do in -mouseDown:
         currentLocation = [self convertBaseToScreen:[self mouseLocationOutsideOfEventStream]];
 //        NSLog(@"mouse was (%f,%f) now (%f,%f) move of (%f,%f) newOrigin will be (%f,%f)",previousLocation.x,previousLocation.y,currentLocation.x,currentLocation.y,currentLocation.x - previousLocation.x,currentLocation.y - previousLocation.y,newOrigin.x +(currentLocation.x - previousLocation.x),newOrigin.y+(currentLocation.y - previousLocation.y));
-        newOrigin.x += currentLocation.x - previousLocation.x;
-        newOrigin.y += currentLocation.y - previousLocation.y;
+float movementX = currentLocation.x - previousLocation.x;
+float movementY = currentLocation.y - previousLocation.y;
+        newOrigin.x += movementX;
+        newOrigin.y += movementY;
         previousLocation = currentLocation;
 		
 		//        NSLog(@"%f + %f > %f + %f",newOrigin.y,windowFrame.size.height,screenFrame.origin.y,screenFrame.size.height);
@@ -88,8 +95,13 @@
             newOrigin.x = 1 - windowFrame.size.width;
         */
 		
-        //Move the window to the new location
-        [self setFrameOrigin:newOrigin];
+		//Attempt to dock this window the the visible frame first, and then to the screen frame
+		windowFrame.origin = newOrigin;
+		
+		[self dockWindowFrame:&windowFrame toScreenFrame:[currentScreen visibleFrame] movementX:movementX movementY:movementY];
+		[self dockWindowFrame:&windowFrame toScreenFrame:[currentScreen frame] movementX:movementX movementY:movementY];
+
+		[self setFrameOrigin:windowFrame.origin];
     } else {
         [super mouseDragged:theEvent];
     }
@@ -102,10 +114,44 @@
     if ([theEvent cmdKey]) {
         //grab the mouse location in global coordinates
         previousLocation = [self convertBaseToScreen:[self mouseLocationOutsideOfEventStream]];
+		
     } else {
         [super mouseDown:theEvent];
     }
 }
+
+//Dock the passed window frame if it's close enough to the screen edges
+- (BOOL)dockWindowFrame:(NSRect *)windowFrame toScreenFrame:(NSRect)screenFrame movementX:(float)movementX movementY:(float)movementY
+{
+	BOOL	changed = NO;
+	//Left
+	if((abs(NSMinX((*windowFrame)) - NSMinX(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE) && movementX < 0){
+		(*windowFrame).origin.x = screenFrame.origin.x;
+		changed = YES;
+	}
+	
+	//Bottom
+	if((abs(NSMinY(*windowFrame) - NSMinY(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE) && movementY < 0){
+//	NSLog(@"%f %f (%i) versus %i setting %f to %f",NSMinY(windowFrame),NSMinY(screenFrame),(abs(NSMinY(windowFrame) - NSMinY(screenFrame))),BORDERLESS_WINDOW_DOCKING_DISTANCE,windowFrame.origin.y,screenFrame.origin.y);
+		(*windowFrame).origin.y = screenFrame.origin.y;
+		changed = YES;
+	}
+	
+	//Right
+	if((abs(NSMaxX(*windowFrame) - NSMaxX(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE) && movementX > 0){
+		(*windowFrame).origin.x -= NSMaxX(*windowFrame) - NSMaxX(screenFrame);
+		changed = YES;
+	}
+	
+	//Top
+	if((abs(NSMaxY(*windowFrame) - NSMaxY(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE) && movementY > 0){
+		(*windowFrame).origin.y -= NSMaxY(*windowFrame) - NSMaxY(screenFrame);
+		changed = YES;
+	}
+	
+	return(changed);
+}
+
 
 
 @end
