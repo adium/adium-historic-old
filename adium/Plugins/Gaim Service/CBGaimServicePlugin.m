@@ -14,7 +14,6 @@
 #define GAIM_EVENTLOOP_INTERVAL     0.02         //Interval at which to run libgaim's main event loop
 
 @interface CBGaimServicePlugin (PRIVATE)
-- (void)configureGaimProxySettings;
 - (NSDictionary *)getDictionaryFromKeychainForKey:(NSString *)key;
 @end
 
@@ -588,7 +587,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     
     /* Proxy */
     gaim_proxy_init();
-    [self configureGaimProxySettings];
+//    [self configureGaimProxySettings];
         
     //Setup libgaim core preferences
     
