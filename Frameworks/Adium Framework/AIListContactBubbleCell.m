@@ -68,7 +68,7 @@
 		//Label color.  If there is no label color we draw the background color (taking care of gridding if needed)
 		//We cannot use the regular table background drawing for bubble cells because of our rounded corners
 		labelColor = [self labelColor];
-		[(labelColor ? labelColor : [self backgroundColor]) set];
+		if(!labelColor) labelColor = [self backgroundColor];
 		
 		//Draw our background with rounded corners, retaining the bezier path for use in drawUserIconInRect:position:
 		[lastBackgroundBezierPath release];
@@ -77,9 +77,6 @@
 		//Draw using a (slow) AIGradient if requested, otherwise just fill
 		if (drawWithGradient){
 			AIGradient	*gradient;
-			NSColor		*labelColor;
-			
-			labelColor = [self labelColor];
 			
 			gradient = [AIGradient gradientWithFirstColor:labelColor
 											  secondColor:[labelColor darkenAndAdjustSaturationBy:0.4] 
@@ -87,6 +84,7 @@
 			[gradient drawInBezierPath:lastBackgroundBezierPath];
 			
 		}else{
+			[labelColor set];
 			[lastBackgroundBezierPath fill];
 		}
 		
