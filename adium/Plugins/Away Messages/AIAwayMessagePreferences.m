@@ -17,8 +17,8 @@
 #import "AIAwayMessagesPlugin.h"
 
 #define AWAY_MESSAGES_PREF_NIB		@"AwayMessagePrefs"	//Name of preference nib
-#define AWAY_MESSAGES_PREF_TITLE	@"Away Messages"	//Title of the preference view
-#define AWAY_NEW_MESSAGE_STRING		@"(New Away Message)"
+#define AWAY_MESSAGES_PREF_TITLE	AILocalizedString(@"Away Messages",nil)	//Title of the preference view
+#define AWAY_NEW_MESSAGE_STRING		AILocalizedString(@"(New Away Message)",nil)
 #define AWAY_LIST_IMAGE			@"AwayIcon"		//Away list image filename
 
 @interface AIAwayMessagePreferences (PRIVATE)
