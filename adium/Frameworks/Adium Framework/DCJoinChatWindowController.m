@@ -26,7 +26,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
     if(!sharedJoinChatInstance){
         sharedJoinChatInstance = [[self alloc] initWithWindowNibName:JOIN_CHAT_NIB];
     }
-
+	
     [[sharedJoinChatInstance window] makeKeyAndOrderFront:nil];
 
 }
@@ -37,10 +37,9 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 	// If there is a controller, it handles all of the join-chat work
 	if( controller ) {
 		[controller joinChatWithAccount:[[popUp_service selectedItem] representedObject]];
-		[controller release]; controller = nil;
 	}
 	
-	[self closeWindow:nil];
+	[[sharedJoinChatInstance window] orderOut:nil];
 }
 
 - (void)configureForAccount:(AIAccount *)inAccount
@@ -117,6 +116,9 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 {	
     [super initWithWindowNibName:windowNibName];    
 	    		
+	if( controller )
+		[controller release];
+	
 	controller = nil;
 
     return(self);
