@@ -11,7 +11,7 @@
 
 @interface ESAddressBookIntegrationPlugin(PRIVATE)
 - (void)updateAllContacts;
-- (void)updateSelf;
+- (void)updateSelfIncludingIcon:(BOOL)includeIcon;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (NSString *)nameForPerson:(ABPerson *)person;
 - (ABPerson *)searchForObject:(AIListObject *)inObject;
@@ -303,15 +303,15 @@
 - (void)updateAllContacts
 {
 	[[adium contactController] updateAllListObjectsForObserver:self];
-    [self updateSelf];
+    [self updateSelfIncludingIcon:YES];
 }
 
 - (void)accountListChanged:(NSNotification *)notification
 {
-	[self updateSelf];
+	[self updateSelfIncludingIcon:NO];
 }
 
-- (void)updateSelf
+- (void)updateSelfIncludingIcon:(BOOL)includeIcon
 {
 	NS_DURING 
         //Begin loading image data for the "me" address book entry, if one exists
@@ -319,8 +319,10 @@
         if (me = [[ABAddressBook sharedAddressBook] me]) {
 			
 			//Default buddy icon
-			//Begin the image load
-			meTag = [me beginLoadingImageDataForClient:self];
+			if (includeIcon){
+				//Begin the image load
+				meTag = [me beginLoadingImageDataForClient:self];
+			}
 			
 			//Set account display names
 			if (enableImport){
