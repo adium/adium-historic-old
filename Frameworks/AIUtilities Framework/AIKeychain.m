@@ -127,6 +127,12 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void *passw
 		if(itemRef) CFRelease(itemRef);
 	}
 	
+	NSLog(@"putPassword of length %i forSerivce: %@ account: %@ -- Succesful? %@",
+		  [password length],
+		  service,
+		  account,
+		  (success ? @"Yes" : @"No"));
+
 	return(success);
 }
 
