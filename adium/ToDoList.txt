@@ -21,6 +21,8 @@ Alerts:
 	+ Support the %escapes in alert text (such as %n to speak the contact's name)
 
 Contact List: 
+    + Add toolbar item for setting status (goes with the state system?)
+	+ Add Action menu toolbar item, ala Xcode or Mail.
 	- Remove contact list font preference.  Hook this up to cmd-T
 	- Remove the advanced option for vertical resizing, since this is already covered in the main preferences.
 	* Renaming doesn't work at the moment.
