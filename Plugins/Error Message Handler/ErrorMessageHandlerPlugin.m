@@ -62,7 +62,9 @@
 	//Generate the event (for no list object, so only global triggers apply)
 	[[adium contactAlertsController] generateEvent:INTERFACE_ERROR_MESSAGE
 									 forListObject:nil
-										  userInfo:nil];
+										  userInfo:nil
+					  previouslyPerformedActionIDs:nil];
+	
 }
 
 
