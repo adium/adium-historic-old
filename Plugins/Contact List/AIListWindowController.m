@@ -65,7 +65,8 @@
 
 - (void)dealloc
 {
-	[contactListController release];
+	[contactListController close];
+
 	[super dealloc];
 }
 
@@ -315,6 +316,7 @@
     if([self windowShouldClose:nil]){
         [[self window] close];
     }
+
     [self release];
 }
 

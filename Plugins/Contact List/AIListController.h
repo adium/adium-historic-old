@@ -19,6 +19,9 @@
 	BOOL								needsAutoResize;
 }
 
+//Call to close down and release the listController
+- (void)close;
+
 - (void)contactListDesiredSizeChanged;
 
 - (void)setMinWindowSize:(NSSize)inSize;
