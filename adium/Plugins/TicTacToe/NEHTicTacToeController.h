@@ -58,7 +58,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 - (IBAction)move:(id)sender;
 
 - (void)reset;
-- (NSImage *)loadImage:(NSString *)name;
 - (void)updateStatus;
 - (BOOL)move:(Player)p atRow:(unsigned)row atColumn:(unsigned)col;
 - (void)clearBoard;
