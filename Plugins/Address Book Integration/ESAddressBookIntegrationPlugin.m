@@ -373,13 +373,13 @@ static	ABAddressBook	*sharedAddressBook = nil;
 		while((listContact = [enumerator nextObject]) && (person == nil)){
 			person = [self searchForObject:listContact];
 		}
-		
+
 	}else{
 		NSString		*UID = [inObject UID];
 		NSString		*serviceID = [[inObject service] serviceID];
 		
 		person = [self _searchForUID:UID serviceID:serviceID];
-		
+
 		//If we don't find anything yet and inObject is an AIM account, try again using the ICQ property; ICQ, try again using AIM
 		if (!person){
 			if ([serviceID isEqualToString:@"AIM"]){
@@ -396,9 +396,9 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	ABPerson		*person = nil;
 	NSDictionary	*dict;
 	
-	if ([serviceID isEqualToString:@"Mac"]) {
+	if ([serviceID isEqualToString:@"Mac"]){
 		dict = [addressBookDict objectForKey:@"AIM"];
-	} else {
+	}else{
 		dict = [addressBookDict objectForKey:serviceID];
 	} 
 	
@@ -515,11 +515,42 @@ static	ABAddressBook	*sharedAddressBook = nil;
 		NSMutableArray		*UIDsArray = [NSMutableArray array];
 		NSMutableArray		*servicesArray = [NSMutableArray array];
 		
+		NSMutableDictionary	*dict;
+		ABMultiValue		*emails;
+		int					i, emailsCount;
+		
+		//An ABPerson may have multiple emails; iterate through them looking for @mac.com addresses
+		{
+			emails = [person valueForProperty:kABEmailProperty];
+			emailsCount = [emails count];
+			
+			for (i = 0; i < emailsCount ; i++){
+				NSString	*email;
+				
+				email = [emails valueAtIndex:i];
+				if ([email hasSuffix:@"@mac.com"]){
+					
+					//@mac.com UIDs go into the AIM dictionary
+					if (!(dict = [addressBookDict objectForKey:@"AIM"])){
+						dict = [[[NSMutableDictionary alloc] init] autorelease];
+						[addressBookDict setObject:dict forKey:@"AIM"];
+					}
+					
+					[dict setObject:[person uniqueId] forKey:email];
+					
+					//Internally we distinguish them as .Mac addresses (for metaContact purposes below)
+					[UIDsArray addObject:email];
+					[servicesArray addObject:@"Mac"];
+				}
+			}
+		}
+
+		//Now go through the instant messaging keys
 		while (serviceID = [servicesEnumerator nextObject]){
-			NSMutableDictionary		*dict;
 			NSString				*addressBookKey;
 			ABMultiValue			*names;
-			int						i, nameCount;
+			int						nameCount;
+			
 			BOOL					isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
 											   [serviceID isEqualToString:@"ICQ"]);
 			
@@ -534,7 +565,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			names = [person valueForProperty:addressBookKey];
 			nameCount = [names count];
 				
-			for (i=0 ; i < nameCount ; i++){
+			for (i = 0 ; i < nameCount ; i++){
 				NSString	*UID = [[names valueAtIndex:i] compactedString];
 				[dict setObject:[person uniqueId] forKey:UID];
 				
