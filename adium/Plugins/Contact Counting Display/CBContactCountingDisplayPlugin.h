@@ -17,6 +17,9 @@
     BOOL                                allCount;
     BOOL                                visibleCount;
     
+    NSMenuItem                          *visibleCountingMenuItem;
+    NSMenuItem                          *allCountingMenuItem;
+    
     CBContactCountingDisplayPreferences *prefs;
 }
 - (void)installPlugin;
