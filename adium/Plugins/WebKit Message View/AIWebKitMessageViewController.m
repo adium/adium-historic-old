@@ -12,6 +12,7 @@
 - (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_flushPreferenceCache;
+- (void)_releaseCachedHTML;
 - (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar;
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar;
 - (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content;
@@ -60,7 +61,19 @@ DeclareString(AppendNextMessage);
 	background = nil;
 	backgroundColor = nil;
 	loadedStyleID = nil;
+	loadedVariantID = nil;
 	setStylesheetTimer = nil;
+
+	//HTML Templates
+	contentInHTML = nil;
+	nextContentInHTML = nil;
+	contentOutHTML = nil;
+	nextContentOutHTML = nil;
+	contextInHTML = nil;
+	nextContextInHTML = nil;
+	contextOutHTML = nil;
+	nextContextOutHTML = nil;
+	statusHTML = nil;
 	
 	webViewIsReady = NO;
 	newContent = [[NSMutableArray alloc] init];
@@ -102,6 +115,7 @@ DeclareString(AppendNextMessage);
 - (void)dealloc
 {
 	[newContentTimer invalidate]; [newContentTimer release]; newContentTimer = nil;	
+	[setStylesheetTimer invalidate]; [setStylesheetTimer release]; setStylesheetTimer = nil;
 	[[adium notificationCenter] removeObserver:self];
 	
 	//Stop being the webView's baby's daddy; the webView may attempt callbacks shortly after we dealloc
@@ -113,6 +127,9 @@ DeclareString(AppendNextMessage);
 	[previousContent release]; previousContent = nil;
 	[plugin release]; plugin = nil;
 	[chat release]; chat = nil;
+	
+	[self _flushPreferenceCache];
+	[self _releaseCachedHTML];
 	
 	[super dealloc];
 }
@@ -240,7 +257,7 @@ DeclareString(AppendNextMessage);
 - (void)refreshView
 {
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	NSString		*CSS, *newStylePath;
+	NSString		*CSS;
 	NSBundle		*style;
 	
 	//Release the old preference cache
@@ -275,7 +292,6 @@ DeclareString(AppendNextMessage);
 		loadedStyleID = AILocalizedString(@"Mockie","Default message style name. Make sure this matches the localized style bundle's name!");
 		style = [plugin messageStyleBundleWithName:loadedStyleID];
 	}
-	newStylePath = [style resourcePath];
 	
 	loadedVariantID = [[prefDict objectForKey:[plugin variantKeyForStyle:loadedStyleID]] retain];
 	CSS = ([loadedVariantID length] ? [NSString stringWithFormat:@"Variants/%@.css",loadedVariantID] : @"main.css");
@@ -288,14 +304,11 @@ DeclareString(AppendNextMessage);
 							   boolDefault:NO];
 	
 	//Background Preferences [Style specific]
-	[background release]; background = nil;
-	[backgroundColor release]; backgroundColor = nil;
 	if(allowBackgrounds){
 		background = [[prefDict objectForKey:[plugin backgroundKeyForStyle:loadedStyleID]] retain];
 		backgroundColor = [[[prefDict objectForKey:[plugin backgroundColorKeyForStyle:loadedStyleID]] representedColor] retain];
 	}
 	
-	[stylePath release];
 	stylePath = [[style resourcePath] retain];
 	
 	[self loadStyle:style 
@@ -304,9 +317,12 @@ DeclareString(AppendNextMessage);
 
 - (void)_flushPreferenceCache
 {
-	[loadedStyleID release];
-	[loadedVariantID release];
-	[timeStampFormatter release];
+	[stylePath release]; stylePath = nil;
+	[loadedStyleID release]; loadedStyleID = nil;
+	[loadedVariantID release]; loadedVariantID = nil;
+	[timeStampFormatter release]; timeStampFormatter = nil;
+	[background release]; background = nil;
+	[backgroundColor release]; backgroundColor = nil;
 }
 
 //Force this view to immediately switch to the current preferences and then redisplay all its content
@@ -351,6 +367,8 @@ DeclareString(AppendNextMessage);
 	
 	//Load all the templates we'll need to for handling content
 	{
+		[self _releaseCachedHTML];
+		
 		//Content Templates
 		contentInHTML = [[NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Incoming/Content.html"]] retain];
 		nextContentInHTML = [[NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Incoming/NextContent.html"]] retain];
@@ -378,6 +396,24 @@ DeclareString(AppendNextMessage);
 	[[webView mainFrame] loadHTMLString:templateHTML baseURL:nil];
 }
 
+- (void)_releaseCachedHTML
+{
+	//Content Templates
+	[contentInHTML release];
+	[nextContentInHTML release];
+	[contentOutHTML release];
+	[nextContentOutHTML release];
+	
+	//Context (Fall back on content if not present)
+	[contextInHTML release];
+	[nextContextInHTML release];
+	
+	[contextOutHTML release];
+	[nextContextOutHTML release];
+	
+	//Status
+	[statusHTML release];
+}
 
 - (void)_loadPreferencesWithStyleNamed:(NSString *)styleName
 {
