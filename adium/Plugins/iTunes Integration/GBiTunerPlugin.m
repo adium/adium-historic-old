@@ -111,11 +111,12 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 				NSAppleScript   *script = [[[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:nil] autorelease];
 				NSString		*keyword = [[script executeFunction:@"keyword" error:nil] stringValue];
 				NSString		*title = [[script executeFunction:@"title" error:nil] stringValue];
+				NSString		*arguments = [[script executeFunction:@"arguments" error:nil] stringValue];
 				BOOL			prefixOnly = [[script executeFunction:@"prefixonly" error:nil] booleanValue];
 				
 				if(keyword && [keyword length] && title && [title length]){
 					NSDictionary	*infoDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Script", @"Type",
-						scriptURL, @"Path", keyword, @"Keyword", title, @"Title",
+						scriptURL, @"Path", keyword, @"Keyword", title, @"Title", arguments, @"Arguments",
 						[NSNumber numberWithBool:prefixOnly], @"PrefixOnly", nil];
 					
 					//Place the entry in our script arrays
@@ -215,8 +216,14 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 //Insert the selected script (CALL BY MENU ONLY)
 - (IBAction)selectScript:(id)sender
 {
-	NSString	*keyword = [[sender representedObject] objectForKey:@"Keyword"];
+	NSString	*replacementText = [[sender representedObject] objectForKey:@"Keyword"];
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+	NSString	*arguments = [[sender representedObject] objectForKey:@"Arguments"];
+	
+	//Append arg list to replacement string, to show the user what they can pass
+	if(arguments){
+		replacementText = [NSString stringWithFormat:@"%@%@", replacementText, arguments];
+	}
 	
 	//Append our string into the responder if possible
 	if(responder && [responder isKindOfClass:[NSTextView class]]){
@@ -224,10 +231,10 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 		
 		//Use typing attributes if available
 		if([responder respondsToSelector:@selector(typingAttributes)]){
-			attrString = [[[NSAttributedString alloc] initWithString:keyword
+			attrString = [[[NSAttributedString alloc] initWithString:replacementText
 														  attributes:[(NSTextView *)responder typingAttributes]] autorelease];
 		}else{
-			attrString = [[[NSAttributedString alloc] initWithString:keyword
+			attrString = [[[NSAttributedString alloc] initWithString:replacementText
 														  attributes:[NSDictionary dictionary]] autorelease];
 		}
 		[[(NSTextView *)responder textStorage] appendAttributedString:attrString];
