@@ -296,7 +296,6 @@
 		contentCell = [[cellClass alloc] init];
 		[contactListView setContentCell:contentCell];
 		
-	
 		//Alignment
 		[contentCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue]];
 		[groupCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue]];
@@ -320,9 +319,11 @@
 		if(contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT){
 			[contentCell setSplitVerticalSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
 			[contentCell setLeftSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
+			[contentCell setRightSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT] intValue]];
 		}else{
 			[contentCell setSplitVerticalPadding:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
 			[contentCell setLeftPadding:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
+			[contentCell setRightPadding:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT] intValue]];
 		}
 
 		//Mockie special cases
@@ -388,6 +389,9 @@
 		[contactListView setDrawsAlternatingRows:(backgroundAlpha == 0.0 ? NO : [[layoutDict objectForKey:KEY_LIST_LAYOUT_GRID_ENABLED] boolValue])];
 	}
 	
+	//
+	[groupCell setTextColor:[[themeDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR] representedColor]];
+		
 	//Transparency.  Bye bye CPU cycles, I'll miss you!
 	[[self window] setOpaque:(backgroundAlpha == 1.0)];
 	[contactListView setUpdateShadowsWhileDrawing:(backgroundAlpha < 0.8)];
