@@ -126,25 +126,77 @@
 	return(description);
 }
 
+- (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
+										listObject:(AIListObject *)listObject
+										  userInfo:(id)userInfo
+									includeSubject:(BOOL)includeSubject
+{
+	NSString		*description = nil;
+	AIContentObject	*contentObject;
+	NSString		*messageText;
+	NSString		*displayName;
+	
+	NSParameterAssert([userInfo isKindOfClass:[AIContentObject class]]);
+	
+	contentObject = (AIContentObject *)userInfo;
+	messageText = [[[contentObject message] safeString] string];
+	displayName = [listObject displayName];
+			
+	if(includeSubject){
+
+		if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
+			description = [NSString stringWithFormat:
+				AILocalizedString(@"You said %@ to %@","You said Message to Contact"),
+				messageText,
+				displayName];
+				
+		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED] ||
+				 [eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
+			description = [NSString stringWithFormat:
+				AILocalizedString(@"%@ said %@","Contact said Message"),
+				displayName,
+				messageText];
+		}	
+
+	}else{
+		if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
+			description = [NSString stringWithFormat:
+				AILocalizedString(@"said %@ to %@", "implied subject is you; you said Message to Contact"),
+				messageText,
+				displayName];
+			
+		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED] ||
+				 [eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
+			description = [NSString stringWithFormat:
+				AILocalizedString(@"said %@", "implied subject is a contact; the contact said Message"),
+				messageText];
+		}
+	}
+	
+	return(description);
+}
+
+#pragma mark Message event handling
 - (void)handleMessageEvent:(NSNotification *)notification
 {
 	AIChat			*chat = [notification object];
+	AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
 	AIListObject	*listObject = [chat listObject];
 	
 	if ([[notification name] isEqualToString:Content_DidSendContent]){
 		[[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_SENT
 										 forListObject:listObject
-											  userInfo:chat];
+											  userInfo:contentObject];
 
 	}else if ([[notification name] isEqualToString:Content_DidReceiveContent]){
 		[[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED
 										 forListObject:listObject
-											  userInfo:chat];
+											  userInfo:contentObject];
 		
 	}else if ([[notification name] isEqualToString:Content_FirstContentRecieved]){
 		[[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED_FIRST
 										 forListObject:listObject
-											  userInfo:chat];
+											  userInfo:contentObject];
 
 	}
 }
