@@ -204,7 +204,7 @@ static AIInfoWindowController *sharedInstance = nil;
 //Displays the attributed string in the profile view.  Pass nil for no profile
 - (void)displayInfo:(NSAttributedString *)infoString
 {
-    if(infoString){
+    if(infoString && [infoString length]){
         NSColor	*backgroundColor;
 
         //Display the string
