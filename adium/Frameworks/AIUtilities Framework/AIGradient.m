@@ -24,16 +24,14 @@
 
 @end
 
-typedef struct
-{
+typedef struct {
 	float red;
 	float green;
 	float blue;
 	float alpha;
 } FloatRGB;
 
-typedef struct
-{
+typedef struct {
 	//the start and end colours of a gradient.
 	FloatRGB start;
 	FloatRGB end;
@@ -49,8 +47,8 @@ enum {
 	//number of bits for each component of a colour value.
 	//for a 24-bit RGB value, this is 8.
 	//for a 32-bit RGBA value (which is what this code uses), this is still 8.
-	bitsPerComponent = 8U,
-	componentsPerPixel = 4U, //RGBA
+	bitsPerComponent = 8,
+	componentsPerPixel = 4, //RGBA
 	bitsPerPixel = bitsPerComponent * componentsPerPixel
 };
 
@@ -145,8 +143,8 @@ enum {
 	float wscale = ((int)inRect.size.width)  / inRect.size.width;
 	float hscale = ((int)inRect.size.height) / inRect.size.height;
 	CGAffineTransform transform = CGAffineTransformMake(
-		/*a*/ wscale, /*b*/ 0.0f,
-		/*c*/ 0.0f,   /*d*/ hscale,
+		/*a*/ wscale, /*b*/ 0.0,
+		/*c*/ 0.0,   /*d*/ hscale,
 		/*tx*/ -(inRect.origin.x), /*ty*/ -(inRect.origin.y)
 	);
 	cgRect->size = CGSizeApplyAffineTransform(cgRect->size, transform);
@@ -157,15 +155,13 @@ enum {
 	TwoColors blendPoints;
 	NSColor *startColor = [color1 retain], *endColor = [color2 retain], *temp;
 
-	if(![[startColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace])
-	{
+	if(![[startColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace]) {
 		temp = startColor;
 		startColor = [[startColor colorUsingColorSpaceName:NSDeviceRGBColorSpace] retain];
 		[temp release];
 	}
 
-	if(![[endColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace])
-	{
+	if(![[endColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace]) {
 		temp = endColor;
 		endColor = [[endColor colorUsingColorSpaceName:NSDeviceRGBColorSpace] retain];
 		[temp release];
@@ -184,7 +180,7 @@ enum {
 	[startColor release];
 	[endColor release];
 
-	struct CGFunctionCallbacks callbacks = { 0, returnColorValue, NULL };
+	CGFunctionCallbacks callbacks = { 0, returnColorValue, NULL };
 	
 	CGFunctionRef function = CGFunctionCreate(
 		&blendPoints,	// void *info,
@@ -194,27 +190,22 @@ enum {
 		NULL,			// float const *range,
 		&callbacks		// CGFunctionCallbacks const *callbacks
 	);
-	if (function != NULL)
-	{
+	if (function != NULL) {
 		CGColorSpaceRef cspace = CGColorSpaceCreateDeviceRGB();
-		if (cspace != NULL)
-		{
+		if (cspace != NULL) {
 			CGPoint srcPt, dstPt;
 
 			//note that the comments in this section refer to the bounds of
 			//  the context, not the window. (e.g. 'top' means 'top of the
 			//  context', not 'top of the window'.)
-			if(direction == AIVertical)
-			{
+			if(direction == AIVertical) {
 				//draw the gradient from the top middle to the bottom middle.
-				srcPt.x = dstPt.x = width / 2.0f;
+				srcPt.x = dstPt.x = width / 2.0;
 				srcPt.y = 0.0f;
 				dstPt.y = height;
-			}
-			else
-			{
+			} else {
 				//draw the gradient from the middle left to the middle right.
-				srcPt.y = dstPt.y = height / 2.0f;
+				srcPt.y = dstPt.y = height / 2.0;
 				srcPt.x = 0.0f;
 				dstPt.x = width;
 			}
@@ -228,19 +219,16 @@ enum {
 				false		// bool extendEnd
 			);
 
-			if (shading != NULL)
-			{
+			if (shading != NULL) {
 				BZContextImageBridge *bridge = [BZContextImageBridge bridgeWithSize:inRect.size];
 				CGContextRef context = [bridge context];
 
-				if (context != NULL)
-				{
+				if (context != NULL) {
 					CGContextBeginPath(context);
 
 					//Drawing stuff
 					CGPathRef pathToAdd = CreateCGPathWithNSBezierPath(&transform, inPath); //thanks boredzo :)
-					if(pathToAdd != NULL)
-					{
+					if(pathToAdd != NULL) {
 						CGContextAddPath(context, pathToAdd);
 						CGContextClip(context);
 
@@ -248,7 +236,7 @@ enum {
 
 						NSImage *image = [bridge image];
 
-						[image drawInRect:inRect fromRect:NSMakeRect(0.0f,0.0f, width, height) operation:NSCompositeSourceOver fraction:1.0f];
+						[image drawInRect:inRect fromRect:NSMakeRect(0.0,0.0, width, height) operation:NSCompositeSourceOver fraction:1.0];
 						
 						CGPathRelease(pathToAdd);
 					} /* if(pathToAdd != NULL) */
@@ -262,6 +250,8 @@ enum {
 	} /* if(function) */
 }
 
+@end
+
 #pragma mark C Functions
 
 //returnColorValue
@@ -273,13 +263,16 @@ enum {
 //4 outputs: the four components (RGBA) of the colour resulting from the blend.
 //reference constant: a pointer to a TwoColors value giving the start and end
 //  points of the aforementioned plane.
-void returnColorValue(void *refcon, const float *blendPoint, float *output)
-{
+void returnColorValue(void *refcon, const float *blendPoint, float *output) {
 	TwoColors *gradient = refcon;
 
+	//this version exploits the RGBA nature of the FloatRGB structure to gain
+	//  speed.
 	BlendColors((FloatRGB *)output, &(gradient->start), &(gradient->end), *blendPoint);
 
-	/*slow version:
+	//this version is slower, but will be correct no matter what format is used.
+	//use this version instead if FloatRGB ever changes.
+	/*
 	FloatRGB newColor;
 	
 	BlendColors(&newColor, &(gradient->start), &(gradient->end), *blendPoint);
@@ -297,16 +290,15 @@ void returnColorValue(void *refcon, const float *blendPoint, float *output)
 //components, as is typical of Quartz, are 0.0f-1.0f also.
 //return value is 0 if successful or < 0 if not.
 
-int BlendColors(FloatRGB *result, FloatRGB *a, FloatRGB *b, float scale)
-{
+int BlendColors(FloatRGB *result, FloatRGB *a, FloatRGB *b, float scale) {
 	//assure that the scale value is within the range of 0.0f-1.0f.
-	if      (scale > 1.0f) scale = 1.0f;
-	else if (scale < 0.0f) scale = 0.0f;
+	if      (scale > 1.0) scale = 1.0;
+	else if (scale < 0.0) scale = 0.0;
 
-	float scaleComplement = 1.0f - scale;
+	float scaleComplement = 1.0 - scale;
 	result->alpha = scale * b->alpha + scaleComplement * a->alpha;
-	scale		  = scale * a->alpha + scaleComplement * (1.0f - b->alpha);
-	scaleComplement = 1.0f - scale;
+	scale		  = scale * a->alpha + scaleComplement * (1.0 - b->alpha);
+	scaleComplement = 1.0 - scale;
 	result->red   = scale * b->red   + scaleComplement * a->red;
  	result->green = scale * b->green + scaleComplement * a->green;
 	result->blue  = scale * b->blue  + scaleComplement * a->blue;
@@ -314,26 +306,21 @@ int BlendColors(FloatRGB *result, FloatRGB *a, FloatRGB *b, float scale)
 	return 0;
 }
 
-@end
-
 //transform can be NULL. --boredzo
-CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBezierPath *bezierPath)
-{
+CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBezierPath *bezierPath) {
 	CGMutablePathRef cgpath = CGPathCreateMutable();
-	if(cgpath != NULL)
-	{
+
+	if(cgpath != NULL) {
 		int numElements = [bezierPath elementCount];
 		int curElement;
 		NSBezierPathElement elementType;
 		NSPoint points[3];
 
-		for(curElement = 0; curElement < numElements; curElement++)
-		{
+		for(curElement = 0; curElement < numElements; curElement++) {
 			//the points are copied into our points array. --boredzo
 			elementType = [bezierPath elementAtIndex:curElement associatedPoints:points];
 
-			switch(elementType)
-			{
+			switch(elementType) {
 				case NSMoveToBezierPathElement:
 					CGPathMoveToPoint(cgpath, transform,
 						points[0].x, points[0].y);
