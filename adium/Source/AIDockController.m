@@ -65,7 +65,8 @@
         }
         else // bounce num # of times
         {
-            for(int i = 1; i <= num; i ++) //install a bunch of timers to go off. again hard to stop.
+            int i;
+            for(i = 1; i <= num; i ++) //install a bunch of timers to go off. again hard to stop.
             {
                 [NSTimer scheduledTimerWithTimeInterval:(double)(delay*num) target:self selector: @selector(bounceWithTimer) userInfo:nil repeats:NO];
             }
