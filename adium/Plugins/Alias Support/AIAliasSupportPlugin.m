@@ -87,7 +87,7 @@
     //Be sure we've set the last changes and invalidated the timer
     if (delayedChangesTimer) {
         [self setAlias:nil];
-        if ([delayedChangeTimer isValid]) {
+        if ([delayedChangesTimer isValid]) {
             [delayedChangesTimer invalidate]; 
         }
         [delayedChangesTimer release]; delayedChangesTimer = nil;
