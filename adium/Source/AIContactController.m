@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.109 2004/02/28 02:43:51 adamiser Exp $
+// $Id: AIContactController.m,v 1.110 2004/03/05 04:39:05 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -650,12 +650,12 @@
 
 		if([modifiedKeys containsObject:@"Online"]){ //Sign on/off
 			BOOL		newStatus = [inObject integerStatusObjectForKey:@"Online"];
-			NSNumber	*oldStatusNumber = [onlineDict objectForKey:[inObject UIDAndServiceID]];
+			NSNumber	*oldStatusNumber = [onlineDict objectForKey:[inObject uniqueObjectID]];
 			BOOL		oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
 
 			if(oldStatusNumber == nil || newStatus != oldStatus){
 				//Save the new status
-				[onlineDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject UIDAndServiceID]];
+				[onlineDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject uniqueObjectID]];
 				
 				//Take action (If this update isn't silent)
 				if(!silent){
@@ -666,12 +666,12 @@
 
 		if([modifiedKeys containsObject:@"Away"]){ //Away / Unaway
 			BOOL		newStatus = [inObject integerStatusObjectForKey:@"Away"];
-			NSNumber	*oldStatusNumber = [awayDict objectForKey:[inObject UIDAndServiceID]];
+			NSNumber	*oldStatusNumber = [awayDict objectForKey:[inObject uniqueObjectID]];
 			BOOL		oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
 			
 			if(oldStatusNumber == nil || newStatus != oldStatus){
 				//Save the new state
-				[awayDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject UIDAndServiceID]];
+				[awayDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject uniqueObjectID]];
 				
 				//Take action (If this update isn't silent)
 				if(!silent){
@@ -683,13 +683,13 @@
 		
 		if([modifiedKeys containsObject:@"IdleSince"]){ //Idle / UnIdle
 			NSDate 		*idleSince = [inObject earliestDateStatusObjectForKey:@"IdleSince"];
-			NSNumber	*oldStatusNumber = [idleDict objectForKey:[inObject UIDAndServiceID]];
+			NSNumber	*oldStatusNumber = [idleDict objectForKey:[inObject uniqueObjectID]];
 			BOOL		oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
 			BOOL		newStatus = (idleSince != nil);
 			
 			if(oldStatusNumber == nil || newStatus != oldStatus){
 				//Save the new state
-				[idleDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject UIDAndServiceID]];
+				[idleDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inObject uniqueObjectID]];
 				
 				//Take action (If this update isn't silent)
 				if(!silent){

@@ -126,7 +126,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 
 + (NSString *)logPathWithAccount:(AIAccount *)account andObject:(NSString *)object
 {
-    return [[logBasePath stringByAppendingPathComponent:[account UIDAndServiceID]] stringByAppendingPathComponent:object];
+    return [[logBasePath stringByAppendingPathComponent:[account uniqueObjectID]] stringByAppendingPathComponent:object];
 }
 
 //Enable/Disable our view log menus

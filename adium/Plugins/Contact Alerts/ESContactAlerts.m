@@ -120,11 +120,11 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     if (object) //nil objects can't be loaded, clearly
     {
         NSMutableArray  *newActionArray =  nil;
-        NSString        *UIDAndServiceID = [object UIDAndServiceID];
+        NSString        *uniqueObjectID = [object uniqueObjectID];
         
         //Load our cached array if available
         if(useCache){
-            newActionArray = [cachedAlertsDict objectForKey:UIDAndServiceID];
+            newActionArray = [cachedAlertsDict objectForKey:uniqueObjectID];
         }
         
         //If no cache is available (or we're not using the cache), load the array
@@ -134,14 +134,14 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
             //Update the cache
             if(newActionArray){
                 newActionArray = [[newActionArray mutableCopy] autorelease];
-                [cachedAlertsDict setObject:newActionArray forKey:UIDAndServiceID]; //cache it
+                [cachedAlertsDict setObject:newActionArray forKey:uniqueObjectID]; //cache it
             }else{
-                [cachedAlertsDict removeObjectForKey:UIDAndServiceID]; //pref is now clear - remove from our cache
+                [cachedAlertsDict removeObjectForKey:uniqueObjectID]; //pref is now clear - remove from our cache
             }
         }
         
         //If this is our currently active contact
-        if([[object UIDAndServiceID] compare:[activeContactObject UIDAndServiceID]] == 0) {
+        if([[object uniqueObjectID] compare:[activeContactObject uniqueObjectID]] == 0) {
             if (!newActionArray) {
                 newActionArray = [[[NSMutableArray alloc] init] autorelease]; //Create a new, empty action array   
             }
@@ -376,13 +376,13 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
 //determine if two instances of ESContactAlerts refer to the same contact
 - (BOOL)isEqual:(id)inInstance
 {
-    BOOL contactTest = ( [inInstance isKindOfClass:[self class]] && [[activeContactObject UIDAndServiceID] compare:[[inInstance activeObject] UIDAndServiceID]] == 0 );
+    BOOL contactTest = ( [inInstance isKindOfClass:[self class]] && [[activeContactObject uniqueObjectID] compare:[[inInstance activeObject] uniqueObjectID]] == 0 );
     return contactTest;
 }
-//hash string is simply based on the UIDAndServiceID's NSString hash
+//hash string is simply based on the uniqueObjectID's NSString hash
 - (unsigned)hash
 {
-    return ( [[activeContactObject UIDAndServiceID] hash] );
+    return ( [[activeContactObject uniqueObjectID] hash] );
 }
 
 #warning This sort function no longer works properly after the group changes

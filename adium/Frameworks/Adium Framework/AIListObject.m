@@ -78,7 +78,7 @@
 }
 
 //Super unique ID string, combining both UID and service ID
-- (NSString *)UIDAndServiceID
+- (NSString *)uniqueObjectID
 {
     if(serviceID){
         return([NSString stringWithFormat:@"%@.%@",serviceID,UID]);
@@ -252,7 +252,7 @@
 //Set a preference value
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName
 {   
-	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self UIDAndServiceID]
+	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self uniqueObjectID]
 																					 path:[self pathToPreferences]];
 
     //Set the new value
@@ -265,7 +265,7 @@
     
     //Save
 	[[adium preferenceController] setCachedObjectPrefs:prefDict
-												forKey:[self UIDAndServiceID]
+												forKey:[self uniqueObjectID]
 												  path:[self pathToPreferences]];
     
     //Broadcast a preference changed notification
@@ -280,7 +280,7 @@
 	if(!ignore) return([self preferenceForKey:inKey group:groupName]);
 	
 	//Return our value for the preference only
-	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self UIDAndServiceID]
+	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self uniqueObjectID]
 																					 path:[self pathToPreferences]];
 	return([prefDict objectForKey:inKey]);
 }
@@ -289,7 +289,7 @@
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName
 {
     id					value = nil;
-	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self UIDAndServiceID]
+	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self uniqueObjectID]
 																					 path:[self pathToPreferences]];
     
     //Get our value for the preference
@@ -329,7 +329,7 @@
 {
     id					value = nil;
     NSMutableArray  	*returnArray = [NSMutableArray arrayWithCapacity:1];
-	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self UIDAndServiceID]
+	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self uniqueObjectID]
 																					 path:[self pathToPreferences]];
     
     //Get our value for the preference

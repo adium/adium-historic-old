@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.46 2004/03/05 03:35:50 adamiser Exp $
+// $Id: AIAccount.m,v 1.47 2004/03/05 04:38:47 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -79,13 +79,13 @@
 	#warning this is AIM specific. Flatten the name using the allowed character information
     if([[inUID compactedString] compare:[self UID]] != 0){
 		//Get our preferences from the old UID
-		NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self UIDAndServiceID]
+		NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self uniqueObjectID]
 																						 path:[self pathToPreferences]];
 		
 		[UID release]; UID = [inUID retain];
 		
 		[[adium preferenceController] setCachedObjectPrefs:prefDict
-													forKey:[self UIDAndServiceID]
+													forKey:[self uniqueObjectID]
 													  path:[self pathToPreferences]];
 		
 		NSString *formattedAccountName = [self preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];

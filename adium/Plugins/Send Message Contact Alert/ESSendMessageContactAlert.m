@@ -113,7 +113,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     
     //set the sendFrom account if necessary
     if (account = [[popUp_message_actionDetails_one selectedItem] representedObject])
-        [detailsDict setObject:[account UIDAndServiceID] forKey:KEY_MESSAGE_SENDFROM];
+        [detailsDict setObject:[account uniqueObjectID] forKey:KEY_MESSAGE_SENDFROM];
     
     //set the sendTo contact if necessary, saving the UID and Service
     if (contact = [[popUp_message_actionDetails_two selectedItem] representedObject]) {

@@ -59,8 +59,8 @@ static NSMenu			* menu_Games;
 
 - (void)endGameWith:(AIListContact*)contact fromAccount:(AIAccount*)account;
 {
-	[[gamesForAccounts objectForKey:[account UIDAndServiceID]]
-			removeObjectForKey:[contact UIDAndServiceID]];
+	[[gamesForAccounts objectForKey:[account uniqueObjectID]]
+			removeObjectForKey:[contact uniqueObjectID]];
 }
 
 - (IBAction)newGame: (id)sender
@@ -110,13 +110,13 @@ static NSMenu			* menu_Games;
         
     //Find the contact
 	contact = [[adium contactController] contactWithService:[serviceType identifier] accountUID:[account UID] UID:UID];
-	NSMutableDictionary *contacts = [gamesForAccounts objectForKey:[account UIDAndServiceID]];
+	NSMutableDictionary *contacts = [gamesForAccounts objectForKey:[account uniqueObjectID]];
 	if(contacts == nil)
 	{
 		contacts = [[[NSMutableDictionary alloc] init] autorelease];
-		[gamesForAccounts setObject:contacts forKey:[account UIDAndServiceID]];
+		[gamesForAccounts setObject:contacts forKey:[account uniqueObjectID]];
 	}
-	if(contact && [contacts objectForKey:[contact UIDAndServiceID]])
+	if(contact && [contacts objectForKey:[contact uniqueObjectID]])
 	{
 		NSBeep();
 		return;
@@ -130,7 +130,7 @@ static NSMenu			* menu_Games;
 		NEHGameController * control = [self newController];
 		[self willSendInvitation:control];
 		[control sendInvitation:playAs account:account contact:contact];
-        [contacts setObject:control	forKey:[contact UIDAndServiceID]];
+        [contacts setObject:control	forKey:[contact uniqueObjectID]];
     }
 	else
 	{
@@ -161,13 +161,13 @@ static NSMenu			* menu_Games;
 	AIListContact   * contact = [inobj source];
 	AIAccount		* account = [inobj destination];
 	
-	NSMutableDictionary * contacts = [gamesForAccounts objectForKey:[account UIDAndServiceID]];
+	NSMutableDictionary * contacts = [gamesForAccounts objectForKey:[account uniqueObjectID]];
 	if(contacts == nil)
 	{
 		contacts = [[[NSMutableDictionary alloc] init] autorelease];
-		[gamesForAccounts setObject:contacts forKey:[account UIDAndServiceID]];
+		[gamesForAccounts setObject:contacts forKey:[account uniqueObjectID]];
 	}
-	NEHGameController * control = [contacts objectForKey:[contact UIDAndServiceID]];
+	NEHGameController * control = [contacts objectForKey:[contact uniqueObjectID]];
 		
 	if([type isEqualToString:MSG_TYPE_INVITE])
 	{
@@ -185,7 +185,7 @@ static NSMenu			* menu_Games;
 		}
 		control = [self newController];
 		[control handleInvitation:msg account:account contact:contact];
-		[contacts setObject:control forKey:[contact UIDAndServiceID]];
+		[contacts setObject:control forKey:[contact uniqueObjectID]];
 	}
 	else if(control != nil)		//We ignore non-invite messages from people with whom we don't have an open game
 	{
