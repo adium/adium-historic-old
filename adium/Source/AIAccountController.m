@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.64 2004/03/14 08:35:52 evands Exp $
+// $Id: AIAccountController.m,v 1.65 2004/03/16 14:54:21 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -325,8 +325,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     
     AIAccount	*newAccount = [self defaultAccount];
     
-    [self insertAccount:newAccount atIndex:index];
-    
+	[self insertAccount:newAccount atIndex:index];
+		
     return(newAccount);
 }
 
@@ -338,7 +338,12 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     NSParameterAssert(index >= 0 && index <= [accountArray count]);
     
     //Insert the account
-    [accountArray insertObject:inAccount atIndex:index];
+	if ([accountArray count]){
+		[accountArray insertObject:inAccount atIndex:index];
+	}else{
+		[accountArray addObject:inAccount];
+	}
+	
     [self saveAccounts];
 }
 
