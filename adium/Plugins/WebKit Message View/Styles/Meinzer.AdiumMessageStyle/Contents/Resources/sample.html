@@ -1,0 +1,158 @@
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <link rel="stylesheet" href="main.css" type="text/css" />
+    
+	<script type="text/ecmascript" defer="defer">
+		var scrollToBottomIsNeeded = false;
+
+		function appendMessage(html) {
+			//Remove any existing insertion point
+			insert = document.getElementById("insert");
+			if(insert) insert.parentNode.removeChild(insert);
+
+			//Append the new message to the bottom of our chat block
+			chat = document.getElementById("Chat");
+			range = document.createRange();
+			range.selectNode(chat);
+			documentFragment = range.createContextualFragment(html);
+			chat.appendChild(documentFragment);
+			alignChat();
+		}
+		
+		function appendNextMessage(html){
+			//
+			insert = document.getElementById("insert");
+		
+			//make new node
+			range = document.createRange();
+			range.selectNode(insert.parentNode);
+			newNode = range.createContextualFragment(html);
+
+			//swap
+			insert.parentNode.replaceChild(newNode,insert);
+			alignChat();
+		}
+		
+		function scrollToBottom() {
+			document.body.scrollTop = document.body.offsetHeight;
+		}
+
+		function checkIfScrollToBottomIsNeeded() {
+			scrollToBottomIsNeeded = ( document.body.scrollTop >= ( document.body.offsetHeight - ( window.innerHeight * 1.2 ) ) );
+		}
+
+		function scrollToBottomIfNeeded() {
+			if( scrollToBottomIsNeeded )
+				document.body.scrollTop = document.body.offsetHeight;
+		}
+
+		function setStylesheet( id, url ) {
+			code = "<style id=\"" + id + "\" type=\"text/css\" media=\"screen,print\">";
+			if( url.length ) code += "@import url( \"" + url + "\" );";
+			code += "</style>";
+			range = document.createRange();
+			head = document.getElementsByTagName( "head" ).item(0);
+			range.selectNode( head );
+			documentFragment = range.createContextualFragment( code );
+			head.removeChild( document.getElementById( id ) );
+			head.appendChild( documentFragment );
+		}
+		document.onclick = imageCheck;
+		function imageCheck() {
+			node = event.target;
+			if(node.tagName == 'IMG' && node.alt) {
+				a = document.createElement('a');
+				a.setAttribute('onclick', 'imageSwap(this)');
+				a.setAttribute('src', node.src);
+				text = document.createTextNode(node.alt);
+				a.appendChild(text);
+				node.parentNode.replaceChild(a, node);
+			}
+		}
+		function imageSwap(node) {
+			img = document.createElement('img');
+			img.setAttribute('src', node.src);
+			img.setAttribute('alt', node.firstChild.nodeValue);
+			node.parentNode.replaceChild(img, node);
+		}
+		function alignChat() {
+			var windowHeight = window.innerHeight;
+			if (windowHeight > 0) {
+				var contentElement = document.getElementById('Chat');
+				var contentHeight = contentElement.offsetHeight;
+				if (windowHeight - contentHeight > 0) {
+					contentElement.style.position = 'relative';
+					contentElement.style.top = (windowHeight - contentHeight) + 'px';
+				}
+				else {
+					contentElement.style.position = 'static';
+				}
+			}
+		}
+		window.onresize = alignChat;
+
+	</script>
+</head>
+<body onload="scrollToBottom();alignChat();">
+	<div class="msg1 context">
+		<div class="name_time">
+			Scott Meinzer
+			<span class="timestamp">12:33:04 PM</span>
+		</div>
+		Hello, How are you doing?
+	</div>
+	<div class="msg1_again context">
+		<span class="timestamp">12:34:08 PM</span>
+		Why wont you listen to me, is it because i am acting like one of thoes annoying msn people who instant message someone, then 10 seconds later then instant message you again and act all suicidal because you supposibly dont want to talk to them?!?!?! fine, i hate you too!
+	</div>
+	<div class="shadow">&nbsp;</div>
+	
+	<div class="msg2">
+		<div class="name_time">
+			<span style="text-shadow: 2px 2px 4px #888; width: 100%; font-weight: bold;">Justin Wood</span>
+			<span style="float: right; font-size: 13px; color: #444;">12:36:32 PM</span>
+		</div>
+		Hey
+	</div>
+	<div class="shadow">&nbsp;</div>
+	
+	<div class="msg1">
+		<div class="name_time">
+			<span style="text-shadow: 2px 2px 4px #888; width: 100%; font-weight: bold;">Scott Meinzer</span>
+			<span style="float: right; font-size: 13px; color: #444;">12:37:04 PM</span>
+		</div>
+		You don't hate me?
+	</div>
+	<div class="shadow">&nbsp;</div>
+	
+	<div class="msg2">
+		<div class="name_time">
+			<span style="text-shadow: 2px 2px 4px #888; width: 100%; font-weight: bold;">Justin Wood</span>
+			<span style="float: right; font-size: small; color: #444;">12:37:50 PM</span>
+		</div>
+		why would you think that... ;)
+	</div>
+	<div class="shadow">&nbsp;</div>
+	
+	<div align="center">
+		<span style="text-shadow: 2px 2px 4px #111; width: 100%; font-weight: bold; font-size: 13px; color: #fff;">12:38:30 Justin Wood has Blocked You</span>
+	</div>
+	<br />
+	<div class="msg2">
+		<div class="name_time">
+			<span style="text-shadow: 2px 2px 4px #888; width: 100%; font-weight: bold;">Justin Wood</span>
+			<span style="float: right; font-size: small; color: #444;">12:39:10 PM</span>
+		</div>
+		Just Kidding!
+	</div>
+	<div class="msg2_again">
+		<span style="float: right; font-size: 13px; color: #444; margin-left: 10px;">12:39:20 PM</span>
+		hahah
+	</div>
+	<div class="shadow">&nbsp;</div>
+</body>
+</html>
