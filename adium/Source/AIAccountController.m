@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.55 2004/02/28 22:11:50 evands Exp $
+// $Id: AIAccountController.m,v 1.56 2004/03/01 04:55:24 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -21,35 +21,23 @@
 #import "AIPasswordPromptController.h"
 
 //Paths and Filenames
-#define PREF_GROUP_PREFERRED_ACCOUNTS		@"Preferred Accounts"
+#define PREF_GROUP_PREFERRED_ACCOUNTS   @"Preferred Accounts"
 
 //Preference keys
-#define ACCOUNT_LIST				@"Accounts"		//Array of accounts
-#define ACCOUNT_TYPE				@"Type"			//Account type
-#define ACCOUNT_SERVICE				@"Service"		//Account service
-#define ACCOUNT_UID				@"UID"			//Account UID
-//Other
-#define KEY_PREFERRED_SOURCE_ACCOUNT		@"Preferred Account"
-#define KEY_ACCOUNT_STATUS			@"Status"
+#define ACCOUNT_LIST					@"Accounts"		//Array of accounts
+#define ACCOUNT_TYPE					@"Type"			//Account type
+#define ACCOUNT_SERVICE					@"Service"		//Account service
+#define ACCOUNT_UID						@"UID"			//Account UID
 
-#define DEFAULT_ICON_CACHE_PATH                 @"~/Library/Caches/Adium"
+//Other
+#define KEY_PREFERRED_SOURCE_ACCOUNT	@"Preferred Account"
 
 @interface AIAccountController (PRIVATE)
-+ (NSBundle *)serviceBundleForAccountType:(NSString *)inType;
-- (void)dealloc;
 - (void)loadAccounts;
-- (void)saveAccounts:(NSArray *)inAccounts;
-- (AIAccount *)defaultAccount;
-- (AIAccount *)accountOfType:(NSString *)inType withUID:(NSString *)inUID;
-- (NSMutableArray *)loadServices;
-- (void)accountListChanged;
-- (void)buildAccountMenus;
-- (void)autoConnectAccounts;
-- (void)disconnectAllAccounts;
-- (NSString *)_defaultIconCachePath;
-- (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index;
+- (void)saveAccounts;
+- (void)_saveAccountArray:(NSArray *)inAccounts;
 - (void)_addMenuItemsToMenu:(NSMenu *)menu withTarget:(id)target forAccounts:(NSArray *)accounts;
-- (NSArray *)_accountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)preferred;
+- (NSArray *)_accountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred;
 @end
 
 @implementation AIAccountController
@@ -61,9 +49,8 @@
     accountArray = nil;
     lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];
     sleepingOnlineAccounts = nil;
-    defaultUserIcon = nil;
     
-    //Monitor sleep
+    //Monitor system sleep so we can cleanly disconnect / reconnect our accounts
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(systemWillSleep:)
                                                  name:AISystemWillSleep_Notification
@@ -74,49 +61,12 @@
                                                object:nil];
 }
 
-//
+//init (Called after the other controllers have set themselves up)
 - (void)finishIniting
-{
-    //### TEMPORARY (OLD ACCOUNT PREFERENCE IMPORT CODE) #######
-    NSArray     *oldAccountArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_ACCOUNTS] objectForKey:@"Account List"];
-    if(oldAccountArray && [oldAccountArray count]){
-        NSMutableArray     *importedAccounts = [NSMutableArray array];
-        NSLog(@"Importing old accounts");
-        
-        NSEnumerator	*accountEnumerator = [oldAccountArray objectEnumerator];
-        NSDictionary	*accountDict;
-        
-        while(accountDict = [accountEnumerator nextObject]){
-            NSDictionary	*propertyDict = [accountDict objectForKey:@"Properties"];
-            NSString		*serviceType = [accountDict objectForKey:@"Type"];
-            NSString		*accountUID = [[propertyDict objectForKey:@"Handle"] compactedString];
-            AIAccount		*tempAccount;
-            NSEnumerator	*propertyEnumerator;
-            NSString		*key;
-            
-            NSLog(@"  Importing %@ account '%@' ", serviceType, accountUID);
-            
-            if(serviceType && accountUID && [serviceType length] && [accountUID length]){
-				if(tempAccount = [self accountOfType:serviceType withUID:accountUID]){
-					propertyEnumerator = [[propertyDict allKeys] objectEnumerator];
-					while(key = [propertyEnumerator nextObject]){
-						NSLog(@"    - %@",key);
-						[tempAccount setPreference:[propertyDict objectForKey:key] forKey:key group:GROUP_ACCOUNT_STATUS];
-					}
-					
-					[importedAccounts addObject:tempAccount];
-				}
-            }
-        }
-        
-        [self saveAccounts:importedAccounts];
-        [[owner preferenceController] setPreference:nil forKey:@"Account List" group:PREF_GROUP_ACCOUNTS];
-    }
-    //#########################################################
-    
+{    
     //Load the user accounts
     [self loadAccounts];
-    [self accountListChanged];
+    [self saveAccounts];
     
     //Observe content (for accountForSendingContentToHandle)
     [[owner notificationCenter] addObserver:self
@@ -138,23 +88,15 @@
     [[owner notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    // Release storage
+    //Cleanup
     [accountArray release];
     [availableServiceDict release];
     [lastAccountIDToSendContent release];
-    [defaultUserIcon release];
 }
 
-//Call after making changes to the account list
-- (void)accountListChanged
-{
-    //Save the changes
-    [self saveAccounts:accountArray];
-    
-    //Broadcast an account list changed message
-    [[owner notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
-}
 
+//Account Storage ------------------------------------------------------------------------------------------------------
+#pragma mark Account Storage
 //Loads the saved accounts
 - (void)loadAccounts
 {
@@ -190,8 +132,18 @@
     accountArray = [tempArray retain];
 }
 
+//Save the accounts
+- (void)saveAccounts
+{
+    //Save the changes
+    [self _saveAccountArray:accountArray];
+    
+    //Broadcast an account list changed message
+    [[owner notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
+}
+
 //Saves our accounts
-- (void)saveAccounts:(NSArray *)inAccounts
+- (void)_saveAccountArray:(NSArray *)inAccounts
 {
     if(inAccounts){
         NSMutableArray	*accountDictArray = [[NSMutableArray alloc] init];
@@ -219,44 +171,6 @@
         [accountDictArray release];
     }
 }
-
-//Returns a default account
-- (AIAccount *)defaultAccount
-{
-	if ([NSApp isOnPantherOrBetter])
-	   return([self accountOfType:@"AIM-LIBGAIM" withUID:@""]);
-	else
-		return([self accountOfType:@"AIM (TOC2)" withUID:@""]);
-}
-
-//Returns a new account of the specified type (Unique service plugin ID)
-- (AIAccount *)accountOfType:(NSString *)inType withUID:(NSString *)inUID
-{
-    id <AIServiceController>    serviceController;
-    
-    NSParameterAssert(inType != nil); NSParameterAssert([inType length] != 0);
-    NSParameterAssert(inUID != nil);
-    
-    //Load the account
-    if(serviceController = [self serviceControllerWithIdentifier:inType]){
-        return([serviceController accountWithUID:inUID]);
-    }else{
-        return(nil);
-    }
-}
-
-//Insert an account
-- (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index
-{    
-    NSParameterAssert(inAccount != nil);
-    NSParameterAssert(accountArray != nil);
-    NSParameterAssert(index >= 0 && index <= [accountArray count]);
-    
-    //Insert the account
-    [accountArray insertObject:inAccount atIndex:index];
-    [self accountListChanged];
-}
-
 
 
 //Services -------------------------------------------------------------------------------------------------------
@@ -319,13 +233,12 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     return(accountArray);
 }
 
+//Searches the account list for the specified account
 - (AIAccount *)accountWithServiceID:(NSString *)serviceID UID:(NSString *)UID
 {
     NSEnumerator	*enumerator = [accountArray objectEnumerator];
     AIAccount		*account;
 	
-#warning accountArray is null when the Stress Test plugin creates its Command list object.  What is up with that?
-//    NSLog(@"accountArray is %@",accountArray);
     while((account = [enumerator nextObject])){
 		if([UID compare:[account UID]] == 0 && [serviceID compare:[account serviceID]] == 0) return(account);
     }
@@ -349,7 +262,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     return(nil);
 }
 
-//
+//Searches the account list for accounts with the specified service ID
 - (NSArray *)accountsWithServiceID:(NSString *)serviceID
 {
 	NSMutableArray	*array = [NSMutableArray array];
@@ -363,6 +276,31 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     return(array);
 }
 
+//Returns a new default account
+- (AIAccount *)defaultAccount
+{
+	if([NSApp isOnPantherOrBetter]){
+		return([self accountOfType:@"AIM-LIBGAIM" withUID:@""]);
+	}else{
+		return([self accountOfType:@"AIM (TOC2)" withUID:@""]);
+	}
+}
+
+//Returns a new account of the specified type (Unique service plugin ID)
+- (AIAccount *)accountOfType:(NSString *)inType withUID:(NSString *)inUID
+{
+    id <AIServiceController>    serviceController;
+    
+    NSParameterAssert(inType != nil); NSParameterAssert([inType length] != 0);
+    NSParameterAssert(inUID != nil);
+    
+    //Load the account
+    if(serviceController = [self serviceControllerWithIdentifier:inType]){
+        return([serviceController accountWithUID:inUID]);
+    }else{
+        return(nil);
+    }
+}
 
 
 //Account Editing ------------------------------------------------------------------------------------------------------
@@ -380,7 +318,19 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     return(newAccount);
 }
 
-//Delete an existing account
+//Insert an account
+- (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index
+{    
+    NSParameterAssert(inAccount != nil);
+    NSParameterAssert(accountArray != nil);
+    NSParameterAssert(index >= 0 && index <= [accountArray count]);
+    
+    //Insert the account
+    [accountArray insertObject:inAccount atIndex:index];
+    [self saveAccounts];
+}
+
+//Delete an account
 - (void)deleteAccount:(AIAccount *)inAccount
 {
     NSParameterAssert(inAccount != nil);
@@ -389,31 +339,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 	[inAccount retain]; //Don't let the account dealloc until we have a chance to notify everyone that it's gone
 	[accountArray removeObject:inAccount];
-	[self accountListChanged];
+	[self saveAccounts];
 	[inAccount release];
-}
-
-//Change the UID of an existing account
-#warning Deprecated
-- (AIAccount *)changeUIDOfAccount:(AIAccount *)inAccount to:(NSString *)inUID
-{
-    if(inUID && [inUID length] != 0){
-		
-        AIAccount   *newAccount;
-        NSString    *serviceIdentifier = [[[[inAccount service] identifier] copy] autorelease]; //Deleting the account will release the serviceID
-        int		index = [accountArray indexOfObject:inAccount];
-        
-        //Delete the existing account (Deleting immediately would be bad since this method has been called by the account)
-        [self performSelector:@selector(deleteAccount:) withObject:inAccount afterDelay:0.0001];
-        
-        //Add an account with the new UID
-        newAccount = [self accountOfType:serviceIdentifier withUID:inUID];
-        [self insertAccount:newAccount atIndex:index];
-        
-        return(newAccount);
-    }else{
-        return(inAccount);
-    }
 }
 
 //Switches the service of the specified account
@@ -433,7 +360,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     return(newAccount);
 }
 
-//Re-orders an account on the list
+//Re-order an account on the list
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex
 {
     int sourceIndex = [accountArray indexOfObject:account];
@@ -446,17 +373,16 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     if(destIndex > sourceIndex){
         destIndex -= 1;
     }
-    
     [accountArray insertObject:account atIndex:destIndex];
     [account release];
     
-    [self accountListChanged];
+    [self saveAccounts];
     
     return(destIndex);
 }
 
 
-//Preferred source account memory --------------------------------------------------------------------------------------
+//Preferred Source Accounts --------------------------------------------------------------------------------------------
 #pragma mark Preferred Source Accounts
 //Returns the preferred choice for sending content to the passed list object
 //When presenting the user with a list of accounts, this should be the one selected by default
