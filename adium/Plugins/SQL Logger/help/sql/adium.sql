@@ -188,6 +188,21 @@ do instead  (
         new.recipient_sn and service = new.recipient_service))
 );
 
+create table adium.meta_container (
+meta_id         serial primary key,
+name            text not null,
+url             text,
+email           text,
+location        text,
+notes           text
+);
+
+create table adium.meta_contact (
+meta_id         int references adium.meta_container (meta_id) not null,
+user_id         int references adium.users (user_id) not null,
+preferred       boolean default false
+);
+
 create table adium.saved_searches (
 search_id       serial primary key,
 title           text,
@@ -212,21 +227,6 @@ meta_id         int references adium.meta_container(meta_id),
 date_start      timestamp,
 date_finish     timestamp,
 date_added      timestamp default now()
-);
-
-create table adium.meta_container (
-meta_id         serial primary key,
-name            text not null,
-url             text,
-email           text,
-location        text,
-notes           text
-);
-
-create table adium.meta_contact (
-meta_id         int references adium.meta_container (meta_id) not null,
-user_id         int references adium.users (user_id) not null,
-preferred       boolean default false
 );
 
 create table adium.message_notes (
