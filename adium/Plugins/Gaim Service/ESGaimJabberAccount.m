@@ -11,8 +11,12 @@
 
 @implementation ESGaimJabberAccount
 
+static BOOL didInitJabber = NO;
+
 - (const char*)protocolPlugin
 {
+	[super initSSL];
+	if (!didInitJabber) didInitJabber = gaim_init_jabber_plugin();
     return "prpl-jabber";
 }
 

@@ -9,8 +9,11 @@
 
 @implementation ESGaimNovellAccount
 
+static BOOL didInitNovell;
+
 - (const char*)protocolPlugin
 {
+	if (!didInitNovell) didInitNovell = gaim_init_novell_plugin();
     return "prpl-novell";
 }
 

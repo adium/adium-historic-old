@@ -10,8 +10,11 @@
 
 @implementation ESGaimTrepiaAccount
 
+static BOOL didInitTrepia = NO;
+
 - (const char*)protocolPlugin
 {
+	if (!didInitTrepia) didInitTrepia = gaim_init_trepia_plugin();
     return "prpl-trepia";
 }
 

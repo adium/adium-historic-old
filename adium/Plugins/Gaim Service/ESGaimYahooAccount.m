@@ -15,8 +15,11 @@
 
 @implementation ESGaimYahooAccount
 
+static BOOL didInitYahoo = NO;
+
 - (const char*)protocolPlugin
 {
+	if (!didInitYahoo) didInitYahoo = gaim_init_yahoo_plugin();
     return "prpl-yahoo";
 }
 

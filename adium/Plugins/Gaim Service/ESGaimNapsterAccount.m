@@ -9,8 +9,11 @@
 
 @implementation ESGaimNapsterAccount
 
+static BOOL didInitNapster = NO;
+
 - (const char*)protocolPlugin
 {
+	if (!didInitNapster) didInitNapster = gaim_init_napster_plugin();
     return "prpl-napster";
 }
 
