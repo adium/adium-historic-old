@@ -15,6 +15,7 @@
 
 @interface AIAlphabeticalSort : AISortController {	
 	IBOutlet	NSButton	*checkBox_sortGroups;
+	IBOutlet	NSButton	*checkBox_sortByLastName;
 }
 
 @end

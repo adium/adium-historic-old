@@ -3,7 +3,7 @@
         {
             CLASS = AIAlphabeticalSort; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"checkBox_sortGroups" = NSButton; }; 
+            OUTLETS = {"checkBox_sortByLastName" = NSButton; "checkBox_sortGroups" = NSButton; }; 
             SUPERCLASS = AISortController; 
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
