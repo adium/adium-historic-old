@@ -160,6 +160,9 @@
 			}else{
 				//Add to our temporary status array
 				[temporaryStateArray addObject:lastStatus];
+				
+				//And clear our full array so it will reflect this newly loaded status when next used
+				[_sortedFullStateArray release]; _sortedFullStateArray = nil;
 				needToRebuildMenus = YES;
 			}
 		}
