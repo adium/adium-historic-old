@@ -2,7 +2,6 @@
 // Adium 0.8 beta bugs
 //---------------------------------------------------------------------------------------------
 - First launch, need setup assistant or need to open account prefs
-- Account add button needs a triangle to indicate that it's a popup [Colin]
 - List toolbar needs icon for toggle groups, add group, toggle offline contacts
 - Move window shadow preference from layout to advanced
 - Move opacity preference from layout to main pane or advanced
@@ -24,14 +23,12 @@
 - OTR Private key generation should be cleaner [Evan]
 - Jabber account registration
 - The crash reporter shouldn't force people to reopen Adium after a crash.
-- Custom Status window appears multiple times on multiple menu item selections..
-	(Be careful in fixing this as you should be able to edit statuses at the same time you edit statuses.)	
 - Custom Status should remember the last status state used for that type of custom status rather than populating
 	with the current status
 - Message views are ignoring variant specific info.plist keys
 - %_statusmessage script is broken
 - Contact list status selector isn't updating to reflect the correct status all the time
-	
+- installation of various xtras doesn't go to the right pref pane now.
 
 //-------------------------------------------------------------------------------------------------------
 // Old junk

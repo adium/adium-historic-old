@@ -31,6 +31,10 @@
 - (id)_positionControl:(id)control relativeTo:(id)guide height:(int *)height;
 - (void)configureStateMenu;
 - (void)hideSaveCheckbox;
+
+- (void)setOriginalStatusState:(AIStatus *)inState forType:(AIStatusType)inStatusType;
+- (void)setAccount:(AIAccount *)inAccount;
+- (void)configureForAccountAndWorkingStatusState;
 @end
 
 /*!
@@ -41,12 +45,15 @@
  */
 @implementation AIEditStateWindowController
 
+static	NSMutableDictionary	*controllerDict = nil;
+
 /*!
  * @brief Open a custom state editor window or sheet
  *
  * Open either a sheet or window containing a state editor.  The state editor will be primed with the passed state
  * dictionary.  When the user successfully closes the editor, the target will be notified and passed the updated
- * state dictionary
+ * state dictionary.  Only one window will be shown per target at a time.
+ *
  * @param inStatusState Initial AIStatus
  * @param inStatusType AIStatusType to use initially if inStatusState is nil
  * @param inAccount The account which to configure the custom state window; nil to configure globally
@@ -57,8 +64,19 @@
 + (id)editCustomState:(AIStatus *)inStatusState forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount withSaveOption:(BOOL)allowSave onWindow:(id)parentWindow notifyingTarget:(id)inTarget
 {
 	AIEditStateWindowController	*controller;
-	
-	controller = [[self alloc] initWithWindowNibName:@"EditStateSheet" forType:inStatusType andAccount:inAccount customState:inStatusState notifyingTarget:inTarget];
+
+	NSNumber	*targetHash = [NSNumber numberWithUnsignedInt:[inTarget hash]];
+		
+	if(controller = [controllerDict objectForKey:targetHash]){
+		[controller setOriginalStatusState:inStatusState forType:inStatusType];
+		[controller setAccount:inAccount];
+		[controller configureForAccountAndWorkingStatusState];
+
+	}else{
+		controller = [[self alloc] initWithWindowNibName:@"EditStateSheet" forType:inStatusType andAccount:inAccount customState:inStatusState notifyingTarget:inTarget];
+		if(!controllerDict) controllerDict = [[NSMutableDictionary alloc] init];
+		[controllerDict setObject:controller forKey:targetHash];
+	}
 	
 	if(!allowSave){
 		[controller hideSaveCheckbox];
@@ -80,20 +98,46 @@
 }
 
 /*!
- * Init the window controller
+ * @brief Init the window controller
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget
 {
     [super initWithWindowNibName:windowNibName];
 
-	originalStatusState = [inStatusState retain];
-	workingStatusState = (originalStatusState ? [originalStatusState mutableCopy] : [[AIStatus statusOfType:inStatusType] retain]);
-
+	[self setOriginalStatusState:inStatusState forType:inStatusType];
+	[self setAccount:inAccount];
+	
 	target = inTarget;
 	
-	account = [inAccount retain];
-	
 	return(self);
+}
+
+/*!
+ * @brief Set our original status state
+ 
+ * Also create the working state if we don't have one or the original status state is of the wrong statusType.
+ */
+- (void)setOriginalStatusState:(AIStatus *)inStatusState forType:(AIStatusType)inStatusType
+{
+	if(originalStatusState != inStatusState){
+		[originalStatusState release];
+		originalStatusState = [inStatusState retain];
+	}
+	
+	if(!workingStatusState || ([workingStatusState statusType] != inStatusType)){
+		[workingStatusState release];
+		workingStatusState = (originalStatusState ? 
+							  [originalStatusState mutableCopy] :
+							  [[AIStatus statusOfType:inStatusType] retain]);
+	}
+}
+
+- (void)setAccount:(AIAccount *)inAccount
+{
+	if(inAccount != account){
+		[account release];
+		account = [inAccount retain];
+	}
 }
 
 /*!
@@ -124,13 +168,24 @@
 	[textView_autoReply setTarget:self action:@selector(okay:)];
 	[textView_autoReply setSendOnReturn:YES];
 	[textView_autoReply setSendOnEnter:NO];
-	
-	[self configureStateMenu];
 
-	//Configure our editor for the passed state
-	[self configureForState:workingStatusState];
+	[self configureForAccountAndWorkingStatusState];
 	
 	[super windowDidLoad];
+}
+
+/*!
+ * @brief Configure for our account and working status state
+ *
+ * This means updating the state menu to be appropriate for our account's service as well as setting up
+ * the rest of the fields.
+ */
+- (void)configureForAccountAndWorkingStatusState
+{
+	[self configureStateMenu];
+	
+	//Configure our editor for the working state
+	[self configureForState:workingStatusState];	
 }
 
 /*!
@@ -152,6 +207,11 @@
 - (void)windowWillClose:(id)sender
 {
 	[super windowWillClose:sender];
+
+	//Stop tracking with the controllerDict
+	NSNumber	*targetHash = [NSNumber numberWithUnsignedInt:[target hash]];
+	[controllerDict removeObjectForKey:targetHash];
+
 	[self autorelease];
 }
 
