@@ -32,8 +32,6 @@
 //Auto-completion
   Tab auto-completion in the message window
 	- Contact names (Mainly for multi-user chat)
-	- Bookmark URLs (From bookmark integration) [Evan: As cool as this would be, I don't think it's worth the overhead.]
-                                                    [Steve: agreed]
 
 //File Receive Prompt
   The receive file prompt should be its own panel, and provide options for
