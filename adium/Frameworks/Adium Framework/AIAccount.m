@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.55 2004/05/06 10:44:57 evands Exp $
+// $Id: AIAccount.m,v 1.56 2004/05/15 22:22:14 evands Exp $
 
 #import "AIAccount.h"
 
@@ -124,6 +124,11 @@
     }
 }
 
+- (BOOL)requiresPassword
+{
+	return YES;
+}
+
 //Callback after the user enters their password for connecting
 - (void)passwordReturnedForConnect:(NSString *)inPassword
 {
@@ -179,10 +184,16 @@
     if([key compare:@"Online"] == 0){
         if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
             if(!areOnline && ![[self statusObjectForKey:@"Connecting"] boolValue]){
-                //Retrieve the user's password and then call connect
-                [[adium accountController] passwordForAccount:self 
-                                              notifyingTarget:self
-                                                     selector:@selector(passwordReturnedForConnect:)];
+				if ([self requiresPassword]){
+					//Retrieve the user's password and then call connect
+					[[adium accountController] passwordForAccount:self 
+												  notifyingTarget:self
+														 selector:@selector(passwordReturnedForConnect:)];
+				}else{
+					//Connect immediately without retrieving a password
+					[self connect];
+				}
+				
             }
         }else{
             if(areOnline && ![[self statusObjectForKey:@"Disconnecting"] boolValue]){
