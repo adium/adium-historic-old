@@ -1,0 +1,28 @@
+Adium
+Copyright (C) 2001-2005 by the following:
+
+Adam Atlas
+Adam Betts
+Adam Iser
+Arno Hautala
+Asher Haig
+Brian Ganninger
+Chris Serino
+Colin Barrett
+David Clark
+Erik J. Barzeski
+Evan Schoenberg
+Greg Smith
+Ian Krieg
+Jasper Hauser
+Jeffrey Melloy
+Jorge Salvador Caffarena
+Laura Natcher
+Mac-arena the Bored Zo
+Nelson Elhage
+Scott Lamb
+Stephen Holt
+Stephen Poprocki
+Vinay Venkatesh
+
+If you have contributed to Adium and are not on this list, please contact us.
