@@ -16,12 +16,7 @@
         {
             CLASS = ESDualWindowMessageAdvancedPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {
-                "autohide_tabBar" = NSButton; 
-                "checkBox_allowInactiveClosing" = NSButton; 
-                "checkBox_arrangeByGroup" = NSButton; 
-                "checkBox_arrangeTabs" = NSButton; 
-            }; 
+            OUTLETS = {"autohide_tabBar" = NSButton; "checkBox_allowInactiveClosing" = NSButton; }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 

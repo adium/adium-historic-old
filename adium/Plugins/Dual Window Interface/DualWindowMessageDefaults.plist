@@ -2,17 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Always Create New Windows</key>
-	<false/>
-	<key>Use Last Window</key>
-	<true/>
 	<key>Autohide Tab Bar</key>
 	<false/>
 	<key>Enable Inactive Tab Close</key>
-	<false/>
-	<key>Keep Tabs Arranged</key>
-	<false/>
-	<key>Arrange Tabs By Group</key>
 	<false/>
 </dict>
 </plist>

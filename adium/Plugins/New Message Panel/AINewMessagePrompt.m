@@ -24,7 +24,7 @@
 - (BOOL)shouldCascadeWindows;
 - (void)_configureTextFieldForAccount:(AIAccount *)account;
 @end
-#warning make a separate plugin
+
 @implementation AINewMessagePrompt
 
 static AINewMessagePrompt *sharedNewMessageInstance = nil;

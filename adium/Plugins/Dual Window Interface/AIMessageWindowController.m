@@ -34,6 +34,11 @@
 - (void)_updateWindowTitleAndIcon;
 @end
 
+//Used to squelch compiler warnings on this private call
+@interface NSWindow (AISecretWindowDocumentIconAdditions)
+- (void)addDocumentIconButton;
+@end
+
 @implementation AIMessageWindowController
 
 //Create a new message window controller
@@ -153,18 +158,9 @@
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]) {
         NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 				
-#warning re-hook
-		//Our prefs
-		alwaysShowTabs = NO;//![[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
-		//[tabView_customTabs setAllowsInactiveTabClosing:[[preferenceDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
-		
-		
-		
-		//Configure tabs for dragging and grouping
+		alwaysShowTabs = ![[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
+		[tabView_customTabs setAllowsInactiveTabClosing:[[preferenceDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
 		[tabView_customTabs setAllowsTabRearranging:[[adium interfaceController] allowChatOrdering]];
-
-		
-			
 			
 		[self updateTabBarVisibilityAndAnimate:(notification != nil)];
     }
@@ -282,7 +278,7 @@
     if([tabView_messages numberOfTabViewItems] == 1){
         [[self window] setTitle:[NSString stringWithFormat:@"%@", [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] label]]];
     }else{
-        [[self window] setTitle:[NSString stringWithFormat:@"%@ Ð %@", name, [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] label]]];
+        [[self window] setTitle:[NSString stringWithFormat:@"%@ - %@", name, [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] label]]];
 //        [[self window] setTitle:name/*@"Adium : Messages"*/];
     }
 	
@@ -357,7 +353,7 @@
 //
 - (int)customTabView:(AICustomTabsView *)tabView indexForInsertingTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	return([[adium interfaceController] indexForInsertingChat:[tabViewItem chat] intoContainerNamed:name]);
+	return([[adium interfaceController] indexForInsertingChat:[(AIMessageTabViewItem *)tabViewItem chat] intoContainerNamed:name]);
 }
 
 //Close a message tab

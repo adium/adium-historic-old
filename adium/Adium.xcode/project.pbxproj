@@ -11647,6 +11647,7 @@
 				9EB7C05703D52AFA00415B22,
 				4B30490B047FBD6A00A8010A,
 				4BF42E6506AC35500091DE5D,
+				4B850DBF06AD783F00D41191,
 				F569E38102CA876501A8010A,
 				40AC0EEA03B5BEDB00A80202,
 				6C60B147056059ED00CAD137,
@@ -13695,6 +13696,19 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B850DBF06AD783F00D41191 = {
+			children = (
+				34D434FA051A6559003B2F21,
+				34D434FB051A6559003B2F21,
+				34D434FE051A6AA7003B2F21,
+				4BA1300304C0A4E300A8010A,
+			);
+			isa = PBXGroup;
+			name = "Chat Grouping/Odering? [Tied to DWI]";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		4B8EFC0403E18F2D00A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -13943,13 +13957,9 @@
 		};
 		4BA12FFC04C0A12900A8010A = {
 			children = (
-				34D434FA051A6559003B2F21,
-				34D434FB051A6559003B2F21,
-				34D434FE051A6AA7003B2F21,
 				4B970BF80535B864002F28F9,
 				4B970BF90535B864002F28F9,
 				4B970BFC0535B879002F28F9,
-				4BA1300304C0A4E300A8010A,
 				C497516305BBAFE4009958A6,
 				34D43504051ADC10003B2F21,
 			);
@@ -13961,7 +13971,7 @@
 		4BA1300304C0A4E300A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
+			lastKnownFileType = text.plist.xml;
 			name = DualWindowDefaults.plist;
 			path = "Plugins/Dual Window Interface/DualWindowDefaults.plist";
 			refType = 4;

@@ -37,14 +37,16 @@
 	applicationIsHidden = NO;
 
 	//Preferences
-#warning clean up used
-	
-//    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_DEFAULT_PREFS forClass:[self class]] 
-//										  forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-//    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_WINDOW_DEFAULT_PREFS forClass:[self class]] 
-//										  forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];    
-//	preferenceMessageAdvController = [[ESDualWindowMessageAdvancedPreferences preferencePane] retain];
+#warning move to separate plugin
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_DEFAULT_PREFS forClass:[self class]] 
+										  forGroup:PREF_GROUP_INTERFACE];
+		
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_WINDOW_DEFAULT_PREFS forClass:[self class]] 
+										  forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];    
+	preferenceMessageController = [[ESDualWindowMessageWindowPreferences preferencePane] retain];
+	preferenceMessageAdvController = [[ESDualWindowMessageAdvancedPreferences preferencePane] retain];
 
+	
 	//Watch Adium hide and unhide (Used for better window opening behavior)
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(applicationDidHide:)
@@ -105,11 +107,6 @@
 	//Close the chat
 	[container removeTabViewItem:messageTab];
 	[[chat statusDictionary] removeObjectForKey:@"MessageTabViewItem"];
-
-//	//Close the container
-//	if([container containerIsEmpty]){
-//		[self closeContainer:container];
-//	}
 }
 
 //Make a chat active
@@ -128,8 +125,7 @@
 	if([messageTab container] == container){
 		[container moveTabViewItem:messageTab toIndex:index];
 	}else{
-#warning ignoring cross-container moves for now
-		NSLog(@"ignoring cross-container moves for now");		
+		//ignoring cross-container moves for now
 	}
 }
 
@@ -198,13 +194,6 @@
 		
 		//If Adium is hidden, remember to open this container later
 		if(applicationIsHidden) [delayedContainerShowArray addObject:container];
-			
-//		if(applicationIsHidden){
-//			//If another chat is open, open behind it
-////			[container showWindowInFront:!([[adium interfaceController] activeChat])];
-//		}else{
-//			[delayedContainerShowArray addObject:container];
-//		}
 	}
 	
 	return(container);

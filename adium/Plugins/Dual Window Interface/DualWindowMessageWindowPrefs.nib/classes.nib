@@ -17,9 +17,9 @@
             CLASS = ESDualWindowMessageWindowPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "autohide_tabBar" = NSButton; 
-                "createMessages_inTabs" = NSButton; 
-                "createTabs_inLastWindow" = NSButton; 
+                "checkBox_arrangeByGroup" = NSButton; 
+                "checkBox_arrangeTabs" = NSButton; 
+                "checkBox_messagesInTabs" = NSButton; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 

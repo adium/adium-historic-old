@@ -17,6 +17,7 @@
 #import "AIDualWindowInterfacePlugin.h"
 #import "AIStatusSelectionView.h"
 #import "AISCLViewController.h"
+#import "AISCLViewPlugin.h"
 
 #define CONTACT_LIST_WINDOW_NIB				@"ContactListWindow"		//Filename of the contact list window nib
 #define CONTACT_LIST_WINDOW_TRANSPARENT_NIB @"ContactListWindowTransparent" //Filename of the minimalist transparent version
