@@ -127,7 +127,7 @@ typedef enum {
 
 @protocol AIHandleLeftView //Draws to the left of a handle
     - (void)drawInRect:(NSRect)inRect;
-    - (int)widthForHeight:(int)inHeight;
+    - (float)widthForHeight:(int)inHeight;
 @end
 
 @protocol AIHandleRightView //Draws to the right of a handle

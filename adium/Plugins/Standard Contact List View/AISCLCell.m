@@ -19,6 +19,10 @@
 #import "AISCLCell.h"
 #import "AISCLOutlineView.h"
 
+#define LEFT_MARGIN		9
+#define LEFT_VIEW_INDENT_SIZE	1.2 //must be close to square then
+#define LEFT_VIEW_PADDING	3
+
 @implementation AISCLCell
 
 - (void)setContact:(AIContactObject *)inObject
@@ -29,7 +33,7 @@
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
     NSFont	*font = [(AISCLOutlineView *)controlView font];
-    
+
     if([contactObject isKindOfClass:[AIContactHandle class]]){
         NSString		*name;
         NSAttributedString	*displayName;
@@ -37,8 +41,9 @@
         AIMutableOwnerArray	*leftViewArray;
         int			loop;
 
-        cellFrame.origin.x -= 6;
-        cellFrame.size.width += 6;
+        //Indent into the left margin
+        cellFrame.origin.x -= LEFT_MARGIN;
+        cellFrame.size.width += LEFT_MARGIN;
 
         // Icons can be 14 pixels wide, as they grow larger, they stop pushing the text right and instead push left.  Once the left margin is full (14?), they continue to push right again.
 
@@ -47,30 +52,32 @@
         for(loop = 0;loop < [leftViewArray count];loop++){
             id <AIHandleLeftView>	handler = [leftViewArray objectAtIndex:loop];
             NSRect			drawRect = cellFrame;
-            int				width = [handler widthForHeight:drawRect.size.height];
-            int				push;
+            float			width = [handler widthForHeight:drawRect.size.height];
+            float			push;
+            float			leftViewIndent = (drawRect.size.height * LEFT_VIEW_INDENT_SIZE);
         
-            if(width <= 14){ //Push right (left aligned)
-                drawRect.size.width = width; 
-                push = width;
+            if(width <= leftViewIndent){ //Right Aligned
+                drawRect.origin.x = (drawRect.origin.x + leftViewIndent) - width;
+                drawRect.size.width = width;
+                push = leftViewIndent;
                 
-            }else if(width <= 28){ //Push right 14, then push left (right aligned)
-                drawRect.origin.x = (drawRect.origin.x + 14) - width;
+            }else if(width <= (leftViewIndent * 2)){ //Into the margin, right aligned
+                drawRect.origin.x = (drawRect.origin.x + leftViewIndent) - width;
                 drawRect.size.width = width;
-                push = 14;
+                push = leftViewIndent;
 
-            }else{ //Push left (left aligned with margin)
-                drawRect.origin.x -= 14;
+            }else{ //Into the margin, indent text to make space
+                drawRect.origin.x -= leftViewIndent;
                 drawRect.size.width = width;
-                push = width - 14;
+                push = width - leftViewIndent;
             }
         
             //Draw the icon
             [handler drawInRect:drawRect];
             
             //Subtract the drawn area from the rect
-            cellFrame.origin.x += (push + 2);
-            cellFrame.size.width -= (push + 2);
+            cellFrame.origin.x += (push + LEFT_VIEW_PADDING);
+            cellFrame.size.width -= (push + LEFT_VIEW_PADDING);
         }
 
         //Color
@@ -84,7 +91,9 @@
         displayName = [[NSAttributedString alloc] initWithString:name attributes:[NSDictionary dictionaryWithObjectsAndKeys:textColor,NSForegroundColorAttributeName,font,NSFontAttributeName,nil]];
 
         //Display
-        [displayName drawInRect:cellFrame];
+        cellFrame.origin.y -= 1; //Adjust the strings up 1 pixel
+        [displayName drawAtPoint:cellFrame.origin];
+
         [displayName release];
         
     }else{
@@ -97,7 +106,8 @@
         cellFrame.origin.x += 2;
         cellFrame.size.width -= 2;
 
-        [displayName drawInRect:cellFrame];
+        cellFrame.origin.y -= 1; //Adjust the strings up 1 pixel
+        [displayName drawAtPoint:cellFrame.origin];
         [displayName release];
     }
 

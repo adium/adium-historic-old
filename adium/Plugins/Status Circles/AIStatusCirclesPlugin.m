@@ -22,6 +22,7 @@
 @interface AIStatusCirclesPlugin (PRIVATE)
 - (void)addToFlashArray:(AIContactHandle *)inHandle;
 - (void)removeFromFlashArray:(AIContactHandle *)inHandle;
+- (NSString *)idleStringForSeconds:(int)seconds;
 @end
 
 @implementation AIStatusCirclesPlugin
@@ -96,11 +97,18 @@
         }
         [statusCircle setColor:circleColor];
 
+        //Embedded idle time
+        if(idle){
+            [statusCircle setStringContent:[self idleStringForSeconds:idle]];
+        }else{
+            [statusCircle setStringContent:nil];
+        }
+
         //Set the circle state
         if(!unviewedContent){
             [statusCircle setState:(unrespondedContent ? AICircleDot : AICircleNormal)];
         }else{
-            [statusCircle setState:[[owner interfaceController] flashState]];
+            [statusCircle setState:(([[owner interfaceController] flashState] % 2) ? AICircleFlashA: AICircleFlashB)];
         }
 
         modifiedAttributes = [NSArray arrayWithObject:@"Left View"];
@@ -162,5 +170,22 @@
         [[owner interfaceController] unregisterFlashObserver:self];
     }    
 }
+
+//
+- (NSString *)idleStringForSeconds:(int)seconds
+{
+    NSString	*idleString;
+
+    if(seconds >= 600){
+        idleString = [NSString stringWithFormat:@"%ih",seconds / 60];
+    }else if(seconds >= 60){
+        idleString = [NSString stringWithFormat:@"%i:%02i",seconds / 60, seconds % 60];
+    }else{
+        idleString = [NSString stringWithFormat:@"%i",seconds];
+    }
+
+    return(idleString);
+}
+
 
 @end
