@@ -323,6 +323,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Register service code
 - (void)registerService:(AIService *)inService
 {
+	NSLog(@"Registering %@ (%@ ; %@)",inService,[inService serviceCodeUniqueID],[inService serviceID]);
     [availableServiceDict setObject:inService forKey:[inService serviceCodeUniqueID]];
 	
 	[availableServiceTypeDict setObject:inService forKey:[inService serviceID]];
@@ -339,7 +340,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	
 	//Prepare our menu
 	NSMenu *menu = [[NSMenu alloc] init];
-	[menu setAutoenablesItems:NO];
 
 	serviceArray = (activeServicesOnly ? [self activeServices] : [self availableServices]);
 	
@@ -426,8 +426,12 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //for efficiency.
 - (NSArray *)accountsWithServiceClassOfService:(AIService *)service
 {
+	return([self accountsWithServiceClass:[service serviceClass]]);
+}
+
+- (NSArray *)accountsWithServiceClass:(NSString *)serviceClass
+{
 	NSMutableArray	*accountsArray = [NSMutableArray array];
-	NSString		*serviceClass = [service serviceClass];	
 	NSEnumerator	*enumerator = [availableServiceDict objectEnumerator];
     AIService		*aService;
 	
@@ -450,7 +454,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	
 	return(accountsArray);
 }
-
 
 
 - (AIAccount *)firstAccountWithService:(AIService *)service
@@ -1159,7 +1162,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		}
 
 		//Update the menu item
-		[[menuItem menu] setMenuChangedMessagesEnabled:NO];		
+		[[menuItem menu] setMenuChangedMessagesEnabled:NO];
 		[menuItem setTitle:[[NSString stringWithFormat:titleFormat,accountTitle] stringByAppendingFormat:@" (%@)",[[account service] shortDescription]]];
 		[menuItem setImage:[serviceImage imageByFadingToFraction:fraction]];
 		[menuItem setEnabled:(![[account statusObjectForKey:@"Connecting"] boolValue] &&
@@ -1191,6 +1194,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		//Enumerate all arrays of menu items (for all plugins)
 		NSEnumerator			*enumerator = [accountMenuItemArraysDict objectEnumerator];
 		NSArray					*accountMenuItemArray;
+		
 		while (accountMenuItemArray = [enumerator nextObject]) {
 			//Find the menu item for this account in this array
 			NSMenuItem  *menuItem = [self _menuItemForAccount:(AIAccount *)inObject
