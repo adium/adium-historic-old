@@ -14,14 +14,17 @@
 - (void)installPlugin
 {
 	[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterIncoming];
-	[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterOutgoing];
+	
+	//Filter as content when outgoing so other content filters can know about the presence of links
+	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterOutgoing];
+
 	[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterIncoming];
 	[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterOutgoing];
 }
 
 - (void)uninstallPlugin
 {
-//	[[adium contentController] unregisterDisplayingContentFilter:self];
+
 }
 
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
@@ -52,6 +55,11 @@
     return (replacementMessage);
 }
 
+//Auto linking overrides other potential filters; do it first
+- (float)filterPriority
+{
+	return HIGHEST_FILTER_PRIORITY;
+}
 
 @end
 

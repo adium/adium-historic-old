@@ -63,6 +63,11 @@
     return(filteredMessage ? filteredMessage : inAttributedString);
 }
 
+- (float)filterPriority
+{
+	return DEFAULT_FILTER_PRIORITY;
+}
+
 //Replace any keywords in the passed string
 //Returns a mutable version of the passed string if keywords have been replaced.  Otherwise returns
 - (NSMutableAttributedString *)replaceKeywordsInString:(NSAttributedString *)original context:(id)context

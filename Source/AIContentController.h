@@ -48,9 +48,16 @@ typedef enum {
 @protocol AIContentHandler 
 @end
 
+#define HIGHEST_FILTER_PRIORITY 0
+#define HIGH_FILTER_PRIORITY 0.25
+#define DEFAULT_FILTER_PRIORITY 0.5
+#define LOW_FILTER_PRIORITY 0.75
+#define LOWEST_FILTER_PRIORITY 1.0
+
 //AIContentFilters have the opportunity to examine every attributed string.  Non-attributed strings are not passed through these filters.
 @protocol AIContentFilter
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context;
+- (float)filterPriority;
 @end
 
 @interface NSObject (AITextEntryFilter)

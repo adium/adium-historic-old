@@ -205,7 +205,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 //Register a content filter.  If the particular filter wants to apply to multiple types or directions, it should
 //register multiple times.  Be careful that incoming content is always contained (aka: Don't feed incoming content
 //to a shell script or something silly like that).
-- (void)registerContentFilter:(id <AIContentFilter>)inFilter
+- (void)registerContentFilter:(id<AIContentFilter>)inFilter
 					   ofType:(AIFilterType)type
 					direction:(AIFilterDirection)direction
 {
@@ -215,7 +215,19 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 					   threaded:NO];
 }
 
-- (void)registerContentFilter:(id <AIContentFilter>)inFilter
+int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *context){
+	float filterPriorityA = [filterA filterPriority];
+	float filterPriorityB = [filterB filterPriority];
+	
+	if(filterPriorityA < filterPriorityB)
+		return NSOrderedAscending;
+	else if(filterPriorityA > filterPriorityB)
+		return NSOrderedDescending;
+	else
+		return NSOrderedSame;
+}
+
+- (void)registerContentFilter:(id<AIContentFilter>)inFilter
 					   ofType:(AIFilterType)type
 					direction:(AIFilterDirection)direction
 					 threaded:(BOOL)threaded
@@ -227,11 +239,14 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	if(!(threaded ? threadedContentFilter : contentFilter)[type][direction]){
 		(threaded ? threadedContentFilter : contentFilter)[type][direction] = [[NSMutableArray alloc] init];
 	}
-	[(threaded ? threadedContentFilter : contentFilter)[type][direction] addObject:inFilter];
+	
+	NSMutableArray	*currentContentFilter = (threaded ? threadedContentFilter : contentFilter)[type][direction];
+	[currentContentFilter addObject:inFilter];
+	[currentContentFilter sortUsingFunction:filterSort context:nil];
 }
 
 //Unregister all instances of filter.
-- (void)unregisterContentFilter:(id <AIContentFilter>)inFilter
+- (void)unregisterContentFilter:(id<AIContentFilter>)inFilter
 {
 	NSParameterAssert(inFilter != nil);
 

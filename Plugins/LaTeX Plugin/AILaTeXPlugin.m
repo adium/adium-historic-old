@@ -71,6 +71,11 @@
     return (newMessage ? newMessage : inAttributedString);
 }
 
+- (float)filterPriority
+{
+	return DEFAULT_FILTER_PRIORITY;
+}
+
 //Returns an attributed string containing the LaTeX image
 - (NSMutableAttributedString *)attributedStringWithPasteboard:(NSPasteboard *)pb textEquivalent:(NSString *)textEquivalent
 {

@@ -70,6 +70,12 @@
 	return(inAttributedString);
 }    
 
+//Do text forcing after all other filters are done
+- (float)filterPriority
+{
+	return LOWEST_FILTER_PRIORITY;
+}
+
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
