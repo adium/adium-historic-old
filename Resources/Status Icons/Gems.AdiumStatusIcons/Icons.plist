@@ -6,15 +6,15 @@
 	<integer>1</integer>
 	<key>List</key>
 	<dict>
-		<key>available</key>
+		<key>Generic Available</key>
 		<string>available.png</string>
-		<key>away</key>
+		<key>Generic Away</key>
 		<string>away.png</string>
-		<key>idle</key>
+		<key>Idle</key>
 		<string>idle.png</string>
-		<key>offline</key>
+		<key>Offline</key>
 		<string>offline.png</string>
-		<key>unknown</key>
+		<key>Unknown</key>
 		<string>unknown.png</string>
 		<key>content</key>
 		<string>content.png</string>
@@ -25,15 +25,15 @@
 	</dict>
 	<key>Tabs</key>
 	<dict>
-		<key>available</key>
+		<key>Generic Available</key>
 		<string>tab-available.png</string>
-		<key>away</key>
+		<key>Generic Away</key>
 		<string>tab-away.png</string>
-		<key>idle</key>
+		<key>Idle</key>
 		<string>tab-idle.png</string>
-		<key>offline</key>
+		<key>Offline</key>
 		<string>tab-offline.png</string>
-		<key>unknown</key>
+		<key>Unknown</key>
 		<string>tab-unknown.png</string>
 		<key>content</key>
 		<string>tab-content.png</string>

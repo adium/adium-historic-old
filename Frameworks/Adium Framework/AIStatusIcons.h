@@ -15,6 +15,7 @@
  */
 
 #import "AIServiceIcons.h" //For AIIconDirection
+#import "AIStatus.h" //For AIStatusType
 
 //Notifications
 #define AIStatusIconSetDidChangeNotification	@"AIStatusIconSetDidChangeNotification"
@@ -31,11 +32,17 @@ typedef enum {
 @interface AIStatusIcons : NSObject {
 
 }
-+ (NSImage *)statusIconForListObject:(AIListObject *)object type:(AIStatusIconType)iconType direction:(AIIconDirection)iconDirection;
-+ (NSImage *)statusIconForChat:(AIChat *)chat type:(AIStatusIconType)iconType direction:(AIIconDirection)iconDirection;
-+ (NSImage *)statusIconForStatusID:(NSString *)statusID type:(AIStatusIconType)iconType direction:(AIIconDirection)iconDirection;
++ (NSImage *)statusIconForListObject:(AIListObject *)object type:(AIStatusIconType)iconType
+						   direction:(AIIconDirection)iconDirection;
++ (NSImage *)statusIconForChat:(AIChat *)chat type:(AIStatusIconType)iconType
+					 direction:(AIIconDirection)iconDirection;
++ (NSImage *)statusIconForUnknownStatusWithIconType:(AIStatusIconType)iconType
+										  direction:(AIIconDirection)iconDirection;
++ (NSImage *)statusIconForStatusName:(NSString *)statusName
+						  statusType:(AIStatusType)statusType
+							iconType:(AIStatusIconType)iconType
+						   direction:(AIIconDirection)iconDirection;
 + (BOOL)setActiveStatusIconsFromPath:(NSString *)inPath;
-
 + (NSImage *)previewMenuImageForStatusIconsAtPath:(NSString *)inPath;
 
 @end
