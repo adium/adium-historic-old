@@ -50,51 +50,48 @@
 	[textField_desiredFont setShowFontFace:NO];
 	[textField_desiredFont setShowPointSize:YES];
 	
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self _buildTimeStampMenu];
+	[self _buildTimeStampMenu];
     [self _buildPrefixFormatMenu];
 	[self _buildMessageColoringMenu];
-    [self preferencesChanged:nil];
+
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 }
 
 //Close the preference view
 - (void)viewWillClose
 {
-    [[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 //Reflect new preferences in view
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-	if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_STANDARD_MESSAGE_DISPLAY]){
-		NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-		
-		//Disable and uncheck show user icons when not using an inline prefix
-		if([[preferenceDict objectForKey:KEY_SMV_PREFIX_INCOMING] rangeOfString:@"%m"].location != NSNotFound){
-			[checkBox_showUserIcons setState:NSOffState];
-			[checkBox_showUserIcons setEnabled:NO];
-		}else{
-			[checkBox_showUserIcons setState:[[preferenceDict objectForKey:KEY_SMV_SHOW_USER_ICONS] boolValue]];
-			[checkBox_showUserIcons setEnabled:YES];
-		}
-		[checkBox_ignoreTextStyles setState:[[preferenceDict objectForKey:KEY_SMV_IGNORE_TEXT_STYLES] boolValue]];
-		
-		[checkBox_combineMessages setState:[[preferenceDict objectForKey:KEY_SMV_COMBINE_MESSAGES] boolValue]];
-		
-		[popUp_timeStamps selectItemWithRepresentedObject:[preferenceDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT]];
-		if (![popUp_timeStamps selectedItem])
-			[popUp_timeStamps selectItem:[popUp_timeStamps lastItem]];
-		
-		[popUp_prefixFormat selectItemWithRepresentedObject:[preferenceDict objectForKey:KEY_SMV_PREFIX_INCOMING]];	
-
-		// Custom message style
-		NSString *currentStyleName = [preferenceDict objectForKey:KEY_SMV_MESSAGE_STYLE_NAME];
-		[popUp_messageColoring selectItemWithTitle:currentStyleName];
-		
-		// Prefix Font
-		NSFont		*selectedFont = [[preferenceDict objectForKey:KEY_SMV_PREFIX_FONT] representedFont];
-		[textField_desiredFont setFont:selectedFont];
+	//Disable and uncheck show user icons when not using an inline prefix
+	if([[prefDict objectForKey:KEY_SMV_PREFIX_INCOMING] rangeOfString:@"%m"].location != NSNotFound){
+		[checkBox_showUserIcons setState:NSOffState];
+		[checkBox_showUserIcons setEnabled:NO];
+	}else{
+		[checkBox_showUserIcons setState:[[prefDict objectForKey:KEY_SMV_SHOW_USER_ICONS] boolValue]];
+		[checkBox_showUserIcons setEnabled:YES];
 	}
+	[checkBox_ignoreTextStyles setState:[[prefDict objectForKey:KEY_SMV_IGNORE_TEXT_STYLES] boolValue]];
+	
+	[checkBox_combineMessages setState:[[prefDict objectForKey:KEY_SMV_COMBINE_MESSAGES] boolValue]];
+	
+	[popUp_timeStamps selectItemWithRepresentedObject:[prefDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT]];
+	if (![popUp_timeStamps selectedItem])
+		[popUp_timeStamps selectItem:[popUp_timeStamps lastItem]];
+	
+	[popUp_prefixFormat selectItemWithRepresentedObject:[prefDict objectForKey:KEY_SMV_PREFIX_INCOMING]];	
+	
+	// Custom message style
+	NSString *currentStyleName = [prefDict objectForKey:KEY_SMV_MESSAGE_STYLE_NAME];
+	[popUp_messageColoring selectItemWithTitle:currentStyleName];
+	
+	// Prefix Font
+	NSFont		*selectedFont = [[prefDict objectForKey:KEY_SMV_PREFIX_FONT] representedFont];
+	[textField_desiredFont setFont:selectedFont];
 }
     
 //Save changed preference
