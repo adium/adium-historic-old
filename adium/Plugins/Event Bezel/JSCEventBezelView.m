@@ -119,12 +119,14 @@ BOOL pantherOrLater;
         tempRect.origin = tempPoint;
         [buddyIconLabelColor set];
         [NSBezierPath fillRect:tempRect];
-        
-        shadowSize.width = 0.0;
-        shadowSize.height = 0.0;
-        [tempShadow setShadowOffset:shadowSize];
-        [tempShadow setShadowBlurRadius:0.0];
-        [tempShadow set];
+	
+	if(pantherOrLater) {        
+            shadowSize.width = 0.0;
+            shadowSize.height = 0.0;
+            [tempShadow setShadowOffset:shadowSize];
+            [tempShadow setShadowBlurRadius:0.0];
+            [tempShadow set];
+        }
     }
     tempPoint.x = 82.0;
     tempPoint.y = 150.0;
