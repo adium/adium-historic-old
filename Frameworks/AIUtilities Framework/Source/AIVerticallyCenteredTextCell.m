@@ -18,24 +18,36 @@
  */
 
 #import "AIVerticallyCenteredTextCell.h"
-
+#import "AIAttributedStringAdditions.h"
 
 @implementation AIVerticallyCenteredTextCell
+
+- (id)init
+{
+	if(self = [super init]){
+		lineBreakMode = /*NSLineBreakByTruncatingTail*/ NSLineBreakByWordWrapping;
+	}
+
+	return self;
+}
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
 	NSFont		*font  = [self font];
 	NSString	*title = [self stringValue];
-	NSColor 	*highlightColor;
+	
 	BOOL 		 highlighted;
+	NSColor 	*highlightColor;
 	
 	highlightColor = [self highlightColorWithFrame:cellFrame inView:controlView];
 	highlighted = [self isHighlighted];
+	/*
 	if(highlighted){
 		[highlightColor set];
 		NSRectFill(cellFrame);
 	}
-
+	 */
+	
 	//Draw the cell's text
 	if(title != nil){
 		NSDictionary	*attributes;
@@ -57,7 +69,7 @@
 		//Paragraph style for alignment and clipping
 		NSMutableParagraphStyle *style = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 		[style setAlignment:[self alignment]];
-		[style setLineBreakMode:NSLineBreakByTruncatingTail];
+		[style setLineBreakMode:lineBreakMode];
 
 		//
 		if(font){
@@ -71,14 +83,16 @@
 				textColor, NSForegroundColorAttributeName,nil];
 		}
 
+		NSAttributedString	*attributedTitle = [[NSAttributedString alloc] initWithString:title
+																			   attributes:attributes];
 		//Calculate the centered rect
-		stringHeight = [title sizeWithAttributes:attributes].height;
+		stringHeight = [attributedTitle heightWithWidth:cellFrame.size.width];
 		if(stringHeight < cellFrame.size.height){
 			cellFrame.origin.y += (cellFrame.size.height - stringHeight) / 2.0;
 		}
 
 		//Draw the string
-		[title drawInRect:cellFrame withAttributes:attributes];
+		[attributedTitle drawInRect:cellFrame];
 	}
 }
 

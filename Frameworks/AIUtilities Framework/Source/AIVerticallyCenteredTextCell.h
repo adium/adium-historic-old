@@ -15,12 +15,12 @@
 
 /*!
  * @class AIVerticallyCenteredTextCell
- * @brief Simple NSCell which draws its text centered vertically
- *
- * Simple <tt>NSCell</tt> which draws its text centered vertically
+ * @brief Simple AIGradientCell which draws its text centered vertically
  */
-@interface AIVerticallyCenteredTextCell : NSCell {
+#import "AIGradientCell.h"
 
+@interface AIVerticallyCenteredTextCell : AIGradientCell {
+	NSLineBreakMode	lineBreakMode;
 }
 
 @end
