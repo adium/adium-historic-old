@@ -26,9 +26,12 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
 @interface AIStatusController (PRIVATE)
 - (void)_saveStateArrayAndNotifyOfChanges;
-- (void)_applyStateToAllAccounts:(NSDictionary *)state;
+- (void)_applyStateToAllAccounts:(AIStatus *)state;
 - (void)_upgradeSavedAwaysToSavedStates;
+- (void)upgradeSVNSavedStatesToCurrent;
 - (void)_setMachineIsIdle:(BOOL)inIdle;
+
+- (NSArray *)menuItemsForStatusesOfType:(AIStatusType)type withTarget:(id)target;
 @end
 									
 /*!
@@ -54,35 +57,181 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 - (void)closeController
 {
 	[stateArray release]; stateArray = nil;
-	[activeState release]; activeState = nil;
+	[activeStatusState release]; activeStatusState = nil;
+}
+
+/*!
+ * @brief Register a status for a service
+ *
+ * Implementation note: Each AIStatusType has its own NSMutableDictionary, statusDictsByServiceCodeUniqueID.
+ * statusDictsByServiceCodeUniqueID is keyed by serviceCodeUniqueID; each object is an NSMutableSet of NSDictionaries.
+ * Each of these dictionaries has KEY_STATUS_NAME, KEY_STATUS_DESCRIPTION, and KEY_STATUS_TYPE.
+ *
+ * @param statusName A name which will be passed back to accounts of this service.  Internal use only.  Use the AIStatusController.h #defines where appropriate.
+ * @param description A human-readable localized description which will be shown to the user.  Use the AIStatusController.h #defines where appropriate.
+ * @param type An AIStatusType, the general type of this status.
+ * @param service The AIService for which to register the status
+ */
+- (void)registerStatus:(NSString *)statusName withDescription:(NSString *)description ofType:(AIStatusType)type forService:(AIService *)service
+{
+	NSMutableSet	*statusDicts;
+	NSString		*serviceCodeUniqueID = [service serviceCodeUniqueID];
+
+	//Create the set if necessary
+	if(!statusDictsByServiceCodeUniqueID[type]) statusDictsByServiceCodeUniqueID[type] = [[NSMutableDictionary alloc] init];
+	if(!(statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:serviceCodeUniqueID])){
+		statusDicts = [NSMutableSet set];
+		[statusDictsByServiceCodeUniqueID[type] setObject:statusDicts
+												   forKey:serviceCodeUniqueID];
+	}
+
+	//Create a dictionary for this status entry
+	NSDictionary *statusDict = [NSDictionary dictionaryWithObjectsAndKeys:
+		statusName, KEY_STATUS_NAME,
+		description, KEY_STATUS_DESCRIPTION,
+		[NSNumber numberWithInt:type], KEY_STATUS_TYPE,
+		nil];
+	
+	[statusDicts addObject:statusDict];
+}
+
+- (NSMenu *)menuOfStatusesWithTarget:(id)target
+{
+	NSMenu			*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+	NSEnumerator	*enumerator;
+	NSMenuItem		*menuItem;
+
+	AIStatusType type;
+	for(type = AIAvailableStatusType ; type < STATUS_TYPES_COUNT ; type++){
+		//Add a separator between each type after available
+		if (type > AIAvailableStatusType){
+			[menu addItem:[NSMenuItem separatorItem]];
+		}
+
+		//Add the items for this type
+		enumerator = [[self menuItemsForStatusesOfType:type withTarget:target] objectEnumerator];
+		while(menuItem = [enumerator nextObject]){
+			[menu addItem:menuItem];
+		}
+	}
+
+	return([menu autorelease]);
+}
+
+
+//Sort by title.  We may need to do more complex sorting to put certain defaults at the top?
+int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
+{
+	return [[menuItemA title] caseInsensitiveCompare:[menuItemA title]];
+}
+
+- (NSArray *)menuItemsForStatusesOfType:(AIStatusType)type withTarget:(id)target
+{
+	NSMutableArray  *menuItems = [[NSMutableArray alloc] init];
+	NSMutableSet	*alreadyAddedTitles = [NSMutableSet set];
+	NSEnumerator	*enumerator;
+	NSString		*serviceCodeUniqueID;
+
+    //Insert a menu item for each available account
+    enumerator = [statusDictsByServiceCodeUniqueID[type] keyEnumerator];
+    while(serviceCodeUniqueID = [enumerator nextObject]){
+		NSSet	*statusDicts;
+		
+		//Obtain the status dicts for this type and service code unique ID if it is online
+		if([[adium accountController] serviceWithUniqueIDIsOnline:serviceCodeUniqueID] &&
+		   (statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:serviceCodeUniqueID])){
+			NSEnumerator	*statusDictEnumerator = [statusDicts objectEnumerator];
+			NSDictionary	*statusDict;
+			
+			//Enumerate the status dicts
+			while(statusDict = [statusDictEnumerator nextObject]){
+				NSString	*title = [statusDict objectForKey:KEY_STATUS_DESCRIPTION];
+
+				/*
+				 * Only add if it has not already been added by another service.... Services need to use unique titles if they have
+				 * unique state names, but are welcome to share common name/description combinations, which is why the #defines
+				 * exist.
+				 */
+				if(![alreadyAddedTitles containsObject:title]){
+					NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
+																								  target:target
+																								  action:@selector(selectStatus:)
+																						   keyEquivalent:@""] autorelease];
+					[menuItem setRepresentedObject:statusDict];
+					[menuItem setImage:[[[AIStatusIcons statusIconForStatusID:((type == AIAvailableStatusType) ? @"available" : @"away")
+																	   type:AIStatusIconList
+																  direction:AIIconNormal] copy] autorelease]];
+					[menuItem setEnabled:YES];
+					[menuItems addObject:menuItem];
+					[alreadyAddedTitles addObject:title];
+				}
+			}
+		}
+    }
+
+	[menuItems sortUsingFunction:statusMenuItemSort context:nil];
+
+	return([menuItems autorelease]);
+}
+
+/*!
+ * @brief Return the localized description for the sate of the passed status
+ *
+ * This could be stored with the statusState, but that would break if the locale changed.  This way, the nonlocalized
+ * string is used to look up the appropriate localized one.
+ *
+ * @result A localized description such as @"Away" or @"Out to Lunch" of the state used by statusState
+ */
+- (NSString *)descriptionForStateOfStatus:(AIStatus *)statusState
+{
+	NSString		*statusName = [statusState statusName];
+	AIStatusType	statusType = [statusState statusType];
+	NSEnumerator	*enumerator = [statusDictsByServiceCodeUniqueID[statusType] objectEnumerator];
+	NSSet			*set;
+	while(set = [enumerator nextObject]){
+		NSEnumerator	*statusDictsEnumerator = [set objectEnumerator];
+		NSDictionary	*statusDict;
+		while(statusDict = [statusDictsEnumerator nextObject]){
+			if([[statusDict objectForKey:KEY_STATUS_NAME] isEqualToString:statusName]){
+				return [statusDict objectForKey:KEY_STATUS_DESCRIPTION];
+			}
+		}
+	}
+	
+	return nil;
 }
 
 /*!
  * @brief Access to Adium's user-defined states
  *
- * Returns an array of available user-defined states.  Each state is represented as a dictionary with the
- * following keys:
- *   STATE_TYPE 			   Should be "State", if not the entry should be ignored. 	(NSString)
- *   STATE_TITLE 			   Title for this away in the menu/list						(NSString)
- *   STATE_AWAY 			   User is away		 										(NSNumber - yes/no)
- *   STATE_AUTO_REPLY 		   Automatically reply to intial messages	 				(NSNumber - yes/no)
- *   STATE_AUTO_REPLY_IS_AWAY  Use AwayMessage instead of AutoReplyMessage to reply		(NSNumber - yes/no)
- *   STATE_AVAILABLE 		   User is available 										(NSNumber - yes/no)
- *   STATE_INVISIBLE 		   User is invisible 										(NSNumber - yes/no)
- *   STATE_IDLE 			   User is idle			 									(NSNumber - yes/no)
- *   STATE_IDLE_START 		   Starting idle duration 									(NSNumber - seconds)
- *   STATE_AWAY_MESSAGE 	   Away mesage 												(NSData - attributed string)
- *   STATE_AVAILABLE_MESSAGE   Available mesage 										(NSData - attributed string)
- *   STATE_AUTO_REPLY_MESSAGE  Auto-reply message 										(NSData - attributed string)
+ * Returns an array of available user-defined states, which are AIStatus objects
  */
 - (NSArray *)stateArray
 {
-	if(!stateArray){
-		//Load the preset states, defaulting to an empty array if none are available
-		stateArray = [[[adium preferenceController] preferenceForKey:KEY_SAVED_STATUS
-															   group:PREF_GROUP_SAVED_STATUS] mutableCopy];
+	if(!stateArray){		
+		NSData	*savedStateArrayData = [[adium preferenceController] preferenceForKey:KEY_SAVED_STATUS
+																	   group:PREF_GROUP_SAVED_STATUS];
+		if(savedStateArrayData){
+			stateArray = [[NSKeyedUnarchiver unarchiveObjectWithData:savedStateArrayData] mutableCopy];
+		}
+		
 		if(!stateArray) stateArray = [[NSMutableArray alloc] init];
 
+/*
+		//Convert the statuses to AIStatus objects
+		enumerator = [savedStateArray objectEnumerator];
+		while(statusData = [enumerator nextObject]){
+			AIStatus	*status = [NSKeyedUnarchiver unarchiveObjectWithData:statusData];
+			if(status){
+				[stateArray addObject:status];
+			}else{
+				NSLog(@"bleh. %@ failed.",statusData);
+			}
+		}
+*/
+		//Update Adium 0.8svn saved states -- VERY TEMPORARY!
+		[self _upgradeSVNSavedStatesToCurrent];
+			
 		//Upgrade Adium 0.7x away messages
 		[self _upgradeSavedAwaysToSavedStates];
 	}
@@ -91,100 +240,32 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 }
 
 /*!
- * @brief Returns an appropriate title for a state
+ * @brief Set the active status state
  *
- * Not all states provide a title.  This method will generate an appropriate title based on the content of the passed
- * state.  If the passed state has a title, it will always be used.
- */ 
-- (NSString *)titleForState:(NSDictionary *)state
-{
-	NSString	*title = nil;
-	
-	//If the state has a title, we simply use it
-	if(!title){
-		NSString *string = [state objectForKey:STATE_TITLE];
-		if(string && [string length]) title = string;
-	}
-	
-	//If the state is away, use the away message (Or "Away" if no message is provided)
-	if(!title && [[state objectForKey:STATE_AWAY] boolValue]){
-		NSString *string = [[NSAttributedString stringWithData:[state objectForKey:STATE_AWAY_MESSAGE]] string];
-		if(string && [string length]){
-			title = string;
-		}else{
-			title = STATUS_TITLE_AWAY;
-		}
-	}
-	//If the state is available, use the avaiable message
-	if(!title && [[state objectForKey:STATE_AVAILABLE] boolValue]){
-		NSString *string = [[NSAttributedString stringWithData:[state objectForKey:STATE_AVAILABLE_MESSAGE]] string];
-		if(string && [string length]) title = string;
-	}
-	//If the state is an auto-reply, use the auto-reply message
-	if(!title && [[state objectForKey:STATE_AUTO_REPLY] boolValue]){
-		NSString *string = [[NSAttributedString stringWithData:[state objectForKey:STATE_AUTO_REPLY_MESSAGE]] string];
-		if(string && [string length]) title = string;
-	}
-	//If the state is simply idle, use the string "Idle"
-	if(!title && [[state objectForKey:STATE_IDLE] boolValue]){
-		title = STATUS_TITLE_IDLE;
-	}
-	//If the state is simply invisible, use the string "Invisible"
-	if(!title && [[state objectForKey:STATE_INVISIBLE] boolValue]){
-		title = STATUS_TITLE_INVISIBLE;
-	}
-	//If the state is none of the above, use the string "Available"
-	if(!title) title = STATUS_TITLE_AVAILABLE;
-	
-	return(title);
-}
-
-/*!
- * @brief Returns an appropriate icon for a state
- *
- * This method will generate an appropriate status icon based on the content of the passed state.
- */ 
-- (NSImage *)iconForState:(NSDictionary *)state
-{
-	NSString	*statusID;
-	
-	if([[state objectForKey:STATE_AWAY] boolValue]){
-		statusID = @"away";
-	}else if([[state objectForKey:STATE_IDLE] boolValue]){
-		statusID = @"idle";
-	}else{
-		statusID = @"available";
-	}
-	
-	return([AIStatusIcons statusIconForStatusID:statusID type:AIStatusIconList direction:AIIconNormal]);
-}
-
-/*!
- * @brief Set the active state
- *
- * Sets the currently active state.  This applies throughout Adium and to all accounts.  The state will become
+ * Sets the currently active status state.  This applies throughout Adium and to all accounts.  The state will become
  * effective immediately.  When the active state changes, an AIActiveStateChangedNotification is broadcast.
  */ 
-- (void)setActiveState:(NSDictionary *)state
+- (void)setActiveStatusState:(AIStatus *)statusState
 {
-	if(activeState != state){
-		[activeState release];
-		activeState = [state retain];
+	if(activeStatusState != statusState){
+		[activeStatusState release];
+		activeStatusState = [statusState retain];
 
 		//Apply the state to our accounts and notify
-		[self _applyStateToAllAccounts:activeState];
-		[[adium notificationCenter] postNotificationName:AIActiveStateChangedNotification object:nil];
+		[self _applyStateToAllAccounts:activeStatusState];
+		[[adium notificationCenter] postNotificationName:AIActiveStatusStateChangedNotification
+												  object:activeStatusState];
 	}
 }
 
 /*!
- * @brief Retrieve active state
+ * @brief Retrieve active status state
  *
- * Returns the currently active state.
+ * @result The currently active status state.
  */ 
-- (NSDictionary *)activeState
+- (AIStatus *)activeStatusState
 {
-	return(activeState);
+	return(activeStatusState);
 }
 
 /*!
@@ -198,76 +279,21 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
  */ 
 - (void)_saveStateArrayAndNotifyOfChanges
 {
-	[[adium preferenceController] setPreference:stateArray
+	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:stateArray]
 										 forKey:KEY_SAVED_STATUS
 										  group:PREF_GROUP_SAVED_STATUS];
-	[[adium notificationCenter] postNotificationName:AIStateArrayChangedNotification object:nil];
+	[[adium notificationCenter] postNotificationName:AIStatusStateArrayChangedNotification object:nil];
 }
 
 /*!
  * @brief Apply a state to all accounts
  *
- * Applies the passed state to all accounts, active and innactive.
+ * Applies the passed state to all accounts
  */ 
-- (void)_applyStateToAllAccounts:(NSDictionary *)state
+- (void)_applyStateToAllAccounts:(AIStatus *)statusState
 {
-	AIPreferenceController	*controller = [adium preferenceController];
-	NSData	*awayMessage, *availableMessage, *autoReplyMessage;
-	BOOL 	available, away, autoReply, autoReplyIsAway, invisible, idle;
-	int  	idleStart;
-	
-	//State Properties
-	available = [[state objectForKey:STATE_AVAILABLE] boolValue];
-	away = [[state objectForKey:STATE_AWAY] boolValue];
-	autoReply = [[state objectForKey:STATE_AUTO_REPLY] boolValue];
-	autoReplyIsAway = [[state objectForKey:STATE_AUTO_REPLY_IS_AWAY] boolValue];
-	invisible = [[state objectForKey:STATE_INVISIBLE] boolValue];
-	idle = [[state objectForKey:STATE_IDLE] boolValue];
-	idleStart = [[state objectForKey:STATE_IDLE_START] intValue];	
-	
-	//Attributed Strings (In NSData form)
-	awayMessage = [state objectForKey:STATE_AWAY_MESSAGE];
-	availableMessage = [state objectForKey:STATE_AVAILABLE_MESSAGE];
-	autoReplyMessage = [state objectForKey:STATE_AUTO_REPLY_MESSAGE];
-	
-	//Available Message
-	if(available && availableMessage && [availableMessage length]){
-		[controller setPreference:availableMessage forKey:STATUS_AVAILABLE_MESSAGE group:GROUP_ACCOUNT_STATUS];
-	}else{
-		[controller setPreference:nil forKey:STATUS_AVAILABLE_MESSAGE group:GROUP_ACCOUNT_STATUS];
-	}
-	
-	//Away Message
-	if(away && awayMessage && [awayMessage length]){
-		[controller setPreference:awayMessage forKey:STATUS_AWAY_MESSAGE group:GROUP_ACCOUNT_STATUS];
-	}else{
-		[controller setPreference:nil forKey:STATUS_AWAY_MESSAGE group:GROUP_ACCOUNT_STATUS];
-	}
-	
-	//Auto-Reply
-	if(autoReplyIsAway) autoReplyMessage = awayMessage;
-	if(autoReply && autoReplyMessage && [autoReplyMessage length]){
-		[controller setPreference:autoReplyMessage forKey:STATUS_AUTO_REPLY group:GROUP_ACCOUNT_STATUS];
-	}else{
-		[controller setPreference:nil forKey:STATUS_AUTO_REPLY group:GROUP_ACCOUNT_STATUS];
-	}
-	
-	//Idle
-	if(idle){
-		[controller setPreference:[NSDate dateWithTimeIntervalSinceNow:-(idleStart ? idleStart : 60)]
-						   forKey:STATUS_IDLE_SINCE
-							group:GROUP_ACCOUNT_STATUS];
-	}else{
-		[controller setPreference:nil forKey:STATUS_IDLE_SINCE group:GROUP_ACCOUNT_STATUS];
-	}
-	
-	//Invisible
-	if(invisible){
-		[controller setPreference:[NSNumber numberWithBool:YES] forKey:STATUS_INVISIBLE group:GROUP_ACCOUNT_STATUS];
-	}else{
-		[controller setPreference:nil forKey:STATUS_INVISIBLE group:GROUP_ACCOUNT_STATUS];
-		
-	}
+	[[[adium accountController] accountArray] makeObjectsPerformSelector:@selector(setStatusState:)
+															  withObject:statusState];
 }
 
 /*!
@@ -295,30 +321,41 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		
 		//Update all the away messages to states
 		while(state = [enumerator nextObject]){
-			if([[state objectForKey:STATE_TYPE] isEqualToString:OLD_STATE_SAVED_AWAY]){
+			if([[state objectForKey:@"Type"] isEqualToString:OLD_STATE_SAVED_AWAY]){
+				AIStatus	*statusState;
+				
 				//Extract the away message information from this old record
-				NSData		*awayMessage = [state objectForKey:OLD_STATE_AWAY];
+				NSData		*statusMessage = [state objectForKey:OLD_STATE_AWAY];
 				NSData		*autoReplyMessage = [state objectForKey:OLD_STATE_AUTO_REPLY];
 				NSString	*title = [state objectForKey:OLD_STATE_TITLE];
 				
-				//Create the new-style "State" from this information
-				state = [NSDictionary dictionaryWithObjectsAndKeys:
-					STATE_SAVED_STATE, STATE_TYPE,
-					(title ? title : @""), STATE_TITLE,
-					[NSNumber numberWithBool:YES], STATE_AWAY,
-					[NSNumber numberWithBool:YES], STATE_AUTO_REPLY,
-					[NSNumber numberWithBool:(autoReplyMessage == nil)], STATE_AUTO_REPLY_IS_AWAY,
-					[NSNumber numberWithBool:NO], STATE_INVISIBLE,
-					[NSNumber numberWithBool:NO], STATE_AVAILABLE,
-					[NSNumber numberWithBool:NO], STATE_IDLE,
-					[NSNumber numberWithInt:600], STATE_IDLE_START,
-					(awayMessage ? awayMessage : [NSData data]), STATE_AWAY_MESSAGE,
-					(awayMessage ? awayMessage : [NSData data]), STATE_AVAILABLE_MESSAGE,
-					(autoReplyMessage ? autoReplyMessage : [NSData data]), STATE_AUTO_REPLY_MESSAGE,
-					nil];
-				
+				//Create an AIStatus from this information
+				statusState = [AIStatus status];
+
+				//General category: It's an away type
+				[statusState setStatusType:AIAwayStatusType];
+
+				//Specific state: It's the generic away. Funny how that work out.
+				[statusState setStatusName:STATUS_NAME_AWAY];				
+
+				//Set the status message (which is just the away message)
+				[statusState setStatusMessageData:statusMessage];
+
+				//It has an auto reply
+				[statusState setHasAutoReply:YES];
+
+				if(autoReplyMessage){
+					//Use the custom auto reply if it was set
+					[statusState setAutoReplyData:autoReplyMessage];
+				}else{
+					//If no autoReplyMesssage, use the status message
+					[statusState setAutoReplyIsStatusMessage:YES];
+				}
+
+				if(title) [statusState setTitle:title];
+	
 				//Add the updated state to our state array
-				[stateArray addObject:state];
+				[stateArray addObject:statusState];
 			}
 		}
 		
@@ -331,17 +368,50 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 }
 
 
+/*
+ * @brief Upgrade saved states from January 2005 SVN to the new storage mechanism.
+ *
+ * This should be removed long before 0.8 ships.
+ */
+- (void)upgradeSVNSavedStatesToCurrent
+{
+	NSArray	*savedAways = [[adium preferenceController] preferenceForKey:@"Saved Status"
+																   group:PREF_GROUP_SAVED_STATUS];
+
+	if(savedAways){
+		NSEnumerator	*enumerator = [savedAways objectEnumerator];
+		NSDictionary	*state;
+
+		//Update all the away messages to states
+		while(state = [enumerator nextObject]){
+			AIStatus	*statusState;
+
+			//Create an AIStatus from this information
+			statusState = [AIStatus statusWithDictionary:state];
+
+			//Add the updated state to our state array
+			[stateArray addObject:statusState];
+		}
+
+		//Save these changes and delete the old aways so we don't need to do this again
+		[self _saveStateArrayAndNotifyOfChanges];
+		[[adium preferenceController] setPreference:nil
+											 forKey:@"Saved Status"
+											  group:OLD_GROUP_AWAY_MESSAGES];
+	}
+}
+
 //State Editing --------------------------------------------------------------------------------------------------------
 #pragma mark State Editing
 /*!
  * @brief Add a state
  *
  * Add a new state to Adium's state array.
- * @param state NSDictionary of state keys and values to add
+ * @param state AIState to add
  */
-- (void)addState:(NSDictionary *)state
+- (void)addStatusState:(AIStatus *)statusState
 {
-	[stateArray addObject:state];
+	[stateArray addObject:statusState];
 	[self _saveStateArrayAndNotifyOfChanges];
 }
 
@@ -349,11 +419,11 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
  * @brief Remove a state
  *
  * Remove a new state from Adium's state array.
- * @param state NSDictionary of state keys and values to remove
+ * @param state AIState to remove
  */
-- (void)removeState:(NSDictionary *)state
+- (void)removeStatusState:(AIStatus *)statusState
 {
-	[stateArray removeObject:state];
+	[stateArray removeObject:statusState];
 	[self _saveStateArrayAndNotifyOfChanges];
 }
 
@@ -361,21 +431,21 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
  * @brief Move a state
  *
  * Move a state that already exists in Adium's state array to another index
- * @param state NSDictionary of state keys and values to move
+ * @param state AIState to move
  * @param destIndex Destination index
  */
-- (int)moveState:(NSDictionary *)state toIndex:(int)destIndex
+- (int)moveStatusState:(AIStatus *)statusState toIndex:(int)destIndex
 {
-    int sourceIndex = [stateArray indexOfObject:state];
+    int sourceIndex = [stateArray indexOfObject:statusState];
     
     //Remove the state
-    [state retain];
-    [stateArray removeObject:state];
+    [statusState retain];
+    [stateArray removeObject:statusState];
     
-    //Re-insert the account
+    //Re-insert the state
     if(destIndex > sourceIndex) destIndex -= 1;
-    [stateArray insertObject:state atIndex:destIndex];
-    [state release];
+    [stateArray insertObject:statusState atIndex:destIndex];
+    [statusState release];
     
 	[self _saveStateArrayAndNotifyOfChanges];
 	
@@ -386,17 +456,19 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
  * @brief Replace a state
  *
  * Replace a state in Adium's state array with another state.
- * @param oldState NSDictionary state that is in Adium's state array
- * @param newState NSDictionary state to replace the oldState with
+ * @param oldState AIState state that is in Adium's state array
+ * @param newState AIState state with which to replace oldState
  */
-- (void)replaceExistingState:(NSDictionary *)oldState withState:(NSDictionary *)newState
+- (void)replaceExistingStatusState:(AIStatus *)oldStatusState withStatusState:(AIStatus *)newStatusState
 {
-	int index = [stateArray indexOfObject:oldState];
-	
-	if(index >= 0 && index < [stateArray count]){
-		[stateArray replaceObjectAtIndex:index withObject:newState];
+	if(oldStatusState != newStatusState){
+		int index = [stateArray indexOfObject:oldStatusState];
+		
+		if(index >= 0 && index < [stateArray count]){
+			[stateArray replaceObjectAtIndex:index withObject:newStatusState];
+		}
 	}
-	
+
 	[self _saveStateArrayAndNotifyOfChanges];
 }
 

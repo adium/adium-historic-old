@@ -15,70 +15,100 @@ Adium, Copyright 2001-2005, Adam Iser
 
 #import <Cocoa/Cocoa.h>
 
-//Notifications
-#define AIActiveStateChangedNotification	@"AIActiveStateChangedNotification"
-#define AIStateArrayChangedNotification		@"AIStateArrayChangedNotification"
-#define AIMachineIsIdleNotification			@"AIMachineIsIdleNotification"
-#define AIMachineIsActiveNotification		@"AIMachineIsActiveNotification"
-#define AIMachineIdleUpdateNotification		@"AIMachineIdleUpdateNotification"
+//Status State Notifications
+#define AIActiveStatusStateChangedNotification	@"AIActiveStatusStateChangedNotification"
+#define AIStatusStateArrayChangedNotification	@"AIStatusStateArrayChangedNotification"
+
+//Idle Notifications
+#define AIMachineIsIdleNotification				@"AIMachineIsIdleNotification"
+#define AIMachineIsActiveNotification			@"AIMachineIsActiveNotification"
+#define AIMachineIdleUpdateNotification			@"AIMachineIdleUpdateNotification"
 
 //Preferences
 #define PREF_GROUP_SAVED_STATUS		@"Saved Status"
-#define KEY_SAVED_STATUS			@"Saved Status"
+#define KEY_SAVED_STATUS			@"Saved Status Array"
 
-//State dictionary keys
-#define STATE_TYPE					@"Type"
-#define STATE_TITLE					@"Title"
-#define STATE_AWAY					@"Away"
-#define STATE_AUTO_REPLY			@"AutoReply"
-#define STATE_AUTO_REPLY_IS_AWAY	@"AutoReplyIsAway"
-#define STATE_AVAILABLE				@"Available"
-#define STATE_INVISIBLE				@"Invisible"
-#define STATE_IDLE					@"Idle"
-#define STATE_IDLE_START			@"IdleStart"
-#define STATE_AWAY_MESSAGE			@"AwayMessage"
-#define STATE_AVAILABLE_MESSAGE		@"AvailableMessage"
-#define STATE_AUTO_REPLY_MESSAGE	@"AutoReplyMessage"
+#define KEY_STATUS_NAME				@"Status Name"
+#define KEY_STATUS_DESCRIPTION		@"Status Description"
+#define	KEY_STATUS_TYPE				@"Status Type"
+
+//Built-in names and descriptions, which services should use when they support identical or approximately identical states
+#define	STATUS_NAME_AVAILABLE				@"Adium: Generic Available"
+#define	STATUS_DESCRIPTION_AVAILABLE		AILocalizedString(@"Available", nil)
+#define STATUS_NAME_FREE_FOR_CHAT			@"Adium: Free for Chat"
+#define STATUS_DESCRIPTION_FREE_FOR_CHAT	AILocalizedString(@"Free for chat", nil)
+#define STATUS_NAME_AVAILABLE_FRIENDS_ONLY	@"Adium: Available for Friends Only"
+#define STATUS_DESCRIPTION_AVAILABLE_FRIENDS_ONLY AILocalizedString(@"Available for friends only",nil)
+
+#define	STATUS_NAME_AWAY					@"Adium: Generic Away"
+#define STATUS_DESCRIPTION_AWAY				AILocalizedString(@"Away", nil)
+#define STATUS_NAME_EXTENDED_AWAY			@"Adium: Extended Away"
+#define STATUS_DESCRIPTION_EXTENDED_AWAY	AILocalizedString(@"Extended away",nil)
+#define STATUS_NAME_AWAY_FRIENDS_ONLY		@"Adium: Away for Friends Only"
+#define STATUS_DESCRIPTION_AWAY_FRIENDS_ONLY AILocalizedString(@"Away for friends only",nil)
+#define STATUS_NAME_DND						@"Adium: DND"
+#define STATUS_DESCRIPTION_DND				AILocalizedString(@"Do not disturb", nil)
+#define STATUS_NAME_NOT_AVAILABLE			@"Adium: Not Available"
+#define STATUS_DESCRIPTION_NOT_AVAILABLE	AILocalizedString(@"Not available", nil)
+#define STATUS_NAME_OCCUPIED				@"Adium: Occupied"
+#define STATUS_DESCRIPTION_OCCUPIED			AILocalizedString(@"Occupied", nil)
+#define STATUS_NAME_BRB						@"Adium: BRB"
+#define STATUS_DESCRIPTION_BRB				AILocalizedString(@"Be right back",nil)
+#define STATUS_NAME_BUSY					@"Adium: Busy"
+#define	STATUS_DESCRIPTION_BUSY				AILocalizedString(@"Busy",nil)
+#define STATUS_NAME_PHONE					@"Adium: Phone"
+#define STATUS_DESCRIPTION_PHONE			AILocalizedString(@"On the phone",nil)
+#define STATUS_NAME_LUNCH					@"Adium: Lunch"
+#define STATUS_DESCRIPTION_LUNCH			AILocalizedString(@"Out to lunch",nil)
+#define STATUS_NAME_NOT_AT_HOME				@"Adium: Not At Home"
+#define STATUS_DESCRIPTION_NOT_AT_HOME		AILocalizedString(@"Not at home",nil)
+#define STATUS_NAME_NOT_AT_DESK				@"Adium: Not At Desk"
+#define STATUS_DESCRIPTION_NOT_AT_DESK		AILocalizedString(@"Not at desk",nil)
+#define STATUS_NAME_NOT_IN_OFFICE			@"Adium: Not In Office"
+#define STATUS_DESCRIPTION_NOT_IN_OFFICE	AILocalizedString(@"Not in office",nil)
+#define STATUS_NAME_VACATION				@"Adium: Vacation"
+#define STATUS_DESCRIPTION_VACATION			AILocalizedString(@"On vacation",nil)
+#define STATUS_NAME_STEPPED_OUT				@"Adium: Stepped Out"
+#define STATUS_DESCRIPTION_STEPPED_OUT		AILocalizedString(@"Stepped out",nil)
 
 //Current version state ID string
 #define STATE_SAVED_STATE			@"State"
-
-//Status keys
-#define STATUS_AVAILABLE_MESSAGE 	@"AvailableMessage"
-#define STATUS_AWAY_MESSAGE 		@"AwayMessage"
-#define STATUS_AUTO_REPLY 			@"AutoReply"
-#define STATUS_IDLE_SINCE 			@"IdleSince"
-#define STATUS_INVISIBLE 			@"Invisible"
-
 
 @interface AIStatusController : NSObject {
     IBOutlet	AIAdium		*adium;
 
 	//Status states
 	NSMutableArray		*stateArray;
-	NSDictionary		*activeState;
+	AIStatus			*activeStatusState;
 	
 	//Machine idle tracking
 	BOOL				machineIsIdle;
 	double				lastSeenIdle;
 	NSTimer				*idleTimer;
+	
+	NSMutableDictionary	*statusDictsByServiceCodeUniqueID[STATUS_TYPES_COUNT];
 }
 
 - (void)initController;
 - (void)closeController;
 - (NSArray *)stateArray;
 
-- (void)setActiveState:(NSDictionary *)state;
-- (NSDictionary *)activeState;
+- (void)registerStatus:(NSString *)statusName
+	   withDescription:(NSString *)description
+				ofType:(AIStatusType)type 
+			forService:(AIService *)service;
+- (NSMenu *)menuOfStatusesWithTarget:(id)target;
 
-- (NSString *)titleForState:(NSDictionary *)state;
-- (NSImage *)iconForState:(NSDictionary *)state;
+- (void)setActiveStatusState:(AIStatus *)state;
+- (AIStatus *)activeStatusState;
+
+- (NSString *)descriptionForStateOfStatus:(AIStatus *)statusState;
 
 //State Editing
-- (void)addState:(NSDictionary *)state;
-- (void)removeState:(NSDictionary *)state;
-- (void)replaceExistingState:(NSDictionary *)oldState withState:(NSDictionary *)newState;
-- (int)moveState:(NSDictionary *)state toIndex:(int)destIndex;
+- (void)addStatusState:(AIStatus *)state;
+- (void)removeStatusState:(AIStatus *)state;
+- (void)replaceExistingStatusState:(AIStatus *)oldState withStatusState:(AIStatus *)newState;
+- (int)moveStatusState:(AIStatus *)state toIndex:(int)destIndex;
 
 //Machine Idle
 - (double)currentMachineIdle;
