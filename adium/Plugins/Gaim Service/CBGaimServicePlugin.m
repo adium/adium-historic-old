@@ -883,7 +883,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	
 	//Configure signals for receiving gaim events
 	[self configureSignals];	
-	NSLog(@"configured.");
+
 	[SLGaimCocoaAdapter createThreadedGaimCocoaAdapter:portArray];
 }
 
