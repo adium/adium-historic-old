@@ -108,6 +108,7 @@ typedef enum {
 //Key-Value pairing
 - (BOOL)online;
 - (AIStatusSummary)statusSummary;
+- (BOOL)isStranger;
 
 - (NSString *)displayName;
 - (void)setDisplayName:(NSString *)alias;

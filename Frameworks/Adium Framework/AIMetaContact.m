@@ -128,6 +128,13 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	
 	[super setContainingObject:inGroup];
 }
+
+//A metaContact should never be a stranger
+- (BOOL)isStranger
+{
+	return(NO);
+}
+
 //Object Storage -------------------------------------------------------------------------------------------------------
 #pragma mark Object Storage
 //Add an object to this meta contact (PRIVATE: For contact controller only)
