@@ -261,7 +261,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 	if(date && message && source) {
 		if(logHTML) {
 			logString = [NSString stringWithFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@: </span><pre class=\"message\">%@</pre></div>\n",
-				([content isOutgoing] ? @"send" : @"receive"), date, [source displayName],
+				([content isOutgoing] ? @"send" : @"receive"), date, [source formattedUID],
 				[AIHTMLDecoder encodeHTML:message
                                                   headers:NO
                                                  fontTags:NO
