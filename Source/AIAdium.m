@@ -61,6 +61,8 @@
 
 - (NSString *)processBetaVersionString:(NSString *)inString;
 - (void)deleteTemporaryFiles;
+
+- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename;
 @end
 
 @implementation AIAdium
@@ -519,6 +521,12 @@ void Adium_HandleSignal(int i){
 	}
 
     return success;
+}
+
+- (BOOL)application:(NSApplication *)theApplication openTempFile:(NSString *)filename
+{
+	[self application:theApplication openFile:filename];
+	[[NSFileManager defaultManager] removeFileAtPath:filename];
 }
 
 - (void)openAppropriatePreferencesIfNeeded
