@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.43 2004/04/15 12:44:10 adamiser Exp $
+$Id: ToDoList.txt,v 1.44 2004/04/15 12:52:49 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -24,9 +24,9 @@ Bugs
 * Getting other strange 'code' in incoming jabber messages (xmlns=, ...)
 * Is jabber working correctly?  Are we receiving status for buddies upon initially connecting?  Need to check this.
 	- (Tick: Yes, jabber works, but only for jabber.org.)
-* User icons are still getting flipped.
+* User icons are still getting flipped (Icons from AIM, apparently)
 * Changing an alias in the inspector does not correctly update the contact list
-* Some URLs in profiles aren't allowing clicks properly.
+* Some URLs in profiles aren't allowing clicks properly (Ones that include %n ?)
 * Tooltip code can crash if the listobject disappears out from under it, somehow. http://www.visualdistortion.org/crash/view.jsp?crash=8128
 * When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
 * Away messages with special characters (such as opt-n-n) show up as "Away:YES' in Adium (even when set by an Adium client)
@@ -37,7 +37,6 @@ Bugs
 * Place contact list on external monitor, quit, reboot without external monitor.  Contact list is gone...gone..gone.gone :)
    - (Confirmed by Hanji)
 * Changes to the password field (Account prefs) aren't applied when connect is clicked.
-* Tabbing through account pref fields (tahoo) is no longer working [regression]
 
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
@@ -310,4 +309,5 @@ Features & Changes:
 = We probably need a default priority preference.
 = Webkit: Add keypress forwarding
 = WebKit: Add support for displaying buddy icons using the UserIconPath status object
+= Tabbing through account pref fields (yahoo) is no longer working [regression]
 
