@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w
 #
+#
 # ciabot -- Mail a CVS log message to a given address, for the purposes of CIA
 #
 # Loosely based on cvslog by Russ Allbery <rra@stanford.edu>
@@ -27,7 +28,7 @@
 # If it does not work, try to disable $xml_rpc in the configuration section
 # below.
 #
-# $Id: ciabot.pl,v 1.12 2004/01/21 08:06:43 ramoth4 Exp $
+# $Id: ciabot.pl,v 1.13 2004/01/21 08:07:45 ramoth4 Exp $
 
 use strict;
 use vars qw ($project $from_email $dest_email $rpc_uri $sendmail $sync_delay
