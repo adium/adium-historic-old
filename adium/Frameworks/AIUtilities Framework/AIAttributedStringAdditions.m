@@ -266,6 +266,32 @@ NSAttributedString *_safeString(NSAttributedString *inString);
     }
 }
 
+//Convert any NSURL objects attached to an attributed string to their absoluteString equivalents
+- (BOOL)convertNSURLtoString
+{
+	//Check if our string contains any NSURL-carrying links
+    NSRange scanRange = NSMakeRange(0, 0);
+	id		potentialNSURL;
+	BOOL	changed = NO;
+	
+    while(NSMaxRange(scanRange) < [self length]){
+        if((potentialNSURL = [self attribute:NSLinkAttributeName atIndex:NSMaxRange(scanRange) effectiveRange:&scanRange]) &&
+		   [potentialNSURL isKindOfClass:[NSURL class]]){
+
+			[self removeAttribute:NSLinkAttributeName range:scanRange];
+			
+			NSDictionary		*attributesDict = [self attributesAtIndex:scanRange.location effectiveRange:nil];
+			NSAttributedString  *replacement = [[[NSAttributedString alloc] initWithString:[(NSURL *)potentialNSURL absoluteString] 
+																				attributes:attributesDict] autorelease];
+			
+			[self replaceCharactersInRange:scanRange withAttributedString:replacement];
+			changed = YES;
+        }
+    }
+	
+	return changed;
+}
+
 @end
 
 @implementation NSAttributedString (AIAttributedStringAdditions)
