@@ -61,8 +61,8 @@
 {
     NSMenu			*behaviorMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
     DOCK_BEHAVIOR	behavior;
-	
-	for(behavior = 0; behavior < BOUNCE_DELAY60; behavior++){
+
+	for(behavior = BOUNCE_ONCE; behavior < BOUNCE_DELAY60; behavior++){
 		NSString *name = [[adium dockController] descriptionForBehavior:behavior];
 		[behaviorMenu addItem:[self menuItemForBehavior:behavior withName:name]];
 	}
