@@ -24,6 +24,7 @@
 - (void)configureView;
 - (void)changeFont:(id)sender;
 - (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField;
+- (void)showOpacityPercent;
 @end
 
 @implementation AICLPreferences
@@ -120,7 +121,7 @@
 
 - (void)showOpacityPercent
 {
-    [textField_opacityPercent setStringValue:[NSString stringWithFormat:@"%d",([slider_opacity floatValue] * 100.0)]];
+    [textField_opacityPercent setStringValue:[NSString stringWithFormat:@"%i",(int)([slider_opacity floatValue] * 100.0)]];
 }
 
 //Configures our view for the current preferences

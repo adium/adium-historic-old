@@ -19,10 +19,7 @@
 
 @class AIAdium;
 
-@interface AISCLOutlineView : AIAlternatingRowOutlineView {
-  //  IBOutlet	NSScrollView	*scrollView;  		//Our containing scroll view
-    
-    
+@interface AISCLOutlineView : AIAlternatingRowOutlineView {    
     NSTrackingRectTag		trackingRectTag;	//Tracing rect for the whole outline view
     int				oldSelection;		//Holds the selection when it's hidden
     
