@@ -193,12 +193,12 @@
 {
     [[owner contactController] setHoldContactListUpdates:YES]; //Hold contact list updates
 
-    //Post a handles changed notification
-    [[owner notificationCenter] postNotificationName:Account_HandlesChanged object:inAccount];
-    
     //Rebuild the list
     [self breakDownContactList]; //Move existing contacts into the abandoned contact dict
     [self _handlesChangedForAccount:inAccount]; //Build the new contact list
+
+    //Post a handles changed notification
+    [[owner notificationCenter] postNotificationName:Account_HandlesChanged object:inAccount];
 
     [[owner contactController] setHoldContactListUpdates:NO]; //Stop holding updates
 }
@@ -206,11 +206,17 @@
 - (void)handle:(AIHandle *)inHandle addedToAccount:(AIAccount *)inAccount
 {
     [self _handle:inHandle addedToAccount:inAccount];
+
+    //Post a handles changed notification
+    [[owner notificationCenter] postNotificationName:Account_HandlesChanged object:inAccount];
 }
 
 - (void)handle:(AIHandle *)inHandle removedFromAccount:(AIAccount *)inAccount
 {
     [self _handle:inHandle removedFromAccount:inAccount];
+
+    //Post a handles changed notification
+    [[owner notificationCenter] postNotificationName:Account_HandlesChanged object:inAccount];
 }
 
 //For the list generation code to call, resets the contact list - moving

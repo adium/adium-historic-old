@@ -31,10 +31,10 @@
     NSTableColumn	*column;
     NSEnumerator	*enumerator;
     int			index = 0;
-
+    
     enumerator = [[self tableColumns] objectEnumerator];
     while((column = [enumerator nextObject])){
-        if([(NSString *)[column identifier] compare:inIdentifier] == 0) return(index);
+        if([column identifier] == inIdentifier/*[(NSString *)[column identifier] compare:inIdentifier] == 0*/) return(index);
         index++;
     }
 

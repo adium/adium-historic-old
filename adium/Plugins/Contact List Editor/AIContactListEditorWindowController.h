@@ -41,7 +41,6 @@
     NSMutableArray		*dragItems;
     id <AIEditorCollection>	dragSourceCollection;
     
-    NSMutableArray		*collectionsArray;
     id <AIEditorCollection>	selectedCollection;
 
     

@@ -18,6 +18,13 @@
 
 #define CONTACT_EDITOR_REGISTER_COLUMNS		@"CONTACT_EDITOR_REGISTER_COLUMNS"
 
+#define Editor_CollectionStatusChanged		@"Editor_CollectionStatusChanged"
+#define Editor_AddedObjectToCollection		@"Editor_AddedObjectToCollection"
+#define Editor_RemovedObjectFromCollection	@"Editor_RemovedObjectFromCollection"
+#define Editor_RenamedObjectOnCollection	@"Editor_RenamedObjectOnCollection"
+#define Editor_CollectionContentChanged		@"Editor_CollectionContentChanged"
+#define Editor_CollectionArrayChanged		@"Editor_CollectionArrayChanged"
+
 @class AIEditorListObject;
 
 @protocol AIListEditorColumnController <NSObject>
@@ -32,9 +39,11 @@
 
 @interface AIContactListEditorPlugin : AIPlugin {
     NSMutableArray	*listEditorColumnControllerArray;
+    NSMutableArray	*collectionsArray;
 }
 
 - (NSArray *)listEditorColumnControllers;
 - (void)registerListEditorColumnController:(id <AIListEditorColumnController>)inController;
+- (NSArray *)collectionsArray;
 
 @end
