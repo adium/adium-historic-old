@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.40 2004/01/12 20:51:58 adamiser Exp $
+// $Id: AIContentController.m,v 1.41 2004/01/13 19:06:17 evands Exp $
 
 #import "AIContentController.h"
 
@@ -318,12 +318,12 @@
         if(displayContent){
             //Add the object
             [self displayContentObject:inObject];
-            //[chat addContentObject:inObject];
         }
 
         if(trackContent){
             //Did send content
-            [[owner notificationCenter] postNotificationName:Content_DidSendContent object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+            [[owner notificationCenter] postNotificationName:Content_DidSendContent object:chat 
+						    userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
         }
 
         mostRecentChat = chat;
@@ -357,7 +357,8 @@
 	[chat addContentObject:inObject];
 	
 	//Content object added
-	[[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+	[[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat 
+						userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
     }
 }
 
@@ -418,9 +419,9 @@
     if (mostRecentChat == inChat)
         mostRecentChat = nil;
     
-    //Notify the account and any chat observers
+    //Notify the account and send out the Chat_WillClose notification
     [(AIAccount<AIAccount_Content> *)[inChat account] closeChat:inChat];
-    //enumerate chat observers
+    [[owner notificationCenter] postNotificationName:Chat_WillClose object:inChat userInfo:nil];
     
     //Remove the chat
     [chatArray removeObject:inChat];

@@ -187,6 +187,7 @@ typedef enum {
 #define Interface_ErrorMessageReceived				@"Interface_ErrorMessageRecieved"
 #define Interface_ContactListDidBecomeMain                      @"Interface_ContactListDidBecomeMain"
 #define Interface_ContactListDidResignMain                      @"Interface_contactListDidResignMain"
+#define Chat_WillClose						@"Chat_WillClose"
 #define Content_ContentObjectAdded				@"Content_ContentObjectAdded"
 #define Content_WillSendContent					@"Content_WillSendContent"
 #define Content_DidSendContent					@"Content_DidSendContent"
