@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerListener.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerListener.m,v 1.4 2004/07/16 02:16:47 proton Exp $
+ * CVS tag:     $Id: AWEzvContactManagerListener.m,v 1.5 2004/07/16 10:32:35 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -134,7 +134,7 @@
 		       withString:@"_"
 		       options:0
 		       range:NSMakeRange(0, [contactIdentifier length])];
-    
+		       
     contact = [contacts objectForKey:contactIdentifier];
     /* Discover the appropriate record if required */
     if ([contact rendezvous] == nil) {
@@ -146,7 +146,7 @@
 			   range:NSMakeRange(0, [contactIdentifier length])];
 	
 	while ((contact = [enumerator nextObject])) {
-	    if ([contact rendezvous] != nil && [[contact ipaddr] compare:contactIdentifier] == NSOrderedSame)
+	    if ([contact rendezvous] != nil && [[contact ipaddr] isEqualToString:contactIdentifier])
 		break;
 	}
     }

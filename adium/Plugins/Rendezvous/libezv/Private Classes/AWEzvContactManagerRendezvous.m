@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerRendezvous.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.11 2004/07/16 09:38:29 proton Exp $
+ * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.12 2004/07/16 10:32:35 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -138,7 +138,7 @@ void av_resolve_reply (struct sockaddr	*interface,
     enumerator = [[currentHost addresses] objectEnumerator];
     while ((instanceName = [enumerator nextObject])) {
 	/* skip 127.0.0.1 */
-        if ([instanceName compare:@"127.0.0.1"] == NSOrderedSame)
+        if ([instanceName isEqualToString:@"127.0.0.1"])
             continue;
 	/* and skip IPv6 */
         range = [instanceName rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@":"]];
@@ -775,11 +775,11 @@ NSData *decode_dns(char* buffer, int len )
     if ([rendezvousData getField:@"status"] == nil) {
 	[contact setStatus: AWEzvOnline];
     } else {
-	if ([[rendezvousData getField:@"status"] compare:@"avail"] == 0)
+	if ([[rendezvousData getField:@"status"] isEqualToString:@"avail"])
 	    [contact setStatus: AWEzvOnline];
-	else if ([[rendezvousData getField:@"status"] compare:@"dnd"] == 0)
+	else if ([[rendezvousData getField:@"status"] isEqualToString:@"dnd"])
 	    [contact setStatus: AWEzvAway];
-	else if ([[rendezvousData getField:@"status"] compare:@"away"] == 0)
+	else if ([[rendezvousData getField:@"status"] isEqualToString:@"away"])
 	    [contact setStatus: AWEzvIdle];
 	else
 	    [contact setStatus: AWEzvOnline];
@@ -914,7 +914,7 @@ void browse_reply  (DNSServiceBrowserReplyResultType resultType,
 		    void *context) {
     
     AWEzvContactManager *self = context;
-    if ([[self myname] compare:[NSString stringWithUTF8String:replyName]] != NSOrderedSame)
+    if (![[self myname] isEqualToString:[NSString stringWithUTF8String:replyName]])
 	[self browseResult:resultType name:replyName type:replyType domain:replyDomain flags:flags av:NO];
 }
 
@@ -927,7 +927,7 @@ void av_browse_reply  (DNSServiceBrowserReplyResultType resultType,
 		    void *context) {
     
     AWEzvContactManager *self = context;
-    if ([[self myavname] compare:[NSString stringWithUTF8String:replyName]] != NSOrderedSame)
+    if (![[self myavname] isEqualToString:[NSString stringWithUTF8String:replyName]])
 	[self browseResult:resultType name:replyName type:replyType domain:replyDomain flags:flags av:YES];
 }
 
