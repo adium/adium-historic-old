@@ -36,6 +36,8 @@
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <AIUtilities/ESOutlineViewAdditions.h>
 
+//#import <limits.h>
+
 #define CONTENT_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
 #define STATUS_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
 #define GROUP_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
@@ -495,16 +497,19 @@
 {
 	NSEnumerator	*enumerator;
 	AIListObject	*containedObject;
+	NSArray			*containedObjects;
 	int				matchNumber = 0;
-	
+
+	int	matchArray[targetNumber];
 	int row = -1;
 	
 	if([contactList isKindOfClass:[AIMetaContact class]]){
-		enumerator = [[(AIMetaContact *)contactList listContacts] objectEnumerator];				
+		containedObjects = [(AIMetaContact *)contactList listContacts];				
 	}else{
-		enumerator = [[contactList containedObjects] objectEnumerator];		
+		containedObjects = [contactList containedObjects];		
 	}
 	
+	enumerator = [containedObjects objectEnumerator];
 	//Enumerate the contact list
 	while((matchNumber < targetNumber) && (containedObject = [enumerator nextObject])){
 		if([containedObject isKindOfClass:[AIListGroup class]]){
@@ -513,21 +518,40 @@
 			AIListObject	*groupContainedObject;
 			while((matchNumber < targetNumber) && (groupContainedObject = [thisGroupEnumerator nextObject])){
 				if([[groupContainedObject longDisplayName] rangeOfString:inputString
-														   options:(NSCaseInsensitiveSearch | NSAnchoredSearch | NSLiteralSearch)].location != NSNotFound){
+																 options:(NSCaseInsensitiveSearch | NSAnchoredSearch | NSLiteralSearch)].location != NSNotFound){
 					row = [outlineView rowForItem:groupContainedObject];
-					if(row != -1) matchNumber++;
+					
+					if(row != -1){
+						matchArray[matchNumber] = row;
+						matchNumber++;
+					}
 				}				
 			}
 		}else{
 			if([[containedObject longDisplayName] rangeOfString:inputString
-												  options:(NSCaseInsensitiveSearch | NSAnchoredSearch | NSLiteralSearch)].location != NSNotFound){
+														options:(NSCaseInsensitiveSearch | NSAnchoredSearch | NSLiteralSearch)].location != NSNotFound){
 				row = [outlineView rowForItem:containedObject];
-				if(row != -1) matchNumber++;
+				if(row != -1){
+					matchArray[matchNumber] = row;
+					matchNumber++;
+				}
 			}
 		}
 	}
 	
-	if((matchNumber == targetNumber) && (row != -1)){
+	/* If we are targeting a match number greater than the actual number of matches, take the target number
+	 * mod the number of matches to have it loop around. */
+	if(targetNumber > matchNumber){
+		targetNumber = (targetNumber % matchNumber);
+		
+		// mod(x,x) == 0, but in that situation we want the match x. (so 3 matches, 3 tabs, 3rd match, not 0th match.)
+		if(targetNumber == 0) targetNumber = matchNumber;
+	}
+
+	//If targetNumber <= the number of matches, matchArray[targetNumber-1] contains the row of the appropriate match.
+	if(targetNumber <= matchNumber){
+		row = matchArray[targetNumber-1]; //Array starts at 0; targetNumber is the Xth match.
+
 		//Select the best matching row
 		if([NSApp isOnTigerOrBetter]){
 			[outlineView selectRowIndexes:[NSClassFromString(@"NSIndexSet") indexSetWithIndex:row]	byExtendingSelection:NO];
