@@ -156,4 +156,19 @@
 	return(YES);
 }
 
+- (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
+										listObject:(AIListObject *)listObject
+										  userInfo:(id)userInfo
+									includeSubject:(BOOL)includeSubject
+{
+	NSString	*description;
+
+	if([eventID isEqualToString:INTERFACE_ERROR_MESSAGE]){
+		description = AILocalizedString(@"An error occurred",nil);
+	}else{
+		description = @"";
+	}
+	
+	return(description);
+}
 @end
