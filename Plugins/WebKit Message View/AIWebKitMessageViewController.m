@@ -22,6 +22,7 @@
 - (void)setVariantID:(NSString *)variantID;
 - (void)refreshView;
 - (void)_loadPreferencesWithStyleNamed:(NSString *)styleName;
+- (void)setViewIndependentPrefsFromDict:(NSDictionary *)prefDict;
 
 //Content
 - (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar;
@@ -319,19 +320,19 @@ DeclareString(AppendNextMessage);
 //WebView preferences --------------------------------------------------------------------------------------------------
 #pragma mark WebView preferences
 //The controller observes for preferences which are applied to the WebView
-//Variant changes are applied immediately, but all other changes must wait
+//Variant changes are applied immediately, but all other changes (except those handlded by setViewIndependentPrefsFromDict:) must wait
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]){
+		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		NSString		*notificationKey = [[notification userInfo] objectForKey:@"Key"];
+		NSString		*key = [plugin variantKeyForStyle:loadedStyleID];
 
-		NSString	*notificationKey = [[notification userInfo] objectForKey:@"Key"];
-		NSString	*key = [plugin variantKeyForStyle:loadedStyleID];
-
+		[self setViewIndependentPrefsFromDict:prefDict];
+		
 		if(notification == nil ||
 		   notificationKey == nil ||
 		   [notificationKey isEqualToString:key]){
-			NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-
 			NSString	*styleID = [prefDict objectForKey:KEY_WEBKIT_STYLE];
 			
 			if([loadedStyleID isEqualToString:styleID]){
@@ -384,6 +385,27 @@ DeclareString(AppendNextMessage);
 	[loadedVariantID release]; loadedVariantID = [variantID retain];
 }
 
+- (void)setViewIndependentPrefsFromDict:(NSDictionary *)prefDict
+{			
+	//Set up a time stamp format based on this user's locale
+	NSString    *format = [prefDict objectForKey:KEY_WEBKIT_TIME_STAMP_FORMAT];
+	
+	if(!format || [format length] == 0){
+		format = [NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:NO];
+		[[adium preferenceController] setPreference:format
+											 forKey:KEY_WEBKIT_TIME_STAMP_FORMAT
+											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	}
+	
+	timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:format allowNaturalLanguage:NO];
+	
+	showUserIcons = [[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue];
+	useCustomNameFormat = [[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue];
+	nameFormat = [[prefDict objectForKey:KEY_WEBKIT_NAME_FORMAT] intValue];
+	combineConsecutive = [[prefDict objectForKey:KEY_WEBKIT_COMBINE_CONSECUTIVE] boolValue];
+}
+
+
 - (void)refreshView
 {
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
@@ -394,25 +416,7 @@ DeclareString(AppendNextMessage);
 	//Release the old preference cache
 	[self _flushPreferenceCache];
 	
-	//
-	{			
-		//Set up a time stamp format based on this user's locale
-		NSString    *format = [prefDict objectForKey:KEY_WEBKIT_TIME_STAMP_FORMAT];
-		
-		if(!format || [format length] == 0){
-			format = [NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:NO];
-			[[adium preferenceController] setPreference:format
-												 forKey:KEY_WEBKIT_TIME_STAMP_FORMAT
-												  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		}
-		
-		timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:format allowNaturalLanguage:NO];
-		
-		showUserIcons = [[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue];
-		useCustomNameFormat = [[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue];
-		nameFormat = [[prefDict objectForKey:KEY_WEBKIT_NAME_FORMAT] intValue];
-		combineConsecutive = [[prefDict objectForKey:KEY_WEBKIT_COMBINE_CONSECUTIVE] boolValue];
-	}
+	[self setViewIndependentPrefsFromDict:prefDict];
 	
 	loadedStyleID = [[prefDict objectForKey:KEY_WEBKIT_STYLE] retain];
 	style = [plugin messageStyleBundleWithName:loadedStyleID];
