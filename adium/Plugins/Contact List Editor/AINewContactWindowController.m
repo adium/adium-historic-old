@@ -229,7 +229,6 @@
 {
 	NSString		*name = [textField_contactName stringValue];
 	AIServiceType	*serviceType = [[popUp_contactType selectedItem] representedObject];
-	int				length;
 	BOOL			enabled = YES;
 	
 	if([name length] != 0 && [name length] < [serviceType allowedLength]){
