@@ -31,6 +31,7 @@
     NSTimer		*scrollTimer;
     float		scrollLocation;
     int			maxScroll;
+    float               scrollRate;
 }
 
 + (LNAboutBoxController *)aboutBoxControllerForOwner:(id)inOwner;
