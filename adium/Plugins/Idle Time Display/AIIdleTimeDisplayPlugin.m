@@ -78,11 +78,11 @@
 		
         if(displayIdleOnLeft){
 			viewArray = [inObject displayArrayForKey:@"Left View"];
-			[[inObject displayArrayForKey:@"Right View"] setObject:nil withOwner:self];
+			[[inObject displayArrayForKey:@"Right View" create:NO] setObject:nil withOwner:self];
 			
 		}else{
 			viewArray = [inObject displayArrayForKey:@"Right View"];
-			[[inObject displayArrayForKey:@"Left View"]  setObject:nil withOwner:self];
+			[[inObject displayArrayForKey:@"Left View" create:NO]  setObject:nil withOwner:self];
 			
 		}
 		
