@@ -54,6 +54,8 @@
 {
     NSAttributedString	*entry = nil;
     NSAttributedString 	*statusMessage = nil;
+	NSString			*serverDisplayName = nil;
+	
     BOOL		away;
 	
     //Get the away state
@@ -61,13 +63,24 @@
 	
     //Get the status message
     statusMessage = [inObject statusObjectForKey:@"StatusMessage"];
-	
+
+	//Check to make sure we're not duplicating server display name information
+	serverDisplayName = [inObject statusObjectForKey:@"Server Display Name"];
+
     //Return the correct string
-    if(statusMessage != nil && [statusMessage length] != 0){
-		entry = statusMessage;
-    }else if(away){
-		entry = [[[NSAttributedString alloc] initWithString:@"Yes"] autorelease];
-    }
+	if ([serverDisplayName isEqualToString:[statusMessage string]]){
+		//If the status and server display name are the same, just display YES for away since we'll display the
+		//server display name itself in the proper place.
+		if (away){
+			entry = [[[NSAttributedString alloc] initWithString:@"Yes"] autorelease];
+		}
+	}else{
+		if(statusMessage != nil && [statusMessage length] != 0){
+			entry = statusMessage;
+		}else if(away){
+			entry = [[[NSAttributedString alloc] initWithString:@"Yes"] autorelease];
+		}
+	}
 	
     return(entry);
 }
