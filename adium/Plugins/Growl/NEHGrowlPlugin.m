@@ -48,11 +48,13 @@
 - (void)handleEvent:(NSNotification*)notification
 {
 	NSString * title;
+	NSString * description;
 	NSString * message;
 	AIListContact * contact;
 	NSString * notificationName = [notification name];
 	NSString * contactName;
 	NSImage  * buddyIcon;
+	NSData   * iconData = nil;
 	
 	//shamlessly ripped from the event bezel :)
 	if([notificationName isEqualToString:Content_FirstContentRecieved]) {
@@ -72,42 +74,43 @@
 	if(contact) {
 		contactName = [contact longDisplayName];
 		
+		title = [events objectForKey:notificationName];
+		
 		if([notificationName isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
-			message = title = [NSString stringWithFormat: AILocalizedString(@"%@ came online",nil),
-									contactName];
+			description = [NSString stringWithFormat: AILocalizedString(@"%@ came online",nil),
+										contactName];
 		}else if([notificationName isEqualToString: CONTACT_STATUS_ONLINE_NO]) {
-			message = title = [NSString stringWithFormat: AILocalizedString(@"%@ went offline",nil),
-				contactName];
+			description = [NSString stringWithFormat: AILocalizedString(@"%@ went offline",nil),
+										contactName];
 		}else if([notificationName isEqualToString: CONTACT_STATUS_AWAY_YES]) {
-			message = title = [NSString stringWithFormat: AILocalizedString(@"%@ went away",nil),
-				contactName];
+			description = [NSString stringWithFormat: AILocalizedString(@"%@ went away",nil),
+										contactName];
 		}else if([notificationName isEqualToString: CONTACT_STATUS_AWAY_NO]) {
-			message = title = [NSString stringWithFormat: AILocalizedString(@"%@ is available",nil),
-				contactName];
+			description = [NSString stringWithFormat: AILocalizedString(@"%@ is available",nil),
+										contactName];
 		}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_YES]) {
-			message = title = [NSString stringWithFormat: AILocalizedString(@"%@ is idle",nil),
-				contactName];
+			description = [NSString stringWithFormat: AILocalizedString(@"%@ is idle",nil),
+										contactName];
 		}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_NO]) {
-			message = title = [NSString stringWithFormat: AILocalizedString(@"%@ is no longer idle",nil),
-				contactName];
+			description = [NSString stringWithFormat: AILocalizedString(@"%@ is no longer idle",nil),
+										contactName];
 		}else if([notificationName isEqualToString: Content_FirstContentRecieved]) {
-			title = [NSString stringWithFormat: AILocalizedString(@"New message from %@",nil),
-				contactName];
 			message = [[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] string];
+			description = [NSString stringWithFormat: AILocalizedString(@"From %@\n%@",nil),
+										contactName, message];
 		}
 		
-		buddyIcon = [[contact displayArrayForKey:@"UserIcon"] objectValue];
-		if(!buddyIcon){
-			buddyIcon = [NSImage imageNamed: @"DefaultIcon"];
+		if(buddyIcon = [[contact displayArrayForKey:@"UserIcon"] objectValue]){
+			iconData = [buddyIcon TIFFRepresentation];
 		}
 		
 		NSDictionary * growlEvent = [NSDictionary dictionaryWithObjectsAndKeys:
 										title, GROWL_NOTIFICATION_TITLE,
-										message, GROWL_NOTIFICATION_DESCRIPTION,
+										description, GROWL_NOTIFICATION_DESCRIPTION,
 										@"Adium", GROWL_APP_NAME,
-										[buddyIcon TIFFRepresentation], GROWL_NOTIFICATION_ICON,
+										iconData, GROWL_NOTIFICATION_ICON,
 										nil];
-		
+	
 		[[NSDistributedNotificationCenter defaultCenter]
 										postNotificationName: [events objectForKey: notificationName]
 													  object: nil
