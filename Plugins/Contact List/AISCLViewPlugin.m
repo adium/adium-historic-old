@@ -20,6 +20,9 @@
 #import "AIListLayoutWindowController.h"
 #import "AIListThemeWindowController.h"
 
+#define DEFAULT_LIST_THEME_NAME		@"Aqua (Tiger)"
+#define DEFAULT_LIST_LAYOUT_NAME	@"Standard"
+
 int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context);
 
 @interface AISCLViewPlugin (PRIVATE)
@@ -41,7 +44,7 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
     //Register our default preferences and install our preference views
 //    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
     preferences = [[AICLPreferences preferencePane] retain];
-
+	
 	//Observe list closing
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(contactListDidClose)
@@ -53,6 +56,18 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 								   selector:@selector(preferencesChanged:)
 									   name:Preference_GroupChanged
 									 object:nil];
+	//Apply the default contact list layout and style (If no style is currently active)
+	if(![[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_CONTACT_LIST]){
+		[[adium preferenceController] setPreference:DEFAULT_LIST_THEME_NAME
+											 forKey:KEY_LIST_THEME_NAME
+											  group:PREF_GROUP_CONTACT_LIST];
+	}
+	if(![[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_CONTACT_LIST]){
+		[[adium preferenceController] setPreference:DEFAULT_LIST_LAYOUT_NAME
+											 forKey:KEY_LIST_LAYOUT_NAME
+											  group:PREF_GROUP_CONTACT_LIST];
+	}
+	
     [self preferencesChanged:nil];
 }
 
