@@ -127,8 +127,17 @@
 		[contactListView reloadData];
 		[contactListView performFullRecalculation];
 	}else{
+		NSDictionary	*userInfo = [notification userInfo];
+		AIListGroup		*containingGroup = [userInfo objectForKey:@"ContainingGroup"];
+		
+		//If a containing group was provided, reload the group.  Otherwise, reload the object
+		if(containingGroup){
+			[contactListView reloadItem:containingGroup reloadChildren:YES];
+		}else{
+			[contactListView reloadItem:object reloadChildren:[contactListView isItemExpanded:object]];
+		}
+		
 		//Reload the item, reloading its children if it is expanded
-		[contactListView reloadItem:object reloadChildren:[contactListView isItemExpanded:object]];
 		[contactListView updateHorizontalSizeForObject:object];
 	}
 }
