@@ -4,14 +4,15 @@
  * 
  * Written by Stephen Holt for Adium, released under the GPL
  *
- * Optoins used:	noyywrap	: act as if yywrap always returns 1
- *			8bit		: always force 8-bit chars.
- *			caseless	: case insensitive lexer
- *			prefix=...	: replace YY_whatever with prefix - avoids symbol collisions
- *			debug		: turns on debugging output (string + accepting rule)
- *					  -- only use while editing rules, and don't commit with this on
- *					     (it generates a lot of unnecessary output and kills any
- *					      performace gains we might get.)
+ * Optoins used:	noyywrap            : act as if yywrap always returns 1
+ *			8bit                : always force 8-bit chars.
+ *			caseless            : case insensitive lexer
+ *                      never-interactive   : prevents flex from including some calls to gettty() and such
+ *                                          -- gives a slight performace gain.
+ *			prefix=...          : replace YY_whatever with prefix - avoids symbol collisions
+ *			debug               : turns on debugging output (string + accepting rule)
+ *                                          -- only use while editing rules, and don't commit with this on
+ *                                              (it generates a lot of unnecessary output and kills performace.)
  */
 #define YY_NO_UNPUT
 unsigned int SHStringOffset;
