@@ -1,0 +1,78 @@
+body {
+    background: #d2d7e0 url("images/background.png") top left repeat-x;
+	font-family: "Lucida Grande", sans-serif;
+	font-size: 10px;
+	font-weight: normal;
+	}
+				
+.container {
+    position: relative;
+    background: url("images/bottom_right.png") bottom right no-repeat;
+    margin: 30px 16px -15px 59px;
+    }
+                
+.sender {
+    top: -16px;
+    left: -41px;
+    right: 38px;
+    position: absolute;
+    background: url("images/top_left.png") top left no-repeat;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: lowercase;
+    text-shadow: 1px 1px 3px #ccc;
+    padding: 13px 0 0 56px;
+    margin-bottom: 0;
+    }
+                
+.incoming { color: #a6002c; }
+
+.outgoing { color: #001190; }
+    
+.time_initial {
+    position: absolute;
+    right: 0;
+    top: -16px;
+    background: url("images/top_right.png") top right no-repeat;
+    font-size: 9px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 3px #ccc;
+    color: #808080;
+    padding: 14px 16px 0 0;
+    margin-bottom: 0;
+    }
+    
+.time_consecutive {
+    float: left;
+    background: 29px url("images/arrow.png") no-repeat;
+    margin-left: -40px;
+    margin-top: 5px;
+    font-size: 9px;
+    text-shadow: 1px 1px 3px #ddd;
+    color: #bfbfbf;
+    }
+
+    
+.buddyicon {
+    position: absolute;
+    top: -5px;
+    left: -29px;
+    z-index: 3;
+    }
+    
+.message {
+    position: relative;
+    background: url("images/bottom_left.png") bottom left repeat-y;
+    top: 0;
+    left: -41px;
+    margin-right: -24px;
+    text-shadow: 1px 1px 3px #ccc;
+    padding: 6px 0 10px 56px;
+    color: #404040;
+    }
+    
+ p {
+    padding: 0;
+    margin-bottom: 6px;
+    }
