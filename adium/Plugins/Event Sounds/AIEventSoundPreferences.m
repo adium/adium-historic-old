@@ -19,6 +19,7 @@
 
 @interface AIEventSoundPreferences (PRIVATE)
 - (NSMenu *)_soundSetMenu;
+- (void)xtrasChanged:(NSNotification *)notification;
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
@@ -38,12 +39,16 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-    //Build the soundset menu
-    [popUp_soundSet setMenu:[self _soundSetMenu]];
-
     //Observer preference changes
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
+
+	
+	//Observe for installation of new sound sets
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(xtrasChanged:)
+									   name:Adium_Xtras_Changed
+									 object:nil];
+	[self xtrasChanged:nil];
 }
 
 //Preference view is closing
@@ -51,6 +56,17 @@
 {
     [AIEventSoundCustom closeEventSoundCustomPanel];
     [[adium notificationCenter] removeObserver:self];
+}
+
+- (void)xtrasChanged:(NSNotification *)notification
+{
+	if (notification == nil || [[notification object] caseInsensitiveCompare:@"AdiumSoundset"] == 0){
+		
+		//Build the soundset menu
+		[popUp_soundSet setMenu:[self _soundSetMenu]];
+		
+		[self preferencesChanged:nil];
+	}
 }
 
 //The user selected a sound set
