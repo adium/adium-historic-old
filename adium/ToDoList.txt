@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.118 2004/05/11 19:28:51 adamiser Exp $
+$Id: ToDoList.txt,v 1.119 2004/05/11 23:08:16 bgannin Exp $
 
 
 Legend
@@ -104,8 +104,8 @@ Accounts:
 Message Window:
 	+ Open new windows behind the frontmost window (When not opening in tabs) [Colin]
         I don't know quite what to do here. I'd like some guideance. <<< I never got any guidence, dammit! :P <<< Still lacking guidence here. We need to have a group chat about this...
-	+ Insert emoticon menu item, contextual menu item [Brian]
-            // Brian: if you want to work on it before I get back to it I'll send the files, just needs insert functionality and some clean-up (namely dynamism)
+	= Insert emoticon menu item, contextual menu item [Brian]
+            // this can now be deemed done... although it should now be Insert Emoticon button/menu ala iChat/MSN/AIM in message view
 	+ Tab-complete usernames in messages and chat
 	+ Make 'save as' menu item work
 	+ Accept dragged items and do wonderful things on them, like if it is text append it in the input field or if it is a file send it to the contact.
@@ -136,7 +136,7 @@ Contact alerts:
 	(Model: http://homepage.mac.com/adamiser/sortathis6.png)
 
 	Steps:
-    = Remove alerts preference pane
+        = Remove alerts preference pane
 	= Remove contact menu from alert window
 	= Remove event popup from alert window
 	= Disallow editing of events
