@@ -141,7 +141,7 @@
 #define CONTENT_MESSAGE_SENT			@"Content_MessageSent"
 #define CONTENT_MESSAGE_RECEIVED		@"Content_MessageReceived"
 #define CONTENT_MESSAGE_RECEIVED_FIRST	@"Content_MessageReceivedFirst"
-#define INTERFACE_ERROR_MESSAGE			@"Interface_ErrorMessageRecieved"
+#define INTERFACE_ERROR_MESSAGE			@"Interface_ErrorMessageReceived"
 #define ACCOUNT_CONNECTED				@"Account_Connected"
 #define ACCOUNT_DISCONNECTED			@"Account_Disconnected"
 #define FILE_TRANSFER_REQUEST			@"FileTransfer_Request"

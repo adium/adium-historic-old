@@ -18,7 +18,7 @@
 #define Interface_WillSendEnteredMessage 			@"Interface_WillSendEnteredMessage"
 #define Interface_DidSendEnteredMessage				@"Interface_DidSendEnteredMessage"
 #define Interface_ShouldClearTextEntryView			@"Interface_ShouldClearTextEntryView"
-#define Interface_ErrorMessageReceived				@"Interface_ErrorMessageRecieved"
+#define Interface_ShouldDisplayErrorMessage			@"Interface_ShouldDisplayErrorMessage"
 #define Interface_ContactListDidBecomeMain			@"Interface_ContactListDidBecomeMain"
 #define Interface_ContactListDidResignMain			@"Interface_contactListDidResignMain"
 #define AIViewDesiredSizeDidChangeNotification		@"AIViewDesiredSizeDidChangeNotification"

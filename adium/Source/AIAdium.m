@@ -31,8 +31,6 @@
 
 #import <ExceptionHandling/NSExceptionHandler.h>
 
-#import <limits.h> //for PATH_MAX
-
 //#define NEW_APPLICATION_SUPPORT_DIRECTORY
 
 //Path to Adium's application support preferences

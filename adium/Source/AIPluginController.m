@@ -13,11 +13,11 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.78 2004/06/28 03:27:30 evands Exp $
+//$Id: AIPluginController.m,v 1.79 2004/07/10 06:20:42 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
-#define DIRECTORY_EXTERNAL_PLUGINS		@"/Plugins"				//Path to the external plugins
+#define DIRECTORY_EXTERNAL_PLUGINS		@"/PlugIns"				//Path to the external plugins
 #define EXTENSION_ADIUM_PLUGIN			@"AdiumPlugin"			//File extension of a plugin
 
 #define WEBKIT_PLUGIN					@"Webkit Message View.AdiumPlugin"
@@ -239,11 +239,16 @@ ESMessageEvents, ESAccountEvents;
 				//Load the plugin; if the plugin is hte webkit plugin, verify webkit is available first
 				if ((![pluginName isEqualToString:WEBKIT_PLUGIN] || [NSApp isWebKitAvailable])){
 					pluginBundle = [NSBundle bundleWithPath:[pluginPath stringByAppendingPathComponent:pluginName]];
-					if(pluginBundle != nil){
-						
+					NSLog(@"loadPluginsFromPath:%@ : Loaded %@ (%@)",pluginPath,pluginBundle,[pluginPath stringByAppendingPathComponent:pluginName]);
+					if(pluginBundle != nil){						
 #if 1
 						//Create an instance of the plugin
-						plugin = [[pluginBundle principalClass] newInstanceOfPlugin];					
+						Class principalClass = [pluginBundle principalClass];
+						if (principalClass != nil){
+							plugin = [principalClass newInstanceOfPlugin];
+						}else{
+							NSLog(@"Failed to obtain principal class from plugin \"%@\" (\"%@\")!",pluginName,[pluginPath stringByAppendingPathComponent:pluginName]);
+						}
 #else
 						//Plugin load timing
 						
@@ -261,7 +266,7 @@ ESMessageEvents, ESAccountEvents;
 							//Add the instance to our list
 							[pluginArray addObject:plugin];
 						}else{
-							NSLog(@"Failed to initialize Plugin \"%@\"!",pluginName);
+							NSLog(@"Failed to initialize Plugin \"%@\" (\"%@\")!",pluginName,[pluginPath stringByAppendingPathComponent:pluginName]);
 						}
 					}else{
 						NSLog(@"Failed to open Plugin \"%@\"!",pluginName);
