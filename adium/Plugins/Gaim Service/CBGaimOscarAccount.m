@@ -10,6 +10,8 @@
 #define KEY_OSCAR_HOST  @"Oscar:Host"
 #define KEY_OSCAR_PORT  @"Oscar:Port"
 
+#define	PREF_GROUP_NOTES			@"Notes"                //Preference group to store notes in
+
 static NSString *ICQServiceID = nil;
 static NSString *MobileServiceID = nil;
 
@@ -38,6 +40,18 @@ static BOOL didInitOscar = NO;
 			[self setStatusObject:ICQServiceID forKey:@"DisplayServiceID" notify:YES];
 		}
 	}
+	
+	//Observe preferences changes
+    [[adium notificationCenter] addObserver:self 
+								   selector:@selector(preferencesChanged:) 
+									   name:Preference_GroupChanged 
+									 object:nil];	
+}
+
+- (void)dealloc
+{
+	[[adium notificationCenter] removeObserver:self];
+	[super dealloc];
 }
 
 /*
@@ -86,6 +100,9 @@ static BOOL didInitOscar = NO;
 			
 			//Apply any changes
 			[contact notifyOfChangedStatusSilently:silentAndDelayed];
+			
+		}else {
+			[contact setStatusObject:[contact serviceID] forKey:@"DisplayServiceID" notify:NO];
 		}
 	}
 	
@@ -418,6 +435,22 @@ aim_srv_setavailmsg(od->sess, text);
     [super rejectFileReceiveRequest:fileTransfer];    
 }
 
+- (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
+{
+	OscarData			*od;
+	aim_userinfo_t		*userinfo;
+	GaimBuddy			*buddy;
+	
+	if (gc &&
+		(od = gc->proto_data) &&
+		(userinfo = aim_locate_finduserinfo(od->sess, [[inListObject UID] UTF8String]))){
+		
+		return (userinfo->capabilities & AIM_CAPS_SENDFILE);
+	}
+	
+	return NO;
+}
+
 #pragma mark Privacy
 -(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type
 {
@@ -426,6 +459,63 @@ aim_srv_setavailmsg(od->sess, text);
 -(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type
 {
     return [super removeListObject:inObject fromPrivacyList:type]; 
+}
+
+#pragma mark Contact notes
+-(NSString *)serversideCommentForContact:(AIListContact *)theContact
+{	
+	NSString *serversideComment = nil;
+	
+	if (gc){
+		const char  *uidUTF8String = [[theContact UID] UTF8String];
+		GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
+		GaimGroup   *g;
+		char		*comment;
+		OscarData   *od;
+		
+		if (!(g = gaim_find_buddys_group(buddy)))
+			return nil;
+
+		od = gc->proto_data;
+
+		comment = aim_ssi_getcomment(od->sess->ssi.local, g->name, buddy->name);
+		if (comment){
+			gchar		*comment_utf8;
+
+			comment_utf8 = gaim_utf8_try_convert(comment);
+			serversideComment = [NSString stringWithUTF8String:comment_utf8];
+			g_free(comment_utf8);
+		}
+		free(comment);
+	}
+	
+	return serversideComment;
+}
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_NOTES]){
+		AIListObject *listObject = [notification object];
+		
+		//If the notification object is a listContact belonging to this account, update the serverside notes
+		if ([listObject isKindOfClass:[AIListContact class]] && 
+			[[(AIListContact *)listObject accountID] isEqualToString:[self uniqueObjectID]]){
+			
+			if (gc){
+				const char  *uidUTF8String = [[listObject UID] UTF8String];
+				GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
+				GaimGroup   *g;
+				OscarData   *od;
+				const char  *comment;
+				
+				if ((g = gaim_find_buddys_group(buddy)) && (od = gc->proto_data)){
+					comment = [[listObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES] UTF8String];
+					
+					aim_ssi_editcomment(od->sess, g->name, uidUTF8String, comment);	
+				}
+				
+			}
+		}
+	}
 }
 
 -(NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding
@@ -454,28 +544,6 @@ aim_srv_setavailmsg(od->sess, text);
 
 @end
 #pragma mark Notes
-/*
- //String encodings:
- enum {    NSASCIIStringEncoding = 1,
-	 NSNEXTSTEPStringEncoding = 2,
-	 NSJapaneseEUCStringEncoding = 3,
-	 NSUTF8StringEncoding = 4,
-	 NSISOLatin1StringEncoding = 5,
-	 NSSymbolStringEncoding = 6,
-	 NSNonLossyASCIIStringEncoding = 7,
-	 NSShiftJISStringEncoding = 8,
-	 NSISOLatin2StringEncoding = 9,
-	 NSUnicodeStringEncoding = 10,
-	 NSWindowsCP1251StringEncoding = 11,
-	 NSWindowsCP1252StringEncoding = 12,
-	 NSWindowsCP1253StringEncoding = 13,
-	 NSWindowsCP1254StringEncoding = 14,
-	 NSWindowsCP1250StringEncoding = 15,
-	 NSISO2022JPStringEncoding = 21,
-	 NSMacOSRomanStringEncoding = 30,
-	 NSProprietaryStringEncoding = 65536};
- */
-
 
 /*if (isdigit(b->name[0])) {
 char *status;
@@ -503,14 +571,6 @@ if ((userinfo != NULL) && (userinfo->capabilities)) {
     tmp = ret;
     ret = g_strconcat(tmp, _("<b>Capabilities:</b> "), caps, "\n", NULL);
     g_free(tmp);
-}
-
-if ((bi != NULL) && (bi->availmsg != NULL) && !(b->uc & UC_UNAVAILABLE)) {
-    gchar *escaped = g_markup_escape_text(bi->availmsg, strlen(bi->availmsg));
-    tmp = ret;
-    ret = g_strconcat(tmp, _("<b>Available:</b> "), escaped, "\n", NULL);
-    g_free(tmp);
-    g_free(escaped);
 }
 */
 
