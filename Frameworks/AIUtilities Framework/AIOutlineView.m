@@ -68,7 +68,11 @@
 			}
 			
 		}else if([theEvent keyCode] == 36){ //Enter or return
-            [[self delegate] performSelector:[self doubleAction] withObject:self];
+			//doubleAction is NULL by default
+			SEL doubleActionSelector = [self doubleAction];
+			if (doubleActionSelector){
+				[[self delegate] performSelector:doubleActionSelector withObject:self];
+			}
 			
         }else if([theEvent keyCode] == 123){ //left
             id 	object = [self itemAtRow:[self selectedRow]];
