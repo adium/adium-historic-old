@@ -144,12 +144,9 @@ static NSMenu       *bookmarkSets;
         NSMenuItem      *subMenuItem;
         id<SHBookmarkImporter> importer;
         while(subMenuItem = [enumerator nextObject]){
-            NSLog([subMenuItem title]);
-            NSLog([[subMenuItem submenu] description]);
             if([[subMenuItem representedObject] conformsToProtocol:@protocol(SHBookmarkImporter)]){
                 importer = [subMenuItem representedObject];
                 if([importer bookmarksUpdated]){
-                    NSLog(@"updating menu: %@", [subMenuItem title]);
                     [[subMenuItem submenu] removeAllItems];
                     [subMenuItem setSubmenu:[self buildBookmarkMenuFor:subMenuItem]];
                     [bookmarkRootContextualMenuItem setSubmenu:[[[bookmarkRootMenuItem submenu] copy] autorelease]];
@@ -161,12 +158,9 @@ static NSMenu       *bookmarkSets;
         NSMenuItem      *subMenuItem;
         id<SHBookmarkImporter> importer;
         while(subMenuItem = [enumerator nextObject]){
-            NSLog([subMenuItem title]);
-            NSLog([[subMenuItem submenu] description]);
             if([[subMenuItem representedObject] conformsToProtocol:@protocol(SHBookmarkImporter)]){
                 importer = [subMenuItem representedObject];
                 if([importer bookmarksUpdated]){
-                    NSLog(@"updating menu: %@", [subMenuItem title]);
                     [[subMenuItem submenu] removeAllItems];
                     [subMenuItem setSubmenu:[self buildBookmarkMenuFor:subMenuItem]];
                     [bookmarkRootMenuItem setSubmenu:[[[bookmarkRootContextualMenuItem submenu] copy] autorelease]];
