@@ -15,7 +15,6 @@
 
 @interface AIVolumeControlPreferences : AIPreferencePane {
     IBOutlet	NSSlider		*slider_volume;
-	IBOutlet	NSButton		*checkbox_useCustomVolume;
 	IBOutlet	NSPopUpButton   *popUp_outputDevice;    
 	IBOutlet    NSButton		*button_muteWhileAway;
 
