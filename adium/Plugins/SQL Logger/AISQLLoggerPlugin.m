@@ -76,7 +76,7 @@
                 destDisplay = destUID;
             }
             destSrv = [[chat account] serviceID];
-            srcDisplay = nil;
+            srcDisplay = [source UID];
             srcUID = [source UID];
             srcSrv = [source serviceID];
         } else {
@@ -85,7 +85,7 @@
                 srcDisplay = [[chat listObject] displayName];
                 srcUID = [[chat listObject] UID];
                 destUID = [destination UID];
-                destDisplay = nil;
+                destDisplay = [destination UID];
             }
             else {
                 srcUID = [source UID];
