@@ -32,10 +32,17 @@ xcodebuild -target Adium GENERATE_DEBUGGING_SYMBOLS=NO COPY_PHASE_STRIP=YES DEBU
 mkdir ~/AdiumBuilds
 
 cp Adium_$prettydate.dmg ~/AdiumBuilds/Adium_$prettydate.dmg
-#Copy the files
+
+#Copy the files, setting them to be group writeable after copying
 scp Adium_$prettydate.dmg $username@shell.sf.net:/home/groups/a/ad/adium/htdocs/downloads/
+ssh shell.sf.net chmod 664 /home/groups/a/ad/adium/htdocs/downloads/Adium_$prettydate.dmg
+
 scp CompleteChanges $username@shell.sf.net:/home/groups/a/ad/adium/htdocs/downloads/
+ssh shell.sf.net chmod 664 /home/groups/a/ad/adium/htdocs/downloads/CompleteChanges
+
 scp ChangeLog_$prettydate $username@shell.sf.net:/home/groups/a/ad/adium/htdocs/downloads/ChangeLogs
+ssh shell.sf.net chmod 664 /home/groups/a/ad/adium/htdocs/downloads/ChangeLogs/ChangeLog_$prettydate
+
 #cleanup
 rm CompleteChanges ChangeLog ChangeLog_$prettydate
 rm Adium_$prettydate.dmg
