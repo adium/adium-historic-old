@@ -241,6 +241,12 @@
 						![[configuredForAccount statusObjectForKey:@"Connecting"] boolValue] &&
 						![[configuredForAccount statusObjectForKey:@"Disconnecting"] boolValue]);
 	
+	//If a field doesn't send its action until the user presses enter (the password field, for example), we should save
+	//immediately so the newly-inputted value is available as we try to connect
+	if (goOnline){
+		[accountViewController saveFieldsImmediately];
+	}
+	
     [configuredForAccount setPreference:[NSNumber numberWithBool:goOnline] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 }
 
