@@ -223,7 +223,8 @@
             conn = PQconnectdb("");
             if (PQstatus(conn) == CONNECTION_BAD)
             {
-                [[adium interfaceController] handleErrorMessage:@"Database reconnect failed.." 			withDescription:@"Check your settings and try again."];
+                [[adium interfaceController] handleErrorMessage:@"Database reconnect failed.." 
+												withDescription:@"Check your settings and try again."];
                 NSLog(@"%s", PQerrorMessage(conn));
             } else {
                 NSLog(@"Connection to PostgreSQL successfully made.");
