@@ -88,8 +88,9 @@
 			//so we are no longer unique.
 			//If we have a currentUID, and it's not the same as the new one, we are no longer unique.
 			//Similarly, if we have a currentUID and our serviceID isn't the same as the new one, we are no longer unique.
-			if ((newUID == nil) ||
-				(currentUID && (![currentUID isEqualToString:newUID] || ![currentService isEqualToString:newService]))){
+			if (([inObject online] || ![self online]) &&
+				((newUID == nil)||
+				(currentUID && (![currentUID isEqualToString:newUID] || ![currentService isEqualToString:newService])))){
 				
 				containsOnlyOneUniqueContact = NO;
 				
