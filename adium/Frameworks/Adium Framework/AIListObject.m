@@ -370,9 +370,9 @@
     NSMutableArray  *returnArray = [NSMutableArray arrayWithCapacity:1];
     
     //Get our value for the preference
-    if(prefDict) {
-        if (value = [prefDict objectForKey:inKey]) {
-            returnArray = [returnArray addObject:value];
+    if(prefDict){
+        if(value = [prefDict objectForKey:inKey]){
+            [returnArray addObject:value];
         }
     }
     
