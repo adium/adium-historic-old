@@ -16,23 +16,44 @@
 @end
 
 @implementation ESContactListWindowHandlingPreferences
+
+//Preference pane properties
+- (PREFERENCE_CATEGORY)category{
+    return(AIPref_Advanced_ContactList);
+}
+- (NSString *)label{
+    return(CLWH_PREF_TITLE);
+}
+- (NSString *)nibName{
+    return(CLWH_PREF_NIB);
+}
+
+/*
 + (ESContactListWindowHandlingPreferences *)contactListWindowHandlingPreferences
 {
     return([[[self alloc] init] autorelease]);
 }
-
+*/
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
     if(sender == checkBox_alwaysOnTop){
-	[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)] forKey:KEY_CLWH_ALWAYS_ON_TOP group:PREF_GROUP_CONTACT_LIST];
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)] forKey:KEY_CLWH_ALWAYS_ON_TOP group:PREF_GROUP_CONTACT_LIST];
     } else if(sender == checkBox_hide){
-	[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)] forKey:KEY_CLWH_HIDE group:PREF_GROUP_CONTACT_LIST];
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)] forKey:KEY_CLWH_HIDE group:PREF_GROUP_CONTACT_LIST];
     }
+}
+
+- (NSDictionary *)restorablePreferences
+{
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:CONTACT_LIST_WINDOW_HANDLING_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_CONTACT_LIST];	
+	return(defaultsDict);
 }
 
 //Private ---------------------------------------------------------------------------
 //init
+/*
 - (id)init
 {
     //Init
@@ -64,11 +85,21 @@
     [view_prefView release]; view_prefView = nil;
 }
 
+
 //Configures our view for the current preferences
 - (void)configureView
 {
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
 
+    [checkBox_alwaysOnTop setState:[[preferenceDict objectForKey:KEY_CLWH_ALWAYS_ON_TOP] boolValue]];
+    [checkBox_hide setState:[[preferenceDict objectForKey:KEY_CLWH_HIDE] boolValue]];
+}
+*/
+
+- (void)viewDidLoad
+{
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+	
     [checkBox_alwaysOnTop setState:[[preferenceDict objectForKey:KEY_CLWH_ALWAYS_ON_TOP] boolValue]];
     [checkBox_hide setState:[[preferenceDict objectForKey:KEY_CLWH_HIDE] boolValue]];
 }
