@@ -10,7 +10,7 @@
 #import <Adium/Adium.h>
 
 @interface AITypingNotificationPlugin : AIPlugin {
-    NSMutableDictionary		*typingDict;
+//    NSMutableDictionary		*typingDict;
 }
 
 @end

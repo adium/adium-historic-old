@@ -17,12 +17,11 @@
 
 - (void)installPlugin
 {
-    disconnectItem = [[NSMenuItem alloc] initWithTitle:DISCONNECT_MENU_TITLE
+    disconnectItem = [[[NSMenuItem alloc] initWithTitle:DISCONNECT_MENU_TITLE
                                                 target:self
                                                 action:@selector(disconnectAll:)
-                                         keyEquivalent:@"D"];
-
-    [disconnectItem setEnabled:NO];
+                                         keyEquivalent:@"D"] autorelease];
+//    [disconnectItem setEnabled:NO];
     [[owner menuController] addMenuItem:disconnectItem toLocation:LOC_File_Accounts];
 }
 

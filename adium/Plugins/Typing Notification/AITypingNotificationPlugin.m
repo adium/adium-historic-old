@@ -24,7 +24,7 @@
     //Register as an entry filter
     [[owner contentController] registerTextEntryFilter:self];
 
-    typingDict = [[NSMutableDictionary alloc] init];
+    //typingDict = [[NSMutableDictionary alloc] init];
     //messagedDict = [[NSMutableDictionary alloc] init];
 
     [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];

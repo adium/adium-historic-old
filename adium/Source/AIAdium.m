@@ -112,7 +112,6 @@
     //init
     notificationCenter = nil;
     eventNotifications = [[NSMutableDictionary alloc] init];
-    
     //play a sound to prevent a delay later when quicktime loads
 //    [AISoundController playSoundNamed:@"Beep"];
 }
