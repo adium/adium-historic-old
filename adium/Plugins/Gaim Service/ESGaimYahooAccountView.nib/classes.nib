@@ -18,6 +18,7 @@
             CLASS = ESGaimAccountViewController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "checkBox_checkMail" = NSButton; 
                 "menu_proxy" = NSPopUpButton; 
                 "textField_alias" = NSTextField; 
                 "textField_hostName" = NSTextField; 
