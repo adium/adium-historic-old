@@ -18,7 +18,6 @@
 //Gaim includes
 #include <Libgaim/libgaim.h>
 
-#define KEY_ACCOUNT_GAIM_CHECK_MAIL			@"Check Mail"
 
 #define GAIM_ORPHANS_GROUP_NAME				"__AdiumOrphansUE9FHUE7I"  //A group name no sane user would have
 
