@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.75 2004/04/29 09:48:01 earthmkii Exp $
+$Id: ToDoList.txt,v 1.76 2004/04/30 17:23:21 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -33,9 +33,6 @@ Contact List:
    - (Confirmed by Hanji)
 * Contact list transparency is incorrect (the background is black/opaque) when the window is first opened.
 * For contacts with no Adium alias and a matching address book card, the contact list format preference will be ignored.  So, if it's set to "Alias (Contact Name)", it will only display the address book name at first.  If the preference is toggled, the correct formatting will be applied.
-
-Tooltips:
-* Adium will unhide if hidden (via cmd-H) while a tooltip is visible
 
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
@@ -347,3 +344,4 @@ Features & Changes:
 = AIM accounts should show AIM as their service type, while ICQ should show ICQ, .Mac show .Mac, etc.
 = Add to buddy list menu item, contextual menu item (for strangers)
 = Add account specific proxy fields (Type, host, port) for all libgaim connections
+= Adium will unhide if hidden (via cmd-H) while a tooltip is visible
