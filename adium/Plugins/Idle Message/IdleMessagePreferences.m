@@ -60,7 +60,12 @@
 //configure our view
 - (void)configureView
 {
+    NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"IdleMessage" account:nil]];
 
+    [checkBox_enableIdleMessage setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_MESSAGE] objectForKey:KEY_IDLE_MESSAGE_ENABLED] boolValue]];
+    
+    [[textView_idleMessage textStorage] setAttributedString:idleMessage];
+    
 }
 
 // Called in response to all preference controls, applies new settings
@@ -70,19 +75,23 @@
     NSData	*newMessage;
 
     if(sender == checkBox_enableIdleMessage) {
-        NSLog(@"-------- Idle Message: Enable Idle Message changed --------");
 
-        //Save the idle message
+        //Save the button's state
         newMessage = [[textView_idleMessage textStorage] dataRepresentation];
 
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_IDLE_MESSAGE_ENABLED
                                               group:PREF_GROUP_IDLE_MESSAGE];
-        [[owner preferenceController] setPreference:newMessage forKey:KEY_IDLE_MESSAGE
-                                              group:PREF_GROUP_IDLE_MESSAGE];
 
     }
 }
 
+- (void)textDidEndEditing:(NSNotification *)notification;
+{
+    [[owner accountController] setStatusObject:[[textView_idleMessage textStorage] dataRepresentation] forKey:@"IdleMessage" account:nil];
+    [[owner preferenceController] setPreference:[[textView_idleMessage textStorage] dataRepresentation]
+                                         forKey:KEY_IDLE_MESSAGE
+                                          group:PREF_GROUP_IDLE_MESSAGE];
+}
 
 @end

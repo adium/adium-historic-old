@@ -40,7 +40,6 @@
 }
 
 
-//Update our menu when the away status changes
 - (void)accountIdleStatusChanged:(NSNotification *)notification
 {
 
@@ -50,46 +49,71 @@
         
         if([modifiedKey compare:@"IdleSince"] == 0){
 
-            NSLog(@"-------- Idle Status Changed --------");
+            if([[[[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_MESSAGE] objectForKey:KEY_IDLE_MESSAGE_ENABLED] boolValue] == TRUE) {
 
-            /*
-            //Remove existing content sent/received observer, and install new (if away)
-            [[owner notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
-            [[owner notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
-            if([[owner accountController] statusObjectForKey:@"AwayMessage" account:nil] != nil){
-                [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
-                [[owner notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
-            }
+                //Remove existing content sent/received observer, and install new (if away)
+                [[owner notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
+                [[owner notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
+                if([[owner accountController] statusObjectForKey:@"IdleSince" account:nil] != nil){
+                    [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
+                    [[owner notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
+                }
 
-            //Flush our array of 'responded' contacts
-            [receivedAwayMessage release]; receivedAwayMessage = [[NSMutableArray alloc] init];
-             */
+                //Flush our array of 'responded' contacts
+                [receivedIdleMessage release]; receivedIdleMessage = [[NSMutableArray alloc] init];
             
-        }
-    }
-
-    // NEW BLOCK
-    /*
-    if(notification == nil || [key compare:@"IdleSince"] == 0){
-        if(changedAccount == nil){ //Global status change
-            BOOL idle = ([[owner accountController] statusObjectForKey:@"IdleSince" account:nil] != nil);
-
-            if(idle && !idleState){
-                idleState = [[owner dockController] setIconStateNamed:@"Idle"];
-
-            }else if(!idle && idleState){
-                [[owner dockController] removeIconState:idleState];
-                idleState = nil;
-
             }
-
         }
-
     }
-     */
 
 }
 
+//Called when Adium receives content
+- (void)didReceiveContent:(NSNotification *)notification
+{
+    id <AIContentObject>	contentObject = [[notification userInfo] objectForKey:@"Object"];
+    // TEMPORARY!!!
+    NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"IdleMessage" account:nil]];
+    //NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"AwayMessage" account:nil]];
+
+    //If the user received a message, send our idle message to them
+    if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
+        if(idleMessage && [idleMessage length] != 0){
+            // Only send if there's no away message up!
+            if([[owner accountController] statusObjectForKey:@"AwayMessage" account:nil] == nil) {
+                AIListContact	*contact = [contentObject source];
+
+                //Create and send an idle bounce message (If the sender hasn't received one already)
+                if(![receivedIdleMessage containsObject:[contact UIDAndServiceID]]){
+                    AIContentMessage	*responseContent;
+
+                    responseContent = [AIContentMessage messageWithSource:[contentObject destination]
+                                                          destination:contact
+                                                                 date:nil
+                                                              message:idleMessage];
+
+                    [[owner contentController] sendContentObject:responseContent];
+                }	
+            }	
+        }	
+    }	
+}	
+
+//Called when Adium sends content
+- (void)didSendContent:(NSNotification *)notification
+{
+    id <AIContentObject>	contentObject = [[notification userInfo] objectForKey:@"Object"];
+
+    if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
+        AIListContact	*contact = [contentObject destination];
+        NSString 	*senderUID = [contact UIDAndServiceID];
+
+        //Add the handle's UID to our 'already received idle message' array, so they only receive the message once.
+        if(![receivedIdleMessage containsObject:senderUID]){
+            [receivedIdleMessage addObject:senderUID];
+        }
+    }
+}
 
 
 - (void)uninstallPlugin
