@@ -22,8 +22,5 @@
     
     CBContactCountingDisplayPreferences *prefs;
 }
-- (void)installPlugin;
-- (void)uninstallPlugin;
 
-- (void)preferencesChanged:(NSNotification *)notification;
 @end

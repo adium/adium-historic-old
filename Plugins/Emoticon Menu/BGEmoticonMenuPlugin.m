@@ -43,8 +43,7 @@
                                                   object:nil];
 
 	//Observe prefs    
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-	[self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];
 }
 
 //Add emoticon menu as item goes into toolbar
@@ -67,16 +66,15 @@
 }
 
 //Emoticons changed
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [PREF_GROUP_EMOTICONS isEqualToString:[[notification userInfo] objectForKey:@"Group"]]){		
-		//Flush the cached emoticon menu
-		[emoticonMenu release]; emoticonMenu = nil;
-		
-		//Flag our menus as dirty
-		[self registerToolbarItem];
-		needToRebuildMenus = YES;
-    }
+	//Flush the cached emoticon menu
+	[emoticonMenu release]; emoticonMenu = nil;
+	
+	//Flag our menus as dirty
+	[self registerToolbarItem];
+	needToRebuildMenus = YES;
 }
 
 //Register our toolbar item with the most current emoticon menu

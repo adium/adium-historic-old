@@ -25,14 +25,7 @@
 
 - (void)installPlugin
 {
-    //Install our preference view
     preferences = [[AIVolumeControlPreferences preferencePane] retain];
 }
 
-- (void)uninstallPlugin
-{
-    [[adium notificationCenter] removeObserver:preferences];
-    [[NSNotificationCenter defaultCenter] removeObserver:preferences];
-}
-    
 @end
