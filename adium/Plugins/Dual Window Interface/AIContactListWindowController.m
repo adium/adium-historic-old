@@ -58,7 +58,7 @@
 {
     interface = [inInterface retain];
 	toolbarItems = nil;
-    borderless = [[[[AIObject sharedAdiumInstance] preferenceController] preferenceForKey:KEY_SCL_BORDERLESS
+	borderless = [[[[AIObject sharedAdiumInstance] preferenceController] preferenceForKey:KEY_SCL_BORDERLESS
 																					group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
 
     [super initWithWindowNibName:(borderless ? CONTACT_LIST_WINDOW_TRANSPARENT_NIB : CONTACT_LIST_WINDOW_NIB)];
@@ -127,7 +127,8 @@
     [self preferencesChanged:nil];
     
     //Tell the interface to open our window
-    [interface containerDidOpen:self];
+//	[interface performSelector:@selector(containerDidOpen:) withObject:self afterDelay:1];
+	[interface containerDidOpen:self];
 }
 
 //Close the contact list window

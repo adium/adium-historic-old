@@ -93,7 +93,7 @@
 														   selector:@selector(screenParametersChanged:) 
 															   name:NSApplicationDidChangeScreenParametersNotification 
 															 object:nil];
-        
+	
     [contactListView setTarget:self];
     [contactListView setDataSource:self];
     [contactListView setDelegate:self];
@@ -113,7 +113,8 @@
     //Remove observers (general)
     [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
+	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
+	
     //Hide any open tooltips
 	[self _removeCursorRect];
 	
@@ -714,7 +715,6 @@
 	if(!NSEqualPoints(tooltipLocation, screenPoint)){
 		AIListObject	*hoveredObject = nil;
 		NSWindow		*window = [contactListView window];
-		
 		if((screenPoint.x != 0 && screenPoint.y != 0) && [window isVisible]){
 			NSPoint			viewPoint;
 			int				hoveredRow;

@@ -15,6 +15,7 @@
 
 @interface CBGaimServicePlugin (PRIVATE)
 - (NSDictionary *)getDictionaryFromKeychainForKey:(NSString *)key;
+- (void)_initGaim;
 - (void)configureSignals;
 @end
 
@@ -179,78 +180,6 @@ static GaimBlistUiOps adiumGaimBlistOps = {
     adiumGaimBlistRequestAddChat,
     adiumGaimBlistRequestAddGroup
 };
-
-#pragma mark Signals
-// Signals ------------------------------------------------------------------------------------------------------
-static void *gaim_adium_get_handle(void)
-{
-	static int adium_gaim_handle;
-	
-	return &adium_gaim_handle;
-}
-
-static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
-{
-	if (buddy)
-		[accountLookup(buddy->account) accountUpdateBuddy:buddy forEvent:event];
-}
-
-- (void)configureSignals
-{
-	void *blist_handle = gaim_blist_get_handle();
-	void *handle       = gaim_adium_get_handle();
-	
-	//Idle
-	gaim_signal_connect(blist_handle, "buddy-idle",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_IDLE));
-	gaim_signal_connect(blist_handle, "buddy-unidle",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_IDLE_RETURN));
-	
-	//Status
-	gaim_signal_connect(blist_handle, "buddy-away",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_AWAY));
-	gaim_signal_connect(blist_handle, "buddy-back",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_AWAY_RETURN));
-	gaim_signal_connect(blist_handle, "buddy-status-message",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_STATUS_MESSAGE));
-	
-	//Info updated
-	gaim_signal_connect(blist_handle, "buddy-info",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_INFO_UPDATED));
-	
-	//Icon
-	gaim_signal_connect(blist_handle, "buddy-icon",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_ICON));
-	
-	//Evil
-	gaim_signal_connect(blist_handle, "buddy-evil",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_EVIL));
-	
-	
-	//Miscellaneous
-	gaim_signal_connect(blist_handle, "buddy-miscellaneous",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_MISCELLANEOUS));
-	
-	
-	gaim_signal_connect(blist_handle, "buddy-signed-on",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_SIGNON));
-	gaim_signal_connect(blist_handle, "buddy-signon",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_SIGNON_TIME));
-	gaim_signal_connect(blist_handle, "buddy-signed-off",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_SIGNOFF));
-}
 
 #pragma mark Conversation
 // Conversation ------------------------------------------------------------------------------------------------------
@@ -779,6 +708,78 @@ static GaimPrivacyUiOps adiumGaimPrivacyOps = {
     adiumGaimDenyRemoved
 };
 
+#pragma mark Signals
+// Signals ------------------------------------------------------------------------------------------------------
+static void *gaim_adium_get_handle(void)
+{
+	static int adium_gaim_handle;
+	
+	return &adium_gaim_handle;
+}
+
+static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
+{
+	if (buddy)
+		[accountLookup(buddy->account) accountUpdateBuddy:buddy forEvent:event];
+}
+
+- (void)configureSignals
+{
+	void *blist_handle = gaim_blist_get_handle();
+	void *handle       = gaim_adium_get_handle();
+	
+	//Idle
+	gaim_signal_connect(blist_handle, "buddy-idle",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_IDLE));
+	gaim_signal_connect(blist_handle, "buddy-unidle",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_IDLE_RETURN));
+	
+	//Status
+	gaim_signal_connect(blist_handle, "buddy-away",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_AWAY));
+	gaim_signal_connect(blist_handle, "buddy-back",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_AWAY_RETURN));
+	gaim_signal_connect(blist_handle, "buddy-status-message",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_STATUS_MESSAGE));
+	
+	//Info updated
+	gaim_signal_connect(blist_handle, "buddy-info",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_INFO_UPDATED));
+	
+	//Icon
+	gaim_signal_connect(blist_handle, "buddy-icon",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_ICON));
+	
+	//Evil
+	gaim_signal_connect(blist_handle, "buddy-evil",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_EVIL));
+	
+	
+	//Miscellaneous
+	gaim_signal_connect(blist_handle, "buddy-miscellaneous",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_MISCELLANEOUS));
+	
+	
+	gaim_signal_connect(blist_handle, "buddy-signed-on",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_SIGNON));
+	gaim_signal_connect(blist_handle, "buddy-signon",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_SIGNON_TIME));
+	gaim_signal_connect(blist_handle, "buddy-signed-off",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_SIGNOFF));
+}
+
 #pragma mark Core
 // Core ------------------------------------------------------------------------------------------------------
 static void adiumGaimPrefsInit(void)
@@ -822,54 +823,34 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     adiumGaimCoreQuit
 };
 
-#pragma mark Gaim Initialization
-//  Gaim Initialization ------------------------------------------------------------------------------------------------
-
-#define GAIM_DEFAULTS   @"GaimServiceDefaults"
-
-- (void)installPlugin
+- (void)_initGaim
 {
-//	char *plugin_search_paths[2];
-	servicePluginInstance = self;
-
-	//Register our defaults
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS forClass:[self class]]
-										  forGroup:GROUP_ACCOUNT_STATUS];
-
     //Register ourself as libgaim's UI handler
     gaim_core_set_ui_ops(&adiumGaimCoreOps);
     if(!gaim_core_init("Adium")) {
         NSLog(@"Failed to initialize gaim core");
     }
-    
+	
 	//Handle libgaim events with the Cocoa event loop
 	eventLoopAdapter = [[SLGaimCocoaAdapter alloc] init];
-    //Tell libgaim to load its plugins
-//    NSString *bundlePath = [[[NSBundle bundleForClass:[self class]] bundlePath] stringByExpandingTildeInPath];
-//    plugin_search_paths[0] = (char *)[[bundlePath stringByAppendingPathComponent:@"/Contents/Frameworks/Protocols/"] UTF8String];
-//    plugin_search_paths[1] = (char *)[[bundlePath stringByAppendingPathComponent:@"/Contents/Frameworks/Plugins/"] UTF8String];
-//    gaim_plugins_set_search_paths(sizeof(plugin_search_paths) / sizeof(*plugin_search_paths), plugin_search_paths);
-//    gaim_plugins_probe(NULL);
-	
 	//Plugins
+	if (/*!gaim_init_ssl_plugin() || */ !gaim_init_ssl_gnutls_plugin()) NSLog(@"Error: No SSL Support");
+	
     if(!gaim_init_gg_plugin()) NSLog(@"Error: No Gadu Gadu Support");
-//    if(!gaim_init_irc_plugin()) NSLog(@"Error: No IRC Support");
+	//    if(!gaim_init_irc_plugin()) NSLog(@"Error: No IRC Support");
     if(!gaim_init_jabber_plugin()) NSLog(@"Error: No Jabber Support");
+	if(!gaim_init_msn_plugin()) NSLog(@"Error: No MSN Support");
     if(!gaim_init_napster_plugin()) NSLog(@"Error: No Napster Support");
     if(!gaim_init_oscar_plugin()) NSLog(@"Error: No Oscar Support");
-//    if(!gaim_init_rendezvous_plugin()) NSLog(@"Error: No Rendezvous Support");
-//    if(!gaim_init_toc_plugin()) NSLog(@"Error: No TOC Support");
+	//    if(!gaim_init_rendezvous_plugin()) NSLog(@"Error: No Rendezvous Support");
+	//    if(!gaim_init_toc_plugin()) NSLog(@"Error: No TOC Support");
     if(!gaim_init_trepia_plugin()) NSLog(@"Error: No Trepia Support");
     if(!gaim_init_yahoo_plugin()) NSLog(@"Error: No Yahoo Support");
 	if(!gaim_init_novell_plugin()) NSLog(@"Error: No Novell Support");
-
-	if(/*!gaim_init_ssl_plugin() || */!gaim_init_ssl_gnutls_plugin() || !gaim_init_msn_plugin()){
-		NSLog(@"Error: No MSN/SSL Support");
-	}
 	
     //Setup the buddy list
     gaim_set_blist(gaim_blist_new());
-            
+	
     //Setup libgaim core preferences
     
     //Disable gaim away handling - we do it ourselves
@@ -882,9 +863,32 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     
     //Typing preference
     gaim_prefs_set_bool("/core/conversations/im/send_typing", TRUE);
-
+	
 	//Configure signals for receiving gaim events
-	[self configureSignals];
+	[self configureSignals];	
+}
+
+#pragma mark Plugin Installation
+//  Plugin Installation ------------------------------------------------------------------------------------------------
+
+#define GAIM_DEFAULTS   @"GaimServiceDefaults"
+
+- (void)installPlugin
+{
+//	char *plugin_search_paths[2];
+	servicePluginInstance = self;
+
+	//Register our defaults
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS forClass:[self class]]
+										  forGroup:GROUP_ACCOUNT_STATUS];
+
+/*	
+		[NSThread detachNewThreadSelector:@selector(_initGaim)
+								 toTarget:self
+							   withObject:nil];
+ */
+	
+	[self _initGaim];
 
 	_accountDict = [[NSMutableDictionary alloc] init];
 
