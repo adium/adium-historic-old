@@ -10331,6 +10331,7 @@
 				341F08E8058A97AB00A5A7AB,
 				4B215D990598907100305B3C,
 				34F2BC69059CC2850005B238,
+				4B7BB54205B1906700598C55,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11077,6 +11078,7 @@
 				341F08E7058A97AB00A5A7AB,
 				4B215D9A0598907100305B3C,
 				34F2BC6A059CC2850005B238,
+				4B7BB54005B1905800598C55,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20707,6 +20709,36 @@
 			path = "Plugins/Contact List Editor/Folder.tiff";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B7BB53F05B1905800598C55 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESArrayAdditions.m;
+			path = "Frameworks/AIUtilities Framework/ESArrayAdditions.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7BB54005B1905800598C55 = {
+			fileRef = 4B7BB53F05B1905800598C55;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B7BB54105B1906700598C55 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESArrayAdditions.h;
+			path = "Frameworks/AIUtilities Framework/ESArrayAdditions.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B7BB54205B1906700598C55 = {
+			fileRef = 4B7BB54105B1906700598C55;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B7BD56204123BEB00A8010A = {
 			fileEncoding = 4;
@@ -30840,6 +30872,8 @@
 			children = (
 				9E9739D905784EFA00CF3AEE,
 				9E9739D805784EF900CF3AEE,
+				4B7BB54105B1906700598C55,
+				4B7BB53F05B1905800598C55,
 				F5793938033E74E401A8010A,
 				F5793939033E74E401A8010A,
 				34E0F189053AE56F00031341,
