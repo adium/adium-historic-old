@@ -5685,7 +5685,6 @@
 				34BD9DE505314755000AB133,
 				34BD9DE605314755000AB133,
 				34BD9DE705314755000AB133,
-				34BD9DE805314755000AB133,
 				34BD9DE905314755000AB133,
 				34BD9DEA05314755000AB133,
 				34BD9DEC05314755000AB133,
@@ -5788,12 +5787,6 @@
 		};
 		34BD9DE705314755000AB133 = {
 			fileRef = F579393E033E74E401A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9DE805314755000AB133 = {
-			fileRef = F5793940033E74E401A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -6139,7 +6132,6 @@
 				34BD9E4C05314755000AB133,
 				34BD9E4D05314755000AB133,
 				34BD9E4E05314755000AB133,
-				34BD9E4F05314755000AB133,
 				34BD9E5005314755000AB133,
 				34BD9E5105314755000AB133,
 				34BD9E5305314755000AB133,
@@ -6241,12 +6233,6 @@
 		};
 		34BD9E4E05314755000AB133 = {
 			fileRef = F579393F033E74E401A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E4F05314755000AB133 = {
-			fileRef = F5793941033E74E401A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -8678,8 +8664,8 @@
 		4947F5EA0655E90C00B791E5 = {
 			children = (
 				6CED9083065B686A00A9C196,
-				6CE10CE80660B890008B290B,
-				6CE10CE90660B890008B290B,
+				4B40D60A0660D58E00F71DAE,
+				4B40D60B0660D58E00F71DAE,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -10492,6 +10478,36 @@
 			path = "Frameworks/AIUtilities Framework/AITableViewPopUpButtonCell.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B40D60A0660D58E00F71DAE = {
+			fileType = "compiled.mach-o.dylib";
+			isa = PBXReferenceProxy;
+			path = libezv.dylib;
+			refType = 3;
+			remoteRef = 4B40D8610660D59900F71DAE;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B40D60B0660D58E00F71DAE = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 4B40D8620660D59900F71DAE;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B40D8610660D59900F71DAE = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
+			remoteInfo = libezv;
+		};
+		4B40D8620660D59900F71DAE = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
 		};
 		4B422C0905ACB248005E720B = {
 			fileEncoding = 30;
@@ -17846,36 +17862,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		6CE10CE80660B890008B290B = {
-			fileType = "compiled.mach-o.dylib";
-			isa = PBXReferenceProxy;
-			path = libezv.dylib;
-			refType = 3;
-			remoteRef = 6CE10F770660B8A5008B290B;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6CE10CE90660B890008B290B = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 6CE10F780660B8A5008B290B;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6CE10F770660B8A5008B290B = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
-		};
-		6CE10F780660B8A5008B290B = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
-		};
 		6CED9083065B686A00A9C196 = {
 			fileType = archive.ar;
 			isa = PBXReferenceProxy;
@@ -20777,8 +20763,6 @@
 		};
 		F549EF13036B101B01A8010A = {
 			children = (
-				F5793940033E74E401A8010A,
-				F5793941033E74E401A8010A,
 				F5793948033E74E401A8010A,
 				F5793949033E74E401A8010A,
 				F579394A033E74E401A8010A,
@@ -21831,24 +21815,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIDictionaryAdditions.m;
 			path = "Frameworks/AIUtilities Framework/AIDictionaryAdditions.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5793940033E74E401A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIFileUtilities.h;
-			path = "Frameworks/AIUtilities Framework/AIFileUtilities.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5793941033E74E401A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIFileUtilities.m;
-			path = "Frameworks/AIUtilities Framework/AIFileUtilities.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};

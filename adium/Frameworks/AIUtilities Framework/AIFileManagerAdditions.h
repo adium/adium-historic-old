@@ -10,4 +10,5 @@
 
 @interface NSFileManager (AIFileManagerAdditions)
 - (BOOL)trashFileAtPath:(NSString *)sourcePath;
+- (void)createDirectoriesForPath:(NSString *)fullPath;
 @end

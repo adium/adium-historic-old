@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.59 2004/05/20 13:56:05 adamiser Exp $
+//$Id: AIPluginController.m,v 1.60 2004/05/23 12:52:17 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -172,7 +172,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmotico
     int			loop;
 
 	//Get the directory listing of plugins
-	[AIFileUtilities createDirectory:pluginPath];
+    [[NSFileManager defaultManager] createDirectoriesForPath:pluginPath];
 	pluginList = [[NSFileManager defaultManager] directoryContentsAtPath:pluginPath];
 
 	for(loop = 0;loop < [pluginList count];loop++){
@@ -201,7 +201,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmotico
 						NSString	*sourcePath = [pluginPath stringByAppendingPathComponent:pluginName];
 						NSString	*destPath = [disabledPath stringByAppendingPathComponent:pluginName];
 						
-						[AIFileUtilities createDirectory:disabledPath];
+						[[NSFileManager defaultManager] createDirectoriesForPath:disabledPath];
 						[[NSFileManager defaultManager] movePath:sourcePath toPath:destPath handler:nil];
 
 					}else{

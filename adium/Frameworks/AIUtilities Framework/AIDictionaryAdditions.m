@@ -19,7 +19,7 @@
 
 #import "AIDictionaryAdditions.h"
 #import "AIColorAdditions.h"
-#import "AIFileUtilities.h"
+#import "AIFileManagerAdditions.h"
 
 @implementation NSDictionary (AIDictionaryAdditions)
 
@@ -66,7 +66,7 @@
     NSParameterAssert(name != nil); NSParameterAssert([name length] != 0);
 
     //--save the dictionary--
-    [AIFileUtilities createDirectory:path]; //make sure the path exists
+	[[NSFileManager defaultManager] createDirectoriesForPath:path]; //make sure the path exists
     if(![self writeToFile:[NSString stringWithFormat:@"%@/%@.plist",path,name] atomically:YES]){
         NSLog(@"Unable to write preference dictionary %@ (%@)",name,path);
     }

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.47 2004/05/22 18:19:17 adamiser Exp $
+// $Id: AIPreferenceController.m,v 1.48 2004/05/23 12:52:17 adamiser Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -43,8 +43,8 @@
     [owner registerEventNotification:Preference_GroupChanged displayName:@"Preferences Changed"];    
 
     //Create the 'ByObject' and 'Accounts' object specific preference directory
-    [AIFileUtilities createDirectory:[[[owner loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH]];
-    [AIFileUtilities createDirectory:[[[owner loginController] userDirectory] stringByAppendingPathComponent:ACCOUNT_PREFS_PATH]];
+	[[NSFileManager defaultManager] createDirectoriesForPath:[[[owner loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH]];
+	[[NSFileManager defaultManager] createDirectoriesForPath:[[[owner loginController] userDirectory] stringByAppendingPathComponent:ACCOUNT_PREFS_PATH]];
 
 	//
 	userDirectory = [[[owner loginController] userDirectory] retain];
