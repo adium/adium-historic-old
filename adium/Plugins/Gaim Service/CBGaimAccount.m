@@ -288,19 +288,21 @@ static id<GaimThread> gaimThread = nil;
 //Buddy Icon
 - (oneway void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData
 {
-	//Observers get a single shot at utilizing the user icon data in its raw form
-	[theContact setStatusObject:userIconData forKey:@"UserIconData" notify:NO];
-
-	//Set the User Icon as an NSImage
-	NSImage *userIcon = [[NSImage alloc] initWithData:userIconData];
-	[theContact setStatusObject:userIcon forKey:KEY_USER_ICON notify:NO];
-	[userIcon release];
-	
-	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-	
-	//Clear the UserIconData
-	[theContact setStatusObject:nil forKey:@"UserIconData" notify:NO];
+	if (userIconData){
+		//Observers get a single shot at utilizing the user icon data in its raw form
+		[theContact setStatusObject:userIconData forKey:@"UserIconData" notify:NO];
+		
+		//Set the User Icon as an NSImage
+		NSImage *userIcon = [[NSImage alloc] initWithData:userIconData];
+		[theContact setStatusObject:userIcon forKey:KEY_USER_ICON notify:NO];
+		[userIcon release];
+		
+		//Apply any changes
+		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+		
+		//Clear the UserIconData
+		[theContact setStatusObject:nil forKey:@"UserIconData" notify:NO];
+	}
 }
 
 - (oneway void)removeContact:(AIListContact *)theContact
@@ -1420,12 +1422,7 @@ static id<GaimThread> gaimThread = nil;
 				
 				for (i = 0; prpl_formats[i]; i++) {
 					if (strcmp(prpl_formats[i],"png") == 0){
-						//Get TIFF data to avoid an odd PNG exception
-						NSData				*imageTIFFData = [image TIFFRepresentation];
-						NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
-						
-						//Get the bitmap rep as PNG data
-						buddyIconData = [bitmapRep representationUsingType:NSPNGFileType properties:nil];
+						buddyIconData = [image PNGRepresentation];
 						break;
 						
 					}else if ((strcmp(prpl_formats[i],"jpeg") == 0) || (strcmp(prpl_formats[i],"jpg") == 0)){
