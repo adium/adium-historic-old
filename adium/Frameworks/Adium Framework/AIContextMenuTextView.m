@@ -19,7 +19,7 @@ static NSMenu *contextualMenu = nil;
 		NSMenuItem		*menuItem;
 		
 		//Grab NSTextView's default menu, copying so we don't mess effect menus elsewhere
-		contextualMenu = [[NSTextView defaultMenu] copy];
+		contextualMenu = [[super defaultMenu] copy];
 		
 		//Retrieve the items which should be added to the bottom of the default menu
 		NSMenu  *adiumMenu = [[[AIObject sharedAdiumInstance] menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
@@ -34,7 +34,7 @@ static NSMenu *contextualMenu = nil;
 			
 			enumerator = [itemsArray objectEnumerator];
 			while((menuItem = [enumerator nextObject])){
-				[contextualMenu addItem:menuItem];
+				[contextualMenu addItem:[[menuItem copy] autorelease]];
 			}
 		}
 	}
