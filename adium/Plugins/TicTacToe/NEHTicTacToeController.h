@@ -17,9 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
-
 #import "NEHTicTacToeBoard.h"
 
 typedef enum {  State_None,
@@ -29,19 +26,14 @@ typedef enum {  State_None,
 				State_Playing,
 				State_GameOver,
 				} GameState;
+				
+@class AIWindowController, AIListContact, AIAccount, AICompletingTextField;
 
-@interface NEHTicTacToeController : AIWindowController <AIContentFilter>
+@interface NEHTicTacToeController : AIWindowController
 {
-	IBOutlet NSWindow		* boardWindow;
     IBOutlet NSMatrix		* squares;
 	IBOutlet NSTextField	* status;
-	IBOutlet NSButton		* newGame;
 	IBOutlet NSButton		* endGame;
-	
-	IBOutlet NSPanel		* sheet_newGame;
-	IBOutlet AICompletingTextField	* textField_handle;
-	IBOutlet NSPopUpButton  * popUp_account;
-	IBOutlet NSMatrix		* radio_playAs;
 	
 	IBOutlet NSPanel		* sheet_acceptInvite;
 	IBOutlet NSTextField	* textField_remoteContact;
@@ -64,18 +56,16 @@ typedef enum {  State_None,
 	NSTimer					* timeout;
 }
 
-+ (id)install;
-+ (id)showBoard;
+- (id)init;
+- (void)handleInvitation:(NSString *)msg account:(AIAccount*)account contact:(AIListContact*)contact;
+- (void)sendInvitation:(Player)inPlayer account:(AIAccount*)account contact:(AIListContact*)contact;
 
-- (id)initWithWindowNibName:(NSString*)nib;
+- (void)updateTitle;
+
 - (NSImage*) loadImage: (NSString*)name;
 
 - (IBAction)move:(id)sender;
-- (IBAction)newGame:(id)sender;
 - (IBAction)endGame:(id)sender;
-
-- (IBAction)sendInvite:(id)sender;
-- (IBAction)cancelInvite:(id)sender;
 
 - (IBAction)acceptInvite:(id)sender;
 - (IBAction)rejectInvite:(id)sender;
@@ -94,6 +84,8 @@ typedef enum {  State_None,
 
 - (void)sendMessage:(NSString*)msg ofType:(NSString*)type;
 - (void)sendMessage:(NSString*)msg ofType:(NSString*)type toContact:(AIListContact*)to fromAccount:(AIAccount*)from inChat:(AIChat*)chat;
+- (void)handleMessage:(NSString*)msg ofType:(NSString*)type;
 
 - (void)cleanup;
+- (void)end:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 @end
