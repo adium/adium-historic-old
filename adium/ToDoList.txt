@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.58 2004/04/17 12:03:55 the_tick Exp $
+$Id: ToDoList.txt,v 1.59 2004/04/17 12:45:27 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -41,12 +41,11 @@ Bugs
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
 * Multi-user chat (MSN) - sent messages appear twice.
 * Message history 'date' timestamps are not using localized time strings
+* Apple scripts will prompt for the location of itunes multiple times on launch if it's not installed.
 
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
 -------------------------------------------------------------------------------------------------------
-* Adium may be requiring itunes to be installed to launch. Some users just hate itunes. :D 
-		Tick: http://www.versiontracker.com/php/feedback/article.php?story=20040416164938958
 * Tooltips are flashing when the contact list auto-resizes?
 * Empty groups come back on next launch after being deleted?
 * Unicode (German) messages not working over ICQ ?
