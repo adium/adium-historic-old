@@ -234,7 +234,7 @@
 		NSString *warningString = [NSString stringWithFormat:@"Warning: %@ does not have a bold variant.", [contactListFont fontName]];
 		
         [checkBox_boldGroups setEnabled:!canNotBeBold];
-		if([tabView_category respondsToSelector:@selector(setHidden:)]){
+		if([textField_noBoldWarning respondsToSelector:@selector(setHidden:)]){
 			[textField_noBoldWarning setStringValue:warningString];
 			[textField_noBoldWarning setHidden:!canNotBeBold];
 		} else { //JAGUAR
