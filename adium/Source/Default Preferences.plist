@@ -20,5 +20,7 @@
 	<true/>
 	<key>message_send_onReturn</key>
 	<true/>
+	<key>message_send_onQuit</key>
+	<true/>
 </dict>
 </plist>
