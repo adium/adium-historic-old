@@ -206,7 +206,8 @@
         {
             case DISPLAY_NAME: longDisplayName = displayName; break;
             case DISPLAY_NAME_SCREEN_NAME: longDisplayName = [NSString stringWithFormat:@"%@ (%@)",displayName,[inObject serverDisplayName]]; break;
-            case SCREEN_NAME_DISPLAY_NAME: longDisplayName = [NSString stringWithFormat:@"%@ (%@)",[inObject serverDisplayName],displayName];  break;
+            case SCREEN_NAME_DISPLAY_NAME: longDisplayName = [NSString stringWithFormat:@"%@ (%@)",[inObject serverDisplayName],displayName]; break;
+            case SCREEN_NAME: longDisplayName = [inObject serverDisplayName]; break;
             default: longDisplayName = nil; break;
         }
     }
