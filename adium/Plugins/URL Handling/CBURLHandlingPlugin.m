@@ -9,7 +9,7 @@
 #import "CBURLHandlingPlugin.h"
 
 @interface CBURLHandlingPlugin(PRIVATE)
-
+- (void)_openChatToContactWithName:(NSString *)name onService:(NSString *)serviceIdentifier withMessage:(NSString *)body;
 @end
 
 @implementation CBURLHandlingPlugin
@@ -24,7 +24,6 @@
 
 /*
 TODO: 
-    o generalize the sending stuff into a single private method
     o add suppport for "stuffing" the inputline with a particluar message 
 */
 - (void)handleURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
@@ -39,38 +38,14 @@ TODO:
         }
         
         if([[url scheme] isEqualToString:@"aim"]){
-            if([[url host] caseInsensitiveCompare:@"goim"] == NSOrderedSame){                
-                NSString *screenname = [url queryArgumentForKey:@"screenname"]; 
-                NSString *service = @"AIM";
-                
-                AIAccount *account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE 
-                                                                                         toListObject:[[[AIListObject alloc] initWithUID:screenname 
-                                                                                                                               serviceID:service] 
-                                                                                                                            autorelease]];
-                AIListContact *contact = [[[AIListContact alloc] initWithUID:screenname 
-                                                                    accountID:[account uniqueObjectID]
-                                                                    serviceID:service]
-                                                                autorelease];
-                
-                [[adium contentController] openChatWithContact:contact];
+            if([[url host] caseInsensitiveCompare:@"goim"] == NSOrderedSame){                                
+                [self _openChatToContactWithName:[url queryArgumentForKey:@"screenname"] onService:@"AIM" withMessage:nil];
             }
             
         // DO NOT OPEN UNTIL XMAS...err...0.76
         }/*else if([[url scheme] isEqualToString:@"ymsgr"]){
             if([[url host] caseInsensitiveCompare:@"sendim"] == NSOrderedSame){
-                NSString *screenname = [url query]; 
-                NSString *service = @"Yahoo!";
-                
-                AIAccount *account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE 
-                                                                                         toListObject:[[[AIListObject alloc] initWithUID:screenname 
-                                                                                                                               serviceID:service] 
-                                                                                                                            autorelease]];
-                AIListContact *contact = [[[AIListContact alloc] initWithUID:screenname 
-                                                                    accountID:[account uniqueObjectID]
-                                                                    serviceID:service]
-                                                                autorelease];
-                
-                [[adium contentController] openChatWithContact:contact];
+                [self _openChatToContactWithName:[url query] onService:@"Yahoo!" withMessage:nil];
             }
         }*/
     }else{
@@ -81,6 +56,20 @@ TODO:
 - (void)uninstallPlugin
 {
 
+}
+
+- (void)_openChatToContactWithName:(NSString *)name onService:(NSString *)serviceIdentifier withMessage:(NSString *)body
+{
+    AIAccount *account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE 
+                                                                             toListObject:[[[AIListObject alloc] initWithUID:name 
+                                                                                                                   serviceID:serviceIdentifier] 
+                                                                                                                autorelease]];
+    AIListContact *contact = [[[AIListContact alloc] initWithUID:name 
+                                                        accountID:[account uniqueObjectID]
+                                                        serviceID:serviceIdentifier]
+                                                    autorelease];
+    
+    [[adium contentController] openChatWithContact:contact];
 }
 
 @end
