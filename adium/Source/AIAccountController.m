@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.60 2004/03/05 23:50:33 adamiser Exp $
+// $Id: AIAccountController.m,v 1.61 2004/03/06 04:43:04 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -656,20 +656,27 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 //Password Storage -----------------------------------------------------------------------------------------------------
 #pragma mark Password Storage
+- (NSString *)_accountNameForAccount:(AIAccount *)inAccount{
+	return([NSString stringWithFormat:@"%@.%@",[inAccount serviceID],[[inAccount UID] compactedString]]);
+}
+- (NSString *)_passKeyForAccount:(AIAccount *)inAccount{
+	return([NSString stringWithFormat:@"Adium.%@",[self _accountNameForAccount:inAccount]]);
+}
+
 //Save an account password
 - (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount
 {
     if(inPassword){
-        [AIKeychain putPasswordInKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount uniqueObjectID]]
-                                            account:[inAccount uniqueObjectID] password:inPassword];
+        [AIKeychain putPasswordInKeychainForService:[self _passKeyForAccount:inAccount]
+                                            account:[self _accountNameForAccount:inAccount] password:inPassword];
     }
 }
 
 //Fetches a saved account password (returns nil if no password is saved)
 - (NSString *)passwordForAccount:(AIAccount *)inAccount
 {
-    NSString	*password = [AIKeychain getPasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount uniqueObjectID]]
-                                                                  account:[inAccount uniqueObjectID]];
+    NSString	*password = [AIKeychain getPasswordFromKeychainForService:[self _passKeyForAccount:inAccount]
+                                                                  account:[self _accountNameForAccount:inAccount]];
     
     return(password);
 }
@@ -680,8 +687,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     NSString	*password;
     
     //check the keychain for this password
-    password = [AIKeychain getPasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount uniqueObjectID]]
-                                                     account:[inAccount uniqueObjectID]];
+    password = [AIKeychain getPasswordFromKeychainForService:[self _passKeyForAccount:inAccount]
+                                                     account:[self _accountNameForAccount:inAccount]];
     
     if(password && [password length] != 0){
         //Invoke the target right away
@@ -695,8 +702,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Forget a saved password
 - (void)forgetPasswordForAccount:(AIAccount *)inAccount
 {
-    [AIKeychain removePasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount uniqueObjectID]]
-											 account:[inAccount uniqueObjectID]];
+    [AIKeychain removePasswordFromKeychainForService:[self _passKeyForAccount:inAccount]
+											 account:[self _accountNameForAccount:inAccount]];
 }
 
 @end
