@@ -6080,6 +6080,7 @@
 				4BDC4F27066229D700C28445,
 				34D13A9406744689001F9B98,
 				3495ACE4068C738700EB5380,
+				4BA4F8DB069C84A300C496EA,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6537,6 +6538,7 @@
 				4BDC4F26066229D700C28445,
 				34D13A9506744689001F9B98,
 				3495ACE5068C738700EB5380,
+				4BA4F8DC069C84A300C496EA,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11864,6 +11866,8 @@
 				4B9AB61804D2C84700A8010A,
 				4BBF41F106611A15001D31E1,
 				4BBF41F206611A15001D31E1,
+				4BA4F8D9069C84A300C496EA,
+				4BA4F8DA069C84A300C496EA,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -13543,6 +13547,36 @@
 			path = "Plugins/Standard Message View/green.png";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BA4F8D9069C84A300C496EA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = MVMenuButton.h;
+			path = "Frameworks/AIUtilities Framework/MVMenuButton.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BA4F8DA069C84A300C496EA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = MVMenuButton.m;
+			path = "Frameworks/AIUtilities Framework/MVMenuButton.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BA4F8DB069C84A300C496EA = {
+			fileRef = 4BA4F8D9069C84A300C496EA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA4F8DC069C84A300C496EA = {
+			fileRef = 4BA4F8DA069C84A300C496EA;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BA5325D050FC5E800A8010A = {
 			fileEncoding = 30;
