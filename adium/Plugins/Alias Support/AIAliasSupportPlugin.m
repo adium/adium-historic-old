@@ -151,8 +151,8 @@
 	
 	//Apply the alias
 	[[inObject displayArrayForKey:@"Adium Alias"] setObject:inAlias withOwner:self];
-	[displayNameArray setObject:inAlias withOwner:self priorityLevel:High_Priority];
-
+	[displayNameArray setObject:inAlias withOwner:self priorityLevel:High_Priority]; // <---- Not setting the display array to null...
+	
 	//Get the displayName which is now active for the object
 	displayName = [displayNameArray objectValue];
 	
@@ -166,6 +166,7 @@
 				
 			case DISPLAY_NAME_SCREEN_NAME:
 				formattedUID = [inObject formattedUID];
+
 				if(!displayName || [displayName compare:formattedUID] == 0){
 					longDisplayName = displayName;
 				}else{
@@ -190,7 +191,7 @@
 				longDisplayName = nil;
 				break;
 		}
-		
+
 		//Apply the Long Display Name
 		[[inObject displayArrayForKey:@"Long Display Name"] setObject:longDisplayName withOwner:self];
 	}
