@@ -2,10 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Status:Group Available</key>
+	<true/>
 	<key>Status:Group Away</key>
-	<true/>
+	<false/>
 	<key>Status:Group Idle</key>
-	<true/>
+	<false/>
 	<key>Status:Sort by Idle Time</key>
 	<false/>
 	<key>Status:Resolve Alphabetically</key>
