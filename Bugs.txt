@@ -26,9 +26,7 @@
 - Extended status doesn't update on the list when it changes
 - Extended status sometimes draws outside the cell (and is therefore cropped)
     instead of increasing cell height
-- Horizontal sizing doesn't work properly - if window is on right edge, resize
-    leftward.  Add slider for max width and
-    allow sizing based on status.
+- Add slider for max width and allow sizing based on status.
 - Manual ordering is most likely screwed up, because I've turned off loading
     of old contacts on launch :)
 - Metacontacts display no service icon
