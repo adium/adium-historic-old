@@ -47,12 +47,13 @@
 	    [super raise];
 		
     }else if((!theName) || //Harmless
-			([theName isEqualToString:@"GIFReadingException"]) || //GIF reader sucks
-			([theName isEqualToString:@"NSPortTimeoutException"]) || //Harmless - it timed out for a reason
-			([theName isEqualToString:@"NSAccessibilityException"]) || //Harmless - one day we should figure out how we aren't accessible, but not today
-			([theName isEqualToString:@"NSImageCacheException"]) || //NSImage is silly
-			([theName isEqualToString:@"NSArchiverArchiveInconsistency"]) //Odd system hacks can lead to this one
-			/*([theName isEqualToString:@"NSInternalInconsistencyException"])*/) //Ignore NSAssert?
+			 ([theName isEqualToString:@"GIFReadingException"]) || //GIF reader sucks
+			 ([theName isEqualToString:@"NSPortTimeoutException"]) || //Harmless - it timed out for a reason
+			 ([theName isEqualToString:@"NSAccessibilityException"]) || //Harmless - one day we should figure out how we aren't accessible, but not today
+			 ([theName isEqualToString:@"NSImageCacheException"]) || //NSImage is silly
+			 ([theName isEqualToString:@"NSArchiverArchiveInconsistency"]) || //Odd system hacks can lead to this one
+			 ([theName isEqualToString:@"NSObjectInaccessibleException"]) //We don't use DO, but spell checking does; AppleScript execution requires multiple run loops, and the HIToolbox can get confused and try to spellcheck in the applescript thread. Silly Apple.
+			/*|| ([theName isEqualToString:@"NSInternalInconsistencyException"])*/) //Ignore NSAssert?
 	{
 	    [super raise];
 	
