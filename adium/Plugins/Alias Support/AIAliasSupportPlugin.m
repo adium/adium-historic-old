@@ -271,9 +271,9 @@
 //need to watch it as it changes as we can't catch the window closing
 -(void) controlTextDidChange:(NSNotification *)theNotification
 {
-    [(AIContactInfoWindowController *)[[(NSView*)contactView window] windowController] ignoreSelectionChanges:YES];
+    [(AIContactInfoWindowController *)[[[contactView view] window] windowController] ignoreSelectionChanges:YES];
     [self setAlias:nil];
-    [(AIContactInfoWindowController *)[[(NSView*)contactView window] windowController] ignoreSelectionChanges:NO];
+    [(AIContactInfoWindowController *)[[[contactView view] window] windowController] ignoreSelectionChanges:NO];
 }
 //Thanks to ratmice and MrBios from #gnustep for helping me with the problems in the above problems. -Tick
 
