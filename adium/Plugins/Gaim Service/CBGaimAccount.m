@@ -207,7 +207,7 @@
         BOOL newAway = ((buddy->uc & UC_UNAVAILABLE) != 0);
 		NSNumber *storedValue = [theContact statusObjectForKey:@"Away" withOwner:self];
         if(storedValue == nil || newAway != [storedValue boolValue]) {
-            [theContact setStatusObject:[NSNumber numberWithBool:newAway] withOwner:self forKey:@"Away" notify:YES];
+            [theContact setStatusObject:[NSNumber numberWithBool:newAway] withOwner:self forKey:@"Away" notify:NO];
 //            [modifiedKeys addObject:@"Away"];
         }
     }
