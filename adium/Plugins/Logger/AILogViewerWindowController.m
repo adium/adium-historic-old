@@ -193,7 +193,7 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     if(row >= 0 && row < [selectedLogArray count]){
         theLog = [selectedLogArray objectAtIndex:row];
     }
-    [selectedLogArray removeObjectAtIndex:row]; // this works well if there is no search active... otherwise the full list is stale
+    [selectedLogArray removeObjectAtIndex:row]; 
     [resultsLock unlock];
     
     [[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];
@@ -826,9 +826,11 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 		AILog   *theLog = [selectedLogArray objectAtIndex:row];
 		
 		if([identifier isEqualToString:@"To"]){
-			value = [theLog to];
+                    value = [theLog to]; 
 		}else if([identifier isEqualToString:@"From"]){
-			value = [theLog from];
+                    NSArray *broken = [[theLog from] componentsSeparatedByString:@"."];
+                    value = [NSString stringWithFormat:@"%@ (%@)",[broken objectAtIndex:1],[broken objectAtIndex:0]];
+
 		}else if([identifier isEqualToString:@"Date"]){
 			value = [dateFormatter stringForObjectValue:[theLog date]];
 		}
