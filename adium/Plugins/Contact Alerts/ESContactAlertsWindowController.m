@@ -194,4 +194,10 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context)
 	[button_edit setEnabled:validSelection];
 }
 
+//Delete the selection
+- (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
+{
+	[self deleteAlert:nil];
+}
+
 @end
