@@ -38,6 +38,13 @@
 #define DATE				AILocalizedString(@"Date",nil)
 #define CONTENT				AILocalizedString(@"Content",nil)
 
+#define HIDE_EMOTICONS				AILocalizedString(@"Hide Emoticons",nil)
+#define SHOW_EMOTICONS				AILocalizedString(@"Show Emoticons",nil)
+
+#define IMAGE_EMOTICONS_OFF			@"emoticonsOff"
+#define IMAGE_EMOTICONS_ON			@"emoticonsOn"
+
+
 @interface AILogViewerWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin;
 - (void)initLogFiltering;
@@ -55,6 +62,7 @@
 - (NSMenuItem *)_menuItemWithTitle:(NSString *)title forSearchMode:(LogSearchMode)mode;
 - (void)_logFilter:(NSString *)searchString searchID:(int)searchID mode:(LogSearchMode)mode;
 - (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID;
+- (void)installToolbar;
 @end
 
 int _sortStringWithKey(id objectA, id objectB, void *key);
@@ -104,7 +112,7 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     activeSearchID = 0;
     searching = NO;
     automaticSearch = NO;
-    filterEmoticons = YES;
+    showEmoticons = NO;
     activeSearchString = nil;
     displayedLog = nil;
     
@@ -394,7 +402,7 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 					//Add pretty formatting to links
 					logText = [logText stringByAddingFormattingForLinks];
                                         
-                                        if(filterEmoticons)
+                                        if(showEmoticons)
                                         {
                                             //Filter appropriately (replaces emoticons)
                                             logText = [[adium contentController] filterAttributedString:logText usingFilterType:AIFilterMessageDisplay direction:AIFilterOutgoing context:nil];
@@ -960,19 +968,22 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
                                    direction:(selectedColumn == tableColumn ? !sortDirection : sortDirection)];
 }
 
--(IBAction)toggleDrawer:(id)sender
+- (IBAction)toggleDrawer:(id)sender
 {
     [drawer_contacts toggle:sender];
 }
 
--(IBAction)toggleEmoticonFiltering:(id)sender
+- (IBAction)toggleEmoticonFiltering:(id)sender
 {
-    if([button_emoticonToggle state] == NSOnState){
-        filterEmoticons = YES;
-    }
-    else{
-        filterEmoticons = NO;
-    }
+	AILog	*log = displayedLog;
+	
+	showEmoticons = !showEmoticons;
+	[sender setLabel:(showEmoticons ? HIDE_EMOTICONS : SHOW_EMOTICONS)];
+	[sender setImage:[NSImage imageNamed:(showEmoticons ? IMAGE_EMOTICONS_ON : IMAGE_EMOTICONS_OFF) forClass:[self class]]];
+	
+	//Refresh the displayed log
+	[displayedLog autorelease]; displayedLog = nil;
+	[self displayLog:log];
 }
 
 
@@ -1029,12 +1040,12 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 	//Toggle Emoticons
 	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
 									withIdentifier:@"toggleemoticons"
-											 label:@"Show Emoticons"
+											 label:(showEmoticons ? HIDE_EMOTICONS : SHOW_EMOTICONS)
 									  paletteLabel:@"Show/Hide Emoticons"
 										   toolTip:@"Show or hide emoticons in logs"
 											target:self
 								   settingSelector:@selector(setImage:)
-									   itemContent:[NSImage imageNamed:@"archer" forClass:[self class]]
+									   itemContent:[NSImage imageNamed:(showEmoticons ? IMAGE_EMOTICONS_ON : IMAGE_EMOTICONS_OFF) forClass:[self class]]
 											action:@selector(toggleEmoticonFiltering:)
 											  menu:nil];
 	
