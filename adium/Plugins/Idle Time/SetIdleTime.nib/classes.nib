@@ -1,0 +1,18 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {cancel = id; setIdle = id; unIdle = id; }; 
+            CLASS = IdleTimeWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                accountPopup = NSPopUpButton; 
+                "text_SetIdleDays" = NSTextField; 
+                "text_SetIdleHours" = NSTextField; 
+                "text_SetIdleMinutes" = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}
