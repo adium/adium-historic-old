@@ -26,10 +26,9 @@
 //Preference Categories
 typedef enum {
 	AIPref_General = 0,
-    AIPref_ContactList,
+	AIPref_Appearance,
     AIPref_Messages,
 	AIPref_Events,
-    AIPref_Dock,
     AIPref_Emoticons,    
 	AIPref_FileTransfer,
     AIPref_Advanced
