@@ -70,9 +70,10 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
 
 - (void)activateAdium:(id)sender
 {
-    //Go go gadget Adium!
     [NSApp activateIgnoringOtherApps:YES];
+    [NSApp arrangeInFront:nil];
 }
+
 
 //AccountMenuPlugin --------------------------------------------------------
 #pragma mark AccountMenuPlugin
