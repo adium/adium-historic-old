@@ -185,6 +185,21 @@ extern void* objc_getClass(const char *name);
     return(YES);
 }
 
+// Add a group to this account
+- (BOOL)addServerGroup:(NSString *)inGroup
+{
+    return(YES);
+}
+
+- (BOOL)removeServerGroup:(NSString *)inGroup
+{
+    return(YES);
+}
+
+- (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName
+{
+    return(YES);
+}
 
 
 

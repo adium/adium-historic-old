@@ -69,7 +69,7 @@
                         temporary:NO];
 
     }else if([inObject isKindOfClass:[AIEditorListGroup class]]){
-        //Not yet
+        [account addServerGroup:[inObject UID]];
         
     }
 }
@@ -78,10 +78,13 @@
 - (void)deleteObject:(AIEditorListObject *)inObject
 {
     if([inObject isKindOfClass:[AIEditorListHandle class]]){
-        [account removeHandleWithUID:[inObject UID]];
+        AIServiceType	*serviceType = [[account service] handleServiceType];
+
+        [account removeHandleWithUID:[serviceType filterUID:[(AIEditorListHandle *)inObject UID]]];
         
     }else if([inObject isKindOfClass:[AIEditorListGroup class]]){
-        //Not yet
+        [account removeServerGroup:[inObject UID]];
+
     }
 }
 
@@ -89,9 +92,10 @@
 - (void)renameObject:(AIEditorListObject *)inObject to:(NSString *)newName
 {
     if([inObject isKindOfClass:[AIEditorListHandle class]]){
-        NSString	*handleUID = [[inObject UID] retain];
+        AIServiceType	*serviceType = [[account service] handleServiceType];
+        NSString	*handleUID = [[[serviceType filterUID:[(AIEditorListHandle *)inObject UID]] retain] autorelease];
         NSString	*handleGroup = [[(AIEditorListHandle *)inObject containingGroup] UID];
-
+        
         //Remove the handle, and re-add it with the new name
         [account removeHandleWithUID:handleUID];
         [account addHandleWithUID:handleUID
@@ -99,7 +103,8 @@
                         temporary:NO];
 
     }else if([inObject isKindOfClass:[AIEditorListGroup class]]){
-        //Not yet
+        [account renameServerGroup:[inObject UID] to:newName];
+
     }
 }
 
@@ -107,7 +112,8 @@
 - (void)moveObject:(AIEditorListObject *)inObject toGroup:(AIEditorListGroup *)inGroup
 {
     if([inObject isKindOfClass:[AIEditorListHandle class]]){
-        NSString	*handleUID = [[inObject UID] retain];
+        AIServiceType	*serviceType = [[account service] handleServiceType];
+        NSString	*handleUID = [[[serviceType filterUID:[(AIEditorListHandle *)inObject UID]] retain] autorelease];
 
         //Remove the handle, and re-add it into the correct group
         [account removeHandleWithUID:handleUID];

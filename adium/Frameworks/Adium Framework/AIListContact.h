@@ -31,6 +31,7 @@
 - (void)addHandle:(AIHandle *)inHandle;
 - (void)removeHandle:(AIHandle *)inHandle;
 - (void)removeAllHandles;
+- (int)numberOfHandles;
 
 //Content
 - (NSArray *)contentObjectArray;

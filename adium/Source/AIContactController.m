@@ -33,6 +33,7 @@
 - (void)_handle:(AIHandle *)inHandle removedFromAccount:(AIAccount *)inAccount;
 - (void)_handlesChangedForAccount:(AIAccount *)inAccount;
 - (void)processHandle:(AIHandle *)handle;
+- (AIListGroup *)processGetGroupNamed:(NSString *)serverGroup;
 - (void)breakDownContactList;
 - (void)breakDownGroup:(AIListGroup *)inGroup;
 @end
@@ -269,7 +270,6 @@
     NSString		*serverGroup = [handle serverGroup];
     AIServiceType	*serviceType = [[[handle account] service] handleServiceType];
     AIListContact	*contact;
-    AIListGroup		*group;
     
     //We first check if a contact for this handle alredy exists on our new contact list.
     //If it does, we'll simply add this handle to the existing contact.
@@ -288,29 +288,20 @@
             contact = [[AIListContact alloc] initWithUID:handleUID serviceID:[serviceType identifier]];
         }
 
-        //Make sure a group exists
-        group = [groupDict objectForKey:serverGroup];
-        //If no group exists in either location, we create a new one
-        if(!group){
-            //If the group does not exist, check for it in the abandoned group dict
-            group = [abandonedGroups objectForKey:serverGroup];
-            if(group){
-                [[group retain] autorelease]; //We need to temporarily hold onto the group, since removing it from the abandoned groups array will cause it to be released immediately.
-                [abandonedGroups removeObjectForKey:serverGroup]; //remove it from abandoned
-            }
-
-            //If it wasn't in the abandoned dict, we create
-            if(!group){
-                group = [[[AIListGroup alloc] initWithUID:serverGroup] autorelease];	//Create the group
-                [group setExpanded:YES/*[[dict objectForKey:serverGroup boolValue]]*/]; //Correctly expand/collapse the group
-            }
-
-            [contactList addObject:group];				//Add the group to our contact list
-            [groupDict setObject:group forKey:serverGroup];		//Add it to our group tracking dict
+        //Add the contact to the correct group
+        [[self processGetGroupNamed:serverGroup] addObject:contact];
+        
+    }else{
+        //If the contact exists, but IS EMPTY (contains no handles), we let this handle determine its placement
+        //This allows us to leave the empty contacts around when removing handles (Which is a good thing, since it preserves any content and interfaces associated with the contact)
+        //**Here we should completely re-evaluate the contact's position**
+        if([contact numberOfHandles] == 0 && [[[contact containingGroup] UID] compare:serverGroup] != 0){
+            [contact retain]; //Hold onto it temporarily
+            [[contact containingGroup] removeObject:contact]; //Remove from old group
+            [[self processGetGroupNamed:serverGroup] addObject:contact]; //Add to new group
+            [contact release];
         }
-
-        //Add the contact to the group
-        [group addObject:contact];
+        
     }
 
     //Add the handle to the contact
@@ -318,6 +309,35 @@
 
     //Call status changed so observers can update the contact's display
     [self handleStatusChanged:handle modifiedStatusKeys:nil];
+}
+
+- (AIListGroup *)processGetGroupNamed:(NSString *)serverGroup
+{
+    AIListGroup		*group;
+
+    //Search for an existing group
+    group = [groupDict objectForKey:serverGroup];
+
+    //If no group exists, we create a new one
+    if(!group){
+        //If the group does not exist, check for it in the abandoned group dict
+        group = [abandonedGroups objectForKey:serverGroup];
+        if(group){
+            [[group retain] autorelease]; //We need to temporarily hold onto the group, since removing it from the abandoned groups array will cause it to be released immediately.
+            [abandonedGroups removeObjectForKey:serverGroup]; //remove it from abandoned
+        }
+
+        //If it wasn't in the abandoned dict, we create
+        if(!group){
+            group = [[[AIListGroup alloc] initWithUID:serverGroup] autorelease];	//Create the group
+            [group setExpanded:YES/*[[dict objectForKey:serverGroup boolValue]]*/]; //Correctly expand/collapse the group
+        }
+
+        [contactList addObject:group];				//Add the group to our contact list
+        [groupDict setObject:group forKey:serverGroup];		//Add it to our group tracking dict
+    }
+
+    return(group);
 }
 // ------------------------------------------
 

@@ -92,8 +92,6 @@
                 NSString	*imagePath;
                 NSImage		*image;
 
-                NSLog(@"Load:%@",imageName);
-
                 imagePath = [folderPath stringByAppendingPathComponent:imageName];
                 image = [[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease];
 
@@ -294,9 +292,7 @@
     if(dockScale <= 0 || dockScale > 1.0){
         dockScale = 0.3;
     }
-    
-    NSLog(@"%0.2f",dockScale);
-    
+        
     return(dockScale);
 }
 

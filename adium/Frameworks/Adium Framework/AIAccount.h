@@ -49,6 +49,12 @@ typedef enum {
     // Remove a handle from this account
     - (BOOL)removeHandleWithUID:(NSString *)inUID;
 
+    // Add a group to this account
+    - (BOOL)addServerGroup:(NSString *)inGroup;
+    // Remove a group
+    - (BOOL)removeServerGroup:(NSString *)inGroup;
+    // Rename a group
+    - (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName;
 @end
 
 //Additional group management methods
