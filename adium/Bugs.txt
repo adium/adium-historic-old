@@ -27,7 +27,7 @@
 - MSN display names shorten incorrectly
 	MSN display names are always shortened to the same length, regardless of the
 	contact list's current width.
-	
+
 - User icons occasionally display upside-down
 	We cannot find a pattern to when or why this happens
 
@@ -50,7 +50,10 @@
 - Initial message events
 
 - Emoticons don't display properly in status messages (away messages) inside message views.
-	
+
+- Messaging the same person from two different accounts is confusing and
+  problematic.
+
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
 //------------------------------------------------------------------------------------
@@ -65,13 +68,13 @@
 - [Yahoo! Japan] Encoding problems
 	Japanese isn't being sent properly.  I would guess this limits the usefulness
 	of the protocol ;) - Fixed for Gaim 0.79
-	
+
 - [AIM / Jabber] File transfer limitations
 	File transfers often fail to navigate firewalls and routers
 
 - [Yahoo] File transfer limitations
 	Files over 1 MB in size fail to send
-	
+
 - [GaduGadu] Contacts not saving to the server-list
 
 
@@ -82,14 +85,14 @@
 	The two included styles with problems are Smooth Operator
 
 - Webkit styles must support multi-line status messages
-	The included style with problems is Smooth Operator 
+	The included style with problems is Smooth Operator
 
 - Bottom alignment issues
 	The simple message style has a bottom alignment issue.  Send a few messages, but
 	not enough to make the scrollbar visible, then type a two line message into the
 	entry field.  The message view will incorrectly render extra bottom margin.
 
-- MSN Emoticon key equivalents 
+- MSN Emoticon key equivalents
 	The key equivelants for MSN's blush emoticon do not include :$.  Other emoticons
 	may be incorrect.
 
@@ -123,7 +126,7 @@
 - Changing timezone doesn't update time stamps immediately (I'm not surprised, but
 	this would be cool)
 - Messages with invalid looking HTML <tags> received via jabber (from ICQ user over
-	transport), the invalid tags are being eaten? (Our HTML decoder isn't eating them, is libgaim?) 
+	transport), the invalid tags are being eaten? (Our HTML decoder isn't eating them, is libgaim?)
 - We aren't fetching the display names of some ICQ users when over AIM?
 	(They still show up in the info, apparently)
 - AIM Passwords with question marks in them prevent libgaim from connecting?
