@@ -16,6 +16,8 @@
 	BOOL			drawsGradient;
 	BOOL			ignoresFocus;
 	BOOL			isHighlighted;
+	
+	NSSize			maxSize;
 }
 
 /*
@@ -42,5 +44,12 @@
 	 */
 - (void)setIgnoresFocus:(BOOL)inIgnoresFocus;
 - (BOOL)ignoresFocus;
+
+/*
+ * @brief Set the maximum image size
+ *
+ * A 0 width or height indicates no maximum. The default is NSZeroSize, no maximum besides the cell bounds.
+ */
+- (void)setMaxSize:(NSSize)inMaxSize;
 
 @end
