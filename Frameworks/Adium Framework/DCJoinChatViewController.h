@@ -20,4 +20,11 @@
 - (void)configureForAccount:(AIAccount *)inAccount;
 - (void)joinChatWithAccount:(AIAccount *)inAccount;
 
+- (void)doJoinChatWithName:(NSString *)inName
+				 onAccount:(AIAccount *)inAccount
+		  chatCreationInfo:(NSDictionary *)inInfo 
+		  invitingContacts:(NSArray *)contactsToInvite
+	withInivitationMessage:(NSString *)invitationMessage;
+- (NSArray *)contactsFromNamesSeparatedByCommas:(NSString *)namesSeparatedByCommas onAccount:(AIAccount *)inAccount;
+
 @end
