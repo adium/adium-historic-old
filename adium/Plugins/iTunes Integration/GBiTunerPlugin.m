@@ -23,6 +23,7 @@
 @end
 
 int _scriptTitleSort(id scriptA, id scriptB, void *context);
+int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 
 @implementation GBiTunerPlugin
 
@@ -179,6 +180,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	
 	//Sort the scripts
 	[scriptArray sortUsingFunction:_scriptTitleSort context:nil];
+	[flatScriptArray sortUsingFunction:_scriptKeywordLengthSort context:nil];
 	
 	//Build the menu
 	[scriptMenu release]; scriptMenu = [[NSMenu alloc] initWithTitle:SCRIPTS_MENU_NAME];
@@ -215,6 +217,24 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 	}
 	
 	return(result);
+}
+
+//Sort by descending length so the longest keywords are at the beginning of the array
+int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
+{
+	NSComparisonResult result;
+	
+	unsigned int lengthA = [(NSString *)[scriptA objectForKey:@"Keyword"] length];
+	unsigned int lengthB = [(NSString *)[scriptB objectForKey:@"Keyword"] length];
+	if (lengthA > lengthB){
+		result = NSOrderedAscending;
+	}else if (lengthA < lengthB){
+		result = NSOrderedDescending;
+	}else{
+		result = NSOrderedSame;
+	}
+	
+	return result;
 }
 
 //Append menu items for the scripts to a menu; the array scripts must already have been 
