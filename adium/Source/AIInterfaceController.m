@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.72 2004/06/28 03:27:30 evands Exp $
+// $Id: AIInterfaceController.m,v 1.73 2004/06/28 03:37:55 evands Exp $
 
 #import "AIInterfaceController.h"
 
@@ -51,8 +51,6 @@
     flashObserverArray = nil;
     flashTimer = nil;
     flashState = 0;
-    
-#warning [owner registerEventNotification:Interface_ErrorMessageReceived displayName:@"Error"];
 }
 
 - (void)finishIniting
