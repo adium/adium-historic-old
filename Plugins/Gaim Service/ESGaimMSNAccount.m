@@ -320,16 +320,6 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	}
 }
 
-#pragma mark Contact List Menu Items
-- (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
-{
-	if((strcmp(label, "Initiate Chat") == 0) || (strcmp(label, "Initiate _Chat") == 0)){
-		return([NSString stringWithFormat:AILocalizedString(@"Initiate Multiuser Chat with %@",nil),[inContact formattedUID]]);
-	}
-
-	return([super titleForContactMenuLabel:label forContact:inContact]);
-}
-
 /*
  * @brief Return the gaim status type to be used for a status
  *
@@ -384,6 +374,16 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
 	
 	return gaimStatusType;
+}
+
+#pragma mark Contact List Menu Items
+- (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
+{
+	if((strcmp(label, "Initiate Chat") == 0) || (strcmp(label, "Initiate _Chat") == 0)){
+		return([NSString stringWithFormat:AILocalizedString(@"Initiate Multiuser Chat with %@",nil),[inContact formattedUID]]);
+	}
+	
+	return([super titleForContactMenuLabel:label forContact:inContact]);
 }
 
 /*
