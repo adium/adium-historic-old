@@ -15,6 +15,23 @@
 
 @implementation NSImage (ESImageAdditions)
 
+// Returns an image from the owners bundle with the specified name
++ (NSImage *)imageNamed:(NSString *)name forClass:(Class)inClass
+{
+    NSBundle	*ownerBundle;
+    NSString	*imagePath;
+    NSImage	*image;
+	
+    //Get the bundle
+    ownerBundle = [NSBundle bundleForClass:inClass];
+	
+    //Open the image
+    imagePath = [ownerBundle pathForImageResource:name];    
+    image = [[NSImage alloc] initWithContentsOfFile:imagePath];
+	
+    return([image autorelease]);
+}
+
 - (NSData *)JPEGRepresentation
 {
     NSBitmapImageRep *imageRep = [[[NSBitmapImageRep alloc] initWithData:[self TIFFRepresentation]] autorelease];

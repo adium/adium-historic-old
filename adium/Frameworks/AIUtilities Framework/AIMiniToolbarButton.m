@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIMiniToolbarButton.h"
-#import "AIImageUtilities.h"
 #import "AIMiniToolbar.h"
 #import "AIAnimatedFloater.h"
 #import "AIMiniToolbarCenter.h"

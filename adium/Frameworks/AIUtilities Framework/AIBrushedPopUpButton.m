@@ -26,21 +26,21 @@
 
     if([[self cell] controlSize] != NSMiniControlSize){
         //Preload some images
-        popUpRolloverCaps = [[AIImageUtilities imageNamed:@"PopUpRollover_Caps" forClass:[self class]] retain];
-        popUpRolloverMiddle = [[AIImageUtilities imageNamed:@"PopUpRollover_Middle" forClass:[self class]] retain];
-        popUpPressedCaps = [[AIImageUtilities imageNamed:@"PopUpPressed_Caps" forClass:[self class]] retain];
-        popUpPressedMiddle = [[AIImageUtilities imageNamed:@"PopUpPressed_Middle" forClass:[self class]] retain];
-        popUpTriangle = [[AIImageUtilities imageNamed:@"PopUpArrow" forClass:[self class]] retain];
-        popUpTriangleWhite = [[AIImageUtilities imageNamed:@"PopUpArrowWhite" forClass:[self class]] retain];
+        popUpRolloverCaps = [[NSImage imageNamed:@"PopUpRollover_Caps" forClass:[self class]] retain];
+        popUpRolloverMiddle = [[NSImage imageNamed:@"PopUpRollover_Middle" forClass:[self class]] retain];
+        popUpPressedCaps = [[NSImage imageNamed:@"PopUpPressed_Caps" forClass:[self class]] retain];
+        popUpPressedMiddle = [[NSImage imageNamed:@"PopUpPressed_Middle" forClass:[self class]] retain];
+        popUpTriangle = [[NSImage imageNamed:@"PopUpArrow" forClass:[self class]] retain];
+        popUpTriangleWhite = [[NSImage imageNamed:@"PopUpArrowWhite" forClass:[self class]] retain];
 
     }else{
         //Preload some images
-        popUpRolloverCaps = [[AIImageUtilities imageNamed:@"SmallPopUpRollover_Caps" forClass:[self class]] retain];
-        popUpRolloverMiddle = [[AIImageUtilities imageNamed:@"SmallPopUpRollover_Middle" forClass:[self class]] retain];
-        popUpPressedCaps = [[AIImageUtilities imageNamed:@"SmallPopUpPressed_Caps" forClass:[self class]] retain];
-        popUpPressedMiddle = [[AIImageUtilities imageNamed:@"SmallPopUpPressed_Middle" forClass:[self class]] retain];
-        popUpTriangle = [[AIImageUtilities imageNamed:@"SmallPopUpArrow" forClass:[self class]] retain];
-        popUpTriangleWhite = [[AIImageUtilities imageNamed:@"SmallPopUpArrowWhite" forClass:[self class]] retain];
+        popUpRolloverCaps = [[NSImage imageNamed:@"SmallPopUpRollover_Caps" forClass:[self class]] retain];
+        popUpRolloverMiddle = [[NSImage imageNamed:@"SmallPopUpRollover_Middle" forClass:[self class]] retain];
+        popUpPressedCaps = [[NSImage imageNamed:@"SmallPopUpPressed_Caps" forClass:[self class]] retain];
+        popUpPressedMiddle = [[NSImage imageNamed:@"SmallPopUpPressed_Middle" forClass:[self class]] retain];
+        popUpTriangle = [[NSImage imageNamed:@"SmallPopUpArrow" forClass:[self class]] retain];
+        popUpTriangleWhite = [[NSImage imageNamed:@"SmallPopUpArrowWhite" forClass:[self class]] retain];
         
     }
 

@@ -303,7 +303,7 @@
     if (![badgeName isEqualToString:@""]) {
         NSImage     *tempImage;
         
-        tempImage = [[AIImageUtilities imageNamed:badgeName forClass:[self class]] retain];
+        tempImage = [[NSImage imageNamed:badgeName forClass:[self class]] retain];
         //tempImage = [[NSImage alloc] initWithContentsOfFile:
         //    [[NSBundle bundleForClass:[self class]] pathForResource:badgeName ofType:@"png"]];
         [buddyIconBadge release];

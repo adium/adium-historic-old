@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.38 2004/03/16 04:06:10 dchoby98 Exp $
+// $Id: AIPreferenceWindowController.m,v 1.39 2004/03/26 03:42:57 adamiser Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -252,7 +252,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
                                            toolTip:label
                                             target:self
                                    settingSelector:@selector(setImage:)
-                                               itemContent:[AIImageUtilities imageNamed:[NSString stringWithFormat:@"pref%@",identifier] forClass:[self class]]
+                                               itemContent:[NSImage imageNamed:[NSString stringWithFormat:@"pref%@",identifier] forClass:[self class]]
                                             action:@selector(selectCategory:)
                                               menu:NULL];
         }

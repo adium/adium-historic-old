@@ -41,10 +41,10 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
 //            statusItemWithLength:NSSquareStatusItemLength] retain];
 //    
 //        [statusItem setHighlightMode:YES];
-//        [statusItem setImage:[AIImageUtilities imageNamed:@"adium.png" forClass:[self class]]];
+//        [statusItem setImage:[NSImage imageNamed:@"adium.png" forClass:[self class]]];
 //        if([NSApp isOnPantherOrBetter])
 //        {
-//            [statusItem setAlternateImage:[AIImageUtilities imageNamed:@"adiumHighlight.png" forClass:[self class]]];
+//            [statusItem setAlternateImage:[NSImage imageNamed:@"adiumHighlight.png" forClass:[self class]]];
 //        }
 //        
 //        //Create our menu
@@ -99,17 +99,17 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
 //        [item setRepresentedObject:[account retain]];
 //		
 //		if([[[account statusArrayForKey:@"Online"] objectWithOwner:account] boolValue]){
-//			[item setImage:[AIImageUtilities imageNamed:@"Account_Online.tiff" forClass:[self class]]];
+//			[item setImage:[NSImage imageNamed:@"Account_Online.tiff" forClass:[self class]]];
 //			[item setEnabled:YES];
 //		}else if([[[account statusArrayForKey:@"Connecting"] objectWithOwner:account] boolValue]){
-//			[item setImage:[AIImageUtilities imageNamed:@"Account_Connecting.tiff" forClass:[self class]]];
+//			[item setImage:[NSImage imageNamed:@"Account_Connecting.tiff" forClass:[self class]]];
 //			[item setEnabled:NO];
 //		}else if([[[account statusArrayForKey:@"Disconnecting"] objectWithOwner:account] boolValue]){
-//			[item setImage:[AIImageUtilities imageNamed:@"Account_Connecting.tiff" forClass:[self class]]];
+//			[item setImage:[NSImage imageNamed:@"Account_Connecting.tiff" forClass:[self class]]];
 //			[item setEnabled:NO];
 //			break;
 //		}else{
-//			[item setImage:[AIImageUtilities imageNamed:@"Account_Offline.tiff" forClass:[self class]]];
+//			[item setImage:[NSImage imageNamed:@"Account_Offline.tiff" forClass:[self class]]];
 //			[item setEnabled:YES];
 //		}
 //        

@@ -351,8 +351,8 @@
     [scrollView_accountList setAutoHideScrollBar:YES];
     
     //Configure our buttons
-    [button_newAccount setImage:[AIImageUtilities imageNamed:@"plus" forClass:[self class]]];
-    [button_deleteAccount setImage:[AIImageUtilities imageNamed:@"minus" forClass:[self class]]];
+    [button_newAccount setImage:[NSImage imageNamed:@"plus" forClass:[self class]]];
+    [button_deleteAccount setImage:[NSImage imageNamed:@"minus" forClass:[self class]]];
 	
 	//Keep an eye on list changes so we can update as necessary
     [[adium notificationCenter] addObserver:self
@@ -464,7 +464,7 @@
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     AIAccount   *account = [accountArray objectAtIndex:row];
-    NSImage		*image = [AIImageUtilities imageNamed:@"DefaultAccountIcon" forClass:[self class]];
+    NSImage		*image = [NSImage imageNamed:@"DefaultAccountIcon" forClass:[self class]];
 	NSString	*status = nil;
 	
 	//Update the 'connect' button's title to match it's action

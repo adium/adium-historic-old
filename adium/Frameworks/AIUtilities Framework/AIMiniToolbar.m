@@ -51,7 +51,7 @@
     itemIdentifierArray = nil;
     itemArray = nil;
     itemsRearranging = NO;
-    toolbarBackground = [[AIImageUtilities imageNamed:@"toolbar_Background" forClass:[self class]] retain];
+    toolbarBackground = [[NSImage imageNamed:@"toolbar_Background" forClass:[self class]] retain];
 
     //setup the toolbar view
     [self registerForDraggedTypes:[NSArray arrayWithObject:MINI_TOOLBAR_ITEM_DRAGTYPE]];
@@ -636,7 +636,7 @@
         puffOrigin.x -= puffSize.width / 2;
         puffOrigin.y -= puffSize.height / 2;
     
-        [AIAnimatedFloater animatedFloaterWithImage:[AIImageUtilities imageNamed:MINI_TOOLBAR_POOF forClass:[self class]] size:puffSize frames:5 delay:0.08  at:puffOrigin];
+        [AIAnimatedFloater animatedFloaterWithImage:[NSImage imageNamed:MINI_TOOLBAR_POOF forClass:[self class]] size:puffSize frames:5 delay:0.08  at:puffOrigin];
     }
 
     if(operation != NSDragOperationPrivate){

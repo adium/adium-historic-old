@@ -74,8 +74,8 @@
     previousRow = nil;
     
     //Cache our icons (temp?)
-    iconIncoming = [[AIImageUtilities imageNamed:@"blue" forClass:[self class]] retain];
-    iconOutgoing = [[AIImageUtilities imageNamed:@"green" forClass:[self class]] retain];
+    iconIncoming = [[NSImage imageNamed:@"blue" forClass:[self class]] retain];
+    iconOutgoing = [[NSImage imageNamed:@"green" forClass:[self class]] retain];
     
     //Configure our table view
     messageView = [[AIFlexibleTableView alloc] initWithFrame:NSZeroRect];

@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AICursorAdditions.h"
-#import "AIImageUtilities.h"
 
 @implementation NSCursor (AICursorAdditions)
 

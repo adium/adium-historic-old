@@ -27,8 +27,7 @@
     //Create our handle service type
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"AIM"
 													  description:@"AIM, AOL, and .Mac"
-															image:[AIImageUtilities imageNamed:@"LilYellowDuck"
-																					  forClass:[self class]]
+															image:[NSImage imageNamed:@"LilYellowDuck" forClass:[self class]]
 													caseSensitive:NO
 												allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@. "]
 												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@" "]

@@ -136,19 +136,19 @@
             //Update the 'connect / disconnect' menu item
 			
 			if([[account statusObjectForKey:@"Online"] boolValue]){
-				[targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Online" forClass:[self class]]];
+				[targetMenuItem setImage:[NSImage imageNamed:@"Account_Online" forClass:[self class]]];
 				[targetMenuItem setTitle:[ACCOUNT_DISCONNECT_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
 				[targetMenuItem setEnabled:YES];
 			}else if([[account statusObjectForKey:@"Connecting"] boolValue]){
-				[targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Connecting" forClass:[self class]]];
+				[targetMenuItem setImage:[NSImage imageNamed:@"Account_Connecting" forClass:[self class]]];
 				[targetMenuItem setTitle:[ACCOUNT_CONNECTING_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
 				[targetMenuItem setEnabled:NO];
 			}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
-				[targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Connecting" forClass:[self class]]];
+				[targetMenuItem setImage:[NSImage imageNamed:@"Account_Connecting" forClass:[self class]]];
 				[targetMenuItem setTitle:[ACCOUNT_DISCONNECTING_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
 				[targetMenuItem setEnabled:NO];
 			}else{
-				[targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Offline" forClass:[self class]]];
+				[targetMenuItem setImage:[NSImage imageNamed:@"Account_Offline" forClass:[self class]]];
 				[targetMenuItem setTitle:[ACCOUNT_CONNECT_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
 				[targetMenuItem setEnabled:YES];
 			}

@@ -65,7 +65,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 /*    AIMiniToolbarItem	*toolbarItem;
 
     toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"IdleTime"];
-    [toolbarItem setImage:[AIImageUtilities imageNamed:@"idle" forClass:[self class]]];
+    [toolbarItem setImage:[NSImage imageNamed:@"idle" forClass:[self class]]];
     [toolbarItem setTarget:self];
     [toolbarItem setAction:@selector(showManualIdleWindow:)];
     [toolbarItem setEnabled:YES];
