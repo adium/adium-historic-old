@@ -15,7 +15,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIColoredBoxView;
+@class AIColoredBoxView, AIPreferenceViewController;
+
+@protocol AIPreferenceViewControllerDelegate <NSObject>
+- (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject;
+@end
 
 @interface AIPreferenceViewController : NSObject {
     IBOutlet	NSView			*view_containerView;
@@ -28,10 +32,13 @@
     NSView	*contentView;
     
     int		desiredHeight;
+
+    id <AIPreferenceViewControllerDelegate>	delegate;
     
 }
 
 + (AIPreferenceViewController *)controllerWithName:(NSString *)inName categoryName:(NSString *)inCategoryName view:(NSView *)inView;
++ (AIPreferenceViewController *)controllerWithName:(NSString *)inName categoryName:(NSString *)inCategoryName view:(NSView *)inView delegate:(id <AIPreferenceViewControllerDelegate>)inDelegate;
 - (NSString *)name;
 - (NSView *)view;
 - (NSString *)categoryName;

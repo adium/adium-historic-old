@@ -102,6 +102,18 @@
     return(contentView);
 }
 
+//Configure the category for an object
+- (void)configureForObject:(id)inObject
+{
+    NSEnumerator		*enumerator;
+    AIPreferenceViewController	*view;
+
+    enumerator = [viewArray objectEnumerator];
+    while((view = [enumerator nextObject])){
+        [view configureForObject:inObject];
+    }
+}
+
 
 //Private ----------------------------------------------------------------------
 - (AIPreferenceCategory *)initWithName:(NSString *)inName image:(NSImage *)inImage

@@ -9,10 +9,10 @@
  
 #import "AIAccount.h"
 #import "AIPreferenceViewController.h"
-#import "AIContactInfoViewController.h"
 #import "AIPlugin.h"
 #import "AIServiceType.h"
 #import "AIContactHandle.h"
 #import "AIContactGroup.h"
 #import "AIContactObject.h"
 #import "AIContentMessage.h"
+#import "AIPreferenceCategory.h"

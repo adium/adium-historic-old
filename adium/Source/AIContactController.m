@@ -20,7 +20,6 @@
 #import "AIAccountController.h"
 #import "AIContactListEditorWindowController.h"
 #import "AIContactInfoWindowController.h"
-#import "AIContactInfoViewController.h"
 #import "AIPreferenceCategory.h"
 #import "AIOutOfSyncWindowController.h"
 
@@ -90,7 +89,7 @@
 }
 
 //Add a contact info view
-- (void)addContactInfoView:(AIContactInfoViewController *)inView
+- (void)addContactInfoView:(AIPreferenceViewController *)inView
 {
     [contactInfoCategory addView:inView];
 }

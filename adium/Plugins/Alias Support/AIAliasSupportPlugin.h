@@ -9,10 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <Adium/Adium.h>
 
-@interface AIAliasSupportPlugin : AIPlugin {
+@interface AIAliasSupportPlugin : AIPlugin <AIPreferenceViewControllerDelegate> {
     IBOutlet    NSView		*view_contactAliasInfoView;
+    IBOutlet	NSTextField	*textField_alias;
 
-    AIContactInfoViewController		*contactView;
+    AIPreferenceViewController		*contactView;
 }
+
+- (IBAction)setAlias:(id)sender;
 
 @end

@@ -237,7 +237,7 @@ typedef enum {
 - (void)registerHandleObserver:(id)inObserver;
 
 - (void)showInfoForContact:(AIContactHandle *)inContact;
-- (void)addContactInfoView:(AIContactInfoViewController *)inView;
+- (void)addContactInfoView:(AIPreferenceViewController *)inView;
 
 - (void)delayContactListUpdatesFor:(int)seconds;
 - (BOOL)contactListUpdatesDelayed;
