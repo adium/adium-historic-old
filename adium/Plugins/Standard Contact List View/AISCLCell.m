@@ -445,14 +445,15 @@
 	NSImage *image = [[[NSImage alloc] initWithSize:[inPath bounds].size] autorelease];
 	NSAffineTransform *trans = [NSAffineTransform transform];
 	NSPoint keepPoint = [inPath bounds].origin;
-	keepPoint.y += [inPath bounds].size.height;
-	[trans translateXBy:(-1.0f * [inPath bounds].origin.x) yBy:(-1.0f * [inPath bounds].origin.y)];
-	[inPath transformUsingAffineTransform:trans];
+	NSBezierPath *tempPath = [inPath copy];
+	keepPoint.y += [tempPath bounds].size.height;
+	[trans translateXBy:(-1.0f * [tempPath bounds].origin.x) yBy:(-1.0f * [tempPath bounds].origin.y)];
+	[tempPath transformUsingAffineTransform:trans];
 	[image lockFocus];
-	[inPath fill];
-	[self drawGradientWithFirstColor:color1 secondColor:color2 inRect:[inPath bounds]];
+	[tempPath fill];
+	[self drawGradientWithFirstColor:color1 secondColor:color2 inRect:[tempPath bounds]];
 	[image unlockFocus];
-	
+ 
 	[image compositeToPoint:keepPoint operation:NSCompositeSourceAtop];
 }
 
