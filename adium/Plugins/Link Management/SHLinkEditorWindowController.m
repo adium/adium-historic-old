@@ -163,6 +163,7 @@
 {
     NSMutableAttributedString   *tempURLString = nil;
     NSDictionary                *stringAttributes = nil;
+    NSRange                      subStringRange = NSMakeRange(0,0);
     
     //get our typing attribs if they exist
     if([inView respondsToSelector:@selector(typingAttributes)]){
@@ -177,8 +178,17 @@
         tempURLString = [[[NSMutableAttributedString alloc] initWithString:linkString] autorelease];
     }
     
+    
     //make it a link
-    [tempURLString addAttribute:NSLinkAttributeName value:urlString range:NSMakeRange(0,[tempURLString length])];
+    subStringRange = NSMakeRange(0,[tempURLString length]);
+    [tempURLString addAttribute:NSLinkAttributeName value:urlString range:subStringRange];
+    //make it look like a link
+    [tempURLString addAttribute:NSForegroundColorAttributeName
+                          value:[NSColor blueColor]
+                          range:subStringRange];
+    [tempURLString addAttribute:NSUnderlineStyleAttributeName
+                          value:[NSNumber numberWithInt:1]
+                          range:subStringRange];
 
     if(editLink){ //replace selected text if editing
         [[(NSTextView *)inView textStorage] replaceCharactersInRange:linkRange withAttributedString:tempURLString];
