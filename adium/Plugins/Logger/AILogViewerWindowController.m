@@ -432,7 +432,7 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     }
     
     //Set the indicator image in the newly selected column
-    [tableView_results setIndicatorImage:[NSImage imageNamed:(direction ? @"NSAscendingSortIndicator" : @"NSDescendingSortIndicator")]
+    [tableView_results setIndicatorImage:[NSImage imageNamed:(direction ? @"NSDescendingSortIndicator" : @"NSAscendingSortIndicator")]
                            inTableColumn:tableColumn];
     
     //Set the highlighted table column.
