@@ -55,7 +55,7 @@
         }
 
 		//Paragraph style for alignment and clipping
-		NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+		NSMutableParagraphStyle *style = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 		[style setAlignment:[self alignment]];
 		[style setLineBreakMode:NSLineBreakByTruncatingTail];
 
