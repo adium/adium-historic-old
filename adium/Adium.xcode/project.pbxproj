@@ -20421,7 +20421,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIColoredBoxView.m;
-			path = Source/AIColoredBoxView.m;
+			path = "Frameworks/AIUtilities Framework/AIColoredBoxView.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -20554,7 +20554,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			name = AIColoredBoxView.h;
-			path = Source/AIColoredBoxView.h;
+			path = "Frameworks/AIUtilities Framework/AIColoredBoxView.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
