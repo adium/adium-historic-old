@@ -35,7 +35,9 @@
 - (void)openInterface
 {
 	containers = [[NSMutableDictionary alloc] init];
+	delayedContainerShowArray = [[NSMutableArray alloc] init];
 	uniqueContainerNumber = 0;
+	applicationIsHidden = NO;
 
 	//Preferences
 #warning clean up used
@@ -46,7 +48,6 @@
 //	preferenceMessageAdvController = [[ESDualWindowMessageAdvancedPreferences preferencePane] retain];
 
 	//Watch Adium hide and unhide (Used for better window opening behavior)
-	delayedContainerShowArray = [[NSMutableArray alloc] init];
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(applicationDidHide:)
 												 name:NSApplicationDidHideNotification
@@ -99,10 +100,10 @@
 	[container removeTabViewItem:messageTab];
 	[[chat statusDictionary] removeObjectForKey:@"MessageTabViewItem"];
 
-	//Close the container
-	if([container containerIsEmpty]){
-		[self closeContainer:container];
-	}
+//	//Close the container
+//	if([container containerIsEmpty]){
+//		[self closeContainer:container];
+//	}
 }
 
 //Make a chat active
@@ -190,7 +191,8 @@
 		[containers setObject:container forKey:containerName];
 		
 		if(!applicationIsHidden){
-			[container showWindow:nil];
+			//If another chat is open, open behind it
+			[container showWindowInFront:!([[adium interfaceController] activeChat])];
 		}else{
 			[delayedContainerShowArray addObject:container];
 		}
@@ -205,49 +207,32 @@
 	[container closeWindow:nil];
 }
 
+//A container did close
 - (void)containerDidClose:(AIMessageWindowController *)container
 {
 	NSString	*key = [[containers allKeysForObject:container] lastObject];
 	if(key) [containers removeObjectForKey:key];
 }
 
-
-
+//Adium hid
 - (void)applicationDidHide:(NSNotification *)notification
 {
 	applicationIsHidden = YES;
-	
-	
-	NSLog(@"hide");
 }
 
+//Adium unhid
 - (void)applicationDidUnhide:(NSNotification *)notification
 {
-	applicationIsHidden = NO;
-
-	
-	NSEnumerator	*enumerator = [delayedContainerShowArray objectEnumerator];
+	NSEnumerator				*enumerator;
 	AIMessageWindowController	*container;
-	
-	while(container = [enumerator nextObject]){
-		[container showWindow:nil];
-	}
-	
+
+	//Open any containers that should have opened while we were hidden
+	enumerator = [delayedContainerShowArray objectEnumerator];
+	while(container = [enumerator nextObject]) [container showWindowInFront:YES];
+
 	[delayedContainerShowArray removeAllObjects];
-	
-	
-	NSLog(@"show");
-	
+	applicationIsHidden = NO;
 }
-
-
-
-
-
-
-
-
-
 
 
 //Custom Tab Management ------------------------------------------------------------------------------------------------

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.79 2004/07/13 18:53:14 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.80 2004/07/13 20:31:47 adamiser Exp $
 
 #import "AIInterfaceController.h"
 #import "AIContactListWindowController.h"
@@ -247,6 +247,12 @@ arrangeChats = YES;
 - (void)closeChat:(AIChat *)inChat
 {
     [interface closeChat:inChat];
+}
+
+//Active chat
+- (AIChat *)activeChat
+{
+	return(activeChat);
 }
 
 //Returns an array of open chats (cached, so call as frequently as desired)
@@ -1099,12 +1105,6 @@ arrangeChats = YES;
 		return(YES);
 	}
 }
-
-
-
-
-
-
 
 @end
 
