@@ -37,6 +37,7 @@ typedef struct _GaimConversationUiOps GaimConversationUiOps;
 typedef struct _GaimConversation      GaimConversation;
 typedef struct _GaimConvIm            GaimConvIm;
 typedef struct _GaimConvChat          GaimConvChat;
+typedef struct _GaimConvChatBuddy     GaimConvChatBuddy;
 
 /**
  * A type of conversation.
@@ -115,8 +116,21 @@ typedef enum
 	GAIM_MESSAGE_NICK      = 0x0020, /**< Contains your nick.      */
 	GAIM_MESSAGE_NO_LOG    = 0x0040, /**< Do not log.              */
 	GAIM_MESSAGE_WHISPER   = 0x0080, /**< Whispered message.       */
-	GAIM_MESSAGE_ERROR     = 0x0200  /**< Error message.           */
+	GAIM_MESSAGE_ERROR     = 0x0200, /**< Error message.           */
+	GAIM_MESSAGE_DELAYED   = 0x0400  /**< Delayed message.         */
 } GaimMessageFlags;
+
+/**
+* Flags applicable to users in Chats.
+ */
+typedef enum
+{
+	GAIM_CBFLAGS_NONE          = 0x0000, /**< No flags                     */
+	GAIM_CBFLAGS_VOICE         = 0x0001, /**< Voiced user or "Participant" */
+	GAIM_CBFLAGS_HALFOP        = 0x0002, /**< Half-op                      */
+	GAIM_CBFLAGS_OP            = 0x0004, /**< Channel Op or Moderator      */
+	GAIM_CBFLAGS_FOUNDER       = 0x0008  /**< Channel Founder              */
+} GaimConvChatBuddyFlags;
 
 #include <libgaim/account.h>
 #include <libgaim/log.h>
@@ -175,6 +189,7 @@ struct _GaimConversationUiOps
 	                         const char *old_name, const char *new_name);
 	void (*chat_remove_user)(GaimConversation *conv, const char *user);
 	void (*chat_remove_users)(GaimConversation *conv, GList *users);
+	void (*chat_update_user)(GaimConversation *conv, const char *user);
 
 	void (*update_progress)(GaimConversation *conv, float percent);
 
@@ -228,6 +243,15 @@ struct _GaimConvChat
 	char *nick;                      /**< Your nick in this chat.       */
 
 	gboolean left;                   /**< We left the chat and kept the window open */
+};
+
+/**
+ * Data for "Chat Buddies"
+ */
+struct _GaimConvChatBuddy
+{
+	char *name;                      /**< The name                      */
+	GaimConvChatBuddyFlags flags;    /**< Flags (ops, voice etc.)       */
 };
 
 /**
@@ -977,6 +1001,21 @@ void gaim_conv_im_write(GaimConvIm *im, const char *who,
 						time_t mtime);
 
 /**
+ * Presents an IM-error to the user
+ * 
+ * This is a helper function to find a conversation, write an error to it, and
+ * raise the window.  If a conversation with this user doesn't already exist,
+ * the function will return FALSE and the calling function can attempt to present
+ * the error another way (gaim_notify_error, most likely)
+ *
+ * @param who     The user this error is about
+ * @param account The account this error is on
+ * @param what    The error
+ * @return        TRUE if the error was presented, else FALSE
+ */
+gboolean gaim_conv_present_error(const char *who, GaimAccount *account, const char *what);
+
+/**
  * Sends a message to this IM conversation.
  *
  * @param im      The IM.
@@ -1153,9 +1192,10 @@ void gaim_conv_chat_send(GaimConvChat *chat, const char *message);
  * @param chat      The chat.
  * @param user      The user to add.
  * @param extra_msg An extra message to display with the join message.
+ * @param flags     The users flags
  */
 void gaim_conv_chat_add_user(GaimConvChat *chat, const char *user,
-							 const char *extra_msg);
+							 const char *extra_msg, GaimConvChatBuddyFlags flags);
 
 /**
  * Adds a list of users to a chat.
@@ -1165,8 +1205,9 @@ void gaim_conv_chat_add_user(GaimConvChat *chat, const char *user,
  *
  * @param chat      The chat.
  * @param users     The list of users to add.
+ * @param flags     The list of flags for each user.
  */
-void gaim_conv_chat_add_users(GaimConvChat *chat, GList *users);
+void gaim_conv_chat_add_users(GaimConvChat *chat, GList *users, GList *flags);
 
 /**
  * Renames a user in a chat.
@@ -1199,6 +1240,37 @@ void gaim_conv_chat_remove_user(GaimConvChat *chat, const char *user,
  */
 void gaim_conv_chat_remove_users(GaimConvChat *chat, GList *users,
 								 const char *reason);
+
+/**
+ * Finds a user in a chat
+ *
+ * @param chat   The chat.
+ * @param user   The user to look for.
+ *
+ * @return TRUE if the user is in the chat, FALSE if not
+ */
+gboolean gaim_conv_chat_find_user(GaimConvChat *chat, const char *user);
+
+/**
+ * Set a users flags in a chat
+ *
+ * @param chat   The chat.
+ * @param user   The user to update.
+ * @param flags  The new flags.
+ */
+void gaim_conv_chat_user_set_flags(GaimConvChat *chat, const char *user,
+								   GaimConvChatBuddyFlags flags);
+
+/**
+ * Get the flags for a user in a chat
+ *
+ * @param chat   The chat.
+ * @param user   The user to find the flags for
+ *
+ * @return The flags for the user
+ */
+GaimConvChatBuddyFlags gaim_conv_chat_user_get_flags(GaimConvChat *chat,
+													 const char *user);
 
 /**
  * Clears all users from a chat.
@@ -1251,6 +1323,41 @@ void gaim_conv_chat_left(GaimConvChat *chat);
  * we're still there.
  */
 gboolean gaim_conv_chat_has_left(GaimConvChat *chat);
+
+/**
+ * Creates a new chat buddy
+ *
+ * @param name The name.
+ * @param flags The flags.
+ *
+ * @return The new chat buddy
+ */
+GaimConvChatBuddy *gaim_conv_chat_cb_new(const char *name,
+										GaimConvChatBuddyFlags flags);
+
+/**
+ * Find a chat buddy in a chat
+ *
+ * @param chat The chat.
+ * @param name The name of the chat buddy to find.
+ */
+GaimConvChatBuddy *gaim_conv_chat_cb_find(GaimConvChat *chat, const char *name);
+
+/**
+ * Get the name of a chat buddy
+ *
+ * @param cb    The chat buddy.
+ *
+ * @return The name of the chat buddy.
+ */
+const char *gaim_conv_chat_cb_get_name(GaimConvChatBuddy *cb);
+
+/**
+ * Destroys a chat buddy
+ *
+ * @param cb The chat buddy to destroy
+ */
+void gaim_conv_chat_cb_destroy(GaimConvChatBuddy *cb);
 
 /*@}*/
 

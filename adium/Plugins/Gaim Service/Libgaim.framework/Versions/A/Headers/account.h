@@ -200,14 +200,6 @@ void gaim_account_set_user_info(GaimAccount *account, const char *user_info);
 void gaim_account_set_buddy_icon(GaimAccount *account, const char *icon);
 
 /**
- * Sets the account's protocol.
- *
- * @param account  The account.
- * @param protocol The protocol.
- */
-void gaim_account_set_protocol(GaimAccount *account, GaimProtocol protocol);
-
-/**
  * Sets the account's protocol ID.
  *
  * @param account     The account.
@@ -383,15 +375,6 @@ const char *gaim_account_get_user_info(const GaimAccount *account);
 const char *gaim_account_get_buddy_icon(const GaimAccount *account);
 
 /**
- * Returns the account's protocol.
- *
- * @param account The account.
- *
- * @return The protocol.
- */
-GaimProtocol gaim_account_get_protocol(const GaimAccount *account);
-
-/**
  * Returns the account's protocol ID.
  *
  * @param account The account.
@@ -552,6 +535,9 @@ void gaim_account_destroy_log(GaimAccount *account);
 
 /**
  * Loads the accounts.
+ *
+ * @return TRUE if accounts.xml was loaded successfully.  Otherwise
+ *         FALSE is returned.
  */
 gboolean gaim_accounts_load();
 

@@ -163,7 +163,7 @@ struct _GaimBuddyList {
 /**
  * Buddy list UI operations.
  *
- * Any UI representing a buddy list must assign a filled-out gaim_blist_window_ops
+ * Any UI representing a buddy list must assign a filled-out GaimBlistUiOps
  * structure to the buddy list core.
  */
 struct _GaimBlistUiOps
@@ -527,18 +527,33 @@ void gaim_blist_remove_group(GaimGroup *group);
  * Returns the alias of a buddy.
  *
  * @param buddy   The buddy whose name will be returned.
- * @return        The alias (if set), server alias (if option is set), or NULL.
+ * @return        The alias (if set), server alias (if set and preference
+ *                is to display server aliases), or NULL.
  */
-const char *gaim_get_buddy_alias_only(GaimBuddy *buddy);
+const char *gaim_buddy_get_alias_only(GaimBuddy *buddy);
 
 
 /**
- * Returns the correct name to display for a buddy.
+ * Returns the correct name to display for a buddy, taking the contact alias
+ * into account. In order of precedence: the buddy's alias; the buddy's
+ * contact alias; the buddy's server alias; the buddy's user name.
+ *
+ * @param buddy  The buddy whose name will be returned
+ * @return       The appropriate name or alias, or NULL.
+ *
+ */
+const char *gaim_buddy_get_contact_alias(GaimBuddy *buddy);
+
+
+/**
+ * Returns the correct name to display for a buddy. In order of precedence:
+ * the buddy's alias; the buddy's server alias; the buddy's contact alias;
+ * the buddy's user name.
  *
  * @param buddy   The buddy whose name will be returned.
- * @return        The alias (if set), server alias (if option is set), screenname, or "Unknown"
+ * @return        The appropriate name or alias, or NULL
  */
-const char *gaim_get_buddy_alias(GaimBuddy *buddy);
+const char *gaim_buddy_get_alias(GaimBuddy *buddy);
 
 /**
  * Returns the correct name to display for a blist chat.

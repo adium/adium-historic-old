@@ -3,7 +3,9 @@
  *
  * gaim
  *
- * Copyright (C) 2003-2004 Christian Hammond <chipx86@gnupdate.org>
+ * Gaim is the legal property of its developers, whose names are too numerous
+ * to list here.  Please refer to the COPYRIGHT file distributed with this
+ * source distribution.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,26 +29,34 @@ typedef struct _MsnMessage MsnMessage;
 #include "session.h"
 #include "user.h"
 
+#include "command.h"
+#include "transaction.h"
+
+typedef enum
+{
+	MSN_MSG_NORMAL,
+	MSN_MSG_SLP_SB,
+	MSN_MSG_SLP_DC
+
+} MsnMsgType;
+
 typedef struct
 {
-	long session_id;
-	long id;
-	long offset_1;
-	long offset_2;
-	long total_size_1;
-	long total_size_2;
-	long length;
-	long flags;
-	long ack_session_id;
-	long ack_unique_id;
-	long ack_length_1;
-	long ack_length_2;
+	guint32 session_id;
+	guint32 id;
+	guint64 offset;
+	guint64 total_size;
+	guint32 length;
+	guint32 flags;
+	guint32 ack_id;
+	guint32 ack_sub_id;
+	guint64 ack_size;
 
 } MsnSlpHeader;
 
 typedef struct
 {
-	long app_id;
+	guint32 value;
 
 } MsnSlpFooter;
 
@@ -57,33 +67,30 @@ struct _MsnMessage
 {
 	size_t ref_count;           /**< The reference count.       */
 
+	MsnMsgType type;
+
 	gboolean msnslp_message;
-	gboolean msnslp_ack_message;
 
-	char *passport;
-
-	unsigned int tid;
+	char *remote_user;
 	char flag;
-
-	size_t size;
-
-	gboolean bin_content;
 
 	char *content_type;
 	char *charset;
 	char *body;
-	size_t bin_len;
+	gsize body_len;
 
 	MsnSlpHeader msnslp_header;
 	MsnSlpFooter msnslp_footer;
 
-	MsnMessage *acked_msg;
-
 	GHashTable *attr_table;
 	GList *attr_list;
-};
 
-#define MSN_MESSAGE(msg) ((MsnMessage *)(msg))
+	MsnCommand *cmd;
+	MsnTransaction *trans;
+
+	MsnTransCb ack_cb;
+	void *ack_data;
+};
 
 /**
  * Creates a new, empty message.
@@ -99,6 +106,8 @@ MsnMessage *msn_message_new(void);
  */
 MsnMessage *msn_message_new_msnslp(void);
 
+MsnMessage *msn_message_new_plain(const char *message);
+
 /**
  * Creates a MSNSLP ack message.
  *
@@ -109,14 +118,23 @@ MsnMessage *msn_message_new_msnslp(void);
 MsnMessage *msn_message_new_msnslp_ack(MsnMessage *acked_msg);
 
 /**
- * Parse the payload of a message.
+ * Creates a new message based off a command.
+ *
+ * @param session The MSN session.
+ * @param cmd     The command.
+ *
+ * @return The new message.
+ */
+MsnMessage *msn_message_new_from_cmd(MsnSession *session, MsnCommand *cmd);
+
+/**
+ * Parses the payload of a message.
  *
  * @param msg         The message.
  * @param payload     The payload.
- * @param payload_len The length payload.
+ * @param payload_len The length of the payload.
  */
-void msn_message_parse_payload(MsnMessage *msg,
-							   const char *payload,
+void msn_message_parse_payload(MsnMessage *msg, const char *payload,
 							   size_t payload_len);
 
 /**
@@ -154,7 +172,7 @@ MsnMessage *msn_message_unref(MsnMessage *msg);
  *
  * @return The payload data of the message.
  */
-char *msn_message_gen_payload(const MsnMessage *msg, size_t *ret_size);
+char *msn_message_gen_payload(MsnMessage *msg, size_t *ret_size);
 
 /**
  * Sets the flag for an outgoing message.
@@ -173,6 +191,7 @@ void msn_message_set_flag(MsnMessage *msg, char flag);
  */
 char msn_message_get_flag(const MsnMessage *msg);
 
+#if 0
 /**
  * Sets the body of a message.
  *
@@ -189,7 +208,7 @@ void msn_message_set_body(MsnMessage *msg, const char *body);
  * @return The body of the message.
  */
 const char *msn_message_get_body(const MsnMessage *msg);
-
+#endif
 /**
  * Sets the binary content of the message.
  *
@@ -271,5 +290,14 @@ const char *msn_message_get_attr(const MsnMessage *msg, const char *attr);
  * @return The resulting hashtable.
  */
 GHashTable *msn_message_get_hashtable_from_body(const MsnMessage *msg);
+
+void msn_message_show_readable(MsnMessage *msg, const char *info,
+							   gboolean text_body);
+
+void msn_message_parse_slp_body(MsnMessage *msg, const char *body,
+								size_t len);
+
+char *msn_message_gen_slp_body(MsnMessage *msg, size_t *ret_size);
+
 
 #endif /* _MSN_MSG_H_ */
