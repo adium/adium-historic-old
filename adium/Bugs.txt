@@ -9,6 +9,7 @@
 - [ICQ] Displaying raw HTML (Messages sent from iChat)
 - Mockie message style rendering incorrectly in very wide windows
 - HTML <BR/> tags appearing in certain received messages
+- Short emoticons mask longer ones
 //------------------------------------------------------------------------------------
 // Bugs - Adium
 //------------------------------------------------------------------------------------
