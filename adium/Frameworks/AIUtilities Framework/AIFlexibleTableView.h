@@ -59,6 +59,7 @@
     NSScrollView		*editorScroll;
     AIFlexibleTableColumn	*editedColumn;
     int				editedRow;
+    AIFlexibleTableCell		*editedCell;
 
 }
 
@@ -71,6 +72,7 @@
 - (void)selectRow:(int)inRow;
 - (int)selectedRow;
 - (void)editRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn;
+- (void)setHeightOfCellAtRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn to:(int)inHeight;
 
 @end
 

@@ -36,6 +36,7 @@
 
 @implementation AIFlexibleTableView
 
+//Init ------------------------------------------------------------------------------------
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     [super initWithCoder:aDecoder];
@@ -77,6 +78,21 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameChanged:) name:NSViewFrameDidChangeNotification object:self];
 }
 
+
+//Config -------------------------------------------------------------------------------
+//Set the content cells bottom aligned
+- (void)setContentBottomAligned:(BOOL)inValue{
+    contentBottomAligned = inValue;
+}
+
+//YES for auto-scroll functionality
+- (void)setScrollsOnNewContent:(BOOL)inValue{
+    scrollsOnNewContent = inValue;
+}
+
+
+//Delegate / Content -------------------------------------------------------------------------------
+//Set our delegate
 - (void)setDelegate:(id <AIFlexibleTableViewDelegate>)inDelegate
 {
     if(inDelegate != delegate){
@@ -89,11 +105,82 @@
     }
 }
 
+//Add a Column
 - (void)addColumn:(AIFlexibleTableColumn *)inColumn
 {
     [columnArray addObject:inColumn];
 }
 
+//Call after adding a new row
+- (void)loadNewRow
+{
+    //Add the new content
+    if([self addCellsForRow:([delegate numberOfRows] - 1)]){
+        [self resizeCells];
+    }
+
+    //Resize and redisplay
+    [self resizeToFillContainerView];
+    [self setNeedsDisplay:YES];
+}
+
+//Call when the data is changed, reloads all the cells
+- (void)reloadData
+{
+    NSEnumerator		*columnEnumerator;
+    AIFlexibleTableColumn	*column;
+    int				numberOfRows = [delegate numberOfRows];
+    int				row;
+
+    //End editing
+    [self endEditing];
+
+    //Remove all existing cells
+    columnEnumerator = [columnArray objectEnumerator];
+    while((column = [columnEnumerator nextObject])){
+        [column removeAllCells];
+    }
+
+    //Add a cell to each column
+    for(row = 0;row < numberOfRows;row++){
+        [self addCellsForRow:row];
+    }
+
+    //Resize and redisplay
+    [self resizeCells];
+    [self resizeToFillContainerView];
+    [self setNeedsDisplay:YES];
+}
+
+//Set the height of a cell
+- (void)setHeightOfCellAtRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn to:(int)inHeight
+{
+    NSEnumerator		*columnEnumerator;
+    AIFlexibleTableColumn	*column;
+    int				newRowHeight = 0;
+
+    columnEnumerator = [columnArray objectEnumerator];
+    while((column = [columnEnumerator nextObject])){
+        int	cellHeight;
+
+        if(column != inColumn){
+            cellHeight = [[[column cellArray] objectAtIndex:inRow] cellSize].height;
+        }else{
+            cellHeight = inHeight;
+        }
+
+        if(cellHeight > newRowHeight){
+            newRowHeight = cellHeight;
+        }
+    }
+
+    [rowHeightArray replaceObjectAtIndex:inRow withObject:[NSNumber numberWithInt:newRowHeight]];
+    [self setNeedsDisplay:YES];
+}
+
+
+//Drawing -------------------------------------------------------------------------------
+//Draw
 - (void)drawRect:(NSRect)rect
 {
     NSEnumerator		*columnEnumerator;
@@ -223,13 +310,17 @@
 {
     NSEnumerator		*enumerator;
     AIFlexibleTableColumn	*column;
-
+    
     enumerator = [columnArray objectEnumerator];
     while((column = [enumerator nextObject])){
-        AIFlexibleTableCell	*cell = [[column cellArray] objectAtIndex:inRow];
+        NSArray			*cellArray = [column cellArray];
 
-        [cell setSelected:selected];
-        [self setNeedsDisplayInRect:[cell frame]];
+        if(inRow >= 0 && inRow < [cellArray count]){
+            AIFlexibleTableCell	*cell = [cellArray objectAtIndex:inRow];
+
+            [cell setSelected:selected];
+            [self setNeedsDisplayInRect:[cell frame]];
+        }
     }
 }
 
@@ -237,6 +328,18 @@
 - (int)selectedRow
 {
     return(selectedRow);
+}
+
+//- (void)moveUpAndModifySelection:(id)sender
+- (void)moveUp:(id)sender
+{
+    [self selectRow:selectedRow - 1];
+}
+
+//- (void)moveDownAndModifySelection:(id)sender
+- (void)moveDown:(id)sender
+{
+    [self selectRow:selectedRow + 1];
 }
 
 
@@ -250,34 +353,14 @@
     
             //Get the cell targeted for editing
             cell = [[inColumn cellArray] objectAtIndex:inRow];
-        
+
             //Close any existing editor
             [self endEditing];
-        
-            //Create the editor
-            editor = [[NSTextView alloc] init];
-            [editor setDelegate:self];
-            [editor setEditable:YES];
-            [editor setSelectable:YES];
-        //    [editor setTextContainerInset:[cell paddingInset]];
-        //    [editor setBackgroundColor:[NSColor orangeColor]];
-            [editor setFrame:NSMakeRect(0, 0, [cell frame].size.width, [cell frame].size.height)];
-            [[editor textStorage] setAttributedString:[cell string]];
-            [editor setSelectedRange:NSMakeRange(0,[[editor string] length])];
-        
-            editorScroll = [[NSScrollView alloc] init];
-            [editorScroll setDocumentView:editor];
-            [editorScroll setBorderType:NSBezelBorder];
-            [editorScroll setHasVerticalScroller:NO];
-            [editorScroll setHasHorizontalScroller:NO];
-            [editorScroll setFrame:[cell frame]];
-    
+
+            [cell editAtRow:inRow column:inColumn inView:self];
+            editedCell = cell;
             editedColumn = inColumn;
             editedRow = inRow;
-    
-            //Make it visible and key
-            [self addSubview:editorScroll];
-            [[self window] makeFirstResponder:editor];
         }
     }
 }
@@ -285,40 +368,45 @@
 //Cancel any existing editing
 - (void)endEditing
 {
-    if(editor){
+    if(editedCell){
+        //Close
+        [editedCell endEditing];
+
         //Save
         if(respondsTo_setObjectValue){
-            [(id <AIFlexibleTableViewDelegate_setObjectValue>)delegate setObjectValue:[editor textStorage] forTableColumn:editedColumn row:editedRow];
+            [(id <AIFlexibleTableViewDelegate_setObjectValue>)delegate setObjectValue:[editedCell objectValue] forTableColumn:editedColumn row:editedRow];
         }
 
-        //Close
-        [editorScroll removeFromSuperview];
-        [editorScroll release]; editorScroll = nil;
-        [editor release]; editor = nil;
+        editedCell = nil;
     }
+}
+
+- (BOOL)acceptsFirstResponder
+{
+    NSLog(@"acceptsFirstResponder");
+    return(YES);
+}
+
+- (BOOL)becomeFirstResponder
+{
+    NSLog(@"becomeFirstResponder");
+    return(YES);
 }
 
 - (BOOL)resignFirstResponder
 {
+    NSLog(@"resignFirstResponder");
     [self endEditing];
     
     return(YES);
 }
 
 
-//Config --------------------------------------------------------------------------------
-- (void)setContentBottomAligned:(BOOL)inValue{
-    contentBottomAligned = inValue;
-}
-
-- (void)setScrollsOnNewContent:(BOOL)inValue{
-    scrollsOnNewContent = inValue;
-}
 
 
-//Reloading --------------------------------------------------------------------------------
-//Call after adding a new row
-- (void)loadNewRow
+
+//Reload a specific row
+/*- (void)reloadRow:(int)inRow
 {
     //Add the new content
     if([self addCellsForRow:([delegate numberOfRows] - 1)]){
@@ -328,32 +416,7 @@
     //Resize and redisplay
     [self resizeToFillContainerView];
     [self setNeedsDisplay:YES];
-}
-
-//Call when the data is changed, reloads all the cells
-- (void)reloadData
-{
-    NSEnumerator		*columnEnumerator;
-    AIFlexibleTableColumn	*column;
-    int				numberOfRows = [delegate numberOfRows];
-    int				row;
-
-    //Remove all existing cells
-    columnEnumerator = [columnArray objectEnumerator];
-    while((column = [columnEnumerator nextObject])){
-        [column removeAllCells];
-    }
-
-    //Add a cell to each column
-    for(row = 0;row < numberOfRows;row++){
-        [self addCellsForRow:row];
-    }
-
-    //Resize and redisplay
-    [self resizeCells];
-    [self resizeToFillContainerView];
-    [self setNeedsDisplay:YES];
-}
+}*/
 
 
 //Private --------------------------------------------------------------------------------
@@ -401,6 +464,8 @@
             columnWidthDidChange = YES;
         }
 
+        [cell setTableView:self];
+
         //By comparing the heights of each cell, we find the largest height and set it as the height of our row
         if([cell cellSize].height > newRowHeight){
             newRowHeight = [cell cellSize].height;
@@ -413,7 +478,7 @@
     return(columnWidthDidChange); //Return YES if the cells should be resized
 }
 
-//Recalculate the cell dimensions
+//Recalculate the dimensions of all our cells
 - (void)resizeCells
 { //This code only works with one flexible column for now...
     NSEnumerator		*rowHeightEnumerator;

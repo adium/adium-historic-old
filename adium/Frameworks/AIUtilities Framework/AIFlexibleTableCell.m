@@ -9,70 +9,29 @@
 #import <AIUtilities/AIUtilities.h>
 #import "AIFlexibleTableCell.h"
 
-#define FRACTIONAL_PADDING 1.0
-
 @interface AIFlexibleTableCell (PRIVATE)
-- (AIFlexibleTableCell *)initWithAttributedString:(NSAttributedString *)inString;
+- (void)drawContentsWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
+- (id)init;
 - (void)dealloc;
 @end
 
 @implementation AIFlexibleTableCell
 
-//Create a new cell from an attributed string
-+ (AIFlexibleTableCell *)cellWithAttributedString:(NSAttributedString *)inString
-{
-    return([[[self alloc] initWithAttributedString:inString] autorelease]);    
-}
-
-//Create a new cell from a regular string and properties
-+ (AIFlexibleTableCell *)cellWithString:(NSString *)inString color:(NSColor *)inTextColor font:(NSFont *)inFont alignment:(NSTextAlignment)inAlignment background:(NSColor *)inBackColor gradient:(NSColor *)inGradientColor
-{
-    AIFlexibleTableCell		*cell;
-    NSDictionary		*attributes;
-    NSMutableParagraphStyle	*paragraphStyle;
-    NSAttributedString		*attributedString;
-
-    //Create a paragraph style with the correct alignment
-    paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-    [paragraphStyle setAlignment:inAlignment];
-
-    //Create the attributed string
-    attributes = [NSDictionary dictionaryWithObjectsAndKeys:inTextColor, NSForegroundColorAttributeName, inFont, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
-    attributedString = [[NSAttributedString alloc] initWithString:inString attributes:attributes];
-
-    //Build the cell
-    cell = [AIFlexibleTableCell cellWithAttributedString:attributedString];
-    if(inGradientColor){
-        [cell setBackgroundGradientFrom:inBackColor to:inGradientColor];
-    }else{
-        [cell setBackgroundColor:inBackColor];
-    }
-
-    return(cell);
-}
-
 //init
-- (AIFlexibleTableCell *)initWithAttributedString:(NSAttributedString *)inString
-{    
+- (id)init
+{
     [super init];
-    
+
     backgroundColor = nil;
     gradientColor = nil;
     dividerColor = nil;
     drawContents = YES;
 
-    textStorage = nil;
-    textContainer = nil;
-    layoutManager = nil;
-
     leftPadding = 0;
     rightPadding = 0;
     topPadding = 0;
     leftPadding = 0;
-    
-    cellSize = [inString size];
-    string = [inString retain];
-    frame = NSMakeRect(0,0,0,0);
+
     selected = NO;
 
     return(self);
@@ -83,14 +42,11 @@
 {
     [backgroundColor release];
     [gradientColor release];
-    [textStorage release];
-    [textContainer release];
-    [layoutManager release];
     [dividerColor release];
-    [string release];
-    
+
     [super dealloc];
 }
+
 
 //Configure ----------------------------------------------------------------------
 - (void)setBackgroundColor:(NSColor *)inColor
@@ -140,46 +96,48 @@
     selected = inSelected;
 }
 
+- (void)setTableView:(AIFlexibleTableView *)inView
+{
+    tableView = inView;
+}
 
-// Access ------------------------------------------------------------------------------
-- (NSSize)paddingInset{
+
+//Access ------------------------------------------------------------------------------
+- (NSSize)paddingInset
+{
     return(NSMakeSize(leftPadding, topPadding));
 }
 
-- (NSAttributedString *)string{
-    return(string);
+- (void)editAtRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn inView:(NSView *)controlView
+{
+    
 }
 
-// Sizing ------------------------------------------------------------------------------
+- (id <NSCopying>)objectValue
+{
+    return(nil);
+}
+
+
+//Editing ------------------------------------------------------------------------------
+- (void)endEditing
+{
+    
+}
+
+
+//Sizing ------------------------------------------------------------------------------
 //Returns the size required to display this cell without wrapping
 - (NSSize)cellSize
 {
-    return(NSMakeSize(cellSize.width + (leftPadding + rightPadding) + FRACTIONAL_PADDING, cellSize.height + (topPadding + bottomPadding))); //We add padding to offset any fractional character widths
+    return(NSMakeSize(0,0));
 }
 
 //Dynamically resizes this cell for the desired width
 - (void)sizeCellForWidth:(float)inWidth
 {
-    if(!textStorage){
-        //Once a dynamic width is requested, we build the necessary text management instances to handle wrapping and formatting.  This avoids the overhead (memory and speed) of these classes when drawing simple, non-wrapping strings.  Once these classes are present, this cell will use them to draw and properly wrap.
-
-        //Setup the layout manager and text container
-        textStorage = [[NSTextStorage alloc] initWithAttributedString:string];
-        textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(1e7, 1e7)];
-        layoutManager = [[NSLayoutManager alloc] init];
-
-        [textContainer setLineFragmentPadding:0.0];
-        [layoutManager addTextContainer:textContainer];
-        [textStorage addLayoutManager:layoutManager];
-    }
-    
-    //Reformat the text
-    [textContainer setContainerSize:NSMakeSize(inWidth - (leftPadding + rightPadding)/* - FRACTIONAL_PADDING*/, 1e7)];
-    glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
-
-    //Save the new cell dimensions
-    cellSize = [layoutManager usedRectForTextContainer:textContainer].size;
 }
+
 
 // Drawing -------------------------------------------------------------------------------
 //Draws this cell in the requested view and rect
@@ -209,48 +167,18 @@
                                   toPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y + 0.5)];
     }
 
-    //Draw our string contents
-    if(drawContents){
-        cellFrame.origin.x += leftPadding;
-        cellFrame.size.width -= leftPadding + rightPadding;
+    //Draw Contents
+    cellFrame.origin.x += leftPadding;
+    cellFrame.size.width -= leftPadding + rightPadding;
+    cellFrame.origin.y += topPadding;
+    cellFrame.size.height -= topPadding + bottomPadding;
+    [self drawContentsWithFrame:cellFrame inView:controlView];
+}
 
-        cellFrame.origin.y += topPadding;
-        cellFrame.size.height -= topPadding + bottomPadding;
+//Draw our contents
+- (void)drawContentsWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+{
 
-        if(!selected){
-            if(layoutManager){ //Draw our string with wrapping (slower)
-                [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:cellFrame.origin];
-            }else{
-                [string drawInRect:cellFrame]; //Draw our string without wrapping (faster)
-            }
-        }else{
-            NSMutableAttributedString *mutableString = [string mutableCopy];
-
-            [mutableString addAttribute:NSForegroundColorAttributeName value:[NSColor whiteColor] range:NSMakeRange(0,[mutableString length])];
-
-            if(layoutManager){ //Draw our string with wrapping (slower)
-                NSTextStorage	*whiteTextStorage = [[NSTextStorage alloc] initWithAttributedString:mutableString];
-                NSTextContainer	*whiteTextContainer = [[NSTextContainer alloc] initWithContainerSize:cellFrame.size];
-                NSLayoutManager	*whiteLayoutManager = [[NSLayoutManager alloc] init];
-
-                [whiteTextContainer setLineFragmentPadding:0.0];
-                [whiteLayoutManager addTextContainer:whiteTextContainer];
-                [whiteTextStorage addLayoutManager:whiteLayoutManager];
-
-                [layoutManager drawGlyphsForGlyphRange:[whiteLayoutManager glyphRangeForTextContainer:whiteTextContainer]
-                                               atPoint:cellFrame.origin];
-
-                [whiteTextStorage release];
-                [whiteTextContainer release];
-                [whiteLayoutManager release];
-                
-            }else{
-                [mutableString drawInRect:cellFrame]; //Draw our string in white
-                
-            }
-            [mutableString release];
-        }
-    }
 }
 
 //Returns the last frame where this cell was drawn

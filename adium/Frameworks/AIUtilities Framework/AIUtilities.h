@@ -49,5 +49,7 @@
 #import "AIStringAdditions.h"
 #import "AIFlexibleTableView.h"
 #import "AIFlexibleTableCell.h"
+#import "AIFlexibleTableTextCell.h"
+#import "AIFlexibleTableImageCell.h"
 #import "AIFlexibleTableColumn.h"
 #import "AIEventAdditions.h"

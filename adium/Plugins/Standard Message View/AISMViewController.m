@@ -93,14 +93,14 @@
         //Create and return a cell
         if(inCol == senderCol){
             if(outgoing){
-                cell = [AIFlexibleTableCell cellWithString:[NSString stringWithFormat:@"%@:",[(AIAccount *)messageSource accountDescription]]
+                cell = [AIFlexibleTableTextCell cellWithString:[NSString stringWithFormat:@"%@:",[(AIAccount *)messageSource accountDescription]]
                                            color:outgoingSourceColor
                                             font:[NSFont systemFontOfSize:11]
                                        alignment:NSRightTextAlignment
                                       background:backColorOut
                                         gradient:[backColorOut darkenBy:0.09]];
             }else{
-                cell = [AIFlexibleTableCell cellWithString:[NSString stringWithFormat:@"%@:",[(AIContactHandle *)messageSource displayName]]
+                cell = [AIFlexibleTableTextCell cellWithString:[NSString stringWithFormat:@"%@:",[(AIContactHandle *)messageSource displayName]]
                                            color:incomingSourceColor
                                             font:[NSFont systemFontOfSize:11]
                                        alignment:NSRightTextAlignment
@@ -112,7 +112,7 @@
             if(duplicateSource) [cell setDrawContents:NO];
                 
         }else if(inCol == messageCol){
-            cell = [AIFlexibleTableCell cellWithAttributedString:[contentMessage message]];
+            cell = [AIFlexibleTableTextCell cellWithAttributedString:[contentMessage message]];
             [cell setBackgroundColor:(outgoing ? backColorOut : backColorIn)];
             [cell setPaddingLeft:2 top:1 right:2 bottom:1];
             if(!duplicateSource) [cell setDividerColor:lineColorDivider];
@@ -122,7 +122,7 @@
             NSDateFormatter		*dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%1I:%M" allowNaturalLanguage:NO] autorelease];
             NSString			*dateString = [dateFormatter stringForObjectValue:[contentMessage date]];
             
-            cell = [AIFlexibleTableCell cellWithString:dateString
+            cell = [AIFlexibleTableTextCell cellWithString:dateString
                                        color:[NSColor grayColor]
                                         font:[NSFont fontWithName:@"Helvetica" size:10]
                                    alignment:NSRightTextAlignment
