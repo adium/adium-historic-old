@@ -434,9 +434,18 @@ void Adium_HandleSignal(int i){
         buttonPressed = NSRunInformationalAlertPanel(alertTitle,alertMsg,nil,prefsButton,nil);
 		
 		// User clicked the "open prefs" button
-		if( buttonPressed == NSAlertAlternateReturn && completedApplicationLoad) {
+		if(buttonPressed == NSAlertAlternateReturn){
+			//If we're done loading the app, open the prefs now; if not, it'll be done once the load is finished
+			//so the controllers and plugins have had a chance to initialize
+			if(completedApplicationLoad) {
 				[self openAppropriatePreferencesIfNeeded];
+			}
+		}else{
+			//If the user didn't press the "open prefs" button, clear the pref opening information
+			prefsCategory = -1;
+			[advancedPrefsName release]; advancedPrefsName = nil;
 		}
+		
     }else{
 		if (!errorMessage){
 			errorMessage = AILocalizedString(@"An error occurred while installing the X(tra).",nil);
@@ -469,11 +478,11 @@ void Adium_HandleSignal(int i){
 	}
 }
 
-//create a resource folder in the Library/Application\ Support/Adium\ 2.0 folder.
-//pass it the name of the folder (e.g. @"Scripts").
-//if it is found to already in a library folder, returns that pathname (using
+//Create a resource folder in the Library/Application\ Support/Adium\ 2.0 folder.
+//Pass it the name of the folder (e.g. @"Scripts").
+//If it is found to already in a library folder, return that pathname (using
 //  the same order of preference as resourcePathsForName:).
-//otherwise, creates it in the user library and returns the pathname to it.
+//Otherwise, create it in the user library and return the pathname to it.
 - (NSString *)createResourcePathForName:(NSString *)name
 {
     BOOL             createIt;
@@ -494,7 +503,7 @@ void Adium_HandleSignal(int i){
 			//future expansion: provide a button to launch Disk Utility --boredzo
 			NSRunAlertPanel([NSString stringWithFormat:AILocalizedString(@"Could not create the %@ folder",nil), name],
 							AILocalizedString(@"Try running Repair Permissions from Disk Utility.",nil),
-							@"OK", 
+							AILocalizedString(@"Okay",nil), 
 							nil, 
 							nil);
 		}
@@ -540,7 +549,7 @@ void Adium_HandleSignal(int i){
 #pragma mark Scripting
 - (BOOL)application:(NSApplication *)sender delegateHandlesKey:(NSString *)key {
 	BOOL handleKey = NO;
-	NSLog(@"handle %@",key);
+	
 	if([key isEqualToString:@"applescriptabilityController"] || 
 	   [key isEqualToString:@"interfaceController"] ){
 		handleKey = YES;

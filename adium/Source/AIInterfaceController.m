@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.93 2004/07/27 19:16:40 evands Exp $
+// $Id: AIInterfaceController.m,v 1.94 2004/07/29 14:54:18 evands Exp $
 
 #import "AIInterfaceController.h"
 #import "AIStandardListWindowController.h"
@@ -788,7 +788,7 @@
             
             //Buddy Icon
             [tooltipImage release];
-			tooltipImage = [[[tooltipListObject displayArrayForKey:KEY_USER_ICON] objectValue] retain];
+			tooltipImage = [tooltipListObject userIcon] retain];
             
             //Reset the maxLabelWidth for the tooltip generation
             maxLabelWidth = 0;
