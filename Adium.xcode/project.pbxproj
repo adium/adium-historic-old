@@ -5513,6 +5513,14 @@
 			settings = {
 			};
 		};
+		34A24E1E07DE2B51009854E1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = "Adium Crash Reporter/French.lproj/MainMenu.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		34A29D9406ED68BF00E1366C = {
 			includeInIndex = 0;
 			isa = PBXFileReference;
@@ -10983,6 +10991,7 @@
 		34E0E9B907CC4B4500A82198 = {
 			children = (
 				4B7F78C10597F5B700162728,
+				34A24E1E07DE2B51009854E1,
 			);
 			isa = PBXVariantGroup;
 			name = MainMenu.nib;
