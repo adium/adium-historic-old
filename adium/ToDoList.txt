@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.50 2004/04/16 15:54:59 adamiser Exp $
+$Id: ToDoList.txt,v 1.51 2004/04/16 16:41:33 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -48,6 +48,7 @@ Unconfirmed bugs
 * We're receiving (but not processing/interpreting) HTML over ICQ
 	Evan: Official ICQ clients send RTF, not HTML.  SIM is an unofficial one that does.  Gaim intentionally escapes HTML coming from ICQ for this reason... Odd.
 * away messages aren't clearing when a buddy comes back from away?  Online buddies with away messages?
+* We are having some text encoding issues with ICQ (multiple mentions)
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
