@@ -68,7 +68,20 @@
 
 - (AIChat *)openChatWithListObject:(AIListObject *)inListObject
 {
-    return nil;
+    AIHandle            *handle;
+    AIChat              *chat = nil;
+
+    if([inListObject isKindOfClass:[AIListContact class]]){
+        //Get our handle for this contact
+        handle = [(AIListContact *)inListObject handleForAccount:self];
+        if(!handle){
+            handle = [self addHandleWithUID:[[inListObject UID] compactedString] serverGroup:nil temporary:
+                YES];
+        }
+        chat = [self _openChatWithHandle:handle];
+    }
+
+    return(chat);
 }
 
 //
