@@ -23,32 +23,24 @@
 
 - (void)installPlugin
 {
-    [[adium contactController] registerListObjectObserver:self];
-
     //Observe contact status changes
-    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusAwayYes:) name:@"Contact_StatusAwayYes" object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusAwayNo:) name:@"Contact_StatusAwayNo" object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusOnlineYes:) name:@"Contact_StatusOnlineYes" object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusOnlineNO:) name:@"Contact_StatusOnlineNO" object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusAwayYes:) name:CONTACT_STATUS_AWAY_YES object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusAwayNo:) name:CONTACT_STATUS_AWAY_NO object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusOnlineYes:) name:CONTACT_STATUS_ONLINE_YES object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusOnlineNO:) name:CONTACT_STATUS_ONLINE_NO object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusIdleYes:) name:CONTACT_STATUS_IDLE_YES object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusIdleNo:) name:CONTACT_STATUS_IDLE_NO object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusMessage:) name:CONTACT_STATUS_MESSAGE object:nil];
 }
 
-//Catch away message changes and display them
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
-{
-    
-    if([inModifiedKeys containsObject:@"StatusMessage"]){
-        NSString	*statusMessage = [[inObject statusObjectForKey:@"StatusMessage"] string];
-		NSString	*statusType = @"away_message";
-		
-		if(statusMessage && [statusMessage length] != 0){
-			[self statusMessage:[NSString stringWithFormat:@"Away Message: \"%@\"",statusMessage] forObject:inObject withType:statusType];
-		}
-    }
-
-	//We don't change any keys
-    return(nil);
+- (void)Contact_StatusMessage:(NSNotification *)notification{
+	AIListObject	*object = [notification object];
+	NSString		*statusMessage = [[object statusObjectForKey:@"StatusMessage"] string];
+	NSString		*statusType = @"away_message";
+	
+	if(statusMessage && [statusMessage length] != 0){
+		[self statusMessage:[NSString stringWithFormat:@"Away Message: %@",statusMessage] forObject:object withType:statusType];
+	}
 }
 
 - (void)Contact_StatusAwayYes:(NSNotification *)notification{
