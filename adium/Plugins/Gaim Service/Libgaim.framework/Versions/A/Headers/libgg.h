@@ -1,4 +1,4 @@
-/* $Id: libgg.h,v 1.8 2004/06/23 21:56:03 evands Exp $ */
+/* $Id: libgg.h,v 1.9 2004/07/05 13:30:05 adamiser Exp $ */
 
 /*
  *  (C) Copyright 2001 Wojtek Kaniewski <wojtekka@irc.pl>,
