@@ -24,7 +24,6 @@
 
 #import "AISQLLoggerPlugin.h"
 #import "libpq-fe.h"
-#import "JMSQLLogViewerWindowController.h"
 #import "JMSQLLoggerAdvancedPreferences.h"
 
 #define SQL_LOG_VIEWER  AILocalizedString(@"SQL Log Viewer",nil)
@@ -165,12 +164,6 @@
                      recServe:destSrv];
         }
     }
-}
-
-//Show the log viewer window
-- (void)showLogViewer:(id)sender
-{
-    [[JMSQLLogViewerWindowController logViewerWindowController] showWindow:nil];
 }
 
 //Insert a message
