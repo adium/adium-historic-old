@@ -32,7 +32,6 @@
     on the screen.
 
 [MetaContacts]
-- Unchecking the address book consolidate contacts option has no effect
 - MetaContact ordering does not always restore properly
 - Source account is not always accurate when a contact within a metaContact is messaged
 - MetaContacts should remember the last messaged contact and use that rather than the "preferredContact" by default
