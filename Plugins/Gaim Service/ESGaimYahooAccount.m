@@ -211,14 +211,14 @@ static NSDictionary		*presetStatusesDictionary = nil;
 		}else{
 			if (f->msg != NULL) {
 				statusMsgString = [NSString stringWithUTF8String:f->msg];
-				
-				//Ensure the away/not away for a cusotm message is handled properly by double checking here.
-				[self _updateAwayOfContact:theContact 
-									toAway:(f->status != YAHOO_STATUS_AVAILABLE)];
 
 			} else if (f->status != YAHOO_STATUS_AVAILABLE) {
 				statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:f->status]];
 			}
+
+			//Ensure the away/not away is handled properly by double checking here.
+			[self _updateAwayOfContact:theContact 
+								toAway:(f->status != YAHOO_STATUS_AVAILABLE)];			
 		}
 		
 		if (statusMsgString && [statusMsgString length]) {
@@ -298,8 +298,8 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	}
 	
 	//If we are setting one of our custom statuses, clear a @"" statusMessage to nil
-	if((gaimStatusType != NULL) && ([*statusMessage length])) *statusMessage = nil;
-	
+	if((gaimStatusType != NULL) && ([*statusMessage length] == 0)) *statusMessage = nil;
+
 	//If we didn't get a gaim status type, request one from super
 	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
 	
