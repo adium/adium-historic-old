@@ -10,7 +10,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/index.jsp $-->
-<!--$Rev: 838 $ $Date: 2004/07/20 19:50:04 $ -->
+<!--$Rev: 843 $ $Date: 2004/07/21 19:31:02 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -268,6 +268,10 @@ try {
     if (meta_id != 0) {
         queryText += " and (send.meta_id = ? or rec.meta_id = ?)";
     }
+
+    // Only pick the lowest note_id so only one shows up for multiples
+
+    queryText += " and not exists (select 'x' from im.message_notes b where b.message_id = message_notes.message_id and b.date_added > message_notes.date_added)";
 
     queryText += " order by message_date, message_id";
 
