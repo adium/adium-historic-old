@@ -407,6 +407,7 @@
 {
     int 	index;
     AIAccount	*targetAccount;
+    NSString    *accountFormattedUID;
     
     NSParameterAssert(accountArray != nil); NSParameterAssert([accountArray count] > 1);
     
@@ -414,10 +415,11 @@
     index = [tableView_accountList selectedRow];
     NSParameterAssert(index >= 0 && index < [accountArray count]);
     targetAccount = [accountArray objectAtIndex:index];
+    accountFormattedUID = [targetAccount formattedUID];
 
     NSBeginAlertSheet(@"Delete Account",@"Delete",@"Cancel",@"",[[self view] window], self, 
 					  @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, targetAccount, 
-					  @"Delete the account %@?", [targetAccount displayName]);
+					  @"Delete the account %@?", [accountFormattedUID length] ? accountFormattedUID : NEW_ACCOUNT_DISPLAY_TEXT);
 }
 
 //Finishes the delete action when the sheet is closed
