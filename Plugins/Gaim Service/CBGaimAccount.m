@@ -1019,6 +1019,20 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	return (type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray);
 }
 
+- (NSArray *)listObjectIDsOnPrivacyList:(PRIVACY_TYPE)type
+{
+	NSArray *listObjectArray = [self listObjectsOnPrivacyList:type];
+	NSMutableArray *idArray =  [[NSMutableArray alloc] initWithCapacity:[listObjectArray count]];
+	NSEnumerator *enumerator = [listObjectArray objectEnumerator];
+	AIListObject *object = nil;
+	
+	while(object = [enumerator nextObject]){
+		[idArray addObject:[object UID]];
+	}
+	
+	return [idArray autorelease];
+}
+
 - (oneway void)privacyPermitListAdded:(NSString *)sourceUID
 {
 	[self accountPrivacyList:PRIVACY_PERMIT added:sourceUID];
