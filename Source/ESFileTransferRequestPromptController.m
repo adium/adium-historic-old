@@ -20,17 +20,13 @@
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <Adium/AIListContact.h>
 #import <Adium/ESFileTransfer.h>
-
-#define	TRANSFER_REQUEST_PROMPT_NIB	@"FileTransferRequestPrompt"
+#import <Adium/ESTextAndButtonsWindowController.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
 
 @interface ESFileTransferRequestPromptController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName
-			forFileTransfer:(ESFileTransfer *)inFileTransfer
-			notifyingTarget:(id)inTarget
-				   selector:(SEL)inSelector;
-
-- (IBAction)closeWindow:(id)sender;
-
+- (id)initForFileTransfer:(ESFileTransfer *)inFileTransfer
+		  notifyingTarget:(id)inTarget
+				 selector:(SEL)inSelector;
 @end
 
 @implementation ESFileTransferRequestPromptController
@@ -39,26 +35,54 @@
 					 notifyingTarget:(id)inTarget
 							selector:(SEL)inSelector
 {
-	ESFileTransferRequestPromptController	*requestPromptController;
-
-	requestPromptController = [[self alloc] initWithWindowNibName:TRANSFER_REQUEST_PROMPT_NIB
-												  forFileTransfer:inFileTransfer
-												  notifyingTarget:inTarget
-														 selector:inSelector];
-
-	[requestPromptController showWindow:nil];
+	[[self alloc] initForFileTransfer:inFileTransfer
+					  notifyingTarget:inTarget
+							 selector:inSelector];
 }
 
-- (id)initWithWindowNibName:(NSString *)windowNibName
-			forFileTransfer:(ESFileTransfer *)inFileTransfer
-			notifyingTarget:(id)inTarget
-				   selector:(SEL)inSelector
+- (id)initForFileTransfer:(ESFileTransfer *)inFileTransfer
+		  notifyingTarget:(id)inTarget
+				 selector:(SEL)inSelector
 {
-
-	if((self = [super initWithWindowNibName:windowNibName])) {
+	if((self = [super init])){		
 		fileTransfer = [inFileTransfer retain];
-		target       = [inTarget       retain];
+		target       = [inTarget retain];
 		selector     =  inSelector;
+		
+		NSString			*messageHeader;
+		NSAttributedString	*message;
+		NSString	*filenameDisplay;
+		NSString	*remoteFilename = [fileTransfer remoteFilename];
+
+		//Display the name of the file, with the file's size if available
+		unsigned long long fileSize = [fileTransfer size];
+		
+		if(fileSize){
+			NSString	*fileSizeString;
+			
+			fileSizeString = [[adium fileTransferController] stringForSize:fileSize];
+			filenameDisplay = [NSString stringWithFormat:@"%@ (%@)",remoteFilename,fileSizeString];
+		}else{
+			filenameDisplay = remoteFilename;
+		}
+		
+		messageHeader = [NSString stringWithFormat:AILocalizedString(@"File transfer request from %@",nil),
+			[[fileTransfer contact] displayName]];
+
+		message = [NSAttributedString stringWithString:
+			[NSString stringWithFormat:AILocalizedString(@"%@ requests to send you %@",nil),
+				[[fileTransfer contact] formattedUID],
+				filenameDisplay]];
+			
+		windowController = [[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:AILocalizedString(@"File Transfer Request",nil)
+																				 defaultButton:AILocalizedString(@"Save",nil)
+																			   alternateButton:AILocalizedString(@"Save As...",nil)
+																				   otherButton:AILocalizedString(@"Cancel",nil)
+																					  onWindow:nil
+																			 withMessageHeader:messageHeader
+																					andMessage:message
+																						target:self
+																					  userInfo:nil] retain];
 	}
 
 	return self;
@@ -68,122 +92,63 @@
 {
 	[fileTransfer release];
 	[target release];
+	[windowController release];
 
 	[super dealloc];
 }
 
-// called as the window closes
-- (void)windowWillClose:(id)sender
-{
-	[super windowWillClose:sender];
-
-    //release the window controller (ourself)
-    [self autorelease];
-}
-
-- (void)windowDidLoad
-{
-	NSString	*remoteFilename = [fileTransfer remoteFilename];
-
-	//Setup the textviews
-    [textView_requestTitle setHorizontallyResizable:NO];
-    [textView_requestTitle setVerticallyResizable:YES];
-    [textView_requestTitle setDrawsBackground:NO];
-    [scrollView_requestTitle setDrawsBackground:NO];
-
-    [textView_requestDetails setHorizontallyResizable:NO];
-    [textView_requestDetails setVerticallyResizable:YES];
-    [textView_requestDetails setDrawsBackground:NO];
-    [scrollView_requestDetails setDrawsBackground:NO];
-
-	//Setup the buttons
-	[button_save setLocalizedString:AILocalizedString(@"Save",nil)];
-	[button_saveAs setLocalizedString:AILocalizedString(@"Save As...",nil)];
-	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
-
-	//Setup the imageView for the file's icon
-	NSImage		*iconImage;
-	if(iconImage = [fileTransfer iconImage]){
-		[imageView_icon setImage:iconImage];
-	}
-
-	NSRect	frame = [[self window] frame];
-    int		heightChange;
-
-    //Display the current request title
-    [textView_requestTitle setString:[NSString stringWithFormat:AILocalizedString(@"File transfer request from %@",nil),[[fileTransfer contact] displayName]]];
-
-	//Resize the window frame to fit the request title
-	[textView_requestTitle sizeToFit];
-	heightChange = [textView_requestTitle frame].size.height - [scrollView_requestTitle documentVisibleRect].size.height;
-	frame.size.height += heightChange;
-	frame.origin.y -= heightChange;
-
-	//Display the name of the file, with the file's size if available
-	NSString	*filenameDisplay;
-	unsigned long long fileSize = [fileTransfer size];
-	if(fileSize){
-			filenameDisplay = [NSString stringWithFormat:@"%@ (%@)",remoteFilename,[[adium fileTransferController] stringForSize:fileSize]];
-	}else{
-			filenameDisplay = remoteFilename;
-	}
-
-	[textView_requestDetails setString:[NSString stringWithFormat:AILocalizedString(@"%@ requests to send you %@",nil),[[fileTransfer contact] formattedUID], filenameDisplay]];
-
-	//Resize the window frame to fit the error message
-	[textView_requestDetails sizeToFit];
-	heightChange = [textView_requestDetails frame].size.height - [scrollView_requestDetails documentVisibleRect].size.height;
-	frame.size.height += heightChange;
-    frame.origin.y -= heightChange;
-
-	//Perform the window resizing as needed
-	if ([NSApp isOnPantherOrBetter]){
-		[[self window] setFrame:frame display:YES animate:YES];
-	}else{
-		[[self window] setFrame:frame display:YES]; //animate:YES can crash in 10.2
-	}
-
-	//Set the title
-	[[self window] setTitle:AILocalizedString(@"File Transfer Request",nil)];
-
-    [[self window] makeKeyAndOrderFront:nil];
-
-	[super windowDidLoad];
-}
-
-- (IBAction)pressedButton:(id)sender
+/*!
+* @brief Window was closed, either by a button being clicked or the user closing it
+ */
+- (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
 {
 	NSString	*localFilename = nil;
 	BOOL		finished = NO;
 
-	if(sender == button_save){
-		localFilename = [[[adium preferenceController] userPreferredDownloadFolder] stringByAppendingPathComponent:[fileTransfer remoteFilename]];
-
-		finished = YES;
-
-	}else if(sender == button_saveAs){
-		//Prompt for a location to save
-		[[NSSavePanel savePanel] beginSheetForDirectory:[[adium preferenceController] userPreferredDownloadFolder]
-												   file:[fileTransfer remoteFilename]
-										 modalForWindow:[self window]
-										  modalDelegate:self
-										 didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:)
-											contextInfo:nil];
-
-	}else if (sender == button_cancel){
-		/* File name remains nil and the transfer will therefore be canceled */
-		finished = YES;
+	switch(returnCode){			
+		case AITextAndButtonsDefaultReturn: /* Save */
+		{
+			localFilename = [[[adium preferenceController] userPreferredDownloadFolder] stringByAppendingPathComponent:[fileTransfer remoteFilename]];
+			
+			finished = YES;
+			break;
+		}
+		case AITextAndButtonsAlternateReturn: /* Save As... */
+		{
+			//Prompt for a location to save
+			[[NSSavePanel savePanel] beginSheetForDirectory:[[adium preferenceController] userPreferredDownloadFolder]
+													   file:[fileTransfer remoteFilename]
+											 modalForWindow:[windowController window]
+											  modalDelegate:self
+											 didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:)
+												contextInfo:nil];
+			break;
+		}
+		case AITextAndButtonsOtherReturn: /* Cancel */			
+		case AITextAndButtonsClosedWithoutResponse: /* Closed = Cancel */
+		{
+			/* File name remains nil and the transfer will therefore be canceled */
+			finished = YES;
+			break;
+		}
 	}
 
 	if(finished){
 		[target performSelector:selector
 					 withObject:fileTransfer
 					 withObject:localFilename];
-
-		//close the prompt
-		[self closeWindow:nil];
+		
+		//Release our instance	
+		[self autorelease];
+		
+		//Close the window
+		return YES;
 	}
+	
+	//Don't close the window if we're not finished.
+	return NO;
 }
+
 
 - (void)savePanelDidEnd:(NSSavePanel *)savePanel returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
@@ -194,9 +159,10 @@
 					 withObject:[savePanel filename]];
 
 		//close the prompt on the next run loop (for smooth animation of the sheet going back into the window)
-		[self performSelector:@selector(closeWindow:)
-				   withObject:nil
-				   afterDelay:0];
+		[windowController performSelector:@selector(closeWindow:)
+							   withObject:nil
+							   afterDelay:0];
+		[self autorelease];
 	}
 }
 
