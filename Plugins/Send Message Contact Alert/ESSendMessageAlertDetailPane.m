@@ -44,7 +44,7 @@
 	if(destUniqueID) destContact = (AIListContact *)[[adium contactController] existingListObjectWithUniqueID:destUniqueID];
 
 	//Configure the destination menu
-	[popUp_messageTo setMenu:[[adium contactController] menuOfAllContactsInGroup:nil withTarget:self]];
+	[popUp_messageTo setMenu:[[adium contactController] menuOfAllContactsInContainingObject:nil withTarget:self]];
 	[self setDestinationContact:(destContact ? destContact : inObject)];
 	
 	//Configure the remaining controls
@@ -76,7 +76,10 @@
 //Destination contact was selected from menu
 - (void)selectContact:(id)sender
 {
-	[self setDestinationContact:[sender representedObject]];	
+	AIListObject *listObject = [sender representedObject];
+	if ([listObject isKindOfClass:[AIListContact class]]){
+		[self setDestinationContact:(AIListContact *)listObject];
+	}
 }
 
 //Set our destination contact
