@@ -8,10 +8,15 @@
 <body><table border="0" cellspacing="0" cellpadding="5">
 <tr><td colspan="2" bgcolor="#000000" align="right"><h2 class="titlebar">Adium SQL Logging Instructions</h2></td></tr>
 <tr>
+<td width="170" height="20" background="transp-change.png" bgcolor="green"></td>
+<td height="20" background="transp-change.png"></td>
+</tr>
+<tr>
 <td width="170" bgcolor="green" valign="top" align="right">
 <h4>Adium SQL Links<br>
 </h4>
-<a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a><br><a href="tsearch.html" class="sidebar">TSearch Installation</a><br><a href="jsp.html" class="sidebar">Resin Installation</a><br><br><h4>Other links</h4>
+<a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a><br><a href="tsearch.html" class="sidebar">TSearch Installation</a><br><a href="resin.html" class="sidebar">Resin Installation</a><br><a href="technical.html" class="sidebar">Technical
+              Details</a><br><br><h4>Other links</h4>
 <a href="http://www.adiumx.com/" class="offsides">Adium</a><br><a href="http://adium.sourceforge.net" class="offsides">Adium
                 2.0</a><br><a href="http://www.funmac.com/forumdisplay.php?forumid=38" class="offsides">Adium
                 Forums</a><br><a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.3/interactive/index.html" class="offsides">PSQL Documentation</a>
@@ -33,7 +38,11 @@
     You can find information and installation instructions at <a href="http://www.entropy.ch/software/macosx/postgresql/" class="offsite">http://www.entropy.ch/software/macosx/postgresql/</a>.</p>
 <p>There is also a set of installation instructions for installing
     PostgreSQL at <a href="http://developer.apple.com/internet/macosx/postgres.html" class="offsite">http://developer.apple.com/internet/macosx/postgres.html</a>.
-    They're pretty good.</p>
+    That tutorial is very good.  It covers installing PostgreSQL from source, shows
+  how to use PostgreSQL with Perl (necessary for parser.pl or parser-2.pl to
+  work), Java (necessary for the JSP viewers to work), and PHP (not necessary
+  for this).  It also covers how to administer the database using phpPgAdmin, an
+  administration program with a web interface.</p>
 <p>After you have PostgreSQL set up, create a user with your username.</p>
 <div class="tutorialcode">
       <pre>createuser <i>username</i></pre>
@@ -74,14 +83,21 @@
           <li>restore.pl (returns original log files to pristine state)
           [<a href="http://www.visualdistortion.org/adium/changes/restore.pl.txt" class="offsite">Changes</a>]</li>
         </ul>
-        <li>These HTML pages:</li>
+        <li>These HTML/XML pages:</li>
       <ul>
-          <li>index.html (this page)
-          [<a href="http://www.visualdistortion.org/adium/changes/index.html.txt" class="offsite">Changes</a>]</li>
-          <li>jsp.html (JSP setup instructions)
-          [<a href="http://www.visualdistortion.org/adium/changes/jsp.html.txt" class="offsite">Changes</a>]</li>
-          <li>tsearch.html (tsearch setup instructions)
-          [<a href="http://www.visualdistortion.org/adium/changes/tsearch.html.txt" class="offsite">Changes</a>]</li>
+        <li>index (this page)
+          [<a href="http://www.visualdistortion.org/adium/changes/index.html.txt" class="offsite">HTML Changes</a>]
+          [<a href="http://www.visualdistortion.org/adium/changes/index.xml.txt" class="offsite">XML Changes</a>]</li>
+        <li>resin (JSP setup instructions)
+          [<a href="http://www.visualdistortion.org/adium/changes/resin.html.txt" class="offsite">HTML Changes</a>]
+          [<a href="http://www.visualdistortion.org/adium/changes/resin.xml.txt" class="offsite">XML Changes</a>]</li>
+          <li>tsearch (tsearch setup instructions)
+            [<a href="http://www.visualdistortion.org/adium/changes/tsearch.html.txt" class="offsite">HTML Changes</a>]
+            [<a href="http://www.visualdistortion.org/adium/changes/tsearch.xml.txt" class="offsite">XML Changes</a>]</li>
+          <li>technical (technical details/detailed parser instructions)
+            [<a href="http://www.visualdistortion.org/adium/changes/technical.html.txt" class="offsite">HTML Changes</a>]
+            [<a href="http://www.visualdistortion.org/adium/changes/technical.xml.txt" class="offsite">XML Changes</a>]</li>
+          <li>adium.xslt (XSLT stylesheet to transform XML to HTML) [<a href="http://www.visualdistortion.org/adium/changes/adium.xsl.txt" class="offsite">Changes</a>]</li>
       </ul>
     </ul>
     </p>
@@ -115,7 +131,8 @@ jmelloy=#</pre></div>
     <pre>alter user <i>username</i> set search_path=adium,public;</pre>
 </div>
 <p>After typing that, you should see the confirmation message <code>ALTER
-    USER</code>. Then type &quot;\d&quot; and you should see something like this:</p>
+      USER</code>. That changes only new instances of your user, so either
+    quit psql (<code>\q</code>) and start again, or type <code>set search_path=adium,public;</code>.  After doing either of those, type &quot;\d&quot; and you should see something like this:</p>
 <div class="tutorialcode"><pre>jmelloy=# \d
                             List of relations
       Schema      |             Name             |   Type   |  Owner  
@@ -130,13 +147,14 @@ jmelloy=#</pre></div>
   messages table stores all the messages themselves, and a reference to the
   users table.  Message_v contains a combination of both: the message, and the
   screenname who sent it, instead of a number.</p>
-<p>At this point, you're ready to use it.
+<p>At this point, you're ready to use the plugin.
   You can run <code>parser.pl</code> to insert all of your old logs into the
   database.  
   To run the script, a few modules are needed for your perl installation.
   The first one is called &quot;DBI&quot; (DataBase Interface) and the second &quot;DBD-PG&quot;
   (DataBase Driver-PostgreSQL).  Both can be gotten from fink or CPAN.
-  The fink modules are called dbi-pm and dbd-pg-pm (in unstable).
+  The fink modules are called dbi-pm and dbd-pg-pm (in unstable).  More
+  information on installation and use can be found in <a href="technical.html">Technical Details</a>.
   Run it by typing <code>./parser.pl</code>.  
   It should automatically find all of your logs, but you may need to edit the
   paths.
@@ -144,7 +162,10 @@ jmelloy=#</pre></div>
   In future versions, it will be able to specify a specific user.
   </p>
 <p>Download the newest source of Adium
-  2.0 from cvs, and compile it.  Switch the target to &quot;SQL Logger&quot; and hit
+    2.0 from CVS, and compile it.  Instructions for downloading through
+    anonymous CVS access can be found <a href="http://sourceforge.net/cvs/?group_id=67507" class="offsite">here</a>.  To compile, open &quot;Adium.pbproj&quot; and hit the
+    &quot;Build&quot; button in the top left.
+    Switch the target to &quot;SQL Logger&quot; (it should start at &quot;Adium&quot;) and hit
   &quot;Build&quot;.  Locate the built application, and control-click it.  Go to &quot;Show
   Package Contents&quot; navigate to the Plugin folder, and add &quot;SQL
   Logger.AdiumPlugin&quot; to it.  That should be all it takes to install it.
@@ -152,7 +173,9 @@ jmelloy=#</pre></div>
 <p>You can also download a compiled plugin here: <a href="http://www.visualdistortion.org/adium/sql-logger.tar.gz" class="offsite">sql-logger.tar.gz</a>, uncompress it, and drop it
   in the Adium application as discussed above.  This will not work without
   PostgreSQL installed on your system, and the proper database setup.</p>
-<p>If the plugin is installed correctly, it works very unobtrusively.  It
+<p>Currently, the plugin doesn't have any prefs.  If your databae setup is
+  non-standard, you need to set an environmental variable (PGHOST, PGUSER,
+  etc) as described in the PostgreSQL docs.  If the plugin is installed correctly, it works very unobtrusively.  It
   never does anything unless there is a problem, so if you start it up and
   don't get an &quot;Unable to Connect to Database&quot; dialog, it's probably
   working.</p>

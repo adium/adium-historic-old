@@ -92,7 +92,7 @@ select * from messages where message_idx ## 'search&amp;!string';
     "searchphrase" at the beginning, "searchphrase$ looks for it at the end,
     etc).  Check the PostgreSQL documentation for more info.</p>
     <p>If the tsearch module is not installed, the regular expressions will
-    work all the time.  The AND/OR/NOT boolean logic will not.</p>
+      work all the time, but very slowly.  The AND/OR/NOT boolean logic will not.</p>
 </body>
 </page>
 

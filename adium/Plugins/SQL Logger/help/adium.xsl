@@ -24,12 +24,20 @@
               </td>
           </tr>
           <tr>
+            <td width="170" height="20" background="transp-change.png"
+            bgcolor="green"> </td>
+            <td height="20" background="transp-change.png"> </td>
+          </tr>
+          <tr>
             <td width="170" bgcolor="green" valign="top" align="right">
               <h4>Adium SQL Links<br /></h4>
               <a href="index.html" class="sidebar">Installation Instructions</a>
               <br /><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a>
               <br /><a href="tsearch.html" class="sidebar">TSearch Installation</a>
-              <br /><a href="jsp.html" class="sidebar">Resin Installation</a>
+              <br /><a href="resin.html" class="sidebar">Resin Installation</a>
+              <br /><a href="technical.html" class="sidebar">Technical
+              Details</a>
+              
               <br /><br /><h4>Other links</h4>
               <a href="http://www.adiumx.com/" class="offsides">Adium</a>
               <br /><a href="http://adium.sourceforge.net" class="offsides">Adium
