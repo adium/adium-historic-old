@@ -1,5 +1,18 @@
 				Adium X Version History
 				-----------------------
+Version 0.52
+- Message history - when a chat window opens, display a specified number of lines from previous conversation(s) with that person
+- Added proxy connect options to Yahoo! accounts
+- Added proxy connect, host, port, connect via, resource, and encryption options to Jabber accounts
+- Fixed address book integration for contacts with spaces in their screennames
+- Fixed autocompletion in the New Message window
+- Fixed issues related to the applescript-based substitutions
+- Fixed a crash when editing saved away messages
+- Fixed a potential crash when deleting a new account
+- Fixed a crash when dragging text across the message window tabs
+- Fixed several crashes when running in OS X 10.2
+- Version checking improvements
+- Miscellaneous cosmetic and speed improvements
 
 Version 0.51 (4/08/2004)
 - Adium now works in 10.2 (Fixed crash on launch in 10.2)
