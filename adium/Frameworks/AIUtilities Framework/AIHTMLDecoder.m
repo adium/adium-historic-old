@@ -161,7 +161,7 @@ int HTMLEquivalentForFontSize(int fontSize);
                 [string appendString:@"&amp;"];
 
             }else{
-                [string appendCharacter:currentChar]; //!! Undocumented / Private method !!
+                [string appendFormat:@"%c", currentChar];
 
             }
             loop++;
