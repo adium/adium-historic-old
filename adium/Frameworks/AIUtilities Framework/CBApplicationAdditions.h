@@ -6,6 +6,7 @@
 //
 
 @interface NSApplication (CBApplicationAdditions)
+- (BOOL)isOnTigerOrBetter;
 - (BOOL)isOnPantherOrBetter;
 - (BOOL)isOnJaguarOrBetter;
 - (BOOL)isWebKitAvailable;
