@@ -1,0 +1,144 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="../style.css">
+	</head>
+	<body>
+		<h1>
+			AI Account Controller
+			<hr>
+		</h1>
+		<p>
+			Keeps track of the user's accounts.<br>
+			<br>
+			Adium supports multiple accounts, allowing a user to store the login information for multiple names (possibly on multiple services) and interact with all of them simultaneously.  Most of the account controller's work is behind the scenes, and involves storing, managing, and keeping track of these accounts.<br>
+		</p>
+
+		<h2>Common Tasks<hr></h2>
+		<h3>Get the list of accounts</h3>
+		<p class="desc">
+		An array containing all the user's accounts can be easily retrieved.
+		</p>
+		<p class="codeblock">
+		accountArray = [[owner accountController] accountArray];
+		</p>
+		<p class="desc">
+Each entry in the array is an AIAccount (or an AIAccount subclass), representing an individual account on the user's list.  By messaging the accounts directly, all sorts of status and property information can be retrieved.
+		</p>
+		<h3>Get notified when the account list changes</h3>
+		<p class="desc">
+			The 'Account_ListChanged' and 'Account_PropertiesChanged' notifications are broadcast to let everyone know when the account list changes.
+		</p>
+		<h3>Get notified when an account's status changes</h3>
+		<p class="desc">
+			The 'Account_StatusChanged' notification is broadcast when an account's status changes.  The object associated with the notification is the account in question, and can be queried for it's new status if necessary.
+		</p>
+			<br>
+		<h2>
+			Class Methods
+			<hr>
+		</h2>
+		<p class="code">
+			- (NSNotificationCenter *)<b>accountNotificationCenter</b>
+		</p>
+		<p class="desc">
+			Returns the shared account controller notification center. Available notifications:<br>
+			<br>
+			<table class="notlist">
+				<tr>
+					<td class="not">
+						Account_ListChanged
+					</td>
+				</tr>
+				<tr>
+					<td class="notdesc">
+						The account list's structure has changed. Posted when an account is added, moved, or deleted.
+					</td>
+				</tr>
+				<tr>
+					<td class="not">
+						Account_PropertiesChanged
+					</td>
+				</tr>
+				<tr>
+					<td class="notdesc">
+						The properties of an account have changed.<br>
+						(object) - Modified account <br>
+					</td>
+				</tr>
+				<tr>
+					<td class="not">
+						Account_StatusChanged
+					</td>
+				</tr>
+				<tr>
+					<td class="notdesc">
+						The status of an account has changed<br>
+						(object) - Modified account<br>
+					</td>
+				</tr>
+			</table>
+		</p>
+		<br><p class="code">
+			- (NSArray *)<b>accountArray</b>
+		</p>
+		<p class="desc">
+			Returns an array of the user's accounts. Each account is represented with an AIAccount (or a subclass of AIAccount) instance.
+		</p>
+		<br><p class="code">
+			- (AIAccount *)<b>newAccountAtIndex</b>:(int)index
+		</p>
+		<p class="desc">
+			Create a new account at the specified index in the account array. Make sure index is valid, you can do this by checking the count of the accountArray.
+		</p>
+		<br><p class="code">
+			- (void)<b>deleteAccount</b>:(AIAccount *)inAccount
+		</p>
+		<p class="desc">
+			Delete the specified account. Be careful with this, and always confirm the action with the user.
+		</p>
+		<br><p class="code">
+			- (int)<b>moveAccount</b>:(AIAccount *)account <b>toIndex</b>:(int)destIndex
+		</p>
+		<p class="desc">
+			Move an account to another place in the account list. Make sure index is valid (by checking the count of the accountArray).
+		</p>
+		<br><p class="code">
+			- (AIAccount *)<b>switchAccount</b>:(AIAccount *)inAccount <b>toService</b>:(AIService *)inService
+		</p>
+		<p class="desc">
+			Switch the specified account to a different service. Although the majority of account properties will no longer apply to the new service, it is possible to switch an account from one service to another. This is especially useful when there are multiple ways onto a service (such as with seperate protocols), as it allows quick switching between the available access methods.
+		</p>
+		
+		<br><p class="code">
+		- (void)<b>passwordForAccount</b>:(AIAccount *)inAccount <b>notifyingTarget</b>:(id)inTarget <b>selector</b>:(SEL)inSelector
+</p>
+		<p class="desc">
+			Retrieve an account password.  Adium handles all the details... keychains, prompting, etc.  The target will be called when the pass becomes available, and passed it (NSString).  It will be passed nil if the password could not be retrieved.		</p>
+		
+		<br><p class="code">
+		- (void)<b>forgetPasswordForAccount</b>:(AIAccount *)inAccount
+</p>
+		<p class="desc">
+			Forget a saved password, if there is one.
+		</p>
+		
+		<br><p class="code">
+		- (NSArray *)<b>availableServiceArray</b>
+</p>
+		<p class="desc">
+	Returns an array of services (AIService)
+		</p>
+		
+		
+		
+		
+		
+		
+
+		
+		
+		
+		
+		
+	</body>
+</html>

@@ -5,7 +5,6 @@
 		activeExecutable = F5DB464A016A8C1B016F8A6D;
 		activeTarget = 29B97326FDCFA39411CA2CEA;
 		addToTargets = (
-			F53B9A0602CCED6401A8010A,
 		);
 		breakpoints = (
 			F58E5A9101AC4CA601A80164,
@@ -17,14 +16,14 @@
 			F5DB464A016A8C1B016F8A6D,
 		);
 		perUserDictionary = {
-			PBXPerProjectTemplateStateSaveDate = 61583312;
+			PBXPerProjectTemplateStateSaveDate = 61618207;
 			PBXWorkspaceContents = (
 				{
 					LeftSlideOut = {
 						Split0 = {
 							Split0 = {
 								NavContent0 = {
-									bookmark = F5DF492A03ABAFFE01A8010A;
+									bookmark = F5E2ED7803AC385F01A8010A;
 									history = (
 										F5B00D0A03AB725F01A8010A,
 										F5B00D0B03AB725F01A8010A,
@@ -32,29 +31,19 @@
 										F5B00D0F03AB725F01A8010A,
 										F5B00D1003AB725F01A8010A,
 										F5B00D1103AB725F01A8010A,
-										F5B00D1303AB725F01A8010A,
 										F5B00D1503AB725F01A8010A,
 										F5B00D1603AB725F01A8010A,
 										F5B00D1703AB725F01A8010A,
 										F5B00D1803AB725F01A8010A,
-										F5B00D1903AB725F01A8010A,
-										F5B00D1D03AB725F01A8010A,
 										F5B00D1E03AB725F01A8010A,
-										F5B00D1F03AB725F01A8010A,
 										F5B00D2003AB725F01A8010A,
 										F5B00D2403AB725F01A8010A,
 										F5B00D2503AB725F01A8010A,
 										F55B417F03AB9A0501A8010A,
 										F55B418003AB9A0501A8010A,
-										F55B418103AB9A0501A8010A,
 										F55B418203AB9A0501A8010A,
-										F55B418403AB9A0501A8010A,
-										F55B418503AB9A0501A8010A,
-										F55B418603AB9A0501A8010A,
 										F55B418703AB9A0501A8010A,
-										F55B418803AB9A0501A8010A,
 										F55B418903AB9A0501A8010A,
-										F55B418A03AB9A0501A8010A,
 										F55B418F03AB9A0501A8010A,
 										F55B419003AB9A0501A8010A,
 										F55B419103AB9A0501A8010A,
@@ -64,7 +53,6 @@
 										F55B419503AB9A0501A8010A,
 										F55B419603AB9A0501A8010A,
 										F55B419703AB9A0501A8010A,
-										F55B419803AB9A0501A8010A,
 										F55B419903AB9A0501A8010A,
 										F55B419A03AB9A0501A8010A,
 										F55B419B03AB9A0501A8010A,
@@ -74,7 +62,26 @@
 										F55B419F03AB9A0501A8010A,
 										F5B9210C03ABAFC701A8010A,
 										F5DF492803ABAFFE01A8010A,
-										F55B418E03AB9A0501A8010A,
+										F52B542003ABB3A501A8010A,
+										F52B542203ABB3A501A8010A,
+										F52B542303ABB3A501A8010A,
+										F52B542403ABB3A501A8010A,
+										F535F4CF03ABB41101A8010A,
+										F535F4D003ABB41101A8010A,
+										F535F4D103ABB41101A8010A,
+										F5186BA703ABE62601A8010A,
+										F5186BA803ABE62601A8010A,
+										F5186BA903ABE62601A8010A,
+										F5186BAA03ABE62601A8010A,
+										F5186BAB03ABE62601A8010A,
+										F5186BAC03ABE62601A8010A,
+										F5186BAD03ABE62601A8010A,
+										F5186BAE03ABE62601A8010A,
+										F5186BAF03ABE62601A8010A,
+										F5186BB003ABE62601A8010A,
+										F5186BB103ABE62601A8010A,
+										F5186BB203ABE62601A8010A,
+										F5E2ED7703AC385F01A8010A,
 									);
 									prevStack = (
 										F5B00D2703AB725F01A8010A,
@@ -196,11 +203,30 @@
 										F55B41DB03AB9A0501A8010A,
 										F5B9210E03ABAFC701A8010A,
 										F5DF492903ABAFFE01A8010A,
+										F52B542603ABB3A501A8010A,
+										F52B542703ABB3A501A8010A,
+										F52B542803ABB3A501A8010A,
+										F52B542903ABB3A501A8010A,
+										F52B542A03ABB3A501A8010A,
+										F52B542B03ABB3A501A8010A,
+										F535F4D403ABB41101A8010A,
+										F535F4D503ABB41101A8010A,
+										F535F4D603ABB41101A8010A,
+										F535F4D703ABB41101A8010A,
+										F5186BB403ABE62601A8010A,
+										F5186BB503ABE62601A8010A,
+										F5186BB603ABE62601A8010A,
+										F5186BB703ABE62601A8010A,
+										F5186BB803ABE62601A8010A,
+										F5186BB903ABE62601A8010A,
+										F5186BBA03ABE62601A8010A,
+										F5186BBB03ABE62601A8010A,
+										F5186BBC03ABE62601A8010A,
 									);
 								};
 								NavCount = 1;
 								NavGeometry0 = {
-									Frame = "{{0, 0}, {713, 610}}";
+									Frame = "{{0, 0}, {713, 602}}";
 									NavBarVisible = YES;
 								};
 							};
@@ -232,16 +258,16 @@
 			);
 			PBXWorkspaceGeometries = (
 				{
-					ContentSize = "{1017, 657}";
+					ContentSize = "{1017, 649}";
 					LeftSlideOut = {
 						ActiveTab = 0;
 						Collapsed = NO;
-						Frame = "{{0, 23}, {1017, 634}}";
+						Frame = "{{0, 23}, {1017, 626}}";
 						Split0 = {
 							Collapsed = NO;
-							Frame = "{{304, 0}, {713, 634}}";
+							Frame = "{{304, 0}, {713, 626}}";
 							Split0 = {
-								Frame = "{{0, 24}, {713, 610}}";
+								Frame = "{{0, 24}, {713, 602}}";
 							};
 							SplitCount = 1;
 							Tab0 = {
@@ -288,19 +314,19 @@
 								};
 							};
 							Tab2 = {
-								BuildMessageFrame = "{{0, 0}, {699, 102}}";
-								BuildTranscriptFrame = "{{0, 111}, {699, 53}}";
-								Frame = "{{0, 0}, {697, 162}}";
+								BuildMessageFrame = "{{0, 0}, {715, 102}}";
+								BuildTranscriptFrame = "{{0, 111}, {715, 53}}";
+								Frame = "{{0, 0}, {713, 162}}";
 							};
 							Tab3 = {
-								Frame = "{{0, 0}, {752, 324}}";
+								Frame = "{{0, 0}, {713, 230}}";
 							};
 							TabCount = 4;
 							TabsVisible = YES;
 						};
 						SplitCount = 1;
 						Tab0 = {
-							Frame = "{{0, 0}, {280, 634}}";
+							Frame = "{{0, 0}, {280, 626}}";
 							GroupTreeTableConfiguration = (
 								SCMStatusColumn,
 								22,
@@ -354,24 +380,55 @@
 					StatusViewVisible = YES;
 					Template = F5F68CF101725D4C0D7A8F4C;
 					ToolbarVisible = YES;
-					WindowLocation = "{8, 35}";
+					WindowLocation = "{9, 43}";
 				},
 			);
-			PBXWorkspaceStateSaveDate = 61583312;
+			PBXWorkspaceStateSaveDate = 61618207;
 		};
 		perUserProjectItems = {
+			F5186BA703ABE62601A8010A = F5186BA703ABE62601A8010A;
+			F5186BA803ABE62601A8010A = F5186BA803ABE62601A8010A;
+			F5186BA903ABE62601A8010A = F5186BA903ABE62601A8010A;
+			F5186BAA03ABE62601A8010A = F5186BAA03ABE62601A8010A;
+			F5186BAB03ABE62601A8010A = F5186BAB03ABE62601A8010A;
+			F5186BAC03ABE62601A8010A = F5186BAC03ABE62601A8010A;
+			F5186BAD03ABE62601A8010A = F5186BAD03ABE62601A8010A;
+			F5186BAE03ABE62601A8010A = F5186BAE03ABE62601A8010A;
+			F5186BAF03ABE62601A8010A = F5186BAF03ABE62601A8010A;
+			F5186BB003ABE62601A8010A = F5186BB003ABE62601A8010A;
+			F5186BB103ABE62601A8010A = F5186BB103ABE62601A8010A;
+			F5186BB203ABE62601A8010A = F5186BB203ABE62601A8010A;
+			F5186BB403ABE62601A8010A = F5186BB403ABE62601A8010A;
+			F5186BB503ABE62601A8010A = F5186BB503ABE62601A8010A;
+			F5186BB603ABE62601A8010A = F5186BB603ABE62601A8010A;
+			F5186BB703ABE62601A8010A = F5186BB703ABE62601A8010A;
+			F5186BB803ABE62601A8010A = F5186BB803ABE62601A8010A;
+			F5186BB903ABE62601A8010A = F5186BB903ABE62601A8010A;
+			F5186BBA03ABE62601A8010A = F5186BBA03ABE62601A8010A;
+			F5186BBB03ABE62601A8010A = F5186BBB03ABE62601A8010A;
+			F5186BBC03ABE62601A8010A = F5186BBC03ABE62601A8010A;
+			F52B542003ABB3A501A8010A = F52B542003ABB3A501A8010A;
+			F52B542203ABB3A501A8010A = F52B542203ABB3A501A8010A;
+			F52B542303ABB3A501A8010A = F52B542303ABB3A501A8010A;
+			F52B542403ABB3A501A8010A = F52B542403ABB3A501A8010A;
+			F52B542603ABB3A501A8010A = F52B542603ABB3A501A8010A;
+			F52B542703ABB3A501A8010A = F52B542703ABB3A501A8010A;
+			F52B542803ABB3A501A8010A = F52B542803ABB3A501A8010A;
+			F52B542903ABB3A501A8010A = F52B542903ABB3A501A8010A;
+			F52B542A03ABB3A501A8010A = F52B542A03ABB3A501A8010A;
+			F52B542B03ABB3A501A8010A = F52B542B03ABB3A501A8010A;
+			F535F4CF03ABB41101A8010A = F535F4CF03ABB41101A8010A;
+			F535F4D003ABB41101A8010A = F535F4D003ABB41101A8010A;
+			F535F4D103ABB41101A8010A = F535F4D103ABB41101A8010A;
+			F535F4D403ABB41101A8010A = F535F4D403ABB41101A8010A;
+			F535F4D503ABB41101A8010A = F535F4D503ABB41101A8010A;
+			F535F4D603ABB41101A8010A = F535F4D603ABB41101A8010A;
+			F535F4D703ABB41101A8010A = F535F4D703ABB41101A8010A;
 			F55B417F03AB9A0501A8010A = F55B417F03AB9A0501A8010A;
 			F55B418003AB9A0501A8010A = F55B418003AB9A0501A8010A;
-			F55B418103AB9A0501A8010A = F55B418103AB9A0501A8010A;
 			F55B418203AB9A0501A8010A = F55B418203AB9A0501A8010A;
-			F55B418403AB9A0501A8010A = F55B418403AB9A0501A8010A;
-			F55B418503AB9A0501A8010A = F55B418503AB9A0501A8010A;
-			F55B418603AB9A0501A8010A = F55B418603AB9A0501A8010A;
 			F55B418703AB9A0501A8010A = F55B418703AB9A0501A8010A;
-			F55B418803AB9A0501A8010A = F55B418803AB9A0501A8010A;
 			F55B418903AB9A0501A8010A = F55B418903AB9A0501A8010A;
-			F55B418A03AB9A0501A8010A = F55B418A03AB9A0501A8010A;
-			F55B418E03AB9A0501A8010A = F55B418E03AB9A0501A8010A;
 			F55B418F03AB9A0501A8010A = F55B418F03AB9A0501A8010A;
 			F55B419003AB9A0501A8010A = F55B419003AB9A0501A8010A;
 			F55B419103AB9A0501A8010A = F55B419103AB9A0501A8010A;
@@ -381,7 +438,6 @@
 			F55B419503AB9A0501A8010A = F55B419503AB9A0501A8010A;
 			F55B419603AB9A0501A8010A = F55B419603AB9A0501A8010A;
 			F55B419703AB9A0501A8010A = F55B419703AB9A0501A8010A;
-			F55B419803AB9A0501A8010A = F55B419803AB9A0501A8010A;
 			F55B419903AB9A0501A8010A = F55B419903AB9A0501A8010A;
 			F55B419A03AB9A0501A8010A = F55B419A03AB9A0501A8010A;
 			F55B419B03AB9A0501A8010A = F55B419B03AB9A0501A8010A;
@@ -448,15 +504,11 @@
 			F5B00D0F03AB725F01A8010A = F5B00D0F03AB725F01A8010A;
 			F5B00D1003AB725F01A8010A = F5B00D1003AB725F01A8010A;
 			F5B00D1103AB725F01A8010A = F5B00D1103AB725F01A8010A;
-			F5B00D1303AB725F01A8010A = F5B00D1303AB725F01A8010A;
 			F5B00D1503AB725F01A8010A = F5B00D1503AB725F01A8010A;
 			F5B00D1603AB725F01A8010A = F5B00D1603AB725F01A8010A;
 			F5B00D1703AB725F01A8010A = F5B00D1703AB725F01A8010A;
 			F5B00D1803AB725F01A8010A = F5B00D1803AB725F01A8010A;
-			F5B00D1903AB725F01A8010A = F5B00D1903AB725F01A8010A;
-			F5B00D1D03AB725F01A8010A = F5B00D1D03AB725F01A8010A;
 			F5B00D1E03AB725F01A8010A = F5B00D1E03AB725F01A8010A;
-			F5B00D1F03AB725F01A8010A = F5B00D1F03AB725F01A8010A;
 			F5B00D2003AB725F01A8010A = F5B00D2003AB725F01A8010A;
 			F5B00D2403AB725F01A8010A = F5B00D2403AB725F01A8010A;
 			F5B00D2503AB725F01A8010A = F5B00D2503AB725F01A8010A;
@@ -528,7 +580,8 @@
 			F5B9210E03ABAFC701A8010A = F5B9210E03ABAFC701A8010A;
 			F5DF492803ABAFFE01A8010A = F5DF492803ABAFFE01A8010A;
 			F5DF492903ABAFFE01A8010A = F5DF492903ABAFFE01A8010A;
-			F5DF492A03ABAFFE01A8010A = F5DF492A03ABAFFE01A8010A;
+			F5E2ED7703AC385F01A8010A = F5E2ED7703AC385F01A8010A;
+			F5E2ED7803AC385F01A8010A = F5E2ED7803AC385F01A8010A;
 		};
 		projectwideBuildSettings = {
 		};
@@ -550,8 +603,376 @@
 	F510B77303339F1C01A8010A = {
 		activeExec = 0;
 	};
+	F5186BA703ABE62601A8010A = {
+		fRef = F55B413A03AB895501A8010A;
+		isa = PBXTextBookmark;
+		name = "AIAccountListEditSheetController.m: 60";
+		rLen = 25;
+		rLoc = 3083;
+		rType = 0;
+		vrLen = 723;
+		vrLoc = 2724;
+	};
+	F5186BA803ABE62601A8010A = {
+		fRef = F59DB3B9033EA90801A8010A;
+		isa = PBXTextBookmark;
+		name = "AIMTOC2Account.m: 314";
+		rLen = 21;
+		rLoc = 10516;
+		rType = 0;
+		vrLen = 575;
+		vrLoc = 10222;
+	};
+	F5186BA903ABE62601A8010A = {
+		fRef = F55B411303AB88D601A8010A;
+		isa = PBXTextBookmark;
+		name = "AIContactListEditorWindowController.m: 81";
+		rLen = 19;
+		rLoc = 4347;
+		rType = 0;
+		vrLen = 816;
+		vrLoc = 3800;
+	};
+	F5186BAA03ABE62601A8010A = {
+		fRef = F570A585037049D501A8010A;
+		isa = PBXTextBookmark;
+		name = "AIAccountMenuAccessPlugin.m: 141";
+		rLen = 25;
+		rLoc = 6196;
+		rType = 0;
+		vrLen = 1334;
+		vrLoc = 5648;
+	};
+	F5186BAB03ABE62601A8010A = {
+		fRef = F57938AB033E737001A8010A;
+		isa = PBXTextBookmark;
+		name = "AIContactController.m: 471";
+		rLen = 19;
+		rLoc = 18302;
+		rType = 0;
+		vrLen = 989;
+		vrLoc = 17674;
+	};
+	F5186BAC03ABE62601A8010A = {
+		fRef = F55B40FF03AB87CA01A8010A;
+		isa = PBXTextBookmark;
+		name = "AIStandardToolbarItemsPlugin.m: 112";
+		rLen = 27;
+		rLoc = 5467;
+		rType = 0;
+		vrLen = 1103;
+		vrLoc = 4977;
+	};
+	F5186BAD03ABE62601A8010A = {
+		fRef = F57939A2033E75CB01A8010A;
+		isa = PBXTextBookmark;
+		name = "AISCLViewPlugin.m: 110";
+		rLen = 27;
+		rLoc = 4098;
+		rType = 0;
+		vrLen = 906;
+		vrLoc = 3581;
+	};
+	F5186BAE03ABE62601A8010A = {
+		fRef = F570A5CE03704D3D01A8010A;
+		isa = PBXTextBookmark;
+		name = "AIMessageViewController.m: 67";
+		rLen = 27;
+		rLoc = 3181;
+		rType = 0;
+		vrLen = 1078;
+		vrLoc = 2767;
+	};
+	F5186BAF03ABE62601A8010A = {
+		fRef = F5793982033E756E01A8010A;
+		isa = PBXTextBookmark;
+		name = "AIMessageWindowController.m: 51";
+		rLen = 27;
+		rLoc = 2409;
+		rType = 0;
+		vrLen = 911;
+		vrLoc = 1984;
+	};
+	F5186BB003ABE62601A8010A = {
+		fRef = F579397E033E756E01A8010A;
+		isa = PBXTextBookmark;
+		name = "AIContactListWindowController.m: 78";
+		rLen = 27;
+		rLoc = 3056;
+		rType = 0;
+		vrLen = 818;
+		vrLoc = 2578;
+	};
+	F5186BB103ABE62601A8010A = {
+		fRef = F5793980033E756E01A8010A;
+		isa = PBXTextBookmark;
+		name = "AIDualWindowInterface.m: 342";
+		rLen = 27;
+		rLoc = 13636;
+		rType = 0;
+		vrLen = 791;
+		vrLoc = 13144;
+	};
+	F5186BB203ABE62601A8010A = {
+		fRef = F57938AC033E737001A8010A;
+		isa = PBXTextBookmark;
+		name = "AIInterfaceController.m: initiateMessage:";
+		rLen = 27;
+		rLoc = 1999;
+		rType = 0;
+		vrLen = 1182;
+		vrLoc = 1557;
+	};
+	F5186BB403ABE62601A8010A = {
+		fRef = F570A585037049D501A8010A;
+		isa = PBXTextBookmark;
+		name = "AIAccountMenuAccessPlugin.m: 141";
+		rLen = 25;
+		rLoc = 6196;
+		rType = 0;
+		vrLen = 642;
+		vrLoc = 5783;
+	};
+	F5186BB503ABE62601A8010A = {
+		fRef = F55B413A03AB895501A8010A;
+		isa = PBXTextBookmark;
+		name = "AIAccountListEditSheetController.m: 60";
+		rLen = 25;
+		rLoc = 3083;
+		rType = 0;
+		vrLen = 723;
+		vrLoc = 2724;
+	};
+	F5186BB603ABE62601A8010A = {
+		fRef = F57939A2033E75CB01A8010A;
+		isa = PBXTextBookmark;
+		name = "AISCLViewPlugin.m: 110";
+		rLen = 27;
+		rLoc = 4098;
+		rType = 0;
+		vrLen = 906;
+		vrLoc = 3581;
+	};
+	F5186BB703ABE62601A8010A = {
+		fRef = F570A5CE03704D3D01A8010A;
+		isa = PBXTextBookmark;
+		name = "AIMessageViewController.m: 67";
+		rLen = 32;
+		rLoc = 3231;
+		rType = 0;
+		vrLen = 952;
+		vrLoc = 2993;
+	};
+	F5186BB803ABE62601A8010A = {
+		fRef = F570A5CE03704D3D01A8010A;
+		isa = PBXTextBookmark;
+		name = "AIMessageViewController.m: 67";
+		rLen = 27;
+		rLoc = 3181;
+		rType = 0;
+		vrLen = 1078;
+		vrLoc = 2767;
+	};
+	F5186BB903ABE62601A8010A = {
+		fRef = F5793982033E756E01A8010A;
+		isa = PBXTextBookmark;
+		name = "AIMessageWindowController.m: 51";
+		rLen = 27;
+		rLoc = 2409;
+		rType = 0;
+		vrLen = 911;
+		vrLoc = 1984;
+	};
+	F5186BBA03ABE62601A8010A = {
+		fRef = F579397E033E756E01A8010A;
+		isa = PBXTextBookmark;
+		name = "AIContactListWindowController.m: 78";
+		rLen = 27;
+		rLoc = 3056;
+		rType = 0;
+		vrLen = 818;
+		vrLoc = 2578;
+	};
+	F5186BBB03ABE62601A8010A = {
+		fRef = F5793980033E756E01A8010A;
+		isa = PBXTextBookmark;
+		name = "AIDualWindowInterface.m: 342";
+		rLen = 27;
+		rLoc = 13636;
+		rType = 0;
+		vrLen = 791;
+		vrLoc = 13144;
+	};
+	F5186BBC03ABE62601A8010A = {
+		fRef = F57938AC033E737001A8010A;
+		isa = PBXTextBookmark;
+		name = "AIInterfaceController.m: initiateMessage:";
+		rLen = 27;
+		rLoc = 1999;
+		rType = 0;
+		vrLen = 1182;
+		vrLoc = 1557;
+	};
 	F51DEFAE032633E301A8010A = {
 		activeExec = 0;
+	};
+	F52B542003ABB3A501A8010A = {
+		fRef = F5CDD1170350B92801A8010A;
+		isa = PBXTextBookmark;
+		name = "Default Preferences.plist: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 778;
+		vrLoc = 0;
+	};
+	F52B542203ABB3A501A8010A = {
+		fRef = F552078B033F727F01A8010A;
+		isa = PBXBookmark;
+	};
+	F52B542303ABB3A501A8010A = {
+		fRef = F574173F033E72AC01A8010A;
+		isa = PBXTextBookmark;
+		name = "gpl.txt: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 2051;
+		vrLoc = 0;
+	};
+	F52B542403ABB3A501A8010A = {
+		fRef = F5741740033E72AC01A8010A;
+		isa = PBXTextBookmark;
+		name = "ReadMe.rtf: 33";
+		rLen = 0;
+		rLoc = 1080;
+		rType = 0;
+		vrLen = 1619;
+		vrLoc = 0;
+	};
+	F52B542603ABB3A501A8010A = {
+		fRef = F5CDD1170350B92801A8010A;
+		isa = PBXTextBookmark;
+		name = "Default Preferences.plist: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 778;
+		vrLoc = 0;
+	};
+	F52B542703ABB3A501A8010A = {
+		fRef = F59DB3D6033EA9CD01A8010A;
+		isa = PBXTextBookmark;
+		name = "AIAdium.h: 137";
+		rLen = 0;
+		rLoc = 6073;
+		rType = 0;
+		vrLen = 2361;
+		vrLoc = 0;
+	};
+	F52B542803ABB3A501A8010A = {
+		fRef = F5741740033E72AC01A8010A;
+		isa = PBXTextBookmark;
+		name = "ReadMe.rtf: 33";
+		rLen = 0;
+		rLoc = 1080;
+		rType = 0;
+		vrLen = 1619;
+		vrLoc = 0;
+	};
+	F52B542903ABB3A501A8010A = {
+		fRef = F552078B033F727F01A8010A;
+		isa = PBXBookmark;
+	};
+	F52B542A03ABB3A501A8010A = {
+		fRef = F574173F033E72AC01A8010A;
+		isa = PBXTextBookmark;
+		name = "gpl.txt: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 2051;
+		vrLoc = 0;
+	};
+	F52B542B03ABB3A501A8010A = {
+		fRef = F5741740033E72AC01A8010A;
+		isa = PBXTextBookmark;
+		name = "ReadMe.rtf: 33";
+		rLen = 0;
+		rLoc = 1080;
+		rType = 0;
+		vrLen = 1619;
+		vrLoc = 0;
+	};
+	F535F4CF03ABB41101A8010A = {
+		fRef = F57938AD033E737001A8010A;
+		isa = PBXTextBookmark;
+		name = "AILoginController.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1693;
+		vrLoc = 0;
+	};
+	F535F4D003ABB41101A8010A = {
+		fRef = F59DB3D7033EA9CD01A8010A;
+		isa = PBXTextBookmark;
+		name = "AIAdium.m: 57";
+		rLen = 0;
+		rLoc = 2432;
+		rType = 0;
+		vrLen = 1605;
+		vrLoc = 682;
+	};
+	F535F4D103ABB41101A8010A = {
+		fRef = F59DB3D6033EA9CD01A8010A;
+		isa = PBXTextBookmark;
+		name = "AIAdium.h: 137";
+		rLen = 0;
+		rLoc = 6073;
+		rType = 0;
+		vrLen = 1312;
+		vrLoc = 5618;
+	};
+	F535F4D403ABB41101A8010A = {
+		fRef = F59DB3D7033EA9CD01A8010A;
+		isa = PBXTextBookmark;
+		name = "AIAdium.m: 57";
+		rLen = 0;
+		rLoc = 2432;
+		rType = 0;
+		vrLen = 1144;
+		vrLoc = 1447;
+	};
+	F535F4D503ABB41101A8010A = {
+		fRef = F57938AD033E737001A8010A;
+		isa = PBXTextBookmark;
+		name = "AILoginController.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1693;
+		vrLoc = 0;
+	};
+	F535F4D603ABB41101A8010A = {
+		fRef = F59DB3D7033EA9CD01A8010A;
+		isa = PBXTextBookmark;
+		name = "AIAdium.m: 57";
+		rLen = 0;
+		rLoc = 2432;
+		rType = 0;
+		vrLen = 1605;
+		vrLoc = 682;
+	};
+	F535F4D703ABB41101A8010A = {
+		fRef = F59DB3D6033EA9CD01A8010A;
+		isa = PBXTextBookmark;
+		name = "AIAdium.h: 137";
+		rLen = 0;
+		rLoc = 6073;
+		rType = 0;
+		vrLen = 1312;
+		vrLoc = 5618;
 	};
 	F5370C9802D76F3B01A8010A = {
 		activeExec = 0;
@@ -588,16 +1009,6 @@
 		vrLen = 761;
 		vrLoc = 1242;
 	};
-	F55B418103AB9A0501A8010A = {
-		fRef = F59DB3B9033EA90801A8010A;
-		isa = PBXTextBookmark;
-		name = "AIMTOC2Account.m: sendContentObject:toHandle:";
-		rLen = 312;
-		rLoc = 6573;
-		rType = 0;
-		vrLen = 964;
-		vrLoc = 6155;
-	};
 	F55B418203AB9A0501A8010A = {
 		fRef = F5793912033E748F01A8010A;
 		isa = PBXTextBookmark;
@@ -607,36 +1018,6 @@
 		rType = 0;
 		vrLen = 323;
 		vrLoc = 1386;
-	};
-	F55B418403AB9A0501A8010A = {
-		fRef = F59DB3D6033EA9CD01A8010A;
-		isa = PBXTextBookmark;
-		name = "AIAdium.h: identifier";
-		rLen = 0;
-		rLoc = 6073;
-		rType = 0;
-		vrLen = 2405;
-		vrLoc = 0;
-	};
-	F55B418503AB9A0501A8010A = {
-		fRef = F59DB3D7033EA9CD01A8010A;
-		isa = PBXTextBookmark;
-		name = "AIAdium.m: accountController";
-		rLen = 0;
-		rLoc = 2432;
-		rType = 0;
-		vrLen = 1983;
-		vrLoc = 0;
-	};
-	F55B418603AB9A0501A8010A = {
-		fRef = F574173F033E72AC01A8010A;
-		isa = PBXTextBookmark;
-		name = "gpl.txt: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 2051;
-		vrLoc = 0;
 	};
 	F55B418703AB9A0501A8010A = {
 		fRef = F59DB6AD033EB74801A8010A;
@@ -648,10 +1029,6 @@
 		vrLen = 110;
 		vrLoc = 0;
 	};
-	F55B418803AB9A0501A8010A = {
-		fRef = F552078B033F727F01A8010A;
-		isa = PBXBookmark;
-	};
 	F55B418903AB9A0501A8010A = {
 		fRef = F5793949033E74E401A8010A;
 		isa = PBXTextBookmark;
@@ -660,26 +1037,6 @@
 		rLoc = 0;
 		rType = 0;
 		vrLen = 1862;
-		vrLoc = 0;
-	};
-	F55B418A03AB9A0501A8010A = {
-		fRef = F5741740033E72AC01A8010A;
-		isa = PBXTextBookmark;
-		name = "ReadMe.rtf: 33";
-		rLen = 0;
-		rLoc = 1080;
-		rType = 0;
-		vrLen = 1619;
-		vrLoc = 0;
-	};
-	F55B418E03AB9A0501A8010A = {
-		fRef = F5CDD1170350B92801A8010A;
-		isa = PBXTextBookmark;
-		name = "Default Preferences.plist: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 778;
 		vrLoc = 0;
 	};
 	F55B418F03AB9A0501A8010A = {
@@ -752,16 +1109,6 @@
 		rLoc = 0;
 		rType = 0;
 		vrLen = 1610;
-		vrLoc = 0;
-	};
-	F55B419803AB9A0501A8010A = {
-		fRef = F55B413A03AB895501A8010A;
-		isa = PBXTextBookmark;
-		name = "AIAccountListEditSheetController.m: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1749;
 		vrLoc = 0;
 	};
 	F55B419903AB9A0501A8010A = {
@@ -1403,16 +1750,6 @@
 		vrLen = 412;
 		vrLoc = 0;
 	};
-	F5B00D1303AB725F01A8010A = {
-		fRef = F57938AB033E737001A8010A;
-		isa = PBXTextBookmark;
-		name = "AIContactController.m: __VERSION__";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1436;
-		vrLoc = 1413;
-	};
 	F5B00D1503AB725F01A8010A = {
 		fRef = F57938AE033E737001A8010A;
 		isa = PBXTextBookmark;
@@ -1453,26 +1790,6 @@
 		vrLen = 1349;
 		vrLoc = 1212;
 	};
-	F5B00D1903AB725F01A8010A = {
-		fRef = F57938AD033E737001A8010A;
-		isa = PBXTextBookmark;
-		name = "AILoginController.m: __VERSION__";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 715;
-		vrLoc = 1030;
-	};
-	F5B00D1D03AB725F01A8010A = {
-		fRef = F579397E033E756E01A8010A;
-		isa = PBXTextBookmark;
-		name = "AIContactListWindowController.m: windowDidLoad";
-		rLen = 0;
-		rLoc = 3331;
-		rType = 0;
-		vrLen = 630;
-		vrLoc = 2766;
-	};
 	F5B00D1E03AB725F01A8010A = {
 		fRef = F570A5BE03704CB801A8010A;
 		isa = PBXTextBookmark;
@@ -1482,16 +1799,6 @@
 		rType = 0;
 		vrLen = 929;
 		vrLoc = 3255;
-	};
-	F5B00D1F03AB725F01A8010A = {
-		fRef = F57938AC033E737001A8010A;
-		isa = PBXTextBookmark;
-		name = "AIInterfaceController.m: __VERSION__";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1805;
-		vrLoc = 0;
 	};
 	F5B00D2003AB725F01A8010A = {
 		fRef = F57938AF033E737001A8010A;
@@ -2208,16 +2515,6 @@
 		glyphRangeLocation = 0;
 		isa = DVDocBookmark;
 	};
-	F5DF492A03ABAFFE01A8010A = {
-		fRef = F5CDD1170350B92801A8010A;
-		isa = PBXTextBookmark;
-		name = "Default Preferences.plist: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 778;
-		vrLoc = 0;
-	};
 	F5DF492B03ABAFFF01A8010A = {
 		isa = PBXFileReference;
 		name = index.html;
@@ -2229,5 +2526,25 @@
 		name = index.html;
 		path = /Developer/Documentation/DeveloperTools/ProjectBuilder/ProjectBuilder.help/Contents/Resources/English.lproj/UsingHelp/index.html;
 		refType = 0;
+	};
+	F5E2ED7703AC385F01A8010A = {
+		fRef = F5186B7603ABD62101A8010A;
+		isa = PBXTextBookmark;
+		name = "Available.rtf: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1904;
+		vrLoc = 0;
+	};
+	F5E2ED7803AC385F01A8010A = {
+		fRef = F5186B7603ABD62101A8010A;
+		isa = PBXTextBookmark;
+		name = "Available.rtf: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1904;
+		vrLoc = 0;
 	};
 }

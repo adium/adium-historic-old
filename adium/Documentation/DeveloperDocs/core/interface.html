@@ -1,0 +1,117 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="../style.css">
+	</head>
+	<body>
+		<h1>
+			AI Interface Controller
+			<hr>
+		</h1>
+		<p>
+			Manages Adium's interface<br>
+			<br>
+			The interface controller handles general interface needs, such as requesting a 'message window' for a handle. The active interface can take any form.<br><br>
+		</p>
+		<h2>
+			Class Methods
+			<hr>
+		</h2>
+		<p class="code">
+			- (NSNotificationCenter *)<b>interfaceNotificationCenter</b>
+		</p>
+		<p class="desc">
+			Returns the shared interface controller notification center. Available notifications:<br><br>
+			<table class="notlist">
+				<tr>
+					<td class="not">
+						Interface_ContactSelectionChanged
+					</td>
+				</tr>
+				<tr>
+					<td class="notdesc">
+						Sent when the currently selected contact object changes<br>
+						@"Object" - The newly selected contact object (AIContactObject)<br>
+					</td>
+				</tr>
+				<tr>
+					<td class="not">
+						Interface_InitiateMessage
+					</td>
+				</tr>
+				<tr>
+					<td class="notdesc">
+						Instructs the interface to open a new 'message window' with the specified contents<br>@"To" - The destination (AIContactHandle)<br>@"From" - The source (AIAccount)<br>@"Content" - The initial outgoing content (This is only guaranteed to be used if a valid 'To' and 'From' are specified)
+					</td>
+				</tr>
+				<tr>
+					<td class="not">
+						Interface_CloseMessage
+					</td>
+				</tr>
+				<tr>
+					<td class="notdesc">
+						Instructs the interface to close an existing message window<br>@"Handle" - The handle who's message should be closed
+					</td>
+				</tr>
+				<tr>
+					<td class="not">
+						Interface_SendEnteredMessage
+					</td>
+				</tr>
+				<tr>
+					<td class="notdesc">
+						Instructs the interface to send the entered message<br>(object) - Handle who's message to send (AIContactHandle)
+					</td>
+				</tr>
+				<tr>
+					<td class="not">
+						Interface_WillSendEnteredMessage
+					</td>
+				</tr>
+				<tr>
+					<td class="notdesc">
+						Sent by interface before sending<br>(object) - Handle who's message is being sent (AIContactHandle)
+					</td>
+				</tr>
+				<tr>
+					<td class="not">
+						Interface_DidSendEnteredMessage
+					</td>
+				</tr>
+				<tr>
+					<td class="notdesc">
+						Sent by interface after sending<br>(object) - Handle who's message was sent (AIContactHandle)
+					</td>
+				</tr>
+			</table>
+		</p>
+		<br>
+		<p class="code">
+			- (void)<b>registerContactListView</b>:(id &lt;AIContactListViewController&gt;)inView
+		</p>
+		<p class="desc">
+			Register a contact list view
+		</p>
+		<br>
+		<p class="code">
+			- (NSView *)<b>contactListView</b>
+		</p>
+		<p class="desc">
+			Return the currently active contact list view
+		</p>
+		<br>
+		<p class="code">
+			- (void)<b>registerMessageView</b>:(id &lt;AIMessageViewController&gt;)inView
+		</p>
+		<p class="desc">
+			Register a message view
+		</p>
+		<br>
+		<p class="code">
+			- (NSView *)<b>messageViewForHandle</b>:(AIContactHandle *)inHandle
+		</p>
+		<p class="desc">
+			Return the currently active message view
+		</p>
+	</body>
+</html>

@@ -143,6 +143,7 @@
 		};
 		29B97314FDCFA39411CA2CEA = {
 			children = (
+				F5186B6703ABD62101A8010A,
 				F5385CF601BEB9F901A80165,
 				F5CDD1170350B92801A8010A,
 				F59DB3D6033EA9CD01A8010A,
@@ -933,6 +934,284 @@
 			);
 			isa = PBXGroup;
 			name = "Out Of Sync Window";
+			refType = 4;
+		};
+		F5186B6703ABD62101A8010A = {
+			children = (
+				F5186B6903ABD62101A8010A,
+				F5186B7603ABD62101A8010A,
+				F5186B7703ABD62101A8010A,
+				F5186B7803ABD62101A8010A,
+				F5186B8403ABD62101A8010A,
+				F5186B8503ABD62101A8010A,
+				F5186B9E03ABD62101A8010A,
+				F5186B9F03ABD62101A8010A,
+				F5186BA003ABD62101A8010A,
+				F5186BA103ABD62101A8010A,
+				F5186BA203ABD62101A8010A,
+				F5186BA303ABD62101A8010A,
+				F5186BA403ABD62101A8010A,
+				F5186BA503ABD62101A8010A,
+				F5186BA603ABD62101A8010A,
+			);
+			isa = PBXGroup;
+			name = DeveloperDocs;
+			path = Documentation/DeveloperDocs;
+			refType = 4;
+		};
+		F5186B6903ABD62101A8010A = {
+			children = (
+				F5186B6A03ABD62101A8010A,
+				F5186B6B03ABD62101A8010A,
+				F5186B6C03ABD62101A8010A,
+				F5186B6D03ABD62101A8010A,
+				F5186B6E03ABD62101A8010A,
+				F5186B6F03ABD62101A8010A,
+				F5186B7003ABD62101A8010A,
+				F5186B7103ABD62101A8010A,
+				F5186B7203ABD62101A8010A,
+				F5186B7303ABD62101A8010A,
+				F5186B7403ABD62101A8010A,
+				F5186B7503ABD62101A8010A,
+			);
+			isa = PBXGroup;
+			path = adium;
+			refType = 4;
+		};
+		F5186B6A03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = .DS_Store;
+			refType = 4;
+		};
+		F5186B6B03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = account.html;
+			refType = 4;
+		};
+		F5186B6C03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = contactGroup.html;
+			refType = 4;
+		};
+		F5186B6D03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = contactHandle.html;
+			refType = 4;
+		};
+		F5186B6E03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = contactObject.html;
+			refType = 4;
+		};
+		F5186B6F03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = contentMessage.html;
+			refType = 4;
+		};
+		F5186B7003ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = infoView.html;
+			refType = 4;
+		};
+		F5186B7103ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = plugin.html;
+			refType = 4;
+		};
+		F5186B7203ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = preferencePane.html;
+			refType = 4;
+		};
+		F5186B7303ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = prefView.html;
+			refType = 4;
+		};
+		F5186B7403ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = service.html;
+			refType = 4;
+		};
+		F5186B7503ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = serviceType.html;
+			refType = 4;
+		};
+		F5186B7603ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = Available.rtf;
+			refType = 4;
+		};
+		F5186B7703ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = blank.html;
+			refType = 4;
+		};
+		F5186B7803ABD62101A8010A = {
+			children = (
+				F5186B7903ABD62101A8010A,
+				F5186B7A03ABD62101A8010A,
+				F5186B7B03ABD62101A8010A,
+				F5186B7C03ABD62101A8010A,
+				F5186B7D03ABD62101A8010A,
+				F5186B7E03ABD62101A8010A,
+				F5186B7F03ABD62101A8010A,
+				F5186B8003ABD62101A8010A,
+				F5186B8103ABD62101A8010A,
+				F5186B8203ABD62101A8010A,
+				F5186B8303ABD62101A8010A,
+			);
+			isa = PBXGroup;
+			path = core;
+			refType = 4;
+		};
+		F5186B7903ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = .DS_Store;
+			refType = 4;
+		};
+		F5186B7A03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = account.html;
+			refType = 4;
+		};
+		F5186B7B03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = contact.html;
+			refType = 4;
+		};
+		F5186B7C03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = content.html;
+			refType = 4;
+		};
+		F5186B7D03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = interface.html;
+			refType = 4;
+		};
+		F5186B7E03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = login.html;
+			refType = 4;
+		};
+		F5186B7F03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = menu.html;
+			refType = 4;
+		};
+		F5186B8003ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = plugin.html;
+			refType = 4;
+		};
+		F5186B8103ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = preference.html;
+			refType = 4;
+		};
+		F5186B8203ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = sound.html;
+			refType = 4;
+		};
+		F5186B8303ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = toolbar.html;
+			refType = 4;
+		};
+		F5186B8403ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = header.html;
+			refType = 4;
+		};
+		F5186B8503ABD62101A8010A = {
+			children = (
+				F5186B9803ABD62101A8010A,
+				F5186B9903ABD62101A8010A,
+				F5186B9A03ABD62101A8010A,
+				F5186B9B03ABD62101A8010A,
+				F5186B9C03ABD62101A8010A,
+				F5186B9D03ABD62101A8010A,
+			);
+			isa = PBXGroup;
+			path = icons;
+			refType = 4;
+		};
+		F5186B9803ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = adium.png;
+			refType = 4;
+		};
+		F5186B9903ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = empty.png;
+			refType = 4;
+		};
+		F5186B9A03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = folder.png;
+			refType = 4;
+		};
+		F5186B9B03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = page.png;
+			refType = 4;
+		};
+		F5186B9C03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = sflipdown.png;
+			refType = 4;
+		};
+		F5186B9D03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = sflipright.png;
+			refType = 4;
+		};
+		F5186B9E03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = index.html;
+			refType = 4;
+		};
+		F5186B9F03ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = line.html;
+			refType = 4;
+		};
+		F5186BA003ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = main.html;
+			refType = 4;
+		};
+		F5186BA103ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = style.css;
+			refType = 4;
+		};
+		F5186BA203ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = tree.html;
+			refType = 4;
+		};
+		F5186BA303ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = tree.js;
+			refType = 4;
+		};
+		F5186BA403ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = tree_items.js;
+			refType = 4;
+		};
+		F5186BA503ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = tree_tpl.js;
+			refType = 4;
+		};
+		F5186BA603ABD62101A8010A = {
+			isa = PBXFileReference;
+			path = treestyle.css;
 			refType = 4;
 		};
 		F51DEC0D03262FB501A8010A = {

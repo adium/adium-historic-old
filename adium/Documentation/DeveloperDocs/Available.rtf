@@ -1,0 +1,1164 @@
+{\rtf1\mac\ansicpg10000\cocoartf102
+{\fonttbl\f0\froman\fcharset77 Times-Roman;\f1\froman\fcharset77 Times-Bold;\f2\fmodern\fcharset77 Courier;
+\f3\fmodern\fcharset77 Courier-Bold;}
+{\colortbl;\red255\green255\blue255;\red128\green0\blue0;\red0\green92\blue2;\red214\green0\blue255;
+\red214\green0\blue255;\red118\green15\blue80;\red128\green0\blue0;}
+\vieww15340\viewh13740\viewkind0
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\fs24 \cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\qc
+
+\f1\b\fs36 \cf2 \ul Using Adium's Core Controllers\
+
+\fs28 \ulnone \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b0\fs24 \cf0 All of Adium's functionality is provided by the controllers, a set of global classes that abstract most of the internal workings of Adium from the plugins and other parts of the code.  The controllers are accessed with the corresponding method in AIAdium.  Since plugins automatically get the main AIAdium class in a local 'owner' variable, accessing a controller is as simple as:\
+\
+[owner preferenceController]\
+\
+To use the controllers, you need to #import "Adium.h".  The available controllers are:\
+\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f1\b\fs28 \cf2 AI Login Controller\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b0\fs24 \cf0 Manages the Adium user list.\
+\
+Adium has it's own built in multiple-user support, allowing multiple sets of unique preferences, contact lists, and other information while being logged in under a single OS X user.  The multiple-user support is only successful with the cooperation of all preference and file saving code.  If you are saving a file that is user-specific, it should be saved to the current user directory, as returned by the login controller.\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf3 Public methods:\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 \CocoaLigature0 	- (NSString *)
+\f3\b userDirectory
+\f2\b0 \CocoaLigature1 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 \CocoaLigature0 Returns the directory of the currently logged in user.  All user-specific preferences and data files should be stored at this location.  This method may return a relative path, such as 
+\f2 "~/Library/Application Support/Adium/Users/Adam/"
+\f0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature1 \
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f1\b\fs28 \cf2 AI Account Controller\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b0\fs24 \cf0 Keeps track of the user's accounts.\
+\
+Adium supports multiple accounts.  Every account the user has is represented by a different instance of AIAccount, and the account controller keeps track of, and manages, these.\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf3 Public methods:\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 \CocoaLigature0 	- (NSNotificationCenter *)
+\f3\b accountNotificationCenter
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Returns the shared account controller notification center.\
+Available notifications:\
+	
+\f1\b Account_ListChanged
+\f0\b0 \
+		The account list's structure has changed.  Posted when an account is added, moved, or deleted.\
+	
+\f1\b Account_PropertiesChanged\
+
+\f0\b0 		The properties of an account have changed.\
+		(object)	- Modified account \
+	
+\f1\b Account_StatusChanged\
+
+\f0\b0 		The status of an account has changed\
+		(object)	- Modified account\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (NSArray *)
+\f3\b accountArray
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Returns an array of the user's accounts.  Each account is represented with an AIAccount instance \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (AIAccount *)
+\f3\b newAccountAtIndex
+\f2\b0 :(int)index\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Create a new account at the specified index in the account array.  Make sure index is valid, you can do this by checking the count of the accountArray.\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (void)
+\f3\b deleteAccount
+\f2\b0 :(AIAccount *)inAccount\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Delete the specified account.  Be careful with this, and always confirm the action with the user.\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (int)
+\f3\b moveAccount
+\f2\b0 :(AIAccount *)account 
+\f3\b toIndex
+\f2\b0 :(int)destIndex\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 \CocoaLigature1 Move an account to another place in the account list.  Make sure index is valid (by checking the count of the accountArray).\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 \CocoaLigature0 	- (void)
+\f3\b switchAccountAtIndex
+\f2\b0 :(int)index 
+\f3\b \cf4 toService
+\f2\b0 :(NSString *)inService\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Switch the specified account to a different service.  While the majority of account properties will no longer apply to the new service, it is possible to switch an account from one service to another.  This is especially useful when there are multiple ways onto a service (such as with seperate protocols), as it allows quick switching between the available access methods.\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature1 \
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f1\b\fs28 \cf2 AI Contact Controller\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b0\fs24 \cf0 Adium's contact list is made entirely of AIContactObjects.  Groups are represented with AIContactGroups, and handles with AIContactHandles (Both of which are subclasses of AIContactObject).  This means that groups can hold other groups, and in fact, the contact list itself (the "root" of the contact list) is simply an AIContactGroup.\
+\
+The contact controller keeps track of this list, allows modification of groups and handles, and other contact related servics.  You should never directly manipulate the contact list!  Always use the contact controller's methods to manage the contact list.\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf3 Public methods:\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 \CocoaLigature0 	- (NSNotificationCenter *)
+\f3\b contactNotificationCenter
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Returns the shared contact controller notification center.\
+Available notifications:\
+	
+\f1\b Contact_ObjectChanged
+\f0\b0 \
+		An object on the contact list has changed.\
+		(object)	- The contact object that changed (AIContactObject)\
+	
+\f1\b Contact_ListChanged
+\f0\b0 \
+		A large number of objects on the contact list have changed, and a refresh of the entire list is required.\
+	
+\f1\b Contact_ContentObjectAdded
+\f0\b0 \
+		A content object has been added to a contact\
+		(object)	- The contact with new content (AIContactObject)\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf3 	Accounts\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+
+\f2 \cf0 - (void)
+\f3\b addAccount
+\f2\b0 :(AIAccount<AIAccount_Handles> *)inAccount 
+\f3\b toHandle
+\f2\b0 :(AIContactHandle *)inHandle\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Add an account as the owner of a contact handle.  When an account is made owner of a handle, it may store the handle on a server-side list, start changing the handle's status, and send and receive content with the handle.  A single handle can be owned by multiple accounts.\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+
+\f2 \cf0 - (void)
+\f3\b removeAccount
+\f2\b0 :(AIAccount<AIAccount_Handles> *)inAccount 
+\f3\b fromHandle
+\f2\b0 :(AIContactHandle *)inHandle\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Remove an account as the other of a handle.  When an account is removed, it will remove the handle from any server-side list, and stop altering the handle's status.\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf3 	Handles
+\f2 \cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+\cf0 - (AIContactHandle *)
+\f3\b createHandleWithService
+\f2\b0 :(NSString *)inService 
+\f3\b UID
+\f2\b0 :(NSString *)inUID 
+\f3\b inGroup
+\f2\b0 :(AIContactGroup *)inGroup 
+\f3\b forAccount
+\f2\b0 :(AIAccount *)inAccount\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Calls createHandleWithService:UID:inGroup:forAccount with a nil group.
+\f2 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+\cf0 \
+- (AIContactHandle *)
+\f3\b createHandleWithService
+\f2\b0 :(NSString *)inService 
+\f3\b UID
+\f2\b0 :(NSString *)inUID 
+\f3\b inGroup
+\f2\b0 :(AIContactGroup *)inGroup 
+\f3\b forAccount
+\f2\b0 :(AIAccount *)inAccount\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Create a new handle in the specified group.  The handle will be created with the specified service and UID, and an account (or several accounts) may automatically be added as owners to the new handle.  If your service doesn't support groups, pass nil, and Adium will automatically match your handles to existing handles on the list since it doesn't matter where they're placed\
+\
+if account is nil, Adium will not display the sync dialog, and instead automatically choose ___ ??\
+\
+Even if you don't support server-side lists, you need to keep track of your list in a preference plist or something.\
+\
+If the handle already exists in that group, the existing handle is returned, and a new one is not created.\
+If the handle already exists in the strangers group, it will be moved to the specified group, and returned.\
+\
+If the handle already exists in another group, User is asked what to do:\
+	( ) Change the server side list	(existing handle is returned, server-side list must be updated)\
+		(how is this one going to work?)\
+\
+	( ) Change the local lists	(existing handle is returned, and is moved to the specified group)\
+	( ) Add duplicates		(existing handle is returned, and is added to the specified group (so it will appear in more than one group))\
+\
+The prompt is a window, and as more prompts appear they are added to the same window.\
+This means that sign on completes... will this cause problems?\
+\
+The account is added as an owner of the handle, and notified after a sync takes place on what to do... if you're not signing on with an account, pass nil.\
+\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (void)
+\f3\b deleteHandle
+\f2\b0 :(AIContactHandle *)inHandle\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Delete the specified handle.  Any owners are removed before deleting.\
+\cf4 Deleting a handle actually moves it to the strangers group?\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf5 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf3 	Groups\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+
+\f2 \cf0 - (AIContactGroup *)
+\f3\b createGroupNamed
+\f2\b0 :(NSString *)inName 
+\f3\b inGroup
+\f2\b0 :(AIContactGroup *)inGroup\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Create a group on the contact list within the specified group.\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (void)
+\f3\b deleteGroup
+\f2\b0 :(AIContactGroup *)inGroup\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Delete an existing group\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (void)
+\f3\b renameGroup
+\f2\b0 :(AIContactGroup *)inGroup 
+\f3\b to
+\f2\b0 :(NSString *)newName\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Rename a group\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf3 	Contact object access\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (AIContactGroup *)
+\f3\b contactList
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Returns the root contact list group.  This group contains every other group and contact on the list.\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 \
+	- (AIContactGroup *)
+\f3\b groupWithName
+\f2\b0 :(NSString *)inName\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Find and return the group with the specified name\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+
+\f2 \cf0 - (AIContactHandle *)
+\f3\b handleWithService
+\f2\b0 :(NSString *)inService 
+\f3\b UID
+\f2\b0 :(NSString *)inUID\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Find and return the handle with the specified service and UID\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+
+\f2 \cf0 \
+	If the handle does not exist, it will be created in the '__strangers' group.\
+\
+\
+- (NSMutableArray *)
+\f3\b allContactsInGroup
+\f2\b0 :(AIContactGroup *)inGroup 
+\f3\b subgroups
+\f2\b0 :(BOOL)subGroups\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 \CocoaLigature1 Return all the contacts in a group, and (optionally) all the subgroups it contains\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf3 	Handle observers / status\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+
+\f2 \cf0 - (void)
+\f3\b handleStatusChanged
+\f2\b0 :(AIContactHandle *)inHandle 
+\f3\b modifiedStatusKeys
+\f2\b0 :(NSArray *)InModifiedKeys\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Let everyone know a handles status has changed (call this method after making changes to a handle's status dict)\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (void)
+\f3\b registerHandleObserver
+\f2\b0 :(id <AIHandleObserver>)inObserver\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Register a handle observer (see docs on handle observers...)\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature1 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf3 \CocoaLigature0 	Content\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+
+\f2 \cf0 \
+- (\cf6 void\cf0 )
+\f3\b addIncomingContentObject
+\f2\b0 :(NSObject <AIContentObject> *)inObject 
+\f3\b toHandle
+\f2\b0 :(AIContactHandle *)inHandle\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Add a content object to a handle\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+
+\f2 \cf0 - (\cf6 void\cf0 )
+\f3\b sendContentObject
+\f2\b0 :(NSObject <AIContentObject> *)inObject 
+\f3\b toHandle
+\f2\b0 :(AIContactHandle *)inHandle\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Send a content object to a handle\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf3 	Contact Info\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (void)
+\f3\b showInfoForContact
+\f2\b0 :(AIContactHandle *)inContact\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Show the info window for the specified contact\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (void)
+\f3\b addContactInfoView
+\f2\b0 :(AIContactInfoView *)inView\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Add a contact info view\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature1 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf3 \CocoaLigature0 	Misc\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (void)
+\f3\b delayContactListUpdatesFor
+\f2\b0 :(int)seconds\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Delay updating of the contact list for a set period of time.  (Call this before making massive changes to the contact list)\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature1 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f1\b\fs28 \cf2 AI Interface Controller\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b0\fs24 \cf0 Manages Adium's interface\
+\
+The interface controller handles general interface needs, such as requesting a 'message window' for a handle.  The active interface can take any form.\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf3 Public Methods:\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 \CocoaLigature0 	- (NSNotificationCenter *)
+\f3\b interfaceNotificationCenter
+\f2\b0 ;\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Returns the shared interface controller notification center.\
+Available notifications:\
+	
+\f3\b Interface_InitiateMessage
+\f0\b0 \
+		Instructs the interface to open a new 'message window' with the specified contents\
+		@"To" 	- The destination (AIContactHandle)\
+		@"From" 	- The source (AIAccount)\
+		@"Content" 	- The initial outgoing content (This is only guaranteed to be used if a valid 'To' and 'From' are specified)\
+	
+\f3\b Interface_CloseMessage\
+
+\f0\b0 		Instructs the interface to close an existing message window\
+		@"Handle" 	- The handle who's message should be closed\
+	
+\f3\b Interface_SendEnteredMessage
+\f2\b0 \
+
+\f0 		Instructs the interface to send the entered message\
+		(object)	- Handle who's message to send (AIContactHandle)\
+	
+\f3\b Interface_WillSendEnteredMessage\
+		
+\f0\b0 Sent by interface before sending\
+		(object)	- Handle who's message is being sent (AIContactHandle)\
+	
+\f3\b Interface_DidSendEnteredMessage\
+		
+\f0\b0 Sent by interface after sending\
+		(object)	- Handle who's message was sent (AIContactHandle)\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 		\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (void)
+\f3\b registerContactListView
+\f2\b0 :(id <AIContactListViewController>)inView\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Register a contact list view\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (NSView *)
+\f3\b contactListView
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Return the currently active contact list view
+\f2 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+	- (void)
+\f3\b registerMessageView
+\f2\b0 :(id <AIMessageViewController>)inView\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Register a message view\
+
+\f2 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 	- (NSView *)
+\f3\b messageViewForHandle
+\f2\b0 :(AIContactHandle *)inHandle\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Return the currently active message view
+\f2 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0 \cf0 \CocoaLigature1 \
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f1\b\fs28 \cf2 AI Preference Controller\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+
+\f2\b0\fs24 \cf0 \CocoaLigature0 - (void)
+\f3\b registerDefaults
+\f2\b0 :(NSDictionary *)defaultDict 
+\f3\b forGroup
+\f2\b0 :(NSString *)groupName\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Register a set of default values
+\f2 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+\cf0 - (void)
+\f3\b setPreference
+\f2\b0 :(id)value 
+\f3\b forKey
+\f2\b0 :(NSString *)inKey 
+\f3\b group
+\f2\b0 :(NSString *)inGroup\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Set a preference
+\f2 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+	- (NSDictionary *)
+\f3\b preferencesForGroup
+\f2\b0 :(NSString *)groupName\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Retrieve a preference group.\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+\cf0 - (id)
+\f3\b preferenceForKey
+\f2\b0 :(NSString *)inKey 
+\f3\b group
+\f2\b0 :(NSString *)groupName 
+\f3\b handle
+\f2\b0 :(AIContactHandle *)handle\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Returns a contact specific preference
+\f2 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+	- (IBAction)
+\f3\b showPreferenceWindow
+\f2\b0 :(id)sender\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Open the preferences window\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 \
+	- (void)
+\f3\b addPreferenceView
+\f2\b0 :(AIPreferenceView *)inView\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Add a custom preference veiw
+\f2 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0 \cf0 \CocoaLigature1 \
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f1\b\fs28 \cf2 AI Menu Controller\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2\b0\fs24 \cf0 \CocoaLigature0 	- (void)
+\f3\b addMenuItem
+\f2\b0 :(NSMenuItem *)newItem 
+\f3\b toLocation
+\f2\b0 :(MENU_LOCATION)location\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Add a menu item\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 \
+	- (void)
+\f3\b removeMenuItem
+\f2\b0 :(NSMenuItem *)targetItem;\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 \CocoaLigature1 Remove a menu item\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f1\b\fs28 \cf2 AI Sound Controller\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2\b0\fs24 \cf0 \CocoaLigature0 	+ (void)
+\f3\b playSoundNamed
+\f2\b0 :(NSString *)inName\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 \CocoaLigature1 Play a sound\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\
+\
+\
+\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\qc
+
+\f1\b\fs36 \cf2 \ul Using the Adium Framework Classes\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\qc
+
+\fs28 \cf2 \ul \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf2 \ulnone AIPlugin\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b0\fs24 \cf0 Serves as a base for developing plugins.  You will never use AIPlugin unless you are creating a plugin (See documentation below)
+\f1\b\fs28 \cf2 \ul \
+
+\f0\b0\fs24 \cf0 \ulnone \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f1\b\fs28 \cf2 AIService\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b0\fs24 \cf0 Services are used for protocol/service plugins.  You will never use AIService unless you are creating a Service Plugin (See documentation below)\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf5 That's a lie - they need to get the service types from them\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\tx32640\tx33600\tx34560\tx35520\tx36480\tx37440\tx38400\tx39360\tx40320\tx41280\tx42240\tx43200\tx44160\tx45120\tx46080\tx47040\tx48000\tx48960\tx49920\tx50880\tx51840\tx52800\tx53760\tx54720\tx55680\tx56640\tx57600\tx58560\tx59520\tx60480\tx61440\tx62400\tx63360\tx64320\tx65280\tx66240\tx67200\tx68160\tx69120\tx70080\tx71040\tx72000\tx72960\tx73920\tx74880\tx75840\tx76800\tx77760\tx78720\tx79680\tx80640\tx81600\tx82560\tx83520\tx84480\tx85440\tx86400\tx87360\tx88320\tx89280\tx90240\tx91200\tx92160\tx93120\tx94080\tx95040\tx96000\li480\fi-480\ql\qnatural
+
+\f2 \cf0 \CocoaLigature0 - (AIServiceType *)
+\f3\b accountServiceType
+\f2\b0 \
+- (AIServiceType *)
+\f3\b handleServiceType
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0 \cf0 \CocoaLigature1 \
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f1\b\fs28 \cf2 AIAccount\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b0\fs24 \cf0 The AIAccount class represents an individual account on the user's account list.  The base AIAccount class provides no practical functionality, so almost all of the AIAccounts you deal with will be subclasses.  You will almost never need to talk directly with an AIAccount.  For an indepth look on creating account code, see below.\
+\
+To simplify the differences and complications of integrating multiple types of messaging services, Adium allows accounts to specify which sets of methods they wish to respond to using protocols.  Because of this, you can never assume an Account with respond to a particular protocol (with the exception of AIAccount_Required), and must always check for conformance before invoking an account method.\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 \CocoaLigature0 	- (NSMutableDictionary *)
+\f3\b properties
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Returns a dictionary of properties specific to this account.  The contents of this dictionary will vary depending on the account plugin in use, but it will usualy contain some form of account identifier and other account information.\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (AIService *)
+\f3\b service
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Returns the AIService instance that this account was created from.\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature1 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf3 Subclasses may respond to the following protocols:\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature0 	\cf2 AIAccount_Required\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+\cf0 These methods are required and guaranteed available for all accounts.\
+\
+
+\f2 - (NSString *)
+\f3\b accountID
+\f2\b0 \
+
+\f0 	Return a unique ID for this account type and username\
+\
+
+\f2 - (NSString *)
+\f3\b accountDescription
+\f2\b0 \
+
+\f0 	Return a readable description of this account's username\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 	\cf2 AIAccount_Content\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+\cf0 You should never call any of the content protocol  methods directly.  Send content using the Contact Controller\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 	\cf2 AIAccount_Handles\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+\cf0 You should never call any of the handle protocol  methods directly.  Modify handles using the Contact Controller\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 		\
+\cf7 	AIAccount_GroupedHandles\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+\cf0 You should never call any of the grouped handles protocol methods directly.  Modify groups using the Contact Controller\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+	\cf2 AIAccount_Status\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+\cf0 Accounts that comply to this protocol have pre-defined states of availability.  An account that is always available (and doesn't conform to the concept of connected / disconnected) may not implement this protocol.\
+\
+
+\f2 - (ACCOUNT_STATUS)
+\f3\b status
+\f2\b0 \
+
+\f0 	Return the current connection status of this account.  Valid values are:\
+	STATUS_NA		- The status is not applicable for some reason\
+	STATUS_OFFLINE	- The account is not connected\
+	STATUS_CONNECTING	- The account is connecting\
+	STATUS_ONLINE		- The account is connected\
+	STATUS_DISCONNECTING	- The account is disconnecting\
+\
+
+\f2 - (void)
+\f3\b connect
+\f2\b0 \
+
+\f0 	Initiate a connection to the account's server\
+\
+
+\f2 - (void)
+\f3\b disconnect
+\f2\b0 \
+
+\f0 	Close the connection with the account's server\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f1\b\fs28 \cf2 \CocoaLigature1 AIServiceType\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b0\fs24 \cf0 AIServiceType is a container class that can be used to describe any 'service' that requires an identifier, description, and image.  Adium uses this class to describe service types and handle types.\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+
+\f2 \cf0 \CocoaLigature0 + (id)
+\f3\b serviceTypeWithIdentifier
+\f2\b0 :(NSString *)inIdentifier 
+\f3\b description
+\f2\b0 :(NSString *)inDescription 
+\f3\b image
+\f2\b0 :(NSImage *)inImage\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Returns a new service type with the specified identifier, description, and image.  \CocoaLigature1 Identifier should be a string unique to this service type that briefly describes it (such as "AIM"), description should be a human-readable description of the service (such as "AOL, AIM, or iChat"), and image should be an image representeation of the service.\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 \CocoaLigature0 \
+	- (NSString *)
+\f3\b identifier
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Returns the identifier\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (NSString *)
+\f3\b description
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Returns the description\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (NSImage *)
+\f3\b image
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Returns the image\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature1 \
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f1\b\fs28 \cf2 AIMessageSendingTextView\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b0\fs24 \cf0 The message sending text view is a handy subclass of an AISendingTextView that automatically handles:\
+	- Configuring the 'send' keys based on the user's preferences\
+	- Posting a send message notification when a send key is pressed\
+	- Clearing the text after the message is sent\
+\
+Nothing too special, but it does save a bit of coding, since almost every interface will want a sending text view that behaves this way.  Before using the text view, call the set owner method, passing the shared instance of AIAdium, and the handle the text view should represent.\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+
+\f2 \cf0 \CocoaLigature0 - (void)
+\f3\b setOwner
+\f2\b0 :(AIAdium *)inOwner 
+\f3\b handle
+\f2\b0 :(AIContactHandle *)inHandle\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 \CocoaLigature1 Sets the owner and represented handle of this view.\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\tx32640\tx33600\tx34560\tx35520\tx36480\tx37440\tx38400\tx39360\tx40320\tx41280\tx42240\tx43200\tx44160\tx45120\tx46080\tx47040\tx48000\tx48960\tx49920\tx50880\tx51840\tx52800\tx53760\tx54720\tx55680\tx56640\tx57600\tx58560\tx59520\tx60480\tx61440\tx62400\tx63360\tx64320\tx65280\tx66240\tx67200\tx68160\tx69120\tx70080\tx71040\tx72000\tx72960\tx73920\tx74880\tx75840\tx76800\tx77760\tx78720\tx79680\tx80640\tx81600\tx82560\tx83520\tx84480\tx85440\tx86400\tx87360\tx88320\tx89280\tx90240\tx91200\tx92160\tx93120\tx94080\tx95040\tx96000\li480\fi-480\ql\qnatural
+
+\f1\b\fs28 \cf2 \CocoaLigature0 AIPreferenceViewController\CocoaLigature1 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b0\fs24 \cf0 AIPreferenceViewControllers are used for adding preferences to Adium.  You will never use them unless you are adding preferences (See documentation below)\
+\
+\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\tx32640\tx33600\tx34560\tx35520\tx36480\tx37440\tx38400\tx39360\tx40320\tx41280\tx42240\tx43200\tx44160\tx45120\tx46080\tx47040\tx48000\tx48960\tx49920\tx50880\tx51840\tx52800\tx53760\tx54720\tx55680\tx56640\tx57600\tx58560\tx59520\tx60480\tx61440\tx62400\tx63360\tx64320\tx65280\tx66240\tx67200\tx68160\tx69120\tx70080\tx71040\tx72000\tx72960\tx73920\tx74880\tx75840\tx76800\tx77760\tx78720\tx79680\tx80640\tx81600\tx82560\tx83520\tx84480\tx85440\tx86400\tx87360\tx88320\tx89280\tx90240\tx91200\tx92160\tx93120\tx94080\tx95040\tx96000\li480\fi-480\ql\qnatural
+
+\f1\b\fs28 \cf2 \CocoaLigature0 AIContactInfoViewController\CocoaLigature1 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b0\fs24 \cf0 AIContactInfoViewControllers are used for adding contact info panels to Adium.  You will only use them to add an info panel (See documentation below)\
+\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f1\b\fs28 \cf2 AIContactObject\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b0\fs24 \cf0 Every object on Adium's contact list is a contact object.  A contact object can be a handle, a group, or something else.  Every contact object you use with will be a subclass, and most of the interaction with contact objects will occur using methods in the Contact Controller.\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 \CocoaLigature0 	- (AIMutableOwnerArray *)
+\f3\b displayArrayForKey
+\f2\b0 :(NSString *)inKey\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 \CocoaLigature1 Returns a mutable owner array for the specified display key.  Mutable owner arrays allow more than one 'owner' to control the display of this object without conflicts.  The common display arrays are:\
+@"\CocoaLigature0 Display Name"	- Local string to override the standard display name (Equivelant to an alias in Adium 1.x)\CocoaLigature1 \
+@"Visible"	- Visibility of the object on the contact list\
+@"Text Color"	- Text color of the name\
+@"Left View"	- Left aligned view (Displayed to the left of the object's name)\
+@"Right View"	- Right aligned view (Displayed to the right of the object's name)\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	\CocoaLigature0 - (NSString *)
+\f3\b displayName
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Returns the contact object's display name.  When representing the object to the user, you should use the display name over the UID and other identifiers.\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature1 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 \CocoaLigature0 	- (NSComparisonResult)
+\f3\b compare
+\f2\b0 :(AIContactObject *)object\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Compares this contact object to another\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (BOOL)
+\f3\b belongsToAccount
+\f2\b0 :(AIAccount *)inAccount;\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Returns YES if this object belongs to the account (and the Account is an owner of this object).\
+
+\f2 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0 \cf0 \CocoaLigature1 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f1\b\fs28 \cf2 AIContactHandle\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b0\fs24 \cf0 Contact Handles are contact objects with some additional handle specific methods\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 \CocoaLigature0 	- (NSString *)
+\f3\b service
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Return the service of this handle\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (NSString *)
+\f3\b UID
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Return the unique identifier of the handle\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (AIMutableOwnerArray *)
+\f3\b statusArrayForKey
+\f2\b0 :(NSString *)inKey\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Return a mutable owner array for the specified status key.  \CocoaLigature1 Mutable owner arrays allow more than one 'owner' to control the status of this handle without conflicts.  The common status arrays are:\
+@"\CocoaLigature0 Display Name"	- (NSString )Server string to override the standard display name (A friendlier representation of the server's UID)\CocoaLigature1 \
+@"\CocoaLigature0 Online\CocoaLigature1 "	- (BOOL) connected or not\
+@"\CocoaLigature0 Warning\CocoaLigature1 "	- (int) Warning/Blacklist percentage\
+@"\CocoaLigature0 Idle\CocoaLigature1 "	- (\CocoaLigature0 double\CocoaLigature1 ) seconds the contact has been idle\
+@"\CocoaLigature0 Signon Date\CocoaLigature1 "	- (NSDate) date the contact connected\
+@"\CocoaLigature0 Away\CocoaLigature1 "	- (BOOL) flagged as away or not\
+@"\CocoaLigature0 Client\CocoaLigature1 "	- (NSString) description of the contact's client\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f2 \cf0 	- (NSArray *)
+\f3\b contentObjectArray
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 \CocoaLigature1 Return the array of content objects for this handle\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f1\b\fs28 \cf2 AIContactGroup\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b0\fs24 \cf0 Contact Groups are contact objects with some additional group specific methods\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature0 	- (unsigned)count;\
+	- (id)objectAtIndex:(unsigned)index;\
+	- (unsigned)sortedCount;\
+	- (id)sortedObjectAtIndex:(unsigned)index;\
+	- (void)sortGroupAndSubGroups:(BOOL)subGroups;\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature1 	??\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f1\b\fs28 \cf2 AIContentObject\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b0\fs24 \cf0 	\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f1\b\fs28 \cf2 AIContentMessage\
+\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+
+\f2\b0\fs24 \cf0 \CocoaLigature0 + (id)
+\f3\b messageTextWithSource
+\f2\b0 :(id)inSource 
+\f3\b destination
+\f2\b0 :(id)inDest 
+\f3\b date
+\f2\b0 :(NSDate *)inDate 
+\f3\b message
+\f2\b0 :(NSAttributedString *)inMessage\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Create a content message\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\tx32640\tx33600\tx34560\tx35520\tx36480\tx37440\tx38400\tx39360\tx40320\tx41280\tx42240\tx43200\tx44160\tx45120\tx46080\tx47040\tx48000\tx48960\tx49920\tx50880\tx51840\tx52800\tx53760\tx54720\tx55680\tx56640\tx57600\tx58560\tx59520\tx60480\tx61440\tx62400\tx63360\tx64320\tx65280\tx66240\tx67200\tx68160\tx69120\tx70080\tx71040\tx72000\tx72960\tx73920\tx74880\tx75840\tx76800\tx77760\tx78720\tx79680\tx80640\tx81600\tx82560\tx83520\tx84480\tx85440\tx86400\tx87360\tx88320\tx89280\tx90240\tx91200\tx92160\tx93120\tx94080\tx95040\tx96000\li480\fi-480\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+
+\f2 \cf0 - (NSString *)
+\f3\b type
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Return the type ID of this content\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+
+\f2 \cf0 - (NSAttributedString *)
+\f3\b message
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 The attributed message contents\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\tx32640\tx33600\tx34560\tx35520\tx36480\tx37440\tx38400\tx39360\tx40320\tx41280\tx42240\tx43200\tx44160\tx45120\tx46080\tx47040\tx48000\tx48960\tx49920\tx50880\tx51840\tx52800\tx53760\tx54720\tx55680\tx56640\tx57600\tx58560\tx59520\tx60480\tx61440\tx62400\tx63360\tx64320\tx65280\tx66240\tx67200\tx68160\tx69120\tx70080\tx71040\tx72000\tx72960\tx73920\tx74880\tx75840\tx76800\tx77760\tx78720\tx79680\tx80640\tx81600\tx82560\tx83520\tx84480\tx85440\tx86400\tx87360\tx88320\tx89280\tx90240\tx91200\tx92160\tx93120\tx94080\tx95040\tx96000\li480\fi-480\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+
+\f2 \cf0 - (id)
+\f3\b source
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Message source (may return a contact handle, or an account)\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+
+\f2 \cf0 - (id)
+\f3\b destination
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Message destination (may return a contact handle, or an account(\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\tx32640\tx33600\tx34560\tx35520\tx36480\tx37440\tx38400\tx39360\tx40320\tx41280\tx42240\tx43200\tx44160\tx45120\tx46080\tx47040\tx48000\tx48960\tx49920\tx50880\tx51840\tx52800\tx53760\tx54720\tx55680\tx56640\tx57600\tx58560\tx59520\tx60480\tx61440\tx62400\tx63360\tx64320\tx65280\tx66240\tx67200\tx68160\tx69120\tx70080\tx71040\tx72000\tx72960\tx73920\tx74880\tx75840\tx76800\tx77760\tx78720\tx79680\tx80640\tx81600\tx82560\tx83520\tx84480\tx85440\tx86400\tx87360\tx88320\tx89280\tx90240\tx91200\tx92160\tx93120\tx94080\tx95040\tx96000\li480\fi-480\ql\qnatural
+\cf0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li360\ql\qnatural
+
+\f2 \cf0 - (NSDate *)
+\f3\b date
+\f2\b0 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\ql\qnatural
+
+\f0 \cf0 Return the date and time this message was sent\CocoaLigature1 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \
+\
+\
+\
+\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\qc
+
+\f1\b\fs36 \cf2 \ul Creating Adium Plugins\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+
+\f0\b0\fs24 \cf0 \ulnone \
+\
+\
+\
+\
+account may be told to do things with handles they don't own.  If your account can't message strangers, you need to be aware of this and take precautions\
+\
+\
+\
+\
+Creating a Plug-in  (Adding functionality to Adium)\
+--------------------------------------------------------------------\
+All Plugins should be a subclass of AIPlugin.\
+\
+The only method a plugin is required to implement is:\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature0 - (void)installPlugin\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature1 When your plugin is loaded, the install plugin is called.  This is where the plugin should install any hooks it requires (filters, preferences, buttons, menu items).\
+\
+The plugin inherits the variable 'owner', which contains a reference to AIAdium, Adium's main class.\
+\
+Plugins perform their magic using the built in controllers.\
+\
+\
+If you use any of the following, import:\
+Core Controllers: 		import "AIAdium.h"\
+AIUtilities.Framework: 	import <AIUtilities/AIUtilities.h>\
+Adium.Framework:		import <Adium/Adium.h>\
+\
+\
+\
+How Adium's contact list works\
+------------------------------------------\
+\
+\
+Every contact object has a list of owners.  Owners are accounts that 'Control' the contact object.  For instance, a handle will have an account as its owner if it is on that account's contact list.  Contact objects can have more than one owner (and they will if they are on the contact list of more than one active account).  To add or remove owners, use the methods in the Contact Controller, do not message the contact object directly.\
+\
+Every contact object also knows the group that contains it.  These are used internally by the \
+\
+\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature0 /*\
+    All message objects retain their origional content when filtered (incase anyone wants/needs it)\
+\
+    (Laura sends IM)\
+    Account:\
+        creates a message object\
+        calls a contactController method to add the object\
+        \
+        ContactController:\
+            calls all registered incoming filters\
+            adds the object to the handle\
+            notifies everyone that an object was added\
+    \
+    (I send IM)\
+    Interface Code:\
+        creates a message object\
+        calls a contact controller method to send the object\
+        \
+        ContactController\
+            calls all registered outgoing filters\
+            calls account code to send the message\
+            \
+            Account:\
+                sends the message to laura\
+            \
+            adds the object to the handle\
+            notifies everyone that an object was added\
+\
+*/\
+\
+//The message object system is used to *send content between users*.  It may be simple text content, or images and other files,\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature1 \
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature0 /*\
+    Creating code with preferences\
+\
+    Init:\
+	[preferenceController addPreferenceView:myView];\
+        [preferenceController registerDefaults:myDefaultDict forGroup:@"My Preference File"]\
+        myPrefDict = [preferenceController preferencesForGroup:@"My Preference File"];\
+        \
+    Using a preference:\
+        textColor = [myPrefDict intForKey:@"Days in week"];\
+        \
+    Setting a preference:\
+        [preferenceController setPreference:7 forKey:@"Days in week" group:@"My Preference File"];\
+\
+*/\
+\
+\pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
+\cf0 \CocoaLigature1 \
+\
+}

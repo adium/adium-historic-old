@@ -1,0 +1,229 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="../style.css">
+	</head>
+	<body>
+		<h1>
+			AI Contact Controller
+			<hr>
+		</h1>
+		<p>
+			The contact controller keeps track of Adium's contact list list, allows modification of groups and handles, altering of handle ownership, and other contact list related functions.
+
+			Adium's contact list is made entirely of AIContactObjects. Groups are represented with AIContactGroups, and handles with AIContactHandles (Both of which are subclasses of AIContactObject). This means that groups can hold other groups, and in fact, the contact list itself (the "root" of the contact list) is simply an AIContactGroup.<br>
+<br>
+The objects of a contact list can be owned by multiple accounts.  For an account to own an object means that it appears on that account's server-side contact list.  Ownership of contact objects is modified using the contact controller.
+<br>
+		</p>
+<p class="note">
+You should <b>never</b> directly manipulate the contact list! Always use the contact controller's methods to manage the contact list!
+		</p>
+		<br>
+		<h2>
+			Common Tasks
+			<hr>
+		</h2>
+		<h3>Change the ownership of a handle</h3>
+		<p class="desc">
+
+		<p class="codeblock">
+			//Add the AIAccount instance 'goodAccount'<br>
+			//as an owner of the AIContactHandle 'buddiesGroup'<br>
+			[[owner contactController] addAccount:goodAccount toObject:buddiesGroup];<br>
+<br>
+			//Remove 'badAccount' as an owner of 'buddiesGroup'<br>
+			[[owner contactController] removeAccount: badAccount fromObject:buddiesGroup];<br>
+
+
+
+		</p>
+
+
+
+
+
+		<br>
+		<h2>
+			Class Methods
+			<hr>
+		</h2>
+		<p class="code">
+			- (NSNotificationCenter *)<b>contactNotificationCenter</b>
+		</p>
+		<p class="desc">
+			Returns the shared contact controller notification center.  Available Notifications: <br><br>
+			
+			<table class="notlist">
+				<tr><td class="not"> Contact_ObjectChanged </td></tr>
+				<tr><td class="notdesc">				An object on the contact list has changed.<br>
+				(object) - The contact object that changed (AIContactObject)<br>
+</td></tr>
+				<tr><td class="not"> Contact_ListChanged </td></tr>
+				<tr><td class="notdesc">				A large number of objects on the contact list have changed, and a refresh of the entire list is required.<br>
+</td></tr>
+			</table>
+
+
+		</p>
+		<br>
+		<h2>
+			Accounts
+			<hr>
+		</h2>
+		<p class="code">
+			- (void)<b>addAccount</b>:(AIAccount&lt;AIAccount_Handles&gt; *)inAccount <b>toObject</b>:(AIContactObject *)inObject
+		</p>
+		<p class="desc">
+			Add an account as the owner of a contact object. When an account is made owner of a handle, it may store the handle on a server-side list, start changing the handle's status, and send and receive content with the handle. A single handle can be owned by multiple accounts.
+		</p>
+		<br>
+		<p class="code">
+			- (void)<b>removeAccount</b>:(AIAccount<AIAccount_Handles> *)inAccount <b>fromObject</b>:(AIContactObject *)inObject
+		</p>
+		<p class="desc">
+			Remove an account as the other of a contact  object. When an account is removed, it will remove the handle from any server-side list, and stop altering the handle's status.
+		</p>
+		<br>
+		<h2>
+			Handles
+			<hr>
+		</h2>
+		<p class="code">
+- (AIContactHandle *)<b>createHandleWithService</b>:(AIServiceType *)inService <b>UID</b>:(NSString *)inUID <b>inGroup</b>:(AIContactGroup *)inGroup <b>forAccount</b>:(AIAccount *)inAccount 
+		</p>
+		<p class="desc">
+Creates a handle on the contact list with the specified service and UID<br>
+    - If the handle does not exist, it will be added to the contact list in the specified group<br>
+    - If the handle exists in the passed group, it will be returned<br>
+    - If the handle exists in another group, an 'out of sync' condition will be flagged<br>
+    - If the handle exists in the strangers group, it will be permanently moved to the passed group<br>
+<br>
+    - GROUP can be 'nil' (if the handle's location is not important)<br>
+<br>
+		</p>
+		<br>
+		<p class="code">
+			- (void)<b>deleteHandle</b>:(AIContactHandle *)inHandle
+		</p>
+		<p class="desc">
+			Delete the specified handle. Any owners are removed before deleting. Deleting a handle actually moves it to the strangers group?
+		</p>
+		<br>
+		<p class="code">
+- (void)<b>renameHandle</b>:(AIContactHandle *)inHandle <b>to</b>:(NSString *)newName;
+		</p>
+		<p class="desc">
+rename a handle
+		</p>
+		
+		
+
+		
+		
+		
+		<br>
+		<h2>
+			Groups
+			<hr>
+		</h2>
+		<p class="code">
+			- (AIContactGroup *)<b>createGroupNamed</b>:(NSString *)inName <b>inGroup</b>:(AIContactGroup *)inGroup
+		</p>
+		<p class="desc">
+			Create a group on the contact list within the specified group.
+		</p>
+		<br>
+		<p class="code">
+			- (void)<b>deleteGroup</b>:(AIContactGroup *)inGroup
+		</p>
+		<p class="desc">
+			Delete an existing group
+		</p>
+		<br>
+		<p class="code">
+			- (void)<b>renameGroup</b>:(AIContactGroup *)inGroup <b>to</b>:(NSString *)newName
+		</p>
+		<p class="desc">
+			Rename a group
+		</p>
+		<br>
+		<h2>
+			Contact object access
+			<hr>
+		</h2>
+		<p class="code">
+			- (AIContactGroup *)<b>contactList</b>
+		</p>
+		<p class="desc">
+			Returns the root contact list group. This group contains every other group and contact on the list.
+		</p>
+		<br>
+		<p class="code">
+			- (AIContactGroup *)<b>groupWithName</b>:(NSString *)inName
+		</p>
+		<p class="desc">
+			Find and return the group with the specified name
+		</p>
+		<br>
+		<p class="code">
+			- (AIContactHandle *)<b>handleWithService:</b>(NSString *)inService <b>UID</b>:(NSString *)inUID
+		</p>
+		<p class="desc">
+			Find and return the handle with the specified service and UID If the handle does not exist, it will be created in the '__strangers' group.
+		</p>
+		<br>
+		<p class="code">
+			- (NSMutableArray *)<b>allContactsInGroup</b>:(AIContactGroup *)inGroup <b>subgroups</b>:(BOOL)subGroups
+		</p>
+		<p class="desc">
+			Return all the contacts in a group, and (optionally) all the subgroups it contains
+		</p>
+		<br>
+		<h2>
+			Handle observer / status
+			<hr>
+		</h2>
+		<p class="code">
+			- (void)<b>handleStatusChanged</b>:(AIContactHandle *)inHandle <b>modifiedStatusKeys</b>:(NSArray *)InModifiedKeys
+		</p>
+		<p class="desc">
+			Let everyone know a handles status has changed (call this method after making changes to a handle's status dict)
+		</p>
+		<br>
+		<p class="code">
+			- (void)<b>registerHandleObserver</b>:(id &lt;AIHandleObserver&gt;)inObserver
+		</p>
+		<p class="desc">
+			Register a handle observer (see docs on handle observers...)
+		</p>
+		<br>
+		<h2>
+			Contact info
+			<hr>
+		</h2>
+		<p class="code">
+			- (void)<b>showInfoForContact</b>:(AIContactHandle *)inContact
+		</p>
+		<p class="desc">
+			how the info window for the specified contact
+		</p>
+		<br>
+		<p class="code">
+			- (void)<b>addContactInfoView</b>:(AIContactInfoView *)inView
+		</p>
+		<p class="desc">
+			Add a contact info view
+		</p>
+		<br>
+		<h2>
+			Misc
+			<hr>
+		</h2>
+		<p class="code">
+			- (void)<b>delayContactListUpdatesFor</b>:(int)seconds
+		</p>
+		<p class="desc">
+			Delay updating of the contact list for a set period of time. (Call this before making massive changes to the contact list)
+		</p>
+	</body>
+</html>

@@ -1,0 +1,69 @@
+/* General Page */
+body{
+	background-color:#ffffff;
+}
+
+
+/* Paragraph Styles */
+p{
+	font-family: times;
+	font-size: 85%;
+}
+
+p.note{
+	background-color:#dddddd;
+	padding: 5px 8px
+}
+
+p.code{
+	padding: 2px 2px;
+	background-color:rgb(242,242,242);	
+	font-family: courier;
+}
+
+p.codeblock{
+	padding: 4px 4px;
+	background-color:rgb(242,242,242);	
+	font-family: courier;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+p.desc{
+	margin-left: 20px;
+}
+
+
+/* Notification Tables */
+table.notlist{
+	width: 95%
+}
+
+td.not{
+	padding: 2px 4px;
+	font-size: 85%;
+	font-weight: bold;
+}
+
+td.notdesc{
+	font-size: 85%;
+	padding-left: 20px;
+	padding-bottom: 10px;
+}
+
+
+/* Class and method sub group headers */
+h1{
+	color: #7F0000;
+	font-size: 120%;
+}
+
+h2{
+	color: #005F00;
+	font-size: 90%;
+}
+
+h3{
+	color: #7F0000;
+	font-size: 80%;
+}
