@@ -16,7 +16,7 @@
 #import "AIContactIdlePlugin.h"
 
 @interface AIContactIdlePlugin (PRIVATE)
-- (void)setIdleForObject:(AIListObject *)inObject delayed:(BOOL)delayed silent:(BOOL)silent;
+- (void)setIdleForObject:(AIListObject *)inObject silent:(BOOL)silent;
 - (void)updateIdleObjectsTimer:(NSTimer *)inTimer;
 @end
 
@@ -50,7 +50,11 @@
             //Track the handle
             if(!idleObjectArray){
                 idleObjectArray = [[NSMutableArray alloc] init];
-                idleObjectTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateIdleObjectsTimer:) userInfo:nil repeats:YES] retain];
+                idleObjectTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0 
+																	target:self 
+																  selector:@selector(updateIdleObjectsTimer:)
+																  userInfo:nil 
+																   repeats:YES] retain];
             }
             [idleObjectArray addObject:inObject];
 
@@ -65,7 +69,7 @@
         }
 
         //Set the correct idle value
-        [self setIdleForObject:inObject delayed:NO silent:silent];
+        [self setIdleForObject:inObject silent:silent];
     }
 
     return(nil);
@@ -81,27 +85,32 @@
     while((object = [enumerator nextObject])){
 		//There's actually no reason to re-sort in response to these status changes, but there is no way for us to
 		//let the Adium core know that.
-        [self setIdleForObject:object delayed:YES silent:YES]; //Update the contact's idle time
+        [self setIdleForObject:object silent:YES]; //Update the contact's idle time
     }
+	
 }
 
 //Give a contact its correct idle value
-- (void)setIdleForObject:(AIListObject *)inObject delayed:(BOOL)delayed silent:(BOOL)silent
+- (void)setIdleForObject:(AIListObject *)inObject silent:(BOOL)silent
 {
     NSDate	*idleSince = [[inObject statusArrayForKey:@"IdleSince"] earliestDate];
     
     if(idleSince){ //Set the handle's 'idle' value
         double	idle = -[idleSince timeIntervalSinceNow] / 60.0;
-        [[inObject statusArrayForKey:@"Idle"] setObject:[NSNumber numberWithDouble:idle] withOwner:inObject];
+		[inObject setStatusObject:[NSNumber numberWithDouble:idle]
+						withOwner:inObject
+						   forKey:@"Idle"
+						   notify:NO];
         
     }else{ //Remove its idle value
-        [[inObject statusArrayForKey:@"Idle"] setObject:nil withOwner:inObject];
+		[inObject setStatusObject:nil
+						withOwner:inObject
+						   forKey:@"Idle"
+						   notify:NO];
     }
 
-    //Let everyone know we changed it
-    [[adium contactController] listObjectStatusChanged:inObject
-                                    modifiedStatusKeys:[NSArray arrayWithObject:@"Idle"]
-                                                silent:silent];
+	//Apply the change
+	[inObject notifyOfChangedStatusSilently:silent];
 }
 
 
