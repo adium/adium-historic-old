@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.141 2004/06/05 18:18:50 evands Exp $
+// $Id: AIContactController.m,v 1.142 2004/06/05 18:30:14 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -600,7 +600,7 @@
 //Always be able to show the inspector
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	if(menuItem == menuItem_getInfo){
+	if((menuItem == menuItem_getInfo) || (menuItem == menuItem_getInfoAlternate)){
 		return([self selectedListObject] != nil);
 	}else if (menuItem == menuItem_getInfoContextual){
 		return([[owner menuController] contactualMenuContact] != nil);
