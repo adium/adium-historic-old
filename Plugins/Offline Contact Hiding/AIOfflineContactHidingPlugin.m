@@ -31,16 +31,22 @@
 #define HIDE_OFFLINE_MENU_TITLE				AILocalizedString(@"Hide Offline Contacts",nil)
 #define KEY_SHOW_OFFLINE_CONTACTS			@"Show Offline Contacts"
 #define OFFLINE_CONTACTS_IDENTIFER			@"OfflineContacts"
-#define	KEY_USE_CONTACT_LIST_GROUPS			@"Use Contact List Groups"
+#define	KEY_HIDE_CONTACT_LIST_GROUPS		@"Hide Contact List Groups"
 
 @interface AIOfflineContactHidingPlugin (PRIVATE)
 - (void)configureOfflineContactHiding;
 - (void)configurePreferences;
 @end
 
+/*
+ * @class AIOfflineContactHidingPlugin
+ * @brief Component to handle showing or hiding offline contacts and hiding empty groups
+ */
 @implementation AIOfflineContactHidingPlugin
 
-//Install
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {	
 	//Register preference observer first so values will be correct for the following calls
@@ -70,7 +76,9 @@
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];	
 }
 
-//Uninstall
+/*
+ * @brief Uninstall
+ */
 - (void)uninstallPlugin
 {
 	[showOfflineMenuItem release]; showOfflineMenuItem = nil;
@@ -84,7 +92,7 @@
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	showOfflineContacts = [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue];
-	useContactListGroups = [[prefDict objectForKey:KEY_USE_CONTACT_LIST_GROUPS] boolValue];
+	useContactListGroups = ![[prefDict objectForKey:KEY_HIDE_CONTACT_LIST_GROUPS] boolValue];
 
 	if(firstTime){
 		//Observe contact and preference changes
@@ -99,7 +107,9 @@
 	}
 }
 
-//Toggle the display of offline contacts (call from menu)
+/*
+ * @brief Toggle the display of offline contacts
+ */
 - (IBAction)toggleOfflineContactsMenu:(id)sender
 {
 	//Store the preference
@@ -111,14 +121,18 @@
 	[self configureOfflineContactHiding];
 }
 
-//Set Show/Hide Text and update the contact list
+/*
+ * @brief Set the menu item title for the current offline contact hiding state
+ */
 - (void)configureOfflineContactHiding
 {
 	//The menu item shows the opposite of the current state, since that what happens if you toggle it
 	[showOfflineMenuItem setTitle:(showOfflineContacts ? HIDE_OFFLINE_MENU_TITLE : SHOW_OFFLINE_MENU_TITLE)];
 }
 
-//Update visibility of a list object
+/*
+ * @brief Update visibility of a list object
+ */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {    
     if(inModifiedKeys == nil ||
@@ -140,7 +154,6 @@
 			}
 
 		}else if([inObject isKindOfClass:[AIListGroup class]]){
-
 			[inObject setVisible:((useContactListGroups) &&
 								  (showOfflineContacts || [(AIListGroup *)inObject visibleCount] > 0))];
 		}
