@@ -109,7 +109,6 @@
     return(nil);
 }
 
-#warning How should delayed be being used here?
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DISPLAYFORMAT] == 0){

@@ -131,7 +131,7 @@
     //Set all column data cells to image cells
     enumerator = [[tableView_icons tableColumns] objectEnumerator];
     while((column = [enumerator nextObject])){
-        NSImageCell	*cell = [[[NSImageCell alloc] init] autorelease];
+        IKTableImageCell	*cell = [[[IKTableImageCell alloc] init] autorelease];
         [cell setImageScaling:NSScaleProportionally];
 
         [column setDataCell:cell];
@@ -385,9 +385,9 @@
     index = (row * columns) + [tableView indexOfTableColumn:tableColumn];
 
     if(index >= 0 && index < icons && ([iconArray objectAtIndex:index] == selectedIcon)){
-        [cell setImageFrameStyle:NSImageFrameGrayBezel];
+        [cell setHighlighted:YES];
     }else{
-        [cell setImageFrameStyle:NSImageFrameNone];
+        [cell setHighlighted:NO];
     }
 
 }

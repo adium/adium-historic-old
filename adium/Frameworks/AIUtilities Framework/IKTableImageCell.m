@@ -8,90 +8,61 @@
 
 #import "IKTableImageCell.h"
 
-
 @implementation IKTableImageCell
 
-- (id)initImageCell:(NSImage *)anImage
+- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-    id me = [super initImageCell:anImage];
-    [self setType:NSImageCellType];
-    
-    return(me);
+    //Highlight
+    if([self isHighlighted]){
+        [[NSColor alternateSelectedControlColor] set];
+        [NSBezierPath fillRect:cellFrame];
+    }
+
+    //Draw our interior
+    [super drawWithFrame:cellFrame inView:controlView];
 }
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
     NSImage	*img = [self image];
-
-    if (!img){
-        img = [self objectValue];
-    }
-
-    if (img) {
-
+    
+    if(img){
         // Handle flipped axes
         BOOL	wasFlipped = TRUE;
         if (![img isFlipped]) {
             wasFlipped = FALSE;
         }
         [img setFlipped:TRUE];
-        
+
         // Size and location
-          // Get image metrics
+        // Get image metrics
         NSSize	imgSize = [img size];
         NSRect	imgRect = NSMakeRect (0, 0, imgSize.width, imgSize.height);
-        
-          // Scaling
-        BOOL	needsScaling = FALSE;
+
+        // Scaling
         NSRect	targetRect = cellFrame;
         if ((imgSize.height > cellFrame.size.height) ||
             (imgSize.width  >  cellFrame.size.width)) {
-            needsScaling = TRUE;
-            
+
             if ((imgSize.height / cellFrame.size.height) >
                 (imgSize.width / cellFrame.size.width)) {
                 targetRect.size.width = imgSize.width / (imgSize.height / cellFrame.size.height);
             } else {
                 targetRect.size.height = imgSize.height / (imgSize.width / cellFrame.size.width);
             }
-        }
-        
-          // Centering
-        NSPoint	location = NSMakePoint ((targetRect.size.width - imgSize.width) / 2,
-                                        (targetRect.size.height - imgSize.height) / 2);
-                           
-        
-        // Draw background
-        NSColor	*bgColor = nil;
-        
-        if ([self isHighlighted]) {
-            //bgColor = [NSColor highlightColor];
-            //if ([bgColor isEqual:[NSColor whiteColor]])
-                bgColor = [NSColor yellowColor];
-        } else {
-            bgColor = [NSColor whiteColor];
+
+        }else{
+            targetRect.size.width = imgSize.width;
+            targetRect.size.height = imgSize.height;
+            
         }
 
-        if (![self isObjectEnabled]) {
-            bgColor = [bgColor blendedColorWithFraction:0.5 ofColor:[NSColor grayColor]];
-        }
-        
-        [bgColor set];
-        [NSBezierPath fillRect:cellFrame];
-        
-        // Set appropriate transparency
-        float	transparency = 0.5;
-        if ([self isObjectEnabled]) {
-            transparency = 1.0;
-        }
+        //Centering
+        targetRect = NSOffsetRect(targetRect, (cellFrame.size.width - targetRect.size.width) / 2, (cellFrame.size.height - targetRect.size.height) / 2);
         
         // Draw	Image
-        if (needsScaling) {
-            targetRect.origin = location;
-            [img drawInRect:targetRect fromRect:imgRect operation:NSCompositeSourceOver fraction:transparency];
-        } else
-            [img drawAtPoint:cellFrame.origin fromRect:imgRect operation:NSCompositeSourceOver fraction:transparency];
-        
+        [img drawInRect:targetRect fromRect:imgRect operation:NSCompositeSourceOver fraction:([self isEnabled] ? 1.0 : 0.5)];
+
         // Clean-up
         if (!wasFlipped){
             [img setFlipped:FALSE];
@@ -99,23 +70,14 @@
     }
 }
 
-- (void)setObjectEnabled:(BOOL)enabled
+//Super doesn't appear to handle the isHighlighted flag correctly, so we handle it to be safe.
+- (void)setHighlighted:(BOOL)flag
 {
-    objectEnabled = enabled;
+    [self setState:(flag ? NSOnState : NSOffState)];
+    isHighlighted = flag;
+}
+- (BOOL)isHighlighted{
+    return(isHighlighted);
 }
 
-- (BOOL)isObjectEnabled
-{
-    return(objectEnabled);
-}
-
-- (void)setHighlighted:(BOOL)enabled
-{
-    highlighted = enabled;
-}
-
-- (BOOL)isHighlighted
-{
-    return(highlighted);
-}
 @end

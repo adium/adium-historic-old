@@ -8,13 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-// Currently researching whether I actually need to write this...
-@interface IKTableImageCell : NSCell {
-    //NSImage			*image;
-    BOOL			highlighted;
-    BOOL			objectEnabled;
+@interface IKTableImageCell : NSImageCell {
+    BOOL	isHighlighted;
 }
 
-- (void)setObjectEnabled:(BOOL)enabled;
-- (BOOL)isObjectEnabled;
+- (void)setHighlighted:(BOOL)flag;
+- (BOOL)isHighlighted;
+
 @end

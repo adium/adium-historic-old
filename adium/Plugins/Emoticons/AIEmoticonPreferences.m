@@ -20,7 +20,6 @@
 #import "AIEmoticonsPlugin.h"
 #import "AIEmoticon.h"
 #import "AIEmoticonPack.h"
-#import "IKTableImageCell.h"
 
 #define	EMOTICON_PREF_NIB		@"EmoticonPrefs"
 #define EMOTICON_PREF_TITLE		@"Emoticons/Smilies"
@@ -473,9 +472,9 @@
         [aCell setHighlighted:select];
         //[aCell setCellAttribute:NSChangeGrayCell to:TRUE];
         if (dim)
-            [aCell setObjectEnabled:FALSE];
+            [aCell setEnabled:FALSE];
         else
-            [aCell setObjectEnabled:TRUE];
+            [aCell setEnabled:TRUE];
         
         //NSLog (@"(Dim: %d)	Select: %d", dim, select);
     }
