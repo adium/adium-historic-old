@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.28 2004/04/08 22:42:11 adamiser Exp $
+$Id: ToDoList.txt,v 1.29 2004/04/08 23:17:41 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -29,6 +29,7 @@ Bugs
 * Is jabber working correctly?  Are we receiving status for buddies upon initially connecting?  Need to check this.
 * User icons are still getting flipped.  We need to determine if they're from libgaim or from the address book.
 * Changing an alias in the inspector does not correctly update the contact list
+* Yahoo giving some users a Gaim error: unknown error 29 on connect
 
 
 
