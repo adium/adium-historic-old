@@ -252,13 +252,17 @@ static NSDictionary		*presetStatusesDictionary = nil;
 			//Update as necessary
 			if ([statusMsgString length] && ![statusMsgString isEqualToString:@"Online"]) {
 				if (![statusMsgString isEqualToString:oldStatusMsgString]) {
-					NSAttributedString *attrStr = [[[NSAttributedString alloc] initWithString:statusMsgString] autorelease];
+					NSAttributedString *attrStr;
+					
+					attrStr = [[NSAttributedString alloc] initWithString:statusMsgString];
 					
 					[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
 					[theContact setStatusObject:attrStr forKey:@"StatusMessage" notify:NO];
 					
 					//apply changes
 					[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+					
+					[attrStr release];
 				}
 				
 			} else if ([oldStatusMsgString length]) {

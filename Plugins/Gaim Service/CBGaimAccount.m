@@ -1404,9 +1404,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//Create a fresh version of the account
     account = gaim_account_new([[self formattedUID] UTF8String], [self protocolPlugin]);
 	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
-	
-    gaim_accounts_add(account);
-	
+
 	if (!gaimThread){
 		gaimThread = [[SLGaimCocoaAdapter sharedInstance] retain];
 	}
@@ -1589,7 +1587,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			NSData  *data;
 
 			if(data = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
-				[self setAccountUserImage:[[[NSImage alloc] initWithData:data] autorelease]];
+				NSImage		*image = [[NSImage alloc] initWithData:data];
+				[self setAccountUserImage:image];
+				[image release];
 			}
 			
 		}
