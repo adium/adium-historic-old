@@ -20,6 +20,9 @@ Contacts
 Rendezvous
 	- Messages with line breaks break the Rendezvous connection with the destination contact
 
+Message window
+	- Minimum size pref is wonky
+
 [LOW]
 
 Contacts
