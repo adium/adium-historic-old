@@ -11,6 +11,7 @@
 	IBOutlet	AIAdium		*owner;
 }
 
+- (void)initController;
 - (void)adiumDebug:(NSString *)message, ...;
 - (NSArray *)debugLogArray;
 

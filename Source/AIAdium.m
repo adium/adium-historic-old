@@ -645,6 +645,9 @@ void Adium_HandleSignal(int i){
 	NSLog(@"####     %@THIS IS A BETA RELEASE!%@     ####",spaces1,spaces2);
 	NSLog(@"#### Loading Adium X BETA Release v%@ ####",currentVersionString);
 
+	AILog(@"####     %@THIS IS A BETA RELEASE!%@     ####",spaces1,spaces2);
+	AILog(@"#### Loading Adium X BETA Release v%@ ####",currentVersionString);
+
 	currentVersionString = [self processBetaVersionString:currentVersionString];
 	lastLaunchedVersionString = [self processBetaVersionString:lastLaunchedVersionString];
 #endif	
