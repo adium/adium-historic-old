@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+                      "http://www.w3.org/TR/html4/strict.dtd">
+<!-- $URL: http://svn.visualdistortion.org/repos/projects/adium/index.html $ -->
+<!-- $Rev: 348 $ $Date: 2003/07/19 00:03:29 $ -->
+<html>
+  <head>
+    <title>Adium SQL Logging Instructions</title>
+    <link rel="stylesheet" type="text/css"
+    href="stylesheet.css">
+  </head>
+  <body>
+    <h3>Adium SQL Logging Instructions</h3>
+    SQL Logging implements Adium logging into a PostgreSQL database.<br>
+    This offers several advantages:
+    <ul>
+      <li>Searching is very, very quick.</li>
+      <li>Exceptionally detailed statistics.</li>
+      <li>Other goodness.</li>
+    </ul>
+
+    <p>At the base level, all that is required is PostgreSQL (duh).
+    It can be installed from source, via fink, or by a package.</p>
+    <p>I would recommend a package by Mark Liyanage.<br>
+    You can find information and installation instructions at <a
+      href="http://www.entropy.ch/software/macosx/postgresql/">http://www.entropy.ch/software/macosx/postgresql/</a>.</p>
+    <p>There is also a set of installation instructions for installing
+    PostgreSQL at <a
+      href="http://developer.apple.com/internet/macosx/postgres.html">http://developer.apple.com/internet/macosx/postgres.html</a>.
+    They're pretty good.</p>
+    <p>After you have PostgreSQL set up, create a user with your username.</p>
+    <div class="tutorialcode">
+      <pre>createuser <i>username</i></pre></div></p>
+    <p>Then create a database with your username:</p>
+    <div class="tutorialcode">
+      <pre>createdb <i>username</i></pre></div></p>
+    <p>After a database is created, you should be able to connect to it by
+    simply typing <code>psql</code>.
+    To log information, Adium will expect to have a certain setup in the
+    database.  Get the following package: <a
+      href="adium-sql.tar.gz">adium.tar.gz</a>.  After using Stuffit Expander or
+    the command line to unpack it, there should these files inside:
+    <ul>
+      <li>jsp/index.jsp (main message viewer)</li>
+      <li>jsp/search.jsp (searching tool)</li>
+      <li>jsp/statistics.jsp (user statistics)</li>
+      <li>jsp/images/ (images for the statistics page)</li>
+      <li>sql/adium.sql (setup)</li>
+      <li>sql/tsearch.sql (setup for fast searching)</li>
+      <li>parser.pl (script to import Adium logs &lt;= 1.6.x)</li>
+      <li>parser-2.pl (script to import logs &gt;= 2.0)</li>
+      <li>These html files</li>
+    </ul>
+    </p>
+
+    <p>The file <code>parser.pl</code> will convert all of your old Adium 1.6
+    logs and insert them into the database.</p>
+    <p>The JSP files will allow you to view IMs with a web interface.  These
+    can be used locally and from the world-wide web.</p>
+    <p>The SQL files are a language that tells the database what type of
+    information to store and tables to create.  They are split into two files: 
+    the file called "adium.sql" will create the default table
+    layout.  tsearch.sql will enable it to use a module called "tsearch",
+    which allows for very, very fast searching.  It requires slightly more
+    setup, which is why it has been split into a different file.</p>
+
+    <p>To create the table needed for message logging, open a terminal window
+    and switch to the directory that contains the files you just downloaded.
+    (If you don't know how to do that, I would suggest <a
+      href="http://www.macdevcenter.com/pub/a/mac/2002/12/06/terminal_osx.html">this
+      series of articles</a>).  Type <code>psql &lt; adium.sql</code>.  You
+    should get messages like TABLE CREATED.  To ensure that it worked, type
+    <code>psql</code>.  Then you will be connected to the database.  You
+    should see something like this:
+    <div class="tutorialcode"><pre>Welcome to psql 7.3, the PostgreSQL interactive terminal.
+
+Type:  \copyright for distribution terms
+       \h for help with SQL commands
+       \? for help on internal slash commands
+       \g or terminate with semicolon to execute query
+       \q to quit
+
+jmelloy=#</pre></div>
+
+  <p>To see the table you just created, you need to alter your search
+  path.</p>
+  <div class="tutorialcode">
+    <pre>alter user <i>username</i> set search_path=adium,public</pre></div>
+  <p>After typing that, you should see the confirmation message <code>ALTER
+    USER</code>. Then type "\d" and you should see something like this:</p>
+  <div class="tutorialcode"><pre>jmelloy=# \d
+                            List of relations
+      Schema      |             Name             |   Type   |  Owner  
+------------------+------------------------------+----------+---------
+ adium            | messages                     | table    | jmelloy
+ adium            | messages_message_id_seq      | sequence | jmelloy
+(2 rows)</pre></div>
+  <p>At this point, you're ready to use it.
+  You can run <code>parser.pl</code> to insert all of your old logs into the
+  database.  
+  To run the script, a few modules are needed for your perl installation.
+  The first one is called "DBI" (DataBase Interface) and the second "DBD-PG"
+  (DataBase Driver-PostgreSQL).  Both can be gotten from fink or CPAN.
+  The fink modules are called dbi-pm and dbd-pg-pm (in unstable).
+  Run it by typing <code>./parser.pl</code>.  
+  It should automatically find all of your logs, but you may need to edit the
+  paths.
+  As it stands, it will run over every screenname who logged into your computer.
+  In future versions, it will be able to specify a specific user.
+  </p>
+  <p>Download the newest source of Adium
+  2.0 from cvs, and compile it.  Switch the target to "SQL Logger" and hit
+  "Build".  Locate the built application, and control-click it.  Go to "Show
+  Package Contents" navigate to the Plugin folder, and add "SQL
+  Logger.AdiumPlugin" to it.  That should be all it takes to install it.
+  </p>
+  <p>You can also download a compiled plugin here: <a
+    href="sql-logger.tar.gz">sql-logger.tar.gz</a>, uncompress it, and drop it
+  in the Adium application as discussed above.  This will not work without
+  PostgreSQL installed on your system, and the proper database setup.</p>
+  <p>When you open up Adium, also check the Console to see if any errors are
+  logged.  (This will probably change into a more obtrusive method of
+  notification.)</p>
+
+  <p>To check that either parser.pl worked correctly, and/or it's correctly
+  logging, type <code>psql</code>.  To view messages:</p> 
+  <div class="tutorialcode">
+    <pre>select * from adium.messages order by message_date desc limit 5;</pre>
+  </div>
+  <p>You should see the last five messages you sent/received.  To search for
+  messages, you can do </p>
+  <div class="tutorialcode">
+    <pre>select * from messages where message ~ '<i>search string</i>'</pre>
+  </div>
+  <p>This interface is kind of a pain, and searching can
+  be made faster.</p>
+  <p>To make searching faster, it is best to install the <i>tsearch</i> module.
+  To make the interface suck less, I've written a web-interface in JSP.
+  Instructions on usage/installation are in the following files:
+  <ul>
+    <li><a href="tsearch.html">tsearch installation guide</a></li>
+    <li><a href="jsp.html">jsp installation guide</a></li>
+  </ul>
+  </p>
+
+  <hr><div align="right"><a
+      href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a></div>
+</body>
+</html>

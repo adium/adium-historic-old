@@ -43,7 +43,8 @@
     conn = PQconnectdb("");
     if (PQstatus(conn) == CONNECTION_BAD)
     {
-        NSLog(@"Connection to database failed.\n");
+        [[owner interfaceController] handleErrorMessage:@"Connection to database failed." withDescription:@"Check your settings and try again."];
+        //NSLog(@"Connection to database failed.");
         NSLog(@"%s", PQerrorMessage(conn));
     }
 }
@@ -105,7 +106,7 @@
     
 }
 
-//Add a message to the specified log file
+//Insert a message
 - (void)_addMessage:
 (NSAttributedString *)message 
 dest:(NSString *)destName 
@@ -128,9 +129,9 @@ recServe:(NSString *)r_service
     PQescapeString(escapeSender, [sourceName UTF8String], [sourceName length]);
     PQescapeString(escapeRecip, [destName UTF8String], [destName length]);
     
-    sqlStatement = [NSString stringWithFormat:@"insert into adium.messages (sender_sn, recipient_sn, message, sender_service, recipient_service) values (\'%s\',\'%s\',\'%s\', \'%@\', \'%@\')", 
+    sqlStatement = [NSString stringWithFormat:@"insert into adium.message_v (sender_sn, recipient_sn, message, sender_service, recipient_service) values (\'%s\',\'%s\',\'%s\', \'%@\', \'%@\')", 
     escapeSender, escapeRecip, escapeMessage, s_service, r_service];
-        
+    
     res = PQexec(conn, [sqlStatement UTF8String]);
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         NSLog(@"%s / %s", PQresStatus(PQresultStatus(res)), PQresultErrorMessage(res));
@@ -154,7 +155,7 @@ recServe:(NSString *)r_service
 }
 
 - (NSString *)pluginURL {
-    return @"http://www.visualdistortion.org";
+    return @"http://www.visualdistortion.org/adium/";
 }
 
 @end
