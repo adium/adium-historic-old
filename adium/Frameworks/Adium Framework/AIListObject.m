@@ -192,14 +192,23 @@
 //Quickly set a status key for this object (owned by this object)
 - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify
 {
-	[self setStatusObject:value withOwner:self forKey:key notify:notify];
+	[self setStatusObject:value primary:NO withOwner:self forKey:key notify:notify];
 }
 
 //Quickly set a status key for this object
 - (void)setStatusObject:(id)value withOwner:(id)owner forKey:(NSString *)key notify:(BOOL)notify
 {
+	[self setStatusObject:value primary:NO withOwner:owner forKey:key notify:notify];
+}
+
+- (void)setStatusObject:(id)value primary:(BOOL)primary withOwner:(id)owner forKey:(NSString *)key notify:(BOOL)notify
+{
 	if(key){
-		[[self statusArrayForKey:key] setObject:value withOwner:owner];
+		if (primary)
+			[[self statusArrayForKey:key] setPrimaryObject:value withOwner:owner];
+		else
+			[[self statusArrayForKey:key] setObject:value withOwner:owner];
+		
 		if(!changedStatusKeys) changedStatusKeys = [[NSMutableArray alloc] init];
 		[changedStatusKeys addObject:key];
 	}
