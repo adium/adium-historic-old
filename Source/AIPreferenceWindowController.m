@@ -187,9 +187,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	
     //Center the window
 	[[self window] center];
-	
-    //Let everyone know we will open
-    [[adium notificationCenter] postNotificationName:Preference_WindowWillOpen object:nil];
 }
 
 //prevent the system from moving our window around
@@ -231,9 +228,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
         [pane closeView];
     }
     
-    //Let everyone know we will close
-    [[adium notificationCenter] postNotificationName:Preference_WindowDidClose object:nil];
-
     //autorelease the shared instance
     [sharedPreferenceInstance autorelease]; sharedPreferenceInstance = nil;
 
