@@ -436,27 +436,31 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
     //When the item only remains on one collection, we disable the checkbox corresponding to that collection
     if([identifier conformsToProtocol:@protocol(AIEditorCollection)]){
-        if([item isKindOfClass:[AIEditorListHandle class]]){
-            BOOL			enabled = YES;
+        if([identifier enabled]){
+            if([item isKindOfClass:[AIEditorListHandle class]]){
+                BOOL			enabled = YES;
 
-            //If this box is checked
-            if([identifier containsHandleWithUID:[item UID] serviceID:[item serviceID]]){
-                NSEnumerator		*enumerator;
-                id <AIEditorCollection>	column;
+                //If this box is checked
+                if([identifier containsHandleWithUID:[item UID] serviceID:[item serviceID]]){
+                    NSEnumerator		*enumerator;
+                    id <AIEditorCollection>	column;
 
-                //Scan the other boxes
-                enabled = NO;
-                enumerator = [[plugin collectionsArray] objectEnumerator];
-                while((column = [enumerator nextObject])){
-                    if(column != identifier && [column includeInOwnershipColumn] && [column containsHandleWithUID:[item UID] serviceID:[item serviceID]]){
-                        //Once we find another checked checkbox, we can enable this one, and stop searching
-                        enabled = YES;
-                        break;
+                    //Scan the other boxes
+                    enabled = NO;
+                    enumerator = [[plugin collectionsArray] objectEnumerator];
+                    while((column = [enumerator nextObject])){
+                        if(column != identifier && [column includeInOwnershipColumn] && [column containsHandleWithUID:[item UID] serviceID:[item serviceID]]){
+                            //Once we find another checked checkbox, we can enable this one, and stop searching
+                            enabled = YES;
+                            break;
+                        }
                     }
                 }
-            }
 
-            [cell setEnabled:enabled];
+                [cell setEnabled:enabled];
+            }else{
+                [cell setEnabled:NO];
+            }
         }else{
             [cell setEnabled:NO];
         }

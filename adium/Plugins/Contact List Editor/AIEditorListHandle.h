@@ -17,5 +17,6 @@
 
 - (id)initWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID temporary:(BOOL)inTemporary;
 - (NSString *)serviceID;
+- (void)setServiceID:(NSString *)inServiceID;
 
 @end

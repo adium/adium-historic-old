@@ -22,6 +22,14 @@
     return(self);
 }
 
+- (void)dealloc
+{
+    [UID release];
+    [containingGroup release];
+    
+    [super dealloc];
+}
+
 - (NSString *)UID
 {
     return(UID);

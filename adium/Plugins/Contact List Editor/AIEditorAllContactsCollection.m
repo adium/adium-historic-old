@@ -113,6 +113,35 @@
 //Add an object to the collection
 - (void)addObject:(AIEditorListObject *)inObject
 {
+    if([inObject isKindOfClass:[AIEditorListHandle class]]){
+        NSString		*groupName = [[inObject containingGroup] UID];
+        BOOL			serviceIDSet = NO;
+        NSEnumerator		*enumerator;
+        id <AIEditorCollection>	collection;
+
+        //Add the object to all available collections (for now)
+        enumerator = [[plugin collectionsArray] objectEnumerator];
+        while((collection = [enumerator nextObject])){
+            if([collection includeInOwnershipColumn] && [collection enabled]){
+                AIEditorListGroup	*group;
+                
+                //Correctly set the object's service ID (for now)
+                if(!serviceIDSet){
+                    [(AIEditorListHandle *)inObject setServiceID:[collection serviceID]];
+                    serviceIDSet = YES;
+                }
+                
+                //Get a local instance of the containing group
+                group = [plugin groupNamed:groupName onCollection:collection];
+                if(!group){ //If the group doesn't exist, create it
+                    group = [plugin createGroupNamed:groupName onCollection:collection temporary:NO];
+                }
+
+                //Add the handle to this collection
+                [plugin createHandleNamed:[inObject UID] inGroup:group onCollection:collection temporary:NO];
+            }
+        }
+    }
 }
 
 //Delete an object from the collection
@@ -125,7 +154,7 @@
     //Delete the object from all owning collections
     enumerator = [[plugin collectionsArray] objectEnumerator];
     while((collection = [enumerator nextObject])){
-        if([collection includeInOwnershipColumn]){
+        if([collection includeInOwnershipColumn] && [collection enabled]){
             AIEditorListObject	*object;
 
             //Get the instance of the object on this collection
@@ -141,7 +170,6 @@
             }
         }
     }
-
 }
 
 //Rename an existing object
@@ -154,7 +182,7 @@
     //Rename the object on all owning collections
     enumerator = [[plugin collectionsArray] objectEnumerator];
     while((collection = [enumerator nextObject])){
-        if([collection includeInOwnershipColumn]){
+        if([collection includeInOwnershipColumn] && [collection enabled]){
             AIEditorListObject	*object;
 
             //Get the instance of the object on this collection
@@ -175,45 +203,43 @@
 //Move an existing object
 - (void)moveObject:(AIEditorListObject *)inObject toGroup:(AIEditorListGroup *)inGroup
 {
-    BOOL			isGroup = [inObject isKindOfClass:[AIEditorListGroup class]];
     NSString			*groupName = [inGroup UID];
     NSEnumerator		*enumerator;
     id <AIEditorCollection>	collection;
-    AIEditorListObject		*object;
+    AIEditorListHandle		*handle;
     AIEditorListGroup		*group;
 
-    //Move the object on all owning collections
-    enumerator = [[plugin collectionsArray] objectEnumerator];
-    while((collection = [enumerator nextObject])){
-        if([collection includeInOwnershipColumn]){
-            //Get the instance of the object on this collection
-            if(!isGroup){
-                object = [plugin handleNamed:[inObject UID] onCollection:collection];
-            }else{
-                object = [plugin groupNamed:groupName onCollection:collection];
-            }
+    if([inObject isKindOfClass:[AIEditorListHandle class]]){
 
-            //Get a local instance of the containing group
-            group = [plugin groupNamed:groupName onCollection:collection];
-            if(!group){ //If the group doesn't exist, create it
-                group = [plugin createGroupNamed:groupName onCollection:collection temporary:NO];
-            }
+        //Move the Handle on all owning collections
+        enumerator = [[plugin collectionsArray] objectEnumerator];
+        while((collection = [enumerator nextObject])){
+            if([collection includeInOwnershipColumn] && [collection enabled]){
+                //Get the instance of the handle on this collection
+                handle = [plugin handleNamed:[inObject UID] onCollection:collection];
 
-            //Move the object
-            if(object){
-                [plugin moveObject:object fromCollection:collection toGroup:group collection:collection];
+                //Get a local instance of the containing group
+                group = [plugin groupNamed:groupName onCollection:collection];
+                if(!group){ //If the group doesn't exist, create it
+                    group = [plugin createGroupNamed:groupName onCollection:collection temporary:NO];
+                }
+
+                //Move the handle
+                if(handle){
+                    [plugin moveObject:handle fromCollection:collection toGroup:group collection:collection];
+                }
             }
         }
+
+        //Move the handle on our list (to avoid regeneration of our editor list group)
+        handle = [plugin handleNamed:[inObject UID] onCollection:self];
+        group = [plugin groupNamed:groupName onCollection:self];
+
+        [handle retain];
+        [[handle containingGroup] removeObject:handle];
+        [group addObject:handle];
+        [handle release];
     }
-
-    //Move the object on our list (to avoid regeneration of our editor list group)
-    object = [plugin handleNamed:[inObject UID] onCollection:self];
-    group = [plugin groupNamed:groupName onCollection:self];
-
-    [object retain];
-    [[object containingGroup] removeObject:object];
-    [group addObject:object];
-    [object release];
 
 }
 
@@ -233,7 +259,7 @@
     //Process the ownership enabled collections' groups
     enumerator = [[plugin collectionsArray] objectEnumerator];
     while((collection = [enumerator nextObject])){
-        if([collection includeInOwnershipColumn]){
+        if([collection includeInOwnershipColumn] && [collection enabled]){
             [self _processCollectionGroup:[collection list] intoEditorGroup:editorGroup];
         }
     }
