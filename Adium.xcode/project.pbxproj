@@ -1306,6 +1306,46 @@
 			settings = {
 			};
 		};
+		3429BAF70703789D00EED705 = {
+			children = (
+				3429BB03070378F700EED705,
+				3429BB04070378F700EED705,
+			);
+			isa = PBXGroup;
+			name = "File Transfer Messages";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3429BB03070378F700EED705 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESFileTransferMessagesPlugin.h;
+			path = "Plugins/File Transfer Messages/ESFileTransferMessagesPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3429BB04070378F700EED705 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESFileTransferMessagesPlugin.m;
+			path = "Plugins/File Transfer Messages/ESFileTransferMessagesPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3429BB05070378F700EED705 = {
+			fileRef = 3429BB03070378F700EED705;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3429BB06070378F700EED705 = {
+			fileRef = 3429BB04070378F700EED705;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		342DC48A05783B8D000E1D83 = {
 			children = (
 				342DC5C005783DE7000E1D83,
@@ -5620,6 +5660,7 @@
 				34A48A5A06F646BD002C7C5F,
 				34A48B3906F64B27002C7C5F,
 				3461621506FB482D009181D8,
+				3429BB05070378F700EED705,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6211,6 +6252,7 @@
 				34A48A5B06F646BD002C7C5F,
 				34A48B3A06F64B27002C7C5F,
 				3461621606FB482D009181D8,
+				3429BB06070378F700EED705,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10855,6 +10897,7 @@
 		};
 		4B4F5B2A042D63E200A8010A = {
 			children = (
+				3429BAF70703789D00EED705,
 				9E4CF9D104AA69B000415B22,
 				34F8A7FA05A8927F00577775,
 				4BF4813B049A802E00A8010A,
