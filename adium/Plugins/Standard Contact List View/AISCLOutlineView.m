@@ -24,6 +24,7 @@
 
 @interface AISCLOutlineView (PRIVATE)
 - (void)configureView;
+- (void)frameChanged:(NSNotification *)notification;
 @end
 
 @implementation AISCLOutlineView
@@ -65,6 +66,12 @@
     
     //Install our scroll view frame changed notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameChanged:) name:NSViewFrameDidChangeNotification object:[newSuperview superview]];
+}
+
+//Called after we're inserted into a window
+- (void)viewDidMoveToSuperview
+{
+    [self frameChanged:nil]; //Force our scrollbar to hide/show correctly
 }
 
 // Navigate the contact list with the keyboard
