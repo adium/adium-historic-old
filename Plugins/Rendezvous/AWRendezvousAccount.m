@@ -30,13 +30,22 @@
 #import "AWEzvDefines.h"
 #import "AWRendezvousAccount.h"
 #import "AWRendezvousPlugin.h"
-#import <AIUtilities/AIMutableOwnerArray.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIContentTyping.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
+#import <Adium/NDRunLoopMessenger.h>
+#import <AIUtilities/AIMutableOwnerArray.h>
+#import <AIUtilities/CBObjectAdditions.h>
+
+static	NSLock				*threadPreparednessLock = nil;
+static	NDRunLoopMessenger	*rendezvousThreadMessenger = nil;
+static	AWEzv				*libezvThreadProxy = nil;
+static	NSAutoreleasePool	*currentAutoreleasePool = nil;
+
+#define	AUTORELEASE_POOL_REFRESH	5.0
 
 @interface AWRendezvousAccount (PRIVATE)
 - (NSString *)UIDForContact:(AWEzvContact *)contact;
@@ -53,8 +62,7 @@
     [super initAccount];
 	
     libezvContacts = [[NSMutableSet alloc] init];
-    
-    libezv = [[AWEzv alloc] initWithClient:self];
+    libezv = [[AWEzv alloc] initWithClient:self];	
 }
 
 - (void)dealloc
@@ -78,11 +86,27 @@
 
 - (void)connect
 {
+	if(!libezvThreadProxy){
+		//Obtain the lock
+		threadPreparednessLock = [[NSLock alloc] init];
+		[threadPreparednessLock lock];
+		
+		//Deatch the thread, which will unlock threadPreparednessLock when it is ready
+		[NSThread detachNewThreadSelector:@selector(prepareRendezvousThread)
+								 toTarget:self
+							   withObject:nil];
+		
+		//Obtain the lock - this will spinlock until the thread is ready
+		[threadPreparednessLock lock];
+		[threadPreparednessLock release]; threadPreparednessLock = nil;
+	}
+	
     // Say we're connecting...
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
 
-    [libezv setName:[self displayName]];
-    [libezv login];
+    [libezvThreadProxy setName:[self displayName]];
+	AILog(@"%@: Logging in using libezvThreadProxy %@",self, libezvThreadProxy);
+    [libezvThreadProxy login];
 }
 
 - (void)disconnect
@@ -93,7 +117,7 @@
     // Say we're disconnecting...
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
     
-    [libezv logout];
+    [libezvThreadProxy logout];
 }
 
 - (void)removeContacts:(NSArray *)objects
@@ -102,23 +126,42 @@
 }
 
 #pragma mark Libezv Callbacks
-// Libezv Callbacks
-- (void)reportLoggedIn
+/*
+ * @brief Logged in, called on the main thread
+ */
+- (void)mainThreadReportLoggedIn
 {
 	[self didConnect];
     
 	//We need to set our user icon after connecting
-    [self updateStatusForKey:KEY_USER_ICON];
+    [self updateStatusForKey:KEY_USER_ICON];	
 }
 
+/*
+ * @brief libezv: we logged in
+ *
+ * Sent on the libezv thread
+ */
+- (void)reportLoggedIn
+{
+	AILog(@"%@: reportLoggedIn",self);
+	[self mainPerformSelector:@selector(mainThreadReportLoggedIn)];
+}
+
+/*
+ * @brief libezv: we logged out
+ *
+ * Sent on the libezv thread
+ */
 - (void)reportLoggedOut 
 {
+	AILog(@"%@: reportLoggedOut",self);
 	[libezvContacts removeAllObjects];
 		
-	[self didDisconnect];
+	[self mainPerformSelector:@selector(didDisconnect)];
 }
 
-- (void)userChangedState:(AWEzvContact *)contact
+- (void)mainThreadUserChangedState:(AWEzvContact *)contact
 {
     AIListContact	*listContact;
 	NSString		*contactName, *statusMessage;
@@ -132,7 +175,7 @@
 	if (![listContact remoteGroupName]){
 		[listContact setRemoteGroupName:AILocalizedString(@"Rendezvous", @"Rendezvous group name")];
 	}
-
+	
 	//We only get state change updates on Online contacts
 	if (![listContact online]){
 		[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
@@ -179,7 +222,7 @@
 	if(contactImage != [listContact userIcon]){
 		[listContact setStatusObject:contactImage forKey:KEY_USER_ICON notify:NO];
 	}
-
+	
     //Use the contact alias as the serverside display name
 	contactName = [contact name];
 	if (![[listContact statusObjectForKey:@"Server Display Name"] isEqualToString:contactName]){
@@ -204,27 +247,44 @@
 																					 forKey:@"Notify"]];		
 	}
 
-	//Adding an existing object to a set has no effect, so just ensure it is added
-	[libezvContacts addObject:contact];
-	
     //Apply any changes
-    [listContact notifyOfChangedStatusSilently:silentAndDelayed];
+    [listContact notifyOfChangedStatusSilently:silentAndDelayed];	
 }
 
-- (void)userLoggedOut:(AWEzvContact *)contact
+/*
+ * @brief libezv: A contact was updated 
+ *
+ * Sent on the libezv thread
+ */
+- (void)userChangedState:(AWEzvContact *)contact
+{
+	[self mainPerformSelector:@selector(mainThreadUserChangedState:)
+				   withObject:contact];
+	
+	//Adding an existing object to a set has no effect, so just ensure it is added
+	[libezvContacts addObject:contact];
+}
+
+- (void)mainThreadUserWithUIDLoggedOut:(NSString *)inUID
 {
     AIListContact *listContact;
     
     listContact = [[adium contactController] existingContactWithService:service
 																account:self 
-																	UID:[self UIDForContact:contact]];
+																	UID:inUID];
     
-    [listContact setRemoteGroupName:nil];
+    [listContact setRemoteGroupName:nil];	
+}
+
+- (void)userLoggedOut:(AWEzvContact *)contact
+{
+	[self mainPerformSelector:@selector(mainThreadUserWithUIDLoggedOut:)
+				   withObject:[contact uniqueID]];
+
     [libezvContacts removeObject:contact];
 }
 
-//We received a message from an AWEzvContact
-- (void)user:(AWEzvContact *)contact sentMessage:(NSString *)message withHtml:(NSString *)html
+- (void)mainThreadUserWithUID:(NSString *)inUID sentMessage:(NSString *)message withHtml:(NSString *)html
 {
     AIListContact		*listContact;
     AIContentMessage	*msgObj;
@@ -232,7 +292,7 @@
 	
     listContact = [[adium contactController] existingContactWithService:service
 																account:self
-																	UID:[self UIDForContact:contact]];
+																	UID:inUID];
 	chat = [[adium contentController] chatWithContact:listContact];
 	
     msgObj = [AIContentMessage messageInChat:chat
@@ -247,21 +307,37 @@
 	//Clear the typing flag
 	[chat setStatusObject:nil
 				   forKey:KEY_TYPING
-				   notify:YES];
+				   notify:YES];	
 }
 
-- (void)user:(AWEzvContact *)contact typingNotification:(AWEzvTyping)typingStatus
+//We received a message from an AWEzvContact
+- (void)user:(AWEzvContact *)contact sentMessage:(NSString *)message withHtml:(NSString *)html
+{
+	[self mainPerformSelector:@selector(mainThreadUserWithUID:sentMessage:withHtml:)
+				   withObject:[contact uniqueID]
+				   withObject:message
+				   withObject:html];
+}
+
+- (void)mainThreadUserWithUID:(NSString *)inUID typingNotificationNumber:(NSNumber *)typingNumber
 {
     AIListContact   *listContact;
     AIChat			*chat;
     listContact = [[adium contactController] existingContactWithService:service
 																account:self
-																	UID:[self UIDForContact:contact]];
+																	UID:inUID];
 	chat = [[adium contentController] existingChatWithContact:listContact];
-		
-    [chat setStatusObject:((typingStatus == AWEzvIsTyping) ? [NSNumber numberWithInt:AITyping] : nil)
-					    forKey:KEY_TYPING
-					    notify:YES];
+	
+    [chat setStatusObject:typingNumber
+				   forKey:KEY_TYPING
+				   notify:YES];	
+}
+
+- (void)user:(AWEzvContact *)contact typingNotification:(AWEzvTyping)typingStatus
+{
+	[self mainPerformSelector:@selector(mainThreadUserWithUID:sentMessage:typingNotificationNumber:)
+				   withObject:[contact uniqueID]
+				   withObject:((typingStatus == AWEzvIsTyping) ? [NSNumber numberWithInt:AITyping] : nil)];;
 }
 
 - (void)user:(AWEzvContact *)contact typeAhead:(NSString *)message withHtml:(NSString *)html {
@@ -311,9 +387,9 @@
 		AIListObject    *listObject = [chat listObject];
 		NSString		*to = [listObject UID];
 		
-		[libezv sendMessage:message 
-						 to:to 
-				   withHtml:htmlMessage];
+		[libezvThreadProxy sendMessage:message 
+									to:to 
+							  withHtml:htmlMessage];
 
 		sent = YES;
 
@@ -323,8 +399,8 @@
 		AIListObject    *listObject = [chat listObject];
 		NSString		*to = [listObject UID];
 		
-		[libezv sendTypingNotification:(([contentTyping typingState] == AITyping) ? AWEzvIsTyping : AWEzvNotTyping)
-									to:to];
+		[libezvThreadProxy sendTypingNotification:(([contentTyping typingState] == AITyping) ? AWEzvIsTyping : AWEzvNotTyping)
+											   to:to];
 		sent = YES;
     }
 	
@@ -366,7 +442,8 @@
         if([key isEqualToString:@"IdleSince"]){
             NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			
-			[libezv setStatus:AWEzvIdle withMessage:[[[[adium statusController] activeStatusState] statusMessage] string]];
+			[libezvThreadProxy setStatus:AWEzvIdle
+							 withMessage:[[self statusMessage] string]];
             [self setAccountIdleTo:idleSince];
 			
         }else if([key isEqualToString:KEY_USER_ICON]){
@@ -395,7 +472,7 @@
 
 - (void)setAccountIdleTo:(NSDate *)idle
 {
-	[libezv setIdleTime:idle];
+	[libezvThreadProxy setIdleTime:idle];
 
 	//We are now idle
 	[self setStatusObject:idle forKey:@"IdleSince" notify:YES];
@@ -405,9 +482,9 @@
 {
 	if(!awayMessage || ![[awayMessage string] isEqualToString:[[self statusObjectForKey:@"StatusMessage"] string]]){
 		if (awayMessage != nil)
-		    [libezv setStatus:AWEzvAway withMessage:[awayMessage string]];
+		    [libezvThreadProxy setStatus:AWEzvAway withMessage:[awayMessage string]];
 		else
-		    [libezv setStatus:AWEzvOnline withMessage:nil];
+		    [libezvThreadProxy setStatus:AWEzvOnline withMessage:nil];
 		
 		//We are now away or not
 		[self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:YES];
@@ -422,7 +499,7 @@
  */
 - (void)setAccountUserImage:(NSImage *)image
 {
-	[libezv setContactImage:image];	
+	[libezvThreadProxy setContactImage:image];	
 
 	//We now have an icon
 	[self setStatusObject:image forKey:KEY_USER_ICON notify:YES];
@@ -460,5 +537,43 @@
 	return([contact uniqueID]);
 }
 
+#pragma mark Rendezvous Thread
+- (void)prepareRendezvousThread
+{
+	NSTimer	*autoreleaseTimer;
+	
+	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
+		
+	rendezvousThreadMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
+	libezvThreadProxy = [[rendezvousThreadMessenger target:libezv] retain];
+	
+	//Use a time to periodically release our autorelease pool so we don't continually grow in memory usage
+	autoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:AUTORELEASE_POOL_REFRESH
+														 target:self
+													   selector:@selector(refreshAutoreleasePool:)
+													   userInfo:nil
+														repeats:YES] retain];
+	//We're good to go; release that lock
+	[threadPreparednessLock unlock];
+	CFRunLoopRun();
+	
+	[autoreleaseTimer invalidate]; [autoreleaseTimer release];
+	[rendezvousThreadMessenger release]; rendezvousThreadMessenger = nil;
+	[libezvThreadProxy release]; libezvThreadProxy = nil;
+    [currentAutoreleasePool release];
+}
+
+/*
+ * @brief Releae and recreate our autorelease pool
+ *
+ * Our autoreleased objects will only be released when the outermost autorelease pool is released.
+ * This is handled automatically in the main thread, but we need to do it manually here.
+ * Release the current pool, then create a new one.
+ */
+- (void)refreshAutoreleasePool:(NSTimer *)inTimer
+{
+	[currentAutoreleasePool release];
+	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
+}
 
 @end
