@@ -15,7 +15,7 @@
 
 @protocol AIListObjectObserver;
 
-@interface AIStatusChangedMessagesPlugin : AIPlugin  <AIListObjectObserver> {
+@interface AIStatusChangedMessagesPlugin : AIPlugin {
 
 }
 

@@ -13,11 +13,11 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIModularPaneCategoryView;
+@class AIModularPaneCategoryView, ESImageViewWithImagePicker;
 
 @interface AIContactInfoWindowController : AIWindowController {	
 	IBOutlet		NSTabView						*tabView_category;
-	IBOutlet		NSImageView						*imageView_userIcon;
+	IBOutlet		ESImageViewWithImagePicker		*imageView_userIcon;
 	IBOutlet		NSTextField						*textField_accountName;
 	IBOutlet		NSTextField						*textField_service;
 	
