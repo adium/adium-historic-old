@@ -23,11 +23,12 @@
 #define KEY_FORMATTING_BACKGROUND_COLOR		@"Default Background Color"
 #define KEY_FORMATTING_SUBBACKGROUND_COLOR	@"Default SubBackground Color"
 
-@class AIDefaultFormattingPreferences;
-
 @interface AIDefaultFormattingPlugin : AIPlugin {
-    AIDefaultFormattingPreferences	*preferences;
-
+	NSFont	*font;
+	NSColor	*textColor;
+	NSColor	*backgroundColor;
+	
+	
 }
 
 @end

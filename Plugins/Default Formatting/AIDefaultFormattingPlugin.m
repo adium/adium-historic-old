@@ -16,13 +16,16 @@
 
 #import "AIContentController.h"
 #import "AIDefaultFormattingPlugin.h"
-#import "AIDefaultFormattingPreferences.h"
 #import "AIInterfaceController.h"
+#import "AIMenuController.h"
+#import "AIPreferenceController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFontAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
+#import <Adium/AIContentMessage.h>
 
 #define DEFAULT_FORMATTING_DEFAULT_PREFS	@"FormattingDefaults"
 
@@ -35,66 +38,136 @@
 
 @implementation AIDefaultFormattingPlugin
 
+/*!
+ * @brief Install the default formatting plugin
+ */
 - (void)installPlugin
 {
-    //Register as an entry filter
+    //Preferences
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DEFAULT_FORMATTING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_FORMATTING];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_FORMATTING];
+
+	//Reset formatting menu item
+	NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@"Restore Default" 
+																				  target:self
+																				  action:@selector(restoreDefaultFormat:)
+																		   keyEquivalent:@""] autorelease];
+    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Format_Additions];
+	
+	//Register as an entry filter, so we can prepare textviews as they open
     [[adium contentController] registerTextEntryFilter:self];
 
-    //Register our default preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DEFAULT_FORMATTING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_FORMATTING];
-
-    //Our preference view
-//    preferences = [[AIDefaultFormattingPreferences preferencePane] retain];
-
-    //Observe
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_FORMATTING];
+	//Observe content sending so we can save the user's formatting
+    [[adium notificationCenter] addObserver:self
+                                   selector:@selector(didSendContent:)
+                                       name:CONTENT_MESSAGE_SENT
+                                     object:nil];
 }
 
+/*!
+ * @brief Invoked when formatting preferences change
+ */
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	NSMutableDictionary	*attributes;
+	
+	//Update our local preference cache for the new values
+	[font release];
+	[textColor release];
+	font = [[[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont] retain];
+	textColor = [[[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor] retain];
+	
+	//Apply the new preferences as Adium's default formatting attributes
+	attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
+	if(textColor && ![textColor equalToRGBColor:[NSColor textColor]]){
+		[attributes setObject:textColor forKey:NSForegroundColorAttributeName];	
+	}	
+	[[adium contentController] setDefaultFormattingAttributes:attributes];
+}
+
+/*!
+ * @brief Invoked when a text entry view opens, set it to our default formatting
+ */
 - (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
-    [self _resetFormattingInView:inTextEntryView]; //Set the formatting to default
+	[self _resetFormattingInView:inTextEntryView];
 }
 
+/*!
+ * @brief Invoked when a text entry view closes
+ */
 - (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
     //Ignored
 }
 
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+/*!
+ * @brief Invoked when content is sent, remember the text formatting used
+ */
+- (void)didSendContent:(NSNotification *)notification
 {
-	NSMutableDictionary *attributes;
-	NSColor				*textColor;
-	NSColor				*backgroundColor;
-	NSColor				*subBackgroundColor;
-	NSFont				*font;
-				
-	//Get the prefs
-	font = [[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont];
-	textColor = [[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor];
-	backgroundColor = [[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor];
-	subBackgroundColor = [[prefDict objectForKey:KEY_FORMATTING_SUBBACKGROUND_COLOR] representedColor];
-	
-	attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
-	
-	//Setup the attributes; don't include colors which match the systemwide defaults
-	if (backgroundColor && ![backgroundColor equalToRGBColor:[NSColor textBackgroundColor]]){
-		[attributes setObject:backgroundColor forKey:AIBodyColorAttributeName];	
+    AIContentObject	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
+
+    if(content && [[content type] isEqualToString:CONTENT_MESSAGE_TYPE]){
+		NSAttributedString	*message = [content message];
+		
+		if([message length] > 0) {
+			NSDictionary	*attributes = [message attributesAtIndex:[message length]-1 effectiveRange:nil];
+			NSString		*newFont = [(NSFont *)[attributes objectForKey:NSFontAttributeName] stringRepresentation];
+			NSString		*newTextColor = [(NSColor *)[attributes objectForKey:NSForegroundColorAttributeName] stringRepresentation];
+			
+			//If the attribute is nil for these values, substitute our defaults
+			if(!newFont) newFont = [[adium preferenceController] defaultPreferenceForKey:KEY_FORMATTING_FONT
+																				   group:PREF_GROUP_FORMATTING
+																				  object:nil];
+			if(!newTextColor) newTextColor = [[adium preferenceController] defaultPreferenceForKey:KEY_FORMATTING_TEXT_COLOR 
+																							 group:PREF_GROUP_FORMATTING
+																							object:nil];
+			
+			//Save the new formatting (if it's changed)
+			if(![[font stringRepresentation] isEqualToString:newFont]){
+				NSLog(@"newfont:%@  (was %@)",newFont,[font stringRepresentation]);
+				[[adium preferenceController] setPreference:newFont
+													 forKey:KEY_FORMATTING_FONT
+													  group:PREF_GROUP_FORMATTING];
+			}
+			if(![[textColor stringRepresentation] isEqualToString:newTextColor]){
+				NSLog(@"newcolor:%@ (was %@)",newTextColor,[textColor stringRepresentation]);
+				[[adium preferenceController] setPreference:newTextColor
+													 forKey:KEY_FORMATTING_TEXT_COLOR
+													  group:PREF_GROUP_FORMATTING];
+			}
+		}
 	}
-	if(subBackgroundColor){
-		[attributes setObject:subBackgroundColor forKey:NSBackgroundColorAttributeName];
-	}
-	if (textColor && ![textColor equalToRGBColor:[NSColor textColor]]){
-		[attributes setObject:textColor forKey:NSForegroundColorAttributeName];	
-	}
-	
-	[[adium contentController] setDefaultFormattingAttributes:attributes];
 }
 
 
+/*!
+ * @brief Restore text formatting to default in all message windows
+ */
+- (void)restoreDefaultFormat:(id)sender
+{
+	//Reset formatting to default
+	[[adium preferenceController] setPreference:nil
+										 forKey:KEY_FORMATTING_FONT
+										  group:PREF_GROUP_FORMATTING];
+	[[adium preferenceController] setPreference:nil
+										 forKey:KEY_FORMATTING_TEXT_COLOR
+										  group:PREF_GROUP_FORMATTING];
+	
+	//Update all open message windows to our default formatting
+	NSEnumerator	*enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
+	NSText<AITextEntryView> *textEntryView;
+	
+	while(textEntryView = [enumerator nextObject]){
+		[self _resetFormattingInView:textEntryView];
+	}	
+}
 
-// Private --------------------------------------------------------------------------
-//Resets all the text in an entry view to the default values
+/*!
+ * @brief Resets all the text in an entry view to the default values
+ */
 - (void)_resetFormattingInView:(NSText<AITextEntryView> *)inTextEntryView
 {
     NSMutableAttributedString	*contents;
@@ -111,6 +184,5 @@
     [inTextEntryView setAttributedString:contents];
 	[contents release];
 }
-
 
 @end
