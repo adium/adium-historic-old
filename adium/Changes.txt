@@ -1,47 +1,55 @@
 				Adium X Version History
 				-----------------------
 
-Version 0.57
+Version 0.57 (5/21/2004)
+- Added contact notes support
+- Added support for seeing jabber status changes
+- added delete contact contextual menu item
+- Added support for addBuddy links
+- Added support for request add contact panels
+- Added an advanced preference for keeping tabs sorted
+
+- Updated the allowed characters / lengths for several protocols
+- Updated several message view styles
+- Updated appearance of message window history (We now remove text color)
+
+- Improved link editing
+- Improved performance and reduced beachballing, especially on slow networks
+- Improved group counting when offline contacts are visible
+- Improved Adium's response to being knocked off by another login
+- Improved behavior of dragging groups on the contact list
+- Improved Adium's recognition of several HTML tags
+- Improved automatic link recognition
+
+- Cleaned up emoticon prefs
+
 - Fixed issue with HTML sending to MSN users
 - Fixed issue with MSN display names, AIM name formatting
 - Fixed issue with multiple message tabs being created
 - Fixed bug causing ordering info to get lost
+- Fixed an issue with the version checker falsly reporting new releases
+- Fixed emoticons flipping in prefs
+- Fixed several cases where text would be incorrectly turned into a link
+- Fixed message view scrollbar positioning
+- Fixed issue with message formatting resetting after sending a message
+- Fixed issue with receiving pasted content from iChat
+- Fixed a bug causing auto-scroll to always happen on receiving messages
+- Fixed a bug with scripts being executed in other peoples profiles
+- Fixed bug sending wrong text color out.. green text
+- Fixed crashes caused by poorly formed dock icon packs
+- fixed issue preventing mobile and ICQ service types from showing up
+- Fixed several memory leaks
 - Fixed issues with auto-resizing not saying on bottom of screen
 - Fixed other option for custom sound alerts
-- Added support for seeing jabber status changes
-- Text color is now ignored for history in message window
-- Fixed something...text from being a link
-- Fixed emoticons flipping in prefs
-- Improvements to the Add/Edit link system
-- Added Contact Notes support
-- Updated mockie to reflect user name format in history messages
-- Improved HTML decoder
-- Fixed several memory leaks
-- Added support for hyphens in account names
-- Added support for addBuddy links
-- Fixed message view scrollbar positioning
-- Hide/show toolbar dim correctly
-- Updated away status window
-- Contact list no longer selects first contact
-- Formatting no longer resets when messages are sent
-- We now recognize <br /> .. so pasting from ichat will work right
-- sped up keychain accesss
-- Improvements to contact list drag targeting
+- Fixed issues with clicking AIM subprofile links (links containing %n)
 - Fixed an issue with re-ordering away messages
-- Fixed fighting over being kicked by another client
-- Updated allowed characters / lengths for several protocols
-- Fixed a bug causing auto-scroll to always happen on receiving messages
-- Added overflow scrollbars to all the message styles
-- Added the ability to sort tabs
-- Fixed a bug with scripts being recognized in other peoples profiles
-- Fixed bug sending wrong text color out.. green text
-- added delete contact menu item
-- implemented requestAddContact panels.. xx has added you, add them?
-- Fixed crashes caused by poorly formed dock icon packs
-- autolink improvements
-- fixed issue preventing mobile and ICQ service types from showing up
-- AIM escapes (%n %d, etc) are now processed in links.. fixed subprofile links
-- With offline contacts visible, we now hide the online count, example: group (4/4) is now group (4)
+- Fixed issue with toolbar menu items not dimming
+- Fixed issue with contact list selecting the first contact when opened
+
+
+
+
+
 
 
 
