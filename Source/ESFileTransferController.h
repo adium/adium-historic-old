@@ -10,7 +10,7 @@
 //File transfers
 @interface ESFileTransferController : NSObject <AIEventHandler> {
 	
-	IBOutlet	AIAdium		*owner;
+	IBOutlet	AIAdium		*adium;
 	
 	NSMenuItem  *sendFileMenuItem;
 	NSMenuItem  *sendFileContextMenuItem;

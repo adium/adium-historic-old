@@ -22,19 +22,19 @@
 												  target:self action:@selector(sendFileToSelectedContact:)
 										   keyEquivalent:@"F"];
 	[sendFileMenuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSShiftKeyMask)];
-	[[owner menuController] addMenuItem:sendFileMenuItem toLocation:LOC_Contact_Action];
+	[[adium menuController] addMenuItem:sendFileMenuItem toLocation:LOC_Contact_Action];
 	
     //Add our get info contextual menu item
     sendFileContextMenuItem = [[NSMenuItem alloc] initWithTitle:SEND_FILE
 														 target:self action:@selector(contextualMenuSendFile:)
 												  keyEquivalent:@""];
-	[[owner menuController] addContextualMenuItem:sendFileContextMenuItem toLocation:Context_Contact_Action];
+	[[adium menuController] addContextualMenuItem:sendFileContextMenuItem toLocation:Context_Contact_Action];
 	
 	//Register the events we generate
-	[[owner contactAlertsController] registerEventID:FILE_TRANSFER_REQUEST withHandler:self globalOnly:YES];
-	[[owner contactAlertsController] registerEventID:FILE_TRANSFER_BEGAN withHandler:self globalOnly:YES];
-	[[owner contactAlertsController] registerEventID:FILE_TRANSFER_CANCELED withHandler:self globalOnly:YES];
-	[[owner contactAlertsController] registerEventID:FILE_TRANSFER_COMPLETE withHandler:self globalOnly:YES];
+	[[adium contactAlertsController] registerEventID:FILE_TRANSFER_REQUEST withHandler:self globalOnly:YES];
+	[[adium contactAlertsController] registerEventID:FILE_TRANSFER_BEGAN withHandler:self globalOnly:YES];
+	[[adium contactAlertsController] registerEventID:FILE_TRANSFER_CANCELED withHandler:self globalOnly:YES];
+	[[adium contactAlertsController] registerEventID:FILE_TRANSFER_COMPLETE withHandler:self globalOnly:YES];
 	
 	//Add our toolbar item
 	NSToolbarItem	*toolbarItem;
@@ -47,7 +47,7 @@
 													itemContent:[NSImage imageNamed:@"sendfile" forClass:[self class]]
 														 action:@selector(sendFileToSelectedContact:)
 														   menu:nil];
-    [[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
 }
 
 - (void)closeController
@@ -62,7 +62,7 @@
 	
 	[savePanel setTitle:[NSString stringWithFormat:@"Receive File from %@",[[fileTransfer contact] displayName]]];
 
-	[[owner contactAlertsController] generateEvent:FILE_TRANSFER_REQUEST
+	[[adium contactAlertsController] generateEvent:FILE_TRANSFER_REQUEST
 									 forListObject:[fileTransfer contact] 
 										  userInfo:fileTransfer];
 	
@@ -88,7 +88,7 @@
 
 - (void)sendFile:(NSString *)inFile toListContact:(AIListContact *)listContact
 {
-	AIAccount *account = [[owner accountController] preferredAccountForSendingContentType:FILE_TRANSFER_TYPE
+	AIAccount *account = [[adium accountController] preferredAccountForSendingContentType:FILE_TRANSFER_TYPE
 																				toContact:listContact];
 	if (account) {
 
@@ -106,14 +106,14 @@
 - (void)beganFileTransfer:(ESFileTransfer *)fileTransfer
 {
     NSLog(@"began a file transfer...");
-	[[owner contactAlertsController] generateEvent:FILE_TRANSFER_BEGAN
+	[[adium contactAlertsController] generateEvent:FILE_TRANSFER_BEGAN
 									 forListObject:[fileTransfer contact] 
 										  userInfo:fileTransfer];
 }
 
 - (void)transferCanceledRemotely:(ESFileTransfer *)fileTransfer
 {
-	[[owner contactAlertsController] generateEvent:FILE_TRANSFER_CANCELED
+	[[adium contactAlertsController] generateEvent:FILE_TRANSFER_CANCELED
 									 forListObject:[fileTransfer contact] 
 										  userInfo:fileTransfer];
 	
@@ -130,7 +130,7 @@
 	AILog(@"Transfer complete!");
 	NSLog(@"Transfer complete!");
 
-	[[owner contactAlertsController] generateEvent:FILE_TRANSFER_COMPLETE
+	[[adium contactAlertsController] generateEvent:FILE_TRANSFER_COMPLETE
 									 forListObject:[fileTransfer contact] 
 										  userInfo:fileTransfer];
 }
@@ -141,9 +141,9 @@
 	AIListObject	*selectedObject;
 	AIListContact   *listContact = nil;
 	
-	selectedObject = [[owner contactController] selectedListObject];
+	selectedObject = [[adium contactController] selectedListObject];
 	if ([selectedObject isKindOfClass:[AIListContact class]]){
-		listContact = [[owner contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+		listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																 forListContact:(AIListContact *)selectedObject];
 	}
 	
@@ -154,8 +154,8 @@
 //Prompt for a new contact with the current tab's name
 - (IBAction)contextualMenuSendFile:(id)sender
 {
-	AIListObject	*selectedObject = [[owner menuController] contactualMenuContact];
-	AIListContact   *listContact = [[owner contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+	AIListObject	*selectedObject = [[adium menuController] contactualMenuContact];
+	AIListContact   *listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																			  forListContact:(AIListContact *)selectedObject];
 	
 	[NSApp activateIgnoringOtherApps:YES];
@@ -181,18 +181,18 @@
 	AIListContact   *listContact = nil;
 	
     if(menuItem == sendFileMenuItem){
-        AIListObject	*selectedObject = [[owner contactController] selectedListObject];
+        AIListObject	*selectedObject = [[adium contactController] selectedListObject];
 		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
-			listContact = [[owner contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+			listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																	 forListContact:(AIListContact *)selectedObject];
 		}
 		
 		[menuItem setTitle:[NSString stringWithFormat:SEND_FILE_TO_CONTACT,(listContact ? [selectedObject displayName] : CONTACT)]];
 
 	}else if(menuItem == sendFileContextMenuItem){
-		AIListObject	*selectedObject = [[owner menuController] contactualMenuContact];
+		AIListObject	*selectedObject = [[adium menuController] contactualMenuContact];
 		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
-			listContact = [[owner contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+			listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																	 forListContact:(AIListContact *)selectedObject];
 		}
     }
@@ -205,9 +205,9 @@
 {
 	AIListContact   *listContact = nil;
 	
-	AIListObject	*selectedObject = [[owner contactController] selectedListObject];
+	AIListObject	*selectedObject = [[adium contactController] selectedListObject];
 	if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
-		listContact = [[owner contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+		listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																 forListContact:(AIListContact *)selectedObject];
 	}
 	NSLog(@"validating %@ gives %@",theItem,listContact);
