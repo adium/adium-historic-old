@@ -139,18 +139,19 @@
 {
     NSEnumerator	*enumerator;
     AICustomTabCell	*tabCell, *nextTabCell;
-    NSRect		tabFrame;
+    NSRect		tabFrame, viewFrame;
     NSRect		drawRect;
     NSPoint		drawPointA, drawPointB;
 
     //Get the active tab's frame
     tabFrame = [selectedCustomTabCell frame];
+    viewFrame = [self frame];
 
     //Paint black over region left of active tab
-    drawRect = NSMakeRect(rect.origin.x,
-                          rect.origin.y + 1,
-                          tabFrame.origin.x - rect.origin.x,
-                          rect.size.height - 1);
+    drawRect = NSMakeRect(viewFrame.origin.x,
+                          viewFrame.origin.y + 1,
+                          tabFrame.origin.x - viewFrame.origin.x,
+                          viewFrame.size.height - 1);
     if(NSIntersectsRect(drawRect, rect)){
         [[NSColor colorWithCalibratedWhite:0.0 alpha:0.20] set];
         [NSBezierPath fillRect:NSIntersectionRect(drawRect, rect)];
@@ -170,9 +171,9 @@
 
     //Paint black over region right of active tab
     drawRect = NSMakeRect(tabFrame.origin.x + tabFrame.size.width,
-                          rect.origin.y + 1,
-                          (rect.origin.x + rect.size.width) - (tabFrame.origin.x + tabFrame.size.width),
-                          rect.size.height - 1);
+                          viewFrame.origin.y + 1,
+                          (viewFrame.origin.x + viewFrame.size.width) - (tabFrame.origin.x + tabFrame.size.width),
+                          viewFrame.size.height - 1);
     if(NSIntersectsRect(drawRect, rect)){
         [[NSColor colorWithCalibratedWhite:0.0 alpha:0.20] set];
         [NSBezierPath fillRect:NSIntersectionRect(drawRect, rect)];
@@ -191,8 +192,8 @@
     }
 
     //Bottom edge light
-    drawPointA = NSMakePoint(rect.origin.x, rect.origin.y + 1.5);
-    drawPointB = NSMakePoint(rect.origin.x + rect.size.width, rect.origin.y + 1.5);
+    drawPointA = NSMakePoint(viewFrame.origin.x, viewFrame.origin.y + 1.5);
+    drawPointB = NSMakePoint(viewFrame.origin.x + viewFrame.size.width, viewFrame.origin.y + 1.5);
     if(drawPointA.y > rect.origin.y && drawPointA.y < NSMaxY(rect)){
         //Crop line to fit within drawn rect
         if(drawPointA.x < rect.origin.x) drawPointA.x = rect.origin.x;
@@ -203,8 +204,8 @@
     }
     
     //Bottom edge dark
-    drawPointA = NSMakePoint(rect.origin.x, rect.origin.y + 0.5);
-    drawPointB = NSMakePoint(rect.origin.x + rect.size.width, rect.origin.y + 0.5);
+    drawPointA = NSMakePoint(viewFrame.origin.x, viewFrame.origin.y + 0.5);
+    drawPointB = NSMakePoint(viewFrame.origin.x + viewFrame.size.width, viewFrame.origin.y + 0.5);
     if(drawPointA.y > rect.origin.y && drawPointA.y < NSMaxY(rect)){
         //Crop line to fit within drawn rect
         if(drawPointA.x < rect.origin.x) drawPointA.x = rect.origin.x;
@@ -213,7 +214,7 @@
         [[NSColor colorWithCalibratedWhite:0.0 alpha:0.41] set];
         [NSBezierPath strokeLineFromPoint:drawPointA toPoint:drawPointB];
     }
-    
+
     //Draw our tabs
     enumerator = [tabCellArray objectEnumerator];
     tabCell = [enumerator nextObject];

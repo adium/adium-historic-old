@@ -227,7 +227,7 @@
     [self startTrackingCursor];
 
     //Redisplay
-    [self setNeedsDisplay:YES];
+#warning   [self setNeedsDisplay:YES];
 }
 
 - (void)stopTrackingCursor

@@ -132,6 +132,7 @@
     NSEnumerator	*enumerator;
     NSMenuItem		*menuItem;
     AIAccount		*account = [delegate account];
+    
     //Select the correct item
     [popUp_accounts selectItemAtIndex:[popUp_accounts indexOfItemWithRepresentedObject:account]];
 
