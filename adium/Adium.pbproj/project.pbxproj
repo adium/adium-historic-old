@@ -1101,6 +1101,7 @@
 				F5A3238104A7C61201888466,
 				11C157D304A88D33008E0C76,
 				6E97F13604A94C1800472FFF,
+				9E4CF9F204AA6D5600415B22,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -1180,6 +1181,7 @@
 				F5A3236F04A7A9EC01888466,
 				11C157C404A88D33008E0C76,
 				6E97F13504A94C1800472FFF,
+				9E4CF9F104AA6D5600415B22,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -1291,6 +1293,7 @@
 				F5A3237404A7AA6401888466,
 				11C157E104A8955B008E0C76,
 				6E97F13704A94C1800472FFF,
+				9E4CF9F304AA6D5600415B22,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -2477,6 +2480,7 @@
 				4B5B15220493BF9A00A8010A,
 				4B6D0E43047D490700A8010A,
 				4BBAEE9703DD7D8900A8010A,
+				9E4CF9D104AA69B000415B22,
 				F5D2FB8403B6649F01A8010A,
 			);
 			isa = PBXGroup;
@@ -3592,6 +3596,7 @@
 				F5A3238B04A7C61801888466,
 				11C157E004A891FE008E0C76,
 				6E97F13804A94C1800472FFF,
+				9E4CF9F404AA6D5600415B22,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10192,6 +10197,181 @@
 			name = MSNAccount.m;
 			path = "Plugins/MSN Service/MSNAccount.m";
 			refType = 4;
+		};
+		9E4CF9D104AA69B000415B22 = {
+			children = (
+				9E4CF9D704AA6A0700415B22,
+				9E4CF9D804AA6A0700415B22,
+			);
+			isa = PBXGroup;
+			name = "Action Support";
+			path = "";
+			refType = 4;
+		};
+		9E4CF9D704AA6A0700415B22 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = CBActionSupportPlugin.h;
+			path = "Plugins/Action Support/CBActionSupportPlugin.h";
+			refType = 4;
+		};
+		9E4CF9D804AA6A0700415B22 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = CBActionSupportPlugin.m;
+			path = "Plugins/Action Support/CBActionSupportPlugin.m";
+			refType = 4;
+		};
+		9E4CF9EC04AA6D5600415B22 = {
+			buildActionMask = 2147483647;
+			files = (
+				9E4CF9F704AA6DB200415B22,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E4CF9ED04AA6D5600415B22 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E4CF9EE04AA6D5600415B22 = {
+			buildActionMask = 2147483647;
+			files = (
+				9E4CF9F804AA6DB200415B22,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E4CF9EF04AA6D5600415B22 = {
+			buildActionMask = 2147483647;
+			files = (
+				9E4CF9F904AA6DDE00415B22,
+				9E4CF9FA04AA6DDF00415B22,
+				9E4CF9FB04AA6DDF00415B22,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E4CF9F004AA6D5600415B22 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E4CF9F104AA6D5600415B22 = {
+			buildPhases = (
+				9E4CF9EC04AA6D5600415B22,
+				9E4CF9ED04AA6D5600415B22,
+				9E4CF9EE04AA6D5600415B22,
+				9E4CF9EF04AA6D5600415B22,
+				9E4CF9F004AA6D5600415B22,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Action Support";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				9E4CF9F504AA6D9700415B22,
+				9E4CF9F604AA6D9700415B22,
+			);
+			isa = PBXBundleTarget;
+			name = "Action Support";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Action Support";
+			productReference = 9E4CF9F204AA6D5600415B22;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>CBActionSupportPlugin</string>
+</dict>
+</plist>
+";
+		};
+		9E4CF9F204AA6D5600415B22 = {
+			isa = PBXBundleReference;
+			path = "Action Support.AdiumPlugin";
+			refType = 3;
+		};
+		9E4CF9F304AA6D5600415B22 = {
+			isa = PBXTargetDependency;
+			target = 9E4CF9F104AA6D5600415B22;
+		};
+		9E4CF9F404AA6D5600415B22 = {
+			fileRef = 9E4CF9F204AA6D5600415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4CF9F504AA6D9700415B22 = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		9E4CF9F604AA6D9700415B22 = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		9E4CF9F704AA6DB200415B22 = {
+			fileRef = 9E4CF9D704AA6A0700415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4CF9F804AA6DB200415B22 = {
+			fileRef = 9E4CF9D804AA6A0700415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4CF9F904AA6DDE00415B22 = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4CF9FA04AA6DDF00415B22 = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4CF9FB04AA6DDF00415B22 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		9E6C448B048D681F00415B22 = {
 			fileRef = 9E2E3075046CAB0000415B22;

@@ -13,10 +13,14 @@
 #import "MSNStringAdditions.h"
 #include <openssl/md5.h>
 
+#define TIMES_PER_SECOND 1.0/10.0
+
 @interface MSNAccount (PRIVATE)
-- (void)connect;
+- (void)startConnect;
+- (void)connect:(NSTimer *)timer;
 - (void)disconnect;
 - (void)syncContactList;
+- (void)receiveInitialStatus;
 @end
 
 @implementation MSNAccount
@@ -161,7 +165,7 @@
         { 
             if(status == STATUS_OFFLINE)
             {
-                [self connect];
+                [self startConnect];
             }            
         }
         else //Disconnect
@@ -178,7 +182,22 @@
 /*******************/
 /* Private methods */
 /*******************/
-- (void)connect
+
+- (void)startConnect
+{
+    /*mainLoopTimer = [NSTimer scheduledTimerWithTimeInterval:TIMES_PER_SECOND
+        target:self
+        selector:@selector(connect:))
+        userInfo:[[NSMutableDictionary alloc] initWithObjectsAndKeys:]
+        repeats:YES];*/
+}
+
+- (void)connect:(NSTimer *)timer
+{
+    
+}
+
+/*- (void)connect
 {    
     NSData *inData = nil;
     
@@ -271,11 +290,13 @@
             
     [self syncContactList];
     
+    [self receiveInitialStatus];
+    
     //We are connected, yay.
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
     [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
     
-}
+}*/
 
 - (void)disconnect
 {
@@ -298,13 +319,24 @@
         {
             if([[message objectAtIndex:2] isEqual:@"FL"])
             {
-                [handleDict setObject:
-                    [AIHandle handleWithServiceID:[[service handleServiceType] identifier]
+                AIHandle *theHandle = [AIHandle 
+                        handleWithServiceID:[[service handleServiceType] identifier]
                         UID:[message objectAtIndex:6]
                         serverGroup:@"MSN"
                         temporary:NO
-                        forAccount:self]
-                forKey:[[message objectAtIndex:7] urlDecode]];
+                        forAccount:self];                                                
+                [handleDict setObject:theHandle forKey:[message objectAtIndex:6]];
+                
+                [[owner contactController] handle:theHandle addedToAccount:self];
+            }
+            else if([[message objectAtIndex:2] isEqual:@"RL"])
+            {
+                //this is how we know we're done. when we get the last message of the reverse list.
+                if([[message objectAtIndex:4] isEqual:[message objectAtIndex:5]])
+                {
+                    NSLog(@"done");
+                    return;
+                }
             }
         }
         else if([[message objectAtIndex:0] isEqual:@"MSG"]) //this is some kind of message from the server
@@ -323,16 +355,59 @@
                 oneShot = NO;
             }
         }
+                        
+        while(![socket readyForReceiving]) {}
+    }
+}
+
+- (void)receiveInitialStatus
+{
+    NSData *inData = nil;
+    
+    while(![socket readyForSending]) {}
+    [socket sendData:[@"CHG 5 NLN\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    NSLog(@">>> %@", @"CHG 5 NLN");
+    
+    //send a PNG so we know when we are done (when we get the QNG)
+    while(![socket readyForSending]) {}
+    [socket sendData:[@"PNG\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    NSLog(@">>> %@", @"PNG");
+    
+    while(![socket readyForReceiving]) {}
+    while([socket readyForReceiving])
+    {
+        [socket getDataToNewline:&inData];
+        NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] length:[inData length]]);
         
-        //this is how we know we're done. when we get the last message of the reverse list.
-        if([[message objectAtIndex:0] isEqual:@"LST"]
-        && [[message objectAtIndex:2] isEqual:@"RL"] 
-        && [[message objectAtIndex:4] isEqual:[message objectAtIndex:5]])
+        if([[NSString stringWithCString:[inData bytes] length:[inData length]] isEqual:@"QNG\r\n"])
         {
-            NSLog(@"done");
             return;
         }
+        
+        NSArray *message = [[NSString stringWithCString:[inData bytes] length:[inData length]] componentsSeparatedByString:@" "];
+        
+        if([[message objectAtIndex:0] isEqual:@"ILN"]) //this is a person
+        {
+            AIHandle *theHandle = [handleDict objectForKey:[message objectAtIndex:3]];
+            
+            [[theHandle statusDictionary]
+                setObject:[NSNumber numberWithInt:1]
+                forKey:@"Online"];
+            
+            NSLog(@"%@",[[[message objectAtIndex:4] 
+                    stringByTrimmingCharactersInSet:
+                        [NSCharacterSet characterSetWithCharactersInString:@"\r\n"]] urlDecode]);
+            
+            [[theHandle statusDictionary]
+                setObject:[[[message objectAtIndex:4] 
+                    stringByTrimmingCharactersInSet:
+                        [NSCharacterSet characterSetWithCharactersInString:@"\r\n"]] urlDecode]
+                forKey:@"Display Name"];
                 
+            [[owner contactController] handleStatusChanged:theHandle
+                modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", @"Display Name"]];
+
+        }
         while(![socket readyForReceiving]) {}
     }
 }

@@ -16,6 +16,8 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
+//typedef enum CONN_STATE { DS, NS, SB };
+
 @class AISocket, AIGroup;
 
 @interface MSNAccount : AIAccount <AIAccount_Content, AIAccount_Handles>
