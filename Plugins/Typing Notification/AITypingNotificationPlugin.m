@@ -6,6 +6,7 @@
 //
 
 #import "AITypingNotificationPlugin.h"
+#import "AITypingNotificationPreferences.h"
 #import <Adium/Adium.h>
 
 @interface AITypingNotificationPlugin (PRIVATE)
@@ -25,9 +26,20 @@
 
 - (void)installPlugin
 {
+    //Preferences
+    preferences = [[AITypingNotificationPreferences preferencePane] retain];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_TYPING_NOTIFICATIONS];
+	
     //Register as an entry filter and observe content
 	[[adium contentController] registerTextEntryFilter:self];
 }
+
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	disableTypingNotifications = [[prefDict objectForKey:KEY_DISABLE_TYPING_NOTIFICATIONS] boolValue];
+}
+
 
 //Text entry -----------------------------------------------------------------------------------------------------------
 - (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
@@ -94,7 +106,9 @@
 //Typing state ---------------------------------------------------------------------------------------------------------
 - (void)_sendTypingState:(AITypingState)typingState toChat:(AIChat *)chat
 {
-	if(![chat integerStatusObjectForKey:@"SuppressTypingNotificationChanges"]){
+	if(![chat integerStatusObjectForKey:@"SuppressTypingNotificationChanges"] &&
+	   (([chat integerStatusObjectForKey:WE_ARE_TYPING] != AINotTyping && typingState == AINotTyping) //We need this to allow 'stop typing' changes incase the user turns off the preference while they're typing
+		|| !disableTypingNotifications)){
 		AIAccount		*account = [chat account];
 		AIContentTyping	*contentObject;
 		
