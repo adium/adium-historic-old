@@ -519,7 +519,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	return(argArray);
 }
 
-#if 1
+#if 0
 //Execute the script, returning its output
 - (NSString *)_executeScript:(NSMutableDictionary *)infoDict withArguments:(NSArray *)arguments
 {
@@ -617,8 +617,9 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 {
 	NSAppleEventDescriptor	*eventDescriptor;
 	
-//	NSLog(@"sendAppleEvent: %@",appleEventDescriptor);
 	if ([appleEventDescriptor eventClass] == 'syso'){
+		NSLog(@"sendAppleEvent MAIN: %@",appleEventDescriptor);
+
 		NSInvocation			*invocation;
 		SEL						selector;
 		
