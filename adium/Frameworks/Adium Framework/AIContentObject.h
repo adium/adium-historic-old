@@ -22,7 +22,7 @@
 	BOOL	displayContent;	
 }
 
-- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest;
+- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate*)inDate;
 - (NSString *)type;
 - (id)source;
 - (id)destination;
