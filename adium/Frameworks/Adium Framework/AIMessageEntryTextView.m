@@ -87,7 +87,7 @@ static NSImage *pushIndicatorImage = nil;
 		unsigned int flags = [inEvent modifierFlags];
 		
 		//We have to test ctrl before option, because otherwise we'd miss ctrl-option-* events
-		if(flags & NSControlKeyMask){
+		if((flags & NSControlKeyMask) && !(flags & NSShiftKeyMask)){
 			if(inChar == NSUpArrowFunctionKey){
 				[self popContent];
 			}else if(inChar == NSDownArrowFunctionKey){
@@ -98,7 +98,7 @@ static NSImage *pushIndicatorImage = nil;
 				[super keyDown:inEvent];
 			}
 			
-		}else if(flags & NSAlternateKeyMask){
+		}else if((flags & NSAlternateKeyMask) && !(flags & NSShiftKeyMask)){
 			if(inChar == NSUpArrowFunctionKey){
 				[self historyUp];
 			}else if(inChar == NSDownArrowFunctionKey){
@@ -107,7 +107,7 @@ static NSImage *pushIndicatorImage = nil;
 				[super keyDown:inEvent];
 			}
 			
-		}else if(flags & NSCommandKeyMask){
+		}else if((flags & NSCommandKeyMask) && !(flags & NSShiftKeyMask)){
 			if(inChar == NSUpArrowFunctionKey || inChar == NSDownArrowFunctionKey){
 				//Pass the associatedView a keyDown event equivalent equal to inEvent except without the modifier flags
 				[associatedView keyDown:[NSEvent keyEventWithType:[inEvent type]
