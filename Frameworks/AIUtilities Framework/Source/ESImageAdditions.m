@@ -62,7 +62,7 @@
 	
 	//Find an NSBitmapImageRep from the temporary image
 	enumerator = [[tempImage representations] objectEnumerator];
-	while(imageRep = [enumerator nextObject]){
+	while((imageRep = [enumerator nextObject])){
 		if([imageRep isKindOfClass:[NSBitmapImageRep class]])
 			break;
 	}

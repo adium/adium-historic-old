@@ -70,7 +70,7 @@
 		}
 	}
 	
-    if (proxyDict = (NSDictionary *)SCDynamicStoreCopyProxies(NULL)) {
+    if ((proxyDict = (NSDictionary *)SCDynamicStoreCopyProxies(NULL))) {
 		
 		//Enabled?
 		enable = [[proxyDict objectForKey:(NSString *)enableKey] intValue];

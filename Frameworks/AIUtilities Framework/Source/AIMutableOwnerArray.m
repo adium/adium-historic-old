@@ -72,7 +72,7 @@
 	id				object;
 	int				i = 0;
 	
-	while(object = [enumerator nextObject]){
+	while((object = [enumerator nextObject])){
 		[desc appendFormat:@"(%@:%@)%@", [ownerArray objectAtIndex:i], object, (object == [contentArray lastObject] ? @"" : @", ")];
 		i++;
 	}
@@ -282,7 +282,7 @@
 		int				index = 0;
 		
 		//Find the object with highest priority
-		while(priority = [enumerator nextObject]){
+		while((priority = [enumerator nextObject])){
 			float	value = [priority floatValue];
 			if(value < currentMax){
 				currentMax = value;
@@ -326,6 +326,7 @@
         int	index = [ownerArray indexOfObject:inOwner];
 		if (index != NSNotFound) return([[priorityArray objectAtIndex:index] floatValue]);
 	}
+	return 0.0;
 }
 
 //Returns the owner of the specified object
@@ -344,7 +345,8 @@
 	if (contentArray && priorityArray){
         int	index = [contentArray indexOfObject:inObject];
 		if (index != NSNotFound) return([[priorityArray objectAtIndex:index] floatValue]);
-	}	
+	}
+	return 0.0;
 }
 
 //Return a value enumerator

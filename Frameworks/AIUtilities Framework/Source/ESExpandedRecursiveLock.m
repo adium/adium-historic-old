@@ -34,7 +34,7 @@
 {
 	BOOL obtainedLock;
 	
-	if(obtainedLock = [super lockBeforeDate:limit]){
+	if((obtainedLock = [super lockBeforeDate:limit])){
 		locksByCurrentOwner++;
 	}
 	
@@ -45,7 +45,7 @@
 {
 	BOOL obtainedLock;
 	
-	if(obtainedLock = [super tryLock]){
+	if((obtainedLock = [super tryLock])){
 		locksByCurrentOwner++;
 	}
 	

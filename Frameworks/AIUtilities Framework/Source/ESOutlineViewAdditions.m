@@ -52,7 +52,7 @@
 		[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
 		
 		for(i = 0; i != bufSize; i++){
-			if(item = [self itemAtRow:buf[i]]){
+			if((item = [self itemAtRow:buf[i]])){
 				[itemArray addObject:item];
 			}
 		}
@@ -63,8 +63,8 @@
 		NSEnumerator 	*enumerator = [self selectedRowEnumerator]; 
 		NSNumber 		*row;
 		
-		while(row = [enumerator nextObject]){
-			if(item = [self itemAtRow:[row intValue]]){
+		while((row = [enumerator nextObject])){
+			if((item = [self itemAtRow:[row intValue]])){
 				[itemArray addObject:item]; 
 			}
 		} 
@@ -85,7 +85,7 @@
 		id  indexSet = [NSMutableIndexSetClass indexSet];
 		
 		//Build an index set
-		while(selectedItem = [enumerator nextObject]){
+		while((selectedItem = [enumerator nextObject])){
 			selectedRow = [self rowForItem:selectedItem];
 			if(selectedRow != NSNotFound){
 				[indexSet addIndex:selectedRow];
@@ -97,7 +97,7 @@
 		
 	}else{
 		//Selected each previously selected row if possible
-		while(selectedItem = [enumerator nextObject]){
+		while((selectedItem = [enumerator nextObject])){
 			selectedRow = [self rowForItem:selectedItem];
 			if(selectedRow != NSNotFound){
 				[self selectRow:selectedRow byExtendingSelection:[self allowsMultipleSelection]];

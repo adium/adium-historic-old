@@ -12,7 +12,7 @@
 
 - (id)initWithItemIdentifier:(NSString *)itemIdentifier
 {
-	if(self = [super initWithItemIdentifier:itemIdentifier]){
+	if((self = [super initWithItemIdentifier:itemIdentifier])){
 		validationDelegate = nil;
 	}
 

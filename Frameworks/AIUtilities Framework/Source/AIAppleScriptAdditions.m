@@ -45,7 +45,7 @@
 		NSEnumerator			*enumerator = [argumentArray objectEnumerator];
 		NSString				*object;
 
-		while(object = [enumerator nextObject]){
+		while((object = [enumerator nextObject])){
 			[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithString:object]
 								atIndex:[arguments numberOfItems]+1]; //This +1 seems wrong... but it's not :)
 		}

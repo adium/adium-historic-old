@@ -20,7 +20,7 @@
     NSString		*obj = nil;
     NSEnumerator	*enumerator = [[[self query] componentsSeparatedByString:@"&"] objectEnumerator];
     
-    while(obj = [enumerator nextObject]){
+    while((obj = [enumerator nextObject])){
         NSArray *keyAndValue = [obj componentsSeparatedByString:@"="];
 
         if(([keyAndValue count] >= 2) &&

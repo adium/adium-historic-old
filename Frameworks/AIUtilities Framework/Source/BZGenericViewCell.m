@@ -75,7 +75,7 @@
 	NSEnumerator	*enumerator = [[embeddedView subviews] objectEnumerator];
 	NSView			*subView;
 
-	while(subView = [enumerator nextObject]){
+	while((subView = [enumerator nextObject])){
 		NSRect	subFrame = [subView frame];
 		NSRect	subUsableFrame = NSMakeRect(0, 0, subFrame.size.width, subFrame.size.height);
 
