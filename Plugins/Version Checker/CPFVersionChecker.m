@@ -30,9 +30,6 @@
 //Install
 - (void)installPlugin
 {
-	//Friendly reminder that we are running with the beta flag on
-	if(BETA_RELEASE_EXPIRATION) NSLog(@"#### THIS IS A BETA RELEASE ####");
-
 	//Configure our default preferences
 	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:VERSION_CHECKER_DEFAULTS 
 																		forClass:[self class]]
@@ -73,7 +70,6 @@
 //Check for a new release of Adium.
 - (void)manualCheckForNewVersion:(id)sender
 {
-	NSLog(@"manualCheckForNewVersion");
 	checkingManually = YES;
 	checkWhenConnectionBecomesAvailable = NO;
 	[NSThread detachNewThreadSelector:@selector(_requestVersionThread) toTarget:self withObject:nil];
@@ -83,7 +79,6 @@
 //Call this method when the user has not explicitely requested the version check.
 - (void)automaticCheckForNewVersion:(id)sender
 {
-	NSLog(@"automaticCheckForNewVersion");
 	BOOL updateAutomatically = [[[adium preferenceController] preferenceForKey:KEY_CHECK_AUTOMATICALLY
 																		 group:PREF_GROUP_UPDATING] boolValue];
 
@@ -103,7 +98,6 @@
 //When a network connection becomes available, check for an update if we haven't already
 - (void)networkConnectivityChanged:(NSNotification *)notification
 {
-	NSLog(@"networkConnectivityChanged:%i",[[notification object] intValue]);
 	if(checkWhenConnectionBecomesAvailable && [[notification object] intValue]){
 		[self automaticCheckForNewVersion:nil];
 	}
@@ -115,7 +109,7 @@
 - (void)_requestVersionThread
 {
 	NSAutoreleasePool	*pool = [[NSAutoreleasePool alloc] init];
-	NSLog(@"## Requesting Version ##");
+
 	[self performSelectorOnMainThread:@selector(_versionReceived:)
 						   withObject:[self dateOfLatestBuild]
 						waitUntilDone:YES];
@@ -127,8 +121,6 @@
 {
 	NSString	*number = [versionDict objectForKey:VERSION_PLIST_KEY];
 	NSDate		*newestDate = nil;
-
-	NSLog(@"## Version Received ##");
 
 	//Get the newest version date from the passed version dict
 	if(versionDict && number){
