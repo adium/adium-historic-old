@@ -82,6 +82,11 @@
                                              
 }
 
+- (void)uninstallPlugin
+{
+    //uninstall preference view, remove observers, etc
+}
+
 - (void)dealloc
 {
     [accountArray release];

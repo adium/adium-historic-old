@@ -23,6 +23,7 @@
     NSMutableArray    	*contactArray;		//Manual ordered array of contents
     NSMutableArray    	*sortedContactArray;	//Dynamically sorted array of contents
     int			sortedCount;		//The number of visible buddies in the sorted array
+    BOOL		expanded;
 }
 
 + (id)contactGroupWithUID:(NSString *)inUID;
@@ -34,6 +35,8 @@
 - (id)sortedObjectAtIndex:(unsigned)index;
 - (int)contentsBelongToAccount:(AIAccount *)inAccount;
 - (void)sortGroupAndSubGroups:(BOOL)subGroups sortController:(id <AIContactSortController>)sortController;
+- (void)setExpanded:(BOOL)inExpanded;
+- (BOOL)isExpanded;
 
 //Semi-Private
 - (void)addObject:(AIContactObject *)inObject;

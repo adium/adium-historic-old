@@ -16,14 +16,19 @@
 #import <Cocoa/Cocoa.h>
 
 @class AIAdium, AIContactGroup, AIMiniToolbar;
+@protocol AIContactListViewController;
 
 @interface AIContactListWindowController : NSWindowController {
     IBOutlet	NSScrollView	*scrollView_contactList;
     IBOutlet	AIMiniToolbar	*toolbar_bottom;
 
+    id <AIContactListViewController>	contactListViewController;
+    NSView				*contactListView;
+        
     AIAdium		*owner;
 }
 
 + (AIContactListWindowController *)contactListWindowControllerWithOwner:(id)inOwner;
+- (IBAction)closeWindow:(id)sender;
 
 @end

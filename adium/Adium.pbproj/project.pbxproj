@@ -4520,14 +4520,14 @@
 				PRODUCT_NAME = "Dual Window";
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
-				WRAPPER_EXTENSION = AdiumInterface;
+				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
 				F53B9A3F02CCEF6601A8010A,
 				F5357E4202F8422E01A8010A,
 			);
 			isa = PBXBundleTarget;
-			name = "Dual Window.AdiumInterface";
+			name = "Dual Window Interface";
 			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
 			productName = "Dual Window.AdiumInterface";
 			productReference = F569E39202CA88C701A8010A;
@@ -4558,14 +4558,14 @@
 	<key>CFBundleVersion</key>
 	<string>0.0.1d1</string>
 	<key>NSPrincipalClass</key>
-	<string>AIDualWindowInterface</string>
+	<string>AIDualWindowInterfacePlugin</string>
 </dict>
 </plist>
 ";
 		};
 		F569E39202CA88C701A8010A = {
 			isa = PBXBundleReference;
-			path = "Dual Window.AdiumInterface";
+			path = "Dual Window.AdiumPlugin";
 			refType = 3;
 		};
 		F569E39302CA88C901A8010A = {
@@ -6354,15 +6354,15 @@
 		F579397F033E756E01A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			name = AIDualWindowInterface.h;
-			path = "Plugins/Dual Window Interface/AIDualWindowInterface.h";
+			name = AIDualWindowInterfacePlugin.h;
+			path = "Plugins/Dual Window Interface/AIDualWindowInterfacePlugin.h";
 			refType = 4;
 		};
 		F5793980033E756E01A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			name = AIDualWindowInterface.m;
-			path = "Plugins/Dual Window Interface/AIDualWindowInterface.m";
+			name = AIDualWindowInterfacePlugin.m;
+			path = "Plugins/Dual Window Interface/AIDualWindowInterfacePlugin.m";
 			refType = 4;
 		};
 		F5793981033E756E01A8010A = {

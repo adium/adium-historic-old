@@ -26,6 +26,7 @@
 @interface AISoundController (INTERNAL)
 
 - (void)initController;
+- (void)closeController;
 
 // These methods are for internal Adium use only.  The public interface is in Adium.h.
 

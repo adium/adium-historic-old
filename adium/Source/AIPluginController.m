@@ -22,6 +22,7 @@
 
 @interface AIPluginController (PRIVATE)
 - (void)loadPlugins;
+- (void)unloadPlugins;
 @end
 
 @implementation AIPluginController
@@ -31,6 +32,12 @@
     pluginArray = [[NSMutableArray alloc] init];
 
     [self loadPlugins];
+}
+
+//close
+- (void)closeController
+{
+    [self unloadPlugins]; //Uninstall all the plugins
 }
 
 - (void)dealloc
@@ -80,6 +87,19 @@
             }
         }
     }
+}
+
+//Unload all the plugins
+- (void)unloadPlugins
+{
+    NSEnumerator	*enumerator;
+    AIPlugin		*plugin;
+
+    enumerator = [pluginArray objectEnumerator];
+    while((plugin = [enumerator nextObject])){
+        [plugin uninstallPlugin];
+    }
+
 }
 
 @end

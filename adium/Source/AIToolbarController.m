@@ -49,6 +49,17 @@
     
 }
 
+//close
+- (void)closeController
+{
+    //Make sure the toolbar customization palette is closed
+    if([[AIMiniToolbarCenter defaultCenter] customizing:nil]){
+        [[AIMiniToolbarCenter defaultCenter] endCustomization:nil];
+    }
+    
+    //Toolbar configurations are saved as changes are made, no need to save them here.
+}
+
 //dealloc
 - (void)dealloc
 {

@@ -19,7 +19,7 @@
 #define AIMessageWindow_ControllerOrderChanged 		@"AIMessageWindow_ControllerOrderChanged"
 #define AIMessageWindow_SelectedControllerChanged 	@"AIMessageWindow_SelectedControllerChanged"
 
-@class AIAdium, AIContactHandle, AIMessageSendingTextView, AIMiniToolbar, AIMessageViewController, AIDualWindowInterface;
+@class AIAdium, AIContactHandle, AIMessageSendingTextView, AIMiniToolbar, AIMessageViewController;
 
 @protocol AIMessageView
 - (AIContactHandle *)handle;	//Return the handle associated with this tab
@@ -27,17 +27,22 @@
 - (NSView *)view;		//Return a view, the tab contents
 @end
 
+@protocol AITabHoldingInterface <NSObject>
+- (void)closeMessageViewController:(id <AIMessageView>)controller;
+@end
+
+
 @interface AIMessageWindowController : NSWindowController {
     IBOutlet	NSTabView	*tabView_messages;
 
     NSMutableArray		*messageViewArray;
 
     AIAdium			*owner;
-    AIDualWindowInterface 	*interface;
+    id <AITabHoldingInterface> 	interface;
     
 }
 
-+ (AIMessageWindowController *)messageWindowControllerWithOwner:(id)inOwner interface:(AIDualWindowInterface *)inInterface;
++ (AIMessageWindowController *)messageWindowControllerWithOwner:(id)inOwner interface:(id <AITabHoldingInterface>)inInterface;
 - (void)selectMessageViewController:(id <AIMessageView>)inController;
 - (void)addMessageViewController:(id <AIMessageView>)inController;
 - (void)removeMessageViewController:(id <AIMessageView>)inController;

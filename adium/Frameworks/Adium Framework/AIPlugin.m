@@ -19,6 +19,7 @@
 @interface AIPlugin (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
 - (void)installPlugin;
+- (void)uninstallPlugin;
 @end
 
 @implementation AIPlugin
@@ -51,7 +52,10 @@
 //Install the plugin
 - (void)installPlugin
 {
-    NSLog(@"No implementation of installPlugin");
+}
+
+- (void)uninstallPlugin
+{
 }
 
 @end

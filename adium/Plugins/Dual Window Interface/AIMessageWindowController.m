@@ -17,7 +17,6 @@
 #import <Adium/Adium.h>
 #import "AIMessageWindowController.h"
 #import "AIAdium.h"
-#import "AIDualWindowInterface.h"
 
 #define	MESSAGE_WINDOW_NIB		@"MessageWindow"		//Filename of the message window nib
 #define KEY_DUAL_MESSAGE_WINDOW_FRAME	@"Dual Message Window Frame"
@@ -25,7 +24,7 @@
 // The tabbed window that contains messages
 
 @interface AIMessageWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner interface:(AIDualWindowInterface *)inInterface;
+- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner interface:(id <AITabHoldingInterface>)inInterface;
 - (void)dealloc;
 - (void)tabViewDidChangeOrderOfTabViewItems:(NSNotification *)notification;
 - (void)windowDidLoad;
@@ -36,7 +35,7 @@
 @implementation AIMessageWindowController
 
 //Create a new message window controller
-+ (AIMessageWindowController *)messageWindowControllerWithOwner:(id)inOwner interface:(AIDualWindowInterface *)inInterface
++ (AIMessageWindowController *)messageWindowControllerWithOwner:(id)inOwner interface:(id <AITabHoldingInterface>)inInterface
 {
     return([[[self alloc] initWithWindowNibName:MESSAGE_WINDOW_NIB owner:inOwner interface:inInterface] autorelease]);
 }
@@ -169,7 +168,7 @@
 
 
 //Private -----------------------------------------------------------------------------
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner interface:(AIDualWindowInterface *)inInterface
+- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner interface:(id <AITabHoldingInterface>)inInterface
 {
     NSParameterAssert(windowNibName != nil && [windowNibName length] != 0);
 

@@ -27,6 +27,13 @@ static ErrorMessageWindowController *sharedInstance = nil;
     return(sharedInstance);
 }
 
++ (void)closeSharedInstance
+{
+    if(sharedInstance){
+        [sharedInstance closeWindow:nil];
+    }
+}
+
 - (void)displayError:(NSString *)inTitle withDescription:(NSString *)inDesc
 {
     //force the window to load

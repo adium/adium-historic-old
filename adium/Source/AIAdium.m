@@ -111,12 +111,24 @@
 
     [preferenceController registerDefaults:[NSDictionary dictionaryNamed:ADIUM_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
 
-    //load the interface
-    //The interface depends upon the plugins, so it must load after them
-    [interfaceController loadDualInterface];
-
+    //
+    [interfaceController finishIniting];
     [contactController finishIniting];
     [accountController finishIniting];
+}
+
+- (void)applicationWillTerminate:(NSNotification *)notification
+{
+    //Close the controllers in reverse order
+    [pluginController closeController]; //should always load last.  Plugins rely on all the controllers.
+    [interfaceController closeController];
+    [contentController closeController];
+    [contactController closeController];
+    [accountController closeController];
+    [soundController closeController];
+    [menuController closeController];
+    [preferenceController closeController];
+    [toolbarController closeController];
 }
 
 @end

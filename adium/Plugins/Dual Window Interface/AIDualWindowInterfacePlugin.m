@@ -15,9 +15,9 @@
 
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
-#import "AIDualWindowInterface.h"
 #import "AIAdium.h"
 #import "AIContactListWindowController.h"
+#import "AIDualWindowInterfacePlugin.h"
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
 
@@ -27,29 +27,83 @@
 #define PREVIOUS_MESSAGE_MENU_TITLE		@"Previous Message"
 #define NEXT_MESSAGE_MENU_TITLE			@"Next Message"
 
-@interface AIDualWindowInterface (PRIVATE)
+@interface AIDualWindowInterfacePlugin (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
 - (void)dealloc;
 - (void)buildWindowMenu;
 - (AIMessageViewController *)messageViewControllerWithHandle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent;
 - (void)loadMessageWindow;
 - (void)unloadMessageWindow;
+- (void)loadContactListWindow;
+- (void)unloadContactListWindow;
+- (void)addMenuItems;
+- (void)removeMenuItems;
 @end
 
-@implementation AIDualWindowInterface
+@implementation AIDualWindowInterfacePlugin
 
-+ (id)newInstanceOfInterfaceWithOwner:(id)inOwner
+//install
+- (void)installPlugin
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+    [[owner interfaceController] registerInterfaceController:self]; //Register our interface
+}
+
+- (void)uninstallPlugin
+{
+    //[[owner interfaceController] unregisterInterfaceController:self]; //
+}
+
+//Open the interface
+- (void)openInterface
+{
+    //init
+    messageWindow = nil;
+    windowMenuArray = [[NSMutableArray alloc] init];
+
+    //Open the contact list window
+    [self showContactList:nil];
+
+    //Register for the necessary notifications
+    [[[owner contentController] contentNotificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
+    [[[owner interfaceController] interfaceNotificationCenter] addObserver:self selector:@selector(initiateMessage:) name:Interface_InitiateMessage object:nil];
+    [[[owner interfaceController] interfaceNotificationCenter] addObserver:self selector:@selector(closeMessage:) name:Interface_CloseMessage object:nil];
+
+    //Install our menu items
+    [self addMenuItems];
+}
+
+//Close the interface
+- (void)closeInterface
+{
+    //Close and unload our windows
+    [self unloadMessageWindow];
+    [self unloadContactListWindow];
+
+    //Stop observing
+    [[[owner contentController] contentNotificationCenter] removeObserver:self];
+    [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self];
+
+    //Remove our menu items
+    [self removeMenuItems];
+    
+    //Cleanup
+    [windowMenuArray release];
+    [super dealloc];
 }
 
 //Show the contact list window
 - (IBAction)showContactList:(id)sender
 {
-    if(!contactListWindowController){
-        contactListWindowController = [[AIContactListWindowController contactListWindowControllerWithOwner:owner] retain];
-    }
+    [self loadContactListWindow];
     [contactListWindowController showWindow:nil];
+}
+
+//Close the active tab
+- (IBAction)closeTab:(id)sender
+{
+    if(messageWindow){
+        [self closeMessageViewController:[messageWindow selectedMessageView]];
+    }
 }
 
 //Show the message window (if any messages are open)
@@ -77,6 +131,7 @@
         [messageWindow removeMessageViewController:controller];
     }
 }
+
 
 //Notifications ------------------------------------------------------------------------------------------------
 //Called when a message object is added to a handle
@@ -142,29 +197,19 @@
     }
 }
 
-- (IBAction)closeTab:(id)sender
-{
-    if(messageWindow){
-        [self closeMessageViewController:[messageWindow selectedMessageView]];
-    }
-}
-
 - (void)messageWindowControllersChanged:(NSNotification *)notification
 {
-    //Close (and release) the message window if it's empty
-    if([messageWindow count] == 0){
+    if([messageWindow count] == 0){ //Close (and release) the message window if it's empty
         [self unloadMessageWindow];
     }
 
     //Rebuild the window menu
     [self buildWindowMenu]; 
-
 }
 
 - (void)messageWindowControllerOrderChanged:(NSNotification *)notification
 {
     [self buildWindowMenu]; //Rebuild the window menu
-    
 }
 
 - (void)messageWindowSelectedControllerChanged:(NSNotification *)notification
@@ -204,71 +249,6 @@
 
 
 //Private ------------------------------------------------------------------------------
-//init
-- (id)initWithOwner:(id)inOwner
-{
-    NSMenuItem	*menuItem;
-
-    [super init];
-
-    //init
-    owner = [inOwner retain];
-    messageWindow = nil;
-    windowMenuArray = [[NSMutableArray alloc] init];
-
-    //Open the contact list window
-    [self showContactList:nil];
-
-    //Register for the necessary notifications
-    [[[owner contentController] contentNotificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
-    [[[owner interfaceController] interfaceNotificationCenter] addObserver:self selector:@selector(initiateMessage:) name:Interface_InitiateMessage object:nil];
-    [[[owner interfaceController] interfaceNotificationCenter] addObserver:self selector:@selector(closeMessage:) name:Interface_CloseMessage object:nil];
-
-    //Add our windows to the window menu
-    menuItem = [[NSMenuItem alloc] initWithTitle:CONTACT_LIST_WINDOW_MENU_TITLE target:self action:@selector(showContactList:) keyEquivalent:@"1"];
-    [[owner menuController] addMenuItem:[menuItem autorelease] toLocation:LOC_Window_Fixed];
-
-    menuItem_closeTab = [[NSMenuItem alloc] initWithTitle:CLOSE_TAB_MENU_TITLE target:self action:@selector(closeTab:) keyEquivalent:@"r"];
-    [[owner menuController] addMenuItem:menuItem_closeTab toLocation:LOC_File_Close];
-
-    //Add our other menu items
-    {
-        /* Using the cursor keys
-            unichar 	left = NSLeftArrowFunctionKey;
-            NSString	*leftKey =[NSString stringWithCharacters:&left length:1];
-            unichar 	right = NSRightArrowFunctionKey;
-            NSString	*rightKey = [NSString stringWithCharacters:&right length:1];
-         */
-
-        /* Using the [ ] keys */
-        NSString	*leftKey = @"[";
-        NSString	*rightKey = @"]";
-
-        menuItem_previousMessage = [[NSMenuItem alloc] initWithTitle:PREVIOUS_MESSAGE_MENU_TITLE target:self action:@selector(previousMessage:) keyEquivalent:leftKey];
-        [[owner menuController] addMenuItem:menuItem_previousMessage toLocation:LOC_Window_Commands];
-
-        menuItem_nextMessage = [[NSMenuItem alloc] initWithTitle:NEXT_MESSAGE_MENU_TITLE target:self action:@selector(nextMessage:) keyEquivalent:rightKey];
-        [[owner menuController] addMenuItem:menuItem_nextMessage toLocation:LOC_Window_Commands];
-    }    
-
-    return(self);
-}
-
-//dealloc
-- (void)dealloc
-{
-    [self unloadMessageWindow];
-
-    [[[owner contentController] contentNotificationCenter] removeObserver:self];
-    [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self];
-
-    [windowMenuArray release];
-    [contactListWindowController release];
-    [owner release];
-
-    [super dealloc];
-}
-
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     BOOL enabled = YES;
@@ -400,17 +380,80 @@
 //unloads the tabbed message window
 - (void)unloadMessageWindow
 {
-    //stop observing
-    [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:AIMessageWindow_ControllersChanged object:messageWindow];
-    [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:AIMessageWindow_ControllerOrderChanged object:messageWindow];
-    [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:AIMessageWindow_SelectedControllerChanged object:messageWindow];
+    if(messageWindow){
+        //stop observing
+        [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:AIMessageWindow_ControllersChanged object:messageWindow];
+        [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:AIMessageWindow_ControllerOrderChanged object:messageWindow];
+        [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:AIMessageWindow_SelectedControllerChanged object:messageWindow];
+    
+        //close the window
+        [messageWindow closeWindow:nil];
+        [messageWindow release]; messageWindow = nil;
+    
+        //Rebuild the window menu
+        [self buildWindowMenu];
+    }
+}
 
-    //close the window
-    [messageWindow closeWindow:nil];
-    [messageWindow release]; messageWindow = nil;
+//Load the contact list window
+- (void)loadContactListWindow
+{
+    if(!contactListWindowController){
+        //Load the window
+        contactListWindowController = [[AIContactListWindowController contactListWindowControllerWithOwner:owner] retain];
+    }
+}
 
-    //Rebuild the window menu
-    [self buildWindowMenu];
+//unload the contact list window
+- (void)unloadContactListWindow
+{
+    if(contactListWindowController){
+        //Close and release the window
+        [contactListWindowController closeWindow:nil];
+        [contactListWindowController release];
+    }
+}
+
+
+//Add our menu items
+- (void)addMenuItems
+{
+    NSMenuItem	*menuItem;
+
+    //Add our windows to the window menu
+    menuItem = [[NSMenuItem alloc] initWithTitle:CONTACT_LIST_WINDOW_MENU_TITLE target:self action:@selector(showContactList:) keyEquivalent:@"1"];
+    [[owner menuController] addMenuItem:[menuItem autorelease] toLocation:LOC_Window_Fixed];
+
+    menuItem_closeTab = [[NSMenuItem alloc] initWithTitle:CLOSE_TAB_MENU_TITLE target:self action:@selector(closeTab:) keyEquivalent:@"r"];
+    [[owner menuController] addMenuItem:menuItem_closeTab toLocation:LOC_File_Close];
+
+    //Add our other menu items
+    {
+        /* Using the cursor keys
+        unichar 	left = NSLeftArrowFunctionKey;
+        NSString	*leftKey =[NSString stringWithCharacters:&left length:1];
+        unichar 	right = NSRightArrowFunctionKey;
+        NSString	*rightKey = [NSString stringWithCharacters:&right length:1];
+        */
+
+        /* Using the [ ] keys */
+        NSString	*leftKey = @"[";
+        NSString	*rightKey = @"]";
+
+        menuItem_previousMessage = [[NSMenuItem alloc] initWithTitle:PREVIOUS_MESSAGE_MENU_TITLE target:self action:@selector(previousMessage:) keyEquivalent:leftKey];
+        [[owner menuController] addMenuItem:menuItem_previousMessage toLocation:LOC_Window_Commands];
+
+        menuItem_nextMessage = [[NSMenuItem alloc] initWithTitle:NEXT_MESSAGE_MENU_TITLE target:self action:@selector(nextMessage:) keyEquivalent:rightKey];
+        [[owner menuController] addMenuItem:menuItem_nextMessage toLocation:LOC_Window_Commands];
+    }
+}
+
+//remove our menu items
+- (void)removeMenuItems
+{
+    [[owner menuController] removeMenuItem:menuItem_closeTab];
+    [[owner menuController] removeMenuItem:menuItem_nextMessage];
+    [[owner menuController] removeMenuItem:menuItem_previousMessage];
 }
 
 @end

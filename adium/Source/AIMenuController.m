@@ -34,6 +34,12 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
     locationArray = [[NSMutableArray alloc] initWithObjects:menu_Adium_About, menu_Adium_Preferences, menu_File_New, menu_File_Close, menu_File_Save, menu_File_Accounts, menu_File_Additions, menu_File_Status, menu_Edit_Bottom, menu_Edit_Additions, menu_Format_Styles, menu_Format_Palettes, menu_Format_Additions, menu_Window_Top, menu_Window_Commands, menu_Window_Auxilary, menu_Window_Fixed, menu_Help_Local, menu_Help_Web, menu_Help_Additions, nil];
 }
 
+//close
+- (void)closeController
+{
+    //There's no need to remove the menu items, the system will take them out for us.
+}
+
 - (void)dealloc
 {
     [locationArray release]; locationArray = nil;

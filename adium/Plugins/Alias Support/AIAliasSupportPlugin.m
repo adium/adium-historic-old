@@ -37,6 +37,11 @@
     activeContactObject = nil;
 }
 
+- (void)uninstallPlugin
+{
+    //[[owner contactController] unregisterHandleObserver:self];
+}
+
 - (IBAction)setAlias:(id)sender
 {
     NSString	*alias = [textField_alias stringValue];

@@ -15,7 +15,6 @@
 
 #import <Adium/Adium.h>
 #import "AIInterfaceController.h"
-#import "AIDualWindowInterface.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"
 
@@ -30,6 +29,12 @@
 {     
     contactListViewArray = [[NSMutableArray alloc] init];
     messageViewArray = [[NSMutableArray alloc] init];
+    interfaceArray = [[NSMutableArray alloc] init];
+}
+
+- (void)closeController
+{
+    [[interfaceArray objectAtIndex:0] closeInterface]; //Close the interface
 }
 
 //dealloc
@@ -37,38 +42,25 @@
 {
     [contactListViewArray release]; contactListViewArray = nil;
     [messageViewArray release]; messageViewArray = nil;
+    [interfaceArray release]; interfaceArray = nil;
     
     [interfaceNotificationCenter release]; interfaceNotificationCenter = nil;
     
     [super dealloc];
 }
 
+- (void)finishIniting
+{
+    //Load the interface
+    [[interfaceArray objectAtIndex:0] openInterface];
+}
+
+
 //Called by the 'new message' menu, initiates a message
 - (IBAction)initiateMessage:(id)sender
 {
     //initiate message with a nil Handle, the interface should prompt for a handle
     [[self interfaceNotificationCenter] postNotificationName:Interface_InitiateMessage object:nil userInfo:nil];
-}
-
-//Hard coded for now
-- (void)loadDualInterface
-{
-    //Load the interface
-    NSString	*interfacePath;
-    NSBundle	*interfaceBundle;
-
-    //Get the plugin path
-    interfacePath = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath];
-
-    //Load the plugin
-    interfaceBundle = [NSBundle bundleWithPath:[interfacePath stringByAppendingPathComponent:@"Dual Window.AdiumInterface"]];
-    if(interfaceBundle != nil){
-        //Create an instance of the plugin
-        [[[interfaceBundle principalClass] newInstanceOfInterfaceWithOwner:owner] retain];
-
-    }else{
-        NSLog(@"Failed to open Interface \"%@\"!",@"temp");
-    }    
 }
 
 //Notification center for interface notifications
@@ -81,15 +73,23 @@
     return(interfaceNotificationCenter);
 }
 
+
+// Registers code to handle the interface
+- (void)registerInterfaceController:(id <AIInterfaceController>)inController
+{
+    [interfaceArray addObject:inController];
+}
+
+
 // Registers a view to handle the contact list.  The user may chose from the available views
 // The view only needs to be added to the interface, it is entirely self sufficient
 - (void)registerContactListViewController:(id <AIContactListViewController>)inController
 {
     [contactListViewArray addObject:inController];
 }
-- (NSView *)contactListView
+- (id <AIContactListViewController>)contactListViewController
 {
-    return([[contactListViewArray objectAtIndex:0] contactListView]);
+    return([contactListViewArray objectAtIndex:0]);
 }
 
 

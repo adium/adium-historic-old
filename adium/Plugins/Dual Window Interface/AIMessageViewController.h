@@ -15,8 +15,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIMessageSendingTextView, AIMiniToolbar, AIContactHandle, AIAdium, AIColoredBoxView, AIDualWindowInterface, AIAccount, AICompletingTextField, AISendingTextView;
-@protocol AITextEntryView, AIMessageView;
+@class AIMessageSendingTextView, AIMiniToolbar, AIContactHandle, AIAdium, AIColoredBoxView, AIAccount, AICompletingTextField, AISendingTextView;
+@protocol AITextEntryView, AIMessageView, AITabHoldingInterface;
 
 @interface AIMessageViewController : NSObject <AIMessageView> {
     IBOutlet	NSView			*view_contents;
@@ -39,13 +39,13 @@
 
     //Variables
     AIAdium			*owner;
-    AIDualWindowInterface 	*interface;
+    id <AITabHoldingInterface> 	interface;
     AIContactHandle		*handle;
     AIAccount			*account;
     BOOL			accountMenuVisible;
 }
 
-+ (AIMessageViewController *)messageViewControllerWithHandle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent owner:(id)inOwner interface:(AIDualWindowInterface *)inInterface;
++ (AIMessageViewController *)messageViewControllerWithHandle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent owner:(id)inOwner interface:(id <AITabHoldingInterface>)inInterface;
 - (IBAction)sendMessage:(id)sender;
 - (AIContactHandle *)handle;
 - (NSAttributedString *)title;

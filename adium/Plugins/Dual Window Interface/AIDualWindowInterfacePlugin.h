@@ -14,14 +14,12 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
 
 @class AIAdium, AIContactListWindowController, AIMessageWindowController, AIMessageViewController;
-@protocol AIMessageView;
+@protocol AIMessageView, AIInterfaceController, AITabHoldingInterface;
 
-@interface AIDualWindowInterface : NSObject {
-
-    AIAdium				*owner;
-    
+@interface AIDualWindowInterfacePlugin : AIPlugin <AIInterfaceController, AITabHoldingInterface> {
     AIContactListWindowController 	*contactListWindowController;
     NSMutableArray			*windowMenuArray;
 
@@ -33,9 +31,9 @@
     NSMenuItem				*menuItem_previousMessage;
 }
 
-+ (id)newInstanceOfInterfaceWithOwner:(id)inOwner;
-- (void)closeMessageViewController:(id <AIMessageView>)controller;
 - (IBAction)showContactList:(id)sender;
+- (IBAction)closeTab:(id)sender;
 - (IBAction)showMessageWindow:(id)sender;
+- (void)closeMessageViewController:(id <AIMessageView>)controller;
 
 @end

@@ -26,12 +26,22 @@
     [[owner interfaceController] registerMessageViewController:self];
 }
 
+- (void)uninstallPlugin
+{
+    //[[owner interfaceController] unregisterMessageViewController:self];
+}
+
 //returns a NEW message view configured for the specified handle
 - (NSView *)messageViewForHandle:(AIContactHandle *)inHandle
 {
     AISMTextView	*messageView = [AISMTextView messageTextViewForHandle:inHandle owner:owner];
 
     return(messageView);
+}
+
+- (void)closeMessageView:(NSView *)inView
+{
+    
 }
 
 @end

@@ -19,5 +19,6 @@
 @interface AIPreferenceController (INTERNAL)
 // These methods are for internal Adium use only.  The public interface is in Adium.h.
 - (void)initController;
+- (void)closeController;
 - (NSArray *)categoryArray;
 @end

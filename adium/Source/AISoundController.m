@@ -21,6 +21,18 @@
 
 @implementation AISoundController
 
+- (void)initController
+{
+    sharedMovie = nil;
+}
+
+//close
+- (void)closeController
+{
+
+}
+
+
 - (void)playSoundNamed:(NSString *)inName
 {
     NSString	*path;
@@ -50,11 +62,6 @@
     if(sharedMovie != nil){
         StartMovie([sharedMovie QTMovie]);
     }
-}
-
-- (void)initController
-{
-    sharedMovie = nil;
 }
 
 

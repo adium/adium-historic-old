@@ -22,5 +22,6 @@
 
 + (AIMiniToolbarCustomizeController *)customizationWindowControllerForToolbar:(AIMiniToolbar *)inToolbar;
 - (void)dragItemAtRow:(int)dragRow fromPoint:(NSPoint)inLocation withEvent:(NSEvent *)inEvent;
+- (IBAction)closeWindow:(id)sender;
 
 @end

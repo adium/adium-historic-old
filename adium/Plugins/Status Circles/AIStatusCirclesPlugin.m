@@ -33,6 +33,11 @@
     [[owner contactController] registerHandleObserver:self];
 }
 
+- (void)uninstallPlugin
+{
+    //[[owner contactController] unregisterHandleObserver:self];
+}
+
 - (void)dealloc
 {
     [circleAway release];
