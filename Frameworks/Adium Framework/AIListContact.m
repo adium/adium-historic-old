@@ -24,7 +24,7 @@
 {
     [self initWithUID:inUID service:inService];
 	
-	account = inAccount;
+	account = [inAccount retain];
 	
     return(self);
 }
@@ -44,8 +44,9 @@
 //Dealloc
 - (void)dealloc
 {
-    [remoteGroupName release];
-    [internalUniqueObjectID release];
+	[account release]; account = nil;
+    [remoteGroupName release]; remoteGroupName = nil;
+    [internalUniqueObjectID release]; internalUniqueObjectID = nil;
 	
     [super dealloc];
 }
