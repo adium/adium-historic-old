@@ -3907,7 +3907,7 @@
 			isa = PBXFileReference;
 			name = LogViewer.nib;
 			path = Plugins/Logger/LogViewer.nib;
-			refType = 4;
+			refType = 2;
 		};
 		4B3DB8FE04547A8D00A8010A = {
 			fileRef = 4B3DB8FD04547A8D00A8010A;
