@@ -1,6 +1,12 @@
 //------------------------------------------------------------------------------------
 // Already Fixed, awaiting the next Adium release
 //------------------------------------------------------------------------------------
+- Themes crashes - applying, installing, creating
+- Crash on startup due to a now-invalid Sounds.plist
+- Crash in certain situations in the Firefox bookmark importer
+- Crash when launching from a UFS partition
+- Incorrect resizing when switching between sort configuration types
+- Webkit performance issues related to templates
 
 //------------------------------------------------------------------------------------
 // Bugs - Adium
@@ -29,22 +35,6 @@
 
 - Tooltips are not appearing for links in profile text.
 
-- Links do not appear as blue and underlined in Jaguar TextViews, including the new info pane.
-
-- Webkit issues when switching between style versions
-	The webkit style version is not stored in the controller, but in the plugin.  This means that
-	switching from an older style to a newer one with windows open will cause problems, since the
-	old styles will still be open - and adium will start treating them like new styles.
-	
-- Webkit performance issues related to templates
-	The message template strings are not being cached.  They are loaded with each new message
-	that is appended to the view.
-
-- Dock bouncing
-	If a "bounce until Adium becomes active" event occurs followed by a "bounce once" event,
-	Adium bounces once and stops instead of performing the second behavior and the continuing with
-	the first behavior.
-
 - Message view animation
 	Animating buddy icons in the message view are annoying.  Caching the animation is good; displaying it
 	is bad.  Perhaps this could be fixed at the same time as the implementation of style-based image
@@ -52,6 +42,9 @@
 
 - Messaging the same person from two different accounts is confusing and
   problematic.
+
+- [Jaguar]: Links do not appear as blue and underlined in TextViews, including the new info pane.
+
 
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
