@@ -50,10 +50,12 @@ BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow)
 //this uses the algorithm employed by Darwin 7.x's rm(1).
 void AIWipeMemory(void *buf, size_t len)
 {
-	char *buf_char = buf;
-	for(unsigned long i = 0; i < len; ++i) {
-		buf_char[i] = 0xff;
-		buf_char[i] = 0x00;
-		buf_char[i] = 0xff;
+	if(buf) {
+		char *buf_char = buf;
+		for(unsigned long i = 0; i < len; ++i) {
+			buf_char[i] = 0xff;
+			buf_char[i] = 0x00;
+			buf_char[i] = 0xff;
+		}
 	}
 }
