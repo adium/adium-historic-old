@@ -17,7 +17,7 @@
 #import "AIMenuController.h"
 #import "AIToolbarController.h"
 #import "SHBookmarksImporterPlugin.h"
-#import "SHMarkedHyperlink.h"
+#import <AIHyperlinks/SHMarkedHyperlink.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/CBObjectAdditions.h>
