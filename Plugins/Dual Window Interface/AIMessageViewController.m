@@ -15,7 +15,7 @@
 
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
-//#import "AIDualWindowInterfacePlugin.h"
+#import "AIDualWindowInterfacePlugin.h"
 #import "AIAccountSelectionView.h"
 #import "CSMessageToOfflineContactWindowController.h"
 #import "AIContactInfoWindowController.h"
@@ -23,6 +23,7 @@
 #define MESSAGE_VIEW_NIB					@"MessageView"		//Filename of the message view nib
 #define MESSAGE_TAB_TOOLBAR					@"MessageTab"		//ID of the message tab toolbar
 #define ENTRY_TEXTVIEW_MIN_HEIGHT			20
+#define ENTRY_TEXTVIEW_DEFAULT_MIN_HEIGHT	(ENTRY_TEXTVIEW_MIN_HEIGHT + 5)
 #define ENTRY_TEXTVIEW_MAX_HEIGHT_PERCENT	.50
 #define RESIZE_CORNER_TOOLBAR_OFFSET 		0
 #define TEXT_ENTRY_PADDING					3
@@ -30,6 +31,8 @@
 
 #define	USERLIST_THEME						@"UserList Theme"
 #define	USERLIST_LAYOUT						@"UserList Layout"
+
+#define	KEY_ENTRY_TEXTVIEW_MIN_HEIGHT		@"Minimum Height"
 
 @interface AIMessageViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat;
@@ -63,7 +66,12 @@
     chat = nil;
     showUserList = NO;
 	sendMessagesToOfflineContact = NO;
-	
+	inSizeAndArrange = NO;
+
+	NSNumber	*minHeightNumber = [[adium preferenceController] preferenceForKey:KEY_ENTRY_TEXTVIEW_MIN_HEIGHT
+																			group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+	entryMinHeight = (minHeightNumber ? [minHeightNumber floatValue] : (ENTRY_TEXTVIEW_DEFAULT_MIN_HEIGHT));
+
     //view
     [NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
 	
@@ -145,10 +153,11 @@
 	
     //Finish everything up
 	[self chatStatusChanged:nil];
-	[self sizeAndArrangeSubviews];
-	
 	[self chatParticipatingListObjectsChanged:nil];
-	
+
+	//Now do a size and arrange once everything is set up
+	[self sizeAndArrangeSubviews];	
+
     return(self);
 }
 
@@ -187,6 +196,11 @@
 
 - (void)tabViewItemWillClose
 {
+	//Store our minimum height for the text entry area
+	[[adium preferenceController] setPreference:[NSNumber numberWithFloat:entryMinHeight]
+										 forKey:KEY_ENTRY_TEXTVIEW_MIN_HEIGHT
+											 group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+	
 	//Release the userListController to let it invalidate its tracking views before closing the window
 	[userListController release]; userListController = nil;
 }
@@ -241,6 +255,8 @@
 //Toggle the visibility of our account selection menu
 - (void)setAccountSelectionMenuVisible:(BOOL)visible
 {
+	BOOL visibilityChanged = NO;
+	
 	//Ignore requests to show the selection menu if there are no options present
 	if(![AIAccountSelectionView optionsAvailableForSendingContentType:CONTENT_MESSAGE_TYPE
 															toContact:[chat listObject]]){
@@ -251,11 +267,13 @@
     if(visible && !view_accountSelection){ //Show the account selection view
         view_accountSelection = [[AIAccountSelectionView alloc] initWithFrame:NSMakeRect(0,0,100,100) delegate:self];
         [view_contents addSubview:view_accountSelection];
+		visibilityChanged = YES;
 		
     }else if(!visible && view_accountSelection){ //Hide the account selection view
 		[view_accountSelection setDelegate:nil]; //Make sure it doesn't try and talk to us after we're gone
         [view_accountSelection removeFromSuperview];
         [view_accountSelection release]; view_accountSelection = nil;
+		visibilityChanged = YES;
     }
 
 	if(view_accountSelection){
@@ -264,9 +282,10 @@
 	}
 	
     //
-    [self sizeAndArrangeSubviews];
-	[view_contents setNeedsDisplay:YES];
-
+	if(visibilityChanged){
+		[self sizeAndArrangeSubviews];
+		[view_contents setNeedsDisplay:YES];
+	}
 }
 
 //Selected item in the group chat view
@@ -455,7 +474,6 @@
         showUserList = listVisible;
         [self sizeAndArrangeSubviews];
 		[view_contents setNeedsDisplay:YES];
-
     }
 
     //Update the user list
@@ -515,105 +533,132 @@
     [view_contents setNeedsDisplay:YES];
 }
 
-//Arrange and resize our subviews based on the current state of this view (whether or not: it's locked to a contact, the account view is visible)
+/*
+ * @brief Arrange and resize our subviews 
+ *
+ * This shows/hides as appropriate the contact/account selection view and the group chat user list,
+ * sizes the text entry area, and sizes the message view to take up the remaining space.
+ *
+ * sizeAndArrangeSubviews guards against its frame changes calling it to be called again. This guard is also used
+ * to determine if a resizing event is caused by the user dragging a splitview divider or programatically, elsewhere in
+ * this class.
+ */
 - (void)sizeAndArrangeSubviews
 {
-    float	textHeight;
-    int		height;
-    NSRect	superFrame = [view_contents frame];
+	if(!inSizeAndArrange){
+		inSizeAndArrange = YES;
 
-	
-    superFrame.origin.y = 0;
-    superFrame.origin.x = 0;
+		float	textHeight;
+		int		height;
+		NSRect	superFrame = [view_contents frame];
+		NSRect	targetRect;
 
-    //Account
-    if(view_accountSelection){
-        height = [view_accountSelection frame].size.height;
-
-        [view_accountSelection setFrame:NSMakeRect(0, superFrame.size.height - height, superFrame.size.width, height)];
-        superFrame.size.height -= height;
-    }
-
-    //Text entry
-	float	entryMaxHeight = [view_contents frame].size.height * ENTRY_TEXTVIEW_MAX_HEIGHT_PERCENT;
-    textHeight = [textView_outgoing desiredSize].height;
-    if(textHeight > entryMaxHeight){
-        textHeight = entryMaxHeight;
-    }else if(textHeight < ENTRY_TEXTVIEW_MIN_HEIGHT){
-        textHeight = ENTRY_TEXTVIEW_MIN_HEIGHT;
-    }
-	
-    [scrollView_outgoingView setHasVerticalScroller:(textHeight == entryMaxHeight)];
-    [scrollView_outgoingView setFrame:NSMakeRect(superFrame.origin.x - 1, superFrame.origin.y, superFrame.size.width + 2, textHeight)];
-    superFrame.size.height -= textHeight + TEXT_ENTRY_PADDING;
-    superFrame.origin.y += textHeight + TEXT_ENTRY_PADDING;
-
-	//Split View (contains UserList and Messages)
-    [splitView_messages setFrame:superFrame];
-	
-    //UserList
-    if(showUserList){
+		superFrame.origin.y = 0;
+		superFrame.origin.x = 0;
 		
-		if (!userListController) {
-			NSDictionary	*themeDict = [NSDictionary dictionaryNamed:USERLIST_THEME forClass:[self class]];
-			NSDictionary	*layoutDict = [NSDictionary dictionaryNamed:USERLIST_LAYOUT forClass:[self class]];
+		//Account
+		if(view_accountSelection){
+			height = [view_accountSelection frame].size.height;
 			
-			userListController = [[ESChatUserListController alloc] initWithContactListView:userListView
-																			  inScrollView:scrollView_userList 
-																				  delegate:self];
-			
-			[userListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
-			[userListController updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];	
-			[userListController setContactListRoot:chat];
-			[userListController setHideRoot:YES];
-			
+			[view_accountSelection setFrame:NSMakeRect(0, superFrame.size.height - height, superFrame.size.width, height)];
+			[view_accountSelection setNeedsDisplay:YES];
+			superFrame.size.height -= height;
 		}
 		
-		if( ![[splitView_messages subviews] containsObject:scrollView_userList] ) {
-			[splitView_messages addSubview:scrollView_userList];
-			
-			NSRect splitFrame = [splitView_messages frame];
-			//NSRect buttonFrame = [button_inviteUser frame];
-			[controllerView_messages setFrame:NSMakeRect(0,0,NSWidth(splitFrame)-USER_LIST_WIDTH-[splitView_messages dividerThickness],NSHeight(splitFrame))];
-			[scrollView_userList setFrame:NSMakeRect(NSWidth(splitFrame)-USER_LIST_WIDTH,0,USER_LIST_WIDTH,NSHeight(splitFrame))];
-			
-			//NSRect userFrame = [view_userPane frame];
-			//[scrollView_userList setFrame:NSMakeRect(0,0,NSWidth(userFrame),NSHeight(userFrame))];
-			//[button_inviteUser setFrame:NSMakeRect(0,0,25,25)];
+		//Split view taking up the rest of the window
+		targetRect = NSMakeRect(superFrame.origin.x,
+								superFrame.origin.y,
+								(superFrame.size.width),
+								superFrame.size.height);
+		if(!NSEqualRects([splitView_textEntryHorizontal frame], targetRect)){
+			[splitView_textEntryHorizontal setFrame:targetRect];
+			[splitView_textEntryHorizontal setNeedsDisplay:YES];
 		}
-    }else{		
-		if( [[splitView_messages subviews] containsObject:scrollView_userList] ) {
-			[scrollView_userList removeFromSuperview];
+		
+		//Text entry
+		float	entryMaxHeight = [view_contents frame].size.height * ENTRY_TEXTVIEW_MAX_HEIGHT_PERCENT;
+		textHeight = [textView_outgoing desiredSize].height;
+		if(textHeight > entryMaxHeight){
+			textHeight = entryMaxHeight;
+		}else if(textHeight < entryMinHeight){
+			textHeight = entryMinHeight;
 		}
-	
-    }
-	
-	/*
-	 if(showUserList){
-		 if( ![[splitView_messages subviews] containsObject:scrollView_userList] ) {
-			 [splitView_messages addSubview:scrollView_userList];
-			 [splitView_messages addSubview:button_inviteUser];
-			 NSRect splitFrame = [splitView_messages frame];
-			 NSRect buttonFrame = [button_inviteUser frame];
-			 [controllerView_messages setFrame:NSMakeRect(0,0,NSWidth(splitFrame)-USER_LIST_WIDTH-[splitView_messages dividerThickness],NSHeight(splitFrame)-NSHeight(buttonFrame))];
-			 [scrollView_userList setFrame:NSMakeRect(NSWidth(splitFrame)-USER_LIST_WIDTH,NSHeight(buttonFrame),USER_LIST_WIDTH,NSHeight(splitFrame))];
-			 [button_inviteUser setFrameOrigin:NSMakePoint(NSWidth(splitFrame)-USER_LIST_WIDTH,0)];
-		 }
-	 }else{
-		 if( [[splitView_messages subviews] containsObject:scrollView_userList] ) {
-			 [scrollView_userList removeFromSuperview];
-			 [button_inviteUser removeFromSuperview];
-		 }
-		 
-	 }
-	 */	 
-	
-    //Messages
-	[splitView_messages displayIfNeeded];
 
+		//Why magic + 1?
+		targetRect = NSMakeRect(superFrame.origin.y, superFrame.origin.x, superFrame.size.width + 1, textHeight);
+		if(!NSEqualSizes([scrollView_outgoing frame].size, targetRect.size)){
+			[scrollView_outgoing setHasVerticalScroller:(textHeight == entryMaxHeight)];
+			[scrollView_outgoing setFrame:targetRect];
+			[scrollView_outgoing setNeedsDisplay:YES];
+		}
+		
+		superFrame.size.height -= textHeight + [splitView_textEntryHorizontal dividerThickness];
+		superFrame.origin.y += textHeight + [splitView_textEntryHorizontal dividerThickness];
+		
+		//Split View with UserList and Messages.  Why magic + 1's?
+		targetRect = NSMakeRect(superFrame.origin.x,
+								superFrame.origin.y,
+								(superFrame.size.width + 1),
+								superFrame.size.height + 1);
+		if(!NSEqualRects([splitView_messages frame], targetRect)){
+			[splitView_messages setFrame:targetRect];
+			[splitView_messages setNeedsDisplay:YES];
+		}
+		
+		//UserList
+		if(showUserList){
+			
+			if (!userListController) {
+				NSDictionary	*themeDict = [NSDictionary dictionaryNamed:USERLIST_THEME forClass:[self class]];
+				NSDictionary	*layoutDict = [NSDictionary dictionaryNamed:USERLIST_LAYOUT forClass:[self class]];
+				
+				userListController = [[ESChatUserListController alloc] initWithContactListView:userListView
+																				  inScrollView:scrollView_userList 
+																					  delegate:self];
+				
+				[userListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
+				[userListController updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];	
+				[userListController setContactListRoot:chat];
+				[userListController setHideRoot:YES];
+				
+			}
+			
+			if( ![[splitView_messages subviews] containsObject:scrollView_userList] ) {
+				[splitView_messages addSubview:scrollView_userList];
+				
+				NSRect splitFrame = [splitView_messages frame];
+				//NSRect buttonFrame = [button_inviteUser frame];
+				[controllerView_messages setFrame:NSMakeRect(0,0,NSWidth(splitFrame)-USER_LIST_WIDTH-[splitView_messages dividerThickness],NSHeight(splitFrame))];
+				[controllerView_messages setNeedsDisplay:YES];
+				[scrollView_userList setFrame:NSMakeRect(NSWidth(splitFrame)-USER_LIST_WIDTH,0,USER_LIST_WIDTH,NSHeight(splitFrame))];
+				[scrollView_userList setNeedsDisplay:YES];
+				
+				//NSRect userFrame = [view_userPane frame];
+				//[scrollView_userList setFrame:NSMakeRect(0,0,NSWidth(userFrame),NSHeight(userFrame))];
+				//[button_inviteUser setFrame:NSMakeRect(0,0,25,25)];
+			}
+		}else{		
+			if( [[splitView_messages subviews] containsObject:scrollView_userList] ) {
+				[scrollView_userList removeFromSuperview];
+			}
+		}
+		
+		//Messages
+		[splitView_textEntryHorizontal displayIfNeeded];
+		[view_accountSelection displayIfNeeded];
+
+		inSizeAndArrange = NO;
+	}
 }
 
 #pragma mark ESChatUserListController delegate
+/*
+ * @brief The selection in the chat user list changed
+ *
+ * Set the chat's "preferred list object" which is used for things like the Get Info and Message buttons.
+ *
+ * @param notification A notification with an AIListOutlineView object which corresponds to our userListView if intended for us
+ */
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
 	if ([notification object] == userListView){
@@ -624,6 +669,13 @@
 	}
 }
 
+/*
+ * @brief Participants in the chat changed
+ *
+ * Reload the user list data
+ *
+ * @param notification A notification with an AIChat object which corresponds to our chat if intended for us
+ */
 - (void)chatParticipantsChanged:(NSNotification *)notification
 {
 	if([notification object] == chat){
@@ -633,12 +685,54 @@
 
 #pragma mark Split View Delegate
 
+/*
+ *
+ * @param sender The splitView
+ * @param proposedMax The proposed maximum, in the sender's flipped coordinate system. For a horizontal divider, this is distance from the top.
+ */
+- (float)splitView:(NSSplitView *)sender constrainMaxCoordinate:(float)proposedMax ofSubviewAt:(int)offset
+{
+	if(sender == splitView_textEntryHorizontal){
+		//Maximum of the top portion is the hieght less the minimum textview entry height
+		return (proposedMax - ENTRY_TEXTVIEW_MIN_HEIGHT);
+		
+	}else /*if(sender == splitView_messages)*/ {
+		return proposedMax;
+	}
+}
+
+- (float)splitView:(NSSplitView *)sender constrainMinCoordinate:(float)proposedMin ofSubviewAt:(int)offset
+{
+	if(sender == splitView_textEntryHorizontal){
+		return ([view_contents frame].size.height * (1-ENTRY_TEXTVIEW_MAX_HEIGHT_PERCENT));
+		
+	}else /*if(sender == splitView_messages)*/ {
+		return proposedMin;
+	}
+}
+
 - (BOOL)splitView:(NSSplitView *)sender canCollapseSubview:(NSView *)subview
 {
 	if(subview == userListView || subview == scrollView_userList){
 		return YES;
 	}else{
 		return NO;
+	}
+}
+
+/*
+ * @brief A split view had its divider position changed
+ *
+ * This is called both when the user drags the divider and when we change the frame programatically.
+ * We only want to use it when the user drags the divider, so we can know our new minimum height, so we only take action
+ * if inSizeAndArrange is NO.
+ *
+ * @param notification A notification whose object is an NSSplitView.
+ */
+- (void)splitViewDidResizeSubviews:(NSNotification *)notification
+{
+	if(([notification object] == splitView_textEntryHorizontal) && !inSizeAndArrange){
+		entryMinHeight = [scrollView_outgoing frame].size.height;
 	}
 }
 
