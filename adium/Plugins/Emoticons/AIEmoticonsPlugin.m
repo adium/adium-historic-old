@@ -104,6 +104,8 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 				if(emoticonsEnabled){
 					[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterIncoming];
 					[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterOutgoing];
+					[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterIncoming];
+					[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterOutgoing];
 				}else{
 					[[adium contentController] unregisterContentFilter:self];
 				}

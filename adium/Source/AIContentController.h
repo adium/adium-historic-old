@@ -29,9 +29,10 @@
 
 typedef enum {
 	AIFilterContent = 0,	// Changes the actual content
-	AIFilterDisplay			// Changes only how the content is displayed locally
+	AIFilterDisplay,		// Changes only how non-message content is displayed locally (Profiles, aways, auto-replies, ...)
+	AIFilterMessageDisplay  // Changes only how messages are displayed locally
 } AIFilterType;
-#define FILTER_TYPE_COUNT 2
+#define FILTER_TYPE_COUNT 3
 
 typedef enum {
 	AIFilterIncoming = 0,   // Content we are receiving
