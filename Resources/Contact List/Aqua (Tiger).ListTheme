@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>Away Color</key>
-	<string>50,50,50</string>
+	<string>0,0,0</string>
 	<key>Away Enabled</key>
-	<true/>
+	<false/>
 	<key>Away Label Color</key>
 	<string>234,234,214</string>
 	<key>Background As Events</key>
@@ -19,27 +19,27 @@
 	<key>Background Image Path</key>
 	<string>/Users/evands/Pictures/eye2.tif</string>
 	<key>Contact Status Text Color</key>
-	<string>143,143,143</string>
+	<string>120,120,120</string>
 	<key>Fade Offline Images</key>
 	<true/>
 	<key>Grid Color</key>
-	<string>237,243,254</string>
+	<string>237,243,255</string>
 	<key>Grid Enabled</key>
-	<false/>
+	<true/>
 	<key>Group Background</key>
-	<string>137,184,255</string>
+	<string>139,186,255</string>
 	<key>Group Background Gradient</key>
 	<string>106,169,255</string>
 	<key>Group Gradient</key>
-	<false/>
+	<true/>
 	<key>Group Inverted Text Color</key>
 	<string>255,255,255</string>
 	<key>Group Shadow</key>
-	<false/>
+	<true/>
 	<key>Group Shadow Color</key>
-	<string>177,177,177</string>
+	<string>126,126,126</string>
 	<key>Group Text Color</key>
-	<string>0,0,0</string>
+	<string>255,255,255</string>
 	<key>Idle And Away Color</key>
 	<string>49,49,49</string>
 	<key>Idle And Away Enabled</key>
@@ -47,13 +47,13 @@
 	<key>Idle And Away Label Color</key>
 	<string>233,233,214</string>
 	<key>Idle Color</key>
-	<string>50,50,50</string>
+	<string>0,0,0</string>
 	<key>Idle Enabled</key>
-	<true/>
+	<false/>
 	<key>Idle Label Color</key>
 	<string>234,234,234</string>
 	<key>Offline Color</key>
-	<string>153,153,153</string>
+	<string>147,147,147</string>
 	<key>Offline Enabled</key>
 	<true/>
 	<key>Offline Image Opacity</key>
@@ -71,13 +71,13 @@
 	<key>Signed Off Enabled</key>
 	<true/>
 	<key>Signed Off Label Color</key>
-	<string>198,55,43</string>
+	<string>229,23,23</string>
 	<key>Signed On Color</key>
 	<string>255,255,255</string>
 	<key>Signed On Enabled</key>
 	<true/>
 	<key>Signed On Label Color</key>
-	<string>43,198,56</string>
+	<string>44,161,11</string>
 	<key>Status Label Opacity</key>
 	<real>1</real>
 	<key>Typing Color</key>
@@ -85,13 +85,13 @@
 	<key>Typing Enabled</key>
 	<true/>
 	<key>Typing Label Color</key>
-	<string>43,157,198</string>
+	<string>245,118,0</string>
 	<key>Unviewed Content Color</key>
 	<string>255,255,255</string>
 	<key>Unviewed Content Enabled</key>
 	<true/>
 	<key>Unviewed Content Label Color</key>
-	<string>43,69,198</string>
+	<string>0,81,212</string>
 	<key>Use Background Image</key>
 	<false/>
 	<key>Window Transparency</key>
