@@ -988,8 +988,6 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	NSEnumerator 	*enumerator;
 	NSString		*arg;
 
-	NSString *color, *back;
-
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while((arg = [enumerator nextObject])){
 		if([arg caseInsensitiveCompare:Face] == NSOrderedSame){
@@ -1009,14 +1007,19 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			[textAttributes setFontSize:[[inArgs objectForKey:arg] intValue]];
 
 		}else if([arg caseInsensitiveCompare:Color] == NSOrderedSame){
-			colorString = [inArgs objectForKey:arg];
-			colorValue  = [colorNames objectForKey:[colorString lowercaseString]];
+			NSString *colorString = [inArgs objectForKey:arg];
+			
+			//If colorString is a name, obtain its hex value (it may already be a hex value)
+			NSString *colorValue  = [colorNames objectForKey:[colorString lowercaseString]];
 			if(colorValue) colorString = colorValue;
+			
 			[textAttributes setTextColor:[colorString hexColor]];
 
 		}else if([arg caseInsensitiveCompare:Back] == NSOrderedSame){
-			colorString = [inArgs objectForKey:arg];
-			colorValue  = [colorNames objectForKey:[colorString lowercaseString]];
+			NSString *colorString = [inArgs objectForKey:arg];
+			
+			//If colorString is a name, obtain its hex value (it may already be a hex value)
+			NSString *colorValue  = [colorNames objectForKey:[colorString lowercaseString]];
 			if(colorValue) colorString = colorValue;
 			[textAttributes setTextBackgroundColor:[colorString hexColor]];
 
