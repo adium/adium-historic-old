@@ -711,21 +711,6 @@ typedef enum {
 }
 
 /*!
- * 
- */
-- (NSArray *)movePreset:(NSDictionary *)preset toIndex:(int)index inPresets:(NSArray *)presets presetAfterMove:(id *)presetAfterMove
-{
-#warning May we request to disallow moving?
-	if(presets == _listLayouts){
-		return([AISCLViewPlugin availableLayoutSets]);
-	}else if(presets == _listThemes){
-		return([AISCLViewPlugin availableThemeSets]);
-	}else{
-		return(nil);
-	}
-}
-
-/*!
  *
  */
 - (NSMenu *)_listLayoutMenu
