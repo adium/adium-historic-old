@@ -55,8 +55,12 @@ a, a:link {
 	background: rgba(0,0,0,0.2);
 }
 
-.context .sender {
+.context .topleft {
 	background: no-repeat url(../images/context/topleft.png);
+}
+
+.context .sender {
+	background: rgba(0,0,0,0.2);
 }
 
 .context .time_initial

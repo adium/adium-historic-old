@@ -19,12 +19,17 @@ body {
 	clear: both;
 }
 
+.topleft {
+	height: 14px;
+	float: left;
+	width: 4px;
+}
+
 .sender {
-	padding-left: 4px;
 	height: 14px;
 	margin-right: 4px;
 	overflow: hidden;
-	padding-right: 45px;
+	padding-right: 48px;
 }
 
 .buddyicon {
