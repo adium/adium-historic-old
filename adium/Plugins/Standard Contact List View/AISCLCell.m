@@ -196,7 +196,11 @@
                 backgroundColor = nil;
             }
         } else {
-            backgroundColor = [[[listObject displayArrayForKey:@"Label Color"] averageColor] colorWithAlphaComponent:[(AISCLOutlineView *)controlView labelOpacity]];
+            if (isGroup) {
+                backgroundColor = [(AISCLOutlineView *)controlView labelGroupColor];
+            } else {
+                backgroundColor = [[[listObject displayArrayForKey:@"Label Color"] averageColor] colorWithAlphaComponent:[(AISCLOutlineView *)controlView labelOpacity]];
+            }
         }
     }
     

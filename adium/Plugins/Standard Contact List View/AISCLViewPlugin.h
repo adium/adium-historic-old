@@ -29,22 +29,28 @@
 
 //Advanced
 #define KEY_SCL_BORDERLESS              @"Borderless"
+#define KEY_SCL_SHADOWS                 @"Shadows"
 #define KEY_SCL_SPACING                 @"Row Spacing"
 #define KEY_SCL_OPACITY			@"Opacity"
 #define KEY_SCL_OUTLINE_GROUPS          @"Outline Groups"
 #define KEY_SCL_OUTLINE_GROUPS_COLOR    @"Outline Groups Color"
 #define KEY_SCL_BACKGROUND_TOOLTIPS     @"Tooltips In Background"
+#define KEY_SCL_BACKGROUND_TOOLTIPS_OTHERAPPS   @"Tooltips With Other Apps Active"
 #define KEY_SCL_LABEL_AROUND_CONTACT    @"Label Around Contact"
 #define KEY_SCL_OUTLINE_LABELS          @"Outline Labels"
 #define KEY_SCL_LABEL_OPACITY           @"Label Opacity"
+#define KEY_SCL_LABEL_GROUPS            @"Label Groups"
+#define KEY_SCL_LABEL_GROUPS_COLOR      @"Label Groups Color"
 
-@class AIListGroup, AICLPreferences, ESCLViewAdvancedPrefs, AISCLOutlineView;
+@class AIListGroup, AICLPreferences, ESCLViewAdvancedPreferences, ESCLViewLabelsAdvancedPrefs, AISCLOutlineView;
 @protocol AIContactListViewController;
 
 @interface AISCLViewPlugin : AIPlugin <AIContactListViewPlugin> {
-    NSMutableArray          *controllerArray;
-    AICLPreferences         *preferences;
-    ESCLViewAdvancedPrefs   *preferencesAdvanced;
+    NSMutableArray                  *controllerArray;
+    
+    AICLPreferences                 *preferences;
+    ESCLViewAdvancedPreferences     *preferencesAdvanced;
+    ESCLViewLabelsAdvancedPrefs     *preferencesLabelsAdvanced;
 }
 
 @end

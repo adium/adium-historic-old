@@ -18,6 +18,7 @@
 #import "AISCLOutlineView.h"
 #import "AICLPreferences.h"
 #import "ESCLViewAdvancedPreferences.h"
+#import "ESCLViewLabelsAdvancedPrefs.h"
 #import "AISCLViewController.h"
 
 @interface AISCLViewPlugin (PRIVATE)
@@ -34,6 +35,7 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
     preferences = [[AICLPreferences contactListPreferences] retain];
     preferencesAdvanced = [[ESCLViewAdvancedPreferences preferencePane] retain];
+    preferencesLabelsAdvanced = [[ESCLViewLabelsAdvancedPrefs preferencePane] retain];
 }
 
 //Return a new contact list view controller

@@ -28,9 +28,13 @@
 	<true/>
         <key>Borderless</key>
         <false/>
+        <key>Shadows</key>
+        <true/>
         <key>Row Spacing</key>
         <real>2.0</real>
         <key>Tooltips In Background</key>
+        <false/>
+        <key>Tooltips With Other Apps Active</key>
         <false/>
         <key>Label Around Contact</key>
         <false/>
@@ -38,5 +42,10 @@
         <false/>
         <key>Label Opacity</key>
         <real>1.0</real>
+        <key>Label Groups</key>
+        <false/>
+        <key>Label Groups Color</key>
+        <string>255,255,255</string>    
+        
 </dict>
 </plist>

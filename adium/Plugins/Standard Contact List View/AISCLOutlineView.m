@@ -51,6 +51,7 @@
     groupColor = nil;
     invertedGroupColor = nil;
     outlineGroupColor = nil;
+    labelGroupColor = nil;
     selectedItem = nil;
     outlineLabels = NO;
     labelOpacity = 1.0;
@@ -419,6 +420,16 @@
 }
 - (NSColor *)outlineGroupColor{
     return outlineGroupColor;
+}
+
+- (void)setLabelGroupColor:(NSColor *)inLabelGroupColor{
+    if (inLabelGroupColor != labelGroupColor) {
+        [labelGroupColor release];
+        labelGroupColor = [inLabelGroupColor retain];
+    }
+}
+- (NSColor *)labelGroupColor{
+    return labelGroupColor;
 }
 
 - (void)setShowLabels:(BOOL)inValue{

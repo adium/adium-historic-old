@@ -57,7 +57,7 @@
     trackingMouseMovedEvents = NO;
     tooltipTimer = nil;
     tooltipCount = 0;
-    fixedShadows = NO;
+    shadows = YES;
     
     //Install the necessary observers
     [[adium notificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
@@ -172,16 +172,24 @@
         float           labelOpacity = [[prefDict objectForKey:KEY_SCL_LABEL_OPACITY] floatValue];
         
         isBorderless = [[prefDict objectForKey:KEY_SCL_BORDERLESS] boolValue];
+        shadows = [[prefDict objectForKey:KEY_SCL_SHADOWS] boolValue];
         
         float           spacing = [[prefDict objectForKey:KEY_SCL_SPACING] floatValue];
         BOOL            outlineGroups = [[prefDict objectForKey:KEY_SCL_OUTLINE_GROUPS] boolValue];
         NSColor         *outlineGroupsColor = [[prefDict objectForKey:KEY_SCL_OUTLINE_GROUPS_COLOR] representedColor];
+        BOOL            labelGroups = [[prefDict objectForKey:KEY_SCL_LABEL_GROUPS] boolValue];
+        NSColor         *labelGroupsColor = [[prefDict objectForKey:KEY_SCL_LABEL_GROUPS_COLOR] representedColor];
         
         allowTooltipsInBackground = [[prefDict objectForKey:KEY_SCL_BACKGROUND_TOOLTIPS] boolValue];
+        allowTooltipsWhileInOtherApps = [[prefDict objectForKey:KEY_SCL_BACKGROUND_TOOLTIPS_OTHERAPPS] boolValue];
         
         //Borderless
         [contactListView setIsBorderless:isBorderless];
         
+        //Configure shadow drawing
+        if ([contactListView window])
+            [[contactListView window] setHasShadow:shadows];
+
         //Fonts
         NSFont		*boldFont = nil;
         [contactListView setFont:font];
@@ -215,10 +223,16 @@
         [contactListView setGroupColor:(customGroupColor ? groupColor : color)];
         [contactListView setBackgroundColor:backgroundColor];
         [(NSScrollView *)[[contactListView superview] superview] setDrawsBackground:NO];
+        
         if (outlineGroups)
             [contactListView setOutlineGroupColor:outlineGroupsColor];          
         else
-            [contactListView setOutlineGroupColor:nil];          
+            [contactListView setOutlineGroupColor:nil];
+        
+        if (labelGroups)
+            [contactListView setLabelGroupColor:labelGroupsColor];
+        else
+            [contactListView setLabelGroupColor:nil];
         
         //Grid
         [contactListView setDrawsAlternatingRows:alternatingGrid];
@@ -255,7 +269,7 @@
 //Called when our view moves to another superview, update the traking rect
 - (void)view:(NSView *)inView didMoveToSuperview:(NSView *)inSuperview
 {
-    //Remove any existing observers (if they exists)
+    //Remove any existing observers (if they exist)
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeKeyNotification object:nil];
@@ -268,6 +282,9 @@
     //Observe the window entering and leaving key (for tooltips)
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_endTrackingMouse) name:NSWindowDidResignKeyNotification object:[inSuperview window]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSWindowDidBecomeKeyNotification object:[inSuperview window]]; //Force a frame update when window becomes key
+    
+    //Configure shadow drawing
+    [[inSuperview window] setHasShadow:shadows];
 }
 
 //Frame changed, reinstall cursor tracking rect
@@ -553,7 +570,9 @@
 - (void)_showTooltipAtPoint:(NSPoint)screenPoint
 {
     if(screenPoint.x != 0 && screenPoint.y != 0){
-        if((allowTooltipsInBackground && [NSApp isActive]) || [[contactListView window] isKeyWindow]){
+        if( (allowTooltipsWhileInOtherApps) ||
+            (allowTooltipsInBackground && [NSApp isActive]) || 
+            ([[contactListView window] isKeyWindow]) ){
             NSPoint		viewPoint;
             AIListObject	*hoveredObject;
             int			hoveredRow;
