@@ -1956,15 +1956,26 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		//If the notification object is a listContact belonging to this account, update the serverside information
 		if ((account != nil) && 
 			([self shouldSetAliasesServerside]) &&
-			([listObject isKindOfClass:[AIListContact class]]) &&
-			([(AIListContact *)listObject account] == self) &&
 			([[userInfo objectForKey:@"Key"] isEqualToString:@"Alias"])){
-			
+
 			NSString *alias = [listObject preferenceForKey:@"Alias"
 													 group:PREF_GROUP_ALIASES 
 									 ignoreInheritedValues:YES];
-			
-			[gaimThread setAlias:alias forUID:[listObject UID] onAccount:self];
+
+			if([listObject isKindOfClass:[AIMetaContact class]]){
+				NSEnumerator	*enumerator = [[listObject containedObjects] objectEnumerator];
+				AIListContact	*listContact;
+				while(listContact = [enumerator nextObject]){
+					if([listContact account] == self){
+						[gaimThread setAlias:alias forUID:[listObject UID] onAccount:self];
+					}
+				}
+				
+			}else if([listObject isKindOfClass:[AIListContact class]]){
+				if([(AIListContact *)listObject account] == self){
+					[gaimThread setAlias:alias forUID:[listObject UID] onAccount:self];
+				}
+			}
 		}
 		
 	}else if (([notification object] == self) && ([prefGroup isEqualToString:GROUP_ACCOUNT_STATUS])){
