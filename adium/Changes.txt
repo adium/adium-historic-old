@@ -1,12 +1,13 @@
 				Adium X Version History
 				-----------------------
 
-Version 0.58
+Version 0.58 (6/04/2004)
 - Added support for server-side AIM buddy comments
 - Added support for server-side AIM and Novell buddy aliases
 - Added automatic use of Safari, Camino, FireFox, and OmniWeb bookmarks
 - Added "new mail" notification support for Yahoo! and MSN
 - Added ability to group chat tabs by contact list groups
+- Combined the Alerts, Info, and Inspector into a single 'Get Info' window.
 - Improved AIM DirectIM (IM Image) support
 - Improved Gadu-Gadu support
 - Improved event notifications
