@@ -5,9 +5,9 @@
  * Jeffrey Melloy <jmelloy@visualdistortion.org>
  *
  */
- 
-drop index adium_display_date;
-create index adium_message_date on adium.messages(message_date);
+
+drop view adium.simple_message_v;
+drop view adium.message_v;
 
 create or replace view adium.message_v as
 select message_id,
@@ -15,6 +15,8 @@ select message_id,
        message,
        s.username as sender_sn,
        s.service as sender_service,
+       m.sender_id,
+       m.recipient_id,
        s_disp.display_name as sender_display,
        r.username as recipient_sn,
        r.service as recipient_service,
@@ -45,7 +47,10 @@ create or replace view adium.simple_message_v as
 select  m.message_date,
         s.username as sender_sn,
         r.username as recipient_sn,
-        message
+        m.sender_id,
+        m.recipient_id,
+        message,
+        message_id
 from    adium.messages m,
         adium.users s,
         adium.users r
@@ -78,15 +83,15 @@ do instead  (
     insert into adium.user_display_name
     (user_id, display_name)
     select user_id, new.sender_display
-    from users 
+    from adium.users 
     where username = new.sender_sn
     and new.sender_display is not null
     and new.sender_display <> ''
     and not exists (
         select 'x'
-        from   user_display_name udn
+        from   adium.user_display_name udn
         where  user_id = 
-               (select user_id from users where username = new.sender_sn)
+               (select user_id from adium.users where username = new.sender_sn)
          and   display_name = new.sender_display
          and not exists (
             select 'x'
@@ -97,19 +102,19 @@ do instead  (
     insert into adium.user_display_name
     (user_id, display_name)
     select user_id, new.recipient_display
-    from users
+    from adium.users
     where username = new.recipient_sn
     and new.recipient_display is not null
     and new.recipient_display <> ''
     and not exists (
         select 'x'
-        from   user_display_name udn
+        from   adium.user_display_name udn
         where  user_id = 
-               (select user_id from users where username = new.recipient_sn)
+               (select user_id from adium.users where username = new.recipient_sn)
         and    display_name = new.recipient_display
         and not exists (
             select 'x'
-            from   user_display_name
+            from   adium.user_display_name
             where  effdate > udn.effdate
              and   user_id = udn.user_id));
 
@@ -117,9 +122,9 @@ do instead  (
     insert into adium.messages
         (message,sender_id,recipient_id, message_date)
     values (new.message,
-    (select user_id from users where username = new.sender_sn and
+    (select user_id from adium.users where username = new.sender_sn and
     service=new.sender_service),
-    (select user_id from users where username = new.recipient_sn and
+    (select user_id from adium.users where username = new.recipient_sn and
     service=new.recipient_service),
     coalesce(new.message_date, now() )
     );
@@ -128,25 +133,25 @@ do instead  (
     update adium.user_statistics
     set num_messages = num_messages + 1,
     last_message = CURRENT_TIMESTAMP
-    where sender_id = (select user_id from users where username =
+    where sender_id = (select user_id from adium.users where username =
     new.sender_sn and service = new.sender_service) 
-    and recipient_id = (select user_id from users where username =
+    and recipient_id = (select user_id from adium.users where username =
     new.recipient_sn and service = new.recipient_service);
 
     -- Inserting statistics if none exist
     insert into adium.user_statistics
     (sender_id, recipient_id, num_messages)
     select
-    (select user_id from users 
+    (select user_id from adium.users 
     where username = new.sender_sn and service = new.sender_service),
-    (select user_id from users
+    (select user_id from adium.users
     where username = new.recipient_sn and service = new.recipient_service),
     1
     where not exists 
-        (select 'x' from user_statistics
-        where sender_id = (select user_id from users where username =
+        (select 'x' from adium.user_statistics
+        where sender_id = (select user_id from adium.users where username =
         new.sender_sn and service = new.sender_service) 
         and recipient_id = 
-        (select user_id from users where username = 
+        (select user_id from adium.users where username = 
         new.recipient_sn and service = new.recipient_service))
 );

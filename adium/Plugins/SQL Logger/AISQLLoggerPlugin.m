@@ -20,6 +20,7 @@
 #import "AIAdium.h"
 #import "AISQLLoggerPlugin.h"
 #import "libpq-fe.h"
+#import "JMSQLLogViewerWindowController.h"
 
 @interface AISQLLoggerPlugin (PRIVATE)
 - (void)_addMessage:(NSAttributedString *)message dest:(NSString *)destName source:(NSString *)sourceName sendDisplay:(NSString *)sendDisp destDisplay:(NSString *)destDisp sendServe:(NSString *)s_service recServe:(NSString *)r_service;
@@ -30,11 +31,14 @@
 
 - (void)installPlugin
 {
-    //NSMenuItem	*logViewerMenuItem;
-
+    NSMenuItem	*logViewerMenuItem;
     //Observe content sending and receiving
     [[owner notificationCenter] addObserver:self selector:@selector(adiumSentOrReceivedContent:) name:Content_ContentObjectAdded object:nil];
-    
+
+    //Install Menu item
+    logViewerMenuItem = [[NSMenuItem alloc] initWithTitle:@"SQL Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@""];
+    [[owner menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
+
     conn = PQconnectdb("");
     if (PQstatus(conn) == CONNECTION_BAD)
     {
@@ -112,7 +116,7 @@
 //Show the log viewer window
 - (void)showLogViewer:(id)sender
 {
-    
+    [[JMSQLLogViewerWindowController logViewerWindowControllerWithOwner:owner] showWindow:nil];
 }
 
 //Insert a message

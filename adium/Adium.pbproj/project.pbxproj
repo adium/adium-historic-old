@@ -1469,30 +1469,6 @@
 			settings = {
 			};
 		};
-		344E7995051FB13B003B41B1 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = "libpq-fe.h";
-			refType = 4;
-		};
-		344E7996051FB13B003B41B1 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = postgres_ext.h;
-			refType = 4;
-		};
-		344E799A051FB5E7003B41B1 = {
-			fileRef = 344E7996051FB13B003B41B1;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		344E799B051FB5E7003B41B1 = {
-			fileRef = 344E7995051FB13B003B41B1;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3454A7840539D6C4005F0B24 = {
 			children = (
 				3454A7860539D6ED005F0B24,
@@ -14869,12 +14845,48 @@
 //B72
 //B73
 //B74
+		B79B8D610544B7F900867292 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = JMSQLLogViewerWindowController.h;
+			refType = 4;
+		};
+		B79B8D620544B7F900867292 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = JMSQLLogViewerWindowController.m;
+			refType = 4;
+		};
+		B79B8D630544B7F900867292 = {
+			isa = PBXFileReference;
+			path = SQLLogViewer.nib;
+			refType = 4;
+		};
+		B79B8D640544B7F900867292 = {
+			fileRef = B79B8D610544B7F900867292;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B79B8D650544B7F900867292 = {
+			fileRef = B79B8D620544B7F900867292;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B79B8D660544B7F900867292 = {
+			fileRef = B79B8D630544B7F900867292;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		B7AE664D0465778E0051E914 = {
 			children = (
+				B79B8D610544B7F900867292,
+				B79B8D620544B7F900867292,
+				B79B8D630544B7F900867292,
 				B7AE664F0465778E0051E914,
 				B7AE66500465778E0051E914,
-				344E7995051FB13B003B41B1,
-				344E7996051FB13B003B41B1,
 			);
 			isa = PBXGroup;
 			name = "SQL Logger";
@@ -14899,8 +14911,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B7AE6658046579290051E914,
-				344E799A051FB5E7003B41B1,
-				344E799B051FB5E7003B41B1,
+				B79B8D640544B7F900867292,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14908,6 +14919,7 @@
 		B7AE6652046578640051E914 = {
 			buildActionMask = 2147483647;
 			files = (
+				B79B8D660544B7F900867292,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14916,6 +14928,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B7AE6659046579390051E914,
+				B79B8D650544B7F900867292,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14991,7 +15004,7 @@
 	<key>CFBundleVersion</key>
 	<string>0.0.1d1</string>
 	<key>NSPrincipalClass</key>
-	<string>AISQLLogger</string>
+	<string>AISQLLoggerPlugin</string>
 </dict>
 </plist>
 ";

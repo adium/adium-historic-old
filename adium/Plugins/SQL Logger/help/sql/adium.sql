@@ -42,6 +42,8 @@ select message_id,
        message,
        s.username as sender_sn,
        s.service as sender_service,
+       m.sender_id,
+       m.recipient_id,
        s_disp.display_name as sender_display,
        r.username as recipient_sn,
        r.service as recipient_service,
@@ -72,7 +74,10 @@ create or replace view adium.simple_message_v as
 select  m.message_date,
         s.username as sender_sn,
         r.username as recipient_sn,
-        message
+        m.sender_id,
+        m.recipient_id,
+        message,
+        message_id
 from    adium.messages m,
         adium.users s,
         adium.users r
