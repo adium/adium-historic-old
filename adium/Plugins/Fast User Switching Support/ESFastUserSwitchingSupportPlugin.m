@@ -53,11 +53,11 @@
         }
 		
 		//Set a temporary mute if none already exists
-		NSNumber *oldTempMute = [[adium preferenceController] preferenceForKey:KEY_SOUND_TEMPORARY_MUTE group:GROUP_GENERAL];
+		NSNumber *oldTempMute = [[adium preferenceController] preferenceForKey:KEY_SOUND_TEMPORARY_MUTE group:PREF_GROUP_GENERAL];
 		if (!oldTempMute || ![oldTempMute boolValue]) {
 			[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES] 
 												 forKey:KEY_SOUND_TEMPORARY_MUTE
-												  group:GROUP_GENERAL];
+												  group:PREF_GROUP_GENERAL];
 			setMuteThroughFastUserSwitch = YES;
 		}
     }
@@ -75,7 +75,7 @@
 		if (setMuteThroughFastUserSwitch) {
 			[[adium preferenceController] setPreference:nil
 												 forKey:KEY_SOUND_TEMPORARY_MUTE
-												  group:GROUP_GENERAL];
+												  group:PREF_GROUP_GENERAL];
 		}
     }    
 }
