@@ -1,15 +1,6 @@
 //------------------------------------------------------------------------------------
 // Already Fixed, awaiting the next Adium release
 //------------------------------------------------------------------------------------
-- Themes crashes - applying, installing, creating
-- Crash on startup due to a now-invalid Sounds.plist
-- Crash in certain situations in the Firefox bookmark importer
-- Crash when launching from a UFS partition
-- Incorrect resizing when switching between sort configuration types
-- Webkit performance issues related to templates
-- Message view buddy icons don't change when the user's icon changes
-- Spawning new windows unhides Adium
-- Interface feedback must be on for sounds
 
 //------------------------------------------------------------------------------------
 // Bugs - Adium
