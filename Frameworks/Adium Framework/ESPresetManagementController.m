@@ -109,6 +109,18 @@
     [sheet orderOut:nil];
 }
 
+/*!
+ * @brief As the window closes, release this controller instance
+ *
+ * The instance retained itself (rather, was not autoreleased when created) so it could function independently.
+ */
+- (void)windowWillClose:(id)sender
+{
+	[super windowWillClose:sender];
+		
+	[self autorelease];
+}
+
 /*
  * @brief Duplicate the selected preset
  */
