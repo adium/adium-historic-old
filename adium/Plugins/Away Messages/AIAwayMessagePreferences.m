@@ -594,6 +594,11 @@
     return(YES);
 }
 
+- (void)outlineViewDeleteSelectedRows:(NSOutlineView *)outlineView
+{
+    [self deleteAwayMessage:nil];    
+}
+
 @end
 
 
