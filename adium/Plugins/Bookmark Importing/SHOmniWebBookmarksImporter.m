@@ -83,19 +83,31 @@ static NSMenu   *omniTopMenu;
     NSScanner   *linkScanner = [NSScanner scannerWithString:inString];
     NSString    *omniTitleString = nil;
     NSString    *urlString = nil;
+    NSString    *untitledString = @"untitled";
+    
+    unsigned int stringLength = [inString length];
     
     [linkScanner setCaseSensitive:NO];
     
+    NSString    *gtSign = @">";
+    NSString    *Hopen = @"h3";
+    NSString    *Aopen = @"a ";
+    NSString    *hrefStr = @"href=\"";
+    NSString    *closeQuote = @"\"";
+    NSString    *Aclose = @"</a";
+    NSString    *DLclose = @"/dl>";
+    NSString    *ltSign = @"<";
+    
     while(![linkScanner isAtEnd]){
-        if([[inString substringFromIndex:[linkScanner scanLocation]] length] < 4){
+        if((stringLength - [linkScanner scanLocation]) < 4){
             [linkScanner setScanLocation:[inString length]];
-        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] compare:@"h3"]){
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
-            [linkScanner scanUpToString:@"<a" intoString:nil];
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
-            [linkScanner scanUpToString:@">" intoString:nil];
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
-            [linkScanner scanUpToString:@"</a" intoString:&omniTitleString];
+        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] compare:Hopen]){
+            if((stringLength - [linkScanner scanLocation]) > 2) [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
+            [linkScanner scanUpToString:Aopen intoString:nil];
+            if((stringLength - [linkScanner scanLocation]) > 2) [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
+            [linkScanner scanUpToString:gtSign intoString:nil];
+            if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
+            [linkScanner scanUpToString:Aclose intoString:&omniTitleString];
 
             if(omniTitleString){
                 // decode html stuff
@@ -103,23 +115,22 @@ static NSMenu   *omniTopMenu;
             }
             
             omniBookmarksSupermenu = omniBookmarksMenu;
-            omniBookmarksMenu = [[[NSMenu alloc] initWithTitle:omniTitleString? omniTitleString : @"untitled"] autorelease];
+            omniBookmarksMenu = [[[NSMenu alloc] initWithTitle:omniTitleString? omniTitleString : untitledString] autorelease];
         
-            NSMenuItem *mozillaSubmenuItem = [[[NSMenuItem alloc] initWithTitle:omniTitleString? omniTitleString : @"untitled"
+            NSMenuItem *mozillaSubmenuItem = [[[NSMenuItem alloc] initWithTitle:omniTitleString? omniTitleString : untitledString
                                                                          target:owner
                                                                          action:nil
                                                                   keyEquivalent:@""] autorelease];
             [omniBookmarksSupermenu addItem:mozillaSubmenuItem];
             [omniBookmarksSupermenu setSubmenu:omniBookmarksMenu forItem:mozillaSubmenuItem];
-        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] compare:@"a "]){
-            //[linkScanner setScanLocation:[linkScanner scanLocation] + 3];
-            [linkScanner scanUpToString:@"href=\"" intoString:nil];
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
-            [linkScanner scanUpToString:@"\"" intoString:&urlString];
+        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] compare:Aopen]){
+            [linkScanner scanUpToString:hrefStr intoString:nil];
+            if((stringLength - [linkScanner scanLocation]) > 6) [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
+            [linkScanner scanUpToString:closeQuote intoString:&urlString];
 
-            [linkScanner scanUpToString:@">" intoString:nil];
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
-            [linkScanner scanUpToString:@"</a" intoString:&omniTitleString];
+            [linkScanner scanUpToString:gtSign intoString:nil];
+            if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
+            [linkScanner scanUpToString:Aclose intoString:&omniTitleString];
             
             if(omniTitleString){
                 // decode html stuff
@@ -137,14 +148,14 @@ static NSMenu   *omniTopMenu;
                                      keyEquivalent:@""
                                  representedObject:markedLink];
         
-        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] compare:@"/dl>"]){
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
+        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] compare:DLclose]){
+            if((stringLength - [linkScanner scanLocation]) > 4) [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
             if([omniBookmarksMenu isNotEqualTo:omniTopMenu]){
                 omniBookmarksMenu = omniBookmarksSupermenu;
                 omniBookmarksSupermenu = [omniBookmarksSupermenu supermenu];
             }
         }else{
-            [linkScanner scanUpToString:@"<" intoString:nil];
+            [linkScanner scanUpToString:ltSign intoString:nil];
             if(![linkScanner isAtEnd])
                 [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
         }
