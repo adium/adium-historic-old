@@ -16,25 +16,26 @@
 
 - (void)installPlugin
 {
-    //Add/Edit Link... menu item (edit menu)
-    menu_EditLink = [[[NSMenuItem alloc] initWithTitle:EDIT_LINK_TITLE
-                                                target:self
-                                                action:@selector(editFormattedLink:)
-                                         keyEquivalent:@"k"] autorelease];
-    [[adium menuController] addMenuItem:menu_EditLink toLocation:LOC_Edit_Additions];
-    
-    //context menu
-    contextMenu_EditLink = [[menu_EditLink copy] autorelease];
-    [contextMenu_EditLink setKeyEquivalent:@""];
-    [[adium menuController] addContextualMenuItem:contextMenu_EditLink toLocation:Context_TextView_LinkAction];
-    
-    if(![[adium preferenceController] preferenceForKey:INITAL_FAVES group:PREF_GROUP_GENERAL]){
-        [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LINK_MANAGEMENT_DEFAULTS forClass:[self class]]
+	NSMenuItem	*menuItem;
+	
+	//Setup our preferences
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LINK_MANAGEMENT_DEFAULTS forClass:[self class]]
                                           forGroup:PREF_GROUP_LINK_FAVORITES];
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:YES] forKey:INITAL_FAVES group:PREF_GROUP_GENERAL];
-    }
-    
     preferences = [[SHLinkFavoritesPreferences preferencePane] retain];
+
+    //Add/Edit Link... menu item (edit menu)
+    menuItem = [[[NSMenuItem alloc] initWithTitle:EDIT_LINK_TITLE
+										   target:self
+										   action:@selector(editFormattedLink:)
+									keyEquivalent:@"k"] autorelease];
+    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Edit_Additions];
+    
+    //Context menu
+    menuItem = [[[NSMenuItem alloc] initWithTitle:EDIT_LINK_TITLE
+										   target:self
+										   action:@selector(editFormattedLink:)
+									keyEquivalent:@""] autorelease];
+    [[adium menuController] addContextualMenuItem:menuItem toLocation:Context_TextView_LinkAction];
 }
 
 - (void)uninstallPlugin
