@@ -5167,7 +5167,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			name = AIEmoticonPackPreviewController.h;
-			path = plugins/emoticons/AIEmoticonPackPreviewController.h;
+			path = Plugins/Emoticons/AIEmoticonPackPreviewController.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -5176,7 +5176,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIEmoticonPackPreviewController.m;
-			path = plugins/emoticons/AIEmoticonPackPreviewController.m;
+			path = Plugins/Emoticons/AIEmoticonPackPreviewController.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
