@@ -64,7 +64,7 @@ static NSImage *pushIndicatorImage = nil;
     currentHistoryLocation = 0;
     [self setDrawsBackground:YES];
     _desiredSizeCached = NSMakeSize(0,0);
-
+    
     //
     if(!pushIndicatorImage) pushIndicatorImage = [[AIImageUtilities imageNamed:@"stackImage" forClass:[self class]] retain];
 
@@ -455,6 +455,40 @@ static NSImage *pushIndicatorImage = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self];
         lastPostedSize = [self desiredSize];
     }
+}
+
+
+//Keyboard navigation ------------------------------------------------------------------------
+//Page up or down in the message view
+- (void)scrollPageUp:(id)sender
+{
+    if([messageScrollView respondsToSelector:@selector(pageUp:)]){
+	[messageScrollView pageUp:nil];
+    }
+}
+- (void)scrollPageDown:(id)sender
+{
+    if([messageScrollView respondsToSelector:@selector(pageDown:)]){
+	[messageScrollView pageDown:nil];
+    }
+}
+
+//Scroll the message view up or down
+//- (void)moveToEndOfParagraph:(id)sender
+- (void)moveForward:(id)sender
+{
+    NSRect	visibleRect = [messageScrollView documentVisibleRect];
+    
+    visibleRect.origin.y += [messageScrollView verticalLineScroll] * 2;
+    [[messageScrollView documentView] scrollRectToVisible:visibleRect];    
+}
+//- (void)moveToBeginningOfParagraph:(id)sender
+- (void)moveBackward:(id)sender
+{
+    NSRect	visibleRect = [messageScrollView documentVisibleRect];
+    
+    visibleRect.origin.y -= [messageScrollView verticalLineScroll] * 2;
+    [[messageScrollView documentView] scrollRectToVisible:visibleRect];    
 }
 
 
