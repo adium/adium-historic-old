@@ -494,12 +494,15 @@
 	}
 	
 	if(row != -1){
+		//Select the best matching row
 		if([NSApp isOnTigerOrBetter]){
 			[outlineView selectRowIndexes:[NSClassFromString(@"NSIndexSet") indexSetWithIndex:row]	byExtendingSelection:NO];
-			
 		}else{
 			[outlineView selectRow:row byExtendingSelection:NO];
 		}
+
+		//Scroll the selection so it's visible
+		[outlineView scrollRectToVisible:[outlineView rectOfRow:row]];
 	}
 }
 
