@@ -100,6 +100,7 @@
 #import <AIUtilities/ESBundleAdditions.h>
 #import <AIUtilities/ESDateFormatterAdditions.h>
 #import <AIUtilities/ESDelayedTextField.h>
+#import <AIUtilities/ESExpandedRecursiveLock.h>
 #import <AIUtilities/ESFileWrapperExtension.h>
 #import <AIUtilities/ESFlexibleToolbarItem.h>
 #import <AIUtilities/ESFloater.h>
