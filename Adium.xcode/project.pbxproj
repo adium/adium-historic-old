@@ -59,6 +59,20 @@
 			settings = {
 			};
 		};
+		07AF3C5907D4897200409BC8 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "pref-messagehistory.png";
+			path = "Resources/pref-messagehistory.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07AF3C5A07D4897300409BC8 = {
+			fileRef = 07AF3C5907D4897200409BC8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //070
 //071
 //072
@@ -7293,6 +7307,7 @@
 				4BB5B78207D2DC4900CFE06F,
 				9E124DF107D34C9100AA91C5,
 				9E124DF207D34C9100AA91C5,
+				07AF3C5A07D4897300409BC8,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19610,6 +19625,7 @@
 				6E7C19BA0623BF7F008A1C99,
 				6ECFABC40622370D001C7E93,
 				34D832BD07CBD641006466F2,
+				07AF3C5907D4897200409BC8,
 			);
 			isa = PBXGroup;
 			name = "Message History";
