@@ -94,19 +94,13 @@
 															desiredHeight:autoResizeVertically];
 
 		if(!NSEqualRects(currentFrame, desiredFrame)){
-#warning I have resize animation on at the moment, why? ...
-/*
- because with animation off the setFrame: method works unreliable when called from here.  Setting this
- back to NO will cause the contact list to jump around in unpredictable ways when expanding and
- collapsing groups when there is a list scrollbar appearing and disappearing in response to those
- groups collapsing and expanding.  I will look into this later and see if there is a solution, but if you think you
- have one feel free to try before then :)
- */
-			[theWindow setFrame:desiredFrame display:YES animate:YES];
+			//We must set the min/max first, otherwise our setFrame will be restricted by them and not produce the
+			//expected results
 			[theWindow setMinSize:NSMakeSize((autoResizeHorizontally ? desiredFrame.size.width : minWindowSize.width),
 											 (autoResizeVertically ? desiredFrame.size.height : minWindowSize.height))];
 			[theWindow setMaxSize:NSMakeSize((autoResizeHorizontally ? desiredFrame.size.width : 10000),
 											 (autoResizeVertically ? desiredFrame.size.height : 10000))];
+			[theWindow setFrame:desiredFrame display:YES animate:NO];
 		}
     }
 }
