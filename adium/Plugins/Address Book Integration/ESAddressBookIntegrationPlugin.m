@@ -58,6 +58,11 @@
 											 selector:@selector(addressBookChanged:)
 												 name:kABDatabaseChangedExternallyNotification
 											   object:nil];
+    //Observe account changes
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(accountListChanged:)
+									   name:Account_ListChanged
+									 object:nil];	
 }
 
 - (void)uninstallPlugin
@@ -243,6 +248,11 @@
     [self updateSelf];
 }
 
+- (void)accountListChanged:(NSNotification *)notification
+{
+	[self updateSelf];
+}
+
 - (void)updateSelf
 {
     NS_DURING 
@@ -268,7 +278,6 @@
 					NSEnumerator	*accountsArray = [[[adium accountController] accountsWithServiceID:serviceID] objectEnumerator];
 					AIAccount		*account;
 					
-					#warning Jorge: This is not enumerating at all, hence the AB integration for the "me" card is not working. No idea why
 					//Look at each account on this service, searching for one a matching UID
 					while (account = [accountsArray nextObject]){
 						//An ABPerson may have multiple names on a given service; iterate through them
