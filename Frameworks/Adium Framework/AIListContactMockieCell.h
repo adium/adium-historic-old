@@ -8,6 +8,7 @@
 #import "AIListContactCell.h"
 
 @interface AIListContactMockieCell : AIListContactCell {
+	NSBezierPath	*lastBackgroundBezierPath;
 }
 
 @end

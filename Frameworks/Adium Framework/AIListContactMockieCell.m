@@ -12,11 +12,29 @@
 
 @implementation AIListContactMockieCell
 
+- (id)init
+{
+	[super init];
+	
+	lastBackgroundBezierPath = nil;
+	
+	return(self);
+}
+
 //Copy
 - (id)copyWithZone:(NSZone *)zone
 {
-	id newCell = [super copyWithZone:zone];
+	AIListContactMockieCell *newCell = [super copyWithZone:zone];
+	newCell->lastBackgroundBezierPath = [lastBackgroundBezierPath retain];
+	
 	return(newCell);
+}
+
+- (void)dealloc
+{
+	[lastBackgroundBezierPath release]; lastBackgroundBezierPath = nil;
+	
+	[super dealloc];
 }
 
 //Draw the background of our cell
@@ -31,11 +49,16 @@
 		//at the top and bottom of the groups.
 		labelColor = [self labelColor];
 		[(labelColor ? labelColor : [self backgroundColor]) set];
-		
+
+		[lastBackgroundBezierPath release];
+
 		//Draw the bottom corners rounded if this is the last cell in a group
 		if(row >= [controlView numberOfRows]-1 || [controlView isExpandable:[controlView itemAtRow:row+1]]){
-			[[NSBezierPath bezierPathWithRoundedBottomCorners:rect radius:MOCKIE_RADIUS] fill];
+			lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedBottomCorners:rect radius:MOCKIE_RADIUS] retain];
+			[lastBackgroundBezierPath fill];
 		}else{
+			lastBackgroundBezierPath = nil;
+
 			[NSBezierPath fillRect:rect];
 		}
 	}
@@ -48,10 +71,14 @@
 		AIGradient	*gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
 		int			row = [controlView rowForItem:listObject];
 		
+		[lastBackgroundBezierPath release];
+
 		//Draw the bottom corners rounded if this is the last cell in a group
 		if(row >= [controlView numberOfRows]-1 || [controlView isExpandable:[controlView itemAtRow:row+1]]){
-			[gradient drawInBezierPath:[NSBezierPath bezierPathWithRoundedBottomCorners:cellFrame radius:MOCKIE_RADIUS]];
+			lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedBottomCorners:cellFrame radius:MOCKIE_RADIUS] retain];
+			[gradient drawInBezierPath:lastBackgroundBezierPath];
 		}else{
+			lastBackgroundBezierPath = nil;
 			[gradient drawInRect:cellFrame];
 		}
 	}
@@ -62,6 +89,27 @@
 - (BOOL)drawGridBehindCell
 {
 	return(NO);
+}
+
+//User Icon, clipping to the last bezier path (which should have been part of this same drawing operation) if applicable
+- (NSRect)drawUserIconInRect:(NSRect)inRect position:(IMAGE_POSITION)position
+{
+	NSRect	returnRect;
+	
+	if (lastBackgroundBezierPath){
+		[NSGraphicsContext saveGraphicsState];
+
+		[lastBackgroundBezierPath setClip];
+	
+		returnRect = [super drawUserIconInRect:inRect position:position];
+
+		[NSGraphicsContext restoreGraphicsState];
+	
+	}else{
+		returnRect = [super drawUserIconInRect:inRect position:position];
+	}
+	
+	return(returnRect);
 }
 
 @end
