@@ -17,17 +17,22 @@ static NSMutableCharacterSet *endSet = nil;
 //default initializer - use strict checking by default
 -(id)init
 {
-    return [self initWithStrictChecking:YES];
+	if (self = [super init]){
+		useStrictChecking = YES;
+		SHStringOffset = 0;
+	}
+	
+    return(self);
 }
 
 //init with a user specified value for strict checking
 -(id)initWithStrictChecking:(BOOL)flag
 {
-    if(self = [super init]) {
-        useStrictChecking = flag;
-        SHStringOffset = 0;
-    }
-    return self;
+	if (self = [self init]){
+		useStrictChecking = flag;
+	}
+
+    return(self);
 }
 
 #pragma mark utility
@@ -50,11 +55,17 @@ static NSMutableCharacterSet *endSet = nil;
 // method to determine the validity of a given string, only place where flex is called
 -(BOOL)isStringValidURL:(NSString *)inString
 {
-    validStatus = SH_URL_INVALID; // assume the URL is invalid
     SH_BUFFER_STATE buf;  // buffer for flex to scan from
-    unsigned utf8Length = strlen([inString UTF8String]); // length of the string in utf-8
-    // initialize the buffer (flex automatically switches to the buffer in this function)
-    buf = SH_scan_string([inString UTF8String]);
+	const char		*inStringUTF8;
+    unsigned		utf8Length;
+    
+	validStatus = SH_URL_INVALID; // assume the URL is invalid
+
+	inStringUTF8 = [inString UTF8String];
+	utf8Length = strlen(inStringUTF8); // length of the string in utf-8
+    
+	// initialize the buffer (flex automatically switches to the buffer in this function)
+    buf = SH_scan_string(inStringUTF8);
 
     // call flex to parse the input
     validStatus = SHlex();
