@@ -273,12 +273,12 @@ if [ "$changelog" == "yes" ] ; then
 	fi
 
 	if [ "$log" == "normal" ] ; then	# Don't Log
-		$adium_co_dir/Utilities/Build/cvs2cl.pl --no-times --day-of-week --prune --hide-filenames --file $adium_co_dir/CompleteChanges >& /dev/null
-		$adium_co_dir/Utilities/Build/cvs2cl.pl --no-times --day-of-week -l "-d'>=$lastbuild'" --prune --hide-filenames --file $adium_co_dir/ChangeLog_$prettydate >& /dev/null
+		$adium_co_dir/Utilities/Build/cvs2cl.pl --no-times --day-of-week --prune --hide-filenames --file $adium_co_dir/CompleteChanges --ignore theList.txt >& /dev/null
+		$adium_co_dir/Utilities/Build/cvs2cl.pl --no-times --day-of-week -l "-d'>=$lastbuild'" --prune --hide-filenames --file $adium_co_dir/ChangeLog_$prettydate --ignore theList.txt >& /dev/null
 		ln -s $adium_co_dir/ChangeLog_$prettydate $adium_co_dir/ChangeLog >& /dev/null
 	elif [ "$log" == "verbose" ] ; then
-		$adium_co_dir/Utilities/Build/cvs2cl.pl --no-times --day-of-week --prune --hide-filenames --file $adium_co_dir/CompleteChanges
-		$adium_co_dir/Utilities/Build/cvs2cl.pl --no-times --day-of-week -l "-d'>=$lastbuild'" --prune --hide-filenames --file $adium_co_dir/ChangeLog_$prettydate
+		$adium_co_dir/Utilities/Build/cvs2cl.pl --no-times --day-of-week --prune --hide-filenames --file $adium_co_dir/CompleteChanges --ignore theList.txt
+		$adium_co_dir/Utilities/Build/cvs2cl.pl --no-times --day-of-week -l "-d'>=$lastbuild'" --prune --hide-filenames --file $adium_co_dir/ChangeLog_$prettydate --ignore theList.txt
 		ln -s $adium_co_dir/ChangeLog_$prettydate $adium_co_dir/ChangeLog
 	fi
 	if !([ -e $adium_co_dir/ChangeLog_$prettydate ]); then
@@ -332,6 +332,11 @@ if [ "$copy_to_sourceforge" == "yes" ] ; then
        ssh shell.sf.net ln -fs \
        /home/groups/a/ad/adium/htdocs/downloads/Adium_$prettydate.dmg \
        /home/groups/a/ad/adium/htdocs/downloads/Adium2.dmg
+
+ 	$adium_co_dir/Utilities/listToHTML.py $adium_co_dir/theList.txt theList.html
+	scp theList.html $username@shell.sf.net:/home/groups/a/ad/Adium/htdocs/theList.html
+
+	scp $adium_co_dir/build/version.plist  $username@shell.sf.net:/home/groups/a/ad/Adium/htdocs/version.plist
 fi
 
 # Get rid of old lastbuild log
