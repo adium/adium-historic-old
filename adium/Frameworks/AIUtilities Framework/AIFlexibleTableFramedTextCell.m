@@ -311,6 +311,7 @@
     if(borderColor){
         [borderColor set];
         if(drawSides){
+            [NSBezierPath setDefaultLineWidth:1.5];
             [NSBezierPath strokeLineFromPoint:NSMakePoint(frame.origin.x + ALIAS_SHIFT_X, frame.origin.y)
                                       toPoint:NSMakePoint(frame.origin.x + ALIAS_SHIFT_X, frame.origin.y + frame.size.height)];
             [NSBezierPath strokeLineFromPoint:NSMakePoint(frame.origin.x + frame.size.width + ALIAS_SHIFT_X, frame.origin.y)
