@@ -79,11 +79,9 @@
             ABPerson * person = [results objectAtIndex:0];
             
             if (person) {
-                //Begin the image load if appropriate
-                if (enableImages) {
-                    int tag = [person beginLoadingImageDataForClient:self];
-                    [trackingDict setObject:inObject forKey:[NSNumber numberWithInt:tag]];
-                }
+                //Begin the image load
+				int tag = [person beginLoadingImageDataForClient:self];
+				[trackingDict setObject:inObject forKey:[NSNumber numberWithInt:tag]];
                 
                 //Load the name if appropriate
                 if (displayFormat != None) {
@@ -147,7 +145,6 @@
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
         //load new displayFormat
         displayFormat = [[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue];
-        enableImages = [[prefDict objectForKey:KEY_AB_ENABLE_IMAGES] boolValue];
         automaticSync = [[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue];
         useNickName = [[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue];
         [self updateAllContacts];
