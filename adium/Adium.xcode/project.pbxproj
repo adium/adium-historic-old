@@ -5364,6 +5364,7 @@
 				34D509B206A4A82400334A7A,
 				34A65D6E06A5ABC500898470,
 				34A65D6F06A5ABC500898470,
+				7EF3C3BE06A5C4AF005307A6,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20624,6 +20625,7 @@
 		};
 		7E824CCD06387FAF00813072 = {
 			children = (
+				7EF3C3BD06A5C4AF005307A6,
 				7E824CDB06387FAF00813072,
 				7E824CDC06387FAF00813072,
 				7E824CD106387FAF00813072,
@@ -21026,6 +21028,19 @@
 			name = Prefs;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		7EF3C3BD06A5C4AF005307A6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			path = linkToolbar.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7EF3C3BE06A5C4AF005307A6 = {
+			fileRef = 7EF3C3BD06A5C4AF005307A6;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 //7E0
 //7E1
