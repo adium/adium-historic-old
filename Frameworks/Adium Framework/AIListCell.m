@@ -18,7 +18,7 @@
 
 @implementation AIListCell
 
-static NSParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
+static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 
 //Init
 - (id)init
@@ -40,11 +40,11 @@ static NSParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	
 	useAliasesAsRequested = YES;
 	
-	if (!leftParagraphStyleWithTruncatingTail){
-		leftParagraphStyleWithTruncatingTail = [[NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
-																	   lineBreakMode:NSLineBreakByTruncatingTail] retain];
+	if(!leftParagraphStyleWithTruncatingTail){
+		leftParagraphStyleWithTruncatingTail = [[NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
+																			  lineBreakMode:NSLineBreakByTruncatingTail] retain];
 	}
-
+	
     return(self);
 }
 
@@ -300,7 +300,7 @@ static NSParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	}
 
 	//Draw (centered vertical)
-	float half = (rect.size.height - labelFontHeight) / 2.0;
+	int half = ceil((rect.size.height - labelFontHeight) / 2.0);
 	[displayName drawInRect:NSMakeRect(rect.origin.x,
 									   rect.origin.y + half,
 									   rect.size.width,
@@ -355,9 +355,10 @@ static NSParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 {
 	NSMutableDictionary	*labelAttributes;
 	NSDictionary		*additionalAttributes = [self additionalLabelAttributes];
-
 	NSColor				*currentTextColor = ([self cellIsSelected] ? [self invertedTextColor] : [self textColor]);
-	
+
+	[leftParagraphStyleWithTruncatingTail setMaximumLineHeight:(float)labelFontHeight];
+
 	if (additionalAttributes){
 		labelAttributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 			currentTextColor, NSForegroundColorAttributeName,

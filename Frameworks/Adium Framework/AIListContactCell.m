@@ -172,9 +172,10 @@
 - (NSDictionary *)statusAttributes
 {
 	if(!_statusAttributes){
-		NSParagraphStyle	*paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
-																	 lineBreakMode:NSLineBreakByTruncatingTail];
-		
+		NSMutableParagraphStyle	*paragraphStyle = [NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
+																				lineBreakMode:NSLineBreakByTruncatingTail];
+		[paragraphStyle setMaximumLineHeight:(float)labelFontHeight];
+
 		_statusAttributes = [[NSDictionary dictionaryWithObjectsAndKeys:
 			paragraphStyle, NSParagraphStyleAttributeName,
 			[self statusColor], NSForegroundColorAttributeName,
@@ -475,10 +476,10 @@
 			int half, offset;
 			
 			if(drawUnder){
-				half = (drawRect.size.height - statusFontHeight) / 2.0;
+				half = ceil((drawRect.size.height - statusFontHeight) / 2.0);
 				offset = 0;
 			}else{
-				half = (drawRect.size.height - labelFontHeight) / 2.0;
+				half = ceil((drawRect.size.height - labelFontHeight) / 2.0);
 				offset = (labelFontHeight - statusFontHeight) + ([[self font] descender] - [[self statusFont] descender]);
 			}
 
