@@ -16,7 +16,6 @@ BOOL pantherOrLater;
 - (void)awakeFromNib
 {
     NSParagraphStyle    *parrafo = [NSParagraphStyle styleWithAlignment:NSCenterTextAlignment];
-    NSShadow		*textShadow = nil;
     
     backdropImage = [[NSImage alloc] initWithContentsOfFile:
         [[NSBundle bundleForClass:[self class]] pathForResource:@"backdrop" ofType:@"png"]];
@@ -33,36 +32,56 @@ BOOL pantherOrLater;
     
     if (pantherOrLater) {
         NSSize      shadowSize;
-        textShadow = [[[NSShadow alloc] init] autorelease];
+        NSShadow    *textShadow = [[[NSShadow alloc] init] autorelease];
         shadowSize.width = 0.0;
         shadowSize.height = -2.0;
         [textShadow setShadowOffset:shadowSize];
         [textShadow setShadowBlurRadius:3.0];
+        
+        // Set the attributes for the main buddy name and the other strings
+        mainAttributes = [[NSMutableDictionary dictionaryWithObjectsAndKeys:
+                    [NSColor whiteColor], NSForegroundColorAttributeName,
+                    textShadow, NSShadowAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
+        mainAttributesMask = [[NSMutableDictionary dictionaryWithObjectsAndKeys:
+                    [NSColor darkGrayColor], NSForegroundColorAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
+        secondaryAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:14.0], NSFontAttributeName, 
+                    [NSColor whiteColor], NSForegroundColorAttributeName,
+                    textShadow, NSShadowAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
+        secondaryAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:14.0], NSFontAttributeName, 
+                    [NSColor darkGrayColor], NSForegroundColorAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
+        mainStatusAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:18.0], NSFontAttributeName, 
+                    [NSColor whiteColor], NSForegroundColorAttributeName,
+                    textShadow, NSShadowAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
+        mainStatusAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:18.0], NSFontAttributeName, 
+                    [NSColor darkGrayColor], NSForegroundColorAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
+    } else {
+    
+        // Set the attributes for the main buddy name and the other strings
+        mainAttributes = [[NSMutableDictionary dictionaryWithObjectsAndKeys:
+                    [NSColor whiteColor], NSForegroundColorAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
+        mainAttributesMask = [[NSMutableDictionary dictionaryWithObjectsAndKeys:
+                    [NSColor darkGrayColor], NSForegroundColorAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
+        secondaryAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:14.0], NSFontAttributeName, 
+                    [NSColor whiteColor], NSForegroundColorAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
+        secondaryAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:14.0], NSFontAttributeName, 
+                    [NSColor darkGrayColor], NSForegroundColorAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
+        mainStatusAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:18.0], NSFontAttributeName, 
+                    [NSColor whiteColor], NSForegroundColorAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
+        mainStatusAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:18.0], NSFontAttributeName, 
+                    [NSColor darkGrayColor], NSForegroundColorAttributeName,
+                    parrafo, NSParagraphStyleAttributeName, nil] retain];
     }
-    
-    // Set the attributes for the main buddy name and the other strings
-    mainAttributes = [[NSMutableDictionary dictionaryWithObjectsAndKeys:
-                    [NSColor whiteColor], NSForegroundColorAttributeName,
-                    textShadow, NSShadowAttributeName,
-                    parrafo, NSParagraphStyleAttributeName, nil] retain];
-    mainAttributesMask = [[NSMutableDictionary dictionaryWithObjectsAndKeys:
-                    [NSColor darkGrayColor], NSForegroundColorAttributeName,
-                    parrafo, NSParagraphStyleAttributeName, nil] retain];
-    secondaryAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:14.0], NSFontAttributeName, 
-                    [NSColor whiteColor], NSForegroundColorAttributeName,
-                    textShadow, NSShadowAttributeName,
-                    parrafo, NSParagraphStyleAttributeName, nil] retain];
-    secondaryAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:14.0], NSFontAttributeName, 
-                    [NSColor darkGrayColor], NSForegroundColorAttributeName,
-                    parrafo, NSParagraphStyleAttributeName, nil] retain];
-    mainStatusAttributes = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:18.0], NSFontAttributeName, 
-                    [NSColor whiteColor], NSForegroundColorAttributeName,
-                    textShadow, NSShadowAttributeName,
-                    parrafo, NSParagraphStyleAttributeName, nil] retain];
-    mainStatusAttributesMask = [[NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:18.0], NSFontAttributeName, 
-                    [NSColor darkGrayColor], NSForegroundColorAttributeName,
-                    parrafo, NSParagraphStyleAttributeName, nil] retain];
-    
 }
 
 - (void)dealloc
@@ -88,8 +107,8 @@ BOOL pantherOrLater;
     NSPoint         buddyIconPoint;
     NSRect          buddyIconLabelRect, buddyNameRect, buddyStatusRect, queueRect;
     NSString        *tempString;
-    NSShadow        *tempShadow = [[[NSShadow alloc] init] autorelease];
-    NSShadow        *noShadow = [[[NSShadow alloc] init] autorelease];
+    NSShadow        *tempShadow = nil;
+    NSShadow        *noShadow = nil;
     NSSize          buddyNameSize;
     float           buddyNameFontSize = 24.0;
     
@@ -124,6 +143,8 @@ BOOL pantherOrLater;
     
     // Set up the shadow for Panther or later
     if (pantherOrLater) {
+        tempShadow = [[[NSShadow alloc] init] autorelease];
+        noShadow = [[[NSShadow alloc] init] autorelease];
         NSSize      shadowSize;
         shadowSize.width = 0.0;
         shadowSize.height = -3.0;
