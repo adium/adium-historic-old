@@ -71,13 +71,15 @@
 //Open a new chat window
 - (id)openChat:(AIChat *)chat inContainerNamed:(NSString *)containerName atIndex:(int)index
 {
-	AIMessageTabViewItem	*messageTab = [[chat statusDictionary] objectForKey:@"MessageTabViewItem"];
+	AIMessageTabViewItem		*messageTab = [[chat statusDictionary] objectForKey:@"MessageTabViewItem"];
+	AIMessageWindowController	*container = nil;
+	AIMessageViewController 	*messageView = nil;
 	
 	//Create the messasge tab (if necessary)
 	if(!messageTab){
-		AIMessageWindowController	*container = [self openContainerNamed:containerName];
-		AIMessageViewController 	*messageView = [AIMessageViewController messageViewControllerForChat:chat];
-		
+		container = [self openContainerNamed:containerName];
+		messageView = [AIMessageViewController messageViewControllerForChat:chat];
+
 		//Add chat to container
 		messageTab = [AIMessageTabViewItem messageTabWithView:messageView];
 		[[chat statusDictionary] setObject:messageTab forKey:@"MessageTabViewItem"];
@@ -86,6 +88,12 @@
 
     //Display the account selector (if multiple accounts are available for sending to the contact)
 	[[messageTab messageViewController] setAccountSelectionMenuVisible:YES];
+	
+	//Open the container window.  We wait until after the chat has been added to the container
+	//before making it visible so window opening looks cleaner.
+	if(container && !applicationIsHidden && ![[container window] isVisible]){
+		[container showWindowInFront:!([[adium interfaceController] activeChat])];
+	}
 	
 	return(messageTab);
 }
@@ -190,12 +198,15 @@
 		container = [AIMessageWindowController messageWindowControllerForInterface:self withName:containerName];
 		[containers setObject:container forKey:containerName];
 		
-		if(!applicationIsHidden){
-			//If another chat is open, open behind it
-			[container showWindowInFront:!([[adium interfaceController] activeChat])];
-		}else{
-			[delayedContainerShowArray addObject:container];
-		}
+		//If Adium is hidden, remember to open this container later
+		if(applicationIsHidden) [delayedContainerShowArray addObject:container];
+			
+//		if(applicationIsHidden){
+//			//If another chat is open, open behind it
+////			[container showWindowInFront:!([[adium interfaceController] activeChat])];
+//		}else{
+//			[delayedContainerShowArray addObject:container];
+//		}
 	}
 	
 	return(container);

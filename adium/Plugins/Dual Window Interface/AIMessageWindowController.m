@@ -31,6 +31,7 @@
 - (void)_configureToolbar;
 - (BOOL)_resizeTabBarAbsolute:(NSNumber *)absolute;
 - (void)_suppressTabHiding:(BOOL)suppress;
+- (void)_updateWindowTitleAndIcon;
 @end
 
 @implementation AIMessageWindowController
@@ -104,6 +105,9 @@
     while([tabView_messages numberOfTabViewItems] > 0){
         [tabView_messages removeTabViewItem:[tabView_messages tabViewItemAtIndex:0]];
     }
+	
+	//
+	[[self window] addDocumentIconButton];
 }
 
 //Close the message window
@@ -159,11 +163,17 @@
 //		[tabView_customTabs setAllowsTabRearranging:(![[preferenceDict objectForKey:KEY_KEEP_TABS_ARRANGED] boolValue])];
 //		[tabView_customTabs setAllowsTabDragging:(![[preferenceDict objectForKey:KEY_ARRANGE_TABS_BY_GROUP] boolValue])];
 
-		alwaysShowTabs = YES;//![[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
+		alwaysShowTabs = NO;//![[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
 		[self updateTabBarVisibilityAndAnimate:(notification != nil)];
     }
 }
 
+- (void)updateIconForTabViewItem:(AIMessageTabViewItem *)tabViewItem
+{
+	if(tabViewItem == [tabView_messages selectedTabViewItem]){
+		[self _updateWindowTitleAndIcon];
+	}
+}
 
 //Contained Chats ------------------------------------------------------------------------------------------------------
 #pragma mark Contained Chats
@@ -261,18 +271,30 @@
 			[[adium interfaceController] chatDidBecomeActive:[(AIMessageTabViewItem *)tabViewItem chat]];
         }
 		
-        //[self _updateWindowTitle]; //Reflect change in window title
+        [self _updateWindowTitleAndIcon]; //Reflect change in window title
     }
 }
 
 //Update our window title
-- (void)_updateWindowTitle
+- (void)_updateWindowTitleAndIcon
 {
+	//Window Title
     if([tabView_messages numberOfTabViewItems] == 1){
-        [[self window] setTitle:[NSString stringWithFormat:@"%@ : %@", name, [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] label]]];
+        [[self window] setTitle:[NSString stringWithFormat:@"%@", [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] label]]];
     }else{
-        [[self window] setTitle:name/*@"Adium : Messages"*/];
+        [[self window] setTitle:[NSString stringWithFormat:@"%@ Ð %@", name, [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] label]]];
+//        [[self window] setTitle:name/*@"Adium : Messages"*/];
     }
+	
+	//Window Icon (We display state in the window title if tabs are not visible)
+	NSButton	*button = [[self window]standardWindowButton:NSWindowDocumentIconButton];
+	//	NSLog(@"%@",button);
+	
+//	if([tabView_messages numberOfTabViewItems] == 1 && !alwaysShowTabs){
+		[button setImage:[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] stateIcon]];
+//	}else{
+//		[button setImage:nil];
+//	}
 }
 
 
@@ -314,7 +336,7 @@
 - (void)customTabViewDidChangeNumberOfTabViewItems:(AICustomTabsView *)tabView
 {       
     [self updateTabBarVisibilityAndAnimate:([[tabView window] isVisible])];
-    [self _updateWindowTitle];
+    [self _updateWindowTitleAndIcon];
 }
 
 //Tab rearranging

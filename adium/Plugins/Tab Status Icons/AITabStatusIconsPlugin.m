@@ -8,7 +8,7 @@
 #import "AITabStatusIconsPlugin.h"
 
 @interface AITabStatusIconsPlugin (PRIVATE)
-- (NSImage *)_iconForListObject:(AIListObject *)object;
+- (NSImage *)_iconForListObject:(AIListObject *)listObject isTemporary:(BOOL *)isTemporary;
 @end
 
 @implementation AITabStatusIconsPlugin
@@ -43,44 +43,56 @@
 	   [inModifiedKeys containsObject:@"IdleSince"] ||
 	   [inModifiedKeys containsObject:@"Online"]){
 		
-		[[inObject displayArrayForKey:@"Tab Icon"] setObject:[self _iconForListObject:inObject] withOwner:self];
-        modifiedAttributes = [NSArray arrayWithObject:@"Tab Icon"];
+		[[inObject displayArrayForKey:@"Tab Status Icon"] setObject:[self _statusIconForListObject:inObject] withOwner:self];
+		[[inObject displayArrayForKey:@"Tab State Icon"] setObject:[self _stateIconForListObject:inObject] withOwner:self];
+		
+		modifiedAttributes = [NSArray arrayWithObjects:@"Tab State Icon", @"Tab Status Icon", nil];
 	}
 	
 	return(modifiedAttributes);
 }
 
-//Returns the icon for the passed contact
-- (NSImage *)_iconForListObject:(AIListObject *)listObject
+//Returns the state icon for the passed contact (away, idle, online, stranger, ...)
+- (NSImage *)_stateIconForListObject:(AIListObject *)listObject
 {
 	if([listObject integerStatusObjectForKey:@"UnviewedContent"]){
 		return(tabContent);
 		
 	}else{
 		AITypingState typingState = [listObject integerStatusObjectForKey:@"Typing"];
-		NSLog(@"%i",typingState);
+
 		if(typingState == AITyping){
 			return(tabTyping);
 			
 		}else if (typingState == AIEnteredText){
 			return(tabEnteredText);
-			
-		}else if([[listObject numberStatusObjectForKey:@"Away"] boolValue]){
-			return(tabAway);
-			
-		}else if([listObject statusObjectForKey:@"IdleSince"]){
-			return(tabIdle);
-			
-		}else if([[listObject numberStatusObjectForKey:@"Online"] boolValue]){
-			return(tabAvailable);
-			
-		}else if([listObject integerStatusObjectForKey:@"Stranger"]){
-			return(tabStranger);
-			
-		}else{
-			return(tabOffline);
-			
 		}
 	}
+	
+	return(nil);
 }
+
+//Returns the status icon for the passed contact (away, idle, online, stranger, ...)
+- (NSImage *)_statusIconForListObject:(AIListObject *)listObject
+{
+	AITypingState typingState = [listObject integerStatusObjectForKey:@"Typing"];
+	
+	if([[listObject numberStatusObjectForKey:@"Away"] boolValue]){
+		return(tabAway);
+		
+	}else if([listObject statusObjectForKey:@"IdleSince"]){
+		return(tabIdle);
+		
+	}else if([[listObject numberStatusObjectForKey:@"Online"] boolValue]){
+		return(tabAvailable);
+		
+	}else if([listObject integerStatusObjectForKey:@"Stranger"]){
+		return(tabStranger);
+		
+	}else{
+		return(tabOffline);
+		
+	}
+}
+
 @end

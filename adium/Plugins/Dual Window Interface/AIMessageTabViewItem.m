@@ -129,8 +129,9 @@
     NSArray		*keys = [[notification userInfo] objectForKey:@"Keys"];
 
 	//Redraw if the icon has changed
-	if(keys == nil || [keys containsObject:@"Tab Icon"]){
+	if(keys == nil || [keys containsObject:@"Tab State Icon"] || [keys containsObject:@"Tab Status Icon"]){
 		[[[self tabView] delegate] redisplayTabForTabViewItem:self];
+		[[self container] updateIconForTabViewItem:self];
 	}
 	
     //If the list object's display name changed, we resize the tabs
@@ -208,23 +209,28 @@
     }
 }
 
-//Our icon is the status of this contact
-static NSImage *hackIconCache = nil;
+//Return the icon to be used for our tabs.  State gets first priority, then status.
 - (NSImage *)icon
 {
-	NSImage	*icon = [[[[messageView chat] listObject] displayArrayForKey:@"Tab Icon"] objectValue];
-	
-#warning This is a hack to give chats a status icon for now.  Will fix later.
-	if(!icon){
-		if(!hackIconCache) hackIconCache = [[NSImage imageNamed:@"tab-stranger" forClass:[self class]] retain];
-		icon = hackIconCache;
-	}
-	
-	return(icon);
+	NSImage *image = [self stateIcon];
+	return(image ? image : [self statusIcon]);
+}
+
+//Status icon is the status of this contact (away, idle, online, stranger)
+- (NSImage *)statusIcon
+{
+	return([[[[messageView chat] listObject] displayArrayForKey:@"Tab Status Icon"] objectValue]);
+}
+
+//State icon is the state of the contact (Typing, unviewed content)
+- (NSImage *)stateIcon
+{
+	return([[[[messageView chat] listObject] displayArrayForKey:@"Tab State Icon"] objectValue]);
 }
 
 - (NSImage *)image
 {
 	return tabViewItemImage;
 }
+
 @end

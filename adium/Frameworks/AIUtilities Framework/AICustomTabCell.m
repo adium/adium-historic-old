@@ -239,15 +239,14 @@ static NSImage		*tabCloseFrontRollover = nil;
     
 
 	//Left Icon
-	NSImage *leftIcon;
+	NSImage *leftIcon = [tabViewItem icon];
 	
-	if(hoveringClose && (selected || allowsInactiveTabClosing || [NSEvent cmdKey])){		
-//		if(hoveringClose){
+	if((hoveringClose && (selected || allowsInactiveTabClosing || [NSEvent cmdKey])) || !leftIcon){		
+		if(hoveringClose){
 			leftIcon = (trackingClose ? tabCloseFrontPressed : tabCloseFrontRollover);
-//		}else{
-//			leftIcon = ((selected && !ignoreSelection) ? tabCloseFront : tabCloseBack);
-//		}
-		
+		}else{
+			leftIcon = ((selected && !ignoreSelection) ? tabCloseFront : tabCloseBack);
+		}
 		
 		NSRect	closeRect = [self _closeButtonRect];
 		NSSize leftIconSize = closeRect.size;
@@ -261,8 +260,6 @@ static NSImage		*tabCloseFrontRollover = nil;
 		rect.size.width -= TAB_CLOSE_LEFTPAD + leftIconSize.width + TAB_CLOSE_RIGHTPAD + TAB_RIGHT_PAD;
 		
 	}else{
-		leftIcon = [tabViewItem icon];
-		
 		NSSize	leftIconSize = [leftIcon size];
 		NSPoint destPoint = NSMakePoint(frame.origin.x + [tabFrontLeft size].width + TAB_CLOSE_LEFTPAD,
 										((frame.size.height - leftIconSize.height) / 2.0) + TAB_CLOSE_Y_OFFSET);
