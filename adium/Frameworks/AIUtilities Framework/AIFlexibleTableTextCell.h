@@ -30,6 +30,8 @@
     NSTextContainer 		*textContainer;
     NSLayoutManager 		*layoutManager;
     NSRange			glyphRange;
+
+    NSRange			selectionRange;
 }
 
 + (AIFlexibleTableTextCell *)cellWithAttributedString:(NSAttributedString *)inString;
@@ -40,5 +42,6 @@
 - (void)resetCursorRectsInView:(NSView *)controlView visibleRect:(NSRect)visibleRect;
 - (BOOL)usesCursorRects;
 - (NSRange)rangeForWordAtIndex:(int)index;
+- (BOOL)indexIsSelected:(int)index;
 
 @end

@@ -40,6 +40,7 @@
 - (void)_resizeCellsRowHeightsChanged:(BOOL)rowHeightsChanged;
 
 - (void)_resetCursorRects;
+- (NSMutableAttributedString *)selectedString;
 @end
 
 @implementation AIFlexibleTableView
@@ -148,6 +149,7 @@
     AIFlexibleTableCell		*cell;
     int				row, column;
     NSPoint			clickLocation;
+    int				clicked_index;
 
     //Determine the clicked cell/row/column
     clickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -156,46 +158,101 @@
     //Give the cell a chance to process the mouse down
     if(![cell handleMouseDown:theEvent]){
         //Text selection within the cell
-        NSPoint		localPoint;      
+        NSPoint		localPoint;
         int clicks = [theEvent clickCount];
 
-        [self deselectAll];	  //Deselect all text
-
         localPoint = NSMakePoint(clickLocation.x - [cell frame].origin.x, clickLocation.y - [cell frame].origin.y);
-        selection_startRow = row;
-        selection_startColumn = column;
-        selection_endRow = selection_startRow;
-        selection_endColumn = selection_startColumn;
+        clicked_index = [cell characterIndexAtPoint:localPoint];
 
-        if (clicks % 3 == 0)
-            //triple click: select the whole cell
+        BOOL inside = ([cell indexIsSelected:clicked_index]);
+        /*
+         (selection_startRow !(selection_startRow < row && selection_endRow > row) || (selection_startRow > row && selection_endRow < row)) &&
+         ((selection_startColumn < column && selection_endColumn > column ) || (selection_startColumn >= column && selection_endColumn <= column)));
+         */
+        if (inside) //only update if not inside the current selection
         {
-            selection_startIndex = 0;
-            selection_endIndex = 10000; //insert generic big number here
-            [cell selectFrom:selection_startIndex to:selection_endIndex];
+            NSEvent *newEvent;
+            [NSEvent startPeriodicEventsAfterDelay:0.5 withPeriod:0];
+            newEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask];
+            switch ([newEvent type]) {
+                case NSLeftMouseUp:
+                {
+                    NSLog(@"mouseup");
+                    [self deselectAll];	  //Deselect all text
+                    selection_startRow = row;
+                    selection_startColumn = column;
+                    selection_endRow = selection_startRow;
+                    selection_endColumn = selection_startColumn;
+                    selection_startIndex = [cell characterIndexAtPoint:localPoint];
+                    selection_endIndex = selection_startIndex;
+
+                    //Redisplay
+                    [self setNeedsDisplay:YES];
+                    
+                    break;
+                }
+                case NSLeftMouseDragged: //immediate drag
+                case NSPeriodic: //click & drag
+                {
+                    NSSize dragOffset = NSMakeSize(0.0, 0.0);
+                    NSPasteboard *pboard;
+                    NSMutableAttributedString * copyString = [self selectedString];
+
+                    pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
+                    [pboard declareTypes:[NSArray arrayWithObject:NSRTFPboardType] owner:self];
+                    [pboard setData:[copyString RTFFromRange:NSMakeRange(0,[copyString length]) documentAttributes:nil] forType:NSRTFPboardType];
+
+                    NSImage *dragImage = [AIImageUtilities imageNamed:@"Clipping" forClass:[self class]];
+                    [[self superview] dragImage:dragImage at:clickLocation offset:dragOffset
+                                          event:theEvent pasteboard:pboard source:self slideBack:YES];
+                    break;
+                }
+                default:
+                {
+                    NSLog(@"default");
+                    break;
+                }
+            }
+            [NSEvent stopPeriodicEvents];
         }
-
-        else if (clicks % 2 == 0)
-            //double click: select word
+        else // not inside
         {
-            NSRange wordRange = [cell rangeForWordAtIndex:[cell characterIndexAtPoint:localPoint]];
-            selection_startIndex = wordRange.location;
-            selection_endIndex = selection_startIndex + wordRange.length;
-            [cell selectFrom:selection_startIndex to:selection_endIndex];
+            NSLog(@"not inside");
+            [self deselectAll];	  //Deselect all text
+            selection_startRow = row;
+            selection_startColumn = column;
+            selection_endRow = selection_startRow;
+            selection_endColumn = selection_startColumn;
+
+            if (clicks % 3 == 0)
+                //triple click: select the whole cell
+            {
+                selection_startIndex = 0;
+                selection_endIndex = 10000; //insert generic big number here
+                [cell selectFrom:selection_startIndex to:selection_endIndex];
+            }
+
+            else if (clicks % 2 == 0)
+                //double click: select word
+            {
+                NSRange wordRange = [cell rangeForWordAtIndex:[cell characterIndexAtPoint:localPoint]];
+                selection_startIndex = wordRange.location;
+                selection_endIndex = selection_startIndex + wordRange.length;
+                [cell selectFrom:selection_startIndex to:selection_endIndex];
+            }
+
+            else
+                //single click: selection is cleared; this is our new starting/ending point for a drag operation
+            {
+                selection_startIndex = [cell characterIndexAtPoint:localPoint];
+                selection_endIndex = selection_startIndex;
+            }
+
+            //Redisplay
+            [self setNeedsDisplay:YES];
         }
-
-        else
-            //single click: selection is cleared; this is our new starting/ending point for a drag operation 
-        {
-            selection_startIndex = [cell characterIndexAtPoint:localPoint];
-            selection_endIndex = selection_startIndex;
-        }        
-        
-        //Redisplay
-        [self setNeedsDisplay:YES];
     }
 }
-
 
 //Selecting --------------------------------------------------------------------------------
 - (void)deselectAll
@@ -227,11 +284,12 @@
     NSLog(@"selectAll");
 }
 
-- (void)copy:(id)sender
+- (NSMutableAttributedString *)selectedString
 {
     NSMutableAttributedString	*copyString = [[NSMutableAttributedString alloc] init];
     int				row, column, index, lowColumn, highColumn;
-    //    NSLog(@"Began copy operation.");
+//    NSLog(@"start (%i,%i,%i) end (%i,%i,%i)",selection_startRow,selection_startColumn,selection_startIndex,selection_endRow,selection_endColumn,selection_endIndex);
+
     if(selection_startRow == selection_endRow && selection_startColumn == selection_endColumn){ //The selection exists completely within one cell
         AIFlexibleTableCell *startCell = [[self columnAtIndex:selection_startColumn] cellAtIndex:selection_startRow];
         [copyString appendAttributedString:[startCell stringFromIndex:selection_startIndex to:selection_endIndex]];
@@ -268,7 +326,6 @@
         for(row = selection_startRow ; row <= selection_endRow; row++) {
             for(column = lowColumn; column <= highColumn; column++) {
                 AIFlexibleTableCell	*cell = [[self columnAtIndex:column] cellAtIndex:row];
-                //                NSLog(@"Going in, %@",[copyString string]);
                 if(row == selection_startRow && column == selection_startColumn) { //starting cell
                     if (lowColumn == selection_startColumn)  //copy index to end of cell
                         [copyString appendAttributedString:[cell stringFromIndex:selection_startIndex to:10000]];
@@ -283,12 +340,17 @@
                 } else { //intermediary cells - copy entire contents
                     [copyString appendAttributedString:[cell stringFromIndex:0 to:10000]];
                 }
-                //                NSLog(@"Coming out, %@",[copyString string]);
             } //end column for-loop
             if (row != selection_endRow) [copyString appendString:@"\r" withAttributes:nil]; //end line after each row except last
         } //end row for-loop
 
     }
+    return copyString;
+}
+
+- (void)copy:(id)sender
+{
+    NSMutableAttributedString * copyString = [self selectedString];
     [[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSRTFPboardType] owner:nil];
     [[NSPasteboard generalPasteboard] setData:[copyString RTFFromRange:NSMakeRange(0,[copyString length]) documentAttributes:nil] forType:NSRTFPboardType];
 }
@@ -311,6 +373,8 @@
     selection_endIndex = [cell characterIndexAtPoint:NSMakePoint(clickLocation.x - [cell frame].origin.x, clickLocation.y - [cell frame].origin.y)];
     selection_endRow = row;
     selection_endColumn = column;
+
+//    NSLog(@"Dragging: start (%i,%i,%i) end (%i,%i,%i)",selection_startRow,selection_startColumn,selection_startIndex,selection_endRow,selection_endColumn,selection_endIndex);
 
     //Select partial text in the start and end cells
     startCell = [[self columnAtIndex:selection_startColumn] cellAtIndex:selection_startRow];
@@ -348,6 +412,8 @@
 
     //Mark our view for redisplay
     [self setNeedsDisplay:YES];
+    //  }
+    
 }
 
 
