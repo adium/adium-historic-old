@@ -15,7 +15,7 @@
 
 #import "AIOfflineContactHidingPlugin.h"
 
-#define	PREF_GROUP_CONTACT_LIST_DISPLAY @"Contact List Display"
+#define	PREF_GROUP_CONTACT_LIST_DISPLAY         @"Contact List Display"
 #define SHOW_OFFLINE_MENU_TITLE 		@"Show Offline Contacts"
 #define KEY_SHOW_OFFLINE_CONTACTS 		@"Show Offline Contacts"
 
