@@ -28,6 +28,8 @@
     NSRange                                  selectionRange;
     NSResponder                             *editableView;
     
+    SHLinkEditorWindowController            *editorController;
+        
     NSDictionary                            *favoritesDict;
 }
 
@@ -35,6 +37,7 @@
 - (void)initEditLinkWindowControllerWithResponder:(NSResponder *)responder;
 - (void)initAddLinkFavoritesWindowControllerWithView:(NSView *)view;
 
+- (void)windowWillBeginSheet:(NSNotification *)aNotification;
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)cancel:(id)sender;
 

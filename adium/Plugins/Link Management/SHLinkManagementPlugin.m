@@ -47,9 +47,9 @@
     NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
     if([responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]){
         if([(NSTextView *)responder selectedRange].length != 0) {
-            [[[SHLinkEditorWindowController alloc] initEditLinkWindowControllerWithResponder:responder] autorelease];
+            [[SHLinkEditorWindowController alloc] initEditLinkWindowControllerWithResponder:responder];
         }else{ //if nothing selected, add link.
-            [[[SHLinkEditorWindowController alloc] initAddLinkWindowControllerWithResponder:responder] autorelease];
+            [[SHLinkEditorWindowController alloc] initAddLinkWindowControllerWithResponder:responder];
         }
     }
 }
