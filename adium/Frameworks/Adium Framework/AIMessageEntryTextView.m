@@ -528,7 +528,7 @@ static NSImage *pushIndicatorImage = nil;
 #ifdef USE_TEXTVIEW_CONTEXTMENUS
 + (NSMenu *)defaultMenu
 {
-    NSMenu          *superClassMenu = [NSTextView defaultMenu];
+    NSMenu          *superClassMenu = [[NSTextView defaultMenu] copy];
     NSMutableArray  *topItemsArray = nil;
     NSMutableArray  *bottomItemsArray = nil;
     NSEnumerator    *enumerator;
@@ -568,7 +568,7 @@ static NSImage *pushIndicatorImage = nil;
             [superClassMenu addItem:[menuItem copy]];
         }
     }
-    return [superClassMenu copy]; //return a copy of the menu
+    return superClassMenu; //return the menu
 }
 #endif
 @end
