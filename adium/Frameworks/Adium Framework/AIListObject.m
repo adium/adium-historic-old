@@ -82,7 +82,9 @@ DeclareString(FormattedUID);
 	//
     [displayDictionary release];
     [statusDictionary release];
+	[changedStatusKeys release];
     [serviceID release];
+	[UID release];
 
     [super dealloc];
 }
