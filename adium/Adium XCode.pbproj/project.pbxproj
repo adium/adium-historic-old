@@ -357,6 +357,7 @@
 				9E87CDF105748FFA001CB886,
 				9E87CF580574909B001CB886,
 				342DC47505783AF0000E1D83,
+				B799BB0005793A6400338E54,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -1469,6 +1470,7 @@
 				6C644D3805776BC700D79723,
 				6C644D3A05776BC700D79723,
 				6C644D3E05776BF000D79723,
+				B799BC8405793C1300338E54,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1499,6 +1501,7 @@
 				3419F34B05314BA100C68BA3,
 				4B037C110558B6CD00FF5530,
 				6CF426660577622300F27FAA,
+				B799BC8205793C1300338E54,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1531,6 +1534,7 @@
 				6C644D3905776BC700D79723,
 				6C644D3B05776BC700D79723,
 				6C644D3F05776BF000D79723,
+				B799BC8305793C1300338E54,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2319,7 +2323,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F3B305314BE000C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "SQL Logger.AdiumPlugin";
@@ -5389,7 +5393,6 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = "Plists/Open Message Window Contact Alert.plist";
 				INSTALL_PATH = "";
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -5404,7 +5407,7 @@
 			isa = PBXNativeTarget;
 			name = "Open Message Window Contact Alert";
 			productName = "Open Message Window Contact Alert";
-			productReference = 344AB2A50579128A00384CEE;
+			productReference = B799BB0005793A6400338E54;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
 <plist version=\"1.0\">
@@ -5433,15 +5436,6 @@
 </plist>
 ";
 			productType = "com.apple.product-type.bundle";
-		};
-		344AB2A50579128A00384CEE = {
-			expectedFileType = "wrapper.plug-in";
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			name = "Open Message Window Contact Alert.bundle";
-			path = "/Users/evands/adium/build/Open Message Window Contact Alert.bundle";
-			refType = 0;
-			sourceTree = "<absolute>";
 		};
 		344AB2AD057912A300384CEE = {
 			fileRef = 34BD9DE105314751000AB133;
@@ -25420,8 +25414,61 @@
 //B72
 //B73
 //B74
+		B799BB0005793A6400338E54 = {
+			expectedFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Open Message Window Contact Alert.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B799BC7F05793C1200338E54 = {
+			expectedFileType = text.plist;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = SQLLogging.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		B799BC8005793C1200338E54 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = JMSQLLoggerAdvancedPreferences.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		B799BC8105793C1300338E54 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = JMSQLLoggerAdvancedPreferences.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		B799BC8205793C1300338E54 = {
+			fileRef = B799BC7F05793C1200338E54;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B799BC8305793C1300338E54 = {
+			fileRef = B799BC8005793C1200338E54;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B799BC8405793C1300338E54 = {
+			fileRef = B799BC8105793C1300338E54;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		B7AE664D0465778E0051E914 = {
 			children = (
+				B799BC7F05793C1200338E54,
+				B799BC8005793C1200338E54,
+				B799BC8105793C1300338E54,
 				B7AE664F0465778E0051E914,
 				B7AE66500465778E0051E914,
 				341591E005463DA700291275,
