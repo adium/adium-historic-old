@@ -83,9 +83,6 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	[serviceMenu setAutoenablesItems:YES];
 	[button_newAccount setMenu:serviceMenu];
 
-	//Observe accounts so we can display accurate status
-    [[adium contactController] registerListObjectObserver:self];
-
 	//Observe status icon pack changes
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(statusIconsChanged:)
@@ -268,7 +265,8 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 									 object:nil];
 	[self accountListChanged:nil];
 	
-	[[adium contactController] registerListObjectObserver:self];
+	//Observe accounts so we can display accurate status
+    [[adium contactController] registerListObjectObserver:self];
 }
 
 /*
