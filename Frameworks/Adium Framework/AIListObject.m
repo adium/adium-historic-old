@@ -42,7 +42,6 @@ DeclareString(FormattedUID);
     containingObject = nil;
     UID = [inUID retain];	
 	service = inService;
-	internalObjectID = nil;
 		
 	visible = YES;
 
