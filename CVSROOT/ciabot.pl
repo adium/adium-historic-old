@@ -24,16 +24,13 @@
 # Note that the last three parameters are optional, you can alternatively change
 # the defaults below in the configuration section.
 #
-# $Id: ciabot.pl,v 1.8 2003/12/20 02:52:31 jmelloy Exp $
+# $Id: ciabot.pl,v 1.9 2003/12/20 03:26:41 jmelloy Exp $
 
 use strict;
 use vars qw ($project $from_email $dest_email $sendmail $max_lines $max_files
 		$sync_delay $xml $commit_template $branch_template
 		$trimmed_template);
 
-for(my $i = 0; $i < @ARGV; $i++){
-    print $ARGV[$i] . "\n";
-}
 
 ### Configuration
 
