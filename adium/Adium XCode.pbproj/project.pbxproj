@@ -5069,6 +5069,92 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34B358A20554F1940033C7D5 = {
+			children = (
+				34B358A50554F1D30033C7D5,
+				34B358A60554F1D30033C7D5,
+				34B358A70554F1D30033C7D5,
+				34B358A80554F1D30033C7D5,
+			);
+			isa = PBXGroup;
+			name = liboscar;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B358A50554F1D30033C7D5 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = faimconfig.h;
+			path = "Plugins/Gaim Service/Protocols/oscar/faimconfig.h";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		34B358A60554F1D30033C7D5 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = aim.h;
+			path = "Plugins/Gaim Service/Protocols/oscar/aim.h";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		34B358A70554F1D30033C7D5 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = aim_cbtypes.h;
+			path = "Plugins/Gaim Service/Protocols/oscar/aim_cbtypes.h";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		34B358A80554F1D30033C7D5 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = aim_internal.h;
+			path = "Plugins/Gaim Service/Protocols/oscar/aim_internal.h";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		34B358A90554F1D40033C7D5 = {
+			fileRef = 34B358A50554F1D30033C7D5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34B358AA0554F1D40033C7D5 = {
+			fileRef = 34B358A60554F1D30033C7D5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34B358AB0554F1D40033C7D5 = {
+			fileRef = 34B358A70554F1D30033C7D5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34B358AC0554F1D40033C7D5 = {
+			fileRef = 34B358A80554F1D30033C7D5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34B3688F0555ACC90033C7D5 = {
+			expectedFileType = archive.ar;
+			isa = PBXFileReference;
+			name = liboscar.a;
+			path = "Plugins/Gaim Service/LIBS/liboscar.a";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B368900555ACC90033C7D5 = {
+			fileRef = 34B3688F0555ACC90033C7D5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34BD83DA054E530700EB2652 = {
 			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 30;
@@ -17652,6 +17738,10 @@
 				9EE058D905548F9400505F31,
 				9EE058DA05548F9400505F31,
 				9EE058DB05548F9400505F31,
+				34B358A90554F1D40033C7D5,
+				34B358AA0554F1D40033C7D5,
+				34B358AB0554F1D40033C7D5,
+				34B358AC0554F1D40033C7D5,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17683,6 +17773,7 @@
 				4B7F279805440CB900CDFC90,
 				4B7F279905440CB900CDFC90,
 				4B7F279A05440CB900CDFC90,
+				34B368900555ACC90033C7D5,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17705,7 +17796,7 @@
 				HEADER_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS/include\" \"Plugins/Gaim Service/LIBS/include/libgaim\" \"Plugins/Gaim Service/LIBS/include/glib-2.0\"";
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\"";
+				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\" \"Plugins/Gaim Service/Protocols\" /Users/evands/adium \"/Users/evands/adium/Plugins/Gaim Service/LIBS\"";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
 				OTHER_REZFLAGS = "";
@@ -17842,6 +17933,7 @@
 				4B7F279305440CB900CDFC90,
 				4B7F279405440CB900CDFC90,
 				4B7F279505440CB900CDFC90,
+				34B3688F0555ACC90033C7D5,
 				4B7F27A005440CC900CDFC90,
 			);
 			isa = PBXGroup;
@@ -21095,6 +21187,7 @@
 		9E2BD856054BE18200558E56 = {
 			children = (
 				9E2BD857054BE18200558E56,
+				34B358A20554F1940033C7D5,
 				9E2BD858054BE18200558E56,
 				9E2BD859054BE18300558E56,
 				9E2BD89C054BE18A00558E56,
