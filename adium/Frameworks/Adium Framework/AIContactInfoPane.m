@@ -25,11 +25,17 @@
     return(self);
 }
 
+
+//Resizable
+- (BOOL)resizable
+{
+	return(YES);
+}
+
 - (CONTACT_INFO_CATEGORY)contactInfoCategory
 {
 	
 }
-
 
 //Configure the pane for a list object
 - (void)configureForListObject:(AIListObject *)inListObject
