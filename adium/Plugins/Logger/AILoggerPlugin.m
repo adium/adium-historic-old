@@ -276,8 +276,18 @@ this problem is along the lines of:
 //Prepare the log index for searching.  Must call before attempting to use the logSearchIndex 
 - (void)prepareLogContentSearching
 {
+    //If we're going to need to re-index all our logs from scratch, it will make
+    //things faster if we start with a fresh log index as well.
+    if(!dirtyLogArray){
+	if([[NSFileManager defaultManager] fileExistsAtPath:[self logIndexPath]]){
+	    if(![[NSFileManager defaultManager] removeFileAtPath:[self logIndexPath] handler:nil]){
+		NSLog(@"Failed to delete log index.");
+	    }
+	}	
+    }
+    
+    //Load the index and start indexing to make it current
     if(logIndexingEnabled){
-	//Load the index and start indexing to make it current
 	[self _loadLogIndex];
 	stopIndexingThreads = NO;
 	if(!dirtyLogArray){
@@ -347,7 +357,7 @@ this problem is along the lines of:
 {
     NSString    *logIndexPath = [self logIndexPath];
     NSURL       *logIndexPathURL = [NSURL fileURLWithPath:logIndexPath];
-
+    NSLog(@"%@",logIndexPath);
     //Load the log index (creating if necessary)
     if([[NSFileManager defaultManager] fileExistsAtPath:logIndexPath]){
 	index_Content = SKIndexOpenWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", true);
@@ -404,16 +414,6 @@ this problem is along the lines of:
 //THREAD: Flag every log as dirty (Do this when there is no log index)
 - (void)dirtyAllLogs
 {
-    NSString    *logIndexPath = [self logIndexPath];
-    
-    //Since we're going to re-index all our logs from scratch, it will make
-    //things faster if we start with a fresh log index as well.
-    if([[NSFileManager defaultManager] fileExistsAtPath:logIndexPath]){
-	if(![[NSFileManager defaultManager] removeFileAtPath:logIndexPath handler:nil]){
-	    NSLog(@"Failed to delete log index.");
-	}
-    }	
-    
     //Reset and rebuild the dirty array
     [dirtyLogArray release]; dirtyLogArray = [[NSMutableArray alloc] init];
     [NSThread detachNewThreadSelector:@selector(_dirtyAllLogsThread) toTarget:self withObject:nil];
