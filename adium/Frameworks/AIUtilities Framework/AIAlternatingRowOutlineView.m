@@ -78,6 +78,7 @@
 - (void)setDrawsAlternatingRows:(BOOL)flag
 {
     drawsAlternatingRows = flag;
+    [self setNeedsDisplay:YES];
 }
 
 - (void)setAlternatingRowColor:(NSColor *)color
@@ -85,18 +86,21 @@
     if(color != alternatingRowColor){
         [alternatingRowColor release];
         alternatingRowColor = [color retain];
+        [self setNeedsDisplay:YES];
     }
 }
 
 - (void)setDrawsAlternatingColumns:(BOOL)flag
 {
     drawsAlternatingColumns = flag;
+    [self setNeedsDisplay:YES];
 }
 
 - (void)setAlternatingColumnColor:(NSColor *)color{
     if(color != alternatingColumnColor){
         [alternatingColumnColor release];
         alternatingColumnColor = [color retain];
+        [self setNeedsDisplay:YES];
     }
 }
 - (NSColor *)alternatingColumnColor{
@@ -105,10 +109,12 @@
 
 - (void)setAlternatingColumnRange:(NSRange)range{
     alternatingColumnRange = range;
+    [self setNeedsDisplay:YES];
 }
 
 - (void)setFirstColumnColored:(BOOL)colored{
     firstColumnColored = colored;
+    [self setNeedsDisplay:YES];
 }
 - (BOOL)firstColumnColored{
     return(firstColumnColored);
@@ -118,6 +124,7 @@
     if(color != secondaryAlternatingColumnColor){
         [secondaryAlternatingColumnColor release];
         secondaryAlternatingColumnColor = [color retain];
+        [self setNeedsDisplay:YES];
     }
 }
 - (NSColor *)secondaryAlternatingColumnColor{
@@ -239,7 +246,7 @@
             }
         }
         
-    }else{ //Draw alternating rows in the outline view
+    }else if(drawsAlternatingRows){ //Draw alternating rows in the outline view
         NSRect		segmentRect = rect;
 
         if(colored && !selected){            

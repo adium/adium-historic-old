@@ -55,6 +55,7 @@
 
     //Create the view
     SCLView = [[AISCLOutlineView alloc] init];
+    [SCLViewArray addObject:SCLView];
 
     //Apply the preferences to the view
     [self preferencesChanged:nil];
@@ -74,8 +75,6 @@
     
     //Fetch and retain the contact list
     contactList = [[[owner contactController] contactList] retain];
-
-    [SCLViewArray addObject:SCLView];
 
     return([SCLView autorelease]);
 }
@@ -105,17 +104,24 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
+    NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:GROUP_CONTACT_LIST];
     NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
     AISCLOutlineView	*SCLView;
 
-    NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:GROUP_CONTACT_LIST];
-
     while((SCLView = [enumerator nextObject])){
         NSFont	*font = [[prefDict objectForKey:KEY_SCL_FONT] representedFont];
-        
+        BOOL	alternatingGrid = [[prefDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue];
+
+        //Font
         [SCLView setFont:font];
         [SCLView setRowHeight:[font defaultLineHeightForFont]];
+
+        //Grid
+        [SCLView setDrawsAlternatingRows:alternatingGrid];
+
     }
+
+    
     
     
     
