@@ -116,8 +116,8 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 				
 				if(keyword && [keyword length] && title && [title length]){
 					NSDictionary	*infoDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Script", @"Type",
-						scriptURL, @"Path", keyword, @"Keyword", title, @"Title", arguments, @"Arguments",
-						[NSNumber numberWithBool:prefixOnly], @"PrefixOnly", nil];
+						scriptURL, @"Path", keyword, @"Keyword", title, @"Title", 
+						[NSNumber numberWithBool:prefixOnly], @"PrefixOnly", arguments, @"Arguments", nil];
 					
 					//Place the entry in our script arrays
 					[scripts addObject:infoDict];
@@ -288,7 +288,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 		while(infoDict = [enumerator nextObject]){
 			NSString	*keyword = [infoDict objectForKey:@"Keyword"];
 			BOOL		prefixOnly = [[infoDict objectForKey:@"PrefixOnly"] boolValue];
-			
+
 			if((prefixOnly && [inString hasPrefix:keyword]) ||
 			   (!prefixOnly && [inString rangeOfString:keyword].location != NSNotFound)){
 
