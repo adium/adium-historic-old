@@ -61,6 +61,7 @@
     enumerator = [controllerArray objectEnumerator];
     while((controller = [enumerator nextObject])){
         if([controller messageView] == inView){
+	    
             [controllerArray removeObject:controller];
             return; //We've found and removed our view, return.
         }

@@ -63,7 +63,7 @@
     timeCol = [[AIFlexibleTableColumn alloc] init];
     [messageView addColumn:timeCol];
 
-    [messageView reloadData]; //Load any exising messages
+    [messageView reloadData]; //Load any existing messages
     
     //Observe
     [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:contact];

@@ -142,9 +142,6 @@
 /*    }else if(typing){
 	color = typingColor;
 	invertedColor = typingInvertedColor;*/
-    }else if(openTab){
-	color = openTabColor;
-	invertedColor = openTabInvertedColor;
     }else if(idle != 0 && away){
 	color = idleAwayColor;
 	invertedColor = idleAwayInvertedColor;
@@ -157,6 +154,9 @@
     }else if(warning){
 	color = warningColor;
 	invertedColor = warningInvertedColor;
+    }else if(openTab){
+	color = openTabColor;
+	invertedColor = openTabInvertedColor;
     }else if(online){		// this should be the last 'if' before the final 'else'
 	color = onlineColor;
 	invertedColor = onlineInvertedColor;
