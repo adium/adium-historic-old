@@ -62,7 +62,7 @@ static NSMutableCharacterSet *endSet = nil;
 
     // call flex to parse the input
     validStatus = SHlex();
-    
+
     // condition for valid URI's
     if(validStatus == SH_URL_VALID || validStatus == SH_MAILTO_VALID || validStatus == SH_FILE_VALID){
         SH_delete_buffer(buf); //remove the buffer from flex.
@@ -123,6 +123,10 @@ static NSMutableCharacterSet *endSet = nil;
     while([preScanner scanUpToCharactersFromSet:skipSet intoString:&scanString]){
         unsigned int localStringLen = [scanString length];
 
+        if(localStringLen > 2 && [startSet characterIsMember:[scanString characterAtIndex:0]]){
+            scanString = [NSString stringWithString:[scanString substringFromIndex:1]];
+            localStringLen = [scanString length];
+        }
         if(localStringLen > 2 && [endSet characterIsMember:[scanString characterAtIndex:localStringLen - 1]]){
             scanString = [NSString stringWithString:[scanString substringToIndex:localStringLen - 1]];
         }
