@@ -33,6 +33,13 @@
 //A unique group name for our root group
 #define ADIUM_ROOT_GROUP_NAME					@"ROOTJKSHFOEIZNGIOEOP"	
 
+//Preference groups and keys used for contacts throughout Adium
+#define	PREF_GROUP_ALIASES						@"Aliases"			//Preference group in which to store aliases
+#define PREF_GROUP_USERICONS					@"User Icons"
+#define KEY_USER_ICON							@"User Icon"
+#define PREF_GROUP_NOTES						@"Notes"			//Preference group to store notes in
+#define PREF_GROUP_ADDRESSBOOK                  @"Address Book"
+
 typedef enum {
     AIInfo_Profile = 1, 
     AIInfo_Accounts,

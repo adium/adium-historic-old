@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.143 2004/06/06 10:46:42 evands Exp $
+// $Id: AIContactController.m,v 1.144 2004/06/07 05:53:48 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -928,8 +928,8 @@
 			}
 		}else if([object isMemberOfClass:[AIListContact class]]){
 			if(!inAccount || 
-			   ([[(AIListContact *)object serviceID] compare:[inAccount serviceID]] == 0 &&
-				[[(AIListContact *)object accountID] compare:[inAccount uniqueObjectID]] == 0)){
+			   ([[(AIListContact *)object serviceID] isEqualToString:[inAccount serviceID]] &&
+				[[(AIListContact *)object accountID] isEqualToString:[inAccount uniqueObjectID]])){
 				[contactArray addObject:object];
 			}
 		}

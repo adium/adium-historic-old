@@ -243,7 +243,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		}
 		
 		//User Icon
-		if(userImage = [[displayedObject displayArrayForKey:@"UserIcon"] objectValue]){
+		if(userImage = [[displayedObject displayArrayForKey:KEY_USER_ICON] objectValue]){
 			//MUST make a copy, since resizing and flipping the original image here breaks it everywhere else
 			userImage = [[userImage copy] autorelease];		
 			//Resize to a fixed size for consistency
@@ -269,6 +269,42 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		while(pane = [enumerator nextObject]){
 			[pane configureForListObject:displayedObject];
 		}
+	}
+}
+
+#pragma mark ESImageViewWithImagePicker Delegate
+// ESImageViewWithImagePicker Delegate ---------------------------------------------------------------------
+- (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)sender didChangeToImage:(NSImage *)image
+{
+	if (displayedObject){
+		[displayedObject setPreference:[image TIFFRepresentation]
+								forKey:KEY_USER_ICON
+								 group:PREF_GROUP_USERICONS];
+	}
+}
+
+- (void)deleteInImageViewWithImagePicker:(ESImageViewWithImagePicker *)sender
+{
+	if (displayedObject && [displayedObject preferenceForKey:KEY_USER_ICON
+													   group:PREF_GROUP_USERICONS
+									   ignoreInheritedValues:YES]){
+		NSImage *userImage;
+		//Remove the preference
+		[displayedObject setPreference:nil
+								forKey:KEY_USER_ICON
+								 group:PREF_GROUP_USERICONS];
+	
+		//User Icon
+		if(userImage = [[displayedObject displayArrayForKey:KEY_USER_ICON] objectValue]){
+			//MUST make a copy, since resizing and flipping the original image here breaks it everywhere else
+			userImage = [[userImage copy] autorelease];		
+			//Resize to a fixed size for consistency
+			[userImage setScalesWhenResized:YES];
+			[userImage setSize:NSMakeSize(48,48)];
+		}else{
+			userImage = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
+		}
+		[imageView_userIcon setImage:userImage];
 	}
 }
 
