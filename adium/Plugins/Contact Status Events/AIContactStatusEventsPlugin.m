@@ -16,13 +16,6 @@
 #import "AIContactStatusEventsPlugin.h"
 #import "AIContactStatusEventsPreferences.h"
 
-#define CONTACT_STATUS_ONLINE_YES	@"Contact_StatusOnlineYes"
-#define CONTACT_STATUS_ONLINE_NO	@"Contact_StatusOnlineNO"
-#define CONTACT_STATUS_AWAY_YES		@"Contact_StatusAwayYes"
-#define CONTACT_STATUS_AWAY_NO		@"Contact_StatusAwayNo"
-#define CONTACT_STATUS_IDLE_YES		@"Contact_StatusIdleYes"
-#define CONTACT_STATUS_IDLE_NO		@"Contact_StatusIdleNo"
-
 //Generates events when a contact changes status, so other plugins may respond to them.  This plugin correctly handles multiple accounts, so a contact changing status on n accounts will only ever generate 1 event.
 
 @implementation AIContactStatusEventsPlugin
