@@ -165,8 +165,8 @@
 																				  hasAlpha:has_alpha
 																				  isPlanar:NO
 																			colorSpaceName:NSDeviceRGBColorSpace
-																			   bytesPerRow:NULL
-																			  bitsPerPixel:NULL] autorelease];
+																			   bytesPerRow:0
+																			  bitsPerPixel:0] autorelease];
         CGColorSpaceRef 	dst_colorspaceref = CGColorSpaceCreateDeviceRGB();
         CGImageAlphaInfo 	dst_alphainfo = has_alpha ? kCGImageAlphaPremultipliedLast : kCGImageAlphaNone;
         CGContextRef 		dst_contextref = CGBitmapContextCreate([bitmap_rep bitmapData],

@@ -127,7 +127,7 @@ static NSSize		rightCapSize;
 }
 
 //Return the tab view item this tab is representing
-- (NSTabViewItem *)tabViewItem
+- (NSTabViewItem<AICustomTabViewItem> *)tabViewItem
 {
     return(tabViewItem);
 }

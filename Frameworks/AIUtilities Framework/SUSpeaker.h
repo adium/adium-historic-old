@@ -41,7 +41,6 @@
 
 @end
 
-
 @interface NSObject (SUSpeakerDelegate)
 -(void) didFinishSpeaking:(SUSpeaker*)speaker;
 -(void) willSpeakWord:(SUSpeaker*)speaker at:(int)where length:(int)length;
