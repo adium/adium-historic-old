@@ -13,7 +13,7 @@
 
 @interface AIAccountSetupEditAccountView : AIAccountSetupView {
 	IBOutlet	NSImageView			*image_serviceIcon;
-	IBOutlet	NSTextField			*textField_accountName;
+	IBOutlet	NSTextField			*textField_accountDescription;
 	IBOutlet	NSTextField			*textField_serviceName;
 	
 //	//Account status
@@ -26,7 +26,7 @@
     IBOutlet		NSTabView					*tabView_auxiliary;
     IBOutlet		NSView						*view_accountDetails;
 //    IBOutlet		NSPopUpButton				*popupMenu_serviceList;
-//	IBOutlet		ESDelayedTextField			*textField_accountName;
+	IBOutlet		ESDelayedTextField			*textField_accountName;
 	IBOutlet		NSTextField					*textField_userNameLabel;
     IBOutlet		NSButton					*button_autoConnect;
 	IBOutlet		ESImageViewWithImagePicker  *imageView_userIcon;
