@@ -28,6 +28,16 @@
 
 @implementation DCGaimMeanwhileJoinChatViewController
 
+- (id)init
+{
+	[super init];
+	
+	[textField_inviteUsers setDragDelegate:self];
+	[textField_inviteUsers registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs",nil]];
+	
+	return self;
+}
+
 - (NSString *)nibName
 {
 	return @"DCGaimMeanwhileJoinChatView";
@@ -114,4 +124,22 @@
     }
 	
 }
+
+#pragma mark Dragging Delegate
+
+- (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
+{
+	return YES;
+}
+
+- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
+{
+	return [super doPerformDragOperation:sender toField:textField_inviteUsers];
+}
+
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
+{
+	return [super doDraggingEntered:sender];
+}
+
 @end
