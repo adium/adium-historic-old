@@ -43,11 +43,17 @@
  */
 - (id)initWithUID:(NSString *)inUID internalObjectID:(NSString *)inInternalObjectID service:(AIService *)inService
 {
-	//We need to get our internal object ID setup before we call super init
-	internalObjectID = [inInternalObjectID retain];
-	inUID = [self accountWillSetUID:inUID];
+	NSString	*accountModifiedUID;
+	
+    self = [super initWithUID:inUID service:inService];
 
-    [super initWithUID:inUID service:inService];
+	internalObjectID = [inInternalObjectID retain];
+	
+	accountModifiedUID = [self accountWillSetUID:UID];
+	if(accountModifiedUID != UID){
+		[UID release];
+		UID = [accountModifiedUID retain];
+	}
 	
 	namesAreCaseSensitive = [[self service] caseSensitive];
 	
