@@ -303,7 +303,8 @@
                                                               styleTags:YES
                                              closeStyleTagsOnFontChange:NO
                                                          encodeNonASCII:YES
-                                                             imagesPath:nil]];
+                                                             imagesPath:nil
+													  attachmentsAsText:YES]];
         }else{
             message = [self validCopyOfString:[[(AIContentMessage *)object message] string]];
         }
@@ -362,7 +363,8 @@
 																  styleTags:YES
 												 closeStyleTagsOnFontChange:NO
 															 encodeNonASCII:YES
-																 imagesPath:nil]));
+																 imagesPath:nil
+														   attachmentsAsText:YES]));
 }
 
 //Return YES if we're available for sending the specified content.  If inListObject is nil, we can return YES if we
@@ -764,7 +766,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.127 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.128 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)

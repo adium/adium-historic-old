@@ -23,13 +23,14 @@
 	}
 	
 	return((noHTML ? [inAttributedString string] : [AIHTMLDecoder encodeHTML:inAttributedString
-									 headers:YES
-									fontTags:YES
-								   closeFontTags:NO
-								       styleTags:YES
-						      closeStyleTagsOnFontChange:NO
-								  encodeNonASCII:NO
-								      imagesPath:nil]));
+																	 headers:YES
+																	fontTags:YES
+															   closeFontTags:NO
+																   styleTags:YES
+												  closeStyleTagsOnFontChange:NO
+															  encodeNonASCII:NO
+																  imagesPath:nil
+														   attachmentsAsText:YES]));
 }
 
 @end

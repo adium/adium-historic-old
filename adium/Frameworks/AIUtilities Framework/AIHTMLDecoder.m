@@ -38,9 +38,9 @@ int HTMLEquivalentForFontSize(int fontSize);
 + (NSString *)encodeHTML:(NSAttributedString *)inMessage encodeFullString:(BOOL)encodeFullString
 {
     if(encodeFullString){
-        return([self encodeHTML:inMessage headers:YES fontTags:YES closeFontTags:YES styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES imagesPath:nil]);
+        return([self encodeHTML:inMessage headers:YES fontTags:YES closeFontTags:YES styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES imagesPath:nil attachmentsAsText:YES]);
     }else{
-        return([self encodeHTML:inMessage headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO encodeNonASCII:NO imagesPath:nil]);
+        return([self encodeHTML:inMessage headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO encodeNonASCII:NO imagesPath:nil attachmentsAsText:YES]);
     }
 }
 
@@ -51,7 +51,7 @@ int HTMLEquivalentForFontSize(int fontSize);
 // styleTags: YES to include B/I/U tags
 // closeStyleTagsOnFontChange: YES to close and re-insert style tags when opening a new font tag
 // encodeNonASCII: YES to encode non-ASCII characters as their HTML equivalents
-+ (NSString *)encodeHTML:(NSAttributedString *)inMessage headers:(BOOL)includeHeaders fontTags:(BOOL)includeFontTags closeFontTags:(BOOL)closeFontTags styleTags:(BOOL)includeStyleTags closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange encodeNonASCII:(BOOL)encodeNonASCII imagesPath:(NSString *)imagesPath
++ (NSString *)encodeHTML:(NSAttributedString *)inMessage headers:(BOOL)includeHeaders fontTags:(BOOL)includeFontTags closeFontTags:(BOOL)closeFontTags styleTags:(BOOL)includeStyleTags closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange encodeNonASCII:(BOOL)encodeNonASCII imagesPath:(NSString *)imagesPath attachmentsAsText:(BOOL)attachmentsAsText
 {
     NSFontManager	*fontManager = [NSFontManager sharedFontManager];
     NSRange			searchRange;
@@ -83,19 +83,18 @@ int HTMLEquivalentForFontSize(int fontSize);
     //Loop through the entire string
     searchRange = NSMakeRange(0,0);
     while(searchRange.location < messageLength){
-        NSDictionary	*attributes = [inMessage 
-            attributesAtIndex:searchRange.location effectiveRange:&searchRange];
-        NSFont		*font = [attributes objectForKey:NSFontAttributeName];
-        NSString	*color = [[attributes objectForKey:NSForegroundColorAttributeName] hexString];
-        NSString	*familyName = [font familyName];
-        float		pointSize = [font pointSize];
+        NSDictionary	*attributes = [inMessage attributesAtIndex:searchRange.location effectiveRange:&searchRange];
+        NSFont			*font = [attributes objectForKey:NSFontAttributeName];
+        NSString		*color = [[attributes objectForKey:NSForegroundColorAttributeName] hexString];
+        NSString		*familyName = [font familyName];
+        float			pointSize = [font pointSize];
         
         NSFontTraitMask	traits = [fontManager traitsOfFont:font];
-        BOOL		hasUnderline = [[attributes objectForKey:NSUnderlineStyleAttributeName] intValue];
-        BOOL		isBold = (traits & NSBoldFontMask);
-        BOOL		isItalic = (traits & NSItalicFontMask);
+        BOOL			hasUnderline = [[attributes objectForKey:NSUnderlineStyleAttributeName] intValue];
+        BOOL			isBold = (traits & NSBoldFontMask);
+        BOOL			isItalic = (traits & NSItalicFontMask);
         
-        NSString	*link = [attributes objectForKey:NSLinkAttributeName];
+        NSString		*link = [attributes objectForKey:NSLinkAttributeName];
         AITextAttachmentExtension *attachment = [attributes objectForKey:NSAttachmentAttributeName];
         NSMutableString	*chunk = [[inMessageString substringWithRange:searchRange] mutableCopy];
 
@@ -175,65 +174,86 @@ int HTMLEquivalentForFontSize(int fontSize);
         }
 
         //Image Attachments
-        if(attachment && [attachment shouldSaveImageForLogging] && [[attachment attachmentCell] respondsToSelector:@selector(image)] && imagesPath){
-            NSImage *attachmentImage = [[attachment attachmentCell] performSelector:@selector(image)];
-            NSBitmapImageRep *bitmapRep = [NSBitmapImageRep imageRepWithData:[attachmentImage TIFFRepresentation]];
-            NSString *fileSafeChunk = [chunk safeFilenameString];
-            NSString *shortFileName;
-            NSString *fileName;
-            
-            shortFileName = [fileSafeChunk stringByAppendingPathExtension:@"png"];
-            fileName = [imagesPath stringByAppendingPathComponent:shortFileName];
-            
-            //create the images directory if it doesn't exist
-            [AIFileUtilities createDirectory:imagesPath];
-            
-            if([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:fileName atomically:YES]){
-                [string appendString:@"<img src=\""];
-                [string appendString:fileName];
-                [string appendString:@"\" alt=\""];
-                [string appendString:chunk];
-                [string appendString:@"\">"];
-                [chunk setString:@""];
-            }
-            else
-                NSLog(@"failed to write log image");
-        }
-        
-        //Escape special HTML characters.
-        [chunk replaceOccurrencesOfString:@"&" withString:@"&amp;"
-            options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
-        [chunk replaceOccurrencesOfString:@"<" withString:@"&lt;"
-            options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
-        [chunk replaceOccurrencesOfString:@">" withString:@"&gt;"
-            options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
-        
-        //If we need to encode non-ASCII to HTML, append string character by character, replacing any non-ascii characters with the designated unicode
-        //escape sequence.
-		if (encodeNonASCII) {
+		if([attributes objectForKey:NSAttachmentAttributeName]){
 			int i;
-			for(i = 0; i < [chunk length]; i++){
-				unichar currentChar = [chunk characterAtIndex:i];
-				if(currentChar > 127){
-					[string appendFormat:@"&#%d;", currentChar];
-				}else if(currentChar == '\r' || currentChar == '\n'){
-					[string appendString:@"<BR>"];
-				}else{
-					//unichar characters may have a length of up to 3; be careful to get the whole character
-					NSRange composedCharRange = [chunk rangeOfComposedCharacterSequenceAtIndex:i];
-					[string appendString:[chunk substringWithRange:composedCharRange]];
-					i += composedCharRange.length - 1;
+			for(i = 0; i < searchRange.length;i++){ //Each attachment takes a character.. they are grouped by the attribute scan
+				AITextAttachmentExtension *attachment = [[inMessage attributesAtIndex:searchRange.location+i effectiveRange:nil] objectForKey:NSAttachmentAttributeName];
+				
+				if(attachment && [attachment shouldSaveImageForLogging] && [[attachment attachmentCell] respondsToSelector:@selector(image)] && imagesPath){
+					NSImage *attachmentImage = [[attachment attachmentCell] performSelector:@selector(image)];
+					NSBitmapImageRep *bitmapRep = [NSBitmapImageRep imageRepWithData:[attachmentImage TIFFRepresentation]];
+					NSString *fileSafeChunk = [chunk safeFilenameString];
+					NSString *shortFileName;
+					NSString *fileName;
+					
+					shortFileName = [fileSafeChunk stringByAppendingPathExtension:@"png"];
+					fileName = [imagesPath stringByAppendingPathComponent:shortFileName];
+					
+					//create the images directory if it doesn't exist
+					[AIFileUtilities createDirectory:imagesPath];
+					
+					if([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:fileName atomically:YES]){
+						[string appendString:@"<img src=\""];
+						[string appendString:fileName];
+						[string appendString:@"\" alt=\""];
+						[string appendString:chunk];
+						[string appendString:@"\">"];
+						[chunk release]; chunk = nil;
+					}
+					else
+						NSLog(@"failed to write log image");
+					
+				}else if(!attachmentsAsText && attachment && [attachment respondsToSelector:@selector(imagePath)]){
+					if([attachment imagePath]){
+						[string appendString:@"<img src=\"file://"];
+						[string appendString:[attachment imagePath]];
+						[string appendString:@"\" alt=\""];
+						[string appendString:[attachment string]];
+						[string appendString:@"\">"];
+						[chunk release]; chunk = nil;
+					}
 				}
 			}
-		} else {
-			[chunk replaceOccurrencesOfString:@"\r" withString:@"<BR>" options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
-			[chunk replaceOccurrencesOfString:@"\n" withString:@"<BR>" options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
-			[string appendString:chunk];
+			
 		}
 		
-        //Release the chunk
-        [chunk release];
-
+       
+		if(chunk){
+			//Escape special HTML characters.
+			[chunk replaceOccurrencesOfString:@"&" withString:@"&amp;"
+									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
+			[chunk replaceOccurrencesOfString:@"<" withString:@"&lt;"
+									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
+			[chunk replaceOccurrencesOfString:@">" withString:@"&gt;"
+									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
+        
+			//If we need to encode non-ASCII to HTML, append string character by character, replacing any non-ascii characters with the designated unicode
+			//escape sequence.
+			if (encodeNonASCII) {
+				int i;
+				for(i = 0; i < [chunk length]; i++){
+					unichar currentChar = [chunk characterAtIndex:i];
+					if(currentChar > 127){
+						[string appendFormat:@"&#%d;", currentChar];
+					}else if(currentChar == '\r' || currentChar == '\n'){
+						[string appendString:@"<BR>"];
+					}else{
+						//unichar characters may have a length of up to 3; be careful to get the whole character
+						NSRange composedCharRange = [chunk rangeOfComposedCharacterSequenceAtIndex:i];
+						[string appendString:[chunk substringWithRange:composedCharRange]];
+						i += composedCharRange.length - 1;
+					}
+				}
+			} else {
+				[chunk replaceOccurrencesOfString:@"\r" withString:@"<BR>" options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
+				[chunk replaceOccurrencesOfString:@"\n" withString:@"<BR>" options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
+				[string appendString:chunk];
+			}
+			
+			//Release the chunk
+			[chunk release];
+		}
+			
         //Close Link
         if(link && [link length] != 0){
             [string appendString:@"</a>"];

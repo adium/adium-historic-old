@@ -201,7 +201,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 					[source UID],
 					[AIHTMLDecoder encodeHTML:message headers:NO fontTags:NO closeFontTags:NO 
 									styleTags:YES closeStyleTagsOnFontChange:YES
-									encodeNonASCII:YES imagesPath:imagesPath]];
+							   encodeNonASCII:YES imagesPath:imagesPath attachmentsAsText:YES]];
 			} else {
 				logMessage = [NSString stringWithFormat:@"(%@) %@: %@\n", dateString, [source UID], [message string]];
 			}
