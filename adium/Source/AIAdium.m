@@ -217,8 +217,10 @@
     [dockController initController];
     [fileTransferController initController];
     [contactAlertsController initController];
+	
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
-
+	
+	//
     [contactController finishIniting];
     [preferenceController finishIniting];
     [interfaceController finishIniting];
@@ -327,25 +329,30 @@ void Adium_HandleSignal(int i){
         //Plugins haven't been loaded yet if the application isn't done loading, so only request a restart if it has finished loading already 
         requiresRestart = completedApplicationLoad;
         fileDescription = AILocalizedString(@"Adium plugin",nil);
+		
     } else if ([extension caseInsensitiveCompare:@"AdiumTheme"] == NSOrderedSame){
         destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Themes"];
         requiresRestart = NO;
         fileDescription = AILocalizedString(@"Adium theme",nil);
+		
     } else if ([extension caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame){
-        destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Dock Icons"];
+		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Dock Icons"];
         requiresRestart = NO;
         fileDescription = AILocalizedString(@"dock icon set",nil);
+		
 	} else if ([extension caseInsensitiveCompare:@"AdiumSoundset"] == NSOrderedSame){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Sounds"];
 		requiresRestart = NO;
 		fileDescription = AILocalizedString(@"sound set",nil);
+		
 	} else if ([extension caseInsensitiveCompare:@"AdiumEmoticonset"] == NSOrderedSame){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Emoticons"];
 		requiresRestart = NO;
 		fileDescription = AILocalizedString(@"emoticon set",nil);
+		
 	} else if ([extension caseInsensitiveCompare:@"AdiumMessageStyle"] == NSOrderedSame){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Message Styles"];
-		requiresRestart = YES; //temporary
+		requiresRestart = NO;
 		fileDescription = AILocalizedString(@"message style",nil);
 	}
 
@@ -386,6 +393,9 @@ void Adium_HandleSignal(int i){
 				alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" was unsuccessful.","End of installation failed sentence")];
 			}
 		}
+		
+		[[self notificationCenter] postNotificationName:Adium_Xtras_Changed
+													 object:nil];
         NSRunInformationalAlertPanel(alertTitle,alertMsg,nil,nil,nil);
     }
 
