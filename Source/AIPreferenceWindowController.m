@@ -145,7 +145,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[super windowDidLoad];
 
 	//Configure window
-	[[self window] center];
 	[[self window] setTitle:AILocalizedString(@"Preferences",nil)];
 	[[[self window] standardWindowButton:NSWindowToolbarButton] setFrame:NSMakeRect(0,0,0,0)];
 	[self _configureAdvancedPreferencesTable];
