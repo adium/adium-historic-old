@@ -876,6 +876,10 @@ static NSLock				*filterCreationLock = nil;
 											 forKey:@"ChatCreationInfo"
 											 notify:NotifyNever];
 		
+		[chat setStatusObject:[NSNumber numberWithBool:YES]
+					   forKey:@"AlwaysShowUserList"
+					   notify:NotifyNever];
+		
 		//Inform the account of its creation and post a notification if successful
 		if([account openChat:chat]){
 			[[owner notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
