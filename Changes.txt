@@ -5,6 +5,96 @@ Version 0.80 (13/-3/2525)
 - Achieved world domination
 - Obtained tasty sandwiches
 
+- Fullsize tooltip images
+- Toolbar buttons: send file, scripts, offline contacts, add contact, add group, view logs, user icon
+- Speech no longer interrupts speech from other applications
+- (ICQ) ICQ Custom Encoding preference is a menu
+- (Sametime) Added support for group (conference) chats
+- Menu item improvements: better status feedback, status menu, unviewed content in open chats
+- Background image options in the contact list (tiled, scaled, centered)
+- Background image options for message windows (tiled, scaled, centered)
+- Added support for custom Service Icon AdiumXtra packs
+- Added support for custom Status Icon AdiumXtra packs, and added a second built-in pack, "Chat Bubbles"
+- Removed games (see imgames)
+- %_uptime returns actual uptime
+- %_adiumVersion returns Adium version as a link to www.adiumx.com
+- Added support for completely hiding groups in the contact list
+- (MSN) Initiate multi-user chat
+- (Yahoo) Join in Chat
+- (ICQ) re-request authorization
+- (Jabber) per-contact invisibility settings, re-request authorization, unsubscribe
+- (Rendezvous) Fixed issues with Rendezvous nick names and the local Rendezvous account's user image not displaying properly.
+- Fixed issues with aliases being deleted when adding new contacts
+- Added print support for message windows and the contact list
+- Fixed a cosmetic glitch with the Get Info drawer shown for metaContacts
+- Fixed issue with tooltips appearing for contacts when hovering over the contact list scrollbar
+- Added keyboard shortcuts for Join Group Chat and Show/Hide Toolbar
+- Improved support for pasting images into Adium's image wells
+- Improved restoration of default settings when removing custom settings
+- Added support for Finder-like name searching in the contact list; typing part of a name will automatically scroll to and select the first matching contact.
+- Added support for dragging to increase the size of the text entry area of message windows.  The text entry area still autoexpands as necessary but will not shrink smaller than the desired size.
+
+- Improved searching logs in the Log Viewer in non-ASCII languages
+- Improved Log Viewer log deletion support
+- Miscallenous other Log Viewer improvements
+
+- Fixed issues with horizontal autosizing in certain circumstances
+- Added contact list contact fading when contacts sign on and off
+- (Jabber) Fixed issue with rejoining a Jabber chat room after leaving
+- Improved Tiger (OS X 10.4) compatibility
+- Fixed issues with sending autoresponse messages to group chats
+- Improved Join Group Chat window functionality
+- Added privacy preference to enable/disable sending of typing notifications.  Enabled by default.
+- Fixed issues with links which contain triggers for installed Applescript filter scripts.
+- Added "Contact Last Seen" information to tooltips for offline contacts
+- Fixed issues with certain Applescript filters removing font and coloration settings from outgoing messages
+
+- Added support for background colors for participating message window styles (XXX - we should update the other default ones)
+- (MSN) Display name is now shown locally the same way it is shown to other contacts, including with processing of iTunes and other scripts.
+
+
+- Complete File Transfer interface implementation
+	- Preferences for file transfer sending and receiving
+	- File Transfer progress window
+	- Improved File Transfer reception dialog
+
+- Improved dock icon selection preferences
+
+- Complete Status system rewrite:
+	- Support for all status states ("Be right back," "Do not disturb," etc) on all protocols
+	- Support for available status messages on all protocols which support them (AIM, .Mac, Jabber, and Yahoo)
+	- Support for "invisible" status on all protocols which supports it
+	- Custom statuses allow customization of the auto reply message (or suppression of it)
+	- Added Status dropdown for Standard Window contact lists
+
+- Complete Events system rewrite:
+	- Easy customization of the actions Adium takes when events occur via the new Events preferences, with both simple presets and infinite flexibility at global, per-group, and per-contact levels.
+	- Built-in Growl notification support; no separate Growl download necessary.  Ships with Growl 0.60, which will be automatically installed if necessary the first time Growl is used.  Growl replaces the Adium 0.7x Event Bezel.
+	- Added support for clicking on Growl notifications, which brings to the front a message tab associated with the appropriate contact.
+	- Greatly expanded speech options, with both global and per-contact voice, pitch, and rate control for speaking events and other text.
+	- Added new events: Message Received in Background Chat, Contact Seen, Contact No Longer Seen
+	- Improved "Send Later" functionality to use the Contact Seen event so delayed messages are sent when you sign online as well as when the target contact signs online
+	- Fixed a long-standing bug with the "Message Received" event not firing for the first message received in certain situations.
+
+- Complete Accounts preferences rewrite:
+	- Accounts are now in their own window
+	- Active accounts automatically connect when Adium is loaded; accounts may be connected manually/temporarily in the new Status menu and via the Menu Item.
+	- Cleaned up, streamlined, and improved per-account preferences
+
+- Encrypted instant messaging with authentication, deniability, and perfect foward secrecy over all protocols except Rendezvous:
+	- Automatic private key generation and encrypted messaging negotiation
+	- Per-account, per-group, and per-contact encryption settings
+	- Added locked/unlocked message window toolbar item to indicate encryption status and provide encryption options
+	- Provided via Off-the-Record Messaging, compatible with any other participating client or client with an OTR plugin.
+	- For more information on OTR, visit http://www.cypherpunks.ca/otr/
+
+- Streamlined and cleaned up Advanced preferences
+
+- Fixed the Adium Crash Reporter when running from a path including spaces
+- Other cosmetic improvements
+- Leak fixes, code efficiency, and other minor core improvements
+
+
 Version 0.76
 - Fixed a crash on load in OS X 10.2.0 through 10.2.6 without Safari
 - Fixed a crash on quit in OS X 10.2.x
