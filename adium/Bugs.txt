@@ -32,6 +32,16 @@
 	Also (unrelated), links do not have the expected coloration when inserted into
 	a text view in Jaguar.  They do not appear as blue and underlined.
 
+- Dock bouncing
+	If a "bounce until Adium becomes active" event occurs followed by a "bounce once" event,
+	Adium bounces once and stops instead of performing the second behavior and the continuing with
+	the first behavior.
+
+- Message view animation
+	Animating buddy icons in the message view are annoying.  Caching the animation is good; displaying it
+	is bad.  Perhaps this could be fixed at the same time as the implementation of style-based image
+	masking as Brad described.
+	
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
 //------------------------------------------------------------------------------------
@@ -111,7 +121,7 @@
 	[Dave] Since we do case-insensitive compares, and the Finder doesn't seem to care, we COULD use AdiumEmoticonSet
 	[Adam] Need to be careful.. some users are running on case-sensitive file systems
 - Crash reporter doesn't appear for some users (snu on IRC in particular)
-
+- New mail notification does not always display?
 
 
 
