@@ -5,78 +5,60 @@
 //
 //  Created by Stephen Holt on Fri Apr 23 2004.
 
+#ifdef USE_TEXTVIEW_CONTEXTMENUS
 #import "AIContextMenuTextView.h"
-
-@interface AIContextMenuTextView (PRIVATE)
-- (NSMenu *)_menuItemsTop;
-- (NSMenu *)_menuItemsBottom;
-@end
 
 @implementation AIContextMenuTextView
 
-- (id)init;
++ (NSMenu *)defaultMenu
 {
-    [super init];
-    adium = [AIObject sharedAdiumInstance];
-    
-    //set up contextual menus
-    [self setMenu:[self contextualMenuForAISendingTextView:self mergeWithMenu:[self menu]]];
-}
-
-- (id)initWithFrame:(NSRect)frameRect
-{
-    [super initWithFrame:frameRect];
-    adium = [AIObject sharedAdiumInstance];
-        
-    //set up contextual menus
-    [self setMenu:[self contextualMenuForAISendingTextView:self mergeWithMenu:[self menu]]];
-}
-
-- (NSMenu *)contextualMenuForAISendingTextView:(NSTextView *)textView  mergeWithMenu:(NSMenu *)mergeMenu
-{
-    NSMenu          *oldMenu;
-    NSMenu          *newMenuTop = [self _menuItemsTop];
-    NSMenu          *newMenuBottom = [self _menuItemsBottom];
-    NSArray         *menuItems;
+    NSMenu          *superClassMenu = [NSTextView defaultMenu];
+    NSMutableArray  *topItemsArray = nil;
+    NSMutableArray  *bottomItemsArray = nil;
     NSEnumerator    *enumerator;
-    NSMenuItem      *itemForInsertion;
+    NSArray         *menuItemArray;
+        
+    if(nil == topItemsArray){ //get the link editor and general actions menu items
+        NSMenu  *topItems = [[[AIObject sharedAdiumInstance] menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
+                                        [NSNumber numberWithInt:Context_TextView_LinkAction],
+                                        [NSNumber numberWithInt:Context_TextView_General], nil]
+                                forTextView:self];
+        topItemsArray = [NSMutableArray arrayWithArray:[topItems itemArray]];
+        [topItems removeAllItems];
+    }
     
-    if(newMenuTop) {
-        [mergeMenu addItem:[NSMenuItem separatorItem]];
-        menuItems = [[newMenuTop itemArray] retain];
-        enumerator = [menuItems objectEnumerator];
-            while((itemForInsertion = [enumerator nextObject])) {
-                [newMenuTop removeItem:itemForInsertion];
-                NSLog(@"Adding: %@",[itemForInsertion title]);
-                [mergeMenu addItem:itemForInsertion];
+    if(nil == bottomItemsArray){ // get the emoticon menues last, so they're always in a constant location
+        NSMenu  *bottomItems = [[[AIObject sharedAdiumInstance] menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
+                                        [NSNumber numberWithInt:Context_TextView_EmoticonAction], nil]
+                                forTextView:self];
+        bottomItemsArray = [NSMutableArray arrayWithArray:[bottomItems itemArray]];
+        [bottomItems removeAllItems];
+    }
+        
+    [superClassMenu addItem:[NSMenuItem separatorItem]];
+    
+    if([topItemsArray count] > 0) { //add items to menu
+        NSMenuItem *menuItem;
+        enumerator = [topItemsArray objectEnumerator];
+        while((menuItem = [enumerator nextObject])){
+            [superClassMenu addItem:[menuItem copy]];
         }
     }
     
-    if(newMenuBottom){
-        [mergeMenu addItem:[NSMenuItem separatorItem]];
-        menuItems = [newMenuBottom itemArray];
-        enumerator = [menuItems objectEnumerator];
-            while((itemForInsertion = [enumerator nextObject])) {
-                [newMenuBottom removeItem:itemForInsertion];
-                NSLog(@"Adding: %@",[itemForInsertion title]);
-                [mergeMenu addItem:itemForInsertion];
+    if([bottomItemsArray count] > 0){ //add emoticon menu to menu
+        NSMenuItem *menuItem;
+        enumerator = [bottomItemsArray objectEnumerator];
+        while((menuItem = [enumerator nextObject])){
+            [superClassMenu addItem:[menuItem copy]];
         }
     }
-    return(mergeMenu);
+    return [superClassMenu copy]; //return a copy of the menu
 }
 
-- (NSMenu *)_menuItemsTop
+- (void)dealloc
 {
-    return([[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObject:
-                                                               [NSNumber numberWithInt:Context_TextView_EmoticonAction]]
-                                                   forTextView:self]);
-}
-
-- (NSMenu *)_menuItemsBottom
-{
-    return([[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
-                                            [NSNumber numberWithInt:Context_TextView_LinkAction],
-                                            [NSNumber numberWithInt:Context_TextView_General], nil]
-                                   forTextView:self]);
+    [[self menu] removeAllItems];
+    [super dealloc];
 }
 @end
+#endif

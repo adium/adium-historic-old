@@ -36,9 +36,6 @@
     NSSize               _desiredSizeCached;
     
     NSView              *associatedView;
-    
-    NSMenu              *newMenuTop;
-    NSMenu              *newMenuBottom;
 }
 
 - (id)initWithFrame:(NSRect)frameRect;
@@ -78,8 +75,5 @@
 - (void)pushContent;
 - (void)popContent;
 - (void)swapContent;
-
-//context menu
-- (NSMenu *)contextualMenuForAISendingTextView:(AISendingTextView *)textView  mergeWithMenu:(NSMenu *)mergeMenu;
 
 @end

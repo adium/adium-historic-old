@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIMenuController.m,v 1.29 2004/04/24 06:29:56 earthmkii Exp $
+// $Id: AIMenuController.m,v 1.30 2004/04/25 10:27:03 earthmkii Exp $
 
 #import "AIMenuController.h"
 
@@ -40,6 +40,10 @@
     contextualMenu = [[NSMenu alloc] init];
     contextualMenuItemDict = [[NSMutableDictionary alloc] init];
     contactualMenuContact = nil;
+#ifdef USE_TEXTVIEW_CONTEXTMENUS
+    textViewContextualMenu = [[NSMenu alloc] init];
+    contextualMenu_TextView = nil;
+#endif
 }
 
 //close
@@ -105,6 +109,7 @@
     // Releases to match allocs in initController
     [locationArray release];
     [contactualMenuContact release];
+    //[contextualMenu_TextView release];
 }
 
 - (void)dealloc
@@ -249,6 +254,8 @@
     return(contextualMenu);
 }
 
+// disabled until post .53
+#ifdef USE_TEXTVIEW_CONTEXTMENUS
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forTextView:(NSTextView *)inObject
 {
     NSEnumerator    *enumerator;
@@ -257,11 +264,11 @@
     BOOL             itemsAbove = NO;
     
     //Remove all items from the existing menu
-    [contextualMenu removeAllItems];
+    [textViewContextualMenu removeAllItems];
     
     //remember menu config
-    [contextualMenuTextView release];
-    contextualMenuTextView = [inObject retain];
+    [contextualMenu_TextView release];
+    contextualMenu_TextView = [inObject retain];
     
     //process specified locations
     enumerator = [inLocationArray objectEnumerator];
@@ -270,29 +277,35 @@
         NSEnumerator    *itemEnumerator;
         
         if(itemsAbove && [menuItems count]) {
-            [contextualMenu addItem:[NSMenuItem separatorItem]];
+            [textViewContextualMenu addItem:[NSMenuItem separatorItem]];
             itemsAbove = NO;
         }
         
         //add each menu to location
         itemEnumerator = [menuItems objectEnumerator];
         while((menuItem = [itemEnumerator nextObject])) {
-            [contextualMenu addItem:menuItem];
+            if([menuItems containsObject:menuItem]){
+                [textViewContextualMenu addItem:menuItem];
+            }
             itemsAbove = YES;
         }
     }
-    return(contextualMenu);
+    return(textViewContextualMenu);
 }
+#endif
 
 - (AIListContact *)contactualMenuContact
 {
     return(contactualMenuContact);
 }
 
+// disabled until post .53
+#ifdef USE_TEXTVIEW_CONTEXTMENUS
 - (NSTextView *)contextualMenuTextView
 {
-    return(contextualMenuTextView);
+    return(contextualMenu_TextView);
 }
+#endif
 
 - (void)removeItalicsKeyEquivalent
 {

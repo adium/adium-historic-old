@@ -23,8 +23,6 @@
 - (void)_setPushIndicatorVisible:(BOOL)visible;
 - (void)_positionIndicator:(NSNotification *)notification;
 - (void)_resetCacheAndPostSizeChanged;
-- (NSMenu *)_menuItemsTop;
-- (NSMenu *)_menuItemsBottom;
 @end
 
 static NSImage *pushIndicatorImage = nil;
@@ -51,12 +49,8 @@ static NSImage *pushIndicatorImage = nil;
     [self setDrawsBackground:YES];
     _desiredSizeCached = NSMakeSize(0,0);
 
-	[self setAllowsUndo:YES];
+    [self setAllowsUndo:YES];
         
-    //set up contextual menus
-    newMenuTop = nil;
-    newMenuBottom = nil;
-    [self setMenu:[self contextualMenuForAISendingTextView:self mergeWithMenu:[self menu]]];
 
     //
     if(!pushIndicatorImage) pushIndicatorImage = [[NSImage imageNamed:@"stackImage" forClass:[self class]] retain];
@@ -73,13 +67,12 @@ static NSImage *pushIndicatorImage = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	
     [chat release];
-	[associatedView release];
-	[defaultTypingAttributes release];
+    [associatedView release];
+    [defaultTypingAttributes release];
     [returnArray release]; returnArray = nil;
     [historyArray release]; historyArray = nil;
     [pushArray release]; pushArray = nil;
-    [newMenuTop release]; newMenuTop = nil;
-    [newMenuBottom release]; newMenuBottom = nil;
+    //[[self menu] removeAllItems];
     [super dealloc];
 }
 
@@ -531,60 +524,51 @@ static NSImage *pushIndicatorImage = nil;
 }
 
 #pragma mark Contextual Menus
-- (NSMenu *)contextualMenuForAISendingTextView:(AISendingTextView *)textView  mergeWithMenu:(NSMenu *)mergeMenu
+// disabled until post .53
+#ifdef USE_TEXTVIEW_CONTEXTMENUS
++ (NSMenu *)defaultMenu
 {
-   /* NSArray         *menuItems;
+    NSMenu          *superClassMenu = [NSTextView defaultMenu];
+    NSMutableArray  *topItemsArray = nil;
+    NSMutableArray  *bottomItemsArray = nil;
     NSEnumerator    *enumerator;
-    NSMenuItem      *itemForInsertion;
-    
-    if(nil == newMenuTop) {
-        newMenuTop = [self _menuItemsTop];
+    NSArray         *menuItemArray;
+        
+    if(nil == topItemsArray){ //get the link editor and general actions menu items
+        NSMenu  *topItems = [[[AIObject sharedAdiumInstance] menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
+                                        [NSNumber numberWithInt:Context_TextView_LinkAction],
+                                        [NSNumber numberWithInt:Context_TextView_General], nil]
+                                forTextView:self];
+        topItemsArray = [NSMutableArray arrayWithArray:[topItems itemArray]];
+        [topItems removeAllItems];
     }
-    if(nil == newMenuBottom) {
-        newMenuBottom = [self _menuItemsBottom];
-    }
     
-    if(nil != newMenuTop) {
-        //[mergeMenu addItem:[NSMenuItem separatorItem]];
-        menuItems = [newMenuTop itemArray];
-        enumerator = [menuItems objectEnumerator];
-            while((itemForInsertion = [enumerator nextObject])) {
-                if(![[mergeMenu itemArray] containsObject:itemForInsertion]){
-                    [newMenuTop removeItem:itemForInsertion];
-                    NSLog(@"Adding: %@",[itemForInsertion title]);
-                    [mergeMenu addItem:itemForInsertion];
-                }
+    if(nil == bottomItemsArray){ // get the emoticon menues last, so they're always in a constant location
+        NSMenu  *bottomItems = [[[AIObject sharedAdiumInstance] menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
+                                        [NSNumber numberWithInt:Context_TextView_EmoticonAction], nil]
+                                forTextView:self];
+        bottomItemsArray = [NSMutableArray arrayWithArray:[bottomItems itemArray]];
+        [bottomItems removeAllItems];
+    }
+        
+    [superClassMenu addItem:[NSMenuItem separatorItem]];
+    
+    if([topItemsArray count] > 0) { //add items to menu
+        NSMenuItem *menuItem;
+        enumerator = [topItemsArray objectEnumerator];
+        while((menuItem = [enumerator nextObject])){
+            [superClassMenu addItem:[menuItem copy]];
         }
     }
     
-    if(nil != newMenuBottom){
-        //[mergeMenu addItem:[NSMenuItem separatorItem]];
-        menuItems = [newMenuBottom itemArray];
-        enumerator = [menuItems objectEnumerator];
-            while((itemForInsertion = [enumerator nextObject])) {
-                if(![[mergeMenu itemArray] containsObject:itemForInsertion]){
-                    [newMenuBottom removeItem:itemForInsertion];
-                    NSLog(@"Adding: %@",[itemForInsertion title]);
-                    [mergeMenu addItem:itemForInsertion];
-                }
+    if([bottomItemsArray count] > 0){ //add emoticon menu to menu
+        NSMenuItem *menuItem;
+        enumerator = [bottomItemsArray objectEnumerator];
+        while((menuItem = [enumerator nextObject])){
+            [superClassMenu addItem:[menuItem copy]];
         }
     }
-    return(mergeMenu);*/
-    return(nil);
+    return [superClassMenu copy]; //return a copy of the menu
 }
-
-- (NSMenu *)_menuItemsTop
-{
-    return([[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObject:
-                                                               [NSNumber numberWithInt:Context_TextView_EmoticonAction]]
-                                                   forTextView:self]);
-}
-
-- (NSMenu *)_menuItemsBottom
-{
-    return([[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
-                                            [NSNumber numberWithInt:Context_TextView_LinkAction],
-                                            [NSNumber numberWithInt:Context_TextView_General], nil]
-                                   forTextView:self]);
-}
+#endif
 @end
