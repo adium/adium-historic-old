@@ -24,40 +24,40 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 @interface NEHTicTacToeController : NEHGameController
 {
-    IBOutlet NSMatrix		* squares;
-	IBOutlet NSTextField	* status;
+    IBOutlet NSMatrix           *squares;
+	IBOutlet NSTextField        *status;
 	
-	IBOutlet NSTextField	* textField_remoteContact;
-	IBOutlet NSImageView	* imageView_acceptPlayAs;
-	IBOutlet NSTextField	* textField_acceptMove;
+	IBOutlet NSTextField        *textField_remoteContact;
+	IBOutlet NSImageView        *imageView_acceptPlayAs;
+	IBOutlet NSTextField        *textField_acceptMove;
 	
-	IBOutlet NSImageView	* imageView_sentPlayAs;
-	IBOutlet NSTextField	* textField_sentMove;
+	IBOutlet NSImageView        *imageView_sentPlayAs;
+	IBOutlet NSTextField        *textField_sentMove;
 	
-	NSImage					* image_X;
-	NSImage					* image_O;
-	IBOutlet NEHTicTacToeBoard	* board;
+	NSImage                     *image_X;
+	NSImage                     *image_O;
+	IBOutlet NEHTicTacToeBoard  *board;
 	
 	Player					player;
 }
 
-- (id)initWithPlugin:(NEHGamePlugin*)inPlugin;
+- (id)initWithPlugin:(NEHGamePlugin *)inPlugin;
 
-- (void)handleMessage:(NSString*)msg ofType:(NSString*)type;
+- (void)handleMessage:(NSString *)msg ofType:(NSString *)type;
 
 - (void)beginNewGame;
 
 - (void)didSendInvitation:(int)playAs;
 - (void)didReceiveInvitation:(int)playAs;
 
-- (NSString*)nibName;
+- (NSString *)nibName;
 
-- (NSString*)firstPlayerName;
-- (NSString*)secondPlayerName;
+- (NSString *)firstPlayerName;
+- (NSString *)secondPlayerName;
 
 - (void)reset;
-- (NSImage*) loadImage:(NSString*)name;
+- (NSImage *)loadImage:(NSString *)name;
 - (void)updateStatus;
-- (BOOL)move:(Player)p atRow:(int)row atColumn:(int)col;
+- (BOOL)move:(Player)p atRow:(unsigned)row atColumn:(unsigned)col;
 - (void)clearBoard;
 @end
