@@ -31,7 +31,10 @@
         {
             CLASS = ESGaimMSNAccountViewController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"textField_friendlyName" = NSTextField; }; 
+            OUTLETS = {
+                "checkBox_HTTPConnectMethod" = NSButton; 
+                "textField_friendlyName" = NSTextField; 
+            }; 
             SUPERCLASS = ESGaimAccountViewController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }

@@ -7,6 +7,8 @@
 #import "CBGaimAccount.h"
 #include <Libgaim/msn.h>
 
+#define KEY_MSN_HTTP_CONNECT_METHOD @"MSN:HTTP Connect Method"
+
 @interface ESGaimMSNAccount : CBGaimAccount {
 
 }

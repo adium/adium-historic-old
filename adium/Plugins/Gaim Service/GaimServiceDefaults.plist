@@ -11,6 +11,8 @@
 	<string>messenger.hotmail.com</string>
 	<key>MSN:Port</key>
 	<integer>1863</integer>
+	<key>MSN:HTTP Connect Method</key>
+	<false/>
 	
 	<key>Jabber:Host</key>
 	<string>jabber.org</string>

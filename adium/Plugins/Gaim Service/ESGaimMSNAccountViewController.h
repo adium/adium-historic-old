@@ -8,6 +8,8 @@
 
 @interface ESGaimMSNAccountViewController : ESGaimAccountViewController {
     IBOutlet		NSTextField		*textField_friendlyName;
+	
+	IBOutlet		NSButton		*checkBox_HTTPConnectMethod;
 }
 
 @end
