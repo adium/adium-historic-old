@@ -1665,8 +1665,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			}
 		}else if([object isMemberOfClass:[AIListContact class]]){
 			if(!inAccount || 
-			   ([(AIListContact *)object service] == [inAccount service] &&
-				[(AIListContact *)object account] == inAccount)){
+			   ([(AIListContact *)object account] == inAccount)){
 				[contactArray addObject:object];
 			}
 		}
