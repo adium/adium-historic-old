@@ -333,7 +333,7 @@
 		arrangeByGroup = [[preferenceDict objectForKey:KEY_ARRANGE_TABS_BY_GROUP] boolValue];
 
 		[tabView_customTabs setAllowsInactiveTabClosing:[[preferenceDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
-		
+		[tabView_customTabs setAllowsTabRearranging:(![[preferenceDict objectForKey:KEY_KEEP_TABS_ARRANGED] boolValue])];
 		if (force_tabBar_visible == -1) {
 			autohide_tabBar = [[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
 			[self updateTabBarVisibilityAndAnimate:(notification != nil)];
@@ -351,6 +351,11 @@
     }
 }
 
+//Return our tab bar
+- (AICustomTabsView *)customTabsView
+{
+	return( tabView_customTabs );
+}
 
 //
 - (NSMenu *)customTabView:(AICustomTabsView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem
