@@ -285,57 +285,62 @@ static AILogViewerWindowController *sharedInstance = nil;
 //Displays the contents of the specified log in our window
 - (void)displayLog:(AILog *)log
 {
-    NSAttributedString	*logText;
-    NSString		*logFileText;
-    if(displayedLog != log){
-	[displayedLog release]; displayedLog = [log retain];
+    NSAttributedString	*logText = nil;
+    NSString			*logFileText = nil;
 	
-	if(log){	    
-	    //Open the log
-            if(searchMode == LOG_SEARCH_CONTENT){
-                logFileText = [NSString stringWithContentsOfFile:[log path]];
-            } else {
-                logFileText = [NSString stringWithContentsOfFile:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[log path]]];                
-            }
-            if([[log path] hasSuffix:@".html"] || [[log path] hasSuffix:@".html.bak"]) {
-		logText = [[[NSAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:logFileText]] autorelease];
-	    }else{
-		AITextAttributes *textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
-		logText = [[[NSAttributedString alloc] initWithString:logFileText attributes:[textAttributes dictionary]] autorelease];
-	    }
-	    
-	    NSRange     scrollRange = NSMakeRange([logText length],0);
-	    //If we are searching by content, highlight the search results
-	    if(searchMode == LOG_SEARCH_CONTENT){
-		NSEnumerator    *enumerator;
-		NSString	*searchWord;
+    if(displayedLog != log){
+		[displayedLog release];
+		displayedLog = [log retain];
 		
-		enumerator = [[activeSearchString componentsSeparatedByString:@" "] objectEnumerator];
-		while(searchWord = [enumerator nextObject]){
-		    NSRange     occurrence;
-		    
-		    logText = [self hilightOccurrencesOfString:searchWord inString:logText firstOccurrence:&occurrence];
-		    if(occurrence.location < scrollRange.location){
-			scrollRange = occurrence;
-		    }
+		if(log){	    
+			//Open the log
+			logFileText = [NSString stringWithContentsOfFile:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[log path]]];                
+			
+			if(logFileText && [logFileText length]){
+				if([[log path] hasSuffix:@".html"] || [[log path] hasSuffix:@".html.bak"]) {
+					logText = [[[NSAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:logFileText]] autorelease];
+				}else{
+					AITextAttributes *textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
+					logText = [[[NSAttributedString alloc] initWithString:logFileText attributes:[textAttributes dictionary]] autorelease];
+				}
+				
+				if(logText && [logText length]){
+					NSRange     scrollRange = NSMakeRange([logText length],0);
+					
+					//If we are searching by content, highlight the search results
+					if(searchMode == LOG_SEARCH_CONTENT){
+						NSEnumerator    *enumerator;
+						NSString	*searchWord;
+						
+						enumerator = [[activeSearchString componentsSeparatedByString:@" "] objectEnumerator];
+						while(searchWord = [enumerator nextObject]){
+							NSRange     occurrence;
+							
+							logText = [self hilightOccurrencesOfString:searchWord inString:logText firstOccurrence:&occurrence];
+							if(occurrence.location < scrollRange.location){
+								scrollRange = occurrence;
+							}
+						}
+					}
+					
+					//Set this string and scroll to the top/bottom/occurrence
+					[[textView_content textStorage] setAttributedString:logText];
+					
+					//Set this string and scroll to the top/bottom/occurrence
+					[[textView_content textStorage] setAttributedString:logText];
+					if((searchMode == LOG_SEARCH_CONTENT) || automaticSearch){
+						[textView_content scrollRangeToVisible:scrollRange];
+					}else{
+						[textView_content scrollRangeToVisible:NSMakeRange(0,0)];
+					}		
+				}
+			}
 		}
-	    }
-	    //Set this string and scroll to the top/bottom/occurrence
-	    [[textView_content textStorage] setAttributedString:logText];
-	    
-	    //Set this string and scroll to the top/bottom/occurrence
-	    [[textView_content textStorage] setAttributedString:logText];
-	    if((searchMode == LOG_SEARCH_CONTENT) || automaticSearch){
-		[textView_content scrollRangeToVisible:scrollRange];
-	    }else{
-		[textView_content scrollRangeToVisible:NSMakeRange(0,0)];
-	    }		
-	    
-	}else{
-	    //No log selected, empty the view
-	    [textView_content setString:@""];
-	    
-	}
+		
+		//No log selected, empty the view
+		if(!logFileText){
+			[textView_content setString:@""];
+		}
     }
 }
 
@@ -385,26 +390,26 @@ static AILogViewerWindowController *sharedInstance = nil;
 - (NSAttributedString *)hilightOccurrencesOfString:(NSString *)littleString inString:(NSAttributedString *)bigString firstOccurrence:(NSRange *)outRange
 {
     NSMutableAttributedString  *outString = [bigString mutableCopy];
-    NSString		*plainBigString = [bigString string];
+    NSString	*plainBigString = [bigString string];
     NSFont		*boldFont = [NSFont boldSystemFontOfSize:14];
     int			location = 0;
     NSRange		searchRange, foundRange;
-
+	
     outRange->location = NSNotFound;
     
     //Search for the little string in the big string
     while(location != NSNotFound && location < [plainBigString length]){
         searchRange = NSMakeRange(location, [plainBigString length]-location);
         foundRange = [plainBigString rangeOfString:littleString options:NSCaseInsensitiveSearch range:searchRange];
-	
-	//Bold and color this match
+		
+		//Bold and color this match
         if(foundRange.location != NSNotFound){
-	    if(outRange->location == NSNotFound) *outRange = foundRange;
-	    
+			if(outRange->location == NSNotFound) *outRange = foundRange;
+			
             [outString addAttribute:NSFontAttributeName value:boldFont range:foundRange];
             [outString addAttribute:NSBackgroundColorAttributeName value:[NSColor yellowColor] range:foundRange];
         }
-	
+		
         location = NSMaxRange(foundRange);
     }
     
