@@ -26,6 +26,7 @@ int HTMLEquivalentForFontSize(int fontSize);
 
 @interface AIHTMLDecoder (PRIVATE)
 + (NSDictionary *)parseArguments:(NSString *)arguments;
++ (NSMutableAttributedString *)decodeHTMLEntities:(NSMutableAttributedString *)inputString;
 @end
 
 @implementation AIHTMLDecoder
@@ -208,7 +209,7 @@ int HTMLEquivalentForFontSize(int fontSize)
     NSMutableAttributedString	*attrString;
     AITextAttributes		*textAttributes;
     int				tagType;
-
+    
     //set up
     textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
     attrString = [[NSMutableAttributedString alloc] init];
@@ -342,6 +343,8 @@ int HTMLEquivalentForFontSize(int fontSize)
             }
         }
     }
+
+    [AIHTMLDecoder decodeHTMLEntities:attrString];
     
     return([attrString autorelease]);
 }
@@ -376,8 +379,38 @@ int HTMLEquivalentForFontSize(int fontSize)
         //Store in dict
         [argDict setObject:value forKey:key];
     }
-
+    
     return([argDict autorelease]);
+}
+
++ (NSMutableAttributedString *)decodeHTMLEntities:(NSMutableAttributedString *)inputString
+{
+    NSString *plainString = [inputString string];
+    NSRange currentRange;
+    
+    int lastRangeMax = 0;
+
+    while ((currentRange = [plainString rangeOfString:@"&amp;" options:0 range:NSMakeRange(lastRangeMax, [plainString length]-lastRangeMax)]).location != NSNotFound) {
+        lastRangeMax = NSMaxRange(currentRange);
+        [inputString replaceCharactersInRange:currentRange withString:@"&"];
+        plainString = [inputString string];
+    }
+
+    lastRangeMax = 0;
+    while ((currentRange = [plainString rangeOfString:@"&lt;" options:0 range:NSMakeRange(lastRangeMax, [plainString length]-lastRangeMax)]).location != NSNotFound) {
+        lastRangeMax = NSMaxRange(currentRange);
+        [inputString replaceCharactersInRange:currentRange withString:@"<"];
+        plainString = [inputString string];
+    }
+
+    lastRangeMax = 0;
+    while ((currentRange = [plainString rangeOfString:@"&gt;" options:0 range:NSMakeRange(lastRangeMax, [plainString length]-lastRangeMax)]).location != NSNotFound) {
+        lastRangeMax = NSMaxRange(currentRange);
+        [inputString replaceCharactersInRange:currentRange withString:@">"];
+        plainString = [inputString string];
+    }
+
+    return inputString;
 }
 
 @end
