@@ -46,11 +46,11 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 {
 	
 	// Sanity check: is there really a list object and a chat?
-	if( contact && chat ) {
+	if( contact && [contact isKindOfClass:[AIListContact class]] && chat ) {
 		
 		// Sanity check: is it a group chat?
-		if( [chat name] ) {
-			BOOL res = [chat inviteListContact:contact withMessage:[textField_message stringValue]];
+		if( [chat name]) {
+			BOOL res = [chat inviteListContact:(AIListContact *)contact withMessage:[textField_message stringValue]];
 			NSLog(@"#### Invited %@, result was %d",contact,res);
 		} else {
 			NSLog(@"#### Inviting %@ to a one-on-one chat?",contact);
