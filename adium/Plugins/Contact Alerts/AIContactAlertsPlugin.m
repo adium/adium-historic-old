@@ -10,6 +10,7 @@
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
 #import "AIAdium.h"
+#import "SUSpeaker.h"
 
 @interface AIContactAlertsPlugin(PRIVATE)
 
@@ -42,6 +43,9 @@
 
     //Register as a contact observer
     [[owner contactController] registerListObjectObserver:self];
+
+    //Initialize our text-to-speech object
+    speaker = [[SUSpeaker alloc] init];  
 }
 
 
@@ -57,7 +61,6 @@
     NSMutableArray * eventActionArray =  [[[[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject] mutableCopy] autorelease];
     NSEnumerator * actionsEnumerator;
     NSDictionary * actionDict;
-    NSString * action;
     NSString * event;
     int status, event_status;
     BOOL status_matches;
@@ -73,21 +76,18 @@
         status = [[inObject statusArrayForKey:event] greatestIntegerValue];
         event_status = [[actionDict objectForKey:KEY_EVENT_STATUS] intValue];
         status_matches = (status && event_status) || (!status && !event_status); //XOR
-        if ( status_matches && [inModifiedKeys containsObject:event])
-             { //actions to take when an event is matched go here
-
-            action = [actionDict objectForKey:KEY_EVENT_ACTION];
-
-            if ([action compare:@"Sound"] == 0)
-            {
-                NSString	*soundPath = [actionDict objectForKey:KEY_EVENT_DETAILS];
+        if ( status_matches && [inModifiedKeys containsObject:event]) { //actions to take when an event is matched go here
+            
+            NSString * action = [actionDict objectForKey:KEY_EVENT_ACTION];
+            NSString * details = [actionDict objectForKey:KEY_EVENT_DETAILS];
+            if ([action compare:@"Sound"] == 0) {
+                NSString	*soundPath = details;
                 if(soundPath != nil && [soundPath length] != 0) {
                     [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
                 }
             }
 
-            else if ([action compare:@"Message"] == 0)
-            { //message
+            else if ([action compare:@"Message"] == 0) { //message
                 if ([[inObject statusArrayForKey:@"Online"] greatestIntegerValue]) //must still be online to prevent an error message
                 {
                 NSMutableArray * onlineAccounts = [NSMutableArray array];
@@ -104,7 +104,7 @@
                 }
                 account = [onlineAccounts objectAtIndex:0];
 
-                NSAttributedString  *message = [[NSAttributedString alloc] initWithString:[actionDict objectForKey:KEY_EVENT_DETAILS]];
+                NSAttributedString  *message = [[NSAttributedString alloc] initWithString:details];
                  responseContent = [AIContentMessage messageInChat:[[owner contentController] chatWithListObject:inObject onAccount:account]
                                                        withSource:account
                                                       destination:inObject
@@ -113,10 +113,22 @@
                 [[owner contentController] sendContentObject:responseContent];
                 }
             }
+            
             else if ([action compare:@"Alert"] == 0) {
-                NSAttributedString *message = [[NSAttributedString alloc] initWithString:[actionDict objectForKey:KEY_EVENT_DETAILS]];
+                NSAttributedString *message = [[NSAttributedString alloc] initWithString:details];
                 NSString *title = [[NSString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", [inObject displayName], [actionDict objectForKey:KEY_EVENT_DISPLAYNAME]]];
                 NSRunInformationalAlertPanel(title, [message string], @"Okay", nil, nil);
+            }
+
+            else if ([action compare:@"Bounce"] == 0) {
+                int behavior = [details intValue];
+
+                //Perform the behavior
+                [[owner dockController] performBehavior:behavior];
+            }
+
+            else if ([action compare:@"Speak"] == 0) {
+                [speaker speakText:details]; //uses Raphael Sebbe's SpeechUtilities.framework
             }
         }
     }
@@ -146,20 +158,20 @@
 - (IBAction)editContactAlerts:(id)sender
 {
     [AIContactAlertsWindowController showContactAlertsWindowWithOwner:owner
-                                                           forContact:[[owner contactController] selectedContact]];
+                                                           forObject:[[owner contactController] selectedContact]];
 }
 
 - (IBAction)editContextContactAlerts:(id)sender
 {
     [AIContactAlertsWindowController showContactAlertsWindowWithOwner:owner
-                                                           forContact:[[owner menuController] contactualMenuContact]];
+                                                           forObject:[[owner menuController] contactualMenuContact]];
 }
 
 - (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
 {
     NSDictionary		*objects = [inToolbarItem configurationObjects];
     AIListContact		*object = [objects objectForKey:@"ContactObject"];
-    BOOL			enabled = (object && [object isKindOfClass:[AIListContact class]]);
+    BOOL			enabled = object &&  [object isKindOfClass:[AIListObject class]];
 
     [inToolbarItem setEnabled:enabled];
     return(enabled);
@@ -168,12 +180,9 @@
 - (IBAction)toolbarContactAlerts:(AIMiniToolbarItem *)toolbarItem
 {
     NSDictionary		*objects = [toolbarItem configurationObjects];
-    AIListContact		*object = [objects objectForKey:@"ContactObject"];
+    AIListObject		*object = [objects objectForKey:@"ContactObject"];
 
-    if([object isKindOfClass:[AIListContact class]]){
-        //Show the window
-        [AIContactAlertsWindowController showContactAlertsWindowWithOwner:owner forContact:object];
-    }
+    [AIContactAlertsWindowController showContactAlertsWindowWithOwner:owner forObject:object];
 }
 
 

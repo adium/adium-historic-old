@@ -23,8 +23,8 @@
 
 @interface AIContactAlertsWindowController (PRIVATE)
 - (NSMenu *)eventMenu;
-- (NSMenu *)soundSetMenu;
 - (NSMenu *)soundListMenu;
+- (NSMenu *)behaviorListMenu;
 - (NSMenu *)actionListMenu;
 - (int)numberOfRowsInTableView:(NSTableView *)tableView;
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row;
@@ -37,24 +37,20 @@
 - (void)configureForTextDetails:(NSString *)instructions;
 - (void)configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu;
 - (NSMenuItem *)eventMenuItem:(NSString *)event withDisplay:(NSString *)displayName;
+- (NSMenuItem *)menuItemForBehavior:(DOCK_BEHAVIOR)behavior withName:(NSString *)name;
 @end
 
 @implementation AIContactAlertsWindowController
 //Open a new info window
 static AIContactAlertsWindowController *sharedInstance = nil;
-//+ (id)showContactAlertsWindowWithOwner:(id)inOwner forContact:(AIListContact *)inContact
-+ (id)showContactAlertsWindowWithOwner:(id)inOwner forContact:(AIListObject *)inContact
++ (id)showContactAlertsWindowWithOwner:(id)inOwner forObject:(AIListObject *)inContact
 {
     if(!sharedInstance){
         sharedInstance = [[self alloc] initWithWindowNibName:CONTACT_ALERT_WINDOW_NIB owner:inOwner];
     }
 
-    //Allow for groups
- //   if([inContact isKindOfClass:[AIListContact class]]){ //Only allow this for contacts
-        //Show the window and configure it for the contact
-        [sharedInstance configureWindowForContact:inContact];
-        [sharedInstance showWindow:nil];
- //   }
+    [sharedInstance configureWindowforObject:inContact];
+    [sharedInstance showWindow:nil];
 
     return(sharedInstance);
 }
@@ -75,15 +71,13 @@ static AIContactAlertsWindowController *sharedInstance = nil;
         [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                              forKey:KEY_CONTACT_ALERTS_WINDOW_FRAME
                                               group:PREF_GROUP_WINDOW_POSITIONS];
-        
         [[self window] close];
     }
 }
 
 
 //Configure the actions window for the specified contact
-//- (void)configureWindowForContact:(AIListContact *)inContact
-- (void)configureWindowForContact:(AIListObject *)inContact
+- (void)configureWindowforObject:(AIListObject *)inContact
 {
 
     //Make sure our window is loaded
@@ -100,9 +94,12 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     //Build the event menu
     [popUp_addEvent setMenu:[self eventMenu]];
 
+    //Build the action menu
+    actionMenu = [self actionListMenu];
+    
     //Configure the 'Action' table column
     dataCell = [[AITableViewPopUpButtonCell alloc] init];
-    [dataCell setMenu:[self actionListMenu]];
+    [dataCell setMenu:actionMenu];
     [dataCell setControlSize:NSSmallControlSize];
     [dataCell setFont:[NSFont menuFontOfSize:11]];
     [dataCell setBordered:NO];
@@ -121,11 +118,11 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
     eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
 
-    if(!eventActionArray)
-    {
+    if(eventActionArray) //saved array
+        if ([eventActionArray count]) [tableView_actions selectRow:0 byExtendingSelection:NO];
+    else
         eventActionArray = [[NSMutableArray alloc] init];
-        //NSLog(@"Not found.");
-    }
+   
     //Update the outline view
     [tableView_actions reloadData];
 }
@@ -157,6 +154,20 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [menuItem setRepresentedObject:@"Alert"];
     [actionListMenu addItem:menuItem];
 
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Bounce the dock"
+                                           target:self
+                                           action:@selector(actionBounceDock:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setRepresentedObject:@"Bounce"];
+    [actionListMenu addItem:menuItem];
+
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Speak text"
+                                           target:self
+                                           action:@selector(actionSpeakText:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setRepresentedObject:@"Speak"];
+    [actionListMenu addItem:menuItem];
+    
     return(actionListMenu);
 }
 
@@ -165,16 +176,23 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 {	[self configureForTextDetails:@"Message to send:"];	}
 
 //setup display for displaying an alert
-- (IBAction)actionDisplayAlert:(id)sender {
-    [self configureForTextDetails:@"Alert text:"];
-}
-    
+- (IBAction)actionDisplayAlert:(id)sender
+{	[self configureForTextDetails:@"Alert text:"];		}
+
+//setup display for speaking text
+- (IBAction)actionSpeakText:(id)sender
+{    [self configureForTextDetails:@"Text to speak:"];		}
+
 //setup display for playing a sound
 - (IBAction)actionPlaySound:(id)sender
 {    [self configureForMenuDetails:@"Sound to play:" menuToDisplay:[self soundListMenu]];	}
 
+//setup display for bouncing the dock
+- (IBAction)actionBounceDock:(id)sender
+{    [self configureForMenuDetails:@"Dock behavior:" menuToDisplay:[self behaviorListMenu]];	}
+
 //Builds and returns an event menu
-- (NSMenu *) eventMenu
+- (NSMenu *)eventMenu
 {
     NSMenu		*eventMenu = [[NSMenu alloc] init];
 
@@ -182,18 +200,16 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [eventMenu addItemWithTitle:@"Add Event…" target:nil action:nil keyEquivalent:@""];
 
     //Add a menu item for each event
-    NSMenuItem	*menuItem;
-
-    menuItem = [self eventMenuItem:@"Signed On" withDisplay:@"Signed On"];	[eventMenu addItem:menuItem];
-    menuItem = [self eventMenuItem:@"Signed Off" withDisplay:@"Signed Off"];    [eventMenu addItem:menuItem];
-    menuItem = [self eventMenuItem:@"Away" withDisplay:@"Went Away"];	    	[eventMenu addItem:menuItem];
-    menuItem = [self eventMenuItem:@"!Away" withDisplay:@"Came Back From Away"];    		[eventMenu addItem:menuItem];
-    menuItem = [self eventMenuItem:@"Idle" withDisplay:@"Became Idle"];		[eventMenu addItem:menuItem];
-    menuItem = [self eventMenuItem:@"!Idle" withDisplay:@"Became Unidle"];    	[eventMenu addItem:menuItem];
-    menuItem = [self eventMenuItem:@"Typing" withDisplay:@"Is Typing"];		[eventMenu addItem:menuItem];
-    menuItem = [self eventMenuItem:@"UnviewedContent" withDisplay:@"Has Unviewed Content"];	[eventMenu addItem:menuItem];
-    menuItem = [self eventMenuItem:@"Warning" withDisplay:@"Was Warned"];	[eventMenu addItem:menuItem];
-
+    [eventMenu addItem:[self eventMenuItem:@"Signed On" withDisplay:@"Signed On"]];
+    [eventMenu addItem:[self eventMenuItem:@"Signed Off" withDisplay:@"Signed Off"]];
+    [eventMenu addItem:[self eventMenuItem:@"Away" withDisplay:@"Went Away"]];
+    [eventMenu addItem:[self eventMenuItem:@"!Away" withDisplay:@"Came Back From Away"]];
+    [eventMenu addItem:[self eventMenuItem:@"Idle" withDisplay:@"Became Idle"]];
+    [eventMenu addItem:[self eventMenuItem:@"!Idle" withDisplay:@"Became Unidle"]];
+    [eventMenu addItem:[self eventMenuItem:@"Typing" withDisplay:@"Is Typing"]];
+    [eventMenu addItem:[self eventMenuItem:@"UnviewedContent" withDisplay:@"Has Unviewed Content"]];
+    [eventMenu addItem:[self eventMenuItem:@"Warning" withDisplay:@"Was Warned"]];
+    
     return(eventMenu);
 }
 
@@ -227,7 +243,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
 - (void)testSelectedEvent
 {
-    //action to take when action is selected in the window
+    //action to take when action is double-clicked in the window
 }
 
 
@@ -238,7 +254,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
     details = [NSString alloc];
     
-    if (row != -1 /* && row < [eventActionArray count] */)
+    if (row != -1)
         details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
 
     [textField_description_textField setStringValue:instructions];
@@ -257,21 +273,10 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [popUp_actionDetails setEnabled:YES];
     [textField_actionDetails setEnabled:NO];
     [popUp_actionDetails setMenu:detailsMenu];
-    if (row != -1 /* && row < [eventActionArray count] */)
+    if (row != -1)
+    {
         [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]]];
-    
-}
-
-//editing is over
-- (void)controlTextDidEndEditing:(NSNotification *)notification
-{
-    int row = [tableView_actions selectedRow];
-    NSMutableDictionary	*selectedActionDict;
-
-    selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
-    [selectedActionDict setObject:[textField_actionDetails stringValue] forKey:KEY_EVENT_DETAILS];
-    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
-    [self saveEventActionArray];
+    }
 }
 
 //used for each item of the eventMenu
@@ -289,7 +294,6 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [menuDict setObject:event 		forKey:KEY_EVENT_NOTIFICATION];
     [menuItem setRepresentedObject:menuDict];
     return menuItem;
-
 }
 
 //Delete the selected action
@@ -385,6 +389,56 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [self saveEventActionArray];
 }
 
+//Builds and returns a dock behavior list menu
+- (NSMenu *)behaviorListMenu
+{
+//    NSMenu		*behaviorMenu = [[[NSMenu alloc] init] autorelease];
+    NSMenu		*behaviorMenu = [[NSMenu alloc] init];
+
+    //Build the menu items
+    [behaviorMenu addItem:[self menuItemForBehavior:BOUNCE_ONCE withName:@"Once"]];
+    [behaviorMenu addItem:[NSMenuItem separatorItem]];
+    [behaviorMenu addItem:[self menuItemForBehavior:BOUNCE_REPEAT withName:@"Repeatedly"]];
+    [behaviorMenu addItem:[self menuItemForBehavior:BOUNCE_DELAY5 withName:@"Every 5 Seconds"]];
+    [behaviorMenu addItem:[self menuItemForBehavior:BOUNCE_DELAY10 withName:@"Every 10 Seconds"]];
+    [behaviorMenu addItem:[self menuItemForBehavior:BOUNCE_DELAY15 withName:@"Every 15 Seconds"]];
+    [behaviorMenu addItem:[self menuItemForBehavior:BOUNCE_DELAY30 withName:@"Every 30 Seconds"]];
+    [behaviorMenu addItem:[self menuItemForBehavior:BOUNCE_DELAY60 withName:@"Every Minute"]];
+
+    [behaviorMenu setAutoenablesItems:NO];
+
+    return(behaviorMenu);
+}
+
+- (NSMenuItem *)menuItemForBehavior:(DOCK_BEHAVIOR)behavior withName:(NSString *)name
+{
+    NSMenuItem		*menuItem;
+
+    menuItem = [[[NSMenuItem alloc] initWithTitle:name
+                                           target:self
+                                           action:@selector(selectBehavior:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setRepresentedObject:[[NSNumber numberWithInt:behavior] stringValue]];
+
+    return(menuItem);
+}
+
+//The user selected a behavior
+- (IBAction)selectBehavior:(id)sender
+{
+    NSString	*behavior = [sender representedObject];
+    int row = [tableView_actions selectedRow];
+    
+    NSMutableDictionary	*selectedActionDict;
+
+    selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
+    [selectedActionDict setObject:behavior forKey:KEY_EVENT_DETAILS];
+    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+
+    //Save event sound preferences
+    [self saveEventActionArray];
+}
+
 //TableView datasource --------------------------------------------------------
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
@@ -418,14 +472,11 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
         return(action);
 
-    }else {
-        
+    }else{
         return(nil);
-
     }
 }
 
-//
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     NSString	*identifier = [tableColumn identifier];
@@ -455,8 +506,6 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     }
 }
 
-
-//
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
     [self deleteEventAction:nil]; //Delete it
@@ -468,10 +517,21 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     int row = [tableView_actions selectedRow];
     if (row != -1)
     {
-        NSMenu * actionsMenu = [[self actionListMenu] autorelease];
         NSString *action = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_ACTION];
-        [actionsMenu performActionForItemAtIndex:[actionsMenu indexOfItemWithRepresentedObject:action]];
+        [actionMenu performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]];
     }
+}
+
+//editing is over
+- (void)controlTextDidEndEditing:(NSNotification *)notification
+{
+    int row = [tableView_actions selectedRow];
+    NSMutableDictionary	*selectedActionDict;
+
+    selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
+    [selectedActionDict setObject:[textField_actionDetails stringValue] forKey:KEY_EVENT_DETAILS];
+    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+    [self saveEventActionArray];
 }
 
 - (BOOL)shouldSelectRow:(int)inRow
@@ -491,7 +551,6 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     return(self);
 }
 
-//
 - (void)dealloc
 {
     [owner release];
@@ -514,6 +573,4 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     }
 
 }
-
-
 @end

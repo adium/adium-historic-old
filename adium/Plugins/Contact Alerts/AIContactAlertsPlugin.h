@@ -10,6 +10,7 @@
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
 #import "AIAdium.h"
+#import "SUSpeaker.h"
 
 #define PREF_GROUP_ALERTS		@"Alerts"
 #define	KEY_EVENT_NOTIFICATION		@"Notification"
@@ -36,6 +37,7 @@
 @interface AIContactAlertsPlugin : AIPlugin <AIMiniToolbarItemDelegate,AIListObjectObserver> {
     NSMenuItem				*editContactAlertsMenuItem;
     NSMenuItem				*contactAlertsContextMenuItem;
+    SUSpeaker 				*speaker;
 }
 
 @end
