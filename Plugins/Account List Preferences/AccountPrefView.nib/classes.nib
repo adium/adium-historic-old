@@ -11,6 +11,7 @@
                 changeUIDField = id; 
                 deleteAccount = id; 
                 newAccount = id; 
+                registerAccount = id; 
                 selectServiceType = id; 
                 toggleAutoConnect = id; 
                 toggleConnectStatus = id; 
@@ -21,8 +22,8 @@
                 "button_autoConnect" = NSButton; 
                 "button_deleteAccount" = NSButton; 
                 "button_newAccount" = NSButton; 
+                "button_register" = NSButton; 
                 "button_toggleConnect" = NSButton; 
-                configuredForService = id; 
                 "popupMenu_serviceList" = NSPopUpButton; 
                 "progress_status" = NSProgressIndicator; 
                 "scrollView_accountList" = AIAutoScrollView; 

@@ -20,6 +20,7 @@
 	IBOutlet		NSTextField					*textField_status;
 	IBOutlet		NSProgressIndicator			*progress_status;
 	IBOutlet		NSButton					*button_toggleConnect;
+	IBOutlet		NSButton					*button_register;
 	
 	//Account preferences
     IBOutlet		NSTabView					*tabView_auxiliary;
@@ -51,5 +52,6 @@
 - (IBAction)toggleAutoConnect:(id)sender;
 - (IBAction)changeUIDField:(id)sender;
 - (IBAction)toggleConnectStatus:(id)sender;
+- (IBAction)registerAccount:(id)sender;
 
 @end
