@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 697 $ $Date: 2004/05/05 16:26:41 $ -->
+<!--$Rev: 697 $ $Date: 2004/05/07 17:32:36 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -18,6 +18,9 @@ Statement stmt = null;
 PreparedStatement metaStmt = null;
 ResultSet rset = null;
 ResultSet metaSet = null;
+PreparedStatement infoStmt = null;
+ResultSet infoSet = null;
+
 try {
     stmt = conn.createStatement();
 %>
@@ -93,45 +96,45 @@ try {
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
-    pstmt = conn.prepareStatement("select meta_id, name, url, " +
-    " email, location, notes " +
-    " from adium.meta_container order by name");;
-    
+
+    pstmt = conn.prepareStatement("select count(*) * 30 + 125 as height from adium.information_keys");
+
     rset = pstmt.executeQuery();
-    
+
+    rset.next();
+
+    int height = rset.getInt("height");
+
+    pstmt = conn.prepareStatement("select meta_id, name " +
+        " from adium.meta_container order by name");
+
+    rset = pstmt.executeQuery();
+
     while(rset.next()) {
 
         String editURL = "editMeta.jsp?meta_id=" + rset.getInt("meta_id");
 %>
 <span class="edit"<a href="#" 
-    onClick="window.open('<%= editURL %>', 'Edit Meta Contact', 'width=275,height=450')">Edit ...</a></span>
+    onClick="window.open('<%= editURL %>', 'Edit Meta Contact', 'width=275,height=<%= height %>')">Edit ...</a></span>
 <%
 
         out.print("<h2>" + rset.getString("name") + "</h2>");
         out.println("<div class=\"meta\">");
         out.print("<div class=\"personal_info\">");
-        out.println("<table>");
-
-        if(rset.getString("url") != null) {
-            out.println("<tr><td class=\"left\">URL</td>" +
-                "<td><a href=\"" + rset.getString("url") + 
-                "\">" + rset.getString("url") + "</a></td></tr>");
-        }
-             
-        if(rset.getString("email") != null) {
-            out.println("<tr><td class=\"left\">Email</td><td>");
-            out.println("<a href=\"mailto:" + rset.getString("email") + 
-                "\">" + rset.getString("email") + "</a></td></tr>");
-        }
-            
-        if(rset.getString("location") != null) {
-            out.println("<tr><td class=\"left\">Location</td><td>" + 
-                rset.getString("location") + "</td></tr>");
-        }
         
-        if(rset.getString("notes") != null) {
-            out.println("<tr><td class=\"left\">Notes</td><td>" + 
-                rset.getString("notes") + "</td></tr>");
+        infoStmt = conn.prepareStatement("select key_name, value from adium.meta_contact_info where meta_id = ? order by key_name");
+
+        infoStmt.setInt(1, rset.getInt("meta_id"));
+
+        infoSet = infoStmt.executeQuery();
+        
+        out.println("<table>");
+        
+        while(infoSet.next()) {
+            out.println("<tr><td class=\"left\">" + 
+                infoSet.getString("key_name") + "</td>" +
+                "<td>" + infoSet.getString("value") + 
+                "</td></tr>");
         }
         out.println("</table>");
         out.println("</div>");
@@ -167,7 +170,7 @@ try {
 %>
     <h2>
 <a href="#" 
-    onClick="window.open('addMeta.jsp', 'Add Meta Contact', 'width=275,height=425')">Add Meta Contact ...</a></h2>
+    onClick="window.open('addMeta.jsp', 'Add Meta Contact', 'width=275,height=<%= height %>')">Add Meta Contact ...</a></h2>
 
                 </div>
                 <div class="boxWideBottom"></div>

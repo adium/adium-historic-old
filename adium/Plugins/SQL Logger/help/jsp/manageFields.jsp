@@ -12,44 +12,51 @@ ResultSet rset = null;
 
 try {
     pstmt = conn.prepareStatement("select key_id, key_name from adium.information_keys order by key_name");
-    
+
     rset = pstmt.executeQuery();
+    rset.next();
 %>
 <html>
-    <head><title>Add Meta-Contact</title></head>
+    <head><title>Manage Fields</title></head>
     <link rel="stylesheet" type="text/css" href="styles/default.css" />
-    <body style="background: #ffffff">
-        <form action="insertNewMeta.jsp" method="get">
+    <body style="background :#fff">
+        <form action="updateFields.jsp" method="get">
             <table border="0" cellpadding="0" cellspacing="5">
             <tr>
             <td align="right">
-            <label for="name">Name</label>
+            <label for="name">Delete?</label>
             </td>
             <td>
-            <input type="text" name="name" size="20" />
+                Field Name
             </td>
             </tr>
 <%
     while(rset.next()) {
         out.println("<tr><td align=\"right\">");
-        out.println("<label for=\"" + rset.getString("key_name") + "\">" +
-            rset.getString("key_name") + "</label>");
 
+        out.println("<input type=\"checkbox\" name=\"" + 
+            rset.getInt("key_id") + "\" id=\"" + 
+            rset.getString("key_name") + "\"/>");
         out.println("</td><td>");
         
-        out.println("<input type=\"text\" name=\"" + 
-            rset.getString("key_id") + "\" size=\"20\">");
-
+        out.println("<label for=\"" + rset.getString("key_name") +
+            "\">" + rset.getString("key_name") + "</label>");
+        
         out.println("</td></tr>");
     }
 
+    for(int i = 1; i <= 3; i ++) {
+        out.println("<tr><td></td><td>");
+        out.println("<input type=\"text\" name=\"new" + i + "\" />");
+        out.println("</td></tr>");
+    }
 %>
+        
             </table>
-            <div align="right">
+                <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
                 <input type="reset" /><input type="submit" />
             </div>
         </form>
-        <p><a href="manageFields.jsp?return=addMeta.jsp">Manage Fields ... </a></p>
     </body>
 </html>
 <%

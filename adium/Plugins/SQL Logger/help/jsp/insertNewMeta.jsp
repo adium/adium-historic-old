@@ -8,44 +8,56 @@ DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
 String name = request.getParameter("name");
-String url = request.getParameter("url");
-String email = request.getParameter("email");
-String location = request.getParameter("location");
-String notes = request.getParameter("notes");
-
-if(url != null && url.equals("")) {
-    url = null;
-}
-
-if(email != null && email.equals("")) {
-    email = null;
-}
-
-if(location != null && location.equals("")) {
-    location = null;
-}
-
-if (notes != null && notes.equals("")) {
-    notes = null;
-}
 
 PreparedStatement pstmt = null;
+ResultSet rset = null;
+
+PreparedStatement updateStmt = null;
+
+int meta_id;
 
 try {
+
     if(name != null && !name.equals("")) {
-        pstmt = conn.prepareStatement("insert into adium.meta_container (name, url, email, location, notes) values (?, ?, ?, ?, ?)");
+
+        conn.setAutoCommit(false);
+
+        pstmt = conn.prepareStatement("insert into adium.meta_container (name) values (?)");
 
         pstmt.setString(1, name);
-        pstmt.setString(2, url);
-        pstmt.setString(3, email);
-        pstmt.setString(4, location);
-        pstmt.setString(5, notes);
 
         pstmt.executeUpdate();
+
+        pstmt = conn.prepareStatement("select currval('meta_container_meta_id_seq')");
+        rset = pstmt.executeQuery();
+
+        rset.next();
+
+        meta_id = rset.getInt("currval");
+        
+        pstmt = conn.prepareStatement("select key_id from information_keys");
+
+        rset = pstmt.executeQuery();
+
+        while(rset.next()) {
+            String requestText = request.getParameter(rset.getString("key_id"));
+
+            if(requestText != null && !requestText.equals("")) {
+                updateStmt = conn.prepareStatement("insert into adium.contact_information (meta_id, key_id, value) values (?, ?, ?)");
+
+                updateStmt.setInt(1, meta_id);
+                updateStmt.setInt(2, rset.getInt("key_id"));
+                updateStmt.setString(3, requestText);
+
+                updateStmt.executeUpdate();
+            }
+        }
     }
 } catch (SQLException e) {
     out.println(e.getMessage());
+    conn.rollback();
 } finally {
+    conn.commit();
     conn.close();
 }
 %>

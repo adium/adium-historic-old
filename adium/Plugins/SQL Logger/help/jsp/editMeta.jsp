@@ -19,37 +19,47 @@ PreparedStatement pstmt = null;
 ResultSet rset = null;
 
 try {
-    pstmt = conn.prepareStatement("select name, coalesce(url, '') as url, coalesce(email, '') as email, coalesce(location, '') as location, coalesce(notes, '') as notes from adium.meta_container where meta_id = ?");
+    pstmt = conn.prepareStatement("select name, key_id, key_name, coalesce(value, '') as value from adium.meta_container natural join adium.information_keys natural left join adium.contact_information where meta_id = ? order by key_name");
     
     pstmt.setInt(1, meta_id);
     
     rset = pstmt.executeQuery();
-    
     rset.next();
 %>
 <html>
     <head><title>Edit Meta-Contact <%= rset.getString("name") %></title></head>
-    <body>
+    <link rel="stylesheet" type="text/css" href="styles/default.css" />
+    <body style="background :#fff">
         <form action="updateMeta.jsp" method="get">
-            <label for="name"><b>Name</b></label><br />
-            <input type="text" name="name" size="30" 
-                value="<%= rset.getString("name")%>"/><br /><br />
+            <table border="0" cellpadding="0" cellspacing="5">
+            <tr>
+            <td align="right">
+            <label for="name">Name</label>
+            </td>
+            <td>
+            <input type="text" name="name" size="20" 
+                value="<%= rset.getString("name")%>"/>
+            </td>
+            </tr>
+<%
+    rset.beforeFirst();
 
-            <label for="url"><b>URL</b></label><br />
-            <input type="text" name="url" size="30"
-                value="<%= rset.getString("url")%>"><br /><br />
+    while(rset.next()) {
+        out.println("<tr><td align=\"right\">");
+        out.println("<label for=\"" + rset.getString("key_name") + "\">" +
+            rset.getString("key_name") + "</label>");
 
-            <label for="email"><b>Email</b></label><br />
-            <input type="text" name="email" size="30"
-                value="<%= rset.getString("email")%>"><br /><br />
+        out.println("</td><td>");
+        
+        out.println("<input type=\"text\" name=\"" + 
+            rset.getString("key_id") + "\" size=\"20\" value=\"" +
+            rset.getString("value") + "\">");
 
-            <label for="location"><b>Location</b></label><br />
-            <input type="text" name="location" size="30"
-                value="<%= rset.getString("location")%>"><br /><br />
+        out.println("</td></tr>");
+    }
 
-            <label for="notes"><b>Notes</b></label><br />
-            <textarea rows="6" cols="30" name="notes"><%= rset.getString("notes")%></textarea><br />
-            <br />
+%>
+            </table>
             <input type="checkbox" name="delete" id="delete" />
             <label for="delete">Delete</label><br />
             <input type="hidden" name="meta_id" value="<%= meta_id %>">
@@ -57,6 +67,7 @@ try {
                 <input type="reset" /><input type="submit" />
             </div>
         </form>
+        <p><a href="manageFields.jsp?return=editMeta.jsp?meta_id=<%= meta_id%>">Manage ...</a></p>
     </body>
 </html>
 <%
