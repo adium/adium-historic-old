@@ -181,7 +181,7 @@
 		
 		//We can select "None" if there are no sounds
 		if(![alertsArray count]){
-			soundMenuItem = [(NSMenuItem *)popUp_soundSet itemWithTitle:@"None"];
+			soundMenuItem = (NSMenuItem *)[popUp_soundSet itemWithTitle:@"None"];
 		}
 
 		//Sounds changed.  Could check all sounds to determine if we are on a soundset or are now 'custom',
