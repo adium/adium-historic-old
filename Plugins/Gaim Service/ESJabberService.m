@@ -12,50 +12,46 @@
 
 @implementation ESJabberService
 
-- (id)initWithService:(id)inService
-{
-    [super initWithService:inService];
-    
-	NSImage *image = [NSImage imageNamed:@"jabber" forClass:[self class]];
-	
-    //Create our handle service type
-    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Jabber"
-                                                      description:@"Jabber"
-                                                            image:image
-														menuImage:nil
-                                                    caseSensitive:NO
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-()"]
-												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
-													allowedLength:129] retain];
-    
-    //Register this service
-    [[adium accountController] registerService:self];
-    
-    return self;
+//Account Creation
+- (Class)accountClass{
+	return([ESGaimJabberAccount class]);
 }
 
-- (NSString *)identifier
-{
-    return(@"Jabber-LIBGAIM");
-}
-- (NSString *)description
-{
-    return @"Jabber";
-}
-
-- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
-{    
-    return([[[ESGaimJabberAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
-}
-
-- (AIAccountViewController *)accountView
-{
+- (AIAccountViewController *)accountView{
     return([ESGaimJabberAccountViewController accountView]);
 }
 
-- (DCJoinChatViewController *)joinChatView
-{
+- (DCJoinChatViewController *)joinChatView{
 	return([DCGaimJabberJoinChatViewController joinChatView]);
+}
+
+//Service Description
+- (NSString *)serviceCodeUniqueID{
+	return(@"libgaim-Jabber");
+}
+- (NSString *)serviceID{
+	return(@"Jabber");
+}
+- (NSString *)serviceClass{
+	return(@"Jabber");
+}
+- (NSString *)shortDescription{
+	return(@"Jabber");
+}
+- (NSString *)longDescription{
+	return(@"Jabber");
+}
+- (NSCharacterSet *)allowedCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-()"]);
+}
+- (NSCharacterSet *)ignoredCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+}
+- (int)allowedLength{
+	return(129);
+}
+- (BOOL)caseSensitive{
+	return(NO);
 }
 
 @end
