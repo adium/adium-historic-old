@@ -23,7 +23,7 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Advanced_Status);
+    return(AIPref_Advanced);
 }
 - (NSString *)label{
     return(@"Away Status Window");
