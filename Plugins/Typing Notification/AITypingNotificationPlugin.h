@@ -6,7 +6,7 @@
 //
 
 @interface AITypingNotificationPlugin : AIPlugin {
-//    NSMutableDictionary		*typingDict;
+
 }
 
 @end
