@@ -38,30 +38,6 @@
 			<key>Type</key>
 			<string>File Item</string>
 		</dict>
-		<dict>
-			<key>Origin</key>
-			<string>{314, 260}</string>
-			<key>Path</key>
-			<string>/Users/adamiser/Code/adium/License.txt</string>
-			<key>Type</key>
-			<string>File Item</string>
-		</dict>
-		<dict>
-			<key>Origin</key>
-			<string>{50, 260}</string>
-			<key>Path</key>
-			<string>/Users/adamiser/Code/adium/Changes.txt</string>
-			<key>Type</key>
-			<string>File Item</string>
-		</dict>
-		<dict>
-			<key>Origin</key>
-			<string>{182, 260}</string>
-			<key>Path</key>
-			<string>/Users/adamiser/Code/adium/ReadMe.rtf</string>
-			<key>Type</key>
-			<string>File Item</string>
-		</dict>
 	</array>
 	<key>License List</key>
 	<array/>
