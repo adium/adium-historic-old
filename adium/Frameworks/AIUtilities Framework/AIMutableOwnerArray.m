@@ -270,6 +270,7 @@
 }
 - (void)_buildOwnerAndContentArrays
 {
+	NSMutableArray *thisOwnerArray, *thisContentArray;
 	int i, index;
 	
 	//Remove all the owners and content objects from the main arrays
@@ -278,11 +279,11 @@
 	
 	//Check each subArray, adding from priority 0 to priority 10
 	for (i=0; i<11; i++) {
-		NSArray *thisOwnerArray = ownerSubArray[i];
+		thisOwnerArray = ownerSubArray[i];
 		
 		//If arrays exist at this priority level, add them to the main arrays
 		if (thisOwnerArray) {
-			NSArray *thisContentArray = contentSubArray[i];
+			thisContentArray = contentSubArray[i];
 			
 			[ownerArray addObjectsFromArray:thisOwnerArray];
 			[contentArray addObjectsFromArray:thisContentArray];
@@ -303,15 +304,24 @@
 
 - (void)_removeObjectFromSubArraysWithOwner:(id)inOwner
 {
+	NSMutableArray *thisOwnerArray, *thisContentArray;
 	int i, index;
 	
 	//Check each subArray
 	for (i=0; i<11; i++) {
-		if ((index = [ownerSubArray[i] indexOfObject:inOwner]) != NSNotFound) {
-			//Remove the object and owner
-			[ownerSubArray[i] removeObjectAtIndex:index];
-			[contentSubArray[i] removeObjectAtIndex:index];
-			break;
+		thisOwnerArray = ownerSubArray[i];
+		
+		if (thisOwnerArray) {
+			index = [thisOwnerArray indexOfObject:inOwner];
+			
+			if (index != NSNotFound) {
+				thisContentArray = contentSubArray[i];
+				
+				//Remove the object and owner
+				[thisOwnerArray removeObjectAtIndex:index];
+				[thisContentArray removeObjectAtIndex:index];
+				break;
+			}
 		}
 	}
 }
