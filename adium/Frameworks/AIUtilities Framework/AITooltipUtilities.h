@@ -15,10 +15,15 @@
 
 #import <Cocoa/Cocoa.h>
 
+typedef enum {
+    TooltipBelow, TooltipAbove
+} AITooltipOrientation;
+
 
 @interface AITooltipUtilities : NSObject {
 
 }
-+ (void)showTooltipWithString:(NSString *)inString onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint;
+
++ (void)showTooltipWithString:(NSString *)inString onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation;
 
 @end

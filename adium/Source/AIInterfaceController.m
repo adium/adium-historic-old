@@ -174,7 +174,7 @@
     if(object){
         if(object == tooltipListObject){ //If we already have this tooltip open
             //Move the existing tooltip
-            [AITooltipUtilities showTooltipWithString:tooltipString onWindow:nil atPoint:point];
+            [AITooltipUtilities showTooltipWithString:tooltipString onWindow:nil atPoint:point orientation:TooltipBelow];
 
         }else{ //This is a new tooltip
             //Hold onto the new object
@@ -186,13 +186,13 @@
             tooltipString = [[self _tooltipStringForObject:object] retain];
             
             //Display the new tooltip
-            [AITooltipUtilities showTooltipWithString:tooltipString onWindow:nil atPoint:point];
+            [AITooltipUtilities showTooltipWithString:tooltipString onWindow:nil atPoint:point orientation:TooltipBelow];
         }
 
     }else{
         //Hide the existing tooltip
         if(tooltipListObject){
-            [AITooltipUtilities showTooltipWithString:nil onWindow:nil atPoint:point];
+            [AITooltipUtilities showTooltipWithString:nil onWindow:nil atPoint:point orientation:TooltipBelow];
             [tooltipListObject release]; tooltipListObject = nil;
         }
     }

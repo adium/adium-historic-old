@@ -301,13 +301,13 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
         [[NSCursor handPointCursor] set]; //Set link cursor
 
-        inPoint.y += [inHoveredLink trackingRect].size.height + 3; //Offset the tooltip down a bit
-        inPoint.x -= 9; //And to the left a bit
-        [AITooltipUtilities showTooltipWithString:hoveredString onWindow:nil atPoint:inPoint]; //Show tooltip
+//        inPoint.y += [inHoveredLink trackingRect].size.height + 3; //Offset the tooltip down a bit
+//        inPoint.x -= 9; //And to the left a bit
+        [AITooltipUtilities showTooltipWithString:hoveredString onWindow:nil atPoint:inPoint orientation:TooltipAbove]; //Show tooltip
 
     }else if(inHoveredLink == nil && mouseOverLink == YES){
         [[NSCursor arrowCursor] set]; //Restore the regular cursor
-        [AITooltipUtilities showTooltipWithString:nil onWindow:nil atPoint:NSMakePoint(0,0)]; //Hide the tooltip
+        [AITooltipUtilities showTooltipWithString:nil onWindow:nil atPoint:NSMakePoint(0,0) orientation:TooltipAbove]; //Hide the tooltip
 
         [hoveredLink release]; hoveredLink = nil;
         [hoveredString release]; hoveredString = nil;
