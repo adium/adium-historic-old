@@ -97,7 +97,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		   [theReason rangeOfString:@"Broken pipe"].location != NSNotFound || //libezv throws broken pipes as NSFileHandleOperationException with this in the reason; I'd rather we watched for "broken pipe" than ignore all file handle errors
 		   [theReason rangeOfString:@"incomprehensible archive"].location != NSNotFound || //NSKeyedUnarchiver can get confused and throw this; it's out of our control
 		   [theReason rangeOfString:@"-whiteComponent not defined"].location != NSNotFound || //Random NSColor exception for certain coded color values
-		   [theReason isEqualToString:@"Failed to get fache -4"] || //Thrown by NSFontManager when availableFontFamilies is called if it runs into a corrupt font
+		   [theReason rangeOfString:@"Failed to get fache"].location != NSNotFound || //Thrown by NSFontManager when availableFontFamilies is called if it runs into a corrupt font
 		   [theReason rangeOfString:@"NSWindow: -_newFirstResponderAfterResigining"].location != NSNotFound || //NSAssert within system code, harmless
 		   [theReason rangeOfString:@"-patternImage not defined"].location != NSNotFound || //Painters Color Picker throws an exception during the normal course of operation.  Don't you hate that?
 		   [theReason rangeOfString:@"Failed to set font"].location != NSNotFound || //Corrupt fonts
