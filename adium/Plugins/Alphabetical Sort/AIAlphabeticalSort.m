@@ -27,10 +27,8 @@ static  BOOL	sortByLastName;
 
 //Sort contacts and groups alphabetically.
 
-- (id)init
+- (void)didBecomeActiveFirstTime
 {
-	[super init];
-	
 	//Register our default preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ALPHABETICAL_SORT_DEFAULT_PREFS 
 																		forClass:[self class]] 
@@ -40,8 +38,6 @@ static  BOOL	sortByLastName;
 	NSDictionary *prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING];
 	sortGroups = [[prefDict objectForKey:KEY_SORT_GROUPS] boolValue];
 	sortByLastName = [[prefDict objectForKey:KEY_SORT_BY_LAST_NAME] boolValue];
-	
-	return self;
 }
 
 - (NSString *)identifier{
