@@ -7828,6 +7828,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				34BD9F2E0531477E000AB133,
+				CA25AAA907B428C800DDBD7E,
+				CA25AAAB07B428C800DDBD7E,
+				CA25AAAD07B428C800DDBD7E,
+				CA25AAAF07B428C800DDBD7E,
+				CA25AAB107B428C800DDBD7E,
+				CA25AB5407B42A8500DDBD7E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7847,6 +7853,12 @@
 				CA2C84AA06F8B91E0024B20E,
 				CA2C84AB06F8B91E0024B20E,
 				CA2C84AC06F8B91E0024B20E,
+				CA25AAB807B428DA00DDBD7E,
+				CA25AB3407B4296C00DDBD7E,
+				CA25AB3A07B4297A00DDBD7E,
+				CA25AB4107B4298700DDBD7E,
+				CA25AB4207B4298700DDBD7E,
+				CA25AB4907B429A900DDBD7E,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7862,6 +7874,12 @@
 			files = (
 				34BD9F320531477E000AB133,
 				34BD9F330531477E000AB133,
+				CA25AAAA07B428C800DDBD7E,
+				CA25AAAC07B428C800DDBD7E,
+				CA25AAAE07B428C800DDBD7E,
+				CA25AAB007B428C800DDBD7E,
+				CA25AAB207B428C800DDBD7E,
+				CA25AB5507B42A8500DDBD7E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20916,11 +20934,15 @@
 		};
 		9EB3C52304F94DB7001D1F74 = {
 			children = (
-				CA2C84A306F8B91D0024B20E,
-				CA2C84A406F8B91D0024B20E,
-				CA2C84A506F8B91E0024B20E,
-				CA2C84A606F8B91E0024B20E,
-				CA2C84A706F8B91E0024B20E,
+				CA25AAA307B428C700DDBD7E,
+				CA25AAA407B428C700DDBD7E,
+				CA25AAA507B428C800DDBD7E,
+				CA25AAA607B428C800DDBD7E,
+				CA25AB4707B4299600DDBD7E,
+				CA25AABF07B4290700DDBD7E,
+				CA25AABE07B428FD00DDBD7E,
+				CA25AABD07B428ED00DDBD7E,
+				CA25AAC007B4291100DDBD7E,
 				9EB3C52E04F94F24001D1F74,
 				9EB3C53304F94FAE001D1F74,
 				9EB3C53404F94FAE001D1F74,
@@ -21884,6 +21906,321 @@
 			isa = PBXTargetDependency;
 			name = "AIUtilities (from AIUtilities.framework.xcode)";
 			targetProxy = CA0C977706DBFDA1004436BE;
+		};
+		CA25AA9F07B428C600DDBD7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = BDFireImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AAA007B428C700DDBD7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = BDFireImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AAA107B428C700DDBD7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = BDiChatImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AAA207B428C700DDBD7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = BDiChatImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AAA307B428C700DDBD7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = BDImportController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AAA407B428C700DDBD7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = BDImportController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AAA507B428C800DDBD7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = BDImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AAA607B428C800DDBD7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = BDImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AAA707B428C800DDBD7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = BDProteusImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AAA807B428C800DDBD7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = BDProteusImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AAA907B428C800DDBD7E = {
+			fileRef = CA25AA9F07B428C600DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA25AAAA07B428C800DDBD7E = {
+			fileRef = CA25AAA007B428C700DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA25AAAB07B428C800DDBD7E = {
+			fileRef = CA25AAA107B428C700DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA25AAAC07B428C800DDBD7E = {
+			fileRef = CA25AAA207B428C700DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA25AAAD07B428C800DDBD7E = {
+			fileRef = CA25AAA307B428C700DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA25AAAE07B428C800DDBD7E = {
+			fileRef = CA25AAA407B428C700DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA25AAAF07B428C800DDBD7E = {
+			fileRef = CA25AAA507B428C800DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA25AAB007B428C800DDBD7E = {
+			fileRef = CA25AAA607B428C800DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA25AAB107B428C800DDBD7E = {
+			fileRef = CA25AAA707B428C800DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA25AAB207B428C800DDBD7E = {
+			fileRef = CA25AAA807B428C800DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA25AAB707B428DA00DDBD7E = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			path = Background.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AAB807B428DA00DDBD7E = {
+			fileRef = CA25AAB707B428DA00DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA25AABD07B428ED00DDBD7E = {
+			children = (
+				CA25AB3907B4297A00DDBD7E,
+				CA25AAA107B428C700DDBD7E,
+				CA25AAA207B428C700DDBD7E,
+			);
+			isa = PBXGroup;
+			name = iChat;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AABE07B428FD00DDBD7E = {
+			children = (
+				CA25AB3307B4296C00DDBD7E,
+				CA25AA9F07B428C600DDBD7E,
+				CA25AAA007B428C700DDBD7E,
+			);
+			isa = PBXGroup;
+			name = Fire;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AABF07B4290700DDBD7E = {
+			children = (
+				CA25AB3F07B4298600DDBD7E,
+				CA25AB4007B4298700DDBD7E,
+				CA25AAA707B428C800DDBD7E,
+				CA25AAA807B428C800DDBD7E,
+			);
+			isa = PBXGroup;
+			name = Proteus;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AAC007B4291100DDBD7E = {
+			children = (
+				CA2C84A306F8B91D0024B20E,
+				CA25AAB707B428DA00DDBD7E,
+				CA2C84A406F8B91D0024B20E,
+				CA2C84A506F8B91E0024B20E,
+				CA2C84A606F8B91E0024B20E,
+				CA2C84A706F8B91E0024B20E,
+			);
+			isa = PBXGroup;
+			name = Resources;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AB3307B4296C00DDBD7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.script.php;
+			name = fire2adium.php;
+			path = "Utilities/Log Importers/fire2adium.php";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CA25AB3407B4296C00DDBD7E = {
+			fileRef = CA25AB3307B4296C00DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA25AB3907B4297A00DDBD7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.script.perl;
+			name = ichat2adium.pl;
+			path = "Utilities/Log Importers/ichat2adium.pl";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CA25AB3A07B4297A00DDBD7E = {
+			fileRef = CA25AB3907B4297A00DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA25AB3F07B4298600DDBD7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.script.perl;
+			name = proteus2adium.pl;
+			path = "Utilities/Log Importers/proteus/proteus2adium.pl";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CA25AB4007B4298700DDBD7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.script.sh;
+			name = sqlite;
+			path = "Utilities/Log Importers/proteus/sqlite";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CA25AB4107B4298700DDBD7E = {
+			fileRef = CA25AB3F07B4298600DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA25AB4207B4298700DDBD7E = {
+			fileRef = CA25AB4007B4298700DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA25AB4707B4299600DDBD7E = {
+			children = (
+				CA25AB5207B42A8400DDBD7E,
+				CA25AB5307B42A8400DDBD7E,
+				CA25AB4807B429A900DDBD7E,
+			);
+			isa = PBXGroup;
+			name = Gaim;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AB4807B429A900DDBD7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.script.perl;
+			name = gaim2adium.pl;
+			path = "Utilities/Log Importers/gaim2adium.pl";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		CA25AB4907B429A900DDBD7E = {
+			fileRef = CA25AB4807B429A900DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA25AB5207B42A8400DDBD7E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = BDGaimImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AB5307B42A8400DDBD7E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = BDGaimImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA25AB5407B42A8500DDBD7E = {
+			fileRef = CA25AB5207B42A8400DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA25AB5507B42A8500DDBD7E = {
+			fileRef = CA25AB5307B42A8400DDBD7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		CA2C84A306F8B91D0024B20E = {
 			isa = PBXFileReference;
