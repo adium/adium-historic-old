@@ -28,7 +28,7 @@
 #define SCREENNAME					AILocalizedString(@"Screen Name",nil)
 
 @interface AIAliasSupportPlugin (PRIVATE)
-- (NSArray *)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject notify:(BOOL)notify;
+- (NSSet *)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject notify:(BOOL)notify;
 - (NSMenu *)_contactNameMenu;
 @end
 
@@ -82,7 +82,7 @@
 }
 
 //Called as contacts are created, load their alias
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
     if((inModifiedKeys == nil) || ([inModifiedKeys containsObject:@"FormattedUID"])){
 		return([self _applyAlias:[inObject preferenceForKey:@"Alias"
@@ -140,9 +140,9 @@
 
 //Private ---------------------------------------------------------------------------------------
 //Apply an alias to an object (Does not save the alias!)
-- (NSArray *)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject notify:(BOOL)notify
+- (NSSet *)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject notify:(BOOL)notify
 {
-	NSArray				*modifiedAttributes;
+	NSSet				*modifiedAttributes;
     NSString			*displayName = nil;
     NSString			*longDisplayName = nil;
     NSString			*formattedUID = nil;
@@ -199,7 +199,9 @@
 	}
 	
 	//Notify
-	modifiedAttributes = [NSArray arrayWithObjects:@"Display Name", @"Long Display Name", @"Adium Alias", nil];
+	modifiedAttributes = [NSSet setWithObjects:@"Display Name", @"Long Display Name", @"Adium Alias", nil];
+	
+	#warning Is this needed? I think it is redundant
 	if(notify) [[adium contactController] listObjectAttributesChanged:inObject modifiedKeys:modifiedAttributes];
 	
 	return(modifiedAttributes);

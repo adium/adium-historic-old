@@ -143,7 +143,7 @@
 //
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
-    NSArray		*keys = [[notification userInfo] objectForKey:@"Keys"];
+    NSSet		*keys = [[notification userInfo] objectForKey:@"Keys"];
 
 	//Redraw if the icon has changed
 	if(keys == nil || [keys containsObject:@"Tab Status Icon"]){

@@ -26,19 +26,8 @@ typedef enum {
 
 + (CBStatusMenuItemController *)statusMenuItemController;
 
-//Icon State
-- (void)setIconState:(SMI_Icon_State)state;
-
-//AccountMenuPlugin
-- (NSString *)identifier;
-- (void)addAccountMenuItems:(NSArray *)menuItemArray;
-- (void)removeAccountMenuItems:(NSArray *)menuItemArray;
-
 //Twiddle visibility
 - (void)showStatusItem;
 - (void)hideStatusItem;
-
-//Chat Observer
-- (NSArray *)updateChat:(AIChat *)inChat keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
 
 @end

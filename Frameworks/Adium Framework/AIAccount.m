@@ -260,7 +260,7 @@
 												   withOwner:self];
 		//notify
 		[[adium contactController] listObjectAttributesChanged:self
-												  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
+												  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
 		
     }else if([key isEqualToString:@"FormattedUID"]){
 		//Transfer formatted UID to status dictionary

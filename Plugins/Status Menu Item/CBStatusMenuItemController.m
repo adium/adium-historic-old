@@ -11,6 +11,15 @@
 - (void)activateAdium:(id)sender;
 - (void)menuNeedsUpdate:(NSMenu *)menu;
 - (void)accountStateChanged:(NSNotification *)notification;
+
+//Icon State
+- (void)setIconState:(SMI_Icon_State)state;
+
+//AccountMenuPlugin
+- (NSString *)identifier;
+- (void)addAccountMenuItems:(NSArray *)menuItemArray;
+- (void)removeAccountMenuItems:(NSArray *)menuItemArray;
+
 @end
 
 @implementation CBStatusMenuItemController
@@ -157,7 +166,7 @@ static	NSImage						*unviewedContentImage = nil;
 //Chat Observer --------------------------------------------------------
 #pragma mark Chat Observer
 
-- (NSArray *)updateChat:(AIChat *)inChat keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	//If the contact's unviewed content state has changed
     if(inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
@@ -191,7 +200,7 @@ static	NSImage						*unviewedContentImage = nil;
             }
         }
     }
-	//We didn't modify contacts, so return nil 
+	//We didn't modify attributes, so return nil 
     return nil;
 }
 

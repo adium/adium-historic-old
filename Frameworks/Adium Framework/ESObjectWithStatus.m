@@ -22,7 +22,6 @@ DeclareString(Value);
 	InitString(Value,@"Value");
 	
     statusDictionary = [[NSMutableDictionary alloc] init];
-    changedStatusKeys = [[NSMutableArray alloc] init];	
 	displayDictionary = [[NSMutableDictionary alloc] init];
 	delayedStatusTimers = nil;
 	
@@ -116,7 +115,7 @@ DeclareString(Value);
 {
     if([changedStatusKeys count]){
 		//Clear changedStatusKeys in case this status change invokes another, and we re-enter this code
-		NSArray	*keys = changedStatusKeys;
+		NSSet	*keys = changedStatusKeys;
 		changedStatusKeys = nil;
 		
 		[self didModifyStatusKeys:keys silent:silent];
@@ -204,13 +203,13 @@ DeclareString(Value);
 		switch (notify){
 			case NotifyNow: {
 				//Send out the notification now
-				[self didModifyStatusKeys:[NSArray arrayWithObject:key]
+				[self didModifyStatusKeys:[NSSet setWithObject:key]
 								   silent:NO];
 				break;
 			}
 			case NotifyLater: {
 				//Add this key to changedStatusKeys for later notification 
-				if(!changedStatusKeys) changedStatusKeys = [[NSMutableArray alloc] init];
+				if(!changedStatusKeys) changedStatusKeys = [[NSMutableSet alloc] init];
 				[changedStatusKeys addObject:key];
 				break;
 			}
@@ -219,7 +218,7 @@ DeclareString(Value);
 	}
 }
 
-- (void)didModifyStatusKeys:(NSArray *)keys silent:(BOOL)silent {};
+- (void)didModifyStatusKeys:(NSSet *)keys silent:(BOOL)silent {};
 - (void)didNotifyOfChangedStatusSilently:(BOOL)silent {};
 
 //Dynamic Display------------------------------------------------------------------------------------------------------

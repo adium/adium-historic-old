@@ -91,7 +91,7 @@
 }
 
 //Update display for account status change
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	
 	if(inObject == nil || inObject == account){
@@ -105,6 +105,6 @@
 		}
 	}
 	
-	return(	[super updateListObject:inObject keys:inModifiedKeys silent:silent] );
+	return([super updateListObject:inObject keys:inModifiedKeys silent:silent]);
 }
 @end

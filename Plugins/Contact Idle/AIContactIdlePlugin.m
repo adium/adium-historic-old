@@ -52,7 +52,7 @@ DeclareString(Idle);
 }
 
 //Called when a handle's status changes
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
     if(	inModifiedKeys == nil || [inModifiedKeys containsObject:IdleSince]){
 

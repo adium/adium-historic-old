@@ -56,19 +56,19 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 
 //Sort Logic -------------------------------------------------------------------------------------------------------
 #pragma mark Sort Logic
-- (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys
+- (BOOL)shouldSortForModifiedStatusKeys:(NSSet *)inModifiedKeys
 {
 	if(statusKeysRequiringResort){
-		return([statusKeysRequiringResort firstObjectCommonWithArray:inModifiedKeys] != nil);
+		return([statusKeysRequiringResort intersectsSet:inModifiedKeys] != nil);
 	}else{
 		return(NO);
 	}
 }
 
-- (BOOL)shouldSortForModifiedAttributeKeys:(NSArray *)inModifiedKeys
+- (BOOL)shouldSortForModifiedAttributeKeys:(NSSet *)inModifiedKeys
 {
 	if(attributeKeysRequiringResort){
-		return([attributeKeysRequiringResort firstObjectCommonWithArray:inModifiedKeys] != nil);
+		return([attributeKeysRequiringResort intersectsSet:inModifiedKeys] != nil);
 	}else{
 		return(NO);
 	}

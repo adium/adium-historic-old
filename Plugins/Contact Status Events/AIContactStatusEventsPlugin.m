@@ -130,14 +130,14 @@
 }
 
 //
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)modifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	//Ignore accounts.
 	//Ignore meta contact children since the actual meta contact provides a better event.
 	if((![inObject isKindOfClass:[AIAccount class]]) &&		//Ignore accounts
 	   (![[inObject containingObject] isKindOfClass:[AIMetaContact class]])){	
 		
-		if([modifiedKeys containsObject:@"Online"]){
+		if([inModifiedKeys containsObject:@"Online"]){
 			id newValue = [inObject numberStatusObjectForKey:@"Online" fromAnyContainedObject:NO];
 			if([self updateCache:onlineCache
 						  forKey:@"Online"
@@ -154,7 +154,7 @@
 		//Events which are irrelevent if the contact is not online - these changes occur when we are just doing bookkeeping
 		//e.g. an away contact signs off, we clear the away flag, but they didn't actually come back from away.
 		if ([[inObject numberStatusObjectForKey:@"Online"] boolValue]){
-			if([modifiedKeys containsObject:@"Away"]){
+			if([inModifiedKeys containsObject:@"Away"]){
 				id newValue = [inObject numberStatusObjectForKey:@"Away" fromAnyContainedObject:NO];
 				if([self updateCache:awayCache
 							  forKey:@"Away"
@@ -167,7 +167,7 @@
 														  userInfo:nil];
 				}
 			}
-			if([modifiedKeys containsObject:@"IdleSince"]){
+			if([inModifiedKeys containsObject:@"IdleSince"]){
 				id newValue = [inObject earliestDateStatusObjectForKey:@"IdleSince"
 												fromAnyContainedObject:NO];
 				if([self updateCache:idleCache
@@ -181,7 +181,7 @@
 														  userInfo:nil];
 				}
 			}
-			if([modifiedKeys containsObject:@"StatusMessage"]){
+			if([inModifiedKeys containsObject:@"StatusMessage"]){
 				id	newValue = [inObject stringFromAttributedStringStatusObjectForKey:@"StatusMessage"
 															   fromAnyContainedObject:YES];
 				if([self updateCache:statusMessageCache 

@@ -130,7 +130,7 @@
 }
 
 
-- (NSArray *)updateChat:(AIChat *)inChat keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if (inModifiedKeys == nil ||
 		[inModifiedKeys containsObject:KEY_CHAT_TIMED_OUT] ||

@@ -16,9 +16,6 @@
 #import "AIListObject.h"
 #import "AIListGroup.h"
 
-//Uncomment to display ordering information in the contact list
-//#define	ORDERING_DEBUG
-
 @interface AIListObject (PRIVATE)
 - (NSMutableArray *)_recursivePreferencesForKey:(NSString *)inKey group:(NSString *)groupName;
 @end
@@ -35,7 +32,7 @@ DeclareString(FormattedUID);
 
 //Init
 - (id)initWithUID:(NSString *)inUID service:(AIService *)inService
-{
+{	
     [super init];
 
 	InitString(ObjectStatusCache,@"Object Status Cache");
@@ -58,7 +55,18 @@ DeclareString(FormattedUID);
 													 group:ObjectStatusCache 
 									 ignoreInheritedValues:YES];
 	if (orderIndexNumber){
-		orderIndex = [orderIndexNumber floatValue];
+		float storedOrderIndex;
+
+		storedOrderIndex = [orderIndexNumber floatValue];
+
+		//Evan: I don't know how we got up to infinity.. perhaps pref corruption in a previous version?
+		//In any case, check against it; if we stored it, reset to a reasonable number.
+		if(storedOrderIndex < INFINITY){
+			orderIndex = storedOrderIndex;
+		}else{
+			[self setOrderIndex:[[adium contactController] nextOrderIndex]];
+			NSLog(@"%@: was %f, now is %f",self,INFINITY,orderIndex);
+		}
 	}else{
 		[self setOrderIndex:[[adium contactController] nextOrderIndex]];
 	}
@@ -205,7 +213,7 @@ DeclareString(FormattedUID);
 //Status objects ------------------------------------------------------------------------------------------------------
 #pragma mark Status objects
 //
-- (void)didModifyStatusKeys:(NSArray *)keys silent:(BOOL)silent
+- (void)didModifyStatusKeys:(NSSet *)keys silent:(BOOL)silent
 {
 	[[adium contactController] listObjectStatusChanged:self
 									modifiedStatusKeys:keys
@@ -380,13 +388,7 @@ DeclareString(FormattedUID);
 {
     NSString	*outName = [[self displayArrayForKey:LongDisplayName] objectValue];
 	
-#ifndef ORDERING_DEBUG
     return(outName ? outName : [self displayName]);
-#else
-	return(outName ?
-		   [NSString stringWithFormat:@"%@ (%f)",outName,[self orderIndex]] :
-		   [NSString stringWithFormat:@"%@ (%f)", [self displayName],[self orderIndex]]);
-#endif
 }
 
 //- (NSString *)displayServiceID
@@ -429,7 +431,7 @@ DeclareString(FormattedUID);
 		[AIUserIcons flushCacheForContact:(AIListContact *)self];
 		//Notify
 		[[adium contactController] listObjectAttributesChanged:self
-												  modifiedKeys:[NSArray arrayWithObject:KEY_USER_ICON]];
+												  modifiedKeys:[NSSet setWithObject:KEY_USER_ICON]];
 	}
 				
 				

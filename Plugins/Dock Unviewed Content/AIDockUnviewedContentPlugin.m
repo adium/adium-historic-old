@@ -34,7 +34,7 @@
 
 }
 
-- (NSArray *)updateChat:(AIChat *)inChat keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
     if([inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
 		

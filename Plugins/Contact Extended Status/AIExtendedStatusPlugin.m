@@ -44,9 +44,9 @@
 }
 
 //Called when a handle's status changes
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	NSArray		*modifiedAttributes = nil;
+	NSSet		*modifiedAttributes = nil;
 
 	//Idle time
     if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Idle"] || [inModifiedKeys containsObject:@"StatusMessage"]){
@@ -87,7 +87,7 @@
 		}
 
 		[[inObject displayArrayForKey:@"ExtendedStatus"] setObject:finalMessage withOwner:self];
-		modifiedAttributes = [NSArray arrayWithObject:@"ExtendedStatus"];
+		modifiedAttributes = [NSSet setWithObject:@"ExtendedStatus"];
 	}
 	
    return(modifiedAttributes);

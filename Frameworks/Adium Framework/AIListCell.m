@@ -16,6 +16,8 @@
 #import "AIListCell.h"
 #import "AIListOutlineView.h"
 
+#define	ORDERING_DEBUG
+
 @implementation AIListCell
 
 static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
@@ -329,7 +331,14 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 {
 	NSString *leftText = [[listObject displayArrayForKey:@"Left Text"] objectValue];
 	NSString *rightText = [[listObject displayArrayForKey:@"Right Text"] objectValue];
-	
+
+	//Ordering debug
+#ifdef ORDERING_DEBUG
+	rightText = (rightText ?
+				 [rightText stringByAppendingFormat:@" %f",[listObject orderIndex]] :
+				 [NSString stringWithFormat:@" %f",[listObject orderIndex]]); 
+#endif
+
 	if(!leftText && !rightText){
 		return((useAliasesAsRequested ? 
 				[listObject longDisplayName] :

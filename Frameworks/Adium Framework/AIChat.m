@@ -127,7 +127,7 @@ static int nextChatNumber = 0;
 //Status ---------------------------------------------------------------------------------------------------------------
 #pragma mark Status
 //Status
-- (void)didModifyStatusKeys:(NSArray *)keys silent:(BOOL)silent
+- (void)didModifyStatusKeys:(NSSet *)keys silent:(BOOL)silent
 {
 	[[adium contentController] chatStatusChanged:self
 							  modifiedStatusKeys:keys

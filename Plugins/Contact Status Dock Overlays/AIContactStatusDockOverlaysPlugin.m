@@ -107,7 +107,7 @@
 	
 }
 
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	//Skip this entirely if overlays are off or this contact is within a metaContact
     if(showStatus && ![[inObject containingObject] isKindOfClass:[AIMetaContact class]]){ 
@@ -136,7 +136,7 @@
 	return(nil);
 }
 
-- (NSArray *)updateChat:(AIChat *)inChat keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if(showContent){
 		if (inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){

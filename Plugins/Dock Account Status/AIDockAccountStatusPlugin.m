@@ -58,7 +58,7 @@
     }
 }
 
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if(inObject == nil || [inObject isKindOfClass:[AIAccount class]]){
 		if(inObject == nil || [inModifiedKeys containsObject:@"Online"]){

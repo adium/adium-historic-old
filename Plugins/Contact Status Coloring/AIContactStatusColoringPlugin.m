@@ -85,9 +85,9 @@
 }
 
 //
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-    NSArray		*modifiedAttributes = nil;
+    NSSet		*modifiedAttributes = nil;
 
 	if([inObject isKindOfClass:[AIListContact class]]){
 		if(	inModifiedKeys == nil ||
@@ -101,7 +101,7 @@
 			
 			//Update the handle's text color
 			[self _applyColorToObject:inObject];
-			modifiedAttributes = [NSArray arrayWithObjects:@"Text Color", @"Inverted Text Color", @"Label Color", nil];
+			modifiedAttributes = [NSSet setWithObjects:@"Text Color", @"Inverted Text Color", @"Label Color", nil];
 		}
 		
 		//Update our flash array

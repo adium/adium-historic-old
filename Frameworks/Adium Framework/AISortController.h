@@ -20,8 +20,8 @@ typedef int(*sortfunc)(id, id, BOOL);
 #define PREF_GROUP_CONTACT_SORTING			@"Sorting"
 
 @interface AISortController : AIObject {
-	NSArray					*statusKeysRequiringResort;
-	NSArray					*attributeKeysRequiringResort;
+	NSSet					*statusKeysRequiringResort;
+	NSSet					*attributeKeysRequiringResort;
 	BOOL					alwaysSortGroupsToTop;
 	
 	sortfunc				sortFunction;
@@ -31,8 +31,8 @@ typedef int(*sortfunc)(id, id, BOOL);
 	BOOL					becameActiveFirstTime;
 }
 
-- (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys;
-- (BOOL)shouldSortForModifiedAttributeKeys:(NSArray *)inModifiedKeys;
+- (BOOL)shouldSortForModifiedStatusKeys:(NSSet *)inModifiedKeys;
+- (BOOL)shouldSortForModifiedAttributeKeys:(NSSet *)inModifiedKeys;
 - (BOOL)alwaysSortGroupsToTopByDefault;
 - (int)indexForInserting:(AIListObject *)inObject intoObjects:(NSArray *)inObjects;
 - (void)sortListObjects:(NSMutableArray *)inObjects;

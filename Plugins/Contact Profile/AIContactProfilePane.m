@@ -52,7 +52,7 @@
 }
 
 //Refresh if changes are made to the object we're displaying
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
     if(inObject == listObject){
         [self updatePane];

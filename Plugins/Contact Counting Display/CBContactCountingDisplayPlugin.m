@@ -103,9 +103,9 @@
     }
 }
 
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {    
-	NSArray		*modifiedAttributes = nil;
+	NSSet		*modifiedAttributes = nil;
 	
 	if([inObject isKindOfClass:[AIListGroup class]] &&
 	   (inModifiedKeys == nil || 
@@ -139,14 +139,14 @@
 			AIMutableOwnerArray *rightTextArray = [inObject displayArrayForKey:@"Right Text"];
 			
 			[rightTextArray setObject:addString withOwner:self priorityLevel:High_Priority];
-			modifiedAttributes = [NSArray arrayWithObject:@"Right Text"];
+			modifiedAttributes = [NSSet setWithObject:@"Right Text"];
 		}else{
 			AIMutableOwnerArray *rightTextArray = [inObject displayArrayForKey:@"Right Text" create:NO];
 			
 			//If there is a right text object now but there shouldn't be anymore, remove it
 			if ([rightTextArray objectWithOwner:self]){
 				[rightTextArray setObject:nil withOwner:self priorityLevel:High_Priority];
-				modifiedAttributes = [NSArray arrayWithObject:@"Right Text"];
+				modifiedAttributes = [NSSet setWithObject:@"Right Text"];
 			}
 		}
 	}

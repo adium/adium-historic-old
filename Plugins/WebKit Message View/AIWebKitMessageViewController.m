@@ -275,7 +275,7 @@ DeclareString(AppendNextMessage);
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
     AIListObject	*inObject = [notification object];
-    NSArray			*keys = [[notification userInfo] objectForKey:@"Keys"];
+    NSSet			*keys = [[notification userInfo] objectForKey:@"Keys"];
 
 	if(inObject &&
 	   ([keys containsObject:KEY_USER_ICON]) &&

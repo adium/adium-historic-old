@@ -144,7 +144,7 @@
 //}
 //
 ////Called as contacts are created, load their notes
-//- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+//- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 //{    
 //    return(nil);
 //}
