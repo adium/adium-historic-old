@@ -499,22 +499,20 @@
 
 - (void)setAwayMessage:(id)message
 {
-    char *awayMessage = NULL;
+    char *newValue = NULL;
     
     if (message) {
-        NSString * encodedMessage = [AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:message]
-                                                                headers:YES
-                                                               fontTags:YES
-                                                          closeFontTags:YES
-                                                              styleTags:YES
-                                             closeStyleTagsOnFontChange:NO];
-        //g_malloc a char * so it remains in existence past this method
-        char * awayMessage = g_malloc(strlen([encodedMessage cString]) * 4 + 1);
-        [encodedMessage getCString:awayMessage];
+        newValue = g_strdup([[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:message]
+                                               headers:YES
+                                              fontTags:YES
+                                         closeFontTags:YES
+                                             styleTags:YES
+                            closeStyleTagsOnFontChange:NO] UTF8String]);
     }
 
-    //this will g_free the old one if necessary
-    serv_set_away(gc, NULL, awayMessage);
+    // gaim expects us to allocate the away message and leave it allocated;
+    // it takes responsibilty for freeing it.
+    serv_set_away(gc, GAIM_AWAY_CUSTOM, newValue);
 }
 
 - (void)finishConnect:(NSString *)inPassword
