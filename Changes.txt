@@ -5,6 +5,17 @@ Version 0.80 (13/-3/2525)
 - Achieved world domination
 - Obtained tasty sandwiches
 
+Version 0.75
+- Fixed a crash on launch
+- Fixed a longstanding crash when accessing stored passwords
+- Fixed a rare lockup condition when sending messages
+- Fixed issues with Adium when running on a system with a concurrent Gaim installation 
+- Fixed an issue with the fast user switching away message remaining after a relaunch
+- Fixed an issue with receiving messages containing certain characters followed by a semicolon
+- Fixed an issue with Command-I performing Show Contact's Info instead of Italics in message windows in certain situations
+- Improved connection speed, particularly on AIM accounts with long buddy lists
+- Updated to libgaim 1.1.2
+
 Version 0.74 (1/5/2005)
 - Fixed issues causing newly added contacts to appear twice in certain situations
 - Fixed a rare crash when opening the Log Viewer
