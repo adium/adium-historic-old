@@ -216,10 +216,10 @@ static	NSTimeZone	*defaultTimeZone = nil;
 	if(scandate([fileName UTF8String], &year, &month, &day)) {
 		if(year && month && day) {
 			return [NSCalendarDate dateWithYear:year month:month day:day hour:0 minute:0 second:0 timeZone:[NSTimeZone defaultTimeZone]];
-		} else {
-			return nil;
 		}
 	}
+
+	return nil;
 }
 
 //Scan an Adium date string, supahfast C style
