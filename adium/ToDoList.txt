@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.54 2004/04/17 04:00:29 adamiser Exp $
+$Id: ToDoList.txt,v 1.55 2004/04/17 05:21:30 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -37,6 +37,10 @@ Bugs
    - (Confirmed by Hanji)
 * Contact list transparency is incorrect (the background is black/opaque) when the window is first opened.
 * Jabber behaves incorrectly when you connect from another location (on, off, on, off, ...) (I've heard that yahoo does this as well) 
+* We have issues with not notifying the user when a message fails to send
+* We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
+* Multi-user chat (MSN) - sent messages appear twice.
+* Message history 'date' timestamps are not using localized time strings
 
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
