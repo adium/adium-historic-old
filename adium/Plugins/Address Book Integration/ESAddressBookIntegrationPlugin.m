@@ -25,11 +25,17 @@
     [[adium contactController] registerListObjectObserver:self];
 	
     //Configure our preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AB_DISPLAYFORMAT_DEFAULT_PREFS forClass:[self class]]  forGroup:PREF_GROUP_ADDRESSBOOK];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AB_DISPLAYFORMAT_DEFAULT_PREFS 
+																		forClass:[self class]]  
+										  forGroup:PREF_GROUP_ADDRESSBOOK];
     advancedPreferences = [[ESAddressBookIntegrationAdvancedPreferences preferencePane] retain];
 	
     //Services dictionary
-    propertyDict = [[NSDictionary dictionaryWithObjectsAndKeys:kABAIMInstantProperty,@"AIM",kABJabberInstantProperty,@"Jabber",kABMSNInstantProperty,@"MSN",kABYahooInstantProperty,@"Yahoo!",kABICQInstantProperty,@"ICQ",nil] retain];
+    propertyDict = [[NSDictionary dictionaryWithObjectsAndKeys:kABAIMInstantProperty,@"AIM",
+								kABJabberInstantProperty,@"Jabber",
+								kABMSNInstantProperty,@"MSN",
+								kABYahooInstantProperty,@"Yahoo!",
+								kABICQInstantProperty,@"ICQ",nil] retain];
     //Tracking dictionary for asynchronous image loads
     trackingDict = [[NSMutableDictionary alloc] init];
     
@@ -38,10 +44,15 @@
     [self preferencesChanged:nil];
 	
     //Observe preferences changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self 
+								   selector:@selector(preferencesChanged:) 
+									   name:Preference_GroupChanged 
+									 object:nil];
     //Observe external address book changes
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addressBookChanged:) name:kABDatabaseChangedExternallyNotification object:nil];
-	
+    [[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(addressBookChanged:)
+												 name:kABDatabaseChangedExternallyNotification
+											   object:nil];
 }
 
 - (void)uninstallPlugin
