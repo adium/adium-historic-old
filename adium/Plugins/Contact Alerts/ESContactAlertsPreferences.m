@@ -68,8 +68,12 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 //Clean up our preference pane
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
 {
+//need to release owner?
+    [prefAlertsArray release];
+    [activeContactObject release];
+ //   [tableView_actions release];
+    
     [view_prefView release]; view_prefView = nil;
-
 }
 
 //Configures our view for the current preferences, jumping to the indicated contact
@@ -95,7 +99,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [tableView_actions setTarget:self];
     [tableView_actions setDoubleAction:@selector(testSelectedEvent:)];
     [tableView_actions setDataSource:self];
-    [tableView_actions retain];
+//    [tableView_actions retain];
 
     [button_delete setEnabled:NO];
     [button_oneTime setEnabled:NO];
@@ -347,8 +351,9 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 - (void)dealloc
 {
     [owner release];
+    [prefAlertsArray release];
     [activeContactObject release];
-    [popUp_addEvent release];
+    [tableView_actions release];
     [super dealloc];
 }
 

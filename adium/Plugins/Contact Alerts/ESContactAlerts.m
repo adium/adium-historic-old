@@ -19,8 +19,8 @@
 #define SOUND_MENU_ICON_SIZE		16
 
 @interface ESContactAlerts (PRIVATE)
-- (void)configureForTextDetails:(NSString *)instructions;
-- (void)configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu;
+- (void)configureForTextDetails:(NSString *)instructions identifier:(NSString *)identifier;
+- (void)configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu identifier:(NSString *)identifier;
 - (void)configureWithSubview:(NSView *)view_inView;
 - (void)saveEventActionArray;
 - (void)testSelectedEvent;
@@ -71,10 +71,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     if (!eventActionArray)
         eventActionArray = [[NSMutableArray alloc] init];
     [eventActionArray retain];
- //   [self removeAllSubviews:view_main];
-
-  //  view_blank = [[NSView alloc] init];
-  //  [view_details release];    view_details = view_blank; [view_details retain];
 
     [view_blank release];
     view_blank = [[NSView alloc] init];
@@ -82,8 +78,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     if ( [[view_main subviews] count] == 0 ) //there are no subviews yet
         [view_main addSubview:view_blank];
     
-   // [view_main setAutoresizingMask:NSViewMaxYMargin];
-
+  
     //nothing's selected, obviously, so row = -1
     row = -1;
 
@@ -92,9 +87,22 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     return self;
 }
 
+- (void)dealloc
+{
+    [owner release];
+    [tableView_actions release];
+    [activeContactObject release];
+    [view_main release];
+    [view_pref release];
+    [eventActionArray release];
+    [view_blank release];
+}
+
 - (void)currentRowIs:(int)currentRow
 {
     row = (currentRow - offset);
+
+    if (row != -1) selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
 }
 
 - (int)currentRow
@@ -124,9 +132,9 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     return ([eventActionArray count]);
 }
 
--(void)replaceDictAtIndex:(int)inRow withDict:(NSDictionary *)selectedActionDict
+-(void)replaceDictAtIndex:(int)inRow withDict:(NSDictionary *)newDict
 {
-    [eventActionArray replaceObjectAtIndex:(inRow-offset) withObject:selectedActionDict];
+    [eventActionArray replaceObjectAtIndex:(inRow-offset) withObject:newDict];
     [self saveEventActionArray];
 }
 
@@ -207,24 +215,24 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
 //setup display for displaying an alert
 - (IBAction)actionDisplayAlert:(id)sender
-{	[self configureForTextDetails:@"Alert text:"];		}
+{   	[self configureForTextDetails:@"Alert text:" identifier:@"Alert"];		}
 
     //setup display for speaking text
 - (IBAction)actionSpeakText:(id)sender
-{    [self configureForTextDetails:@"Text to speak:"];		}
+{    [self configureForTextDetails:@"Text to speak:" identifier:@"Speak"];		}
 
     //setup display for playing a sound
 - (IBAction)actionPlaySound:(id)sender
-{    [self configureForMenuDetails:@"Sound to play:" menuToDisplay:[self soundListMenu]];	}
+{    [self configureForMenuDetails:@"Sound to play:" menuToDisplay:[self soundListMenu] identifier:@"Sound"];	}
 
     //setup display for bouncing the dock
 - (IBAction)actionBounceDock:(id)sender
-{    [self configureForMenuDetails:@"Dock behavior:" menuToDisplay:[self behaviorListMenu]];	}
+{    [self configureForMenuDetails:@"Dock behavior:" menuToDisplay:[self behaviorListMenu] identifier:@"Bounce"];	}
 
     //setup display for opening message window
 - (IBAction)actionOpenMessage:(id)sender
 {
-    [self configureForMenuDetails:@"Open window using account:" menuToDisplay:[self accountForOpenMessageMenu]];
+    [self configureForMenuDetails:@"Open window using account:" menuToDisplay:[self accountForOpenMessageMenu] identifier:@"Open Message"];
     [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:[[owner accountController] accountWithID:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]]]];
 }
 
@@ -233,9 +241,13 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 {
     NSString *details = [[NSString alloc] autorelease];
     NSMutableDictionary * detailsDict;
+    NSString *identifier = [selectedActionDict objectForKey:KEY_EVENT_ACTION]; 
+    if ([identifier compare:@"Message"] == 0) //only set the text field if the stored text is for a message
+        details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
+    else
+        details = @"";
 
-    details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
-    [textField_message_actionDetails setStringValue:(details ? details : @"")];
+    [textField_message_actionDetails setStringValue:(details)];
     [textField_message_actionDetails setDelegate:self];
 
     [popUp_message_actionDetails_one setMenu:[self accountMenu]];
@@ -300,7 +312,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
 -(IBAction)saveMessageDetails:(id)sender
 {
-    NSMutableDictionary	*selectedActionDict;
     NSMutableDictionary *detailsDict = [[NSMutableDictionary alloc] init];;
     AIAccount * account = [[popUp_message_actionDetails_one selectedItem] representedObject];
     [detailsDict setObject:[account accountID] forKey:KEY_MESSAGE_SENDFROM];
@@ -314,8 +325,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     [detailsDict setObject:[NSNumber numberWithInt:[button_anotherAccount state]] forKey:KEY_MESSAGE_OTHERACCOUNT];
     [detailsDict setObject:[NSNumber numberWithInt:[button_displayAlert state]] forKey:KEY_MESSAGE_ERROR];
 
-
-    selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
     [selectedActionDict setObject:detailsDict forKey:KEY_EVENT_DETAILS_DICT];
     [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
 
@@ -384,9 +393,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
         [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
     }
 
-    NSMutableDictionary	*selectedActionDict;
-
-    selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
     [selectedActionDict setObject:soundPath forKey:KEY_EVENT_DETAILS];
     [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
 
@@ -432,10 +438,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 {
     NSString	*behavior = [sender representedObject];
 
-    NSMutableDictionary	*selectedActionDict;
-
-    selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
-    [selectedActionDict setObject:behavior forKey:KEY_EVENT_DETAILS];
+   [selectedActionDict setObject:behavior forKey:KEY_EVENT_DETAILS];
     [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
 
     //Save event preferences
@@ -446,9 +449,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 {
     AIAccount * account = [sender representedObject];
     NSString * accountID = [account accountID];
-    NSMutableDictionary	*selectedActionDict;
 
-    selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
     [selectedActionDict setObject:accountID forKey:KEY_EVENT_DETAILS];
     [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
 }
@@ -638,20 +639,24 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     [tableView_actions selectRow:(([eventActionArray count]-1)+offset) byExtendingSelection:NO]; //select the new event
 
     
- //   if ([[tableView_actions dataSource] respondsToSelector:@selector(addedEvent:)])
-        [[tableView_actions dataSource] addedEvent:self];
+    if ([[tableView_actions dataSource] respondsToSelector:@selector(addedEvent:)])
+        [[tableView_actions dataSource] performSelector:@selector(addedEvent:) withObject:self];
     
     //Update the outline view
     [tableView_actions reloadData];
 
 }
 
-- (void)configureForTextDetails:(NSString *)instructions
+- (void)configureForTextDetails:(NSString *)instructions identifier:(NSString *)identifier
 {
-    NSString *details;
-
-    details = [NSString alloc];
-    details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
+    NSString *details =  [[NSString alloc] autorelease];
+    NSString *oldIdentifier = [selectedActionDict objectForKey:KEY_EVENT_ACTION];
+    if ([oldIdentifier compare:identifier] == 0)
+    {
+        details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
+    }
+    else
+        details = @"";
 
     [textField_actionDetails setDelegate:self];
     [textField_description_textField setStringValue:instructions];
@@ -660,9 +665,8 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     [self configureWithSubview:view_details_text];
 }
 
-- (void)configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu
+- (void)configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu identifier:(NSString *)identifier
 {
-
     [textField_description_popUp setStringValue:instructions];
     [popUp_actionDetails setMenu:detailsMenu];
     [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]]];
@@ -694,8 +698,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
         containerFrame.size.height += heightChange;
         containerFrame.origin.y -= heightChange;
         [view_pref setFrame:containerFrame];
-   //     [view_pref display];
-
+ 
         containerFrame = [[[view_pref superview] superview] frame];
         containerFrame.size.height += heightChange;
         [[[view_pref superview] superview] setFrame:containerFrame];
@@ -707,11 +710,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     [view_main replaceSubview:view_blank with:view_inView];
     [view_main setFrameSize:[view_inView frame].size];
     [view_main setNeedsDisplay:YES];
-    
-  /*  [view_details release];
-    view_details = view_inView;
-    [view_details retain]; */
-  //  [[view_main window] display];
+
 }
 
 - (void)removeAllSubviews:(NSView *)view
@@ -768,12 +767,10 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 }
 
 //editing is over - save in KEY_EVENT_DETAILS
-- (void)controlTextDidEndEditing:(NSNotification *)notification
+//- (void)controlTextDidEndEditing:(NSNotification *)notification
+- (void)textDidChange:(NSNotification *)notification
 {
 
-    NSMutableDictionary	*selectedActionDict;
-
-    selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
     [selectedActionDict setObject:[[notification object] stringValue] forKey:KEY_EVENT_DETAILS];
     [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
     [self saveEventActionArray];
@@ -783,10 +780,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 - (void)oneTimeEvent:(NSButton *)inButton
 {
 
-    NSMutableDictionary	*selectedActionDict;
-    selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
-
-    [selectedActionDict setObject:[NSNumber numberWithInt:[inButton state]] forKey:KEY_EVENT_DELETE];
+   [selectedActionDict setObject:[NSNumber numberWithInt:[inButton state]] forKey:KEY_EVENT_DELETE];
     [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
 
     [self saveEventActionArray];
@@ -799,6 +793,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     return contactTest;
 }
 
+//hash string is simply based on the UIDAndServiceID's NSString hash
 - (unsigned) hash
 {
     return ( [[activeContactObject UIDAndServiceID] hash] );
