@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# $Id: ichat2adium.pl,v 1.4 2003/11/30 01:15:55 jmelloy Exp $
+# $Id: ichat2adium.pl,v 1.5 2003/12/19 06:13:46 jmelloy Exp $
 #
 # This program imports iChat logs using the program Logorrhea.  Get it from
 # http://spiny.com/logorrhea/
@@ -9,6 +9,12 @@
 #
 # Then run this script with "ichat2adium.pl filename"  or run from the same
 # directory as the exported contents.
+#
+# If you pass the "--usernames" flag, the script will prompt you for the
+# usernames of the various aliases.
+#
+# The "--primary-user USERNAME" flag will set the name of the user to your
+# username.
 #
 # Records that make no sense will be sent to "adiumLogs/bad".
 #
