@@ -1830,36 +1830,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		343EAB9006EF8604001CDAFF = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = GBApplescriptFiltersPlugin.h;
-			path = "Plugins/Applescript Filters/GBApplescriptFiltersPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		343EAB9106EF8604001CDAFF = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = GBApplescriptFiltersPlugin.m;
-			path = "Plugins/Applescript Filters/GBApplescriptFiltersPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		343EAB9206EF8604001CDAFF = {
-			fileRef = 343EAB9006EF8604001CDAFF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		343EAB9306EF8604001CDAFF = {
-			fileRef = 343EAB9106EF8604001CDAFF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		344092CC07D8FF8F00321BB3 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -3638,20 +3608,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		347797E30729A86100A8CE8C = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = scriptToolbar.png;
-			path = "Plugins/Applescript Filters/scriptToolbar.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		347797E40729A86100A8CE8C = {
-			fileRef = 347797E30729A86100A8CE8C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3477CAD10776E55800995429 = {
 			fileRef = 4BBF41ED066119A8001D31E1;
 			isa = PBXBuildFile;
@@ -3692,6 +3648,7 @@
 		};
 		347E778507CA825F00350507 = {
 			children = (
+				34F8A7FA05A8927F00577775,
 				9E4CF9D104AA69B000415B22,
 				4B6D0E43047D490700A8010A,
 				4B0473B7043E43F200A8010A,
@@ -7159,7 +7116,6 @@
 				6EC1684C06C170A000F9FAD3,
 				6EC1684E06C170A000F9FAD3,
 				C45F7F6506C75E210056B1F2,
-				343EAB9206EF8604001CDAFF,
 				34CEBE6206F117DF00A89DDE,
 				34A489F406F64359002C7C5F,
 				34A48A0206F6436D002C7C5F,
@@ -7265,6 +7221,7 @@
 				34A6FADA07D6F3AA00972830,
 				34A6FB7807D6FDBA00972830,
 				344093AA07D9161B00321BB3,
+				34BFD80107E6A51D00AD984D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7510,7 +7467,6 @@
 				34A48A6806F646C7002C7C5F,
 				3461621406FB482D009181D8,
 				3461621706FB482D009181D8,
-				347797E40729A86100A8CE8C,
 				9E6A9BF70732CB500032C9F6,
 				9E6A9BF80732CB500032C9F6,
 				C4C63A09073889B2005E076D,
@@ -7566,6 +7522,7 @@
 				34A250B607E0F822009854E1,
 				4BFC2E7907E357F00063D70C,
 				34C899AC07E51B18009357F6,
+				34BFD7FD07E6A50C00AD984D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7653,7 +7610,6 @@
 				6EC1684D06C170A000F9FAD3,
 				6EC1684F06C170A000F9FAD3,
 				C45F7F6606C75E210056B1F2,
-				343EAB9306EF8604001CDAFF,
 				34CEBE6306F117DF00A89DDE,
 				34A489F306F64359002C7C5F,
 				34A48A0106F6436D002C7C5F,
@@ -7759,6 +7715,7 @@
 				34A6FADB07D6F3AA00972830,
 				34A6FB7707D6FDBA00972830,
 				344093AB07D9161B00321BB3,
+				34BFD80007E6A51D00AD984D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8044,6 +8001,7 @@
 				34D8350B07CBE889006466F2,
 				34A6FEB907D7E2E200972830,
 				34A6FEBB07D7E2E400972830,
+				34BFD7F507E6A22700AD984D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8171,6 +8129,7 @@
 				34943DEF07BAD918000F2A03,
 				3402D38B07CB04FC0044F818,
 				4BFE2EA807E61FB200C07EBE,
+				34BFD7F607E6A22700AD984D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8255,6 +8214,7 @@
 				34EF54A407CE8EC300A685F1,
 				34A6FEBA07D7E2E300972830,
 				34A6FEBC07D7E2E500972830,
+				34BFD7F707E6A22700AD984D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8587,6 +8547,105 @@
 			path = "Adium 1.6 Pref Importer.app";
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34BFD7ED07E6A1FB00AD984D = {
+			children = (
+				34BFD7F207E6A22700AD984D,
+				34BFD7F407E6A22700AD984D,
+				34BFD7F307E6A22700AD984D,
+			);
+			isa = PBXGroup;
+			name = "Preset Manager";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFD7F207E6A22700AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESPresetManagementController.h;
+			path = "Frameworks/Adium Framework/ESPresetManagementController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFD7F307E6A22700AD984D = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = PresetManagement.nib;
+			path = "Frameworks/Adium Framework/PresetManagement.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFD7F407E6A22700AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESPresetManagementController.m;
+			path = "Frameworks/Adium Framework/ESPresetManagementController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFD7F507E6A22700AD984D = {
+			fileRef = 34BFD7F207E6A22700AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFD7F607E6A22700AD984D = {
+			fileRef = 34BFD7F307E6A22700AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFD7F707E6A22700AD984D = {
+			fileRef = 34BFD7F407E6A22700AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFD7FC07E6A50C00AD984D = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = scriptToolbar.png;
+			path = Resources/scriptToolbar.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFD7FD07E6A50C00AD984D = {
+			fileRef = 34BFD7FC07E6A50C00AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFD7FE07E6A51D00AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = GBApplescriptFiltersPlugin.m;
+			path = Source/GBApplescriptFiltersPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFD7FF07E6A51D00AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = GBApplescriptFiltersPlugin.h;
+			path = Source/GBApplescriptFiltersPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFD80007E6A51D00AD984D = {
+			fileRef = 34BFD7FE07E6A51D00AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFD80107E6A51D00AD984D = {
+			fileRef = 34BFD7FF07E6A51D00AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		34C14CD007A8B1AB003CC138 = {
 			fileEncoding = 4;
@@ -12309,9 +12368,9 @@
 		};
 		34F8A7FA05A8927F00577775 = {
 			children = (
-				347797E30729A86100A8CE8C,
-				343EAB9006EF8604001CDAFF,
-				343EAB9106EF8604001CDAFF,
+				34BFD7FF07E6A51D00AD984D,
+				34BFD7FE07E6A51D00AD984D,
+				34BFD7FC07E6A50C00AD984D,
 			);
 			isa = PBXGroup;
 			name = "Applescript Filters";
@@ -14402,7 +14461,6 @@
 		};
 		4B4F5B2A042D63E200A8010A = {
 			children = (
-				34F8A7FA05A8927F00577775,
 				4BF4813B049A802E00A8010A,
 				7E64083B06629DD7006A5552,
 				4B1332130459B98E00A8010A,
@@ -14749,6 +14807,7 @@
 		};
 		4B587CA507ABFEFD001832A9 = {
 			children = (
+				34BFD7ED07E6A1FB00AD984D,
 				4B4F5B2D042D645F00A8010A,
 				4B587CAB07ABFF18001832A9,
 				4BE5AC7F07AFD46800422AD5,
