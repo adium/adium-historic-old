@@ -23,6 +23,10 @@
 
 - (IBAction)selectDockBehaviorSet:(id)sender;
 - (NSMenu *)_dockBehaviorSetMenu;
+
+- (NSMenu *)_speechPresetMenu;
+- (void)selectSpeechPreset:(id)sender;
+
 @end
 
 @implementation ESGlobalEventsPreferences
@@ -45,7 +49,7 @@
 	[contactAlertsViewController setDelegate:self];
 	[contactAlertsViewController configureForListObject:nil];
 	
-	//Observe for installation of new sound sets
+	//Observe for installation of new sound sets and set up the sound set menu
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(xtrasChanged:)
 									   name:Adium_Xtras_Changed
@@ -55,10 +59,13 @@
 	//Build and set the dock behavior set menu
     [popUp_dockBehaviorSet setMenu:[self _dockBehaviorSetMenu]];
 	
-	
+	//Build and set the speech preset menu
+	[popUp_speechPreset setMenu:[self _speechPresetMenu]];
+
 	//Observer preference changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DOCK_BEHAVIOR];	
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DOCK_BEHAVIOR];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_ANNOUNCER];
 }
 
 //Preference view is closing
@@ -84,6 +91,7 @@
 			if(soundSetPath && [soundSetPath length] != 0){
 				[popUp_soundSet selectItemWithRepresentedObject:[soundSetPath stringByExpandingBundlePath]];
 				[self popUp:popUp_soundSet shouldShowCustom:NO];
+	
 			}else{
 				[self popUp:popUp_soundSet shouldShowCustom:YES];
 			}
@@ -97,11 +105,25 @@
 			if(activePreset && ([activePreset length] != 0)){
 				[popUp_dockBehaviorSet selectItemWithRepresentedObject:activePreset];
 				[self popUp:popUp_dockBehaviorSet shouldShowCustom:NO];
-			}else{
 				
+			}else{
 				[self popUp:popUp_dockBehaviorSet shouldShowCustom:YES];
 			}
 		}
+	}else if([group isEqualToString:PREF_GROUP_ANNOUNCER]){
+		if(!key || [key isEqualToString:KEY_SPEECH_ACTIVE_PRESET]){
+			NSString	*activePreset = [prefDict objectForKey:KEY_SPEECH_ACTIVE_PRESET];
+			
+			if(activePreset && ([activePreset length] != 0)){
+				[popUp_speechPreset selectItemWithRepresentedObject:activePreset];
+				[self popUp:popUp_speechPreset shouldShowCustom:NO];
+				
+			}else{
+				[self popUp:popUp_speechPreset shouldShowCustom:YES];
+			}
+		}
+		
+		
 	}
 	
 }
@@ -157,9 +179,12 @@
 		[self selectSoundSet:nil];
 		
 	}else if([actionID isEqualToString:DOCK_BEHAVIOR_ALERT_IDENTIFIER]){
-		//Dock behaviors changed.  Could check  all dock behaviors to determine if we are on a behavior set or are now 'custom'
-		//For now, if behaviors change, we are 'custom' even if it gets us back to a dock behavior set
-		[self selectDockBehaviorSet:nil];
+		//Dock behaviors changed.
+		[plugin updateActiveDockBehaviorSet];
+		
+	}else if([actionID isEqualToString:SPEAK_EVENT_ALERT_IDENTIFIER]){
+		//Speech preset changed.
+		[plugin updateActiveSpeechPreset];
 	}
 }
 
@@ -244,6 +269,46 @@
     }
 	
     return(behaviorSetMenu);
+}
+
+#pragma mark Speech presets
+- (void)selectSpeechPreset:(id)sender
+{
+	//Can't set nil because if we do the default will be reapplied on next launch
+	[[adium preferenceController] setPreference:([sender representedObject] ?
+												 [sender representedObject] : 
+												 @"")
+										 forKey:KEY_SPEECH_ACTIVE_PRESET
+										  group:PREF_GROUP_ANNOUNCER];	
+}
+
+//Builds and returns a speech preset menu
+- (NSMenu *)_speechPresetMenu
+{
+    NSEnumerator	*enumerator;
+    NSString		*setName;
+    NSMenu			*speechPresetMenu;
+	
+    //Create the behavior set menu
+    speechPresetMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
+	
+    //Add all the premade behavior sets
+    enumerator = [[plugin availableSpeechPresets] objectEnumerator];
+    while((setName = [enumerator nextObject])){
+        NSMenuItem	*menuItem;
+		
+        //Create the menu item
+        menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:setName
+																		 target:self
+																		 action:@selector(selectSpeechPreset:)
+																  keyEquivalent:@""] autorelease];
+		
+        //
+        [menuItem setRepresentedObject:setName];
+        [speechPresetMenu addItem:menuItem];
+    }
+
+    return(speechPresetMenu);
 }
 
 @end

@@ -9,19 +9,19 @@
         <array>
             <dict>
                 <key>Behavior</key>
-                <integer>1</integer>
+                <real>1</real>
                 <key>Notification</key>
                 <string>Content_MessageReceivedFirst</string>
             </dict>
             <dict>
                 <key>Behavior</key>
-                <integer>1</integer>
+                <real>1</real>
                 <key>Notification</key>
                 <string>Content_MessageReceived</string>
             </dict>
             <dict>
                 <key>Behavior</key>
-                <integer>2</integer>
+                <real>2</real>
                 <key>Notification</key>
                 <string>Interface_ErrorMessageReceived</string>
             </dict>
@@ -34,7 +34,7 @@
         <array>
             <dict>
                 <key>Behavior</key>
-                <integer>2</integer>
+                <real>2</real>
                 <key>Notification</key>
                 <string>Interface_ErrorMessageReceived</string>
             </dict>

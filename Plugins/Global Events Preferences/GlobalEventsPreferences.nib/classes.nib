@@ -37,7 +37,9 @@
             OUTLETS = {
                 contactAlertsViewController = ESContactAlertsViewController; 
                 "popUp_dockBehaviorSet" = NSPopUpButton; 
+                "popUp_growlPreset" = NSPopUpButton; 
                 "popUp_soundSet" = NSPopUpButton; 
+                "popUp_speechPreset" = NSPopUpButton; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
