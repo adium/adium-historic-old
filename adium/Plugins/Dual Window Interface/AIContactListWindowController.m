@@ -107,8 +107,6 @@
 
 - (NSRect)windowWillUseStandardFrame:(NSWindow *)sender defaultFrame:(NSRect)defaultFrame
 {
-    NSLog(@"windowWillUseStandardFrame");
-
     return([self _desiredWindowFrame]);
 }
 
@@ -192,7 +190,6 @@
 - (BOOL)windowShouldClose:(id)sender
 {
     //Close the contact list view
-    [contactListViewController closeContactListView:contactListView];
     [contactListViewController release];
     [contactListView release];
 

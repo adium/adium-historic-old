@@ -115,7 +115,7 @@
 }
 
 - (BOOL)tabShouldClose:(id)sender
-{    
+{
     //Close down our message view
     [messageView closeMessageView];
     

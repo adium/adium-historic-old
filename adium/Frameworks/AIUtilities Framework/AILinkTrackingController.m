@@ -69,8 +69,6 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     NSPoint		location;
 
     location = [link trackingRect].origin;
-#warning I've had bad access here.  Somehow the links are getting dealloced?
-
     location = [controlView convertPoint:location toView:nil];
     location = [[theEvent window] convertBaseToScreen:location];
 
@@ -208,12 +206,26 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     hoveredString = nil;
 
     //
-    controlView = [inControlView retain];
+    controlView = inControlView;
     textStorage = [inTextStorage retain];
     layoutManager = [inLayoutManager retain];
     textContainer = [inTextContainer retain];
     
     return(self);
+}
+
+- (void)dealloc
+{
+    [self _endCursorTracking];
+
+    [textStorage release];
+    [layoutManager release];
+    [textContainer release];
+    [hoveredString release];
+    [hoveredLink release];
+    [linkArray release];
+
+    [super dealloc];
 }
 
 //Begins cursor tracking, registering tracking rects for all our available links

@@ -30,6 +30,13 @@
     return(self);
 }
 
+- (void)dealloc
+{
+    [cellArray release];
+
+    [super dealloc];
+}
+
 //Add a cell.  Returns YES if our column's width changes
 - (BOOL)addCell:(AIFlexibleTableCell *)inCell forRow:(int)inRow
 {

@@ -16,27 +16,17 @@
 #import <Cocoa/Cocoa.h>
 
 @class AIListContact, AIAdium, AIFlexibleTableView, AIFlexibleTableColumn, AIChat;
-@protocol AIFlexibleTableViewDelegate;
+@protocol AIFlexibleTableViewDelegate, AIMessageViewController;
 
-@interface AISMViewController : NSObject <AIFlexibleTableViewDelegate> {
+@interface AISMViewController : NSObject <AIFlexibleTableViewDelegate, AIMessageViewController> {
     AIAdium			*owner;
 
-//    AIListContact		*contact;
     AIChat			*chat;
     AIFlexibleTableView		*messageView;
 
     AIFlexibleTableColumn	*senderCol;
     AIFlexibleTableColumn	*messageCol;
     AIFlexibleTableColumn	*timeCol;
-/*
-    NSColor			*backColorIn;
-    NSColor			*backColorOut;
-    NSColor			*lineColorDivider;
-    NSColor			*lineColorDarkDivider;
-    NSColor			*outgoingSourceColor;
-    NSColor			*outgoingBrightSourceColor;
-    NSColor			*incomingSourceColor;
-    NSColor			*incomingBrightSourceColor;*/
 
     NSColor			*outgoingSourceColor;
     NSColor			*outgoingLightSourceColor;
@@ -52,7 +42,6 @@
 
     float			gridDarkness;
     float			senderGradientDarkness;
-//    float			senderGradientLightness;
 
     NSFont			*prefixFont;
 

@@ -16,8 +16,9 @@
 #import <Cocoa/Cocoa.h>
 
 @class AIAdium, AIListGroup, AISCLOutlineView;
+@protocol AIContactListViewController;
 
-@interface AISCLViewController : NSObject {
+@interface AISCLViewController : NSObject <AIContactListViewController> {
     AIAdium		*owner;
     
     AIListGroup		*contactList;
@@ -34,7 +35,6 @@
 - (IBAction)performDefaultActionOnSelectedContact:(id)sender;
 - (NSView *)contactListView;
 - (void)view:(NSView *)inView didMoveToSuperview:(NSView *)inSuperview;
-- (void)closeView;
 - (NSMenu *)outlineView:(NSOutlineView *)outlineView menuForEvent:(NSEvent *)theEvent;
 
 @end

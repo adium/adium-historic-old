@@ -372,10 +372,7 @@
 //Set our delegate
 - (void)setDelegate:(id <AIFlexibleTableViewDelegate>)inDelegate
 {
-    if(inDelegate != delegate){
-        [delegate release]; delegate = nil;
-        delegate = [inDelegate retain];
-    }
+    delegate = inDelegate;
 }
 
 //Add a Column

@@ -31,6 +31,7 @@
 @end
 
 @implementation AISMViewController
+
 + (AISMViewController *)messageViewControllerForChat:(AIChat *)inChat owner:(id)inOwner
 {
     return([[[self alloc] initForChat:inChat owner:inOwner] autorelease]);
@@ -44,36 +45,38 @@
     chat = [inChat retain];
     outgoingAlias = nil;
 
-    //observe
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-        
+    //Get pref values
     [self preferencesChanged:nil];
 
-    //Create our table view
+    //Configure our table view
     messageView = [[AIFlexibleTableView alloc] init];
     [messageView setDelegate:self];
     [messageView setForwardsKeyEvents:YES];
 
+    //Configure the columns
     senderCol = [[AIFlexibleTableColumn alloc] init];
     [messageView addColumn:senderCol];
-    
     messageCol = [[AIFlexibleTableColumn alloc] init];
     [messageCol setFlexibleWidth:YES];
     [messageView addColumn:messageCol];
-    
     timeCol = [[AIFlexibleTableColumn alloc] init];
     [messageView addColumn:timeCol];
 
-    [messageView reloadData]; //Load any existing messages
+    //Load any existing messages
+    [messageView reloadData];
     
     //Observe
     [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:chat];
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
     return(self);
 }
 
 - (void)dealloc
 {
+    //
+    [[owner notificationCenter] removeObserver:self];
+    
     //Release the old preference cache
     [outgoingSourceColor release];
     [outgoingLightSourceColor release];
@@ -90,6 +93,7 @@
     [messageCol release];
     [timeCol release];
     [messageView release];
+    [chat release];
     
     [super dealloc];
 }

@@ -91,7 +91,7 @@
 
 - (void)setTarget:(id)inTarget action:(SEL)inSelector
 {
-    target = /*[*/inTarget/* retain]*/;
+    target = inTarget;
     selector = inSelector;
 }
 
@@ -230,6 +230,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
+    [chat release];
     [returnArray release]; returnArray = nil;
     [super dealloc];
 }

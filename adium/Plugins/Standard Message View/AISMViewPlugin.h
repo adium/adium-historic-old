@@ -43,7 +43,7 @@
 #define	KEY_SMV_TIME_STAMP_FORMAT		@"Time Stamp"
 #define	KEY_SMV_TIME_STAMP_FORMAT_SECONDS	@"Time Stamp Seconds"
 
-@interface AISMViewPlugin : AIPlugin <AIMessageViewController> {
+@interface AISMViewPlugin : AIPlugin <AIMessageViewPlugin> {
     NSMutableArray		*controllerArray;
 
     AISMPreferences		*preferences;
