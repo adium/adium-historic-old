@@ -23,28 +23,27 @@
 {
     meTag = -1;
     
-    //register default preferences
+    //Register ourself as a handle observer
+    [[adium contactController] registerListObjectObserver:self];
+	
+    //Configure our preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AB_DISPLAYFORMAT_DEFAULT_PREFS forClass:[self class]]  forGroup:PREF_GROUP_ADDRESSBOOK];
-
-    //load the preference view
     advancedPreferences = [[ESAddressBookIntegrationAdvancedPreferences preferencePane] retain];
-          
+	
     //Services dictionary
     propertyDict = [[NSDictionary dictionaryWithObjectsAndKeys:kABAIMInstantProperty,@"AIM",kABJabberInstantProperty,@"Jabber",kABMSNInstantProperty,@"MSN",kABYahooInstantProperty,@"Yahoo!",kABICQInstantProperty,@"ICQ",nil] retain];
     //Tracking dictionary for asynchronous image loads
     trackingDict = [[NSMutableDictionary alloc] init];
     
     //sharedAddressBook = [[ABAddressBook sharedAddressBook] retain];
-
+	
     [self preferencesChanged:nil];
-
+	
     //Observe preferences changes
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     //Observe external address book changes
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addressBookChanged:) name:kABDatabaseChangedExternallyNotification object:nil];
-    //Register ourself as a handle observer
-    [[adium contactController] registerListObjectObserver:self];
-
+	
 }
 
 - (void)uninstallPlugin
@@ -54,12 +53,14 @@
     
     [propertyDict release];
     [trackingDict release];
-//    [sharedAddressBook release];
+	//    [sharedAddressBook release];
 }
 
 //Called as contacts are created, load their address book information
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
+	NSArray		*modifiedAttributes = nil;
+	
     if(inModifiedKeys == nil){ //Only set on contact creation
                                //look up the property for this serviceID
         
@@ -100,13 +101,13 @@
                     NSString *oldValue = [[inObject displayArrayForKey:@"Display Name"] objectWithOwner:self];
                     if (!oldValue || ![oldValue isEqualToString:displayName]) {
                         [[inObject displayArrayForKey:@"Display Name"] setObject:displayName withOwner:self];
-                        [[adium contactController] listObjectAttributesChanged:inObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"] delayed:delayed];
+						modifiedAttributes = [NSArray arrayWithObject:@"Display Name"];
                     } 
                 } else {
                     //Clear any stored value
                     if ([[inObject displayArrayForKey:@"Display Name"] objectWithOwner:self]) {
                         [[inObject displayArrayForKey:@"Display Name"] setObject:nil withOwner:self];
-                        [[adium contactController] listObjectAttributesChanged:inObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"] delayed:delayed];   
+						modifiedAttributes = [NSArray arrayWithObject:@"Display Name"];
                     }
                 }
             }
@@ -119,16 +120,16 @@
             ABPerson * person;
             
             if (person = [results objectAtIndex:0]){
-		AIMutableOwnerArray	*statusArray = [inObject statusArrayForKey:@"UserIcon"];
-		
-		if([statusArray count]){
+				AIMutableOwnerArray	*statusArray = [inObject statusArrayForKey:@"UserIcon"];
+				
+				if([statusArray count]){
                     [person setImageData: [[statusArray firstImage] TIFFRepresentation]];
                 }
             }
         }
     }
     
-    return(nil); //we don't change any keys
+    return(modifiedAttributes); //we don't change any keys
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
@@ -157,7 +158,6 @@
     while (inObject = [contactEnumerator nextObject]){
         [self updateListObject:inObject
                           keys:nil
-                       delayed:YES
                         silent:NO]; 
     }
     [self updateSelf];
@@ -170,7 +170,7 @@
         //Check if we retrieved data from the 'me' address book card
         if (tag == meTag) {
             NSLog(@"ABIntegration: myImageData found.");
-	    [[adium preferenceController] setPreference:inData forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
+			[[adium preferenceController] setPreference:inData forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
             meTag = -1;
         }else{
             //Apply the image to the appropriate listObject
