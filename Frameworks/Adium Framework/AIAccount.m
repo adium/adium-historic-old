@@ -131,7 +131,7 @@
 }
 
 //Callback after the user enters their password for connecting
-- (void)passwordReturnedForConnect:(NSString *)inPassword
+- (void)passwordReturnedForConnect:(NSString *)inPassword context:(id)inContext
 {
     //If a password was returned, and we're still waiting to connect
     if(inPassword && [inPassword length] != 0 &&
@@ -139,7 +139,7 @@
        ![[self statusObjectForKey:@"Connecting"] boolValue]){
         //Save the new password
         if(password != inPassword){
-            [password release]; password = [inPassword copy];
+            [password release]; password = [inPassword retain];
         }
         
         //Tell the account to connect
@@ -232,7 +232,7 @@
 					//Retrieve the user's password and then call connect
 					[[adium accountController] passwordForAccount:self 
 												  notifyingTarget:self
-														 selector:@selector(passwordReturnedForConnect:)];
+														 selector:@selector(passwordReturnedForConnect:context:)];
 				}else{
 					//Connect immediately without retrieving a password
 					[self connect];
@@ -582,5 +582,7 @@
 - (BOOL)contactListEditable{
 	return(NO);
 }
+
+- (void)performRegisterWithPassword:(NSString *)inPassword{}
 
 @end
