@@ -22,8 +22,10 @@
     NSImage	*miniCheck_Enabled_Press;
     NSImage	*miniCheck_Selected;
     NSImage	*miniCheck_Selected_Press;
+    NSImage	*miniCheck_Selected_Disabled;
     NSImage	*miniCheck_Mixed;
     NSImage	*miniCheck_Mixed_Press;
+    NSImage	*miniCheck_Mixed_Disabled;
     
     int	state;
 }

@@ -118,6 +118,28 @@
 //Delete an object from the collection
 - (void)deleteObject:(AIEditorListObject *)inObject
 {
+    NSEnumerator		*enumerator;
+    id <AIEditorCollection>	collection;
+
+    if([inObject isKindOfClass:[AIEditorListHandle class]]){
+        //Delete the object from all owning collections
+        enumerator = [[plugin collectionsArray] objectEnumerator];
+        while((collection = [enumerator nextObject])){
+            if([collection includeInOwnershipColumn]){
+                AIEditorListHandle	*handle;
+
+                handle = [plugin handleNamed:[inObject UID] onCollection:collection];
+                if(handle){ //Remove the handle
+                    [plugin deleteObject:handle fromCollection:collection];
+                }
+            }
+        }
+
+    }else{
+
+        
+    }    
+    
 }
 
 //Rename an existing object
@@ -138,6 +160,8 @@
     NSEnumerator		*enumerator;
     id <AIEditorCollection>	collection;
 
+    NSLog(@"Rebuilding list");
+    
     //Create the editor group
     editorGroup = [[[AIEditorListGroup alloc] initWithUID:@"" temporary:NO] autorelease];
 
@@ -206,7 +230,6 @@
 
     return(nil);
 }
-
 
 
 //A collection's content has changed
@@ -304,6 +327,7 @@
     //Redisplay our content view
     NSLog(@"collectionStatusChanged (All contacts collection)");
 }
+
 
 @end
 

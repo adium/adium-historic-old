@@ -28,8 +28,10 @@
     miniCheck_Enabled_Press = [[AIImageUtilities imageNamed:@"miniCheck_Enabled_Press" forClass:[self class]] retain];
     miniCheck_Selected = [[AIImageUtilities imageNamed:@"miniCheck_Selected" forClass:[self class]] retain];
     miniCheck_Selected_Press = [[AIImageUtilities imageNamed:@"miniCheck_Selected_Press" forClass:[self class]] retain];
+    miniCheck_Selected_Disabled = [[AIImageUtilities imageNamed:@"miniCheck_Selected_Disabled" forClass:[self class]] retain];
     miniCheck_Mixed = [[AIImageUtilities imageNamed:@"miniCheck_Mixed" forClass:[self class]] retain];
     miniCheck_Mixed_Press = [[AIImageUtilities imageNamed:@"miniCheck_Mixed_Press" forClass:[self class]] retain];
+    miniCheck_Mixed_Disabled = [[AIImageUtilities imageNamed:@"miniCheck_Mixed_Disabled" forClass:[self class]] retain];
 
     //Config ourselves a bit
     [self setBordered:NO];
@@ -48,8 +50,10 @@
     new->miniCheck_Enabled_Press = [miniCheck_Enabled_Press retain];
     new->miniCheck_Selected = [miniCheck_Selected retain];
     new->miniCheck_Selected_Press = [miniCheck_Selected_Press retain];
+    new->miniCheck_Selected_Disabled = [miniCheck_Selected_Disabled retain];
     new->miniCheck_Mixed = [miniCheck_Mixed retain];
     new->miniCheck_Mixed_Press = [miniCheck_Mixed_Press retain];
+    new->miniCheck_Mixed_Disabled = [miniCheck_Mixed_Disabled retain];
 
     new->state = state;
 
@@ -63,8 +67,10 @@
     [miniCheck_Enabled_Press release];
     [miniCheck_Selected release];
     [miniCheck_Selected_Press release];
+    [miniCheck_Selected_Disabled release];
     [miniCheck_Mixed release];
     [miniCheck_Mixed_Press release];
+    [miniCheck_Mixed_Disabled release];
 
     [super dealloc];
 }
@@ -98,22 +104,26 @@
     highlighted = [self isHighlighted];
 
     //Draw the correct mini-check image
-    if(!enabled){
-        image = miniCheck_Disabled;
-    }else if(state == NSOffState){
-        if(!highlighted){
+    if(state == NSOffState){
+        if(!enabled){
+            image = miniCheck_Disabled;
+        }else if(!highlighted){
             image = miniCheck_Enabled;
         }else{
             image = miniCheck_Enabled_Press;
         }
     }else if(state == NSOnState){
-        if(!highlighted){
+        if(!enabled){
+            image = miniCheck_Selected_Disabled;
+        }else if(!highlighted){
             image = miniCheck_Selected;
         }else{
             image = miniCheck_Selected_Press;
         }
     }else{ //if(state == NSMixedState){
-        if(!highlighted){
+        if(!enabled){
+            image = miniCheck_Mixed_Disabled;
+        }else if(!highlighted){
             image = miniCheck_Mixed;
         }else{
             image = miniCheck_Mixed_Press;

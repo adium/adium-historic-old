@@ -16,7 +16,6 @@
 
     AIEditorListGroup			*list;
     AIContactListEditorPlugin		*plugin;
-
 }
 
 + (AIEditorAllContactsCollection *)allContactsCollectionWithOwner:(id)inOwner plugin:(id)inPlugin;
