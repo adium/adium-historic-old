@@ -313,7 +313,7 @@
 - (NSArray *)renamePreset:(NSDictionary *)preset toName:(NSString *)name inPresets:(NSArray *)presets
 {
 	NSString				*oldPresetName = [preset objectForKey:@"Name"];
-	NSMutableDictionary	*newPreset = [preset mutableCopy];
+	NSMutableDictionary		*newPreset = [preset mutableCopy];
 	[newPreset setObject:name
 				  forKey:@"Name"];
 
@@ -338,7 +338,7 @@
 	NSMutableDictionary	*newEventPreset = [preset mutableCopy];
 	NSString			*newName = [NSString stringWithFormat:@"%@ (%@)", [preset objectForKey:@"Name"], AILocalizedString(@"Copy",nil)];
 	[newEventPreset setObject:newName
-				  forKey:@"Name"];
+					   forKey:@"Name"];
 	
 	//Remove the original preset's order index
 	[newEventPreset removeObjectForKey:@"OrderIndex"];
@@ -382,7 +382,7 @@
 	}
 	
 	[newEventPreset setObject:[NSNumber numberWithFloat:newOrderIndex]
-				  forKey:@"OrderIndex"];
+					   forKey:@"OrderIndex"];
 			 
 	//Now save the new preset
 	[plugin saveEventPreset:newEventPreset];
