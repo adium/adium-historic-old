@@ -62,7 +62,7 @@
 - (AIService *)firstServiceWithServiceID:(NSString *)serviceID;
 - (NSArray *)servicesWithServiceClass:(NSString *)serviceClass;
 - (void)registerService:(AIService *)inService;
-- (NSMenu *)menuOfServicesWithTarget:(id)target;
+- (NSMenu *)menuOfServicesWithTarget:(id)target activeServicesOnly:(BOOL)activeServicesOnly longDescription:(BOOL)longDescription;
 
 //Accounts
 - (NSArray *)accountArray;
