@@ -303,7 +303,7 @@
                 away = [[away substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:@"É"];
             }
             
-            menuItem = [[NSMenuItem alloc] initWithTitle:away target:self action:@selector(setAwayMessage:) keyEquivalent:@""];
+            menuItem = [[[NSMenuItem alloc] initWithTitle:away target:self action:@selector(setAwayMessage:) keyEquivalent:@""] autorelease];
             [menuItem setRepresentedObject:awayDict];
             [awayMenu addItem:menuItem];
         }
