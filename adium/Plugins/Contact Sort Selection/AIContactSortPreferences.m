@@ -84,7 +84,7 @@
     NSDictionary			*preferenceDict;
     NSString				*identifier;
     NSEnumerator			*enumerator;
-    id <AIListSortController>		controller;
+    AISortController		*controller;
 
     //Load our preferences
     preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING];
@@ -107,7 +107,7 @@
 - (void)buildSortModeMenu
 {
     NSEnumerator                *enumerator;
-    id <AIListSortController>	controller;
+    AISortController		*controller;
 
     //Remove all menu items
     [popUp_sortMode removeAllItems];

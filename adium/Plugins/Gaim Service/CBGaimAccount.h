@@ -24,9 +24,9 @@
 #include "sound.h"
 #include "util.h"
 
-@interface CBGaimAccount : AIAccount <AIAccount_Handles,AIAccount_Content>
+@interface CBGaimAccount : AIAccount </*AIAccount_Handles,*/AIAccount_Content>
 {     
-    NSMutableDictionary	*handleDict;
+//    NSMutableDictionary	*handleDict;
     NSMutableDictionary *chatDict;
 
     NSMutableArray      *filesToSendArray;
