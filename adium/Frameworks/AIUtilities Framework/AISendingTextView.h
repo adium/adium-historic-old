@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on Thu Mar 25 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 @interface AISendingTextView : NSTextView {
@@ -16,6 +15,11 @@
 	
     BOOL			sendOnEnter;
     BOOL			sendOnReturn;
+	
+	BOOL			nextIsReturn;
+    BOOL			nextIsEnter;
+    BOOL			optionPressedWithNext;
+	
 }
 
 - (void)setSendingEnabled:(BOOL)inBool;
