@@ -72,9 +72,11 @@
 //
 - (void)dealloc
 {
-	[tabViewItemImage release]; tabViewItemImage = nil;
-    [messageViewController release];
     [[adium notificationCenter] removeObserver:self];
+
+	[tabViewItemImage release]; tabViewItemImage = nil;
+    [messageViewController release]; messageViewController = nil;
+	[container release]; container = nil;
 
     [super dealloc];
 }
@@ -93,7 +95,10 @@
 
 //Our containing window
 - (void)setContainer:(AIMessageWindowController *)inContainer{
-	container = inContainer;
+	if(inContainer != container){
+		[container release];
+		container = [inContainer retain];
+	}
 }
 - (AIMessageWindowController *)container{
 	return(container);
