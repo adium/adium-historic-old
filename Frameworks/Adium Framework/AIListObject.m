@@ -199,8 +199,9 @@ DeclareString(FormattedUID);
 //A mutable owner array (one of our displayArrays) set an object
 - (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner
 {
-	if (containingObject)
+	if (containingObject){
 		[containingObject listObject:self mutableOwnerArray:inArray didSetObject:anObject withOwner:inOwner];
+	}
 }
 
 //Empty implementation by default - we do not need to take any action when a mutable owner array changes
@@ -353,8 +354,43 @@ DeclareString(FormattedUID);
 #pragma mark Key-Value Pairing
 - (NSImage *)userIcon
 {
-	return([[self displayArrayForKey:KEY_USER_ICON create:NO] objectValue]);
+	return([self displayUserIcon]);
 }
+- (NSImage *)displayUserIcon
+{
+	return([[self displayArrayForKey:KEY_USER_ICON create:NO] objectValue]);	
+}
+
+- (void)setDisplayUserIcon:(NSImage *)inImage
+{
+	[self setDisplayUserIcon:inImage withOwner:self priorityLevel:Highest_Priority];
+}
+- (void)setDisplayUserIcon:(NSImage *)inImage withOwner:(id)inOwner priorityLevel:(float)inPriorityLevel
+{
+	AIMutableOwnerArray *userIconDisplayArray;
+	NSImage				*oldImage;
+	
+	//If inImage is nil, we don't want to create the display array if it doesn't already exist
+	userIconDisplayArray = (inImage ?
+							[self displayArrayForKey:KEY_USER_ICON] :
+							[self displayArrayForKey:KEY_USER_ICON create:NO]);
+	oldImage = [self displayUserIcon];
+	
+	[[self displayArrayForKey:KEY_USER_ICON] setObject:inImage
+											 withOwner:inOwner
+										 priorityLevel:inPriorityLevel];
+	
+	//If the displayUserIcon changed, flush our cache and send out a notification
+	if (oldImage != [self displayUserIcon]){
+		[AIUserIcons flushCacheForContact:self];
+		//Notify
+		[[adium contactController] listObjectAttributesChanged:self
+												  modifiedKeys:[NSArray arrayWithObject:KEY_USER_ICON]];
+	}
+				
+				
+}
+
 
 - (NSData *)userIconData
 {
