@@ -45,6 +45,8 @@ gopher:\/\/                     {BEGIN CANONICAL;}
 
 mailto:{mailSpecifier}          {return SH_MAILTO_VALID;}
 
+xmpp:.*@.*(\/.*)?		{return SH_URL_VALID; /*jabber*/}
+
 
 {mailSpecifier}			{return SH_MAILTO_DEGENERATE;}	
 {urlSpecifier}			{return SH_URL_DEGENERATE;}
