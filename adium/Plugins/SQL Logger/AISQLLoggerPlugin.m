@@ -16,8 +16,8 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.41 $
- * $Date: 2004/04/26 07:11:03 $
+ * $Revision: 1.42 $
+ * $Date: 2004/05/06 08:17:28 $
  * $Author: evands $
  *
  */
@@ -187,7 +187,8 @@
     escapeHTMLMessage = [NSMutableString stringWithString:[AIHTMLDecoder encodeHTML:message headers:NO 
 																		   fontTags:NO includingColorTags:NO closeFontTags:NO 
 																		  styleTags:YES closeStyleTagsOnFontChange:NO 
-																	 encodeNonASCII:YES imagesPath:nil attachmentsAsText:YES]];
+																	 encodeNonASCII:YES imagesPath:nil attachmentsAsText:YES
+																		 simpleTagsOnly:NO]];
 	
     char	escapeMessage[[escapeHTMLMessage length] * 2 + 1];
     char	escapeSender[[sourceName length] * 2 + 1];
