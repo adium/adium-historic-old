@@ -62,6 +62,10 @@
 
 	//Observe account list objects so we can enable/disable our controls for connected accounts
     [[adium contactController] registerListObjectObserver:self];
+	
+	if([[[adium accountController] accountArray] count] == 0){
+		[self newAccount:nil];
+	}
 }
 
 //Preference view is closing
