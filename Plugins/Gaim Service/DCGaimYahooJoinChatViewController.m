@@ -20,17 +20,14 @@
 	NSDictionary	*chatCreationInfo;
 	
 	//NSLog(@"#### Yahoo! joinChatWithAccount: %@ joining",inAccount);
-		
-	NSArray *contacts = [[textField_inviteUsers stringValue] componentsSeparatedByString:@","];
-	[self registerToInviteUsers:contacts message:[textField_inviteMessage stringValue]];
-	
+
 	chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:room,@"room",nil];
 	
 	[self doJoinChatWithName:room
 				   onAccount:inAccount
 			chatCreationInfo:chatCreationInfo
-			invitingContacts:nil
-	  withInvitationMessage:nil];
+			invitingContacts:[self contactsFromNamesSeparatedByCommas:[textField_inviteUsers stringValue] onAccount:inAccount]
+	   withInvitationMessage:[textField_inviteMessage stringValue]];
 	
 }
 

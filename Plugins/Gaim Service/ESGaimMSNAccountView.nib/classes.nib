@@ -36,6 +36,9 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_HTTPConnectMethod" = NSButton; 
+                "checkBox_conversationClosed" = NSButton; 
+                "checkBox_conversationTimedOut" = NSButton; 
+                "checkBox_treatDisplayNamesAsStatus" = NSButton; 
                 "textField_friendlyName" = NSTextField; 
             }; 
             SUPERCLASS = ESGaimAccountViewController; 

@@ -10,6 +10,10 @@
     IBOutlet		NSTextField		*textField_friendlyName;
 	
 	IBOutlet		NSButton		*checkBox_HTTPConnectMethod;
+	
+	IBOutlet		NSButton		*checkBox_treatDisplayNamesAsStatus;
+	IBOutlet		NSButton		*checkBox_conversationClosed;
+	IBOutlet		NSButton		*checkBox_conversationTimedOut;
 }
 
 @end
