@@ -14,6 +14,7 @@ Version 0.71
 - Fixed issues with attempting to save Contact List layouts and themes with '/' in their names
 - Fixed a crash from malformed Address Book entries
 - Fixed a crash when opening a message window with no accounts online
+- Improved Log Viewer stability and responsiveness while indexing
 - Improved Rendezvous performance
 - Updated glib to avoid a potential buffer overflow
 - Updated to libgaim 1.0.2, which fixes 3 potential security problems (More information is available here: http://gaim.sf.net/security/)  
