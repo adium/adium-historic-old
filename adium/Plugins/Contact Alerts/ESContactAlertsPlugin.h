@@ -1,5 +1,5 @@
 //
-//  AIContactAlertsPlugin.h
+//  ESContactAlertsPlugin.h
 //  Adium
 //
 //  Created by Evan Schoenberg on Mon Jul 14 2003.
@@ -21,6 +21,13 @@
 #define KEY_EVENT_DISPLAYNAME		@"Display Name"
 #define KEY_EVENT_DELETE		@"Delete"
 
+#define KEY_EVENT_DETAILS_DICT		@"Details Dictionary"
+#define KEY_MESSAGE_SENDTO_UID		@"Destination UID"
+#define KEY_MESSAGE_SENDTO_SERVICE	@"Destination Service"
+#define KEY_MESSAGE_SENDFROM		@"Account ID"
+#define KEY_MESSAGE_OTHERACCOUNT	@"Allow Other"
+#define KEY_MESSAGE_ERROR		@"Display Error"
+
 #define PREF_GROUP_SOUNDS		@"Sounds"
 
 #define SOUND_EVENT_START		@"\nSoundset:\n"	//String marking start of event list
@@ -34,10 +41,14 @@
 
 @protocol AIMiniToolbarItemDelegate;
 @protocol AIListObjectObserver;
+@class ESContactAlertsPlugin;
+@class ESContactAlertsPreferences;
 
-@interface AIContactAlertsPlugin : AIPlugin <AIMiniToolbarItemDelegate,AIListObjectObserver> {
+@interface ESContactAlertsPlugin : AIPlugin <AIMiniToolbarItemDelegate,AIListObjectObserver> {
     NSMenuItem				*editContactAlertsMenuItem;
     NSMenuItem				*contactAlertsContextMenuItem;
+    ESContactAlertsPreferences		*prefs;
+
     SUSpeaker 				*speaker;
 }
 
