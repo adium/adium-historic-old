@@ -15,10 +15,13 @@
 
 #import "AIOutlineView.h"
 
-#define DEFAULT_GROUPED_TYPING_INTERVAL 0.5
-
 @interface AIOutlineView (PRIVATE)
 - (void)_initOutlineView;
+@end
+
+@interface AIOutlineView (KFTypeSelectTableViewSupport)
+- (void)findPrevious:(id)sender;
+- (void)findNext:(id)sender;
 @end
 
 @implementation AIOutlineView
@@ -41,14 +44,7 @@
 
 - (void)_initOutlineView
 {
-	lastKeypressTick = 0;
-	currentInputString = nil;
-}
 
-- (void)dealloc
-{
-	[currentInputString release];
-	[super dealloc];
 }
 
 //Allow our delegate to specify context menus
@@ -61,35 +57,6 @@
     }
 }
 
-//Process a pressed alphanumeric character. This should only be called if the delegate responds to outlineView:userDidTypeString:
-- (void)_userPressedCharacter:(unichar)pressedChar
-{
-	UInt32	keypressTick = TickCount();	
-	BOOL	isTab = (pressedChar == '\t');
-	
-	//If more than GROUPED_TYPING_INTERVAL has passed since the last input, clear the input string and start over
-	//If the pressed key is a tab, allow a greater grouped typing interval
-	//Note that this will resolve to TRUE the first time this method is called since lastKeypressTick == 0.
-	if(((keypressTick - lastKeypressTick) / 60.0) > (DEFAULT_GROUPED_TYPING_INTERVAL * (isTab ? 4 : 1))) {
-		[currentInputString release]; 
-		currentInputString = [[NSMutableString alloc] init];
-		tabCount = 1;
-	}
-
-	if(isTab){
-		tabCount++;
-	}else{
-		[currentInputString appendString:[NSString stringWithCharacters:&pressedChar length:1]];
-		
-		//Always reset the tab count when new characters are input
-		tabCount = 1;
-	}
-
-	[[self delegate] outlineView:self userDidTypeString:currentInputString matchTargetNumber:tabCount];
-
-	lastKeypressTick = keypressTick;
-}
-
 //Navigate outline view with the keyboard, send select actions to delegate
 - (void)keyDown:(NSEvent *)theEvent
 {
@@ -97,7 +64,7 @@
 
 		NSString	*charString = [theEvent charactersIgnoringModifiers];
 		unichar		pressedChar = 0;
-
+	
 		//Get the pressed character
 		if([charString length] == 1) pressedChar = [charString characterAtIndex:0];
 
@@ -125,9 +92,17 @@
 				[self expandItem:object];
             }
 
-        }else if(((isalnum(pressedChar)) || (pressedChar == '\t')) && 
-				 ([[self delegate] respondsToSelector:@selector(outlineView:userDidTypeString:matchTargetNumber:)])){
-			[self _userPressedCharacter:pressedChar];
+        }else if((pressedChar == '\031') && // backtab
+				 ([self respondsToSelector:@selector(findPrevious:)])){
+			/* KFTypeSelectTableView supports findPrevious; backtab is added to AIOutlineView as a find previous action
+			 * if KFTypeSelectTableView is being used via posing */
+			[self findPrevious:self];
+			
+		}else if((pressedChar == '\t') &&
+				 ([self respondsToSelector:@selector(findNext:)])){
+			/* KFTypeSelectTableView supports findNext; tab is added to AIOutlineView as a find next action
+			* if KFTypeSelectTableView is being used via posing */
+			[self findNext:self];
 
 		}else{
 			[super keyDown:theEvent];
