@@ -22,7 +22,7 @@
 #define AWAY_MESSAGE_MENU_TITLE			AILocalizedString(@"Set Away Message",nil)
 #define AWAY_MESSAGE_MENU_TITLE_SHORT   AILocalizedString(@"Set Away",nil)
 #define	REMOVE_AWAY_MESSAGE_MENU_TITLE  AILocalizedString(@"Remove Away Message",nil)
-#define	CUSTOM_AWAY_MESSAGE_MENU_TITLE  AILocalizedString(@"Custom MessageÉ",nil)
+#define	CUSTOM_AWAY_MESSAGE_MENU_TITLE  AILocalizedString(@"Custom Message...",nil)
 #define AWAY_MENU_HOTKEY				@"y"
 
 @interface AIAwayMessagesPlugin (PRIVATE)
@@ -392,7 +392,7 @@
             
             //Cap the away menu title (so they're not incredibly long)
             if([away length] > MENU_AWAY_DISPLAY_LENGTH){
-                away = [[away substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:@"É"];
+                away = [[away substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:ELIPSIS_STRING];
             }
             
             menuItem = [[[NSMenuItem alloc] initWithTitle:away

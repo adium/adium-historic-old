@@ -19,6 +19,7 @@
 #define IDLE_TIME_PREF_NIB          @"IdleTimePrefs"		//Name of preference nib
 #define IDLE_TIME_PREF_TITLE		AILocalizedString(@"Idle",nil)  //Title of the preference view
 #define AUTO_AWAY_NO_AWAYS_TITLE	@"No saved aways"   //What to display in popUp_title if no messages are saved
+#define ELIPSIS_STRING				AILocalizedString(@"...",nil)
 
 @interface IdleTimePreferences (PRIVATE)
 - (void)configureView;
@@ -218,7 +219,7 @@
     
                 //Cap the away menu title (so they're not incredibly long)
                 if([message length] > MENU_AWAY_DISPLAY_LENGTH){
-                    message = [[message substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:@"É"];
+                    message = [[message substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:ELIPSIS_STRING];
                 }
                 
                 menuItem = [[[NSMenuItem alloc] initWithTitle:message

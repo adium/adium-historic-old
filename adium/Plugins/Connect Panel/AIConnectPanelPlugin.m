@@ -9,7 +9,7 @@
 #import "AIConnectPanelPlugin.h"
 #import "AIConnectPanelWindowController.h"
 
-#define NEW_CONNETION_MENU_TITLE	AILocalizedString(@"New Connection…","Title for the new connection menu item")
+#define NEW_CONNETION_MENU_TITLE	AILocalizedString(@"New Connection...","Title for the new connection menu item")
 
 
 @implementation AIConnectPanelPlugin

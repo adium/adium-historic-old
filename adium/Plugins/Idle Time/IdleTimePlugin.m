@@ -21,7 +21,7 @@
 #define IDLE_INACTIVE_INTERVAL		1.0	//Checking delay when the user is idle
 
 #define IDLE_REMOVE_IDLE_TITLE		AILocalizedString(@"Remove Idle","Remove the manual idle")
-#define IDLE_SET_CUSTOM_IDLE_TITLE	AILocalizedString(@"Set Custom Idle…","Set a custom idle")
+#define IDLE_SET_CUSTOM_IDLE_TITLE	AILocalizedString(@"Set Custom Idle...","Set a custom idle")
 #define IDLE_SET_IDLE_TITLE			AILocalizedString(@"Set Idle",nil)
 
 extern double CGSSecondsSinceLastInputEvent(unsigned long evType);

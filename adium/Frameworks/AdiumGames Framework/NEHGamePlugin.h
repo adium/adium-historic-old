@@ -22,8 +22,8 @@
 #define MSG_BUSY			@"Busy"
 #define MSG_TIMEOUT			@"Timeout"
 
-#define BUTTON_OK   AILocalizedString(@"OK","")
-#define BUTTON_ERR  AILocalizedString(@"OK","")
+#define BUTTON_OK   AILocalizedString(@"Okay","")
+#define BUTTON_ERR  AILocalizedString(@"Okay","")
 #define BUTTON_YES  AILocalizedString(@"Yes","")
 #define BUTTON_NO   AILocalizedString(@"No","")
 

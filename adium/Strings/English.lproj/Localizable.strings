@@ -1,0 +1,398 @@
+/* AIAccount */
+"<New Account>" = "<New Account>";
+
+/* AIAccountListPreferences */
+"Connect" = "Connect";
+"Disconnect" = "Disconnect";
+"Connecting..." = "Connecting…";
+"Disconnecting..." = "Disconnecting…";
+"Accounts" = "Accounts";
+
+/* AIAccountMenuAccessPlugin */
+"Connect:" = "Connect:";
+"Disconnect:" = "Disconnect:";
+"Cancel Connect:" = "Cancel Connect:";
+"Disconnecting" = "Disconnecting";
+"Auto-Connect on Launch" = "Auto-Connect on Launch";
+
+/* AIAdium */
+"Adium plugin" = "Adium plugin";
+"Adium theme" = "Adium theme";
+"dock icon set" = "dock icon set";
+"sound set" = "sound set";
+"emoticon set" = "emoticon set";
+"message style" = "message style";
+"Installation of the %@ %@" = "Installation of the %@ %@";
+"Installation Successful" = "Installation Successful";
+" was successful because the file was already in the correct location." = " was successful because the file was already in the correct location.";
+"Installation Successful" = "Installation Successful";
+" was successful." = " was successful.";
+"Installation Failed" = "Installation Failed";
+" was unsuccessful." = " was unsuccessful.";
+
+/* AIAliasSupportPreferences */
+"Contact Display Formatting" = "Contact Display Formatting";
+"Alias" = "Alias";
+"Alias (Screen Name)" = "Alias (Screen Name)";
+"Screen Name (Alias)" = "Screen Name (Alias)";
+"Screen Name" = "Screen Name";
+
+/* AIAlphabeticalSort */
+"Alphabetically" = "Alphabetically";
+"Configure Alphabetical Sort..." = "Configure Alphabetical Sort…";
+"Configure Alphabetical Sort" = "Configure Alphabetical Sort";
+
+/* AIAwayMessagePreferences */
+"Away Messages" = "Away Messages";
+"<New Away Message>" = "<New Away Message>";
+
+/* AIAwayMessagesPlugin */
+"Set Away Message" = "Set Away Message";
+"Set Away" = "Set Away";
+"Remove Away Message" = "Remove Away Message";
+"Custom Message..." = "Custom Message…";
+"..." = "…";
+
+/* AICLPreferences */
+"General Appearance" = "General Appearance";
+
+/* AIConnectPanelPlugin */
+"New Connection..." = "New Connection…";
+
+/* AIContactInfoPlugin */
+"View Contact's Info" = "View Contact's Info";
+"View Info" = "View Info";
+
+/* AIContactListEditorPlugin */
+"Add Contact..." = "Add Contact…";
+"Add Contact To Group..." = "Add Contact To Group…";
+"Add Group..." = "Add Group…";
+"Delete Selection" = "Delete Selection";
+"Rename Group..." = "Rename Group…";
+
+/* AIContactSortSelectionPlugin */
+"Configure Sort..." = "Configure Sort…";
+"Sort Contacts" = "Sort Contacts";
+
+/* AIContactStatusColoringPreferences */
+"Status Coloring" = "Status Coloring";
+
+/* AICrashReporter */
+"Contact Information Required" = "Contact Information Required";
+"Please provide either your email address or AIM name in case we need to contact you for additional information (or to suggest a solution)." = "Please provide either your email address or AIM name in case we need to contact you for additional information (or to suggest a solution).";
+
+/* AIDockBehaviorPreferences */
+"Dock Bouncing" = "Dock Bouncing";
+"Custom..." = "Custom…";
+
+/* AIDockController */
+"None" = "None";
+"Once" = "Once";
+"Repeatedly" = "Repeatedly";
+"Every 5 Seconds" = "Every 5 Seconds";
+"Every 10 Seconds" = "Every 10 Seconds";
+"Every 15 Seconds" = "Every 15 Seconds";
+"Every 30 Seconds" = "Every 30 Seconds";
+"Every 60 Seconds" = "Every 60 Seconds";
+
+/* AIDockCustomBehavior */
+"Add Event..." = "Add Event…";
+
+/* AIDockIconPreferences */
+"Dock Icon" = "Dock Icon";
+
+/* AIDualWindowAdvancedPrefs */
+"Auto-resizing" = "Auto-resizing";
+
+/* AIDualWindowInterfacePlugin */
+"Contact List" = "Contact List";
+"Messages" = "Messages";
+"Close Tab" = "Close Tab";
+"Close" = "Close";
+"Previous Chat" = "Previous Chat";
+"Next Chat" = "Next Chat";
+"Chat in New Window" = "Chat in New Window";
+"Chat in Primary Window" = "Chat in Primary Window";
+"Consolidate All Chats" = "Consolidate All Chats";
+"Toggle Tab Bar" = "Toggle Tab Bar";
+
+/* AIDualWindowPreferences */
+"General Appearance";
+
+/* AIEmoticonPreferences */
+"Reorder emoticon packs by dragging. Packs get prioritized from top to bottom.";
+"Emoticons" = "Emoticons";
+
+/* AIEnterAwayWindowController */
+"None" = "None";
+
+/* AIEventSoundCustom */
+"Add Event..." = "Add Event…";
+
+/* AIEventSoundPreferences */
+"Custom..." = "Custom…";
+
+/* AIEventSoundsPlugin */
+"Other..." = "Other…";
+"Other" = "Other";
+
+/* AIFlexibleTableTextCell */
+"Copy Text" = "Copy Text";
+"Copy Image" = "Copy Image";
+
+/* AIIdleTimeDisplayPreferences */
+"Idle Time Display" = "Idle Time Display";
+
+/* AIInterfaceController */
+"Adium : Error" = "Adium : Error";
+
+/* AILinkTrackingController */
+"Copy Link" = "Copy Link";
+
+/* AILoggerPlugin */
+"Log Viewer" = "Log Viewer";
+"View Contact's Logs" = "View Contact's Logs";
+"View Logs" = "View Logs";
+
+/* AILogViewerWindowController */
+"Search Menu" = "Search Menu";
+"From" = "From";
+"To" = "To";
+"Date" = "Date";
+"Content" = "Content";
+
+/* AIManualSort */
+"Manually" = "Manually";
+
+/* AIMTOC2ServicePlugin */
+"AIM Connection" = "AIM Connection";
+
+/* AIPluginController */
+"The WebKit Message View plugin failed to load because WebKit is not available.  Please install Safari to enable the WebKit plugin." = "The WebKit Message View plugin failed to load because WebKit is not available.  Please install Safari to enable the WebKit plugin.";
+"The" = "The";
+"plugin failed to load properly.  It may be partially loaded.  If strange behavior ensues, remove it from Adium 2's plugin directory" = "plugin failed to load properly.  It may be partially loaded.  If strange behavior ensues, remove it from Adium 2's plugin directory";
+", then quit and relaunch Adium" = ", then quit and relaunch Adium";
+"Plugin load error" = "Plugin load error";
+
+/* AISCLOutlineView */
+"No Available Contacts" = "No Available Contacts";
+
+/* AISQLLoggerPlugin */
+"SQL Log Viewer" = "SQL Log Viewer";
+
+/* AIWebKitMessageViewController */
+"Smooth Operator" = "Smooth Operator";
+
+/* CBGaimOscarAccount */
+"Connecting" = "Connecting";
+"Screen name sent" = "Screen name sent";
+"Password sent" = "Password sent";
+"Received authorization" = "Received authorization";
+"Connection established" = "Connection established";
+"Finalizing connection" = "Finalizing connection";
+
+/* CBGaimServicePlugin */
+"Adium : Notice" = "Adium : Notice";
+"Your Yahoo! message did not get sent." = "Your Yahoo! message did not get sent.";
+"Your message to %@ did not get sent" = "Your message to %@ did not get sent";
+"You are sending messages too quickly; wait a moment and try again." = "You are sending messages too quickly; wait a moment and try again.";
+"Connection error." = "Connection error.";
+"Your message was refused by the other user." = "Your message was refused by the other user.";
+"Your message was too big." = "Your message was too big.";
+"The other user is in your deny list." = "The other user is in your deny list.";
+"Warning level is too high." = "Warning level is too high.";
+"The other user is temporarily unavailable." = "The other user is temporarily unavailable.";
+"No reason was given." = "No reason was given.";
+"(No reason given)" = "(No reason given)";
+"%@ denied authorization:" = "%@ denied authorization:";
+"%@ granted authorization." = "%@ granted authorization.";
+
+/* CPFVersionChecker */
+"Check for Updates..." = "Check for Updates…";
+
+/* CSDisconnectAllPlugin */
+"Connect All" = "Connect All";
+"Disconnect All" = "Disconnect All";
+"Cancel All" = "Cancel All";
+
+/* CSSingleWindowInterfacePlugin */
+"Show Main Window..." = "Show Main Window…";
+"Close" = "Close";
+"Hide Contact List" = "Hide Contact List";
+
+/* ESAddressBookIntegrationAdvancedPreferences */
+"Address Book" = "Address Book";
+
+/* ESCLViewAdvancedPreferences */
+"Display Preferences" = "Display Preferences";
+
+/* ESCLViewLabelsAdvancedPrefs */
+"Labels" = "Labels";
+
+/* ESContactAlertsPlugin */
+"Edit Alerts" = "Edit Alerts";
+
+/* ESContactListWindowHandlingPreferences */
+"Window Handling" = "Window Handling";
+
+/* ESDateFormatterAdditions */
+"%i day " = "%i day ";
+"%i days " = "%i days ";
+"%i week " = "%i week ";
+"%i weeks " = "%i weeks ";
+"%i hour " = "%i hour ";
+"%i hours " = "%i hours ";
+
+/* ESDualWindowMessageAdvancedPreferences */
+"Window Preferences" = "Window Preferences";
+
+/* ESEventSoundAlertDetailPane */
+"Play a sound" = "Play a sound";
+
+/* ESFastUserSwitchingSupportPlugin */
+"I have switched logged in users. Someone else may be using the computer." = "I have switched logged in users. Someone else may be using the computer.";
+
+/* ESFileTransferController */
+"Send File To %@" = "Send File To %@";
+"Send File" = "Send File";
+"Contact" = "Contact";
+
+/* ESGaimAccountViewController */
+"None" = "None";
+"Systemwide SOCKS Settings" = "Systemwide SOCKS Settings";
+"HTTP" = "HTTP";
+"SOCKS4" = "SOCKS4";
+"SOCKS5" = "SOCKS5";
+
+/* ESGaimGaduGaduAccount */
+"Connecting" = "Connecting";
+"Looking up server" = "Looking up server";
+"Reading data" = "Reading data";
+"Balancer handshake" = "Balancer handshake";
+"Reading server key" = "Reading server key";
+"Exchanging key hash" = "Exchanging key hash";
+
+/* ESGaimJabberAccount */
+"Roster" = "Roster";
+"Connecting" = "Connecting";
+"Initializing Stream" = "Initializing Stream";
+"Reading data" = "Reading data";
+"Authenticating" = "Authenticating";
+"Initializing Stream" = "Initializing Stream";
+"Authenticating" = "Authenticating";
+
+/* ESGaimMSNAccount */
+"Connecting" = "Connecting";
+"Connecting" = "Connecting";
+"Syncing with server" = "Syncing with server";
+"Requesting to send password" = "Requesting to send password";
+"Syncing with server" = "Syncing with server";
+"Requesting to send password" = "Requesting to send password";
+"Password sent" = "Password sent";
+"Retrieving buddy list" = "Retrieving buddy list";
+
+/* ESGaimRequestWindowController */
+"Okay" = "Okay";
+
+/* ESGaimTrepiaAccount */
+"Connecting" = "Connecting";
+"Logging in" = "Logging in";
+"Retrieving buddy list" = "Retrieving buddy list";
+
+/* ESGaimYahooAccount */
+"Connecting" = "Connecting";
+
+/* ESStatusSort */
+"by Status" = "by Status";
+"Configure Status Sort..." = "Configure Status Sort…";
+"Configure Status Sort" = "Configure Status Sort";
+
+/* ESVersionCheckerWindowController */
+"Adium was updated on %@. Your copy is %@old.  Would you like to update?" = "Adium was updated on %@. Your copy is %@old.  Would you like to update?";
+
+/* ESWebKitMessageViewPreferences */
+"Normal" = "Normal";
+"Smooth Operator" = "Smooth Operator";
+
+/* IdleMessagePreferences */
+"Idle Message" = "Idle Message";
+
+/* AIIdleTimePlugin */
+"Remove Idle" = "Remove Idle";
+"Set Custom Idle..." = "Set Custom Idle…";
+"Set Idle" = "Set Idle";
+
+/* IdleTimePreferences */
+"Idle" = "Idle";
+
+/* JSCEventBezelController */
+"says" = "says";
+"is now online" = "is now online";
+"is available" = "is available";
+"is no longer idle" = "is no longer idle";
+"has gone offline" = "has gone offline";
+"has gone away" = "has gone away";
+"is idle" = "is idle";
+"new message" = "new message";
+
+/* JSCEventBezelPlugin */
+"is now online" = "is now online";
+"has gone offline" = "has gone offline";
+"has gone away" = "has gone away";
+"is available" = "is available";
+"is idle" = "is idle";
+"is no longer idle" = "is no longer idle";
+"says" = "says";
+
+/* LNStatusIconsPreferences */
+"Status Icons Display" = "Status Icons Display";
+
+/* NEHGameController */
+"Invite cancelled" = "Invite cancelled";
+"The invitation was cancelled." = "The invitation was cancelled.";
+"Invite rejected" = "Invite rejected";
+"The invitation was turned down." = "The invitation was turned down.";
+"Game ended" = "Game ended";
+"Your opponent cancelled the game." = "Your opponent cancelled the game.";
+"Invitation timed out." = "Invitation timed out.";
+"The invitation timed out. The other player most likely is not using the appropriate plugin." = "The invitation timed out. The other player most likely is not using the appropriate plugin.";
+"End game?" = "End game?";
+"Are you sure you want to end the game?" = "Are you sure you want to end the game?";
+"Game Over" = "Game Over";
+"You win!" = "You win!";
+"You lost..." = "You lost...";
+"It's a Tie!" = "It's a Tie!";
+
+/* NEHGamePlugin */
+"Okay" = "Okay";
+"Okay" = "Okay";
+"Yes" = "Yes";
+"No" = "No";
+"Invite to play game" = "Invite to play game";
+"New Game" = "New Game";
+"Contact Not Found" = "Contact Not Found";
+"Unable to find contact '%@'" = "Unable to find contact '%@'";
+
+/* NEHTicTacToeController */
+"(You will play first)" = "(You will play first)";
+"(You will play second)" = "(You will play second)";
+"You win!" = "You win!";
+"You lost..." = "You lost...";
+"It's a Tie!" = "It's a Tie!";
+"No game." = "No game.";
+"Your turn." = "Your turn.";
+"Waiting for opponent" = "Waiting for opponent";
+
+/* NEHTicTacToePlugin */
+"Okay" = "Okay";
+"Okay" = "Okay";
+
+/*SHLinkEditorWindowController*/
+"Select..." = "Select…";
+
+/* SHLinkFavoritesPreferences */
+"Link Favorites" = "Link Favorites";
+
+/* SHLinkManagementPlugin */
+"Add Link..." = "Add Link…";
+"Edit Link..." = "Edit Link…";

@@ -11,6 +11,8 @@
 #define ORIGINAL_HEIGHT             206.0
 #define IMAGE_DIMENSION             48.0
 
+#define ELIPSIS_STRING				AILocalizedString(@"...",nil)
+
 @interface JSCEventBezelView (PRIVATE)
 - (NSBezierPath *)bezierPathLabelOfSize:(NSSize)backgroundSize;
 @end
@@ -213,7 +215,7 @@
     }
 	buddyNameRect.origin.y += ceil(accumulator);
 	if (minFontSize) {
-		[self setMainBuddyName: [NSString stringWithFormat:@"%@É",[mainBuddyName substringToIndex: [mainBuddyName length]-1]]];
+		[self setMainBuddyName: [NSString stringWithFormat:@"%@%@",[mainBuddyName substringToIndex: [mainBuddyName length]-1], ELIPSIS_STRING]];
 	}
 	[mainAttributesMask setObject:[[NSFontManager sharedFontManager] 
 		convertFont:[NSFont systemFontOfSize:buddyNameFontSize] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];

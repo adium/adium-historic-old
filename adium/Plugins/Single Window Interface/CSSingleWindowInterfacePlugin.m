@@ -10,7 +10,7 @@
 
 #define SINGLE_WINDOW_NIB @"Single Window Interface"
 
-#define SHOW_MAIN_WINDOW    AILocalizedString(@"Show Main Window…",nil)
+#define SHOW_MAIN_WINDOW    AILocalizedString(@"Show Main Window...",nil)
 #define CLOSE		    AILocalizedString(@"Close",nil)
 #define HIDE_CONTACT_LIST   AILocalizedString(@"Hide Contact List",nil)
 

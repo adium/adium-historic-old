@@ -17,11 +17,11 @@
 #import "AINewContactWindowController.h"
 #import "AINewGroupWindowController.h"
 
-#define ADD_CONTACT   				AILocalizedString(@"Add Contact…",nil)
-#define ADD_CONTACT_TO_GROUP		AILocalizedString(@"Add Contact To Group…",nil)
-#define ADD_GROUP   				AILocalizedString(@"Add Group…",nil)
+#define ADD_CONTACT   				AILocalizedString(@"Add Contact...",nil)
+#define ADD_CONTACT_TO_GROUP		AILocalizedString(@"Add Contact To Group...",nil)
+#define ADD_GROUP   				AILocalizedString(@"Add Group...",nil)
 #define DELETE_CONTACT   			AILocalizedString(@"Delete Selection",nil)
-#define RENAME_GROUP				AILocalizedString(@"Rename Group…",nil)
+#define RENAME_GROUP				AILocalizedString(@"Rename Group...",nil)
 
 @implementation AIContactListEditorPlugin
 

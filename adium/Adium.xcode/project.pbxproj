@@ -3803,7 +3803,6 @@
 				4BD6759906001E510049CAF7,
 				4BD6759C06001E540049CAF7,
 				4BD6759D06001E540049CAF7,
-				4BD6759E06001E590049CAF7,
 				4BD6759F06001E590049CAF7,
 				4BD675A206001E5D0049CAF7,
 				4BD675A706001E760049CAF7,
@@ -3838,6 +3837,7 @@
 				7E824CDF06387FAF00813072,
 				BF00023B063A4FFE0019910B,
 				4B494B45063AB63000E2EF06,
+				4B6C3557063BF4B600D3819D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9640,6 +9640,41 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B6C3555063BF4B600D3819D = {
+			children = (
+				4B6C3556063BF4B600D3819D,
+				4B6C355D063BF52E00D3819D,
+			);
+			isa = PBXVariantGroup;
+			name = Localizable.strings;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B6C3556063BF4B600D3819D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = English;
+			path = Strings/English.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B6C3557063BF4B600D3819D = {
+			fileRef = 4B6C3555063BF4B600D3819D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B6C355D063BF52E00D3819D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Spanish;
+			path = Strings/Spanish.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		4B6D0E43047D490700A8010A = {
 			children = (
 				4B7FAEA1047D6A3400A8010A,
@@ -14590,12 +14625,6 @@
 			settings = {
 			};
 		};
-		4BD6759E06001E590049CAF7 = {
-			fileRef = 6C24111F05849D1A00CECFC3;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6759F06001E590049CAF7 = {
 			fileRef = 6C60B14B05605A3600CAD137;
 			isa = PBXBuildFile;
@@ -15700,7 +15729,6 @@
 		52AEBD5D05ABA95700B19C56 = {
 			buildActionMask = 2147483647;
 			files = (
-				52AEBD7305ABA9AA00B19C56,
 				52AEBD7405ABA9AA00B19C56,
 				52AEBD7C05ABA9AA00B19C56,
 				52AEBD7D05ABA9AA00B19C56,
@@ -15802,25 +15830,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		52AEBD6405ABA9A800B19C56 = {
-			children = (
-				52AEBD6505ABA9A800B19C56,
-			);
-			isa = PBXVariantGroup;
-			name = Localizable.strings;
-			path = Plugins/TicTacToe/English.lproj;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		52AEBD6505ABA9A800B19C56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.strings;
-			name = English;
-			path = Localizable.strings;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		52AEBD6605ABA9A800B19C56 = {
 			children = (
 				52AEBD6705ABA9A800B19C56,
@@ -15918,12 +15927,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		52AEBD7305ABA9AA00B19C56 = {
-			fileRef = 52AEBD6405ABA9A800B19C56;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		52AEBD7405ABA9AA00B19C56 = {
 			fileRef = 52AEBD6605ABA9A800B19C56;
 			isa = PBXBuildFile;
@@ -15986,7 +15989,6 @@
 		};
 		52AEBD8205ABA9F000B19C56 = {
 			children = (
-				52AEBD6405ABA9A800B19C56,
 				52AEBD6605ABA9A800B19C56,
 				5233D6A705B606FA00E9A4EC,
 				52AEBD6A05ABA9A900B19C56,
@@ -16193,34 +16195,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		6C24111F05849D1A00CECFC3 = {
-			children = (
-				6C24112005849D1A00CECFC3,
-				6C24112205849D3C00CECFC3,
-			);
-			isa = PBXVariantGroup;
-			name = Localizable.strings;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C24112005849D1A00CECFC3 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.strings;
-			name = English;
-			path = "Plugins/Event Bezel/English.lproj/Localizable.strings";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6C24112205849D3C00CECFC3 = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.strings;
-			name = Spanish;
-			path = "Plugins/Event Bezel/Spanish.lproj/Localizable.strings";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		6C24112705849D7900CECFC3 = {
 			children = (
 				6C60B14905605A3500CAD137,
@@ -16372,7 +16346,6 @@
 				6C24112A05849DBB00CECFC3,
 				6C24112D05849DF400CECFC3,
 				4BAA1B560632EF4A00D8B92C,
-				6C24111F05849D1A00CECFC3,
 				6C60B14B05605A3600CAD137,
 			);
 			isa = PBXGroup;
@@ -18973,6 +18946,7 @@
 		};
 		F50A325A03B5798301A8010A = {
 			children = (
+				4B6C3555063BF4B600D3819D,
 				4B191D880611C10800E8A4E7,
 				4B191D890611C10800E8A4E7,
 				F59DB6AD033EB74801A8010A,

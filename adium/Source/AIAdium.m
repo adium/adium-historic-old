@@ -355,8 +355,7 @@ void Adium_HandleSignal(int i){
         
         NSString *alertTitle = nil;
         //For example: "Installation of the Adium plugin MakeToast"
-        NSString *alertMsg = [NSString stringWithFormat:@"%@ %@ %@",
-            AILocalizedString(@"Installation of the","Beginning of installation sentence"),
+        NSString *alertMsg = [NSString stringWithFormat:AILocalizedString(@"Installation of the %@ %@","Installation sentence"),
             fileDescription,
             [[filename lastPathComponent] stringByDeletingPathExtension]];
         
