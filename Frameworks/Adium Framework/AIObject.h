@@ -11,6 +11,8 @@
 @interface AIObject : NSObject {
     AIAdium     *adium;
 }
+
 + (void)_setSharedAdiumInstance:(AIAdium *)shared;
 + (AIAdium *)sharedAdiumInstance;
+
 @end
