@@ -140,7 +140,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
         Set idle time to idle condition
     
     Idle (Auto-Set):
-        Install time, check every 1 second
+        Install timer, check every 1 second
         if (idle condition < threshold)
         Remove idle time
     
