@@ -60,69 +60,71 @@
 {
     NSArray *modifiedAttributes = nil;
 	
-    if(	inModifiedKeys == nil ||
-        [inModifiedKeys containsObject:@"Label Color"] ||
-        [inModifiedKeys containsObject:@"Typing"] ||
-        [inModifiedKeys containsObject:@"UnviewedContent"] ||
-        [inModifiedKeys containsObject:@"Away"] ||
-        [inModifiedKeys containsObject:@"Idle"] ||
-        [inModifiedKeys containsObject:@"Online"] ||
-        [inModifiedKeys containsObject:@"Signed On"] ||
-        [inModifiedKeys containsObject:@"Signed Off"]){
-		
-        AIMutableOwnerArray	*iconArray;
-        AIStatusCircle		*statusCircle;
-        NSColor			*circleColor;
-		
-        double			idle;
-		
-		if(displayStatusCircleOnLeft){
-			iconArray = [inObject displayArrayForKey:@"Left View"];
-			[[inObject displayArrayForKey:@"Right View"] setObject:nil withOwner:self];
+	if([inObject isKindOfClass:[AIListContact class]]){
+		if(	inModifiedKeys == nil ||
+			[inModifiedKeys containsObject:@"Label Color"] ||
+			[inModifiedKeys containsObject:@"Typing"] ||
+			[inModifiedKeys containsObject:@"UnviewedContent"] ||
+			[inModifiedKeys containsObject:@"Away"] ||
+			[inModifiedKeys containsObject:@"Idle"] ||
+			[inModifiedKeys containsObject:@"Online"] ||
+			[inModifiedKeys containsObject:@"Signed On"] ||
+			[inModifiedKeys containsObject:@"Signed Off"]){
 			
-		}else{
-			iconArray = [inObject displayArrayForKey:@"Right View"];
-			[[inObject displayArrayForKey:@"Left View"]  setObject:nil withOwner:self];
+			AIMutableOwnerArray	*iconArray;
+			AIStatusCircle		*statusCircle;
+			NSColor			*circleColor;
 			
-		}
-		
-		statusCircle = [iconArray objectWithOwner:self];
-		
-		if(displayStatusCircle){
+			double			idle;
 			
-			if(!statusCircle){
-				statusCircle = [AIStatusCircle statusCircle];
-				[iconArray setObject:statusCircle withOwner:self];
-			}
-	        
-			circleColor = [[inObject displayArrayForKey:@"Label Color"] averageColor];
-			
-			if(!circleColor){
-				circleColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1.0];
-			}
-			
-			[statusCircle setColor:circleColor];
-			
-			idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
-			
-			//Embedded idle time
-			if(displayIdleTime && idle != 0){
-				[statusCircle setStringContent:[self idleStringForSeconds:idle]];
-				[statusCircle setStringColor:idleStringColor];
+			if(displayStatusCircleOnLeft){
+				iconArray = [inObject displayArrayForKey:@"Left View"];
+				[[inObject displayArrayForKey:@"Right View"] setObject:nil withOwner:self];
+				
 			}else{
-				[statusCircle setStringContent:nil];
-				[statusCircle setStringColor:idleStringColor];
+				iconArray = [inObject displayArrayForKey:@"Right View"];
+				[[inObject displayArrayForKey:@"Left View"]  setObject:nil withOwner:self];
+				
 			}
 			
-		}else{
-			if(statusCircle){
-				[iconArray setObject:nil withOwner:self];
+			statusCircle = [iconArray objectWithOwner:self];
+			
+			if(displayStatusCircle){
+				
+				if(!statusCircle){
+					statusCircle = [AIStatusCircle statusCircle];
+					[iconArray setObject:statusCircle withOwner:self];
+				}
+				
+				circleColor = [[inObject displayArrayForKey:@"Label Color"] averageColor];
+				
+				if(!circleColor){
+					circleColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1.0];
+				}
+				
+				[statusCircle setColor:circleColor];
+				
+				idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
+				
+				//Embedded idle time
+				if(displayIdleTime && idle != 0){
+					[statusCircle setStringContent:[self idleStringForSeconds:idle]];
+					[statusCircle setStringColor:idleStringColor];
+				}else{
+					[statusCircle setStringContent:nil];
+					[statusCircle setStringColor:idleStringColor];
+				}
+				
+			}else{
+				if(statusCircle){
+					[iconArray setObject:nil withOwner:self];
+				}
 			}
+			
+			modifiedAttributes = [NSArray arrayWithObjects:@"Left View", @"Right View", nil];
 		}
+	}
 		
-		modifiedAttributes = [NSArray arrayWithObjects:@"Left View", @"Right View", nil];
-    }
-	
     return(modifiedAttributes);
 }
 
