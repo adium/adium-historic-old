@@ -56,7 +56,7 @@ static NSMenu       *eContextualMenu = nil;
     }
 }
 
--(void)configureEmoticonSupport
+- (void)configureEmoticonSupport
 {
     [quickMenuItem setEnabled:YES];
     [quickContextualMenuItem setEnabled:YES];
@@ -99,7 +99,7 @@ static NSMenu       *eContextualMenu = nil;
     [[adium notificationCenter] postNotificationName:Menu_didChange object:quickContextualMenuItem userInfo:nil];
 }
 
--(void)buildToolbarItem
+- (void)buildToolbarItem
 {   
     // add to popup button
     [menuButton setMenu:eMenu];
@@ -119,16 +119,14 @@ static NSMenu       *eContextualMenu = nil;
     [toolbarItem setMenuFormRepresentation: toolbarMenu];
 }
 
--(NSMenu *)buildMenu:(AIEmoticonPack *)incomingPack
+- (NSMenu *)buildMenu:(AIEmoticonPack *)incomingPack
 {
     NSEnumerator *emoteEnum = [[incomingPack emoticons] objectEnumerator];
     AIEmoticon *anEmoticon;
     NSMenu *packMenu = [[NSMenu alloc] initWithTitle:@""];
     // loop through each emoticon and add a menu item for each
-    while(anEmoticon = [emoteEnum nextObject])
-    {
-        if([anEmoticon isEnabled] == YES)
-        {
+    while(anEmoticon = [emoteEnum nextObject]){
+        if([anEmoticon isEnabled] == YES){
             NSMenuItem *newItem = [[NSMenuItem alloc] initWithTitle:[anEmoticon name]
 															 target:self
 															 action:@selector(insertEmoticon:)
@@ -137,7 +135,9 @@ static NSMenu       *eContextualMenu = nil;
 			//We need to make a copy of the emoticons for our menu, otherwise the menu flips them in an unpredictable
 			//way, causing problems in the emoticon preferences
             [newItem setImage:[[[anEmoticon image] copy] autorelease]];
-            [packMenu addItem:newItem];
+
+			[newItem setRepresentedObject:anEmoticon];
+			[packMenu addItem:newItem];
 			
 			[newItem release];
         }
@@ -147,49 +147,22 @@ static NSMenu       *eContextualMenu = nil;
 
 - (void)insertEmoticon:(id)sender
 {
-    NSString *emoString = nil;
-    // Actually, since sender can be a menu item or a button, it'd be better to look up the name in the emoticon pack's emoticons array,
-    // then get the emoticon itself and ask IT for the textEquivalents, instead of asking an id sender :P
-    if([emoticonPacks count] == 1)
-    {    
-        AIEmoticon *selectedEmoticon = [[[emoticonPacks objectAtIndex:0] emoticons] objectAtIndex:[[sender menu] indexOfItem:sender]];
-        emoString = [[selectedEmoticon textEquivalents] objectAtIndex:0];
-    }
-    else if([emoticonPacks count] > 1)
-    {
-        AIEmoticonPack *selectedPack = nil;
-        AIEmoticon *selectedEmoticon;
-        id object;
-        if([sender isKindOfClass:[NSMenuItem class]]){
-            NSEnumerator *menuEnum = [[[[sender menu] supermenu] itemArray] objectEnumerator];
-            while(object = [menuEnum nextObject])
-            {
-                if([object submenu] == [sender menu])
-                {
-                    selectedPack = [emoticonPacks objectAtIndex:[[[[sender menu] supermenu] itemArray] indexOfObject:object]];
-                }
-            }
-            
-            if (selectedPack) {
-                    selectedEmoticon = [[selectedPack emoticons] objectAtIndex:[[sender menu] indexOfItem:sender]];
-                    emoString = [[selectedEmoticon textEquivalents] objectAtIndex:0];
-            }
-        }
-
-    }
-		   
-    NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-    if(emoString && [responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]){
-        NSRange tmpRange = [(NSTextView *)responder selectedRange];
-        if(0 != tmpRange.length){
-            [(NSTextView *)responder setSelectedRange:NSMakeRange((tmpRange.location + tmpRange.length),0)];
-        }
-        [responder insertText:emoString];
+	if([sender isKindOfClass:[NSMenuItem class]]){
+		NSString *emoString = [[[sender representedObject] textEquivalents] objectAtIndex:0];
+		
+		NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+		if(emoString && [responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]){
+			NSRange tmpRange = [(NSTextView *)responder selectedRange];
+			if(0 != tmpRange.length){
+				[(NSTextView *)responder setSelectedRange:NSMakeRange((tmpRange.location + tmpRange.length),0)];
+			}
+			[responder insertText:emoString];
+		}
     }
 }
 
 //Just a target so we get the validateMenuItem: call for the emoticon menu
--(IBAction)dummyTarget:(id)sender{
+- (IBAction)dummyTarget:(id)sender{
 }
 
 //Disable the emoticon menu if a text field is not active
