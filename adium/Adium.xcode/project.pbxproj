@@ -3078,9 +3078,10 @@
 			children = (
 				F544A5DE03B3628B01A8010A,
 				F544A5DF03B3628B01A8010A,
+				F544A5E003B3628B01A8010A,
 				4BBF449E0661354F001D31E1,
 				4BBF449F0661354F001D31E1,
-				F544A5E003B3628B01A8010A,
+				4B6C4647066FEB180082199C,
 				3484645005910E5F00241F68,
 				3484644F05910E5F00241F68,
 				3484645305910E7E00241F68,
@@ -5006,6 +5007,7 @@
 				4BCC20AE066B9A00007C8449,
 				4B2DC069066F6B1200AD5AAD,
 				4B6C4646066FEA160082199C,
+				4B6C4648066FEB180082199C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11599,6 +11601,20 @@
 		};
 		4B6C4646066FEA160082199C = {
 			fileRef = 4B6C4645066FEA160082199C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B6C4647066FEB180082199C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = AICLGroupPrefView.nib;
+			path = "Plugins/Standard Contact List View/Preferences/AICLGroupPrefView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B6C4648066FEB180082199C = {
+			fileRef = 4B6C4647066FEB180082199C;
 			isa = PBXBuildFile;
 			settings = {
 			};
