@@ -3,9 +3,11 @@
 //  Adium
 //
 //  Created by Adam Iser on Tue Mar 23 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
+@protocol AIOutlineViewDelegateAdditions
+- (void)outlineView:(NSOutlineView *)outlineView draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation;
+@end
 
 @interface AIOutlineView : NSOutlineView {
     BOOL		needsReload;

@@ -26,6 +26,8 @@
 
 #define	USE_10_3_METHODS_CHECK		[NSApplication isOnPantherOrBetter]
 
+#define	CONNECTIVITY_DEBUG			FALSE
+
 @interface AINetworkConnectivity (PRIVATE)
 + (void)handleConnectivityUsingCheckGenericReachability;
 
@@ -42,15 +44,11 @@ static OSStatus CreateIPAddressListChangeCallbackSCF(SCDynamicStoreCallBack call
 static void localIPsChangedCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info);
 static void networkReachabilityChangedCallback(SCNetworkReachabilityRef target, SCNetworkConnectionFlags flags, void *info);
 
-static AINetworkConnectivity				*myself = nil;
-//static NSMutableArray						*customReachabilityRefArray = nil;
-
 static NSTimer								*aggregatedChangesTimer = nil;
 static BOOL									networkIsReachable = NO;
 
 + (void)load
 {
-	myself = self;
 	if (USE_10_3_METHODS_CHECK){
 		//Schedule our generic reachability check which will be used for most accounts
 		//This is triggered as soon as it is added to the run loop, which is why we do it after doing [self autoConnectAccounts]
@@ -119,17 +117,18 @@ static void gotNetworkChangedToReachable(BOOL reachable)
 //The last call is accurate, so aggregate changes until we hit AGGREGATE_INTERVAL without a change
 static void networkReachabilityChangedCallback(SCNetworkReachabilityRef target, SCNetworkConnectionFlags flags, void *info)
 {
-	BOOL reachable = (flags & kSCNetworkFlagsReachable);
-	
-	gotNetworkChangedToReachable(reachable);
+	gotNetworkChangedToReachable((flags & kSCNetworkFlagsReachable));
 }
 
 //10.3 and above: Schedule a check for the nodename (e.g. "www.google.com") with account as contextual information (may be NULL)
 + (void)scheduleReachabilityCheckFor:(const char *)nodename context:(void *)context
 {
-	SCNetworkReachabilityRef reachabilityRef = SCNetworkReachabilityCreateWithName(CFAllocatorGetDefault(),
-																						  nodename);
-	SCNetworkReachabilityContext reachabilityContext = { 0, context, NULL, NULL, NULL };
+	SCNetworkReachabilityRef		reachabilityRef;
+	SCNetworkReachabilityContext	reachabilityContext;
+	
+	reachabilityRef = SCNetworkReachabilityCreateWithName(CFAllocatorGetDefault(),
+														  nodename);
+	reachabilityContext = { 0, context, NULL, NULL, NULL };
 	
 	//Add it to the run loop so we will receive the notifications
 	SCNetworkReachabilityScheduleWithRunLoop(reachabilityRef,
@@ -137,32 +136,21 @@ static void networkReachabilityChangedCallback(SCNetworkReachabilityRef target, 
 											 kCFRunLoopDefaultMode);
 	
 	//Configure our callback
-	SCNetworkReachabilitySetCallback (reachabilityRef, 
-									  networkReachabilityChangedCallback, 
-									  &reachabilityContext);
-	
-	/*
-	//Add it to our array of references if we were passed an account context
-	if (account){
-		if (!customReachabilityRefArray){
-			customReachabilityRefArray = [[NSMutableArray alloc] init];
-		}
-		[customReachabilityRefArray addObject:(id)reachabilityRef];
-	}
-	 */
+	SCNetworkReachabilitySetCallback(reachabilityRef, 
+									 networkReachabilityChangedCallback, 
+									 &reachabilityContext);
 }
 
 #pragma mark 10.2 Reachability Checking
 static BOOL checkReachabilityForHost(const char *host)
 {
-	
 	SCNetworkConnectionFlags	status;
-	BOOL						reachable = NO;
+	BOOL						reachable;
 	
 	if (SCNetworkCheckReachabilityByName(host, &status)){
 		reachable = (status & kSCNetworkFlagsReachable);
 		
-		/*
+#if CONNECTIVITY_DEBUG
 		 NSLog(@"*** %s is %i : %i %i %i %i %i %i",host,status,
 			   status & kSCNetworkFlagsTransientConnection,
 			   status & kSCNetworkFlagsReachable,
@@ -171,8 +159,11 @@ static BOOL checkReachabilityForHost(const char *host)
 			   status & kSCNetworkFlagsInterventionRequired,
 			   status & kSCNetworkFlagsIsLocalAddress,
 			   status & kSCNetworkFlagsIsDirect);
-		 */
+#endif		 
+	}else{
+		 reachable = NO;
 	}
+	
 	return reachable;
 }
 
