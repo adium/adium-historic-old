@@ -64,22 +64,14 @@ static NSDictionary* details_for_context(ConnContext *context)
     /* Make a human-readable version of the fingerprint */
     otrl_privkey_hash_to_human(fingerprint,
 							   context->active_fingerprint->fingerprint);
+
     /* Make a human-readable version of the sessionid (in two parts) */
     sessionid = context->sesskeys[1][0].sessionid;
     for(i=0;i<10;++i) sprintf(sess1+(2*i), "%02x", sessionid[i]);
     sess1[20] = '\0';
     for(i=0;i<10;++i) sprintf(sess2+(2*i), "%02x", sessionid[i+10]);
     sess2[20] = '\0';
-	
-    /*
-	 secondary = g_strdup_printf("Fingerprint for %s:\n%s\n\n"
-								 "Secure id for this session:\n"
-								 "<span %s>%s</span> <span %s>%s</span>", context->username,
-								 fingerprint,
-								 dir == SESS_DIR_LOW ? "weight=\"bold\"" : "", sess1,
-								 dir == SESS_DIR_HIGH ? "weight=\"bold\"" : "", sess2);
-	 */
-	
+
 	securityDetailsDict = [NSDictionary dictionaryWithObjectsAndKeys:
 		[NSString stringWithUTF8String:fingerprint], @"Fingerprint",
 		[NSString stringWithUTF8String:((dir == SESS_DIR_LOW) ? sess1 : sess2)], @"Incoming SessionID",
@@ -95,11 +87,19 @@ static NSDictionary* details_for_context(ConnContext *context)
  * keyboard focus, (b) the button is "OK" instead of "Close", and (c)
  * the labels aren't limited to 2K. */
 static void otrg_adium_dialog_notify_message(GaimNotifyMsgType type, 
-											 const char *accountname, const char *protocol, const char *usernmae,
+											 const char *accountname, const char *protocol, const char *username,
 											 const char *title, const char *primary, const char *secondary)
 {
-	//Just pass it to gaim_notify_message()
-	gaim_notify_message(adium_gaim_get_handle(), type, title, primary, secondary, NULL, NULL);
+//	GaimAccount	*account = gaim_accounts_find(accountname, protocol);
+	
+	NSLog(@"otrg_adium_dialog_notify_message: %s ; %s",primary, secondary);
+	AILog(@"otrg_adium_dialog_notify_message: %s ; %s",primary, secondary);
+
+	//XXX todo: search on ops->notify in message.c in libotr and handle the error messages
+//	if (!(gaim_conv_present_error(username, account, msg))){
+		//Just pass it to gaim_notify_message()
+		gaim_notify_message(adium_gaim_get_handle(), type, title, primary, secondary, NULL, NULL);		
+//	}
 }
 
 //Return 0 if we handled dislaying the message; non-0 if it should be displayed as a normal message
@@ -107,6 +107,7 @@ static int otrg_adium_dialog_display_otr_message(const char *accountname, const 
 												 const char *username, const char *msg)
 {
 	NSLog(@"otrg_adium_dialog_display_otr_message: %s",msg);
+	AILog(@"otrg_adium_dialog_display_otr_message: %s",msg);
 
 	GaimAccount	*account = gaim_accounts_find(accountname, protocol);
 
