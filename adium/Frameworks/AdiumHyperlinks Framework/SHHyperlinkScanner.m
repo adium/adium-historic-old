@@ -7,6 +7,8 @@
 #import "SHMarkedHyperlink.h"
 #import "SHHyperlinkScanner.h"
 
+static NSMutableCharacterSet *skipSet = nil;
+
 @implementation SHHyperlinkScanner
 
 #pragma mark Init
@@ -90,12 +92,14 @@
 {
     NSString    *scanString = nil;
     int location = SHStringOffset; //get our location from SHStringOffset, so we can pick up where we left off.
-    NSMutableCharacterSet *skipSet = [[[NSMutableCharacterSet alloc] init] autorelease];
-    [skipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    [skipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
-    [skipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
-    [skipSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'"]];
-    
+	if (!skipSet){
+		skipSet = [[NSMutableCharacterSet alloc] init];
+		[skipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		[skipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
+		[skipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
+		[skipSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'"]];
+    }
+	
     // scan upto the next whitespace char so that we don't unnecessarity confuse flex
     // otherwise we end up validating urls that look like this "http://www.adiumx.com/ <--cool"
     NSScanner *preScanner = [[[NSScanner alloc] initWithString:inString] autorelease];
