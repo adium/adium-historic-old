@@ -15,13 +15,13 @@
 
 #import "AIAccountMenuAccessPlugin.h"
 
-#define	ACCOUNT_CONNECT_MENU_TITLE		AILocalizedString(@"Connect","Connect an account")	    //Menu item title for the connect item
-#define	ACCOUNT_DISCONNECT_MENU_TITLE		AILocalizedString(@"Disconnect","Disconnect an account")    //Menu item title
-#define	ACCOUNT_CONNECTING_MENU_TITLE		AILocalizedString(@"Connecting…",nil)		//Menu item title
-#define	ACCOUNT_DISCONNECTING_MENU_TITLE	AILocalizedString(@"Disconnecting…",nil)	//Menu item title
-#define	ACCOUNT_AUTO_CONNECT_MENU_TITLE		AILocalizedString(@"Auto-Connect on Launch",nil)   //Menu item title for the auto-connect item
+#define	ACCOUNT_CONNECT_MENU_TITLE			AILocalizedString(@"Connect","Connect an account")
+#define	ACCOUNT_DISCONNECT_MENU_TITLE		AILocalizedString(@"Disconnect","Disconnect an account")
+#define	ACCOUNT_CONNECTING_MENU_TITLE		AILocalizedString(@"Connecting…",nil)
+#define	ACCOUNT_DISCONNECTING_MENU_TITLE	AILocalizedString(@"Disconnecting…",nil)
+#define	ACCOUNT_AUTO_CONNECT_MENU_TITLE		AILocalizedString(@"Auto-Connect on Launch",nil)
 
-#define ACCOUNT_TITLE   [NSString stringWithFormat:@"%@ (%@)",[account formattedUID],[account serviceID]]
+#define ACCOUNT_TITLE   [NSString stringWithFormat:@"%@ (%@)",([[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT),[account serviceID]]
 
 @interface AIAccountMenuAccessPlugin (PRIVATE)
 - (void)buildAccountMenus;
@@ -230,7 +230,7 @@
 					keyEquivalent:@""
 				representedObject:account];
 		
-        //Create the submenu's owning item - title will be set in updateMenuForAccount
+        //Create the submenu's owning item
         menuItem = [[[NSMenuItem alloc] initWithTitle:ACCOUNT_TITLE
 											   target:nil
 											   action:nil
