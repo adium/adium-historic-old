@@ -8,4 +8,5 @@
 @interface NSApplication (CBApplicationAdditions)
 - (BOOL)isOnPantherOrBetter;
 - (BOOL)isOnJaguarOrBetter;
+- (BOOL)isWebKitAvailable;
 @end
