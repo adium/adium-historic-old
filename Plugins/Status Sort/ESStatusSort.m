@@ -42,9 +42,16 @@
 #define ONLINE						AILocalizedString(@"Online",nil)		
 
 #define STATUS_DRAG_TYPE			@"Status Sort"
-#define MAX_SORT_ORDER_DIMENSION	6
 
-int statusSort(id objectA, id objectB, BOOL groups);
+typedef enum {
+	Available = 0,
+	Away = 1,
+	Idle = 2,
+	Away_And_Idle = 3,
+	Unavailable = 4,
+	Online = 5
+} Status_Sort_Type;
+#define MAX_SORT_ORDER_DIMENSION	6
 
 static BOOL groupAvailable;
 static BOOL groupUnavailable;
@@ -68,20 +75,33 @@ DeclareString(sAway)
 DeclareString(sIdle)
 DeclareString(sOnline)
 
+/*!
+ * @class ESStatusSort
+ * @brief AISortController to sort by contacts and groups
+ *
+ * Extensive configuration is allowed.
+ */
 @implementation ESStatusSort
 
-//Sort contacts and groups by status.
+/*!
+ * @brief Initialize
+ */
 - (id)init
 {
 	InitString(sAway,@"Away");
 	InitString(sIdle,@"Idle");
 	InitString(sOnline,@"Online");
 	
-	[super init];
+	self = [super init];
 	
 	return self;
 }
 
+/*!
+ * @brief Did become active first time
+ *
+ * Called only once; gives the sort controller an opportunity to set defaults and load preferences lazily.
+ */
 - (void)didBecomeActiveFirstTime
 {
 	//Register our default preferences
@@ -106,8 +126,13 @@ DeclareString(sOnline)
 	[self pruneAndSetSortOrderFromArray:[prefDict objectForKey:KEY_SORT_ORDER]];
 }
 
-//This method completely determines how the statusSort() method will operate.
-//The sortOrder array, when it is done, contains, in order, the statuses which will be sorted upon.
+/*!
+ * @brief Determines how the statusSort() method will operate.
+ *
+ * The sortOrder array, when it is done, contains, in order, the statuses which will be sorted upon.
+ *
+ * @param sortOrderArray An <tt>NSArray</tt> of <tt>NSNumber</tt>s whose values are Status_Sort_Type
+ */
 - (void)pruneAndSetSortOrderFromArray:(NSArray *)sortOrderArray
 {
 	NSEnumerator	*enumerator = [sortOrderArray objectEnumerator];
@@ -178,34 +203,57 @@ DeclareString(sOnline)
 	
 	[tableView_sortOrder reloadData];
 }
-- (NSString *)description{
-    return(@"Sort by Status.");
-}
+
+/*!
+ * @brief Non-localized identifier
+ */
 - (NSString *)identifier{
     return(@"by Status");
 }
+
+/*!
+ * @brief Localized display name
+ */
 - (NSString *)displayName{
     return(AILocalizedString(@"Sort Contacts by Status",nil));
 }
+
+/*!
+ * @brief Status keys which, when changed, should trigger a resort
+ */
 - (NSSet *)statusKeysRequiringResort{
 	return([NSSet setWithObjects:sOnline,sIdle,sAway,nil]);
 }
+
+/*!
+ * @brief Attribute keys which, when changed, should trigger a resort
+ */
 - (NSSet *)attributeKeysRequiringResort{
 	return([NSSet setWithObject:@"Display Name"]);
 }
 
 //Configuration
 #pragma mark Configuration
-- (NSString *)configureSortMenuItemTitle{ 
-	return(AILocalizedString(@"Configure Status Sort...",nil));
-}
+/*!
+ * @brief Window title when configuring the sort
+ *
+ * Subclasses should provide a title for configuring the sort only if configuration is possible.
+ * @result Localized title. If nil, the menu item will be disabled.
+ */
 - (NSString *)configureSortWindowTitle{
 	return(AILocalizedString(@"Configure Status Sort",nil));	
 }
+
+/*!
+ * @brief Nib name for configuration
+ */
 - (NSString *)configureNibName{
 	return @"StatusSortConfiguration";
 }
 
+/*!
+ * @brief View did load
+ */
 - (void)viewDidLoad
 {
 	[checkBox_groupAvailable setState:groupAvailable];
@@ -244,6 +292,11 @@ DeclareString(sOnline)
 	[label_statusGroupOrdering setStringValue:AILocalizedString(@"Status group ordering:","Status sort configuration")];
 }
 
+/*!
+ * @brief Preference changed
+ *
+ * Sort controllers should live update as preferences change.
+ */
 - (IBAction)changePreference:(id)sender
 {
 	if (sender == checkBox_groupAvailable){
@@ -306,6 +359,9 @@ DeclareString(sOnline)
 	[[adium contactController] sortContactList];
 }
 
+/*!
+ * @brief Configure control dimming
+ */
 - (void)configureControlDimming
 {
 	[checkBox_alphabeticallyByLastName setEnabled:resolveAlphabetically];
@@ -315,11 +371,17 @@ DeclareString(sOnline)
 }
 
 #pragma mark Sort Order Tableview datasource
+/*!
+ * @brief Table view number of rows
+ */
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	return sizeOfSortOrder;
 }
 
+/*!
+ * @brief Table view object value
+ */
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
 	switch (sortOrder[rowIndex]){
@@ -355,6 +417,12 @@ DeclareString(sOnline)
 	return @"";
 }
 
+/*!
+ * @brief The NSNumber Status_Sort_Type which corresponds to a string
+ *
+ * @param string A string such as AVAILABLE or AWAY (localized)
+ * @result The NSNumber Status_Sort_Type which corresponds to the string 
+ */
 - (NSNumber *)numberForString:(NSString *)string
 {
 	int equivalent = -1;
@@ -376,6 +444,9 @@ DeclareString(sOnline)
 	return [NSNumber numberWithInt:equivalent];
 }
 
+/*!
+ * @brief Table view write rows
+ */
 -  (BOOL)tableView:(NSTableView *)tableView writeRows:(NSArray *)rows toPasteboard:(NSPasteboard *)pboard
 {
     [pboard declareTypes:[NSArray arrayWithObject:STATUS_DRAG_TYPE] owner:self];
@@ -391,6 +462,9 @@ DeclareString(sOnline)
     return(YES);
 }
 
+/*!
+ * @brief Table view validate drop
+ */
 - (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)operation
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:STATUS_DRAG_TYPE]];
@@ -406,6 +480,9 @@ DeclareString(sOnline)
     return(NSDragOperationNone);
 }
 
+/*!
+ * @brief Table view accept drop
+ */
 - (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)operation
 {
     NSString		*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:STATUS_DRAG_TYPE]];
@@ -459,10 +536,11 @@ DeclareString(sOnline)
 
 #pragma mark Sorting
 
-- (sortfunc)sortFunction{
-	return(&statusSort);
-}
-
+/*!
+ * @brief The status sort method itself
+ *
+ * It's magic... but it's efficient magic!
+ */
 int statusSort(id objectA, id objectB, BOOL groups)
 {
 	if(groups){
@@ -614,6 +692,13 @@ int statusSort(id objectA, id objectB, BOOL groups)
 		
 		return (returnValue);
 	}
+}
+
+/*!
+ * @brief Sort function
+ */
+- (sortfunc)sortFunction{
+	return(&statusSort);
 }
 
 @end
