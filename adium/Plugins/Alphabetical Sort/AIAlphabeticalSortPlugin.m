@@ -15,14 +15,12 @@
 
 #import "AIAlphabeticalSortPlugin.h"
 #import "AIAlphabeticalSort.h"
-#import "AIAlphabeticalSortNoGroups.h"
 
 @implementation AIAlphabeticalSortPlugin
 
 - (void)installPlugin
 {
     [[adium contactController] registerListSortController:[[[AIAlphabeticalSort alloc] init] autorelease]];
-//    [[adium contactController] registerListSortController:[[[AIAlphabeticalSortNoGroups alloc] init] autorelease]];
 }
 
 - (void)uninstallPlugin
