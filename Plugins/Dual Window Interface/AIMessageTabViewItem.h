@@ -14,9 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @class AIMessageViewController, AIMessageWindowController;
-@protocol AIInterfaceContainer;
+@protocol AIInterfaceContainer, AICustomTabViewItem;
 
-@interface AIMessageTabViewItem : NSTabViewItem <AIInterfaceContainer> {
+@interface AIMessageTabViewItem : NSTabViewItem <AIInterfaceContainer, AICustomTabViewItem> {
 	AIMessageWindowController	*container;
     AIMessageViewController 	*messageView;
     AIAdium						*adium;
