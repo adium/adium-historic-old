@@ -81,7 +81,6 @@ void callback(void * x, io_service_t y, natural_t messageType, void * messageArg
     switch ( messageType ) {
         case kIOMessageSystemWillSleep:
             //Let everyone know we will sleep
-            holdSleep = 0;
             [[NSNotificationCenter defaultCenter] postNotificationName:AISystemWillSleep_Notification object:nil];
 
             //If noone requested a delay, sleep now
