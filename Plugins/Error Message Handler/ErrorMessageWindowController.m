@@ -123,7 +123,7 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
 - (void)refreshErrorDialog
 {
     NSRect	frame = [[self window] frame];
-    int		heightChange;
+    int		heightChange = 0, titleHeightChange;
 
     //Display the current error title
 	NSString	*title = [errorTitleArray objectAtIndex:0];
@@ -131,16 +131,19 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
 
 	//Resize the window frame to fit the error title
 	[textView_errorTitle sizeToFit];
-	heightChange = [textView_errorTitle frame].size.height - [scrollView_errorTitle documentVisibleRect].size.height;
+	titleHeightChange = [textView_errorTitle frame].size.height - [scrollView_errorTitle documentVisibleRect].size.height;
+	heightChange += titleHeightChange;
+
 	frame.size.height += heightChange;
 	frame.origin.y -= heightChange;
-
+	
 	//Display the message
 	[textView_errorInfo setString:[errorDescArray objectAtIndex:0]];
 
 	//Resize the window frame to fit the error message
 	[textView_errorInfo sizeToFit];
 	heightChange = [textView_errorInfo frame].size.height - [scrollView_errorInfo documentVisibleRect].size.height;
+	
 	frame.size.height += heightChange;
     frame.origin.y -= heightChange;
 	
@@ -150,6 +153,10 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
 	}else{
 		[[self window] setFrame:frame display:YES]; //animate:YES can crash in 10.2
 	}
+
+	NSRect	infoFrame = [scrollView_errorInfo frame];
+	infoFrame.origin.y -= titleHeightChange;
+	[scrollView_errorInfo setFrame:infoFrame];
 
     //Display the current error count
     if([errorTitleArray count] == 1){
