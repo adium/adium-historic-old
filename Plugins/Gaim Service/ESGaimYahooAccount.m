@@ -40,8 +40,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 			AILocalizedString(@"Out To Lunch",nil),		[NSNumber numberWithInt:YAHOO_STATUS_OUTTOLUNCH],
 			AILocalizedString(@"Stepped Out",nil),		[NSNumber numberWithInt:YAHOO_STATUS_STEPPEDOUT],
 			AILocalizedString(@"Invisible",nil),		[NSNumber numberWithInt:YAHOO_STATUS_INVISIBLE],
-			AILocalizedString(@"Idle",nil),				[NSNumber numberWithInt:YAHOO_STATUS_IDLE],
-			AILocalizedString(@"Offline",nil),			[NSNumber numberWithInt:YAHOO_STATUS_OFFLINE],nil] retain];
+			AILocalizedString(@"Idle",nil),				[NSNumber numberWithInt:YAHOO_STATUS_IDLE],nil] retain];
 	}
 }
 
