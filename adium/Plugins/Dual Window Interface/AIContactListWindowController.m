@@ -270,7 +270,7 @@
     
     //Add the status selection view
     contactListFrame = [scrollView_contactList frame];
-    view_statusSelection = [[AIStatusSelectionView alloc] initWithFrame:NSMakeRect(contactListFrame.origin.x, contactListFrame.origin.y + contactListFrame.size.height - 16 + 1, contactListFrame.size.width, 16) owner:owner];
+    view_statusSelection = [[[AIStatusSelectionView alloc] initWithFrame:NSMakeRect(contactListFrame.origin.x, contactListFrame.origin.y + contactListFrame.size.height - 16 + 1, contactListFrame.size.width, 16) owner:owner] autorelease];
     
     [view_statusSelection setAutoresizingMask:(NSViewMaxXMargin | NSViewMinYMargin | NSViewWidthSizable)];
     [[[self window] contentView] addSubview:view_statusSelection];
