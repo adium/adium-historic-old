@@ -21,6 +21,7 @@
 [Contact List]
 - Bubble-to-fit cells don't work with any new list additions (disable when
     bubble is selected)
+- Bubble-to-fit cells don't work when groups aren't aligned left.
 - Metacontacts display no service icon
 - Double clicking two names in succession causes the first name to highlight
     the second time. (wordsaboutmehere)
