@@ -68,8 +68,10 @@
 		frame.size.height += heightChange;
 		frame.origin.y -= heightChange;
 		
-		if( !titleString ) {
-			[textField_title setHidden:YES];
+		if(!titleString){
+			if([textField_title respondsToSelector:@selector(setHidden:)]){
+				[textField_title setHidden:YES];
+			}
 			
 			NSRect scrollFrame = [scrollView_msg frame];
 			NSRect textFrame = [textField_title frame];
