@@ -95,10 +95,10 @@
                     Adium supports AIM, MSN, Yahoo!, Yahoo! Japan, Gadu-Gadu, Jabber, Napster, and Novell GroupWise.</p>
                     
                     <p><span class="faqQuestion">Is Adium affiliated or endorsed by any of these companies?</span><br />
-                    No, Absolutely not.  Adium is an independent, third-party instant messaging client. It is not associated with and is not supported by AOL, MSN, Yahoo, or any other such company</p>
+                    No, absolutely not.  Adium is an independent, third-party instant messaging client. It neither associated with nor supported by AOL, MSN, Yahoo, or any other company.</p>
                     
                     <p><span class="faqQuestion">What does Adium X cost?</span><br />
-                    Adium is free, and is distributed under the <a href="http://www.fsf.org/copyleft/gpl.html">GNU General Public License</a>.</p>
+                    Adium is free and is distributed under the <a href="http://www.fsf.org/copyleft/gpl.html">GNU General Public License</a>. Donations are accepted and appreciated but never expected. :)</p>
                     
                     <p><span class="faqQuestion">How is Adium pronounced?</span><br />
                     Officially, Adium is pronounced like stadium, though there are adherents to Add-ee-um.  The project leads actually pronounce it differently; you're welcome to choose.</p>
