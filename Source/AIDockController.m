@@ -34,7 +34,6 @@
 - (void)_continuousBounce;
 - (void)_stopBouncing;
 - (void)_bounceWithInterval:(double)delay;
-- (NSString *)_pathOfIconPackWithName:(NSString *)name;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (AIIconState *)iconStateFromStateDict:(NSDictionary *)stateDict folderPath:(NSString *)folderPath;
 - (void)updateAppBundleIcon;
@@ -117,7 +116,10 @@
 		NSString			*iconPath;
 		
 		//Load the new icon pack
-		iconPath = [self _pathOfIconPackWithName:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
+		iconPath = [adium pathOfPackWIthName:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]
+								   extension:@"AdiumIcon"
+						  resourceFolderName:FOLDER_DOCK_ICONS];
+
 		if(iconPath){
 			if(newAvailableIconStateDict = [[self iconPackAtPath:iconPath] retain]){
 				[availableIconStateDict release]; availableIconStateDict = newAvailableIconStateDict;
@@ -326,23 +328,6 @@
 {
     [availableDynamicIconStateDict setObject:iconState forKey:inName]; 	//Add the new state to our available dict
     [self setIconStateNamed:inName];					//Set it
-}
-
-//Scan for an icon pack with the specified name
-- (NSString *)_pathOfIconPackWithName:(NSString *)name
-{
-	NSFileManager	*fileManager = [NSFileManager defaultManager];
-    NSString		*packFileName = [name stringByAppendingPathExtension:@"AdiumIcon"];
-    NSEnumerator	*enumerator = [[[AIObject sharedAdiumInstance] resourcePathsForName:FOLDER_DOCK_ICONS] objectEnumerator];
-    NSString		*resourcePath;
-
-	//Search all our resource paths for the icon pack
-    while(resourcePath = [enumerator nextObject]){
-		NSString *iconPackPath = [resourcePath stringByAppendingPathComponent:packFileName];
-		if([fileManager fileExistsAtPath:iconPackPath]) return(iconPackPath);
-	}
-
-    return(nil);
 }
 
 //Build/Pre-render the icon images, start/stop animation
