@@ -81,11 +81,14 @@
     NSEnumerator	*enumerator;
     AIListObject	*object;
 
+	//There's actually no reason to re-sort in response to these status changes, but there is no way for us to
+	//let the Adium core know that.  The best we can do is delay updates so only a single sort occurs
+	[[adium contactController] delayListObjectNotifications];
+
+	//Update everyone's idle time
     enumerator = [idleObjectArray objectEnumerator];
     while((object = [enumerator nextObject])){
-		//There's actually no reason to re-sort in response to these status changes, but there is no way for us to
-		//let the Adium core know that.
-        [self setIdleForObject:object silent:YES]; //Update the contact's idle time
+        [self setIdleForObject:object silent:YES];
     }
 	
 }
