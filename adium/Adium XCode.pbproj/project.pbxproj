@@ -2308,7 +2308,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F3B305314BE000C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "SQL Logger.AdiumPlugin";
@@ -21965,6 +21965,7 @@
 				6C271CE60561719200057D9C,
 				6C271CEB056177CA00057D9C,
 				6C0FFB2305723F1B00E75F79,
+				6CC851C20574B315008A5F66,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -22104,6 +22105,7 @@
 				6C271CE40561719200057D9C,
 				6C60B14805605A3500CAD137,
 				6C0FFB2205723F1B00E75F79,
+				6CC851C10574B314008A5F66,
 				6C60B14905605A3500CAD137,
 				6C60B14A05605A3500CAD137,
 				6C60B14B05605A3600CAD137,
@@ -22350,6 +22352,20 @@
 		};
 		6CC070540563FA7B0013E642 = {
 			fileRef = D2547F1D050AD55B00A80164;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6CC851C10574B314008A5F66 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = ContactEventBezel.nib;
+			path = "Plugins/Event Bezel/ContactEventBezel.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CC851C20574B315008A5F66 = {
+			fileRef = 6CC851C10574B314008A5F66;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -23978,7 +23994,7 @@
 			productType = "com.apple.product-type.bundle";
 		};
 		9E87CF580574909B001CB886 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Status Menu Item.AdiumPlugin";
