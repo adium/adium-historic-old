@@ -38,41 +38,41 @@
 	NSString	*description = @"";
 	
 	if([eventID compare:CONTACT_STATUS_ONLINE_YES] == 0){
-		description = @"When %n connects";
+		description = @"Connects";
 	}else if([eventID compare:CONTACT_STATUS_ONLINE_NO] == 0){
-		description = @"When %n disconnects";
+		description = @"Disconnects";
 	}else if([eventID compare:CONTACT_STATUS_AWAY_YES] == 0){
-		description = @"When %n goes away";
+		description = @"Goes away";
 	}else if([eventID compare:CONTACT_STATUS_AWAY_NO] == 0){
-		description = @"When %n returns from away";
+		description = @"Returns from away";
 	}else if([eventID compare:CONTACT_STATUS_IDLE_YES] == 0){
-		description = @"When %n goes idle";
+		description = @"Goes idle";
 	}else if([eventID compare:CONTACT_STATUS_IDLE_NO] == 0){
-		description = @"When %n returns from idle";
+		description = @"Returns from idle";
 	}
 	
 	return(description);
 }
 
-- (NSString *)longDescriptionForEventID:(NSString *)eventID
+- (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject
 {
 	NSString	*description = @"Unknown";
 	
 	if([eventID compare:CONTACT_STATUS_ONLINE_YES] == 0){
-		description = @"When %n connects";
+		description = @"When %@ connects";
 	}else if([eventID compare:CONTACT_STATUS_ONLINE_NO] == 0){
-		description = @"When %n disconnects";
+		description = @"When %@ disconnects";
 	}else if([eventID compare:CONTACT_STATUS_AWAY_YES] == 0){
-		description = @"When %n goes away";
+		description = @"When %@ goes away";
 	}else if([eventID compare:CONTACT_STATUS_AWAY_NO] == 0){
-		description = @"When %n returns from away";
+		description = @"When %@ returns from away";
 	}else if([eventID compare:CONTACT_STATUS_IDLE_YES] == 0){
-		description = @"When %n goes idle";
+		description = @"When %@ goes idle";
 	}else if([eventID compare:CONTACT_STATUS_IDLE_NO] == 0){
-		description = @"When %n returns from idle";
+		description = @"When %@ returns from idle";
 	}
 	
-	return(description);
+	return([NSString stringWithFormat:description, [listObject displayName]]);
 }
 
 //
