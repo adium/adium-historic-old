@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.139 2004/05/16 19:13:58 adamiser Exp $
+$Id: ToDoList.txt,v 1.140 2004/05/16 19:29:33 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -14,6 +14,9 @@ Bugs - LibGaim
 -------------------------------------------------------------------------------------------------------
 * [ICQ] Displaying raw HTML (Messages sent from iChat)
 	Libgaim is escaping all incoming HTML characters over ICQ.
+
+* [MSN] Outoing chat appears twice
+	Libgaim is sending our message back to us
 
 
 -------------------------------------------------------------------------------------------------------
@@ -34,30 +37,56 @@ Bugs - Resources
 Bugs - Adium
 -------------------------------------------------------------------------------------------------------
 * "Custom..." sound option is not working.
+	The user is prompted for a custom sound, but it doesn't appear in the menu and doesn't save.
+
+* Short emoticons mask longer ones
+	For instance, :) prevents :)) from working.  A solution to this would be shorting all the text
+	equivelants from longest to shortest, but the way we store emoticons makes this impossible.
+
+* Message history is being colored
+	History messages should be stripped of color before being passed to the message view, so they
+	use the view's default text color (which is usually dimmed or special in some way)
+
+* Escapes aren't processed in links
+	The escapes are filtered using the plain text version of the message, so any escapes within the
+	link attributes of the attributed message are not filtered.  This prevents subprofile links from
+	working.
+
+* Message formatting is reset on send
+	If the user changes their message formatting, it should stay until that window is closed.  This
+	causes problems for users who use right-to-left text entry, and users wishing to use a special
+	message format temporarily.
+
+* Applescripts are parsed in other's profiles
+	This is a potential security risk if the user has scripts that run shell commands.  We shuold
+	not be parsing script commands sent by other users (via profiles)
+
+* Customize Toolbar doesn't disable
+	This menu item should disable when there is no toolbar visible
+
+* Spawning new windows unhides Adium
+	We don't want to spawn new windows while Adium is hudden.  Windows should be qued and shown when
+	Adium is unhid.
 
 
-* Don't spawn new windows when we're hidden, doing so will unhide us (Show the windows next time we're unhidden)
+-------------------------------------------------------------------------------------------------------
+Bugs - Deferred (Awaiting a rewrite / other change)
+-------------------------------------------------------------------------------------------------------
+* Info window can be opened with no selection
+	Shows a blank window titled "window".  Waiting on info/inspector/alert merge.
+
+
+
+-------------------------------------------------------------------------------------------------------
+Bugs - Unconfirmed
+-------------------------------------------------------------------------------------------------------
 * Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
 * User icons are still getting flipped (Icons from AIM, apparently)
-* Clicking the info button with nothing selected (1 group, 0 contacts defined) shows a blank window titled "Window"
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
-* Multi-user chat (MSN) - sent messages appear twice.
 * Update checker reporting a new version when non exists? (possibly a caching error?)
-* Message formatting is reset after each message sent (was this an intentional change? - it resets things such as right-to-left typing as well)
-* Links with %n's in them beep when clicked (Set a %n link in your profile using AOLIM)
-* Linking plugin auto-links some characters it shouldn't.. such as *'s and >'s (When placed at the end of an address)
-* Smooth operator incorrectly displays multi-line status messages.
-* Emoticon packs flip upside down when you select them.  (The emoticon menu is causing them to flip, so only enabled packs will be flipped.  No amount of flipping and unflipping within the emoticon pack cell seems to make things correct)
 * AIM chats are logging with both loggers as having a title of (null)
-* "Customize Toolbar..." menu item remains active even when "Show Toolbar" is inactive since there isn't one. 
 * Push/pop indicator could use 1-2 px extra spacing from the right & left since its nearly flush with the scrollbar 
     // brian now dons his flameproof pants :)
-* Add/Edit link menu item needs to disable when unavailable
-* Short emoticons can mask longer ones ( :) masks :)) ).  Sort emoticons longest to shortest?
-* Message history should be de-colored before being passed to the message view
-
-Applescripts:
-* Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
 
 Contact List:
 * Adding a contact that's already online causes them to appear signed off on the list.
