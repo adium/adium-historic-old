@@ -113,9 +113,10 @@
 	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 	[self preferencesChanged:nil];
 
-    //turn on URL validation for our textView
+    //Turn on URL validation for our textView
     [textView_URL setContiniousURLValidationEnabled:YES];
     
+	//In 10.2 the hidden flag will be ignored, so we'll need to set the blank image on launch to ghetto hide it
     if(![NSApp isOnPantherOrBetter]){
         [imageView_invalidURLAlert setImage:[NSImage imageNamed:@"space" forClass:[self class]]];
     }

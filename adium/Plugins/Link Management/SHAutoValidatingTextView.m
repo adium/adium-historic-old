@@ -24,6 +24,8 @@
     [super dealloc];
 }
 
+
+//Set Validation Attribs -----------------------------------------------------------------------------------------------
 #pragma mark Set Validation Attribs
 - (void)setContiniousURLValidationEnabled:(BOOL)flag
 {
@@ -41,6 +43,9 @@
 {
     return(continiousURLValidation);
 }
+
+
+//Get URL Verification Status ------------------------------------------------------------------------------------------
 #pragma mark Get URL Verification Status
 - (BOOL)isURLValid
 {
@@ -50,15 +55,20 @@
 {
     return(validStatus);
 }
+
+
+//Evaluate URL ---------------------------------------------------------------------------------------------------------
 #pragma mark Evaluate URL
-//catch the notification when the text in the view is edited
+//Catch the notification when the text in the view is edited
 - (void)textDidChange:(NSNotification *)notification
 {
     if(continiousURLValidation) {//call the URL validatation if set
-        SHHyperlinkScanner  *laxScanner = [[[SHHyperlinkScanner alloc] initWithStrictChecking:NO] autorelease];
+        SHHyperlinkScanner  *laxScanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
         
         URLIsValid = [laxScanner isStringValidURL:[[self textStorage] string]];
         validStatus = [laxScanner validationStatus];
+		
+		[laxScanner release];
     }
 }
 
