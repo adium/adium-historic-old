@@ -9,13 +9,7 @@
 #import "JSCEventBezelWindow.h"
 #import "JSCEventBezelView.h"
 
-@class AIAdium, AIListContact;
-
 @interface JSCEventBezelController : NSWindowController {
-    IBOutlet NSTextField *mainName;
-    IBOutlet NSTextField *mainStatus;
-    IBOutlet NSTextField *mainAwayMessage;
-    IBOutlet NSTextField *queueField;
     IBOutlet JSCEventBezelWindow *bezelWindow;
     IBOutlet JSCEventBezelView *bezelView;
     AIAdium *owner;

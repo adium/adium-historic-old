@@ -4,14 +4,7 @@
         {
             CLASS = JSCEventBezelController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {
-                bezelView = JSCEventBezelView; 
-                bezelWindow = JSCEventBezelWindow; 
-                mainAwayMessage = NSTextField; 
-                mainName = NSTextField; 
-                mainStatus = NSTextField; 
-                queueField = NSTextField; 
-            }; 
+            OUTLETS = {bezelView = JSCEventBezelView; bezelWindow = JSCEventBezelWindow; }; 
             SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = JSCEventBezelView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
