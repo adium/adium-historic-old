@@ -352,7 +352,7 @@
             [displayedMessage setObject:awayMessage forKey:@"Message"];
 
 	    NSAttributedString * autoresponse = [[textView_autoresponse textStorage] copy];
-	    if ([autoresponse isEqualToAttributedString:awayMessage]){
+	    if ([autoresponse isEqualToAttributedString:awayMessage] || !([[autoresponse string] length]) ){ //same as the away message, or empty
 		[displayedMessage removeObjectForKey:@"Autoresponse"];
 	    }else{
 		[displayedMessage setObject:autoresponse forKey:@"Autoresponse"];
