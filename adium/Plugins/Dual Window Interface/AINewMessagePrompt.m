@@ -62,7 +62,7 @@ static AINewMessagePrompt *sharedNewMessageInstance = nil;
     //Get the service type and UID
     account = [[popUp_service selectedItem] representedObject];
     serviceType = [[account service] handleServiceType];
-    UID = [serviceType filterUID:[textField_handle stringValue] removeIgnoredCharacters:YES];
+    UID = [serviceType filterUID:[textField_handle impliedStringValue] removeIgnoredCharacters:YES];
         
     //Find the contact
 	contact = [[adium contactController] contactWithService:[serviceType identifier] accountID:[account uniqueObjectID] UID:UID];
@@ -104,10 +104,15 @@ static AINewMessagePrompt *sharedNewMessageInstance = nil;
     NSEnumerator		*enumerator;
     AIListContact		*contact;
     
+	[textField_handle setMinStringLength:2];
+	
+#warning This should really only autocomplete contacts which match the service type of the selected account
     //Configure the auto-complete view
     enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
     while((contact = [enumerator nextObject])){
-        [textField_handle addCompletionString:[contact UID]];
+		NSString *UID = [contact UID];
+        [textField_handle addCompletionString:UID];
+		[textField_handle addCompletionString:[contact displayName] withImpliedCompletion:UID];
     }
 
     //Configure the handle type menu
