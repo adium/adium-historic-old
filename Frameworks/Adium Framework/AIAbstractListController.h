@@ -183,6 +183,8 @@ typedef enum {
 - (BOOL)useAliasesInContactListAsRequested;
 - (BOOL)shouldUseContactTextColors;
 
+- (void)configureViewsAndTooltips;
+
 //Tooltip
 - (void)showTooltipAtPoint:(NSPoint)screenPoint;
 - (AIListObject *)contactListItemAtScreenPoint:(NSPoint)screenPoint;

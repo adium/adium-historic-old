@@ -23,9 +23,7 @@
 #define GROUP_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
 
 @interface AIAbstractListController (PRIVATE)
-- (void)configureViewsAndTooltips;
 - (BOOL)shouldShowTooltips;
-
 - (LIST_POSITION)pillowsFittedIconPositionForIconPosition:(LIST_POSITION)iconPosition contentCellAlignment:(NSTextAlignment)contentCellAlignment;
 @end
 
