@@ -127,6 +127,8 @@
 - (NSArray *)stateArray;
 - (NSArray *)stateArrayForMenuItems;
 
+- (NSNumber *)nextUniqueStatusID;
+
 - (void)registerStatus:(NSString *)statusName
 	   withDescription:(NSString *)description
 				ofType:(AIStatusType)type 
@@ -160,5 +162,7 @@
 - (void)plugin:(id <StateMenuPlugin>)stateMenuPlugin didAddMenuItems:(NSArray *)addedMenuItems;
 - (void)removeAllMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
 - (void)setDelayStateMenuSelectionUpdates:(BOOL)shouldDelay;
+
+- (NSMenu *)statusStatesMenu;
 
 @end
