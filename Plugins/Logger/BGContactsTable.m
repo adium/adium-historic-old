@@ -21,6 +21,14 @@
 - (void)awakeFromNib
 {
 	showingContacts = YES;
+	blankImage = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
+}
+
+- (void)dealloc
+{
+	[blankImage release];
+	
+	[super dealloc];
 }
 
 //
@@ -37,11 +45,12 @@
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     if([[tableColumn identifier] isEqual:@"service"]){
-		return(@"");
-        /*return [AIServiceIcons serviceIconForService:[[controller_LogViewer serviceArray] objectAtIndex:row]
-												type:AIServiceIconSmall
-										   direction:AIIconNormal];*/
-		
+		NSArray	*serviceArray = (showingContacts ? [controller_LogViewer toServiceArray] : [controller_LogViewer fromServiceArray]);
+		NSImage	*image = [AIServiceIcons serviceIconForServiceID:[serviceArray objectAtIndex:row]
+															type:AIServiceIconSmall
+													   direction:AIIconNormal];
+		return(image ? image : blankImage);
+			
     }else if([[tableColumn identifier] isEqual:@"name"]){
 		if(showingContacts){
 			return([[controller_LogViewer toArray] objectAtIndex:row]);
