@@ -81,7 +81,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     //caches
     [cachedAlertsDict release]; cachedAlertsDict = nil;
     [actionListMenu_cached release]; actionListMenu_cached = nil;
-    [eventMenu_cached release]; eventMenu_cahced = nil;
+    [eventMenu_cached release]; eventMenu_cached = nil;
     [soundMenu_cached release]; soundMenu_cached = nil;
 }
 
