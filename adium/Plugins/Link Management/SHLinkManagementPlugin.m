@@ -39,8 +39,21 @@
 
 - (void)uninstallPlugin
 {
+	
 }
 
+//
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	//Update the menu item title to reflect its action
+	
+	
+	//Disable the menu item if a text field is not key
+	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+	return(responder && [responder isKindOfClass:[NSText class]]);
+}
+
+//
 - (IBAction)editFormattedLink:(id)sender
 {
     //edit existing link/text
