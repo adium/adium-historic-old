@@ -16,20 +16,6 @@ function getDirList ($dirName) {
     return $array;
 } 
 
-function RandomActionShoot()
-{
-    $thumbsDir = "images/actionthumbs";
-    $picturesDir = "images/actionshots";
-    $picturesList = getDirList($picturesDir);
-    
-    $index = rand(0, count($picturesList)-1);
-    $picture = $picturesList[$index];
-    list($picWidth, $picHeight, $type, $attr) = getimagesize($picturesDir."/".$picture);
-    list($thumbWidth, $thumbHeight, $type, $attr) = getimagesize($thumbsDir."/".$picture);
-    
-    return "<a href=\"$picturesDir/$picture\" onclick=\"window.open('$picturesDir/$picture','popup','width=$picWidth,height=$picHeight,scrollbars=yes,toolbar=no,status=yes'); return false\"><img src=\"$thumbsDir/$picture\" width=\"$thumbWidth\" height=\"$thumbHeight\" alt=\"actionshot\" /></a>";
-}
-
 function RandomActionShot($numberOfShots)
 {
     $thumbsDir = "images/actionthumbs";
@@ -42,6 +28,9 @@ function RandomActionShot($numberOfShots)
     $html = "";
     foreach($chosenPics as $index){
         $picture = $availablePics[$index];
+        list($picWidth, $picHeight, $type, $attr) = getimagesize($picturesDir."/".$picture);
+        list($thumbWidth, $thumbHeight, $type, $attr) = getimagesize($thumbsDir."/".$picture);
+        
         $html .= "<a href=\"$picturesDir/$picture\" onclick=\"window.open('$picturesDir/$picture','popup','width=$picWidth,height=$picHeight,scrollbars=yes,toolbar=no,status=yes'); return false\"><img src=\"$thumbsDir/$picture\" width=\"$thumbWidth\" height=\"$thumbHeight\" alt=\"actionshot\" /></a><br /><br />";
     }
 

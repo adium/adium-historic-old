@@ -47,7 +47,7 @@
                 <div class="boxThinContent">
                 <p>We need some cool screenshots of Adium in action.  See this <a href="http://www.funmac.com/showthread.php?s=&amp;threadid=6218">forum thread</a> for more information.</p>
                 <p>Meanwhile, here are some samples from users like you (thanks!):</p>
-                <?php echo RandomActionShot(5); ?>
+                <?php echo RandomActionShot(4); ?>
                 </div>
                 <div class="boxThinBottom"></div>
             </div>
