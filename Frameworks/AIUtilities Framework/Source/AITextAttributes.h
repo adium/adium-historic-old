@@ -56,6 +56,13 @@
 - (NSDictionary *)dictionary;
 
 /*!
+ * @brief Reset the font-related attributes.
+ * 
+ * This sets to default values font family, font size, foreground color, background color, and language value.
+ */
+- (void)resetFontAttributes;
+
+/*!
  * @brief Set the font family
  *
  * Set the font family
@@ -150,5 +157,20 @@
  * @param inURL An <tt>NSString</tt> of the link URL
  */
 - (void)setLinkURL:(NSString *)inURL;
+
+/*!
+ * @brief Set the language value
+ *
+ * No relevance to normal display; may be used for internal bookkeeping or the like
+ * @param inLanguageValue The language value
+ */
+- (void)setLanguageValue:(id)inLanguageValue;
+
+/*!
+ * @brief Retrieve the language value
+ *
+ * No relevance to normal display; may be used for internal bookkeeping or the like
+ */
+- (id)languageValue;
 
 @end
