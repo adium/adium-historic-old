@@ -8,6 +8,7 @@
 - [MSN] Outoing chat appears twice
 - [AIM] Auto-reply flag being ignored
 - Group chats are logging as (null)
+- Autolinking overwrites custom titled links with domain names in them.
 
 //------------------------------------------------------------------------------------
 // Bugs - Adium
@@ -32,9 +33,6 @@
 	in the window.
         
 - Why oh why doesn't our image picker window remember its position whatsoever?
-
-- Hyperlinks that include domains will have that domain name overridden by the link parser.
-	Ref: http://www.funmac.com/showthread.php?p=75587
 
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
