@@ -54,7 +54,7 @@
     [toolbarItem setAction:nil];
     [toolbarItem setToolTip:@""];
     [toolbarItem setEnabled:YES];
-    [toolbarItem setPaletteLabel:@"Seperator"];
+    [toolbarItem setPaletteLabel:@"Separator"];
     [toolbarItem setAllowsDuplicatesInToolbar:YES];
     [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
 

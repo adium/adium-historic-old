@@ -36,7 +36,7 @@
     for(loop = 0;loop < [accountArray count] + 1;loop++){
         NSTextField		*textField;
         AIColoredBoxView	*coloredBox;
-        NSBox			*seperator;
+        NSBox			*separator;
         NSRect			frame;
         
         if(loop != 0){
@@ -76,12 +76,12 @@
         }
 
         //Line
-	seperator = [[[NSBox alloc] init] autorelease];
-        [seperator setBoxType:NSBoxSeparator];
+	separator = [[[NSBox alloc] init] autorelease];
+        [separator setBoxType:NSBoxSeparator];
 
-        [self addSubview:seperator];
-        [seperator setFrame:NSMakeRect(LABEL_X_OFFSET + ((loop) * (SUB_COLUMN_WIDTH + [outlineView intercellSpacing].width)), LABEL_Y_OFFSET, LABEL_LENGTH, 1)];
-        [seperator setFrameRotation:LABEL_ROTATION];
+        [self addSubview:separator];
+        [separator setFrame:NSMakeRect(LABEL_X_OFFSET + ((loop) * (SUB_COLUMN_WIDTH + [outlineView intercellSpacing].width)), LABEL_Y_OFFSET, LABEL_LENGTH, 1)];
+        [separator setFrameRotation:LABEL_ROTATION];
     }
 
     //Bottom Line
