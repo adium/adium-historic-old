@@ -88,7 +88,6 @@
 - (void)updateStatusForKey:(NSString *)key;
 - (void)setAccountUserImage:(NSImage *)image;
 - (void)setAccountIdleSinceTo:(NSDate *)idleSince;
-- (void)setAccountInvisibleTo:(BOOL)isInvisible;
 
 - (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
 						  message:(NSAttributedString **)statusMessage;

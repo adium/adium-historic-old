@@ -172,18 +172,19 @@
 		(od = account->gc->proto_data) &&
 		(f = g_hash_table_lookup(od->friends, buddyName))) {
 		
-		NSString		*statusMsgString = nil;
-		NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString"];
+		NSString		*statusName = nil;
+		NSString		*statusMessage = nil;
+		AIStatusType	statusType = ((f->status != YAHOO_STATUS_AVAILABLE) ? AIAwayStatusType : AIAvailableStatusType);		
 		
 		if (f->status == YAHOO_STATUS_IDLE){
-			/*
+#warning Idle time may not work.
 			 //Now idle
 			 int		idle = f->idle;
 			 NSDate	*idleSince;
 			 
 			 NSLog(@"%@ YAHOO_STATUS_IDLE %i (%d)",[theContact UID],idle,idle);
 			 
-			 if (idle != -1){
+			 if(idle != -1){
 				 idleSince = [NSDate dateWithTimeIntervalSinceNow:-idle];
 				 NSLog(@"So that's %i minutes ago",([[NSDate date] timeIntervalSinceDate:idleSince]/60));
 			 }else{
@@ -193,55 +194,74 @@
 			 [theContact setStatusObject:idleSince
 								  forKey:@"IdleSince"
 								  notify:NO];
-			 */
-			
 		}else{
-			if (f->msg != NULL) {
-				statusMsgString = [NSString stringWithUTF8String:f->msg];
+			if(f->msg != NULL){
+				statusMessage = [NSString stringWithUTF8String:f->msg];
 
-			} else if (f->status != YAHOO_STATUS_AVAILABLE) {
-				static NSDictionary		*presetStatusesDictionary = nil;
-				if (!presetStatusesDictionary){
-					presetStatusesDictionary = [[NSDictionary dictionaryWithObjectsAndKeys:
-						STATUS_DESCRIPTION_BRB,				[NSNumber numberWithInt:YAHOO_STATUS_BRB],
-						STATUS_DESCRIPTION_BUSY,			[NSNumber numberWithInt:YAHOO_STATUS_BUSY],
-						STATUS_DESCRIPTION_NOT_AT_HOME,		[NSNumber numberWithInt:YAHOO_STATUS_NOTATHOME],
-						STATUS_DESCRIPTION_NOT_AT_DESK,		[NSNumber numberWithInt:YAHOO_STATUS_NOTATDESK],
-						STATUS_DESCRIPTION_NOT_IN_OFFICE,	[NSNumber numberWithInt:YAHOO_STATUS_NOTINOFFICE],
-						STATUS_DESCRIPTION_PHONE,			[NSNumber numberWithInt:YAHOO_STATUS_ONPHONE],
-						STATUS_DESCRIPTION_VACATION,		[NSNumber numberWithInt:YAHOO_STATUS_ONVACATION],
-						STATUS_DESCRIPTION_LUNCH,			[NSNumber numberWithInt:YAHOO_STATUS_OUTTOLUNCH],
-						STATUS_DESCRIPTION_STEPPED_OUT,		[NSNumber numberWithInt:YAHOO_STATUS_STEPPEDOUT],
-						STATUS_DESCRIPTION_INVISIBLE,		[NSNumber numberWithInt:YAHOO_STATUS_INVISIBLE],nil] retain];
-				}
-				
-				statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:f->status]];
-			}
+			}else if(f->status != YAHOO_STATUS_AVAILABLE){
+				switch(f->status){
+					case YAHOO_STATUS_BRB:
+						statusName = STATUS_NAME_BRB;
+						statusMessage = STATUS_DESCRIPTION_BRB;
+						break;
 
-			//Ensure the away/not away is handled properly by double checking here.
-			[self _updateAwayOfContact:theContact 
-								toAway:(f->status != YAHOO_STATUS_AVAILABLE)];			
-		}
-		
-		if (statusMsgString && [statusMsgString length]) {
-			if (![statusMsgString isEqualToString:oldStatusMsgString]) {
-				NSAttributedString *attrStr;
-				
-				attrStr = [[NSAttributedString alloc] initWithString:statusMsgString];
-				
-				[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
-				[theContact setStatusObject:attrStr forKey:@"StatusMessage" notify:NO];
-				
-				[attrStr release];
-			}
+					case YAHOO_STATUS_BUSY:
+						statusName = STATUS_NAME_BUSY;
+						statusMessage = STATUS_DESCRIPTION_BUSY;
+						break;
+
+					case YAHOO_STATUS_NOTATHOME:
+						statusName = STATUS_NAME_NOT_AT_HOME;
+						statusMessage = STATUS_DESCRIPTION_NOT_AT_HOME;
+						break;
+
+					case YAHOO_STATUS_NOTATDESK:
+						statusName = STATUS_NAME_NOT_AT_DESK;
+						statusMessage = STATUS_DESCRIPTION_NOT_AT_DESK;
+						break;
+
+					case YAHOO_STATUS_NOTINOFFICE:
+						statusName = STATUS_NAME_NOT_IN_OFFICE;
+						statusMessage = STATUS_DESCRIPTION_NOT_IN_OFFICE;
+						break;
+
+					case YAHOO_STATUS_ONPHONE:
+						statusName = STATUS_NAME_PHONE;
+						statusMessage = STATUS_DESCRIPTION_PHONE;
+						break;
+
+					case YAHOO_STATUS_ONVACATION:
+						statusName = STATUS_NAME_VACATION;
+						statusMessage = STATUS_DESCRIPTION_VACATION;
+						break;
 			
-		} else if (oldStatusMsgString && [oldStatusMsgString length]) {
-			//If we had a message before, remove it
-			[theContact setStatusObject:nil forKey:@"StatusMessageString" notify:NO];
-			[theContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
+					case YAHOO_STATUS_OUTTOLUNCH:
+						statusName = STATUS_NAME_LUNCH;
+						statusMessage = STATUS_DESCRIPTION_LUNCH;
+						break;
+
+					case YAHOO_STATUS_STEPPEDOUT:
+						statusName = STATUS_NAME_STEPPED_OUT;
+						statusMessage = STATUS_DESCRIPTION_STEPPED_OUT;
+						break;
+
+					case YAHOO_STATUS_INVISIBLE:
+						statusName = STATUS_NAME_INVISIBLE;
+						statusMessage = STATUS_DESCRIPTION_INVISIBLE;
+						statusType = AIInvisibleStatusType; /* Invisible has a special status type */
+						break;
+				}
+			}			
 		}
 		
-		//apply changes
+		[theContact setStatusWithName:statusName
+						   statusType:statusType
+						statusMessage:(statusMessage ?
+									   [[[NSAttributedString alloc] initWithString:statusMessage] autorelease]:
+									   nil)
+							   notify:NotifyLater];
+		
+		//Apply the change
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
 }
@@ -260,7 +280,6 @@
  *
  * @result The gaim status equivalent
  */
-#warning msn invisible = "Hidden"
 - (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
 						  message:(NSAttributedString **)statusMessage
 {
@@ -278,23 +297,43 @@
 			
 		case AIAwayStatusType:
 		{
-			if ([statusName isEqualToString:STATUS_NAME_BRB])
+			NSString	*statusMessageString = (*statusMessage ? [*statusMessage string] : @"");
+
+			if (([statusName isEqualToString:STATUS_NAME_BRB]) ||
+				([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_BRB] == NSOrderedSame))
 				gaimStatusType = "Be Right Back";
-			else if ([statusName isEqualToString:STATUS_NAME_BUSY])
+			else if (([statusName isEqualToString:STATUS_NAME_BUSY]) ||
+					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_BUSY] == NSOrderedSame))
 				gaimStatusType = "Busy";
-			else if ([statusName isEqualToString:STATUS_NAME_NOT_AT_HOME])
+			else if (([statusName isEqualToString:STATUS_NAME_NOT_AT_HOME]) ||
+					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_NOT_AT_HOME] == NSOrderedSame))
 				gaimStatusType = "Not At Home";
-			else if ([statusName isEqualToString:STATUS_NAME_NOT_AT_DESK])
+			else if (([statusName isEqualToString:STATUS_NAME_NOT_AT_DESK]) ||
+				([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_NOT_AT_DESK] == NSOrderedSame))
 				gaimStatusType = "Not At Desk";
-			else if ([statusName isEqualToString:STATUS_NAME_PHONE])
+			else if (([statusName isEqualToString:STATUS_NAME_PHONE]) ||
+					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_PHONE] == NSOrderedSame))
 				gaimStatusType = "On The Phone";
-			else if ([statusName isEqualToString:STATUS_NAME_VACATION])
+			else if (([statusName isEqualToString:STATUS_NAME_VACATION]) ||
+					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_VACATION] == NSOrderedSame))
 				gaimStatusType = "On Vacation";
-			else if ([statusName isEqualToString:STATUS_NAME_LUNCH])
+			else if (([statusName isEqualToString:STATUS_NAME_LUNCH]) ||
+					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_LUNCH] == NSOrderedSame))
 				gaimStatusType = "Out To Lunch";
-			else if ([statusName isEqualToString:STATUS_NAME_STEPPED_OUT])
+			else if (([statusName isEqualToString:STATUS_NAME_STEPPED_OUT]) ||
+					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_STEPPED_OUT] == NSOrderedSame))
 				gaimStatusType = "Stepped Out";
 
+			break;
+		}
+			
+		case AIInvisibleStatusType:
+		{
+			gaimStatusType = "Invisible";
+			
+			//We must clear the status message to enter an invisible state
+			*statusMessage = nil;
+			
 			break;
 		}
 	}

@@ -59,4 +59,38 @@
 	return NO;
 }
 
+/*!
+* @brief Return the gaim status type to be used for a status
+ *
+ * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer
+ * to the status message.  This method should handle any status whose statusNname this service set as well as any statusName
+ * defined in  AIStatusController.h (which will correspond to the services handled by Adium by default).
+ * It should also handle a status name not specified in either of these places with a sane default, most likely by loooking at
+ * [statusState statusType] for a general idea of the status's type.
+ *
+ * @param statusState The status for which to find the gaim status equivalent
+ * @param statusMessage A pointer to the statusMessage.  Set *statusMessage to nil if it should not be used directly for this status.
+ *
+ * @result The gaim status equivalent
+ */
+- (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
+						  message:(NSAttributedString **)statusMessage
+{
+	AIStatusType	statusType = [statusState statusType];
+	char			*gaimStatusType = NULL;
+	
+	switch(statusType){
+		case AIAvailableStatusType:
+			gaimStatusType = "Online";
+			break;
+		case AIInvisibleStatusType:
+			gaimStatusType = "Hidden";
+			break;
+	}
+
+	//If we didn't get a gaim status type, request one from super
+	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
+	
+	return gaimStatusType;
+}
 @end

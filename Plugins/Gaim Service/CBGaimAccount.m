@@ -298,11 +298,18 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
 {
-	NSNumber *storedValue = [theContact statusObjectForKey:@"Away"];
-	if((!newAway && (storedValue == nil)) || newAway != [storedValue boolValue]) {
-		[theContact setStatusObject:(newAway ? [NSNumber numberWithBool:YES] : nil) forKey:@"Away" notify:NO];
-		
-		//Apply any changes
+	NSLog(@"!!! %@ : %i",theContact,newAway);
+	
+	AIStatusType oldStatusType = [[theContact statusState] statusType];
+	AIStatusType newStatusType = (newAway ? AIAwayStatusType : AIAvailableStatusType);
+	
+	if(oldStatusType != newStatusType){
+		[theContact setStatusWithName:nil
+						   statusType:newStatusType
+						statusMessage:nil
+							   notify:NotifyLater];
+
+		//Apply the change
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
 }
@@ -1682,8 +1689,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[self setStatusObject:nil forKey:@"Online" notify:NO];
 	
 	//Clear status objects which don't make sense for a disconnected account
-	[self setStatusObject:nil forKey:@"StatusMessage" notify:NO];
-	[self setStatusObject:nil forKey:@"Away" notify:NO];
 	[self setStatusObject:nil forKey:@"TextProfile" notify:NO];
 	
 	//Apply any changes
@@ -1766,8 +1771,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			@"Offline",
 			@"IdleSince",
 			@"IdleManuallySet",
-			@"Away",
-			@"AwayMessage",
 			@"TextProfile",
 			@"DefaultUserIconFilename",
 			KEY_ACCOUNT_CHECK_MAIL,
@@ -1867,6 +1870,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			gaimStatusType = "Available";
 			break;
 		case AIAwayStatusType:
+		case AIInvisibleStatusType: /* Invisible defaults to just being an away status */
 			gaimStatusType = GAIM_AWAY_CUSTOM;
 			//If we make it here, and we don't have a status message, generate one from the status controller's description.
 			if((*statusMessage == nil) || ([*statusMessage length] == 0)){
@@ -1894,9 +1898,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[gaimThread setGaimStatusType:gaimStatusType 
 					  withMessage:statusMessage
 						onAccount:self];
-
-	//Now set invisibility
-	[self setAccountInvisibleTo:[statusState invisible]];
 }
 
 //Set our idle (Pass nil for no idle)
@@ -1907,27 +1908,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//We now should update our idle status object
 	[self setStatusObject:([idleSince timeIntervalSinceNow] ? idleSince : nil)
 				   forKey:@"IdleSince" notify:YES];
-}
-
-/*!
- * @brief Set this account to an invisibility state
- *
- * Supported property keys must contain "Invisible" for this code to have any effecy
- *
- * @param isInvisible YES if the account is now invisible, NO if it is now visible
- */
-- (void)setAccountInvisibleTo:(BOOL)isInvisible
-{
-	if([[self supportedPropertyKeys] containsObject:@"Invisible"]){
-		if(isInvisible != [[self statusObjectForKey:@"Invisible"] boolValue]){
-			[gaimThread setInvisible:isInvisible onAccount:self];
-
-			[self setStatusObject:[NSNumber numberWithBool:isInvisible]
-						   forKey:@"Invisible"
-						   notify:NotifyNever];
-		}
-	}
-#warning Evan: We lose away/available messages when going to and from invisible.  Will want to re-set these after changing I think.
 }
 
 //Set the profile, then invoke the passed invocation to return control to the target/selector specified
@@ -2269,7 +2249,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	static NSArray *contactStatusFlagsArray = nil;
 	
 	if (!contactStatusFlagsArray)
-		contactStatusFlagsArray = [[NSArray alloc] initWithObjects:@"Online",@"Warning",@"IdleSince",@"Signon Date",@"Away",@"Client",nil];
+		contactStatusFlagsArray = [[NSArray alloc] initWithObjects:@"Online",@"Warning",@"IdleSince",
+			@"Signon Date",@"StatusState",@"Client",nil];
 	
 	return contactStatusFlagsArray;
 }

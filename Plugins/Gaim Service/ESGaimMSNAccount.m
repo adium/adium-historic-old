@@ -294,49 +294,52 @@
 {
 	GaimBuddy	*buddy;
 	const char	*uidUTF8String = [[theContact UID] UTF8String];
-	
-	static NSDictionary		*presetStatusesDictionary = nil;
-	
-	if (!presetStatusesDictionary){
-		/* Only define preset statuses which we actually want to show a string for. */
-		presetStatusesDictionary = [[NSDictionary dictionaryWithObjectsAndKeys:
-			STATUS_DESCRIPTION_BRB,				[NSNumber numberWithInt:MSN_BRB],
-			STATUS_DESCRIPTION_BUSY,			[NSNumber numberWithInt:MSN_BUSY],
-			STATUS_DESCRIPTION_PHONE,			[NSNumber numberWithInt:MSN_PHONE],
-			STATUS_DESCRIPTION_LUNCH,			[NSNumber numberWithInt:MSN_LUNCH],nil] retain];
-	}
-	
+
 	if ((gaim_account_is_connected(account)) &&
 		(buddy = gaim_find_buddy(account, uidUTF8String))) {
 
-		MsnAwayType type = MSN_AWAY_TYPE(buddy->uc);
+		//Retrieve the current status string
+		NSString		*statusName = nil;
+		NSString		*statusMessage = nil;
+		AIStatusType	statusType = ((buddy->uc & UC_UNAVAILABLE) ? AIAwayStatusType : AIAvailableStatusType);		
+		MsnAwayType		gaimMsnAwayType = MSN_AWAY_TYPE(buddy->uc);
 
-		NSString		*statusMsgString = nil;
-		NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString"];
-		
-		statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:type]];
-
-		if (statusMsgString && [statusMsgString length]) {
-			if (![statusMsgString isEqualToString:oldStatusMsgString]) {
-				NSAttributedString *attrStr;
+		switch(gaimMsnAwayType){
+			case MSN_BRB:
+				statusName = STATUS_NAME_BRB;
+				statusMessage = STATUS_DESCRIPTION_BRB;
+				break;
+			case MSN_BUSY:
+				statusName = STATUS_NAME_BUSY;
+				statusMessage = STATUS_DESCRIPTION_BUSY;
+				break;
 				
-				attrStr = [[NSAttributedString alloc] initWithString:statusMsgString];
+			case MSN_PHONE:
+				statusName = STATUS_NAME_PHONE;
+				statusMessage = STATUS_DESCRIPTION_PHONE;
+				break;
 				
-				[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
-				[theContact setStatusObject:attrStr forKey:@"StatusMessage" notify:NO];
-				
-				[attrStr release];
-			}
-			
-		} else if (oldStatusMsgString && [oldStatusMsgString length]) {
-			//If we had a message before, remove it
-			[theContact setStatusObject:nil forKey:@"StatusMessageString" notify:NO];
-			[theContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
+			case MSN_LUNCH:
+				statusName = STATUS_NAME_LUNCH;
+				statusMessage = STATUS_DESCRIPTION_LUNCH;
+				break;
 		}
 		
-		//apply changes
+		[theContact setStatusWithName:statusName
+						   statusType:statusType
+						statusMessage:(statusMessage ?
+									   [[[NSAttributedString alloc] initWithString:statusMessage] autorelease]:
+									   nil)
+							   notify:NotifyLater];
+		
+		//Apply the change
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
+}
+
+- (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
+{
+	[self updateStatusMessage:theContact];
 }
 
 /*!
@@ -353,7 +356,6 @@
  *
  * @result The gaim status equivalent
  */
-#warning msn invisible = "Hidden"
 - (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
 						  message:(NSAttributedString **)statusMessage
 {
@@ -368,22 +370,32 @@
 				gaimStatusType = "Available";
 			break;
 		}
-			
+
 		case AIAwayStatusType:
 		{
-			if([statusName isEqualToString:STATUS_NAME_AWAY])
-				gaimStatusType = "Away From Computer";
-			else if ([statusName isEqualToString:STATUS_NAME_BRB])
+			NSString	*statusMessageString = (*statusMessage ? [*statusMessage string] : @"");
+
+			if (([statusName isEqualToString:STATUS_NAME_BRB]) ||
+					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_BRB] == NSOrderedSame))
 				gaimStatusType = "Be Right Back";
-			else if ([statusName isEqualToString:STATUS_NAME_BUSY])
+			else if (([statusName isEqualToString:STATUS_NAME_BUSY]) ||
+					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_BUSY] == NSOrderedSame))
 				gaimStatusType = "Busy";
-			else if ([statusName isEqualToString:STATUS_NAME_PHONE])
+			else if (([statusName isEqualToString:STATUS_NAME_PHONE]) ||
+					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_PHONE] == NSOrderedSame))
 				gaimStatusType = "On The Phone";
-			else if ([statusName isEqualToString:STATUS_NAME_LUNCH])
+			else if (([statusName isEqualToString:STATUS_NAME_LUNCH]) ||
+					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_LUNCH] == NSOrderedSame))
 				gaimStatusType = "Out To Lunch";
-			
+			else if([statusName isEqualToString:STATUS_NAME_AWAY]) /* Check last so statusMessageString has been properly checked. */
+				gaimStatusType = "Away From Computer";
+
 			break;
 		}
+			
+		case AIInvisibleStatusType:
+			gaimStatusType = "Hidden";
+			break;
 	}
 	
 	//If we are setting one of our custom statuses, don't use a status message
@@ -391,7 +403,7 @@
 
 	//If we didn't get a gaim status type, request one from super
 	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
-	
+
 	return gaimStatusType;
 }
 

@@ -79,22 +79,16 @@
 	}
 }
 
-//Away and away return
-- (oneway void)updateWentAway:(AIListContact *)theContact withData:(void *)data
+#pragma mark Contact status
+- (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
 {
-	[super updateWentAway:theContact withData:data];
-	[theContact setStatusObject:[self statusMessageForContact:theContact]
-						 forKey:@"StatusMessage"
-						 notify:YES];
-}
-
-- (oneway void)updateAwayReturn:(AIListContact *)theContact withData:(void *)data
-{
-	[super updateWentAway:theContact withData:data];
+	[theContact setStatusWithName:nil
+					   statusType:(newAway ? AIAwayStatusType : AIAvailableStatusType)
+					statusMessage:[self statusMessageForContact:theContact]
+						   notify:NotifyLater];
 	
-	[theContact setStatusObject:[self statusMessageForContact:theContact]
-						 forKey:@"StatusMessage"
-						 notify:YES];
+	//Apply the change
+	[theContact notifyOfChangedStatusSilently:silentAndDelayed];	
 }
 
 - (NSAttributedString *)statusMessageForContact:(AIListContact *)theContact
@@ -155,6 +149,10 @@
 			
 			break;
 		}
+			
+		case AIInvisibleStatusType:
+			gaimStatusType = AGG_STATUS_INVISIBLE;
+			break;
 	}
 
 	/* Gadu-Gadu supports status messages along with the status types, so let our message stay */
