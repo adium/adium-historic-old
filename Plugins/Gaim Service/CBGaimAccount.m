@@ -649,11 +649,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (oneway void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
 {	
-	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
+	GaimMessageFlags	flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
+	NSString			*source = [messageDict objectForKey:@"Source"];
 
-	AIListContact			*sourceContact = [self _contactWithUID:[messageDict objectForKey:@"Source"]];
-
-	if ((flags & GAIM_MESSAGE_SEND) != 0) {
+	if ((flags & GAIM_MESSAGE_SEND) != 0){
 		/*
 		 * TODO
 		 * gaim is telling us that our message was sent successfully. Some
@@ -663,13 +662,19 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		return;
 	}
 	
-	GaimDebug (@"receivedMultiChatMessage: Received %@ from %@ in %s",[messageDict objectForKey:@"Message"],[sourceContact UID],[chat name]);
+	//We display the message locally when it is sent.  If the protocol sends the message back to us, we should
+	//simply ignore it (MSN does this when a display name is set, for example).
+	if (![source isEqualToString:[self UID]]){
+		AIListContact		*sourceContact = [self _contactWithUID:source];
 		
-	[self _receivedMessage:[messageDict objectForKey:@"Message"]
-					inChat:chat 
-		   fromListContact:sourceContact 
-					 flags:flags
-					  date:[messageDict objectForKey:@"Date"]];
+		GaimDebug (@"receivedMultiChatMessage: Received %@ from %@ in %@",[messageDict objectForKey:@"Message"],[sourceContact UID],[chat name]);
+		
+		[self _receivedMessage:[messageDict objectForKey:@"Message"]
+						inChat:chat 
+			   fromListContact:sourceContact 
+						 flags:flags
+						  date:[messageDict objectForKey:@"Date"]];
+	}
 }
 
 - (void)_receivedMessage:(NSString *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date
