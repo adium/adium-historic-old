@@ -27,6 +27,7 @@
 - (AIListObject *)listObject;
 
 - (NSArray *)contentObjectArray;
+- (BOOL)hasContent;
 - (void)setContentArray:(NSArray *)inContentArray;
 - (void)addContentObject:(AIContentObject *)inObject;
 - (void)appendContentArray:(NSArray *)inContent;
