@@ -33,7 +33,7 @@ LNAboutBoxController *sharedInstance = nil;
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
 {
 
-    numberOfDuckClicks = 0;
+    numberOfDuckClicks = -1;
 
     [super initWithWindowNibName:windowNibName owner:self];
 
@@ -120,7 +120,7 @@ LNAboutBoxController *sharedInstance = nil;
     numberOfDuckClicks++;
 
     if (numberOfDuckClicks == [avatarArray count]) {
-        numberOfDuckClicks = 0;
+        numberOfDuckClicks = -1;
         [button_duckIcon setImage:[AIImageUtilities imageNamed:@"Awake" forClass:[self class]]];
         [[owner soundController] playSoundNamed:@"/Adium/Feather Ruffle.aif"];
     } else {
