@@ -46,7 +46,9 @@
 
 		if( shouldRebuildChatList ) {
 			AIListObject *object = [[adium contactController] selectedListObjectInContactList];
-			[menuItem_inviteToChat setSubmenu:[self groupChatMenuForContact:object]];
+			if([object isKindOfClass:[AIListContact class]]){
+				[menuItem_inviteToChat setSubmenu:[self groupChatMenuForContact:(AIListContact *)object]];
+			}
 		}
 		return ([[menuItem_inviteToChat submenu] numberOfItems] > 0);
 
@@ -55,7 +57,9 @@
 		
 		if( shouldRebuildChatList ) {
 			AIListContact *object = [[adium menuController] contactualMenuContact];
-			[menuItem_inviteToChatContext setSubmenu:[self groupChatMenuForContact:object]];
+			if([object isKindOfClass:[AIListContact class]]){
+				[menuItem_inviteToChatContext setSubmenu:[self groupChatMenuForContact:(AIListContact *)object]];
+			}
 		}
 		return ([[menuItem_inviteToChatContext submenu] numberOfItems] > 0);
 
