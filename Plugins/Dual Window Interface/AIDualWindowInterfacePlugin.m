@@ -43,8 +43,6 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_DEFAULT_PREFS forClass:[self class]] 
 										  forGroup:PREF_GROUP_INTERFACE];
 		
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_WINDOW_DEFAULT_PREFS forClass:[self class]] 
-										  forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];    
 	preferenceMessageController = [[ESDualWindowMessageWindowPreferences preferencePane] retain];
 	preferenceMessageAdvController = [[ESDualWindowMessageAdvancedPreferences preferencePane] retain];
 
