@@ -232,6 +232,7 @@
 				3499F45106309AC80035B468,
 				C4243CAD0638EEFA007AD2D9,
 				4947F5CB0655E85200B791E5,
+				C4E0B3DF0659FDE700F75176,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -292,6 +293,7 @@
 				346C9C5306004525000F5A8A,
 				C4243CA00638EEFA007AD2D9,
 				4947F5BC0655E85200B791E5,
+				C4E0B3D30659FDE700F75176,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -8684,9 +8686,9 @@
 		};
 		4947F5EA0655E90C00B791E5 = {
 			children = (
-				6C9F8DD20659E62D00A43F15,
-				6C9F8DD30659E62E00A43F15,
-				6C9F8DD40659E62E00A43F15,
+				C4E0B40E0659FE4A00F75176,
+				C4E0B40F0659FE4A00F75176,
+				C4E0B4100659FE4A00F75176,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -17780,51 +17782,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		6C9F8DD20659E62D00A43F15 = {
-			fileType = "compiled.mach-o.dylib";
-			isa = PBXReferenceProxy;
-			path = libezv.dylib;
-			refType = 3;
-			remoteRef = 6C9F904C0659E63C00A43F15;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6C9F8DD30659E62E00A43F15 = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libexpat.a;
-			refType = 3;
-			remoteRef = 6C9F904D0659E63C00A43F15;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6C9F8DD40659E62E00A43F15 = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 6C9F904E0659E63C00A43F15;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6C9F904C0659E63C00A43F15 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
-		};
-		6C9F904D0659E63C00A43F15 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
-			remoteInfo = expat;
-		};
-		6C9F904E0659E63C00A43F15 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
-		};
 		6CC851C10574B314008A5F66 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -20221,6 +20178,212 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		C4E0B3D30659FDE700F75176 = {
+			buildPhases = (
+				C4E0B3D60659FDE700F75176,
+				C4E0B3D80659FDE700F75176,
+				C4E0B3D90659FDE700F75176,
+				C4E0B3DB0659FDE700F75176,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_DEVELOPER_DIR)/SDKs/MacOSX10.2.8.sdk/System/Library/Frameworks\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "Plists/Contact Notes.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
+				PRODUCT_NAME = "Contact Notes";
+				REZ_EXECUTABLE = NO;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				C4E0B3D40659FDE700F75176,
+				C4E0B3D50659FDE700F75176,
+			);
+			isa = PBXNativeTarget;
+			name = "Contact Notes";
+			productName = "Latex Plugin";
+			productReference = C4E0B3DF0659FDE700F75176;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Latex Plugin</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Latex_Plugin</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+	<key>CSResourcesFileMapped</key>
+	<string>yes</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		C4E0B3D40659FDE700F75176 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = B72537BD058C45CF004BA969;
+		};
+		C4E0B3D50659FDE700F75176 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = B72537BF058C45D3004BA969;
+		};
+		C4E0B3D60659FDE700F75176 = {
+			buildActionMask = 2147483647;
+			files = (
+				C4E0B43B0659FE6E00F75176,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4E0B3D80659FDE700F75176 = {
+			buildActionMask = 2147483647;
+			files = (
+				C4E0B43D0659FE7600F75176,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4E0B3D90659FDE700F75176 = {
+			buildActionMask = 2147483647;
+			files = (
+				C4E0B43C0659FE7200F75176,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4E0B3DB0659FDE700F75176 = {
+			buildActionMask = 2147483647;
+			files = (
+				C4E0B43A0659FE6200F75176,
+				C4E0B3DC0659FDE700F75176,
+				C4E0B3DD0659FDE700F75176,
+				C4E0B3DE0659FDE700F75176,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4E0B3DC0659FDE700F75176 = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4E0B3DD0659FDE700F75176 = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4E0B3DE0659FDE700F75176 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4E0B3DF0659FDE700F75176 = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Contact Notes.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C4E0B40E0659FE4A00F75176 = {
+			fileType = "compiled.mach-o.dylib";
+			isa = PBXReferenceProxy;
+			path = libezv.dylib;
+			refType = 3;
+			remoteRef = C4E0B43E0659FE7C00F75176;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C4E0B40F0659FE4A00F75176 = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libexpat.a;
+			refType = 3;
+			remoteRef = C4E0B43F0659FE7C00F75176;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C4E0B4100659FE4A00F75176 = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = C4E0B4400659FE7C00F75176;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C4E0B43A0659FE6200F75176 = {
+			fileRef = 4BED6DB305D5F49200ACFD49;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4E0B43B0659FE6E00F75176 = {
+			fileRef = C4382548062E798500F5A31D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4E0B43C0659FE7200F75176 = {
+			fileRef = C4382549062E798500F5A31D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4E0B43D0659FE7600F75176 = {
+			fileRef = C438254A062E798500F5A31D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4E0B43E0659FE7C00F75176 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
+			remoteInfo = libezv;
+		};
+		C4E0B43F0659FE7C00F75176 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
+			remoteInfo = expat;
+		};
+		C4E0B4400659FE7C00F75176 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
 		};
 //C40
 //C41
