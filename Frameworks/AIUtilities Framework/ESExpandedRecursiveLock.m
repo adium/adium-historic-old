@@ -13,8 +13,9 @@
 
 - (id)init
 {
-	[super init];
-	locksByCurrentOwner = 0;
+	if((self = [super init])) {
+		locksByCurrentOwner = 0;
+	}
 	return(self);
 }
 - (void)lock
