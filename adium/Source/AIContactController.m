@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.113 2004/03/10 16:51:37 adamiser Exp $
+// $Id: AIContactController.m,v 1.114 2004/03/12 02:30:26 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -429,9 +429,10 @@
 //Performs any delayed list object/handle updates
 - (void)_performDelayedUpdates:(NSTimer *)timer
 {
-    //If updates have been delayed, we process them.  If not, we turn off the delayed update timer.
-	if(delayedUpdateTimer && (delayedStatusChanges || delayedAttributeChanges || delayedContentChanges)){
-		//Send out global attribute & status changed notifications (to cover any delayed updates)
+	BOOL	updatesOccured = (delayedStatusChanges || delayedAttributeChanges || delayedContentChanges);
+	
+	//Send out global attribute & status changed notifications (to cover any delayed updates)
+	if(updatesOccured){
 		if(delayedAttributeChanges){
 			[[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:nil];
 		}
@@ -446,9 +447,11 @@
 		delayedStatusChanges = 0;
 		delayedAttributeChanges = 0;
 		delayedContentChanges = 0;
-		
-    }else{
-		//Disable any delayed update timer
+	}
+	
+    //If no more updates are left to process, disable the update timer
+	//If there are no delay update requests, remove the hold
+	if(!delayedUpdateTimer || !updatesOccured){
 		if(delayedUpdateTimer){
 			[delayedUpdateTimer invalidate];
 			[delayedUpdateTimer release];
