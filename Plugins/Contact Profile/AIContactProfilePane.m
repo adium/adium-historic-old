@@ -88,7 +88,7 @@
 											 selector:@selector(gotFilteredProfile:context:)
 											  context:listObject];
 	//Away & Status
-	[[adium contentController] filterAttributedString:[listObject statusObjectForKey:@"StatusMessage"]
+	[[adium contentController] filterAttributedString:[[listObject statusState] statusMessage]
 									  usingFilterType:AIFilterDisplay
 											direction:AIFilterIncoming
 										filterContext:listObject
