@@ -68,10 +68,10 @@
 	NSMenuItem		*menuItem;
 
 	AIStatusType	activeStatusType = [[adium statusController] activeStatusType];
-	AIStatusType	targetStatusType;
-	AIStatus		*targetStatusState;
+	AIStatusType	targetStatusType = AIAvailableStatusType;
+	AIStatus		*targetStatusState = nil;
 	BOOL			assignKeyEquivalents = NO;
-	BOOL			assignOptionCmdY;
+	BOOL			assignOptionCmdY = NO;
 	
 	if(activeStatusType == AIAvailableStatusType){
 		targetStatusType = AIAwayStatusType;

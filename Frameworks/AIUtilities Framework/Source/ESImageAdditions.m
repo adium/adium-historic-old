@@ -305,7 +305,7 @@
     FSRef       ref;
     NSImage     *closeImage = nil;
     
-    if(FSPathMakeRef([theFilePath fileSystemRepresentation], &ref, NULL) == noErr){
+    if(FSPathMakeRef((unsigned char *)[theFilePath fileSystemRepresentation], &ref, NULL) == noErr){
 		HFSUniStr255    forkName;
 		SInt16			refNum;
 		Handle			resource;
@@ -349,7 +349,7 @@
     FSRef       ref;
     NSImage     *closeImage = nil;
     
-    if(FSPathMakeRef([theFilePath fileSystemRepresentation], &ref, NULL) == noErr){
+    if(FSPathMakeRef((unsigned char *)[theFilePath fileSystemRepresentation], &ref, NULL) == noErr){
 		HFSUniStr255    forkName;
 		SInt16			refNum;
 		Handle			resource;

@@ -169,7 +169,7 @@ Note that extreme value can make your app crash..."  */
         error = GetVoiceDescription( &voiceSpec, &voiceDescription, sizeof(voiceDescription));
         if(error == noErr)
         {
-            NSString *voiceName = [NSString stringWithUTF8String:&(voiceDescription.name[1])];
+            NSString *voiceName = [NSString stringWithUTF8String:(char *)&(voiceDescription.name[1])];
             
             [voices addObject:voiceName];
         }
@@ -230,7 +230,7 @@ textBytes: LongInt): OSErr;*/
 
 	
 	if(error == noErr){
-		demoText = [NSString stringWithUTF8String:&(voiceDescription.comment[1])];
+		demoText = [NSString stringWithUTF8String:(char *)&(voiceDescription.comment[1])];
 	}
 	
 	return demoText;

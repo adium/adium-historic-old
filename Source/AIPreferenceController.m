@@ -702,9 +702,9 @@
 		OSStatus		err = noErr;
 		ICInstance		inst = NULL;
 		ICFileSpec		folder;
-		unsigned long	length = kICFileSpecHeaderSize;
+		long			length = kICFileSpecHeaderSize;
 		FSRef			ref;
-		unsigned char	path[1024];
+		char			path[1024];
 		
 		memset( path, 0, 1024 ); //clear path's memory range
 		
@@ -713,7 +713,7 @@
 			ICStop( inst );
 			
 			if(((err = FSpMakeFSRef(&folder.fss, &ref)) == noErr) &&
-			   ((err = FSRefMakePath(&ref, path, 1024)) == noErr) &&
+			   ((err = FSRefMakePath(&ref, (unsigned char *)path, 1024)) == noErr) &&
 			   ((path != NULL) && (strlen(path) > 0))){
 				userPreferredDownloadFolder = [NSString stringWithUTF8String:path];
 			}

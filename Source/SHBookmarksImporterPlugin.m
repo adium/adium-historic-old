@@ -109,6 +109,7 @@
 {
     [[adium notificationCenter] removeObserver:self];
 	[importer release]; importer = nil;
+	[super dealloc];
 }
 
 /*

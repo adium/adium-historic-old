@@ -19,7 +19,7 @@
 {
 	UInt8			thePath[PATH_MAX + 1];		// plus 1 for \0 terminator
 	
-	return (FSRefMakePath ( aFSRef, thePath, PATH_MAX ) == noErr) ? [NSString stringWithUTF8String:thePath] : nil;
+	return (FSRefMakePath ( aFSRef, thePath, PATH_MAX ) == noErr) ? [NSString stringWithUTF8String:(char *)thePath] : nil;
 }
 
 /*
@@ -27,7 +27,7 @@
  */
 - (BOOL)getFSRef:(FSRef *)aFSRef
 {
-	return FSPathMakeRef( [self UTF8String], aFSRef, NULL ) == noErr;
+	return FSPathMakeRef( (unsigned char *)[self UTF8String], aFSRef, NULL ) == noErr;
 }
 
 /*

@@ -42,7 +42,7 @@
 - (NSArray *)_loadScriptsFromDirectory:(NSString *)dirPath intoUsageArray:(NSMutableArray *)useArray;
 - (id)_filterString:(NSString *)inString originalObject:(id)originalObject;
 - (NSString *)_executeScript:(NSMutableDictionary *)infoDict withArguments:(NSArray *)arguments;
-- (void)_replaceKeyword:(NSString *)keyword withScript:(NSMutableDictionary *)infoDict inString:(NSString *)inString inAttributedString:(id)toObject;
+- (void)_replaceKeyword:(NSString *)keyword withScript:(NSMutableDictionary *)infoDict inString:(NSString *)inString inAttributedString:(NSMutableAttributedString *)toObject;
 - (NSArray *)_argumentsFromString:(NSString *)inString forScript:(NSMutableDictionary *)scriptDict;
 - (void)buildScriptMenu;
 - (void)registerToolbarItem;

@@ -34,8 +34,8 @@
 + (SLGaimCocoaAdapter *)sharedInstance;
 + (NDRunLoopMessenger *)gaimThreadMessenger;
 
-- (void)addAdiumAccount:(id)adiumAccount;
-- (void)removeAdiumAccount:(id)adiumAccount;
+- (void)addAdiumAccount:(CBGaimAccount *)adiumAccount;
+- (void)removeAdiumAccount:(CBGaimAccount *)adiumAccount;
 - (BOOL)sendEncodedMessage:(NSString *)encodedMessage
 		   originalMessage:(NSString *)originalMessage 
 			   fromAccount:(id)sourceAccount
@@ -45,7 +45,7 @@
 - (oneway void)sendTyping:(AITypingState)typingState inChat:(AIChat *)chat;
 
 - (oneway void)addUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName;
-- (oneway void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:groupName;
+- (oneway void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName;
 - (oneway void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName;
 - (oneway void)renameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName;
 - (oneway void)deleteGroup:(NSString *)groupName onAccount:(id)adiumAccount;

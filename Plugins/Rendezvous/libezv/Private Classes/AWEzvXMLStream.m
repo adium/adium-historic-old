@@ -278,7 +278,7 @@ void xml_char_data	(void *userData,
     /* create node and tree, then convert to XML text */
     xmlNode = CFXMLNodeCreate(NULL, kCFXMLNodeTypeElement, (CFStringRef)string, &xmlElementInfo, kCFXMLNodeCurrentVersion);
     xmlTree = CFXMLTreeCreateWithNode(NULL, xmlNode);
-    (CFDataRef)data = CFXMLTreeCreateXMLData(NULL, xmlTree);
+    data = CFXMLTreeCreateXMLData(NULL, xmlTree);
     
     /* now we create an NSString with our data */
     mutableString = [[[NSMutableString alloc] initWithCString:[data bytes] length:[data length]] autorelease];

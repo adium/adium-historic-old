@@ -277,7 +277,7 @@ static int nextChatNumber = 0;
 	preferredListObject = inObject;
 }
 
-- (AIListObject *)preferredListObject
+- (AIListContact *)preferredListObject
 {
 	return preferredListObject;
 }

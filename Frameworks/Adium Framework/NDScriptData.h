@@ -11,8 +11,6 @@
 
 @class	NDComponentInstance;
 
-extern const short		kScriptResourceID;
-
 /*!
 	@class NDScriptData
 	@abstract Class for representing script data <tt>OSAID</tt>

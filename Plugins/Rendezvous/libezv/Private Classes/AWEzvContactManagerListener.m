@@ -111,7 +111,8 @@
 - (void)connectionReceived:(NSNotification *)aNotification {
     NSFileHandle 	*incomingConnection = [[aNotification userInfo] objectForKey:NSFileHandleNotificationFileHandleItem];
     NSMutableString	*contactIdentifier;
-    int			fd, size;
+    int			fd;
+	socklen_t	size;
     struct sockaddr_in	remoteAddress;
     AWEzvXMLStream      *stream;
     AWEzvContact	*contact;

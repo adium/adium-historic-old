@@ -143,7 +143,7 @@
 										inObject);
 
 		NSString		*countString = nil;
-		int onlineObjects, totalObjects;
+		int onlineObjects = 0, totalObjects = 0;
 
 		//Obtain a count of online objects in this group
 		if(countOnlineObjects){
