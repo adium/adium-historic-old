@@ -281,7 +281,7 @@ static NSImage		*tabCloseFrontRollover = nil;
     NSDictionary    *eventData = [theEvent userData];
     NSView          *view = [eventData objectForKey:@"view"];
 
-	if ([theEvent modifierFlags] & NSControlKeyMask) {
+	if (([theEvent modifierFlags] & NSControlKeyMask) && !selected) {
 		[[tabViewItem tabView] selectTabViewItem:tabViewItem];
 	}
 	
