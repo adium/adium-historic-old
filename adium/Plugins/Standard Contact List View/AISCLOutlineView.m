@@ -138,12 +138,13 @@
     [column setResizable:NO];
 }
 
-//Prevent the display of a focus ring around the contact list
+//Prevent the display of a focus ring around the contact list in 10.3 and greater
+#ifdef MAC_OS_X_VERSION_10_3
 - (NSFocusRingType)focusRingType
 {
     return(NSFocusRingTypeNone);
 }
-
+#endif
 
 
 
