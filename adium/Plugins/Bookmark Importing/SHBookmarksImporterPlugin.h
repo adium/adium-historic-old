@@ -4,21 +4,18 @@
 //
 //  Created by Stephen Holt on Wed May 19 2004.
 
-#define rebuildBookmarkMenu
-// protocol bookmark importer classes must impliment
-@protocol SHBookmarkImporter
-+(id)newInstanceOfImporter;
-+(NSString *)importerTitle;
--(NSMenu *)parseBookmarksForOwner:(id)owner;    // returns a NSMenu with the full hierarchy
--(NSString *)menuTitle;                         // title for the menu item
--(BOOL)bookmarksExist;                          // if the bookmarks file exists
--(BOOL)bookmarksUpdated;                        // if the bookmarks file has been updated
-@end                                            //   since the last time parseBookmarksForOwner: has been called
+@protocol SHBookmarkImporter <NSObject>
++ (id)newInstanceOfImporter;
+- (NSArray *)availableBookmarks;	//All available bookmarks
+- (BOOL)bookmarksUpdated; 			//YES if bookmarks have changed since last call to availableBookmarks
+@end
 
-@interface SHBookmarksImporterPlugin : AIPlugin {
-    NSMutableArray  *importerArray;
-    NSLock          *bookmarksLock;
-    BOOL             singularMenu;
+@interface SHBookmarksImporterPlugin : AIPlugin {	
+	NSMenuItem   	*bookmarkRootMenuItem;
+	NSMenuItem   	*bookmarkRootContextualMenuItem;	
+
+	id <SHBookmarkImporter> 	importer;
+	BOOL						updatingMenu;
 }
 
 @end

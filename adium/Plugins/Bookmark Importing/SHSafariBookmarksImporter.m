@@ -20,68 +20,33 @@
 #define SAFARI_ROOT_MENU_TITLE  AILocalizedString(@"Safari",nil)
 
 @interface SHSafariBookmarksImporter(PRIVATE)
--(void)drillPropertyList:(id)inObject;
--(void)menuItemFromDict:(NSDictionary *)inDict;
+- (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems;
+- (NSDictionary *)hyperlinkForSafariBookmark:(NSDictionary *)inDict;
+- (NSArray *)drillPropertyList:(id)inObject;
 @end
 
 @implementation SHSafariBookmarksImporter
 
-static NSMenu   *safariBookmarksMenu;
-static NSMenu   *safariBookmarksSupermenu;
-static NSMenu   *safariTopMenu;
-
-static NSArray *emptyArray;
 + (id)newInstanceOfImporter
 {
-    return [[[self alloc] init] autorelease];
-}
-
-+(NSString *)importerTitle
-{
-    return SAFARI_ROOT_MENU_TITLE;
+    return([[[self alloc] init] autorelease]);
 }
 
 - (id)init
 {
-    [super init];
-    emptyArray = [[NSArray alloc] init];
-    
-    return self;
+	[super init];
+	lastModDate = nil;
+	return(self);
 }
 
--(NSMenu *)parseBookmarksForOwner:(id)inObject
+- (void)dealloc
 {
-    owner = inObject;
-    NSDictionary    *bookmarkDict = [NSDictionary dictionaryWithContentsOfFile:[SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath]];
-    
-    if(safariBookmarksMenu){
-        [safariBookmarksMenu removeAllItems];
-        [safariBookmarksMenu release];
-    }
-    
-    if (lastModDate) [lastModDate release];
-    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath] traverseLink:YES];
-    lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
-    
-    safariBookmarksMenu = [[[NSMenu alloc] initWithTitle:SAFARI_ROOT_MENU_TITLE] autorelease];
-    safariBookmarksSupermenu = safariBookmarksMenu;
-    safariTopMenu = safariBookmarksMenu;
-    [self drillPropertyList:bookmarkDict];
-        
-    return safariBookmarksMenu;
+	[lastModDate release];
+	[super dealloc];
 }
 
--(BOOL)bookmarksExist
-{
-    return [[NSFileManager defaultManager] fileExistsAtPath:[SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath]];
-}
-
--(NSString *)menuTitle
-{
-    return SAFARI_ROOT_MENU_TITLE;
-}
-
--(BOOL)bookmarksUpdated
+//Returns YES if the bookmarks have changed
+- (BOOL)bookmarksUpdated
 {
     NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath] traverseLink:YES];
     NSDate *modDate = [fileProps objectForKey:NSFileModificationDate];
@@ -89,61 +54,61 @@ static NSArray *emptyArray;
     return ![modDate isEqualToDate:lastModDate];
 }
 
-
--(void)drillPropertyList:(id)inObject
+//Return an array of the available bookmarks
+- (NSArray *)availableBookmarks
 {
-    if([inObject isKindOfClass:[NSDictionary class]]){
-        // for the list type, recurrsively call the "Children" NSArray
-        NSArray *childrenArray = [(NSDictionary *)inObject objectForKey:SAFARI_DICT_CHILD];
-        [self drillPropertyList:childrenArray? childrenArray : emptyArray];
-    }else if([inObject isKindOfClass:[NSArray class]]){
-        // if we're passed a NSArray object, it can contain both list and leaf dict types,
-        // so, we grab an enumerator from the array, and handle each case
-        NSEnumerator *enumerator = [(NSArray *)inObject objectEnumerator];
-        id outObject;
-        
-        while(outObject = [enumerator nextObject]){
-            if([[(NSDictionary *)outObject objectForKey:SAFARI_DICT_TYPE_KEY] isEqualToString:SAFARI_DICT_TYPE_LEAF]){
-                // if outObject is of type leaf, get it's menuItem, then add it to the local menu.
-                [self menuItemFromDict:outObject];
-            }else if([[(NSDictionary *)outObject objectForKey:SAFARI_DICT_TYPE_KEY] isEqualToString:SAFARI_DICT_TYPE_LIST]){
-                // if outObject is a list, then get the array it contains, then push the menu down.
-                safariBookmarksSupermenu = safariBookmarksMenu;
-                safariBookmarksMenu = [[[NSMenu alloc] initWithTitle:[(NSDictionary *)outObject objectForKey:SAFARI_DICT_TITLE]] autorelease];
-                
-                NSMenuItem *safariSubMenuItem = [[[NSMenuItem alloc] initWithTitle:[safariBookmarksMenu title]
-                                                                            target:owner
-                                                                            action:nil
-                                                                     keyEquivalent:@""] autorelease];
-                [safariBookmarksSupermenu addItem:safariSubMenuItem];
-                [safariBookmarksSupermenu setSubmenu:safariBookmarksMenu forItem:safariSubMenuItem];
-                [self drillPropertyList:outObject];
-            }
-        }
-        
-        if([safariBookmarksMenu isNotEqualTo:safariTopMenu]){
-            //so long as the supermenu exists, pop it up.
-            safariBookmarksMenu = safariBookmarksSupermenu;
-            safariBookmarksSupermenu = [safariBookmarksSupermenu supermenu];
-        }
-    }
+	NSString	*bookmarkPath = [SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath];
+	
+	//Open the bookmarks
+	NSDictionary *bookmarkDict = [NSDictionary dictionaryWithContentsOfFile:bookmarkPath];
+	
+	//Remember when they were last modified
+	NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarkPath traverseLink:YES];
+	[lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
+	
+	//Process them
+	return([self drillPropertyList:[bookmarkDict objectForKey:SAFARI_DICT_CHILD]]);
 }
 
--(void)menuItemFromDict:(NSDictionary *)inDict
+//Parse the safari bookmark file
+- (NSArray *)drillPropertyList:(id)inObject
 {
-    // for convienence, refer to the URIDictionary by it's own variable
-    NSDictionary *URIDict = [inDict objectForKey:SAFARI_DICT_URIDICT];
+	NSMutableArray	*array = [NSMutableArray array];
 
-    SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[[inDict objectForKey:SAFARI_DICT_URLSTRING] retain]
-                                                          withValidationStatus:SH_URL_VALID
-                                                                  parentString:[URIDict objectForKey:SAFARI_DICT_URI_TITLE]
-                                                                      andRange:NSMakeRange(0,[(NSString *)[URIDict objectForKey:SAFARI_DICT_URI_TITLE] length])] autorelease];
-    
-    [safariBookmarksMenu addItemWithTitle:[URIDict objectForKey:SAFARI_DICT_URI_TITLE]
-                                  target:owner
-                                  action:@selector(injectBookmarkFrom:)
-                           keyEquivalent:@""
-                       representedObject:markedLink];
+	if([inObject isKindOfClass:[NSArray class]]){
+        NSEnumerator *enumerator = [(NSArray *)inObject objectEnumerator];
+        NSDictionary *linkDict;
+		
+        while(linkDict = [enumerator nextObject]){
+            if([[linkDict objectForKey:SAFARI_DICT_TYPE_KEY] isEqualToString:SAFARI_DICT_TYPE_LEAF]){
+                //We found a link
+				[array addObject:[self hyperlinkForSafariBookmark:linkDict]];
+				
+			}else if([[linkDict objectForKey:SAFARI_DICT_TYPE_KEY] isEqualToString:SAFARI_DICT_TYPE_LIST]){
+				//We found an array of links
+				[array addObject:[self menuDictWithTitle:[linkDict objectForKey:SAFARI_DICT_TITLE]
+											   menuItems:[self drillPropertyList:[linkDict objectForKey:SAFARI_DICT_CHILD]]]];
+            }
+        }
+	}
+	
+	return(array);
+}
+
+//Menu
+- (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
+{
+	return([NSDictionary dictionaryWithObjectsAndKeys:inTitle, @"Title", inMenuItems, @"Content", nil]);
+}
+
+//Menu Item
+- (NSDictionary *)hyperlinkForSafariBookmark:(NSDictionary *)inDict
+{
+	NSString	*title = [[inDict objectForKey:SAFARI_DICT_URIDICT] objectForKey:SAFARI_DICT_URI_TITLE];
+    return([[[SHMarkedHyperlink alloc] initWithString:[inDict objectForKey:SAFARI_DICT_URLSTRING]
+								 withValidationStatus:SH_URL_VALID
+										 parentString:title
+											 andRange:NSMakeRange(0,[title length])] autorelease]);
 }
 
 @end
