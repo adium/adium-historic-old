@@ -807,6 +807,9 @@
             //Buddy Icon
             [tooltipImage release];
 			tooltipImage = [[tooltipListObject userIcon] retain];
+			if(!tooltipImage) tooltipImage = [[AIServiceIcons serviceIconForObject:tooltipListObject
+																			 type:AIServiceIconLarge
+																		direction:AIIconNormal] retain];
             
             //Reset the maxLabelWidth for the tooltip generation
             maxLabelWidth = 0;
