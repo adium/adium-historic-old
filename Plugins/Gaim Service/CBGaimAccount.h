@@ -18,10 +18,10 @@
 - (AIChat *)mainThreadChatWithName:(NSString *)name;
 - (oneway void)requestAddContactWithUID:(NSString *)contactUID;
 
-- (NSString *)uniqueObjectID;
+- (NSString *)internalObjectID;
 @end
 
-@interface CBGaimAccount : AIAccount <AIAccount_List, AIAccount_Content, AIAccount_Privacy, AdiumGaimDO>
+@interface CBGaimAccount : AIAccount <AIAccount_Privacy, AdiumGaimDO>
 {     
     NSMutableDictionary *chatDict;
 
