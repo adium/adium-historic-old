@@ -372,6 +372,8 @@
 	else if( inSize >= pow( 1024., 3. ) && inSize < pow( 1024., 4. ) ) ret = [NSString stringWithFormat:AILocalizedString( @"%.3f GB", "file size measured in gigabytes" ), ( inSize / pow( 1024., 3. ) )];
 	else if( inSize >= pow( 1024., 4. ) ) ret = [NSString stringWithFormat:AILocalizedString( @"%.4f TB", "file size measured in terabytes" ), ( inSize / pow( 1024., 4. ) )];
 
+	if(!ret) ret = ZERO_BYTES;
+	
 	return(ret);
 }
 
@@ -420,6 +422,8 @@
 		}
 	}
 	
+	if(!ret) ret = ZERO_BYTES;
+
 	return(ret);
 }
 
