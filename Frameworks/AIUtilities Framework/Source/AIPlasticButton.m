@@ -9,7 +9,7 @@
 #import "ESImageAdditions.h"
 
 #define LABEL_OFFSET_X	1
-#define LABEL_OFFSET_Y	-1
+#define LABEL_OFFSET_Y	0
 
 #define IMAGE_OFFSET_X	0
 #define IMAGE_OFFSET_Y	0
@@ -78,32 +78,37 @@
     middleRight = ((frame.origin.x + frame.size.width) - capWidth);
 
     //Draw the left cap
-    [caps compositeToPoint:NSMakePoint(frame.origin.x, frame.origin.y + frame.size.height)
-                  fromRect:NSMakeRect(0, 0, capWidth, capHeight)
-                 operation:NSCompositeSourceOver];
+	destRect = NSMakeRect(frame.origin.x/* + capWidth*/, frame.origin.y/* + frame.size.height*/, capWidth, frame.size.height);
+    [caps drawInRect:destRect
+			fromRect:NSMakeRect(0, 0, capWidth, capHeight)
+		   operation:NSCompositeSourceOver
+			fraction:1.0];
 
-    //Draw the middle
+    //Draw the middle, which tiles across the button (excepting the areas drawn by the left and right caps)
     NSSize middleSize = [middle size];
     sourceRect = NSMakeRect(0, 0, middleSize.width, middleSize.height);
-    destRect = NSMakeRect(frame.origin.x + capWidth, frame.origin.y + frame.size.height, sourceRect.size.width, sourceRect.size.height);
-
+    destRect = NSMakeRect(frame.origin.x + capWidth, frame.origin.y/* + frame.size.height*/, sourceRect.size.width,  frame.size.height);
+	
     while(destRect.origin.x < middleRight && (int)destRect.size.width > 0){
         //Crop
         if((destRect.origin.x + destRect.size.width) > middleRight){
             sourceRect.size.width -= (destRect.origin.x + destRect.size.width) - middleRight;
         }
-
-        [middle compositeToPoint:destRect.origin
-                        fromRect:sourceRect
-                       operation:NSCompositeSourceOver];
+		
+        [middle drawInRect:destRect
+				  fromRect:sourceRect
+				 operation:NSCompositeSourceOver
+				  fraction:1.0];
         destRect.origin.x += destRect.size.width;
     }
-
+	
     //Draw right mask
-    [caps compositeToPoint:NSMakePoint(middleRight, frame.origin.y + frame.size.height)
-                  fromRect:NSMakeRect(capWidth, 0, capWidth, capHeight)
-                 operation:NSCompositeSourceOver];
-
+	destRect = NSMakeRect(middleRight, frame.origin.y/* + frame.size.height*/, capWidth, frame.size.height);
+	[caps drawInRect:destRect
+			fromRect:NSMakeRect(capWidth, 0, capWidth, capHeight)
+		   operation:NSCompositeSourceOver
+			fraction:1.0];
+	
     //Draw Label
     NSString *title = [self title];
     if(title) {
@@ -122,21 +127,21 @@
 
         //Calculate center
         size = [title sizeWithAttributes:attributes];
-        centeredPoint = NSMakePoint(frame.origin.x + ((frame.size.width - size.width) / 2.0) + LABEL_OFFSET_X,
-                                    frame.origin.y + ((capHeight - size.height) / 2.0) + LABEL_OFFSET_Y);
+        centeredPoint = NSMakePoint(frame.origin.x + round((frame.size.width - size.width) / 2.0) + LABEL_OFFSET_X,
+                                    frame.origin.y + round((frame.size.height - size.height) / 2.0) + LABEL_OFFSET_Y);
 
         //Draw
         [title drawAtPoint:centeredPoint withAttributes:attributes];
     }
 
-    //Draw
+    //Draw image
     NSImage *image = [self image];
     if(image) {
         NSSize	size = [image size];
         NSRect	centeredRect;
 
         centeredRect = NSMakeRect(frame.origin.x + (int)((frame.size.width - size.width) / 2.0) + IMAGE_OFFSET_X,
-                                  frame.origin.y + (int)((capHeight - size.height) / 2.0) + IMAGE_OFFSET_Y,
+                                  frame.origin.y + (int)((frame.size.height - size.height) / 2.0) + IMAGE_OFFSET_Y,
                                   size.width,
                                   size.height);
 
