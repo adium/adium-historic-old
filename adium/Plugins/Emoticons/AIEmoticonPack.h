@@ -15,9 +15,10 @@
 
 @interface AIEmoticonPack : NSObject {
     NSString			*path;
-    NSString                    *name;
-    
-    NSMutableArray              *emoticonArray;
+    NSString			*name;
+
+    NSMutableArray		*emoticonArray;
+	BOOL				enabled;
 }
 
 + (id)emoticonPackFromPath:(NSString *)inPath;
@@ -25,5 +26,6 @@
 - (NSArray *)emoticons;
 - (NSString *)name;
 - (void)flushEmoticonImageCache;
-
+- (void)setIsEnabled:(BOOL)inEnabled;
+- (BOOL)isEnabled;
 @end

@@ -13,9 +13,10 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#define PREF_GROUP_EMOTICONS		@"Emoticons"
+#define PREF_GROUP_EMOTICONS			@"Emoticons"
 #define KEY_EMOTICON_ACTIVE_PACKS       @"Active Emoticon Packs"
 #define KEY_EMOTICON_DISABLED           @"Disabled Emoticons"
+#define KEY_EMOTICON_PACK_ORDERING		@"Emoticon Pack Ordering"
 
 @protocol AIContentFilter;
 @class AIEmoticonPreferences, AIEmoticonPack, AIEmoticon;
@@ -36,9 +37,8 @@
 - (AIEmoticonPack *)emoticonPackWithName:(NSString *)inName;
 - (NSArray *)activeEmoticons;
 - (NSArray *)activeEmoticonPacks;
-- (void)removeActiveEmoticonPacks:(NSArray *)inPacks;
-- (void)addActiveEmoticonPacks:(NSArray *)inPacks toIndex:(int)index;
-- (void)moveActiveEmoticonPacks:(NSArray *)inPacks toIndex:(int)index;
+- (void)moveEmoticonPacks:(NSArray *)inPacks toIndex:(int)index;
+- (void)setEmoticonPack:(AIEmoticonPack *)inPack enabled:(BOOL)enabled;
 - (void)setEmoticon:(AIEmoticon *)inEmoticon inPack:(AIEmoticonPack *)inPack enabled:(BOOL)enabled;
 - (void)flushEmoticonImageCache;
 

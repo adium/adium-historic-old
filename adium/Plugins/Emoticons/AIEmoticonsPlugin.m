@@ -35,7 +35,12 @@
 - (NSMutableAttributedString *)_convertEmoticonsInMessage:(NSAttributedString *)inMessage;
 - (void)_buildCharacterSetsAndIndexEmoticons;
 - (void)_saveActiveEmoticonPacks;
+- (void)_saveEmoticonPackOrdering;
+- (NSString *)_keyForPack:(AIEmoticonPack *)inPack;
+- (void)_sortArrayOfEmoticonPacks:(NSMutableArray *)packArray;
 @end
+
+int packSortFunction(id packA, id packB, void *packOrderingArray);
 
 @implementation AIEmoticonsPlugin
 
@@ -56,13 +61,20 @@
     [AIFileUtilities createDirectory:[[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:PATH_EMOTICONS]];
     
     //Setup Preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:@"EmoticonDefaults" forClass:[self class]] forGroup:PREF_GROUP_EMOTICONS];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:@"EmoticonDefaults" 
+																		forClass:[self class]]
+										  forGroup:PREF_GROUP_EMOTICONS];
     prefs = [[AIEmoticonPreferences preferencePaneForPlugin:self] retain];
     
     //Register themable preferences
-    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:EMOTICONS_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_EMOTICONS];
+    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:EMOTICONS_THEMABLE_PREFS
+																  forClass:[self class]] 
+											  forGroup:PREF_GROUP_EMOTICONS];
 
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(preferencesChanged:) 
+									   name:Preference_GroupChanged 
+									 object:nil];
     [self preferencesChanged:nil];
 }
 
@@ -75,103 +87,29 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_EMOTICONS] == 0){
-        //Flush our cached active emoticons
-        [self resetActiveEmoticons];
-        
-        //Enable/Disable logging
-        BOOL    emoticonsEnabled = ([[self activeEmoticons] count] != 0);
-        if(observingContent != emoticonsEnabled){
-            if(emoticonsEnabled){
-                [[adium contentController] registerDisplayingContentFilter:self];
-            }else{
-                [[adium contentController] unregisterDisplayingContentFilter:self];
-            }
-            observingContent = emoticonsEnabled;
-        }
+		
+		//If all that changed was the active pack list, there's no reason to flush our cache
+		//if (![[[notification userInfo] objectForKey:@"Key"] isEqualToString:KEY_EMOTICON_ACTIVE_PACKS]) 
+	{
+			
+			//Flush our cached active emoticons
+			[self resetActiveEmoticons];
+			
+			//Enable/Disable logging
+			BOOL    emoticonsEnabled = ([[self activeEmoticons] count] != 0);
+			if(observingContent != emoticonsEnabled){
+				if(emoticonsEnabled){
+					[[adium contentController] registerDisplayingContentFilter:self];
+				}else{
+					[[adium contentController] unregisterDisplayingContentFilter:self];
+				}
+				observingContent = emoticonsEnabled;
+			}
+		}
     }
 }
 
-//Returns all active emoticons, categoriezed by starting character, using a dictionary, with each value containing an array of characters
-- (NSDictionary *)emoticonIndex
-{
-    if(!_emoticonIndexDict) [self _buildCharacterSetsAndIndexEmoticons];
-    return(_emoticonIndexDict);
-}
-
-//Returns a characterset containing characters that hint at the presence of an emoticon
-- (NSCharacterSet *)emoticonHintCharacterSet
-{
-    if(!_emoticonHintCharacterSet) [self _buildCharacterSetsAndIndexEmoticons];
-    return(_emoticonHintCharacterSet);
-}
-
-//Returns a characterset containing all the characters that may start an emoticon
-- (NSCharacterSet *)emoticonStartCharacterSet
-{
-    if(!_emoticonStartCharacterSet) [self _buildCharacterSetsAndIndexEmoticons];
-    return(_emoticonStartCharacterSet);
-}
-
-//For optimization, we build a list of characters that could possibly be an emoticon and will require additional scanning.
-//We also build a dictionary categorizing the emoticons by their first character to quicken lookups.
-- (void)_buildCharacterSetsAndIndexEmoticons
-{
-    NSEnumerator        *emoticonEnumerator;
-    AIEmoticon          *emoticon;
-    
-    //Start with a fresh character set, and a fresh index
-    [_emoticonHintCharacterSet release]; _emoticonHintCharacterSet = [[NSMutableCharacterSet alloc] init];
-    [_emoticonStartCharacterSet release]; _emoticonStartCharacterSet = [[NSMutableCharacterSet alloc] init];
-    [_emoticonIndexDict release]; _emoticonIndexDict = [[NSMutableDictionary alloc] init];
-    
-    //Process all the text equivalents of each active emoticon
-    emoticonEnumerator = [[self activeEmoticons] objectEnumerator];
-    while(emoticon = [emoticonEnumerator nextObject]){
-        if([emoticon isEnabled]){
-            NSEnumerator        *textEnumerator;
-            NSString            *text;
-
-            textEnumerator = [[emoticon textEquivalents] objectEnumerator];
-            while(text = [textEnumerator nextObject]){
-                NSMutableArray  *subIndex;
-                unichar         firstCharacter;
-                NSString        *firstCharacterString;
-                
-                if([text length] != 0){ //Invalid emoticon files may let empty text equivalents sneak in
-                    firstCharacter = [text characterAtIndex:0];
-                    firstCharacterString = [NSString stringWithFormat:@"%C",firstCharacter];
-                    
-                    // -- Emoticon Hint Character Set --
-                    //If any letter in this text equivalent already exists in the quick scan character set, we can skip it
-                    if([text rangeOfCharacterFromSet:_emoticonHintCharacterSet].location == NSNotFound){
-                        //Potential for optimization!: Favor punctuation characters ( :();- ) over letters (especially vowels).                
-                        [_emoticonHintCharacterSet addCharactersInString:firstCharacterString];
-                    }
-                    
-                    // -- Emoticon Start Character Set --
-                    //First letter of this emoticon goes in the start set
-                    if(![_emoticonStartCharacterSet characterIsMember:firstCharacter]){
-                        [_emoticonStartCharacterSet addCharactersInString:firstCharacterString];
-                    }
-                    
-                    // -- Index --
-                    //Get the index according to this emoticon's first character
-                    if(!(subIndex = [_emoticonIndexDict objectForKey:firstCharacterString])){
-                        subIndex = [[NSMutableArray alloc] init];
-                        [_emoticonIndexDict setObject:subIndex forKey:firstCharacterString];
-                        [subIndex release];
-                    }
-                    
-                    //Place the emoticon into that index (If it isn't already in there)
-                    if(![subIndex containsObject:emoticon]){
-                        [subIndex addObject:emoticon];
-                    }
-                }
-            }
-            
-        }
-    }
-}
+#pragma mark Content filter
 
 //Filter a content object before display, inserting graphical emoticons
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
@@ -193,10 +131,12 @@
 {
     NSCharacterSet              *emoticonStartCharacterSet = [self emoticonStartCharacterSet];
     NSDictionary                *emoticonIndex = [self emoticonIndex];
-    NSString                    *messageString = [inMessage string];   
+    NSString                    *messageString = [inMessage string];
     NSMutableAttributedString   *newMessage = nil; //We avoid creating a new string unless necessary
     int                         currentLocation = 0;
-    int                         replacementCount = 0; //Number of characters we've replaced so far (used to calcluate placement in the destination string)
+
+    //Number of characters we've replaced so far (used to calcluate placement in the destination string)
+	int                         replacementCount = 0; 
 
     while(currentLocation != NSNotFound && currentLocation < [messageString length]){
         //Find the next occurence of a suspected emoticon
@@ -260,6 +200,368 @@
     return(newMessage ? newMessage : inMessage);
 }
 
+#pragma mark Active emoticons
+
+//Returns an array of the currently active emoticons
+- (NSArray *)activeEmoticons
+{
+    if(!_activeEmoticons){
+        NSEnumerator    *enumerator;
+        AIEmoticonPack  *emoticonPack;
+        
+        //
+        _activeEmoticons = [[NSMutableArray alloc] init];
+		
+        //Grap the emoticons from each active pack
+        enumerator = [[self activeEmoticonPacks] objectEnumerator];
+        while(emoticonPack = [enumerator nextObject]){
+            [_activeEmoticons addObjectsFromArray:[emoticonPack emoticons]];
+        }
+        
+        //Let the contentController know about the active emoticons
+        [[adium contentController] setEmoticonsArray:_activeEmoticons];
+    }
+	
+    //
+    return(_activeEmoticons);
+}
+
+//Returns all active emoticons, categoriezed by starting character, using a dictionary, with each value containing an array of characters
+- (NSDictionary *)emoticonIndex
+{
+    if(!_emoticonIndexDict) [self _buildCharacterSetsAndIndexEmoticons];
+    return(_emoticonIndexDict);
+}
+
+
+#pragma mark Disabled emoticons
+
+//Enabled or disable a specific emoticon
+- (void)setEmoticon:(AIEmoticon *)inEmoticon inPack:(AIEmoticonPack *)inPack enabled:(BOOL)enabled
+{
+    NSString                *packKey = [self _keyForPack:inPack];
+    NSMutableDictionary     *packDict = [[[[adium preferenceController] preferenceForKey:packKey
+																				   group:PREF_GROUP_EMOTICONS] mutableCopy] autorelease];
+    NSMutableArray          *disabledArray = [[[packDict objectForKey:KEY_EMOTICON_DISABLED] mutableCopy] autorelease];
+	
+    if(!packDict) packDict = [NSMutableDictionary dictionary];
+    if(!disabledArray) disabledArray = [NSMutableArray array];
+    
+    //Enable/Disable the emoticon
+    if(enabled){
+        [disabledArray removeObject:[inEmoticon name]];
+    }else{
+        [disabledArray addObject:[inEmoticon name]];
+    }
+    
+    //Update the pack (This should really be done from the prefs changed method, but it works here as well)
+    [inPack setDisabledEmoticons:disabledArray];
+    
+    //Save changes
+    [packDict setObject:disabledArray forKey:KEY_EMOTICON_DISABLED];
+    [[adium preferenceController] setPreference:packDict forKey:packKey group:PREF_GROUP_EMOTICONS];
+}
+
+//Returns the disabled emoticons in a pack
+- (NSArray *)disabledEmoticonsInPack:(AIEmoticonPack *)inPack
+{
+    NSDictionary    *packDict = [[adium preferenceController] preferenceForKey:[self _keyForPack:inPack]
+																		 group:PREF_GROUP_EMOTICONS];
+    
+    return([packDict objectForKey:KEY_EMOTICON_DISABLED]);
+}
+
+#pragma mark Active emoticon packs
+
+//Returns an array of the currently active emoticon packs
+- (NSArray *)activeEmoticonPacks
+{
+    if(!_activeEmoticonPacks){
+        NSArray         *activePackNames;
+        NSEnumerator    *enumerator;
+        NSString        *packName;
+        
+        //
+        _activeEmoticonPacks = [[NSMutableArray alloc] init];
+        
+        //Get the names of our active packs
+        activePackNames = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS] objectForKey:KEY_EMOTICON_ACTIVE_PACKS];
+        //Use the names to build an array of the desired emoticon packs
+        enumerator = [activePackNames objectEnumerator];
+        while(packName = [enumerator nextObject]){
+            AIEmoticonPack  *emoticonPack = [self emoticonPackWithName:packName];
+            
+            if(emoticonPack){
+                [_activeEmoticonPacks addObject:emoticonPack];
+				[emoticonPack setIsEnabled:YES];
+            }
+        }
+		
+		//Sort as per the saved ordering
+		[self _sortArrayOfEmoticonPacks:_activeEmoticonPacks];
+    }
+	
+    //
+    return(_activeEmoticonPacks);
+}
+
+- (void)setEmoticonPack:(AIEmoticonPack *)inPack enabled:(BOOL)enabled
+{
+	if (enabled) {
+		[_activeEmoticonPacks addObject:inPack];	
+		[inPack setIsEnabled:YES];
+		
+		//Sort the active emoticon packs as per the saved ordering
+		[self _sortArrayOfEmoticonPacks:_activeEmoticonPacks];
+	} else {
+		[_activeEmoticonPacks removeObject:inPack];
+		[inPack setIsEnabled:NO];
+	}
+	
+	//Save
+	[self _saveActiveEmoticonPacks];
+}
+
+//Save the active emoticon packs to preferences
+- (void)_saveActiveEmoticonPacks
+{
+    NSEnumerator    *enumerator;
+    AIEmoticonPack  *pack;
+    NSMutableArray  *nameArray = [NSMutableArray array];
+    
+    enumerator = [[self activeEmoticonPacks] objectEnumerator];
+    while(pack = [enumerator nextObject]){
+        [nameArray addObject:[pack name]];
+    }
+    
+    [[adium preferenceController] setPreference:nameArray forKey:KEY_EMOTICON_ACTIVE_PACKS group:PREF_GROUP_EMOTICONS];
+}
+
+#pragma mark Available emoticon packs
+
+//Returns an array of the available emoticon packs
+- (NSArray *)availableEmoticonPacks
+{
+    if(!_availableEmoticonPacks){
+        NSString	*path;
+		
+        _availableEmoticonPacks = [[NSMutableArray alloc] init];
+        
+        //Load internal packs
+        path = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_EMOTICONS] stringByExpandingTildeInPath];
+        [_availableEmoticonPacks addObjectsFromArray:[self _emoticonsPacksAvailableAtPath:path]];
+        
+        //Load user packs
+        path = [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:PATH_EMOTICONS] stringByExpandingTildeInPath];
+        [_availableEmoticonPacks addObjectsFromArray:[self _emoticonsPacksAvailableAtPath:path]];
+		
+		//Sort as per the saved ordering
+		[self _sortArrayOfEmoticonPacks:_availableEmoticonPacks];
+
+		//Build the list of active packs
+		[self activeEmoticonPacks];
+    }
+    
+    return(_availableEmoticonPacks);
+}
+
+//Returns the emoticon pack by name
+- (AIEmoticonPack *)emoticonPackWithName:(NSString *)inName
+{
+    NSEnumerator    *enumerator;
+    AIEmoticonPack  *emoticonPack;
+	
+    enumerator = [[self availableEmoticonPacks] objectEnumerator];
+    while(emoticonPack = [enumerator nextObject]){
+        if([[emoticonPack name] compare:inName] == 0) return(emoticonPack);
+    }
+	
+    return(nil);
+}
+
+//Returns an array of the emoticon packs at the specified path
+- (NSArray *)_emoticonsPacksAvailableAtPath:(NSString *)inPath
+{
+    NSMutableArray          *emoticonPackArray = [NSMutableArray array];
+    NSDirectoryEnumerator   *enumerator;
+    NSString                *file;
+	
+    //Scan the directory
+    enumerator = [[NSFileManager defaultManager] enumeratorAtPath:inPath];
+    while((file = [enumerator nextObject])){        
+        if([[file lastPathComponent] characterAtIndex:0] != '.' &&                              //Ignore invisible files
+           [[file pathExtension] caseInsensitiveCompare:EMOTICON_PACK_PATH_EXTENSION] == 0){    //Only accept emoticon packs
+            NSString        *fullPath = [inPath stringByAppendingPathComponent:file];
+            BOOL            isDirectory;
+            
+            //Ensure that this is a folder
+            [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDirectory];
+            if(isDirectory){
+                AIEmoticonPack  *pack = [AIEmoticonPack emoticonPackFromPath:fullPath];
+                
+                [emoticonPackArray addObject:pack];
+                [pack setDisabledEmoticons:[self disabledEmoticonsInPack:pack]];
+            }
+        }
+    }
+    
+    return(emoticonPackArray);
+}
+
+#pragma mark Pack ordering
+
+//Re-arrange an emoticon pack
+- (void)moveEmoticonPacks:(NSArray *)inPacks toIndex:(int)index
+{    
+    NSEnumerator    *enumerator;
+    AIEmoticonPack  *pack;
+    
+    //Remove each pack
+    enumerator = [inPacks objectEnumerator];
+    while(pack = [enumerator nextObject]){
+        if([_availableEmoticonPacks indexOfObject:pack] < index) index--;
+        [_availableEmoticonPacks removeObject:pack];
+    }
+	
+    //Add back the packs in their new location
+    enumerator = [inPacks objectEnumerator];
+    while(pack = [enumerator nextObject]){
+        [_availableEmoticonPacks insertObject:pack atIndex:index];
+        index++;
+    }
+	
+    //Save our new ordering
+    [self _saveEmoticonPackOrdering];
+}
+
+- (void)_saveEmoticonPackOrdering
+{
+    NSEnumerator		*enumerator;
+    AIEmoticonPack		*pack;
+    NSMutableArray		*nameArray = [NSMutableArray array];
+    
+    enumerator = [[self availableEmoticonPacks] objectEnumerator];
+    while(pack = [enumerator nextObject]){
+        [nameArray addObject:[pack name]];
+    }
+    
+	//Changing a preference will clear out our premade _activeEmoticonPacks array
+    [[adium preferenceController] setPreference:nameArray forKey:KEY_EMOTICON_PACK_ORDERING group:PREF_GROUP_EMOTICONS];	
+}
+
+- (void)_sortArrayOfEmoticonPacks:(NSMutableArray *)packArray
+{
+	//Load the saved ordering and sort the active array based on it
+	NSArray *packOrderingArray = [[adium preferenceController] preferenceForKey:KEY_EMOTICON_PACK_ORDERING 
+																		  group:PREF_GROUP_EMOTICONS];
+	//It's most likely quicker to create an empty array here than to do nil checks each time through the sort function
+	if (!packOrderingArray)
+		packOrderingArray = [NSArray array];
+	[packArray sortUsingFunction:packSortFunction context:packOrderingArray];
+}
+
+int packSortFunction(id packA, id packB, void *packOrderingArray)
+{
+	int packAIndex = [(NSArray *)packOrderingArray indexOfObject:[packA name]];
+	int packBIndex = [(NSArray *)packOrderingArray indexOfObject:[packB name]];
+	
+	BOOL notFoundA = (packAIndex == NSNotFound);
+	BOOL notFoundB = (packBIndex == NSNotFound);
+	
+	//Packs which aren't in the ordering index sort to the bottom
+	if (notFoundA && notFoundB) {
+		return ([[packA name] compare:[packB name]]);
+	} else if (notFoundA) {
+		return (NSOrderedDescending);
+	} else if (notFoundB) {
+		return (NSOrderedAscending);
+		
+	} else if (packAIndex > packBIndex) {
+		return(NSOrderedDescending);
+	} else {
+		return(NSOrderedAscending);
+	}
+}
+
+#pragma mark Character hints for efficiency
+
+//Returns a characterset containing characters that hint at the presence of an emoticon
+- (NSCharacterSet *)emoticonHintCharacterSet
+{
+    if(!_emoticonHintCharacterSet) [self _buildCharacterSetsAndIndexEmoticons];
+    return(_emoticonHintCharacterSet);
+}
+
+//Returns a characterset containing all the characters that may start an emoticon
+- (NSCharacterSet *)emoticonStartCharacterSet
+{
+    if(!_emoticonStartCharacterSet) [self _buildCharacterSetsAndIndexEmoticons];
+    return(_emoticonStartCharacterSet);
+}
+
+//For optimization, we build a list of characters that could possibly be an emoticon and will require additional scanning.
+//We also build a dictionary categorizing the emoticons by their first character to quicken lookups.
+- (void)_buildCharacterSetsAndIndexEmoticons
+{
+    NSEnumerator        *emoticonEnumerator;
+    AIEmoticon          *emoticon;
+    
+    //Start with a fresh character set, and a fresh index
+    [_emoticonHintCharacterSet release]; _emoticonHintCharacterSet = [[NSMutableCharacterSet alloc] init];
+    [_emoticonStartCharacterSet release]; _emoticonStartCharacterSet = [[NSMutableCharacterSet alloc] init];
+    [_emoticonIndexDict release]; _emoticonIndexDict = [[NSMutableDictionary alloc] init];
+    
+    //Process all the text equivalents of each active emoticon
+    emoticonEnumerator = [[self activeEmoticons] objectEnumerator];
+    while(emoticon = [emoticonEnumerator nextObject]){
+        if([emoticon isEnabled]){
+            NSEnumerator        *textEnumerator;
+            NSString            *text;
+			
+            textEnumerator = [[emoticon textEquivalents] objectEnumerator];
+            while(text = [textEnumerator nextObject]){
+                NSMutableArray  *subIndex;
+                unichar         firstCharacter;
+                NSString        *firstCharacterString;
+                
+                if([text length] != 0){ //Invalid emoticon files may let empty text equivalents sneak in
+                    firstCharacter = [text characterAtIndex:0];
+                    firstCharacterString = [NSString stringWithFormat:@"%C",firstCharacter];
+                    
+                    // -- Emoticon Hint Character Set --
+                    //If any letter in this text equivalent already exists in the quick scan character set, we can skip it
+                    if([text rangeOfCharacterFromSet:_emoticonHintCharacterSet].location == NSNotFound){
+                        //Potential for optimization!: Favor punctuation characters ( :();- ) over letters (especially vowels).                
+                        [_emoticonHintCharacterSet addCharactersInString:firstCharacterString];
+                    }
+                    
+                    // -- Emoticon Start Character Set --
+                    //First letter of this emoticon goes in the start set
+                    if(![_emoticonStartCharacterSet characterIsMember:firstCharacter]){
+                        [_emoticonStartCharacterSet addCharactersInString:firstCharacterString];
+                    }
+                    
+                    // -- Index --
+                    //Get the index according to this emoticon's first character
+                    if(!(subIndex = [_emoticonIndexDict objectForKey:firstCharacterString])){
+                        subIndex = [[NSMutableArray alloc] init];
+                        [_emoticonIndexDict setObject:subIndex forKey:firstCharacterString];
+                        [subIndex release];
+                    }
+                    
+                    //Place the emoticon into that index (If it isn't already in there)
+                    if(![subIndex containsObject:emoticon]){
+                        [subIndex addObject:emoticon];
+                    }
+                }
+            }
+            
+        }
+    }
+}
+
+#pragma Cache flushing
+
 //Flush any cached emoticon images (and image attachment strings)
 - (void)flushEmoticonImageCache
 {
@@ -294,221 +596,12 @@
     [self resetActiveEmoticons];
 }
 
-//Returns an array of the currently active emoticons
-- (NSArray *)activeEmoticons
+#pragma mark Private
+
+- (NSString *)_keyForPack:(AIEmoticonPack *)inPack
 {
-    if(!_activeEmoticons){
-        NSEnumerator    *enumerator;
-        AIEmoticonPack  *emoticonPack;
-        
-        //
-        _activeEmoticons = [[NSMutableArray alloc] init];
-
-        //Grap the emoticons from each active pack
-        enumerator = [[self activeEmoticonPacks] objectEnumerator];
-        while(emoticonPack = [enumerator nextObject]){
-            [_activeEmoticons addObjectsFromArray:[emoticonPack emoticons]];
-        }
-        
-        //Let the contentController know about the active emoticons
-        [[adium contentController] setEmoticonsArray:_activeEmoticons];
-    }
-
-    //
-    return(_activeEmoticons);
+	return [NSString stringWithFormat:@"Pack:%@",[inPack name]];
 }
 
-//Re-arrange an emoticon pack
-- (void)moveActiveEmoticonPacks:(NSArray *)inPacks toIndex:(int)index
-{    
-    NSEnumerator    *enumerator;
-    AIEmoticonPack  *pack;
-    
-    //Remove each pack
-    enumerator = [inPacks objectEnumerator];
-    while(pack = [enumerator nextObject]){
-        if([_activeEmoticonPacks indexOfObject:pack] < index) index--;
-        [_activeEmoticonPacks removeObject:pack];
-    }
-
-    //Add back the packs in their new location
-    [self addActiveEmoticonPacks:inPacks toIndex:index];
-}
-
-//Remove a set of emoticon packs
-- (void)removeActiveEmoticonPacks:(NSArray *)inPacks
-{
-    NSEnumerator    *enumerator;
-    AIEmoticonPack  *pack;
-    
-    //Remove all the packs
-    enumerator = [inPacks objectEnumerator];
-    while(pack = [enumerator nextObject]){
-        [_activeEmoticonPacks removeObject:pack];
-    }
-
-    //Save
-    [self _saveActiveEmoticonPacks];
-}
-
-//
-- (void)addActiveEmoticonPacks:(NSArray *)inPacks toIndex:(int)index
-{
-    NSEnumerator    *enumerator;
-    AIEmoticonPack  *pack;
-
-    //Add back the packs in their new location
-    enumerator = [inPacks objectEnumerator];
-    while(pack = [enumerator nextObject]){
-        [_activeEmoticonPacks insertObject:pack atIndex:index];
-        index++;
-    }
-
-    //Save
-    [self _saveActiveEmoticonPacks];
-}
-
-//Save the active emoticon packs to preferences
-- (void)_saveActiveEmoticonPacks
-{
-    NSEnumerator    *enumerator;
-    AIEmoticonPack  *pack;
-    NSMutableArray  *nameArray = [NSMutableArray array];
-    
-    enumerator = [[self activeEmoticonPacks] objectEnumerator];
-    while(pack = [enumerator nextObject]){
-        [nameArray addObject:[pack name]];
-    }
-    
-    [[adium preferenceController] setPreference:nameArray forKey:KEY_EMOTICON_ACTIVE_PACKS group:PREF_GROUP_EMOTICONS];
-}
-
-//Enabled or disable a specific emoticon
-- (void)setEmoticon:(AIEmoticon *)inEmoticon inPack:(AIEmoticonPack *)inPack enabled:(BOOL)enabled
-{
-    NSDictionary            *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS];
-    NSString                *packKey = [NSString stringWithFormat:@"Pack:%@",[inPack name]];
-    NSMutableDictionary     *packDict = [[[preferenceDict objectForKey:packKey] mutableCopy] autorelease];
-    NSMutableArray          *disabledArray = [[[packDict objectForKey:KEY_EMOTICON_DISABLED] mutableCopy] autorelease];
-
-    if(!packDict) packDict = [NSMutableDictionary dictionary];
-    if(!disabledArray) disabledArray = [NSMutableArray array];
-    
-    //Enable/Disable the emoticon
-    if(enabled){
-        [disabledArray removeObject:[inEmoticon name]];
-    }else{
-        [disabledArray addObject:[inEmoticon name]];
-    }
-    
-    //Update the pack (This should really be done from the prefs changed method, but it works here as well)
-    [inPack setDisabledEmoticons:disabledArray];
-    
-    //Save changes
-    [packDict setObject:disabledArray forKey:KEY_EMOTICON_DISABLED];
-    [[adium preferenceController] setPreference:packDict forKey:packKey group:PREF_GROUP_EMOTICONS];
-}
-
-//Returns the disabled emoticons in a pack
-- (NSArray *)disabledEmoticonsInPack:(AIEmoticonPack *)inPack
-{
-    NSDictionary    *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS];
-    NSDictionary    *packDict = [preferenceDict objectForKey:[NSString stringWithFormat:@"Pack:%@",[inPack name]]];
-    
-    return([packDict objectForKey:KEY_EMOTICON_DISABLED]);
-}
-
-//Returns an array of the currently active emoticon packs
-- (NSArray *)activeEmoticonPacks
-{
-    if(!_activeEmoticonPacks){
-        NSArray         *activePackNames;
-        NSEnumerator    *enumerator;
-        NSString        *packName;
-        
-        //
-        _activeEmoticonPacks = [[NSMutableArray alloc] init];
-        
-        //Get the names of our active packs
-        activePackNames = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS] objectForKey:KEY_EMOTICON_ACTIVE_PACKS];
-        
-        //Use the names to build an array of the desired emoticon packs
-        enumerator = [activePackNames objectEnumerator];
-        while(packName = [enumerator nextObject]){
-            AIEmoticonPack  *emoticonPack = [self emoticonPackWithName:packName];
-            
-            if(emoticonPack){
-                [_activeEmoticonPacks addObject:emoticonPack];
-            }
-        }
-    }
-
-    //
-    return(_activeEmoticonPacks);
-}
-
-//Returns the emoticon pack by name
-- (AIEmoticonPack *)emoticonPackWithName:(NSString *)inName
-{
-    NSEnumerator    *enumerator;
-    AIEmoticonPack  *emoticonPack;
-
-    enumerator = [[self availableEmoticonPacks] objectEnumerator];
-    while(emoticonPack = [enumerator nextObject]){
-        if([[emoticonPack name] compare:inName] == 0) return(emoticonPack);
-    }
-
-    return(nil);
-}
-
-//Returns an array of the available emoticon packs
-- (NSArray *)availableEmoticonPacks
-{
-    if(!_availableEmoticonPacks){
-        NSString	*path;
-
-        _availableEmoticonPacks = [[NSMutableArray alloc] init];
-        
-        //Load internal packs
-        path = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_EMOTICONS] stringByExpandingTildeInPath];
-        [_availableEmoticonPacks addObjectsFromArray:[self _emoticonsPacksAvailableAtPath:path]];
-        
-        //Load user packs
-        path = [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:PATH_EMOTICONS] stringByExpandingTildeInPath];
-        [_availableEmoticonPacks addObjectsFromArray:[self _emoticonsPacksAvailableAtPath:path]];
-
-    }
-    
-    return(_availableEmoticonPacks);
-}
-
-//Returns an array of the emoticon packs at the specified path
-- (NSArray *)_emoticonsPacksAvailableAtPath:(NSString *)inPath
-{
-    NSMutableArray          *emoticonPackArray = [NSMutableArray array];
-    NSDirectoryEnumerator   *enumerator;
-    NSString                *file;
-
-    //Scan the directory
-    enumerator = [[NSFileManager defaultManager] enumeratorAtPath:inPath];
-    while((file = [enumerator nextObject])){        
-        if([[file lastPathComponent] characterAtIndex:0] != '.' &&                              //Ignore invisible files
-           [[file pathExtension] caseInsensitiveCompare:EMOTICON_PACK_PATH_EXTENSION] == 0){    //Only accept emoticon packs
-            NSString        *fullPath = [inPath stringByAppendingPathComponent:file];
-            BOOL            isDirectory;
-            
-            //Ensure that this is a folder
-            [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDirectory];
-            if(isDirectory){
-                AIEmoticonPack  *pack = [AIEmoticonPack emoticonPackFromPath:fullPath];
-                
-                [emoticonPackArray addObject:pack];
-                [pack setDisabledEmoticons:[self disabledEmoticonsInPack:pack]];
-            }
-        }
-    }
-    
-    return(emoticonPackArray);
-}
 
 @end

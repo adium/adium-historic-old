@@ -15,7 +15,11 @@
 
 
 @interface AIEmoticonPackCell : AIGradientCell {
-
+	NSButtonCell	*packCheckCell;
+	
+	id				plugin;
 }
+
+- (id)initWithPlugin:(id)inPlugin;
 
 @end
