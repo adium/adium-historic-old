@@ -24,6 +24,9 @@
 
 #define USE_OPTIMIZED_LIVE_RESIZE   NO  //If YES, text layout will not be recalculated during a resize
 
+#define COPY_EMOTICON_TEXT  AILocalizedString(@"Copy Emoticon Text","Copy the text of an emoticon")
+#define COPY_EMOTICON_IMAGE AILocalizedString(@"Copy Emoticon Image","Copy the image of an emoticon")
+
 @interface AIFlexibleTableTextCell (PRIVATE)
 - (NSRange)validRangeFromIndex:(int)sourceIndex to:(int)destIndex;
 - (NSTextStorage *)createTextSystemWithString:(NSAttributedString *)inString size:(NSSize)inSize container:(NSTextContainer **)outContainer layoutManager:(NSLayoutManager **)outLayoutManager;
@@ -31,6 +34,7 @@
 - (void)_showTooltipForEvent:(NSEvent *)theEvent;
 - (void)_endTrackingMouse;
 - (BOOL)_handleEmoticonClicks:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)offset;
+- (NSArray *)_emoticonMenuItemsForEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)offset;
 - (NSRange)_validRangeFromIndex:(int)sourceIndex to:(int)destIndex;
 @end
 
@@ -363,6 +367,112 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     }
 
     return(range);
+}
+
+//****Contextual menu items
+
+//Supply menu items
+- (NSArray *)menuItemsForEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)inOffset
+{
+    NSMutableArray *menuItemArray = nil;
+
+    if(containsLinks){
+        //Get link menu items if appropriate
+        menuItemArray = ([linkTrackingController menuItemsForEvent:theEvent withOffset:inOffset]);
+    } else {
+        //Get emoticon menu items if appropriate
+        menuItemArray = [self _emoticonMenuItemsForEvent:theEvent atPoint:inPoint offset:inOffset];
+    }
+    
+    return(menuItemArray);
+}
+
+//Return the menu items for an emoticon, if appropriate
+- (NSArray *)_emoticonMenuItemsForEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)offset
+{
+    NSMutableArray      *menuItemArray = nil;
+    NSMenuItem          *menuItem;
+    unsigned int	charIndex;
+    
+    //Find clicked char index
+    charIndex = [self _characterIndexAtPoint:inPoint fractionOffset:1.0];
+    if(charIndex >= 0 && charIndex < [textStorage length]){
+        //Check for emoticons in image form
+        if( ([[textStorage string] characterAtIndex:charIndex] == NSAttachmentCharacter) ) {
+            //get the string value of the emoticon
+            NSString	*repStr = [[textStorage attribute:NSAttachmentAttributeName atIndex:charIndex effectiveRange:nil] string];
+            
+            //If a string value exists, we're good to go
+            if (repStr != nil) {
+                //Make an array for transmitting the items
+                menuItemArray = [[[NSMutableArray alloc] init] autorelease];
+                
+                AITextAttachmentExtension	*smileyAttachment = [textStorage attribute:NSAttachmentAttributeName 
+                                                                             atIndex:charIndex
+                                                                      effectiveRange:nil];   
+                NSImage                         *emoticonImage = [(NSTextAttachmentCell *)[smileyAttachment attachmentCell] image];
+                
+                menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_EMOTICON_IMAGE
+                                                       target:self
+                                                       action:@selector(copyEmoticonImage:)
+                                                keyEquivalent:@""] autorelease];
+                [menuItem setRepresentedObject:emoticonImage];
+                [menuItemArray addObject:menuItem];
+                
+                
+                NSAttributedString *formattedEmoticonText = [[NSAttributedString alloc] initWithString:repStr
+                                                                                            attributes:[textStorage attributesAtIndex:charIndex effectiveRange:nil]];
+                menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_EMOTICON_TEXT
+                                                       target:self
+                                                       action:@selector(copyEmoticonText:)
+                                                keyEquivalent:@""] autorelease];
+                [menuItem setRepresentedObject:[formattedEmoticonText autorelease]];                
+                [menuItemArray addObject:menuItem];
+            } 
+        }
+        //Check for emoticons in text form
+        else if ([textStorage attribute:@"IKHiddenAttachment" atIndex:charIndex effectiveRange:nil]) {
+            //Make an array for transmitting the items
+            NSRange			replaceRange;
+            menuItemArray = [[[NSMutableArray alloc] init] autorelease];
+            
+            AITextAttachmentExtension	*smileyAttachment = [textStorage attribute:@"IKHiddenAttachment" 
+                                                                         atIndex:charIndex
+                                                                  effectiveRange:&replaceRange];
+            
+            NSAttributedString *formattedEmoticonText = [textStorage attributedSubstringFromRange:replaceRange];
+            menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_EMOTICON_TEXT
+                                                   target:self
+                                                   action:@selector(copyEmoticonText:)
+                                            keyEquivalent:@""] autorelease];
+            [menuItem setRepresentedObject:formattedEmoticonText];                
+            [menuItemArray addObject:menuItem];
+            
+            NSImage                     *emoticonImage = [(NSTextAttachmentCell *)[smileyAttachment attachmentCell] image];
+            menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_EMOTICON_IMAGE
+                                                   target:self
+                                                   action:@selector(copyEmoticonImage:)
+                                            keyEquivalent:@""] autorelease];
+            [menuItem setRepresentedObject:emoticonImage];
+            [menuItemArray addObject:menuItem];
+            
+        }
+    }
+    return menuItemArray;
+}
+
+- (void)copyEmoticonText:(id)sender
+{
+    NSAttributedString *copyString = [sender representedObject];
+    [[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSRTFPboardType] owner:nil];
+    [[NSPasteboard generalPasteboard] setData:[copyString RTFFromRange:NSMakeRange(0,[copyString length]) documentAttributes:nil] forType:NSRTFPboardType];
+}
+
+- (void)copyEmoticonImage:(id)sender
+{
+    NSImage *copyImage = [sender representedObject];
+    [[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSTIFFPboardType] owner:nil];
+    [[NSPasteboard generalPasteboard] setData:[copyImage TIFFRepresentation] forType:NSTIFFPboardType];
 }
                                                                
 @end

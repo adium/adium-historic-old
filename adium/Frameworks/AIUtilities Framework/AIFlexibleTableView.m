@@ -200,7 +200,7 @@
     }
     
     //Add any table-specific menu items to the front of the menu
-    if(tableViewItemArray && [tableViewItemArray count]) {
+    if (tableViewItemArray && [tableViewItemArray count]) {
         //If the delegate didn't respond or responded nil, initialize a menu
         //Otherwise, prepend a separator
         if(!menu){
