@@ -20,14 +20,16 @@
 @implementation AIListObject
 
 //Init
-- (id)initWithUID:(NSString *)inUID
+- (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID
 {
     [super init];
 
     displayDictionary = [[NSMutableDictionary alloc] init];
     containingGroup = nil;
     UID = [inUID retain];
+    serviceID = [inServiceID retain];
     orderIndex = -1;
+    statusDictionary = [[NSMutableDictionary alloc] init];
 
     return(self);
 }
@@ -36,6 +38,8 @@
 {
     [displayDictionary release];
     [containingGroup release];
+    [statusDictionary release];
+    [serviceID release];
 
     [super dealloc];
 }
@@ -47,12 +51,19 @@
     return(UID);
 }
 
-/*- (void)setUID:(NSString *)inUID
+- (NSString *)serviceID
 {
-    [UID release]; UID = nil;
-    UID = [inUID retain];
-}*/
+    return(serviceID);
+}
 
+- (NSString *)UIDAndServiceID //ServiceID.UID
+{
+    if(serviceID){
+        return([NSString stringWithFormat:@"%@.%@",serviceID,UID]);
+    }else{
+        return(UID);
+    }
+}
 
 //Manual Ordering
 - (void)setOrderIndex:(float)inIndex
@@ -62,7 +73,6 @@
 - (float)orderIndex{
     return(orderIndex);
 }
-
 
 //Display
 - (NSString *)displayName
@@ -100,5 +110,21 @@
         containingGroup = [inGroup retain];
     }
 }
+
+//Status
+//Returns the requested status array for this object
+- (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey
+{
+    AIMutableOwnerArray	*array = [statusDictionary objectForKey:inKey];
+
+    if(!array){
+        array = [[AIMutableOwnerArray alloc] init];
+        [statusDictionary setObject:array forKey:inKey];
+        [array release];
+    }
+
+    return(array);
+}
+
 
 @end

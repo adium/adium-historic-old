@@ -6,17 +6,18 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
+#import "AIContentObject.h"
 #import "AIContentTyping.h"
 
 @interface AIContentTyping (PRIVATE)
-+ (id)initWithSource:(id)inSource destination:(id)inDest typing:(BOOL)inTyping;
+- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest typing:(BOOL)inTyping;
 @end
 
 @implementation AIContentTyping
 
-+ (id)typingContentWithSource:(id)inSource destination:(id)inDest typing:(BOOL)inTyping
++ (id)typingContentInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest typing:(BOOL)inTyping
 {
-    return([[[self alloc] initWithSource:inSource destination:inDest typing:inTyping] autorelease]);
+    return([[[self alloc] initWithChat:inChat source:inSource destination:inDest typing:inTyping] autorelease]);
 }
 
 //Return the type ID of this content
@@ -24,24 +25,19 @@
     return(CONTENT_TYPING_TYPE);
 }
 
-- (BOOL)filterObject
+- (BOOL)filterContent
 {
     return(NO); //There is no need to filter typing content
 }
 
-- (BOOL)trackObject
+- (BOOL)trackContent
 {
     return(NO); //Typing content should NOT be tracked by contacts
 }
 
-//Message source (may return a contact handle, or an account)
-- (id)source{
-    return(source);
-}
-
-//Message destination (may return a contact handle, or an account(
-- (id)destination{
-    return(destination);
+- (BOOL)displayContent
+{
+    return(NO); //Typing content should NOT be displayed
 }
 
 //YES if typing, NO if not typing
@@ -52,13 +48,9 @@
 
 // Private ------------------------------------------------------------------------------
 //init
-- (id)initWithSource:(id)inSource destination:(id)inDest typing:(BOOL)inTyping
+- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest typing:(BOOL)inTyping
 {
-    [super init];
-
-    //Store source and dest
-    source = [inSource retain];
-    destination = [inDest retain];
+    [super initWithChat:inChat source:inSource destination:inDest];
 
     //Store typing
     typing = inTyping;
@@ -68,9 +60,6 @@
 
 - (void)dealloc
 {
-    [source release];
-    [destination release];
-
     [super dealloc];
 }
 

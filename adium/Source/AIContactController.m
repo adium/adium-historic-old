@@ -59,7 +59,7 @@
     contactList = [[AIListGroup alloc] initWithUID:CONTACT_LIST_GROUP_NAME];
     contactListGeneration = [[AIContactListGeneration alloc] initWithContactList:contactList owner:owner];
 
-    [owner registerEventNotification:Contact_StatusChanged displayName:@"Contact Status Changed"];
+    [owner registerEventNotification:ListObject_StatusChanged displayName:@"Contact Status Changed"];
     
     //
     contactInfoCategory = [[AIPreferenceCategory categoryWithName:@"" image:nil] retain];
@@ -184,7 +184,7 @@
 
 // Handle status --------------------------------------------------------------------------------
 //Registers code to observe handle status changes
-- (void)registerContactObserver:(id <AIContactObserver>)inObserver
+- (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver
 {
     NSEnumerator	*enumerator;
     AIListContact	*contact;
@@ -194,7 +194,7 @@
     //Let the handle observer process all existing contacts
     enumerator = [[self allContactsInGroup:nil subgroups:YES] objectEnumerator];
     while((contact = [enumerator nextObject])){
-        [inObserver updateContact:contact keys:nil];
+        [inObserver updateListObject:contact keys:nil];
     }
 
     //Resort and update the contact list (Since the observer has most likely changed attributes)
@@ -203,7 +203,7 @@
     [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
 }
 
-- (void)unregisterContactObserver:(id)inObserver
+- (void)unregisterListObjectObserver:(id)inObserver
 {
     [contactObserverArray removeObject:inObserver];
 
@@ -237,16 +237,16 @@
         }
 
         //Acknowledge the contact status changes
-        [self contactStatusChanged:listContact modifiedStatusKeys:inModifiedKeys];
+        [self listObjectStatusChanged:listContact modifiedStatusKeys:inModifiedKeys];
     }
 }
 
 //Called after modifying a contact's status directly (and not through a handle)
-- (void)contactStatusChanged:(AIListContact *)inContact modifiedStatusKeys:(NSArray *)inModifiedKeys
+- (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSArray *)inModifiedKeys
 {
     NSEnumerator		*enumerator;
     NSMutableArray		*modifiedAttributeKeys;
-    id <AIContactObserver>	observer;
+    id <AIListObjectObserver>	observer;
 
     //Let all the observers know the contact has changed
     modifiedAttributeKeys = [NSMutableArray array];
@@ -254,7 +254,7 @@
     while((observer = [enumerator nextObject])){
         NSArray	*newKeys;
 
-        if((newKeys = [observer updateContact:inContact keys:inModifiedKeys])){
+        if((newKeys = [observer updateListObject:inObject keys:inModifiedKeys])){
             [modifiedAttributeKeys addObjectsFromArray:newKeys];
         }
     }
@@ -264,26 +264,26 @@
        ([[self activeSortController] shouldSortForModifiedStatusKeys:inModifiedKeys] ||
         [[self activeSortController] shouldSortForModifiedAttributeKeys:modifiedAttributeKeys])){
 
-        [self sortListGroup:[inContact containingGroup] mode:AISortGroupAndSuperGroups];
-        [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:[inContact containingGroup]];
+        [self sortListGroup:[inObject containingGroup] mode:AISortGroupAndSuperGroups];
+        [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:[inObject containingGroup]];
     }
 
     //Post a 'status' changed message, signaling that the object's status has changed.
     if(inModifiedKeys){
-        [[owner notificationCenter] postNotificationName:Contact_StatusChanged object:inContact userInfo:[NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"]];
+        [[owner notificationCenter] postNotificationName:ListObject_StatusChanged object:inObject userInfo:[NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"]];
     }else{
-        [[owner notificationCenter] postNotificationName:Contact_StatusChanged object:inContact];
+        [[owner notificationCenter] postNotificationName:ListObject_StatusChanged object:inObject];
     }
 
     //Post an attributes changed message (if necessary)
     if([modifiedAttributeKeys count] != 0){
-        [[owner notificationCenter] postNotificationName:Contact_AttributesChanged object:inContact userInfo:[NSDictionary dictionaryWithObject:modifiedAttributeKeys forKey:@"Keys"]];
+        [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:inObject userInfo:[NSDictionary dictionaryWithObject:modifiedAttributeKeys forKey:@"Keys"]];
     }
 }
 
 
 //Call after modifying an object's display attributes
-- (void)objectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys
+- (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys
 {
     //Resort the contact list (If necessary)
     if(!holdUpdates && //Skip sorting when updates are delayed
@@ -295,9 +295,9 @@
 
     //Post an attributes changed message (if necessary)
     if(inModifiedKeys){
-        [[owner notificationCenter] postNotificationName:Contact_AttributesChanged object:inObject userInfo:[NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"]];
+        [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:inObject userInfo:[NSDictionary dictionaryWithObject:inModifiedKeys forKey:@"Keys"]];
     }else{
-        [[owner notificationCenter] postNotificationName:Contact_AttributesChanged object:inObject];
+        [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:inObject];
     }
 }
 

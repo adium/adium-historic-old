@@ -43,9 +43,9 @@
 }
 
 //returns a NEW message view configured for the specified handle
-- (NSView *)messageViewForContact:(AIListContact *)inContact
+- (NSView *)messageViewForChat:(AIChat *)inChat
 {
-    AISMViewController	*controller = [AISMViewController messageViewControllerForContact:inContact owner:owner];
+    AISMViewController	*controller = [AISMViewController messageViewControllerForChat:inChat owner:owner];
 
     [controllerArray addObject:controller];
 

@@ -22,7 +22,7 @@
 
 - (void)installPlugin
 {
-    [[owner contactController] registerContactObserver:self];
+    [[owner contactController] registerListObjectObserver:self];
 }
 
 - (void)uninstallPlugin
@@ -30,14 +30,14 @@
     //[[owner contactController] unregisterHandleObserver:self];
 }
 
-- (NSArray *)updateContact:(AIListContact *)inContact keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
 {
     NSArray		*modifiedAttributes = nil;
     
     if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"] || [inModifiedKeys containsObject:@"Signed Off"]){
-        AIMutableOwnerArray	*hiddenArray = [inContact displayArrayForKey:@"Hidden"];
-        int			online = [[inContact statusArrayForKey:@"Online"] greatestIntegerValue];
-        int			justSignedOff = [[inContact statusArrayForKey:@"Signed Off"] containsAnyIntegerValueOf:1];
+        AIMutableOwnerArray	*hiddenArray = [inObject displayArrayForKey:@"Hidden"];
+        int			online = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
+        int			justSignedOff = [[inObject statusArrayForKey:@"Signed Off"] containsAnyIntegerValueOf:1];
         
         //Insert an updated value
         if(!online && !justSignedOff){

@@ -42,6 +42,8 @@
     NSDictionary	*preferencesDict;	// Our preferences dictionary
 
     NSMutableDictionary	*handleDict;		// A dictionary of all available handles
+ //   NSMutableDictionary	*messageChatDict;
+    NSMutableDictionary	*chatDict;
     
     NSTimer		*pingTimer;
     NSTimeInterval	pingInterval;
@@ -51,10 +53,12 @@
     BOOL		processingSignOnUpdates;
     int			numberOfSignOnUpdates;
 
-    NSURLHandle		*profileURLHandle;	// URLHandle for the currently loading profile	
+    NSURLHandle		*profileURLHandle;	// URLHandle for the currently loading profile
+
+
 }
 
-- (IBAction)sendCommand:(id)sender;
+- (IBAction)sendDirectDebugCommand:(id)sender;
 - (void)initAccount;
 - (NSString *)accountID;
 - (NSString *)accountDescription;

@@ -27,13 +27,15 @@ static AIInfoWindowController *sharedInstance = nil;
         sharedInstance = [[self alloc] initWithWindowNibName:INFO_WINDOW_NIB owner:inOwner];
     }
 
-    //Let everyone know we want profile information
-    [[inOwner notificationCenter] postNotificationName:Contact_UpdateStatus object:inContact userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"TextProfile"] forKey:@"Keys"]];
-
-    //Show the window and configure it for the contact
-    [sharedInstance configureWindowForContact:inContact];
-    [sharedInstance showWindow:nil];
-
+    if([inContact isKindOfClass:[AIListContact class]]){ //Only allow this for contacts
+        //Let everyone know we want profile information
+        [[inOwner notificationCenter] postNotificationName:Contact_UpdateStatus object:inContact userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"TextProfile"] forKey:@"Keys"]];
+    
+        //Show the window and configure it for the contact
+        [sharedInstance configureWindowForContact:inContact];
+        [sharedInstance showWindow:nil];
+    }
+        
     return(sharedInstance);
 }
 
@@ -46,11 +48,11 @@ static AIInfoWindowController *sharedInstance = nil;
 }
 
 //Called as profiles are set on a handle, update our display
-- (NSArray *)updateContact:(AIListContact *)inContact keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
 {
     //If we're currently displaying this handle, and it's profile or other displayed information changed...
-    if(inContact == activeContactObject/* && [inModifiedKeys containsObject:@"TextProfile"]*/){
-        [self configureWindowForContact:inContact];
+    if(inObject == activeContactObject/* && [inModifiedKeys containsObject:@"TextProfile"]*/){
+        [self configureWindowForContact:(AIListContact *)inObject];
     }
 
     return(nil); //We've modified no display attributes, return nil
@@ -231,7 +233,7 @@ static AIInfoWindowController *sharedInstance = nil;
     owner = [inOwner retain];
 
     //Register ourself as a handle observer
-    [[owner contactController] registerContactObserver:self];
+    [[owner contactController] registerListObjectObserver:self];
 
     return(self);
 }
@@ -240,7 +242,7 @@ static AIInfoWindowController *sharedInstance = nil;
 - (void)dealloc
 {
     [owner release];
-    [[owner contactController] unregisterContactObserver:self];
+    [[owner contactController] unregisterListObjectObserver:self];
     [activeContactObject release];
 
     [super dealloc];

@@ -152,7 +152,7 @@ extern void* objc_getClass(const char *name);
 
 
 // AIAccount_Messaging --------------------------------------------------------------------------------
-- (BOOL)sendContentObject:(id <AIContentObject>)object
+- (BOOL)sendContentObject:(AIContentObject *)object
 {
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){
         NSString	*message;
@@ -208,20 +208,42 @@ extern void* objc_getClass(const char *name);
 }
 
 // Return YES if we're available for sending the specified content
-- (BOOL)availableForSendingContentType:(NSString *)inType toHandle:(AIHandle *)inHandle
+- (BOOL)availableForSendingContentType:(NSString *)inType toChat:(AIChat *)inChat
 {
-    BOOL available = NO;
+    AIListObject 	*listObject = [inChat object];
+    BOOL 		available = NO;
 
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
-        //If we're online, ("and the contact is online", nil, or not on our list), return YES
-        if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE && //If we're online
-           (![[handleDict allValues] containsObject:inHandle] || [[[inHandle statusDictionary] objectForKey:@"Online"] intValue])){
-            available = YES;
+        //If we are online
+        if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE){
+            if(!inChat || !listObject){
+                available = YES;
+
+            }else{
+                AIHandle	*handle = [(AIListContact *)listObject handleForAccount:self];
+
+                if(![[handleDict allValues] containsObject:handle] || [[[handle statusDictionary] objectForKey:@"Online"] intValue]){
+                    available = YES;
+                }
+            }
         }
     }
 
     return(available);
 }
+
+- (BOOL)openChat:(AIChat *)inChat
+{
+    return(YES);
+}
+
+- (BOOL)closeChat:(AIChat *)inChat
+{
+    return(YES);
+}
+
+
+
 
 
 // AIAccount_Status --------------------------------------------------------------------------------
@@ -451,7 +473,12 @@ extern void* objc_getClass(const char *name);
         //If this is not just a "typing" message, Process the received message string
         if(!(flags & kMessageTypingFlag)){
             messageText = [AIHTMLDecoder decodeHTML:[inMessage body]];
-            messageObject = [AIContentMessage messageWithSource:[handle containingContact] destination:self date:nil message:messageText];
+
+            messageObject = [AIContentMessage messageInChat:[[owner contentController] chatWithListObject:[handle containingContact] onAccount:self]
+                                                 withSource:[handle containingContact]
+                                                destination:self
+                                                       date:nil
+                                                    message:messageText];
             [[owner contentController] addIncomingContentObject:messageObject];
         }
     }

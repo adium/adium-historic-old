@@ -19,13 +19,11 @@
 
 @implementation AIListGroup
 
-
 - (id)initWithUID:(NSString *)inUID
 {
-    [super initWithUID:inUID];
+    [super initWithUID:inUID serviceID:nil];
 
     objectArray = [[NSMutableArray alloc] init];
-//    sortedObjectArray = [[NSMutableArray alloc] init];
     visibleCount = 0;
     expanded = NO;
     
@@ -36,7 +34,6 @@
 {
     return(UID);
 }
-
 
 //Contained Objects
 //Returns the specified object
@@ -52,8 +49,6 @@
     return([objectArray objectEnumerator]);
 }
 
-
-
 //Expanded State
 //Set whether this group is expanded or collapsed
 - (void)setExpanded:(BOOL)inExpanded
@@ -63,7 +58,6 @@
 - (BOOL)isExpanded{
     return(expanded);
 }
-
 
 //Returns the number of visible objects in this group
 - (unsigned)visibleCount
@@ -75,22 +69,6 @@
 {
     return([objectArray count]);
 }
-
-
-//Sorting
-//Returns the number of visible/sorted objects in this group
-/*- (unsigned)sortedCount
-{
-    return(sortedCount);
-}
-
-//Returns the specified visible/sorted object
-- (id)sortedObjectAtIndex:(unsigned)index
-{
-    NSParameterAssert(index >= 0 && index < [sortedObjectArray count]);
-
-    return([sortedObjectArray objectAtIndex:index]);
-}*/
 
 //Resorts the group contents
 - (void)sortGroupAndSubGroups:(BOOL)subGroups sortController:(id <AIListSortController>)sortController
@@ -135,16 +113,7 @@
 {
     [inObject setContainingGroup:self];
     [objectArray addObject:inObject];
-//    [sortedObjectArray addObject:inObject];
 }
-
-//Add an object to this group
-/*- (void)insertObject:(AIListObject *)inObject atIndex:(int)index
-{
-    [inObject setContainingGroup:self];
-    [objectArray insertObject:inObject atIndex:index];
-//    [sortedObjectArray addObject:inObject]; //since the array is sorted, placement makes no difference
-}*/
 
 //Replace an object in this group
 - (void)replaceObject:(AIListObject *)oldObject with:(AIListObject *)newObject
@@ -153,9 +122,6 @@
 
     index = [objectArray indexOfObject:oldObject];
     [objectArray replaceObjectAtIndex:index withObject:newObject];
-
-//    index = [sortedObjectArray indexOfObject:oldObject];
-//    [sortedObjectArray replaceObjectAtIndex:index withObject:newObject];
 }
 
 //Removes an object from this group
@@ -163,7 +129,6 @@
 {
     [inObject setContainingGroup:nil];
     [objectArray removeObject:inObject];
-//    [sortedObjectArray removeObject:inObject];
 }
 
 //Returns the index of an object
@@ -186,7 +151,6 @@
         
     //Remove the objects
     [objectArray removeAllObjects];
-//    [sortedObjectArray removeAllObjects];
     visibleCount = 0;
 }
 

@@ -16,37 +16,19 @@
 #import <Foundation/Foundation.h>
 #import "AIListObject.h"
 
-@class AIHandle, AIAccount;
-@protocol AIContentObject;
+@class AIHandle, AIAccount, AIContentObject;
 
 @interface AIListContact : AIListObject {
-    NSMutableArray	*contentObjectArray;
-    NSMutableDictionary	*statusDictionary;
     NSMutableArray	*handleArray;
-
-    NSString		*serviceID;
 }
 
 - (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID;
-- (NSString *)serviceID;
-- (NSString *)UIDAndServiceID;
 
 //Contained Handles
-//- (unsigned)handleCount;
-//- (id)handleAtIndex:(unsigned)index;
-//- (NSEnumerator *)handleEnumerator;
 - (AIHandle *)handleForAccount:(AIAccount *)inAccount;
 - (void)addHandle:(AIHandle *)inHandle;
 - (void)removeHandle:(AIHandle *)inHandle;
 - (void)removeAllHandles;
 - (int)numberOfHandles;
-
-//Content
-- (NSArray *)contentObjectArray;
-- (void)addContentObject:(id <AIContentObject>)inObject;
-
-//Status
-- (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey;
-
 
 @end

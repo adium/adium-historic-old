@@ -16,7 +16,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-@class AITextProfilePreferences, AIPreferenceViewController, AIContactObserver, AILinkTrackingController;
+@class AITextProfilePreferences, AIPreferenceViewController, AIListObjectObserver, AILinkTrackingController;
 
 @interface AITextProfilesPlugin : AIPlugin {    
     AITextProfilePreferences		*preferences;

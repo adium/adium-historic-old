@@ -16,8 +16,8 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-@interface AIContactStatusDockOverlaysPlugin : AIPlugin <AIContactObserver> {
-    NSMutableArray		*unviewedContactsArray;
+@interface AIContactStatusDockOverlaysPlugin : AIPlugin <AIListObjectObserver> {
+    NSMutableArray		*unviewedObjectsArray;
     AIIconState			*overlayState;
 
 }

@@ -250,20 +250,20 @@
 //- The last account used to message this contact
 //- The last account used to message anyone
 //- The first available account on the account list
-- (AIAccount *)accountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
+- (AIAccount *)accountForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject
 {
     NSEnumerator	*enumerator;
     AIAccount		*account;
 
     // Preferred account for this contact --
     // The preferred account always has priority, as long as it is available for sending content
-    if(inContact){
+    if(inObject){
         NSString	*accountID = [[owner preferenceController] preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT
                                                                        group:PREF_GROUP_ACCOUNTS
-                                                                      object:inContact];
+                                                                      object:inObject];
 
         if(accountID && (account = [self accountWithID:accountID])){
-            if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:nil]){
+            if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil]){
                 return(account);
             }
         }
@@ -272,29 +272,29 @@
     // Last account used to message anyone --
     // Next, the last account used to message someone is picked, as long as it is available for sending content
     if(lastAccountIDToSendContent && (account = [self accountWithID:lastAccountIDToSendContent])){
-        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:nil]){
+        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil]){
             return(account);
         }
     }
 
-    // First available account that can see the handle --
+    // First available account that can see the handle -- (only applies to contacts)
     // If this is the first message opened in this session, the first account with the contact on it's contact list is choosen
-    if(inContact){
+    if(inObject && [inObject isKindOfClass:[AIListContact class]]){
         enumerator = [accountArray objectEnumerator];
         while((account = [enumerator nextObject])){
-            AIHandle	*handle = [inContact handleForAccount:account];
-            
-            if(handle && [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:handle]){
+            AIHandle	*handle = [(AIListContact *)inObject handleForAccount:account];
+
+            if(handle && [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil]){
                 return(account);
             }
-        }
+        }        
     }
         
     // If the handle does not exist on any contact lists, the first account available for sending content is used
     // First available account that can see the handle --
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
-        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:nil]){
+        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil]){
             return(account);
         }
     }
@@ -363,13 +363,14 @@
 //Watch outgoing content, remembering the user's choice of source account
 - (void)didSendContent:(NSNotification *)notification
 {
-    AIListContact	*destContact = [notification object];
-    AIAccount		*sourceAccount = (AIAccount *)[[[notification userInfo] objectForKey:@"Object"] source];
+    AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
+    AIListObject	*destObject = [contentObject destination];
+    AIAccount		*sourceAccount = (AIAccount *)[contentObject source];
 
     [[owner preferenceController] setPreference:[sourceAccount accountID]
                                          forKey:KEY_PREFERRED_SOURCE_ACCOUNT
                                           group:PREF_GROUP_ACCOUNTS
-                                        contact:destContact];
+                                         object:destObject];
 
     [lastAccountIDToSendContent release];
     lastAccountIDToSendContent = [[sourceAccount accountID] retain];

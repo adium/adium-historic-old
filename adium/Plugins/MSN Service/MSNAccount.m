@@ -25,15 +25,27 @@
 /* AIAccount_Content */
 /*********************/
 
-- (BOOL)sendContentObject:(id <AIContentObject>)object 
+- (BOOL)sendContentObject:(AIContentObject *)object
 {
     return NO;
 }
+
 // Returns YES if the contact is available for receiving content of the specified type
-- (BOOL)availableForSendingContentType:(NSString *)inType toHandle:(AIHandle *)inHandle
+- (BOOL)availableForSendingContentType:(NSString *)inType toChat:(AIChat *)inChat
 {
     return NO;
 }
+
+- (BOOL)openChat:(AIChat *)inChat
+{
+    return(NO);
+}
+
+- (BOOL)closeChat:(AIChat *)inChat
+{
+    return(NO);
+}
+
 
 /*********************/
 /* AIAccount_Handles */
@@ -324,4 +336,5 @@
         while(![socket readyForReceiving]) {}
     }
 }
+
 @end

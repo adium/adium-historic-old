@@ -16,9 +16,9 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-@protocol AIContactObserver;
+@protocol AIListObjectObserver;
 
-@interface AIOfflineContactHidingPlugin : AIPlugin <AIContactObserver> {
+@interface AIOfflineContactHidingPlugin : AIPlugin <AIListObjectObserver> {
 
 }
 

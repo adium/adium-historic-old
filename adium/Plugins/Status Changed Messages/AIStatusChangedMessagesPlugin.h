@@ -16,9 +16,9 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-@protocol AIContactObserver;
+@protocol AIListObjectObserver;
 
-@interface AIStatusChangedMessagesPlugin : AIPlugin  <AIContactObserver> {
+@interface AIStatusChangedMessagesPlugin : AIPlugin  <AIListObjectObserver> {
 
 }
 

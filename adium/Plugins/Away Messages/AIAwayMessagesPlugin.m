@@ -111,8 +111,8 @@
 //Called when Adium receives content
 - (void)didReceiveContent:(NSNotification *)notification
 {
-    id <AIContentObject>	contentObject = [[notification userInfo] objectForKey:@"Object"];
-    NSAttributedString		*awayMessage = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"AwayMessage" account:nil]];
+    AIContentObject 	*contentObject = [[notification userInfo] objectForKey:@"Object"];
+    NSAttributedString	*awayMessage = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"AwayMessage" account:nil]];
     
     //If the user received a message, send our away message to them
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
@@ -122,12 +122,13 @@
             //Create and send an away bounce message (If the sender hasn't received one already)
             if(![receivedAwayMessage containsObject:[contact UIDAndServiceID]]){
                 AIContentMessage	*responseContent;
-    
-                responseContent = [AIContentMessage messageWithSource:[contentObject destination]
-                                                          destination:contact
-                                                                 date:nil
-                                                              message:awayMessage];
-    
+
+                responseContent = [AIContentMessage messageInChat:[contentObject chat]
+                                                       withSource:[contentObject destination]
+                                                      destination:contact
+                                                             date:nil
+                                                          message:awayMessage];
+                
                 [[owner contentController] sendContentObject:responseContent];
             }
         }
@@ -137,7 +138,7 @@
 //Called when Adium sends content
 - (void)didSendContent:(NSNotification *)notification
 {
-    id <AIContentObject>	contentObject = [[notification userInfo] objectForKey:@"Object"];
+    AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
 
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
         AIListContact	*contact = [contentObject destination];

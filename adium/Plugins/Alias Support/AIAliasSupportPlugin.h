@@ -18,12 +18,12 @@
 
 @protocol AIListEditorColumnController;
 
-@interface AIAliasSupportPlugin : AIPlugin <AIPreferenceViewControllerDelegate, AIContactObserver, AIListEditorColumnController> {
+@interface AIAliasSupportPlugin : AIPlugin <AIPreferenceViewControllerDelegate, AIListObjectObserver, AIListEditorColumnController> {
     IBOutlet    NSView		*view_contactAliasInfoView;
     IBOutlet	NSTextField	*textField_alias;
 
     AIPreferenceViewController		*contactView;
-    AIListContact			*activeContactObject;
+    AIListObject			*activeListObject;
 }
 
 - (void)installPlugin;

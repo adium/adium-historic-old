@@ -21,7 +21,7 @@
 #define TEXT_FORCING_DEFAULT_PREFS	@"TextForcingDefaults"
 
 @interface AITextForcingPlugin (PRIVATE)
-- (void)filterContentObject:(id <AIContentObject>)inObject;
+- (void)filterContentObject:(AIContentObject *)inObject;
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
@@ -52,7 +52,7 @@
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 }
 
-- (void)filterContentObject:(id <AIContentObject>)inObject
+- (void)filterContentObject:(AIContentObject *)inObject
 {
     if([[inObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
         AIContentMessage		*contentMessage = (AIContentMessage *)inObject;

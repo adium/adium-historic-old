@@ -15,24 +15,21 @@
 
 #import <Cocoa/Cocoa.h>
 #import "AIAdium.h"
+#import "AIContentObject.h"
 
 #define CONTENT_MESSAGE_TYPE		@"Message"		//Type ID for this content
 
-@interface AIContentMessage : NSObject <AIContentObject> {
+@class AIChat;
 
-    id 				source;
-    id	 			destination;
+@interface AIContentMessage : AIContentObject {
     NSDate 			*date;
     NSAttributedString 		*message;
     
 }
 
-+ (id)messageWithSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage;
-- (NSString *)type;
-- (NSAttributedString *)message;
-- (id)source;
-- (id)destination;
++ (id)messageInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage;
 - (NSDate *)date;
+- (NSAttributedString *)message;
 - (void)setMessage:(NSAttributedString *)inMessage;
 
 @end

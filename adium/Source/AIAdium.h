@@ -15,8 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferenceView, AIMenuController, AILoginWindowController, AIAccountWindowController, AIAccount, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIIconFamily, AIDockController, AIHandle, AIListContact, AIListGroup, AIListObject, AIIconState, AIContactListGeneration;
-@protocol AIContentObject;
+@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferenceView, AIMenuController, AILoginWindowController, AIAccountWindowController, AIAccount, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIIconFamily, AIDockController, AIHandle, AIListContact, AIListGroup, AIListObject, AIIconState, AIContactListGeneration, AIChat, AIContentObject;
 
 @interface AIAdium : NSObject {
 
@@ -123,8 +122,8 @@ typedef enum {
 #define Account_PropertiesChanged				@"Account_PropertiesChanged"
 #define Account_StatusChanged					@"Account_StatusChanged"
 #define Account_HandlesChanged					@"Account_HandlesChanged"
-#define Contact_AttributesChanged				@"Contact_AttributesChanged"
-#define Contact_StatusChanged					@"Contact_StatusChanged"
+#define ListObject_AttributesChanged				@"ListObject_AttributesChanged"
+#define ListObject_StatusChanged				@"ListObject_StatusChanged"
 #define Contact_OrderChanged					@"Contact_OrderChanged"
 #define Contact_ListChanged					@"Contact_ListChanged"
 #define Contact_SortSelectorListChanged				@"Contact_SortSelectorListChanged"
@@ -151,16 +150,16 @@ typedef enum {
 #define Dock_IconDidChange					@"Dock_IconDidChange"
 
 // Public core controller protocols ------------------------------------------------------------
-@protocol AIContactObserver //notified of changes
-    - (NSArray *)updateContact:(AIListContact *)inContact keys:(NSArray *)inModifiedKeys;
+@protocol AIListObjectObserver //notified of changes
+    - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys;
 @end
 
-@protocol AIContactLeftView //Draws to the left of a handle
+@protocol AIListObjectLeftView //Draws to the left of a handle
     - (void)drawInRect:(NSRect)inRect;
     - (float)widthForHeight:(int)inHeight computeMax:(BOOL)computeMax;
 @end
 
-@protocol AIContactRightView //Draws to the right of a handle
+@protocol AIListObjectRightView //Draws to the right of a handle
 
 @end
 
@@ -170,7 +169,7 @@ typedef enum {
 @end
 
 @protocol AIMessageViewController <NSObject>
-- (NSView *)messageViewForContact:(AIListContact *)inContact;
+- (NSView *)messageViewForChat:(AIChat *)inChat;
 - (void)closeMessageView:(NSView *)inView;
 @end
 
@@ -179,24 +178,15 @@ typedef enum {
 - (void)setAttributedString:(NSAttributedString *)inAttributedString;
 - (void)setTypingAttributes:(NSDictionary *)attrs;
 - (BOOL)availableForSending;
-- (AIListContact *)contact;
-- (AIAccount *)account;
+- (AIChat *)chat;
 @end
 
 @protocol AIContentHandler //Handles the display of a content type
 
 @end
 
-@protocol AIContentObject
-- (NSString *)type;		//Return the unique type identifier for this object
-- (id)source;
-- (id)destination;
-- (BOOL)filterObject;	//If NO, this content is not passed through the content filters
-- (BOOL)trackObject;	//If NO, this content is not tracked.  This means it's NOT stored within the contact, and sending notifications are NOT broadcast
-@end
-
 @protocol AIContentFilter
-- (void)filterContentObject:(id <AIContentObject>)inObject;
+- (void)filterContentObject:(AIContentObject *)inObject;
 @end
 
 @protocol AITextEntryFilter //Interpret text as it's entered
@@ -257,21 +247,18 @@ typedef enum {
 @end
 
 @interface AIAccountController : NSObject{
-
     IBOutlet	AIAdium		*owner;	
 
     NSMutableArray		*accountArray;			//Array of active accounts
-
     NSMutableArray		*availableServiceArray;
     NSString			*lastAccountIDToSendContent;
-
     NSMutableDictionary		*accountStatusDict;
 }
 
 //Access to the account list
 - (NSArray *)accountArray;
 - (AIAccount *)accountWithID:(NSString *)inID;
-- (AIAccount *)accountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact;
+- (AIAccount *)accountForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
 
 //Managing accounts
 - (AIAccount *)newAccountAtIndex:(int)index;
@@ -288,9 +275,8 @@ typedef enum {
 - (void)forgetPasswordForAccount:(AIAccount *)inAccount;
 
 //Access to services
-- (NSArray *)availableServiceArray;
-//- (AIServiceType *)serviceTypeWithID:(NSString *)inServiceID;
 - (void)registerService:(id <AIServiceController>)inService;
+- (NSArray *)availableServiceArray;
 
 @end
 
@@ -301,16 +287,32 @@ typedef enum {
 
     NSMutableArray		*outgoingContentFilterArray;
     NSMutableArray		*incomingContentFilterArray;
+
+    NSMutableDictionary		*chatDict;
 }
 
 //Content default handlers
 - (void)registerDefaultHandler:(id <AIContentHandler>)inHandler forContentType:(NSString *)inType;
-- (void)invokeDefaultHandlerForObject:(id <AIContentObject>)inObject;
+- (void)invokeDefaultHandlerForObject:(AIContentObject *)inObject;
+
+//Chats
+- (void)addIncomingContentObject:(AIContentObject *)inObject;
+- (BOOL)sendContentObject:(AIContentObject *)inObject;
+
+- (BOOL)closeChat:(AIChat *)inChat;
+- (AIChat *)chatWithListObject:(AIListObject *)inObject onAccount:(AIAccount *)inAccount;
+- (NSArray *)allChatsWithListObject:(AIListObject *)inObject;
+
+
+
+
+//- (AIChat *)chatForSendingToContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount;
+//- (BOOL)closeChat:(AIChat *)inChat;
+//- (BOOL)inviteContact:(AIListContact *)inContact toChat:(AIChat *)inChat;
 
 //Sending / Receiving content
-- (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount;
-- (void)addIncomingContentObject:(id <AIContentObject>)inObject;
-- (BOOL)sendContentObject:(id <AIContentObject>)inObject;
+- (BOOL)availableForSendingContentType:(NSString *)inType toChat:(AIChat *)inChat onAccount:(AIAccount *)inAccount;
+- (void)addIncomingContentObject:(AIContentObject *)inObject;
 
 //Filtering text entry
 - (void)registerTextEntryFilter:(id <AITextEntryFilter>)inFilter;
@@ -361,10 +363,10 @@ typedef enum {
 
 //Contact status & Attributes
 - (void)handleStatusChanged:(AIHandle *)inHandle modifiedStatusKeys:(NSArray *)inModifiedKeys;
-- (void)contactStatusChanged:(AIListContact *)inContact modifiedStatusKeys:(NSArray *)inModifiedKeys;
-- (void)registerContactObserver:(id)inObserver;
-- (void)unregisterContactObserver:(id)inObserver;
-- (void)objectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys;
+- (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSArray *)inModifiedKeys;
+- (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver;
+- (void)unregisterListObjectObserver:(id)inObserver;
+- (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys;
 
 //Contact list sorting
 - (NSArray *)sortControllerArray;
@@ -422,7 +424,7 @@ typedef enum {
 
 //Message views
 - (void)registerMessageViewController:(id <AIMessageViewController>)inController;
-- (NSView *)messageViewForContact:(AIListContact *)inContact;
+- (NSView *)messageViewForChat:(AIChat *)inChat;
 
 //Messaging
 - (IBAction)initiateMessage:(id)sender;
@@ -465,11 +467,11 @@ typedef enum {
 //Defaults and access to preferencecs
 - (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)groupName;
 - (NSDictionary *)preferencesForGroup:(NSString *)groupName;
-- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListContact *)object;
-- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName contactKey:(NSString *)prefDictKey;
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object;
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName objectKey:(NSString *)prefDictKey;
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;
-- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName contact:(AIListContact *)object;
-- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName contactKey:(NSString *)prefDictKey;
+- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object;
+- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName objectKey:(NSString *)prefDictKey;
 
 @end
 

@@ -19,14 +19,14 @@
 #import <AIUtilities/AIUtilities.h>
 
 @interface AIStatusChangedMessagesPlugin (PRIVATE)
-- (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact;
+- (void)statusMessage:(NSString *)message forObject:(AIListObject *)object;
 @end
 
 @implementation AIStatusChangedMessagesPlugin
 
 - (void)installPlugin
 {
-    [[owner contactController] registerContactObserver:self];
+    [[owner contactController] registerListObjectObserver:self];
 
     //Observe contact status changes
     [[owner notificationCenter] addObserver:self selector:@selector(Contact_StatusAwayYes:) name:@"Contact_StatusAwayYes" object:nil];
@@ -38,17 +38,17 @@
 }
 
 //Catch away message changes and display them
-- (NSArray *)updateContact:(AIListContact *)inContact keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
 {
     
     if([inModifiedKeys containsObject:@"StatusMessage"]){
-        AIMutableOwnerArray	*statusMessageArray = [inContact statusArrayForKey:@"StatusMessage"];
+        AIMutableOwnerArray	*statusMessageArray = [inObject statusArrayForKey:@"StatusMessage"];
 
         if([statusMessageArray count] != 0){
             NSString		*statusMessage = [[statusMessageArray objectAtIndex:0] string];
 
             if([statusMessage length] != 0){
-                [self statusMessage:[NSString stringWithFormat:@"Away Message: \"%@\"",statusMessage] forContact:inContact];
+                [self statusMessage:[NSString stringWithFormat:@"Away Message: \"%@\"",statusMessage] forObject:inObject];
             }
             
         }
@@ -60,41 +60,45 @@
 
 
 - (void)Contact_StatusAwayYes:(NSNotification *)notification{
-    [self statusMessage:@"%@ went away" forContact:[notification object]];
+    [self statusMessage:@"%@ went away" forObject:[notification object]];
 }
 - (void)Contact_StatusAwayNo:(NSNotification *)notification{
-    [self statusMessage:@"%@ came back" forContact:[notification object]];
+    [self statusMessage:@"%@ came back" forObject:[notification object]];
 }
 - (void)Contact_StatusOnlineYes:(NSNotification *)notification{
-    [self statusMessage:@"%@ connected" forContact:[notification object]];
+    [self statusMessage:@"%@ connected" forObject:[notification object]];
 }
 - (void)Contact_StatusOnlineNO:(NSNotification *)notification{
-    [self statusMessage:@"%@ disconnected" forContact:[notification object]];
+    [self statusMessage:@"%@ disconnected" forObject:[notification object]];
 }
 - (void)Contact_StatusIdleYes:(NSNotification *)notification{
-    [self statusMessage:@"%@ went idle" forContact:[notification object]];
+    [self statusMessage:@"%@ went idle" forObject:[notification object]];
 }
 - (void)Contact_StatusIdleNo:(NSNotification *)notification{
-    [self statusMessage:@"%@ became active" forContact:[notification object]];
+    [self statusMessage:@"%@ became active" forObject:[notification object]];
 }
 
 
-//Post a status message
-- (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact
+//Post a status message on all activa chats for this object
+- (void)statusMessage:(NSString *)message forObject:(AIListObject *)object
 {
-    AIContentStatus		*content;
+    NSEnumerator	*enumerator;
+    AIChat		*chat;
 
-    //Create our content object
-    content = [AIContentStatus statusWithSource:contact
-                                    destination:[[owner accountController] accountForSendingContentType:CONTENT_STATUS_TYPE toContact:contact]
+    enumerator = [[[owner contentController] allChatsWithListObject:object] objectEnumerator];
+    while((chat = [enumerator nextObject])){
+        AIContentStatus	*content;
+
+        //Create our content object
+        content = [AIContentStatus statusInChat:chat
+                                     withSource:object
+                                    destination:object
                                            date:[NSDate date]
-                                        message:[NSString stringWithFormat:message,[contact displayName]]];
-    
-    //Add the object
-    [contact addContentObject:content];
-    [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded
-                                              object:contact
-                                            userInfo:[NSDictionary dictionaryWithObject:content forKey:@"Object"]];
+                                        message:[NSString stringWithFormat:message,[object displayName]]];
+
+        //Add the object
+        [[owner contentController] addIncomingContentObject:content];
+    }
 }
 
 

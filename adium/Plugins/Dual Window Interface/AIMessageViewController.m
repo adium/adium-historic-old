@@ -30,20 +30,53 @@
 #define RESIZE_CORNER_TOOLBAR_OFFSET 	0
 
 @interface AIMessageViewController (PRIVATE)
-- (id)initWithOwner:(id)inOwner contact:(AIListContact *)inContact account:(AIAccount *)inAccount content:(NSAttributedString *)inContent interface:(id <AIContainerInterface>)inInterface;
+- (id)initForChat:(AIChat *)inChat owner:(id)inOwner;
 - (void)dealloc;
 - (void)textDidChange:(NSNotification *)notification;
 - (void)sizeAndArrangeSubviews;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (float)textHeight;
+- (void)clearTextEntryView;
+- (void)setChat:(AIChat *)inChat;
 @end
 
 @implementation AIMessageViewController
 
 //Create a new message view controller
-+ (AIMessageViewController *)messageViewControllerForContact:(AIListContact *)inContact account:(AIAccount *)inAccount content:(NSAttributedString *)inContent owner:(id)inOwner interface:(id <AIContainerInterface>)inInterface
++ (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat owner:(id)inOwner
 {
-    return([[[self alloc] initWithOwner:inOwner contact:inContact account:inAccount content:inContent interface:inInterface] autorelease]);
+    return([[[self alloc] initForChat:inChat owner:inOwner] autorelease]);
+}
+
+//Return our view
+- (NSView *)view{
+    return(view_contents);
+}
+
+//Return the chat associated with this message
+- (AIChat *)chat{
+    return(chat);
+}
+
+//Return the destination object of this message
+- (AIListObject *)listObject{
+    return(object);
+}
+
+//For our account selector view
+- (AIListContact *)contact
+{
+    if([object isKindOfClass:[AIListContact class]]){ //Account selector is only valid for contacts
+        return((AIListContact *)object);
+    }else{
+        return(nil);
+    }
+}
+
+
+//The source account of this message
+- (AIAccount *)account{
+    return(account);
 }
 
 //Send the entered message
@@ -53,14 +86,16 @@
         AIContentMessage	*message;
 
         //Send the message
-        [[owner notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:contact userInfo:nil];
-        message = [AIContentMessage messageWithSource:account
-                                          destination:contact
-                                                 date:nil
-                                              message:[[[textView_outgoing attributedString] copy] autorelease]];
+        [[owner notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:chat userInfo:nil];
+        message = [AIContentMessage messageInChat:chat
+                                       withSource:account
+                                      destination:object
+                                             date:nil
+                                          message:[[[textView_outgoing attributedString] copy] autorelease]];
 
+        
         if([[owner contentController] sendContentObject:message]){
-            [[owner notificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:contact userInfo:nil];
+            [[owner notificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:chat userInfo:nil];
         }
     }
 }
@@ -68,46 +103,72 @@
 //The entered message was sent
 - (IBAction)didSendMessage:(id)sender
 {
-    //Hide the account selection menu
-    [self setAccountSelectionMenuVisible:NO];
-
-    //Clear the message entry text view
-    [textView_outgoing setString:@""];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing]; //Force a textDidChange: notification
-}
-    
-
-//Return our view
-- (NSView *)view
-{
-    return(view_contents);
+    [self setAccountSelectionMenuVisible:NO]; //Hide the account selection menu
+    [self clearTextEntryView]; //Clear the message entry text view
 }
 
-//The destination contact of this message
-- (AIListContact *)contact
-{
-    return(contact);
-}
-
-
-//The sounce account of this message
+//Set the sounce account of this message
 - (void)setAccount:(AIAccount *)inAccount
 {
-    [account release]; account = nil;
-//    [handle release]; handle = nil;
+    if([object isKindOfClass:[AIListContact class]]){ //Don't let them do this if the object isn't a contact
+        if(account != inAccount){
+            NSArray	*existingContent = [[chat contentObjectArray] retain];
 
-    //Set the account
-    account = [inAccount retain];
-//    handle = [[[owner contactController] handleOfContact:contact forReceivingContentType:CONTENT_MESSAGE_TYPE fromAccount:account create:YES] retain];
+            //Set the account
+            [account release]; account = nil;
+            account = [inAccount retain];
 
-    [textView_outgoing setAccount:account];            
+            //Reconfigure our view for the new chat
+            [self setChat:[[owner contentController] chatWithListObject:object onAccount:account]];
+            //[chat appendContentArray:existingContent];
+            //If I decide to go this route, care must be taken to:
+            // - "Reload data" the message view
+            // - Convert all content objects to the new chat
+        }
+    }
 }
-- (AIAccount *)account{
-    return(account);
+
+//Set the chat represented by this view
+- (void)setChat:(AIChat *)inChat
+{
+    if(inChat != chat){
+        //Close our existing chat, and hold onto the new one
+        if(chat){
+            [[owner contentController] closeChat:chat];
+            [chat release]; chat = nil;
+        }
+        chat = [inChat retain];
+    
+        //Get our new account and contact
+        [account release]; account = [[inChat account] retain];
+        [object release]; object = [[inChat object] retain];
+
+        //Config the outgoing text view
+        [textView_outgoing setChat:chat];
+//        [textView_outgoing setListObject:object];
+//        [textView_outgoing setAccount:account];
+    
+        //Config our toolbar
+        [toolbar_bottom setIdentifier:MESSAGE_TAB_TOOLBAR];
+        [toolbar_bottom configureForObjects:[NSDictionary dictionaryWithObjectsAndKeys:inChat, @"Chat", object, @"ContactObject", textView_outgoing, @"TextEntryView", nil]];
+    
+        //Register for sending notifications
+        [[owner notificationCenter] removeObserver:self name:Interface_SendEnteredMessage object:nil];
+        [[owner notificationCenter] removeObserver:self name:Interface_DidSendEnteredMessage object:nil];
+        [[owner notificationCenter] addObserver:self selector:@selector(sendMessage:) name:Interface_SendEnteredMessage object:inChat];
+        [[owner notificationCenter] addObserver:self selector:@selector(didSendMessage:) name:Interface_DidSendEnteredMessage object:inChat];
+
+        //Create the message view
+        [view_messages release];
+        view_messages = [[owner interfaceController] messageViewForChat:chat];
+        [scrollView_messages setAndSizeDocumentView:view_messages];
+        [scrollView_messages setNextResponder:textView_outgoing];
+        [scrollView_messages setAutoScrollToBottom:YES];
+        [scrollView_messages setAutoHideScrollBar:NO];
+        [scrollView_messages setHasVerticalScroller:YES];
+
+    }
 }
-
-
-
 
 //Toggle the visibility of our account selection menu
 - (void)setAccountSelectionMenuVisible:(BOOL)visible
@@ -131,77 +192,69 @@
     [[textView_outgoing window] makeFirstResponder:textView_outgoing];
 }
 
+//Clear the message entry text view and force a textDidChange: notification
+- (void)clearTextEntryView
+{
+    [textView_outgoing setString:@""];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing];
+}
+
 
 //Private -----------------------------------------------------------------------------
-- (id)initWithOwner:(id)inOwner contact:(AIListContact *)inContact account:(AIAccount *)inAccount content:(NSAttributedString *)inContent interface:(id <AIContainerInterface>)inInterface
-{    
+//Init
+- (id)initForChat:(AIChat *)inChat owner:(id)inOwner
+{
     [super init];
-    
-    //
-    view_accountSelection = nil;
-    owner = [inOwner retain];
-    interface = [inInterface retain];
-    contact = [inContact retain];
-    currentTextEntryHeight = 0;
-    account = nil;
-//    handle = nil;
 
-    if(inAccount){
-        [self setAccount:inAccount];
-    }else{
-        [self setAccount:[[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toContact:contact]];
-    }
-            
+    //
+    currentTextEntryHeight = 0;
+    view_accountSelection = nil;
+    view_messages = nil;
+    account = nil;
+    object = nil;
+    chat = nil;
+    owner = [inOwner retain];
+
     //view
     [NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
 
-    //Observe our contact for status changes
-    [[owner notificationCenter] addObserver:self selector:@selector(contactStatusChanged:) name:Contact_StatusChanged object:contact];
-    
+    //Configure for our chat
+    [self setChat:inChat];
+
     //Config the outgoing text view
     [textView_outgoing setOwner:owner];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
-    [textView_outgoing setContact:inContact];
-    [textView_outgoing setAccount:[self account]];            
-    
-    //Config the toolbar
-    [toolbar_bottom setIdentifier:MESSAGE_TAB_TOOLBAR];
-    [toolbar_bottom configureForObjects:[NSDictionary dictionaryWithObjectsAndKeys:inContact,@"ContactObject",textView_outgoing,@"TextEntryView",nil]];
 
     //Resize and arrange our views
     [self sizeAndArrangeSubviews];
 
-    //Create the message view
-    view_messages = [[owner interfaceController] messageViewForContact:contact];
-    [scrollView_messages setAndSizeDocumentView:view_messages];
-    [scrollView_messages setNextResponder:textView_outgoing];
-    [scrollView_messages setAutoScrollToBottom:YES];
-    [scrollView_messages setAutoHideScrollBar:NO];
-    [scrollView_messages setHasVerticalScroller:YES];
-
     //Register for notifications
-    [[owner notificationCenter] addObserver:self selector:@selector(sendMessage:) name:Interface_SendEnteredMessage object:contact];
-    [[owner notificationCenter] addObserver:self selector:@selector(didSendMessage:) name:Interface_DidSendEnteredMessage object:contact];
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sizeAndArrangeSubviews) name:NSViewFrameDidChangeNotification object:view_contents];
-
-    //Put the initial content in the outgoing text view
-    [textView_outgoing setAttributedString:inContent];
-
+    [[owner notificationCenter] addObserver:self selector:@selector(listObjectStatusChanged:) name:ListObject_StatusChanged object:object];
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
-
+    
+    
     return(self);
 }
 
-- (void)dealloc
+- (void)closeMessageView
 {
     //Save spellcheck state
     [[owner preferenceController] setPreference:[NSNumber numberWithBool:[textView_outgoing isContinuousSpellCheckingEnabled]] forKey:KEY_MESSAGE_SPELL_CHECKING group:PREF_GROUP_SPELLING];
 
     //Clear the message entry text view
-    [textView_outgoing setString:@""];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing]; //Force a textDidChange: notification
+    [self clearTextEntryView];
 
+    //Close our chat
+    if(chat){
+        [[owner contentController] closeChat:chat];
+        [chat release]; chat = nil;
+    }
+}
+
+- (void)dealloc
+{
     //remove notifications
     [[owner notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -213,17 +266,17 @@
     [owner release]; owner = nil;
     [interface release]; interface = nil;
     [account release]; account = nil;
-    [contact release]; contact = nil;
+    [object release]; object = nil;
 
     [super dealloc];
 }
 
 //Our contact's status did change
-- (void)contactStatusChanged:(NSNotification *)notification
+- (void)listObjectStatusChanged:(NSNotification *)notification
 {    
     //Enable/Disable our text view sending
-    [textView_outgoing setAvailableForSending:[[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toContact:contact onAccount:account]];
-        
+    [textView_outgoing setAvailableForSending:[[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:chat onAccount:account]];
+
     //Update our toolbar
     [toolbar_bottom configureForObjects:nil];
 }
@@ -232,8 +285,8 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     //Configure the message sending keys
-    [textView_outgoing setSendOnEnter:[[[owner preferenceController] preferenceForKey:@"Send On Enter" group:PREF_GROUP_GENERAL object:contact] boolValue]];
-    [textView_outgoing setSendOnReturn:[[[owner preferenceController] preferenceForKey:@"Send On Return" group:PREF_GROUP_GENERAL object:contact] boolValue]];
+    [textView_outgoing setSendOnEnter:[[[owner preferenceController] preferenceForKey:@"Send On Enter" group:PREF_GROUP_GENERAL object:object] boolValue]];
+    [textView_outgoing setSendOnReturn:[[[owner preferenceController] preferenceForKey:@"Send On Return" group:PREF_GROUP_GENERAL object:object] boolValue]];
 
     //Configure spellchecking
     [textView_outgoing setContinuousSpellCheckingEnabled:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SPELLING] objectForKey:KEY_MESSAGE_SPELL_CHECKING] boolValue]];
@@ -305,6 +358,8 @@
 
     return(textHeight);
 }
+
+
 
 @end
 

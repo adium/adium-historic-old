@@ -23,11 +23,12 @@
     AIAdium			*owner;
 }
 
-+ (AIMessageTabViewItem *)messageTabViewItemWithIdentifier:(id)identifier messageView:(AIMessageViewController *)inMessageView owner:(id)inOwner;
++ (AIMessageTabViewItem *)messageTabWithView:(AIMessageViewController *)inMessageView owner:(id)inOwner;
 - (void)makeActive:(id)sender;
 - (void)close:(id)sender;
 - (NSString *)labelString;
 - (AIMessageViewController *)messageViewController;
 - (void)tabViewItemWasSelected;
+- (BOOL)tabShouldClose:(id)sender;
 
 @end

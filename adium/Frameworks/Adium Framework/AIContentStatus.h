@@ -15,22 +15,18 @@
 
 #import <Cocoa/Cocoa.h>
 #import "AIAdium.h"
+#import "AIContentObject.h"
 
 #define CONTENT_STATUS_TYPE		@"Status"		//Type ID for this content
 
-@interface AIContentStatus : NSObject <AIContentObject> {
-    id 				source;
-    id	 			destination;
+@interface AIContentStatus : AIContentObject {
     NSDate 			*date;
     NSString 			*message;
 
 }
 
-+ (id)statusWithSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage;
-- (NSString *)type;
++ (id)statusInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage;
 - (NSString *)message;
-- (id)source;
-- (id)destination;
 - (NSDate *)date;
 
 @end
