@@ -39,6 +39,7 @@
                 "checkBox_arrangeByGroup" = NSButton; 
                 "checkBox_arrangeTabs" = NSButton; 
                 "checkBox_enableLogging" = NSButton; 
+                "checkBox_enableMenuItem" = NSButton; 
                 "checkBox_messagesInTabs" = NSButton; 
                 "checkBox_sendOnEnter" = NSButton; 
                 "checkBox_sendOnReturn" = NSButton; 
