@@ -278,7 +278,7 @@ AIChat* imChatLookupFromConv(GaimConversation *conv)
 		name = g_strdup(gaim_normalize(account, conv->name));
 		
 		//First, find the GaimBuddy with whom we are conversing
-		buddy = gaim_find_buddy(account, name);
+		buddy = gaim_find_buddy(account, conv->name);
 		if (!buddy) {
 			GaimDebug (@"imChatLookupFromConv: Creating %s %s",account->username,name);
 			//No gaim_buddy corresponding to the conv->name is on our list, so create one
@@ -739,16 +739,16 @@ NSMutableDictionary* get_chatDict(void)
 {	
 	const char *encodedMessageUTF8String;
 	
-	if(encodedMessageUTF8String = [encodedMessage UTF8String]){
+	if(encodedMessage && (encodedMessageUTF8String = [encodedMessage UTF8String])){
 		GaimConversation	*conv = convLookupFromChat(chat,sourceAccount);
-		
+
 		switch (gaim_conversation_get_type(conv)) {				
 			case GAIM_CONV_IM: {
 				GaimConvIm			*im = gaim_conversation_get_im_data(conv);
 				gaim_conv_im_send_with_flags(im, encodedMessageUTF8String, flags);
 				break;
 			}
-				
+
 			case GAIM_CONV_CHAT: {
 				GaimConvChat	*gaimChat = gaim_conversation_get_chat_data(conv);
 				gaim_conv_chat_send(gaimChat, encodedMessageUTF8String);
@@ -826,8 +826,7 @@ NSMutableDictionary* get_chatDict(void)
 - (oneway void)gaimThreadAddUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	char		*buddyUTF8String;
-	const char	*groupUTF8String;
+	const char	*groupUTF8String, *buddyUTF8String;
 	GaimGroup	*group;
 	GaimBuddy	*buddy;
 	
@@ -839,10 +838,9 @@ NSMutableDictionary* get_chatDict(void)
 	}
 	
 	//Find the buddy (Create if necessary)
-	buddyUTF8String = g_strdup(gaim_normalize(account,[objectUID UTF8String]));
+	buddyUTF8String = [objectUID UTF8String];
 	buddy = gaim_find_buddy(account, buddyUTF8String);
 	if(!buddy) buddy = gaim_buddy_new(account, buddyUTF8String, NULL);
-	g_free(buddyUTF8String);
 
 	GaimDebug (@"Adding buddy %s to group %s",buddy->name, group->name);
 
@@ -863,12 +861,9 @@ NSMutableDictionary* get_chatDict(void)
 - (oneway void)gaimThreadRemoveUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	char		*buddyUTF8String;
 	GaimBuddy 	*buddy;
 	
-	buddyUTF8String =  g_strdup(gaim_normalize(account, [objectUID UTF8String]));
-	
-	if (buddy = gaim_find_buddy(account, buddyUTF8String)){
+	if (buddy = gaim_find_buddy(account, [objectUID UTF8String])){
 		const char	*groupUTF8String;
 		GaimGroup	*group;
 
@@ -883,10 +878,8 @@ NSMutableDictionary* get_chatDict(void)
 			gaim_blist_remove_buddy(buddy);
 		}
 	}
-	
-	//Cleanup after g_strdup() above
-	g_free(buddyUTF8String);
 }
+
 - (oneway void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
 {
 	[gaimThreadProxy gaimThreadRemoveUID:objectUID
@@ -915,15 +908,13 @@ NSMutableDictionary* get_chatDict(void)
 		gaim_blist_add_group(group, NULL);
 	}
 
-	buddyUTF8String = g_strdup(gaim_normalize(account, [objectUID UTF8String]));
-	buddy = gaim_find_buddy(account,buddyUTF8String);
+	buddy = gaim_find_buddy(account, [objectUID UTF8String]);
 	if(!buddy){
 		/* If we can't find a buddy, something's gone wrong... we shouldn't be moving a buddy we don't have.
  		 * As with the group, we'll just silently turn this into an add operation. */
 		buddy = gaim_buddy_new(account, buddyUTF8String, NULL);
 		needToAddServerside = YES;
 	}
-	g_free(buddyUTF8String);
 
 	/* gaim_blist_add_buddy() will update the local list and perform a serverside move as necessary */
 	gaim_blist_add_buddy(buddy, NULL, group, NULL);
