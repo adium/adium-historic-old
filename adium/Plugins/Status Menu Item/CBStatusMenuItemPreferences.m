@@ -34,24 +34,17 @@
 
 - (void)viewDidLoad
 {
-    if([[[adium preferenceController] preferenceForKey:KEY_STATUS_MENU_ITEM_ENABLED group:PREF_GROUP_STATUS_MENU_ITEM] boolValue]){
-        [checkBox_enableStatusMenuItem setState:NSOnState];
-    }else{
-        [checkBox_enableStatusMenuItem setState:NSOffState];
-    }
+    BOOL enabled = [[[adium preferenceController] preferenceForKey:KEY_STATUS_MENU_ITEM_ENABLED
+															 group:PREF_GROUP_STATUS_MENU_ITEM] boolValue];
+	
+	[checkBox_enableStatusMenuItem setState:(enabled ? NSOnState : NSOffState)];
 }
 
 - (IBAction)changePreference:(id)sender
 {
-    if([checkBox_enableStatusMenuItem state] == NSOnState){
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:YES] 
-                                             forKey:KEY_STATUS_MENU_ITEM_ENABLED
-                                              group:PREF_GROUP_STATUS_MENU_ITEM];
-    }else{
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:NO] 
-                                     forKey:KEY_STATUS_MENU_ITEM_ENABLED
-                                      group:PREF_GROUP_STATUS_MENU_ITEM];
-    }
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:[checkBox_enableStatusMenuItem state]] 
+										 forKey:KEY_STATUS_MENU_ITEM_ENABLED
+										  group:PREF_GROUP_STATUS_MENU_ITEM];
 }
 
 @end
