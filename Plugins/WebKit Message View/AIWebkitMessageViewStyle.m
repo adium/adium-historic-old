@@ -153,6 +153,14 @@ DeclareString(AppendNextMessage);
 	return([styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_SIZE]);
 }
 
+/*!
+ * @brief Style's has a header
+ */
+- (BOOL)hasHeader
+{
+	return(headerHTML && [headerHTML length]);
+}
+
 
 //Behavior -------------------------------------------------------------------------------------------------------------
 #pragma mark Behavior

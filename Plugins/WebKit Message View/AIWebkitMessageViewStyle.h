@@ -79,6 +79,7 @@ typedef enum {
 - (BOOL)allowsCustomBackground;
 - (NSString *)defaultFontFamily;
 - (NSNumber *)defaultFontSize;
+- (BOOL)hasHeader;
 
 //Behavior
 - (void)setDateFormat:(NSString *)format;

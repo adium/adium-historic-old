@@ -169,6 +169,9 @@
 		[colorWell_customBackgroundColor setEnabled:allowCustomBackground];
 		[imageView_backgroundImage setEnabled:allowCustomBackground];
 		[popUp_backgroundImageType setEnabled:allowCustomBackground];
+		
+		//Disable the header control if this style doesn't have a header
+		[checkBox_showHeader setEnabled:[[previewController messageStyle] hasHeader]];
 	}
 	
 }
