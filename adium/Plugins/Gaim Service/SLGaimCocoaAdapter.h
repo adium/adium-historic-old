@@ -31,9 +31,12 @@
 - (oneway void)setBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount;
 - (oneway void)setIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount;
 
+- (oneway void)setCheckMail:(NSNumber *)checkMail forAccount:(id)adiumAccount;
+
 - (oneway void)getInfoFor:(NSString *)inUID onAccount:(id)adiumAccount;
 
 - (oneway void)MSNRequestBuddyIconFor:(NSString *)inUID onAccount:(id)adiumAccount;
+- (oneway void)OSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount;
 @end
 
 /*!
@@ -72,7 +75,10 @@
 - (oneway void)setBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount;
 - (oneway void)setIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount;
 
+- (oneway void)setCheckMail:(NSNumber *)checkMail forAccount:(id)adiumAccount;
+
 - (oneway void)MSNRequestBuddyIconFor:(NSString *)inUID onAccount:(id)adiumAccount;
+- (oneway void)OSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount;
 
 - (void *)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
 - (void *)handleNotifyEmails:(size_t)count detailed:(BOOL)detailed subjects:(const char **)subjects froms:(const char **)froms tos:(const char **)tos urls:(const char **)urls;

@@ -732,28 +732,14 @@ aim_srv_setavailmsg(od->sess, text);
 		if ([listObject isKindOfClass:[AIListContact class]] && 
 			[[(AIListContact *)listObject accountID] isEqualToString:[self uniqueObjectID]]){
 			
-			if (gaim_account_is_connected(account)){
-				const char  *uidUTF8String = [[listObject UID] UTF8String];
-				GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
+			if ([[userInfo objectForKey:@"Key"] isEqualToString:@"Notes"]){
 				
-				NSString	*key = [userInfo objectForKey:@"Key"];
+				NSString  *comment = [listObject preferenceForKey:@"Notes" 
+															group:PREF_GROUP_NOTES
+											ignoreInheritedValues:YES];
 				
-				if ([key isEqualToString:@"Notes"]){
-					
-					GaimGroup   *g;
-					OscarData   *od;
-					const char  *comment;
-					
-					if ((g = gaim_find_buddys_group(buddy)) && (od = account->gc->proto_data)){
-						comment = [[listObject preferenceForKey:@"Notes" 
-														  group:PREF_GROUP_NOTES
-										  ignoreInheritedValues:YES] UTF8String];
-						
-						aim_ssi_editcomment(od->sess, g->name, uidUTF8String, comment);	
-					}
-					
-				}
-			}
+				[[super gaimThread] OSCAREditComment:comment forUID:[listObject UID] onAccount:self];
+			}			
 		}
 	}
 }
