@@ -759,9 +759,9 @@ DeclareString(UID);
 {
 	NSDictionary	*allMetaContactsDict = [[adium preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
 																					group:PREF_GROUP_CONTACT_LIST];
-	NSArray			*containedContactsArray = [allMetaContactsDict objectForKey:[metaContact internalObjectID]];
+	NSArray			*containedContactsArray = [allMetaContactsDict objectForKey:[metaContact internalObjectID]];	
 	BOOL			restoredContacts;
-	
+
 	if([containedContactsArray count]){
 		[metaContact setDelayContainedObjectSorting:YES];
 		
@@ -820,26 +820,13 @@ DeclareString(UID);
 			[contactToMetaContactLookupDict setObject:metaContact 
 											   forKey:[AIListObject internalObjectIDForServiceID:[containedContact objectForKey:ServiceID]
 																							 UID:[containedContact objectForKey:UID]]];
-
-			/*
-			//This contained contact is a regular AIListContact.
-			NSEnumerator	*contactEnumerator;
-			AIListContact	*listContact = nil;			
-			contactEnumerator = [[self allContactsWithServiceID:[containedContact objectForKey:ServiceID]
-															UID:[containedContact objectForKey:UID]] objectEnumerator];
-
-			//Add all matching contacts on all accounts.
-			while (listContact = [contactEnumerator nextObject]){
-				if (updatePreferences)
-					[self addListObject:listContact toMetaContact:metaContact];
-				else
-					[self _performAddListObject:listContact toMetaContact:metaContact];					
-			}
-			 */
 		}
 	}
 	
-	if(shouldSaveMetaContacts) [self _saveMetaContacts:allMetaContactsDict];
+	if(shouldSaveMetaContacts) {
+		AILog(@"MetaContacts: Should save for %@",containedContactsArray);
+		[self _saveMetaContacts:allMetaContactsDict];
+	}
 }
 
 
@@ -855,17 +842,17 @@ DeclareString(UID);
 			AIListObject	*someObject;
 			
 			while(someObject = [enumerator nextObject]){
+
 				[self addListObject:someObject toMetaContact:metaContact];
 			}
 
 		}else{
 			AIMetaContact		*oldMetaContact;
 			
-			//Obtain any metaContact this listObject is current within, so we can remove it later
+			//Obtain any metaContact this listObject is currently within, so we can remove it later
 			oldMetaContact = [contactToMetaContactLookupDict objectForKey:[listObject internalObjectID]];
 			
 			if ([self _performAddListObject:listObject toMetaContact:metaContact]){
-				
 				//If this listObject was not in this metaContact in any form before, store the change
 				if (metaContact != oldMetaContact){
 					//Remove the list object from any other metaContact it is in at present
@@ -882,6 +869,7 @@ DeclareString(UID);
 
 - (void)_storeListObject:(AIListObject *)listObject inMetaContact:(AIMetaContact *)metaContact
 {
+	AILog(@"MetaContacts: Storing %@ in %@",listObject, metaContact);
 	NSDictionary		*containedContactDict;
 	NSMutableDictionary	*allMetaContactsDict;
 	NSMutableArray		*containedContactsArray;
@@ -918,6 +906,7 @@ DeclareString(UID);
 		[allMetaContactsDict setObject:containedContactsArray forKey:metaContactInternalObjectID];
 
 		//Save
+		AILog(@"MetaContacts: _storeListObject saving: %@",listObject);
 		[self _saveMetaContacts:allMetaContactsDict];
 
 		[[adium contactAlertsController] mergeAndMoveContactAlertsFromListObject:listObject 
@@ -960,7 +949,7 @@ DeclareString(UID);
 			[self _listChangedGroup:localGroup object:metaContact];
 		}
 	}
-	
+
 	return success;
 }
 
@@ -974,11 +963,12 @@ DeclareString(UID);
 
 	//Remove from the contactToMetaContactLookupDict first so we don't try to reinsert into this metaContact
 	[contactToMetaContactLookupDict removeObjectForKey:[listObject internalObjectID]];
-		
+	
+	[self delayListObjectNotifications];
 	while (theObject = [enumerator nextObject]){
 		[self removeListObject:theObject fromMetaContact:metaContact];
 	}
-
+	[self endListObjectNotificationsDelay];	
 }
 
 - (void)removeListObject:(AIListObject *)listObject fromMetaContact:(AIMetaContact *)metaContact
@@ -991,9 +981,8 @@ DeclareString(UID);
 
 	//Get the dictionary of all metaContacts
 	allMetaContactsDict = [[adium preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
-																	 group:PREF_GROUP_CONTACT_LIST];
-	
-	
+																   group:PREF_GROUP_CONTACT_LIST];
+
 	//Load the array for the metaContact
 	containedContactsArray = [allMetaContactsDict objectForKey:metaContactInternalObjectID];
 	
@@ -1025,17 +1014,20 @@ DeclareString(UID);
 	
 	//If we found a matching dict (referring to our contact in the old metaContact), remove it and store the result
 	if (containedContactDict){
-		NSMutableArray *newContainedContactsArray;
-		
+		NSMutableArray		*newContainedContactsArray;
+		NSMutableDictionary	*newAllMetaContactsDict;
+
 		newContainedContactsArray = [containedContactsArray mutableCopy];
 		[newContainedContactsArray removeObjectIdenticalTo:containedContactDict];
+
+		newAllMetaContactsDict = [allMetaContactsDict mutableCopy];
+		[newAllMetaContactsDict setObject:newContainedContactsArray
+								   forKey:metaContactInternalObjectID];
 		
-		[allMetaContactsDict setObject:newContainedContactsArray
-								forKey:metaContactInternalObjectID];
-		
-		[self _saveMetaContacts:allMetaContactsDict];
+		[self _saveMetaContacts:newAllMetaContactsDict];
 		
 		[newContainedContactsArray release];
+		[newAllMetaContactsDict release];
 	}
 	
 	//The listObject can be within the metaContact without us finding a containedContactDict if we are removing multiple
@@ -1153,14 +1145,13 @@ DeclareString(UID);
 
 - (void)_saveMetaContacts:(NSDictionary *)allMetaContactsDict
 {
-//	[[adium preferenceController] delayPreferenceChangedNotifications:YES];
+	AILog(@"MetaContacts: Saving!");
 	[[adium preferenceController] setPreference:allMetaContactsDict
 										 forKey:KEY_METACONTACT_OWNERSHIP
 										  group:PREF_GROUP_CONTACT_LIST];
 	[[adium preferenceController] setPreference:[allMetaContactsDict allKeys]
 										 forKey:KEY_FLAT_METACONTACTS
 										  group:PREF_GROUP_CONTACT_LIST];
-//	[[adium preferenceController] delayPreferenceChangedNotifications:NO];
 }
 
 //Sort list objects alphabetically by their display name
