@@ -90,7 +90,8 @@
  */
 - (void)awakeFromNib
 {
-	if(popUp_encryption) [popUp_encryption setMenu:[[adium contentController] encryptionMenuNotifyingTarget:nil]];
+	if(popUp_encryption) [popUp_encryption setMenu:[[adium contentController] encryptionMenuNotifyingTarget:nil 
+																								withDefault:NO]];
 }
 
 
