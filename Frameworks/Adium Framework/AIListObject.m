@@ -78,7 +78,7 @@ DeclareString(FormattedUID);
 	//
 	[UID release]; UID = nil;
 	[internalObjectID release]; internalObjectID = nil;
-	[containingObject release]; containigObject = nil;
+	[containingObject release]; containingObject = nil;
 	
     [super dealloc];
 }
