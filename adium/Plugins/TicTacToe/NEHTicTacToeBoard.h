@@ -19,20 +19,27 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #import <Foundation/Foundation.h>
 
-typedef enum {PLAYER_NONE, PLAYER_X, PLAYER_O} Player;
+typedef enum { PLAYER_NONE, PLAYER_X, PLAYER_O, PLAYER_DRAW } Player;
+
+enum {
+	defaultBoardSize = 3
+};
 
 @interface NEHTicTacToeBoard : NSObject {
-	
-	Player board[3][3];
+	unsigned boardSize;
+	Player **board;
+
 	Player currentPlayer;
 	int moves;
 }
+
+- (id)initWithSize:(unsigned)size;
 
 - (void)newGame;
 - (void)endGame;
 - (BOOL)gameOver;
 - (Player)nextPlayer;
 - (Player)winner;
-- (BOOL)move: (Player)who atRow:(int)row atColumn:(int)col;
+- (BOOL)move:(Player)who atRow:(unsigned)row atColumn:(unsigned)col;
 
 @end

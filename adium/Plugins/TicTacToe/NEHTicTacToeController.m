@@ -36,7 +36,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 @implementation NEHTicTacToeController
 
-- (id)initWithPlugin:(NEHGamePlugin*)inPlugin
+- (id)initWithPlugin:(NEHGamePlugin *)inPlugin
 {
 	[super initWithPlugin:inPlugin];
 	return self;
@@ -48,18 +48,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 	image_X = [self loadImage:@"X"];	
 }
 
-- (void)handleMessage:(NSString*)msg ofType:(NSString*)type
+- (void)handleMessage:(NSString *)msg ofType:(NSString *)type
 {
-	if([type isEqualToString:MSG_TYPE_MOVE])
-	{
-		if(state == State_Playing)
-		{
-			int row,col;
+	if([type isEqualToString:MSG_TYPE_MOVE]) {
+		if(state == State_Playing) {
+			unsigned row, col;
 			row = [msg characterAtIndex:0] - '0';
 			col = [msg characterAtIndex:2] - '0';
-			[self move:(player==PLAYER_X?PLAYER_O:PLAYER_X) atRow:row atColumn:col];
+			[self move:(player == PLAYER_X ? PLAYER_O : PLAYER_X) atRow:row atColumn:col];
+		} else {
+			NSLog(@"TTT:Move message received with state %d.", state);
 		}
-		else NSLog(@"TTT:Move message received with state %d.",state);
 	}
 	[super handleMessage:msg ofType:type];
 }
@@ -81,14 +80,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 - (void)didSendInvitation:(int)playAs
 {
-	player = (playAs == FIRST_PLAYER)?PLAYER_X:PLAYER_O;
-	if(player == PLAYER_X)
-	{
+	player = (playAs == FIRST_PLAYER ? PLAYER_X : PLAYER_O);
+	if(playAs == FIRST_PLAYER) {
+		player = PLAYER_X;
 		[imageView_sentPlayAs setImage:image_X];
 		[textField_sentMove setStringValue:PLAY_FIRST];
-	}
-	else
-	{
+	} else {
+		player = PLAYER_O;
 		[imageView_sentPlayAs setImage:image_O];
 		[textField_sentMove setStringValue:PLAY_SECOND];
 	}
@@ -97,49 +95,45 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 - (void)didReceiveInvitation:(int)playAs
 {
-	player = (playAs == FIRST_PLAYER)?PLAYER_X:PLAYER_O;
+	player = (playAs == FIRST_PLAYER ? PLAYER_X : PLAYER_O);
 	[textField_remoteContact setStringValue:[contact_OtherPlayer displayName]];
-	if(player == PLAYER_X)
-	{
+	if(player == PLAYER_X) {
 		[imageView_acceptPlayAs setImage:image_X];
 		[textField_acceptMove setStringValue:PLAY_FIRST];
-	}
-	else
-	{
+	} else {
 		[imageView_acceptPlayAs setImage:image_O];
 		[textField_acceptMove setStringValue:PLAY_SECOND];
 	}
 }
 
-- (NSString*)nibName
+- (NSString *)nibName
 {
 	return TTT_NIB;
 }
 
-- (NSString*)firstPlayerName
+- (NSString *)firstPlayerName
 {
 	return @"X";
 }
 
-- (NSString*)secondPlayerName
+- (NSString *)secondPlayerName
 {
 	return @"O";
 }
 
 
-- (NSImage*) loadImage:(NSString*)name
+- (NSImage *)loadImage:(NSString *)name
 {
-	NSString	* path;
-	NSImage		* img = nil;
-	NSBundle	* bundle = [NSBundle bundleForClass:[self class]];
-	if(path = [bundle pathForImageResource:name])
-	{
+	NSString *path;
+	NSImage  *img    =  nil;
+	NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+
+	if(path = [bundle pathForImageResource:name]) {
 		img = [[NSImage alloc] initWithContentsOfFile:path];
-	}
-	else
-	{
+	} else {
 		NSLog(@"TTT:Unable to open image %@",name);
 	}
+
 	return img;
 }
 
@@ -151,24 +145,25 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 - (IBAction)move:(id)sender
 {
-	if(state  != State_Playing)
-		return;
-	int		row = [squares selectedRow], 
-			col = [squares selectedColumn];
-	if([self move:player atRow:row atColumn:col])
-	{
+	if(state != State_Playing) return;
+
+	int	row = [squares selectedRow], 
+		col = [squares selectedColumn];
+
+	if(row >= 0 && col >= 0 && [self move:player atRow:row atColumn:col]) {
 		[self sendMessage:[NSString stringWithFormat:@"%d,%d",row,col] ofType:MSG_TYPE_MOVE];
-	}
-	else
+	} else {
 		NSBeep();
+	}
 }
 
 - (void)clearBoard
 {
-	int i,j;
-	for(i=0;i<3;i++)
-		for(j=0;j<3;j++)
+	for(int i = 0; i < 3; i++) {
+		for(int j = 0; j < 3; j++) {
 			[[squares cellAtRow:i column:j] setImage:nil];
+		}
+	}
 }
 
 - (void)reset
@@ -182,14 +177,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 - (void)updateStatus
 {
-	NSString * msg;
+	NSString *msg;
 	switch(state)
 	{
 		case State_Playing:
-			if(player == [board nextPlayer])
-				msg = STATE_YOUR_TURN;
-			else
-				msg = STATE_THEIR_TURN;
+			msg = (player == [board nextPlayer] ? STATE_YOUR_TURN : STATE_THEIR_TURN);
 			break;
 		default:
 			msg = STATE_NO_GAME;
@@ -198,34 +190,25 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 	[status setStringValue:msg];
 }
 
-- (BOOL)move:(Player)p atRow:(int)row atColumn:(int)col
+- (BOOL)move:(Player)p atRow:(unsigned)row atColumn:(unsigned)col
 {
-	Player winner;
-	if([board move:p atRow:row atColumn:col])
-	{
-		if(p == PLAYER_O)
-			[[squares cellAtRow:row column:col] setImage:image_O];
-		else
-			[[squares cellAtRow:row column:col] setImage:image_X];
-			
-		if([board nextPlayer] == PLAYER_NONE)
-		{
-			winner = [board winner];
-			if(winner != PLAYER_NONE)
-			{
-				[self gameDidComplete:(winner == player)?End_UserWon:End_UserLost displaySheet:YES];
-				[status setStringValue: (winner == player)?YOU_WIN:YOU_LOSE];
-				[squares setEnabled:NO];
-			}
-			else				//Tie
-			{
+	if([board move:p atRow:row atColumn:col]) {
+		[[squares cellAtRow:row column:col] setImage:(p == PLAYER_X ? image_X : image_O)];
+
+		if([board nextPlayer] == PLAYER_NONE) {
+			Player winner = [board winner];
+			if(winner != PLAYER_DRAW) {
+				[self gameDidComplete:(winner == player ? End_UserWon : End_UserLost) displaySheet:YES];
+				[status setStringValue:(winner == player ? YOU_WIN : YOU_LOSE)];
+			} else {
 				[self gameDidComplete:End_GameTied displaySheet:YES];
 				[status setStringValue: TIE];
-				[squares setEnabled:NO];
 			}
+			[squares setEnabled:NO];
 			state = State_GameOver;
+		} else {
+			[self updateStatus];
 		}
-		else [self updateStatus];
 		return YES;
 	}
 	return NO;
