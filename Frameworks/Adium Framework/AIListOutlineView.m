@@ -108,6 +108,11 @@
 	[self setNeedsDisplay:YES];
 }
 
+//
+- (void)cancelOperation:(id)sender
+{
+	[self deselectAll:nil];
+}
 
 //Sizing -----------------------------------------------------------------------------------------------------
 // Returns our desired size
