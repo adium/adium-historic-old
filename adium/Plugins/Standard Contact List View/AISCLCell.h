@@ -13,19 +13,18 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIListObject;
+@class AIListObject, AISCLOutlineView;
 
 @interface AISCLCell : NSCell {
+    AIListObject	*listObject;
+    BOOL			isGroup;
+
 	NSTextStorage 	*textStorage;
 	NSLayoutManager	*layoutManager;
 	NSTextContainer	*textContainer;
-	
-    AIListObject	*listObject;
-	
-    BOOL		isGroup;
 }
 
-- (void)setContact:(AIListObject *)inObject;
-- (NSArray *)cellSizeArrayForBounds:(NSRect)aRect inView:(NSView *)controlView;
+- (void)setListObject:(AIListObject *)inObject;
+- (NSArray *)cellSizeArrayForBounds:(NSRect)aRect inView:(AISCLOutlineView *)controlView;
 
 @end

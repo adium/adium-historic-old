@@ -10,7 +10,7 @@
 
 @class CSCheckmarkPreferences;
 
-@interface CSCheckmarkPlugin : AIPlugin <AIListObjectObserver, AIListObjectLeftView> {
+@interface CSCheckmarkPlugin : AIPlugin <AIListObjectObserver, AIListObjectView> {
 	NSImage						*checkmarkImage;
 	CSCheckmarkPreferences		*checkmarkPreferences;
 	BOOL						displayCheckmark;

@@ -1,5 +1,5 @@
 
-@interface LNStatusIcon : NSObject <AIListObjectLeftView> {
+@interface LNStatusIcon : NSObject <AIListObjectView> {
 
     NSArray	*imageArray;
 

@@ -37,13 +37,9 @@ typedef enum {
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
 @end
 
-@protocol AIListObjectLeftView //Draws to the left of a handle
+@protocol AIListObjectView
 - (void)drawInRect:(NSRect)inRect;
 - (float)widthForHeight:(int)inHeight;
-@end
-
-@protocol AIListObjectRightView //Draws to the right of a handle
-
 @end
 
 
