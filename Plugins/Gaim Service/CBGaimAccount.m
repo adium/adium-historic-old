@@ -1726,7 +1726,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				[image release];
 			}
 			
-		}else if([key isEqualToString:KEY_ACCOUNT_GAIM_CHECK_MAIL]){
+		}else if([key isEqualToString:KEY_ACCOUNT_CHECK_MAIL]){
 			//Update the mail checking setting if the account is already made (if it isn't, we'll set it when it is made)
 			if(account){
 				[gaimThread setCheckMail:[self shouldCheckMail]
@@ -1972,6 +1972,18 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 #pragma mark AIAccount Subclassed Methods
 - (void)initAccount
 {
+	NSDictionary	*defaults = [NSDictionary dictionaryNamed:[NSString stringWithFormat:@"GaimDefaults%@",[[self service] serviceID]]
+													 forClass:[self class]];
+	
+	if(defaults){
+		[[adium preferenceController] registerDefaults:defaults
+											  forGroup:GROUP_ACCOUNT_STATUS
+												object:self];
+	}else{
+		NSLog(@"Failed to load defaults for %@",[NSString stringWithFormat:@"GaimDefaults%@",[[self service] serviceID]]);
+	}
+	
+	//Defaults
     chatDict = [[NSMutableDictionary alloc] init];
 	shouldDisplayDict = [[NSMutableDictionary alloc] init];
 
@@ -2131,21 +2143,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	return(contact);
 }
 
-- (NSString *)host{
-	NSString *hostKey = [self hostKey];
-	return (hostKey ? [self preferenceForKey:hostKey group:GROUP_ACCOUNT_STATUS] : nil); 
-}
-- (int)port{ 
-	NSString *portKey = [self portKey];
-	return (portKey ? [[self preferenceForKey:portKey group:GROUP_ACCOUNT_STATUS] intValue] : nil); 
-}
-
-- (NSString *)hostKey { return nil; };
-- (NSString *)portKey { return nil; };
-
 - (NSNumber *)shouldCheckMail
 {
-	return([self preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS]);
+	return([self preferenceForKey:KEY_ACCOUNT_CHECK_MAIL group:GROUP_ACCOUNT_STATUS]);
 }
 
 - (BOOL)displayConversationClosed
