@@ -9,7 +9,7 @@
 #import "AITextColorPreviewView.h"
 
 @interface AITextColorPreviewView (PRIVATE)
-- (void)_init;
+- (void)_initTextColorPreviewView;
 @end
 
 @implementation AITextColorPreviewView
@@ -17,18 +17,18 @@
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     [super initWithCoder:aDecoder];
-    [self _init];
+    [self _initTextColorPreviewView];
     return(self);
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
     [super initWithFrame:frameRect];
-    [self _init];
+    [self _initTextColorPreviewView];
     return(self);
 }
 
-- (void)_init
+- (void)_initTextColorPreviewView
 {
 	backColorOverride = nil;
 }

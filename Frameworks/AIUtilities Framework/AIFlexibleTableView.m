@@ -19,7 +19,7 @@
 #define COPY_MENU_ITEM AILocalizedString(@"Copy","Copy to the clipboard")
 
 @interface AIFlexibleTableView (PRIVATE)
-- (void)_init;
+- (void)_initFlexibleTableView;
 - (NSAttributedString *)_selectedString;
 - (void)_resizeViewToWidth:(int)width height:(int)height;
 - (void)_resizeContents:(BOOL)resizeContents;
@@ -38,25 +38,25 @@
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     [super initWithCoder:aDecoder];
-    [self _init];
+    [self _initFlexibleTableView];
     return(self);
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
     [super initWithFrame:frameRect];
-    [self _init];
+    [self _initFlexibleTableView];
     return(self);
 }
 
 - (id)init
 {
     [super init];
-    [self _init];
+    [self _initFlexibleTableView];
     return(self);
 }
 
-- (void)_init
+- (void)_initFlexibleTableView
 {
     cursorTrackingRowArray = [[NSMutableArray alloc] init];
     rowArray = [[NSMutableArray alloc] init];

@@ -21,13 +21,12 @@
  - Expand / Collapse state control
  - A vertical column grid
  - Fixes a reload data crash
-
  */
 
 #import "AIAlternatingRowOutlineView.h"
 
 @interface AIAlternatingRowOutlineView (PRIVATE)
-- (void)_init;
+- (void)_initAlternatingRowOutlineView;
 - (void)outlineViewDeleteSelectedRows:(NSTableView *)tableView;
 - (void)_drawGridInClipRect:(NSRect)rect;
 - (BOOL)_restoreSelectionFromSavedSelection;
@@ -40,7 +39,7 @@
 {
     [super initWithCoder:aDecoder];
 
-    [self _init];
+    [self _initAlternatingRowOutlineView];
 
     return(self);
 }
@@ -49,9 +48,20 @@
 {
     [super initWithFrame:frameRect];
 
-    [self _init];
+    [self _initAlternatingRowOutlineView];
 
     return(self);
+}
+
+- (void)_initAlternatingRowOutlineView
+{
+	[super _init];
+	
+    drawsAlternatingRows = NO;
+	drawsBackground = YES;
+	hidesSelectionWhenNotMain = NO;
+    alternatingRowColor = [[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0] retain];
+    isOnPantherOrBetter = [NSApp isOnPantherOrBetter];
 }
 
 - (void)dealloc
@@ -62,16 +72,6 @@
     [super dealloc];
 }
 
-- (void)_init
-{
-	[super _init];
-	
-    drawsAlternatingRows = NO;
-	drawsBackground = YES;
-	hidesSelectionWhenNotMain = NO;
-    alternatingRowColor = [[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0] retain];
-    isOnPantherOrBetter = [NSApp isOnPantherOrBetter];
-}
 
 //Configuring ----------------------------------------------------------------------
 //Toggle the drawing of alternating rows

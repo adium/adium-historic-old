@@ -13,7 +13,7 @@
 #define COLOR_CUSTOM_TITLE		@"Custom…"
 
 @interface AIColorSelectionPopUpButton (PRIVATE)
-- (void)_init;
+- (void)_initColorSelectionPopUpButton;
 - (void)_buildColorMenu;
 - (NSImage *)_sampleImageForColor:(NSColor *)inColor;
 - (void)_setCustomColor:(NSColor *)inColor;
@@ -24,18 +24,18 @@
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     [super initWithCoder:aDecoder];
-    [self _init];
+    [self _initColorSelectionPopUpButton];
     return(self);
 }
 
 - (id)initWithFrame:(NSRect)buttonFrame pullsDown:(BOOL)flag
 {
     [super initWithFrame:buttonFrame pullsDown:flag];
-    [self _init];
+    [self _initColorSelectionPopUpButton];
     return(self);
 }
 
-- (void)_init
+- (void)_initColorSelectionPopUpButton
 {
     //
     availableColors = nil;

@@ -15,23 +15,27 @@
 
 #import "AIOutlineView.h"
 
+@implementation AIOutlineView (PRIVATE)
+- (void)_initOutlineView;
+@end
+
 @implementation AIOutlineView
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     [super initWithCoder:aDecoder];
-    [self _init];
+    [self _initOutlineView];
     return(self);
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
     [super initWithFrame:frameRect];
-    [self _init];
+    [self _initOutlineView];
     return(self);
 }
 
-- (void)_init
+- (void)_initOutlineView
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpand:) name:NSOutlineViewItemDidExpandNotification object:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidCollapse:) name:NSOutlineViewItemDidCollapseNotification object:self];

@@ -17,7 +17,7 @@
  */
 
 @interface ESImageViewWithImagePicker (PRIVATE)
-- (void)_init;
+- (void)_initImageViewWithImagePicker;
 - (void)showPickerController;
 - (void)delete;
 @end
@@ -29,18 +29,18 @@
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     [super initWithCoder:aDecoder];
-    [self _init];
+    [self _initImageViewWithImagePicker];
     return(self);
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
     [super initWithFrame:frameRect];
-	[self _init];
+	[self _initImageViewWithImagePicker];
 	return(self);
 }
 
-- (void)_init
+- (void)_initImageViewWithImagePicker
 {
 	pickerController = nil;
 	title = nil;
