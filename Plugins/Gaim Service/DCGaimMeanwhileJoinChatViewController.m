@@ -63,7 +63,6 @@
 	NSDictionary	*chatCreationInfo;
 	
 	//Obtain room and exchange from the view
-	//room = [NSString stringWithFormat:@"Chat %@",[NSString randomStringOfLength:5]];
 	topic = [textField_topic stringValue];
 	
 	if (topic && [topic length]){
