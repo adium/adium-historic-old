@@ -69,7 +69,7 @@
 	if (topic && [topic length]){
 		//The chatCreationInfo has keys corresponding to the GHashTable keys and values to match them.
 		chatCreationInfo = [NSDictionary dictionaryWithObject:topic
-													   forKey:@"chat_topic"];
+													   forKey:@"chat.topic"];
 		
 		[self doJoinChatWithName:topic
 					   onAccount:inAccount
