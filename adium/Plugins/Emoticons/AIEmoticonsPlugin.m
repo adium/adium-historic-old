@@ -566,13 +566,26 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
                     
                     //Place the emoticon into that index (If it isn't already in there)
                     if(![subIndex containsObject:emoticon]){
-                        [subIndex addObject:emoticon];
+						//Keep emoticons in order from largest to smallest.  This prevents icons that contain other
+						//icons from being masked by the smaller icons they contain.
+						//This cannot work unless the emoticon equivelents are broken down.
+						/*int i;
+						for(i = 0;i < [subIndex count]; i++){
+							if([subIndex objectAtIndex:i] equivelentLength] < ourLength]) break;
+						}*/
+                        
+						//Instead of adding the emoticon, add all of it's equivelants... ?
+						
+						[subIndex addObject:emoticon];
                     }
                 }
             }
             
         }
     }
+	
+	
+	//After building all the subIndexes, sort them by length here
 }
 
 #pragma mark Cache flushing
