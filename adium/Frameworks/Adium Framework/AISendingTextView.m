@@ -51,7 +51,7 @@ static NSImage *pushIndicatorImage = nil;
 
     //
     adium = [AIObject sharedAdiumInstance];
-	associatedScrollView = nil;
+	associatedView = nil;
     target = nil;
     selector = nil;
     chat = nil;
@@ -86,7 +86,7 @@ static NSImage *pushIndicatorImage = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	
     [chat release];
-	[associatedScrollView release];
+	[associatedView release];
     [returnArray release]; returnArray = nil;
     [historyArray release]; historyArray = nil;
     [pushArray release]; pushArray = nil;
@@ -117,16 +117,16 @@ static NSImage *pushIndicatorImage = nil;
 	clearOnEscape = inBool;
 }
 
-//Associate a scroll view with this text view for the scroll up/down keys
-- (void)setAssociatedScrollView:(NSScrollView *)inScrollView
+//Associate a view with this text view for key forwarding
+- (void)setAssociatedView:(NSView *)inView
 {
-	if(inScrollView != associatedScrollView){
-		[associatedScrollView release];
-		associatedScrollView = [inScrollView retain];
+	if(inView != associatedView){
+		[associatedView release];
+		associatedView = [inView retain];
 	}
 }
-- (NSScrollView *)associatedScrollView{
-	return(associatedScrollView);
+- (NSView *)associatedView{
+	return(associatedView);
 }
 
 
@@ -520,21 +520,22 @@ static NSImage *pushIndicatorImage = nil;
 
 //Keyboard navigation ------------------------------------------------------------------------
 #pragma mark Keyboard navigation
+
 //Page up or down in the message view
 - (void)scrollPageUp:(id)sender
 {
-    if([associatedScrollView respondsToSelector:@selector(pageUp:)]){
-		[associatedScrollView pageUp:nil];
+    if([associatedView respondsToSelector:@selector(pageUp:)]){
+		[associatedView pageUp:nil];
     }
 }
 - (void)scrollPageDown:(id)sender
 {
-    if([associatedScrollView respondsToSelector:@selector(pageDown:)]){
-		[associatedScrollView pageDown:nil];
+    if([associatedView respondsToSelector:@selector(pageDown:)]){
+		[associatedView pageDown:nil];
     }
 }
 
-- (void)keyDown: (NSEvent*) inEvent
+- (void)keyDown:(NSEvent*) inEvent
 {
 	NSString *charactersIgnoringModifiers = [inEvent charactersIgnoringModifiers];
 	
@@ -553,7 +554,6 @@ static NSImage *pushIndicatorImage = nil;
 				if( pushPop ) {
 					// Is there text?
 					NSAttributedString *tempMessage = nil;
-//					NSAttributedString *tempPush = nil;
 					
 					if( [[self textStorage] length] != 0 ){
 						tempMessage = [[self textStorage] copy];
@@ -582,31 +582,28 @@ static NSImage *pushIndicatorImage = nil;
 				[super keyDown:inEvent];
 			}
 		}else if(flags & NSCommandKeyMask){
-			if(inChar == NSUpArrowFunctionKey){
-				NSRect visibleRect = [associatedScrollView documentVisibleRect];
-				visibleRect.origin.y -= [associatedScrollView verticalLineScroll]*2;
-				[[associatedScrollView documentView] scrollRectToVisible:visibleRect]; 
-			}else if(inChar == NSDownArrowFunctionKey){
-				NSRect visibleRect = [associatedScrollView documentVisibleRect];
-				visibleRect.origin.y += [associatedScrollView verticalLineScroll]*2;
-				[[associatedScrollView documentView] scrollRectToVisible:visibleRect]; 
+			if(inChar == NSUpArrowFunctionKey || inChar == NSDownArrowFunctionKey){
+				//Pass the associatedView a keyDown event equivalent equal to inEvent except without the modifier flags
+				[associatedView keyDown:[NSEvent keyEventWithType:[inEvent type]
+														 location:[inEvent locationInWindow]
+													modifierFlags:nil
+														timestamp:[inEvent timestamp]
+													 windowNumber:[inEvent windowNumber]
+														  context:[inEvent context]
+													   characters:[inEvent characters]
+									  charactersIgnoringModifiers:charactersIgnoringModifiers
+														isARepeat:[inEvent isARepeat]
+														  keyCode:[inEvent keyCode]]];
 			}else{
 				[super keyDown:inEvent];
 			}
 			
-		}else if(inChar == NSHomeFunctionKey){
-			NSRect visibleRect = [associatedScrollView documentVisibleRect];
-			visibleRect.origin.y = 0;
-			[[associatedScrollView documentView] scrollRectToVisible:visibleRect]; 
-			
-		}else if(inChar == NSEndFunctionKey){
-			NSRect frame = [[associatedScrollView documentView] frame];
-			frame.origin.y = frame.size.height;
-			frame.size.height = 0;
-			[[associatedScrollView documentView] scrollRectToVisible:frame];
-			
 		}else if((inChar == '\E') && clearOnEscape){
 			[self setString:@""];
+			
+		}else if (inChar == NSPageUpFunctionKey || inChar == NSPageDownFunctionKey || 
+				  inChar == NSHomeFunctionKey || inChar == NSEndFunctionKey){
+			[associatedView keyDown:inEvent];
 			
 		}else{
 			[super keyDown:inEvent];
