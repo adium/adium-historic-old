@@ -29,6 +29,10 @@
 #define SCROLL_VIEW_PADDING_X	2
 #define SCROLL_VIEW_PADDING_Y	2
 
+#define PREF_GROUP_CONTACT_LIST			@"Contact List"
+#define KEY_CLWH_ALWAYS_ON_TOP			@"Always on Top"
+#define KEY_CLWH_HIDE				@"Hide While in Background"
+
 @interface AIContactListWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName interface:(id <AIContainerInterface>)inInterface owner:(id)inOwner;
 - (void)contactSelectionChanged:(NSNotification *)notification;
@@ -102,6 +106,17 @@
         autoResizeHorizontal = [[prefDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
 
         [self _configureAutoResizing];
+    } else if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0){
+	//Handle window ordering
+	NSDictionary * prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+
+	if ([[prefDict objectForKey:KEY_CLWH_ALWAYS_ON_TOP] boolValue]) {
+	    [[self window] setLevel:NSFloatingWindowLevel]; //always on top
+	} else {
+	    [[self window] setLevel:NSNormalWindowLevel]; //normal
+	}
+
+	[[self window] setHidesOnDeactivate:[[prefDict objectForKey:KEY_CLWH_HIDE] boolValue]];  //hides in background
     }
 }
 
@@ -252,6 +267,8 @@
 
     //
     [toolbar_bottom setIdentifier:CONTACT_LIST_TOOLBAR];
+
+    [self preferencesChanged:nil];
 }
 
 //Close the contact list window
