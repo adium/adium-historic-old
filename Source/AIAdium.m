@@ -223,7 +223,18 @@
 											   userInfo:versionUpgradeDict];
 	}
 	
-	[pluginController finishIniting]; //Should finish initing first; the accountController needs all accounts and services available
+	/* 
+	 Use willFinishIniting for controllers which:
+		a) depend on other controllers having init'd -AND-
+		b) supply information which other controllers or plugins will need to init
+	 */
+	[preferenceController willFinishIniting];
+	
+	/*
+	 Plugin controller should finish initing first. The accountController needs all accounts
+	 and services available.
+	*/
+	[pluginController finishIniting];
 	
 	/*
 	 Account controller should finish initing before the contact controller so accounts and services are available
