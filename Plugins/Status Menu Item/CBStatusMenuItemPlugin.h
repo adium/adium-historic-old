@@ -12,12 +12,9 @@
 #define PREF_GROUP_STATUS_MENU_ITEM     @"Status Menu Item"
 #define KEY_STATUS_MENU_ITEM_ENABLED    @"Status Menu Item Enabled"
 
-@class CBStatusMenuItemPreferences;
-
 @interface CBStatusMenuItemPlugin : AIPlugin 
 {
     CBStatusMenuItemController  *itemController;
-    CBStatusMenuItemPreferences *preferences;
 }
 
 @end
