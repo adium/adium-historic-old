@@ -16173,6 +16173,7 @@
 				34BDA19205314848000AB133,
 				C497519005BBBBCC009958A6,
 				4B584E17055DD7EA00E89D48,
+				6E23F84805E9CD9D007818A9,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -25361,6 +25362,20 @@
 //6E2
 //6E3
 //6E4
+		6E23F84705E9CD9C007818A9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = minus.tiff;
+			path = "Plugins/Account List Preferences/minus.tiff";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E23F84805E9CD9D007818A9 = {
+			fileRef = 6E23F84705E9CD9C007818A9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		6E4F2B1605CA013000C11243 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -31578,6 +31593,7 @@
 				4BAC8C8C05011FF300A8010A,
 				4B34BA8D04FE4D8900A8010A,
 				4B34BA8E04FE4D8900A8010A,
+				6E23F84705E9CD9C007818A9,
 			);
 			isa = PBXGroup;
 			name = "Account List Preferences";
