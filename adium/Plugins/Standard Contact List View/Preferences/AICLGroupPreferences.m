@@ -47,7 +47,7 @@
 //Preference view is closing
 - (void)viewWillClose
 {
-	[colorWell_group deactivate];
+	if([colorWell_group isActive]) [colorWell_group deactivate];
 }
 
 //Enable/disable controls that are available/unavailable

@@ -93,7 +93,7 @@
 
 - (void)viewWillClose
 {
-	[colorWell_labelGroupsColor deactivate];
+	if([colorWell_labelGroupsColor isActive]) [colorWell_labelGroupsColor deactivate];
 }
 
 //Enable/disable controls that are available/unavailable

@@ -90,7 +90,7 @@
 
 - (void)viewWillClose
 {
-	[colorWell_outlineGroupsColor deactivate];
+	if([colorWell_outlineGroupsColor isActive]) [colorWell_outlineGroupsColor deactivate];
 }
 
 //Enable/disable controls that are available/unavailable
