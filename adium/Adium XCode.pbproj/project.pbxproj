@@ -7357,19 +7357,6 @@
 			settings = {
 			};
 		};
-		349D706705998D370059824C = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			isa = PBXShellScriptBuildPhase;
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "buildnum=`$SYMROOT/../Other/buildnum`\nbuilddate=`perl -e 'print time;'`\necho $buildnum \"|\" $builddate > $SYMROOT/Adium\\ Crash\\ Reporter.app/Contents/Resources/buildnum\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
-		};
 		34ADDFFF05158D4B003B2F21 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -17833,8 +17820,10 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
+				GCC_ALTIVEC_EXTENSIONS = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				OPTIMIZATION_CFLAGS = "-O0";
@@ -17850,7 +17839,9 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUGGING_SYMBOLS = NO;
+				GCC_ALTIVEC_EXTENSIONS = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OPTIMIZATION_CFLAGS = "-Os";
 				ZERO_LINK = NO;
@@ -21054,7 +21045,6 @@
 				4B7F78B10597F42400162728,
 				4B7F78B20597F42400162728,
 				4B7F78B30597F42400162728,
-				349D706705998D370059824C,
 				4BC8AABA059A33B400F940E1,
 			);
 			buildRules = (
