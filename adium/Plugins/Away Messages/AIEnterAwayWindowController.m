@@ -93,7 +93,7 @@ AIEnterAwayWindowController	*sharedInstance = nil;
                 [newdict setObject:[[textView_awayMessage textStorage] dataRepresentation] forKey:@"Message"];
                 [tempArray replaceObjectAtIndex:index withObject:newdict];
                 notFound = NO;
-            }	
+            }
         }
 
         if (notFound) { //never found one to replace then add it
@@ -110,8 +110,8 @@ AIEnterAwayWindowController	*sharedInstance = nil;
         [[owner preferenceController] setPreference:tempArray forKey:KEY_SAVED_AWAYS group:PREF_GROUP_AWAY_MESSAGES];
     }
 
-//Close our window
-[self closeWindow:nil];
+    //Close our window
+    [self closeWindow:nil];
 }
 
 
@@ -156,7 +156,7 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 
     [comboBox_title setStringValue:[textView_awayMessage string]];
 
-    
+
     //Select the away text
     [textView_awayMessage setSelectedRange:NSMakeRange(0,[[textView_awayMessage textStorage] length])];
 
@@ -173,7 +173,7 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     [self loadAwayMessages];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectionChanged:) name:NSComboBoxSelectionDidChangeNotification object:comboBox_title];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSControlTextDidChangeNotification object:comboBox_title];
-    
+
     [[self window] makeFirstResponder:textView_awayMessage];
 }
 
@@ -199,23 +199,24 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     return(NO);
 }
 
-//User is editing an away message
 - (void)textDidChange:(NSNotification *)notification
 {
-    if(!edited_title) //only do this if the user hasn't edited the title manually
+    if ([notification object] == textView_awayMessage) //User is editing an away message
     {
-        [comboBox_title setStringValue:[textView_awayMessage string]];
+        if(!edited_title) //only do this if the user hasn't edited the title manually
+        {
+            [comboBox_title setStringValue:[textView_awayMessage string]];
+        }
     }
-}
+    else if ([notification object] == comboBox_title) //User is editing the away message title
+    {
 
-//User is editing the away message title
-- (void)controlTextDidChange:(NSNotification *)notification
-{
-    if([[comboBox_title stringValue] length] != 0){
-    	edited_title = YES;
-    }else{
-        edited_title = NO;
-        [self textDidChange:nil]; //Update the displayed title
+        if([[comboBox_title stringValue] length] != 0){
+            edited_title = YES;
+        }else{
+            edited_title = NO;
+            [self textDidChange:nil]; //Update the displayed title
+        }
     }
 }
 
@@ -224,15 +225,15 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 {
     if ([comboBox_title indexOfSelectedItem] != -1)
     {
-    NSDictionary * dict = [awayMessageArray objectAtIndex:[comboBox_title indexOfSelectedItem]];
+        NSDictionary * dict = [awayMessageArray objectAtIndex:[comboBox_title indexOfSelectedItem]];
 
-    [textView_awayMessage setAttributedString:[dict objectForKey:@"Message"]];
-    edited_title = YES;
-    [button_save setState:NO];
+        [textView_awayMessage setAttributedString:[dict objectForKey:@"Message"]];
+        edited_title = YES;
+        [button_save setState:NO];
 
-    //make the text editing active
-    [[self window] makeFirstResponder:textView_awayMessage];
-    [button_save setState:YES];
+        //make the text editing active
+        [[self window] makeFirstResponder:textView_awayMessage];
+        [button_save setState:YES];
     }
 }
 
