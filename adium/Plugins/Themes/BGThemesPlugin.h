@@ -13,20 +13,14 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-
 #import "BGThemesPreferences.h"
 
-#define THEME_ADIUM_DEFAULT		@"Adium Default"
+#define THEME_FOLDER_NAME		@"Themes"
+#define THEME_FOLDER_PATH		[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:THEME_FOLDER_NAME]
 
 @interface BGThemesPlugin : AIPlugin {
     BGThemesPreferences *themePane;
     NSString *themePath;
 }
--(void)saveTheme:(NSMutableDictionary *)saveTheme;
--(void)applyTheme:(NSString *)newThemeName;
--(void)createThemeNamed:(NSString *)newName by:(NSString *)newAuthor version:(NSString *)newVersion;
--(void)saveKey:(NSString *)key group:(NSString *)group toDict:(NSMutableDictionary *)dict;
--(void)applyPreferenceFromKey:(NSString *)key inDict:(NSDictionary *)dict;
+
 @end

@@ -13,26 +13,32 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-#import <Adium/Adium.h>
-#import <AIUtilities/AIUtilities.h>
-#import "BGThemeManageView.h"
-
 @interface BGThemesPreferences : AIPreferencePane {
-    // create
-    IBOutlet NSWindow *createWindow;
-    IBOutlet NSTextField *nameField;
-    IBOutlet NSTextField *authorField;
-    IBOutlet NSTextField *versionField;
-    IBOutlet AIPlasticButton *createButton;
-    IBOutlet AIPlasticButton *removeButton;
-    // manage
-    IBOutlet BGThemeManageView *themesList;
-    // other
+    // Create panel
+    IBOutlet NSWindow		*createWindow;
+    IBOutlet NSTextField	*textField_name;
+    IBOutlet NSTextField	*textField_author;
+    IBOutlet NSTextField	*textField_version;
+    IBOutlet NSButton		*button_create;
+    IBOutlet NSButton		*button_cancel;
+	
+    // List of themes
+    IBOutlet AIAlternatingRowTableView		*tableView_themesList;
+	IBOutlet NSButton						*button_apply;
+	IBOutlet NSButton						*button_createNewTheme;
+	IBOutlet NSButton						*button_delete;
+	
+	// other
     NSMenu *themeMenu;
-    id themePlugin;
+	
+    NSString			*defaultThemePath;
+    NSMutableArray		*themes;
+    int 				themeCount;
 }
--(IBAction)createAction:(id)sender;
--(IBAction)createTheme:(id)sender;
--(void)setPlugin:(id)newPlugin;
--(void)createDone;
+
+-(IBAction)showCreateNewThemeSheet:(id)sender;
+-(IBAction)createNewThemeSheetAction:(id)sender;
+-(IBAction)applyTheme:(id)sender;
+-(IBAction)deleteTheme:(id)sender;
+
 @end

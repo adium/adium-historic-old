@@ -40,18 +40,25 @@
             SUPERCLASS = AIAlternatingRowTableView; 
         }, 
         {
-            ACTIONS = {createAction = id; createTheme = id; openThemesFolder = id; }; 
+            ACTIONS = {
+                applyTheme = id; 
+                createNewThemeSheetAction = id; 
+                deleteTheme = id; 
+                showCreateNewThemeSheet = id; 
+            }; 
             CLASS = BGThemesPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                authorField = NSTextField; 
-                createButton = AIPlasticButton; 
+                "button_apply" = NSButton; 
+                "button_cancel" = NSButton; 
+                "button_create" = NSButton; 
+                "button_createNewTheme" = NSButton; 
+                "button_delete" = NSButton; 
                 createWindow = NSWindow; 
-                nameField = NSTextField; 
-                removeButton = AIPlasticButton; 
-                themePlugin = id; 
-                themesList = BGThemeManageView; 
-                versionField = NSTextField; 
+                "tableView_themesList" = AIAlternatingRowTableView; 
+                "textField_author" = NSTextField; 
+                "textField_name" = NSTextField; 
+                "textField_version" = NSTextField; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
