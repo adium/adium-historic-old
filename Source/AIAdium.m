@@ -50,6 +50,9 @@
 #define ADIUM_BUG_PAGE						@"mailto:bugs@adiumx.com"
 #define ADIUM_FEEDBACK_PAGE					@"mailto:feedback@adiumx.com"
 
+//Portable Adium prefs key
+#define PORTABLE_ADIUM_KEY	@"Preference Folder Location"
+
 //#define KEY_USER_VIEWED_LICENSE				@"AdiumUserLicenseViewed"
 //#define KEY_LAST_VERSION_LAUNCHED			@"Last Version Launched"
 
@@ -70,15 +73,32 @@
 //Init
 - (id)init
 {
+	[super init];
+
     [AIObject _setSharedAdiumInstance:self];
-	
-    return([super init]);
+
+    return(self);
 }
 
-//Returns the location of Adium's preference folder (within the system's 'application support' directory)
+/*
+ * @brief Returns the location of Adium's preference folder
+ * 
+ * This may be specified in our bundle's info dictionary keyed as PORTABLE_ADIUM_KEY
+ * or, by default, be within the system's 'application support' directory.
+ */
 + (NSString *)applicationSupportDirectory
 {
-    return([ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath]);
+	//Path to the preferences folder
+	static NSString *_preferencesFolderPath = nil;
+
+    //Determine the preferences path if neccessary
+	if(!_preferencesFolderPath){
+		_preferencesFolderPath = [[[[[NSBundle mainBundle] infoDictionary] objectForKey:PORTABLE_ADIUM_KEY] stringByExpandingTildeInPath] retain];
+		if (!_preferencesFolderPath)
+			_preferencesFolderPath = [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] retain];
+	}
+
+	return _preferencesFolderPath;
 }
 
 
