@@ -2,7 +2,7 @@
 
 # Jeffrey Melloy <jmelloy@visualdistortion.org>
 # $URL: http://svn.visualdistortion.org/repos/projects/adium/parser-2.pl $
-# $Rev: 442 $ $Date: 2003/10/12 16:30:23 $
+# $Rev: 442 $ $Date: 2003/10/28 15:59:17 $
 #
 # Script will parse Adium logs >= 2.0 and put them in postgresql table.
 # Table is created with "adium.sql"

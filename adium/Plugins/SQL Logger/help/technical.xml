@@ -231,8 +231,8 @@ export DBI_PASS=<i>password</i></pre>
           _X509_check_private_key
           _X509_free
           _X509_get_subject_name</pre>
-        This is caused by not including -lssl in the library path as you
-        compiled DBD::Pg</li>
+        This is caused by not including <b>-lssl -lcrypto</b> in the library path as you
+        compiled DBD::Pg.</li>
       <li>If you get an error like this:
         <pre>dyld: perl Undefined symbols:
           _is_utf8_string

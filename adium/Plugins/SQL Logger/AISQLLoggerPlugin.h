@@ -16,6 +16,15 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 
+/**
+ * 
+ * $Revision: 1.4 $
+ * $Date: 2003/10/28 15:59:16 $
+ * $Author: jmelloy $
+ *
+ **/
+
+
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 #import "libpq-fe.h"
