@@ -281,6 +281,9 @@
 			[button_alternate setFrame:NSZeroRect];
 		}
 	}
+
+    //Center the window (if we're not a sheet)
+    [[self window] center];
 }
 
 - (IBAction)pressedButton:(id)sender
