@@ -159,7 +159,6 @@
 			
 		case	NSOnState:
 		{	// Turn on selected emoticon-pack
-			
 			//Conflict resolution
 				// For now, this just turns off the other packs.  Later it will check for individual conflicts
 			NSEnumerator	*numer = [packs objectEnumerator];
