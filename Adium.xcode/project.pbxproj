@@ -8053,6 +8053,14 @@
 				34BFD7F507E6A22700AD984D,
 				34BFDB2E07E7710C00AD984D,
 				3444C9BE07F52919001279F1,
+				34C1F4FD07F8148300DB6645,
+				34C1F4FE07F8148300DB6645,
+				34C1F50007F8148300DB6645,
+				34C1F50207F8148300DB6645,
+				34C1F50407F8148300DB6645,
+				34C1F50507F8148300DB6645,
+				34C1F5F807F88C9900DB6645,
+				34C1F5FA07F88C9900DB6645,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8193,7 +8201,6 @@
 				34D8350E07CBE8AB006466F2,
 				34D8350F07CBE8AB006466F2,
 				34D8351007CBE8AB006466F2,
-				34D8351107CBE8AB006466F2,
 				34D8351207CBE8AB006466F2,
 				34D8351307CBE8AB006466F2,
 				34D8351407CBE8AB006466F2,
@@ -8269,6 +8276,13 @@
 				34BFD7F707E6A22700AD984D,
 				34BFDB2F07E7710C00AD984D,
 				3444C9BF07F52919001279F1,
+				34C1F4FF07F8148300DB6645,
+				34C1F50107F8148300DB6645,
+				34C1F50307F8148300DB6645,
+				34C1F50607F8148300DB6645,
+				34C1F50707F8148300DB6645,
+				34C1F5F707F88C9900DB6645,
+				34C1F5F907F88C9900DB6645,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9325,6 +9339,255 @@
 			fileRef = 34C1F21307F7A63500DB6645;
 			isa = PBXBuildFile;
 			settings = {
+			};
+		};
+		34C1F4F107F8148200DB6645 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSAppleEventDescriptor+NDDebugging.h";
+			path = "Frameworks/Adium Framework/NSAppleEventDescriptor+NDDebugging.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1F4F207F8148200DB6645 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSValue+NDFourCharCode.h";
+			path = "Frameworks/Adium Framework/NSValue+NDFourCharCode.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1F4F307F8148200DB6645 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NDScriptData.m;
+			path = "Frameworks/Adium Framework/NDScriptData.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1F4F407F8148200DB6645 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSAppleEventDescriptor+NDScriptData.h";
+			path = "Frameworks/Adium Framework/NSAppleEventDescriptor+NDScriptData.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1F4F507F8148200DB6645 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSValue+NDFourCharCode.m";
+			path = "Frameworks/Adium Framework/NSValue+NDFourCharCode.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1F4F607F8148200DB6645 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NDScriptData_Protocols.h;
+			path = "Frameworks/Adium Framework/NDScriptData_Protocols.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1F4F707F8148200DB6645 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSAppleEventDescriptor+NDScriptData.m";
+			path = "Frameworks/Adium Framework/NSAppleEventDescriptor+NDScriptData.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1F4F807F8148300DB6645 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NDProgrammerUtilities.h;
+			path = "Frameworks/Adium Framework/NDProgrammerUtilities.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1F4F907F8148300DB6645 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NDScriptData.h;
+			path = "Frameworks/Adium Framework/NDScriptData.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1F4FA07F8148300DB6645 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSAppleEventDescriptor+NDDebugging.m";
+			path = "Frameworks/Adium Framework/NSAppleEventDescriptor+NDDebugging.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1F4FB07F8148300DB6645 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NDProgrammerUtilities.m;
+			path = "Frameworks/Adium Framework/NDProgrammerUtilities.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1F4FD07F8148300DB6645 = {
+			fileRef = 34C1F4F107F8148200DB6645;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		34C1F4FE07F8148300DB6645 = {
+			fileRef = 34C1F4F207F8148200DB6645;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		34C1F4FF07F8148300DB6645 = {
+			fileRef = 34C1F4F307F8148200DB6645;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C1F50007F8148300DB6645 = {
+			fileRef = 34C1F4F407F8148200DB6645;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		34C1F50107F8148300DB6645 = {
+			fileRef = 34C1F4F507F8148200DB6645;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C1F50207F8148300DB6645 = {
+			fileRef = 34C1F4F607F8148200DB6645;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		34C1F50307F8148300DB6645 = {
+			fileRef = 34C1F4F707F8148200DB6645;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C1F50407F8148300DB6645 = {
+			fileRef = 34C1F4F807F8148300DB6645;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		34C1F50507F8148300DB6645 = {
+			fileRef = 34C1F4F907F8148300DB6645;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		34C1F50607F8148300DB6645 = {
+			fileRef = 34C1F4FA07F8148300DB6645;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C1F50707F8148300DB6645 = {
+			fileRef = 34C1F4FB07F8148300DB6645;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C1F5F307F88C9800DB6645 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSString+NDUtilities.m";
+			path = "Frameworks/Adium Framework/NSString+NDUtilities.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1F5F407F88C9800DB6645 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSString+NDUtilities.h";
+			path = "Frameworks/Adium Framework/NSString+NDUtilities.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1F5F507F88C9800DB6645 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSArray+NDUtilities.m";
+			path = "Frameworks/Adium Framework/NSArray+NDUtilities.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1F5F607F88C9900DB6645 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSArray+NDUtilities.h";
+			path = "Frameworks/Adium Framework/NSArray+NDUtilities.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1F5F707F88C9900DB6645 = {
+			fileRef = 34C1F5F307F88C9800DB6645;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C1F5F807F88C9900DB6645 = {
+			fileRef = 34C1F5F407F88C9800DB6645;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		34C1F5F907F88C9900DB6645 = {
+			fileRef = 34C1F5F507F88C9800DB6645;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C1F5FA07F88C9900DB6645 = {
+			fileRef = 34C1F5F607F88C9900DB6645;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		34C2CF85063340540018E5D2 = {
@@ -10822,15 +11085,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34D8344107CBE6E1006466F2 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = "NSAppleEventDescriptor+NDAppleScriptObject.m";
-			path = "Frameworks/Adium Framework/NSAppleEventDescriptor+NDAppleScriptObject.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34D8344207CBE6E1006466F2 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -11006,20 +11260,34 @@
 		34D834D007CBE7B1006466F2 = {
 			children = (
 				34D8344B07CBE6E2006466F2,
+				34D8344A07CBE6E2006466F2,
 				34D8344907CBE6E2006466F2,
 				34D8344807CBE6E2006466F2,
-				34D8344607CBE6E2006466F2,
-				34D8344407CBE6E2006466F2,
-				34D8344207CBE6E1006466F2,
-				34D8343E07CBE6E1006466F2,
-				34D8343C07CBE6E1006466F2,
-				34D8344A07CBE6E2006466F2,
 				34D8344707CBE6E2006466F2,
+				34C1F4F807F8148300DB6645,
+				34C1F4FB07F8148300DB6645,
+				34D8344607CBE6E2006466F2,
 				34D8344507CBE6E2006466F2,
+				34D8344407CBE6E2006466F2,
 				34D8344307CBE6E1006466F2,
-				34D8344107CBE6E1006466F2,
+				34C1F4F907F8148300DB6645,
+				34C1F4F307F8148200DB6645,
+				34C1F4F607F8148200DB6645,
+				34D8344207CBE6E1006466F2,
+				34C1F4F107F8148200DB6645,
+				34C1F4FA07F8148300DB6645,
+				34C1F4F407F8148200DB6645,
+				34C1F4F707F8148200DB6645,
+				34C1F5F307F88C9800DB6645,
+				34C1F5F407F88C9800DB6645,
+				34C1F5F507F88C9800DB6645,
+				34C1F5F607F88C9900DB6645,
+				34D8343E07CBE6E1006466F2,
 				34D8343D07CBE6E1006466F2,
+				34D8343C07CBE6E1006466F2,
 				34D8343B07CBE6E1006466F2,
+				34C1F4F207F8148200DB6645,
+				34C1F4F507F8148200DB6645,
 			);
 			isa = PBXGroup;
 			name = "Applescript Running";
@@ -11208,12 +11476,6 @@
 		};
 		34D8351007CBE8AB006466F2 = {
 			fileRef = 34D8344307CBE6E1006466F2;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34D8351107CBE8AB006466F2 = {
-			fileRef = 34D8344107CBE6E1006466F2;
 			isa = PBXBuildFile;
 			settings = {
 			};
