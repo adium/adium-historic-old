@@ -305,7 +305,7 @@
 					<key>Name</key>
 					<string>status message</string>
 				</dict>
-				<key>uniqueObjectID</key>
+				<key>internalObjectID</key>
 				<dict>
 					<key>Description</key>
 					<string>A unique identifier for this object.</string>
