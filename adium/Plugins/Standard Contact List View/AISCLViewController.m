@@ -635,6 +635,11 @@
 	windowHidesOnDeactivate = [window hidesOnDeactivate];
 }
 
+- (void)window:(NSWindow *)inWindow didBecomeMain:(NSNotification *)notification
+{	
+	[self _startTrackingMouse];
+}
+
 - (void)window:(NSWindow *)inWindow didResignMain:(NSNotification *)notification
 {	
 	[self _stopTrackingMouse];
@@ -730,20 +735,24 @@
 - (void)mouseMovementTimer:(NSTimer *)inTimer
 {
 	NSPoint mouseLocation = [NSEvent mouseLocation];
-
-	//tooltipCount is used for delaying the appearence of tooltips.  We reset it to 0 when the mouse moves.  When
-	//the mouse is left still tooltipCount will eventually grow greater than TOOL_TIP_DELAY, and we will begin
-	//displaying the tooltips
-	if(tooltipCount > TOOL_TIP_DELAY){
-		[self _showTooltipAtPoint:mouseLocation];
-		
-	}else{
-		if(!NSEqualPoints(mouseLocation,lastMouseLocation)){
-			lastMouseLocation = mouseLocation;
-			tooltipCount = 0; //reset tooltipCount to 0 since the mouse has moved
-		} else {
-			tooltipCount++;
+	if (NSPointInRect(mouseLocation,[[contactListView window] frame])){
+		//tooltipCount is used for delaying the appearence of tooltips.  We reset it to 0 when the mouse moves.  When
+		//the mouse is left still tooltipCount will eventually grow greater than TOOL_TIP_DELAY, and we will begin
+		//displaying the tooltips
+		if(tooltipCount > TOOL_TIP_DELAY){
+			[self _showTooltipAtPoint:mouseLocation];
+			
+		}else{
+			if(!NSEqualPoints(mouseLocation,lastMouseLocation)){
+				lastMouseLocation = mouseLocation;
+				tooltipCount = 0; //reset tooltipCount to 0 since the mouse has moved
+			} else {
+				tooltipCount++;
+			}
 		}
+	}else{
+		//Failsafe for if the mouse is outside the window yet the timer is still firing
+		[self _stopTrackingMouse];
 	}
 }
 

@@ -178,6 +178,11 @@
     if(lastSelectedRow >= 0 && lastSelectedRow < [self numberOfRows] && [self selectedRow] == -1){
         [self selectRow:lastSelectedRow byExtendingSelection:NO];
     }
+	
+	//Pass this on to our delegate
+    if([[self delegate] respondsToSelector:@selector(window:didBecomeMain:)]){
+        [[self delegate] window:[self window] didBecomeMain:notification];
+    }
 }
 
 //Hide the selection
