@@ -12,7 +12,7 @@
 
 @class CBContactCountingDisplayPreferences;
 
-@interface CBContactCountingDisplayPlugin : AIPlugin 
+@interface CBContactCountingDisplayPlugin : AIPlugin <AIListObjectObserver>
 {
     BOOL                                allCount;
     BOOL                                visibleCount;
@@ -23,5 +23,5 @@
 - (void)uninstallPlugin;
 
 - (void)preferencesChanged:(NSNotification *)notification;
-- (void)contactsChanged:(NSNotification *)notification;
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
 @end
