@@ -487,13 +487,15 @@
     if (awayMessage){
         [self AIM_SetAway:[self encodedAttributedString:awayMessage forListObject:nil]];
         [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Away" notify:NO];
-        [self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
+        [self setStatusObject:awayMessage forKey:@"StatusMessage" notify:NO];
         
     }else{
         [self AIM_SetAway:nil];
         [self setStatusObject:nil forKey:@"Away" notify:NO];
-        [self setStatusObject:nil forKey:@"StatusMessage" notify:YES];
+        [self setStatusObject:nil forKey:@"StatusMessage" notify:NO];
     }
+	
+	[self notifyOfChangedStatusSilently:NO];
 }
 
 - (void)setAccountProfileTo:(NSAttributedString *)profile
@@ -571,7 +573,9 @@
     //Set our status as offline
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO]; //Needed if we were connecting when the error happened
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:NO];
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:NO];
+	
+	[self notifyOfChangedStatusSilently:NO];
 }
 
 
@@ -651,8 +655,9 @@
 					
                     //Flag ourself as online
 					[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO];
-					[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
-					
+					[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
+					[self notifyOfChangedStatusSilently:NO];
+						
                     //Set our correct status
 					[self updateStatusForKey:@"IdleSince"];
 					[self updateStatusForKey:@"TextProfile"];
@@ -759,7 +764,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.125 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.126 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
