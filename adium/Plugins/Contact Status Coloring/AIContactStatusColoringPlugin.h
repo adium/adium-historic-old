@@ -26,7 +26,6 @@
 #define KEY_SIGNED_ON_ENABLED		@"Signed On Enabled"
 #define KEY_UNVIEWED_ENABLED		@"Unviewed Content Enabled"
 #define KEY_ONLINE_ENABLED		@"Online Enabled"
-#define KEY_OPEN_TAB_ENABLED		@"Open Tab Enabled"
 #define KEY_IDLE_AWAY_ENABLED		@"Idle And Away Enabled"
 
 #define KEY_AWAY_COLOR			@"Away Color"
@@ -36,7 +35,6 @@
 #define KEY_SIGNED_ON_COLOR		@"Signed On Color"
 #define KEY_UNVIEWED_COLOR		@"Unviewed Content Color"
 #define KEY_ONLINE_COLOR		@"Online Color"
-#define KEY_OPEN_TAB_COLOR		@"Open Tab Color"
 #define KEY_IDLE_AWAY_COLOR		@"Idle And Away Color"
 
 #define KEY_LABEL_AWAY_COLOR		@"Away Label Color"
@@ -46,7 +44,6 @@
 #define KEY_LABEL_SIGNED_ON_COLOR	@"Signed On Label Color"
 #define KEY_LABEL_UNVIEWED_COLOR	@"Unviewed Content Label Color"
 #define KEY_LABEL_ONLINE_COLOR		@"Online Label Color"
-#define KEY_LABEL_OPEN_TAB_COLOR	@"Open Tab Label Color"
 #define KEY_LABEL_IDLE_AWAY_COLOR	@"Idle And Away Label Color"
 
 

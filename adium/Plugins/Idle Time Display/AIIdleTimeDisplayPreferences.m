@@ -24,6 +24,7 @@
 @interface AIIdleTimeDisplayPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
 - (void)configureView;
+- (void)configureControlDimming;
 @end
 
 @implementation AIIdleTimeDisplayPreferences
@@ -40,6 +41,7 @@
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_DISPLAY_IDLE_TIME
                                               group:PREF_GROUP_IDLE_TIME_DISPLAY];
+	[self configureControlDimming];
 
     }else if(sender == checkBox_displayIdleOnLeft){
 	[[owner preferenceController] setPreference:[NSNumber numberWithBool:YES]
@@ -106,6 +108,15 @@
     [checkBox_displayIdleOnLeft setState:[[preferenceDict objectForKey:KEY_DISPLAY_IDLE_TIME_ON_LEFT] boolValue]];
     [checkBox_displayIdleOnRight setState:![[preferenceDict objectForKey:KEY_DISPLAY_IDLE_TIME_ON_LEFT] boolValue]];
     [colorWell_idleColor setColor:[[preferenceDict objectForKey:KEY_IDLE_TIME_COLOR] representedColor]];
+
+    [self configureControlDimming];
+}
+//Enable/disable controls that are available/unavailable
+- (void)configureControlDimming
+{
+    [checkBox_displayIdleOnLeft setEnabled:[checkBox_displayIdle state]];
+    [checkBox_displayIdleOnRight setEnabled:[checkBox_displayIdle state]];
+    [colorWell_idleColor setEnabled:[checkBox_displayIdle state]];
 }
 
 
