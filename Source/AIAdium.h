@@ -28,7 +28,6 @@
 #import "AIPreferenceController.h"
 #import "AISoundController.h"
 #import "AIToolbarController.h"
-#import "BZActivityWindowController.h"
 #import "ESApplescriptabilityController.h"
 #import "ESDebugController.h"
 
