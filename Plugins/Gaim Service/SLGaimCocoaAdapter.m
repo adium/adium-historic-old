@@ -246,7 +246,7 @@ static AIChat* imChatLookupFromConv(GaimConversation *conv)
 		char			*name;
 		
 		account = conv->account;
-		GaimDebug (@"%x conv->name %s ; normalizes to %s",account,conv->name,gaim_normalize(account,conv->name));
+		GaimDebug (@"%x conv->name %s; normalizes to %s",account,conv->name,gaim_normalize(account,conv->name));
 		name = g_strdup(gaim_normalize(account, conv->name));
 		
 		//First, find the GaimBuddy with whom we are conversing
@@ -1271,7 +1271,8 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 		if (([secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Your screen name is currently formatted as follows"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Error reading from Switchboard server"].location != NSNotFound) ||
-			([secondaryString rangeOfString:@"0x001a: Unknown error"].location != NSNotFound)){
+			([secondaryString rangeOfString:@"0x001a: Unknown error"].location != NSNotFound) ||
+			([secondaryString rangeOfString:@"Not supported by host"].location != NSNotFound)){
 			return;
 		}
 	}
@@ -2612,7 +2613,14 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 - (oneway void)gaimThreadOSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	oscar_set_format_screenname(account->gc, [inFormattedUID UTF8String]);
+	
+	//Because we can get here from a delay, it's possible that we are now disconnected. Sanity checks are good.
+	if(account &&
+	   gaim_account_is_connected(account) &&
+	   [inFormattedUID length]){
+		
+		oscar_set_format_screenname(account->gc, [inFormattedUID UTF8String]);
+	}
 }
 
 #pragma mark Request callbacks
