@@ -6495,6 +6495,7 @@
 				34BD9D66053146CC000AB133,
 				34BD9D6A053146CC000AB133,
 				345DFF4A05564DB200CEE7B3,
+				4B030E52056C2D7E00C765F9,
 			);
 			buildRules = (
 			);
@@ -15628,6 +15629,19 @@
 			path = "Plugins/AIM TOC2 Service/ChatInviteWindow.nib";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B030E52056C2D7E00C765F9 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			isa = PBXShellScriptBuildPhase;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Create symlinks to the iChat sounds\n#\ncd $SYMROOT\ncd Adium.app/Contents/Resources/Sounds/iChat/\n\necho \"Symlinking iChat sounds...\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Logged In.aiff\" \"Connected.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Buddy Logging In.aiff\" \"Contact Signed On.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Buddy Logging Out.aiff\" \"Contact Signed Off.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Invitation.aiff\" \"Message Received (New).aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Received Message.aiff\" \"Message Received.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Sent Message.aiff\" \"Message Sent.aiff\"\necho \"Done\"";
 		};
 		4B037C050558B5C700FF5530 = {
 			expectedFileType = sourcecode.c.h;
