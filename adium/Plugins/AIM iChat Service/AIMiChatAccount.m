@@ -456,7 +456,8 @@ extern void* objc_getClass(const char *name);
                                                  withSource:[handle containingContact]
                                                 destination:self
                                                        date:nil
-                                                    message:messageText];
+                                                    message:messageText
+                                                  autorelpy:NO];
             [[owner contentController] addIncomingContentObject:messageObject];
         }
     }

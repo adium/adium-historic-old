@@ -499,7 +499,8 @@
                                          withSource:[handle containingContact]
                                         destination:self
                                                date:nil
-                                            message:[AIHTMLDecoder decodeHTML:message]];
+                                            message:[AIHTMLDecoder decodeHTML:message]
+                                          autorelpy:NO];
     [[owner contentController] addIncomingContentObject:messageObject];
 }
 

@@ -82,7 +82,8 @@
                                        withSource:account
                                       destination:nil
                                              date:nil
-                                          message:[[[textView_outgoing attributedString] copy] autorelease]];
+                                          message:[[[textView_outgoing attributedString] copy] autorelease]
+                                        autorelpy:NO];
 
         
         if([[owner contentController] sendContentObject:message]){
