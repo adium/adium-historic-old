@@ -882,7 +882,6 @@ static void *adiumGaimNotifyEmail(const char *subject, const char *from, const c
 
 static void *adiumGaimNotifyFormatted(const char *title, const char *primary, const char *secondary, const char *text, GCallback cb,void *userData)
 {
-	NSLog(@"adiumGaimNotifyFormatted");
     return(nil);
 }
 

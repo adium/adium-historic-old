@@ -76,7 +76,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     //
 	loadedPanes = [[NSMutableArray alloc] init];
 	[[self window] setHidesOnDeactivate:NO];
-	[[self window] setFloatingPanel:NO];
+	[(NSPanel *)[self window] setFloatingPanel:NO];
 	
     //Select the previously selected category
     selectedTab = [[[adium preferenceController] preferenceForKey:KEY_INFO_SELECTED_CATEGORY
@@ -165,7 +165,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     int	identifier = [[tabViewItem identifier] intValue];
 	
     //Take focus away from any controls to ensure that they register changes and save
-    [[self window] makeFirstResponder:tabView_category];
+//    [[self window] makeFirstResponder:tabView_category];
+    [[self window] makeFirstResponder:nil];
     
     if(tabView == tabView_category){
         switch(identifier){

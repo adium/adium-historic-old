@@ -1289,7 +1289,6 @@ static id<GaimThread> gaimThread = nil;
 {
 	//Even if we're setting a non-zero idle time, set it to zero first.
 	//Some clients ignore idle time changes unless it moves to/from 0.
-	NSLog(@"setting to %i",idle);
 	if (gaim_account_is_connected(account)){
 		serv_set_idle(account->gc, 0);
 		if(idle) serv_set_idle(account->gc, idle);
