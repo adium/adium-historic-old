@@ -107,9 +107,8 @@
 
         prefixFont = [[[prefDict objectForKey:KEY_SMV_PREFIX_FONT] representedFont] retain];
 
-        [timeStampFormat release];
         timeStampFormat = [[NSDateFormatter localizedDateFormatStringShowingSeconds:[[prefDict objectForKey:KEY_SMV_SHOW_TIME_SECONDS] boolValue]
-                                                                     showingAMorPM:[[prefDict objectForKey:KEY_SMV_SHOW_AMPM] boolValue]] retain];
+					    showingAMorPM:[[prefDict objectForKey:KEY_SMV_SHOW_AMPM] boolValue]] retain];
         
         prefixIncoming = [[prefDict objectForKey:KEY_SMV_PREFIX_INCOMING] retain];
         prefixOutgoing = [[prefDict objectForKey:KEY_SMV_PREFIX_OUTGOING] retain];

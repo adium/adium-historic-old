@@ -35,6 +35,7 @@
     IBOutlet	NSButton	*checkBox_showTimeStamps;
     IBOutlet	NSButton	*checkBox_hideDuplicateTimeStamps;
     IBOutlet	NSButton	*checkBox_showSeconds;
+    IBOutlet	NSButton	*checkBox_showAmPm;
     
     //Gridding
     AIPreferencePane		*griddingPane;
