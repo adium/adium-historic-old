@@ -98,7 +98,7 @@
             if([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] == nil) {
                 AIChat	*chat = [contentObject chat];
                 //Create and send an idle bounce message (If the sender hasn't received one already)
-                if([receivedIdleMessage indexOfObjectIdenticalTo:chat] == NSNotFound){
+                if(![receivedIdleMessage containsObjectIdenticalTo:chat]){
                     AIContentMessage	*responseContent;
                     
                     responseContent = [AIContentMessage messageInChat:chat
@@ -122,7 +122,7 @@
     if([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE]){
         AIChat	*chat = [contentObject chat];
 
-        if([receivedIdleMessage indexOfObjectIdenticalTo:chat] == NSNotFound){
+        if(![receivedIdleMessage containsObjectIdenticalTo:chat]){
             [receivedIdleMessage addObject:chat];
         }
     }
@@ -131,10 +131,8 @@
 - (void)chatWillClose:(NSNotification *)notification
 {
     AIChat *chat = [notification object];
-    int chatIndex = [receivedIdleMessage indexOfObjectIdenticalTo:chat];
-    
-    if (chatIndex != NSNotFound)
-	[receivedIdleMessage removeObjectAtIndex:chatIndex];
+
+	[receivedIdleMessage removeObjectIdenticalTo:chat];
 }
 
 @end
