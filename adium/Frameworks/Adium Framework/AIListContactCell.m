@@ -22,11 +22,6 @@
 #define STATUS_ICON_RIGHT_PAD			3
 #define HULK_CRUSH_FACTOR 1
  
-@interface AIListContactCell (PRIVATE)
-- (NSImage *)userIconImageOfSize:(NSSize)inSize;
-- (BOOL)drawStatusBelowLabelInRect:(NSRect)rect;
-@end
-
 @implementation AIListContactCell
 
 //Copy
