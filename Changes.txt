@@ -10,7 +10,7 @@ Version 0.73
 - Fixed issues with applescript filters messaging applications which have been quit and relaunched
 - Fixed issues with custom dock icon selections not being reflected in the Finder and the Dock
 - Fixed issues with logging messages from Sametime contacts with LDAP strings for usernames
-- Fixed issues with the link editor sheet being displayed multiple times
+- Fixed issues with the link editor sheet
 - Fixed issues with Announcer speaking messages in the message preferences
 - Fixed a crash related to Systemwide Proxy Settings in certain situations
 - Fixed a potential crash when deleting an account
@@ -19,6 +19,7 @@ Version 0.73
 - (Sametime) Fixed issues with away messages and away states
 - (Yahoo) Fixed issues with away messages
 - Improved date display when receiving queued messages from previous days
+- Improved handling of links in the Get Info window
 - Updated to libgaim 1.1.0
 
 Version 0.72 (11/16/2004)
