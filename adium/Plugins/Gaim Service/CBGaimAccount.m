@@ -487,14 +487,20 @@
 			[scanner scanString:@"\">" intoString:nil];
 			
 			//Get the image, then write it out as a png
-			GaimStoredImage *gaimImage = gaim_imgstore_get(imageID);
-			NSString		*imagePath = [self _messageImageCachePathForID:imageID];
+			GaimStoredImage		*gaimImage = gaim_imgstore_get(imageID);
+			NSString			*imagePath = [self _messageImageCachePathForID:imageID];
 
-			NSBitmapImageRep *bitmapRep = [NSBitmapImageRep imageRepWithData:[NSData dataWithBytes:gaimImage->data 
-																							length:gaimImage->size]];
+			//First make an NSImage, then request a TIFFRepresentation to avoid an obscure bug in the PNG writing routines
+			//Exception: PNG writer requires compacted components (bits/component * components/pixel = bits/pixel)
+			NSImage				*image = [[NSImage alloc] initWithData:[NSData dataWithBytes:gaimImage->data 
+																					  length:gaimImage->size]];
+			NSData				*imageTIFFData = [image TIFFRepresentation];
+			NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
             
             [[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES];
-
+			
+			[image release];
+			
 			//Write an <IMG SRC="filepath"> tag
 			[newString appendString:[NSString stringWithFormat:@"<IMG SRC=\"%@\">",imagePath]];
 		}
