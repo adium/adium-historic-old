@@ -62,9 +62,9 @@
         signedOnColor = [[[prefDict objectForKey:@"Signed On Color"] representedColor] retain];
         unviewedContentColor = [[[prefDict objectForKey:@"Unviewed Content Color"] representedColor] retain];
     
-        backSignedOffColor = [[[prefDict objectForKey:@"Signed Off Background Color"] representedColor] retain];
-        backSignedOnColor = [[[prefDict objectForKey:@"Signed On Background Color"] representedColor] retain];
-        backUnviewedContentColor = [[[prefDict objectForKey:@"Unviewed Content Background Color"] representedColor] retain];
+        backSignedOffColor = [[[prefDict objectForKey:@"Signed Off Label Color"] representedColor] retain];
+        backSignedOnColor = [[[prefDict objectForKey:@"Signed On Label Color"] representedColor] retain];
+        backUnviewedContentColor = [[[prefDict objectForKey:@"Unviewed Content Label Color"] representedColor] retain];
 
     }
     

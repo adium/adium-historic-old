@@ -67,6 +67,7 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
     [color release];
     [flashColor release];
     [string release];
+    [stringColor release];
     
     [super dealloc];
 }
@@ -91,7 +92,6 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
     if(stringColor != inColor){
         [stringColor release];
         stringColor = [inColor retain];
-        [self _flushDrawingCache];
     }
 }
 
@@ -126,7 +126,7 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
 - (float)widthForHeight:(int)inHeight computeMax:(BOOL)computeMax
 {
     //If our height has changed, flush the string/rect cache
-//    if(cachedHeight != inHeight + CIRCLE_SIZE_OFFSET) [self _flushDrawingCache];
+    //if(cachedHeight != inHeight + CIRCLE_SIZE_OFFSET) [self _flushDrawingCache];
 
     //Return the requested width
     if(computeMax){
@@ -182,12 +182,12 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
     NSBezierPath 		*pillPath;
     float			circleRadius, circleWidth, lineWidth;
     float 			innerLeft, innerRight, innerTop, innerBottom, centerY;
-
+    
     //Calculate Circle Dimensions
     circleRadius = [self _circleRadiusForHeight:inRect.size.height];
     circleWidth = [self _circleWidthForHeight:inRect.size.height];
     lineWidth = (circleRadius * (2.0/15.0));
-
+    
     //Right align our circle
     inRect.origin.x += inRect.size.width - circleWidth;
     inRect.size.width = circleWidth;
@@ -201,24 +201,26 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
 
     //Create the circle path
     pillPath = [NSBezierPath bezierPath];
-        //top line (if our pill is not a circle)
-        if((innerRight - innerLeft) != 0){
-            [pillPath moveToPoint: NSMakePoint(innerLeft, innerTop)];
-            [pillPath lineToPoint: NSMakePoint(innerRight, innerTop)];
-        }
-        //right cap
-        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerRight, centerY) radius:circleRadius startAngle:90 endAngle:0 clockwise:YES];
-        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerRight, centerY) radius:circleRadius startAngle:0 endAngle:270 clockwise:YES];
-        //right cap
-        //bottom line (if our pill is not a circle)
-        if((innerRight - innerLeft) != 0){
-            [pillPath moveToPoint: NSMakePoint(innerRight, innerBottom)];
-            [pillPath lineToPoint: NSMakePoint(innerLeft, innerBottom)];
-        }
-        //left cap
-        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerLeft, centerY)radius:circleRadius startAngle:270 endAngle:180 clockwise:YES];
-        [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerLeft, centerY)radius:circleRadius startAngle:180 endAngle:90 clockwise:YES];
 
+    //top line (if our pill is not a circle)
+    if((innerRight - innerLeft) != 0){
+	[pillPath moveToPoint: NSMakePoint(innerLeft, innerTop)];
+	[pillPath lineToPoint: NSMakePoint(innerRight, innerTop)];
+    }
+
+    //right cap
+    [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerRight, centerY) radius:circleRadius startAngle:90 endAngle:0 clockwise:YES];
+    [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerRight, centerY) radius:circleRadius startAngle:0 endAngle:270 clockwise:YES];
+    
+    //bottom line (if our pill is not a circle)
+    if((innerRight - innerLeft) != 0){
+	[pillPath moveToPoint: NSMakePoint(innerRight, innerBottom)];
+	[pillPath lineToPoint: NSMakePoint(innerLeft, innerBottom)];
+    }
+
+    //left cap
+    [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerLeft, centerY)radius:circleRadius startAngle:270 endAngle:180 clockwise:YES];
+    [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerLeft, centerY)radius:circleRadius startAngle:180 endAngle:90 clockwise:YES];
         
     //draw the contents
     [((state == AICircleFlashA) ? flashColor : color) set];
@@ -226,7 +228,7 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
     [pillPath fill];
 
     if(string){
-        NSAttributedString	*attrString = [self attributedStringForHeight:inRect.size.height];
+	NSAttributedString	*attrString = [self attributedStringForHeight:inRect.size.height];
         NSSize			stringSize = [self attributedStringSizeForHeight:inRect.size.height];
         
         //Draw the string content
@@ -234,7 +236,6 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
                                           inRect.origin.y - 1 + CIRCLE_Y_OFFSET + (inRect.size.height - stringSize.height) / 2.0, //Center vertically
                                           innerRight - innerLeft + circleRadius * 2,
                                           stringSize.height)];
-        
     }else{
         //draw the dot (for unreplied messages)
         if(state == AICircleDot){
@@ -282,23 +283,23 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
             [pillPath moveToPoint: NSMakePoint(innerLeft, innerTop)];
             [pillPath lineToPoint: NSMakePoint(innerRight, innerTop)];
         }
-        //right cap
+
+	//right cap
         [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerRight, centerY) radius:circleRadius startAngle:90 endAngle:0 clockwise:YES];
 
         [[NSColor colorWithCalibratedWhite:0.8 alpha:0.6] set];
         [pillPath stroke];
-
-
         
         pillPath = [NSBezierPath bezierPath];
         [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerRight, centerY) radius:circleRadius startAngle:0 endAngle:270 clockwise:YES];
-        //right cap
-        //bottom line (if our pill is not a circle)
+
+	//bottom line (if our pill is not a circle)
         if((innerRight - innerLeft) != 0){
             [pillPath moveToPoint: NSMakePoint(innerRight, innerBottom)];
             [pillPath lineToPoint: NSMakePoint(innerLeft, innerBottom)];
         }
-        //left cap
+
+	//left cap
         [pillPath appendBezierPathWithArcWithCenter: NSMakePoint(innerLeft, centerY)radius:circleRadius startAngle:270 endAngle:180 clockwise:YES];
         [[NSColor colorWithCalibratedWhite:0.2 alpha:0.6] set];
         [pillPath stroke];
@@ -306,9 +307,7 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
     }else{
         [[NSColor colorWithCalibratedWhite:0.6 alpha:0.8] set];
         [pillPath stroke];
-
     }
-
 }
 
 - (float)_circleRadiusForHeight:(float)height
@@ -380,6 +379,7 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
     //
     if(!_maxWidth){
         _maxWidth = [[self _attributedString:@"8:88" forHeight:height + CIRCLE_SIZE_OFFSET] size].width + [self _circleRadiusForHeight:height] + 1.0;
+	
         cachedHeight = height + CIRCLE_SIZE_OFFSET;
     }
 
@@ -389,7 +389,8 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
 //Flush the cached strings and sizes
 - (void)_flushDrawingCache
 {
-    [_attributedString release]; _attributedString = nil;
+    [_attributedString release];
+    _attributedString = nil;
     _attributedStringSize = NSMakeSize(0,0);
     _maxWidth = 0;
 }
