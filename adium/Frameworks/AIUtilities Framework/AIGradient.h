@@ -41,6 +41,6 @@ typedef enum {
 - (AIDirection)direction;
 
 - (void)drawInRect:(NSRect)rect;
-- (void)drawInBezierPath:(NSBezierPath *)inPath fraction:(float)inFration;
+- (void)drawInBezierPath:(NSBezierPath *)inPath fraction:(float)inFraction;
 
 @end
