@@ -204,7 +204,7 @@ static int  sizeOfSortOrder;
  * @brief Status keys which, when changed, should trigger a resort
  */
 - (NSSet *)statusKeysRequiringResort{
-	return([NSSet setWithObjects:@"Online",@"Idle",@"StatusState",nil]);
+	return([NSSet setWithObjects:@"Online",@"Idle",@"StatusType",nil]);
 }
 
 /*!
@@ -534,9 +534,12 @@ int statusSort(id objectA, id objectB, BOOL groups)
 		}
 		
 	}else{
+		AIStatusSummary	statusSummaryA = [objectA statusSummary];
+		AIStatusSummary	statusSummaryB = [objectB statusSummary];
+		
 		//Always sort offline contacts to the bottom
-		BOOL onlineA = ([[objectA numberStatusObjectForKey:@"Online" fromAnyContainedObject:NO] boolValue]);
-		BOOL onlineB = ([[objectB numberStatusObjectForKey:@"Online" fromAnyContainedObject:NO] boolValue]);
+		BOOL onlineA = (statusSummaryA != AIOfflineStatus);
+		BOOL onlineB = (statusSummaryB != AIOfflineStatus);
 		if (!onlineB && onlineA){
 			return NSOrderedAscending;
 		}else if (!onlineA && onlineB){
@@ -554,12 +557,16 @@ int statusSort(id objectA, id objectB, BOOL groups)
 			int				objectCounter;
 			
 			//Get the away state and idle times now rather than potentially doing each twice below
-			away[0] = ([[objectA statusState] statusType] == AIAwayStatusType);
-			away[1] = ([[objectB statusState] statusType] == AIAwayStatusType);
+			away[0] = ((statusSummaryA == AIAwayStatus) || (statusSummaryA == AIAwayAndIdleStatus));
+			away[1] = ((statusSummaryB == AIAwayStatus) || (statusSummaryB == AIAwayAndIdleStatus));
 			
-			idle[0] = [objectA integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO];
-			idle[1] = [objectB integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO];
-
+			idle[0] = (((statusSummaryA == AIIdleStatus) || (statusSummaryA == AIAwayAndIdleStatus)) ?
+					   [objectA integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO] :
+					   0);
+			idle[1] = (((statusSummaryB == AIIdleStatus) || (statusSummaryB == AIAwayAndIdleStatus)) ?
+					   [objectB integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO] :
+					   0);
+			
 			for (objectCounter = 0; objectCounter < 2; objectCounter++){
 				sortIndex[objectCounter] = 999;
 
