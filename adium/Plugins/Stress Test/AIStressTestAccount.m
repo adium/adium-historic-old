@@ -77,11 +77,6 @@
     return(@"TEST");
 }
 
-//ServiceID.UID
-- (NSString *)UIDAndServiceID{
-    return(@"TEST.TEST");
-}
-
 // Return a readable description of this account's username
 - (NSString *)accountDescription
 {
