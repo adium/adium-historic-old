@@ -116,6 +116,9 @@
             NSEnumerator	*enumerator;
             AIContentObject	*contentObject;
 
+            //Close our text entry view
+            [[owner contentController] willCloseTextEntryView:textView_outgoing];
+            
             //Extract the content from our existing chat
             savedContent = [[[chat contentObjectArray] retain] autorelease];
 
@@ -157,6 +160,9 @@
         [scrollView_messages setAutoScrollToBottom:YES];
         [scrollView_messages setAutoHideScrollBar:NO];
         [scrollView_messages setHasVerticalScroller:YES];
+
+        //Open our text entry view for the chat
+        [[owner contentController] didOpenTextEntryView:textView_outgoing];            
 
         //
         [scrollView_userList setAutoScrollToBottom:NO];
@@ -249,19 +255,18 @@
     //view
     [NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
 
-    //Configure for our chat
-    [self setChat:inChat];
-
-    //
-    [button_send setTitle:@"Send"];
-    [button_send setButtonType:NSMomentaryPushInButton];
-
     //Config the outgoing text view
     [textView_outgoing setOwner:owner];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
     [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
-    [[owner contentController] didOpenTextEntryView:textView_outgoing];
 
+    //Send button
+    [button_send setTitle:@"Send"];
+    [button_send setButtonType:NSMomentaryPushInButton];
+
+    //Configure for our chat
+    [self setChat:inChat];
+    
     //Resize and arrange our views
     [self sizeAndArrangeSubviews];
 
@@ -273,8 +278,7 @@
 
 - (void)closeMessageView
 {
-    //Clear and close the message entry text view
-    [self clearTextEntryView];
+    //Close the message entry text view
     [[owner contentController] willCloseTextEntryView:textView_outgoing];
 
     //Close our chat
