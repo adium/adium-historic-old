@@ -6,7 +6,6 @@
 //
 
 @interface ESDualWindowMessageAdvancedPreferences : AIPreferencePane {
-    IBOutlet	NSButton	*createTabs_inLastWindow;
     IBOutlet	NSButton	*autohide_tabBar;
     IBOutlet    NSButton	*checkBox_allowInactiveClosing;
 }
