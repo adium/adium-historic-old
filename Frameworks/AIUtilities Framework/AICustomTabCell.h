@@ -13,30 +13,30 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface NSObject (AICustomTabViewItem)
+@protocol AICustomTabViewItem
 - (NSString *)label;
 - (NSImage *)icon;
 @end
 
 @interface AICustomTabCell : NSCell {
-    BOOL				selected;
-    BOOL				highlighted;
-    BOOL				allowsInactiveTabClosing;
+    BOOL								selected;
+    BOOL								highlighted;
+    BOOL								allowsInactiveTabClosing;
     
-    BOOL				trackingClose;
-    BOOL				hoveringClose;
+    BOOL								trackingClose;
+    BOOL								hoveringClose;
     
-    NSTrackingRectTag	trackingTag;
-    NSDictionary        *userData;
-    NSTrackingRectTag   closeTrackingTag;
-    NSDictionary        *closeUserData;
+    NSTrackingRectTag					trackingTag;
+    NSDictionary						*userData;
+    NSTrackingRectTag					closeTrackingTag;
+    NSDictionary						*closeUserData;
     
-	NSAttributedString	*attributedLabel;
-    NSTabViewItem		*tabViewItem;
-    NSRect				frame;
+	NSAttributedString					*attributedLabel;
+    NSTabViewItem<AICustomTabViewItem>	*tabViewItem;
+    NSRect								frame;
 }
 
-+ (id)customTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
++ (id)customTabForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem;
 - (void)setAllowsInactiveTabClosing:(BOOL)inValue;
 - (BOOL)allowsInactiveTabClosing;
 - (void)setSelected:(BOOL)inSelected;
