@@ -1,4 +1,4 @@
-\set ON_ERROR_STOP
+\set ON_ERROR STOP;
 \echo schema
 create schema im;
 
@@ -50,6 +50,7 @@ create index im_msg_date_sender_recipient on
 create index im_recipient on im.messages (recipient_id);
 create index display_user_effdat on im.user_display_name (user_id, effdate);
 create index im_message_date on im.messages (message_date);
+create index im_sender_random on im.messages (sender_id, random_id);
 
  -- message_v contains the message, sender and recipient screennames, and
  -- sender/recipient display names
@@ -257,6 +258,32 @@ meta_id         int references im.meta_container (meta_id) not null,
 user_id         int references im.users (user_id) not null,
 preferred       boolean default false
 );
+
+create view im.meta_names as (
+select meta_id, name, service, username, user_id
+from im.meta_container
+natural join im.meta_contact
+natural join im.users
+);
+
+create or replace rule insert_meta_contact as
+on insert to im.meta_names
+do instead (
+    insert into im.meta_container (name)
+    select new.name
+    where not exists (
+        select  'x'
+        from    im.meta_container
+        where   name = new.name);
+
+    insert into im.meta_contact (meta_id, user_id, preferred)
+    select (select meta_id from im.meta_container where name = new.name),
+        (select user_id from im.users
+        where username = lower(new.username) and service = new.service),
+        exists (select 'x' from im.meta_contact where user_id =
+            (select user_id from users where username = lower(new.username)
+            and service = new.service));
+    );
 
 -- saves a note and links it to a message id
 \echo table message_notes
