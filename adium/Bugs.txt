@@ -37,7 +37,8 @@
 
 - User icons occasionally display upside-down
 	We cannot find a pattern to when or why this happens
-	
+
+- Event Notification window moves out of place between resolution changes.
 
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
