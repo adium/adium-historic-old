@@ -28,6 +28,8 @@
 	int 						animatedIndex;
 }
 
++ (void)showDockIconSelectorOnWindow:(NSWindow *)parentWindow;
+
 //Animation
 - (void)setAnimatedDockIconAtIndex:(int)index;
 - (AIIconState *)animatedStateForDockIconAtPath:(NSString *)path;
