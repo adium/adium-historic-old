@@ -5823,6 +5823,8 @@
 		};
 		34B70349076EDB410016E8BA = {
 			children = (
+				34C69E6D07794B9200EB423C,
+				34C69E6E07794B9200EB423C,
 				34B7033E076EDB370016E8BA,
 				34B7033D076EDB370016E8BA,
 				34B70340076EDB370016E8BA,
@@ -7111,6 +7113,7 @@
 				34B70343076EDB370016E8BA,
 				34B70345076EDB370016E8BA,
 				3477CAD10776E55800995429,
+				34C69E6F07794B9200EB423C,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7289,6 +7292,7 @@
 				34E829850766B0FE00EFB3BC,
 				34B70342076EDB370016E8BA,
 				34B70344076EDB370016E8BA,
+				34C69E7007794B9200EB423C,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8271,6 +8275,36 @@
 		};
 		34C68B660778FCB900EB423C = {
 			fileRef = 34C68B650778FCB800EB423C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C69E6D07794B9200EB423C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIImageTextCellView.h;
+			path = "Frameworks/Adium Framework/AIImageTextCellView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C69E6E07794B9200EB423C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIImageTextCellView.m;
+			path = "Frameworks/Adium Framework/AIImageTextCellView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C69E6F07794B9200EB423C = {
+			fileRef = 34C69E6D07794B9200EB423C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C69E7007794B9200EB423C = {
+			fileRef = 34C69E6E07794B9200EB423C;
 			isa = PBXBuildFile;
 			settings = {
 			};
