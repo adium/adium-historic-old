@@ -11,11 +11,18 @@
             SUPERCLASS = NSTableColumn; 
         }, 
         {
-            ACTIONS = {addedEvent = id; deleteEventAction = id; oneTimeEvent = id; }; 
+            ACTIONS = {
+                addedEvent = id; 
+                anInstanceChanged = id; 
+                deleteEventAction = id; 
+                oneTimeEvent = id; 
+                onlyWhileActive = id; 
+            }; 
             CLASS = ESContactAlertsPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 actionColumn = ESContactAlertsActionColumn; 
+                "button_active" = NSButton; 
                 "button_delete" = NSButton; 
                 "button_oneTime" = NSButton; 
                 "popUp_addEvent" = NSPopUpButton; 

@@ -6,10 +6,17 @@
             SUPERCLASS = NSTableView; 
         }, 
         {
-            ACTIONS = {closeWindow = id; deleteEventAction = id; oneTimeEvent = id; }; 
+            ACTIONS = {
+                addedEvent = id; 
+                closeWindow = id; 
+                deleteEventAction = id; 
+                oneTimeEvent = id; 
+                onlyWhileActive = id; 
+            }; 
             CLASS = ESContactAlertsWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_active" = NSButton; 
                 "button_delete" = NSButton; 
                 "button_oneTime" = NSButton; 
                 "popUp_addEvent" = NSPopUpButton; 

@@ -163,7 +163,6 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [prefAlertsArray retain];
 
     AIListContact * contact;
-    NSLog(@"begin loading instances");
     while (contact = [enumerator nextObject])
     {
         ESContactAlerts * thisInstance = [[[ESContactAlerts alloc] initForObject:contact withDetailsView:view_main withTable:tableView_actions withPrefView:view_prefView owner:owner] autorelease];
@@ -177,7 +176,6 @@ int alphabeticalSort(id objectA, id objectB, void *context);
             offset += [thisInstance count];
         }
     }
-    NSLog(@"instances done");
     [actionColumn setPrefAlertsArray:prefAlertsArray];
 }
 
@@ -195,7 +193,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 -(IBAction)onlyWhileActive:(id)sender
 {
-    [instance oneTimeEvent:button_active];
+    [instance onlyWhileActive:button_active];
 }
 
 -(IBAction)deleteEventAction:(id)sender
@@ -365,9 +363,11 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         
         [[[actionColumn dataCellForRow:row] menu] performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]]; //will appply appropriate subview in the process
         [button_oneTime setState:[[selectedActionDict objectForKey:KEY_EVENT_DELETE] intValue]];
-
+        [button_active setState:[[selectedActionDict objectForKey:KEY_EVENT_ACTIVE] intValue]];
+        
         [button_delete setEnabled:YES];
         [button_oneTime setEnabled:YES];
+        [button_active setEnabled:YES];
     }
     else //no selection
     {
@@ -375,6 +375,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
         [button_delete setEnabled:NO];
         [button_oneTime setEnabled:NO];
+        [button_active setEnabled:NO];
     }
 
 }
@@ -389,7 +390,6 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 - (void)dealloc
 {
-//    NSLog(@"dealloc");
     [owner release];
     [prefAlertsArray release];
     [activeContactObject release];

@@ -144,7 +144,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
 -(IBAction)onlyWhileActive:(id)sender
 {
-    [instance oneTimeEvent:button_active];
+    [instance onlyWhileActive:button_active];
 }
 
 -(IBAction)deleteEventAction:(id)sender
@@ -256,10 +256,11 @@ static ESContactAlertsWindowController *sharedInstance = nil;
         
         [actionMenu performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]]; //will appply appropriate subview in the process
         [button_oneTime setState:[[selectedActionDict objectForKey:KEY_EVENT_DELETE] intValue]];
-
+        [button_active setState:[[selectedActionDict objectForKey:KEY_EVENT_ACTIVE] intValue]];
+        
         [button_delete setEnabled:YES];
         [button_oneTime setEnabled:YES];
-
+        [button_active setEnabled:YES];
     }
 
     else //no selection
@@ -267,6 +268,9 @@ static ESContactAlertsWindowController *sharedInstance = nil;
         [instance configureWithSubview:nil];
         [button_delete setEnabled:NO];
         [button_oneTime setEnabled:NO];
+        [button_oneTime setState:NSOffState];
+        [button_active setEnabled:NO];
+        [button_active setState:NSOffState];
     }
 
 }
@@ -308,7 +312,6 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     if(savedFrame){
         [[self window] setFrameFromString:savedFrame];
         NSRect newFrame = [[self window] frame];
-        //NSLog(@"1: %d  2: %d",newFrame.size.height,defaultFrame.size.height);
         newFrame.size.height = defaultFrame.size.height;
         [[self window] setFrame:newFrame display:YES];
         [[self window] setMinSize:minimum];
