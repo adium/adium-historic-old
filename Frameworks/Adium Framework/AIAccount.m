@@ -121,7 +121,7 @@ Adium, Copyright 2001-2005, Adam Iser
  * strange behavior.  Return YES from this method to suppress the sending of a stopped typing notification along with
  * messages.
  */
-- (BOOL)suppressTypingNotificationChangesAfterSendForListObject:(AIListObject *)listObject
+- (BOOL)suppressTypingNotificationChangesAfterSend
 {
 	return(NO);
 }

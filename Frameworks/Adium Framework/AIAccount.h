@@ -118,7 +118,7 @@ typedef enum {
 - (BOOL)shouldSendAutoresponsesWhileAway;
 - (BOOL)disconnectOnFastUserSwitch;
 - (BOOL)connectivityBasedOnNetworkReachability;
-- (BOOL)suppressTypingNotificationChangesAfterSendForListObject:(AIListObject *)listObject;
+- (BOOL)suppressTypingNotificationChangesAfterSend;
 
 //Status
 - (NSSet *)supportedPropertyKeys;
