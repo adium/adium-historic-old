@@ -23,6 +23,8 @@
     NSDictionary    *secondaryAttributesMask;
     NSDictionary    *mainStatusAttributes;
     NSDictionary    *mainStatusAttributesMask;
+    
+    NSColor         *buddyIconLabelColor;
 }
 
 - (NSImage *)buddyIconImage;
@@ -36,4 +38,7 @@
 - (void)setMainBuddyStatus:(NSString *)newString;
 - (NSString *)queueField;
 - (void)setQueueField:(NSString *)newString;
+
+- (NSColor *)buddyIconLabelColor;
+- (void)setBuddyIconLabelColor:(NSColor *)newColor;
 @end

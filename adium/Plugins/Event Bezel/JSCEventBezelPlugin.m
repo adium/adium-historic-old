@@ -9,6 +9,7 @@
 #import "JSCEventBezelPlugin.h"
 #import "JSCEventBezelPreferences.h"
 #import "AIContactStatusEventsPlugin.h"
+#import "AIContactStatusColoringPlugin.h"
 #import <AddressBook/AddressBook.h>
 
 @interface JSCEventBezelPlugin (PRIVATE)
@@ -125,21 +126,21 @@
 
 - (void)processBezelForNotification:(NSNotification *)notification 
 {
-    AIListContact   *contact;
-    BOOL            isFirstMessage = NO;
-    
-    NSString        *notificationName = [notification name];
-    
+    AIListContact               *contact;
+    BOOL                        isFirstMessage = NO;
+    NSString                    *notificationName = [notification name];
+    NSString                    *tempEvent = nil;
+    AIMutableOwnerArray         *ownerArray =nil;
+    NSImage                     *tempBuddyIcon = nil;
+    NSString                    *statusMessage = nil;
+    NSDictionary                *colorPreferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+
     if ([notificationName isEqualToString:Content_FirstContentRecieved]) {
         contact = [[[notification object] participatingListObjects] objectAtIndex:0];
         isFirstMessage = YES;
     } else {
         contact = [notification object];
     }
-    
-    AIMutableOwnerArray         *ownerArray;
-    NSImage                     *tempBuddyIcon = nil;
-    NSString                    *statusMessage = nil;
     
     ownerArray = [contact statusArrayForKey:@"BuddyImage"];
     if(ownerArray && [ownerArray count]) {
@@ -161,9 +162,33 @@
         }*/
     }
     
+    // Prepare the event string and label color
+    if ([notificationName isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
+        tempEvent = @"is now online";
+        [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor]];
+    } else if ([notificationName isEqualToString: CONTACT_STATUS_ONLINE_NO]) {
+        tempEvent = @"has gone offline";
+        [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor]];
+    } else if ([notificationName isEqualToString: CONTACT_STATUS_AWAY_YES]) {
+        tempEvent = @"has gone away";
+        [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
+    } else if ([notificationName isEqualToString: CONTACT_STATUS_AWAY_NO]) {
+        tempEvent = @"is available";
+        [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
+    } else if ([notificationName isEqualToString: CONTACT_STATUS_IDLE_YES]) {
+        tempEvent = @"is idle";
+        [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
+    } else if ([notificationName isEqualToString: CONTACT_STATUS_IDLE_NO]) {
+        tempEvent = @"is no longer idle";
+        [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
+    } else if ([notificationName isEqualToString: Content_FirstContentRecieved]) {
+        tempEvent = @"says";
+        [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
+    }
+    
     [ebc showBezelWithContact: [contact longDisplayName]
                     withImage: tempBuddyIcon
-                     forEvent: notificationName
+                     forEvent: tempEvent
                   withMessage: statusMessage];
 }
 
