@@ -110,7 +110,7 @@
     NSImage						*img = [[NSImage alloc] initWithPasteboard:pb];
     NSTextAttachmentCell		*cell = [[NSTextAttachmentCell alloc] initImageCell:img];
     AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
-    NSAttributedString			*attachString;
+    NSMutableAttributedString	*attachString;
     
     [attachment setAttachmentCell:cell];
     [attachment setString:textEquivalent];
