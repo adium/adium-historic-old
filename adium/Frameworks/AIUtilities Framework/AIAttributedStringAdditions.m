@@ -42,14 +42,9 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 
 - (NSData *)dataRepresentation
 {
-	//RTFFromRange is buggy on Jaguar, so we'll use HTML instead
-    if(![NSApp isOnPantherOrBetter]){
-        NSString *superSpecialJagString = [AIHTMLDecoder encodeHTML:self encodeFullString:NO];
-        return [[NSAttributedString stringWithString:superSpecialJagString] RTFFromRange:NSMakeRange(0,[superSpecialJagString length]) documentAttributes:nil];
-    }
-
-    return([self RTFFromRange:NSMakeRange(0,[self length]) documentAttributes:nil]);
+	return([NSArchiver archivedDataWithRootObject:self]);
 }
+
 
 - (NSAttributedString *)safeString
 {
@@ -355,24 +350,33 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 
 - (NSData *)dataRepresentation
 {
-	//RTFFromRange is buggy on Jaguar, so we'll use HTML instead
-    if(![NSApp isOnPantherOrBetter]){
-        NSString *superSpecialJagString = [AIHTMLDecoder encodeHTML:self encodeFullString:NO];
-        return [[NSAttributedString stringWithString:superSpecialJagString] RTFFromRange:NSMakeRange(0,[superSpecialJagString length]) documentAttributes:nil];
-    }
-	
-    return([self RTFFromRange:NSMakeRange(0,[self length]) documentAttributes:nil]);
+	return([NSArchiver archivedDataWithRootObject:self]);
 }
 
 + (NSAttributedString *)stringWithData:(NSData *)inData
 {
-	//RTFFromRange is buggy on Jaguar, so we'll use HTML instead
-    if(![NSApp isOnPantherOrBetter]){
-        NSAttributedString *superSpecialJagString = [[[NSAttributedString alloc] initWithRTF:inData documentAttributes:nil] autorelease];
-        return [AIHTMLDecoder decodeHTML:[superSpecialJagString string]];
-    }
+	NSAttributedString	*returnValue;
+	NSUnarchiver		*unarchiver = [[NSUnarchiver alloc] initForReadingWithData:inData];
+
+	returnValue = (NSAttributedString *)[unarchiver decodeObject];
+
+	//For reading previously stored NSData objects - we used to store them as RTF data, but that
+	//method is both slower and buggier. Any modern storage will use NSUnarchiver, so leaving this
+	//here isn't a speed problem.
+	if (!returnValue){
+		if([NSApp isOnPantherOrBetter]){
+			
+			returnValue = ([[[NSAttributedString alloc] initWithRTF:inData
+												 documentAttributes:nil] autorelease]);
+		}else{
+			//RTFFromRange is buggy on Jaguar, so we'll use HTML instead
+			NSAttributedString *superSpecialJagString = [[[NSAttributedString alloc] initWithRTF:inData
+																			  documentAttributes:nil] autorelease];
+			returnValue = [AIHTMLDecoder decodeHTML:[superSpecialJagString string]];
+		}
+	}
 	
-    return([[[NSAttributedString alloc] initWithRTF:inData documentAttributes:nil] autorelease]);
+	return returnValue;
 }
 
 - (NSAttributedString *)safeString
