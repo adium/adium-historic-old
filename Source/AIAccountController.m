@@ -640,36 +640,25 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     NSParameterAssert(inAccount != nil);
     NSParameterAssert(accountArray != nil);
 
-	[inAccount retain]; //Don't let the account dealloc until we have a chance to notify everyone that it's gone
+	//Don't let the account dealloc until we have a chance to notify everyone that it's gone
+	[inAccount retain]; 
+
+	//Let the account take any action it wants before being deleted, such as disconnecting
 	[inAccount willBeDeleted];
+	
+	//Remove from our array
 	[accountArray removeObject:inAccount];
+	
+	//Clean up the keychain -- forget the stored password
+	[self forgetPasswordForAccount:inAccount];
+	
+	//Save if appropriate
 	if (shouldSave){
 		[self saveAccounts];
 	}
-	[inAccount release];
-}
-
-//Switches the service of the specified account
-//XXX - We no longer support this in the interface, I'm in favor of removing this method -ai
-- (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(AIService *)inService
-{
-    //Add an account with the new service
-	AIAccount	*newAccount;
-	int			accountIndex;
 	
-	newAccount = [self createAccountWithService:inService
-											UID:[inAccount UID]
-							   internalObjectID:[inAccount internalObjectID]];
-	accountIndex = [accountArray indexOfObject:inAccount];
-		
-    [self insertAccount:newAccount
-				atIndex:((accountIndex != NSNotFound) ? accountIndex : 0)
-				   save:NO];
-    
-    //Delete the old account
-    [self deleteAccount:inAccount save:YES];
-    
-    return(newAccount);
+	//Cleanup
+	[inAccount release];
 }
 
 //Re-order an account on the list
