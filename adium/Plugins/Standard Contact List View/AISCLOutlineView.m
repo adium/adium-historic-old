@@ -109,8 +109,14 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeMainNotification object:[self window]];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignMainNotification object:[self window]];
     if([newSuperview window]){
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecameMain:) name:NSWindowDidBecomeMainNotification object:[newSuperview window]];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowResignedMain:) name:NSWindowDidResignMainNotification object:[newSuperview window]];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(windowBecameMain:) 
+													 name:NSWindowDidBecomeMainNotification 
+												   object:[newSuperview window]];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(windowResignedMain:)
+													 name:NSWindowDidResignMainNotification 
+												   object:[newSuperview window]];
     }
 }
 
@@ -127,6 +133,17 @@
     if([self superview]){
         [self _sizeColumnToFit];
     }
+}
+
+- (void)viewDidMoveToWindow
+{
+	[super viewDidMoveToWindow];
+	
+	//Pass this on to our delegate
+    if([[self delegate] respondsToSelector:@selector(view:didMoveToWindow:)]){
+        [[self delegate] view:self didMoveToWindow:[self window]];
+    }
+	
 }
 
 //Override set frame size to force our rect to always be the correct height.  Without this the scrollview will stretch too tall vertically when resized beyond the bottom of our contact list.

@@ -63,6 +63,7 @@
     //Init
     tooltipTrackingTag = -1;
 	inDrag = NO;
+	windowHidesOnDeactivate = NO;
 	dragItems = nil;
 	tooltipMouseLocationTimer = nil;
     tooltipCount = 0;
@@ -88,6 +89,8 @@
 									   name:Preference_GroupChanged 
 									 object:nil];
 
+	
+	
     //Watch for resolution and screen configuration changes
     [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
 														   selector:@selector(screenParametersChanged:) 
@@ -99,12 +102,12 @@
     [contactListView setDelegate:self];
     [contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
 
-    //Fetch and update the contact list
+	//Fetch and update the contact list
     [self contactListChanged:nil];
-
+	
     //Apply the preferences to our view - needs to happen _after_ fetching & updating the contact list
     [self preferencesChanged:nil];
-
+				
     return(self);
 }
 
@@ -289,12 +292,9 @@
         [contactListView setDrawsAlternatingRows:alternatingGrid];
         [contactListView setAlternatingRowColor:gridColor];
 
-
-        [contactListView _performFullRecalculation];
-        
+		[contactListView _performFullRecalculation];
     }
    
-
     //Resizing
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0){
         //This is sloppy, we shouldn't be reading the interface plugin's preferences
@@ -309,11 +309,11 @@
 //Configure the transparency and shadowing of the window containing our list
 - (void)_configureTransparencyAndShadows
 {
-	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
-	float   		alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
-	BOOL			hasShadow = [[prefDict objectForKey:KEY_SCL_SHADOWS] boolValue];
-	
 	if([contactListView window]){
+		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
+		float   		alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
+		BOOL			hasShadow = [[prefDict objectForKey:KEY_SCL_SHADOWS] boolValue];
+				
 		//Shadow
 		[[contactListView window] setHasShadow:hasShadow];
 		if([[contactListView enclosingScrollView] respondsToSelector:@selector(setUpdateShadowsWhileScrolling:)]){
@@ -589,10 +589,15 @@
 												 selector:@selector(frameDidChange:)
 													 name:NSViewFrameDidChangeNotification 
 												   object:[newSuperview superview]];
-		
-		[self performSelector:@selector(_installCursorRect) withObject:nil afterDelay:0.0001];
-		[self performSelector:@selector(_configureTransparencyAndShadows) withObject:nil afterDelay:0.0001];
-    }
+	}
+}
+
+- (void)view:(NSView *)inView didMoveToWindow:(NSWindow *)window
+{
+	[self _installCursorRect];
+	[self _configureTransparencyAndShadows];
+	
+	windowHidesOnDeactivate = [window hidesOnDeactivate];
 }
 
 - (void)window:(NSWindow *)inWindow didResignMain:(NSNotification *)notification
@@ -674,9 +679,6 @@
 - (void)_stopTrackingMouse
 {
 	[self _showTooltipAtPoint:NSMakePoint(0,0)];
-	[tooltipMouseLocationTimer invalidate];
-	[tooltipMouseLocationTimer release];
-	tooltipMouseLocationTimer = nil;
 }
 
 //Time to poll mouse location
@@ -709,13 +711,15 @@
 	tooltipCount = 0;
 }
 
-//Show a tooltip at the specified screen point.  If point is (0,0) the tooltip will be hidden
+//Show a tooltip at the specified screen point.
+//If point is (0,0) or the window is hidden, the tooltip will be hidden and tracking stopped
 - (void)_showTooltipAtPoint:(NSPoint)screenPoint
 {
 	if(!NSEqualPoints(tooltipLocation, screenPoint)){
 		AIListObject	*hoveredObject = nil;
 		NSWindow		*window = [contactListView window];
-		if((screenPoint.x != 0 && screenPoint.y != 0) && [window isVisible]){
+
+		if((screenPoint.x != 0 && screenPoint.y != 0) && [window isVisible] && (!windowHidesOnDeactivate || [NSApp isActive])){
 			NSPoint			viewPoint;
 			int				hoveredRow;
 			
@@ -725,6 +729,10 @@
 			//Get the hovered contact
 			hoveredRow = [contactListView rowAtPoint:viewPoint];
 			hoveredObject = [contactListView itemAtRow:hoveredRow];
+		}else{
+			[tooltipMouseLocationTimer invalidate];
+			[tooltipMouseLocationTimer release];
+			tooltipMouseLocationTimer = nil;	
 		}
 		
 		[[adium interfaceController] showTooltipForListObject:hoveredObject atScreenPoint:screenPoint onWindow:window];

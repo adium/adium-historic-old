@@ -27,7 +27,8 @@
 	NSPoint				tooltipLocation;
     NSTrackingRectTag	tooltipTrackingTag;
     int 				tooltipCount;
-
+	BOOL				windowHidesOnDeactivate;
+	
 	BOOL				inDrag;
 	NSArray				*dragItems;
 }
@@ -35,8 +36,9 @@
 + (AISCLViewController *)contactListViewController;
 - (IBAction)performDefaultActionOnSelectedContact:(id)sender;
 - (NSView *)contactListView;
-- (void)view:(NSView *)inView didMoveToSuperview:(NSView *)inSuperview;
 - (void)view:(NSView *)inView willMoveToSuperview:(NSView *)inSuperview;
+- (void)view:(NSView *)inView didMoveToSuperview:(NSView *)inSuperview;
+- (void)view:(NSView *)inView didMoveToWindow:(NSWindow *)window;
 - (void)window:(NSWindow *)inWindow didResignMain:(NSNotification *)notification;
 - (NSMenu *)outlineView:(NSOutlineView *)outlineView menuForEvent:(NSEvent *)theEvent;
 - (void)hideTooltip;
