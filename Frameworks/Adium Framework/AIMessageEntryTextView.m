@@ -271,9 +271,15 @@ static NSImage *pushIndicatorImage = nil;
 //Paste as rich text without altering our typing attributes
 - (void)pasteAsRichText:(id)sender
 {
-	NSDictionary	*attributes = [[[self typingAttributes] copy] autorelease];
+	NSDictionary	*attributes = [[self typingAttributes] copy];
+	
 	[super pasteAsRichText:sender];
-	if(attributes) [self setTypingAttributes:attributes];
+	
+	if(attributes){
+		[self setTypingAttributes:attributes];
+	}
+	
+	[attributes release];
 }
 
 //Let adium know as text is inserted
@@ -307,9 +313,12 @@ static NSImage *pushIndicatorImage = nil;
 		NSDictionary *typingAttributes = [self typingAttributes];
 		if ([typingAttributes objectForKey:NSLinkAttributeName]){
 			
-			NSMutableDictionary *newTypingAttributes = [[typingAttributes mutableCopy] autorelease];
+			NSMutableDictionary *newTypingAttributes = [typingAttributes mutableCopy];
+			
 			[newTypingAttributes removeObjectForKey:NSLinkAttributeName];
 			[self setTypingAttributes:newTypingAttributes];
+			
+			[newTypingAttributes release];
 		}
 	}
 	
