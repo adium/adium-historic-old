@@ -1,0 +1,6 @@
+#ifdef __OBJC__
+#import <Cocoa/Cocoa.h>
+
+#import <WebKit/WebKit.h>
+#import <AIUtilities/AIUtilities.h>
+#endif
