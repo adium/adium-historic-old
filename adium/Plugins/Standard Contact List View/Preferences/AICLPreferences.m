@@ -14,7 +14,7 @@
 #import "AISCLViewPlugin.h"
 
 #define CL_PREF_NIB		@"AICLPrefView"		//Name of preference nib
-#define CL_PREF_TITLE		@"Text Settings"	//
+#define CL_PREF_TITLE		@"General Appearance"	//
 
 //Handles the interface interaction, and sets preference values
 //The outline view plugin is responsible for reading & setting the preferences, as well as observing changes in them
