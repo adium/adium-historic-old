@@ -43,8 +43,6 @@ typedef enum {
     NSTimer 				*animationTimer;
     NSTimer					*bounceTimer;
     
-	NSMutableArray			*dockIconPacks;
-	
     NSMutableDictionary		*availableIconStateDict;
     NSMutableDictionary		*availableDynamicIconStateDict;
     NSMutableArray			*activeIconStateArray;
