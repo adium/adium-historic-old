@@ -36,7 +36,7 @@
 #define ADIUM_FAQ_PAGE                          @"http://adium.sourceforge.net/faq/"
 
 @interface AIAdium (PRIVATE)
-- (void)applicationDidFinishLaunching:(NSNotification *)notification;
+- (void)configureCrashReporter;
 - (void)completeLogin;
 @end
 
@@ -238,6 +238,18 @@ void Adium_HandleSignal(int i){
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
+    [self configureCrashReporter];
+
+    //Load and init the components
+    [loginController initController];
+    
+    //Begin Login
+    [loginController requestUserNotifyingTarget:self selector:@selector(completeLogin)];
+    
+    completedApplicationLoad = YES;
+}
+- (void)configureCrashReporter
+{
     //Remove any existing crash logs
     [[NSFileManager defaultManager] trashFileAtPath:EXCEPTIONS_PATH];
     [[NSFileManager defaultManager] trashFileAtPath:CRASHES_PATH];
@@ -254,15 +266,7 @@ void Adium_HandleSignal(int i){
     signal(11, Adium_HandleSignal);     /* segmentation violation */
     signal(12, Adium_HandleSignal);     /* bad argument to system call */
     signal(24, Adium_HandleSignal);     /* exceeded CPU time limit */
-    signal(25, Adium_HandleSignal);     /* exceeded file size limit */
-        
-    //Load and init the components
-    [loginController initController];
-    
-    //Begin Login
-    [loginController requestUserNotifyingTarget:self selector:@selector(completeLogin)];
-    
-    completedApplicationLoad = YES;
+    signal(25, Adium_HandleSignal);     /* exceeded file size limit */    
 }
 
 //If Adium was launched by double-clicking an associated file, we get this call after willFinishLaunching but before didFinishLaunching
