@@ -52,7 +52,7 @@ AICrashController *sharedCrashController = nil;
     signal(SIGXCPU, CrashHandler_Signal);	/* 24:  exceeded CPU time limit */
     signal(SIGXFSZ, CrashHandler_Signal);	/* 25:  exceeded file size limit */    
 	
-	//I think SIGABRT is an exception... maybe we should ignore it? I'm really not sure.
+	//I think SIGABRT is an exception... we should ignore it.
 	signal(SIGABRT, SIG_IGN);
 	
 	return(self);
