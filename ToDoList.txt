@@ -42,14 +42,6 @@ Standardize/enhance Xtras pref panes [brian]
   These changes allow for the removal of the 'Keys' preferences, and for
   message preferences to focus on message display over behavior.
 
-//Alternate Event Interfaces
-  Our event system interfaces (sound sets, dock behavior) need several usability
-  improvements.
-	- Custom behavior panels should be sheets
-	- Allow changing of event within the table
-	- Use standard +/- controls for adding and removing events (Not a popup)
-	- Organize and group event menu, clarify and focus events
-
 //Message window toolbar
   Additional message window toolbar items
 	- Open font/color panel (standard system buttons)
@@ -63,7 +55,7 @@ Standardize/enhance Xtras pref panes [brian]
 //Message Save and Print
   Common mac file menu operations should work on message windows, this includes
 	- Save As
-	- Print
+	- Print (Done)
   These are grouped because they are functionally similar.	
 
 //File Receive Prompt
@@ -158,7 +150,7 @@ Standardize/enhance Xtras pref panes [brian]
   - Improve organization of advanced preferences
   - Add advanced categories for service specific preferences
   - Make heights of preference panes equal where possible
-  - Fade between preference panes when switching
+  - Fade between preference panes when switching?
 
 //Alerts
   - Display time stamps in the panel alert
