@@ -19,6 +19,7 @@
 	BOOL		hasAlternate;
 	NSString	*imagePath;
 	NSSize		imageSize;
+	BOOL		shouldAlwaysSendAsText;
 }
 
 - (void)setString:(NSString *)inString;
@@ -33,5 +34,8 @@
 
 - (void)setImageSize:(NSSize)inSize;
 - (NSSize)imageSize;
+
+- (BOOL)shouldAlwaysSendAsText;
+- (void)setShouldAlwaysSendAsText:(BOOL)flag;
 
 @end
