@@ -58,16 +58,14 @@ static AINewMessagePrompt *sharedNewMessageInstance = nil;
     AIListContact	*contact;
     AIAccount		*account;
     NSString		*UID;
-    AIServiceType	*serviceType;
 
     //Get the service type and UID
     account = [[popUp_service selectedItem] representedObject];
-    serviceType = [[account service] handleServiceType];
-    UID = [serviceType filterUID:[textField_handle impliedStringValue] removeIgnoredCharacters:YES];
+    UID = [[account service] filterUID:[textField_handle impliedStringValue] removeIgnoredCharacters:YES];
         
     //Find the contact
-	contact = [[adium contactController] contactWithService:[serviceType identifier]
-												  accountID:[account uniqueObjectID] 
+	contact = [[adium contactController] contactWithService:[account service]
+													account:account 
 														UID:UID];
     if(contact){
         //Close the prompt
@@ -131,7 +129,7 @@ static AINewMessagePrompt *sharedNewMessageInstance = nil;
 
     //Select the last used account / Available online account
 	AIAccount   *preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
-																						toListObject:nil];
+																						   toContact:nil];
 	int			serviceIndex = [popUp_service indexOfItemWithRepresentedObject:preferredAccount];
 	
     if(serviceIndex < [popUp_service numberOfItems] && serviceIndex >= 0){
