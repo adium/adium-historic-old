@@ -11,6 +11,7 @@
     NSTimer     *fadeTimer, *displayTimer;
     BOOL        fadingOut, fadingIn;
     BOOL        doFadeOut, doFadeIn;
+    BOOL        appWasHidden;
     int         displayDuration;
 }
 
@@ -31,4 +32,6 @@
 - (void)setDoFadeOut:(BOOL)b;
 - (BOOL)doFadeIn;
 - (void)setDoFadeIn:(BOOL)b;
+- (BOOL)appWasHidden;
+- (void)setAppWasHidden:(BOOL)b;
 @end
