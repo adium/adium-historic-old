@@ -489,7 +489,7 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 				}
 			}
 			
-			const char *alias = gaim_get_buddy_alias(buddy);
+			const char *alias = gaim_buddy_get_alias(buddy);
 			if (alias){
 				NSString *aliasString = [NSString stringWithUTF8String:alias];
 				
@@ -816,6 +816,11 @@ static void adiumGaimConvSetTitle(GaimConversation *conv, const char *title)
     GaimDebug (@"adiumGaimConvSetTitle");
 }
 
+static void adiumGaimConvUpdateUser(GaimConversation *conv, const char *user)
+{
+	
+}
+
 static void adiumGaimConvUpdateProgress(GaimConversation *conv, float percent)
 {
     NSLog(@"adiumGaimConvUpdateProgress %f",percent);
@@ -884,6 +889,7 @@ static GaimConversationUiOps adiumGaimConversationOps = {
     adiumGaimConvChatRenameUser,
     adiumGaimConvChatRemoveUser,
     adiumGaimConvChatRemoveUsers,
+	adiumGaimConvUpdateUser,
     adiumGaimConvUpdateProgress,
 	adiumGaimConvHasFocus,
     adiumGaimConvUpdated
@@ -1559,7 +1565,7 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
     return(nil);
 }
 
-static void *adiumGaimRequestFile(const char *title, const char *filename, GCallback ok_cb, GCallback cancel_cb,void *user_data)
+static void *adiumGaimRequestFile(const char *title, const char *filename, gboolean savedialog, GCallback ok_cb, GCallback cancel_cb,void *user_data)
 {
 	NSLog(@"adiumGaimRequestFile");
 	return(nil);
@@ -1596,6 +1602,7 @@ static void adiumGaimDestroy(GaimXfer *xfer)
 	xfer->ui_data = nil;
 }
 
+#warning file transfer is now broken, fix before 0.64 - adiumGaimRequestXfer no longer is part of the GaimXferUiOps
 static void adiumGaimRequestXfer(GaimXfer *xfer)
 {
     GaimXferType xferType = gaim_xfer_get_type(xfer);
@@ -1635,11 +1642,6 @@ static void adiumGaimRequestXfer(GaimXfer *xfer)
 										  withObject:AILocalizedString(@"File Send Error",nil)];
 }
 
-static void adiumGaimAskCancel(GaimXfer *xfer)
-{
-	NSLog(@"adiumGaimAskCancel");
-}
-
 static void adiumGaimAddXfer(GaimXfer *xfer)
 {
 	NSLog(@"adiumGaimAddXfer");
@@ -1674,8 +1676,6 @@ static void adiumGaimCancelRemote(GaimXfer *xfer)
 static GaimXferUiOps adiumGaimFileTransferOps = {
     adiumGaimNewXfer,
     adiumGaimDestroy,
-    adiumGaimRequestXfer,
-    adiumGaimAskCancel,
     adiumGaimAddXfer,
     adiumGaimUpdateProgress,
     adiumGaimCancelLocal,
