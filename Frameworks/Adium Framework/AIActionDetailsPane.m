@@ -3,11 +3,10 @@
 //  Adium
 //
 //  Created by Adam Iser on Sun Apr 18 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIActionDetailsPane.h"
-
+#import "ESContactAlertsViewController.h"
 
 @implementation AIActionDetailsPane
 
@@ -21,6 +20,12 @@
 + (AIActionDetailsPane *)actionDetailsPaneForPlugin:(id)inPlugin
 {
     return([[[self alloc] initForPlugin:inPlugin] autorelease]);
+}
+
+- (void)detailsForHeaderChanged
+{
+   [[adium notificationCenter] postNotificationName:CONTACT_ALERTS_DETAILS_FOR_HEADER_CHANGED
+											 object:self];
 }
 
 //For subclasses -------------------------------------------------------------------------------
