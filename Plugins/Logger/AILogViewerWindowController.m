@@ -499,23 +499,33 @@ static NSString                             *filterForContactName = nil;	//Conta
     //We always convey the number of logs being displayed
     [resultsLock lock];
     if(activeSearchString && [activeSearchString length]){
-		progress = [NSMutableString stringWithFormat:AILocalizedString(@"Found %i matches for search",nil),[selectedLogArray count]];
+		unsigned count = [selectedLogArray count];
+		progress = [NSMutableString stringWithFormat:((count != 1) ? 
+													  AILocalizedString(@"Found %i matches",nil) :
+													  AILocalizedString(@"Found 1 match",nil)),count];
     }else if(searching){
 		progress = [NSMutableString stringWithString:AILocalizedString(@"Opening logs...",nil)];
     }else{
-		progress = [NSMutableString stringWithFormat:AILocalizedString(@"%i logs",nil),[selectedLogArray count]];
+		unsigned count = [selectedLogArray count];
+		progress = [NSMutableString stringWithFormat:((count != 1) ?
+													  AILocalizedString(@"%i logs",nil) :
+													  AILocalizedString(@"1 log",nil)),count];
     }
     [resultsLock unlock];
-
-    //Append search progress
-    if(searching && activeSearchString && [activeSearchString length]){
-		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" - Searching for '%@'",nil),activeSearchString]];
-	}
 	
 	if(filterForAccountName && [filterForAccountName length]){
 		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" of chats on %@",nil),filterForAccountName]];
 	}else if(filterForContactName && [filterForContactName length]){
 		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" of chats with %@",nil),filterForContactName]];
+	}
+
+    //Append search progress
+    if(activeSearchString && [activeSearchString length]){
+		if(searching){
+			[progress appendString:[NSString stringWithFormat:AILocalizedString(@" - Searching for '%@'",nil),activeSearchString]];
+		}else{
+			[progress appendString:[NSString stringWithFormat:AILocalizedString(@" containing '%@'",nil),activeSearchString]];			
+		}
 	}
 
     //Append indexing progress
@@ -544,7 +554,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 		//the newly-indexed logs can be added without blanking the current table contents.
 		//We set an NSNumber with our current activeSearchID so we will only refresh if we haven't done a new search
 		//between the timer being set and firing.
-		if (searchMode == LOG_SEARCH_CONTENT){
+		if (searchMode == LOG_SEARCH_CONTENT && (activeSearchString != nil)){
 			if (!aggregateLogIndexProgressTimer){
 				aggregateLogIndexProgressTimer = [[NSTimer scheduledTimerWithTimeInterval:7.0
 																				   target:self
@@ -1316,7 +1326,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 				 */
 				[resultsLock lock];
 				theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
-				if(theLog != nil && ![selectedLogArray containsObjectIdenticalTo:theLog]){
+				if((theLog != nil) && (![selectedLogArray containsObjectIdenticalTo:theLog])){
 					[theLog setRankingPercentage:outScoresArray[i]];
 					[selectedLogArray addObject:theLog];
 				}
