@@ -30,6 +30,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	alwaysSortGroupsToTop = [self alwaysSortGroupsToTop];
 	
 	configureView = nil;
+	becameActiveFirstTime = NO;
 	
 	return(self);
 }
@@ -154,6 +155,14 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context)
 - (NSArray *)statusKeysRequiringResort{ return(nil); };
 - (NSArray *)attributeKeysRequiringResort{ return(nil); };
 - (int (*)(id, id, BOOL))sortFunction{ return(nil); };
+- (void)didBecomeActiveFirstTime {};
+- (void)didBecomeActive 
+{
+	if (!becameActiveFirstTime){
+		[self didBecomeActiveFirstTime];
+		becameActiveFirstTime = YES;
+	}
+}
 
 //Subclasses should provide a title for configuring the sort only if configuration is possible
 - (NSString *)configureSortMenuItemTitle{ return(nil); };
