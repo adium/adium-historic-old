@@ -250,7 +250,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     [AIFileUtilities createDirectory:logPath];
 
     //Append the new content (We use fopen/fputs/fclose for max speed)
-    logFullPath = [logPath stringByAppendingPathComponent:logFileName];
+    logFullPath = [logPath stringByAppendingPathComponent:[logFileName safeFilenameString]];
     file = fopen([logFullPath fileSystemRepresentation], "a");
     if (ftell(file) == 0) {
         const unichar bom = 0xFEFF;
