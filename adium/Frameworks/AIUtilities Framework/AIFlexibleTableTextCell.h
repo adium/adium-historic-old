@@ -21,6 +21,7 @@
 @interface AIFlexibleTableTextCell : AIFlexibleTableCell {
     NSAttributedString		*string;
     BOOL			containsLinks;
+    int				contentHeight;
     
     //Link
     AILinkTrackingController	*linkTrackingController;

@@ -463,7 +463,7 @@
 
     //Get our view's new width
     size.width = documentVisibleRect.size.width;
-    
+
     //Enumerate through each row, resizing it to the new width
     if(resizeContents){
         contentsHeight = VIEW_PADDING_TOP + VIEW_PADDING_BOTTOM;
@@ -472,7 +472,7 @@
             contentsHeight += [row sizeRowForWidth:size.width];
         }
     }
-
+        
     //Resize our view
     [self _resizeViewToWidth:size.width height:contentsHeight];
 }
