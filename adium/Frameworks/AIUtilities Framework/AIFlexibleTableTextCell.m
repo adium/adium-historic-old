@@ -103,12 +103,19 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Dynamically resizes this cell for the desired width
 - (void)sizeCellForWidth:(float)inWidth
 {
-    //Reformat the text
-    [textContainer setContainerSize:NSMakeSize(inWidth - (leftPadding + rightPadding), 1e7)];
-    glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
+    if(editor){ //If we are currently editing, size our cell to fit the editor content
+        float textHeight = [[editor layoutManager] usedRectForTextContainer:[editor textContainer]].size.height;
 
-    //Save the new cell dimensions
-    cellSize = [layoutManager usedRectForTextContainer:textContainer].size;
+        cellSize = NSMakeSize(inWidth, textHeight); //Given width, editor height
+
+    }else{
+        //Reformat the text
+        [textContainer setContainerSize:NSMakeSize(inWidth - (leftPadding + rightPadding), 1e7)];
+        glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
+
+        //Save the new cell dimensions
+        cellSize = [layoutManager usedRectForTextContainer:textContainer].size;
+    }
 }
 
 //Draw our custom content
@@ -191,11 +198,9 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 {
     float textHeight = [[editor layoutManager] usedRectForTextContainer:[editor textContainer]].size.height;
 
-    textHeight -= EDITOR_Y_INSET * 2; //We need to offset for the frame
-
-    if([self frame].size.height != textHeight){
-        [tableView setHeightOfCellAtRow:editedRow column:editedColumn to:textHeight];
-        [editorScroll setFrameSize:NSMakeSize([editorScroll frame].size.width, textHeight)];
+    if(cellSize.height != textHeight){
+        [tableView resizeCellHeight:self];
+        [editorScroll setFrameSize:NSMakeSize([editorScroll frame].size.width, textHeight - (EDITOR_Y_INSET * 2))]; //We need to offset for the frame
     }
 }
 

@@ -218,8 +218,6 @@ extern void* objc_getClass(const char *name);
 
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
-    NSLog(@"(%@) \"%@\" changing to [%@]", [self accountDescription], key, inValue);
-
     if([key compare:@"Online"] == 0){
         ACCOUNT_STATUS status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
 
@@ -264,26 +262,22 @@ extern void* objc_getClass(const char *name);
         break;
 
         case 1: //Error
-            NSLog(@"Error (status?): %@",inMessage);
+            [[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"iChat Error (%@)", screenName] withDescription:inMessage];
         break;
 
         case 2: //Disconnecting
             //Squelch sounds and updates while we sign off
 //            [[owner contactController] delayContactListUpdatesFor:5];
-            NSLog(@"Disconnecting");
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
         break;
             
         case 3: //Connecting
             //Squelch sounds and updates while we sign on
 //            [[owner contactController] delayContactListUpdatesFor:10];
-            NSLog(@"Connecting");
-
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
         break;
 
         case 4: //Online
-            NSLog(@"Online");
             [[owner contactController] setHoldContactListUpdates:YES];
 
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
@@ -319,11 +313,9 @@ extern void* objc_getClass(const char *name);
         waitingForFirstUpdate = NO;
     
         if(numberOfSignOnUpdates == 0){
-            NSLog(@"No updates received");
             //No available contacts after 5 seconds, assume noone is online and resume contact list updates
             [self waitForLastSignOnUpdate:nil];
         }else{
-            NSLog(@"First update received");
             //Check every X seconds for additional updates
             [NSTimer scheduledTimerWithTimeInterval:(SIGN_ON_UPKEEP_INTERVAL)
                                             target:self
@@ -337,14 +329,12 @@ extern void* objc_getClass(const char *name);
 - (void)waitForLastSignOnUpdate:(NSTimer *)inTimer
 {
     if(numberOfSignOnUpdates == 0){
-        NSLog(@"Done.");
         processingSignOnUpdates = NO;
         //No updates received, sign on is complete
         [inTimer invalidate]; //Stop this timer
         [[owner contactController] setHoldContactListUpdates:NO]; //Resume contact list updates
         [[owner contactController] handlesChangedForAccount:self]; //
     }else{
-        NSLog(@"Connecting... (%i)",(int)numberOfSignOnUpdates);
         numberOfSignOnUpdates = 0;
     }
 }
@@ -576,7 +566,7 @@ extern void* objc_getClass(const char *name);
     }    
 }
 - (oneway void)service:(id)inService youAreDesignatedNotifier:(char)notifier{
-    NSLog(@"(iChat)Adium is designated notifier (%i)",(int)notifier);
+//    NSLog(@"(iChat)Adium is designated notifier (%i)",(int)notifier);
 }
 - (oneway void)service:(id)inService buddyPictureChanged:(id)buddy imageData:(id)image{
 //    NSLog(@"Woot: buddyPictureChanged (%@)",buddy);

@@ -80,10 +80,9 @@
 - (void)reloadRow:(int)inRow;
 - (void)setContentBottomAligned:(BOOL)inValue;
 - (void)setScrollsOnNewContent:(BOOL)inValue;
-- (void)selectRow:(int)inRow;
 - (int)selectedRow;
 - (void)editRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn;
-- (void)setHeightOfCellAtRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn to:(int)inHeight;
+- (void)resizeCellHeight:(AIFlexibleTableCell *)inCell;
 - (void)setAcceptsMouseMovedEvents:(BOOL)flag;
 
 @end
