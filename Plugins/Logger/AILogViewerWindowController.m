@@ -369,22 +369,22 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     //We always convey the number of logs being displayed
     [resultsLock lock];
     if(activeSearchString && [activeSearchString length]){
-		progress = [NSMutableString stringWithFormat:@"Found %i matches for search",[selectedLogArray count]];
+		progress = [NSMutableString stringWithFormat:AILocalizedString(@"Found %i matches for search",nil),[selectedLogArray count]];
     }else if(searching){
-		progress = [NSMutableString stringWithString:@"Opening logs..."];
+		progress = [NSMutableString stringWithString:AILocalizedString(@"Opening logs...",nil)];
     }else{
-		progress = [NSMutableString stringWithFormat:@"%i logs",[selectedLogArray count]];
+		progress = [NSMutableString stringWithFormat:AILocalizedString(@"%i logs",nil),[selectedLogArray count]];
     }
     [resultsLock unlock];
     
     //Append search progress
     if(searching && activeSearchString && [activeSearchString length]){
-		[progress appendString:[NSString stringWithFormat:@" - Searching for '%@'",activeSearchString]];
+		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" - Searching for '%@'",nil),activeSearchString]];
     }
     
     //Append indexing progress
     if(indexing = [plugin getIndexingProgress:&indexComplete outOf:&indexTotal]){
-		[progress appendString:[NSString stringWithFormat:@" - Indexing %i of %i",indexComplete, indexTotal]];
+		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" - Indexing %i of %i",nil),indexComplete, indexTotal]];
     }
     
     //Enable/disable the searching animation
@@ -1046,9 +1046,9 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 	//Toggle Drawer
 	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
 									withIdentifier:@"toggledrawer"
-											 label:@"Contacts"
-									  paletteLabel:@"Contacts Drawer"
-										   toolTip:@"Show/Hide the Contacts Drawer"
+											 label:AILocalizedString(@"Contacts",nil)
+									  paletteLabel:AILocalizedString(@"Contacts Drawer",nil)
+										   toolTip:AILocalizedString(@"Show/Hide the Contacts Drawer",nil)
 											target:self
 								   settingSelector:@selector(setImage:)
 									   itemContent:[NSImage imageNamed:@"showdrawer" forClass:[self class]]
@@ -1057,9 +1057,9 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 	//Delete Logs
 	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
 									withIdentifier:@"delete"
-											 label:@"Delete"
-									  paletteLabel:@"Delete"
-										   toolTip:@"Delete selected log"
+											 label:AILocalizedString(@"Delete",nil)
+									  paletteLabel:AILocalizedString(@"Delete",nil)
+										   toolTip:AILocalizedString(@"Delete selected log",nil)
 											target:self
 								   settingSelector:@selector(setImage:)
 									   itemContent:[NSImage imageNamed:@"remove" forClass:[self class]]
@@ -1068,9 +1068,9 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 	//Search
 	[self window]; //Ensure the window is loaded, since we're pulling the search view from our nib
 	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"search"
-														  label:@"Search"
-												   paletteLabel:@"Search"
-														toolTip:@"Search or filter logs"
+														  label:AILocalizedString(@"Search",nil)
+												   paletteLabel:AILocalizedString(@"Search",nil)
+														toolTip:AILocalizedString(@"Search or filter logs",nil)
 														 target:self
 												settingSelector:@selector(setView:)
 													itemContent:view_SearchField
@@ -1084,8 +1084,8 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
 									withIdentifier:@"toggleemoticons"
 											 label:(showEmoticons ? HIDE_EMOTICONS : SHOW_EMOTICONS)
-									  paletteLabel:@"Show/Hide Emoticons"
-										   toolTip:@"Show or hide emoticons in logs"
+									  paletteLabel:AILocalizedString(@"Show/Hide Emoticons",nil)
+										   toolTip:AILocalizedString(@"Show or hide emoticons in logs",nil)
 											target:self
 								   settingSelector:@selector(setImage:)
 									   itemContent:[NSImage imageNamed:(showEmoticons ? IMAGE_EMOTICONS_ON : IMAGE_EMOTICONS_OFF) forClass:[self class]]
