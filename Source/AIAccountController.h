@@ -75,6 +75,8 @@
 								   toListObject:(AIListObject *)inObject
 									 withTarget:(id)target
 								 includeOffline:(BOOL)includeOffline;
+- (BOOL)anOnlineAccountCanCreateGroupChats;
+
 //Account Editing
 - (AIAccount *)newAccountAtIndex:(int)index;
 - (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index save:(BOOL)shouldSave;
