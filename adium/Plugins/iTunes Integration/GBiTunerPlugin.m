@@ -16,10 +16,10 @@
 - (void)_appendScripts:(NSArray *)scripts toMenu:(NSMenu *)menu atLevel:(int)level;
 - (void)_sortScriptsByTitle:(NSMutableArray *)sortArray;
 - (NSMutableArray *)_loadScriptsFromDirectory:(NSString *)dirPath intoUsageArray:(NSMutableArray *)useArray;
-- (NSMenu *)loadScriptsAndBuildScriptMenu;
-- (NSString*)hashLookup:(NSString *)pattern;
 - (id)_filterString:(NSString *)inString originalObject:(id)originalObject;
 - (NSString *)_executeScript:(NSDictionary *)infoDict withArguments:(NSArray *)arguments;
+- (void)_replaceKeyword:(NSString *)keyword withScript:(NSDictionary *)infoDict inString:(NSString *)inString toObject:(id)toObject;
+- (NSArray *)_argumentsFromString:(NSString *)inString;
 @end
 
 int _scriptTitleSort(id scriptA, id scriptB, void *context);
@@ -267,7 +267,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 
 - (id)_filterString:(NSString *)inString originalObject:(id)originalObject
 {
-	id<DummyStringProtocol>		mesg = nil;
+	id<DummyStringProtocol>		updatedObject = nil;
 
     if(inString){
 		NSEnumerator				*enumerator;
@@ -281,24 +281,82 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 		while(infoDict = [enumerator nextObject]){
 			NSString	*keyword = [infoDict objectForKey:@"Keyword"];
 			BOOL		prefixOnly = [[infoDict objectForKey:@"PrefixOnly"] boolValue];
-
+			
 			if((prefixOnly && [inString hasPrefix:keyword]) ||
 			   (!prefixOnly && [inString rangeOfString:keyword].location != NSNotFound)){
-								
-				//Execute the script
-				NSString	*scriptResult = [self _executeScript:infoDict withArguments:nil];
-				
-				//Swap the result into our string
-				if(!mesg) mesg = [[originalObject mutableCopy] autorelease];
-				[[mesg mutableString] replaceOccurrencesOfString:keyword 
-													  withString:(scriptResult ? scriptResult : @"")
-														 options:NSLiteralSearch 
-														   range:NSMakeRange(0,[[mesg mutableString] length])];
+
+				if(!updatedObject) updatedObject = [[originalObject mutableCopy] autorelease];
+				[self _replaceKeyword:keyword withScript:infoDict inString:inString toObject:updatedObject];
+
 			}
 		}
 	}
 	
-    return(mesg ? mesg : originalObject);
+    return(updatedObject ? updatedObject : originalObject);
+}
+
+//Perform a thorough variable replacing scan
+- (void)_replaceKeyword:(NSString *)keyword withScript:(NSDictionary *)infoDict inString:(NSString *)inString toObject:(id)toObject
+{
+	NSScanner	*scanner = [NSScanner scannerWithString:inString];
+	NSString	*arglessScriptResult = nil;
+	int			offset = 0;
+	
+	//Scan for the keyword
+	while(![scanner isAtEnd]){
+		[scanner scanUpToString:keyword intoString:nil];
+		if([scanner scanString:keyword intoString:nil]){
+			int 		keywordStart, keywordEnd;
+			NSArray 	*argArray = nil;
+			NSString	*argString;
+			
+			//Scan arguments
+			keywordStart = [scanner scanLocation] - [keyword length];
+			if([scanner scanString:@"{" intoString:nil]){				
+				if([scanner scanUpToString:@"}" intoString:&argString]){
+					argArray = [self _argumentsFromString:argString];
+					[scanner scanString:@"}" intoString:nil];
+				}
+			}
+			keywordEnd = [scanner scanLocation];		
+
+			if(keywordStart != 0 && [inString characterAtIndex:keywordStart - 1] == '\\'){
+				//Ignore the script (It was escaped), and delete the escape character
+				[[toObject mutableString] replaceCharactersInRange:NSMakeRange(keywordStart + offset - 1, 1) withString:@""];
+				offset -= 1;
+					
+			}else{
+				//Run the script.  Cache the result to speed up multiple instances of a single keyword
+				NSString	*scriptResult = nil;
+				if([argArray count] == 0 && arglessScriptResult) scriptResult = arglessScriptResult;
+				if(!scriptResult) scriptResult = [self _executeScript:infoDict withArguments:argArray];
+				if([argArray count] == 0 && !arglessScriptResult) arglessScriptResult = scriptResult;
+				
+				if(scriptResult){
+					//Replace the substring with script result
+					[[toObject mutableString] replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
+															withString:scriptResult];
+					//Adjust for replaced text
+					offset += [scriptResult length] - (keywordEnd - keywordStart);
+				}
+				
+			}
+		}
+	}
+}
+
+//Return an NSData for each argument in the string
+- (NSArray *)_argumentsFromString:(NSString *)inString
+{
+	NSMutableArray	*argArray = [NSMutableArray array];
+	NSEnumerator	*enumerator = [[inString componentsSeparatedByString:@","] objectEnumerator];
+	NSString		*arg;
+	
+	while(arg = [enumerator nextObject]) {
+		[argArray addObject:[arg dataUsingEncoding:NSUTF8StringEncoding]];
+	}
+	
+	return(argArray);
 }
 
 //Execute the script, returning it's output
@@ -306,7 +364,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 {
 	NSURL 			*scriptURL = [infoDict objectForKey:@"Path"];
 	NSAppleScript   *script = [[[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:nil] autorelease];
-		
+
 	return([[script executeFunction:@"substitute" withArguments:arguments error:nil] stringValue]);
 }
 

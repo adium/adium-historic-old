@@ -45,7 +45,7 @@
 		
 		while(object = [enumerator nextObject]){
 			[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithDescriptorType:typeChar data:object]
-								atIndex:[arguments numberOfItems]];
+								atIndex:[arguments numberOfItems]+1]; //This +1 seems wrong... but it's not :)
 		}
 		
 		[containerEvent setParamDescriptor:arguments forKeyword:keyDirectObject];
