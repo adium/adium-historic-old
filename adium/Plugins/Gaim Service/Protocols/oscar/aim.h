@@ -32,7 +32,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #else
-#include <winsock.h>
+#include "libc_interface.h"
 #endif
 
 #ifdef __cplusplus
@@ -862,6 +862,7 @@ struct aim_incomingim_ch4_args {
 /* 0x0004 */ faim_export int aim_im_reqparams(aim_session_t *sess);
 /* 0x0006 */ faim_export int aim_im_sendch1_ext(aim_session_t *sess, struct aim_sendimext_args *args);
 /* 0x0006 */ faim_export int aim_im_sendch1(aim_session_t *, const char *destsn, fu16_t flags, const char *msg);
+/* 0x0006 */ faim_export int aim_im_sendch2_chatinvite(aim_session_t *sess, const char *sn, const char *msg, fu16_t exchange, const char *roomname, fu16_t instance);
 /* 0x0006 */ faim_export int aim_im_sendch2_icon(aim_session_t *sess, const char *sn, const fu8_t *icon, int iconlen, time_t stamp, fu16_t iconsum);
 /* 0x0006 */ faim_export int aim_im_sendch2_rtfmsg(aim_session_t *sess, struct aim_sendrtfmsg_args *args);
 /* 0x0006 */ faim_export int aim_im_sendch2_odcrequest(aim_session_t *sess, fu8_t *cookie, const char *sn, const fu8_t *ip, fu16_t port);
@@ -932,12 +933,12 @@ faim_export int aim_odc_send_typing(aim_session_t *sess, aim_conn_t *conn, int t
 faim_export int aim_odc_send_im(aim_session_t *sess, aim_conn_t *conn, const char *msg, int len, int encoding, int isawaymsg);
 faim_export const char *aim_odc_getsn(aim_conn_t *conn);
 faim_export aim_conn_t *aim_odc_getconn(aim_session_t *sess, const char *sn);
-faim_export aim_conn_t *aim_odc_initiate(aim_session_t *sess, const char *sn);
+faim_export aim_conn_t *aim_odc_initiate(aim_session_t *sess, const char *sn, int listenfd, fu16_t port);
 faim_export aim_conn_t *aim_odc_connect(aim_session_t *sess, const char *sn, const char *addr, const fu8_t *cookie);
 
 faim_export struct aim_oft_info *aim_oft_createinfo(aim_session_t *sess, const fu8_t *cookie, const char *sn, const char *ip, fu16_t port, fu32_t size, fu32_t modtime, char *filename);
 faim_export int aim_oft_destroyinfo(struct aim_oft_info *oft_info);
-faim_export int aim_sendfile_listen(aim_session_t *sess, struct aim_oft_info *oft_info);
+faim_export int aim_sendfile_listen(aim_session_t *sess, struct aim_oft_info *oft_info, int listenfd);
 faim_export int aim_oft_sendheader(aim_session_t *sess, fu16_t type, struct aim_oft_info *oft_info);
 
 
@@ -1072,6 +1073,7 @@ struct aim_invite_priv {
 #define AIM_COOKIETYPE_OFTICON  0x15
 
 faim_export aim_userinfo_t *aim_locate_finduserinfo(aim_session_t *sess, const char *sn);
+faim_export void aim_locate_dorequest(aim_session_t *sess);
 
 /* 0x0002 */ faim_export int aim_locate_reqrights(aim_session_t *sess);
 /* 0x0004 */ faim_export int aim_locate_setprofile(aim_session_t *sess, const char *profile_encoding, const char *profile, const int profile_len, const char *awaymsg_encoding, const char *awaymsg, const int awaymsg_len);
@@ -1119,15 +1121,13 @@ struct aim_chat_exchangeinfo {
 
 #define AIM_CHATFLAGS_NOREFLECT 0x0001
 #define AIM_CHATFLAGS_AWAY      0x0002
-faim_export int aim_chat_send_im(aim_session_t *sess, aim_conn_t *conn, fu16_t flags, const char *msg, int msglen);
+faim_export int aim_chat_send_im(aim_session_t *sess, aim_conn_t *conn, fu16_t flags, const char *msg, int msglen, const char *encoding, const char *language);
 faim_export int aim_chat_join(aim_session_t *sess, aim_conn_t *conn, fu16_t exchange, const char *roomname, fu16_t instance);
 faim_export int aim_chat_attachname(aim_conn_t *conn, fu16_t exchange, const char *roomname, fu16_t instance);
 faim_export char *aim_chat_getname(aim_conn_t *conn);
 faim_export aim_conn_t *aim_chat_getconn(aim_session_t *, const char *name);
 
 faim_export int aim_chatnav_reqrights(aim_session_t *sess, aim_conn_t *conn);
-
-faim_export int aim_chat_invite(aim_session_t *sess, aim_conn_t *conn, const char *sn, const char *msg, fu16_t exchange, const char *roomname, fu16_t instance);
 
 faim_export int aim_chatnav_createroom(aim_session_t *sess, aim_conn_t *conn, const char *name, fu16_t exchange);
 faim_export int aim_chat_leaveroom(aim_session_t *sess, const char *name);
@@ -1400,6 +1400,7 @@ faim_internal int aim_tlvlist_add_16(aim_tlvlist_t **list, const fu16_t type, co
 faim_internal int aim_tlvlist_add_32(aim_tlvlist_t **list, const fu16_t type, const fu32_t value);
 faim_internal int aim_tlvlist_add_caps(aim_tlvlist_t **list, const fu16_t type, const fu32_t caps);
 faim_internal int aim_tlvlist_add_userinfo(aim_tlvlist_t **list, fu16_t type, aim_userinfo_t *userinfo);
+faim_internal int aim_tlvlist_add_chatroom(aim_tlvlist_t **list, fu16_t type, fu16_t exchange, const char *roomname, fu16_t instance);
 faim_internal int aim_tlvlist_add_frozentlvlist(aim_tlvlist_t **list, fu16_t type, aim_tlvlist_t **tl);
 
 faim_internal int aim_tlvlist_replace_raw(aim_tlvlist_t **list, const fu16_t type, const fu16_t lenth, const fu8_t *value);

@@ -3,7 +3,7 @@
  *
  * gaim
  *
- * Copyright (C) 2003 Christian Hammond <chipx86@gnupdate.org>
+ * Copyright (C) 2003-2004 Christian Hammond <chipx86@gnupdate.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,10 +26,12 @@ typedef struct _MsnSession MsnSession;
 
 #include <libgaim/sslconn.h>
 
+#include "group.h"
+#include "nexus.h"
 #include "servconn.h"
 #include "switchboard.h"
 #include "user.h"
-#include "group.h"
+
 
 struct _MsnSession
 {
@@ -47,16 +49,12 @@ struct _MsnSession
 	MsnServConn *dispatch_conn;
 	MsnServConn *notification_conn;
 
+	MsnNexus *nexus;
+
 	unsigned int trId;
 
 	gboolean http_method;
-
-	char *ssl_url;
-	char *ssl_login_host;
-	char *ssl_login_path;
-	char *ssl_login_params;
-	GHashTable *ssl_challenge_data;
-	GaimSslConnection *ssl_conn;
+	gint http_poll_timer;
 
 	MsnUsers *users;
 	MsnGroups *groups;
@@ -104,6 +102,9 @@ struct _MsnSession
 	char *dest_group_name;
 	MsnUser *moving_user;
 	MsnGroup *old_group;
+
+	/* The last chat ID. */
+	int last_chat_id;
 };
 
 /**

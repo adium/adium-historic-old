@@ -3,7 +3,7 @@
  *
  * gaim
  *
- * Copyright (C) 2003 Christian Hammond <chipx86@gnupdate.org>
+ * Copyright (C) 2003-2004 Christian Hammond <chipx86@gnupdate.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -96,9 +96,6 @@ typedef enum
 	MSN_CLIENT_VER_6_1 = 0x20
 
 } MsnClientVerId;
-
-//**ADIUM
-void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 
 #define MSN_CLIENT_ID_VERSION      MSN_CLIENT_VER_6_0
 #define MSN_CLIENT_ID_RESERVED_1   0x00

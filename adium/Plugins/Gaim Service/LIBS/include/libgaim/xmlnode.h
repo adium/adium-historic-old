@@ -46,6 +46,7 @@ xmlnode *xmlnode_new(const char *name);
 xmlnode *xmlnode_new_child(xmlnode *parent, const char *name);
 void xmlnode_insert_child(xmlnode *parent, xmlnode *child);
 xmlnode *xmlnode_get_child(xmlnode *parent, const char *name);
+xmlnode *xmlnode_get_child_with_namespace(xmlnode *parent, const char *name, const char *xmlns);
 xmlnode *xmlnode_get_next_twin(xmlnode *node);
 void xmlnode_insert_data(xmlnode *parent, const char *data, size_t size);
 char *xmlnode_get_data(xmlnode *node);
@@ -54,6 +55,7 @@ const char *xmlnode_get_attrib(xmlnode *node, const char *attr);
 void xmlnode_remove_attrib(xmlnode *node, const char *attr);
 char *xmlnode_to_str(xmlnode *node, int *len);
 xmlnode *xmlnode_from_str(const char *str, size_t size);
+xmlnode *xmlnode_copy(xmlnode *src);
 
 void xmlnode_free(xmlnode *node);
 

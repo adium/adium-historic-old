@@ -121,13 +121,13 @@ void gaim_quotedp_decode (const char *str, char **ret_str, int *ret_len);
 
 /**
  * Converts a MIME header field string back to its readable equivalent
- * according to RFC 2047.  Basically, a header is plain ASCII and can 
- * contain any number of sections called "encoded-words."  The format 
+ * according to RFC 2047.  Basically, a header is plain ASCII and can
+ * contain any number of sections called "encoded-words."  The format
  * of an encoded word is =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?=
  * =? designates the beginning of the encoded-word
  * ?= designates the end of the encoded-word
- * ? segments the encoded word into three pieces.  The first piece is 
- *   the character set, the second peice is the encoding, and the 
+ * ? segments the encoded word into three pieces.  The first piece is
+ *   the character set, the second peice is the encoding, and the
  *   third piece is the encoded text.
  *
  * @param str The string to convert back.
@@ -266,6 +266,28 @@ char *gaim_markup_strip_html(const char *str);
  */
 char *gaim_markup_linkify(const char *str);
 
+/**
+ * Escapes HTML special characters to be displayed literally.
+ * For example '&' is replaced by "&amp;" and so on
+ *
+ * @param html The string in which to escape any HTML special characters
+ *
+ * @return the text with HTML special characters escaped
+ */
+char *gaim_escape_html(const char *html);
+
+/**
+ * Unescapes HTML entities to their literal characters.
+ * For example "&amp;" is replaced by '&' and so on.
+ * Actually only "&amp;", "&quot;", "&lt;" and "&gt;" are currently
+ * supported.
+ *
+ * @param html The string in which to unescape any HTML entities
+ *
+ * @return the text with HTML entities literalized
+ */
+char *gaim_unescape_html(const char *html);
+
 /*@}*/
 
 
@@ -365,10 +387,10 @@ const char *gaim_normalize(const GaimAccount *account, const char *str);
 /**
  * Compares two strings to see if the first contains the second as
  * a proper prefix.
- * 
+ *
  * @param s  The string to check.
  * @param p  The prefix in question.
- * 
+ *
  * @return   TRUE if p is a prefix of s, otherwise FALSE.
  */
 gboolean gaim_str_has_prefix(const char *s, const char *p);
@@ -376,10 +398,10 @@ gboolean gaim_str_has_prefix(const char *s, const char *p);
 /**
  * Compares two strings to see if the second is a proper suffix
  * of the first.
- * 
+ *
  * @param s  The string to check.
  * @param x  The suffix in question.
- * 
+ *
  * @return   TRUE if x is a a suffix of s, otherwise FALSE.
  */
 gboolean gaim_str_has_suffix(const char *s, const char *x);
@@ -399,41 +421,14 @@ gboolean gaim_str_has_suffix(const char *s, const char *x);
 const char *gaim_str_sub_away_formatters(const char *str, const char *name);
 
 /**
- * Copies a string and replaces all HTML linebreaks with newline characters.
- *
- * @param dest     The destination string.
- * @param src      The source string.
- * @param dest_len The destination string length.
- *
- * @see gaim_strncpy_withhtml()
- * @see gaim_strdup_withhtml()
- */
-void gaim_strncpy_nohtml(char *dest, const char *src, size_t dest_len);
-
-/**
- * Copies a string and replaces all newline characters with HTML linebreaks.
- *
- * @param dest     The destination string.
- * @param src      The source string.
- * @param dest_len The destination string length.
- *
- * @see gaim_strncpy_nohtml()
- * @see gaim_strdup_withhtml()
- */
-void gaim_strncpy_withhtml(gchar *dest, const gchar *src, size_t dest_len);
-
-/**
  * Duplicates a string and replaces all newline characters from the
  * source string with HTML linebreaks.
  *
  * @param src The source string.
  *
- * @return The new string.
- *
- * @see gaim_strncpy_nohtml()
- * @see gaim_strncpy_withhtml()
+ * @return The new string.  Must be g_free'd by the caller.
  */
-char *gaim_strdup_withhtml(const char *src);
+gchar *gaim_strdup_withhtml(const gchar *src);
 
 /**
  * Ensures that all linefeeds have a matching carriage return.
@@ -459,9 +454,27 @@ void gaim_str_strip_cr(char *str);
  * @param delimiter The substring you want replaced.
  * @param replacement The substring you want inserted in place
  *        of the delimiting substring.
+ *
+ * @return A new string, after performing the substitution.
+ *         free this with g_free().
  */
-char *gaim_strreplace(const char *string, const char *delimiter,
-					  const char *replacement);
+gchar *gaim_strreplace(const char *string, const char *delimiter,
+					   const char *replacement);
+
+/**
+ * Given a string, this replaces one substring with another
+ * ignoring case and returns a newly allocated string.
+ *
+ * @param string The string from which to replace stuff.
+ * @param delimiter The substring you want replaced.
+ * @param replacement The substring you want inserted in place
+ *        of the delimiting substring.
+ *
+ * @return A new string, after performing the substitution.
+ *         free this with g_free().
+ */
+gchar *gaim_strcasereplace(const char *string, const char *delimiter,
+						   const char *replacement);
 
 /**
  * This is like strstr, except that it ignores ASCII case in
@@ -600,9 +613,20 @@ gboolean gaim_message_meify(char *message, size_t len);
  *
  * @return The stripped string
  */
-char * gaim_text_strip_mnemonic(const char *in);
+char *gaim_text_strip_mnemonic(const char *in);
 
 /*@}*/
+
+/**
+ * Adds 8 to something.
+ *
+ * Blame SimGuy.
+ *
+ * @param i The number to add 8 to.
+ *
+ * @return i + 8
+ */
+#define gaim_add_eight(x) ((x)+8)
 
 #ifdef __cplusplus
 }

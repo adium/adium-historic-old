@@ -349,10 +349,7 @@ struct buddyinfo {
 - (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
 	char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
-	
-	//Needed until gaim 0.76 (or until I compile a patched libgaim...)
-	gaim_prefs_set_string("/core/ft/public_ip", "129.59.47.229");
-	
+
 	GaimXfer *xfer = oscar_xfer_new(gc,destsn);
 	
 	//gaim will free filename when necessary

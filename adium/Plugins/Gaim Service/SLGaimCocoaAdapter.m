@@ -43,13 +43,15 @@ static NSMutableDictionary *sourceInfoDict;
  **/
 static SLGaimCocoaAdapter *myself;
 
-static guint adium_timeout_add_full(gint, guint, GSourceFunc, gpointer, GDestroyNotify);
-static gint adium_input_add(int, GaimInputCondition, GaimInputFunction, gpointer);
-static void adium_input_remove(gint);
+static guint adium_timeout_add(guint, GSourceFunc, gpointer);
+static guint adium_timeout_remove(guint);
+static guint adium_input_add(int, GaimInputCondition, GaimInputFunction, gpointer);
+static void adium_source_remove(guint);
 
 static GaimEventLoopUiOps adiumEventLoopUiOps = {
-    adium_timeout_add_full,
-    adium_io_add_watch_full,
+    adium_timeout_add,
+    adium_timeout_remove,
+    adium_input_add,
     adium_source_remove
 };
 
@@ -64,7 +66,7 @@ struct SourceInfo {
     CFRunLoopSourceRef rls;
     union {
         GSourceFunc sourceFunction;
-        GIOFunc ioFunction;
+        GaimInputFunction ioFunction;
     };
     int fd;
     gpointer user_data;
@@ -79,7 +81,7 @@ struct SourceInfo {
     return self;
 }
 
-static guint adium_timeout_add_full(guint interval, GSourceFunc function, gpointer data)
+static guint adium_timeout_add(guint interval, GSourceFunc function, gpointer data)
 {
     //NSLog(@"New %u-ms timer (tag %u)", interval, sourceId);
 
@@ -95,31 +97,30 @@ static guint adium_timeout_add_full(guint interval, GSourceFunc function, gpoint
     info->timer = timer;
     info->socket = NULL;
     info->rls = NULL;
-    info->channel = NULL;
     info->user_data = data;
     NSCAssert1([sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:sourceId]] == nil, @"Key %u in use", sourceId);
-    [sourceInfoDict setObject:[NSValue valueWithPointer:info] forKey:[NSNumber numberWithUnsignedInt:sourceId]];
+    [sourceInfoDict setObject:[NSValue valueWithPointer:info]
+					   forKey:[NSNumber numberWithUnsignedInt:sourceId]];
     return sourceId++;
 }
 
 - (void) callTimerFunc:(NSTimer*)timer
 {
     struct SourceInfo *info = [[timer userInfo] pointerValue];
-    //NSLog(@"Timer callback (tag %u)", info->tag);
     if ([sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:info->tag]] == nil) {
         NSLog(@"Timer %u notification arrived after source removed", info->tag);
         return;
     }
-    if (! info->sourceFunction(info->user_data))
+	
+    if (! info->sourceFunction(info->user_data)) {
         adium_source_remove(info->tag);
+	}
 }
 
-static gint adium_input_add(int fd, GaimInputCondition condition,
+static guint adium_input_add(int fd, GaimInputCondition condition,
                             GaimInputFunction func, gpointer user_data)
 {
     struct SourceInfo *info = g_new(struct SourceInfo, 1);
-
-    // NSRunLoop does not support priority; that argument is ignored
 
     // Build the CFSocket-style callback flags to use from the gaim ones
     CFOptionFlags callBackTypes = 0;
@@ -148,9 +149,9 @@ static gint adium_input_add(int fd, GaimInputCondition condition,
     info->user_data = user_data;
     info->fd = fd;
     NSCAssert1([sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:sourceId]] == nil, @"Key %u in use", sourceId);
-    [sourceInfoDict setObject:[NSValue valueWithPointer:info] forKey:[NSNumber numberWithUnsignedInt:sourceId]];
+    [sourceInfoDict setObject:[NSValue valueWithPointer:info]
+					   forKey:[NSNumber numberWithUnsignedInt:sourceId]];
 
-    //NSLog(@"Watching for IO on descriptor %d (tag %u)", fd, sourceId);
     return sourceId++;
 }
 
@@ -166,20 +167,27 @@ static void socketCallback(CFSocketRef s,
     if ((callbackType & kCFSocketReadCallBack) != 0)  c |= GAIM_INPUT_READ;
     if ((callbackType & kCFSocketWriteCallBack) != 0) c |= GAIM_INPUT_WRITE;
 
-    //NSLog(@"NSRunLoop reports IO on tag %u", info->tag);
-    if (! info->ioFunction(c, info->user_data, info->fd, c))
-        adium_input_remove(info->tag);
+	info->ioFunction(info->user_data, info->fd, c);
 }
 
-static void adium_input_remove(gint tag) {
-    //NSLog(@"Removing source tag %u", tag);
+static guint adium_timeout_remove(guint tag) {
+    adium_source_remove(tag);
+    /*
+     * XXX: why was this return value added? The CVS log says
+     * "This should be less wrong. Or more wrong. Either one."
+     * and the doc comment says "Something" for the return value. Hmm.
+     */
+    return 0;
+}
+
+static void adium_source_remove(guint tag) {
     struct SourceInfo *sourceInfo = (struct SourceInfo*)
         [[sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:tag]] pointerValue];
 
     if (sourceInfo == NULL)
-        return FALSE;
+        return;
 
-    if (sourceInfo->channel == NULL) { // timer
+    if (sourceInfo->timer != NULL) { // timer
         [sourceInfo->timer invalidate];
     } else { // file handle
         CFRunLoopSourceInvalidate(sourceInfo->rls);
@@ -188,7 +196,6 @@ static void adium_input_remove(gint tag) {
 
     [sourceInfoDict removeObjectForKey:[NSNumber numberWithUnsignedInt:tag]];
     free(sourceInfo);
-    return TRUE;
 }
 
 @end

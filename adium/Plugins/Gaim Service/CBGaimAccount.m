@@ -1688,8 +1688,6 @@
 //We don't want libgaim keeping track of anything between sessions... we handle all that on our own
 - (void)resetLibGaimAccount
 {
-    gaim_core_mainloop_finish_events();
-    
 	//Remove the account - may want to also destroy it?  Just destroying it causes crashes.
 	//This will remove any gaimBuddies, account information, etc.
     [(CBGaimServicePlugin *)service removeAccount:account];
@@ -1697,8 +1695,6 @@
     gc = NULL;
 
     [self createNewGaimAccount];
-    
-    gaim_core_mainloop_finish_events();
 }
 
 - (void)createNewGaimAccount
@@ -1824,8 +1820,10 @@
     if(awayMessage){
         awayHTML = (char *)[[self encodedAttributedString:awayMessage forListObject:nil] UTF8String];
     }
-	if (gc && account) 
+	if (gc && account) {
+//Status Changes: We could use "Invisible" instead of GAIM_AWAY_CUSTOM for invisibility...
 		serv_set_away(gc, GAIM_AWAY_CUSTOM, awayHTML);
+	}
     
     //We are now away
     [self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:YES];
