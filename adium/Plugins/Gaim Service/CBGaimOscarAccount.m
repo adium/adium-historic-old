@@ -77,31 +77,10 @@ struct buddyinfo {
 
 @implementation CBGaimOscarAccount
 
-- (void)initAccount
-{
-    [super initAccount];
-	
-	delayedUpdateTimers = [[NSMutableArray alloc] init];
-}
-
-- (void)dealloc
-{
-	[delayedUpdateTimers release];
-	
-	[super dealloc];
-}
-
 - (const char*)protocolPlugin
 {
     return "prpl-oscar";
 }
-
-/*
-- (NSArray *)supportedPropertyKeys
-{
-    return [super supportedPropertyKeys];
-}
-*/
 
 #pragma mark Account Connection
 
@@ -129,20 +108,6 @@ struct buddyinfo {
 			break;
 	}
 	return nil;
-}
-
-- (void)accountConnectionDisconnected
-{
-	//We have to track and invalidate these timers.. they will crash us if fired after a disconnect.
-	NSEnumerator	*enumerator = [delayedUpdateTimers objectEnumerator];
-	NSTimer			*timer;
-	
-	while(timer = [enumerator nextObject]){
-		[timer invalidate];
-	}
-	
-	//
-	[super accountConnectionDisconnected];
 }
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent)event
