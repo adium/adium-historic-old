@@ -557,7 +557,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	return(result);
 }
 
-//Receive apple events, then have them processed as normal but on the main thread
+//Receive apple events while running an applescript
 - (NSAppleEventDescriptor *)sendAppleEvent:(NSAppleEventDescriptor *)appleEventDescriptor 
 								  sendMode:(AESendMode)sendMode 
 							  sendPriority:(AESendPriority)sendPriority
@@ -567,36 +567,46 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 {
 	NSAppleEventDescriptor	*eventDescriptor;
 	
-	if ([appleEventDescriptor eventClass] == 'syso'){
-//		NSLog(@"sendAppleEvent MAIN: %@",appleEventDescriptor);
-
-		NSInvocation			*invocation;
-		SEL						selector;
-		
-		selector = @selector(sendAppleEvent:sendMode:sendPriority:timeOutInTicks:idleProc:filterProc:);
-		
-		invocation = [NSInvocation invocationWithMethodSignature:[componentInstance methodSignatureForSelector:selector]];
-		[invocation setSelector:selector];
-		[invocation setTarget:componentInstance];
-		
-		[invocation setArgument:&appleEventDescriptor atIndex:2];
-		[invocation setArgument:&sendMode atIndex:3];
-		[invocation setArgument:&sendPriority atIndex:4];
-		[invocation setArgument:&timeOutInTicks atIndex:5];
-		[invocation setArgument:&idleProc atIndex:6];
-		[invocation setArgument:&filterProc atIndex:7];
-		
-		[invocation performSelectorOnMainThread:@selector(invoke)
-									 withObject:nil
-								  waitUntilDone:YES];
-		[invocation getReturnValue:&eventDescriptor];
-	}else{
-		eventDescriptor = [componentInstance sendAppleEvent:appleEventDescriptor
-												   sendMode:sendMode
-											   sendPriority:sendPriority
-											 timeOutInTicks:timeOutInTicks
-												   idleProc:idleProc
-												 filterProc:filterProc];
+	/* 
+		We want to send certain eventClasses (those which necessitate user interaction) to the main thread
+		since the UI is not threadsafe.
+	 */
+	switch([appleEventDescriptor eventClass]){
+		case 'syso':
+		case 'gtqp':
+		{
+			NSInvocation			*invocation;
+			SEL						selector;
+			
+			selector = @selector(sendAppleEvent:sendMode:sendPriority:timeOutInTicks:idleProc:filterProc:);
+			
+			invocation = [NSInvocation invocationWithMethodSignature:[componentInstance methodSignatureForSelector:selector]];
+			[invocation setSelector:selector];
+			[invocation setTarget:componentInstance];
+			
+			[invocation setArgument:&appleEventDescriptor atIndex:2];
+			[invocation setArgument:&sendMode atIndex:3];
+			[invocation setArgument:&sendPriority atIndex:4];
+			[invocation setArgument:&timeOutInTicks atIndex:5];
+			[invocation setArgument:&idleProc atIndex:6];
+			[invocation setArgument:&filterProc atIndex:7];
+			
+			[invocation performSelectorOnMainThread:@selector(invoke)
+										 withObject:nil
+									  waitUntilDone:YES];
+			[invocation getReturnValue:&eventDescriptor];
+			break;
+		}
+		default:
+		{
+			eventDescriptor = [componentInstance sendAppleEvent:appleEventDescriptor
+													   sendMode:sendMode
+												   sendPriority:sendPriority
+												 timeOutInTicks:timeOutInTicks
+													   idleProc:idleProc
+													 filterProc:filterProc];
+			break;
+		}
 	}
 
 	return(eventDescriptor);
