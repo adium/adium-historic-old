@@ -20,13 +20,14 @@
 @interface AIEnterAwayWindowController : NSWindowController {
     AIAdium	*owner;
 
-    IBOutlet 	NSTextField		*textField_title;
+    IBOutlet 	NSComboBox		*comboBox_title;
     IBOutlet	AISendingTextView	*textView_awayMessage;
     IBOutlet	NSButton		*button_setAwayMessage;
     IBOutlet	NSButton		*button_save;
     IBOutlet	NSScrollView		*scrollView_awayMessageContainer;
     
     BOOL				edited_title;
+    NSMutableArray			*awayMessageArray;
 }
 
 + (AIEnterAwayWindowController *)enterAwayWindowControllerForOwner:(id)inOwner;

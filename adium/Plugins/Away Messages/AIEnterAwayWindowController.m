@@ -29,6 +29,8 @@
 @interface AIEnterAwayWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
 - (BOOL)windowShouldClose:(id)sender;
+- (void)loadAwayMessages;
+- (NSMutableArray *)_loadAwaysFromArray:(NSArray *)array;
 @end
 
 @implementation AIEnterAwayWindowController
@@ -73,15 +75,36 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     if ([button_save state] == NSOnState)
     {
         NSMutableArray * tempArray;
+        NSEnumerator * enumerator;
+        NSDictionary * dict;
+        BOOL notFound = YES;
         //Load the saved away messages
         tempArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
 
-        //Add the away
-        if(edited_title){
-            [tempArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Away", @"Type", [[textView_awayMessage textStorage] dataRepresentation], @"Message", [textField_title stringValue], @"Title", nil]];
-        }else{
-            [tempArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Away", @"Type", [[textView_awayMessage textStorage] dataRepresentation], @"Message", nil]];
+        //Test for replacement of an existing away
+        enumerator = [tempArray objectEnumerator];
+        while( (dict = [enumerator nextObject]) && notFound)
+        {
+            NSString * storedTitle = [dict objectForKey:@"Title"];
+            if ([storedTitle compare:[comboBox_title stringValue]] == 0)
+            {
+                int index = [tempArray indexOfObject:dict];
+                NSMutableDictionary * newdict = [[dict mutableCopy] autorelease];
+                [newdict setObject:[[textView_awayMessage textStorage] dataRepresentation] forKey:@"Message"];
+                [tempArray replaceObjectAtIndex:index withObject:newdict];
+                notFound = NO;
+            }	
         }
+
+        if (notFound) { //never found one to replace then add it
+            if(edited_title){
+                [tempArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Away", @"Type", [[textView_awayMessage textStorage] dataRepresentation], @"Message", [comboBox_title stringValue], @"Title", nil]];
+            }else{
+                [tempArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Away", @"Type", [[textView_awayMessage textStorage] dataRepresentation], @"Message", nil]];
+            }
+        }
+
+
 
         //Save the away message array
         [[owner preferenceController] setPreference:tempArray forKey:KEY_SAVED_AWAYS group:PREF_GROUP_AWAY_MESSAGES];
@@ -131,7 +154,8 @@ AIEnterAwayWindowController	*sharedInstance = nil;
         [textView_awayMessage setString:DEFAULT_AWAY_MESSAGE];
     }
 
-    [textField_title setStringValue:[textView_awayMessage string]];
+    [comboBox_title setStringValue:[textView_awayMessage string]];
+
     
     //Select the away text
     [textView_awayMessage setSelectedRange:NSMakeRange(0,[[textView_awayMessage textStorage] length])];
@@ -146,6 +170,10 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     [textView_awayMessage setDelegate:self];
     edited_title = NO;
 
+    [self loadAwayMessages];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectionChanged:) name:NSComboBoxSelectionDidChangeNotification object:comboBox_title];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSControlTextDidChangeNotification object:comboBox_title];
+    
     [[self window] makeFirstResponder:textView_awayMessage];
 }
 
@@ -176,31 +204,147 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 {
     if(!edited_title) //only do this if the user hasn't edited the title manually
     {
-        [textField_title setStringValue:[textView_awayMessage string]];
+        [comboBox_title setStringValue:[textView_awayMessage string]];
     }
 }
 
 //User is editing the away message title
 - (void)controlTextDidChange:(NSNotification *)notification
 {
-    if([[textField_title stringValue] length] != 0){
+    if([[comboBox_title stringValue] length] != 0){
     	edited_title = YES;
     }else{
         edited_title = NO;
         [self textDidChange:nil]; //Update the displayed title
     }
+}
+
+//the combo box changed selection - set the message appropriately
+- (void)selectionChanged:(NSNotification *)notification
+{
+    if ([comboBox_title indexOfSelectedItem] != -1)
+    {
+    NSDictionary * dict = [awayMessageArray objectAtIndex:[comboBox_title indexOfSelectedItem]];
+
+    [textView_awayMessage setAttributedString:[dict objectForKey:@"Message"]];
+    edited_title = YES;
+    [button_save setState:NO];
+
+    //make the text editing active
+    [[self window] makeFirstResponder:textView_awayMessage];
     [button_save setState:YES];
+    }
 }
 
 //User toggled 'save' checkbox
 - (IBAction)toggleSave:(id)sender
 {
     if([button_save state] == NSOnState){
-        [[textField_title window] makeFirstResponder:textField_title];
+        [[comboBox_title window] makeFirstResponder:comboBox_title];
     }else{
         [[textView_awayMessage window] makeFirstResponder:textView_awayMessage];
     }
 }
 
+//Private ----------------------------------------------------
+//Recursively load the away messages, rebuilding the structure with mutable objects
+- (NSMutableArray *)_loadAwaysFromArray:(NSArray *)array
+{
+    NSEnumerator	*enumerator;
+    NSDictionary	*dict;
+    NSMutableArray	*mutableArray = [[NSMutableArray alloc] init];
+
+    enumerator = [array objectEnumerator];
+    while((dict = [enumerator nextObject])){
+        NSString	*type = [dict objectForKey:@"Type"];
+
+        if([type compare:@"Group"] == 0){
+            [mutableArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
+                @"Group", @"Type",
+                [self _loadAwaysFromArray:[dict objectForKey:@"Contents"]], @"Contents",
+                [dict objectForKey:@"Name"], @"Name",
+                nil]];
+
+        }else if([type compare:@"Away"] == 0){
+            [mutableArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
+                @"Away", @"Type",
+                [NSAttributedString stringWithData:[dict objectForKey:@"Message"]], @"Message",[dict objectForKey:@"Title"], @"Title",
+                nil]];
+
+        }
+    }
+
+    return(mutableArray);
+}
+
+//Recursively build a savable away message array (replacing NSAttributedString with NSData)
+- (NSArray *)_saveArrayFromArray:(NSArray *)array
+{
+    NSEnumerator	*enumerator;
+    NSDictionary	*dict;
+    NSMutableArray	*saveArray = [[NSMutableArray alloc] init];
+
+    enumerator = [array objectEnumerator];
+    while((dict = [enumerator nextObject])){
+        NSString	*type = [dict objectForKey:@"Type"];
+
+        if([type compare:@"Group"] == 0){
+            [saveArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                @"Group", @"Type",
+                [self _saveArrayFromArray:[dict objectForKey:@"Contents"]], @"Contents",
+                [dict objectForKey:@"Name"], @"Name",
+                nil]];
+
+        }else if([type compare:@"Away"] == 0){
+            [saveArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                @"Away", @"Type",
+                [[dict objectForKey:@"Message"] dataRepresentation], @"Message", [dict objectForKey:@"Title"], @"Title",
+                nil]];
+
+        }
+    }
+
+    return(saveArray);
+}
+
+//Load the away messages
+- (void)loadAwayMessages
+{
+    NSArray	*tempArray;
+
+    //Release any existing away array
+    [awayMessageArray release];
+
+    //Load the saved away messages
+    tempArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
+    if(tempArray){
+        //Load the aways
+        awayMessageArray = [self _loadAwaysFromArray:tempArray];
+
+    }else{
+        //If no aways exist, create an empty array
+        awayMessageArray = [[NSMutableArray alloc] init];
+    }
+
+    NSEnumerator *enumerator = [awayMessageArray objectEnumerator];
+    NSDictionary *dict;
+    while (dict = [enumerator nextObject])
+    {
+        NSString * title = [dict objectForKey:@"Title"];
+        if (title) [comboBox_title addItemWithObjectValue:[dict objectForKey:@"Title"]];
+    }
+}
+
+//Save the away messages
+- (void)saveAwayMessages
+{
+    NSArray	*tempArray;
+
+    //Rebuild the away message array, converting all attributed string to NSData's that are suitable for saving
+    tempArray = [self _saveArrayFromArray:awayMessageArray];
+
+    //Save the away message array
+    [[owner preferenceController] setPreference:tempArray forKey:KEY_SAVED_AWAYS group:PREF_GROUP_AWAY_MESSAGES];
+}
 
 @end

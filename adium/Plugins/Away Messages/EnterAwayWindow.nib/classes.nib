@@ -7,8 +7,8 @@
             OUTLETS = {
                 "button_save" = NSButton; 
                 "button_setAwayMessage" = NSButton; 
+                "comboBox_title" = NSComboBox; 
                 "scrollView_awayMessageContainer" = NSScrollView; 
-                "textField_title" = NSTextField; 
                 "textView_awayMessage" = AISendingTextView; 
             }; 
             SUPERCLASS = NSWindowController; 

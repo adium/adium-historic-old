@@ -288,7 +288,9 @@
             //Create & process submenu
 
         }else if([type compare:@"Away"] == 0){
-            NSString		*away = [[NSAttributedString stringWithData:[awayDict objectForKey:@"Message"]] string];
+            NSString		*away = [awayDict objectForKey:@"Title"];
+            if (!away) //no title was found
+                away = [[NSAttributedString stringWithData:[awayDict objectForKey:@"Message"]] string];
             NSMenuItem		*menuItem;
 
             //Cap the away menu title (so they're not incredibly long)
