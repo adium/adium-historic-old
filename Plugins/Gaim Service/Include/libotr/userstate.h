@@ -17,13 +17,29 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#ifndef __USERSTATE_H__
+#define __USERSTATE_H__
 
-#define OTRL_VERSION "2.0.0"
+typedef struct s_OtrlUserState* OtrlUserState;
 
-#define OTRL_VERSION_MAJOR 2
-#define OTRL_VERSION_MINOR 0
-#define OTRL_VERSION_SUB 0
+#include "context.h"
+#include "privkey.h"
+
+struct s_OtrlUserState {
+    ConnContext *context_root;
+    PrivKey *privkey_root;
+};
+
+/* Create a new OtrlUserState.  Most clients will only need one of
+ * these.  A OtrlUserState encapsulates the list of known fingerprints
+ * and the list of private keys; if you have separate files for these
+ * things for (say) different users, use different OtrlUserStates.  If
+ * you've got only one user, with multiple accounts all stored together
+ * in the same fingerprint store and privkey store files, use just one
+ * OtrlUserState. */
+OtrlUserState otrl_userstate_create(void);
+
+/* Free a OtrlUserState */
+void otrl_userstate_free(OtrlUserState us);
 
 #endif

@@ -587,7 +587,9 @@ specified by Unix98. */
 #define USE_LIBICONV_GNU 1
 
 /* For glib */
+#ifndef EILSEQ
 #define EILSEQ ENOENT
+#endif
 
 /* Define to the GLIB binary age */
 #define GLIB_BINARY_AGE 406
