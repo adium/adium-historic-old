@@ -19,6 +19,7 @@
 #define SHOW_OFFLINE_MENU_TITLE				AILocalizedString(@"Show Offline Contacts",nil)
 #define HIDE_OFFLINE_MENU_TITLE				AILocalizedString(@"Hide Offline Contacts",nil)
 #define KEY_SHOW_OFFLINE_CONTACTS			@"Show Offline Contacts"
+#define OFFLINE_CONTACTS_IDENTIFER			@"OfflineContacts"
 
 @interface AIOfflineContactHidingPlugin (PRIVATE)
 - (void)configureOfflineContactHiding:(BOOL)firstTime;
@@ -37,6 +38,19 @@
 											  keyEquivalent:@"H"];
 	[[adium menuController] addMenuItem:showOfflineMenuItem toLocation:LOC_View_Unnamed_B];		
 
+	//Toolbar
+	NSToolbarItem	*toolbarItem;
+    toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:OFFLINE_CONTACTS_IDENTIFER
+														  label:AILocalizedString(@"Offline Contacts",nil)
+												   paletteLabel:AILocalizedString(@"Toggle Offline Contacts",nil)
+														toolTip:AILocalizedString(@"Toggle display of offline contacts",nil)
+														 target:self
+												settingSelector:@selector(setImage:)
+													itemContent:[NSImage imageNamed:@"offlineContacts" forClass:[self class]]
+														 action:@selector(toggleOfflineContactsMenu:)
+														   menu:nil];
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];
+	
 	//Observe contact and preference changes
     [[adium contactController] registerListObjectObserver:self];
 
