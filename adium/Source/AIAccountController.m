@@ -23,6 +23,9 @@
 
 
 //Paths and Filenames
+#define PREF_GROUP_PREFERRED_ACCOUNTS		@"Preferred Accounts"
+#define PREF_GROUP_ACCOUNT_STATUS		@"Account Status"
+
 //#define DIRECTORY_INTERNAL_SERVICES		@"/Contents/Plugins"	//Path to the internal services
 //Preference keys
 #define ACCOUNT_LIST				@"Account List"		//Array of accounts
@@ -54,13 +57,13 @@
 {
     availableServiceArray = [[NSMutableArray alloc] init];
     accountArray = [[NSMutableArray alloc] init];
-    lastAccountIDToSendContent = nil;
+    lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];
     sleepingOnlineAccounts = nil;
     
     [owner registerEventNotification:Account_StatusChanged displayName:@"Account Status Changed"];
     
     //Register our default preferences
-    accountStatusDict = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_ACCOUNTS] objectForKey:KEY_ACCOUNT_STATUS] mutableCopy];
+    accountStatusDict = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_ACCOUNT_STATUS] objectForKey:KEY_ACCOUNT_STATUS] mutableCopy];
     if(!accountStatusDict) accountStatusDict = [[NSMutableDictionary alloc] init];
 
     //Monitor sleep
@@ -112,7 +115,7 @@
 - (void)closeController
 {
     //Save the current account status dict
-    [[owner preferenceController] setPreference:accountStatusDict forKey:KEY_ACCOUNT_STATUS group:PREF_GROUP_ACCOUNTS];
+    [[owner preferenceController] setPreference:accountStatusDict forKey:KEY_ACCOUNT_STATUS group:PREF_GROUP_ACCOUNT_STATUS];
 
     //The account list is saved as changes are made, so there is no need to save it on close        
 
@@ -304,7 +307,7 @@
     // The preferred account always has priority, as long as it is available for sending content
     if(inObject){
         NSString	*accountID = [[owner preferenceController] preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT
-                                                                       group:PREF_GROUP_ACCOUNTS
+                                                                       group:PREF_GROUP_PREFERRED_ACCOUNTS
                                                                       object:inObject];
 
         if(accountID && (account = [self accountWithID:accountID])){
@@ -316,8 +319,8 @@
 
     // Last account used to message anyone --
     // Next, the last account used to message someone is picked, as long as it is available for sending content
-//#warning seperate accounts for each service type
-    if(lastAccountIDToSendContent && (account = [self accountWithID:lastAccountIDToSendContent])){
+    NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[inObject serviceID]];
+    if(lastAccountID && (account = [self accountWithID:lastAccountID])){
         if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil]){
             return(account);
         }
@@ -325,24 +328,27 @@
 
     // First available account that can see the handle -- (only applies to contacts)
     // If this is the first message opened in this session, the first account with the contact on it's contact list is choosen
-//#warning check to make sure it has the correct service type
     if(inObject && [inObject isKindOfClass:[AIListContact class]]){
         enumerator = [accountArray objectEnumerator];
         while((account = [enumerator nextObject])){
             AIHandle	*handle = [(AIListContact *)inObject handleForAccount:account];
 
-            if(handle && [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil]){
+            if(handle &&
+               [[handle serviceID] compare:[[[account service] handleServiceType] identifier]] == 0 &&
+               [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil]){
                 return(account);
             }
         }        
     }
         
     // If the handle does not exist on any contact lists, the first account available for sending content is used
-//#warning first account with the correct service type
     // First available account that can see the handle --
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
-        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil]){
+        AIHandle	*handle = [(AIListContact *)inObject handleForAccount:account];
+
+        if((!handle || [[handle serviceID] compare:[[[account service] handleServiceType] identifier]] == 0) && 
+           [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil]){
             return(account);
         }
     }
@@ -417,11 +423,10 @@
 
     [[owner preferenceController] setPreference:[sourceAccount accountID]
                                          forKey:KEY_PREFERRED_SOURCE_ACCOUNT
-                                          group:PREF_GROUP_ACCOUNTS
+                                          group:PREF_GROUP_PREFERRED_ACCOUNTS
                                          object:destObject];
 
-    [lastAccountIDToSendContent release];
-    lastAccountIDToSendContent = [[sourceAccount accountID] retain];
+    [lastAccountIDToSendContent setObject:[sourceAccount accountID] forKey:[destObject serviceID]];
     
 }
 

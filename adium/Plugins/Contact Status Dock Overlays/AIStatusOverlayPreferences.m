@@ -18,6 +18,7 @@
 
 @interface AIStatusOverlayPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
+- (void)configureView;
 @end
 
 @implementation AIStatusOverlayPreferences
