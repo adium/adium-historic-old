@@ -334,15 +334,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Returns a menu of all services.
 //- Selector called on service selection is selectAccount:
 //- The menu item's represented objects are the service controllers they represent
-- (NSMenu *)menuOfServicesWithTarget:(id)target activeServicesOnly:(BOOL)activeServicesOnly longDescription:(BOOL)longDescription
-{	
-	return([self menuOfServicesWithTarget:target
-					   activeServicesOnly:activeServicesOnly
-						  longDescription:longDescription
-								   format:@"%@"]);
-	
-}
-
+//- Format allows the description to be placed within a format string. If it is nil, the description alone will be used.
 - (NSMenu *)menuOfServicesWithTarget:(id)target activeServicesOnly:(BOOL)activeServicesOnly longDescription:(BOOL)longDescription format:(NSString *)format
 {
 	AIServiceImportance	importance;
@@ -354,7 +346,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 	serviceArray = (activeServicesOnly ? [self activeServices] : [self availableServices]);
 	
-	//Divide our menu into sections.  This helps separate less importance services from the others (sorry guys!)
+	//Divide our menu into sections.  This helps separate less important services from the others (sorry guys!)
 	for(importance = AIServicePrimary; importance <= AIServiceUnsupported; importance++){
 		NSEnumerator	*enumerator;
 		AIService		*service;
@@ -373,9 +365,13 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		enumerator = [serviceArray objectEnumerator];
 		while((service = [enumerator nextObject])){
 			if([service serviceImportance] == importance){
-				NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:format,(longDescription ?
-																										  [service longDescription] :
-																										  [service shortDescription])]
+				NSString	*description = (longDescription ?
+											[service longDescription] :
+											[service shortDescription]);
+				
+				NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:(format ? 
+																		[NSString stringWithFormat:format,description] :
+																		description)
 																target:target 
 																action:@selector(selectServiceType:) 
 														 keyEquivalent:@""] autorelease];
