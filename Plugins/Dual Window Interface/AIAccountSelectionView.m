@@ -79,7 +79,6 @@
     delegate = nil;
     [[adium contactController] unregisterListObjectObserver:self];
     [[adium notificationCenter] removeObserver:self];
-    [view_contents release]; view_contents = nil;
 		
     [super dealloc];
 }
@@ -109,6 +108,8 @@
         [view resizeWithOldSuperviewSize:[view_contents frame].size];
         [view release];
     }
+	
+	//Release the view_contents, which we own via -[NSBundle loadNibNamed:withOnwer:]
     [view_contents release];
 }
 
