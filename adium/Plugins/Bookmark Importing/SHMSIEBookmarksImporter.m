@@ -34,11 +34,23 @@ DeclareString(DLclose)
 DeclareString(ltSign)
 
 DeclareString(untitledString)
+DeclareString(bookmarkDictTitle)
+DeclareString(bookmarkDictContent)
 
 #pragma mark protocol methods
 + (id)newInstanceOfImporter
 {
     return [[[self alloc] init] autorelease];
+}
+
+-(id)init
+{
+    [super init];
+    
+    InitString(bookmarkDictTitle,SH_BOOKMARK_DICT_TITLE)
+    InitString(bookmarkDictContent,SH_BOOKMARK_DICT_CONTENT)
+    
+    return self;
 }
 
 - (NSArray *)availableBookmarks
@@ -155,6 +167,6 @@ DeclareString(untitledString)
 -(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
     NSString    *titleString = inTitle? inTitle : untitledString;
-    return [NSDictionary dictionaryWithObjectsAndKeys:titleString, @"Title", inMenuItems, @"Content", nil];
+    return [NSDictionary dictionaryWithObjectsAndKeys:titleString, bookmarkDictTitle, inMenuItems, bookmarkDictContent, nil];
 }
 @end

@@ -35,6 +35,8 @@ DeclareString(safariDictChild)
 DeclareString(safariDictURIDict)
 DeclareString(safariDictURITitle)
 DeclareString(safariURLString)
+DeclareString(bookmarkDictTitle)
+DeclareString(bookmarkDictContent)
 
 + (id)newInstanceOfImporter
 {
@@ -43,18 +45,21 @@ DeclareString(safariURLString)
 
 - (id)init
 {
-        InitString(safariDictTypeKey,SAFARI_DICT_TYPE_KEY)
-        InitString(safariDictTypeLeaf,SAFARI_DICT_TYPE_LEAF)
-        InitString(safariDictTypeList,SAFARI_DICT_TYPE_LIST)
-        InitString(safariDictTitle,SAFARI_DICT_TITLE)
-        InitString(safariDictChild,SAFARI_DICT_CHILD)
-        InitString(safariDictURIDict,SAFARI_DICT_URIDICT)
-        InitString(safariDictURITitle,SAFARI_DICT_URI_TITLE)
-        InitString(safariURLString,SAFARI_DICT_URLSTRING)
+    InitString(safariDictTypeKey,SAFARI_DICT_TYPE_KEY)
+    InitString(safariDictTypeLeaf,SAFARI_DICT_TYPE_LEAF)
+    InitString(safariDictTypeList,SAFARI_DICT_TYPE_LIST)
+    InitString(safariDictTitle,SAFARI_DICT_TITLE)
+    InitString(safariDictChild,SAFARI_DICT_CHILD)
+    InitString(safariDictURIDict,SAFARI_DICT_URIDICT)
+    InitString(safariDictURITitle,SAFARI_DICT_URI_TITLE)
+    InitString(safariURLString,SAFARI_DICT_URLSTRING)
         
-	[super init];
-	lastModDate = nil;
-	return(self);
+    InitString(bookmarkDictTitle,SH_BOOKMARK_DICT_TITLE)
+    InitString(bookmarkDictContent,SH_BOOKMARK_DICT_CONTENT)
+    
+    [super init];
+    lastModDate = nil;
+    return(self);
 }
 
 - (void)dealloc
@@ -116,7 +121,7 @@ DeclareString(safariURLString)
 //Menu
 - (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
-	return([NSDictionary dictionaryWithObjectsAndKeys:inTitle, @"Title", inMenuItems, @"Content", nil]);
+	return([NSDictionary dictionaryWithObjectsAndKeys:inTitle, bookmarkDictTitle, inMenuItems, bookmarkDictContent, nil]);
 }
 
 //Menu Item

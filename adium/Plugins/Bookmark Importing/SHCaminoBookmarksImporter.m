@@ -26,6 +26,8 @@ DeclareString(CaminoDictChildKey)
 DeclareString(caminoDictFolderKey)
 DeclareString(caminoDictTitleKey)
 DeclareString(caminoDictURLKey)
+DeclareString(bookmarkDictTitle)
+DeclareString(bookmarkDictContent)
 
 static NSArray *emptyArray;
 
@@ -40,6 +42,9 @@ static NSArray *emptyArray;
     InitString(caminoDictFolderKey,CAMINO_DICT_FOLDER_KEY)
     InitString(caminoDictTitleKey,CAMINO_DICT_TITLE_KEY)
     InitString(caminoDictURLKey,CAMINO_DICT_URL_KEY)
+    
+    InitString(bookmarkDictTitle,SH_BOOKMARK_DICT_TITLE)
+    InitString(bookmarkDictContent,SH_BOOKMARK_DICT_CONTENT)
     
     [super init];
     emptyArray = [[NSArray alloc] init];
@@ -56,7 +61,6 @@ static NSArray *emptyArray;
     [lastModDate autorelease]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
     
     return [self drillPropertyList:[bookmarkDict objectForKey:CaminoDictChildKey]];
-   //return [self drillPropertyList:bookmarkDict];
 }
 
 -(BOOL)bookmarksExist
@@ -95,7 +99,7 @@ static NSArray *emptyArray;
 
 - (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
-    return [NSDictionary dictionaryWithObjectsAndKeys:inTitle, @"Title", inMenuItems, @"Content", nil];
+    return [NSDictionary dictionaryWithObjectsAndKeys:inTitle, bookmarkDictTitle, inMenuItems, bookmarkDictContent, nil];
 }
 
 - (SHMarkedHyperlink *)hyperlinkForBookmark:(NSDictionary *)inDict

@@ -6,6 +6,7 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
+#import "SHBookmarksImporterPlugin.h"
 #import "SHMozillaCommonParser.h"
 
 @interface SHMozillaCommonParser(PRIVATE)
@@ -45,6 +46,8 @@ DeclareString(bMdash)
 DeclareString(bMdashHTML)
 
 DeclareString(untitledString)
+DeclareString(bookmarkDictTitle)
+DeclareString(bookmarkDictContent)
 
 + (void)load
 {
@@ -78,6 +81,8 @@ DeclareString(untitledString)
     InitString(bMdashHTML,@"MDASH");
     
     InitString(untitledString,@"untitled")
+    InitString(bookmarkDictTitle,SH_BOOKMARK_DICT_TITLE)
+    InitString(bookmarkDictContent,SH_BOOKMARK_DICT_CONTENT)
 }
 
 + (NSArray *)parseBookmarksfromString:(NSString *)inString
@@ -158,7 +163,7 @@ DeclareString(untitledString)
 +(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
     NSString    *titleString = inTitle? inTitle : untitledString;
-    return [NSDictionary dictionaryWithObjectsAndKeys:titleString, @"Title", inMenuItems, @"Content", nil];
+    return [NSDictionary dictionaryWithObjectsAndKeys:titleString, bookmarkDictTitle, inMenuItems, bookmarkDictContent, nil];
 }
 
 #pragma mark HTML replacement        

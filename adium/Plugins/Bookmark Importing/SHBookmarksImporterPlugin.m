@@ -82,7 +82,6 @@
     
     //Launch services can tell us the default handler for text/html (which will be the default browser)
     if(noErr == LSGetApplicationForInfo(kLSUnknownType,kLSUnknownCreator,(CFStringRef)@"html",kLSRolesAll,NULL,(CFURLRef *)&appURL)){
-    NSLog([appURL path]);
         if(NSNotFound != [[appURL path] rangeOfString:@"Safari"].location){
             importerClass = [SHSafariBookmarksImporter class];
         }else if(NSNotFound != [[appURL path] rangeOfString:@"Camino"].location){
@@ -193,7 +192,7 @@
 {	
 	//Recursively add the contents of the group to the parent menu
 	NSMenu			*menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-	NSEnumerator	*enumerator = [[bookmarks objectForKey:@"Content"] objectEnumerator];
+	NSEnumerator	*enumerator = [[bookmarks objectForKey:SH_BOOKMARK_DICT_CONTENT] objectEnumerator];
 	id				object;
 	
 
@@ -210,7 +209,7 @@
 	}
 
 	//Insert the submenu we built into the menu
-	NSMenuItem		*item = [[[NSMenuItem alloc] initWithTitle:[bookmarks objectForKey:@"Title"] action:nil
+	NSMenuItem		*item = [[[NSMenuItem alloc] initWithTitle:[bookmarks objectForKey:SH_BOOKMARK_DICT_TITLE] action:nil
 												 keyEquivalent:@""] autorelease];
 	[item setSubmenu:menu];
 	[menu setAutoenablesItems:YES];

@@ -33,6 +33,8 @@ DeclareString(Aclose)
 DeclareString(DLclose)
 DeclareString(ltSign)
 DeclareString(untitledString)
+DeclareString(bookmarkDictTitle)
+DeclareString(bookmarkDictContent)
 
 #pragma mark protocol methods
 + (id)newInstanceOfImporter
@@ -45,6 +47,10 @@ DeclareString(untitledString)
 {
     useOW5 = [[NSFileManager defaultManager] fileExistsAtPath:[OW5_BOOKMARKS_PATH stringByExpandingTildeInPath]];
     [super init];
+    
+    InitString(bookmarkDictTitle,SH_BOOKMARK_DICT_TITLE)
+    InitString(bookmarkDictContent,SH_BOOKMARK_DICT_CONTENT)
+    
     return self;
 }
 
@@ -167,7 +173,7 @@ DeclareString(untitledString)
 -(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
     NSString    *titleString = inTitle? inTitle : untitledString;
-    return [NSDictionary dictionaryWithObjectsAndKeys:titleString, @"Title", inMenuItems, @"Content", nil];
+    return [NSDictionary dictionaryWithObjectsAndKeys:titleString, bookmarkDictTitle, inMenuItems, bookmarkDictTitle, nil];
 }
 
 @end
