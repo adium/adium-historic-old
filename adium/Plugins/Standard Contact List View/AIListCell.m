@@ -32,6 +32,8 @@
 	rightSpacing = 0;
 	
 	font = [[NSFont systemFontOfSize:12] retain];
+	textColor = [[NSColor blackColor] retain];
+	invertedTextColor = [[NSColor whiteColor] retain];
 	
     return(self);
 }
@@ -49,6 +51,8 @@
 {
 	[genericUserIcon release];
 	[font release];
+	[textColor release];
+	[invertedTextColor release];
 	[super dealloc];
 }
 
@@ -90,6 +94,29 @@
 }
 - (NSTextAlignment)textAlignment{
 	return(textAlignment);
+}
+
+//Text color
+- (void)setTextColor:(NSColor *)inColor
+{
+	if(inColor != textColor){
+		[textColor release];
+		textColor = [inColor retain];
+	}
+}
+- (NSColor *)textColor{
+	return(textColor);
+}
+
+- (void)setInvertedTextColor:(NSColor *)inColor
+{
+	if(inColor != invertedTextColor){
+		[invertedTextColor release];
+		invertedTextColor = [inColor retain];
+	}
+}
+- (NSColor *)invertedTextColor{
+	return(invertedTextColor);
 }
 
 
@@ -295,9 +322,10 @@
 	NSDictionary		*additionalAttributes = [self additionalLabelAttributes];
 	NSParagraphStyle	*paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																 lineBreakMode:NSLineBreakByTruncatingTail];
+	NSColor				*textColor = ([self isSelectionInverted] ? [self invertedTextColor] : [self textColor]);
 	
 	labelAttributes = [[NSMutableDictionary dictionaryWithObjectsAndKeys:
-		[self textColor], NSForegroundColorAttributeName,
+		textColor, NSForegroundColorAttributeName,
 		paragraphStyle, NSParagraphStyleAttributeName,
 		[self font], NSFontAttributeName,
 		nil] retain];
@@ -310,16 +338,6 @@
 - (NSDictionary *)additionalLabelAttributes
 {
 	return(nil);
-}
-
-//Text Color (If this cell is selected, use the inverted color)
-- (NSColor *)textColor
-{
-	if([self isSelectionInverted]){
-		return([NSColor alternateSelectedControlTextColor]);
-	}else{
-		return([NSColor blackColor]);
-	}
 }
 
 //YES if our selection should be drawn inverted

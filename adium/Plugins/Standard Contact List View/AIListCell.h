@@ -32,6 +32,9 @@
 	int				leftSpacing;
 	int				rightSpacing;
 	
+	NSColor			*textColor;
+	NSColor			*invertedTextColor;
+	
 	NSFont			*font;
 	NSImage			*genericUserIcon;
 }
@@ -45,6 +48,10 @@
 - (NSFont *)font;
 - (void)setTextAlignment:(NSTextAlignment)inAlignment;
 - (NSTextAlignment)textAlignment;
+- (void)setTextColor:(NSColor *)inColor;
+- (NSColor *)textColor;
+- (void)setInvertedTextColor:(NSColor *)inColor;
+- (NSColor *)invertedTextColor;
 
 //Cell sizing and padding
 - (NSSize)cellSize;
@@ -66,7 +73,7 @@
 - (int)leftPadding;
 - (void)setRightPadding:(int)inPadding;
 - (int)rightPadding;
-	
+
 //Drawing
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
