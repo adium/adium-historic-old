@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Mon Jul 14 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIContactAlertsPlugin.h"
@@ -55,7 +54,7 @@
 
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
 {
-    NSMutableArray * eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject];
+    NSMutableArray * eventActionArray =  [[[[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject] mutableCopy] autorelease];
     NSEnumerator * actionsEnumerator;
     NSDictionary * actionDict;
     NSString * action;
@@ -63,7 +62,7 @@
     int status, event_status;
     BOOL status_matches;
 
-    [eventActionArray addObjectsFromArray:[[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:[inObject containingGroup]] ]; //get the group array, as well
+    [eventActionArray addObjectsFromArray:[[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:[inObject containingGroup]]]; //get the group array, as well
     
     actionsEnumerator = [eventActionArray objectEnumerator];
     while(actionDict = [actionsEnumerator nextObject])
