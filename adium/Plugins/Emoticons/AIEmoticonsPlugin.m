@@ -31,6 +31,7 @@
 @interface AIEmoticonsPlugin (PRIVATE)
 - (void)filterContentObject:(AIContentObject *)inObject;
 - (NSMutableAttributedString *)convertSmiliesInMessage:(NSAttributedString *)inMessage;
+- (int) firstOccurenceInString:(NSString *)inString;
 - (void)setupForTesting;
 - (BOOL)_scanEmoticonPacksFromPath:(NSString *)emoticonFolderPath intoArray:(NSMutableArray *)emoticonPackArray tagKey:(NSString *)source;
 - (void)_scanEmoticonsFromPath:(NSString *)emoticonPackPath intoArray:(NSMutableArray *)emoticonPackArray;
@@ -48,6 +49,7 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
 {
     //init
     quickScanList = [[NSMutableArray alloc] init];
+    quickScanString = [[NSMutableString alloc] init];
     emoticons = [[NSMutableArray alloc] init];
     cachedPacks = [[NSMutableArray alloc] init];
 
@@ -131,78 +133,114 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
 }
 
 //most of this is ripped right from 1.x, YAY!
+// well...not so much anymore...but the conversion code is based on it
 - (NSMutableAttributedString *)convertSmiliesInMessage:(NSAttributedString *)inMessage
 {
     NSRange 		emoticonRange;
     NSRange		attributeRange;
     int			currentLocation = 0;
-    
-    NSEnumerator	*emoEnumerator = [emoticons objectEnumerator];
+    int			nextOccurence = 0;
+    int			replacementCount = 0;
+
+    NSEnumerator	*emoEnumerator = nil;
     AIEmoticon		*currentEmo = nil;
     NSString		*currentEmoText = nil;
-    
+
     NSMutableAttributedString	*tempMessage = [inMessage mutableCopy];
     BOOL			messageChanged = NO;
+
+    currentLocation = [self firstOccurenceInString:[[inMessage safeString] string]];
+
+    while(currentLocation < [inMessage length]){
+	emoEnumerator = [emoticons objectEnumerator];
+	
+	while(currentEmo = [emoEnumerator nextObject]){
+	    currentEmoText = [currentEmo representedText];
+
+	    //NSLog(@"%d %d %@ %@ %@", currentLocation, [inMessage length], [[inMessage safeString] string], [[[inMessage safeString] string] substringWithRange:NSMakeRange(currentLocation,[inMessage length]-currentLocation)], currentEmoText);
+
+	    if(currentLocation+[currentEmoText length] <= [inMessage length]){
+
+		emoticonRange = [[[inMessage safeString] string] rangeOfString:currentEmoText options:0 range:NSMakeRange(currentLocation,[currentEmoText length])];
     
-    while(currentEmo = [emoEnumerator nextObject]){
-	currentEmoText = [currentEmo representedText];
-	
-	//start at the beginning of the string
-	currentLocation = 0;
-	
-	//--find emoticon--
-	emoticonRange = [[tempMessage string] rangeOfString:currentEmoText options:0 range:NSMakeRange(currentLocation,[tempMessage length] - currentLocation)];
-	
-	while(emoticonRange.length != 0){ //if we found a emoticon
-	    
-	    //--make sure this emoticon is not inside a link--
-	    if([tempMessage attribute:NSLinkAttributeName atIndex:emoticonRange.location effectiveRange:&attributeRange] == nil){
-		
-		NSMutableAttributedString *replacement = [[[currentEmo attributedEmoticon] mutableCopy] autorelease];
-		
-		[replacement addAttributes:[tempMessage attributesAtIndex:emoticonRange.location effectiveRange:nil] range:NSMakeRange(0,1)];
-		
-		//--insert the emoticon--
-		[tempMessage replaceCharactersInRange:emoticonRange withAttributedString:replacement];
-		
-		//shrink the emoticon range to 1 character (the multicharacter chunk has been replaced with a single character/emoticon)
-		emoticonRange.length = 1;
-		
-		messageChanged = YES;
+		if(emoticonRange.location != NSNotFound){
+    
+		    //--make sure this emoticon is not inside a link--
+		    if([inMessage attribute:NSLinkAttributeName atIndex:emoticonRange.location effectiveRange:&attributeRange] == nil){
+    
+			NSMutableAttributedString *replacement = [[[currentEmo attributedEmoticon] mutableCopy] autorelease];
+    
+			[replacement addAttributes:[inMessage attributesAtIndex:emoticonRange.location effectiveRange:nil] range:NSMakeRange(0,1)];
+    
+			//--insert the emoticon--
+			[tempMessage replaceCharactersInRange:NSMakeRange(emoticonRange.location-replacementCount,emoticonRange.length) withAttributedString:replacement];
+
+			//NSLog(@"break at %d for %@",currentLocation,currentEmoText);
+			
+			replacementCount += emoticonRange.length-1;
+			currentLocation += emoticonRange.length-1;
+			messageChanged = YES;
+			
+			break;
+		    }
+		}
 	    }
-	    
-	    //--move our location--
-	    currentLocation = emoticonRange.location + emoticonRange.length;
-	    
-	    //--find the next emoticon--
-	    emoticonRange = [[tempMessage string] rangeOfString:currentEmoText options:0 range:NSMakeRange(currentLocation,[[tempMessage string] length] - currentLocation)];
-        }
+	}
+
+	// find the next possible location of an emoticon
+	currentLocation ++;
+
+	if(currentLocation < [inMessage length]){
+	    nextOccurence = [self firstOccurenceInString:[[[inMessage safeString] string] substringWithRange:NSMakeRange(currentLocation,[inMessage length]-currentLocation)]];
+	}else{
+	    nextOccurence = NSNotFound;
+	}
+
+	if(nextOccurence != NSNotFound){
+	    currentLocation += nextOccurence;
+	}else{
+	    break;
+	}
     }
     
     if(!messageChanged){
 	tempMessage = nil;
     }
-    
+
     return tempMessage;
+}
+
+- (int) firstOccurenceInString:(NSString *)inString
+{
+    int loop = 0;
+    
+    for(loop = 0; loop < [inString length]; loop++){
+	if([quickScanString rangeOfString:[inString substringWithRange:NSMakeRange(loop,1)]].location != NSNotFound)
+	    return loop;
+    }
+
+    return NSNotFound;
 }
 
 - (void)updateQuickScanList
 {
-    int			loop = 0;
     NSEnumerator	*emoEnumerator = [emoticons objectEnumerator];
     AIEmoticon		*currentEmo = nil;
     NSString		*currentEmoText = nil;
     NSString		*currentChar = nil;
 
+    [quickScanList removeAllObjects];
+
     while(currentEmo = [emoEnumerator nextObject]){
 	currentEmoText = [currentEmo representedText];
 
-	for(loop = 0; loop < [currentEmoText length]; loop++){
-	    currentChar = [NSString stringWithFormat:@"%C",[currentEmoText characterAtIndex:loop]];
+	// we only need to add the first character of each emoticon to the quickscan list
+	// a somewhat obvious timesaver
+	currentChar = [NSString stringWithFormat:@"%C",[currentEmoText characterAtIndex:0]];
 
-	    if(![quickScanList containsObject:currentChar]){
-		[quickScanList addObject:currentChar];
-	    }
+	if(![quickScanList containsObject:currentChar]){
+	    [quickScanList addObject:currentChar];
+	    [quickScanString appendString:currentChar];
 	}
     }
 }
@@ -476,8 +514,10 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
 
     while(currentString = [enumerator nextObject]){
 	[currentString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-	emo = [[AIEmoticon alloc] initWithPath:inPath andText:currentString];
-	[emoticons addObject:emo];
+	if([inPath length] && [currentString length]){
+	    emo = [[AIEmoticon alloc] initWithPath:inPath andText:currentString];
+	    [emoticons addObject:emo];
+	}
     }
 }
 
