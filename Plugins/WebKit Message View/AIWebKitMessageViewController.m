@@ -420,7 +420,7 @@ DeclareString(AppendNextMessage);
 	//If the preferred style is unavailable, load the default
 	if (!style){
 		[loadedStyleID release];
-		loadedStyleID = NSLocalizedString(@"Mockie","Default message style name. Make sure this matches the localized style bundle's name!");
+		loadedStyleID = NSLocalizedStringFromTableInBundle(@"Mockie",nil,[NSBundle bundleForClass: [self class]],"Default message style name. Make sure this matches the localized style bundle's name!");
 		style = [plugin messageStyleBundleWithName:loadedStyleID];
 	}
 	
