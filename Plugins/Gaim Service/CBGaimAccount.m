@@ -1196,7 +1196,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-#warning To Colin: If account is nil (the GaimAccount has not been made) we do not have access to account->perm_deny.
 - (PRIVACY_OPTION)privacyOptions
 {
 	PRIVACY_OPTION privacyOption = -1;
