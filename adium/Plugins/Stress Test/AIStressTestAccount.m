@@ -343,7 +343,11 @@
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
-    return(YES);
+	if ([inType isEqualToString:CONTENT_MESSAGE_TYPE]){
+		return(YES);
+	}else{
+		return(NO);
+	}
 }
 
 //Initiate a new chat
