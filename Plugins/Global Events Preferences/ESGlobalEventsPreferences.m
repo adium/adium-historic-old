@@ -80,7 +80,11 @@
 	[popUp_speechPreset setMenu:[self _speechPresetMenu]];
 
 	//Build and set the growl preset menu
-	[popUp_growlPreset setMenu:[self _growlPresetMenu]];
+	if([NSApp isOnPantherOrBetter]){
+		[popUp_growlPreset setMenu:[self _growlPresetMenu]];
+	}else{
+		[popUp_growlPreset setEnabled:NO];
+	}
 
 	//Observer preference changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
