@@ -86,10 +86,10 @@
 
 
 //Cursor Tracking ----------------------------------------------------------------------
-//Reset our cursor rects
-- (void)resetCursorRectsAtOffset:(NSPoint)offset visibleRect:(NSRect)visibleRect inView:(NSView *)controlView
+//Reset our cursor rects (returns YES if cursor rects were modified)
+- (BOOL)resetCursorRectsAtOffset:(NSPoint)offset visibleRect:(NSRect)visibleRect inView:(NSView *)controlView
 {
-    
+    return(NO);
 }
 
 //Handle a mouse down

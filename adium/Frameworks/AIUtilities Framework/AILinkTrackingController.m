@@ -102,7 +102,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     mouseLoc = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
     mouseLoc.x -= offset.x;
     mouseLoc.y -= offset.y;
-    NSLog(@"click %0.2f %0.2f (%0.2f, %0.2f)",mouseLoc.x,mouseLoc.y,offset.x,offset.y);
+
     glyphIndex = [layoutManager glyphIndexForPoint:mouseLoc inTextContainer:textContainer fractionOfDistanceThroughGlyph:nil];
     charIndex = [layoutManager characterIndexForGlyphAtIndex:glyphIndex];
 

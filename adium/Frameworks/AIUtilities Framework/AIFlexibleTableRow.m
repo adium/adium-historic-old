@@ -83,24 +83,27 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     }
 }
 
-//
-- (void)resetCursorRectsAtOffset:(NSPoint)offset visibleRect:(NSRect)visibleRect inView:(NSView *)controlView
+//Returns YES if cursor rects were modified
+- (BOOL)resetCursorRectsAtOffset:(NSPoint)offset visibleRect:(NSRect)visibleRect inView:(NSView *)controlView
 {
     NSEnumerator	*enumerator;
     AIFlexibleTableCell	*cell;
     int			x = offset.x;
+    int			installedCursorRects = 0;
 
     //Reset the cursor rects of our cells
     enumerator = [cellArray objectEnumerator];
     while(cell = [enumerator nextObject]){
         NSSize	cellSize = [cell cellSize];
 
-        [cell resetCursorRectsAtOffset:NSMakePoint(x, offset.y)
-                           visibleRect:NSIntersectionRect(visibleRect, NSMakeRect(x, offset.y, cellSize.width, cellSize.height))
-                                inView:controlView];
+        installedCursorRects += [cell resetCursorRectsAtOffset:NSMakePoint(x, offset.y)
+                                                   visibleRect:NSIntersectionRect(visibleRect, NSMakeRect(x, offset.y, cellSize.width, cellSize.height))
+                                                        inView:controlView];
         
         x += cellSize.width;
     }
+
+    return(installedCursorRects != 0);
 }
 
 // (point local to this row)

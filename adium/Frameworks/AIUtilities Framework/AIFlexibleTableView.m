@@ -59,7 +59,7 @@
 
 - (void)_init
 {
-    cursorTrackingCellArray = [[NSMutableArray alloc] init];
+    cursorTrackingRowArray = [[NSMutableArray alloc] init];
     rowArray = [[NSMutableArray alloc] init];
     rowHeightArray = nil;
     contentsHeight = 0;
@@ -72,11 +72,14 @@
 
 - (void)dealloc
 {
+    //Remove cursor tracking (by passing an empty rect)
+    [self _resetCursorRectsForVisibleRect:NSMakeRect(0,0,0,0)];
+
     //Ensure we're no longer observing
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:nil];
 
     //Clean up
-    [cursorTrackingCellArray release];
+    [cursorTrackingRowArray release];
     [rowArray release];
     [rowHeightArray release];
 
@@ -375,36 +378,51 @@
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow
 {
     if(newWindow == nil){
-        //Remove cursor tracking (by passing an empty rect) 
+        //Remove cursor tracking (by passing an empty rect)
         [self _resetCursorRectsForVisibleRect:NSMakeRect(0,0,0,0)];
     }
 }
 
-//Reset cursor tracking for cells within the passed visible rect
+//Reset cursor tracking for cells within the passed visible rect.  Pass an empty visible rect to remove all cursor tracking
 - (void)_resetCursorRectsForVisibleRect:(NSRect)visibleRect
 {
     NSPoint			cellPoint = NSMakePoint(0, contentsHeight - VIEW_PADDING_BOTTOM);
-    NSEnumerator		*rowEnumerator;
+    NSEnumerator		*rowEnumerator, *enumerator;
     AIFlexibleTableRow		*row;
     BOOL			foundVisible = NO;
     NSRect			documentVisibleRect;
 
-    //Get our visible rect (we don't want to process non-visible rows)
-    documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
+    //Remove any existing cursor rects
+    enumerator = [cursorTrackingRowArray objectEnumerator];
+    while(row = [enumerator nextObject]){
+        //Pass an empty visible rect to remove any cursor rects
+        [row resetCursorRectsAtOffset:NSMakePoint(0,0) visibleRect:NSMakeRect(0,0,0,0) inView:self];
+    }
+    [cursorTrackingRowArray release]; cursorTrackingRowArray = [[NSMutableArray alloc] init];
+    
+    //Install new cursor rects
+    if(visibleRect.size.width != 0 && visibleRect.size.height != 0){
+        //Get our visible rect (we don't want to process non-visible rows)
+        documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
+    
+        //Enumerate through each row
+        //We move from the bottom up, so we can avoid enumerating through rows that have scrolled out of view
+        rowEnumerator = [rowArray objectEnumerator];
+        while((row = [rowEnumerator nextObject])){
+            int	rowHeight = [row height];
+    
+            cellPoint.y -= [row height];
+    
+            if(NSIntersectsRect(NSMakeRect(cellPoint.x, cellPoint.y, visibleRect.size.width, rowHeight), documentVisibleRect) || [row spansRows]){ //If visible
 
-    //Enumerate through each row
-    //We move from the bottom up, so we can avoid enumerating through rows that have scrolled out of view
-    rowEnumerator = [rowArray objectEnumerator];
-    while((row = [rowEnumerator nextObject])){
-        int	rowHeight = [row height];
+                if([row resetCursorRectsAtOffset:cellPoint visibleRect:visibleRect inView:self]){
+                    [cursorTrackingRowArray addObject:row];
+                }
 
-        cellPoint.y -= [row height];
-
-        if(NSIntersectsRect(NSMakeRect(cellPoint.x, cellPoint.y, visibleRect.size.width, rowHeight), documentVisibleRect) || [row spansRows]){ //If visible
-            [row resetCursorRectsAtOffset:cellPoint visibleRect:visibleRect inView:self];
-            if(!foundVisible && ![row spansRows]) foundVisible = YES;
-        }else{
-            if(foundVisible) break; //Stop scanning once we hit a non-visible (after having drawn something)
+                if(!foundVisible && ![row spansRows]) foundVisible = YES;
+            }else{
+                if(foundVisible) break; //Stop scanning once we hit a non-visible (after having drawn something)
+            }
         }
     }
 }
