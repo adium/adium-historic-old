@@ -13,6 +13,8 @@
     int         displayDuration;
 }
 
+- (void)startTimer;
+
 - (NSTimer *)fadeTimer;
 - (void)setFadeTimer:(NSTimer *)timer;
 - (NSTimer *)displayTimer;
