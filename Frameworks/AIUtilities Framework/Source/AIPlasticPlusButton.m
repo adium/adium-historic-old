@@ -42,7 +42,7 @@
 	}
 }
 
-//Path for the little popup arrow (Cached, depdenant upon our current frame)
+//Path for the little popup arrow (Cached, dependent upon our current frame)
 - (NSBezierPath *)popUpArrowPath
 {
 	if(!arrowPath){
