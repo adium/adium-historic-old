@@ -32,7 +32,7 @@
     [checkBox_status setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_STATUS] boolValue]];
     [checkBox_time setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_TIME] boolValue]];
     [checkBox_sender setState:[[preferenceDict objectForKey:KEY_ANNOUNCER_SENDER] boolValue]];
-    
+    [checkBox_messageText setState:[[dict objectForKey:KEY_ANNOUNCER_MESSAGETEXT] boolValue]];
     [self configureControlDimming];
 }
 
@@ -59,6 +59,10 @@
 	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 									forKey:KEY_ANNOUNCER_SENDER
 									group:PREF_GROUP_ANNOUNCER];
+    } else if (sender == checkBox_messageText){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_ANNOUNCER_MESSAGETEXT
+                                              group:PREF_GROUP_ANNOUNCER];
     }
 
     [self configureControlDimming];
@@ -69,6 +73,7 @@
 {
     BOOL messages = ([checkBox_outgoing state] || [checkBox_incoming state]);
     
+    [checkBox_messageText setEnabled:(messages)];
     [checkBox_sender setEnabled:(messages)];
     [checkBox_time setEnabled:(messages || [checkBox_status state])];
     

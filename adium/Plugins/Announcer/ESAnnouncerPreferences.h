@@ -9,6 +9,7 @@
 @interface ESAnnouncerPreferences : AIPreferencePane {
     IBOutlet	NSButton	*checkBox_outgoing;
     IBOutlet	NSButton	*checkBox_incoming;
+    IBOutlet    NSButton        *checkBox_messageText;
     IBOutlet	NSButton	*checkBox_status;
     IBOutlet	NSButton	*checkBox_time;
     IBOutlet	NSButton	*checkBox_sender;
