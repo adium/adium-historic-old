@@ -21,7 +21,6 @@
 @interface AIListLayoutWindowController : AIWindowController {
 	IBOutlet		NSPopUpButton		*popUp_contactTextAlignment;
 	IBOutlet		NSPopUpButton		*popUp_groupTextAlignment;
-	IBOutlet		NSPopUpButton		*popUp_windowStyle;
 	IBOutlet		NSPopUpButton		*popUp_extendedStatusStyle;
 	IBOutlet		NSPopUpButton		*popUp_extendedStatusPosition;
 	IBOutlet		NSPopUpButton		*popUp_userIconPosition;
@@ -32,9 +31,6 @@
 	IBOutlet		NSButton			*checkBox_extendedStatusVisible;
 	IBOutlet		NSButton			*checkBox_statusIconsVisible;
 	IBOutlet		NSButton			*checkBox_serviceIconsVisible;
-	IBOutlet		NSButton			*checkBox_windowHasShadow;
-	IBOutlet		NSButton			*checkBox_verticalAutosizing;
-	IBOutlet		NSButton			*checkBox_horizontalAutosizing;
 
 	IBOutlet		NSTextField			*textField_horizontalWidthText;
 	IBOutlet		NSSlider			*slider_horizontalWidth;

@@ -428,7 +428,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	NSDictionary	*layoutDict = [NSDictionary dictionaryNamed:CONTACT_INFO_LAYOUT forClass:[self class]];
 
 	[contactListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
-	[contactListController updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];	
 
 	[contactListController setHideRoot:YES];
 }
