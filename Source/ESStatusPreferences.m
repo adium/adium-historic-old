@@ -12,6 +12,7 @@
 #import <AIUtilities/AIImageTextCell.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIVerticallyCenteredTextCell.h>
+#import "KFTypeSelectTableView.h"
 
 #define STATE_DRAG_TYPE	@"AIState"
 
@@ -310,6 +311,16 @@
     }else{
         return(NO);
     }
+}
+
+/*!
+* @brief Set up KFTypeSelectTableView
+ *
+ * Only search the "name" column.
+ */
+- (void)configureTypeSelectTableView:(KFTypeSelectTableView *)tableView
+{
+    [tableView setSearchColumnIdentifiers:[NSSet setWithObject:@"name"]];
 }
 
 #pragma mark Other status-related controls

@@ -26,6 +26,7 @@
 #import <Adium/AIListObject.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
+#import "KFTypeSelectTableView.h"
 
 #define	ACCOUNT_DRAG_TYPE					@"AIAccount"	    			//ID for an account drag
 
@@ -503,4 +504,13 @@
 	[self updateControlAvailability];
 }
 
+/*!
+ * @brief Set up KFTypeSelectTableView
+ *
+ * Only search the "name" column.
+ */
+- (void)configureTypeSelectTableView:(KFTypeSelectTableView *)tableView
+{
+    [tableView setSearchColumnIdentifiers:[NSSet setWithObject:@"name"]];
+}
 @end
