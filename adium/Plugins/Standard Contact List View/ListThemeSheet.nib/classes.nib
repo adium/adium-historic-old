@@ -22,6 +22,7 @@
                 "colorWell_grid" = NSColorWell; 
                 "colorWell_groupBackground" = NSColorWell; 
                 "colorWell_groupBackgroundGradient" = NSColorWell; 
+                "colorWell_groupText" = NSColorWell; 
                 "colorWell_idle" = NSColorWell; 
                 "colorWell_idleAndAway" = NSColorWell; 
                 "colorWell_idleAndAwayLabel" = NSColorWell; 
@@ -38,12 +39,34 @@
                 "colorWell_typingLabel" = NSColorWell; 
                 "colorWell_unviewedContent" = NSColorWell; 
                 "colorWell_unviewedContentLabel" = NSColorWell; 
+                "preview_away" = AITextColorPreviewView; 
+                "preview_background" = AITextColorPreviewView; 
+                "preview_grid" = AITextColorPreviewView; 
+                "preview_groupBackground" = AITextColorPreviewView; 
+                "preview_idle" = AITextColorPreviewView; 
+                "preview_idleAndAway" = AITextColorPreviewView; 
+                "preview_offline" = AITextColorPreviewView; 
+                "preview_online" = AITextColorPreviewView; 
+                "preview_signedOff" = AITextColorPreviewView; 
+                "preview_signedOn" = AITextColorPreviewView; 
+                "preview_typing" = AITextColorPreviewView; 
+                "preview_unviewedContent" = AITextColorPreviewView; 
                 "slider_backgroundFade" = NSSlider; 
                 "textField_backgroundFade" = NSTextField; 
                 "textField_backgroundImagePath" = NSTextField; 
                 "textField_themeName" = NSTextField; 
             }; 
             SUPERCLASS = AIWindowController; 
+        }, 
+        {
+            CLASS = AITextColorPreviewView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                backgroundColor = NSColorWell; 
+                backgroundGradientColor = NSColorWell; 
+                textColor = NSColorWell; 
+            }; 
+            SUPERCLASS = NSView; 
         }, 
         {
             CLASS = AIWindowController; 
