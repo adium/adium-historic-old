@@ -34,7 +34,6 @@
 - (void)_updateAwaySubmenus;
 - (NSMenu *)_awaySubmenuFromArray:(NSArray *)awayArray forMainMenu:(BOOL)mainMenu;
 - (void)_appendAwaysFromArray:(NSArray *)awayArray toMenu:(NSMenu *)awayMenu;
-- (void)swapMenuItem:(NSMenuItem *)existingItem with:(NSMenuItem *)newItem;
 @end
 
 @implementation AIAwayMessagesPlugin
@@ -57,6 +56,21 @@
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     
     [self accountPropertiesChanged:nil];
+}
+
+
+- (void)dealloc
+{
+    [menuItem_away release]; menuItem_away = nil;
+    
+    [menuItem_removeAway release]; menuItem_removeAway = nil;
+    
+    if ([NSApp isOnPantherOrBetter]) {
+        [menuItem_away_alternate release]; menuItem_away_alternate = nil;
+        
+        [menuItem_removeAway_alternate release]; menuItem_removeAway_alternate = nil;
+    }
+    
 }
 
 //Display the enter away message window
@@ -242,31 +256,21 @@
     if(shouldConfigureForAway != menuConfiguredForAway){
         //Swap the menu items
         if(shouldConfigureForAway){
-            [self swapMenuItem:menuItem_away with:menuItem_removeAway];
+            [NSMenu swapMenuItem:menuItem_away with:menuItem_removeAway];
             if ([NSApp isOnPantherOrBetter]) {
-                [self swapMenuItem:menuItem_away_alternate with:menuItem_removeAway_alternate];
+                [NSMenu swapMenuItem:menuItem_away_alternate with:menuItem_removeAway_alternate];
             }
-            [self swapMenuItem:menuItem_dockAway with:menuItem_dockRemoveAway];
+            [NSMenu swapMenuItem:menuItem_dockAway with:menuItem_dockRemoveAway];
         }else{
-            [self swapMenuItem:menuItem_removeAway with:menuItem_away];
+            [NSMenu swapMenuItem:menuItem_removeAway with:menuItem_away];
             if ([NSApp isOnPantherOrBetter]) {
-                [self swapMenuItem:menuItem_removeAway_alternate with:menuItem_away_alternate];
+                [NSMenu swapMenuItem:menuItem_removeAway_alternate with:menuItem_away_alternate];
             }
-            [self swapMenuItem:menuItem_dockRemoveAway with:menuItem_dockAway];
+            [NSMenu swapMenuItem:menuItem_dockRemoveAway with:menuItem_dockAway];
         }
         
         menuConfiguredForAway = shouldConfigureForAway;
     }
-}
-
-//Swap two menu items
-- (void)swapMenuItem:(NSMenuItem *)existingItem with:(NSMenuItem *)newItem
-{
-    NSMenu	*containingMenu = [existingItem menu];
-    int		menuItemIndex = [containingMenu indexOfItem:existingItem];
-    
-    [containingMenu removeItem:existingItem];
-    [containingMenu insertItem:newItem atIndex:menuItemIndex];
 }
 
 //Refresh the away messages displayed in the away submenus
