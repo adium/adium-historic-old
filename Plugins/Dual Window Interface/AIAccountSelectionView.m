@@ -94,13 +94,13 @@
     [view_contents release];
 }
 
-+ (BOOL)optionsAvailableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject
++ (BOOL)optionsAvailableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inObject
 {
-	return([self multipleContactsForListObject:inObject] ||
-		   [self multipleAccountsForSendingContentType:inType toListObject:inObject]);
+	return([self multipleContactsForContact:inObject] ||
+		   [self multipleAccountsForSendingContentType:inType toContact:inObject]);
 }
 
-+ (BOOL)multipleAccountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject
++ (BOOL)multipleAccountsForSendingContentType:(NSString *)inType toContact:(AIListContact *)inObject
 {
 	return(([[[[AIObject sharedAdiumInstance] contentController] sourceAccountsForSendingContentType:inType
 																				toListObject:inObject
@@ -111,12 +111,12 @@
 																				   preferred:NO] count]> 1));
 }
 
-+ (BOOL)multipleContactsForListObject:(AIListObject *)inObject
++ (BOOL)multipleContactsForContact:(AIListContact *)inObject
 {
 	//Find the parent meta contact if possible
 	AIListObject	*containingObject;
 	while ([(containingObject = [inObject containingObject]) isKindOfClass:[AIMetaContact class]]){
-		inObject = containingObject;
+		inObject = (AIListObject *)containingObject;
 	}
 
 	return ([inObject isKindOfClass:[AIMetaContact class]] && ![(AIMetaContact *)inObject containsOnlyOneUniqueContact]);
@@ -200,14 +200,14 @@
 - (void)selectContainedContact:(id)sender
 {
 	AIListContact	*listObject = [sender representedObject];
-	NSString		*oldServiceID = [[delegate listObject] serviceID];
+	AIService		*oldService = [[delegate listObject] service];
 	
 	[delegate setListObject:listObject];
 	
 	//If we changed services, set the account
-	if (![oldServiceID isEqualToString:[listObject serviceID]]){
+	if(oldService != [listObject service]){
 		[delegate setAccount:[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
-																				 toListObject:listObject]];
+																					toContact:listObject]];
 	}
 	
 	
