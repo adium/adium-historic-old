@@ -85,7 +85,7 @@
 
 - (NSString *)applicationVersion
 {
-	return([[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]);
+	return([[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey]);
 }
 
 @end
