@@ -12,4 +12,7 @@
     CBStatusMenuItemController  *itemController;
 }
 
+//Used when toggling the status item on and off
+- (void)createStatusItem;
+- (void)destroyStatusItem;
 @end
