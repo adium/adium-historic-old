@@ -155,6 +155,8 @@ ADD_TOOLBAR_ITEMS_HERE
 - (BOOL)start;
 - (BOOL)canReveal;
 - (BOOL)reveal;
+- (BOOL)canDelete;
+- (BOOL)prepareForDelete;
 
 - (enum ProgressState)progressState;
 
