@@ -4,5 +4,7 @@
 <dict>
 	<key>AB Display Format</key>
 	<integer>1</integer>
+        <key>AB Image Sync</key>
+        <integer>0</integer>
 </dict>
 </plist>

@@ -95,6 +95,27 @@
             }
             
         }
+    } else if ((syncMethod == ADDRESS_BOOK_SYNC_AUTO) && [inModifiedKeys containsObject: @"BuddyImage"]) {
+        NSString * property = [propertyDict objectForKey:[inObject serviceID]];
+        if (property) {
+            NSString * screenName = [[inObject UID] compactedString];
+            
+            ABSearchElement * searchElement = [ABPerson searchElementForProperty:property label:nil     key:nil value:screenName comparison:kABEqualCaseInsensitive];
+            NSArray * results = [sharedAddressBook recordsMatchingSearchElement:searchElement];
+            
+            if (results && [results count]) {
+                ABPerson * person = [results objectAtIndex:0];
+                
+                if (person) {
+                    AIHandle * handle = [inObject handleForAccount:nil];
+                    NSMutableDictionary *statusDict = [handle statusDictionary];
+                    //apply the image
+                    if ([statusDict objectForKey:@"BuddyImage"]) {
+                        [person setImageData: [[statusDict objectForKey:@"BuddyImage"] TIFFRepresentation]];
+                    }
+                }
+            }
+        }
     }
     
     return(nil); //we don't change any keys
@@ -105,6 +126,7 @@
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_ADDRESSBOOK] == 0){
         //load new displayFormat
         displayFormat = [[[owner preferenceController] preferenceForKey:KEY_AB_DISPLAYFORMAT group:PREF_GROUP_ADDRESSBOOK object:nil] intValue];
+        syncMethod = [[[owner preferenceController] preferenceForKey:KEY_AB_IMAGE_SYNC group:PREF_GROUP_ADDRESSBOOK object:nil] intValue];
         [self updateAllContacts];
     }
 }

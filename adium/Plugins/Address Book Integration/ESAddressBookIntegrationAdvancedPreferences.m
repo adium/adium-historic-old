@@ -84,6 +84,17 @@
 {
     if(notification == nil || [PREF_GROUP_ADDRESSBOOK compare:[[notification userInfo] objectForKey:@"Group"]] == 0){
         [format_menu selectItemAtIndex:[format_menu indexOfItemWithTag:[[[owner preferenceController] preferenceForKey:KEY_AB_DISPLAYFORMAT group:PREF_GROUP_ADDRESSBOOK object:nil] intValue]]];
+    
+        switch ([[[owner preferenceController] preferenceForKey:KEY_AB_IMAGE_SYNC group:PREF_GROUP_ADDRESSBOOK object:nil] intValue]) {
+            case ADDRESS_BOOK_SYNC_NO:
+                [radioButton_syncNothing setState: NSOnState];
+                [radioButton_syncAutomatic setState: NSOffState];
+            break;
+            case ADDRESS_BOOK_SYNC_AUTO:
+                [radioButton_syncNothing setState: NSOffState];
+                [radioButton_syncAutomatic setState: NSOnState];
+            break;
+        }
     }
 }
 
@@ -93,6 +104,21 @@
         [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]]
                                              forKey:KEY_AB_DISPLAYFORMAT
                                               group:PREF_GROUP_ADDRESSBOOK];
+}
+
+- (IBAction)changeSyncMethod:(id)sender
+{
+    if (sender == radioButton_syncNothing) {
+        [[owner preferenceController] setPreference: [NSNumber numberWithInt: ADDRESS_BOOK_SYNC_NO]
+                                             forKey: KEY_AB_IMAGE_SYNC
+                                              group: PREF_GROUP_ADDRESSBOOK];
+        [radioButton_syncAutomatic setState: NSOffState];
+    } else if (sender == radioButton_syncAutomatic) {
+        [[owner preferenceController] setPreference: [NSNumber numberWithInt: ADDRESS_BOOK_SYNC_AUTO]
+                                             forKey: KEY_AB_IMAGE_SYNC
+                                              group: PREF_GROUP_ADDRESSBOOK];
+        [radioButton_syncNothing setState: NSOffState];
+    }
 }
 
 @end
