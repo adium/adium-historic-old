@@ -356,7 +356,11 @@ static  NSImage			*tabDivider = nil;
 	tabGapIndex = index;
 	
 	if(!arrangeCellTimer){ //Ignore the request if animation is already occuring       
-		arrangeCellTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/CUSTOM_TABS_FPS) target:self selector:@selector(_arrangeCellTimer:) userInfo:nil repeats:YES] retain];
+		arrangeCellTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/CUSTOM_TABS_FPS) 
+															 target:self 
+														   selector:@selector(_arrangeCellTimer:) 
+														   userInfo:nil 
+															repeats:YES] retain];
 		[self _arrangeCellsAbsolute:NO];
 	}
 }
@@ -504,7 +508,8 @@ static  NSImage			*tabDivider = nil;
 			if((ignoreSelection ||
 				(tabCell != selectedCustomTabCell && (!nextTabCell || nextTabCell != selectedCustomTabCell)))
 			   && [tabCellArray indexOfObject:tabCell] != tabGapIndex - 1){
-                [tabDivider compositeToPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y) operation:NSCompositeSourceOver];
+                [tabDivider compositeToPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y) 
+								   operation:NSCompositeSourceOver];
 			}
 			
 		}
@@ -594,7 +599,10 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 
 				[dragCell retain];
 				[self removeTabCell:dragCell];
-				[[AICustomTabDragging sharedInstance] dragTabCell:dragCell fromCustomTabsView:self withEvent:theEvent selectTab:(![NSEvent cmdKey])];
+				[[AICustomTabDragging sharedInstance] dragTabCell:dragCell
+											   fromCustomTabsView:self 
+														withEvent:theEvent 
+														selectTab:(![NSEvent cmdKey])];
 				[dragCell release];
 				
 			}
@@ -669,7 +677,8 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
     }else{
         if(tabCell = [self tabAtPoint:[sender draggingLocation]]){            
             if([delegate respondsToSelector:@selector(customTabView:didAcceptDragPasteboard:onTabViewItem:)]){
-                success = [delegate customTabView:self didAcceptDragPasteboard:pboard onTabViewItem:[tabCell tabViewItem]];
+                success = [delegate customTabView:self didAcceptDragPasteboard:pboard 
+									onTabViewItem:[tabCell tabViewItem]];
             }
         }
     }
@@ -736,15 +745,21 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 //Called when the drag exits this tab bar
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {    
-	//Stop tracking the drag, and move our tabs back to where they belong
-	[[AICustomTabDragging sharedInstance] setDestinationTabView:nil];
-	[self smoothlyArrangeTabs];
-    [self resetCursorTracking];
-
-    //Pass event along to the windowController
-    if([[[self window] windowController] respondsToSelector:@selector(draggingExited:)]){
-        [[[self window] windowController] draggingExited:sender];
-    }
+	NSPasteboard 	*pboard = [sender draggingPasteboard];
+    NSString 		*type = [pboard availableTypeFromArray:[NSArray arrayWithObject:TAB_CELL_IDENTIFIER]];
+	
+	if(type && [type isEqualToString:TAB_CELL_IDENTIFIER]){ //Dragging a tab
+		
+		//Stop tracking the drag, and move our tabs back to where they belong
+		[[AICustomTabDragging sharedInstance] setDestinationTabView:nil];
+		[self smoothlyArrangeTabs];
+		[self resetCursorTracking];
+		
+		//Pass event along to the windowController
+		if([[[self window] windowController] respondsToSelector:@selector(draggingExited:)]){
+			[[[self window] windowController] draggingExited:sender];
+		}
+	}
 }
 
 //Determines the correct drop index for a hovered tab, and returns the desired screen location and index for it
