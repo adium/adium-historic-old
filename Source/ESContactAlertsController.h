@@ -19,6 +19,7 @@
 - (NSImage *)imageForActionID:(NSString *)actionID;
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo;
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID;
+- (BOOL)allowMultipleActionsWithID:(NSString *)actionID;
 @end
 
 //Event preferences

@@ -133,14 +133,12 @@ DeclareString(KeyOneTimeAlert);
 		//Process each alert (There may be more than one for an event)
 		while(alert = [enumerator nextObject]){
 			NSString	*actionID;
+			id <AIActionHandler>	actionHandler;			
 			
 			actionID = [alert objectForKey:KeyActionID];
-
-			if (![performedActionIDs containsObject:actionID]){
-				id <AIActionHandler>	actionHandler;
-				
-				actionHandler = [actionHandlers objectForKey:actionID];		
-				
+			actionHandler = [actionHandlers objectForKey:actionID];		
+			
+			if((![performedActionIDs containsObject:actionID]) || ([actionHandler allowMultipleActionsWithID:actionID])){
 				[actionHandler performActionID:actionID
 								 forListObject:listObject
 								   withDetails:[alert objectForKey:KeyActionDetails] 
