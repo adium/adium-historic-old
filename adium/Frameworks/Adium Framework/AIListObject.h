@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #define PREF_GROUP_OBJECT_STATUS_CACHE  @"Object Status Cache"
+#define KEY_FORMATTED_UID				@"FormattedUID"
 
 @class AIMutableOwnerArray, AIListGroup;
 

@@ -16,8 +16,6 @@
 #import "AIListObject.h"
 #import "AIListGroup.h"
 
-#define KEY_FORMATTED_UID   @"FormattedUID"
-
 @interface AIListObject (PRIVATE)
 - (NSMutableArray *)_recursivePreferencesForKey:(NSString *)inKey group:(NSString *)groupName;
 @end
