@@ -3,6 +3,7 @@
 //  Adium
 //
 //  Created by Chris Serino on Wed Jan 28 2004.
+//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
 /*
