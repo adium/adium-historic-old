@@ -97,7 +97,7 @@
         if(!listObject || [[listObject serviceID] compare:[[[anAccount service] handleServiceType] identifier]] == 0){
             NSMenuItem	*menuItem;
 
-            menuItem = [[[NSMenuItem alloc] initWithTitle:[anAccount accountDescription] target:nil action:nil keyEquivalent:@""] autorelease];
+            menuItem = [[[NSMenuItem alloc] initWithTitle:[anAccount accountDescription] target:self action:@selector(selectNewAccount:) keyEquivalent:@""] autorelease];
             [menuItem setRepresentedObject:anAccount];
 
             //They are disabled if the account is offline
@@ -124,10 +124,7 @@
 //User selected a new account from the account menu
 - (IBAction)selectNewAccount:(id)sender
 {
-    //Inform our delegate of the new selection
-    [delegate setAccount:[[sender selectedItem] representedObject]];
-    
-    //
+    [delegate setAccount:[sender representedObject]];
     [self updateMenu];
 }
 
@@ -136,7 +133,6 @@
     NSEnumerator	*enumerator;
     NSMenuItem		*menuItem;
     AIAccount		*account = [delegate account];
-
     //Select the correct item
     [popUp_accounts selectItemAtIndex:[popUp_accounts indexOfItemWithRepresentedObject:account]];
 
