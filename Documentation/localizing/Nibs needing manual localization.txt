@@ -1,0 +1,13 @@
+ESFileTransferProgressView.nib
+PasswordPrompt.nib
+ProxyPasswordPrompt.nib
+AboutBox.nib ?
+AccountListWindow.nib
+
+
+---untouched, will be changing---
+EnterAwayWindow
+AwayMessagePrefs
+AwayStatusWindow
+AwayStatusWindowPrefs
+IdleMessagePrefs
