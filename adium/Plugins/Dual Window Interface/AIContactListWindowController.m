@@ -141,10 +141,11 @@
             [[self window] setMaxSize:newFrame.size];
             [[self window] setMinSize:newFrame.size];
         }
-           
+
         //Resize the window (We animate only if the window is main)
         if([[self window] isMainWindow]){
             [scrollView_contactList setAutoHideScrollBar:NO]; //Prevent scrollbar from appearing during animation
+            [scrollView_contactList setHasVerticalScroller:NO];
             [[self window] setFrame:newFrame display:YES animate:YES];
             [scrollView_contactList setAutoHideScrollBar:YES];
 
