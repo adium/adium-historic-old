@@ -63,9 +63,12 @@ static BOOL didInitGG = NO;
 {
 	[super accountConnectionConnected];	
 
-	GaimConnection  *gc = [self gaimAccount]->gc;
+	GaimAccount		*gaimAccount = [self gaimAccount];
+	GaimConnection  *gc;
 	
-	gg_userlist_request(((struct agg_data *)gc->proto_data)->sess, GG_USERLIST_GET, NULL);
+	if(gc = gaim_account_get_connection(gaimAccount)){
+		gg_userlist_request(((struct agg_data *)gc->proto_data)->sess, GG_USERLIST_GET, NULL);
+	}
 }
 
 //Away and away return
