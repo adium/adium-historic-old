@@ -50,11 +50,11 @@
 					message = [NSString stringWithFormat:AILocalizedString(@"Unknown conversation error.",nil)];
 					break;
 					
-				case AIChatUserNotAvailable:
+				case AIChatMessageSendingUserNotAvailable:
 					message = [NSString stringWithFormat:AILocalizedString(@"Could not send because %@ is not available.",nil),[listObject formattedUID]];
 					break;
 				
-				case AIChatUserIsBlocked:
+				case AIChatMessageSendingUserIsBlocked:
 					message = [NSString stringWithFormat:AILocalizedString(@"Could not send because %@ is blocked.",nil),[listObject formattedUID]];
 					break;
 
@@ -84,17 +84,22 @@
 					break;
 				case AIChatMessageReceivingMissedLocalIsTooEvil:
 					message = AILocalizedString(@"Could not receive: you are too evil.",nil);
-
 					break;
 				
 				case AIChatCommandFailed:
 					message = AILocalizedString(@"Command failed.",nil);
-					
 					break;
 				
 				case AIChatInvalidNumberOfArguments:
 					message = AILocalizedString(@"Incorrect number of command argments.",nil);
+					break;
 					
+				case AIChatMessageSendingConnectionError:
+					message = AILocalizedString(@"Could not send; a connection error occurred.",nil);
+					break;
+					
+				case AIChatMessageSendingNotAllowedWhileInvisible:
+					message = AILocalizedString(@"Could not send; not allowed while invisible.",nil);
 					break;
 			}
 			
