@@ -29,18 +29,7 @@
 {
     [super init];
 	
-	//The slower script is more proper... but it's so slow!
-	//The faster script results in the crash window barely appearing at all
-	slayerScript = [[NSAppleScript alloc] initWithSource:
-		/*@"tell application \"System Events\"\r\
-				set theList to name of every application process\r\
-			end tell\r\
-			if theList contains \"UserNotificationCenter\" then\r\
-				tell application \"UserNotificationCenter\" to quit\r\
-				return false\r\
-			end if\r\
-			return true"*/
-		@"tell application \"UserNotificationCenter\" to quit"];
+	slayerScript = [[NSAppleScript alloc] initWithSource:@"tell application \"UserNotificationCenter\" to quit"];
 	crashLog = nil;
     
     return(self);
@@ -80,9 +69,7 @@
 - (void)appleCrashReportSlayer:(NSTimer *)inTimer
 {
 	static int 		countdown = CRASH_REPORT_SLAY_ATTEMPTS;
-	
-	NSLog(@"Slay! (%i)",countdown);
-	
+
 	//Kill the notification app if it's open
 	if(countdown-- == 0 || ![[slayerScript executeAndReturnError:nil] booleanValue]){
 		[inTimer invalidate];
@@ -93,8 +80,6 @@
 - (void)delayedCrashLogDiscovery:(NSTimer *)inTimer
 {
 	static int 		countdown = CRASH_LOG_WAIT_ATTEMPTS;
-	
-	NSLog(@"No log yet, waiting... (%i)",countdown);
 
 	//Kill the notification app if it's open
 	if(countdown-- == 0 || [self reportCrashForLogAtPath:CRASHES_PATH]){
