@@ -69,7 +69,7 @@
 	_cachedActiveServices = nil;
 
 	//Default account preferences
-	[[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ACCOUNT_DEFAULT_PREFS forClass:[self class]]
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ACCOUNT_DEFAULT_PREFS forClass:[self class]]
 										  forGroup:PREF_GROUP_ACCOUNTS];
 }
 
@@ -77,17 +77,17 @@
 - (void)finishIniting
 {   
 	//Observe account changes, both list and online/connecting/offline
-    [[owner notificationCenter] addObserver:self
+    [[adium notificationCenter] addObserver:self
 								   selector:@selector(accountListChanged:)
 									   name:Account_ListChanged
 									 object:nil];
-    [[owner contactController] registerListObjectObserver:self];
+    [[adium contactController] registerListObjectObserver:self];
 	
     //Load the user accounts
     [self loadAccounts];
     
     //Observe content (for accountForSendingContentToContact)
-    [[owner notificationCenter] addObserver:self
+    [[adium notificationCenter] addObserver:self
                                    selector:@selector(didSendContent:)
                                        name:Content_DidSendContent
                                      object:nil];
@@ -106,7 +106,7 @@
     [self disconnectAllAccounts];
     
     //Remove observers (otherwise, every account added will be a duplicate next time around)
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
     
     //Cleanup
     [accountArray release];
@@ -131,7 +131,7 @@
 	[accountArray release]; accountArray = [[NSMutableArray alloc] init];
 	[unloadableAccounts release]; unloadableAccounts = [[NSMutableArray alloc] init];	
 	
-	accountList = [[owner preferenceController] preferenceForKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
+	accountList = [[adium preferenceController] preferenceForKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
 	
     //Create an instance of every saved account
 	enumerator = [accountList objectEnumerator];
@@ -192,7 +192,7 @@
     }
 	
 	//Broadcast an account list changed notification
-    [[owner notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
+    [[adium notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
 }
 
 //Save the accounts
@@ -219,10 +219,10 @@
 	[flatAccounts addObjectsFromArray:unloadableAccounts];
 	
 	//Save
-	[[owner preferenceController] setPreference:flatAccounts forKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
+	[[adium preferenceController] setPreference:flatAccounts forKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
 	
 	//Broadcast an account list changed notification
-	[[owner notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
+	[[adium notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
 }
 
 //Returns a new account of the specified type (Unique service plugin ID)
@@ -233,8 +233,8 @@
 	
 	//If no object ID is provided, use the next largest
 	if(!inAccountNumber){
-		inAccountNumber = [[[owner preferenceController] preferenceForKey:TOP_ACCOUNT_ID group:PREF_GROUP_ACCOUNTS] intValue];
-		[[owner preferenceController] setPreference:[NSNumber numberWithInt:inAccountNumber + 1]
+		inAccountNumber = [[[adium preferenceController] preferenceForKey:TOP_ACCOUNT_ID group:PREF_GROUP_ACCOUNTS] intValue];
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:inAccountNumber + 1]
 											 forKey:TOP_ACCOUNT_ID
 											  group:PREF_GROUP_ACCOUNTS];
 	}
@@ -780,7 +780,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     //Insert a menu item for each available account
     enumerator = [accountArray objectEnumerator];
     while(account = [enumerator nextObject]){
-		BOOL available = [[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE
+		BOOL available = [[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE
 																		 toContact:nil 
 																		 onAccount:account];
 		
@@ -857,7 +857,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 - (NSArray *)_accountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred includeOffline:(BOOL)includeOffline
 {
 	NSMutableArray	*sourceAccounts = [NSMutableArray array];
-	NSEnumerator	*enumerator = [[[owner accountController] accountArray] objectEnumerator];
+	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	AIAccount		*account;
 	
 	while(account = [enumerator nextObject]){
@@ -892,7 +892,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		if ([[inObject serviceClass] isEqualToString:[account serviceClass]]){
 			BOOL			knowsObject = NO;
 			BOOL			canFindObject = NO;
-			AIListContact	*contactForAccount = [[owner contactController] existingContactWithService:[inObject service]
+			AIListContact	*contactForAccount = [[adium contactController] existingContactWithService:[inObject service]
 																							   account:account
 																								   UID:[inObject UID]];
 			
