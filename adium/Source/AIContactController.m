@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.148 2004/06/22 16:47:55 adamiser Exp $
+// $Id: AIContactController.m,v 1.149 2004/06/22 18:33:19 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -83,8 +83,10 @@
     sortControllerArray = [[NSMutableArray alloc] init];
     activeSortController = nil;
     delayedStatusChanges = 0;
+	delayedModifiedStatusKeys = [[NSMutableSet alloc] init];
 	delayedAttributeChanges = 0;
-    delayedContentChanges = 0;
+	delayedModifiedAttributeKeys = [[NSMutableSet alloc] init];
+    delayedContactChanges = 0;
 	delayedUpdateRequests = 0;
 	updatesAreDelayed = NO;
 	contactDict = [[NSMutableDictionary alloc] init];
@@ -425,7 +427,7 @@
 - (void)_listChangedGroup:(AIListGroup *)group object:(AIListObject *)object
 {
 	if(updatesAreDelayed){
-		delayedContentChanges++;
+		delayedContactChanges++;
 	}else{
 		[[owner notificationCenter] postNotificationName:Contact_ListChanged 
 												  object:object
@@ -439,12 +441,13 @@
 {
     NSArray			*modifiedAttributeKeys;
 	
-    //Let all observers know the contact's status has changed
+    //Let all observers know the contact's status has changed before performing any sorting or further notifications
 	modifiedAttributeKeys = [self _informObserversOfObjectStatusChange:inObject withKeys:inModifiedKeys silent:silent];
 	
     //Resort the contact list
 	if(updatesAreDelayed){
 		delayedStatusChanges++;
+		[delayedModifiedStatusKeys addObjectsFromArray:inModifiedKeys];
 	}else{
 		//We can safely skip sorting if we know the modified attributes will invoke a resort later
 		if(![[self activeSortController] shouldSortForModifiedAttributeKeys:modifiedAttributeKeys] &&
@@ -471,6 +474,7 @@
 {	
 	if(updatesAreDelayed){
 		delayedAttributeChanges++;
+		[delayedModifiedAttributeKeys addObjectsFromArray:inModifiedKeys];
 	}else{
         //Resort the contact list if necessary
         if([[self activeSortController] shouldSortForModifiedAttributeKeys:inModifiedKeys]){
@@ -487,25 +491,40 @@
 //Performs any delayed list object/handle updates
 - (void)_performDelayedUpdates:(NSTimer *)timer
 {
-	BOOL	updatesOccured = (delayedStatusChanges || delayedAttributeChanges || delayedContentChanges);
+	BOOL	updatesOccured = (delayedStatusChanges || delayedAttributeChanges || delayedContactChanges);
 	
 	//Send out global attribute & status changed notifications (to cover any delayed updates)
 	if(updatesOccured){
-		//Resort the list
-		[self sortContactList];
+		BOOL shouldSort = NO;
 		
 		//Inform observers of any changes
-		if(delayedAttributeChanges){
-			[[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:nil];
+		if (delayedStatusChanges){
+			if([[self activeSortController] shouldSortForModifiedStatusKeys:[delayedModifiedStatusKeys allObjects]]){
+				shouldSort = YES;
+			}
+			[delayedModifiedStatusKeys removeAllObjects];
+			delayedStatusChanges = 0;
+			
 		}
-		if(delayedContentChanges){
+		if(delayedAttributeChanges){
+			if([[self activeSortController] shouldSortForModifiedAttributeKeys:[delayedModifiedAttributeKeys allObjects]]){
+				shouldSort = YES;
+			}			
+			[[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:nil];
+			[delayedModifiedAttributeKeys removeAllObjects];
+		}
+		if(delayedContactChanges){
 			[[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
 		}
 		
+		//Sort only if necessary
+		if (shouldSort || delayedContactChanges){
+			[self sortContactList];
+		}
         //Reset the delayed update count back to 0
-		delayedStatusChanges = 0;
+
 		delayedAttributeChanges = 0;
-		delayedContentChanges = 0;
+		delayedContactChanges = 0;
 	}
 	
     //If no more updates are left to process, disable the update timer
@@ -721,7 +740,6 @@
 - (void)registerListSortController:(AISortController *)inController
 {
     [sortControllerArray addObject:inController];
-    [[owner notificationCenter] postNotificationName:Contact_SortSelectorListChanged object:nil userInfo:nil];
 }
 - (NSArray *)sortControllerArray
 {
@@ -752,10 +770,10 @@
 - (void)sortListObject:(AIListObject *)inObject
 {
 	if(updatesAreDelayed){
-		delayedStatusChanges++;
+		delayedContactChanges++;
 	}else{
 		AIListGroup		*group = [inObject containingGroup];
-		
+
 		//Sort the groups containing this object
 		[group sortListObject:inObject sortController:activeSortController];
 		[[owner notificationCenter] postNotificationName:Contact_OrderChanged object:group];
