@@ -60,6 +60,10 @@
 }
 
 - (void) dealloc {
+	
+	//Ensure we log out before deallocing
+	[self logout];
+	
     [manager release];
     [client release];
 }
