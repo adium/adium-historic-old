@@ -37,9 +37,7 @@
     IBOutlet	AIFlippedCategoryView		*view_Status_Away;
     IBOutlet	AIFlippedCategoryView		*view_Status_Idle;
 
-    IBOutlet	NSTabView			*tabView_dock;
-    IBOutlet	AIFlippedCategoryView		*view_Dock_General;
-    IBOutlet	AIFlippedCategoryView		*view_Dock_Icon;
+    IBOutlet	AIFlippedCategoryView		*view_Dock;
     
     IBOutlet	AIFlippedCategoryView		*view_Sound;
 

@@ -16,7 +16,6 @@
                 "outlineView_advanced" = NSOutlineView; 
                 "tabView_category" = NSTabView; 
                 "tabView_contactList" = NSTabView; 
-                "tabView_dock" = NSTabView; 
                 "tabView_messages" = NSTabView; 
                 "tabView_status" = NSTabView; 
                 "textField_advancedTitle" = NSTextField; 
@@ -26,8 +25,7 @@
                 "view_ContactList_Contacts" = AIFlippedCategoryView; 
                 "view_ContactList_General" = AIFlippedCategoryView; 
                 "view_ContactList_Groups" = AIFlippedCategoryView; 
-                "view_Dock_General" = AIFlippedCategoryView; 
-                "view_Dock_Icon" = AIFlippedCategoryView; 
+                "view_Dock" = AIFlippedCategoryView; 
                 "view_Messages_Display" = AIFlippedCategoryView; 
                 "view_Messages_Emoticons" = AIFlippedCategoryView; 
                 "view_Messages_Receiving" = AIFlippedCategoryView; 

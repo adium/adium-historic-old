@@ -36,7 +36,7 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Dock_Icon);
+    return(AIPref_Dock);
 }
 - (NSString *)label{
     return(@"Dock Icon");

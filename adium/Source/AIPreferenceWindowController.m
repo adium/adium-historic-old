@@ -278,9 +278,8 @@ static AIPreferenceWindowController *sharedInstance = nil;
                 [self _sizeWindowToFitTabView:tabView_status];
             break;
             case 5:
-                [self _insertPanesForCategory:AIPref_Dock_General intoView:view_Dock_General showContainers:YES];
-                [self _insertPanesForCategory:AIPref_Dock_Icon intoView:view_Dock_Icon showContainers:YES];
-                [self _sizeWindowToFitTabView:tabView_dock];
+                [self _insertPanesForCategory:AIPref_Dock intoView:view_Dock showContainers:YES];
+                [self _sizeWindowToFitFlatView:view_Dock];
             break;
             case 6:
                 [self _insertPanesForCategory:AIPref_Sound intoView:view_Sound showContainers:YES];
