@@ -1,5 +1,6 @@
 {
     IBClasses = (
+        {CLASS = AIContextMenuTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {
             ACTIONS = {changePreference = id; }; 
             CLASS = AIPreferencePane; 

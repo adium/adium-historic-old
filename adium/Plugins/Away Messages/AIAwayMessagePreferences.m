@@ -174,6 +174,9 @@
     [scrollView_awayList setAutoScrollToBottom:NO];
     [scrollView_awayText setAutoHideScrollBar:YES];
     [scrollView_awayText setAutoScrollToBottom:NO];
+
+    [[NSNotificationCenter defaultCenter] addObserver:textView_message selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:textView_message];
+    [[NSNotificationCenter defaultCenter] addObserver:textView_autoresponse selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:textView_autoresponse];
 	
     //Load our aways
     [self loadAwayMessages];
