@@ -198,11 +198,7 @@ do instead  (
 
 create table adium.meta_container (
 meta_id         serial primary key,
-name            text not null,
-url             text,
-email           text,
-location        text,
-notes           text
+name            text not null
 );
 
 create table adium.meta_contact (
