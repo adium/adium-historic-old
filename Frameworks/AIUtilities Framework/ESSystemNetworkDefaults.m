@@ -14,22 +14,16 @@
 + (NSDictionary *)systemProxySettingsDictionaryForType:(ProxyType)proxyType
 {
 	NSMutableDictionary *systemProxySettingsDictionary = nil;
-	CFDictionaryRef     proxyDict = nil;
-	
-    Boolean             result;
-    	
+	NSDictionary		*proxyDict = nil;
+
 	CFStringRef			enableKey;
-	CFNumberRef         enableNum = nil;
     int                 enable;
     
 	CFStringRef			portKey;
-	CFNumberRef         portNum = nil;
-    int                 portInt;
+	NSNumber			*portNum = nil;
 
 	CFStringRef			proxyKey;
-	CFStringRef         hostStr = nil;
-    char				host[300];
-    size_t				hostSize;
+	NSString			*hostString;
 	
 	switch(proxyType){
 		case Proxy_HTTP: {
@@ -75,72 +69,45 @@
 		}
 	}
 	
-	proxyDict = SCDynamicStoreCopyProxies(NULL);
-    result = (proxyDict != NULL);
-	
-    // Get the enable flag.  This isn't a CFBoolean, but a CFNumber.
-    // Check if SOCKS is enabled
-    if (result) {
-        enableNum = (CFNumberRef) CFDictionaryGetValue(proxyDict, enableKey);
-        
-        result = (enableNum != NULL)
-            && (CFGetTypeID(enableNum) == CFNumberGetTypeID());
-    }
-    if (result) {
-        result = CFNumberGetValue(enableNum, kCFNumberIntType,
-                                  &enable) && (enable != 0);
-    }
-    
-    // Get the proxy host.  DNS names must be in ASCII.  If you 
-    // put a non-ASCII character  in the "Secure Web Proxy"
-    // field in the Network preferences panel, the CFStringGetCString
-    // function will fail and this function will return false.
-    if (result) {
-        hostStr = (CFStringRef) CFDictionaryGetValue(proxyDict, proxyKey);
-        
-        result = (hostStr != NULL)
-            && (CFGetTypeID(hostStr) == CFStringGetTypeID());
-    }
-    if (result) {
-        result = CFStringGetCString(hostStr, host,
-                                    (CFIndex) hostSize, [NSString defaultCStringEncoding]);
-    }
-    
-    //Get the proxy port
-    if (result) {
-        portNum = (CFNumberRef) CFDictionaryGetValue(proxyDict, portKey);
-        
-        result = (portNum != NULL)
-            && (CFGetTypeID(portNum) == CFNumberGetTypeID());
-    }
-    if (result) {
-        result = CFNumberGetValue(portNum, kCFNumberIntType, &portInt);
-    }
-    if (result) {
-		NSString		*hostString = [NSString stringWithCString:host];
-		NSDictionary	*authDict = [AIKeychain getDictionaryFromKeychainForKey:hostString];
+    if (proxyDict = (NSDictionary *)SCDynamicStoreCopyProxies(NULL)) {
 		
-		systemProxySettingsDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-			hostString,@"Host",
-			[NSNumber numberWithInt:portInt],@"Port",nil];
+		//Enabled?
+		enable = [[proxyDict objectForKey:(NSString *)enableKey] intValue];
+		if (enable){
+			
+			//Host
+			hostString = [proxyDict objectForKey:(NSString *)proxyKey];
+			if (hostString){
+				
+				//Port
+				portNum = [proxyDict objectForKey:(NSString *)portKey];
+				if (portNum){
+					NSDictionary	*authDict;
 		
-        if(authDict) {            
-			[systemProxySettingsDictionary setObject:[authDict objectForKey:@"username"] forKey:@"Username"];
-			[systemProxySettingsDictionary setObject:[authDict objectForKey:@"password"] forKey:@"Password"];
-            
-        } else {
-            //No username/password.  I think this doesn't need to be an error or anything since it should have been set in the system prefs
-        }
+					systemProxySettingsDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+						hostString,@"Host",
+						portNum,@"Port",nil];
 		
+					//User name & password if applicable
+					authDict = [AIKeychain getDictionaryFromKeychainForKey:hostString];
+					if(authDict){
+						[systemProxySettingsDictionary setObject:[authDict objectForKey:@"username"]
+														  forKey:@"Username"];
+						[systemProxySettingsDictionary setObject:[authDict objectForKey:@"password"]
+														  forKey:@"Password"];
+					}
+				}
+			}
+		}
 		// Could check and process kSCPropNetProxiesExceptionsList here, which returns: CFArray[CFString]
-    }    
+	}
     
-    //Clean up
+    //Clean up; proxyDict was created by a call with Copy in its name
     if (proxyDict != NULL) {
-        CFRelease(proxyDict);
+        [proxyDict release];
     }
-	
-    return systemProxySettingsDictionary;
+
+    return(systemProxySettingsDictionary);
 }    
 
 @end
