@@ -135,6 +135,11 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     [self tableViewSelectionDidChange:nil];
 }
 
+-(IBAction)addedEvent:(id)sender
+{
+
+}
+
 //TableView datasource --------------------------------------------------------
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {

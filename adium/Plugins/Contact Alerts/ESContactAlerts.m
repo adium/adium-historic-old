@@ -152,6 +152,8 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 //Actions!
 - (NSMenu *)actionListMenu //menu of possible actions
 {
+    if (!actionListMenu_cached)
+    {
     NSMenu		*actionListMenu = [[NSMenu alloc] init];
     NSMenuItem		*menuItem;
 
@@ -197,7 +199,10 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     [menuItem setRepresentedObject:@"Open Message"];
     [actionListMenu addItem:menuItem];
 
-    return(actionListMenu);
+    actionListMenu_cached = actionListMenu;
+    }
+    
+    return(actionListMenu_cached);
 }
 
 //setup display for displaying an alert
@@ -271,6 +276,8 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 //Builds and returns an event menu
 - (NSMenu *)eventMenu
 {
+    if (!eventMenu_cached)
+    {
     NSMenu		*eventMenu = [[NSMenu alloc] init];
 
     //Add the static/display menu item
@@ -286,8 +293,9 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     [eventMenu addItem:[self eventMenuItem:@"Typing" withDisplay:@"Is Typing"]];
     [eventMenu addItem:[self eventMenuItem:@"UnviewedContent" withDisplay:@"Has Unviewed Content"]];
     [eventMenu addItem:[self eventMenuItem:@"Warning" withDisplay:@"Was Warned"]];
-
-    return(eventMenu);
+    eventMenu_cached = eventMenu;
+    }
+    return(eventMenu_cached);
 }
 
 -(IBAction)saveMessageDetails:(id)sender
@@ -624,14 +632,13 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     [actionDict setObject:@"Sound" forKey:KEY_EVENT_ACTION]; //Sound is default action
     [actionDict setObject:[NSNumber numberWithInt:NSOffState] forKey:KEY_EVENT_DELETE]; //default to recurring events
     [eventActionArray addObject:actionDict];
-    //Save event preferences?
-    //NSLog(@"not saving when adding new event ... ");
+
     [self saveEventActionArray];
 
     [tableView_actions selectRow:(([eventActionArray count]-1)+offset) byExtendingSelection:NO]; //select the new event
 
-    if ([[tableView_actions dataSource] respondsToSelector:@selector(addedEvent:)])
-        [[tableView_actions dataSource] addedEvent:nil];
+ //   if ([[tableView_actions dataSource] respondsToSelector:@selector(addedEvent:)])
+        [[tableView_actions dataSource] addedEvent:self];
     
     //Update the outline view
     [tableView_actions reloadData];
@@ -677,40 +684,33 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     containerFrame.origin.y -= heightChange;
     minimumSize.height += heightChange;
 
-    [[view_main window] setFrame:containerFrame display:YES animate:NO/*YES*/];
+    [[view_main window] setFrame:containerFrame display:YES animate:NO];
     [[view_main window] setMinSize:minimumSize];
 
     if (view_pref != nil)
     {
-
         containerFrame = [view_pref frame];
         containerFrame.size.height += heightChange;
         containerFrame.origin.y -= heightChange;
         [view_pref setFrame:containerFrame];
-        [view_pref display];
+   //     [view_pref display];
 
         containerFrame = [[[view_pref superview] superview] frame];
         containerFrame.size.height += heightChange;
         [[[view_pref superview] superview] setFrame:containerFrame];
         [view_pref setFrameOrigin:NSMakePoint(0,0)];
-        [[[view_pref superview] superview] display];
+        [[[view_pref superview] superview] setNeedsDisplay:YES];
         
     }
     
     [view_main replaceSubview:view_blank with:view_inView];
-    NSRect viewFrame = [view_main frame];
-    viewFrame.size = [view_inView frame].size;
- //   [view_main setFrame:[view_inView frame]];
     [view_main setFrameSize:[view_inView frame].size];
-
-    //   [view_main setFrameOrigin:NSMakePoint(0,0)];
+    [view_main setNeedsDisplay:YES];
     
-    [view_details release];
+  /*  [view_details release];
     view_details = view_inView;
-    [view_details retain];
-    [view_main display];
-  //   [[view_main superview] display];
-    
+    [view_details retain]; */
+  //  [[view_main window] display];
 }
 
 - (void)removeAllSubviews:(NSView *)view
