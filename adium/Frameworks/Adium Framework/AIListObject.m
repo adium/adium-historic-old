@@ -77,7 +77,56 @@
 }
 
 
-// Display --------------------------------------------------------------------------------
+//Nesting --------------------------------------------------------------------------------
+//Returns the group this object is in (will be nil for the root object)
+- (AIListGroup *)containingGroup
+{
+    return(containingGroup);
+}
+
+//Sets the group this object is in
+- (void)setContainingGroup:(AIListGroup *)inGroup
+{
+    if(inGroup == nil){
+        [containingGroup release]; containingGroup = nil;
+
+    }else{
+        containingGroup = [inGroup retain];
+    }
+}
+
+
+//Dynamic Status and Display -------------------------------------------------------------------
+//Access to the display arrays for this object
+- (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey
+{
+    AIMutableOwnerArray	*array = [displayDictionary objectForKey:inKey];
+
+    if(!array){
+        array = [[AIMutableOwnerArray alloc] init];
+        [displayDictionary setObject:array forKey:inKey];
+        [array release];
+    }
+
+    return(array);
+}
+
+//Returns the requested status array for this object
+- (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey
+{
+    AIMutableOwnerArray	*array = [statusDictionary objectForKey:inKey];
+
+    if(!array){
+        array = [[AIMutableOwnerArray alloc] init];
+        [statusDictionary setObject:array forKey:inKey];
+        [array release];
+    }
+
+    return(array);
+}
+
+
+// Display Name Convenience Methods -----------------------------------------------------------------------
 /*
  A list object basically has 4 different variations of display.
 
@@ -88,7 +137,6 @@
 
  A value will always be returned by these methods, so if there is no long display name present it will fall back to display name, serverDisplayName, and finally UID (which is guaranteed to be present).  Use whichever one seems best suited for what is being displayed.
  */
-
 //Server display name, specified by server
 - (NSString *)serverDisplayName
 {
@@ -134,57 +182,6 @@
         outName = [self displayName];
     }
     return (outName);
-}
-
-//Access to the display arrays for this object
-- (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey
-{
-    AIMutableOwnerArray	*array = [displayDictionary objectForKey:inKey];
-
-    if(!array){
-        //	NSLog(@"array for key:%@ not found and created", inKey);
-        array = [[AIMutableOwnerArray alloc] init];
-        [displayDictionary setObject:array forKey:inKey];
-        [array release];
-    }
-
-    return(array);
-}
-
-
-//Nesting --------------------------------------------------------------------------------
-//Returns the group this object is in (will be nil for the root object)
-- (AIListGroup *)containingGroup
-{
-    return(containingGroup);
-}
-
-//Sets the group this object is in
-- (void)setContainingGroup:(AIListGroup *)inGroup
-{
-    if(inGroup == nil){
-        [containingGroup release]; containingGroup = nil;
-
-    }else{
-        containingGroup = [inGroup retain];
-    }
-}
-
-
-//Status --------------------------------------------------------------------------------
-//Returns the requested status array for this object
-- (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey
-{
-    AIMutableOwnerArray	*array = [statusDictionary objectForKey:inKey];
-
-    if(!array){
-//	NSLog(@"array for key:%@ not found and created", inKey);
-        array = [[AIMutableOwnerArray alloc] init];
-        [statusDictionary setObject:array forKey:inKey];
-        [array release];
-    }
-
-    return(array);
 }
 
 
