@@ -214,7 +214,7 @@ static BOOL didInitOscar = NO;
 	AIService	*contactService;
 	NSString	*contactServiceID = nil;
 	
-	const char	firstCharacter = ([contactUID length] ? [contactUID characterAtIndex:0] : nil);
+	const char	firstCharacter = ([contactUID length] ? [contactUID characterAtIndex:0] : '\0');
 
 	//Determine service based on UID
 	if([contactUID hasSuffix:@"@mac.com"]){
