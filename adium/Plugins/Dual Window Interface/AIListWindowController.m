@@ -54,7 +54,8 @@
 #define DRAW_ALTERNATING_GRID	NO
 #define ALTERNATING_GRID_COLOR	[NSColor colorWithCalibratedRed:0.926 green:0.949 blue:0.992 alpha:1.0]
 
-#define BACKGROUND_COLOR		[NSColor colorWithCalibratedRed:0.7 green:0.8 blue:0.9 alpha:0.0]
+#define BACKGROUND_ALPHA		0.0
+#define BACKGROUND_COLOR		[NSColor colorWithCalibratedRed:0.7 green:0.8 blue:0.9 alpha:BACKGROUND_ALPHA]
 
 
 @interface AIListWindowController (PRIVATE)
@@ -137,6 +138,12 @@
 	[contactListView setAlternatingRowColor:ALTERNATING_GRID_COLOR];
 	
 	[contactListView setBackgroundColor:BACKGROUND_COLOR];
+	
+	
+	//Bye bye CPU cycles, I'll miss you!
+	[[self window] setOpaque:(BACKGROUND_ALPHA == 1.0)];
+	[contactListView setUpdateShadowsWhileDrawing:(BACKGROUND_ALPHA < 0.8)];
+	//--
 	
 #warning grr
 
