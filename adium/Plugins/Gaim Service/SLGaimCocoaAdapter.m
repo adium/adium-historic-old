@@ -1042,7 +1042,7 @@ static void *adiumGaimNotifyFormatted(const char *title, const char *primary, co
 
 static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who, const char *title, const char *primary, const char *secondary, const char *text, GCallback cb,void *userData)
 {
-	NSLog(@"%s - %s: %s\n%s\n%s\n%s",gc->account->username,who,title,primary, secondary, text);
+//	NSLog(@"%s - %s: %s\n%s\n%s\n%s",gc->account->username,who,title,primary, secondary, text);
 //	NSString	*titleString = [NSString stringWithUTF8String:title];
 //	NSString	*primaryString = [NSString stringWithUTF8String:primary];
 //	NSString	*secondaryString = [NSString stringWithUTF8String:secondary];
@@ -1101,9 +1101,12 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 	
 	NSString *errorMessage = nil;
 	NSString *description = nil;
-			
-	if (secondaryString && (([secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound) ||
-							([secondaryString rangeOfString:@"Already there"].location != NSNotFound))){
+	
+	if (primaryString && ([primaryString rangeOfString:@"Already there"].location != NSNotFound)){
+		return;
+	}
+	
+	if (secondaryString && ([secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound)){
 		return;
 	}
 	
