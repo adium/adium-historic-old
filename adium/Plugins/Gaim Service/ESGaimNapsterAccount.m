@@ -17,4 +17,14 @@ static BOOL didInitNapster = NO;
     return "prpl-napster";
 }
 
+- (NSString *)hostKey
+{
+	return KEY_NAPSTER_HOST;
+}
+
+- (NSString *)portKey
+{
+	return KEY_NAPSTER_PORT;
+}
+
 @end

@@ -1064,6 +1064,9 @@ static id<GaimThread> gaimThread = nil;
 	//We are connecting
 	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
 	
+	//Make sure our settings are correct
+	[self configureGaimAccount];
+	
 	//Configure libgaim's proxy settings; continueConnectWithConfiguredProxy will be called once we are ready
 	[self configureAccountProxy];
 }
@@ -1294,8 +1297,6 @@ static id<GaimThread> gaimThread = nil;
 	}
 	
 	[gaimThread addAdiumAccount:self];
-	   
-	[self configureGaimAccount];
 }
 
 #pragma mark Disconnect

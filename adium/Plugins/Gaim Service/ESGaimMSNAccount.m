@@ -32,9 +32,9 @@ static BOOL didInitMSN = NO;
 }
 
 #pragma mark Connection
-- (void)createNewGaimAccount
+- (void)configureGaimAccount
 {
-	[super createNewGaimAccount];
+	[super configureGaimAccount];
 	
 	BOOL HTTPConnect = [[self preferenceForKey:KEY_MSN_HTTP_CONNECT_METHOD group:GROUP_ACCOUNT_STATUS] boolValue];
 	gaim_account_set_bool(account, "http_method", HTTPConnect);

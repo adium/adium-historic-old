@@ -44,6 +44,10 @@
         {
             CLASS = ESGaimMeanwhileAccountViewController; 
             LANGUAGE = ObjC; 
+            OUTLETS = {
+                "popUp_contactList" = NSPopUpButton; 
+                "textField_contactListWarning" = NSTextField; 
+            }; 
             SUPERCLASS = ESGaimAccountViewController; 
         }, 
         {

@@ -7,6 +7,9 @@
 
 #import "CBGaimAccount.h"
 
+#define	KEY_NAPSTER_HOST	@"Napster:Host"
+#define	KEY_NAPSTER_PORT	@"Napster:Port"
+
 @interface ESGaimNapsterAccount : CBGaimAccount {
     
 }

@@ -7,7 +7,8 @@
 #include "ESGaimAccountViewController.h"
 
 @interface ESGaimMeanwhileAccountViewController : ESGaimAccountViewController {
-
+	IBOutlet	NSPopUpButton	*popUp_contactList;
+	IBOutlet	NSTextField		*textField_contactListWarning;
 }
 
 @end

@@ -47,6 +47,9 @@
 	<key>Trepia:Port</key>
 	<integer>8201</integer>
 	
+	<key>Meanwhile:ContactList</key>
+	<integer>2</integer>
+	
 	<key>Proxy Type</key>
 	<integer>1</integer>
 	<key>Proxy Needs Authentication</key>

@@ -26,9 +26,9 @@
     [super configureForAccount:inAccount];
     
 	CBGaimAccount           *theAccount = (CBGaimAccount *)inAccount;
-	NSString		*hostName, *proxyHostName, *proxyUserName, *proxyPassword;
-	NSNumber		*proxyTypeNumber, *proxyPortNumber;
-        NSData                  *data;
+	NSString				*hostName, *proxyHostName, *proxyUserName, *proxyPassword;
+	NSNumber				*proxyTypeNumber, *proxyPortNumber;
+	NSData                  *data;
 	int                     port;
 	
 	//Host name
