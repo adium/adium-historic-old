@@ -617,7 +617,7 @@
     [toolbar setAutosavesConfiguration:YES];
 	
     //
-    toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", nil]] retain];
+	toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", @"TextEntry", nil]] retain];
     [[self window] setToolbar:toolbar];
 }
 
@@ -628,7 +628,7 @@
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
-    return([NSArray arrayWithObjects:@"ShowInfo", NSToolbarSeparatorItemIdentifier, @"NewMessage", NSToolbarFlexibleSpaceItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, @"ShowPreferences", nil]);
+    return([NSArray arrayWithObjects:@"ShowInfo", NSToolbarSeparatorItemIdentifier, @"InsertEmoticon", NSToolbarFlexibleSpaceItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, @"ShowPreferences", nil]);
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
