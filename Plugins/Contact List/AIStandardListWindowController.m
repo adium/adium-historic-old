@@ -59,7 +59,7 @@
     [toolbar setAutosavesConfiguration:YES];
 	
     //
-    toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", nil]] retain];
+    toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", @"ContactList",nil]] retain];
     [[self window] setToolbar:toolbar];
 }
 

@@ -597,7 +597,7 @@
     [toolbar setAutosavesConfiguration:YES];
 	
     //
-	toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", @"TextEntry", @"ContactList", nil]] retain];
+	toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", @"TextEntry", nil]] retain];
     [[self window] setToolbar:toolbar];
 }
 
@@ -645,7 +645,6 @@
 	
 		image = [[[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat] listObject] userIcon];
 		[(ESFlexibleToolbarItem *)[inToolbarItem view] setImage:image];
-		NSLog(@"validate %@",inToolbarItem);
 	
 		toolbar_selectedTabChanged = NO;
 	}
