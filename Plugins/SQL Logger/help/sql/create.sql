@@ -230,7 +230,7 @@ do instead  (
     (select user_id from im.users
     where username = lower(new.recipient_sn) and service ilike new.recipient_service),
     1,
-    date_trunc('month', new.message_date)::date
+    date_trunc('month', coalesce(new.message_date, now()))::date
     where not exists
         (select 'x' from im.user_statistics
         where sender_id = (select user_id from im.users where username =
