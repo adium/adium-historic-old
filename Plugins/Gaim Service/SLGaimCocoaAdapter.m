@@ -1309,7 +1309,7 @@ static void adiumGaimWebcamFrameFinished(GaimWebcam *wc, unsigned int id)
 	NSLog(@"adiumGaimWebcamFrameFinished");
 	
 	NSBitmapImageRep *rep;
-	rep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:[frameData bytes]
+	rep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:(unsigned char **)[frameData bytes]
 												  pixelsWide:320
 												  pixelsHigh:240
 											   bitsPerSample:8
@@ -1321,8 +1321,8 @@ static void adiumGaimWebcamFrameFinished(GaimWebcam *wc, unsigned int id)
 												bitsPerPixel:0]; 
 	
 	NSLog(@"rep = %@",rep);
-#warning we are in a gthread because of my idle hack in the codec, so we cant do anything in here...
-//	[[AIObject sharedAdiumInstance] performSelectorOnMainThread:@selector(showImage:) withObject:rep waitUntilDone:NO];
+
+	//	[[AIObject sharedAdiumInstance] performSelectorOnMainThread:@selector(showImage:) withObject:rep waitUntilDone:NO];
 
 //	NSImage *tmp = [[NSImage alloc] init];
 //	[tmp addRepresentation:rep];
