@@ -111,6 +111,7 @@ BOOL pantherOrLater;
         
     // Paint the buddy icon or placeholder
     if (buddyIconLabelColor) {
+        NSSize      shadowSize;
         tempPoint.x = 80.0;
         tempPoint.y = 148.0;
         tempRect.size.width = 52.0;
@@ -118,6 +119,12 @@ BOOL pantherOrLater;
         tempRect.origin = tempPoint;
         [buddyIconLabelColor set];
         [NSBezierPath fillRect:tempRect];
+        
+        shadowSize.width = 0.0;
+        shadowSize.height = 0.0;
+        [tempShadow setShadowOffset:shadowSize];
+        [tempShadow setShadowBlurRadius:0.0];
+        [tempShadow set];
     }
     tempPoint.x = 82.0;
     tempPoint.y = 150.0;

@@ -90,7 +90,7 @@
         NSDictionary    *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
         
         showEventBezel = [[preferenceDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue];
-        [ebc setBezelPosition: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_POSITION] intValue]];
+        prefsPosition = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_POSITION] intValue];
         
         [eventArray removeAllObjects];
         if ([[preferenceDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue])
@@ -134,7 +134,7 @@
     NSImage                     *tempBuddyIcon = nil;
     NSString                    *statusMessage = nil;
     NSDictionary                *colorPreferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
-
+    
     if ([notificationName isEqualToString:Content_FirstContentRecieved]) {
         contact = [[[notification object] participatingListObjects] objectAtIndex:0];
         isFirstMessage = YES;
@@ -184,6 +184,10 @@
     } else if ([notificationName isEqualToString: Content_FirstContentRecieved]) {
         tempEvent = @"says";
         [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
+    }
+    
+    if ([ebc bezelPosition] != prefsPosition) {
+        [ebc setBezelPosition: prefsPosition];
     }
     
     [ebc showBezelWithContact: [contact longDisplayName]

@@ -31,6 +31,7 @@
     
     NSMutableArray              *eventArray;
     BOOL                        showEventBezel;
+    int                         prefsPosition;
 }
 
 @end
