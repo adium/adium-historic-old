@@ -83,6 +83,7 @@
             CLASS = AIMenuController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "menuItem_Format_Italics" = NSMenuItem; 
                 "menu_Adium_About" = NSMenuItem; 
                 "menu_Adium_Preferences" = NSMenuItem; 
                 "menu_Contact_Action" = NSMenuItem; 
