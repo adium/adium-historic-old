@@ -30,7 +30,11 @@
 //Return our current configuration
 - (NSDictionary *)actionDetails
 {
-	return([NSDictionary dictionaryWithObject:[view_textToSpeak string] forKey:KEY_ANNOUNCER_TEXT_TO_SPEAK]);
+	if([view_textToSpeak string]){
+		return([NSDictionary dictionaryWithObject:[view_textToSpeak string] forKey:KEY_ANNOUNCER_TEXT_TO_SPEAK]);
+	}else{
+		return(nil);
+	}
 }
 	
 @end
