@@ -20546,7 +20546,7 @@
 			sourceTree = "<group>";
 		};
 		6576A01305026B4F000EB664 = {
-			expectedFileType = file;
+			expectedFileType = wrapper.framework;
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
 			name = acid.framework;
@@ -25645,7 +25645,7 @@
 			sourceTree = "<group>";
 		};
 		F5A3238104A7C61201888466 = {
-			expectedFileType = file;
+			expectedFileType = folder;
 			fallbackIsa = PBXFileReference;
 			isa = PBXBundleReference;
 			path = "MX LaTeX Plugin.AdiumPlugin";
