@@ -24,6 +24,16 @@
     return(CONTENT_TYPING_TYPE);
 }
 
+- (BOOL)filterObject
+{
+    return(NO); //There is no need to filter typing content
+}
+
+- (BOOL)trackObject
+{
+    return(NO); //Typing content should NOT be tracked by contacts
+}
+
 //Message source (may return a contact handle, or an account)
 - (id)source{
     return(source);

@@ -191,6 +191,8 @@ typedef enum {
 - (NSString *)type;		//Return the unique type identifier for this object
 - (id)source;
 - (id)destination;
+- (BOOL)filterObject;	//If NO, this content is not passed through the content filters
+- (BOOL)trackObject;	//If NO, this content is not tracked.  This means it's NOT stored within the contact, and sending notifications are NOT broadcast
 @end
 
 @protocol AIContentFilter
@@ -306,6 +308,7 @@ typedef enum {
 - (void)invokeDefaultHandlerForObject:(id <AIContentObject>)inObject;
 
 //Sending / Receiving content
+- (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount;
 - (void)addIncomingContentObject:(id <AIContentObject>)inObject;
 - (BOOL)sendContentObject:(id <AIContentObject>)inObject;
 
@@ -355,9 +358,6 @@ typedef enum {
 - (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(NSString *)serviceID UID:(NSString *)UID serverGroup:(NSString *)serverGroup create:(BOOL)create;
 - (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups;
 - (AIListGroup *)groupInGroup:(AIListGroup *)inGroup withUID:(NSString *)UID;
-
-//Handle access
-- (AIHandle *)handleOfContact:(AIListContact *)inContact forReceivingContentType:(NSString *)inType fromAccount:(AIAccount *)inAccount;
 
 //Contact status & Attributes
 - (void)handleStatusChanged:(AIHandle *)inHandle modifiedStatusKeys:(NSArray *)inModifiedKeys;

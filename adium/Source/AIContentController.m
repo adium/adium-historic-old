@@ -155,40 +155,60 @@
 {
     AIListContact 	*contact = [inObject destination];
     BOOL		sent = NO;
-
-    if(contact){
-        NSEnumerator		*enumerator;
-        id<AIContentFilter>	filter;
-        
-        //Will send content
-        [[owner notificationCenter] postNotificationName:Content_WillSendContent object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+    BOOL		trackContent = [inObject trackObject];	//Adium should track this content
+    BOOL		filterContent = [inObject filterObject]; //Adium should filter this content
     
-        //Filter the object
-        enumerator = [outgoingContentFilterArray objectEnumerator];
-        while((filter = [enumerator nextObject])){
-            [filter filterContentObject:inObject];
+    if(contact){
+        //Will send content
+        if(trackContent){
+            [[owner notificationCenter] postNotificationName:Content_WillSendContent object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+        }
+
+        //Filter the content object
+        if(filterContent){
+            NSEnumerator	*enumerator;
+            id<AIContentFilter>	filter;
+            
+            enumerator = [outgoingContentFilterArray objectEnumerator];
+            while((filter = [enumerator nextObject])){
+                [filter filterContentObject:inObject];
+            }
         }
     
         //Send the object
         if([(AIAccount <AIAccount_Content> *)[inObject source] sendContentObject:inObject]){
-            //Add the object
-            [contact addContentObject:inObject];
+            if(trackContent){
+                //Add the object
+                [contact addContentObject:inObject];
 
-            //Set 'UnrespondedContent' to NO  (This could be done by a seperate plugin, but I'm not sure that's necessary)
-            [[contact statusArrayForKey:@"UnrespondedContent"] setObject:[NSNumber numberWithBool:NO] withOwner:contact];
-            [[owner contactController] contactStatusChanged:contact modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
+                //Set 'UnrespondedContent' to NO  (This could be done by a seperate plugin, but I'm not sure that's necessary)
+                [[contact statusArrayForKey:@"UnrespondedContent"] setObject:[NSNumber numberWithBool:NO] withOwner:contact];
+                [[owner contactController] contactStatusChanged:contact modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
 
-            //Content object added
-            [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+                //Content object added
+                [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 
-            //Did send content
-            [[owner notificationCenter] postNotificationName:Content_DidSendContent object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+                //Did send content
+                [[owner notificationCenter] postNotificationName:Content_DidSendContent object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+            }
 
             sent = YES;
         }
     }
 
     return(sent);
+}
+
+//Is an account available for sending content?
+- (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount
+{
+    AIHandle	*handle = [inContact handleForAccount:inAccount];
+
+    if([inAccount conformsToProtocol:@protocol(AIAccount_Content)]){
+        return([(AIAccount <AIAccount_Content> *)inAccount availableForSendingContentType:inType toHandle:handle]);
+    }else{
+        return(NO);
+    }
 }
 
 @end

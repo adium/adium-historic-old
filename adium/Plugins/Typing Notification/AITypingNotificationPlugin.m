@@ -73,16 +73,12 @@
 - (void)_sendTyping:(BOOL)typing toContact:(AIListContact *)contact onAccount:(AIAccount *)account
 {
     AIContentTyping	*contentObject;
-    AIHandle		*handle;
     NSString		*key;
 
-    //Get the dest handle
-    handle = [[owner contactController] handleOfContact:contact forReceivingContentType:CONTENT_MESSAGE_TYPE fromAccount:account];
-
-    //Send typing content object (Directly to the account)
+    //Send typing content object (It will go directly to the account since typing content isn't tracked or filtered)
     contentObject = [AIContentTyping typingContentWithSource:account destination:contact typing:typing];
-    [(AIAccount <AIAccount_Content> *)account sendContentObject:contentObject];
-        
+    [[owner contentController] sendContentObject:contentObject];
+    
     //Remember the state
     key = [NSString stringWithFormat:@"(%@)%@",[account accountID],[contact UIDAndServiceID]];
     if(typing){

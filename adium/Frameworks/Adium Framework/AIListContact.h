@@ -16,7 +16,7 @@
 #import <Foundation/Foundation.h>
 #import "AIListObject.h"
 
-@class AIHandle;
+@class AIHandle, AIAccount;
 @protocol AIContentObject;
 
 @interface AIListContact : AIListObject {
@@ -34,7 +34,8 @@
 //Contained Handles
 //- (unsigned)handleCount;
 //- (id)handleAtIndex:(unsigned)index;
-- (NSEnumerator *)handleEnumerator;
+//- (NSEnumerator *)handleEnumerator;
+- (AIHandle *)handleForAccount:(AIAccount *)inAccount;
 - (void)addHandle:(AIHandle *)inHandle;
 - (void)removeHandle:(AIHandle *)inHandle;
 - (void)removeAllHandles;
