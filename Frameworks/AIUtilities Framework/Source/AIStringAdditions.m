@@ -73,6 +73,19 @@
 	return [self stringByAppendingString:[NSString stringWithUTF8String:"\xE2\x80\xA6"]];
 }
 
+- (NSString *)stringByTranslatingByOffset:(int)offset
+{
+	NSMutableString	*newString = [NSMutableString string];
+	unsigned		i, length = [self length];
+
+	for(i = 0 ; i < length ; i++){
+		/* Offset by the desired amount */
+		[newString appendFormat:@"%C",([self characterAtIndex:i] + offset)];
+	}
+	
+	return newString;
+}
+
 /*	compactedString
  *	returns the string in all lowercase without spaces
  */
@@ -454,7 +467,6 @@
 		}
 	}
 	
-//	NSLog(@"escaped string: %@\ninto string: %@", self, result);
 	return result;
 }
 
@@ -472,7 +484,6 @@
 	
 	do {
 		if([scanner scanUpToString:ampersand intoString:&segment] || [self characterAtIndex:[scanner scanLocation]] == '&') {
-//			NSLog(@"scanned to ampersand");
 			if(segment) {
 				[result appendString:segment];
 				segment = nil;
@@ -483,25 +494,27 @@
 		}
 		if([scanner scanUpToString:semicolon intoString:&entity]) {
 			unsigned number;
-			if([entity characterAtIndex:0] == '#') {
-//				NSLog(@"it's numeric: entity is %@", entity);
-				NSScanner *numScanner = [NSScanner scannerWithString:entity];
+			if([entity characterAtIndex:0] == '#'){
+				NSScanner	*numScanner;
+				unichar		secondCharacter;
+				BOOL		appendIt = NO;
+
+				numScanner = [NSScanner scannerWithString:entity];
 				[numScanner setCaseSensitive:YES];
-				unichar secondCharacter = [entity characterAtIndex:1];
-				BOOL appendIt = NO;
-				if(secondCharacter == 'x' || secondCharacter == 'X') {
+				secondCharacter = [entity characterAtIndex:1];
+				
+				if(secondCharacter == 'x' || secondCharacter == 'X'){
 					//hexadecimal: "#x..." or "#X..."
-//					NSLog(@"characterAtIndex:2 == '%C'", [entity characterAtIndex:2]);
 					[numScanner setScanLocation:2];
 					appendIt = [numScanner scanHexInt:&number];
-				} else {
+					
+				}else{
 					//decimal: "#..."
-//					NSLog(@"characterAtIndex:1 == '%C'", [entity characterAtIndex:1]);
 					[numScanner setScanLocation:1];
 					appendIt = [numScanner scanUnsignedInt:&number];
 				}
-//				NSLog(@"appendIt: %u", appendIt);
-				if(appendIt) {
+
+				if(appendIt){
 					unichar chars[2] = { number, 0xffff };
 					CFIndex length = 1;
 					if(number > 0xffff) {
@@ -524,8 +537,7 @@
 						nil];
 				}
 				number = [[entityNames objectForKey:[entity lowercaseString]] unsignedIntValue];
-//				NSLog(@"named entity: entity value for name @\"%@\" is (0x%x) '%C'", [entity lowercaseString], (unichar)number, number);
-				if(number) {
+				if(number){
 					[result appendFormat:@"%C", (unichar)number];
 				}
 			}
