@@ -13,6 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+//$Id: LNAboutBoxController.m,v 1.24 2003/12/14 05:28:57 jmelloy Exp $
+
 #import "LNAboutBoxController.h"
 
 #define ABOUT_BOX_NIB			@"AboutBox"
