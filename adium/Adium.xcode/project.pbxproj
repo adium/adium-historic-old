@@ -8911,7 +8911,7 @@
 			children = (
 				4B149D4B0678FB5300D74D43,
 				4BF2DCC7067C919300743318,
-				4BF4A29F067CC6E700DCE812,
+				4BD48E47067CF94000BA8DE6,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -14419,6 +14419,21 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4BD48E47067CF94000BA8DE6 = {
+			fileType = "compiled.mach-o.dylib";
+			isa = PBXReferenceProxy;
+			path = libezv.dylib;
+			refType = 3;
+			remoteRef = 4BD48F63067CF95F00BA8DE6;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4BD48F63067CF95F00BA8DE6 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
+			remoteInfo = libezv;
+		};
 		4BD6720906001B2C0049CAF7 = {
 			children = (
 				346C9BCD060044F3000F5A8A,
@@ -17236,21 +17251,6 @@
 			path = "Plugins/Auto Linking/AIAutoLinkingPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4BF4A29F067CC6E700DCE812 = {
-			fileType = "compiled.mach-o.dylib";
-			isa = PBXReferenceProxy;
-			path = libezv.dylib;
-			refType = 3;
-			remoteRef = 4BF4A38F067CC6F100DCE812;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4BF4A38F067CC6F100DCE812 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
 		};
 		4BF5BA10042F3CB200A8010A = {
 			fileEncoding = 30;
