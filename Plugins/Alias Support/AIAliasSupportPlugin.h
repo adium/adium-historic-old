@@ -30,7 +30,4 @@
     int 							displayFormat;
 }
 
-- (void)installPlugin;
-- (void)preferencesChanged:(NSNotification *)notification;
-
 @end
