@@ -44,6 +44,9 @@
 - (const char*)protocolPlugin { return NULL; }
 
 
+#warning remove gets called on disconnect for all the buddies
+#warning we end up w/ negative group counts
+
 
 //
 - (void)_setInstantMessagesWithContact:(AIListContact *)contact enabled:(BOOL)enable
@@ -168,7 +171,7 @@
     if(theContact){
 		[theContact setRemoteGroupName:nil forAccount:self];
 		[self removeAllStatusFlagsFromContact:theContact];
-		
+
 		[theContact release];
         buddy->node.ui_data = NULL;
     }
@@ -699,6 +702,7 @@
 	while(key = [enumerator nextObject]){
 		[contact setStatusObject:nil withOwner:self forKey:key notify:NO];
 	}
+	[contact notifyOfChangedStatusSilently:YES];
 }
 
 - (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing
@@ -804,12 +808,13 @@
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
     
     //Flush all our handle status flags
-#warning (Intentional) This is dreadfully inefficient.  Is there a faster solution to disconnecting?
-    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
-    while((contact = [enumerator nextObject])){
-        [self removeAllStatusFlagsFromContact:contact];
-		[contact setRemoteGroupName:nil forAccount:self];
-    }
+//#warning (Intentional) This is dreadfully inefficient.  Is there a faster solution to disconnecting?
+//libgaim does this for us w/ remove messages
+//    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+//    while((contact = [enumerator nextObject])){
+//        [self removeAllStatusFlagsFromContact:contact];
+////		[contact setRemoteGroupName:nil forAccount:self];
+//    }
     
     //Clear out the GaimConv pointers in the chat statusDictionaries, as they no longer have meaning
     AIChat *chat;
@@ -826,10 +831,10 @@
     
     //If we were disconnected unexpectedly, attempt a reconnect
     if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
-	if (reconnectAttemptsRemaining) {
-	    [self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
-	    reconnectAttemptsRemaining--;
-	}
+		if (reconnectAttemptsRemaining) {
+			[self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
+			reconnectAttemptsRemaining--;
+		}
     }
 }
 
