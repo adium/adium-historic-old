@@ -116,19 +116,17 @@
         }
         
         if(awayMessage && [awayMessage length] != 0){
-            AIListContact	*contact = [contentObject source];
-            
-            //Create and send an away bounce message (If the sender hasn't received one already)
-            if(![receivedAwayMessage containsObject:[contact UIDAndServiceID]]){
+            AIChat	*chat = [contentObject chat];
+            //Create and send an idle bounce message (If the sender hasn't received one already)
+            if([receivedAwayMessage indexOfObjectIdenticalTo:chat] == NSNotFound){
                 AIContentMessage	*responseContent;
                 
-                responseContent = [AIContentMessage messageInChat:[contentObject chat]
+                responseContent = [AIContentMessage messageInChat:chat
                                                        withSource:[contentObject destination]
-                                                      destination:contact
+                                                      destination:[contentObject source]
                                                              date:nil
                                                           message:awayMessage
                                                         autoreply:YES];
-                
                 [[adium contentController] sendContentObject:responseContent];
             }
         }
@@ -141,12 +139,10 @@
     AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
     
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        AIListContact	*contact = (AIListContact *)[[contentObject chat] listObject];
-        NSString 	*senderUID = [contact UIDAndServiceID];
+        AIChat	*chat = [contentObject chat];
         
-        //Add the handle's UID to our 'already received away message' array, so they only receive the message once.
-        if(![receivedAwayMessage containsObject:senderUID]){
-            [receivedAwayMessage addObject:senderUID];
+        if([receivedAwayMessage indexOfObjectIdenticalTo:chat] == NSNotFound){
+            [receivedAwayMessage addObject:chat];
         }
     }
 }
