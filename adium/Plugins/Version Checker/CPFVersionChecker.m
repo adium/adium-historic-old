@@ -50,11 +50,9 @@
 - (void)adiumIsUpToDate:(BOOL)upToDate
 {
     if(upToDate) {
-		NSRunAlertPanel(AILocalizedString(@"Adium is up to date",
-										  @"Adium up to date."),
-						AILocalizedString(@"You have the most recent version of Adium.",
-										  @"Adium is "),
-						AILocalizedString(@"OK", @"OK"), nil, nil);
+		NSRunAlertPanel(AILocalizedString(@"Adium is up to date",nil),
+						AILocalizedString(@"You have the most recent version of Adium.",nil),
+						AILocalizedString(@"OK",nil), nil, nil);
     } else {
         NSDate *latestDate = [NSDate dateWithTimeIntervalSince1970:latestBuildUnixDate];
         NSDate *currentDate = [NSDate dateWithTimeIntervalSince1970:currentBuildUnixDate];
@@ -64,7 +62,7 @@
 		NSString   *latestDateString = [dateFormatter stringForObjectValue:[NSDate dateWithTimeIntervalSince1970:latestBuildUnixDate]];
 		
 		//Number of days or weeks old the current version is
-		int daysOld = [latestDate timeIntervalSinceDate:currentDate]/60/60/24;
+		double daysOld = [latestDate timeIntervalSinceDate:currentDate]/60/60/24;
 		int interval;
 		NSString   *intervalIndicator;
 		if (daysOld >= 7){
@@ -74,12 +72,19 @@
 			}else{
 				intervalIndicator = AILocalizedString(@"week",nil);
 			}
-		}else{
+		}else if (daysOld >= 1){
 			interval = daysOld;
 			if (interval > 1){
 				intervalIndicator = AILocalizedString(@"days",nil);
 			}else{
 				intervalIndicator = AILocalizedString(@"day",nil);
+			}
+		}else{
+			interval = daysOld/24;
+			if (interval > 1){
+				intervalIndicator = AILocalizedString(@"hours",nil);
+			}else{
+				intervalIndicator = AILocalizedString(@"hour",nil);
 			}
 		}
 		
