@@ -60,11 +60,11 @@
 		
     //Install the contact info view
     [NSBundle loadNibNamed:CONTACT_ALIAS_NIB owner:self];
-    contactView = [[AIPreferenceViewController controllerWithName:@"Alias" 
-													 categoryName:@"None" 
-															 view:view_contactAliasInfoView 
-														 delegate:self] retain];
-    [[adium contactController] addContactInfoView:contactView];
+//    contactView = [[AIPreferenceViewController controllerWithName:@"Alias" 
+//													 categoryName:@"None" 
+//															 view:view_contactAliasInfoView 
+//														 delegate:self] retain];
+#warning    [[adium contactController] addContactInfoView:contactView];
     
 	//Create the menu item
 	menuItem_contactName = [[[NSMenuItem alloc] initWithTitle:CONTACT_NAME_MENU_TITLE

@@ -13,11 +13,12 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.41 2004/04/07 13:23:12 adamiser Exp $
+// $Id: AIPreferenceWindowController.m,v 1.42 2004/05/23 17:33:50 adamiser Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
 #import "AIPreferenceController.h"
+#import "AIPreferenceCategoryView.h"
 
 #define PREFERENCE_WINDOW_NIB					@"PreferenceWindow"	//Filename of the preference window nib
 #define TOOLBAR_PREFERENCE_WINDOW				@"PreferenceWindow"	//Identifier for the preference toolbar
@@ -26,25 +27,27 @@
 #define	KEY_PREFERENCE_WINDOW_FRAME				@"Preference Window Frame"
 #define KEY_PREFERENCE_SELECTED_CATEGORY		@"Preference Selected Category"
 #define KEY_ADVANCED_PREFERENCE_SELECTED_ROW    @"Preference Advanced Selected Row"
-#define FLAT_PADDING_OFFSET                     45
 #define PREFERENCE_WINDOW_TITLE					@"Preferences"
 #define PREFERENCE_PANE_ARRAY					@"PaneArray"
 #define PREFERENCE_GROUP_NAME					@"GroupName"
 #define ADVANCED_PANE_HEIGHT					300
+#define TAB_PADDING_OFFSET						45
+#define FRAME_PADDING_OFFSET					2
 
 @interface AIPreferenceWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)configureToolbarItems;
 - (void)installToolbar;
-- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIFlippedCategoryView *)inView showContainers:(BOOL)includeContainers;
-- (void)_insertPanes:(NSArray *)paneArray intoView:(AIFlippedCategoryView *)inView showContainers:(BOOL)includeContainers;
+- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIPreferenceCategoryView *)inView showContainers:(BOOL)includeContainers;
+- (void)_insertPanes:(NSArray *)paneArray intoView:(AIPreferenceCategoryView *)inView showContainers:(BOOL)includeContainers;
 - (void)_sizeWindowToFitTabView:(NSTabView *)tabView;
-- (void)_sizeWindowToFitFlatView:(AIFlippedCategoryView *)view;
+- (void)_sizeWindowToFitFlatView:(AIPreferenceCategoryView *)view;
 - (void)_sizeWindowForContentHeight:(int)height;
 - (IBAction)restoreDefaults:(id)sender;
-- (NSArray *)advancedCategoryArray;
 - (NSDictionary *)_createGroupNamed:(NSString *)inName forCategory:(PREFERENCE_CATEGORY)category;
 - (NSArray *)_prefsInCategory:(PREFERENCE_CATEGORY)category;
+- (int)_heightForFlatView:(AIPreferenceCategoryView *)view;
+- (int)_heightForTabView:(NSTabView *)tabView;
 @end
 
 @implementation AIPreferenceWindowController
@@ -96,13 +99,16 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     }
 }
 
-// Internal --------------------------------------------------------------------
+
+
+
+
+//Internal -------------------------------------------------------------------------------------------------------------
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
     [super initWithWindowNibName:windowNibName];
 
     //Retain our owner
-    toolbarItems = [[NSMutableDictionary dictionary] retain];
     loadedPanes = [[NSMutableArray alloc] init];
     _advancedCategoryArray = nil;
     loadedAdvancedPanes = nil;
@@ -112,10 +118,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 
 - (void)dealloc
 {
-    [toolbarItems release];
+	[self configureAdvancedPreferencesForPane:nil];
+
     [loadedPanes release];
-    [loadedAdvancedPanes release];
-    [_advancedCategoryArray release];
 
     [super dealloc];
 }
@@ -127,11 +132,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     int             selectedTab;
     NSTabViewItem   *tabViewItem;
     
-    //Remember the amount of vertical padding to our window's frame
-    yPadding = [[self window] frame].size.height;
-
     //
-    [self installToolbar];
     [outlineView_advanced setIndentationPerLevel:10];
     [coloredBox_advancedTitle setColor:[NSColor colorWithCalibratedWhite:0.0 alpha:0.15]];
  
@@ -147,12 +148,12 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[button_restoreDefaults setEnabled:YES];
 	
     //Restore the window position
-    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_WINDOW_FRAME];
-    if(savedFrame){
-        [[self window] setFrameFromString:savedFrame];
-    }else{
-        [[self window] center];
-    }
+//    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_WINDOW_FRAME];
+//    if(savedFrame){
+//        [[self window] setFrameFromString:savedFrame];
+//    }else{
+//        [[self window] center];
+//    }
 	
     //Let everyone know we will open
     [[adium notificationCenter] postNotificationName:Preference_WindowWillOpen object:nil];
@@ -167,7 +168,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 //called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
-	
 	//Save toolbar state
 	NSToolbar *toolbar = [[self window] toolbar];
 
@@ -178,6 +178,10 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 										 forKey:KEY_PREFERENCE_WINDOW_TOOLBAR_SIZE
 										  group:PREF_GROUP_GENERAL];
 	
+	//Save selection
+	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[outlineView_advanced selectedRow]]
+										 forKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW
+										  group:PREF_GROUP_WINDOW_POSITIONS];
 	
     NSEnumerator	*enumerator;
     AIPreferencePane	*pane;
@@ -206,70 +210,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     return(YES);
 }
 
-//Install our toolbar
-- (void)installToolbar
-{
-    NSToolbar *toolbar;
-
-    //init the toolbar
-    toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_PREFERENCE_WINDOW] autorelease];
-    [self configureToolbarItems];
-    
-    [toolbar setDelegate:self];
-    [toolbar setAllowsUserCustomization:NO];
-    [toolbar setAutosavesConfiguration:NO];
-	
-//    [toolbar setDisplayMode: NSToolbarDisplayModeIconAndLabel];
-//    [toolbar setSizeMode: NSToolbarSizeModeRegular];
-	
-	[toolbar setDisplayMode:[[[adium preferenceController] preferenceForKey:KEY_PREFERENCE_WINDOW_TOOLBAR_DISPLAY
-																	  group:PREF_GROUP_GENERAL] intValue]];
-	[toolbar setSizeMode:[[[adium preferenceController] preferenceForKey:KEY_PREFERENCE_WINDOW_TOOLBAR_SIZE
-																   group:PREF_GROUP_GENERAL] intValue]];
-	
-    //install it
-    [[self window] setToolbar:toolbar];
-}
-
-//Configure the toolbar items
-- (void)configureToolbarItems
-{
-    NSEnumerator	*enumerator;
-    NSTabViewItem	*tabViewItem;
-    
-    enumerator = [[tabView_category tabViewItems] objectEnumerator];
-    
-    while((tabViewItem = [enumerator nextObject])){
-        NSString 	*identifier = [tabViewItem identifier];
-        NSString	*label = [tabViewItem label];
-
-        if(![toolbarItems objectForKey:identifier]){
-            [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
-                                    withIdentifier:identifier
-                                             label:label
-                                      paletteLabel:label
-                                           toolTip:label
-                                            target:self
-                                   settingSelector:@selector(setImage:)
-                                               itemContent:[NSImage imageNamed:[NSString stringWithFormat:@"pref%@",identifier] forClass:[self class]]
-                                            action:@selector(selectCategory:)
-                                              menu:NULL];
-        }
-    }
-
-    [[[self window] toolbar] setConfigurationFromDictionary:toolbarItems];
-}
-
-//Select the category that invoked this method
-- (IBAction)selectCategory:(id)sender
-{
-    //Take focus away from any controls to ensure that they register changes and save
-    [[self window] makeFirstResponder:tabView_category];
-    
-    //Select the corresponding tab
-    [tabView_category selectTabViewItemWithIdentifier:[sender itemIdentifier]];
-}
-
 //
 - (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
@@ -282,49 +222,39 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
         switch(identifier){
             case 1:
                 [self _insertPanesForCategory:AIPref_Accounts intoView:view_Accounts showContainers:NO];
-                [self _sizeWindowToFitFlatView:view_Accounts];
             break;
             case 2:
                 [self _insertPanesForCategory:AIPref_ContactList_General intoView:view_ContactList_General showContainers:YES];
                 [self _insertPanesForCategory:AIPref_ContactList_Groups intoView:view_ContactList_Groups showContainers:YES];
                 [self _insertPanesForCategory:AIPref_ContactList_Contacts intoView:view_ContactList_Contacts showContainers:YES];
-                [self _sizeWindowToFitTabView:tabView_contactList];
             break;
             case 3:
                 [self _insertPanesForCategory:AIPref_Messages_Display intoView:view_Messages_Display showContainers:YES];
                 [self _insertPanesForCategory:AIPref_Messages_Sending intoView:view_Messages_Sending showContainers:YES];
-                [self _sizeWindowToFitTabView:tabView_messages];
             break;
             case 4:
                 [self _insertPanesForCategory:AIPref_Status_Away intoView:view_Status_Away showContainers:YES];
                 [self _insertPanesForCategory:AIPref_Status_Idle intoView:view_Status_Idle showContainers:YES];
-                [self _sizeWindowToFitTabView:tabView_status];
             break;
             case 5:
                 [self _insertPanesForCategory:AIPref_Dock intoView:view_Dock showContainers:YES];
-                [self _sizeWindowToFitFlatView:view_Dock];
             break;
             case 6:
                 [self _insertPanesForCategory:AIPref_Sound intoView:view_Sound showContainers:YES];
-                [self _sizeWindowToFitFlatView:view_Sound];
             break;
             case 7:
                 [self _insertPanesForCategory:AIPref_Emoticons intoView:view_Emoticons showContainers:YES];
-                [self _sizeWindowToFitFlatView:view_Emoticons];
                 break;
             case 8:
-                [self _sizeWindowForContentHeight:ADVANCED_PANE_HEIGHT];
                 [outlineView_advanced reloadData];
-                
-                //Get the previously selected row
-                int previousRow = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW] intValue];
-                //Select it in the table
-                [outlineView_advanced selectRow:previousRow byExtendingSelection:NO];
-                //Force the view to update
-                [self outlineView:outlineView_advanced shouldSelectItem:[outlineView_advanced itemAtRow:previousRow]];
-                
+
+                //Select the previously selected row
+				int row = [[[adium preferenceController] preferenceForKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW
+																	group:PREF_GROUP_WINDOW_POSITIONS] intValue];
+				if([self outlineView:outlineView_advanced shouldSelectItem:[outlineView_advanced itemAtRow:row]]){
+					[outlineView_advanced selectRow:row byExtendingSelection:NO];
+				}
             break;
-                
         }
 
 		//Update the selected toolbar item (10.3 or higher)
@@ -337,18 +267,45 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     [[self window] setTitle:[NSString stringWithFormat:@"%@ : %@",PREFERENCE_WINDOW_TITLE,[tabViewItem label]]];    	
 }
 
+- (NSImage *)tabView:(NSTabView *)tabView imageForTabViewItem:(NSTabViewItem *)tabViewItem
+{
+	return([NSImage imageNamed:[NSString stringWithFormat:@"pref%@",[tabViewItem identifier]] forClass:[self class]]);
+}
+
+- (int)tabView:(NSTabView *)tabView heightForTabViewItem:(NSTabViewItem *)tabViewItem
+{
+	switch([[tabViewItem identifier] intValue]){
+		case 1: return([self _heightForFlatView:view_Accounts]); break;
+		case 2: return([self _heightForTabView:tabView_contactList]); break;
+		case 3: return([self _heightForTabView:tabView_messages]); break;
+		case 4: return([self _heightForTabView:tabView_status]); break;
+		case 5: return([self _heightForFlatView:view_Dock]); break;
+		case 6: return([self _heightForFlatView:view_Sound]); break;
+		case 7: return([self _heightForFlatView:view_Emoticons]); break;
+		case 8: return(ADVANCED_PANE_HEIGHT); break;
+		default: return(0); break;
+	}
+}
+
+
+//Dynamic Content ------------------------------------------------------------------------------------------------------
+#pragma mark Toolbar
 //Insert all the preference panes for the category into the passed view
-- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIFlippedCategoryView *)inView showContainers:(BOOL)includeContainers
+- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory
+					   intoView:(AIPreferenceCategoryView *)inView
+				 showContainers:(BOOL)includeContainers
 {
     [self _insertPanes:[self _prefsInCategory:inCategory] intoView:inView showContainers:includeContainers];    
 }
 
 //Insert the passed preference panes into a view
-- (void)_insertPanes:(NSArray *)paneArray intoView:(AIFlippedCategoryView *)inView showContainers:(BOOL)includeContainers
+- (void)_insertPanes:(NSArray *)paneArray
+			intoView:(AIPreferenceCategoryView *)inView
+	  showContainers:(BOOL)includeContainers
 {
-    NSEnumerator	*enumerator;
+    NSEnumerator		*enumerator;
     AIPreferencePane	*pane;
-    int			yPos = 0;
+    int					yPos = 0;
     
     //Add their views
     enumerator = [paneArray objectEnumerator];
@@ -366,15 +323,14 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     }
     
     //Set the desired height of this view
-    [inView setDesiredHeight:yPos];
+    [inView setDesiredHeight:yPos+2];
 }
 
-//Resize our window to fit the specified tabview
-- (void)_sizeWindowToFitTabView:(NSTabView *)tabView
+- (int)_heightForTabView:(NSTabView *)tabView
 {
     NSEnumerator	*enumerator;
     NSTabViewItem	*tabViewItem;
-    int			maxHeight = 0;
+    int				maxHeight = 0;
 
     //Determine the tallest view contained within this tab view.
     enumerator = [[tabView tabViewItems] objectEnumerator];
@@ -384,7 +340,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 
         subViewEnumerator = [[[tabViewItem view] subviews] objectEnumerator];
         while(subView = [subViewEnumerator nextObject]){
-            int		height = [(AIFlippedCategoryView *)subView desiredHeight];
+            int		height = [(AIPreferenceCategoryView *)subView desiredHeight];
 
             if(height > maxHeight){
                 maxHeight = height;
@@ -392,78 +348,48 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
         }
     }
 
-    //Resize the window
-    [self _sizeWindowForContentHeight:maxHeight];
+	return(maxHeight + TAB_PADDING_OFFSET + FRAME_PADDING_OFFSET);
 }
 
 //Resize our window to fit the specified non-tabbed view
-- (void)_sizeWindowToFitFlatView:(AIFlippedCategoryView *)view
+- (int)_heightForFlatView:(AIPreferenceCategoryView *)view
 {
-    [self _sizeWindowForContentHeight:([view desiredHeight] - FLAT_PADDING_OFFSET)];
+	return([view desiredHeight] + FRAME_PADDING_OFFSET);
 }
 
-//Resize our window to fit the specified content height
-- (void)_sizeWindowForContentHeight:(int)height
-{
-    BOOL	isVisible = [[self window] isVisible];
-    NSRect 	frame = [[self window] frame];
 
-    //Add in window frame padding
-    height += yPadding;
-
-    if([tabView_category respondsToSelector:@selector(setHidden:)]){
-        [tabView_category setHidden:YES];
-    }
-    
-    //Adjust our window's frame
-    frame.origin.y += frame.size.height - height;
-    frame.size.height = height;
-    [[self window] setFrame:frame display:isVisible animate:isVisible];
-
-    if([tabView_category respondsToSelector:@selector(setHidden:)]){
-        [tabView_category setHidden:NO];
-    }
-}
-
-// Restore everything the AIPreferencePane wants restored
+//Advanced Preferences -------------------------------------------------------------------------------------------------
+#pragma mark Advanced Preferences
+//Restore everything the AIPreferencePane wants restored
 - (IBAction)restoreDefaults:(id)sender
 {
-	NSDictionary		*allDefaults;
-	NSDictionary		*defaultsDict;
-	NSString			*group;
-	NSString			*key;
-	
-	//Get the previously selected row
-	int previousRow = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] 
-							objectForKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW] intValue];
-	
-	// Get the restorable prefs dictionary of the pref pane at the active row
-	allDefaults = [(AIPreferencePane *)[outlineView_advanced itemAtRow:previousRow] restorablePreferences];
-	
-	if( allDefaults ) {
-		
-		NSEnumerator	*enumerator = [allDefaults keyEnumerator];
-		
-		// They keys are preference groups, run through all of them
-		while( group = (NSString *)[enumerator nextObject] ) {
-			
-			NSEnumerator	*keyEnum;
-			
-			// Get the pref dictionary for each pref goup
-			defaultsDict = [allDefaults objectForKey:group];
-			keyEnum = [defaultsDict keyEnumerator];
-			
-			while( key = (NSString *)[keyEnum nextObject] ) {
-				//NSLog(@"----Key: %@, Value: %@, Group: %@",key,[defaultsDict objectForKey:key],group);
-				[[adium preferenceController] setPreference:[defaultsDict objectForKey:key]
-													 forKey:key
-													  group:group];
-			}
-		}
-		
-		[self outlineView:outlineView_advanced shouldSelectItem:[outlineView_advanced itemAtRow:previousRow]];
+	int	selectedRow = [outlineView_advanced selectedRow];
+	[[adium preferenceController] resetPreferencesInPane:[outlineView_advanced itemAtRow:selectedRow]];
+}
 
+//Set the displayed advanced pane
+- (void)configureAdvancedPreferencesForPane:(AIPreferencePane *)preferencePane
+{
+	NSEnumerator		*enumerator;
+	AIPreferencePane	*pane;
+	
+	//Close open panes
+	enumerator = [loadedAdvancedPanes objectEnumerator];
+	while(pane = [enumerator nextObject]){
+		[pane closeView];
 	}
+	[view_Advanced removeAllSubviews];
+	[loadedAdvancedPanes release]; loadedAdvancedPanes = nil;
+	
+	//Load new panes
+	if(preferencePane){
+		loadedAdvancedPanes = [[NSArray arrayWithObject:preferencePane] retain];
+		[self _insertPanes:loadedAdvancedPanes intoView:view_Advanced showContainers:NO];
+		[textField_advancedTitle setStringValue:[preferencePane label]];
+	}
+
+	//Disable the "Restore Defaults" button if there's nothing to restore
+	[button_restoreDefaults setEnabled:([preferencePane restorablePreferences] != nil)];
 }
 
 //Returns the advanced preference categories
@@ -485,7 +411,10 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 //
 - (NSDictionary *)_createGroupNamed:(NSString *)inName forCategory:(PREFERENCE_CATEGORY)category
 {
-    return([NSDictionary dictionaryWithObjectsAndKeys:inName, PREFERENCE_GROUP_NAME, [self _prefsInCategory:category], PREFERENCE_PANE_ARRAY, nil]);
+    return([NSDictionary dictionaryWithObjectsAndKeys:
+		inName, PREFERENCE_GROUP_NAME,
+		[self _prefsInCategory:category], PREFERENCE_PANE_ARRAY,
+		nil]);
 }
 
 //Loads, alphabetizes, and caches prefs for the speficied category
@@ -510,49 +439,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     return(paneArray);
 }
 
-//Toolbar item methods
-- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
-{
-    return(YES);
-}
 
-- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
-{
-    return([AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier]);
-}
-
-- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
-{
-    NSMutableArray	*defaultArray;
-    NSEnumerator	*enumerator;
-    NSToolbarItem	*toolbarItem;
-    
-    defaultArray = [[NSMutableArray alloc] init];
-
-    //Build a list of all our toolbar item identifiers
-    enumerator = [toolbarItems objectEnumerator];
-    while((toolbarItem = [enumerator nextObject])){
-        [defaultArray addObject:[toolbarItem itemIdentifier]];
-    }
-
-    //Sort
-    [defaultArray sortUsingSelector:@selector(compare:)];
-    
-    return([defaultArray autorelease]);
-}
-
-- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
-{
-    return([self toolbarDefaultItemIdentifiers:toolbar]);
-}
-
-- (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar
-{
-    return([self toolbarDefaultItemIdentifiers:toolbar]);
-}
-
-
-//Advanced outline view data source
+//Advanced Preferences (Outline View) ----------------------------------------------------------------------------------
+#pragma mark Advanced Preferences (Outline View)
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
     if(item == nil){ //Root
@@ -584,10 +473,12 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 {
     if([item isKindOfClass:[NSDictionary class]]){
         return([[[NSAttributedString alloc] initWithString:[item objectForKey:PREFERENCE_GROUP_NAME]
-                                                attributes:[NSDictionary dictionaryWithObject:[NSFont boldSystemFontOfSize:11] forKey:NSFontAttributeName]] autorelease]);
+                                                attributes:[NSDictionary dictionaryWithObject:[NSFont boldSystemFontOfSize:11]
+																					   forKey:NSFontAttributeName]] autorelease]);
         
     }else if([item isKindOfClass:[AIPreferencePane class]]){
-        float	cellWidth = [outlineView frameOfCellAtColumn:[outlineView indexOfTableColumn:tableColumn] row:[outlineView rowForItem:item]].size.width - 4;
+        float	cellWidth = [outlineView frameOfCellAtColumn:[outlineView indexOfTableColumn:tableColumn]
+														 row:[outlineView rowForItem:item]].size.width - 4;
         return([[(AIPreferencePane *)item label] stringByTruncatingTailToWidth:cellWidth]);
     }
     
@@ -597,50 +488,16 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldSelectItem:(id)item
 {
     if([item isKindOfClass:[AIPreferencePane class]]){
-        NSEnumerator		*enumerator;
-        AIPreferencePane	*pane;
-        
-        //Close open panes
-        enumerator = [loadedAdvancedPanes objectEnumerator];
-        while(pane = [enumerator nextObject]){
-            [pane closeView];
-        }
-        [loadedAdvancedPanes release]; loadedAdvancedPanes = nil;
-        [view_Advanced removeAllSubviews];
-        
-        //Load new panes
-            loadedAdvancedPanes = [[NSArray arrayWithObject:item] retain];
-            [self _insertPanes:loadedAdvancedPanes intoView:view_Advanced showContainers:NO];
-            [textField_advancedTitle setStringValue:[item label]];
-			
-			// Disable the "Restore Defaults" button if there's nothing to restore
-			if( [item restorablePreferences] != nil ) {
-				[button_restoreDefaults setEnabled:YES];
-			} else {
-				[button_restoreDefaults setEnabled:NO];
-			}
-		
+		[self configureAdvancedPreferencesForPane:item];
         return(YES);
     }else{
         return(NO);
     }
 }
 
-- (void)outlineViewSelectionDidChange:(NSNotification *)notification
-{
-    //Save the selected row number
-    [[adium preferenceController] setPreference:[NSNumber numberWithInt:[[notification object] selectedRow]] forKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW group:PREF_GROUP_WINDOW_POSITIONS];
-}
-
 - (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item
 {
     return(YES);
 }
-
-- (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
-{
-    
-}
-
 
 @end

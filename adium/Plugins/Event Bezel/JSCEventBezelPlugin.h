@@ -32,7 +32,7 @@
 
 @class JSCEventBezelPreferences;
 
-@interface JSCEventBezelPlugin : AIPlugin <AIPreferenceViewControllerDelegate, AIActionHandler> {
+@interface JSCEventBezelPlugin : AIPlugin <AIActionHandler> {
     JSCEventBezelController     *ebc;
     JSCEventBezelPreferences    *preferences;
     

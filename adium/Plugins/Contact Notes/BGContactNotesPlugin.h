@@ -17,7 +17,7 @@
 
 @protocol AIListEditorColumnController;
 
-@interface BGContactNotesPlugin : AIPlugin <AIListObjectObserver, AIPreferenceViewControllerDelegate, AIContactListTooltipEntry> {
+@interface BGContactNotesPlugin : AIPlugin <AIListObjectObserver, AIContactListTooltipEntry> {
     IBOutlet    NSView                  *view_contactNotesInfoView;
     IBOutlet	NSTextField             *textField_notes;
     

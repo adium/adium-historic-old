@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.60 2004/05/23 12:52:17 adamiser Exp $
+//$Id: AIPluginController.m,v 1.61 2004/05/23 17:33:50 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -31,7 +31,7 @@
 
 @class AIAccountListPreferencesPlugin, AIAccountMenuAccessPlugin, AIAliasSupportPlugin, AIAlphabeticalSortPlugin,
 AIAutoLinkingPlugin, AIAwayMessagesPlugin, AIAwayStatusWindowPlugin, AIContactAwayPlugin, AIContactIdlePlugin,
-AIContactInfoPlugin, AIContactListEditorPlugin, AIContactOnlineSincePlugin, AIContactSortSelectionPlugin,
+/*AIContactInfoPlugin,*/ AIContactListEditorPlugin, AIContactOnlineSincePlugin, AIContactSortSelectionPlugin,
 AIContactStatusColoringPlugin, AIContactStatusDockOverlaysPlugin, AIContactStatusTabColoringPlugin,
 AIContactWarningLevelPlugin, AIDefaultFormattingPlugin, AIDockAccountStatusPlugin, AIDockBehaviorPlugin,
 AIDockIconSelectionPlugin, AIDockUnviewedContentPlugin, AIDualWindowInterfacePlugin, AIEmoticonsPlugin,
@@ -67,7 +67,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmotico
 	[self loadPluginWithClass:[AIAwayStatusWindowPlugin class]];
 	[self loadPluginWithClass:[AIContactAwayPlugin class]];
 	[self loadPluginWithClass:[AIContactIdlePlugin class]];
-	[self loadPluginWithClass:[AIContactInfoPlugin class]];
+//	[self loadPluginWithClass:[AIContactInfoPlugin class]];
 	[self loadPluginWithClass:[AIContactListEditorPlugin class]];
 	[self loadPluginWithClass:[AIContactOnlineSincePlugin class]];
 	[self loadPluginWithClass:[AIContactSortSelectionPlugin class]];

@@ -13,8 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /** 
- * $Revision: 1.38 $
- *  $Date: 2004/05/02 10:37:27 $
+ * $Revision: 1.39 $
+ *  $Date: 2004/05/23 17:33:46 $
  *  $Author#
  *
  **/
@@ -34,7 +34,6 @@
 #import "AIEmoticon.h"
 #import "AIException.h"
 #import "ESFileTransfer.h"
-#import "AIFlippedCategoryView.h"
 #import "AIIconState.h"
 #import "AIListContact.h"
 #import "AIListGroup.h"
@@ -42,11 +41,10 @@
 #import "AIMessageEntryTextView.h"
 #import "AIMetaContact.h"
 #import "AIModularPane.h"
+#import "AIContactInfoPane.h"
 #import "AIPlugin.h"
-#import "AIPreferenceCategory.h"
 #import "AIPreferencePane.h"
 #import "AIEmoticonPreferences.h"
-#import "AIPreferenceViewController.h"
 #import "AIServiceType.h"
 #import "AISortController.h"
 #import "AIWindowController.h"

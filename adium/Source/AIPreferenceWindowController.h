@@ -13,36 +13,36 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIFlippedCategoryView;
+@class AIPreferenceCategoryView;
 
 @interface AIPreferenceWindowController : AIWindowController {
     IBOutlet	NSTabView					*tabView_category;
 
-    IBOutlet	AIFlippedCategoryView		*view_Accounts;
+    IBOutlet	AIPreferenceCategoryView	*view_Accounts;
 
     IBOutlet	NSTabView					*tabView_contactList;
-    IBOutlet	AIFlippedCategoryView		*view_ContactList_General;
-    IBOutlet	AIFlippedCategoryView		*view_ContactList_Groups;
-    IBOutlet	AIFlippedCategoryView		*view_ContactList_Contacts;
+    IBOutlet	AIPreferenceCategoryView	*view_ContactList_General;
+    IBOutlet	AIPreferenceCategoryView	*view_ContactList_Groups;
+    IBOutlet	AIPreferenceCategoryView	*view_ContactList_Contacts;
 
     IBOutlet	NSTabView					*tabView_messages;
-    IBOutlet	AIFlippedCategoryView		*view_Messages_Display;
-    IBOutlet	AIFlippedCategoryView		*view_Messages_Sending;
+    IBOutlet	AIPreferenceCategoryView	*view_Messages_Display;
+    IBOutlet	AIPreferenceCategoryView	*view_Messages_Sending;
 
     IBOutlet	NSTabView					*tabView_status;
-    IBOutlet	AIFlippedCategoryView		*view_Status_Away;
-    IBOutlet	AIFlippedCategoryView		*view_Status_Idle;
+    IBOutlet	AIPreferenceCategoryView	*view_Status_Away;
+    IBOutlet	AIPreferenceCategoryView	*view_Status_Idle;
 
-    IBOutlet	AIFlippedCategoryView		*view_Dock;
+    IBOutlet	AIPreferenceCategoryView	*view_Dock;
     
-    IBOutlet	AIFlippedCategoryView		*view_Sound;
+    IBOutlet	AIPreferenceCategoryView	*view_Sound;
 
-    IBOutlet 	AIFlippedCategoryView		*view_Alerts;
+    IBOutlet 	AIPreferenceCategoryView	*view_Alerts;
     
-    IBOutlet 	AIFlippedCategoryView		*view_Emoticons;
+    IBOutlet 	AIPreferenceCategoryView	*view_Emoticons;
 
     IBOutlet	NSOutlineView				*outlineView_advanced;
-    IBOutlet	AIFlippedCategoryView   	*view_Advanced;
+    IBOutlet	AIPreferenceCategoryView   	*view_Advanced;
     IBOutlet	NSTextField					*textField_advancedTitle;
     IBOutlet	AIColoredBoxView			*coloredBox_advancedTitle;
 	IBOutlet	NSButton					*button_restoreDefaults;
@@ -50,15 +50,15 @@
     NSMutableArray		*loadedPanes;
     NSMutableArray		*loadedAdvancedPanes;
 
-    NSMutableDictionary *toolbarItems;
     NSMutableArray		*_advancedCategoryArray;
-	
-    int					yPadding;    
 }
 
 + (AIPreferenceWindowController *)preferenceWindowController;
 + (void)closeSharedInstance;
 - (IBAction)closeWindow:(id)sender;
 - (void)showCategory:(PREFERENCE_CATEGORY)inCategory;
+
+- (NSArray *)advancedCategoryArray;
+- (void)configureAdvancedPreferencesForPane:(AIPreferencePane *)preferencePane;
 
 @end

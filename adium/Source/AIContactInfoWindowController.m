@@ -14,82 +14,53 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIContactInfoWindowController.h"
-#import "AIPreferenceCategory.h"
 
 #define	CONTACT_INFO_NIB	@"ContactInfoWindow"		//Filename of the contact info nib
 
 @interface AIContactInfoWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory;
+- (id)initWithWindowNibName:(NSString *)windowNibName;
+- (void)selectionChanged:(NSNotification *)notification;
 @end
 
 @implementation AIContactInfoWindowController
 
 //Return the shared contact info window
 static AIContactInfoWindowController *sharedContactInfoInstance = nil;
-+ (AIContactInfoWindowController *)contactInfoWindowControllerWithCategory:(AIPreferenceCategory *)inCategory
++ (void)showInfoWindowForListObject:(AIListObject *)listObject
 {
     //Create the window
     if(!sharedContactInfoInstance){
-        sharedContactInfoInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB category:inCategory];
+        sharedContactInfoInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB];
     }
-    
-    return(sharedContactInfoInstance);
+	
+	//Configure and show window
+	[sharedContactInfoInstance configureForListObject:listObject];
+	[sharedContactInfoInstance showWindow:nil];
 }
 
-//Close the window
-- (IBAction)closeWindow:(id)sender
+//Close the info window
++ (void)closeInfoWindow
 {
-    if([self windowShouldClose:nil]){
-        [[self window] close];
+    if(sharedContactInfoInstance){
+        [sharedContactInfoInstance closeWindow:nil];
     }
 }
 
-
-// Internal --------------------------------------------------------------------
 //init
-- (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory
+- (id)initWithWindowNibName:(NSString *)windowNibName
 {    
     [super initWithWindowNibName:windowNibName];
-    mainCategory = [inCategory retain];
 	displayedObject = nil;
-        
+	
     return(self);    
 }
 
 - (void)dealloc
 {
-    [mainCategory release];
 	[displayedObject release];
     
     [super dealloc];
-}
-
-//When the contact list selection changes, then configure the window for the new contact
-- (void)selectionChanged:(NSNotification *)notification
-{
-	[self configureForListObject:[[adium contactController] selectedListObject]];
-}
-
-//Configure our views for the specified list object
-- (void)configureForListObject:(AIListObject *)inObject
-{
-	if(inObject == nil || displayedObject != inObject){
-		[displayedObject release];
-		displayedObject = [inObject retain];
-		
-		if(inObject == nil){
-			[[self window] setContentView:view_noContact];
-			[[self window] setTitle:@"Contact Info"];
-
-		}else{
-			[mainCategory configureForObject:inObject];
-			[scrollView_contents setDocumentView:[mainCategory contentView]];
-			[[self window] setContentView:view_contact];
-			[[self window] setTitle:[NSString stringWithFormat:@"%@ Info",[inObject longDisplayName]]];
-
-		}
-	}
-}
+}	
 
 //Setup the window before it is displayed
 - (void)windowDidLoad
@@ -110,10 +81,12 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     }
 }
 
-//prevent the system from moving our window around
-- (BOOL)shouldCascadeWindows
+//Close the window
+- (IBAction)closeWindow:(id)sender
 {
-    return(NO);
+    if([self windowShouldClose:nil]){
+        [[self window] close];
+    }
 }
 
 //called as the window closes
@@ -128,8 +101,68 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	
 	//Close down our shared instance
     [sharedContactInfoInstance autorelease]; sharedContactInfoInstance = nil;
-
+	
     return(YES);
 }
+
+//prevent the system from moving our window around
+- (BOOL)shouldCascadeWindows
+{
+    return(NO);
+}
+
+
+
+
+
+
+- (NSImage *)tabView:(NSTabView *)tabView imageForTabViewItem:(NSTabViewItem *)tabViewItem
+{
+	return([NSImage imageNamed:[NSString stringWithFormat:@"pref%@",[tabViewItem identifier]] forClass:[self class]]);
+}
+
+//- (int)tabView:(NSTabView *)tabView heightForTabViewItem:(NSTabViewItem *)tabViewItem
+//{
+//	
+//}
+	
+
+//When the contact list selection changes, then configure the window for the new contact
+- (void)selectionChanged:(NSNotification *)notification
+{
+	[self configureForListObject:[[adium contactController] selectedListObject]];
+}
+
+
+//Configure our views for the specified list object
+- (void)configureForListObject:(AIListObject *)inObject
+{
+	if(inObject == nil || displayedObject != inObject){
+		[displayedObject release];
+		displayedObject = [inObject retain];
+		
+		if(inObject){
+			[[self window] setTitle:[NSString stringWithFormat:@"%@'s Info",[inObject displayName]]];
+		}else{
+			[[self window] setTitle:@"Contact Info"];
+		}
+		
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @end

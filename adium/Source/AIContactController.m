@@ -13,16 +13,18 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.134 2004/05/20 13:15:04 adamiser Exp $
+// $Id: AIContactController.m,v 1.135 2004/05/23 17:33:49 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
 #import "AIContactInfoWindowController.h"
-#import "AIPreferenceCategory.h"
 
 #define PREF_GROUP_CONTACT_LIST		@"Contact List"			//Contact list preference group
 #define KEY_FLAT_GROUPS				@"FlatGroups"			//Group storage
 #define KEY_FLAT_CONTACTS			@"FlatContacts"			//Contact storage
+
+#define VIEW_CONTACTS_INFO  AILocalizedString(@"View Contact's Info",nil)
+#define VIEW_INFO	    AILocalizedString(@"View Info",nil)
 
 #define UPDATE_CLUMP_INTERVAL		1.0
 
@@ -42,6 +44,7 @@
 - (void)saveContactList;
 - (NSArray *)_informObserversOfObjectStatusChange:(AIListObject *)inObject withKeys:(NSArray *)modifiedKeys silent:(BOOL)silent;
 - (void)_updateAllAttributesOfObject:(AIListObject *)inObject;
+- (void)prepareContactInfo;
 
 - (NSMenu *)menuOfAllContactsInGroup:(AIListGroup *)inGroup withTarget:(id)target firstLevel:(BOOL)firstLevel;
 
@@ -86,6 +89,9 @@
 	largestOrder = 1.0;
 	smallestOrder = 1.0;
 
+	//
+	[self prepareContactInfo];
+	
 	// AIContactStatusEvents Stuff
     onlineDict = [[NSMutableDictionary alloc] init];
     awayDict = [[NSMutableDictionary alloc] init];
@@ -99,7 +105,6 @@
 
 	//
     [owner registerEventNotification:ListObject_StatusChanged displayName:@"Contact Status Changed"];
-    contactInfoCategory = [[AIPreferenceCategory categoryWithName:@"" image:nil] retain];
 }
 
 //finish initing
@@ -120,7 +125,7 @@
 {
     [contactList release];
     [contactObserverArray release]; contactObserverArray = nil;
-    [contactInfoCategory release];
+//    [contactInfoCategory release];
 
     [super dealloc];
 }
@@ -508,13 +513,43 @@
 //Show info for the selected contact
 - (IBAction)showContactInfo:(id)sender
 {
-    [[AIContactInfoWindowController contactInfoWindowControllerWithCategory:contactInfoCategory] showWindow:nil];
+    [AIContactInfoWindowController showInfoWindowForListObject:[self selectedListObject]];
 }
 
 //Add a contact info view
-- (void)addContactInfoView:(AIPreferenceViewController *)inView
+- (void)addContactInfoPane:(AIContactInfoPane *)inPane
 {
-    [contactInfoCategory addView:inView];
+    [contactInfoPanes addObject:inPane];
+}
+
+//Prepare the contact info menu and toolbar items
+- (void)prepareContactInfo
+{
+	contactInfoPanes = [[NSMutableArray alloc] init];
+	
+	//Install the Get Info menu item
+	menuItem_getInfo = [[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_INFO
+												  target:self
+												  action:@selector(showContactInfo:)
+										   keyEquivalent:@"i"];
+	[menuItem_getInfo setKeyEquivalentModifierMask:(NSCommandKeyMask | NSShiftKeyMask)];
+	[[owner menuController] addMenuItem:menuItem_getInfo toLocation:LOC_Contact_Manage];
+	
+	//Add our get info contextual menu item
+	menuItem_getInfoContextual = [[NSMenuItem alloc] initWithTitle:VIEW_INFO target:self action:@selector(showContactInfo:) keyEquivalent:@""];
+	[[owner menuController] addContextualMenuItem:menuItem_getInfoContextual toLocation:Context_Contact_Manage];
+	
+	//Add our get info toolbar item
+	NSToolbarItem   *toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"ShowInfo"
+																		   label:@"Info"
+																	paletteLabel:@"Show Info"
+																		 toolTip:@"Show Info"
+																		  target:self
+																 settingSelector:@selector(setImage:)
+																	 itemContent:[NSImage imageNamed:@"info" forClass:[self class]]
+																		  action:@selector(showContactInfo:)
+																			menu:nil];
+	[[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
 }
 
 //Always be able to show the inspector
