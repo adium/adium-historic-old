@@ -23,9 +23,18 @@
 - (void)accountListChanged:(NSNotification *)notification;
 @end
 
+/*
+ * @class AIAccountListWindowController
+ * @brief Shows a list of accounts and provides for management of them
+ */
 @implementation AIAccountListWindowController
 
 AIAccountListWindowController *sharedAccountWindowInstance = nil;
+/*
+ * @brief Return a shared instance of AIAccountListWindowController.
+ *
+ * @result The shared instance, created if necessary
+ */
 + (AIAccountListWindowController *)accountListWindowController
 {
     if(!sharedAccountWindowInstance){
@@ -34,26 +43,19 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     return(sharedAccountWindowInstance);
 }
 
-//Init
-- (id)initWithWindowNibName:(NSString *)windowNibName
-{
-    [super initWithWindowNibName:windowNibName];
-
-    return(self);
-}
-
-//Dealloc
-- (void)dealloc
-{    
-    [super dealloc];
-}
-
+/*
+ * @brief Auto save name for AIWindowController
+ */
 - (NSString *)adiumFrameAutosaveName
 {
 	return(@"AIAccountListWindow");
 }
 
-//Configure
+/*
+ * @brief Configure the window initially
+ *
+ * Center the window on screen and then configure the list and menus
+ */
 - (void)windowDidLoad
 {
 	//Center this panel
@@ -75,7 +77,9 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     [[adium contactController] registerListObjectObserver:self];
 }
 
-//Close
+/*
+ * @brief Close the window
+ */
 - (IBAction)closeWindow:(id)sender
 {
     if([self windowShouldClose:nil]){
@@ -83,7 +87,9 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     }
 }
 
-//Closing
+/*
+ * @brief Perform actions before the window closes
+ */
 - (BOOL)windowShouldClose:(id)sender
 {
 	[[adium contactController] unregisterListObjectObserver:self];
@@ -95,7 +101,11 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	return(YES);
 }
 
-//Account status changed.  Disable the service menu and user name field for connected accounts
+/*
+ * @brief Account status changed.
+ *
+ * Disable the service menu and user name field for connected accounts
+ */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if([inObject isKindOfClass:[AIAccount class]]){
@@ -122,7 +132,11 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 
 //Actions --------------------------------------------------------------------------------------------------------------
 #pragma mark Actions
-//Create a new account
+/*
+ * @brief Create a new account
+ *
+ * Called when a service type is selected from the Add menu
+ */
 - (IBAction)selectServiceType:(id)sender
 {
     AIAccount	*account;
@@ -143,7 +157,9 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	[self editAccount:nil];
 }
 
-//Edit the selected account
+/*
+ * @brief Edit the currently selected account using <tt>AIEditAccountWindowController</tt>
+ */
 - (IBAction)editAccount:(id)sender
 {
     int	selectedRow = [tableView_accountList selectedRow];
@@ -154,7 +170,11 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     }
 }
 
-//Delete the selected account
+/*
+ * @brief Delete the selected account
+ *
+ * Prompts for confirmation first
+ */
 - (IBAction)deleteAccount:(id)sender
 {
     int 		index = [tableView_accountList selectedRow];
@@ -168,12 +188,21 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     targetAccount = [accountArray objectAtIndex:index];
     accountFormattedUID = [targetAccount formattedUID];
 	
-    NSBeginAlertSheet(@"Delete Account",@"Delete",@"Cancel",@"",[self window], self, 
+    NSBeginAlertSheet(AILocalizedString(@"Delete Account",nil),
+					  AILocalizedString(@"Delete",nil),
+					  AILocalizedString(@"Cancel",nil),
+					  @"",[self window], self, 
 					  @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, targetAccount, 
-					  @"Delete the account %@?", [accountFormattedUID length] ? accountFormattedUID : NEW_ACCOUNT_DISPLAY_TEXT);
+					  AILocalizedString(@"Delete the account %@?",nil), ([accountFormattedUID length] ? accountFormattedUID : NEW_ACCOUNT_DISPLAY_TEXT));
 }
 
-//Finish account deletion (when the sheet is closed)
+/*
+ * @brief Finish account deletion
+ *
+ * Called when the sheet is closed
+ *
+ * @param returnCode NSAlertDefaultReturn indicates the account should be deleted
+ */
 - (void)deleteAccountSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     AIAccount 	*targetAccount = contextInfo;
@@ -198,7 +227,9 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 
 //Account List ---------------------------------------------------------------------------------------------------------
 #pragma mark Account List
-//Configure the account list table
+/*
+ * @brief Configure the account list table
+ */
 - (void)configureAccountList
 {
     AIImageTextCell			*cell;
@@ -228,7 +259,9 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	[self accountListChanged:nil];
 }
 
-//Account list changed, refresh our table
+/*
+ * @brief Account list changed, refresh our table
+ */
 - (void)accountListChanged:(NSNotification *)notification
 {
     //Update our list of accounts
@@ -241,7 +274,11 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	[self updateAccountOverview];
 }
 
-//Update our account overview
+/*
+ * @brief Update our account overview
+ *
+ * The overview indicates the total number of accounts and the number which are online.
+ */
 - (void)updateAccountOverview
 {
 	NSEnumerator	*enumerator = [accountArray objectEnumerator];
@@ -253,10 +290,12 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 		if([[account statusObjectForKey:@"Online"] boolValue]) online++;
 	}
 	
-	[textField_overview setStringValue:[NSString stringWithFormat:@"%i accounts, %i online", [accountArray count], online]];
+	[textField_overview setStringValue:[NSString stringWithFormat:AILocalizedString(@"%i accounts, %i online", [accountArray count], online]];
 }
 
-//Update control availability based on list selection
+/*
+ * @brief Update control availability based on list selection
+ */
 - (void)updateControlAvailability
 {
 	BOOL	selection = ([tableView_accountList selectedRow] != -1);
@@ -265,22 +304,27 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	[button_deleteAccount setEnabled:selection];
 }
 
-
 //Account List Table Delegate ------------------------------------------------------------------------------------------
 #pragma mark Account List (Table Delegate)
-//Delete the selected row
+/*
+ * @brief Delete the selected row
+ */
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
     [self deleteAccount:nil];
 }
 
-//Number of rows
+/*
+ * @brief Number of rows in the table
+ */
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	return([accountArray count]);
 }
 
-//Table values
+/*
+ * @brief Table values
+ */
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
 	NSString 	*identifier = [tableColumn identifier];
@@ -302,6 +346,9 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	return(nil);
 }
 
+/*
+ * @brief Configure cells before display
+ */
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
 	NSString 	*identifier = [tableColumn identifier];
@@ -320,7 +367,11 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	
 }
 
-//Clicked checkbox
+/*
+ * @brief Handle a clicked active/inactive checkbox
+ *
+ * Checking the box both takes the account online and sets it to autoconnect. Unchecking it does the opposite.
+ */
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
 	if([[tableColumn identifier] isEqualToString:@"enabled"]){
@@ -329,7 +380,9 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	}
 }
 
-//Drag start
+/*
+ * @brief Drag start
+ */
 - (BOOL)tableView:(NSTableView *)tv writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard
 {
     tempDragAccount = [accountArray objectAtIndex:[[rows objectAtIndex:0] intValue]];
@@ -340,7 +393,9 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     return(YES);
 }
 
-//Drag validate
+/*
+ * @brief Drag validate
+ */
 - (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)op
 {
     if(op == NSTableViewDropAbove && row != -1){
@@ -350,7 +405,9 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     }
 }
 
-//Drag complete
+/*
+ * @brief Drag complete
+ */
 - (BOOL)tableView:(NSTableView*)tv acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)op
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:ACCOUNT_DRAG_TYPE]];
@@ -368,7 +425,9 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     }
 }
 
-//Selection change
+/*
+ * @brief Selection change
+ */
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
 	[self updateControlAvailability];

@@ -22,12 +22,22 @@
 - (int)_addCustomView:(NSView *)customView toView:(NSView *)setupView tabViewItemIdentifier:(NSString *)identifier;
 - (void)_configureResponderChain:(NSTimer *)inTimer;
 - (void)_removeCustomViewAndTabs;
-
 - (void)saveConfiguration;
 @end
 
+/*
+ * @class AIEditAccountWindowController
+ * @brief Window controller for configuring an <tt>AIAccount</tt>
+ */
 @implementation AIEditAccountWindowController
 
+/*
+ * @brief Begin editing
+ *
+ * @param inAccount The account to edit
+ * @param parentWindow A window on which to show the edit account window as a sheet.  If nil, account editing takes place in an independent window.
+ * @param inDeleteIfCanceled If YES and the user presses cancel, inAccount is deleted. This should be passed as YES when the method is called as a result of creating a new account.
+ */
 + (void)editAccount:(AIAccount *)inAccount onWindow:(id)parentWindow deleteIfCanceled:(BOOL)inDeleteIfCanceled
 {
 	AIEditAccountWindowController	*controller;
@@ -47,7 +57,9 @@
 	}
 }
 
-//init the window controller
+/*
+ * @brief Init the window controller
+ */
 - (id)initWithWindowNibName:(NSString *)windowNibName account:(AIAccount *)inAccount deleteIfCanceled:(BOOL)inDeleteIfCanceled
 {
     [super initWithWindowNibName:windowNibName];
@@ -58,14 +70,19 @@
 	return(self);
 }
 
-//Dealloc
+/*
+ * @brief Deallocate
+ */
 - (void)dealloc
 {
 	[account release];
+
 	[super dealloc];
 }
 	
-//Setup the window before it is displayed
+/*
+ * @brief Setup the window before it is displayed
+ */
 - (void)windowDidLoad
 {
 	NSData	*iconData;
@@ -93,20 +110,28 @@
 	[self _addCustomViewAndTabsForAccount:account];
 }
 
-//Window is closing
+/*
+ * @brief Window is closing
+ */
 - (BOOL)windowShouldClose:(id)sender
 {
 	[self autorelease];
     return(YES);
 }
 
-//Stop automatic window positioning
+/*
+ * @brief Stop automatic window positioning
+ *
+ * We don't want the system moving our window around
+ */
 - (BOOL)shouldCascadeWindows
 {
     return(NO);
 }
 
-//Close this window
+/*
+ * @brief Close this window (or end the sheet, as appropriate)
+ */
 - (IBAction)closeWindow:(id)sender
 {
 	if([self windowShouldClose:nil]){
@@ -118,17 +143,23 @@
 	}
 }
 
-//Called as the user list edit sheet closes, dismisses the sheet
+/*
+ * @brief Called as the user list edit sheet closes, dismisses the sheet
+ */
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     [sheet orderOut:nil];
 }
 
-//Cancel.  Close without saving changes
+/*
+ * @brief Cancel
+ * 
+ * Close without saving changes. If deleteIfCanceled is YES, delete the account at this time.
+ * deleteIfCanceled should only be YES if we were called to edit a newly created account. Canceling the process should
+ * delete the account which we were passed.
+ */
 - (IBAction)cancel:(id)sender
 {
-	/* deleteIfCanceled should only be YES if we were called to edit a newly created account. Canceling the process should
-	 * delete the account which we were passed. */
 	if(deleteIfCanceled){
 		[[adium accountController] deleteAccount:account save:YES];
 	}
@@ -136,7 +167,11 @@
 	[self closeWindow:nil];
 }
 
-//Okay.  Save changes and close
+/*
+ * @brief Okay.
+ * 
+ * Save changes and close.
+ */
 - (IBAction)okay:(id)sender
 {
 	[self saveConfiguration];
@@ -145,6 +180,11 @@
 	[self closeWindow:nil];
 }
 
+/*
+ * @brief Save any configuration managed by the window controller
+ *
+ * Most configuration is handled by the custom view controllers.  Save any other configuration, such as the user icon.
+ */
 - (void)saveConfiguration
 {
 	//User icon
@@ -153,7 +193,9 @@
 					 group:GROUP_ACCOUNT_STATUS];
 }
 
-//Add the custom views for a controller
+/*
+ * @brief Add the custom views for an account
+ */
 - (void)_addCustomViewAndTabsForAccount:(AIAccount *)inAccount
 {
 	NSRect	windowFrame;
@@ -207,7 +249,17 @@
 	[tabView_auxiliary selectFirstTabViewItem:nil];
 }
 
-//Add customView to setupView and return the height difference between the two if customView is taller than setupView
+/*
+ * @brief Used when configuring to add custom views and remove tabs as necessary
+ *
+ * Add customView to setupView and return the height difference between the two if customView is taller than setupView.
+ * Remove the tabViewItem with the passed identifier if no customView exists, avoiding empty tabs.
+ *
+ * @param customView The view to add
+ * @param setupView The view within our nib which will be filled by customView
+ * @param identifier Identifier of the <tt>NSTabViewItem</tt> which will be removed from tabView_auxiliary if customView == nil
+ * @result The positive height difference betwen customView and setupView, indicating how much taller the window needs to be to fit customView.
+ */
 - (int)_addCustomView:(NSView *)customView toView:(NSView *)setupView tabViewItemIdentifier:(NSString *)identifier
 {
 	NSSize	customViewFrameSize;
@@ -238,7 +290,9 @@
 	return(heightDifference > 0 ? heightDifference : 0);
 }
 
-//Remove any existing custom views
+/*
+ * @brief Remove any existing custom views
+ */
 - (void)_removeCustomViewAndTabs
 {
     //Close any currently open controllers
