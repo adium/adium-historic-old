@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.86 2004/07/27 19:16:10 evands Exp $
+//$Id: AIPluginController.m,v 1.87 2004/07/28 02:38:53 dchoby98 Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -49,7 +49,7 @@ ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessage
 JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin, AIContactSettingsPlugin,
 AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, AIContactStatusEventsPlugin,
 SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmoticonMenuPlugin, BGContactNotesPlugin, SHBookmarksImporterPlugin,
-ESMessageEvents, ESAccountEvents, ESSafariLinkToolbarItemPlugin;
+ESMessageEvents, ESAccountEvents, ESSafariLinkToolbarItemPlugin, DCJoinChatPanelPlugin;
 
 #ifdef ALL_IN_ONE
 @class AIWebKitMessageViewPlugin, CBGaimServicePlugin, NEHTicTacToePlugin;
@@ -145,6 +145,7 @@ ESMessageEvents, ESAccountEvents, ESSafariLinkToolbarItemPlugin;
 	[self loadPluginWithClass:[SHBookmarksImporterPlugin class]];
 	[self loadPluginWithClass:[AIContactAccountsPlugin class]];
 	[self loadPluginWithClass:[ESSafariLinkToolbarItemPlugin class]];
+	[self loadPluginWithClass:[DCJoinChatPanelPlugin class]];
 	//	[self loadPluginWithClass:[AISMViewPlugin class]];
 		
 	#ifdef ALL_IN_ONE
