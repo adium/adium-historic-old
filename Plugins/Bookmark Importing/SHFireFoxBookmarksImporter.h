@@ -13,7 +13,7 @@
     NSDate  *lastModDate;
     BOOL     fox9;
 	
-	NSString	*bookmarkPath;
+	NSString	*fox8OrLessBookmarkPath;
 	NSString	*fox9BookmarkPath;
 }
 
