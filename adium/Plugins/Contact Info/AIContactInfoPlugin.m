@@ -71,7 +71,8 @@
     BOOL			enabled = (object && [object isKindOfClass:[AIListContact class]]);
 
     [inToolbarItem setEnabled:enabled];
-    return(enabled);
+//    return(enabled);
+    return(YES);
 }
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
