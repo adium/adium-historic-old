@@ -79,17 +79,37 @@
 {
 	if ((sender == button_showEmail) && urlString){
 		
-		NSURL   *emailURL;
-		
-		//The urlString could either be a web address or a path to a local HTML file we are supposed to load.
-		//The local HTML file will be in the user's temp directory, which Gaim obtains with g_get_tmp_dir()... so we will, too.
+		/*
+		 The urlString could either be a web address or a path to a local HTML file we are supposed to load.
+		 The local HTML file will be in the user's temp directory, which Gaim obtains with g_get_tmp_dir()... 
+		 so we will, too.
+		 */
 		if ([urlString rangeOfString:[NSString stringWithUTF8String:g_get_tmp_dir()]].location != NSNotFound){
-			emailURL = [NSURL fileURLWithPath:[urlString stringByExpandingTildeInPath]];
+			//Local HTML file
+			CFURLRef	appURL;
+			OSStatus	err;
+			
+			//Obtain the default http:// handler
+			err = LSGetApplicationForURL((CFURLRef)[NSURL URLWithString:@"http://www.google.com"],
+										 kLSRolesAll,
+										 NULL,
+										 &appURL);
+			
+			//Use it to open the specified file (if we just told NSWorkspace to open it, it might be opened instead
+			//by an HTML editor or other program
+			[[NSWorkspace sharedWorkspace] openFile:[urlString stringByExpandingTildeInPath]
+									withApplication:[(NSURL *)appURL path]];
+			
+			//LSGetApplicationForURL() requires us to release the appURL when we are done with it
+			CFRelease(appURL);
+			
 		}else{
+			NSURL		*emailURL;
+
+			//Web address
 			emailURL = [NSURL URLWithString:urlString];
+			[[NSWorkspace sharedWorkspace] openURL:emailURL];
 		}
-		
-		[[NSWorkspace sharedWorkspace] openURL:emailURL];
 	}
 	
 	[[self window] close];
