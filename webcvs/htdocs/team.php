@@ -70,8 +70,6 @@
                     <span class="tiny">Interface Icons</span></p>
                     <p><a href="mailto:maran@mac.com">Benjamin Costello</a><br />
                     <span class="tiny">Site design, Xtras site</span></p>
-                    <p><a href="mailto:4N01@simplstick.com">Steve Holt</a><br />
-                    <span class="tiny">Code Contributions</span></p>
                     <p>Mac-arena the Bored Zo<br />
                     <span class="tiny">Code Contributions</span></p>
                     <p>Asher Haig<br />
@@ -110,10 +108,10 @@
                     <div class="teamMember">
                         <h2>Evan Schoenberg</h2>
                         <img class="teamAvatar" width="64" height="64" border="0" src="images/avatars/avatar_Evan Schoenberg.png" alt="avatar" />
-                        <span class="teamData">Email:</span><a href="mailto:evan@adiumx.com">evan@adiumx.com</a><br />
+                        <span class="teamData">Email:</span>evan[at]adiumx[dot]com<br />
                         <span class="teamData">AIM:</span>TekJew<br />
-                        <span class="teamData">MSN:</span>evan.s@dreskin.net<br />
-                        <span class="teamData">Yahoo:</span>evands
+                        <span class="teamData">MSN:</span>evan[dot]s[at]dreskin[dot]net<br />
+                        <span class="teamData">Yahoo:</span>eschoenberg
                     </div>
                     <div class="cleanHackLeft"> </div>
                 </div>
@@ -165,6 +163,10 @@
                         <span class="teamData">Website:</span><a href="http://www.infinitenexus.com/">http://www.infinitenexus.com/</a><br />
                         <span class="teamData">Email:</span><a href="mailto:disposable@infinitenexus.com">disposable@infinitenexus.com</a><br />
                         <span class="teamData">AIM:</span>bgann7899
+                    </div>
+                    <div class="teamMember">
+                        <h2>Steve Holt</h2>
+                        <span class="teamData">Email:</span><a href="mailto:4N01@simplstick.com">4N01@simplstick.com</a><br />
                     </div>
                     <div class="teamMember">
                         <h2>Chris Serino</h2>
