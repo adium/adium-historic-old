@@ -234,7 +234,7 @@ enum {
 
 				if (context != NULL)
 				{
-					CGContextBeginPath(context); //Should clear the context of its current clipping path --chris
+					CGContextBeginPath(context);
 
 					//Drawing stuff
 					CGPathRef pathToAdd = CreateCGPathWithNSBezierPath(&transform, inPath); //thanks boredzo :)
