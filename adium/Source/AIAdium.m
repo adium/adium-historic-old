@@ -109,6 +109,9 @@
 - (ESContactAlertsController *)contactAlertsController{
     return(contactAlertsController);
 }
+- (ESApplescriptabilityController *)applescriptabilityController{
+	return(applescriptabilityController);
+}
 //- (BZActivityWindowController *)activityWindowController {
 //	return activityWindowController;
 //}
@@ -202,6 +205,8 @@
     [interfaceController initController];
     [dockController initController];
     [fileTransferController initController];
+	[applescriptabilityController initController];
+	
 //    [activityWindowController initController];
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
 
@@ -215,6 +220,8 @@
 	[self openAppropriatePreferencesIfNeeded];
 	
     completedApplicationLoad = YES;
+	
+	[[self notificationCenter] postNotificationName:Adium_CompletedApplicationLoad object:nil];
 }
 
 //Give all the controllers a chance to close down
@@ -234,7 +241,8 @@
     [accountController closeController];
     [soundController closeController];
     [menuController closeController];
-    [toolbarController closeController];
+    [applescriptabilityController closeController];
+	[toolbarController closeController];
     [preferenceController closeController];
 }
 
@@ -267,8 +275,8 @@
 //Last call to perform actions before the app shuffles off its mortal coil and joins the bleeding choir invisible
 - (IBAction)confirmQuit:(id)sender
 {
-	//Disconnect all the accounts before quitting
-    [accountController disconnectAllAccounts];
+	//Disconnect all the accounts before quitting - but the accountController already does this in closeController....
+    //[accountController disconnectAllAccounts];
 	
 	[NSApp terminate:nil];
 }
@@ -527,6 +535,19 @@ void Adium_HandleSignal(int i){
 	}
     
 	return pathArray;
+}
+
+#pragma mark Scripting
+- (BOOL)application:(NSApplication *)sender delegateHandlesKey:(NSString *)key {
+	BOOL handleKey = NO;
+	NSLog(@"handle %@",key);
+	if([key isEqualToString:@"applescriptabilityController"] || 
+	   [key isEqualToString:@"interfaceController"] ){
+		handleKey = YES;
+		
+	}
+	
+	return handleKey;
 }
 
 @end
