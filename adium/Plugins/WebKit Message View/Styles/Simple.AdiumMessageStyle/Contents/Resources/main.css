@@ -1,0 +1,18 @@
+@import url(styles/layout.css);
+@import url(styles/base.css);
+
+.prefix .timestampbefore {
+	display: none;
+}
+
+.prefix .sender {
+	display: inline;
+}
+
+.prefix .senderScreenName {
+	display: none;
+}
+
+.prefix .timestampafter {
+	display: none;
+}

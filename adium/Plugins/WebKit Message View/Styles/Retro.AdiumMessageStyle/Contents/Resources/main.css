@@ -1,0 +1,135 @@
+@import url(layout.css);
+
+body {
+    padding: 0px;
+    margin: 0px;
+}
+
+.name
+{
+	font: bold 11px 'Lucida Grande', LucidaGrande, Lucida, Helvetica, Arial, sans-serif;
+}
+
+.timestamp {
+	font: 10px Helvetica, sans-serif;
+	color: gray;
+}
+
+.context {
+	color: gray;
+}
+
+/*<group=Incoming>*/
+
+.incoming .name {
+	color: rgb(0,32,127);
+}
+
+.incoming .topleft
+{
+	background: url(Incoming/blue-topleft.png) no-repeat;
+}
+
+.incoming .topmiddle
+{
+	background: #E5F2FF;
+	border-top: 1px solid #6B8FB3;
+}
+
+.incoming .topright
+{
+	background: url(Incoming/blue-topright.png) no-repeat;
+}
+
+.incoming .messagebody
+{
+	background: #E5F2FF;
+	border-left: 1px solid #6B8FB3;
+	border-right: 1px solid #6B8FB3;
+}
+
+.incoming .nextmessagebody {
+	background: #E5F2FF;
+	border-top: 1px solid #B6CFEB;
+	border-left: 1px solid #6B8FB3;
+	border-right: 1px solid #6B8FB3;
+}
+
+.incoming .bottomleft
+{
+	background: url(Incoming/blue-bottomleft.png) no-repeat;
+}
+
+.incoming .bottommiddle
+{
+	background: #E5F2FF;
+	border-bottom: 1px solid #6B8FB3;
+}
+
+.incoming .bottomright
+{
+	background: url(Incoming/blue-bottomright.png) no-repeat;
+}
+
+/*</group>*/
+
+/*<group=Outgoing>*/
+
+.outgoing .name
+{
+	color: rgb(0,127,0);
+}
+
+.outgoing .topleft
+{
+	background: url(Outgoing/green-topleft.png) no-repeat;
+}
+
+.outgoing .topmiddle
+{
+	background: #E6FFEA;
+	border-top: 1px solid #6BB377;
+}
+
+.outgoing .topright
+{
+	background: url(Outgoing/green-topright.png) no-repeat;
+}
+
+.outgoing .messagebody
+{
+	background: #E6FFEA;
+	border-left: 1px solid #6BB377;
+	border-right: 1px solid #6BB377;
+}
+
+.outgoing .nextmessagebody {
+	background: #E6FFEA;
+	border-top: 1px solid #B8E6BF;
+	border-left: 1px solid #6BB377;
+	border-right: 1px solid #6BB377;
+}
+
+.outgoing .bottomleft
+{
+	background: url(Outgoing/green-bottomleft.png) no-repeat;
+}
+
+.outgoing .bottommiddle
+{
+	background: #E6FFEA;
+	border-bottom: 1px solid #6BB377;
+}
+
+.outgoing .bottomright
+{
+	background: url(Outgoing/green-bottomright.png) no-repeat;
+}
+
+/*</group>*/
+
+.status_message {
+	text-align: center;
+	font: 11px Helvetica, sans-serif;
+	color: gray;
+}
