@@ -17,8 +17,8 @@ typedef enum {
 @interface AIStatusIcons : NSObject {
 
 }
-+ (NSImage *)statusIconForListObject:(AIListObject *)object type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection;
-+ (NSImage *)statusIconForChat:(AIChat *)chat type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection;
++ (NSImage *)statusIconForListObject:(AIListObject *)object type:(AIStatusIconType)iconType direction:(AIIconDirection)iconDirection;
++ (NSImage *)statusIconForChat:(AIChat *)chat type:(AIStatusIconType)iconType direction:(AIIconDirection)iconDirection;
 + (NSImage *)statusIconForStatusID:(NSString *)statusID type:(AIStatusIconType)iconType direction:(AIIconDirection)iconDirection;
 + (BOOL)setActiveStatusIconsFromPath:(NSString *)inPath;
 

@@ -35,7 +35,7 @@ static NSDictionary			*statusIconNames[NUMBER_OF_STATUS_ICON_TYPES];
 }
 
 //Retrieve the correct status icon for a given list object
-+ (NSImage *)statusIconForListObject:(AIListObject *)object type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection
++ (NSImage *)statusIconForListObject:(AIListObject *)object type:(AIStatusIconType)iconType direction:(AIIconDirection)iconDirection
 {
 	return [AIStatusIcons statusIconForStatusID:[AIStatusIcons _statusIDForListObject:object]
 										   type:iconType
@@ -43,7 +43,7 @@ static NSDictionary			*statusIconNames[NUMBER_OF_STATUS_ICON_TYPES];
 }
 
 //Retrieve the correct status icon for a given chat
-+ (NSImage *)statusIconForChat:(AIChat *)chat type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection
++ (NSImage *)statusIconForChat:(AIChat *)chat type:(AIStatusIconType)iconType direction:(AIIconDirection)iconDirection
 {
 	return [AIStatusIcons statusIconForStatusID:[AIStatusIcons _stateIDForChat:chat]
 										   type:iconType
