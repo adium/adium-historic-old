@@ -13,14 +13,23 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+
 @interface IdleTimePreferences : AIObject {    
     IBOutlet	NSView			*view_prefView;
     IBOutlet	NSButton		*checkBox_enableIdle;
     IBOutlet	NSTextField		*textField_idleMinutes;
     IBOutlet	NSStepper		*stepper_idleMinutes;
+	IBOutlet 	NSPopUpButton   *popUp_title;
+	IBOutlet	NSButton		*checkBox_enableAutoAway;
+	IBOutlet	NSTextField		*textField_autoAwayMinutes;
+	IBOutlet	NSStepper		*stepper_autoAwayMinutes;
+	
+	NSMutableArray			*awayMessageArray;
+	
 }
 
 + (IdleTimePreferences *)idleTimePreferences;
 - (IBAction)changePreference:(id)sender;
+- (IBAction)changeAwayPreference:(id)sender;
 
 @end

@@ -113,6 +113,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
         //Store the new values locally
         idleEnabled = [[prefDict objectForKey:KEY_IDLE_TIME_ENABLED] boolValue];
         idleThreshold = [[prefDict objectForKey:KEY_IDLE_TIME_IDLE_MINUTES] intValue] * 60; //convert to seconds
+		autoAwayEnabled = [[prefDict objectForKey:KEY_AUTO_AWAY_ENABLED] boolValue];
+		autoAwayThreshold = [[prefDict objectForKey:KEY_AUTO_AWAY_IDLE_MINUTES] intValue] * 60; //also convert this to seconds
+		autoAwayMessageIndex = [[prefDict objectForKey:KEY_AUTO_AWAY_MESSAGE_INDEX] intValue];
 
         //Reset our idle state (We don't reset if idle, since that would clear the idle status)
         if(idleState == AINotIdle){
@@ -165,7 +168,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
             //Set idle to 0 seconds (Not idle)
             [self _setAllAccountsIdleTo:0];
 
-            if(idleEnabled){
+            if(idleEnabled || autoAwayEnabled){
                 //Install a timer to check the user's activity every 30 seconds.
                 [idleTimer invalidate]; [idleTimer release];
                 idleTimer = [[NSTimer scheduledTimerWithTimeInterval:(IDLE_ACTIVE_INTERVAL)
@@ -197,7 +200,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
             //Set idle to 0 (Not Idle)
             [self _setAllAccountsIdleTo:0];
 
-            //Install a timer for the user's threshold.  After the threshold is up, we set the user as idle.  This makes it easier to fake idle status, since the user doesn't isntantly have a 5/10 minute idle time.
+            //Install a timer for the user's threshold.  After the threshold is up, we set the user as idle.  This makes it easier to fake idle status, since the user doesn't instantly have a 5/10 minute idle time.
             [idleTimer invalidate]; [idleTimer release];
             idleTimer = [[NSTimer scheduledTimerWithTimeInterval:(idleThreshold)
                                                           target:self
@@ -205,6 +208,16 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
                                                         userInfo:nil
                                                          repeats:YES] retain];
         break;
+		case AIAutoAway:
+		{
+			NSArray *awaysArray = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
+			NSDictionary	*awayDict = [awaysArray objectAtIndex:autoAwayMessageIndex];
+			NSAttributedString  *awayMessage = [awayDict objectForKey:@"Message"];
+			NSAttributedString  *awayAutoResponse = [awayDict objectForKey:@"Autoresponse"];
+			[[adium preferenceController] setPreference:awayMessage forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
+			[[adium preferenceController] setPreference:awayAutoResponse forKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
+		}
+		break;
     }    
 }
 
@@ -220,14 +233,21 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
         case AIManualIdle:
             //Nothing needs to be done
         break;
+		case AIAutoAway:
+			//Nothing needs to be done, unless we add support for setting back automatically
+		break;
     }
 }
 
 //Make sure the user hasn't gone idle
 - (void)notIdleTimer:(NSTimer *)inTimer
 {
-    if([self currentIdleTime] > idleThreshold){ //The user has gone idle
+    if(([self currentIdleTime] > idleThreshold) && idleEnabled){ //The user has gone idle
         [self setIdleState:AIAutoIdle];
+    }
+	
+    if(([self currentIdleTime] > autoAwayThreshold) && autoAwayEnabled && ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] == nil)){ //The user has gone idle (time to set auto away)
+        [self setIdleState:AIAutoAway];
     }
 }
 
@@ -236,6 +256,10 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 {
     if([self currentIdleTime] < idleThreshold){ //The user is no longer idle
         [self setIdleState:AINotIdle];
+    }
+   
+	 if(([self currentIdleTime] > autoAwayThreshold) && autoAwayEnabled && ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] == nil)){ //Check just incase the user wants to go away automatically AFTER being set idle
+        [self setIdleState:AIAutoAway];
     }
 }
 
@@ -255,7 +279,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
         NSDate	*newIdle = [NSDate dateWithTimeIntervalSinceNow:(-inSeconds)];
 
         if(![currentIdle isEqualToDate:newIdle]){
-            [[adium preferenceController] setPreference:newIdle forKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+			[[adium preferenceController] setPreference:newIdle forKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
         }
         
     }else{
@@ -339,7 +363,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
         }else if([NSEvent optionKey]){ //Set custom idle... (JAGUAR)
             [menuItem_setIdle setTitle:IDLE_SET_CUSTOM_IDLE_TITLE];
         }else{ //Set idle
-        [menuItem_setIdle setTitle:IDLE_SET_IDLE_TITLE];
+            [menuItem_setIdle setTitle:IDLE_SET_IDLE_TITLE];
         }
     }
 }

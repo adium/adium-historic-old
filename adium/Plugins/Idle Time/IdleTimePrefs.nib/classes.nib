@@ -41,8 +41,12 @@
             CLASS = IdleTimePreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "checkBox_enableAutoAway" = NSButton; 
                 "checkBox_enableIdle" = NSButton; 
+                "popUp_title" = NSPopUpButton; 
+                "stepper_autoAwayMinutes" = NSStepper; 
                 "stepper_idleMinutes" = NSStepper; 
+                "textField_autoAwayMinutes" = NSTextField; 
                 "textField_idleMinutes" = NSTextField; 
                 "view_prefView" = NSView; 
             }; 
