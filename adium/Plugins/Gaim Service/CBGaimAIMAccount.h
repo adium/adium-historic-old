@@ -12,7 +12,4 @@
 
 }
 
-//Overriden from CBGAimOscarAccount
-- (id <AIAccountViewController>)accountView;
-
 @end

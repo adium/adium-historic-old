@@ -11,11 +11,12 @@
 
 @interface CBGaimServicePlugin : AIPlugin{
     id  AIMService;
-    id  MSNService;
-    id  YahooService;
     id  GaduGaduService;
-    id  NapsterService;
     id  JabberService;
+	id  NapsterService;
+	id  MSNService;
+	id  TrepiaService;
+    id  YahooService;
 }
 
 - (void)addAccount:(id)anAccount forGaimAccountPointer:(GaimAccount *)gaimAcct;
