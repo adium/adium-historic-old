@@ -45,8 +45,46 @@
 			<array>
 				<string>AdiumIcon</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AdiumIcon.icns</string>
 			<key>CFBundleTypeName</key>
-			<string>Adium Icon</string>
+			<string>Adium Dock Icon</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>AdIM</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSTypeIsPackage</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>AdiumSoundset</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AdiumSoundset.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Adium Sound Set</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>AdIM</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSTypeIsPackage</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>AdiumEmoticonset</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AdiumEmoticonset.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Adium Emoticon Set</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>AdIM</string>
