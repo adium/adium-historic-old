@@ -78,6 +78,7 @@ typedef enum {
 - (NSDictionary *)defaultProperties;
 - (NSDictionary *)properties;
 - (id <AIServiceController>)service;
+- (NSString *)displayName;
 
 //Methods that should be subclassed
 - (void)initAccount; 				//Init anything relating to the account

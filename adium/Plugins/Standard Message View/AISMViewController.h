@@ -15,18 +15,16 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIListContact, AIAdium, AIFlexibleTableView, AIFlexibleTableColumn, AIChat;
+@class AIListContact, AIAdium, AIFlexibleTableView, AIChat, AIFlexibleTableCell, AIFlexibleTableFramedTextCell;
 @protocol AIFlexibleTableViewDelegate, AIMessageViewController;
 
-@interface AISMViewController : NSObject <AIFlexibleTableViewDelegate, AIMessageViewController> {
+@interface AISMViewController : NSObject <AIMessageViewController> {
     AIAdium			*owner;
 
     AIChat			*chat;
     AIFlexibleTableView		*messageView;
-
-    AIFlexibleTableColumn	*senderCol;
-    AIFlexibleTableColumn	*messageCol;
-    AIFlexibleTableColumn	*timeCol;
+    AIFlexibleTableCell		*lastMasterCell;
+    AIFlexibleTableFramedTextCell *lastMessageCell;
 
     NSColor			*outgoingSourceColor;
     NSColor			*outgoingLightSourceColor;
@@ -36,12 +34,13 @@
     BOOL			displayPrefix;
     BOOL			displayTimeStamps;
     BOOL			displayGridLines;
-    BOOL			displaySenderGradient;
     BOOL			hideDuplicateTimeStamps;
     BOOL			hideDuplicatePrefixes;
 
+    NSImage			*iconIncoming;
+    NSImage			*iconOutgoing;
+    
     float			gridDarkness;
-    float			senderGradientDarkness;
 
     NSFont			*prefixFont;
 

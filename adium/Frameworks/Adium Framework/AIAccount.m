@@ -90,6 +90,16 @@
     [super dealloc];
 }
 
+//Display name (Convenience)
+- (NSString *)displayName
+{
+    NSString	*name = [[owner accountController] propertyForKey:@"FullName" account:self];
+    if(!name || [name length] == 0) name = [self accountDescription];
+    return(name);
+}
+
+
+
 //Functions for subclasses to override
 - (void)initAccount{};
 - (NSView *)accountView{return(nil);};
