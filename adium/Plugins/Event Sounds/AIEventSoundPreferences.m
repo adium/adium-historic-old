@@ -38,10 +38,8 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-    NSDictionary *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
     //Build the soundset menu
     [popUp_soundSet setMenu:[self _soundSetMenu]];
-    [button_muteWhileAway setState:[[preferenceDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
 
     //Observer preference changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
@@ -94,10 +92,9 @@
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_SOUNDS] == 0){
         NSString	*key = [[notification userInfo] objectForKey:@"Key"];
-
+        NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
         //If the 'Soundset' changed
         if(notification == nil || ([key compare:KEY_EVENT_SOUND_SET] == 0)){
-            NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
             NSString		*soundSetPath = [preferenceDict objectForKey:KEY_EVENT_SOUND_SET];
 
             //Update the soundset popUp
@@ -107,6 +104,7 @@
                 [popUp_soundSet selectItem:[popUp_soundSet lastItem]];
             }
         }
+        [button_muteWhileAway setState:[[preferenceDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
     }
 }
 
