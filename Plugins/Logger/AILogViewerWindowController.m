@@ -546,7 +546,10 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
 
 					//Filter emoticons
 					if(showEmoticons){
-						logText = [[adium contentController] filterAttributedString:logText usingFilterType:AIFilterMessageDisplay direction:AIFilterOutgoing context:nil];
+						logText = [[adium contentController] filterAttributedString:logText 
+																	usingFilterType:AIFilterMessageDisplay
+																		  direction:AIFilterOutgoing
+																			context:nil];
 					}
 					
 					NSRange     scrollRange = NSMakeRange([logText length],0);
