@@ -110,11 +110,14 @@ do instead  (
     -- Display Names
     insert into adium.user_display_name
     (user_id, display_name)
-    select user_id, new.sender_display
+    select user_id,
+        case when new.sender_display is null
+        or new.sender_display = ''
+        then new.sender_sn
+        else new.sender_display end
     from   adium.users
     where  username = new.sender_sn
      and   service = coalesce(new.sender_service, 'AIM')
-     and   new.sender_display is not null
     and not exists (
         select 'x'
         from   adium.user_display_name udn
@@ -122,7 +125,9 @@ do instead  (
                (select user_id from adium.users
                 where  username = new.sender_sn
                  and   service = coalesce(new.sender_service, 'AIM'))
-            and   display_name = new.sender_display
+            and   display_name = case when new.sender_display is null
+             or new.sender_display = '' then new.sender_sn
+              else new.sender_display end
             and not exists (
                 select 'x'
                 from adium.user_display_name
@@ -131,11 +136,14 @@ do instead  (
 
     insert into adium.user_display_name
     (user_id, display_name)
-    select user_id, new.recipient_display
+    select user_id,
+        case when new.recipient_display is null
+        or new.recipient_display = ''
+        then new.recipient_sn
+        else new.recipient_display end
     from adium.users
     where username = new.recipient_sn
      and  service = coalesce(new.sender_service, 'AIM')
-    and new.recipient_display is not null
     and not exists (
         select 'x'
         from   adium.user_display_name udn
