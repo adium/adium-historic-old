@@ -29,8 +29,8 @@
     //Observe preferences changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     //Observe external address book changes
-    [[owner notificationCenter] addObserver:self selector:@selector(addressBookChanged:) name:kABDatabaseChangedExternallyNotification object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addressBookChanged:) name:kABDatabaseChangedExternallyNotification object:nil];
+        
     propertyDict = [[NSDictionary dictionaryWithObjectsAndKeys:kABAIMInstantProperty,@"AIM",kABJabberInstantProperty,@"Jabber",kABMSNInstantProperty,@"MSN",kABYahooInstantProperty,@"Yahoo",kABICQInstantProperty,@"ICQ",nil] retain];
     trackingDict = [[NSMutableDictionary alloc] init];
     sharedAddressBook = [[ABAddressBook sharedAddressBook] retain];
@@ -63,7 +63,7 @@
             if (results && [results count]) {
                 ABPerson * person = [results objectAtIndex:0];
                 
-                if (person) {                    
+                if (person) {
                     //Begin the image load if appropriate
                     int tag = [person beginLoadingImageDataForClient:self];
                     [trackingDict setObject:inObject forKey:[NSNumber numberWithInt:tag]];
@@ -72,7 +72,6 @@
                     NSString *firstName = [person valueForProperty:kABFirstNameProperty];
                     NSString *lastName = [person valueForProperty:kABLastNameProperty];
                     NSString *displayName = nil;
-                    
                     if (!lastName || displayFormat == ADDRESS_BOOK_FIRST) { //If no last name is available, use the first name
                         displayName = firstName;
                     } else if (!firstName) {        //If no first name is available, use the last name
@@ -124,7 +123,7 @@
         [self updateListObject:inObject
                           keys:nil
                        delayed:YES
-                        silent:YES]; 
+                        silent:NO]; 
     }
 }
 

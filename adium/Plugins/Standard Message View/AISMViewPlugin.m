@@ -16,6 +16,7 @@
 #import "AISMViewPlugin.h"
 #import "AISMViewController.h"
 #import "AISMPreferences.h"
+#import "ESSMAdvancedPreferences.h"
 
 #define SMV_DEFAULT_PREFS	@"SMVDefaults"
 
@@ -29,7 +30,8 @@
     //Register our default preferences and install our preference view
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SMV_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
     preferences = [[AISMPreferences preferencePaneWithOwner:owner] retain];
-    
+    advancedPreferences = [[ESSMAdvancedPreferences preferencePaneWithOwner:owner] retain];
+        
     //Setup a time stamp format based on this user's locale
     NSString    *format = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] objectForKey:KEY_SMV_TIME_STAMP_FORMAT];
     if(!format || [format length] == 0){
