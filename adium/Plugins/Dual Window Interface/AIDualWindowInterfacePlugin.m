@@ -786,10 +786,12 @@
                                                                  object:[[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject]];
             if(savedFrame){
                 newFrame.size.width = NSRectFromString(savedFrame).size.width;
-                newFrame.size.height = NSRectFromString(savedFrame).size.height;                
+                newFrame.size.height = NSRectFromString(savedFrame).size.height;      
+                NSLog(@"savedFrame; w %f h %f",newFrame.size.width,newFrame.size.height);
             }else{ //Default to the width of the source message window
-                newFrame.size.width = [[[tabViewItem tabView] window] frame].size.width;
-                newFrame.size.height = [[[tabViewItem tabView] window] frame].size.height;                
+                newFrame.size.width = [[oldMessageWindow window] frame].size.width;
+                newFrame.size.height = [[oldMessageWindow window] frame].size.height;   
+                NSLog(@"using source size; w %f h %f",newFrame.size.width,newFrame.size.height);
             }
             newFrame.origin = screenPoint;
             [[newMessageWindow window] setFrame:newFrame display:NO];

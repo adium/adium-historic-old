@@ -168,6 +168,7 @@
                                                              object:[[[(AIMessageTabViewItem *)inTabViewItem messageViewController] chat] listObject]];
 
         if(savedFrame){
+            NSLog(@"setting Frame %@",savedFrame);
             [[self window] setFrameFromString:savedFrame];
         }   
     }
@@ -222,6 +223,7 @@
     windowIsClosing = NO;
     tabIsShowing = YES;
     shouldHideOnDragExit = NO;
+    supressHiding = NO;
     
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     
@@ -347,7 +349,8 @@
 //
 - (void)customTabViewDidChangeNumberOfTabViewItems:(AICustomTabsView *)TabView
 {
-    [self _updateTabBarVisibility];
+    if (!supressHiding)
+        [self _updateTabBarVisibility];
     [self _updateWindowTitle];
 }
 
@@ -443,6 +446,13 @@
             return YES;
         }
     }
+}
+
+- (void)supressTabBarHiding:(BOOL)supress
+{
+    supressHiding = supress;
+    if (!supress)
+        [self _updateTabBarVisibility];
 }
 
 //---Drag tracking to show/hide the tab bar as necessary
