@@ -19,7 +19,8 @@
 
 	draggingDelegate = nil;
 	allowsDragAndDrop = YES;
-	
+	shouldForwardEvents = YES;
+
 	return self;
 }
 //Font Family ----------------------------------------------------------------------------------------------------------
@@ -40,12 +41,21 @@
 
 //Key/Paste Forwarding ---------------------------------------------------------------------------------
 #pragma mark Key/Paste Forwarding
+- (void)setShouldForwardEvents:(BOOL)flag
+{
+	shouldForwardEvents = flag;
+}
+
 //When the user attempts to type into the table view, we push the keystroke to the next responder,
 //and make it key.  This isn't required, but convienent behavior since one will never want to type
 //into this view.
 - (void)keyDown:(NSEvent *)theEvent
 {
-    [self forwardSelector:@selector(keyDown:) withObject:theEvent];
+	if(shouldForwardEvents){
+		[self forwardSelector:@selector(keyDown:) withObject:theEvent];
+	}else{
+		[super keyDown:theEvent];
+	}
 }
 
 - (void)forwardSelector:(SEL)selector withObject:(id)object

@@ -7,6 +7,9 @@
 #import <WebKit/WebKit.h>
 #import "ESWebView.h"
 
+@class JVFontPreviewField, AIContentObject, AIAutoScrollView;
+@protocol AIMessageViewController;
+
 typedef enum {
 	DefaultBackground = 0,
 	CustomBackground,
@@ -39,8 +42,9 @@ typedef enum {
 	
 	AIChat						*previewChat;
 	
-	id<AIMessageViewController> previewController;
-    IBOutlet	NSView			*view_previewLocation;
+	id<AIMessageViewController>		previewController;
+	IBOutlet	AIAutoScrollView	*scrollView_previewLocation;
+    IBOutlet	NSView				*view_previewLocation;
 	
 	BOOL						viewIsOpen;
 }

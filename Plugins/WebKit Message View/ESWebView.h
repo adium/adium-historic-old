@@ -10,6 +10,7 @@
 @interface ESWebView : WebView {
 	id		draggingDelegate;
 	BOOL	allowsDragAndDrop;
+	BOOL	shouldForwardEvents;
 }
 
 - (void)setFontFamily:(NSString *)familyName;
@@ -17,5 +18,6 @@
 - (void)setDraggingDelegate:(id)inDelegate;
 
 - (void)setAllowsDragAndDrop:(BOOL)flag;
+- (void)setShouldForwardEvents:(BOOL)flag;
 
 @end

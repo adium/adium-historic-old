@@ -35,6 +35,7 @@
                 "popUp_timeStamps" = NSPopUpButton; 
                 preview = ESWebView; 
                 previewController = id; 
+                "scrollView_previewLocation" = NSScrollView; 
                 "view_previewLocation" = NSView; 
             }; 
             SUPERCLASS = AIPreferencePane; 
