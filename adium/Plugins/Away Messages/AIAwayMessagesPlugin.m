@@ -26,7 +26,6 @@
 #define	CUSTOM_AWAY_MESSAGE_MENU_TITLE		@"Custom Message…"
 #define AWAY_MENU_HOTKEY			@"y"
 
-
 @interface AIAwayMessagesPlugin (PRIVATE)
 - (void)accountPropertiesChanged:(NSNotification *)notification;
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem;
@@ -44,20 +43,20 @@
 - (void)installPlugin
 {
     menuConfiguredForAway = NO;
-
+    
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AWAY_SPELLING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SPELLING];
     
     //Our preference view
     preferences = [[AIAwayMessagePreferences awayMessagePreferencesWithOwner:owner] retain];
-
+    
     //Install our 'enter away message' submenu
     [self installAwayMenu];
-
+    
     //Observe
     [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-
+    
     [self accountPropertiesChanged:nil];
 }
 
@@ -90,12 +89,12 @@
 {
     if(notification == nil || [notification object] == nil){ //We ignore account-specific status changes
         NSString	*modifiedKey = [[notification userInfo] objectForKey:@"Key"];
-
+        
         if([modifiedKey compare:@"AwayMessage"] == 0){
             //Update our away menus
             [self _updateMenusToReflectAwayState:[self shouldConfigureForAway]];
             [self _updateAwaySubmenus];
-
+            
             //Remove existing content sent/received observer, and install new (if away)
             [[owner notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
             [[owner notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
@@ -103,7 +102,7 @@
                 [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
                 [[owner notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
             }
-
+            
             //Flush our array of 'responded' contacts
             [receivedAwayMessage release]; receivedAwayMessage = [[NSMutableArray alloc] init];
         }
@@ -117,20 +116,20 @@
     
     //If the user received a message, send our away message to source
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
-
-	NSAttributedString  *awayMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"AutoResponse" account:nil]];
-
-	if (!awayMessage) {
-	    awayMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"AwayMessage" account:nil]];
-	}
-	
+        
+        NSAttributedString  *awayMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"AutoResponse" account:nil]];
+        
+        if (!awayMessage) {
+            awayMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"AwayMessage" account:nil]];
+        }
+        
         if(awayMessage && [awayMessage length] != 0){
             AIListContact	*contact = [contentObject source];
-
+            
             //Create and send an away bounce message (If the sender hasn't received one already)
             if(![receivedAwayMessage containsObject:[contact UIDAndServiceID]]){
                 AIContentMessage	*responseContent;
-
+                
                 responseContent = [AIContentMessage messageInChat:[contentObject chat]
                                                        withSource:[contentObject destination]
                                                       destination:contact
@@ -148,11 +147,11 @@
 - (void)didSendContent:(NSNotification *)notification
 {
     AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
-
+    
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
         AIListContact	*contact = (AIListContact *)[[contentObject chat] listObject];
         NSString 	*senderUID = [contact UIDAndServiceID];
-
+        
         //Add the handle's UID to our 'already received away message' array, so they only receive the message once.
         if(![receivedAwayMessage containsObject:senderUID]){
             [receivedAwayMessage addObject:senderUID];
@@ -169,15 +168,15 @@
     /*
      It would be easier (and safer) to use a single menu item, and dynamically set it to behave as both menu items ("Set Away ->" and "Remove Away"), dynamically adding and removing the submenu and hotkey.  However, NSMenuItem appears to dislike it when a menu that has previously contained a submenu is assigned a hotkey.  setKeyEquivalent is ignored for any menu that has previuosly contained a submenu, resulting in a hotkey that will stick and persist even when the submenu is present, and that cannot be removed.  To work around this we must use two seperate menu items, and sneak them into Adium's menu.  Using the menu controller with two seperate dynamic items would result in them jumping position in the menu if other items were present in the same category, and is not a good solution.
      */
-
+    
     //Setup the menubar away selector
-    menuItem_away = [[[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:@""] autorelease];
-    menuItem_removeAway = [[[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(removeAwayMessage:) keyEquivalent:AWAY_MENU_HOTKEY] autorelease];
-
+    menuItem_away = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:@""];
+    menuItem_removeAway = [[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(removeAwayMessage:) keyEquivalent:AWAY_MENU_HOTKEY];
+    
     //Setup the dock menu away selector
-    menuItem_dockAway = [[[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:@""] autorelease];
-    menuItem_dockRemoveAway = [[[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(removeAwayMessage:) keyEquivalent:@""] autorelease];
-
+    menuItem_dockAway = [[NSMenuItem alloc] initWithTitle:AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:@""];
+    menuItem_dockRemoveAway = [[NSMenuItem alloc] initWithTitle:REMOVE_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(removeAwayMessage:) keyEquivalent:@""];
+    
     //Add it to the menubar
     if([self shouldConfigureForAway]){
         [[owner menuController] addMenuItem:menuItem_removeAway toLocation:LOC_File_Status];
@@ -186,7 +185,7 @@
         [[owner menuController] addMenuItem:menuItem_away toLocation:LOC_File_Status];
         [[owner menuController] addMenuItem:menuItem_dockAway toLocation:LOC_Dock_Status];
     }
-
+    
     //Update the menu content
     [self _updateAwaySubmenus];
 }
@@ -196,7 +195,7 @@
 {
     //It would be much better to update the menu in response to option being pressed, but I do not know of an easy way to do this :(
     [self _updateMenusToReflectAwayState:[self shouldConfigureForAway]]; //Update the away message menu
-
+    
     return(YES);
 }
 
@@ -211,6 +210,7 @@
 {
     if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_AWAY_MESSAGES] == 0 &&
        [(NSString *)[[notification userInfo] objectForKey:@"Key"] compare:KEY_SAVED_AWAYS] == 0){
+        
         [self _updateAwaySubmenus]; //Rebuild the away menu
     }
 }
@@ -225,13 +225,11 @@
         if(shouldConfigureForAway){
             [self swapMenuItem:menuItem_away with:menuItem_removeAway];
             [self swapMenuItem:menuItem_dockAway with:menuItem_dockRemoveAway];
-            
         }else{
             [self swapMenuItem:menuItem_removeAway with:menuItem_away];
             [self swapMenuItem:menuItem_dockRemoveAway with:menuItem_dockAway];
-
         }
-
+        
         menuConfiguredForAway = shouldConfigureForAway;
     }
 }
@@ -241,7 +239,7 @@
 {
     NSMenu	*containingMenu = [existingItem menu];
     int		menuItemIndex = [containingMenu indexOfItem:existingItem];
-
+    
     [containingMenu removeItem:existingItem];
     [containingMenu insertItem:newItem atIndex:menuItemIndex];
 }
@@ -250,14 +248,13 @@
 - (void)_updateAwaySubmenus
 {
     NSArray	*awayArray;
-
+    
     //Load the saved aways
     awayArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
-
+    
     //Update the menus
     [menuItem_away setSubmenu:[self _awaySubmenuFromArray:awayArray forMainMenu:YES]];
     [menuItem_dockAway setSubmenu:[self _awaySubmenuFromArray:awayArray forMainMenu:NO]];
-
 }
 
 //Builds an away message submenu from the passed array of aways
@@ -268,15 +265,15 @@
     
     //Create the menu
     awayMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-
+    
     //Add the 'Custom away' menu item and divider
     menuItem = [[NSMenuItem alloc] initWithTitle:CUSTOM_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:(mainMenu ? AWAY_MENU_HOTKEY : @"")];
     [awayMenu addItem:menuItem];
     [awayMenu addItem:[NSMenuItem separatorItem]];
-
+    
     //Add a menu item for each away message
     [self _appendAwaysFromArray:awayArray toMenu:awayMenu];
-
+    
     return(awayMenu);
 }
 
@@ -284,28 +281,28 @@
 {
     NSEnumerator	*enumerator;
     NSDictionary	*awayDict;
-
+    
     //Add a menu item for each away message
     enumerator = [awayArray objectEnumerator];
     while((awayDict = [enumerator nextObject])){
         NSString *type = [awayDict objectForKey:@"Type"];
-
+        
         if([type compare:@"Group"] == 0){
             //NSString		*group = [awayDict objectForKey:@"Name"];
-
+            
             //Create & process submenu
-
+            
         }else if([type compare:@"Away"] == 0){
             NSString		*away = [awayDict objectForKey:@"Title"];
             if (!away) //no title was found
                 away = [[NSAttributedString stringWithData:[awayDict objectForKey:@"Message"]] string];
             NSMenuItem		*menuItem;
-
+            
             //Cap the away menu title (so they're not incredibly long)
             if([away length] > MENU_AWAY_DISPLAY_LENGTH){
                 away = [[away substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:@"…"];
             }
-
+            
             menuItem = [[NSMenuItem alloc] initWithTitle:away target:self action:@selector(setAwayMessage:) keyEquivalent:@""];
             [menuItem setRepresentedObject:awayDict];
             [awayMenu addItem:menuItem];
