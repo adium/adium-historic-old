@@ -8,8 +8,7 @@ New features:
 *** - Complete contact list rewrite, w00t.
 - Support for grouping multiple contacts into a single entry ("MetaContacts") via option-dragging in the Contact List and via the Address Book
 - Applescript dictionary
-- Adium now detects changes in network connectivity and automatically disconnects/reconnects as appropriate. When Adium launches, autoconnecting accounts
-	wait for network availability before attempting to connect.
+- Adium now detects changes in network connectivity and automatically disconnects/reconnects as appropriate. When Adium launches, autoconnecting accounts wait for network availability before attempting to connect.
 - Support for protocol-specific /commands (currently only applicable in Zephyr)
 - Preference to specify Sametime serverside contact list loading and saving behavior
 - Preference to specify Home/End key behavior in message windows
