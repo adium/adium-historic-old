@@ -238,26 +238,29 @@ static NSString *statusNameForChat(AIChat *inChat)
  */
 static NSString *statusNameForListObject(AIListObject *listObject)
 {
-	NSString		*statusName;
-	AIStatusSummary	statusSummary = [listObject statusSummary];
+	NSString		*statusName = nil;
 
-	if(statusSummary == AIOfflineStatus){
-		return STATUS_NAME_OFFLINE;
-	}else if(statusSummary == AIIdleStatus){
-		/* Note: AIIdleStatus, but not AIAwayAndIdleStatus, which implies an away state */
-		return @"Idle";
-	}else if(statusName = [listObject statusName]){
-		/* If we have a status name, use that */
-		return statusName;
+	if([listObject isMobile]){
+		statusName = @"Mobile";
+	
 	}else{
-		if(statusSummary == AIUnknownStatus){
-			/* If the object is unknown and we don't have one yet, we'll use that */
-			return @"Unknown";
+		AIStatusSummary	statusSummary = [listObject statusSummary];
+
+		if(statusSummary == AIOfflineStatus){
+			statusName = STATUS_NAME_OFFLINE;
+		}else if(statusSummary == AIIdleStatus){
+			/* Note: AIIdleStatus, but not AIAwayAndIdleStatus, which implies an away state */
+			statusName = @"Idle";
+		}else{
+			statusName = [listObject statusName];
+			
+			if(!statusName && (statusSummary == AIUnknownStatus)){
+				statusName = @"Unknown";
+			}
 		}
 	}
 	
-	/* Otherwise, return nil, which will imply using the default status name for whatever statusType the object is in */
-	return nil;
+	return statusName;
 }
 
 static AIStatusType statusTypeForListObject(AIListObject *listObject)
