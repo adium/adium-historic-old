@@ -597,7 +597,7 @@
     [toolbar setAutosavesConfiguration:YES];
 	
     //
-	toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", @"TextEntry", nil]] retain];
+	toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", @"TextEntry", @"MessageWindow", nil]] retain];
     [[self window] setToolbar:toolbar];
 }
 
@@ -641,9 +641,16 @@
 {
 	//If our selectedTab has changed since the last validation call, update the listObject
 	if(toolbar_selectedTabChanged){
-		NSImage	*image;
-	
-		image = [[[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat] listObject] userIcon];
+		AIListObject	*listObject;
+		NSImage			*image;
+		
+		listObject = [[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat] listObject];
+		image = [listObject userIcon];
+		
+		//Use the serviceIcon if no image can be found
+		if(!image) image = [AIServiceIcons serviceIconForObject:listObject
+														   type:AIServiceIconLarge
+													  direction:AIIconNormal];
 		[(ESFlexibleToolbarItem *)[inToolbarItem view] setImage:image];
 	
 		toolbar_selectedTabChanged = NO;
