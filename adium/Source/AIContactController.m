@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.69 2004/01/08 15:44:43 adamiser Exp $
+// $Id: AIContactController.m,v 1.70 2004/01/08 16:29:39 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -139,6 +139,7 @@
 			infoDict = [NSDictionary dictionaryWithObjectsAndKeys:
 				[object UID], @"UID",
 				[self _arrayRepresentationOfGroupContent:(AIListGroup *)object], @"Content",
+				[NSNumber numberWithBool:[(AIListGroup *)object isExpanded]], @"Expanded",
 				nil];
 		}
 		
@@ -176,6 +177,7 @@
 			object = [self groupWithUID:[infoDict objectForKey:@"UID"]];
 			
 			[inGroup addObject:object];
+			[(AIListGroup *)object setExpanded:[[infoDict objectForKey:@"Expanded"] boolValue]];
 			[self _loadListObjectsFromGroupContent:[infoDict objectForKey:@"Content"]
 										 intoGroup:(AIListGroup *)object];
 			

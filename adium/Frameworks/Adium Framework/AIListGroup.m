@@ -28,7 +28,7 @@
 	
     objectArray = [[NSMutableArray alloc] init];
 	largestIndex = 1;
-    expanded = NO;
+    expanded = YES;
 	
 	//Default invisible
     visibleCount = 0;

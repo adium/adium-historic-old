@@ -732,12 +732,14 @@
 //Create an ESFileTransfer object from an xfer, associating the xfer with the object and the object with the xfer
 - (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer
 {
-    AIHandle * handle = [handleDict objectForKey:[[NSString stringWithUTF8String:(xfer->who)] compactedString]];
+//    AIHandle * handle = [handleDict objectForKey:[[NSString stringWithUTF8String:(xfer->who)] compactedString]];
     //handle new handles here
     //****
-    
-    ESFileTransfer * fileTransfer = [ESFileTransfer fileTransferWithHandle:handle forAccount:self]; 
-    
+	AIListContact   *contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+																			UID:[[NSString stringWithUTF8String:(xfer->who)] compactedString]];
+
+    ESFileTransfer * fileTransfer = [ESFileTransfer fileTransferWithContact:contact forAccount:self]; 
+
     [fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
     xfer->ui_data = fileTransfer;
     
@@ -903,7 +905,7 @@
 - (void)accountConnectionDisconnected
 {
     NSEnumerator    *enumerator;
-    AIHandle        *handle;
+    AIListContact	*contact;
     
     //We are now offline
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
@@ -911,9 +913,11 @@
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
     
     //Flush all our handle status flags
-    enumerator = [[handleDict allValues] objectEnumerator];
-    while((handle = [enumerator nextObject])){
-        [self removeAllStatusFlagsFromHandle:handle];
+#warning (Intentional) This is dreadfully inefficient.  Is there a faster solution to disconnecting?
+    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+    while((contact = [enumerator nextObject])){
+        [self removeAllStatusFlagsFromContact:contact];
+		[contact setRemoteGroupName:nil forAccount:self];
     }
     
     //Clear out the GaimConv pointers in the chat statusDictionaries, as they no longer have meaning
@@ -922,10 +926,6 @@
     while (chat = [enumerator nextObject]) {
         [[chat statusDictionary] removeObjectForKey:@"GaimConv"];
     }       
-    
-    //Remove all our handles
-    [handleDict release]; handleDict = [[NSMutableDictionary alloc] init];
-    [[adium contactController] handlesChangedForAccount:self];
     
     //Remove our chat dictionary
     [chatDict release]; chatDict = [[NSMutableDictionary alloc] init];

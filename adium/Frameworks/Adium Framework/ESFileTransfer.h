@@ -8,25 +8,25 @@
 
 #import <Foundation/Foundation.h>
 
-@class AIAccount, AIHandle;
+@class AIAccount;
 
 @interface ESFileTransfer : AIObject {
-    AIHandle *handle;
-    AIAccount<AIAccount_Files> *account;
-    NSString *localFilename;
-    NSString *remoteFilename;
-    id accountData;
+    AIListContact		*contact;
+    AIAccount<AIAccount_Files> 	*account;
+    NSString			*localFilename;
+    NSString			*remoteFilename;
+    id					accountData;
     
-    float percentDone;
-    unsigned int size;
-    unsigned int bytesSent;
-    FileTransferType type;
+    float				percentDone;
+    unsigned int		size;
+    unsigned int		bytesSent;
+    FileTransferType 	type;
 }
 
-+ (id)fileTransferWithHandle:(AIHandle *)inHandle forAccount:(AIAccount *)inAccount;
-- (id)initWithHandle:(AIHandle *)inHandle forAccount:(AIAccount *)inAccount;
++ (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount;
+- (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount;
 
-- (AIHandle *)handle;
+- (AIListContact *)contact;
 - (AIAccount *)account;
 
 - (void)setRemoteFilename:(NSString *)inRemoteFilename;
