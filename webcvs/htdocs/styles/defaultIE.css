@@ -1,0 +1,55 @@
+body {
+	background: #ff9934;
+}
+
+#header {
+	background: url(imagesIE/bordertop.gif) no-repeat;
+}
+
+#banner {
+	background: url(imagesIE/bordercentral.gif) repeat-y;
+}
+
+/*<group=buttonbar>*/
+
+#buttoncontainer ul .download {
+	background: url(imagesIE/downloadpackage.gif) no-repeat 30px 10px #FFE4C9;
+}
+
+#buttoncontainer ul .xtras {
+	background: url(imagesIE/xtras.gif) no-repeat 15px 10px;
+}
+
+/*</group>*/
+
+#central {
+	background: url(imagesIE/bordercentral.gif) repeat-y;
+}
+
+.donate a {
+	background: url(imagesIE/adiumy/green_small.gif) no-repeat;
+}
+
+.donate a:hover {
+	background: url(imagesIE/adiumy/green_flap_small.gif) no-repeat;
+}
+
+.boxWideTop {
+	background: url(imagesIE/boxWideTopBorder.gif) no-repeat;
+}
+
+.boxWideBottom {
+	background: url(imagesIE/boxWideBottomBorder.gif) no-repeat;
+}
+
+.boxThinTop {
+	background: url(imagesIE/boxThinTopBorder.gif) no-repeat;
+}
+
+.boxThinBottom {
+	background: url(imagesIE/boxThinBottomBorder.gif) no-repeat;
+}
+
+#footer {
+	background: url(imagesIE/borderbottom.gif) no-repeat;
+}
