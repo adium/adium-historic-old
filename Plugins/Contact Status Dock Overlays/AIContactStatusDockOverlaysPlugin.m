@@ -57,22 +57,27 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
+	NSString *group;
+	
+	group = (NSString *)[[notification userInfo] objectForKey:@"Group"];
+	
 	///*
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:@"Contact Status Coloring"]){
-        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:@"Contact Status Coloring"];
+    if(notification == nil || [group isEqualToString:PREF_GROUP_LIST_THEME]){
+        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
 		
 		//Snatch colors from status coloring plugin's prefs    
 		[self flushPreferenceColorCache];
-        signedOffColor = [[[prefDict objectForKey:@"Signed Off Color"] representedColor] retain];
-        signedOnColor = [[[prefDict objectForKey:@"Signed On Color"] representedColor] retain];
-        unviewedContentColor = [[[prefDict objectForKey:@"Unviewed Content Color"] representedColor] retain];
-        backSignedOffColor = [[[prefDict objectForKey:@"Signed Off Label Color"] representedColor] retain];
-        backSignedOnColor = [[[prefDict objectForKey:@"Signed On Label Color"] representedColor] retain];
-        backUnviewedContentColor = [[[prefDict objectForKey:@"Unviewed Content Label Color"] representedColor] retain];
+        signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
+        signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
+        unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
+		
+        backSignedOffColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor] retain];
+        backSignedOnColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor] retain];
+        backUnviewedContentColor = [[[prefDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor] retain];
     }
 	//*/
     
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DOCK_OVERLAYS]){
+    if(notification == nil || [group isEqualToString:PREF_GROUP_DOCK_OVERLAYS]){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DOCK_OVERLAYS];
 		
         //
