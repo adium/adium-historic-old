@@ -45,8 +45,6 @@ typedef enum {
 } AIFilterDirection;
 #define FILTER_DIRECTION_COUNT 2
 
-
-
 //Handles the display of a content type
 @protocol AIContentHandler 
 @end

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.94 2004/07/22 16:46:26 adamiser Exp $
+// $Id: AIContentController.m,v 1.95 2004/07/27 19:16:41 evands Exp $
 
 #import "AIContentController.h"
 
@@ -456,8 +456,8 @@
 		}
 		
 		//If this object is within a meta contact, and a chat for and object in that meta contact already exists
-		if([[inContact containingGroup] isKindOfClass:[AIMetaContact class]] && 
-		   [[chat listObject] containingGroup] == [inContact containingGroup]){
+		if([[inContact containingObject] isKindOfClass:[AIMetaContact class]] && 
+		   [[chat listObject] containingObject] == [inContact containingObject]){
 
 			//If we're on a different account now, switch the chat over
 			if(![[inContact accountID] isEqualToString:[(AIListContact *)[chat listObject] accountID]]){
