@@ -4604,6 +4604,20 @@
 			settings = {
 			};
 		};
+		34A273AA0721E58F004F3455 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = sendfile.png;
+			path = Source/sendfile.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A273AB0721E58F004F3455 = {
+			fileRef = 34A273AA0721E58F004F3455;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34A29D9406ED68BF00E1366C = {
 			includeInIndex = 0;
 			isa = PBXFileReference;
@@ -6056,6 +6070,7 @@
 				34F6A9320710E20000F485C4,
 				34F6A9330710E20000F485C4,
 				34F6A9340710E20000F485C4,
+				34A273AB0721E58F004F3455,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -23110,6 +23125,7 @@
 				34B9BCFF064062170097AF93,
 				34B9BD00064062170097AF93,
 				4B0118080679168700FCB992,
+				34A273AA0721E58F004F3455,
 				4B29093F05F944BF0087D16F,
 				348E556A053A188C0021E541,
 				4BDF17240450CBDE00A8010A,
