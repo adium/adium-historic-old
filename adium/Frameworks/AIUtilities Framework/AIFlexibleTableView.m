@@ -442,6 +442,16 @@
     [self setNeedsDisplay:YES];
 }
 
+//Typing
+//When the user attempts to type into the table view, we push the keystroke to the next responder, and make it key.  This isn't required, but convienent behavior since one will never want to type into this view.
+- (void)keyDown:(NSEvent *)theEvent
+{    
+    //Make the next responder key
+    [[self window] makeFirstResponder:[self nextResponder]];
+
+    //Pass it this key event
+    [[self nextResponder] tryToPerform:@selector(keyDown:) with:theEvent];
+}
 
 
 //Row Selection ---------------------------------------------------------------------------------
