@@ -14,9 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.15 $
- * $Date: 2004/03/20 13:23:53 $
- * $Author: adamiser $
+ * $Revision: 1.16 $
+ * $Date: 2004/03/24 14:44:19 $
+ * $Author: evands $
  **/
 
 #define Account_ListChanged 					@"Account_ListChanged"
@@ -80,6 +80,9 @@
 - (NSString *)passwordForAccount:(AIAccount *)inAccount;
 - (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector;
 - (void)forgetPasswordForAccount:(AIAccount *)inAccount;
+
+- (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector;
+- (void)setPassword:(NSString *)inPassword forProxyServer:(NSString *)server userName:(NSString *)userName;
 
 //Private
 - (void)initController;
