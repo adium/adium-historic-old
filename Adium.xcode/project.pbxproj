@@ -1706,13 +1706,13 @@
 		};
 		343C89B005704DEC005E0632 = {
 			children = (
-				3481DF4D05704F3300CD38D6,
-				3481DF4F05704F4C00CD38D6,
-				3481DF5105704F6400CD38D6,
-				3481DF5305704F7D00CD38D6,
-				34DFEC2507A4865000B92233,
-				3481DF5505704F9A00CD38D6,
-				3481DF5605704F9A00CD38D6,
+				34E2A2EA07B018B0006735BC,
+				34E2A2EB07B018B1006735BC,
+				34E2A2EC07B018B1006735BC,
+				34E2A2ED07B018B1006735BC,
+				34E2A2EE07B018B1006735BC,
+				34E2A2EF07B018B2006735BC,
+				34E2A2F907B018E5006735BC,
 			);
 			isa = PBXGroup;
 			name = "Address Book Integration";
@@ -3854,59 +3854,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = ESContactClientPlugin.m;
 			path = "Plugins/Contact Client/ESContactClientPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3481DF4D05704F3300CD38D6 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESAddressBookIntegrationPlugin.h;
-			path = "Plugins/Address Book Integration/ESAddressBookIntegrationPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3481DF4F05704F4C00CD38D6 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESAddressBookIntegrationPlugin.m;
-			path = "Plugins/Address Book Integration/ESAddressBookIntegrationPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3481DF5105704F6400CD38D6 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESAddressBookIntegrationAdvancedPreferences.h;
-			path = "Plugins/Address Book Integration/ESAddressBookIntegrationAdvancedPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3481DF5305704F7D00CD38D6 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESAddressBookIntegrationAdvancedPreferences.m;
-			path = "Plugins/Address Book Integration/ESAddressBookIntegrationAdvancedPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3481DF5505704F9A00CD38D6 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = AddressBookPrefs.nib;
-			path = "Plugins/Address Book Integration/AddressBookPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3481DF5605704F9A00CD38D6 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = "AB Display Format Defaults.plist";
-			path = "Plugins/Address Book Integration/AB Display Format Defaults.plist";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -6281,8 +6228,6 @@
 				4BD6737306001BF00049CAF7,
 				4BD6737506001BF00049CAF7,
 				4BD6737E06001BF60049CAF7,
-				4BD6738606001C2B0049CAF7,
-				4BD6738806001C2C0049CAF7,
 				4BD6738C06001C2D0049CAF7,
 				4BD6739906001C3F0049CAF7,
 				4BD6739C06001C440049CAF7,
@@ -6456,6 +6401,8 @@
 				34E2A0C407AF593B006735BC,
 				34E2A1CE07AF635A006735BC,
 				34E2A1DC07AF6504006735BC,
+				34E2A2F207B018B2006735BC,
+				34E2A2F407B018B2006735BC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6562,7 +6509,6 @@
 				34BD9D3D053146CC000AB133,
 				4BD673E806001CB50049CAF7,
 				4BD6737706001BF10049CAF7,
-				4BD6738A06001C2C0049CAF7,
 				4BD673EB06001CB60049CAF7,
 				4BD6740206001CC40049CAF7,
 				34BD9D2A053146CC000AB133,
@@ -6627,7 +6573,6 @@
 				34254F4C05EC0C4300F11AD7,
 				34BD9D29053146CC000AB133,
 				4B29094005F944BF0087D16F,
-				4BD6738B06001C2C0049CAF7,
 				4BD6739006001C2F0049CAF7,
 				4BD6739106001C2F0049CAF7,
 				4BD673A606001C4E0049CAF7,
@@ -6754,7 +6699,6 @@
 				3433673307949E2200C84B15,
 				4BDAF69707A1561000276D68,
 				4B7A567C07A1754400BDC540,
-				34DFEC2607A4865000B92233,
 				34DFF53607A62EB100B92233,
 				34DFF53707A62EB200B92233,
 				34DFF53807A62EB200B92233,
@@ -6774,6 +6718,9 @@
 				34DFF54807A62EB300B92233,
 				34C14D5107A8BA00003CC138,
 				4BE6174907AC67D50049C87D,
+				34E2A2F107B018B2006735BC,
+				34E2A2F307B018B2006735BC,
+				34E2A2FA07B018E5006735BC,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6851,8 +6798,6 @@
 				4BD6737406001BF00049CAF7,
 				4BD6737606001BF10049CAF7,
 				4BD6737D06001BF50049CAF7,
-				4BD6738706001C2B0049CAF7,
-				4BD6738906001C2C0049CAF7,
 				4BD6738D06001C2E0049CAF7,
 				4BD6739B06001C410049CAF7,
 				4BD6739D06001C450049CAF7,
@@ -7026,6 +6971,8 @@
 				34E2A0C307AF593B006735BC,
 				34E2A1CD07AF635A006735BC,
 				34E2A1DB07AF6504006735BC,
+				34E2A2F007B018B2006735BC,
+				34E2A2F507B018B2006735BC,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8912,20 +8859,6 @@
 			settings = {
 			};
 		};
-		34DFEC2507A4865000B92233 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = AddressBook.png;
-			path = "Plugins/Address Book Integration/AddressBook.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DFEC2607A4865000B92233 = {
-			fileRef = 34DFEC2507A4865000B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34DFF46007A5EABF00B92233 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -9383,6 +9316,118 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		34E2A2EA07B018B0006735BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESAddressBookIntegrationPlugin.m;
+			path = Source/ESAddressBookIntegrationPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A2EB07B018B1006735BC = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = AddressBookPrefs.nib;
+			path = Source/AddressBookPrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A2EC07B018B1006735BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESAddressBookIntegrationAdvancedPreferences.h;
+			path = Source/ESAddressBookIntegrationAdvancedPreferences.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A2ED07B018B1006735BC = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = AddressBook.png;
+			path = Source/AddressBook.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A2EE07B018B1006735BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESAddressBookIntegrationPlugin.h;
+			path = Source/ESAddressBookIntegrationPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A2EF07B018B2006735BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESAddressBookIntegrationAdvancedPreferences.m;
+			path = Source/ESAddressBookIntegrationAdvancedPreferences.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A2F007B018B2006735BC = {
+			fileRef = 34E2A2EA07B018B0006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A2F107B018B2006735BC = {
+			fileRef = 34E2A2EB07B018B1006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A2F207B018B2006735BC = {
+			fileRef = 34E2A2EC07B018B1006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A2F307B018B2006735BC = {
+			fileRef = 34E2A2ED07B018B1006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A2F407B018B2006735BC = {
+			fileRef = 34E2A2EE07B018B1006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A2F507B018B2006735BC = {
+			fileRef = 34E2A2EF07B018B2006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A2F907B018E5006735BC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = "AB Display Format Defaults.plist";
+			path = "Source/AB Display Format Defaults.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E2A2FA07B018E5006735BC = {
+			fileRef = 34E2A2F907B018E5006735BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E2A2FD07B0193B006735BC = {
+			children = (
+				343C89B005704DEC005E0632,
+			);
+			isa = PBXGroup;
+			name = Contacts;
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		34E38235068F7F0300303451 = {
 			children = (
@@ -11960,15 +12005,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B13323A0459BD3300A8010A = {
-			children = (
-			);
-			isa = PBXGroup;
-			name = Sound;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B15ED2E057AED8600A3B3D3 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -12800,7 +12836,6 @@
 		};
 		4B4F5B25042D637700A8010A = {
 			children = (
-				343C89B005704DEC005E0632,
 				4B28907503C1D14200A8010A,
 				34C2D31006334A460018E5D2,
 				4B052C9B067E399300A43B4A,
@@ -13125,6 +13160,7 @@
 		4B587C0507ABFC87001832A9 = {
 			children = (
 				34E29FCE07AF091C006735BC,
+				34E2A2FD07B0193B006735BC,
 				4B587C3707ABFCA8001832A9,
 			);
 			isa = PBXGroup;
@@ -13140,7 +13176,6 @@
 				34306FE3076F53F60025102A,
 				4B4F5B2A042D63E200A8010A,
 				4B4F5B23042D636700A8010A,
-				4B13323A0459BD3300A8010A,
 				4B4F5B29042D63DC00A8010A,
 			);
 			isa = PBXGroup;
@@ -16335,42 +16370,6 @@
 		};
 		4BD6737E06001BF60049CAF7 = {
 			fileRef = 348E54C00539D04C0021E541;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6738606001C2B0049CAF7 = {
-			fileRef = 3481DF4D05704F3300CD38D6;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6738706001C2B0049CAF7 = {
-			fileRef = 3481DF4F05704F4C00CD38D6;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6738806001C2C0049CAF7 = {
-			fileRef = 3481DF5105704F6400CD38D6;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6738906001C2C0049CAF7 = {
-			fileRef = 3481DF5305704F7D00CD38D6;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6738A06001C2C0049CAF7 = {
-			fileRef = 3481DF5505704F9A00CD38D6;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6738B06001C2C0049CAF7 = {
-			fileRef = 3481DF5605704F9A00CD38D6;
 			isa = PBXBuildFile;
 			settings = {
 			};
