@@ -60,7 +60,7 @@
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	
+
 	[super dealloc];
 }
 
@@ -70,10 +70,10 @@
 	NSPoint	viewPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	int		row = [self rowAtPoint:viewPoint];
 	id		item = [self itemAtRow:row];
-	
+
 	//Expand/Collapse groups on mouse DOWN instead of mouse up (Makes it feel a ton faster)
-	if((item) && 
- 	   ([self isExpandable:item]) && 
+	if((item) &&
+ 	   ([self isExpandable:item]) &&
  	   (viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.height)){
 		//XXX - This is kind of a hack.  We need to check < WidthOfDisclosureTriangle, and are using the fact that
 		//      the disclosure width is about the same as the height of the row to fudge it. -ai
@@ -86,15 +86,15 @@
 	}else{
 		[super mouseDown:theEvent];
 	}
-	
-//	if((expandOnClick) && 
-//	   (item) && 
-//	   ([self isExpandable:item]) && 
+
+//	if((expandOnClick) &&
+//	   (item) &&
+//	   ([self isExpandable:item]) &&
 //	   (viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.width)){
 //
 //		NSEvent *nextEvent;
 //		BOOL	itemIsExpanded;
-//		
+//
 //		//Store the current expanded state
 //		itemIsExpanded = [self isItemExpanded:item];
 //
@@ -105,7 +105,7 @@
 //												 dequeue:NO];
 //		//Handle the original event
 //		[super mouseDown:theEvent];
-//		
+//
 //		if([nextEvent type] == NSLeftMouseUp){
 //			//If they pressed and released, expand/collapse the item unless mouseDown: already did
 //			BOOL itemIsNowExpanded = [self isItemExpanded:item];
@@ -147,9 +147,9 @@
 - (int)rowAtPoint:(NSPoint)point
 {
 	[self updateRowHeightCache];
-	
+
 	if(point.y < 0 || point.y > totalHeight) return(-1);
-	
+
 	//Find the top visible cell
 	int row = 0;
 	while(row < entriesInCache-1 && rowOriginCache[row+1] <= point.y) row++;
@@ -160,20 +160,20 @@
 {
 	NSRange	range = NSMakeRange(0,0);
 	int 	row = 0;
-	
+
 	[self updateRowHeightCache];
-	
+
 	//Find the top visible cell
 	while(row < entriesInCache-1 && rowOriginCache[row+1] <= rect.origin.y){
 		range.location++;
 		row++;
 	}
-	
+
 	//Determine the number of additional visible cells
 	do{
 		range.length++;
 	}while(row < entriesInCache && rowOriginCache[row++] <= rect.origin.y + rect.size.height);
-	
+
 	return(range);
 }
 
@@ -231,12 +231,12 @@
 {
 	if(!rowHeightCache && !rowOriginCache){
 		int	numberOfRows = [self numberOfRows];
-		
+
 		//Expand
 		while(numberOfRows > cacheSize){
 			cacheSize *= 2;
 		}
-		
+
 		//New
 		rowHeightCache = malloc(cacheSize * sizeof(int));
 		rowOriginCache = malloc(cacheSize * sizeof(int));
@@ -246,18 +246,23 @@
 		int		origin = 0;
 		int		i;
 		NSSize	intercellSpacing = [self intercellSpacing];
-		
+
 		for(i = 0; i < entriesInCache; i++){
 			int height = [self heightForRow:i];
 
 			rowHeightCache[i] = height;
 			rowOriginCache[i] = origin;
-			
+
 			origin += height + intercellSpacing.height;
 		}
-		
+
 		totalHeight = origin;
-	}	
+	}
+}
+
+- (id)cellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
+    return([tableColumn dataCell]);
 }
 
 - (int)heightForRow:(int)row
@@ -273,36 +278,36 @@
 		NSArray		*tableColumns = [self tableColumns];
 		id			item = [self itemAtRow:row];
 		unsigned	tableColumnIndex, count = [tableColumns count];
-		
+
 		for(tableColumnIndex = 0 ; tableColumnIndex < count ; tableColumnIndex++){
 			NSTableColumn	*tableColumn;
 			NSRect			cellFrame;
 			id				cell;
 			BOOL			selected;
-			
+
 			tableColumn = [tableColumns objectAtIndex:tableColumnIndex];
 			cell = [tableColumn dataCell];
-			
+
 			[[self delegate] outlineView:self
-						 willDisplayCell:cell 
+						 willDisplayCell:cell
 						  forTableColumn:tableColumn
 									item:item];
-	
+
 			selected = [self isRowSelected:row];
 			[cell setHighlighted:selected];
 
-			[cell setObjectValue:[[self dataSource] outlineView:self 
+			[cell setObjectValue:[[self dataSource] outlineView:self
 									  objectValueForTableColumn:tableColumn
 														 byItem:item]];
-			
+
 			cellFrame = [self frameOfCellAtColumn:tableColumnIndex row:row];
-	
+
 			/*
 			 * Draw the alternating rows.  If we draw alternating rows, the cell in the first column
 			 * can optionally suppress drawing. We only do this before drawing the first column; that way,
 			 * we can cover the full width of the row in one stroke.
 			 */
-			if([self drawsAlternatingRows] && 
+			if([self drawsAlternatingRows] &&
 			   (![cell respondsToSelector:@selector(drawGridBehindCell)] || [cell drawGridBehindCell]) &&
 			   (tableColumnIndex == 0)){
 
@@ -310,7 +315,7 @@
 							 colored:!(row % 2)
 							selected:selected];
 			}
-			
+
 			//Draw the cell
 			if(selected) [cell _drawHighlightWithFrame:cellFrame inView:self];
 			[cell drawWithFrame:cellFrame inView:self];
@@ -324,62 +329,62 @@
 	NSRect			rowRect;
 	float			yOffset;
 	unsigned int	i, firstRow, row, tableColumnsCount;
-	
+
 	firstRow = buf[0];
-	
+
 	//Since our cells draw outside their bounds, this drag image code will create a drag image as big as the table row
 	//and then draw the cell into it at the regular size.  This way the cell can overflow its bounds as normal and not
 	//spill outside the drag image.
 	rowRect = [self rectOfRow:firstRow];
 	image = [[[NSImage alloc] initWithSize:NSMakeSize(rowRect.size.width,
 													  rowRect.size.height*count + [self intercellSpacing].height*(count-1))] autorelease];
-	
+
 	//Draw (Since the OLV is normally flipped, we have to be flipped when drawing)
 	[image setFlipped:YES];
 	[image lockFocus];
-	
+
 	tableColumnsCount = [tableColumns count];
-	
+
 	yOffset = 0;
 	for(i = 0; i < count; i++){
 
 		id		item = [self itemAtRow:row];
 		row = buf[i];
-		
+
 		//Draw each table column
 		unsigned tableColumnIndex;
 		for(tableColumnIndex = 0 ; tableColumnIndex < tableColumnsCount ; tableColumnIndex++){
-			
+
 			NSTableColumn	*tableColumn = [tableColumns objectAtIndex:tableColumnIndex];
 			id		cell = [tableColumn dataCell];
-			
+
 			//Render the cell
 			[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:tableColumn item:item];
 			[cell setHighlighted:NO];
-			[cell setObjectValue:[[self dataSource] outlineView:self 
+			[cell setObjectValue:[[self dataSource] outlineView:self
 									  objectValueForTableColumn:tableColumn
 														 byItem:item]];
-			
+
 			//Draw the cell
 			NSRect	cellFrame = [self frameOfCellAtColumn:tableColumnIndex row:row];
 			[cell drawWithFrame:NSMakeRect(cellFrame.origin.x - rowRect.origin.x,yOffset,cellFrame.size.width,cellFrame.size.height)
 						 inView:self];
 		}
-	
+
 		//Offset so the next drawing goes directly below this one
 		yOffset += (rowRect.size.height + [self intercellSpacing].height);
 	}
-	
+
 	[image unlockFocus];
 	[image setFlipped:NO];
-	
+
 	//Offset the drag image (Remember: The system centers it by default, so this is an offset from center)
 	NSPoint clickLocation = [self convertPoint:[dragEvent locationInWindow] fromView:nil];
 	dragImageOffset->x = (rowRect.size.width / 2.0) - clickLocation.x;
-	
-	
+
+
 	return([image imageByFadingToFraction:DRAG_IMAGE_FRACTION]);
-	
+
 }
 
 - (NSImage *)dragImageForRowsWithIndexes:(NSIndexSet *)dragRows tableColumns:(NSArray *)tableColumns event:(NSEvent*)dragEvent offset:(NSPointPointer)dragImageOffset
@@ -387,14 +392,14 @@
 	NSImage			*image;
 	unsigned int	bufSize = [dragRows count];
 	unsigned int	*buf = malloc(bufSize * sizeof(unsigned int));
-	
+
 	NSRange range = NSMakeRange([dragRows firstIndex], ([dragRows lastIndex]-[dragRows firstIndex]) + 1);
 	[dragRows getIndexes:buf maxCount:bufSize inIndexRange:&range];
-	
-	image = [self dragImageForRows:buf count:bufSize tableColumns:tableColumns event:dragEvent offset:dragImageOffset]; 
-	
+
+	image = [self dragImageForRows:buf count:bufSize tableColumns:tableColumns event:dragEvent offset:dragImageOffset];
+
 	free(buf);
-	
+
 	return(image);
 }
 
@@ -404,15 +409,15 @@
 	NSImage			*image;
 	unsigned int	i, bufSize = [dragRows count];
 	unsigned int	*buf = malloc(bufSize * sizeof(unsigned int));
-	
+
 	for(i = 0; i < bufSize; i++){
 		buf[i] = [[dragRows objectAtIndex:0] unsignedIntValue];
 	}
-	
-	image = [self dragImageForRows:buf count:bufSize tableColumns:nil event:dragEvent offset:dragImageOffset]; 
-	
+
+	image = [self dragImageForRows:buf count:bufSize tableColumns:nil event:dragEvent offset:dragImageOffset];
+
 	free(buf);
-	
+
 	return(image);
 }
 
@@ -427,7 +432,7 @@
 //Custom highlight management
 - (void)setDrawHighlightOnlyWhenMain:(BOOL)inFlag
 {
-	drawHighlightOnlyWhenMain = inFlag;	
+	drawHighlightOnlyWhenMain = inFlag;
 }
 - (BOOL)drawHighlightOnlyWhenMain
 {
@@ -449,19 +454,19 @@
 			unsigned int bufSize = [indices count];
 			unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
 			unsigned int i;
-			
+
 			NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
 			[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
-			
+
 			for(i = 0; i < bufSize; i++) {
 				[self _drawRowSelectionInRect:[self rectOfRow:buf[i]]];
 			}
-			
+
 			free(buf);
 		}else{
 			NSEnumerator	*enumerator = [self selectedRowEnumerator];
 			NSNumber		*rowNumber;
-			
+
 			while(rowNumber = [enumerator nextObject]){
 				[self _drawRowSelectionInRect:[self rectOfRow:[rowNumber intValue]]];
 			}
@@ -474,12 +479,12 @@
 	//Draw the gradient
 	AIGradient *gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
 	[gradient drawInRect:rect];
-	
+
 	//Draw a line at the light side, to make it look a lot cleaner
 	rect.size.height = 1;
 	[[NSColor alternateSelectedControlColor] set];
 	NSRectFillUsingOperation(rect, NSCompositeSourceOver);
-	
+
 }
 
 @end
