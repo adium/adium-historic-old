@@ -49,6 +49,8 @@
 #define	KEY_ACTION_DETAILS			@"ActionDetails"
 #define KEY_ONE_TIME_ALERT			@"OneTime"
 
+#define EVENTS_TITLE				AILocalizedString(@"Events", "Name of preferences and tab for specifying what Adium should do when events occur - for example, when display a Growl alert when John signs on.")
+
 typedef enum {
 	AIContactsEventHandlerGroup = 0,
 	AIMessageEventHandlerGroup,
