@@ -6593,6 +6593,57 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34C2CF85063340540018E5D2 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = GaimMultilineRequestWindow.nib;
+			path = "Plugins/Gaim Service/GaimMultilineRequestWindow.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C2CF86063340540018E5D2 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = GaimSinglelineRequestWindow.nib;
+			path = "Plugins/Gaim Service/GaimSinglelineRequestWindow.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C2CF87063340540018E5D2 = {
+			fileRef = 34C2CF85063340540018E5D2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C2CF88063340540018E5D2 = {
+			fileRef = 34C2CF86063340540018E5D2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C2CF8F0633405C0018E5D2 = {
+			children = (
+				3499F4A706309AF60035B468,
+				3499F4A606309AF60035B468,
+				34C2CF85063340540018E5D2,
+				34C2CF86063340540018E5D2,
+			);
+			isa = PBXGroup;
+			name = "Request UI";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C2CFE6063340780018E5D2 = {
+			children = (
+				34048AC50617CB4C004D0B7E,
+				34048AC60617CB4C004D0B7E,
+				4BDF2C91061E376C00EA75C5,
+			);
+			isa = PBXGroup;
+			name = Libgaim;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		34CDB7AE0571D67800D50469 = {
 			children = (
 				4BE9200A03DED0E500A8010A,
@@ -10028,6 +10079,8 @@
 				348A8A1A0629A68C00FC6E03,
 				348A901B062A13AB00FC6E03,
 				34B91980062DEC99004F1223,
+				34C2CF87063340540018E5D2,
+				34C2CF88063340540018E5D2,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10152,14 +10205,11 @@
 				340915F105C0A5DF00CDE3DD,
 				4B7F278905440C8D00CDFC90,
 				4B7F278A05440C8D00CDFC90,
-				3499F4A706309AF60035B468,
-				3499F4A606309AF60035B468,
-				34048AC50617CB4C004D0B7E,
-				34048AC60617CB4C004D0B7E,
-				4BDF2C91061E376C00EA75C5,
 				34327BD6060D2FE6003D7AD9,
 				34415880059F8F050019246B,
 				3441587A059F8EFC0019246B,
+				34C2CF8F0633405C0018E5D2,
+				34C2CFE6063340780018E5D2,
 			);
 			isa = PBXGroup;
 			name = Gaim;
