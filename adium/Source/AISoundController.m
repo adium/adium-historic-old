@@ -25,8 +25,6 @@
     NSString	*path = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_SOUNDS] stringByAppendingPathComponent:inName];
     NSMovie	*sharedMovie;
 
-
-
     sharedMovie = [[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:path] byReference:YES];
 
     //---set the volume & play---

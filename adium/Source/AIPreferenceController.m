@@ -126,8 +126,9 @@
     }
 }
 
-//Using Handle Specific Preferences --------------------------------------------------------------
-- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName handle:(AIContactHandle *)handle
+//Using Handle/Group Specific Preferences --------------------------------------------------------------
+//Return an object specific preference.
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIContactObject *)object
 {
     //Search the handle specific prefs for the key
     
@@ -135,7 +136,15 @@
     return([[self preferencesForGroup:groupName] objectForKey:inKey]);
 }
 
+//Set an object specific preference
+- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName object:(AIContactObject *)object
+{
+    //Set the preference as handle or group specific
 
+    //For now just save it generally
+    [self setPreference:value forKey:inKey group:groupName];    
+}
+    
 //Using General Preferences ----------------------------------------------------------------------
 //Return a dictionary of preferences
 - (NSDictionary *)preferencesForGroup:(NSString *)groupName

@@ -286,11 +286,14 @@ typedef enum {
 
 - (void)addPreferenceView:(AIPreferenceViewController *)inView;
 - (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)groupName;
-- (NSDictionary *)preferencesForGroup:(NSString *)groupName;
-- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)inGroup;
 - (IBAction)showPreferenceWindow:(id)sender;
-- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName handle:(AIContactHandle *)handle;
 - (void)openPreferencesToView:(AIPreferenceViewController *)inView;
+
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIContactObject *)object;
+- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName object:(AIContactObject *)object;
+- (NSDictionary *)preferencesForGroup:(NSString *)groupName;
+- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;
+
 
 @end
 
