@@ -8,10 +8,10 @@
 
 
 @protocol GaimThread
-- (void)makeAccount:(id)account performSelector:(SEL)selector;
-- (void)makeAccount:(id)account performSelector:(SEL)selector withObject:(id)object;
-- (void)makeAccount:(id)account performSelector:(SEL)selector withObject:(id)firstObject withObject:(id)secondObject;
-- (void)test; 
+- (oneway void)sendMessage:(NSString *)encodedMessage fromAccount:(id)sourceAccount inChat:(AIChat *)chat withFlags:(int)flags;
+- (oneway void)sendTyping:(BOOL)typing inChat:(AIChat *)chat;
+- (void)connectAccount:(id)adiumAccount;
+- (void)disconnectAccount:(id)adiumAccount;
 @end
 
 /*!
@@ -21,13 +21,12 @@
  * where you initialize the gaim core and gaim will be its events
  * from Cocoa.
  **/
-@interface SLGaimCocoaAdapter : NSObject<GaimThread> {
+@interface SLGaimCocoaAdapter : AIObject<GaimThread> {
+
 }
 
-+ (void)createThreadedGaimCocoaAdapter:(NSArray *)portArray;
-+ (void)connectToAccountWithPorts:(NSArray *)portArray;
-- (void)makeAccount:(id)account performSelector:(SEL)selector;
-- (void)makeAccount:(id)account performSelector:(SEL)selector withObject:(id)object;
-- (void)makeAccount:(id)account performSelector:(SEL)selector withObject:(id)firstObject withObject:(id)secondObject;
-
+- (oneway void)sendMessage:(NSString *)encodedMessage fromAccount:(id)sourceAccount inChat:(AIChat *)chat withFlags:(int)flags;
+- (oneway void)sendTyping:(BOOL)typing inChat:(AIChat *)chat;
+- (void)connectAccount:(id)adiumAccount;
+- (void)disconnectAccount:(id)adiumAccount;
 @end

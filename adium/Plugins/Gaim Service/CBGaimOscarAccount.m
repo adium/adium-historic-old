@@ -140,43 +140,34 @@ static BOOL didInitOscar = NO;
 }
 
 #pragma mark Buddy updates
-- (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent)event
+- (oneway void)updateContact:(AIListContact *)theContact forEvent:(GaimBuddyEvent)event
 {
-	[super accountUpdateBuddy:buddy forEvent:event];
+	[super updateContact:theContact forEvent:event];
 	
-	AIListContact           *theContact;
-	
-	if (buddy != nil) {
-		//Get the node's ui_data
-		theContact = (AIListContact *)buddy->node.ui_data;
-		
-		if (theContact/* && GAIM_BUDDY_IS_ONLINE(buddy)*/) {
-			SEL updateSelector = nil;
-			switch(event){
-				case GAIM_BUDDY_STATUS_MESSAGE: {
-					updateSelector = @selector(updateStatusMessage:);
-					break;
-				}
-				case GAIM_BUDDY_INFO_UPDATED: {
-					updateSelector = @selector(updateInfo:);
-					break;
-				}
-				case GAIM_BUDDY_MISCELLANEOUS: {  
-					updateSelector = @selector(updateMiscellaneous:);
-					break;
-				}
-			}
-			
-			if (updateSelector){
-				[self performSelectorOnMainThread:updateSelector
-									   withObject:theContact
-									waitUntilDone:NO];
-			}
+
+	SEL updateSelector = nil;
+	switch(event){
+		case GAIM_BUDDY_STATUS_MESSAGE: {
+			updateSelector = @selector(updateStatusMessage:);
+			break;
 		}
+		case GAIM_BUDDY_INFO_UPDATED: {
+			updateSelector = @selector(updateInfo:);
+			break;
+		}
+		case GAIM_BUDDY_MISCELLANEOUS: {  
+			updateSelector = @selector(updateMiscellaneous:);
+			break;
+		}
+	}
+	
+	if (updateSelector){
+		[self performSelectorOnMainThread:updateSelector
+							   withObject:theContact
+							waitUntilDone:NO];
 	}
 }
 	
-
 - (void)updateStatusMessage:(AIListContact *)theContact
 {
 	NSString			*statusMsgString = nil;
@@ -186,13 +177,15 @@ static BOOL didInitOscar = NO;
 	struct buddyinfo	*bi;
 	GaimBuddy			*buddy;
 	
-	buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];
-	if ((od = gc->proto_data) &&
-		(userinfo = aim_locate_finduserinfo(od->sess, buddy->name))){
+//	buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];
+	const char				*buddyName = [[theContact UID] UTF8String];
 	
-		bi = g_hash_table_lookup(od->buddyinfo, gaim_normalize(buddy->account, buddy->name));
+	if ((od = gc->proto_data) &&
+		(userinfo = aim_locate_finduserinfo(od->sess, buddyName))){
+	
+		bi = g_hash_table_lookup(od->buddyinfo, buddyName);
 		
-		if ((bi != NULL) && (bi->availmsg != NULL) && !(buddy->uc & UC_UNAVAILABLE)) {
+		if ((bi != NULL) && (bi->availmsg != NULL) && !(userinfo->flags & AIM_FLAG_AWAY)) {
 			
 			//Available status message
 			statusMsgString = [NSString stringWithUTF8String:(bi->availmsg)];
@@ -206,6 +199,7 @@ static BOOL didInitOscar = NO;
 										   encoding:userinfo->away_encoding];
 			
 			//If the away message changed, make sure the contact is marked as away
+			/*
 			BOOL		newAway;
 			NSNumber	*storedValue;
 			
@@ -214,6 +208,7 @@ static BOOL didInitOscar = NO;
 			if((!newAway && (storedValue == nil)) || newAway != [storedValue boolValue]) {
 				[theContact setStatusObject:[NSNumber numberWithBool:newAway] forKey:@"Away" notify:NO];
 			}
+			 */
 		}
 		
 		//Update the status message if necessary
@@ -239,10 +234,10 @@ static BOOL didInitOscar = NO;
 	aim_userinfo_t		*userinfo;
 	GaimBuddy			*buddy;
 	
-	buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];	
+//	buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];	
 	
 	if ((od = gc->proto_data) &&
-		(userinfo = aim_locate_finduserinfo(od->sess, buddy->name))){
+		(userinfo = aim_locate_finduserinfo(od->sess, [[theContact UID] UTF8String]))){
 			
 		//Update the profile if necessary - length must be greater than one since we get "" with info_len 1
 		//when attempting to retrieve the profile of an AOL member (which can't be done via AIM).
@@ -281,9 +276,9 @@ static BOOL didInitOscar = NO;
 	aim_userinfo_t		*userinfo;
 	GaimBuddy			*buddy;
 	
-	buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];
+//	buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];
 	if ((od = gc->proto_data) && 
-		(userinfo = aim_locate_finduserinfo(od->sess, buddy->name))){
+		(userinfo = aim_locate_finduserinfo(od->sess, [[theContact UID] UTF8String]))){
 	
 	/*
 	 userinfo->membersince;
