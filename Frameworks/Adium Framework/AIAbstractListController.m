@@ -45,6 +45,11 @@
 	return(self);
 }
 
+- (id)delegate
+{
+	return(delegate);
+}
+
 //Dealloc
 - (void)dealloc
 {

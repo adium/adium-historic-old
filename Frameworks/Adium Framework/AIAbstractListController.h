@@ -10,7 +10,6 @@
 
 @class AIAutoScrollView, AIListOutlineView, AIListContactCell, AIListGroupCell;
 
-
 #define LIST_LAYOUT_FOLDER						@"Contact List"
 #define LIST_LAYOUT_EXTENSION					@"ListLayout"
 #define PREF_GROUP_LIST_LAYOUT					@"List Layout"
@@ -156,6 +155,7 @@ typedef enum {
 }
 
 - (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate;
+- (id)delegate;
 
 - (void)setContactListRoot:(ESObjectWithStatus<AIContainingObject> *)newContactListRoot;
 - (ESObjectWithStatus<AIContainingObject> *)contactListRoot;
