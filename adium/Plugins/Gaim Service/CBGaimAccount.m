@@ -489,7 +489,7 @@
 {
     BOOL            sent = NO;
 	
-	if (gc && aaccount && GAIM_ACCOUNT_IS_ONLINE(account)) {
+	if (gc && account && gaim_account_is_connected(account)) {
 		if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0) {
 			AIContentMessage	*cm = (AIContentMessage*)object;
 			AIChat				*chat = [cm chat];
