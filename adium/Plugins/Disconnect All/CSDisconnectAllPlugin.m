@@ -1,19 +1,19 @@
 //
-//  DisconnectAllPlugin.m
+//  CSDisconnectAllPlugin.m
 //  Adium
 //
 //  Created by Chris Serino on Tue Sep 30 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2003 The Adium Group. All rights reserved.
 //
 
 #import "AIAdium.h"
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
-#import "DisconnectAllPlugin.h"
+#import "CSDisconnectAllPlugin.h"
 
 #define DISCONNECT_MENU_TITLE @"Disconnect All"
 
-@implementation DisconnectAllPlugin
+@implementation CSDisconnectAllPlugin
 
 - (void)installPlugin
 {
