@@ -41,9 +41,6 @@
     NSAttributedString	*profile = [NSAttributedString stringWithData:[account preferenceForKey:AIM_TOC2_KEY_PROFILE group:GROUP_ACCOUNT_STATUS]];
     if(!profile) profile = [[[NSAttributedString alloc] initWithString:@""] autorelease];
     [[textView_textProfile textStorage] setAttributedString:profile];
-
-    //Put focus on the account name
-    [[[view_accountView superview] window] setInitialFirstResponder:textField_accountName];	
 }
 
 //Save changes made to a preference control

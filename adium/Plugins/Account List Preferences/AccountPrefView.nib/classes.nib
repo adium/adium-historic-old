@@ -8,6 +8,7 @@
         }, 
         {
             ACTIONS = {
+                accountNameChanged = id; 
                 deleteAccount = id; 
                 newAccount = id; 
                 selectServiceType = id; 
@@ -24,6 +25,7 @@
                 "scrollView_accountList" = AIAutoScrollView; 
                 "tabView_auxiliary" = NSTabView; 
                 "tableView_accountList" = AIAlternatingRowTableView; 
+                "textField_accountName" = NSTextField; 
                 "view_accountDetails" = NSView; 
                 "view_accountPreferences" = NSView; 
             }; 

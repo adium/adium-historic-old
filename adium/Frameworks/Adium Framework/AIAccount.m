@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.45 2004/03/05 03:04:54 evands Exp $
+// $Id: AIAccount.m,v 1.46 2004/03/05 03:35:50 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -75,22 +75,29 @@
 
 - (void)changedUIDto:(NSString *)inUID
 {
-	//Get our preferences from the old UID
-	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self UIDAndServiceID]
-																					 path:[self pathToPreferences]];
-	
-	[UID release]; UID = [inUID retain];
+	//Rename the account if necessary (If the UID changed)
+	#warning this is AIM specific. Flatten the name using the allowed character information
+    if([[inUID compactedString] compare:[self UID]] != 0){
+		//Get our preferences from the old UID
+		NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self UIDAndServiceID]
+																						 path:[self pathToPreferences]];
 		
-	[[adium preferenceController] setCachedObjectPrefs:prefDict
-												forKey:[self UIDAndServiceID]
-												  path:[self pathToPreferences]];
-
-	NSString *formattedAccountName = [self preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
-	[self setStatusObject:formattedAccountName
-				   forKey:@"Formatted UID"
-				   notify:YES];	
-
-	[self accountUIDdidChange];
+		[UID release]; UID = [inUID retain];
+		
+		[[adium preferenceController] setCachedObjectPrefs:prefDict
+													forKey:[self UIDAndServiceID]
+													  path:[self pathToPreferences]];
+		
+		NSString *formattedAccountName = [self preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
+		[self setStatusObject:formattedAccountName
+					   forKey:@"Formatted UID"
+					   notify:YES];	
+		
+		[self accountUIDdidChange];
+	}
+	
+	//Update the name formatting
+	[self setPreference:inUID forKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
 	
 	//Save the new accounts list
 	[[adium accountController] saveAccounts];

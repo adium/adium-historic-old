@@ -51,7 +51,6 @@
     //Our custom preferences
     if(sender == textField_fullName){
         [account setPreference:[sender stringValue] forKey:@"FullName" group:GROUP_ACCOUNT_STATUS];    
-        
     }
 }
 

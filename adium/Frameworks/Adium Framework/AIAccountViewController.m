@@ -29,7 +29,7 @@
     [super init];
     account = inAccount;
 	auxiliaryTabs = nil;
-	NSLog(@"just did init for account %@ (%@)",inAccount,(AIAccount *)[inAccount UID]);
+
     //Open a new instance of the account view
     if(![NSBundle loadNibNamed:[self nibName] owner:self]){
         NSLog(@"couldn't load account view bundle");
@@ -37,12 +37,7 @@
     
     [self loadAuxiliaryTabsFromTabView:view_auxiliaryTabView];
 
-    
     //Observer account changes
-    [[adium notificationCenter] addObserver:self
-                                   selector:@selector(accountPreferencesChanged:)
-                                       name:Preference_GroupChanged
-                                     object:account];
     [[adium contactController] registerListObjectObserver:self];
     
     return(self);
@@ -70,22 +65,7 @@
 {
     NSString		*accountName, *savedPassword;
 	AIServiceType	*serviceType = [[account service] handleServiceType];
-    
-    //Display formatted account name
-    accountName = [account preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
-    if(accountName != nil && [accountName length] != 0){
-        [textField_accountName setStringValue:accountName];
-    }else{
-        [textField_accountName setStringValue:[account UID]];
-    }
-	
-	//Restrict the account name field to valid characters and length
-    [textField_accountName setFormatter:
-		[AIStringFormatter stringFormatterAllowingCharacters:[serviceType allowedCharacters]
-													  length:[serviceType allowedLength]
-											   caseSensitive:[serviceType caseSensitive]
-												errorMessage:@"The characters you're entering are not valid for an account name on this service."]];
-    
+
     //Display saved password
     savedPassword = [[adium accountController] passwordForAccount:account];
     if(savedPassword != nil && [savedPassword length] != 0){
@@ -147,27 +127,11 @@
 {
 	if(inObject == nil || inObject == account){
 		if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"]){
-			[textField_accountName setEnabled:![[account statusObjectForKey:@"Online"] boolValue]];
 			[textField_password setEnabled:![[account statusObjectForKey:@"Online"] boolValue]];
 		}
 	}
 	
 	return(nil);
-}
-
-//Display changed account preferences
-- (void)accountPreferencesChanged:(NSNotification *)notification
-{
-    NSString    *group = [[notification userInfo] objectForKey:@"Group"];
-    
-    if(notification == nil || [group compare:GROUP_ACCOUNT_STATUS] == 0){
-        NSString    *key = [[notification userInfo] objectForKey:@"Key"];
-        
-        //Redisplay if the username changes
-        if([key compare:KEY_ACCOUNT_NAME] == 0){
-            [self configureViewAfterLoad];
-        }
-    }
 }
 
 //Save changes made to a preference control
@@ -182,27 +146,6 @@
         }else{
             [[adium accountController] forgetPasswordForAccount:account];
         }
-    }
-}
-
-//User changed the account name
-- (IBAction)accountNameChanged:(id)sender
-{
-    NSString    *accountName = [textField_accountName stringValue];
-    
-    if([[accountName compactedString] compare:[account UID]] != 0){
-		NSString    *flatUserName = [accountName compactedString];
-		AIAccount   *targetAccount = account;
-		
-		//Create a new account & Update our custom formatting
-		//targetAccount = [[adium accountController] changeUIDOfAccount:account to:flatUserName];
-		[targetAccount setPreference:accountName forKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
-		//Notify the account of the change
-		[targetAccount changedUIDto:flatUserName];
-        
-    }else{
-        [account setPreference:accountName forKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
-        
     }
 }
 
