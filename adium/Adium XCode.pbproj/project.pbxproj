@@ -23836,8 +23836,8 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "ranlib $SRCROOT/Plugins/Gaim\\ Service/LIBS/liboscar.a";
+			shellPath = /bin/tcsh;
+			shellScript = "ranlib $SRCROOT/Plugins/Gaim\\\\ Service/LIBS/liboscar.a";
 		};
 		9CDF247703E8CBAA000001C9 = {
 			expectedFileType = sourcecode.c.h;
