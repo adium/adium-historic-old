@@ -77,6 +77,7 @@
 	
     //Stop observing
     [[adium notificationCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 	
 	[super dealloc];
 }
