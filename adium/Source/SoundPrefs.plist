@@ -3,12 +3,16 @@
 <plist version="1.0">
 <dict>
 	<key>Custom Volume Level</key>
-	<real>0.5</real>
+	<real>1.0</real>
 	<key>Use Custom Volume</key>
 	<false/>
 	<key>Use System Sound Output</key>
 	<false/>
 	<key>Warned About Custom Volume</key>
+	<false/>
+	<key>Sound Device Type</key>
+	<integer>0</integer>
+	<key>Mute While Away</key>
 	<false/>
 </dict>
 </plist>
