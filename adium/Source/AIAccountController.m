@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.61 2004/03/06 04:43:04 adamiser Exp $
+// $Id: AIAccountController.m,v 1.62 2004/03/06 18:36:32 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -179,7 +179,8 @@
 	
 	//Create the account
     if(serviceController = [self serviceControllerWithIdentifier:inType]){
-        return([serviceController accountWithUID:inUID objectID:inObjectID]);
+        return([serviceController accountWithUID:[[serviceController handleServiceType] filterUID:inUID removeIgnoredCharacters:YES]
+										objectID:inObjectID]);
     }else{
         return(nil);
     }
@@ -345,10 +346,15 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Change the UID of an existing account
 - (AIAccount *)changeUIDOfAccount:(AIAccount *)inAccount to:(NSString *)inUID
 {
+	AIServiceType	*serviceType = [[inAccount service] handleServiceType];
+
 	//Add an account with the new UID
 	AIAccount	*newAccount = [self createAccountOfType:[[inAccount service] identifier]
-												withUID:inUID
+												withUID:[serviceType filterUID:inUID removeIgnoredCharacters:YES]
 											   objectID:[[inAccount uniqueObjectID] intValue]];
+	[newAccount setPreference:[serviceType filterUID:inUID removeIgnoredCharacters:NO]
+					   forKey:@"FormattedUID"
+						group:GROUP_ACCOUNT_STATUS];
 	[self insertAccount:newAccount atIndex:[accountArray indexOfObject:inAccount]];
 	
 	//Delete the old account
@@ -657,7 +663,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Password Storage -----------------------------------------------------------------------------------------------------
 #pragma mark Password Storage
 - (NSString *)_accountNameForAccount:(AIAccount *)inAccount{
-	return([NSString stringWithFormat:@"%@.%@",[inAccount serviceID],[[inAccount UID] compactedString]]);
+	return([NSString stringWithFormat:@"%@.%@",[inAccount serviceID],[inAccount UID]]);
 }
 - (NSString *)_passKeyForAccount:(AIAccount *)inAccount{
 	return([NSString stringWithFormat:@"Adium.%@",[self _accountNameForAccount:inAccount]]);

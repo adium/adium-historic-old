@@ -370,7 +370,7 @@
 //Server-formatted UID if present, otherwise the UID
 - (NSString *)formattedUID
 {
-    NSString	*outName = [self statusObjectForKey:@"Formatted UID"];	
+    NSString	*outName = [self statusObjectForKey:@"FormattedUID"];	
     return(outName ? outName : UID);	
 }
 

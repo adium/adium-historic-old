@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.50 2004/03/06 05:33:34 adamiser Exp $
+// $Id: AIAccount.m,v 1.51 2004/03/06 18:36:30 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -50,6 +50,7 @@
     [self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 	[self updateStatusForKey:@"Handle"];
     [self updateStatusForKey:@"FullName"];
+    [self updateStatusForKey:@"FormattedUID"];
     
     attributedRefreshDict = [[NSMutableDictionary alloc] init];
     attributedRefreshTimer = nil;
@@ -96,7 +97,6 @@
 {
 	return([NSString stringWithFormat:@"%i",objectID]);
 }
-
 
 //Preferences ----------------------------------------------------------------------------------------------------------
 #pragma mark Preferences
@@ -181,6 +181,7 @@
                 [self disconnect];
             }
         }
+		
     }else if([key compare:@"FullName"] == 0) {
         //Account's full name (alias) formatting changed
         //Update the display name for this account
@@ -195,7 +196,14 @@
 		//notify
 		[[adium contactController] listObjectAttributesChanged:self
 												  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
-    }
+		
+    }else if([key compare:@"FormattedUID"] == 0){
+		//Transfer formatted UID to status dictionary
+		[self setStatusObject:[self preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS]
+					   forKey:@"FormattedUID"
+					   notify:YES];
+
+	} 
 }
 
 //Set an attributed status value (nil for no value), setting up a refresh timer if the filters changed the string
