@@ -34,6 +34,7 @@
 
 @protocol AIMessageViewController <NSObject>
 - (NSView *)messageView;
+- (NSScrollView *)messageScrollView;
 @end
 
 //Manages contact list view controllers
