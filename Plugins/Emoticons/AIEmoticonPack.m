@@ -125,19 +125,18 @@
 	return enabled;
 }
 
-
-
 //Copying --------------------------------------------------------------------------------------------------------------
 #pragma mark Copying
 //Copy
 - (id)copyWithZone:(NSZone *)zone
 {
     AIEmoticonPack	*newPack = [[AIEmoticonPack alloc] initFromPath:path];   
-    
+
 	newPack->emoticonArray = [emoticonArray mutableCopy];
-	[newPack->serviceClass release];
-	newPack->serviceClass = nil;
-	
+	newPack->serviceClass = [serviceClass retain];
+	newPack->path = [path retain];
+	newPack->name = [name retain];
+
     return(newPack);
 }
 
