@@ -10,7 +10,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/index.jsp $-->
-<!--$Rev: 895 $ $Date$ -->
+<!--$Rev: 899 $ $Date$ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -630,9 +630,11 @@ try {
     prevSender = new String();
     prevRecipient = new String();
 
-    int cntr = 1;
     Date currentDate = null;
     Timestamp currentTime = new Timestamp(0);
+
+    int greyCount = 1;
+
     while (rset.next()) {
         if(!rset.getDate("message_date").equals(currentDate)) {
             currentDate = rset.getDate("message_date");
@@ -718,9 +720,10 @@ try {
             message = sb.toString();
         }
 
-
         if(!rset.getString("sender_sn").equals(prevSender) ||
             !rset.getString("recipient_sn").equals(prevRecipient)) {
+
+            greyCount = 1;
 
             out.print("<div class=\"message_container\" id=\""
                 + rset.getString("message_id") + "\">");
@@ -803,7 +806,9 @@ try {
         out.print(rset.getTime("message_date"));
         out.println("</div>\n");
 
-        out.println("<div class=\"message\"><p>");
+        out.println("<div class=\"message\"><p " +
+                (greyCount++ % 2 == 0 ? "class=\"even\"" :
+                 "class=\"odd\"") + ">");
         out.println(message);
         out.println("</p></div>\n");
 
