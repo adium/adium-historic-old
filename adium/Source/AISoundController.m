@@ -39,20 +39,22 @@
 
 - (void)playSoundAtPath:(NSString *)inPath
 {
-    NSMovie	*sharedMovie;
+    if(sharedMovie){
+        //Stop any currently playing sound
+        StopMovie([sharedMovie QTMovie]);
+        [sharedMovie release]; sharedMovie = nil;
+    }
 
+    //Play the new sound
     sharedMovie = [[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:inPath] byReference:YES];
-
-    //---set the volume & play---
     if(sharedMovie != nil){
         StartMovie([sharedMovie QTMovie]);
     }
 }
 
-
 - (void)initController
 {
-
+    sharedMovie = nil;
 }
 
 

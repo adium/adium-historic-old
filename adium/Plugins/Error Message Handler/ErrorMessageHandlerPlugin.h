@@ -4,9 +4,9 @@
 @class ErrorMessageWindowController;
 
 @interface ErrorMessageHandlerPlugin : AIPlugin {
-    NSString		*errorTitle;
-    NSString		*errorDesc;
+
 }
 
-- (void)handleError;
+- (void)handleError:(NSNotification *)notification;
+
 @end

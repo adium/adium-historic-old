@@ -271,8 +271,6 @@ typedef enum {
 - (IBAction)initiateMessage:(id)sender;
 
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc;
-- (NSString *)errorTitle;
-- (NSString *)errorDesc;
 
 @end
 
@@ -339,6 +337,8 @@ typedef enum {
 
 @interface AISoundController : NSObject {
     IBOutlet	AIAdium		*owner;
+
+    NSMovie	*sharedMovie;
 }
 
 - (void)playSoundNamed:(NSString *)inName;

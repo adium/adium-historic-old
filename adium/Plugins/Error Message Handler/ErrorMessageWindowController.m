@@ -39,7 +39,7 @@ static ErrorMessageWindowController *sharedInstance = nil;
     [sharedInstance window];
 
     //add the error
-    if([errorTitleArray count] < 20){
+    if([errorTitleArray count] < 20){ //Stop logging errors after 20
         [errorTitleArray insertObject:inTitle atIndex:0];
         [errorDescArray insertObject:inDesc atIndex:0];
     }
@@ -70,6 +70,8 @@ static ErrorMessageWindowController *sharedInstance = nil;
 
 - (void)refreshErrorDialog
 {
+    NSRect	*oldFrame, *newFrame;
+    
     //--Display the current error message--
     [textField_errorTitle setStringValue:[errorTitleArray objectAtIndex:0]];
     [textField_errorInfo setStringValue:[errorDescArray objectAtIndex:0]];
@@ -94,6 +96,12 @@ static ErrorMessageWindowController *sharedInstance = nil;
         [button_okay setTitle:@"Next"];
 
     }
+
+    //Resize the window bigger (if necessary) to fit the error message
+//    oldFrame = [textField_errorInfo
+    [textField_errorInfo sizeToFit];
+
+    
     [self showWindow:nil];
 }
 

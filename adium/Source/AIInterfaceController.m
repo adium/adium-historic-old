@@ -104,25 +104,17 @@
     return([[messageViewArray objectAtIndex:0] messageViewForHandle:inHandle]);
 }
 
+
+//Errors
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc
 {
-    errorTitle = inTitle;
-    errorDesc = inDesc;
-    
+    NSDictionary	*errorDict;
+
     //Post a notification that an error was recieved
-    [[self interfaceNotificationCenter] postNotificationName:Interface_ErrorMessageRecieved object:nil userInfo:nil];
+    errorDict = [NSDictionary dictionaryWithObjectsAndKeys:inTitle,@"Title",inDesc,@"Description",nil];    
+    [[self interfaceNotificationCenter] postNotificationName:Interface_ErrorMessageRecieved object:nil userInfo:errorDict];
 }
 
-
-- (NSString *)errorTitle
-{
-    return(errorTitle);
-};
-
-- (NSString *)errorDesc
-{
-    return(errorDesc);
-};
 
 @end
 
