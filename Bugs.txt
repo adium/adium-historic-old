@@ -42,10 +42,6 @@ Other
 - (AIM / Jabber) File transfers often fail to navigate firewalls and routers
 - (Yahoo) Files over 1 MB in size fail to send
 - (AIM) Contacts can get incorrectly tagged as being on an AOL Mobile Device
-- (AIM) Group Chat : Japanese (and probably other charsets) doesn't get sent properly,
-	but can be received - only with certain default languages. English default language
-	works fine for these charactersets... so the default C encoding must be being used
-	(incorrectly) somewhere in libgaim?
 - (ICQ) Broken ICQ clients send HTML. Should we try to correct for this?
 - (All) Gaim's proxy support is unreliable at best
 
@@ -64,7 +60,6 @@ Other
     previously authorized contacts work as expected.
 - (Yahoo) yahoo_html_to_codes() produces output which Fire and perhaps other clients
 	do not process. Is this a libgaim bug or a Fire/other clients bug?
-- (Yahoo) typing in a group chat sending typing to all open yahoo chats?
 
 //------------------------------------------------------------------------------------
 // Bugs - Unavoidable

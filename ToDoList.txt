@@ -4,12 +4,16 @@
 
 (incomplete list, feel free to add and assign issues)
 
+[Status]
+- Status pane
+	- Idle after X minutes
+	- Auto-away after X minutes
+	- Fast User Switching
+
 [Preferences]
 - Restore defaults broken?
 - Message formatting [Adam]
 - MSN preferences to Accounts Options
-- Typing preferences to Accounts Privacy
-- Xtras installation buttons crash, see http://www.visualdistortion.org/crash/view.jsp?crash=57824
 
 [Accounts]
 - Jabber account registration
@@ -28,7 +32,6 @@
 
 //Flashing reduction [Evan (now that I have Growl, I'm sick of flashing, it's very OS 9)]
   Make it possible to use Adium without any distracting flashing and blinking
-  - Add option to remove flashing unviewed content on the contact list
   - Add option to prevent dock icon animations
 
 [Group chat]
@@ -50,14 +53,6 @@
 //-------------------------------------------------------------------------------------------------------
 // Possible Thoughts
 //-------------------------------------------------------------------------------------------------------
-//Fast User Switching
-  The fast user switching plugin needs to provide advanced preferences for
-	- Enabling or disabling the feature
-	- Changing the status message used when switched
-  [Steve: Must these go in the 'advanced' pane?  Can't we find a better home for them?
-   Seems the 'status' pane makes sense - maybe a set up not unlike auto-idle? It serves a similar purpose.]
-
-
 //Auto-completion
   Tab auto-completion in the message window [Evan: How would one insert a tab with this implemented?]
 	- Contact names (Mainly for multi-user chat)
@@ -188,5 +183,3 @@
 
 //Message context improvements
 	- The message context system will not work well with deferred messages.
-
-- Make command-= an alternate for Add Contact (command-shift-=, or command-+)
