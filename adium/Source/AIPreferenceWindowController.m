@@ -19,10 +19,10 @@
 #import "AIPreferencePane.h"
 #import "AIPreferenceController.h"
 
-#define PREFERENCE_WINDOW_NIB		@"PreferenceWindow"	//Filename of the preference window nib
-#define TOOLBAR_PREFERENCE_WINDOW	@"PreferenceWindow"	//Identifier for the preference toolbar
-#define	KEY_PREFERENCE_WINDOW_FRAME	@"Preference Window Frame"
-
+#define PREFERENCE_WINDOW_NIB			@"PreferenceWindow"	//Filename of the preference window nib
+#define TOOLBAR_PREFERENCE_WINDOW		@"PreferenceWindow"	//Identifier for the preference toolbar
+#define	KEY_PREFERENCE_WINDOW_FRAME		@"Preference Window Frame"
+#define KEY_PREFERENCE_SELECTED_CATEGORY	@"Preference Selected Category"
 #define FLAT_PADDING_OFFSET 45
 
 @interface AIPreferenceWindowController (PRIVATE)
@@ -112,10 +112,20 @@ static AIPreferenceWindowController *sharedInstance = nil;
 {
     NSString	*savedFrame;
 //    NSArray	*categoryArray;
-
+    int		selectedTab;
+    
     //Remember the amount of vertical padding to our window's frame
     yPadding = [[self window] frame].size.height;
-    
+
+    //
+    [self installToolbar];
+ 
+    //Select the previously selected category
+    selectedTab = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_SELECTED_CATEGORY] intValue];
+    if(selectedTab < 0 || selectedTab > [tabView_category numberOfTabViewItems]) selectedTab = 0;
+    [self tabView:tabView_category willSelectTabViewItem:[[tabView_category tabViewItems] objectAtIndex:selectedTab]];
+    [tabView_category selectTabViewItemAtIndex:selectedTab];    
+
     //Restore the window position
     savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_WINDOW_FRAME];
     if(savedFrame){
@@ -123,15 +133,8 @@ static AIPreferenceWindowController *sharedInstance = nil;
     }else{
         [[self window] center];
     }
-    
-    //
-    [self installToolbar];
- 
-    //select the default category
-    [self tabView:tabView_category willSelectTabViewItem:[[tabView_category tabViewItems] objectAtIndex:0]];
-    [tabView_category selectFirstTabViewItem:nil];    
 
-/*    categoryArray = [[owner preferenceController] categoryArray];
+    /*    categoryArray = [[owner preferenceController] categoryArray];
     if([categoryArray count]){
         [self showCategory:[categoryArray objectAtIndex:0]];
     }*/
@@ -155,10 +158,11 @@ static AIPreferenceWindowController *sharedInstance = nil;
     //Take focus away from any controls to ensure that they register changes and save
     [[self window] makeFirstResponder:tabView_category];
 
+    //Save the selected category
+    [[owner preferenceController] setPreference:[NSNumber numberWithInt:[tabView_category indexOfTabViewItem:[tabView_category selectedTabViewItem]]] forKey:KEY_PREFERENCE_SELECTED_CATEGORY group:PREF_GROUP_WINDOW_POSITIONS];
+    
     //Save the window position
-    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
-                  forKey:KEY_PREFERENCE_WINDOW_FRAME
-                   group:PREF_GROUP_WINDOW_POSITIONS];
+    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame] forKey:KEY_PREFERENCE_WINDOW_FRAME group:PREF_GROUP_WINDOW_POSITIONS];
 
     //Close all open panes
     enumerator = [loadedPanes objectEnumerator];
@@ -323,6 +327,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
 //Resize our window to fit the specified tabview
 - (void)_sizeWindowToFitTabView:(NSTabView *)tabView
 {
+    BOOL		isVisible = [[self window] isVisible];
     NSEnumerator	*enumerator;
     NSTabViewItem	*tabViewItem;
     int			maxHeight = 0;
@@ -350,13 +355,13 @@ static AIPreferenceWindowController *sharedInstance = nil;
     //Adjust our window's frame
     frame.origin.y += frame.size.height - maxHeight;
     frame.size.height = maxHeight;
-    [[self window] setFrame:frame display:YES animate:YES];
+    [[self window] setFrame:frame display:isVisible animate:isVisible];
 }
 
 - (void)_sizeWindowToFitFlatView:(AIFlippedCategoryView *)view
 {
-    NSRect 		frame = [[self window] frame];
-
+    BOOL	isVisible = [[self window] isVisible];
+    NSRect 	frame = [[self window] frame];
     int		height = [(AIFlippedCategoryView *)view desiredHeight];
 
     //Add in window frame padding
@@ -365,7 +370,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     //Adjust our window's frame
     frame.origin.y += frame.size.height - height;
     frame.size.height = height;
-    [[self window] setFrame:frame display:YES animate:YES];
+    [[self window] setFrame:frame display:isVisible animate:isVisible];
 }
 
 //Toolbar item methods
