@@ -1,0 +1,53 @@
+{
+    IBClasses = (
+        {
+            CLASS = AILocalizationTextField; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSTextField; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = AIPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
+            }; 
+            SUPERCLASS = AIModularPane; 
+        }, 
+        {
+            CLASS = ESContactListAdvancedPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_flash" = NSButton; 
+                "checkBox_hide" = NSButton; 
+                "checkBox_showTooltips" = NSButton; 
+                "checkBox_showTooltipsInBackground" = NSButton; 
+                "checkBox_showTransitions" = NSButton; 
+                "label_effects" = NSTextField; 
+                "label_orderTheContactList" = NSTextField; 
+                "label_tooltips" = NSTextField; 
+                "label_windowHandling" = NSTextField; 
+                "popUp_windowPosition" = NSPopUpButton; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}
