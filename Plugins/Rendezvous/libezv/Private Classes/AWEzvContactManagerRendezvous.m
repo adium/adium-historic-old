@@ -374,14 +374,14 @@ void av_resolve_reply (struct sockaddr	*interface,
     				    format:NSPropertyListXMLFormat_v1_0
     				    errorDescription:&error];    
     if (plist != nil) {
-	if (imageRef == NULL) {
+	if (imageRef == 0) {
 	    imageRef = DNSServiceRegistrationAddRecord(dnsRef, T_NULL, [plist length], [plist bytes], 10);
 	} else {
 	    DNSServiceRegistrationUpdateRecord(dnsRef, imageRef, [plist length], [plist bytes], 10);
 	}
     }
     
-    if (avImageRef == NULL) {
+    if (avImageRef == 0) {
     	avImageRef = DNSServiceRegistrationAddRecord(avDnsRef, T_NULL, [JPEGData length], [JPEGData bytes], 10);
     } else {
     	DNSServiceRegistrationUpdateRecord(avDnsRef, avImageRef, [JPEGData length], [JPEGData bytes], 10);
@@ -810,7 +810,7 @@ NSData *decode_dns(char* buffer, int len )
 	    id			    extracted;  /* extracted data from plist */
 	    NSData		    *data;      /* DNS packet data */
 	    
-	    data = decode_dns(buf, len);
+	    data = decode_dns((char *)buf, len);
 	    if (data != nil) {
 		if (av) {
 		    /* parse raw Data */
