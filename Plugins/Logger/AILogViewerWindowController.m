@@ -357,6 +357,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 		[self initLogFiltering];
 
 		[tableView_results reloadData];
+		[self updateProgressDisplay];
 		[self selectDisplayedLog];
 
 		[theLog release];
