@@ -4,7 +4,7 @@
 <dict>
 	<key>Count All Contacts</key>
 	<false/>
-	<key>Count Visible Contacts</key>
+	<key>Count Online Contacts</key>
 	<false/>
 </dict>
 </plist>
