@@ -236,10 +236,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 
 - (NSString *)hashLookup:(NSString *)pattern
 {
-    //@"" as the return string causes all sorts of problems because we can end up with a content message with no text
-    //instead, default to a non-nil but one-length returnString - this way, the pattern is still removed
-    //but problems are avoided.
-    NSString        *returnString = @" ";
+    NSString        *returnString = nil;
     
     NSURL *scriptURL = [scriptDict objectForKey:pattern];
     if(scriptURL){
@@ -247,7 +244,8 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
         returnString = [[script executeFunction:@"substitute" error:nil] stringValue];
     }
  
-    return(returnString);	
+	//Returning a zero length string will cause crashes, never let that happen.
+    return((returnString && [returnString length]) ? returnString : @" ");	
 }
 
 - (void)uninstallPlugin
