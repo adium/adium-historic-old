@@ -114,8 +114,7 @@ DeclareString(AppendNextMessage);
 	
 	NSArray *draggedTypes = [NSArray arrayWithObjects:NSFilenamesPboardType,NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil];
 	[webView registerForDraggedTypes:draggedTypes];
-//	[[[webView mainFrame] frameView] registerForDraggedTypes:draggedTypes];
-	
+
 	//Observe preference changes. Our initial preferences are also applied by refreshView, so no need for an explicit
 	//[self prefrencesChanged:nil] call here.
 	[[adium notificationCenter] addObserver:self 
@@ -1220,32 +1219,31 @@ DeclareString(AppendNextMessage);
 //If we're getting a non-image file, we can handle it immediately.  Otherwise, the drag is the textView's problem.
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
+	NSPasteboard	*pasteboard = [sender draggingPasteboard];
 	BOOL	success = NO;
 	
-	NSPasteboard	*pasteboard = [sender draggingPasteboard];
+	if (![pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]] &&
+		[pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]]){
 		
-		if (![pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]] &&
-			[pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]]){
-			
-			//Not an image but it is a file - send it immediately as a file transfer
-			NSArray			*files = [pasteboard propertyListForType:NSFilenamesPboardType];
-			NSEnumerator	*enumerator = [files objectEnumerator];
-			NSString		*path;
-			while (path = [enumerator nextObject]){
-				AIListObject *listObject = [chat listObject];
-				if(listObject){
-					[[adium fileTransferController] sendFile:path toListContact:(AIListContact *)listObject];
-				}
-			}
-			success = YES;
-			
-		}else{
-			NSTextView *textView = [self textView];
-			if(textView){
-				[[webView window] makeFirstResponder:textView]; //Make it first responder
-				success = [textView performDragOperation:sender];
+		//Not an image but it is a file - send it immediately as a file transfer
+		NSArray			*files = [pasteboard propertyListForType:NSFilenamesPboardType];
+		NSEnumerator	*enumerator = [files objectEnumerator];
+		NSString		*path;
+		while (path = [enumerator nextObject]){
+			AIListObject *listObject = [chat listObject];
+			if(listObject){
+				[[adium fileTransferController] sendFile:path toListContact:(AIListContact *)listObject];
 			}
 		}
+		success = YES;
+		
+	}else{
+		NSTextView *textView = [self textView];
+		if(textView){
+			[[webView window] makeFirstResponder:textView]; //Make it first responder
+			success = [textView performDragOperation:sender];
+		}
+	}
 	
 	return success;
 }
@@ -1253,40 +1251,34 @@ DeclareString(AppendNextMessage);
 //Pass on the prepareForDragOperation if it's not one we're handling in this class
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
-	BOOL	success = NO;
-	
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
+	BOOL	success = YES;
 	
-	if ([self shouldHandleDragWithPasteboard:pasteboard]){
-		success = YES;
-		
-	}else{
+	if (![self shouldHandleDragWithPasteboard:pasteboard]){	
 		NSTextView *textView = [self textView];
 		if(textView){
 			success = [textView prepareForDragOperation:sender];
 		}
 	}
-
-	NSLog(@"returning %i",success);
+	
 	return success;
 }
 	
 //Pass on the concludeDragOperation if it's not one we're handling in this class
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
-		NSPasteboard	*pasteboard = [sender draggingPasteboard];
-		
-		if (![self shouldHandleDragWithPasteboard:pasteboard]){
-			NSTextView *textView = [self textView];
-			if(textView){
-				[textView concludeDragOperation:sender];
-			}
+	NSPasteboard	*pasteboard = [sender draggingPasteboard];
+	
+	if (![self shouldHandleDragWithPasteboard:pasteboard]){
+		NSTextView *textView = [self textView];
+		if(textView){
+			[textView concludeDragOperation:sender];
 		}
+	}
 }
 
 - (BOOL)shouldHandleDragWithPasteboard:(NSPasteboard *)pasteboard
 {
-	NSLog(@"handle %@?",pasteboard);
 	return (![pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]] &&
 			[pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]]);
 }

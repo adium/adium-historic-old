@@ -18,15 +18,10 @@
 	[super initWithFrame:frameRect frameName:frameName groupName:groupName];
 
 	draggingDelegate = nil;
-<<<<<<< .mine
-	allowDragAndDrop = YES;
-=======
 	allowsDragAndDrop = YES;
->>>>>>> .r6770
 	
 	return self;
 }
-
 //Font Family ----------------------------------------------------------------------------------------------------------
 #pragma mark Font Family
 - (void)setFontFamily:(NSString *)familyName
@@ -71,23 +66,9 @@
 
 //Accepting Drags ------------------------------------------------------------------------------------------------------
 #pragma mark Accepting Drags
-<<<<<<< .mine
-- (void)setAllowDragAndDrop:(BOOL)flag
-{
-	allowDragAndDrop = flag;
-}
-
-- (unsigned int)draggingEntered:(id <NSDraggingInfo>)sender
-=======
 - (void)setAllowsDragAndDrop:(BOOL)flag
->>>>>>> .r6770
 {
-<<<<<<< .mine
-	NSLog(@"dragging entered: %@",[[sender draggingPasteboard] types]);
-	return (allowDragAndDrop ? NSDragOperationPrivate : NSDragOperationNone);
-=======
 	allowsDragAndDrop = flag;
->>>>>>> .r6770
 }
 
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
@@ -113,7 +94,6 @@
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
-			NSLog(@"Prepare?");
 	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(prepareForDragOperation:)]){
 		return [draggingDelegate prepareForDragOperation:sender];
 	}else{
@@ -123,7 +103,6 @@
 
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
-			NSLog(@"Perform?");
 	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(performDragOperation:)]){
 		return [draggingDelegate performDragOperation:sender];
 	}else{
@@ -133,7 +112,6 @@
 
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
-	NSLog(@"conclude");
 	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(concludeDragOperation:)]){
 		[draggingDelegate performSelector:@selector(concludeDragOperation:) withObject:sender];
 	}else{
