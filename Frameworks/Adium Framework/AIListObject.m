@@ -532,12 +532,12 @@ DeclareString(FormattedUID);
 	if([alias length] == 0) alias = nil; 
 	
 	NSString	*oldAlias = [self preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES];
-	NSLog(@"Alias: %@ ; oldAlias: %@",alias,oldAlias);
+
 	if ((!alias && oldAlias) ||
 		(alias && !([alias isEqualToString:oldAlias]))){
 		//Save the alias
 		[self setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];
-		
+
 		#warning There must be a cleaner way to do this alias stuff!  This works for now :)
 		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
 												  object:self
@@ -576,26 +576,7 @@ DeclareString(FormattedUID);
 #pragma mark Debugging
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"%@:%@",[super description],[self internalObjectID]];
+	return([NSString stringWithFormat:@"%@:%@",[super description],[self internalObjectID]]);
 }
-
-//Contained Contacts (should be subclassed) ----------------------------------------------------------------------------
-//#pragma mark Contained Contacts (Subclassed)
-//- (BOOL)addObject:(AIListObject *)inObject { return NO; };
-//- (void)removeObject:(AIListObject *)inObject {};
-//- (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible {};
-//- (void)sortListObject:(AIListObject *)inObject sortController:(AISortController *)sortController {};
-
-//Contained Contacts (handled for subclasses) --------------------------------------------------------------------------
-//All these methods will have no effect, returning 0 or nil as appropriate, for non-subclassed AIListObject
-#pragma mark Contained Contacts (Handled for subclasses)
-//
-//// Return an array of all objects. Defaults to just ourself.
-//- (NSArray *)listContacts
-//{
-//	return [NSArray arrayWithObject:self];
-//}
-//
-
 
 @end
