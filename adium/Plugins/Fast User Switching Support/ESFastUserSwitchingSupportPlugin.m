@@ -12,23 +12,25 @@
 @implementation ESFastUserSwitchingSupportPlugin
 - (void)installPlugin
 {
-    setAwayThroughFastUserSwitch = NO;
-    
-    [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
-                                                           selector:@selector(switchHandler:) 
-                                                               name:NSWorkspaceSessionDidBecomeActiveNotification 
-                                                             object:nil];
-    
-    [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self 
-                                                           selector:@selector(switchHandler:) 
-                                                               name:NSWorkspaceSessionDidResignActiveNotification
-                                                             object:nil];
-
+    if(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2) //only install on Panther
+    {
+        setAwayThroughFastUserSwitch = NO;
+        
+        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
+                                                            selector:@selector(switchHandler:) 
+                                                                name:NSWorkspaceSessionDidBecomeActiveNotification 
+                                                                object:nil];
+        
+        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self 
+                                                            selector:@selector(switchHandler:) 
+                                                                name:NSWorkspaceSessionDidResignActiveNotification
+                                                                object:nil];
+    }
 }
 
 -(void)uninstallPlugin
 {
-    
+
 }
 
 -(void)switchHandler:(NSNotification*) notification
