@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.26 2004/04/08 21:32:37 adamiser Exp $
+$Id: ToDoList.txt,v 1.27 2004/04/08 22:22:17 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -27,7 +27,7 @@ Bugs
 * Version checker reports 'up to date' when there is no net connection (and when the server cannot be reached?)
 * We aren't processing <code> tags in our HTML decoder (Jabber uses them)
 * Is jabber working correctly?  Are we receiving status for buddies upon initially connecting?  Need to check this.
-
+* User icons are still getting flipped.  We need to determine if they're from libgaim or from the address book.
 
 
 
