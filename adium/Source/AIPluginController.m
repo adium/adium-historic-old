@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.17 2004/02/07 22:33:18 evands Exp $
+//$Id: AIPluginController.m,v 1.18 2004/02/08 03:59:55 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -21,8 +21,8 @@
 #define EXTENSION_ADIUM_PLUGIN			@"AdiumPlugin"			//File extension of a plugin
 
 @interface AIPluginController (PRIVATE)
-- (void)loadPlugins;
 - (void)unloadPlugins;
+- (void)loadPluginsFromPath:(NSString *)pluginPath;
 @end
 
 @implementation AIPluginController
@@ -31,7 +31,8 @@
 {
     pluginArray = [[NSMutableArray alloc] init];
 
-    [self loadPlugins];
+	[self loadPluginsFromPath:[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath]];
+	//[self loadPluginsFromPath:[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath]];
 }
 
 //close
@@ -48,26 +49,13 @@
 }
 
 //Load all the plugins
-- (void)loadPlugins
+- (void)loadPluginsFromPath:(NSString *)pluginPath
 {
-    NSArray	*pluginList;
-    NSString	*pluginPath;
-    int		loop, counter;
+    NSArray		*pluginList;
+    int			loop;
 
-    NSParameterAssert(owner != nil);
-    NSParameterAssert(pluginArray != nil);
-
-    for(counter=0 ; counter < 2 ; counter++)
-    {
-	//Get the plugin path
-	if (counter == 0) { //bundle
-	    pluginPath = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath];
-	}else {  //user's folder, creating if necessary
-	    pluginPath = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath];
-	    [AIFileUtilities createDirectory:pluginPath];
-	}
-	
 	//Get the directory listing of plugins
+	[AIFileUtilities createDirectory:pluginPath];
 	pluginList = [[NSFileManager defaultManager] directoryContentsAtPath:pluginPath];
 
 	for(loop = 0;loop < [pluginList count];loop++){
@@ -113,7 +101,6 @@
 			NS_ENDHANDLER
 	    }
 	}
-    }
 }
 
 //Unload all the plugins
