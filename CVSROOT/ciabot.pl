@@ -24,7 +24,7 @@
 # Note that the last three parameters are optional, you can alternatively change
 # the defaults below in the configuration section.
 #
-# $Id: ciabot.pl,v 1.1 2003/10/23 03:02:47 jmelloy Exp $
+# $Id: ciabot.pl,v 1.2 2003/10/23 03:40:39 jmelloy Exp $
 
 use strict;
 use vars qw ($project $from_email $dest_email @sendmail $max_lines $max_files
@@ -45,7 +45,7 @@ $dest_email = 'commits@picogui.org';
 # Path to your sendmail binary. If you have it at a different place (and
 # outside of $PATH), add your location at the start of the list. By all means
 # keep the trailing empty string in the array.
-@sendmail = ('sendmail', '/usr/lib/sendmail', '/usr/sbin/sendmail', '');
+@sendmail = ('sendmail', '/usr/lib/sendmail', '/usr/sbin/sendmail', '/usr/bin/sendmail', '');
 
 # The maximal number of lines the log message should have.
 $max_lines = 12;
