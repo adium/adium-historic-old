@@ -260,7 +260,7 @@ typedef enum {
 @end
 
 @protocol AIContentFilter
-- (void)filterContentObject:(AIContentObject *)inObject;
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inString forContentObject:(AIContentObject *)inObject;
 @end
 
 @protocol AIServiceController <NSObject>
@@ -444,7 +444,8 @@ typedef enum {
 - (void)registerDisplayingContentFilter:(id <AIContentFilter>)inFilter;
 - (void)unregisterDisplayingContentFilter:(id <AIContentFilter>)inFilter;
 - (void)filterObject:(AIContentObject *)inObject isOutgoing:(BOOL)isOutgoing;
-- (NSAttributedString *)filteredAttributedString:(NSAttributedString *)inString;
+- (NSAttributedString *)filteredAttributedString:(NSAttributedString *)inString isOutgoing:(BOOL)isOutgoing;
+- (NSAttributedString *)fullyFilteredAttributedString:(NSAttributedString *)inString;
 
 //Emoticons
 - (void)setEmoticonsArray:(NSArray *)inEmoticonsArray;

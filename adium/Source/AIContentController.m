@@ -13,9 +13,14 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.37 2003/12/16 19:22:36 evands Exp $
+// $Id: AIContentController.m,v 1.38 2004/01/08 07:19:09 evands Exp $
 
 #import "AIContentController.h"
+
+@interface AIContentController (PRIVATE)
+- (NSAttributedString *)_filterAttributedString:(NSAttributedString *)inString forContentObject:(AIContentObject *)inObject usingFilterArray:(NSArray *)inArray;
+- (void)_filterContentObject:(AIContentObject *)inObject usingFilterArray:(NSArray *)inArray;
+@end
 
 @implementation AIContentController
 
@@ -66,6 +71,7 @@
 
 
 //Text Entry Filters ------------------------------------------------------------------------------------
+#pragma mark Text Entry Filters
 //Register a text entry filter
 - (void)registerTextEntryFilter:(id)inFilter
 {
@@ -159,7 +165,8 @@
 
 
 //Content Filters -----------------------------------------------------------------------------------------
-//
+#pragma mark Content Filters
+
 - (void)registerOutgoingContentFilter:(id <AIContentFilter>)inFilter 
 {
     [outgoingContentFilterArray addObject:inFilter];
@@ -190,8 +197,65 @@
     [displayingContentFilterArray removeObject:inFilter];
 }
 
+//Modify a contentObject by passing it through the appropriate filters
+- (void)filterObject:(AIContentObject *)inObject isOutgoing:(BOOL)isOutgoing
+{
+    [self _filterContentObject:inObject usingFilterArray:(isOutgoing ? 
+                                                          outgoingContentFilterArray : displayingContentFilterArray)];
+}
 
+//Return an attributed string which is the result of passing inString through both outgoing and display filters
+- (NSAttributedString *)fullyFilteredAttributedString:(NSAttributedString *)inString
+{
+    return [self filteredAttributedString:[self filteredAttributedString:inString isOutgoing:YES] isOutgoing:NO];
+}
+
+//Return an attributed string which is the result of passing inString through the specified filter (outgoing or diplay)
+- (NSAttributedString *)filteredAttributedString:(NSAttributedString *)inString isOutgoing:(BOOL)isOutgoing
+{
+    return ([self _filterAttributedString:inString
+                         forContentObject:nil
+                         usingFilterArray:(isOutgoing ? 
+                                           outgoingContentFilterArray : displayingContentFilterArray)]);
+}
+
+// Send the specified attributed string and possibly a contentObject through the specified filters, returning the modified
+// string if one is generated (or the original string if one is not).  Filters get the contentObject and can modify it,
+// but should not expect its "message" member to be accurate.
+- (NSAttributedString *)_filterAttributedString:(NSAttributedString *)inString forContentObject:(AIContentObject *)inObject usingFilterArray:(NSArray *)inArray
+{
+    NSEnumerator                *enumerator;
+    id<AIContentFilter>         filter;
+    NSAttributedString          *filteredString = inString;
+    
+    if (inString){
+        enumerator = [inArray objectEnumerator];
+        while((filter = [enumerator nextObject])){
+            filteredString = [filter filterAttributedString:filteredString forContentObject:inObject];
+        }
+    }
+    
+    return filteredString;
+}
+
+- (void)_filterContentObject:(AIContentObject *)inObject usingFilterArray:(NSArray *)inArray
+{
+    // Only CONTENT_MESSAGE_TYPE contentObjects have an attributed string,
+    // but all contentObjects should be passed through the filters
+    if([[inObject type] isEqual:CONTENT_MESSAGE_TYPE]){
+        
+        [(AIContentMessage *)inObject setMessage:[self _filterAttributedString:[(AIContentMessage *)inObject message]
+                                                              forContentObject:inObject
+                                                              usingFilterArray:inArray]];
+    } else {
+        [self _filterAttributedString:nil
+                     forContentObject:inObject
+                     usingFilterArray:inArray];
+    }
+    
+}
 //Messaging -----------------------------------------------------------------------------------------------
+#pragma mark Messaging
 //Add an incoming content object
 - (void)addIncomingContentObject:(AIContentObject *)inObject
 {
@@ -209,14 +273,7 @@
 
         //Filter the object
         if(filterContent){
-            NSEnumerator		*enumerator;
-            id<AIContentFilter>		filter;
-
-            enumerator = [incomingContentFilterArray objectEnumerator];
-            while((filter = [enumerator nextObject])){
-                [filter filterContentObject:inObject];
-            }
-            
+            [self _filterContentObject:inObject usingFilterArray:incomingContentFilterArray];
         }
 
         //Add/Display the object
@@ -295,17 +352,6 @@
     [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 }
 
-- (void)filterObject:(AIContentObject *)inObject isOutgoing:(BOOL)isOutgoing
-{
-    NSEnumerator	*enumerator;
-    id<AIContentFilter>	filter;
-
-    enumerator = [(isOutgoing ? outgoingContentFilterArray : displayingContentFilterArray) objectEnumerator];
-    while((filter = [enumerator nextObject])){
-        [filter filterContentObject:inObject];
-    }
-}
-
 //Returns YES if the account/chat is available for sending content
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject onAccount:(AIAccount *)inAccount 
 {
@@ -316,23 +362,10 @@
     }
 }
 
-- (NSAttributedString *)filteredAttributedString:(NSAttributedString *)inString
-{
-    AIContentMessage *object = [AIContentMessage messageInChat:nil
-                                                    withSource:nil
-                                                   destination:nil
-                                                          date:nil
-                                                       message:inString
-                                                     autoreply:NO];
 
-    //Run through the filters; do both incoming and outgoing filters so we get links and emoticons
-    [[owner contentController] filterObject:object isOutgoing:YES];
-    [[owner contentController] filterObject:object isOutgoing:NO];
-    
-    return ([object message]);
-}
 
 //Chats -------------------------------------------------------------------------------------------------
+#pragma mark Chats
 //Open a chat on the specified account, or returns an existing chat
 - (AIChat *)openChatOnAccount:(AIAccount *)inAccount withListObject:(AIListObject *)inListObject
 {
@@ -379,8 +412,11 @@
     if (mostRecentChat == inChat)
         mostRecentChat = nil;
     
-    //Notify the account, and remove the chat
+    //Notify the account and any chat observers
     [(AIAccount<AIAccount_Content> *)[inChat account] closeChat:inChat];
+    //enumerate chat observers
+    
+    //Remove the chat
     [chatArray removeObject:inChat];
 
     //Remove all content from the chat
