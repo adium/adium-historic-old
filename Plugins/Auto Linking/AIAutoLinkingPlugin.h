@@ -15,8 +15,10 @@
 
 @protocol AIContentFilter;
 
-@interface AIAutoLinkingPlugin : AIPlugin <AIContentFilter> {
+@class SHHyperlinkScanner;
 
+@interface AIAutoLinkingPlugin : AIPlugin <AIContentFilter> {
+	SHHyperlinkScanner	*hyperlinkScanner;
 }
 
 @end
