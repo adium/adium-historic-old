@@ -67,9 +67,11 @@
 
 		for(i = 0; i < [self numberOfTabViewItems]; i++){
 			NSTabViewItem	*tabViewItem = [self tabViewItemAtIndex:i];
-			NSString 		*identifier = [tabViewItem identifier];
+			NSString 		*identifier = [NSString stringWithFormat:@"%i",i];
 			NSString		*label = [tabViewItem label];
 			
+			//We use the tab view item's index as identifier so we can easily sort our toolbar items into the same
+			//ordering as the tabs.
 			if(![toolbarItems objectForKey:identifier] && (tabViewItem != tabViewItem_loading)){
 				[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
 												withIdentifier:identifier
@@ -90,11 +92,10 @@
 }
 
 //Select the category that invoked this method
+//Select the corresponding tab view item
 - (IBAction)selectCategory:(id)sender
 {
-    //Take focus away from any controls to ensure that they register changes and save
-    [[self window] makeFirstResponder:self];
-    [self selectTabViewItemWithIdentifier:[sender itemIdentifier]];
+    [self selectTabViewItemAtIndex:[[sender itemIdentifier] intValue]];
 }
 
 //Enable all categories
@@ -104,8 +105,7 @@
 }
 
 //Access to our toolbar items
-- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar
-	 itemForItemIdentifier:(NSString *)itemIdentifier
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier
  willBeInsertedIntoToolbar:(BOOL)flag
 {
     return([AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier]);
@@ -133,6 +133,11 @@
 //Resize our window when the tabview selection changes
 - (void)selectTabViewItem:(NSTabViewItem *)tabViewItem
 {
+	//Update the selected toolbar item (10.3 or higher)
+	if([[[self window] toolbar] respondsToSelector:@selector(setSelectedItemIdentifier:)]){
+		[[[self window] toolbar] setSelectedItemIdentifier:[NSString stringWithFormat:@"%i",[self indexOfTabViewItem:tabViewItem]]];
+	}
+
 	if(tabViewItem != [self selectedTabViewItem]){
 		if(tabViewItem_loading){
 			//Start the spinning progress indicator
@@ -148,7 +153,7 @@
 				[[self delegate] tabView:self willSelectTabViewItem:tabViewItem];
 			}
 			
-		}else if ([self respondsToSelector:@selector(setHidden:)]){
+		}else if([self respondsToSelector:@selector(setHidden:)]){
 			//If not, just hide
 			[self setHidden:YES];
 		}
@@ -162,7 +167,6 @@
 	//Resize the window
 	if([[self delegate] respondsToSelector:@selector(tabView:heightForTabViewItem:)]){
 		int		height = [[self delegate] tabView:self heightForTabViewItem:tabViewItem];
-		
 		BOOL	isVisible = [[self window] isVisible];
 		NSRect 	frame = [[self window] frame];
 		
