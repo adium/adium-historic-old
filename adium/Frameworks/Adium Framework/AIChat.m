@@ -126,9 +126,9 @@
 }
 
 //
-- (void)appendContentArray:(NSArray *)inContent
+- (void)appendContentArray:(NSArray *)inContentArray
 {
-    [contentObjectArray addObjectsFromArray:inContent];
+    [contentObjectArray addObjectsFromArray:inContentArray];
 }
 
 //

@@ -15,7 +15,7 @@
 
 /*
     Cocoa wrapper for accessing the system keychain
-*/
+ */
 
 #import "AIKeychain.h"
 #import <Carbon/Carbon.h>
@@ -29,8 +29,8 @@
 @implementation AIKeychain
 
 /* getPasswordFromKeychainForService
- *   gets a password from the keychain for the specified service & account
- */
+*   gets a password from the keychain for the specified service & account
+*/
 + (NSString *)getPasswordFromKeychainForService:(NSString *)service account:(NSString *)account
 {
     OSStatus ret;
@@ -39,10 +39,11 @@
     NSString *string = nil;
     
     ret = kcfindgenericpassword([service cString], [account cString], 127, p, &len, NULL);
-
-    if (!ret)
+	
+    if (!ret){
         string = [NSString stringWithCString:(const char*)p length:len];
-
+	}
+	
     free(p); 
     return string;
 }
@@ -50,29 +51,31 @@
 // puts a password on the keychain for the specified service and account
 + (void)putPasswordInKeychainForService:(NSString *)service account:(NSString *)account password:(NSString *)password
 {
-    OSStatus ret;
-    KCItemRef itemref = NULL;
-
-    if (itemref = [self getKCItemRefWithAccount:account service:service])
-      KCDeleteItem(itemref);
+    OSStatus	ret;
+    KCItemRef   itemref = NULL;
+	
+    if ((itemref = [self getKCItemRefWithAccount:account service:service])){
+		KCDeleteItem(itemref);
+	}
     ret = kcaddgenericpassword([service cString], [account cString], [password cStringLength], 
-      [password cString], NULL);
+							   [password cString], NULL);
 }
 
 // removes a password from the keychain
 + (void)removePasswordFromKeychainForService:(NSString *)service account:(NSString *)account
 {
-  KCItemRef itemref = NULL;
-  if (itemref = [self getKCItemRefWithAccount:account service:service])
-    KCDeleteItem(itemref);
+	KCItemRef itemref = NULL;
+	if ((itemref = [self getKCItemRefWithAccount:account service:service])){
+		KCDeleteItem(itemref);
+	}
 }
 
 //returns a keychain item ref
 + (KCItemRef)getKCItemRefWithAccount:(NSString *)account service:(NSString *)service
 {
-  KCItemRef itemref = NULL;
-  kcfindgenericpassword([service cString], [account cString], NULL, NULL, NULL, &itemref);
-  return itemref;
+	KCItemRef itemref = NULL;
+	kcfindgenericpassword([service cString], [account cString], NULL, NULL, NULL, &itemref);
+	return itemref;
 }
 
 @end

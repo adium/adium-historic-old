@@ -98,8 +98,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Handle a mouse down.  Returns NO if the mouse down event should continue to be processed
 - (BOOL)handleMouseDown:(NSEvent *)theEvent withOffset:(NSPoint)offset
 {
-    BOOL		success = NO;
-    NSPoint		mouseLoc;
+    BOOL			success = NO;
+    NSPoint			mouseLoc;
     unsigned int	glyphIndex;
     unsigned int	charIndex;
     NSRectArray		linkRects = nil;
@@ -132,10 +132,10 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
             //bail if a link couldn't be made
             if(linkURL){
                 unsigned int	eventMask;
-                NSDate		*distantFuture;
-                int			linkCount;
-                BOOL		done = NO;
-                BOOL		inRects = NO;
+                NSDate			*distantFuture;
+                int				linkCount;
+                BOOL			done = NO;
+                BOOL			inRects = NO;
 
                 //Setup Tracking Info
                 distantFuture = [NSDate distantFuture];
@@ -155,8 +155,6 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
                     [controlView setNeedsDisplay:YES];
 
                     while(!done){
-                        NSPoint		mouseLoc;
-
                         //Get the next event and mouse location
                         theEvent = [NSApp nextEventMatchingMask:eventMask untilDate:distantFuture inMode:NSEventTrackingRunLoopMode dequeue:YES];
                         mouseLoc = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];

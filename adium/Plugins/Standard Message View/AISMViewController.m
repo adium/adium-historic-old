@@ -269,10 +269,10 @@
 		lockContentThreadQueue = NO;
 		
         NSEnumerator    *enumerator = [secondaryThreadContentThreadQueue objectEnumerator];
-        AIContentObject *content;
+        AIContentObject *queuedContent;
         
-        while ( (content = [enumerator nextObject]) && !abandonRebuilding) {
-            [self performSelectorOnMainThread:@selector(_addContentObject:) withObject:content waitUntilDone:YES];
+        while ( (queuedContent = [enumerator nextObject]) && !abandonRebuilding) {
+            [self performSelectorOnMainThread:@selector(_addContentObject:) withObject:queuedContent waitUntilDone:YES];
         }
     }
     

@@ -460,8 +460,7 @@
     NSMutableString		*newString;
 
     int imageID;
-	BOOL found = NO;
-	
+
     //set up
 	newString = [[NSMutableString alloc] init];
 	
@@ -780,7 +779,7 @@
 			//Since no protocol here supports nesting, a group move is really a re-name
 			
 		}else{
-			NSString	*oldGroupName = [self _mapOutgoingGroupName:[listObject remoteGroupName]];
+//			NSString	*oldGroupName = [self _mapOutgoingGroupName:[listObject remoteGroupName]];
 			
 //			NSLog(@"Old %@ ; New %@",oldGroupName,[group UID]);
 			
@@ -1426,13 +1425,12 @@
 //Update our status
 - (void)updateStatusForKey:(NSString *)key
 {    
-	NSData	*data;
-	
 	[super updateStatusForKey:key];
 
     //Now look at keys which only make sense while online
 	if([[self statusObjectForKey:@"Online"] boolValue]){
 		NSData  *data;
+		
 		if([key compare:@"IdleSince"] == 0){
 			NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			[self setAccountIdleTo:(idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil)];

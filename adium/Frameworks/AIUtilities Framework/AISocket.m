@@ -80,7 +80,7 @@
 
 
 //Get data
-- (BOOL)getData:(NSData **)outData ofLength:(int)inLength remove:(BOOL)remove
+- (BOOL)getData:(NSData **)outData ofLength:(int)inLength remove:(BOOL)shouldRemove
 {
     BOOL		allDataAvailable;
     int		 	bytesRead;
@@ -97,7 +97,7 @@
         allDataAvailable = YES;
         
 		//Remove the bytes from the read buffer (if desired)
-		if(allDataAvailable && remove){
+		if(allDataAvailable && shouldRemove){
 			[self removeDataBytes:inLength];
 		}
 
@@ -118,7 +118,7 @@
                 allDataAvailable = ([readBuffer length] == inLength); //YES if we have all the data
 
                 //Remove the bytes from the read buffer (if desired)
-                if(allDataAvailable && remove){
+                if(allDataAvailable && shouldRemove){
                     [self removeDataBytes:inLength];
                 }
             }
@@ -129,7 +129,7 @@
     return(allDataAvailable);
 }
 
-- (BOOL)getDataToNewline:(NSData **)outData remove:(BOOL)remove
+- (BOOL)getDataToNewline:(NSData **)outData remove:(BOOL)shouldRemove
 {
     BOOL	lineAvailable;
     char 	tempBuffer[8192];
@@ -164,7 +164,7 @@
             lineAvailable = YES;
             
             //Remove the bytes from the read buffer (if desired)
-            if(remove){
+            if(shouldRemove){
                 [self removeDataBytes:(c + 2)];
             }
 

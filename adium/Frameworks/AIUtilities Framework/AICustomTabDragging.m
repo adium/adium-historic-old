@@ -75,8 +75,6 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 - (void)dragTabCell:(AICustomTabCell *)inTabCell fromCustomTabsView:(AICustomTabsView *)sourceView withEvent:(NSEvent *)inEvent selectTab:(BOOL)shouldSelect
 {
     NSPasteboard 	*pboard;
-    NSImage			*dragTabImage, *dragWindowImage;
-    NSRect			frame = [inTabCell frame];
     NSPoint			clickLocation = [inEvent locationInWindow];
     NSPoint			startPoint;
     BOOL			sourceWindowWillHide;

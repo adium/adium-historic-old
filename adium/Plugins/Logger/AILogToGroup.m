@@ -55,56 +55,56 @@
 - (NSArray *)logArray
 {
     if(!logArray){
-	NSEnumerator    *enumerator;
-	NSString	*fileName;
-	NSString	*fullPath;
-	NSCalendarDate  *date;
-	
-	//
-	logArray = [[NSMutableArray alloc] init];
-	
-	//
-	fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:path];
-	enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:fullPath] objectEnumerator];
-	while(fileName = [enumerator nextObject]){
-	    
-		if([[fileName substringToIndex:1] isEqualToString:@"."] ||
-		   ![[[[NSFileManager defaultManager] fileAttributesAtPath:[fullPath stringByAppendingPathComponent:fileName] traverseLink:YES] fileType] isEqualToString:NSFileTypeRegular])
-			continue;
+		NSEnumerator    *enumerator;
+		NSString	*fileName;
+		NSString	*fullPath;
+		NSCalendarDate  *date;
 		
-	    //Temprary Code.  This can be removed once everyone who ran the alpha has opened their log viewer :)
-	    //
-	    //Rename Adium 2.0 alpha logs.  Logs saved after the format change and before this viewer use
-	    //the filename format: adam_(2003|11|16).adiumLog.html
-	    //
-	    //We want to convert these to: adam (2003|11|16).html
-	    //
-	    if([fileName hasSuffix:OLD_SUFFIX]){
-		NSString    *filePath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:path];
-		NSString    *newName;
-		NSRange     underRange = [fileName rangeOfString:@"_"];
+		//
+		logArray = [[NSMutableArray alloc] init];
 		
-		//Remove the .adiumLog and the '_'
-		newName = [NSString stringWithFormat:@"%@.html",[fileName substringToIndex:([fileName length] - [OLD_SUFFIX length])]];
-		newName = [NSString stringWithFormat:@"%@ %@",[newName substringToIndex:underRange.location], [newName substringFromIndex:underRange.location+1]];
-		
-		//Rename
-	        [[NSFileManager defaultManager] movePath:[filePath stringByAppendingPathComponent:fileName]
-						  toPath:[filePath stringByAppendingPathComponent:newName]
-						 handler:nil];
-		fileName = newName;
-	    }
-
-	    //Create & add the log
-	    if(date = [AILog dateFromFileName:fileName]){
-		AILog   *log = [[AILog alloc] initWithPath:[path stringByAppendingPathComponent:fileName]
-										  from:from
-										    to:to
-										  date:date];
-		[logArray addObject:log];
-		[log release];
-	    }
-	}
+		//
+		fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:path];
+		enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:fullPath] objectEnumerator];
+		while(fileName = [enumerator nextObject]){
+			
+			if([[fileName substringToIndex:1] isEqualToString:@"."] ||
+			   ![[[[NSFileManager defaultManager] fileAttributesAtPath:[fullPath stringByAppendingPathComponent:fileName] traverseLink:YES] fileType] isEqualToString:NSFileTypeRegular])
+				continue;
+			
+			//Temprary Code.  This can be removed once everyone who ran the alpha has opened their log viewer :)
+			//
+			//Rename Adium 2.0 alpha logs.  Logs saved after the format change and before this viewer use
+			//the filename format: adam_(2003|11|16).adiumLog.html
+			//
+			//We want to convert these to: adam (2003|11|16).html
+			//
+			if([fileName hasSuffix:OLD_SUFFIX]){
+				NSString    *filePath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:path];
+				NSString    *newName;
+				NSRange     underRange = [fileName rangeOfString:@"_"];
+				
+				//Remove the .adiumLog and the '_'
+				newName = [NSString stringWithFormat:@"%@.html",[fileName substringToIndex:([fileName length] - [OLD_SUFFIX length])]];
+				newName = [NSString stringWithFormat:@"%@ %@",[newName substringToIndex:underRange.location], [newName substringFromIndex:underRange.location+1]];
+				
+				//Rename
+				[[NSFileManager defaultManager] movePath:[filePath stringByAppendingPathComponent:fileName]
+												  toPath:[filePath stringByAppendingPathComponent:newName]
+												 handler:nil];
+				fileName = newName;
+			}
+			
+			//Create & add the log
+			if(date = [AILog dateFromFileName:fileName]){
+				AILog   *theLog = [[AILog alloc] initWithPath:[path stringByAppendingPathComponent:fileName]
+														 from:from
+														   to:to
+														 date:date];
+				[logArray addObject:theLog];
+				[theLog release];
+			}
+		}
     }
     
     return(logArray);

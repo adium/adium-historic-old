@@ -118,6 +118,7 @@
 				return [account displayName];
 			}
 		}
+		
     } else if([pattern isEqualToString:@"%n"]) {
 		if (content) {
 			//Use the destination if possible, otherwise rely on the listObject of the associated chat
@@ -144,6 +145,7 @@
 				return [account displayName];
 			}
 		}
+		
     } else if([pattern isEqualToString:@"%m"]) {
 		if (content) {
 			return [[content source] displayName]; 	
@@ -153,10 +155,11 @@
 				return [listObject displayName];
 			}
 		}
+		
     } else if([pattern isEqualToString:@"%t"]) {
 		NSCalendarDate  *timestamp = [NSCalendarDate calendarDate];
 		NSString		*hour = [timestamp descriptionWithCalendarFormat:@"%I"];
-		NSMutableString *time;
+		NSMutableString *timeString;
 		unichar			*charHour = malloc(sizeof(unichar) * 2); 
 		
 		charHour[0] = [hour characterAtIndex:0];
@@ -164,21 +167,23 @@
 		
 		if(charHour[0] == '0') {
             charHour[0] = charHour[1];
-            time = [[[NSMutableString alloc] initWithCharacters:charHour length:1] autorelease];
+            timeString = [[[NSMutableString alloc] initWithCharacters:charHour length:1] autorelease];
 		} else {
-            time = [[[NSMutableString alloc] initWithCharacters:charHour length:2] autorelease];
+            timeString = [[[NSMutableString alloc] initWithCharacters:charHour length:2] autorelease];
 		}
 		
 		free(charHour);
 		
-		[time appendString:[timestamp descriptionWithCalendarFormat:@":%M %p"]];
+		[timeString appendString:[timestamp descriptionWithCalendarFormat:@":%M %p"]];
 		
-		return time;  
+		return timeString;  
+		
     } else if([pattern isEqualToString:@"%d"]) {
 		NSCalendarDate *date = [NSCalendarDate calendarDate];
 		return [date descriptionWithCalendarFormat:@"%b %e, %Y"];  
     }
     
+	//No change: return the original pattern
     return pattern;
 }
 

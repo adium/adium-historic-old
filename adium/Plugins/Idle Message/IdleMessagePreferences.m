@@ -50,6 +50,9 @@
     //Idle message
     [checkBox_enableIdleMessage setState:[[preferenceDict objectForKey:KEY_IDLE_MESSAGE_ENABLED] boolValue]];
     [[textView_idleMessage textStorage] setAttributedString:idleMessage];
+
+	//This doesn't work.  Why not?
+	//[[textView_idleMessage window] setInitialFirstResponder:textView_idleMessage];
 }
 
 //force the textView to save its contents when the view will close

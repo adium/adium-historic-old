@@ -57,7 +57,7 @@
                 char buffer[512];
                 size_t length;
                 
-                while( length = fread( buffer, 1, sizeof( buffer ), file ) )
+                while( (length = fread(buffer, 1, sizeof(buffer), file) ))
                 {
                     [processedStackTrace appendString:[NSString stringWithCString:buffer]];
                 }

@@ -91,9 +91,9 @@ int HTMLEquivalentForFontSize(int fontSize);
         float		pointSize = [font pointSize];
         
         NSFontTraitMask	traits = [fontManager traitsOfFont:font];
-        BOOL		underline = [[attributes objectForKey:NSUnderlineStyleAttributeName] intValue];
-        BOOL		bold = (traits & NSBoldFontMask);
-        BOOL		italic = (traits & NSItalicFontMask);
+        BOOL		hasUnderline = [[attributes objectForKey:NSUnderlineStyleAttributeName] intValue];
+        BOOL		isBold = (traits & NSBoldFontMask);
+        BOOL		isItalic = (traits & NSItalicFontMask);
         
         NSString	*link = [attributes objectForKey:NSLinkAttributeName];
         AITextAttachmentExtension *attachment = [attributes objectForKey:NSAttachmentAttributeName];
@@ -104,9 +104,9 @@ int HTMLEquivalentForFontSize(int fontSize);
         
         //Close style tags
         if(includeStyleTags){
-            if(!italic && currentItalic) [string appendString:@"</I>"];
-            if(!bold && currentBold) [string appendString:@"</B>"];
-            if(!underline && currentUnderline) [string appendString:@"</U>"];
+            if(!isItalic && currentItalic) [string appendString:@"</I>"];
+            if(!isBold && currentBold) [string appendString:@"</B>"];
+            if(!hasUnderline && currentUnderline) [string appendString:@"</U>"];
         }
 
         //Font (If the color, font, or size has changed)
@@ -153,14 +153,14 @@ int HTMLEquivalentForFontSize(int fontSize);
         //Style (Bold, italic, underline)
         if(includeStyleTags){
             //Open style tags
-            if(!currentUnderline && underline) [string appendString:@"<U>"];
-            if(!currentBold && bold) [string appendString:@"<B>"];
-            if(!currentItalic && italic) [string appendString:@"<I>"];
+            if(!currentUnderline && hasUnderline) [string appendString:@"<U>"];
+            if(!currentBold && isBold) [string appendString:@"<B>"];
+            if(!currentItalic && isItalic) [string appendString:@"<I>"];
 
             //Set our current styles
-            currentUnderline = underline;
-            currentBold = bold;
-            currentItalic = italic;
+            currentUnderline = hasUnderline;
+            currentBold = isBold;
+            currentItalic = isItalic;
         }
         
         //Link

@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.27 2004/03/13 00:14:55 adamiser Exp $
+//$Id: AIPluginController.m,v 1.28 2004/03/13 16:50:24 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -61,7 +61,7 @@ AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin;
 	[self loadPluginWithClass:[AIAutoLinkingPlugin class]];
 	[self loadPluginWithClass:[AIAwayMessagesPlugin class]];
 	[self loadPluginWithClass:[AIAwayStatusWindowPlugin class]];
-	[self loadPluginWithClass:[AIConnectPanelPlugin class]];
+//	[self loadPluginWithClass:[AIConnectPanelPlugin class]];
 	[self loadPluginWithClass:[AIContactAwayPlugin class]];
 	[self loadPluginWithClass:[AIContactIdlePlugin class]];
 	[self loadPluginWithClass:[AIContactInfoPlugin class]];

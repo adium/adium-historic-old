@@ -71,8 +71,7 @@
 //Configure the account view
 - (void)configureForAccount:(AIAccount *)inAccount
 {
-    NSString		*accountName, *savedPassword;
-	AIServiceType	*serviceType = [[account service] handleServiceType];
+    NSString		*savedPassword;
 	
 	//Remember the account
 	account = inAccount;

@@ -159,7 +159,6 @@ float _v(float m1, float m2, float hue);
 {
     NSColor	*rgbColor;
     float	r, g, b;
-    float	rc, gc, bc;
     float	minValue, maxValue;
     
     //Get the current RGB values
