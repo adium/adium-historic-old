@@ -16,7 +16,6 @@ Version 0.61 (6/25/2004)
 - Improvements to HTML support
 - Improvements to error handling
 - Improvements to file transfer
-- Improvements to tooltips
 - Improvements to the 'Add Contact' panel
 - Improvements to formatted message sending via Novell GroupWise
 - Fixed Yahoo! authentication problems (care of Cerulean Studios)
