@@ -29,12 +29,21 @@
 
 - (void)awakeFromNib
 {
-    [contentController initController];
+    iconDict = [[[NSMutableDictionary alloc] init] retain];
+	[contentController initController];
     [tabView_ClientTabs selectTabViewItemAtIndex:0];
     [popUpButton_account removeItemAtIndex:0];
     [popUpButton_user removeItemAtIndex:0];
     [progressIndicator setIndeterminate:NO];
     [progressIndicator setUsesThreadedAnimation:YES];
+	
+	[spinner_ClientProgress setUsesThreadedAnimation:YES];
+	[spinner_ClientProgress setHidden:NO];
+	[spinner_ClientProgress startAnimation:nil];
+	[spinner_ClientProgress display];
+	
+	[popUpButton_Clients setAction:@selector(changeClientSelection:)];
+	[popUpButton_Clients setAutoenablesItems:NO];
         
 	
     NSString				*file;
@@ -97,44 +106,61 @@
 	
 	path = [[NSString alloc]init];
 	path = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"iChat"];
+	[iconDict setObject:[[NSWorkspace sharedWorkspace] iconForFile:path] forKey:@"iChat"];
 	settingsPath = [[NSString stringWithString:@"~/Library/Preferences/com.apple.iChat.plist"] stringByExpandingTildeInPath];
 	
-	if([manager fileExistsAtPath:settingsPath]){
-		
-		[popUpButton_Clients addItemWithTitle:@"iChat"];
+	[popUpButton_Clients addItemWithTitle:@"iChat"];
+	
 		item = (NSMenuItem *)[popUpButton_Clients lastItem];
-		icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
+		icon = [iconDict objectForKey:[item title]];
 		[icon setSize:NSMakeSize(16,16)];
 		[item setImage:icon];
+	if([manager fileExistsAtPath:settingsPath]){
+		[item setEnabled:YES];
+	}else{
+		[item setEnabled:NO];
 	}
 
 	path = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"Proteus"];
+	[iconDict setObject:[[NSWorkspace sharedWorkspace] iconForFile:path] forKey:@"Proteus"];
 	settingsPath = [@"~/Library/Application Support/Proteus/" stringByExpandingTildeInPath];
-	if([manager fileExistsAtPath:settingsPath]){
-		[popUpButton_Clients addItemWithTitle:@"Proteus"];
+	[popUpButton_Clients addItemWithTitle:@"Proteus"];
 		item = (NSMenuItem *)[popUpButton_Clients lastItem];
-		icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
+		icon = [iconDict objectForKey:[item title]];
 		[icon setSize:NSMakeSize(16,16)];
 		[item setImage:icon];
-		[item setEnabled:NO];
-	}
+		if([manager fileExistsAtPath:settingsPath]){
+			[item setEnabled:YES];
+		}else{
+			[item setEnabled:NO];
+		}
 	
 	path = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"Fire"];
+	[iconDict setObject:[[NSWorkspace sharedWorkspace] iconForFile:path] forKey:@"Fire"];
 	settingsPath = [@"~/Library/Application Support/Fire/" stringByExpandingTildeInPath];
-	if([manager fileExistsAtPath:settingsPath]){
 		[popUpButton_Clients addItemWithTitle:@"Fire"];
 		item = (NSMenuItem *)[popUpButton_Clients lastItem];
-		icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
+		if ([[NSFileManager defaultManager] fileExistsAtPath:path]){
+			icon = [iconDict objectForKey:[item title]];
+		}else{
+			icon = [NSImage imageNamed:@"ErrorAlert"];
+		}
 		[icon setSize:NSMakeSize(16,16)];
+		
 		[item setImage:icon];
-		[item setEnabled:NO];
-	}
+		if([manager fileExistsAtPath:settingsPath]){
+			[item setEnabled:YES];
+		}else{
+			[item setEnabled:NO];
+		}
+
+		[spinner_ClientProgress stopAnimation:nil];
+		[spinner_ClientProgress setHidden:YES];
 }
 
 - (void)dealloc
 {
 	[super dealloc];
-	
     [contentController closeController];
 }
 
@@ -762,7 +788,13 @@
 #pragma mark -
 #pragma mark Application Delegate Methods & Other Ugly Stuff(tm)
 
-- (AIContentController *)contentController{
+- (IBAction)changeClientSelection:(id)sender
+{
+	[tabView_ClientTabs selectTabViewItemWithIdentifier:[popUpButton_Clients titleOfSelectedItem]];;
+}
+
+- (AIContentController *)contentController
+{
     return(contentController);
 }
 

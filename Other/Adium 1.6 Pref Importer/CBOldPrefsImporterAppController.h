@@ -13,6 +13,7 @@
     IBOutlet	NSProgressIndicator		*progressIndicator;
     IBOutlet	NSTextField				*currentTask;
     IBOutlet    NSImageView				*image_AdiumImage;
+	IBOutlet	NSImageView				*image_Backdrop;
     IBOutlet	NSWindow				*theSheet;
     IBOutlet	NSPanel					*importListSheet;
     IBOutlet	NSPopUpButton			*popUpButton_user;
@@ -25,10 +26,14 @@
     IBOutlet    NSPopUpButton           *popUpButton_Clients;
     IBOutlet    NSButton                *button_Import;
     IBOutlet    NSProgressIndicator     *spinner_importProgress;
+	IBOutlet	NSProgressIndicator		*spinner_ClientProgress;
     IBOutlet    NSTabView               *tabView_ClientTabs;
     IBOutlet    NSTabView               *tabView_optionsTab;
     IBOutlet	AIContentController     *contentController;
     IBOutlet    NSButton                *button_importAllProteusAways;
+
+	
+	NSMutableDictionary		*iconDict;
     
     
 }
@@ -38,6 +43,7 @@
 - (IBAction)importContacts:(id)sender;
 - (IBAction)sheetButton:(id)sender;
 - (IBAction)importAwayMessages:(id)sender;
+- (IBAction)changeClientSelection:(id)sender;
 
 - (BOOL)ensureAdiumIsClosed;
 - (void)importiChatAways;
