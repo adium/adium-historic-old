@@ -518,14 +518,17 @@
 
     tabSize.height += distance;
     [tabView_customTabs setFrameSize:tabSize];
-    
+    [tabView_customTabs setNeedsDisplay:YES];
+	
     //Adjust other views
     newFrame = [tabView_messages frame];
     newFrame.size.height -= distance;
     newFrame.origin.y += distance;
     [tabView_messages setFrame:newFrame];
-    [[self window] display];
-    
+    [tabView_messages setNeedsDisplay:YES];
+	
+	[[self window] displayIfNeeded];
+	
     //Return YES when the desired height is reached
     return(tabSize.height == destHeight);
 }
