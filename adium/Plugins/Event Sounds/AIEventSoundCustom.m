@@ -192,7 +192,7 @@ AIEventSoundCustom	*sharedInstance = nil;
     [[owner preferenceController] setPreference:eventSoundArray forKey:KEY_EVENT_CUSTOM_SOUNDSET group:PREF_GROUP_SOUNDS];
     
     //Remove the soundset preference because we now have a custom one
-    [[owner preferenceController] setPreference:nil forKey:KEY_EVENT_SOUND_SET group:PREF_GROUP_SOUNDS];
+    [[owner preferenceController] setPreference:@"" forKey:KEY_EVENT_SOUND_SET group:PREF_GROUP_SOUNDS];
 }
 
 //Builds and returns an event menu
