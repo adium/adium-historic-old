@@ -9,5 +9,6 @@
 #define One_Time_Event_Fired 		@"One Time Event Fired"
 
 @interface ESContactAlertsController (INTERNAL) 
-
+- (void)initController;
+- (void)closeController;
 @end

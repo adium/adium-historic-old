@@ -18,42 +18,48 @@
 
 @implementation ESEventSoundContactAlert
 
-- (id)initWithOwner:(id)inOwner
+-(id)initWithOwner:(id)inOwner{
+    soundMenu_cached = nil;
+
+    return ([super initWithOwner:inOwner]);
+}
+
+-(void)dealloc{
+    [soundMenu_cached release];
+    [super dealloc];
+}
+
+-(NSString *)nibName
 {
-    owner = inOwner;
-    
-    [NSBundle loadNibNamed:CONTACT_ALERT_ACTION_NIB owner:self];
-    
-    [super init];
-    return (self);
+    return CONTACT_ALERT_ACTION_NIB;
 }
 
 - (NSMenuItem *)alertMenuItem
 {
     NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:@"Play a sound"
                                            target:self
-                                           action:@selector(actionPlaySound:)
+                                           action:@selector(selectedAlert:)
                                     keyEquivalent:@""] autorelease];
     [menuItem setRepresentedObject:CONTACT_ALERT_IDENTIFIER];
-    NSLog(@"menuItem %@",CONTACT_ALERT_IDENTIFIER);
     return (menuItem);
 }
 
 //setup display for playing a sound
-- (IBAction)actionPlaySound:(id)sender
+- (IBAction)selectedAlert:(id)sender
 {   
     //Get the current dictionary
     NSDictionary *currentDict = [[owner contactAlertsController] currentDictForContactAlert:self];
+        
+    [popUp_actionDetails setMenu:[self soundListMenu]];
     
     //Set the menu to its previous setting if the stored event matches
     if ([(NSString *)[currentDict objectForKey:KEY_EVENT_ACTION] isEqualToString:CONTACT_ALERT_IDENTIFIER]) {
         [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:[currentDict objectForKey:KEY_EVENT_DETAILS]]];        
     }
     
-    [popUp_actionDetails setMenu:[self soundListMenu]];
-    [self autosizeAndCenterPopUpButton:popUp_actionDetails];
+    [popUp_actionDetails autosizeAndCenterHorizontally];
     
-    [[owner contactAlertsController] configureWithSubview:view_details_menu forContactAlert:self];
+    [self configureWithSubview:view_details_menu];
 }
 
 //--Sounds--
@@ -165,7 +171,7 @@
 - (IBAction)selectSound:(id)sender
 {
     NSString	*soundPath = [sender representedObject];
-    [self autosizeAndCenterPopUpButton:popUp_actionDetails];
+    [popUp_actionDetails autosizeAndCenterHorizontally];
     
     if(soundPath != nil && [soundPath length] != 0){
         [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
@@ -204,18 +210,7 @@
         //Update the menu and and the selection
         [popUp_actionDetails setMenu:[self soundListMenu]];
         [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:soundPath]];
-        [self autosizeAndCenterPopUpButton:popUp_actionDetails];
-    }
-}
-- (void)autosizeAndCenterPopUpButton:(NSPopUpButton *)button
-{
-    NSString *buttonTitle = [button titleOfSelectedItem];
-    if (buttonTitle && [buttonTitle length]) {
-        [button sizeToFit];
-        NSRect menuFrame = [button frame];
-        menuFrame.origin.x = ([[button superview] frame].size.width / 2) - (menuFrame.size.width / 2);
-        [button setFrame:menuFrame];   
-        [[button superview] display];
+        [popUp_actionDetails autosizeAndCenterHorizontally];
     }
 }
 

@@ -21,9 +21,10 @@
 #define KEY_DOCK_EVENT_BEHAVIOR				@"Behavior"
 #define	KEY_DOCK_EVENT_NOTIFICATION			@"Notification"
 
+#define CONTACT_ALERT_IDENTIFIER                        @"Bounce"
 @class AIDockBehaviorPreferences;
 
-@interface AIDockBehaviorPlugin : AIPlugin {
+@interface AIDockBehaviorPlugin : AIPlugin <ESContactAlertProvider>{
     AIDockBehaviorPreferences 	*preferences;
 
     NSMutableDictionary		*behaviorDict;
@@ -38,5 +39,8 @@
 - (void)setCustomBehavior:(NSArray *)inBehavior;
 - (NSArray *)customBehavior;
 - (NSArray *)availablePresets;
+
++ (NSMenu *)behaviorListMenuForTarget:(id)target;
++ (NSMenuItem *)menuItemForBehavior:(DOCK_BEHAVIOR)behavior withName:(NSString *)name target:(id)target;
 
 @end

@@ -47,7 +47,6 @@ Plugin Contact Alert registration
 
 - (void)registerContactAlertProvider:(NSObject<ESContactAlertProvider> *)contactAlertProvider
 {
-    NSLog(@"register!");
  //Add to our array of contact alert providers
     [contactAlertProviderArray addObject:contactAlertProvider];
     //Sort?
@@ -65,14 +64,12 @@ Communication between the contact alerts UI and plugins
 
 - (void)createAlertsArrayWithOwner:(NSObject<ESContactAlerts> *)inOwner;
 {
-    NSLog(@"create an alerts array");
     //create the alertsArray
     NSMutableArray *alertsArray = [[NSMutableArray alloc] init];
     id contactAlertProvider;
     
     NSEnumerator *providerEnumerator = [contactAlertProviderArray objectEnumerator];
     while (contactAlertProvider = [providerEnumerator nextObject]) {
-        NSLog(@"looking..");
         [alertsArray addObject:[contactAlertProvider contactAlert]];
     }
 
@@ -170,7 +167,6 @@ Methods used by ESContactAlerts
     while (contactAlert = [enumerator nextObject]) {
         [actionListMenu addItem:[contactAlert alertMenuItem]];   
     }
-    NSLog(@"returning menu");   
     return([actionListMenu autorelease]);
 }
 
@@ -228,7 +224,7 @@ Alert Execution
     NSEnumerator * actionsEnumerator;
     NSDictionary * actionDict;
     NSString * event;
-    int status, event_status;
+    BOOL status, event_status;
     BOOL status_matches;
     
     actionsEnumerator = [eventActionArray objectEnumerator];
@@ -255,7 +251,10 @@ Alert Execution
                 while ( contactAlertProvider = [providerEnumerator nextObject]) {
                     if ([action isEqualToString:[(NSObject<ESContactAlertProvider> *)contactAlertProvider identifier]]) {
                         success = [(NSObject<ESContactAlertProvider> *)contactAlertProvider performActionWithDetails:[actionDict objectForKey:KEY_EVENT_DETAILS]
-                                                                                                       andDictionary:[actionDict objectForKey:KEY_EVENT_DETAILS_DICT]];
+                                                                                                       andDictionary:[actionDict objectForKey:KEY_EVENT_DETAILS_DICT]
+                                                                                                    triggeringObject:inObject
+                                                                                                     triggeringEvent:event
+                                                                                                         eventStatus:event_status];
                         if (success)
                             keepProcessingForUser = [(NSObject<ESContactAlertProvider> *)contactAlertProvider shouldKeepProcessing];
                         
@@ -264,7 +263,7 @@ Alert Execution
                 }
                 
                 //after all tests
-                if (success && [[actionDict objectForKey:KEY_EVENT_DELETE] boolValue]) { //delete the action from the array if succesful and necessary
+                if (success && [[actionDict objectForKey:KEY_EVENT_DELETE] intValue]) { //delete the action from the array if succesful and necessary
                     [eventActionArray removeObject:actionDict];
                     [[owner preferenceController] setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject];
                     
