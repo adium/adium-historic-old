@@ -13,6 +13,7 @@
 {
     //Register us as a filter
     [[adium contentController] registerOutgoingContentFilter:self];
+    [[adium contentController] registerIncomingContentFilter:self];
     
     //Build the dictionary
     //	Eventually This Dictionary will become mutable and be updated from a preference pane 
@@ -22,6 +23,13 @@
         @"$var$", @"%d", 
         @"$var$", @"%a",
         nil];
+}
+
+- (void)uninstallPlugin
+{
+	[[adium contentController] unregisterOutgoingContentFilter:self];
+	[[adium contentController] unregisterIncomingContentFilter:self];
+	[hash release]; hash=nil;
 }
 
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject
@@ -41,6 +49,7 @@
                     mesg = [[inAttributedString mutableCopyWithZone:nil] autorelease];
                 }
                 
+				NSLog(@"%@ -> %@",pattern,[hash objectForKey:pattern]);
                 //if key is a var go find out what the replacement text should be
                 if([(replaceWith = [hash objectForKey:pattern]) isEqualToString:@"$var$"]){
                     replaceWith = [self hashLookup:pattern contentMessage:inObject];
@@ -59,71 +68,68 @@
 
 - (NSString*)hashLookup:(NSString*)pattern contentMessage:(AIContentObject *)content
 {
+	NSLog(@"%@ in %@",pattern,content);
     if([pattern isEqualToString:@"%a"]){
-	AIChat *chat = [content chat];
-	AIListObject *contact = [chat listObject];
-	
-	if(contact == nil){
-	    return pattern;
-	}else{
-	    return [contact displayName];
-	} 
+		if (content) {
+			//Use the destination if possible, otherwise rely on the listObject of the associated chat
+			AIListObject	*destination = [content destination];
+			if(destination) {
+				return [destination displayName];
+			} else {
+				AIChat			*chat = [content chat];
+				AIListObject	*contact = [chat listObject];
+				
+				if (contact) {
+					return [contact displayName];
+				}
+			}
+		}
     } else if([pattern isEqualToString:@"%n"]) {
-	AIChat *chat = [content chat];
-	AIListObject *contact = [chat listObject];
-	
-	if(contact == nil){
-	    return pattern;
-	}else{
-	    return [contact UID];
-	} 
+		if (content) {
+			//Use the destination if possible, otherwise rely on the listObject of the associated chat
+			AIListObject	*destination = [content destination];
+			if(destination) {
+				return [destination UID];
+			} else {
+				AIChat			*chat = [content chat];
+				AIListObject	*contact = [chat listObject];
+				
+				if (contact) {
+					return [contact UID];
+				}
+			}
+		}
     } else if([pattern isEqualToString:@"%m"]) {
-	id contact = [content source]; 	
-	
-	if( [contact isKindOfClass:[AIListContact class]] ) {
-	    return [(AIListContact *)contact displayName];
-	} else if ([contact isKindOfClass:[AIAccount class]] ){
-	    return [(AIAccount *)contact UID];
-	} else {
-	    return pattern;
-	}
+		if (content) {
+			return [[content source] displayName]; 	
+		}
     } else if([pattern isEqualToString:@"%t"]) {
-	NSCalendarDate *timestamp = [NSCalendarDate calendarDate];
-	NSString *hour = [timestamp descriptionWithCalendarFormat:@"%I"];
-	NSMutableString *time;
-	unichar *charHour = malloc(sizeof(unichar) * 2); 
-	
-	charHour[0] = [hour characterAtIndex:0];
-	charHour[1] = [hour characterAtIndex:1];
-	
-	if(charHour[0] == '0') {
+		NSCalendarDate  *timestamp = [NSCalendarDate calendarDate];
+		NSString		*hour = [timestamp descriptionWithCalendarFormat:@"%I"];
+		NSMutableString *time;
+		unichar			*charHour = malloc(sizeof(unichar) * 2); 
+		
+		charHour[0] = [hour characterAtIndex:0];
+		charHour[1] = [hour characterAtIndex:1];
+		
+		if(charHour[0] == '0') {
             charHour[0] = charHour[1];
             time = [[[NSMutableString alloc] initWithCharacters:charHour length:1] autorelease];
-	} else {
+		} else {
             time = [[[NSMutableString alloc] initWithCharacters:charHour length:2] autorelease];
-	}
-	
-	free(charHour);
-	
-	[time appendString:[timestamp descriptionWithCalendarFormat:@":%M %p"]];
-	
-	
-	return time;  
+		}
+		
+		free(charHour);
+		
+		[time appendString:[timestamp descriptionWithCalendarFormat:@":%M %p"]];
+		
+		return time;  
     } else if([pattern isEqualToString:@"%d"]) {
-	NSCalendarDate *date = [NSCalendarDate calendarDate];
-	return [date descriptionWithCalendarFormat:@"%b %e, %Y"];  
+		NSCalendarDate *date = [NSCalendarDate calendarDate];
+		return [date descriptionWithCalendarFormat:@"%b %e, %Y"];  
     }
     
     return pattern;
 }
 
-- (void)uninstallPlugin
-{
-    [hash release];
-}
-
-- (void)dealloc
-{
-    [super dealloc];
-}
 @end
