@@ -117,7 +117,6 @@
 				34BD9F390531477E000AB133,
 				4B7F78B50597F42400162728,
 				34BD9DE105314751000AB133,
-				7E6642C20653363A0050E8C8,
 				4B7F278305440C0800CDFC90,
 				34BD9EF10531476E000AB133,
 				346C9DA406004754000F5A8A,
@@ -168,6 +167,10 @@
 					ProjectRef = 4947F5E90655E90C00B791E5;
 				},
 				{
+					ProductGroup = 3496A8E807CE6CA30055BBAB;
+					ProjectRef = 3496A8E707CE6CA30055BBAB;
+				},
+				{
 					ProductGroup = 34D834D107CBE7B2006466F2;
 					ProjectRef = 3448717006D1E57700DA778C;
 				},
@@ -177,7 +180,6 @@
 				4B7F78B40597F42400162728,
 				34BD9F2C0531477E000AB133,
 				34BD9DAF05314751000AB133,
-				7E6642C10653363A0050E8C8,
 				4B7F278205440C0800CDFC90,
 				B72537BB058C4577004BA969,
 				3419F3A605314BE000C68BA3,
@@ -221,6 +223,7 @@
 		29B97323FDCFA39411CA2CEA = {
 			children = (
 				34D8379307CC3222006466F2,
+				3496A8F207CE6CFB0055BBAB,
 				348E5ACA06D2A74C004C051C,
 				F5819CE9032124CE01A8010A,
 				34D8370007CBF97A006466F2,
@@ -2482,12 +2485,6 @@
 			};
 		};
 		3448761606D1EC3000DA778C = {
-			fileRef = 3448758D06D1EBDF00DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3448761706D1EC6300DA778C = {
 			fileRef = 3448758D06D1EBDF00DA778C;
 			isa = PBXBuildFile;
 			settings = {
@@ -4843,6 +4840,88 @@
 			settings = {
 			};
 		};
+		3496A8BF07CE6B3D0055BBAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = English;
+			path = Resources/English.lproj/InfoPlist.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3496A8C107CE6B880055BBAB = {
+			children = (
+				3496A8BF07CE6B3D0055BBAB,
+			);
+			isa = PBXVariantGroup;
+			name = InfoPlist.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3496A8C207CE6B880055BBAB = {
+			fileRef = 3496A8C107CE6B880055BBAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3496A8E707CE6CA30055BBAB = {
+			isa = PBXFileReference;
+			lastKnownFileType = "wrapper.pb-project";
+			name = AIHyperlinks.framework.xcode;
+			path = "Frameworks/AIHyperlinks Framework/AIHyperlinks.framework.xcode";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3496A8E807CE6CA30055BBAB = {
+			children = (
+				3496A8EA07CE6CA30055BBAB,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3496A8EA07CE6CA30055BBAB = {
+			fileType = wrapper.framework;
+			isa = PBXReferenceProxy;
+			path = AIHyperlinks.framework;
+			refType = 3;
+			remoteRef = 3496A8ED07CE6CCB0055BBAB;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3496A8ED07CE6CCB0055BBAB = {
+			containerPortal = 3496A8E707CE6CA30055BBAB;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = AIHyperlinks.framework;
+		};
+		3496A8EE07CE6CD40055BBAB = {
+			containerPortal = 3496A8E707CE6CA30055BBAB;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = AIHyperlinks.framework;
+		};
+		3496A8EF07CE6CD40055BBAB = {
+			isa = PBXTargetDependency;
+			name = "AIHyperlinks.framework (from AIHyperlinks.framework.xcode)";
+			targetProxy = 3496A8EE07CE6CD40055BBAB;
+		};
+		3496A8F207CE6CFB0055BBAB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = AIHyperlinks.framework;
+			path = "Frameworks/AIHyperlinks Framework/build/AIHyperlinks.framework";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3496A8F407CE6D050055BBAB = {
+			fileRef = 3496A8F207CE6CFB0055BBAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3499F45006309AC80035B468 = {
 			explicitFileType = wrapper.cfbundle;
 			includeInIndex = 0;
@@ -6606,7 +6685,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Plugins/Growl\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" Plugins/Growl \"/Users/evands/adium/Frameworks/AIHyperlinks Framework/build\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6628,7 +6707,7 @@
 			};
 			dependencies = (
 				34D8353907CBEA21006466F2,
-				7E6642F9065336C70050E8C8,
+				3496A8EF07CE6CD40055BBAB,
 				34BD9CD2053146CC000AB133,
 				4B215DB0059896B000305B3C,
 				4B7845EC059B50820048A8BA,
@@ -7135,6 +7214,7 @@
 				4BCAC71707B5A50F006641B9,
 				4BCAC71807B5A50F006641B9,
 				4BCAC71907B5A50F006641B9,
+				3496A8C207CE6B880055BBAB,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7439,8 +7519,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				34D835D907CBED8F006466F2,
+				3496A8F407CE6D050055BBAB,
 				3448758E06D1EBDF00DA778C,
-				7E4694830653403600E4F390,
 				3419F7760531512200C68BA3,
 				34BD9D5A053146CC000AB133,
 				34B588A1058D833A00E7EF0D,
@@ -7471,7 +7551,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				34D837FE07CC339D006466F2,
-				7E6642F7065336BA0050E8C8,
 				3419FE230531586A00C68BA3,
 				34E9F1F20790BF5500662E8E,
 				349C6F8B07C99D2C005EB896,
@@ -10258,12 +10337,6 @@
 			name = "AIUtilities (from AIUtilities.framework.xcode)";
 			targetProxy = 34D8353807CBEA21006466F2;
 		};
-		34D835D707CBED79006466F2 = {
-			fileRef = 34D834D207CBE7B2006466F2;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34D835D807CBED81006466F2 = {
 			fileRef = 34D834D207CBE7B2006466F2;
 			isa = PBXBuildFile;
@@ -10335,18 +10408,6 @@
 			isa = PBXTargetDependency;
 			name = "AIUtilities (from AIUtilities.framework.xcode)";
 			targetProxy = 34D8371307CBFC4C006466F2;
-		};
-		34D8371507CBFC57006466F2 = {
-			containerPortal = 3448717006D1E57700DA778C;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = AIUtilities;
-		};
-		34D8371607CBFC57006466F2 = {
-			isa = PBXTargetDependency;
-			name = "AIUtilities (from AIUtilities.framework.xcode)";
-			targetProxy = 34D8371507CBFC57006466F2;
 		};
 		34D8374E07CC2F2E006466F2 = {
 			fileRef = 34D834D207CBE7B2006466F2;
@@ -14157,8 +14218,8 @@
 		};
 		4B4F5B2C042D642500A8010A = {
 			children = (
-				7E6642FD065337090050E8C8,
 				F53B9A1302CCEDCA01A8010A,
+				3496A8E707CE6CA30055BBAB,
 				3448717006D1E57700DA778C,
 			);
 			isa = PBXGroup;
@@ -20136,12 +20197,6 @@
 			settings = {
 			};
 		};
-		7E4694830653403600E4F390 = {
-			fileRef = 7E6642C20653363A0050E8C8;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		7E5B1DCC066ACE8C00EE5E57 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -20294,251 +20349,6 @@
 		};
 		7E64084E06629E31006A5552 = {
 			fileRef = 7E64084306629E10006A5552;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E6642BD0653363A0050E8C8 = {
-			buildActionMask = 2147483647;
-			files = (
-				7E664305065337090050E8C8,
-				7E664306065337090050E8C8,
-				7E664308065337090050E8C8,
-				7E66430A065337090050E8C8,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7E6642BE0653363A0050E8C8 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7E6642BF0653363A0050E8C8 = {
-			buildActionMask = 2147483647;
-			files = (
-				7E664307065337090050E8C8,
-				7E664309065337090050E8C8,
-				7E66430B065337090050E8C8,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7E6642C00653363A0050E8C8 = {
-			buildActionMask = 2147483647;
-			files = (
-				34D835D707CBED79006466F2,
-				3448761706D1EC6300DA778C,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7E6642C10653363A0050E8C8 = {
-			buildPhases = (
-				7E6642BD0653363A0050E8C8,
-				7E6642BE0653363A0050E8C8,
-				7E6642BF0653363A0050E8C8,
-				7E6642C00653363A0050E8C8,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
-				FRAMEWORK_VERSION = A;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
-				INFOPLIST_FILE = Plists/AdiumHyperlinks_Framework.plist;
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				OTHER_LDFLAGS = "-seg1addr 0x10600000";
-				PRODUCT_NAME = AdiumHyperlinks;
-				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = framework;
-				ZERO_LINK = YES;
-			};
-			dependencies = (
-				34D8371607CBFC57006466F2,
-			);
-			isa = PBXNativeTarget;
-			name = AdiumHyperlinks.framework;
-			productName = AdiumHyperlinks.framework;
-			productReference = 7E6642C20653363A0050E8C8;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>AdiumHyperlinks.framework</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>com.MySoftwareCompany.AdiumHyperlinks_framework</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>FMWK</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0.0d1</string>
-</dict>
-</plist>
-";
-			productType = "com.apple.product-type.framework";
-		};
-		7E6642C20653363A0050E8C8 = {
-			explicitFileType = wrapper.framework;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = AdiumHyperlinks.framework;
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		7E6642F7065336BA0050E8C8 = {
-			fileRef = 7E6642C20653363A0050E8C8;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E6642F8065336C70050E8C8 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 7E6642C10653363A0050E8C8;
-			remoteInfo = AdiumHyperlinks.framework;
-		};
-		7E6642F9065336C70050E8C8 = {
-			isa = PBXTargetDependency;
-			target = 7E6642C10653363A0050E8C8;
-			targetProxy = 7E6642F8065336C70050E8C8;
-		};
-		7E6642FD065337090050E8C8 = {
-			children = (
-				7E6642FE065337090050E8C8,
-				7E6642FF065337090050E8C8,
-				7E664300065337090050E8C8,
-				7E664301065337090050E8C8,
-				7E664302065337090050E8C8,
-				7E664303065337090050E8C8,
-				7E664304065337090050E8C8,
-			);
-			isa = PBXGroup;
-			name = AdiumHyperlinks.Framework;
-			path = "Frameworks/AdiumHyperlinks Framework";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E6642FE065337090050E8C8 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = AdiumHyperlinks.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E6642FF065337090050E8C8 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = SHHyperlinkScanner.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E664300065337090050E8C8 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = SHHyperlinkScanner.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E664301065337090050E8C8 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = SHLinkLexer.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E664302065337090050E8C8 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.lex;
-			path = SHLinkLexer.l;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E664303065337090050E8C8 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = SHMarkedHyperlink.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E664304065337090050E8C8 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = SHMarkedHyperlink.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E664305065337090050E8C8 = {
-			fileRef = 7E6642FE065337090050E8C8;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
-		7E664306065337090050E8C8 = {
-			fileRef = 7E6642FF065337090050E8C8;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-				);
-			};
-		};
-		7E664307065337090050E8C8 = {
-			fileRef = 7E664300065337090050E8C8;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E664308065337090050E8C8 = {
-			fileRef = 7E664301065337090050E8C8;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-				);
-			};
-		};
-		7E664309065337090050E8C8 = {
-			fileRef = 7E664302065337090050E8C8;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E66430A065337090050E8C8 = {
-			fileRef = 7E664303065337090050E8C8;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-				);
-			};
-		};
-		7E66430B065337090050E8C8 = {
-			fileRef = 7E664304065337090050E8C8;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -22498,6 +22308,7 @@
 		F50A325A03B5798301A8010A = {
 			children = (
 				3402E04107CB0E4D0044F818,
+				3496A8C107CE6B880055BBAB,
 				4B191D880611C10800E8A4E7,
 				4B191D890611C10800E8A4E7,
 				F59DB6AD033EB74801A8010A,
