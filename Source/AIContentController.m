@@ -39,6 +39,7 @@
 static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 static BOOL					pauseFilteringForSafety = NO;
 static BOOL					threadedFiltersInUse = NO;
+static NSLock				*threadCreationLock = nil;
 //init
 - (void)initController
 {
@@ -320,7 +321,19 @@ static BOOL					threadedFiltersInUse = NO;
 - (NDRunLoopMessenger *)filterRunLoopMessenger
 {
 	if (!filterRunLoopMessenger){
-		[NSThread detachNewThreadSelector:@selector(thread_createFilterRunLoopMessenger) toTarget:self withObject:nil];
+		//Lock before calling the thread
+		threadCreationLock = [[NSLock alloc] init];
+		[threadCreationLock lock];
+		
+		[NSThread detachNewThreadSelector:@selector(thread_createFilterRunLoopMessenger) 
+								 toTarget:self
+							   withObject:nil];
+		
+		//Obtain the lock, which won't be available until thread_createFilterRunLoopMessenger unlocks it 
+		[threadCreationLock lockBeforeDate:[NSDate distantFuture]];
+		
+		//We should never need the lock again
+		[threadCreationLock release]; threadCreationLock = nil;
 		
 		while (!filterRunLoopMessenger);
 	}
@@ -376,6 +389,7 @@ static BOOL					threadedFiltersInUse = NO;
 	filterRunLoopMessenger = [NDRunLoopMessenger runLoopMessengerForCurrentRunLoop];
 	[filterRunLoopMessenger setMessageRetryTimeout:3.0];
 	NSLog(@"thread_createFilterRunLoopMessenger: Got %@",filterRunLoopMessenger);
+	[threadCreationLock unlock];
 	CFRunLoopRun();
 	
 	[pool release];
