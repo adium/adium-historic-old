@@ -25,6 +25,10 @@ typedef enum {
 
 } ACCOUNT_STATUS;
 
+typedef enum {
+    PRIVACY_PERMIT = 0,
+    PRIVACY_DENY
+}  PRIVACY_TYPE;
 
 //Support for sending content to contacts
 @protocol AIAccount_Content
@@ -71,6 +75,14 @@ typedef enum {
 
     //Instructs the account to initiate sending of a file
     //- (void)initiateSendOfFile:(NSString *)filename toContact:(AIListContact *)inContact;
+@end
+
+//Support for privacy settings
+@protocol AIAccount_Privacy
+    //Add a list object to the privacy list (either PRIVACY_PERMIT or PRIVACY_DENY). Return value indicates success.
+    -(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type;
+    //Remove a list object from the privacy list (either PRIVACY_PERMIT or PRIVACY_DENY). Return value indicates success
+    -(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type;
 @end
 
 /*!
