@@ -42,7 +42,11 @@
     return([string autorelease]);
 }
 
-
++ (NSString *)stringWithContentsOfASCIIFile:(NSString *)path
+{
+	return ([[[NSString alloc] initWithData:[NSData dataWithContentsOfFile:path]
+								   encoding:NSASCIIStringEncoding] autorelease]);
+}
 
 
 /* compactedString
