@@ -281,13 +281,16 @@ static AILogViewerWindowController *sharedInstance = nil;
 {
     NSAttributedString	*logText;
     NSString		*logFileText;
-    
     if(displayedLog != log){
 	[displayedLog release]; displayedLog = [log retain];
 	
 	if(log){	    
 	    //Open the log
-	    logFileText = [NSString stringWithContentsOfFile:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[log path]]];
+            if(searchMode == LOG_SEARCH_CONTENT){
+                logFileText = [NSString stringWithContentsOfFile:[log path]];
+            } else {
+                logFileText = [NSString stringWithContentsOfFile:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[log path]]];                
+            }
             if([[log path] hasSuffix:@".html"] || [[log path] hasSuffix:@".html.bak"]) {
 		logText = [[[NSAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:logFileText]] autorelease];
 	    }else{
@@ -296,7 +299,6 @@ static AILogViewerWindowController *sharedInstance = nil;
 	    }
 	    
 	    NSRange     scrollRange = NSMakeRange([logText length],0);
-
 	    //If we are searching by content, highlight the search results
 	    if(searchMode == LOG_SEARCH_CONTENT){
 		NSEnumerator    *enumerator;
