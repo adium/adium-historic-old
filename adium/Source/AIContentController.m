@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.41 2004/01/13 19:06:17 evands Exp $
+// $Id: AIContentController.m,v 1.42 2004/01/13 19:52:15 adamiser Exp $
 
 #import "AIContentController.h"
 
@@ -259,29 +259,26 @@
 //Add an incoming content object
 - (void)addIncomingContentObject:(AIContentObject *)inObject
 {
-    AIChat		*chat = [inObject chat];
+    AIChat			*chat = [inObject chat];
     AIListObject 	*object = [inObject source];
-    BOOL		trackContent = [inObject trackContent];	//Adium should track this content
-    BOOL		filterContent = [inObject filterContent]; //Adium should filter this content
-    BOOL		displayContent = [inObject displayContent]; //Adium should filter this content
 
     if(object){
         //Will receive content
-        if(trackContent){
+        if([inObject trackContent]){
             [[owner notificationCenter] postNotificationName:Content_WillReceiveContent object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
         }
 
         //Filter the object
-        if(filterContent){
+        if([inObject filterContent]){
             [self _filterContentObject:inObject usingFilterArray:incomingContentFilterArray];
         }
 
         //Add/Display the object
-        if(displayContent){
-	    [self displayContentObject:inObject];
+        if([inObject displayContent]){
+			[self displayContentObject:inObject];
         }
-
-        if(trackContent){
+		
+        if([inObject trackContent]){
             //Did receive content
             if ([[chat contentObjectArray] count] > 1) {
                 [[owner notificationCenter] postNotificationName:Content_DidReceiveContent object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
@@ -347,18 +344,19 @@
     
     //Check if the object should display
     if ([inObject displayContent]) {
-	//If the chat doesn't have content yet, open it
-	if (![chat hasContent]) {
-	    //Have the interface open this chat
-	    [[owner interfaceController] openChat:chat]; 
-	}
-	
-	//Add the object
-	[chat addContentObject:inObject];
-	
-	//Content object added
-	[[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat 
-						userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+		BOOL	chatHadContent = [chat hasContent];
+		
+		//Add the content to the chat
+		[chat addContentObject:inObject];
+		
+		//If the chat didn't have content yet, open it
+		if(!chatHadContent){
+			[[owner interfaceController] openChat:chat]; 
+		}
+
+		//Content object added
+		[[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat
+												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
     }
 }
 

@@ -323,7 +323,7 @@
     AIListObject	*selectedObject;
 
     selectedObject = [sender itemAtRow:[sender selectedRow]];
-
+	NSLog(@"performDefaultActionOnSelectedContact");
     if([selectedObject isKindOfClass:[AIListGroup class]]){
         //Expand or collapse the group
         if([sender isItemExpanded:selectedObject]){

@@ -8840,6 +8840,7 @@
 				B774EFC4058C48F6009C7C67,
 				4B6EA1BE058FA6900070A9A1,
 				4B215DB0059896B000305B3C,
+				4B5BB48505B46ABE0085F4C6,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
@@ -9818,6 +9819,7 @@
 				3419FE1A0531585600C68BA3,
 				3419FE1B0531585600C68BA3,
 				3419FE1C0531585600C68BA3,
+				4B5BB48705B46AF30085F4C6,
 				3419FE1D0531585600C68BA3,
 				3419FE1E0531585600C68BA3,
 			);
@@ -19976,6 +19978,24 @@
 			path = "Plugins/Typing Notification/AITypingNotificationPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B5BB48405B46ABE0085F4C6 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 52AEBD6005ABA95700B19C56;
+			remoteInfo = TicTacToe;
+		};
+		4B5BB48505B46ABE0085F4C6 = {
+			isa = PBXTargetDependency;
+			target = 52AEBD6005ABA95700B19C56;
+			targetProxy = 4B5BB48405B46ABE0085F4C6;
+		};
+		4B5BB48705B46AF30085F4C6 = {
+			fileRef = 52AEBD6105ABA95700B19C56;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B5D67D3050CF56700A8010A = {
 			children = (

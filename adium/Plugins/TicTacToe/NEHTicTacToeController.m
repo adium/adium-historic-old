@@ -117,9 +117,13 @@ static NEHTicTacToeController * sharedInstance = nil;
 - (id)initWithWindowNibName:(NSString*)nib
 {
 	[super initWithWindowNibName:nib];
-	[[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
-	[[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
+	[[adium contentController] registerIncomingContentFilter:self];
 	return self;
+}
+- (void)dealloc
+{
+	[[adium contentController] unregisterIncomingContentFilter:self];
+	[super dealloc];
 }
 
 - (void)cleanup
@@ -419,21 +423,21 @@ static NEHTicTacToeController * sharedInstance = nil;
 										date:nil
 										message:message
 										autoreply:NO];
-//	[content setDisplayContent:NO];
+	[content setDisplayContent:NO];
+	[content setTrackContent:NO];
 	
 	[[adium contentController] sendContentObject:content];
 }
 
-- (void)didReceiveContent: (NSNotification*)notification
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inobj
 {
-	AIContentObject * inobj = [[notification userInfo] objectForKey:@"Object"];
 	if(![[inobj type] isEqual:CONTENT_MESSAGE_TYPE])
-		return;
+		return inAttributedString;
 	NSString * str = [[((AIContentMessage*)inobj) message] string];
 	NSRange start = [str rangeOfString:@"[TTT/"];
 	NSRange end = [str rangeOfString:@"]:"];
 	if(start.location != 0 || end.location == NSNotFound)
-		return;
+		return inAttributedString;
 	NSRange r;
 	r.location = start.length;
 	r.length = end.location - r.location;
@@ -445,7 +449,8 @@ static NEHTicTacToeController * sharedInstance = nil;
 		msg = @"";
 		
 	AIListContact * contact = [inobj source];
-//	[inobj setDisplayContent:NO];
+	[inobj setDisplayContent:NO];
+	[inobj setTrackContent:NO];
 	if([type isEqualToString:MSG_TYPE_INVITE])
 	{
 		if(state == State_None || state == State_GameOver)
@@ -480,12 +485,12 @@ static NEHTicTacToeController * sharedInstance = nil;
 	if([inobj source] != contact_OtherPlayer)
 	{
 		NSLog(@"TTT:Dropped %@ message from account %@",type,[[inobj source] displayName]);
-		return;
+		return inAttributedString;
 	}
 	if([inobj destination] != account_Player)
 	{
 		NSLog(@"TTT:Dropped %@ message to account %@",type,[[inobj destination] displayName]);
-		return;
+		return inAttributedString;
 	}
 	if([type isEqualToString:MSG_TYPE_ACK])
 	{
@@ -553,6 +558,8 @@ static NEHTicTacToeController * sharedInstance = nil;
 		}
 		else NSLog(@"TTT:End game message received with state %d.",state);
 	}
+	
+	return(inAttributedString);
 }
 
 @end
