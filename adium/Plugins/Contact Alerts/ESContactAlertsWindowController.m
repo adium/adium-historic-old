@@ -84,7 +84,6 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     [[owner notificationCenter] removeObserver:self]; //remove any previous observers
     [[owner notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:Pref_Changed_Alerts object:activeContactObject];
     [[owner notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:One_Time_Event_Fired object:activeContactObject];
-
     
     //Set window title
     [[self window] setTitle:[NSString stringWithFormat:@"%@'s Alerts",[activeContactObject displayName]]];
@@ -95,9 +94,13 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     [popUp_contactList setMenu:[self switchContactMenu]];
     [popUp_contactList selectItemAtIndex:[popUp_contactList indexOfItemWithRepresentedObject:activeContactObject]];
 
-    [instance release];
-    instance = [[ESContactAlerts alloc] initForObject:activeContactObject withDetailsView:view_main withTable:tableView_actions withPrefView:nil owner:owner];
-    [instance retain];
+//    [instance release];
+    if (!instance)
+    {
+        instance = [[ESContactAlerts alloc] initWithDetailsView:view_main withTable:tableView_actions withPrefView:nil owner:owner];
+        [instance retain];
+    }
+    [instance configForObject:activeContactObject];
 
     //Build the event menu
     [popUp_addEvent setMenu:[instance eventMenu]];
@@ -155,7 +158,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
         [self tableViewSelectionDidChange:nil];
     
     [[owner notificationCenter] postNotificationName:Window_Changed_Alerts
-                                              object:[instance activeObject]
+                                              object:activeContactObject
                                             userInfo:nil];
     }
 }
@@ -163,15 +166,16 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 -(IBAction)addedEvent:(id)sender
 {
     [[owner notificationCenter] postNotificationName:Window_Changed_Alerts
-                                              object:[instance activeObject]
+                                              object:activeContactObject
                                             userInfo:nil];
 }
 
 -(void)externalChangedAlerts:(NSNotification *)notification
 {
-    [instance reloadFromPrefs];
+    [instance reload:activeContactObject usingCache:NO];
     [tableView_actions reloadData];
 }
+
 //TableView datasource --------------------------------------------------------
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
@@ -328,70 +332,63 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     NSMenu		*contactMenu = [[NSMenu alloc] init];
     //Build the menu items
     NSMutableArray		*contactArray =  [[owner contactController] allContactsInGroup:nil subgroups:YES];
-    [contactArray sortUsingFunction:alphabeticalGroupOfflineSort context:nil]; //online buddies will end up at the top, alphabetically
-
-    NSEnumerator 	*enumerator = 	[contactArray objectEnumerator];
-    AIListObject	*contact;
-    BOOL		firstOfflineSearch = NO;
-
-    contact = [contactArray objectAtIndex:0];
-    if ( !([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) ) //the first contact is offline
+    if ([contactArray count])
     {
-        NSMenuItem	*separatorItem;
-        separatorItem = [[[NSMenuItem alloc] initWithTitle:[[contact containingGroup] displayName]
-                                                    target:nil
-                                                    action:nil
-                                             keyEquivalent:@""] autorelease];
-        [separatorItem setEnabled:NO];
-        [contactMenu addItem:separatorItem]; //add the group object manually
-        firstOfflineSearch = YES; //start off adding the Offline object algorithmically
-    }
+        [contactArray sortUsingFunction:alphabeticalGroupOfflineSort context:nil]; //online buddies will end up at the top, alphabetically
 
-    while (contact = [enumerator nextObject])
-    {
-        NSMenuItem		*menuItem;
-        NSString	 	*itemDisplay;
-        NSString		*itemUID = [contact UID];
-        itemDisplay = [contact displayName];
-        if ( !([itemDisplay compare:itemUID] == 0) ) //display name and screen name aren't the same
-            itemDisplay = [NSString stringWithFormat:@"%@ (%@)",itemDisplay,itemUID]; //show the UID along with the display name
-        menuItem = [[[NSMenuItem alloc] initWithTitle:itemDisplay
-                                               target:self
-                                               action:@selector(switchToContact:)
-                                        keyEquivalent:@""] autorelease];
-        [menuItem setRepresentedObject:contact];
-        if (firstOfflineSearch)
+        NSEnumerator 	*enumerator = 	[contactArray objectEnumerator];
+        AIListObject	*contact;
+        NSString 	*groupName = [[[NSString alloc] init] autorelease];
+        BOOL		firstOfflineSearch = NO;
+
+        while (contact = [enumerator nextObject])
         {
-            if ( !([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) ) //look for the first offline contact
+            NSMenuItem		*menuItem;
+            NSString	 	*itemDisplay;
+            NSString		*itemUID = [contact UID];
+            itemDisplay = [contact displayName];
+            if ( !([itemDisplay compare:itemUID] == 0) ) //display name and screen name aren't the same
+                itemDisplay = [NSString stringWithFormat:@"%@ (%@)",itemDisplay,itemUID]; //show the UID along with the display name
+            menuItem = [[[NSMenuItem alloc] initWithTitle:itemDisplay
+                                                   target:self
+                                                   action:@selector(switchToContact:)
+                                            keyEquivalent:@""] autorelease];
+            [menuItem setRepresentedObject:contact];
+
+            if ([groupName compare:[[contact containingGroup] displayName]] != 0)
             {
-                NSMenuItem	*separatorItem;
-                separatorItem = [[[NSMenuItem alloc] initWithTitle:@"Offline"
-                                                            target:nil
-                                                            action:nil
-                                                     keyEquivalent:@""] autorelease];
-                [separatorItem setEnabled:NO];
-                [contactMenu addItem:separatorItem];
-                firstOfflineSearch = NO; //search for an online contact
-            }
-        }
-        else
-        {
-            if ( ([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) ) //look for the first online contact
-            {
-                NSMenuItem	*separatorItem;
-                separatorItem = [[[NSMenuItem alloc] initWithTitle:[[contact containingGroup] displayName]
-                                                            target:nil
-                                                            action:nil
-                                                     keyEquivalent:@""] autorelease];
-                [separatorItem setEnabled:NO];
-                [contactMenu addItem:separatorItem];
+                NSMenuItem	*groupItem;
+                if ([contactMenu numberOfItems] > 0) [contactMenu addItem:[NSMenuItem separatorItem]];
+                groupItem = [[[NSMenuItem alloc] initWithTitle:[[contact containingGroup] displayName]
+                                                        target:self
+                                                        action:@selector(switchToContact:)
+                                                 keyEquivalent:@""] autorelease];
+                [groupItem setRepresentedObject:[contact containingGroup]];
+                [contactMenu addItem:groupItem];
                 firstOfflineSearch = YES; //start searching for an offline contact
             }
-        }
-        [contactMenu addItem:menuItem];
-    }
-    [contactMenu setAutoenablesItems:NO];
 
+            if (firstOfflineSearch)
+            {
+                if ( !([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) ) //look for the first offline contact
+                {
+                    NSMenuItem	*separatorItem;
+                    separatorItem = [[[NSMenuItem alloc] initWithTitle:@"Offline"
+                                                                target:nil
+                                                                action:nil
+                                                         keyEquivalent:@""] autorelease];
+                    [separatorItem setEnabled:NO];
+                    [contactMenu addItem:separatorItem];
+                    firstOfflineSearch = NO;
+                }
+            }
+
+            [contactMenu addItem:menuItem];
+
+            groupName = [[contact containingGroup] displayName];
+        }
+        [contactMenu setAutoenablesItems:NO];
+    }
     return contactMenu;
 }
 
