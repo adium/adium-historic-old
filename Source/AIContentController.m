@@ -67,6 +67,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_SENT withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
 	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
 	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED_FIRST withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
+	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED_BACKGROUND withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
 }
 
 //close
@@ -702,16 +703,24 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		
 		userInfo = [NSDictionary dictionaryWithObjectsAndKeys:chat, @"AIChat", inObject, @"AIContentObject", nil];
 
-		if (shouldPostContentReceivedEvents){
+		if(shouldPostContentReceivedEvents){
 			NSSet			*previouslyPerformedActionIDs = nil;
 			AIListObject	*listObject = [chat listObject];
 			
 			if(!chatIsOpen){
-				//If the chat wasn't open before, post the firstContentReceived notification
+				//If the chat wasn't open before, generate CONTENT_MESSAGE_RECEIVED_FIRST
 				previouslyPerformedActionIDs = [[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED_FIRST
 																				forListObject:listObject
 																					 userInfo:userInfo
 																 previouslyPerformedActionIDs:nil];	
+			}
+			
+			if(chat != [[adium interfaceController] activeChat]){
+				//If the chat is not currently active, generate CONTENT_MESSAGE_RECEIVED_BACKGROUND
+				previouslyPerformedActionIDs = [[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED_BACKGROUND
+																				forListObject:listObject
+																					 userInfo:userInfo
+																 previouslyPerformedActionIDs:previouslyPerformedActionIDs];
 			}
 			
 			[[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED
@@ -1002,15 +1011,28 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	enumerator = [chatArray objectEnumerator];
 
 	while(chat = [enumerator nextObject]){
-		
-		//If the chat we want already exists
 		if(([chat account] == account) &&
 		   ([[chat name] isEqualToString:inName])){
 			break;
 		}
 	}	
 	
-	AILog(@"existingChatWithName returning %@",chat);
+	return chat;
+}
+
+- (AIChat *)existingChatWithUniqueChatID:(NSString *)uniqueChatID
+{
+	NSEnumerator	*enumerator;
+	AIChat			*chat = nil;
+	
+	enumerator = [chatArray objectEnumerator];
+	
+	while(chat = [enumerator nextObject]){
+		if([[chat uniqueChatID] isEqualToString:uniqueChatID]){
+			break;
+		}
+	}	
+	
 	return chat;
 }
 
@@ -1118,12 +1140,10 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	}else{
 		NSEnumerator	*chatEnumerator = [chatArray objectEnumerator];
 		AIChat			*chat;
-		AILog(@"allChatsWithContact looking for %@",[inContact internalObjectID]);
 		while((chat = [chatEnumerator nextObject])){
 			if([[[chat listObject] internalObjectID] isEqualToString:[inContact internalObjectID]]){
 				if (!foundChats) foundChats = [NSMutableSet set];
 				[foundChats addObject:chat];
-				AILog(@"%@ gave us %@",inContact,foundChats);
 			}
 		}
 	}
@@ -1250,6 +1270,8 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		description = AILocalizedString(@"Sends a message",nil);
 	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
 		description = AILocalizedString(@"Sends an initial message",nil);
+	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]){
+		description = AILocalizedString(@"Sends a message in a background chat",nil);
 	}else{
 		description = @"";
 	}
@@ -1260,17 +1282,19 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 - (NSString *)globalShortDescriptionForEventID:(NSString *)eventID
 {
 	NSString	*description;
-	
+
 	if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
-		description = AILocalizedString(@"You sent a message",nil);
+		description = AILocalizedString(@"Message sent",nil);
 	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
-		description = AILocalizedString(@"You receive any message",nil);
+		description = AILocalizedString(@"Message received",nil);
 	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
-		description = AILocalizedString(@"You receive an initial message",nil);
+		description = AILocalizedString(@"Message received (Initial)",nil);
+	}else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]){
+		description = AILocalizedString(@"Message received (Background chat)",nil);
 	}else{
 		description = @"";
 	}
-	
+
 	return(description);
 }
 
@@ -1286,6 +1310,8 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		description = @"Message Received";
 	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
 		description = @"Message Received (New)";
+	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]){
+		description = @"Message Received (Background Chat)";
 	}else{
 		description = @"";
 	}
@@ -1300,17 +1326,19 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	if(listObject){
 		NSString	*name;
 		NSString	*format;
-		
+
 		if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
 			format = AILocalizedString(@"When you send %@ a message",nil);
 		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
 			format = AILocalizedString(@"When %@ sends a message to you",nil);
 		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
 			format = AILocalizedString(@"When %@ sends an initial message to you",nil);
+		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]){
+			format = AILocalizedString(@"When %@ sends a message to you in a background chat",nil);			
 		}else{
 			format = nil;
 		}
-		
+
 		if(format){
 			name = ([listObject isKindOfClass:[AIListGroup class]] ?
 					[NSString stringWithFormat:AILocalizedString(@"a member of %@",nil),[listObject displayName]] :
@@ -1326,6 +1354,8 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 			description = AILocalizedString(@"When you receive any message",nil);
 		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
 			description = AILocalizedString(@"When you receive an initial message",nil);
+		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]){
+			description = AILocalizedString(@"When you receive a message in a background chat",nil);			
 		}
 	}
 	
@@ -1346,18 +1376,22 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	
 	contentObject = [(NSDictionary *)userInfo objectForKey:@"AIContentObject"];
 	messageText = [[[contentObject message] safeString] string];
-	displayName = [listObject displayName];
 	
 	if(includeSubject){
 		
 		if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
+			displayName = (listObject ? [listObject displayName] : [[contentObject chat] name]);
+
 			description = [NSString stringWithFormat:
 				AILocalizedString(@"You said %@ to %@","You said Message to Contact"),
 				messageText,
 				displayName];
 			
 		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED] ||
-				 [eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
+				 [eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST] ||
+				 [eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]){
+			displayName = (listObject ? [listObject displayName] : [[contentObject source] displayName]);
+
 			description = [NSString stringWithFormat:
 				AILocalizedString(@"%@ said %@","Contact said Message"),
 				displayName,
