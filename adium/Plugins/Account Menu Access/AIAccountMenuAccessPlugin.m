@@ -15,13 +15,14 @@
 
 #import "AIAccountMenuAccessPlugin.h"
 
-#define	ACCOUNT_CONNECT_MENU_TITLE			AILocalizedString(@"Connect","Connect account prefix")
-#define	ACCOUNT_DISCONNECT_MENU_TITLE		AILocalizedString(@"Disconnect","Disconnect account prefix")
-#define	ACCOUNT_CONNECTING_MENU_TITLE		AILocalizedString(@"Connecting","Connecting an account prefix")
+#define	ACCOUNT_CONNECT_MENU_TITLE			AILocalizedString(@"Connect:","Connect account prefix")
+#define	ACCOUNT_DISCONNECT_MENU_TITLE		AILocalizedString(@"Disconnect:","Disconnect account prefix")
+#define	ACCOUNT_CONNECTING_MENU_TITLE		AILocalizedString(@"Cancel Connect:","Connecting an account prefix")
 #define	ACCOUNT_DISCONNECTING_MENU_TITLE	AILocalizedString(@"Disconnecting","Disconnecting an account prefix")
 #define	ACCOUNT_AUTO_CONNECT_MENU_TITLE		AILocalizedString(@"Auto-Connect on Launch",nil)
 
 #define ACCOUNT_TITLE   [NSString stringWithFormat:@"%@ (%@)",([[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT),[account displayServiceID]]
+#define TARGET_ACCOUNT_TITLE   [NSString stringWithFormat:@"%@ (%@)",([[targetAccount formattedUID] length] ? [targetAccount formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT),[targetAccount serviceID]]
 
 @interface AIAccountMenuAccessPlugin (PRIVATE)
 - (void)buildAccountMenus;
@@ -138,18 +139,22 @@
 			if([[account statusObjectForKey:@"Online"] boolValue]){
 				[targetMenuItem setImage:[NSImage imageNamed:@"Account_Online" forClass:[self class]]];
 				[targetMenuItem setTitle:[ACCOUNT_DISCONNECT_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
+                                [targetMenuItem setKeyEquivalent:@""];
 				[targetMenuItem setEnabled:YES];
 			}else if([[account statusObjectForKey:@"Connecting"] boolValue]){
 				[targetMenuItem setImage:[NSImage imageNamed:@"Account_Connecting" forClass:[self class]]];
 				[targetMenuItem setTitle:[ACCOUNT_CONNECTING_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
-				[targetMenuItem setEnabled:NO];
+                                [targetMenuItem setKeyEquivalent:@"."];
+				[targetMenuItem setEnabled:YES];
 			}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
 				[targetMenuItem setImage:[NSImage imageNamed:@"Account_Connecting" forClass:[self class]]];
 				[targetMenuItem setTitle:[ACCOUNT_DISCONNECTING_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
+                                [targetMenuItem setKeyEquivalent:@""];
 				[targetMenuItem setEnabled:NO];
 			}else{
 				[targetMenuItem setImage:[NSImage imageNamed:@"Account_Offline" forClass:[self class]]];
 				[targetMenuItem setTitle:[ACCOUNT_CONNECT_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
+                                [targetMenuItem setKeyEquivalent:@""];
 				[targetMenuItem setEnabled:YES];
 			}
 			
@@ -171,8 +176,13 @@
     AIAccount   *targetAccount = [sender representedObject];
     BOOL    	online = [[targetAccount statusObjectForKey:@"Online"] boolValue];
 	
-    [targetAccount setPreference:[NSNumber numberWithBool:!online] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-
+    if([[sender title] isEqualToString:[ACCOUNT_CONNECTING_MENU_TITLE stringByAppendingFormat:@" %@",TARGET_ACCOUNT_TITLE]]){
+        //let the user disconnect from the menu item.
+        [targetAccount setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+        [targetAccount  disconnect];
+    }else{
+        [targetAccount setPreference:[NSNumber numberWithBool:!online] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+    }
 }
 
 //Create the list of account sub menus in the file menu
@@ -225,6 +235,19 @@
 	}
 	
 	return targetMenuItem;	
+}
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+    NSEnumerator    *enumerator;
+    AIAccount       *account;
+        
+        enumerator = [[[adium accountController] accountArray] objectEnumerator];
+        while((account = [enumerator nextObject])){
+            [self updateMenuForAccount:account];
+        }
+    
+    return(YES);
 }
 
 @end
