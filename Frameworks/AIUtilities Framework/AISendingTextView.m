@@ -32,18 +32,18 @@
 //Init the text view
 - (id)initWithFrame:(NSRect)frameRect
 {
-    self = [super initWithFrame:frameRect];
+    if((self = [super initWithFrame:frameRect])) {
+		[self _initSendingTextView];
+	}
 
-	[self _initSendingTextView];
-	
 	return(self);
 }
 
 - (id)initWithCoder:(NSCoder *)coder
 {
-	self = [super initWithCoder:coder];
-	
-	[self _initSendingTextView];
+	if((self = [super initWithCoder:coder])) {
+		[self _initSendingTextView];
+	}
 	
 	return(self);
 }
@@ -63,7 +63,7 @@
 
 - (void)dealloc
 {
-	[returnArray release]; returnArray = nil;
+	[returnArray release];
 	
 	[super dealloc];
 }
@@ -73,7 +73,8 @@
 {
     sendingEnabled = inBool;
 }
-- (BOOL)isSendingEnabled{
+- (BOOL)isSendingEnabled
+{
     return(sendingEnabled);
 }
 
@@ -142,15 +143,14 @@
 //
 - (void)interpretKeyEvents:(NSArray *)eventArray
 {
-	int 	index = 0;
-		
-    while(index < [eventArray count]){
+	unsigned 	index = 0;
+	unsigned	numEvents = [eventArray count];
 
+    while(index < numEvents){
 		NSEvent		*theEvent = [eventArray objectAtIndex:index];
 		
         if ([theEvent type] == NSKeyDown) {
-            unichar lastChar = [[theEvent charactersIgnoringModifiers]
-                                characterAtIndex:[[theEvent charactersIgnoringModifiers] length]-1];
+			unichar lastChar = [[theEvent charactersIgnoringModifiers] lastCharacter];
             if (lastChar == NSCarriageReturnCharacter) {
                 nextIsEnter = NO;
 				nextIsReturn = YES;
