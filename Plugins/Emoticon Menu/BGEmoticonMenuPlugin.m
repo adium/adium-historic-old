@@ -95,9 +95,9 @@
 	button = [[[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)] autorelease];
 	[button setImage:[NSImage imageNamed:@"emoticonToolbar" forClass:[self class]]];
 	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:@"InsertEmoticon"
-                                                               label:@"Emoticon"
-                                                        paletteLabel:@"Insert Emoticon"
-                                                             toolTip:@"Insert Emoticon"
+                                                               label:AILocalizedString(@"Emoticon",nil)
+                                                        paletteLabel:AILocalizedString(@"Insert Emoticon",nil)
+                                                             toolTip:AILocalizedString(@"Insert Emoticon",nil)
                                                               target:self
                                                      settingSelector:@selector(setView:)
                                                          itemContent:button
