@@ -55,7 +55,7 @@
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_FORMATTING] == 0){
 		NSDictionary		*prefDict;
-		NSDictionary		*attributes;
+		NSMutableDictionary *attributes;
 		NSColor				*textColor;
 		NSColor				*backgroundColor;
 		NSColor				*subBackgroundColor;
@@ -67,19 +67,20 @@
 		textColor = [[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor];
 		backgroundColor = [[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor];
 		subBackgroundColor = [[prefDict objectForKey:KEY_FORMATTING_SUBBACKGROUND_COLOR] representedColor];
+
+		attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
 		
-		//Setup the attributes
-		if(!subBackgroundColor){
-			attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, 
-																textColor, NSForegroundColorAttributeName, 
-																backgroundColor, AIBodyColorAttributeName, nil];
-		}else{
-			attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName,
-																textColor, NSForegroundColorAttributeName,
-																backgroundColor, AIBodyColorAttributeName,
-																subBackgroundColor, NSBackgroundColorAttributeName, nil];
+		//Setup the attributes; don't include colors which match the systemwide defaults
+		if (![backgroundColor equalToRGBColor:[NSColor textBackgroundColor]]){
+			[attributes setObject:backgroundColor forKey:AIBodyColorAttributeName];	
 		}
-		
+		if(subBackgroundColor){
+			[attributes setObject:subBackgroundColor forKey:NSBackgroundColorAttributeName];
+		}
+		if (![textColor equalToRGBColor:[NSColor textColor]]){
+			[attributes setObject:textColor forKey:NSForegroundColorAttributeName];	
+		}
+
 		[[adium contentController] setDefaultFormattingAttributes:attributes];
     }
 }
