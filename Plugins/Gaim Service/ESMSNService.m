@@ -26,7 +26,6 @@
 	return(self);
 }
 
-
 //Account Creation
 - (Class)accountClass{
 	return([ESGaimMSNAccount class]);
