@@ -93,12 +93,13 @@
 					contentElement.style.position = 'static';
 				}
 			}
+			scrollToBottom();
 		}
 		window.onresize = alignChat;
 
 	</script>
 </head>
-<body onload="scrollToBottom();alignChat();">
+<body onload="alignChat();">
 <div id="Chat">
 <div class="incoming context">
     <div class="buddyicon">
@@ -178,6 +179,5 @@
     </div>
 </div>
 </div>
-<div class="bottomdivider"></div>
 </body>
 </html>

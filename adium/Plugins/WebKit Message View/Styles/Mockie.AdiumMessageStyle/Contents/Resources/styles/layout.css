@@ -1,11 +1,10 @@
 body {
-	margin: -5px 0px 0px 0px;
+	margin: 0px 0px 0px 0px;
 }
 
 #Chat {
 	overflow: hidden;
 	margin-right: 10px;
-	margin-bottom: 5px;
 	margin-left: 10px;
 }
 

@@ -8,12 +8,11 @@
 
 #Chat {
 	overflow: hidden;
-	margin-bottom: -3px;
 }
 
 #Chat .context .message { background: #FFF;color: gray; }
 
-body { margin: -3px 3px 3px 3px }
+body { margin: 0px 3px 0px 3px }
 	.chatbox { margin: 6px 0 6px 0;}
 
 		.buddyicon { margin: 3px 0 0; float: left }

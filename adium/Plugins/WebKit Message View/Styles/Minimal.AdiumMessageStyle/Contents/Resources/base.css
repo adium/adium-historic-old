@@ -3,7 +3,7 @@
 			color: #333333;
 			background-color: #ffffff;
 			background-image: url("images/back_l.png");
-			margin: -5px 0 0 0;
+			margin: 0;
 			background-repeat: repeat-y;
 	line-height: 1.3em;
 }
@@ -109,5 +109,4 @@
 		
 		#Chat {
 			overflow: hidden;
-			margin-bottom: 8px;
 		}
