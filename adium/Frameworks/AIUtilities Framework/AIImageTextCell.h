@@ -16,10 +16,12 @@
 @interface AIImageTextCell : AIGradientCell {
     NSFont 		*font;
     NSString	*subString;
+	float		maxImageWidth;
 }
 
 - (void)setFont:(NSFont *)obj;
 - (NSFont *)font;
 - (void)setSubString:(NSString *)inSubString;
+- (void)setMaxImageWidth:(float)inMaxImageWidth;
 
 @end
