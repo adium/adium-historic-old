@@ -31,10 +31,7 @@
     NSMutableDictionary *chatDict;
 
     NSMutableArray      *filesToSendArray;
-    
-    NSTimer             *signonTimer;
-    BOOL                silentAndDelayed;
-    
+        
     GaimAccount         *account;
     GaimConnection      *gc;
 }
@@ -101,8 +98,13 @@
 -(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type;
 
 
+//Connectivity
+- (void)configureAccountProxy;
 
 //Account status
+- (NSArray *)supportedPropertyKeys;
+- (void)updateAllStatusKeys;
+- (void)updateStatusForKey:(NSString *)key;
 - (void)setAccountIdleTo:(NSTimeInterval)idle;
 - (void)setAccountAwayTo:(NSAttributedString *)awayMessage;
 - (void)setAccountProfileTo:(NSAttributedString *)profile;

@@ -101,12 +101,13 @@ typedef enum {
     NSMutableArray				*changedStatusKeys;		//Status keys that have changed since the last notification
 	NSString					*password;				//Password of this account
 
-	
-	//   NSImage                     *userIcon;
-	
+    BOOL						silentAndDelayed; 			//We are waiting for and processing our sign on updates
 }
 
 - (id)initWithUID:(NSString *)inUID service:(id <AIServiceController>)inService;
+
+- (void)silenceAllHandleUpdatesForInterval:(NSTimeInterval)interval;
+- (void)autoReconnectAfterDelay:(int)delay;
 
 /*
  * @method properties

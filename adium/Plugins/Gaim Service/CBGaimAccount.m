@@ -11,7 +11,6 @@
 #import "CBGaimAccount.h"
 #import "CBGaimServicePlugin.h"
 
-#define OWN_BUDDY_IMAGE         @"/Users/evands/evands.jpg"
 #define PROFILE_STRING          @"I'm using Adium 2.0. Are you? www.adiumx.com"
 
 #define NO_GROUP                @"__NoGroup__"
@@ -28,7 +27,6 @@
 - (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer;
 - (void)connect;
 - (void)disconnect;
-- (void)autoReconnectAfterDelay:(int)delay;
 - (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle;
 - (NSString *)_userIconCachePath;
 - (void)setTypingFlagOfHandle:(AIHandle *)handle to:(BOOL)typing;
@@ -53,7 +51,7 @@
 
 - (void)accountNewBuddy:(GaimBuddy*)buddy
 {
-	//    NSLog(@"accountNewBuddy (%s)", buddy->name);
+	NSLog(@"accountNewBuddy (%s)", buddy->name);
     [self createHandleAssociatingWithBuddy:buddy];
 }
 
@@ -77,7 +75,7 @@
             //use the buddy's information gaimside to create the needed Adium handle
             theHandle = [self createHandleAssociatingWithBuddy:buddy];
             //Update the contact list
-            if (!silentAndDelayed)
+#warning            if (!silentAndDelayed)
                 [[adium contactController] handle:theHandle 
                                    addedToAccount:self];
         }
@@ -199,7 +197,7 @@
     if (buddy->node.ui_data != NULL) {
         [(AIHandle *)buddy->node.ui_data release];
         buddy->node.ui_data = NULL;
-        if (!silentAndDelayed)
+#warning      if (!silentAndDelayed)
             [[adium contactController] handlesChangedForAccount:self];
     }
 }
@@ -323,8 +321,6 @@
     gaim_accounts_add(account);
     gc = NULL;
     NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
-    signonTimer = nil;
-    password = nil;
     
     //ensure our user icon cache path exists
     [AIFileUtilities createDirectory:[USER_ICON_CACHE_PATH stringByExpandingTildeInPath]];
@@ -371,11 +367,6 @@
     [chatDict release];
     [handleDict release];
     [filesToSendArray release];
-    if (signonTimer != nil) {
-        [signonTimer invalidate];
-        [signonTimer release];
-        signonTimer = nil;
-    }
 	
     //  is deleting the accoutn necessary?  this seems to throw an exception.
 	//    gaim_accounts_delete(account); account = NULL;
@@ -700,82 +691,8 @@
 /* accountConnection methods */
 /*****************************/
 
-- (void)accountConnectionReportDisconnect:(const char*)text
-{
-    [self displayError: [NSString stringWithUTF8String: text]];
-}
-
-- (void)accountConnectionConnected
-{
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
-    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
-    
-    NSLog(@"Setting handle updates to silent and delayed (connected)");
-    silentAndDelayed = YES;
-    NSAssert(signonTimer == nil, @"Already have a signon timer");
-    signonTimer = [[NSTimer scheduledTimerWithTimeInterval:18
-                                                    target:self
-                                                  selector:@selector(signonTimerExpired:)
-                                                  userInfo:nil
-                                                   repeats:NO] retain];
-    [self performSelector:@selector(delayedInitialSettings:) withObject:nil afterDelay:1];
-}
-
-- (void)delayedInitialSettings:(id)object
-{
-    //Set our correct status
-    [self updateStatusForKey:@"IdleSince"];
-    [self updateStatusForKey:@"TextProfile"];
-    [self updateStatusForKey:@"AwayMessage"];
-    [self updateStatusForKey:@"UserIcon"];
-    
-    //Load our buddy icon from a file
-    NSImage *buddyImage = [[NSImage alloc] initWithContentsOfFile:OWN_BUDDY_IMAGE];
-    if(buddyImage && [buddyImage isValid]){
-		[self setPreference:[buddyImage TIFFRepresentation] forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
-    }
-    [buddyImage release];
-}
 
 
-- (void)signonTimerExpired:(NSTimer*)timer
-{
-    [signonTimer invalidate];
-    [signonTimer release];
-    signonTimer = nil;
-    silentAndDelayed = NO;
-    NSLog(@"Setting handle updates to loud and instantaneous (signon timer expired)");
-    
-    [[adium contactController] handlesChangedForAccount:self];
-}
-
-
-
-// Auto-Reconnect -------------------------------------------------------------------------------------
-//Attempts to auto-reconnect (after an X second delay)
-- (void)autoReconnectAfterDelay:(int)delay
-{
-    //Install a timer to autoreconnect after a delay
-    [NSTimer scheduledTimerWithTimeInterval:delay
-                                     target:self
-                                   selector:@selector(autoReconnectTimer:)
-                                   userInfo:nil
-                                    repeats:NO];
-    
-    NSLog(@"Auto-Reconnect in %i seconds",delay);
-}
-
-//
-- (void)autoReconnectTimer:(NSTimer *)inTimer
-{
-    //If we're still offline, continue with the reconnect
-    if([[self statusObjectForKey:@"Online"] boolValue] && ![[self statusObjectForKey:@"Connecting"] boolValue]){
-        NSLog(@"Attempting Auto-Reconnect");
-        
-        //Instead of calling connect, we directly call the second phase of connecting, passing it the user's password.  This prevents users who don't keychain passwords from having to enter them for a reconnect.
-        [self connect];
-    }
-}
 
 /*****************************************************/
 /* File transfer / AIAccount_Files inherited methods */
@@ -940,16 +857,23 @@
 //Connect this account (Our password should be in the instance variable 'password' all ready for us)
 - (void)connect
 {
-	//now we start to connect
+	//We are connecting
 	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
 	
-	//setup the account, get things ready
-	gaim_account_set_password(account, [password UTF8String]);
+	//Configure libgaim's proxy settings
+	[self configureAccountProxy];
 	
-	//configure at sign on time so we get the latest settings from the system
-	if ([(CBGaimServicePlugin *)service configureGaimProxySettings]) {
-		
-		//proxy info - once account prefs are in place, this should be able to use the gaim prefs (which are set by the service plugin and are our systemwide prefs) or account-specific prefs
+	//Set password and connect
+	gaim_account_set_password(account, [password UTF8String]);
+	gc = gaim_account_connect(account);
+}
+
+//Configure libgaim's proxy settings using the current system values
+- (void)configureAccountProxy
+{
+	if([(CBGaimServicePlugin *)service configureGaimProxySettings]) {
+		//proxy info - once account prefs are in place, this should be able to use the gaim prefs (which are set by the
+		//service plugin and are our systemwide prefs) or account-specific prefs
 		GaimProxyInfo *proxy_info = gaim_proxy_info_new();
 		
 		char *type = (char *)gaim_prefs_get_string("/core/proxy/type");
@@ -978,21 +902,19 @@
 		
 		gaim_account_set_proxy_info(account,proxy_info);
 	}
-	//NSLog(@"%i %s %i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
-	
-	gc = gaim_account_connect(account);
 }
 
+//Disconnect this account
 - (void)disconnect
 {
     NSEnumerator    *enumerator;
     AIHandle        *handle;
     
-    //signing off
+    //We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
     
     //tell gaim to disconnect    
-    silentAndDelayed = YES;
+#warning    silentAndDelayed = YES;
     NSLog(@"Setting handle updates to silent and delayed (disconnecting)");
 	
     //Flush all our handle status flags
@@ -1024,38 +946,54 @@
     [(CBGaimServicePlugin *)service removeAccount:account];
     gaim_accounts_delete(account); account = NULL;
     gc = NULL;
-    
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
-    
+
     //create a new account for next time
     account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
     gaim_accounts_add(account);
     [(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
+    
+	//We are now offline
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
 }
 
-//Called automatically by gaimServicePlugin whenever we disconnected for any reason
+//Our account was disconnected, report the error
+- (void)accountConnectionReportDisconnect:(const char*)text
+{
+    [self displayError:[NSString stringWithUTF8String:text]];
+}
+
+//Our account has disconnected (called automatically by gaimServicePlugin)
 - (void)accountConnectionDisconnected
 {
-    if(signonTimer != nil) {
-        [signonTimer invalidate];
-        [signonTimer release];
-        signonTimer = nil;
-    }
-    
-    NSLog(@"reconnect?");
+	//We are now offline
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
+
+	//
     //If a gc object still exists, we were disconnected unexpectedly
     if(gc != NULL) {
-        //clean up
+		//clean up
         [self disconnect];
         //reconnect
         [self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
     }
-    NSLog(@"done");
 }
 
+//Our account has connected (called automatically by gaimServicePlugin)
+- (void)accountConnectionConnected
+{
+	//We are now online
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
+    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
+    
+	//Silence updates
+	[self silenceAllHandleUpdatesForInterval:18.0];
 
-
+	//Set our initial status after a short delay (To allow libgaim to finish connecting)
+    [self performSelector:@selector(updateAllStatusKeys) withObject:nil afterDelay:1];
+}
 
 
 
@@ -1078,6 +1016,15 @@
         nil]);
 }
 
+//Update all our status keys
+- (void)updateAllStatusKeys
+{
+    [self updateStatusForKey:@"IdleSince"];
+    [self updateStatusForKey:@"TextProfile"];
+    [self updateStatusForKey:@"AwayMessage"];
+    [self updateStatusForKey:@"UserIcon"];
+}
+
 //Update our status
 - (void)updateStatusForKey:(NSString *)key
 {    
@@ -1087,7 +1034,7 @@
 
     //Now look at keys which only make sense while online
     if([[self statusObjectForKey:@"Online"] boolValue]){
-		
+
         if([key compare:@"IdleSince"] == 0){
             NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			[self setAccountIdleTo:(idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil)];
