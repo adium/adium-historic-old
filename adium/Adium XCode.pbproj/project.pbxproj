@@ -12744,6 +12744,7 @@
 			files = (
 				34BDA0BA053147EF000AB133,
 				34BDA0BB053147EF000AB133,
+				4B791A5E0535002A0000969C,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12765,6 +12766,7 @@
 			files = (
 				34BDA0BD053147EF000AB133,
 				34BDA0BE053147EF000AB133,
+				4B791A65053500580000969C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12786,6 +12788,7 @@
 			files = (
 				34BDA0C0053147EF000AB133,
 				34BDA0C1053147EF000AB133,
+				4B791A5F0535002A0000969C,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15479,6 +15482,9 @@
 				4B9267C304A7583D00A8010A,
 				4B9267C404A7583D00A8010A,
 				4B9267C104A7541200A8010A,
+				4B791A5C0535002A0000969C,
+				4B791A5D0535002A0000969C,
+				4B791A64053500580000969C,
 				4BB826B504C8876C00A8010A,
 			);
 			isa = PBXGroup;
@@ -17218,6 +17224,50 @@
 		};
 		4B791A280534C4290000969C = {
 			fileRef = 4B791A270534C4290000969C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B791A5C0535002A0000969C = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIStatusOverlayAdvancedPreferences.h;
+			path = "Plugins/Contact Status Dock Overlays/AIStatusOverlayAdvancedPreferences.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B791A5D0535002A0000969C = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIStatusOverlayAdvancedPreferences.m;
+			path = "Plugins/Contact Status Dock Overlays/AIStatusOverlayAdvancedPreferences.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B791A5E0535002A0000969C = {
+			fileRef = 4B791A5C0535002A0000969C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B791A5F0535002A0000969C = {
+			fileRef = 4B791A5D0535002A0000969C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B791A64053500580000969C = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = DockOverlayAdvancedPrefs.nib;
+			path = "Plugins/Contact Status Dock Overlays/DockOverlayAdvancedPrefs.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B791A65053500580000969C = {
+			fileRef = 4B791A64053500580000969C;
 			isa = PBXBuildFile;
 			settings = {
 			};

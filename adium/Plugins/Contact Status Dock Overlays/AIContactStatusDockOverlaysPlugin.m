@@ -40,7 +40,8 @@
 
     //Install our preference view and register our default prefs
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_OVERLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DOCK_OVERLAYS];
-    preferences = [[AIStatusOverlayPreferences statusOverlayPreferencesWithOwner:owner] retain];
+    preferences = [[AIStatusOverlayPreferences preferencePaneWithOwner:owner] retain];
+    advancedPrefs = [[AIStatusOverlayAdvancedPreferences preferencePaneWithOwner:owner] retain];
 
     //Register as a contact observer (So we can catch the unviewed content status flag)
     [[owner contactController] registerListObjectObserver:self];
