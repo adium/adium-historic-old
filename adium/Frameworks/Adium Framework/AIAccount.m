@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.34 2004/01/17 13:28:00 adamiser Exp $
+// $Id: AIAccount.m,v 1.35 2004/01/17 18:21:29 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -42,7 +42,7 @@
 								   selector:@selector(_accountPreferencesChanged:)
 									   name:Preference_GroupChanged
 									 object:nil];
-    
+    	
     //Clear the online state.  'Auto-Connect' values are used, not the previous online state.
     [self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
     [self updateStatusForKey:@"Handle"];
@@ -208,6 +208,9 @@
     }
 }
 
+
+
+
 //Return the account-specific user icon, or the default user icon from the account controlelr if none exists (thee default user icon returns nil if none is set)
 //- (NSImage *)userIcon {
 //    if (userIcon)
@@ -229,6 +232,7 @@
 - (NSView *)accountView{return(nil);};
 - (NSArray *)supportedPropertyKeys{return([NSArray array]);}
 - (void)setAttributedStatusString:(NSAttributedString *)inAttributedString forKey:(NSString *)key{};
+- (void)updateContactStatus:(AIListContact *)inContact{};
 
 //Functions subclasses may choose to override
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject

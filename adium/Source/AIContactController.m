@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.85 2004/01/17 16:25:49 adamiser Exp $
+// $Id: AIContactController.m,v 1.86 2004/01/17 18:21:30 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -195,6 +195,20 @@
 		updatesAreDelayed = YES;
 		delayedUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:UPDATE_CLUMP_INTERVAL target:self selector:@selector(_performDelayedUpdates:) userInfo:nil repeats:YES] retain];
     }
+}
+
+//Update the status of a list object.  This will update any information that is otherwise too expensive to update
+//automatically, such as their profile.
+- (void)updateListContactStatus:(AIListContact *)inContact
+{
+	NSEnumerator	*enumerator;
+	AIAccount		*account;
+	
+	//Ask each account to update status
+	enumerator = [[inContact remoteGroupArray] ownerEnumerator];
+	while(account = [enumerator nextObject]){
+		[account updateContactStatus:inContact];
+	}
 }
 
 //Compare containing groups to remote groups, and sync the local groups as necessary to match remote.

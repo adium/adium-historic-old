@@ -99,11 +99,11 @@ typedef enum {
 //Editing
 - (void)removeListObjects:(NSArray *)objectArray fromGroup:(AIListGroup *)group;
 
-
 //Contact info
 - (IBAction)showContactInfo:(id)sender;
 - (void)showInfoForContact:(AIListContact *)inContact;
 - (void)addContactInfoView:(AIPreferenceViewController *)inView;
+- (void)updateListContactStatus:(AIListContact *)inContact;
 
 //Interface selection
 - (AIListContact *)selectedContact;
