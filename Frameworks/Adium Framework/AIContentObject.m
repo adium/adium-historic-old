@@ -76,7 +76,7 @@
 	NSCalendarDate *ourDate = [[self date] dateWithCalendarFormat:nil timeZone:nil];
 	NSCalendarDate *inDate = [[inContent date] dateWithCalendarFormat:nil timeZone:nil];
 	
-	return([ourDate dayOfCommonEra] != [inDate dayOfCommonEra]);
+	return([ourDate dayOfCommonEra] == [inDate dayOfCommonEra]);
 }
 
 //Content --------------------------------------------------------------------------------------------------------------
