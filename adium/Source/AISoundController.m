@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.34 2004/03/05 03:08:43 evands Exp $
+// $Id: AISoundController.m,v 1.35 2004/04/15 04:59:00 ramoth4 Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -34,6 +34,7 @@
 #define RATE						@"Rate"
 
 @interface AISoundController (PRIVATE)
+- (void)_removeSystemAlertIDs;
 - (void)_quicktimePlaySound:(NSString *)inPath;
 - (void)_scanSoundSetsFromPath:(NSString *)soundFolderPath intoArray:(NSMutableArray *)soundSetArray;
 - (void)_addSet:(NSString *)inSet withSounds:(NSArray *)inSounds toArray:(NSMutableArray *)inArray;
@@ -51,6 +52,8 @@
     activeSoundThreads = 0;
     soundLock = [[NSLock alloc] init];
     soundThreadActive = NO;
+    
+    systemSoundIDDict = [[NSMutableDictionary alloc] init];
 
 #ifdef MAC_OS_X_VERSION_10_0
     voiceArray = [[SUSpeaker voiceNames] retain];  //voiceArray will be in the same order that speaker expects
@@ -83,6 +86,7 @@
 //close
 - (void)closeController
 {
+    [self _removeSystemAlertIDs];
     [voiceArray release];
 }
 
@@ -141,12 +145,20 @@
 			[self _quicktimePlaySound:inPath];
 			
         }else if(!useCustomVolume){ 
+            if(soundsAsAlerts){ //Use System Alert sounds if the user wants it
+                if(!soundThreadActive){
+                    [NSThread detachNewThreadSelector:@selector(_threadPlaySoundAsAlert:)
+                                             toTarget:self
+                                           withObject:inPath];
+                }
+            }else{
 			//Otherwise, we can use NSSound
 			if(!soundThreadActive){ //Don't bother spawning another thread if one is already waiting
                 [NSThread detachNewThreadSelector:@selector(_threadPlaySound:) toTarget:self withObject:inPath];
-			}
+            }
         }
     }    
+}
 }
 
 //Play a sound using quicktime.
@@ -231,6 +243,62 @@
     [pool release];
 }
 
+// Play a sound using the CF sound API's available in 10.2+ (or so says apple)
+// It's slightly more flexable than NSSound, but higher level than CoreAudio.  Good compromise?
+// ? threadable (works in 10.3, crashes in 10.2 regardless of running in thread or not)
+// + faster then QuickTime
+// + respects system settings for Alerts (including volume and output device)
+// - plays a few formats
+// ? system will interrupt sounds when a new event triggers
+// Ref: http://developer.apple.com/technotes/tn2002/tn2102.html
+- (void)_threadPlaySoundAsAlert:(NSString *)inPath
+{
+    NSAutoreleasePool 	*pool = [[NSAutoreleasePool alloc] init];
+    SystemSoundActionID  soundID = 0;
+    FSRef                soundRef;
+    OSStatus             err;
+    
+    
+    soundThreadActive = YES;
+    [soundLock lock];
+    
+    // to use this API, we have to work with carbon - so need to use CF's File Manager
+    // to get a refrence to the file and then use that to register the event sound with the system
+    // BUT, first, we see if the system sound ID we need has already been generated.
+    soundID = (SystemSoundActionID)[[systemSoundIDDict objectForKey:inPath] intValue];
+    
+    //if not, then we have to generate it and save it for later (for graceful removal)
+    if(!soundID){
+        err = FSPathMakeRef ([inPath fileSystemRepresentation], &soundRef, NULL);
+        if(noErr == err)
+            err = SystemSoundGetActionID(&soundRef, &soundID);
+        if(noErr == err){
+            [systemSoundIDDict setObject:[NSNumber numberWithInt:(int)soundID] forKey:inPath];
+        }
+    }
+    
+    //play the sound (system takes care of cueueing and waking audio hardware)
+    AlertSoundPlayCustomSound(soundID);
+    
+    [soundLock unlock];
+    soundThreadActive = NO;
+    
+    [pool release];
+}
+
+// the SystemSoundGetActionID's generated in the above method need to be gracefully
+// removed from the system.  We do that here.
+// called from closeController:
+- (void)_removeSystemAlertIDs
+{
+    NSEnumerator            *enumerator = [systemSoundIDDict objectEnumerator];
+    SystemSoundActionID      soundID = 0;
+    
+    while((soundID = (SystemSoundActionID)[[enumerator nextObject] intValue])){
+        SystemSoundRemoveActionID(soundID);
+    }
+}
+
 //NSSound finished playing callback
 - (void)sound:(NSSound *)sound didFinishPlaying:(BOOL)aBool
 {
@@ -245,6 +313,8 @@
         NSDictionary *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
 		
 		NSNumber *customVolumeNumber = [preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL];
+                
+                soundsAsAlerts = [[preferenceDict objectForKey:KEY_USE_SYSTEM_SOUND_OUTPUT] boolValue];
 
 		//On Panther, we only use the QuickTime sound playing code if a customvolume is set,
 		//but on Jaguar we must always use QuickTime code since our threaded sound code will crash

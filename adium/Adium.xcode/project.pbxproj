@@ -3591,6 +3591,8 @@
 				3404893306173DAB004D0B7E,
 				BF99B529061D74EE00BF2252,
 				6E7C19BC0623BF80008A1C99,
+				9E4E71FA062E3D3A00562300,
+				9E4E71FC062E3D3A00562300,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3902,6 +3904,7 @@
 				6ECFABC50622370E001C7E93,
 				6E7C19BE0623BF80008A1C99,
 				3429200906288D9B00BB9217,
+				9E4E71F9062E3D3A00562300,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4220,6 +4223,8 @@
 				3404893406173DAB004D0B7E,
 				BF99B52A061D74EE00BF2252,
 				6E7C19BD0623BF80008A1C99,
+				9E4E71FB062E3D3A00562300,
+				9E4E71FD062E3D3A00562300,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7672,6 +7677,7 @@
 			children = (
 				346E640C05153395003B2F21,
 				F5AAD085039BA0D301A8010A,
+				9E4E71F3062E3D3900562300,
 				4B554115044DEFEF00A8010A,
 			);
 			isa = PBXGroup;
@@ -16862,6 +16868,89 @@
 			path = "Plugins/Action Support/CBActionSupportPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		9E4E71F3062E3D3900562300 = {
+			children = (
+				9E4E71F4062E3D3900562300,
+				9E4E71F5062E3D3900562300,
+				9E4E71F6062E3D3A00562300,
+				9E4E71F7062E3D3A00562300,
+				9E4E71F8062E3D3A00562300,
+			);
+			isa = PBXGroup;
+			name = "Output Device Control";
+			path = "Plugins/Output Device Control";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E4E71F4062E3D3900562300 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			path = OutputControlPrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E4E71F5062E3D3900562300 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = SHOutputDeviceControlPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E4E71F6062E3D3A00562300 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = SHOutputDeviceControlPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E4E71F7062E3D3A00562300 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = SHOutputDeviceControlPreferences.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E4E71F8062E3D3A00562300 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = SHOutputDeviceControlPreferences.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E4E71F9062E3D3A00562300 = {
+			fileRef = 9E4E71F4062E3D3900562300;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4E71FA062E3D3A00562300 = {
+			fileRef = 9E4E71F5062E3D3900562300;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4E71FB062E3D3A00562300 = {
+			fileRef = 9E4E71F6062E3D3A00562300;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4E71FC062E3D3A00562300 = {
+			fileRef = 9E4E71F7062E3D3A00562300;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E4E71FD062E3D3A00562300 = {
+			fileRef = 9E4E71F8062E3D3A00562300;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		9E57141405B2168100283CAD = {
 			children = (

@@ -6,6 +6,8 @@
 	<real>0.5</real>
 	<key>Use Custom Volume</key>
 	<false/>
+	<key>Use System Sound Output</key>
+	<false/>
 	<key>Warned About Custom Volume</key>
 	<false/>
 </dict>

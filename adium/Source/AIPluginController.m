@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.41 2004/04/08 20:16:15 dchoby98 Exp $
+//$Id: AIPluginController.m,v 1.42 2004/04/15 04:59:00 ramoth4 Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -46,7 +46,7 @@ ESAnnouncerPlugin, ESContactAlertsPlugin, ESContactClientPlugin, ESContactListWi
 ESFastUserSwitchingSupportPlugin, ESOpenMessageWindowContactAlertPlugin, ESSendMessageContactAlertPlugin,
 ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessagePlugin,
 JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin,
-AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker;
+AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, SHOutputDeviceControlPlugin;
 
 @implementation AIPluginController
 //init
@@ -121,6 +121,8 @@ AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersi
 	[self loadPluginWithClass:[JSCEventBezelPlugin class]];
 	[self loadPluginWithClass:[LNStatusIconsPlugin class]];
 	[self loadPluginWithClass:[SAContactOnlineForPlugin class]];
+        
+        [self loadPluginWithClass:[SHOutputDeviceControlPlugin class]];
 
 //	[self loadPluginWithClass:[AISMViewPlugin class]];
 //	[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
