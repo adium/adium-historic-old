@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIHandleIdentifier, AIServiceType, AIMessageObject, AIListContact, AIHandle, AIChat, AIContentObject, AIListObject, ESFileTransfer;
+@class AIHandleIdentifier, AIServiceType, AIMessageObject, AIListContact, AIHandle, AIChat, AIContentObject, AIListObject, ESFileTransfer, DCJoinChatWindowController;
 @protocol AIServiceController;
 
 #import "AIListObject.h"
@@ -147,6 +147,10 @@ typedef enum {
 - (BOOL)disconnectOnFastUserSwitch;
 - (BOOL)shouldSendAutoresponsesWhileAway;
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
+- (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat;
+- (BOOL)createNewGroupChatWithListObject:(AIListObject *)contact;
+- (NSImage *)serviceImage;
+- (NSImage *)serviceMenuImage;
 
 //Images
 - (NSImage *)image;
