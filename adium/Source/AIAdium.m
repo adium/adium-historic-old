@@ -30,9 +30,12 @@
 
 #import <ExceptionHandling/NSExceptionHandler.h>
 
+#import <limits.h> //for PATH_MAX
+
 //Path to Adium's application support preferences
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"]
 #define ADIUM_FAQ_PAGE						@"http://adium.sourceforge.net/faq/"
+#define ADIUM_SUBFOLDER_OF_APP_SUPPORT      @"Adium 2.0"
 
 @interface AIAdium (PRIVATE)
 - (void)configureCrashReporter;
@@ -337,5 +340,58 @@ void Adium_HandleSignal(int i){
     return success;
 }
 
-@end
+//return zero or more pathnames to objects in the Application Support folders.
+//only those pathnames that exist are returned.
+- (NSArray *)applicationSupportPathsForName:(NSString *)name
+{
+	NSFileManager *manager = [NSFileManager defaultManager];
+	NSString *path = NULL;
+	NSMutableArray *pathArray = [NSMutableArray arrayWithCapacity:3];
 
+	NSString *adiumFolderName = ADIUM_SUBFOLDER_OF_APP_SUPPORT;
+	if(name) {
+		adiumFolderName = [adiumFolderName stringByAppendingPathComponent:name];
+	}
+
+	FSRef ref;
+	OSStatus err = noErr;
+
+	// ~/Library/Application\ Support
+	err = FSFindFolder(kUserDomain, kApplicationSupportFolderType, kDontCreateFolder, &ref);
+	if(err == noErr) {
+		path = [NSString pathForFSRef:&ref];
+		if(path) {
+			path = [[path autorelease] stringByAppendingPathComponent:adiumFolderName];
+		}
+		if(path && [manager fileExistsAtPath:path]) {
+			[pathArray addObject:path];
+		}
+	}
+
+	// /Library/Application\ Support
+	err = FSFindFolder(kLocalDomain, kApplicationSupportFolderType, kDontCreateFolder, &ref);
+	if(err == noErr) {
+		path = [NSString pathForFSRef:&ref];
+		if(path) {
+			path = [[path autorelease] stringByAppendingPathComponent:adiumFolderName];
+		}
+		if(path && [manager fileExistsAtPath:path]) {
+			[pathArray addObject:path];
+		}
+	}
+
+	// /Network/Library/Application\ Support
+	err = FSFindFolder(kNetworkDomain, kApplicationSupportFolderType, kDontCreateFolder, &ref);
+	if(err == noErr) {
+		path = [NSString pathForFSRef:&ref];
+		if(path) {
+			path = [[path autorelease] stringByAppendingPathComponent:adiumFolderName];
+		}
+		if(path && [manager fileExistsAtPath:path]) {
+			[pathArray addObject:path];
+		}
+	}
+
+	return [[pathArray copy] autorelease];
+}
+@end
