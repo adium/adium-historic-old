@@ -119,7 +119,7 @@
     away = [[inContact statusArrayForKey:@"Away"] greatestIntegerValue];
     idle = [[inContact statusArrayForKey:@"Idle"] greatestDoubleValue];
     online = [[inContact statusArrayForKey:@"Online"] greatestIntegerValue];
-    online = [[inContact statusArrayForKey:@"Open Tab"] greatestIntegerValue];
+    openTab = [[inContact statusArrayForKey:@"Open Tab"] greatestIntegerValue];
     signedOn = [[inContact statusArrayForKey:@"Signed On"] greatestIntegerValue];
     signedOff = [[inContact statusArrayForKey:@"Signed Off"] greatestIntegerValue];
     typing = [[inContact statusArrayForKey:@"Typing"] greatestIntegerValue];
