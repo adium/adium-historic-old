@@ -65,6 +65,10 @@ Other:
 Contact alerts:
 	+ Add icons (16x16) to event types, and display them in the event list (still needed on some.  make the ESContactAlert subclasses respond to -icon)
 	+ Menu has "all contacts in ___" items, and "all contacts" item (?)
+	
+Dock contextual menu:
+	+ Make the menu controller capable of handling putting dock menu items in certain categories, or something; at present
+		it is only possible to add it to the dock, resulting in a really disorderly menu.
 
 //-------------------------------------------------------------------------------------------------------
 // Big Stuff
