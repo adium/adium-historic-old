@@ -374,6 +374,13 @@ static ESContactAlertsWindowController *sharedInstance = nil;
                                             keyEquivalent:@""] autorelease];
             [menuItem setRepresentedObject:contact];
 
+            #ifdef MAC_OS_X_VERSION_10_3
+            NSLog (@"%i %d",floor(NSAppKitVersionNumber),floor(NSAppKitVersionNumber));
+            //if (floor(NSAppKitVersionNumber) >= NSFoundationVersionNumber10_3) {
+            //    [menuItem setIndentationLevel:1];
+            //}
+            #endif
+
             if ([groupName compare:[[contact containingGroup] displayName]] != 0)
             {
                 NSMenuItem	*groupItem;
@@ -383,6 +390,11 @@ static ESContactAlertsWindowController *sharedInstance = nil;
                                                         action:@selector(switchToContact:)
                                                  keyEquivalent:@""] autorelease];
                 [groupItem setRepresentedObject:[contact containingGroup]];
+                #ifdef MAC_OS_X_VERSION_10_3
+                //if (floor(NSAppKitVersionNumber) >= NSFoundationVersionNumber10_3) {
+                //[groupItem setIndentationLevel:0];
+                //}
+                 #endif
                 [contactMenu addItem:groupItem];
                 firstOfflineSearch = YES; //start searching for an offline contact
             }

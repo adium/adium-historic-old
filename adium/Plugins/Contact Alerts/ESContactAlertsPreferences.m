@@ -467,6 +467,9 @@ int alphabeticalSort(id objectA, id objectB, void *context);
                                                    target:self
                                                    action:@selector(switchToContact:)
                                             keyEquivalent:@""] autorelease];
+#ifdef MAC_OS_X_VERSION_10_3
+            [menuItem setIndentationLevel:1];
+#endif
             [menuItem setRepresentedObject:contact];
 
             if ([groupName compare:[[contact containingGroup] displayName]] != 0)
@@ -478,6 +481,9 @@ int alphabeticalSort(id objectA, id objectB, void *context);
                                                         action:@selector(switchToContact:)
                                                  keyEquivalent:@""] autorelease];
                 [groupItem setRepresentedObject:[contact containingGroup]];
+#ifdef MAC_OS_X_VERSION_10_3
+                [groupItem setIndentationLevel:0];
+#endif
                 [contactMenu addItem:groupItem];
                 firstOfflineSearch = YES; //start searching for an offline contact
             }
