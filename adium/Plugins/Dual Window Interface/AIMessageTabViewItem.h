@@ -21,5 +21,6 @@
 - (void)close:(id)sender;
 - (NSString *)labelString;
 - (AIMessageViewController *)messageViewController;
+- (void)tabViewItemWasSelected;
 
 @end
