@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleGetInfoString</key>
+	<string>iTunes: Now Playing Scripts</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.adiumx.iTunes.scripts</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>1.0</string>
+	<key>CFBundleName</key>
+	<string>iTunes - Now Playing</string>
+	<key>CFBundlePackageType</key>
+	<string>AdIM</string>
+	<key>Set</key>
+	<string>iTunes - Now Playing</string>
+	<key>Scripts</key>
+	<array>
+		<dict>
+			<key>File</key>
+			<string>%_album</string>
+			<key>Keyword</key>
+			<string>%_album</string>
+			<key>Title</key>
+			<string>Album</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>%_artist</string>
+			<key>Keyword</key>
+			<string>%_artist</string>
+			<key>Title</key>
+			<string>Artist</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>%_comment</string>
+			<key>Keyword</key>
+			<string>%_comment</string>
+			<key>Title</key>
+			<string>Comment</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>%_composer</string>
+			<key>Keyword</key>
+			<string>%_composer</string>
+			<key>Title</key>
+			<string>Composer</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>%_genre</string>
+			<key>Keyword</key>
+			<string>%_genre</string>
+			<key>Title</key>
+			<string>Genre</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>%_iTMS</string>
+			<key>Keyword</key>
+			<string>%_itms</string>
+			<key>Title</key>
+			<string>iTunes Music Store Link</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>%_position</string>
+			<key>Keyword</key>
+			<string>%_position</string>
+			<key>Title</key>
+			<string>Position</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>%_playcount</string>
+			<key>Keyword</key>
+			<string>%_playcount</string>
+			<key>Title</key>
+			<string>Play Count</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>%_rating</string>
+			<key>Keyword</key>
+			<string>%_rating</string>
+			<key>Title</key>
+			<string>Rating</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>%_status</string>
+			<key>Keyword</key>
+			<string>%_status</string>
+			<key>Title</key>
+			<string>Status</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>%_track</string>
+			<key>Keyword</key>
+			<string>%_track</string>
+			<key>Title</key>
+			<string>Track</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>%_year</string>
+			<key>Keyword</key>
+			<string>%_year</string>
+			<key>Title</key>
+			<string>Year</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>music</string>
+			<key>Keyword</key>
+			<string>/music</string>
+			<key>Title</key>
+			<string>Artist - Track</string>
+			<key>Prefix Only</key>
+			<true/>
+		</dict>
+	</array>
+</dict>
+</plist>
