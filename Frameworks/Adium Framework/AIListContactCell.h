@@ -29,12 +29,14 @@
 	NSColor				*statusColor;
 
 	NSDictionary		*_statusAttributes;
+	NSMutableDictionary	*_statusAttributesInverted;
 }
 
 //Status Text
 - (void)setStatusFont:(NSFont *)inFont;
 - (NSFont *)statusFont;
 - (NSDictionary *)statusAttributes;
+- (NSDictionary *)statusAttributesInverted;
 - (void)setTextAlignment:(NSTextAlignment)inAlignment;
 - (void)setStatusColor:(NSColor *)inColor;
 - (NSColor *)statusColor;
@@ -72,5 +74,6 @@
 - (NSImage *)serviceImage;
 - (BOOL)drawStatusBelowLabelInRect:(NSRect)rect;
 - (BOOL)drawGridBehindCell;
+- (float)imageOpacityForDrawing;
 
 @end
