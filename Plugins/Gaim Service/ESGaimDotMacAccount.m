@@ -26,4 +26,12 @@
 	gaim_account_set_username(account, [userNameWithMacDotCom UTF8String]);
 }
 
+/*
+ * @brief Set the spacing and capitilization of our formatted UID serverside (from CBGaimOscarAccount)
+ *
+ * CBGaimOscarAccount calls this to perform spacing/capitilization setting serverside.  This is not supported
+ * for .Mac accounts and will throw a SNAC error if attempted.  Override the method to perform no action for .Mac.
+ */
+- (void)setFormattedUID {};
+
 @end
