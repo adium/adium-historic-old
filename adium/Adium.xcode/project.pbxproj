@@ -5188,6 +5188,7 @@
 				4B1EE92306B7E22A00A919E9,
 				4B1EE92506B7E22A00A919E9,
 				4B1EE92706B7E22A00A919E9,
+				4B1EEB6506B811C400A919E9,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5833,6 +5834,7 @@
 				4B1EE92406B7E22A00A919E9,
 				4B1EE92606B7E22A00A919E9,
 				4B1EE92806B7E22A00A919E9,
+				4B1EEB6606B811C400A919E9,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11061,6 +11063,36 @@
 			settings = {
 			};
 		};
+		4B1EEB6306B811C400A919E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIStandardListOutlineView.h;
+			path = "Plugins/Standard Contact List View/AIStandardListOutlineView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B1EEB6406B811C400A919E9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIStandardListOutlineView.m;
+			path = "Plugins/Standard Contact List View/AIStandardListOutlineView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B1EEB6506B811C400A919E9 = {
+			fileRef = 4B1EEB6306B811C400A919E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B1EEB6606B811C400A919E9 = {
+			fileRef = 4B1EEB6406B811C400A919E9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B215D970598907100305B3C = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -15887,6 +15919,8 @@
 			children = (
 				F579397D033E756E01A8010A,
 				F579397E033E756E01A8010A,
+				4B1EEB6306B811C400A919E9,
+				4B1EEB6406B811C400A919E9,
 				4BF000CC06B5513400C32219,
 				4BF000CD06B5513400C32219,
 				4BF002CC06B55FCF00C32219,

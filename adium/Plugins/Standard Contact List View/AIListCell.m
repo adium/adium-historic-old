@@ -109,14 +109,21 @@
 	return([controlView font]);
 }
 
+- (NSColor *)textColor
+{
+	return([NSColor blackColor]);
+}
+
 //Drawing
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView{
     [self drawInteriorWithFrame:cellFrame inView:controlView];
 }
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {	
-	[self drawBackgroundWithFrame:cellFrame inView:controlView];
-	[self drawContentWithFrame:cellFrame inView:controlView];
+	if(listObject){
+		[self drawBackgroundWithFrame:cellFrame inView:controlView];
+		[self drawContentWithFrame:cellFrame inView:controlView];
+	}
 }
 	
 //Draw the background of our cell
@@ -339,23 +346,13 @@
 }
 
 //Text Color (If this cell is selected, use the inverted color, or white)
-- (NSColor *)textColorInView:(AISCLOutlineView *)controlView
+- (NSColor *)textColorInView:(NSView *)controlView
 {
 	NSColor	*textColor = nil;
 	
 	if(![self isHighlighted] || ![[controlView window] isKeyWindow] || [[controlView window] firstResponder] != controlView){
 		textColor = [[listObject displayArrayForKey:@"Text Color"] objectValue];
-		if(!textColor){
-			textColor = [NSColor blackColor];
-			
-			if(isGroup) textColor = [NSColor whiteColor];
-			
-			
-//			else textColor = [NSColor whiteColor];
-
-			//if(isGroup) textColor = [(AISCLOutlineView *)controlView groupColor];
-			//else textColor = [(AISCLOutlineView *)controlView color];
-		}
+		if(!textColor) textColor = [NSColor blackColor];
 	}else{
 		textColor = [NSColor alternateSelectedControlTextColor];
 	}    

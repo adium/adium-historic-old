@@ -11,14 +11,18 @@
 
 @implementation AIListContactCell
 
-#define USER_ICON_SIZE			16
+#define SHOW_USER_ICON			YES
+#define USER_ICON_ON_LEFT		NO
+#define USER_ICON_SIZE			28
 #define VERTICAL_ICON_PADDING	1
 #define ICON_LEFT_PADDING 		4
 #define ICON_RIGHT_PADDING 		2
 
+#define SHOW_STATUS_ICON		YES
+#define STATUS_ICON_ON_LEFT		YES
 
 
-#define badgewidth 				30
+#define badgewidth 				18
 
 - (NSSize)cellSize
 {
@@ -28,24 +32,52 @@
 //Draw content of our cell
 - (void)drawContentWithFrame:(NSRect)rect inView:(NSView *)controlView
 {
+	NSRect	iconRect;
+
 	//Indent
 	rect.origin.x += ICON_LEFT_PADDING;
 	rect.size.width -= ICON_LEFT_PADDING;
 	
 	//Draw the user image
-	[self drawUserIconInRect:NSMakeRect(rect.origin.x,
-										rect.origin.y + (rect.size.height - USER_ICON_SIZE) / 2.0,
-										USER_ICON_SIZE,
-										USER_ICON_SIZE)];
-	rect.origin.x += USER_ICON_SIZE + ICON_RIGHT_PADDING;
-	rect.size.width -= USER_ICON_SIZE + ICON_RIGHT_PADDING;
+	if(SHOW_USER_ICON){
+		if(USER_ICON_ON_LEFT){
+			iconRect = NSMakeRect(rect.origin.x,
+								  rect.origin.y + (rect.size.height - USER_ICON_SIZE) / 2.0,
+								  USER_ICON_SIZE,
+								  USER_ICON_SIZE);
+		}else{
+			iconRect = NSMakeRect(rect.origin.x + rect.size.width - ICON_RIGHT_PADDING - USER_ICON_SIZE,
+								  rect.origin.y + (rect.size.height - USER_ICON_SIZE) / 2.0,
+								  USER_ICON_SIZE,
+								  USER_ICON_SIZE);
+		}
+		
+		[self drawUserIconInRect:iconRect];
+
+		if(USER_ICON_ON_LEFT) rect.origin.x += USER_ICON_SIZE + ICON_RIGHT_PADDING;
+		rect.size.width -= USER_ICON_SIZE + ICON_RIGHT_PADDING;
+	}
 
 	//Status badge
-	[self drawUserStatusBadgeInRect:NSMakeRect(rect.origin.x + rect.size.width - badgewidth,
-											   rect.origin.y,
-											   badgewidth,
-											   rect.size.height)];
-	rect.size.width -= badgewidth;
+	if(SHOW_STATUS_ICON){
+		if(STATUS_ICON_ON_LEFT){
+			iconRect = iconRect = NSMakeRect(rect.origin.x,
+											 rect.origin.y,
+											 badgewidth,
+											 rect.size.height);
+		}else{
+			iconRect = iconRect = NSMakeRect(rect.origin.x + rect.size.width - badgewidth,
+											 rect.origin.y,
+											 badgewidth,
+											 rect.size.height);
+		}
+		
+		[self drawUserStatusBadgeInRect:iconRect];
+
+		if(STATUS_ICON_ON_LEFT) rect.origin.x += badgewidth;
+		rect.size.width -= badgewidth;
+	}
+	
 	
 	[self drawDisplayNameWithFrame:rect inView:controlView];
 }
