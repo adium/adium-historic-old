@@ -66,22 +66,10 @@
 
 - (BOOL)_validateURL // Now with FLEX!
 {
-    validStatus = 0;
-    SHLinkLexer_BUFFER_STATE buf;
+    SHHyperlinkScanner  *laxScanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
     
-    //init buffer to scan a string
-    buf = SHLinkLexer_scan_string([[[self textStorage] string] UTF8String]);
-    SHLinkLexer_switch_to_buffer(buf);
-    
-    //return the lexer's state
-    validStatus = SHLinkLexerlex();
-    if( validStatus != SH_URL_INVALID) {
-        SHLinkLexer_delete_buffer(buf);
-        return YES;
-    }else{
-        SHLinkLexer_delete_buffer(buf);
-        return NO;
-    }
+    if([laxScanner isStringValidURL:[[self textStorage] string]]) return YES;
+    return NO;
 }
 
 @end

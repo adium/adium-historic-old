@@ -2,6 +2,7 @@
 #import <Cocoa/Cocoa.h>
 
 #import <AIUtilities/AIUtilities.h>
+#import <AdiumHyperlinks/AdiumHyperlinks.h>
 #import <Adium/Adium.h>
 #import "AIAdium.h"
 #endif
