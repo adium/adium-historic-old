@@ -71,6 +71,7 @@
     cursorTrackingCellArray = [[NSMutableArray alloc] init];
     columnArray = [[NSMutableArray alloc] init];
     delegate = nil;
+    rowHeightArray = nil;
     contentsHeight = 0;
     oldWidth = 0;
     forwardsKeyEvents = NO;
@@ -88,6 +89,7 @@
     //Clean up
     [cursorTrackingCellArray release];
     [columnArray release];
+    [rowHeightArray release];
     
     [super dealloc];
 }

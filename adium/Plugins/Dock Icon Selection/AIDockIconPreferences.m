@@ -53,7 +53,6 @@
     owner = [inOwner retain];
     cycle = 0;
     animationTimer = nil;
-    [self _buildIconArray];
 
     //Register our preference pane
     [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Dock_Icon withDelegate:self label:DOCK_ICON_SELECTION_PREF_TITLE]];
@@ -92,9 +91,11 @@
 {
     //Load our preference view nib
     if(!view_prefView){
-        [NSBundle loadNibNamed:DOCK_ICON_SELECTION_PREF_NIB owner:self];
+        //Load our icons
+        [self _buildIconArray];
 
-        //Configure our view
+        //Load and configure our view
+        [NSBundle loadNibNamed:DOCK_ICON_SELECTION_PREF_NIB owner:self];
         [self configureView];
 
         //Start animating
@@ -107,14 +108,18 @@
 //Clean up our preference pane
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
 {
+    //Cleanup our icons
+    [iconArray release]; iconArray = nil;
+
+    //Clean up our view
     [view_prefView release]; view_prefView = nil;
+    [previewStateArray release]; previewStateArray = nil;
 
     //Stop animating
     [self _stopAnimating];
 
     //
     [[owner notificationCenter] removeObserver:self];
-    [previewStateArray release]; previewStateArray = nil;
 }
 
 //Setup our preference view

@@ -53,6 +53,7 @@
 {
     [string release];
     [textColor release];
+    [_attributedString release];
     
     [super dealloc];
 }

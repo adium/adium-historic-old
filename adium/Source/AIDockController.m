@@ -102,13 +102,14 @@
 
     //Load the icon pack
     iconPackDict = [NSDictionary dictionaryWithContentsOfFile:[folderPath stringByAppendingPathComponent:@"IconPack.plist"]];
-    
+
     //Process each state in the icon pack
     stateEnumerator = [[[iconPackDict objectForKey:@"State"] allKeys] objectEnumerator];
     while((stateNameKey = [stateEnumerator nextObject])){
         NSDictionary	*stateDict = [[iconPackDict objectForKey:@"State"] objectForKey:stateNameKey];
 
         if([[stateDict objectForKey:@"Animated"] intValue]){ //Animated State
+            NSMutableDictionary	*tempIconCache = [NSMutableDictionary dictionary];
             NSEnumerator	*imageNameEnumerator;
             NSString		*imageName;
             NSMutableArray	*imageArray;
@@ -128,8 +129,13 @@
                 NSImage		*image;
 
                 imagePath = [folderPath stringByAppendingPathComponent:imageName];
-                image = [[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease];
 
+                image = [tempIconCache objectForKey:imagePath]; //We re-use the same images for each state if possible to lower memory usage.
+                if(!image){
+                    image = [[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease];
+                    [tempIconCache setObject:image forKey:imagePath];
+                }
+                
                 if(image && [image isValid]) [imageArray addObject:image];
             }
 
