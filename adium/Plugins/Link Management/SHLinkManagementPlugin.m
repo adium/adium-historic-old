@@ -64,7 +64,7 @@
 {
     //edit existing link/text
     NSResponder         *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-    if([responder isKindOfClass:[NSTextView class]]) {
+    if(([responder isKindOfClass:[NSTextView class]]) && ([(NSTextView *)responder selectedRange].length != 0)) {
         [[[SHLinkEditorWindowController alloc] initEditLinkWindowControllerWithResponder:responder] autorelease];
     }
 }
