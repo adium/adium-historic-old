@@ -34,8 +34,9 @@
 {
     NSView<AITextEntryView>	*text = [[toolbarItem configurationObjects] objectForKey:@"TextEntryView"];
 
+    [text setSelectedTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor yellowColor],NSBackgroundColorAttributeName,nil]];
+
     NSLog(@"%@",text);
-//    [text setSelectedTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:]];
     
     /*
     - (NSAttributedString *)attributedString;
