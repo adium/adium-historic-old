@@ -1,1 +1,291 @@
-{\rtf1\mac\ansicpg10000\uc1 \deff0\deflang1033\deflangfe1033{\upr{\fonttbl{\f0\fnil\fcharset256\fprq2{\*\panose 00020206030504050203}Times New Roman{\*\falt Times};}{\f4\fnil\fcharset256\fprq2{\*\panose 00020005000000000000}Times;}{\f5\fnil\fcharset256\fprq2{\*\panose 00020005000000000000}Helvetica;}{\f19\fswiss\fcharset77\fprq0{\*\panose 00000000000000000000}Helvetica-Bold{\*\falt Times};}}{\*\ud{\fonttbl{\f0\fnil\fcharset256\fprq2{\*\panose 00020206030504050203}Times New Roman{\*\falt Times};}{\f4\fnil\fcharset256\fprq2{\*\panose 00020005000000000000}Times;}{\f5\fnil\fcharset256\fprq2{\*\panose 00020005000000000000}Helvetica;}{\f19\fswiss\fcharset77\fprq0{\*\panose 00000000000000000000}Helvetica-Bold{\*\falt Times};}}}}{\colortbl;\red0\green0\blue0;\red0\green0\blue255;\red0\green255\blue255;\red0\green255\blue0;\red255\green0\blue255;\red255\green0\blue0;\red255\green255\blue0;\red255\green255\blue255;\red0\green0\blue128;\red0\green128\blue128;\red0\green128\blue0;\red128\green0\blue128;\red128\green0\blue0;\red128\green128\blue0;\red128\green128\blue128;\red192\green192\blue192;}{\stylesheet{\widctlpar\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 \f4\lang1033\cgrid \snext0 Normal;}{\*\cs10 \additive Default Paragraph Font;}}{\info{\title AIAccountController}{\author Adam Iser}{\operator Adam Iser}{\creatim\yr2003\mo1\dy2\hr9\min54}{\revtim\yr2003\mo1\dy2\hr10\min13}{\version12}{\edmins12}{\nofpages4}{\nofwords713}{\nofchars4066}{\nofcharsws4993}{\vern16561}}\paperw12226\paperh15826\margl720\margr886 \widowctrl\ftnbj\aenddoc\formshade\horzdoc\dghspace180\dgvspace180\dghorigin1701\dgvorigin1984\dghshow0\dgvshow0\jexpand\viewkind1\viewscale100\pgbrdrhead\pgbrdrfoot\splytwnine\ftnlytwnine\htmautsp\useltbaln\alntblind\lytcalctblwd\lyttblrtgr\lnbrkrule \fet0\sectd \linex-32767\endnhere\sectdefaultcl {\*\pnseclvl1\pnucrm\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl2\pnucltr\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl3\pndec\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl4\pnlcltr\pnstart1\pnindent720\pnhang{\pntxta )}}{\*\pnseclvl5\pndec\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl6\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl7\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl8\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl9\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}\pard\plain \qc\widctlpar\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 \f4\lang1033\cgrid {\fs32\cf1 AIAccountController\par }\pard \widctlpar\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 {\par \par }\pard \nowidctlpar\faauto\rin0\lin0\itap0 {\f5 Every account the user creates is represented by an AIAccount subclass.  The account controller lets any plugin have access to, and manipulate the list of these accounts.\par }\pard \widctlpar\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 {\par \par }{\b\f5\cf13 Account controller notifications\par }{\b\cf13 {\pict{\*\picprop\shplid1025{\sp{\sn shapeType}{\sv 1}}{\sp{\sn fFlipH}{\sv 0}}{\sp{\sn fFlipV}{\sv 0}}{\sp{\sn fillColor}{\sv 11184810}}{\sp{\sn fFilled}{\sv 1}}{\sp{\sn fLine}{\sv 0}}{\sp{\sn alignHR}{\sv 1}}{\sp{\sn dxHeightHR}{\sv 30}}{\sp{\sn fStandardHR}{\sv 1}}{\sp{\sn fHorizRule}{\sv 1}}}\picscalex898\picscaley6\piccropl0\piccropr0\piccropt0\piccropb0\picw50\pich25\picwgoal1000\pichgoal500\macpict}}{\cf1 \par - (NSNotificationCenter *)}{\b\cf1 accountNotificationCenter}{\cf1 ;\par \par }\pard \li360\nowidctlpar\faauto\rin0\lin360\itap0 {\b\fs22 Account_ListChanged\par }\pard \li720\nowidctlpar\faauto\rin0\lin720\itap0 {\b\fs22 Cause:}{\fs22  The account list content has changed (add/move/delete)\par }{\b\fs22 Object:}{\fs22  nil\par }{\b\fs22 UserInfo: }{\fs22 nil\par }{\b\fs22 \par }\pard \li360\nowidctlpar\faauto\rin0\lin360\itap0 {\b\fs22 Account_PropertiesChanged\par }\pard \li720\nowidctlpar\faauto\rin0\lin720\itap0 {\b\fs22 Cause:}{\fs22  An account's properties dict has changed\par }{\b\fs22 Object:}{\fs22  The account (AIAccount)\par }{\b\fs22 UserInfo: }{\fs22 nil\par }{\b\fs22 \par }\pard \li360\nowidctlpar\faauto\rin0\lin360\itap0 {\b\fs22 Account_StatusChanged\par }\pard \li720\nowidctlpar\faauto\rin0\lin720\itap0 {\b\fs22 Cause:}{\fs22  An account's status has changed\par }{\b\fs22 Object:}{\fs22  The account (AIAccount)\par }{\b\fs22 UserInfo: }{\fs22 nil\par }{\b\fs22 \par }\pard \li360\nowidctlpar\faauto\rin0\lin360\itap0 {\b\fs22 Account_IdleStatusChanged\par }\pard \li720\nowidctlpar\faauto\rin0\lin720\itap0 {\b\fs22 Cause:}{\fs22  An account's idle status has changed\par }{\b\fs22 Object:}{\fs22  The account (AIAccount)\par }{\b\fs22 UserInfo: }{\fs22 nil\par }\pard \widctlpar\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 {\b\f5\cf13 \par \par Accessing the list of accounts\par }{\b\cf13 {\pict{\*\picprop\shplid1026{\sp{\sn shapeType}{\sv 1}}{\sp{\sn fFlipH}{\sv 0}}{\sp{\sn fFlipV}{\sv 0}}{\sp{\sn fillColor}{\sv 11184810}}{\sp{\sn fFilled}{\sv 1}}{\sp{\sn fLine}{\sv 0}}{\sp{\sn alignHR}{\sv 1}}{\sp{\sn dxHeightHR}{\sv 30}}{\sp{\sn fStandardHR}{\sv 1}}{\sp{\sn fHorizRule}{\sv 1}}}\picscalex898\picscaley6\piccropl0\piccropr0\piccropt0\piccropb0\picw50\pich25\picwgoal1000\pichgoal500\macpict}}{\cf1 \par - (NSArray *)}{\b\cf1 accountArray}{\cf1 ;\par \par }\pard \nowidctlpar\faauto\rin0\lin0\itap0 {\f5 Returns the current array of AIAccount's.\par }\pard \widctlpar\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 {\b\f5\cf13 \par \par Modifying the account list\par }{\b\cf13 {\pict{\*\picprop\shplid1027{\sp{\sn shapeType}{\sv 1}}{\sp{\sn fFlipH}{\sv 0}}{\sp{\sn fFlipV}{\sv 0}}{\sp{\sn fillColor}{\sv 11184810}}{\sp{\sn fFilled}{\sv 1}}{\sp{\sn fLine}{\sv 0}}{\sp{\sn alignHR}{\sv 1}}{\sp{\sn dxHeightHR}{\sv 30}}{\sp{\sn fStandardHR}{\sv 1}}{\sp{\sn fHorizRule}{\sv 1}}}\picscalex898\picscaley6\piccropl0\piccropr0\piccropt0\piccropb0\picw50\pich25\picwgoal1000\pichgoal500\macpict}}{\cf1 \par - (AIAccount *)}{\b\cf1 newAccountAtIndex}{\cf1 :(int)index;\par - (void)}{\b\cf1 deleteAccount}{\cf1 :(AIAccount *)inAccount;\par - (int)}{\b\cf1 moveAccount}{\cf1 :(AIAccount *)account toIndex:(int)destIndex;\par \par }\pard \nowidctlpar\faauto\rin0\lin0\itap0 {\f5 Used to create, delete, or move an account.  Accounts are created with the default settings & service, but these can be changed to whatever is desired.\par }\pard \widctlpar\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 {\b\f5\cf13 \par \par Storing and retrieving account passwords\par }{\b\cf13 {\pict{\*\picprop\shplid1028{\sp{\sn shapeType}{\sv 1}}{\sp{\sn fFlipH}{\sv 0}}{\sp{\sn fFlipV}{\sv 0}}{\sp{\sn fillColor}{\sv 11184810}}{\sp{\sn fFilled}{\sv 1}}{\sp{\sn fLine}{\sv 0}}{\sp{\sn alignHR}{\sv 1}}{\sp{\sn dxHeightHR}{\sv 30}}{\sp{\sn fStandardHR}{\sv 1}}{\sp{\sn fHorizRule}{\sv 1}}}\picscalex898\picscaley6\piccropl0\piccropr0\piccropt0\piccropb0\picw50\pich25\picwgoal1000\pichgoal500\macpict}}{\cf1 \par - (void)}{\b\cf1 passwordForAccount}{\cf1 :(AIAccount *)inAccount }{\b\cf1 notifyingTarget}{\cf1 :(id)inTarget }{\b\cf1 selector}{\cf1 :(SEL)inSelector;\par - (void)}{\b\cf1 forgetPasswordForAccount}{\cf1 :(AIAccount *)inAccount;\par \par \par \par }{\b\f5\cf13 Dealing with services\par }{\b\cf13 {\pict{\*\picprop\shplid1029{\sp{\sn shapeType}{\sv 1}}{\sp{\sn fFlipH}{\sv 0}}{\sp{\sn fFlipV}{\sv 0}}{\sp{\sn fillColor}{\sv 11184810}}{\sp{\sn fFilled}{\sv 1}}{\sp{\sn fLine}{\sv 0}}{\sp{\sn alignHR}{\sv 1}}{\sp{\sn dxHeightHR}{\sv 30}}{\sp{\sn fStandardHR}{\sv 1}}{\sp{\sn fHorizRule}{\sv 1}}}\picscalex898\picscaley6\piccropl0\piccropr0\piccropt0\piccropb0\picw50\pich25\picwgoal1000\pichgoal500\macpict}}{\cf1 \par - (NSArray *)}{\b\cf1 availableServiceArray}{\cf1 ;\par - (void)}{\b\cf1 registerService}{\cf1 :(id <AIServiceController>)inService;\par - (AIAccount *)}{\b\cf1 switchAccount}{\cf1 :(AIAccount *)inAccount }{\b\cf1 toService}{\cf1 :(id <AIServiceController>)inService;\par \par }\pard \nowidctlpar\faauto\rin0\lin0\itap0 {\cf1 E}{\f5 very service that Adium can connect using is represented by a service controller.  Any class that conforms to the service controller protocol can be a service controller.\par \par The current list of all available service controllers is retrieved using availableServiceArray.\par \par Accounts are always created using the default service, but they can be switched to another service programatically using the switchAccount method:\par \par The service an account is using is retrieved using AIAccount\rquote s }{\f5 service}{\f5  method:\par }\pard \widctlpar\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 {\cf1 - (id <AIServiceController>)}{\b\cf1 service}{\cf1 ;\par }\pard \nowidctlpar\faauto\rin0\lin0\itap0 {\f5 \par }\pard \widctlpar\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 {\cf1 \par }{\b\f5\cf13 AIAccount Properties\par }{\b\cf13 {\pict{\*\picprop\shplid1030{\sp{\sn shapeType}{\sv 1}}{\sp{\sn fFlipH}{\sv 0}}{\sp{\sn fFlipV}{\sv 0}}{\sp{\sn fillColor}{\sv 11184810}}{\sp{\sn fFilled}{\sv 1}}{\sp{\sn fLine}{\sv 0}}{\sp{\sn alignHR}{\sv 1}}{\sp{\sn dxHeightHR}{\sv 30}}{\sp{\sn fStandardHR}{\sv 1}}{\sp{\sn fHorizRule}{\sv 1}}}\picscalex898\picscaley6\piccropl0\piccropr0\piccropt0\piccropb0\picw50\pich25\picwgoal1000\pichgoal500\macpict}}{\b\f19\cf13 \par }\pard \nowidctlpar\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\faauto\rin0\lin0\itap0 {\f5 Every account has a dictionary of properties. The dictionary is used to store account specific login and configuration information.  Examples of some keys that may be present in the properties dictionary:\par @\rdblquote AutoConnect\rdblquote  \endash  YES if the account should auto-connect\par @\rdblquote SavedPassword\rdblquote  \endash  YES if the user wants this account\rquote s password saved.\par @\rdblquote Handle\rdblquote  \endash  The user handle/account name\par \par The content of this dictionary is dynamic and dependant on the service though, so many unique keys may be present.  To access the properties dictionary, use AIAccount\rquote s method:\par }\pard \widctlpar\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 {\cf1 - (NSMutableDictionary *)}{\b\cf1 properties}{\cf1 \par }\pard \nowidctlpar\faauto\rin0\lin0\itap0 {\f5 \par This method returns a mutable form of the properties dictionary, meaning you can modify it directly.  You may freely modify the property dictionary, but after it has been modified a \lquote properties changed\rquote  notification should be posted.  This lets everyone else know that the properties have been touched.  This notification will also cause Adium to save the new properties to the user\rquote s preferences.  When posting the notification, object should be set to the account who\rquote s properties have been modified:\par }\pard \widctlpar\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 {\cf1 [[[owner accountController] accountNotificationCenter] postNotificationName:Account_PropertiesChanged object:account userInfo:nil];\par \par \par }{\b\f5\cf13 Other AIAccount methods\par }{\b\cf13 {\pict{\*\picprop\shplid1032{\sp{\sn shapeType}{\sv 1}}{\sp{\sn fFlipH}{\sv 0}}{\sp{\sn fFlipV}{\sv 0}}{\sp{\sn fillColor}{\sv 11184810}}{\sp{\sn fFilled}{\sv 1}}{\sp{\sn fLine}{\sv 0}}{\sp{\sn alignHR}{\sv 1}}{\sp{\sn dxHeightHR}{\sv 30}}{\sp{\sn fStandardHR}{\sv 1}}{\sp{\sn fHorizRule}{\sv 1}}}\picscalex898\picscaley6\piccropl0\piccropr0\piccropt0\piccropb0\picw50\pich25\picwgoal1000\pichgoal500\macpict}}{\b\f19\cf13 \par }\pard \nowidctlpar\faauto\rin0\lin0\itap0 {\f5 Because of the dynamic nature of accounts, their methods are implemented using protocols.    An account may conform to all the available protocols, or only a few.  Before sending messages to an account, it is important to make sure that it conforms to the protocol you\rquote re trying to use.  For instance:\par \par }{BOOL\tab listEditable;\par \par if([account conformsToProtocol:@protocol(AIAccount_Handles)])\{\par }\pard \fi720\nowidctlpar\faauto\rin0\lin0\itap0 {listEditable = [(AIAccount<AIAccount_Handles> *)account contactListEditable];\par }\pard \nowidctlpar\faauto\rin0\lin0\itap0 {\}else\{\par }\pard \fi720\nowidctlpar\faauto\rin0\lin0\itap0 {//This account does not support the protocol\par }\pard \nowidctlpar\faauto\rin0\lin0\itap0 {\tab listEditable = NO;\par \}\par }{\f5 \par The frequently used methods for an AIAccount are:\par \par }{\f5\ul\cf1 Protocol: AIAccount_Required\par }\pard \fi-480\li480\nowidctlpar\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\faauto\rin0\lin480\itap0 {- (NSString *)}{\b accountDescription}{;\par }\pard \li480\nowidctlpar\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\faauto\rin0\lin480\itap0 {\f5 Returns a human-readable description of the account.  For most accounts this will return the account name the user is signed in under:\par }\pard \nowidctlpar\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\faauto\rin0\lin0\itap0 {\f5 \par }\pard \nowidctlpar\faauto\rin0\lin0\itap0 {\f5\ul\cf1 Protocol: AIAccount_Handles or AIAccount_GroupedHandles\par }\pard \fi-480\li480\nowidctlpar\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\faauto\rin0\lin480\itap0 {- (BOOL)}{\b contactListEditable}{;\par }\pard \li480\nowidctlpar\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\faauto\rin0\lin480\itap0 {\f5 Returns YES if the accounts contact list is currently editable.\par }\pard \nowidctlpar\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\faauto\rin0\lin0\itap0 {\f5 \par }\pard \nowidctlpar\faauto\rin0\lin0\itap0 {\f5\ul\cf1 Protocol: AIAccount_Status\par }\pard \fi-480\li480\nowidctlpar\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\faauto\rin0\lin480\itap0 {- (ACCOUNT_STATUS)}{\b status}{\par }\pard \li480\nowidctlpar\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\faauto\rin0\lin480\itap0 {\f5 Returns the accounts current connectivity status.  Possible values are:\par STATUS_OFFLINE \endash  The account is offline\par STATUS_CONNECTING \endash  The account is connecting\par STATUS_ONLINE \endash  The account is online\par STATUS_DISCONNECTING \endash  The account is disconnecting\par \par }\pard \fi-480\li480\nowidctlpar\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\faauto\rin0\lin480\itap0 {- (void)}{\b connect}{\par }\pard \li480\nowidctlpar\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\faauto\rin0\lin480\itap0 {\f5 Causes a disconnected account to connect\par }\pard \fi-480\li480\nowidctlpar\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\faauto\rin0\lin480\itap0 {\f5     \par }{- (void)}{\b disconnect}{;\par }\pard \li480\nowidctlpar\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\faauto\rin0\lin480\itap0 {\f5 Causes a connected or connecting account to disconnect.\par }\pard \nowidctlpar\faauto\rin0\lin0\itap0 {\f5 \par \par Please note: The majority of AIAccount methods are for internal use only, and ones not listed above should not be used by plugins.}{\par }}
+{\rtf1\mac\ansicpg10000\cocoartf102
+{\fonttbl\f0\froman\fcharset77 Times-Roman;\f1\fswiss\fcharset77 Helvetica;\f2\fswiss\fcharset77 Helvetica-Bold;
+\f3\froman\fcharset77 Times-Bold;}
+{\colortbl;\red255\green255\blue255;\red128\green0\blue0;}
+\pard\qc
+
+\f0\fs32 \cf0 AIAccountController\
+\pard\ql\qnatural
+
+\fs24 \cf0 \
+\
+\pard\ql\qnatural
+
+\f1 \cf0 Every account the user creates is represented by an AIAccount subclass.  The account controller lets any plugin have access to, and manipulate the list of these accounts.\
+\pard\ql\qnatural
+
+\f0 \cf0 \
+\
+\pard\ql\qnatural
+
+\f2\b \cf2 Account controller notifications\
+\pard\ql\qnatural
+
+\f0\b0 \cf0 \
+- (NSNotificationCenter *)
+\f3\b accountNotificationCenter
+\f0\b0 ;\
+\
+\pard\li360\ql\qnatural
+
+\f3\b\fs22 \cf0 Account_ListChanged\
+\pard\li720\ql\qnatural
+\cf0 Cause:
+\f0\b0  The account list content has changed (add/move/delete)\
+
+\f3\b Object:
+\f0\b0  nil\
+
+\f3\b UserInfo: 
+\f0\b0 nil\
+
+\f3\b \
+\pard\li360\ql\qnatural
+\cf0 Account_PropertiesChanged\
+\pard\li720\ql\qnatural
+\cf0 Cause:
+\f0\b0  An account's properties dict has changed\
+
+\f3\b Object:
+\f0\b0  The account (AIAccount)\
+
+\f3\b UserInfo: 
+\f0\b0 nil\
+
+\f3\b \
+\pard\li360\ql\qnatural
+\cf0 Account_StatusChanged\
+\pard\li720\ql\qnatural
+\cf0 Cause:
+\f0\b0  An account's status has changed\
+
+\f3\b Object:
+\f0\b0  The account (AIAccount)\
+
+\f3\b UserInfo: 
+\f0\b0 nil\
+
+\f3\b \
+\pard\li360\ql\qnatural
+\cf0 Account_IdleStatusChanged\
+\pard\li720\ql\qnatural
+\cf0 Cause:
+\f0\b0  An account's idle status has changed\
+
+\f3\b Object:
+\f0\b0  The account (AIAccount)\
+
+\f3\b UserInfo: 
+\f0\b0 nil\
+\pard\ql\qnatural
+
+\f2\b\fs24 \cf2 \
+\
+Accessing the list of accounts\
+\pard\ql\qnatural
+
+\f0\b0 \cf0 \
+- (NSArray *)
+\f3\b accountArray
+\f0\b0 ;\
+- (AIAccount *)
+\f3\b accountWithID
+\f0\b0 :(NSString *)inID;\
+\
+\pard\ql\qnatural
+
+\f1 \cf0 Returns the current array of AIAccount's, or a specified (by ID) account from the list.\
+\pard\ql\qnatural
+
+\f2\b \cf2 \
+\
+Modifying the account list\
+\pard\ql\qnatural
+
+\f0\b0 \cf0 \
+- (AIAccount *)
+\f3\b newAccountAtIndex
+\f0\b0 :(int)index;\
+- (void)
+\f3\b deleteAccount
+\f0\b0 :(AIAccount *)inAccount;\
+- (int)
+\f3\b moveAccount
+\f0\b0 :(AIAccount *)account toIndex:(int)destIndex;\
+\
+\pard\ql\qnatural
+
+\f1 \cf0 Used to create, delete, or move an account.  Accounts are created with the default settings & service, but these can be changed to whatever is desired.\
+\pard\ql\qnatural
+
+\f2\b \cf2 \
+\
+Storing and retrieving account passwords\
+\pard\ql\qnatural
+
+\f0\b0 \cf0 \
+- (void)
+\f3\b passwordForAccount
+\f0\b0 :(AIAccount *)inAccount 
+\f3\b notifyingTarget
+\f0\b0 :(id)inTarget 
+\f3\b selector
+\f0\b0 :(SEL)inSelector;\
+- (void)
+\f3\b forgetPasswordForAccount
+\f0\b0 :(AIAccount *)inAccount;\
+\
+\
+\
+\pard\ql\qnatural
+
+\f2\b \cf2 Dealing with services\
+\pard\ql\qnatural
+
+\f0\b0 \cf0 \
+- (NSArray *)
+\f3\b availableServiceArray
+\f0\b0 ;\
+- (void)
+\f3\b registerService
+\f0\b0 :(id <AIServiceController>)inService;\
+- (AIAccount *)
+\f3\b switchAccount
+\f0\b0 :(AIAccount *)inAccount 
+\f3\b toService
+\f0\b0 :(id <AIServiceController>)inService;\
+\
+E
+\f1 very service that Adium can connect using is represented by a service controller.  Any class that conforms to the service controller protocol can be a service controller.\
+\
+The current list of all available service controllers is retrieved using availableServiceArray.\
+\
+Accounts are always created using the default service, but they can be switched to another service programatically using the switchAccount method:\
+\
+The service an account is using is retrieved using AIAccount\'d5s service method:\
+
+\f0 - (id <AIServiceController>)
+\f3\b service
+\f0\b0 ;\
+\pard\ql\qnatural
+
+\f1 \cf0 \
+\pard\ql\qnatural
+
+\f0 \cf0 \
+\pard\ql\qnatural
+
+\f2\b \cf2 AIAccount Properties\
+\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\ql\qnatural
+
+\f1\b0 \cf0 Every account has a dictionary of properties. The dictionary is used to store account specific login and configuration information.  Examples of some keys that may be present in the properties dictionary:\
+@\'d3AutoConnect\'d3 \'d0 YES if the account should auto-connect\
+@\'d3SavedPassword\'d3 \'d0 YES if the user wants this account\'d5s password saved.\
+@\'d3Handle\'d3 \'d0 The user handle/account name\
+\
+The content of this dictionary is dynamic and dependant on the service though, so many unique keys may be present.  To access the properties dictionary, use AIAccount\'d5s method:\
+\pard\ql\qnatural
+
+\f0 \cf0 - (NSMutableDictionary *)
+\f3\b properties
+\f0\b0 \
+\pard\ql\qnatural
+
+\f1 \cf0 \
+This method returns a mutable form of the properties dictionary, meaning you can modify it directly.  You may freely modify the property dictionary, but after it has been modified a \'d4properties changed\'d5 notification should be posted.  This lets everyone else know that the properties have been touched.  This notification will also cause Adium to save the new properties to the user\'d5s preferences.  When posting the notification, object should be set to the account who\'d5s properties have been modified:\
+\pard\ql\qnatural
+
+\f0 \cf0 [[[owner accountController] accountNotificationCenter] postNotificationName:Account_PropertiesChanged object:account userInfo:nil];\
+\
+\
+\pard\ql\qnatural
+
+\f2\b \cf2 Other AIAccount methods\
+\
+\pard\ql\qnatural
+
+\f1\b0 \cf0 Because of the dynamic nature of accounts, their methods are implemented using protocols.    An account may conform to all the available protocols, or only a few.  Before sending messages to an account, it is important to make sure that it conforms to the protocol you\'d5re trying to use.  For instance:\
+\
+\pard\ql\qnatural
+
+\f0 \cf0 BOOL	listEditable;\
+\
+if([account conformsToProtocol:@protocol(AIAccount_Handles)])\{\
+\pard\fi720\ql\qnatural
+\cf0 listEditable = [(AIAccount<AIAccount_Handles> *)account contactListEditable];\
+\pard\ql\qnatural
+\cf0 \}else\{\
+\pard\fi720\ql\qnatural
+\cf0 //This account does not support the protocol\
+\pard\ql\qnatural
+\cf0 	listEditable = NO;\
+\}\
+\pard\ql\qnatural
+
+\f1 \cf0 \
+The frequently used methods for an AIAccount are:\
+\
+\pard\ql\qnatural
+\cf0 \ul Protocol: AIAccount_Required\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\li480\fi-480\ql\qnatural
+
+\f0 \cf0 \ulnone - (NSString *)
+\f3\b accountDescription
+\f0\b0 ;\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\li480\ql\qnatural
+
+\f1 \cf0 Returns a human-readable description of the account.  For most accounts this will return the account name the user is signed in under:\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\ql\qnatural
+\cf0 \
+\pard\ql\qnatural
+\cf0 \ul Protocol: AIAccount_Handles or AIAccount_GroupedHandles\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\li480\fi-480\ql\qnatural
+
+\f0 \cf0 \ulnone - (BOOL)
+\f3\b contactListEditable
+\f0\b0 ;\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\li480\ql\qnatural
+
+\f1 \cf0 Returns YES if the accounts contact list is currently editable.\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\ql\qnatural
+\cf0 \
+\pard\ql\qnatural
+\cf0 \ul Protocol: AIAccount_Status\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\li480\fi-480\ql\qnatural
+
+\f0 \cf0 \ulnone - (ACCOUNT_STATUS)
+\f3\b status
+\f0\b0 \
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\li480\ql\qnatural
+
+\f1 \cf0 Returns the accounts current connectivity status.  Possible values are:\
+STATUS_OFFLINE \'d0 The account is offline\
+STATUS_CONNECTING \'d0 The account is connecting\
+STATUS_ONLINE \'d0 The account is online\
+STATUS_DISCONNECTING \'d0 The account is disconnecting\
+\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\li480\fi-480\ql\qnatural
+
+\f0 \cf0 - (void)
+\f3\b connect
+\f0\b0 \
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\li480\ql\qnatural
+
+\f1 \cf0 Causes a disconnected account to connect\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\li480\fi-480\ql\qnatural
+\cf0     \
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\li480\fi-480\ql\qnatural
+
+\f0 \cf0 - (void)
+\f3\b disconnect
+\f0\b0 ;\
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\li480\ql\qnatural
+
+\f1 \cf0 Causes a connected or connecting account to disconnect.\
+\pard\ql\qnatural
+\cf0 \
+\
+Please note: The majority of AIAccount methods are for internal use only, and ones not listed above should not be used by plugins.
+\f0 \
+}
