@@ -108,7 +108,6 @@ static NSImage *pushIndicatorImage = nil;
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent
 {
     BOOL result = NO;
-	NSRect visibleRect;
 	
     unichar theChar = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
     //check for command-return to send the message
@@ -119,32 +118,31 @@ static NSImage *pushIndicatorImage = nil;
 	    result = YES;
 		break;
 	case '\E':
-		//Reset entry
+	    //Reset entry
 	    [self setString:@""];
 		
-		if(	[[prefDict objectForKey:KEY_AUTOPOP] boolValue] )
-			[self _popContent];
+	    if( [[prefDict objectForKey:KEY_AUTOPOP] boolValue] )
+	     	[self _popContent];
 			
-		result = YES;
-        break;
+	    result = YES;
+	    break;
     }
-	
-	// Command-Arrow pushes and pops
-    if([theEvent modifierFlags] & NSCommandKeyMask) { //command is being held
-        switch(theChar){
-            case NSUpArrowFunctionKey:
-                [self _popContent];
-                result = YES;
-				break;
-				
-            case NSDownArrowFunctionKey:
-                [self _pushContent];
-				result = YES;
-				break;
-		}
-		
+
+    // Catch control here to stop it from being "page up/down"
+    if( ([theEvent modifierFlags] & NSControlKeyMask) && ([theEvent type] == NSKeyDown) ) {
+      switch(theChar)
+	{
+	case NSUpArrowFunctionKey:
+	  [self _popContent];
+	  result = YES;
+	  break;
+
+	case NSDownArrowFunctionKey:
+	  [self _pushContent];
+	  result = YES;
 	}
-		
+    }
+
     return(result);
 }
 
@@ -467,31 +465,14 @@ static NSImage *pushIndicatorImage = nil;
 - (void)scrollPageUp:(id)sender
 {
     if([messageScrollView respondsToSelector:@selector(pageUp:)]){
-	[messageScrollView pageUp:nil];
+		[messageScrollView pageUp:nil];
     }
 }
 - (void)scrollPageDown:(id)sender
 {
     if([messageScrollView respondsToSelector:@selector(pageDown:)]){
-	[messageScrollView pageDown:nil];
+		[messageScrollView pageDown:nil];
     }
-}
-
-
-// Scroll the message view up or down
-// These methods are invoked on Control-Up or Control-Down
-- (void)moveToEndOfLine:(id)sender
-{
-	NSRect visibleRect = [messageScrollView documentVisibleRect];
-				visibleRect.origin.y -= [messageScrollView verticalLineScroll];
-				[[messageScrollView documentView] scrollRectToVisible:visibleRect];     
-}
-
-- (void)moveToBeginningOfLine:(id)sender
-{
-	NSRect visibleRect = [messageScrollView documentVisibleRect];
-				visibleRect.origin.y += [messageScrollView verticalLineScroll];
-				[[messageScrollView documentView] scrollRectToVisible:visibleRect];    
 }
 
 
@@ -507,6 +488,22 @@ static NSImage *pushIndicatorImage = nil;
 	[self _historyUp];
 }
 
+
+// Scroll through history
+// These methods are invoked on Command-Up or Command-Down
+- (void)moveToEndOfDocument:(id)sender
+{
+  NSRect visibleRect = [messageScrollView documentVisibleRect];
+  visibleRect.origin.y += [messageScrollView verticalLineScroll]*2;
+  [[messageScrollView documentView] scrollRectToVisible:visibleRect];   
+}
+
+- (void)moveToBeginningOfDocument:(id)sender
+{
+  NSRect visibleRect = [messageScrollView documentVisibleRect];
+  visibleRect.origin.y -= [messageScrollView verticalLineScroll]*2;
+  [[messageScrollView documentView] scrollRectToVisible:visibleRect];  
+}
 
 
 
