@@ -15,6 +15,7 @@
 
 #import "AIStringAdditions.h"
 #import <Carbon/Carbon.h>
+#import "AIColorAdditions.h"
 
 @implementation NSString (AIStringAdditions)
 
@@ -102,76 +103,195 @@
     return([string autorelease]);
 }
 
+//- (NSString *)stringByEncodingURLEscapes
+//{
+//    NSScanner *s = [NSScanner scannerWithString:self];
+//    NSCharacterSet *notUrlCode = [[NSCharacterSet characterSetWithCharactersInString:
+//        @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$-_.+!*'(),;/?:@=&"] 		invertedSet];
+//    NSMutableString *encodedString = [[NSMutableString alloc] initWithString:@""];
+//    NSString *read;
+//    
+//    while(![s isAtEnd])
+//    {
+//        [s scanUpToCharactersFromSet:notUrlCode intoString:&read];
+//        if(read)
+//            [encodedString appendString:read];
+//        if(![s isAtEnd])
+//        {
+//            [encodedString appendFormat:@"%%%x", [self characterAtIndex:[s scanLocation]]];
+//            [s setScanLocation:[s scanLocation]+1];
+//        }
+//    }
+//    
+//    return([encodedString autorelease]);
+//}
+//
+//- (NSString *)stringByDecodingURLEscapes
+//{
+//    NSScanner *s = [NSScanner scannerWithString:self];
+//    NSMutableString *decodedString = [[NSMutableString alloc] initWithString:@""];
+//    NSString *read;
+//    
+//    while(![s isAtEnd])
+//    {
+//        [s scanUpToString:@"%" intoString:&read];
+//        if(read)
+//            [decodedString appendString:read];
+//        if(![s isAtEnd])
+//        {
+//            [decodedString appendString:[NSString stringWithFormat:@"%c", 
+//                [[NSString stringWithFormat:@"%li",
+//                    strtol([[self substringWithRange:NSMakeRange([s scanLocation]+1, 2)] cString], 
+//                        NULL, 16)] 
+//                intValue]]];
+//                
+//            [s setScanLocation:[s scanLocation]+3];
+//
+//        }
+//    }
+//    return([decodedString autorelease]);
+//
+//}
+//
+//- (BOOL)isURLEncoded
+//{
+//    NSCharacterSet *notUrlCode = [[NSCharacterSet characterSetWithCharactersInString:
+//        @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$-_.+!*'(),;/?:@=&"] 		invertedSet];
+//    NSCharacterSet *notHexSet = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789ABCEFabcdef"]
+//        invertedSet];
+//    NSScanner *s = [NSScanner scannerWithString:self]; 
+//    
+//    if([self rangeOfCharacterFromSet:notUrlCode].location != NSNotFound)
+//        return NO;
+//    
+//    while(![s isAtEnd])
+//    {
+//        [s scanUpToString:@"%" intoString:nil];
+//        
+//        if([[self substringWithRange:NSMakeRange([s scanLocation]+1, 2)] rangeOfCharacterFromSet:notHexSet].location != NSNotFound)
+//            return NO;
+//    }
+//    
+//    return YES;
+//}
+
+
+
+
+
+
+
+
+//char intToHex(int digit)
+//{
+//    if(digit > 9){
+//        return('a' + digit - 10);
+//    }else{
+//        return('0' + digit);
+//    }
+//}
+//
+//int hexToInt(char hex)
+//{
+//    if(hex >= '0' && hex <= '9'){
+//        return(hex - '0');
+//		
+//    }else if(hex >= 'a' && hex <= 'f'){
+//        return(hex - 'a' + 10);
+//		
+//    }else if(hex >= 'A' && hex <= 'F'){
+//        return(hex - 'A' + 10);
+//		
+//    }else{
+//        return(0);
+//		
+//    }
+//}
+
+//URLEncode
+// Percent escape all characters except for a-z, A-Z, 0-9, '_', and '-'
+// Convert spaces to '+'
 - (NSString *)stringByEncodingURLEscapes
 {
-    NSScanner *s = [NSScanner scannerWithString:self];
-    NSCharacterSet *notUrlCode = [[NSCharacterSet characterSetWithCharactersInString:
-        @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$-_.+!*'(),;/?:@=&"] 		invertedSet];
-    NSMutableString *encodedString = [[NSMutableString alloc] initWithString:@""];
-    NSString *read;
+    int			sourceLength = [self length];
+    const char		*cSource = [self cString];
+    char		*cDest;
+    NSMutableData	*destData;
+    int			s = 0;
+    int			d = 0;
+	
+    //Worst case scenario is 3 times the origional length (every character escaped)
+    destData = [NSMutableData dataWithLength:(sourceLength * 3)];
+    cDest = [destData mutableBytes];
     
-    while(![s isAtEnd])
-    {
-        [s scanUpToCharactersFromSet:notUrlCode intoString:&read];
-        if(read)
-            [encodedString appendString:read];
-        if(![s isAtEnd])
-        {
-            [encodedString appendFormat:@"%%%x", [self characterAtIndex:[s scanLocation]]];
-            [s setScanLocation:[s scanLocation]+1];
+    while(s < sourceLength){
+        char	ch = cSource[s];
+		
+        if( (ch >= 'a' && ch <= 'z') ||
+            (ch >= 'A' && ch <= 'Z') ||
+            (ch >= '0' && ch <= '9') ||
+            (ch == 95) || (ch == 45)){ //'_' or '-'
+            
+            cDest[d] = ch;
+            d++;
+        }else if(ch == ' '){
+            cDest[d] = '+';
+            d++;
+			
+        }else{
+            cDest[d] = '%';
+            cDest[d+1] = intToHex(ch / 16);
+            cDest[d+2] = intToHex(ch % 16);
+            d += 3;
         }
+		
+        s++;
     }
-    
-    return([encodedString autorelease]);
+	
+    return([NSString stringWithCString:cDest length:d]);
 }
 
+//URLEncode
+// Percent escape all characters except for a-z, A-Z, 0-9, '_', and '-'
+// Convert spaces to '+'
 - (NSString *)stringByDecodingURLEscapes
 {
-    NSScanner *s = [NSScanner scannerWithString:self];
-    NSMutableString *decodedString = [[NSMutableString alloc] initWithString:@""];
-    NSString *read;
+    int			sourceLength = [self length];
+    const char		*cSource = [self cString];
+    char		*cDest;
+    NSMutableData	*destData;
+    int			s = 0;
+    int			d = 0;
+	
+    //Worst case scenario is 3 times the origional length (every character escaped)
+    destData = [NSMutableData dataWithLength:(sourceLength * 3)];
+    cDest = [destData mutableBytes];
     
-    while(![s isAtEnd])
-    {
-        [s scanUpToString:@"%" intoString:&read];
-        if(read)
-            [decodedString appendString:read];
-        if(![s isAtEnd])
-        {
-            [decodedString appendString:[NSString stringWithFormat:@"%c", 
-                [[NSString stringWithFormat:@"%li",
-                    strtol([[self substringWithRange:NSMakeRange([s scanLocation]+1, 2)] cString], 
-                        NULL, 16)] 
-                intValue]]];
-                
-            [s setScanLocation:[s scanLocation]+3];
-
+    while(s < sourceLength){
+        char	ch = cSource[s];
+		
+        if(ch == '%'){
+            cDest[d] = ( hexToInt(cSource[s+1]) * 16 ) + hexToInt(cSource[s+2]);
+            s += 3;
+			
+        }else if(ch == '+'){
+            cDest[d] = ' ';
+            s++;
+			
+        }else{
+            cDest[d] = ch;
+            s++;
         }
+		
+        d++;
     }
-    return([decodedString autorelease]);
-
+	
+    return([NSString stringWithCString:cDest length:d]);
 }
 
-- (BOOL)isURLEncoded
-{
-    NSCharacterSet *notUrlCode = [[NSCharacterSet characterSetWithCharactersInString:
-        @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$-_.+!*'(),;/?:@=&"] 		invertedSet];
-    NSCharacterSet *notHexSet = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789ABCEFabcdef"]
-        invertedSet];
-    NSScanner *s = [NSScanner scannerWithString:self]; 
-    
-    if([self rangeOfCharacterFromSet:notUrlCode].location != NSNotFound)
-        return NO;
-    
-    while(![s isAtEnd])
-    {
-        [s scanUpToString:@"%" intoString:nil];
-        
-        if([[self substringWithRange:NSMakeRange([s scanLocation]+1, 2)] rangeOfCharacterFromSet:notHexSet].location != NSNotFound)
-            return NO;
-    }
-    
-    return YES;
-}
+
+
+
+
 
 @end
