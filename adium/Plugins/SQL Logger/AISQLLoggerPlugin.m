@@ -33,18 +33,12 @@
     //NSMenuItem	*logViewerMenuItem;
 
     //Observe content sending and receiving
-    [[owner notificationCenter] addObserver:self selector:@selector(adiumSentContent:) name:Content_DidSendContent object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(adiumReceivedContent:) name:Content_DidReceiveContent object:nil];
-
-    //Install the log viewer menu item
-    //logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@"L"] autorelease];
-    //[[owner menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
+    [[owner notificationCenter] addObserver:self selector:@selector(adiumSentOrReceivedContent:) name:Content_ContentObjectAdded object:nil];
     
     conn = PQconnectdb("");
     if (PQstatus(conn) == CONNECTION_BAD)
     {
         [[owner interfaceController] handleErrorMessage:@"Connection to database failed." withDescription:@"Check your settings and try again."];
-        //NSLog(@"Connection to database failed.");
         NSLog(@"%s", PQerrorMessage(conn));
     }
 }
@@ -53,65 +47,57 @@
     PQfinish(conn);
 }
 
-//Content was sent
-- (void)adiumSentContent:(NSNotification *)notification
+//Content was sent or recieved
+- (void)adiumSentOrReceivedContent:(NSNotification *)notification
 {
     AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
     
-
     //Message Content
     if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        AIChat		*chat = [content chat];
-        AIAccount	*source = [content source];
-        NSString	*destUID;
-        NSString	*destService;
-        NSString	*destDisplay;
-
-        destUID = [[chat listObject] UID];
-        destService = [[chat listObject] serviceID];
-        //destDisplay = [[chat statusDictionary] objectForKey:@"DisplayName"];
-        destDisplay = [[chat listObject] displayName];
+        AIChat		*chat = [notification object];
+        AIListObject	*source = [content source];
+        AIListObject	*destination = [content destination];
+        AIAccount	*account = [chat account];
         
-        if([chat account] && [content source]){
+        NSString	*srcDisplay = nil;
+        NSString	*destDisplay = nil;
+        NSString	*destUID = nil;
+        NSString	*srcUID = nil;
+        NSString	*destSrv = nil;
+        NSString	*srcSrv = nil;
+        
+        if ([[account UID] isEqual:[source UID]]) {
+            destUID  = [[chat statusDictionary] objectForKey:@"DisplayName"];
+            if(!destUID) {
+                destUID = [[chat listObject] UID];
+                destDisplay = [[chat listObject] displayName];
+                destSrv = [[chat listObject] serviceID];
+            }
+            else {
+                destDisplay = [[chat listObject] displayName];
+                destSrv = nil;
+            }
+            srcDisplay = nil;
+            srcUID = [source UID];
+            srcSrv = [source serviceID];
+        } else {
+            srcDisplay = [[chat listObject] displayName];
+            srcUID = [[chat listObject] UID];
+            srcSrv = [[chat listObject] serviceID];
+            destDisplay = nil;
+            destUID = [destination UID];
+            destSrv = [destination serviceID];
+        }
+        
+        if(account && source){
             //Log the message
             [self _addMessage:[[content message] safeString]
                          dest:destUID
-                       source:[source UID]
-                  sendDisplay:nil
-                  destDisplay:destDisplay
-                    sendServe:[source serviceID]
-                     recServe:destService];
-        }
-    }
-}
-
-//Content was received
-- (void)adiumReceivedContent:(NSNotification *)notification
-{
-    AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
-    
-    //Message Content
-    if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        AIChat		*chat = [content chat];
-        AIAccount	*destination = [content destination];
-        NSString	*srcUID;
-        NSString	*srcService;
-        NSString	*srcDisplay;
-        
-        srcUID = [[chat listObject] UID];
-        srcService = [[chat listObject] serviceID];
-        srcDisplay = [[chat listObject] displayName];
-        
-        //Destination are valid (handle)
-        if([chat account] && [content source]){
-            //Log the message
-            [self _addMessage:[[content message] safeString]
-                         dest:[destination UID]
                        source:srcUID
                   sendDisplay:srcDisplay
-                  destDisplay:nil
-                    sendServe:srcService
-                     recServe:[destination serviceID]];
+                  destDisplay:destDisplay
+                    sendServe:srcSrv
+                     recServe:destSrv];
         }
     }
 }
@@ -155,7 +141,7 @@
     
     res = PQexec(conn, [sqlStatement UTF8String]);
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
-        NSLog(@"%s / %s", PQresStatus(PQresultStatus(res)), PQresultErrorMessage(res));
+        NSLog(@"%s / %s\n%@", PQresStatus(PQresultStatus(res)), PQresultErrorMessage(res), sqlStatement);
         [[owner interfaceController] handleErrorMessage:@"Insertion failed." withDescription:@"Database Insert Failed"];
         if (res != nil) {
             PQclear(res);

@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/search.jsp $-->
-<!--$Rev: 353 $ $Date: 2003/08/05 04:25:49 $ -->
+<!--$Rev: 401 $ $Date: 2003/08/28 09:19:57 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -264,7 +264,7 @@ try {
         
         out.print("<tr>");
         out.print("<td>" + rset.getString("sender_sn") + 
-        ":" + rset.getString("recipient_sn") + "<br>");
+        ": " + rset.getString("recipient_sn") + "<br>");
         out.print(rset.getString("message_date") + "</td>");
         out.print("<td>" + messageContent + "</td>");
         
