@@ -43,11 +43,21 @@
 	NSMutableDictionary	*storedEventPresets;
 }
 
+//Activation
 - (void)setEventPreset:(NSDictionary *)preset;
-- (void)saveEventPreset:(NSDictionary *)eventPreset;
+
+//Storage
+- (void)saveEventPreset:(NSMutableDictionary *)eventPreset;
+- (void)deleteEventPreset:(NSDictionary *)eventPreset;
+
 - (NSDictionary *)builtInEventPresets;
+- (NSArray *)builtInEventPresetsArray;
+
 - (NSDictionary *)storedEventPresets;
+- (NSArray *)storedEventPresetsArray;
 
 - (void)applySoundSetWithPath:(NSString *)soundSetPath;
+
+- (float)nextOrderIndex;
 
 @end

@@ -88,10 +88,6 @@
 												  forKey:@"Adium:RegisteredDefaultEvents"];
 	}
 
-	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:EVENT_SOUNDS_DEFAULT_PREFS 
-																		forClass:[self class]] 
-										  forGroup:PREF_GROUP_SOUNDS];	
-
 	//Install our preference view
     preferences = [[ESGlobalEventsPreferences preferencePaneForPlugin:self] retain];
 
@@ -111,9 +107,6 @@
 
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
-    //Observe preference changes
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
-	
 	[[adium notificationCenter] removeObserver:self
 										  name:Adium_CompletedApplicationLoad
 										object:nil];
@@ -124,20 +117,7 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if([group isEqualToString:PREF_GROUP_SOUNDS]){
-		NSString		*soundSetPath;
-		
-		//Load the soundset
-		soundSetPath = [prefDict objectForKey:KEY_EVENT_SOUND_SET];
-		if(soundSetPath && [soundSetPath length]){ //Soundset
-			NSArray			*soundSetArray;
 
-			soundSetArray = [self soundSetArrayAtPath:[soundSetPath stringByExpandingBundlePath]
-											  creator:nil
-										  description:nil]; //Load the soundset
-			[self activateSoundSet:soundSetArray];
-		}
-	}
 }
 
 #pragma mark Sound Sets
@@ -284,8 +264,6 @@
 
 - (void)setEventPreset:(NSDictionary *)eventPreset
 {
-	NSString	*soundSetPath;
-
 	[[adium contactAlertsController] setAllGlobalAlerts:[eventPreset objectForKey:@"Events"]];
 	
 	/* For a built in set, we now should apply the sound set it specified. User-created sets already include the
@@ -299,15 +277,37 @@
 	[[adium preferenceController] setPreference:[eventPreset objectForKey:@"Name"]
 										 forKey:@"Active Event Set"
 										  group:PREF_GROUP_EVENT_PRESETS];
-
-	//Set the name of the now-active sound set for the preferences to use as needed
-	[[adium preferenceController] setPreference:[eventPreset objectForKey:KEY_EVENT_SOUND_SET]
-										 forKey:KEY_EVENT_SOUND_SET
-										  group:PREF_GROUP_SOUNDS];
 }
 
-- (void)saveEventPreset:(NSDictionary *)eventPreset
+- (float)nextOrderIndex
 {
+	NSNumber *nextOrderIndexNumber = [[adium preferenceController] preferenceForKey:@"NextOrderIndex"
+																			  group:PREF_GROUP_EVENT_PRESETS];
+	float	nextOrderIndex;
+	
+	nextOrderIndex = (nextOrderIndexNumber ? [nextOrderIndexNumber floatValue] : 1.0);
+	
+	[[adium preferenceController] setPreference:[NSNumber numberWithFloat:(nextOrderIndex + 1)]
+										 forKey:@"NextOrderIndex"
+										  group:PREF_GROUP_EVENT_PRESETS];	
+
+	return nextOrderIndex;
+}
+
+/*!
+ * @brief Save an event preset
+ *
+ * This will assign an order index to the preset if necessary and then save it to the stored event presets dictionary.
+ * If a preset with the same name exists, it will be overwritten
+ */
+- (void)saveEventPreset:(NSMutableDictionary *)eventPreset
+{
+	//Assign the next order index to this preset if it doesn't have one yet
+	if(![eventPreset objectForKey:@"OrderIndex"]){
+		[eventPreset setObject:[NSNumber numberWithFloat:[self nextOrderIndex]]
+						forKey:@"OrderIndex"];
+	}
+	
 	[storedEventPresets setObject:eventPreset
 						   forKey:[eventPreset objectForKey:@"Name"]];
 
@@ -316,15 +316,23 @@
 										  group:PREF_GROUP_EVENT_PRESETS];
 }
 
+/*!
+ * @brief Delete an event preset
+ */
+- (void)deleteEventPreset:(NSDictionary *)eventPreset
+{
+	[storedEventPresets removeObjectForKey:[eventPreset objectForKey:@"Name"]];
+	
+	[[adium preferenceController] setPreference:storedEventPresets
+										 forKey:@"Event Presets"
+										  group:PREF_GROUP_EVENT_PRESETS];	
+}
+
+/*
+ * @brief Apply a sound set
+ */
 - (void)applySoundSetWithPath:(NSString *)soundSetPath
 {
-	//Can't set nil because if we do the default will be reapplied on next launch
-	[[adium preferenceController] setPreference:([soundSetPath length] ?
-												 [soundSetPath stringByCollapsingBundlePath] :
-												 @"")
-										 forKey:KEY_EVENT_SOUND_SET
-										  group:PREF_GROUP_SOUNDS];	
-	
 	if(soundSetPath && [soundSetPath length]){ //Soundset
 		NSArray			*soundSetArray;
 		
@@ -344,4 +352,31 @@
 {
 	return storedEventPresets;
 }
+
+int eventPresetsSort(id eventPresetA, id eventPresetB, void *context)
+{
+	float orderIndexA = [[eventPresetA objectForKey:@"OrderIndex"] floatValue];
+	float orderIndexB = [[eventPresetB objectForKey:@"OrderIndex"] floatValue];
+	
+	if(orderIndexA > orderIndexB){
+		return(NSOrderedDescending);
+	}else if (orderIndexA < orderIndexB){
+		return(NSOrderedAscending);
+	}else{
+		return([[eventPresetA objectForKey:@"Name"] caseInsensitiveCompare:[eventPresetB objectForKey:@"Name"]]);
+	}
+}
+
+- (NSArray *)storedEventPresetsArray
+{
+	return [[storedEventPresets allValues] sortedArrayUsingFunction:eventPresetsSort
+															 context:nil];
+}
+
+- (NSArray *)builtInEventPresetsArray
+{
+	return [[builtInEventPresets allValues] sortedArrayUsingFunction:eventPresetsSort
+															 context:nil];
+}
+
 @end
