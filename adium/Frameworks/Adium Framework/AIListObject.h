@@ -108,6 +108,10 @@ typedef enum {
 - (NSString *)notes;
 - (void)setNotes:(NSString *)notes;
 
+- (NSImage *)userIcon;
+- (NSData *)userIconData;
+- (void)setUserIconData:(NSData *)inData;
+
 //Containing contacts (for subclassing)
 - (BOOL)addObject:(AIListObject *)inObject;
 - (void)removeObject:(AIListObject *)inObject;
