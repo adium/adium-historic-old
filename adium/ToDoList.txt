@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.36 2004/04/13 03:17:07 adamiser Exp $
+$Id: ToDoList.txt,v 1.37 2004/04/13 04:00:16 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -21,14 +21,15 @@ Bugs
 * Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
 * We aren't processing <code> tags in our HTML decoder (Jabber uses them)
 	- (Tick: I thought jabber sent xml...??? 
+* Getting other strange 'code' in incoming jabber messages (xmlns=, ...)
 * Is jabber working correctly?  Are we receiving status for buddies upon initially connecting?  Need to check this.
 	- (Tick: Yes, jabber works, but only for jabber.org.)
-* User icons are still getting flipped.  We need to determine if they're from libgaim or from the address book.
+* User icons are still getting flipped.
 * Changing an alias in the inspector does not correctly update the contact list
-* Yahoo giving some users a Gaim error: unknown error 29 on connect
 * Some URLs in profiles aren't allowing clicks properly.
 * Tooltip code can crash if the listobject disappears out from under it, somehow. http://www.visualdistortion.org/crash/view.jsp?crash=8128
 * When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
+* Away messages with special characters (such as opt-n-n) show up as "Away:YES' in Adium (even when set by an Adium client)
 
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
@@ -36,9 +37,12 @@ Unconfirmed bugs
 * Tooltips are flashing when the contact list auto-resizes?
 * Empty groups come back on next launch after being deleted?
 * Adding buddies, sometimes they'll show up on the list twice until a restart?
-
-
-
+* Unicode (German) messages not working over ICQ ?
+* away messages aren't going away
+* Yahoo giving some users a Gaim error: unknown error 29 on connect
+* We're receiving (but not processing/interpreting) HTML over ICQ
+* away messages aren't clearing when a buddy comes back from away?  Online buddies with away messages?
+* Place contact list on external monitor, quit, reboot without external monitor.  Contact list is gone...gone..gone.gone :)
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
