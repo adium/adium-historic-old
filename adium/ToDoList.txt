@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.81 2004/05/01 14:00:18 adamiser Exp $
+$Id: ToDoList.txt,v 1.82 2004/05/01 16:33:14 adamiser Exp $
 
 
 Legend
@@ -19,6 +19,7 @@ Bugs
 
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
 * Multi-user chat (MSN) - sent messages appear twice.
+* MSN freezes in glib (g_ascii_strncasecmp) when sending a &
 
 Applescripts:
 * Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
