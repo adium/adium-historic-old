@@ -3320,6 +3320,9 @@
 			fileRef = 3459C58D07E291EC005F284E;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		348E5E1706D2F447004C051C = {
