@@ -14580,6 +14580,8 @@
 //BF4
 		BF7BF5E7052BA0EF00000202 = {
 			children = (
+				BF9CEA9A052BCCE500000202,
+				BF9CEA9B052BCCE500000202,
 			);
 			isa = PBXGroup;
 			name = "Disconnect All";
@@ -14588,6 +14590,7 @@
 		BF7BF5E8052BA13000000202 = {
 			buildActionMask = 2147483647;
 			files = (
+				BF9CEA9C052BCCE500000202,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14602,6 +14605,7 @@
 		BF7BF5EA052BA13000000202 = {
 			buildActionMask = 2147483647;
 			files = (
+				BF9CEA9D052BCCE500000202,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14721,6 +14725,32 @@
 		BF7BF5FB052BA1A800000202 = {
 			isa = PBXTargetDependency;
 			target = F53B9A0602CCED6401A8010A;
+		};
+		BF9CEA9A052BCCE500000202 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = DisconnectAllPlugin.h;
+			path = "Plugins/Disconnect All/DisconnectAllPlugin.h";
+			refType = 4;
+		};
+		BF9CEA9B052BCCE500000202 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = DisconnectAllPlugin.m;
+			path = "Plugins/Disconnect All/DisconnectAllPlugin.m";
+			refType = 4;
+		};
+		BF9CEA9C052BCCE500000202 = {
+			fileRef = BF9CEA9A052BCCE500000202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF9CEA9D052BCCE500000202 = {
+			fileRef = BF9CEA9B052BCCE500000202;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 //BF0
 //BF1
