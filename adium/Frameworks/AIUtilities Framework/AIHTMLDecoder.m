@@ -358,7 +358,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 						
 						if([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:fileName
 																							  atomically:YES]){
-							[string appendFormat:@"<img src=\"%@\" alt=\"%@\">",fileURL,[attachment string]];
+							[string appendFormat:@"<img src=\"%@\" alt=\"%@\">", [fileURL stringByEscapingForHTML], [[attachment string] stringByEscapingForHTML]];
 							
 							[chunk release]; chunk = nil;
 						}
@@ -372,7 +372,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 						//We have a file and should link to it with an img tag
 						
 						[string appendFormat:@"<img src=\"file://%@\" alt=\"%@\" width=\"%i\" height=\"%i\">",
-							[attachment imagePath], [attachment string],
+							[[attachment imagePath] stringByEscapingForHTML], [[attachment string] stringByEscapingForHTML],
 							(int)[attachment imageSize].width, (int)[attachment imageSize].height];
 						
 						[chunk release]; chunk = nil;
