@@ -1195,20 +1195,6 @@
 			settings = {
 			};
 		};
-		34254F4905EC0C3D00F11AD7 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.icns;
-			name = AdiumTheme.icns;
-			path = Source/AdiumTheme.icns;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34254F4A05EC0C3D00F11AD7 = {
-			fileRef = 34254F4905EC0C3D00F11AD7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34254F4B05EC0C4300F11AD7 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.icns;
@@ -5833,7 +5819,6 @@
 				34254F4405EC0C2700F11AD7,
 				34254F4605EC0C2E00F11AD7,
 				34254F4805EC0C3400F11AD7,
-				34254F4A05EC0C3D00F11AD7,
 				34254F4C05EC0C4300F11AD7,
 				4B29094005F944BF0087D16F,
 				4BD6735206001BD50049CAF7,
@@ -6010,6 +5995,10 @@
 				3461621406FB482D009181D8,
 				3461621706FB482D009181D8,
 				34445922070B613600D8E932,
+				34F6A9310710E20000F485C4,
+				34F6A9320710E20000F485C4,
+				34F6A9330710E20000F485C4,
+				34F6A9340710E20000F485C4,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8109,6 +8098,62 @@
 		};
 		34F59BFE0667A99300F01E8C = {
 			fileRef = 34F59BFD0667A99300F01E8C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F6A92D0710E20000F485C4 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.icns;
+			name = AdiumListTheme.icns;
+			path = Source/AdiumListTheme.icns;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F6A92E0710E20000F485C4 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.icns;
+			name = AdiumMessageStyle.icns;
+			path = Source/AdiumMessageStyle.icns;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F6A92F0710E20000F485C4 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.icns;
+			name = AdiumScripts.icns;
+			path = Source/AdiumScripts.icns;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F6A9300710E20000F485C4 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.icns;
+			name = AdiumListLayout.icns;
+			path = Source/AdiumListLayout.icns;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F6A9310710E20000F485C4 = {
+			fileRef = 34F6A92D0710E20000F485C4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F6A9320710E20000F485C4 = {
+			fileRef = 34F6A92E0710E20000F485C4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F6A9330710E20000F485C4 = {
+			fileRef = 34F6A92F0710E20000F485C4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F6A9340710E20000F485C4 = {
+			fileRef = 34F6A9300710E20000F485C4;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -21748,8 +21793,11 @@
 				34254F4305EC0C2700F11AD7,
 				34254F4505EC0C2E00F11AD7,
 				34254F4705EC0C3400F11AD7,
-				34254F4905EC0C3D00F11AD7,
 				34254F4B05EC0C4300F11AD7,
+				34F6A92D0710E20000F485C4,
+				34F6A92E0710E20000F485C4,
+				34F6A92F0710E20000F485C4,
+				34F6A9300710E20000F485C4,
 			);
 			isa = PBXGroup;
 			name = Resources;
