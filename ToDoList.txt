@@ -1,169 +1,52 @@
-//---------------------------------------------------------------------------------------------
-// Adium 0.8 beta bugs
-//---------------------------------------------------------------------------------------------
-- List toolbar needs icon for toggle groups, add group, toggle offline contacts
-- Move maximum width slider from layout to main pane
-- Status window when away preference is not implemented
-- Implement 'edit menu' sheets for deleting list layouts and themes
-- Improve behavior when customizing existing layouts and themes
-- Improve behavior when canceling changes to layouts and themes
-- Add a warning sheet about window moving/performance for non-standard styles
-- Update included layouts, themes, and message views
-- Jabber account registration
-- The crash reporter shouldn't force people to reopen Adium after a crash.
-- Message views are ignoring variant specific info.plist keys
-- %_statusmessage script is broken
-- Line breaks don't work properly with ICQ
-- Double-clicking a contact with more than one message window open opens a new tab in the first opened window (instead of the frontmost) (this is the desired behavior -ai)
-- Chats are sticking in the evil duck menu
-- Double check for memory leaks (esp w/ tab dragging & AIChats)
-- Behavior when adding a new account and then clicking OK without entering a UID needs to be improved
-
-//-------------------------------------------------------------------------------------------------------
-// Old junk
-//-------------------------------------------------------------------------------------------------------
-
-[OTR]
-- Fingerprint management? (advanced)
-
-[Other]
-- Crash on first launch of a new user: "Item to be inserted into menu already is in another menu"
-
-//-------------------------------------------------------------------------------------------------------
-// Possible Thoughts
-//-------------------------------------------------------------------------------------------------------
-//Auto-completion
-  Tab auto-completion in the message window [Evan: How would one insert a tab with this implemented?]
-	- Contact names (Mainly for multi-user chat)
-
-//Kill Plugins
-  Refactoring is fun, refactoring is scary, refactoring could greatly simplify our code
-	- Remove the menu controller, hook plugins directly to their menu items
-	- Remove preference obfuscation, preferences in one nib, hooked directly to their code
-	- Remove many unneeded plugin classes, interfaces, clutter
-  Keeping the modular design, but ditching all the negative effects of it could be very beneficial
-
-//Message Tabs
-  - Enforce a larger minimum width for tabs
-  - Use a chevron to display tabs that don't fit on the tab bar (like safari)
-  - New close button graphic
-
-//Formatted messages
-  Some users like formatted and colored messages, other want messages to look
-  the way they've decided in the preferences.  Let's make message formatting
-  preferences follow this distinction
-  - Preference "Send Formatted Messages", off by default.  When enabled, user
-    can pick font, size, color of their messages.  This formatting is used
-    when typing, displaying, and sending their message.
-  - Preference "Display formatting of received messages", off by default.  When
-    enabled, the font, size, and color of incoming messages will be displayed.
-  By default we will completely ignore message formatting.  Users who want
-  formatting will look for a way to set their font/color and find the options
-  in general preferences.
-
-//Plugin Version Control
-  Simple solution to compatibility with 3rd party plugins
-  - Every release of Adium has a plugin version number
-  - When the interfaces change (only .x releases), this number will increment
-  - Plugins have a version number in their info.plist
-  - Adium will only load plugins if their plugin number matches Adium's
-  This means that every major upgrade of Adium will require a new plugin download.
-  Since releases are bigger and further apart, this will not be a major issue.
-
-//Offline contacts
-  Add group specific offline visibility toggles to the contact list.
-
-//Deferring of initial messages
-  In certain situations the user may not want new messages to automatically open
-  windows.
-  - Add an option to not open windows for incoming messages
-  - Allow this option to be set/unset depending on our status (State system)
-  - Display the number of new messages in the dock (Similar to mail)
-  - Allow retrieval of these messages from the status/dock menu and contact list
-
-//Contact list editing
-  We need contact list editing to feel safe
-  - Improve drag images
-  - Improve drop targeting, especially when dragging contacts with sorting on
-  - Prevent list from flickering states when editing (contacts appearing to sign on, off, etc)
-  - Improve reliability of moving, deleting, and adding contacts
-  - Improve error handling with full lists
-  - Improve error handling when adding contacts that already exist
-
-//Improved info window
-  Update the info window appearance and profile display
-  - Fix support for sub-profile links [Evan: These work for me.  Confirmation, anyone?]
-  - Use WebKit to handle the HTML unless there is some overwhelming reason we parse it
-    // this should resolve several issues and gives great benefits - like tooltips & copy link
-
-//Alerts
-  - Display time stamps in the panel alert
-  - Support %escapes in spoken alert (such as %n to speak the contact's name)
-
-//Saving and Exporting
-  - Allow 'save as' from a message window to export the current conversation
-  - Allow 'save as' from within the log viewer to export logs
-
-//Logging
-  - Per account account logging preferences would allow users to choose which accounts are
-    logged instead of the all-or-none approach we have now.
-           - Add tab in all accounts with [x] Log chats
-           - We can move the logging format pref. to this as well.
-           - Other requirement would be a flag in the logging code to check account & pref.
-  - Support printing from Log Viewer and its toolbar (add item)
-
-//First run
-  - We need a more intuitive interface for a first-time user to get started with Adium.
-	- A first-run Adium setup wizard [Evan: this is my inclination]
-		* Basic account setup
-		* Initial configuration of a few key preferences
-  - The Migration Assistant, with expanded program support and a revamped UI, should
-    automatically offer its services when Adium is first launched, ‡ la Mail.app's
-	importer.[Brandon: Working on it.]
-
-// Address Book integration
-    - Sync (optionally) contact notes to an associated AB card's Notes field
-    - Ability to add a screenname into AB as a new card
-    - Add People Picker & ability to add via this panel
-
-// Group Chat
-	- Different message style / not Webkit for group chats? (it bogs down quickly in active rooms)
-	- Allow chats to be added as contact list objects?
-	- Support configuring Jabber rooms (this is aparently a libgaim callback?)
-
-//-------------------------------------------------------------------------------------------------------
-// Incomplete Thoughts
-//-------------------------------------------------------------------------------------------------------
-//Message Preferences
-	- Clean up variant submenus and other message preference aspects
-        - Provide way to delete a message style from within Adium
-
-//Privacy Preferences
-  Allow the user to easily block/unblock users by name, or users on their list.  Provide a way for them to see
-  all blocked names and add/remove from the list.  Ignore the AIM specific block 'modes'.
-	- Add block and unblock menu items which prompt for the service and name
-	- Add "Block contacts not on my list" to AIM account preferences
-
-//Sound Preferences
-	- Provide a way to manage (delete at minimum) soundsets
-
-//Service-Specific
-	- Add 'priority' support for jabber connections
-	- Service specific functions (buddy search, password changing, etc)
-
-//Contact List
-	- Easy identification of mobile users
-	- Round label caps for events
-	- Improve status hierarchy
-	- We need to either support contacts at the root level or not support them; we currently do a mixture
-		which is very confusing to new users.  For example, a new Jabber account has no groups, but adding
-		a contact with no groups has no visible effect.
-
-//Status on message window
-  - Show our current status on the message window
-
-//Documentation
-	- User documentation
-
-//Message context improvements
-	- The message context system will not work well with deferred messages.
+5 - Contact list layout defaults
+5 - Contact list theme defaults
+5 - Contact list toolbar icons for toggle groups, add group, toggle offline
+5 - Fix appearance prefs to update in response to preference changes
+5 - Implement edit sheets for layout
+5 - Implement edit sheets for themes
+5 - Mobile status icon (get this in before icon packs start excluding it!)
+4 - Fix behavior when canceling list layout or theme sheets
+4 - Implement status window when away preference
+3 - %_statusmessage script is broken
+3 - Add movement threshold to the borderless window
+3 - Figure out what to do with bubble list specific preferences
+3 - Fix group spacing to be fixed depending on mode
+3 - Get updated plastics view for bundling
+3 - Implement jabber account registration from the account prefs
+3 - Message views are ignoring variant specific info.plist keys
+3 - Several window frames are not saving (esp preferences)
+2 - Account online checkboxes have incorrect state after canceling a password prompt
+2 - Allow meta-contact creation without holding option, add a confirmation sheet
+2 - Change sound sets so that events use key sounds rather then specifing directly
+2 - Chats are sticking in the evil duck menu
+2 - Contact is offline sheet appears incorrectly for strangers
+2 - Crash reporter should provide an option for send & quit
+2 - Divide the dock menu into bundled/custom
+2 - Divide the theme/layout menu into bundled/custom
+2 - Get windows or plain text message view for bundling
+2 - Improve behavior when adding a new account and clicking OK without entering a UID
+2 - Line breaks do not work properly with ICQ
+2 - Minor control alignment in account preference sheet
+2 - Minor control alignment in advanced preferences
+1 - Account connectivity & status panel on launch
+1 - Add priority support for jabber connections
+1 - Add resize widget to borderless, remove width slider by overloading window resizing
+1 - Deferred messaging, allow for windows to not open immediately
+1 - Documentation
+1 - Fix libgaim AIM file transfer code to handle firewalls/nat
+1 - Group specific offline visibility toggles on the contact list
+1 - Improve address book support, syncing
+1 - Improve behavior with showing empty groups, adding new groups
+1 - Improve blocking and privacy setting support
+1 - Improve list editing for errors, full lists, flickering when moving contacts
+1 - Improve profile display in the info window
+1 - Improve tab bar graphics
+1 - Improve the dock menu
+1 - OTR fingerprint management
+1 - Revisit gaim-vv
+1 - Save as support for exporting a log
+1 - Save as support for saving an individual conversation
+1 - Setup assistant and prefernce importer
+1 - Tab auto-completion of contact names in the message window
+1 - Tab bar needs a chevron when the tabs overflow the bar
+1 - Printing from the log viewer
