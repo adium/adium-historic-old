@@ -15,11 +15,9 @@
 
 @class AIEmoticonPack;
 
-#import "BGEmoticonPackTableView.h"
-
 @interface AIEmoticonPreferences : AIPreferencePane
 {
-    IBOutlet    BGEmoticonPackTableView     *table_emoticonPacks;
+    IBOutlet    AIAlternatingRowTableView   *table_emoticonPacks;
     IBOutlet    AIAlternatingRowTableView   *table_emoticons;
     
     IBOutlet    NSTextField                 *textField_packTitle;
