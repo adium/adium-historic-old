@@ -18,6 +18,9 @@
 
 #define PREF_GROUP_DOCK_ICON		@"Dock Icon"
 
+#define ANIMATION_SPEED_CHANGE			0.50
+#define ANIMATION_STATE_SWITCH_DELAY	1.00
+
 @interface AIDockIconPreferences (PRIVATE)
 - (void)configureForSelectedIcon:(NSDictionary *)iconDict;
 - (void)_buildIconArray;
@@ -198,7 +201,7 @@
 		stateToAnimate = nil;
 		previewToAnimateEnumerator = nil;
 		
-		stateChangeTimer = [[NSTimer scheduledTimerWithTimeInterval:2 
+		stateChangeTimer = [[NSTimer scheduledTimerWithTimeInterval:ANIMATION_STATE_SWITCH_DELAY
 															 target:self 
 														   selector:@selector(stateChange:)
 														   userInfo:nil
@@ -276,7 +279,7 @@
 		}
 		//Start an animation timer for this frame if needed
 		if ([stateToAnimate animated]) {
-			animationTimer = [[NSTimer scheduledTimerWithTimeInterval:[stateToAnimate animationDelay]
+			animationTimer = [[NSTimer scheduledTimerWithTimeInterval:[stateToAnimate animationDelay] * ANIMATION_SPEED_CHANGE
 															   target:self
 															 selector:@selector(animate:)
 															 userInfo:nil
@@ -371,7 +374,7 @@
     }
 
 	[selectedIcon release];
-    selectedIcon = [[iconArray objectAtIndex:2] copy];
+    selectedIcon = nil;
     
     //Update our view
     [tableView_icons reloadData];
