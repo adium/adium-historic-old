@@ -28,7 +28,7 @@
 {
     NSBundle	*ownerBundle;
     NSString	*dictPath;
-    NSImage	*dict;
+    NSDictionary	*dict;
 
     //Get the bundle
     ownerBundle = [NSBundle bundleForClass:inClass];

@@ -58,6 +58,7 @@
     [[owner notificationCenter] addObserver:self selector:@selector(contactAttributesChanged:) name:Contact_AttributesChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
+//    [contactListView setIndentationPerLevel:0];
     [contactListView setTarget:self];
     [contactListView setDataSource:self];
     [contactListView setDelegate:self];

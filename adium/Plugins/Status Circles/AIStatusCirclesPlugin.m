@@ -81,7 +81,7 @@
         [inModifiedKeys containsObject:@"Signed On"] ||
         [inModifiedKeys containsObject:@"Signed Off"]){
 
-        AIMutableOwnerArray	*iconArray;
+        AIMutableOwnerArray	*iconArray, *tabIconArray;
         AIStatusCircle		*statusCircle;
         NSColor			*circleColor;
         int			away, warning, online, unviewedContent, unrespondedContent, signedOn, signedOff;
@@ -89,12 +89,14 @@
         
         //Get the status circle
         iconArray = [inContact displayArrayForKey:@"Left View"];
+        tabIconArray = [inContact displayArrayForKey:@"Tab Left View"];
         statusCircle = [iconArray objectWithOwner:self];
 	
         if(!statusCircle){
             statusCircle = [AIStatusCircle statusCircle];
             [statusCircle setFlashColor:unviewedContentColor];
             [iconArray setObject:statusCircle withOwner:self];
+            [tabIconArray setObject:statusCircle withOwner:self];
         }
 
         //Get all the values

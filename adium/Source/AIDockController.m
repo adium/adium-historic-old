@@ -14,16 +14,20 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Adium/Adium.h>
+#import <AIUtilities/AIUtilities.h>
 #import "AIDockController.h"
 
+#define DOCK_DEFAULT_PREFS	@"DockPrefs"
+
 @interface AIDockController (PRIVATE)
-- (void)loadIconPackFromPath:(NSString *)folderPath;
 - (void)_buildIcon;
 - (void)animateIcon:(NSTimer *)timer;
 - (void)_singleBounce;
 - (void)_continuousBounce;
 - (void)_stopBouncing;
 - (void)_bounceWithInterval:(double)delay;
+- (NSString *)_pathOfIconPackWithName:(NSString *)name;
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIDockController
@@ -31,21 +35,21 @@
 //init and close
 - (void)initController
 {
-    NSString 	*familyPath;
-
     //init
-    activeIconStateArray = [[NSMutableArray alloc] init];
-    dockImageArray = [[NSMutableArray alloc] init];
+    activeIconStateArray = nil;
+    currentIconState = nil;
     currentAttentionRequest = -1;
     animationTimer = nil;
     bounceTimer = nil;
 
-    //Set the default icon
-    familyPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Adiumy Icons/Adiumy Green.AdiumIcon"];
-    [self loadIconPackFromPath:familyPath];
-    [self _buildIcon];
+    //Register our default preferences
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SPELLING];
 
-    //
+    //observe pref changes
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
+
+    //We always want to stop bouncing when Adium is made active
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillBecomeActive:) name:NSApplicationWillBecomeActiveNotification object:nil];
 }
 
@@ -55,37 +59,53 @@
 //    [self setAppIcon:[iconFamily closedImage]];
 }
 
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){
+        NSDictionary 	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+        NSString	*iconPath;
 
+        //Take down the current icon
+        [activeIconStateArray release]; activeIconStateArray = [[NSMutableArray alloc] init];
+        [availableIconStateDict release]; availableIconStateDict = nil;
 
+        //Configure the dock icon
+        iconPath = [self _pathOfIconPackWithName:[preferenceDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
+        if(iconPath){
+            availableIconStateDict = [[self iconPackAtPath:iconPath] retain];
+        }
+
+        //Composite the new icon
+        [self setIconStateNamed:@"Base"];
+        [self _buildIcon];
+    }
+}
 
 //Icons ------------------------------------------------------------------------------------
 //Load an icon pack
-- (void)loadIconPackFromPath:(NSString *)folderPath
+- (NSDictionary *)iconPackAtPath:(NSString *)folderPath
 {
+    NSMutableDictionary	*iconStateDict = [[[NSMutableDictionary alloc] init] autorelease];
     AIIconState		*iconState;
     NSDictionary	*iconPackDict;
     NSEnumerator	*stateEnumerator;
     NSString		*stateNameKey;
-    
-    //Flush the icon state dict
-    [availableIconStateDict release];
-    availableIconStateDict  = [[NSMutableDictionary alloc] init];
 
     //Load the icon pack
     iconPackDict = [NSDictionary dictionaryWithContentsOfFile:[folderPath stringByAppendingPathComponent:@"IconPack.plist"]];
-
+    
     //Process each state in the icon pack
-    stateEnumerator = [[iconPackDict allKeys] objectEnumerator];
+    stateEnumerator = [[[iconPackDict objectForKey:@"State"] allKeys] objectEnumerator];
     while((stateNameKey = [stateEnumerator nextObject])){
-        NSDictionary	*stateDict = [iconPackDict objectForKey:stateNameKey];
-        
+        NSDictionary	*stateDict = [[iconPackDict objectForKey:@"State"] objectForKey:stateNameKey];
+
         if([[stateDict objectForKey:@"Animated"] intValue]){ //Animated State
             NSEnumerator	*imageNameEnumerator;
             NSString		*imageName;
             NSMutableArray	*imageArray;
             BOOL		overlay, looping;
             float		delay;
-            
+
             //Get the state information
             overlay = [[stateDict objectForKey:@"Overlay"] intValue];
             looping = [[stateDict objectForKey:@"Looping"] intValue];
@@ -107,7 +127,7 @@
             //Create the state
             if(delay != 0 && [imageArray count] != 0){
                 iconState = [[[AIIconState alloc] initWithImages:imageArray delay:delay looping:looping overlay:overlay] autorelease];
-                [availableIconStateDict setObject:iconState forKey:stateNameKey];
+                [iconStateDict setObject:iconState forKey:stateNameKey];
             }else{
                 NSLog(@"Invalid animated icon state (%@)",stateNameKey);
             }
@@ -126,18 +146,20 @@
             //Create the state
             if(image){
                 iconState = [[[AIIconState alloc] initWithImage:image overlay:overlay] autorelease];
-                [availableIconStateDict setObject:iconState forKey:stateNameKey];
+                [iconStateDict setObject:iconState forKey:stateNameKey];
             }else{
                 NSLog(@"Invalid static icon state (%@)",stateNameKey);
             }
         }
     }
+
+    return([NSDictionary dictionaryWithObjectsAndKeys:[iconPackDict objectForKey:@"Description"], @"Description", iconStateDict, @"State", nil]);
 }
 
 //Sets an icon state from the current icon pack.  If the state is already set or doesn't exist, nothing happens.
 - (AIIconState *)setIconStateNamed:(NSString *)inName
 {
-    AIIconState	*iconState = [availableIconStateDict objectForKey:inName];
+    AIIconState	*iconState = [[availableIconStateDict objectForKey:@"State"] objectForKey:inName];
 
     [self setIconState:iconState];
 
@@ -168,107 +190,67 @@
     }
 }
 
+//Scan for an icon pack with the specified name
+- (NSString *)_pathOfIconPackWithName:(NSString *)name
+{
+    NSDirectoryEnumerator	*fileEnumerator;
+    NSString			*iconPath;
+    NSString			*filePath;
+
+    //
+    iconPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS];
+
+    //Find the desired .AdiumIcon
+    fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:iconPath];
+    while((filePath = [fileEnumerator nextObject])){
+        if([[filePath pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == 0 && [[[filePath lastPathComponent] stringByDeletingPathExtension] caseInsensitiveCompare:name] == 0){
+            //Found a match, return the path
+            return([iconPath stringByAppendingPathComponent:filePath]);
+        }
+    }
+
+    //No match found
+    return(nil);
+}
 
 //Build/Pre-render the icon images, start/stop animation
 - (void)_buildIcon
 {
-    NSEnumerator	*enumerator;
-    NSImage		*workingImage;
-    AIIconState		*iconState;
-    AIIconState		*animatingState;
-    float		animationDelay;
-    int			drawFrame;
-    AIIconState		*startingState;
-
-    //Release the current images
-    [dockImageArray release];
-    dockImageArray = [[NSMutableArray alloc] init];
-    
-    //Find the newest animating state (It will control the animation)
-    enumerator = [activeIconStateArray reverseObjectEnumerator];
-    while((animatingState = [enumerator nextObject]) && ![animatingState animated]);
-
-    //If there is an animating state, set up the animation timers
+    //Stop any existing animation
     [animationTimer invalidate]; [animationTimer release]; animationTimer = nil;
-    if(animatingState){
-        animationDelay = [animatingState animationDelay];
-        animationFrames = [[animatingState imageArray] count];
-        animationTimer = [[NSTimer scheduledTimerWithTimeInterval:animationDelay
-                                                           target:self
-                                                         selector:@selector(animateIcon:)
-                                                         userInfo:nil
-                                                          repeats:YES] retain];
-    }else{
-        animationFrames = 1;
+
+    //Generate the composited icon state
+    [currentIconState release];
+    currentIconState = [[[AIIconState alloc] initByCompositingStates:activeIconStateArray] retain];
+
+    //
+    if(![currentIconState animated]){ //Static icon
+        if([currentIconState image]) [[NSApplication sharedApplication] setApplicationIconImage:[currentIconState image]];
+
+    }else{ //Animated icon
+        //Setup the animation timer
+        animationTimer = [[NSTimer scheduledTimerWithTimeInterval:[currentIconState animationDelay]
+                                                            target:self
+                                                            selector:@selector(animateIcon:)
+                                                            userInfo:nil
+                                                            repeats:YES] retain];
+        [self animateIcon:nil]; //Set the icon and move to the next frame
+
     }
-    
-    //Take the the newest non-overlay state's image
-    enumerator = [activeIconStateArray reverseObjectEnumerator];
-    while((startingState = [enumerator nextObject]) && [startingState overlay]);
 
-    //If no non-overlay states are set, use the base state
-    if(!startingState) startingState = [availableIconStateDict objectForKey:@"Base"]; 
-
-    if(startingState){ //Abort if no image
-        for(drawFrame = 0; drawFrame < animationFrames; drawFrame++){ //Create an image for each stage in animation
-    
-            //Use the starting state's image as our base
-            if([startingState animated]){
-                if(startingState == animatingState){
-                    workingImage = [[[[startingState imageArray] objectAtIndex:drawFrame] copy] autorelease];
-                }else{
-                    workingImage = [[[[startingState imageArray] objectAtIndex:0] copy] autorelease];
-                }
-            }else{
-                workingImage = [[[startingState image] copy] autorelease];
-            }
-    
-            //Draw on the images of all overlayed states
-            enumerator = [activeIconStateArray objectEnumerator];
-            while((iconState = [enumerator nextObject])){
-                if([iconState overlay]){
-                    NSImage	*overlayImage;
-                    
-                    //Get the overlay image
-                    if([iconState animated]){
-                        if(iconState == animatingState){ //Only one state animates at a time
-                            overlayImage = [[iconState imageArray] objectAtIndex:drawFrame];
-                        }else{
-                            overlayImage = [[iconState imageArray] objectAtIndex:0];
-                        }
-                    }else{
-                        overlayImage = [iconState image];
-                    }
-    
-                    //Layer it ontop our working image
-                    [workingImage lockFocus];
-                    [overlayImage compositeToPoint:NSMakePoint(0,0) operation:NSCompositeSourceOver];
-                    [workingImage unlockFocus];
-                }
-            }
-    
-            [dockImageArray addObject:workingImage];
-        }
-
-        //Set the finished icon
-        currentFrame = 0;
-        [self animateIcon:nil];
-    }
 }
 
-//Move the dock to the next animation frame
+//Move the dock to the next animation frame (Assumes the current state is animated)
 - (void)animateIcon:(NSTimer *)timer
 {
+    NSImage	*image = [currentIconState image];
+    
     //Set the image
-    [[NSApplication sharedApplication] setApplicationIconImage:[dockImageArray objectAtIndex:currentFrame]];
+    if(image) [[NSApplication sharedApplication] setApplicationIconImage:image];
 
     //Move to the next image
-    currentFrame++;
-    if(currentFrame >= animationFrames){
-        currentFrame = 0;
-    }
+    [currentIconState nextFrame];
 }
-
 
 //returns the % of the dock icon's full size that it currently is (0.0 - 1.0)
 - (float)dockIconScale
@@ -303,7 +285,7 @@
 }
 
 
-
+//Bouncing ------------------------------------------------------------------------------------
 //Perform a bouncing behavior
 - (void)performBehavior:(DOCK_BEHAVIOR)behavior
 {
@@ -373,6 +355,7 @@
     }
 }
 
+//
 - (void)appWillBecomeActive:(NSNotification *)notification
 {
     [self _stopBouncing]; //Stop any bouncing

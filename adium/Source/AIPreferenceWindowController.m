@@ -57,7 +57,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     [self window]; //make sure the window has loaded
 
     //Show the category that was selected
-    enumerator = [[owner categoryArray] objectEnumerator];
+    enumerator = [[[owner preferenceController] categoryArray] objectEnumerator];
     while((category = [enumerator nextObject])){
         NSEnumerator 			*viewEnumerator;
         AIPreferenceViewController	*view;
@@ -107,7 +107,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     NSArray	*categoryArray;
 
     //Restore the window position
-    savedFrame = [[owner preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_WINDOW_FRAME];
+    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_WINDOW_FRAME];
     if(savedFrame){
         [[self window] setFrameFromString:savedFrame];
     }else{
@@ -118,10 +118,13 @@ static AIPreferenceWindowController *sharedInstance = nil;
     [self installToolbar];
  
     //select the default category
-    categoryArray = [owner categoryArray];
+    categoryArray = [[owner preferenceController] categoryArray];
     if([categoryArray count]){
         [self showCategory:[categoryArray objectAtIndex:0]];
     }
+
+    //Let everyone know we will open
+    [[owner notificationCenter] postNotificationName:Preference_WindowWillOpen object:nil];
 }
 
 //prevent the system from moving our window around
@@ -137,9 +140,12 @@ static AIPreferenceWindowController *sharedInstance = nil;
     [[self window] makeFirstResponder:scrollView_contents];
 
     //Save the window position
-    [owner setPreference:[[self window] stringWithSavedFrame]
+    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
                   forKey:KEY_PREFERENCE_WINDOW_FRAME
                    group:PREF_GROUP_WINDOW_POSITIONS];
+
+    //Let everyone know we did close
+    [[owner notificationCenter] postNotificationName:Preference_WindowDidClose object:nil];
 
     //autorelease the shared instance
     [sharedInstance autorelease]; sharedInstance = nil;
@@ -173,7 +179,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     NSEnumerator		*enumerator;
     AIPreferenceCategory	*category;
     
-    categoryArray = [owner categoryArray];
+    categoryArray = [[owner preferenceController] categoryArray];
     enumerator = [categoryArray objectEnumerator];
     
     while((category = [enumerator nextObject])){
@@ -211,7 +217,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     clickedName = [sender itemIdentifier];
 
     //Find this category
-    categoryArray = [owner categoryArray];
+    categoryArray = [[owner preferenceController] categoryArray];
     enumerator = [categoryArray objectEnumerator];
     
     while((category = [enumerator nextObject])){
@@ -250,7 +256,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     
     defaultArray = [[NSMutableArray alloc] init];
     toolbar = [[self window] toolbar];
-    categoryArray = [owner categoryArray];
+    categoryArray = [[owner preferenceController] categoryArray];
     enumerator = [categoryArray objectEnumerator];
     
     while((category = [enumerator nextObject])){
