@@ -135,15 +135,17 @@
 		selectedIconIndex = -1;
 		[self _stopAnimating];
 		
-		[[iconArray objectAtIndex:oldIndex] setObject:[selectedIcon objectForKey:@"Original State"]
-													  forKey:@"State"];
-		[[matrix_iconPreview selectedCell] setImage:[[selectedIcon objectForKey:@"Original State"] image]];
+		AIIconState *theState = [selectedIcon objectForKey:@"Original State"];
+		if (theState){
+			[[iconArray objectAtIndex:oldIndex] setObject:theState
+												   forKey:@"State"];
+			[[matrix_iconPreview selectedCell] setImage:[theState image]];
+		}
 	}
 	
 	
     //Remember this as selected
-	//LEAKING?
-    [selectedIcon release]; selectedIcon = [[iconDict copy] retain];
+    [selectedIcon release]; selectedIcon = [iconDict retain];
 
     //
     iconPackDict = [[adium dockController] iconPackAtPath:[iconDict objectForKey:@"Path"]];
