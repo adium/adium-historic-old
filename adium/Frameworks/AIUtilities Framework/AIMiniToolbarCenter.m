@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2002, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
  | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  | General Public License as published by the Free Software Foundation; either version 2 of the License,
@@ -119,18 +119,6 @@ static AIMiniToolbarCenter *defaultCenter = nil;
     //Remove it from our list and notify
     [customizeIdentifier release]; customizeIdentifier = nil;
     [[NSNotificationCenter defaultCenter] postNotificationName:AIMiniToolbar_RefreshItem object:nil];
-
-    //Turn customization mode off
-    /*    customizing = NO;
-    [[NSNotificationCenter defaultCenter] postNotificationName:AIMiniToolbar_RefreshItem object:nil];
-
-    //Release the array of views
-    [itemImageArray release]; itemImageArray = nil;
-
-    //Close the customization palette
-    [panel_customization orderOut:nil];
-    [panel_customization autorelease]; panel_customization = nil;
-    */
 }
 
 

@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2002, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
  | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  | General Public License as published by the Free Software Foundation; either version 2 of the License,
@@ -15,7 +15,9 @@
 
 #import "AIAnimatedView.h"
 
-//Image should be frames stacked vertically
+/*
+    An animated image.  Image file should be frames stacked vertically.
+*/
 
 @interface AIAnimatedView (PRIVATE)
     - (void)animate:(NSTimer *)timer;

@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2002, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
  | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  | General Public License as published by the Free Software Foundation; either version 2 of the License,
@@ -16,6 +16,10 @@
 #import "AICompletingTextField.h"
 #import "AIAttributedStringAdditions.h"
 #import "AITextFieldAdditions.h"
+
+/*
+    A text field that auto-completes known strings
+ */
 
 @interface AICompletingTextField (PRIVATE)
 - (id)_init;
@@ -78,12 +82,8 @@
 }
 
 
-
-
 //Private ------------------------------------------------------------------------------------------
-//- (void)insertText:(id)insertString
 - (void)textDidChange:(NSNotification *)notification
-//- (void)insertText:(id)insertString
 {
     NSString	*userValue, *completionValue;
 
@@ -105,6 +105,7 @@
     oldUserLength = [userValue length];
 }
 
+//Returns the known completion for a string segment
 - (NSString *)completionForString:(NSString *)inString
 {
     NSEnumerator	*enumerator;

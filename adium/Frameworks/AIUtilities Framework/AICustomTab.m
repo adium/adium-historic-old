@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2002, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
  | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  | General Public License as published by the Free Software Foundation; either version 2 of the License,
@@ -73,16 +73,6 @@
 {
     [super initWithFrame:frameRect];
 
-/*  tabBackLeft = [[AIImageUtilities imageNamed:@"tab_back_left" forClass:[self class]] retain];
-    tabBackMiddle = [[AIImageUtilities imageNamed:@"tab_back_middle" forClass:[self class]] retain];
-    tabBackRight = [[AIImageUtilities imageNamed:@"tab_back_right" forClass:[self class]] retain];
-    tabFrontLeft = [[AIImageUtilities imageNamed:@"tab_front_left" forClass:[self class]] retain];
-    tabFrontMiddle = [[AIImageUtilities imageNamed:@"tab_front_middle" forClass:[self class]] retain];
-    tabFrontRight = [[AIImageUtilities imageNamed:@"tab_front_right" forClass:[self class]] retain];
-    tabPushLeft = [[AIImageUtilities imageNamed:@"tab_push_left" forClass:[self class]] retain];
-    tabPushMiddle = [[AIImageUtilities imageNamed:@"tab_push_middle" forClass:[self class]] retain];
-    tabPushRight = [[AIImageUtilities imageNamed:@"tab_push_right" forClass:[self class]] retain];
-*/
     tabFrontLeft = [[AISystemTabRendering tabFrontLeft] retain];
     tabFrontMiddle = [[AISystemTabRendering tabFrontMiddle] retain];
     tabFrontRight = [[AISystemTabRendering tabFrontRight] retain];

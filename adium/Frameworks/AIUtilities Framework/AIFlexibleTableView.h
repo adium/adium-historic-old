@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2002, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
  | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  | General Public License as published by the Free Software Foundation; either version 2 of the License,
@@ -43,34 +43,23 @@
 
     //Delegate
     id <AIFlexibleTableViewDelegate>	delegate;		//Our delegate
-    BOOL				respondsTo_shouldEditTableColumn;
-    BOOL				respondsTo_setObjectValue;
-    BOOL				respondsTo_shouldSelectRow;
 
     //Configuration
     NSMutableArray			*columnArray;		//Our columns
     BOOL				contentBottomAligned;	//YES for bottom-aligned content
+    BOOL				forwardsKeyEvents;	//Pass keypresses to next responder
 
     //Cursor tracking
     NSMutableArray			*cursorTrackingCellArray;
     
     //Selecting
-    int					selectedRow;		//The currently selected row
     int					selection_startIndex;
     int					selection_startRow;
     int					selection_startColumn;
     int					selection_endIndex;
     int					selection_endRow;
     int					selection_endColumn;
-    
-    //Editing
-    NSTextView			*editor;
-    NSScrollView		*editorScroll;
-    AIFlexibleTableColumn	*editedColumn;
-    int				editedRow;
-    AIFlexibleTableCell		*editedCell;
-
-}
+    }
 
 - (void)setDelegate:(id <AIFlexibleTableViewDelegate>)inDelegate;
 - (void)addColumn:(AIFlexibleTableColumn *)inColumn;
@@ -78,8 +67,6 @@
 - (void)reloadData;
 - (void)reloadRow:(int)inRow;
 - (void)setContentBottomAligned:(BOOL)inValue;
-- (int)selectedRow;
-- (void)editRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn;
 - (void)resizeCellHeight:(AIFlexibleTableCell *)inCell;
 
 @end
