@@ -82,8 +82,7 @@
     [self _buildIconArray];
     
     //Observe preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];
     
 	//Observe for installation of new dock icon sets
 	[[adium notificationCenter] addObserver:self
@@ -105,24 +104,20 @@
     [self _stopAnimating];
     
     //
+	[[adium preferenceController] unregisterPreferenceObserver:self];
     [[adium notificationCenter] removeObserver:self];
 }
 
 //Preferences have changed
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-	NSDictionary *userInfo = [notification userInfo];
-	
-    if(notification == nil || 
-	   (([(NSString *)[userInfo objectForKey:@"Group"] isEqualToString:PREF_GROUP_GENERAL]) && 
-		([[userInfo objectForKey:@"Key"] isEqualToString:KEY_ACTIVE_DOCK_ICON]))){
-
+    if(!key || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]){
         NSDictionary	*iconDict;
         NSString		*iconName;
 
         //Set the selected icon
-        iconName = [[adium preferenceController] preferenceForKey:KEY_ACTIVE_DOCK_ICON
-															group:PREF_GROUP_GENERAL];
+        iconName = [prefDict objectForKey:KEY_ACTIVE_DOCK_ICON];
         iconDict = [self _iconInArrayNamed:iconName];
 			
         [self configureForSelectedIcon:iconDict];
