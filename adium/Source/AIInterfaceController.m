@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.76 2004/07/12 23:24:36 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.77 2004/07/13 16:33:53 evands Exp $
 
 #import "AIInterfaceController.h"
 #import "AIContactListWindowController.h"
@@ -141,6 +141,7 @@ arrangeChats = YES;
 //    }else{
 //		return([interface handleReopenWithVisibleWindows:visibleWindows]);    
 //	}
+	return YES;
 }
 
 // Registers code to handle the interface
