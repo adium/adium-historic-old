@@ -45,7 +45,7 @@
                 <br /><a href="http://planet.adiumx.com"
                 class="offsides">Planet Adium</a>
                 <br /><a href="http://cia.navi.cx/stats/project/adium/"
-                class="offsides">CVS Changes</a>
+                class="offsides">SVN Changes</a>
               <br /><a
                 href="http://www.visualdistortion.org/sqllogger/adium-sql.tar.gz"
                 class="offsides"><b>Adium Plugin (.63)</b></a>
