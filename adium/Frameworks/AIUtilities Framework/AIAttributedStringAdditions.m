@@ -40,6 +40,12 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 
 - (NSData *)dataRepresentation
 {
+	//RTFFromRange is buggy on Jaguar, so we'll use HTML instead
+    if(![NSApp isOnPantherOrBetter]){
+        NSString *superSpecialJagString = [AIHTMLDecoder encodeHTML:self encodeFullString:NO];
+        return [superSpecialJagString dataUsingEncoding:NSUnicodeStringEncoding];
+    }
+
     return([self RTFFromRange:NSMakeRange(0,[self length]) documentAttributes:nil]);
 }
 
@@ -340,19 +346,23 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 
 - (NSData *)dataRepresentation
 {
+	//RTFFromRange is buggy on Jaguar, so we'll use HTML instead
     if(![NSApp isOnPantherOrBetter]){
         NSString *superSpecialJagString = [AIHTMLDecoder encodeHTML:self encodeFullString:NO];
         return [superSpecialJagString dataUsingEncoding:NSUnicodeStringEncoding];
     }
+	
     return([self RTFFromRange:NSMakeRange(0,[self length]) documentAttributes:nil]);
 }
 
 + (NSAttributedString *)stringWithData:(NSData *)inData
 {
+	//RTFFromRange is buggy on Jaguar, so we'll use HTML instead
     if(![NSApp isOnPantherOrBetter]){
-        NSString *superSpecialJagString = [[NSString alloc] initWithData:inData encoding:NSUnicodeStringEncoding];
-        return [[AIHTMLDecoder decodeHTML:superSpecialJagString] autorelease];
+        NSString *superSpecialJagString = [[[NSString alloc] initWithData:inData encoding:NSUnicodeStringEncoding] autorelease];
+        return [AIHTMLDecoder decodeHTML:superSpecialJagString];
     }
+	
     return([[[NSAttributedString alloc] initWithRTF:inData documentAttributes:nil] autorelease]);
 }
 
