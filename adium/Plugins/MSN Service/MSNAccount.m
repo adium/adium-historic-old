@@ -247,6 +247,12 @@
     return NO;
 }
 
+- (void)displayError:(NSString *)errorDesc
+{
+    [[owner interfaceController] handleErrorMessage:@"MSN Error"
+                                    withDescription:errorDesc];
+}
+
 /********************/
 /* AIAccount_Groups */
 /********************/

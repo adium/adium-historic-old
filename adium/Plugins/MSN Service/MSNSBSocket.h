@@ -13,17 +13,22 @@
 
 @interface MSNSBSocket : NSObject 
 {
-    AISocket 		*socket;		// The connection socket
-    MSNAccount		*ourAccount;		// Us
-    NSMutableDictionary *participantsDict;	// everyone in this convo
+    AIAdium				*owner;
+    AISocket 			*socket;		// The connection socket
+    MSNAccount			*ourAccount;		// Us
+    NSMutableDictionary	*participantsDict;	// everyone in this convo
+    NSMutableDictionary	*unconfirmedMessagesDict;
     
-    NSMutableArray	*packetsToSend;		// Packets we need to send out
+    NSMutableArray		*packetsToSend;		// Packets we need to send out
+    NSMutableDictionary	*tempInfoDict;		// Mostly to reduce class clutter
+    BOOL				sendMessages;		// FALSE until we are clear to send messages
+    BOOL				receivingPayload;
 }
 
-+ (MSNSBSocket *)socketWithIP:(NSString *)ip andPort:(int)port forAccount:(MSNAccount *)account;
++ (MSNSBSocket *)socketWithIP:(NSString *)ip andPort:(int)port forAccount:(MSNAccount *)account owner :(AIAdium *)setOwner;
 
 - (BOOL)isChat; //returns true if this is a "chat" or not
-- (void)checkForPackets;
+- (void)doEveryGoodThing;
 - (void)sendPacket:(NSString *)packet;
 
 - (AISocket *)socket;

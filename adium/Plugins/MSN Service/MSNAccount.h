@@ -64,6 +64,8 @@
 // Remove a group from this account
 - (BOOL)removeGroup:(NSString *)inGroup;*/
 
+- (void)displayError:(NSString *)errorDesc;
+
 //AIAccount subclassed methods
 - (void)initAccount; 				//Init anything relating to the account
 - (id <AIAccountViewController>)accountView;	//Return a view controller for the connection window
