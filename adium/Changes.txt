@@ -1,6 +1,8 @@
 				Adium X Version History
 				-----------------------
-				
+Version 0.54 (5/7/2004) 
+- Added bubble breaking (consecutive messages are not combined after a 5 minute period has ellapsed)
+
 Version 0.53 (4/30/2004)				
 - Added Webkit Message View (6 distinct styles, or create your own!  Customizable fonts and backgrounds!) [10.3 only]
 - Added "Novell GroupWise" protocol support

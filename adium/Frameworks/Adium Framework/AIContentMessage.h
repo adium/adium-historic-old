@@ -20,7 +20,6 @@
 @class AIChat;
 
 @interface AIContentMessage : AIContentObject {
-    NSDate 			*date;
     NSAttributedString 		*message;
     BOOL			autoreply;
     

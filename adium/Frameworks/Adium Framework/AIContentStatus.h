@@ -18,7 +18,6 @@
 #define CONTENT_STATUS_TYPE		@"Status"		//Type ID for this content
 
 @interface AIContentStatus : AIContentObject {
-    NSDate 			*date;
     NSString		*message;
 	NSString		*statusType;
 }

@@ -14,6 +14,8 @@
     id		source;
     id		destination;
     BOOL	outgoing;
+    
+    NSDate  *date;
 
 	BOOL	filterContent;
 	BOOL	trackContent;
@@ -24,6 +26,7 @@
 - (NSString *)type;
 - (id)source;
 - (id)destination;
+- (NSDate *)date;
 - (BOOL)isOutgoing;
 - (void)_setIsOutgoing:(BOOL)inOutgoing;
 - (AIChat *)chat;
