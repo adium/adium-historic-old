@@ -45,6 +45,7 @@
 - (void)_setMachineIsIdle:(BOOL)inIdle;
 - (void)_addStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
 - (void)_removeStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
+- (BOOL)removeIfNecessaryTemporaryStatusState:(AIStatus *)originalState;
 - (NSString *)_titleForMenuDisplayOfState:(AIStatus *)statusState;
 
 - (NSArray *)_menuItemsForStatusesOfType:(AIStatusType)type forServiceCodeUniqueID:(NSString *)inServiceCodeUniqueID withTarget:(id)target;
@@ -1557,8 +1558,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		enumerator = [[[adium accountController] accountArray] objectEnumerator];
 		while(account = [enumerator nextObject]){
 			if([account statusState] == originalState){
-				count++;
-				if(count > 1) break;
+				if(++count > 1) break;
 			}
 		}
 		NSLog(@"%i are using %@",count,originalState);
