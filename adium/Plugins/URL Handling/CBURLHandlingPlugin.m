@@ -49,11 +49,14 @@
 	Err = ICGetPref(ICInst, key, &Junk, &Spec, &TheSize);
 
 	//Set the name and creator codes
-	Spec.name[0] = sprintf((char *) &Spec.name[1], "Adium.app");
-	Spec.fCreator = 'AdIM';
-
-	//Set the helper app to Adium
-	Err = ICSetPref(ICInst, key, Junk, &Spec, TheSize);
+	if (Spec.fCreator != 'AdIM'){
+		NSLog(@"must set");
+		Spec.name[0] = sprintf((char *) &Spec.name[1], "Adium.app");
+		Spec.fCreator = 'AdIM';
+		
+		//Set the helper app to Adium
+		Err = ICSetPref(ICInst, key, Junk, &Spec, TheSize);
+	}
 }
 
 - (void)handleURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
