@@ -288,9 +288,9 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 - (void)setEmoticon:(AIEmoticon *)inEmoticon inPack:(AIEmoticonPack *)inPack enabled:(BOOL)enabled
 {
     NSString                *packKey = [self _keyForPack:inPack];
-    NSMutableDictionary     *packDict = [[[[adium preferenceController] preferenceForKey:packKey
-																				   group:PREF_GROUP_EMOTICONS] mutableCopy] autorelease];
-    NSMutableArray          *disabledArray = [[[packDict objectForKey:KEY_EMOTICON_DISABLED] mutableCopy] autorelease];
+    NSMutableDictionary     *packDict = [[[adium preferenceController] preferenceForKey:packKey
+																				   group:PREF_GROUP_EMOTICONS] mutableCopy];
+    NSMutableArray          *disabledArray = [[packDict objectForKey:KEY_EMOTICON_DISABLED] mutableCopy];
 	
     if(!packDict) packDict = [NSMutableDictionary dictionary];
     if(!disabledArray) disabledArray = [NSMutableArray array];
@@ -308,6 +308,9 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     //Save changes
     [packDict setObject:disabledArray forKey:KEY_EMOTICON_DISABLED];
     [[adium preferenceController] setPreference:packDict forKey:packKey group:PREF_GROUP_EMOTICONS];
+	
+	[disabledArray release];
+	[packDict release];
 }
 
 //Returns the disabled emoticons in a pack
