@@ -561,15 +561,17 @@
 	[self contactListDesiredSizeChanged:nil];
 }
 
-//Reload the contact list (if updates aren't delayed)
+//Update the contact list (if updates aren't delayed)
 - (void)contactOrderChanged:(NSNotification *)notification
 {
-	id		object = [notification object];
-	
+	id		object = [[notification object] containingObject];
+
+	//The notification passes the contact who's order changed.  This means that we must reload the group containing
+	//that contact in order to correctly update the list.
 	if(!object || (object == contactList)){ //Treat a nil object as equivalent to the contact list
 		[contactListView reloadData];
 	}else{
-		if([object containingObject]) [contactListView reloadItem:[object containingObject] reloadChildren:YES];
+		[contactListView reloadItem:object reloadChildren:YES];
 	}
 }
 
