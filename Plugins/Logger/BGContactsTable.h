@@ -22,10 +22,12 @@
     IBOutlet    NSPopUpButton                     *popup_filterType;
     IBOutlet    NSWindow                          *window_LogViewer;
 	
-	BOOL		showingContacts;
-	NSImage		*blankImage;
+                BOOL                              showingContacts;
+                NSImage                           *blankImage;
 }
 
 - (IBAction)switchTable:(id)sender;
 
+- (void)moveAccountToTrash;
+- (void)moveContactToTrash;
 @end
