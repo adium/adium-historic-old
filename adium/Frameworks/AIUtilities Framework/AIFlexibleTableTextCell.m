@@ -18,6 +18,7 @@
 #import "AICursorAdditions.h"
 #import "AITooltipUtilities.h"
 #import "AILinkTrackingController.h"
+#import "AITextAttachmentExtension.h"
 
 #define FRACTIONAL_PADDING 1.0
 #define	EDITOR_X_INSET	-6
@@ -29,6 +30,7 @@
 - (void)_buildLinkArray;
 - (void)_showTooltipForEvent:(NSEvent *)theEvent;
 - (void)_endTrackingMouse;
+- (BOOL)handleEmoticonClicks:(NSEvent *)theEvent withOffset:(NSSize)offset;
 @end
 
 BOOL _mouseInRects(NSPoint aPoint, NSRectArray someRects, int arraySize, BOOL flipped);
@@ -194,7 +196,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 {
     NSRange	selectionRange = [self validRangeFromIndex:sourceIndex to:destIndex];
 
-    return([string attributedSubstringFromRange:selectionRange]);
+    //return([[string safeString] attributedSubstringFromRange:selectionRange]);
+    return([[textStorage attributedSubstringFromRange:selectionRange] safeString]);
 }
 
 
@@ -268,11 +271,84 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
 - (BOOL)handleMouseDown:(NSEvent *)theEvent
 {
+    BOOL	handled = NO;
     if(containsLinks){
-        return([linkTrackingController handleMouseDown:theEvent withOffset:NSMakeSize(-[self frame].origin.x, -[self frame].origin.y)]);
+        handled = ([linkTrackingController handleMouseDown:theEvent withOffset:NSMakeSize(-[self frame].origin.x, -[self frame].origin.y)]);
     }else{
-        return(NO);
+        handled = (NO);
     }
+    
+    if (TRUE) {	// Add check for emoticons being present, if too slow
+        handled = [self handleEmoticonClicks:theEvent withOffset:NSMakeSize(-[self frame].origin.x, -[self frame].origin.y)];
+    }
+    
+    return	handled;
+}
+
+- (BOOL)handleEmoticonClicks:(NSEvent *)theEvent withOffset:(NSSize)offset
+{
+    BOOL	handled = NO;
+    unsigned int	glyphIndex;
+    unsigned int	charIndex;
+    
+    //Find clicked char index
+    NSPoint mouseLoc = [tableView convertPoint:[theEvent locationInWindow] fromView:nil];
+    mouseLoc.x += offset.width;
+    mouseLoc.y += offset.height;
+    
+    glyphIndex = [layoutManager glyphIndexForPoint:mouseLoc inTextContainer:textContainer fractionOfDistanceThroughGlyph:nil];
+    charIndex = [layoutManager characterIndexForGlyphAtIndex:glyphIndex];
+    
+    if(charIndex >= 0 && charIndex < [textStorage length]){
+        // Check for emoticons to turn into text
+        if ([[textStorage string] characterAtIndex:charIndex] == NSAttachmentCharacter){
+            NSString	*repStr = [[textStorage attribute:NSAttachmentAttributeName atIndex:charIndex effectiveRange:nil] string];
+            
+            if (repStr != nil){
+                NSMutableAttributedString	*repAttStr = [[NSMutableAttributedString alloc] initWithString:repStr];
+                //NSAttributedString			*origStr = [[textStorage attributedSubstringFromRange:NSMakeRange(charIndex,1)] retain];
+                AITextAttachmentExtension		*origSmiley = [textStorage attribute:NSAttachmentAttributeName atIndex:charIndex effectiveRange:nil];
+                
+                //NSLog (@"Saving image string, whose text is %@", [origStr string]);
+                
+                
+                // Add attribute holding original string with attachment
+                [repAttStr addAttribute:@"IKHiddenAttachment" value:origSmiley range:NSMakeRange(0,[repAttStr length])];
+                
+                // Insert string
+                [textStorage replaceCharactersInRange:NSMakeRange(charIndex,1) withAttributedString:repAttStr];
+                
+                handled = true;
+            }
+            
+        // Check for smily text to turn back into emoticons
+        } else if ([textStorage attribute:@"IKHiddenAttachment" atIndex:charIndex effectiveRange:nil]) {
+            NSLog (@"MouseDown: Found attachment text to replace w/ attachment");
+            // Find what to replace with what
+            NSRange		replaceRange;
+            
+            NSMutableAttributedString	*repAttStr;
+            //NSAttributedString	*repAttStr = [textStorage attribute:@"IKHiddenAttachment" atIndex:charIndex effectiveRange:&replaceRange];
+            AITextAttachmentExtension	*repAtt = [textStorage attribute:@"IKHiddenAttachment" atIndex:charIndex effectiveRange:&replaceRange];
+            
+            repAttStr = [[NSMutableAttributedString attributedStringWithAttachment:repAtt] retain];
+            [repAttStr addAttributes:[textStorage attributesAtIndex:charIndex effectiveRange:nil] range:NSMakeRange(0,1)];
+            
+            //NSLog (@"into range: XX, with 'text': %@", [repAttStr string]);
+            
+            // Replace text with original image
+            [textStorage replaceCharactersInRange:replaceRange withAttributedString:repAttStr];
+            
+            handled = true;
+        }
+    }
+    
+    if (handled){
+    	glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
+        [tableView setNeedsDisplay:TRUE];
+    }
+    
+    return(handled);
 }
 
 
