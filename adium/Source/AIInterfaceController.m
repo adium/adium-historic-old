@@ -23,7 +23,8 @@
 @interface AIInterfaceController (PRIVATE)
 - (void)loadDualInterface;
 - (void)flashTimer:(NSTimer *)inTimer;
-- (NSString *)_tooltipStringForObject:(AIListObject *)object;
+- (NSAttributedString *)_tooltipTitleForObject:(AIListObject *)object;
+- (NSAttributedString *)_tooltipBodyForObject:(AIListObject *)object;
 @end
 
 @implementation AIInterfaceController
@@ -37,7 +38,9 @@
     contactListTooltipEntryArray = [[NSMutableArray alloc] init];
 
     tooltipListObject = nil;
-    tooltipString = nil;
+    tooltipTitle = nil;
+    tooltipBody = nil;
+    tooltipImage = nil;
     flashObserverArray = nil;
     flashTimer = nil;
     flashState = 0;
@@ -203,68 +206,122 @@
     if(object){
         if(object == tooltipListObject){ //If we already have this tooltip open
             //Move the existing tooltip
-            [AITooltipUtilities showTooltipWithString:tooltipString onWindow:nil atPoint:point orientation:TooltipBelow];
+            [AITooltipUtilities showTooltipWithTitle:tooltipTitle body:tooltipBody image:tooltipImage onWindow:nil atPoint:point orientation:TooltipBelow];
 
         }else{ //This is a new tooltip
             //Hold onto the new object
             [tooltipListObject release];
             tooltipListObject = [object retain];
 
+            [tooltipTitle release]; tooltipTitle = nil;
+            tooltipTitle = [[self _tooltipTitleForObject:object] retain];
+            
             //Build a tooltip string for the new object
-            [tooltipString release]; tooltipString = nil;
-            tooltipString = [[self _tooltipStringForObject:object] retain];
+            [tooltipBody release]; tooltipBody = nil;
+            tooltipBody = [[self _tooltipBodyForObject:object] retain];
+            
+            [tooltipImage release]; tooltipImage = nil;
+            //Buddy Icon
+            AIMutableOwnerArray *ownerArray = [tooltipListObject statusArrayForKey:@"BuddyImage"];
+            if(ownerArray && [ownerArray count]){
+                tooltipImage = [[ownerArray objectAtIndex:0] retain];
+            }else{
+                tooltipImage = [[AIImageUtilities imageNamed:@"DefaultIcon" forClass:[self class]] retain];
+            }
+            
+            //If a body exists, add a blank line to the title to provide white space between the two
+            //if ([tooltipBody length])
+            //    [tooltipTitle appendAttributedString:[[NSAttributedString alloc] initWithString:@"\r"]];
             
             //Display the new tooltip
-            [AITooltipUtilities showTooltipWithString:tooltipString onWindow:nil atPoint:point orientation:TooltipBelow];
+            [AITooltipUtilities showTooltipWithTitle:tooltipTitle body:tooltipBody image:tooltipImage onWindow:nil atPoint:point orientation:TooltipBelow];
         }
 
     }else{
         //Hide the existing tooltip
         if(tooltipListObject){
-            [AITooltipUtilities showTooltipWithString:nil onWindow:nil atPoint:point orientation:TooltipBelow];
+            [AITooltipUtilities showTooltipWithTitle:nil body:nil image:nil onWindow:nil atPoint:point orientation:TooltipBelow];
             [tooltipListObject release]; tooltipListObject = nil;
         }
     }
 }
 
-- (NSString *)_tooltipStringForObject:(AIListObject *)object
+- (NSAttributedString *)_tooltipTitleForObject:(AIListObject *)object
 {
-    NSMutableString	*tipString = [[NSMutableString alloc] init];
-    NSString		*displayName = [object displayName];
-    NSString		*uid = [object UID];
-    BOOL		firstItem = YES;
-
+    NSString                    *displayName = [object displayName];
+    NSString                    *uid = [object UID];
+    
+    NSDictionary        *titleDict = [NSDictionary dictionaryWithObjectsAndKeys:
+        [NSNumber numberWithInt:1], NSUnderlineStyleAttributeName, [NSFont toolTipsFontOfSize:12], NSFontAttributeName, nil];
+    
     //"<DisplayName>" (or) "<DisplayName> (<UID>)"
     if([displayName compare:uid] == 0){
-        [tipString appendString:displayName];
+        return [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@",displayName] attributes:titleDict] autorelease];
     }else{
-        [tipString appendString:[NSString stringWithFormat:@"%@ (%@)",displayName,uid]];
+        return [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@)",displayName,uid] attributes:titleDict] autorelease];
     }
-
+}
+- (NSAttributedString *)_tooltipBodyForObject:(AIListObject *)object
+{
+    NSMutableAttributedString	*tipString = [[NSMutableAttributedString alloc] init];
+    
+    //Configure fonts and attributes
+    //NSFontManager       *fontManager = [NSFontManager sharedFontManager];
+    NSFont              *toolTipsFont = [NSFont toolTipsFontOfSize:10];
+    
+    NSDictionary        *labelDict = [NSDictionary dictionaryWithObjectsAndKeys:
+        [NSFont toolTipsFontOfSize:9], NSFontAttributeName, nil];
+    NSDictionary        *entryDict =[NSDictionary dictionaryWithObjectsAndKeys:
+        toolTipsFont, NSFontAttributeName, nil];
+    
+    //entries from plugins
     if([contactListTooltipEntryArray count] != 0){
         id <AIContactListTooltipEntry>	tooltipEntry;
         NSEnumerator			*enumerator;
         
-        //Additional entries
+        //Calculate the widest label
+        enumerator = [contactListTooltipEntryArray objectEnumerator];
+        int maxLabelSize = 0;
+        int labelSize;
+        while (tooltipEntry = [enumerator nextObject]){
+            //The largest size should be the label's size plus the distance to the next tab at least a space past its end
+            NSAttributedString * labelString = [[NSAttributedString alloc] initWithString:
+                 [NSString stringWithFormat:@"%@ \t",[tooltipEntry label]] attributes:labelDict];
+            labelSize = [labelString size].width;
+            
+            if (labelSize > maxLabelSize)
+                maxLabelSize = labelSize;
+        }
+        
+        BOOL firstEntry = YES;
+        //Add labels plus entires to the toolTip
         enumerator = [contactListTooltipEntryArray objectEnumerator];
         while((tooltipEntry = [enumerator nextObject])){
-            NSString	*labelString = [tooltipEntry label];
             NSString	*entryString = [tooltipEntry entryForObject:object];
-
             if(entryString){
-                if(firstItem){ //Add a divider above the first entry
-                    [tipString appendString:@"\r"];
-                    firstItem = NO;
+                //Tab over from each label until it has the width of the widest one (plus the widest one's tab)
+                NSMutableString * labelString = [[NSMutableString alloc] initWithString:[NSString stringWithFormat:@"%@ ",[tooltipEntry label]]]; 
+                while (maxLabelSize >= [[[NSMutableAttributedString alloc] initWithString:labelString attributes:labelDict] size].width) {
+                    [labelString appendString:@"\t"];
                 }
-                [tipString appendString:[NSString stringWithFormat:@"\r%@: %@",labelString,entryString]];
+                
+                if (firstEntry) {
+                    //Add the label (with its spacing)
+                    [tipString appendString:labelString withAttributes:labelDict];
+                    firstEntry = NO;
+                } else {
+                    //Add a carriage return and the label (with its spacing)
+                    [tipString appendString:[NSString stringWithFormat:@"\r%@",labelString]
+                         withAttributes:labelDict];
+                }
+                //Add the entry
+                [tipString appendString:entryString withAttributes:entryDict];
             }
         }
     }
-
+    
     return([tipString autorelease]);
 }
-
-
 
 //Custom pasting ----------------------------------------------------------------------------------------------------
 @protocol _RESPONDS_TO_PASTE //Just a temp protocol to suppress compiler warnings
@@ -302,12 +359,3 @@
 }
 
 @end
-
-
-
-
-
-
-
-
-

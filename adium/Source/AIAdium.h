@@ -462,8 +462,10 @@ typedef enum {
     NSTimer			*flashTimer;
     int				flashState;
     AIListObject		*tooltipListObject;
-    NSString			*tooltipString;
-    
+    NSMutableAttributedString   *tooltipBody;
+    NSMutableAttributedString   *tooltipTitle;
+    NSImage                     *tooltipImage;
+
     NSString			*errorTitle;
     NSString			*errorDesc;
 
