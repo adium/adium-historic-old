@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-//$Id: LNAboutBoxController.m,v 1.35 2004/05/24 06:04:20 evands Exp $
+//$Id: LNAboutBoxController.m,v 1.36 2004/06/20 23:47:27 evands Exp $
 
 #import "LNAboutBoxController.h"
 
@@ -170,8 +170,9 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 		}
 		
 		if(*unixDate){
-			NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%B %e, %Y" allowNaturalLanguage:NO] autorelease];
-            NSDate	    *date;
+			NSDateFormatter *dateFormatter = [NSDateFormatter localizedDateFormatter];
+
+			NSDate	    *date;
 			
 			date = [NSDate dateWithTimeIntervalSince1970:[[NSString stringWithCString:unixDate] doubleValue]];
             buildDate = [[dateFormatter stringForObjectValue:date] retain];
