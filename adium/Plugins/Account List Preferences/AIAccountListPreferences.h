@@ -34,6 +34,7 @@
 	id <AIServiceController>		configuredForService;
 	AIAccount						*configuredForAccount;
     AIAccountViewController			*accountViewController;
+	NSTimer							*responderChainTimer;
 
     //Account List
     NSArray							*accountArray;
