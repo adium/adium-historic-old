@@ -3,7 +3,7 @@
  * File:        AWEzvContact.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContact.m,v 1.5 2004/06/15 16:08:30 proton Exp $
+ * CVS tag:     $Id: AWEzvContact.m,v 1.6 2004/07/13 15:05:56 evands Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -85,21 +85,21 @@
     }
     
     /* setup XML tree */
-    messageNode = [[AWEzvXMLNode alloc] initWithType:XMLElement name:@"message"];
+    messageNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"message"];
     [messageNode addAttribute:@"to" withValue:_ipAddr];
     [messageNode addAttribute:@"type" withValue:@"chat"];
     
-    bodyNode = [[AWEzvXMLNode alloc] initWithType:XMLElement name:@"body"];
+    bodyNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"body"];
     [messageNode addChild:bodyNode];
     
     textNode = [[AWEzvXMLNode alloc] initWithType:XMLText name:message];
     [bodyNode addChild:textNode];
     
-    htmlNode = [[AWEzvXMLNode alloc] initWithType:XMLElement name:@"html"];
+    htmlNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"html"];
     [htmlNode addAttribute:@"xmlns" withValue:@"http://www.w3.org/1999/xhtml"];
     [messageNode addChild:htmlNode];
     
-    htmlBodyNode = [[AWEzvXMLNode alloc] initWithType:XMLElement name:@"body"];
+    htmlBodyNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"body"];
     [htmlBodyNode addAttribute:@"ichattextcolor" withValue:@"#000000"];
     [htmlNode addChild:htmlBodyNode];
     
@@ -121,30 +121,30 @@
 - (void) sendTypingNotification:(AWEzvTyping)typingStatus {
     AWEzvXMLNode *messageNode, *bodyNode, *htmlNode, *htmlBodyNode, *xNode, *composingNode = nil, *idNode = nil;
     
-    messageNode = [[AWEzvXMLNode alloc] initWithType:XMLElement name:@"message"];
+    messageNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"message"];
     [messageNode addAttribute:@"to" withValue:_ipAddr];
     
-    bodyNode = [[AWEzvXMLNode alloc] initWithType:XMLElement name:@"body"];
+    bodyNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"body"];
     [messageNode addChild:bodyNode];
 
-    htmlNode = [[AWEzvXMLNode alloc] initWithType:XMLElement name:@"html"];
+    htmlNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"html"];
     [htmlNode addAttribute:@"xmlns" withValue:@"http://www.w3.org/1999/xhtml"];
     [messageNode addChild:htmlNode];
     
-    htmlBodyNode = [[AWEzvXMLNode alloc] initWithType:XMLElement name:@"body"];
+    htmlBodyNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"body"];
     [htmlBodyNode addAttribute:@"ichattextcolor" withValue:@"#000000"];
     [htmlNode addChild:htmlBodyNode];
     
-    xNode = [[AWEzvXMLNode alloc] initWithType:XMLElement name:@"x"];
+    xNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"x"];
     [xNode addAttribute:@"xmlns" withValue:@"jabber:x:event"];
     [messageNode addChild:xNode];
     
     if (composingNode != nil) {
-	composingNode = [[AWEzvXMLNode alloc] initWithType:XMLElement name:@"composing"];
+	composingNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"composing"];
 	[xNode addChild:composingNode];
     }
     
-    idNode = [[AWEzvXMLNode alloc] initWithType:XMLElement name:@"id"];
+    idNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"id"];
     [xNode addChild:idNode];
     
     /* send the data */

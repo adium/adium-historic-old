@@ -3,7 +3,7 @@
  * File:        AWEzvXMLStream.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvXMLStream.m,v 1.2 2004/05/22 06:19:21 proton Exp $
+ * CVS tag:     $Id: AWEzvXMLStream.m,v 1.3 2004/07/13 15:05:56 evands Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -150,7 +150,7 @@ void xml_char_data	(void *userData,
     
     nodeName = [NSString stringWithUTF8String:name];
     
-    node = [[[AWEzvXMLNode alloc] initWithType:XMLElement name:nodeName] autorelease];
+    node = [[[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:nodeName] autorelease];
     
     while (*attributes != NULL) {
         attribute = [NSString stringWithUTF8String:*attributes++];
@@ -244,7 +244,7 @@ void xml_char_data	(void *userData,
     NSMutableArray	*array;
     
     CFXMLNodeRef	xmlNode;
-    CFXMLElementInfo	xmlElementInfo;
+    CFXMLElementInfo	AWEzvXMLElementInfo;
     CFXMLTreeRef	xmlTree;
     NSData		*data;
 
@@ -268,12 +268,12 @@ void xml_char_data	(void *userData,
 	[array insertObject:@"to" atIndex:0];
     
     /* and make an element info structure */
-    xmlElementInfo.attributes = (CFDictionaryRef)[[dict copy] autorelease];
-    xmlElementInfo.attributeOrder = (CFArrayRef)[[array copy] autorelease];
-    xmlElementInfo.isEmpty = YES;
+    AWEzvXMLElementInfo.attributes = (CFDictionaryRef)[[dict copy] autorelease];
+    AWEzvXMLElementInfo.attributeOrder = (CFArrayRef)[[array copy] autorelease];
+    AWEzvXMLElementInfo.isEmpty = YES;
     
     /* create node and tree, then convert to XML text */
-    xmlNode = CFXMLNodeCreate(NULL, kCFXMLNodeTypeElement, (CFStringRef)string, &xmlElementInfo, kCFXMLNodeCurrentVersion);
+    xmlNode = CFXMLNodeCreate(NULL, kCFXMLNodeTypeElement, (CFStringRef)string, &AWEzvXMLElementInfo, kCFXMLNodeCurrentVersion);
     xmlTree = CFXMLTreeCreateWithNode(NULL, xmlNode);
     (CFDataRef)data = CFXMLTreeCreateXMLData(NULL, xmlTree);
     
