@@ -1040,6 +1040,7 @@
 				4B71CD5B03CBCAE200A8010A,
 				4B53714A03CEF16D00A8010A,
 				4B53714D03CEF61200A8010A,
+				4BC5DDA803D059D200A8010A,
 			);
 			isa = PBXGroup;
 			name = "Text Profiles";
@@ -1059,6 +1060,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B53714E03CEF61200A8010A,
+				4BC5DDA903D059D200A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1579,6 +1581,18 @@
 		};
 		4BC3133503BCD2FA00A8010A = {
 			fileRef = F55B415D03AB8B5601A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC5DDA803D059D200A8010A = {
+			isa = PBXFileReference;
+			name = ContactProfile.nib;
+			path = "Plugins/Text Profiles/ContactProfile.nib";
+			refType = 4;
+		};
+		4BC5DDA903D059D200A8010A = {
+			fileRef = 4BC5DDA803D059D200A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};

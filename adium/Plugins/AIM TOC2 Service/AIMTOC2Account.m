@@ -42,13 +42,17 @@ static char *hash_password(const char * const password);
 - (void)AIM_HandleError:(NSString *)message;
 - (void)AIM_HandleConfig:(NSString *)message;
 - (void)AIM_HandleMessageIn:(NSString *)inCommand;
+- (void)AIM_HandleGotoURL:(NSString *)message;
 - (void)AIM_SendMessage:(NSString *)inMessage toHandle:(NSString *)handleUID;
 - (void)AIM_SetIdle:(double)inSeconds;
 - (void)AIM_SetProfile:(NSString *)profile;
 - (void)AIM_SetStatus;
+- (void)AIM_GetProfile:(NSString *)handleUID;
+- (NSString *)extractStringFrom:(NSString *)searchString between:(NSString *)stringA and:(NSString *)stringB;
 - (NSString *)validCopyOfString:(NSString *)inString;
 - (void)connect;
 - (void)disconnect;
+- (void)updateContactStatus:(NSNotification *)notification;
 @end
 
 @implementation AIMTOC2Account
@@ -67,6 +71,9 @@ static char *hash_password(const char * const password);
     addDict = [[NSMutableDictionary alloc] init];
     messageDelayTimer = nil;
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
+
+    //
+    [[[owner contactController] contactNotificationCenter] addObserver:self selector:@selector(updateContactStatus:) name:Contact_UpdateStatus object:nil];
     
     //Load our preferences
     preferencesDict = [[preferenceController preferencesForGroup:AIM_TOC2_PREFS] retain];
@@ -277,6 +284,18 @@ static char *hash_password(const char * const password);
 
 
 
+- (void)updateContactStatus:(NSNotification *)notification
+{
+    NSArray		*desiredKeys = [[notification userInfo] objectForKey:@"Keys"];
+    AIContactHandle	*handle = [notification object];
+    
+    //AIM requires a delayed load of profiles...
+    if([desiredKeys containsObject:@"TextProfile"]){
+        [self AIM_GetProfile:[handle UID]];
+    }
+    
+}
+
 // Internal --------------------------------------------------------------------------------
 //Dealloc
 - (void)dealloc
@@ -354,7 +373,7 @@ static char *hash_password(const char * const password);
 //Removes all the possible status flags (that are valid on AIM/TOC) from the passed handle
 - (void)removeAllStatusFlagsFromHandle:(AIContactHandle *)handle
 {
-    NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"Idle",@"Signon Date",@"Away",@"Client",nil];
+    NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"Idle",@"Signon Date",@"Away",@"Client",@"TextProfile",nil];
     int		loop;
     
     for(loop = 0;loop < [keyArray count];loop++){
@@ -410,6 +429,8 @@ static char *hash_password(const char * const password);
                 [self AIM_HandleUpdateBuddy:message];
 
             }else if([command compare:@"GOTO_URL"] == 0){
+                [self AIM_HandleGotoURL:message];
+                      
             }else if([command compare:@"EVILED"] == 0){
             }else if([command compare:@"CHAT_JOIN"] == 0){
             }else if([command compare:@"CHAT_LEFT"] == 0){
@@ -921,6 +942,51 @@ static char *hash_password(const char * const password);
 
 }
 
+- (void)AIM_HandleGotoURL:(NSString *)message
+{
+    NSString	*host, *port, *path, *urlString;
+    NSURL	*url;
+    NSData	*data;
+    NSString	*profileHTML, *profile;
+    NSString	*userName;
+
+    //Key pieces of HTML that mark the begining and end of the AIM profile (and the username)
+    #define USERNAME_START	@"Username : <B>"
+    #define USERNAME_END	@"</B>"    
+    #define PROFILE_START	@"<hr><br>"
+    #define PROFILE_END		@"<br><hr><I>Legend:</I><br><br>"
+    
+    //Piece together the URL (http://host:port/profile#)
+    host = [preferencesDict objectForKey:AIM_TOC2_KEY_HOST];
+    port = [preferencesDict objectForKey:AIM_TOC2_KEY_PORT];
+    path = [message nonBreakingTOCStringArgumentAtIndex:2];
+    urlString = [NSString stringWithFormat:@"http://%@:%@/%@", host, port, path];
+    
+    //Fetch the site
+    //Just to note: this caused a crash when the user had a proxy in previous versions of Adium
+    url = [NSURL URLWithString:urlString];
+    data = [url resourceDataUsingCache:NO];
+    profileHTML = [[[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding] autorelease];
+
+    //Extract the username and profile
+    userName = [self extractStringFrom:profileHTML between:USERNAME_START and:USERNAME_END];
+    profile = [self extractStringFrom:profileHTML between:PROFILE_START and:PROFILE_END];
+
+    if(userName && profile){
+        AIContactHandle		*handle = [[owner contactController] handleWithService:[service handleServiceType] UID:[userName compactedString] forAccount:self];
+        AIMutableOwnerArray	*ownerArray;
+
+        //Add profile to the handle
+        ownerArray = [handle statusArrayForKey:@"TextProfile"];
+        [ownerArray removeObjectsWithOwner:self];
+        [ownerArray addObject:[AIHTMLDecoder decodeHTML:profile] withOwner:self];
+        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"TextProfile"]];
+        
+    }else{
+        [[owner interfaceController] handleErrorMessage:@"Invalid Server Response" withDescription:@"The AIM server has returned HTML that Adium does not recognize."];
+    }
+}
+
 - (void)AIM_SetIdle:(double)inSeconds
 {
     NSString	*idleMessage;
@@ -936,6 +1002,16 @@ static char *hash_password(const char * const password);
     NSString	*message;
 
     message = [NSString stringWithFormat:@"toc_set_info \"%@\"",[self validCopyOfString:profile]];
+
+    //Send the message
+    [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
+}
+
+- (void)AIM_GetProfile:(NSString *)handleUID
+{
+    NSString	*message;
+
+    message = [NSString stringWithFormat:@"toc_get_info %@",handleUID];
 
     //Send the message
     [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
@@ -1018,5 +1094,24 @@ static char *hash_password(const char * const password) {
 
     return(message);
 }
+
+//Extracts a string from another, using 2 other strings to locate the desired segment
+- (NSString *)extractStringFrom:(NSString *)searchString between:(NSString *)stringA and:(NSString *)stringB
+{
+    NSString	*string = nil;
+    int		start, end;
+    NSRange	range;
+
+    range = [searchString rangeOfString:stringA];
+    start = range.location + range.length;
+    end = [searchString rangeOfString:stringB].location;
+
+    if(start >= 0 && start < [searchString length] && end >= 0 && end < [searchString length] && end > start){ //Ensure the ranges are valid
+        string = [searchString substringWithRange:NSMakeRange(start, end - start)];
+    }
+
+    return(string);
+}
+
 
 @end
