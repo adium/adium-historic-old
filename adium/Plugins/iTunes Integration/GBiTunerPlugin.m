@@ -27,8 +27,6 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 //install plugin
 - (void)installPlugin
 {
-	NSMenuItem	*scriptMenuItem;
-	
 	//Perform substitutions on outgoing content
 	[[adium contentController] registerOutgoingContentFilter:self];
 
@@ -44,9 +42,10 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	scriptDict = [[NSMutableDictionary alloc] init];
 	
 	//Load all our scripts, and stick them in the script menu
-	scriptMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Script" target:self action:nil keyEquivalent:@""] autorelease];
+	scriptMenuItem = [[NSMenuItem alloc] initWithTitle:@"Script" target:self action:@selector(dummyTarget:) keyEquivalent:@""];
 	[[adium menuController] addMenuItem:scriptMenuItem toLocation:LOC_Edit_Additions];
-	[scriptMenuItem setSubmenu:[self loadScriptsAndBuildScriptMenu]];
+	//Wait until the first time the menu is accessed to generate the submenu of scripts, in validateMenuItem:
+	hasGeneratedScriptMenu = NO;
 }
 
 //Load the scripts and build (returning) a script menu of them
@@ -205,6 +204,11 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 //Disable the insertion if a text field is not active
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
+	if (!hasGeneratedScriptMenu) {
+		[scriptMenuItem setSubmenu:[self loadScriptsAndBuildScriptMenu]];
+		hasGeneratedScriptMenu = YES;
+	}
+	
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 	return(responder && [responder isKindOfClass:[NSText class]]);
 }
@@ -258,12 +262,18 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
     return((returnString && [returnString length]) ? returnString : @" ");	
 }
 
+-(IBAction)dummyTarget:(id)sender
+{
+	//Just a target so we get the validateMenuItem: call for the script menu
+}
+
 - (void)uninstallPlugin
 {
 	[[adium contentController] unregisterOutgoingContentFilter:self];
 	[[adium contentController] unregisterStringFilter:self];
     [scriptDict release];
 	[scriptArray release];
+	[scriptMenuItem release];
 }
 
 @end
