@@ -181,14 +181,18 @@
 //The versionDict was downloaded succesfully
 - (void)URLResourceDidFinishLoading:(NSURL *)sender
 {
-	NSDictionary	*versionDict;
+	NSData			*data = [sender resourceDataUsingCache:YES];
+	
+	if(data){
+		NSDictionary	*versionDict;
 
-	versionDict = [NSPropertyListSerialization propertyListFromData:[sender resourceDataUsingCache:YES]
-												   mutabilityOption:NSPropertyListImmutable
-															 format:nil
-												   errorDescription:nil];
-
-	[self _versionReceived:versionDict];
+		versionDict = [NSPropertyListSerialization propertyListFromData:data
+													   mutabilityOption:NSPropertyListImmutable
+																 format:nil
+													   errorDescription:nil];
+		
+		[self _versionReceived:versionDict];
+	}
 }
 
 //The versionDict could not be loaded
