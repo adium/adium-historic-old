@@ -69,7 +69,13 @@
 		for(i = 0; i < [self numberOfTabViewItems]; i++){
 			NSTabViewItem	*tabViewItem = [self tabViewItemAtIndex:i];
 			NSString 		*identifier = [NSString stringWithFormat:@"%i",i];
-			NSString		*label = [tabViewItem label];
+			NSString		*label = nil;
+			
+			if([[self delegate] respondsToSelector:@selector(tabView:labelForTabViewItem:)]){
+				label = [[self delegate] tabView:self labelForTabViewItem:tabViewItem];
+			}
+			
+			if(!label) label = [tabViewItem label];
 			
 			//We use the tab view item's index as identifier so we can easily sort our toolbar items into the same
 			//ordering as the tabs.
