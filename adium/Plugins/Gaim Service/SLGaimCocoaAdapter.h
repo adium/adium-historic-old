@@ -17,8 +17,6 @@
 @interface SLGaimCocoaAdapter {
 }
 
-+ (void)init;
-
 - (void)callTimerFunc:(id)obj;
 - (void)callIOFunc:(id)obj;
 
