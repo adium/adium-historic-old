@@ -10,6 +10,7 @@
 
 #import "AIListLayoutWindowController.h"
 
+#define FONT_HEIGHT_STRING	@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
 @implementation AIListContactCell
@@ -48,17 +49,73 @@
 }
 
 
-//
+
+
+//Status Text ----------------------------------------------------------------------------------------------------------
+//Font used to display status text
 - (void)setStatusFont:(NSFont *)inFont
 {
 	if(inFont && inFont != statusFont){
+		NSDictionary		*attributes;
+		NSAttributedString 	*statusString;
+		
 		[statusFont release];
 		statusFont = [inFont retain];
+
+		//Calculate and cache the height of this font
+		attributes = [NSDictionary dictionaryWithObject:[self statusFont] forKey:NSFontAttributeName];
+		statusString = [[[NSAttributedString alloc] initWithString:FONT_HEIGHT_STRING attributes:attributes] autorelease];
+		statusFontHeight = [statusString heightWithWidth:1e7];
+		
+		//Flush the status attributes cache
+		[_statusAttributes release]; _statusAttributes = nil;
 	}
 }
 - (NSFont *)statusFont{
 	return(statusFont);
 }
+
+//Attributes for displaying the status string (Cached)
+//Cache is flushed when alignment, color, or font is changed
+- (NSDictionary *)statusAttributes
+{
+	if(!_statusAttributes){
+		NSParagraphStyle	*paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
+																	 lineBreakMode:NSLineBreakByTruncatingTail];
+		
+		_statusAttributes = [[NSDictionary dictionaryWithObjectsAndKeys:
+			paragraphStyle, NSParagraphStyleAttributeName,
+			EXTENDED_STATUS_COLOR, NSForegroundColorAttributeName,
+			[self statusFont], NSFontAttributeName,nil] retain];
+	}
+	
+	return(_statusAttributes);
+}
+
+//Flush status attributes when alignment is changed
+- (void)setTextAlignment:(NSTextAlignment)inAlignment
+{
+	[super setTextAlignment:inAlignment];
+	[_statusAttributes release]; _statusAttributes = nil;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -387,102 +444,51 @@
 //User Extended Status
 - (NSRect)drawUserExtendedStatusInRect:(NSRect)rect drawUnder:(BOOL)drawUnder
 {
-	if(extendedStatusVisible){
-		if(drawUnder || [self textAlignment] != NSCenterTextAlignment){
-			NSString 	*string = [[listObject statusObjectForKey:@"StatusMessage"] string];
-			NSRange 	glyphRange;
-			
-			//if(!string) string = @"Online";
-			if(string){
-				int	halfHeight = rect.size.height / 2;
-				
-				//Pad
-				if(drawUnder){
-					rect.origin.y += halfHeight;
-					rect.size.height -= halfHeight;
-				}else{
-					if([self textAlignment] == NSLeftTextAlignment) rect.origin.x += NAME_STATUS_PAD;
-					rect.size.width -= NAME_STATUS_PAD;
-				}
-				
-				//Format string
-				
-				
-				NSParagraphStyle	*paragraphStyle;
-				
-				//Attributes
-				paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment lineBreakMode:NSLineBreakByTruncatingTail/*NSLineBreakByClipping*/];
-				
-				
-				
-				
-				NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-					paragraphStyle, NSParagraphStyleAttributeName,
-					EXTENDED_STATUS_COLOR, NSForegroundColorAttributeName,
-					[self statusFont], NSFontAttributeName,nil];
-				
-				
-				if(string){
-					//				string = [string stringByTruncatingTailToWidth:rect.size.width ];
-					
-					NSString *extStatus = [[[NSAttributedString alloc] initWithString:string attributes:attributes] autorelease];
-					
-					//				[[NSColor orangeColor] set];
-					//				[NSBezierPath fillRect:rect];
-					
-#warning gaaaaaah
-					NSAttributedString *statusString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[NSDictionary dictionaryWithObject:[self statusFont] forKey:NSFontAttributeName]] autorelease];
-					int		statusHeight = [statusString heightWithWidth:1e7];
-					
-					
-					
-					
-					
-					//Alignment
-					NSSize		nameSize = [extStatus size];
-					NSRect		drawRect = rect;
-					
-					if(nameSize.width > drawRect.size.width) nameSize = rect.size;
-					
-					switch([self textAlignment]){
-						case NSCenterTextAlignment:
-							drawRect.origin.x += (drawRect.size.width - nameSize.width) / 2.0;
-							break;
-						case NSRightTextAlignment:
-							drawRect.origin.x += (drawRect.size.width - nameSize.width);
-							break;
-						default:
-							break;
-					}
-					
-					
-					
-					
-					
-					
-					int half = (drawRect.size.height - statusHeight) / 2.0;
-					[extStatus drawInRect:NSMakeRect(drawRect.origin.x,
-													 drawRect.origin.y + half,
-													 drawRect.size.width,
-													 drawRect.size.height - half)];
-					
-					//				[textStorage setAttributedString:extStatus];
-					//				glyphRange = [layoutManager glyphRangeForBoundingRect:NSMakeRect(0,0,rect.size.width,10) inTextContainer:textContainer];
-					//				[layoutManager drawGlyphsForGlyphRange:glyphRange
-					//											   atPoint:NSMakePoint(rect.origin.x, rect.origin.y)];
-					
-					
-					
-				}
-				
-				
-				
-				
-				if(drawUnder){
-					rect.origin.y -= halfHeight;
-				}
+	if(extendedStatusVisible && (drawUnder || [self textAlignment] != NSCenterTextAlignment)){
+		NSString 	*string = [[listObject statusObjectForKey:@"StatusMessage"] string];
+		NSRange 	glyphRange;
+		
+		if(string){
+			int	halfHeight = rect.size.height / 2;
+
+			//Pad
+			if(drawUnder){
+				rect.origin.y += halfHeight;
+				rect.size.height -= halfHeight;
+			}else{
+				if([self textAlignment] == NSLeftTextAlignment) rect.origin.x += NAME_STATUS_PAD;
+				rect.size.width -= NAME_STATUS_PAD;
 			}
 			
+			NSString *extStatus = [[[NSAttributedString alloc] initWithString:string
+																   attributes:[self statusAttributes]] autorelease];
+			
+			//Alignment
+			NSSize		nameSize = [extStatus size];
+			NSRect		drawRect = rect;
+			
+			if(nameSize.width > drawRect.size.width) nameSize = rect.size;
+			
+			switch([self textAlignment]){
+				case NSCenterTextAlignment:
+					drawRect.origin.x += (drawRect.size.width - nameSize.width) / 2.0;
+					break;
+				case NSRightTextAlignment:
+					drawRect.origin.x += (drawRect.size.width - nameSize.width);
+					break;
+				default:
+					break;
+			}
+			
+			int half = (drawRect.size.height - statusFontHeight) / 2.0;
+			[extStatus drawInRect:NSMakeRect(drawRect.origin.x,
+											 drawRect.origin.y + half,
+											 drawRect.size.width,
+											 drawRect.size.height - half)];
+			
+			if(drawUnder){
+				rect.origin.y -= halfHeight;
+			}
 		}
 	}
 	return(rect);
