@@ -38,6 +38,8 @@
     BOOL				contentBottomAligned;	//YES for bottom-aligned content
     BOOL				forwardsKeyEvents;	//Pass keypresses to next responder
     NSPoint				contentOrigin;
+    int					topPadding;
+    int					bottomPadding;
     
     //Cursor tracking & selecting
     NSMutableArray			*cursorTrackingRowArray;
@@ -52,6 +54,7 @@
 - (void)setForwardsKeyEvents:(BOOL)inValue;
 - (void)removeAllRows;
 - (AIFlexibleTableRow *)rowAtIndex:(int)index;
+- (void)setContentPaddingTop:(int)inTop bottom:(int)inBottom;
 
 @end
 

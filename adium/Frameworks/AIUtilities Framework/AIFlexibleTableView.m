@@ -16,9 +16,6 @@
 #import "AIFlexibleTableView.h"
 #import "AIFlexibleTableCell.h"
 
-#define VIEW_PADDING_TOP 	0
-#define VIEW_PADDING_BOTTOM 	2
-
 @interface AIFlexibleTableView (PRIVATE)
 - (void)_init;
 - (NSAttributedString *)_selectedString;
@@ -64,6 +61,8 @@
     forwardsKeyEvents = NO;
     selectClicks = 1;
     contentOrigin = NSMakePoint(0, 0);
+    topPadding = 0;
+    bottomPadding = 0;
 
     contentBottomAligned = YES;
     [self setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
@@ -89,6 +88,13 @@
 //Set the content cells bottom aligned
 - (void)setContentBottomAligned:(BOOL)inValue{
     contentBottomAligned = inValue;
+}
+
+//Set content padding
+- (void)setContentPaddingTop:(int)inTop bottom:(int)inBottom
+{
+    topPadding = inTop;
+    bottomPadding = inBottom;
 }
 
 //Pass all keypresses to the next responder
@@ -515,7 +521,7 @@
 
     //Enumerate through each row, resizing it to the new width
     if(resizeContents){
-        contentsHeight = VIEW_PADDING_TOP + VIEW_PADDING_BOTTOM;
+        contentsHeight = topPadding + bottomPadding;
         rowEnumerator = [rowArray objectEnumerator];
         while((row = [rowEnumerator nextObject])){
             contentsHeight += [row sizeRowForWidth:size.width];
@@ -553,9 +559,9 @@
 
     //Remember our content origin
     if(contentBottomAligned && contentsHeight < documentVisibleRect.size.height){
-        contentOrigin = NSMakePoint(0, documentVisibleRect.size.height - VIEW_PADDING_BOTTOM);
+        contentOrigin = NSMakePoint(0, documentVisibleRect.size.height - bottomPadding);
     }else{
-        contentOrigin = NSMakePoint(0, contentsHeight - VIEW_PADDING_BOTTOM);
+        contentOrigin = NSMakePoint(0, contentsHeight - bottomPadding);
     }
 
     //Resize our view, and redisplay

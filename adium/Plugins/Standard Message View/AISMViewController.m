@@ -63,9 +63,6 @@
     chat = [inChat retain];
     lastMasterCell = nil;
     
-    //Get pref values
-    [self preferencesChanged:nil];
-    
     //Cache our icons (temp?)
     iconIncoming = [[AIImageUtilities imageNamed:@"blue" forClass:[self class]] retain];
     iconOutgoing = [[AIImageUtilities imageNamed:@"green" forClass:[self class]] retain];
@@ -73,9 +70,10 @@
     //Configure our table view
     messageView = [[AIFlexibleTableView alloc] initWithFrame:NSMakeRect(0,0,100,100)]; //Arbitrary frame
     [messageView setForwardsKeyEvents:YES];
-    
-    //Observe
     [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:chat];
+
+    //Preferences
+    [self preferencesChanged:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     
     //Rebuild out view to include any content already in the chat
@@ -114,7 +112,7 @@
 //
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] == 0){
         NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         
         //Release the old preference cache
@@ -186,8 +184,8 @@
 	colorOutgoingDivider = [[colorOutgoing adjustHue:0.0 saturation:+0.1 brightness:-0.1] retain];
 
 	
-	
-        
+	//Pad bottom depending on mode
+	[messageView setContentPaddingTop:0 bottom:(inlinePrefixes ? 3 : 0)];
         
         
         gridDarkness = [[prefDict objectForKey:KEY_SMV_GRID_DARKNESS] floatValue];
