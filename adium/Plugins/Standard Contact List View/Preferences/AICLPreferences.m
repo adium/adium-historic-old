@@ -81,8 +81,9 @@
 	
 	
 #warning cells
-	NSCell *dataCell;
+	AIImageTextCell *dataCell;
 		
+	//
 	dataCell = [[[AIImageTextCell alloc] init] autorelease];
     [dataCell setFont:[NSFont systemFontOfSize:12]];
 	[dataCell setIgnoresFocus:YES];

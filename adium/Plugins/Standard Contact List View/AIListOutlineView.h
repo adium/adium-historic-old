@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface AIListOutlineView : AIMultiCellOutlineView <AIAutoSizingView, ContactListOutlineView> {    
+@interface AIListOutlineView : AIMultiCellOutlineView <ContactListOutlineView> {    
 //    NSTrackingRectTag   trackingRectTag;	//Tracing rect for the whole outline view
 //    int					oldSelection;		//Holds the selection when it's hidden
 //    BOOL				editing;			//YES when the list is in edit mode... (temp)
@@ -49,14 +49,11 @@
 }
 
 - (void)setDelegate:(id)delegate;
-- (void)setRowHeightFromDataCellOfColumn:(NSTableColumn *)column;
 - (int)desiredHeight;
 - (int)desiredWidth;
 
 //Frame and superview tracking
-- (void)viewWillMoveToSuperview:(NSView *)newSuperview;
 - (void)viewDidMoveToSuperview;
-- (void)frameDidChange:(NSNotification *)notification;
 
 //Selection Hiding
 - (void)configureSelectionHidingForNewSuperview:(NSView *)newSuperview;

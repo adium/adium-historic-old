@@ -23,19 +23,11 @@
 #define KEY_DUAL_RESIZE_HORIZONTAL			@"Autoresize Horizontal"
 
 @interface AIListWindowController : AIAbstractListWindowController <AIInterfaceContainer> {
-//    id <AIContactListViewController>	contactListViewController;
-
-    NSDictionary						*toolbarItems;
 	BOOL                                borderless;
 
     NSSize								minWindowSize;
     BOOL								autoResizeVertically;
     BOOL								autoResizeHorizontally;
-
-	
-    BOOL								horizontalResizingEnabled;
-    
-	
 }
 
 + (AIListWindowController *)listWindowController;

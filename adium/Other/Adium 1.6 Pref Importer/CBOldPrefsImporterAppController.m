@@ -570,7 +570,7 @@
     // Loop through each Fire away message    
     NSEnumerator *AdiumEnumerator = NULL;
     NSDictionary *AdiumMessage; 
-    NSDictionary *fireMessage, *fireCurrentMessage;
+    NSDictionary *fireMessage;
     NSString *AdiumMsgTitle, *AdiumMsgContent;
     NSString *fireMsgTitle, *fireMsgContent;
     BOOL messageAlreadyExists;

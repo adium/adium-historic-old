@@ -8,7 +8,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface AIScaledImageCell : NSCell {
+@interface AIScaledImageCell : NSImageCell {
 	BOOL	isHighlighted;
 }
 
