@@ -41,7 +41,7 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-    NSTableColumn	*tableColumn;
+    id	tableColumn;
 
     [super initWithFrame:frameRect];
 
@@ -71,10 +71,22 @@
     tableColumn = [[[NSTableColumn alloc] init] autorelease];
     [tableColumn setDataCell:[[[AISCLCell alloc] init] autorelease]];
     [tableColumn setEditable:NO];
-    [tableColumn setResizable:NO];
-    [self setDrawsGrid:NO];
+	
+	if ([tableColumn respondsToSelector:@selector(setResizingMask:)]){
+		[tableColumn setResizingMask:NSTableColumnNoResizing];
+	}else{
+		[tableColumn setResizable:NO];
+	}
+    
+	[self setDrawsGrid:NO];
     [self addTableColumn:tableColumn];
-    [self setAutoresizesAllColumnsToFit:NO]; //System needs to leave this alone; we handle it manually
+
+	if ([tableColumn respondsToSelector:@selector(setColumnAutoresizingStyle:)]){
+		[self setColumnAutoresizingStyle:NSTableViewLastColumnOnlyAutoresizingStyle];
+	}else{
+		[self setAutoresizesAllColumnsToFit:NO]; //System needs to leave this alone; we handle it manually
+	}
+	
 	[self setAllowsMultipleSelection:YES];
     [self setOutlineTableColumn:tableColumn];
     [self setHeaderView:nil];
@@ -149,6 +161,10 @@
 	
 }
 
+- (AIListObject *)listObject
+{
+	return ((AIListObject *)[self firstSelectedItem]);
+}
 //Override set frame size to force our rect to always be the correct height.  Without this the scrollview will stretch too tall vertically when resized beyond the bottom of our contact list.
 - (void)setFrame:(NSRect)frameRect
 {
@@ -160,10 +176,19 @@
 //Size our column to fit
 - (void)_sizeColumnToFit
 {
-    NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
-    [column setResizable:YES];
-    [self sizeLastColumnToFit]; //Keep the table column at full width
-    [column setResizable:NO];
+    id	column = [[self tableColumns] objectAtIndex:0];
+
+	if ([column respondsToSelector:@selector(setResizingMask:)]){
+		[column setResizingMask:(NSTableColumnUserResizingMask | NSTableColumnAutoresizingMask)];
+		[self sizeLastColumnToFit]; //Keep the table column at full width
+		[column setResizingMask:NSTableColumnNoResizing];
+
+	}else{
+		[column setResizable:YES];
+		[self sizeLastColumnToFit]; //Keep the table column at full width
+		[column setResizable:NO];
+
+	}
 }
 
 //Prevent the display of a focus ring around the contact list in 10.3 and greater
