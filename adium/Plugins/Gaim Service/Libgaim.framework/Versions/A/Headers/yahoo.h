@@ -148,6 +148,8 @@ struct yahoo_buddy_icon_upload_data {
 	guint watcher;
 };
 
+struct _YchtConn;
+
 struct yahoo_data {
 	int fd;
 	guchar *rxqueue;
@@ -166,6 +168,7 @@ struct yahoo_data {
 	char *cookie_t;
 	int session_id;
 	gboolean jp;
+	gboolean wm;
 	/* picture aka buddy icon stuff */
 	char *picture_url;
 	int picture_checksum;
@@ -173,6 +176,8 @@ struct yahoo_data {
 	/* ew. we have to check the icon before we connect,
 	 * but can't upload it til we're connected. */
 	struct yahoo_buddy_icon_upload_data *picture_upload_todo;
+
+	struct _YchtConn *ycht;
 };
 
 struct yahoo_pair {
@@ -190,11 +195,10 @@ struct yahoo_packet {
 
 #define YAHOO_MAX_STATUS_MESSAGE_LENGTH (48)
 
-#ifdef YAHOO_WEBMESSENGER
-#define YAHOO_PROTO_VER 0x0065
-#else
+
+#define YAHOO_WEBMESSENGER_PROTO_VER 0x0065
 #define YAHOO_PROTO_VER 0x000b
-#endif
+
 
 #define YAHOO_PACKET_HDRLEN (4 + 2 + 2 + 2 + 2 + 4 + 4)
 
