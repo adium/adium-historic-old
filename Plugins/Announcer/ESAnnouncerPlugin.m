@@ -116,15 +116,19 @@
 						senderString = [source displayName];
 						
 						if (!lastSenderString || ![senderString isEqualToString:lastSenderString]) {
+							NSMutableString		*senderStringToSpeak;
+							
 							[lastSenderString release]; lastSenderString = [senderString retain];
 							
-							NSMutableString		*senderStringToSpeak = [[senderString mutableCopy] autorelease];
+							senderStringToSpeak = [senderString mutableCopy];
 							[senderStringToSpeak replaceOccurrencesOfString:@" " 
 																 withString:@" [[emph -]] " 
 																	options:NSCaseInsensitiveSearch
 																	  range:NSMakeRange(0, [senderStringToSpeak length])]; //deemphasize all words after first in sender's name
 							[theMessage appendFormat:@"[[emph +]] %@...",senderStringToSpeak]; //emphasize first word in sender's name
 							newParagraph = YES;
+							
+							[senderStringToSpeak release];
 						}
 					}
 					
