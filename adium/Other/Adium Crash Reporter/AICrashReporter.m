@@ -177,13 +177,10 @@
 //User wants to send the report
 - (IBAction)send:(id)sender
 {
-    if([[textField_emailAddress stringValue] isEqualToString:@""] 
-        || [[textField_description stringValue] isEqualToString:@""])
-    {
-        NSBeginCriticalAlertSheet(@"You must fill in the required fields", @"OK", nil, nil, window_MainWindow, nil, nil, nil, NULL, @"You must fill your email address and give a brief description of the crash.");
-    }
-    else
-    {
+    if([[textField_emailAddress stringValue] isEqualToString:@""]){
+        NSBeginCriticalAlertSheet(@"Email Address Required", @"Okay", nil, nil, window_MainWindow, nil, nil, nil, NULL,
+								  @"Please provide your email address so we may contact you with a possible fix or request additional information.");
+    }else{
         NSString	*shortDescription = [textField_description stringValue];
         
         //Truncate description field to 300 characters
