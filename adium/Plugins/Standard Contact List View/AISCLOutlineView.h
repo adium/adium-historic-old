@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface AISCLOutlineView : AIAlternatingRowOutlineView <AIAutoSizingView> {    
+@interface AISCLOutlineView : AIAlternatingRowOutlineView <AIAutoSizingView,ContactListOutlineView> {    
     NSTrackingRectTag   trackingRectTag;	//Tracing rect for the whole outline view
     int					oldSelection;		//Holds the selection when it's hidden
     BOOL				editing;			//YES when the list is in edit mode... (temp)
