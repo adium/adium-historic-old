@@ -53,6 +53,8 @@
 - (AIMessageTabViewItem *)_createMessageTabForChat:(AIChat *)inChat inMessageWindowController:(AIMessageWindowController *)messageWindowController;
 - (void)closeTabViewItem:(AIMessageTabViewItem *)inTab;
 - (void)preferencesChanged:(NSNotification *)notification;
+- (void)contactOrderChanged:(NSNotification *)notification;
+- (void)listObjectStatusChanged:(NSNotification *)notification;
 - (void)_transferMessageTabContainer:(AIMessageTabViewItem *)tabViewItem toWindow:(AIMessageWindowController *)messageWindowController;
 - (void)arrangeTabs:(id)sender;
 - (void)arrangeTabsByGroup:(id)sender;
@@ -120,6 +122,16 @@
 								   selector:@selector(didReceiveContent:)
 									   name:Content_FirstContentRecieved 
 									 object:nil];
+	
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(contactOrderChanged:)
+									   name:Contact_OrderChanged 
+									 object:nil];
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(listObjectStatusChanged:)
+									   name:ListObject_StatusChanged
+									 object:nil];
+	
     [[adium notificationCenter] addObserver:self
 								   selector:@selector(preferencesChanged:) 
 									   name:Preference_GroupChanged 
@@ -247,6 +259,22 @@
 		}
     }
 }
+
+- (void)contactOrderChanged:(NSNotification *)notification
+{
+	if( keepTabsArranged ) {
+		[self arrangeTabs:menuItem_arrangeTabs_alternate];
+	}
+	
+}
+
+- (void)listObjectStatusChanged:(NSNotification *)notification
+{
+	if( keepTabsArranged ) {
+		[self arrangeTabs:menuItem_arrangeTabs_alternate];
+	}
+}
+
 
 //A tab was moved from one window to another
 - (void)transferMessageTabContainer:(id)tabViewItem toWindow:(id)newMessageWindow atIndex:(int)index withTabBarAtPoint:(NSPoint)screenPoint
@@ -962,7 +990,7 @@
 		enabled = (contactualMenuContact && [contactualMenuContact isKindOfClass:[AIListContact class]]);
 		
     }else if (menuItem == menuItem_consolidate){
-		if([messageWindowControllerArray count] <= 1) enabled = NO; //only with more than one window open
+		if(([messageWindowControllerArray count] <= 1) || arrangeByGroup) enabled = NO; //only with more than one window open
 		
 	}else if (menuItem == menuItem_splitByGroup){
         if(![messageWindowControllerArray count] || arrangeByGroup) enabled = NO;
@@ -1072,6 +1100,8 @@
 }
 
 
+// #### MAKE SORTING HAPPEN ON STATUS CHANGES TOO!!! ####
+// Use: ListObject_StatusChanged, Contact_OrderChanged
 //Arrange tabs in some or all windows with the current sort options
 - (IBAction)arrangeTabs:(id)sender
 {
