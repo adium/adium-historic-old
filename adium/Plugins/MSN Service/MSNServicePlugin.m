@@ -9,7 +9,8 @@
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
 #import "AIAdium.h"
-#import "AIMSNServicePlugin.h"
+#import "MSNServicePlugin.h"
+#import "MSNAccount.h"
 
 @implementation AIMSNServicePlugin
 

@@ -106,12 +106,6 @@
 			path = "Plugins/Status Circles/AIStatusCirclesPreferences.m";
 			refType = 4;
 		};
-		112F94060476EBE1001277FE = {
-			isa = PBXFileReference;
-			name = StatusCirclesPrefs.nib;
-			path = "Plugins/Status Circles/StatusCirclesPrefs.nib";
-			refType = 4;
-		};
 		112F94070476EBE1001277FE = {
 			fileRef = 112F94040476EBE1001277FE;
 			isa = PBXBuildFile;
@@ -120,24 +114,6 @@
 		};
 		112F94080476EBE1001277FE = {
 			fileRef = 112F94050476EBE1001277FE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		112F94090476EBE1001277FE = {
-			fileRef = 112F94060476EBE1001277FE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		112F940A0476EBEF001277FE = {
-			isa = PBXFileReference;
-			name = ContactStatusColoringPrefs.nib;
-			path = "Plugins/Contact Status Coloring/ContactStatusColoringPrefs.nib";
-			refType = 4;
-		};
-		112F940B0476EBEF001277FE = {
-			fileRef = 112F940A0476EBEF001277FE;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -4331,6 +4307,9 @@
 			children = (
 				4B81631E03D1C2A600A8010A,
 				4B81631F03D1C2A600A8010A,
+				6ECE6C220474BB1700CAEAD0,
+				6ECE6C230474BB1700CAEAD0,
+				6ECE6C2004749C9600CAEAD0,
 				4B70F28903D1CA1C00A8010A,
 				4B70F28A03D1CA1C00A8010A,
 				4B70F28D03D1CC6400A8010A,
@@ -4353,6 +4332,7 @@
 				4B81632003D1C2A600A8010A,
 				4B70F28B03D1CA1C00A8010A,
 				4B70F29303D1D13800A8010A,
+				6ECE6C240474BB1700CAEAD0,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4366,6 +4346,7 @@
 				4B187A0A03D5E95500A8010A,
 				4BF1F04603D7B92D00A8010A,
 				4B64797B03DC321800A8010A,
+				6ECE6C2104749C9600CAEAD0,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4376,6 +4357,7 @@
 				4B81632103D1C2A600A8010A,
 				4B70F28C03D1CA1C00A8010A,
 				4B70F29403D1D13800A8010A,
+				6ECE6C250474BB1700CAEAD0,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7190,6 +7172,54 @@
 //4B2
 //4B3
 //4B4
+//6E0
+//6E1
+//6E2
+//6E3
+//6E4
+		6ECE6C2004749C9600CAEAD0 = {
+			isa = PBXFileReference;
+			name = AwayStatusWindow.nib;
+			path = "Plugins/Away Messages/AwayStatusWindow.nib";
+			refType = 4;
+		};
+		6ECE6C2104749C9600CAEAD0 = {
+			fileRef = 6ECE6C2004749C9600CAEAD0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6ECE6C220474BB1700CAEAD0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIAwayStatusWindowController.h;
+			path = "Plugins/Away Messages/AIAwayStatusWindowController.h";
+			refType = 4;
+		};
+		6ECE6C230474BB1700CAEAD0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIAwayStatusWindowController.m;
+			path = "Plugins/Away Messages/AIAwayStatusWindowController.m";
+			refType = 4;
+		};
+		6ECE6C240474BB1700CAEAD0 = {
+			fileRef = 6ECE6C220474BB1700CAEAD0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6ECE6C250474BB1700CAEAD0 = {
+			fileRef = 6ECE6C230474BB1700CAEAD0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//6E0
+//6E1
+//6E2
+//6E3
+//6E4
 //9C0
 //9C1
 //9C2
@@ -7461,8 +7491,6 @@
 		9E2E3068046CA9BF00415B22 = {
 			buildActionMask = 2147483647;
 			files = (
-				9E2E3077046CAB0000415B22,
-				9E2E307F046CB05F00415B22,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7477,8 +7505,6 @@
 		9E2E306A046CA9BF00415B22 = {
 			buildActionMask = 2147483647;
 			files = (
-				9E2E3078046CAB0000415B22,
-				9E2E3080046CB05F00415B22,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7597,18 +7623,6 @@
 			path = "Plugins/MSN Service/MSNServicePlugin.m";
 			refType = 4;
 		};
-		9E2E3077046CAB0000415B22 = {
-			fileRef = 9E2E3075046CAB0000415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E2E3078046CAB0000415B22 = {
-			fileRef = 9E2E3076046CAB0000415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		9E2E3079046CAB2F00415B22 = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
@@ -7640,18 +7654,6 @@
 			name = MSNAccount.m;
 			path = "Plugins/MSN Service/MSNAccount.m";
 			refType = 4;
-		};
-		9E2E307F046CB05F00415B22 = {
-			fileRef = 9E2E307D046CB05F00415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E2E3080046CB05F00415B22 = {
-			fileRef = 9E2E307E046CB05F00415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		9E95316303C8E08800415B22 = {
 			fileEncoding = 30;
@@ -8988,7 +8990,6 @@
 				F59DB3AF033EA8EC01A8010A,
 				112F94040476EBE1001277FE,
 				112F94050476EBE1001277FE,
-				112F94060476EBE1001277FE,
 				117ED00F0475BC1A00733160,
 			);
 			isa = PBXGroup;
@@ -9010,7 +9011,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				117ED0100475BC1A00733160,
-				112F94090476EBE1001277FE,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13599,7 +13599,6 @@
 				F57939AA033E75FD01A8010A,
 				112F94000476EBB9001277FE,
 				112F94010476EBB9001277FE,
-				112F940A0476EBEF001277FE,
 				117ED0110475BCF100733160,
 			);
 			isa = PBXGroup;
@@ -13620,7 +13619,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				117ED0120475BCF100733160,
-				112F940B0476EBEF001277FE,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
