@@ -544,10 +544,9 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	[currentComponentInstance setAppleEventSendTarget:self];
 
 	[script executeSubroutineNamed:@"substitute" argumentsArray:arguments];
-	
+
 	/* resultAsString isn't threadsafe; perform it on the main thread and use its return value */
 	result = [script mainPerformSelector:@selector(resultAsString)
-							  withObject:nil
 							 returnValue:YES];
 	
 	//Result will be enclosed in quotes; we don't want 'em

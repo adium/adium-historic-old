@@ -49,6 +49,28 @@
 	[self performSelectorOnMainThread:aSelector withObject:argument1 waitUntilDone:flag];
 }
 
+- (id)mainPerformSelector:(SEL)aSelector returnValue:(BOOL)flag
+{
+	id returnValue;
+	
+	if (flag){
+		NSInvocation *invocation;
+		
+		invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
+		[invocation setSelector:aSelector];
+		
+		[self performSelectorOnMainThread:@selector(handleInvocation:)
+							   withObject:invocation
+							waitUntilDone:YES];
+		
+		[invocation getReturnValue:&returnValue];
+		
+	}else{
+		returnValue = nil;
+		[self performSelectorOnMainThread:aSelector waitUntilDone:NO];
+	}	
+}
+
 //Perform a selector on the main thread, optionally taking an argument, and return its return value
 - (id)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 returnValue:(BOOL)flag
 {
