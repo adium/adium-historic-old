@@ -7230,6 +7230,8 @@
 			children = (
 				34048AC50617CB4C004D0B7E,
 				34048AC60617CB4C004D0B7E,
+				4B090DCD065CD50D00FF0528,
+				4B090DCE065CD50D00FF0528,
 				4BDF2C91061E376C00EA75C5,
 			);
 			isa = PBXGroup;
@@ -8687,8 +8689,8 @@
 		4947F5EA0655E90C00B791E5 = {
 			children = (
 				6CED9083065B686A00A9C196,
-				6CC09022065CB39D00D1E6BD,
-				6CC09023065CB39D00D1E6BD,
+				4B090B3E065CD43400FF0528,
+				4B090B3F065CD43400FF0528,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -9382,6 +9384,66 @@
 			path = "Plugins/Status Changed Messages/AIStatusChangedMessagesPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B090B3E065CD43400FF0528 = {
+			fileType = "compiled.mach-o.dylib";
+			isa = PBXReferenceProxy;
+			path = libezv.dylib;
+			refType = 3;
+			remoteRef = 4B090DCB065CD45600FF0528;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B090B3F065CD43400FF0528 = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 4B090DCC065CD45600FF0528;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B090DCB065CD45600FF0528 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
+			remoteInfo = libezv;
+		};
+		4B090DCC065CD45600FF0528 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
+		};
+		4B090DCD065CD50D00FF0528 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NDRunLoopMessenger.m;
+			path = "Plugins/Gaim Service/NDRunLoopMessenger.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B090DCE065CD50D00FF0528 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NDRunLoopMessenger.h;
+			path = "Plugins/Gaim Service/NDRunLoopMessenger.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B090DCF065CD50D00FF0528 = {
+			fileRef = 4B090DCD065CD50D00FF0528;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B090DD0065CD50D00FF0528 = {
+			fileRef = 4B090DCE065CD50D00FF0528;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B09D5C005D5265800BC00F0 = {
 			fileEncoding = 30;
@@ -11830,6 +11892,7 @@
 				34E3C8890638D40500AA3EF7,
 				34E3C8A70638D50F00AA3EF7,
 				341E886B0648FF1B00E0C828,
+				4B090DD0065CD50D00FF0528,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11890,6 +11953,7 @@
 				34E3C88A0638D40500AA3EF7,
 				34E3C8A80638D50F00AA3EF7,
 				341E886C0648FF1B00E0C828,
+				4B090DCF065CD50D00FF0528,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17781,36 +17845,6 @@
 			path = Plugins/Logger/AILogToGroup.m;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		6CC09022065CB39D00D1E6BD = {
-			fileType = "compiled.mach-o.dylib";
-			isa = PBXReferenceProxy;
-			path = libezv.dylib;
-			refType = 3;
-			remoteRef = 6CC092B0065CB3DA00D1E6BD;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6CC09023065CB39D00D1E6BD = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 6CC092B1065CB3DA00D1E6BD;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6CC092B0065CB3DA00D1E6BD = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
-		};
-		6CC092B1065CB3DA00D1E6BD = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
 		};
 		6CC851C10574B314008A5F66 = {
 			isa = PBXFileReference;
