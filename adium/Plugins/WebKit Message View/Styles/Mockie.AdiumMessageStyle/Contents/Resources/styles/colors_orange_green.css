@@ -1,5 +1,9 @@
 body {
-	background: #E7F2E7;
+	background-color: rgba(102,204,50,0.4);
+}
+
+#curtain {
+	background-color: rgba(255,255,255,0.8);
 }
 
 .incoming .buddyicon {
