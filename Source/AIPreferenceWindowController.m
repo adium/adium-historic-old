@@ -311,7 +311,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	static NSDictionary	*identifierToLabelDict = nil;
 	if(!identifierToLabelDict){
 		identifierToLabelDict = [[NSDictionary alloc] initWithObjectsAndKeys:
-			AILocalizedString(@"Accounts",nil),@"accounts",
+			ACCOUNTS_TITLE,@"accounts",
 			AILocalizedString(@"General",nil),@"general",
 			AILocalizedString(@"Appearance",nil),@"appearance",
 			AILocalizedString(@"Messages",nil),@"messages",

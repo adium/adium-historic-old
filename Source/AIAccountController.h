@@ -23,6 +23,8 @@
 #define Account_ListChanged 					@"Account_ListChanged"
 #define Adium_RequestSetManualIdleTime			@"Adium_RequestSetManualIdleTime"
 
+#define ACCOUNTS_TITLE AILocalizedString(@"Accounts",nil)
+
 //Connecting is faded by 40%
 #define CONNECTING_MENU_IMAGE_FRACTION  0.60
 
