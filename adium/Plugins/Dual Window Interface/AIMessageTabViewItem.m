@@ -168,9 +168,18 @@
 }
 
 //Our icon is the status of this contact
+static NSImage *hackIconCache = nil;
 - (NSImage *)icon
 {
-	return([[[[messageView chat] listObject] displayArrayForKey:@"Tab Icon"] objectValue]);
+	NSImage	*icon = [[[[messageView chat] listObject] displayArrayForKey:@"Tab Icon"] objectValue];
+	
+#warning This is a hack to give chats a status icon for now.  Will fix later.
+	if(!icon){
+		if(!hackIconCache) hackIconCache = [[NSImage imageNamed:@"tab-stranger" forClass:[self class]] retain];
+		icon = hackIconCache;
+	}
+	
+	return(icon);
 }
 
 @end

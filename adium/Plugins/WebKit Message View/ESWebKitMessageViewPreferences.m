@@ -626,9 +626,7 @@
 			//AIContentMessage won't know whether the message is outgoing unless we tell it since neither our source
 			//nor our destination are AIAccount objects.
 			[content _setIsOutgoing:outgoing];
-			
-			NSLog(@"%@",[message string]);
-			
+
 		}else if([msgType isEqualToString:CONTENT_STATUS_TYPE]){
 			//Create status content object
 			NSString		*message = [messageDict objectForKey:@"Message"];
