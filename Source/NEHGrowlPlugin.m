@@ -258,6 +258,13 @@
 																			   userInfo:userInfo
 																		 includeSubject:NO];
 
+	NSAssert4(@"Growl notify error: EventID %@, listObject %@, userInfo %@\nGave Title \"%@\" description \"%@\"",
+			  eventID,
+			  listObject,
+			  userInfo,
+			  title,
+			  description);
+	
 	[GrowlApplicationBridge notifyWithTitle:title
 								description:description
 						   notificationName:eventID /* Use the same ID as Adium uses to keep things simple */
