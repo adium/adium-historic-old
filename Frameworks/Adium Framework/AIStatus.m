@@ -397,7 +397,7 @@
 {
 	return([[statusDict objectForKey:STATE_FORCED_INITIAL_IDLE_TIME] doubleValue]);
 }
-/XXX
+//XXX
 - (void)setForcedInitialIdleTime:(double)forcedInitialIdleTime
 {
 	[statusDict setObject:[NSNumber numberWithDouble:forcedInitialIdleTime]
