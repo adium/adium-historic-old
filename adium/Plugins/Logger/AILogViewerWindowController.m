@@ -307,6 +307,9 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 				if(logText && [logText length]){
 					NSRange     scrollRange = NSMakeRange([logText length],0);
 					
+					//Add pretty formatting to links
+					logText = [logText stringByAddingFormattingForLinks];
+					
 					//If we are searching by content, highlight the search results
 					if(searchMode == LOG_SEARCH_CONTENT){
 						NSEnumerator    *enumerator;

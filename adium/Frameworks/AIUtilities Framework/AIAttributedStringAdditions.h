@@ -23,6 +23,7 @@
 - (void)adjustColorsToShowOnBackground:(NSColor *)backgroundColor;
 - (void)adjustColorsToShowOnBackgroundRelativeToOriginalBackground:(NSColor *)backgroundColor;
 - (BOOL)convertNSURLtoString;
+- (void)addFormattingForLinks;			//Set color and underline attributes for any areas with NSLinkAttributeName set
 @end
 
 @interface NSAttributedString (AIAttributedStringAdditions)
@@ -31,6 +32,7 @@
 - (NSData *)dataRepresentation;
 + (NSAttributedString *)stringWithData:(NSData *)inData;
 - (NSAttributedString *)safeString;
+- (NSAttributedString *)stringByAddingFormattingForLinks;
 
 @end
 
