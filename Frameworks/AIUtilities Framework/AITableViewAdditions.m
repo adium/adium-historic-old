@@ -33,6 +33,49 @@
     return(NSNotFound);
 }
 
+
+//Return an array of items which are currently selected. SourceArray should be an array from which to pull the items;
+//its count must be the same as the number of rows
+- (NSArray *)arrayOfSelectedItemsUsingSourceArray:(NSArray *)sourceArray
+{
+	NSParameterAssert([sourceArray count] == ([self numberOfRows] - 1));
+
+	NSMutableArray 	*itemArray = [NSMutableArray array];
+	id 				item;
+	
+	//Apple wants us to do some pretty crazy stuff for selections in 10.3
+	//We'll continue to use the old simpler cleaner safer easier method for 10.2
+	if([NSApp isOnPantherOrBetter]){
+		NSIndexSet *indices = [self selectedRowIndexes];
+		unsigned int bufSize = [indices count];
+		unsigned int *buf = malloc(bufSize + sizeof(unsigned int));
+		unsigned int i;
+		
+		NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
+		[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
+		
+		for(i = 0; i != bufSize; i++){
+			if(item = [sourceArray objectAtIndex:buf[i]]){
+				[itemArray addObject:item];
+			}
+		}
+		
+		free(buf);
+		
+	}else{
+		NSEnumerator 	*enumerator = [self selectedRowEnumerator]; 
+		NSNumber 		*row;
+		
+		while(row = [enumerator nextObject]){
+			if(item = [sourceArray objectAtIndex:[row intValue]]){
+				[itemArray addObject:item]; 
+			}
+		} 
+	}
+	
+	return(itemArray);
+}
+
 - (int)indexOfTableColumnWithIdentifier:(id)inIdentifier
 {
     NSTableColumn	*column;
