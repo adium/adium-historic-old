@@ -883,7 +883,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 							
 							//Extract the file we wish to send
 							NSDictionary	*imgArguments = [AIHTMLDecoder parseArguments:chunkString];
-							NSString		*filePath = [imgArguments objectForKey:@"src"];
+							NSString		*filePath = [[imgArguments objectForKey:@"src"] stringByUnescapingFromHTML];
 							
 							//Send the file
 							[[adium fileTransferController] sendFile:filePath toListContact:listContact];

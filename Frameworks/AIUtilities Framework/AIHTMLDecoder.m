@@ -1028,7 +1028,7 @@ int HTMLEquivalentForFontSize(int fontSize)
 
 + (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string
 {
-	[string appendFormat:@"<AdiumFT src=\"%@\">", path];	
+	[string appendFormat:@"<AdiumFT src=\"%@\">", [path stringByEscapingForHTML]];	
 }
 
 @end
