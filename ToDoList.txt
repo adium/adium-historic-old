@@ -161,5 +161,5 @@
 //Documentation
 	- User documentation
 
-//Degerring of initial messages
+//Deferring of initial messages
 	- Some system to not have messages pop up when received
