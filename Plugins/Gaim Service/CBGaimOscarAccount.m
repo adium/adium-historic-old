@@ -280,8 +280,10 @@ static BOOL didInitOscar = NO;
 		//Remove trailing whitespace
 		while([formattedUID hasSuffix:@" "]) formattedUID = [formattedUID substringToIndex:([formattedUID length]-1)];
 		
-		[[self gaimThread] OSCARSetFormatTo:formattedUID
-								  onAccount:self];
+		[[self gaimThread] performSelector:@selector(OSCARSetFormatTo:formattedUID:)
+								withObject:formattedUID
+								withObject:self
+								afterDelay:5.0];
 	}
 }
 
