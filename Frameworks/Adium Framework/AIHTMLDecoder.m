@@ -47,6 +47,7 @@ int HTMLEquivalentForFontSize(int fontSize);
 @implementation AIHTMLDecoder
 
 static AITextAttributes *_defaultTextDecodingAttributes = nil;
+static NSDictionary *colorNames = nil;
 
 DeclareString(HTML);
 DeclareString(CloseHTML);
@@ -159,11 +160,33 @@ DeclareString(SpaceHTML);
 	if (!_defaultTextDecodingAttributes){
 		_defaultTextDecodingAttributes = [[AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12] retain];
 	}
+
+	if(!colorNames) {
+		colorNames = [[NSDictionary alloc] initWithObjectsAndKeys:
+			@"#000",    @"black",
+			@"#c0c0c0", @"silver",
+			@"#808080", @"gray",
+			@"#808080", @"grey",
+			@"#fff",    @"white",
+			@"#800000", @"maroon",
+			@"#f00",    @"red",
+			@"#800080", @"purple",
+			@"#f0f",    @"fuchsia",
+			@"#008000", @"green",
+			@"#0f0",    @"lime",
+			@"#808000", @"olive",
+			@"#ff0",    @"yellow",
+			@"#000080", @"navy",
+			@"#00f",    @"blue",
+			@"#008080", @"teal",
+			@"#0ff",    @"aqua",
+			nil];
+	}
 }
 
 + (AIHTMLDecoder *)decoder
 {
-	return [[self new] autorelease];
+	return [[[self alloc] init] autorelease];
 }
 
 - (id)initWithHeaders:(BOOL)includeHeaders
@@ -178,18 +201,19 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	   simpleTagsOnly:(BOOL)simpleOnly
 	   bodyBackground:(BOOL)bodyBackground
 {
-	self = [self init];
-	thingsToInclude.headers                        = includeHeaders;
-	thingsToInclude.fontTags                       = includeFontTags;
-	thingsToInclude.closingFontTags                = closeFontTags;
-	thingsToInclude.colorTags                      = includeColorTags;
-	thingsToInclude.styleTags                      = includeStyleTags;
-	thingsToInclude.nonASCII                       = encodeNonASCII;
-	thingsToInclude.allSpaces                      = encodeSpaces;
-	thingsToInclude.attachmentTextEquivalents      = attachmentsAsText;
-	thingsToInclude.attachmentImagesOnlyForSending = attachmentImagesOnlyForSending;
-	thingsToInclude.simpleTagsOnly                 = simpleOnly;
-	thingsToInclude.bodyBackground                 = bodyBackground;
+	if((self = [self init])) {
+		thingsToInclude.headers                        = includeHeaders;
+		thingsToInclude.fontTags                       = includeFontTags;
+		thingsToInclude.closingFontTags                = closeFontTags;
+		thingsToInclude.colorTags                      = includeColorTags;
+		thingsToInclude.styleTags                      = includeStyleTags;
+		thingsToInclude.nonASCII                       = encodeNonASCII;
+		thingsToInclude.allSpaces                      = encodeSpaces;
+		thingsToInclude.attachmentTextEquivalents      = attachmentsAsText;
+		thingsToInclude.attachmentImagesOnlyForSending = attachmentImagesOnlyForSending;
+		thingsToInclude.simpleTagsOnly                 = simpleOnly;
+		thingsToInclude.bodyBackground                 = bodyBackground;
+	}
 	return self;
 }
 
@@ -964,6 +988,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	NSEnumerator 	*enumerator;
 	NSString		*arg;
 
+	NSString *color, *back;
+
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while((arg = [enumerator nextObject])){
 		if([arg caseInsensitiveCompare:Face] == NSOrderedSame){
@@ -983,10 +1009,16 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			[textAttributes setFontSize:[[inArgs objectForKey:arg] intValue]];
 
 		}else if([arg caseInsensitiveCompare:Color] == NSOrderedSame){
-			[textAttributes setTextColor:[[inArgs objectForKey:arg] hexColor]];
+			colorString = [inArgs objectForKey:arg];
+			colorValue  = [colorNames objectForKey:[colorString lowercaseString]];
+			if(colorValue) colorString = colorValue;
+			[textAttributes setTextColor:[colorString hexColor]];
 
 		}else if([arg caseInsensitiveCompare:Back] == NSOrderedSame){
-			[textAttributes setTextBackgroundColor:[[inArgs objectForKey:arg] hexColor]];
+			colorString = [inArgs objectForKey:arg];
+			colorValue  = [colorNames objectForKey:[colorString lowercaseString]];
+			if(colorValue) colorString = colorValue;
+			[textAttributes setTextBackgroundColor:[colorString hexColor]];
 
 		}
 	}
@@ -1000,7 +1032,10 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while((arg = [enumerator nextObject])){
 		if([arg caseInsensitiveCompare:@"BGCOLOR"] == NSOrderedSame){
-			[textAttributes setBackgroundColor:[[inArgs objectForKey:arg] hexColor]];
+			NSString *colorString = [inArgs objectForKey:arg];
+			NSString *colorValue  = [colorNames objectForKey:[colorString lowercaseString]];
+			if(colorValue) colorString = colorValue;
+			[textAttributes setBackgroundColor:[colorString hexColor]];
 		}
 	}
 }
