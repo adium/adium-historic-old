@@ -64,19 +64,19 @@
 #pragma mark Window Methods
 - (void)windowDidLoad
 {
-	[self configureControls];
+	//We'll be adding/removing this from our view
+	[tabViewItem_advancedContactBubbles retain];
 
+	//Setup
 	[fontField_contact setShowPointSize:YES];
 	[fontField_contact setShowFontFace:YES];
 	[fontField_status setShowPointSize:YES];
 	[fontField_status setShowFontFace:YES];
 	[fontField_group setShowPointSize:YES];
 	[fontField_group setShowFontFace:YES];
-	
 	[textField_layoutName setStringValue:(layoutName ? layoutName : @"")];
 	
-	//We'll be adding/removing this from our view
-	[tabViewItem_advancedContactBubbles retain];
+	[self configureControls];
 }
 
 //Window is closing
