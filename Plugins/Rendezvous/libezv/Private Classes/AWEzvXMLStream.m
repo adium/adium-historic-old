@@ -73,6 +73,7 @@ void xml_char_data	(void *userData,
 	}
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[nodeStack release];
 	
 	[super dealloc];
 }
