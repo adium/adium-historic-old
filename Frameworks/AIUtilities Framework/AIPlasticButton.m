@@ -68,9 +68,10 @@
     }
 
     //Precalc some sizes
+    NSSize capsSize = [caps size];
     frame = [self bounds];
-    capWidth = [caps size].width / 2.0;
-    capHeight = [caps size].height;
+    capWidth = capsSize.width / 2.0;
+    capHeight = capsSize.height;
     middleRight = ((frame.origin.x + frame.size.width) - capWidth);
 
     //Draw the left cap
@@ -79,7 +80,8 @@
                  operation:NSCompositeSourceOver];
 
     //Draw the middle
-    sourceRect = NSMakeRect(0, 0, [middle size].width, [middle size].height);
+    NSSize middleSize = [middle size];
+    sourceRect = NSMakeRect(0, 0, middleSize.width, middleSize.height);
     destRect = NSMakeRect(frame.origin.x + capWidth, frame.origin.y + frame.size.height, sourceRect.size.width, sourceRect.size.height);
 
     while(destRect.origin.x < middleRight && (int)destRect.size.width > 0){
@@ -100,32 +102,34 @@
                  operation:NSCompositeSourceOver];
 
     //Draw Label
-    if([self title]){
+    NSString *title = [self title];
+    if(title) {
         NSColor		*color;
         NSDictionary 	*attributes;
         NSSize		size;
         NSPoint		centeredPoint;
 
         //Prep attributes
-        if([self isEnabled]){
+        if([self isEnabled]) {
             color = [NSColor blackColor];
-        }else{
+        } else {
             color = [NSColor colorWithCalibratedWhite:0.0 alpha:0.5];
         }
         attributes = [NSDictionary dictionaryWithObjectsAndKeys:[self font], NSFontAttributeName, color, NSForegroundColorAttributeName, nil];
 
         //Calculate center
-        size = [[self title] sizeWithAttributes:attributes];
+        size = [title sizeWithAttributes:attributes];
         centeredPoint = NSMakePoint(frame.origin.x + ((frame.size.width - size.width) / 2.0) + LABEL_OFFSET_X,
                                     frame.origin.y + ((capHeight - size.height) / 2.0) + LABEL_OFFSET_Y);
 
         //Draw
-        [[self title] drawAtPoint:centeredPoint withAttributes:attributes];
+        [title drawAtPoint:centeredPoint withAttributes:attributes];
     }
 
     //Draw
-    if([self image]){
-        NSSize	size = [[self image] size];
+    NSImage *image = [self image];
+    if(image) {
+        NSSize	size = [image size];
         NSRect	centeredRect;
 
         centeredRect = NSMakeRect(frame.origin.x + (int)((frame.size.width - size.width) / 2.0) + IMAGE_OFFSET_X,
@@ -133,11 +137,11 @@
                                   size.width,
                                   size.height);
 
-        [[self image] setFlipped:YES];
-        [[self image] drawInRect:centeredRect
-						fromRect:NSMakeRect(0,0,size.width,size.height) 
-					   operation:NSCompositeSourceOver 
-						fraction:([self isEnabled] ? 1.0 : 0.5)];
+        [image setFlipped:YES];
+        [image drawInRect:centeredRect
+				 fromRect:NSMakeRect(0,0,size.width,size.height) 
+				operation:NSCompositeSourceOver 
+				 fraction:([self isEnabled] ? 1.0 : 0.5)];
     }
     
 }
@@ -188,7 +192,7 @@
 
 - (BOOL)isOpaque
 {
-    return(NO);
+    return NO;
 }
 
 - (void)dealloc
