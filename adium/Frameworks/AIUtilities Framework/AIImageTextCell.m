@@ -48,8 +48,13 @@
 - (id)copyWithZone:(NSZone *)zone
 {
 	id newCell = [super copyWithZone:zone];
+
+	newCell->font = nil;
 	[newCell setFont:font];
+	
+	newCell->subString = nil;
 	[newCell setSubString:subString];
+	
 	[newCell setMaxImageWidth:maxImageWidth];
 	return(newCell);
 }
