@@ -1171,7 +1171,8 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 	
 	if (secondaryString){
 		if (([secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound) ||
-			([secondaryString rangeOfString:@"Your screen name is currently formatted as follows"].location != NSNotFound)){
+			([secondaryString rangeOfString:@"Your screen name is currently formatted as follows"].location != NSNotFound) ||
+			([secondaryString rangeOfString:@"Error reading from Switchboard server"].location != NSNotFound)){
 			return;
 		}
 	}
