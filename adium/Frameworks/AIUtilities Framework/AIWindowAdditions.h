@@ -16,4 +16,5 @@
 @interface NSWindow (AIWindowAdditions)
 - (BOOL)isTextured;
 - (void)compatibleInvalidateShadow;
+- (BOOL)isBorderless;
 @end
