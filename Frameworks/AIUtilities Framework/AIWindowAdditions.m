@@ -17,6 +17,20 @@
 
 @implementation NSWindow (AIWindowAdditions)
 
+//Set content size with animation
+- (void)setContentSize:(NSSize)aSize display:(BOOL)displayFlag animate:(BOOL)animateFlag
+{
+	NSRect	frame = [self frame];
+	NSSize	desiredSize;
+
+	desiredSize = [self frameRectForContentRect:NSMakeRect(0, 0, aSize.width, aSize.height)].size;
+	frame.origin.y += frame.size.height - desiredSize.height;
+	frame.size = desiredSize;
+	
+	[self setFrame:frame display:displayFlag animate:animateFlag];
+}
+
+
 //The method 'center' puts the window really close to the top of the screen.  This method puts it not so close.
 - (void)betterCenter
 {
