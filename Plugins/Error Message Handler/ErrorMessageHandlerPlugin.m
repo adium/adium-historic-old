@@ -33,7 +33,7 @@
     //Install our contact alert
 	[[adium contactAlertsController] registerActionID:ERROR_MESSAGE_CONTACT_ALERT_IDENTIFIER withHandler:self];
 
-	[[adium contactAlertsController] registerEventID:INTERFACE_ERROR_MESSAGE withHandler:self globalOnly:YES];
+	[[adium contactAlertsController] registerEventID:INTERFACE_ERROR_MESSAGE withHandler:self inGroup:AIOtherEventHandlerGroup globalOnly:YES];
 }
 
 - (void)uninstallPlugin
@@ -114,7 +114,7 @@
 	NSString	*description;
 	
 	if([eventID isEqualToString:INTERFACE_ERROR_MESSAGE]){
-		description = AILocalizedString(@"Error",nil);
+		description = AILocalizedString(@"Error occurs",nil);
 	}else{
 		description = @"";
 	}
@@ -138,7 +138,18 @@
 }
 
 
-- (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject	{ return @""; }
+- (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject	
+{
+	NSString	*description;
+
+	if([eventID isEqualToString:INTERFACE_ERROR_MESSAGE]){
+		description = AILocalizedString(@"When an error occurs",nil);
+	}else{
+		description = @"";
+	}
+	
+	return(description);
+}
 
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
 {
