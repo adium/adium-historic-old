@@ -53,7 +53,7 @@
         {
             [[owner dockController] bounce];
         }
-        else if(bounceNum == 0) //forever
+        else if(bounceNum == -1) //forever
         {
             [[owner dockController] bounceForeverWithInterval:bounceDelay];
         }

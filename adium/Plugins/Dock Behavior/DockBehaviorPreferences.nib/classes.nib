@@ -6,6 +6,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 bounceField = NSTextField; 
+                bounceMatrix = NSMatrix; 
                 delayField = NSTextField; 
                 enabledCheckBox = NSButton; 
                 "view_prefView" = NSView; 
