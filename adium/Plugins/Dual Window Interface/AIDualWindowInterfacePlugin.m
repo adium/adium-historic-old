@@ -22,8 +22,10 @@
 #import "AIMessageWindowController.h"
 #import "AIMessageTabViewItem.h"
 #import "AINewMessagePrompt.h"
+#import "AIDualWindowPreferences.h"
 
 #define DUAL_SPELLING_DEFAULT_PREFS		@"DualSpellingDefaults"
+#define DUAL_INTERFACE_DEFAULT_PREFS		@"DualWindowDefaults"
 
 #define CONTACT_LIST_WINDOW_MENU_TITLE		@"Contact List"		//Title for the contact list menu item
 #define MESSAGES_WINDOW_MENU_TITLE		@"Messages"		//Title for the messages window menu item
@@ -67,7 +69,11 @@
 
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_SPELLING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SPELLING];
-    
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+
+    //Install Preference Views
+    preferenceController = [[AIDualWindowPreferences dualWindowInterfacePreferencesWithOwner:owner] retain];
+        
     //Open the contact list window
     [self showContactList:nil];
 
@@ -75,6 +81,8 @@
     [[owner notificationCenter] addObserver:self selector:@selector(initiateMessage:) name:Interface_InitiateMessage object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(closeMessage:) name:Interface_CloseMessage object:nil];
+
+
 
     //Install our menu items
     [self addMenuItems];

@@ -35,6 +35,8 @@
 - (void)windowDidLoad;
 - (BOOL)windowShouldClose:(id)sender;
 - (NSRect)_desiredWindowFrame;
+- (void)_configureAutoResizing;
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIContactListWindowController
@@ -68,7 +70,11 @@
 
     owner = [inOwner retain];
     interface = [inInterface retain];
-        
+
+    //Observe preference changes
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
+            
     return(self);
 }
 
@@ -81,6 +87,19 @@
     [super dealloc];
 }
 
+//Preferences have changed
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0){
+        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+
+        autoResizeVertically = [[prefDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue];
+        autoResizeHorizontal = [[prefDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
+
+        [self _configureAutoResizing];
+    }
+}
+
 //Called when the user selects a new contact object
 - (void)contactSelectionChanged:(NSNotification *)notification
 {
@@ -90,26 +109,45 @@
     [toolbar_bottom configureForObjects:[NSDictionary dictionaryWithObjectsAndKeys:[self window],@"Window",object,@"ContactObject",nil]];
 }
 
+//Configure auto-resizing
+- (void)_configureAutoResizing
+{
+    [[self window] setShowsResizeIndicator:!(autoResizeVertically && autoResizeHorizontal)];
+
+    if(!autoResizeVertically){
+        [[self window] setMaxSize:NSMakeSize(10000, 10000)];
+        [[self window] setMinSize:NSMakeSize(0, 0)];
+    }
+
+    [self contactListDesiredSizeChanged:nil];
+}
+
 //Dynamically resize the contact list
 - (void)contactListDesiredSizeChanged:(NSNotification *)notification
 {
-    NSRect	newFrame = [self _desiredWindowFrame];
+    if(autoResizeVertically){
+        NSRect	newFrame = [self _desiredWindowFrame];
 
-    //Set this as our window's size
-    [[self window] setMaxSize:newFrame.size];
-    [[self window] setMinSize:newFrame.size];    
-    
-    //Resize the window (We animate only if the window is main)
-    if([[self window] isMainWindow]){
-        [scrollView_contactList setAutoHideScrollBar:NO]; //Prevent scrollbar from appearing during animation
-        [[self window] setFrame:newFrame display:YES animate:YES];
-        [scrollView_contactList setAutoHideScrollBar:YES];
+        //Set this as our window's size
+        if(!autoResizeHorizontal){ //Allow horiz resizing still
+            [[self window] setMaxSize:NSMakeSize(10000, newFrame.size.height)];
+            [[self window] setMinSize:NSMakeSize(0, newFrame.size.height)];
+        }else{
+            [[self window] setMaxSize:newFrame.size];
+            [[self window] setMinSize:newFrame.size];
+        }
+           
+        //Resize the window (We animate only if the window is main)
+        if([[self window] isMainWindow]){
+            [scrollView_contactList setAutoHideScrollBar:NO]; //Prevent scrollbar from appearing during animation
+            [[self window] setFrame:newFrame display:YES animate:YES];
+            [scrollView_contactList setAutoHideScrollBar:YES];
 
-    }else{
-        [[self window] setFrame:newFrame display:YES animate:NO];
+        }else{
+            [[self window] setFrame:newFrame display:YES animate:NO];
 
+        }
     }
-
 }
 
 - (NSRect)windowWillUseStandardFrame:(NSWindow *)sender defaultFrame:(NSRect)defaultFrame
@@ -127,16 +165,18 @@
         NSRect	screenFrame = [[[self window] screen] visibleFrame];
 
         //Calculate desired width and height
-        newFrame.size.width = desiredSize.width + contactViewPadding.width + SCROLL_VIEW_PADDING_X;
+        if(autoResizeHorizontal){
+            newFrame.size.width = desiredSize.width + contactViewPadding.width + SCROLL_VIEW_PADDING_X;
+        }else{
+            newFrame.size.width = currentFrame.size.width;
+        }
         newFrame.size.height = desiredSize.height + contactViewPadding.height + SCROLL_VIEW_PADDING_Y;
 
         //Adjust the Y Origin
         if(newFrame.size.height > screenFrame.size.height){
             newFrame.size.height = screenFrame.size.height; //Max Height
             newFrame.size.width += 16; //Factor scrollbar into width
-
         }
-        
         if(currentFrame.origin.y - EDGE_CATCH_Y < screenFrame.origin.y){
             newFrame.origin.y = currentFrame.origin.y; //Expand up
         }else{
@@ -144,10 +184,14 @@
         }
 
         //Adjust the X Origin
-        if((currentFrame.origin.x + currentFrame.size.width) + EDGE_CATCH_X > (screenFrame.origin.x + screenFrame.size.width)){
-            newFrame.origin.x = currentFrame.origin.x + (currentFrame.size.width - newFrame.size.width); //Expand Left
+        if(autoResizeHorizontal){
+            if((currentFrame.origin.x + currentFrame.size.width) + EDGE_CATCH_X > (screenFrame.origin.x + screenFrame.size.width)){
+                newFrame.origin.x = currentFrame.origin.x + (currentFrame.size.width - newFrame.size.width); //Expand Left
+            }else{
+                newFrame.origin.x = currentFrame.origin.x; //Expand Right
+            }
         }else{
-            newFrame.origin.x = currentFrame.origin.x; //Expand Right
+            newFrame.origin.x = currentFrame.origin.x;
         }
     }
 
@@ -185,11 +229,7 @@
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
 
-    //Turn on auto-resizing
-    [[self window] setShowsResizeIndicator:NO];
-    [self contactListDesiredSizeChanged:nil];
-
-        
+    //
     [toolbar_bottom setIdentifier:CONTACT_LIST_TOOLBAR];
 }
 

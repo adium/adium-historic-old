@@ -6844,6 +6844,69 @@
 			settings = {
 			};
 		};
+		4BA12FFC04C0A12900A8010A = {
+			children = (
+				4BA12FFF04C0A2D900A8010A,
+				4BA1300004C0A2D900A8010A,
+				4BA12FFD04C0A17300A8010A,
+				4B64797803DC29B200A8010A,
+				4BA1300304C0A4E300A8010A,
+			);
+			isa = PBXGroup;
+			name = Preferences;
+			refType = 4;
+		};
+		4BA12FFD04C0A17300A8010A = {
+			isa = PBXFileReference;
+			name = DualWindowPrefs.nib;
+			path = "Plugins/Dual Window Interface/DualWindowPrefs.nib";
+			refType = 4;
+		};
+		4BA12FFE04C0A17300A8010A = {
+			fileRef = 4BA12FFD04C0A17300A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA12FFF04C0A2D900A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIDualWindowPreferences.h;
+			path = "Plugins/Dual Window Interface/AIDualWindowPreferences.h";
+			refType = 4;
+		};
+		4BA1300004C0A2D900A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIDualWindowPreferences.m;
+			path = "Plugins/Dual Window Interface/AIDualWindowPreferences.m";
+			refType = 4;
+		};
+		4BA1300104C0A2D900A8010A = {
+			fileRef = 4BA12FFF04C0A2D900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA1300204C0A2D900A8010A = {
+			fileRef = 4BA1300004C0A2D900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA1300304C0A4E300A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = DualWindowDefaults.plist;
+			path = "Plugins/Dual Window Interface/DualWindowDefaults.plist";
+			refType = 4;
+		};
+		4BA1300404C0A4E300A8010A = {
+			fileRef = 4BA1300304C0A4E300A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BA80057046C63DF00C50DA9 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -14261,7 +14324,7 @@
 				F549EF1B036B1A0801A8010A,
 				F549EF1C036B1A0A01A8010A,
 				4BCFEC5803F5718700A8010A,
-				4B64797803DC29B200A8010A,
+				4BA12FFC04C0A12900A8010A,
 			);
 			isa = PBXGroup;
 			name = "Dual Window Interface";
@@ -14278,6 +14341,7 @@
 				4BACB70303C8CB5E00A8010A,
 				4B25494A03F6A32700A8010A,
 				4B25494C03F6A32700A8010A,
+				4BA1300104C0A2D900A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14292,6 +14356,8 @@
 				4BCFEC5A03F574A400A8010A,
 				4BCFEF4D03F59F2800A8010A,
 				4B707E7104B8B34800A8010A,
+				4BA12FFE04C0A17300A8010A,
+				4BA1300404C0A4E300A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14306,6 +14372,7 @@
 				4BACB70403C8CB5E00A8010A,
 				4B25494B03F6A32700A8010A,
 				4B25494D03F6A32700A8010A,
+				4BA1300204C0A2D900A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
