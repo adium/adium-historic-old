@@ -52,8 +52,13 @@ typedef enum {
     NSMutableArray			*paneArray;						//Loaded preference panes
 	NSMutableDictionary		*observers;						//Preference change observers
 
+	NSMutableDictionary		*defaults;						//Preference defaults
     NSMutableDictionary		*prefCache;						//Preference cache
-    NSMutableDictionary		*objectPrefCache;				//Object specific preferences cache
+	NSMutableDictionary		*prefWithDefaultsCache;			//Preference cache with defaults included
+	
+	NSMutableDictionary		*objectDefaults;				//Object specific defaults
+	NSMutableDictionary		*objectPrefCache;				//Object specific preferences cache
+    NSMutableDictionary		*objectPrefWithDefaultsCache;	//Object specific preferences cache with defaults included
 
     int						preferenceChangeDelays;			//Number of active delays (0 = not delayed)
     NSMutableSet			*delayedNotificationGroups;  	//Groups with delayed changes
