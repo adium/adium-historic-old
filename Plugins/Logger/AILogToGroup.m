@@ -153,8 +153,11 @@
 		 60*60*24*7*8 = 4838400 seconds = 2 months ago or earlier: 
 		 Don't trust the modification date in case we're using a restore-from-backup log folder; we don't want all those
 		 old logs to have the same date.
+		 
+		 Don't trust the modification date if it's in the future.
 		 */
-		if ([date timeIntervalSinceNow] < -4838400){
+		NSTimeInterval dateTimeIntervalSinceNow = [date timeIntervalSinceNow];
+		if ((dateTimeIntervalSinceNow < -4838400) || (dateTimeIntervalSinceNow > 0)){
 			date = [AILog dateFromFileName:(fileName ?
 											fileName :
 											[relativeLogPath lastPathComponent])];
