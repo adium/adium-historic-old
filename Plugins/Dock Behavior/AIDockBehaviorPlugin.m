@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIDockBehaviorPlugin.h"
-#import "AIDockBehaviorPreferences.h"
 #import "ESDockAlertDetailPane.h"
 
 #define DOCK_BEHAVIOR_ALERT_SHORT	@"Bounce the dock icon"
