@@ -7,6 +7,7 @@
 #include "libgaim/imgstore.h"
 #include "libgaim/notify.h"
 #include "libgaim/plugin.h"
+#include "libgaim/pluginpref.h"
 #include "libgaim/pounce.h"
 #include "libgaim/prefs.h"
 #include "libgaim/privacy.h"
