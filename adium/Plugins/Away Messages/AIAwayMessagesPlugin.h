@@ -14,7 +14,7 @@
 
 @class AIAwayMessagePreferences;
 
-@interface AIAwayMessagesPlugin : AIPlugin/*<AIPreferenceViewControllerDelegate>*/ {
+@interface AIAwayMessagesPlugin : AIPlugin {
 
     AIAwayMessagePreferences	*preferences;
 

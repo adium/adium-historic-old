@@ -33,7 +33,6 @@
 #import "AIMenuAdditions.h"
 #import "AICompletingTextField.h"
 #import "AITextFieldAdditions.h"
-#import "AISendingTextView.h"
 #import "AIColoredBoxView.h"
 #import "AIMiniToolbarButton.h"
 #import "AIMiniToolbar.h"
