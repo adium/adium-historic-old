@@ -37,6 +37,7 @@
 - (void)_addSet:(NSString *)inSet withSounds:(NSArray *)inSounds toArray:(NSMutableArray *)inArray;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)speakNext;
+-(void)initDefaultVoiceIfNecessary;
 @end
 
 @implementation AISoundController
@@ -48,10 +49,8 @@
     soundLock = [[NSLock alloc] init];
 
     voiceArray = [[SUSpeaker voiceNames] retain];  //voiceArray will be in the same order that speaker expects
-    speaker = [[SUSpeaker alloc] init];
-    [speaker setDelegate:self];
-    defaultRate = [speaker rate];
-    defaultPitch = [speaker pitch];
+
+    
     speechArray = [[NSMutableArray alloc] init];
     resetNextTime = NO;
     speaking = NO;
@@ -292,12 +291,13 @@
 
 - (int)defaultRate
 {
+    [self initDefaultVoiceIfNecessary];
     return defaultRate;
 }
 
 - (int)defaultPitch
 { 
-    NSLog(@"default pitch is %i",defaultPitch);
+    [self initDefaultVoiceIfNecessary];
     return defaultPitch;
 }
 
@@ -350,25 +350,32 @@
 	NSNumber * voiceNumber = [dict objectForKey:VOICE_INDEX];
 	NSNumber * pitchNumber = [dict objectForKey:PITCH];
 	NSNumber * rateNumber = [dict objectForKey:RATE];
-	
-	if (resetNextTime) { //reset after a voice or pitch change so default is used
-	    [speaker resetToDefaults];
-	    resetNextTime = NO;
-	}
+	SUSpeaker * theSpeaker;
+
 	if (voiceNumber) {
-	    [speaker setVoice:[voiceNumber intValue]];
-	    resetNextTime = YES;
+	    if (!speaker_variableVoice) { //initVariableVoiceifNecessary
+		speaker_variableVoice = [[SUSpeaker alloc] init];
+		[speaker_variableVoice setDelegate:self];
+	    }
+	    theSpeaker = speaker_variableVoice;
+	    [theSpeaker setVoice:[voiceNumber intValue]];
+	} else {
+	    [self initDefaultVoiceIfNecessary];
+	    theSpeaker = speaker_defaultVoice;
 	}
+	
 	if (pitchNumber) {
-	    [speaker setPitch:[pitchNumber floatValue]];
-	    resetNextTime = YES;
+	    [theSpeaker setPitch:[pitchNumber floatValue]];
+	} else {
+	    [theSpeaker setPitch:defaultPitch];
 	}
 	if (rateNumber) {
-	    [speaker setRate:[rateNumber intValue]];
-	    resetNextTime = YES;
+	    [theSpeaker setRate:[rateNumber intValue]];
+	} else {
+	    [theSpeaker setRate:defaultRate];
 	}
 
-	[speaker speakText:text];
+	[theSpeaker speakText:text];
 	[speechArray removeObjectAtIndex:0];
     }
 }
@@ -377,6 +384,16 @@
 {
     speaking = NO;
     [self speakNext];
+}
+
+- (void)initDefaultVoiceIfNecessary
+{
+    if (!speaker_defaultVoice) {
+	speaker_defaultVoice = [[SUSpeaker alloc] init];
+	[speaker_defaultVoice setDelegate:self];
+	defaultRate = [speaker_defaultVoice rate];
+	defaultPitch = [speaker_defaultVoice pitch];
+    }
 }
 
 @end

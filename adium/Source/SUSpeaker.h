@@ -21,7 +21,7 @@
 }
 
 +(NSArray*) voiceNames;
-+(NSString*) defaultVoiceName;
+//+(NSString*) defaultVoiceName;
 -(void) setPitch:(float)pitch;
 -(void) setRate:(int)rate;
 -(void) setVoice:(int)index;

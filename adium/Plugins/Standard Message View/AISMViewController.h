@@ -44,7 +44,7 @@
 
     NSFont			*prefixFont;
 
-    NSString			*timeStampFormat;
+    NSMutableString             *timeStampFormat;
     NSString			*prefixIncoming;
     NSString			*prefixOutgoing;
 }

@@ -17,6 +17,7 @@
 #import "AIColorAdditions.h"
 #import "AIScrollViewAdditions.h"
 #import "AIViewAdditions.h"
+#import "ESDateFormatterAdditions.h"
 #import "AIDictionaryAdditions.h"
 #import "AIVerticallyCenteredTextCell.h"
 #import "AIImageTextCell.h"

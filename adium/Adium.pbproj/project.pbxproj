@@ -1486,6 +1486,7 @@
 			files = (
 				34ADE00005158D4B003B2F21,
 				34ADE00305159186003B2F21,
+				34F7707A052B72F7004616D4,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1598,6 +1599,7 @@
 				346E641405157B14003B2F21,
 				346E641505157B14003B2F21,
 				34ADDFFF05158D4B003B2F21,
+				34F77079052B72F7004616D4,
 				34ADE00205159186003B2F21,
 			);
 			isa = PBXGroup;
@@ -1997,6 +1999,44 @@
 		};
 		34D43505051ADC10003B2F21 = {
 			fileRef = 34D43504051ADC10003B2F21;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F77075052B72C4004616D4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESDateFormatterAdditions.h;
+			path = "Frameworks/AIUtilities Framework/ESDateFormatterAdditions.h";
+			refType = 4;
+		};
+		34F77076052B72C4004616D4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESDateFormatterAdditions.m;
+			path = "Frameworks/AIUtilities Framework/ESDateFormatterAdditions.m";
+			refType = 4;
+		};
+		34F77077052B72C4004616D4 = {
+			fileRef = 34F77075052B72C4004616D4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F77078052B72C4004616D4 = {
+			fileRef = 34F77076052B72C4004616D4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F77079052B72F7004616D4 = {
+			isa = PBXFileReference;
+			name = ContactAnnouncer.nib;
+			path = Plugins/Announcer/ContactAnnouncer.nib;
+			refType = 4;
+		};
+		34F7707A052B72F7004616D4 = {
+			fileRef = 34F77079052B72F7004616D4;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -16568,6 +16608,7 @@
 				4B740FB7051D500C00A8010A,
 				4B740FB9051D500C00A8010A,
 				4B740FBB051D500C00A8010A,
+				34F77077052B72C4004616D4,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -16681,6 +16722,7 @@
 				4B740FB8051D500C00A8010A,
 				4B740FBA051D500C00A8010A,
 				4B740FBC051D500C00A8010A,
+				34F77078052B72C4004616D4,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19987,6 +20029,8 @@
 				F579393B033E74E401A8010A,
 				4B30ADFA044228BA00A8010A,
 				4B30ADFB044228BA00A8010A,
+				34F77075052B72C4004616D4,
+				34F77076052B72C4004616D4,
 				F579393E033E74E401A8010A,
 				F579393F033E74E401A8010A,
 				4B187A0303D59CCC00A8010A,

@@ -579,7 +579,8 @@ typedef enum {
 
     NSLock		*soundLock;
 
-    SUSpeaker		*speaker;
+    SUSpeaker		*speaker_variableVoice;
+    SUSpeaker		*speaker_defaultVoice;
     NSMutableArray 	*speechArray;
     NSArray		*voiceArray;
     BOOL		resetNextTime;
