@@ -7352,6 +7352,7 @@
 				340F481B06DA4EDD0072E2FA,
 				34D189290760F75F0075A380,
 				34B70346076EDB370016E8BA,
+				4B4D30740797534A003B0288,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12140,6 +12141,20 @@
 			settings = {
 			};
 		};
+		4B4D30730797534A003B0288 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = AccountViews.nib;
+			path = "Frameworks/Adium Framework/AccountViews.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B4D30740797534A003B0288 = {
+			fileRef = 4B4D30730797534A003B0288;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B4F5B23042D636700A8010A = {
 			children = (
 				34C68B1C0778F9C200EB423C,
@@ -12259,6 +12274,7 @@
 				4BE8AF6E0796EC1200B6E49B,
 				4B28DDAB0599FED200343093,
 				4B28DDAC0599FED200343093,
+				4B4D30730797534A003B0288,
 			);
 			isa = PBXGroup;
 			name = "Accounts & Services";
