@@ -16,9 +16,9 @@
     [[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterOutgoing];
     
     stringShitlist = [[NSArray alloc] initWithObjects:@" a/s/l",@" u",@" r",@" omg",@" pic",@" mby",@" 2nite",@" cos",@" coz",@" 2day",
-                                                      @" waz",@" 4ever",@" B4",@" GR8",@" L8R",@" THX",@" TX",@" THKS",@" lyk",
+                                                      @" waz",@" 4ever",@" B4",@" GR8",@" L8R",@" THX",@" THKS",@" lyk",
                                                       @" wut",@" asl",@" ic",@" pen0r",@" vagin0r",@" pr0n",@" fer",@" ffs",@" sif",
-                                                      @" 2morrow",@" 2marro",nil];
+                                                      @" 2morrow",@" 2marro",@" k",@" OMGWTFBBQ",@" OMGHI2U",@" ur",@" NE1", @" "nil];
     killCount = 0;
 }
 
