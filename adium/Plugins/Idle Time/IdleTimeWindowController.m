@@ -92,7 +92,9 @@ static IdleTimeWindowController *sharedInstance = nil;
 	[popUp_Accounts addItemWithTitle:[account accountDescription]];
 
 	// only set the item enabled if the account responds to "IdleTime"
-        if([[account supportedStatusKeys] containsObject:@"IdleTime"]){
+        if([[account supportedStatusKeys] containsObject:@"IdleTime"] &&
+	   [[account statusObjectForKey:@"Status"] intValue] == STATUS_ONLINE) {
+	    
 	    [[popUp_Accounts itemWithTitle:[account accountDescription]] setEnabled:TRUE];
         }else{
 	    [[popUp_Accounts itemWithTitle:[account accountDescription]] setEnabled:FALSE];
@@ -107,8 +109,10 @@ static IdleTimeWindowController *sharedInstance = nil;
 
 - (IBAction)configureControls:(id)sender
 {
-    if ([popUp_Accounts numberOfItems]==0) [popUp_Accounts setEnabled:NO];
-    else [popUp_Accounts setEnabled:YES];
+//    if ([popUp_Accounts numberOfItems]==0) [popUp_Accounts setEnabled:FALSE];
+//    else [popUp_Accounts setEnabled:TRUE];
+
+    [popUp_Accounts setEnabled: ([popUp_Accounts numberOfItems] > 0)];
     
     [checkBox_SetManually setEnabled:[popUp_Accounts isEnabled]];
     if (![checkBox_SetManually isEnabled]) [checkBox_SetManually setState:FALSE];
