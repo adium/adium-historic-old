@@ -739,7 +739,7 @@ static NSImage *pushIndicatorImage = nil;
 			NSArray			*files = [pasteboard propertyListForType:NSFilenamesPboardType];
 			NSEnumerator	*enumerator = [files objectEnumerator];
 			NSString		*path;
-			while (path = [enumerator nextObject]){
+			while ((path = [enumerator nextObject])){
 				ESFileWrapperExtension  *fileWrapper;
 				NSTextAttachment		*attachment;
 				

@@ -49,7 +49,7 @@
     
     //Add their views
     enumerator = [paneArray objectEnumerator];
-    while(pane = [enumerator nextObject]){
+    while((pane = [enumerator nextObject])){
         NSView	*paneView = [pane view];
         
         //Add the view
@@ -84,12 +84,12 @@
 	
     //Determine the tallest view contained within this tab view.
     enumerator = [[tabView tabViewItems] objectEnumerator];
-    while(tabViewItem = [enumerator nextObject]){
+    while((tabViewItem = [enumerator nextObject])){
         NSEnumerator	*subViewEnumerator;
         NSView		*subView;
 		
         subViewEnumerator = [[[tabViewItem view] subviews] objectEnumerator];
-        while(subView = [subViewEnumerator nextObject]){
+        while((subView = [subViewEnumerator nextObject])){
             int		height = [(AIModularPaneCategoryView *)subView desiredHeight];
 			
             if(height > maxHeight){

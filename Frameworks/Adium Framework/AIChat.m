@@ -103,7 +103,7 @@ static int nextChatNumber = 0;
 	AIListObject 	*listObject;
 	NSImage			*chatMenuImage = nil;
 	
-	if(listObject = [self listObject]){
+	if((listObject = [self listObject])){
 		chatMenuImage = [AIUserIcons menuUserIconForObject:listObject];
 	}
 
@@ -312,7 +312,7 @@ static int nextChatNumber = 0;
 {
 	if (!uniqueChatID) {
 		AIListObject	*listObject;
-		if (listObject = [self listObject]){
+		if ((listObject = [self listObject])){
 			uniqueChatID = [listObject internalObjectID];
 		}else{
 			uniqueChatID = [NSString stringWithFormat:@"%@.%i",name,nextChatNumber++];
@@ -407,7 +407,7 @@ static int nextChatNumber = 0;
 		NSEnumerator	*enumerator = [[self participatingListObjects] objectEnumerator];
 		AIListContact	*listContact;
 		
-		while (listContact = [enumerator nextObject]){
+		while ((listContact = [enumerator nextObject])){
 			AIListContact   *targetFileTransferContact;
 			
 			if (sourceAccount){
@@ -461,7 +461,7 @@ static int nextChatNumber = 0;
 	NSEnumerator	*enumerator = [[self containedObjects] objectEnumerator];
 	AIListObject	*object;
 	
-	while(object = [enumerator nextObject]){
+	while((object = [enumerator nextObject])){
 		if([inUID isEqualToString:[object UID]] && [object service] == inService) break;
 	}
 	

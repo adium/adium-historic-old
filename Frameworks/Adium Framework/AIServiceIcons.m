@@ -112,11 +112,11 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 			[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:AIServiceIconSetDidChangeNotification
 																			   object:nil];
 			
-			return(YES);
-		}else{
-			return(NO);
+			return YES;
 		}
 	}
+
+	return NO;
 }
 
 #define	PREVIEW_MENU_IMAGE_SIZE		13
@@ -139,11 +139,11 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 		int				xOrigin = 0;
 		
 		[image lockFocus];
-		while(iconID = [enumerator nextObject]){
+		while((iconID = [enumerator nextObject])){
 			NSString	*anIconPath = [inPath stringByAppendingPathComponent:[previewIconNames objectForKey:iconID]];
 			NSImage		*anIcon;
 			
-			if(anIcon = [[[NSImage alloc] initWithContentsOfFile:anIconPath] autorelease]){
+			if((anIcon = [[[NSImage alloc] initWithContentsOfFile:anIconPath] autorelease])){
 				NSSize	anIconSize = [anIcon size];
 				NSRect	targetRect = NSMakeRect(xOrigin, 0, PREVIEW_MENU_IMAGE_SIZE, PREVIEW_MENU_IMAGE_SIZE);
 				

@@ -25,7 +25,7 @@
 
 -(id)initWithFrame:(NSRect)inFrame
 {
-	if(self = [super initWithFrame:inFrame]){
+	if((self = [super initWithFrame:inFrame])){
 		[self _initImageTextView];
 	}
 	
@@ -34,7 +34,7 @@
 
 - (id)initWithCoder:(NSCoder *)encoder
 {
-	if(self = [super initWithCoder:encoder]){
+	if((self = [super initWithCoder:encoder])){
 		[self _initImageTextView];		
 	}
 	

@@ -156,7 +156,7 @@
 	NSEnumerator	*enumerator = [containedObjects objectEnumerator];
 	AIListObject	*object;
 	
-	while(object = [enumerator nextObject]){
+	while((object = [enumerator nextObject])){
 		if([inUID isEqualToString:[object UID]] && [object service] == inService) break;
 	}
 	

@@ -592,7 +592,7 @@
 			NSEnumerator	*enumerator = [dragItems objectEnumerator];
 			AIListObject	*listObject;
 			
-			while (listObject = [enumerator nextObject]){
+			while ((listObject = [enumerator nextObject])){
 				[dragItemsArray addObject:[listObject internalObjectID]];
 			}
 			

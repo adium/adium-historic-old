@@ -98,7 +98,11 @@
  */
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-	[aDecoder decodeValueOfObjCType:@encode(FourCharCode) at:(void *)&fourCharCode];
+	if ((self = [super init])) {
+		[aDecoder decodeValueOfObjCType:@encode(FourCharCode) at:(void *)&fourCharCode];
+	}
+
+	return self;
 }
 
 /*

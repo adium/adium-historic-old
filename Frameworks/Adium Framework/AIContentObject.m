@@ -164,7 +164,7 @@
 //Behavior -------------------------------------------------------------------------------------------------------------
 #pragma mark Behavior
 //Is this content passed through content filters?
-- (BOOL)setFilterContent:(BOOL)inFilterContent{
+- (void)setFilterContent:(BOOL)inFilterContent{
 	filterContent = inFilterContent;
 }
 - (BOOL)filterContent{

@@ -396,7 +396,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		serviceClass = [[listContact service] serviceClass];
 		
 		// Is there already an entry for this service?
-		if(contactArray = [contactsDict objectForKey:serviceClass]){
+		if((contactArray = [contactsDict objectForKey:serviceClass])){
 			[contactArray addObject:listContact];
 			
 		}else{
@@ -635,7 +635,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	NSEnumerator	*enumerator = [inObject statusKeyEnumerator];
 	NSString		*key;
 	
-	while(key = [enumerator nextObject]){
+	while((key = [enumerator nextObject])){
 		id value = [inObject statusObjectForKey:key];
 
 		//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
@@ -653,7 +653,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	NSEnumerator	*enumerator = [inObject statusKeyEnumerator];
 	NSString		*key;
 	
-	while(key = [enumerator nextObject]){
+	while((key = [enumerator nextObject])){
 		//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
 		if([self _cacheStatusValue:nil forObject:inObject key:key notify:NotifyLater]){
 			[super object:self didSetStatusObject:[self statusObjectForKey:key] forKey:key notify:NotifyLater];
@@ -952,7 +952,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	NSEnumerator	*enumerator = [[self containedObjects] objectEnumerator];
 	AIListObject	*object;
 	
-	while(object = [enumerator nextObject]){
+	while((object = [enumerator nextObject])){
 		if([inUID isEqualToString:[object UID]] && [object service] == inService) break;
 	}
 	

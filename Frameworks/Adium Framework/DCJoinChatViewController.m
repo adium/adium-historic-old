@@ -162,7 +162,7 @@
 			contactsArray = [NSMutableArray array];
 			
 			enumerator = [contactNames objectEnumerator];		
-			while (aContactName = [enumerator nextObject]){
+			while ((aContactName = [enumerator nextObject])){
 								
 				UID = [[inAccount service] filterUID:[self impliedCompletion:aContactName] removeIgnoredCharacters:YES];
 				
@@ -171,9 +171,9 @@
 					UID = [UID compactedString];
 				}
 				
-				if(listContact = [[adium contactController] contactWithService:[inAccount service] 
+				if((listContact = [[adium contactController] contactWithService:[inAccount service] 
 																	   account:inAccount 
-																		   UID:UID]){
+																		   UID:UID])){
 					[contactsArray addObject:listContact];
 				}
 			}
@@ -227,7 +227,7 @@
 			dragItemsUniqueIDs = [pboard propertyListForType:@"AIListObjectUniqueIDs"];
 			
 			enumerator = [dragItemsUniqueIDs objectEnumerator];
-			while (uniqueID = [enumerator nextObject]){
+			while ((uniqueID = [enumerator nextObject])){
 				
 				// Is there a contact with our service?
 				if( [self validContact:uniqueID withService:[account service]] ) {
@@ -264,13 +264,13 @@
 			dragItemsUniqueIDs = [pboard propertyListForType:@"AIListObjectUniqueIDs"];
 			
 			enumerator = [dragItemsUniqueIDs objectEnumerator];
-			while (uniqueID = [enumerator nextObject]){
+			while ((uniqueID = [enumerator nextObject])){
 				NSString *oldValue = [theField stringValue];
 				listObject = [[adium contactController] existingListObjectWithUniqueID:uniqueID];
 				
 				// Get contacts with our service
 				// (May not be necessary, as we reject ungood contacts in the dragging entered phase)
-				if( listContact = [self validContact:uniqueID withService:[account service]] ) {
+				if((listContact = [self validContact:uniqueID withService:[account service]])) {
 					
 					// Add a comma for prettiness if need be
 					if( [oldValue length] && ![[oldValue substringFromIndex:([oldValue length]-1)] isEqualToString:@","] ) {

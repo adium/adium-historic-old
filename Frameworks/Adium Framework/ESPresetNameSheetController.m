@@ -44,7 +44,7 @@
 
 - (id)initWithWindowNibName:(NSString *)windowNibName defaultName:(NSString *)inDefaultName explanatoryText:(NSString *)inExplanatoryText notifyingTarget:(id)inTarget userInfo:(id)inUserInfo
 {
-	if(self = [super initWithWindowNibName:windowNibName]){
+	if((self = [super initWithWindowNibName:windowNibName])){
 		defaultName = [inDefaultName retain];
 		explanatoryText = [inExplanatoryText retain];
 		target = [inTarget retain];

@@ -66,7 +66,7 @@
 - (BOOL)displayContent;
 - (void)setTrackContent:(BOOL)inTrackContent;
 - (void)setDisplayContent:(BOOL)inDisplayContent;
-- (BOOL)setFilterContent:(BOOL)inFilterContent;
+- (void)setFilterContent:(BOOL)inFilterContent;
 - (void)setSendContent:(BOOL)inSendContent;
 - (BOOL)sendContent;
 - (void)setPostProcessContent:(BOOL)inPostProcessContent;

@@ -25,7 +25,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 
 - (id)init
 {
-	if(self = [super init]){
+	if((self = [super init])){
 		statusKeysRequiringResort = [[self statusKeysRequiringResort] retain];
 		attributeKeysRequiringResort = [[self attributeKeysRequiringResort] retain];
 		sortFunction = [self sortFunction];
