@@ -34,7 +34,8 @@
     } else if ((![self name]) || 
 		  ([[self name] isEqualToString:@"GIFReadingException"]) || 
 		  ([[self name] isEqualToString:@"NSPortTimeoutException"]) ||
-		  ([[self name] isEqualToString:@"NSAccessibilityException"]) /*||
+		  ([[self name] isEqualToString:@"NSAccessibilityException"]) ||
+		  ([[self name] isEqualToString:@"NSImageCacheException"]) /*||
 		  ([[self name] isEqualToString:@"NSInternalInconsistencyException"])*/) {
 	    [super raise];
 	
