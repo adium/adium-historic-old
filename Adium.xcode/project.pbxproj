@@ -2552,19 +2552,6 @@
 			settings = {
 			};
 		};
-		344877B506D1F61A00DA778C = {
-			buildActionMask = 8;
-			files = (
-			);
-			inputPaths = (
-			);
-			isa = PBXShellScriptBuildPhase;
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = "# Remove the 500 kilobytes of aiutilities private headers which are needed for compiling\n# but not for running\nrm -r \"$SYMROOT/Adium.app/Contents/Resources/Frameworks/AIUtilities.framework/Versions/A/PrivateHeaders\"";
-		};
 		344AB2B4057912C500384CEE = {
 			children = (
 				344AB2C30579136900384CEE,
@@ -5389,10 +5376,9 @@
 				34BD9D62053146CC000AB133,
 				34BD9D6A053146CC000AB133,
 				4B53CD9206B08A9700FCDA0C,
+				6C15E63106DF3BB600E5A50E,
 				345DFF4A05564DB200CEE7B3,
 				4B030E52056C2D7E00C765F9,
-				344877B506D1F61A00DA778C,
-				6C15E63106DF3BB600E5A50E,
 			);
 			buildRules = (
 			);
@@ -17478,7 +17464,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "find $BUILD_ROOT/$WRAPPER_NAME -name '.svn' -print0 | xargs -0 rm -rf\nfind $BUILD_ROOT/$WRAPPER_NAME -name '.DS_Store' -print0 | xargs -0 rm -rf";
+			shellScript = "echo \"Cleaning up header files...\"\nfind $BUILD_ROOT/$WRAPPER_NAME -name '.svn' -print0 | xargs -0 rm -rf\nfind $BUILD_ROOT/$WRAPPER_NAME -name '.DS_Store' -print0 | xargs -0 rm -rf\nfind $BUILD_ROOT/$WRAPPER_NAME -name '*.h' -print0 | xargs -0 rm -rf";
 		};
 		6C1CC23105415D5700B64925 = {
 			isa = PBXFileReference;
