@@ -29,8 +29,9 @@
 #import "AILicenseWindowController.h"
 #import "AICorePluginLoader.h"
 #import "AICoreComponentLoader.h"
+#import "AICrashController.h"
+#import "AIExceptionController.h"
 
-#import <ExceptionHandling/NSExceptionHandler.h>
 
 //#define NEW_APPLICATION_SUPPORT_DIRECTORY
 
@@ -80,19 +81,6 @@
 {
     return([ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath]);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //Core Controllers -----------------------------------------------------------------------------------------------------
@@ -179,11 +167,11 @@
 #ifdef NEW_APPLICATION_SUPPORT_DIRECTORY
 	[self upgradePreferenceFolderFromAdium2ToAdium];
 #endif
-	
 	//Load the crash reporter
 #ifdef CRASH_REPORTER
 #warning Crash reporter enabled.
-    [self configureCrashReporter];
+    [AICrashController enableCrashCatching];
+    [AIExceptionController enableExceptionCatching];
 #endif
     //Ignore SIGPIPE, which is a harmless error signal
     //sent when write() or similar function calls fail due to a broken pipe in the network connection
@@ -340,39 +328,6 @@
     [[NSWorkspace sharedWorkspace] launchApplication:PATH_TO_IMPORTER];
 }
 
-
-//Crash Reporter -------------------------------------------------------------------------------------------------------
-#pragma mark Crash Reporter
-//Handle a singal by loading the crash reporter and closing Adium down
-void Adium_HandleSignal(int i){
-    [[NSWorkspace sharedWorkspace] launchApplication:PATH_TO_CRASH_REPORTER];
-    exit(-1);
-}
-
-//Setup the crash reporter
-- (void)configureCrashReporter
-{
-    //Remove any existing crash logs
-    [[NSFileManager defaultManager] trashFileAtPath:EXCEPTIONS_PATH];
-    [[NSFileManager defaultManager] trashFileAtPath:CRASHES_PATH];
-    
-    //Log and Handle all exceptions
-    [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:NSLogAndHandleEveryExceptionMask];
-
-    //Install custom handlers which properly terminate Adium if one is received
-    signal(SIGILL, Adium_HandleSignal);		/* 4:   illegal instruction (not reset when caught) */
-    signal(SIGTRAP, Adium_HandleSignal);	/* 5:   trace trap (not reset when caught) */
-    signal(SIGEMT, Adium_HandleSignal);		/* 7:   EMT instruction */
-    signal(SIGFPE, Adium_HandleSignal);		/* 8:   floating point exception */
-    signal(SIGBUS, Adium_HandleSignal);		/* 10:  bus error */
-    signal(SIGSEGV, Adium_HandleSignal);	/* 11:  segmentation violation */
-    signal(SIGSYS, Adium_HandleSignal);		/* 12:  bad argument to system call */
-    signal(SIGXCPU, Adium_HandleSignal);	/* 24:  exceeded CPU time limit */
-    signal(SIGXFSZ, Adium_HandleSignal);	/* 25:  exceeded file size limit */    
-	
-	//I think SIGABRT is an exception... maybe we should ignore it? I'm really not sure.
-	signal(SIGABRT, SIG_IGN);
-}
 
 
 //Other -------------------------------------------------------------------------------------------------------

@@ -5359,39 +5359,6 @@
 			settings = {
 			};
 		};
-		34B5875A058D801D00E7EF0D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIException.m;
-			path = "Frameworks/Adium Framework/AIException.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34B5875B058D801D00E7EF0D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIException.h;
-			path = "Frameworks/Adium Framework/AIException.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34B5875C058D801D00E7EF0D = {
-			fileRef = 34B5875A058D801D00E7EF0D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34B5875D058D801D00E7EF0D = {
-			fileRef = 34B5875B058D801D00E7EF0D;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
 		34B588A0058D833A00E7EF0D = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -5847,6 +5814,8 @@
 				34F102320734499700890D3B,
 				34F1023C073449D500890D3B,
 				340EC2280736BF32001653BF,
+				4B5323EC0747BDED0073DF4D,
+				4B53245A0747C82B0073DF4D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6443,6 +6412,8 @@
 				34F1022E0734499700890D3B,
 				34F1023B073449D500890D3B,
 				340EC2290736BF32001653BF,
+				4B5323ED0747BDED0073DF4D,
+				4B53245B0747C82B0073DF4D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6677,7 +6648,6 @@
 				348862D205645EB6003C9627,
 				4BFC33DF058D4430008F7FA2,
 				4BFC3414058D48A8008F7FA2,
-				34B5875D058D801D00E7EF0D,
 				34503C81058F96C400FB7AD1,
 				4B28DDAD0599FED300343093,
 				4B422C0B05ACB248005E720B,
@@ -6850,7 +6820,6 @@
 				348862D105645EB5003C9627,
 				4BFC33E0058D4430008F7FA2,
 				4BFC3415058D48A8008F7FA2,
-				34B5875C058D801D00E7EF0D,
 				34503C80058F96C400FB7AD1,
 				4B28DDAE0599FED300343093,
 				4B422C0C05ACB248005E720B,
@@ -11450,8 +11419,6 @@
 			children = (
 				34503C7F058F96C400FB7AD1,
 				34503C7E058F96C400FB7AD1,
-				34B5875B058D801D00E7EF0D,
-				34B5875A058D801D00E7EF0D,
 				348862CD05645E94003C9627,
 				348862CE05645E95003C9627,
 				3483928505E68B05002BC6C0,
@@ -11474,6 +11441,80 @@
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B5323E90747BDB80073DF4D = {
+			children = (
+				4B7F78C30597F6F500162728,
+				4B7F78BD0597F44D00162728,
+				4B7F78BE0597F44D00162728,
+				4B7F78C10597F5B700162728,
+				4B215DBD0598A71400305B3C,
+				4BB7670C05B31DBA00E89FA2,
+			);
+			isa = PBXGroup;
+			name = "Crash Report Application";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B5323EA0747BDED0073DF4D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AICrashController.h;
+			path = Source/AICrashController.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4B5323EB0747BDED0073DF4D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AICrashController.m;
+			path = Source/AICrashController.m;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4B5323EC0747BDED0073DF4D = {
+			fileRef = 4B5323EA0747BDED0073DF4D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B5323ED0747BDED0073DF4D = {
+			fileRef = 4B5323EB0747BDED0073DF4D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B5324580747C82B0073DF4D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIExceptionController.h;
+			path = Source/AIExceptionController.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4B5324590747C82B0073DF4D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIExceptionController.m;
+			path = Source/AIExceptionController.m;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		4B53245A0747C82B0073DF4D = {
+			fileRef = 4B5324580747C82B0073DF4D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B53245B0747C82B0073DF4D = {
+			fileRef = 4B5324590747C82B0073DF4D;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B539C4B05EFD6CD00E5921A = {
 			fileEncoding = 4;
@@ -12675,12 +12716,11 @@
 		};
 		4B7F78BA0597F42D00162728 = {
 			children = (
-				4B7F78C10597F5B700162728,
-				4B7F78C30597F6F500162728,
-				4B7F78BD0597F44D00162728,
-				4B7F78BE0597F44D00162728,
-				4B215DBD0598A71400305B3C,
-				4BB7670C05B31DBA00E89FA2,
+				4B5323EA0747BDED0073DF4D,
+				4B5323EB0747BDED0073DF4D,
+				4B5324580747C82B0073DF4D,
+				4B5324590747C82B0073DF4D,
+				4B5323E90747BDB80073DF4D,
 				34F2BD2E059CF8E70005B238,
 			);
 			isa = PBXGroup;
