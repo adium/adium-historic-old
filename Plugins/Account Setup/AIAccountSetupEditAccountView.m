@@ -7,6 +7,7 @@
 //
 
 #import "AIAccountSetupEditAccountView.h"
+#import "AIAccountSetupWindowController.h"
 
 @interface AIAccountSetupEditAccountView (PRIVATE)
 - (void)configureViewForAccount:(AIAccount *)inAccount;
@@ -14,6 +15,7 @@
 
 - (void)_addCustomViewAndTabsForController:(AIAccountViewController *)inControler;
 - (void)_removeCustomViewAndTabs;
+- (void)_configureResponderChain:(NSTimer *)inTimer;
 @end
 
 @implementation AIAccountSetupEditAccountView
@@ -119,7 +121,7 @@
 	
 	//Get account view
 	accountViewController = [inControler retain];
-	accountView = [accountViewController accountView];
+	accountView = [accountViewController connectionView];
 	
     //Swap in the account details view
     [view_accountDetails addSubview:accountView];
