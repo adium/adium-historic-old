@@ -45,18 +45,13 @@
 //init
 - (void)initController
 {
-    //Load the contact list
-    contactList = [[self loadContactList] retain];
-
-    //Create a dynamic strangers group
-    strangerGroup = [self createGroupNamed:STRANGER_GROUP_NAME inGroup:contactList];
-    [[strangerGroup displayArrayForKey:@"Dynamic"] addObject:[NSNumber numberWithBool:YES] withOwner:self];
-    [self updateListForObject:strangerGroup saveChanges:NO];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adiumLaunchComplete:) name:Adium_LaunchComplete object:nil];
 
     //
     handleObserverArray = [[NSMutableArray alloc] init];
     sortControllerArray = [[NSMutableArray alloc] init];
     delayedUpdating = 0;
+    contactList = nil;
     
     //
     contactInfoCategory = [[AIPreferenceCategory categoryWithName:@"" image:nil] retain];
@@ -72,6 +67,19 @@
 
     [super dealloc];
 }
+
+- (void)finishIniting
+{
+    //Load the contact list
+    contactList = [[self loadContactList] retain];
+    [[self contactNotificationCenter] postNotificationName:Contact_ListChanged object:nil];
+
+    //Create a dynamic strangers group
+    strangerGroup = [self createGroupNamed:STRANGER_GROUP_NAME inGroup:contactList];
+    [[strangerGroup displayArrayForKey:@"Dynamic"] addObject:[NSNumber numberWithBool:YES] withOwner:self];
+    [self updateListForObject:strangerGroup saveChanges:NO];
+}
+
 
 //Notification center for contact notifications
 - (NSNotificationCenter *)contactNotificationCenter
@@ -638,10 +646,15 @@
         NSString *type = [objectDict objectForKey:@"Type"];
 
         if([type compare:@"Contact"] == 0){
-            NSString 	*UID = [objectDict objectForKey:@"UID"];
-            NSString 	*service = [objectDict objectForKey:@"Service"];
+            AIContactHandle	*handle;
+            NSString 		*UID = [objectDict objectForKey:@"UID"];
+            NSString 		*service = [objectDict objectForKey:@"Service"];
 
-            [group addObject:[AIContactHandle handleWithServiceID:service UID:UID]];
+            //Create and add the handle
+            handle = [AIContactHandle handleWithServiceID:service UID:UID];
+            [group addObject:handle];
+            
+            [self handleStatusChanged:handle modifiedStatusKeys:nil]; //let all observers touch this new handle
             
         }else if([type compare:@"Group"] == 0){
             [group addObject:[self createGroupFromDict:objectDict]];

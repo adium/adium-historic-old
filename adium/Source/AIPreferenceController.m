@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <AIUtilities/AIUtilities.h>
+#import <Adium/Adium.h>
 #import "AIAdium.h"
 #import "AIPreferenceController.h"
 #import "AIPreferenceViewController.h"
@@ -24,6 +25,7 @@
 
 @interface AIPreferenceController (PRIVATE)
 - (NSMutableDictionary *)loadPreferenceGroup:(NSString *)groupName;
+- (void)savePreferences:(NSMutableDictionary *)prefDict forGroup:(NSString *)groupName;
 @end
 
 @implementation AIPreferenceController
@@ -140,48 +142,60 @@
 //Return an object specific preference.
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIContactObject *)object
 {
-    //Search the handle specific prefs for the key
-    
-    //if not found, get the group and find the base value
-    return([[self preferencesForGroup:groupName] objectForKey:inKey]);
+    NSMutableDictionary	*prefDict, *objectPrefDict;
+    id			value = nil;
+
+    //Load the preference
+    prefDict = [self loadPreferenceGroup:groupName];
+    objectPrefDict = [prefDict objectForKey:[NSString stringWithFormat:@"(%@)",[object UID]]];
+    if(objectPrefDict) value = [objectPrefDict objectForKey:inKey];
+
+    //If an object specific is not found, use the global preference
+    if(!value){
+        value = [[self preferencesForGroup:groupName] objectForKey:inKey];
+    }
+
+    return(value);
 }
 
 //Set an object specific preference
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName object:(AIContactObject *)object
 {
-    //Set the preference as handle or group specific
-
-    //For now just save it generally
-    [self setPreference:value forKey:inKey group:groupName];    
+    NSMutableDictionary	*prefDict, *objectPrefDict;
+    NSString		*prefDictKey = [NSString stringWithFormat:@"(%@)",[object UID]];
+    
+    //Load the preferences
+    prefDict = [self loadPreferenceGroup:groupName];
+    objectPrefDict = [[prefDict objectForKey:prefDictKey] mutableCopy];
+    if(!objectPrefDict) objectPrefDict = [[[NSMutableDictionary alloc] init] autorelease];
+    
+    //Set and save the new value
+    [objectPrefDict setObject:value forKey:inKey];
+    [prefDict setObject:objectPrefDict forKey:prefDictKey];
+    [self savePreferences:prefDict forGroup:groupName];
+    
+    //Broadcast a group changed notification
+    [[self preferenceNotificationCenter] postNotificationName:Preference_GroupChanged object:groupName userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inKey,@"Key",nil]];
 }
     
 //Using General Preferences ----------------------------------------------------------------------
 //Return a dictionary of preferences
 - (NSDictionary *)preferencesForGroup:(NSString *)groupName
 {
-    NSMutableDictionary	*prefDict;
-
-    //Load the group if necessary
-    prefDict = [self loadPreferenceGroup:groupName];
-    
-    //Return the preference dictionary
-    return(prefDict);    
+    return([self loadPreferenceGroup:groupName]);    
 }
  
 //Set a preference value
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName
 {
     NSMutableDictionary	*prefDict;
-    NSString 		*path;
 
-    //Load the group if necessary
+    //Load the preferences
     prefDict = [self loadPreferenceGroup:groupName];
 
-    //Set the preference and save the dictionary
+    //Set and save the new value
     [prefDict setObject:value forKey:inKey];
-
-    path = [[owner loginController] userDirectory]; //[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PREF_FOLDER_NAME];
-    [prefDict writeToPath:path withName:groupName];
+    [self savePreferences:prefDict forGroup:groupName];
 
     //Broadcast a group changed notification
     [[self preferenceNotificationCenter] postNotificationName:Preference_GroupChanged object:groupName userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inKey,@"Key",nil]];
@@ -203,6 +217,19 @@
     return(prefDict);
 }
 
+//Save a preference group
+- (void)savePreferences:(NSMutableDictionary *)prefDict forGroup:(NSString *)groupName
+{
+    NSString	*path = [[owner loginController] userDirectory];
+    
+    [prefDict writeToPath:path withName:groupName];
+}
+
 @end
+
+
+
+
+
 
 

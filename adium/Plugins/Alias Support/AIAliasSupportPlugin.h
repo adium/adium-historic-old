@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <Adium/Adium.h>
 
-@interface AIAliasSupportPlugin : AIPlugin <AIPreferenceViewControllerDelegate> {
+@interface AIAliasSupportPlugin : AIPlugin <AIPreferenceViewControllerDelegate, AIHandleObserver> {
     IBOutlet    NSView		*view_contactAliasInfoView;
     IBOutlet	NSTextField	*textField_alias;
 
@@ -17,6 +17,9 @@
     AIContactObject			*activeContactObject;
 }
 
+- (void)installPlugin;
 - (IBAction)setAlias:(id)sender;
+- (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject;
+- (NSArray *)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys;;
 
 @end

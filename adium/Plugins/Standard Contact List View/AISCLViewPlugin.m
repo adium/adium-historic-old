@@ -88,7 +88,11 @@
 {
     NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
     AISCLOutlineView	*SCLView;
-    
+
+    //Fetch the new contact list
+    [contactList release]; contactList = [[[owner contactController] contactList] retain];
+
+    //Redisplay
     while((SCLView = [enumerator nextObject])){
         [SCLView reloadData];
     }

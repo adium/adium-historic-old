@@ -205,7 +205,10 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //Notified when the contact list changes
 - (void)contactListChanged:(NSNotification *)notification
 {
-    //refresh the outline view
+    //Fetch the new contact list
+    [contactList release]; contactList = [[[owner contactController] contactList] retain];
+
+    //Redisplay
     [outlineView_contactList reloadData];
 }
 
