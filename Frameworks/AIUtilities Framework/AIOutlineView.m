@@ -78,6 +78,9 @@
 		tabCount++;
 	}else{
 		[currentInputString appendString:[NSString stringWithCharacters:&pressedChar length:1]];
+		
+		//Always reset the tab count when new characters are input
+		tabCount = 1;
 	}
 
 	[[self delegate] outlineView:self userDidTypeString:currentInputString matchTargetNumber:tabCount];
