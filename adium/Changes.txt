@@ -11,6 +11,7 @@ Version 0.53 (4/  /2004)
 - Added the ability to cancel connecting accounts
 - Added hourly level preferences for message history
 - Added custom hyperlink insertion and editing
+- Added the ability to add messages sent to offline contacts as alerts
 - Updated /music script to work with mp3 streams
 - Improved the 'Add Contact' window
 - Improved appearance of source list gradients
