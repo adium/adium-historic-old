@@ -489,6 +489,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
+- (void)deleteGroup:(AIListGroup *)inGroup
+{
+	NSString		*groupName = [self _mapOutgoingGroupName:[inGroup UID]];
+
+	[gaimThread deleteGroup:groupName onAccount:self];
+}
+
 // Return YES if the contact list is editable
 - (BOOL)contactListEditable
 {

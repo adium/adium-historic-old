@@ -1632,7 +1632,7 @@ void callTimerFunc(CFRunLoopTimerRef timer, void *info)
 {
 	struct SourceInfo *sourceInfo = info;
 	
-	GaimDebug (@"%x: Fired %f-ms timer (tag %u)",[NSRunLoop currentRunLoop],CFRunLoopTimerGetInterval(timer)*1000,sourceInfo->tag);
+//	GaimDebug (@"%x: Fired %f-ms timer (tag %u)",[NSRunLoop currentRunLoop],CFRunLoopTimerGetInterval(timer)*1000,sourceInfo->tag);
 	if (! sourceInfo->sourceFunction(sourceInfo->user_data)) {
         adium_source_remove(sourceInfo->tag);
 	}
@@ -1640,7 +1640,7 @@ void callTimerFunc(CFRunLoopTimerRef timer, void *info)
 
 guint adium_timeout_add(guint interval, GSourceFunc function, gpointer data)
 {
-    GaimDebug (@"%x: New %u-ms timer (tag %u)",[NSRunLoop currentRunLoop], interval, sourceId);
+//    GaimDebug (@"%x: New %u-ms timer (tag %u)",[NSRunLoop currentRunLoop], interval, sourceId);
 	
     struct SourceInfo *info = (struct SourceInfo*)malloc(sizeof(struct SourceInfo));
 	
@@ -1714,7 +1714,7 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 	
 	sourceId++;
 
-	GaimDebug (@"Adding for %i",sourceId);
+//	GaimDebug (@"Adding for %i",sourceId);
 
 	info->rls = rls;
 	info->timer = NULL;
@@ -2151,12 +2151,22 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     if(group){
 		//Rename gaimside, which will rename serverside as well
 		gaim_blist_rename_group(group, [newGroupName UTF8String]);
+	}
+}
 
-		/*
-	     //Is this needed?
-		 gaim_blist_remove_group(group);                         //remove the old one gaimside
-		 */
-	}	
+- (oneway void)deleteGroup:(NSString *)groupName onAccount:(id)adiumAccount
+{
+	[runLoopMessenger target:self
+			 performSelector:@selector(gaimThreadDeleteGroup:onAccount:)
+				  withObject:groupName
+				  withObject:adiumAccount];
+}
+
+- (oneway void)gaimThreadDeleteGroup:(NSString *)groupName onAccount:(id)adiumAccount
+{
+	GaimGroup *group = gaim_find_group([groupName UTF8String]);
+	
+	gaim_blist_remove_group(group);
 }
 
 #pragma mark Alias
