@@ -8886,6 +8886,7 @@
 				4B6D0E43047D490700A8010A,
 				4B1332130459B98E00A8010A,
 				11C157D504A88DE0008E0C76,
+				C4243C8F0638E4C7007AD2D9,
 				7E824CCD06387FAF00813072,
 				9C8C7FA303CBA17B00267226,
 				F1D0C631051AC2380000000E,
@@ -18338,6 +18339,34 @@
 //C42
 //C43
 //C44
+		C4243C8F0638E4C7007AD2D9 = {
+			children = (
+				C4243C920638E4EA007AD2D9,
+				C4243C930638E4EA007AD2D9,
+			);
+			isa = PBXGroup;
+			name = "Emoticon Menu";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4243C920638E4EA007AD2D9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = BGEmoticonMenuPlugin.h;
+			path = "Plugins/Emoticon Menu/BGEmoticonMenuPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4243C930638E4EA007AD2D9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = BGEmoticonMenuPlugin.m;
+			path = "Plugins/Emoticon Menu/BGEmoticonMenuPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		C42C170005BA687800135D3C = {
 			children = (
 				6EF3F85F05EF179B0037D3CC,
