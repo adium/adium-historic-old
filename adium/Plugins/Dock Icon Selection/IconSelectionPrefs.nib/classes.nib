@@ -8,11 +8,24 @@
                 "tableView_icons" = NSTableView; 
                 "textField_creator" = NSTextField; 
                 "textField_title" = NSTextField; 
-                "view_prefView" = NSView; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                view = NSView; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }

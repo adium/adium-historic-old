@@ -14,14 +14,10 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
 
-
-@interface AIDockIconPreferences : NSObject {
-    AIAdium				*owner;
-
-    IBOutlet	NSView			*view_prefView;
+@interface AIDockIconPreferences : AIPreferencePane {
     IBOutlet	NSTableView		*tableView_icons;
-    IBOutlet	NSTextField		*textField_title;
     IBOutlet	NSTextField		*textField_creator;
 
     IBOutlet	NSMatrix		*matrix_iconPreview;
@@ -32,7 +28,5 @@
     NSDictionary		*selectedIcon;
     NSMutableArray		*previewStateArray;
 }
-
-+ (AIDockIconPreferences *)dockIconPreferencesWithOwner:(id)inOwner;
 
 @end

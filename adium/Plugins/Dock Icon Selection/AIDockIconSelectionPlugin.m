@@ -29,7 +29,7 @@
     [AIFileUtilities createDirectory:[[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS]];
     
     //Install our preference view
-    preferences = [[AIDockIconPreferences dockIconPreferencesWithOwner:owner] retain];
+    preferences = [[AIDockIconPreferences preferencePaneWithOwner:owner] retain];
 }
 
 //
