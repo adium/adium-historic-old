@@ -113,12 +113,12 @@
     [checkBox_enableAutoAway setState:[[preferenceDict objectForKey:KEY_AUTO_AWAY_ENABLED] boolValue]];
     [textField_autoAwayMinutes setIntValue:[[preferenceDict objectForKey:KEY_AUTO_AWAY_IDLE_MINUTES] intValue]];
 	
-
-    //
-	
+    //Auto-away
 	[popUp_title setMenu:[self savedAwaysMenu]];
-	[popUp_title selectItemAtIndex:[[preferenceDict objectForKey:KEY_AUTO_AWAY_MESSAGE_INDEX] intValue]];
-	
+	int awayMessageIndex = [[preferenceDict objectForKey:KEY_AUTO_AWAY_MESSAGE_INDEX] intValue];
+	if ((awayMessageIndex >= 0) && (awayMessageIndex < [popUp_title numberOfItems])){
+		[popUp_title selectItemAtIndex:awayMessageIndex];
+	}
 	
     [self configureControlDimming];
 }
