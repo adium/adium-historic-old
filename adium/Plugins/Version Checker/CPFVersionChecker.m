@@ -121,9 +121,9 @@
 	
 	//If the user has already been informed of this update previously, don't bother them
 	if(checkingManually || !lastDateDisplayedToUser || (![lastDateDisplayedToUser isEqualToDate:newestDate])){
-		if(!newestDate && checkingManually){
+		if(!newestDate){
 			//Display connection error message
-			[ESVersionCheckerWindowController showCannotConnectWindow];
+			if(checkingManually) [ESVersionCheckerWindowController showCannotConnectWindow];
 		}else if([thisDate isEqualToDate:newestDate] || [thisDate isEqualToDate:[thisDate laterDate:newestDate]]){
 			//Display the 'up to date' message if the user checked for updates manually
 			if(checkingManually) [ESVersionCheckerWindowController showUpToDateWindow];
