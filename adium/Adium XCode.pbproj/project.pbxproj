@@ -341,6 +341,7 @@
 				4B7F78B50597F42400162728,
 				BF0F5BCB05A2B0070034AD18,
 				34F8A7E705A8920F00577775,
+				BF380C3105A8FF9000A74E9F,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -398,6 +399,7 @@
 				34BD9F8B05314795000AB133,
 				34BD9F9F0531479B000AB133,
 				34BD9FBA053147A0000AB133,
+				BF380C3005A8FF9000A74E9F,
 				34BD9FD1053147A6000AB133,
 				34BD9FF1053147AE000AB133,
 				34BDA001053147B4000AB133,
@@ -17707,7 +17709,6 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = "PLists/GBiTunerPlugin-Info.plist";
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -18283,6 +18284,7 @@
 			children = (
 				343C89B005704DEC005E0632,
 				4B28907503C1D14200A8010A,
+				BF380C2805A8FF6F00A74E9F,
 				F5148D9404C8B3BF018B6CC7,
 				4BD7D0CA04620D7C00A8010A,
 				34878F710518289B003B2F21,
@@ -27382,6 +27384,277 @@
 		};
 		BF318ED305A513C900D07184 = {
 			fileRef = BF318ED205A513C900D07184;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF380C2805A8FF6F00A74E9F = {
+			children = (
+				BF380C3F05A900A300A74E9F,
+				BF380C4005A900A300A74E9F,
+				BF380C4105A900A400A74E9F,
+				BF380C4205A900A400A74E9F,
+				BF380C4305A900A500A74E9F,
+				BF380C4405A900A500A74E9F,
+				BF380C3205A8FF9200A74E9F,
+			);
+			isa = PBXGroup;
+			name = Checkmark;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF380C2B05A8FF9000A74E9F = {
+			buildActionMask = 2147483647;
+			files = (
+				BF380C4705A900A500A74E9F,
+				BF380C4905A900A500A74E9F,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF380C2C05A8FF9000A74E9F = {
+			buildActionMask = 2147483647;
+			files = (
+				BF380C4505A900A500A74E9F,
+				BF380C4605A900A500A74E9F,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF380C2D05A8FF9000A74E9F = {
+			buildActionMask = 2147483647;
+			files = (
+				BF380C4805A900A500A74E9F,
+				BF380C4A05A900A500A74E9F,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF380C2E05A8FF9000A74E9F = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF380C2F05A8FF9000A74E9F = {
+			buildActionMask = 2147483647;
+			files = (
+				BF380C5905A9038A00A74E9F,
+				BF380C3C05A8FFF400A74E9F,
+				BF380C3D05A8FFF400A74E9F,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF380C3005A8FF9000A74E9F = {
+			buildPhases = (
+				BF380C2B05A8FF9000A74E9F,
+				BF380C2C05A8FF9000A74E9F,
+				BF380C2D05A8FF9000A74E9F,
+				BF380C2E05A8FF9000A74E9F,
+				BF380C2F05A8FF9000A74E9F,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = Plists/Checkmark.plist;
+				INSTALL_PATH = /Adium.app/Contents/Plugins/;
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-framework Carbon";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = Checkmark;
+				REZ_EXECUTABLE = NO;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				BF380C3805A8FFA400A74E9F,
+				BF380C3A05A8FFA400A74E9F,
+			);
+			isa = PBXNativeTarget;
+			name = Checkmark;
+			productName = Checkmark;
+			productReference = BF380C3105A8FF9000A74E9F;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Checkmark</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Checkmark</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+	<key>CSResourcesFileMapped</key>
+	<string>yes</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		BF380C3105A8FF9000A74E9F = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = Checkmark.AdiumPlugin;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		BF380C3205A8FF9200A74E9F = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = Checkmark.plist;
+			path = Plists/Checkmark.plist;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		BF380C3705A8FFA400A74E9F = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		BF380C3805A8FFA400A74E9F = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = BF380C3705A8FFA400A74E9F;
+		};
+		BF380C3905A8FFA400A74E9F = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		BF380C3A05A8FFA400A74E9F = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = BF380C3905A8FFA400A74E9F;
+		};
+		BF380C3C05A8FFF400A74E9F = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF380C3D05A8FFF400A74E9F = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF380C3F05A900A300A74E9F = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = checkmark.tiff;
+			path = Plugins/Checkmark/checkmark.tiff;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF380C4005A900A300A74E9F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = CheckmarkPreferences.nib;
+			path = Plugins/Checkmark/CheckmarkPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF380C4105A900A400A74E9F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CSCheckmarkPlugin.h;
+			path = Plugins/Checkmark/CSCheckmarkPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF380C4205A900A400A74E9F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CSCheckmarkPlugin.m;
+			path = Plugins/Checkmark/CSCheckmarkPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF380C4305A900A500A74E9F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CSCheckmarkPreferences.h;
+			path = Plugins/Checkmark/CSCheckmarkPreferences.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF380C4405A900A500A74E9F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CSCheckmarkPreferences.m;
+			path = Plugins/Checkmark/CSCheckmarkPreferences.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF380C4505A900A500A74E9F = {
+			fileRef = BF380C3F05A900A300A74E9F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF380C4605A900A500A74E9F = {
+			fileRef = BF380C4005A900A300A74E9F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF380C4705A900A500A74E9F = {
+			fileRef = BF380C4105A900A400A74E9F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF380C4805A900A500A74E9F = {
+			fileRef = BF380C4205A900A400A74E9F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF380C4905A900A500A74E9F = {
+			fileRef = BF380C4305A900A500A74E9F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF380C4A05A900A500A74E9F = {
+			fileRef = BF380C4405A900A500A74E9F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF380C5905A9038A00A74E9F = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
 			settings = {
 			};
