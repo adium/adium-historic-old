@@ -34,6 +34,8 @@
 
 #define BUILT_IN_STATE_ARRAY		@"BuiltInStatusStates"
 
+#define TOP_STATUS_STATE_ID			@"TopStatusID"
+
 @interface AIStatusController (PRIVATE)
 - (void)_saveStateArrayAndNotifyOfChanges;
 - (void)_applyStateToAllAccounts:(AIStatus *)state;
@@ -614,7 +616,14 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 
 	return activeStatusType;
 }
-	
+
+/*!
+ * @brief All active status states
+ *
+ * A status state is active if any online account is currently in that state.
+ *
+ * @result An <tt>NSSet</tt> of <tt>AIStatus</tt> objects
+ */
 - (NSSet *)allActiveStatusStates
 {
 	if(!_allActiveStatusStates){
@@ -630,6 +639,23 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	}
 	
 	return _allActiveStatusStates;
+}
+
+/*!
+ * @brief Next available unique status ID
+ */
+- (NSNumber *)nextUniqueStatusID
+{
+	NSNumber	*nextUniqueStatusID;
+
+	nextUniqueStatusID = [[adium preferenceController] preferenceForKey:TOP_STATUS_STATE_ID
+																  group:PREF_GROUP_SAVED_STATUS];
+
+	[[adium preferenceController] setPreference:[NSNumber numberWithInt:([nextUniqueStatusID intValue] + 1)]
+										 forKey:TOP_STATUS_STATE_ID
+										  group:PREF_GROUP_SAVED_STATUS];
+	
+	return nextUniqueStatusID;
 }
 
 /*!
@@ -1468,6 +1494,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	[AIEditStateWindowController editCustomState:baseStatusState
 										 forType:statusType
 									  andAccount:account
+								  withSaveOption:YES
 										onWindow:nil
 								 notifyingTarget:self];
 }
@@ -1509,6 +1536,10 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		[account setStatusState:newState];
 	}else{
 		[self setActiveStatusState:newState];
+	}
+	
+	if([newState mutabilityType] != AITemporaryEditableStatusState){
+		[[adium statusController] addStatusState:newState];
 	}
 }
 
@@ -1569,5 +1600,61 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		nil];
 	[builtInStatusTypes[AIAwayStatusType] addObject:statusDict];	
 }
+
+- (NSMenu *)statusStatesMenu
+{
+	NSMenu			*statusStatesMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+	NSEnumerator	*enumerator;
+	AIStatus		*statusState;
+	AIStatusType	currentStatusType;
+	NSMenuItem		*menuItem;
+	
+	[statusStatesMenu setMenuChangedMessagesEnabled:NO];
+	[statusStatesMenu setAutoenablesItems:NO];
+		
+	//Create a menu item for each state.  States must first be sorted such that states of the same AIStatusType 
+	//are grouped together.
+	enumerator = [[self stateArrayForMenuItems] objectEnumerator];
+	while(statusState = [enumerator nextObject]){
+		AIStatusType thisStatusType = [statusState statusType];
+		
+		if(currentStatusType != thisStatusType){
+			//Add a divider between each type of status
+			[statusStatesMenu addItem:[NSMenuItem separatorItem]];
+			currentStatusType = thisStatusType;
+		}
+
+		menuItem = [[NSMenuItem alloc] initWithTitle:[self _titleForMenuDisplayOfState:statusState]
+											  target:nil
+											  action:nil
+									   keyEquivalent:@""];
+
+		//NSMenuItem will call setFlipped: on the image we pass it, causing flipped drawing elsewhere if we pass it the
+		//shared status icon.  So we pass it a copy of the shared icon that it's free to manipulate.
+		[menuItem setImage:[[[statusState icon] copy] autorelease]];
+		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObject:statusState
+																   forKey:@"AIStatus"]];
+		[statusStatesMenu addItem:menuItem];
+		[menuItem release];
+	}
+
+	//Now add a separator and the Offline state option
+	[statusStatesMenu addItem:[NSMenuItem separatorItem]];
+	
+	menuItem = [[NSMenuItem alloc] initWithTitle:STATUS_TITLE_OFFLINE
+										  target:nil
+										  action:nil
+								   keyEquivalent:@""];
+	[menuItem setImage:[[[AIStatusIcons statusIconForStatusName:nil
+													 statusType:AIOfflineStatusType
+													   iconType:AIStatusIconList
+													  direction:AIIconNormal] copy] autorelease]];
+	[menuItem setTag:AIOfflineStatusType];
+	[statusStatesMenu addItem:menuItem];
+
+	[statusStatesMenu setMenuChangedMessagesEnabled:YES];
+
+	return statusStatesMenu;
+}	
 
 @end
