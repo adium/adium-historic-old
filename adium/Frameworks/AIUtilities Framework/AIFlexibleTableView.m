@@ -27,6 +27,7 @@
 - (void)_deselectAll;
 - (void)_dragMouseWithEvent:(NSEvent *)theEvent;
 - (void)_dragSelectedContentWithEvent:(NSEvent *)theEvent;
+- (void)forwardSelector:(SEL)selector withObject:(id)object;
 @end
 
 @implementation AIFlexibleTableView
@@ -480,25 +481,38 @@
 //When the user attempts to type into the table view, we push the keystroke to the next responder, and make it key.  This isn't required, but convienent behavior since one will never want to type into this view.
 - (void)keyDown:(NSEvent *)theEvent
 {
+    [self forwardSelector:@selector(keyDown:) withObject:theEvent];
+}
+
+- (void)pasteAsPlainText:(id)sender
+{
+    [self forwardSelector:@selector(pasteAsPlainText:) withObject:sender];
+}
+
+- (void)pasteAsRichText:(id)sender
+{
+    [self forwardSelector:@selector(pasteAsRichText:) withObject:sender];
+}
+
+- (void)forwardSelector:(SEL)selector withObject:(id)object
+{
     if(forwardsKeyEvents){
         id	responder = [self nextResponder];
-
+        
         //Make the next responder key (When walking the responder chain, we want to skip ScrollViews and ClipViews).
         while(responder && ([responder isKindOfClass:[NSClipView class]] || [responder isKindOfClass:[NSScrollView class]])){
             responder = [responder nextResponder];
         }
-
+        
         if(responder){
             [[self window] makeFirstResponder:responder]; //Make it first responder
-            [[self nextResponder] tryToPerform:@selector(keyDown:) with:theEvent]; //Pass it this key event
+            [[self nextResponder] tryToPerform:selector with:object]; //Pass it this key event
         }
-
+        
     }else{
-        [super keyDown:theEvent];
+        [super tryToPerform:selector with:object]; //Pass it this key event
     }
 }
-
-
 //Cell, Column, and Row Access --------------------------------------------------------------------
 - (AIFlexibleTableRow *)_rowAtPoint:(NSPoint)inPoint rowOrigin:(NSPoint *)outOrigin
 {
