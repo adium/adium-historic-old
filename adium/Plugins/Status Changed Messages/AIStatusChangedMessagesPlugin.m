@@ -91,8 +91,8 @@
 
         //Create our content object
         content = [AIContentStatus statusInChat:chat
-                                     withSource:object
-                                    destination:object
+                                     withSource:[chat object]
+                                    destination:[chat account]
                                            date:[NSDate date]
                                         message:[NSString stringWithFormat:message,[object displayName]]];
 
