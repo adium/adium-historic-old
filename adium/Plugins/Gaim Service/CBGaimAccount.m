@@ -1322,7 +1322,7 @@ static id<GaimThread> gaimThread = nil;
 		
 		if([key isEqualToString:@"IdleSince"]){
 			NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
-			[self setAccountIdleTo:(idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil)];
+			[self setAccountIdleSinceTo:idleSince];
 			
 		}else if([key isEqualToString:@"AwayMessage"]){
 			[self setAccountAwayTo:[self autoRefreshingOutgoingContentForStatusKey:key]];
@@ -1340,34 +1340,27 @@ static id<GaimThread> gaimThread = nil;
 }
 
 //Set our idle (Pass nil for no idle)
-- (void)setAccountIdleTo:(NSTimeInterval)idle
+- (void)setAccountIdleSinceTo:(NSDate *)idleSince
 {
-	//Even if we're setting a non-zero idle time, set it to zero first.
-	//Some clients ignore idle time changes unless it moves to/from 0.
-	if (gaim_account_is_connected(account)){
-		serv_set_idle(account->gc, 0);
-		if(idle) serv_set_idle(account->gc, idle);
-	}
-
-	//We are now idle
-	[self setStatusObject:(idle ? [NSDate dateWithTimeIntervalSinceNow:-idle] : nil)
+	[gaimThread setIdleSinceTo:idleSince onAccount:self];
+	
+	//We now should update our idle status object
+	[self setStatusObject:([idleSince timeIntervalSinceNow] ? idleSince : nil)
 				   forKey:@"IdleSince" notify:YES];
 }
 
 - (void)setAccountAwayTo:(NSAttributedString *)awayMessage
 {
 	if(!awayMessage || ![[awayMessage string] isEqualToString:[[self statusObjectForKey:@"StatusMessage"] string]]){
-		char	*awayHTML = nil;
+		NSString	*awayHTML = nil;
 		
 		//Convert the away message to HTML, and pass it to libgaim
 		if(awayMessage){
-			awayHTML = (char *)[[self encodedAttributedString:awayMessage forListObject:nil] UTF8String];
+			awayHTML = [self encodedAttributedString:awayMessage forListObject:nil];
 		}
 
-		if (gaim_account_is_connected(account)) {
-			//Status Changes: We could use "Invisible" instead of GAIM_AWAY_CUSTOM for invisibility...
-			serv_set_away(account->gc, GAIM_AWAY_CUSTOM, awayHTML);
-		}
+		//Set the away serverside
+		[gaimThread setAway:awayHTML onAccount:self];
 		
 		//We are now away
 		[self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:YES];
@@ -1378,16 +1371,14 @@ static id<GaimThread> gaimThread = nil;
 - (void)setAccountProfileTo:(NSAttributedString *)profile
 {
 	if(!profile || ![[profile string] isEqualToString:[[self statusObjectForKey:@"TextProfile"] string]]){
-		char 	*profileHTML = nil;
+		NSString 	*profileHTML = nil;
 		
 		//Convert the profile to HTML, and pass it to libgaim
 		if(profile){
-			profileHTML = (char *)[[self encodedAttributedString:profile forListObject:nil] UTF8String];
+			profileHTML = [self encodedAttributedString:profile forListObject:nil];
 		}
 		
-		if (gaim_account_is_connected(account)){
-			serv_set_info(account->gc, profileHTML);
-		}
+		[gaimThread setInfo:profileHTML onAccount:self];
 		
 		if (GAIM_DEBUG) NSLog(@"updating profile to %@",[profile string]);
 		
@@ -1402,7 +1393,7 @@ static id<GaimThread> gaimThread = nil;
 {
 	if (account) {
 		//Clear the existing icon first
-		gaim_account_set_buddy_icon(account, nil);
+		[gaimThread setBuddyIcon:nil onAccount:self];
 		
 		//Now pass libgaim the new icon.  Libgaim takes icons as a file, so we save our
 		//image to one, and then pass libgaim the path.
@@ -1411,8 +1402,8 @@ static id<GaimThread> gaimThread = nil;
 			NSString    *buddyImageFilename = [self _userIconCachePath];
 			
 			if([data writeToFile:buddyImageFilename atomically:YES]){
-				if (account)
-					gaim_account_set_buddy_icon(account, [buddyImageFilename UTF8String]);
+				[gaimThread setBuddyIcon:buddyImageFilename onAccount:self];
+
 			}else{
 				NSLog(@"Error writing file %@",buddyImageFilename);   
 			}

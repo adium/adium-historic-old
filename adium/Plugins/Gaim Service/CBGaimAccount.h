@@ -86,7 +86,7 @@
 - (void)updateAllStatusKeys;
 - (void)updateStatusForKey:(NSString *)key;
 - (void)setAccountUserImage:(NSImage *)image;
-- (void)setAccountIdleTo:(NSTimeInterval)idle;
+- (void)setAccountIdleSinceTo:(NSDate *)idleSince;
 - (void)setAccountAwayTo:(NSAttributedString *)awayMessage;
 - (void)setAccountProfileTo:(NSAttributedString *)profile;
 

@@ -687,7 +687,7 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const 
 //Never actually called as of gaim 0.75
 static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-	NSLog(@"adiumGaimConvWriteConv: %s: %s", who, message);
+	if (GAIM_DEBUG) NSLog(@"adiumGaimConvWriteConv: %s: %s", who, message);
 }
 
 static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user)
@@ -965,9 +965,7 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 	NSString *errorMessage = nil;
 	NSString *description = nil;
 			
-	if (secondaryString &&
-		(([secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound) ||
-		 ([secondaryString rangeOfString:@"The user's profile is empty"].location != NSNotFound))){
+	if (secondaryString && [secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound){
 		return;
 	}
 	
@@ -1378,7 +1376,7 @@ static GaimEventLoopUiOps adiumEventLoopUiOps = {
 // The structure of values of sourceInfoDict
 struct SourceInfo {
     guint tag;
-    NSTimer *timer;
+    CFRunLoopTimerRef timer;
     CFSocketRef socket;
     CFRunLoopSourceRef rls;
     union {
@@ -1391,43 +1389,45 @@ struct SourceInfo {
 
 #pragma mark Add
 
+void callTimerFunc(CFRunLoopTimerRef timer, void *info)
+{
+	struct SourceInfo *sourceInfo = info;
+	
+	// NSLog(@"%x: Fired %f-ms timer (tag %u)",[NSRunLoop currentRunLoop],CFRunLoopTimerGetInterval(timer)*1000,sourceInfo->tag);
+	if (! sourceInfo->sourceFunction(sourceInfo->user_data)) {
+        adium_source_remove(sourceInfo->tag);
+	}
+}
+
 guint adium_timeout_add(guint interval, GSourceFunc function, gpointer data)
 {
-    //NSLog(@"New %u-ms timer (tag %u)", interval, sourceId);
+    // NSLog(@"%x: New %u-ms timer (tag %u)",[NSRunLoop currentRunLoop], interval, sourceId);
 	
     struct SourceInfo *info = (struct SourceInfo*)malloc(sizeof(struct SourceInfo));
 	
-    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:(NSTimeInterval)interval/1000
-                                                      target:myself
-                                                    selector:@selector(callTimerFunc:)
-                                                    userInfo:[NSValue valueWithPointer:info]
-                                                     repeats:YES];
-	
 	sourceId++;
-	
+	NSTimeInterval intervalInSec = (NSTimeInterval)interval/1000;
+	CFRunLoopTimerContext runLoopTimerContext = { 0, info, NULL, NULL, NULL };
+	CFRunLoopTimerRef runLoopTimer = CFRunLoopTimerCreate(kCFAllocatorDefault, /* default allocator */
+														(CFAbsoluteTimeGetCurrent() + intervalInSec), /* The time at which the timer should first fire */
+														intervalInSec, /* firing interval */
+														0, /* flags, currently ignored */
+														0, /* order, currently ignored */
+														callTimerFunc, /* CFRunLoopTimerCallBack callout */
+														&runLoopTimerContext /* context */);
     info->tag = sourceId;
     info->sourceFunction = function;
-    info->timer = [timer retain];
+    info->timer = runLoopTimer;
     info->socket = NULL;
     info->rls = NULL;
     info->user_data = data;
+
+	CFRunLoopAddTimer(CFRunLoopGetCurrent(), runLoopTimer, kCFRunLoopCommonModes);
+
     NSCAssert1([sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:sourceId]] == nil, @"Key %u in use", sourceId);
     [sourceInfoDict setObject:[NSValue valueWithPointer:info]
 					   forKey:[NSNumber numberWithUnsignedInt:sourceId]];
     return sourceId;
-}
-
-- (void) callTimerFunc:(NSTimer*)timer
-{
-    struct SourceInfo *info = [[timer userInfo] pointerValue];
-    if ([sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:info->tag]] == nil) {
-		        NSLog(@"Timer %u notification arrived after source removed", info->tag);
-        return;
-    }
-	
-    if (! info->sourceFunction(info->user_data)) {
-        adium_source_remove(info->tag);
-	}
 }
 
 guint adium_input_add(int fd, GaimInputCondition condition,
@@ -1435,8 +1435,6 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 {
     struct SourceInfo *info = g_new(struct SourceInfo, 1);
 
-	if (GAIM_DEBUG) NSLog(@"Adding for %i",fd);
-	
     // Build the CFSocket-style callback flags to use from the gaim ones
     CFOptionFlags callBackTypes = 0;
     if ((condition & GAIM_INPUT_READ ) != 0) callBackTypes |= kCFSocketReadCallBack;
@@ -1451,8 +1449,8 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 	
     // Re-enable callbacks automatically and _don't_ close the socket on
     // invalidate
-    CFSocketSetSocketFlags(socket,   /*kCFSocketAutomaticallyReenableDataCallBack
-						   | */kCFSocketAutomaticallyReenableWriteCallBack
+    CFSocketSetSocketFlags(socket,   kCFSocketAutomaticallyReenableDataCallBack
+						   | kCFSocketAutomaticallyReenableWriteCallBack
 						   | kCFSocketAutomaticallyReenableReadCallBack);
 	
     // Add it to our run loop
@@ -1461,7 +1459,9 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 	CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopCommonModes);
 	
 	sourceId++;
-	
+
+	if (GAIM_DEBUG) NSLog(@"Adding for %i",sourceId);
+
 	info->rls = rls;
 	info->timer = NULL;
     info->tag = sourceId;
@@ -1490,8 +1490,8 @@ guint adium_source_remove(guint tag) {
     if (sourceInfo){
 		if (sourceInfo->timer != NULL) { 
 			//Got a timer; invalidate and release
-			[sourceInfo->timer invalidate];
-			[sourceInfo->timer release];
+			CFRunLoopTimerInvalidate(sourceInfo->timer);
+			CFRelease(sourceInfo->timer);
 			
 		}else{
 			//Got a file handle; invalidate and release the source and the socket
@@ -1538,6 +1538,7 @@ static void socketCallback(CFSocketRef s,
 		free(sourceInfo);
 		
 	}else{
+//		NSLog(@"%x: Socket callback: %i",[NSRunLoop currentRunLoop],sourceInfo->tag);
 		sourceInfo->ioFunction(sourceInfo->user_data, sourceInfo->fd, c);
 	}
 	
@@ -1832,6 +1833,72 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	}
 }
 
+#pragma mark Account Status
+- (oneway void)setAway:(NSString *)awayHTML onAccount:(id)adiumAccount
+{
+	[runLoopMessenger target:self
+			 performSelector:@selector(gaimThreadSetAway:onAccount:)
+				  withObject:awayHTML
+				  withObject:adiumAccount];
+}
+- (oneway void)gaimThreadSetAway:(NSString *)awayHTML onAccount:(id)adiumAccount
+{
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	if (gaim_account_is_connected(account)){
+		
+		//Status Changes: We could use "Invisible" instead of GAIM_AWAY_CUSTOM for invisibility...
+		serv_set_away(account->gc, GAIM_AWAY_CUSTOM, [awayHTML UTF8String]);
+	}
+}
+- (oneway void)setInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
+{
+	[runLoopMessenger target:self
+			 performSelector:@selector(gaimThreadSetInfo:onAccount:)
+				  withObject:profileHTML
+				  withObject:adiumAccount];
+}
+- (oneway void)gaimThreadSetInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
+{
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	if (gaim_account_is_connected(account)){
+		
+		serv_set_info(account->gc, [profileHTML UTF8String]);
+	}
+}
+
+- (oneway void)setBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount
+{
+	[runLoopMessenger target:self
+			 performSelector:@selector(gaimThreadSetBuddyIcon:onAccount:)
+				  withObject:buddyImageFilename
+				  withObject:adiumAccount];
+}
+- (oneway void)gaimThreadSetBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount
+{
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	if (account){
+		gaim_account_set_buddy_icon(account, [buddyImageFilename UTF8String]);
+	}
+}
+
+- (oneway void)setIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount
+{
+	[runLoopMessenger target:self
+			 performSelector:@selector(gaimThreadSetIdleSinceTo:onAccount:)
+				  withObject:idleSince
+				  withObject:adiumAccount];
+}
+- (oneway void)gaimThreadSetIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount
+{
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	if (gaim_account_is_connected(account)){
+		NSTimeInterval idle = (idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil);
+		
+		serv_set_idle(account->gc, 0);
+		if(idle) serv_set_idle(account->gc, idle);
+	}
+}
+
 #pragma mark Get Info
 - (oneway void)getInfoFor:(NSString *)inUID onAccount:(id)adiumAccount
 {
@@ -1884,20 +1951,6 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 
 #pragma mark Protocol specific accessors
-- (oneway void)jabberRosterRequestForAccount:(id)adiumAccount
-{
-	[runLoopMessenger target:self
-			 performSelector:@selector(gaimThreadJabberRosterRequestForAccount:)
-				  withObject:adiumAccount];
-}
-- (oneway void)gaimThreadJabberRosterRequestForAccount:(id)adiumAccount
-{
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if (gaim_account_is_connected(account)){
-		JabberStream *js = account->gc->proto_data;
-		jabber_roster_request(js);
-	}
-}
 
 #pragma mark Gaim Images
 - (NSString *)_processGaimImagesInString:(NSString *)inString forAdiumAccount:(NSObject<AdiumGaimDO> *)adiumAccount

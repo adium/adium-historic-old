@@ -138,19 +138,21 @@ static NSDictionary		*presetStatusesDictionary = nil;
 - (void)accountConnectionConnected
 {
 	[super accountConnectionConnected];
-	
-	//Request the roster now; while gaim official manages to request before doing blist updates, libgaim does not
-	//If we don't request, all buddies will seem to be unauthorized so won't report their online status
-	[[super gaimThread] jabberRosterRequestForAccount:self];
 }
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
 {
-	if (disconnectionError && ([disconnectionError rangeOfString:@"401"].location != NSNotFound)) {
-		[[adium accountController] forgetPasswordForAccount:self];
+	BOOL shouldReconnect = YES;
+	
+	if (disconnectionError){
+		if ([disconnectionError rangeOfString:@"401"].location != NSNotFound) {
+			[[adium accountController] forgetPasswordForAccount:self];
+		}else if ([disconnectionError rangeOfString:@"Stream Error"].location != NSNotFound){
+			shouldReconnect = NO;
+		}
 	}
 	
-	return YES;
+	return shouldReconnect;
 }
 
 #pragma mark File transfer
