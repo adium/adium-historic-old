@@ -489,59 +489,60 @@
 {
     BOOL            sent = NO;
 	
-    if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0) {
-        AIContentMessage	*cm = (AIContentMessage*)object;
-        AIChat				*chat = [cm chat];
-
-		//***NOTE: listObject is probably the wrong thing to use here - won't that mess up multiuser chats?
-		AIListObject		*listObject = [chat listObject];
-		
-        NSString			*body = [self encodedAttributedString:[cm message] forListObject:listObject];
-        GaimConversation	*conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
-        const char			*destination = [[listObject UID] UTF8String];
-		
-        //create a new conv if necessary - this happens, for example, if an existing chat is suddenly our responsibility
-        //whereas it previously belonged to another account
-        if (conv == NULL) {
-            //***NOTE: need to check if the chat is an IM or a CHAT and handle accordingly
-            conv = gaim_conversation_new(GAIM_CONV_IM, account, destination);
-
-            //associate the AIChat with the gaim conv
-            conv->ui_data = chat;
-            [[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
-            
-            [chatDict setObject:chat forKey:[listObject UID]];                
-        }
-        
-        switch (gaim_conversation_get_type(conv)) {
-			case GAIM_CONV_IM:
-			{
-				//        NSLog(@"sending %s to %@",[body UTF8String],[[chat listObject] displayName]);
-				serv_send_im(gc, destination, [body UTF8String], [cm autoreply] ? GAIM_CONV_IM_AUTO_RESP : 0);
-				//gaim_conv_im_send(im, [body UTF8String]);
+	if (gc && aaccount && GAIM_ACCOUNT_IS_ONLINE(account)) {
+		if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0) {
+			AIContentMessage	*cm = (AIContentMessage*)object;
+			AIChat				*chat = [cm chat];
+			
+			//***NOTE: listObject is probably the wrong thing to use here - won't that mess up multiuser chats?
+			AIListObject		*listObject = [chat listObject];
+			
+			NSString			*body = [self encodedAttributedString:[cm message] forListObject:listObject];
+			GaimConversation	*conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
+			const char			*destination = [[listObject UID] UTF8String];
+			
+			//create a new conv if necessary - this happens, for example, if an existing chat is suddenly our responsibility
+			//whereas it previously belonged to another account
+			if (conv == NULL) {
+				//***NOTE: need to check if the chat is an IM or a CHAT and handle accordingly
+				conv = gaim_conversation_new(GAIM_CONV_IM, account, destination);
+				
+				//associate the AIChat with the gaim conv
+				conv->ui_data = chat;
+				[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
+				
+				[chatDict setObject:chat forKey:[listObject UID]];                
+			}
+			
+			switch (gaim_conversation_get_type(conv)) {
+				case GAIM_CONV_IM:
+				{
+					//        NSLog(@"sending %s to %@",[body UTF8String],[[chat listObject] displayName]);
+					serv_send_im(gc, destination, [body UTF8String], [cm autoreply] ? GAIM_CONV_IM_AUTO_RESP : 0);
+					//gaim_conv_im_send(im, [body UTF8String]);
+					sent = YES;
+					break;
+				}
+				case GAIM_CONV_CHAT:
+				{
+					NSLog(@"sending to a chat");	
+					sent = NO;
+					break;
+				}
+			}
+		}else if([[object type] compare:CONTENT_TYPING_TYPE] == 0){
+			AIContentTyping *ct = (AIContentTyping*)object;
+			AIChat *chat = [ct chat];
+			GaimConversation *conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
+			
+			if(conv){
+				serv_send_typing(gaim_conversation_get_gc(conv),
+								 gaim_conversation_get_name(conv),
+								 ([ct typing] ? GAIM_TYPING : GAIM_NOT_TYPING));
 				sent = YES;
-				break;
 			}
-			case GAIM_CONV_CHAT:
-			{
-				NSLog(@"sending to a chat");	
-				sent = NO;
-				break;
-			}
-		}
-	}else if([[object type] compare:CONTENT_TYPING_TYPE] == 0){
-        AIContentTyping *ct = (AIContentTyping*)object;
-        AIChat *chat = [ct chat];
-        GaimConversation *conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
-		
-        if(conv){
-			serv_send_typing(gaim_conversation_get_gc(conv),
-							 gaim_conversation_get_name(conv),
-							 ([ct typing] ? GAIM_TYPING : GAIM_NOT_TYPING));
-			sent = YES;
 		}
 	}
-	
     return sent;
 }
 
@@ -1358,11 +1359,13 @@
 }
 - (void)setAttributedStatusString:(NSAttributedString *)attributedString forKey:(NSString *)key
 {
-    if ([key compare:@"AwayMessage"] == 0){
-        [self setAccountAwayTo:attributedString];
-    } else if ([key compare:@"TextProfile"] == 0) {
-        [self setAccountProfileTo:attributedString];
-    }
+	if([[self statusObjectForKey:@"Online"] boolValue]){
+		if ([key compare:@"AwayMessage"] == 0){
+			[self setAccountAwayTo:attributedString];
+		} else if ([key compare:@"TextProfile"] == 0) {
+			[self setAccountProfileTo:attributedString];
+		}
+	}
 }
 
 //Set our idle (Pass nil for no idle)
