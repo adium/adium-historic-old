@@ -16782,7 +16782,7 @@
 				INFOPLIST_FILE = "plists/AdiumGames-Info.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "-seg1addr 0x10600000";
+				OTHER_LDFLAGS = "-seg1addr 0x10700000";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = AdiumGames;
 				SECTORDER_FLAGS = "";
@@ -19081,7 +19081,7 @@
 				HEADER_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks \"Frameworks";
 				INFOPLIST_FILE = Plists/AdiumHyperlinks_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				OTHER_LDFLAGS = "-seg1addr 0x10500000";
+				OTHER_LDFLAGS = "-seg1addr 0x10600000";
 				PRODUCT_NAME = AdiumHyperlinks;
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
