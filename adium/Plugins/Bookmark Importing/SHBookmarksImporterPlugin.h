@@ -11,11 +11,11 @@
 @end
 
 @interface SHBookmarksImporterPlugin : AIPlugin {	
-	NSMenuItem   	*bookmarkRootMenuItem;
-	NSMenuItem   	*bookmarkRootContextualMenuItem;	
+	NSMenuItem              *bookmarkRootMenuItem;
+	NSMenuItem              *bookmarkRootContextualMenuItem;	
 
-	id <SHBookmarkImporter> 	importer;
-	BOOL						updatingMenu;
+	id <SHBookmarkImporter>  importer;
+	BOOL                     updatingMenu;
 }
 
 @end

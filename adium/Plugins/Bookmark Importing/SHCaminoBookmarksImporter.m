@@ -15,67 +15,53 @@
 #define CAMINO_ROOT_MENU_TITLE  AILocalizedString(@"Camino",nil)
 
 @interface SHCaminoBookmarksImporter(PRIVATE)
--(void)drillPropertyList:(id)inObject;
--(void)menuItemFromDict:(NSDictionary *)inDict;
+-(NSArray *)drillPropertyList:(id)inObject;
+- (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems;
+- (SHMarkedHyperlink *)hyperlinkForBookmark:(NSDictionary *)inDict;
 @end
 
 @implementation SHCaminoBookmarksImporter
 
-static NSMenu   *caminoBookmarksMenu;
-static NSMenu   *caminoBookmarksSupermenu;
-static NSMenu   *caminoTopMenu;
+DeclareString(CaminoDictChildKey)
+DeclareString(caminoDictFolderKey)
+DeclareString(caminoDictTitleKey)
+DeclareString(caminoDictURLKey)
 
 static NSArray *emptyArray;
+
 + (id)newInstanceOfImporter
 {
     return [[[self alloc] init] autorelease];
 }
 
-+(NSString *)importerTitle
-{
-    return CAMINO_ROOT_MENU_TITLE;
-}
-
 - (id)init
 {
+    InitString(CaminoDictChildKey,CAMINO_DICT_CHILD_KEY)
+    InitString(caminoDictFolderKey,CAMINO_DICT_FOLDER_KEY)
+    InitString(caminoDictTitleKey,CAMINO_DICT_TITLE_KEY)
+    InitString(caminoDictURLKey,CAMINO_DICT_URL_KEY)
+    
     [super init];
     emptyArray = [[NSArray alloc] init];
     
     return self;
 }
 
--(NSMenu *)parseBookmarksForOwner:(id)inObject
+- (NSArray *)availableBookmarks
 {
-    owner = inObject;
-    NSDictionary    *bookmarkDict = [NSDictionary dictionaryWithContentsOfFile:[CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath]];
+    NSString        *bookmarkPath = [CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath];
+    NSDictionary    *bookmarkDict = [NSDictionary dictionaryWithContentsOfFile:bookmarkPath];
     
-    // remove our root menu, if it exists
-    if(caminoBookmarksMenu){
-        [caminoBookmarksMenu removeAllItems];
-        [caminoBookmarksMenu release];
-    }
+    NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarkPath traverseLink:YES];
+    [lastModDate autorelease]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
     
-    // store the modification date for future reference
-    if (lastModDate) [lastModDate release];
-    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath] traverseLink:YES];
-    lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
-    
-    caminoBookmarksMenu = [[[NSMenu alloc] initWithTitle:CAMINO_ROOT_MENU_TITLE] autorelease];
-    caminoBookmarksSupermenu = caminoBookmarksMenu;
-    caminoTopMenu = caminoBookmarksMenu;
-    [self drillPropertyList:bookmarkDict];
-    
-    return caminoBookmarksMenu;
+    return [self drillPropertyList:[bookmarkDict objectForKey:CaminoDictChildKey]];
+   //return [self drillPropertyList:bookmarkDict];
 }
 
 -(BOOL)bookmarksExist
 {
     return [[NSFileManager defaultManager] fileExistsAtPath:[CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath]];
-}
-
--(NSString *)menuTitle
-{
-    return CAMINO_ROOT_MENU_TITLE;
 }
 
 -(BOOL)bookmarksUpdated
@@ -86,60 +72,39 @@ static NSArray *emptyArray;
     return ![modDate isEqualToDate:lastModDate];
 }
 
--(void)drillPropertyList:(id)inObject
+-(NSArray *)drillPropertyList:(id)inObject
 {
-    if([inObject isKindOfClass:[NSDictionary class]]){
-        // for the list type, recurrsively call the "Children" NSArray
-        NSArray *childrenArray = [(NSDictionary *)inObject objectForKey:CAMINO_DICT_CHILD_KEY];
-        [self drillPropertyList:childrenArray? childrenArray : emptyArray];
-    }else if([inObject isKindOfClass:[NSArray class]]){
-        // if we're passed a NSArray object, it can contain both list and leaf dict types,
-        // so, we grab an enumerator from the array, and handle each case
-        NSEnumerator *enumerator = [(NSArray *)inObject objectEnumerator];
-        id outObject;
+    NSMutableArray  *caminoArray = [NSMutableArray array];
+    
+    if([inObject isKindOfClass:[NSArray class]]){
+        NSEnumerator    *enumerator = [(NSArray *)inObject objectEnumerator];
+        NSDictionary    *linkDict;
         
-        while(outObject = [enumerator nextObject]){
-            if(nil == [(NSDictionary *)outObject objectForKey:CAMINO_DICT_FOLDER_KEY]){
-                // if outObject is of type leaf, get it's menuItem, then add it to the local menu.
-                [self menuItemFromDict:outObject];
+        while(linkDict = [enumerator nextObject]){
+            if(nil == [linkDict objectForKey:caminoDictFolderKey]){
+                [caminoArray addObject:[self hyperlinkForBookmark:linkDict]];
             }else{
-                // if outObject is a list, then get the array it contains, then push the menu down.
-                caminoBookmarksSupermenu = caminoBookmarksMenu;
-                caminoBookmarksMenu = [[[NSMenu alloc] initWithTitle:[(NSDictionary *)outObject objectForKey:CAMINO_DICT_TITLE_KEY]] autorelease];
-                
-                NSMenuItem *caminoSubmenuItem = [[[NSMenuItem alloc] initWithTitle:[caminoBookmarksMenu title]
-                                                                            target:owner
-                                                                            action:nil
-                                                                     keyEquivalent:@""] autorelease];
-                [caminoBookmarksSupermenu addItem:caminoSubmenuItem];
-                [caminoBookmarksSupermenu setSubmenu:caminoBookmarksMenu forItem:caminoSubmenuItem];
-                [self drillPropertyList:outObject];
+                NSArray *outArray = [linkDict objectForKey:CaminoDictChildKey];
+                [caminoArray addObject:[self menuDictWithTitle:[linkDict objectForKey:caminoDictTitleKey]
+                             menuItems:[self drillPropertyList:outArray? outArray : emptyArray]]];
             }
         }
-        
-        if([caminoBookmarksMenu isNotEqualTo:caminoTopMenu]){
-            //so long as the supermenu exists, pop it up.
-            caminoBookmarksMenu = caminoBookmarksSupermenu;
-            caminoBookmarksSupermenu = [caminoBookmarksSupermenu supermenu];
-        }
     }
+    return caminoArray;
 }
 
--(void)menuItemFromDict:(NSDictionary *)inDict
+- (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
-	NSString			*urlKey = [inDict objectForKey:CAMINO_DICT_URL_KEY];
-	if (urlKey){
-		SHMarkedHyperlink   *markedLink = [[[SHMarkedHyperlink alloc] initWithString:urlKey
-																withValidationStatus:SH_URL_VALID
-																		parentString:[inDict objectForKey:CAMINO_DICT_TITLE_KEY]
-																			andRange:NSMakeRange(0,[(NSString *)[inDict objectForKey:CAMINO_DICT_TITLE_KEY] length])] autorelease];
-		
-		[caminoBookmarksMenu addItemWithTitle:[inDict objectForKey:CAMINO_DICT_TITLE_KEY]
-									   target:owner
-									   action:@selector(injectBookmarkFrom:)
-								keyEquivalent:@""
-							representedObject:markedLink];
-	}
+    return [NSDictionary dictionaryWithObjectsAndKeys:inTitle, @"Title", inMenuItems, @"Content", nil];
+}
+
+- (SHMarkedHyperlink *)hyperlinkForBookmark:(NSDictionary *)inDict
+{
+    NSString    *title = [inDict objectForKey:caminoDictTitleKey];
+    return  [[[SHMarkedHyperlink alloc] initWithString:[inDict objectForKey:caminoDictURLKey]
+                                  withValidationStatus:SH_URL_VALID
+                                          parentString:title
+                                              andRange:NSMakeRange(0,[title length])] autorelease];
 }
 
 @end
