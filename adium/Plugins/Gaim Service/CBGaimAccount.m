@@ -11,7 +11,6 @@
 #import <Adium/Adium.h>
 #import "AIAdium.h"
 
-//don't change this
 #define NO_GROUP @"__NoGroup__"
 
 @interface CBGaimAccount (PRIVATE)
@@ -84,7 +83,7 @@
         
         //set up our ui_data
         node->ui_data = [theHandle retain];
-    
+        
         //[[owner contactController] handlesChangedForAccount:self];
     }
 }
@@ -95,37 +94,61 @@
     if(node)
     {
         //extract the GaimBuddy from whatever we were passed
-        GaimBuddy *buddy;
+        GaimBuddy *buddy = nil;
         if(GAIM_BLIST_NODE_IS_BUDDY(node))
             buddy = (GaimBuddy *)node;
         else if(GAIM_BLIST_NODE_IS_CONTACT(node))
             buddy = ((GaimContact *)node)->priority;
-            
+        if (buddy) {
         NSMutableArray *modifiedKeys = [NSMutableArray array];
         AIHandle *theHandle = (AIHandle *)node->ui_data;
         
         int online = (GAIM_BUDDY_IS_ONLINE(buddy) ? 1 : 0);
         
+        NSMutableDictionary * statusDict = [theHandle statusDictionary];
         //NSLog(@"%d", online);
         
         //see if our online state is up to date
-        if([[[theHandle statusDictionary] objectForKey:@"Online"] intValue] != online)
+        if([[statusDict objectForKey:@"Online"] intValue] != online)
         {
-            [[theHandle statusDictionary]
+            [statusDict
                 setObject:[NSNumber numberWithInt:online] 
                 forKey:@"Online"];
             [modifiedKeys addObject:@"Online"];
+            
+            if (online && buddy->signon != 0) {
+            //Set the signon time
+                NSLog(@"%i",buddy->signon);
+                NSMutableDictionary * statusDict = [theHandle statusDictionary];
+                
+                [statusDict
+                    setObject:[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->signon]
+                       forKey:@"Signon Date"];
+            }
         }
+        
+        
+    /*   //This doesn't work - buddy->signon is always 0.  not sure why.
+        if (online && ((time_t)(buddy->signon) != 0)) {
+                    NSLog(@"%i",(time_t)(buddy->signon));
+            //Set the signon time
+            NSMutableDictionary * statusDict = [theHandle statusDictionary];
+            
+            [statusDict
+                    setObject:[NSDate dateWithTimeIntervalSince1970:(time_t)(buddy->signon)]
+                       forKey:@"Signon Date"];
+        }
+    */
         
         //snag the correct alias, and the current display name
         char *alias = (char *)gaim_get_buddy_alias(buddy);
-        char *disp_name = (char *)[[[theHandle statusDictionary] objectForKey:@"Display Name"] cString];
+        char *disp_name = (char *)[[statusDict objectForKey:@"Display Name"] cString];
         if(!disp_name) disp_name = "";
         
         //check 'em and update
         if(alias && strcmp(disp_name, alias))
         {
-            [[theHandle statusDictionary] 
+            [statusDict
                 setObject:[NSString stringWithUTF8String:alias]
                 forKey:@"Display Name"];
             [modifiedKeys addObject:@"Display Name"];
@@ -136,13 +159,13 @@
         {
             if(buddy->idle != 0)
             {
-                [[theHandle statusDictionary]
+                [statusDict
                     setObject:[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->idle]
                     forKey:@"IdleSince"];
             }
             else
             {
-                [[theHandle statusDictionary] removeObjectForKey:@"IdleSince"];
+                [statusDict removeObjectForKey:@"IdleSince"];
             }
             [modifiedKeys addObject:@"IdleSince"];
         }
@@ -152,7 +175,7 @@
         if(g && strcmp([[theHandle serverGroup] cString], g->name))
         {
             [[owner contactController] handle:[theHandle copy] removedFromAccount:self];
-            NSLog(@"Changed to group %s", g->name);
+//            NSLog(@"Changed to group %s", g->name);
             [theHandle setServerGroup:[NSString stringWithUTF8String:g->name]];
             [[owner contactController] handle:theHandle addedToAccount:self];
         }
@@ -161,9 +184,9 @@
         GaimBuddyIcon *buddyIcon = gaim_buddy_get_icon(buddy);
         if(buddyIcon)
         {
-            if(buddyIcon != [[[theHandle statusDictionary] objectForKey:@"BuddyImagePointer"] pointerValue])
+            if(buddyIcon != [[statusDict objectForKey:@"BuddyImagePointer"] pointerValue])
             {
-                NSLog(@"Icon for %s", buddy->name);
+//                NSLog(@"Icon for %s", buddy->name);
                                 
                 //save this for convenience
                 [[theHandle statusDictionary]
@@ -171,9 +194,9 @@
                     forKey:@"BuddyImagePointer"];
             
                 //set the buddy image
-                [[theHandle statusDictionary]
+                [statusDict
                     setObject:[[[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_buddy_icon_get_data(buddyIcon, &(buddyIcon->len)) length:buddyIcon->len]] autorelease]
-                    forKey:@"BuddyImage"];
+                       forKey:@"BuddyImage"];
                 
                 //BuddyImagePointer is just for us, shh, keep it secret ;)
                 [modifiedKeys addObject:@"BuddyImage"];
@@ -191,17 +214,18 @@
         //if anything chnaged
         if([modifiedKeys count] > 0)
         {
-            //NSLog(@"Changed %@", modifiedKeys);
+    //        NSLog(@"Changed %@", modifiedKeys);
             
             //tell the contact controller, silencing if necessary
             [[owner contactController] handleStatusChanged:theHandle
-                modifiedStatusKeys:modifiedKeys
-                delayed:NO
-                silent:online
-                    ? (gaim_connection_get_state(gaim_account_get_connection(buddy->account)) == GAIM_CONNECTING)
-                    : (buddy->present != GAIM_BUDDY_SIGNING_OFF)];
+                                        modifiedStatusKeys:modifiedKeys
+                                                   delayed:NO
+                                                    silent:online
+                ? (gaim_connection_get_state(gaim_account_get_connection(buddy->account)) == GAIM_CONNECTING)
+                : (buddy->present != GAIM_BUDDY_SIGNING_OFF)];
             /* the silencing code does -not- work. I either need to change the way gaim works, or get someone to change it. */
         }
+    }
     }
 }
 
@@ -517,6 +541,5 @@
     [[owner interfaceController] handleErrorMessage:@"Gaim error"
                                     withDescription:errorDesc];
 }
-
 
 @end
