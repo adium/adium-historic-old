@@ -30,6 +30,7 @@
 - (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField;
 //- (void)showOpacityPercent;
 - (void)configureControlDimming;
+- (void)configureBoldCheckboxAndWarning;
 @end
 
 @implementation AICLPreferences
@@ -120,10 +121,13 @@
 {
     NSFontManager	*fontManager = [NSFontManager sharedFontManager];
     NSFont		*contactListFont = [fontManager convertFont:[fontManager selectedFont]];
-
+    BOOL                canBeBold;
+    
     //Update the displayed font string & preferences
     [self showFont:contactListFont inField:textField_fontName];
     [[adium preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_SCL_FONT group:PREF_GROUP_CONTACT_LIST_DISPLAY];
+
+    [self configureBoldCheckboxAndWarning];
 }
 
 //init
@@ -213,6 +217,24 @@
 - (void)configureControlDimming
 {
     [colorWell_group setEnabled:[checkBox_customGroupColor state]];
+    
+    [self configureBoldCheckboxAndWarning];
+}
+
+//Enable/disable the groups in bold checkbox and warning
+- (void)configureBoldCheckboxAndWarning
+{
+    //Disable the Show Groups In Bold button if the font doesn't support it
+    NSFontManager   *fontManager = [NSFontManager sharedFontManager];
+    NSFont          *contactListFont = [[[adium preferenceController] preferenceForKey:KEY_SCL_FONT group:PREF_GROUP_CONTACT_LIST_DISPLAY] representedFont]; 
+    BOOL            canNotBeBold = (contactListFont == [fontManager convertFont:[fontManager convertFont:contactListFont toHaveTrait:NSUnBoldFontMask] toHaveTrait:NSBoldFontMask]);
+    
+    if(contactListFont && canNotBeBold)
+    {
+        [textField_noBoldWarning setStringValue:[NSString stringWithFormat:@"Warning: %@ does not have a bold variant.", [contactListFont fontName]]];
+        [checkBox_boldGroups setEnabled:!canNotBeBold];
+        [textField_noBoldWarning setHidden:!canNotBeBold];
+    }
 }
 
 @end
