@@ -48,12 +48,6 @@
 
 - Tooltips are not appearing for links in profile text.
 
-<<<<<<< .mine
-=======
-- Double clicking two names in succession causes the first name to highlight
-  the second time.
-
->>>>>>> .r6509
 - Why oh why doesn't our image picker window remember its position whatsoever?
 
 - [MSN] Outoing chat appears twice with a display name set
