@@ -143,7 +143,7 @@
 
     //Offline, Signed off, signed on, or typing (These do not show if there is unviewed content)
     if(!color && (!unviewedContentEnabled || !unviewedContent)){
-		if(offlineEnabled && (![inObject integerStatusObjectForKey:@"Online"] &&
+		if(offlineEnabled && (![inObject online] &&
 							  ![inObject integerStatusObjectForKey:@"Signed Off"])){
 			color = offlineColor;
 			invertedColor = offlineInvertedColor;
@@ -176,7 +176,7 @@
         idle = [inObject integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO];
 
         //Idle And Away, Away, or Idle
-        if(idleAndAwayEnabled && away && idle != 0){
+        if(idleAndAwayEnabled && away && (idle != 0)){
             color = idleAndAwayColor;
             invertedColor = idleAndAwayInvertedColor;
             labelColor = idleAndAwayLabelColor;
@@ -184,7 +184,7 @@
             color = awayColor;
             invertedColor = awayInvertedColor;
             labelColor = awayLabelColor;
-        }else if(idleEnabled && idle != 0){
+        }else if(idleEnabled && (idle != 0)){
             color = idleColor;
             invertedColor = idleInvertedColor;
             labelColor = idleLabelColor;
@@ -192,7 +192,7 @@
     }
 
     //Online
-    if(!color && onlineEnabled && [inObject integerStatusObjectForKey:@"Online"]){
+    if(!color && onlineEnabled && [inObject online]){
         color = onlineColor;
         invertedColor = onlineInvertedColor;
         labelColor = onlineLabelColor;
