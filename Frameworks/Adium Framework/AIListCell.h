@@ -38,7 +38,6 @@
 	NSColor				*invertedTextColor;
 	
 	NSFont				*font;
-	NSImage				*genericUserIcon;
 	
 	BOOL				useAliasesAsRequested;
 }
