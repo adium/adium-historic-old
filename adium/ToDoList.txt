@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.33 2004/04/10 23:12:58 evands Exp $
+$Id: ToDoList.txt,v 1.34 2004/04/11 02:27:33 the_tick Exp $
 
 Legend
 + Change or Addition
@@ -19,11 +19,14 @@ Bugs
 * Contact list flippy triangles are white behind them in 10.2 [Colin]
 * Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
 * We aren't processing <code> tags in our HTML decoder (Jabber uses them)
+	- (Tick: I thought jabber sent xml...??? 
 * Is jabber working correctly?  Are we receiving status for buddies upon initially connecting?  Need to check this.
+	- (Tick: Yes, jabber works, but only for jabber.org.)
 * User icons are still getting flipped.  We need to determine if they're from libgaim or from the address book.
 * Changing an alias in the inspector does not correctly update the contact list
 * Yahoo giving some users a Gaim error: unknown error 29 on connect
 * Some URLs in profiles aren't allowing clicks properly.
+* When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
 -------------------------------------------------------------------------------------------------------
 Minor Changes
 -------------------------------------------------------------------------------------------------------
@@ -168,6 +171,7 @@ New State System:
 
 Multi-user chat:
     Powerful multi-user chat that can handle both large, moderated rooms (irc) and multi-way IMs (MSN).
+		- Tick: would we want a drawer or a list, or a collapsable list or what? Everyone seems opposed to a drawer, so a list would do better.
     
 Contact status coloring:
     Status coloring that is easy to configure and consistant throughout Adium.
@@ -199,8 +203,11 @@ Unfixable(?) Issues
 	It does not auto-resize under the dock EXCEPT for at the edges, by design, since many people use a dock which does not extend to the edges of the screen and would like the contact list to reach down there.  So far as I can tell there's no way to know how
  wide the dock is; only how tall it is.
 
-* Don't overwrite user specified icons in the address book.  Only overwrite iChat placed icons (and store ours such that iChat will overwrite them) - (Evan: I spent an hour going through private frameworks trying to figure this out.  If you have any ideas
-, please let me know.)
+* Don't overwrite user specified icons in the address book.  Only overwrite iChat placed icons (and store ours such that iChat will overwrite them) 
+	- (Evan: I spent an hour going through private frameworks trying to figure this out.  If you have any ideas, please let me know.)
+	- (Tick: Maybe we can use steganography, crysflame in irc brought it up, and eevyl and I have discussed it before:
+			19:45 < crysflame> http://www.mirrors.wiretapped.net/security/steganography/outguess/outguess-0.2.tar.gz and 
+http://www.mirrors.wiretapped.net/security/steganography/stegdetect/stegdetect-0.5.tar.gz
 
 -------------------------------------------------------------------------------------------------------
 Waiting On
