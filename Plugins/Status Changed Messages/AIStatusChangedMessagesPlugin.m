@@ -35,7 +35,8 @@
 
 - (void)Contact_StatusMessage:(NSNotification *)notification{
 	AIListContact	*contact = [notification object];
-	NSString		*statusMessage = [[contact statusObjectForKey:@"StatusMessage"] string];
+	NSString		*statusMessage = [contact stringFromAttributedStringStatusObjectForKey:@"StatusMessage"
+																	fromAnyContainedObject:YES];
 	NSString		*statusType = @"away_message";
 	
 	if(statusMessage && [statusMessage length] != 0){
