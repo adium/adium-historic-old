@@ -46,7 +46,7 @@
 																	 action:@selector(dummyTarget:)
 															  keyEquivalent:@""] autorelease];
 		[bookmarkRootContextualMenuItem setRepresentedObject:self];
-		[[adium menuController] addContextualMenuItem:bookmarkRootContextualMenuItem toLocation:Context_TextView_LinkAction];
+		[[adium menuController] addContextualMenuItem:bookmarkRootContextualMenuItem toLocation:Context_TextView_Edit];
 		
 		//Wait for Adium to finish launching before we build the content of our menus
 		[[adium notificationCenter] addObserver:self

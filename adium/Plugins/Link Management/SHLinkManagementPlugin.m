@@ -34,7 +34,7 @@
 										   target:self
 										   action:@selector(editFormattedLink:)
 									keyEquivalent:@""] autorelease];
-    [[adium menuController] addContextualMenuItem:menuItem toLocation:Context_TextView_LinkAction];
+    [[adium menuController] addContextualMenuItem:menuItem toLocation:Context_TextView_Edit];
     [self registerToolbarItem];
 }
 
