@@ -740,11 +740,15 @@
 {
     BOOL	weAreOnline = [[self statusObjectForKey:@"Online"] boolValue];
 	
-    if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
+    if([inType isEqualToString:CONTENT_MESSAGE_TYPE]){
         if(weAreOnline && (inListObject == nil || [[inListObject statusObjectForKey:@"Online"] boolValue])){ 
 			return(YES);
         }
-    }
+    }else if (([inType isEqualToString:FILE_TRANSFER_TYPE]) && ([self conformsToProtocol:@protocol(AIAccount_Files)])){
+		if(weAreOnline && (inListObject == nil || [[inListObject statusObjectForKey:@"Online"] boolValue])){ 
+			return(YES);
+        }	
+	}
 	
     return(NO);
 }
@@ -1298,7 +1302,7 @@
     ESFileTransfer * fileTransfer = [ESFileTransfer fileTransferWithContact:contact forAccount:self]; 
 
     [fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
-    xfer->ui_data = fileTransfer;
+    xfer->ui_data = [fileTransfer retain];
     
     return fileTransfer;
 }
@@ -1314,6 +1318,12 @@
 {
     [[adium fileTransferController] transferCanceled:(ESFileTransfer *)(xfer->ui_data)];
 //    gaim_xfer_destroy(xfer);
+}
+
+- (void)accountXferDestroy:(GaimXfer *)xfer
+{
+	[(ESFileTransfer *)xfer->ui_data release];
+	xfer->ui_data = nil;
 }
 
 //Accept a send or receive ESFileTransfer object, beginning the transfer.

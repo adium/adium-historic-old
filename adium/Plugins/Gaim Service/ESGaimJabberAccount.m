@@ -57,4 +57,37 @@
 	return KEY_JABBER_PORT;
 }
 
+
+#pragma mark File transfer
+- (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
+{
+	char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
+	
+	GaimXfer *xfer = jabber_outgoing_xfer_new(gc,destsn);
+	
+	//gaim will free filename when necessary
+	char *filename = g_strdup([[fileTransfer localFilename] UTF8String]);
+	
+	//Associate the fileTransfer and the xfer with each other
+	[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
+    xfer->ui_data = fileTransfer;
+	
+    //accept the request
+    gaim_xfer_request_accepted(xfer, filename);
+    
+    //tell the fileTransferController to display appropriately
+    [[adium fileTransferController] beganFileTransfer:fileTransfer];
+}
+
+- (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
+{
+    [super acceptFileTransferRequest:fileTransfer];    
+}
+
+- (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
+{
+    [super rejectFileReceiveRequest:fileTransfer];    
+}
+
+
 @end
