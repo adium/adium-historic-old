@@ -112,6 +112,8 @@ typedef enum {
 - (void)connect;
 - (void)disconnect;
 - (void)performRegisterWithPassword:(NSString *)inPassword;
+- (NSString *)accountWillSetUID:(NSString *)proposedUID;
+- (void)didChangeUID;
 
 //Properties
 - (BOOL)requiresPassword;

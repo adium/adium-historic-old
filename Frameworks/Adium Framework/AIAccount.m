@@ -68,6 +68,36 @@
 
 }
 
+/*!
+ * @brief The UID will be change. The account has a chance to perform modifications
+ *
+ * For example, MSN adds @hotmail.com to the proposedUID and returns the new value
+ *
+ * @param proposedUID The proposed, pre-filtered UID (filtered means it has no characters invalid for this servce)
+ * @result The UID to use; the default implementation just returns proposedUID.
+ */
+- (NSString *)accountWillSetUID:(NSString *)proposedUID
+{
+	return proposedUID;
+}
+
+/*!
+ * @brief The account's UID changed
+ */
+- (void)didChangeUID
+{
+
+}
+
+/*!
+ * @brief The account will be deleted
+ *
+ * The default implemented disconnects the account.  Subclasses should call super's implementation.
+ */
+- (void)willBeDeleted
+{
+	[self disconnect];
+}
 
 //Properties -----------------------------------------------------------------------------------------------------------
 #pragma mark Properties
