@@ -41,7 +41,9 @@
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
 	if(![self cellIsSelected]){
-		int		row = [controlView rowForItem:listObject];
+		int			row = [controlView rowForItem:listObject];
+		unsigned	numberOfRows = [controlView numberOfRows];
+
 		NSColor	*labelColor;
 		
 		//Label color.  If there is no label color we draw the background color (taking care of gridding if needed)
@@ -52,18 +54,27 @@
 
 		[lastBackgroundBezierPath release];
 
-		if(row >= [controlView numberOfRows]-1 || [controlView isExpandable:[controlView itemAtRow:row+1]]){
+		if(row == 0){
+			if(numberOfRows > 1){
+				//Draw the top corner rounded if this cell is the first cell in the outline view (only possible if its containing
+				//group is not being displayed) but not also the last cell
+				lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedTopCorners:rect radius:MOCKIE_RADIUS] retain];
+
+			}else{
+				//Draw the entire rect rounded if this cell is the first cell in the outline view (only possible if its containing
+				//group is not being displayed) and also the last cell
+				lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedRect:rect radius:MOCKIE_RADIUS] retain];
+			}
+
+			[lastBackgroundBezierPath fill];
+			
+		}else if(row >= (numberOfRows-1) || [controlView isExpandable:[controlView itemAtRow:row+1]]){
 			//Draw the bottom corners rounded if this is the last cell in a group
 			lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedBottomCorners:rect radius:MOCKIE_RADIUS] retain];
 			[lastBackgroundBezierPath fill];
 			
-		}else if(row == 0){
-			//Draw the top corner rounded if this cell is the first cell in the outline view (only possible if its containing
-			//group is not being displayed)
-			lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedTopCorners:rect radius:MOCKIE_RADIUS] retain];
-			[lastBackgroundBezierPath fill];
-			
 		}else{
+			//Cells which are not at the top or bottom are simply filled, no rounded path necessary
 			lastBackgroundBezierPath = nil;
 
 			[NSBezierPath fillRect:rect];
@@ -77,22 +88,33 @@
 	if([self cellIsSelected]){
 		AIGradient	*gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
 		int			row = [controlView rowForItem:listObject];
-		
+		unsigned	numberOfRows = [controlView numberOfRows];
+
 		[lastBackgroundBezierPath release];
 
-		if(row >= [controlView numberOfRows]-1 || [controlView isExpandable:[controlView itemAtRow:row+1]]){
+		if(row == 0){
+			if(numberOfRows > 1){
+				//Draw the top corner rounded if this cell is the first cell in the outline view (only possible if its containing
+				//group is not being displayed) but not also the last cell
+				lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedTopCorners:cellFrame radius:MOCKIE_RADIUS] retain];
+				
+			}else{
+				//Draw the entire cellFrame rounded if this cell is the first cell in the outline view (only possible if its containing
+				//group is not being displayed) and also the last cell
+				lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedRect:cellFrame radius:MOCKIE_RADIUS] retain];
+			}
+			
+			[gradient drawInBezierPath:lastBackgroundBezierPath];
+			
+		}else if(row >= (numberOfRows-1) || [controlView isExpandable:[controlView itemAtRow:row+1]]){
 			//Draw the bottom corners rounded if this is the last cell in a group
 			lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedBottomCorners:cellFrame radius:MOCKIE_RADIUS] retain];
 			[gradient drawInBezierPath:lastBackgroundBezierPath];
 			
-		}else if(row == 0){
-			//Draw the top corner rounded if this cell is the first cell in the outline view (only possible if its containing
-			//group is not being displayed)
-			lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedTopCorners:cellFrame radius:MOCKIE_RADIUS] retain];
-			[gradient drawInBezierPath:lastBackgroundBezierPath];
-			
 		}else{
+			//Cells which are not at the top or bottom are simply filled, no rounded path necessary
 			lastBackgroundBezierPath = nil;
+			
 			[gradient drawInRect:cellFrame];
 		}
 	}
