@@ -61,6 +61,7 @@ nntp:\/\/       |
 cifs:\/\/	|
 smb:\/\/	|
 itms:\/\/	|
+afp:\/\/	|
 gopher:\/\/		    {SHStringOffset += SHleng; SHValidShift = SHleng; BEGIN CANONICAL;}
 
 mailto:{mailSpecifier}      {SHStringOffset += SHleng; return SH_MAILTO_VALID;}
