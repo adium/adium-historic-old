@@ -40,7 +40,7 @@ static NSImage *pushIndicatorImage = nil;
     indicator = nil;
 	pushPopEnabled = YES;
 	clearOnEscape = NO;
-	homeToStartOfLine = NO;
+	homeToStartOfLine = YES;
     insertingText = NO;
 	resizing = NO;
     historyArray = [[NSMutableArray alloc] initWithObjects:@"",nil];
@@ -191,7 +191,7 @@ static NSImage *pushIndicatorImage = nil;
 	clearOnEscape = inBool;
 }
 
-//Set go to start of line on home instead of home of associated view
+//Set to make home/end go to start/end of line instead of home/end of associated view
 - (void)setHomeToStartOfLine:(BOOL)inBool
 {
 	homeToStartOfLine = inBool;
