@@ -126,6 +126,41 @@
     [windowMenuArray release];
 }
 
+//Handle a reopen/dock icon click
+- (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows
+{
+    //The 'visibleWindows' variable passed by the system is unreliable, since the presence
+    //of the Adium system menu will cause it to always be YES.  We won't use it below.
+
+    //If no windows are visible, show the contact list
+    if(contactListWindowController == nil && [messageWindowControllerArray count] == 0){
+	[self showContactList:nil];
+    }else{
+	//If windows are open, try switching to a tab with unviewed content
+	if(![[owner contentController] switchToMostRecentUnviewedContent]){
+	    NSEnumerator    *enumerator;
+	    NSWindow	    *window, *targetWindow = nil;
+	    BOOL	    unMinimizedWindows = 0;
+	    
+	    //If there was no unviewed content, ensure that atleast one of Adium's windows is unminimized
+	    enumerator = [[NSApp windows] objectEnumerator];
+	    while(window = [enumerator nextObject]){
+		//Check stylemask to rule out the system menu's window (Which reports itself as visible like a real window)
+		if(([window styleMask] & (NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask))){
+		    if(!targetWindow) targetWindow = window;
+		    if(![window isMiniaturized]) unMinimizedWindows++;
+		}
+	    }
+	    //If there are no unminimized windows, unminimize the last one
+	    if(unMinimizedWindows == 0 && targetWindow){
+		[targetWindow deminiaturize:nil];
+	    }
+	}
+    }
+
+    return(NO); //we handled the reopen, return NO so NSApp does nothing.
+}
+
 //
 - (void)preferencesChanged:(NSNotification *)notification
 {

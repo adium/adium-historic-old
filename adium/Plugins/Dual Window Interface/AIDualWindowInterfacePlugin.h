@@ -60,6 +60,7 @@
     //messageWindow stuff
     NSMutableArray			*messageWindowControllerArray;
     AIMessageWindowController		*lastUsedMessageWindow;
+    NSMutableArray			*lastUsedContainerArray;
     
     //Preferences
     AIDualWindowPreferences                 *preferenceController;

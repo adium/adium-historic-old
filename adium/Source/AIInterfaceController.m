@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.41 2003/12/08 06:12:37 jmelloy Exp $
+// $Id: AIInterfaceController.m,v 1.42 2003/12/09 03:56:18 adamiser Exp $
 
 #import "AIInterfaceController.h"
 
@@ -96,13 +96,11 @@
 - (void)setActiveChat:(AIChat *)inChat
 {
     [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] setActiveChat:inChat];
-    [[owner contentController] setMostRecentChat:inChat];
 }
 
-- (void)showContactList
+- (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows
 {
-    if ([(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] respondsToSelector:@selector(showContactList:)])
-        [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] performSelector:@selector(showContactList:) withObject:nil];
+    return([(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] handleReopenWithVisibleWindows:visibleWindows]);    
 }
 
 // Registers code to handle the interface
