@@ -174,8 +174,6 @@
 	switch(status){
 		case Accepted_FileTransfer:
 		{
-			AILog(@"accepted a file transfer...");
-			NSLog(@"accepted a file transfer...");
 			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_BEGAN
 											 forListObject:[fileTransfer contact] 
 												  userInfo:fileTransfer];
@@ -185,8 +183,6 @@
 		}
 		case Complete_FileTransfer:
 		{		
-			AILog(@"Transfer complete!");
-			NSLog(@"Transfer complete!");
 			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_COMPLETE
 											 forListObject:[fileTransfer contact] 
 												  userInfo:fileTransfer];

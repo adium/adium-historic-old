@@ -59,6 +59,4 @@
 
 - (IBAction)toggleDetails:(id)sender;
 
-- (void)setIsSelected:(BOOL)flag;
-
 @end
