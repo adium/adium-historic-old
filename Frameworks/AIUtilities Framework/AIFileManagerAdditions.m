@@ -48,6 +48,27 @@
 	return(YES);
 }
 
+- (void)removeFilesInDirectory:(NSString *)dirPath withPrefix:(NSString *)prefix movingToTrash:(BOOL)moveToTrash
+{
+	NSEnumerator	*enumerator;
+	NSString		*fileName;
+	
+	dirPath = [dirPath stringByExpandingTildeInPath];
+	
+	enumerator = [[self directoryContentsAtPath:dirPath] objectEnumerator];
+	while(fileName = [enumerator nextObject]){
+		if([fileName hasPrefix:prefix]){
+			NSString	*path = [dirPath stringByAppendingPathComponent:fileName];
+			
+			if (moveToTrash){
+				[self trashFileAtPath:path];
+			}else{
+				[self removeFileAtPath:path handler:nil];
+			}
+		}
+	}	
+}
+
 //Creates all the folders specified in 'fullPath' (if they don't exist)
 - (void)createDirectoriesForPath:(NSString *)fullPath
 {
