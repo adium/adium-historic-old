@@ -2,7 +2,6 @@
 // Adium 0.8 beta bugs
 //---------------------------------------------------------------------------------------------
 - First launch, need setup assistant or need to open account prefs
-- Account add button needs a triangle to indicate that it's a popup
 - Default new accounts (or atleast the first new account) to online
 - List toolbar needs icon for toggle groups, add group, toggle offline contacts
 - Move window shadow preference from layout to advanced
