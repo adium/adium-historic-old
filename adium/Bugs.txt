@@ -10,12 +10,12 @@
 	We don't want to spawn new windows while Adium is hidden.  Windows should be queued
 	and shown when Adium is unhid.
 
-- Contact list view goes behind toolbar
+- Contact list view goes behind toolbar (Did we fix this?, can't reproduce)
 	It's possible for the contact list view to become stuck under the toolbar,
 	covering the first few contacts on the list.  Toggling the toolbar will sometimes
 	correct the view.
 
-- Adding contact with no groups crashes
+- Adding contact with no groups crashes (Did we fix this?, can't reproduce)
 	Adding a contact with no groups defined crashes adium.
 
 - Adding contact that already exists
