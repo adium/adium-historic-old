@@ -77,19 +77,7 @@
 	
 	//Check mail
 	[checkBox_checkMail setState:[[inAccount preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]];
-	
-	// icon junk
-	if(data = [inAccount preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
-		NSImage *image;
 		
-		image = [[NSImage alloc] initWithData:data];
-		[imageView_userIcon setImage:image];
-		[image release];
-	} 
-	else{
-		// image = {default image thing};
-	}        
-	
 	[self configureConnectionControlDimming];
 }
 
@@ -165,17 +153,6 @@
 	}
 	
 	
-}
-
-//User icon editing support
-- (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)sender didChangeToImage:(NSImage *)image
-{
-    [account setPreference:[image PNGRepresentation] forKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
-}
-
-- (void)deleteInImageViewWithImagePicker:(ESImageViewWithImagePicker *)sender
-{
-	[account setPreference:nil forKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
 }
 
 - (IBAction)changedPreference:(id)sender
