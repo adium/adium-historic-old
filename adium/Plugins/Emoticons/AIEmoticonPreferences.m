@@ -334,7 +334,9 @@
             id			emoID = [emoDict objectForKey:@"Emoticon"];
             AIEmoticonPack	*emoPack = [emoDict objectForKey:@"Pack"];
 
-            return ([[emoPack emoticonAllTextRepresentationsAsArray:emoID] count] - 1);
+            //Does this fix our problem?  The world may never know.
+            return (([[emoPack emoticonAllTextRepresentationsAsArray:emoID] count] / [tableView numberOfColumns]) + 1);
+            
         }else{
             return nil;
         }
@@ -372,8 +374,12 @@ else
         if (emoticonIsSelected && emoDict) {
             id			emoID = [emoDict objectForKey:@"Emoticon"];
             AIEmoticonPack	*emoPack = [emoDict objectForKey:@"Pack"];
+            unsigned long index = (row * [tableView numberOfColumns]) + [tableView indexOfTableColumn:tableColumn];
 
-            return [[emoPack emoticonAllTextRepresentationsAsArray:emoID] objectAtIndex:row];
+            if (index < [[emoPack emoticonAllTextRepresentationsAsArray:emoID] count])
+                return [[emoPack emoticonAllTextRepresentationsAsArray:emoID] objectAtIndex:index];
+            else
+                return nil;
         }
         else
             return nil;
