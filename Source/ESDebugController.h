@@ -12,6 +12,7 @@
 }
 
 - (void)initController;
+- (void)closeController;
 - (void)adiumDebug:(NSString *)message, ...;
 - (NSArray *)debugLogArray;
 
