@@ -22,7 +22,7 @@
 #define LOGGING_DEFAULT_PREFS	@"LoggingDefaults"
 
 @interface AILoggerPlugin (PRIVATE)
-- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(NSString *)object onDate:(NSDate *)date logHTML:(BOOL)logHTML;
+- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(NSString *)object onDate:(NSDate *)date;
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
@@ -69,6 +69,8 @@
 
         BOOL	newLogStatus = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING] objectForKey:KEY_LOGGER_STATUS] boolValue];
 
+        BOOL	newLogHTML = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING] objectForKey:KEY_LOGGER_HTML] boolValue];
+        
         if(newLogStyle != logStyle) {
             logStyle = newLogStyle;
         }
@@ -77,6 +79,9 @@
         }
         if(newLogStatus != logStatus) {
             logStatus = newLogStatus;
+        }
+        if(newLogHTML != logHTML) {
+            logHTML = newLogHTML;
         }
         
         if(newLogValue != observingContent){
@@ -129,11 +134,8 @@
     NSDate		*date = nil;
     NSString		*dateString = nil;
     NSString		*logMessage = nil;
-    BOOL		logHTML = NO;
     BOOL		closeStyle = NO;
     
-    if(logFont || logStyle) logHTML = YES;
-    else logHTML = NO;
     if(logFont && logStyle) closeStyle = YES;
     else closeStyle=NO;
 
@@ -185,9 +187,9 @@
 	}
     }
 
-    //Log the message
+    //Log the message 
     if(logMessage != nil){
-        [self _addMessage:logMessage betweenAccount:account andObject:object onDate:date logHTML:logHTML];
+        [self _addMessage:logMessage betweenAccount:account andObject:object onDate:date];
     }
 }
 
@@ -212,7 +214,7 @@
 }
 
 //Add a message to the specified log file
-- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(NSString *)object onDate:(NSDate *)date logHTML:(BOOL)logHTML
+- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(NSString *)object onDate:(NSDate *)date
 {
     NSString	*logPath;
     NSString	*logFileName;

@@ -21,6 +21,7 @@
     IBOutlet	NSButton	*checkBox_enableStyle;
     IBOutlet	NSButton	*checkBox_enableFont;
     IBOutlet	NSButton	*checkBox_enableStatus;
+    IBOutlet	NSButton	*checkBox_enableHTML;
 }
 
 @end

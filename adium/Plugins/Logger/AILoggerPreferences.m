@@ -19,6 +19,10 @@
 #import "AILoggerPreferences.h"
 #import "AILoggerPlugin.h"
 
+@interface AILoggerPreferences (PRIVATE)
+- (void)autoDim;
+@end;
+
 @implementation AILoggerPreferences
 
 //Preference pane properties
@@ -41,7 +45,9 @@
     [checkBox_enableFont setState:[[preferenceDict objectForKey:KEY_LOGGER_FONT] boolValue]];
     [checkBox_enableStyle setState:[[preferenceDict objectForKey:KEY_LOGGER_STYLE] boolValue]];
     [checkBox_enableStatus setState:[[preferenceDict objectForKey:KEY_LOGGER_STATUS] boolValue]];
+    [checkBox_enableHTML setState:[[preferenceDict objectForKey:KEY_LOGGER_HTML] boolValue]];
 
+    [self autoDim];
 }
 
 //
@@ -63,7 +69,32 @@
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LOGGER_STYLE
                                               group:PREF_GROUP_LOGGING];
+    } else if (sender == checkBox_enableHTML) {
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LOGGER_HTML
+                                              group:PREF_GROUP_LOGGING];
     }
+    [self autoDim];
 }
 
+//Dims style and font if HTML logs are not selected, all if enable logging is not selected.
+- (void) autoDim {
+    if(![checkBox_enableLogging state]) {
+        [checkBox_enableFont setEnabled:NO];
+        [checkBox_enableStyle setEnabled:NO];
+        [checkBox_enableStatus setEnabled:NO];
+        [checkBox_enableHTML setEnabled:NO];
+    } else {
+        [checkBox_enableStatus setEnabled:YES];
+        [checkBox_enableHTML setEnabled:YES];
+    }
+
+    if(![checkBox_enableHTML state]) {
+        [checkBox_enableFont setEnabled:NO];
+        [checkBox_enableStyle setEnabled:NO];
+    } else {
+        [checkBox_enableFont setEnabled:YES];
+        [checkBox_enableStyle setEnabled:YES];
+    }
+}
 @end

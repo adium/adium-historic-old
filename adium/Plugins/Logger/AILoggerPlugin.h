@@ -22,12 +22,13 @@
 #define	KEY_LOGGER_STYLE	@"Enable Style Logging"
 #define	KEY_LOGGER_FONT		@"Enable Font Logging"
 #define KEY_LOGGER_STATUS	@"Enable Status Logging"
+#define	KEY_LOGGER_HTML		@"Enable HTML Logging"
 
 @class AILoggerPreferences;
 
 @interface AILoggerPlugin : AIPlugin <AIPluginInfo> {
     AILoggerPreferences		*preferences;
-    BOOL			observingContent, logStyle, logFont, logStatus;
+    BOOL			observingContent, logStyle, logFont, logStatus, logHTML;
     
     NSString			*logBasePath; 			//The base directory of all logs
 

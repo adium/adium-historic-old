@@ -221,7 +221,8 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
             //Process each user folder (/Logs/SERVICE.ACCOUNT_NAME/CONTACT_NAME/)
             userRes = PQexec(conn, [userSQL UTF8String]);
             if (!userRes || PQresultStatus(userRes) != PGRES_TUPLES_OK) {
-                [[owner interfaceController] handleErrorMessage:@"Users Failed." withDescription:@"User Selection Failed"];
+                [[owner interfaceController] handleErrorMessage:@"Users Failed" withDescription:@"User Selection Failed"];
+                NSLog(@"%s / %s\n%@", PQresStatus(PQresultStatus(userRes)), PQresultErrorMessage(userRes), userSQL);
             } else {
                 for(j = 0; j < PQntuples(userRes); j++) {
                     NSString		*serverGroup = nil;
@@ -292,7 +293,8 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
 
     dateRes = PQexec(conn, [dateSQL UTF8String]);
     if (!dateRes || PQresultStatus(dateRes) != PGRES_TUPLES_OK) {
-        [[owner interfaceController] handleErrorMessage:@"Date Selection Failed." withDescription:@"Date Selection Failed"];
+        [[owner interfaceController] handleErrorMessage:@"Date Selection Failed" withDescription:@"Date Selection Failed"];
+        NSLog(@"%s / %s\n%@", PQresStatus(PQresultStatus(dateRes)), PQresultErrorMessage(dateRes), dateSQL);
     } else {
         for(i = 0; i < PQntuples(dateRes); i++) {
             NSDate 	*logDate = [NSCalendarDate dateWithYear:atoi(PQgetvalue(dateRes, i, 3)) month:atoi(PQgetvalue(dateRes, i, 4)) day:atoi(PQgetvalue(dateRes, i, 5)) hour:0 minute:0 second:0 timeZone:[NSTimeZone defaultTimeZone]];
