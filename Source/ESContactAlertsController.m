@@ -582,4 +582,11 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 	[[adium preferenceController] delayPreferenceChangedNotifications:NO];
 }
 
+#pragma mark -
+- (BOOL)isMessageEvent:(NSString *)eventID
+{
+	return(([eventHandlersByGroup[AIMessageEventHandlerGroup] objectForKey:eventID] != nil) ||
+		   ([globalOnlyEventHandlersByGroup[AIMessageEventHandlerGroup] objectForKey:eventID] != nil));
+}
+
 @end
