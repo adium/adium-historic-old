@@ -48,7 +48,17 @@
 	
 	IBOutlet		NSTextField			*textField_layoutName;
 
-	NSString				*layoutName;
+	IBOutlet		NSTabView			*tabView_preferences;
+	
+	//Advanced contact bubble options
+	IBOutlet		NSTabViewItem		*tabViewItem_advancedContactBubbles;
+	IBOutlet		NSButton			*checkBox_outlineBubbles;
+	IBOutlet		NSButton			*checkBox_drawContactBubblesWithGraadient;
+	IBOutlet		NSButton			*checkBox_showGroupBubbles;
+	IBOutlet		NSSlider			*slider_outlineWidth;
+	IBOutlet		NSTextField			*textField_outlineWidthIndicator;
+	
+	NSString							*layoutName;
 }
 
 + (id)listLayoutOnWindow:(NSWindow *)parentWindow withName:(NSString *)inName;

@@ -16,6 +16,7 @@
 - (void)configureControls;
 - (void)configureControlDimming;
 - (void)updateSliderValues;
+- (void)updateDisplayedTabsFromPrefDict:(NSDictionary *)prefDict;
 - (void)updateStatusAndServiceIconMenusFromPrefDict:(NSDictionary *)prefDict;
 - (void)updateUserIconMenuFromPrefDict:(NSDictionary *)prefDict;
 - (NSMenu *)alignmentMenuWithChoices:(int [])alignmentChoices;
@@ -73,12 +74,17 @@
 	[fontField_group setShowFontFace:YES];
 	
 	[textField_layoutName setStringValue:(layoutName ? layoutName : @"")];
+	
+	//We'll be adding/removing this from our view
+	[tabViewItem_advancedContactBubbles retain];
 }
 
 //Window is closing
 - (BOOL)windowShouldClose:(id)sender
 {
+	[tabViewItem_advancedContactBubbles autorelease];
 	[self autorelease];
+	
     return(YES);
 }
 
@@ -144,6 +150,8 @@
 	textAlignmentChoices[2] = NSRightTextAlignment;
 	textAlignmentChoices[3] = -1;
 
+	[self updateDisplayedTabsFromPrefDict:prefDict];
+	
 	[self updateStatusAndServiceIconMenusFromPrefDict:prefDict];
 	
 	[self updateUserIconMenuFromPrefDict:prefDict];
@@ -184,7 +192,7 @@
 	[fontField_contact setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_FONT] representedFont]];
 	[fontField_status setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_FONT] representedFont]];
 	[fontField_group setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_FONT] representedFont]];
-
+	
 	[self configureControlDimming];
 }
 
@@ -217,6 +225,7 @@
 
 		prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
 
+		[self updateDisplayedTabsFromPrefDict:prefDict];
 		[self updateStatusAndServiceIconMenusFromPrefDict:prefDict];
 		[self updateUserIconMenuFromPrefDict:prefDict];
 
@@ -316,6 +325,25 @@
                                               group:PREF_GROUP_LIST_LAYOUT];
 		[self configureControlDimming];
 			
+    }else if (sender == checkBox_outlineBubbles){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE
+                                              group:PREF_GROUP_LIST_LAYOUT];
+		[self configureControlDimming];
+		
+    }else if (sender == checkBox_drawContactBubblesWithGraadient){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LIST_LAYOUT_CONTACT_BUBBLE_GRADIENT
+                                              group:PREF_GROUP_LIST_LAYOUT];
+		
+    }else if (sender == checkBox_showGroupBubbles){
+		BOOL shouldHideGroupBubbles = ![sender state];
+		
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:shouldHideGroupBubbles]
+                                             forKey:KEY_LIST_LAYOUT_GROUP_HIDE_BUBBLE
+                                              group:PREF_GROUP_LIST_LAYOUT];
+		[self configureControlDimming];
+		
     }else if(sender == slider_windowTransparency){
         [[adium preferenceController] setPreference:[NSNumber numberWithFloat:([sender floatValue] / 100.0)]
                                              forKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY
@@ -339,9 +367,21 @@
 		int oldValue = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH
 																group:PREF_GROUP_LIST_LAYOUT] intValue];
 		if (newValue != oldValue){ 
-			[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
+			[[adium preferenceController] setPreference:[NSNumber numberWithInt:newValue]
 												 forKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH
 												  group:PREF_GROUP_LIST_LAYOUT];
+			[self updateSliderValues];
+		}
+	}else if (sender == slider_outlineWidth){
+		int newValue = [sender intValue];
+		int oldValue = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE_WIDTH
+																 group:PREF_GROUP_LIST_LAYOUT] intValue];
+		if (newValue != oldValue){ 
+			
+			[[adium preferenceController] setPreference:[NSNumber numberWithInt:newValue]
+												 forKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE_WIDTH
+												  group:PREF_GROUP_LIST_LAYOUT];
+			
 			[self updateSliderValues];
 		}
 	}
@@ -385,6 +425,7 @@
 	[textField_contactLeftIndent setStringValue:[NSString stringWithFormat:@"%ipx",[slider_contactLeftIndent intValue]]];
 	[textField_contactRightIndent setStringValue:[NSString stringWithFormat:@"%ipx",[slider_contactRightIndent intValue]]];
 	[textField_horizontalWidthIndicator setStringValue:[NSString stringWithFormat:@"%ipx",[slider_horizontalWidth intValue]]];
+	[textField_outlineWidthIndicator setStringValue:[NSString stringWithFormat:@"%ipx",[slider_outlineWidth intValue]]];
 }
 
 //Configure control dimming
@@ -473,6 +514,11 @@
 		}
 		[slider_horizontalWidth setEnabled:YES];
 	}
+	
+	//Contact Bubbles Advanced
+	
+	//Only enable the outline width slider if outline width is being shown
+	[slider_outlineWidth setEnabled:[checkBox_outlineBubbles state]];
 }
 
 - (void)updateStatusAndServiceIconMenusFromPrefDict:(NSDictionary *)prefDict
@@ -726,4 +772,38 @@
 	
 	return(windowStyleMenu);
 }
+
+#pragma mark Displayed Tabs
+//Displayed Tabs
+- (void)updateDisplayedTabsFromPrefDict:(NSDictionary *)prefDict
+{
+	LIST_WINDOW_STYLE	windowStyle;
+	BOOL				tabViewCurrentHasAdvancedContactBubbles;
+	
+	windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+	tabViewCurrentHasAdvancedContactBubbles = ([[tabView_preferences tabViewItems] containsObjectIdenticalTo:tabViewItem_advancedContactBubbles]);
+	
+	if ((windowStyle == WINDOW_STYLE_PILLOWS_FITTED) ||
+		(windowStyle == WINDOW_STYLE_PILLOWS)){
+
+		if (!tabViewCurrentHasAdvancedContactBubbles){
+			[tabView_preferences addTabViewItem:tabViewItem_advancedContactBubbles];
+		}
+
+		//Configure the controls whose state we only care about if we are showing this tab view item
+		BOOL showGroupBubbles = ![[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_HIDE_BUBBLE] boolValue];
+		[checkBox_showGroupBubbles setState:showGroupBubbles];
+		
+		[checkBox_outlineBubbles setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE] boolValue]];
+		[checkBox_drawContactBubblesWithGraadient setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_BUBBLE_GRADIENT] boolValue]];
+
+		[slider_outlineWidth setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE_WIDTH] intValue]];
+		
+	}else{
+		if (tabViewCurrentHasAdvancedContactBubbles){
+			[tabView_preferences removeTabViewItem:tabViewItem_advancedContactBubbles];
+		}		
+	}
+}
+
 @end
