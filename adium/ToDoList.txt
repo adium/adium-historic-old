@@ -46,6 +46,7 @@ Message Window:
 	+ Accept dragged items and do wonderful things on them, like if it is text append it in the input field or if it is a file send it to the contact.
         * Push/pop indicator could use 1-2 px extra spacing from the right & left since its nearly flush with the scrollbar 
 	+ Finish SMV prefs if we're going to keep using them on 10.2. If not we need to make webkit work on 10.2
+		[Dave]
 	+ Put a delay on typing events... time out when typing stops.
 	
 Contact List Display:
