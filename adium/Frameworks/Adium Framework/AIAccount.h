@@ -20,6 +20,8 @@
 
 #define GROUP_ACCOUNT_STATUS    	@"Account Status"
 
+#define NEW_ACCOUNT_DISPLAY_TEXT	AILocalizedString(@"<New Account>",nil)
+
 typedef enum {
     STATUS_NA = -1,
     STATUS_OFFLINE,
