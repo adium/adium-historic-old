@@ -31,7 +31,7 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Sound);
+    return(AIPref_ContactList_General);
 }
 - (NSString *)label{
     return(@"General Appearance");

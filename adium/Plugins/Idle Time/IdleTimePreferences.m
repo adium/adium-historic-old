@@ -34,7 +34,7 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Sound);
+    return(AIPref_Status_Idle);
 }
 - (NSString *)label{
     return(@"Idle Time");

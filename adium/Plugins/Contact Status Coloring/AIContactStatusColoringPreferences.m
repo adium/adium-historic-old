@@ -20,7 +20,7 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Sound);
+    return(AIPref_ContactList_Contacts);
 }
 - (NSString *)label{
     return(@"Status Coloring");
