@@ -150,6 +150,8 @@ static NSMenu       *bookmarkSets;
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
+    if([[(NSMenuItem *)menuItem representedObject] isKindOfClass:[SHMarkedHyperlink class]])
+        return YES;
     // here's how the basic menu update process works:
     //      1. the menuItem being validated must be the main "Bookmarks" menu item, else stop.
     //      2. we get the item array for the menu and enumerate it.
