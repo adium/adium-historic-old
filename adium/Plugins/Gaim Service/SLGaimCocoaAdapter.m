@@ -660,7 +660,7 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 		[NSString stringWithUTF8String:who],@"Source",
 		[NSNumber numberWithInt:flags],@"GaimMessageFlags",
 		[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
-	
+
 	[accountLookup(conv->account) mainPerformSelector:@selector(receivedMultiChatMessage:inChat:)
 										   withObject:messageDict
 										   withObject:chatLookupFromConv(conv)];
@@ -695,6 +695,7 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 
 static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user)
 {
+	NSLog(@"adiumGaimConvChatAddUser %s",user);
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
 		[accountLookup(conv->account) mainPerformSelector:@selector(addUser:toChat:)
 											   withObject:[NSString stringWithUTF8String:user]
@@ -715,7 +716,8 @@ static void adiumGaimConvChatRenameUser(GaimConversation *conv, const char *oldN
 
 static void adiumGaimConvChatRemoveUser(GaimConversation *conv, const char *user)
 {
-	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
+	NSLog(@"adiumGaimConvChatRemoveUser %s",user);
+ 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
 		[accountLookup(conv->account) mainPerformSelector:@selector(removeUser:fromChat:)
 											   withObject:[NSString stringWithUTF8String:user]
 											   withObject:chatLookupFromConv(conv)];
@@ -740,6 +742,7 @@ static void adiumGaimConvUpdateProgress(GaimConversation *conv, float percent)
 static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type)
 {
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
+//			case GAIM_CONV_UPDATE_CHATLEFT:
 		[accountLookup(conv->account) mainPerformSelector:@selector(updateForChat:type:)
 											withObject:chatLookupFromConv(conv)
 											   withObject:[NSNumber numberWithInt:type]];
@@ -2087,15 +2090,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 {
 	GaimConversation *conv = existingConvLookupFromChat(chat);
 	
-	[chatDict removeObjectForKey:[chat uniqueChatID]];
-	
 	if (conv){
-		AIChat *uiDataChat = conv->ui_data;
-		if (chat == uiDataChat){
-			[uiDataChat release];
-		}
-		conv->ui_data = nil;
-		
 		gaim_conversation_destroy(conv);
 	}
 }
