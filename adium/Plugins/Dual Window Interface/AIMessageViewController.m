@@ -34,6 +34,7 @@
 - (void)dealloc;
 - (void)textDidChange:(NSNotification *)notification;
 - (void)sizeAndArrangeSubviews;
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIMessageViewController
@@ -135,8 +136,6 @@
 
     //Config the outgoing text view
     [textView_outgoing setOwner:owner];
-    [textView_outgoing setSendOnEnter:[[[owner preferenceController] preferenceForKey:@"message_send_onEnter" group:PREF_GROUP_GENERAL object:handle] boolValue]];
-    [textView_outgoing setSendOnReturn:[[[owner preferenceController] preferenceForKey:@"message_send_onReturn" group:PREF_GROUP_GENERAL object:handle] boolValue]];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
     [[textView_outgoing window] makeFirstResponder:textView_outgoing];
     
@@ -149,13 +148,13 @@
 
     //Register for notifications
     [[owner notificationCenter] addObserver:self selector:@selector(sendMessage:) name:Interface_SendEnteredMessage object:handle];
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSViewFrameDidChangeNotification object:view_contents];
 
     //Put the initial content in the outgoing text view
     [textView_outgoing setAttributedString:inContent];
 
-    //Restore spellcheck state
-    [textView_outgoing setContinuousSpellCheckingEnabled:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SPELLING] objectForKey:KEY_MESSAGE_SPELL_CHECKING] boolValue]];
+    [self preferencesChanged:nil];
 
     return(self);
 }
@@ -166,6 +165,7 @@
     [[owner preferenceController] setPreference:[NSNumber numberWithBool:[textView_outgoing isContinuousSpellCheckingEnabled]] forKey:KEY_MESSAGE_SPELL_CHECKING group:PREF_GROUP_SPELLING];
     
     //remove notifications
+    [[owner notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     //nib
@@ -178,6 +178,17 @@
     [handle release]; handle = nil;
 
     [super dealloc];
+}
+
+//A preference did change
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    //Configure the message sending keys
+    [textView_outgoing setSendOnEnter:[[[owner preferenceController] preferenceForKey:@"Send On Enter" group:PREF_GROUP_GENERAL object:handle] boolValue]];
+    [textView_outgoing setSendOnReturn:[[[owner preferenceController] preferenceForKey:@"Send On Return" group:PREF_GROUP_GENERAL object:handle] boolValue]];
+
+    //Configure spellchecking
+    [textView_outgoing setContinuousSpellCheckingEnabled:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SPELLING] objectForKey:KEY_MESSAGE_SPELL_CHECKING] boolValue]];
 }
 
 //The entered text has changed

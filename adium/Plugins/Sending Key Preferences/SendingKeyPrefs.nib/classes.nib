@@ -1,0 +1,17 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {preferenceChanged = id; }; 
+            CLASS = AISendingKeyPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_sendOnEnter" = NSButton; 
+                "checkBox_sendOnReturn" = NSButton; 
+                "view_prefView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
