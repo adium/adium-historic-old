@@ -195,6 +195,8 @@
 				346C9D6A06004728000F5A8A,
 				6C5C3C2505F6532600490341,
 				6C5C3C2605F6532600490341,
+				4B04B0500600A661007060DF,
+				4B04B0520600A661007060DF,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -2234,7 +2236,7 @@
 			isa = PBXNativeTarget;
 			name = "Standard Message View";
 			productName = "Standard Message View";
-			productReference = 346C9C4906004517000F5A8A;
+			productReference = 4B04B0520600A661007060DF;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
 <plist version=\"1.0\">
@@ -2263,15 +2265,6 @@
 </plist>
 ";
 			productType = "com.apple.product-type.bundle";
-		};
-		346C9C4906004517000F5A8A = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			name = .bundle;
-			path = /Users/evands/adium/build/.bundle;
-			refType = 0;
-			sourceTree = "<absolute>";
 		};
 		346C9C4F06004525000F5A8A = {
 			buildActionMask = 2147483647;
@@ -2348,7 +2341,7 @@
 			isa = PBXNativeTarget;
 			name = "WebKit Message View";
 			productName = "WebKit Message View";
-			productReference = 346C9C5406004525000F5A8A;
+			productReference = 4B04B0500600A661007060DF;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
 <plist version=\"1.0\">
@@ -2377,15 +2370,6 @@
 </plist>
 ";
 			productType = "com.apple.product-type.bundle";
-		};
-		346C9C5406004525000F5A8A = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			name = .bundle;
-			path = /Users/evands/adium/build/.bundle;
-			refType = 0;
-			sourceTree = "<absolute>";
 		};
 		346C9C6906004536000F5A8A = {
 			fileRef = 34BD9DE105314751000AB133;
@@ -3582,14 +3566,6 @@
 				4BD6747906001D880049CAF7,
 				4BD6747D06001DB70049CAF7,
 				4BD6747F06001DB80049CAF7,
-				4BD6748406001DBF0049CAF7,
-				4BD6748606001DBF0049CAF7,
-				4BD6748A06001DC10049CAF7,
-				4BD6749106001DCF0049CAF7,
-				4BD6749306001DD00049CAF7,
-				4BD6749506001DD10049CAF7,
-				4BD6749706001DD10049CAF7,
-				4BD6749906001DD20049CAF7,
 				4BD6752F06001E0C0049CAF7,
 				4BD6753106001E0D0049CAF7,
 				4BD6753506001E0F0049CAF7,
@@ -3881,22 +3857,6 @@
 				4BD6748106001DB90049CAF7,
 				4BD6748206001DB90049CAF7,
 				4BD6748306001DBA0049CAF7,
-				4BD6748806001DC00049CAF7,
-				4BD6748906001DC10049CAF7,
-				4BD6748C06001DC20049CAF7,
-				4BD6748D06001DC30049CAF7,
-				4BD6748E06001DC30049CAF7,
-				4BD6748F06001DC40049CAF7,
-				4BD6749006001DCC0049CAF7,
-				4BD6749A06001DD30049CAF7,
-				4BD6749B06001DD30049CAF7,
-				4BD6749C06001DD30049CAF7,
-				4BD6749D06001DD40049CAF7,
-				4BD6749E06001DD40049CAF7,
-				4BD6749F06001DD50049CAF7,
-				4BD674A006001DD50049CAF7,
-				4BD674A106001DD60049CAF7,
-				4BD674A206001DD70049CAF7,
 				4BD6753306001E0E0049CAF7,
 				4BD6753406001E0E0049CAF7,
 				4BD6753906001E100049CAF7,
@@ -4215,13 +4175,6 @@
 				4BD6747A06001D880049CAF7,
 				4BD6747E06001DB70049CAF7,
 				4BD6748006001DB80049CAF7,
-				4BD6748506001DBF0049CAF7,
-				4BD6748706001DC00049CAF7,
-				4BD6748B06001DC20049CAF7,
-				4BD6749206001DD00049CAF7,
-				4BD6749406001DD00049CAF7,
-				4BD6749606001DD10049CAF7,
-				4BD6749806001DD20049CAF7,
 				4BD6753006001E0D0049CAF7,
 				4BD6753206001E0E0049CAF7,
 				4BD6753606001E0F0049CAF7,
@@ -7490,6 +7443,22 @@
 			path = "Plugins/Status Changed Messages/AIStatusChangedMessagesPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B04B0500600A661007060DF = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Webkit Message View.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B04B0520600A661007060DF = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Standard Message View.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		4B09D5C005D5265800BC00F0 = {
 			fileEncoding = 30;
@@ -13443,192 +13412,6 @@
 		};
 		4BD6748306001DBA0049CAF7 = {
 			fileRef = 4BA88A4A0524AE2900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6748406001DBF0049CAF7 = {
-			fileRef = F5793995033E75B001A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6748506001DBF0049CAF7 = {
-			fileRef = F5793996033E75B001A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6748606001DBF0049CAF7 = {
-			fileRef = 4BCDEB4203D4DC9700A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6748706001DC00049CAF7 = {
-			fileRef = 4BCDEB4103D4DC9700A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6748806001DC00049CAF7 = {
-			fileRef = 4BA3DADA0520CD4000A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6748906001DC10049CAF7 = {
-			fileRef = 4BA3DADB0520CD4000A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6748A06001DC10049CAF7 = {
-			fileRef = 4BE9200A03DED0E500A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6748B06001DC20049CAF7 = {
-			fileRef = 4BE9200B03DED0E500A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6748C06001DC20049CAF7 = {
-			fileRef = 4BE9200E03DED34C00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6748D06001DC30049CAF7 = {
-			fileRef = 4BE9201003DEE2FE00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6748E06001DC30049CAF7 = {
-			fileRef = C497516205BBAEB1009958A6;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6748F06001DC40049CAF7 = {
-			fileRef = 4B5AAA1F03E02EB900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6749006001DCC0049CAF7 = {
-			fileRef = B723DD1D05F85459003913CC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6749106001DCF0049CAF7 = {
-			fileRef = 4B539C4B05EFD6CD00E5921A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6749206001DD00049CAF7 = {
-			fileRef = 4B539C4C05EFD6CD00E5921A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6749306001DD00049CAF7 = {
-			fileRef = 4B539C5105EFD6FA00E5921A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6749406001DD00049CAF7 = {
-			fileRef = 4B539C5205EFD6FB00E5921A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6749506001DD10049CAF7 = {
-			fileRef = 34FB54DE05FEC73A00F0D7D7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6749606001DD10049CAF7 = {
-			fileRef = 34FB54DD05FEC73A00F0D7D7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6749706001DD10049CAF7 = {
-			fileRef = 346C9A2305FFE3DE000F5A8A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6749806001DD20049CAF7 = {
-			fileRef = 346C9A2405FFE3DF000F5A8A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6749906001DD20049CAF7 = {
-			fileRef = 346C9A4005FFE418000F5A8A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6749A06001DD30049CAF7 = {
-			fileRef = 4B539F3705EFE51500E5921A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6749B06001DD30049CAF7 = {
-			fileRef = 4BDEC39C05F1A47D00416138;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6749C06001DD30049CAF7 = {
-			fileRef = 4BDEC39D05F1A47D00416138;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6749D06001DD40049CAF7 = {
-			fileRef = 4BDEC39E05F1A47D00416138;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6749E06001DD40049CAF7 = {
-			fileRef = 4BDEC3A505F1A47D00416138;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6749F06001DD50049CAF7 = {
-			fileRef = 6C5C3DC105F655B500490341;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD674A006001DD50049CAF7 = {
-			fileRef = 4BDEC3AC05F1A47D00416138;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD674A106001DD60049CAF7 = {
-			fileRef = 4BDEC3AD05F1A47D00416138;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD674A206001DD70049CAF7 = {
-			fileRef = 4BDEC39B05F1A47D00416138;
 			isa = PBXBuildFile;
 			settings = {
 			};
