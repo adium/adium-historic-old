@@ -36,6 +36,7 @@
 
 - (BOOL)sendContentObject:(AIContentObject *)object
 {
+    NSLog(@"sendContentObject");
     if([[object type] isEqual:CONTENT_MESSAGE_TYPE])
     {
         NSString	*message;
@@ -53,19 +54,20 @@
         
         if(sbSocket)//there's already an SB session
         {
+            NSLog(@"open SB socket for the handle");
             return([self sendMessage:payload onSocket:sbSocket]);
-        
         }
         else // create a session
         {
+            NSLog(@"creating an SB session");
             [NSTimer scheduledTimerWithTimeInterval:1.0/TIMES_PER_SECOND
                 target:self
                 selector:@selector(startSBSessionHelper:)
                 userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:
                     @"Message", @"Type",
                     payload, @"Payload",
-                    handle, @"Handle",
-                    [NSNumber numberWithInt:0], @"Phase"]
+                    [handle UID], @"Handle",
+                    [NSNumber numberWithInt:0], @"Phase", nil]
                 repeats:YES];
             
             return YES;
@@ -77,9 +79,12 @@
 // Returns YES if the contact is available for receiving content of the specified type
 - (BOOL)availableForSendingContentType:(NSString *)inType toChat:(AIChat *)inChat
 {
-    if([[inChat object] isKindOfClass:[AIListContact class]])
+    NSLog(@"availableForSendingContentType");
+    if([[inChat object] respondsToSelector:@selector(object)])
     {
         AIHandle *handle = [(AIListContact *)[inChat object] handleForAccount:self];
+        
+        NSLog(@"OK to send content");
         
         return([[[handle statusDictionary] objectForKey:@"Online"] intValue] == 1
                 /*&& [inType isEqual:CONTENT_MESSAGE_TYPE]*/);
@@ -89,17 +94,20 @@
 
 - (BOOL)openChat:(AIChat *)inChat
 {
+    NSLog(@"openChat");
     if([[inChat object] isKindOfClass:[AIListContact class]])
     {
         AIHandle *handle = [(AIListContact *)[inChat object] handleForAccount:self];
+        
+        NSLog(@"Opening chat");
         
         [NSTimer scheduledTimerWithTimeInterval:1.0/TIMES_PER_SECOND
             target:self
             selector:@selector(startSBSessionHelper:)
             userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:
                 @"Empty", @"Type",
-                handle, @"Handle",
-                [NSNumber numberWithInt:0], @"Phase"]
+                [handle UID], @"Handle",
+                [NSNumber numberWithInt:0], @"Phase", nil]
             repeats:YES];
             
             return YES;
@@ -295,7 +303,7 @@
             case 2:
                 if ([socket sendData:[@"VER 0 MSNP7 MSNP6 MSNP5 MSNP4 CVR0\r\n"
                         dataUsingEncoding:NSUTF8StringEncoding]]){
-                    NSLog(@">>> %@", @"VER 0 MSNP7 MSNP6 MSNP5 MSNP4 CVR0");
+                    //NSLog(@">>> %@", @"VER 0 MSNP7 MSNP6 MSNP5 MSNP4 CVR0");
 
                     connectionPhase ++;
                 }
@@ -303,8 +311,8 @@
 
             case 3:
                 if ([socket getDataToNewline:&inData remove:YES]){
-                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes]
-                                                         length:[inData length]]);
+                    /*NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes]
+                                                         length:[inData length]]);*/
                         
                     connectionPhase ++;
                 }
@@ -312,7 +320,7 @@
                     
             case 4:
                 if ([socket sendData:[@"INF 1\r\n" dataUsingEncoding:NSUTF8StringEncoding]]){
-                    NSLog(@">>> %@", @"INF 1");
+                    //NSLog(@">>> %@", @"INF 1");
 
                         connectionPhase ++;
                 }
@@ -320,8 +328,8 @@
             
             case 5:
                 if ([socket getDataToNewline:&inData remove:YES]){
-                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes]
-                                                         length:[inData length]]);
+                    /*NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes]
+                                                         length:[inData length]]);*/
                                             
                     connectionPhase ++;
                 }
@@ -331,8 +339,8 @@
                 if ([socket sendData:[[NSString stringWithFormat:@"USR 2 MD5 I %s\r\n",
                     [screenName cString]] dataUsingEncoding:NSUTF8StringEncoding]]){
                     
-                    NSLog(@">>> %@",[NSString stringWithFormat:@"USR 2 MD5 I %s",
-                        [screenName cString]]);
+                    /*NSLog(@">>> %@",[NSString stringWithFormat:@"USR 2 MD5 I %s",
+                        [screenName cString]]);*/
                     connectionPhase ++;
                 }
                 break;
@@ -342,8 +350,8 @@
                 {	
                     // In this phase, we receive data concerning the next server to connect to, 
                     // and then we connect.
-                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes]
-                        length:[inData length]]);
+                    /*NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes]
+                        length:[inData length]]);*/
                     
                     NSArray *hostAndPort = [[[[NSString stringWithCString:[inData bytes]
                         length:[inData length]] 
@@ -363,7 +371,7 @@
                 if ([socket sendData:[@"VER 0 MSNP7 MSNP6 MSNP5 MSNP4 CVR0\r\n"
                         dataUsingEncoding:NSUTF8StringEncoding]])
                 {
-                    NSLog(@">>> %@", @"VER 0 MSNP7 MSNP6 MSNP5 MSNP4 CVR0");
+                    //NSLog(@">>> %@", @"VER 0 MSNP7 MSNP6 MSNP5 MSNP4 CVR0");
                     connectionPhase ++;
                 }
                 break;
@@ -371,8 +379,8 @@
             case 9:
                 if ([socket getDataToNewline:&inData remove:YES])
                 {
-                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes]
-                        length:[inData length]]);
+                    /*NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes]
+                        length:[inData length]]); */
                     connectionPhase ++;
                 }
                 break;
@@ -380,7 +388,7 @@
             case 10:
                 if ([socket sendData:[@"INF 1\r\n" dataUsingEncoding:NSUTF8StringEncoding]])
                 {
-                    NSLog(@">>> %@", @"INF 1");
+                    //NSLog(@">>> %@", @"INF 1");
                     connectionPhase ++;
                 }
                 break;
@@ -388,8 +396,8 @@
             case 11:
                 if ([socket getDataToNewline:&inData remove:YES])
                 {
-                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes]
-                        length:[inData length]]); 
+                    /*NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes]
+                        length:[inData length]]); */
                     
                     connectionPhase ++;
                 }
@@ -399,8 +407,8 @@
                 if ([socket sendData:[[NSString stringWithFormat:@"USR 2 MD5 I %s\r\n",
                     [screenName cString]] dataUsingEncoding:NSUTF8StringEncoding]])
                 {
-                    NSLog(@">>> %@",[NSString stringWithFormat:@"USR 2 MD5 I %s",
-                        [screenName cString]]);
+                    /*NSLog(@">>> %@",[NSString stringWithFormat:@"USR 2 MD5 I %s",
+                        [screenName cString]]);*/
                     connectionPhase ++;
                 }
                 break;
@@ -408,8 +416,8 @@
             case 13:
                 if ([socket getDataToNewline:&inData remove:YES])
                 {
-                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
-                        length:[inData length]]);
+                    /*NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]]);*/
                     
                     // Use the info passed by the server to produce a properly encrypted password
                     NSData *tempData = [[NSString stringWithFormat:@"%@%@",
@@ -426,7 +434,7 @@
                         [NSCharacterSet whitespaceCharacterSet]];
                     temp = [[temp componentsSeparatedByString:@" "] componentsJoinedByString:@""];
                     
-                    NSLog (@"Password encrypted");
+                    //NSLog (@"Password encrypted");
                     
                     [[timer userInfo] setObject:temp forKey:@"String"];
                     connectionPhase ++;
@@ -439,8 +447,8 @@
                 if ([socket sendData:[[NSString stringWithFormat:@"USR 3 MD5 S %@\r\n", temp]
                         dataUsingEncoding:NSUTF8StringEncoding]])
                 {
-                    NSLog (@"Password being sent");
-                    NSLog(@">>> %@",[NSString stringWithFormat:@"USR 3 MD5 S %@", temp]);
+                    //NSLog (@"Password being sent");
+                    //NSLog(@">>> %@",[NSString stringWithFormat:@"USR 3 MD5 S %@", temp]);
                     [[timer userInfo] setObject:@"" forKey:@"String"];
                     connectionPhase ++;
                 }
@@ -449,8 +457,8 @@
             }case 15:
                 if ([socket getDataToNewline:&inData remove:YES])
                 {
-                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] length:[inData length]]); 
-                    
+                    /*NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]]); */
                     connectionPhase ++;
                 }
                 break;
@@ -459,8 +467,8 @@
             case 16:
                 if ([socket getDataToNewline:&inData remove:YES])
                 {
-                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
-                        length:[inData length]]);
+                    /*NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]]);*/
                     NSArray *message = [[NSString stringWithCString:[inData bytes] 
                         length:[inData length]] 
                     componentsSeparatedByString:@" "];
@@ -468,7 +476,7 @@
                     //this is some kind of message from the server
                     if([[message objectAtIndex:0] isEqual:@"MSG"]) 
                     {
-                        NSLog(@"%d",[[message objectAtIndex:3] intValue]);
+                        //NSLog(@"%d",[[message objectAtIndex:3] intValue]);
                         [[timer userInfo] setObject:[message objectAtIndex:3] forKey:@"String"];
                         connectionPhase++;
                     }
@@ -479,8 +487,8 @@
                 if ([socket getData:&inData ofLength:
                     [[[timer userInfo] objectForKey:@"String"] intValue] remove:YES])
                 {
-                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
-                        length:[inData length]]);
+                    /*NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]]);*/
                     [[timer userInfo] setObject:@"" forKey:@"String"];
                     connectionPhase++;
                 }
@@ -490,7 +498,7 @@
                 //now we send out our SYN
                 if ([socket sendData:[@"SYN 4 0\r\n" dataUsingEncoding:NSUTF8StringEncoding]])
                 {
-                    NSLog(@">>> %@", @"SYN 4 0");
+                    //NSLog(@">>> %@", @"SYN 4 0");
                     connectionPhase++;
                 }
                 break;
@@ -498,8 +506,8 @@
             case 19:
                 if ([socket getDataToNewline:&inData remove:YES])
                 {
-                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
-                        length:[inData length]]);
+                    /*NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]]); */
                     NSArray *message = [[NSString stringWithCString:[inData bytes] 
                         length:[inData length]] componentsSeparatedByString:@" "];
                     
@@ -522,17 +530,17 @@
                             //this is how we know we're done. when we get the last message of the reverse list.
                             if([[message objectAtIndex:4] isEqual:[message objectAtIndex:5]])
                             {
-                                NSLog(@"done");
+                                //NSLog(@"done");
                                 connectionPhase++;
                             }
                         }
                     }
                     else if([[message objectAtIndex:0] isEqual:@"MSG"]) //this is some kind of message from the server
                     {
-                        NSLog(@"%d",[[message objectAtIndex:3] intValue]);
+                        //NSLog(@"%d",[[message objectAtIndex:3] intValue]);
                         while(![socket getData:&inData ofLength:[[message objectAtIndex:3] intValue] remove:YES]) {}
-                        NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
-                            length:[inData length]]);
+                        /*NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                            length:[inData length]]);*/
                     }
                 }
                 break;
@@ -540,7 +548,7 @@
             case 20:
                 if([socket sendData:[@"CHG 5 NLN\r\n" dataUsingEncoding:NSUTF8StringEncoding]])
                 {
-                    NSLog(@">>> %@", @"CHG 5 NLN");			
+                    //NSLog(@">>> %@", @"CHG 5 NLN");			
                     connectionPhase ++;
                 }
                 break;
@@ -549,15 +557,15 @@
                 if([socket sendData:[@"PNG\r\n" dataUsingEncoding:NSUTF8StringEncoding]])
                 {
                     //send a PNG so we know when we are done (when we get the QNG)
-                    NSLog(@">>> %@", @"PNG");
+                    //NSLog(@">>> %@", @"PNG");
                     connectionPhase ++;
                 }
                 break;
             case 22:
                 if([socket getDataToNewline:&inData remove:YES])
                 {
-                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
-                        length:[inData length]]);
+                    /*NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]]);*/
                     
                     if([[NSString stringWithCString:[inData bytes] length:[inData length]]
                         isEqual:@"QNG\r\n"])
@@ -576,10 +584,10 @@
                             setObject:[NSNumber numberWithInt:1]
                             forKey:@"Online"];
                         
-                        NSLog(@"%@",[[[message objectAtIndex:4] 
+                        /*NSLog(@"%@",[[[message objectAtIndex:4] 
                                 stringByTrimmingCharactersInSet:
                                     [NSCharacterSet characterSetWithCharactersInString:@"\r\n"]]
-                                        urlDecode]);
+                                        urlDecode]);*/
                         
                         [[theHandle statusDictionary]
                             setObject:[[[message objectAtIndex:4] 
@@ -605,7 +613,7 @@
     }
     else
     {
-        NSLog (@"Socket found to be invalid");
+        //NSLog (@"Socket found to be invalid");
         
         [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] 			forKey:@"Status" account:self];
 		
@@ -1057,7 +1065,7 @@
         selector:@selector(sendMessageHelper:)
         userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
             [packet dataUsingEncoding:NSUTF8StringEncoding], @"Packet",
-            Socket, @"Socket"]
+            Socket, @"Socket", nil]
         repeats:YES];
 
     return YES;
@@ -1099,11 +1107,12 @@
                 NSArray *message = [[NSString stringWithCString:[inData bytes] 
                                         length:[inData length]] componentsSeparatedByString:@" "];
                 
+                NSLog(@"%u", [self getTrid:NO]);
                 //is this command for us?
                 if([[message objectAtIndex:0] isEqual:@"XFR"]
-                    && [[message objectAtIndex:1] isEqual:[NSString stringWithFormat:@"%u", 
-                            [self getTrid:NO]]])
+                    && [[message objectAtIndex:1] doubleValue] == (double)[self getTrid:NO])
                 {
+                    NSLog(@"Fixed");
                     //it's ours, take it out of the buffer
                     [socket removeDataBytes:[inData length]];
                     
@@ -1115,7 +1124,7 @@
                     
                     //add it to the dict
                     [switchBoardDict setObject:sbSocket 
-                        forKey:[[timer userInfo] objectForKey:@"Handle"]];
+                        forKey:[handleDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]];
                         
                     //now, setup the command for the next phase
                     [[timer userInfo] 
@@ -1127,11 +1136,13 @@
                     //move on
                     [[timer userInfo] setObject:[NSNumber numberWithInt:2] forKey:@"Phase"];
                 }
+                NSLog(@"Not fixed");
             }
             break;
             
         case 2:
-            if([[switchBoardDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]
+            if([[switchBoardDict 
+                    objectForKey:[handleDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]]
                     sendData:[[[timer userInfo] objectForKey:@"IDString"]
                     dataUsingEncoding:NSUTF8StringEncoding]])
             {
@@ -1180,7 +1191,8 @@
             
         case 4:
             //send the thing out
-            if([[switchBoardDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]
+            if([[switchBoardDict 
+                    objectForKey:[handleDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]]
                     sendData:[[[timer userInfo] objectForKey:@"Ring-a-ding-ding"]
                     dataUsingEncoding:NSUTF8StringEncoding]])
             {
@@ -1195,7 +1207,8 @@
             break;
             
         case 5:
-            if([[switchBoardDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]
+            if([[switchBoardDict objectForKey:[handleDict 
+                    objectForKey:[[timer userInfo] objectForKey:@"Handle"]]]
                     getDataToNewline:&inData remove:YES])
             {
                 //uhoh! error!
@@ -1234,17 +1247,16 @@
 
 - (unsigned long)getTrid:(BOOL)increment
 {
-    static unsigned long lastTrid = 1;
+    static unsigned long lastTrid = 0; //0+1 = 1 :)
     
     if(increment)
     {
         if (lastTrid >= 4294967295UL)
             lastTrid = 1;
             
-        return lastTrid++;
+        lastTrid += 1;
     }
-    else
-        return lastTrid;
+    return lastTrid;
 }
 
 @end
