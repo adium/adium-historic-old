@@ -171,7 +171,7 @@
 	message = (NSString *)[[content message] string];
 	
         if(account && contact){
-//	    logMessage = [NSString stringWithFormat:@"(%@)%@:%@\n", dateString, [contact UID], message];
+	    logMessage = [NSString stringWithFormat:@"(%@)%@:%@\n", dateString, [contact UID], message];
 	}
 
     }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
