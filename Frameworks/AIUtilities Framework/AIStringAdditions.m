@@ -109,7 +109,7 @@
     if([self hasPrefix:BUNDLE_STRING]){
         return [[[[NSBundle mainBundle] bundlePath] stringByExpandingTildeInPath] stringByAppendingString:[self substringFromIndex:[BUNDLE_STRING length]]];
     }else{
-        return(self);
+        return [[self retain] autorelease];
     }
 }
 
@@ -121,7 +121,7 @@
     if([self hasPrefix:bundlePath]){
         return [BUNDLE_STRING stringByAppendingString:[self substringFromIndex:[bundlePath length]]];
     }else{
-        return(self);
+        return [[self retain] autorelease];
     }
 }
 
@@ -444,7 +444,7 @@
 
 - (NSString *)stringByUnescapingFromHTML
 {
-	if([self length] == 0) return self; //avoids various RangeExceptions.
+	if([self length] == 0) return [[self retain] autorelease]; //avoids various RangeExceptions.
 	
 	static NSString *ampersand = @"&", *semicolon = @";";
 	
