@@ -23,13 +23,13 @@
 
 @class AIStatusCirclesPreferences;
 
-@interface AIStatusCirclesPlugin : AIPlugin </*AIFlashObserver, */AIListObjectObserver> {
-    AIStatusCirclesPreferences *preferences;
-
-    BOOL		displayStatusCircle;
-    BOOL		displayStatusCircleOnLeft;
-    BOOL		displayIdleTime;
-    NSColor		*idleStringColor;
+@interface AIStatusCirclesPlugin : AIPlugin /*<AIFlashObserver, AIListObjectObserver>*/ {
+//    AIStatusCirclesPreferences *preferences;
+//
+//    BOOL		displayStatusCircle;
+//    BOOL		displayStatusCircleOnLeft;
+//    BOOL		displayIdleTime;
+//    NSColor		*idleStringColor;
 }
 
 @end
