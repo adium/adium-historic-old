@@ -34,7 +34,7 @@
     //Tracking dictionary for asynchronous image loads
     trackingDict = [[NSMutableDictionary alloc] init];
     
-    sharedAddressBook = [[ABAddressBook sharedAddressBook] retain];
+    //sharedAddressBook = [[ABAddressBook sharedAddressBook] retain];
 
     [self preferencesChanged:nil];
 
@@ -45,7 +45,6 @@
     //Register ourself as a handle observer
     [[adium contactController] registerListObjectObserver:self];
 
-    NSLog(@"ABIntegration: installPlugin done");
 }
 
 - (void)uninstallPlugin
@@ -55,7 +54,7 @@
     
     [propertyDict release];
     [trackingDict release];
-    [sharedAddressBook release];
+//    [sharedAddressBook release];
 }
 
 //Called as contacts are created, load their address book information
@@ -80,11 +79,12 @@
                 if (displayFormat != None) {
                     NSString *firstName = [person valueForProperty:kABFirstNameProperty];
                     NSString *lastName = [person valueForProperty:kABLastNameProperty];
-                    NSString *nickName = [person valueForProperty:kABNicknameProperty];
+                    NSString *nickName;
                     NSString *displayName = nil;
-                    if (useNickName && nickName) {
+                    
+                    if (useNickName && (nickName = [person valueForProperty:kABNicknameProperty])) {
                         displayName = nickName;
-                    } else if (!lastName || displayFormat == First) {  //If no last name is available, use the first name
+                    } else if (!lastName || (displayFormat == First)) {  //If no last name is available, use the first name
                         displayName = firstName;
                     } else if (!firstName) {                    //If no first name is available, use the last name
                         displayName = lastName;
@@ -167,8 +167,6 @@
 - (void)consumeImageData:(NSData *)inData forTag:(int)tag
 {
     if (inData) {
-        NSImage *image= [[[NSImage alloc] initWithData:inData] autorelease];
-        
         //Check if we retrieved data from the 'me' address book card
         if (tag == meTag) {
             NSLog(@"ABIntegration: myImageData found.");
@@ -176,6 +174,7 @@
             meTag = -1;
         }else{
             //Apply the image to the appropriate listObject
+            NSImage                 *image= [[[NSImage alloc] initWithData:inData] autorelease];
             NSNumber                *tagNumber = [NSNumber numberWithInt:tag];
             
             //Get the object from our tracking dictionary
@@ -201,11 +200,9 @@
 {
     //Begin loading image data for the "me" address book entry, if one exists
     ABPerson *me;
-    NSLog(@"ABIntegration: updateSelf me? %i",(me != nil));
-    if (me = [sharedAddressBook me]) {
+    if (me = [[ABAddressBook sharedAddressBook] me]) {
         meTag = [me beginLoadingImageDataForClient:self];
     }
-    NSLog(@"ABIntegration: updateSelf done");
 }
 
 - (NSArray *)searchForObject:(AIListObject *)inObject
@@ -239,7 +236,7 @@
                                                                      key:nil 
                                                                    value:name 
                                                               comparison:kABEqualCaseInsensitive];
-    return [sharedAddressBook recordsMatchingSearchElement:searchElement];
+    return [[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElement];
 }
 
 @end
