@@ -428,6 +428,46 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		078DF8AE07C2948200831ABF = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIWiredData.h;
+			path = "Frameworks/AIUtilities Framework/AIWiredData.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		078DF8AF07C2948200831ABF = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIWiredData.m;
+			path = "Frameworks/AIUtilities Framework/AIWiredData.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		078DF8B007C2948200831ABF = {
+			fileRef = 078DF8AE07C2948200831ABF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		078DF8B107C2948200831ABF = {
+			fileRef = 078DF8AF07C2948200831ABF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		078DF8B907C2948B00831ABF = {
+			children = (
+				078DF8AE07C2948200831ABF,
+				078DF8AF07C2948200831ABF,
+			);
+			isa = PBXGroup;
+			name = "Data object that uses wired memory";
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		079C11390782FB500048E350 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -5254,6 +5294,7 @@
 				4BD1F2DB06D26A2E00B3975E,
 				4BD1F2AE06D2686200B3975E,
 				4BD1F36506D26FF800B3975E,
+				078DF8B907C2948B00831ABF,
 				4BD1F41306D2828000B3975E,
 				4BD1F41606D2828700B3975E,
 				4BD1F2AB06D2683300B3975E,
@@ -5916,6 +5957,7 @@
 				4B84A63307B70A5000C2941D,
 				4B5CBF7707BC1887007E4075,
 				07C52D4707BD2F97006BE37C,
+				078DF8B007C2948200831ABF,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6080,6 +6122,7 @@
 				3433564D0793699400C84B15,
 				4B84A63407B70A5000C2941D,
 				07C52D4807BD2F97006BE37C,
+				078DF8B107C2948200831ABF,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
