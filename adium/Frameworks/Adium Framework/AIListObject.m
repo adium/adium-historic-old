@@ -500,6 +500,62 @@ DeclareString(FormattedUID);
     return([containedObjects count]);
 }
 
+// Return an array of all objects. Defaults to just ourself.
+- (NSArray *)listContacts
+{
+	return [NSArray arrayWithObject:self];
+}
+	
+
+// Return a dictionary whose keys are serviceID's
+// and whose objects are arrays of contained contacts with those serviceID's
+- (NSDictionary *)dictionaryOfServicesAndListContacts
+{
+	NSMutableDictionary *contacts = [NSMutableDictionary dictionary];
+	AIListObject		*current;
+	NSString			*service;
+	NSMutableArray		*contactList;
+	int i;
+	NSArray				*listContacts = [self listContacts];
+	
+	for( i = 0; i < [listContacts count]; i++ ) {
+		current = [listContacts objectAtIndex:i];
+		service = [current serviceID];
+		
+		// Is there already an entry for this service?
+		if( contactList = [contacts objectForKey:service] ) {
+			[contactList addObject:current];
+			[contacts setObject:contactList forKey:service];
+		} else {
+			NSMutableArray *tempList = [NSMutableArray arrayWithObject:current];
+			[contacts setObject:tempList forKey:service];
+		}
+	}
+	NSLog(@"#### dictionaryOfServicesAndListContacts: %@",contacts);
+	
+	return contacts;
+}
+
+- (NSArray *)arrayOfServices
+{
+	NSMutableArray		*services = [NSMutableArray array];
+	AIListObject		*current;
+	NSString			*service;
+	NSMutableArray		*contactList;
+	int i;
+	
+	for( i = 0; i < [containedObjects count]; i++ ) {
+		service = [[containedObjects objectAtIndex:i] serviceID];
+		
+		// Is there already an entry for this service?
+		if( [services indexOfObject:service] == NSNotFound ) {
+			[services addObject:service];
+		}
+	}
+	
+	return services;
+}
+
 //Test for the presence of an object in our group
 - (BOOL)containsObject:(AIListObject *)inObject
 {

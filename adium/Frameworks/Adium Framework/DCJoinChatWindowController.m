@@ -42,11 +42,12 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 - (IBAction)joinChat:(id)sender
 {
 	
+	// If there is a controller, it handles all of the join-chat work
 	if( controller ) {
 		[controller joinChatWithAccount:[[popUp_service selectedItem] representedObject]];
+		[controller release];
 	}
 	
-	[controller release];
 	[DCJoinChatWindowController closeSharedInstance];
 
 }
@@ -73,7 +74,6 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 		currentView = [controller view];
 		frame = [currentView frame];
 		diff = (NSHeight(existingViewFrame) - NSHeight(frame));
-		[view_customView addSubview:currentView];
 		frame.origin=[view_customView frame].origin;
 		[view_customView setFrame:frame];
 	} else {
@@ -111,6 +111,10 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 	[button_joinChat setNeedsDisplay:YES];
 	[button_cancel setNeedsDisplay:YES];
 
+	if( controller ) {
+		[view_customView addSubview:currentView];
+	}
+	
 	[[self window] display];
 }
 

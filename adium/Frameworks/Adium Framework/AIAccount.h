@@ -80,6 +80,7 @@ typedef enum {
 	-(NSArray *)listObjectsOnPrivacyList:(PRIVACY_TYPE)type;
 @end
 
+
 /*!
  * @class AIAccount
  * @abstract An account of ours (one we connect to and use to talk to handles)

@@ -221,6 +221,11 @@
 	return (returnContact);
 }
 
+- (NSArray *)listContacts
+{
+	return [self containedObjects];
+}
+
 - (BOOL)containsOnlyOneUniqueContact
 {
 	return containsOnlyOneUniqueContact;
