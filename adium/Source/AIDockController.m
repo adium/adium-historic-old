@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIDockController.m,v 1.49 2004/02/22 09:18:43 evands Exp $
+// $Id: AIDockController.m,v 1.50 2004/04/15 17:12:32 evands Exp $
 
 #import "AIDockController.h"
 
@@ -101,19 +101,19 @@
             }
     
 #ifdef MAC_OS_X_VERSION_10_0
-            //Change the Adium application icon to this new icon
-            if(notification != nil){
+            //Write the icon to the Adium application bundle so finder will see it
+//            if(notification != nil){
+#warning Evan: This is only necessary when the Adium app gets upgraded or notification != nil.  Perhaps Adium should know the version it had when last launched and be able to perform upgrade operations.
                 NSString		*icnsPath = [[NSBundle mainBundle] pathForResource:@"Adium" ofType:@"icns"];
                 IconFamily		*iconFamily;
-                NSImage		*image;
-    
+                NSImage			*image;
                 image = [[[availableIconStateDict objectForKey:@"State"] objectForKey:@"Base"] image];
                 if(image){
                     //Create and save a new .icns file for the base icon state image
                     iconFamily = [IconFamily iconFamilyWithThumbnailsOfImage:image usingImageInterpolation:NSImageInterpolationLow];
                     [iconFamily writeToFile:icnsPath];
-                }            
-            }
+                }
+//            }
 #endif
             //Recomposite the icon
             [self _setNeedsDisplay];
