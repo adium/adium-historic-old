@@ -31,6 +31,7 @@
     IBOutlet	NSColorWell		*colorWell_idle;
     IBOutlet	NSColorWell		*colorWell_idleAway;
     IBOutlet	NSColorWell		*colorWell_openTab;
+    IBOutlet	NSColorWell		*colorWell_typing;
     IBOutlet	NSColorWell		*colorWell_unviewedContent;
     IBOutlet	NSColorWell		*colorWell_warning;
 
@@ -41,6 +42,7 @@
     IBOutlet	NSColorWell		*colorWell_idleInverted;
     IBOutlet	NSColorWell		*colorWell_idleAwayInverted;
     IBOutlet	NSColorWell		*colorWell_openTabInverted;
+    IBOutlet	NSColorWell		*colorWell_typingInverted;
     IBOutlet	NSColorWell		*colorWell_unviewedContentInverted;
     IBOutlet	NSColorWell		*colorWell_warningInverted;
 }

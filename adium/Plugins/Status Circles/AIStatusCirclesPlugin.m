@@ -33,13 +33,14 @@
     //init
     displayIdleTime = NO;
 
-    signedOffColor = nil;
-    signedOnColor = nil;
-    onlineColor = nil;
     awayColor = nil;
     idleColor = nil;
     idleAwayColor = nil;
+    onlineColor = nil;
     openTabColor = nil;
+    typingColor = nil;
+    signedOffColor = nil;
+    signedOnColor = nil;
     unviewedContentColor = nil;
     warningColor = nil;
 
@@ -72,20 +73,21 @@
     NSArray		*modifiedAttributes = nil;
     
     if(	inModifiedKeys == nil || 
-        [inModifiedKeys containsObject:@"Away"] || 
-        [inModifiedKeys containsObject:@"Idle"] || 
-        [inModifiedKeys containsObject:@"Warning"] ||
+        [inModifiedKeys containsObject:@"Away"] ||
+        [inModifiedKeys containsObject:@"Idle"] ||
         [inModifiedKeys containsObject:@"Online"] ||
-        [inModifiedKeys containsObject:@"UnviewedContent"] ||
-        [inModifiedKeys containsObject:@"UnrespondedContent"] ||
+        [inModifiedKeys containsObject:@"Open Tab"] || 
         [inModifiedKeys containsObject:@"Signed On"] ||
         [inModifiedKeys containsObject:@"Signed Off"] ||
-        [inModifiedKeys containsObject:@"Typing"]){
+        [inModifiedKeys containsObject:@"Typing"] ||
+        [inModifiedKeys containsObject:@"UnviewedContent"] ||
+        [inModifiedKeys containsObject:@"UnrespondedContent"] ||
+        [inModifiedKeys containsObject:@"Warning"]){
 
         AIMutableOwnerArray	*iconArray, *tabIconArray;
         AIStatusCircle		*statusCircle;
         NSColor			*circleColor;
-        int			typing, away, warning, online, unviewedContent, unrespondedContent, signedOn, signedOff;
+        int			away, online, openTab, signedOn, signedOff, typing, unrespondedContent, unviewedContent, warning;
         double			idle;
         
         //Get the status circle
@@ -101,25 +103,28 @@
         }
 
         //Get all the values
-        typing = [[inContact statusArrayForKey:@"Typing"] greatestIntegerValue];
         away = [[inContact statusArrayForKey:@"Away"] greatestIntegerValue];
         idle = [[inContact statusArrayForKey:@"Idle"] greatestDoubleValue];
-        warning = [[inContact statusArrayForKey:@"Warning"] greatestIntegerValue];
         online = [[inContact statusArrayForKey:@"Online"] greatestIntegerValue];
-        unviewedContent = [[inContact statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
-        unrespondedContent = [[inContact statusArrayForKey:@"UnrespondedContent"] greatestIntegerValue];
+        openTab = [[inContact statusArrayForKey:@"Open Tab"] greatestIntegerValue];
         signedOn = [[inContact statusArrayForKey:@"Signed On"] greatestIntegerValue];
         signedOff = [[inContact statusArrayForKey:@"Signed Off"] greatestIntegerValue];
+        typing = [[inContact statusArrayForKey:@"Typing"] greatestIntegerValue];
+        unviewedContent = [[inContact statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
+        unrespondedContent = [[inContact statusArrayForKey:@"UnrespondedContent"] greatestIntegerValue];
+        warning = [[inContact statusArrayForKey:@"Warning"] greatestIntegerValue];
         
         //Set the circle color
         if(signedOff){
 	    circleColor = signedOffColor;
 	}else if(!online){
 	    circleColor = signedOffColor;
-        }else if(typing){
-            circleColor = typingColor;
         }else if(signedOn){
 	    circleColor = signedOnColor;
+        }else if(typing){
+            circleColor = typingColor;
+        }else if(openTab){
+            circleColor = openTabColor;
         }else if(idle != 0 && away){
 	    circleColor = idleAwayColor;
         }else if(idle != 0){
@@ -242,14 +247,14 @@
 	//Cache the preference values
 	displayIdleTime = [[prefDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue];
 
-        typingColor = [[[prefDict objectForKey:KEY_TYPING_COLOR] representedColor] retain];
-	signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
-	signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
-	onlineColor = [[[prefDict objectForKey:KEY_ONLINE_COLOR] representedColor] retain];
 	awayColor = [[[prefDict objectForKey:KEY_AWAY_COLOR] representedColor] retain];
 	idleColor = [[[prefDict objectForKey:KEY_IDLE_COLOR] representedColor] retain];
 	idleAwayColor = [[[prefDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor] retain];
+	onlineColor = [[[prefDict objectForKey:KEY_ONLINE_COLOR] representedColor] retain];
 	openTabColor = [[[prefDict objectForKey:KEY_OPEN_TAB_COLOR] representedColor] retain];
+	signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
+	signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
+        typingColor = [[[prefDict objectForKey:KEY_TYPING_COLOR] representedColor] retain];
 	unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
         warningColor = [[[prefDict objectForKey:KEY_WARNING_COLOR] representedColor] retain];
 

@@ -26,13 +26,14 @@
 
     IBOutlet	NSButton		*checkBox_displayIdle;
 
-    IBOutlet	NSColorWell		*colorWell_signedOff;
-    IBOutlet	NSColorWell		*colorWell_signedOn;
-    IBOutlet	NSColorWell		*colorWell_online;
     IBOutlet	NSColorWell		*colorWell_away;
     IBOutlet	NSColorWell		*colorWell_idle;
     IBOutlet	NSColorWell		*colorWell_idleAway;
+    IBOutlet	NSColorWell		*colorWell_online;
     IBOutlet	NSColorWell		*colorWell_openTab;
+    IBOutlet	NSColorWell		*colorWell_signedOff;
+    IBOutlet	NSColorWell		*colorWell_signedOn;
+    IBOutlet	NSColorWell		*colorWell_typing;
     IBOutlet	NSColorWell		*colorWell_unviewedContent;
     IBOutlet	NSColorWell		*colorWell_warning;
 }

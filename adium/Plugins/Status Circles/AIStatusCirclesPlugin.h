@@ -29,6 +29,7 @@
 #define KEY_OPEN_TAB_COLOR		@"Open Tab Color"
 #define KEY_SIGNED_OFF_COLOR		@"Signed Off Color"
 #define KEY_SIGNED_ON_COLOR		@"Signed On Color"
+#define KEY_TYPING_COLOR		@"Typing Color"
 #define KEY_UNVIEWED_COLOR		@"Unviewed Content Color"
 #define KEY_WARNING_COLOR		@"Warning Color"
 
@@ -42,14 +43,14 @@
 
     BOOL		displayIdleTime;
 
-    NSColor		*typingColor;
-    NSColor		*signedOffColor;
-    NSColor		*signedOnColor;
-    NSColor		*onlineColor;
     NSColor		*awayColor;
     NSColor		*idleColor;
     NSColor		*idleAwayColor;
+    NSColor		*onlineColor;
     NSColor		*openTabColor;
+    NSColor		*signedOffColor;
+    NSColor		*signedOnColor;
+    NSColor		*typingColor;
     NSColor		*unviewedContentColor;
     NSColor		*warningColor;
 }

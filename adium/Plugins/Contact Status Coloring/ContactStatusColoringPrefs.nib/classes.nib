@@ -19,6 +19,8 @@
                 "colorWell_signedOffInverted" = NSColorWell; 
                 "colorWell_signedOn" = NSColorWell; 
                 "colorWell_signedOnInverted" = NSColorWell; 
+                "colorWell_typing" = NSColorWell; 
+                "colorWell_typingInverted" = NSColorWell; 
                 "colorWell_unviewedContent" = NSColorWell; 
                 "colorWell_unviewedContentInverted" = NSColorWell; 
                 "colorWell_warning" = NSColorWell; 
