@@ -81,21 +81,6 @@ typedef enum {
 	[popUp_serviceIcons setMenu:[self _serviceIconsMenu]];
 	[popUp_serviceIcons selectItemWithTitle:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]];
 
-	//Emoticons
-	[popUp_emoticons setMenu:[self _emoticonPackMenu]];
-	{
-		NSArray	*activeEmoticonPacks = [[adium emoticonController] activeEmoticonPacks];
-		int		numActivePacks = [activeEmoticonPacks count];
-		
-		if(numActivePacks == 0){
-			[popUp_emoticons compatibleSelectItemWithTag:AIEmoticonMenuNone];
-		}else if(numActivePacks > 1){
-			[popUp_emoticons compatibleSelectItemWithTag:AIEmoticonMenuMultiple];
-		}else{
-			[popUp_emoticons selectItemWithRepresentedObject:[activeEmoticonPacks objectAtIndex:0]];
-		}
-	}
-	
 	//Dock icons
 	[popUp_dockIcon setMenu:[self _dockIconMenu]];
 	[popUp_dockIcon selectItemWithTitle:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
@@ -140,6 +125,30 @@ typedef enum {
 	}
 	
 	[self _updateSliderValues];
+	
+	//This will set up the emoticon pack menu
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];
+}
+
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object
+					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	if([group isEqualToString:PREF_GROUP_EMOTICONS]){
+		//Emoticons
+		[popUp_emoticons setMenu:[self _emoticonPackMenu]];
+		{
+			NSArray	*activeEmoticonPacks = [[adium emoticonController] activeEmoticonPacks];
+			int		numActivePacks = [activeEmoticonPacks count];
+			
+			if(numActivePacks == 0){
+				[popUp_emoticons compatibleSelectItemWithTag:AIEmoticonMenuNone];
+			}else if(numActivePacks > 1){
+				[popUp_emoticons compatibleSelectItemWithTag:AIEmoticonMenuMultiple];
+			}else{
+				[popUp_emoticons selectItemWithRepresentedObject:[activeEmoticonPacks objectAtIndex:0]];
+			}
+		}
+	}
 }
 
 /*!
@@ -209,15 +218,20 @@ typedef enum {
 			//Disable all active emoticons
 			NSArray			*activePacks = [[[[adium emoticonController] activeEmoticonPacks] mutableCopy] autorelease];
 			NSEnumerator	*enumerator = [activePacks objectEnumerator];
-			AIEmoticonPack	*pack;
+			AIEmoticonPack	*pack, *selectedPack;
 			
+			selectedPack = [[sender selectedItem] representedObject];
+			
+			[[adium preferenceController] delayPreferenceChangedNotifications:YES];
+
 			while(pack = [enumerator nextObject]){
 				[[adium emoticonController] setEmoticonPack:pack enabled:NO];
 			}
 			
 			//Enable the selected pack
-			pack = [[sender selectedItem] representedObject];
-			if(pack) [[adium emoticonController] setEmoticonPack:pack enabled:YES];
+			if(selectedPack) [[adium emoticonController] setEmoticonPack:selectedPack enabled:YES];
+
+			[[adium preferenceController] delayPreferenceChangedNotifications:NO];
 		}
 	}
 }
@@ -253,7 +267,7 @@ typedef enum {
 	NSMenuItem		*menuItem;
 		
 	//Add the "No Emoticons" option
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@"None"
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"None",nil)
 																	 target:nil
 																	 action:nil
 															  keyEquivalent:@""] autorelease];
@@ -263,7 +277,7 @@ typedef enum {
 	
 	//Add the "Multiple packs selected" option
 	if([[[adium emoticonController] activeEmoticonPacks] count] > 1){
-		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@"Multile Packs Selected"
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Multiple Packs Selected",nil)
 																		 target:nil
 																		 action:nil
 																  keyEquivalent:@""] autorelease];
