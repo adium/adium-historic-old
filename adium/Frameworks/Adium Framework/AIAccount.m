@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.19 2003/12/24 01:30:18 adamiser Exp $
+// $Id: AIAccount.m,v 1.20 2003/12/24 15:17:19 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -54,7 +54,7 @@
 {
     [[adium notificationCenter] removeObserver:self];
     [service release];
-    [userIcon release]; userIcon = nil;
+//    [userIcon release]; userIcon = nil;
     
     [super dealloc];
 }
@@ -101,6 +101,50 @@
     return([[self statusArrayForKey:key] objectWithOwner:self]);
 }
 
+//
+- (void)updateStatusForKey:(NSString *)key
+{
+	BOOL    areOnline = [[self statusObjectForKey:@"Online"] boolValue];
+	
+    //Online status changed, call connect or disconnect as appropriate
+    if([key compare:@"Online"] == 0){
+        if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue] && !areOnline){
+			//Retrieve the user's password and then call connect
+			[[adium accountController] passwordForAccount:self 
+										  notifyingTarget:self
+												 selector:@selector(passwordReturnedForConnect:)];
+			
+        }else if(areOnline){
+			//Disconnect
+			[self disconnect];
+			
+        }
+    }
+}
+
+//Callback after the user enters their password for connecting
+- (void)passwordReturnedForConnect:(NSString *)inPassword
+{
+	NSLog(@"passwordReturnedForConnect:%@",inPassword);
+	if(inPassword && [inPassword length] != 0){
+        //Save the new password
+		if(password != inPassword){
+            [password release]; password = [inPassword copy];
+        }
+		
+		//Tell the account to connect
+		[self connect];
+	}
+}
+
+
+//
+
+
+
+
+
+
 //Return the account-specific user icon, or the default user icon from the account controlelr if none exists (thee default user icon returns nil if none is set)
 //- (NSImage *)userIcon {
 //    if (userIcon)
@@ -116,8 +160,9 @@
 
 //Functions for subclasses to override
 - (void)initAccount{};
+- (void)connect{};
+- (void)disconnect{};
 - (NSView *)accountView{return(nil);};
-- (void)updateStatusForKey:(NSString *)key{};
 - (NSArray *)supportedPropertyKeys{return([NSArray array]);}
 
 @end

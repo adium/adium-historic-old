@@ -22,7 +22,6 @@
     AISocket 		*socket;		// The connection socket
     int			connectionPhase;	// Offline/Connecting/Online/Disconnecting
 
-    NSString		*password;		// Current signed on password
     BOOL		connectedWithICQ;
 
     NSMutableArray	*outQue;		// Que of outgoing packets
