@@ -11,6 +11,7 @@
 @interface AIBrowser : NSView {
 	NSMutableArray	*columnArray;
 	id				dataSource;
+	BOOL			ignoreSelectionChanges; //Temporarily ignore selection changes
 }
 
 - (void)setDataSource:(id)inDataSource;

@@ -42,6 +42,7 @@
 
 - (void)_init
 {		
+	ignoreSelectionChanges = NO;
 	dataSource = nil;
 	columnArray = [[NSMutableArray alloc] init];
 	
@@ -159,8 +160,9 @@
 		NSNumber		*rowNumber;
 		
 		[[column tableView] reloadData];
-
+		
 		//Reselect rows
+		ignoreSelectionChanges = YES; //Below sends out selection changed notifications, we want to ignore them
 		[[column tableView] deselectAll:nil];
 		enumerator = [selectedRows objectEnumerator];
 		while(rowNumber = [enumerator nextObject]){
@@ -169,7 +171,9 @@
 				[[column tableView] selectRow:row byExtendingSelection:YES];
 			}
 		}
-}
+		ignoreSelectionChanges = NO;
+
+	}
 }
 
 //returns the rightmost selected item
@@ -215,28 +219,30 @@
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
-	NSTableView		*table = [notification object];
-	int				columnIndex;
-	id 				selectedItem = nil;
+	if(!ignoreSelectionChanges){
+		NSTableView		*table = [notification object];
+		int				columnIndex;
+		id 				selectedItem = nil;
 		
-	//Get this column's index and the selected item
-	columnIndex = [columnArray indexOfObject:[self columnForTableView:table]];
-	if(columnIndex == NSNotFound){
-		columnIndex = 0;
-	}else{
-		columnIndex++;
-	}
-	selectedItem = [self selectedItemInColumn:[self columnForTableView:table]];
-
-	//Close down all table views after this one
-	while(columnIndex < [columnArray count]){
-		[self removeLastColumn];
-	}
-	
-	//Add table view for the selected item
-	if(selectedItem && [dataSource browserView:self isItemExpandable:selectedItem]){
-		[self addColumn:[self newColumnForObject:selectedItem]];
-	}
+		//Get this column's index and the selected item
+		columnIndex = [columnArray indexOfObject:[self columnForTableView:table]];
+		if(columnIndex == NSNotFound){
+			columnIndex = 0;
+		}else{
+			columnIndex++;
+		}
+		selectedItem = [self selectedItemInColumn:[self columnForTableView:table]];
+		
+		//Close down all table views after this one
+		while(columnIndex < [columnArray count]){
+			[self removeLastColumn];
+		}
+		
+		//Add table view for the selected item
+		if(selectedItem && [dataSource browserView:self isItemExpandable:selectedItem]){
+			[self addColumn:[self newColumnForObject:selectedItem]];
+		}
+	}	
 }
 
 //Returns nil if there is no selection or multiple selection
