@@ -22,4 +22,6 @@
 - (void)closeController;
 - (void)finishIniting;
 - (void)saveAccounts;
+- (void)disconnectAllAccounts;
+
 @end
