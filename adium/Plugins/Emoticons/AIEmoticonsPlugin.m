@@ -414,6 +414,7 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context)
 
     //Setup
     [emoticons	removeAllObjects];
+    [indexedEmoticons	removeAllObjects];
     emoticonPackArray = [[NSMutableArray alloc] init];
 
     [self allEmoticonPacks:emoticonPackArray];
