@@ -7914,6 +7914,7 @@
 				34F2E81107C2CD5E007EAAAB,
 				34F2E81B07C2CD6C007EAAAB,
 				34F2E83A07C2CDBE007EAAAB,
+				34EF54A407CE8EC300A685F1,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11383,6 +11384,12 @@
 		};
 		34EF54A207CE8E4700A685F1 = {
 			fileRef = 34EF54A107CE8E4700A685F1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34EF54A407CE8EC300A685F1 = {
+			fileRef = 34D8344C07CBE6E2006466F2;
 			isa = PBXBuildFile;
 			settings = {
 			};
