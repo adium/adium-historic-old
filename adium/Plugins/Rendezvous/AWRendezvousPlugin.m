@@ -29,11 +29,14 @@
 
 - (void)installPlugin
 {
+	NSImage *image = [NSImage imageNamed:@"rendezvous" forClass:[self class]];
+	NSImage *menuImage = [NSImage imageNamed:@"rendezvous-menu" forClass:[self class]];
+	
     //Create our handle service type
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:[self identifier]
                                                       description:[self description]
-                                                            image:nil
-														menuImage:nil
+                                                            image:image
+														menuImage:menuImage
                                                     caseSensitive:NO
                                                 allowedCharacters:[[NSCharacterSet illegalCharacterSet] invertedSet]
 												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
