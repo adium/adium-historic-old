@@ -29,8 +29,6 @@ DeclareString(caminoDictURLKey)
 DeclareString(bookmarkDictTitle)
 DeclareString(bookmarkDictContent)
 
-static NSArray *emptyArray;
-
 + (id)newInstanceOfImporter
 {
     return [[[self alloc] init] autorelease];
