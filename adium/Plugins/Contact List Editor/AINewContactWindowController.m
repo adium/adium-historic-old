@@ -23,6 +23,7 @@
 - (void)_buildGroupMenu:(NSMenu *)menu forGroup:(AIListGroup *)group level:(int)level;
 - (void)validateEnteredName;
 - (void)updateAccountList;
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem;
 @end
 
 @implementation AINewContactWindowController
@@ -51,7 +52,6 @@
 {
     [super initWithWindowNibName:windowNibName];
 	accounts = nil;
-	addToAccounts = [[NSMutableArray alloc] init];
 	
     return(self);
 }
@@ -60,7 +60,6 @@
 - (void)dealloc
 {
 	[accounts release];
-	[addToAccounts release];
 	
     [super dealloc];
 }
@@ -124,12 +123,13 @@
 	AIServiceType	*serviceType = [[popUp_contactType selectedItem] representedObject];
 	NSString		*serviceID = [serviceType identifier];
 	NSString		*UID = [textField_contactName stringValue];
-	NSEnumerator	*enumerator = [addToAccounts objectEnumerator];
+	NSEnumerator	*enumerator = [accounts objectEnumerator];
 	AIAccount		*account;
 	
 	while(account = [enumerator nextObject]){
-		//Ignore any accounts with a non-matching service
-		if([[[[account service] handleServiceType] identifier] compare:[serviceType identifier]] == 0){
+		if([account conformsToProtocol:@protocol(AIAccount_List)] &&
+		   [(AIAccount<AIAccount_List> *)account contactListEditable] &&
+		   [[account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] boolValue]){
 			AIListContact	*contact = [[adium contactController] contactWithService:serviceID
 																		   accountID:[account uniqueObjectID]
 																				 UID:UID];
@@ -153,7 +153,7 @@
 {
 	NSEnumerator		*enumerator;
 	AIServiceType		*serviceType;
-	
+
 	//Empty the menu
 	[popUp_contactType removeAllItems];
 	
@@ -165,7 +165,18 @@
 											action:@selector(selectServiceType:)
 									 keyEquivalent:@""
 								 representedObject:serviceType];
+		
 	}
+	[[popUp_contactType menu] update];
+	enumerator = [[popUp_contactType itemArray] objectEnumerator];
+	NSMenuItem			*menuItem;
+	while(menuItem = [enumerator nextObject]) {
+		if([menuItem isEnabled]) {
+			[popUp_contactType selectItem:menuItem];
+			break;
+		}
+	}
+	
 }
 
 //Service type selected from the menu
@@ -182,6 +193,9 @@
 //Build the menu of available destination groups
 - (void)buildGroupMenu
 {
+	AIListObject	*selectedObject;
+	AIListGroup		*group;
+	
 	//Empty the menu
 	[popUp_targetGroup removeAllItems];
 	
@@ -189,6 +203,17 @@
 	[self _buildGroupMenu:[popUp_targetGroup menu]
 				 forGroup:[[adium contactController] contactList]
 					level:0];
+	
+	//Select the group of the currently selected object on the contact list
+	selectedObject = [[adium contactController] selectedListObject];
+
+	if(selectedObject != nil) {
+		if([selectedObject isKindOfClass:[AIListGroup class]])
+			group = (AIListGroup*)selectedObject;
+		else
+			group = [selectedObject containingGroup];
+		[popUp_targetGroup selectItemWithRepresentedObject:group];			
+	}
 }
 
 - (void)_buildGroupMenu:(NSMenu *)menu forGroup:(AIListGroup *)group level:(int)level
@@ -255,8 +280,20 @@
 {
 	AIServiceType	*serviceType = [[popUp_contactType selectedItem] representedObject];
 	
+	NSEnumerator	*enumerator;
+	AIAccount		*account;
+	NSNumber		*addTo;
+	
 	[accounts release];
 	accounts = [[[adium accountController] accountsWithServiceID:[serviceType identifier]] retain];
+	
+	//Select accounts by default
+	enumerator = [accounts objectEnumerator];
+	while(account = [enumerator nextObject]) {
+		addTo = [account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT];
+		if(!addTo)
+			[account setPreference:[NSNumber numberWithBool:YES] forKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT];
+	}
 	[tableView_accounts reloadData];
 }
 
@@ -272,7 +309,9 @@
 	NSString	*identifier = [tableColumn identifier];
 	
 	if([identifier compare:@"check"] == 0){
-		return([NSNumber numberWithBool:[addToAccounts containsObject:[accounts objectAtIndex:row]]]);
+		return([[accounts objectAtIndex:row] contactListEditable] ?
+			   [[accounts objectAtIndex:row] preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] :
+			   [NSNumber numberWithBool:NO]);
 	}else if([identifier compare:@"account"] == 0){
 		return([[accounts objectAtIndex:row] displayName]);
 	}else{
@@ -291,11 +330,7 @@
 	NSString	*identifier = [tableColumn identifier];
 
 	if([identifier compare:@"check"] == 0){
-		if([object boolValue] == YES){
-			[addToAccounts addObject:[accounts objectAtIndex:row]];
-		}else{
-			[addToAccounts removeObject:[accounts objectAtIndex:row]];
-		}
+		[[accounts objectAtIndex:row] setPreference:[NSNumber numberWithBool:[object boolValue]] forKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT];
 	}
 }
 
@@ -308,6 +343,23 @@
 }
 - (void)tableViewSelectionDidChange:(NSNotification *)notification{
 	[tableView_accounts deselectAll:nil];
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+	if([[menuItem representedObject] isKindOfClass:[AIServiceType class]]) {
+		AIServiceType   * serviceType = [menuItem representedObject];
+		NSEnumerator	* enumerator;
+		enumerator = [[[adium accountController] accountsWithServiceID:[serviceType identifier]] objectEnumerator];
+		AIAccount		* account;
+		while(account = [enumerator nextObject]) {
+			if([account conformsToProtocol:@protocol(AIAccount_List)] &&
+			   [(AIAccount<AIAccount_List> *)account contactListEditable]) {
+				return YES;
+			}
+		}
+	}
+	return NO;
 }
 
 @end

@@ -18,6 +18,7 @@
 #import "AINewGroupWindowController.h"
 
 #define ADD_CONTACT   				AILocalizedString(@"Add Contact…",nil)
+#define ADD_CONTACT_TO_GROUP		AILocalizedString(@"Add Contact To Group…",nil)
 #define ADD_GROUP   				AILocalizedString(@"Add Group…",nil)
 #define DELETE_CONTACT   			AILocalizedString(@"Delete Selection",nil)
 #define RENAME_GROUP				AILocalizedString(@"Rename Group…",nil)
@@ -32,6 +33,10 @@
 	//Add contact menu item
     menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT target:self action:@selector(addContact:) keyEquivalent:@""] autorelease];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
+	
+	//Add contact context menu item
+	menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT_TO_GROUP target:self action:@selector(addContact:) keyEquivalent:@""] autorelease];
+	[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Group_Manage];
 
 	//Add group menu item
     menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_GROUP target:self action:@selector(addGroup:) keyEquivalent:@""] autorelease];
