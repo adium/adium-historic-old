@@ -30,6 +30,7 @@
 - Selected cells need to draw with inverted text
 - Manual ordering is most likely screwed up, because I've turned off loading of old contacts on launch :)
 - Metacontacts display no service icon
+- (from Meron at #adium) if you have the alternating grid turned on in the contact list, and you select a cell that's the alternate color and then focus on another window, the selected cell is redrawn with the normal background color instead of the alternate background color.
 
 [Other]
 - Metacontact drawer in get info crashes upon dragging
