@@ -185,14 +185,11 @@
 
 - (void)configureControlDimming
 {
-	BOOL haveLayouts = ([layoutArray count] > 0);
-	BOOL haveThemes = ([themeArray count] > 0);
-	
-	[button_layoutDelete setEnabled:haveLayouts];
-	[button_layoutEdit setEnabled:haveLayouts];
+	[button_layoutEdit setEnabled:([layoutArray count] > 0)];
+	[button_layoutDelete setEnabled:([layoutArray count] > 1)];
 
-	[button_themeDelete setEnabled:haveThemes];
-	[button_themeEdit setEnabled:haveThemes];
+	[button_themeEdit setEnabled:([themeArray count] > 0)];
+	[button_themeDelete setEnabled:([themeArray count] > 1)];
 }
 
 
@@ -223,19 +220,21 @@
 //Delete a layout
 - (IBAction)deleteLayout:(id)sender
 {
-	NSDictionary	*selected = [layoutArray objectAtIndex:[tableView_layout selectedRow]];
-	NSBeginAlertSheet(AILocalizedString(@"Delete Layout",nil), 
-					  AILocalizedString(@"Delete",nil), 
-					  AILocalizedString(@"Cancel",nil),
-					  @"",
-					  [[self view] window],
-					  self,
-					  @selector(deleteLayoutSheetDidEnd:returnCode:contextInfo:),
-					  nil,
-					  selected,
-					  AILocalizedString(@"Delete the layout \"%@\" from %@?",nil), 
-					  [selected objectForKey:@"name"],
-					  [selected objectForKey:@"path"]);
+	if([layoutArray count] > 1){
+		NSDictionary	*selected = [layoutArray objectAtIndex:[tableView_layout selectedRow]];
+		NSBeginAlertSheet(AILocalizedString(@"Delete Layout",nil), 
+						  AILocalizedString(@"Delete",nil), 
+						  AILocalizedString(@"Cancel",nil),
+						  @"",
+						  [[self view] window],
+						  self,
+						  @selector(deleteLayoutSheetDidEnd:returnCode:contextInfo:),
+						  nil,
+						  selected,
+						  AILocalizedString(@"Delete the layout \"%@\" from %@?",nil), 
+						  [selected objectForKey:@"name"],
+						  [selected objectForKey:@"path"]);
+	}
 }
 - (void)deleteLayoutSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(NSDictionary *)contextInfo
 {
@@ -252,19 +251,21 @@
 //Delete a theme
 - (IBAction)deleteTheme:(id)sender
 {
-	NSDictionary	*selected = [themeArray objectAtIndex:[tableView_theme selectedRow]];
-	NSBeginAlertSheet(AILocalizedString(@"Delete Theme",nil), 
-					  AILocalizedString(@"Delete",nil), 
-					  AILocalizedString(@"Cancel",nil),
-					  @"",
-					  [[self view] window],
-					  self,
-					  @selector(deleteThemeSheetDidEnd:returnCode:contextInfo:),
-					  nil,
-					  selected,
-					  AILocalizedString(@"Delete the theme \"%@\" from %@?",nil), 
-					  [selected objectForKey:@"name"],
-					  [selected objectForKey:@"path"]);
+	if([themeArray count] > 1){
+		NSDictionary	*selected = [themeArray objectAtIndex:[tableView_theme selectedRow]];
+		NSBeginAlertSheet(AILocalizedString(@"Delete Theme",nil), 
+						  AILocalizedString(@"Delete",nil), 
+						  AILocalizedString(@"Cancel",nil),
+						  @"",
+						  [[self view] window],
+						  self,
+						  @selector(deleteThemeSheetDidEnd:returnCode:contextInfo:),
+						  nil,
+						  selected,
+						  AILocalizedString(@"Delete the theme \"%@\" from %@?",nil), 
+						  [selected objectForKey:@"name"],
+						  [selected objectForKey:@"path"]);
+	}
 }
 - (void)deleteThemeSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(NSDictionary *)contextInfo
 {
