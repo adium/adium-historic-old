@@ -17,6 +17,7 @@
 #import "AIAccountController.h"
 #import "AIAccountListWindowController.h"
 #import "AIContactController.h"
+#import "AIStatusController.h"
 #import "AIEditAccountWindowController.h"
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIImageTextCell.h>
@@ -401,7 +402,7 @@
 		}else if([[account statusObjectForKey:@"Online"] boolValue]){
 			title = AILocalizedString(@"Online",nil);
 		}else{
-			title = AILocalizedString(@"Offline",nil);
+			title = STATUS_DESCRIPTION_OFFLINE;
 		}
 
 		return(title);
