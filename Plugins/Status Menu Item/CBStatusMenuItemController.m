@@ -29,8 +29,6 @@
 
 static	CBStatusMenuItemController	*sharedStatusMenuInstance = nil;
 
-static	NSImage						*unviewedContentImage = nil;
-
 static	NSImage						*adiumOfflineImage = nil;
 static	NSImage						*adiumOfflineHighlightImage = nil;
 
@@ -58,9 +56,6 @@ static	NSImage						*adiumRedHighlightImage = nil;
         [statusItem setHighlightMode:YES];
 		
 		//Initialize our cached images
-		if(!unviewedContentImage){
-			unviewedContentImage = [[NSImage imageNamed:@"unviewedContent.png" forClass:[self class]] retain];
-		}
 		if(!adiumOfflineImage){
 			adiumOfflineImage = [[NSImage imageNamed:@"adiumOffline.png" forClass:[self class]] retain];
 		}
@@ -261,6 +256,12 @@ static	NSImage						*adiumRedHighlightImage = nil;
             }
         }
     }
+	
+	//If they're typing, we also need to update.
+	if([inModifiedKeys containsObject:KEY_TYPING]){
+		needsUpdate = YES;
+	}
+	
 	//We didn't modify attributes, so return nil 
     return nil;
 }
@@ -296,6 +297,8 @@ static	NSImage						*adiumRedHighlightImage = nil;
             [menu addItem:[NSMenuItem separatorItem]];
             //Create and add the menu items
             while(chat = [enumerator nextObject]){
+				NSImage *image = nil;
+				
                 //Create a menu item from the chat
                 menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[chat displayName] 
 																				 target:self
@@ -304,11 +307,17 @@ static	NSImage						*adiumRedHighlightImage = nil;
                 //Set the represented object
                 [menuItem setRepresentedObject:chat];
 				
-                //Set the image if it's unviewed
-				if([unviewedObjectsArray containsObjectIdenticalTo:chat]) {
-					[menuItem setImage:unviewedContentImage];
+                //If there is a chat status image, use that
+				if(!(image = [AIStatusIcons statusIconForChat:chat type:AIStatusIconTab direction:AIIconNormal])){
+					//Otherwise use the contact's one
+					image = [AIStatusIcons statusIconForListObject:[chat listObject] 
+														type:AIStatusIconTab
+												   direction:AIIconNormal];
 				}
-                //Add it to the menu
+				//Set the image
+				[menuItem setImage:image];
+							  
+				//Add it to the menu
                 [menu addItem:menuItem];
             }
         }
