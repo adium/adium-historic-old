@@ -50,7 +50,8 @@
     [self preferencesChanged:nil];
         
     //
-    image = [[NSImage alloc] initWithSize:NSMakeSize(128,128)];
+    image1 = [[NSImage alloc] initWithSize:NSMakeSize(128,128)];
+    image2 = [[NSImage alloc] initWithSize:NSMakeSize(128,128)];
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
@@ -148,6 +149,7 @@
     float			dockIconScale;
     int				iconHeight;
     float			top, bottom;
+    NSImage			*image = (flash ? image1 : image2);
 
     //Pre-calc some sizes
     dockIconScale = 1.0 - [[owner dockController] dockIconScale];
