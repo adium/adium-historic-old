@@ -10,6 +10,10 @@
 
 @interface AIAccountProxySettings (PRIVATE)
 - (void)_initAccountProxySettings;
+- (void)configureControlDimming;
+
+- (NSMenu *)_proxyMenu;
+- (NSMenuItem *)_proxyMenuItemWithTitle:(NSString *)title tag:(int)tag;
 @end
 
 @implementation AIAccountProxySettings

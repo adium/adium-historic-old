@@ -8,6 +8,13 @@
 
 #import "AIAccountSetupEditAccountView.h"
 
+@interface AIAccountSetupEditAccountView (PRIVATE)
+- (void)configureViewForAccount:(AIAccount *)inAccount;
+- (void)configureViewForService:(AIService *)inService;
+
+- (void)_addCustomViewAndTabsForController:(AIAccountViewController *)inControler;
+- (void)_removeCustomViewAndTabs;
+@end
 
 @implementation AIAccountSetupEditAccountView
 
