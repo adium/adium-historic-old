@@ -198,13 +198,6 @@ DeclareString(TagCharStartString);
         //
         //if(!color) color = defaultColor;
         
-        //Close style tags
-        if(includeStyleTags){
-            if(!isItalic && currentItalic) [string appendString:@"</I>"];
-            if(!isBold && currentBold) [string appendString:@"</B>"];
-            if(!hasUnderline && currentUnderline) [string appendString:@"</U>"];
-        }
-
         //Font (If the color, font, or size has changed)
         if(includeFontTags && (pointSize != currentSize ||
 							   [familyName compare:currentFamily] ||
@@ -245,13 +238,15 @@ DeclareString(TagCharStartString);
                 currentSize = pointSize;
 				
             }
-
+			
             //Color
             if(includeColorTags && (([color compare:currentColor] || (currentColor && !color)) || closeFontTags)){
-				if(simpleOnly){
-					[string appendString:[NSString stringWithFormat:@"<FONT COLOR=\"#%@\">",color]];	
-				}else{
-					[string appendString:[NSString stringWithFormat:@" COLOR=\"#%@\"",color]];
+				if (color){
+					if(simpleOnly){
+						[string appendString:[NSString stringWithFormat:@"<FONT COLOR=\"#%@\">",color]];	
+					}else{
+						[string appendString:[NSString stringWithFormat:@" COLOR=\"#%@\"",color]];
+					}
 				}
                 [currentColor release]; currentColor = [color retain];
             }
@@ -263,16 +258,30 @@ DeclareString(TagCharStartString);
         }
 
         //Style (Bold, italic, underline)
-        if(includeStyleTags){
-            //Open style tags
-            if(!currentUnderline && hasUnderline) [string appendString:@"<U>"];
-            if(!currentBold && isBold) [string appendString:@"<B>"];
-            if(!currentItalic && isItalic) [string appendString:@"<I>"];
+        if(includeStyleTags){			
+			if(currentItalic && !isItalic){
+				[string appendString:@"</I>"];
+				currentItalic = NO;
+			}else  if(!currentItalic && isItalic){
+				[string appendString:@"<I>"];
+				currentItalic = YES;
+			}
 
-            //Set our current styles
-            currentUnderline = hasUnderline;
-            currentBold = isBold;
-            currentItalic = isItalic;
+			if (currentUnderline && !hasUnderline){
+				[string appendString:@"</U>"];
+				currentUnderline = NO;
+			} else if(!currentUnderline && hasUnderline){
+				[string appendString:@"<U>"];
+				currentUnderline = YES;
+			}
+
+			if (currentBold && !isBold){
+				[string appendString:@"</B>"];
+				currentBold = NO;
+			} else if(!currentBold && isBold){
+				[string appendString:@"<B>"];
+				currentBold = YES;
+			}
         }
         
         //Link
@@ -371,16 +380,6 @@ DeclareString(TagCharStartString);
         //Close Link
         if(link && [link length] != 0){
             [string appendString:@"</a>"];
-        }
-
-        //Close all open style tags
-        if(includeStyleTags && closeStyleTagsOnFontChange){
-            if(currentItalic) [string appendString:@"</I>"];
-            if(currentBold) [string appendString:@"</B>"];
-            if(currentUnderline) [string appendString:@"</U>"];
-            currentItalic = NO;
-            currentBold = NO;
-            currentUnderline = NO;
         }
 
         searchRange.location += searchRange.length;
