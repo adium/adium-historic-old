@@ -450,10 +450,10 @@
     chatDict = [[NSMutableDictionary alloc] init];
     filesToSendArray = [[NSMutableArray alloc] init];
 
-    //create an initial gaim account
-    [self createNewGaimAccount];
+	//We will create a gaimAccount the first time we attempt to connect
+	account = NULL;
+	//gc will be set once we are connecting
     gc = NULL;
-    if (GAIM_DEBUG) NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
     
     //ensure our user icon cache path exists
     [AIFileUtilities createDirectory:[USER_ICON_CACHE_PATH stringByExpandingTildeInPath]];
@@ -1136,6 +1136,12 @@
 //Connect this account (Our password should be in the instance variable 'password' all ready for us)
 - (void)connect
 {
+	if (!account) {
+		//create a gaim account if one does not already exist
+		[self createNewGaimAccount];
+		if (GAIM_DEBUG) NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
+	}
+	
 	//We are connecting
 	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
 	
@@ -1283,12 +1289,21 @@
 
 - (void)createNewGaimAccount
 {
+	NSString *formattedAccountName = [self preferenceForKey:KEY_ACCOUNT_NAME group:GROUP_ACCOUNT_STATUS];
+	
     //Recreate a fresh version of the account
-    account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
+    account = gaim_account_new([formattedAccountName UTF8String], [self protocolPlugin]);
     gaim_accounts_add(account);
 //	gaim_account_set_username(account, [[self serverDisplayName] UTF8String]);
     
 	[(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
+}
+
+- (void)accountUIDdidChange
+{
+	//If we currently have a gaimAccount, destroy it and create a new one with the new UID
+	if (account)
+		[self resetLibGaimAccount];
 }
 
 //Account Status ------------------------------------------------------------------------------------------------------
@@ -1348,15 +1363,12 @@
                     
                     [self updateAttributedStatusString:attributedString forKey:key];
                     
-                }
+                } else if([key compare:@"UserIcon"] == 0) {
+					if(data = [self preferenceForKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS]){
+						[self setAccountUserImage:[[[NSImage alloc] initWithData:data] autorelease]];
+					}
+				}
         }
-
-	//User Icon can be set regardless of ONLINE state
-	if([key compare:@"UserIcon"] == 0) {
-		if(data = [self preferenceForKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS]){
-			[self setAccountUserImage:[[[NSImage alloc] initWithData:data] autorelease]];
-		}
-	}
 }
 - (void)setAttributedStatusString:(NSAttributedString *)attributedString forKey:(NSString *)key
 {
@@ -1419,23 +1431,25 @@
 //Set our user image (Pass nil for no image)
 - (void)setAccountUserImage:(NSImage *)image
 {
-	//Clear the existing icon first
-	gaim_account_set_buddy_icon(account, nil);
-
-	//Now pass libgaim the new icon.  Libgaim takes icons as a file, so we save our
-	//image to one, and then pass libgaim the path.
-	if(image){          
-		NSData 		*data = [image JPEGRepresentation];
-		NSString    *buddyImageFilename = [self _userIconCachePath];
+	if (account) {
+		//Clear the existing icon first
+		gaim_account_set_buddy_icon(account, nil);
 		
-		if([data writeToFile:buddyImageFilename atomically:YES]){
-			if (account)
-				gaim_account_set_buddy_icon(account, [buddyImageFilename UTF8String]);
-		}else{
-			NSLog(@"Error writing file %@",buddyImageFilename);   
+		//Now pass libgaim the new icon.  Libgaim takes icons as a file, so we save our
+		//image to one, and then pass libgaim the path.
+		if(image){          
+			NSData 		*data = [image JPEGRepresentation];
+			NSString    *buddyImageFilename = [self _userIconCachePath];
+			
+			if([data writeToFile:buddyImageFilename atomically:YES]){
+				if (account)
+					gaim_account_set_buddy_icon(account, [buddyImageFilename UTF8String]);
+			}else{
+				NSLog(@"Error writing file %@",buddyImageFilename);   
+			}
 		}
 	}
-
+	
 	//We now have an icon
 	[self setStatusObject:image forKey:@"UserIcon" notify:YES];
 }
