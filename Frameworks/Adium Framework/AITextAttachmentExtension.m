@@ -45,11 +45,13 @@
     }
 }
 
+/*
+ * @brief If asked for a string and we don't have one available, set and return a globally unique string
+ */
 - (NSString *)string
 {
-	
 	if(stringRepresentation == nil){
-		[self setString:[super description]];
+		[self setString:[[NSProcessInfo processInfo] globallyUniqueString]];
     }
 	
     return (stringRepresentation);
