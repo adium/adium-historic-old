@@ -15,7 +15,6 @@
 
 	//Default configure
 	bigImage = nil;
-	smallImage = nil;
 	toolbarItem = nil;
 	arrowPath = nil;
 	drawsArrow = YES;
@@ -34,7 +33,6 @@
 	//Copy our config
 	[newButton setControlSize:controlSize];
 	[newButton setImage:bigImage];
-	[newButton setSmallImage:smallImage];
 	[newButton setDrawsArrow:drawsArrow];
 
 	//Copy super's config
@@ -47,7 +45,6 @@
 - (void)dealloc
 {
 	[bigImage release];
-	[smallImage release];
 	[arrowPath release];
 	
 	[super dealloc];
@@ -57,21 +54,36 @@
 //Configure ------------------------------------------------------------------------------------------------------------
 #pragma mark Configure
 //Control Size (Allows us to dynamically size for a small or big toolbar)
-- (void)setControlSize:(NSControlSize)inSize
+- (void)setControlSize:(NSControlSize)inControlSize
 {
-	controlSize = inSize;
+	NSSize		targetSize;
+	NSSize		bigImageSize;
 	
+	controlSize = inControlSize;
+
 	//Update our containing toolbar item's size so it will scale with us
-	if(inSize == NSRegularControlSize){
-		[toolbarItem setMinSize:NSMakeSize(32, 32)];
-		[toolbarItem setMaxSize:NSMakeSize(32, 32)];
+	switch(controlSize){
+		case NSRegularControlSize:
+			targetSize = NSMakeSize(32, 32);
+			break;
+		case NSSmallControlSize:
+			targetSize = NSMakeSize(24, 24);
+			break;
+		case NSMiniControlSize:
+			targetSize = NSMakeSize(16, 16); /*XXX Numbers right?*/
+			break;
+	}	
+	
+	[toolbarItem setMinSize:targetSize];
+	[toolbarItem setMaxSize:targetSize];
+
+	bigImageSize = [bigImage size];
+	if ((bigImageSize.width > targetSize.width) || (bigImageSize.height > targetSize.height)){
+		//If the image is bigger than our target, we should set a scaled image, not the bigImage itself
+		[super setImage:[bigImage imageByScalingToSize:targetSize]];
+		
+	}else{
 		[super setImage:bigImage];
-		
-	}else if(inSize == NSSmallControlSize){
-		[toolbarItem setMinSize:NSMakeSize(24, 24)];
-		[toolbarItem setMaxSize:NSMakeSize(24, 24)];
-		[super setImage:smallImage];
-		
 	}
 	
 	//Reset the popup arrow path cache, we'll need to re-calculate it for the new size
@@ -86,15 +98,7 @@
 - (void)setImage:(NSImage *)inImage
 {
 	[bigImage release];
-	[smallImage release];
 	bigImage = [inImage retain];
-	
-	//Generate a small version of this image
-	smallImage = [[NSImage alloc] initWithSize:NSMakeSize(24, 24)];
-	[smallImage lockFocus];
-	[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-	[[bigImage bestRepresentationForDevice:nil] drawInRect:NSMakeRect(0, 0, 24, 24)];
-	[smallImage unlockFocus];
 	
 	//Update our control size and the displayed image
 	[self setControlSize:controlSize];
@@ -102,16 +106,6 @@
 - (NSImage *)image
 {
 	return(bigImage);
-}
-
-//Small Image (Used for copying)
-- (void)setSmallImage:(NSImage *)image
-{
-	[smallImage release]; smallImage = [image retain];
-}
-- (NSImage *)smallImage
-{
-	return(smallImage);
 }
 
 //Containing toolbar Item
