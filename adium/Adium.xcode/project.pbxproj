@@ -1057,6 +1057,8 @@
 				34F142A605E95B4C00B32FD7,
 				34415B9B059FA8DF0019246B,
 				34415B9C059FA8DF0019246B,
+				34E3C8870638D40500AA3EF7,
+				34E3C8880638D40500AA3EF7,
 			);
 			isa = PBXGroup;
 			name = Services;
@@ -1265,6 +1267,8 @@
 			children = (
 				34415BD1059FA9CE0019246B,
 				34415BCF059FA9CD0019246B,
+				34E3C8A50638D50F00AA3EF7,
+				34E3C8A60638D50F00AA3EF7,
 				342928080628BB4200BB9217,
 				342928090628BB4200BB9217,
 				348A901A062A13AB00FC6E03,
@@ -6811,6 +6815,66 @@
 			settings = {
 			};
 		};
+		34E3C8870638D40500AA3EF7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESYahooJapanService.h;
+			path = "Plugins/Gaim Service/ESYahooJapanService.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E3C8880638D40500AA3EF7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESYahooJapanService.m;
+			path = "Plugins/Gaim Service/ESYahooJapanService.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E3C8890638D40500AA3EF7 = {
+			fileRef = 34E3C8870638D40500AA3EF7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E3C88A0638D40500AA3EF7 = {
+			fileRef = 34E3C8880638D40500AA3EF7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E3C8A50638D50F00AA3EF7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimYahooJapanAccount.h;
+			path = "Plugins/Gaim Service/ESGaimYahooJapanAccount.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E3C8A60638D50F00AA3EF7 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimYahooJapanAccount.m;
+			path = "Plugins/Gaim Service/ESGaimYahooJapanAccount.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34E3C8A70638D50F00AA3EF7 = {
+			fileRef = 34E3C8A50638D50F00AA3EF7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34E3C8A80638D50F00AA3EF7 = {
+			fileRef = 34E3C8A60638D50F00AA3EF7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34E839050583207E00F2AADB = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -10159,6 +10223,8 @@
 				34C2E6710634CF5F0018E5D2,
 				34C2E6890634CF940018E5D2,
 				34C2EA1A0634DB5E0018E5D2,
+				34E3C8890638D40500AA3EF7,
+				34E3C8A70638D50F00AA3EF7,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10212,6 +10278,8 @@
 				34C2E6720634CF5F0018E5D2,
 				34C2E68A0634CF940018E5D2,
 				34C2EA1B0634DB5E0018E5D2,
+				34E3C88A0638D40500AA3EF7,
+				34E3C8A80638D50F00AA3EF7,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
