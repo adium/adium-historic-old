@@ -73,23 +73,25 @@
 
 - (void) updateDisplayedFont
 {
-	NSMutableAttributedString *text = nil;
+	if(_actualFont){
+		NSMutableAttributedString *text = nil;
 
-	[super setFont:[[NSFontManager sharedFontManager] convertFont:_actualFont toSize:11.]];
-
-	if(_showPointSize){
-		text = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %.0f", (_showFontFace ? [_actualFont displayName] : [_actualFont familyName]), [_actualFont pointSize]]] autorelease];
-	}else{
-		text = [[[NSMutableAttributedString alloc] initWithString:( _showFontFace ? [_actualFont displayName] : [_actualFont familyName] )] autorelease];
+		[super setFont:[[NSFontManager sharedFontManager] convertFont:_actualFont toSize:11.]];
+		
+		if(_showPointSize){
+			text = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %.0f", (_showFontFace ? [_actualFont displayName] : [_actualFont familyName]), [_actualFont pointSize]]] autorelease];
+		}else{
+			text = [[[NSMutableAttributedString alloc] initWithString:( _showFontFace ? [_actualFont displayName] : [_actualFont familyName] )] autorelease];
+		}
+		
+		NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+		
+		[paraStyle setMinimumLineHeight:NSHeight([self bounds])];
+		[paraStyle setMaximumLineHeight:NSHeight([self bounds])];
+		[text addAttribute:NSParagraphStyleAttributeName value:paraStyle range:NSMakeRange(0, [text length])];
+		
+		[self setObjectValue:text];
 	}
-	
-	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-	
-	[paraStyle setMinimumLineHeight:NSHeight([self bounds])];
-	[paraStyle setMaximumLineHeight:NSHeight([self bounds])];
-	[text addAttribute:NSParagraphStyleAttributeName value:paraStyle range:NSMakeRange(0, [text length])];
-
-	[self setObjectValue:text];
 }
 
 - (IBAction) chooseFontWithFontPanel:(id) sender
