@@ -506,12 +506,12 @@
     //We should merge if the previous content is a message and from the same source AND same day
     if((!inlinePrefixes || combineMessages) &&
        (previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source]) &&
-	   ([(NSCalendarDate *)[previousContent date] dayOfCommonEra] == [(NSCalendarDate *)[content date] dayOfCommonEra])){
+	   ([previousContent isFromSameDayAsContent:content])){
         contentIsSimilar = YES;
     }
 	
 	//Show a date header if the messages were on different dates
-	if( !contentIsSimilar && ([(NSCalendarDate *)[previousContent date] dayOfCommonEra] != [(NSCalendarDate *)[content date] dayOfCommonEra])) {
+	if( !contentIsSimilar && (![previousContent isFromSameDayAsContent:content])) {
 		
 		NSString *dateMessage = [[NSDateFormatter localizedDateFormatter] stringForObjectValue:[content date]];
 		dateSeparator = [AIContentStatus statusInChat:[content chat]
