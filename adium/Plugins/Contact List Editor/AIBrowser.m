@@ -154,7 +154,7 @@
 	
 	enumerator = [columnArray reverseObjectEnumerator];
 	while(column = [enumerator nextObject]){
-		NSArray			*selectedRows = [[[[column tableView] selectedRowEnumerator]allObjects] copy];
+		NSArray			*selectedRows = [[[[column tableView] selectedRowEnumerator] allObjects] copy];
 		NSEnumerator	*enumerator;
 		NSNumber		*rowNumber;
 		
@@ -169,7 +169,7 @@
 				[[column tableView] selectRow:row byExtendingSelection:YES];
 			}
 		}
-	}
+}
 }
 
 //returns the rightmost selected item

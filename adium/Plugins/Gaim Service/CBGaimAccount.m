@@ -464,6 +464,7 @@
 		NSString	*group = [object remoteGroupNameForAccount:self];
 		GaimBuddy 	*buddy = gaim_find_buddy(account,[[object UID] UTF8String]);
 		
+		[object setRemoteGroupName:nil forAccount:self];
 		serv_remove_buddy(gc, [[object UID] UTF8String], [group UTF8String]);	//remove it from the list serverside
 		gaim_blist_remove_buddy(buddy);											//remove it gaimside
 	}

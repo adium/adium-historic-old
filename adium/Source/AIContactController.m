@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.84 2004/01/17 15:53:24 adamiser Exp $
+// $Id: AIContactController.m,v 1.85 2004/01/17 16:25:49 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -211,14 +211,14 @@
 	    NSString	*localGroupUID = [localGroup UID];
 	    
 	    if([remoteGroups containsObject:localGroupUID]){
-		while([remoteGroups containsObject:localGroupUID]) [remoteGroups removeObject:localGroupUID];
+			while([remoteGroups containsObject:localGroupUID]) [remoteGroups removeObject:localGroupUID];
 	    }else{ 
-		//The contact should no longer be in this group
-		[localGroup removeObject:inObject];
-		NSLog(@"Grouping:  Removed %@ from %@",[inObject displayName],[localGroup displayName]);
-		if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged
-										 object:inObject
-									       userInfo:[NSDictionary dictionaryWithObject:localGroup forKey:@"ContainingGroup"]];
+			//The contact should no longer be in this group
+			[localGroup removeObject:inObject];
+			NSLog(@"Grouping:  Removed %@ from %@",[inObject displayName],[localGroup displayName]);
+			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged
+																			 object:inObject
+																		   userInfo:[NSDictionary dictionaryWithObject:localGroup forKey:@"ContainingGroup"]];
 	    }
 	}
 	
@@ -228,13 +228,13 @@
 	    
 #warning lots of crashes from remoteGroupName length being 0... what is up with that? This fix is possibly temporary.
 	    if ([remoteGroupName length]){
-		//The contact needs to be added to this group
-		localGroup = [self groupWithUID:remoteGroupName createInGroup:contactList];
-		[localGroup addObject:inObject];
-		NSLog(@"Grouping:  Added %@ to %@",[inObject displayName],remoteGroupName);
-		if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged 
-										 object:inObject
-									       userInfo:[NSDictionary dictionaryWithObject:localGroup forKey:@"ContainingGroup"]];
+			//The contact needs to be added to this group
+			localGroup = [self groupWithUID:remoteGroupName createInGroup:contactList];
+			[localGroup addObject:inObject];
+			NSLog(@"Grouping:  Added %@ to %@",[inObject displayName],remoteGroupName);
+			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged 
+																			 object:inObject
+																		   userInfo:[NSDictionary dictionaryWithObject:localGroup forKey:@"ContainingGroup"]];
 	    }
 	}
 	
