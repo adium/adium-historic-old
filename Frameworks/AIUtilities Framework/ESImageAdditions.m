@@ -87,7 +87,7 @@
 
 - (NSImage *)imageByScalingToSize:(NSSize)size
 {
-	return ([self imageByScalingToSize:size fraction:1.0]);
+	return ([self imageByScalingToSize:size fraction:1.0 flipImage:NO]);
 }
 
 - (NSImage *)imageByFadingToFraction:(float)delta
@@ -105,7 +105,7 @@
 	NSSize  originalSize = [self size];
 	
 	//Proceed only if size or delta are changing
-	if((NSEqualSizes(originalSize, size)) && (delta == 1.0)){
+	if((NSEqualSizes(originalSize, size)) && (delta == 1.0) && !flipImage){
 		return([[self copy] autorelease]);
 		
 	}else{
