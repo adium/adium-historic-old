@@ -152,8 +152,6 @@
 /* Plugins/Video Chat Interface */
 #import "CBURLHandlingPlugin.h"
 
-//AIAwayMessagesPlugin, AIAwayStatusWindowPlugin, AIDockIconSelectionPlugin, AIEmoticonsPlugin, IdleMessagePlugin
-
 @interface AICoreComponentLoader (PRIVATE)
 - (void)_loadComponentClass:(Class)inClass;
 @end
