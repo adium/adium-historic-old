@@ -180,8 +180,6 @@ static BOOL didInitOscar = NO;
 																			 account:self
 																				 UID:sourceUID];
 	if(!contact){
-		NSString	*contactServiceID = nil;
-		
 		contact = [[adium contactController] contactWithService:[self _serviceForUID:sourceUID]
 														account:self
 															UID:sourceUID];
@@ -193,6 +191,8 @@ static BOOL didInitOscar = NO;
 - (AIService *)_serviceForUID:(NSString *)contactUID
 {
 	AIService	*contactService;
+	NSString	*contactServiceID = nil;
+	
 	const char	firstCharacter = [contactUID characterAtIndex:0];
 	
 	//Determine service based on UID
