@@ -127,8 +127,8 @@
 	//We guard against a recursive call to this method, which may occur if the user is resizing the view at the same time
 	//content is being modified
     if(autoScrollToBottom && !inAutoScrollToBottom){
-        NSRect	documentVisibleRect = [self documentVisibleRect];
-        NSRect	newDocumentFrame = [[self documentView] frame];
+        NSRect	documentVisibleRect =  [self documentVisibleRect];
+        NSRect	   newDocumentFrame = [[self documentView] frame];
         
         //We autoscroll if the height of the document frame changed AND (Using the old frame to calculate) we're scrolled close to the bottom.
         if((newDocumentFrame.size.height != oldDocumentFrame.size.height) && 
@@ -157,7 +157,7 @@
 //Scroll to the top of our view
 - (void)scrollToTop
 {    
-    [[self documentView] scrollPoint:NSMakePoint(0, 0)];
+    [[self documentView] scrollPoint:NSZeroPoint];
 }
 
 //Scroll to the bottom of our view
@@ -179,14 +179,14 @@
 //Hides or shows the scrollbar as necessary
 - (void)setCorrectScrollbarVisibility
 {
-    int	visibleHeight = [self documentVisibleRect].size.height;
-    int	totalHeight = [[self documentView] frame].size.height;
+    float	visibleHeight =  [self documentVisibleRect].size.height;
+    float	  totalHeight = [[self documentView] frame].size.height;
 
     //Hide or show scrollbar
     if(totalHeight > visibleHeight){
         if(![self hasVerticalScroller]) [self setHasVerticalScroller:YES];
     }else{
-        if([self hasVerticalScroller]) [self setHasVerticalScroller:NO];
+        if( [self hasVerticalScroller]) [self setHasVerticalScroller:NO];
     }
 }
 
