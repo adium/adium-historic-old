@@ -70,7 +70,6 @@ static  NSImage			*tabDivider = nil;
     arrangeCellTimer = nil;
     removingLastTabHidesWindow = YES;
 	allowsTabRearranging = YES;
-	allowsTabDragging = YES;
     tabCellArray = nil;
     selectedCustomTabCell = nil;
 	ignoreTabNumberChange = NO;
@@ -90,7 +89,21 @@ static  NSImage			*tabDivider = nil;
     [super dealloc];
 }
 
+//Allow tab switching from the background
+- (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
+{
+    return(YES);
+}
 
+//Prevent dragging on metal windows
+- (BOOL)mouseDownCanMoveWindow
+{
+    return(NO);
+}
+
+
+//Configure ------------------------------------------------------------------------------------------------------------
+#pragma mark Configure
 //Set our delegate
 - (void)setDelegate:(id)inDelegate
 {
@@ -110,7 +123,8 @@ static  NSImage			*tabDivider = nil;
 {
     removingLastTabHidesWindow = inValue;
 }
-- (BOOL)removingLastTabHidesWindow{
+- (BOOL)removingLastTabHidesWindow
+{
     return(removingLastTabHidesWindow);
 }
 
@@ -129,7 +143,8 @@ static  NSImage			*tabDivider = nil;
 		[tabCell setAllowsInactiveTabClosing:allowsInactiveTabClosing];
     }
 }
-- (BOOL)allowsInactiveTabClosing{
+- (BOOL)allowsInactiveTabClosing
+{
     return(allowsInactiveTabClosing);
 }
 
@@ -138,50 +153,41 @@ static  NSImage			*tabDivider = nil;
 {
 	allowsTabRearranging = inValue;
 }
-
 - (BOOL)allowsTabRearranging
 {
 	return(allowsTabRearranging);
 }
 
-//Is the user allowed to drag tabs out of the window at all?
-- (void)setAllowsTabDragging:(BOOL)inValue
-{
-	allowsTabDragging = inValue;
-}
 
-- (BOOL)allowsTabDragging
-{
-	return(allowsTabDragging);
-}
-
-//Allow tab switching from the background
-- (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
-{
-    return(YES);
-}
-
-//Prevent dragging on metal windows
-- (BOOL)mouseDownCanMoveWindow
-{
-    return(NO);
-}
-
-
-//Tabs -----------------------------------------------------------------------------------------------------------------
-#pragma mark Tabs
+//Additional Public Methods --------------------------------------------------------------------------------------------
+#pragma mark Additional Public Methods
 //Redisplay a tab
 - (void)redisplayTabForTabViewItem:(NSTabViewItem *)inTabViewItem
 {
 	[self setNeedsDisplayInRect:[[self tabCellForTabViewItem:inTabViewItem] frame]];
 }
 
-//
+//Resize a tab
 - (void)resizeTabForTabViewItem:(NSTabViewItem *)inTabViewItem
 {
 	[self smoothlyArrangeTabs];
 }
 
+//Move a tab
+- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index
+{
+	[self moveTab:tabViewItem toIndex:index selectTab:NO animate:YES];
+}
+
+//Returns number of tab view items
+- (int)numberOfTabViewItems
+{
+	return([tabView numberOfTabViewItems]);
+}
+
+
+//Tabs -----------------------------------------------------------------------------------------------------------------
+#pragma mark Tabs
 //Tell our delegate to close a tab
 - (void)closeTab:(AICustomTabCell *)tabCell
 {
@@ -205,31 +211,18 @@ static  NSImage			*tabDivider = nil;
     }
 }
 
-//Returns an array of all the tab cells
-- (NSArray *)tabCells
-{
-	return tabCellArray; //Should be immutable?
-}
-
-- (NSTabView *)tabView
-{
-	return tabView;
-}
-
 //Reposition a tab
-- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index selectTab:(BOOL)shouldSelect
+- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index selectTab:(BOOL)shouldSelect animate:(BOOL)animate
 {
-	NSLog(@"tab is at index %i",[tabView indexOfTabViewItem:tabViewItem]);
-	
 	//Ignore the move request if the tab is already at the proper index
 	if([tabView indexOfTabViewItem:tabViewItem] != index){
 		AICustomTabCell		*tabCell = [self tabCellForTabViewItem:tabViewItem];
-		
+
 		//Ignore the 'shouldSelect' choice if this cell is already selected
 		if(tabViewItem == [tabView selectedTabViewItem]) shouldSelect = YES;
 		
 		//Move the tab cell
-		if(tabCell) [tabCellArray moveObject:tabCell toIndex:index];
+		[tabCellArray moveObject:tabCell toIndex:index];
 		
 		//Move the tab
 		ignoreTabNumberChange = YES;
@@ -246,7 +239,8 @@ static  NSImage			*tabDivider = nil;
 		}
 		
 		//Smoothly animate into place
-		if(tabCell){
+		if(animate){
+			[self resetCursorTracking];
 			[self smoothlyArrangeTabs];
 		}else{
 			[self rebuildTabCells];
@@ -254,12 +248,6 @@ static  NSImage			*tabDivider = nil;
 	}
 	
 	if(shouldSelect) [tabView selectTabViewItem:tabViewItem];
-}
-
-//Returns number of tab view items (Returns the number of visible tabs if a drag is happening from this bar)
-- (int)numberOfTabViewItems
-{
-	return([tabCellArray count]);
 }
 
 //Returns tab cell at the specified point
@@ -270,7 +258,7 @@ static  NSImage			*tabDivider = nil;
 	
     enumerator = [tabCellArray objectEnumerator];
     while((tabCell = [enumerator nextObject])){
-        if(NSPointInRect(clickLocation, [tabCell frame])) break;
+		if(tabCell != dragCell && NSPointInRect(clickLocation, [tabCell frame])) break;
     }
 	
     return(tabCell);
@@ -284,7 +272,7 @@ static  NSImage			*tabDivider = nil;
     AICustomTabCell	*tabCell;
     
     while((tabCell = [enumerator nextObject])){
-        totalWidth += [tabCell size].width + CUSTOM_TABS_GAP;
+		if(tabCell != dragCell) totalWidth += [tabCell size].width + CUSTOM_TABS_GAP;
     }
     
     return(totalWidth);
@@ -340,13 +328,6 @@ static  NSImage			*tabDivider = nil;
     [super setFrame:frameRect];
     [self arrangeTabs];
 	[self resetCursorTracking];
-}
-
-//Temporarily remove a tab cell from our array.  Call rebuildTabCells to re-add it.  Used for dragging.
-- (void)removeTabCell:(AICustomTabCell *)inCell
-{
-	[tabCellArray removeObject:inCell];
-	if(selectedCustomTabCell == inCell) selectedCustomTabCell = nil;
 }
 
 //Rebuild the tab cells for this view
@@ -461,9 +442,11 @@ static  NSImage			*tabDivider = nil;
         enumerator = [sortedTabArray reverseObjectEnumerator];
         tabCell = [enumerator nextObject];
         do{
-            tabCount++;
-            totalTabWidthForShrinking += [tabCell size].width;
-            reducedWidth = (totalTabWidthForShrinking - tabExtraWidth) / tabCount;
+			if(tabCell != dragCell){
+				tabCount++;
+				totalTabWidthForShrinking += [tabCell size].width;
+				reducedWidth = (totalTabWidthForShrinking - tabExtraWidth) / tabCount;
+			}
 
         }while((tabCell = [enumerator nextObject]) && (reducedWidth <= [tabCell size].width));
 
@@ -477,43 +460,44 @@ static  NSImage			*tabDivider = nil;
     int index = 0;
 
     while((tabCell = [enumerator nextObject])){
-		NSSize	size;
-		NSPoint	origin;
-		
-		//Make a gap to signify that the dragged cell can be dropped here
-		if(index == tabGapIndex) xLocation += tabGapWidth;
-		
-		//Get the object's size
-		size = [tabCell size];
-		
-		//If this tab is > next biggest, use the 'reduced' width calculated above
-		if(size.width > reduceThreshold){
-			size.width = reducedWidth;
-		}
-		
-		//Move the tab closer to its desired location
-		origin = NSMakePoint(xLocation, 0 );
-		if(!absolute){
-			if(origin.x > [tabCell frame].origin.x){
-				int distance = (origin.x - [tabCell frame].origin.x) * ([NSEvent shiftKey] ? CUSTOM_TABS_SLOW_STEP : CUSTOM_TABS_STEP);
-				if(distance < 1) distance = 1;
-				
-				origin.x = [tabCell frame].origin.x + distance;
-				
-				if(finished) finished = NO;
-			}else if(origin.x < [tabCell frame].origin.x){
-				int distance = ([tabCell frame].origin.x - origin.x) * ([NSEvent shiftKey] ? CUSTOM_TABS_SLOW_STEP : CUSTOM_TABS_STEP);
-				if(distance < 1) distance = 1;
-				
-				origin.x = [tabCell frame].origin.x - distance;
-				if(finished) finished = NO;
+		if(tabCell != dragCell){
+			NSSize	size;
+			NSPoint	origin;
+			
+			//Make a gap to signify that the dragged cell can be dropped here
+			if(index == tabGapIndex) xLocation += tabGapWidth;
+			
+			//Get the object's size
+			size = [tabCell size];
+			
+			//If this tab is > next biggest, use the 'reduced' width calculated above
+			if(size.width > reduceThreshold){
+				size.width = reducedWidth;
 			}
+			
+			//Move the tab closer to its desired location
+			origin = NSMakePoint(xLocation, 0 );
+			if(!absolute){
+				if(origin.x > [tabCell frame].origin.x){
+					int distance = (origin.x - [tabCell frame].origin.x) * ([NSEvent shiftKey] ? CUSTOM_TABS_SLOW_STEP : CUSTOM_TABS_STEP);
+					if(distance < 1) distance = 1;
+					
+					origin.x = [tabCell frame].origin.x + distance;
+					
+					if(finished) finished = NO;
+				}else if(origin.x < [tabCell frame].origin.x){
+					int distance = ([tabCell frame].origin.x - origin.x) * ([NSEvent shiftKey] ? CUSTOM_TABS_SLOW_STEP : CUSTOM_TABS_STEP);
+					if(distance < 1) distance = 1;
+					
+					origin.x = [tabCell frame].origin.x - distance;
+					if(finished) finished = NO;
+				}
+			}
+			[tabCell setFrame:NSMakeRect((int)origin.x, (int)origin.y, (int)size.width, (int)size.height)];
+			
+			//Move to the next tab
+			xLocation += size.width + CUSTOM_TABS_GAP; //overlap the tabs a bit
 		}
-		[tabCell setFrame:NSMakeRect((int)origin.x, (int)origin.y, (int)size.width, (int)size.height)];
-		
-		//Move to the next tab
-		xLocation += size.width + CUSTOM_TABS_GAP; //overlap the tabs a bit
-		
 		index++;
 	}
     
@@ -556,21 +540,23 @@ static  NSImage			*tabDivider = nil;
         NSRect	cellFrame = [tabCell frame];
 		
         if(NSIntersectsRect(cellFrame, rect)){
-			BOOL	ignoreSelection = ([[AICustomTabDragging sharedInstance] destinationTabView] == self);
-			
-            //Draw the tab cell
-            [tabCell drawWithFrame:cellFrame inView:self ignoreSelection:ignoreSelection];
-			
-            //Draw the divider
-			//We don't draw the divider for the selected tab, or the tab to the right of the selected tab
-			//We also don't draw it for the index behind hovered
-			if((ignoreSelection ||
-				(tabCell != selectedCustomTabCell && (!nextTabCell || nextTabCell != selectedCustomTabCell)))
-			   && [tabCellArray indexOfObject:tabCell] != tabGapIndex - 1){
-                [tabDivider compositeToPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y) 
-								   operation:NSCompositeSourceOver];
+			if(tabCell != dragCell){
+				BOOL	ignoreSelection = ([[AICustomTabDragging sharedInstance] destinationTabView] == self ||
+										   [[AICustomTabDragging sharedInstance] sourceTabView] == self);
+				
+				//Draw the tab cell
+				[tabCell drawWithFrame:cellFrame inView:self ignoreSelection:ignoreSelection];
+				
+				//Draw the divider
+				//We don't draw the divider for the selected tab, or the tab to the right of the selected tab
+				//We also don't draw it for the index behind hovered
+				if((ignoreSelection ||
+					(tabCell != selectedCustomTabCell && (!nextTabCell || nextTabCell != selectedCustomTabCell)))
+				   && [tabCellArray indexOfObject:tabCell] != tabGapIndex - 1){
+					[tabDivider compositeToPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y) 
+									   operation:NSCompositeSourceOver];
+				}
 			}
-			
 		}
 		
         tabCell = nextTabCell;
@@ -596,7 +582,8 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 {
 	NSRect		drawRect;
 
-	if([[AICustomTabDragging sharedInstance] destinationTabView] == self){ //Draw dark gradient across entire view
+	if([[AICustomTabDragging sharedInstance] destinationTabView] == self ||
+	   [[AICustomTabDragging sharedInstance] sourceTabView] == self){ //Draw dark gradient across entire view
 		if(NSIntersectsRect(viewFrame, rect)){
 			[tabBackground tileInRect:AIConstrainRectWidth(viewFrame, NSMinX(rect), NSMaxX(rect))];
 		}
@@ -618,6 +605,22 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 			[tabBackground tileInRect:AIConstrainRectWidth(drawRect, NSMinX(rect), NSMaxX(rect))];
 		}
 	}
+}
+
+
+//Contextual menu ------------------------------------------------------------------------------------------------------
+#pragma mark Contextual menu
+//Return a contextual menu
+- (NSMenu *)menuForEvent:(NSEvent *)theEvent
+{
+    NSPoint		clickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    AICustomTabCell	*tabCell = [self tabAtPoint:clickLocation];
+	
+    //Pass this on to our delegate
+    if(tabCell && [delegate respondsToSelector:@selector(customTabView:menuForTabViewItem:)]){
+        return([delegate customTabView:self menuForTabViewItem:[tabCell tabViewItem]]);
+    }
+    return(nil);
 }
 
 
@@ -645,28 +648,23 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 - (void)mouseDragged:(NSEvent *)theEvent
 {
     NSPoint             clickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    AICustomTabCell     *dragCell;
 
 	//Once we've dragged beyond a certain threshold, initiate a tab drag
 	if( (lastClickLocation.x - clickLocation.x) > TAB_DRAG_DISTANCE || (lastClickLocation.x - clickLocation.x) < -TAB_DRAG_DISTANCE ||
 		(lastClickLocation.y - clickLocation.y) > TAB_DRAG_DISTANCE || (lastClickLocation.y - clickLocation.y) < -TAB_DRAG_DISTANCE ){
 		
 		//Perform a tab drag
-
-		if( allowsTabDragging ) {
-			if(lastClickLocation.x != -1 && lastClickLocation.y != -1){ //See note below about lastClickLocation
-				if((dragCell = [self tabAtPoint:lastClickLocation])){
-					[self stopCursorTracking];
-					
-					[dragCell retain];
-					[self removeTabCell:dragCell];
-					[[AICustomTabDragging sharedInstance] dragTabCell:dragCell
-												   fromCustomTabsView:self 
-															withEvent:theEvent 
-															selectTab:(![NSEvent cmdKey])];
-					[dragCell release];
-					
-				}
+		if(lastClickLocation.x != -1 && lastClickLocation.y != -1){ //See note below about lastClickLocation
+			
+			dragCell = [self tabAtPoint:lastClickLocation];
+			if(dragCell){
+				[dragCell retain];
+				[self stopCursorTracking];
+				[[AICustomTabDragging sharedInstance] dragTabCell:dragCell
+											   fromCustomTabsView:self 
+														withEvent:theEvent 
+														selectTab:(![NSEvent cmdKey])];
+				[dragCell release]; dragCell = nil;
 			}
 		}
 		
@@ -678,25 +676,6 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 	}
 }
 
-
-//Contextual menu ------------------------------------------------------------------------------------------------------
-#pragma mark Contextual menu
-//Return a contextual menu
-- (NSMenu *)menuForEvent:(NSEvent *)theEvent
-{
-    NSPoint		clickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    AICustomTabCell	*tabCell = [self tabAtPoint:clickLocation];
-
-    //Pass this on to our delegate
-    if(tabCell && [delegate respondsToSelector:@selector(customTabView:menuForTabViewItem:)]){
-        return([delegate customTabView:self menuForTabViewItem:[tabCell tabViewItem]]);
-    }
-    return(nil);
-}
-
-
-//Dragging -------------------------------------------------------------------------------------------------------------
-#pragma mark Dragging
 //Return the drag types we accept
 - (NSArray *)acceptableDragTypes
 {
@@ -734,9 +713,9 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		[[AICustomTabDragging sharedInstance] acceptDragIntoTabView:self atIndex:dropIndex];
 		[self setNeedsDisplay:YES];
 		[self displayIfNeeded];
-
+		
 		success = YES;
-
+		
     }else{
         if(tabCell = [self tabAtPoint:[sender draggingLocation]]){            
             if([delegate respondsToSelector:@selector(customTabView:didAcceptDragPasteboard:onTabViewItem:)]){
@@ -752,21 +731,21 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 //Called when a drag enters this toolbar
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
-    NSString 		*type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:TAB_CELL_IDENTIFIER]];
-    NSDragOperation	operation = NSDragOperationNone;
+	NSString 		*type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:TAB_CELL_IDENTIFIER]];
+	NSDragOperation	operation = NSDragOperationNone;
 	
 	[self stopCursorTracking];
 	if(type && [type isEqualToString:TAB_CELL_IDENTIFIER]){
 		operation = NSDragOperationPrivate;
 		[[AICustomTabDragging sharedInstance] setDestinationTabView:self];	
-    }else{
-        operation = NSDragOperationCopy;
-    }
-    
-    //Pass the drag event along to our window
-    if([[[self window] windowController] respondsToSelector:@selector(draggingEntered:)]){
-        [[[self window] windowController] draggingEntered:sender];
-    }
+	}else{
+		operation = NSDragOperationCopy;
+	}
+	
+	//Pass the drag event along to our window
+	if([[[self window] windowController] respondsToSelector:@selector(draggingEntered:)]){
+		[[[self window] windowController] draggingEntered:sender];
+	}
     
     return(operation);
 }
@@ -789,7 +768,6 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 																		  dropIndex:&dropIndex]];
 		[self smoothlyArrangeTabsWithGapOfWidth:(draggedCellWidth + CUSTOM_TABS_GAP) atIndex:dropIndex];
 		operation = NSDragOperationPrivate;
-		
     }else{
 		AICustomTabCell	*tabCell;
 
@@ -807,9 +785,9 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 
 //Called when the drag exits this tab bar
 - (void)draggingExited:(id <NSDraggingInfo>)sender
-{    
+{   
 	NSPasteboard 	*pboard = [sender draggingPasteboard];
-    NSString 		*type = [pboard availableTypeFromArray:[NSArray arrayWithObject:TAB_CELL_IDENTIFIER]];
+	NSString 		*type = [pboard availableTypeFromArray:[NSArray arrayWithObject:TAB_CELL_IDENTIFIER]];
 	
 	if(type && [type isEqualToString:TAB_CELL_IDENTIFIER]){ //Dragging a tab
 		
@@ -830,26 +808,50 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 //Instead, we step through each cell and use only it's width.
 - (NSPoint)_dropPointForTabOfWidth:(int)dragTabWidth hoveredAtScreenPoint:(NSPoint)inPoint dropIndex:(int *)outIndex
 {    
-    NSEnumerator 	*enumerator;
-    AICustomTabCell	*tabCell;
-    float			lastLocation = CUSTOM_TABS_INDENT;
-	int 			hoverIndex = 0;
-	
-    //Figure out where the user is hovering the tabcell item
-    enumerator = [tabCellArray objectEnumerator];
-    while(tabCell = [enumerator nextObject]){
-		if(inPoint.x < lastLocation + (([tabCell frame].size.width + dragTabWidth) / 2.0) ) break;
-		lastLocation += [tabCell frame].size.width + CUSTOM_TABS_GAP;
-		hoverIndex++;
+	if(allowsTabRearranging){
+		NSEnumerator 	*enumerator;
+		AICustomTabCell	*tabCell;
+		float			lastLocation = CUSTOM_TABS_INDENT;
+		int 			hoverIndex = 0;
+
+		//Figure out where the user is hovering the tabcell item
+		enumerator = [tabCellArray objectEnumerator];
+		while(tabCell = [enumerator nextObject]){
+			if(tabCell != dragCell){
+				if(inPoint.x < lastLocation + (([tabCell frame].size.width + dragTabWidth) / 2.0) ) break;
+				lastLocation += [tabCell frame].size.width + CUSTOM_TABS_GAP;
+			}
+			hoverIndex++;
+		}
+		
+		//Special case: Tab is to the right of all our tabs, the drop index is set to after our last tab
+		if(hoverIndex >= [tabCellArray count]) hoverIndex = [tabCellArray count];
+		
+		if(outIndex) *outIndex = hoverIndex;
+		return([[self window] convertBaseToScreen:[self convertPoint:NSMakePoint(lastLocation,0) toView:nil]]);
+
+	}else{
+		NSTabViewItem		*tabViewItem = [[AICustomTabDragging sharedInstance] draggedTabViewItem];
+		int					hover;
+		
+		//If dragging is disallowed, ask our delegate where this tab should go		//Desired index
+		int	desiredIndex = [delegate customTabView:self indexForInsertingTabViewItem:tabViewItem];		
+		if(outIndex) *outIndex = desiredIndex;
+		
+		//Position the hover tab
+		//Compensate for the hidden source drag tab if we are dragging to ourself
+		if(dragCell && [tabCellArray indexOfObject:dragCell] < desiredIndex) desiredIndex--;
+		if(desiredIndex == 0){
+			hover = CUSTOM_TABS_INDENT;
+		}else{
+			hover = NSMaxX([[tabCellArray objectAtIndex:desiredIndex-1] frame]);
+		}
+		return([[self window] convertBaseToScreen:[self convertPoint:NSMakePoint(hover,0) toView:nil]]);
 	}
-		  
-	//Special case: Tab is to the right of all our tabs, the drop index is set to after our last tab
-    if(hoverIndex >= [tabCellArray count]) hoverIndex = [tabCellArray count];
-	
-	if(outIndex) *outIndex = hoverIndex;
-    return([[self window] convertBaseToScreen:[self convertPoint:NSMakePoint(lastLocation,0) toView:nil]]);
 }
 
+	
+	
 
 //Cursor tracking ------------------------------------------------------------------------------------------------------
 #pragma mark Cursor Tracking

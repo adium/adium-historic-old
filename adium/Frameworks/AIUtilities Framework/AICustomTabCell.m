@@ -103,42 +103,6 @@ static NSImage		*tabCloseFrontRollover = nil;
     [super dealloc];
 }
 
-//Allow the user to close this tab even if it's not active
-- (void)setAllowsInactiveTabClosing:(BOOL)inValue
-{
-    allowsInactiveTabClosing = inValue;
-}
-- (BOOL)allowsInactiveTabClosing{
-	return(allowsInactiveTabClosing);
-}
-
-//The selected tab draws differently and has special close button behavior
-- (void)setSelected:(BOOL)inSelected
-{
-    selected = inSelected;
-}
-- (BOOL)isSelected{
-    return(selected);
-}
-
-//When a tab is hovered it should be highlighted.  Highlighted tabs draw differently.
-- (void)setHighlighted:(BOOL)inHighlighted
-{
-    highlighted = inHighlighted;
-}
-- (BOOL)isHighlighted{
-    return(highlighted);
-}
-
-//Frame determines where this tab cell will draw
-- (void)setFrame:(NSRect)inFrame
-{
-    frame = inFrame;
-}
-- (NSRect)frame{
-    return(frame);
-}
-
 //Return the desired size of this tab
 - (NSSize)size
 {
@@ -182,6 +146,45 @@ static NSImage		*tabCloseFrontRollover = nil;
 					  centeredYPos + TAB_CLOSE_Y_OFFSET + 1,
 					  [tabCloseFront size].width,
 					  [tabCloseFront size].height));
+}
+
+
+//Configure ------------------------------------------------------------------------------------------------------------
+#pragma mark Configure
+//Allow the user to close this tab even if it's not active
+- (void)setAllowsInactiveTabClosing:(BOOL)inValue
+{
+    allowsInactiveTabClosing = inValue;
+}
+- (BOOL)allowsInactiveTabClosing{
+	return(allowsInactiveTabClosing);
+}
+
+//The selected tab draws differently and has special close button behavior
+- (void)setSelected:(BOOL)inSelected
+{
+    selected = inSelected;
+}
+- (BOOL)isSelected{
+    return(selected);
+}
+
+//When a tab is hovered it should be highlighted.  Highlighted tabs draw differently.
+- (void)setHighlighted:(BOOL)inHighlighted
+{
+    highlighted = inHighlighted;
+}
+- (BOOL)isHighlighted{
+    return(highlighted);
+}
+
+//Frame determines where this tab cell will draw
+- (void)setFrame:(NSRect)inFrame
+{
+    frame = inFrame;
+}
+- (NSRect)frame{
+    return(frame);
 }
 
 

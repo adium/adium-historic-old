@@ -152,18 +152,20 @@
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]) {
         NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-		
-//		keepTabsArranged = [[preferenceDict objectForKey:KEY_KEEP_TABS_ARRANGED] boolValue];
-//		arrangeByGroup = [[preferenceDict objectForKey:KEY_ARRANGE_TABS_BY_GROUP] boolValue];
-
+				
 #warning re-hook
-//		[tabView_customTabs setAllowsInactiveTabClosing:[[preferenceDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
-
-#warning done within here? .. seems we have to
-//		[tabView_customTabs setAllowsTabRearranging:(![[preferenceDict objectForKey:KEY_KEEP_TABS_ARRANGED] boolValue])];
-//		[tabView_customTabs setAllowsTabDragging:(![[preferenceDict objectForKey:KEY_ARRANGE_TABS_BY_GROUP] boolValue])];
-
+		//Our prefs
 		alwaysShowTabs = NO;//![[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
+		//[tabView_customTabs setAllowsInactiveTabClosing:[[preferenceDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
+		
+		
+		
+		//Configure tabs for dragging and grouping
+		[tabView_customTabs setAllowsTabRearranging:[[adium interfaceController] allowChatOrdering]];
+
+		
+			
+			
 		[self updateTabBarVisibilityAndAnimate:(notification != nil)];
     }
 }
@@ -225,7 +227,7 @@
 	AIChat	*chat = [inTabViewItem chat];
 
 	if([containedChats indexOfObject:chat] != index){
-		[tabView_customTabs moveTab:inTabViewItem toIndex:index selectTab:NO];
+		[tabView_customTabs moveTab:inTabViewItem toIndex:index];
 		[containedChats moveObject:chat toIndex:index];
 		
 		[[adium interfaceController] chatOrderDidChange];
@@ -350,6 +352,12 @@
 					  toContainer:[[destTabView window] windowController]
 						  atIndex:index
 				withTabBarAtPoint:point];
+}
+
+//
+- (int)customTabView:(AICustomTabsView *)tabView indexForInsertingTabViewItem:(NSTabViewItem *)tabViewItem
+{
+	return([[adium interfaceController] indexForInsertingChat:[tabViewItem chat] intoContainerNamed:name]);
 }
 
 //Close a message tab
