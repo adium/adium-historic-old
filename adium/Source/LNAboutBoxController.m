@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-//$Id: LNAboutBoxController.m,v 1.27 2003/12/24 13:42:46 adamiser Exp $
+//$Id: LNAboutBoxController.m,v 1.28 2004/01/12 19:38:19 evands Exp $
 
 #import "LNAboutBoxController.h"
 
@@ -227,11 +227,11 @@ LNAboutBoxController *sharedInstance = nil;
 - (void)_loadBuildInformation
 {
     //Grab the info from our buildnum script
-    char *path, unixDate[256], num[256];
+    char *path, unixDate[256], num[256], whoami[256];
     if(path = (char *)[[[NSBundle mainBundle] pathForResource:@"buildnum" ofType:nil] fileSystemRepresentation])
     {
         FILE *f = fopen(path, "r");
-        fscanf(f, "%s | %s", num, unixDate);
+        fscanf(f, "%s | %s | %s", num, unixDate, whoami);
         fclose(f);
 	
         if(*num){
