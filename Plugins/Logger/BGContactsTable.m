@@ -58,6 +58,8 @@
 			return([[controller_LogViewer fromArray] objectAtIndex:row]);
 		}
 
+	}else{
+		return(@"");
 	}
 }
 
