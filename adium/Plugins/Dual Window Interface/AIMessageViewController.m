@@ -505,7 +505,7 @@
 
 	// Identifier 0: status image column. 1: name
 	if( [(NSNumber *)[tableColumn identifier] intValue] == 0 ) {
-		return [AITabStatusIconsPlugin iconForListObject:listObject];
+		return @""; //[AITabStatusIconsPlugin iconForListObject:listObject];
 	} else {
 		return([listObject displayName]);
 	}
