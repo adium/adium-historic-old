@@ -27,7 +27,9 @@
 - (void)_addContentStatus:(AIContentStatus *)content;
 - (void)_addContentObjectToQueue:(AIContentObject *)content;
 - (void)_addQueuedContent;
+- (NSArray *)_rowsForAddingContentObject:(AIContentObject *)content;
 - (NSArray *)_rowsForAddingContentMessage:(AIContentMessage *)content;
+- (AIFlexibleTableRow *)_rowForAddingContentStatus:(AIContentStatus *)content;
 - (AIFlexibleTableRow *)_statusRowForContent:(AIContentStatus *)content;
 - (AIFlexibleTableRow *)_prefixRowForContent:(AIContentMessage *)content;
 - (AIFlexibleTableRow *)_messageRowForContent:(AIContentMessage *)content previousRow:(AIFlexibleTableRow *)thePreviousRow header:(BOOL)isHeader;
@@ -199,7 +201,7 @@
     //lock the addition of rows down with rebuilding=YES
     rebuilding = YES;
 
-    AIContentMessage    *content;
+    AIContentObject    *content;
     AIFlexibleTableRow  *row;
     NSMutableArray      *rowArray = [[NSMutableArray alloc] init];
     
@@ -212,7 +214,7 @@
     //Re-add all content one row at a time (slooow)
     NSEnumerator        *enumerator_chat = [[chat contentObjectArray] reverseObjectEnumerator]; //(Content is stored in reverse order)
     while((content = [enumerator_chat nextObject]) && !restartRebuilding){
-        NSArray *contentRowArray = [[self _rowsForAddingContentMessage:content] retain];
+        NSArray *contentRowArray = [[self _rowsForAddingContentObject:content] retain];
         NSEnumerator        *enumerator_two = [contentRowArray objectEnumerator];
         AIFlexibleTableRow  *row;
         
@@ -296,13 +298,19 @@
 {
     if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
         [self _addContentMessage:(AIContentMessage *)content];
-
     }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
         [self _addContentStatus:(AIContentStatus *)content];
-        
     }
 }
 
+- (NSArray *)_rowsForAddingContentObject:(AIContentObject *)content
+{
+    if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
+        return [self _rowsForAddingContentMessage:(AIContentMessage *)content];
+    }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
+        return [NSArray arrayWithObject:[self _rowForAddingContentStatus:(AIContentStatus *)content]];
+    }
+}
 //Add rows for a content message object
 - (void)_addContentMessage:(AIContentMessage *)content
 {
@@ -380,7 +388,13 @@
 - (void)_addContentStatus:(AIContentStatus *)content
 {
     //Add the status change
-    [messageView addRow:[self _statusRowForContent:content]];
+    [messageView addRow:[self _rowForAddingContentStatus:content]];
+}
+
+- (AIFlexibleTableRow *)_rowForAddingContentStatus:(AIContentStatus *)content
+{
+    //Add the status change
+    AIFlexibleTableRow *row = [self _statusRowForContent:content];
     
     //Add a separatorto our previous row if necessary
     AIFlexibleTableFramedTextCell *cell;
@@ -388,16 +402,17 @@
     while (cell = [enumerator nextObject]) {
         [cell setDrawBottom:YES];
     }
+    
+    return(row);
 }
-
-
 //Rows --------------------------------------------------------------------------------------------------
 //Returns a status row for a content object
 - (AIFlexibleTableRow *)_statusRowForContent:(AIContentStatus *)content
 {
     AIFlexibleTableCell	*statusCell = [self _statusCellForContent:content];
-
-    return([AIFlexibleTableRow rowWithCells:[NSArray arrayWithObject:statusCell] representedObject:content]);
+    AIFlexibleTableRow *row = [AIFlexibleTableRow rowWithCells:[NSArray arrayWithObject:statusCell] representedObject:content];
+    previousRow = row;
+    return(row);
 }
 
 //Returns a message prefix row for a content object
