@@ -46,6 +46,7 @@
 //Path for the little popup arrow (Cached)
 - (NSBezierPath *)popUpArrowPath
 {
+	NSRect frame = [self frame];
 	arrowPath = [NSBezierPath bezierPath];
 	[arrowPath moveToPoint:NSMakePoint(NSWidth(frame)-8, NSHeight(frame)-6)];
 	[arrowPath relativeLineToPoint:NSMakePoint( 6, 0)];
