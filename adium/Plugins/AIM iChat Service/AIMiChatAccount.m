@@ -357,7 +357,7 @@ extern void* objc_getClass(const char *name);
 //    NSLog(@"Woot: chat:member:statusChanged (%@, %@, %i)",chat,member,inStatus);
 }
 - (oneway void)service:(id)service chat:(id)chat showError:(id)error{
-//    NSLog(@"Woot: showError (%@, %i)",chat,error);
+    [[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"iChat Error (%@)", screenName] withDescription:error];
 }
 - (oneway void)service:(id)service chat:(id)chat statusChanged:(int)inStatus{
 //    NSLog(@"Woot: chat:statusChanged (%@, %i)",chat,inStatus);
@@ -375,16 +375,16 @@ extern void* objc_getClass(const char *name);
     }    
 }
 - (oneway void)service:(id)service youAreDesignatedNotifier:(char)notifier{
-//    NSLog(@"Woot: youAreDesignatedNotifier (%i)",(int)notifier);
+    NSLog(@"(iChat)Adium is designated notifier (%i)",(int)notifier);
 }
 - (oneway void)service:(id)service buddyPictureChanged:(id)buddy imageData:(id)image{
 //    NSLog(@"Woot: buddyPictureChanged (%@)",buddy);
 }
 - (oneway void)openNotesChanged:(id)unknown{
-//    NSLog(@"Woot: openNotesChanged (%@)",unknown);
+    NSLog(@"(iChat)openNotesChanged (%@)",unknown);
 }
 - (oneway void)myStatusChanged:(id)unknown{
-//    NSLog(@"Woot: myStatusChanged (%@)",unknown);
+    NSLog(@"(iChat)myStatusChanged (%@)",unknown);
 }
 
 
