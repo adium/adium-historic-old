@@ -156,7 +156,7 @@
         AIAccount		*newAccount;
         AIService		*service;
 		NSString		*accountUID;
-		int				accountNumber;
+		NSString		*internalObjectID;
 		
 		//TEMPORARY UPGRADE CODE  0.63 -> 0.70 (Account format changed)
 		//####################################
@@ -195,11 +195,11 @@
 		//Fetch the account service, UID, and ID
 		service = [self serviceWithUniqueID:serviceID];
 		accountUID = [accountDict objectForKey:ACCOUNT_UID];
-		accountNumber = [[accountDict objectForKey:ACCOUNT_OBJECT_ID] intValue];
+		internalObjectID = [accountDict objectForKey:ACCOUNT_OBJECT_ID];
 		
         //Create the account and add it to our array
         if(service && accountUID && [accountUID length]){
-			if(newAccount = [self createAccountWithService:service UID:accountUID accountNumber:accountNumber]){
+			if(newAccount = [self createAccountWithService:service UID:accountUID internalObjectID:internalObjectID]){
                 [accountArray addObject:newAccount];
             }else{
 				[unloadableAccounts addObject:accountDict];
@@ -242,21 +242,22 @@
 }
 
 //Returns a new account of the specified type (Unique service plugin ID)
-- (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID accountNumber:(int)inAccountNumber
+- (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID internalObjectID:(NSString *)internalObjectID
 {	
 	//Filter the UID
 	inUID = [service filterUID:inUID removeIgnoredCharacters:YES];
 	
-	//If no object ID is provided, use the next largest
-	if(!inAccountNumber){
-		inAccountNumber = [[[adium preferenceController] preferenceForKey:TOP_ACCOUNT_ID group:PREF_GROUP_ACCOUNTS] intValue];
-		[[adium preferenceController] setPreference:[NSNumber numberWithInt:inAccountNumber + 1]
+	//If no object ID is provided, use the next largest integer
+	if(!internalObjectID){
+		int	topAccountID = [[[adium preferenceController] preferenceForKey:TOP_ACCOUNT_ID group:PREF_GROUP_ACCOUNTS] intValue];
+		internalObjectID = [NSString stringWithFormat:@"%i",topAccountID];
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:topAccountID + 1]
 											 forKey:TOP_ACCOUNT_ID
 											  group:PREF_GROUP_ACCOUNTS];
 	}
 	
 	//Create the account
-	return([service accountWithUID:inUID accountNumber:inAccountNumber]);
+	return([service accountWithUID:inUID internalObjectID:internalObjectID]);
 }
 
 
@@ -425,13 +426,22 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 }
 
 //Searches the account list for the specified account
-- (AIAccount *)accountWithAccountNumber:(int)accountNumber
+- (AIAccount *)accountWithInternalObjectID:(NSString *)objectID
 {
     NSEnumerator	*enumerator = [accountArray objectEnumerator];
     AIAccount		*account;
+	
+	//XXX - Temporary Upgrade code for account internalObjectIDs stored as NSNumbers 0.7x -> 0.8 -ai
+	if(![objectID isKindOfClass:[NSString class]]){
+		if([objectID isKindOfClass:[NSNumber class]]){
+			objectID = [NSString stringWithFormat:@"%i",[(NSNumber *)objectID intValue]];
+		}else{
+			objectID = nil; //Unrecognizable, ignore
+		}
+	}
     
-    while((account = [enumerator nextObject])){
-        if([account accountNumber] == accountNumber) break;
+    while(objectID && (account = [enumerator nextObject])){
+        if([objectID isEqualToString:[account internalObjectID]]) break;
     }
     
     return(account);
@@ -501,7 +511,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Returns a new default account
 - (AIAccount *)defaultAccount
 {
-	return([self createAccountWithService:[self serviceWithUniqueID:@"libgaim-oscar-AIM"] UID:@"" accountNumber:0]);
+	return([self createAccountWithService:[self serviceWithUniqueID:@"libgaim-oscar-AIM"] UID:@"" internalObjectID:nil]);
 }
 
 - (BOOL)anOnlineAccountCanCreateGroupChats
@@ -550,9 +560,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	AIAccount *newAccount;
 	
 	if(service){
-		newAccount = [self createAccountWithService:service
-												UID:@""
-									  accountNumber:0];
+		newAccount = [self createAccountWithService:service	UID:@"" internalObjectID:nil];
 	}else{
 		newAccount = [self defaultAccount];
 	}
@@ -597,6 +605,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 }
 
 //Switches the service of the specified account
+//XXX - We no longer support this in the interface, I'm in favor of removing this method -ai
 - (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(AIService *)inService
 {
     //Add an account with the new service
@@ -605,7 +614,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	
 	newAccount = [self createAccountWithService:inService
 											UID:[inAccount UID]
-								  accountNumber:[inAccount accountNumber]];
+							   internalObjectID:[inAccount internalObjectID]];
 	accountIndex = [accountArray indexOfObject:inAccount];
 		
     [self insertAccount:newAccount
@@ -624,7 +633,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	//Add an account with the new UID
 	AIAccount	*newAccount = [self createAccountWithService:[inAccount service]
 														 UID:inUID
-											   accountNumber:[inAccount accountNumber]];
+											internalObjectID:[inAccount internalObjectID]];
 
 	[newAccount setPreference:[[inAccount service] filterUID:inUID removeIgnoredCharacters:NO]
 					   forKey:@"FormattedUID"
@@ -691,9 +700,9 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	//If passed a contact, we have a few better ways to determine the account than just using the first
     if(inContact){
 		//If we've messaged this object previously, and the account we used to message it is online, return that account
-        int accountID = [[inContact preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT
-											   group:PREF_GROUP_PREFERRED_ACCOUNTS] intValue];
-        if(accountID && (account = [self accountWithAccountNumber:accountID])){
+        NSString *accountID = [inContact preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT
+													group:PREF_GROUP_PREFERRED_ACCOUNTS];
+        if(accountID && (account = [self accountWithInternalObjectID:accountID])){
             if([account availableForSendingContentType:inType toContact:inContact]){
                 return(account);
             }
@@ -708,7 +717,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		
 		//Return the last account used to message someone on this service
 		NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[[inContact service] serviceID]];
-		if(lastAccountID && (account = [self accountWithAccountNumber:[lastAccountID intValue]])){
+		if(lastAccountID && (account = [self accountWithInternalObjectID:lastAccountID])){
 			if([account availableForSendingContentType:inType toContact:nil] || includeOffline){
 				return(account);
 			}
@@ -952,7 +961,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
         AIContentObject *contentObject = [userInfo objectForKey:@"AIContentObject"];
         AIAccount		*sourceAccount = (AIAccount *)[contentObject source];
         
-        [destObject setPreference:[NSNumber numberWithInt:[sourceAccount accountNumber]]
+        [destObject setPreference:[sourceAccount internalObjectID]
                            forKey:KEY_PREFERRED_SOURCE_ACCOUNT
                             group:PREF_GROUP_PREFERRED_ACCOUNTS];
         
