@@ -204,12 +204,16 @@ Adium, Copyright 2001-2005, Adam Iser
 }
 
 /*!
- * @brief Set the account to an AIStatus status state
+ * @brief Perform the setting of a status state
  *
  * Sets the account to a passed status state.  The account should set itself to best possible status given the return
- * values of statusState's accessors.
+ * values of statusState's accessors.  The passed statusMessage has been filtered; it should be used rather than
+ * [statusState statusMessage], which returns an unfiltered statusMessage.
+ *
+ * @param statusState The state to enter
+ * @param statusMessage The filtered status message to use.
  */
-- (void)setStatusState:(AIStatus *)statusState
+- (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage
 {
 	
 }
