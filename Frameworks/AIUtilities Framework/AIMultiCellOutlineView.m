@@ -44,7 +44,7 @@
 }
 
 //Cell used for content rows
-- (void)setContentCell:(id)cell{
+- (void)setContentCell:(NSCell *)cell{
 	if(contentCell != cell){
 		[contentCell release];
 		contentCell = [cell retain];
@@ -53,12 +53,12 @@
 	[self setRowHeight:contentRowHeight];
 	[self resetRowHeightCache];
 }
-- (id)contentCell{
+- (NSCell *)contentCell{
 	return(contentCell);
 }
 
 //Cell used for group rows
-- (void)setGroupCell:(id)cell{
+- (void)setGroupCell:(NSCell *)cell{
 	if(groupCell != cell){
 		[groupCell release];
 		groupCell = [cell retain];
@@ -66,11 +66,11 @@
 	groupRowHeight = [groupCell cellSize].height;
 	[self resetRowHeightCache];
 }
-- (id)groupCell{
+- (NSCell *)groupCell{
 	return(groupCell);
 }
 
-- (id)cellForItem:(id)item
+- (NSCell *)cellForItem:(id)item
 {
 	return([self isExpandable:item] ? groupCell : contentCell);
 }

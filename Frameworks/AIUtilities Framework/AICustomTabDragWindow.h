@@ -3,8 +3,9 @@
 //  Adium
 //
 //  Created by Adam Iser on Sat Mar 06 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
+
+@class ESFloater;
 
 @interface AICustomTabDragWindow : NSObject {
 	NSImage				*floaterTabImage;
@@ -15,13 +16,12 @@
 	
 	BOOL				useFancyAnimations;
 }
+@end
 
+@interface AICustomTabDragWindow (PRIVATE_AICustomTabDraggingOnly)
 + (AICustomTabDragWindow *)dragWindowForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent;
 - (void)setDisplayingFullWindow:(BOOL)fullWindow animate:(BOOL)animate;
 - (void)moveToPoint:(NSPoint)inPoint;
-- (NSImage *)dragTabImageForTabCell:(AICustomTabCell *)tabCell inCustomTabsView:(AICustomTabsView *)customTabsView;
-- (NSImage *)dragWindowImageForWindow:(NSWindow *)window customTabsView:(AICustomTabsView *)customTabsView tabCell:(AICustomTabCell *)tabCell;
-- (NSImage *)dragImage;
 - (void)closeWindow;
-
+- (NSImage *)dragImage;
 @end

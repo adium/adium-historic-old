@@ -18,6 +18,11 @@ typedef enum {
 	AIVertical
 } AIDirection;
 
+/*!
+@class AIGradient
+@abstract 	Cocoa wrapper around lower level gradient drawing functions.  Draws simple gradients.
+@discussion Cocoa wrapper around lower level gradient drawing functions.  Draws simple gradients.  Methods are self-explanatory; <tt>direction</tt> is one of AIHorizontal or AIVertical.
+*/
 @interface AIGradient : NSObject {
 	AIDirection		direction;
 	NSColor			*color1;

@@ -19,6 +19,7 @@
 
 @interface AIAutoScrollView (PRIVATE)
 - (void)_initAutoScrollView;
+- (void)setCorrectScrollbarVisibility;
 @end
 
 @implementation AIAutoScrollView
@@ -51,7 +52,6 @@
     autoScrollToBottom = NO;
 	inAutoScrollToBottom= NO;
     autoHideScrollBar = NO;
-    updateShadowsWhileScrolling = NO;
 	passKeysToDocumentView = NO;
 	
 	//Focus ring
@@ -149,11 +149,6 @@
     if(autoHideScrollBar){
         [self setCorrectScrollbarVisibility];
     }
-//    if(updateShadowsWhileScrolling){
-//		[[self window] performSelector:@selector(compatibleInvalidateShadow) withObject:nil afterDelay:0.001];
-//		[[self window] compatibleInvalidateShadow];
-//		[[self window] display];
-//    }
 }
 
 //Scroll to the top of our view
@@ -190,13 +185,6 @@
     }else{
         if([self hasVerticalScroller]) [self setHasVerticalScroller:NO];
     }
-}
-
-//Shadow updating when scrolling ----------------------
-#pragma mark Shadow updating
-- (void)setUpdateShadowsWhileScrolling:(BOOL)inValue
-{
-    updateShadowsWhileScrolling = inValue;   
 }
 
 //Key forwarding ----------------------

@@ -21,7 +21,7 @@
 
 	This class also contains methods for auto-sizing the parent window based on the selected tab.  The delegate
 	is asked for the window size, and this tabview takes care of the animation.
-
+	
 */
 
 #import "AIToolbarTabView.h"

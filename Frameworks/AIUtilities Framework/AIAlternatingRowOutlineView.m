@@ -17,13 +17,11 @@
  A subclass of outline view that adds:
 
  - Alternating rows
- - Delete key filtering
- - Expand / Collapse state control
  - A vertical column grid
- - Fixes a reload data crash
  */
 
 #import "AIAlternatingRowOutlineView.h"
+#import "AIOutlineView.h"
 
 @interface AIAlternatingRowOutlineView (PRIVATE)
 - (void)_initAlternatingRowOutlineView;
@@ -57,9 +55,7 @@
 {
     drawsAlternatingRows = NO;
 	drawsBackground = YES;
-	hidesSelectionWhenNotMain = NO;
     alternatingRowColor = [[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0] retain];
-    isOnPantherOrBetter = [NSApp isOnPantherOrBetter];
 }
 
 - (void)dealloc

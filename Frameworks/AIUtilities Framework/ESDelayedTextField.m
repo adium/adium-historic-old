@@ -94,7 +94,13 @@
 - (void)_delayedAction:(NSTimer *)timer
 {
 	[[self target] performSelector:[self action] withObject:self];
-}
 
+    if(delayedChangesTimer){
+        if([delayedChangesTimer isValid]){
+            [delayedChangesTimer invalidate]; 
+        }
+        [delayedChangesTimer release]; delayedChangesTimer = nil;
+    }
+}
 
 @end

@@ -251,14 +251,15 @@ static BOOL expandOnClick = YES;
 		
 		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
 		[cell setHighlighted:selected];
-		
+
 		//Draw the grid
-		if([self drawsAlternatingRows] && [cell drawGridBehindCell]){
+		if([self drawsAlternatingRows] && (![cell respondsToSelector:@selector(drawGridBehindCell)] ||
+										   [cell drawGridBehindCell])){
 			[self _drawRowInRect:NSIntersectionRect([self rectOfRow:row], rect)
 						 colored:!(row % 2)
-						selected:selected];			
+						selected:selected];	
 		}
-		
+
 		//Draw the cell
 		NSRect	cellFrame = [self frameOfCellAtColumn:0 row:row];
 		if([self isRowSelected:row]) [cell _drawHighlightWithFrame:cellFrame inView:self];

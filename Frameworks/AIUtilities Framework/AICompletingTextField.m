@@ -25,7 +25,6 @@
 - (id)_init;
 - (void)insertText:(id)insertString;
 - (NSString *)completionForString:(NSString *)inString;
-- (NSString *)impliedStringValueForString:(NSString *)aString;
 @end
 
 @implementation AICompletingTextField

@@ -9,6 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <Carbon/Carbon.h>
 
+/*!
+	@class SUSpeaker
+	@abstract Cocoa wrapper for the Carbon Speech Synthesis Manager
+	@discussion Cocoa wrapper for the Carbon Speech Synthesis Manager
+*/
 @interface SUSpeaker : NSObject 
 {
     SpeechChannel _speechChannel;

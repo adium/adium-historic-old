@@ -21,7 +21,6 @@
 
 #import "AIBezierPathAdditions.h"
 
-
 @implementation NSBezierPath (AIBezierPathAdditions)
 
 + (NSBezierPath *)bezierPathRoundedRectOfSize:(NSSize)backgroundSize
@@ -74,7 +73,7 @@
                                   clockwise:NO];
     [path lineToPoint:NSMakePoint(topLeft.x, topLeft.y + radius)];
 
-    return [[path retain] autorelease];
+    return path;
 }
 
 + (NSBezierPath *)bezierPathWithRoundedTopCorners:(NSRect)rect radius:(float)radius
@@ -105,7 +104,7 @@
     [path lineToPoint:NSMakePoint(bottomRight.x, bottomRight.y)];
 	[path closePath];
 	
-    return [[path retain] autorelease];
+    return path;
 }
 
 + (NSBezierPath *)bezierPathWithRoundedBottomCorners:(NSRect)rect radius:(float)radius
@@ -136,7 +135,7 @@
     [path lineToPoint:NSMakePoint(topLeft.x, topLeft.y)];
 	[path closePath];
 	
-    return [[path retain] autorelease];
+    return path;
 }
 
 @end

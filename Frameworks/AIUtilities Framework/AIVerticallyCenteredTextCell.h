@@ -13,6 +13,11 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+/*!
+	@class AIVerticallyCenteredTextCell
+	@abstract Simple NSCell which draws its text centered vertically
+	@discussion Simple <tt>NSCell</tt> which draws its text centered vertically
+*/
 @interface AIVerticallyCenteredTextCell : NSCell {
 
 }

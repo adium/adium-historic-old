@@ -1,9 +1,3 @@
-//
-//  BZBezierPathAdditions.h
-//  Adium
-//
-//  Created by Mac-arena the Bored Zo and Chris Serino.
-
 /*-------------------------------------------------------------------------------------------------------*\
 | Adium, Copyright (C) 2001-2004, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
@@ -18,6 +12,12 @@
  | You should have received a copy of the GNU General Public License along with this program; if not,
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
+
+//
+//  BZBezierPathAdditions.h
+//  Adium
+//
+//  Created by Mac-arena the Bored Zo and Chris Serino.
 
 @interface NSBezierPath (AIBezierPathAdditions) 
 

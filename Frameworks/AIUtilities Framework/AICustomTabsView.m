@@ -26,13 +26,13 @@
 #define CUSTOM_TABS_GAP			1					//Gap between tabs
 #define CUSTOM_TABS_INDENT		3					//Indent on left and right of tabbar
 
+#warning For Adam: I do not know this code well enough to properly document it. It is all you. ;)
+
 //Images shared by all instances of AICustomTabsView
 static  NSImage			*tabBackground = nil;
 static  NSImage			*tabDivider = nil;
 
 @interface AICustomTabsView (PRIVATE)
-- (id)initWithFrame:(NSRect)frameRect;
-
 //Positioning 
 - (void)arrangeTabs;
 - (void)smoothlyArrangeTabs;
@@ -48,10 +48,20 @@ static  NSImage			*tabDivider = nil;
 //Tab Data Access (Guarded)
 - (void)removeTabCell:(AICustomTabCell *)inCell;
 - (NSArray *)tabCellArray;
+- (int)numberOfTabViewItems;
+- (AICustomTabCell *)tabCellForTabViewItem:(NSTabViewItem *)tabViewItem;
 
 //Cursor tracking
 - (void)startCursorTracking;
 - (void)stopCursorTracking;
+
+- (void)rebuildTabCells;
+
+- (AICustomTabCell *)tabAtPoint:(NSPoint)clickLocation;
+
+//Drawing
+- (int)totalWidthOfTabs;
+
 @end
 
 @implementation AICustomTabsView

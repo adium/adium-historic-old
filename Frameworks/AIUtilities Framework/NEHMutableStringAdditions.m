@@ -12,7 +12,7 @@
 + (NSMutableString *)stringWithContentsOfASCIIFile:(NSString *)path
 {
 	return ([[[NSMutableString alloc] initWithData:[NSData dataWithContentsOfFile:path]
-								   encoding:NSASCIIStringEncoding] autorelease]);
+										  encoding:NSASCIIStringEncoding] autorelease]);
 }
 
 - (NSMutableString*)mutableString

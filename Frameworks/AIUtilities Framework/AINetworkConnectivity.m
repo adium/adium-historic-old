@@ -11,8 +11,7 @@
  new connectivity state.  
  
  + (void)refreshReachabilityAndNotify is offerred to immediately refresh reachability, although
- this should not generally be needed (it is used in Adium to force an update when waking from sleep, for example, in case
-									  the system doesn't believe that network connectivity was ever lost).
+ this should not generally be needed
  
  + (BOOL)networkIsReachable always reflects the last network reachability state retrieved by AINetworkCnonnectivity.
  The notification should be relied upon whenever possible; this method exists primarily to assist in debugging.

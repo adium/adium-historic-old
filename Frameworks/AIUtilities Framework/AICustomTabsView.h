@@ -13,10 +13,14 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import "ESFloater.h"
 #define TAB_CELL_IDENTIFIER     @"Tab Cell Identifier"
 
 @class AICustomTabCell, AICustomTabsView;
+
+@protocol AICustomTabViewItem
+- (NSString *)label;
+- (NSImage *)icon;
+@end
 
 @interface NSObject (AICustomTabsViewDelegate)
 - (void)customTabView:(AICustomTabsView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;
@@ -30,6 +34,12 @@
 - (int)customTabView:(AICustomTabsView *)tabView indexForInsertingTabViewItem:(NSTabViewItem *)tabViewItem;
 @end
 
+/*!
+	@class AICustomTabsView
+	@abstract Dynamic, draggable, separatable tabs, with full-featured delegate-driven behavior
+	@discussion <tt>AICustomTabsView</tt> is the public class which displays and manages dynamic, draggable tabs.
+		(**INCOMPLETE**)
+*/
 @interface AICustomTabsView : NSView {
     IBOutlet	NSTabView			*tabView;
 
@@ -76,17 +86,18 @@
 - (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index;
 - (int)numberOfTabViewItems;
 
-//Private
-- (void)rebuildTabCells;
-- (AICustomTabCell *)tabAtPoint:(NSPoint)clickLocation;
-- (int)totalWidthOfTabs;
-- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index selectTab:(BOOL)shouldSelect animate:(BOOL)animate;
-- (int)numberOfTabViewItems;
-- (void)closeTab:(AICustomTabCell *)tabCell;
-- (void)closeAllTabsExceptFor:(AICustomTabCell *)targetCell;
-- (void)drawBackgroundInRect:(NSRect)rect withFrame:(NSRect)viewFrame selectedTabRect:(NSRect)tabFrame;
-- (void)resetCursorTracking;
-- (AICustomTabCell *)tabCellForTabViewItem:(NSTabViewItem *)tabViewItem;
-
 @end
 
+@interface AICustomTabsView (PRIVATE_AICustomTabsViewForAuxiliaryClasses)
+//Cursor tracking
+- (void)resetCursorTracking;
+
+//Moving and Closing
+- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index selectTab:(BOOL)shouldSelect animate:(BOOL)animate;
+- (void)closeTab:(AICustomTabCell *)tabCell;
+- (void)closeAllTabsExceptFor:(AICustomTabCell *)targetCell;
+
+//Drawing
+- (void)drawBackgroundInRect:(NSRect)rect withFrame:(NSRect)viewFrame selectedTabRect:(NSRect)tabFrame;
+
+@end

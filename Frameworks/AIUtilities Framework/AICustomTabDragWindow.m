@@ -3,10 +3,10 @@
 //  Adium
 //
 //  Created by Adam Iser on Sat Mar 06 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AICustomTabDragWindow.h"
+#import "ESFloater.h"
 
 #define CUSTOM_TABS_INDENT		3					//Indent on left and right of tabbar
 #define CONTENT_OFFSET_X		1					//Offset of content view relative to tabs
@@ -14,6 +14,8 @@
 
 @interface AICustomTabDragWindow (PRIVATE)
 - (id)initForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent;
+- (NSImage *)dragTabImageForTabCell:(AICustomTabCell *)tabCell inCustomTabsView:(AICustomTabsView *)customTabsView;
+- (NSImage *)dragWindowImageForWindow:(NSWindow *)window customTabsView:(AICustomTabsView *)customTabsView tabCell:(AICustomTabCell *)tabCell;
 @end
 
 @implementation AICustomTabDragWindow

@@ -21,8 +21,6 @@
 #import "AIHTMLDecoder.h"
 #import "AIColorAdditions.h"
 
-NSAttributedString *_safeString(NSAttributedString *inString);
-
 @implementation NSMutableAttributedString (AIAttributedStringAdditions)
 
 //Append a plain string, adding the specified attributes
@@ -38,17 +36,6 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 
     [self appendAttributedString:tempString];
     [tempString release];
-}
-
-- (NSData *)dataRepresentation
-{
-	return([NSArchiver archivedDataWithRootObject:self]);
-}
-
-
-- (NSAttributedString *)safeString
-{
-    return(_safeString((NSAttributedString *)self));
 }
 
 - (unsigned int)replaceOccurrencesOfString:(NSString *)target withString:(NSString*)replacement options:(unsigned)opts range:(NSRange)searchRange
@@ -400,32 +387,8 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 
 - (NSAttributedString *)safeString
 {
-    return(_safeString(self));
-}
-
-- (NSAttributedString *)stringByAddingFormattingForLinks
-{
-NSMutableAttributedString  *str = [self mutableCopy];
-	[str addFormattingForLinks];
-	return [str autorelease];
-}
-
-@end
-
-@implementation NSData (AIAttributedStringAdditions)
-
-- (NSAttributedString *)attributedString
-{
-	return([NSAttributedString stringWithData:self]);
-}
-
-@end
-
-//Separated out to avoid code duplication
-NSAttributedString *_safeString(NSAttributedString *inString)
-{
-    if([inString containsAttachments]){
-        NSMutableAttributedString	*safeString = [[inString mutableCopy] autorelease];
+    if([self containsAttachments]){
+        NSMutableAttributedString	*safeString = [[self mutableCopy] autorelease];
         int							currentLocation = 0;
         NSRange						attachmentRange;
 		
@@ -467,7 +430,29 @@ NSAttributedString *_safeString(NSAttributedString *inString)
         return safeString;
 
     }else{
-        return inString;
-
+        return self;
     }
+}
+
+- (NSAttributedString *)stringByAddingFormattingForLinks
+{
+	NSMutableAttributedString  *str = [self mutableCopy];
+	[str addFormattingForLinks];
+	return [str autorelease];
+}
+
+@end
+
+@implementation NSData (AIAttributedStringAdditions)
+
+- (NSAttributedString *)attributedString
+{
+	return([NSAttributedString stringWithData:self]);
+}
+
+@end
+
+//Separated out to avoid code duplication
+NSAttributedString *_safeString(NSAttributedString *inString)
+{
 }
