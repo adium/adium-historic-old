@@ -12,7 +12,6 @@ Legend
 ----
 Bugs
 ----
-* If the first recieved message is a link, it is not clickable until you send another message or get sent one (I think)
 = Account name not displaying correctly after service switch
 * Create new account, tab from username->pass->account list.  Next tab should go back to username
 * Stop contact list from auto-resizing under the dock - this is a tough area.  It does not auto-resize under the dock EXCEPT for at the edges, by design, since many people use a dock which does not extend to the edges of the screen and would like the contact list to reach down there.  So far as I can tell there's no way to know how wide the dock is; only how tall it is.
@@ -47,7 +46,7 @@ Preferences:
 	
 Accounts:
 	= Move user name field out of account code and into account list preferences code
-	+ Display 'New Account' in account list for accounts without a UID
+	= Display 'New Account' in account list for accounts without a UID
 	+ Allow user to cancel connecting of accounts
 	+ Auto-complete aliases and address book entries in New message prompt, log viewer
 
@@ -65,7 +64,7 @@ Message Window:
 	+ Remember last X lines of previous conversation, restore to new message windows
 	+ Preference to place tabs on the top of the window (Make it look pretty)
 	+ Make option-clicking a tab close button close all other tabs
-	- Remove "per-contact" window position/size saving. Instead, use the size/position of the last window, and cascade new ones
+	- Remove "per-contact" window position/size saving. Instead, use the size/position of the last window, and cascade new ones - Colin is working on this
 	
 Contact List Display:
 	+ Small contact list icon to idenfity mobile device users
@@ -76,12 +75,12 @@ Sounds:
 	= Add a 'None' soundset 
 
 iTunes Integration:
-	+ iTunes script runner should load scripts from the Application Support directory
+	= iTunes script runner should load scripts from the Application Support directory
 	= iTunes %_status script should display "Not Playing" when iTunes isn't open
 	= Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
 
 Other:
-	+ Add customizable hotkey to bring Adium to the foreground
+	# Add customizable hotkey to bring Adium to the foreground
 		How is this possible? - we can set global hotkeys, no? - Is this necessary in Adium? Can't Key Xing or iKey can do it if you want it?.
 	+ Create a plugin to hide the AIM "Your screen name is now signed in 2 locations" messages
 	- Don't display libgaim errors for disconnect
@@ -130,7 +129,7 @@ Contact List
 	- Remove text color preference.  All contacts will have a status color, and groups have their own color preference.
 	- Remove show contact labels preference
 	- Remove the contact count display preferences, these are in the view menu
-	- Remove preference for idle time color.  It should be the color of the text.
+	# Remove preference for idle time color.  It should be the color of the text.
 	- Remove 'Idle & Away' status coloring.  There is no need for an additional color here.
 	- Remove the label colors for online, offline, idle, away
 	- Remove the text colors for signed on, signed off, typing, and unviewed content
