@@ -169,9 +169,10 @@
 	
     //Finish everything up
 	[self chatStatusChanged:nil];
-	[self chatParticipatingListObjectsChanged:nil];
 	[self sizeAndArrangeSubviews];
-
+	
+	[self chatParticipatingListObjectsChanged:nil];
+	
     return(self);
 }
 
@@ -300,9 +301,9 @@
 		NSMutableAttributedString	*outgoingAttributedString = [[[textView_outgoing textStorage] copy] autorelease];
 
 		if (!sendMessagesToOfflineContact &&
-			[[chat participatingListObjects] count] == 1 &&
-			![[[[chat participatingListObjects] objectAtIndex:0] statusObjectForKey:@"Online"] boolValue] &&
-			![[[[chat participatingListObjects] objectAtIndex:0] statusObjectForKey:@"Stranger"] boolValue]){
+			![chat name] &&
+			![[chat listObject] online] &&
+			![[chat listObject] integerStatusObjectForKey:@"Stranger"]){
 			
 			//Contact is offline.  Ask how the user wants to handle the situation.
 			[CSMessageToOfflineContactWindowController showSheetInWindow:[view_contents window] forMessageViewController:self];
