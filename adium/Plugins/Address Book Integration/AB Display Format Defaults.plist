@@ -12,5 +12,7 @@
 	<integer>1</integer>
 	<key>AB Use NickName</key>
 	<integer>0</integer>
+	<key>AB Prefer AB Images</key>
+	<integer>0</integer>
 </dict>
 </plist>
