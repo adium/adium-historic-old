@@ -30,6 +30,10 @@
 - (int)_circleWidthForHeight:(float)height;
 @end
 
+static BOOL displayTime;
+static BOOL isOnLeft;
+static BOOL needsUpdate;
+
 @implementation AIStatusCircle
 
 + (id)statusCircle
@@ -53,6 +57,8 @@
     _attributedStringSize = NSMakeSize(0,0);
     _maxWidth = 0;
     cachedHeight = 0;
+    
+    needsUpdate = YES;
     
 /*    statusSquare = [[AIImageUtilities 
 imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
@@ -183,6 +189,7 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
     
     //Right align our circle
     inRect.origin.x += inRect.size.width - circleWidth;
+//    inRect.origin.x += [self maxWidthForHeight:inRect.size.height] - circleWidth;
     inRect.size.width = circleWidth;
 
     //Pre-calculate some key points
@@ -324,7 +331,6 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
     }else{
         insideWidth = 0;
     }
-
     return(insideWidth + circleRadius * 2);
 }
 
@@ -369,16 +375,31 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
     //If our height has changed, flush the string/rect cache
     if(cachedHeight != height + CIRCLE_SIZE_OFFSET) [self _flushDrawingCache];
 
-    //
-    if(!_maxWidth){
-        _maxWidth = [[self _attributedString:@"8:88" forHeight:height + CIRCLE_SIZE_OFFSET] size].width + [self _circleRadiusForHeight:height] + 1.0;
+    if(needsUpdate || !_maxWidth){
+        _maxWidth = [self _circleRadiusForHeight:height] + 1.0;
+        
+        if (displayTime || isOnLeft) //on the left, we need the full width to make the alignment correct
+            _maxWidth += [[self _attributedString:@"8:88" forHeight:height + CIRCLE_SIZE_OFFSET] size].width;
 	
         cachedHeight = height + CIRCLE_SIZE_OFFSET;
+        
+        needsUpdate = NO;
     }
 
     return(_maxWidth);
 }
 
++ (void)shouldDisplayIdleTime:(BOOL)displayIdleTime
+{
+    displayTime = displayIdleTime;
+    needsUpdate = YES;
+}
+
++ (void)setIsOnLeft:(BOOL)inIsOnLeft;
+{
+    isOnLeft = inIsOnLeft;
+    needsUpdate = YES;
+}
 //Flush the cached strings and sizes
 - (void)_flushDrawingCache
 {

@@ -212,6 +212,7 @@
     NSArray             *cellSizeArray;
     BOOL                changed = NO;
     BOOL                isHidden = [[inObject displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
+    BOOL                isOnline = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
     int                 j;
     
     if ( (isHidden) || !([[inObject containingGroup] isExpanded]) ) { //if it's hidden it shouldn't be part of our current cache
@@ -221,7 +222,7 @@
                 changed = YES;
             }
         }
-    } else { //contact is in the active contact list and is 
+    } else if (isOnline) { //contact is in the active contact list and is 
         [[self delegate] outlineView:self willDisplayCell:cell forTableColumn:column item:inObject];        
         for (j=0 ; j < 3; j++) {  //check left, middle, and right
             cellSizeArray = [cell cellSizeArrayForBounds:NSMakeRect(0,0,0,[self rowHeight]) inView:self];
@@ -265,7 +266,7 @@
         cellSizeArray = [cell cellSizeArrayForBounds:NSMakeRect(0,0,0,[self rowHeight]) inView:self];
     
         cellSize = NSSizeFromString([cellSizeArray objectAtIndex:j]);
-        if(cellSize.width > desiredWidth[j]){
+        if(cellSize.width > desiredWidth[j] && ([[object containingGroup] isExpanded] || [object isKindOfClass:[AIListGroup class]])){
             desiredWidth[j] = cellSize.width;
             hadMax[j] = object;
         }
@@ -284,7 +285,7 @@
         
         desiredHeight = [self numberOfRows] * ([self rowHeight] + [self intercellSpacing].height);
          for (j = 0; j < 3; j++) {
-             totalWidth += desiredWidth[j];   
+             totalWidth += desiredWidth[j]; 
          }
          
          totalWidth += [self intercellSpacing].width + 3; //+3 is to account for variable-width letters.  stupid things.

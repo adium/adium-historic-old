@@ -115,7 +115,9 @@
 
     //Redisplay and resize
     [contactListView reloadData];
-    [contactListView performFullRecalculation]; //recalculate all sizes now rather than waiting for random updates to recache them
+    
+    //Recalculate all sizes after giving the contact list a second to update itself
+    [NSTimer scheduledTimerWithTimeInterval:1 target:contactListView selector:@selector(performFullRecalculation) userInfo:nil repeats:NO];
 }
 
 //Reload the contact list (if updates aren't delayed)
