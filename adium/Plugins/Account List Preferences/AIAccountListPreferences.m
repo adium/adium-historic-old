@@ -247,6 +247,7 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	[[popupMenu_serviceList window] makeFirstResponder:popupMenu_serviceList];
+	return(YES);
 }
 
 
