@@ -49,7 +49,7 @@
 /*!
  * @brief Window was closed, either by a button being clicked or the user closing it
  */
-+ (void)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
++ (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
 {
 	BOOL	fingerprintAccepted;
 
@@ -66,14 +66,14 @@
 	}	
 	
 	//Use the gaim thread to perform the response
-	NSLog(@"unknown from %x",[NSRunLoop currentRunLoop]);
 	[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
 									 performSelector:@selector(gaimThreadUnknownFingerprintResponseInfo:wasAccepted:)
 										  withObject:userInfo
 										  withObject:[NSNumber numberWithBool:fingerprintAccepted]];
 	
 	//XXX perform any other behaviors now
-	
+
+	return YES;
 }
 
 /*!
