@@ -56,6 +56,7 @@
 
 - (void)setAndConfigureEventPresetsMenu;
 - (void)updateSoundSetSelection;
+- (void)updateSoundSetSelectionForSoundSetPath:(NSString *)soundSetPath;
 @end
 
 @implementation ESGlobalEventsPreferences
@@ -437,7 +438,7 @@
 	/* Update the selection, which will select Custom as appropriate.  This must be done before saving the event
 	 * preset so the menu is on the correct sound set to save.
 	 */
-	[self updateSoundSetSelection];
+	[self updateSoundSetSelectionForSoundSetPath:soundSetPath];
 
 	/* Save the preset which is now updated to have the appropriate sounds; 
 	 * in saving, the name of the soundset, or @"", will also be saved.
@@ -588,12 +589,8 @@
 	
 }
 
-- (void)updateSoundSetSelection
+- (void)updateSoundSetSelectionForSoundSetPath:(NSString *)soundSetPath
 {
-	NSDictionary	*eventPreset = [[popUp_eventPreset selectedItem] representedObject];
-	
-	//Update the soundset popUp
-	NSString		*soundSetPath = [eventPreset objectForKey:KEY_EVENT_SOUND_SET];
 	if(soundSetPath && [soundSetPath length] != 0){
 		[popUp_soundSet selectItemWithRepresentedObject:[soundSetPath stringByExpandingBundlePath]];
 		[self popUp:popUp_soundSet shouldShowCustom:NO];
@@ -601,6 +598,16 @@
 	}else{
 		[self popUp:popUp_soundSet shouldShowCustom:YES];
 	}
+}
+
+- (void)updateSoundSetSelection
+{
+	NSDictionary	*eventPreset = [[popUp_eventPreset selectedItem] representedObject];
+	
+	//Update the soundset popUp
+	NSString		*soundSetPath = [eventPreset objectForKey:KEY_EVENT_SOUND_SET];
+	
+	[self updateSoundSetSelectionForSoundSetPath:soundSetPath];
 }
 
 /*
