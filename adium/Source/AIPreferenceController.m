@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.38 2004/01/28 17:53:27 evands Exp $
+// $Id: AIPreferenceController.m,v 1.39 2004/02/03 05:23:45 dchoby98 Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -128,6 +128,7 @@
         }
     }
 }
+
 
 - (void)registerThemableKeys:(NSArray *)keysArray forGroup:(NSString *)groupName
 {

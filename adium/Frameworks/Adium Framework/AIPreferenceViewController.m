@@ -61,14 +61,6 @@
     return(delegate);
 }
 
-// Restore this categories' defaults
-- (IBAction)restoreDefaults:(id)sender
-{
-	// NSLog(@"---- Restore Defaults in AIPreferenceViewController");
-	
-	
-}
-
 //Compare to another category view (for sorting on the preference window)
 - (NSComparisonResult)compare:(AIPreferenceViewController *)inView
 {

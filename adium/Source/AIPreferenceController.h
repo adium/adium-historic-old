@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.h,v 1.10 2004/01/18 19:10:34 bgannin Exp $ 
+// $Id: AIPreferenceController.h,v 1.11 2004/02/03 05:23:45 dchoby98 Exp $ 
 
 //Preference groups
 #define PREF_GROUP_GENERAL              @"General"
@@ -64,6 +64,7 @@ typedef enum {
 	
     NSMutableArray			*paneArray;		//An array of preference panes
     NSMutableDictionary		*groupDict;		//A dictionary of pref dictionaries
+	NSMutableDictionary		*defaultPrefs;  //A dictionary of default preferences
     NSMutableDictionary		*themablePreferences;
     
     BOOL					shouldDelay;

@@ -8,10 +8,18 @@
         {CLASS = AIColoredBoxView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = AIFlippedCategoryView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {
-            ACTIONS = {closeWindow = id; }; 
+            ACTIONS = {restoreDefaults = id; }; 
+            CLASS = AIPreferenceViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"button_restoreDefaults" = NSButton; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {closeWindow = id; restoreDefaults = id; }; 
             CLASS = AIPreferenceWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_restoreDefaults" = id; 
                 "coloredBox_advancedTitle" = AIColoredBoxView; 
                 "outlineView_advanced" = NSOutlineView; 
                 "tabView_category" = NSTabView; 

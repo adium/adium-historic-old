@@ -42,7 +42,6 @@
 
 + (AIPreferencePane *)preferencePane;
 + (AIPreferencePane *)preferencePaneForPlugin:(id)inPlugin;
-+ (void)restoreDefaultsForPreferencePane:(AIPreferencePane *)preferencePane;
 - (NSComparisonResult)compare:(AIPreferencePane *)inPane;
 - (NSView *)view;
 - (void)closeView;

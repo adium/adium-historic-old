@@ -45,13 +45,14 @@
     IBOutlet	AIFlippedCategoryView		*view_Advanced;
     IBOutlet	NSTextField			*textField_advancedTitle;
     IBOutlet	AIColoredBoxView		*coloredBox_advancedTitle;
+	IBOutlet	NSButton				*button_restoreDefaults;
     
     NSMutableArray		*loadedPanes;
     NSMutableArray		*loadedAdvancedPanes;
 
     NSMutableDictionary		*toolbarItems;
     NSMutableArray		*_advancedCategoryArray;
-
+	
     int				yPadding;    
 }
 
