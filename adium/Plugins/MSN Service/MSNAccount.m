@@ -343,11 +343,6 @@
     return @"MSN";
 }
 
-- (NSString *)UIDAndServiceID //serviceid.uid
-{
-    return [NSString stringWithFormat:@"%@.%@",[self serviceID],[self UID]];
-}
-
 - (NSString *)accountDescription
 {
     return [propertiesDict objectForKey:@"Email"];

@@ -71,9 +71,6 @@ extern void* objc_getClass(const char *name);
 - (NSString *)serviceID{
     return(@"AIM"); //The service ID (shared by any account code accessing this service)
 }
-- (NSString *)UIDAndServiceID{
-    return([NSString stringWithFormat:@"%@.%@",[self serviceID],[self UID]]); //ServiceID.UID
-}
 - (NSString *)accountDescription{
     return([AIMService loginID]); //Readable description of this account's username
 }

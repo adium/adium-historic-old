@@ -17,6 +17,10 @@
 
 @class AIListContact, AIAccount, AIMutableOwnerArray;
 
+/*!
+ * @class AIHandle
+ * A unique handle to talk to on any IM protocol
+ */
 @interface AIHandle : NSObject {
     NSString		*UID;
     NSString		*serviceID;
@@ -36,9 +40,25 @@
 - (id)initWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary forAccount:(AIAccount *)inAccount;
 
 //Identifying information
+
+/*!
+ * @method UID
+ * Returns the service-specific unique ID of this handle
+ */
 - (NSString *)UID;
+
+/*!
+ * @method serviceID
+ * Returns the identifier of this service
+ */
 - (NSString *)serviceID;
+
+/*!
+ * @method UIDAndServiceID
+ * Returns serviceID.UID, which together unique identify the handle.
+ */
 - (NSString *)UIDAndServiceID;
+
 - (NSString *)serverGroup;
 - (void)setServerGroup:(NSString *)inServerGroup;
 - (BOOL)temporary;

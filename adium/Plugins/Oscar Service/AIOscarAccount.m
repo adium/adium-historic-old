@@ -109,11 +109,6 @@
     return(@"AIM");
 }
 
-//ServiceID.UID
-- (NSString *)UIDAndServiceID{
-    return([NSString stringWithFormat:@"%@.%@",[self serviceID],[self UID]]);
-}
-
 // Return a readable description of this account's username
 - (NSString *)accountDescription
 {
