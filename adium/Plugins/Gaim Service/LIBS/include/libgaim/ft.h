@@ -1,10 +1,12 @@
 /**
- * @file ft.h The file transfer interface
+ * @file ft.h File Transfer API
  * @ingroup core
  *
  * gaim
  *
- * Copyright (C) 2002-2003, Christian Hammond <chipx86@gnupdate.org>
+ * Gaim is the legal property of its developers, whose names are too numerous
+ * to list here.  Please refer to the COPYRIGHT file distributed with this
+ * source distribution.
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,6 +44,19 @@ typedef enum
 } GaimXferType;
 
 /**
+ * The different states of the xfer.
+ */
+typedef enum
+{
+	GAIM_XFER_STATUS_UNKNOWN = 0,   /**< Unknown, the xfer may be null. */
+	GAIM_XFER_STATUS_NOT_STARTED,   /**< It hasn't started yet. */
+	GAIM_XFER_STATUS_STARTED,       /**< gaim_xfer_start has been called. */
+	GAIM_XFER_STATUS_DONE,          /**< The xfer completed successfully. */
+	GAIM_XFER_STATUS_CANCEL_LOCAL,  /**< The xfer was canceled by us. */
+	GAIM_XFER_STATUS_CANCEL_REMOTE  /**< The xfer was canceled by the other end, or we couldn't connect. */
+} GaimXferStatusType;
+
+/**
  * File transfer UI operations.
  *
  * Any UI representing a file transfer must assign a filled-out
@@ -65,6 +80,7 @@ typedef struct
  */
 struct _GaimXfer
 {
+	guint ref;                    /**< The reference count.                 */
 	GaimXferType type;            /**< The type of transfer.               */
 
 	GaimAccount *account;         /**< The account.                        */
@@ -89,12 +105,13 @@ struct _GaimXfer
 	size_t bytes_sent;            /**< The number of bytes sent.           */
 	size_t bytes_remaining;       /**< The number of bytes remaining.      */
 
-	gboolean completed;           /**< File Transfer is completed.         */
+	GaimXferStatusType status;    /**< File Transfer's status.             */
 
 	/* I/O operations. */
 	struct
 	{
 		void (*init)(GaimXfer *xfer);
+		void (*request_denied)(GaimXfer *xfer);
 		void (*start)(GaimXfer *xfer);
 		void (*end)(GaimXfer *xfer);
 		void (*cancel_send)(GaimXfer *xfer);
@@ -122,6 +139,10 @@ extern "C" {
 
 /**
  * Creates a new file transfer handle.
+ * This is called by prpls.
+ * The handle starts with a ref count of 1, and this reference
+ * is owned by the core. The prpl normally does not need to
+ * gaim_xfer_ref or unref.
  *
  * @param account The account sending or receiving the file.
  * @param type    The type of file transfer.
@@ -133,11 +154,23 @@ GaimXfer *gaim_xfer_new(GaimAccount *account,
 								GaimXferType type, const char *who);
 
 /**
- * Destroys a file transfer handle.
+ * Increases the reference count on a GaimXfer.
+ * Please call gaim_xfer_unref later.
  *
- * @param xfer The file transfer to destroy.
+ * @param xfer A file transfer handle.
  */
-void gaim_xfer_destroy(GaimXfer *xfer);
+void gaim_xfer_ref(GaimXfer *xfer);
+
+/**
+ * Decreases the reference count on a GaimXfer.
+ * If the reference reaches 0, gaim_xfer_destroy (an internal function)
+ * will destroy the xfer. It calls the ui destroy cb first.
+ * Since the core keeps a ref on the xfer, only an erronous call to
+ * this function will destroy the xfer while still in use.
+ *
+ * @param xfer A file transfer handle.
+ */
+void gaim_xfer_unref(GaimXfer *xfer);
 
 /**
  * Requests confirmation for a file transfer from the user.
@@ -152,7 +185,7 @@ void gaim_xfer_request(GaimXfer *xfer);
  * @param xfer     The file transfer.
  * @param filename The filename.
  */
-void gaim_xfer_request_accepted(GaimXfer *xfer, char *filename);
+void gaim_xfer_request_accepted(GaimXfer *xfer, const char *filename);
 
 /**
  * Called if the user rejects the file transfer request.
@@ -178,6 +211,24 @@ GaimXferType gaim_xfer_get_type(const GaimXfer *xfer);
  * @return The account.
  */
 GaimAccount *gaim_xfer_get_account(const GaimXfer *xfer);
+
+/**
+ * Returns the status of the xfer.
+ *
+ * @param xfer The file transfer.
+ *
+ * @return The status.
+ */
+GaimXferStatusType gaim_xfer_get_status(const GaimXfer *xfer);
+
+/**
+ * Returns true if the file transfer was canceled.
+ *
+ * @param xfer The file transfer.
+ *
+ * @return Whether or not the transfer was canceled.
+ */
+gboolean gaim_xfer_is_canceled(const GaimXfer *xfer);
 
 /**
  * Returns the completed state for a file transfer.
@@ -228,7 +279,7 @@ size_t gaim_xfer_get_bytes_remaining(const GaimXfer *xfer);
  * Returns the size of the file being sent or received.
  *
  * @param xfer The file transfer.
- * 
+ *
  * @return The total size of the file.
  */
 size_t gaim_xfer_get_size(const GaimXfer *xfer);
@@ -347,6 +398,14 @@ void gaim_xfer_set_write_fnc(GaimXfer *xfer,
  */
 void gaim_xfer_set_ack_fnc(GaimXfer *xfer,
 		void (*fnc)(GaimXfer *, const char *, size_t));
+
+/**
+ * Sets the function to be called if the request is denied.
+ *
+ * @param xfer The file transfer.
+ * @param fnc The request denied prpl callback.
+ */
+void gaim_xfer_set_request_denied_fnc(GaimXfer *xfer, void (*fnc)(GaimXfer *));
 
 /**
  * Sets the transfer initialization function for the file transfer.

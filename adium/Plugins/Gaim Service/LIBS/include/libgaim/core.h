@@ -4,7 +4,9 @@
  *
  * gaim
  *
- * Copyright (C) 2003 Christian Hammond <chipx86@gnupdate.org>
+ * Gaim is the legal property of its developers, whose names are too numerous
+ * to list here.  Please refer to the COPYRIGHT file distributed with this
+ * source distribution.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,6 +57,20 @@ gboolean gaim_core_init(const char *ui);
  * application using the gaim core.
  */
 void gaim_core_quit(void);
+
+/**
+ * Calls gaim_core_quit().  This can be used as the function 
+ * passed to g_timeout_add() when you want to shutdown Gaim 
+ * in a specified amount of time.  When shutting down Gaim 
+ * from a plugin, you must use this with a timeout value of 0: 
+ *   g_timeout_add(0, gaim_core_quitcb, NULL);
+ * This is ensures that code from your plugin is not being 
+ * executed when gaim_core_quit() is called.  Otherwise you 
+ * would get a core dump after gaim_core_quit() executes and 
+ * control returns to your plugin because gaim_core_quit() frees 
+ * all plugins.
+ */
+gboolean gaim_core_quit_cb(gpointer unused);
 
 /**
  * Returns the version of the core library.

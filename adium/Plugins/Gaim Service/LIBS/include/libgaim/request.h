@@ -4,7 +4,9 @@
  *
  * gaim
  *
- * Copyright (C) 2003 Christian Hammond <chipx86@gnupdate.org>
+ * Gaim is the legal property of its developers, whose names are too numerous
+ * to list here.  Please refer to the COPYRIGHT file distributed with this
+ * source distribution.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,7 +50,9 @@ typedef enum
 	GAIM_REQUEST_FIELD_STRING,
 	GAIM_REQUEST_FIELD_INTEGER,
 	GAIM_REQUEST_FIELD_BOOLEAN,
-	GAIM_REQUEST_FIELD_CHOICE
+	GAIM_REQUEST_FIELD_CHOICE,
+	GAIM_REQUEST_FIELD_LIST,
+	GAIM_REQUEST_FIELD_LABEL
 
 } GaimRequestFieldType;
 
@@ -61,6 +65,8 @@ typedef struct
 
 	char *id;
 	char *label;
+
+	gboolean visible;
 
 	union
 	{
@@ -96,6 +102,17 @@ typedef struct
 			GList *labels;
 
 		} choice;
+
+		struct
+		{
+			GList *items;
+			GHashTable *item_data;
+			GList *selected;
+			GHashTable *selected_table;
+
+			gboolean multiple_selection;
+
+		} list;
 
 	} u;
 
@@ -345,6 +362,14 @@ void gaim_request_field_destroy(GaimRequestField *field);
 void gaim_request_field_set_label(GaimRequestField *field, const char *label);
 
 /**
+ * Sets whether or not a field is visible.
+ *
+ * @param field  The field.
+ * @param visible TRUE if visible, or FALSE if not.
+ */
+void gaim_request_field_set_visible(GaimRequestField *field, gboolean visible);
+
+/**
  * Returns the type of a field.
  *
  * @param field The field.
@@ -370,6 +395,15 @@ const char *gaim_request_field_get_id(const GaimRequestField *field);
  * @return The label text.
  */
 const char *gaim_request_field_get_label(const GaimRequestField *field);
+
+/**
+ * Returns whether or not a field is visible.
+ *
+ * @param field The field.
+ *
+ * @return TRUE if the field is visible. FALSE otherwise.
+ */
+gboolean gaim_request_field_is_visible(const GaimRequestField *field);
 
 /*@}*/
 
@@ -434,7 +468,7 @@ void gaim_request_field_string_set_editable(GaimRequestField *field,
  * Returns the default value in a string field.
  *
  * @param field The field.
- * 
+ *
  * @return The default value.
  */
 const char *gaim_request_field_string_get_default_value(
@@ -517,7 +551,7 @@ void gaim_request_field_int_set_value(GaimRequestField *field, int value);
  * Returns the default value in an integer field.
  *
  * @param field The field.
- * 
+ *
  * @return The default value.
  */
 int gaim_request_field_int_get_default_value(const GaimRequestField *field);
@@ -642,7 +676,7 @@ void gaim_request_field_choice_set_value(GaimRequestField *field, int value);
  * Returns the default value in an choice field.
  *
  * @param field The field.
- * 
+ *
  * @return The default value.
  */
 int gaim_request_field_choice_get_default_value(const GaimRequestField *field);
@@ -664,6 +698,140 @@ int gaim_request_field_choice_get_value(const GaimRequestField *field);
  * @return The list of labels.
  */
 GList *gaim_request_field_choice_get_labels(const GaimRequestField *field);
+
+/*@}*/
+
+/**************************************************************************/
+/** @name List Field API                                                  */
+/**************************************************************************/
+/*@{*/
+
+/**
+ * Creates a multiple list item field.
+ *
+ * @param id   The field ID.
+ * @param text The optional label of the field.
+ *
+ * @return The new field.
+ */
+GaimRequestField *gaim_request_field_list_new(const char *id, const char *text);
+
+/**
+ * Sets whether or not a list field allows multiple selection.
+ *
+ * @param field        The list field.
+ * @param multi_select TRUE if multiple selection is enabled,
+ *                     or FALSE otherwise.
+ */
+void gaim_request_field_list_set_multi_select(GaimRequestField *field,
+											  gboolean multi_select);
+
+/**
+ * Returns whether or not a list field allows multiple selection.
+ *
+ * @param field The list field.
+ *
+ * @return TRUE if multiple selection is enabled, or FALSE otherwise.
+ */
+gboolean gaim_request_field_list_get_multi_select(
+	const GaimRequestField *field);
+
+/**
+ * Returns the data for a particular item.
+ *
+ * @param field The list field.
+ * @param item  The item text.
+ *
+ * @return The data associated with the item.
+ */
+void *gaim_request_field_list_get_data(const GaimRequestField *field,
+									   const char *text);
+
+/**
+ * Adds an item to a list field.
+ *
+ * @param field The list field.
+ * @param item  The list item.
+ * @param data  The associated data.
+ */
+void gaim_request_field_list_add(GaimRequestField *field,
+								 const char *item, void *data);
+
+/**
+ * Adds a selected item to the list field.
+ *
+ * @param field The field.
+ * @param item  The item to add.
+ */
+void gaim_request_field_list_add_selected(GaimRequestField *field,
+										  const char *item);
+
+/**
+ * Clears the list of selected items in a list field.
+ *
+ * @param field The field.
+ */
+void gaim_request_field_list_clear_selected(GaimRequestField *field);
+
+/**
+ * Sets a list of selected items in a list field.
+ *
+ * @param field The field.
+ * @param items The list of selected items.
+ */
+void gaim_request_field_list_set_selected(GaimRequestField *field,
+										  GList *items);
+
+/**
+ * Returns whether or not a particular item is selected in a list field.
+ *
+ * @param field The field.
+ * @param item  The item.
+ *
+ * @return TRUE if the item is selected. FALSE otherwise.
+ */
+gboolean gaim_request_field_list_is_selected(const GaimRequestField *field,
+											 const char *item);
+
+/**
+ * Returns a list of selected items in a list field.
+ *
+ * To retrieve the data for each item, use
+ * gaim_request_field_list_get_data().
+ *
+ * @param field The field.
+ *
+ * @return The list of selected items.
+ */
+const GList *gaim_request_field_list_get_selected(
+	const GaimRequestField *field);
+
+/**
+ * Returns a list of items in a list field.
+ *
+ * @param field The field.
+ *
+ * @return The list of items.
+ */
+const GList *gaim_request_field_list_get_items(const GaimRequestField *field);
+
+/*@}*/
+
+/**************************************************************************/
+/** @name Label Field API                                                 */
+/**************************************************************************/
+/*@{*/
+
+/**
+ * Creates a label field.
+ *
+ * @param id   The field ID.
+ * @param text The optional label of the field.
+ *
+ * @return The new field.
+ */
+GaimRequestField *gaim_request_field_label_new(const char *id,
+											   const char *text);
 
 /*@}*/
 
