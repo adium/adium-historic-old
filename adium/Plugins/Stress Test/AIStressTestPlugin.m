@@ -1,4 +1,5 @@
-//
+/***
+///
 //  AIStressTestPlugin.m
 //  Adium
 //
@@ -22,13 +23,13 @@
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
 
     //Register this service
-#warning [[adium accountController] registerService:self];
+//#warning [[adium accountController] registerService:self];
 }
 
 //Return a new account with the specified properties
 - (id)accountWithProperties:(NSDictionary *)inProperties
 {
-    return([[[AIStressTestAccount alloc] initWithProperties:inProperties service:self] autorelease]);
+//    return([[[AIStressTestAccount alloc] initWithProperties:inProperties service:self] autorelease]);
 }
 
 // Return a Plugin-specific ID and description
@@ -48,3 +49,4 @@
 }
 
 @end
+*/
