@@ -24,5 +24,6 @@
 
 - (void)setRemoteGroupName:(NSString *)groupName forAccount:(AIAccount *)inAccount;
 - (AIMutableOwnerArray *)remoteGroupArray;
+- (NSString *)remoteGroupNameForAccount:(AIAccount *)inAccount;
 
 @end

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.30 2004/01/08 07:13:01 evands Exp $
+// $Id: AIAccount.m,v 1.31 2004/01/08 14:51:57 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -168,7 +168,7 @@
                                                                       userInfo:nil repeats:YES] retain];
         }
     }else{
-        [refreshDict removeObjectForKey:status];
+        [refreshDict removeObjectForKey:key];
         
         //Check if our refreshDict is now empty with a currently running timer
         if ( ([refreshDict count] == 0) && refreshTimer){

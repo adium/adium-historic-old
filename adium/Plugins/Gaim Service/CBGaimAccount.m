@@ -19,17 +19,17 @@
 #define RECONNECTION_ATTEMPTS   4
 
 @interface CBGaimAccount (PRIVATE)
-- (AIChat*)_openChatWithHandle:(AIHandle*)handle andConversation:(GaimConversation*)conv;
 - (void)displayError:(NSString *)errorDesc;
 - (void)setBuddyImageFromFilename:(char *)imageFilename;
 - (void)signonTimerExpired:(NSTimer*)timer;
 - (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer;
 - (void)connect;
 - (void)disconnect;
-- (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle;
 - (NSString *)_userIconCachePath;
-- (void)setTypingFlagOfHandle:(AIHandle *)handle to:(BOOL)typing;
-- (AIHandle *)createHandleAssociatingWithBuddy:(GaimBuddy *)buddy;
+
+
+- (void)associateContact:(AIListContact *)contact withBuddy:(GaimBuddy *)buddy;
+
 @end
 
 @implementation CBGaimAccount
@@ -50,60 +50,74 @@
 #pragma mark GaimBuddies
 - (void)accountNewBuddy:(GaimBuddy*)buddy
 {
-//	NSLog(@"accountNewBuddy (%s)", buddy->name);
-	AIHandle *handle = [handleDict objectForKey:[[NSString stringWithUTF8String:(buddy->name)] compactedString]];
-	if (!handle)
-		[self createHandleAssociatingWithBuddy:buddy];
+	NSLog(@"accountNewBuddy (%s)", buddy->name);
+
+	AIListContact   *theContact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+																			UID:[[NSString stringWithUTF8String:(buddy->name)] compactedString]];
+	[self associateContact:theContact withBuddy:buddy];
+//	
+//	
+//	
+//	AIHandle *handle = [handleDict objectForKey:[[NSString stringWithUTF8String:(buddy->name)] compactedString]];
+//	if (!handle)
+//		[self createHandleAssociatingWithBuddy:buddy];
 }
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {
-//	NSLog(@"accountUpdateBuddy (%s)", buddy->name);
+	NSLog(@"accountUpdateBuddy (%s)", buddy->name);
     int                     online;
-    NSMutableDictionary     *statusDict;
-    NSMutableArray          *modifiedKeys = [NSMutableArray array];
-    AIHandle                *theHandle;
+//    NSMutableDictionary     *statusDict;
+//    NSMutableArray          *modifiedKeys = [NSMutableArray array];
+    AIListContact           *theContact;
 	
     //Get the node's ui_data
-    theHandle = (AIHandle*)buddy->node.ui_data;
+    theContact = (AIListContact *)buddy->node.ui_data;
 	
     //no associated handle - gaim has a buddy for us but we are no longer tracking that buddy
-    if (!theHandle) { 
-        theHandle = [handleDict objectForKey:[[NSString stringWithUTF8String:(buddy->name)] compactedString]];    
-        if (theHandle) {
-            buddy->node.ui_data = theHandle;
-        } else {
-            //use the buddy's information gaimside to create the needed Adium handle
-            theHandle = [self createHandleAssociatingWithBuddy:buddy];
-            //Update the contact list
-                [[adium contactController] handle:theHandle 
-                                   addedToAccount:self];
-        }
-    }
+    if(!theContact){
+		theContact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+															   UID:[[NSString stringWithUTF8String:(buddy->name)] compactedString]];
+		[self associateContact:theContact withBuddy:buddy];
+	}
+
+//		if (theHandle) {
+//            buddy->node.ui_data = theHandle;
+//        } else {
+//            //use the buddy's information gaimside to create the needed Adium handle
+//            theHandle = [self createHandleAssociatingWithBuddy:buddy];
+//            //Update the contact list
+//                [[adium contactController] handle:theHandle 
+//                                   addedToAccount:self];
+//        }
+//    }
     
-    statusDict = [theHandle statusDictionary];
+//    statusDict = [theHandle statusDictionary];
     
     //Online / Offline
     online = (GAIM_BUDDY_IS_ONLINE(buddy) ? 1 : 0);
 //    NSLog(@"%s is %i",buddy->name,buddy->uc);
-    if([[statusDict objectForKey:@"Online"] intValue] != online)
+    if(![[theContact statusObjectForKey:@"Online" withOwner:self] boolValue])
     {
-        NSNumber *onlineNum = [NSNumber numberWithBool:online];
-        [statusDict setObject:onlineNum forKey:@"Online"];
-        [modifiedKeys addObject:@"Online"];
+		[theContact setStatusObject:[NSNumber numberWithBool:online] withOwner:self forKey:@"Online" notify:NO];
+		
+//        NSNumber *onlineNum = [NSNumber numberWithBool:online];
+//        [statusDict setObject:onlineNum forKey:@"Online"];
+//        [modifiedKeys addObject:@"Online"];
         
         //Enable/disable any instant messages with this handle
-        AIChat *chat = [chatDict objectForKey:[[theHandle containingContact] UID]];
-        if (chat) {
-            //Enable/disable the chat
-            [[chat statusDictionary] setObject:onlineNum forKey:@"Enabled"];
-            
-            //Notify
-            [[adium notificationCenter] postNotificationName:Content_ChatStatusChanged
-                                                      object:chat 
-                                                    userInfo:[NSDictionary dictionaryWithObject:
-                                                            [NSArray arrayWithObject:@"Enabled"] forKey:@"Keys"]];            
-        }
+#warning move to separate function
+//        AIChat *chat = [chatDict objectForKey:[[theHandle containingContact] UID]];
+//        if (chat) {
+//            //Enable/disable the chat
+//            [[chat statusDictionary] setObject:onlineNum forKey:@"Enabled"];
+//            
+//            //Notify
+//            [[adium notificationCenter] postNotificationName:Content_ChatStatusChanged
+//                                                      object:chat 
+//                                                    userInfo:[NSDictionary dictionaryWithObject:
+//                                                            [NSArray arrayWithObject:@"Enabled"] forKey:@"Keys"]];            
+//        }
 		/*           
 			//buddy->signon is always 0 - this will be fixed gaimside soon.
 			if (online && buddy->signon != 0) {
@@ -119,85 +133,101 @@
     //Display Name - use the serverside buddy_alias if present
     {
         char *alias = (char *)gaim_get_buddy_alias(buddy);
-        char *disp_name = (char *)[[statusDict objectForKey:@"Display Name"] UTF8String];
+		char *disp_name = (char *)[[theContact statusObjectForKey:@"Display Name" withOwner:self] UTF8String];
         if(!disp_name) disp_name = "";
 		
         if(alias && strcmp(disp_name, alias))
         {
-            [statusDict setObject:[NSString stringWithUTF8String:alias]
-                           forKey:@"Display Name"];
-            [modifiedKeys addObject:@"Display Name"];
+            [theContact setStatusObject:[NSString stringWithUTF8String:alias]
+							  withOwner:self
+								 forKey:@"Display Name"
+								 notify:NO];
+			//            [modifiedKeys addObject:@"Display Name"];
         }
     }
 	
     //Idletime
     {
-        if(buddy->idle != (int)([[[theHandle statusDictionary] objectForKey:@"IdleSince"] timeIntervalSince1970])){
-            if(buddy->idle != 0){
-                [statusDict setObject:[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->idle]
-                               forKey:@"IdleSince"];
-            } else {
-                [statusDict removeObjectForKey:@"IdleSince"];
-            }
-            [modifiedKeys addObject:@"IdleSince"];
+        if(buddy->idle != (int)([[theContact statusObjectForKey:@"IdleSince" withOwner:self] timeIntervalSince1970])){
+            [theContact setStatusObject:(buddy->idle ? [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->idle] : nil)
+							  withOwner:self
+								 forKey:@"IdleSince"
+								 notify:NO];
+			
+//            if(buddy->idle != 0){
+//                [statusDict setObject:
+//                               forKey:@"IdleSince"];
+//            } else {
+//                [statusDict removeObjectForKey:@"IdleSince"];
+//            }
+//            [modifiedKeys addObject:@"IdleSince"];
         }
     }
     
     //Group changes - gaim buddies start off in no group, so this is an important update for us
-    {
+    if(![theContact remoteGroupNameForAccount:self]){
         GaimGroup *g = gaim_find_buddys_group(buddy);
-        if(g && strcmp([[theHandle serverGroup] UTF8String], g->name)){
-            //            NSLog(@"Changed to group %s", g->name);        
-            [[adium contactController] handle:theHandle removedFromAccount:self];
-            [theHandle setServerGroup:[NSString stringWithUTF8String:g->name]];
-            [[adium contactController] handle:theHandle addedToAccount:self];
+		if(g/* && strcmp([[theContact remoteGroupNameForAccount:self] UTF8String], g->name)*/){
+            NSLog(@"Changed to group %s", g->name);
+			[theContact setRemoteGroupName:[NSString stringWithUTF8String:g->name] forAccount:self];
+				
+//            [[adium contactController] handle:theHandle removedFromAccount:self];
+//            [theHandle setServerGroup:[NSString stringWithUTF8String:g->name]];
+//            [[adium contactController] handle:theHandle addedToAccount:self];
         }
     }
     
     //Buddy Icon
     {
         GaimBuddyIcon *buddyIcon = gaim_buddy_get_icon(buddy);
-        if(buddyIcon && (buddyIcon != [[statusDict objectForKey:@"BuddyImagePointer"] pointerValue])) {                            
+        if(buddyIcon && (buddyIcon != [[theContact statusObjectForKey:@"BuddyImagePointer" withOwner:self] pointerValue])) {                            
             //save this for convenience
-            [[theHandle statusDictionary]
-                    setObject:[NSValue valueWithPointer:buddyIcon]
-                       forKey:@"BuddyImagePointer"];
+			
+			[theContact setStatusObject:[NSValue valueWithPointer:buddyIcon]
+							  withOwner:self
+								 forKey:@"BuddyImagePointer"
+								 notify:NO];
+//            [[theHandle statusDictionary]
+//                    setObject:
+//                       forKey:@"BuddyImagePointer"];
             
             //set the buddy image
             NSImage *image = [[[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_buddy_icon_get_data(buddyIcon, &(buddyIcon->len))
                                                                            length:buddyIcon->len]] autorelease];
-            [statusDict setObject:image forKey:@"UserIcon"];
+//            [statusDict setObject:image forKey:@"UserIcon"];
+			[theContact setStatusObject:image withOwner:self forKey:@"UserIcon" notify:NO];
 			
             //BuddyImagePointer is just for us, shh, keep it secret ;)
-            [modifiedKeys addObject:@"UserIcon"];
+//            [modifiedKeys addObject:@"UserIcon"];
         }
     }     
     
     //Away status
     {
         BOOL newAway = ((buddy->uc & UC_UNAVAILABLE) != 0);
-        NSNumber *storedValue = [[theHandle statusDictionary] objectForKey:@"Away"];
-        if (storedValue == nil || newAway != [storedValue boolValue]) {
-            [[theHandle statusDictionary] setObject:[NSNumber numberWithBool:newAway] 
-                                             forKey:@"Away"];
-            [modifiedKeys addObject:@"Away"];
+		NSNumber *storedValue = [theContact statusObjectForKey:@"Away" withOwner:self];
+        if(storedValue == nil || newAway != [storedValue boolValue]) {
+            [theContact setStatusObject:[NSNumber numberWithBool:newAway] withOwner:self forKey:@"Away" notify:YES];
+//            [modifiedKeys addObject:@"Away"];
         }
     }
     
     //Broadcast any changes
-    if([modifiedKeys count] > 0){
-//        NSLog(@"ModifiedKeys for %s: %@",buddy->name,modifiedKeys);
-        //tell the contact controller, silencing if necessary
-        [[adium contactController] handleStatusChanged:theHandle
-                                    modifiedStatusKeys:modifiedKeys
-                                               delayed:silentAndDelayed
-                                                silent:silentAndDelayed];
-    }
+	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+#warning desirable to combine this notification with that of our subclass
+//    if([modifiedKeys count] > 0){
+////        NSLog(@"ModifiedKeys for %s: %@",buddy->name,modifiedKeys);
+//        //tell the contact controller, silencing if necessary
+//        [[adium contactController] handleStatusChanged:theHandle
+//                                    modifiedStatusKeys:modifiedKeys
+//                                               delayed:silentAndDelayed
+//                                                silent:silentAndDelayed];
+//    }
 }
 
 - (void)accountRemoveBuddy:(GaimBuddy*)buddy
 {
-//	NSLog(@"accountRemoveBuddy (%s)", buddy->name);
+	NSLog(@"accountRemoveBuddy (%s)", buddy->name);
 
     //stored the key as a compactedString originally
     [handleDict removeObjectForKey:[[NSString stringWithFormat:@"%s", buddy->name] compactedString]];
@@ -626,29 +656,29 @@
     return NO;
 }
 
-- (AIHandle *)createHandleAssociatingWithBuddy:(GaimBuddy *)buddy
+- (void)associateContact:(AIListContact *)contact withBuddy:(GaimBuddy *)buddy
 {
-    GaimGroup   *group = gaim_find_buddys_group(buddy); //get the group
-    NSString    *groupName;
-    if (group)
-		groupName = [NSString stringWithCString:(group->name)];
-    else
-		groupName = NO_GROUP;
+//    GaimGroup   *group = gaim_find_buddys_group(buddy); //get the group
+//    NSString    *groupName;
+//    if (group)
+//		groupName = [NSString stringWithCString:(group->name)];
+//    else
+//		groupName = NO_GROUP;
 	
-	
-    AIHandle *handle = [AIHandle
-        handleWithServiceID:[self serviceID]
-                        UID:[[NSString stringWithUTF8String:buddy->name] compactedString]
-                serverGroup:groupName
-                  temporary:NO
-                 forAccount:self];
-    [handleDict setObject:handle forKey:[[NSString stringWithFormat:@"%s", buddy->name] compactedString]];
+//	
+//    AIHandle *handle = [AIHandle
+//        handleWithServiceID:[self serviceID]
+//                        UID:[[NSString stringWithUTF8String:buddy->name] compactedString]
+//                serverGroup:groupName
+//                  temporary:NO
+//                 forAccount:self];
+//    [handleDict setObject:handle forKey:[[NSString stringWithFormat:@"%s", buddy->name] compactedString]];
 	
     //Associate the handle with ui_data and the buddy with our statusDictionary
-    buddy->node.ui_data = [handle retain];
-    [[handle statusDictionary] setObject:[NSValue valueWithPointer:buddy] forKey:@"GaimBuddy"];
+    buddy->node.ui_data = [contact retain];
+    [contact setStatusObject:[NSValue valueWithPointer:buddy] withOwner:self forKey:@"GaimBuddy" notify:YES];
 	
-    return handle;
+//    return handle;
 }
 
 /*********************/

@@ -49,6 +49,11 @@
 	[[adium contactController] listObjectRemoteGroupingChanged:self oldGroupName:oldGroup];
 }
 
+- (NSString *)remoteGroupNameForAccount:(AIAccount *)inAccount
+{
+	return([remoteGroups objectWithOwner:inAccount]);
+}
+
 - (AIMutableOwnerArray *)remoteGroupArray
 {
 	return(remoteGroups);

@@ -3,7 +3,7 @@
 //  Adium XCode
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.13 2004/01/08 07:31:28 evands Exp $
+//  $Id: ESContactAlertsController.m,v 1.14 2004/01/08 14:51:58 adamiser Exp $
 
 
 /*
@@ -33,7 +33,7 @@
     arrayOfAlertsArrays             =   [[AIMutableOwnerArray alloc] init];
     
     //Register as a contact observer
-    [[owner contactController] registerListObjectObserver:self];
+#warning    [[owner contactController] registerListObjectObserver:self];
 }
 
 - (void)closeController
