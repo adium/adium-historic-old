@@ -96,7 +96,7 @@
   */
 - (NSString *)trimWhitespace;
 /*!
-	@method finderInfoFlags:type:creator:
+	@method getFinderInfoFlags:type:creator:
 	@brief Get finder info flags creator and type.
 	@discussion The bits of the finder info flag are
 	<blockquote>
@@ -123,7 +123,7 @@
 	@param creator Contains creator on return.
 	@result Return <tt>YES</tt> if successful, otherwise <tt>NO</tt> and the returned values are invalid.
   */
-- (BOOL)finderInfoFlags:(UInt16*)flags type:(OSType*)type creator:(OSType*)creator;
+- (BOOL)getFinderInfoFlags:(UInt16*)flags type:(OSType*)type creator:(OSType*)creator;
 
 /*!
 	@method finderLocation
