@@ -39,7 +39,6 @@
 	
     //bring the window front
     [controller showWindow:nil];
-	[[controller window] makeKeyAndOrderFront:nil];
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
