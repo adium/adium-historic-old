@@ -21,6 +21,8 @@
 #define Contact_ListChanged						@"Contact_ListChanged"
 #define Contact_SortSelectorListChanged			@"Contact_SortSelectorListChanged"
 
+#define Contact_ApplyDisplayName				@"Contact_ApplyDisplayName"
+
 //Whenever possible, accounts should keep their contact's status up to date.  However, sometimes this ideal situation
 //cannot be achieved, and the account needs to be told when 'more expensive' status keys are required so it can fetch
 //them.  This notification instructs the accounts to do just that.  It is currently used for profiles, but may be
