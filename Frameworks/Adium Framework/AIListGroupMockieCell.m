@@ -9,8 +9,8 @@
 #import "AIListOutlineView.h"
 
 @interface AIListGroupMockieCell (PRIVATE)
-- (NSImage *)cachedGroupGradient:(NSSize)inSize;
-- (NSImage *)cachedExpandedGroupGradient:(NSSize)inSize;
+- (NSImage *)cachedGradient:(NSSize)inSize;
+- (NSImage *)cachedExpandedGradient:(NSSize)inSize;
 @end
 
 @implementation AIListGroupMockieCell
@@ -37,9 +37,9 @@
 	NSImage			*image;
 	
 	if([controlView isItemExpanded:listObject]){
-		image = [self cachedGroupGradient:rect.size];
+		image = [self cachedGradient:rect.size];
 	}else{
-		image = [self cachedExpandedGroupGradient:rect.size];
+		image = [self cachedExpandedGradient:rect.size];
 	}
 	
 	[image drawInRect:rect
@@ -48,7 +48,14 @@
 			 fraction:1.0];
 }
 
-- (NSImage *)cachedGroupGradient:(NSSize)inSize
+//Reset gradient cache
+- (void)flushGradientCache
+{
+	[_groupGradient release]; _groupGradient = nil;
+	[_groupExpandedGradient release]; _groupExpandedGradient = nil;
+}
+
+- (NSImage *)cachedGradient:(NSSize)inSize
 {
 	NSRect	rect;
 	
@@ -67,7 +74,7 @@
 	
 	return(_groupGradient);
 }
-- (NSImage *)cachedExpandedGroupGradient:(NSSize)inSize
+- (NSImage *)cachedExpandedGradient:(NSSize)inSize
 {
 	NSRect	rect;
 	

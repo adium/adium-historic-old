@@ -27,6 +27,7 @@
 	[super dealloc];
 }
 
+//
 - (void)setShadowColor:(NSColor *)inColor
 {
 	if(inColor != shadowColor){
@@ -36,6 +37,12 @@
 }
 - (NSColor *)shadowColor{
 	return(shadowColor);
+}
+
+//Reset gradient cache
+- (void)flushGradientCache
+{
+	[_gradient release]; _gradient = nil;
 }
 
 //
@@ -51,7 +58,7 @@
 	}
 	
 	//Reset gradient cache
-	[_gradient release]; _gradient = nil;
+	[self flushGradientCache];
 }
 
 //Draw a gradient behind our group
