@@ -308,7 +308,7 @@ static void adiumGaimConvSetTitle(GaimConversation *conv, const char *title)
 
 static void adiumGaimConvUpdateProgress(GaimConversation *conv, float percent)
 {
-    NSLog(@"adiumGaimConvUpdateProgress");
+    NSLog(@"adiumGaimConvUpdateProgress %f",percent);
 }
 
 static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type)
