@@ -1,7 +1,10 @@
 				Adium X Version History
 				-----------------------
 
-Version 0.80 (??/??/????)
+Version 0.80 (13/-3/2525)
+- Achieved world domination
+- Obtained tasty sandwiches
+
 - Fullsize tooltip images
 - Toolbar buttons: send file, scripts, offline contacts, add contact, add group, view logs, user icon
 - Speech no longer interrupts speech from other applications
