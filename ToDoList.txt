@@ -30,7 +30,6 @@
 - Improve behavior when canceling changes to layouts and themes
 - Implement emoticon menu in appearance
 - Implement emoticons customize sheet in appearance
-- Prevent layout changes from altering prefs that are no longer in layout
 - Add a warning sheet about window moving/performance for non-standard styles
 - Not fetching buddy icons as well as we could be
 - Moving MSN buddies from one group to another doesn't usually work
