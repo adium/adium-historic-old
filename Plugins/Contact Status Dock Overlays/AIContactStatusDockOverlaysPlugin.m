@@ -110,7 +110,7 @@
 				AIListObject	*listObject;
 				while(listObject = [enumerator nextObject]){
 					if(([listObject respondsToSelector:@selector(account)]) &&
-					   ([listObject account] == inObject)){
+					   ([(id)listObject account] == inObject)){
 						   [unviewedObjectsArray removeObject:listObject];
 					   }
 				}
