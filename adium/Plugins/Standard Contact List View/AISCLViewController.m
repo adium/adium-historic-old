@@ -43,6 +43,7 @@
 
 - (void)_configureTransparencyAndShadows;
 - (void)_hideTooltip;
+- (void)_endTrackingMouse;
 @end
 
 @interface NSObject (_AIRespondsToUpdateShadows)
@@ -115,11 +116,9 @@
     [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-	//Hide any tooltip and invalidate the timers
-	[[adium interfaceController] showTooltipForListObject:nil atScreenPoint:NSMakePoint(0,0) onWindow:nil];
-	[tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil; //Stop the tooltip timer
-	[tooltipMouseLocationTimer invalidate]; [tooltipMouseLocationTimer release]; tooltipMouseLocationTimer = nil; //Stop the mouse location timer
-
+    //Hide any open tooltips
+    [self _endTrackingMouse];
+	
     //Close down and release the view
     [contactListView setTarget:nil];
     [contactListView setDataSource:nil];
@@ -346,7 +345,7 @@
     
     //Observe the window entering and leaving key (for tooltips)
     [[NSNotificationCenter defaultCenter] addObserver:self 
-											 selector:@selector(_hideTooltip)
+											 selector:@selector(_endTrackingMouse)
 												 name:NSWindowDidResignKeyNotification 
 											   object:[inSuperview window]];
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -599,7 +598,7 @@
     NSPoint		localPoint;
     BOOL		mouseInside;
 
-    [self _hideTooltip]; //Hide any open tooltips
+    [self _endTrackingMouse]; //Hide any open tooltips
 
     //Remove the existing tracking rect
     if (tooltipTrackingTag != -1)
@@ -681,18 +680,28 @@
 //Called when the mouse leaves the view
 - (void)mouseExited:(NSEvent *)theEvent
 {
-    [self _hideTooltip];
+    [self _endTrackingMouse];
+}
+
+//Stop tracking mouse events, stop displaying tooltips
+- (void)_endTrackingMouse
+{
+    if(trackingMouseMovedEvents){
+        trackingMouseMovedEvents = NO;
+        [[contactListView window] setAcceptsMouseMovedEvents:NO]; //Stop generating mouse-moved events
+        [self _showTooltipAtPoint:NSMakePoint(0,0)]; //Hide the tooltip
+        [tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil; //Stop the tooltip timer
+		[tooltipMouseLocationTimer invalidate]; [tooltipMouseLocationTimer release]; tooltipMouseLocationTimer = nil; //Stop the mouse location timer
+    }
 }
 
 //Hide any open tooltip and reset the tracking counter
 - (void)_hideTooltip
 {
-	if (trackingMouseMovedEvents){
-		trackingMouseMovedEvents = NO;
-		[tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil; //Stop the tooltip timer
-		[tooltipMouseLocationTimer invalidate]; [tooltipMouseLocationTimer release]; tooltipMouseLocationTimer = nil; //Stop the mouse location timer
-		[self _showTooltipAtPoint:NSMakePoint(0,0)];
-	}
+	[self _showTooltipAtPoint:NSMakePoint(0,0)];
+	tooltipCount = 0;
+	[tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil; //Stop the tooltip timer
+	[tooltipMouseLocationTimer invalidate]; [tooltipMouseLocationTimer release]; tooltipMouseLocationTimer = nil; //Stop the mouse location timer
 }
 
 //Show the correctly positioned tooltip (Pass a screen point)

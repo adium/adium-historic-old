@@ -33,7 +33,6 @@
 	NSPoint				lastMouseLocation;
 
 	BOOL				inDrag;
-//	AIListObject		*dragItem;
 	NSArray				*dragItems;
     
 }
