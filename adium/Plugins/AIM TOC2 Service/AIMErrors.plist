@@ -70,7 +70,7 @@
 		<key>982</key>
 		<string>You are blocked (Your warning level is too high to sign on)</string>
 		<key>983</key>
-		<string>You are blocked (You have been connected and disconnecting too frequently)</string>
+		<string>You are blocked (You have been connecting and disconnecting too frequently)</string>
 		<key>989</key>
 		<string>That account is currently suspended (or) The host has refused this connection</string>
 	</dict>
