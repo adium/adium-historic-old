@@ -31,7 +31,11 @@ static BOOL didInitOscar = NO;
 
 - (const char*)protocolPlugin
 {
-	if (!didInitOscar) didInitOscar = gaim_init_oscar_plugin();
+	if (!didInitOscar){
+		didInitOscar = gaim_init_oscar_plugin();
+		if (!didInitOscar) NSLog(@"CBGaimOscarAccount: Oscar plugin failed to load.");
+	}
+	
     return "prpl-oscar";
 }
 
@@ -155,8 +159,9 @@ static BOOL didInitOscar = NO;
 						//Check for a oscar_direct_im (dim) currently open
 						struct oscar_direct_im  *dim;
 						const char				*who = [[inListObject UID] UTF8String];
-						
-						dim = (struct oscar_direct_im  *)oscar_find_direct_im(account->gc, who);
+
+						//XXX
+//						dim = (struct oscar_direct_im  *)oscar_find_direct_im(account->gc, who);
 						
 						if (dim && (dim->connected)){
 							//We have a connected dim already; process the string and keep the modified copy
@@ -164,7 +169,8 @@ static BOOL didInitOscar = NO;
 							
 						}else{
 							//Either no dim, or the dim we have is no longer conected (oscar_direct_im_initiate_immediately will reconnect it)
-							oscar_direct_im_initiate_immediately(account->gc, who);
+//XXX
+							///oscar_direct_im_initiate_immediately(account->gc, who);
 							
 							//Add this content message to the sending queue for this contact to be sent once a connection is established
 							//XXX
@@ -701,8 +707,8 @@ aim_srv_setavailmsg(od->sess, text);
 {
 	if (gaim_account_is_connected(account)){
 		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
-		
-		return oscar_xfer_new(account->gc,destsn);
+//XXX		
+//		return oscar_xfer_new(account->gc,destsn);
 	}
 	
 	return nil;

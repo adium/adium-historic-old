@@ -121,7 +121,7 @@ typedef enum
 } GaimMessageFlags;
 
 /**
-* Flags applicable to users in Chats.
+ * Flags applicable to users in Chats.
  */
 typedef enum
 {
@@ -132,10 +132,13 @@ typedef enum
 	GAIM_CBFLAGS_FOUNDER       = 0x0008  /**< Channel Founder              */
 } GaimConvChatBuddyFlags;
 
-#include <libgaim/account.h>
-#include <libgaim/log.h>
-#include <libgaim/buddyicon.h>
-#include <libgaim/server.h>
+#include "account.h"
+#include "buddyicon.h"
+#include "log.h"
+#include "server.h"
+
+//**Adium
+#include "prpl.h"
 
 /**
  * Conversation window operations.
@@ -183,7 +186,7 @@ struct _GaimConversationUiOps
 	                   const char *message, GaimMessageFlags flags,
 	                   time_t mtime);
 
-	void (*chat_add_user)(GaimConversation *conv, const char *user);
+	void (*chat_add_user)(GaimConversation *conv, const char *user, gboolean new_arrival);
 	void (*chat_add_users)(GaimConversation *conv, GList *users);
 	void (*chat_rename_user)(GaimConversation *conv,
 	                         const char *old_name, const char *new_name);
@@ -1023,7 +1026,6 @@ gboolean gaim_conv_present_error(const char *who, GaimAccount *account, const ch
  */
 void gaim_conv_im_send(GaimConvIm *im, const char *message);
 
-
 void gaim_conv_im_send_with_flags(GaimConvIm *im, const char *message, GaimConvImFlags flags);
 
 /*@}*/
@@ -1195,7 +1197,8 @@ void gaim_conv_chat_send(GaimConvChat *chat, const char *message);
  * @param flags     The users flags
  */
 void gaim_conv_chat_add_user(GaimConvChat *chat, const char *user,
-							 const char *extra_msg, GaimConvChatBuddyFlags flags);
+							 const char *extra_msg, GaimConvChatBuddyFlags flags,
+							 gboolean new_arrival);
 
 /**
  * Adds a list of users to a chat.

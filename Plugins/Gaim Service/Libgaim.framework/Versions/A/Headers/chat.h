@@ -22,11 +22,11 @@
 #ifndef _GAIM_JABBER_CHAT_H_
 #define _GAIM_JABBER_CHAT_H_
 
-#include <libgaim/internal.h>
-#include <libgaim/connection.h>
-#include <libgaim/conversation.h>
-#include <libgaim/request.h>
-#include <libgaim/roomlist.h>
+#include "internal.h"
+#include "connection.h"
+#include "conversation.h"
+#include "request.h"
+#include "roomlist.h"
 
 #include "jabber.h"
 
@@ -51,6 +51,7 @@ typedef struct _JabberChat {
 } JabberChat;
 
 GList *jabber_chat_info(GaimConnection *gc);
+GHashTable *jabber_chat_info_defaults(GaimConnection *gc, const char *chat_name);
 void jabber_chat_join(GaimConnection *gc, GHashTable *data);
 JabberChat *jabber_chat_find(JabberStream *js, const char *room,
 		const char *server);

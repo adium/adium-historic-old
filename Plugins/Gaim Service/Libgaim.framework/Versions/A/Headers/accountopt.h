@@ -22,10 +22,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef _GAIM_ACCOUNT_OPT_H_
-#define _GAIM_ACCOUNT_OPT_H_
+#ifndef _GAIM_ACCOUNTOPT_H_
+#define _GAIM_ACCOUNTOPT_H_
 
-#include <libgaim/prefs.h>
+#include "prefs.h"
 
 /**
  * An option for an account.
@@ -328,4 +328,4 @@ char gaim_account_user_split_get_separator(const GaimAccountUserSplit *split);
 }
 #endif
 
-#endif /* _GAIM_ACCOUNT_OPT_H_ */
+#endif /* _GAIM_ACCOUNTOPT_H_ */

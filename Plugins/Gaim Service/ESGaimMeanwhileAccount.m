@@ -7,6 +7,8 @@
 
 #import "ESGaimMeanwhileAccount.h"
 
+//#define MEANWHILE_NOT_AVAILABLE
+
 @interface ESGaimMeanwhileAccount (PRIVATE)
 - (NSAttributedString *)statusMessageForContact:(AIListContact *)theContact;
 @end
@@ -18,7 +20,9 @@ static BOOL didInitMeanwhile = NO;
 - (const char*)protocolPlugin
 {
 	[super initSSL];
-	if (!didInitMeanwhile) didInitMeanwhile = gaim_init_meanwhile_plugin();
+#ifndef MEANWHILE_NOT_AVAILABLE
+	if (!didInitMeanwhile) didInitMeanwhile = gaim_init_meanwhile_plugin(); 
+#endif
     return "prpl-meanwhile";
 }
 
@@ -61,6 +65,7 @@ static BOOL didInitMeanwhile = NO;
 
 - (NSAttributedString *)statusMessageForContact:(AIListContact *)theContact
 {
+#ifndef MEANWHILE_NOT_AVAILABLE
 	NSAttributedString		*statusMessage = nil;
 	GaimConnection			*gc = [self gaimAccount]->gc;
 		
@@ -76,6 +81,7 @@ static BOOL didInitMeanwhile = NO;
 	}
 	
 	return statusMessage;
+#endif
 }
 
 @end

@@ -44,7 +44,7 @@ extern "C" {
 GaimXfer *oscar_xfer_new(GaimConnection *gc, const char *destsn);
 void oscar_direct_im_initiate_immediately(GaimConnection *gc, const char *who);
 void *oscar_find_direct_im(GaimConnection *gc, const char *who);
-	
+
 /* XXX adjust these based on autoconf-detected platform */
 typedef unsigned char fu8_t;
 typedef unsigned short fu16_t;
@@ -296,11 +296,8 @@ struct client_info_s {
 #define AIM_CONN_TYPE_EMAIL		0x0018
 
 /* they start getting arbitrary for rendezvous stuff =) */
-#define AIM_CONN_TYPE_RENDEZVOUS			0xfffe /* these do not speak FLAP! */
-#define AIM_CONN_TYPE_LISTENER				0xffff /* socket waiting for accept() */
-#define AIM_CONN_TYPE_ODC_PROGRESS			0xfffb /* these do not speak FLAP! */
-#define AIM_CONN_TYPE_RENDEZVOUS_REVERSE	0xfffc /* these do not speak FLAP! */
-#define AIM_CONN_TYPE_PROXY					0xfffd /* these do not speak FLAP! */
+#define AIM_CONN_TYPE_RENDEZVOUS	0xfffe /* these do not speak FLAP! */
+#define AIM_CONN_TYPE_LISTENER		0xffff /* socket waiting for accept() */
 
 /*
  * Subtypes, we need these for OFT stuff.
@@ -322,7 +319,6 @@ struct client_info_s {
 
 #define AIM_FRAMETYPE_FLAP		0x0000
 #define AIM_FRAMETYPE_OFT		0x0001
-#define AIM_FRAMETYPE_PROXY		0x0002
 
 typedef struct aim_conn_s {
 	int fd;
@@ -372,14 +368,6 @@ typedef struct aim_frame_s {
 			fu16_t hdrlen;
 			fu16_t type;
 		} rend;
-		struct {
-			fu16_t datalen;
-			fu16_t proxydata; /*set to 0x044a*/
-			fu16_t type;
-			fu32_t unknown;  /*set to 0x0000 0000*/
-			fu16_t direction;	/*you send 0x0000, server sends 0x0220*/
-		} proxy;
-		
 	} hdr;
 	aim_bstream_t data;		/* payload stream */
 	aim_conn_t *conn;		/* the connection it came in on/is going out on */
@@ -699,19 +687,21 @@ struct aim_chat_roominfo {
 	fu16_t instance;
 };
 
-#define AIM_IMFLAGS_AWAY		0x0001 /* mark as an autoreply */
-#define AIM_IMFLAGS_ACK			0x0002 /* request a receipt notice */
-#define AIM_IMFLAGS_UNICODE		0x0004
-#define AIM_IMFLAGS_ISO_8859_1		0x0008
-#define AIM_IMFLAGS_BUDDYREQ		0x0010 /* buddy icon requested */
-#define AIM_IMFLAGS_HASICON		0x0020 /* already has icon */
+#define AIM_IMFLAGS_AWAY				0x0001 /* mark as an autoreply */
+#define AIM_IMFLAGS_ACK					0x0002 /* request a receipt notice */
+#define AIM_IMFLAGS_BUDDYREQ			0x0010 /* buddy icon requested */
+#define AIM_IMFLAGS_HASICON				0x0020 /* already has icon */
 #define AIM_IMFLAGS_SUBENC_MACINTOSH	0x0040 /* damn that Steve Jobs! */
-#define AIM_IMFLAGS_CUSTOMFEATURES 	0x0080 /* features field present */
-#define AIM_IMFLAGS_EXTDATA		0x0100
-#define AIM_IMFLAGS_X			0x0200
-#define AIM_IMFLAGS_MULTIPART		0x0400 /* ->mpmsg section valid */
-#define AIM_IMFLAGS_OFFLINE		0x0800 /* send to offline user */
-#define AIM_IMFLAGS_TYPINGNOT		0x1000 /* typing notification */
+#define AIM_IMFLAGS_CUSTOMFEATURES 		0x0080 /* features field present */
+#define AIM_IMFLAGS_EXTDATA				0x0100
+#define AIM_IMFLAGS_X					0x0200
+#define AIM_IMFLAGS_MULTIPART			0x0400 /* ->mpmsg section valid */
+#define AIM_IMFLAGS_OFFLINE				0x0800 /* send to offline user */
+#define AIM_IMFLAGS_TYPINGNOT			0x1000 /* typing notification */
+
+#define AIM_CHARSET_ASCII		0x0000
+#define AIM_CHARSET_UNICODE	0x0002 /* UCS-2BE */
+#define AIM_CHARSET_CUSTOM	0x0003
 
 /*
  * Multipart message structures.
@@ -836,7 +826,6 @@ struct aim_incomingim_ch2_args {
 	const char *msg; /* invite message or file description */
 	const char *encoding;
 	const char *language;
-	fu16_t reverseConnection;
 	union {
 		struct {
 			fu32_t checksum;
@@ -885,7 +874,7 @@ struct aim_incomingim_ch4_args {
 /* 0x0006 */ faim_export int aim_im_sendch2_icon(aim_session_t *sess, const char *sn, const fu8_t *icon, int iconlen, time_t stamp, fu16_t iconsum);
 /* 0x0006 */ faim_export int aim_im_sendch2_rtfmsg(aim_session_t *sess, struct aim_sendrtfmsg_args *args);
 /* 0x0006 */ faim_export int aim_im_sendch2_odcrequest(aim_session_t *sess, fu8_t *cookie, bool usecookie, const char *sn, const fu8_t *ip, fu16_t port);
-/* 0x0006 */ faim_export int aim_im_sendch2_sendfile_ask(aim_session_t *sess, struct aim_oft_info *oft_info, int reverseConnection);
+/* 0x0006 */ faim_export int aim_im_sendch2_sendfile_ask(aim_session_t *sess, struct aim_oft_info *oft_info);
 /* 0x0006 */ faim_export int aim_im_sendch2_sendfile_accept(aim_session_t *sess, struct aim_oft_info *info);
 /* 0x0006 */ faim_export int aim_im_sendch2_sendfile_cancel(aim_session_t *sess, struct aim_oft_info *oft_info);
 /* 0x0006 */ faim_export int aim_im_sendch2_geticqaway(aim_session_t *sess, const char *sn, int type);
@@ -943,7 +932,6 @@ struct aim_oft_info {
 	aim_session_t *sess;
 	struct aim_fileheader_t fh;
 	struct aim_oft_info *next;
-	fu8_t sendcookie;
 };
 
 faim_export fu32_t aim_oft_checksum_chunk(const fu8_t *buffer, int bufferlen, fu32_t prevcheck);
@@ -1499,13 +1487,6 @@ faim_export char *aimutil_itemindex(char *toSearch, int theindex, char dl);
 faim_export int aim_snvalid(const char *sn);
 faim_export int aim_snlen(const char *sn);
 faim_export int aim_sncmp(const char *sn1, const char *sn2);
-
-/* aim_proxy.c - AOL proxy for ODC connections */
-faim_export int aim_proxy_initiate(aim_session_t *sess, aim_conn_t *conn, fu8_t *cookie, const char *theirsn);
-faim_export int aim_proxy_connect(aim_session_t *sess, aim_conn_t *conn, fu16_t port, fu8_t *cookie, const char *theirsn);
-faim_internal int aim_rxdispatch_proxy(aim_session_t *sess, aim_frame_t *fr);
-faim_export fu16_t aim_proxy_originaltype(aim_conn_t *conn);
-faim_export char *aim_proxy_theirsn(aim_conn_t *conn);
 
 #include <aim_internal.h>
 

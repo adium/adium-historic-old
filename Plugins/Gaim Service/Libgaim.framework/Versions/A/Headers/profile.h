@@ -24,7 +24,7 @@
 
 #include <glib.h>
 #include <time.h>
-#include <libgaim/blist.h>
+#include "blist.h"
 
 typedef struct
 {

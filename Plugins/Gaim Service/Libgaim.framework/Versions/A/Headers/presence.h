@@ -23,7 +23,7 @@
 #define _GAIM_JABBER_PRESENCE_H_
 
 #include "jabber.h"
-#include <libgaim/xmlnode.h>
+#include "xmlnode.h"
 
 #define JABBER_STATE_AWAY  (0x02 | UC_UNAVAILABLE)
 #define JABBER_STATE_CHAT  (0x04)

@@ -22,9 +22,9 @@
 #ifndef _GAIM_JABBER_JUTIL_H_
 #define _GAIM_JABBER_JUTIL_H_
 
-#include <libgaim/account.h>
-#include <libgaim/conversation.h>
-#include <libgaim/xmlnode.h>
+#include "account.h"
+#include "conversation.h"
+#include "xmlnode.h"
 
 
 typedef struct _JabberID {

@@ -23,7 +23,7 @@
 #define _GAIM_JABBER_AUTH_H_
 
 #include "jabber.h"
-#include <libgaim/xmlnode.h>
+#include "xmlnode.h"
 
 gboolean jabber_process_starttls(JabberStream *js, xmlnode *packet);
 void jabber_auth_start(JabberStream *js, xmlnode *packet);

@@ -55,8 +55,8 @@ typedef enum
 
 } GaimConnectionState;
 
-#include <libgaim/account.h>
-#include <libgaim/plugin.h>
+#include "account.h"
+#include "plugin.h"
 
 typedef struct
 {

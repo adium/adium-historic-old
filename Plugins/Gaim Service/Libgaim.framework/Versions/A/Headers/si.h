@@ -22,7 +22,7 @@
 #ifndef _GAIM_JABBER_SI_H_
 #define _GAIM_JABBER_SI_H_
 
-#include <libgaim/ft.h>
+#include "ft.h"
 
 #include "jabber.h"
 

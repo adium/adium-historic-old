@@ -24,8 +24,8 @@
  *
  * @see @ref account-signals
  */
-#ifndef _GAIM_ACCOUNTS_H_
-#define _GAIM_ACCOUNTS_H_
+#ifndef _GAIM_ACCOUNT_H_
+#define _GAIM_ACCOUNT_H_
 
 #include <glib.h>
 
@@ -34,10 +34,10 @@ typedef struct _GaimAccount      GaimAccount;
 
 typedef gboolean (*GaimFilterAccountFunc)(GaimAccount *account);
 
-#include <libgaim/connection.h>
-#include <libgaim/proxy.h>
-#include <libgaim/prpl.h>
-#include <libgaim/log.h>
+#include "connection.h"
+#include "log.h"
+#include "proxy.h"
+#include "prpl.h"
 
 struct _GaimAccountUiOps
 {
@@ -384,6 +384,15 @@ const char *gaim_account_get_buddy_icon(const GaimAccount *account);
 const char *gaim_account_get_protocol_id(const GaimAccount *account);
 
 /**
+ * Returns the account's protocol name.
+ *
+ * @param account The account.
+ *
+ * @return The protocol name.
+ */
+const char *gaim_account_get_protocol_name(const GaimAccount *account);
+
+/**
  * Returns the account's connection.
  *
  * @param account The account.
@@ -655,4 +664,4 @@ void gaim_accounts_uninit(void);
 }
 #endif
 
-#endif /* _GAIM_ACCOUNTS_H_ */
+#endif /* _GAIM_ACCOUNT_H_ */

@@ -19,11 +19,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-
 #ifndef _GAIM_CMDS_H_
 #define _GAIM_CMDS_H_
 
-#include <libgaim/conversation.h>
+#include "conversation.h"
 
 /**************************************************************************
  * @name Structures
