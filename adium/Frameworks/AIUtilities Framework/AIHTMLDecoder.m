@@ -53,6 +53,7 @@ DeclareString(CloseU);
 DeclareString(P);
 DeclareString(CloseP);
 DeclareString(IMG);
+DeclareString(CloseIMG);
 DeclareString(Face);
 DeclareString(SIZE);
 DeclareString(Color);
@@ -98,6 +99,7 @@ DeclareString(TagCharStartString);
 	InitString(CloseP,@"/P");
 	
 	InitString(IMG,@"IMG");
+	InitString(CloseIMG,@"/IMG");
 	InitString(Face,@"FACE");
 	InitString(SIZE,@"SIZE");
 	InitString(Color,@"COLOR");
@@ -333,9 +335,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
         //Image Attachments
 		if([attributes objectForKey:NSAttachmentAttributeName]){
 			int i;
+			
 			for(i = 0; (i < searchRange.length); i++){ //Each attachment takes a character.. they are grouped by the attribute scan
 				AITextAttachmentExtension *attachment = [[inMessage attributesAtIndex:searchRange.location+i effectiveRange:nil] objectForKey:NSAttachmentAttributeName];
-				
 				if (attachment){
 					
 					if([attachment shouldSaveImageForLogging] && [[attachment attachmentCell] respondsToSelector:@selector(image)] && imagesPath){
@@ -354,7 +356,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 						//create the images directory if it doesn't exist
 						[[NSFileManager defaultManager] createDirectoriesForPath:imagesPath];
 						
-						if([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:fileName atomically:YES]){
+						if([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:fileName
+																							  atomically:YES]){
 							[string appendFormat:@"<img src=\"%@\" alt=\"%@\">",fileURL,[attachment string]];
 							
 							[chunk release]; chunk = nil;
@@ -381,7 +384,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 						}
 						
 						[chunk release]; chunk = nil;
-					}
+					}					
 				}
 			}			
 		}
@@ -652,18 +655,20 @@ int HTMLEquivalentForFontSize(int fontSize)
                       [textAttributes setSuperscript:NO];
 						
                     //Image
-                    }else if([chunkString caseInsensitiveCompare:IMG] == 0){
+                    } else if([chunkString caseInsensitiveCompare:IMG] == 0){
                         if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
                             NSAttributedString *attachString = [self processImgTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
                             [attrString appendAttributedString:attachString];
                         }
-						
+					} else if([chunkString caseInsensitiveCompare:CloseIMG] == 0){
+						//just ignore </img> if we find it
+					
 					// Ignore <p> for those wacky AIM express users
 					} else if ([chunkString caseInsensitiveCompare:P] == 0 ||
 							   [chunkString caseInsensitiveCompare:CloseP] == 0) {
 
                     //Invalid
-                    }else{
+                    } else {
                         validTag = NO;
                     }
                 }
