@@ -15,6 +15,11 @@
 	[super configureForAccount:inAccount];
 }
 
+- (void)joinChatWithAccount:(AIAccount *)inAccount
+{
+	NSLog(@"#### OSCAR join chat");
+}
+
 - (NSString *)nibName
 {
 	return @"DCGaimOscarJoinChatView";
