@@ -3731,6 +3731,7 @@
 				3420E6600611D80100AE67E3,
 				3420E6620611D80100AE67E3,
 				4B0DB3AE06122B94004F47D9,
+				34D5B281061263B300B98336,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4033,6 +4034,7 @@
 				4B191D8B0611C10800E8A4E7,
 				3420E6640611D80100AE67E3,
 				4B0DB3B506123423004F47D9,
+				34D5B283061263B600B98336,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4348,6 +4350,7 @@
 				3420E6610611D80100AE67E3,
 				3420E6630611D80100AE67E3,
 				4B0DB3AF06122B94004F47D9,
+				34D5B262061260AE00B98336,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6810,6 +6813,24 @@
 			path = "Plugins/Dual Window Interface/DualWindowMessageDefaults.plist";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		34D5B262061260AE00B98336 = {
+			fileRef = 83DB8F220611460E00A5C28C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D5B281061263B300B98336 = {
+			fileRef = 83DB8F230611460E00A5C28C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D5B283061263B600B98336 = {
+			fileRef = 83DB8F240611460E00A5C28C;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		34E0F188053AE56F00031341 = {
 			fileEncoding = 30;
