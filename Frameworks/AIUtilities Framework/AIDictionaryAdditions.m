@@ -98,17 +98,6 @@
     return([self objectForKey:[NSNumber numberWithInt:aKey]]);
 }
 
-/*untested
-- (NSAttributedString *)attributedStringForKey:(NSString *)inKey{
-    NSData	*stringData = [self objectForKey:inKey];
-
-    if(stringData == nil){
-        return([[[NSMutableString alloc] init] autorelease]);
-    }else{
-        return([[[NSMutableString alloc] initWithRTF:stringData documentAttributes:nil] autorelease]);
-    }
-}*/
-
 @end
 
 @implementation NSMutableDictionary (AIDictionaryAdditions)
@@ -154,13 +143,5 @@
 {
     return([self objectForKey:[NSNumber numberWithInt:aKey]]);
 }
-
-/*untested
-- (void)setAttributedString:(NSAttributedString *)inString forKey:(NSString *)inKey{
-    if(inString != nil){
-        NSData	*stringData = [inString RTFFromRange:NSMakeRange(0,[inString length]) documentAttributes:nil];
-        [self setObject:stringData forKey:inKey];
-    }
-}*/
 
 @end
