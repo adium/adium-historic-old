@@ -161,8 +161,8 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context)
 - (NSString *)description{ return(nil); };
 - (NSString *)identifier{ return(nil); };
 - (NSString *)displayName{ return(nil); };
-- (NSArray *)statusKeysRequiringResort{ return(nil); };
-- (NSArray *)attributeKeysRequiringResort{ return(nil); };
+- (NSSet *)statusKeysRequiringResort{ return(nil); };
+- (NSSet *)attributeKeysRequiringResort{ return(nil); };
 - (int (*)(id, id, BOOL))sortFunction{ return(nil); };
 - (void)didBecomeActiveFirstTime {};
 - (void)didBecomeActive 

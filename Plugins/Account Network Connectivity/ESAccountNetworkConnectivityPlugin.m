@@ -117,7 +117,7 @@ static NSMutableSet							*accountsToConnect = nil;
 }
 
 #pragma mark Update List Object
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 { 
 	if ([inObject isKindOfClass:[AIAccount class]]){
 		if ([inModifiedKeys containsObject:@"Online"] &&

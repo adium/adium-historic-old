@@ -173,11 +173,11 @@ DeclareString(sOnline)
 - (NSString *)displayName{
     return(AILocalizedString(@"Sort Contacts by Status",nil));
 }
-- (NSArray *)statusKeysRequiringResort{
-	return([NSArray arrayWithObjects:sOnline,sIdle,sAway,nil]);
+- (NSSet *)statusKeysRequiringResort{
+	return([NSSet setWithObjects:sOnline,sIdle,sAway,nil]);
 }
-- (NSArray *)attributeKeysRequiringResort{
-	return([NSArray arrayWithObject:@"Display Name"]);
+- (NSSet *)attributeKeysRequiringResort{
+	return([NSSet setWithObject:@"Display Name"]);
 }
 
 //Configuration

@@ -49,11 +49,11 @@ static  BOOL	sortByLastName;
 - (NSString *)displayName{
     return(AILocalizedString(@"Sort Contacts Alphabetically",nil));
 }
-- (NSArray *)statusKeysRequiringResort{
+- (NSSet *)statusKeysRequiringResort{
 	return(nil);
 }
-- (NSArray *)attributeKeysRequiringResort{
-	return([NSArray arrayWithObject:@"Display Name"]);
+- (NSSet *)attributeKeysRequiringResort{
+	return([NSSet setWithObject:@"Display Name"]);
 }
 
 #pragma mark Configuration
