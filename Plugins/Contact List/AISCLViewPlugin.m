@@ -79,7 +79,6 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 	
 	//Observe window style changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 }
 
 
@@ -128,9 +127,9 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 
-	if([group isEqualToString:PREF_GROUP_APPEARANCE]){
+	if(firstTime || [group isEqualToString:PREF_GROUP_APPEARANCE]){
 		//Theme
-		if(!key || [key isEqualToString:KEY_LIST_THEME_NAME]){
+		if(firstTime || !key || [key isEqualToString:KEY_LIST_THEME_NAME]){
 			[AISCLViewPlugin applySetWithName:[prefDict objectForKey:KEY_LIST_THEME_NAME]
 									extension:LIST_THEME_EXTENSION
 									 inFolder:LIST_THEME_FOLDER
@@ -138,16 +137,14 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 		}
 		
 		//Layout
-		if(!key || [key isEqualToString:KEY_LIST_LAYOUT_NAME]){
+		if(firstTime || !key || [key isEqualToString:KEY_LIST_LAYOUT_NAME]){
 			[AISCLViewPlugin applySetWithName:[prefDict objectForKey:KEY_LIST_LAYOUT_NAME]
 									extension:LIST_LAYOUT_EXTENSION
 									 inFolder:LIST_LAYOUT_FOLDER
 							toPreferenceGroup:PREF_GROUP_LIST_LAYOUT];
 		}
-	}
-	
-	if([group isEqualToString:PREF_GROUP_APPEARANCE]){
-		if(!key || [key isEqualToString:KEY_LIST_LAYOUT_WINDOW_STYLE]){
+
+		if(firstTime || !key || [key isEqualToString:KEY_LIST_LAYOUT_WINDOW_STYLE]){
 			int	newWindowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 
 			if(newWindowStyle != windowStyle){

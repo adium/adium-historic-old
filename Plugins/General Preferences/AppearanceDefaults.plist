@@ -6,5 +6,9 @@
 	<string>Gems</string>
 	<key>Service Icon Pack</key>
 	<string>Gaim</string>
+	<key>List Layout Name</key>
+	<string>Standard</string>
+	<key>List Theme Name</key>
+	<string>Aqua (Tiger)</string>
 </dict>
 </plist>
