@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.86 2004/06/07 05:49:35 evands Exp $
+// $Id: AIAccountController.m,v 1.87 2004/06/20 23:49:14 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -68,14 +68,13 @@
                                                object:nil];
 }
 
-//init (Called after the other controllers have set themselves up)
+//Finish initialization once other controllers have set themselves up
 - (void)finishIniting
 {    
     //Load the user accounts
     [self loadAccounts];
-    [self saveAccounts];
     
-    //Observe content (for accountForSendingContentToHandle)
+    //Observe content (for accountForSendingContentToContact)
     [[owner notificationCenter] addObserver:self
                                    selector:@selector(didSendContent:)
                                        name:Content_DidSendContent
