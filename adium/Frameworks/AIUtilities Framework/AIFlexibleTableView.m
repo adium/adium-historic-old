@@ -241,27 +241,29 @@
             lowColumn = selection_endColumn;
             highColumn = selection_startColumn;
         }
-
+//        NSLog(@"Begin copy operation");
         //Select all text in every cell between start and end - traverse each row, column by column, left-to-right
         for(row = selection_startRow ; row <= selection_endRow; row++) {
             for(column = lowColumn; column <= highColumn; column++) {
                 AIFlexibleTableCell	*cell = [[self columnAtIndex:column] cellAtIndex:row];
-
+//                NSLog(@"Going in, %@",[copyString string]);
                 if(row == selection_startRow && column == selection_startColumn) { //starting cell
                     if (lowColumn == selection_startColumn)  //copy index to end of cell
                          [copyString appendAttributedString:[cell stringFromIndex:selection_startIndex to:10000]];
                     else //copy left to index of cell
                          [copyString appendAttributedString:[cell stringFromIndex:0 to:selection_startIndex]];
                 } else if(row == selection_endRow && column == selection_endColumn) { //ending cell
-                    if (lowColumn == selection_endColumn) //copy index to end of cell
-                        [copyString appendAttributedString:[cell stringFromIndex:selection_endIndex to:10000]];
-                    else //copy left to index of cell
+                    if (highColumn == selection_endColumn) //copy left to index of cell
                         [copyString appendAttributedString:[cell stringFromIndex:0 to:selection_endIndex]];
+                    else //copy index to end of cell
+                        [copyString appendAttributedString:[cell stringFromIndex:selection_endIndex to:10000]];
+
                 } else { //intermediary cells - copy entire contents
                     [copyString appendAttributedString:[cell stringFromIndex:0 to:10000]];
                 }
+//                NSLog(@"Coming out, %@",[copyString string]);
             } //end column for-loop
-                [copyString appendString:@"\r" withAttributes:nil]; //end line after each row
+            if (row != selection_endRow) [copyString appendString:@"\r" withAttributes:nil]; //end line after each row except last
         } //end row for-loop
 
     }
