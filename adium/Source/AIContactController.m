@@ -550,9 +550,14 @@
 //Call before making large changes to the contact list, or changes to a large number of contacts
 - (void)setHoldContactListUpdates:(BOOL)inHoldUpdates
 {
-    holdUpdates = inHoldUpdates;
+    if(inHoldUpdates){
+        holdUpdates++;
+    }else{
+        holdUpdates--;
+    }
 
-    if(inHoldUpdates == NO){
+    if(holdUpdates < 0) holdUpdates = 0;  //This should never be needed, but just incase
+    if(holdUpdates == 0){
         //Resort and redisplay the entire list at once (since sorting has been skipped while delayed)
         [self sortListGroup:contactList mode:AISortGroupAndSubGroups];
         [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
@@ -562,7 +567,7 @@
 //Returns YES if the contact list updates are currently on hold
 - (BOOL)holdContactListUpdates
 {
-    return(holdUpdates);
+    return(holdUpdates != 0);
 }
 
 //Returns the handle with the specified Service and UID in the group (or any subgroups)
