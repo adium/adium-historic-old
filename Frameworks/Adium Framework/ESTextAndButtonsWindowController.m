@@ -205,7 +205,7 @@
 	[textView_messageHeader setDrawsBackground:NO];
 	[scrollView_messageHeader setDrawsBackground:NO];
 	
-	[textView_messageHeader setString:title];
+	[textView_messageHeader setString:(messageHeader ? messageHeader : @"")];
 	
 	//Resize the window frame to fit the error title
 	[textView_messageHeader sizeToFit];
