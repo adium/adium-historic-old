@@ -261,6 +261,18 @@
 	
 	if(!notification || ([[item itemIdentifier] isEqualToString:@"UserIcon"])){
 		[toolbarItem setEnabled:YES];
+		
+#if 0
+		/* XXX Tiger thought */
+		// Autovalidation
+		// NSToolbar relies on window update to drive its auto-validation mechanism to enable/disable NSToolbarItems. Unfortunately, window update may not happen at the exact moment a developer needs to update their UI. Also, window update happens very frequently, and can cause performance problems for validators that need to do a lot of work. Therefore, we now provide a way to turn off the default auto validation on a per-item basis.
+		 /* By default NSToolbar automatically invokes its items validate method on a regular basis.
+		 To be in complete control of when the -validate method is invoked, you can disable automatic validation
+		 on a per-item basis.  In particular, if your validation code is slow, you may want to do this for performance reasons.
+		 */
+		 - (void)setAutovalidates:(BOOL)autovalidates;
+		 - (BOOL)autovalidates;
+#endif
 	}
 }
 
