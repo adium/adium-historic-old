@@ -168,7 +168,9 @@
     (If you don't know how to do that, I would suggest <a
       href="http://www.macdevcenter.com/pub/a/mac/2002/12/06/terminal_osx.html" class="offsite">this
       series of articles</a>).  Type:</p>
-  <div class="tutorialcode"><pre>psql &lt; adium.sql</pre></div>. 
+  <div class="tutorialcode"><pre>psql &lt; adium.sql
+createlang plpgsql
+psql &lt; functions.sql</pre></div>. 
   <p>You
     should get messages like TABLE CREATED.  To ensure that it worked, type
     <code>psql</code>.  Then you will be connected to the database.  You

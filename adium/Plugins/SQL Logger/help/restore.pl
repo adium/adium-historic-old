@@ -30,7 +30,7 @@ chdir "$path";
 foreach  my $account (glob '*') {
     chdir "$account/Logs" or die;
     foreach my $user (glob '*') {
-        chdir "$user" or die or die qq{Bad user $user};
+        chdir "$user" or die qq{Bad user $user};
         foreach my $folder (glob '*') {
             chdir $folder or die;
             foreach my $file (glob '*.bak') {
