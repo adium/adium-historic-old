@@ -7116,7 +7116,6 @@
 				4BD6742B06001D1B0049CAF7,
 				4BD6742D06001D1C0049CAF7,
 				4BD6743206001D1F0049CAF7,
-				4BD6744206001D390049CAF7,
 				4BD6744406001D430049CAF7,
 				4BD6745706001D5E0049CAF7,
 				4BD6745D06001D730049CAF7,
@@ -7272,6 +7271,7 @@
 				34BFE25107E8E5F200AD984D,
 				34BFE25D07E8E69300AD984D,
 				34BFE2D707E8E74400AD984D,
+				34C1F21507F7A63500DB6645,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7608,7 +7608,6 @@
 				4BD6742C06001D1C0049CAF7,
 				4BD6742E06001D1D0049CAF7,
 				4BD6743306001D200049CAF7,
-				4BD6744306001D390049CAF7,
 				4BD6744506001D430049CAF7,
 				4BD6745806001D5E0049CAF7,
 				4BD6745E06001D740049CAF7,
@@ -7765,6 +7764,7 @@
 				34BFE25007E8E5F200AD984D,
 				34BFE25C07E8E69300AD984D,
 				34BFE2D807E8E74400AD984D,
+				34C1F21407F7A63500DB6645,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9293,6 +9293,36 @@
 		};
 		34C18B0D06CAC95400FF5FF9 = {
 			fileRef = 34E839050583207E00F2AADB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C1F21207F7A63500DB6645 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AITypingNotificationPlugin.m;
+			path = Source/AITypingNotificationPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1F21307F7A63500DB6645 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AITypingNotificationPlugin.h;
+			path = Source/AITypingNotificationPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1F21407F7A63500DB6645 = {
+			fileRef = 34C1F21207F7A63500DB6645;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C1F21507F7A63500DB6645 = {
+			fileRef = 34C1F21307F7A63500DB6645;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -15484,30 +15514,12 @@
 		};
 		4B5B15220493BF9A00A8010A = {
 			children = (
-				4B5B152E0493BFE600A8010A,
-				4B5B152F0493BFE600A8010A,
+				34C1F21307F7A63500DB6645,
+				34C1F21207F7A63500DB6645,
 			);
 			isa = PBXGroup;
 			name = "Typing Notification";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B5B152E0493BFE600A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AITypingNotificationPlugin.h;
-			path = "Plugins/Typing Notification/AITypingNotificationPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B5B152F0493BFE600A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AITypingNotificationPlugin.m;
-			path = "Plugins/Typing Notification/AITypingNotificationPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -18602,18 +18614,6 @@
 		};
 		4BD6743606001D210049CAF7 = {
 			fileRef = 4BC8AFEC04FD413900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6744206001D390049CAF7 = {
-			fileRef = 4B5B152E0493BFE600A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6744306001D390049CAF7 = {
-			fileRef = 4B5B152F0493BFE600A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
