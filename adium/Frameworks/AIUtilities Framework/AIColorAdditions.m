@@ -97,6 +97,25 @@ float _v(float m1, float m2, float hue);
                                      alpha:[convertedColor alphaComponent]]);
 }
 
+
+//Linearly adjust a color
+#define cap(x) { if(x < 0){x = 0;}else if(x > 1){x = 1;} }
+- (NSColor *)adjustHue:(float)dHue saturation:(float)dSat brightness:(float)dBrit
+{
+    float hue, sat, brit, alpha;
+    
+    [self getHue:&hue saturation:&sat brightness:&brit alpha:&alpha];
+    hue += dHue;
+    cap(hue);
+    sat += dSat;
+    cap(sat);
+    brit += dBrit;
+    cap(brit);
+    
+    return([NSColor colorWithCalibratedHue:hue saturation:sat brightness:brit alpha:alpha]);
+}
+
+
 //Inverts the luminance of this color so it looks good on selected/dark backgrounds
 - (NSColor *)colorWithInvertedLuminance
 {

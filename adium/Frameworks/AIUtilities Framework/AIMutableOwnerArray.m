@@ -183,6 +183,12 @@
     return(greatest);
 }
 
+//Returns the first image
+- (NSImage *)firstImage
+{
+    return([ownerArray count] ? [contentArray objectAtIndex:0] : nil);
+}
+
 - (void)_createArrays
 {
     if(!contentArray) contentArray = [[NSMutableArray alloc] init];

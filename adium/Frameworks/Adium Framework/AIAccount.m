@@ -96,6 +96,12 @@
     return(name);
 }
 
+//Server Display name (Convenience)
+- (NSString *)serverDisplayName
+{
+    return([self displayName]);
+}
+
 
 
 //Functions for subclasses to override

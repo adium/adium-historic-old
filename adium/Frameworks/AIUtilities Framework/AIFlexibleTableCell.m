@@ -59,6 +59,10 @@
 {
     tableRow = inRow;
 }
+- (AIFlexibleTableRow *)tableRow
+{
+    return(tableRow);
+}
 
 
 //Padding ------------------------------------------------------------------------------
@@ -78,6 +82,7 @@
 - (void)setRowSpan:(int)inRowSpan
 {
     rowSpan = inRowSpan;
+    [tableRow updateSpanningAndResizeRow:YES];
 }
 - (int)rowSpan{
     return(rowSpan);

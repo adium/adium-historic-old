@@ -35,6 +35,7 @@
 }
 
 - (void)setTableRow:(AIFlexibleTableRow *)inRow;
+- (AIFlexibleTableRow *)tableRow;
 
 //Configure
 - (void)setBackgroundColor:(NSColor *)inColor;

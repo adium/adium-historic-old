@@ -29,5 +29,6 @@
 - (int)greatestIntegerValue;
 - (double)greatestDoubleValue;
 - (NSDate *)earliestDate;
+- (NSImage *)firstImage;
 
 @end

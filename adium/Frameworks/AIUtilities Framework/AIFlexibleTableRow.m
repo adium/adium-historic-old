@@ -41,8 +41,10 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     enumerator = [cellArray objectEnumerator];
     while(cell = [enumerator nextObject]){
         [cell setTableRow:self];
-        if([cell rowSpan] != 1) spansRows = YES;
     }
+    
+    //Update spanning
+    [self updateSpanningAndResizeRow:NO];
 
     return(self);
 }
@@ -56,6 +58,22 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     [super dealloc];
 }
 
+//Spanning
+- (void)updateSpanningAndResizeRow:(BOOL)resize
+{
+    NSEnumerator	*enumerator;
+    AIFlexibleTableCell	*cell;
+
+    //Update our spansRow flag
+    spansRows = NO;
+    enumerator = [cellArray objectEnumerator];
+    while(cell = [enumerator nextObject]){
+        if([cell rowSpan] != 1) spansRows = YES;
+    }
+    
+    //Recalculate height
+    if(resize) [tableView resizeRow:self];
+}
 //Returns YES if this row spans into another row's cells
 - (BOOL)spansRows{
     return(spansRows);
@@ -93,7 +111,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     while(cell = [enumerator nextObject]){
         NSSize	cellSize = [cell cellSize];
         
-        [cell drawWithFrame:NSMakeRect(x,point.y,cellSize.width,cellSize.height) inView:controlView];
+        [cell drawWithFrame:NSMakeRect(x, point.y, cellSize.width, (cellSize.height > height ? cellSize.height : height)) inView:controlView];
 
         x += cellSize.width;
     }
@@ -241,9 +259,10 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
 //Size this row for the passed width (returns our new height)
 - (int)sizeRowForWidth:(int)inWidth
 {
-    NSEnumerator	*enumerator;
-    AIFlexibleTableCell	*cell;
-    int			flexCellCount = 0;
+    NSEnumerator	    *enumerator;
+    AIFlexibleTableCell     *cell;
+    AIFlexibleTableSpanCell *spanCell = nil;
+    int			    flexCellCount = 0;
 
     //
     height = 0;
@@ -254,8 +273,9 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
 
         if([cell isKindOfClass:[AIFlexibleTableSpanCell class]]){ //If the cell is a 'span' zone
             //Set the void cell to the width of its master
-            [cell sizeCellForWidth:[[(AIFlexibleTableSpanCell *)cell masterCell] cellSize].width];
-            inWidth -= [cell cellSize].width;
+	    spanCell = (AIFlexibleTableSpanCell *)cell;
+            [spanCell sizeCellForWidth:[[spanCell masterCell] cellSize].width];
+            inWidth -= [spanCell cellSize].width;
             
         }else if(![cell variableWidth]){
             inWidth -= [cell cellSize].width;
@@ -264,7 +284,6 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
         }else{
             flexCellCount++;
         }
-
     }
 
     //Size all the flexible cells
@@ -281,6 +300,21 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
                 height = _factorHeightOfCell(cell, height);
             }
         }
+    }
+
+    //Size the span cell (if necessary) to make enough vertical space for it's master
+    //NOTE: This code only works for master cells with a rowspan of 2, and with only one span per row.
+    //NOTE: Code to do beyond this would be much more complicated, and is not necessary at the moment.
+    //If we are the bottom of this span chain
+    if(spanCell){
+	AIFlexibleTableCell *masterCell = [spanCell masterCell];
+	if([masterCell rowSpan] == 2){
+	    //And the height of the master cell has not been satisfied by it's spans
+	    if([[masterCell tableRow] height] + height < [masterCell cellSize].height){
+		//Pad our height to make enough room for the master to fully draw
+		height = [masterCell cellSize].height - [[masterCell tableRow] height];
+	    }
+	}
     }
 
     //Return our required height

@@ -14,12 +14,14 @@
     AIChat	*chat;
     id		source;
     id		destination;
+    BOOL	outgoing;
 }
 
 - (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest;
 - (NSString *)type;
 - (id)source;
 - (id)destination;
+- (BOOL)isOutgoing;
 - (AIChat *)chat;
 - (void)setChat:(AIChat *)inChat;
 - (BOOL)filterContent;

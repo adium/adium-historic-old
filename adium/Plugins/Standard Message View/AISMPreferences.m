@@ -28,9 +28,11 @@
 #define COLOR_SAMPLE_HEIGHT		10
 */
 @interface AISMPreferences (PRIVATE)
-- (void)configureView;
+- (void)preferencesChanged:(NSNotification *)notification;
 - (void)_buildTimeStampMenu;
 - (void)_buildTimeStampMenu_AddFormat:(NSString *)format;
+- (void)_buildPrefixFormatMenu;
+- (void)_buildPrefixFormatMenu_AddFormat:(NSString *)format withTitle:(NSString *)title;
 @end
 
 @implementation AISMPreferences
@@ -49,20 +51,65 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-    [self configureView];
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self _buildTimeStampMenu];
+    [self _buildPrefixFormatMenu];
+    [self preferencesChanged:nil];
 }
 
-//Configures our view for the current preferences
-- (void)configureView
+//Close the preference view
+- (void)viewWillClose
+{
+    [[owner notificationCenter] removeObserver:self];
+}
+
+//Reflect new preferences in view
+- (void)preferencesChanged:(NSNotification *)notification
 {
     NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-
-    [self _buildTimeStampMenu];
     
-    [checkBox_showUserIcons setState:[[preferenceDict objectForKey:KEY_SMV_SHOW_USER_ICONS] boolValue]];
+    //Disable and uncheck show user icons when not using an inline prefix
+    if([[preferenceDict objectForKey:KEY_SMV_PREFIX_INCOMING] rangeOfString:@"%m"].location != NSNotFound){
+	[checkBox_showUserIcons setState:NSOffState];
+	[checkBox_showUserIcons setEnabled:NO];
+    }else{
+	[checkBox_showUserIcons setState:[[preferenceDict objectForKey:KEY_SMV_SHOW_USER_ICONS] boolValue]];
+	[checkBox_showUserIcons setEnabled:YES];
+    }
+    
     [checkBox_combineMessages setState:[[preferenceDict objectForKey:KEY_SMV_COMBINE_MESSAGES] boolValue]];
     [popUp_timeStamps selectItemWithRepresentedObject:[preferenceDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT]];
+    [popUp_prefixFormat selectItemWithRepresentedObject:[preferenceDict objectForKey:KEY_SMV_PREFIX_INCOMING]];	
+}
     
+//Save changed preference
+- (IBAction)changePreference:(id)sender
+{
+    if(sender == checkBox_showUserIcons){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_SMV_SHOW_USER_ICONS
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+
+    }else if(sender == checkBox_combineMessages){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_SMV_COMBINE_MESSAGES
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+        
+    }else if(sender == popUp_timeStamps){
+        [[owner preferenceController] setPreference:[[popUp_timeStamps selectedItem] representedObject]
+                                             forKey:KEY_SMV_TIME_STAMP_FORMAT
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+        
+    }else if(sender == popUp_prefixFormat){
+        [[owner preferenceController] setPreference:[[popUp_prefixFormat selectedItem] representedObject]
+                                             forKey:KEY_SMV_PREFIX_INCOMING
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+        [[owner preferenceController] setPreference:[[popUp_prefixFormat selectedItem] representedObject]
+                                             forKey:KEY_SMV_PREFIX_OUTGOING
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+        
+    }
+
 }
 
 //Build the time stamp selection menu
@@ -85,38 +132,42 @@
     NSDateFormatter *stampFormatter = [[[NSDateFormatter alloc] initWithDateFormat:format allowNaturalLanguage:NO] autorelease];
     NSString        *dateString = [stampFormatter stringForObjectValue:[NSDate date]];
     NSMenuItem      *menuItem = [[[NSMenuItem alloc] initWithTitle:dateString target:nil action:nil keyEquivalent:@""] autorelease];
-
-    [menuItem setRepresentedObject:[[format copy] autorelease]];
+    
+    [menuItem setRepresentedObject:format];
     [[popUp_timeStamps menu] addItem:menuItem];
 }
 
-//Called in response to all preference controls, applies new settings
-- (IBAction)changePreference:(id)sender
+//Build the prefix selection menu
+- (void)_buildPrefixFormatMenu
 {
-    if(sender == checkBox_showUserIcons){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_SMV_SHOW_USER_ICONS
-                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-
-    }else if(sender == checkBox_combineMessages){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_SMV_COMBINE_MESSAGES
-                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-        
-    }else if(sender == popUp_timeStamps){
-        [[owner preferenceController] setPreference:[[popUp_timeStamps selectedItem] representedObject]
-                                             forKey:KEY_SMV_TIME_STAMP_FORMAT
-                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-        
-    }
-
+    //Empty the menu
+    [popUp_prefixFormat removeAllItems];
+    
+    [self _buildPrefixFormatMenu_AddFormat:@"%a" withTitle:@"Alias"];
+    [self _buildPrefixFormatMenu_AddFormat:@"?a%a (?a%n?a)?a" withTitle:@"Alias (User Name)"];
+    [self _buildPrefixFormatMenu_AddFormat:@"%n" withTitle:@"User Name"];
+    [self _buildPrefixFormatMenu_AddFormat:@"%n?a (%a)?a" withTitle:@"User Name (Alias)"];
+    
+    [[popUp_prefixFormat menu] addItem:[NSMenuItem separatorItem]];
+    
+    [self _buildPrefixFormatMenu_AddFormat:@"%a: %m" withTitle:@"Alias: Message"];
+    [self _buildPrefixFormatMenu_AddFormat:@"%n: %m" withTitle:@"User Name: Message"];
+    [self _buildPrefixFormatMenu_AddFormat:@"(%t) %a: %m" withTitle:@"(Time) Alias: Message"];
+    [self _buildPrefixFormatMenu_AddFormat:@"(%t) %n: %m" withTitle:@"(Time) User Name: Message"];
+    [self _buildPrefixFormatMenu_AddFormat:@"%a (%t): %m" withTitle:@"Alias (Time): Message"];
+    [self _buildPrefixFormatMenu_AddFormat:@"%n (%t): %m" withTitle:@"User Name (Time): Message"];
 }
 
+//Add a prefix format to the menu
+- (void)_buildPrefixFormatMenu_AddFormat:(NSString *)format withTitle:(NSString *)title
+{
+    NSMenuItem      *menuItem = [[[NSMenuItem alloc] initWithTitle:title target:nil action:nil keyEquivalent:@""] autorelease];
+    
+    [menuItem setRepresentedObject:format];
+    [[popUp_prefixFormat menu] addItem:menuItem];
+}
 
 /*
-
-
-
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
