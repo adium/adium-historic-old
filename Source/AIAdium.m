@@ -431,7 +431,7 @@ void Adium_HandleSignal(int i){
 			prefsButton = AILocalizedString(@"Open Message Prefs",nil);
 			prefsCategory = AIPref_Messages;
 		}else{
-			errorMessage = AILocalizedString(@"Sorry, but Adium Message Styles are not supported in OS X 10.2 (Jaguar) at this time.",nil);
+			errorMessage = AILocalizedString(@"Sorry, but Adium Message Styles are not supported in OS X 10.2 (Jaguar).",nil);
 		}
 	} else if ([extension caseInsensitiveCompare:@"ListLayout"] == NSOrderedSame){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Contact List"];
