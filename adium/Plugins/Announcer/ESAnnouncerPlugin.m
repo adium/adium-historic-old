@@ -10,7 +10,6 @@
 #import "AIAdium.h"
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
-#import "SUSpeaker.h"
 
 #define ANNOUNCER_DEFAULT_PREFS @"AnnouncerDefaults.plist"
 

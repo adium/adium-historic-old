@@ -11,7 +11,6 @@
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
 #import "AIAdium.h"
-#import "SUSpeaker.h"
 
 @interface ESContactAlertsPlugin(PRIVATE)
 - (void)processEventActionArrayForObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys;

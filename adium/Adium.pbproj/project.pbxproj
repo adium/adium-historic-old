@@ -1341,8 +1341,6 @@
 				9E95316803C8E0BE00415B22,
 				4B82AB7E04576AA600A8010A,
 				4BB54FE60476794200A8010A,
-				F16B1A6205163D830000000E,
-				F16B1A6405163D830000000E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1396,8 +1394,6 @@
 				9E95316A03C8E0C700415B22,
 				4BB54FE70476794200A8010A,
 				4BEC44B204AFCFDB00A8010A,
-				F16B1A6305163D830000000E,
-				F16B1A6505163D830000000E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1430,7 +1426,6 @@
 			files = (
 				346E641605157B14003B2F21,
 				346E641905157B96003B2F21,
-				34ADE00B05159249003B2F21,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1449,7 +1444,6 @@
 			files = (
 				346E641705157B14003B2F21,
 				346E641805157B96003B2F21,
-				34ADE00A05159249003B2F21,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1857,6 +1851,24 @@
 			settings = {
 			};
 		};
+		3487901505194CFF003B2F21 = {
+			fileRef = F519B01404D480C60196D3C4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3487901605194CFF003B2F21 = {
+			fileRef = F519B01304D480C60196D3C4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3487901705194D00003B2F21 = {
+			fileRef = 4B33F8DF0511F45000A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34A591AE0515943A003B2F21 = {
 			fileRef = 346E6407051532D6003B2F21;
 			isa = PBXBuildFile;
@@ -1902,18 +1914,6 @@
 		};
 		34ADE0060515920E003B2F21 = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34ADE00A05159249003B2F21 = {
-			fileRef = F519B01404D480C60196D3C4;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34ADE00B05159249003B2F21 = {
-			fileRef = F519B01304D480C60196D3C4;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -4455,12 +4455,6 @@
 		};
 		4B33F8E20511F45000A8010A = {
 			fileRef = 4B33F8DE0511F45000A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B33F8E30511F45000A8010A = {
-			fileRef = 4B33F8DF0511F45000A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -10280,6 +10274,8 @@
 				4B33F8DE0511F45000A8010A,
 				4B33F8DD0511F45000A8010A,
 				4B33F8DF0511F45000A8010A,
+				F519B01304D480C60196D3C4,
+				F519B01404D480C60196D3C4,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -13199,7 +13195,6 @@
 		};
 		9EB3C52204F94D96001D1F74 = {
 			children = (
-				F519B09504D54D480196D3C4,
 				9EB3C52304F94DB7001D1F74,
 			);
 			isa = PBXGroup;
@@ -13972,30 +13967,6 @@
 			path = "Plugins/Grouped Away By Idle Sort/AIGroupedAwayByIdleSortPlugin.m";
 			refType = 4;
 		};
-		F16B1A6205163D830000000E = {
-			fileRef = F16B1A5E05163D830000000E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F16B1A6305163D830000000E = {
-			fileRef = F16B1A5F05163D830000000E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F16B1A6405163D830000000E = {
-			fileRef = F16B1A6005163D830000000E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F16B1A6505163D830000000E = {
-			fileRef = F16B1A6105163D830000000E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F16B1A6605163D830000000E = {
 			fileRef = F16B1A5E05163D830000000E;
 			isa = PBXBuildFile;
@@ -14728,7 +14699,6 @@
 		F5148D8804C8B38E018B6CC7 = {
 			buildActionMask = 2147483647;
 			files = (
-				F519B01504D480C60196D3C4,
 				F527079904E203BB0114B3C0,
 				F527079B04E203BB0114B3C0,
 				F527079E04E203D40114B3C0,
@@ -14752,7 +14722,6 @@
 		F5148D8A04C8B38E018B6CC7 = {
 			buildActionMask = 2147483647;
 			files = (
-				F519B01604D480C60196D3C4,
 				F527079804E203BB0114B3C0,
 				F527079A04E203BB0114B3C0,
 				F527079F04E203D40114B3C0,
@@ -14910,28 +14879,6 @@
 			name = SUSpeaker.m;
 			path = Source/SUSpeaker.m;
 			refType = 4;
-		};
-		F519B01504D480C60196D3C4 = {
-			fileRef = F519B01304D480C60196D3C4;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F519B01604D480C60196D3C4 = {
-			fileRef = F519B01404D480C60196D3C4;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F519B09504D54D480196D3C4 = {
-			children = (
-				F519B01304D480C60196D3C4,
-				F519B01404D480C60196D3C4,
-			);
-			isa = PBXGroup;
-			name = "Speech-To-Text files";
-			path = "";
-			refType = 2;
 		};
 		F51DEC0D03262FB501A8010A = {
 			children = (
@@ -15681,7 +15628,8 @@
 				4B9AB61904D2C84700A8010A,
 				3C88C78D04D8CB8C00A80106,
 				4B33F8E00511F45000A8010A,
-				4B33F8E30511F45000A8010A,
+				3487901605194CFF003B2F21,
+				3487901705194D00003B2F21,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15791,6 +15739,7 @@
 				3C88C78E04D8CB8C00A80106,
 				4B33F8E10511F45000A8010A,
 				4B33F8E20511F45000A8010A,
+				3487901505194CFF003B2F21,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

@@ -33,6 +33,8 @@
 #define PREVIOUS_MESSAGE_MENU_TITLE		@"Previous Message"
 #define NEXT_MESSAGE_MENU_TITLE			@"Next Message"
 
+#define ALWAYS_CREATE_NEW_WINDOWS 		NO
+
 @interface AIDualWindowInterfacePlugin (PRIVATE)
 - (void)addMenuItems;
 - (void)removeMenuItems;
@@ -44,7 +46,9 @@
 - (AIMessageTabViewItem *)_messageTabForChat:(AIChat *)inChat;
 - (AIMessageTabViewItem *)_messageTabForListObject:(AIListObject *)inListObject;
 - (AIMessageWindowController *) messageWindowControllerForContainer:(AIMessageTabViewItem *)container;
+- (AIMessageTabViewItem *)_createMessageTabForChat:(AIChat *)inChat inMessageWindowController:(AIMessageWindowController *)messageWindowController;
 - (void)closeTabViewItem:(AIMessageTabViewItem *)inTab;
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIDualWindowInterfacePlugin
@@ -81,10 +85,12 @@
 
     //Register for the necessary notifications
     [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
-
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    
     //Install our menu items
     [self addMenuItems];
     [self buildWindowMenu];
+    [self preferencesChanged:nil];
 }
 
 //Close the interface
@@ -108,6 +114,13 @@
 
     //Cleanup
     [windowMenuArray release];
+}
+
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if (notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0) {
+	alwaysCreateNewWindows = ALWAYS_CREATE_NEW_WINDOWS;
+    }
 }
 
 //Contact List ---------------------------------------------------------------------
@@ -306,6 +319,8 @@
 	[messageWindowController showWindow:nil];
 	activeWindowControllerIndex = [messageWindowControllerArray indexOfObjectIdenticalTo:messageWindowController];
     }
+    else
+	activeWindowControllerIndex = -1; //no active window controller -> contact list
 
     //Update the close window/close tab menu item keys
     if([inContainer isKindOfClass:[AIMessageTabViewItem class]]){
@@ -572,7 +587,7 @@
     BOOL enabled = YES;
 
     if(menuItem == menuItem_closeTab){
-        if(![[[messageWindowControllerArray objectAtIndex:activeWindowControllerIndex] window] isKeyWindow]) enabled = NO;
+        if((activeWindowControllerIndex==-1) || (![[[messageWindowControllerArray objectAtIndex:activeWindowControllerIndex] window] isKeyWindow]) ) enabled = NO;
     }else if(menuItem == menuItem_nextMessage){
         if(![messageWindowControllerArray count]) enabled = NO;
     }else if(menuItem == menuItem_previousMessage){
@@ -630,45 +645,38 @@
     return(nil);
 }
 
-//
+//create a tab for the chat.  add it to the first message window, creating one if necessary
 - (AIMessageTabViewItem *)_createMessageTabForChat:(AIChat *)inChat
 {
     AIMessageTabViewItem	*messageTabContainer;
-    AIMessageViewController	*messageViewController;
-    AIMessageWindowController 	*messageWindowController;
-
-    //Dual Window Mode
-        //Make sure our message window is loaded
-	if(![messageWindowControllerArray count]){
-	    messageWindowController = [AIMessageWindowController messageWindowControllerWithOwner:owner interface:self];
-
-	    //Register to be notified when the message window closes
-	    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageWindowWillClose:) name:NSWindowWillCloseNotification object:[messageWindowController window]];
-
-	    //Add the messageWindowController to our array
-	    [messageWindowControllerArray addObject:messageWindowController];
-	    activeWindowControllerIndex = [messageWindowControllerArray count] - 1;
-	}
+    if (![messageWindowControllerArray count] || alwaysCreateNewWindows)
+	messageTabContainer = [self _createMessageTabForChat:inChat inMessageWindowController:nil];
     else
-    {
-	messageWindowController = [messageWindowControllerArray lastObject];
+	messageTabContainer = [self _createMessageTabForChat:inChat inMessageWindowController:[messageWindowControllerArray objectAtIndex:0]];
+
+    return messageTabContainer;
+}
+
+//pass nil to create a new window for this tab; otherwise, put a tab containing inChat into the window controller by messageWindowController
+- (AIMessageTabViewItem *)_createMessageTabForChat:(AIChat *)inChat inMessageWindowController:(AIMessageWindowController *)messageWindowController
+{
+    AIMessageTabViewItem	*messageTabContainer;
+    AIMessageViewController	*messageViewController;
+
+    //Make sure our message window is loaded
+    if(!messageWindowController || ![messageWindowControllerArray count]){
+	messageWindowController = [AIMessageWindowController messageWindowControllerWithOwner:owner interface:self];
+
+	//Register to be notified when the message window closes
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageWindowWillClose:) name:NSWindowWillCloseNotification object:[messageWindowController window]];
+
+	//Add the messageWindowController to our array
+	[messageWindowControllerArray addObject:messageWindowController];
+	activeWindowControllerIndex = [messageWindowControllerArray count] - 1;
+    } else {
+    activeWindowControllerIndex = [messageWindowControllerArray indexOfObjectIdenticalTo:messageWindowController];
     }
     
-
-    //Multiwindow mode
-	/*
-    //Make sure our message window is loaded
-    messageWindowController = [AIMessageWindowController messageWindowControllerWithOwner:owner interface:self];
-
-    //Register to be notified when the message window closes
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageWindowWillClose:) name:NSWindowWillCloseNotification object:[messageWindowController window]];
-
-    //Add the messageWindowController to our array
-    [messageWindowControllerArray addObject:messageWindowController];
-    activeWindowControllerIndex = [messageWindowControllerArray count] - 1;
-	 */
-
-
     //Create the message view & tab
     messageViewController = [AIMessageViewController messageViewControllerForChat:inChat owner:owner];
     messageTabContainer = [AIMessageTabViewItem messageTabWithView:messageViewController owner:owner];
@@ -679,7 +687,6 @@
 
     return(messageTabContainer);
 }
-
 //Called as the message window closes
 - (void)messageWindowWillClose:(NSNotification *)notification
 {
@@ -696,6 +703,7 @@
 	    [messageWindowControllerArray removeObjectIdenticalTo:messageWindowController];
 	}
     }
+    activeWindowControllerIndex = -1; //nothing's active; if another window takes over in a brief moment this will change
 }
 
 //
@@ -733,6 +741,7 @@
 
     }
 }
+
 
 @end
 
