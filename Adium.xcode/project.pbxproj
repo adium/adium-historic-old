@@ -5649,6 +5649,106 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34B7033B076EDB240016E8BA = {
+			children = (
+				6E4D960606B73979005235E9,
+				6E4D960706B73979005235E9,
+				6E4D960806B7397A005235E9,
+				6E4D960906B7397A005235E9,
+				6E4D960A06B7397A005235E9,
+			);
+			isa = PBXGroup;
+			name = "Group Chat";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B7033D076EDB370016E8BA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESContactAlertsViewController.m;
+			path = "Frameworks/Adium Framework/ESContactAlertsViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B7033E076EDB370016E8BA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESContactAlertsViewController.h;
+			path = "Frameworks/Adium Framework/ESContactAlertsViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B7033F076EDB370016E8BA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CSNewContactAlertWindowController.m;
+			path = "Frameworks/Adium Framework/CSNewContactAlertWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B70340076EDB370016E8BA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CSNewContactAlertWindowController.h;
+			path = "Frameworks/Adium Framework/CSNewContactAlertWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B70341076EDB370016E8BA = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = NewAlert.nib;
+			path = "Frameworks/Adium Framework/NewAlert.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B70342076EDB370016E8BA = {
+			fileRef = 34B7033D076EDB370016E8BA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34B70343076EDB370016E8BA = {
+			fileRef = 34B7033E076EDB370016E8BA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34B70344076EDB370016E8BA = {
+			fileRef = 34B7033F076EDB370016E8BA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34B70345076EDB370016E8BA = {
+			fileRef = 34B70340076EDB370016E8BA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34B70346076EDB370016E8BA = {
+			fileRef = 34B70341076EDB370016E8BA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34B70349076EDB410016E8BA = {
+			children = (
+				34B7033D076EDB370016E8BA,
+				34B7033E076EDB370016E8BA,
+				34B7033F076EDB370016E8BA,
+				34B70340076EDB370016E8BA,
+				34B70341076EDB370016E8BA,
+			);
+			isa = PBXGroup;
+			name = "Contact Alerts";
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		34B9194A062DEC29004F1223 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -6950,6 +7050,8 @@
 				34D1897F076114C00075A380,
 				34D189B2076131850075A380,
 				34E829840766B0FE00EFB3BC,
+				34B70343076EDB370016E8BA,
+				34B70345076EDB370016E8BA,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7069,6 +7171,7 @@
 				6E4D960F06B7397A005235E9,
 				340F481B06DA4EDD0072E2FA,
 				34D189290760F75F0075A380,
+				34B70346076EDB370016E8BA,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7125,6 +7228,8 @@
 				340833ED075C3A7900703011,
 				34D18980076114C00075A380,
 				34E829850766B0FE00EFB3BC,
+				34B70342076EDB370016E8BA,
+				34B70344076EDB370016E8BA,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11949,11 +12054,8 @@
 				4B5827E90613CE9D0004BD25,
 				3426FD0A0699D3D100751059,
 				3426FD090699D3D100751059,
-				6E4D960606B73979005235E9,
-				6E4D960706B73979005235E9,
-				6E4D960806B7397A005235E9,
-				6E4D960906B7397A005235E9,
-				6E4D960A06B7397A005235E9,
+				34B70349076EDB410016E8BA,
+				34B7033B076EDB240016E8BA,
 				349DDD5206406A7D00542726,
 			);
 			isa = PBXGroup;
