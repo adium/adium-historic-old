@@ -835,7 +835,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
     BOOL	weAreOnline = [self online];
-	NSLog(@"*** %@: %i %i",inContact, weAreOnline,[self integerStatusObjectForKey:@"Connecting"]);
 	
     if([inType isEqualToString:CONTENT_MESSAGE_TYPE]){
         if((weAreOnline && (inContact == nil || [inContact online])) ||
