@@ -496,6 +496,7 @@
 			children = (
 				1058C7A1FEA54F0111CA2CBB,
 				F531836F019E40BB01A80165,
+				34B588A0058D833A00E7EF0D,
 				01BD68FF015E255C7F000001,
 				4BDB241F04AF52B000A8010A,
 				F5819CE9032124CE01A8010A,
@@ -6341,6 +6342,56 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34B5875A058D801D00E7EF0D = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIException.m;
+			path = "Frameworks/Adium Framework/AIException.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B5875B058D801D00E7EF0D = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIException.h;
+			path = "Frameworks/Adium Framework/AIException.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B5875C058D801D00E7EF0D = {
+			fileRef = 34B5875A058D801D00E7EF0D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34B5875D058D801D00E7EF0D = {
+			fileRef = 34B5875B058D801D00E7EF0D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34B588A0058D833A00E7EF0D = {
+			expectedFileType = wrapper.framework;
+			isa = PBXFileReference;
+			name = ExceptionHandling.framework;
+			path = /System/Library/Frameworks/ExceptionHandling.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		34B588A1058D833A00E7EF0D = {
+			fileRef = 34B588A0058D833A00E7EF0D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34B588A4058D83D300E7EF0D = {
+			fileRef = 34B588A0058D833A00E7EF0D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34BD83DA054E530700EB2652 = {
 			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 30;
@@ -8550,6 +8601,7 @@
 				34BD9D59053146CC000AB133,
 				34BD9D5A053146CC000AB133,
 				34BD9D5D053146CC000AB133,
+				34B588A1058D833A00E7EF0D,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8822,6 +8874,7 @@
 				6CF426830577648700F27FAA,
 				4BFC33DF058D4430008F7FA2,
 				4BFC3414058D48A8008F7FA2,
+				34B5875D058D801D00E7EF0D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8991,6 +9044,7 @@
 				6CF426840577648700F27FAA,
 				4BFC33E0058D4430008F7FA2,
 				4BFC3415058D48A8008F7FA2,
+				34B5875C058D801D00E7EF0D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9108,6 +9162,7 @@
 			files = (
 				3419F7790531516500C68BA3,
 				34BD9DDC05314751000AB133,
+				34B588A4058D83D300E7EF0D,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18299,6 +18354,8 @@
 				6CF426820577648700F27FAA,
 				348862CD05645E94003C9627,
 				348862CE05645E95003C9627,
+				34B5875B058D801D00E7EF0D,
+				34B5875A058D801D00E7EF0D,
 				4BFC33DD058D4430008F7FA2,
 				4BFC33DE058D4430008F7FA2,
 				F5793924033E74C301A8010A,
@@ -26097,7 +26154,7 @@
 			productType = "com.apple.product-type.bundle";
 		};
 		B72537BC058C4577004BA969 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Latex Plugin.AdiumPlugin";
