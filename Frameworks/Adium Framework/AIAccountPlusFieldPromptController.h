@@ -13,7 +13,7 @@
     IBOutlet	NSPopUpButton			*popUp_service;
 }
 
-+ (void)newPrompt;
++ (void)showPrompt;
 + (void)closeSharedInstance;
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)okay:(id)sender;
