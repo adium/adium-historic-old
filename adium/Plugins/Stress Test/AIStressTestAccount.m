@@ -28,7 +28,7 @@
 
     //
 	NSLog(@"Stress Test\r-------------\rYou must create handles before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rcrash");
-    //[self echo:@"Stress Test\r-------------\rYou must create handles before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rcrash"];
+    //[self echo:@"Stress Test\r-------------\rYou must create contacts before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rcrash"];
 }
 
 //Return the default properties for this account
@@ -196,11 +196,13 @@
 															UID:buddyUID])){
 		NSLog(@"%@ (%@) chat:%@",contact, buddyUID, [[adium contentController] chatWithContact:contact initialStatus:nil]);
         AIContentMessage *messageObject;
-        messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact initialStatus:nil]
+        messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact 
+																					 initialStatus:nil]
 											 withSource:contact
                                             destination:self
 												   date:nil
-                                                message:[[[NSAttributedString alloc] initWithString:message attributes:[NSDictionary dictionary]] autorelease]
+                                                message:[[[NSAttributedString alloc] initWithString:message
+																						 attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
 											  autoreply:NO];
         [[adium contentController] receiveContentObject:messageObject];
 		
@@ -216,10 +218,10 @@
 {
     NSMutableDictionary *userInfo = [inTimer userInfo];
     NSString		*message = [userInfo objectForKey:@"message"];
-    int			i = [[userInfo objectForKey:@"i"] intValue];
-    int			count = [[userInfo objectForKey:@"count"] intValue];
-    int			spread = [[userInfo objectForKey:@"spread"] intValue];
-    BOOL		msgIn = [[userInfo objectForKey:@"in"] boolValue];
+    int				i = [[userInfo objectForKey:@"i"] intValue];
+    int				count = [[userInfo objectForKey:@"count"] intValue];
+    int				spread = [[userInfo objectForKey:@"spread"] intValue];
+    BOOL			msgIn = [[userInfo objectForKey:@"in"] boolValue];
     
     AIListContact	*contact;
     NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i%spread];
@@ -229,19 +231,23 @@
 															UID:buddyUID])){
         AIContentMessage *messageObject;
         if(msgIn){
-            messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact initialStatus:nil]
+            messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact
+																						 initialStatus:nil]
                                                  withSource:self
                                                 destination:contact
                                                        date:nil
-                                                    message:[[[NSAttributedString alloc] initWithString:message attributes:[NSDictionary dictionary]] autorelease]
+                                                    message:[[[NSAttributedString alloc] initWithString:message
+																							 attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
                                                   autoreply:YES];
             [[adium contentController] sendContentObject:messageObject];
         }else{
-            messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact initialStatus:nil]
+            messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact
+																						 initialStatus:nil]
                                                  withSource:contact
                                                 destination:self
                                                        date:nil
-                                                    message:[[[NSAttributedString alloc] initWithString:message attributes:[NSDictionary dictionary]] autorelease]
+                                                    message:[[[NSAttributedString alloc] initWithString:message 
+																							 attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
                                                   autoreply:NO];
             [[adium contentController] receiveContentObject:messageObject];
         }
@@ -264,10 +270,8 @@
 //Initiate a new chat
 - (BOOL)openChat:(AIChat *)chat
 {
-		NSLog(@"was %@",[chat statusDictionary]);
 	[[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
 	
-	NSLog(@"now is %@",[chat statusDictionary]);
 	[chatDict setObject:chat forKey:[[chat listObject] UID]];
 	
     return(YES);
@@ -289,11 +293,13 @@
 - (void)_echo:(NSString *)string
 {
     AIContentMessage *messageObject;
-    messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:commandContact initialStatus:nil]
+    messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:commandContact
+																				 initialStatus:nil]
                                          withSource:commandContact
                                         destination:self
                                                date:nil
-                                            message:[[[NSAttributedString alloc] initWithString:string attributes:[NSDictionary dictionary]] autorelease]
+                                            message:[[[NSAttributedString alloc] initWithString:string
+																					 attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
                                           autoreply:NO];
     [[adium contentController] receiveContentObject:messageObject];
 }
