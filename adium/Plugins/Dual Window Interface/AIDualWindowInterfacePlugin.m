@@ -42,15 +42,16 @@
 
 @implementation AIDualWindowInterfacePlugin
 
-//install
+//Plugin setup ------------------------------------------------------------------
 - (void)installPlugin
 {
-    [[owner interfaceController] registerInterfaceController:self]; //Register our interface
+    //Register our interface
+    [[owner interfaceController] registerInterfaceController:self]; 
 }
 
 - (void)uninstallPlugin
 {
-    //[[owner interfaceController] unregisterInterfaceController:self]; //
+
 }
 
 //Open the interface
@@ -76,9 +77,9 @@
 - (void)closeInterface
 {
     //Close and unload our windows
-    [self unloadMessageWindow];
-    [self unloadContactListWindow];
-
+    if(messageWindow) [messageWindow closeWindow:nil];
+    if(contactListWindowController) [contactListWindowController closeWindow:nil];
+    
     //Stop observing
     [[[owner contentController] contentNotificationCenter] removeObserver:self];
     [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self];
@@ -91,6 +92,7 @@
     [super dealloc];
 }
 
+// Contact List ---------------------------------------------------------------------
 //Show the contact list window
 - (IBAction)showContactList:(id)sender
 {
@@ -98,6 +100,17 @@
     [contactListWindowController showWindow:nil];
 }
 
+//(cleanup) unload the contact list window - called by the contactListWindow controller as it's closed
+- (void)unloadContactListWindow
+{
+    //release the window
+    [contactListWindowController autorelease]; contactListWindowController = nil;
+    //we MUST autorelease here (and not simply release), because the window controller may try to message itself while it's closing, and if we release here it will cause crashes in certain situations (such as quitting Adium with the contact list window open).
+
+}
+
+
+// Messages -------------------------------------------------------------------------
 //Close the active tab
 - (IBAction)closeTab:(id)sender
 {
@@ -123,17 +136,62 @@
     }
 }
 
-//Close a message view controller
+//Select the next message
+- (IBAction)nextMessage:(id)sender
+{
+    if(messageWindow && [[messageWindow window] isKeyWindow]){
+        if(![messageWindow selectNextController]){
+            //Move: message window -> contact list
+            [contactListWindowController showWindow:nil];
+        }
+    }else{
+        //Move:  contact list -> message window
+        [messageWindow selectFirstController];
+        [messageWindow showWindow:nil];
+    }
+}
+
+//Select the previous message
+- (IBAction)previousMessage:(id)sender
+{
+    if(messageWindow && [[messageWindow window] isKeyWindow]){
+        if(![messageWindow selectPreviousController]){
+            //Move:  contact list <- message window
+            [contactListWindowController showWindow:nil];
+        }
+    }else{
+        //Move:  message window <- contact list
+        [messageWindow selectLastController];
+        [messageWindow showWindow:nil];
+    }
+}
+
+//(cleanup) Close a message view controller
 - (void)closeMessageViewController:(id <AIMessageView>)controller
 {
-    if(messageWindow){
-        //Remove the message from the message window
-        [messageWindow removeMessageViewController:controller];
+    BOOL	windowIsEmpty;
+    
+    //Remove the message from the message window
+    windowIsEmpty = [messageWindow removeMessageViewController:controller];
+
+    //Unload the window if it's now empty
+    if(windowIsEmpty){ 
+        //stop observing
+        [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:AIMessageWindow_ControllersChanged object:messageWindow];
+        [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:AIMessageWindow_ControllerOrderChanged object:messageWindow];
+        [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:AIMessageWindow_SelectedControllerChanged object:messageWindow];
+
+        //release the window
+        [messageWindow closeWindow:nil];
+        [messageWindow release]; messageWindow = nil;
+
+        //Rebuild the window menu
+        [self buildWindowMenu];
     }
 }
 
 
-//Notifications ------------------------------------------------------------------------------------------------
+// Notifications -------------------------------------------------------------------------------
 //Called when a message object is added to a handle
 - (void)contentObjectAdded:(NSNotification *)notification
 {
@@ -197,19 +255,17 @@
     }
 }
 
+//Notifications sent by the message window on tab changes
 - (void)messageWindowControllersChanged:(NSNotification *)notification
 {
-    if([messageWindow count] == 0){ //Close (and release) the message window if it's empty
-        [self unloadMessageWindow];
-    }
-
     //Rebuild the window menu
     [self buildWindowMenu]; 
 }
 
 - (void)messageWindowControllerOrderChanged:(NSNotification *)notification
 {
-    [self buildWindowMenu]; //Rebuild the window menu
+    //Rebuild the window menu
+    [self buildWindowMenu];
 }
 
 - (void)messageWindowSelectedControllerChanged:(NSNotification *)notification
@@ -217,38 +273,10 @@
 
 }
 
-//Select the next message
-- (IBAction)nextMessage:(id)sender
-{    
-    if(messageWindow && [[messageWindow window] isKeyWindow]){
-        if(![messageWindow selectNextController]){
-            //Move: message window -> contact list
-            [contactListWindowController showWindow:nil];
-        }
-    }else{
-        //Move:  contact list -> message window
-        [messageWindow selectFirstController];
-        [messageWindow showWindow:nil];
-    }
-}
-
-- (IBAction)previousMessage:(id)sender
-{
-    if(messageWindow && [[messageWindow window] isKeyWindow]){
-        if(![messageWindow selectPreviousController]){
-            //Move:  contact list <- message window
-            [contactListWindowController showWindow:nil];
-        }
-    }else{
-        //Move:  message window <- contact list
-        [messageWindow selectLastController];
-        [messageWindow showWindow:nil];
-    }
-}
 
 
 
-//Private ------------------------------------------------------------------------------
+// Private ------------------------------------------------------------------------------
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     BOOL enabled = YES;
@@ -377,43 +405,14 @@
     }
 }
 
-//unloads the tabbed message window
-- (void)unloadMessageWindow
-{
-    if(messageWindow){
-        //stop observing
-        [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:AIMessageWindow_ControllersChanged object:messageWindow];
-        [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:AIMessageWindow_ControllerOrderChanged object:messageWindow];
-        [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:AIMessageWindow_SelectedControllerChanged object:messageWindow];
-    
-        //close the window
-        [messageWindow closeWindow:nil];
-        [messageWindow release]; messageWindow = nil;
-    
-        //Rebuild the window menu
-        [self buildWindowMenu];
-    }
-}
-
 //Load the contact list window
 - (void)loadContactListWindow
 {
     if(!contactListWindowController){
         //Load the window
-        contactListWindowController = [[AIContactListWindowController contactListWindowControllerWithOwner:owner] retain];
+        contactListWindowController = [[AIContactListWindowController contactListWindowControllerForInterface:self owner:owner] retain];
     }
 }
-
-//unload the contact list window
-- (void)unloadContactListWindow
-{
-    if(contactListWindowController){
-        //Close and release the window
-        [contactListWindowController closeWindow:nil];
-        [contactListWindowController release];
-    }
-}
-
 
 //Add our menu items
 - (void)addMenuItems

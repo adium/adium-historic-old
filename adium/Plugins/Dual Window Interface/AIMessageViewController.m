@@ -129,9 +129,9 @@
     owner = [inOwner retain];
     interface = [inInterface retain];
     account = [inAccount retain];
-    
-    if(!account) account = [[[[owner accountController] accountArray] objectAtIndex:0] retain];
-    
+    if(!account) account = [[[owner accountController] accountForSendingContentToHandle:inHandle] retain];
+
+
     [NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
 
     if(!inHandle){ //If a handle is specified, we can skip these steps, since these views will be removed
@@ -166,14 +166,21 @@
     [view_account setColor:[NSColor whiteColor]];
     [view_handle setColor:[NSColor whiteColor]];
     [view_buttons setColor:[NSColor whiteColor]];
+
+    //register for notifications
+    [[[owner accountController] accountNotificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
+    [[[owner accountController] accountNotificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_PropertiesChanged object:nil];
+    [[[owner accountController] accountNotificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_StatusChanged object:nil];
     
+
     return(self);
 }
 
 - (void)dealloc
 {
-//remove notifications
+    //remove notifications
     [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self];
+    [[[owner accountController] accountNotificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     //nib
@@ -253,6 +260,12 @@
 {
     //Resize our contents to fix the text
     [self sizeAndArrangeSubviews];
+}
+
+//The account list/status changed
+- (void)accountListChanged:(NSNotification *)notification
+{
+    [self configureAccountMenu]; //rebuild the account menu
 }
 
 //Arrange and resize our subviews based on the current state of this view (whether or not: it's locked to a handle, the account view is visible)
@@ -358,7 +371,7 @@
             if([(AIAccount <AIAccount_Status> *)anAccount status] != STATUS_ONLINE){
                 //An 'available for sending content' would be more appropriate here
                 [menuItem setEnabled:NO];
-            }            
+            }
         
             [[popUp_accounts menu] addItem:menuItem];
         }

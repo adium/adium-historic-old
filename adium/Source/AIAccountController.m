@@ -25,10 +25,11 @@
 //Paths and Filenames
 //#define DIRECTORY_INTERNAL_SERVICES		@"/Contents/Plugins"	//Path to the internal services
 //Preference keys
-#define ACCOUNT_LIST				@"Account List"	//Array of accounts
+#define ACCOUNT_LIST				@"Account List"		//Array of accounts
 #define ACCOUNT_TYPE				@"Type"			//Account type
 #define ACCOUNT_PROPERTIES			@"Properties"		//Account properties
 //Other
+#define KEY_PREFERRED_SOURCE_ACCOUNT		@"Preferred Account"
 //#define EXTENSION_ADIUM_SERVICE			@"AdiumService"		//File extension on a service
 
 @interface AIAccountController (PRIVATE)
@@ -53,6 +54,7 @@
     accountNotificationCenter = nil;
     availableServiceArray = [[NSMutableArray alloc] init];
     accountArray = [[NSMutableArray alloc] init];
+    lastAccountIDToSendContent = nil;
 }
 
 // close
@@ -68,6 +70,7 @@
     [accountArray release];
     [accountNotificationCenter release];
     [availableServiceArray release];
+    [lastAccountIDToSendContent release];
 
     [super dealloc];
 }
@@ -80,6 +83,9 @@
 
     //Observe the newly loaded account list
     [[self accountNotificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
+
+    //Observe content (for accountForSendingContentToHandle)
+    [[[owner contentController] contentNotificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
     
     //Autoconnect
     [self autoConnectAccounts];
@@ -131,6 +137,22 @@
     NSParameterAssert(accountArray != nil);
 
     return(accountArray);
+}
+
+//Searches the account list for the specified account
+- (AIAccount *)accountWithID:(NSString *)inID
+{
+    NSEnumerator	*enumerator;
+    AIAccount		*account;
+
+    enumerator = [accountArray objectEnumerator];
+    while((account = [enumerator nextObject])){
+        if([inID compare:[account accountID]] == 0){
+            return(account);
+        }
+    }
+
+    return(nil);
 }
 
 //Switches the service of the specified account
@@ -206,11 +228,66 @@
 {
     [availableServiceArray addObject:inService];
 }
-            
 
+//Returns the desired source account for messaging the specified contact.  The account is the first one found online following the chain:
+//- The last account used to message this contact
+//- The last account used to message anyone
+//- The first available account on the account list
+- (AIAccount *)accountForSendingContentToHandle:(AIContactHandle *)inHandle
+{
+    NSEnumerator	*enumerator;
+    AIAccount		*account;
+
+    // Preferred account for this contact --
+    if(inHandle){
+        NSString	*accountID = [[owner preferenceController] preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT
+                                                             group:PREF_GROUP_ACCOUNTS
+                                                            object:inHandle];
+
+        if(accountID && (account = [self accountWithID:accountID])){
+            if([(AIAccount <AIAccount_Status> *)account status] == STATUS_ONLINE){ //"available for sending content"
+                return(account);
+            }
+        }
+    }
+    
+    // Last account used to message anyone --
+    if(lastAccountIDToSendContent && (account = [self accountWithID:lastAccountIDToSendContent])){        
+        if([(AIAccount <AIAccount_Status> *)account status] == STATUS_ONLINE){ //"available for sending content"
+            return(account);
+        }
+    }
+    
+    // First available account --
+    enumerator = [accountArray objectEnumerator];
+    while((account = [enumerator nextObject])){
+        if([(AIAccount <AIAccount_Status> *)account status] == STATUS_ONLINE){ //An 'available for sending content' would be more appropriate here
+            return(account);
+        }
+    }
+        
+    //Nothing found (no accounts are available to send)
+    return([accountArray objectAtIndex:0]);
+}
 
 
 // Internal ----------------------------------------------------------------
+//Watch outgoing content, remembering the user's choice of source account
+- (void)didSendContent:(NSNotification *)notification
+{
+    AIContactHandle	*destHandle = [notification object];
+    AIAccount		*sourceAccount = (AIAccount *)[[[notification userInfo] objectForKey:@"Object"] source];
+
+    [[owner preferenceController] setPreference:[sourceAccount accountID]
+                                         forKey:KEY_PREFERRED_SOURCE_ACCOUNT
+                                          group:PREF_GROUP_ACCOUNTS
+                                         object:destHandle];
+
+    [lastAccountIDToSendContent release];
+    lastAccountIDToSendContent = [[sourceAccount accountID] retain];
+    
+}
+
 //automatically connect to accounts flagged with an auto connect property
 - (void)autoConnectAccounts
 {
@@ -357,6 +434,7 @@
 
     return(newAccount);
 }
+
 
 @end
 

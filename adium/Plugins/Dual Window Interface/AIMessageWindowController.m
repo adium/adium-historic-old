@@ -40,7 +40,17 @@
     return([[[self alloc] initWithWindowNibName:MESSAGE_WINDOW_NIB owner:inOwner interface:inInterface] autorelease]);
 }
 
-//select a message
+//Close the message window (closing the window does not unload it, it is just hidden)
+- (IBAction)closeWindow:(id)sender
+{
+    if([self windowShouldClose:nil]){
+        [[self window] orderOut:nil]; //Order out (as opposed to close)
+    }
+}
+
+
+//Controller selection ------------------------------------------------------------------
+//select a message controller
 - (void)selectMessageViewController:(id <AIMessageView>)inController
 {
     NSTabViewItem	*tabViewItem = [tabView_messages tabViewItemWithIdentifier:inController];
@@ -54,7 +64,8 @@
     }
 }
 
-//Selects the next message view.  If the current selection is last, NO is returned, and the selected tab is not changed.  Otherwise returns YES
+//Select the next message controller.
+//If the current selection is last, NO is returned, and the selected tab is not changed.  Otherwise returns YES
 - (BOOL)selectNextController
 {
     int		selectedIndex = [tabView_messages indexOfTabViewItem:[tabView_messages selectedTabViewItem]];
@@ -70,7 +81,8 @@
     return(selectionChanged);
 }
 
-//Selects the previous message view.  If the current selection is first, NO is returned, and the selected tab is not changed.  Otherwise returns YES
+//Select the previous message controller.
+//If the current selection is first, NO is returned, and the selected tab is not changed.  Otherwise returns YES
 - (BOOL)selectPreviousController
 {
     int		selectedIndex = [tabView_messages indexOfTabViewItem:[tabView_messages selectedTabViewItem]];
@@ -86,17 +98,28 @@
     return(selectionChanged);
 }
 
+//Select the first message controller
 - (void)selectFirstController
 {
     [tabView_messages selectTabViewItemAtIndex:0];
 }
 
+//Select the last message controller
 - (void)selectLastController
 {
     [tabView_messages selectTabViewItemAtIndex:[tabView_messages numberOfTabViewItems]-1 ];
 }
 
-//add a message
+//Returns the selected message controller
+- (id <AIMessageView>)selectedMessageView
+{
+    return([[tabView_messages selectedTabViewItem] identifier]);
+}
+
+
+
+//Add/Remove/Access controllers --------------------------------------------------------------------
+//add a message controller
 - (void)addMessageViewController:(id <AIMessageView>)inController
 {
     NSTabViewItem	*tabViewItem;
@@ -124,8 +147,8 @@
                                                                   userInfo:nil];
 }
 
-//remove a message
-- (void)removeMessageViewController:(id <AIMessageView>)inController
+//remove a message controller
+- (BOOL)removeMessageViewController:(id <AIMessageView>)inController
 {
     NSTabViewItem	*tabViewItem;
 
@@ -134,10 +157,10 @@
         //Remove the controller
         [tabView_messages removeTabViewItem:tabViewItem];
         [messageViewArray removeObject:inController];
-        [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:AIMessageWindow_ControllersChanged
-                                                                        object:self
-                                                                      userInfo:nil];        
+        [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:AIMessageWindow_ControllersChanged object:self userInfo:nil];
     }
+
+    return([messageViewArray count] == 0); //Return YES if that was our last controller    
 }
 
 //number of contained message controllers
@@ -152,19 +175,8 @@
     return(messageViewArray);
 }
 
-//Returns the selected message view
-- (id <AIMessageView>)selectedMessageView
-{
-    return([[tabView_messages selectedTabViewItem] identifier]);
-}
 
-//Close the message window (closing the window does not unload it - it is just hidden)
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] orderOut:nil]; //Order out (as opposed to close)
-    }
-}
+
 
 
 //Private -----------------------------------------------------------------------------
@@ -230,24 +242,16 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabViewDidChangeOrderOfTabViewItems:) name:AITabViewDidChangeOrderOfTabViewItemsNotification object:tabView_messages];
 }
 
-// called as the window closes
+//called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
-    //Save the window position
-    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
-                                         forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
-                                          group:PREF_GROUP_WINDOW_POSITIONS];
-
-    /*    NSArray		*viewArrayCopy = [[[tabView_messages tabViewItems] copy] autorelease]; //the array will change as we remove views, so we must work with a copy
-    NSEnumerator 	*enumerator;
-    NSTabViewItem	*tabViewItem;
-
-    //close all our tabs
-    enumerator = [viewArrayCopy objectEnumerator];
-    while((tabViewItem = [enumerator nextObject])){
-        [interface closeMessageViewController:[tabViewItem identifier]];
+    if([messageViewArray count]){ //Only close the window for real if it's empty
+        //Save the window position
+        [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+                                             forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
+                                              group:PREF_GROUP_WINDOW_POSITIONS];        
     }
-*/
+    
     return(YES);
 }
 
