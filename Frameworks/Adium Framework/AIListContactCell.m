@@ -404,7 +404,7 @@
 		rect = [image drawInRect:rect
 						  atSize:NSMakeSize(0, 0)
 						position:position
-						fraction:[self imageOpacityForDrawing]];
+						fraction:1.0];
 		[image setFlipped:![image isFlipped]];
 		
 		if(!isBadge){
