@@ -244,14 +244,23 @@ void socketCallback(CFSocketRef s,
     return self;
 }
 
-- (void)disconnect:(CBGaimAccount *)account
+#pragma mark Thread accessors
+
+- (void)makeAccount:(CBGaimAccount *)account performSelector:(SEL)selector
 {
-	[account performDisconnect];
+	[account performSelector:selector];
 }
 
-- (void)connect:(CBGaimAccount *)account
+- (void)makeAccount:(CBGaimAccount *)account performSelector:(SEL)selector withObject:(id)object
 {
-	[account performConnect];
+	[account performSelector:selector withObject:object];
 }
+
+- (void)makeAccount:(CBGaimAccount *)account performSelector:(SEL)selector withObject:(id)firstObject withObject:(id)secondObject
+{
+	[account performSelector:selector withObject:firstObject withObject:secondObject];
+}
+
+
 
 @end
