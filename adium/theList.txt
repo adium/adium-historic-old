@@ -15,6 +15,9 @@ Bugs
 * Standard Message View: Link tracking doesn't work if the link is the entire body of the first message received UNTIL you send a message, at which point it starts working
 * Libgaim disconnect errors are being displayed, and not ignored (since they are handled internally)
 * Preference window crashes if you have a color picker open, close the window, and then click inside the picker.  The colorwell just needs to be told activate:NO in viewWillClose.  Fixing this requires verifying that viewWillClose is being called on advanced preference panes.
+* In certain fonts, the tails of letters will stain in the text entry field after it clears.  This is visible with HoeflerText(size 12) - type a few j's and then press esc to clear the field.
+
+
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
