@@ -365,13 +365,6 @@
     }
 }
 
-- (void)removeRowAtIndex:(int)rowIndex
-{
-    if (rowIndex < [rowArray count] && rowIndex >= 0) {
-        
-    }
-}
-
 
 //Cursor Tracking -----------------------------------------------------------------------------------
 //This method is automatically called when our size or position changes, allowing for our cells to re-configure any cursor tracking rects they've set up.
