@@ -14408,15 +14408,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B4F5B25042D637700A8010A = {
-			children = (
-			);
-			isa = PBXGroup;
-			name = Contacts;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B4F5B29042D63DC00A8010A = {
 			children = (
 				9E6417090613C564006AF387,
@@ -14739,7 +14730,6 @@
 		};
 		4B587C0807ABFC8E001832A9 = {
 			children = (
-				4B4F5B25042D637700A8010A,
 				34306FE3076F53F60025102A,
 				4B4F5B2A042D63E200A8010A,
 				4B4F5B23042D636700A8010A,
