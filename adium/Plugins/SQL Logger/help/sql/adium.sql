@@ -196,6 +196,8 @@ sender          text,
 recipient       text,
 searchString    text,
 orderBy         text,
+date_start      timestamp,
+date_finish     timestamp,
 date_added      timestamp default now()
 );
 

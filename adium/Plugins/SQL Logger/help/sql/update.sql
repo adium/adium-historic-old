@@ -6,10 +6,5 @@
  *
  */
 
-alter table adium.saved_chats add column meta_id int
-    references adium.meta_container (meta_id);
-
-create index user_stats_sender on adium.user_statistics (sender_id);
-create index user_stats_recipient on adium.user_statistics (recipient_id);
-create index meta_contact_user on adium.meta_contact (user_id);
-create index meta_contact_meta on adium.meta_contact (meta_id);
+alter table adium.saved_searches add column date_start timestamp;
+alter table adium.saved_searches add column date_finish timestamp;
