@@ -44,5 +44,6 @@
 - (void)window:(NSWindow *)inWindow didResignMain:(NSNotification *)notification;
 - (NSMenu *)outlineView:(NSOutlineView *)outlineView menuForEvent:(NSEvent *)theEvent;
 - (void)hideTooltip;
+- (void)window:(NSWindow *)inWindow didBecomeMain:(NSNotification *)notification;
 
 @end
