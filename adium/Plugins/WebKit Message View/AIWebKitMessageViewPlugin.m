@@ -709,18 +709,26 @@ DeclareString(AppendNextMessage);
 //
 - (NSMutableString *)escapeString:(NSMutableString *)inString
 {
+	NSRange range = NSMakeRange(0, [inString length]);
+	unsigned delta;
 	//We need to escape a few things to get our string to the javascript without trouble
-	[inString replaceOccurrencesOfString:@"\\" withString:@"\\\\" 
-								 options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
+	delta = [inString replaceOccurrencesOfString:@"\\" withString:@"\\\\" 
+										 options:NSLiteralSearch range:range];
+	range.length += delta;
 	
-	[inString replaceOccurrencesOfString:@"\"" withString:@"\\\"" 
-						  options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
+	delta = [inString replaceOccurrencesOfString:@"\"" withString:@"\\\"" 
+						  options:NSLiteralSearch range:range];
+	range.length += delta;
 
-	[inString replaceOccurrencesOfString:@"\n" withString:@"" 
-								 options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
+	delta = [inString replaceOccurrencesOfString:@"\n" withString:@"" 
+										 options:NSLiteralSearch range:range];
+	range.length -= delta;
 
-	[inString replaceOccurrencesOfString:@"\r" withString:@"<br />" 
-								 options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
+	delta = [inString replaceOccurrencesOfString:@"\r" withString:@"<br />" 
+										 options:NSLiteralSearch range:range];
+	enum { lengthOfBRString = 6 };
+	range.length += delta * lengthOfBRString;
+
 	return(inString);
 }
 
