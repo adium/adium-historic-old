@@ -52,15 +52,18 @@ typedef enum {
     LogSearchMode		searchMode;				//Currently selected search mode
     NSDateFormatter		*dateFormatter;			//Format for dates displayed in the table
     BOOL				automaticSearch;		//YES if this search was performed automatically for the user (view ___'s logs...)
-    BOOL				ignoreSelectionChange;	//Hack to prevent automatic table selectin changes from clearing the automaticSearch flag
+    BOOL				ignoreSelectionChange;	//Hack to prevent automatic table selection changes from clearing the automaticSearch flag
     BOOL				showEmoticons;			//Flag for whether or not to process emoticons
-
+	BOOL				windowIsClosing;		//YES only if windowShouldClose: has been called, to prevent actions after that point
+	
     //Search information
     int					activeSearchID;			//ID of the active search thread, all other threads should quit
     NSLock				*searchingLock;			//Locked when a search is in progress
     BOOL				searching;				//YES if a search is in progress
     NSString			*activeSearchString;	//Current search string
-    
+	
+	NSTimer				*aggregateLogIndexProgressTimer; //Used to update a content search as the index updates
+	
     //Array of selected / displayed logs.  (Locked access)
     NSMutableArray		*selectedLogArray;		//Array of filtered/resulting logs
     NSLock				*resultsLock;			//Lock before touching the array

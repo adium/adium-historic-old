@@ -22,12 +22,12 @@
 @class AILoggerPreferences, AILoggerAdvancedPreferences;
 
 @interface AILoggerPlugin : AIPlugin {
-    AILoggerPreferences     *preferences;
+    AILoggerPreferences		*preferences;
     
     //Current logging settings
-    BOOL		    observingContent;
-    BOOL		    logIndexingEnabled; //Does this system support log indexing?
-    BOOL                    logHTML;
+    BOOL				observingContent;
+    BOOL				logIndexingEnabled; //Does this system support log indexing?
+    BOOL				logHTML;
 	
     //Log viewer menu items
     NSMenuItem		    *logViewerMenuItem;
@@ -35,16 +35,22 @@
     NSMenuItem		    *viewContactLogsContextMenuItem;
 
     //Log content search index
-    SKIndexRef		    index_Content;      
+    SKIndexRef		    index_Content;	
 
     //Dirty all information (First build of the dirty cache)
-    NSLock		    *indexingThreadLock;    //Locked when a dirty all or clean thread is running
-    BOOL		    stopIndexingThreads;    //Set to YES to abort a dirty all or clean
-    BOOL		    suspendDirtyArraySave;  //YES to prevent saving of the dirty index
+    BOOL				stopIndexingThreads;    //Set to YES to abort a dirty all or clean
+    BOOL				suspendDirtyArraySave;  //YES to prevent saving of the dirty index	
+    NSLock				*indexingThreadLock;	//Locked by the plugin when a dirty all or clean thread is running
+												
+	/*
+	 Locked by the plugin while the index is being modified.
+	 Locked by the logViewerWindowController when content searching is running.
+	 */
+	NSLock				*logAccessLock;
     
     //Array of dirty logs / Logs that need re-indexing.  (Locked access)
     NSMutableArray	    *dirtyLogArray;
-    NSLock		    *dirtyLogLock;
+    NSLock				*dirtyLogLock;
     
     //Indexing progress
     int			    logsToIndex;
@@ -74,6 +80,8 @@
 - (void)stopIndexingThreads;
 - (void)dirtyAllLogs;
 - (void)cleanDirtyLogs;
+
+- (NSLock *)logAccessLock;
 
 @end
 

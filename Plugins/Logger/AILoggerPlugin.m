@@ -70,7 +70,8 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     dirtyLogArray = nil;
     indexingThreadLock = [[NSLock alloc] init];
     dirtyLogLock = [[NSLock alloc] init];
-
+	logAccessLock = [[NSLock alloc] init];
+	
     //Setup our preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS 
 																		forClass:[self class]] 
@@ -407,7 +408,9 @@ this problem is along the lines of:
 - (SKIndexRef)logContentIndex
 {
     if(logIndexingEnabled){
+		[logAccessLock lock];
 		SKIndexFlush(index_Content); //Flush the index before returning to ensure everything is up to date
+		[logAccessLock unlock];
 		return(index_Content);
     }else{
 		return(nil);
@@ -460,12 +463,17 @@ this problem is along the lines of:
     NSURL       *logIndexPathURL = [NSURL fileURLWithPath:logIndexPath];
 	
     if([[NSFileManager defaultManager] fileExistsAtPath:logIndexPath]){
+		[logAccessLock lock];
 		index_Content = SKIndexOpenWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", true);
+		[logAccessLock unlock];
     }
     if(!index_Content){
 		//Create the index if one doesn't exist
 		[[NSFileManager defaultManager] createDirectoriesForPath:[logIndexPath stringByDeletingLastPathComponent]];
+		
+		[logAccessLock lock];
 		index_Content = SKIndexCreateWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", kSKIndexVector, NULL);
+		[logAccessLock unlock];
     }
 }
 
@@ -658,21 +666,29 @@ this problem is along the lines of:
 				//
 				//However, it seems that (10.3.1) SKDocumentCreateWithURL has a pretty serious memory leak.  It works just
 				//as well to use SKDocumentCreate and set the document's name to the path, so we can do that as an alternative:
+				[logAccessLock lock];
 				document = SKDocumentCreate((CFStringRef)@"file", NULL, (CFStringRef)logPath);
 				SKIndexAddDocumentWithText(index_Content, document, (CFStringRef)[NSString stringWithContentsOfFile:fullPath], YES);
 				CFRelease(document);
+				[logAccessLock unlock];
 				
 				//Update our progress
 				logsIndexed++;
 				if(lastUpdate == 0 || TickCount() > lastUpdate + LOG_INDEX_STATUS_INTERVAL){
-					[[AILogViewerWindowController existingWindowController] performSelectorOnMainThread:@selector(updateProgressDisplay) withObject:nil waitUntilDone:NO];
+					[[AILogViewerWindowController existingWindowController] performSelectorOnMainThread:@selector(logIndexingProgressUpdate) 
+																							 withObject:nil
+																						  waitUntilDone:NO];
 					lastUpdate = TickCount();
 				}
 				
 				//Save the dirty array
 				if(unsavedChanges++ > LOG_CLEAN_SAVE_INTERVAL){
 					[self _saveDirtyLogArray];
+					
+					[logAccessLock lock];
 					SKIndexFlush(index_Content);
+					[logAccessLock unlock];
+							
 					unsavedChanges = 0;
 					
 					//Flush ram
@@ -686,15 +702,25 @@ this problem is along the lines of:
 		
 		//Save the slimmed down dirty log array
 		[self _saveDirtyLogArray];
+		
+		[logAccessLock lock];
 		SKIndexFlush(index_Content);
+		[logAccessLock unlock];
 		
 		//Update our progress
 		logsToIndex = 0;
-		[[AILogViewerWindowController existingWindowController] performSelectorOnMainThread:@selector(updateProgressDisplay) withObject:nil waitUntilDone:NO];
+		[[AILogViewerWindowController existingWindowController] performSelectorOnMainThread:@selector(logIndexingProgressUpdate) 
+																				 withObject:nil
+																			  waitUntilDone:NO];
     }
     
     [indexingThreadLock unlock];
     [pool release];
+}
+
+- (NSLock *)logAccessLock
+{
+	return(logAccessLock);
 }
 
 @end

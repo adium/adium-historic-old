@@ -57,7 +57,7 @@
 - (void)selectDisplayedLog;
 - (NSAttributedString *)hilightOccurrencesOfString:(NSString *)littleString inString:(NSAttributedString *)bigString firstOccurrence:(NSRange *)outRange;
 - (void)sortSelectedLogArrayForTableColumn:(NSTableColumn *)tableColumn direction:(BOOL)direction;
-- (void)startSearching;
+- (void)startSearchingClearingCurrentResults:(BOOL)clearCurrentResults;
 - (void)stopSearching;
 - (void)buildSearchMenu;
 - (NSMenuItem *)_menuItemWithTitle:(NSString *)title forSearchMode:(LogSearchMode)mode;
@@ -135,7 +135,9 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
     showEmoticons = NO;
     activeSearchString = nil;
     displayedLog = nil;
-    
+    aggregateLogIndexProgressTimer = nil;
+	windowIsClosing = NO;
+	
 	blankImage = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
 
 	sortDirection = YES;
@@ -294,7 +296,7 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
 
     //Begin our initial search
     [searchField_logs setStringValue:(activeSearchString ? activeSearchString : @"")];
-    [self startSearching];
+    [self startSearchingClearingCurrentResults:YES];
 	
 	if ([[[adium preferenceController] preferenceForKey:KEY_LOG_VIEWER_DRAWER_STATE
 												  group:PREF_GROUP_LOGGING] boolValue]){
@@ -316,8 +318,12 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
     }
 
 	if (theLog){
+		//We utilize the logIndexAccessLock so we have exclusive access to the logs
+		NSLock	*logAccessLock = [plugin logAccessLock];
+
 		[theLog retain];
-		
+
+		[resultsLock lock];
 		[selectedLogArray removeObjectAtIndex:row];
 		[resultsLock unlock];
 
@@ -328,11 +334,13 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
 //		[textView_content setString:@""];
 
 		//Update the log index
+		[logAccessLock lock];
 		SKIndexRef		logSearchIndex = [plugin logContentIndex];
 		SKDocumentRef document = SKDocumentCreate((CFStringRef)@"file", NULL, (CFStringRef)[theLog path]);
 		SKIndexRemoveDocument(logSearchIndex, document);
 		CFRelease(document);
 		SKIndexFlush(logSearchIndex);
+		[logAccessLock unlock];
 
 		//Rebuild the 'global' log indexes
 		[logFromGroupDict release]; logFromGroupDict = [[NSMutableDictionary alloc] init];
@@ -344,7 +352,7 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
 
 		[tableView_results reloadData];
 		[self selectDisplayedLog];
-		
+
 		[theLog release];
 	}
 }
@@ -379,10 +387,14 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
 										 forKey:KEY_LOG_VIEWER_DRAWER_STATE
 										  group:PREF_GROUP_LOGGING];
 
-    //Disable the search field.  If we don't disable the search field, it will often try to call it's target action
+    //Disable the search field.  If we don't disable the search field, it will often try to call its target action
     //after the window has closed (and we are gone).  I'm not sure why this happens, but disabling the field
     //before we close the window down seems to prevent the crash.
     [searchField_logs setEnabled:NO];
+	
+	//Note that the window is closing so we don't take behaviors which could cause messages to the window after
+	//it was gone, like responding to a logIndexUpdated message
+	windowIsClosing = YES;
 
     //Abort any in-progress searching and indexing, and wait for their completion
     [self stopSearching];
@@ -391,6 +403,9 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
 	[super windowShouldClose:sender];
 
     //Clean up
+	[aggregateLogIndexProgressTimer invalidate];
+	[aggregateLogIndexProgressTimer release]; aggregateLogIndexProgressTimer = nil;
+	
     [sharedLogViewerInstance autorelease]; sharedLogViewerInstance = nil;
 	[toolbarItems release];
 	
@@ -473,9 +488,47 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
     [textField_progress setStringValue:progress];
 }
 
+//The plugin is informing us that the log indexing changed
+- (void)logIndexingProgressUpdate
+{
+	//Don't do anything if the window is already closing
+	if (!windowIsClosing){
+		[self updateProgressDisplay];
+		
+		//If we are searching by content, we should re-search without clearing our current results so the
+		//the newly-indexed logs can be added without blanking the current table contents.
+		//We set an NSNumber with our current activeSearchID so we will only refresh if we haven't done a new search
+		//between the timer being set and firing.
+		if (searchMode == LOG_SEARCH_CONTENT){
+			if (!aggregateLogIndexProgressTimer){
+				aggregateLogIndexProgressTimer = [[NSTimer scheduledTimerWithTimeInterval:7.0
+																				   target:self
+																				 selector:@selector(aggregatedLogIndexingProgressUpdate:)
+																				 userInfo:[NSNumber numberWithInt:activeSearchID]
+																				  repeats:NO] retain];
+			}
+		}
+	}
+}
+
+- (void)aggregatedLogIndexingProgressUpdate:(NSTimer *)inTimer
+{
+	NSNumber	*oldActiveSearchID = [aggregateLogIndexProgressTimer userInfo];
+
+	//If the search is still a content search and hasn't changed since the timer was made, update our results
+	if ((searchMode == LOG_SEARCH_CONTENT) && ([oldActiveSearchID intValue] == activeSearchID)){
+		[self startSearchingClearingCurrentResults:NO];
+	}
+
+	[aggregateLogIndexProgressTimer invalidate];
+	[aggregateLogIndexProgressTimer release]; aggregateLogIndexProgressTimer = nil;
+}
+
 //Refresh the results table
 - (void)refreshResults
 {
+	[self updateProgressDisplay];
+
 	[self refreshResultsSearchIsComplete:NO];
 }
 
@@ -750,7 +803,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 {
     automaticSearch = NO;
     [self setSearchString:[searchField_logs stringValue]];
-    [self startSearching];
+    [self startSearchingClearingCurrentResults:YES];
 }
 
 //Change search mode (Called by mode menu)
@@ -758,7 +811,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 {
     automaticSearch = NO;
     [self setSearchMode:[sender tag]];
-    [self startSearching];
+    [self startSearchingClearingCurrentResults:YES];
 }
 
 //Begin a specific search
@@ -767,11 +820,11 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     automaticSearch = YES;
     [self setSearchString:inString];
     [self setSearchMode:inMode];
-    [self startSearching];
+    [self startSearchingClearingCurrentResults:YES];
 }
 
 //Begin the current search
-- (void)startSearching
+- (void)startSearchingClearingCurrentResults:(BOOL)clearCurrentResults
 {
     NSDictionary    *searchDict;
     
@@ -779,9 +832,12 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     [self stopSearching];
     	
     //Once all searches have exited, we can start a new one
-    [resultsLock lock];
-    [selectedLogArray release]; selectedLogArray = [[NSMutableArray alloc] init];
-    [resultsLock unlock];
+	if(clearCurrentResults){
+		[resultsLock lock];
+		[selectedLogArray release]; selectedLogArray = [[NSMutableArray alloc] init];
+		[resultsLock unlock];
+	}
+	
     searchDict = [NSDictionary dictionaryWithObjectsAndKeys:
 		[NSNumber numberWithInt:activeSearchID], @"ID",
 		[NSNumber numberWithInt:searchMode], @"Mode",
@@ -807,6 +863,11 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
     //wait for any active searches to finish and release the lock
     activeSearchID++;
     [searchingLock lock]; [searchingLock unlock];
+	
+	//If the plugin is in the middle of indexing, and we are content searching, we could be autoupdating a search.
+	//Be sure to invalidate the timer.
+	[aggregateLogIndexProgressTimer invalidate];
+	[aggregateLogIndexProgressTimer release]; aggregateLogIndexProgressTimer = nil;
 }
 
 //Set the active search mode (Does not invoke a search)
@@ -1006,7 +1067,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 		[self setSearchMode:LOG_SEARCH_CONTENT];
 	}
 	
-    [self startSearching];
+    [self startSearchingClearingCurrentResults:YES];
 }
 
 - (void)filterForAccountName:(NSString *)inAccountName
@@ -1021,7 +1082,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 		[self setSearchMode:LOG_SEARCH_CONTENT];
 	}
 
-    [self startSearching];	
+    [self startSearchingClearingCurrentResults:YES];	
 }
 
 Boolean ContentResultsFilter (SKIndexRef     inIndex,
@@ -1062,7 +1123,11 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 	UInt32				lastUpdate = TickCount();
 	void				*indexPtr = &logSearchIndex;
 	
+	//We utilize the logIndexAccessLock so we have exclusive access to the logs
+	NSLock				*logAccessLock = [plugin logAccessLock];
+
 	//Perform the content search
+	[logAccessLock lock];
 	indexArray = CFArrayCreate(NULL, indexPtr, 1, &kCFTypeArrayCallBacks);
 	searchGroup = SKSearchGroupCreate(indexArray);
 	searchResults = SKSearchResultsCreateWithQuery(
@@ -1073,8 +1138,11 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 												   (void *)self,	/* Must have a context for the ContentResultsFilter */
 												   &ContentResultsFilter	/* Determines if a given document should be included */
 												   );
+	[logAccessLock unlock];
 	
 	//Process the results
+	[logAccessLock lock];
+	
 	if(resultCount = SKSearchResultsGetCount(searchResults)){
 		SKDocumentRef   *outDocumentsArray = malloc(sizeof(SKDocumentRef) * LOG_RESULT_CLUMP_SIZE);
 		float		*outScoresArray = malloc(sizeof(float) * LOG_RESULT_CLUMP_SIZE);
@@ -1104,7 +1172,9 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 				 */
 				[resultsLock lock];
 				theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
-				if(theLog) [selectedLogArray addObject:theLog];
+				if(theLog && ![selectedLogArray containsObjectIdenticalTo:theLog]){
+					[selectedLogArray addObject:theLog];
+				}
 				[resultsLock unlock];
 			}	 
 			
@@ -1122,6 +1192,9 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 	CFRelease(indexArray);
 	CFRelease(searchGroup);
 	CFRelease(searchResults);
+	
+	//Release the logsLock so the plugin can return to regularly scheduled programming if it wants to
+	[logAccessLock unlock];
 }
 
 
