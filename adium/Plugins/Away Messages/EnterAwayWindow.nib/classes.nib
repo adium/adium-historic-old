@@ -15,6 +15,7 @@
                 "button_setAwayMessage" = NSButton; 
                 "popUp_title" = NSPopUpButton; 
                 savePanel = NSPanel; 
+                "savePanel_cancelButton" = NSButton; 
                 "savePanel_saveButton" = NSButton; 
                 "scrollView_awayMessageContainer" = NSScrollView; 
                 "textField_title" = NSTextField; 

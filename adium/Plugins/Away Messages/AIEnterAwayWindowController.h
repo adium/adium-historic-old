@@ -28,6 +28,7 @@
 
     IBOutlet	NSPanel			*savePanel;
     IBOutlet	NSButton		*savePanel_saveButton;
+    IBOutlet	NSButton		*savePanel_cancelButton;
     IBOutlet	NSTextField		*textField_title;
     
     NSMutableArray			*awayMessageArray;
