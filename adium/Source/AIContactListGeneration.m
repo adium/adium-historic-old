@@ -55,7 +55,6 @@
 //A handle was added to an account
 - (void)handle:(AIHandle *)inHandle addedToAccount:(AIAccount *)inAccount
 {
-    NSLog(@"%@ addedToAccount %@",[inHandle UID],[inAccount accountDescription]);
     if([self _addHandle:inHandle]){ //Add the handle
         //Let everyone know the contact list changed
         [[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
@@ -69,7 +68,6 @@
     NSArray		*statusKeyArray;
     NSString		*groupName;
 
-    NSLog(@"%@ removedFromAccount %@",[inHandle UID],[inAccount accountDescription]);
     //Remove ALL status flags from the handle, and give observers a chance to remove their attributes
     statusKeyArray = [[inHandle statusDictionary] allKeys];
     [[inHandle statusDictionary] removeAllObjects];
@@ -96,7 +94,6 @@
     NSEnumerator		*accountEnumerator;
     AIAccount			*account;
 
-    NSLog(@"handlesChangedForAccount %@",[inAccount accountDescription]);
     //Flush the existing list
     [self _breakDownGroup:contactList];
     [groupDict release]; groupDict = [[NSMutableDictionary alloc] init];
@@ -255,14 +252,12 @@
         while((contactHandle = [handleEnumerator nextObject])){
 
             if([contactHandle account] == account){ //We found a match
-                NSLog(@"group (%@)",[contactHandle serverGroup]);
                 return([contactHandle serverGroup]);
             }
 
         }
     }
 
-    NSLog(@"group (*****)");
     return(nil);
 }
 

@@ -408,6 +408,10 @@ int HTMLEquivalentForFontSize(int fontSize)
 
         }else if([arg caseInsensitiveCompare:@"COLOR"] == 0){
             [textAttributes setTextColor:[[inArgs objectForKey:arg] hexColor]];
+
+        }else if([arg caseInsensitiveCompare:@"BACK"] == 0){
+            [textAttributes setTextBackgroundColor:[[inArgs objectForKey:arg] hexColor]];
+            
         }
     }
 }
