@@ -144,20 +144,6 @@
 	[super dealloc];
 }
 
-#warning XXX - no clue what this is for -ai
-- (NSTextView *)textView
-{
-	id	responder = [webView nextResponder];
-	
-	//When walking the responder chain, we want to skip ScrollViews and ClipViews.
-	while(responder &&
-		  ![responder isKindOfClass:[NSTextView class]]){
-		responder = [responder nextResponder];
-	}
-	
-	return responder;
-}
-
 /*!
  * @brief Enable or disable updating to reflect preference changes
  *
@@ -647,6 +633,24 @@
 
 //Dragging delegate ----------------------------------------------------------------------------------------------------
 #pragma mark Dragging delegate
+/*
+ * @brief If possible, return the first NSTextView in the message view's responder chain
+ *
+ * This is used for drag and drop behavior.
+ */
+- (NSTextView *)textView
+{
+	id	responder = [webView nextResponder];
+	
+	//Walkin the responder chain looking for an NSTextView
+	while(responder &&
+		  ![responder isKindOfClass:[NSTextView class]]){
+		responder = [responder nextResponder];
+	}
+	
+	return responder;
+}
+
 /*!
  * @brief Handle a drag onto the webview
  * 
