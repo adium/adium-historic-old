@@ -25,7 +25,8 @@
 #define RIGHT_PADDING				9		//Padding on the far right of our cell
 #define NAME_OFFSET_X				-4		//Offset to apply to our name text (To counter any margins in text layout)
 #define	LABEL_PADDING_REDUCTION		4.0 	//25% of the requested label endcap padding
-#define GROUP_LABEL_OFFSET			-8		//Offset of the label when drawing behind a group name
+#define GROUP_LABEL_LEFT_OFFSET		-8		//Offset of the left side of the label when drawing behind a group name
+#define GROUP_LABEL_RIGHT_OFFSET	0		//Offset of the right side of the label when drawing behind a group name
 #define STATUS_CIRCLE_MARGIN_HACK 	-12		//I hate status circles
 
 //This are temporary to work around issues with the horizontal auto-resizing
@@ -262,8 +263,8 @@
 			
 			//Adjust labels slightly when displaying for a group (to avoid overlapping the flippy triangle)
 			if(isGroup){
-				labelRect.origin.x += GROUP_LABEL_OFFSET;
-				labelRect.size.width -= 2 * GROUP_LABEL_OFFSET;
+				labelRect.origin.x += GROUP_LABEL_LEFT_OFFSET;
+				labelRect.size.width -= GROUP_LABEL_LEFT_OFFSET + GROUP_LABEL_RIGHT_OFFSET;
 			}
 			
 			//Retrieve the label and shift it into position
