@@ -32,18 +32,21 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	//User scripts
 	[AIFileUtilities createDirectory:PATH_EXTERNAL_SCRIPTS];
 	
+	//We have an array of scripts for building the menu, and a dictionary of scripts used for the actual substition
+	scriptArray = nil;
+	flatScriptArray = nil;
+	
+	//Start building the script menu
+	scriptMenu = nil;
+	[NSThread detachNewThreadSelector:@selector(buildScriptMenu) toTarget:self withObject:nil];
+	
 	//Perform substitutions on outgoing content
 	[[adium contentController] registerOutgoingContentFilter:self];
 
 	//Perform simple string substitutions
 	[[adium contentController] registerStringFilter:self];
 	
-	//We have an array of scripts for building the menu, and a dictionary of scripts used for the actual substition
-	scriptArray = nil;
-	flatScriptArray = nil;
-	
-	//Prepare our script menu
-	scriptMenu = nil;
+	//Prepare our script menu item
 	scriptMenuItem = [[NSMenuItem alloc] initWithTitle:@"Script" target:self action:@selector(dummyTarget:) keyEquivalent:@""];
 	[[adium menuController] addMenuItem:scriptMenuItem toLocation:LOC_Edit_Additions];
 }
@@ -71,9 +74,6 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	//
 	[scriptArray release]; scriptArray = [[NSMutableArray alloc] init];
 	[flatScriptArray release]; flatScriptArray = [[NSMutableArray alloc] init];
-	
-	//Load built-in scripts (within the bundle).
-//	[scriptArray addObjectsFromArray:[self _loadScriptsFromDirectory:internalPath intoUsageArray:flatScriptArray]];
 	
 	//Load scripts
 	enumerator = [[adium resourcePathsForName:@"Scripts"] objectEnumerator];
@@ -136,6 +136,10 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 //Build the script menu
 - (void)buildScriptMenu
 {
+	buildingScriptMenu = YES;
+	
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
 	if(!scriptArray) [self loadScripts];
 	
 	//Sort the scripts
@@ -145,6 +149,10 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	[scriptMenu release]; scriptMenu = [[NSMenu alloc] initWithTitle:@"Scripts"];
 	[self _appendScripts:scriptArray toMenu:scriptMenu atLevel:0];
 	[scriptMenuItem setSubmenu:scriptMenu];
+	
+	[pool release];
+	
+	buildingScriptMenu = NO;
 }
 
 //Alphabetize scripts
@@ -248,7 +256,13 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 //Disable the insertion if a text field is not active
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	if(!scriptMenu) [self buildScriptMenu];
+	if(!scriptMenu){
+		if (buildingScriptMenu){
+			while(buildingScriptMenu);
+		}else{
+			[self buildScriptMenu];
+		}
+	}
 
 	if(menuItem == scriptMenuItem){
 		return(YES); //Always keep the submenu enabled so users can see the available scripts
@@ -281,7 +295,13 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 		NSDictionary				*infoDict;
 		
 		//Ensure scripts have loaded
-		if(!scriptArray) [self loadScripts];
+		if(!scriptMenu){
+			if (buildingScriptMenu){
+				while(buildingScriptMenu);
+			}else{
+				[self buildScriptMenu];
+			}
+		}
 		
 		//Replace all keywords
 		enumerator = [flatScriptArray objectEnumerator];

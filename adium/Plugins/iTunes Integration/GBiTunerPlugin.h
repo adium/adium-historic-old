@@ -15,6 +15,8 @@
 
 	NSMutableArray			*flatScriptArray;		//Flat array of scripts
 	NSMutableArray			*scriptArray;			//Ordered array for script menu
+	
+	BOOL					buildingScriptMenu;
 }
 
 @end
