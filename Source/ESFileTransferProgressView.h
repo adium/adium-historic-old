@@ -19,8 +19,6 @@
 	IBOutlet NSButton				*button_icon;
 	IBOutlet NSProgressIndicator	*progressIndicator;
 	
-	IBOutlet NSTextField			*textField_transferStatus;
-	
 	NSString						*transferBytesStatus;
 	NSString						*transferRemainingStatus;
 	NSString						*transferSpeedStatus;
@@ -30,9 +28,15 @@
 
 	IBOutlet AIRolloverButton		*button_reveal;
 	BOOL							buttonRevealIsHovered;
-	
+
+	//Details in primary view
 	BOOL							showingDetails;
 	IBOutlet NSButton				*twiddle_details;
+	IBOutlet NSTextField			*textField_detailsLabel;
+	IBOutlet NSBox					*box_transferStatusFrame; //Placeholder for drawing the transfer status
+	NSString						*transferStatus;
+	
+	//Details view (revealed by twiddle_details)
 	IBOutlet NSView					*view_details;
 	IBOutlet NSTextField			*textField_rate;
 	IBOutlet NSTextField			*textField_source;
@@ -41,6 +45,7 @@
 	IBOutlet NSImageView			*imageView_destination;
 	
 	BOOL							isSelected;
+	BOOL							progressVisible;
 }
 
 - (void)setSourceName:(NSString *)inSourceName;
@@ -55,6 +60,7 @@
 - (void)setProgressDoubleValue:(double)inPercent;
 - (void)setProgressIndeterminate:(BOOL)flag;
 - (void)setProgressAnimation:(BOOL)flag;
+- (void)setProgressVisible:(BOOL)flag;
 
 - (void)setTransferBytesStatus:(NSString *)inTransferBytesStatus
 			   remainingStatus:(NSString *)inTransferRemainingStatus
