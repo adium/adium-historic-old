@@ -339,13 +339,14 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 				if(!scriptResult) scriptResult = [self _executeScript:infoDict withArguments:argArray];
 				if([argArray count] == 0 && !arglessScriptResult) arglessScriptResult = scriptResult;
 				
-				if(scriptResult){
-					//Replace the substring with script result
-					[[toObject mutableString] replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
-															withString:scriptResult];
-					//Adjust for replaced text
-					offset += [scriptResult length] - (keywordEnd - keywordStart);
-				}
+				//If the script fails, eat the keyword
+				if(!scriptResult) scriptResult = @"";
+				
+				//Replace the substring with script result
+				[[toObject mutableString] replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
+														withString:scriptResult];
+				//Adjust for replaced text
+				offset += [scriptResult length] - (keywordEnd - keywordStart);
 				
 			}
 		}
