@@ -23,7 +23,7 @@
     return(AIPref_Messages_Sending);
 }
 - (NSString *)label{
-    return(@"S");
+    return(@"B");
 }
 - (NSString *)nibName{
     return(@"SendingKeyPrefs");

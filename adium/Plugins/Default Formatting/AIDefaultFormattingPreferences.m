@@ -28,7 +28,7 @@
     return(AIPref_Messages_Sending);
 }
 - (NSString *)label{
-    return(@"V");
+    return(@"A");
 }
 - (NSString *)nibName{
     return(@"DefaultFormattingPrefs");
