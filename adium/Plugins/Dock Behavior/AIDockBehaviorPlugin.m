@@ -13,11 +13,13 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
 #import "AIDockBehaviorPlugin.h"
 #import "AIDockBehaviorPreferences.h"
 
 #define DOCK_BEHAVIOR_DEFAULT_PREFS	@"DockBehaviorDefaults"
+#define DOCK_BEHAVIOR_PRESETS		@"DockBehaviorPresets"
 
 @interface AIDockBehaviorPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -28,14 +30,18 @@
 
 - (void)installPlugin
 {
+    NSString	*path;
+
     //
     behaviorDict = nil;
+    path = [[NSBundle bundleForClass:[self class]] pathForResource:DOCK_BEHAVIOR_PRESETS ofType:@"plist"];
+    presetBehavior = [[NSArray arrayWithContentsOfFile:path] retain];
     
     //Register default preferences and pre-set behavior
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_BEHAVIOR_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DOCK_BEHAVIOR];
 
     //Install our preference view
-    preferences = [[AIDockBehaviorPreferences dockBehaviorPreferencesWithOwner:owner] retain];
+    preferences = [[AIDockBehaviorPreferences preferencePaneWithPlugin:self owner:owner] retain];
 
     //Observer preference changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
@@ -66,7 +72,7 @@
         //Load the behaviorSet
         activeBehaviorSet = [preferenceDict objectForKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET];
         if(activeBehaviorSet && [activeBehaviorSet length] != 0){ //preset
-            behaviorArray = [[preferenceDict objectForKey:KEY_DOCK_BEHAVIOR_SETS] objectForKey:activeBehaviorSet];
+            behaviorArray = [self behaviorForPreset:activeBehaviorSet];
 
         }else{ //Custom
             behaviorArray = [preferenceDict objectForKey:KEY_DOCK_CUSTOM_BEHAVIOR];
@@ -93,7 +99,7 @@
     }
 }
 
-
+//Called in response to an event that will invoke behavior
 - (void)eventNotification:(NSNotification *)notification
 {
     int	behavior = [[behaviorDict objectForKey:[notification name]] intValue];
@@ -102,5 +108,65 @@
     [[owner dockController] performBehavior:behavior];
 }
 
+//Active behavior preset.  Pass and return nil for custom behavior
+- (void)setActivePreset:(NSString *)presetName
+{
+    [[owner preferenceController] setPreference:presetName
+                                         forKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET
+                                          group:PREF_GROUP_DOCK_BEHAVIOR];
+}
+- (NSString *)activePreset
+{
+    NSDictionary *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DOCK_BEHAVIOR];
+    
+    return([preferenceDict objectForKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET]);
+}
+
+//Returns the behavior for a preset
+- (NSArray *)behaviorForPreset:(NSString *)presetName
+{
+    NSEnumerator	*enumerator;
+    NSDictionary	*set;
+    
+    //Search for the desired set
+    enumerator = [presetBehavior objectEnumerator];
+    while((set = [enumerator nextObject])){
+        if([presetName compare:[set objectForKey:@"Name"]] == 0){
+            return([set objectForKey:@"Behavior"]);
+        }
+    }
+    
+    return(nil);
+}
+
+//Returns an array of the available preset names
+- (NSArray *)availablePresets
+{
+    NSMutableArray	*availablePresets = [[NSMutableArray alloc] init];
+    NSEnumerator	*enumerator;
+    NSDictionary	*set;
+    
+    //Grab the name of each set
+    enumerator = [presetBehavior objectEnumerator];
+    while((set = [enumerator nextObject])){
+        [availablePresets addObject:[set objectForKey:@"Name"]];
+    }
+    
+    return([availablePresets autorelease]);
+}
+
+//Custom dock behavior
+- (void)setCustomBehavior:(NSArray *)inBehavior
+{
+    [[owner preferenceController] setPreference:inBehavior
+                                         forKey:KEY_DOCK_CUSTOM_BEHAVIOR
+                                          group:PREF_GROUP_DOCK_BEHAVIOR];
+}
+- (NSArray *)customBehavior
+{
+    NSDictionary 	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DOCK_BEHAVIOR];
+    
+    return([preferenceDict objectForKey:KEY_DOCK_CUSTOM_BEHAVIOR]);
+}
 
 @end
