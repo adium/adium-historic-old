@@ -14,9 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.28 $
- * $Date: 2004/07/28 02:38:53 $
- * $Author: dchoby98 $
+ * $Revision: 1.29 $
+ * $Date: 2004/08/06 05:09:52 $
+ * $Author: evands $
  **/
 
 #define Account_ListChanged 					@"Account_ListChanged"
@@ -49,7 +49,8 @@
     IBOutlet	AIAdium		*owner;	
 	
     NSMutableArray			*accountArray;				//Array of active accounts
-    NSMutableDictionary		*availableServiceDict;		//Array of available services
+    NSMutableDictionary		*availableServiceDict;		//Dictionary of available services
+	NSMutableDictionary		*availableServiceTypeDict;  //Dictionary of one of each available service types by serviceID
     NSMutableDictionary		*lastAccountIDToSendContent;//Last account to send content
     NSMutableDictionary		*accountStatusDict;			//Account status
 	
@@ -68,6 +69,7 @@
 - (id <AIServiceController>)serviceControllerWithIdentifier:(NSString *)inType;
 - (void)registerService:(id <AIServiceController>)inService;
 - (NSMenu *)menuOfServicesWithTarget:(id)target;
+- (AIServiceType *)firstServiceTypeWithServiceID:(NSString *)serviceID;
 
 //Accounts
 - (NSArray *)accountArray;

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.95 2004/07/27 19:17:58 evands Exp $
+// $Id: AIAccountController.m,v 1.96 2004/08/06 05:09:52 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -56,6 +56,7 @@
 - (void)initController
 {
     availableServiceDict = [[NSMutableDictionary alloc] init];
+	availableServiceTypeDict = [[NSMutableDictionary alloc] init];
     accountArray = nil;
     lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];
     sleepingOnlineAccounts = nil;
@@ -273,6 +274,14 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 - (void)registerService:(id <AIServiceController>)inService
 {
     [availableServiceDict setObject:inService forKey:[inService identifier]];
+	
+	[availableServiceTypeDict setObject:[inService handleServiceType] forKey:[[inService handleServiceType] identifier]];
+}
+
+//Return the first AIServiceType with the specified serviceID
+- (AIServiceType *)firstServiceTypeWithServiceID:(NSString *)serviceID
+{
+	return([availableServiceTypeDict objectForKey:serviceID]);
 }
 
 //Returns a menu of all services.
@@ -301,8 +310,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	
 	return([menu autorelease]);
 }	
-
-
 
 //Accounts -------------------------------------------------------------------------------------------------------
 #pragma mark Accounts
