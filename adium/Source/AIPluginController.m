@@ -101,7 +101,7 @@
                     [[owner notificationCenter] removeObserver:plugin];
                     [[NSNotificationCenter defaultCenter] removeObserver:plugin];
                 }
-                [[owner interfaceController] handleErrorMessage:@"Plugin load error" withDescription:[NSString stringWithFormat:@"The \"%@\" plugin failed to load properly.  It may be partially loaded.  If strange behavior ensues, remove it from Adium 2's plugin directory, then quit and relaunch Adium.", [NSString stringByDeletingPathExtension:pluginName]]];
+                [[owner interfaceController] handleErrorMessage:@"Plugin load error" withDescription:[NSString stringWithFormat:@"The \"%@\" plugin failed to load properly.  It may be partially loaded.  If strange behavior ensues, remove it from Adium 2's plugin directory, then quit and relaunch Adium.", [pluginName stringByDeletingPathExtension]]];
                 // It would probably be unsafe to call the plugin's uninstall
             NS_ENDHANDLER
         }
