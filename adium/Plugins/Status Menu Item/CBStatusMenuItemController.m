@@ -9,8 +9,11 @@
 #import "CBStatusMenuItemController.h"
 
 @interface CBStatusMenuItemController (PRIVATE)
+- (void)preferencesChanged:(NSNotification *)notification;
 - (void)accountsChanged:(NSNotification *)notification;
+- (void)contactsChanged:(NSNotification *)notification;
 - (IBAction)toggleConnection:(id)sender;
+- (IBAction)messageContact:(id)sender;
 - (void)buildMenu;
 @end
 
@@ -32,11 +35,7 @@ CBStatusMenuItemController *sharedInstance = nil;
     {        
         //alloc and init our arrays
         accountsMenuItems = [[NSMutableArray alloc] init];
-        //groupsMenuItems = [[NSMutableArray alloc] init];
-
-        contactListItems = [ [ NSMutableArray alloc ] init ];
-
-        //contactsMenuItems = [ [ NSMutableArray alloc ] init ];
+        groupsMenuItems = [[NSMutableDictionary alloc] init];
         
         //Create and set up the Status Item.
         statusItem = [[[NSStatusBar systemStatusBar]
@@ -59,12 +58,7 @@ CBStatusMenuItemController *sharedInstance = nil;
         //Install our observers
         [[adium notificationCenter] addObserver:self selector:@selector(accountsChanged:) name:Account_ListChanged object:nil];
         [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-
-        /* BEG -- Added by Sean Gilbertson (prell), 2003-12-27 @ 1957. */
-
-        [ [ adium contactController ] registerListObjectObserver:self ];
-
-        /* END -- Added by Sean Gilbertson (prell), 2003-12-27 @ 1957. */
+        [[adium notificationCenter] addObserver:self selector:@selector(contactsChanged:) name:ListObject_StatusChanged object:nil];
     }
     
     return self;
@@ -74,15 +68,9 @@ CBStatusMenuItemController *sharedInstance = nil;
 {
     [[adium notificationCenter] removeObserver:self];
     [accountsMenuItems release];
-    //[groupsMenuItems release];
-
-    [ contactListItems release ];
-
-    //[ contactsMenuItems release ];
-
+    [groupsMenuItems release];
     [statusItem release];
     [theMenu release];
-
     [super dealloc];
 }
 
@@ -109,8 +97,7 @@ CBStatusMenuItemController *sharedInstance = nil;
     while(account = [numer nextObject])
     {
         item = [[[NSMenuItem alloc] initWithTitle:[account displayName] target:self action:@selector(toggleConnection:) keyEquivalent:@""] autorelease];
-//        [item setRepresentedObject:[account retain]];
-        [ item setRepresentedObject:account ];
+        [item setRepresentedObject:[account retain]];
 
 	if([[[account statusArrayForKey:@"Online"] objectWithOwner:account] boolValue]){
 	    [item setImage:[AIImageUtilities imageNamed:@"Account_Online.tiff" forClass:[self class]]];
@@ -133,113 +120,96 @@ CBStatusMenuItemController *sharedInstance = nil;
     [self buildMenu];
 }
 
-/*
- * Method  :  removeContactFromMenu:
- *
- * Created :  2003-12-28 @ 0000
- *      by :  Sean Gilbertson
- */
-- ( void ) removeContactFromMenu:( NSString* )contact
+- (void)contactsChanged:(NSNotification *)notification
 {
-    NSEnumerator* contactListEnumerator;
+    if(![[notification object] isKindOfClass:[AIAccount class]]) //we don't care about accounts
+    {
+        //snag the contact from the notification
+        AIListObject *contact = [notification object];
+        
+        //see if there's already a group menu for this contact
+        NSMenuItem *groupItem = [groupsMenuItems objectForKey:[[contact containingGroup] UID]];
+        
+        if(!groupItem) //No group menu item!
+        {
+            //so we create one
+            groupItem = [[[NSMenuItem alloc] initWithTitle:[[contact containingGroup] UID] target:nil action:NULL keyEquivalent:@""] autorelease];
+            [groupItem setRepresentedObject:[contact containingGroup]];
+            [groupItem setEnabled:YES];
+            
+            //and add it to our dict
+            [groupsMenuItems setObject:groupItem forKey:[[contact containingGroup] UID]];
+        }
+        
+        if(![groupItem hasSubmenu]) //No submenuon the group menu item
+        {
+            //so we add them
+            [groupItem setSubmenu:[[NSMenu alloc] initWithTitle:[[contact containingGroup] UID]]];
+        } /* small WoA: the reason I didn't combine this with the above is in case Something Weird happens
+                and we don't have a menu for the existing group (bad reference counting, or just plain
+                Wackyness). I don't actually expect this case to happen without the (!groupItem) statement being
+                evaluated, but hey, you never know -chb */
+        
+        //active iff online ^ ~(away v idle)
+        BOOL isActive = [[contact statusArrayForKey:@"Online"] greatestIntegerValue] && !([[contact statusArrayForKey:@"Away"] greatestIntegerValue] || [[contact statusArrayForKey:@"Idle"] greatestIntegerValue]);
+        int indexOfItem = [[groupItem submenu] indexOfItemWithRepresentedObject:contact];
+        
+        //add if active and not in menu.
+        if(isActive && indexOfItem == -1)
+        {
+            //What we're doing here is the following:
+            //  A) If we have items already,
+            //      1) build an array of ListObjects
+            //      2) send that array to the Sort Method
+            //      3) find out what index our contact is in that array
+            //      4) and insert him in the same place in our menu
+            //  B) Otherwise, just insert him at the top, it doesn't matter
+            
+            NSMutableArray *sortArray = [NSMutableArray arrayWithObject:contact];
+            NSMenuItem *menuItemObj = nil;
+            NSMenuItem *contactMenuItem = [[[NSMenuItem alloc] initWithTitle:[contact displayName] target:self action:@selector(messageContact:) keyEquivalent:@""] autorelease];
+            [contactMenuItem setRepresentedObject:contact];
+            [contactMenuItem setEnabled:YES];
 
-    contactListEnumerator = [ contactListItems objectEnumerator ];
-
-    id currentContactListItem;
-
-    while ( currentContactListItem = [ contactListEnumerator nextObject ] ) {
-        if ( [ [ currentContactListItem displayName ] isEqualToString:contact ] ) {
-            [ contactListItems removeObject:currentContactListItem ];
+            if([[[groupItem submenu] itemArray] count] > 0)
+            {
+                NSEnumerator *numer = [[[groupItem submenu] itemArray] objectEnumerator];
+                while(menuItemObj = [numer nextObject])
+                {
+                    [sortArray addObject:[menuItemObj representedObject]];
+                }
+                
+                [[[adium contactController] activeSortController] sortListObjects:sortArray];
+                                                  
+                [[groupItem submenu] insertItem:contactMenuItem atIndex:[sortArray indexOfObjectIdenticalTo:contact]];
+            }
+            else
+            {
+                [[groupItem submenu] addItem:contactMenuItem];
+            }
+            
+            //GO GO GO!
+            [self buildMenu];
+        }
+        
+        //remove if not active and in menu
+        else if(!isActive && indexOfItem != -1)
+        {
+            [[groupItem submenu] removeItemAtIndex:indexOfItem];
+                        
+            //GO GO GO!
+            [self buildMenu];
+        }
+        
+        //if this group is empty, remove it!
+        if([[[groupItem submenu] itemArray] count] == 0)
+        {
+            [groupsMenuItems removeObjectForKey:[[contact containingGroup] UID]];
+            
+            //GO GO GO!
+            [self buildMenu];
         }
     }
-}
-
-- ( BOOL ) contactIsInContactList:( NSString* )contact
-{
-    NSEnumerator* contactListEnumerator;
-    
-    contactListEnumerator = [ contactListItems objectEnumerator ];
-    
-    id currentContactListItem;
-    
-    BOOL foundContact = FALSE;
-    
-    while ( currentContactListItem = [ contactListEnumerator nextObject ] ) {
-        if ( [ [ currentContactListItem displayName ] isEqualToString:contact ] ) {
-            foundContact = TRUE;
-
-            break;
-        }
-    } 
-
-    return foundContact;
-}
-
-- ( void ) sortContactList
-{
-    [ [ [ adium contactController ] activeSortController ] sortListObjects:contactListItems ];
-}
-
-/*
- * Method  :  addContactToMenu:representedListObject:
- *
- * Created :  2003-12-28 @ 0000
- *      by :  Sean Gilbertson
- */
-- ( void ) addContactToMenu:( NSString* )contact
-      representedListObject:( AIListObject* )listObject
-{
-    BOOL foundContact;
-
-    foundContact = [ self contactIsInContactList:contact ];
-
-    if ( !foundContact ) {
-        [ contactListItems addObject:listObject ];
-
-        [ self sortContactList ];
-    } else {
-        return;
-    }
-}
-
-/*
- * Method  :  updateListObject:keys:delayed:silent
- *
- * Created :  2003-12-27 @ 2100
- *      by :  Sean Gilbertson
- */
-- ( NSArray* ) updateListObject:( AIListObject* )inObject
-                           keys:( NSArray* )inModifiedKeys
-                        delayed:( BOOL )delayed
-                         silent:( BOOL )silent
-{
-    /* TODO: Do this conditiional without class reflection. */
-    if ( inModifiedKeys
-         && ( [ [ inObject statusArrayForKey:@"Online" ] greatestIntegerValue ] > 0 )
-         && [ inObject isKindOfClass:[ AIListContact class ] ]
-         /*&& ( [ inModifiedKeys containsObject:@"Online" ]  )*/
-         && ( [ [ inObject statusArrayForKey:@"Away" ] greatestIntegerValue ] == 0
-              && [ [ inObject statusArrayForKey:@"Idle" ] greatestDoubleValue ] == 0 ) )
-    {
-        /* If someone (not us) is not idle or away, display them. */
-
-        [ self addContactToMenu:[ inObject displayName ]
-          representedListObject:inObject ];
-    } else if ( inModifiedKeys
-                && ( [ [ inObject statusArrayForKey:@"Away" ] greatestIntegerValue ] > 0
-                     || [ [ inObject statusArrayForKey:@"Idle" ] greatestDoubleValue ] > 0
-                     || ( [ inModifiedKeys containsObject:@"Online" ]
-                          && ( [ [ inObject statusArrayForKey:@"Online" ] greatestIntegerValue ] == 0 ) ) ) )
-    {
-        /* If someone went away or idle, or signed off, take them off the menu. */
-
-        [ self removeContactFromMenu:[ inObject displayName ] ];
-    }
-
-    /* Build here for now. */
-    [ self buildMenu ];
-
-    return nil;
 }
 
 //Togle the connection of the selected account (called by the connect/disconnnect menu item)
@@ -253,48 +223,17 @@ CBStatusMenuItemController *sharedInstance = nil;
     [targetAccount setPreference:[NSNumber numberWithBool:newOnlineProperty] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 }
 
-- ( IBAction ) sendMessageToContact:( id )sender
+- (IBAction)messageContact:(id)sender
 {
-    AIChat* newIM;
 
-    newIM = [ [ adium contentController ] openChatOnAccount:nil
-                                             withListObject:[ sender representedObject ] ];
-
-    [ [ adium interfaceController ] setActiveChat:newIM ];
-}
-
-- ( IBAction ) showContactListInterface:( id ) sender
-{
-    //[ [ adium interfaceController ] openInterface ];
-
-    /*
-    [ [ [ [ adium interfaceController ] contactListViewController ] contactListView ] setHidden:FALSE ];
-
-    [ [ [ [ adium interfaceController ] contactListViewController ] contactListView ] display ];
-
-    [ [ [ [ [ adium interfaceController ] contactListViewController ] contactListView ] window ] makeKeyAndOrderFront:nil ];
-     */
-
-    /* Write the code for this when the capability is public, or I discover
-     * that it already is, somewhere. */
 }
 
 - (void)buildMenu
 {
     //clear out the old menu
-    //[theMenu release];
-    //theMenu = [[NSMenu alloc] init];
-
-    NSEnumerator* menuItemsEnumerator;
-
-    menuItemsEnumerator = [ [ theMenu itemArray ] objectEnumerator ];
-
-    id menuItem;
-
-    while ( menuItem = [ menuItemsEnumerator nextObject ] ) {
-        [ theMenu removeItem:menuItem ];
-    }
-
+    [theMenu release];
+    theMenu = [[NSMenu alloc] init];
+    
     NSEnumerator *numer;
     NSMenuItem *item;
     
@@ -306,72 +245,37 @@ CBStatusMenuItemController *sharedInstance = nil;
     //traverse the accounts array
     numer = [accountsMenuItems objectEnumerator];
     while(item = [numer nextObject])
+    {
+        [[item menu] removeItem:item];
         [theMenu addItem:item];
-
-    if ( contactListItems && [ contactListItems count ] > 0 ) {
-        /* Separator between accounts and contacts. */
-        [ theMenu addItem:[ NSMenuItem separatorItem ] ];
     }
-
-    NSEnumerator* contactListItemsEnumerator;
-
-    contactListItemsEnumerator = [ contactListItems objectEnumerator ];
-
-    id contactListItem;
-
-    while ( contactListItem = [ contactListItemsEnumerator nextObject ] ) {
-        NSMenuItem* newContactMenuItem;
-
-        newContactMenuItem = [ [ NSMenuItem alloc ] initWithTitle:[ contactListItem displayName ]
-                                                           action:@selector( sendMessageToContact: )
-                                                    keyEquivalent:@"" ];
-        
-        [ newContactMenuItem setTarget:self ];
-        
-        [ newContactMenuItem setRepresentedObject:contactListItem ];
-
-        [ theMenu addItem:newContactMenuItem ];
-        
-        [ newContactMenuItem release ];        
-    }
-
-    /* Add a separator between everything and the shortcut to the buddy list view. */
-    [ theMenu addItem:[ NSMenuItem separatorItem ] ];
-
-    NSMenuItem* showContactListItem;
-
-    /*
-    showContactListItem = [ [ NSMenuItem alloc ] initWithTitle:@"Show Buddy List"
-                                                      action:@selector( showContactListInterface: )
-                                               keyEquivalent:@"" ];
-
-    [ showContactListItem setTarget:self ];
-     */
-
-    /* No action, because this is disabled for now (see showContactListInterface:) */
-    showContactListItem = [ [ NSMenuItem alloc ] initWithTitle:@"Show Contact List"
-                                                        action:nil
-                                                 keyEquivalent:@"" ];
-
-    [ showContactListItem setEnabled:FALSE ];
-
-    [ theMenu addItem:showContactListItem ];
-
-    [ showContactListItem release ];
-
-    //add a divider
-    //[theMenu addItem:[NSMenuItem separatorItem]];
-
-    //add a descriptor
-    //item = [[[NSMenuItem alloc] initWithTitle:@"Accounts" action:nil keyEquivalent:nil] autorelease];
-    //[item setEnabled:NO];
-    //[theMenu addItem:item];
     
-    //traverse the groups array
-    //numer = [accountsMenuItems objectEnumerator];
-    //while(item = [numer nextObject])
-    //    [theMenu addItem:item];
-
+    if([groupsMenuItems count] > 0)
+    {
+        //add a divider
+        [theMenu addItem:[NSMenuItem separatorItem]];
+        
+        //add the group objects to an array
+        NSMutableArray *groupArray = [NSMutableArray array];
+        numer = [groupsMenuItems objectEnumerator];
+        while(item = [numer nextObject])
+        {
+            [array addObject:[item representedObject]];
+        }
+        
+        //sort the array
+        [[[adium contactController] activeSortController] sortListObjects:groupArray];
+        
+        //traverse the groupsItems dict in the correct order
+        numer = [groupArray objectEnumerator];
+        while(item = [groupsMenuItems objectForKey:[(AIListObject *)[numer nextObject] UID]])
+        {
+            [[item menu] removeItem:item];
+            [theMenu addItemAtIndex:item];
+        }
+    }
+    
+    //install our menu
     [statusItem setMenu:theMenu];
 }
 
