@@ -31,7 +31,6 @@
  */
 
 
-//Auto Scrolling ---------------------------------------------------------------
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     [super initWithCoder:aDecoder];
@@ -61,6 +60,9 @@
 
     [super dealloc];
 }
+
+//Auto Scrolling ---------------------------------------------------------------
+#pragma mark Auto scrolling
 
 - (void)setAutoScrollToBottom:(BOOL)inValue
 {
@@ -153,6 +155,7 @@
 
 
 //Automatic scrollbar hiding ---------------------------------------------------------------
+#pragma mark Automatic scrollbar hiding
 - (void)setAutoHideScrollBar:(BOOL)inValue
 {
     autoHideScrollBar = inValue;
@@ -175,12 +178,14 @@
 }
 
 //Shadow updating when scrolling ----------------------
+#pragma mark Shadow updating
 - (void)setUpdateShadowsWhileScrolling:(BOOL)inValue
 {
     updateShadowsWhileScrolling = inValue;   
 }
 
-//Key forwarding
+//Key forwarding ----------------------
+#pragma mark Key Forwarding
 - (void)setPassKeysToDocumentView:(BOOL)inValue
 {
 	passKeysToDocumentView = inValue;
