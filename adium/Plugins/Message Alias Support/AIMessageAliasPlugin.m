@@ -85,8 +85,10 @@
 			AIAccount *account = nil;
 			
 			if ([listObject isKindOfClass:[AIListContact class]]) {
-				//if no content was passed but a AIListContact was, substitute the display name of the best account connected to that list object
-				account = [[adium accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:listObject];
+				//if no content was passed but a AIListContact was, substitute the display name of the best account
+				//connected to that list object
+				account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
+																			  toListObject:listObject];
 			}
 			
 			if (account) {
@@ -112,7 +114,7 @@
 
 			if ([listObject isKindOfClass:[AIListContact class]]) {
 				//if no content was passed but a AIListContact was, substitute the display name of the best account connected to that list object
-				account = [[adium accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:listObject];
+				account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:listObject];
 			}
 			
 			if (account) {

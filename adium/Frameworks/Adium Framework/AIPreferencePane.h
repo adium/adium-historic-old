@@ -51,6 +51,7 @@
 - (void)configureControlDimming;
 - (id)init;
 - (id)initForPlugin:(id)inPlugin;
+- (NSDictionary *)restorablePreferences;
 
 
 //Will be removed, transition only

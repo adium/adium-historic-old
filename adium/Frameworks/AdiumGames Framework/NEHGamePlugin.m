@@ -74,7 +74,6 @@ static NSMenu			* menu_Games;
 	
 	NSEnumerator		*enumerator;
     AIListContact		*contact;
-    AIAccount			*account;
     
     //Configure the auto-complete view
     enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
@@ -83,34 +82,16 @@ static NSMenu			* menu_Games;
     }
 
     //Configure the handle type menu
-    [popUp_account removeAllItems];
-    [[popUp_account menu] setAutoenablesItems:NO];
-
-    //Insert a menu item for each available account
-    enumerator = [[[adium accountController] accountArray] objectEnumerator];
-    while((account = [enumerator nextObject])){
-        NSMenuItem	*menuItem;
-        
-        //Create the menu item
-        menuItem = [[[NSMenuItem alloc] initWithTitle:[account displayName] target:self action:@selector(selectAccount:) keyEquivalent:@""] autorelease];
-        [menuItem setRepresentedObject:account];
-
-        //Disabled the menu item if the account is offline
-        if(![[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:account]){
-            [menuItem setEnabled:NO];
-        }else{
-            [menuItem setEnabled:YES];
-        }
-
-        //add the menu item
-        [[popUp_account menu] addItem:menuItem];
-    }
+    [popUp_account setMenu:[[adium accountController] menuOfAccountsWithTarget:self]];
 
     //Select the last used account / Available online account
-    [popUp_account selectItemAtIndex:[popUp_account indexOfItemWithRepresentedObject:[[adium accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]]];
+	int index = [popUp_account indexOfItemWithRepresentedObject:[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]];
+    if(index < [popUp_account numberOfItems] && index >= 0){
+		[popUp_account selectItemAtIndex:index];
+	}
 }
 
-- (IBAction)selectAccount: (id)sender
+- (IBAction)selectAccount:(id)sender
 {
 }
 
@@ -129,8 +110,8 @@ static NSMenu			* menu_Games;
     UID = [serviceType filterUID:[textField_handle stringValue]];
         
     //Find the contact
-	contact = [[adium contactController] contactWithService:[serviceType identifier] UID:UID];
-	NSMutableDictionary * contacts = [gamesForAccounts objectForKey:[account UIDAndServiceID]];
+	contact = [[adium contactController] contactWithService:[serviceType identifier] accountUID:[account UID] UID:UID];
+	NSMutableDictionary *contacts = [gamesForAccounts objectForKey:[account UIDAndServiceID]];
 	if(contacts == nil)
 	{
 		contacts = [[[NSMutableDictionary alloc] init] autorelease];

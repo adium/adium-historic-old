@@ -42,19 +42,24 @@
 //performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
 - (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status actionName:(NSString *)actionName
 {
-    BOOL success = YES;
-    AIAccount * account = [[adium accountController] accountWithID:details];
-    if (![[account statusObjectForKey:@"Online"] boolValue]) { //desired account not available
-        if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) { //use another account if necessary pref
-            account = [[adium accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:inObject];
-        }
-        if (!account)
-            success = NO;
-    }
-    if (success) {
-        AIChat	*chat = [[adium contentController] openChatOnAccount:account withListObject:inObject];
-        [[adium interfaceController] setActiveChat:chat];
-    }
+	BOOL success = YES;
+
+	if([inObject isKindOfClass:[AIListContact class]]){
+		AIAccount * account = [[adium accountController] accountWithID:details];
+		if (![[account statusObjectForKey:@"Online"] boolValue]) { //desired account not available
+			if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) { //use another account if necessary pref
+				account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
+																			  toListObject:inObject];
+			}
+			if (!account)
+				success = NO;
+		}
+		if(success){
+			AIChat	*chat = [[adium contentController] openChatWithContact:(AIListContact *)inObject];
+			[[adium interfaceController] setActiveChat:chat];
+		}
+	}
+	
     return success;
 }
 

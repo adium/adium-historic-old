@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.39 2004/02/03 05:23:45 dchoby98 Exp $
+// $Id: AIPreferenceController.m,v 1.40 2004/02/08 00:23:00 adamiser Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -32,6 +32,7 @@
     //
     paneArray = [[NSMutableArray alloc] init];
     groupDict = [[NSMutableDictionary alloc] init];
+	objectPrefCache = [[NSMutableDictionary alloc] init];
     themablePreferences = [[NSMutableDictionary alloc] init];
     delayedNotificationGroups = [[NSMutableSet alloc] init];
     shouldDelay = NO;
@@ -43,6 +44,9 @@
     [AIFileUtilities createDirectory:[[[owner loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH]];
     [AIFileUtilities createDirectory:[[[owner loginController] userDirectory] stringByAppendingPathComponent:ACCOUNT_PREFS_PATH]];
 
+	//
+	userDirectory = [[[owner loginController] userDirectory] retain];
+	
 }
 
 //We can't do these in initing, since the toolbar controller hasn't loaded yet
@@ -66,9 +70,8 @@
 //close
 - (void)closeController
 {
-    [AIPreferenceWindowController closeSharedInstance]; //Close the preference window
-    
     //Preferences are (always) saved as they're modified, so there's no need to save them here.
+    [AIPreferenceWindowController closeSharedInstance]; //Close the preference window
 } 
 
 //dealloc
@@ -77,8 +80,26 @@
     [delayedNotificationGroups release]; delayedNotificationGroups = nil;
     [paneArray release]; paneArray = nil;
     [groupDict release]; groupDict = nil;
+	[objectPrefCache release];
     [themablePreferences release]; themablePreferences = nil;
     [super dealloc];
+}
+
+
+//Preference Window ----------------------------------------------------------------------------------------------------
+#pragma mark Preference Window
+//Show the preference window
+- (IBAction)showPreferenceWindow:(id)sender
+{
+    [[AIPreferenceWindowController preferenceWindowController] showWindow:nil];
+}
+
+//Show a specific pane of the preference window
+- (void)openPreferencesToPane:(AIPreferencePane *)inPane
+{
+	/*    AIPreferenceWindowController	*preferenceWindow = [AIPreferenceWindowController preferenceWindowController];
+    [preferenceWindow showView:inView];
+    [preferenceWindow showWindow:nil];*/
 }
 
 //Return the array of preference panes
@@ -87,27 +108,14 @@
     return(paneArray);
 }
 
-//Show the preference window
-- (IBAction)showPreferenceWindow:(id)sender
-{
-    [[AIPreferenceWindowController preferenceWindowController] showWindow:nil];
-}
 
-
-//Adding Preferences ----------------------------------------------------------------------
+//Adding Preferences ---------------------------------------------------------------------------------------------------
+#pragma mark Adding Preferences
 //Add a view to the preferences
 - (void)addPreferencePane:(AIPreferencePane *)inPane
 {
     //Add the pane to our array
     [paneArray addObject:inPane];
-}
-
-- (void)openPreferencesToPane:(AIPreferencePane *)inPane
-{
-/*    AIPreferenceWindowController	*preferenceWindow = [AIPreferenceWindowController preferenceWindowController];
-
-    [preferenceWindow showView:inView];
-    [preferenceWindow showWindow:nil];*/
 }
 
 //Register a dictionary of defaults
@@ -145,112 +153,67 @@
     return (themablePreferences);
 }
 
-//Using Handle/Group Specific Preferences --------------------------------------------------------------
-//
+
+//Contact/Group Specific Preferences -----------------------------------------------------------------------------------
+#pragma mark Contact/Group Specific Preferences
+//Private: For AIListObject only.  Access to a shared object specific preference dict.
+//This code would be within AIListObject, but since several objects share the same preference file it would prevent
+//caching.  By moving the preference dicts in here we can share the caches between our objects, improving performance.
+- (NSMutableDictionary *)cachedObjectPrefsForKey:(NSString *)objectKey path:(NSString *)path
+{
+	NSString			*cacheKey = [NSString stringWithFormat:@"%@:%@", path, objectKey];
+	NSMutableDictionary	*prefs = [objectPrefCache objectForKey:cacheKey]; 
+	
+	//Load if necessary
+	if(!prefs){
+		prefs = [NSMutableDictionary dictionaryAtPath:[userDirectory stringByAppendingPathComponent:path]
+											 withName:objectKey
+											   create:YES];
+		[objectPrefCache setObject:prefs forKey:cacheKey];
+	}
+	
+	return(prefs);
+}
+
+//Write prefs back to the cache
+- (void)setCachedObjectPrefs:(NSMutableDictionary *)prefs forKey:(NSString *)objectKey path:(NSString *)path
+{
+	NSString			*cacheKey = [NSString stringWithFormat:@"%@:%@", path, objectKey];
+
+	//Add back to cache and save
+	[objectPrefCache setObject:prefs forKey:cacheKey];
+    [prefs writeToPath:[userDirectory stringByAppendingPathComponent:path]
+			  withName:objectKey];
+}
+
+//Private
 - (BOOL)tempImportOldPreferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object
 {
     if(![object isKindOfClass:[AIAccount class]]){
-	NSString		*objectKey = [NSString stringWithFormat:@"(%@)", [object UIDAndServiceID]];
-	NSMutableDictionary     *prefDict = [self loadPreferenceGroup:groupName];
-	NSMutableDictionary     *objectPrefDict = [prefDict objectForKey:objectKey];
-	id			oldValue;
-	
-	if(oldValue = [objectPrefDict objectForKey:inKey]){
-	    NSLog(@"Imported preference: %@ : %@",objectKey,inKey);
-	    [object setPreference:oldValue forKey:inKey group:groupName];
-	    
-	    //Delete old
-	    [objectPrefDict removeObjectForKey:inKey];
-	    [prefDict setObject:objectPrefDict forKey:objectKey];
-	    [self savePreferences:prefDict forGroup:groupName];
-	    
-	    return(YES);
-	}
+		NSString		*objectKey = [NSString stringWithFormat:@"(%@)", [object UIDAndServiceID]];
+		NSMutableDictionary     *prefDict = [self loadPreferenceGroup:groupName];
+		NSMutableDictionary     *objectPrefDict = [prefDict objectForKey:objectKey];
+		id			oldValue;
+		
+		if(oldValue = [objectPrefDict objectForKey:inKey]){
+			NSLog(@"Imported preference: %@ : %@",objectKey,inKey);
+			[object setPreference:oldValue forKey:inKey group:groupName];
+			
+			//Delete old
+			[objectPrefDict removeObjectForKey:inKey];
+			[prefDict setObject:objectPrefDict forKey:objectKey];
+			[self savePreferences:prefDict forGroup:groupName];
+			
+			return(YES);
+		}
     }
-
+	
     return(NO);
 }
 
-//Return an object specific preference.
-/*- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object
-{
-    id      value;
     
-    value = [object preferenceForKey:inKey group:groupName];
-    if(!value) value = [[self preferencesForGroup:groupName] objectForKey:inKey];
-    
-    return(value);
-    
-    //return([self preferenceForKey:inKey group:groupName objectKey:[NSString stringWithFormat:@"(%@)", [object UIDAndServiceID]]]);
-}*/
-
-/*
-- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName objectKey:(NSString *)prefDictKey
-{
-    NSMutableDictionary	*prefDict, *objectPrefDict;
-    id			value = nil;
-
-    //Load the preference
-    prefDict = [self loadPreferenceGroup:groupName];
-    objectPrefDict = [prefDict objectForKey:prefDictKey];
-    if(objectPrefDict) value = [objectPrefDict objectForKey:inKey];
-
-    //If an object specific is not found, use the global preference
-    if(!(value = [object preferenceForKey:inKey group:groupName){
-        value = [[self preferencesForGroup:groupName] objectForKey:inKey];
-    }
-
-    return(value);
-}
-
-//Set an object specific preference
-- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object
-{
-    [self setPreference:value forKey:inKey group:groupName objectKey:[NSString stringWithFormat:@"(%@)", [object UIDAndServiceID]]];
-}
-
-- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName objectKey:(NSString *)prefDictKey
-{
-    NSMutableDictionary	*prefDict, *objectPrefDict;
-    
-    //Load the preferences
-    prefDict = [self loadPreferenceGroup:groupName];
-    objectPrefDict = [[[prefDict objectForKey:prefDictKey] mutableCopy] autorelease];
-    if(!objectPrefDict) objectPrefDict = [[[NSMutableDictionary alloc] init] autorelease];
-    
-    //Set and save the new value
-    if(value != nil){
-        [objectPrefDict setObject:value forKey:inKey];
-    }else{
-        [objectPrefDict removeObjectForKey:inKey];
-    }
-    [prefDict setObject:objectPrefDict forKey:prefDictKey];
-    [self savePreferences:prefDict forGroup:groupName];
-    
-    if (shouldDelay) {
-        [delayedNotificationGroups addObject:groupName];
-    } else {
-        //Broadcast a group changed notification
-        [[owner notificationCenter] postNotificationName:Preference_GroupChanged object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
-    }
-}*/
-
-//This should be used like [lockFocus] / [unlockFocus] around groups of preference changes
-- (void)delayPreferenceChangedNotifications:(BOOL)inDelay
-{
-    if (inDelay != shouldDelay) {
-        shouldDelay = inDelay;
-        if (!inDelay) {
-            NSEnumerator    *enumerator = [delayedNotificationGroups objectEnumerator];
-            NSString        *groupName;
-            while (groupName = [enumerator nextObject])
-                [[owner notificationCenter] postNotificationName:Preference_GroupChanged object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",nil]];
-            [delayedNotificationGroups removeAllObjects];
-        }
-    }
-}
-    
-//Using General Preferences ----------------------------------------------------------------------
+//General Preferences --------------------------------------------------------------------------------------------------
+#pragma mark General Preferences
 //Return a dictionary of preferences
 - (NSDictionary *)preferencesForGroup:(NSString *)groupName
 {
@@ -270,7 +233,7 @@
     
     //Load the preferences
     prefDict = [self loadPreferenceGroup:groupName];
-
+	
     //Set and save the new value
     if(value != nil){
         [prefDict setObject:value forKey:inKey];
@@ -278,16 +241,38 @@
         [prefDict removeObjectForKey:inKey];
     }
     [self savePreferences:prefDict forGroup:groupName];
-
+	
 	if (shouldDelay) {
         [delayedNotificationGroups addObject:groupName];
     } else {
         //Broadcast a group changed notification
-        [[owner notificationCenter] postNotificationName:Preference_GroupChanged object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
+        [[owner notificationCenter] postNotificationName:Preference_GroupChanged
+												  object:nil
+												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
     }
 }
 
-//Internal ----------------------------------------------------------------------
+//Delay preference changed notifications
+//This should be used like [lockFocus] / [unlockFocus] around groups of preference changes
+- (void)delayPreferenceChangedNotifications:(BOOL)inDelay
+{
+    if (inDelay != shouldDelay) {
+        shouldDelay = inDelay;
+        if (!inDelay) {
+            NSEnumerator    *enumerator = [delayedNotificationGroups objectEnumerator];
+            NSString        *groupName;
+            while (groupName = [enumerator nextObject])
+                [[owner notificationCenter] postNotificationName:Preference_GroupChanged
+														  object:nil
+														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",nil]];
+            [delayedNotificationGroups removeAllObjects];
+        }
+    }
+}
+
+
+//Internal -------------------------------------------------------------------------------------------------------------
+#pragma mark Internal
 //Load a preference group
 - (NSMutableDictionary *)loadPreferenceGroup:(NSString *)groupName
 {
@@ -312,5 +297,4 @@
 }
 
 @end
-
 

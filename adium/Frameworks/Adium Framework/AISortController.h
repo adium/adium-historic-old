@@ -13,24 +13,21 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-typedef int(*sortfunc)(id, id, AIListGroup *, BOOL);
-
-typedef struct {
-	AIListGroup	*group;
-	sortfunc	function;
-} sortContextInfo;
+typedef int(*sortfunc)(id, id, BOOL);
 
 @interface AISortController : NSObject {
 	NSArray					*statusKeysRequiringResort;
 	NSArray					*attributeKeysRequiringResort;
+	BOOL					alwaysSortGroupsToTop;
 	
 	sortfunc				sortFunction;
 }
 
 - (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys;
 - (BOOL)shouldSortForModifiedAttributeKeys:(NSArray *)inModifiedKeys;
-- (int)indexForInserting:(AIListObject *)inObject intoObjects:(NSMutableArray *)inObjects inGroup:(AIListGroup *)inGroup;
-- (void)sortListObjects:(NSMutableArray *)inObjects inGroup:(AIListGroup *)inGroup;
+- (BOOL)alwaysSortGroupsToTop;
+- (int)indexForInserting:(AIListObject *)inObject intoObjects:(NSMutableArray *)inObjects;
+- (void)sortListObjects:(NSMutableArray *)inObjects;
 - (NSString *)description;
 - (NSString *)identifier;
 - (NSString *)displayName;

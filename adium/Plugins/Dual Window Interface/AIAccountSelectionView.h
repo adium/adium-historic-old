@@ -30,6 +30,7 @@
     id <AIAccountSelectionViewDelegate>	delegate;
 }
 
++ (BOOL)optionsAvailableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
 - (id)initWithFrame:(NSRect)frameRect delegate:(id <AIAccountSelectionViewDelegate>)inDelegate;
 - (void)setDelegate:(id <AIAccountSelectionViewDelegate>)inDelegate;
 - (id <AIAccountSelectionViewDelegate>)delegate;
@@ -37,6 +38,6 @@
 - (void)configureAccountMenu;
 - (void)updateMenu;
 - (void)accountListChanged:(NSNotification *)notification;
-- (IBAction)selectNewAccount:(id)sender;
+- (IBAction)selectAccount:(id)sender;
 
 @end

@@ -9748,6 +9748,7 @@
 				34503C81058F96C400FB7AD1,
 				4B28DDAD0599FED300343093,
 				4B422C0B05ACB248005E720B,
+				4B09D5C205D5265800BC00F0,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9914,6 +9915,7 @@
 				34503C80058F96C400FB7AD1,
 				4B28DDAE0599FED300343093,
 				4B422C0C05ACB248005E720B,
+				4B09D5C305D5265800BC00F0,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11401,7 +11403,6 @@
 				34BD9E9A05314758000AB133,
 				34BD9E9B05314758000AB133,
 				34BD9E9C05314758000AB133,
-				34BD9E9D05314758000AB133,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11432,12 +11433,6 @@
 		};
 		34BD9E9C05314758000AB133 = {
 			fileRef = F570A5C903704D1A01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9E9D05314758000AB133 = {
-			fileRef = 4B001BFB04F105AC00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -11506,7 +11501,6 @@
 				34BD9EA905314758000AB133,
 				34BD9EAA05314758000AB133,
 				34BD9EAB05314758000AB133,
-				34BD9EAC05314758000AB133,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11537,12 +11531,6 @@
 		};
 		34BD9EAB05314758000AB133 = {
 			fileRef = F570A5CA03704D1A01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9EAC05314758000AB133 = {
-			fileRef = 4B001BFC04F105AC00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -13934,6 +13922,7 @@
 				4B7BB57E05B1AB8000598C55,
 				4B7BB64705B1D27F00598C55,
 				4BB1BE5705BADB4800E0C9D2,
+				4B09D5C605D5270B00BC00F0,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13967,6 +13956,7 @@
 				34BDA045053147BF000AB133,
 				4BBDE39505B2E34F00EA51E7,
 				4BBDE39905B2F2DA00EA51E7,
+				4B09D5C905D5271A00BC00F0,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14088,6 +14078,7 @@
 				4B7BB57F05B1AB8000598C55,
 				4B7BB64805B1D27F00598C55,
 				4BB1BE5805BADB4800E0C9D2,
+				4B09D5C705D5270B00BC00F0,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17680,6 +17671,80 @@
 			path = "Plugins/Status Changed Messages/AIStatusChangedMessagesPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B09D5C005D5265800BC00F0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIMetaContact.h;
+			path = "Frameworks/Adium Framework/AIMetaContact.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B09D5C105D5265800BC00F0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIMetaContact.m;
+			path = "Frameworks/Adium Framework/AIMetaContact.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B09D5C205D5265800BC00F0 = {
+			fileRef = 4B09D5C005D5265800BC00F0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B09D5C305D5265800BC00F0 = {
+			fileRef = 4B09D5C105D5265800BC00F0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B09D5C405D5270B00BC00F0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AINewGroupWindowController.h;
+			path = "Plugins/Contact List Editor/AINewGroupWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B09D5C505D5270B00BC00F0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AINewGroupWindowController.m;
+			path = "Plugins/Contact List Editor/AINewGroupWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B09D5C605D5270B00BC00F0 = {
+			fileRef = 4B09D5C405D5270B00BC00F0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B09D5C705D5270B00BC00F0 = {
+			fileRef = 4B09D5C505D5270B00BC00F0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B09D5C805D5271A00BC00F0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = AddGroup.nib;
+			path = "Plugins/Contact List Editor/AddGroup.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B09D5C905D5271A00BC00F0 = {
+			fileRef = 4B09D5C805D5271A00BC00F0;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B0AABA805228F9700A8010A = {
 			isa = PBXFileReference;
@@ -29558,21 +29623,24 @@
 				F570A59D03704B9501A8010A,
 				F55B411203AB88D601A8010A,
 				F55B411303AB88D601A8010A,
+				F55B411703AB88D601A8010A,
 				4B7BB56305B19DD500598C55,
 				4B7BB56405B19DD500598C55,
 				F55B411003AB88D601A8010A,
 				F55B411103AB88D601A8010A,
 				4BB1BE5505BADB4700E0C9D2,
 				4BB1BE5605BADB4700E0C9D2,
+				4BBDE39805B2F2DA00EA51E7,
+				4B09D5C405D5270B00BC00F0,
+				4B09D5C505D5270B00BC00F0,
+				4B09D5C805D5271A00BC00F0,
 				4BFB1570043497E700A8010A,
 				4B4F5B31042D673500A8010A,
-				F55B411703AB88D601A8010A,
 				F5361E3103058E2A01A8010A,
 				4B7BB57C05B1AB7F00598C55,
 				4B7BB57D05B1AB7F00598C55,
 				4B7BB64505B1D27F00598C55,
 				4B7BB64605B1D27F00598C55,
-				4BBDE39805B2F2DA00EA51E7,
 			);
 			isa = PBXGroup;
 			name = "Contact List Editor";
@@ -29823,6 +29891,8 @@
 				4BF5BA13042F3CB200A8010A,
 				4BF5BA10042F3CB200A8010A,
 				4BF5BA11042F3CB200A8010A,
+				4B09D5C005D5265800BC00F0,
+				4B09D5C105D5265800BC00F0,
 			);
 			isa = PBXGroup;
 			name = "Contacts & Handles";

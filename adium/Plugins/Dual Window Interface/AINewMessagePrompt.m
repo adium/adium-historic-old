@@ -65,7 +65,7 @@ static AINewMessagePrompt *sharedInstance = nil;
     UID = [serviceType filterUID:[textField_handle stringValue]];
         
     //Find the contact
-	contact = [[adium contactController] contactWithService:[serviceType identifier] UID:UID];
+	contact = [[adium contactController] contactWithService:[serviceType identifier] accountUID:[account UID] UID:UID];
     if(contact){
         AIChat	*chat;
         
@@ -73,7 +73,7 @@ static AINewMessagePrompt *sharedInstance = nil;
         [AINewMessagePrompt closeSharedInstance];
 
         //Initiate the message
-        chat = [[adium contentController] openChatOnAccount:account withListObject:contact];
+        chat = [[adium contentController] openChatWithContact:contact];
         [[adium interfaceController] setActiveChat:chat];
     }
 }
@@ -112,31 +112,10 @@ static AINewMessagePrompt *sharedInstance = nil;
     }
 
     //Configure the handle type menu
-    [popUp_service removeAllItems];
-    [[popUp_service menu] setAutoenablesItems:NO];
-
-    //Insert a menu item for each available account
-    enumerator = [[[adium accountController] accountArray] objectEnumerator];
-    while((account = [enumerator nextObject])){
-        NSMenuItem	*menuItem;
-        
-        //Create the menu item
-        menuItem = [[[NSMenuItem alloc] initWithTitle:[account displayName] target:self action:@selector(selectAccount:) keyEquivalent:@""] autorelease];
-        [menuItem setRepresentedObject:account];
-
-        //Disabled the menu item if the account is offline
-        if(![[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:account]){
-            [menuItem setEnabled:NO];
-        }else{
-            [menuItem setEnabled:YES];
-        }
-
-        //add the menu item
-        [[popUp_service menu] addItem:menuItem];
-    }
+    [popUp_service setMenu:[[adium accountController] menuOfAccountsWithTarget:self]];
 
     //Select the last used account / Available online account
-	int index = [popUp_service indexOfItemWithRepresentedObject:[[adium accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]];
+	int index = [popUp_service indexOfItemWithRepresentedObject:[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]];
     if(index < [popUp_service numberOfItems] && index >= 0){
 		[popUp_service selectItemAtIndex:index];
 	}

@@ -13,17 +13,17 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.h,v 1.11 2004/02/03 05:23:45 dchoby98 Exp $ 
+// $Id: AIPreferenceController.h,v 1.12 2004/02/08 00:23:00 adamiser Exp $ 
 
 //Preference groups
 #define PREF_GROUP_GENERAL              @"General"
 #define PREF_GROUP_ACCOUNTS             @"Accounts"
-#define PREF_GROUP_TOOLBARS 		@"Toolbars"
+#define PREF_GROUP_TOOLBARS 			@"Toolbars"
 #define PREF_GROUP_WINDOW_POSITIONS     @"Window Positions"
-#define PREF_GROUP_SPELLING 		@"Spelling"
-#define OBJECT_PREFS_PATH               @"ByObject"		//Path to object specific preference folder
-#define ACCOUNT_PREFS_PATH              @"Accounts"		//Path to account specific preference folder
-#define Preference_GroupChanged		@"Preference_GroupChanged"
+#define PREF_GROUP_SPELLING 			@"Spelling"
+#define OBJECT_PREFS_PATH               @"ByObject"				//Path to object specific preference folder
+#define ACCOUNT_PREFS_PATH              @"Accounts"				//Path to account specific preference folder
+#define Preference_GroupChanged			@"Preference_GroupChanged"
 #define Preference_WindowWillOpen       @"Preference_WindowWillOpen"
 #define Preference_WindowDidClose       @"Preference_WindowDidClose"
 #define Themes_Changed                  @"Themes_Changed"
@@ -62,10 +62,14 @@ typedef enum {
 @interface AIPreferenceController : NSObject {
     IBOutlet	AIAdium		*owner;
 	
-    NSMutableArray			*paneArray;		//An array of preference panes
-    NSMutableDictionary		*groupDict;		//A dictionary of pref dictionaries
-	NSMutableDictionary		*defaultPrefs;  //A dictionary of default preferences
+	NSString				*userDirectory;
+	
+    NSMutableArray			*paneArray;					//An array of preference panes
+    NSMutableDictionary		*groupDict;					//A dictionary of pref dictionaries
+	NSMutableDictionary		*defaultPrefs;  			//A dictionary of default preferences
+
     NSMutableDictionary		*themablePreferences;
+	NSMutableDictionary		*objectPrefCache;			//Object specific preferences
     
     BOOL					shouldDelay;
     NSMutableSet			*delayedNotificationGroups;  //Group names for delayed notifications
@@ -86,6 +90,9 @@ typedef enum {
 //Themable preferences
 - (void)registerThemableKeys:(NSArray *)keysArray forGroup:(NSString *)groupName;
 - (NSDictionary *)themablePreferences;
+
+- (NSMutableDictionary *)cachedObjectPrefsForKey:(NSString *)objectKey path:(NSString *)path;
+- (void)setCachedObjectPrefs:(NSMutableDictionary *)prefs forKey:(NSString *)objectKey path:(NSString *)path;
 
 - (BOOL)tempImportOldPreferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object;
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;

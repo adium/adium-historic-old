@@ -439,7 +439,7 @@
         NSString *type = [item objectForKey:@"Type"];
 
         if([type compare:@"Group"] == 0){ //Group
-            return([[item objectForKey:@"Contents"] count]);
+            return([(NSArray *)[item objectForKey:@"Contents"] count]);
         }else{
             return(0);
         }

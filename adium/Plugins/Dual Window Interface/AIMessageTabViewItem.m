@@ -26,7 +26,6 @@
 - (NSSize)sizeOfLabel:(BOOL)computeMin;
 - (NSAttributedString *)attributedLabelStringWithColor:(NSColor *)textColor;
 - (void)chatParticipatingListObjectsChanged:(NSNotification *)notification;
-- (void)_observeListObjectAttributes:(AIListObject *)inListObject;
 - (void)chatStatusChanged:(NSNotification *)notification;
 @end
 
@@ -48,7 +47,14 @@
 
     //Configure ourself for the message view
     [messageView setDelegate:self];
-    [self messageViewController:messageView chatChangedTo:[messageView chat]];
+    [[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:)
+									   name:Content_ChatStatusChanged
+									 object:[messageView chat]];
+    [[adium notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:)
+									   name:Content_ChatParticipatingListObjectsChanged
+									 object:[messageView chat]];
+    [self chatStatusChanged:nil];
+    [self chatParticipatingListObjectsChanged:nil];
 
     //Set our contents
     [self setView:[messageView view]];
@@ -72,33 +78,15 @@
 }
 
 //Message View Delegate ----------------------------------------------------------------------
-- (void)messageViewController:(AIMessageViewController *)inMessageView chatChangedTo:(AIChat *)chat
-{
-    //Observe the chat status
-    [[adium notificationCenter] removeObserver:self name:Content_ChatStatusChanged object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:) name:Content_ChatStatusChanged object:chat];
-    [self chatStatusChanged:nil];
-
-    //Observe the chat's participating list objects
-    [[adium notificationCenter] removeObserver:self name:Content_ChatParticipatingListObjectsChanged object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:) name:Content_ChatParticipatingListObjectsChanged object:chat];
-    [self _observeListObjectAttributes:[chat listObject]];
-
-}
-
 //
 - (void)chatParticipatingListObjectsChanged:(NSNotification *)notification
 {
-    [self _observeListObjectAttributes:[[notification object] listObject]];
-}
-
-//
-- (void)_observeListObjectAttributes:(AIListObject *)inListObject
-{
     //Observe it's primary list object's status
     [[adium notificationCenter] removeObserver:self name:ListObject_AttributesChanged object:nil];
-    if(inListObject){
-        [[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) name:ListObject_AttributesChanged object:inListObject];
+    if([notification object]){
+        [[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:)
+										   name:ListObject_AttributesChanged
+										 object:[[notification object] listObject]];
     }
 }
 

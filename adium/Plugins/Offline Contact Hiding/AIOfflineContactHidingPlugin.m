@@ -29,7 +29,10 @@
 
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {    
-    if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"] || [inModifiedKeys containsObject:@"Signed Off"]){
+    if(inModifiedKeys == nil ||
+	   [inModifiedKeys containsObject:@"Online"] ||
+	   [inModifiedKeys containsObject:@"Signed Off"] ||
+	   [inModifiedKeys containsObject:@"VisibleObjectCount"]){
 		if([inObject isKindOfClass:[AIListContact class]]){
 			int		online = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
 			int		justSignedOff = [[inObject statusArrayForKey:@"Signed Off"] containsAnyIntegerValueOf:1];
@@ -40,6 +43,10 @@
 			}else{
 				[inObject setVisible:YES]; //Visible
 			}
+		}else if([inObject isKindOfClass:[AIListGroup class]]){
+//			int		visible = [[inObject statusObjectForKey:@"VisibleObjectCount"] intValue];
+//
+			[inObject setVisible:YES/*(visible != 0)*/];			
 		}
 	}
 	

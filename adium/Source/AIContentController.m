@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.49 2004/01/28 17:53:24 evands Exp $
+// $Id: AIContentController.m,v 1.50 2004/02/08 00:23:00 adamiser Exp $
 
 #import "AIContentController.h"
 
@@ -307,7 +307,7 @@
     BOOL		trackContent = [inObject trackContent];	//Adium should track this content
     BOOL		filterContent = [inObject filterContent]; //Adium should filter this content
     BOOL		displayContent = [inObject displayContent]; //Adium should display this content
-    
+    	
     //Will send content
     if(trackContent){
         [[owner notificationCenter] postNotificationName:Content_WillSendContent object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
@@ -352,7 +352,10 @@
     
     //Check if the object should display
     if ([inObject displayContent]) {
-		BOOL	chatHadContent = [chat hasContent];
+		//If the chat doesn't have content yet, open it
+		if(![chat hasContent]){
+			[[owner interfaceController] openChat:chat]; 
+		}
 		
 		//Add the content to the chat
 		[chat addContentObject:inObject];
@@ -360,10 +363,6 @@
 		//Content object added
 		[[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat
 												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
-		//If the chat didn't have content yet, open it
-		if(!chatHadContent){
-			[[owner interfaceController] openChat:chat]; 
-		}
     }
 }
 
@@ -381,57 +380,123 @@
 
 //Chats -------------------------------------------------------------------------------------------------
 #pragma mark Chats
-//Open a chat on the specified account, or returns an existing chat
-- (AIChat *)openChatOnAccount:(AIAccount *)inAccount withListObject:(AIListObject *)inListObject
+//Opens a chat for communication with the contact, creating if necessary.  The new chat will be made active.
+- (AIChat *)openChatWithContact:(AIListContact *)inContact
 {
-    NSEnumerator	*enumerator;
-    AIChat		*chat;
-    
-    //Search for an existing chat
-    enumerator = [chatArray objectEnumerator];
-    while(chat = [enumerator nextObject]){
-        if([chat listObject] == inListObject) break;
-    }
+	AIChat	*chat = [self chatWithContact:inContact initialStatus:nil];
+	if(chat) [[owner interfaceController] openChat:chat]; 
+	return(chat);	
+}
 
-    if(!chat || (inAccount != nil && [chat account] != inAccount) ){
-        //If no account is passed, use the default
-        if(!inAccount){
-            inAccount = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:inListObject];
-        }
-
-        //Instruct the account to create a new chat
-        chat = [(id <AIAccount_Content>)inAccount openChatWithListObject:inListObject];
+//Creates a chat for communication with the contact, but does not make the chat active (Doesn't open a chat window)
+//If desired, the chat's initial status can be set during creation.  Pass nil for default initial status.
+//If a chat already exists it will be returned (and initialStatus will be ignored).
+- (AIChat *)chatWithContact:(AIListContact *)inContact initialStatus:(NSDictionary *)initialStatus
+{
+	NSEnumerator	*enumerator;
+	AIChat			*chat;
 	
-	//Have the interface open this chat
-	[[owner interfaceController] openChat:chat]; 
+	//If we're dealing with a meta contact, open a chat with the preferred contact for this meta contact
+	//It's a good idea for the caller to pick the preferred contact for us, since they know the content type
+	//being sent and more information - but we'll do it here as well just to be safe.
+	if([inContact isKindOfClass:[AIMetaContact class]]){
+		inContact = [[owner contactController] preferredContactForReceivingContentType:CONTENT_MESSAGE_TYPE
+																		 forListObject:inContact];
+	}
+	
+	//Search for an existing chat we can switch instead of replacing
+	enumerator = [chatArray objectEnumerator];
+	while(chat = [enumerator nextObject]){
+		//If a chat for this object already exists
+		if([chat listObject] == inContact) break;
+		
+		//If this object is within a meta contact, and a chat for and object in that meta contact already exists
+		if([[inContact containingGroup] isKindOfClass:[AIMetaContact class]] && 
+		   [[chat listObject] containingGroup] == [inContact containingGroup]){
 
-    }else{
-        //Have the interface re-open this chat
-        [[owner interfaceController] openChat:chat];    
-
-    }
-
-    return(chat);
+			//If we're on a different account now, switch the chat over
+			if([[inContact accountUID] compare:[(AIListContact *)[chat listObject] accountUID]] != 0){
+				[self switchChat:chat
+					   toAccount:[[owner accountController] accountWithServiceID:[inContact serviceID]
+																			 UID:[inContact accountUID]]];
+			}
+			
+			break;
+		}
+	}
+	
+	if(!chat){
+		AIAccount *account = [[owner accountController] accountWithServiceID:[inContact serviceID] UID:[inContact accountUID]];
+		
+		if([account conformsToProtocol:@protocol(AIAccount_Content)]){
+			//Create a new chat
+			chat = [AIChat chatForAccount:account];
+			[chat addParticipatingListObject:inContact];
+			
+			//Inform the account of it's creation
+			if(![(AIAccount<AIAccount_Content> *)account openChat:chat]){
+				chat = nil;
+			}
+			[chatArray addObject:chat];
+		}
+	}
+	
+	return(chat);
 }
 
 //Note a chat (Called by account code only, after creating a chat)
-- (void)noteChat:(AIChat *)inChat forAccount:(AIAccount *)inAccount
-{
-	AIListObject	*listObject;
+//- (void)noteChat:(AIChat *)inChat forAccount:(AIAccount *)inAccount
+//{
+//	AIListObject	*listObject;
+//
+//    //Track the chat
+//    [chatArray addObject:inChat];
+//	
+//	//Up the chat count for this contact
+//	if(listObject = [inChat listObject]){
+//        int currentCount = [[listObject statusArrayForKey:@"ChatsCount"] greatestIntegerValue];
+//        [listObject setStatusObject:[NSNumber numberWithInt:(currentCount + 1)]
+//                             forKey:@"ChatsCount"
+//                             notify:YES];
+//	}
+//}
+//	
 
-    //Track the chat
-    [chatArray addObject:inChat];
-	
-	//Up the chat count for this contact
-	if(listObject = [inChat listObject]){
-        int currentCount = [[listObject statusArrayForKey:@"ChatsCount"] greatestIntegerValue];
-        [listObject setStatusObject:[NSNumber numberWithInt:(currentCount + 1)]
-                          withOwner:listObject
-                             forKey:@"ChatsCount"
-                             notify:YES];
-	}
 
-}
+
+//Open a chat on the specified account, or returns an existing chat
+//- (AIChat *)openChatOnAccount:(AIAccount *)inAccount withListObject:(AIListObject *)inListObject
+//{
+//    NSEnumerator	*enumerator;
+//    AIChat		*chat;
+//    
+//    //Search for an existing chat
+//    enumerator = [chatArray objectEnumerator];
+//    while(chat = [enumerator nextObject]){
+//        if([chat listObject] == inListObject) break;
+//    }
+//	
+//    if(!chat || (inAccount != nil && [chat account] != inAccount) ){
+//        //If no account is passed, use the default
+//        if(!inAccount){
+//            inAccount = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:inListObject];
+//        }
+//		
+//        //Instruct the account to create a new chat
+//        chat = [(id <AIAccount_Content>)inAccount openChatWithListObject:inListObject];
+//		
+//		//Have the interface open this chat
+//		[[owner interfaceController] openChat:chat]; 
+//		
+//    }else{
+//        //Have the interface re-open this chat
+//        [[owner interfaceController] openChat:chat];    
+//		
+//    }
+//	
+//    return(chat);
+//}
+
 
 //Close a chat
 - (BOOL)closeChat:(AIChat *)inChat
@@ -446,7 +511,6 @@
         int currentCount = [[listObject statusArrayForKey:@"ChatsCount"] greatestIntegerValue];
         if(currentCount > 0) {
 			[listObject setStatusObject:[NSNumber numberWithInt:(currentCount - 1)]
-							  withOwner:listObject
 								 forKey:@"ChatsCount"
 								 notify:YES];
 		}
@@ -463,6 +527,33 @@
     [inChat removeAllContent];
 
     return(YES);
+}
+
+//Switch a chat from one account to another
+- (void)switchChat:(AIChat *)chat toAccount:(AIAccount *)newAccount
+{
+	AIListContact	*oldContact = (AIListContact *)[chat listObject];
+	AIListContact	*newContact = [[owner contactController] contactWithService:[oldContact serviceID] accountUID:[newAccount UID] UID:[oldContact UID]];
+	NSLog(@"Switch chat to %@",[newAccount UID]);
+	//Hang onto stuff until we're done
+	[chat retain];
+	[oldContact retain];
+	
+	//Close down the chat on account A
+	[chat removeParticipatingListObject:oldContact];
+	[(AIAccount<AIAccount_Content> *)[chat account] closeChat:chat];
+	
+	//Open the chat on account B 
+	[chat addParticipatingListObject:newContact];
+	[(AIAccount<AIAccount_Content> *)newAccount openChat:chat];
+	[chat setAccount:newAccount];
+	
+	//Let everyone else know we switched the account of this chat
+	[[owner notificationCenter] postNotificationName:Content_ChatAccountChanged object:chat];
+	
+	//Clean up
+	[chat release];
+	[oldContact release];
 }
 
 //Returns all chats with the object
@@ -499,13 +590,64 @@
 - (BOOL)switchToMostRecentUnviewedContent
 {
     if(mostRecentChat && [mostRecentChat listObject] && [[[mostRecentChat listObject] statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]){
-	[[owner interfaceController] setActiveChat:mostRecentChat];
-	return(YES);
+		[[owner interfaceController] setActiveChat:mostRecentChat];
+		return(YES);
     }else{
-	return(NO);
+		return(NO);
     }
 }
 
+//Content Source & Destination -----------------------------------------------------------------------------------------
+#pragma mark Content Source & Destination
+//Returns the available account for sending content to a specified contact
+- (NSArray *)sourceAccountsForSendingContentType:(NSString *)inType
+									toListObject:(AIListObject *)inObject
+									   preferred:(BOOL)inPreferred
+{
+	NSMutableArray	*sourceAccounts = [NSMutableArray array];
+	NSEnumerator	*enumerator = [[[owner accountController] accountArray] objectEnumerator];
+	AIAccount		*account;
+	
+	while(account = [enumerator nextObject]){
+		if([account conformsToProtocol:@protocol(AIAccount_Content)]){
+			if([[inObject serviceID] compare:[[[account service] handleServiceType] identifier]] == 0){
+				BOOL			knowsObject = NO;
+				BOOL			canFindObject = NO;
+				AIListContact	*contactForAccount = [[owner contactController] existingContactWithService:[inObject serviceID]
+																								accountUID:[account UID]
+																									   UID:[inObject UID]];
+				//Does the account know this object?
+				if(contactForAccount){
+					knowsObject = [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE
+																							 toListObject:contactForAccount];
+				}
+				
+				//Could the account find this object?
+				canFindObject = [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE
+																						   toListObject:nil];
+
+				if((inPreferred && knowsObject) || (!inPreferred && !knowsObject && canFindObject)){
+					[sourceAccounts addObject:account];
+				}
+			}
+		}
+	}
+	
+	return(sourceAccounts);
+}
+
+//Returns the available contacts for receiving content to a specific contact
+- (NSArray *)destinationObjectsForContentType:(NSString *)inType
+								 toListObject:(AIListObject *)inObject
+									preferred:(BOOL)inPreferred
+{
+	//meta contact special case here, return any contacts in the user defined meta contact
+	return([NSArray arrayWithObject:inObject]);
+}
+
+
+//Emoticons (In the core?) ---------------------------------------------------------------------------------------------
+#pragma mark Emoticons (In the core?)
 //emoticonsArray is an array of all AIEmoticon objects in the active emoticon set, maintained by the Emoticons plugin
 - (void)setEmoticonsArray:(NSArray *)inEmoticonsArray
 {

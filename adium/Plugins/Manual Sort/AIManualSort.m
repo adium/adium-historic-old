@@ -15,7 +15,7 @@
 
 #import "AIManualSort.h"
 
-int manualSort(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups);
+int manualSort(id objectA, id objectB, BOOL groups);
 
 @implementation AIManualSort
 
@@ -34,14 +34,17 @@ int manualSort(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups
 - (NSArray *)attributeKeysRequiringResort{
 	return(nil);
 }
+- (BOOL)alwaysSortGroupsToTop{
+	return(NO);
+}
 - (sortfunc)sortFunction{
 	return(&manualSort);
 }
 
-int manualSort(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups)
+int manualSort(id objectA, id objectB, BOOL groups)
 {
 	//Contacts and Groups in manual order
-	if([objectA orderIndexForGroup:containingGroup] > [objectB orderIndexForGroup:containingGroup]){
+	if([objectA orderIndex] > [objectB orderIndex]){
 		return(NSOrderedDescending);
 	}else{
 		return(NSOrderedAscending);

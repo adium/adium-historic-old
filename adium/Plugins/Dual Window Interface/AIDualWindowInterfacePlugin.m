@@ -286,12 +286,12 @@
 //Open chat in new window (Must ONLY be called by a context menu)
 - (IBAction)openChatInNewWindow:(id)sender
 {
-    AIListObject 	*listObject = [[adium menuController] contactualMenuContact];
-    AIChat		*chat;
+    AIListContact 	*listContact = [[adium menuController] contactualMenuContact];
+    AIChat			*chat;
 
-    if(listObject){
+    if(listContact){
         forceIntoNewWindow = YES; //Temporarily override our preference
-        chat = [[adium contentController] openChatOnAccount:nil withListObject:listObject];
+        chat = [[adium contentController] openChatWithContact:listContact];
         [[adium interfaceController] setActiveChat:chat];
     }
 }
@@ -299,12 +299,12 @@
 //Open chat as tab in primary window (Must ONLY be called by a context menu)
 - (IBAction)openChatInPrimaryWindow:(id)sender
 {
-    AIListObject 	*listObject = [[adium menuController] contactualMenuContact];
-    AIChat		*chat;
+    AIListContact 	*listContact = [[adium menuController] contactualMenuContact];
+    AIChat			*chat;
 
-    if(listObject){
+    if(listContact){
         forceIntoTab = YES; //Temporarily override our preference
-        chat = [[adium contentController] openChatOnAccount:nil withListObject:listObject];
+        chat = [[adium contentController] openChatWithContact:listContact];
         [[adium interfaceController] setActiveChat:chat];
     }
 }
@@ -518,14 +518,14 @@
 
         //If one already exists, we want to use it for this new chat
         if(messageTabContainer){
-            [[messageTabContainer messageViewController] setChat:inChat];
+//            [[messageTabContainer messageViewController] setChat:inChat];
+//
+//            //Honor any temporary preference override for window spawning
+//            if(forceIntoNewWindow || forceIntoTab){
+//                [self _transferMessageTabContainer:messageTabContainer toWindow:(forceIntoNewWindow ? nil : [self _primaryMessageWindow])];
+//            }
 
-            //Honor any temporary preference override for window spawning
-            if(forceIntoNewWindow || forceIntoTab){
-                [self _transferMessageTabContainer:messageTabContainer toWindow:(forceIntoNewWindow ? nil : [self _primaryMessageWindow])];
-            }
-
-            [messageTabContainer makeActive:nil];
+//            [messageTabContainer makeActive:nil];
         }
     }
     
@@ -539,9 +539,7 @@
     }
 
     //Display the account selector if multiple accounts are available for sending to the contact
-    if ( (![[[inChat statusDictionary] objectForKey:@"DisallowAccountSwitching"] boolValue]) && ([[adium accountController] numberOfAccountsAvailableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:listObject]>1) ) {
-        [[messageTabContainer messageViewController] setAccountSelectionMenuVisible:YES];
-    }
+	[[messageTabContainer messageViewController] setAccountSelectionMenuVisible:YES];
 
     //Clear any temporary preference overriding
     forceIntoNewWindow = NO;

@@ -80,13 +80,12 @@
 
 - (void)sendMessage:(NSString*)msg ofType:(NSString*)type
 {
-	//Open a chat if needed
-	AIChat * chat;
-	if([[[adium contentController] allChatsWithListObject:contact_OtherPlayer] count] == 0)
-		chat = [[adium contentController] openChatOnAccount:account_Player withListObject:contact_OtherPlayer];
-	else
-		chat = [[[adium contentController] allChatsWithListObject:contact_OtherPlayer] objectAtIndex:0];
-	[self sendMessage:msg ofType:type toContact:contact_OtherPlayer fromAccount:account_Player inChat:chat];
+	AIChat * chat = [[adium contentController] chatWithContact:contact_OtherPlayer initialStatus:nil];
+	[self sendMessage:msg
+			   ofType:type
+			toContact:contact_OtherPlayer
+		  fromAccount:account_Player
+			   inChat:chat];
 }
 
 - (void)gameDidComplete:(GameEndState)end displaySheet:(BOOL)display

@@ -3,7 +3,7 @@
 //  Adium XCode
 //
 //  Created by Evan Schoenberg on Wed Nov 12 2003.
-//  $Id: ESFileTransferController.m,v 1.6 2004/02/07 19:34:33 evands Exp $
+//  $Id: ESFileTransferController.m,v 1.7 2004/02/08 00:23:00 adamiser Exp $
 
 #import "ESFileTransferController.h"
 
@@ -64,8 +64,8 @@
 
 - (void)sendFile:(NSString *)inFile toListContact:(AIListContact *)listContact
 {
-	AIAccount *account = [[owner accountController] accountForSendingContentType:FILE_TRANSFER_TYPE
-																	toListObject:listContact];
+	AIAccount *account = [[owner accountController] preferredAccountForSendingContentType:FILE_TRANSFER_TYPE
+																			 toListObject:listContact];
 	if (account) {
 
 		//Set up a fileTransfer object

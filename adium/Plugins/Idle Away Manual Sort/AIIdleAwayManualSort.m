@@ -8,7 +8,7 @@
 
 #import "AIIdleAwayManualSort.h"
 
-int idleAwayManualSort(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups);
+int idleAwayManualSort(id objectA, id objectB, BOOL groups);
 
 @implementation AIIdleAwayManualSort
 
@@ -31,7 +31,7 @@ int idleAwayManualSort(id objectA, id objectB, AIListGroup *containingGroup, BOO
 	return(&idleAwayManualSort);
 }
 
-int idleAwayManualSort(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups)
+int idleAwayManualSort(id objectA, id objectB, BOOL groups)
 {
 	if(!groups){
 		BOOL idleAwayA = ([[objectA statusArrayForKey:@"Away"] containsAnyIntegerValueOf:1] || [[objectA statusArrayForKey:@"Idle"] greatestDoubleValue] != 0);
@@ -45,7 +45,7 @@ int idleAwayManualSort(id objectA, id objectB, AIListGroup *containingGroup, BOO
 	}
 	
 	//manual order
-	if([objectA orderIndexForGroup:containingGroup] > [objectB orderIndexForGroup:containingGroup]){
+	if([objectA orderIndex] > [objectB orderIndex]){
 		return(NSOrderedDescending);
 	}else{
 		return(NSOrderedAscending);

@@ -171,8 +171,10 @@
             //Get the object from our tracking dictionary
             AIListObject            *listObject = [trackingDict objectForKey:tagNumber];
             AIMutableOwnerArray     *statusArray = [listObject statusArrayForKey:@"UserIcon"];
+			
             //apply the image
             if([statusArray count] == 0) {
+#warning Anything we apply to the status array here is just ignored.  We need to apply our icons as a primary object of the display array.
                 [statusArray setObject:image withOwner:self];
                 [[adium contactController] listObjectStatusChanged:listObject
                                                 modifiedStatusKeys:[NSArray arrayWithObject:@"UserIcon"]

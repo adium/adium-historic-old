@@ -11,7 +11,11 @@
 	IBOutlet	NSPopUpButton		*popUp_contactType;
 	IBOutlet	NSPopUpButton		*popUp_targetGroup;
 	IBOutlet	NSTextField			*textField_contactName;
+	IBOutlet	NSTableView			*tableView_accounts;
 	IBOutlet	NSButton			*button_add;
+	
+	NSArray							*accounts;
+	NSMutableArray					*addToAccounts;
 }
 
 + (void)promptForNewContactOnWindow:(NSWindow *)parentWindow;

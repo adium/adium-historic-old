@@ -13,25 +13,25 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.29 2003/12/20 03:34:16 jmelloy Exp $
+// $Id: AISoundController.m,v 1.30 2004/02/08 00:23:00 adamiser Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
 
-#define	PATH_SOUNDS			@"/Sounds"
+#define	PATH_SOUNDS					@"/Sounds"
 #define PATH_INTERNAL_SOUNDS		@"/Contents/Resources/Sounds/"
 #define SOUND_SET_PATH_EXTENSION	@"txt"
-#define SOUND_DEFAULT_PREFS		@"SoundPrefs"
-#define MAX_THREAD_SOUNDS		3		//Max concurrent sounds
-#define SOUND_SLEEP_INTERVAL		0.5		//Seconds to sleep between sound activity checks
-#define MAX_QT_CACHED_SOUNDS		5		//Max sounds cached for QT play
+#define SOUND_DEFAULT_PREFS			@"SoundPrefs"
+#define MAX_THREAD_SOUNDS			3					//Max concurrent sounds
+#define SOUND_SLEEP_INTERVAL		0.5					//Seconds to sleep between sound activity checks
+#define MAX_QT_CACHED_SOUNDS		5					//Max sounds cached for QT play
 
 #define KEY_SOUND_WARNED_ABOUT_CUSTOM_VOLUME	@"Warned About Custom Volume"
 
-#define TEXT_TO_SPEAK			@"Text"
-#define VOICE_INDEX			@"Voice"
-#define PITCH				@"Pitch"
-#define RATE				@"Rate"
+#define TEXT_TO_SPEAK				@"Text"
+#define VOICE_INDEX					@"Voice"
+#define PITCH						@"Pitch"
+#define RATE						@"Rate"
 
 @interface AISoundController (PRIVATE)
 - (void)_quicktimePlaySound:(NSString *)inPath;

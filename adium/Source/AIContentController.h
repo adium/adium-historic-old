@@ -22,6 +22,7 @@
 #define Content_FirstContentRecieved				@"Content_FirstContentRecieved"
 #define Content_ChatStatusChanged					@"Content_ChatStatusChanged"
 #define Content_ChatParticipatingListObjectsChanged @"Content_ChatParticipatingListObjectsChanged"
+#define Content_ChatAccountChanged 					@"Content_ChatAccountChanged"
 
 //Handles the display of a content type
 @protocol AIContentHandler 
@@ -60,11 +61,12 @@
 
 //Chats
 - (NSArray *)allChatsWithListObject:(AIListObject *)inObject;
-- (AIChat *)openChatOnAccount:(AIAccount *)inAccount withListObject:(AIListObject *)inListObject;
-- (void)noteChat:(AIChat *)inChat forAccount:(AIAccount *)inAccount;
+- (AIChat *)openChatWithContact:(AIListContact *)inContact;
+- (AIChat *)chatWithContact:(AIListContact *)inContact initialStatus:(NSDictionary *)initialStatus;
 - (BOOL)closeChat:(AIChat *)inChat;
 - (NSArray *)chatArray;
 - (BOOL)switchToMostRecentUnviewedContent;
+- (void)switchChat:(AIChat *)chat toAccount:(AIAccount *)newAccount;
 
 //Sending / Receiving content
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject onAccount:(AIAccount *)inAccount;
@@ -90,6 +92,14 @@
 - (void)filterObject:(AIContentObject *)inObject isOutgoing:(BOOL)isOutgoing;
 - (NSAttributedString *)filteredAttributedString:(NSAttributedString *)inString listObjectContext:(AIListObject *)inListObject isOutgoing:(BOOL)isOutgoing;
 - (NSAttributedString *)fullyFilteredAttributedString:(NSAttributedString *)inString listObjectContext:(AIListObject *)inListObject;
+
+//Content Source & Destination
+- (NSArray *)sourceAccountsForSendingContentType:(NSString *)inType
+									toListObject:(AIListObject *)inObject
+									   preferred:(BOOL)inPreferred;
+- (NSArray *)destinationObjectsForContentType:(NSString *)inType
+								 toListObject:(AIListObject *)inObject
+									preferred:(BOOL)inPreferred;
 
 //Emoticons
 - (void)setEmoticonsArray:(NSArray *)inEmoticonsArray;

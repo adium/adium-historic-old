@@ -827,7 +827,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 	AIListGroup		*group = [[browser_contactList selectedColumn] representedObject];
 	
 	if(objects && [objects count]){
-		[[adium contactController] removeListObjects:objects fromGroup:group];
+		[[adium contactController] removeListObjects:objects];
 	}
 	
 	

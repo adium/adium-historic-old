@@ -317,7 +317,7 @@ int hexToInt(char hex)
         return(0);
     }
 }
-//#warning move to another file
+
 //Convert int to a hex
 char intToHex(int digit)
 {

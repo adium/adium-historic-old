@@ -15,9 +15,9 @@
 {
     chatDict = [[NSMutableDictionary alloc] init];
 
-	commandContact = [[[adium contactController] contactWithService:@"TEMP" UID:@"Command"] retain];
-    [commandContact setRemoteGroupName:@"Command" forAccount:self];
-    [commandContact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Online" notify:YES];
+	commandContact = [[[adium contactController] contactWithService:@"TEMP" accountUID:[self UID] UID:@"Command"] retain];
+    [commandContact setRemoteGroupName:@"Command"];
+    [commandContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
     
     //
     commandChat = [[self chatForContact:commandContact] retain];
@@ -28,18 +28,7 @@
 
 - (AIChat *)chatForContact:(AIListContact *)inContact
 {
-    AIChat *chat = [chatDict objectForKey:[inContact UID]];
-
-    if(!chat){
-        chat = [AIChat chatForAccount:self];
-        [chat addParticipatingListObject:inContact];
-        [[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
-        [[adium contentController] noteChat:chat forAccount:self];
-
-        [chatDict setObject:chat forKey:[inContact UID]];
-    }
-
-    return(chat);
+    return([[adium contentController] chatWithContact:inContact initialStatus:nil]);
 }
 
 //Return the default properties for this account
@@ -92,8 +81,8 @@
                 NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
 				AIListContact	*contact;
 				
-				contact = [[adium contactController] contactWithService:@"TEMP" UID:buddyUID];
-				[contact setRemoteGroupName:[NSString stringWithFormat:@"Group %i", (int)(i/5.0)] forAccount:self];
+				contact = [[adium contactController] contactWithService:@"TEMP" accountUID:[self UID] UID:buddyUID];
+				[contact setRemoteGroupName:[NSString stringWithFormat:@"Group %i", (int)(i/5.0)]];
             }
 
             [self echo:[NSString stringWithFormat:@"Created %i handles",count]];
@@ -109,7 +98,7 @@
 				AIListContact	*contact;
                 NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
 
-				contact = [[adium contactController] contactWithService:@"TEMP" UID:buddyUID];
+				contact = [[adium contactController] contactWithService:@"TEMP" accountUID:[self UID] UID:buddyUID];
 				[handleArray addObject:contact];
             }
 
@@ -127,8 +116,8 @@
 				AIListContact	*contact;
                 NSString	*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
 
-				contact = [[adium contactController] contactWithService:@"TEMP" UID:buddyUID];
-				[contact setStatusObject:[NSNumber numberWithBool:NO] withOwner:self forKey:@"Online" notify:YES];
+				contact = [[adium contactController] contactWithService:@"TEMP" accountUID:[self UID] UID:buddyUID];
+				[contact setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
             }
 
             [self echo:[NSString stringWithFormat:@"%i handles signed off %@",count,(silent?@"(Silently)":@"")]];
@@ -165,7 +154,7 @@
     AIListContact		*contact = [array lastObject];
 //    BOOL				silent = [[[inTimer userInfo] objectForKey:@"silent"] boolValue];
     
-	[contact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Online" notify:YES];
+	[contact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
  
     [array removeLastObject];
     if([array count] == 0) [inTimer invalidate];
@@ -182,7 +171,7 @@
     AIListContact	*contact;
     NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i%spread];
 
-    if(contact = [[adium contactController] contactWithService:@"TEMP" UID:buddyUID]){
+    if(contact = [[adium contactController] contactWithService:@"TEMP" accountUID:[self UID] UID:buddyUID]){
         AIContentMessage *messageObject;
         messageObject = [AIContentMessage messageInChat:[self chatForContact:contact]
 											 withSource:contact
@@ -212,7 +201,7 @@
     AIListContact	*contact;
     NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i%spread];
 
-    if(contact = [[adium contactController] contactWithService:@"TEMP" UID:buddyUID]){
+    if(contact = [[adium contactController] contactWithService:@"TEMP" accountUID:[self UID] UID:buddyUID]){
         AIContentMessage *messageObject;
         if(msgIn){
             messageObject = [AIContentMessage messageInChat:[self chatForContact:contact]
@@ -248,9 +237,12 @@
 }
 
 //Initiate a new chat
-- (AIChat *)openChatWithListObject:(AIListObject *)inListObject
+- (BOOL)openChat:(AIChat *)chat
 {
-    return([self chatForContact:(AIListContact *)inListObject]);
+	[[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
+	[chatDict setObject:chat forKey:[[chat listObject] UID]];
+	
+    return(YES);
 }
 
 //Close a chat instance

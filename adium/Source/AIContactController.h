@@ -27,6 +27,10 @@
 //used for more information in the future.
 #define Contact_UpdateStatus					@"Contact_UpdateStatus"
 
+//A unique group name for our root group
+#define ADIUM_ROOT_GROUP_NAME					@"ROOTJKSHFOEIZNGIOEOP"	
+
+
 typedef enum {
     AISortGroup = 0,
     AISortGroupAndSubGroups,
@@ -69,12 +73,14 @@ typedef enum {
     NSMutableDictionary		*listOrderDict;
     NSMutableDictionary		*reverseListOrderDict;
     float					largestOrder;
+    float					smallestOrder;
 }
 
 //Contact list access
 - (AIListGroup *)contactList;
-- (AIListContact *)contactWithService:(NSString *)serviceID UID:(NSString *)UID;
-- (AIListGroup *)groupWithUID:(NSString *)groupUID createInGroup:(AIListGroup *)targetGroup;
+- (AIListContact *)contactWithService:(NSString *)serviceID accountUID:(NSString *)accountUID UID:(NSString *)UID;
+- (AIListContact *)existingContactWithService:(NSString *)serviceID accountUID:(NSString *)accountUID UID:(NSString *)UID;
+- (AIListGroup *)groupWithUID:(NSString *)groupUID;
 - (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups;
 
 //Contact status & Attributes
@@ -84,7 +90,7 @@ typedef enum {
 
 //
 - (void)delayListObjectNotifications;
-- (void)listObjectRemoteGroupingChanged:(AIListContact *)inObject oldGroupName:(NSString *)oldGroupName;
+- (void)listObjectRemoteGroupingChanged:(AIListContact *)inObject;
 - (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
 - (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys;
 
@@ -95,11 +101,15 @@ typedef enum {
 - (AISortController *)activeSortController;
 - (void)sortContactList;
 - (void)sortListObject:(AIListObject *)inObject;
-- (float)largestOrderIndex;
+//- (float)largestOrderIndex;
+
+//
+- (AIListContact *)preferredContactForReceivingContentType:(NSString *)inType forListObject:(AIListObject *)inObject;
 
 //Editing
-- (void)addContacts:(NSArray *)contactArray toGroup:(AIListGroup *)group onAccounts:(NSArray *)accountArray;
-- (void)removeListObjects:(NSArray *)objectArray fromGroup:(AIListGroup *)group;
+- (void)addContacts:(NSArray *)contactArray toGroup:(AIListGroup *)group;
+- (void)removeListObjects:(NSArray *)objectArray;
+- (void)moveListObjects:(NSArray *)objectArray toGroup:(AIListGroup *)group index:(int)index;
 
 //Contact info
 - (IBAction)showContactInfo:(id)sender;
@@ -108,7 +118,6 @@ typedef enum {
 
 //Interface selection
 - (AIListObject *)selectedListObject;
-- (AIListGroup *)selectedContaininigGroup;
 
 //Private
 - (void)initController;

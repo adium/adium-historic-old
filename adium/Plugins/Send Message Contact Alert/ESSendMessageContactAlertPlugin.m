@@ -93,7 +93,7 @@
     
     NSString            *errorReason = nil;
     int                 displayError;
-    BOOL                success;
+    BOOL                success = NO;
 
     //Source account
     account = [[adium accountController] accountWithID:[detailsDict objectForKey:KEY_MESSAGE_SENDFROM]];
@@ -103,7 +103,7 @@
     //intended recipient
     uid = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_UID];
     service = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_SERVICE];
-    contact = [[adium contactController] contactWithService:service UID:uid];
+    contact = [[adium contactController] contactWithService:service accountUID:[account UID] UID:uid];
     
     //error message
     displayError = [[detailsDict objectForKey:KEY_MESSAGE_ERROR] intValue];
@@ -112,7 +112,8 @@
         success = YES;
     } else {
         if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) { //use another account if necessary pref
-            account = [[adium accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:contact];
+            account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
+																		  toListObject:contact];
             
             if (!account) {//no appropriate accounts found
                 errorReason = @"failed because no appropriate accounts are online.";
@@ -127,7 +128,7 @@
     }
     if (success) { //we're good so far...
             if ([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) {
-                AIChat	*chat = [[adium contentController] openChatOnAccount:account withListObject:contact];
+                AIChat	*chat = [[adium contentController] openChatWithContact:contact];
                 
                 [[adium interfaceController] setActiveChat:chat];
                 responseContent = [AIContentMessage messageInChat:chat
@@ -153,7 +154,7 @@
         [[adium interfaceController] handleMessage:title withDescription:alertMessage withWindowTitle:@"Error Sending Message"];
     }
     
-//    [message release];
+    [message release];
     return success;
 }
 

@@ -19,7 +19,7 @@
 #import "AIMTOC2StringAdditions.h"
 #import "AIMTOC2AccountViewController.h"
 #import "AIMTOC2ServicePlugin.h"
-#import "AIMTOC2ChatInviteWindowController.h"
+//#import "AIMTOC2ChatInviteWindowController.h"
 
 #define	AIM_ERRORS_FILE			@"AIMErrors"	//Filename of the AIM Errors plist
 #define TOC2_DEFAULTS_FILE		@"TOC2Defaults" //Filename of the account property defaults
@@ -83,7 +83,6 @@
 - (void)loadProfileFromURL:(NSString *)inURL;
 - (void)resetPingTimer;
 - (void)_AIMHandleMessageInFromUID:(NSString *)name rawMessage:(NSString *)rawMessage;
-- (AIChat *)_openChatWithContact:(AIListContact *)contact;
 - (void)removeAllStatusFlagsFromContact:(AIListContact *)contact;
 - (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing;
 - (void)setAccountIdleTo:(NSTimeInterval)idle;
@@ -133,10 +132,10 @@
 	AIListContact	*object;
 	
 	while(object = [enumerator nextObject]){
-		NSString	*group = [object remoteGroupNameForAccount:self];
+		NSString	*group = [object remoteGroupName];
 
 		//Remove it server-side & update our remote grouping
-		[object setRemoteGroupName:nil forAccount:self];
+		[object setRemoteGroupName:nil];
 		[self AIM_RemoveHandle:[object UID] fromGroup:group];
 	}
 }
@@ -149,8 +148,15 @@
 	while(object = [enumerator nextObject]){
 		//Add it server-side & update our remote grouping
 		[self AIM_AddHandle:[object UID] toGroup:[inGroup UID]];
-		[object setRemoteGroupName:[inGroup UID] forAccount:self];
+		[object setRemoteGroupName:[inGroup UID]];
 	}
+}
+
+- (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group
+{
+	//TOC doesn't support moving contacts, so our only option is to delete and re-add them
+	[self removeContacts:objects];
+	[self addContacts:objects toGroup:group];
 }
 
 // Return YES if the contact list is editable
@@ -360,13 +366,14 @@
 																 imagesPath:nil]));
 }
 
-//Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
+//Return YES if we're available for sending the specified content.  If inListObject is nil, we can return YES if we
+//will 'most likely' be able to send the content.
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
     BOOL	weAreOnline = [[self statusObjectForKey:@"Online"] boolValue];
 	
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
-        if(weAreOnline && (inListObject == nil || [[inListObject statusObjectForKey:@"Online" withOwner:self] boolValue])){ 
+        if(weAreOnline && (inListObject == nil || [[inListObject statusObjectForKey:@"Online"] boolValue])){ 
 			return(YES);
         }
     }
@@ -375,39 +382,16 @@
 }
 
 //Initiate a new chat
-- (AIChat *)openChatWithListObject:(AIListObject *)inListObject
+- (BOOL)openChat:(AIChat *)chat
 {
-    AIChat		*chat = nil;
-	
-    if([inListObject isKindOfClass:[AIListContact class]]){        
-        chat = [self _openChatWithContact:(AIListContact *)inListObject];
-    }
-	
-    return(chat);
-}
+	//Correctly enable/disable the chat
+#warning All opened chats assumed valid until a better system for doing this reliably is figured out.
+	[[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
+		
+	//
+	[chatDict setObject:chat forKey:[[chat listObject] UID]];
 
-- (AIChat *)_openChatWithContact:(AIListContact *)contact
-{
-    AIChat	*chat;
-	
-    //Create chat
-    if(!(chat = [chatDict objectForKey:[contact UID]])){
-        //Create the chat
-        chat = [AIChat chatForAccount:self];
-		
-        //Set the chat participants
-        [chat addParticipatingListObject:contact];
-		
-        //Correctly enable/disable the chat
-#warning Adam: All opened chats assumed valid until a better system for doing this reliably is figured out.
-        [[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
-		
-        //
-        [chatDict setObject:chat forKey:[contact UID]];
-        [[adium contentController] noteChat:chat forAccount:self];
-    }
-	
-    return(chat);
+	return(YES);
 }
 
 //Close a chat instance
@@ -529,7 +513,7 @@
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact
 {	
     //AIM requires a delayed load of profiles...
-    if([[inContact statusObjectForKey:@"Online" withOwner:self] boolValue]){
+    if([[inContact statusObjectForKey:@"Online"] boolValue]){
 		[self AIM_GetProfile:[inContact UID]];
     }
 }
@@ -574,7 +558,7 @@
     enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
     while((contact = [enumerator nextObject])){
 		[self removeAllStatusFlagsFromContact:contact];
-		[contact setRemoteGroupName:nil forAccount:self];
+		[contact setRemoteGroupName:nil];
     }
 	
     //Clean up and close down
@@ -775,7 +759,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.119 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.120 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -988,10 +972,11 @@
 
 - (void)AIM_HandleClientEvent:(NSString *)inCommand
 {
-    int                 event = [[inCommand TOCStringArgumentAtIndex:2] intValue];
+    int				event = [[inCommand TOCStringArgumentAtIndex:2] intValue];
     NSString		*name = [inCommand TOCStringArgumentAtIndex:1];
     AIListContact	*contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-                                                                             UID:[name compactedString]];
+																  accountUID:[self UID]
+																		 UID:[name compactedString]];
     
     //Post the correct typing state
     if(contact){
@@ -1022,14 +1007,16 @@
     AIListContact		*contact;
 	
 	//
-	contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier] UID:[name compactedString]];
+	contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+												 accountUID:[self UID]
+														UID:[name compactedString]];
 	
     //Clear the 'typing' flag
     [self setTypingFlagOfContact:contact to:NO];
     
     //Open a chat for this handle
-    chat = [self _openChatWithContact:contact];
-    
+    chat = [[adium contentController] chatWithContact:contact initialStatus:nil];
+
     //Add a content object for the message
     messageObject = [AIContentMessage messageInChat:chat
                                          withSource:contact
@@ -1069,7 +1056,9 @@
     AIListContact	*contact = nil;
 	
     //Get the contact
-    if(contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier] UID:compactedName]){
+    if(contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+													accountUID:[self UID]
+														   UID:compactedName]){
         NSNumber		*storedValue;
         NSDate			*storedDate;
         NSString		*storedString;
@@ -1084,19 +1073,19 @@
         BOOL		away = (([userFlags length] < 3) ? NO : ([userFlags characterAtIndex:2] == 'U'));
 		
         //Online/Offline
-		storedValue = [contact statusObjectForKey:@"Online" withOwner:self];
+		storedValue = [contact statusObjectForKey:@"Online"];
         if(storedValue == nil || online != [storedValue intValue]){
-            [contact setStatusObject:[NSNumber numberWithInt:online] withOwner:self forKey:@"Online" notify:NO];
+            [contact setStatusObject:[NSNumber numberWithInt:online] forKey:@"Online" notify:NO];
 			
 			if(!silentAndDelayed){
 				if(online){
-					[contact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Signed On" notify:NO];
-					[contact setStatusObject:nil withOwner:self forKey:@"Signed Off" notify:NO];
-					[contact setStatusObject:nil withOwner:self forKey:@"Signed On" afterDelay:15];
+					[contact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Signed On" notify:NO];
+					[contact setStatusObject:nil forKey:@"Signed Off" notify:NO];
+					[contact setStatusObject:nil forKey:@"Signed On" afterDelay:15];
 				}else{
-					[contact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Signed Off" notify:NO];
-					[contact setStatusObject:nil withOwner:self forKey:@"Signed On" notify:NO];
-					[contact setStatusObject:nil withOwner:self forKey:@"Signed Off" afterDelay:15];
+					[contact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Signed Off" notify:NO];
+					[contact setStatusObject:nil forKey:@"Signed On" notify:NO];
+					[contact setStatusObject:nil forKey:@"Signed Off" afterDelay:15];
 				}
 			}
 			
@@ -1105,9 +1094,9 @@
         }
 		
         //Warning
-        storedValue = [contact statusObjectForKey:@"Warning" withOwner:self];
+        storedValue = [contact statusObjectForKey:@"Warning"];
         if(storedValue == nil || warning != [storedValue intValue]){
-            [contact setStatusObject:[NSNumber numberWithInt:warning] withOwner:self forKey:@"Warning" notify:NO];
+            [contact setStatusObject:[NSNumber numberWithInt:warning] forKey:@"Warning" notify:NO];
 			//			
 			//			if([storedValue intValue] == 0){
 			//				[handleStatusDict setObject:[NSNumber numberWithInt:warning] forKey:@"Cooldown"];
@@ -1119,37 +1108,37 @@
         }
 		
         //Idle time (seconds)
-        storedDate = [contact statusObjectForKey:@"IdleSince" withOwner:self];
+        storedDate = [contact statusObjectForKey:@"IdleSince"];
         if(storedDate == nil || (idleTime != -[storedDate timeIntervalSinceNow])){
             if(idleTime == 0 && storedDate){
-				[contact setStatusObject:nil withOwner:self forKey:@"IdleSince" notify:NO];
+				[contact setStatusObject:nil forKey:@"IdleSince" notify:NO];
             }else if(idleTime > 0){
-				[contact setStatusObject:[NSDate dateWithTimeIntervalSinceNow:-idleTime] withOwner:self forKey:@"IdleSince" notify:NO];
+				[contact setStatusObject:[NSDate dateWithTimeIntervalSinceNow:-idleTime] forKey:@"IdleSince" notify:NO];
             }
         }
 		
         //Sign on date
-        storedDate = [contact statusObjectForKey:@"Signon Date" withOwner:self];
+        storedDate = [contact statusObjectForKey:@"Signon Date"];
         if(storedDate == nil || ![signOnDate isEqualToDate:storedDate]){
-			[contact setStatusObject:signOnDate withOwner:self forKey:@"Signon Date" notify:NO];
+			[contact setStatusObject:signOnDate forKey:@"Signon Date" notify:NO];
         }
 		
         //Away
-        storedValue = [contact statusObjectForKey:@"Away" withOwner:self];
+        storedValue = [contact statusObjectForKey:@"Away"];
         if(storedValue == nil || away != [storedValue intValue]){
-			[contact setStatusObject:[NSNumber numberWithBool:away] withOwner:self forKey:@"Away" notify:NO];
+			[contact setStatusObject:[NSNumber numberWithBool:away] forKey:@"Away" notify:NO];
         }
 		
         //Client
-        storedString = [contact statusObjectForKey:@"Client" withOwner:self];
+        storedString = [contact statusObjectForKey:@"Client"];
         if(storedString == nil || [client compare:storedString] != 0){
-			[contact setStatusObject:client withOwner:self forKey:@"Client" notify:NO];
+			[contact setStatusObject:client forKey:@"Client" notify:NO];
         }
         
         //Display Name
-        storedString = [contact statusObjectForKey:@"Display Name" withOwner:self];
+        storedString = [contact statusObjectForKey:@"Display Name"];
         if(storedString == nil || [name compare:storedString] != 0){
-			[contact setStatusObject:name withOwner:self forKey:@"Display Name" notify:NO];
+			[contact setStatusObject:name forKey:@"Display Name" notify:NO];
         }
 		
         //Let the contact list know a contact's status changed
@@ -1288,8 +1277,9 @@
 					AIListContact	*contact;
 					//
 					contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+																 accountUID:[self UID]
 																		UID:[value compactedString]];
-					[contact setRemoteGroupName:currentGroup forAccount:self];
+					[contact setRemoteGroupName:currentGroup];
 					
                 }else if([type compare:@"p"] == 0){
                 }else if([type compare:@"d"] == 0){
@@ -1540,9 +1530,10 @@
 	
     if(userName && profile){
 		AIListContact	*contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+																	  accountUID:[self UID]
 																			 UID:[userName compactedString]];
         //Add profile to the handle
-        [contact setStatusObject:[AIHTMLDecoder decodeHTML:profile] withOwner:self forKey:@"TextProfile" notify:YES];
+        [contact setStatusObject:[AIHTMLDecoder decodeHTML:profile] forKey:@"TextProfile" notify:YES];
     }
 	
     //Cleanup
@@ -1670,7 +1661,7 @@
 	NSString		*key;
 	
 	while(key = [enumerator nextObject]){
-		[contact setStatusObject:nil withOwner:self forKey:key notify:NO];
+		[contact setStatusObject:nil forKey:key notify:NO];
 	}
 	[contact notifyOfChangedStatusSilently:YES];
 }
@@ -1692,10 +1683,10 @@
 
 - (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing
 {
-    BOOL currentValue = [[contact statusObjectForKey:@"Typing" withOwner:self] boolValue];
+    BOOL currentValue = [[contact statusObjectForKey:@"Typing"] boolValue];
 	
     if(typing != currentValue){
-		[contact setStatusObject:[NSNumber numberWithBool:typing] withOwner:self forKey:@"Typing" notify:YES];
+		[contact setStatusObject:[NSNumber numberWithBool:typing] forKey:@"Typing" notify:YES];
     }
 }
 

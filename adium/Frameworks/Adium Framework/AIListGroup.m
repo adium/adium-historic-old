@@ -39,6 +39,7 @@
 
 
 //Expanded State -------------------------------------------------------------------------------------------------------
+#pragma mark Expanded State
 //Set the expanded/collapsed state of this group (PRIVATE: For the contact list view to let us know our state)
 - (void)setExpanded:(BOOL)inExpanded
 {
@@ -52,6 +53,7 @@
 
 
 //Visibility -----------------------------------------------------------------------------------------------------------
+#pragma mark Visibility
 /*
  The visible objects contained in a group are always sorted to the top.  This allows us to easily retrieve only visible
  objects without having to physically remove invisible objects from the group.
@@ -75,9 +77,9 @@
 //Set this group as visible if it contains anything visible
 - (void)_setVisibleCount:(int)newCount
 {
-	if((newCount && !visibleCount) || (!newCount && visibleCount)){
-		[self setVisible:(newCount != 0)];
-	}
+//	if((newCount && !visibleCount) || (!newCount && visibleCount)){
+//		[self setVisible:(newCount != 0)];
+//	}
 	visibleCount = newCount;
 	
 	//
@@ -86,6 +88,7 @@
 
 
 //Contained Objects ----------------------------------------------------------------------------------------------------
+#pragma mark Contained Objects
 //Returns the number of objects in this group
 - (unsigned)count
 {
@@ -123,8 +126,23 @@
     return([objectArray indexOfObject:inObject]);
 }
 
+//
+- (AIListObject *)objectWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID
+{
+	NSEnumerator	*enumerator = [objectArray objectEnumerator];
+	AIListObject	*object;
+	
+	while(object = [enumerator nextObject]){
+		if([inUID compare:[object UID]] == 0 && [inServiceID compare:[object serviceID]] == 0){
+			return(object);
+		}
+	}
+	
+	return(nil);
+}
 
 //Contained Object Editing ---------------------------------------------------------------------------------------------
+#pragma mark Contained Object Editing
 //Add an object to this group (PRIVATE: For contact controller only)
 - (void)addObject:(AIListObject *)inObject
 {
@@ -133,10 +151,10 @@
 		if([inObject isVisible]) [self _setVisibleCount:visibleCount+1];
 		
 		//Add the object
-		[inObject addContainingGroup:self];
-		if([inObject orderIndexForGroup:self] == 0){ //Assign an index if necessary
-			[inObject setOrderIndex:[[adium contactController] largestOrderIndex] forGroup:self];
-		}
+		[inObject setContainingGroup:self];
+//		if([inObject orderIndex] == -1){ //Assign an index if necessary
+//			[inObject setOrderIndex:[[adium contactController] largestOrderIndex]];
+//		}
 		[objectArray addObject:inObject];
 		
 		//Sort this object on our own.  This always comes along with a content change, so calling contact controller's
@@ -157,7 +175,7 @@
 		if([inObject isVisible]) [self _setVisibleCount:visibleCount-1];
 		
 		//Remove the object
-		[inObject removeContainingGroup:self];
+		[inObject setContainingGroup:nil];
 		[objectArray removeObject:inObject];
 
 		//
@@ -174,13 +192,35 @@
 	}
 }
 
+//Move an object within this group
+//- (void)moveObject:(AIListObject *)inObject toIndex:(int)index
+//{
+//#warning posting the notification really shouldnt be done from here, should it?
+//	float	between;
+//	
+//	if(index == 0){
+//		between = (0 + 
+//				   [[objectArray objectAtIndex:index] orderIndex]) / 2.0;
+//	}else{
+//		between = ([[objectArray objectAtIndex:index-1] orderIndex] + 
+//				   [[objectArray objectAtIndex:index] orderIndex]) / 2.0;
+//	}
+//	
+//	
+//	[inObject setOrderIndex:between];
+//	[[adium contactController] sortListObject:inObject];
+//}
+
 
 //Sorting --------------------------------------------------------------------------------------------------------------
+#pragma mark Sorting
 //Resort an object in this group (PRIVATE: For contact controller only)
 - (void)sortListObject:(AIListObject *)inObject sortController:(AISortController *)sortController
 {
+	[inObject retain];
 	[objectArray removeObject:inObject];
-	[objectArray insertObject:inObject atIndex:[sortController indexForInserting:inObject intoObjects:objectArray inGroup:self]];
+	[objectArray insertObject:inObject atIndex:[sortController indexForInserting:inObject intoObjects:objectArray]];
+	[inObject release];
 }
 
 //Resorts the group contents (PRIVATE: For contact controller only)
@@ -201,7 +241,7 @@
 	
     //Sort this group
     if(sortController){
-        [sortController sortListObjects:objectArray inGroup:self];
+        [sortController sortListObjects:objectArray];
     }
 }
 
