@@ -16,8 +16,6 @@
 
 #include <Adium/AIWindowController.h>
 
-#define	PASSWORD_REQUIRED	AILocalizedString(@"Password Required","Password prompt window title")
-
 @interface AIPasswordPromptController : AIWindowController {
 
 	IBOutlet	NSTextField	*textField_password;

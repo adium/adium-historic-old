@@ -21,6 +21,7 @@
 #import <AIUtilities/ESURLAdditions.h>
 
 #define PROXY_PASSWORD_PROMPT_NIB		@"ProxyPasswordPrompt"
+#define	PROXY_PASSWORD_REQUIRED			AILocalizedString(@"Accessing Proxy","Proxy password prompt window title")
 
 @interface ESProxyPasswordPromptController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName forProxyServer:(NSString *)inServer userName:(NSString *)inUserName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
@@ -61,6 +62,8 @@
 
 - (void)windowDidLoad
 {
+	[[self window] setTitle:PROXY_PASSWORD_REQUIRED];
+
 	[textField_server setStringValue:([server length] ? server : @"<None>")];
 	[textField_userName setStringValue:([userName length] ? userName : @"<None>")];
 	

@@ -48,7 +48,6 @@
 {
 	NSWindow *window = [self window];
 
-	[window setTitle:PASSWORD_REQUIRED];
 	[window center];
 }
 

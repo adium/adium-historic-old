@@ -18,8 +18,10 @@
 #import "ESAccountPasswordPromptController.h"
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
+#import <Adium/AIServiceIcons.h>
 
 #define ACCOUNT_PASSWORD_PROMPT_NIB		@"PasswordPrompt"
+#define	ACCOUNT_PASSWORD_REQUIRED		AILocalizedString(@"Connecting Account","Password prompt window title")
 
 @interface ESAccountPasswordPromptController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
@@ -58,9 +60,13 @@
 
 - (void)windowDidLoad
 {
-    [textField_account setStringValue:[account formattedUID]];
-	[textField_service setStringValue:[[account service] shortDescription]];
+	[[self window] setTitle:ACCOUNT_PASSWORD_REQUIRED];
 	
+    [textField_account setStringValue:[account formattedUID]];
+	[imageView_service setImage:[AIServiceIcons serviceIconForService:[account service]
+																 type:AIServiceIconLarge
+															direction:AIIconNormal]];
+
     [checkBox_savePassword setState:[[account preferenceForKey:[self savedPasswordKey] 
 														 group:GROUP_ACCOUNT_STATUS] boolValue]];
 	
