@@ -1,0 +1,20 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIAlphabeticalSort; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"checkBox_sortGroups" = NSButton; }; 
+            SUPERCLASS = AISortController; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AISortController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {configureView = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

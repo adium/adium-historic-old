@@ -15,18 +15,37 @@
 
 #import "AIAlphabeticalSort.h"
 
+#define KEY_SORT_GROUPS						@"ABC:Sort Groups"
+#define ALPHABETICAL_SORT_DEFAULT_PREFS		@"AlphabeticalSortDefaults"
+
 int alphabeticalSort(id objectA, id objectB, BOOL groups);
+static 	BOOL	sortGroups;
 
 @implementation AIAlphabeticalSort
 
-- (NSString *)description{
-    return(@"Sort contacts and groups alphabetically.");
+//Sort contacts and groups alphabetically.
+
+- (id)init
+{
+	[super init];
+	
+	//Register our default preferences
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ALPHABETICAL_SORT_DEFAULT_PREFS 
+																		forClass:[self class]] 
+										  forGroup:PREF_GROUP_CONTACT_SORTING];
+	
+	//Load our single preference
+	sortGroups = [[[adium preferenceController] preferenceForKey:KEY_SORT_GROUPS
+														   group:PREF_GROUP_CONTACT_SORTING] boolValue];
+
+	return self;
 }
+
 - (NSString *)identifier{
     return(@"Alphabetical");
 }
 - (NSString *)displayName{
-    return(@"Alphabetical");
+    return(AILocalizedString(@"Alphabetically","Sort Contacts... <Alphabetically>"));
 }
 - (NSArray *)statusKeysRequiringResort{
 	return(nil);
@@ -34,13 +53,49 @@ int alphabeticalSort(id objectA, id objectB, BOOL groups);
 - (NSArray *)attributeKeysRequiringResort{
 	return([NSArray arrayWithObject:@"Display Name"]);
 }
+
+#pragma mark Configuration
+//Configuration
+- (NSString *)configureSortMenuItemTitle{ 
+	return(AILocalizedString(@"Configure Alphabetical Sort...",nil));
+}
+- (NSString *)configureSortWindowTitle{
+	return(AILocalizedString(@"Configure Alphabetical Sort",nil));	
+}
+- (NSString *)configureNibName{
+	return @"AlphabeticalSortConfiguration";
+}
+- (void)viewDidLoad{
+	[checkBox_sortGroups setState:(sortGroups ? NSOnState : NSOffState)];
+}
+- (IBAction)changePreference:(id)sender
+{
+	if (sender == checkBox_sortGroups) {
+		sortGroups = [sender state];
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:sortGroups]
+                                             forKey:KEY_SORT_GROUPS
+                                              group:PREF_GROUP_CONTACT_SORTING];		
+	}
+}
+
+#pragma mark Sorting
+//Sort functions
 - (sortfunc)sortFunction{
 	return(&alphabeticalSort);
 }
-
 int alphabeticalSort(id objectA, id objectB, BOOL groups)
 {
-	return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
+	//If we were not passed groups or if we should be sorting groups, sort alphabetically
+	if (!groups || sortGroups){
+		return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
+	}else{
+		//Keep groups in manual order
+		if([objectA orderIndex] > [objectB orderIndex]){
+			return(NSOrderedDescending);
+		}else{
+			return(NSOrderedAscending);
+		}
+	}
 }
 
 @end
