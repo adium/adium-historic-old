@@ -18,6 +18,7 @@
                 "tableView_accounts" = NSTableView; 
                 "textField_contactAlias" = NSTextField; 
                 "textField_contactName" = NSTextField; 
+                "textField_contactNameLabel" = NSTextField; 
             }; 
             SUPERCLASS = AIWindowController; 
         }, 
