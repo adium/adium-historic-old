@@ -14,6 +14,7 @@
 	IBOutlet	NSButton		*checkBox_autoAcceptOnlyFromCLList;
 
 	IBOutlet	NSButton		*checkBox_autoOpenFiles;
+	IBOutlet	NSButton		*checkBox_autoClearCompleted;
 	IBOutlet	NSButton		*checkBox_showProgress;
 }
 

@@ -18,8 +18,14 @@
 - (ESFileTransferProgressRow *)previousRow;
 - (ESFileTransferProgressRow *)nextRow;
 - (void)updateStatusBar;
-
 - (void)reloadAllData;
+
+- (void)_removeFileTransfer:(ESFileTransfer *)inFileTransfer;
+- (void)_removeFileTransferRow:(ESFileTransferProgressRow *)progressRow;
+@end
+
+@interface ESFileTransferController (PRIVATE)
+- (void)_removeFileTransfer:(ESFileTransfer *)fileTransfer;
 @end
 
 @implementation ESFileTransferProgressWindowController
@@ -50,7 +56,12 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
     }
 }
 
-
++ (void)removeFileTransfer:(ESFileTransfer *)inFileTransfer
+{
+    if(sharedTransferProgressInstance){
+        [sharedTransferProgressInstance _removeFileTransfer:inFileTransfer];
+    }	
+}
 //init
 #pragma mark Basic window controller functionality
 - (id)initWithWindowNibName:(NSString *)windowNibName
@@ -149,15 +160,21 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	}
 
 	[self reloadAllData];
+	
+	NSClipView	*clipView = [scrollView contentView];
+	[clipView scrollToPoint:[clipView constrainScrollPoint:([outlineView rectOfRow:[progressRows indexOfObject:progressRow]].origin)]];
 }
 
 #pragma mark Progress row details twiddle
 //Called when the file transfer view's twiddle is clicked.
-- (void)fileTransferProgressRow:(ESFileTransferProgressRow *)inRow
+- (void)fileTransferProgressRow:(ESFileTransferProgressRow *)progressRow
 			  heightChangedFrom:(float)oldHeight
 							 to:(float)newHeight
 {
 	[self reloadAllData];
+
+	NSClipView	*clipView = [scrollView contentView];	
+	[clipView scrollToPoint:[clipView constrainScrollPoint:([outlineView rectOfRow:[progressRows indexOfObject:progressRow]].origin)]];
 }
 
 #pragma mark Adding file transfers
@@ -185,25 +202,52 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	}	
 }
 
-/*
-//Handle delete in the outline view
-//XXX toDo - also handle delete, either here or in the view itself
-- (void)keyDown:(NSEvent *)inEvent
+- (void)_removeFileTransfer:(ESFileTransfer *)inFileTransfer
 {
-	NSString *charactersIgnoringModifiers = [inEvent charactersIgnoringModifiers];
-	BOOL	handled = NO;
+	NSEnumerator				*enumerator = [progressRows objectEnumerator];
+	ESFileTransferProgressRow	*row;
 	
-	if([charactersIgnoringModifiers length]) {
-
+	while(row = [enumerator nextObject]){
+		if([row fileTransfer] == inFileTransfer) break;
 	}
 	
-	//Send key down events to the currently selected row (to support the delete key, for example)
-	if(!handled){
-		[super keyDown:inEvent];
+	if(row) [self _removeFileTransferRow:row];
+}
+
+//Remove a file transfer row from the window. This is coupled to the file transfer controller; care must be taken
+//that we don't remove a row which is in progress, as this will remove the file transfer controller's tracking of it.
+//This must be done so we don't see the file transfer again if the progress window is closed and then reopened.
+- (void)_removeFileTransferRow:(ESFileTransferProgressRow *)progressRow
+{
+	if([progressRow isStopped]){
+		ESFileTransfer	*fileTransfer = [progressRow fileTransfer];
+		NSClipView		*clipView = [scrollView contentView];
+		unsigned		row;
+		
+		//Protect
+		[progressRow retain];
+		
+		//Remove the row from our array, and its file transfer from the fileTransferController
+		row = [progressRows indexOfObject:progressRow];
+		[progressRows removeObject:progressRow];
+		[[adium fileTransferController] _removeFileTransfer:fileTransfer];
+		
+		//Refresh the outline view
+		[self reloadAllData];
+		
+		//Determine the row to reselect.  If the current row is valid, keep it.  If it isn't, use the last row.
+		if(row >= [progressRows count]){
+			row = [progressRows count] - 1;
+		}
+		[clipView scrollToPoint:[clipView constrainScrollPoint:([outlineView rectOfRow:row].origin)]];
+		
+		//Clean up
+		[progressRow release];
+		
+		[self updateStatusBar];
 	}
 }
-*/
-
+							   
 #pragma mark Status bar
 //Called when a progress row changes its type, typically from Unknown to either Incoming or Outgoing
 - (void)progressRowDidChangeType:(ESFileTransferProgressRow *)progressRow
@@ -231,14 +275,14 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 		}
 	}
 
-	if(downloads){
+	if(downloads > 0){
 		if(downloads == 1)
 			downloadsString = AILocalizedString(@"1 download",nil);
 		else
 			downloadsString = [NSString stringWithFormat:AILocalizedString(@"%i downloads","(number) downloads"), downloads];
 	}
 
-	if(uploads){
+	if(uploads > 0){
 		if(uploads == 1)
 			uploadsString = AILocalizedString(@"1 upload",nil);
 		else
@@ -292,9 +336,26 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 }
 
 //Before a cell is display, set its embedded view
-- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
+- (void)outlineView:(NSOutlineView *)inOutlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
 	[cell setEmbeddedView:[(ESFileTransferProgressRow *)item view]];
+}
+
+- (void)outlineViewDeleteSelectedRows:(NSOutlineView *)inOutlineView
+{
+	unsigned	row = [inOutlineView selectedRow];
+	BOOL		didDelete = NO;
+	if(row != -1){
+		ESFileTransferProgressRow	*progressRow = [inOutlineView itemAtRow:row];
+		if([progressRow isStopped]){
+			[self _removeFileTransferRow:progressRow];
+			didDelete = YES;
+		}
+	}
+	
+	//If they tried to delete a row that isn't finished, or we got here with no valid selection, sound the system beep
+	if(!didDelete)
+		NSBeep();
 }
 
 - (void)reloadAllData
@@ -302,9 +363,6 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	[[[[outlineView subviews] copy] autorelease] makeObjectsPerformSelector:@selector(removeFromSuperviewWithoutNeedingDisplay)];
 	
 	[outlineView reloadData];
-	
-	[scrollView tile];
-	[scrollView reflectScrolledClipView:[scrollView contentView]];	
 }
 
 #pragma mark Window zoom

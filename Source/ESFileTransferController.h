@@ -11,6 +11,7 @@
 
 #define	KEY_FT_AUTO_ACCEPT				@"FT AutoAccept"
 #define KEY_FT_AUTO_OPEN_SAFE			@"FT AutoOpenSafe"
+#define	KEY_FT_AUTO_CLEAR_COMPLETED		@"FT AutoClearCompleted"
 #define	KEY_FT_SHOW_PROGRESS_WINDOW		@"FT ShowProgressWindow"
 
 typedef enum {
@@ -38,6 +39,7 @@ typedef enum {
 	FTAutoAcceptType		autoAcceptType;
 	BOOL					autoChooseFolder;
 	BOOL					autoOpenSafe;
+	BOOL					autoClearCompletedTransfers;
 	BOOL					showProgressWindow;
 }
 

@@ -11,6 +11,8 @@
 
 @interface ESFileTransferProgressView (PRIVATE)
 - (void)updateHeaderLine;
+- (void)updateButtonReveal;
+- (void)updateButtonStopResume;
 @end
 
 @implementation ESFileTransferProgressView
@@ -26,6 +28,12 @@
 	showingDetails = NO;
 	[view_details retain];
 
+	[button_stopResume setDelegate:self];
+	[button_reveal setDelegate:self];
+
+	buttonStopResumeIsHovered = NO;
+	buttonRevealIsHovered = NO;
+	
 #warning Safari does something cool with this, reclaiming its space when it hides.
 	//[progressIndicator setDisplayedWhenStopped:NO];
 }
@@ -167,15 +175,11 @@
 								 to:newFrame.size.height];
 }
 
-#pragma mark Event handling
-/*
-- (void)keyDown:(NSEvent *)event
+- (void)setAllowsCancel:(BOOL)flag
 {
-	NSLog(@"%@: keyDown: %@",self,event);
-	
-	[super keyDown:event];
+	[button_stopResume setEnabled:flag];
 }
-*/
+
 #pragma mark Selection
 - (void)setIsHighlighted:(BOOL)flag
 {
@@ -188,23 +192,9 @@
 		if(isSelected){
 			newColor = [NSColor whiteColor];
 			transferStatusColor = newColor;
-			
-#warning Cache these
-			[button_stopResume setImage:[NSImage imageNamed:@"FTProgressStop_Selected" forClass:[self class]]];
-			[button_stopResume setAlternateImage:[NSImage imageNamed:@"FTProgressStopPressed_Selected" forClass:[self class]]];
-			
-			[button_reveal setImage:[NSImage imageNamed:@"FTProgressReveal_Selected" forClass:[self class]]];
-			[button_reveal setAlternateImage:[NSImage imageNamed:@"FTProgressRevealPressed_Selected" forClass:[self class]]];
 		}else{
 			newColor = [NSColor controlTextColor];
 			transferStatusColor = [NSColor disabledControlTextColor];
-
-#warning Cache these
-			[button_stopResume setImage:[NSImage imageNamed:@"FTProgressStop" forClass:[self class]]];
-			[button_stopResume setAlternateImage:[NSImage imageNamed:@"FTProgressStopPressed" forClass:[self class]]];
-
-			[button_reveal setImage:[NSImage imageNamed:@"FTProgressReveal" forClass:[self class]]];
-			[button_reveal setAlternateImage:[NSImage imageNamed:@"FTProgressRevealPressed" forClass:[self class]]];
 		}
 		
 		[textField_rate setTextColor:newColor];
@@ -213,6 +203,54 @@
 		[textField_fileName setTextColor:newColor];
 		
 		[textField_transferStatus setTextColor:newColor];
+		
+		[self updateButtonStopResume];
+		[self updateButtonReveal];
+	}
+}
+
+- (void)updateButtonStopResume
+{
+	if(isSelected){
+		[button_stopResume setImage:[NSImage imageNamed:(buttonStopResumeIsHovered ? @"FTProgressStopRollover_Selected" : @"FTProgressStop_Selected")
+											   forClass:[self class]]];
+		
+		[button_stopResume setAlternateImage:[NSImage imageNamed:@"FTProgressStopPressed_Selected" forClass:[self class]]];
+		
+	}else{
+		[button_stopResume setImage:[NSImage imageNamed:(buttonStopResumeIsHovered ? @"FTProgressStopRollover" : @"FTProgressStop")
+											   forClass:[self class]]];
+		
+		[button_stopResume setAlternateImage:[NSImage imageNamed:@"FTProgressStopPressed" forClass:[self class]]];
+	}
+}
+
+- (void)updateButtonReveal
+{
+	if(isSelected){
+		[button_reveal setImage:[NSImage imageNamed:(buttonRevealIsHovered ? @"FTProgressRevealRollover_Selected" : @"FTProgressReveal_Selected")
+										   forClass:[self class]]];
+		
+		[button_reveal setAlternateImage:[NSImage imageNamed:@"FTProgressRevealPressed_Selected" forClass:[self class]]];
+
+	}else{
+		[button_reveal setImage:[NSImage imageNamed:(buttonRevealIsHovered ? @"FTProgressRevealRollover" : @"FTProgressReveal")
+										   forClass:[self class]]];
+
+		[button_reveal setAlternateImage:[NSImage imageNamed:@"FTProgressRevealPressed" forClass:[self class]]];
+
+	}
+}
+- (void)rolloverButton:(AIRolloverButton *)inButton mouseChangedToInsideButton:(BOOL)isInside
+{
+	if(inButton == button_stopResume){
+		buttonStopResumeIsHovered = isInside;
+		[self updateButtonStopResume];
+		
+	}else if(inButton == button_reveal){
+		buttonRevealIsHovered = isInside;
+		[self updateButtonReveal];
+
 	}
 }
 

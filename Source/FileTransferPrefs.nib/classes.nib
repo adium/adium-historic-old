@@ -19,6 +19,7 @@
             OUTLETS = {
                 "checkBox_autoAcceptFiles" = NSButton; 
                 "checkBox_autoAcceptOnlyFromCLList" = NSButton; 
+                "checkBox_autoClearCompleted" = NSButton; 
                 "checkBox_autoOpenFiles" = NSButton; 
                 "checkBox_showProgress" = NSButton; 
                 "popUp_downloadLocation" = NSPopUpButton; 

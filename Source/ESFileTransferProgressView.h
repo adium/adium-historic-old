@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class ESFileTransferProgressRow, ESFileTransfer;
+@class ESFileTransferProgressRow, ESFileTransfer, AIRolloverButton;
 
 @interface ESFileTransferProgressView : NSView {
 	IBOutlet ESFileTransferProgressRow	*owner;
@@ -25,8 +25,11 @@
 	NSString						*transferRemainingStatus;
 	NSString						*transferSpeedStatus;
 
-	IBOutlet NSButton				*button_stopResume;
-	IBOutlet NSButton				*button_reveal;
+	IBOutlet AIRolloverButton		*button_stopResume;
+	BOOL							buttonStopResumeIsHovered;
+
+	IBOutlet AIRolloverButton		*button_reveal;
+	BOOL							buttonRevealIsHovered;
 	
 	BOOL							showingDetails;
 	IBOutlet NSButton				*twiddle_details;
@@ -58,5 +61,7 @@
 				   speedStatus:(NSString *)inTransferSpeedStatus;
 
 - (IBAction)toggleDetails:(id)sender;
+
+- (void)setAllowsCancel:(BOOL)flag;
 
 @end
