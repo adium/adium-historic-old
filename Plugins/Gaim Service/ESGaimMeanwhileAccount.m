@@ -54,11 +54,43 @@ static BOOL didInitMeanwhile = NO;
 
 - (oneway void)updateAwayReturn:(AIListContact *)theContact withData:(void *)data
 {
-	[super updateWentAway:theContact withData:data];
+	[super updateAwayReturn:theContact withData:data];
 	
 	[theContact setStatusObject:[self statusMessageForContact:theContact]
 						 forKey:@"StatusMessage"
 						 notify:YES];
+}
+
+#pragma mark Status Messages
+- (void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
+{
+	SEL updateSelector = nil;
+	
+	switch ([event intValue]){
+		case GAIM_BUDDY_STATUS_MESSAGE: {
+			updateSelector = @selector(updateStatusMessage:);
+			break;
+		}
+	}
+	
+	if (updateSelector){
+		[self performSelector:updateSelector
+				   withObject:theContact];
+	}
+	
+	[super updateContact:theContact forEvent:event];
+}
+
+- (void)updateStatusMessage:(AIListContact *)theContact
+{
+	NSAttributedString	*newStatusMessage = [self statusMessageForContact:theContact];
+	NSAttributedString	*oldStatusMessage = [theContact statusObjectForKey:@"StatusMessage"];
+
+	if(!oldStatusMessage || ![[newStatusMessage string] isEqualToString:[oldStatusMessage string]]){
+		[theContact setStatusObject:newStatusMessage
+							 forKey:@"StatusMessage"
+							 notify:YES];
+	}
 }
 
 - (NSAttributedString *)statusMessageForContact:(AIListContact *)theContact
@@ -70,7 +102,7 @@ static BOOL didInitMeanwhile = NO;
 	struct mwAwareIdBlock	t = { mwAware_USER, (char *)[[theContact UID] UTF8String], NULL };
 	
 	const char				*statusMessageText = (const char *)mwServiceAware_getText(pd->srvc_aware, &t);
-	NSString				*statusMessageString = [NSString stringWithUTF8String:statusMessageText];
+	NSString				*statusMessageString = (statusMessageText ? [NSString stringWithUTF8String:statusMessageText] : nil);
 	
 	if (statusMessageString && [statusMessageString length]){
 		statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
