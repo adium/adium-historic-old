@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.39 2004/04/23 14:51:37 adamiser Exp $
+// $Id: AISoundController.m,v 1.40 2004/04/24 07:06:16 boredzo Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -116,22 +116,25 @@
 //Play a sound by name
 - (void)playSoundNamed:(NSString *)inName
 {
-    NSString	*path;
-    
-    //Sounds stored in ~/Library/Application Support/Adium 2.0/Sounds
-    path = [[[AIAdium applicationSupportDirectory]
-			stringByAppendingPathComponent:PATH_SOUNDS]
-			stringByAppendingPathComponent:inName];
+    NSString      *path;
+    NSArray       *soundsFolders = [[AIObject sharedAdiumInstance] resourcePathsForName:PATH_SOUNDS];
+    NSEnumerator  *folderEnum    = [soundsFolders objectEnumerator];
+    NSFileManager *mgr           = [NSFileManager defaultManager];
+    BOOL           isDir         = NO;
 
-    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
-        //Sounds stored within the Adium application
-        path = [[[[[NSBundle mainBundle] bundlePath]
-    			stringByAppendingPathComponent:PATH_INTERNAL_SOUNDS]
-        		stringByAppendingPathComponent:inName]
-        		stringByExpandingTildeInPath];
+    while(path = [folderEnum nextObject]) {
+        path = [path stringByAppendingPathComponent:inName];
+        if([mgr fileExistsAtPath:path isDirectory:&isDir]) {
+            if(!isDir) {
+                break;
+            }
+        }
     }
 
-    [self playSoundAtPath:path];
+    if(path) {
+        [self playSoundAtPath:path];
+    }
+    //should create some sort of feedback if the sound was not found.
 }
 
 //Play a sound by path
