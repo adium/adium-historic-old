@@ -6,10 +6,10 @@
 //  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
 //
 
-#import "ESGaimAccountViewController.h"
+#import "AIAccountViewController.h"
 #import "ESGaimJabberAccount.h"
 
-@interface ESGaimJabberAccountViewController : ESGaimAccountViewController {
+@interface ESGaimJabberAccountViewController : AIAccountViewController {
     IBOutlet	NSTextField *textField_connectServer;
 	IBOutlet	NSTextField *textField_resource;
 	IBOutlet	NSButton	*checkBox_useTLS;
