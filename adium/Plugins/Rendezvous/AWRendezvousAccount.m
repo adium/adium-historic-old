@@ -146,16 +146,11 @@
 	[user setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
 	
 	switch ([contact status]) {
-		case AWEzvOnline:
-			[user setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
-			break;
 		case AWEzvAway:
 			[user setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Away" notify:NO];
 			break;
+		case AWEzvOnline:
 		case AWEzvIdle:
-#warning Evan: Should Idle be treated as implicitly Away?
-			[user setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Away" notify:NO];
-			break;
 		default:
 			[user setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
 	}
