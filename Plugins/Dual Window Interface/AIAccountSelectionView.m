@@ -116,7 +116,7 @@
 	//Find the parent meta contact if possible
 	AIListObject	*containingObject;
 	while ([(containingObject = [inObject containingObject]) isKindOfClass:[AIMetaContact class]]){
-		inObject = (AIListObject *)containingObject;
+		inObject = (AIMetaContact *)containingObject;
 	}
 
 	return ([inObject isKindOfClass:[AIMetaContact class]] && ![(AIMetaContact *)inObject containsOnlyOneUniqueContact]);
