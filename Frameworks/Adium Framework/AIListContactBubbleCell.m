@@ -49,6 +49,13 @@
 	return([super rightPadding] + EDGE_INDENT);
 }
 
+- (int)cellWidth
+{
+	int		width = [super cellWidth];
+
+	return(width + EDGE_INDENT);
+}
+
 //Draw the background of our cell
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
@@ -72,10 +79,12 @@
 {
 	if([self cellIsSelected]){
 		AIGradient 	*gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
-		NSRect 		rect = [self bubbleRectForFrame:cellFrame];
-		
+
+		[lastBackgroundBezierPath release];
+		lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:cellFrame]] retain];
+
 		//Draw our bubble with the selected control gradient
-		[gradient drawInBezierPath:[NSBezierPath bezierPathWithRoundedRect:rect]];
+		[gradient drawInBezierPath:lastBackgroundBezierPath];
 	}
 }
 
