@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.94 2004/05/05 04:39:53 adamiser Exp $
+$Id: ToDoList.txt,v 1.95 2004/05/05 04:58:03 adamiser Exp $
 
 
 Legend
@@ -29,6 +29,7 @@ Bugs
 * Connection failures due to a disconnected network (at least with Airport) cause the password to be cleared and re-prompted for.
 
 * Simple webkit style has some bottom redraw/margin issues and is not displaying some of the dividing lines above a status change.
+* We are prompting for passwords on auto-reconnect like crazy.
 
 Applescripts:
 * Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
@@ -71,6 +72,8 @@ Unconfirmed bugs
 * Changing timezone doesn't update time stamps immediately (I'm not surprised, but this would be cool)
 * Update checker reporting a new version when non exists? (possibly a caching error?)
 * Messages with invalid looking HTML <tags> received via jabber (from ICQ user over transport), the invalid tags are being eaten? (Our HTML decoder isn't eating them, is libgaim?) 
+* We aren't fetching the display names of ICQ users, some icq users, when over AIM? (They still show up in the info, apparently)
+
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
