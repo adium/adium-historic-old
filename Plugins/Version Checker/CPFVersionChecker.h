@@ -1,17 +1,17 @@
-//
-//  CPFVersionChecker.h
-//  Adium
-//
-//  Created by Christopher Forsythe on Sat Mar 20 2004.
-//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
-//
-
-//----------------------------------------------------------------------------------------------------------------------
-//When the beta flag is set, we will version check from the beta key.  This allows beta releases to receive update
-//notifications separately from regular releases.  Version updates will also be more frequent and cannot be disabled.
-//This is to discourage the use of beta releases after a regular release is made without completely preventing the
-//program from launching.
-//----------------------------------------------------------------------------------------------------------------------
+/* 
+Adium, Copyright 2001-2005, Adam Iser
+ 
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ General Public License as published by the Free Software Foundation; either version 2 of the License,
+ or (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License along with this program; if not,
+ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 #define KEY_LAST_UPDATE_ASKED		@"LastUpdateAsked"
 #define PREF_GROUP_UPDATING			@"Updating"

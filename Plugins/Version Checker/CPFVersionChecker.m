@@ -1,10 +1,17 @@
-//
-//  CPFVersionChecker.m
-//  Adium
-//
-//  Created by Christopher Forsythe on Sat Mar 20 2004.
-//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
-//
+/* 
+Adium, Copyright 2001-2005, Adam Iser
+ 
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ General Public License as published by the Free Software Foundation; either version 2 of the License,
+ or (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License along with this program; if not,
+ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 #import "CPFVersionChecker.h"
 #import "ESVersionCheckerWindowController.h"
@@ -25,9 +32,22 @@
 - (NSDate *)dateOfThisBuild;
 @end
 
+/*
+ * @class CPFVersionChecker
+ * @brief Checks for new releases of Adium
+ *
+ * The version checker checks for new releases of Adium and notifies the user when one is available.
+ *
+ * When the beta flag is set, we will version check from the beta key.  This allows beta releases to receive update
+ * notifications separately from regular releases.  Version updates will also be more frequent and cannot be disabled.
+ * This is to discourage the use of beta releases after a regular release is made without completely preventing the
+ * program from launching.
+ */
 @implementation CPFVersionChecker
 
-//Install
+/*
+ * @brief Install the version checker
+ */
 - (void)installPlugin
 {
 	//Configure our default preferences
@@ -59,15 +79,24 @@
 											 repeats:YES] retain];
 }
 
+/*
+ * @brief Uninstall the version checker
+ */
 - (void)uninstallPlugin
 {
-	[timer invalidate]; [timer release];
+	[timer invalidate];
+	[timer release];
 }
 
 
 //New version checking -------------------------------------------------------------------------------------------------
 #pragma mark New version checking
-//Check for a new release of Adium.
+/*
+ * @brief Check for a new release of Adium (Notify on failure)
+ *
+ * Checks for a new release of Adium.  The user will be notified when checking has completed, either with a new
+ * release or a message that their current release is up to date.
+ */
 - (void)manualCheckForNewVersion:(id)sender
 {
 	checkingManually = YES;
@@ -75,8 +104,12 @@
 	[self _requestVersionDict];
 }
 
-//Check for a new release of Adium without notifying the user on a false result.
-//Call this method when the user has not explicitely requested the version check.
+/*
+ * @brief Check for a new release of Adium (Silent on failure)
+ *
+ * Check for a new release of Adium without notifying the user on a false result.
+ * Call this method when the user has not explicitely requested the version check.
+ */
 - (void)automaticCheckForNewVersion:(id)sender
 {
 	BOOL updateAutomatically = [[[adium preferenceController] preferenceForKey:KEY_CHECK_AUTOMATICALLY
@@ -95,7 +128,9 @@
 	}
 }
 
-//When a network connection becomes available, check for an update if we haven't already
+/*
+ * @brief When a network connection becomes available, check for an update if we haven't already
+ */
 - (void)networkConnectivityChanged:(NSNotification *)notification
 {
 	if(checkWhenConnectionBecomesAvailable && [[notification object] intValue]){
@@ -103,7 +138,13 @@
 	}
 }
 
-//Version received
+/*
+ * @brief Invoked when version information is received
+ *
+ * Parse the version dictionary and notify the user (if necessary) of a new release or that their current
+ * version is the newest.
+ * @param versionDict Dictionary from the web containing version numbers of the most recent releases
+ */
 - (void)_versionReceived:(NSDictionary *)versionDict
 {
 	NSString	*number = [versionDict objectForKey:VERSION_PLIST_KEY];
@@ -155,7 +196,9 @@
 
 //Build Dates ----------------------------------------------------------------------------------------------------------
 #pragma mark Build Dates
-//Returns the date of this build
+/*
+ * @brief Returns the date of this build
+ */
 - (NSDate *)dateOfThisBuild
 {
 	char *path, unixDate[256], num[256], whoami[256];
@@ -173,13 +216,19 @@
 	return(nil);
 }
 
-//Returns the date of the most recent Adium build (contacts adiumx.com asynchronously)
+/*
+ * @brief Returns the date of the most recent Adium build (contacts adiumx.com asynchronously)
+ */
 - (void)_requestVersionDict
 {
 	[[NSURL URLWithString:VERSION_PLIST_URL] loadResourceDataNotifyingClient:self usingCache:NO];
 }
 
-//The versionDict was downloaded succesfully
+/*
+ * @brief Invoked when the versionDict was downloaded succesfully
+ *
+ * In response, we parse the received version information.
+ */
 - (void)URLResourceDidFinishLoading:(NSURL *)sender
 {
 	NSData			*data = [sender resourceDataUsingCache:YES];
@@ -196,7 +245,9 @@
 	}
 }
 
-//The versionDict could not be loaded
+/*
+ * @brief Invoked when the versionDict could not be loaded
+ */
 - (void)URLResourceDidCancelLoading:(NSURL *)sender
 {
 	[self _versionReceived:nil];

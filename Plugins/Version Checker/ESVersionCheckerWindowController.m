@@ -1,10 +1,17 @@
-//
-//  ESVersionCheckerWindowController.m
-//  Adium
-//
-//  Created by Evan Schoenberg on Mon Mar 29 2004.
-//  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
-//
+/* 
+Adium, Copyright 2001-2005, Adam Iser
+ 
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ General Public License as published by the Free Software Foundation; either version 2 of the License,
+ or (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License along with this program; if not,
+ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 #import "ESVersionCheckerWindowController.h"
 #import "CPFVersionChecker.h"
@@ -15,17 +22,28 @@
 
 #define VERSION_AVAILABLE_NIB		@"VersionAvailable"
 #define VERSION_UPTODATE_NIB		@"VersionUpToDate"
-#define CONNECT_ERROR_NIB              @"VersionCannotConnect"
+#define CONNECT_ERROR_NIB           @"VersionCannotConnect"
 
 @interface ESVersionCheckerWindowController (PRIVATE)
 - (void)showWindowFromBuild:(NSDate *)currentDate toBuild:(NSDate *)newestDate;
 @end
 
+/*
+ * @class ESVersionCheckerWindowController
+ * @brief A window that notifies the user of new Adium releases
+ *
+ * This window can either notify the user of a new Adium release, or that their current release is the newest
+ * available.
+ */
 @implementation ESVersionCheckerWindowController
 
 static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 
-//Display the 'Up to date' panel
+/*
+ * @brief Display the 'Up to date' panel
+ *
+ * This panel tells the user that their release of Adium is the newest available
+ */
 + (void)showUpToDateWindow
 {
 	if(sharedVersionCheckerInstance) [sharedVersionCheckerInstance release];
@@ -33,7 +51,13 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 	[sharedVersionCheckerInstance showWindowFromBuild:nil toBuild:nil];
 }
 
-//Display the 'Update available' panel
+/*
+ * @brief Display the 'Update available' panel
+ *
+ * This panel tells the user that a newer release of Adium is available.
+ * @param currentBuildDate Date of the release they're running
+ * @param latestBuildDate Date of the newest release
+ */
 + (void)showUpdateWindowFromBuild:(NSDate *)currentBuildDate toBuild:(NSDate *)latestBuildDate
 {
 	if(sharedVersionCheckerInstance) [sharedVersionCheckerInstance release];
@@ -41,7 +65,11 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 	[sharedVersionCheckerInstance showWindowFromBuild:currentBuildDate toBuild:latestBuildDate];
 }
 
-//Display the 'Connection error' panel
+/*
+ * @brief Display the 'Connection error' panel
+ *
+ * This panel tells the user that we were unable to retrieve version information
+ */
 + (void)showCannotConnectWindow
 {
     if(sharedVersionCheckerInstance) [sharedVersionCheckerInstance release];
@@ -49,7 +77,9 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
     [sharedVersionCheckerInstance showWindowFromBuild:nil toBuild:nil];
 }
 
-//
+/*
+ * @brief Configure the window
+ */
 - (void)windowDidLoad
 {
 	[super windowDidLoad];
@@ -61,7 +91,9 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 	}	
 }
 
-//Called as the window closes, release the shared window controller
+/*
+ * @brief Called as the window closes, release the shared window controller
+ */
 - (BOOL)windowShouldClose:(id)sender
 {    
     [sharedVersionCheckerInstance autorelease];
@@ -72,6 +104,14 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 
 //Window Display -------------------------------------------------------------------------------------------------------
 #pragma mark Window display
+/*
+ * @brief Display the new version available window for the passed build dates
+ *
+ * Displays a panel that tells the user that a newer release of Adium is available.  Build dates aren't required for
+ * up-to-date and error window nibs.
+ * @param currentDate Date of the release they're running
+ * @param newestDate Date of the newest release
+ */
 - (void)showWindowFromBuild:(NSDate *)currentDate toBuild:(NSDate *)newestDate
 {
 	//Ensure the window is loaded
@@ -102,22 +142,22 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 	[self showWindow:nil];
 }
 
-//Closes this window
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
-}
-
-//Update
+/*
+ * @brief Update to the new release of Adium
+ *
+ * Called when the user presses the download button, this method opens the Adium download site.
+ */
 - (IBAction)update:(id)sender
 {
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:(BETA_RELEASE ? ADIUM_UPDATE_BETA_URL : ADIUM_UPDATE_URL)]];
 	[self closeWindow:nil];
 }
 
-//Toggle auto-check
+/*
+ * @brief Invoked when a preference is changed
+ *
+ * Toggle auto-checking for new releases.  This option is unavailable for beta releases.
+ */
 - (IBAction)changePreference:(id)sender
 {
 	if(sender == checkBox_checkAutomatically){
