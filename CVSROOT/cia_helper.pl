@@ -5,6 +5,8 @@ use strict;
 my $input = join("", <STDIN>);
 my $args = join(" ", @ARGV);
 
+print $args . "\n";
+
 open(CIA,  "| /usr/bin/perl /cvsroot/adium/CVSROOT/ciabot.pl $args") or die "shit: $!";
 print CIA $input;
 close CIA;
