@@ -149,11 +149,11 @@ DeclareString(FormattedUID);
 //Set the local grouping for this object (PRIVATE: These are for AIListGroup ONLY)
 - (void)setContainingObject:(AIListObject <AIContainingObject> *)inGroup
 {
-	BOOL hadContainingObject = (containingObject != nil);
-	
 	containingObject = inGroup;
 	
 #if 0
+	BOOL hadContainingObject = (containingObject != nil);
+
 	if (!hadContainingObject){
 		//When we get our first containing object, our ordering information is appropriate
 		[containingObject listObject:self didSetOrderIndex:orderIndex];
