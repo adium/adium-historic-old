@@ -11,7 +11,7 @@
 @class AIAdium, AIAlternatingRowTableView;
 
 @interface AIDockBehaviorPreferences : NSObject {
-    AIAdium			*owner;
+    AIAdium					*owner;
 
     IBOutlet	AIAlternatingRowTableView	*tableView_events;
     IBOutlet	NSButton			*button_delete;
@@ -20,16 +20,9 @@
     
     IBOutlet	NSView				*view_prefView;
 
-    NSMutableArray				*dockEventArray;
+    NSMutableArray				*behaviorArray;
 
-    BOOL				usingCustomBehaviorSet;
-    /*    IBOutlet 	NSTextField	*bounceField;
-    IBOutlet	NSTextField	*delayField;
-    IBOutlet	NSButton	*enableBouncingCheckBox;
-    IBOutlet	NSButton	*enableAnimationCheckBox;
-    IBOutlet	NSMatrix	*bounceMatrix;
-    
-    NSDictionary		*preferenceDict;*/
+    BOOL				usingCustomBehavior;
 }
 
 + (id)dockBehaviorPreferencesWithOwner:(id)inOwner;

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Active Behavior Set</key>
+	<string>Basic</string>
+	<key>Custom Behavior</key>
+	<array/>
+	<key>Dock Behavior Sets</key>
+	<dict>
+		<key>Basic</key>
+		<array>
+			<dict>
+				<key>Behavior</key>
+				<integer>1</integer>
+				<key>Notification</key>
+				<string>Content_DidReceiveContent</string>
+			</dict>
+                        <dict>
+                                <key>Behavior</key>
+                                <integer>2</integer>
+                                <key>Notification</key>
+                                <string>Interface_ErrorMessageRecieved</string>
+                        </dict>
+		</array>
+		<key>Off</key>
+		<array/>
+	</dict>
+</dict>
+</plist>
