@@ -42,12 +42,7 @@
 
 - (NSColor *)flippyColor
 {
-	return([NSColor blackColor]);
-}
-
-- (NSColor *)textColor
-{
-	return([NSColor blackColor]);
+	return([self textColor]);
 }
 
 //Draw content of our cell
