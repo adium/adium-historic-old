@@ -118,38 +118,103 @@
 //Delete an object from the collection
 - (void)deleteObject:(AIEditorListObject *)inObject
 {
+    BOOL			isGroup = [inObject isKindOfClass:[AIEditorListGroup class]];
     NSEnumerator		*enumerator;
     id <AIEditorCollection>	collection;
+    
+    //Delete the object from all owning collections
+    enumerator = [[plugin collectionsArray] objectEnumerator];
+    while((collection = [enumerator nextObject])){
+        if([collection includeInOwnershipColumn]){
+            AIEditorListObject	*object;
 
-    if([inObject isKindOfClass:[AIEditorListHandle class]]){
-        //Delete the object from all owning collections
-        enumerator = [[plugin collectionsArray] objectEnumerator];
-        while((collection = [enumerator nextObject])){
-            if([collection includeInOwnershipColumn]){
-                AIEditorListHandle	*handle;
+            //Get the instance of the object on this collection
+            if(!isGroup){
+                object = [plugin handleNamed:[inObject UID] onCollection:collection];
+            }else{
+                object = [plugin groupNamed:[inObject UID] onCollection:collection];
+            }
 
-                handle = [plugin handleNamed:[inObject UID] onCollection:collection];
-                if(handle){ //Remove the handle
-                    [plugin deleteObject:handle fromCollection:collection];
-                }
+            //Remove the object
+            if(object){
+                [plugin deleteObject:object fromCollection:collection];
             }
         }
+    }
 
-    }else{
-
-        
-    }    
-    
 }
 
 //Rename an existing object
 - (void)renameObject:(AIEditorListObject *)inObject to:(NSString *)newName
 {
+    BOOL			isGroup = [inObject isKindOfClass:[AIEditorListGroup class]];
+    NSEnumerator		*enumerator;
+    id <AIEditorCollection>	collection;
+
+    //Rename the object on all owning collections
+    enumerator = [[plugin collectionsArray] objectEnumerator];
+    while((collection = [enumerator nextObject])){
+        if([collection includeInOwnershipColumn]){
+            AIEditorListObject	*object;
+
+            //Get the instance of the object on this collection
+            if(!isGroup){
+                object = [plugin handleNamed:[inObject UID] onCollection:collection];
+            }else{
+                object = [plugin groupNamed:[inObject UID] onCollection:collection];
+            }
+
+            //Rename the object
+            if(object){
+                [plugin renameObject:object onCollection:collection to:newName];
+            }
+        }
+    }
 }
 
 //Move an existing object
 - (void)moveObject:(AIEditorListObject *)inObject toGroup:(AIEditorListGroup *)inGroup
 {
+    BOOL			isGroup = [inObject isKindOfClass:[AIEditorListGroup class]];
+    NSString			*groupName = [inGroup UID];
+    NSEnumerator		*enumerator;
+    id <AIEditorCollection>	collection;
+    AIEditorListObject		*object;
+    AIEditorListGroup		*group;
+
+    //Move the object on all owning collections
+    enumerator = [[plugin collectionsArray] objectEnumerator];
+    while((collection = [enumerator nextObject])){
+        if([collection includeInOwnershipColumn]){
+            //Get the instance of the object on this collection
+            if(!isGroup){
+                object = [plugin handleNamed:[inObject UID] onCollection:collection];
+            }else{
+                object = [plugin groupNamed:groupName onCollection:collection];
+            }
+
+            //Get a local instance of the containing group
+            group = [plugin groupNamed:groupName onCollection:collection];
+            if(!group){ //If the group doesn't exist, create it
+                group = [plugin createGroupNamed:groupName onCollection:collection temporary:NO];
+            }
+
+            //Move the object
+            if(object){
+                [plugin moveObject:object fromCollection:collection toGroup:group collection:collection];
+            }
+        }
+    }
+
+    //Move the object on our list (to avoid regeneration of our editor list group)
+    object = [plugin handleNamed:[inObject UID] onCollection:self];
+    group = [plugin groupNamed:groupName onCollection:self];
+
+    [object retain];
+    [[object containingGroup] removeObject:object];
+    [group addObject:object];
+    [object release];
+
 }
 
 
