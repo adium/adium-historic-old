@@ -3732,6 +3732,7 @@
 				3420E6620611D80100AE67E3,
 				4B0DB3AE06122B94004F47D9,
 				34D5B281061263B300B98336,
+				9E6417070613C55D006AF387,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4351,6 +4352,7 @@
 				3420E6630611D80100AE67E3,
 				4B0DB3AF06122B94004F47D9,
 				34D5B262061260AE00B98336,
+				9E6417080613C55D006AF387,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8895,6 +8897,7 @@
 		};
 		4B4F5B29042D63DC00A8010A = {
 			children = (
+				9E6417090613C564006AF387,
 				83DB8F21061145C400A5C28C,
 			);
 			isa = PBXGroup;
@@ -16763,8 +16766,8 @@
 //834
 		83DB8F21061145C400A5C28C = {
 			children = (
-				83DB8F230611460E00A5C28C,
 				83DB8F220611460E00A5C28C,
+				83DB8F230611460E00A5C28C,
 				83DB8F240611460E00A5C28C,
 			);
 			isa = PBXGroup;
@@ -17979,6 +17982,46 @@
 			isa = PBXGroup;
 			name = "Contact Counting Display";
 			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E6417050613C55C006AF387 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CBURLHandlingPlugin.h;
+			path = "Plugins/URL Handling/CBURLHandlingPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E6417060613C55C006AF387 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CBURLHandlingPlugin.m;
+			path = "Plugins/URL Handling/CBURLHandlingPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E6417070613C55D006AF387 = {
+			fileRef = 9E6417050613C55C006AF387;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E6417080613C55D006AF387 = {
+			fileRef = 9E6417060613C55C006AF387;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E6417090613C564006AF387 = {
+			children = (
+				9E6417050613C55C006AF387,
+				9E6417060613C55C006AF387,
+			);
+			isa = PBXGroup;
+			name = "URL Handling";
 			refType = 4;
 			sourceTree = "<group>";
 		};
