@@ -8,24 +8,36 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 679 $ $Date: 2004/04/21 01:30:35 $ -->
+<!--$Rev: 683 $ $Date: 2004/04/23 04:26:27 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
-String afterDate, beforeDate, from_sn, to_sn, contains_sn, hl;
+
+String dateStart, dateFinish, from_sn, to_sn, contains_sn, hl;
 boolean showDisplay = true, showForm = false, showConcurrentUsers = false, simpleViewStyle = false;
-
 Date today = new Date(System.currentTimeMillis());
+int chat_id = 0;
 
-beforeDate = request.getParameter("before");
-afterDate = request.getParameter("after");
+String formURL = new String("saveForm.jsp?action=saveChat.jsp");
+
+dateFinish = request.getParameter("finish");
+dateStart = request.getParameter("start");
 from_sn = request.getParameter("from");
 to_sn = request.getParameter("to");
 contains_sn = request.getParameter("contains");
 String screennameDisplay = request.getParameter("screen_or_display");
 String viewStyle = request.getParameter("viewstyle");
+
+String title = new String("");
+String notes = new String("");
+
+try {
+    chat_id = Integer.parseInt(request.getParameter("chat_id"));
+} catch (NumberFormatException e) {
+    chat_id = 0;
+}
 
 showForm = Boolean.valueOf(request.getParameter("form")).booleanValue();
 
@@ -35,20 +47,37 @@ showConcurrentUsers =
 hl = request.getParameter("hl");
 ArrayList hlWords = new ArrayList();
 
-if (beforeDate != null && (beforeDate.equals("") || beforeDate.equals("null"))) {
-    beforeDate = null;
+if (dateFinish != null && (dateFinish.equals("") || dateFinish.equals("null"))) {
+    dateFinish = null;
+} else if (dateFinish != null) {
+    formURL += "&dateFinish=" + dateFinish;
 }
-if (afterDate != null && (afterDate.equals("") || afterDate.startsWith("null"))) {
-    afterDate = null;
+
+
+if (dateStart != null && (dateStart.equals("") || dateStart.startsWith("null"))) {
+    dateStart = null;
+} else if (dateStart != null) {
+    formURL += "&dateStart=" + dateStart;
+} else if (dateStart == null ) {
+    formURL += "&dateStart=" + today.toString();
 }
+
 if (from_sn != null && from_sn.equals("")) {
     from_sn = null;
+} else if(from_sn != null) {
+    formURL += "&sender=" + from_sn;
 }
+
 if (to_sn != null && to_sn.equals("")) {
     to_sn = null;
+} else if(to_sn != null ) {
+    formURL += "&recipient=" + to_sn;
 }
+
 if (contains_sn != null && contains_sn.equals("")) {
     contains_sn = null;
+} else if(contains_sn != null) {
+    formURL += "&single_sn=" + contains_sn;
 }
 
 if (screennameDisplay == null || screennameDisplay.equals("display")) {
@@ -87,8 +116,33 @@ String hlColor[] = {"#ff6","#a0ffff", "#9f9", "#f99", "#f69"};
         </style>
     </head>
     <body bgcolor="#ffffff">
-<% if (!showForm) { 
+<%
+PreparedStatement pstmt = null;
+ResultSet rset = null;
+
+try {
+
+    if(chat_id != 0) {
+        pstmt = conn.prepareStatement("select title, notes, sent_sn, received_sn, single_sn, date_start, date_finish from adium.saved_chats where chat_id = ?");
+
+        pstmt.setInt(1, chat_id);
+
+        rset = pstmt.executeQuery();
+        
+        if(rset != null && rset.next()) {
+            from_sn = rset.getString("sent_sn");
+            to_sn = rset.getString("received_sn");
+            contains_sn = rset.getString("single_sn");
+            dateFinish = rset.getString("date_finish");
+            dateStart = rset.getString("date_start");
+            title = rset.getString("title");
+            notes = rset.getString("notes");
+        }
+    }
+
+    if (!showForm) { 
 %>
+        <table border="0"><tr><td>
         <form action="index.jsp" method="GET">
             <fieldset>
                 <legend>View by Date</legend>
@@ -103,14 +157,14 @@ String hlColor[] = {"#ff6","#a0ffff", "#9f9", "#f99", "#f69"};
                 <input type="text" name="contains" <% if (contains_sn != null)
                 out.print("value=\"" + contains_sn + "\""); %> id = "contains"
                 /><br />
-                <label for="after_date">Date Range: </label>
-                <input type="text" name="after" <% if (afterDate != null)
-                out.print("value=\"" + afterDate + "\""); else
+                <label for="start_date">Date Range: </label>
+                <input type="text" name="start" <% if (dateStart != null)
+                out.print("value=\"" + dateStart + "\""); else
                 out.print("value=\"" + today.toString() + " 00:00:00\"");%>
-                id="after_date" />
-                <label for="before_date">&nbsp;--&nbsp;</label>
-                <input type="text" name="before" <% if (beforeDate != null)
-                out.print("value=\"" + beforeDate + "\""); %> id="before_date" />
+                id="start_date" />
+                <label for="finish_date">&nbsp;--&nbsp;</label>
+                <input type="text" name="finish" <% if (dateFinish != null)
+                out.print("value=\"" + dateFinish + "\""); %> id="finish_date" />
                 &nbsp;(YYYY-MM-DD hh:mm:ss)<br />
             </fieldset>
             <fieldset>
@@ -150,6 +204,31 @@ String hlColor[] = {"#ff6","#a0ffff", "#9f9", "#f99", "#f69"};
             <input type="reset">
             <input type="submit">
         </form>
+        </td>
+        <td>
+            <form action="index.jsp" method="post">
+                <select name="chat_id">
+                    <option value="0" selected="yes">Please Choose</option>
+<%
+pstmt = conn.prepareStatement("select chat_id, title from adium.saved_chats");
+
+rset = pstmt.executeQuery();
+
+while(rset.next()) {
+    out.println("<option value=\"" + rset.getString("chat_id") + "\">" +
+        rset.getString("title") + "</option>");
+}
+%>
+                </select>
+                <input type="submit">
+            </form>
+            <a href="#"
+                onClick="window.open('<%= formURL %>', 'Save Search', 'width=275,height=225')">
+                Save Chat
+            </a>
+        </td>
+        </tr>
+        </table>
         <%
         if (hl != null) {
             out.print("<table border=\"1\"><tr><td>");
@@ -162,21 +241,20 @@ String hlColor[] = {"#ff6","#a0ffff", "#9f9", "#f99", "#f69"};
             out.print("</td></tr></table>");
         }
         %>
+        <h2><%= title %></h2>
+        <p><%= notes %></p><br />
         <a href="search.jsp">[Search Logs]</a>&nbsp;&nbsp;
         <a href="statistics.jsp">[Statistics]</a><br /><br />
         <%
     }
-PreparedStatement pstmt = null;
-ResultSet rset = null;
-
-try {
+    
     String commandArray[] = new String[10];
     int aryCount = 0;
     boolean unconstrained = false;
 
     String queryText = "select scramble(sender_sn) as sender_sn, "+
     " scramble(recipient_sn) as recipient_sn, " + 
-    " message, message_date, message_id";
+    " message, message_date, message_id, title, notes";
     if(showDisplay) {
        queryText += ", scramble(sender_display) as sender_display, "+
            " scramble(recipient_display) as recipient_display "
@@ -185,24 +263,26 @@ try {
         queryText += " from adium.simple_message_v ";
     }
 
+    queryText += " natural left join adium.message_notes notes ";
+    
     String concurrentWhereClause = " where ";
 
-    if (afterDate == null) {
+    if (dateStart == null) {
         queryText += "where message_date > 'now'::date ";
         concurrentWhereClause += " message_date > 'now'::date ";
     } else {
         queryText += "where message_date > ?::timestamp ";
         concurrentWhereClause += " message_date > ?::timestamp ";
-        commandArray[aryCount++] = new String(afterDate);
-        if(beforeDate == null) {
+        commandArray[aryCount++] = new String(dateStart);
+        if(dateFinish == null) {
             unconstrained = true;
         }
     }
 
-    if (beforeDate != null) {
+    if (dateFinish != null) {
         queryText += " and message_date < ?::timestamp";
         concurrentWhereClause += "and message_date < ?::timestamp ";
-        commandArray[aryCount++] = new String(beforeDate);
+        commandArray[aryCount++] = new String(dateFinish);
     }
 
     if (from_sn != null && to_sn != null) {
@@ -259,17 +339,17 @@ try {
 
         pstmt = conn.prepareStatement(query);
 
-        if(afterDate != null && beforeDate != null) {
-            pstmt.setString(1, afterDate);
-            pstmt.setString(2, beforeDate);
-            pstmt.setString(3, afterDate);
-            pstmt.setString(4, beforeDate);
-        } else if(afterDate == null && beforeDate != null) {
-            pstmt.setString(1, beforeDate);
-            pstmt.setString(2, beforeDate);
+        if(dateStart != null && dateFinish != null) {
+            pstmt.setString(1, dateStart);
+            pstmt.setString(2, dateFinish);
+            pstmt.setString(3, dateStart);
+            pstmt.setString(4, dateFinish);
+        } else if(dateStart == null && dateFinish != null) {
+            pstmt.setString(1, dateFinish);
+            pstmt.setString(2, dateFinish);
         } else if(unconstrained) {
-            pstmt.setString(1, afterDate);
-            pstmt.setString(2, afterDate);
+            pstmt.setString(1, dateStart);
+            pstmt.setString(2, dateStart);
         }
 
         rset = pstmt.executeQuery();
@@ -279,24 +359,26 @@ try {
             if (rset.getRow() % 5 == 0) {
                 out.print("<br />");
             }
-            out.print("<a href=\"index.jsp?after=" + afterDate + 
-            "&before=" + beforeDate + "&contains=" + 
+            out.print("<a href=\"index.jsp?start=" + dateStart + 
+            "&finish=" + dateFinish + "&contains=" + 
             rset.getString("username") + "\">"+
             rset.getString("username") + "</a>&nbsp;|&nbsp;");
         }
-        out.print("<a href=\"index.jsp?after=" + afterDate +
-            "&before=" + beforeDate + "\"><i>All</i></a>");
+        out.print("<a href=\"index.jsp?start=" + dateStart +
+            "&finish=" + dateFinish + "\"><i>All</i></a>");
         out.println("</div><br />");
     }
     pstmt = conn.prepareStatement(queryText);
+    
     //out.print(queryText + "<br />");
+    
     for(int i = 0; i < aryCount; i++) {
       //  out.print(commandArray[i] + "<br />");
         pstmt.setString(i + 1, commandArray[i]);
     }
-    
+
     rset = pstmt.executeQuery();
-    
+
     /*
      * Used to print query plans.
     out.println("<pre>");
@@ -311,6 +393,7 @@ try {
     } else {
         out.print("<table border=\"0\">");
     }
+
     ArrayList userArray = new java.util.ArrayList();
     String colorArray[] =
     {"red","blue","green","purple","black","orange", "teal"};
@@ -328,7 +411,7 @@ try {
             out.print("<td align=\"center\" bgcolor=\"teal\"" +
             " background=\"images/transp-change.png\" width=\"150\">");
             out.print("<font color=\"white\">" + currentDate.toString());
-            out.print("</font></td>");
+            out.print("</font></td><td></td>");
             out.print("</tr>");
         }
 
@@ -397,12 +480,12 @@ try {
         if(simpleViewStyle) {
             out.print(rset.getTime("message_date") + " ");
         }
-        
+
         out.print("<a href=\"index.jsp?from=" +
         rset.getString("sender_sn") + 
         "&to=" + rset.getString("recipient_sn") + 
-        "&after=" + afterDate +
-        "&before=" + beforeDate + "#" + rset.getInt("message_id") + "\" ");
+        "&start=" + dateStart +
+        "&finish=" + dateFinish + "#" + rset.getInt("message_id") + "\" ");
         
         if(!showDisplay) {
             out.print("title=\"" + rset.getString("sender_sn"));
@@ -435,6 +518,18 @@ try {
                 cellColor + "\" width=\"150\">");
             out.print(rset.getTime("message_date"));
             out.print("</td>\n");
+            if(rset.getString("notes") != null) {
+                out.println("<td rowspan=\"2\" width=\"150\" bgcolor=\"#ffff99\">" + 
+                    "<font size=\"2\"><b>" + rset.getString("title") + 
+                    "</b><br />" + rset.getString("notes") + "</font></td>");
+            } else {
+                out.println("<td rowspan=\"2\"><a href=\"#\" " +
+                    "onClick=\"window.open('saveForm.jsp?action=saveNote.jsp&message_id=" +
+                    rset.getString("message_id") + "', 'Add Note', "+
+                    "'width=275,height=225')\">");
+                out.println("Add Note");
+                out.println("</a></td>");
+            }
             out.print("</tr><tr>");
             out.print("<td colspan=\"2\" bgcolor=\"" + cellColor + "\">");
         }
