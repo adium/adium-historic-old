@@ -13,7 +13,7 @@
 #import "SUSpeaker.h"
 
 @interface AIContactAlertsPlugin(PRIVATE)
-
+- (void)processEventActionArrayForObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys;
 @end
 
 @implementation AIContactAlertsPlugin
@@ -58,30 +58,40 @@
 
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
-if (!silent) //We do things.  If silent, don't do them.
+    if (!silent) //We do things.  If silent, don't do them.
+    {
+        [self processEventActionArrayForObject:inObject keys:inModifiedKeys];
+        [self processEventActionArrayForObject:[inObject containingGroup] keys:inModifiedKeys]; //process the group's array, as well
+    }
+    return nil; //we don't change any attributes
+}
+
+- (void)processEventActionArrayForObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
 {
-    NSMutableArray * eventActionArray =  [[[[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject] mutableCopy] autorelease];
+    NSMutableArray * eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject];
+    
     NSEnumerator * actionsEnumerator;
     NSDictionary * actionDict;
     NSString * event;
     int status, event_status;
     BOOL status_matches;
 
-    [eventActionArray addObjectsFromArray:[[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:[inObject containingGroup]]]; //get the group array, as well
-    
+
     actionsEnumerator = [eventActionArray objectEnumerator];
     while(actionDict = [actionsEnumerator nextObject])
     {
         event = [actionDict objectForKey:KEY_EVENT_NOTIFICATION];
- //       NSLog(@"modified keys are %@; the event is %@; the statusArrayForKey is %@; giv is %i and looking for %i",inModifiedKeys, event, [inObject statusArrayForKey:event], [[inObject statusArrayForKey:event] greatestIntegerValue],  [[actionDict objectForKey:KEY_EVENT_STATUS] intValue]);
+        //NSLog(@"modified keys are %@; the event is %@; the statusArrayForKey is %@; giv is %i and looking for %i",inModifiedKeys, event, [inObject statusArrayForKey:event], [[inObject statusArrayForKey:event] greatestIntegerValue],  [[actionDict objectForKey:KEY_EVENT_STATUS] intValue]);
 
         status = [[inObject statusArrayForKey:event] greatestIntegerValue];
         event_status = [[actionDict objectForKey:KEY_EVENT_STATUS] intValue];
         status_matches = (status && event_status) || (!status && !event_status); //XOR
         if ( status_matches && [inModifiedKeys containsObject:event]) { //actions to take when an event is matched go here
-            
+
             NSString * action = [actionDict objectForKey:KEY_EVENT_ACTION];
             NSString * details = [actionDict objectForKey:KEY_EVENT_DETAILS];
+            NSString * delete = [actionDict objectForKey:KEY_EVENT_DELETE];
+            
             if ([action compare:@"Sound"] == 0) {
                 NSString	*soundPath = details;
                 if(soundPath != nil && [soundPath length] != 0) {
@@ -92,30 +102,30 @@ if (!silent) //We do things.  If silent, don't do them.
             else if ([action compare:@"Message"] == 0) { //message
                 if ([[inObject statusArrayForKey:@"Online"] greatestIntegerValue]) //must still be online to prevent an error message
                 {
-                NSMutableArray * onlineAccounts = [NSMutableArray array];
-                NSEnumerator * accountEnumerator;
-                AIAccount * account;
-                AIContentMessage * responseContent;
-                
-                accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
-                while(account = [accountEnumerator nextObject]){
-                    if ([[account statusObjectForKey:@"Status"] intValue] == STATUS_ONLINE)
-                    {
-                        [onlineAccounts addObject:account];
-                    }
-                }
-                account = [onlineAccounts objectAtIndex:0];
+                    NSMutableArray * onlineAccounts = [NSMutableArray array];
+                    NSEnumerator * accountEnumerator;
+                    AIAccount * account;
+                    AIContentMessage * responseContent;
 
-                NSAttributedString  *message = [[NSAttributedString alloc] initWithString:details];
-                 responseContent = [AIContentMessage messageInChat:[[owner contentController] chatWithListObject:inObject onAccount:account]
-                                                       withSource:account
-                                                      destination:inObject
-                                                             date:nil
-                                                          message:message];
-                [[owner contentController] sendContentObject:responseContent];
+                    accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
+                    while(account = [accountEnumerator nextObject]){
+                        if ([[account statusObjectForKey:@"Status"] intValue] == STATUS_ONLINE)
+                        {
+                            [onlineAccounts addObject:account];
+                        }
+                    }
+                    account = [onlineAccounts objectAtIndex:0];
+
+                    NSAttributedString  *message = [[NSAttributedString alloc] initWithString:details];
+                    responseContent = [AIContentMessage messageInChat:[[owner contentController] chatWithListObject:inObject onAccount:account]
+                                                           withSource:account
+                                                          destination:inObject
+                                                                 date:nil
+                                                              message:message];
+                    [[owner contentController] sendContentObject:responseContent];
                 }
             }
-            
+
             else if ([action compare:@"Alert"] == 0) {
                 NSAttributedString *message = [[NSAttributedString alloc] initWithString:details];
                 NSString *title = [[NSString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", [inObject displayName], [actionDict objectForKey:KEY_EVENT_DISPLAYNAME]]];
@@ -132,10 +142,16 @@ if (!silent) //We do things.  If silent, don't do them.
             else if ([action compare:@"Speak"] == 0) {
                 [speaker speakText:details]; //uses Raphael Sebbe's SpeechUtilities.framework
             }
+
+
+            //after all tests
+            if ([delete compare:@"YES"] == 0) //delete the action from the array
+            {
+                [eventActionArray removeObject:actionDict];
+                [[owner preferenceController] setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject];
+            }
         }
     }
-}
-    return nil; //we don't change any attributes
 }
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem

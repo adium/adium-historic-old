@@ -19,6 +19,7 @@
 #define KEY_EVENT_DETAILS		@"Details"
 #define KEY_EVENT_STATUS		@"Status"
 #define KEY_EVENT_DISPLAYNAME		@"Display Name"
+#define KEY_EVENT_DELETE		@"Delete"
 
 #define PREF_GROUP_SOUNDS		@"Sounds"
 

@@ -11,14 +11,16 @@
                 actionSendMessage = id; 
                 closeWindow = id; 
                 deleteEventAction = id; 
-                endEditing = id; 
                 newEvent = id; 
+                oneTimeEvent = id; 
+                selectBehavior = id; 
                 selectSound = id; 
             }; 
             CLASS = AIContactAlertsWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_delete" = NSButton; 
+                "button_oneTime" = NSButton; 
                 "popUp_actionDetails" = NSPopUpButton; 
                 "popUp_addEvent" = NSPopUpButton; 
                 "tableView_actions" = AIAlternatingRowTableView; 

@@ -113,15 +113,21 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [tableView_actions setDataSource:self];
 
     [popUp_actionDetails setEnabled:NO];
+    [popUp_actionDetails removeAllItems];
     [textField_actionDetails setEnabled:NO];
     [textField_actionDetails setDelegate:self];
+    [button_delete setEnabled:NO];
+    [button_oneTime setEnabled:NO];
+
+    [textField_description_popUp setStringValue:@""];
+    [textField_description_textField setStringValue:@""];
 
     eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
 
     if(eventActionArray) //saved array
         if ([eventActionArray count]) [tableView_actions selectRow:0 byExtendingSelection:NO];
     else
-        eventActionArray = [[NSMutableArray alloc] init];
+        eventActionArray = [[NSMutableArray alloc] init]; }
    
     //Update the outline view
     [tableView_actions reloadData];
@@ -231,6 +237,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [actionDict setObject:[[sender representedObject] objectForKey:KEY_EVENT_DISPLAYNAME] forKey:KEY_EVENT_DISPLAYNAME];
     [actionDict setObject:event forKey:KEY_EVENT_NOTIFICATION];
     [actionDict setObject:@"Sound" forKey:KEY_EVENT_ACTION]; //Sound is default action
+    [actionDict setObject:@"NO" forKey:KEY_EVENT_DELETE]; //default to recurring events
     [eventActionArray addObject:actionDict];
 
     //Save event preferences
@@ -260,6 +267,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [textField_description_textField setStringValue:instructions];
     [textField_description_popUp setStringValue:@""];
     [popUp_actionDetails setEnabled:NO];
+    [popUp_actionDetails removeAllItems];
     [textField_actionDetails setEnabled:YES];
 
     [textField_actionDetails setStringValue:(details ? details : @"")];
@@ -435,8 +443,26 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [selectedActionDict setObject:behavior forKey:KEY_EVENT_DETAILS];
     [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
 
-    //Save event sound preferences
+    //Save event preferences
     [self saveEventActionArray];
+}
+
+- (IBAction)oneTimeEvent:(id)sender
+{
+    int row = [tableView_actions selectedRow];
+    if (row != -1)
+    {
+        NSMutableDictionary	*selectedActionDict;
+
+        selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
+        if ([button_oneTime state] == NSOnState)
+            [selectedActionDict setObject:@"YES" forKey:KEY_EVENT_DELETE];
+        else
+            [selectedActionDict setObject:@"NO" forKey:KEY_EVENT_DELETE];
+        [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+    
+        [self saveEventActionArray];
+    }
 }
 
 //TableView datasource --------------------------------------------------------
@@ -515,11 +541,28 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotfication
 {
     int row = [tableView_actions selectedRow];
-    if (row != -1)
+    if (row != -1) //a row is selected
     {
-        NSString *action = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_ACTION];
+        NSDictionary * selectedActionDict = [eventActionArray objectAtIndex:row]; 
+        NSString *action = [selectedActionDict objectForKey:KEY_EVENT_ACTION];
+        NSString *delete = [selectedActionDict objectForKey:KEY_EVENT_DELETE];
         [actionMenu performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]];
+        if ([delete compare:@"YES"] == 0)
+            [button_oneTime setState:NSOnState];
+        else
+            [button_oneTime setState:NSOffState];
     }
+    else //no selection
+    {
+        [popUp_actionDetails setEnabled:NO];
+        [popUp_actionDetails removeAllItems];
+        [textField_actionDetails setEnabled:NO];
+
+        [textField_description_popUp setStringValue:@""];
+        [textField_description_textField setStringValue:@""];
+    }
+    [button_delete setEnabled:(row != -1)]; //Enable/disable the delete button correctly
+    [button_oneTime setEnabled:(row != -1)];
 }
 
 //editing is over
@@ -536,8 +579,6 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
 - (BOOL)shouldSelectRow:(int)inRow
 {
-
-    [button_delete setEnabled:(inRow != -1)]; //Enable/disable the delete button correctly
 
     return(YES);
 }
