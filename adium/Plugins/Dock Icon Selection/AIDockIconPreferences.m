@@ -91,13 +91,13 @@
 {
     //Load our preference view nib
     if(!view_prefView){
-        //Load our icons
-        [self _buildIconArray];
-
         //Load and configure our view
         [NSBundle loadNibNamed:DOCK_ICON_SELECTION_PREF_NIB owner:self];
         [self configureView];
 
+        //Load our icons
+        [self _buildIconArray];
+        
         //Start animating
         [self _startAnimating];
     }
