@@ -87,7 +87,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 	
 	if( [contact isKindOfClass:[AIMetaContact class]] ) {
 #warning Dave: This fails to select anyone for some reason
-		[menu_contacts selectItemWithRepresentedObject:[(AIMetaContact *)contact preferredContactWithServiceID:service]];
+		[menu_contacts selectItemWithRepresentedObject:[(AIMetaContact *)contact preferredContactWithService:service]];
 	} else {
 		[menu_contacts selectItemAtIndex:0];
 	}
