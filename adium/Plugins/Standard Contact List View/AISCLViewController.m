@@ -335,12 +335,21 @@
 
     //Observe scrollview frame changes (so we can update our cursor tracking rect)
     if(inSuperview && [inSuperview superview]){
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSViewFrameDidChangeNotification object:[inSuperview superview]];
+        [[NSNotificationCenter defaultCenter] addObserver:self 
+												 selector:@selector(frameDidChange:)
+													 name:NSViewFrameDidChangeNotification 
+												   object:[inSuperview superview]];
     }
     
     //Observe the window entering and leaving key (for tooltips)
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_hideTooltip) name:NSWindowDidResignKeyNotification object:[inSuperview window]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSWindowDidBecomeKeyNotification object:[inSuperview window]]; //Force a frame update when window becomes key
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(_hideTooltip)
+												 name:NSWindowDidResignKeyNotification 
+											   object:[inSuperview window]];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(frameDidChange:) 
+												 name:NSWindowDidBecomeKeyNotification 
+											   object:[inSuperview window]]; //Force a frame update when window becomes key
     
     //Configure shadow drawing
 	[self _configureTransparencyAndShadows];
@@ -641,7 +650,6 @@
         [self _showTooltipAtPoint:[NSEvent mouseLocation]]; //Show the tooltip
         [tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil; //Stop the tooltip timer
 		
-		
 		//Start our mouse location timer
 		tooltipMouseLocationTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/TOOL_TIP_CHECK_INTERVAL)
 																	  target:self
@@ -680,7 +688,6 @@
 	[tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil; //Stop the tooltip timer
 	
 	[self _showTooltipAtPoint:NSMakePoint(0,0)];
-	tooltipCount = 0;
 }
 
 //Show the correctly positioned tooltip (Pass a screen point)
@@ -706,7 +713,7 @@
             [[adium interfaceController] showTooltipForListObject:hoveredObject atScreenPoint:screenPoint onWindow:theWindow];
   //      }
     }else{
-        [[adium interfaceController] showTooltipForListObject:nil atScreenPoint:NSMakePoint(0,0) onWindow:[contactListView window]];
+        [[adium interfaceController] showTooltipForListObject:nil atScreenPoint:NSMakePoint(0,0) onWindow:nil];
     }
 }
 
