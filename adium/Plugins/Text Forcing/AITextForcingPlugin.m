@@ -32,19 +32,17 @@
     force_desiredFont = nil;
     force_desiredTextColor = nil;
     force_desiredBackgroundColor = nil;
-
-    //Register our default preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TEXT_FORCING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_TEXT_FORCING];
-    [self preferencesChanged:nil];
     
     //Our preference view
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TEXT_FORCING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_TEXT_FORCING];
     preferences = [[AITextForcingPreferences preferencePane] retain];
 
     //Register our content filter
 	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterIncoming];
     
-    //Observe
+    //Observe preference changes
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
 }
 
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
@@ -75,7 +73,7 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_TEXT_FORCING]){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_TEXT_FORCING]){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_TEXT_FORCING];
 
         //Release the old values..
@@ -93,12 +91,9 @@
         force_desiredBackgroundColor = [[[prefDict objectForKey:KEY_FORCE_DESIRED_BACKGROUND_COLOR] representedColor] retain];
 		
 		//If a preference load fails for some reason, don't try to make that formatting substitution
-		if (!force_desiredFont)
-			forceFont = nil;
-		if (!force_desiredTextColor)
-			forceText = nil;
-		if (!force_desiredBackgroundColor)
-			forceBackground = nil;
+		if(!force_desiredFont) forceFont = NO;
+		if(!force_desiredTextColor) forceText = NO;
+		if(!force_desiredBackgroundColor) forceBackground = NO;
     }
 }
 
