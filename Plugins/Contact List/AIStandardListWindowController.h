@@ -10,6 +10,8 @@
 
 @interface AIStandardListWindowController : AIListWindowController {
 	NSDictionary		*toolbarItems;
+
+	IBOutlet		NSPopUpButton	*popUp_state;
 }
 
 @end
