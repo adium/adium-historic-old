@@ -58,17 +58,14 @@ typedef enum
                                                 range:NSMakeRange(0,[localizedDateFormatString length])];
     } else if (![NSApp isOnPantherOrBetter]){
         //Jaguar doesn't usually include the " %p" in the localized time string for 12-hour time.  This is dumb.
-        NSLog(@"%@",localizedDateFormatString);
         NSRange range = [localizedDateFormatString rangeOfString:@"I"
                                                          options:NSLiteralSearch
                                                            range:NSMakeRange(0,[localizedDateFormatString length])];
         if (range.location != NSNotFound) {
-            NSLog(@"12hour time enabled");
             range = [localizedDateFormatString rangeOfString:@"%p"
                                                      options:NSLiteralSearch
                                                        range:NSMakeRange(0,[localizedDateFormatString length])];
             if (range.location == NSNotFound) {
-                NSLog(@"append %p");
                 [localizedDateFormatString appendString:@" %p"];
             }
         }
