@@ -1814,11 +1814,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		AIListObject *listObject = [notification object];
 		
 		//If the notification object is a listContact belonging to this account, update the serverside information
-		if (account && 
-			[(AIListContact *)listObject account] == self &&
-			[self shouldSetAliasesServerside] &&
-			[listObject isKindOfClass:[AIListContact class]] &&
-			[[userInfo objectForKey:@"Key"] isEqualToString:@"Alias"]){
+		if ((account != nil) && 
+			([self shouldSetAliasesServerside]) &&
+			([listObject isKindOfClass:[AIListContact class]]) &&
+			([(AIListContact *)listObject account] == self) &&
+			([[userInfo objectForKey:@"Key"] isEqualToString:@"Alias"])){
 			
 			NSString *alias = [listObject preferenceForKey:@"Alias"
 													 group:PREF_GROUP_ALIASES 
