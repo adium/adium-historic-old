@@ -88,29 +88,29 @@
 	AIChat			*chat;
 	NSMenu			*menu_chatMenu = [[NSMenu alloc] initWithTitle:@""];
 	NSDictionary	*serviceDict;
-	NSString		*serviceID;
+	AIService		*service;
 	int i;
 	
 	if( contact && ![contact isKindOfClass:[AIListGroup class]] ) {
 				
 		// Get a dictionary of (service, contacts in that service)
-		if( [contact isKindOfClass:[AIMetaContact class]] )
+		if([contact isKindOfClass:[AIMetaContact class]])
 			serviceDict = [contact dictionaryOfServicesAndListContacts];
 		else
-			serviceDict = [NSDictionary dictionaryWithObject:contact forKey:[contact serviceID]];
+			serviceDict = [NSDictionary dictionaryWithObject:contact forKey:[[contact service] serviceID]];
 		
 		NSEnumerator *enumerator = [serviceDict keyEnumerator];
 		
 		[menu_chatMenu setMenuChangedMessagesEnabled:NO];
 		
-		while( serviceID = [enumerator nextObject] ) {
+		while( service = [enumerator nextObject] ) {
 						
 			// Loop through all chats
 			for( i = 0; i < [openChats count]; i++ ) {
 				chat = [openChats objectAtIndex:i];
 				
 				// Is this the same service as this contact?				
-				if( [[[[[chat account] service] handleServiceType] identifier] isEqualToString:serviceID] ) {
+				if( [[chat account] service] == service ) {
 					
 					NSLog(@"#   Considering chat %@. Name: %@. Participants: %d",chat,[chat name],[[chat participatingListObjects] count]);
 					// Is this a group chat?
@@ -124,7 +124,7 @@
 																			  target:self
 																			  action:@selector(inviteToChat:)
 																	   keyEquivalent:@""];
-							[chatItem setRepresentedObject:[NSArray arrayWithObjects:chat,contact,serviceID,nil]];
+							[chatItem setRepresentedObject:[NSArray arrayWithObjects:chat,contact,service,nil]];
 							[menu_chatMenu addItem:chatItem];
 							[chatItem release];
 						}
