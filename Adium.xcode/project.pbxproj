@@ -312,24 +312,6 @@
 //342
 //343
 //344
-		340042CF05AA98C00047226F = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = GBiTunerPlugin.m;
-			path = "Plugins/iTunes Integration/GBiTunerPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		340042D005AA98C00047226F = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = GBiTunerPlugin.h;
-			path = "Plugins/iTunes Integration/GBiTunerPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		3401925B06406D9200192BC4 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -1592,6 +1574,123 @@
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		343EAB8306EF857F001CDAFF = {
+			children = (
+				343EAB8606EF859C001CDAFF,
+				343EAB8706EF859C001CDAFF,
+				343EAB8806EF859C001CDAFF,
+				343EAB8906EF859C001CDAFF,
+				343EAB8A06EF859C001CDAFF,
+			);
+			isa = PBXGroup;
+			name = "Applescript Contact Alert";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EAB8606EF859C001CDAFF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESPanelApplescriptDetailPane.m;
+			path = "Plugins/Applescript Contact Alert/ESPanelApplescriptDetailPane.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EAB8706EF859C001CDAFF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESApplescriptContactAlertPlugin.h;
+			path = "Plugins/Applescript Contact Alert/ESApplescriptContactAlertPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EAB8806EF859C001CDAFF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESApplescriptContactAlertPlugin.m;
+			path = "Plugins/Applescript Contact Alert/ESApplescriptContactAlertPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EAB8906EF859C001CDAFF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESPanelApplescriptDetailPane.h;
+			path = "Plugins/Applescript Contact Alert/ESPanelApplescriptDetailPane.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EAB8A06EF859C001CDAFF = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ApplescriptContactAlert.nib;
+			path = "Plugins/Applescript Contact Alert/ApplescriptContactAlert.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EAB8B06EF859C001CDAFF = {
+			fileRef = 343EAB8606EF859C001CDAFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EAB8C06EF859C001CDAFF = {
+			fileRef = 343EAB8706EF859C001CDAFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EAB8D06EF859C001CDAFF = {
+			fileRef = 343EAB8806EF859C001CDAFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EAB8E06EF859C001CDAFF = {
+			fileRef = 343EAB8906EF859C001CDAFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EAB8F06EF859C001CDAFF = {
+			fileRef = 343EAB8A06EF859C001CDAFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EAB9006EF8604001CDAFF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = GBApplescriptFiltersPlugin.h;
+			path = "Plugins/Applescript Filters/GBApplescriptFiltersPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EAB9106EF8604001CDAFF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = GBApplescriptFiltersPlugin.m;
+			path = "Plugins/Applescript Filters/GBApplescriptFiltersPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EAB9206EF8604001CDAFF = {
+			fileRef = 343EAB9006EF8604001CDAFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EAB9306EF8604001CDAFF = {
+			fileRef = 343EAB9106EF8604001CDAFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		3441587A059F8EFC0019246B = {
 			children = (
@@ -4960,7 +5059,6 @@
 				4BD6758D06001E4B0049CAF7,
 				4BD6758F06001E4C0049CAF7,
 				4BD6759106001E4D0049CAF7,
-				4BD675A006001E5C0049CAF7,
 				6E5A43DF061160C60078C342,
 				3420E6600611D80100AE67E3,
 				3420E6620611D80100AE67E3,
@@ -5026,6 +5124,9 @@
 				4B74EFA706CEACC8004007B2,
 				340F423E06D7CB890072E2FA,
 				4BB5CBAA06EDF046009B4517,
+				343EAB8C06EF859C001CDAFF,
+				343EAB8E06EF859C001CDAFF,
+				343EAB9206EF8604001CDAFF,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5349,6 +5450,7 @@
 				4B1AB2C806E1074000FB5EAD,
 				4B1AB2C906E1074000FB5EAD,
 				4B1AB2CA06E1074000FB5EAD,
+				343EAB8F06EF859C001CDAFF,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5555,7 +5657,6 @@
 				4BD6758E06001E4C0049CAF7,
 				4BD6759006001E4D0049CAF7,
 				4BD6759206001E4E0049CAF7,
-				4BD675A106001E5D0049CAF7,
 				6E5A43E0061160C60078C342,
 				3420E6610611D80100AE67E3,
 				3420E6630611D80100AE67E3,
@@ -5621,6 +5722,9 @@
 				4B74ECE506CE637B004007B2,
 				340F423F06D7CB8A0072E2FA,
 				4BB5CBAB06EDF046009B4517,
+				343EAB8B06EF859C001CDAFF,
+				343EAB8D06EF859C001CDAFF,
+				343EAB9306EF8604001CDAFF,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7462,8 +7566,8 @@
 		};
 		34F8A7FA05A8927F00577775 = {
 			children = (
-				340042D005AA98C00047226F,
-				340042CF05AA98C00047226F,
+				343EAB9006EF8604001CDAFF,
+				343EAB9106EF8604001CDAFF,
 			);
 			isa = PBXGroup;
 			name = "Applescript Filters";
@@ -10338,6 +10442,7 @@
 		};
 		4B4F5B29042D63DC00A8010A = {
 			children = (
+				343EAB8306EF857F001CDAFF,
 				9E6417090613C564006AF387,
 				83DB8F21061145C400A5C28C,
 			);
@@ -15692,18 +15797,6 @@
 		};
 		4BD6759F06001E590049CAF7 = {
 			fileRef = 6C60B14B05605A3600CAD137;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD675A006001E5C0049CAF7 = {
-			fileRef = 340042D005AA98C00047226F;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD675A106001E5D0049CAF7 = {
-			fileRef = 340042CF05AA98C00047226F;
 			isa = PBXBuildFile;
 			settings = {
 			};
