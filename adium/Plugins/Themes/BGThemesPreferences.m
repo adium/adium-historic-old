@@ -35,6 +35,11 @@
     [themesList setPlugin:themePlugin];
 }
 
+- (void)viewWillClose
+{
+	[themesList release]; themesList = nil;
+}
+
 -(IBAction)createTheme:(id)sender
 {
     // tell the plugin to create a theme using all the attributes of the create tab
