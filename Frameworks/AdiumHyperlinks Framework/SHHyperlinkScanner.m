@@ -59,6 +59,7 @@ static NSMutableCharacterSet *endSet = nil;
 
     // initialize the buffer (flex automatically switches to the buffer in this function)
     buf = SH_scan_string([inString UTF8String]);
+    fprintf(stderr,"scanning string: \"%s\" in flex",[inString UTF8String]);
 
     // call flex to parse the input
     validStatus = SHlex();
@@ -70,6 +71,7 @@ static NSMutableCharacterSet *endSet = nil;
         
         // check that the whole string was matched by flex.
         // this prevents silly things like "blah...com" from being seen as links
+        NSLog(@"inString length: %u  SHleng: %u", [inString length], SHleng);
         if(SHleng == [inString length]){
             return YES;
         }
