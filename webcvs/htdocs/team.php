@@ -70,8 +70,6 @@
                     <span class="tiny">Interface Icons</span></p>
                     <p><a href="mailto:maran@mac.com">Benjamin Costello</a><br />
                     <span class="tiny">Site design, Xtras site</span></p>
-                    <p>Mac-arena the Bored Zo<br />
-                    <span class="tiny">Code Contributions</span></p>
                     <p>Asher Haig<br />
                     <span class="tiny">Build Scripts</span></p>
                 </div>
@@ -167,6 +165,9 @@
                     <div class="teamMember">
                         <h2>Steve Holt</h2>
                         <span class="teamData">Email:</span><a href="mailto:4N01@simplstick.com">4N01@simplstick.com</a><br />
+                    </div>
+                    <div class="teamMember">
+                        <h2>Mac-arena the Bored Zo</h2>
                     </div>
                     <div class="teamMember">
                         <h2>Chris Serino</h2>
