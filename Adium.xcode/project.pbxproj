@@ -6161,6 +6161,7 @@
 				9E6A9BF80732CB500032C9F6,
 				34F1022F0734499700890D3B,
 				C4C63A09073889B2005E076D,
+				C44125540740B4DA003C2C5B,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -21253,6 +21254,20 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		C44125530740B4DA003C2C5B = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = AddContact.png;
+			path = "Plugins/Contact List Editor/AddContact.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C44125540740B4DA003C2C5B = {
+			fileRef = C44125530740B4DA003C2C5B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		C45F7F6206C75E200056B1F2 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -21812,6 +21827,7 @@
 		};
 		F5361E3103058E2A01A8010A = {
 			children = (
+				C44125530740B4DA003C2C5B,
 				349DDD0D064066B500542726,
 				349DDD0E064066B500542726,
 				349DDD0F064066B500542726,
