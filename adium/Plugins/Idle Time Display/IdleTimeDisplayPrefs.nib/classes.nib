@@ -1,7 +1,6 @@
 {
     IBClasses = (
         {
-            ACTIONS = {changePreference = id; }; 
             CLASS = AIIdleTimeDisplayPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -9,11 +8,20 @@
                 "checkBox_displayIdleOnLeft" = NSButton; 
                 "checkBox_displayIdleOnRight" = NSButton; 
                 "colorWell_idleColor" = NSColorWell; 
-                "view_prefView" = NSView; 
             }; 
-            SUPERCLASS = NSObject; 
+            SUPERCLASS = AIPreferencePane; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }

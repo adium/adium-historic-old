@@ -13,15 +13,11 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface AIIdleTimeDisplayPreferences : AIObject {
-    IBOutlet	NSView			*view_prefView;
+@interface AIIdleTimeDisplayPreferences : AIPreferencePane {
     IBOutlet	NSButton		*checkBox_displayIdle;
     IBOutlet	NSButton		*checkBox_displayIdleOnLeft;
     IBOutlet	NSButton		*checkBox_displayIdleOnRight;
     IBOutlet	NSColorWell		*colorWell_idleColor;
 }
-
-+ (AIIdleTimeDisplayPreferences *)idleTimeDisplayPreferences;
-- (IBAction)changePreference:(id)sender;
 
 @end
