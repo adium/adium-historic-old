@@ -30,7 +30,7 @@
 
 - (void)contactsChanged:(NSNotification *)notification
 {
-    if((visibleCount || allCount) && [[notification object] isOfClass:[AIListGroup class]])
+    if((visibleCount || allCount) && [[notification object] isKindOfClass:[AIListGroup class]])
     {
         AIListGroup *group = [notification object];
         NSString *addString = nil;
