@@ -41,11 +41,11 @@
 
 - (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
-    [super initWithWindowNibName:windowNibName notifyingTarget:inTarget selector:inSelector context:inContext];
-    
-    account = [inAccount retain];
-	[self retain];
-	
+    if((self = [super initWithWindowNibName:windowNibName notifyingTarget:inTarget selector:inSelector context:inContext])) {
+		account = [inAccount retain];
+		[self retain];
+	}
+
     return(self);
 }
 

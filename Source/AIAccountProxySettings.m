@@ -133,7 +133,7 @@
 	if(![proxyUserName isEqualToString:[account preferenceForKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS]] ||
 	   ![proxyHostName isEqualToString:[account preferenceForKey:KEY_ACCOUNT_PROXY_HOST group:GROUP_ACCOUNT_STATUS]]){
 		
-		[[adium accountController] setPassword:[textField_proxyPassword stringValue]
+		[[adium accountController] setPassword:[textField_proxyPassword secureStringValue]
 								forProxyServer:proxyHostName
 									  userName:proxyUserName];
 	}
