@@ -1,4 +1,11 @@
 //------------------------------------------------------------------------------------
+// Already Fixed, awaiting the next Adium release
+//------------------------------------------------------------------------------------
+
+
+
+
+//------------------------------------------------------------------------------------
 // Bugs - Adium
 //------------------------------------------------------------------------------------
 - Short emoticons mask longer ones
@@ -28,6 +35,13 @@
 - User icons occasionally display upside-down
 	We cannot find a pattern to when or why this happens
 	
+- Crash when re-arranging emoticon packs
+	Might be related to the code trying to make a multiple selection after the drag?
+
+- Crashes with chat rooms and conferences
+	We don't support chats at this time.  But we're still displaying the invite panels
+	and crashing when the user joins or soon after.
+	
 
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
@@ -52,6 +66,9 @@
 
 - [Yahoo] Fil transfer limitations
 	Files over 1 MB in size fail to send
+	
+- [MSN] Crash moving contacts between groups
+	
 
 //------------------------------------------------------------------------------------
 // Bugs - Resources
