@@ -259,6 +259,11 @@
 		};
 		29B97314FDCFA39411CA2CEA = {
 			children = (
+				CA2C842606F8A3E70024B20E,
+				CA2C842706F8A3E70024B20E,
+				CA2C842806F8A3E80024B20E,
+				CA2C842906F8A3E80024B20E,
+				CA2C842A06F8A3E80024B20E,
 				4B191D8C0611C11000E8A4E7,
 				34B5EBA106589A88007B9A56,
 				4B191D8E0611C11400E8A4E7,
@@ -6988,6 +6993,7 @@
 				34BD9F310531477E000AB133,
 				34BD9F340531477E000AB133,
 				34BD9F360531477E000AB133,
+				CA2C843606F8A4250024B20E,
 			);
 			buildRules = (
 			);
@@ -7027,6 +7033,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				34BD9F300531477E000AB133,
+				CA2C842B06F8A3E80024B20E,
+				CA2C842C06F8A3E80024B20E,
+				CA2C842D06F8A3E80024B20E,
+				CA2C842E06F8A3E80024B20E,
+				CA2C842F06F8A3E80024B20E,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7061,7 +7072,6 @@
 		34BD9F340531477E000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34FF934306DE3F2700C1D683,
 				3448769806D1EF5900DA778C,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -21629,6 +21639,81 @@
 			isa = PBXTargetDependency;
 			name = "AIUtilities (from AIUtilities.framework.xcode)";
 			targetProxy = CA0C977706DBFDA1004436BE;
+		};
+		CA2C842606F8A3E70024B20E = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.icns;
+			path = Adium.icns;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA2C842706F8A3E70024B20E = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			path = Awake.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA2C842806F8A3E80024B20E = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			path = ErrorAlert.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA2C842906F8A3E80024B20E = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			path = notfound.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA2C842A06F8A3E80024B20E = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			path = pref4.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		CA2C842B06F8A3E80024B20E = {
+			fileRef = CA2C842606F8A3E70024B20E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA2C842C06F8A3E80024B20E = {
+			fileRef = CA2C842706F8A3E70024B20E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA2C842D06F8A3E80024B20E = {
+			fileRef = CA2C842806F8A3E80024B20E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA2C842E06F8A3E80024B20E = {
+			fileRef = CA2C842906F8A3E80024B20E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA2C842F06F8A3E80024B20E = {
+			fileRef = CA2C842A06F8A3E80024B20E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA2C843606F8A4250024B20E = {
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				34FF934306DE3F2700C1D683,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 //CA0
 //CA1

@@ -596,8 +596,8 @@
         NSLog(proteusMsgContent);
         
         //If we want to import ALL of the messages and not just ones for the away status...
-        if([button_importAllProteusAways state] == NSOffState){
-        //if([button_importAllProteusAways state] == NSOnState){
+        if([button_importAllProteusAways state] == NSOnState){
+        
             
         // Loop through each Adium away message and compare it to the current proteus message
         AdiumEnumerator = [AdiumMessageArray objectEnumerator];
