@@ -199,7 +199,8 @@
 				NSString	*event = ([newValue boolValue] ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO);
 				[[adium contactAlertsController] generateEvent:event
 												 forListObject:inObject
-													  userInfo:nil];
+													  userInfo:nil
+								  previouslyPerformedActionIDs:nil];
 			}
 		}
 		
@@ -216,7 +217,8 @@
 					NSString	*event = ([newValue boolValue] ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO);
 					[[adium contactAlertsController] generateEvent:event
 													 forListObject:inObject
-														  userInfo:nil];
+														  userInfo:nil
+									  previouslyPerformedActionIDs:nil];
 				}
 			}
 			if([inModifiedKeys containsObject:@"IsIdle"]){
@@ -229,7 +231,8 @@
 					NSString	*event = ([newValue boolValue] ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO);
 					[[adium contactAlertsController] generateEvent:event
 													 forListObject:inObject
-														  userInfo:nil];
+														  userInfo:nil
+									  previouslyPerformedActionIDs:nil];
 				}
 			}
 			if([inModifiedKeys containsObject:@"StatusMessage"]){
@@ -244,7 +247,8 @@
 						//Evan: Not yet a contact alert, but we use the notification - how could/should we use this?
 						[[adium contactAlertsController] generateEvent:CONTACT_STATUS_MESSAGE
 														 forListObject:inObject
-															  userInfo:nil];
+															  userInfo:nil
+										  previouslyPerformedActionIDs:nil];
 					}
 				}
 			}
