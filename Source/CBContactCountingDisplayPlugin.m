@@ -26,8 +26,8 @@
 
 #define CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS  @"ContactCountingDisplayDefaults"
 
-#define COUNT_ONLINE_CONTACTS_TITLE				AILocalizedString(@"Count Online Contacts", nil)
-#define COUNT_ALL_CONTACTS_TITLE				AILocalizedString(@"Count All Contacts", nil)
+#define COUNT_ONLINE_CONTACTS_TITLE				AILocalizedString(@"Show Group Online Count", nil)
+#define COUNT_ALL_CONTACTS_TITLE				AILocalizedString(@"Show Group Total Count", nil)
 
 #define PREF_GROUP_CONTACT_LIST					@"Contact List"
 #define KEY_COUNT_ALL_CONTACTS					@"Count All Contacts"
@@ -58,13 +58,13 @@
 														 target:self 
 														 action:@selector(toggleMenuItem:)
 												  keyEquivalent:@""];
-    [[adium menuController] addMenuItem:menuItem_countOnlineObjects toLocation:LOC_View_Display];		
+    [[adium menuController] addMenuItem:menuItem_countOnlineObjects toLocation:LOC_View_Toggles];		
 
     menuItem_countAllObjects = [[NSMenuItem alloc] initWithTitle:COUNT_ALL_CONTACTS_TITLE
 														 target:self 
 														 action:@selector(toggleMenuItem:)
 												  keyEquivalent:@""];
-	[[adium menuController] addMenuItem:menuItem_countAllObjects toLocation:LOC_View_Display];		
+	[[adium menuController] addMenuItem:menuItem_countAllObjects toLocation:LOC_View_Toggles];		
     
 	//set up the prefs
 	countAllObjects = NO;

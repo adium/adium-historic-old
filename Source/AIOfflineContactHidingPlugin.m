@@ -28,7 +28,6 @@
 
 #define	PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
 #define SHOW_OFFLINE_MENU_TITLE				AILocalizedString(@"Show Offline Contacts",nil)
-#define HIDE_OFFLINE_MENU_TITLE				AILocalizedString(@"Hide Offline Contacts",nil)
 #define KEY_SHOW_OFFLINE_CONTACTS			@"Show Offline Contacts"
 #define OFFLINE_CONTACTS_IDENTIFER			@"OfflineContacts"
 #define	KEY_HIDE_CONTACT_LIST_GROUPS		@"Hide Contact List Groups"
@@ -49,18 +48,12 @@
  */
 - (void)installPlugin
 {	
-	//Register preference observer first so values will be correct for the following calls
-	[[adium preferenceController] registerPreferenceObserver:self
-													forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
-	
 	//Show offline contacts menu item
-    showOfflineMenuItem = [[NSMenuItem alloc] initWithTitle:(showOfflineContacts ?
-															 HIDE_OFFLINE_MENU_TITLE : 
-															 SHOW_OFFLINE_MENU_TITLE)
+    showOfflineMenuItem = [[NSMenuItem alloc] initWithTitle:SHOW_OFFLINE_MENU_TITLE
 													 target:self
 													 action:@selector(toggleOfflineContactsMenu:)
 											  keyEquivalent:@"H"];
-	[[adium menuController] addMenuItem:showOfflineMenuItem toLocation:LOC_View_Content];		
+	[[adium menuController] addMenuItem:showOfflineMenuItem toLocation:LOC_View_Toggles];		
 
 	//Toolbar
 	NSToolbarItem	*toolbarItem;
@@ -74,6 +67,9 @@
 														 action:@selector(toggleOfflineContactsMenu:)
 														   menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];	
+
+	//Register preference observer first so values will be correct for the following calls
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 }
 
 /*!
@@ -114,6 +110,9 @@
 		//updateListObject: method call, so the contact controller doesn't know we changed anything)
 		[[adium contactController] sortContactList];
 	}
+
+	//Update our menu to reflect the current preferences
+	[showOfflineMenuItem setState:showOfflineContacts];
 }
 
 /*!
@@ -121,22 +120,9 @@
  */
 - (IBAction)toggleOfflineContactsMenu:(id)sender
 {
-	//Store the preference
 	[[adium preferenceController] setPreference:[NSNumber numberWithBool:!showOfflineContacts]
 										 forKey:KEY_SHOW_OFFLINE_CONTACTS
 										  group:PREF_GROUP_CONTACT_LIST_DISPLAY];
-
-	//Update the menu item's title
-	[self configureOfflineContactHiding];
-}
-
-/*!
- * @brief Set the menu item title for the current offline contact hiding state
- */
-- (void)configureOfflineContactHiding
-{
-	//The menu item shows the opposite of the current state, since that what happens if you toggle it
-	[showOfflineMenuItem setTitle:(showOfflineContacts ? HIDE_OFFLINE_MENU_TITLE : SHOW_OFFLINE_MENU_TITLE)];
 }
 
 /*!
