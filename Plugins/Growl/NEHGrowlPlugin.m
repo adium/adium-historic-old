@@ -10,6 +10,8 @@
 #import "GrowlDefines.h"
 #import "GrowlApplicationBridge.h"
 
+#define	GROWL_ON_ALL_EVENTS					FALSE
+
 #define PREF_GROUP_EVENT_BEZEL              @"Event Bezel"
 #define KEY_EVENT_BEZEL_SHOW_AWAY           AILocalizedString(@"Show While Away",nil)
 #define GROWL_ALERT							AILocalizedString(@"Show Growl Notification",nil)
@@ -41,40 +43,20 @@
 //		- set description to the description
 //		- set note to the name of your notification (one of the defines)
 
+@interface NEHGrowlPlugin (PRIVATE)
+- (NSDictionary *)growlRegistrationDict;
+- (NSArray *)adiumEventsToObserve;
+@end
+
 @implementation NEHGrowlPlugin
 
 - (void)installPlugin
 {
-	NSString		*note;
-	NSEnumerator	*enumerator;
-	
-	//Set up the events
-	NSArray	* events = [NSArray arrayWithObjects:
-									CONTACT_STATUS_ONLINE_YES,
-									CONTACT_STATUS_ONLINE_NO,
-									CONTACT_STATUS_AWAY_YES,
-									CONTACT_STATUS_AWAY_NO,
-									CONTACT_STATUS_IDLE_YES,
-									CONTACT_STATUS_IDLE_NO,
-									Content_FirstContentRecieved,
-									Content_DidReceiveContent,
-									FILE_TRANSFER_REQUEST,
-									FILE_TRANSFER_BEGAN,
-									FILE_TRANSFER_CANCELED,
-									FILE_TRANSFER_COMPLETE,
-									nil];
-	
-	//Launch Growl if needed
-	[GrowlApplicationBridge launchGrowlIfInstalledNotifyingTarget:self selector:@selector(registerAdium:) context:NULL];
-	
-	enumerator = [events objectEnumerator];
-	while(note = [enumerator nextObject]) {
-		[[adium notificationCenter] addObserver:self selector:@selector(handleEvent:) name:note object:nil];
-	}
-	
-    //Install our contact alert
-	[[adium contactAlertsController] registerActionID:@"Growl" withHandler:self];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EVENT_BEZEL];
+	//Register with and launch Growl
+	[GrowlAppBridge launchGrowlIfInstalledNotifyingTarget:self
+												 selector:@selector(growlLaunched:)
+												  context:NULL
+										 registrationDict:[self growlRegistrationDict]];
 }
 
 - (void)dealloc
@@ -82,7 +64,7 @@
 	[super dealloc];
 }
 
-- (void)registerAdium:(void*)context
+- (NSDictionary *)growlRegistrationDict
 {
 	//Register us with Growl
 	
@@ -124,10 +106,48 @@
 		allNotes, GROWL_NOTIFICATIONS_ALL,
 		defNotes, GROWL_NOTIFICATIONS_DEFAULT,
 		nil];
+
+	return(growlReg);
+}
+
+- (NSArray *)adiumEventsToObserve
+{
+	//Set up the events
+	NSArray	* events;
 	
-	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:GROWL_APP_REGISTRATION
-																   object:nil
-																 userInfo:growlReg];
+	events = [NSArray arrayWithObjects:
+		CONTACT_STATUS_ONLINE_YES,
+		CONTACT_STATUS_ONLINE_NO,
+		CONTACT_STATUS_AWAY_YES,
+		CONTACT_STATUS_AWAY_NO,
+		CONTACT_STATUS_IDLE_YES,
+		CONTACT_STATUS_IDLE_NO,
+		Content_FirstContentRecieved,
+		Content_DidReceiveContent,
+		FILE_TRANSFER_REQUEST,
+		FILE_TRANSFER_BEGAN,
+		FILE_TRANSFER_CANCELED,
+		FILE_TRANSFER_COMPLETE,
+		nil];
+	
+	return(events);
+}
+
+- (void)growlLaunched:(void *)context
+{
+#if GROWL_ON_ALL_EVENTS
+	NSString		*note;
+	NSEnumerator	*enumerator;
+
+	enumerator = [[self adiumEventsToObserve] objectEnumerator];
+	while(note = [enumerator nextObject]) {
+		[[adium notificationCenter] addObserver:self selector:@selector(handleEvent:) name:note object:nil];
+	}
+#endif
+		
+    //Install our contact alert
+	[[adium contactAlertsController] registerActionID:@"Growl" withHandler:self];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EVENT_BEZEL];	
 }
 
 - (void)handleEvent:(NSNotification*)notification
@@ -215,7 +235,6 @@
 			description = AILocalizedString(@"completed a file transfer","");
 			note = GROWL_FT_COMPLETE;
 		}else{
-			//NSLog(@"Unknown notification: %@",notificationName);
 			note = GROWL_UNKNOWN;
 			return;
 		}
@@ -236,7 +255,7 @@
 											@"Adium", GROWL_APP_NAME,
 											iconData, GROWL_NOTIFICATION_ICON,
 											nil];
-		
+
 			[[NSDistributedNotificationCenter defaultCenter]
 											postNotificationName: GROWL_NOTIFICATION
 														  object: nil
