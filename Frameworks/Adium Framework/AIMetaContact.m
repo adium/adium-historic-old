@@ -659,18 +659,23 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return([[self statusObjectForKey:key fromAnyContainedObject:fromAnyContainedObject] string]);
 }
 
-//Returns the status object from the preferredContact for a given key.  If no such object is found, and containedObjectSelector is not nil,
-//queries the entire mutableOwnerArray using that selector
+//Returns the status object from our object.
+//If no such object is found, return the status object from the preferredContact for a given key.
+//If no such object is found, and containedObjectSelector is not nil, 
+//queries the entire mutableOwnerArray using that selector.
 - (id)_statusObjectForKey:(NSString *)key containedObjectSelector:(SEL)containedObjectSelector
 {
-	AIMutableOwnerArray *keyArray = [statusCacheDict objectForKey:key];
 	id					returnValue;
-	
-	returnValue = [keyArray objectWithOwner:[self preferredContact]];
 
-	//If we got nil and we want to look at our contained objects, return the objectValue
-	if (!returnValue && containedObjectSelector){
-		returnValue = [keyArray performSelector:containedObjectSelector];
+	if (!(returnValue = [super statusObjectForKey:key])){
+		AIMutableOwnerArray *keyArray = [statusCacheDict objectForKey:key];
+		
+		returnValue = [keyArray objectWithOwner:[self preferredContact]];
+		
+		//If we got nil and we want to look at our contained objects, return the objectValue
+		if (!returnValue && containedObjectSelector){
+			returnValue = [keyArray performSelector:containedObjectSelector];
+		}
 	}
 	
 	return (returnValue);
