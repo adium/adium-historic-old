@@ -28,8 +28,11 @@
 @interface AWRendezvousAccount : AIAccount <AIAccount_Content, AWEzvClientProtocol> {
     AWEzv				*libezv;
     NSMutableDictionary	*libezvContacts;
+    NSString *savedAwayMessage;
 }
 
 - (void)setAccountIdleTo:(NSDate *)idle;
+- (void)setAccountAwayTo:(NSAttributedString *)awayMessage;
+- (void)updateAllStatusKeys;
 
 @end
