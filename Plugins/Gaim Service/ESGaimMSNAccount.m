@@ -195,7 +195,7 @@ static BOOL didInitMSN = NO;
 			
 			msn_set_friendly_name(account->gc, [friendlyName UTF8String]);
 
-			if([friendlyName length] == 0) displayName = nil;
+			if([friendlyName length] == 0) friendlyName = nil;
 			
 			[[self displayArrayForKey:@"Display Name"] setObject:friendlyName
 													   withOwner:self];
