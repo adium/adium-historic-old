@@ -33,3 +33,6 @@
 
 # NIBS
 *.nib -k 'b'
+
+# liboscar.a
+*.a -k 'b'
