@@ -44,12 +44,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     //Create the window
     if(!sharedContactInfoInstance){
         sharedContactInfoInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB];
-		
-		//Remove those buttons we don't want.  removeFromSuperview will confuse the window, so just make them invisible.
-		NSButton *standardWindowButton = [[sharedContactInfoInstance window] standardWindowButton:NSWindowMiniaturizeButton];
-		[standardWindowButton setFrame:NSMakeRect(0,0,0,0)];
-		standardWindowButton = [[sharedContactInfoInstance window] standardWindowButton:NSWindowZoomButton];
-		[standardWindowButton setFrame:NSMakeRect(0,0,0,0)];
     }
 	
 	//Configure and show window
@@ -62,7 +56,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	}
 
 	[sharedContactInfoInstance configureForListObject:listObject];
-	[sharedContactInfoInstance showWindow:nil];
+	[[sharedContactInfoInstance window] makeKeyAndOrderFront:nil];
 	
 	return (sharedContactInfoInstance);
 }
@@ -107,8 +101,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
     //
 	loadedPanes = [[NSMutableSet alloc] init];
-	[[self window] setHidesOnDeactivate:NO];
-	[(NSPanel *)[self window] setFloatingPanel:NO];
 	
     //Select the previously selected category
     selectedTab = [[[adium preferenceController] preferenceForKey:KEY_INFO_SELECTED_CATEGORY
