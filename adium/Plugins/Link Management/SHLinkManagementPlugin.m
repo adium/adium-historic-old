@@ -21,7 +21,7 @@
                                                 target:self
                                                 action:@selector(editFormattedLink:)
                                          keyEquivalent:@"k"] autorelease];
-    [[adium menuController] addMenuItem:menu_EditLink toLocation:LOC_Edit_Bottom];
+    [[adium menuController] addMenuItem:menu_EditLink toLocation:LOC_Edit_Additions];
     
     //context menu
     contextMenu_EditLink = [[menu_EditLink copy] autorelease];
