@@ -16,6 +16,7 @@
 #define SENDING_KEY_DEFAULT_PREFS	@"SendingKeyDefaults"
 #define SEND_ON_RETURN				@"Send On Return"
 #define SEND_ON_ENTER				@"Send On Enter"
+#define HOME_TO_START_OF_LINE		@"Home To Start Of Line"
 
 @class AISendingKeyPreferences, AISendingKeyPreferencesAdvanced;
 

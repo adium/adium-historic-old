@@ -40,6 +40,7 @@ static NSImage *pushIndicatorImage = nil;
     indicator = nil;
 	pushPopEnabled = YES;
 	clearOnEscape = NO;
+	homeToStartOfLine = NO;
     insertingText = NO;
 	resizing = NO;
 	defaultTypingAttributes = nil;
@@ -125,13 +126,39 @@ static NSImage *pushIndicatorImage = nil;
 		}else if((inChar == '\E') && clearOnEscape){
 			[self setString:@""];
 			
-		}else if(inChar == NSPageUpFunctionKey || inChar == NSPageDownFunctionKey || 
-				 inChar == NSHomeFunctionKey || inChar == NSEndFunctionKey){
+		}else if(inChar == NSPageUpFunctionKey || inChar == NSPageDownFunctionKey){
 			[associatedView keyDown:inEvent];
 			
+		}else if (inChar == NSHomeFunctionKey || inChar == NSEndFunctionKey){
+			if (homeToStartOfLine){
+				NSRange	newRange;
+				
+				if (flags & NSShiftKeyMask){
+					//With shift, select to the beginning/end of the line
+					NSRange	selectedRange = [self selectedRange];
+					if (inChar == NSHomeFunctionKey) {
+						//Home: from 0 to the current location
+						newRange.location = 0;
+						newRange.length = selectedRange.location;
+					}else{
+						//End: from current location to the end
+						newRange.location = selectedRange.location;
+						newRange.length = [[self string] length] - newRange.location;
+					}
+					
+				}else{
+					newRange.location = ((inChar == NSHomeFunctionKey) ? 0 : [[self string] length]);
+					newRange.length = 0;
+				}
+
+				[self setSelectedRange:newRange];
+
+			}else{
+				//If !homeToStartOfLine, pass the keypress to our associated view.
+				[associatedView keyDown:inEvent];
+			}
 		}else{
 			[super keyDown:inEvent];
-			
 		}
 	}else{
 		[super keyDown:inEvent];
@@ -157,6 +184,12 @@ static NSImage *pushIndicatorImage = nil;
 - (void)setClearOnEscape:(BOOL)inBool
 {
 	clearOnEscape = inBool;
+}
+
+//Set go to start of line on home instead of home of associated view
+- (void)setHomeToStartOfLine:(BOOL)inBool
+{
+	homeToStartOfLine = inBool;
 }
 
 //Associate a view with this text view for key forwarding
@@ -618,6 +651,7 @@ static NSImage *pushIndicatorImage = nil;
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
+	NSLog(@"pasteboard is %@",pasteboard);
 	NSString 		*type = [pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSFilenamesPboardType,NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]];
 	
 	if(!type){

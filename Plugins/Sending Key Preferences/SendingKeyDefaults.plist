@@ -6,5 +6,7 @@
 	<true/>
 	<key>Send On Return</key>
 	<true/>
+	<key>Home To Start Of Line</key>
+	<false/>
 </dict>
 </plist>

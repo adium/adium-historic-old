@@ -36,6 +36,7 @@
     
     [checkBox_sendOnReturn setState:[[preferenceDict objectForKey:SEND_ON_RETURN] intValue]];
 	[checkBox_sendOnEnter setState:[[preferenceDict objectForKey:SEND_ON_ENTER] intValue]];
+	[checkBox_homeToStartOfLine setState:[[preferenceDict objectForKey:HOME_TO_START_OF_LINE] intValue]];
 }
 
 //User changed a preference
@@ -49,6 +50,11 @@
     } else if(sender == checkBox_sendOnEnter){
         [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
                                              forKey:SEND_ON_ENTER
+                                              group:PREF_GROUP_GENERAL];
+        
+    } else if(sender == checkBox_homeToStartOfLine){
+        [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
+                                             forKey:HOME_TO_START_OF_LINE
                                               group:PREF_GROUP_GENERAL];
         
     }
