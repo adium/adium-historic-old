@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<string>Font</string>
+	<string>Alternating Grid</string>
+	<string>Background Color</string>
+	<string>Grid Color</string>
+	<string>Contact Color</string>
+	<string>Group Color</string>
+	<string>Opacity</string>
+	<string>Custom Group Color</string>
+	<string>Bold Groups</string>
+        <string>Outline Groups</string>
+        <string>Outline Groups Color</string>
+	<string>Show Labels</string>
+        <string>Borderless</string>
+        <string>Shadows</string>
+        <string>Row Spacing</string>
+        <string>Label Around Contact</string>
+        <string>Outline Labels</string>
+        <string>Use Gradient</string>
+        <string>Label Opacity</string>
+        <string>Label Groups</string>
+        <string>Label Groups Color</string>
+</array>
+</plist>

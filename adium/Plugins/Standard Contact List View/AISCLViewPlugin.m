@@ -27,6 +27,7 @@
 @implementation AISCLViewPlugin
 
 #define LABELS_THEMABLE_PREFS   @"Labels Themable Prefs"
+#define SCL_THEMABLE_PREFS      @"SCL Themable Prefs"
 
 - (void)installPlugin
 {
@@ -34,12 +35,11 @@
     [[adium interfaceController] registerContactListViewPlugin:self];
 
     //Register our default preferences and install our preference views
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]]
-					  forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
     
     //Register themable preferences
-    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:LABELS_THEMABLE_PREFS forClass:[self class]]
-						     forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
+    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:LABELS_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
+    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:SCL_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
     
     preferences = [[AICLPreferences contactListPreferences] retain];
     preferencesAdvanced = [[ESCLViewAdvancedPreferences preferencePane] retain];

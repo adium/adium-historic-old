@@ -25,6 +25,8 @@
 
 @implementation AIContactStatusColoringPlugin
 
+#define CONTACT_STATUS_THEMABLE_PREFS   @"Contact Status Coloring Themable Prefs"
+
 - (void)installPlugin
 {
     //init
@@ -59,6 +61,9 @@
     //Setup our preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_STATUS_COLORING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
     preferences = [[AIContactStatusColoringPreferences contactStatusColoringPreferences] retain];
+    
+    //Register themable preferences
+    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:CONTACT_STATUS_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];    
 
     //Observe list object changes
     [[adium contactController] registerListObjectObserver:self];

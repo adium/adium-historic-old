@@ -22,6 +22,8 @@
 
 @implementation AISMViewPlugin
 
+#define SMV_THEMABLE_PREFS      @"SMV Themable Prefs"
+
 - (void)installPlugin
 {
     //Register ourself as a message list view plugin
@@ -31,6 +33,9 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SMV_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
     preferences = [[AISMPreferences preferencePane] retain];
     advancedPreferences = [[ESSMAdvancedPreferences preferencePane] retain];
+    
+    //Register themable preferences
+    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:SMV_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         
     //Setup a time stamp format based on this user's locale
     NSString    *format = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] objectForKey:KEY_SMV_TIME_STAMP_FORMAT];
