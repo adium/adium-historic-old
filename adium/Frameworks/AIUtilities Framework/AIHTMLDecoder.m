@@ -321,7 +321,6 @@ DeclareString(TagCharStartString);
 					
 				}else if(!attachmentsAsText && attachment && [attachment respondsToSelector:@selector(imagePath)]){
 					if([attachment imagePath]){
-						NSLog(@"%i x %i",(int)[attachment imageSize].width, (int)[attachment imageSize].height);
 						[string appendFormat:@"<img src=\"file://%@\" alt=\"%@\" width=\"%i\" height=\"%i\">",
 							[attachment imagePath], [attachment string],
 							(int)[attachment imageSize].width, (int)[attachment imageSize].height];
