@@ -75,15 +75,29 @@ static NSMenu   *msieTopMenu;
 {
     NSScanner   *linkScanner = [NSScanner scannerWithString:inString];
     NSString    *titleString, *urlString;
+    NSString    *untitledString = @"untitled";
+    
+    unsigned int        stringLength = [inString length];
+    
+    static NSString     *gtSign = @">";
+    static NSString     *Hclose = @"</H";
+    static NSString     *Hopen = @"H3 ";
+    static NSString     *Aopen = @"A ";
+    static NSString     *hrefStr = @"HREF=\"";
+    static NSString     *closeQuote = @"\"";
+    static NSString     *closeLink = @"\">";
+    static NSString     *Aclose = @"</A";
+    static NSString     *DLclose = @"/DL>";
+    static NSString     *ltSign = @"<";
     
     while(![linkScanner isAtEnd]){
-        if([[inString substringFromIndex:[linkScanner scanLocation]] length] < 4){
+        if((stringLength - [linkScanner scanLocation]) < 4){
             [linkScanner setScanLocation:[inString length]];
-        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],3)] compare:@"H3 "]){
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 3];
-            [linkScanner scanUpToString:@">" intoString:nil];
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
-            [linkScanner scanUpToString:@"</H" intoString:&titleString];
+        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],3)] compare:Hopen]){
+            if((stringLength - [linkScanner scanLocation]) > 3) [linkScanner setScanLocation:[linkScanner scanLocation] + 3];
+            [linkScanner scanUpToString:gtSign intoString:nil];
+            if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
+            [linkScanner scanUpToString:Hclose intoString:&titleString];
 
             if(titleString){
                 // decode html stuff
@@ -91,23 +105,22 @@ static NSMenu   *msieTopMenu;
             }
             
             msieBookmarksSupermenu = msieBookmarksMenu;
-            msieBookmarksMenu = [[[NSMenu alloc] initWithTitle:titleString? titleString : @"untitled"] autorelease];
+            msieBookmarksMenu = [[[NSMenu alloc] initWithTitle:titleString? titleString : untitledString] autorelease];
         
-            NSMenuItem *mozillaSubmenuItem = [[[NSMenuItem alloc] initWithTitle:titleString? titleString : @"untitled"
+            NSMenuItem *mozillaSubmenuItem = [[[NSMenuItem alloc] initWithTitle:titleString? titleString : untitledString
                                                                          target:owner
                                                                          action:nil
                                                                   keyEquivalent:@""] autorelease];
             [msieBookmarksSupermenu addItem:mozillaSubmenuItem];
             [msieBookmarksSupermenu setSubmenu:msieBookmarksMenu forItem:mozillaSubmenuItem];
-        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] compare:@"A "]){
-            //[linkScanner setScanLocation:[linkScanner scanLocation] + 3];
-            [linkScanner scanUpToString:@"HREF=\"" intoString:nil];
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
-            [linkScanner scanUpToString:@"\"" intoString:&urlString];
+        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] compare:Aopen]){
+            [linkScanner scanUpToString:hrefStr intoString:nil];
+            if((stringLength - [linkScanner scanLocation]) > 6) [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
+            [linkScanner scanUpToString:closeQuote intoString:&urlString];
                 
-            [linkScanner scanUpToString:@"\">" intoString:nil];
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
-            [linkScanner scanUpToString:@"</A" intoString:&titleString];
+            [linkScanner scanUpToString:closeLink intoString:nil];
+            if((stringLength - [linkScanner scanLocation]) > 2) [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
+            [linkScanner scanUpToString:Aclose intoString:&titleString];
 
             if(titleString){
                 // decode html stuff
@@ -125,14 +138,14 @@ static NSMenu   *msieTopMenu;
                                      keyEquivalent:@""
                                  representedObject:markedLink];
         
-        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] compare:@"/DL>"]){
-            [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
+        }else if(NSOrderedSame == [[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] compare:DLclose]){
+            if((stringLength - [linkScanner scanLocation]) > 4) [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
             if([msieBookmarksMenu isNotEqualTo:msieTopMenu]){
                 msieBookmarksMenu = msieBookmarksSupermenu;
                 msieBookmarksSupermenu = [msieBookmarksSupermenu supermenu];
             }
         }else{
-            [linkScanner scanUpToString:@"<" intoString:nil];
+            [linkScanner scanUpToString:ltSign intoString:nil];
             if(![linkScanner isAtEnd])
                 [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
         }
