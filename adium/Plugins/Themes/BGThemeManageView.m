@@ -1,16 +1,25 @@
-//
-//  BGThemeManageView.m
-//  Adium
-//
-//  Created by Brian Ganninger on Sun Jan 11 2004.
-//
+/*-------------------------------------------------------------------------------------------------------*\
+| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+                                              \---------------------------------------------------------------------------------------------------------/
+| This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+| General Public License as published by the Free Software Foundation; either version 2 of the License,
+| or (at your option) any later version.
+|
+| This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+| the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+| Public License for more details.
+|
+| You should have received a copy of the GNU General Public License along with this program; if not,
+| write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+\------------------------------------------------------------------------------------------------------ */
+
 #import "BGThemeManageView.h"
 #import "BGThemesPlugin.h"
 
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"
-#define THEME_FOLDER_NAME @"Themes"
-#define THEME_PATH  [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:THEME_FOLDER_NAME]
-#define THEMES_ARE_DIRECTORIES NO
+#define THEME_FOLDER_NAME                       @"Themes"
+#define THEME_PATH                              [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:THEME_FOLDER_NAME]
+#define THEMES_ARE_DIRECTORIES                  NO
 
 @interface BGThemeManageView (PRIVATE)
 - (void)configureControlDimming;
@@ -20,8 +29,9 @@
 
 -(void)awakeFromNib
 {        
-	themes = nil;
-	defaultThemePath = [[NSBundle bundleForClass:[self class]] pathForResource:THEME_ADIUM_DEFAULT ofType:@"AdiumTheme"];
+    themes = nil;
+    defaultThemePath = [[NSBundle bundleForClass:[self class]] pathForResource:THEME_ADIUM_DEFAULT ofType:@"AdiumTheme"];
+    mgr = [NSFileManager defaultManager];
 
     [table setDrawsAlternatingRows:YES];
     [table setTarget:self];
@@ -48,7 +58,6 @@
         [tempThemesList addObject:defaultThemePath];
     }
 
-    NSFileManager      *mgr            = [NSFileManager defaultManager];
     NSArray            *resourcesPaths = [[AIObject sharedAdiumInstance] resourcePathsForName:THEME_FOLDER_NAME];
     NSEnumerator       *tempEnum       = [resourcesPaths objectEnumerator];
     NSString           *curPath;
@@ -91,7 +100,6 @@
 		NSEnumerator       *tempEnum       = [resourcesPaths objectEnumerator];
 		NSString           *curResPath;
 		NSString           *filePath = nil;
-		NSFileManager      *mgr            = [NSFileManager defaultManager];
 		BOOL                isDirectory;
 
 		while(curResPath = [tempEnum nextObject]) {
@@ -137,7 +145,6 @@
 		if( [selection isEqualToString:defaultThemePath] ) {
 			return defaultThemePath;
 		} else {
-			NSFileManager *mgr = [NSFileManager defaultManager];
 			BOOL isDir;
 			NSString *curFolder, *curFile;
 			NSEnumerator *resPathsEnum = [[[AIObject sharedAdiumInstance] resourcePathsForName:THEME_FOLDER_NAME] objectEnumerator];
@@ -199,11 +206,9 @@
 {
     if ([themes count] == 0) { // themes aren't present
         [removeButton setEnabled:NO];
-        //[applyButton setEnabled:NO];
     }
     else {
         [removeButton setEnabled:YES];
-        //[applyButton setEnabled:YES];
     }
 }
 

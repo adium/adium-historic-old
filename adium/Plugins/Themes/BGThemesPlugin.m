@@ -1,17 +1,25 @@
-//
-//  BGThemesPlugin.m
-//  Adium
-//
-//  Created by Brian Ganninger on Sat Jan 03 2004.
-//
+/*-------------------------------------------------------------------------------------------------------*\
+| Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+                                              \---------------------------------------------------------------------------------------------------------/
+| This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+| General Public License as published by the Free Software Foundation; either version 2 of the License,
+| or (at your option) any later version.
+|
+| This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+| the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+| Public License for more details.
+|
+| You should have received a copy of the GNU General Public License along with this program; if not,
+| write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+\------------------------------------------------------------------------------------------------------ */
+
 #import "BGThemesPlugin.h"
-#import "BGThemesPreferences.h"
 #import "BGThemeManageView.h"
 
-#define KEY_GROUP_SEPARATOR @"_BGTheme_"
+#define KEY_GROUP_SEPARATOR                     @"_BGTheme_"
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"
-#define THEME_FOLDER_NAME @"Themes"
-#define THEME_PATH  [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:THEME_FOLDER_NAME]
+#define THEME_FOLDER_NAME                       @"Themes"
+#define THEME_PATH                              [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:THEME_FOLDER_NAME]
 
 @implementation BGThemesPlugin
 
@@ -26,11 +34,11 @@
 
 -(void)createThemeNamed:(NSString *)newName by:(NSString *)newAuthor version:(NSString *)newVersion
 {
-    NSArray				*themableKeys;
+    NSArray                     *themableKeys;
     NSString			*group;
     NSString			*key;
     NSEnumerator		*keyEnumerator;
-    NSMutableDictionary *newTheme = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary         *newTheme = [[NSMutableDictionary alloc] init];
     NSEnumerator		*enumerator = [[[adium preferenceController] themablePreferences] keyEnumerator];
 	
     // set basic attributes of theme
@@ -55,11 +63,12 @@
     NSArray *resourcePaths = [[AIObject sharedAdiumInstance] resourcePathsForName:THEME_FOLDER_NAME];
     if([resourcePaths count]) {
         NSString *savePath = [[resourcePaths objectAtIndex:0] stringByAppendingPathComponent:[[saveTheme objectForKey:@"themeName"] stringByAppendingPathExtension:@"AdiumTheme"]];
-        [saveTheme writeToFile:savePath atomically:YES];
-#warning we should provide some kind of alert if this write fails. --boredzo
+        if([saveTheme writeToFile:savePath atomically:YES] == NO)
+        {
+            NSRunAlertPanel(@"Your theme was not saved",@"Adium was unable to save your theme in the Themes directory. Please try again.",@"OK",nil,nil);
+        }
     } else {
-        NSBeep();
-        NSLog(@"Could not find a folder in which to save the file\n");
+        NSRunAlertPanel(@"Your theme was not saved",@"Adium was unable to save your theme in the Themes directory because it was not in the correct location. Please relaunch the Adium Theme preferences and it will attempt to repair this so you may try again.",@"OK",nil,nil);
     }
     [themePane createDone];
 }
