@@ -22,7 +22,6 @@
 #import "MXImageTextAttachmentCell.h"
 
 @protocol AIContentFilter;
-@protocol AITextEntryFilter;
 
 @interface MXLaTeXPlugin : AIPlugin  {
 

@@ -853,6 +853,7 @@
 				F5F8471404C70B8A01A80106,
 				4B55411C044DF01600A8010A,
 				4BCFC91804E930D300A8010A,
+				4BC8AFDD04FD3C2800A8010A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -936,6 +937,7 @@
 				4B5B15280493BFB100A8010A,
 				F5F846F604C7020601A80106,
 				4B55411B044DF01600A8010A,
+				4BC8AFDC04FD3C2800A8010A,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -1052,6 +1054,7 @@
 				4B5B152A0493BFB100A8010A,
 				F5F8478D04C7135801A80106,
 				4B55411D044DF01600A8010A,
+				4BC8AFDE04FD3C2800A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -1160,9 +1163,9 @@
 				9C82689F03D9B26500F1D4AF,
 				4BF290CB03F9FE8D00A8010A,
 				4BDF17250450CBDE00A8010A,
-				4B333F74048144D900A8010A,
 				4B24A26B0482B34B00A8010A,
 				4BAE56E804CC5FCC00A8010A,
+				4BC8AFEF04FD4BF000A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2285,6 +2288,7 @@
 				4B6D0E43047D490700A8010A,
 				11C157D504A88DE0008E0C76,
 				F5A3236904A7A9A501888466,
+				4BC8AFD604FD3C1000A8010A,
 				4BBAEE9703DD7D8900A8010A,
 				F5D2FB8403B6649F01A8010A,
 				4B5B15220493BF9A00A8010A,
@@ -3701,12 +3705,6 @@
 			path = Source/DockPrefs.plist;
 			refType = 4;
 		};
-		4B333F74048144D900A8010A = {
-			fileRef = 4B333F73048144D900A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B33401104815A0600A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -3851,6 +3849,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				4BC8AFDF04FD3C2800A8010A,
 				4BD0E3FA04E9586300A8010A,
 				4B40E1CB03DB5B9600A8010A,
 				9E6C4494048D6DEB00415B22,
@@ -5285,19 +5284,6 @@
 		4B64793903DB613700A8010A = {
 			isa = PBXTargetDependency;
 			target = 9EDAC4EC03D5160100415B22;
-		};
-		4B64797803DC29B200A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = DualSpellingDefaults.plist;
-			path = "Plugins/Dual Window Interface/DualSpellingDefaults.plist";
-			refType = 4;
-		};
-		4B64797903DC29B200A8010A = {
-			fileRef = 4B64797803DC29B200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B64797A03DC321800A8010A = {
 			fileEncoding = 30;
@@ -7296,7 +7282,6 @@
 				4BA12FFF04C0A2D900A8010A,
 				4BA1300004C0A2D900A8010A,
 				4BA12FFD04C0A17300A8010A,
-				4B64797803DC29B200A8010A,
 				4BA1300304C0A4E300A8010A,
 			);
 			isa = PBXGroup;
@@ -8270,6 +8255,245 @@
 			};
 		};
 		4BC6A420048054CC00A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC8AFD604FD3C1000A8010A = {
+			children = (
+				4BC8AFE204FD3C5600A8010A,
+				4BC8AFE304FD3C5600A8010A,
+				4BC8AFE604FD3CEB00A8010A,
+				4BC8AFE704FD3CEB00A8010A,
+				4BC8AFEA04FD3E9500A8010A,
+				4BC8AFEC04FD413900A8010A,
+			);
+			isa = PBXGroup;
+			name = "Spell Checking";
+			refType = 4;
+		};
+		4BC8AFD704FD3C2800A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BC8AFE404FD3C5600A8010A,
+				4BC8AFE804FD3CEB00A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BC8AFD804FD3C2800A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BC8AFEB04FD3E9600A8010A,
+				4BC8AFED04FD413900A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BC8AFD904FD3C2800A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BC8AFE504FD3C5600A8010A,
+				4BC8AFE904FD3CEB00A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BC8AFDA04FD3C2800A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BC8AFF004FD51F400A8010A,
+				4BC8AFF104FD51F400A8010A,
+				4BC8AFF204FD51F400A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BC8AFDB04FD3C2800A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BC8AFDC04FD3C2800A8010A = {
+			buildPhases = (
+				4BC8AFD704FD3C2800A8010A,
+				4BC8AFD804FD3C2800A8010A,
+				4BC8AFD904FD3C2800A8010A,
+				4BC8AFDA04FD3C2800A8010A,
+				4BC8AFDB04FD3C2800A8010A,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Spell Checking";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4BC8AFE004FD3C3000A8010A,
+				4BC8AFE104FD3C3000A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Spell Checking";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Spell Checking";
+			productReference = 4BC8AFDD04FD3C2800A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AISpellCheckingPlugin</string>
+</dict>
+</plist>
+";
+		};
+		4BC8AFDD04FD3C2800A8010A = {
+			isa = PBXBundleReference;
+			path = "Spell Checking.AdiumPlugin";
+			refType = 3;
+		};
+		4BC8AFDE04FD3C2800A8010A = {
+			isa = PBXTargetDependency;
+			target = 4BC8AFDC04FD3C2800A8010A;
+		};
+		4BC8AFDF04FD3C2800A8010A = {
+			fileRef = 4BC8AFDD04FD3C2800A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC8AFE004FD3C3000A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4BC8AFE104FD3C3000A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4BC8AFE204FD3C5600A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AISpellCheckingPlugin.h;
+			path = "Plugins/Spell Checking/AISpellCheckingPlugin.h";
+			refType = 4;
+		};
+		4BC8AFE304FD3C5600A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AISpellCheckingPlugin.m;
+			path = "Plugins/Spell Checking/AISpellCheckingPlugin.m";
+			refType = 4;
+		};
+		4BC8AFE404FD3C5600A8010A = {
+			fileRef = 4BC8AFE204FD3C5600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC8AFE504FD3C5600A8010A = {
+			fileRef = 4BC8AFE304FD3C5600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC8AFE604FD3CEB00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AISpellCheckingPreferences.h;
+			path = "Plugins/Spell Checking/AISpellCheckingPreferences.h";
+			refType = 4;
+		};
+		4BC8AFE704FD3CEB00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AISpellCheckingPreferences.m;
+			path = "Plugins/Spell Checking/AISpellCheckingPreferences.m";
+			refType = 4;
+		};
+		4BC8AFE804FD3CEB00A8010A = {
+			fileRef = 4BC8AFE604FD3CEB00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC8AFE904FD3CEB00A8010A = {
+			fileRef = 4BC8AFE704FD3CEB00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC8AFEA04FD3E9500A8010A = {
+			isa = PBXFileReference;
+			name = SpellCheckingPrefs.nib;
+			path = "Plugins/Spell Checking/SpellCheckingPrefs.nib";
+			refType = 4;
+		};
+		4BC8AFEB04FD3E9600A8010A = {
+			fileRef = 4BC8AFEA04FD3E9500A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC8AFEC04FD413900A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = SpellingDefaults.plist;
+			path = "Plugins/Spell Checking/SpellingDefaults.plist";
+			refType = 4;
+		};
+		4BC8AFED04FD413900A8010A = {
+			fileRef = 4BC8AFEC04FD413900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC8AFEF04FD4BF000A8010A = {
+			fileRef = 4B333F73048144D900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC8AFF004FD51F400A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC8AFF104FD51F400A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC8AFF204FD51F400A8010A = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
 			settings = {
@@ -16206,7 +16430,6 @@
 				F579398B033E756E01A8010A,
 				F579398C033E756E01A8010A,
 				F570A60603704E7201A8010A,
-				4B64797903DC29B200A8010A,
 				4BCFEC5A03F574A400A8010A,
 				4BCFEF4D03F59F2800A8010A,
 				4B707E7104B8B34800A8010A,

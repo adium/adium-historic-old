@@ -87,9 +87,17 @@
     }
 }
 
-- (void)initTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+- (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
     //Ignored
+}
+
+- (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+{
+    //AIChat		*chat = [inTextEntryView chat];
+    //We could choose to de-clear the contact for typing notifications here
+    //[[chat statusDictionary] removeObjectForKey:CAN_RECEIVE_TYPING];
+    
 }
 
 @end

@@ -23,16 +23,25 @@
 //init
 - (void)initController
 {
+    //Content Filtering
     outgoingContentFilterArray = [[NSMutableArray alloc] init];
     incomingContentFilterArray = [[NSMutableArray alloc] init];
     displayingContentFilterArray = [[NSMutableArray alloc] init];
+
+    //Text entry filtering and tracking
     textEntryFilterArray = [[NSMutableArray alloc] init];
+    textEntryContentFilterArray = [[NSMutableArray alloc] init];
+    textEntryViews = [[NSMutableArray alloc] init];
+    
+    //Chat tracking
     chatArray = [[NSMutableArray alloc] init];
 
+    //Register our event notifications for message sending and receiving
     [owner registerEventNotification:Content_DidReceiveContent displayName:@"Message Received"];
     [owner registerEventNotification:Content_DidSendContent displayName:@"Message Sent"];
 }
 
+//close
 - (void)closeController
 {
 
@@ -41,85 +50,133 @@
 //dealloc
 - (void)dealloc
 {
-    [chatArray release];
     [outgoingContentFilterArray release];
     [incomingContentFilterArray release];
+    [displayingContentFilterArray release];
     [textEntryFilterArray release];
+    [textEntryContentFilterArray release];
+    [textEntryViews release];
+    [chatArray release];
+
     [super dealloc];
 }
 
-// Content Handlers--
-- (void)registerDefaultHandler:(id <AIContentHandler>)inHandler forContentType:(NSString *)inType
-{
 
+//Text Entry Filters ------------------------------------------------------------------------------------
+//Register a text entry filter
+- (void)registerTextEntryFilter:(id)inFilter
+{
+    if([inFilter respondsToSelector:@selector(didOpenTextEntryView:)] &&
+       [inFilter respondsToSelector:@selector(willCloseTextEntryView:)]){
+
+        //For performance reasons, we place filters that actually monitor content in a separate array
+        if([inFilter respondsToSelector:@selector(stringAdded:toTextEntryView:)] &&
+           [inFilter respondsToSelector:@selector(contentsChangedInTextEntryView:)]){
+            [textEntryContentFilterArray addObject:inFilter];
+        }else{
+            [textEntryFilterArray addObject:inFilter];
+        }
+
+    }else{
+        NSLog(@"Invalid AITextEntryFilter");
+    }
 }
 
-- (void)invokeDefaultHandlerForObject:(AIContentObject *)inObject
+//Returns all currently open text entry views
+- (NSArray *)openTextEntryViews
 {
-
-
+    return(textEntryViews);
 }
 
-
-// Text Entry Filters--
-- (void)registerTextEntryFilter:(id <AITextEntryFilter>)inFilter
-{
-    [textEntryFilterArray addObject:inFilter];
-}
-
+//Called when a string is added to a text entry view
 - (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
-    NSEnumerator		*enumerator;
-    id <AITextEntryFilter>	filter;
+    NSEnumerator	*enumerator;
+    id			filter;
 
-    enumerator = [textEntryFilterArray objectEnumerator];
+    //Notify all text entry filters (that are interested in filtering content)
+    enumerator = [textEntryContentFilterArray objectEnumerator];
     while((filter = [enumerator nextObject])){
         [filter stringAdded:inString toTextEntryView:inTextEntryView];
     }
 }
 
+//Called when a text entry view's content changes
 - (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
-    NSEnumerator		*enumerator;
-    id <AITextEntryFilter>	filter;
+    NSEnumerator	*enumerator;
+    id			filter;
 
-    enumerator = [textEntryFilterArray objectEnumerator];
+    //Notify all text entry filters (that are interested in filtering content)
+    enumerator = [textEntryContentFilterArray objectEnumerator];
     while((filter = [enumerator nextObject])){
         [filter contentsChangedInTextEntryView:inTextEntryView];
     }
 }
 
-- (void)initTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+//Called as a text entry view is opened
+- (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
-    NSEnumerator		*enumerator;
-    id <AITextEntryFilter>	filter;
+    NSEnumerator	*enumerator;
+    id			filter;
 
+    //Track the view
+    [textEntryViews addObject:inTextEntryView];
+    
+    //Notify all text entry filters
+    enumerator = [textEntryContentFilterArray objectEnumerator];
+    while((filter = [enumerator nextObject])){
+        [filter didOpenTextEntryView:inTextEntryView];
+    }
     enumerator = [textEntryFilterArray objectEnumerator];
     while((filter = [enumerator nextObject])){
-        [filter initTextEntryView:inTextEntryView];
+        [filter didOpenTextEntryView:inTextEntryView];
+    }
+}
+
+//Called as a text entry view is closed
+- (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+{
+    NSEnumerator	*enumerator;
+    id			filter;
+
+    //Stop tracking the view
+    [textEntryViews removeObject:inTextEntryView];
+
+    //Notify all text entry filters
+    enumerator = [textEntryContentFilterArray objectEnumerator];
+    while((filter = [enumerator nextObject])){
+        [filter willCloseTextEntryView:inTextEntryView];
+    }
+    enumerator = [textEntryFilterArray objectEnumerator];
+    while((filter = [enumerator nextObject])){
+        [filter willCloseTextEntryView:inTextEntryView];
     }
 }
 
 
-//Content Filters--
+//Content Filters -----------------------------------------------------------------------------------------
+//
 - (void)registerOutgoingContentFilter:(id <AIContentFilter>)inFilter 
 {
     [outgoingContentFilterArray addObject:inFilter];
 }
 
+//
 - (void)registerIncomingContentFilter:(id <AIContentFilter>)inFilter
 {
     [incomingContentFilterArray addObject:inFilter];
 }
 
+//
 - (void)registerDisplayingContentFilter:(id <AIContentFilter>)inFilter
 {
     [displayingContentFilterArray addObject:inFilter];
 }
 
 
-// Messaging --------------------------------------------------------------------------------
-//Add a message object to a handle
+//Messaging -----------------------------------------------------------------------------------------------
+//Add an incoming content object
 - (void)addIncomingContentObject:(AIContentObject *)inObject
 {
     AIChat		*chat = [inObject chat];
@@ -158,7 +215,7 @@
     }
 }
 
-//Send a message object to a handle
+//Send a content object
 - (BOOL)sendContentObject:(AIContentObject *)inObject
 {
     AIChat		*chat = [inObject chat];
@@ -202,6 +259,7 @@
     return(sent);
 }
 
+//Display a content object
 - (void)displayContentObject:(AIContentObject *)inObject
 {
     AIChat		*chat = [inObject chat];
@@ -225,7 +283,7 @@
     [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 }
 
-//Is an account/chat available for sending content?
+//Returns YES if the account/chat is available for sending content
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject onAccount:(AIAccount *)inAccount 
 {
     if([inAccount conformsToProtocol:@protocol(AIAccount_Content)]){
@@ -290,24 +348,25 @@
     return(YES);
 }
 
-//Returns all chats w/ the object
+//Returns all chats with the object
 - (NSArray *)allChatsWithListObject:(AIListObject *)inObject
 {
     NSMutableArray	*foundChats = [NSMutableArray array];
     NSEnumerator	*chatEnumerator;
     AIChat		*chat;
 
+    //Scan all the open chats
     chatEnumerator = [chatArray objectEnumerator];
     while((chat = [chatEnumerator nextObject])){
         NSEnumerator	*objectEnumerator;
         AIListObject	*object;
 
+        //Scan the objects participating in this chat, looking for the requested object
         objectEnumerator = [[chat participatingListObjects] objectEnumerator];
         while((object = [objectEnumerator nextObject])){
             if(object == inObject){
                 [foundChats addObject:chat];
             }
-
         }
     }
 

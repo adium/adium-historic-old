@@ -54,8 +54,6 @@
     //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:self];
 
-    [[owner contentController] initTextEntryView:self];
-
     return(self);
 }
 
@@ -64,9 +62,6 @@
     if(owner != inOwner){
         [owner release];
         owner = [inOwner retain];
-
-        //Let observers know we're inited
-        [[owner contentController] initTextEntryView:self];
     }
 }
 

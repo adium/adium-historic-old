@@ -44,19 +44,14 @@
     [self preferencesChanged:nil];
 }
 
-- (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
-{
-    //Ignored
-}
-
-- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
-{
-    //Ignored
-}
-
-- (void)initTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+- (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
     [self _resetFormattingInView:inTextEntryView]; //Set the formatting to default
+}
+
+- (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+{
+    //Ignored
 }
 
 - (void)preferencesChanged:(NSNotification *)notification

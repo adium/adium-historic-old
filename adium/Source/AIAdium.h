@@ -214,12 +214,6 @@ typedef enum {
 - (void)filterContentObject:(AIContentObject *)inObject;
 @end
 
-@protocol AITextEntryFilter //Interpret text as it's entered
-- (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; //keypress
-- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; //delete,copy,paste,etc
-- (void)initTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
-@end
-
 @protocol AIServiceController <NSObject>
 - (NSString *)identifier;
 - (NSString *)description;
@@ -258,6 +252,15 @@ typedef enum {
 @protocol AIContactListTooltipEntry <NSObject>
 - (NSString *)label;
 - (NSString *)entryForObject:(AIListObject *)inObject;
+@end
+
+@interface NSObject (AITextEntryFilter)
+//required
+- (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; 
+- (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
+//optional
+- (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; //keypress
+- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; //delete,copy,paste,etc
 @end
 
 
@@ -315,37 +318,36 @@ typedef enum {
 @interface AIContentController : NSObject {
     IBOutlet	AIAdium		*owner;
 
-    NSMutableArray		*textEntryFilterArray;
-
     NSMutableArray		*outgoingContentFilterArray;
     NSMutableArray		*incomingContentFilterArray;
     NSMutableArray		*displayingContentFilterArray;
 
+    NSMutableArray		*textEntryFilterArray;
+    NSMutableArray		*textEntryContentFilterArray;
+    NSMutableArray		*textEntryViews;
+
     NSMutableArray		*chatArray;
 }
 
-//Content default handlers
-- (void)registerDefaultHandler:(id <AIContentHandler>)inHandler forContentType:(NSString *)inType;
-- (void)invokeDefaultHandlerForObject:(AIContentObject *)inObject;
-
 //Chats
-- (void)addIncomingContentObject:(AIContentObject *)inObject;
-- (BOOL)sendContentObject:(AIContentObject *)inObject;
-- (void)displayContentObject:(AIContentObject *)inObject;
+- (NSArray *)allChatsWithListObject:(AIListObject *)inObject;
 - (AIChat *)openChatOnAccount:(AIAccount *)inAccount withListObject:(AIListObject *)inListObject;
 - (void)noteChat:(AIChat *)inChat forAccount:(AIAccount *)inAccount;
-- (NSArray *)allChatsWithListObject:(AIListObject *)inObject;
 - (BOOL)closeChat:(AIChat *)inChat;
 
 //Sending / Receiving content
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject onAccount:(AIAccount *)inAccount;
 - (void)addIncomingContentObject:(AIContentObject *)inObject;
+- (BOOL)sendContentObject:(AIContentObject *)inObject;
+- (void)displayContentObject:(AIContentObject *)inObject;
 
-//Filtering text entry
-- (void)registerTextEntryFilter:(id <AITextEntryFilter>)inFilter;
-- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
+//Filtering / Tracking text entry
+- (void)registerTextEntryFilter:(id)inFilter;
+- (NSArray *)openTextEntryViews;
 - (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
-- (void)initTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
+- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
+- (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
+- (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
 
 //Filtering content
 - (void)registerOutgoingContentFilter:(id <AIContentFilter>)inFilter;

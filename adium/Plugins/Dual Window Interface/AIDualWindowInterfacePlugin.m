@@ -24,7 +24,6 @@
 #import "AINewMessagePrompt.h"
 #import "AIDualWindowPreferences.h"
 
-#define DUAL_SPELLING_DEFAULT_PREFS		@"DualSpellingDefaults"
 #define DUAL_INTERFACE_DEFAULT_PREFS		@"DualWindowDefaults"
 
 #define CONTACT_LIST_WINDOW_MENU_TITLE		@"Contact List"		//Title for the contact list menu item
@@ -68,7 +67,6 @@
     windowMenuArray = [[NSMutableArray alloc] init];
 
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_SPELLING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SPELLING];
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
     //Install Preference Views
