@@ -231,10 +231,7 @@ DeclareString(AppendNextMessage);
 
 	//Starting with version 1, styles can choose to not include template.html.  If the template is not included 
 	//Adium's default will be used.  This is preferred since any future template updates will apply to the style
-	if((!templateHTML || [templateHTML length] == 0) && styleVersion >= 1){
-		NSLog(@"%@",[NSBundle bundleForClass:[self class]]);
-		NSLog(@"%@",[[NSBundle bundleForClass:[self class]] pathForResource:@"Template" ofType:@"html"]);
-		
+	if((!templateHTML || [templateHTML length] == 0) && styleVersion >= 1){		
 		templateHTML = [NSMutableString stringWithContentsOfASCIIFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"Template" ofType:@"html"]];
 	}
 	templateHTML = [NSMutableString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];
