@@ -13,14 +13,13 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.67 2004/01/08 03:59:46 adamiser Exp $
+// $Id: AIContactController.m,v 1.68 2004/01/08 04:23:11 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
 #import "AIContactListEditorWindowController.h"
 #import "AIContactInfoWindowController.h"
 #import "AIPreferenceCategory.h"
-#import "AIContactListGeneration.h"
 
 #define CONTACT_LIST_GROUP_NAME		@"Contact List"		//The name of the main contact list group
 #define STRANGER_GROUP_NAME			@"__Strangers"		//The name of the hidden stranger group
@@ -50,6 +49,7 @@
 - (void)loadContactList;
 - (NSArray *)_arrayRepresentationOfGroupContent:(AIListGroup *)inGroup;
 - (void)_loadListObjectsFromGroupContent:(NSArray *)contentArray intoGroup:(AIListGroup *)inGroup;
+- (NSArray *)_informObserversOfObjectStatusChange:(AIListObject *)inObject withKeys:(NSArray *)modifiedKeys silent:(BOOL)silent;
 @end
 
 //Used to suppress compiler warnings

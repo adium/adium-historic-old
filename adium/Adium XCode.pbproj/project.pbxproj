@@ -4718,12 +4718,6 @@
 			settings = {
 			};
 		};
-		3419FDF30531585600C68BA3 = {
-			fileRef = 34BDA057053147C0000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3419FDF40531585600C68BA3 = {
 			fileRef = 34BDA06B053147C7000AB133;
 			isa = PBXBuildFile;
@@ -9168,7 +9162,6 @@
 				34BD9D1E053146CC000AB133,
 				34BD9D1F053146CC000AB133,
 				34BD9D20053146CC000AB133,
-				34BD9D21053146CC000AB133,
 				34BD9D22053146CC000AB133,
 				34BD9D23053146CC000AB133,
 				34FDD6E505632BFD00F5B30F,
@@ -9269,12 +9262,6 @@
 		};
 		34BD9D20053146CC000AB133 = {
 			fileRef = F57938FB033E745F01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9D21053146CC000AB133 = {
-			fileRef = 4BB54FE40476794200A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -9502,7 +9489,6 @@
 				34BD9D50053146CC000AB133,
 				34BD9D51053146CC000AB133,
 				34BD9D52053146CC000AB133,
-				34BD9D53053146CC000AB133,
 				34BD9D54053146CC000AB133,
 				34BD9D55053146CC000AB133,
 				34BD9D56053146CC000AB133,
@@ -9604,12 +9590,6 @@
 		};
 		34BD9D52053146CC000AB133 = {
 			fileRef = 9E95316903C8E0C700415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9D53053146CC000AB133 = {
-			fileRef = 4BB54FE50476794200A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -9783,7 +9763,6 @@
 				3419FDF00531585600C68BA3,
 				3419FDF10531585600C68BA3,
 				3419FDF20531585600C68BA3,
-				3419FDF30531585600C68BA3,
 				3419FDF40531585600C68BA3,
 				6C05CA1D054930AF0088ECBF,
 				3419FDF50531585600C68BA3,
@@ -22272,24 +22251,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BB54FE40476794200A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIContactListGeneration.h;
-			path = Source/AIContactListGeneration.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BB54FE50476794200A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIContactListGeneration.m;
-			path = Source/AIContactListGeneration.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BB5809603E86BF600A8010A = {
 			fallbackIsa = PBXFileReference;
 			includeInIndex = 1;
@@ -31296,8 +31257,6 @@
 				6CF42678057763E200F27FAA,
 				F57938F6033E745F01A8010A,
 				F57938AB033E737001A8010A,
-				4BB54FE40476794200A8010A,
-				4BB54FE50476794200A8010A,
 				F55B415C03AB8B5601A8010A,
 				F55B415D03AB8B5601A8010A,
 				9E95316703C8E0BE00415B22,
