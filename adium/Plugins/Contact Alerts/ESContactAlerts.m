@@ -42,6 +42,9 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
     [super init];
 
     actionListMenu_cached = nil;
+    eventActionArray = nil;
+    activeContactObject = nil;
+    
     cachedAlertsDict = [[NSMutableDictionary alloc] init];
     
     tableView_actions = inTable;
@@ -94,8 +97,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
 - (void)configForObject:(AIListObject *)inObject
 {
     [activeContactObject release];
-    activeContactObject = inObject;
-    [activeContactObject retain];
+    activeContactObject = [inObject retain];
     
     [self reload:activeContactObject usingCache:YES];
 }
@@ -131,7 +133,7 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
             
             //Update the cache
             if(newActionArray){
-                newActionArray = [newActionArray mutableCopy];
+                newActionArray = [[newActionArray mutableCopy] autorelease];
                 [cachedAlertsDict setObject:newActionArray forKey:UID]; //cache it
             }else{
                 [cachedAlertsDict removeObjectForKey:UID]; //pref is now clear - remove from our cache
@@ -141,9 +143,9 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
         //If this is our currently active contact
         if([[object UID] compare:[activeContactObject UID]] == 0) {
             if (!newActionArray) {
-                newActionArray = [[NSMutableArray alloc] init]; //Create a new, empty action array   
+                newActionArray = [[[NSMutableArray alloc] init] autorelease]; //Create a new, empty action array   
             }
-            [eventActionArray release]; eventActionArray = newActionArray;
+            [eventActionArray release]; eventActionArray = [newActionArray retain];
             
             //inform the controller
             [[adium contactAlertsController] updateOwner:self toArray:eventActionArray forObject:object];
@@ -228,9 +230,8 @@ int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *con
 //Called by the event popUp menu (Inserts a new event)
 - (IBAction)newEvent:(id)sender
 {
-    NSMutableDictionary	*actionDict;
+    NSMutableDictionary	*actionDict = [[NSMutableDictionary alloc] init];
     NSString * event = [[sender representedObject] objectForKey:KEY_EVENT_NOTIFICATION];
-    actionDict = [[NSMutableDictionary alloc] init];
     if ( [event hasPrefix:@"!"] ) //negative status
     {
         event = [event stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"!"]];
