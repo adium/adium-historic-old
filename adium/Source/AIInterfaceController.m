@@ -13,17 +13,17 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.55 2004/02/21 20:53:01 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.56 2004/02/21 21:47:02 evands Exp $
 
 #import "AIInterfaceController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"
 #define ERROR_MESSAGE_WINDOW_TITLE		AILocalizedString(@"Adium : Error","Error message window title")
-#define LABEL_ENTRY_SPACING                     4.0
-#define DISPLAY_IMAGE_ON_RIGHT                  NO
+#define LABEL_ENTRY_SPACING				4.0
+#define DISPLAY_IMAGE_ON_RIGHT			NO
 
 #define PREF_GROUP_FORMATTING			@"Formatting"
-#define KEY_FORMATTING_FONT			@"Default Font"
+#define KEY_FORMATTING_FONT				@"Default Font"
 
 
 @interface AIInterfaceController (PRIVATE)
@@ -54,21 +54,6 @@
     [owner registerEventNotification:Interface_ErrorMessageReceived displayName:@"Error"];
 }
 
-- (void)closeController
-{
-    [[interfaceArray objectAtIndex:0] closeInterface]; //Close the interface
-}
-
-//dealloc
-- (void)dealloc
-{
-    [contactListViewArray release]; contactListViewArray = nil;
-    [messageViewArray release]; messageViewArray = nil;
-    [interfaceArray release]; interfaceArray = nil;
-    
-    [super dealloc];
-}
-
 - (void)finishIniting
 {
     //Load the interface
@@ -77,6 +62,26 @@
     //Configure our dynamic paste menu item
     [menuItem_paste setDynamic:YES];
     [menuItem_pasteFormatted setDynamic:YES];
+}
+
+- (void)closeController
+{
+    [[interfaceArray objectAtIndex:0] closeInterface]; //Close the interface
+}
+
+// Dealloc
+- (void)dealloc
+{
+    [contactListViewArray release]; contactListViewArray = nil;
+    [messageViewArray release]; messageViewArray = nil;
+    [interfaceArray release]; interfaceArray = nil;
+	
+    [tooltipListObject release]; tooltipListObject = nil;
+	[tooltipTitle release]; tooltipTitle = nil;
+	[tooltipBody release]; tooltipBody = nil;
+	[tooltipImage release]; tooltipImage = nil;
+	
+    [super dealloc];
 }
 
 - (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows
@@ -379,7 +384,8 @@
                 [entryArray addObject:entryString];
                 [labelArray addObject:labelString];
                 
-                NSAttributedString * labelAttribString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@:",labelString] attributes:labelDict];
+                NSAttributedString * labelAttribString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@:",labelString] 
+																						 attributes:labelDict];
                 
                 //The largest size should be the label's size plus the distance to the next tab at least a space past its end
                 labelWidth = [labelAttribString size].width;
@@ -397,8 +403,8 @@
     labelEnumerator = [labelArray objectEnumerator];
     
     while((entryString = [enumerator nextObject])){        
-        NSAttributedString * labelString = [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:\t",[labelEnumerator nextObject]]
-                                                                            attributes:labelDict] autorelease];
+        NSAttributedString * labelAttribString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:\t",[labelEnumerator nextObject]]
+																				 attributes:labelDict];
         
         //Add a carriage return
         [titleString appendString:@"\r" withAttributes:labelEndLineDict];
@@ -410,7 +416,8 @@
         }
         
         //Add the label (with its spacing)
-        [titleString appendAttributedString:labelString];
+        [titleString appendAttributedString:labelAttribString];
+		[labelAttribString release];
         [titleString appendAttributedString:[entryString addAttributes:entryDict range:NSMakeRange(0,[entryString length])]];
     }
     return [titleString autorelease];
