@@ -72,6 +72,16 @@
 	accountMenuPluginsArray = [[NSMutableArray alloc] init];
 	_cachedActiveServices = nil;
 
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(rebuildAllAccountMenuItems)
+									   name:AIStatusIconSetDidChangeNotification
+									 object:nil];
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(rebuildAllAccountMenuItems)
+									   name:AIServiceIconSetDidChangeNotification
+									 object:nil];
+	
+	
 	//Default account preferences
 	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ACCOUNT_DEFAULT_PREFS forClass:[self class]]
 										  forGroup:PREF_GROUP_ACCOUNTS];
