@@ -51,20 +51,20 @@ from   adium.messages m,
        adium.users r natural join adium.user_display_name r_disp
 where  m.sender_id = s.user_id
   and  m.recipient_id = r.user_id
-  and  s_disp.effdate < message_date
+  and  s_disp.effdate <= message_date
   and  not exists (
        select 'x'
        from   adium.user_display_name udn
        where  udn.effdate > s_disp.effdate
        and    udn.user_id = s.user_id
-       and    udn.effdate < message_date)
-  and  r_disp.effdate < message_date
+       and    udn.effdate <= message_date)
+  and  r_disp.effdate <= message_date
   and  not exists (
        select 'x'
        from   adium.user_display_name udn
        where  udn.effdate > r_disp.effdate
        and    udn.user_id = r.user_id
-       and    udn.effdate < message_date);
+       and    udn.effdate <= message_date);
 
 create or replace rule insert_message_v as
 on insert to adium.message_v

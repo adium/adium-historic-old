@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<html xmlns:xalan="http://xml.apache.org/xslt">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ascii">
+<title>Performance / Maintenance</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+<body><table border="0" cellspacing="0" cellpadding="5">
+<tr><td colspan="2" bgcolor="#000000" align="right"><h2 class="titlebar">Performance / Maintenance</h2></td></tr>
+<tr>
+<td width="170" height="20" background="images/transp-change.png" bgcolor="green"></td>
+<td height="20" background="images/transp-change.png"></td>
+</tr>
+<tr>
+<td width="170" bgcolor="green" valign="top" align="right">
+<h4>Adium SQL Links<br>
+</h4>
+<a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a><br><a href="tsearch.html" class="sidebar">TSearch Installation</a><br><a href="resin.html" class="sidebar">Resin Installation</a><br><a href="technical.html" class="sidebar">Technical
+              Details</a><br><a href="performance.html" class="sidebar">Performance/Maintenance</a><br><br><h4>Other links</h4>
+<a href="http://www.adiumx.com/" class="offsides">Adium</a><br><a href="http://adium.sourceforge.net" class="offsides">Adium
+                2.0</a><br><a href="http://www.funmac.com/forumdisplay.php?forumid=38" class="offsides">Adium
+                Forums</a><br><a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.3/interactive/index.html" class="offsides">PSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a>
+</td>
+<td>
+<h2>Maintenance</h2>
+<p>PostgreSQL requires some routine maintenance to function properly.
+      As PostgreSQL makes an update, it does not actually delete the old
+      version of the record.  It does this because if multiple processes are
+      accessing the database at the same time, a single process has no way of
+      knowing if any other process is looking at the same record its modified.
+      Therefore, any process/transaction that started looking at the table
+      before the record was modified see the old version, even if the record
+      hsa already been changed.</p>
+<p>This problem is very simple to solve.  All that needs to be run is
+      PostgreSQL's <code>VACCUM</code> command.  This flags all old tuples to
+      be overwritten the next time they need to be.  It's meant to be run in
+      an update/delete heavy application, and the adium stuff isn't very
+      update/delete heavy under normal use, but it's still a good idea to run
+      it periodically.  (Once a week or so.)</p>
+<p>Running vacuum can be accomplished a few ways:</p>
+<ul>
+      <li>Through psql:<div class="tutorialcode"><pre>vacuum;
+vacuum analyze;</pre></div>
+</li>
+      <li>Through the command line:<div class="tutorialcode"><pre>vacuumdb
+vacuumdb -z</pre></div>
+</li>
+    </ul>
+<p>These can easily be added to a weekly cron job or automatic maintenance
+      script.</p>
+<h2>Performance</h2>
+<p>If you are not getting the kind of performance you want from
+      PostgreSQL, a few things might be at blame.  PostgreSQL makes use of
+      indexes to perform faster lookups on tables.  These indexes are very
+      similar to indexes in a book, and serve the same purpose.  PostgreSQL is
+      very smart (sometimes too smart) about when not to use indexes.  If your
+      table isn't big enough, it won't take advantage of them at all.</p>
+<p>If you want to see if PostgreSQL is using an index for something, you
+      can construct a similar query in psql:</p>
+<div class="tutorialcode">
+      <pre>select * from adium.message_v where message_date &gt; 'now'::date</pre>
+    </div>
+<p>If you want to see how fast it runs:</p>
+<div class="tutorialcode">
+      <pre>explain analyze select * from messages 
+where message_date &gt;'now'::date;</pre>
+</div>
+<p>The output I get is something like this, for a relatively typical
+      day:</p>
+<div class="tutorialcode">
+      <pre>Index Scan using adium_msg_date_sender_recipient on messages
+  (cost=0.00..160.60 rows=45 width=97) (actual time=0.11..3.55 rows=223 loops=1)
+  Index Cond: (message_date &gt; '2003-09-02 00:00:00'::timestamp without time zone)
+ Total runtime: 4.31 msec
+ (3 rows)</pre>
+</div>
+<hr>
+<div align="right"><a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a></div>
+</td>
+</tr>
+</table></body>
+</html>

@@ -147,11 +147,22 @@
     escapeSender, escapeRecip, escapeMessage, s_service, r_service, escapeSendDisplay, escapeRecDisplay];
     
     res = PQexec(conn, [sqlStatement UTF8String]);
-    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+    if (!res || PQresultStatus(res) != PGRES_COMMAND_OK) {
         NSLog(@"%s / %s\n%@", PQresStatus(PQresultStatus(res)), PQresultErrorMessage(res), sqlStatement);
         [[owner interfaceController] handleErrorMessage:@"Insertion failed." withDescription:@"Database Insert Failed"];
-        if (res != nil) {
+        if (res) {
             PQclear(res);
+        }
+        if (PQresultStatus(res) == PGRES_FATAL_ERROR) {
+            PQfinish(conn);
+            conn = PQconnectdb("");
+            if (PQstatus(conn) == CONNECTION_BAD)
+            {
+                [[owner interfaceController] handleErrorMessage:@"Database reconnect failed.." 			withDescription:@"Check your settings and try again."];
+                NSLog(@"%s", PQerrorMessage(conn));
+            } else {
+                NSLog(@"Connection to PostgreSQL successfully made.");
+            }
         }
     }
 

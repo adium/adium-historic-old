@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 401 $ $Date: 2003/08/28 09:19:57 $ -->
+<!--$Rev: 418 $ $Date: 2003/09/09 01:18:57 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -59,7 +59,7 @@ try {
         String display_name = new String(rset.getString("display_name"));
         
         out.print("<td valign=\"top\">");
-        pstmt = conn.prepareStatement(" select " +
+        pstmt = conn.prepareStatement("select " +
         " count(*) as total_sent, "+
         " min(length(message)) as min_sent_length, " +
         " max(length(message)) as max_sent_length, " +
@@ -219,7 +219,9 @@ try {
         out.print("</tr></table>");
         
         out.print("</td><td valign=\"top\" align=\"left\">");
-        out.print("View detailed statistics on the following months:<br>");
+        out.print("<table><tr><td colspan=\"2\">");
+        out.print("View detailed statistics on the following months:");
+        out.print("</td></tr><tr><td>");
         pstmt = conn.prepareStatement("select distinct " +
         " to_char(date_trunc('month', message_date), 'Mon, YYYY') " +
         " as date, date_trunc('month', message_date) as full_date " +
@@ -229,23 +231,21 @@ try {
         
         rset = pstmt.executeQuery();
         
-        int count = 1;
         while(rset.next()) {
             out.print("<a href=\"details.jsp?sender=" +
             sender_sn + 
             "&sender_id=" + sender +
             "&date=" + rset.getString("full_date") + "\">");
             out.print(rset.getString("date") + "</a><br>");
-            if(count % 23 == 0) out.print("</td><td valign=\"top\"" +
+            if(rset.getRow() % 23 == 0) out.print("</td><td valign=\"top\"" +
                 " align=\"left\">");
-            count++;
         }
-
         out.print("</td></tr></table>");
-        
-        pstmt = conn.prepareStatement("select username, recipient_id as \"Recipient\", "+ 
-        " count(*) as \"Sent\", (select count(*)"+
-        " from messages where"+
+        out.print("</td></tr></table>");
+
+        pstmt = conn.prepareStatement(" select username, recipient_id as \"Recipient\", "+ 
+        " count(*) as \"Sent\", (select sum(num_messages)"+
+        " from adium.user_statistics where"+
         " recipient_id = a.sender_id and sender_id = a.recipient_id) as " +
         " \"Recieved\", " +
         " trunc(avg(length(message)), 2) as "+
@@ -273,7 +273,15 @@ try {
         rset = pstmt.executeQuery();
 
         rsmd = rset.getMetaData();
-
+        
+        /*
+        out.print("<pre>");
+        while(rset.next()) {
+            out.print(rset.getString(1) + "\n");
+        }
+        out.print("</pre>");
+        */
+        
         out.print("<table>");
         
         int cntr = 0;

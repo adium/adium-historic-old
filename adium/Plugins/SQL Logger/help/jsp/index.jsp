@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 413 $ $Date: 2003/09/03 05:16:13 $ -->
+<!--$Rev: 419 $ $Date: 2003/09/09 01:18:57 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -293,7 +293,13 @@ try {
         rset.getString("sender_sn") + 
         "&to=" + rset.getString("recipient_sn") + 
         "&after=" + afterDate +
-        "&before=" + beforeDate + "#" + rset.getInt("message_id") + "\">");
+        "&before=" + beforeDate + "#" + rset.getInt("message_id") + "\" ");
+        if(showDisplay) {
+            out.print("title=\"" + rset.getString("sender_sn"));
+        } else {
+            out.print("title=\"" + rset.getString("sender_display"));
+        }
+        out.print("\">");
         out.print("<font color=\"" + sent_color + "\">");
         if(showDisplay) {
             out.print(rset.getString("sender_display"));
@@ -314,7 +320,7 @@ try {
             if(showDisplay) {
                 out.print(rset.getString("recipient_display"));
             } else {
-                out.println(rset.getString("recipient_sn"));
+                out.print(rset.getString("recipient_sn"));
             }
             out.print(")</font>");
         }
