@@ -20,6 +20,7 @@
 - (NSString *)_executeScript:(NSDictionary *)infoDict withArguments:(NSArray *)arguments;
 - (void)_replaceKeyword:(NSString *)keyword withScript:(NSDictionary *)infoDict inString:(NSString *)inString toObject:(id)toObject;
 - (NSArray *)_argumentsFromString:(NSString *)inString;
+- (void)buildScriptMenu;
 @end
 
 int _scriptTitleSort(id scriptA, id scriptB, void *context);
@@ -38,7 +39,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	
 	//Start building the script menu
 	scriptMenu = nil;
-	[NSThread detachNewThreadSelector:@selector(buildScriptMenu) toTarget:self withObject:nil];
+	[NSThread detachNewThreadSelector:@selector(_buildScriptMenuThread) toTarget:self withObject:nil];
 	
 	//Perform substitutions on outgoing content
 	[[adium contentController] registerOutgoingContentFilter:self];
@@ -134,25 +135,32 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 //Script Menu ----------------------------------------------------------------------------------------------------------
 #pragma mark Script Menu
 //Build the script menu
-- (void)buildScriptMenu
+- (void)_buildScriptMenuThread
 {
 	buildingScriptMenu = YES;
 	
+	[NSThread setThreadPriority:0.0];
+	
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
-	if(!scriptArray) [self loadScripts];
-	
-	//Sort the scripts
-	[self _sortScriptsByTitle:scriptArray];
-		
-	//Build the menu
-	[scriptMenu release]; scriptMenu = [[NSMenu alloc] initWithTitle:@"Scripts"];
-	[self _appendScripts:scriptArray toMenu:scriptMenu atLevel:0];
-	[scriptMenuItem setSubmenu:scriptMenu];
+	[self buildScriptMenu];
 	
 	[pool release];
 	
 	buildingScriptMenu = NO;
+}
+
+- (void)buildScriptMenu
+{
+	if(!scriptArray) [self loadScripts];
+	
+	//Sort the scripts
+	[self _sortScriptsByTitle:scriptArray];
+	
+	//Build the menu
+	[scriptMenu release]; scriptMenu = [[NSMenu alloc] initWithTitle:@"Scripts"];
+	[self _appendScripts:scriptArray toMenu:scriptMenu atLevel:0];
+	[scriptMenuItem setSubmenu:scriptMenu];
 }
 
 //Alphabetize scripts
