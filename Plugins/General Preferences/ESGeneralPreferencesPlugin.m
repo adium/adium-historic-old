@@ -98,7 +98,7 @@
 			path = [adium pathOfPackWithName:[prefDict objectForKey:KEY_STATUS_ICON_PACK]
 								   extension:@"AdiumStatusIcons"
 						  resourceFolderName:@"Status Icons"];
-			
+
 			[AIStatusIcons setActiveStatusIconsFromPath:path];
 		}
 		

@@ -21,6 +21,8 @@
                 "checkBox_sendOnEnter" = NSButton; 
                 "checkBox_sendOnReturn" = NSButton; 
                 "popUp_outputDevice" = NSPopUpButton; 
+                "popUp_serviceIcons" = NSPopUpButton; 
+                "popUp_statusIcons" = NSPopUpButton; 
                 "popUp_tabKeys" = NSPopUpButton; 
                 "slider_volume" = NSSlider; 
             }; 
