@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIToolbarController.m,v 1.10 2003/12/14 05:46:36 jmelloy Exp $
+// $Id: AIToolbarController.m,v 1.11 2003/12/22 23:55:54 adamiser Exp $
 
 #import "AIToolbarController.h"
 
@@ -97,6 +97,7 @@
     NSEnumerator	*enumerator;
     NSString		*type;
     
+    //Add our toolbar items
     enumerator = [types objectEnumerator];
     while(type = [enumerator nextObject]){
 	NSDictionary     *availableItems = [toolbarItems objectForKey:type];
@@ -104,7 +105,7 @@
 	    [items addEntriesFromDictionary:availableItems];
 	}
     }
-    
+
     return(items);
 }
 
