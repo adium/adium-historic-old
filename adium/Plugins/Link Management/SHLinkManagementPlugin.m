@@ -72,7 +72,7 @@
     if([responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]){
 		[SHLinkEditorWindowController showLinkEditorForResponder:responder
 														onWindow:keyWindow
-													existingLink:YES];
+												   showFavorites:YES];
     }
 }
 

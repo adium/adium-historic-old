@@ -24,16 +24,13 @@
     IBOutlet    SHAutoValidatingTextView    *textView_URL;
     IBOutlet    NSImageView                 *imageView_invalidURLAlert;
     
-                BOOL                         editLink;
-              //  BOOL                         favoriteWindow;
-
-                NSRange                      selectionRange;
+//                NSRange                      selectionRange;
                 NSResponder                 *editableView;
 
-                NSMutableArray                *favoritesDict;
+                NSMutableArray				*favoritesDict;
 }
 
-+ (void)showLinkEditorForResponder:(NSResponder *)responder onWindow:(NSWindow *)parentWindow existingLink:(BOOL)existingLink;
++ (void)showLinkEditorForResponder:(NSResponder *)responder onWindow:(NSWindow *)parentWindow showFavorites:(BOOL)showFavorites;
 
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)cancel:(id)sender;
