@@ -288,12 +288,24 @@ DeclareString(AppendNextMessage);
  */
 - (NSString *)baseTemplateWithVariant:(NSString *)variant chat:(AIChat *)chat
 {
-	NSMutableString	*templateHTML = [NSMutableString stringWithFormat:baseHTML,		//Template
-		[[NSURL fileURLWithPath:stylePath] absoluteString],							//Base path
-		(styleVersion < 3 ? @"" : @"@import url( \"main.css\" );"),					//Import main.css by default (For version 3 and newer styles)
-		[self pathForVariant:variant],												//Variant path
-		(showHeader ? headerHTML : @""),
-		footerHTML];
+	NSMutableString	*templateHTML;
+
+	//Old styles may be using an old custom 4 parameter baseHTML.  Styles version 3 and higher should
+	//be using the bundled (or a custom) 5 parameter baseHTML.
+	if(styleVersion < 3 && usingCustomBaseHTML){
+		templateHTML = [NSMutableString stringWithFormat:baseHTML,						//Template
+			[[NSURL fileURLWithPath:stylePath] absoluteString],							//Base path
+			[self pathForVariant:variant],												//Variant path
+			(showHeader ? headerHTML : @""),
+			footerHTML];
+	}else{
+		templateHTML = [NSMutableString stringWithFormat:baseHTML,						//Template
+			[[NSURL fileURLWithPath:stylePath] absoluteString],							//Base path
+			(styleVersion < 3 ? @"" : @"@import url( \"main.css\" );"),					//Import main.css by default (For version 3 and newer styles)
+			[self pathForVariant:variant],												//Variant path
+			(showHeader ? headerHTML : @""),
+			footerHTML];
+	}
 
 	return([self fillKeywordsForBaseTemplate:templateHTML chat:chat]);
 }
@@ -348,6 +360,9 @@ DeclareString(AppendNextMessage);
 	//Adium's default will be used.  This is preferred since any future template updates will apply to the style
 	if((!baseHTML || [baseHTML length] == 0) && styleVersion >= 1){		
 		baseHTML = [NSString stringWithContentsOfASCIIFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"Template" ofType:@"html"]];
+		usingCustomBaseHTML = NO;
+	}else{
+		usingCustomBaseHTML = YES;
 	}
 	[baseHTML retain];	
 	
