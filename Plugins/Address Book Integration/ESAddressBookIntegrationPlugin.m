@@ -501,7 +501,7 @@
 				personArrayForImageData = [[NSMutableArray alloc] init];
 			}
 			
-			[listObjectArrayForImageData addObject:inObject];
+			[listObjectArrayForImageData addObject:metaContact];
 			[personArrayForImageData addObject:person];
 			if (!imageLookupTimer){
 				imageLookupTimer = [[NSTimer scheduledTimerWithTimeInterval:IMAGE_LOOKUP_INTERVAL
