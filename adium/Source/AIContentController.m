@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.48 2004/01/28 02:04:26 evands Exp $
+// $Id: AIContentController.m,v 1.49 2004/01/28 17:53:24 evands Exp $
 
 #import "AIContentController.h"
 
@@ -257,6 +257,7 @@
 	} else {
         [self _filterAttributedString:nil
                      forContentObject:inObject
+					listObjectContext:nil
                      usingFilterArray:inArray];
     }
     
