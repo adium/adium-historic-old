@@ -114,13 +114,13 @@
       the update to everything in the table, and creating the index.  Creating
       the index can take 10-15 minutes or more, depending on how much data
       there is in your table.</p>
-<a name="parser.pl"><h2>parser.pl/parser-2.pl</h2></a><p>
-<code>Parser.pl</code> and <code>parser-2.pl</code> read through all 
+<a name="parser.pl"><h2>parser.pl</h2></a><div class="important">
+<code>parser-2.pl</code> does not require DBI and
+      DBD::Pg</div>
+<p>
+<code>Parser.pl</code> reads through all 
       of your Adium logs and
-      inserts the messages into the database.  
-      There is not a lot of difference between
-      the two, except that parser works on Adium logs before 2.0, and parser-2
-      goes over Adium 2.0 logs.</p>
+      inserts the messages into the database.</p>
 <p>The Perl scripts require a few modules for talking to the database.  It
       requires <code>DBI</code> and <code>DBD::Pg</code>.  DBI is a standard
       database-independant perl module.  You can download it with either CPAN

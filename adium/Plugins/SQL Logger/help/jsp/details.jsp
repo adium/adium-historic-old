@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/details.jsp $-->
-<!--$Rev: 487 $ $Date: 2003/11/27 06:37:44 $ -->
+<!--$Rev: 530 $ $Date: 2004/01/19 19:59:41 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -322,6 +322,7 @@ try {
     int cntr = 0;
     while(rset.next()) {
         if (cntr % 25 == 0) {
+            out.print("<td class=\"colhead\">#</td>");
             for(int j = 2; j <= rsmd.getColumnCount(); j++) {
                 out.print("<td class=\"colhead\">"+
                 rsmd.getColumnName(j) + "</td>");
@@ -329,6 +330,7 @@ try {
         }
 
         out.print("<tr>");
+        out.println("<td class=\"rowCount\">" + rset.getRow() + "</td>");
         if (cntr % 2 == 0) {
             out.print("<td><a href=\"statistics.jsp?sender=" + 
             rset.getString("Recipient") + "\">" + rset.getString("username") +

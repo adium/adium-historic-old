@@ -224,7 +224,9 @@ bare-bones: the sending and receiving screennames, the message, and a date.</p>
   paths.
   As it stands, it will run over every screenname who logged into your computer.
   In future versions, it will be able to specify a specific user.
-  </p>
+</p>
+<div class="important">If you wish to run <code>parser-2.pl</code> you do not
+  need to install DBI and DBD::Pg</div>
   <p>Download the newest source of Adium
     2.0 from CVS, and compile it.  Instructions for downloading through
     anonymous CVS access can be found <a
