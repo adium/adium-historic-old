@@ -53,12 +53,16 @@ static	BOOL alreadyMoving = NO;
 	resisted_XMotion = 0;
 	resisted_YMotion = 0;
 	oldWindowFrame = NSMakeRect(0,0,0,0);
+
+	return self;
 }
 
 //Stop observing movement
 - (void)dealloc
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidMoveNotification object:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self
+													name:NSWindowDidMoveNotification
+												  object:self];
 	[super dealloc];
 }
 
