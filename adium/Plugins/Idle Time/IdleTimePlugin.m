@@ -11,7 +11,7 @@
 #import "IdleTimeWindowController.h"
 #import "IdleTimePreferences.h"
 
-#define IDLE_ACTIVE_INTERVAL		1.0//30.0	//Checking delay when the user is active
+#define IDLE_ACTIVE_INTERVAL		30.0	//Checking delay when the user is active
 #define IDLE_INACTIVE_INTERVAL		1.0	//Checking delay when the user is idle
 
 #define IDLE_REMOVE_IDLE_TITLE		@"Remove Idle"
@@ -244,7 +244,6 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 //Returns the current # of seconds the user has been idle
 - (double)currentIdleTime
 {
-    NSLog(@"Double Idle:%0.2f  int Idle:%i",CGSSecondsSinceLastInputEvent(-1),(int)CGSSecondsSinceLastInputEvent(-1));
     return(CGSSecondsSinceLastInputEvent(-1));
 }
 
