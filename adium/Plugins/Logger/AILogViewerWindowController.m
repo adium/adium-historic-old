@@ -161,11 +161,14 @@ static AILogViewerWindowController *sharedInstance = nil;
         [[self window] center];
     }
 
-    //Sort by date
-    selectedColumn = [[tableView_results tableColumnWithIdentifier:@"Date"] retain];
-    
     //Prepare the search controls
     [self buildSearchMenu];
+    if([textView_content respondsToSelector:@selector(setUsesFindPanel:)]){
+	[textView_content setUsesFindPanel:YES];
+    }
+
+    //Sort by date
+    selectedColumn = [[tableView_results tableColumnWithIdentifier:@"Date"] retain];
     
     //Prepare indexing and filter searching
     [self initLogFiltering];
