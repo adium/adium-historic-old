@@ -26,9 +26,8 @@
 	BOOL				statusIconsVisible;
 	BOOL				serviceIconsVisible;
 	NSSize				userIconSize;
-	int					statusFontHeight;
-	int					labelFontHeight;
-			
+	int					statusFontHeight;	
+	
 	BOOL				backgroundColorIsStatus;
 	BOOL				backgroundColorIsEvents;
 	BOOL				shouldUseContactTextColors;

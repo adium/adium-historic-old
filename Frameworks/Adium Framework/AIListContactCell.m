@@ -9,8 +9,6 @@
 
 #import "AIListLayoutWindowController.h"
 
-#define FONT_HEIGHT_STRING		@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
 #define NAME_STATUS_PAD			6
 
 #define HULK_CRUSH_FACTOR 1
@@ -273,20 +271,6 @@
 	return(backgroundOpacity);
 }
 
-//Text Font
-- (void)setFont:(NSFont *)inFont
-{
-	NSDictionary		*attributes;
-	NSAttributedString 	*labelString;
-	
-	[super setFont:inFont];
-	
-	//Calculate and cache the height of this font
-	attributes = [NSDictionary dictionaryWithObject:[self font] forKey:NSFontAttributeName];
-	labelString = [[[NSAttributedString alloc] initWithString:FONT_HEIGHT_STRING attributes:attributes] autorelease];
-	labelFontHeight = [labelString heightWithWidth:1e7];
-}
-
 //
 - (void)setBackgroundColorIsStatus:(BOOL)isStatus
 {
@@ -487,12 +471,13 @@
 				default:
 				break;
 			}
-			int half = (drawRect.size.height - statusFontHeight) / 2.0;
+			int half = (drawRect.size.height - labelFontHeight) / 2.0;
+			int offset = (labelFontHeight - statusFontHeight) + ([[self font] descender] - [[self statusFont] descender]);
 
 			[extStatus drawInRect:NSMakeRect(drawRect.origin.x,
-											 drawRect.origin.y + half,
+											 drawRect.origin.y + half + offset,
 											 drawRect.size.width,
-											 drawRect.size.height - half)];
+											 drawRect.size.height - (half + offset))];
 			
 			if(drawUnder){
 				rect.origin.y -= halfHeight;
