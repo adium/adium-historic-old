@@ -93,6 +93,7 @@ DeclareString(Idle);
 
 	//There's actually no reason to re-sort in response to these status changes, but there is no way for us to
 	//let the Adium core know that.  The best we can do is delay updates so only a single sort occurs
+	//of course, smart sorting controllers should be watching IdleSince, not Idle, since that's the important bit
 	[[adium contactController] delayListObjectNotifications];
 
 	//Update everyone's idle time
