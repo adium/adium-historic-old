@@ -310,7 +310,11 @@
     }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
         return [NSArray arrayWithObject:[self _rowForAddingContentStatus:(AIContentStatus *)content]];
     }
+    
+    //Should never get here
+    return nil;
 }
+
 //Add rows for a content message object
 - (void)_addContentMessage:(AIContentMessage *)content
 {
