@@ -87,7 +87,7 @@ DeclareString(AppendNextMessage);
 	styleDictionary = [[NSMutableDictionary alloc] init];
 	
 	//Get all resource paths to search
-	resourcePaths = [[adium resourcePathsForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT] arrayByAddingObject:[[[NSBundle bundleForClass:[self class]] resourcePath] stringByAppendingPathComponent:@"Styles"]];
+	resourcePaths = [adium resourcePathsForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT];
 	enumerator = [resourcePaths objectEnumerator];
 	
 	NSString	*AdiumMessageStyle = @"AdiumMessageStyle";
