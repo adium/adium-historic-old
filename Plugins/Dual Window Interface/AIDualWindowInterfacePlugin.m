@@ -196,6 +196,10 @@
 	return([[containers objectForKey:containerID] containedChats]);
 }
 
+- (NSWindow *)windowForChat:(AIChat *)chat
+{
+	return([[[chat statusObjectForKey:@"MessageTabViewItem"] container] window]);
+}
 
 //Containers -----------------------------------------------------------------------------------------------------------
 #pragma mark Containers
