@@ -188,10 +188,7 @@
     [self _loadBuildInformation];
     
     //Build the report
-    //NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%m-%d %H:%M" allowNaturalLanguage:NO] autorelease];
-    
     NSDictionary	*crashReport = [NSDictionary dictionaryWithObjectsAndKeys:
-        /*[dateFormatter stringForObjectValue:[NSDate date]]*/[[NSDate date] description], @"time",
         [NSString stringWithFormat:@"%@	(%@)",buildDate,(buildUser ? buildUser : buildNumber)], @"build",
         [textField_emailAddress stringValue], @"email",
         [textField_accountIM stringValue], @"uid",
