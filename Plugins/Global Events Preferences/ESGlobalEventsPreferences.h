@@ -25,9 +25,6 @@
 @interface ESGlobalEventsPreferences : AIPreferencePane {
 	IBOutlet	ESContactAlertsViewController	*contactAlertsViewController;
 	
-	IBOutlet	NSPanel			*panel_editingAdiumPreset;
-	IBOutlet	NSTextField		*textField_name;
-	
 	IBOutlet	NSTabView		*tabView_summaryAndConfig;
 	
 	IBOutlet	NSPopUpButton	*popUp_eventPreset;
