@@ -335,6 +335,7 @@ typedef enum {
 }
 
 - (void)playSoundNamed:(NSString *)inName;
+- (void)playSoundAtPath:(NSString *)inPath;
 
 @end
 

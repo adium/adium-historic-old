@@ -16,6 +16,7 @@
 #import "AIEventSoundsPlugin.h"
 #import "AIAdium.h"
 #import <Adium/Adium.h>
+#import <AIUtilities/AIUtilities.h>
 
 @implementation AIEventSoundsPlugin
 
@@ -25,6 +26,9 @@
 
     [[[owner contentController] contentNotificationCenter] addObserver:self selector:@selector(messageIn:) name:Content_DidReceiveContent object:nil];
     [[[owner contentController] contentNotificationCenter] addObserver:self selector:@selector(messageOut:) name:Content_DidSendContent object:nil];
+    [[owner contactController] registerHandleObserver:self];
+
+    onlineDict = [[NSMutableDictionary alloc] init];
 }
 
 - (void)messageIn:(NSNotification *)notification
@@ -37,7 +41,25 @@
     [[owner soundController] playSoundNamed:@"(Adium)Send.aif"];
 }
 
+- (BOOL)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys
+{
+    //Sign on/off
+    if([inModifiedKeys containsObject:@"Online"]){
+        BOOL	oldOnline = [[onlineDict objectForKey:[inHandle UID]] boolValue]; //! UID is not unique enough !
+        BOOL	newOnline = [[inHandle statusArrayForKey:@"Online"] containsAnyIntegerValueOf:1];
 
+        if(newOnline != oldOnline){
+            if(newOnline){
+                [[owner soundController] playSoundNamed:@"(Adium)Buddy_SignedOn.aif"];
+            }else{
+                [[owner soundController] playSoundNamed:@"(Adium)Buddy_SignedOff.aif"];
+            }
 
+            [onlineDict setObject:[NSNumber numberWithBool:newOnline] forKey:[inHandle UID]];
+        }
+    }
+    
+    return(NO);
+}
 
 @end

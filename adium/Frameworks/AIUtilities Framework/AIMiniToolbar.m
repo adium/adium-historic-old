@@ -211,12 +211,14 @@
     int	imageWidth;
 
     //Fill the rect with aqua stripes
-    imageWidth = [toolbarBackground size].width;
-    if(toolbarBackground && imageWidth){
-        int xOffset = 0;
-        while(xOffset < rect.size.width){
-            [toolbarBackground compositeToPoint:NSMakePoint(xOffset,0) operation:NSCompositeSourceOver];
-            xOffset += imageWidth;
+    if(!([[self window] styleMask] & NSTexturedBackgroundWindowMask)){ //Don't do this on brushed metal windows
+        imageWidth = [toolbarBackground size].width;
+        if(toolbarBackground && imageWidth){
+            int xOffset = 0;
+            while(xOffset < rect.size.width){
+                [toolbarBackground compositeToPoint:NSMakePoint(xOffset,0) operation:NSCompositeSourceOver];
+                xOffset += imageWidth;
+            }
         }
     }
     

@@ -16,29 +16,49 @@
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
 
-#define	PATH_SOUNDS	@"/Sounds"
+#define	PATH_SOUNDS		@"/Sounds"
+#define PATH_INTERNAL_SOUNDS	@"/Contents/Resources/Sounds/"
 
 @implementation AISoundController
 
 - (void)playSoundNamed:(NSString *)inName
 {
-    NSString	*path = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_SOUNDS] stringByAppendingPathComponent:inName];
+    NSString	*path;
+    
+    //Sounds stored in /library/appsupport/adium/sounds
+    //path = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_SOUNDS] stringByAppendingPathComponent:inName];
+
+    //Sounds stored within the Adium application
+    path = [[[[[NSBundle mainBundle] bundlePath]
+    			stringByAppendingPathComponent:PATH_INTERNAL_SOUNDS]
+        		stringByAppendingPathComponent:inName]
+        		stringByExpandingTildeInPath];
+
+    [self playSoundAtPath:path];
+}
+
+- (void)playSoundAtPath:(NSString *)inPath
+{
     NSMovie	*sharedMovie;
 
-    sharedMovie = [[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:path] byReference:YES];
+    sharedMovie = [[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:inPath] byReference:YES];
 
     //---set the volume & play---
     if(sharedMovie != nil){
-//        SetMovieVolume([sharedMovie QTMovie],soundVolume);
         StartMovie([sharedMovie QTMovie]);
     }
 }
+
 
 - (void)initController
 {
 
 }
 
+
+
+
+//        SetMovieVolume([sharedMovie QTMovie],soundVolume);
 // returns the shared instance of AISound
 /*static AISound	*sharedInstance;
 + (AISound *)sharedInstance

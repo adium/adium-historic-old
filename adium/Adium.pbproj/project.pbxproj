@@ -171,6 +171,7 @@
 				F53EA2B502C8020E01A8010A,
 				F5A01D85037980F201A8010A,
 				F5B53FBD0333AB8801A8010A,
+				F50A325A03B5798301A8010A,
 				F551A4F903AC4C2301A8010A,
 				29B97323FDCFA39411CA2CEA,
 				19C28FACFE9D520D11CA2CBB,
@@ -196,6 +197,7 @@
 		};
 		29B97326FDCFA39411CA2CEA = {
 			buildPhases = (
+				F50A326B03B579BD01A8010A,
 				29B97327FDCFA39411CA2CEA,
 				29B97328FDCFA39411CA2CEA,
 				29B9732BFDCFA39411CA2CEA,
@@ -416,12 +418,6 @@
 			path = "build/Standard Contact List Preferences.AdiumPlugin";
 			refType = 4;
 		};
-		A1D4691F03AFDDFC00A8000D = {
-			fileRef = A1D4691E03AFDDFC00A8000D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 //A10
 //A11
 //A12
@@ -584,6 +580,119 @@
 			isa = PBXGroup;
 			name = Images;
 			refType = 4;
+		};
+		F50A325A03B5798301A8010A = {
+			children = (
+				F50A325B03B579A101A8010A,
+				F50A325C03B579A101A8010A,
+				F50A325D03B579A101A8010A,
+				F50A325E03B579A101A8010A,
+				F50A325F03B579A101A8010A,
+				F50A326003B579A101A8010A,
+			);
+			isa = PBXGroup;
+			name = Sounds;
+			path = "";
+			refType = 4;
+		};
+		F50A325B03B579A101A8010A = {
+			isa = PBXFileReference;
+			name = "(Adium)Buddy_SignedOff.aif";
+			path = "Sounds/(Adium)Buddy_SignedOff.aif";
+			refType = 4;
+		};
+		F50A325C03B579A101A8010A = {
+			isa = PBXFileReference;
+			name = "(Adium)Buddy_SignedOn.aif";
+			path = "Sounds/(Adium)Buddy_SignedOn.aif";
+			refType = 4;
+		};
+		F50A325D03B579A101A8010A = {
+			isa = PBXFileReference;
+			name = "(Adium)Receive.aif";
+			path = "Sounds/(Adium)Receive.aif";
+			refType = 4;
+		};
+		F50A325E03B579A101A8010A = {
+			isa = PBXFileReference;
+			name = "(Adium)ReceiveFirst.aif";
+			path = "Sounds/(Adium)ReceiveFirst.aif";
+			refType = 4;
+		};
+		F50A325F03B579A101A8010A = {
+			isa = PBXFileReference;
+			name = "(Adium)Send.aif";
+			path = "Sounds/(Adium)Send.aif";
+			refType = 4;
+		};
+		F50A326003B579A101A8010A = {
+			isa = PBXFileReference;
+			name = "(Adium)Stranger.aif";
+			path = "Sounds/(Adium)Stranger.aif";
+			refType = 4;
+		};
+		F50A326903B579B701A8010A = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50A326A03B579B701A8010A = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50A326B03B579BD01A8010A = {
+			buildActionMask = 2147483647;
+			dstPath = Sounds;
+			dstSubfolderSpec = 7;
+			files = (
+				F50A326C03B579C801A8010A,
+				F50A326D03B579C801A8010A,
+				F50A326E03B579C801A8010A,
+				F50A326F03B579C801A8010A,
+				F50A327003B579C801A8010A,
+				F50A327103B579C801A8010A,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F50A326C03B579C801A8010A = {
+			fileRef = F50A325B03B579A101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50A326D03B579C801A8010A = {
+			fileRef = F50A325C03B579A101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50A326E03B579C801A8010A = {
+			fileRef = F50A325D03B579A101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50A326F03B579C801A8010A = {
+			fileRef = F50A325E03B579A101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50A327003B579C801A8010A = {
+			fileRef = F50A325F03B579A101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50A327103B579C801A8010A = {
+			fileRef = F50A326003B579A101A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		F50CD61C03603BE201A8010A = {
 			children = (
@@ -1869,6 +1978,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				F50A326903B579B701A8010A,
+				F50A326A03B579B701A8010A,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2231,7 +2342,6 @@
 				F551A50B03AC4C5001A8010A,
 				F551A50C03AC4C5001A8010A,
 				F551A50D03AC4C5001A8010A,
-				A1D4691F03AFDDFC00A8000D,
 				F551A50E03AC4C5001A8010A,
 				F551A50F03AC4C5001A8010A,
 				F551A51003AC4C5001A8010A,

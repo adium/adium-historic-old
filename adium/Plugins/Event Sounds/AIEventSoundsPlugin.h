@@ -15,9 +15,10 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
+#import "AIAdium.h"
 
-@interface AIEventSoundsPlugin : AIPlugin {
-
+@interface AIEventSoundsPlugin : AIPlugin <AIHandleObserver> {
+    NSMutableDictionary		*onlineDict;
 }
 
 @end
