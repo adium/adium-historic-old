@@ -72,3 +72,6 @@ a.info:hover span { /*the span will display just on :hover state*/
     text-align: center;
 }
 
+img {
+    border: none;
+}
