@@ -1495,10 +1495,21 @@ static void adiumGaimRequestXfer(GaimXfer *xfer)
 											   withObject:fileTransfer];
 		
     } else if (xferType == GAIM_XFER_SEND) {
-		NSCAssert(xfer->local_filename != nil, @"adiumGaimRequestFile: Attempted to send nil file...");
-		NSLog(@"beginning send %s.",xfer->local_filename);
-		gaim_xfer_request_accepted(xfer, xfer->local_filename);
+		if (xfer->local_filename == nil){
+			[myself displayFileSendError];
+		}else{
+			NSLog(@"Beginning send of %s",xfer->local_filename);
+			gaim_xfer_request_accepted(xfer, xfer->local_filename);
+		}
 	}
+}
+
+- (void)displayFileSendError
+{
+	[[adium interfaceController] mainPerformSelector:@selector(handleMessage:withDescription:withWindowTitle:)
+										  withObject:AILocalizedString(@"File Send Error",nil)
+										  withObject:AILocalizedString(@"An error was encoutered sending the file.  Please note that sending of folders is not currently supported; this includes Application bundles.",nil)
+										  withObject:AILocalizedString(@"File Send Error",nil)];
 }
 
 static void adiumGaimAskCancel(GaimXfer *xfer)
