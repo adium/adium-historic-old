@@ -48,8 +48,15 @@ long unsigned int	waitingSleepArgument;
     }
 
     //Observe Hold/continue sleep notification
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(holdSleep:) name:AISystemHoldSleep_Notification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(continueSleep:) name:AISystemContinueSleep_Notification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(holdSleep:) 
+												 name:AISystemHoldSleep_Notification
+											   object:nil];
+	
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(continueSleep:)
+												 name:AISystemContinueSleep_Notification
+											   object:nil];
 }
 
 //
