@@ -7,7 +7,10 @@ my $args = join(" ", @ARGV);
 
 print $args . "\n";
 
-open(CIA,  "| /usr/bin/perl /cvsroot/adium/CVSROOT/ciabot.pl $args") or die "shit: $!";
+my $cia  = "| /usr/bin/perl /cvsroot/adium/CVSROOT/ciabot.pl $args";
+print $cia;
+
+open(CIA,  "$cia") or die "shit: $!";
 print CIA $input;
 close CIA;
 
