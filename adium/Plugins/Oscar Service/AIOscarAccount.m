@@ -588,8 +588,8 @@
 // Return YES if the contact list is editable
 - (BOOL)contactListEditable
 {
-    return(NO);
-    //return([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
+    //return(NO);
+    return([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
 }
 
 // Return a dictionary of our handles
