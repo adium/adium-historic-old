@@ -32,7 +32,9 @@
                 "checkBox_backgroundColorFormatting" = NSButton; 
                 "checkBox_combineConsecutive" = NSButton; 
                 "checkBox_customNameFormatting" = NSButton; 
+                "popUp_minimumFontSize" = NSPopUpButton; 
                 "popUp_nameFormat" = NSPopUpButton; 
+                "popUp_timeStampFormat" = NSPopUpButton; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 

@@ -40,7 +40,7 @@
 
 - (NSDictionary *)restorablePreferences
 {
-#warning Evan: Need to fix these defaults
+#warning Evan: Need to fix these defaults...
 	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:DUAL_INTERFACE_WINDOW_DEFAULT_PREFS forClass:[self class]];
 	NSDictionary *defaultsTemp = [NSDictionary dictionaryWithObjectsAndKeys:
 		[defaultPrefs objectForKey:KEY_ALWAYS_CREATE_NEW_WINDOWS],KEY_ALWAYS_CREATE_NEW_WINDOWS,
@@ -78,9 +78,17 @@
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	}else if(sender == checkBox_backgroundColorFormatting){
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-											 forKey:KEY_WEBKIT_USE_BACKGROUND
+											 forKey:KEY_WEBKIT_ALLOW_BACKGROUND_COLORING
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	}
+	}else if(sender == popUp_minimumFontSize){
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
+											 forKey:KEY_WEBKIT_MIN_FONT_SIZE
+											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	}else if(sender == popUp_timeStampFormat){
+		[[adium preferenceController] setPreference:[[sender selectedItem] representedObject]
+											 forKey:KEY_WEBKIT_TIME_STAMP_FORMAT
+											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	}		
 	
 	[self configureControlDimming];
 }
@@ -98,7 +106,13 @@
 	[popUp_nameFormat compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_WEBKIT_NAME_FORMAT] intValue]];
 	[checkBox_customNameFormatting setState:[[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue]];
 	[checkBox_combineConsecutive setState:[[prefDict objectForKey:KEY_WEBKIT_COMBINE_CONSECUTIVE] boolValue]];
-	[checkBox_backgroundColorFormatting setState:[[prefDict objectForKey:KEY_WEBKIT_USE_BACKGROUND] boolValue]];
+	[checkBox_backgroundColorFormatting setState:[[prefDict objectForKey:KEY_WEBKIT_ALLOW_BACKGROUND_COLORING] boolValue]];
+
+	[popUp_minimumFontSize setMenu:[self _fontSizeMenu]];
+	[popUp_minimumFontSize compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_WEBKIT_MIN_FONT_SIZE] intValue]];
+	
+	[popUp_timeStampFormat setMenu:[self _timeStampMenu]];
+	[popUp_minimumFontSize selectItemWithRepresentedObject:[[prefDict objectForKey:KEY_WEBKIT_TIME_STAMP_FORMAT] intValue]];
 	
     [self configureControlDimming];
 }
@@ -109,7 +123,64 @@
 	
 	[popUp_nameFormat setEnabled:[[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue]];
 }
+
+/*!
+ * @brief Build & return a time stamp menu
+ */
+- (NSMenu *)_timeStampMenu
+{
+	NSMenu	*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""];
+	
+	//Generate all the available time stamp formats
+    NSDateFormatter	*noSecondsNoAMPM = [NSDateFormatter localizedDateFormaterShowingSeconds:NO showingAMorPM:NO];
+    NSDateFormatter	*noSecondsAMPM = [NSDateFormatter localizedDateFormaterShowingSeconds:NO showingAMorPM:YES];
+    NSDateFormatter	*secondsNoAMPM = [NSDateFormatter localizedDateFormaterShowingSeconds:YES showingAMorPM:NO];
+    NSDateFormatter	*secondsAMPM = [NSDateFormatter localizedDateFormaterShowingSeconds:YES showingAMorPM:YES];
+	
+	//If there is no difference between the time stamp with AM/PM and the one without, the localized time stamp must
+	//not include AM/PM.  Since these menu items would appear as duplicates we exclude them.
+    NSString	*sampleStampA = [noSecondsAMPM stringForObjectValue:[NSDate date]];
+	NSString	*sampleStampB = [noSecondsNoAMPM stringForObjectValue:[NSDate date]];
+	BOOL		noAMPM = [sampleStampA isEqualToString:sampleStampB];
+	
+	//Build the menu from the available formats
+	[self _addTimeStampChoice:noSecondsNoAMPM toMenu:menu];
+	if(!noAMPM) [self _addTimeStampChoice:noSecondsAMPM toMenu:menu];
+	[self _addTimeStampChoice:secondsNoAMPM toMenu:menu];
+	if(!noAMPM) [self _addTimeStampChoice:secondsAMPM toMenu:menu];
+	
+	return(menu);
+}
+- (void)_addTimeStampChoice:(NSDateFormatter *)formatter toMenu:(NSMenu *)menu
+{	
+	[menu addItemWithTitle:[formatter stringForObjectValue:[NSDate date]]
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+		 representedObject:[formatter dateFormat]];
+}
+
+/*!
+ * @brief Build & return a font size menu
+ */
+- (NSMenu *)_fontSizeMenu
+{
+	NSMenu		*menu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
+	NSMenuItem	*menuItem;
+	
+	int sizes[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,18,20,22,24,36,48,64,72,96};
+	int loopCounter;
+	
+	for(loopCounter = 0; loopCounter < 23; loopCounter++){
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[[NSNumber numberWithInt:sizes[loopCounter]] stringValue]
+																		 target:nil
+																		 action:nil
+																  keyEquivalent:@""] autorelease];
+		[menuItem setTag:sizes[loopCounter]];
+		[menu addItem:menuItem];
+	}
+	
+	return menu;
+}
+
 @end
-
-
-
