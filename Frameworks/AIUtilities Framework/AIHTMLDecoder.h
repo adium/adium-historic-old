@@ -123,9 +123,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
  *when these methods are no longer used, this category should be deleted.
  */
 
-+ (NSAttributedString *)decodeHTML:(NSString *)inMessage;
-+ (NSString *)encodeHTML:(NSAttributedString *)inMessage encodeFullString:(BOOL)encodeFullString;
++ (AIHTMLDecoder *)classMethodInstance;
 
++ (NSString *)encodeHTML:(NSAttributedString *)inMessage encodeFullString:(BOOL)encodeFullString;
 + (NSString *)encodeHTML:(NSAttributedString *)inMessage
 				 headers:(BOOL)includeHeaders 
 				fontTags:(BOOL)includeFontTags
@@ -139,6 +139,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	   attachmentsAsText:(BOOL)attachmentsAsText
 attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		  simpleTagsOnly:(BOOL)simpleOnly;
+
++ (NSAttributedString *)decodeHTML:(NSString *)inMessage;
 
 + (NSDictionary *)parseArguments:(NSString *)arguments;
 
