@@ -119,7 +119,7 @@
 #define AILocalizedString(key, comment) [[NSBundle bundleForClass: [self class]] localizedStringForKey: (key) value:@"" table:nil]
 
 //Webkit-- Controls whether Webkit or SMV plugins work
-#define USE_WEBKIT_PLUGIN		1
+#define USE_WEBKIT_PLUGIN		TRUE
 
 //Static strings
 #define DeclareString(var)			static NSString * (var) = nil;
