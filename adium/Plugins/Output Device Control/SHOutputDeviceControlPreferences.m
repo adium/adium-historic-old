@@ -34,7 +34,7 @@
         [checkBox_useAlertOutput setState:NO];
     
     //for some reason this will crash Jag. Force disabled for now.
-    if (![NSApp isOnPantherOrBetter]){
+    if(![NSApp isOnPantherOrBetter]){
         [[adium preferenceController] setPreference:NO
                                              forKey:KEY_USE_SYSTEM_SOUND_OUTPUT
                                               group:PREF_GROUP_GENERAL];

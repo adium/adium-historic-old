@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.35 2004/04/15 04:59:00 ramoth4 Exp $
+// $Id: AISoundController.m,v 1.36 2004/04/15 12:40:43 adamiser Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -313,8 +313,12 @@
         NSDictionary *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
 		
 		NSNumber *customVolumeNumber = [preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL];
-                
-                soundsAsAlerts = [[preferenceDict objectForKey:KEY_USE_SYSTEM_SOUND_OUTPUT] boolValue];
+        
+        //Sounds as alerts.  This only works in 10.3
+		soundsAsAlerts = [[preferenceDict objectForKey:KEY_USE_SYSTEM_SOUND_OUTPUT] boolValue];
+		if(![NSApp isOnPantherOrBetter]){
+			soundsAsAlerts = NO;
+		}
 
 		//On Panther, we only use the QuickTime sound playing code if a customvolume is set,
 		//but on Jaguar we must always use QuickTime code since our threaded sound code will crash

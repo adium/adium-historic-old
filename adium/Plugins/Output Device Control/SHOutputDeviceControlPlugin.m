@@ -18,14 +18,12 @@
     //Install our preference view
     if([NSApp isOnPantherOrBetter]){
         preferences = [[SHOutputDeviceControlPreferences preferencePane] retain];
-    }else{
-        return(nil);
     }
 }
 
 - (void)uninstallPlugin
 {
-    [[adium notificationCenter] removeObserver:preferences];
-    [[NSNotificationCenter defaultCenter] removeObserver:preferences];
+
 }
+
 @end
