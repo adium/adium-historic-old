@@ -129,30 +129,6 @@ static NSImage *pushIndicatorImage = nil;
 	    result = YES;
 	    break;
     }
-
-    // Catch control here to stop it from being "page up/down"
-    if( ([theEvent modifierFlags] & NSControlKeyMask) && ([theEvent type] == NSKeyDown) ) {
-		
-		switch(theChar)
-		{
-			case NSUpArrowFunctionKey:
-				[self _popContent];
-				result = YES;
-				break;
-				
-			case NSDownArrowFunctionKey:
-				
-				// Is it Control-Option-Down? Then show the push menu
-				if( [theEvent modifierFlags] & NSAlternateKeyMask ) {
-					[self _pushClicked];
-				} else {
-					[self _pushContent];
-				}
-				result = YES;
-		}
-		
-    }
-	
     return(result);
 }
 
@@ -574,34 +550,53 @@ static NSImage *pushIndicatorImage = nil;
     }
 }
 
-
-// Scroll through history
-// These methods are invoked on Option-Up or Option-Down
-- (void)moveToEndOfParagraph:(id)sender
+- (void)keyDown: (NSEvent*) inEvent
 {
-	[self _historyDown];  
-}
-
-- (void)moveToBeginningOfParagraph:(id)sender
-{
-	[self _historyUp];
-}
-
-
-// Scroll through history
-// These methods are invoked on Command-Up or Command-Down
-- (void)moveToEndOfDocument:(id)sender
-{
-  NSRect visibleRect = [messageScrollView documentVisibleRect];
-  visibleRect.origin.y += [messageScrollView verticalLineScroll]*2;
-  [[messageScrollView documentView] scrollRectToVisible:visibleRect];   
-}
-
-- (void)moveToBeginningOfDocument:(id)sender
-{
-  NSRect visibleRect = [messageScrollView documentVisibleRect];
-  visibleRect.origin.y -= [messageScrollView verticalLineScroll]*2;
-  [[messageScrollView documentView] scrollRectToVisible:visibleRect];  
+	unichar inChar = [[inEvent charactersIgnoringModifiers] characterAtIndex:0];
+	unsigned int flags = [inEvent modifierFlags];
+	//We have to test ctrl first, because otherwise we'd miss ctrl-option-* events
+	if(flags & NSControlKeyMask)
+	{
+		if(inChar == NSUpArrowFunctionKey)
+			[self _popContent];
+		else if(inChar == NSDownArrowFunctionKey)
+			if(flags & NSAlternateKeyMask)
+			{
+				NSLog(@"Ctrl-Opt-Down");
+				[self _pushClicked];
+			}
+			else
+				[self _pushContent];
+		else
+			[super keyDown:inEvent];
+	}
+	else if(flags & NSAlternateKeyMask)
+	{
+		if(inChar == NSUpArrowFunctionKey)
+			[self _historyUp];
+		else if(inChar == NSDownArrowFunctionKey)
+			[self _historyDown];
+		else
+			[super keyDown:inEvent];
+	}
+	else if(flags & NSCommandKeyMask)
+	{
+		if(inChar == NSUpArrowFunctionKey)
+		{
+			NSRect visibleRect = [messageScrollView documentVisibleRect];
+			visibleRect.origin.y -= [messageScrollView verticalLineScroll]*2;
+			[[messageScrollView documentView] scrollRectToVisible:visibleRect]; 
+		}
+		else if(inChar == NSDownArrowFunctionKey)
+		{
+			NSRect visibleRect = [messageScrollView documentVisibleRect];
+			visibleRect.origin.y += [messageScrollView verticalLineScroll]*2;
+			[[messageScrollView documentView] scrollRectToVisible:visibleRect]; 
+		}
+		else
+			[super keyDown:inEvent];
+	}
+	else [super keyDown:inEvent];
 }
 
 
