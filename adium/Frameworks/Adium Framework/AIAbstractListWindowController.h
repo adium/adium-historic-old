@@ -8,7 +8,7 @@
 #import <Cocoa/Cocoa.h>
 #import "AIWindowController.h"
 
-@class AIAutoScrollView, AIListOutlineView, AIListCell;
+@class AIAutoScrollView, AIListOutlineView, AIListContactCell, AIListGroupCell;
 
 
 #define LIST_LAYOUT_FOLDER						@"Contact List"
@@ -131,8 +131,8 @@ typedef enum {
 	
 	AISmoothTooltipTracker				*tooltipTracker;
 	
-	AIListCell							*contentCell;
-	AIListCell							*groupCell;
+	AIListContactCell					*contentCell;
+	AIListGroupCell						*groupCell;
 	
     AIListObject						*contactList;
 	BOOL								hideRoot;
@@ -145,6 +145,8 @@ typedef enum {
 
 - (void)setContactListRoot:(AIListObject *)newContactListRoot;
 - (void)setHideRoot:(BOOL)inHideRoot;
+- (IBAction)performDefaultActionOnSelectedItem:(id)sender;
+- (IBAction)performDefaultActionOnSelectedContact:(id)sender;
 
 - (void)updateLayoutFromPrefDict:(NSDictionary *)prefDict;
 - (void)updateTransparencyFromLayoutDict:(NSDictionary *)layoutDict themeDict:(NSDictionary *)themeDict;

@@ -94,4 +94,5 @@
 
 //Control over whether the cell will respect aliases and long display names
 - (void)setUseAliasesAsRequested:(BOOL)flag;
+
 @end

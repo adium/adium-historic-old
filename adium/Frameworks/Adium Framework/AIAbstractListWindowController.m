@@ -8,6 +8,7 @@
 #import "AIAbstractListWindowController.h"
 
 #import "AIListCell.h"
+#import "AIListOutlineView.h"
 #import "AIListGroupGradientCell.h"
 #import "AIListContactCell.h"
 #import "AIListContactBubbleCell.h"
