@@ -11,14 +11,14 @@
 #import "SHAutoValidatingTextView.h"
 
 #define ADD_LINK_TITLE          AILocalizedString(@"Add Link...",nil)
-#define EDIT_LINK_TITLE         AILocalizedString(@"Edit Link...",nil)
+#define EDIT_LINK_TITLE         AILocalizedString(@"Add/Edit Link...",nil)
 
 @implementation SHLinkManagementPlugin
 
 - (void)installPlugin
 {
     //Add Link.. menu item (edit menu)
-    menu_AddLink = [[[NSMenuItem alloc] initWithTitle:ADD_LINK_TITLE
+    /*menu_AddLink = [[[NSMenuItem alloc] initWithTitle:ADD_LINK_TITLE
                                                target:self
                                                action:@selector(addFormattedLink:)
                                         keyEquivalent:@"["] autorelease];
@@ -27,7 +27,7 @@
     //contextual menu
     contextMenu_AddLink = [[menu_AddLink copy] autorelease];
     [contextMenu_AddLink setKeyEquivalent:@""];
-    [[adium menuController] addContextualMenuItem:contextMenu_AddLink toLocation:Context_TextView_LinkAction];
+    [[adium menuController] addContextualMenuItem:contextMenu_AddLink toLocation:Context_TextView_LinkAction];*/
     
     //Edit Link... menu item (edit menu)
     menu_EditLink = [[[NSMenuItem alloc] initWithTitle:EDIT_LINK_TITLE
@@ -66,6 +66,8 @@
     NSResponder         *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
     if(([responder isKindOfClass:[NSTextView class]]) && ([(NSTextView *)responder selectedRange].length != 0)) {
         [[[SHLinkEditorWindowController alloc] initEditLinkWindowControllerWithResponder:responder] autorelease];
+    }else{//if nothing selected, add link.
+        [[[SHLinkEditorWindowController alloc] initAddLinkWindowControllerWithResponder:responder] autorelease];
     }
 }
 
