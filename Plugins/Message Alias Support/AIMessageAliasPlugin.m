@@ -70,40 +70,42 @@
 
 //Replace any keywords in the passed string
 //Returns a mutable version of the passed string if keywords have been replaced.  Otherwise returns
-- (NSMutableAttributedString *)replaceKeywordsInString:(NSAttributedString *)original context:(id)context
+- (NSMutableAttributedString *)replaceKeywordsInString:(NSAttributedString *)attributedString context:(id)context
 {
-	NSString					*str = [original string];
-	NSMutableAttributedString	*filteredMessage = nil;
-	
+	NSString					*str = [attributedString string];
+	NSMutableAttributedString	*newAttributedString = nil;
+
 	//Our Name
 	//If we're passed content, our account will be the destination of that content
 	//If we're passed a list object, we can use the name of the preferred account for that object
 	if([str rangeOfString:@"%n"].location != NSNotFound){
 		NSString	*replacement = nil;
-		
+
 		if([context isKindOfClass:[AIContentObject class]]){
 			replacement = [[context destination] UID]; //This exists primarily for AIM compatibility; AIM uses the UID (no formatting).
 		}else if([context isKindOfClass:[AIListObject class]]){
 			replacement = [[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																				  toContact:context] formattedUID];
 		}
-		
-		if(replacement){
-			filteredMessage = [self replaceOccurencesOfString:@"%n"
-										   inAttributedString:original
-												   withString:replacement
-								   usingExistingMutableOutput:filteredMessage];
-		}
+
+		if(!newAttributedString) newAttributedString = [[attributedString mutableCopy] autorelease];
+
+		[newAttributedString replaceOccurrencesOfString:@"%n"
+										  withString:replacement
+											 options:NSLiteralSearch
+											   range:NSMakeRange(0, [newAttributedString length])];
 	}
-	
+
 	//Current Date
 	if([str rangeOfString:@"%d"].location != NSNotFound){
 		NSCalendarDate *currentDate = [NSCalendarDate calendarDate];
 		
-		filteredMessage = [self replaceOccurencesOfString:@"%d"
-									   inAttributedString:original
-											   withString:[currentDate descriptionWithCalendarFormat:@"%m/%d/%y"]
-							   usingExistingMutableOutput:filteredMessage];		
+		if(!newAttributedString) newAttributedString = [[attributedString mutableCopy] autorelease];
+		
+		[newAttributedString replaceOccurrencesOfString:@"%d"
+											 withString:[currentDate descriptionWithCalendarFormat:@"%m/%d/%y"]
+												options:NSLiteralSearch
+												  range:NSMakeRange(0, [newAttributedString length])];
 	}
 	
 	//Current Time
@@ -112,44 +114,15 @@
 		NSString		*localDateFormat = [NSDateFormatter localizedDateFormatStringShowingSeconds:YES
 																					  showingAMorPM:YES];
 		
-		filteredMessage = [self replaceOccurencesOfString:@"%t"
-									   inAttributedString:original
-											   withString:[currentDate descriptionWithCalendarFormat:localDateFormat]
-							   usingExistingMutableOutput:filteredMessage];		
+		if(!newAttributedString) newAttributedString = [[attributedString mutableCopy] autorelease];
+
+		[newAttributedString replaceOccurrencesOfString:@"%t"
+											 withString:[currentDate descriptionWithCalendarFormat:localDateFormat]
+												options:NSLiteralSearch
+												  range:NSMakeRange(0, [newAttributedString length])];
 	}
 	
-	return(filteredMessage);
-}
-
-//Replace any keywords in the passed string
-//Returns a mutable version of the passed string if keywords have been replaced.  Otherwise returns
-
-//Replace a keyword with another string.  If an existing mutable version of the string exists, pass it to increase
-//performance.  If a mutable will return nil if no keywords exist in the string and a mutable variant was not passed
-- (NSMutableAttributedString *)replaceOccurencesOfString:(NSString *)keyword
-							   inAttributedString:(NSAttributedString *)original
-									   withString:(NSString *)replacement
-					   usingExistingMutableOutput:(NSMutableAttributedString *)mutableOutput
-{
-	int		scanIndex = 0;
-	NSRange range;
-
-	if(!mutableOutput) mutableOutput = [[original mutableCopy] autorelease];
-
-	do{
-		NSString	*scanString = [mutableOutput string];
-
-		range = [scanString rangeOfString:keyword
-								  options:0
-									range:NSMakeRange(scanIndex, [scanString length] - scanIndex)];
-		if(range.location != NSNotFound){
-			[mutableOutput replaceCharactersInRange:range withString:replacement];
-		}
-		
-		scanIndex = range.location;
-	}while(range.location != NSNotFound);
-
-	return(mutableOutput);
+	return newAttributedString;
 }
 
 @end
