@@ -339,7 +339,7 @@
 
         }
     }
-    
+
     //Get our backgound color
     if(!outgoing){
         color = [NSColor colorWithCalibratedRed:(229.0/255.0) green:(242.0/255.0) blue:(255.0/255.0) alpha:1.0];
