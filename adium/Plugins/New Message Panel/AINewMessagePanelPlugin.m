@@ -18,6 +18,7 @@
 													action:@selector(newMessage:)
 											 keyEquivalent:@"n"];
 	[[adium menuController] addMenuItem:newMessageMenuItem toLocation:LOC_File_New];
+	
 }	
 
 //Initiate a chat

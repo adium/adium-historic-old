@@ -23,6 +23,10 @@
 				NSView					*controllerView_messages;
     IBOutlet	NSView					*scrollView_messages;
 	IBOutlet	NSSplitView				*splitView_messages;
+	//IBOutlet	NSView					*view_userPane;
+	
+	IBOutlet	NSButton				*button_inviteUser;
+	
     IBOutlet	AIMiniToolbar			*toolbar_bottom;
 
     IBOutlet	NSTableView				*tableView_userList;
@@ -31,7 +35,7 @@
     IBOutlet	AIPlasticButton			*button_send;
 
     id <AIMessageViewController>		messageViewController;
-    AIAccountSelectionView				*view_accountSelection;
+	AIAccountSelectionView				*view_accountSelection;
 
     //Variables
     id				delegate;
@@ -42,6 +46,7 @@
 
 + (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat;
 - (IBAction)sendMessage:(id)sender;
+- (IBAction)inviteUser:(id)sender;
 - (NSView *)view;
 - (void)setAccountSelectionMenuVisible:(BOOL)visible;
 - (void)makeTextEntryViewFirstResponder;

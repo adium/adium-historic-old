@@ -18,6 +18,7 @@
 //#import "AIDualWindowInterfacePlugin.h"
 #import "AIAccountSelectionView.h"
 #import "CSMessageToOfflineContactWindowController.h"
+#import "DCInviteUserToChatWindowController.h"
 #import "AIContactInfoWindowController.h"
 
 #define MESSAGE_VIEW_NIB					@"MessageView"		//Filename of the message view nib
@@ -97,7 +98,7 @@
 	
 	//scrollView_messages should now be a containing view from the controller; it may or may not be the same as controllerView_messages
 	scrollView_messages = [messageViewController messageScrollView];
-		
+
 	[controllerView_messages setNextResponder:textView_outgoing];
 	/*if (controllerView_messages != scrollView_messages)
 		[scrollView_messages setNextResponder:controllerView_messages];
@@ -114,6 +115,8 @@
 //	[scrollView_messages setHasVerticalScroller:YES];
 	
 	//User List
+	//[view_userPane retain];
+		
 	[scrollView_userList setAutoScrollToBottom:NO];
 	[scrollView_userList setAutoHideScrollBar:YES];
 	[scrollView_userList retain];
@@ -123,6 +126,9 @@
 	[tableView_userList setDoubleAction:@selector(cellWasDoubleClicked:)];
 	[tableView_userList setNextResponder:controllerView_messages];
 	
+	//NSTableColumn *leftCol = [[tableView_userList tableColumns] objectAtIndex:0];
+	//[leftCol setDataCell:[[[NSImageCell alloc] init] autorelease]];
+
 	/*
 	 //The image column does not currently exist
 	NSTableColumn *leftCol = [[tableView_userList tableColumns] objectAtIndex:0];
@@ -157,7 +163,11 @@
 									   name:ListObject_StatusChanged
 									 object:nil];
 
-
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(chatParticipantsChanged:)
+									   name:Content_ChatParticipatingListObjectsChanged
+									 object:nil];
+	
     //Finish everything up
 	[self chatStatusChanged:nil];
 	[self chatParticipatingListObjectsChanged:nil];
@@ -195,6 +205,7 @@
     [messageViewController release];
 	
 	[scrollView_userList release];
+	//[view_userPane release];
 	
     [super dealloc];
 }
@@ -343,6 +354,11 @@
 	sendMessagesToOfflineContact = should;
 }
 
+- (IBAction)inviteUser:(id)sender
+{
+	[DCInviteUserToChatWindowController showSheetInWindow:[view_contents window] forMessageViewController:self];
+}
+
 //Sets our text entry view as the first responder
 - (void)makeTextEntryViewFirstResponder
 {
@@ -478,22 +494,46 @@
     if(showUserList){
 		if( ![[splitView_messages subviews] containsObject:scrollView_userList] ) {
 			[splitView_messages addSubview:scrollView_userList];
+			
 			NSRect splitFrame = [splitView_messages frame];
+			//NSRect buttonFrame = [button_inviteUser frame];
 			[controllerView_messages setFrame:NSMakeRect(0,0,NSWidth(splitFrame)-USER_LIST_WIDTH-[splitView_messages dividerThickness],NSHeight(splitFrame))];
 			[scrollView_userList setFrame:NSMakeRect(NSWidth(splitFrame)-USER_LIST_WIDTH,0,USER_LIST_WIDTH,NSHeight(splitFrame))];
+			
+			//NSRect userFrame = [view_userPane frame];
+			//[scrollView_userList setFrame:NSMakeRect(0,0,NSWidth(userFrame),NSHeight(userFrame))];
+			//[button_inviteUser setFrame:NSMakeRect(0,0,25,25)];
 		}
-    }else{
+    }else{		
 		if( [[splitView_messages subviews] containsObject:scrollView_userList] ) {
 			[scrollView_userList removeFromSuperview];
 		}
+	
     }
 	
+	/*
+	 if(showUserList){
+		 if( ![[splitView_messages subviews] containsObject:scrollView_userList] ) {
+			 [splitView_messages addSubview:scrollView_userList];
+			 [splitView_messages addSubview:button_inviteUser];
+			 NSRect splitFrame = [splitView_messages frame];
+			 NSRect buttonFrame = [button_inviteUser frame];
+			 [controllerView_messages setFrame:NSMakeRect(0,0,NSWidth(splitFrame)-USER_LIST_WIDTH-[splitView_messages dividerThickness],NSHeight(splitFrame)-NSHeight(buttonFrame))];
+			 [scrollView_userList setFrame:NSMakeRect(NSWidth(splitFrame)-USER_LIST_WIDTH,NSHeight(buttonFrame),USER_LIST_WIDTH,NSHeight(splitFrame))];
+			 [button_inviteUser setFrameOrigin:NSMakePoint(NSWidth(splitFrame)-USER_LIST_WIDTH,0)];
+		 }
+	 }else{
+		 if( [[splitView_messages subviews] containsObject:scrollView_userList] ) {
+			 [scrollView_userList removeFromSuperview];
+			 [button_inviteUser removeFromSuperview];
+		 }
+		 
+	 }
+	 */	 
+	
     //Messages
-
 	[splitView_messages displayIfNeeded];
-	//[controllerView_messages displayIfNeeded];
-	//[scrollView_userList displayIfNeeded];
-	//[view_contents displayIfNeeded];
+
 }
 
 #pragma mark Table View
@@ -505,16 +545,17 @@
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-	AIListObject *listObject = [[chat participatingListObjects] objectAtIndex:row];
-
-	// Identifier 0: status image column. 1: name
-//	if( [(NSNumber *)[tableColumn identifier] intValue] == 0 ) {
-//		return [AITabStatusIconsPlugin iconForListObject:listObject];
-//	} else {
-		return([listObject displayName]);
-//	}
 	
-	return nil;
+	AIListObject *listObject = [[chat participatingListObjects] objectAtIndex:row];
+	
+	// Identifier 0: status image column. 1: name
+	if( [(NSNumber *)[tableColumn identifier] intValue] == 0 ) {
+		return [[listObject displayArrayForKey:@"Tab Icon"] objectValue];
+	} else {
+		return([listObject displayName]);
+	}
+	
+	//return nil;
 }
 
 // Allow selection of a contact, prepare info on them
@@ -527,7 +568,6 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
 	int selectedIndex = [tableView_userList selectedRow];
-	
 	[chat setPreferredListObject:((selectedIndex != -1) ? 
 								  [[chat participatingListObjects] objectAtIndex:selectedIndex] :
 								  nil)];
@@ -551,6 +591,13 @@
 - (void)listObjectChanged:(NSNotification *)notification
 {
 	[tableView_userList reloadData];
+}
+
+- (void)chatParticipantsChanged:(NSNotification *)notification
+{
+	NSLog(@"#### chatParticipantsChanged: chat = %@, notification object = %@",chat,[notification object]);
+	if( [notification object] == chat )
+		[tableView_userList reloadData];
 }
 
 #pragma mark Split View Delegate

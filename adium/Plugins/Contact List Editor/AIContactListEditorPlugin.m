@@ -23,6 +23,7 @@
 #define DELETE_CONTACT   			AILocalizedString(@"Delete Selection",nil)
 #define DELETE_CONTACT_CONTEXT		AILocalizedString(@"Delete",nil)
 #define RENAME_GROUP				AILocalizedString(@"Rename Group...",nil)
+#define INVITE_CONTACT				AILocalizedString(@"Invite to This Chat...",nil)
 
 @interface AIContactListEditorPlugin (PRIVATE)
 - (void)deleteFromArray:(NSArray *)array;
@@ -168,6 +169,7 @@
 		}
 	}	
 }
+
 
 //Called by a context menu
 - (IBAction)renameGroup:(id)sender
