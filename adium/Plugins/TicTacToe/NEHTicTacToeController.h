@@ -46,7 +46,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 - (void)handleMessage:(NSString*)msg ofType:(NSString*)type;
 
 - (void)beginNewGame;
-- (void)gameDidEnd;
 
 - (void)didSendInvitation:(int)playAs;
 - (void)didReceiveInvitation:(int)playAs;

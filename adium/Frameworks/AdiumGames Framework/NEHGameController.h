@@ -67,7 +67,6 @@ typedef enum {
 - (void)handleMessage:(NSString*)msg ofType:(NSString*)type;
 
 - (void)beginNewGame;
-- (void)gameDidEnd;
 
 - (void)didSendInvitation:(int)playAs;
 - (void)didReceiveInvitation:(int)playAs;
