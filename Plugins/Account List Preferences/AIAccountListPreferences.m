@@ -57,7 +57,9 @@
     [textField_accountName setDelayInterval:1.0];
 	
 	//
-	NSMenu	*serviceMenu = [[adium accountController] menuOfServicesWithTarget:self];
+	NSMenu	*serviceMenu = [[adium accountController] menuOfServicesWithTarget:self 
+															activeServicesOnly:NO
+															   longDescription:YES];
 	[serviceMenu setAutoenablesItems:YES];
 	[popupMenu_serviceList setMenu:serviceMenu];
 	[self configureAccountList];
