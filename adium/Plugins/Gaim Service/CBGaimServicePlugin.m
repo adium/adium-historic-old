@@ -811,9 +811,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     
     char    host[300];
     size_t  hostSize;
-	
-    NSLog(@"configureGaimProxySettings: Checking proxy settings..");
-	
+		
     proxyDict = SCDynamicStoreCopyProxies(NULL);
     result = (proxyDict != NULL);
      

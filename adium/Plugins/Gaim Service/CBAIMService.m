@@ -16,7 +16,7 @@
 
     //Create our handle service type
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"AIM"
-                                                      description:@"AIM, AOL, and .Mac"
+                                                      description:@"AIM, ICQ, and .Mac"
                                                             image:nil
                                                     caseSensitive:NO
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._ "]
@@ -35,7 +35,7 @@
 }
 - (NSString *)description
 {
-    return([NSString stringWithFormat:@"AIM / ICQ %@",[self gaimDescriptionSuffix]]);
+    return @"AIM, ICQ, and .Mac";
 }
 
 - (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID

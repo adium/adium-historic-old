@@ -36,7 +36,7 @@
 }
 - (NSString *)description
 {
-    return([NSString stringWithFormat:@"Trepia %@",[self gaimDescriptionSuffix]]);
+    return @"Trepia";
 }
 
 - (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID

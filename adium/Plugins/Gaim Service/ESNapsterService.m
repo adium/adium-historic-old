@@ -36,7 +36,7 @@
 }
 - (NSString *)description
 {
-    return([NSString stringWithFormat:@"Napster %@",[self gaimDescriptionSuffix]]);
+    return @"Napster";
 }
 
 - (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID

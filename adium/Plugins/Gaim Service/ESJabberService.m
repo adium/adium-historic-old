@@ -36,7 +36,7 @@
 }
 - (NSString *)description
 {
-    return([NSString stringWithFormat:@"Jabber %@",[self gaimDescriptionSuffix]]);
+    return @"Jabber";
 }
 
 - (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
