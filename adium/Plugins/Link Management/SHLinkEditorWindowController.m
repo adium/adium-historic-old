@@ -6,6 +6,7 @@
 
 #import "SHLinkEditorWindowController.h"
 #import "SHAutoValidatingTextView.h"
+#import "SHLinkLexer.h"
 
 #define LINK_EDITOR_NIB_NAME        @"LinkEditor"
 #define CHOOSE_URL                  AILocalizedString(@"Select...",nil)
@@ -141,17 +142,26 @@
 #pragma mark AttributedString Wrangleing Methods
 - (IBAction)acceptURL:(id)sender;
 {
-    NSString    *urlString = nil;
-    NSString    *linkString = nil;
-    NSRange      linkRange = NSMakeRange(0,0);
+    NSMutableString *urlString = nil;
+    NSString        *linkString = nil;
+    NSRange          linkRange = NSMakeRange(0,0);
     
     //get our infos out from the text's
-    urlString   = [[textView_URL textStorage] string];
+    urlString   = [[NSMutableString alloc] initWithString:[[textView_URL textStorage] string]];
     linkString  = [textField_linkText stringValue];
     linkRange   = selectionRange;
     
+    switch([textView_URL validationStatus]){
+        case SH_URL_DEGENERATE:
+            [urlString insertString:@"http://" atIndex:0];
+            break;
+        case SH_MAILTO_DEGENERATE:
+            [urlString insertString:@"mailto:" atIndex:0];
+            break;
+    }
+    
     //call the insertion method
-    [self insertLinkTo:urlString
+    [self insertLinkTo:[urlString string]
               withText:linkString
                 inView:editableView
              withRange:linkRange];
