@@ -95,7 +95,7 @@ static char *hash_password(const char * const password);
     messageDelayTimer = nil;
 
     //
-    [[owner notificationCenter] addObserver:self selector:@selector(updateHandleStatus:) name:Contact_UpdateStatus object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(updateContactStatus:) name:Contact_UpdateStatus object:nil];
     
     //Load our preferences
     preferencesDict = [[preferenceController preferencesForGroup:AIM_TOC2_PREFS] retain];
@@ -291,16 +291,17 @@ static char *hash_password(const char * const password);
 }
 
 // Update the status of a handle
-- (void)updateHandleStatus:(NSNotification *)notification
+- (void)updateContactStatus:(NSNotification *)notification
 {
     NSArray		*desiredKeys = [[notification userInfo] objectForKey:@"Keys"];
-    AIHandle		*handle = [notification object];
+    AIListContact	*contact = [notification object];
     
     //AIM requires a delayed load of profiles...
-    if([desiredKeys containsObject:@"TextProfile"]){
-        [self AIM_GetProfile:[handle UID]];
+    if([[contact statusArrayForKey:@"Online"] greatestIntegerValue]){
+        if([desiredKeys containsObject:@"TextProfile"]){
+            [self AIM_GetProfile:[contact UID]];
+        }
     }
-    
 }
 
 

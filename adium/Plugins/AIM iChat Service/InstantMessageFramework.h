@@ -17,7 +17,7 @@ enum {
 - (NSArray *)allServices;				//Returns an array of FZServices
 - (void)addListener:(id)fp12 capabilities:(int)fp16;	//Add a listener (caps == 15)
 - (void)removeListener:(id)fp12;			//Remove a listener
-- (oneway void)changeMyStatus:fp12;			//?
+- (oneway void)changeMyStatus:(NSDictionary *)newStatus;//?
 - (NSDictionary *)myStatus;				//Returns a status dict for the user
 - (void)terminate;					//?Terminate the daemon
 @end
