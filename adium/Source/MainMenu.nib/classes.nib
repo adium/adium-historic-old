@@ -58,10 +58,14 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {initiateMessage = id; }; 
+            ACTIONS = {initiateMessage = id; paste = id; pasteFormatted = id; }; 
             CLASS = AIInterfaceController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {owner = AIAdium; }; 
+            OUTLETS = {
+                "menuItem_paste" = NSMenuItem; 
+                "menuItem_pasteFormatted" = NSMenuItem; 
+                owner = AIAdium; 
+            }; 
             SUPERCLASS = NSObject; 
         }, 
         {

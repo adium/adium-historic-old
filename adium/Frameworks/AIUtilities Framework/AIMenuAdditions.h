@@ -28,5 +28,7 @@
 @interface NSMenuItem (ItemCreationAdditions)
 
 - (id)initWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode;
+- (void)setDynamic:(BOOL)dynamic;
+- (BOOL)isDynamic;
 
 @end

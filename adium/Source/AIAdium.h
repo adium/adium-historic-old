@@ -401,6 +401,9 @@ typedef enum {
 @interface AIInterfaceController : NSObject {
     IBOutlet	AIAdium		*owner;
 
+    IBOutlet	NSMenuItem	*menuItem_paste;
+    IBOutlet	NSMenuItem	*menuItem_pasteFormatted;
+
     NSMutableArray		*contactListViewArray;
     NSMutableArray		*messageViewArray;
     NSMutableArray		*interfaceArray;
@@ -442,6 +445,10 @@ typedef enum {
 //Tooltips
 - (void)showTooltipForListObject:(AIListObject *)object atPoint:(NSPoint)point;
 - (void)registerContactListTooltipEntry:(id <AIContactListTooltipEntry>)inEntry;
+
+//Custom pasting
+- (IBAction)paste:(id)sender;
+- (IBAction)pasteFormatted:(id)sender;
 
 @end
 

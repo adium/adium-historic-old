@@ -118,7 +118,7 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
-    //Load an init the components
+    //Load and init the components
     [loginController initController];
 
     //Begin Login

@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIMenuAdditions.h"
+#import <Carbon/Carbon.h>
 
 
 @implementation NSMenu (ItemCreationAdditions)
@@ -66,6 +67,39 @@
     [self setTarget:target];
     
     return(self);
+}
+
+extern MenuRef _NSGetCarbonMenu(NSMenu *);
+
+// Must be called after NSApp delegate's applicationDidFinishLaunching.
+- (void)setDynamic:(BOOL)dynamic
+{
+    MenuRef 	carbonMenu;
+    int 	itemIndex;
+
+    //Get the carbon menu
+    carbonMenu = _NSGetCarbonMenu([self menu]);
+    itemIndex = [[self menu] indexOfItem:self] + 1;
+
+    //Set its attributes
+    if(dynamic){
+        ChangeMenuItemAttributes(carbonMenu, itemIndex, kMenuItemAttrDynamic, 0);
+    }else{
+        ChangeMenuItemAttributes(carbonMenu, itemIndex, 0, kMenuItemAttrDynamic);
+    }
+}
+
+- (BOOL)isDynamic
+{
+    MenuItemAttributes 	attributes;
+    int 		itemIndex;
+
+    //Get the attributes
+    itemIndex = [[self menu] indexOfItem:self] + 1;
+    GetMenuItemAttributes(_NSGetCarbonMenu([self menu]), itemIndex, &attributes);
+
+    //
+    return(attributes & kMenuItemAttrDynamic);
 }
 
 @end
