@@ -81,7 +81,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
     //register observer
     [[owner notificationCenter] addObserver:self selector:@selector(oneTimeEventFired:) name:One_Time_Event_Fired object:activeContactObject];
-    
     return self;
 }
 
@@ -669,7 +668,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 //Save the event actions (contact context sensitive)
 - (void)saveEventActionArray
 {
-    //Display eventActionArray contents
     [[owner preferenceController] setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
 }
 
@@ -693,6 +691,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     [actionDict setObject:event forKey:KEY_EVENT_NOTIFICATION];
     [actionDict setObject:@"Sound" forKey:KEY_EVENT_ACTION]; //Sound is default action
     [actionDict setObject:[NSNumber numberWithInt:NSOffState] forKey:KEY_EVENT_DELETE]; //default to recurring events
+    [actionDict setObject:[NSNumber numberWithInt:NSOffState] forKey:KEY_EVENT_ACTIVE]; //default to ignore active/inactive
     [eventActionArray addObject:actionDict];
     
     [self saveEventActionArray];
@@ -861,12 +860,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 
 - (void)oneTimeEventFired:(NSNotification *)notification
 {
-    //reload eventActionArray
-    [eventActionArray release];
-    eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
-    if (!eventActionArray)
-        eventActionArray = [[NSMutableArray alloc] init];
-    [eventActionArray retain];
+    [self reloadFromPrefs];
 
     if ([[tableView_actions dataSource] respondsToSelector:@selector(anInstanceChanged:)])
         [[tableView_actions dataSource] performSelector:@selector(anInstanceChanged:) withObject:nil];
