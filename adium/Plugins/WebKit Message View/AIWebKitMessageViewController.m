@@ -57,10 +57,9 @@
 	//Load the template, and fill it up
 	NSString	*templateHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
 	templateHTML = [NSString stringWithFormat:templateHTML, basePath, mainCSS, variantCSS, headerHTML, footerHTML];
-
+    
 	//Feed it to the webview
 	[[webView mainFrame] loadHTMLString:templateHTML baseURL:nil];
-	
 	
 	
 	
@@ -168,7 +167,7 @@
 		newHTML = [[contentTemplate mutableCopy] autorelease];
 		newHTML = [self fillKeywords:newHTML forContent:content];
 		newHTML = [self escapeString:newHTML];
-
+        
 		[webView stringByEvaluatingJavaScriptFromString:
 			[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();", newHTML]];
 		
@@ -201,8 +200,9 @@
 	
 	range = [inString rangeOfString:@"%message"];
 	if(range.location != NSNotFound){
-//		NSLog(@"%@",[AIHTMLDecoder encodeHTML:[content message] encodeFullString:YES]);
-		[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message] encodeFullString:YES]];
+		[inString replaceCharactersInRange:range withString:
+		  [AIHTMLDecoder encodeHTML:[content message] 
+		      headers:NO fontTags:YES closeFontTags:YES styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES imagesPath:nil]];
 	}
 	
 	range = [inString rangeOfString:@"%time"];
@@ -229,7 +229,7 @@
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
 {
 	webViewIsReady = YES;
-	NSLog(@"Ready");
+	//NSLog(@"Ready");
 }
 
 // WebPolicyDelegate
