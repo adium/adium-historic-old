@@ -12,6 +12,9 @@
 	
 	BOOL					useNSImagePickerController;
 	IBOutlet	id			delegate;
+	
+	BOOL shouldDrawFocusRing;
+	NSResponder *lastResp;
 }
 
 - (void)setDelegate:(id)inDelegate;
