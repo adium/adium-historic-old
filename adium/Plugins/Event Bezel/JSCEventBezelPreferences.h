@@ -9,7 +9,6 @@
 @interface JSCEventBezelPreferences : AIPreferencePane {
     IBOutlet NSButton       *checkBox_showBezel;
     IBOutlet NSPopUpButton  *popUp_position;
-    IBOutlet NSPopUpButton  *popUp_buddyNameFormat;
     IBOutlet NSButton       *checkBox_online;
     IBOutlet NSButton       *checkBox_offline;
     IBOutlet NSButton       *checkBox_available;
@@ -21,7 +20,6 @@
 
 - (IBAction)toggleShowBezel:(id)sender;
 - (IBAction)changePosition:(id)sender;
-- (IBAction)changeBuddyNameFormat:(id)sender;
 - (IBAction)toggleOnline:(id)sender;
 - (IBAction)toggleOffline:(id)sender;
 - (IBAction)toggleAvailable:(id)sender;

@@ -31,10 +31,6 @@
     
     NSMutableArray              *eventArray;
     BOOL                        showEventBezel;
-    int                         buddyNameFormat;
-    int                         eventBezelPosition;
 }
-
-- (NSString *)stringWithoutWhitespace:(NSString *)sourceString;
 
 @end
