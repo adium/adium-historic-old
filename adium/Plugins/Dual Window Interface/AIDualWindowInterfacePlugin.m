@@ -13,12 +13,10 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-#import "AIContactListWindowController.h"
 #import "AIDualWindowInterfacePlugin.h"
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
 #import "AIMessageTabViewItem.h"
-#import "AIContactListAdvancedPrefs.h"
 #import "ESDualWindowMessageWindowPreferences.h"
 #import "ESDualWindowMessageAdvancedPreferences.h"
 
@@ -40,7 +38,6 @@
 
 	//Preferences
 #warning clean up used
-#warning AIContactListAdvancedPrefs
 	
 //    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_DEFAULT_PREFS forClass:[self class]] 
 //										  forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];

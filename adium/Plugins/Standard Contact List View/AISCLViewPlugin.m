@@ -21,6 +21,7 @@
 #import "ESCLViewLabelsAdvancedPrefs.h"
 #import "AISCLViewController.h"
 #import "AIContactListWindowController.h"
+#import "AIContactListAdvancedPrefs.h"
 
 @interface AISCLViewPlugin (PRIVATE)
 @end
@@ -45,8 +46,7 @@
     preferencesGroup = [[AICLGroupPreferences preferencePane] retain];
     preferencesAdvanced = [[ESCLViewAdvancedPreferences preferencePane] retain];
     preferencesLabelsAdvanced = [[ESCLViewLabelsAdvancedPrefs preferencePane] retain];
-	
-#warning	[[AIContactListAdvancedPrefs preferencePane] retain];
+	[[AIContactListAdvancedPrefs preferencePane] retain];
 }
 
 
