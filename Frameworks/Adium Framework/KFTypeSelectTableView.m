@@ -44,7 +44,6 @@
 static uint64_t SecondsToMachAbsolute(double seconds);
 
 NSString *KFTypeSelectTableViewPatternDidChangeNotification = @"KFTypeSelectTableViewPatternDidChange";
-NSString *KFTypeSelectMatchAlgorithmDefaultsKey = @"KFTypeSelectTableViewMatchAlgorithm";
 
 /* NOTE - because of behavior detailed at cocoadev.com/index.pl?PosingWithCategoriesSuperGotcha, 
  * it's important that private methods be _implemented_ in the main implementation of the class,
@@ -291,13 +290,15 @@ static BOOL KFKeyEventIsBeginFindEvent(NSEvent *keyEvent)
         return NO;
     }
     
-    NSCharacterSet *alphanumericCharacterSet = [NSCharacterSet alphanumericCharacterSet];
+    NSMutableCharacterSet *beginFindCharacterSet = [[[NSCharacterSet alphanumericCharacterSet] mutableCopy] autorelease];
+    [beginFindCharacterSet formUnionWithCharacterSet:[NSCharacterSet punctuationCharacterSet]];
+
     int i;
     unichar character;
     for (i = 0; i < numCharacters; i++)
     {
         character = [characters characterAtIndex:i];
-        if (![alphanumericCharacterSet characterIsMember:character])
+        if (![beginFindCharacterSet characterIsMember:character])
         {
             return NO;
         }
@@ -318,7 +319,7 @@ static BOOL KFKeyEventIsExtendFindEvent(NSEvent *keyEvent)
         return NO;
     }
     
-    NSMutableCharacterSet *extendFindCharacterSet = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
+    NSMutableCharacterSet *extendFindCharacterSet = [[[NSCharacterSet alphanumericCharacterSet] mutableCopy] autorelease];
     [extendFindCharacterSet formUnionWithCharacterSet:[NSCharacterSet punctuationCharacterSet]];
     [extendFindCharacterSet addCharactersInString:@" "];
     
@@ -493,13 +494,14 @@ static BOOL KFKeyEventIsCancelEvent(NSEvent *keyEvent)
     }
     
     BOOL finished = NO;
-    int row = initialRow - rowIncrement;
+    int row = initialRow;
     while (!finished)
     {
-        row += rowIncrement;
         // Mail generates 3MB in autoreleased objects in a search through 15000 rows
         // there's a noticable pause when they're deallocated.  We'll avoid it by using
-        // our own autorelease pool.
+        // our own autorelease pool. 
+        // (Update - implementing typeSelectTableView:stringValueForTableColumn:row: in the mail
+        // plugin dropped the number of allocations)
         //
         // Note: checking for new input no more often than 100 times a second drops time spent 
         // in -[NSApplication nextEventMatchingMask::::] from 30-60% of total function time to .2-.5% 
@@ -518,6 +520,9 @@ static BOOL KFKeyEventIsCancelEvent(NSEvent *keyEvent)
         [match retain];
         [pool release];
         [match autorelease];
+        
+        if (!finished)
+            row += rowIncrement;
         
         if (finished && match == nil && shouldWrap)
         {
@@ -1135,29 +1140,28 @@ static NSMutableDictionary *idToSimulatedIvarsMap = nil;
     return [[pattern retain] autorelease];
 }
 
+static KFTypeSelectMatchAlgorithm defaultMatchAlgorith = KFPrefixMatchAlgorithm;
++ (KFTypeSelectMatchAlgorithm)defaultMatchAlgorithm
+{
+    return defaultMatchAlgorith;
+}
+
++ (void)setDefaultMatchAlgorithm:(KFTypeSelectMatchAlgorithm)algorithm
+{
+    defaultMatchAlgorith = algorithm;
+}
+
+
 -(KFTypeSelectMatchAlgorithm)matchAlgorithm
 {
     [self kfConfigureDelegateIfNeeded];
-
-    KFTypeSelectMatchAlgorithm algorithm;
     
     NSNumber *algorithmNumber = [[self kfSimulatedIvars] objectForKey:@"matchAlgorithm"];
-    if (algorithmNumber == nil)
-    {
-        algorithmNumber = [[NSUserDefaults standardUserDefaults] objectForKey:KFTypeSelectMatchAlgorithmDefaultsKey];
-    }
-    
-    if (algorithmNumber == nil)
-    {
-        algorithm = KFPrefixMatchAlgorithm;
-        [self setMatchAlgorithm:algorithm];
-    }
-    else
-    {
-        algorithm = [algorithmNumber intValue];
-    }
 
-    return algorithm;
+    if (algorithmNumber == nil)
+        return defaultMatchAlgorith;
+    else 
+        return [algorithmNumber intValue];
 }
 
 -(void)setMatchAlgorithm:(KFTypeSelectMatchAlgorithm)algorithm
