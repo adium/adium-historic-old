@@ -29,4 +29,20 @@ static BOOL didInitNovell;
 	return KEY_NOVELL_PORT;
 }
 
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
+{
+	BOOL shouldAttemptReconnect = YES;
+	
+	if (disconnectionError) {
+		if ([disconnectionError rangeOfString:@"Invalid username or password"].location != NSNotFound) {
+			[[adium accountController] forgetPasswordForAccount:self];
+		}else if ([disconnectionError rangeOfString:@"you logged in at another workstation"].location != NSNotFound) {
+			shouldAttemptReconnect = NO;
+		}
+	}
+	
+	return shouldAttemptReconnect;
+}
+
+
 @end
