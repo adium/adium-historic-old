@@ -498,7 +498,7 @@
 //Message without a prefix
 - (NSAttributedString *)_messageStringForContent:(AIContentMessage *)content
 {
-    if(!ignoreTextColor){
+    if([content isOutgoing] || !ignoreTextColor){
 	return([content message]);
     }else{
 	return([self _stringByRemoveTextColor:[content message]]);
@@ -523,7 +523,7 @@
         //headIndent = [prefixString size].width;
         //headIndent = 25.0;
         
-	if(!ignoreTextColor){
+	if([content isOutgoing] || !ignoreTextColor){
 	    [prefixString appendAttributedString:[content message]];
 	}else{
 	    [prefixString appendAttributedString:[self _stringByRemoveTextColor:[content message]]];
