@@ -23,8 +23,8 @@
     AIAdium		*owner;
     AIMTOC2Account	*account;
 
-    IBOutlet		NSView		*view_accountView;
-    IBOutlet		NSTextField	*textField_handle;
+    IBOutlet		NSView			*view_accountView;
+    IBOutlet		NSTextField		*textField_handle;
 }
 
 + (id)accountViewForOwner:(id)inOwner account:(id)inAccount;

@@ -74,6 +74,14 @@
 
     [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:account];
 
+    //Configure the account name field
+    [textField_handle setFormatter:[AIStringFormatter stringFormatterAllowingCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789 "] length:16 caseSensitive:NO errorMessage:@"You account name must be 16 characters or less, contain only letters and numbers, and must start with a letter."]];
+    
+/*    [textField_handle setAllowedCharacters:];
+    [textField_handle setAllowedLength:];
+    [textField_handle setCaseSensitive:NO];
+    [textField_handle setErrorMessage:];*/
+    
     return(self);
 }
 

@@ -18,6 +18,7 @@
 #import "AITextFieldAdditions.h"
 
 @interface AICompletingTextField (PRIVATE)
+- (id)_init;
 - (void)insertText:(id)insertString;
 - (NSString *)completionForString:(NSString *)inString;
 @end
@@ -25,12 +26,23 @@
 @implementation AICompletingTextField
 
 //Init the field
-- (id)initWithFrame:(NSRect)frameRect;
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    [super initWithCoder:aDecoder];
+    [self _init];
+    return(self);
+}
+
+- (id)initWithFrame:(NSRect)frameRect
 {
     [super initWithFrame:frameRect];
+    [self _init];
+    return(self);
+}
 
+- (id)_init
+{
     stringArray = nil;
-//    [self setDelegate:self];
     minLength = 3;
     oldUserLength = 0;
 

@@ -117,7 +117,7 @@
 - (IBAction)closeTab:(id)sender
 {
     if(messageWindowController){
-        AIMessageTabViewItem	*container = [messageWindowController selectedTabViewItemContainer];
+        AIMessageTabViewItem	*container = (AIMessageTabViewItem *)[messageWindowController selectedTabViewItemContainer];
         AIContactHandle		*handle = [[container messageViewController] handle];
 
         [[owner notificationCenter] postNotificationName:Interface_CloseMessage object:handle userInfo:nil];

@@ -22,6 +22,7 @@
     int			oldUserLength;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder;
 - (id)initWithFrame:(NSRect)frameRect;
 - (void)setMinStringLength:(int)length;
 - (void)setCompletingStrings:(NSArray *)strings;

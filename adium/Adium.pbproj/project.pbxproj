@@ -808,6 +808,32 @@
 			settings = {
 			};
 		};
+		4B254C4203F6D8FC00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIStringFormatter.h;
+			path = "Frameworks/AIUtilities Framework/AIStringFormatter.h";
+			refType = 4;
+		};
+		4B254C4303F6D8FC00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIStringFormatter.m;
+			path = "Frameworks/AIUtilities Framework/AIStringFormatter.m";
+			refType = 4;
+		};
+		4B254C4603F6E09400A8010A = {
+			fileRef = 4B254C4303F6D8FC00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B254C4703F6E09600A8010A = {
+			fileRef = 4B254C4203F6D8FC00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B28907503C1D14200A8010A = {
 			children = (
 				4B28909B03C1D2F900A8010A,
@@ -2000,6 +2026,7 @@
 				F5793950033E74E401A8010A,
 				F579394E033E74E401A8010A,
 				F5793942033E74E401A8010A,
+				4B254C4203F6D8FC00A8010A,
 				F5793979033E755501A8010A,
 			);
 			isa = PBXGroup;
@@ -5176,6 +5203,7 @@
 				4B8EFC0603E18F2D00A8010A,
 				4B3E502403EC538D00A8010A,
 				4B3E502803EC651400A8010A,
+				4B254C4703F6E09600A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5252,6 +5280,7 @@
 				4B8EFC0703E18F2D00A8010A,
 				4B3E502503EC538D00A8010A,
 				4B3E502903EC651400A8010A,
+				4B254C4603F6E09400A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5887,6 +5916,7 @@
 		F549EF0B036B0F7201A8010A = {
 			children = (
 				F5793943033E74E401A8010A,
+				4B254C4303F6D8FC00A8010A,
 				F579397A033E755501A8010A,
 			);
 			isa = PBXGroup;
