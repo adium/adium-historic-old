@@ -33,6 +33,8 @@
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
     NSFont	*font = [(AISCLOutlineView *)controlView font];
+    NSColor	*groupColor = [(AISCLOutlineView *)controlView color];
+    NSColor	*invertedGroupColor = [(AISCLOutlineView *)controlView invertedColor];
 
 //    if([listObject isKindOfClass:[AIListContact class]]){
         NSString		*name;
@@ -75,18 +77,20 @@
             //If no left views are present, insert padding to move text away from flippy triangle
             cellFrame.origin.x += LEFT_VIEW_PADDING;
             cellFrame.size.width -= LEFT_VIEW_PADDING;
-            
+
         }
     
         //Color (If this cell is selected, use the inverted color, or white)
         if([self isHighlighted] && [[controlView window] isKeyWindow] && [[controlView window] firstResponder] == controlView){
             textColor = [[listObject displayArrayForKey:@"Inverted Text Color"] averageColor];
+	    if([listObject isKindOfClass:[AIListGroup class]]) textColor = invertedGroupColor;
             if(!textColor) textColor = [NSColor whiteColor];
         }else{ //use the regular color, or black
             textColor = [[listObject displayArrayForKey:@"Text Color"] averageColor];
+	    if([listObject isKindOfClass:[AIListGroup class]]) textColor = groupColor;
             if(!textColor) textColor = [NSColor blackColor];
         }
-        
+
         //Name
         name = [listObject displayName];
         displayName = [[NSAttributedString alloc] initWithString:name attributes:[NSDictionary dictionaryWithObjectsAndKeys:textColor,NSForegroundColorAttributeName,font,NSFontAttributeName,nil]];

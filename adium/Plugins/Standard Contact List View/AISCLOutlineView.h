@@ -25,9 +25,17 @@
     BOOL			editing;		//YES when the list is in edit mode... (temp)
 
     NSFont			*font;
+    NSColor			*color;
+    NSColor			*invertedColor;
 }
 
 - (void)setFont:(NSFont *)inFont;
 - (NSFont *)font;
+
+- (void)setColor:(NSColor *)inColor;
+- (void)setInvertedColor:(NSColor *)inInvertedColor;
+- (void)setColor:(NSColor *)inColor andInvertedColor:(NSColor *)inInvertedColor;
+- (NSColor *)color;
+- (NSColor *)invertedColor;
 
 @end
