@@ -167,6 +167,7 @@
 		[unzip setLaunchPath:@"/usr/bin/unzip"];
 		[unzip setArguments:[NSArray arrayWithObjects:
 			@"-o",  /* overwrite */
+			@"-q", /* quiet! */
 			dest, /* source zip file */
 			@"-d", [dest stringByDeletingLastPathComponent], /*destination folder*/
 			nil]];
