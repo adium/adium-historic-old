@@ -89,6 +89,7 @@
 #import "AIViewAdditions.h"
 #import "BZContextImageBridge.h"
 #import "AIWindowAdditions.h"
+#import "BZFontManagerAdditions.h"
 
 #import "IconFamily.h"
 #import "SUSpeaker.h"

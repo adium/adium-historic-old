@@ -19,6 +19,46 @@
 //012
 //013
 //014
+//070
+//071
+//072
+//073
+//074
+		07A07ADC05F9325C00179FDC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = BZFontManagerAdditions.h;
+			path = "Frameworks/AIUtilities Framework/BZFontManagerAdditions.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07A07ADD05F9325C00179FDC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = BZFontManagerAdditions.m;
+			path = "Frameworks/AIUtilities Framework/BZFontManagerAdditions.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07A07AE605F9335A00179FDC = {
+			fileRef = 07A07ADC05F9325C00179FDC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07A07AE705F9335C00179FDC = {
+			fileRef = 07A07ADD05F9325C00179FDC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//070
+//071
+//072
+//073
+//074
 //100
 //101
 //102
@@ -10567,6 +10607,7 @@
 				4BA7F23905E2E8D200ABF4FC,
 				34A7DA6105E34C3B00FFAC63,
 				9EEDAD9D05E7463E00CB537D,
+				07A07AE605F9335A00179FDC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11297,6 +11338,7 @@
 				4BA7F23A05E2E8D200ABF4FC,
 				34A7DA6005E34C3B00FFAC63,
 				9EEDAD9C05E7463E00CB537D,
+				07A07AE705F9335C00179FDC,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19450,7 +19492,6 @@
 				4BDEC3B305F1A47E00416138,
 				4BDEC3B405F1A47E00416138,
 				4BDEC3B505F1A47E00416138,
-				4BDEC3B605F1A47E00416138,
 				6C5C3DC205F655B500490341,
 				B723DD2D05F85459003913CC,
 			);
@@ -22824,7 +22865,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
 			name = background.png;
-			path = "Plugins/WebKit Message View/background.png";
+			path = "Plugins/WebKit Message View/images/background.png";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -22880,14 +22921,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BDEC3AE05F1A47E00416138 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = whitesquare.png;
-			path = "Plugins/WebKit Message View/whitesquare.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BDEC3AF05F1A47E00416138 = {
 			fileRef = 4BDEC39B05F1A47D00416138;
 			isa = PBXBuildFile;
@@ -22926,12 +22959,6 @@
 		};
 		4BDEC3B505F1A47E00416138 = {
 			fileRef = 4BDEC3AD05F1A47D00416138;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BDEC3B605F1A47E00416138 = {
-			fileRef = 4BDEC3AE05F1A47E00416138;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -25848,7 +25875,6 @@
 				4BDEC3AC05F1A47D00416138,
 				4BDEC3AD05F1A47D00416138,
 				4BDEC39B05F1A47D00416138,
-				4BDEC3AE05F1A47E00416138,
 			);
 			isa = PBXGroup;
 			name = "WebKit Message View";
@@ -31451,6 +31477,8 @@
 				4B215D980598907100305B3C,
 				4BBC8E4B03BA0DB900A8010A,
 				4BBC8E4C03BA0DB900A8010A,
+				07A07ADC05F9325C00179FDC,
+				07A07ADD05F9325C00179FDC,
 				34004D86057C7DCA0022CA56,
 				34004D87057C7DCA0022CA56,
 				F570A5B103704C3701A8010A,
