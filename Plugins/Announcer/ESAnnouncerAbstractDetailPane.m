@@ -26,7 +26,15 @@
 - (NSMenu *)voicesMenu;
 @end
 
+/*
+ * @class ESAnnouncerAbstractDetailPane
+ * @brief Abstract superclass for Announcer action (Speak Event and Speak Text) detail panes
+ */
 @implementation ESAnnouncerAbstractDetailPane
+
+/*
+ * @brief View did load
+ */
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
@@ -36,7 +44,9 @@
 	[popUp_voices setMenu:[self voicesMenu]];
 }
 
-//Configure for the action
+/*
+ * @brief Configure for the action
+ */
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
 {
 	BOOL		speakTime, speakContactName;
@@ -71,6 +81,11 @@
 	[checkBox_speakContactName setState:speakContactName];
 }
 
+/*
+ * @brief Configure controls specially for message events.
+ *
+ * Speaking of the name is only disable-able for message events.
+ */
 - (void)configureForEventID:(NSString *)eventID listObject:(AIListObject *)inObject
 {
 	if([[adium contactAlertsController] isMessageEvent:eventID]){
@@ -81,8 +96,12 @@
 	}
 }
 
-//Should be overridden, with the subclass returning [self actionDetailsDromDict:actionDetails]
-//where actionDetails is the dictionary of what it itself needs to store
+/*
+ * @brief Return action details
+ *
+ * Should be overridden, with the subclass returning [self actionDetailsDromDict:actionDetails]
+ * where actionDetails is the dictionary of what it itself needs to store
+ */
 - (NSDictionary *)actionDetails
 {
 	NSDictionary	*actionDetails = [self actionDetailsFromDict:nil];
@@ -95,6 +114,9 @@
 	return(actionDetails);
 }
 
+/*
+ * @brief Used by subclasses; adds the general information managed by the superclass to the details dictionary.
+ */
 - (NSDictionary *)actionDetailsFromDict:(NSMutableDictionary *)actionDetails
 {
 	NSNumber		*speakTime, *speakContactName, *pitch, *rate;
@@ -131,12 +153,19 @@
 	return actionDetails;
 }
 
-
+/*
+ * @brief Key on which to store our defaults
+ *
+ * Must be overridden by subclasses
+ */
 - (NSString *)defaultDetailsKey
 {
 	return nil;
 }
 
+/*
+ * @brief Speech voices menu
+ */
 - (NSMenu *)voicesMenu
 {
 	NSArray			*voicesArray;
@@ -166,6 +195,9 @@
 	return(voicesMenu);
 }
 
+/*
+ * @brief Preference changed
+ */
 -(IBAction)changePreference:(id)sender
 {
 	//If the Default voice is selected, also set the pitch and rate to defaults
@@ -183,6 +215,8 @@
 											 withPitch:[slider_pitch floatValue]
 											   andRate:[slider_rate intValue]];
 	}
+	
 	[super changePreference:sender];
 }
+
 @end
