@@ -572,6 +572,26 @@ static NSImage *pushIndicatorImage = nil;
 				}
 				else
 					[self _pushContent];
+			else if(inChar == 's')
+			{
+				// Is there text?
+				NSAttributedString *tempMessage = nil;
+				NSAttributedString *tempPush = nil;
+
+				if( [[self textStorage] length] != 0 ){
+					tempMessage = [[self textStorage] copy];
+				}
+				
+				if( [pushArray count] )
+					[self _popContent];
+				else
+					[self setString:@""];
+			
+				if( tempMessage ) {
+					[pushArray addObject:tempMessage];
+					[self _setPushIndicatorVisible:YES];
+				}
+			}
 			else
 				[super keyDown:inEvent];
 		}
