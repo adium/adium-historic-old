@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="main.css" type="text/css" />
+	<script type="text/ecmascript" defer="defer">
+		var scrollToBottomIsNeeded = false;
+
+		function appendMessage(html) {
+			//Remove any existing insertion point
+			insert = document.getElementById("insert");
+			if(insert) insert.parentNode.removeChild(insert);
+
+			//Append the new message to the bottom of our chat block
+			chat = document.getElementById("Chat");
+			range = document.createRange();
+			range.selectNode(chat);
+			documentFragment = range.createContextualFragment(html);
+			chat.appendChild(documentFragment);
+			alignChat();
+		}
+		
+		function appendNextMessage(html){
+			//
+			insert = document.getElementById("insert");
+		
+			//make new node
+			range = document.createRange();
+			range.selectNode(insert.parentNode);
+			newNode = range.createContextualFragment(html);
+
+			//swap
+			insert.parentNode.replaceChild(newNode,insert);
+			alignChat();
+		}
+		
+		function scrollToBottom() {
+			document.body.scrollTop = document.body.offsetHeight;
+		}
+
+		function checkIfScrollToBottomIsNeeded() {
+			scrollToBottomIsNeeded = ( document.body.scrollTop >= ( document.body.offsetHeight - ( window.innerHeight * 1.2 ) ) );
+		}
+
+		function scrollToBottomIfNeeded() {
+			if( scrollToBottomIsNeeded )
+				document.body.scrollTop = document.body.offsetHeight;
+		}
+
+		function setStylesheet( id, url ) {
+			code = "<style id=\"" + id + "\" type=\"text/css\" media=\"screen,print\">";
+			if( url.length ) code += "@import url( \"" + url + "\" );";
+			code += "</style>";
+			range = document.createRange();
+			head = document.getElementsByTagName( "head" ).item(0);
+			range.selectNode( head );
+			documentFragment = range.createContextualFragment( code );
+			head.removeChild( document.getElementById( id ) );
+			head.appendChild( documentFragment );
+		}
+		document.onclick = imageCheck;
+		function imageCheck() {
+			node = event.target;
+			if(node.tagName == 'IMG' && node.alt) {
+				a = document.createElement('a');
+				a.setAttribute('onclick', 'imageSwap(this)');
+				a.setAttribute('src', node.src);
+				text = document.createTextNode(node.alt);
+				a.appendChild(text);
+				node.parentNode.replaceChild(a, node);
+			}
+		}
+		function imageSwap(node) {
+			img = document.createElement('img');
+			img.setAttribute('src', node.src);
+			img.setAttribute('alt', node.firstChild.nodeValue);
+			node.parentNode.replaceChild(img, node);
+		}
+		function alignChat() {
+			var windowHeight = window.innerHeight;
+			if (windowHeight > 0) {
+				var contentElement = document.getElementById('Chat');
+				var contentHeight = contentElement.offsetHeight;
+				if (windowHeight - contentHeight > 0) {
+					contentElement.style.position = 'relative';
+					contentElement.style.top = (windowHeight - contentHeight) + 'px';
+				}
+				else {
+					contentElement.style.position = 'static';
+				}
+			}
+		}
+		window.onresize = alignChat;
+
+	</script>
+</head>
+<body onload="scrollToBottom();alignChat();">
+<div id="Chat">
+<div class="container">
+    <div class="time_initial">
+		19:54:32
+	</div>
+	<div>
+		<div class="sender greyed">
+			You
+		</div>
+		<div class="context_message greyed_link">
+			<p>Ahoy</p>
+		</div>
+		<div class="clear"></div>
+    </div>
+	<div class="clear"></div>
+</div>
+<div class="container_next">
+    <div class="time_initial">
+		19:54:32
+	</div>
+	<div>
+		<div class="next_label greyed">
+			&#187;
+		</div>
+		<div class="context_message greyed_link">
+			<p>Wasssup a message long</p>
+		</div>
+		<div class="clear"></div>
+    </div>
+	<div class="clear"></div>
+</div>
+<div class="container">
+    <div class="time_initial">
+		19:54:32
+	</div>
+	<div>
+		<div class="sender greyed">
+			Me
+		</div>
+		<div class="context_message greyed_link">
+			<p>heyeyeyeyeyeye</p>
+		</div>
+		<div class="clear"></div>
+    </div>
+	<div class="clear"></div>
+</div>
+<div class="container_next">
+    <div class="time_initial">
+		19:54:32
+	</div>
+	<div>
+		<div class="next_label greyed">
+			&#187;
+		</div>
+		<div class="context_message greyed_link">
+			<p>this is a message long asdadh auish uaihd us duiash uidhasu dhuasi duasd uasdhuas duas duasduiash duiah suidaiusd huas dhas hdhasi dsadsa. asd asd. sa.d asdas ds</p>
+		</div>
+		<div class="clear"></div>
+    </div>
+	<div class="clear"></div>
+</div>
+<div class="container_next">
+    <div class="time_initial">
+		19:54:32
+	</div>
+	<div>
+		<div class="next_label greyed">
+			&#187;
+		</div>
+		<div class="context_message greyed_link">
+			<p>asd</p>
+		</div>
+		<div class="clear"></div>
+    </div>
+	<div class="clear"></div>
+</div>
+<div class="container">
+    <div class="time_initial">
+		19:54:32
+	</div>
+	<div>
+		<div class="sender outgoing">
+			Colin
+		</div>
+		<div class="message outgoing_link">
+			<p>ahoy</p>
+		</div>
+		<div class="clear"></div>
+    </div>
+	<div class="clear"></div>
+</div>
+<div class="container_next">
+    <div class="time_initial">
+		19:54:32
+	</div>
+	<div>
+		<div class="next_label outgoing">
+			&#187;
+		</div>
+		<div class="message outgoing_link">
+			<p>mooo</p>
+		</div>
+		<div class="clear"></div>
+    </div>
+	<div class="clear"></div>
+</div>
+<div class="container">
+    <div class="time_initial">
+		19:54:32
+	</div>
+	<div>
+		<div class="sender status">
+			Status
+		</div>
+		<div class="message status">
+			<p>Colin went idle</p>
+		</div>
+		<div class="clear"></div>
+    </div>
+	<div class="clear"></div>
+</div>
+<div class="container">
+    <div class="time_initial">
+		19:54:32
+	</div>
+	<div>
+		<div class="sender incoming">
+			%sender%
+		</div>
+		<div class="message incoming_link">
+			<p>%message%</p>
+		</div>
+		<div class="clear"></div>
+    </div>
+	<div class="clear"></div>
+</div>
+<div class="container_next">
+    <div class="time_initial">
+		19:54:32
+	</div>
+	<div>
+		<div class="next_label incoming">
+			&#187;
+		</div>
+		<div class="message incoming_link">
+			<p>%message%</p>
+		</div>
+		<div class="clear"></div>
+    </div>
+	<div class="clear"></div>
+</div>
+<div id="insert"></div>
+</div>
+</body>
+</html>
