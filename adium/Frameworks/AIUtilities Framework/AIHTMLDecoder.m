@@ -321,11 +321,10 @@ DeclareString(TagCharStartString);
 					
 				}else if(!attachmentsAsText && attachment && [attachment respondsToSelector:@selector(imagePath)]){
 					if([attachment imagePath]){
-						[string appendString:@"<img src=\"file://"];
-						[string appendString:[attachment imagePath]];
-						[string appendString:@"\" alt=\""];
-						[string appendString:[attachment string]];
-						[string appendString:@"\">"];
+						NSLog(@"%i x %i",(int)[attachment imageSize].width, (int)[attachment imageSize].height);
+						[string appendFormat:@"<img src=\"file://%@\" alt=\"%@\" width=\"%i\" height=\"%i\">",
+							[attachment imagePath], [attachment string],
+							(int)[attachment imageSize].width, (int)[attachment imageSize].height];
 						[chunk release]; chunk = nil;
 					}
 				}

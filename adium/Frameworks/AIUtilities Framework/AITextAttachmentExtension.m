@@ -24,6 +24,8 @@
     shouldSaveImageForLogging = NO;
 	hasAlternate = NO;
 	imagePath = nil;
+	imageSize = NSMakeSize(0,0);
+	
     return self;
 }
 
@@ -62,6 +64,15 @@
 - (NSString *)imagePath
 {
 	return(imagePath);
+}
+
+- (void)setImageSize:(NSSize)inSize
+{
+	imageSize = inSize;
+}
+- (NSSize)imageSize
+{
+	return(imageSize);
 }
 
 
