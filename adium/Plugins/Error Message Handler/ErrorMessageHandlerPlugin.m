@@ -19,6 +19,9 @@
     [ErrorMessageWindowController closeSharedInstance]; //Close the error window
 }
 
+#warning testing new syncmail, this time with a directory with spaces
+#warning it doesn't appear to be working at all anymore though.
+
 - (void)handleError:(NSNotification *)notification
 {
     NSDictionary	*userInfo;
