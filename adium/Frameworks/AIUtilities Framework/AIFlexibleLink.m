@@ -18,14 +18,21 @@
 
 @implementation AIFlexibleLink
 
-- (id)initWithTrackingRect:(NSRect)inTrackingRect url:(NSString *)inURL
+- (id)initWithTrackingRect:(NSRect)inTrackingRect url:(NSString *)inURL title:(NSString *)inTitle
 {
     [super init];
 
     trackingRect = inTrackingRect;
     url = [inURL retain];
+	title = [inTitle retain];
 
     return(self);
+}
+
+- (void)dealloc
+{
+	[url release];
+	[title release];
 }
 
 - (NSRect)trackingRect{
@@ -43,6 +50,10 @@
 
 - (NSString *)url{
     return(url);
+}
+
+- (NSString *)title{
+	return(title);
 }
 
 @end
