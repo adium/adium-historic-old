@@ -236,8 +236,9 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 //This must be done so we don't see the file transfer again if the progress window is closed and then reopened.
 - (void)_removeFileTransferRow:(ESFileTransferProgressRow *)progressRow
 {
-	if([progressRow isStopped]){
-		ESFileTransfer	*fileTransfer = [progressRow fileTransfer];
+	ESFileTransfer	*fileTransfer = [progressRow fileTransfer];
+
+	if([fileTransfer isStopped]){
 		NSClipView		*clipView = [scrollView contentView];
 		unsigned		row;
 		
@@ -365,7 +366,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	BOOL		didDelete = NO;
 	if(row != -1){
 		ESFileTransferProgressRow	*progressRow = [inOutlineView itemAtRow:row];
-		if([progressRow isStopped]){
+		if([[progressRow fileTransfer] isStopped]){
 			[self _removeFileTransferRow:progressRow];
 			didDelete = YES;
 		}

@@ -350,16 +350,6 @@
 								to:newHeight];
 }
 
-#warning move to ESFileTransfer
-- (BOOL)isStopped
-{
-	FileTransferStatus	status = [fileTransfer status];
-
-	return((status == Complete_FileTransfer) ||
-		   (status == Canceled_Local_FileTransfer) ||
-		   (status == Canceled_Remote_FileTransfer));
-}
-
 #pragma mark Localized readable values
 //From Colloquy
 - (NSString *)readableTimeForSecs:(NSTimeInterval)secs inLongFormat:(BOOL)longFormat
