@@ -17,7 +17,7 @@
 #import "AISCLOutlineView.h"
 #import "AISCLViewPlugin.h"
 
-#define CL_PREF_NIB			@"AICLPrefView"		//Name of preference nib
+#define CL_PREF_NIB					@"AICLPrefView"		//Name of preference nib
 #define CL_PREF_GENERAL_TITLE		AILocalizedString(@"General Appearance",nil)
 #define CL_PREF_GROUPS_TITLE		AILocalizedString(@"General Appearance",nil)
 
