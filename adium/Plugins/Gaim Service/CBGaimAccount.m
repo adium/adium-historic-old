@@ -545,7 +545,7 @@
 }
 
 - (NSString *)accountDescription {
-    return [self UIDAndServiceID];
+    return [self uniqueObjectID];
 }
 
 - (NSString *)unknownGroupName {
@@ -1197,13 +1197,13 @@
 
 - (NSString *)_userIconCachePath
 {    
-    NSString    *userIconCacheFilename = [NSString stringWithFormat:USER_ICON_CACHE_NAME, [self UIDAndServiceID]];
+    NSString    *userIconCacheFilename = [NSString stringWithFormat:USER_ICON_CACHE_NAME, [self uniqueObjectID]];
     return([[USER_ICON_CACHE_PATH stringByAppendingPathComponent:userIconCacheFilename] stringByExpandingTildeInPath]);
 }
 
 - (NSString *)_messageImageCachePathForID:(int)imageID
 {
-    NSString    *messageImageCacheFilename = [NSString stringWithFormat:MESSAGE_IMAGE_CACHE_NAME, [self UIDAndServiceID], imageID];
+    NSString    *messageImageCacheFilename = [NSString stringWithFormat:MESSAGE_IMAGE_CACHE_NAME, [self uniqueObjectID], imageID];
     return([[[USER_ICON_CACHE_PATH stringByAppendingPathComponent:messageImageCacheFilename] stringByAppendingPathExtension:@"png"] stringByExpandingTildeInPath]);	
 }
 

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.58 2004/03/05 03:07:00 evands Exp $
+// $Id: AIAccountController.m,v 1.59 2004/03/05 04:39:05 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -253,7 +253,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
-        if([inID compare:[account UIDAndServiceID]] == 0){
+        if([inID compare:[account uniqueObjectID]] == 0){
             return(account);
         }
     }
@@ -558,11 +558,11 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
         AIContentObject *contentObject = [[notification userInfo] objectForKey:@"Object"];
         AIAccount		*sourceAccount = (AIAccount *)[contentObject source];
         
-        [destObject setPreference:[sourceAccount UIDAndServiceID]
+        [destObject setPreference:[sourceAccount uniqueObjectID]
                            forKey:KEY_PREFERRED_SOURCE_ACCOUNT
                             group:PREF_GROUP_PREFERRED_ACCOUNTS];
         
-        [lastAccountIDToSendContent setObject:[sourceAccount UIDAndServiceID] forKey:[destObject serviceID]];
+        [lastAccountIDToSendContent setObject:[sourceAccount uniqueObjectID] forKey:[destObject serviceID]];
     }
 }
 
@@ -662,16 +662,16 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 - (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount
 {
     if(inPassword){
-        [AIKeychain putPasswordInKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount UIDAndServiceID]]
-                                            account:[inAccount UIDAndServiceID] password:inPassword];
+        [AIKeychain putPasswordInKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount uniqueObjectID]]
+                                            account:[inAccount uniqueObjectID] password:inPassword];
     }
 }
 
 //Fetches a saved account password (returns nil if no password is saved)
 - (NSString *)passwordForAccount:(AIAccount *)inAccount
 {
-    NSString	*password = [AIKeychain getPasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount UIDAndServiceID]]
-                                                                  account:[inAccount UIDAndServiceID]];
+    NSString	*password = [AIKeychain getPasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount uniqueObjectID]]
+                                                                  account:[inAccount uniqueObjectID]];
     
     return(password);
 }
@@ -682,8 +682,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     NSString	*password;
     
     //check the keychain for this password
-    password = [AIKeychain getPasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount UIDAndServiceID]]
-                                                     account:[inAccount UIDAndServiceID]];
+    password = [AIKeychain getPasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount uniqueObjectID]]
+                                                     account:[inAccount uniqueObjectID]];
     
     if(password && [password length] != 0){
         //Invoke the target right away
@@ -697,8 +697,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Forget a saved password
 - (void)forgetPasswordForAccount:(AIAccount *)inAccount
 {
-    [AIKeychain removePasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount UIDAndServiceID]]
-											 account:[inAccount UIDAndServiceID]];
+    [AIKeychain removePasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount uniqueObjectID]]
+											 account:[inAccount uniqueObjectID]];
 }
 
 @end

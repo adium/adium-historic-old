@@ -194,8 +194,8 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         [instance configForObject:contact];
         thisInstanceCount = [instance count];
         if (thisInstanceCount) {
-			NSLog(@"setting %i for %@",offset,[contact UIDAndServiceID]);
-            [offsetDictionary setObject:[NSNumber numberWithInt:offset] forKey:[contact UIDAndServiceID]];
+			NSLog(@"setting %i for %@",offset,[contact uniqueObjectID]);
+            [offsetDictionary setObject:[NSNumber numberWithInt:offset] forKey:[contact uniqueObjectID]];
             for (arrayCounter=0 ; arrayCounter < thisInstanceCount ; arrayCounter++) {
                 [prefAlertsArray addObject:contact];
             }
@@ -301,7 +301,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     NSString	*identifier = [tableColumn identifier];
     AIListObject *object = [prefAlertsArray objectAtIndex:row];
     [instance configForObject:object];
-    row -= [[offsetDictionary objectForKey:[object UIDAndServiceID]] intValue]; //acount for offset from here on out
+    row -= [[offsetDictionary objectForKey:[object uniqueObjectID]] intValue]; //acount for offset from here on out
 
     if([identifier compare:TABLE_COLUMN_EVENT] == 0){
         NSDictionary	*actionDict;
@@ -344,7 +344,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         [instance configForObject:object];
 		
 		//Adjust row to be instance-relative
-        row -= [[offsetDictionary objectForKey:[object UIDAndServiceID]] intValue];
+        row -= [[offsetDictionary objectForKey:[object uniqueObjectID]] intValue];
 
 		//Select the action in the menu
         [cell selectItemWithRepresentedObject:[[instance dictAtIndex:row] objectForKey:KEY_EVENT_ACTION]];
@@ -369,7 +369,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
         selectedMenuItem = (NSMenuItem *)[[[tableColumn dataCellForRow:row] menu] itemAtIndex:[object intValue]];
 
-        row -= [[offsetDictionary objectForKey:[listObject UIDAndServiceID]] intValue]; //change row to account for offset
+        row -= [[offsetDictionary objectForKey:[listObject uniqueObjectID]] intValue]; //change row to account for offset
         selectedActionDict = [[instance dictAtIndex:row] mutableCopy];
         newAction = [selectedMenuItem representedObject];
 
@@ -399,7 +399,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         activeContactObject = object;
 		
 		//Correct for the offset so that row is in terms the instance can handle
-        row -= [[offsetDictionary objectForKey:[object UIDAndServiceID]] intValue];
+        row -= [[offsetDictionary objectForKey:[object uniqueObjectID]] intValue];
 
 		
 		//evands -- ???

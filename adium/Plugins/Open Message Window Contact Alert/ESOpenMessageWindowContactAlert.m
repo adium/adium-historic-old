@@ -55,7 +55,7 @@
          //if we found an online account, set it as the default account choice
         if (account)
         {
-            NSString *accountID = [account UIDAndServiceID];
+            NSString *accountID = [account uniqueObjectID];
             [popUp_actionDetails_open_message selectItemAtIndex:[popUp_actionDetails_open_message indexOfItemWithRepresentedObject:account]]; //set the menu view
             
             [self setObject:accountID forKey:KEY_EVENT_DETAILS];
@@ -117,7 +117,7 @@
 {
     AIAccount * account = [sender representedObject];
     
-    [self setObject:[account UIDAndServiceID] forKey:KEY_EVENT_DETAILS];
+    [self setObject:[account uniqueObjectID] forKey:KEY_EVENT_DETAILS];
     
     //Save event preferences
     [self saveEventActionArray];

@@ -35,8 +35,8 @@
 @interface NEHGamePlugin : AIPlugin <AIContentFilter> {
 	NSMenuItem				* menuItem_game;
 	
-	//This dictionary maps [account UIDAndServiceID] => 
-	//{NSDictionary of [contact UIDAndServiceID] =>  NEHGameController*}
+	//This dictionary maps [account uniqueObjectID] => 
+	//{NSDictionary of [contact uniqueObjectID] =>  NEHGameController*}
 	NSMutableDictionary		* gamesForAccounts;
 	
 	IBOutlet NSWindow		* window_newGame;

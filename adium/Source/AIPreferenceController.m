@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.42 2004/02/26 23:22:51 adamiser Exp $
+// $Id: AIPreferenceController.m,v 1.43 2004/03/05 04:39:05 adamiser Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -195,7 +195,7 @@
 - (BOOL)tempImportOldPreferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object
 {
     if(![object isKindOfClass:[AIAccount class]]){
-		NSString		*objectKey = [NSString stringWithFormat:@"(%@)", [object UIDAndServiceID]];
+		NSString		*objectKey = [NSString stringWithFormat:@"(%@)", [object uniqueObjectID]];
 		NSMutableDictionary     *prefDict = [self loadPreferenceGroup:groupName];
 		NSMutableDictionary     *objectPrefDict = [prefDict objectForKey:objectKey];
 		id			oldValue;

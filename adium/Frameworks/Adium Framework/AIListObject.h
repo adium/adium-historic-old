@@ -42,7 +42,7 @@
 //Identifying information
 - (NSString *)UID;
 - (NSString *)serviceID;
-- (NSString *)UIDAndServiceID;
+- (NSString *)uniqueObjectID;
 
 //Visibility
 - (void)setVisible:(BOOL)inVisible;

@@ -42,7 +42,7 @@
 
 // Return a unique ID specific to THIS account plugin, and the user's account name
 - (NSString *)accountID{
-    return([self UIDAndServiceID]);
+    return([self uniqueObjectID]);
 }
 
 //The user's account name
