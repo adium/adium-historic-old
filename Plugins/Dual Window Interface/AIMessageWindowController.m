@@ -26,7 +26,7 @@
 #import <AIUtilities/AICustomTabDragging.h>
 #import <AIUtilities/AICustomTabsView.h>
 #import <AIUtilities/AIToolbarUtilities.h>
-#import <AIUtilities/ESArrayAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>

@@ -20,7 +20,7 @@
 #import "ESGlobalEventsPreferencesPlugin.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/ESArrayAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
 
 //Sound set defines
 #define SOUND_EVENT_START			@"\nSoundset:\n"	//String marking start of event list

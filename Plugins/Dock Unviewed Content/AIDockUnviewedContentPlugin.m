@@ -17,7 +17,7 @@
 #import "AIContentController.h"
 #import "AIDockController.h"
 #import "AIDockUnviewedContentPlugin.h"
-#import <AIUtilities/BZArrayAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
 #import <Adium/AIChat.h>
 
 @implementation AIDockUnviewedContentPlugin
