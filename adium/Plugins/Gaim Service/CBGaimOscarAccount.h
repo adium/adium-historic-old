@@ -14,15 +14,9 @@
 
 }
 
-//Overriden from CBGAimAccount
-- (NSString *)UID;
-- (NSString *)serviceID;
-- (NSString *)UIDAndServiceID;
-- (NSString *)accountDescription;
-- (void)accountBlistUpdate:(GaimBuddyList *)list withNode:(GaimBlistNode *)node;
+//Overriden from CBGaimAccount
+- (void)accountUpdateBuddy:(GaimBuddy*)buddy;
 - (NSArray *)supportedPropertyKeys;
-
-//- (void)accountBlistNewNode:(GaimBlistNode *)node;
 
 extern gchar *oscar_encoding_to_utf8(const char *encoding, char *text, int textlen);
 
