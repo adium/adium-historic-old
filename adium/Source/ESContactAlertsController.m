@@ -3,7 +3,7 @@
 //  Adium XCode
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.14 2004/01/08 14:51:58 adamiser Exp $
+//  $Id: ESContactAlertsController.m,v 1.15 2004/01/10 22:31:39 evands Exp $
 
 
 /*
@@ -33,7 +33,7 @@
     arrayOfAlertsArrays             =   [[AIMutableOwnerArray alloc] init];
     
     //Register as a contact observer
-#warning    [[owner contactController] registerListObjectObserver:self];
+    [[owner contactController] registerListObjectObserver:self];
 }
 
 - (void)closeController
@@ -210,21 +210,17 @@ Alert Execution
 {
     if (!silent) //We do things.  If silent, don't do them.
     {
-        NSMutableArray * eventActionArray;
-        
         //To track actions which should only be done once, for the user if possible, then for the group is still needed
         //Such behaviors are dock bouncing and event bezel display
         [completedActionTypes removeAllObjects];
         
-        //load inObject events
-        eventActionArray =  [inObject preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS ignoreInheritedValues:YES];
-        //process inObject events
-        [self processEventActionArray:eventActionArray forObject:inObject keys:inModifiedKeys];
-
-        //load [inObject containingGroup] events
-        eventActionArray =  [[inObject containingGroup] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS ignoreInheritedValues:YES];
-        //process the group events
-        [self processEventActionArray:eventActionArray forObject:inObject keys:inModifiedKeys];
+        NSArray         *allPrefs = [inObject allPreferencesForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS];
+        NSEnumerator    *enumerator = [allPrefs objectEnumerator];
+        NSMutableArray  *eventActionArray;
+        
+        while (eventActionArray = [enumerator nextObject]) {
+            [self processEventActionArray:eventActionArray forObject:inObject keys:inModifiedKeys];
+        }
     }
     return nil; //we don't change any attributes
 }
