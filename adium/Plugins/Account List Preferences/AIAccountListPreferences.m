@@ -95,12 +95,11 @@
         [[popupMenu_serviceList menu] addItem:item];
     }
 
-	//Observe account list objects so we can enable/disable our service menu as necessary
+	//Observe account list objects so we can enable/disable our controls for connected accounts
     [[adium contactController] registerListObjectObserver:self];
-	
 }
 
-//Account status changed
+//Account status changed.  Disable the service menu and user name field for connected accounts
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     if(inObject == selectedAccount){
@@ -115,32 +114,30 @@
 
 //We need to make sure all changes to the account have been saved before a service switch occurs.
 //This code is called when the service menu is opened, and takes focus away from the first responder,
-//causing it to so save any outstanding changes.
+//causing it to save any outstanding changes.
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	[[popupMenu_serviceList window] makeFirstResponder:popupMenu_serviceList];
 }
 
-//User selected a service type from the menu
+//User changed the service of our account
 - (IBAction)selectServiceType:(id)sender
 {
     id <AIServiceController>	service = [sender representedObject];
-	
-	//Switch account to the new service
     selectedAccount = [[[adium accountController] switchAccount:selectedAccount toService:service] retain];
 }
 
+//User changed the name of our account
 - (void)controlTextDidChange:(NSNotification *)obj
 {
 	[selectedAccount changedUIDto:[textField_accountName stringValue]];
 }
 
 //User changed the account name
-- (IBAction)accountNameChanged:(id)sender
-{
-	[selectedAccount changedUIDto:[textField_accountName stringValue]];
-}
-
+//- (IBAction)accountNameChanged:(id)sender
+//{
+//	[selectedAccount changedUIDto:[textField_accountName stringValue]];
+//}
 
 
 //Account Options ------------------------------------------------------------------------------------------------------
@@ -206,7 +203,6 @@
 			[view_accountDetails addSubview:auxiliaryAccountDetails];
 			[auxiliaryAccountDetails setFrameOrigin:NSMakePoint(0,([view_accountDetails frame].size.height -accountViewHeight -[auxiliaryAccountDetails frame].size.height))];
 		}
-	 
     }
 
     //Hook up the key view chain
@@ -221,8 +217,9 @@
         [tabView_auxiliary addTabViewItem:tabViewItem];
     }
 	
-	
-    //There must be a better way to do this.  When moving tabs over, they will stay selected - resulting in multiple selected tabs.  My quick fix is to manually select each tab in the view.  Not the greatest, but it'll work for now.
+    //There must be a better way to do this.  When moving tabs over, they will stay selected - resulting in multiple
+	//selected tabs.  My quick fix is to manually select each tab in the view.  Not the greatest, but it'll
+	//work for now.
     [tabView_auxiliary selectLastTabViewItem:nil];
     int i;
     for(i = 1;i < [tabView_auxiliary numberOfTabViewItems];i++){
@@ -251,6 +248,7 @@
 
 //Account List ---------------------------------------------------------------------------------------------------------
 #pragma mark Account List
+//Configure the account list table
 - (void)configureAccountList
 {
     AIImageTextCell			*cell;
@@ -275,7 +273,7 @@
 	[self accountListChanged:nil];
 }
 
-//Account list changed
+//Account list changed, refresh our table
 - (void)accountListChanged:(NSNotification *)notification
 {
     //Update our reference to the accounts
