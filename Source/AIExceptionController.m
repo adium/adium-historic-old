@@ -46,7 +46,6 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			@"No text was found", //ICeCoffEE is an APE haxie which would crash us whenever a user pasted, or something like that
 			@"Error (1000) creating CGSWindow", //This looks like an odd NSImage error... it occurs sporadically, seems harmless, and doesn't appear avoidable
 			@"Access invalid attribute location 0 (length 0)", //The undo manager can throw this one when restoring a large amount of attributed text... doesn't appear avoidable
-			@"-patternImage not defined", //Painters Color Picker throws an exception during the normal course of operation.  Don't you hate that?
 			@"Invalid parameter not satisfying: (index >= 0) && (index < (_itemArray ? CFArrayGetCount(_itemArray) : 0))", //A couple AppKit methods, particularly NSSpellChecker, seem to expect this exception to be happily thrown in the normal course of operation. Lovely. Also needed for FontSight compatibility.
 			@"Invalid parameter not satisfying: (index >= 0) && (index <= (_itemArray ? CFArrayGetCount(_itemArray) : 0))", //Like the above, but <= instead of <
 			@"Invalid parameter not satisfying: entry", //NSOutlineView throws this, particularly if it gets clicked while reloading or the computer sleeps while reloading
@@ -92,6 +91,8 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		   [theReason rangeOfString:@"-whiteComponent not defined"].location != NSNotFound || //Random NSColor exception for certain coded color values
 		   [theReason isEqualToString:@"Failed to get fache -4"] || //Thrown by NSFontManager when availableFontFamilies is called if it runs into a corrupt font
 		   [theReason rangeOfString:@"NSWindow: -_newFirstResponderAfterResigining"].location != NSNotFound || //NSAssert within system code, harmless
+		   [theReason rangeOfString:@"-patternImage not defined"].location != NSNotFound || //Painters Color Picker throws an exception during the normal course of operation.  Don't you hate that?
+
 		   (!theName) || //Harmless
 		   [safeExceptionNames containsObject:theName])
 		{
