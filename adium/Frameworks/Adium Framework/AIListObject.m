@@ -263,10 +263,15 @@
 - (void)notifyOfChangedStatusSilently:(BOOL)silent
 {
     if([changedStatusKeys count]){
+		//Clear changedStatusKeys incase this status change invokes another, and we re-enter this code
+		NSArray	*keys = changedStatusKeys;
+		changedStatusKeys = nil;
+		
+		//
 		[[adium contactController] listObjectStatusChanged:self
-										modifiedStatusKeys:changedStatusKeys
+										modifiedStatusKeys:keys
 													silent:silent];
-		[changedStatusKeys release]; changedStatusKeys = nil;
+		[keys release];
     }
 }
 
