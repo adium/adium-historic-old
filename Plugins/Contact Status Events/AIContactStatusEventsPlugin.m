@@ -163,7 +163,7 @@
 	NSString	*description = nil;
 	
 	if(includeSubject){
-		NSString	*format;
+		NSString	*format = nil;
 		
 		if([eventID isEqualToString:CONTACT_STATUS_ONLINE_YES]){
 			format = AILocalizedString(@"%@ connected",nil);
@@ -183,7 +183,9 @@
 			format = AILocalizedString(@"%@ is no longer seen",nil);
 		}
 		
-		description = [NSString stringWithFormat:format,[listObject displayName]];
+		if(format){
+			description = [NSString stringWithFormat:format,[listObject displayName]];
+		}
 	}else{
 		if([eventID isEqualToString:CONTACT_STATUS_ONLINE_YES]){
 			description = AILocalizedString(@"connected",nil);
