@@ -290,7 +290,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 		if([[account statusObjectForKey:@"Online"] boolValue]) online++;
 	}
 	
-	[textField_overview setStringValue:[NSString stringWithFormat:AILocalizedString(@"%i accounts, %i online", [accountArray count], online]];
+	[textField_overview setStringValue:[NSString stringWithFormat:AILocalizedString(@"%i accounts, %i online", "Overview of total and online accounts"), [accountArray count], online]];
 }
 
 /*
