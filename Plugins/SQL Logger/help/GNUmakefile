@@ -6,7 +6,7 @@ deploy: $(HTML_FILES)
 clean:
 	rm -f $(HTML_FILES)
 
-$(HTML_FILES): transform.xsl
+$(HTML_FILES): index.jsp
 
 %.html: %.xml
-	xsltproc -o $@ transform.xsl $<
+	wget -O $@ "http://www.visualdistortion.org/sqllogger/index.jsp?page=$<&mode=html"

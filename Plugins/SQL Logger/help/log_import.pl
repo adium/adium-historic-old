@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 
 # Jeffrey Melloy <jmelloy@visualdistortion.org>
-# $URL: http://svn.visualdistortion.org/repos/projects/sqllogger/adium/parser.pl $
-# $Rev: 917 $ $Date$
+# $URL: http://svn.visualdistortion.org/repos/projects/sqllogger/adium/log_import.pl $
+# $Rev: 1046 $ $Date$
 #
 # Script will parse Adium logs >= 2.0 and put them in postgresql table.
 # Table is created with "im.sql"
@@ -59,7 +59,7 @@ foreach my $outer_user (glob '*') {
         print OUT "insert into im.users (username, service, login) select
         \'$user\', \'$service\', true where not exists (select 'x' from
         im.users where username = \'$user\' and service = \'$service\');"
-            or warn qq{$!};
+            or die qq{Could not insert login users: $!};
 
         foreach my $folder (glob '*') {
             !$quiet && print "\t" . $folder;
@@ -99,7 +99,9 @@ foreach my $outer_user (glob '*') {
                     close(FFILE);
 
                     $content = escapeHTML($content);
-                    $content =~ s/\n((?!\(\d\d\:\d\d\:\d\d\)[\w\_\.\@\+\-]*\:|(\&lt\;\w*\s.*\d\d\:\d\d\:\d\d.*\&gt\;)))/<br>$1/g or die $!;
+                    $content =~
+                    s/\n((?!\(\d\d\:\d\d\:\d\d\)[\w\_\.\@\+\-]*\:|(\&lt\;\w*\s.*\d\d\:\d\d\:\d\d.*\&gt\;)))/<br>$1/g
+                        or die qq{Could not split content: $!};
 
                     my @filecontents = split(/\n/, $content);
 
@@ -109,7 +111,7 @@ foreach my $outer_user (glob '*') {
 
                         ($time, $sender) = /^\((\d\d\:\d\d\:\d\d)\)([\w\@\_\.\+\-]*)\:/
                             or ($time) = /^\&lt\;.*(\d\d\:\d\d\:\d\d)/
-                            or die "$file:$_\n$!";
+                            or die "Could not grab time and sender.  $file:\n$!";
 
                         if (/^\&lt\;.*\&gt\;/) {
                             $sender = $recdName;
@@ -159,11 +161,9 @@ foreach my $outer_user (glob '*') {
                     my @contents = <FILE>;
                     close(FILE);
 
-                    unlink($file);
-
                     open(FFILE, ">>$file.bak") or die qq{Unable to open file "$file.bak": $!};
                     foreach(@contents){
-                        	print FFILE $_;
+                        print FFILE $_;
                     }
                     close(FFILE);
 
@@ -178,12 +178,15 @@ foreach my $outer_user (glob '*') {
                         if($message_type ne "status") {
                             ($message_type, $time, $sender, $message) =
                             /.*class\=\"(.*)\"\>.*?\"timestamp\"\>(\d\d\:\d\d\:\d\d).*?sender\"\>(.*)\:.*?message\"\>(.*)\<\/.*?\>\<\/div\>/s
-                            or die "$file:$_\n$!\n$i\n$contents[$i]";
+                            or warn "$file:$_\n$!\n$i\n$contents[$i]";
                         } else {
                             $sender = $recdName;
                             $message = "&lt;" . $message . "&gt;";
                             ($time) = /.*(\d\d\:\d\d\:\d\d).*/;
                         }
+
+                        $sender =~ s/\s//g;
+                        $sender = lc($sender);
 
                         $message =~ s/\\/\\\\/g;
                         $message =~ s/\'/\\\'/g;
@@ -195,7 +198,7 @@ foreach my $outer_user (glob '*') {
                             $receiver = $sentName;
                         }
 
-                        my $timestamp = $date . " " . $time;
+                        my $timestamp = $date . " " . $time or die qq{bad date: $date $time};
 
                         my $query = "insert into im.message_v
                             (sender_sn, recipient_sn, message, message_date,
@@ -216,10 +219,13 @@ foreach my $outer_user (glob '*') {
                         }
                     }
                 }
-                print OUT $outtext or warn qq{$outtext};
+                print OUT $outtext or die qq{$outtext};
                 $outtext = "";
+
+                unlink($file);
+
             }
-            chdir "$path/$outer_user/Logs/$service_user" or die;
+            chdir "$path/$outer_user/Logs/$service_user";
         }
         chdir "$path/$outer_user/Logs/";
     }

@@ -374,7 +374,7 @@ VALUES (1, 'query_text', 'select s.username as sender,
 from    messages,
         users s,
         users r,
-        to_tsquery(''porn'') as q
+        to_tsquery(?::word) as q
 where idxfti @@ q
    and  s.user_id = sender_id
    and  r.user_id = recipient_id
@@ -397,14 +397,14 @@ values (2, 'query_text',
 from   messages a,
           users s,
           users r,
-          to_tsquery(''porn'') as q
+          to_tsquery(?::word_1) as q
 where s.user_id = sender_id
    and  r.user_id = recipient_id
    and  idxfti @@ q
    and  exists (
            select ''x''
            from   messages b,
-                     to_tsquery(''raccoon'') as q2
+                     to_tsquery(?::word_2) as q2
            where sender_id in (a.sender_id, a.recipient_id)
              and   recipient_id in (a.sender_id, a.recipient_id)
              and   b.idxfti @@ q2
@@ -423,106 +423,6 @@ insert into im.saved_fields (item_id, field_name, value) values
           value
 from   users natural join contact_information
           natural join information_keys
-where username = ''fetchgreebledonx''');
+where username = ?::username');
 
 select setval('im.saved_items_item_id_seq', 3);
-
---statuses
-\echo table status
-create table im.status (
-status_id       serial primary key,
-user_id         int references im.users (user_id),
-status_date     timestamp default now(),
-status_type     varchar(30),
-status_message  varchar(8096)
-);
-
-\echo view simple_status_v
-create view im.simple_status_v as
-select  status_id,
-        status.user_id,
-        username,
-        service,
-        status_date,
-        status_type,
-        status_message
-from    im.status natural join im.users;
-
-\echo view status_v
-create view im.status_v as
-select  status_id,
-        status.user_id,
-        username,
-        service,
-        display_name,
-        status_date,
-        status_type,
-        status_message
-from    im.status
-        natural join im.users
-        natural join im.user_display_name disp
-where   disp.effdate < status_date
-        and not exists (
-            select  'x'
-            from    im.user_display_name
-            where   user_id = status.user_id
-             and    effdate < status_date
-             and    effdate > disp.effdate
-        );
-
-\echo rule insert_status_v
-create or replace rule insert_status_v as
-on insert to im.status_v
-do instead (
-
-     -- username
-     insert into im.users (username, service)
-     select username, coalesce(new.service, 'AIM')
-     from im.users
-     where not exists (
-        select 'x'
-        from   im.users
-        where  username = new.username
-         and   service ilike coalesce(new.service, 'AIM'));
-
-    -- Display Names
-    insert into im.user_display_name
-    (user_id, display_name, effdate)
-    select user_id,
-           case when new.display_name is null
-             or new.display_name = ''
-            then new.username
-            else new.display_name end,
-           coalesce(new.status_date, now())
-    from   im.users
-    where  username = new.username
-     and   service ilike coalesce(new.service, 'AIM')
-    and not exists (
-        select 'x'
-        from   im.user_display_name udn
-        where  user_id =
-               (select user_id from im.users
-                where  username = new.username
-                 and   service ilike coalesce(new.service, 'AIM'))
-            and   display_name = case when new.display_name is null
-             or new.display_name = '' then new.username
-              else new.display_name end
-            and effdate < coalesce(new.status_date, now())
-            and not exists (
-                select 'x'
-                from im.user_display_name
-                where effdate > udn.effdate
-                and effdate < coalesce(new.status_date, now())
-                and user_id = udn.user_id));
-
-    -- status
-
-    insert into im.status (user_id, status_date, status_type, status_message)
-    values ((select user_id
-             from im.users
-             where username = new.username
-              and service ilike coalesce(new.service, 'AIM')),
-            coalesce(new.status_date, now()),
-            new.status_type,
-            new.status_message);
-);
