@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIDockController.m,v 1.51 2004/04/23 04:59:10 adamiser Exp $
+// $Id: AIDockController.m,v 1.52 2004/04/26 11:46:46 boredzo Exp $
 
 #import "AIDockController.h"
 
@@ -248,24 +248,18 @@
 //Scan for an icon pack with the specified name
 - (NSString *)_pathOfIconPackWithName:(NSString *)name
 {
-    NSDirectoryEnumerator	*fileEnumerator;
-    NSString			*iconPath;
-    NSString			*filePath;
-    int					curPath;
+    NSEnumerator			*resPathEnumerator = [[[AIObject sharedAdiumInstance] resourcePathsForName:FOLDER_DOCK_ICONS] objectEnumerator];
+    NSDirectoryEnumerator	*dirEnumerator;
+    NSString				*iconsDir;
+    NSString				*iconPack;
 
-    for (curPath = 0; curPath < 2; curPath ++){
-        //
-        if (curPath == 0)
-            iconPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS];
-        else
-            iconPath = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:FOLDER_DOCK_ICONS];
-    
+    while(iconsDir = [resPathEnumerator nextObject]) {
         //Find the desired .AdiumIcon
-        fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:iconPath];
-        while((filePath = [fileEnumerator nextObject])){
-            if([[filePath pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == 0 && [[[filePath lastPathComponent] stringByDeletingPathExtension] caseInsensitiveCompare:name] == 0){
+        dirEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:iconsDir];
+        while((iconPack = [dirEnumerator nextObject])){
+            if([[iconPack pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == 0 && [[[iconPack lastPathComponent] stringByDeletingPathExtension] caseInsensitiveCompare:name] == 0){
                 //Found a match, return the path
-                return([iconPath stringByAppendingPathComponent:filePath]);
+                return([iconsDir stringByAppendingPathComponent:iconPack]);
             }
         }
     }
