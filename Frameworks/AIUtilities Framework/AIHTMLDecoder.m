@@ -639,6 +639,11 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 - (NSAttributedString *)decodeHTML:(NSString *)inMessage
 {
+	return [self decodeHTML:inMessage withDefaultAttributes:nil];
+}
+
+- (NSAttributedString *)decodeHTML:(NSString *)inMessage withDefaultAttributes:(NSDictionary *)inDefaultAttributes
+{
 	NSScanner					*scanner;
 	static NSCharacterSet		*tagCharStart = nil, *tagEnd = nil, *charEnd = nil, *absoluteTagEnd = nil;
 	NSString					*chunkString, *tagOpen;
@@ -647,7 +652,12 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	BOOL						send = NO, receive = NO, inDiv = NO, inLogSpan = NO;
 
     //set up
-    textAttributes = [[_defaultTextDecodingAttributes copy] autorelease];
+	if(inDefaultAttributes){
+		textAttributes = [AITextAttributes textAttributesWithDictionary:inDefaultAttributes];
+	}else{
+		textAttributes = [[_defaultTextDecodingAttributes copy] autorelease];
+	}
+	
     attrString = [[NSMutableAttributedString alloc] init];
 
 	if(!tagCharStart)     tagCharStart = [[NSCharacterSet characterSetWithCharactersInString:TagCharStartString] retain];
@@ -1247,7 +1257,12 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 + (NSAttributedString *)decodeHTML:(NSString *)inMessage
 {
-	return [[self classMethodInstance] decodeHTML:inMessage];
+	return [[self classMethodInstance] decodeHTML:inMessage withDefaultAttributes:nil];
+}
+
++ (NSAttributedString *)decodeHTML:(NSString *)inMessage withDefaultAttributes:(NSDictionary *)inDefaultAttributes
+{
+	return [[self classMethodInstance] decodeHTML:inMessage withDefaultAttributes:inDefaultAttributes];
 }
 
 + (NSDictionary *)parseArguments:(NSString *)arguments

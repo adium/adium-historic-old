@@ -75,6 +75,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 //uses no options.
 - (NSAttributedString *)decodeHTML:(NSString *)inMessage;
 
+//turn HTML source into an attributed string, passing the default attributes to use when tags don't explicitly set them
+- (NSAttributedString *)decodeHTML:(NSString *)inMessage withDefaultAttributes:(NSDictionary *)inDefaultAttributes;
+
 //turn an attributed string into HTML source.
 //uses all options.
 - (NSString *)encodeHTML:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesPath;
@@ -151,6 +154,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		  bodyBackground:(BOOL)bodyBackground;
 
 + (NSAttributedString *)decodeHTML:(NSString *)inMessage;
++ (NSAttributedString *)decodeHTML:(NSString *)inMessage withDefaultAttributes:(NSDictionary *)inDefaultAttributes;
 
 + (NSDictionary *)parseArguments:(NSString *)arguments;
 
