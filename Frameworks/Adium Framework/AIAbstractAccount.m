@@ -474,6 +474,23 @@
 	}
 }
 
+- (NSString *)statusName
+{
+	return([[self statusState] statusName]);
+}
+
+- (AIStatusType)statusType
+{
+	return([[self statusState] statusType]);
+}
+
+- (NSAttributedString *)statusMessage
+{
+	return([[self statusState] statusMessage]);
+}
+
+
+
 #pragma mark Passwowrds
 
 /*!
