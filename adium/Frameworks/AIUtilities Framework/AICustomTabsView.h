@@ -35,6 +35,7 @@
     id					delegate;
     BOOL				allowsInactiveTabClosing;	//Allow closing of inactive tabs
 	BOOL				allowsTabRearranging;		//Allow tabs to be rearranged in the window
+	BOOL				allowsTabDragging;			//Allow tabs to be dragged out of the window
 	BOOL				trackingCursor;				//Tracking rects are installed
 
 	//Tab Dragging
@@ -64,6 +65,10 @@
 //Permit rearranging within the window
 - (void)setAllowsTabRearranging:(BOOL)inValue;
 - (BOOL)allowsTabRearranging;
+
+//Permit tab dragging out of the window
+- (void)setAllowsTabDragging:(BOOL)inValue;
+- (BOOL)allowsTabDragging;
 
 //
 - (void)redisplayTabForTabViewItem:(NSTabViewItem *)inTabViewItem;

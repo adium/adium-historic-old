@@ -71,6 +71,7 @@ static  NSImage			*tabDivider = nil;
     arrangeCellTimer = nil;
     removingLastTabHidesWindow = YES;
 	allowsTabRearranging = YES;
+	allowsTabDragging = YES;
     tabCellArray = nil;
     selectedCustomTabCell = nil;
 
@@ -143,6 +144,16 @@ static  NSImage			*tabDivider = nil;
 	return(allowsTabRearranging);
 }
 
+//Is the user allowed to drag tabs out of the window at all?
+- (void)setAllowsTabDragging:(BOOL)inValue
+{
+	allowsTabDragging = inValue;
+}
+
+- (BOOL)allowsTabDragging
+{
+	return(allowsTabDragging);
+}
 
 //Allow tab switching from the background
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
@@ -612,18 +623,21 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		(lastClickLocation.y - clickLocation.y) > TAB_DRAG_DISTANCE || (lastClickLocation.y - clickLocation.y) < -TAB_DRAG_DISTANCE ){
 		
 		//Perform a tab drag
-		if(lastClickLocation.x != -1 && lastClickLocation.y != -1){ //See note below about lastClickLocation
-			if((dragCell = [self tabAtPoint:lastClickLocation])){
-				[self stopCursorTracking];
 
-				[dragCell retain];
-				[self removeTabCell:dragCell];
-				[[AICustomTabDragging sharedInstance] dragTabCell:dragCell
-											   fromCustomTabsView:self 
-														withEvent:theEvent 
-														selectTab:(![NSEvent cmdKey])];
-				[dragCell release];
-				
+		if( allowsTabDragging ) {
+			if(lastClickLocation.x != -1 && lastClickLocation.y != -1){ //See note below about lastClickLocation
+				if((dragCell = [self tabAtPoint:lastClickLocation])){
+					[self stopCursorTracking];
+					
+					[dragCell retain];
+					[self removeTabCell:dragCell];
+					[[AICustomTabDragging sharedInstance] dragTabCell:dragCell
+												   fromCustomTabsView:self 
+															withEvent:theEvent 
+															selectTab:(![NSEvent cmdKey])];
+					[dragCell release];
+					
+				}
 			}
 		}
 		
