@@ -91,6 +91,7 @@ typedef enum {
 
 //Defaults
 - (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)group;
+- (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)group object:(AIListObject *)object;
 - (void)resetPreferencesInPane:(AIPreferencePane *)preferencePane;
 
 //Preference Cache
