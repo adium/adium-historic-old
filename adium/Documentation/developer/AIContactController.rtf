@@ -38,12 +38,10 @@ The contact list is a delicate, complicated structure.  Care should be taken to 
 \f0\b0  The contact object (AIContactObject)\
 
 \f3\b UserInfo: \
-\pard\li720\ql\qnatural
 
-\f0\b0 \cf0 @"Keys" - The modified attribute keys (NSArray)\
-\pard\li720\ql\qnatural
+\f0\b0 @"Keys" - The modified attribute keys (NSArray)\
 
-\f3\b \cf0 \
+\f3\b \
 \pard\li360\ql\qnatural
 \cf0 Contact_StatusChanged\
 \pard\li720\ql\qnatural
@@ -54,9 +52,8 @@ The contact list is a delicate, complicated structure.  Care should be taken to 
 \f0\b0  The contact object (AIContactObject)\
 
 \f3\b UserInfo: \
-\pard\li720\ql\qnatural
 
-\f0\b0 \cf0 @"Keys" - The modified status keys (NSArray)\
+\f0\b0 @"Keys" - The modified status keys (NSArray)\
 \
 \pard\li360\ql\qnatural
 
@@ -262,10 +259,7 @@ Accessing & finding objects\
 \f0\b0 :(AIAccount *)inAccount;\
 - (NSMutableArray *)
 \f3\b allContactsInGroup
-\f0\b0 :(AIContactGroup *)inGroup subgroups:(BOOL)subGroups 
-\f3\b ownedBy
-\f0\b0 :(AIAccount *)inAccount;\
-\
+\f0\b0 :(AIContactGroup *)inGroup subgroups:(BOOL)subGroups;\
 \
 \pard\ql\qnatural
 
@@ -291,7 +285,6 @@ allContactsInGroup is useful when building a list of available contacts. It will
 \
 inGroup - the group to search in (nil for the contact list root)\
 subgroups - if yes, subgroups will be searched as well\
-inAccount - if an account is passed, only contacts owned by that account are returned.\
 \pard\ql\qnatural
 
 \f0 \cf0 \
