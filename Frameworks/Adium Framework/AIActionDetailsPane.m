@@ -29,8 +29,15 @@
 }
 
 //For subclasses -------------------------------------------------------------------------------
-//
+//Called only when the pane is displayed a result of its action being selected
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
+{
+	
+}
+
+//Called whenever the event changes.  Most subclasses will have no no need for this method;
+//it should only be used for custom handling of particular events, and only with good reason.
+- (void)configureForEventID:(NSString *)eventID listObject:(AIListObject *)inObject
 {
 	
 }
