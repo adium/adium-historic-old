@@ -540,8 +540,8 @@
 			children = (
 				340F440306D8202A0072E2FA,
 				340F440406D8202A0072E2FA,
-				4BF000CC06B5513400C32219,
-				4BF000CD06B5513400C32219,
+				34A48AD106F647FD002C7C5F,
+				34A48AD206F647FD002C7C5F,
 				4B93587906DBC6D3007977AA,
 				4BF98D5506D1485100E8781D,
 			);
@@ -4955,6 +4955,36 @@
 			settings = {
 			};
 		};
+		34A48AD106F647FD002C7C5F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIListOutlineView.m;
+			path = "Frameworks/Adium Framework/AIListOutlineView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A48AD206F647FD002C7C5F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIListOutlineView.h;
+			path = "Frameworks/Adium Framework/AIListOutlineView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A48AD306F647FD002C7C5F = {
+			fileRef = 34A48AD106F647FD002C7C5F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A48AD406F647FD002C7C5F = {
+			fileRef = 34A48AD206F647FD002C7C5F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34A65AF606A5A0C400898470 = {
 			children = (
 				34A65B0406A5A15300898470,
@@ -5720,8 +5750,6 @@
 				4BD673FC06001CC10049CAF7,
 				4BD6740106001CC40049CAF7,
 				4BD6740206001CC40049CAF7,
-				4BD6741906001CD30049CAF7,
-				4BD6741A06001CD40049CAF7,
 				4BD6742506001CF40049CAF7,
 				4BD6742606001CF40049CAF7,
 				4BD6742F06001D1D0049CAF7,
@@ -5851,7 +5879,6 @@
 				4BA62DBA06C51298001D6B3C,
 				C45F7F6706C75E210056B1F2,
 				9E23E9E306CC506A00D3C897,
-				4BF98D5206D1484500E8781D,
 				4BF98DCD06D149EE00E8781D,
 				340F47EC06DA41DB0072E2FA,
 				340F47ED06DA41DD0072E2FA,
@@ -6431,7 +6458,7 @@
 				4B93589306DBC71B007977AA,
 				4B93589506DBC71B007977AA,
 				4BAFD57906E0091100FF7FBC,
-				34CEBE2106F1005E00A89DDE,
+				34A48AD406F647FD002C7C5F,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6574,7 +6601,7 @@
 				4B93589206DBC71B007977AA,
 				4B93589406DBC71B007977AA,
 				4BAFD57A06E0091100FF7FBC,
-				34CEBE2006F1005C00A89DDE,
+				34A48AD306F647FD002C7C5F,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7125,15 +7152,6 @@
 			settings = {
 			};
 		};
-		34C1CA8705B15B170055C2E3 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = "Labels Themable Prefs.plist";
-			path = "Plugins/Standard Contact List View/Labels Themable Prefs.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34C1CA8D05B15B3D0055C2E3 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -7458,18 +7476,6 @@
 			name = Preferences;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		34CEBE2006F1005C00A89DDE = {
-			fileRef = 4BF000CD06B5513400C32219;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34CEBE2106F1005E00A89DDE = {
-			fileRef = 4BF000CC06B5513400C32219;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34CEBE6006F117DF00A89DDE = {
 			fileEncoding = 4;
@@ -13342,24 +13348,6 @@
 			settings = {
 			};
 		};
-		4BAC8E9C0448412300A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AISCLViewController.h;
-			path = "Plugins/Standard Contact List View/AISCLViewController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BAC8E9D0448412300A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AISCLViewController.m;
-			path = "Plugins/Standard Contact List View/AISCLViewController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BACB70103C8CB5E00A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -13783,15 +13771,6 @@
 			lastKnownFileType = text.plist;
 			name = IdleDefaultPrefs.plist;
 			path = "Plugins/Idle Time/IdleDefaultPrefs.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BBC89A803B964B800A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = "SCL Defaults.plist";
-			path = "Plugins/Standard Contact List View/SCL Defaults.plist";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -14248,30 +14227,13 @@
 				4B31E8C504C46A9100A8010A,
 				C4947AFF05BD177E00780FE2,
 				4B25363306BECC97003498D4,
-				4BD388D306B58B8B000A346A,
-				F51DEFA40326330101A8010A,
 				4B970BE00535B6AC002F28F9,
 				4B970BE10535B6AC002F28F9,
 				4B970BE40535B6BE002F28F9,
 				3484644C05910DFF00241F68,
-				4BAC8E9C0448412300A8010A,
-				4BAC8E9D0448412300A8010A,
-				F579399D033E75CB01A8010A,
-				F579399E033E75CB01A8010A,
-				F579399F033E75CB01A8010A,
-				F57939A0033E75CB01A8010A,
 			);
 			isa = PBXGroup;
 			name = "OLD Crap";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BD388D306B58B8B000A346A = {
-			children = (
-			);
-			isa = PBXGroup;
-			name = "Borderless Contact List";
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
@@ -15075,18 +15037,6 @@
 		};
 		4BD6740606001CC60049CAF7 = {
 			fileRef = 4B7BD86F041258F400A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6741906001CD30049CAF7 = {
-			fileRef = C497514805BBAA38009958A6;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6741A06001CD40049CAF7 = {
-			fileRef = 4BBC89A803B964B800A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -16419,24 +16369,6 @@
 			target = 34BD9DAF05314751000AB133;
 			targetProxy = 4BED6DE705D5F5FA00ACFD49;
 		};
-		4BF000CC06B5513400C32219 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIListOutlineView.h;
-			path = "Plugins/Standard Contact List View/AIListOutlineView.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BF000CD06B5513400C32219 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIListOutlineView.m;
-			path = "Plugins/Standard Contact List View/AIListOutlineView.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BF2E194067CAE9200743318 = {
 			isa = PBXFileReference;
 			lastKnownFileType = folder;
@@ -16707,12 +16639,6 @@
 			name = "List / Outline View";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4BF98D5206D1484500E8781D = {
-			fileRef = 34C1CA8705B15B170055C2E3;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4BF98D5506D1485100E8781D = {
 			children = (
@@ -21617,15 +21543,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		C497514805BBAA38009958A6 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = "SCL Themable Prefs.plist";
-			path = "Plugins/Standard Contact List View/SCL Themable Prefs.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		C497514905BBAC25009958A6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -22065,18 +21982,6 @@
 			);
 			isa = PBXGroup;
 			name = "Login Window";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F51DEFA40326330101A8010A = {
-			children = (
-				34C1CA8705B15B170055C2E3,
-				C497514805BBAA38009958A6,
-				4BBC89A803B964B800A8010A,
-			);
-			isa = PBXGroup;
-			name = "Standard Contact List Window";
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
@@ -22823,42 +22728,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AISMViewPlugin.m;
 			path = "Plugins/Standard Message View/AISMViewPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F579399D033E75CB01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AISCLCell.h;
-			path = "Plugins/Standard Contact List View/AISCLCell.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F579399E033E75CB01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AISCLCell.m;
-			path = "Plugins/Standard Contact List View/AISCLCell.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F579399F033E75CB01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AISCLOutlineView.h;
-			path = "Plugins/Standard Contact List View/AISCLOutlineView.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F57939A0033E75CB01A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AISCLOutlineView.m;
-			path = "Plugins/Standard Contact List View/AISCLOutlineView.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
