@@ -69,12 +69,12 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context);
 {
 	if(notification == nil || 
 	   ([notification object] == listObject && 
-		[(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:@"Contact Alerts"])){
-
+		[(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_ALERTS])){
+		
 		//Update our list of alerts
 		[alertArray release];
 		alertArray = [[[adium contactAlertsController] alertsForListObject:listObject] mutableCopy];
-		
+
 		//Sort them
 		[alertArray sortUsingFunction:alertAlphabeticalSort context:nil];
 		
