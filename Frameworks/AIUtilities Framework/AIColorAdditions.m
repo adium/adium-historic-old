@@ -18,6 +18,7 @@
 */
 
 #import "AIColorAdditions.h"
+#include <string.h>
 
 float ONE_THIRD = 1.0/3.0;
 float ONE_SIXTH = 1.0/6.0;
@@ -31,27 +32,54 @@ float _v(float m1, float m2, float hue);
 
 - (NSColor *)hexColor
 {
-    const char	*hexString = [self cString];
-    float 	red,green,blue;
+	const char	*hexString = [self UTF8String];
+	float 	red,green,blue;
+	float	alpha = 1.0;
 
-    if(hexString[0] == '#'){
-        red = ( hexToInt(hexString[1]) * 16 + hexToInt(hexString[2]) ) / 255.0;
-        green = ( hexToInt(hexString[3]) * 16 + hexToInt(hexString[4]) ) / 255.0;
-        blue = ( hexToInt(hexString[5]) * 16 + hexToInt(hexString[6]) ) / 255.0;
-    }else{
-        red = ( hexToInt(hexString[0]) * 16 + hexToInt(hexString[1]) ) / 255.0;
-        green = ( hexToInt(hexString[2]) * 16 + hexToInt(hexString[3]) ) / 255.0;
-        blue = ( hexToInt(hexString[4]) * 16 + hexToInt(hexString[5]) ) / 255.0;
-    }
-  
-    return([NSColor colorWithCalibratedRed:red green:green blue:blue alpha:1.0]);
+	//skip # if present.
+	if(*hexString == '#') ++hexString;
+	size_t hexStringLength = strlen(hexString);
+
+	NSAssert((hexStringLength == 3) || (hexStringLength == 4) || (hexStringLength == 6) || (hexStringLength == 8), @"-hexColor called on a string that cannot possibly be a hexadecimal color specification (e.g. #ff0000, #00b, #cc08)");
+
+	//long specification:  #rrggbb[aa]
+	//short specification: #rgb[a]
+	//e.g. these all specify pure opaque blue: #0000ff #00f #0000ffff #00ff
+	BOOL isLong = hexStringLength > 4;
+
+	//for a long component c = 'xy':
+	//	c = (x * 0x10 + y) / 0xff
+	//for a short component c = 'x':
+	//	c = x / 0xf
+
+	red   = hexToInt(*(hexString++));
+	if(isLong)   red = (  red * 16.0 + hexToInt(*(hexString++))) / 255.0;
+	else   red /= 15.0;
+
+	green = hexToInt(*(hexString++));
+	if(isLong) green = (green * 16.0 + hexToInt(*(hexString++))) / 255.0;
+	else green /= 15.0;
+
+	blue  = hexToInt(*(hexString++));
+	if(isLong)  blue = ( blue * 16.0 + hexToInt(*(hexString++))) / 255.0;
+	else  blue /= 15.0;
+
+	if(*hexString) {
+		//we still have one more component to go: this is alpha.
+		//without this component, alpha defaults to 1.0 (see initialiser above).
+		alpha = hexToInt(*(hexString++));
+		if(isLong) alpha = (alpha * 16.0 + hexToInt(*(hexString++))) / 255.0;
+		else alpha /= 15.0;
+	}
+
+	return [NSColor colorWithCalibratedRed:red green:green blue:blue alpha:alpha];
 }
 
 - (NSColor *)representedColor
 {
     unsigned int	r, g, b;
 
-    sscanf([self cString], "%d,%d,%d", &r,&g,&b);
+    sscanf([self UTF8String], "%d,%d,%d", &r,&g,&b);
     return([NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:1.0]);
 }
 
@@ -59,7 +87,7 @@ float _v(float m1, float m2, float hue);
 {
     unsigned int	r, g, b;
 
-    sscanf([self cString], "%d,%d,%d", &r,&g,&b);
+    sscanf([self UTF8String], "%d,%d,%d", &r,&g,&b);
     return([NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:alpha]);
 }
 
@@ -71,16 +99,15 @@ float _v(float m1, float m2, float hue);
 + (NSControlTint)currentControlTintSupportingJag
 {
     if([self respondsToSelector:@selector(currentControlTint)]){
-	return([self currentControlTint]);
-
+		return [self currentControlTint];
     }else{
-	NSNumber	*tintNum = [[NSUserDefaults standardUserDefaults] objectForKey:@"AppleAquaColorVariant"];
-
-	if(!tintNum || [tintNum intValue] == 1){
-	    return(NSBlueControlTint);
-	}else{
-	    return(NSGraphiteControlTint);
-	}
+		NSNumber	*tintNum = [[NSUserDefaults standardUserDefaults] objectForKey:@"AppleAquaColorVariant"];
+	
+		if(!tintNum || [tintNum intValue] == 1){
+			return NSBlueControlTint;
+		}else{
+			return NSGraphiteControlTint;
+		}
     }
 }
 
@@ -90,8 +117,8 @@ float _v(float m1, float m2, float hue);
     NSColor	*convertedA = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
     NSColor	*convertedB = [inColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
     
-    return(([convertedA redComponent] == [convertedB redComponent]) &&
-           ([convertedA blueComponent] == [convertedB blueComponent]) &&
+    return(([convertedA redComponent]   == [convertedB redComponent])   &&
+           ([convertedA blueComponent]  == [convertedB blueComponent])  &&
            ([convertedA greenComponent] == [convertedB greenComponent]));
 }
 
