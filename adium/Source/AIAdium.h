@@ -101,7 +101,7 @@ typedef enum {
 #define Content_WillReceiveContent				@"Content_WillReceiveContent"
 #define Content_DidReceiveContent				@"Content_DidReceiveContent"
 #define Preference_GroupChanged					@"Preference_GroupChanged"
-#define DockIconChanged						@"DockIconChanged"
+#define Dock_IconChanged					@"Dock_IconChanged"
 
 // Public core controller protocols ------------------------------------------------------------
 @protocol AIHandleObserver //notified of changes

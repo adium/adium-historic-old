@@ -32,7 +32,7 @@
 //icon family methods
 - (AIIconFamily *)currentIconFamily
 {
-
+    return nil;
 }
 - (void)setIconFamily:(AIIconFamily *)iconFamily
 {
@@ -70,7 +70,7 @@
     }
 }
 
-- (void)stopBouncing //sketchy about wether 
+- (void)stopBouncing //sketchy about whether or not this will work... 
 {
         if([NSApplication instancesRespondToSelector:@selector(cancelUserAttentionRequest:)])
         {

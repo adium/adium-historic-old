@@ -1,5 +1,5 @@
 //
-//  AIDockBehaviorPreferencesPlugin.h
+//  AIDockBehaviorPlugin.h
 //  Adium
 //
 //  Created by Colin Barrett on Tue Jan 14 2003.
@@ -14,6 +14,6 @@
 }
 
 - (void)installPlugin;
-- (void)messageIn:(id)anObject;
+- (void)messageIn:(NSNotification *)notification;
 
 @end
