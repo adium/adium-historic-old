@@ -29,7 +29,7 @@
 //init
 - (void)initController
 {
-    //Register Defaults - Doesn't work for some reason.
+    //Register Defaults
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TOOLBAR_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_TOOLBARS];
     
     NSEnumerator	*enumerator;
@@ -38,7 +38,6 @@
 
     //Load the toolbars and register them
     toolbarDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_TOOLBARS];
-//    NSLog(@"toolbarDict is %@",toolbarDict);
     enumerator = [[toolbarDict allKeys] objectEnumerator];
     while((key = [enumerator nextObject])){
         if([key hasPrefix:TOOLBAR_ITEMS_PREFIX]){
