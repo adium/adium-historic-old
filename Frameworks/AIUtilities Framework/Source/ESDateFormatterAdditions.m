@@ -40,6 +40,13 @@ typedef enum {
 								   allowNaturalLanguage:NO] autorelease]);
 }
 
++ (NSDateFormatter *)localizedDateFormaterShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm
+{
+    NSString	*format = [self localizedDateFormatStringShowingSeconds:seconds showingAMorPM:showAmPm];
+	
+	return([[[NSDateFormatter alloc] initWithDateFormat:format allowNaturalLanguage:NO] autorelease]);	
+}
+
 + (NSString *)localizedDateFormatStringShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm
 {
     static NSString 	*cache[4] = {nil,nil,nil,nil}; //Cache for the 4 combinations of date string
