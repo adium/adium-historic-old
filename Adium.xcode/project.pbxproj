@@ -5365,6 +5365,7 @@
 				4BF98DCD06D149EE00E8781D,
 				340F47EC06DA41DB0072E2FA,
 				340F47ED06DA41DD0072E2FA,
+				4BAFD68406E00D1700FF7FBC,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6547,6 +6548,7 @@
 				34BD9EE40531476D000AB133,
 				34BD9EE50531476D000AB133,
 				6EA3689806B73FE5009CA81A,
+				4BAFD5CA06E00B7C00FF7FBC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6577,6 +6579,7 @@
 				34BD9EE80531476D000AB133,
 				34BD9EE90531476D000AB133,
 				6EA3689906B73FE5009CA81A,
+				4BAFD5CB06E00B7C00FF7FBC,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8006,6 +8009,8 @@
 			children = (
 				4947F5CE0655E90C00B791E5,
 				4947F5CF0655E90C00B791E5,
+				4BAFD5BD06E00B6C00FF7FBC,
+				4BAFD5BE06E00B6C00FF7FBC,
 				4947F5CC0655E90C00B791E5,
 				4947F5CD0655E90C00B791E5,
 				348D8DFC06CC09F400449EBB,
@@ -8085,6 +8090,7 @@
 				4947F6320655E90D00B791E5,
 				4947F6340655E90D00B791E5,
 				4947F6370655E90D00B791E5,
+				4BAFD5BF06E00B6C00FF7FBC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8132,6 +8138,7 @@
 				4947F6330655E90D00B791E5,
 				4947F6350655E90D00B791E5,
 				4947F6360655E90D00B791E5,
+				4BAFD5C006E00B6C00FF7FBC,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12767,6 +12774,8 @@
 			children = (
 				4BC15BEB0524CE5E00A8010A,
 				4BC15BEC0524CE5E00A8010A,
+				4BAFD5C806E00B7C00FF7FBC,
+				4BAFD5C906E00B7C00FF7FBC,
 				4BC15BE90524CE5E00A8010A,
 				4BC15BEA0524CE5E00A8010A,
 				6EA3689406B73FE5009CA81A,
@@ -13280,6 +13289,78 @@
 		};
 		4BAFD5AC06E00AD300FF7FBC = {
 			fileRef = 4BAFD5A606E00AD200FF7FBC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAFD5BD06E00B6C00FF7FBC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWRendezvousService.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAFD5BE06E00B6C00FF7FBC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWRendezvousService.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAFD5BF06E00B6C00FF7FBC = {
+			fileRef = 4BAFD5BD06E00B6C00FF7FBC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAFD5C006E00B6C00FF7FBC = {
+			fileRef = 4BAFD5BE06E00B6C00FF7FBC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAFD5C806E00B7C00FF7FBC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIStressTestService.h;
+			path = "Plugins/Stress Test/AIStressTestService.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAFD5C906E00B7C00FF7FBC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIStressTestService.m;
+			path = "Plugins/Stress Test/AIStressTestService.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAFD5CA06E00B7C00FF7FBC = {
+			fileRef = 4BAFD5C806E00B7C00FF7FBC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAFD5CB06E00B7C00FF7FBC = {
+			fileRef = 4BAFD5C906E00B7C00FF7FBC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAFD5E806E00D1700FF7FBC = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = "Service Icons";
+			path = "Resources/Service Icons";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAFD68406E00D1700FF7FBC = {
+			fileRef = 4BAFD5E806E00D1700FF7FBC;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -16219,6 +16300,7 @@
 				4BB1E47D067F2E9F00D1DB86,
 				4B57CDB9068498D7003FF229,
 				4BA62D7F06C51256001D6B3C,
+				4BAFD5E806E00D1700FF7FBC,
 			);
 			isa = PBXGroup;
 			name = "Xtras (Built In)";
