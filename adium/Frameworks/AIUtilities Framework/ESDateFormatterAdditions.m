@@ -138,4 +138,25 @@ typedef enum
     
     return theString;
 }
+
+
+//Returns a string representation of the interval between two dates
++ (NSString *)stringForApproximateTimeIntervalBetweenDate:(NSDate *)firstDate andDate:(NSDate *)secondDate
+{
+	int 	hours = [firstDate timeIntervalSinceDate:secondDate] / 60.0 / 60.0;
+	int 	days = hours / 24.0;
+	int		weeks = days / 7.0;
+	
+	if(days >= 1){
+		return([NSString stringWithFormat:AILocalizedString(days == 1 ? @"%i day " : @"%i days ", nil), days]);
+	}else if(weeks >= 1){
+		return([NSString stringWithFormat:AILocalizedString(weeks == 1 ? @"%i week " : @"%i weeks ", nil), weeks]);
+	}else if(hours >= 1){
+		return([NSString stringWithFormat:AILocalizedString(days == 1 ? @"%i hour " : @"%i hours ", nil), hours]);
+	}else{
+		return(@"");
+	}
+}
+
+
 @end
