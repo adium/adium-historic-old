@@ -91,7 +91,7 @@
 
         //Update the handle's text color
         [self applyColorToObject:inObject];
-        modifiedAttributes = [NSArray arrayWithObjects:@"Text Color", @"Inverted Text Color", @"Background Color", @"Tab Color", nil];
+        modifiedAttributes = [NSArray arrayWithObjects:@"Text Color", @"Inverted Text Color", @"Label Color", @"Tab Color", nil];
     }
 
     //Update our flash array
@@ -186,7 +186,7 @@
         [self applyColorToObject:object];
         
         //Force a redraw
-        [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:object userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObjects:@"Text Color", @"Inverted Text Color", @"Tab Color", nil] forKey:@"Keys"]];
+        [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:object userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObjects:@"Text Color", @"Label Color", @"Inverted Text Color", @"Tab Color", nil] forKey:@"Keys"]];
     }
 }
 
