@@ -29,8 +29,7 @@
 @interface AIContactListGeneration (PRIVATE)
 - (AIListGroup *)_getGroupNamed:(NSString *)serverGroup;
 - (void)_correctlyExpandCollapseGroup:(AIListGroup *)group;
-- (void)_setOrderIndexOfContact:(AIListContact *)contact;
-- (BOOL)_addHandle:(AIHandle *)handle;
+- (BOOL)_addHandle:(AIHandle *)handle generatingList:(BOOL)generatingList;
 - (NSString *)_groupNameForContact:(AIListContact *)contact;
 - (void)_breakDownGroup:(AIListGroup *)inGroup;
 - (void)_moveContact:(AIListContact *)contact toGroupNamed:(NSString *)groupName;
@@ -55,7 +54,7 @@
 //A handle was added to an account
 - (void)handle:(AIHandle *)inHandle addedToAccount:(AIAccount *)inAccount
 {
-    if([self _addHandle:inHandle]){ //Add the handle
+    if([self _addHandle:inHandle generatingList:NO]){ //Add the handle
         //Let everyone know the contact list changed
         [[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
     }
@@ -106,9 +105,8 @@
             AIHandle		*handle;
 
             handleEnumerator = [[[(AIAccount<AIAccount_Handles> *)account availableHandles] allValues] objectEnumerator];
-            NSLog(@"%@ (%i)",[account accountDescription],[[(AIAccount<AIAccount_Handles> *)account availableHandles] count]);
             while((handle = [handleEnumerator nextObject])){
-                [self _addHandle:handle];
+                [self _addHandle:handle generatingList:YES];
             }
         }
     }
@@ -117,9 +115,48 @@
     [[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
 }
 
+//Saves the expand/collapse state of groups
+- (void)saveGroupState
+{
+    NSDictionary	*preferences;
+    NSMutableDictionary	*groupStateDict;
+    NSEnumerator	*enumerator;
+    AIListGroup		*group;
+    
+    //Get the group state dict
+    preferences = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+    groupStateDict = [[preferences objectForKey:KEY_CONTACT_LIST_GROUP_STATE] mutableCopy];
+    if(!groupStateDict){
+        groupStateDict = [[NSMutableDictionary alloc] init];
+    }
+
+    //Set expanded/collapsed state of groups
+    enumerator = [contactList objectEnumerator];
+    while((group = [enumerator nextObject])){
+        [groupStateDict setObject:[NSNumber numberWithBool:[group isExpanded]]
+                           forKey:[group UID]];
+    }
+    
+    //Set expanded/collapsed state of abandoned groups
+    enumerator = [[abandonedGroups allValues] objectEnumerator];
+    while((group = [enumerator nextObject])){
+        [groupStateDict setObject:[NSNumber numberWithBool:[group isExpanded]]
+                           forKey:[group UID]];
+    }
+
+    //Save
+    [[owner preferenceController] setPreference:groupStateDict
+                                         forKey:KEY_CONTACT_LIST_GROUP_STATE
+                                          group:PREF_GROUP_CONTACT_LIST];
+
+    [groupStateDict release];
+}
+
+
+//Private ------------------------------------------------------------------------
 //Adds a handle to the contact list
 //Returns YES if the contact list was modified (and a listChanged notificatin should be posted)
-- (BOOL)_addHandle:(AIHandle *)handle
+- (BOOL)_addHandle:(AIHandle *)handle generatingList:(BOOL)generatingList
 {
     NSString		*serverGroup = [handle serverGroup];
     NSString		*handleUID = [handle UID];
@@ -135,18 +172,14 @@
         //Add our handle
         [contact addHandle:handle];
 
-#warning we can skip this step (for a bit of speed) when generating the list...
-        //Make sure the contact is still in the proper group
-        groupName = [self _groupNameForContact:contact];
-        if([groupName compare:[[contact containingGroup] UID]] != 0){
-            [self _moveContact:contact toGroupNamed:groupName]; //Move contact to the correct group
-            updateList = YES;
-
-            NSLog(@"Add (Contact already exists, Moved to group %@) %@",groupName, [handle UID]);
-
-        }else{
-            NSLog(@"Add (Contact already exists) %@",[handle UID]);
-            
+        //we skip this step (for a bit of speed) when generating the list
+        if(!generatingList){
+            //Make sure the contact is still in the proper group
+            groupName = [self _groupNameForContact:contact];
+            if([groupName compare:[[contact containingGroup] UID]] != 0){
+                [self _moveContact:contact toGroupNamed:groupName]; //Move contact to the correct group
+                updateList = YES;
+            }
         }
         
     }else{ //If it doesn't
@@ -160,18 +193,14 @@
             //Add our handle
             [contact addHandle:handle];
 
-            NSLog(@"Add (Recycled from abandoned) %@",[handle UID]);
-
         }else{ //If it doesn't
             //create a new contact
             contact = [[AIListContact alloc] initWithUID:handleUID serviceID:[serviceType identifier]];
-            [self _setOrderIndexOfContact:contact];
+            [[owner contactController] _setOrderIndexOfContact:contact];
             [[self _getGroupNamed:serverGroup] addObject:contact];
 
             //Add our handle
             [contact addHandle:handle];
-
-            NSLog(@"Add (New Contact) %@",[handle UID]);
         }
     }
 
@@ -179,22 +208,6 @@
     [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:nil];
 
     return(updateList);
-}
-
-//Correctly sets the index value of a contact, using the saved value if present.
-- (void)_setOrderIndexOfContact:(AIListContact *)contact
-{
-#warning need to put this somewhere
-/*    int	orderIndex;
-    
-    orderIndex = [listOrderDict objectForKey:[contact UIDAndServiceID]];
-    if(!orderIndex){ //If this contact doesn't have an index, put it at the end of the list (largest order).
-        [listOrderDict setObject:[NSNumber numberWithInt:largestOrder] forKey:[contact UIDAndServiceID]];
-        [contact setIndex:largestOrder];
-        largestOrder++;
-    }else{
-        [contact setIndex:[orderIndex intValue]];
-    }*/
 }
 
 //Returns the specified group, creating or recycling if necessary
@@ -212,8 +225,6 @@
             [contactList addObject:group];			//Add the group to our contact list
             [groupDict setObject:group forKey:serverGroup];	//Add it to our group tracking dict
             [abandonedGroups removeObjectForKey:serverGroup]; 	//remove it from the abandoned cache
-
-            NSLog(@"  Group %@ (Recycle)",serverGroup);
             
         }else{ //If it doesn't
             //Create the group
@@ -222,11 +233,7 @@
             [self _correctlyExpandCollapseGroup:group];		//Correctly set the group as expanded or collapsed
             [contactList addObject:group];			//Add the group to our contact list
             [groupDict setObject:group forKey:serverGroup];	//Add it to our group tracking dict
-
-            NSLog(@"  Group %@ (Create)",serverGroup);
         }
-    }else{
-//        NSLog(@"  Group %@ (Exists)",serverGroup);
     }
 
     //Return the group

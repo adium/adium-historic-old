@@ -25,5 +25,6 @@
 - (void)handle:(AIHandle *)inHandle addedToAccount:(AIAccount *)inAccount;
 - (void)handle:(AIHandle *)inHandle removedFromAccount:(AIAccount *)inAccount;
 - (void)handlesChangedForAccount:(AIAccount *)inAccount;
+- (void)saveGroupState;
 
 @end

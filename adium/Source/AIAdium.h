@@ -164,6 +164,7 @@ typedef enum {
 @protocol AITextEntryView //Handles any attributed text entry
 - (NSAttributedString *)attributedString;
 - (void)setAttributedString:(NSAttributedString *)inAttributedString;
+- (void)setTypingAttributes:(NSDictionary *)attrs;
 - (BOOL)availableForSending;
 @end
 
@@ -343,6 +344,8 @@ typedef enum {
 
 - (void)setHoldContactListUpdates:(BOOL)inHoldUpdates;
 - (BOOL)holdContactListUpdates;
+
+- (void)_setOrderIndexOfContact:(AIListContact *)contact;
 
 @end
 

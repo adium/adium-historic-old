@@ -276,9 +276,19 @@
 
 - (float)textHeight
 {
-    float textHeight;
+    float 		textHeight;
 
-    textHeight = [[textView_outgoing layoutManager] usedRectForTextContainer:[textView_outgoing textContainer]].size.height + ENTRY_TEXTVIEW_PADDING;
+    //When the view is empty, usedRectForTextContainer will return an incorrect height, so we calculate it manually using the typing attributes    
+    if([[textView_outgoing textStorage] length] == 0){
+        //Manually calculate the height
+        textHeight = [@" " sizeWithAttributes:[textView_outgoing typingAttributes]].height + ENTRY_TEXTVIEW_PADDING - 1;
+                
+    }else{
+        //Let the container tell us its height
+        textHeight = [[textView_outgoing layoutManager] usedRectForTextContainer:[textView_outgoing textContainer]].size.height + ENTRY_TEXTVIEW_PADDING;
+
+    }
+    
     if(textHeight > ENTRY_TEXTVIEW_MAX_HEIGHT){
         textHeight = ENTRY_TEXTVIEW_MAX_HEIGHT;
     }

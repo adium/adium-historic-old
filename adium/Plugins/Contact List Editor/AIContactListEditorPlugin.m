@@ -282,8 +282,6 @@
 {
     [object retain]; //Temporarily hold onto the object
 
-#warning avoid duplicates
-
     if(sourceCollection == destCollection){
         if([object containingGroup] != destGroup){
             if(![object temporary]){

@@ -68,9 +68,11 @@
 //Small gray drawer text label
 - (NSString *)subLabel{
     if([account availableHandles] != nil){ //Let the user know this is a server-side list
-        return([NSString stringWithFormat:@"%@ Server-Side List",[account serviceID]]);
+        return([NSString stringWithFormat:@"%@'s contacts",[account accountDescription]]
+               /*[NSString stringWithFormat:@"%@ Server-Side List",[account serviceID]]*/);
     }else{
-        return([NSString stringWithFormat:@"%@ (Unavailable)",[account serviceID]]);
+        return(@"(Connect to edit)"
+               /*[NSString stringWithFormat:@"%@ (Unavailable)",[account serviceID]]*/);
     }
 }
 

@@ -16,6 +16,7 @@
 #import "AISendingTextView.h"
 #import "AIDictionaryAdditions.h"
 #import <Adium/Adium.h>
+#import <AIUtilities/AIUtilities.h>
 
 @interface AISendingTextView (PRIVATE)
 - (void)dealloc;
@@ -49,7 +50,7 @@
     
     //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:nil];
-    
+
     return(self);
 }
 
@@ -58,6 +59,9 @@
     if(owner != inOwner){
         [owner release];
         owner = [inOwner retain];
+
+        //Let observers know we're inited
+        [[owner contentController] contentsChangedInTextEntryView:self];
     }
 }
 
@@ -165,7 +169,7 @@
 {
     int		length = [inAttributedString length];
     NSRange 	oldRange = [self selectedRange];
-
+    
     //Change our string
     [[self textStorage] setAttributedString:inAttributedString];
 
@@ -178,6 +182,23 @@
         }
     }
 }
+
+- (void)setTypingAttributes:(NSDictionary *)attrs
+{
+    NSColor	*backgroundColor;
+
+    [super setTypingAttributes:attrs];
+
+    //Correctly set our background color
+    backgroundColor = [attrs objectForKey:AIBodyColorAttributeName];
+    if(backgroundColor){
+        [self setBackgroundColor:backgroundColor];
+        [self setDrawsBackground:YES];
+    }else{
+        [self setDrawsBackground:NO];
+    }
+}
+
 
 //Contact menu ---------------------------------------------------------------
 //Set and return the selected contact (to auto-configure the contact menu)
