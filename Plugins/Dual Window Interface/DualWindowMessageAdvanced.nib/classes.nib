@@ -1,6 +1,16 @@
 {
     IBClasses = (
         {
+            CLASS = AILocalizationTextField; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSTextField; 
+        }, 
+        {
             ACTIONS = {changePreference = id; }; 
             CLASS = AIPreferencePane; 
             LANGUAGE = ObjC; 
