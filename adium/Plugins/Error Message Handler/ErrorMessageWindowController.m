@@ -51,17 +51,19 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
 
 - (void)displayError:(NSString *)inTitle withDescription:(NSString *)inDesc withTitle:(NSString *)inWindowTitle;
 {
-    //force the window to load
-    [sharedErrorMessageInstance window];
-
-    //add the error
-    if([errorTitleArray count] < MAX_ERRORS){ //Stop logging errors after too many
-        [errorTitleArray addObject:inTitle];
-        [errorDescArray addObject:inDesc];
-        [errorWindowTitleArray addObject:inWindowTitle];
-    }
-
-    [self refreshErrorDialog];
+	if(inTitle && inDesc && inWindowTitle){
+		//force the window to load
+		[sharedErrorMessageInstance window];
+		
+		//add the error
+		if([errorTitleArray count] < MAX_ERRORS){ //Stop logging errors after too many
+			[errorTitleArray addObject:inTitle];
+			[errorDescArray addObject:inDesc];
+			[errorWindowTitleArray addObject:inWindowTitle];
+		}
+		
+		[self refreshErrorDialog];
+	}
 }
 
 - (IBAction)okay:(id)sender
@@ -91,7 +93,6 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
         [[self window] close];
     }
 }
-
 
 
 // Private --------------------------------------------------------------------------------
