@@ -1,0 +1,89 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                view = NSView; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {applyTheme = id; removeTheme = id; }; 
+            CLASS = BGThemeManageView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                previewName = NSTextField; 
+                previewWindow = NSWindow; 
+                table = AIAlternatingRowTableView; 
+                themesPlugin = id; 
+            }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {
+            ACTIONS = {applyTheme = id; removeTheme = id; }; 
+            CLASS = BGThemeTableView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {previewName = NSTextField; previewWindow = NSWindow; table = NSTableView; }; 
+            SUPERCLASS = AIAlternatingRowTableView; 
+        }, 
+        {
+            ACTIONS = {createTheme = id; generatePreview = id; openThemesFolder = id; }; 
+            CLASS = BGThemesPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                applyPreview = NSImageView; 
+                authorField = NSTextField; 
+                createButton = NSButton; 
+                createPreview = NSImageView; 
+                createStatus = NSTextField; 
+                generatePreviewButton = NSButton; 
+                manageStatus = NSTextField; 
+                nameField = NSTextField; 
+                themePlugin = id; 
+                themesFolderButton = NSButton; 
+                themesList = BGThemeManageView; 
+                versionField = NSTextField; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = ESAddressBookIntegrationAdvancedPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_enableImages" = NSButton; 
+                "checkBox_syncAutomatic" = NSButton; 
+                "checkBox_useNickName" = NSButton; 
+                "format_menu" = NSPopUpButton; 
+                "format_textField" = NSTextField; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {
+            CLASS = ESAnnouncerPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_incoming" = NSButton; 
+                "checkBox_outgoing" = NSButton; 
+                "checkBox_sender" = NSButton; 
+                "checkBox_status" = NSButton; 
+                "checkBox_time" = NSButton; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}
