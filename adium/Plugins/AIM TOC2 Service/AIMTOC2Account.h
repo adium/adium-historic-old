@@ -19,6 +19,7 @@
 
 @interface AIMTOC2Account : AIAccount <AIAccount_Content, AIAccount_Handles> {
     IBOutlet		NSTextView	*textView_trafficWatchDEBUG;
+    IBOutlet		NSTextField	*textField_trafficSendDEBUG;
     
     AISocket 		*socket;		// The connection socket
     int			connectionPhase;	// Offline/Connecting/Online/Disconnecting
@@ -51,6 +52,7 @@
     int			numberOfSignOnUpdates;
 }
 
+- (IBAction)sendCommand:(id)sender;
 - (void)initAccount;
 - (NSString *)accountID;
 - (NSString *)accountDescription;

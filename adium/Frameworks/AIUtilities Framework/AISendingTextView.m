@@ -43,6 +43,8 @@
     target = nil;
     selector = nil;
     owner = nil;
+    contact = nil;
+    account = nil;
     sendOnReturn = YES;
     sendOnEnter = YES;
     returnArray = [[NSMutableArray alloc] init];
@@ -220,11 +222,22 @@
         contact = [inContact retain];
     }
 }
-
-- (AIListContact *)contact
-{
+- (AIListContact *)contact{
     return(contact);
 }
+
+//Set and return the selected account ()
+- (void)setAccount:(AIAccount *)inAccount
+{
+    if(account != inAccount){
+        [account release];
+        account = [inAccount retain];
+    }
+}
+- (AIAccount *)account{
+    return(account);
+}
+
 
 
 //Private ------------------------------------------------------------------------------------

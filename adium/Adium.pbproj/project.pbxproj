@@ -443,6 +443,7 @@
 				4B304912047FBD8200A8010A,
 				4BC2C6E80480540A00A8010A,
 				4BE8E5400483B5A900A8010A,
+				4B5B15290493BFB100A8010A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -471,6 +472,7 @@
 				29B97326FDCFA39411CA2CEA,
 				F53B9A0E02CCED8B01A8010A,
 				F53B9A0602CCED6401A8010A,
+				4B5B15280493BFB100A8010A,
 				F53EA2CD02C803C101A8010A,
 				F5A01D8B0379813301A8010A,
 				F569E39102CA88C701A8010A,
@@ -614,6 +616,7 @@
 				4B304913047FBD8200A8010A,
 				4BC2C6E90480540A00A8010A,
 				4BE8E5410483B5A900A8010A,
+				4B5B152A0493BFB100A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -724,7 +727,6 @@
 				4BDF17250450CBDE00A8010A,
 				4B333F74048144D900A8010A,
 				4B24A26B0482B34B00A8010A,
-				9E6C4490048D6DAA00415B22,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1772,6 +1774,7 @@
 		};
 		4B1332410459BF1F00A8010A = {
 			children = (
+				4B5B15220493BF9A00A8010A,
 				4B6D0E43047D490700A8010A,
 				4BBAEE9703DD7D8900A8010A,
 				F5D2FB8403B6649F01A8010A,
@@ -2762,6 +2765,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				4B5B152B0493BFB100A8010A,
 				4BE8E5420483B5A900A8010A,
 				4BC2C6EA0480540A00A8010A,
 				4BDD982C047FC45100A8010A,
@@ -3721,6 +3725,180 @@
 		};
 		4B5AAA2003E02EB900A8010A = {
 			fileRef = 4B5AAA1F03E02EB900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B5B15220493BF9A00A8010A = {
+			children = (
+				4B5B152E0493BFE600A8010A,
+				4B5B152F0493BFE600A8010A,
+			);
+			isa = PBXGroup;
+			name = "Typing Notification";
+			refType = 4;
+		};
+		4B5B15230493BFB100A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B5B15300493BFE600A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B5B15240493BFB100A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B5B15250493BFB100A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B5B15310493BFE600A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B5B15260493BFB100A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B5B15330493C6BA00A8010A,
+				4B5B15340493C6BA00A8010A,
+				4B5B15350493C6BA00A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B5B15270493BFB100A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B5B15280493BFB100A8010A = {
+			buildPhases = (
+				4B5B15230493BFB100A8010A,
+				4B5B15240493BFB100A8010A,
+				4B5B15250493BFB100A8010A,
+				4B5B15260493BFB100A8010A,
+				4B5B15270493BFB100A8010A,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Typing Notification";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4B5B152C0493BFBA00A8010A,
+				4B5B152D0493BFBA00A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Typing Notification";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Typing Notification";
+			productReference = 4B5B15290493BFB100A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AITypingNotificationPlugin</string>
+</dict>
+</plist>
+";
+		};
+		4B5B15290493BFB100A8010A = {
+			isa = PBXBundleReference;
+			path = "Typing Notification.AdiumPlugin";
+			refType = 3;
+		};
+		4B5B152A0493BFB100A8010A = {
+			isa = PBXTargetDependency;
+			target = 4B5B15280493BFB100A8010A;
+		};
+		4B5B152B0493BFB100A8010A = {
+			fileRef = 4B5B15290493BFB100A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B5B152C0493BFBA00A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4B5B152D0493BFBA00A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4B5B152E0493BFE600A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AITypingNotificationPlugin.h;
+			path = "Plugins/Typing Notification/AITypingNotificationPlugin.h";
+			refType = 4;
+		};
+		4B5B152F0493BFE600A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AITypingNotificationPlugin.m;
+			path = "Plugins/Typing Notification/AITypingNotificationPlugin.m";
+			refType = 4;
+		};
+		4B5B15300493BFE600A8010A = {
+			fileRef = 4B5B152E0493BFE600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B5B15310493BFE600A8010A = {
+			fileRef = 4B5B152F0493BFE600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B5B15330493C6BA00A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B5B15340493C6BA00A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B5B15350493C6BA00A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -6394,6 +6572,32 @@
 			settings = {
 			};
 		};
+		4BDC17720493C90E00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContentTyping.h;
+			path = "Frameworks/Adium Framework/AIContentTyping.h";
+			refType = 4;
+		};
+		4BDC17730493C90E00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContentTyping.m;
+			path = "Frameworks/Adium Framework/AIContentTyping.m";
+			refType = 4;
+		};
+		4BDC17740493C90E00A8010A = {
+			fileRef = 4BDC17720493C90E00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDC17750493C90E00A8010A = {
+			fileRef = 4BDC17730493C90E00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BDD982C047FC45100A8010A = {
 			fileRef = 4B304912047FBD8200A8010A;
 			isa = PBXBuildFile;
@@ -8401,12 +8605,6 @@
 			isa = PBXTargetDependency;
 			target = 9E2E306D046CA9BF00415B22;
 		};
-		9E6C4490048D6DAA00415B22 = {
-			fileRef = 9E2E306E046CA9BF00415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		9E6C4494048D6DEB00415B22 = {
 			fileRef = 9E2E306E046CA9BF00415B22;
 			isa = PBXBuildFile;
@@ -9689,6 +9887,8 @@
 			children = (
 				F579392B033E74C401A8010A,
 				F5793911033E748F01A8010A,
+				4BDC17720493C90E00A8010A,
+				4BDC17730493C90E00A8010A,
 				4BFC5407043E509A00A8010A,
 				4BFC5408043E509A00A8010A,
 			);
@@ -10111,6 +10311,7 @@
 				4BF5BA1C042F3CB200A8010A,
 				4BFC5409043E509A00A8010A,
 				4B82AB790457178E00A8010A,
+				4BDC17740493C90E00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10141,6 +10342,7 @@
 				4BF5BA1D042F3CB200A8010A,
 				4BFC540A043E509A00A8010A,
 				4B82AB7A0457178E00A8010A,
+				4BDC17750493C90E00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

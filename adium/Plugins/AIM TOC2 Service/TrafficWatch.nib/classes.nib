@@ -8,9 +8,13 @@
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
+            ACTIONS = {sendCommand = id; }; 
             CLASS = AIMTOC2Account; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"textView_trafficWatchDEBUG" = NSTextView; }; 
+            OUTLETS = {
+                "textField_trafficSendDEBUG" = NSTextField; 
+                "textView_trafficWatchDEBUG" = NSTextView; 
+            }; 
             SUPERCLASS = AIAccount; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }

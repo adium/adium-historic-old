@@ -27,3 +27,4 @@
 #import "AIListGroup.h"
 #import "AIListObject.h"
 #import "AIContentStatus.h"
+#import "AIContentTyping.h"

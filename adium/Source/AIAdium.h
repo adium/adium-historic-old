@@ -173,6 +173,7 @@ typedef enum {
 - (void)setTypingAttributes:(NSDictionary *)attrs;
 - (BOOL)availableForSending;
 - (AIListContact *)contact;
+- (AIAccount *)account;
 @end
 
 @protocol AIContentHandler //Handles the display of a content type
