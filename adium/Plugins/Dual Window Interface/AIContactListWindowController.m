@@ -130,6 +130,12 @@
 
         if (borderless != newBorderless) {
             borderless = newBorderless;
+            //we're going to be closing, and nothing's going to change that at this point
+            //but if the user changes her mind, we'll get a second message in the middle of close, which won't be pretty - the new instance of AIContactListWindowController will handle it; we don't need to
+            //Remove observers (general)
+            [[adium notificationCenter] removeObserver:self];
+            [[NSNotificationCenter defaultCenter] removeObserver:self];
+            
             [[self window] performClose:nil];
             [(AIDualWindowInterfacePlugin *)interface showContactList:nil];
         }
