@@ -18,7 +18,6 @@
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
 #import "AILoggerPlugin.h"
-#import <Webkit/WebKit.h>
 
 #define LOG_VIEWER_NIB				@"LogViewer"
 #define KEY_LOG_VIEWER_WINDOW_FRAME		@"Log Viewer Frame"
