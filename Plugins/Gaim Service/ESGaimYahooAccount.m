@@ -256,16 +256,18 @@
 		
 		[theContact setStatusWithName:statusName
 						   statusType:statusType
-						statusMessage:(statusMessage ?
-									   [[[NSAttributedString alloc] initWithString:statusMessage] autorelease]:
-									   nil)
 							   notify:NotifyLater];
+		[theContact setStatusMessage:(statusMessage ?
+									  [[[NSAttributedString alloc] initWithString:statusMessage] autorelease]:
+									  nil)
+							  notify:NotifyLater];
 		
 		//Apply the change
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
 }
 
+/*
 - (void)updateIdleReturn:(AIListContact *)theContact withData:(void *)data
 {
 	struct yahoo_data   *od;
@@ -277,8 +279,6 @@
 		(od = account->gc->proto_data) &&
 		(f = g_hash_table_lookup(od->friends, buddyName))) {
 		
-		NSString		*statusName = nil;
-		NSString		*statusMessage = nil;
 		AIStatusType	statusType = ((f->status != YAHOO_STATUS_AVAILABLE) ? AIAwayStatusType : AIAvailableStatusType);		
 		
 		if (f->status != YAHOO_STATUS_IDLE){
@@ -287,6 +287,7 @@
 		}
 	}
 }
+*/
 
 /*!
  * @brief Return the gaim status type to be used for a status

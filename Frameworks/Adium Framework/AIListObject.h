@@ -110,11 +110,11 @@ typedef enum {
 //Key-Value pairing
 - (BOOL)online;
 
-- (AIStatus *)statusState;
-- (void)setStatusWithName:(NSString *)name
-			   statusType:(AIStatusType)type
-			statusMessage:(NSAttributedString *)statusMessage
-				   notify:(NotifyTiming)notify;
+- (NSString *)statusName;
+- (AIStatusType)statusType;
+- (void)setStatusWithName:(NSString *)statusName statusType:(AIStatusType)statusType notify:(NotifyTiming)notify;
+- (NSAttributedString *)statusMessage;
+- (void)setStatusMessage:(NSAttributedString *)statusMessage notify:(NotifyTiming)notify;
 - (NSAttributedString *)contactListStatusMessage;
 - (void)setBaseAvailableStatusAndNotify:(NotifyTiming)notify;
 - (AIStatusSummary)statusSummary;

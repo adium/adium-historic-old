@@ -389,10 +389,12 @@
 			NSDate	*idleSince;
 			
 			idleSince = ([statusState shouldForceInitialIdleTime] ?
-						 [NSDate dateWithTimeIntervalSinceNow:-[statusState forcedInitialIdleTime]] :
+						 [NSDate dateWithTimeIntervalSinceNow:-([statusState forcedInitialIdleTime]+1)] :
 						 nil);
-			
-			[self setPreference:idleSince forKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+
+			if([self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS] != idleSince){
+				[self setPreference:idleSince forKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+			}
 		}
 		
 		[self notifyOfChangedStatusSilently:YES];
@@ -418,7 +420,9 @@
 					 [NSDate dateWithTimeIntervalSinceNow:-[statusState forcedInitialIdleTime]] :
 					 nil);
 		
-		[self setPreference:idleSince forKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+		if([self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS] != idleSince){
+			[self setPreference:idleSince forKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+		}		
 	}
 }
 
@@ -458,7 +462,7 @@
 - (AIStatus *)statusState
 {
 	if ([self integerStatusObjectForKey:@"Online"]){
-		AIStatus	*statusState = [super statusState];
+		AIStatus	*statusState = [self statusObjectForKey:@"StatusState"];
 		if(!statusState){
 			statusState = [[adium statusController] defaultInitialStatusState];
 			[self setStatusStateAndRemainOffline:statusState];		

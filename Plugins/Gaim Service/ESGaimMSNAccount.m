@@ -334,10 +334,11 @@
 		
 		[theContact setStatusWithName:statusName
 						   statusType:statusType
-						statusMessage:(statusMessage ?
-									   [[[NSAttributedString alloc] initWithString:statusMessage] autorelease]:
-									   nil)
 							   notify:NotifyLater];
+		[theContact setStatusMessage:(statusMessage ?
+									  [[[NSAttributedString alloc] initWithString:statusMessage] autorelease]:
+									  nil)
+							  notify:NotifyLater];
 		
 		//Apply the change
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];

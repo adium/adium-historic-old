@@ -31,6 +31,7 @@
 - (void)silenceAllContactUpdatesForInterval:(NSTimeInterval)interval;
 - (void)updateContactStatus:(AIListContact *)inContact;
 - (void)updateCommonStatusForKey:(NSString *)key;
+- (AIStatus *)statusState;
 - (void)setStatusState:(AIStatus *)statusState;
 - (void)setStatusStateAndRemainOffline:(AIStatus *)statusState;
 

@@ -309,18 +309,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
 {
-	AIStatusType oldStatusType = [[theContact statusState] statusType];
-	AIStatusType newStatusType = (newAway ? AIAwayStatusType : AIAvailableStatusType);
-	
-	if(oldStatusType != newStatusType){
-		[theContact setStatusWithName:nil
-						   statusType:newStatusType
-						statusMessage:nil
-							   notify:NotifyLater];
+	[theContact setStatusWithName:nil 
+					   statusType:(newAway ? AIAwayStatusType : AIAvailableStatusType)
+						   notify:NotifyLater];
 
-		//Apply the change
-		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-	}
+	//Apply the change
+	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
 //Idle time
@@ -2423,25 +2417,24 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 // Removes all the possible status flags from the passed contact
 - (void)removeAllStatusFlagsFromContact:(AIListContact *)theContact silently:(BOOL)silent
 {
-    NSArray			*keyArray = [self contactStatusFlags];
-	NSEnumerator	*enumerator = [keyArray objectEnumerator];
+	NSEnumerator	*enumerator = [[self contactStatusFlags] objectEnumerator];
 	NSString		*key;
 
 	while(key = [enumerator nextObject]){
-		[theContact setStatusObject:nil forKey:key notify:NO];
+		[theContact setStatusObject:nil forKey:key notify:NotifyLater];
 	}
 	
 	//Apply any changes
 	[theContact notifyOfChangedStatusSilently:silent];
 }
 
-- (NSArray *)contactStatusFlags
+- (NSSet *)contactStatusFlags
 {
-	static NSArray *contactStatusFlagsArray = nil;
+	static NSSet *contactStatusFlagsArray = nil;
 	
 	if (!contactStatusFlagsArray)
-		contactStatusFlagsArray = [[NSArray alloc] initWithObjects:@"Online",@"Warning",@"IdleSince",
-			@"Signon Date",@"StatusState",@"Client",nil];
+		contactStatusFlagsArray = [[NSSet alloc] initWithObjects:@"Online",@"Warning",@"IdleSince",
+			@"Signon Date",@"StatusName",@"StatusType",@"StatusMessage",@"Client",nil];
 	
 	return contactStatusFlagsArray;
 }
