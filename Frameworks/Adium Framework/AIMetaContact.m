@@ -165,10 +165,10 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 		
 		[containedObjects removeObject:inObject];
 
-		if ([inObject remoteGroupName]){
+		if ([inObject isKindOfClass:[AIListContact class]] && [(AIListContact *)inObject remoteGroupName]){
 			//Reset it to its remote group
 			[inObject setContainingObject:nil];
-			[[adium contactController] listObjectRemoteGroupingChanged:inObject];
+			[[adium contactController] listObjectRemoteGroupingChanged:(AIListContact *)inObject];
 		}else{
 			[inObject setContainingObject:[self containingObject]];
 		}
