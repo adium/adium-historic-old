@@ -17,6 +17,6 @@
 	IBOutlet	NSSecureTextField   *textField_proxyPassword;
 }
 
-- (IBAction)changeConnectionPreference:(id)sender;
+- (IBAction)changedConnectionPreference:(id)sender;
 
 @end

@@ -1445,13 +1445,14 @@
 	int					port = 0;
 	
 	proxy_info = gaim_proxy_info_new();
+	gaim_account_set_proxy_info(account, proxy_info);
+	
 	proxyType = (proxyPref ? [proxyPref intValue] : Gaim_Proxy_Default);
 	
 	if (proxyType == Gaim_Proxy_None){
 		//No proxy
 		gaim_proxy_info_set_type(GAIM_PROXY_NONE, gaimAccountProxyType);
 		
-		gaim_account_set_proxy_info(account,proxy_info);
 		[self continueConnectWithConfiguredProxy];
 		
 	}else if (proxyType == Gaim_Proxy_Default) {
@@ -1482,7 +1483,6 @@
 		
 		NSLog(@"Systemwide proxy settings: %i %s:%i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
 		
-		gaim_account_set_proxy_info(account,proxy_info);
 		[self continueConnectWithConfiguredProxy];
 		
 	}else{
@@ -1512,7 +1512,6 @@
 		proxyUserName = [self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
 		if (proxyUserName && [proxyUserName length]){
 			gaim_proxy_info_set_username(proxy_info, (char *)[proxyUserName UTF8String]);
-			gaim_account_set_proxy_info(account, proxy_info);
 			
 			[[adium accountController] passwordForProxyServer:host 
 													 userName:proxyUserName 
@@ -1521,7 +1520,6 @@
 		}else{
 			
 			NSLog(@"Adium proxy settings: %i %s:%i",proxy_info->type,proxy_info->host,proxy_info->port);
-			gaim_account_set_proxy_info(account,proxy_info);
 			[self continueConnectWithConfiguredProxy];
 		}
 	}
@@ -1530,17 +1528,20 @@
 //Retried the proxy password from the keychain
 - (void)gotProxyServerPassword:(NSString *)inPassword
 {
+	GaimProxyInfo		*proxy_info = gaim_account_get_proxy_info(account);
+	
 	if (inPassword){
-		GaimProxyInfo		*proxy_info = gaim_account_get_proxy_info(account);
-
 		gaim_proxy_info_set_password(proxy_info, (char *)[inPassword UTF8String]);
 		
 		NSLog(@"GotPassword: Proxy settings: %i %s:%i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
 		
-		gaim_account_set_proxy_info(account,proxy_info);
+		[self continueConnectWithConfiguredProxy];
+	}else{
+		gaim_proxy_info_set_username(proxy_info, NULL);
+		
+		//We are no longer connecting
+		[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
 	}
-	
-	[self continueConnectWithConfiguredProxy];
 }
 
 //Disconnect this account

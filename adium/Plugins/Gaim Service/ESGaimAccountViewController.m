@@ -27,20 +27,19 @@
     
 	CBGaimAccount   *theAccount = (CBGaimAccount *)inAccount;
 	NSString		*hostName, *proxyHostName, *proxyUserName, *proxyPassword;
-	int				port, proxyPort;
-	NSNumber		*proxyTypeNumber;
+	NSNumber		*proxyTypeNumber, *proxyPortNumber;
+	int				port;
 	
 	//Host name
 	hostName = [theAccount host];
-
-	if (hostName){
-		[textField_hostName setStringValue:hostName];
-	}
+	[textField_hostName setStringValue:(hostName ? hostName : @"")];
 	
 	//Port number
 	port = [theAccount port];
 	if (port){
 		[textField_portNumber setIntValue:port];
+	}else{
+		[textField_portNumber setStringValue:@""];	
 	}
 	
 	//Proxy type
@@ -50,27 +49,19 @@
 	
 	//Proxy name
 	proxyHostName = [theAccount preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
-	if (proxyHostName){
-		[textField_proxyHostName setStringValue:proxyHostName];
-	}
+	[textField_proxyHostName setStringValue:(proxyHostName ? proxyHostName : @"")];
 	
 	//Proxy port number
-	proxyPort = [[theAccount preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_PORT group:GROUP_ACCOUNT_STATUS] intValue];
-	if (proxyPort){
-		[textField_proxyPortNumber setIntValue:proxyPort];
-	}
+	proxyPortNumber = [theAccount preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_PORT group:GROUP_ACCOUNT_STATUS];
+	[textField_proxyPortNumber setStringValue:(proxyPortNumber ? [proxyPortNumber stringValue] : @"")];
 
 	proxyUserName = [theAccount preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
-	if (proxyUserName){
-		[textField_proxyUserName setStringValue:proxyUserName];
-	}
+	[textField_proxyUserName setStringValue:(proxyUserName ? proxyUserName : @"")];
+
 	
-	proxyPassword = [theAccount preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_PASSWORD group:GROUP_ACCOUNT_STATUS];
-	if (proxyPassword){
-		[textField_proxyPassword setStringValue:proxyPassword];
-	}
-	
-	
+	proxyPassword = [[adium accountController] passwordForProxyServer:proxyHostName
+															 userName:proxyUserName];
+	[textField_proxyPassword setStringValue:(proxyPassword ? proxyPassword : @"")];
 	
 	[self configureConnectionControlDimming];
 }
@@ -105,9 +96,9 @@
 {
 	NSTextField *sender = [aNotification object];
 	if (sender == textField_hostName){
-		NSString *stringValue = [sender stringValue];
-		if ([stringValue length]){
-			[account setPreference:stringValue
+		NSString *hostName = [textField_hostName stringValue];
+		if ([hostName length]){
+			[account setPreference:hostName
 							forKey:[account hostKey]
 							 group:GROUP_ACCOUNT_STATUS];
 		}else{
@@ -115,8 +106,8 @@
 							forKey:[account hostKey]
 							 group:GROUP_ACCOUNT_STATUS];
 			
-			//Set the host name so we can redisplay the default value if needed
-			NSString *hostName = [(CBGaimAccount *)account host];
+			//Access the host name so we can redisplay the default value if applicable
+			hostName = [(CBGaimAccount *)account host];
 			
 			if (hostName){
 				[textField_hostName setStringValue:hostName];
@@ -134,16 +125,15 @@
 							 group:GROUP_ACCOUNT_STATUS];
 			
 			//Set the port number so we can redisplay the default value if needed
-			int portNumber = [(CBGaimAccount *)account port];
+			int port = [(CBGaimAccount *)account port];
 			
-			if (portNumber){
-				[textField_portNumber setIntValue:portNumber];
+			if (port){
+				[textField_portNumber setIntValue:port];
 			}
 		}
 		
 	}else if (sender == textField_proxyHostName){
-		NSString	*hostName = [textField_hostName stringValue];
-		[account setPreference:hostName
+		[account setPreference:[sender stringValue]
 						forKey:KEY_ACCOUNT_GAIM_PROXY_HOST
 						 group:GROUP_ACCOUNT_STATUS];
 		
@@ -165,11 +155,11 @@
 	}
 }
 
-- (IBAction)changeConnectionPreference:(id)sender
+- (IBAction)changedConnectionPreference:(id)sender
 {
 	if (sender == textField_proxyPassword){
 		[[adium accountController] setPassword:[textField_proxyPassword stringValue]
-								forProxyServer:[textField_hostName stringValue]
+								forProxyServer:[textField_proxyHostName stringValue]
 									  userName:[textField_proxyUserName stringValue]];
 	}
 }
@@ -197,5 +187,3 @@
 }
 
 @end
-
-
