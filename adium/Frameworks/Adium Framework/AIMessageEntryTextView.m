@@ -15,6 +15,7 @@
 
 #import "AIMessageEntryTextView.h"
 #import "AIDictionaryAdditions.h"
+#import "ESFileWrapperExtension.h"
 
 #define MAX_HISTORY					25		//Number of messages to remember in history
 #define ENTRY_TEXTVIEW_PADDING		6		//Padding for auto-sizing
@@ -582,4 +583,97 @@ static NSImage *pushIndicatorImage = nil;
     return dragTypes;
 }
 */
+
+//We don't need to prepare for the types we are handling in performDragOperation: below
+- (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
+{
+	NSPasteboard	*pasteboard = [sender draggingPasteboard];
+	NSString 		*type = [pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSFilenamesPboardType,NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]];
+	BOOL			allowDragOperation;
+	
+	if (type){
+		
+		// XXX - This shouldn't let you insert into a view for which the delegate says NO to some sort of check.
+		allowDragOperation = YES;
+	}else {
+		allowDragOperation = [super prepareForDragOperation:sender];
+	}
+	
+	return (allowDragOperation);
+}
+
+//No conclusion is needed for the types we are handling in performDragOperation: below
+- (void)concludeDragOperation:(id <NSDraggingInfo>)sender
+{
+	NSPasteboard	*pasteboard = [sender draggingPasteboard];
+	NSString 		*type = [pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSFilenamesPboardType,NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]];
+	
+	if(!type){
+		[super concludeDragOperation:sender];
+	}
+}
+
+//The textView's method of inserting into the view is insufficient; we can do better.
+- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
+{
+	NSPasteboard	*pasteboard = [sender draggingPasteboard];
+	NSString 		*type = [pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSFilenamesPboardType,NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]];
+	
+	BOOL	success = NO;
+	if(type){
+		NSAttributedString			*attachString;
+		NSImage						*img = [[[NSImage alloc] initWithPasteboard:pasteboard] autorelease];
+		
+		//Check if we are able to create an image out of this pasteboard.  If so, use NSTextAttachmentCell
+		//which will display the image for us in the text view.  Otherwise, use ESFileWrapperExtension so
+		//we can keep track of the paths of the files sent to us and insert their icons into the text view for later
+		//use.
+		
+		///XXX some services only will support files, not images... so we should adjust accordingly
+		if (img /* && [delegate canInsertImageIntoMessageEntryTextView:self] */){
+			AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
+			NSTextAttachmentCell		*cell = [[NSTextAttachmentCell alloc] initImageCell:img];
+			
+			[attachment setAttachmentCell:cell];
+			[attachment setShouldSaveImageForLogging:YES];
+			[attachment setHasAlternate:NO];
+			
+			//Insert an attributed string into the text at the current insertion point
+			attachString = [NSAttributedString attributedStringWithAttachment:attachment];
+			[self insertText:attachString];
+			
+			//Clean up
+			[cell release];
+			[attachment release];
+		}else{
+			NSArray			*files = [pasteboard propertyListForType:NSFilenamesPboardType];
+			NSEnumerator	*enumerator = [files objectEnumerator];
+			NSString		*path;
+			while (path = [enumerator nextObject]){
+				ESFileWrapperExtension  *fileWrapper;
+				NSTextAttachment		*attachment;
+				
+				//Create the ESFileWrapper, which will handle both icon setting and path retention
+				fileWrapper = [[[ESFileWrapperExtension alloc] initWithPath:path] autorelease];
+				
+				//Create an attachment using that file wrapper
+				attachment = [[NSTextAttachment alloc] initWithFileWrapper:fileWrapper];
+				
+				//Insert an attributed string into the text at the current insertion point
+				attachString = [NSAttributedString attributedStringWithAttachment:attachment];
+				[self insertText:attachString];
+				
+				//Clean up
+				[attachment release];
+			}
+		}
+		
+		success = YES;
+	}else{
+		success = [super performDragOperation:sender];
+		
+	}
+
+	return success;
+}
 @end
