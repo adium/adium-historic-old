@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.38 2004/04/20 06:26:33 evands Exp $
+// $Id: AISoundController.m,v 1.39 2004/04/23 14:51:37 adamiser Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -52,13 +52,9 @@
     activeSoundThreads = 0;
     soundLock = [[NSLock alloc] init];
     soundThreadActive = NO;
-    
     systemSoundIDDict = [[NSMutableDictionary alloc] init];
 
-#ifdef MAC_OS_X_VERSION_10_0
     voiceArray = [[SUSpeaker voiceNames] retain];  //voiceArray will be in the same order that speaker expects
-#endif
-    
     speechArray = [[NSMutableArray alloc] init];
     resetNextTime = NO;
     speaking = NO;
@@ -90,30 +86,34 @@
     [voiceArray release];
 }
 
-//Returns an array of dictionaries, each representing a soundset with the following keys:
-// (NString *)"Set" - The path of the soundset (name is the last component)
-// (NSArray *)"Sounds" - An array of sound paths (name is the last component) (NSString *'s)
-- (NSArray *)soundSetArray
+//
+- (void)preferencesChanged:(NSNotification *)notification
 {
-    NSString		*path;
-    NSMutableArray	*soundSetArray;
-	NSEnumerator	*enumerator;
-
-    //Setup
-    soundSetArray = [[NSMutableArray alloc] init];
-    
-    //Scan sounds
-	enumerator = [[owner resourcePathsForName:@"Sounds"] objectEnumerator];
-	while (path = [enumerator nextObject]){
-		[self _scanSoundSetsFromPath:path intoArray:soundSetArray];
-	}
-    
-    return([soundSetArray autorelease]);
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){    
+        NSDictionary 	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+		NSNumber		*customVolumeNumber = [preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL];
+        
+		//On Panther, we only use the QuickTime sound playing code if a customvolume is set,
+		//but on Jaguar we must always use QuickTime code since our threaded sound code will crash
+		if([NSApp isOnPantherOrBetter]){
+			useCustomVolume = [[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] intValue];
+			customVolume = ([customVolumeNumber floatValue] * 512.0);
+		}else{
+			useCustomVolume = YES;
+		}
+		
+        muteSounds = ([[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue] ||
+					  [[preferenceDict objectForKey:KEY_SOUND_TEMPORARY_MUTE] intValue]);
+        
+        //If we should be muted now, clear out the speech array.
+        if(muteSounds) [speechArray removeAllObjects];
+    }
 }
 
 
-//Private ------------------------------------------------------------------------
-//
+//Sound Playing --------------------------------------------------------------------------------------------------------
+#pragma mark Sound Playing
+//Play a sound by name
 - (void)playSoundNamed:(NSString *)inName
 {
     NSString	*path;
@@ -134,113 +134,122 @@
     [self playSoundAtPath:path];
 }
 
-//Play a sound
+//Play a sound by path
 - (void)playSoundAtPath:(NSString *)inPath
 {
     if(!muteSounds){
         if(useCustomVolume && customVolume != 0){
 			//If the user is specifying a custom volume, we must use quicktime to play our sounds.
 			[self _quicktimePlaySound:inPath];
-			
+
         }else if(!useCustomVolume){ 
-            if(soundsAsAlerts){ //Use System Alert sounds if the user wants it
-                if(!soundThreadActive){
-                    [NSThread detachNewThreadSelector:@selector(_threadPlaySoundAsAlert:)
-                                             toTarget:self
-                                           withObject:inPath];
-                }
-            }else{
-			//Otherwise, we can use NSSound
-			if(!soundThreadActive){ //Don't bother spawning another thread if one is already waiting
-                [NSThread detachNewThreadSelector:@selector(_threadPlaySound:) toTarget:self withObject:inPath];
-            }
-        }
-    }    
-}
+			if(!soundThreadActive){
+				[NSThread detachNewThreadSelector:@selector(_threadPlaySoundAsAlert:)
+										 toTarget:self
+									   withObject:inPath];
+			}
+		}    
+	}
 }
 
-//Play a sound using quicktime.
+
+//Quicktime ------------------------------------------------------------------------------------------------------------
+#pragma mark Quicktime
 // - Quicktime cannot be threaded to avoid blocking while sound hardware wakes up
 // - Quicktime is slow
 // + Quicktime offers volume contorl
 // + Quicktime can play almost anything
 // - Must cache manually
+//Play a sound using quicktime.
 - (void)_quicktimePlaySound:(NSString *)inPath
 {
     NSMovie	*movie;
-
+	
     //Search for this sound in our cache
     movie = [soundCacheDict objectForKey:inPath];
-
+	
     //If the sound is not cached, load it
     if(!movie){
-	//If the cache is full, remove the less recently used cached sound
-	if([soundCacheDict count] >= MAX_QT_CACHED_SOUNDS){
-	    [soundCacheDict removeObjectForKey:[soundCacheArray lastObject]];
-	    [soundCacheArray removeLastObject];
-	}
-	
-	//Load and cache the sound
-	movie = [[[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:inPath] byReference:YES] autorelease];
-	if(movie){
-	    [soundCacheDict setObject:movie forKey:inPath];
-	    [soundCacheArray insertObject:inPath atIndex:0];
-	}
-
+		//If the cache is full, remove the less recently used cached sound
+		if([soundCacheDict count] >= MAX_QT_CACHED_SOUNDS){
+			[soundCacheDict removeObjectForKey:[soundCacheArray lastObject]];
+			[soundCacheArray removeLastObject];
+		}
+		
+		//Load and cache the sound
+		movie = [[[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:inPath] byReference:YES] autorelease];
+		if(movie){
+			[soundCacheDict setObject:movie forKey:inPath];
+			[soundCacheArray insertObject:inPath atIndex:0];
+		}
+		
     }else{
-	//Reset the cached sound back to the beginning
-	StopMovie([movie QTMovie]);
-	GoToBeginningOfMovie([movie QTMovie]);
-	
-	//Move this sound to the front of the cache (This will naturally move lesser used sounds to the back for removal)
-	[soundCacheArray removeObject:inPath];
-	[soundCacheArray insertObject:inPath atIndex:0];
+		//Reset the cached sound back to the beginning
+		StopMovie([movie QTMovie]);
+		GoToBeginningOfMovie([movie QTMovie]);
+		
+		//Move this sound to the front of the cache (This will naturally move lesser used sounds to the back for removal)
+		[soundCacheArray removeObject:inPath];
+		[soundCacheArray insertObject:inPath atIndex:0];
     }
-
+	
     //Set the volume and play sound
     if(movie){
-	SetMovieVolume([movie QTMovie], customVolume);
-	StartMovie([movie QTMovie]);
+		SetMovieVolume([movie QTMovie], customVolume);
+		StartMovie([movie QTMovie]);
     }
 }
 
-//Play a sound using NSSound.  Meant to be detached as a new thread.
+
+//NSSound --------------------------------------------------------------------------------------------------------------
+//#pragma mark NSSound
 // + NSSound can be threaded to avoid blocking Adium while the sound hardware wakes up
 // + NSSound is fast
 // - NSSound does not offer volume control
 // - NSSound only plays a few formats
 // + Cached by the system
-- (void)_threadPlaySound:(NSString *)inPath
-{
-    NSAutoreleasePool 	*pool = [[NSAutoreleasePool alloc] init];
-    NSSound		*sound;
-
-    //Lock to avoid trying to play two sounds at once from two different threads.
-    soundThreadActive = YES;
-    [soundLock lock];
-
-    //Load the sound (The system apparently caches these)
-    sound = [[NSSound alloc] initWithContentsOfFile:inPath byReference:YES];
-    [sound setDelegate:self];
-
-    //Play the sound
-    [sound play];
-
-    //When run on a laptop using battery power, the play method may block while the audio
-    //hardware warms up.  If it blocks, the sound WILL NOT PLAY after the block ends.
-    //To get around this, we check to make sure the sound is playing, and if it isn't
-    //we call the play method again.
-    if(![sound isPlaying]){
-        [sound play];
-    }
-
-    //Unlock and cleanup
-    [soundLock unlock];
-    soundThreadActive = NO;
+//Play a sound using NSSound.  Meant to be detached as a new thread.
+//- (void)_threadPlaySound:(NSString *)inPath
+//{
+//    NSAutoreleasePool 	*pool = [[NSAutoreleasePool alloc] init];
+//    NSSound		*sound;
+//
+//    //Lock to avoid trying to play two sounds at once from two different threads.
+//    soundThreadActive = YES;
+//    [soundLock lock];
+//
+//    //Load the sound (The system apparently caches these)
+//    sound = [[NSSound alloc] initWithContentsOfFile:inPath byReference:YES];
+//    [sound setDelegate:self];
+//
+//    //Play the sound
+//    [sound play];
+//
+//    //When run on a laptop using battery power, the play method may block while the audio
+//    //hardware warms up.  If it blocks, the sound WILL NOT PLAY after the block ends.
+//    //To get around this, we check to make sure the sound is playing, and if it isn't
+//    //we call the play method again.
+//    if(![sound isPlaying]){
+//        [sound play];
+//    }
+//
+//    //Unlock and cleanup
+//    [soundLock unlock];
+//    soundThreadActive = NO;
+//	
+//    [pool release];
+//}
+//
+//NSSound finished playing callback
+//- (void)sound:(NSSound *)sound didFinishPlaying:(BOOL)aBool
+//{
+//    //Clean up the sound
+//    [sound release];
+//}
 	
-    [pool release];
-}
 
+//CF Alert Sound -------------------------------------------------------------------------------------------------------
+#pragma mark CF Alert Sound
 // Play a sound using the CF sound API's available in 10.2+ (or so says apple)
 // It's slightly more flexable than NSSound, but higher level than CoreAudio.  Good compromise?
 // ? threadable (works in 10.3, crashes in 10.2 regardless of running in thread or not)
@@ -297,74 +306,36 @@
     }
 }
 
-//NSSound finished playing callback
-- (void)sound:(NSSound *)sound didFinishPlaying:(BOOL)aBool
-{
-    //Clean up the sound
-    [sound release];
-}
 
-//
-- (void)preferencesChanged:(NSNotification *)notification
+//Sound Sets -----------------------------------------------------------------------------------------------------------
+#pragma mark Sound Sets
+//Returns an array of dictionaries, each representing a soundset with the following keys:
+// (NString *)"Set" - The path of the soundset (name is the last component)
+// (NSArray *)"Sounds" - An array of sound paths (name is the last component) (NSString *'s)
+- (NSArray *)soundSetArray
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){    
-        NSDictionary *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
-		
-		NSNumber *customVolumeNumber = [preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL];
-        
-        //Sounds as alerts.  This only works in 10.3
-		soundsAsAlerts = [[preferenceDict objectForKey:KEY_USE_SYSTEM_SOUND_OUTPUT] boolValue];
-		if(![NSApp isOnPantherOrBetter]){
-			soundsAsAlerts = NO;
-		}
-
-		//On Panther, we only use the QuickTime sound playing code if a customvolume is set,
-		//but on Jaguar we must always use QuickTime code since our threaded sound code will crash
-		if ([NSApp isOnPantherOrBetter]) {
-			useCustomVolume = [[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] intValue];
-			customVolume = ([customVolumeNumber floatValue] * 512.0);
-		} else {
-			useCustomVolume = YES;
-			if (customVolumeNumber)
-				customVolume = ([customVolumeNumber floatValue] * 512.0);
-			else
-				customVolume = 256.0;
-		}
-		
-        muteSounds = ( [[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue] || [[preferenceDict objectForKey:KEY_SOUND_TEMPORARY_MUTE] intValue] );
-        
-        //If we should be muted now, clear out the speech array.
-        if (muteSounds)
-            [speechArray removeAllObjects];
-        
-        //Display the custom volume performance warning
-        if(useCustomVolume && ![[preferenceDict objectForKey:KEY_SOUND_WARNED_ABOUT_CUSTOM_VOLUME] intValue]){
-            int result;
+    NSString		*path;
+    NSMutableArray	*soundSetArray;
+	NSEnumerator	*enumerator;
+	
+    //Setup
+    soundSetArray = [[NSMutableArray alloc] init];
     
-            result = NSRunInformationalAlertPanel(@"Notice", @"Setting a custom volume may cause delays when Adium plays a sound.\r\rThese delays are most noticeable to users:\r ¥ using a laptop (on battery power) or \r ¥ using an older computer\r\rIf you experience delays, please set volume back to 'Normal'.", nil, @"Cancel", nil);
+    //Scan sounds
+	enumerator = [[owner resourcePathsForName:@"Sounds"] objectEnumerator];
+	while (path = [enumerator nextObject]){
+		[self _scanSoundSetsFromPath:path intoArray:soundSetArray];
+	}
     
-            if(result == NSAlertAlternateReturn){
-                //If the user canceled, we turn the custom volume preference back off
-                [[owner preferenceController] setPreference:[NSNumber numberWithBool:NO]
-                                                    forKey:KEY_SOUND_USE_CUSTOM_VOLUME
-                                                    group:PREF_GROUP_GENERAL];
-    
-            }else{
-                //Otherwise we leave it on, and suppress the warning message
-                [[owner preferenceController] setPreference:[NSNumber numberWithBool:YES]
-                                                    forKey:KEY_SOUND_WARNED_ABOUT_CUSTOM_VOLUME
-                                                    group:PREF_GROUP_GENERAL];
-            }
-        }
-    }
+    return([soundSetArray autorelease]);
 }
 
 - (void)_scanSoundSetsFromPath:(NSString *)soundFolderPath intoArray:(NSMutableArray *)soundSetArray
 {
-    NSDirectoryEnumerator	*enumerator;			//Sound folder directory enumerator
-    NSString			*file;				//Current Path (relative to sound folder)
-    NSString			*soundSetPath;			//Name of the set
-    NSMutableArray		*soundSetContents;		//Array of sounds in the set
+    NSDirectoryEnumerator	*enumerator;		//Sound folder directory enumerator
+    NSString				*file;				//Current Path (relative to sound folder)
+    NSString				*soundSetPath;		//Name of the set
+    NSMutableArray			*soundSetContents;  //Array of sounds in the set
 
     //Start things off with a valid set path and contents, incase any sounds aren't in subfolders
     soundSetPath = soundFolderPath;
@@ -412,6 +383,14 @@
 	}
 }
 
+
+//Text to Speech -------------------------------------------------------------------------------------------------------
+#pragma mark Text to Speech
+- (void)speakText:(NSString *)text
+{
+    [self speakText:text withVoice:nil andPitch:0 andRate:0];
+}
+
 - (NSArray *)voices
 {
     return voiceArray;
@@ -429,85 +408,74 @@
     return defaultPitch;
 }
 
-- (void)speakText:(NSString *)text
-{
-    [self speakText:text withVoice:nil andPitch:0 andRate:0];
-}
-
 //add text & voiceString to the speech queue and attempt to speak text now
 //pass voice as nil to use default voice
 //pass pitch as 0 to use default pitch
 //pass rate as 0 to use default rate
 - (void)speakText:(NSString *)text withVoice:(NSString *)voiceString andPitch:(float)pitch andRate:(int)rate
 {
-    if (text && [text length]) {
-	NSMutableDictionary * dict = [[NSMutableDictionary alloc] init];
-
-	if (text) {
-	    [dict setObject:text forKey:TEXT_TO_SPEAK];
-	}
-
-	if (voiceString) {
-	    int voiceIndex = [voiceArray indexOfObject:voiceString];
-	    if (voiceIndex != NSNotFound) {
-		[dict setObject:[NSNumber numberWithInt:voiceIndex] forKey:VOICE_INDEX];
-	    }
-	}
-
-	if (pitch)
-	    [dict setObject:[NSNumber numberWithFloat:pitch] forKey:PITCH];
-
-	if (rate)
-	    [dict setObject:[NSNumber numberWithInt:rate] forKey:RATE];
-	
-	[speechArray addObject:dict];
-	[dict release];
-        if (!muteSounds)
-            [self speakNext];
+    if(text && [text length]){
+		NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+		
+		if(text){
+			[dict setObject:text forKey:TEXT_TO_SPEAK];
+		}
+		
+		if(voiceString){
+			int voiceIndex = [voiceArray indexOfObject:voiceString];
+			if(voiceIndex != NSNotFound){
+				[dict setObject:[NSNumber numberWithInt:voiceIndex] forKey:VOICE_INDEX];
+			}
+		}
+		
+		if(pitch) [dict setObject:[NSNumber numberWithFloat:pitch] forKey:PITCH];
+		if(rate) [dict setObject:[NSNumber numberWithInt:rate] forKey:RATE];
+		
+		[speechArray addObject:dict];
+		[dict release];
+        if(!muteSounds) [self speakNext];
     }
 }
 
 //attempt to speak the next item in the queue
 - (void)speakNext
 {
-#ifdef MAC_OS_X_VERSION_10_0
     //we have items left to speak and aren't already speaking
-    if ([speechArray count] && !speaking) {
-	speaking = YES;
-	NSMutableDictionary * dict = [speechArray objectAtIndex:0];
-	NSString * text = [dict objectForKey:TEXT_TO_SPEAK];
-	NSNumber * voiceNumber = [dict objectForKey:VOICE_INDEX];
-	NSNumber * pitchNumber = [dict objectForKey:PITCH];
-	NSNumber * rateNumber = [dict objectForKey:RATE];
-	SUSpeaker * theSpeaker;
-
-	if (voiceNumber) {
-	    if (!speaker_variableVoice) { //initVariableVoiceifNecessary
-		speaker_variableVoice = [[SUSpeaker alloc] init];
-		[speaker_variableVoice setDelegate:self];
-	    }
-	    theSpeaker = speaker_variableVoice;
-	    [theSpeaker setVoice:[voiceNumber intValue]];
-	} else {
-	    [self initDefaultVoiceIfNecessary];
-	    theSpeaker = speaker_defaultVoice;
-	}
-	
-	if (pitchNumber) {
-	    [theSpeaker setPitch:[pitchNumber floatValue]];
-	} else {
-	    [theSpeaker setPitch:defaultPitch];
-	}
-	if (rateNumber) {
-	    [theSpeaker setRate:[rateNumber intValue]];
-	} else {
-	    [theSpeaker setRate:defaultRate];
-	}
-
-	[theSpeaker speakText:text];
-	[speechArray removeObjectAtIndex:0];
+    if([speechArray count] && !speaking){
+		speaking = YES;
+		NSMutableDictionary *dict = [speechArray objectAtIndex:0];
+		NSString 			*text = [dict objectForKey:TEXT_TO_SPEAK];
+		NSNumber 			*voiceNumber = [dict objectForKey:VOICE_INDEX];
+		NSNumber 			*pitchNumber = [dict objectForKey:PITCH];
+		NSNumber 			*rateNumber = [dict objectForKey:RATE];
+		SUSpeaker 			*theSpeaker;
+		
+		if(voiceNumber){
+			if(!speaker_variableVoice){ //initVariableVoiceifNecessary
+				speaker_variableVoice = [[SUSpeaker alloc] init];
+				[speaker_variableVoice setDelegate:self];
+			}
+			theSpeaker = speaker_variableVoice;
+			[theSpeaker setVoice:[voiceNumber intValue]];
+		}else{
+			[self initDefaultVoiceIfNecessary];
+			theSpeaker = speaker_defaultVoice;
+		}
+		
+		if(pitchNumber){
+			[theSpeaker setPitch:[pitchNumber floatValue]];
+		}else{
+			[theSpeaker setPitch:defaultPitch];
+		}
+		if(rateNumber){
+			[theSpeaker setRate:[rateNumber intValue]];
+		}else{
+			[theSpeaker setRate:defaultRate];
+		}
+		
+		[theSpeaker speakText:text];
+		[speechArray removeObjectAtIndex:0];
     }
-#endif
 }
 
 - (IBAction)didFinishSpeaking:(SUSpeaker *)theSpeaker
@@ -518,14 +486,12 @@
 
 - (void)initDefaultVoiceIfNecessary
 {
-#ifdef MAC_OS_X_VERSION_10_0
-    if (!speaker_defaultVoice) {
-	speaker_defaultVoice = [[SUSpeaker alloc] init];
-	[speaker_defaultVoice setDelegate:self];
-	defaultRate = [speaker_defaultVoice rate];
-	defaultPitch = [speaker_defaultVoice pitch];
+    if(!speaker_defaultVoice){
+		speaker_defaultVoice = [[SUSpeaker alloc] init];
+		[speaker_defaultVoice setDelegate:self];
+		defaultRate = [speaker_defaultVoice rate];
+		defaultPitch = [speaker_defaultVoice pitch];
     }
-#endif
 }
 
 @end

@@ -36,46 +36,22 @@
 {
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
     
+	[checkbox_useCustomVolume setState:[[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] boolValue]];
     if([[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue] == YES){
         [slider_volume setFloatValue:0.0];
-
-    }else if([[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] intValue] == NO){
-        [slider_volume setFloatValue:DEFAULT_VOLUME];
-
     }else{
-        float	volume = [[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue];
-        [slider_volume setFloatValue:volume];
-
+        [slider_volume setFloatValue:[[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]];
     }
-}
-
-//Reset to the default value
-- (IBAction)resetVolume:(id)sender
-{
-    [slider_volume setFloatValue:DEFAULT_VOLUME];
-    [self selectVolume:nil]; 
 }
 
 //New value selected on the volume slider
 - (IBAction)selectVolume:(id)sender
 {
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
-    float		value = [slider_volume floatValue];
-    BOOL		mute, custom;
-    BOOL		playSample = NO;
+    float			value = [slider_volume floatValue];
+    BOOL			mute = (value == 0.0);
+    BOOL			playSample = NO;
     
-    //Save the pref
-    if(value == 0.0){ //Muted
-        mute = YES;
-        custom = NO;        
-    }else if(value == DEFAULT_VOLUME){ //Default Volume
-        mute = NO;
-        custom = NO;        
-    }else{ //Custom volume
-        mute = NO;
-        custom = YES;        
-    }
-
     //Volume
     if(value != [[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]){
         [[adium preferenceController] setPreference:[NSNumber numberWithFloat:value]
@@ -92,18 +68,25 @@
         playSample = NO;
     }
 
-    //Custom
-    if(custom != [[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] intValue]){
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:custom]
-                                             forKey:KEY_SOUND_USE_CUSTOM_VOLUME
-                                              group:PREF_GROUP_GENERAL];
-        playSample = YES;
-    }
-
     //Play a sample sound
     if(playSample){
         [[adium soundController] playSoundAtPath:@"/System/Library/LoginPlugins/BezelServices.loginPlugin/Contents/Resources/volume.aiff"];
     }
+}
+
+//Apply a changed controls
+- (IBAction)changePreference:(id)sender
+{
+	[super changePreference:sender];
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:[checkbox_useCustomVolume state]]
+										 forKey:KEY_SOUND_USE_CUSTOM_VOLUME
+										  group:PREF_GROUP_GENERAL];
+}
+
+//Configure control dimming
+- (void)configureControlDimming
+{
+    [slider_volume setEnabled:[checkbox_useCustomVolume state]];
 }
 
 @end

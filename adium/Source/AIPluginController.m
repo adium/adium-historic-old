@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.52 2004/04/23 12:13:32 adamiser Exp $
+//$Id: AIPluginController.m,v 1.53 2004/04/23 14:51:37 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -124,7 +124,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin;
 	[self loadPluginWithClass:[LNStatusIconsPlugin class]];
 	[self loadPluginWithClass:[SAContactOnlineForPlugin class]];
 	[self loadPluginWithClass:[AIContactStatusEventsPlugin class]];
-	[self loadPluginWithClass:[SHOutputDeviceControlPlugin class]]; //Crash on launch = 1
+//	[self loadPluginWithClass:[SHOutputDeviceControlPlugin class]]; //Crash on launch = 1
         [self loadPluginWithClass:[SHLinkManagementPlugin class]];
 
 //	[self loadPluginWithClass:[AISMViewPlugin class]];

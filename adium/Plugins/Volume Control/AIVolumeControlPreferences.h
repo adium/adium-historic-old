@@ -15,8 +15,9 @@
 
 @interface AIVolumeControlPreferences : AIPreferencePane {
     IBOutlet	NSSlider		*slider_volume;
+	IBOutlet	NSButton		*checkbox_useCustomVolume;
 }
 
 - (IBAction)selectVolume:(id)sender;
-- (IBAction)resetVolume:(id)sender;
+
 @end
