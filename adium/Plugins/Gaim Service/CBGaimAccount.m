@@ -678,26 +678,19 @@
 - (void)renameGroup:(AIListGroup *)inGroup to:(NSString *)newName
 {
     GaimGroup *group = gaim_find_group([[self _mapOutgoingGroupName:[inGroup UID]] UTF8String]);
-	NSLog(@"Rename '%@' to '%@'  (%i)",[self _mapOutgoingGroupName:[inGroup UID]],newName,group);
+
 	//If we don't have a group with this name, just ignore the rename request
     if(group){
-	
-		//Rename server-side
-        serv_rename_group(gc, group, [newName UTF8String]);
 		//Rename gaimside
 		gaim_blist_rename_group(group, [newName UTF8String]);
 		
 		//We must also update the remote grouping of all our contacts in that group
-		NSEnumerator	*enumerator = [inGroup objectEnumerator];
-		AIListObject	*object;
+		NSEnumerator	*enumerator = [[[adium contactController] allContactsInGroup:inGroup onAccount:self] objectEnumerator];
+		AIListContact	*contact;
 		
-		while(object = [enumerator nextObject]){
-			if([object isKindOfClass:[AIListContact class]] &&
-			   [[(AIListContact *)object accountUID] compare:[self UID]] == 0){
-				[(AIListContact *)object setRemoteGroupName:newName];
-			}
+		while(contact = [enumerator nextObject]){
+			[contact setRemoteGroupName:newName];
 		}
-		
 	}
 }
 

@@ -172,6 +172,9 @@
 //Account list changed
 - (void)accountListChanged:(NSNotification *)notification
 {
+	//
+	
+	
     //Update our reference to the accounts
     selectedAccount = nil;
     [accountArray release]; accountArray = [[[adium accountController] accountArray] retain];
