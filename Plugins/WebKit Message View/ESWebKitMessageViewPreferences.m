@@ -77,6 +77,7 @@
  */
 - (void)viewDidLoad
 {	
+	viewIsOpen = YES;
 	previewListObjectsDict = nil;
 
 	//Configure our menus
@@ -109,6 +110,7 @@
 	[[adium notificationCenter] removeObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[previewListObjectsDict release]; previewListObjectsDict = nil;
+	viewIsOpen = NO;
 }
 
 /*!
@@ -116,12 +118,13 @@
  */
 - (void)messageStyleXtrasDidChange
 {
-	NSDictionary *prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-
-	[popUp_styles setMenu:[self _stylesMenu]];
-	[popUp_styles selectItemWithTitle:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
+	if(viewIsOpen){
+		NSDictionary *prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		
+		[popUp_styles setMenu:[self _stylesMenu]];
+		[popUp_styles selectItemWithTitle:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
+	}
 }
-
 
 //Preferences ----------------------------------------------------------------------------------------------------------
 #pragma mark Preferences
