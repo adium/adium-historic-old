@@ -68,7 +68,7 @@ typedef enum {
 	
     NSMutableDictionary		*listOrderDict;
     NSMutableDictionary		*reverseListOrderDict;
-    int						largestOrder;
+    float					largestOrder;
 }
 
 //Contact list access
@@ -95,6 +95,7 @@ typedef enum {
 - (AISortController *)activeSortController;
 - (void)sortContactList;
 - (void)sortListObject:(AIListObject *)inObject;
+- (float)largestOrderIndex;
 
 //Editing
 - (void)addContacts:(NSArray *)contactArray toGroup:(AIListGroup *)group onAccounts:(NSArray *)accountArray;
@@ -107,6 +108,7 @@ typedef enum {
 
 //Interface selection
 - (AIListObject *)selectedListObject;
+- (AIListGroup *)selectedContaininigGroup;
 
 //Private
 - (void)initController;

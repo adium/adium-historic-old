@@ -22,7 +22,6 @@
     NSMutableArray    	*objectArray;		//Manual ordered array of contents
     int					visibleCount;		//The number of visible buddies in the sorted array
     BOOL				expanded;			//Exanded/Collapsed state of this group
-	int					largestIndex;		//The largest index value of an object in our group
 }
 
 - (id)initWithUID:(NSString *)inUID;

@@ -27,7 +27,6 @@
     [super initWithUID:inUID serviceID:nil];
 	
     objectArray = [[NSMutableArray alloc] init];
-	largestIndex = 1;
     expanded = YES;
 	
 	//Default invisible
@@ -135,7 +134,9 @@
 		
 		//Add the object
 		[inObject addContainingGroup:self];
-		[inObject setOrderIndex:largestIndex++ forGroup:self];
+		if([inObject orderIndexForGroup:self] == 0){ //Assign an index if necessary
+			[inObject setOrderIndex:[[adium contactController] largestOrderIndex] forGroup:self];
+		}
 		[objectArray addObject:inObject];
 		
 		//Sort this object on our own.  This always comes along with a content change, so calling contact controller's
@@ -157,7 +158,6 @@
 		
 		//Remove the object
 		[inObject removeContainingGroup:self];
-		[inObject setOrderIndex:0 forGroup:self];
 		[objectArray removeObject:inObject];
 
 		//
