@@ -46,7 +46,6 @@
    	
     //Clear the online state.  'Auto-Connect' values are used, not the previous online state.
     [self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-	[self updateStatusForKey:@"Handle"];
     [self updateStatusForKey:@"FullNameAttr"];
     [self updateStatusForKey:@"FormattedUID"];
     
