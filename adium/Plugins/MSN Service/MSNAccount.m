@@ -21,6 +21,7 @@
 - (void)connect:(NSTimer *)timer;
 - (void)update:(NSTimer *)timer;
 - (void)disconnect;
+- (NSDictionary *)parseMessage:(NSData *)payload;
 //- (void)syncContactList;
 //- (void)receiveInitialStatus;
 @end
@@ -122,11 +123,13 @@
     [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
     
     handleDict = [[NSMutableDictionary alloc] init];
+	chatSocketDict = [[NSMutableDictionary alloc] init];
 }
 
 - (void)dealloc
 {
     [handleDict release];
+	[chatSocketDict release];
     
     [super dealloc];
 }
@@ -199,6 +202,12 @@
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
     
     connectionPhase = 1;
+	
+	if (socket)
+	{
+		[socket release];
+		socket = nil;
+	}
     
     stepTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/TIMES_PER_SECOND
         target:self
@@ -892,55 +901,25 @@
         NSLog (@"Socket found to be invalid");
         
         [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] 			forKey:@"Status" account:self];
+		
+		[socket release];
+		socket = nil;
     }
 }
 
 - (void)getPackets:(NSTimer *)timer
 {
-    /*possible soltion to the problem of payload commands:
-    switch()
-    {
-        case: 0
-            if(readyForReceiving)
-            {
-                if(theres a cached command)
-                    use it
-                else
-                    snag the command from the socket
-                    
-                if(command == command that needs to read a payload)
-                {
-                    if(phase1)
-                        do stuff to get ready to send read in our payload
-                    else if(phase2)
-                        use the case2 stuff from below, to read in the payload
-                    else if(phase3)
-                        process the payload command.
-                    else
-                        error cheking go here
-                }
-                other commands
-            }
-            else
-                error checking go here
-            break;
-            
-        case 1: 
-            sending stuff go here
-            break;
-    }*/
-    
-    /*NSData *inData = nil; //don't want old data hanving around
+	NSData *inData = nil; //don't want old data hanging around
     if ([socket isValid])
     {
+		//NSLog (@"MSN getPackets, mode: %@", [[timer userInfo] objectForKey:@"Number"]);
         switch([[[timer userInfo] objectForKey:@"Number"] intValue])
         {
             case 0: //read
-                if([socket readyForReceiving])
+                if([socket getDataToNewline:&inData remove:YES])
                 {
                     //get the data, put it into message.
-                    [socket getDataToNewline:&inData];
-                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                    NSLog(@"<<<< %@",[NSString stringWithCString:[inData bytes] 
                         length:[inData length]]);
                     NSArray *message = [[NSString stringWithCString:[inData bytes] 
                         length:[inData length]-2] 
@@ -969,7 +948,7 @@
                             componentsJoinedByString:@""];
                         
                         //format the stuff in the right format.
-                        //CODE_GO_HERE
+                        temp = [NSString stringWithFormat:@"QRY %d msmsgs@msnmsgr.com 32\r\n%@", 231, temp];
                         
                         //set it in userInfo
                         [[timer userInfo] setObject:temp forKey:@"String"];
@@ -977,6 +956,22 @@
                         //go to sending stage
                         [[timer userInfo] setObject:[NSNumber numberWithInt:1] forKey:@"Number"];
                     }
+                    else if([command isEqual:@"MSG"])
+                    {
+						//Set payload length
+						[[timer userInfo] setObject:[message objectAtIndex:([message count] - 1)] forKey:@"String"];
+						
+						//go to Message paylad stage
+						[[timer userInfo] setObject:[NSNumber numberWithInt:2] forKey:@"Number"];
+					}
+                    else if([command isEqual:@"NOT"])
+                    {
+						//Set payload length
+						[[timer userInfo] setObject:[message objectAtIndex:([message count] - 1)] forKey:@"String"];
+						
+						//go to Message paylad stage
+						[[timer userInfo] setObject:[NSNumber numberWithInt:3] forKey:@"Number"];
+					}
                     else if([command isEqual:@""])
                     {
                         //do stuff...
@@ -985,11 +980,9 @@
                 break;
                 
             case 1: //Send
-                if([socket readyForSending])
+                if([socket sendData:[[[timer userInfo] objectForKey:@"String"]
+                        dataUsingEncoding:NSUTF8StringEncoding]])
                 {
-                    //send it out
-                    [socket sendData:[[[timer userInfo] objectForKey:@"String"]
-                        dataUsingEncoding:NSUTF8StringEncoding]];
                     NSLog(@">>> %@", [[timer userInfo] objectForKey:@"String"]);
                     
                     //reset the string
@@ -1001,55 +994,101 @@
                 }
                 break;
                 
-            case 2: //Receive a payload command, the length is in String.
-                    //Afterward, the data will be in String, AS AN NSDATA. BE CAREFUL
-                if([socket readyForReceiving])
-                {
-                    //get the length
-                    int length = [[[timer userInfo] objectForKey:@"String"] intValue];
-                    
-                    //if we don't have temp, create it
-                    if([[timer userInfo] objectForKey:@"temp"] == nil)
-                    {
-                        [[timer userInfo] setObject:[[NSMutableData alloc] init] forKey:@"temp"];
-                    }
-                    
-                    //Get data, then check if we don't have all the data
-                    if(![socket getData:&inData ofLength:length])
-                    {
-                        //put the data in temp.
-                        [[[timer userInfo] objectForKey:@"temp"] appendData:inData];
-                    }
-                    else //if we do have all the data
-                    {
-                        //put the data in String.
-                        [[[timer userInfo] objectForKey:@"temp"] appendData:inData];
-                        
-                        //put the final data into String.
-                        [[timer userInfo] setObject:[[timer userInfo] objectForKey:@"temp"]
-                            forKey:@"String"];
-                        
-                        //remove temp
-                        [[timer userInfo] removeObjectForKey:@"temp"];
-                        
-                        //go back to reading packets, we are done here.
-                        [[timer userInfo] setObject:[NSNumber numberWithInt:0] forKey:@"Number"];
-                    }
+            case 2: //MSG //Receive a payload command, the length is in String.
+            case 3: //NOT //(Afterward, the data will be in String, AS AN NSDATA. BE CAREFUL) <-- May be changed
+			{		
+				//get the length
+				int length = [[[timer userInfo] objectForKey:@"String"] intValue];
+				
+				//if we don't have temp, create it
+				//if([[timer userInfo] objectForKey:@"temp"] == nil)
+				//{
+				//	[[timer userInfo] setObject:[[NSMutableData alloc] init] forKey:@"temp"];
+				//}
+				
+                if([socket getData:&inData ofLength:length remove:YES])
+                {	// AISocket will cache the data and return FALSE until it has retrieved the entire payload
+
+					//put the data in String.
+					//[[[timer userInfo] objectForKey:@"temp"] appendData:inData];
+					
+					//put the final data into String.
+					//[[timer userInfo] setObject:[[timer userInfo] objectForKey:@"temp"]
+					//	forKey:@"String"];
+					
+					//remove temp
+					//[[timer userInfo] removeObjectForKey:@"temp"];
+					
+					if ([[[timer userInfo] objectForKey:@"Number"] intValue] == 3)
+					{	// NOT command.  Might be a server-going-down notification or the like
+					}
+					else
+					{	// MSG command.  Payload has a standard format, including information on how to interpret it.
+						NSDictionary *messageLoad = [self parseMessage:inData];
+						NSString	*contentType = [[[messageLoad objectForKey:@"Content-Type"] componentsSeparatedByString:@";"] objectAtIndex:0];
+						
+						NSLog (@"MSN Message received of type %@", contentType);
+						
+						if ([contentType isEqualToString:@"text/plain"])
+						{
+							NSLog (@"MSN Plain text message.");
+						}
+						else if ([contentType isEqualToString:@"text/x-msmsgscontrol"])
+						{
+							NSLog (@"MSN A user is typing.");
+						}
+						else if ([contentType isEqualToString:@"text/x-msmsgsprofile"])
+						{
+							NSLog (@"MSN Received user profile.");
+						}
+						else if ([contentType isEqualToString:@"text/x-msmsgsinitialemailnotification"])
+						{
+							NSLog (@"MSN new mail!");
+						}
+						else if ([contentType isEqualToString:@"application/x-msmsgsemailnotification"])
+						{
+							NSLog (@"MSN new mail! MSN2");
+						}
+						else if ([contentType isEqualToString:@"text/x-msmsgsemailnotification"])
+						{
+							NSLog (@"MSN new mail! MSN3-7");
+						}
+						else if ([contentType isEqualToString:@"text/x-msmsgsactivemailnotification"])
+						{
+							NSLog (@"MSN Hotmail activity");
+						}
+						else if ([contentType isEqualToString:@"application/x-msmsgssystemmessage"])
+						{
+							NSLog (@"MSN System Message!!! \r%@", [messageLoad objectForKey:@"MSG Body"]);
+						}
+					}
+					
+					//go back to reading packets, we are done here.
+					[[timer userInfo] setObject:[NSNumber numberWithInt:0] forKey:@"Number"];
                 }
             break;
+			}
         }
     }
     else //socket is dead
     {
         NSLog (@"NS Socket found to be invalid");
         [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] 			forKey:@"Status" account:self];
+		
+		[socket release];
+		socket = nil;
     }
     
     //now enumerate over each SB socket, and check for packets on each one.
     //if there is a packet, go to some kind of handling method
     
-    //CODE GO HERE, MONKEY!
-*/
+	NSEnumerator	*numer = [chatSocketDict keyEnumerator];
+	AISocket		*sbSocket = nil;
+	
+	while (sbSocket = [numer nextObject])
+	{
+		//CODE GO HERE, MONKEY!
+	}
 }
 
 - (void)update:(NSTimer *)timer
@@ -1085,6 +1124,150 @@
     
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE]
         forKey:@"Status" account:self];
+}
+
+// Returns fields as key/value pairs, and the body under the key "MSG Body"
+- (NSDictionary *)parseMessage:(NSData *)payload
+{
+	int curMode = 0;
+	
+	NSMutableDictionary		*dict = [[NSMutableDictionary alloc] init];
+	NSString				*loadStr = [NSString stringWithCString:[payload bytes] length:[payload length]],
+							*curField = nil, *curValue = nil;
+	unsigned long			lastCharIndex = 0, curCharIndex = 0;
+	unichar					curChar;
+	BOOL					done = NO;
+	NSRange					range;
+	
+	while (!done)
+	{
+		curChar = [loadStr characterAtIndex:curCharIndex];
+	
+		switch (curMode)
+		{
+		case 0:	// Scanning in a field
+			if (curChar == ':')
+			{				
+				range.location = lastCharIndex;
+				range.length = curCharIndex - lastCharIndex;
+				
+				if ([loadStr characterAtIndex:(curCharIndex + 1)] == ' ')
+				{	// The space after the colon is not required by the format, but not part of the
+					// field value either
+					curCharIndex++;
+				}
+				
+				if (range.length != 0)
+				{
+					curField = [loadStr substringWithRange:range];
+				}
+				else
+				{
+					NSLog (@"Message with empty field name.");
+					curField = nil;
+				}
+				curMode = 1;
+				lastCharIndex = curCharIndex + 1;
+			}
+			else if (curChar == '\r')
+			{
+				if (lastCharIndex == curCharIndex)
+				{	// EXIT LOOP
+					done = TRUE;	// The tell-tale blank line was found!
+					curCharIndex++;
+				}
+				else
+				{	// Strange error: field name that ends in newline: "badfield\n\r" instead of colon: "goodfield: value\n\r"
+					// Report error:
+					range.location = lastCharIndex;
+					range.length = curCharIndex - lastCharIndex;
+					
+					if (range.length != 0)
+					{
+						NSLog (@"Badly formed field: (no colon) %@", [loadStr substringWithRange:range]);
+					}
+					else
+					{
+						NSLog (@"Badly formed field (no colon)");
+					}
+					
+					// Proceed: (reset counting variables, at next line's start)
+					if ([loadStr characterAtIndex:(curCharIndex + 1)] == '\r')
+						curCharIndex++;
+					lastCharIndex = curCharIndex + 1;
+				}
+			}
+			break;
+			
+			
+		case 1: // Scanning in a value
+			if (curChar == '\n')
+			{
+				// Put the range of the text into string
+				range.location = lastCharIndex;
+				range.length = curCharIndex - lastCharIndex;
+				
+				if (range.length != 0)
+					curValue = [loadStr substringWithRange:range];
+				else
+					curValue = @"";
+				
+				// Store values in dictionary
+				if (curField != nil)
+				{
+					NSLog (@"MSN message values: %@: %@", curField, curValue);
+					[dict setObject:curValue forKey:curField];
+				}
+				
+				// Move on
+				//curCharIndex++;	// To account for following required '\r'
+				curMode = 0;
+				lastCharIndex = curCharIndex + 1;
+			}
+		
+			break;
+		}
+		
+		++curCharIndex;
+		
+		if (curCharIndex >= [loadStr length]) done = TRUE;
+	}
+	
+	// Get the message body
+	
+	NSString*	encoding = [dict objectForKey:@"Content-Type"];
+	curField = @"MSG Body";
+	//range.length = 13;
+	//range.location = range.length - ([encoding length] - 1);
+	
+	
+	if ([encoding rangeOfString:@"charset=UTF-8"].location != NSNotFound)//[encoding compare:@"charset=UTF-8" options:nil range:range])//contains:@"charset=UTF-8"])
+	{
+		range.location = curCharIndex;
+		range.length = ([payload length] - curCharIndex);
+		
+		if (range.length > 0)
+			curValue = [NSString stringWithCString:[[payload subdataWithRange:range] bytes] length:range.length];
+		else
+			curValue = @"";
+		
+		// Store values in dictionary
+		if (curField != nil)
+		{
+			NSLog (@"MSN message values: %@: %@", curField, curValue);
+			[dict setObject:curValue forKey:curField];
+		}
+	}
+	else
+	{
+		NSLog (@"Did not recognize encoding: %@ (%@)", encoding, [encoding substringWithRange:range]);
+	}
+	
+	// Make the immutable dictionary
+	NSDictionary* returnDict = [NSDictionary dictionaryWithDictionary:dict];
+	[dict release];
+	
+	return (returnDict);
 }
 
 /*- (void)connect
