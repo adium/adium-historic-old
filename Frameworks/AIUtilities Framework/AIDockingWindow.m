@@ -16,6 +16,10 @@
 - (NSRect)dockWindowFrame:(NSRect)windowFrame toScreenFrame:(NSRect)screenFrame;
 @end
 
+@interface NSWindow (AIUNDOCUMENTED)
+- (void)_toolbarPillButtonClicked:(id)sender;
+@end
+
 @implementation AIDockingWindow
 
 static	BOOL alreadyMoving = NO;
@@ -144,6 +148,26 @@ static	BOOL alreadyMoving = NO;
 	}
 	
 	return(windowFrame);
+}
+
+- (void)toggleToolbarShown:(id)sender
+{
+	[super toggleToolbarShown:sender];
+	
+	if([self delegate] && [[self delegate] respondsToSelector:@selector(windowDidToogleToolbarShown:)]){
+		[[self delegate] performSelector:@selector(windowDidToogleToolbarShown:)
+							  withObject:self];
+	}
+}
+
+- (void)_toolbarPillButtonClicked:(id)sender
+{
+	[super _toolbarPillButtonClicked:sender];
+	
+	if([self delegate] && [[self delegate] respondsToSelector:@selector(windowDidToogleToolbarShown:)]){
+		[[self delegate] performSelector:@selector(windowDidToogleToolbarShown:)
+							  withObject:self];
+	}
 }
 
 @end
