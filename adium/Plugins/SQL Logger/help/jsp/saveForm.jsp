@@ -3,7 +3,7 @@
 Enumeration e = request.getParameterNames();
 %>
 <html>
-    <head><title>Save Search</title></head>
+    <head><title>Save</title></head>
     <body>
         <form action="<%= request.getParameter("action")%>" method="get">
             <label for="title"><b>Name</b></label><br />

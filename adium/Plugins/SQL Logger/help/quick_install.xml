@@ -74,11 +74,25 @@ postgres $] su <i>username</i></pre></div>
 <div class="tutorialcode"><pre>PATH=$PATH:/usr/local/bin
 CLASSPATH=/usr/local/pgsql/share/java/postgresql.jar:$CLASSPATH
 export PATH CLASSPATH</pre></div>
+
 <p>Now you're ready to use the Adium stuff.</p>
 <div class="tutorialcode"><pre>cd ~/adium/Plugins/SQL Logger/help/sql
 psql &lt; adium.sql
 createlang plpgsql
 psql &lt; functions.sql</pre></div>
+
+<p>At this point, it is helpful to edit the search path of the database.</p>
+<div class="tutorialcode"><pre>jmelloy $] psql
+Welcome to psql 7.4, the PostgreSQL interactive terminal.
+
+Type:  \copyright for distribution terms
+       \h for help with SQL commands
+       \? for help on internal slash commands
+       \g or terminate with semicolon to execute query
+       \q to quit
+
+jmelloy=# alter user <i>username</i> set search_path=adium,public;</pre></div>
+
 <p>At this point, you're ready to import your logs into the database.  Simply
   use the parser-2.pl script, and it will import all of your adium 2.x
   logfiles.  If you wish to use parser.pl (for 1.x logs) you will need to

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
-<html xmlns:xalan="http://xml.apache.org/xslt">
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ascii">
+<meta content="text/html; charset=ascii" http-equiv="Content-Type">
 <title>Resin/JSP Installation Instructions</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
@@ -22,7 +22,7 @@
 <div id="content">
 <p>To view the database logs with a web interface, you need to install a
     JSP servlet engine.  Several are available, but I prefer one called
-    "Resin".  You can get it at <a href="http://www.caucho.com" class="offsite">http://www.caucho.com</a>.</p>
+    &quot;Resin&quot;.  You can get it at <a href="http://www.caucho.com" class="offsite">http://www.caucho.com</a>.</p>
 <p>Download the newest 2.0 release (2.1.9) for Unix.  It's not very
     difficult to install at all.  Most browsers will automatically decompress
     the file, but if you need to, open up a terminal window
@@ -31,7 +31,7 @@
       <pre>gunzip resin-2.1.x.tar.gz
 tar -xvf resin-2.1.x.tar</pre>
     </div>
-<p>At this point, you should have a folder called "resin-2.1.x".  Open up
+<p>At this point, you should have a folder called &quot;resin-2.1.x&quot;.  Open up
     a terminal and cd into the folder.  To simply run Resin, nothing really
     needs to be done.  The default settings are pretty good,
     but a few things need to be changed.  While in the Resin folder, type</p>
@@ -45,12 +45,12 @@ tar -xvf resin-2.1.x.tar</pre>
 &lt;resource-ref&gt;
   &lt;res-ref-name&gt;jdbc/test&lt;/res-ref-name&gt;
   &lt;res-type&gt;javax.sql.DataSource&lt;/res-type&gt;
-  &lt;init-param driver-name="com.caucho.jdbc.mysql.Driver"/&gt;
-  &lt;init-param url="jdbc:mysql_caucho://localhost:3306/test"/&gt;
-  &lt;init-param user=""/&gt;
-  &lt;init-param password=""/&gt;
-  &lt;init-param max-connections="20"/&gt;
-  &lt;init-param max-idle-time="30"/&gt;
+  &lt;init-param driver-name=&quot;com.caucho.jdbc.mysql.Driver&quot;/&gt;
+  &lt;init-param url=&quot;jdbc:mysql_caucho://localhost:3306/test&quot;/&gt;
+  &lt;init-param user=&quot;&quot;/&gt;
+  &lt;init-param password=&quot;&quot;/&gt;
+  &lt;init-param max-connections=&quot;20&quot;/&gt;
+  &lt;init-param max-idle-time=&quot;30&quot;/&gt;
 &lt;/resource-ref&gt;</pre>
     </div>
 <p>This needs to be set up to use PostgreSQL.  If you've installed the
@@ -60,12 +60,12 @@ tar -xvf resin-2.1.x.tar</pre>
       <pre>&lt;resource-ref&gt;
   &lt;res-ref-name&gt;<b>jdbc/postgresql</b>&lt;/res-ref-name&gt;
   &lt;res-type&gt;javax.sql.DataSource&lt;/res-type&gt;
-  &lt;init-param driver-name="<b>org.postgresql.Driver</b>"/&gt;
-  &lt;init-param url="<b>jdbc:postgresql:<i>USERNAME</i></b>"/&gt;
-  &lt;init-param user="<b><i>USERNAME</i></b>"/&gt;
-  &lt;init-param password=""/&gt;
-  &lt;init-param max-connections="20"/&gt;
-  &lt;init-param max-idle-time="30"/&gt;
+  &lt;init-param driver-name=&quot;<b>org.postgresql.Driver</b>&quot;/&gt;
+  &lt;init-param url=&quot;<b>jdbc:postgresql:<i>USERNAME</i></b>&quot;/&gt;
+  &lt;init-param user=&quot;<b><i>USERNAME</i></b>&quot;/&gt;
+  &lt;init-param password=&quot;&quot;/&gt;
+  &lt;init-param max-connections=&quot;20&quot;/&gt;
+  &lt;init-param max-idle-time=&quot;30&quot;/&gt;
 &lt;/resource-ref&gt;</pre>
     </div>
 <p>That's all it takes to get Resin to use the database connection.  The
@@ -93,7 +93,7 @@ tar -xvf resin-2.1.x.tar</pre>
   into the directory, the front page.  If you have an index.html file in
   there, that may be served.</p>
 <p>Note, to work, this require PostgreSQL to be accepting TCP/IP connections.
-  Either do this by passing the "-i" flag to pg_ctl as it is started up, or by
+  Either do this by passing the &quot;-i&quot; flag to pg_ctl as it is started up, or by
   editing /usr/local/pgsql/data/postgresql.conf and settting the lines that
   looks like this:</p>
 <div class="tutorialcode">
@@ -110,9 +110,9 @@ tar -xvf resin-2.1.x.tar</pre>
   restart your computer.  It would be better if it started at startup.  The
   package I have starting it can be downloaded from <a href="http://www.visualdistortion.org/adium/resin.tar.gz" class="offsite">
     http://www.visualdistortion.org/adium/resin.tar.gz</a>.  Simply change the
-  information in the "Resin" script to your path and startup information (I
+  information in the &quot;Resin&quot; script to your path and startup information (I
   have the postgresql.jar added to my CLASSPATH environmental variable, so I
-  don't need to explicitly call it) and put the "Resin" folder in 
+  don't need to explicitly call it) and put the &quot;Resin&quot; folder in 
   <code>/Library/StartupItems</code>.</p>
 </div>
 <div id="footer">Resin/JSP Installation Instructions<br><a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a>

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
-<html xmlns:xalan="http://xml.apache.org/xslt">
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ascii">
+<meta content="text/html; charset=ascii" http-equiv="Content-Type">
 <title>Installing the PostgreSQL tsearch2 contrib module</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
@@ -27,7 +27,7 @@
     Get it from <a href="http://www.postgresql.org/mirrors-ftp.html" class="offsite">http://www.postgresql.org/mirrors-ftp.html</a>.
     Download the full version.  (About 10 megs.)  Unpack it with Stuffit
     Expander or the command line.  Open up a Terminal window, and change into
-    the newly created "postgresql-7.4" directory.
+    the newly created &quot;postgresql-7.4&quot; directory.
     To install any module, it needs to know where the original is stored.
     Type </p>
 <div class="tutorialcode">
@@ -65,10 +65,10 @@ psql <i>USERNAME</i> &lt; tsearch2.sql</pre>
 (1 row)</pre>
     </div>
 <p>If you do not see that, make sure your search path is set up correctly,
-    and includes "public"</p>
+    and includes &quot;public&quot;</p>
 <p>To prepare the Adium message table to use tsearch indexing:
     Switch directories into wherever you downloaded the tarball from my site.
-    In the "sql" folder, there's a script called "tsearch2.sql".
+    In the &quot;sql&quot; folder, there's a script called &quot;tsearch2.sql&quot;.
     Run it by typing </p>
 <div class="tutorialcode">
       <pre>psql &lt; tsearch2.sql</pre>
@@ -103,8 +103,8 @@ select * from messages
 <p>If either tsearch module is installed, boolean logic (AND/OR/NOT)
     will work, and phrases in quotation marks will act as you would expect.
     If a phrase is in quotation marks, regular expressions will work to the
-    extent PostgreSQL supports them.  ("^searchphrase" looks for the word
-    "searchphrase" at the beginning, "searchphrase$ looks for it at the end,
+    extent PostgreSQL supports them.  (&quot;^searchphrase&quot; looks for the word
+    &quot;searchphrase&quot; at the beginning, &quot;searchphrase$ looks for it at the end,
     etc).  The PostgreSQL regular expression engine is much improved in
     PostgreSQL 7.4.  Check the PostgreSQL documentation for more info.</p>
 <p>If the tsearch module is not installed, the regular expressions will

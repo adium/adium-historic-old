@@ -6,9 +6,10 @@
 <%@ page import = 'java.util.regex.Pattern' %>
 <%@ page import = 'java.util.regex.Matcher' %>
 
-<!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 683 $ $Date: 2004/04/23 04:26:27 $ -->
+<!--$Rev: 707 $ $Date: 2004/05/04 21:29:54 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -16,7 +17,8 @@ DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
 String dateStart, dateFinish, from_sn, to_sn, contains_sn, hl;
-boolean showDisplay = true, showForm = false, showConcurrentUsers = false, simpleViewStyle = false;
+boolean showDisplay = true;
+
 Date today = new Date(System.currentTimeMillis());
 int chat_id = 0;
 
@@ -28,7 +30,8 @@ from_sn = request.getParameter("from");
 to_sn = request.getParameter("to");
 contains_sn = request.getParameter("contains");
 String screennameDisplay = request.getParameter("screen_or_display");
-String viewStyle = request.getParameter("viewstyle");
+hl = request.getParameter("hl");
+ArrayList hlWords = new ArrayList();
 
 String title = new String("");
 String notes = new String("");
@@ -39,57 +42,37 @@ try {
     chat_id = 0;
 }
 
-showForm = Boolean.valueOf(request.getParameter("form")).booleanValue();
-
-showConcurrentUsers =
-    Boolean.valueOf(request.getParameter("users")).booleanValue();
-
-hl = request.getParameter("hl");
-ArrayList hlWords = new ArrayList();
-
 if (dateFinish != null && (dateFinish.equals("") || dateFinish.equals("null"))) {
     dateFinish = null;
 } else if (dateFinish != null) {
-    formURL += "&dateFinish=" + dateFinish;
+    formURL += "&amp;dateFinish=" + dateFinish;
 }
 
 
 if (dateStart != null && (dateStart.equals("") || dateStart.startsWith("null"))) {
     dateStart = null;
 } else if (dateStart != null) {
-    formURL += "&dateStart=" + dateStart;
+    formURL += "&amp;dateStart=" + dateStart;
 } else if (dateStart == null ) {
-    formURL += "&dateStart=" + today.toString();
+    formURL += "&amp;dateStart=" + today.toString();
 }
 
 if (from_sn != null && from_sn.equals("")) {
     from_sn = null;
 } else if(from_sn != null) {
-    formURL += "&sender=" + from_sn;
+    formURL += "&amp;sender=" + from_sn;
 }
 
 if (to_sn != null && to_sn.equals("")) {
     to_sn = null;
 } else if(to_sn != null ) {
-    formURL += "&recipient=" + to_sn;
+    formURL += "&amp;recipient=" + to_sn;
 }
 
 if (contains_sn != null && contains_sn.equals("")) {
     contains_sn = null;
 } else if(contains_sn != null) {
-    formURL += "&single_sn=" + contains_sn;
-}
-
-if (screennameDisplay == null || screennameDisplay.equals("display")) {
-    showDisplay = true;
-} else {
-    showDisplay = false;
-}
-
-if (viewStyle != null && viewStyle.equals("simple")) {
-    simpleViewStyle = true;
-} else {
-    simpleViewStyle = false;
+    formURL += "&amp;single_sn=" + contains_sn;
 }
 
 if (hl != null && hl.equals("")) {
@@ -104,21 +87,9 @@ if (hl != null && hl.equals("")) {
 
 String hlColor[] = {"#ff6","#a0ffff", "#9f9", "#f99", "#f69"};
 
-%>
-
-<html>
-    <head>
-        <title>
-            Adium Log Viewer
-        </title>
-        <style type="text/css">
-            :link, :visited {text-decoration: none}
-        </style>
-    </head>
-    <body bgcolor="#ffffff">
-<%
 PreparedStatement pstmt = null;
 ResultSet rset = null;
+ResultSet noteSet = null;
 
 try {
 
@@ -138,133 +109,74 @@ try {
             title = rset.getString("title");
             notes = rset.getString("notes");
         }
+    } else {
+        title = "SQL Logger";
     }
-
-    if (!showForm) { 
 %>
-        <table border="0"><tr><td>
-        <form action="index.jsp" method="GET">
-            <fieldset>
-                <legend>View by Date</legend>
-                <label for="from">Sent SN: </label>
-                <input type="text" name="from" <% if(from_sn != null)
-                out.print("value=\"" + from_sn + "\""); %> id="from" />
-                <label for="to">Received SN: </label>
-                <input type="text" name="to" <% if (to_sn != null)
-                out.print("value=\"" + to_sn + "\""); %> id="to" />
-                <br />
-                <label for="contains">Single SN:</label>
-                <input type="text" name="contains" <% if (contains_sn != null)
-                out.print("value=\"" + contains_sn + "\""); %> id = "contains"
-                /><br />
-                <label for="start_date">Date Range: </label>
-                <input type="text" name="start" <% if (dateStart != null)
-                out.print("value=\"" + dateStart + "\""); else
-                out.print("value=\"" + today.toString() + " 00:00:00\"");%>
-                id="start_date" />
-                <label for="finish_date">&nbsp;--&nbsp;</label>
-                <input type="text" name="finish" <% if (dateFinish != null)
-                out.print("value=\"" + dateFinish + "\""); %> id="finish_date" />
-                &nbsp;(YYYY-MM-DD hh:mm:ss)<br />
-            </fieldset>
-            <fieldset>
-                <legend>Format Options</legend>
-                <table>
-                    <tr>
-                        <td>
-                            <input type="checkbox" name="users" id="user"
-                            value="true" <% if (showConcurrentUsers)
-                            out.print(" checked=\"true\""); %>/>
-                                <label for="user">Do Not Show Multiple Users</label><br />
-                            <input type="checkbox" name="form" id="form" value="true" />
-                                <label for="form">Do Not Show Form</label>
-                        </td>
-                        <td>
-                            <input type="radio" name="screen_or_display" value
-                            = "screenname" id = "sn" <% if (!showDisplay)
-                            out.print("checked=\"true\""); %> />
-                                <label for="sn">Show Screename</label><br />
-                            <input type="radio" name="screen_or_display"
-                            value="display" id="disp" <% if (showDisplay)
-                            out.print("checked=\"true\""); %> />
-                                <label for="disp">Show Alias/Display Name</label>
-                        </td>
-                        <td>
-                            <input type="radio" name="viewstyle" value="simple"
-                              id="simple" <% if (simpleViewStyle) out.print("checked=\"true\""); %> />
-                            <label for="simple">Simple View</label>
-                            <br />
-                            <input type="radio" name="viewstyle"
-                              value="complex" id="complex" <% if (!simpleViewStyle) out.print("checked=\"true\""); %> />
-                            <label for="complex">Complex View</label>
-                        </td>
-                    </tr>
-                </table>
-            </fieldset>
-            <input type="reset">
-            <input type="submit">
-        </form>
-        </td>
-        <td>
-            <form action="index.jsp" method="post">
-                <select name="chat_id">
-                    <option value="0" selected="yes">Please Choose</option>
-<%
-pstmt = conn.prepareStatement("select chat_id, title from adium.saved_chats");
-
-rset = pstmt.executeQuery();
-
-while(rset.next()) {
-    out.println("<option value=\"" + rset.getString("chat_id") + "\">" +
-        rset.getString("title") + "</option>");
-}
-%>
-                </select>
-                <input type="submit">
-            </form>
-            <a href="#"
-                onClick="window.open('<%= formURL %>', 'Save Search', 'width=275,height=225')">
-                Save Chat
-            </a>
-        </td>
-        </tr>
-        </table>
-        <%
-        if (hl != null) {
-            out.print("<table border=\"1\"><tr><td>");
-            out.print("Search Words:<br />");
-            for (int i = 0; i < hlWords.size(); i++) {
-                out.print("<b style=\"color:black;" +
-                    "background-color:" + hlColor[i % hlColor.length] +
-                    "\">" + hlWords.get(i).toString() + "</b> ");
-            }
-            out.print("</td></tr></table>");
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Adium SQL Logger</title>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<link rel="stylesheet" type="text/css" href="styles/layout.css" />
+<link rel="stylesheet" type="text/css" href="styles/default.css" />
+<link rel="stylesheet" type="text/css" href="styles/message.css" />
+</head>
+<body>
+	<div id="container">
+	   <div id="header">
+	   </div>
+	   <div id="banner">
+            <div id="bannerTitle">
+                <img class="adiumIcon" src="images/adiumy/green.png" width="128" height="128" border="0" alt="Adium X Icon" />
+                <div class="text">
+                    <h1><%= title %></h1>
+                </div>
+            </div>
+            <div id="buttoncontainer">
+            <p><%= notes %></p>
+            </div>
+        </div>
+        <div id="central">
+            <div id="navcontainer">
+                <ul id="navlist">
+                    <li><span id="current">Viewer</span></li>
+                    <li><a href="search.jsp">Search</a></li>
+                    <li><a href="statistics.jsp">Statistics</a></li>
+                    <li><a href="users.jsp">Users</a></li>
+                </ul>
+            </div>
+            <div id="sidebar-a">
+    <%
+    if (hl != null) {
+        out.print("<h1>Search Words</h1>");
+        out.println("<div class=\"boxThinTop\"></div>");
+        out.println("<div class=\"boxThinContent\">");
+        for (int i = 0; i < hlWords.size(); i++) {
+            out.print("<p><b style=\"color:black;" +
+                "background-color:" + hlColor[i % hlColor.length] +
+                "\">" + hlWords.get(i).toString() + "</b></p>\n");
         }
-        %>
-        <h2><%= title %></h2>
-        <p><%= notes %></p><br />
-        <a href="search.jsp">[Search Logs]</a>&nbsp;&nbsp;
-        <a href="statistics.jsp">[Statistics]</a><br /><br />
-        <%
+        out.println("</div>");
+        out.println("<div class=\"boxThinBottom\"></div>");
     }
-    
-    String commandArray[] = new String[10];
+    String commandArray[] = new String[20];
     int aryCount = 0;
     boolean unconstrained = false;
 
     String queryText = "select scramble(sender_sn) as sender_sn, "+
     " scramble(recipient_sn) as recipient_sn, " + 
-    " message, message_date, message_id, title, notes";
+    " message, message_date, message_id, " +
+    " to_char(message_date, 'fmDay, fmMonth DD, YYYY') as fancy_date, " +
+    " exists (select 'x' from adium.message_notes " +
+    " where message_id = view.message_id) as notes";
     if(showDisplay) {
        queryText += ", scramble(sender_display) as sender_display, "+
-           " scramble(recipient_display) as recipient_display "
-        + " from adium.message_v ";
+           " scramble(recipient_display) as recipient_display " + 
+           " from adium.message_v as view ";
     } else {
-        queryText += " from adium.simple_message_v ";
+        queryText += " from adium.simple_message_v as view ";
     }
 
-    queryText += " natural left join adium.message_notes notes ";
-    
     String concurrentWhereClause = " where ";
 
     if (dateStart == null) {
@@ -329,45 +241,137 @@ while(rset.next()) {
         "messages.</i><br><br></div>");
     }
     
-    if(!showConcurrentUsers) {
-        String query = "select scramble(username) as username " +
-        "from adium.users natural join "+
-        "(select distinct sender_id as user_id from adium.messages "+
-        concurrentWhereClause + " union " +
-        "select distinct recipient_id as user_id from adium.messages " +
-        concurrentWhereClause + ") messages";
+    String query = "select scramble(username) as username " +
+    "from adium.users natural join "+
+    "(select distinct sender_id as user_id from adium.messages "+
+    concurrentWhereClause + " union " +
+    "select distinct recipient_id as user_id from adium.messages " +
+    concurrentWhereClause + ") messages";
 
-        pstmt = conn.prepareStatement(query);
+    pstmt = conn.prepareStatement(query);
 
-        if(dateStart != null && dateFinish != null) {
-            pstmt.setString(1, dateStart);
-            pstmt.setString(2, dateFinish);
-            pstmt.setString(3, dateStart);
-            pstmt.setString(4, dateFinish);
-        } else if(dateStart == null && dateFinish != null) {
-            pstmt.setString(1, dateFinish);
-            pstmt.setString(2, dateFinish);
-        } else if(unconstrained) {
-            pstmt.setString(1, dateStart);
-            pstmt.setString(2, dateStart);
-        }
-
-        rset = pstmt.executeQuery();
-        out.print("<div align=\"center\">");
-        out.println("<b>Users:</b><br />");
-        while(rset.next()) {
-            if (rset.getRow() % 5 == 0) {
-                out.print("<br />");
-            }
-            out.print("<a href=\"index.jsp?start=" + dateStart + 
-            "&finish=" + dateFinish + "&contains=" + 
-            rset.getString("username") + "\">"+
-            rset.getString("username") + "</a>&nbsp;|&nbsp;");
-        }
-        out.print("<a href=\"index.jsp?start=" + dateStart +
-            "&finish=" + dateFinish + "\"><i>All</i></a>");
-        out.println("</div><br />");
+    if(dateStart != null && dateFinish != null) {
+        pstmt.setString(1, dateStart);
+        pstmt.setString(2, dateFinish);
+        pstmt.setString(3, dateStart);
+        pstmt.setString(4, dateFinish);
+    } else if(dateStart == null && dateFinish != null) {
+        pstmt.setString(1, dateFinish);
+        pstmt.setString(2, dateFinish);
+    } else if(unconstrained) {
+        pstmt.setString(1, dateStart);
+        pstmt.setString(2, dateStart);
     }
+
+    rset = pstmt.executeQuery();
+
+    out.println("<h1>Users</h1>");
+    out.println("<div class=\"boxThinTop\"></div>");
+    out.println("<div class=\"boxThinContent\">");
+    while(rset.next()) {
+        out.print("<p><a href=\"index.jsp?start=" + dateStart + 
+        "&finish=" + dateFinish + "&contains=" + 
+        rset.getString("username") + "\">"+
+        rset.getString("username") + "</a></p>\n");
+    }
+    
+    out.print("<a href=\"index.jsp?start=" + dateStart +
+        "&finish=" + dateFinish + "\"><i>All</i></a>");
+    out.println("</div>");
+    out.println("<div class=\"boxThinBottom\"></div>");
+    
+    out.println("<h1>Saved Chats</h1>");
+    out.println("<div class=\"boxThinTop\"></div>");
+    out.println("<div class=\"boxThinContent\">");
+    
+    pstmt = conn.prepareStatement("select chat_id, title from adium.saved_chats");
+    
+    rset = pstmt.executeQuery();
+    
+    while(rset.next()) {
+        out.println("<p><a href=\"index.jsp?chat_id=" + rset.getInt("chat_id") +
+            "\">" + rset.getString("title") + "</a></p>");
+    }
+    out.println("<p></p>");
+    %>
+        <p><a href="#"
+                onClick="window.open('<%= formURL %>', 'Save Chat', 'width=275,height=225')">
+                Save Chat ...
+            </a></p>
+    <%
+    out.println("</div>");
+    out.println("<div class=\"boxThinBottom\"></div>");
+    
+    
+%>
+            </div>
+            <div id="content">
+            <h1>View Messages by Date</h1>
+            
+            <div class="boxWideTop"></div>
+            <div class="boxWideContent">
+            <form action="index.jsp" method="get">
+                <table border="0" cellpadding="3" cellspacing="0">
+                <tr>
+                    <td align="right">
+                        <label for="from">Sent SN: </label></td>
+                    <td>
+                        <input type="text" name="from" <% if(from_sn != null)
+                        out.print("value=\"" + from_sn + "\""); %> id="from" />
+                    </td>
+                </tr>
+                <tr>
+                <tr>
+                    <td align="right"><label for="to"">Received SN: </label></td>
+                    <td><input type="text" name="to" <% if (to_sn != null)
+                        out.print("value=\"" + to_sn + "\""); %> id="to" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        <label for="contains">Single SN:</label>
+                    </td>
+                    <td>
+                        <input type="text" name="contains" <% if (contains_sn != null)
+                        out.print("value=\"" + contains_sn + "\""); %> 
+                        id = "contains" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right"><label for="start_date">Date Range: </label></td>
+                <td><input type="text" name="start" <% if (dateStart != null)
+                out.print("value=\"" + dateStart + "\""); else
+                out.print("value=\"" + today.toString() + " 00:00:00\"");%>
+                id="start_date" />
+                <label for="finish_date">&nbsp;--&nbsp;</label>
+                <input type="text" name="finish" <% if (dateFinish != null)
+                out.print("value=\"" + dateFinish + "\""); %> id="finish_date" />
+                    </td>
+                </tr>
+                </table>
+                <p style="text-indent: 80px"><i>(YYYY-MM-DD hh:mm:ss)</i></p><br />
+                
+                <input type="radio" name="screen_or_display" value
+                = "screenname" id = "sn" <% if (!showDisplay)
+                out.print("checked=\"true\""); %> />
+                    <label for="sn">Show Screename</label><br />
+                <input type="radio" name="screen_or_display"
+                value="display" id="disp" <% if (showDisplay)
+                out.print("checked=\"true\""); %> />
+                <label for="disp">Show Alias/Display Name</label>
+                
+                <div align="right">
+                    <input type="reset" /><input type="submit" />
+                </div>
+                </form>
+            </div>
+            <div class="boxWideBottom"></div>
+
+            <h1>Messages</h1>
+                <div class="boxWideTop"></div>
+                <div class="boxWideContent">
+<%
+    
     pstmt = conn.prepareStatement(queryText);
     
     //out.print(queryText + "<br />");
@@ -378,43 +382,40 @@ while(rset.next()) {
     }
 
     rset = pstmt.executeQuery();
-
-    /*
-     * Used to print query plans.
-    out.println("<pre>");
-    while(rset.next()) {
-        out.println(rset.getString(1));
-    }
-    out.println("</pre>");
-    */
-
+    
     if (!rset.isBeforeFirst()) {
         out.print("<div align=\"center\"><i>No records found.</i></div>");
-    } else {
-        out.print("<table border=\"0\">");
     }
-
+    
     ArrayList userArray = new java.util.ArrayList();
     String colorArray[] =
     {"red","blue","green","purple","black","orange", "teal"};
     String sent_color = new String();
     String received_color = new String();
     String user = new String();
-
+    String prevSender, prevRecipient;
+    prevSender = new String();
+    prevRecipient = new String();
+    
     int cntr = 1;
     Date currentDate = null;
+    Timestamp currentTime = new Timestamp(0);
     while (rset.next()) {
         if(!rset.getDate("message_date").equals(currentDate)) {
             currentDate = rset.getDate("message_date");
-            out.print("<tr>");
-            out.print("<td></td>");
-            out.print("<td align=\"center\" bgcolor=\"teal\"" +
-            " background=\"images/transp-change.png\" width=\"150\">");
-            out.print("<font color=\"white\">" + currentDate.toString());
-            out.print("</font></td><td></td>");
-            out.print("</tr>");
+            prevSender = "";
+            prevRecipient = "";
+            
+            out.println("<div class=\"weblogDateHeader\">");
+            out.println(rset.getString("fancy_date"));
+            out.println("</div>");
+        } else if (rset.getTimestamp("message_date").getTime() - 
+            currentTime.getTime() > 60*10*1000) {
+            out.println("<hr width=\"75%\">");
         }
-
+        
+        currentTime = rset.getTimestamp("message_date");
+        
         sent_color = null;
         received_color = null;
         String message = rset.getString("message");
@@ -468,84 +469,103 @@ while(rset.next()) {
             message = sb.toString();
         }
 
-        out.print("<tr>\n");
-        String cellColor = "#ffffff";
-        if(cntr++ % 2 == 0) {
-            cellColor = "#dddddd";
-        }
 
-        out.print("<td valign=\"top\" align=\"left\" bgcolor=\"" +
-        cellColor + "\" id=\"" + rset.getInt("message_id") + "\">");
+        if(!rset.getString("sender_sn").equals(prevSender) || 
+            !rset.getString("recipient_sn").equals(prevRecipient)) {
 
-        if(simpleViewStyle) {
-            out.print(rset.getTime("message_date") + " ");
-        }
+            out.print("<div class=\"message_container\">");
 
-        out.print("<a href=\"index.jsp?from=" +
-        rset.getString("sender_sn") + 
-        "&to=" + rset.getString("recipient_sn") + 
-        "&start=" + dateStart +
-        "&finish=" + dateFinish + "#" + rset.getInt("message_id") + "\" ");
-        
-        if(!showDisplay) {
-            out.print("title=\"" + rset.getString("sender_sn"));
-        } else {
-            out.print("title=\"" + rset.getString("sender_display"));
-        }
-        out.print("\">");
-        
-        out.print("<font color=\"" + sent_color + "\">");
-        if(showDisplay) {
-            out.print(rset.getString("sender_display"));
-        } else {
-            out.print(rset.getString("sender_sn"));
-        }
-        out.print("</font>:</a></font>\n");
+            out.println("<div class=\"sender\">");
+            out.print("<a href=\"index.jsp?from=" +
+            rset.getString("sender_sn") + 
+            "&to=" + rset.getString("recipient_sn") + 
+            "&start=" + dateStart +
+            "&finish=" + dateFinish + "#" + rset.getInt("message_id") + "\" ");
 
-        if(to_sn == null || from_sn == null) {
-            out.print("<font color=\"" +
-            received_color + "\">");
+            if(!showDisplay) {
+                out.print("title=\"" + rset.getString("sender_sn"));
+            } else {
+                out.print("title=\"" + rset.getString("sender_display"));
+            }
+            out.print("\">");
+
+            out.print("<span style=\"color: " + sent_color + "\">");
             if(showDisplay) {
-                out.print(rset.getString("recipient_display"));
+                out.print(rset.getString("sender_display"));
             } else {
-                out.print(rset.getString("recipient_sn"));
+                out.print(rset.getString("sender_sn"));
             }
-            out.print("</font>");
-        }
-        if(!simpleViewStyle) {
-            out.print("</td>");
-            out.print("<td valign=\"top\" align=\"right\" bgcolor=\"" + 
-                cellColor + "\" width=\"150\">");
-            out.print(rset.getTime("message_date"));
-            out.print("</td>\n");
-            if(rset.getString("notes") != null) {
-                out.println("<td rowspan=\"2\" width=\"150\" bgcolor=\"#ffff99\">" + 
-                    "<font size=\"2\"><b>" + rset.getString("title") + 
-                    "</b><br />" + rset.getString("notes") + "</font></td>");
-            } else {
-                out.println("<td rowspan=\"2\"><a href=\"#\" " +
-                    "onClick=\"window.open('saveForm.jsp?action=saveNote.jsp&message_id=" +
-                    rset.getString("message_id") + "', 'Add Note', "+
-                    "'width=275,height=225')\">");
-                out.println("Add Note");
-                out.println("</a></td>");
-            }
-            out.print("</tr><tr>");
-            out.print("<td colspan=\"2\" bgcolor=\"" + cellColor + "\">");
-        }
-        out.print(" " + message + "</td>\n");
+            out.print("</span></a> :\n");
 
-        out.print("</tr>\n");
+            if(to_sn == null || from_sn == null) {
+                out.print("<span style=\"color: " +
+                received_color + "\">");
+                if(showDisplay) {
+                    out.print(rset.getString("recipient_display"));
+                } else {
+                    out.print(rset.getString("recipient_sn"));
+                }
+                out.print("</span>");
+            }
+            out.println("</div>");
+        } else {
+            out.println("<div class=\"msg_container_next\">");
+        }
+
+        prevSender = rset.getString("sender_sn");
+        prevRecipient = rset.getString("recipient_sn");
+
+        out.println("<div class=\"time_initial\">");
+        if(rset.getBoolean("notes")) {
+            pstmt = conn.prepareStatement("select title, notes " +
+            " from adium.message_notes where message_id = ? " +
+            " order by date_added ");
+            
+            pstmt.setInt(1, rset.getInt("message_id"));
+            noteSet = pstmt.executeQuery();
+            
+            out.print("<a class=\"info\" href=\"#\">");
+            out.print("<img src=\"images/note.png\"><span>");
+            
+            while(noteSet.next()) {
+                out.print("<p><b>" + noteSet.getString("title") + "</b><br />" +
+                    noteSet.getString("notes") + "</p>");
+            }
+            out.print("</span></a>");
+            
+        }
+        out.println("<a href=\"#\" title=\"Add Note ...\" " +
+            "onClick=\"window.open('saveForm.jsp?action=saveNote.jsp&message_id=" +
+            rset.getString("message_id") + "', 'Add Note', "+
+            "'width=275,height=225')\">");
+
+        out.print("<img src=\"images/note_add.png\" alt=\"Add Note\"></a>");
+        
+        out.print(rset.getTime("message_date"));
+        out.println("</div>");
+        
+        out.println("<div class=\"message\"><p>");
+        out.println(message);
+        out.println("</p></div>");
+        
+        out.println("</div>");
     }
-%>
-</table>
-<%
+
 }catch(SQLException e) {
-    out.print(e.getMessage());
+    out.print("<spant style=\"color: red\">" + e.getMessage() + "</span>");
 } finally {
     pstmt.close();
     conn.close();
 }
 %>
+                </div>
+                <div class="boxWideBottom"></div>
+            </div>
+            <div id="bottom">
+                <div class="cleanHackBoth"> </div>
+            </div>
+        </div>
+        <div id="footer">&nbsp;</div>
+    </div>
 </body>
 </html>

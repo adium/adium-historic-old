@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
-<html xmlns:xalan="http://xml.apache.org/xslt">
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ascii">
+<meta content="text/html; charset=ascii" http-equiv="Content-Type">
 <title>SQL Logger Quick Install Instructions</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
@@ -55,11 +55,11 @@ sudo make install</pre>
 <h3>Configuring PostgreSQL</h3>
 <p>That's all it takes to compile and install PostgreSQL.  To set it up, you
   need to create a new user for Postgres to run as.  I used NetInfo Manager to
-  do this.  After authenticating, select the "www" user and duplicate it.  A
+  do this.  After authenticating, select the &quot;www&quot; user and duplicate it.  A
   few things need to be changed after duplicating the user.</p>
 <ul>
     <li>Change the short
- username to "postgres", and the long name to "PostgreSQL Server".</li>
+ username to &quot;postgres&quot;, and the long name to &quot;PostgreSQL Server&quot;.</li>
     <li>The uid
   and gid values need to be changed.  It doesn't matter what they're changed
   to, as long as it is unique.  If the uid is less than 500, the user will not
@@ -75,7 +75,7 @@ postgres $] /usr/local/bin/initdb -D /usr/local/pgsql/data</pre></div>
 <p>This initially sets up PostgreSQL.  For the Perl script and JSP stuff to
   work, the file <code>/usr/local/pgsql/data/postgresql.conf</code> needs to
   be edited.  Type <code>pico /usr/local/pgsql/data/postgresql.conf</code> (as
-  postgres or root) and change the line that says <code>enable_tcpip</code> to
+  postgres or root) and change the line that says <code>tcpip_socket</code> to
   true.  If the line starts with #, remove the hash.</p>
 <p>Now Postgres is ready to be started.</p>
 <div class="tutorialcode"><pre>postgres $] /usr/local/bin/pg_ctl -D /usr/local/pgsql/data \
@@ -94,6 +94,17 @@ export PATH CLASSPATH</pre></div>
 psql &lt; adium.sql
 createlang plpgsql
 psql &lt; functions.sql</pre></div>
+<p>At this point, it is helpful to edit the search path of the database.</p>
+<div class="tutorialcode"><pre>jmelloy $] psql
+Welcome to psql 7.4, the PostgreSQL interactive terminal.
+
+Type:  \copyright for distribution terms
+       \h for help with SQL commands
+       \? for help on internal slash commands
+       \g or terminate with semicolon to execute query
+       \q to quit
+
+jmelloy=# alter user <i>username</i> set search_path=adium,public;</pre></div>
 <p>At this point, you're ready to import your logs into the database.  Simply
   use the parser-2.pl script, and it will import all of your adium 2.x
   logfiles.  If you wish to use parser.pl (for 1.x logs) you will need to
@@ -123,12 +134,12 @@ jmelloy $] psql &lt; tsearch2.sql</pre></div>
 &lt;resource-ref&gt;
   &lt;res-ref-name&gt;jdbc/test&lt;/res-ref-name&gt;
   &lt;res-type&gt;javax.sql.DataSource&lt;/res-type&gt;
-  &lt;init-param driver-name="com.caucho.jdbc.mysql.Driver"/&gt;
-  &lt;init-param url="jdbc:mysql_caucho://localhost:3306/test"/&gt;
-  &lt;init-param user=""/&gt;
-  &lt;init-param password=""/&gt;
-  &lt;init-param max-connections="20"/&gt;
-  &lt;init-param max-idle-time="30"/&gt;
+  &lt;init-param driver-name=&quot;com.caucho.jdbc.mysql.Driver&quot;/&gt;
+  &lt;init-param url=&quot;jdbc:mysql_caucho://localhost:3306/test&quot;/&gt;
+  &lt;init-param user=&quot;&quot;/&gt;
+  &lt;init-param password=&quot;&quot;/&gt;
+  &lt;init-param max-connections=&quot;20&quot;/&gt;
+  &lt;init-param max-idle-time=&quot;30&quot;/&gt;
 &lt;/resource-ref&gt;</pre>
     </div>
 <p>This needs to be set up to use PostgreSQL.  If you've installed the
@@ -138,12 +149,12 @@ jmelloy $] psql &lt; tsearch2.sql</pre></div>
  <pre>&lt;resource-ref&gt;
   &lt;res-ref-name&gt;<b>jdbc/postgresql</b>&lt;/res-ref-name&gt;
   &lt;res-type&gt;javax.sql.DataSource&lt;/res-type&gt;
-  &lt;init-param driver-name="<b>org.postgresql.Driver</b>"/&gt;
-  &lt;init-param url="<b>jdbc:postgresql:<i>USERNAME</i></b>"/&gt;
-  &lt;init-param user="<b><i>USERNAME</i></b>"/&gt;
-  &lt;init-param password=""/&gt;
-  &lt;init-param max-connections="20"/&gt;
-  &lt;init-param max-idle-time="30"/&gt;
+  &lt;init-param driver-name=&quot;<b>org.postgresql.Driver</b>&quot;/&gt;
+  &lt;init-param url=&quot;<b>jdbc:postgresql:<i>USERNAME</i></b>&quot;/&gt;
+  &lt;init-param user=&quot;<b><i>USERNAME</i></b>&quot;/&gt;
+  &lt;init-param password=&quot;&quot;/&gt;
+  &lt;init-param max-connections=&quot;20&quot;/&gt;
+  &lt;init-param max-idle-time=&quot;30&quot;/&gt;
 &lt;/resource-ref&gt;</pre>
     </div>
 <p>That's all it takes to get Resin to use the database connection.  The
@@ -173,7 +184,7 @@ jmelloy $] psql &lt; tsearch2.sql</pre></div>
    -
     &lt;database&gt;
       &lt;jndi-name&gt;jdbc/mysql&lt;/jndi-name&gt;
-      &lt;driver type="org.gjt.mm.mysql.Driver"&gt;
+      &lt;driver type=&quot;org.gjt.mm.mysql.Driver&quot;&gt;
         &lt;url&gt;jdbc:mysql://localhost:3306/test&lt;/url&gt;
         &lt;user&gt;&lt;/user&gt;
         &lt;password&gt;&lt;/password&gt;
@@ -193,7 +204,7 @@ jmelloy $] psql &lt; tsearch2.sql</pre></div>
   <b> --&gt;</b>
     &lt;database&gt;
       &lt;jndi-name&gt;jdbc/postgresql&lt;/jndi-name&gt;
-      &lt;driver type="<b>org.postgresql.Driver</b>"&gt;
+      &lt;driver type=&quot;<b>org.postgresql.Driver</b>&quot;&gt;
         &lt;url&gt;<b>jdbc:postgresql:<i>USERNAME</i></b>&lt;/url&gt;
         &lt;user&gt;<b><i>USERNAME</i></b>&lt;/user&gt;
         &lt;password&gt;&lt;/password&gt;
@@ -202,7 +213,7 @@ jmelloy $] psql &lt; tsearch2.sql</pre></div>
       &lt;max-idle-time&gt;30s&lt;/max-idle-time&gt;
     &lt;/database&gt;</pre>
 </div>
-<br><div class="important">Make sure you move the "--&gt;" to above the
+<br><div class="important">Make sure you move the &quot;--&gt;&quot; to above the
   &lt;database&gt;.  Otherwise you will comment out the entire file.</div>
 <p>Next, find the part referring to the document directory.  The document
   directory tells where to look for files.  It needs to be changed to wherever
@@ -225,8 +236,8 @@ jmelloy $] psql &lt; tsearch2.sql</pre></div>
   download the Adium source and compile it yourself, or download the plugin
   from here.  I would recommend compiling from source.  It's not difficult.
   Download the newest Adium source from <a href="http://adium.sourceforge.net" class="offsite">http://adium.sourceforge.net</a>.  Open it up in Project
-  Builder or XCode, switch the active target to "SQL Logger", and hit compile.
-  Then go into the build directory, select "SQL Logger.AdiumPlugin" and drag
+  Builder or XCode, switch the active target to &quot;SQL Logger&quot;, and hit compile.
+  Then go into the build directory, select &quot;SQL Logger.AdiumPlugin&quot; and drag
   it to the <code>~/Library/Application Support/Adium 2.0/Plugins</code>.
   That's it.</p>
 </div>
