@@ -51,17 +51,19 @@
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_ANNOUNCER] == 0){
 	NSDictionary * dict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ANNOUNCER];
+
+	speechEnabled = [[dict objectForKey:KEY_ANNOUNCER_ENABLED] boolValue];
 	speakOutgoing = [[dict objectForKey:KEY_ANNOUNCER_OUTGOING] boolValue];
 	speakIncoming = [[dict objectForKey:KEY_ANNOUNCER_INCOMING] boolValue];
 	speakMessages = speakOutgoing || speakIncoming;
         
-        speakMessageText = [[dict objectForKey:KEY_ANNOUNCER_MESSAGETEXT] boolValue];
+	speakMessageText = [[dict objectForKey:KEY_ANNOUNCER_MESSAGETEXT] boolValue];
 	speakStatus = [[dict objectForKey:KEY_ANNOUNCER_STATUS] boolValue];
 
 	speakTime = [[dict objectForKey:KEY_ANNOUNCER_TIME] boolValue];
 	speakSender = [[dict objectForKey:KEY_ANNOUNCER_SENDER] boolValue];
 
-	BOOL	newValue = (speakMessages || speakStatus);
+	BOOL	newValue = ((speakMessages || speakStatus) && speechEnabled);
 
         if(newValue != observingContent){
             observingContent = newValue;
@@ -78,7 +80,7 @@
 - (void)contentObjectAdded:(NSNotification *)notification
 {
     AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
-
+	
     AIChat		*chat = nil;
     NSString		*message = nil;
     AIAccount		*account = nil;
@@ -87,100 +89,102 @@
     NSCalendarDate	*date = nil;
     NSString		*dateString = nil;
     NSMutableString	*theMessage = nil;
-
-
-    //Message Content
-    if(speakMessages && ([[content type] compare:CONTENT_MESSAGE_TYPE] == 0) ){
-        date = [[content date] dateWithCalendarFormat:nil timeZone:nil];
-        chat	= [notification object];
-        object  = [[chat statusDictionary] objectForKey:@"DisplayName"];
-	if(!object) object = [[chat listObject] UID];
-        account	= [chat account];
-	source	= [content source];
-	message = (NSString *)[[[content message] safeString] string];
-
-
-        if(account && source) { //valid message
-            theMessage = [[NSMutableString alloc] init];
-	    //Determine some basic info about the content
-	    BOOL isOutgoing = [content isOutgoing];
-	    BOOL newParagraph = NO;
-	    if ( (isOutgoing  && speakOutgoing) || (!isOutgoing && speakIncoming) ) {
+	
+	
+	if(speechEnabled) {
+		//Message Content
+		if(speakMessages && ([[content type] compare:CONTENT_MESSAGE_TYPE] == 0) ){
+			date = [[content date] dateWithCalendarFormat:nil timeZone:nil];
+			chat	= [notification object];
+			object  = [[chat statusDictionary] objectForKey:@"DisplayName"];
+			if(!object) object = [[chat listObject] UID];
+			account	= [chat account];
+			source	= [content source];
+			message = (NSString *)[[[content message] safeString] string];
+			
+			
+			if(account && source) { //valid message
+				theMessage = [[NSMutableString alloc] init];
+				//Determine some basic info about the content
+				BOOL isOutgoing = [content isOutgoing];
+				BOOL newParagraph = NO;
+				if ( (isOutgoing  && speakOutgoing) || (!isOutgoing && speakIncoming) ) {
+					
+					if (speakSender && !isOutgoing) {
+						NSString * senderString;
+						//Get the sender string
+						/*  if(isOutgoing){ //speak outgoing message sender names
+						senderString = [[adium accountController] propertyForKey:@"FullName" account:(AIAccount *)source];
+						if(!senderString || [senderString length] == 0) senderString = [(AIAccount *)source accountDescription];
+						}else{ */ //incoming message sender name
+						senderString = [(AIListContact *)source displayName];
+						//		    }
+						
+						if (!lastSenderString || [senderString compare:lastSenderString] != 0) {
+							[theMessage replaceOccurrencesOfString:@" " withString:@" [[emph -]] " options:NSCaseInsensitiveSearch range:NSMakeRange(0, [theMessage length])]; //deemphasize all words after first in sender's name
+							[theMessage appendFormat:@"[[emph +]] %@...",senderString]; //emphasize first word in sender's name
+							[lastSenderString release]; lastSenderString = [senderString retain];
+							newParagraph = YES;
+						}
+					}
+					
+					if (speakTime) {
+						dateString = [NSString stringWithFormat:@"%i %i and %i seconds",[date hourOfDay],[date minuteOfHour],[date secondOfMinute]];
+						[theMessage appendFormat:@" %@...",dateString];
+					}
+					
+					if (newParagraph) {
+						[theMessage appendFormat:@" [[pmod +1; pbas +1]]"];
+					}
+					
+					if (speakMessageText) {
+						[theMessage appendFormat:@" %@",message];
+					}
+				}
+			}
+		}
+		else if(speakStatus && ([[content type] compare:CONTENT_STATUS_TYPE] == 0) ){
+			date = [[content date] dateWithCalendarFormat:nil timeZone:nil];
+			chat	= [notification object];
+			object  = [[chat statusDictionary] objectForKey:@"DisplayName"];
+			if(!object) object = [[chat listObject] UID];
+			account	= [chat account];
+			source	= [content source];
+			message = (NSString *)[content message];
+			
+			if(account && source){
+				theMessage = [[NSMutableString alloc] init];
+				if (speakTime) {
+					dateString = [NSString stringWithFormat:@"%i %i and %i seconds",[date hourOfDay],[date minuteOfHour],[date secondOfMinute]];
+					[theMessage appendFormat:@" %@...",dateString];
+				}
+				[theMessage appendFormat:@" %@",message];
+			}
+		}
 		
-		if (speakSender && !isOutgoing) {
-		    NSString * senderString;
-		    //Get the sender string
-		  /*  if(isOutgoing){ //speak outgoing message sender names
-			senderString = [[adium accountController] propertyForKey:@"FullName" account:(AIAccount *)source];
-			if(!senderString || [senderString length] == 0) senderString = [(AIAccount *)source accountDescription];
-		    }else{ */ //incoming message sender name
-			senderString = [(AIListContact *)source displayName];
-//		    }
-
-		    if (!lastSenderString || [senderString compare:lastSenderString] != 0) {
-                        [theMessage replaceOccurrencesOfString:@" " withString:@" [[emph -]] " options:NSCaseInsensitiveSearch range:NSMakeRange(0, [theMessage length])]; //deemphasize all words after first in sender's name
-                        [theMessage appendFormat:@"[[emph +]] %@...",senderString]; //emphasize first word in sender's name
-                        [lastSenderString release]; lastSenderString = [senderString retain];
-                        newParagraph = YES;
-		    }
+		//Speak the message
+		if(theMessage != nil){
+			AIListObject * otherPerson = [chat listObject];
+			if (otherPerson) { //one-on-one chat; check for and use custom settings
+				NSString	*voice = nil;
+				NSNumber	*pitchNumber = nil;	float pitch = 0;
+				NSNumber	*rateNumber = nil;	int rate = 0;
+				voice = [otherPerson preferenceForKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER];
+				
+				pitchNumber = [otherPerson preferenceForKey:PITCH group:PREF_GROUP_ANNOUNCER];
+				if(pitchNumber)
+					pitch = [pitchNumber floatValue];
+				
+				rateNumber = [otherPerson preferenceForKey:RATE group:PREF_GROUP_ANNOUNCER];
+				if(rateNumber)
+					rate = [rateNumber intValue];
+				
+				[[adium soundController] speakText:theMessage withVoice:voice andPitch:pitch andRate:rate];
+			} else { //must be in a chat room - just speak the message
+				[[adium soundController] speakText:theMessage];
+			}
 		}
-
-		if (speakTime) {
-		    dateString = [NSString stringWithFormat:@"%i %i and %i seconds",[date hourOfDay],[date minuteOfHour],[date secondOfMinute]];
-		    [theMessage appendFormat:@" %@...",dateString];
-		}
-
-		if (newParagraph) {
-		    [theMessage appendFormat:@" [[pmod +1; pbas +1]]"];
-		}
-                
-                if (speakMessageText) {
-                    [theMessage appendFormat:@" %@",message];
-                }
-	    }
 	}
-    }
-    else if(speakStatus && ([[content type] compare:CONTENT_STATUS_TYPE] == 0) ){
-        date = [[content date] dateWithCalendarFormat:nil timeZone:nil];
-	chat	= [notification object];
-        object  = [[chat statusDictionary] objectForKey:@"DisplayName"];
-	if(!object) object = [[chat listObject] UID];
-	account	= [chat account];
-	source	= [content source];
-        message = (NSString *)[content message];
-
-        if(account && source){
-            theMessage = [[NSMutableString alloc] init];
-	    if (speakTime) {
-		dateString = [NSString stringWithFormat:@"%i %i and %i seconds",[date hourOfDay],[date minuteOfHour],[date secondOfMinute]];
-		[theMessage appendFormat:@" %@...",dateString];
-	    }
-	    [theMessage appendFormat:@" %@",message];
-	}
-    }
-
-    //Speak the message
-    if(theMessage != nil){
-	AIListObject * otherPerson = [chat listObject];
-	if (otherPerson) { //one-on-one chat; check for and use custom settings
-	    NSString	*voice = nil;
-	    NSNumber	*pitchNumber = nil;	float pitch = 0;
-	    NSNumber	*rateNumber = nil;	int rate = 0;
-	    voice = [otherPerson preferenceForKey:VOICE_STRING group:PREF_GROUP_ANNOUNCER];
-	    
-	    pitchNumber = [otherPerson preferenceForKey:PITCH group:PREF_GROUP_ANNOUNCER];
-	    if(pitchNumber)
-		pitch = [pitchNumber floatValue];
-
-	    rateNumber = [otherPerson preferenceForKey:RATE group:PREF_GROUP_ANNOUNCER];
-	    if(rateNumber)
-		rate = [rateNumber intValue];
-
-	    [[adium soundController] speakText:theMessage withVoice:voice andPitch:pitch andRate:rate];
-	} else { //must be in a chat room - just speak the message
-	[[adium soundController] speakText:theMessage];
-	}
-    }
 }
 
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
