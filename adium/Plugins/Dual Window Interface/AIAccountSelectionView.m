@@ -117,7 +117,9 @@
 		
 		//Select our current account
 		selectedIndex = [popUp_accounts indexOfItemWithRepresentedObject:[delegate account]];
-		[popUp_accounts selectItemAtIndex:selectedIndex];
+		if (selectedIndex != NSNotFound) {
+			[popUp_accounts selectItemAtIndex:selectedIndex];
+		}
 		[self updateMenu];
 	}
 }

@@ -112,6 +112,7 @@
     if(/*[keys containsObject:@"Tab Color"] ||*/ [keys containsObject:@"Tab Text Color"]){
         //This should really be optimized and cleaned up.  Right now we're assuming the tab view's delegate is our custom tabs, and telling them to display - obviously not the best solution, but good enough for now.
         //[self setColor:[[listObject displayArrayForKey:@"Tab Color"] averageColor]];
+
         [[[self tabView] delegate] setNeedsDisplay:YES];
     }
 

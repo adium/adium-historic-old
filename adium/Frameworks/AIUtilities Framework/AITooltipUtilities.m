@@ -31,71 +31,107 @@
 @implementation AITooltipUtilities
 
 static	NSPanel                 *tooltipWindow;
-static	NSTextView		*textView_tooltipTitle;
-static	NSTextView		*textView_tooltipBody;
-static  ESStaticView            *view_tooltipImage;
-static	NSAttributedString      *tooltipBody;
-static	NSAttributedString      *tooltipTitle;
-static  NSImage                 *tooltipImage;
+static  NSWindow				*onWindow = nil;
+static	NSTextView				*textView_tooltipTitle = nil;
+static	NSTextView				*textView_tooltipBody = nil;
+static  ESStaticView            *view_tooltipImage = nil;
+static	NSAttributedString      *tooltipBody = nil;
+static	NSAttributedString      *tooltipTitle = nil;
+static  NSImage                 *tooltipImage = nil;
 static  NSSize                  imageSize;
 static  BOOL                    imageOnRight;
-static	NSPoint			tooltipPoint;
+static	NSPoint					tooltipPoint;
 static	AITooltipOrientation	tooltipOrientation;
 
 //Tooltips
 + (void)showTooltipWithString:(NSString *)inString onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation
 {
-    [self showTooltipWithAttributedString:[[[NSAttributedString alloc] initWithString:inString] autorelease] onWindow:inWindow atPoint:inPoint orientation:inOrientation];
+    [self showTooltipWithAttributedString:[[[NSAttributedString alloc] initWithString:inString] autorelease]
+								 onWindow:inWindow
+								  atPoint:inPoint
+							  orientation:inOrientation];
 }
 
 + (void)showTooltipWithAttributedString:(NSAttributedString *)inString onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation
 {
-    [self showTooltipWithTitle:nil body:inString image:nil imageOnRight:YES onWindow:inWindow atPoint:inPoint orientation:inOrientation];
+    [self showTooltipWithTitle:nil 
+						  body:inString 
+						 image:nil
+				  imageOnRight:YES 
+					  onWindow:inWindow
+					   atPoint:inPoint 
+				   orientation:inOrientation];
 }
 
 + (void)showTooltipWithTitle:(NSAttributedString *)inTitle body:(NSAttributedString *)inBody image:(NSImage *)inImage onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation
 {
-    [self showTooltipWithTitle:inTitle body:inBody image:inImage imageOnRight:YES onWindow:inWindow atPoint:inPoint orientation:inOrientation];    
+    [self showTooltipWithTitle:inTitle
+						  body:inBody 
+						 image:inImage 
+				  imageOnRight:YES 
+					  onWindow:inWindow 
+					   atPoint:inPoint 
+				   orientation:inOrientation];    
 }
 
 + (void)showTooltipWithTitle:(NSAttributedString *)inTitle body:(NSAttributedString *)inBody image:(NSImage *)inImage imageOnRight:(BOOL)inImageOnRight onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation
 {    
-   if((inTitle && [inTitle length]) || (inBody && [inBody length]) || inImage){ //If passed something to display
-       BOOL	newLocation = (!NSEqualPoints(inPoint,tooltipPoint) || tooltipOrientation != inOrientation);
-       BOOL     needToCreateTooltip = (!tooltipTitle && !tooltipBody && !tooltipImage);
-       
+	if((inTitle && [inTitle length]) || (inBody && [inBody length]) || inImage){ //If passed something to display
+		BOOL		newLocation = (!NSEqualPoints(inPoint,tooltipPoint) || tooltipOrientation != inOrientation);
+		BOOL		needToCreateTooltip = (!tooltipTitle && !tooltipBody && !tooltipImage);
+		
         //Update point and orientation
         tooltipPoint = inPoint;
         tooltipOrientation = inOrientation;
-        
+		
+        onWindow = inWindow;
+		
         if(needToCreateTooltip){
             [self _createTooltip]; //make the window
         }
         
-        if (needToCreateTooltip || ![inBody isEqualToAttributedString:tooltipBody] || ![inTitle isEqualToAttributedString:tooltipTitle] || !(inImage==tooltipImage)) { //we don't exist or something changed
-            if (tooltipTitle) [tooltipTitle release];
-            if (inTitle) {
+        if (needToCreateTooltip ||
+			![inBody isEqualToAttributedString:tooltipBody] || 
+			![inTitle isEqualToAttributedString:tooltipTitle] || 
+			!(inImage==tooltipImage)) { //we don't exist or something changed
+			
+			NSTextStorage *textStorage = [textView_tooltipTitle textStorage];
+			
+            if (tooltipTitle) {
+				[tooltipTitle release]; tooltipTitle = nil;
+			}
+            
+			if (inTitle) {
                 tooltipTitle = [inTitle retain];
-                [[textView_tooltipTitle textStorage] replaceCharactersInRange:NSMakeRange(0,[[textView_tooltipTitle textStorage] length]) withAttributedString:tooltipTitle];
+                [textStorage replaceCharactersInRange:NSMakeRange(0,[[textView_tooltipTitle textStorage] length]) 
+														 withAttributedString:tooltipTitle];
             } else {
                 tooltipTitle = nil;
-                [[textView_tooltipTitle textStorage] deleteCharactersInRange:NSMakeRange(0,[[textView_tooltipTitle textStorage] length])];            
+                [textStorage deleteCharactersInRange:NSMakeRange(0,[[textView_tooltipTitle textStorage] length])];            
             }
             
-            if (tooltipBody) [tooltipBody release]; 
+            if (tooltipBody) {
+				[tooltipBody release]; tooltipBody = nil;
+			}
+			
             if (inBody) {
                 tooltipBody = [inBody retain];
-                [[textView_tooltipBody textStorage] replaceCharactersInRange:NSMakeRange(0,[[textView_tooltipBody textStorage] length]) withAttributedString:tooltipBody];
+                [textStorage replaceCharactersInRange:NSMakeRange(0,[[textView_tooltipBody textStorage] length]) 
+														withAttributedString:tooltipBody];
             } else {
                 tooltipBody = [inBody retain];
-                [[textView_tooltipBody textStorage] deleteCharactersInRange:NSMakeRange(0,[[textView_tooltipBody textStorage] length])];
+                [textStorage deleteCharactersInRange:NSMakeRange(0,[[textView_tooltipBody textStorage] length])];
             }
             
-            if (tooltipImage) [tooltipImage release];
+            if (tooltipImage) {
+				[tooltipImage release]; tooltipImage = nil;
+			}
+			
             tooltipImage = [inImage retain];
             imageOnRight = inImageOnRight;
             [view_tooltipImage setImage:tooltipImage];
-            if (tooltipImage) {
+            
+			if (tooltipImage) {
                 imageSize = NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION);
             } else {
                 imageSize = NSMakeSize(0,0);
@@ -117,7 +153,10 @@ static	AITooltipOrientation	tooltipOrientation;
 + (void)_createTooltip
 {
     //Create the window
-    tooltipWindow = [[NSPanel alloc] initWithContentRect:NSMakeRect(0,0,0,0) styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
+    tooltipWindow = [[NSPanel alloc] initWithContentRect:NSMakeRect(0,0,0,0) 
+											   styleMask:NSBorderlessWindowMask 
+												 backing:NSBackingStoreBuffered 
+												   defer:NO];
     [tooltipWindow setLevel:NSStatusWindowLevel]; //Just using the floating panel level is insufficient because the contact list can float, too
     [tooltipWindow setHidesOnDeactivate:NO];
     [tooltipWindow setIgnoresMouseEvents:YES];
@@ -276,8 +315,14 @@ static	AITooltipOrientation	tooltipOrientation;
 
 + (NSPoint)_tooltipFrameOriginForSize:(NSSize)tooltipSize;
 {
-    NSRect	screenRect = [[NSScreen mainScreen] visibleFrame]; //use tooltip/window screen, not main screen!
-    
+    NSRect	screenRect;
+	
+	if (onWindow) {
+		screenRect = [[onWindow screen] visibleFrame];
+	} else {
+		screenRect = [[NSScreen mainScreen] visibleFrame];
+	}
+	
     NSPoint      tooltipOrigin;
     
     //Adjust the tooltip so it fits completely on the screen
@@ -303,14 +348,14 @@ static	AITooltipOrientation	tooltipOrientation;
         }else{
             tooltipOrigin.x = tooltipPoint.x + 10;
         }
-
+		
         if(tooltipPoint.y < (screenRect.origin.y + tooltipSize.height)){
             tooltipOrigin.y = tooltipPoint.y + 2;
         }else{
             tooltipOrigin.y = tooltipPoint.y - 2 - tooltipSize.height;
         }
-        
-        if (tooltipOrigin.y + tooltipSize.height > screenRect.size.height)
+
+        if (tooltipOrigin.y + tooltipSize.height > (screenRect.origin.y + screenRect.size.height))
             tooltipOrigin.y = screenRect.size.height - tooltipSize.height;
     }
     

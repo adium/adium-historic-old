@@ -67,10 +67,20 @@
 {
     //Draw
     if (image) {
-        if (NSContainsRect(rect,sourceRect))
-            [image drawInRect:NSInsetRect(rect,(rect.size.width-sourceRect.size.width)/2,(rect.size.height-sourceRect.size.height)/2) fromRect:sourceRect operation:NSCompositeSourceOver fraction:1.0];
-        else
+		
+		//Works in the AIFlexibleTableImageCell but not here... I have no idea why.
+	//	[image setFlipped:![image isFlipped]];
+		
+        if (NSContainsRect(rect,sourceRect)) {
+            [image drawInRect:NSInsetRect(rect,(rect.size.width-sourceRect.size.width)/2,(rect.size.height-sourceRect.size.height)/2)
+					 fromRect:sourceRect
+					operation:NSCompositeSourceOver 
+					 fraction:1.0];
+        } else {
             [image drawInRect:rect fromRect:sourceRect operation:NSCompositeSourceOver fraction:1.0];
+		}
+	//	[image setFlipped:![image isFlipped]];
+		
     } else {
         //Clear
         [[NSColor clearColor] set];

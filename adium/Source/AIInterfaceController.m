@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.52 2004/02/02 07:23:10 ramoth4 Exp $
+// $Id: AIInterfaceController.m,v 1.53 2004/02/14 19:12:59 evands Exp $
 
 #import "AIInterfaceController.h"
 
@@ -215,12 +215,18 @@
 }
 
 //list object tooltips
-- (void)showTooltipForListObject:(AIListObject *)object atPoint:(NSPoint)point
+- (void)showTooltipForListObject:(AIListObject *)object atScreenPoint:(NSPoint)point onWindow:(NSWindow *)inWindow 
 {
     if(object){
         if(object == tooltipListObject){ //If we already have this tooltip open
                                          //Move the existing tooltip
-            [AITooltipUtilities showTooltipWithTitle:tooltipTitle body:tooltipBody image:tooltipImage imageOnRight:DISPLAY_IMAGE_ON_RIGHT onWindow:nil atPoint:point orientation:TooltipBelow];
+            [AITooltipUtilities showTooltipWithTitle:tooltipTitle
+												body:tooltipBody
+											   image:tooltipImage 
+										imageOnRight:DISPLAY_IMAGE_ON_RIGHT 
+											onWindow:inWindow
+											 atPoint:point 
+										 orientation:TooltipBelow];
             
         }else{ //This is a new tooltip
             NSArray                     *tabArray;
@@ -292,7 +298,7 @@
                                                 body:tooltipBody 
                                                image:tooltipImage
                                         imageOnRight:DISPLAY_IMAGE_ON_RIGHT
-                                            onWindow:nil
+                                            onWindow:inWindow
                                              atPoint:point 
                                          orientation:TooltipBelow];
         }
