@@ -102,8 +102,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 
 - (NSString *)connectionStringForStep:(int)step
 {
-	switch (step)
-	{
+	switch (step) {
 		case 0:
 			return AILocalizedString(@"Connecting",nil);
 			break;

@@ -169,7 +169,6 @@ static id<AdiumGaimDO> accountLookup(GaimAccount *acct)
 static GaimAccount* accountLookupFromAdiumAccount(id adiumAccount)
 {
 	return [(CBGaimAccount *)adiumAccount gaimAccount];
-//	return [[accountDict objectForKey:[adiumAccount uniqueObjectID]] pointerValue];
 }
 
 static AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
@@ -204,7 +203,7 @@ static AIChat* chatLookupFromConv(GaimConversation *conv)
 		
 		chat = [accountLookup(conv->account) chatWithName:name];
 
-		[chatDict setObject:[NSValue valueWithPointer:conv] forKey:chat];
+		[chatDict setObject:[NSValue valueWithPointer:conv] forKey:[chat uniqueChatID]];
 		conv->ui_data = [chat retain];
 	}
 
@@ -256,7 +255,7 @@ static AIChat* imChatLookupFromConv(GaimConversation *conv)
 		chat = [accountLookup(conv->account) chatWithContact:sourceContact];
 		
 		//Associate the GaimConversation with the AIChat
-		[chatDict setObject:[NSValue valueWithPointer:conv] forKey:[[chat listObject] uniqueObjectID]];
+		[chatDict setObject:[NSValue valueWithPointer:conv] forKey:[chat uniqueChatID]];
 		conv->ui_data = [chat retain];
 	}
 
@@ -265,28 +264,68 @@ static AIChat* imChatLookupFromConv(GaimConversation *conv)
 
 static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 {
-	GaimConversation *conv;
+	GaimConversation	*conv = [[chatDict objectForKey:[chat uniqueChatID]] pointerValue];
+	GaimAccount			*account = accountLookupFromAdiumAccount(adiumAccount);
 	
-	AIListObject	*listObject = [chat listObject];
-	if (listObject) {
-		conv = [[chatDict objectForKey:[[chat listObject] uniqueObjectID]] pointerValue];
-		if (!conv && adiumAccount){
+	if (!conv && adiumAccount){
+		AIListObject *listObject = [chat listObject];
+		if (listObject){
+			const char			*destination = [[listObject UID] UTF8String];
+			conv = gaim_conversation_new(GAIM_CONV_IM,account, destination);
+			
+			//associate the AIChat with the gaim conv
+			imChatLookupFromConv(conv);
+		}else{
 			
 #warning XXX
-			//***NOTE: need to check if the chat is an IM or a CHAT and handle accordingly
-			if (listObject){
-				const char			*destination = [[listObject UID] UTF8String];
-				conv = gaim_conversation_new(GAIM_CONV_IM, accountLookupFromAdiumAccount(adiumAccount), destination);
+			const char *name = [[chat name] UTF8String];
+			
+			//Look for an existing gaimChat (for now, it had better exist already which means trouble if we get here!)
+			GaimChat *gaimChat = gaim_blist_find_chat (account, name);
+			if (!gaimChat){
+				NSLog(@"gotta create a chat");
+				GHashTable *components;
+				GList *tmp;
+				GaimGroup *group;
+				const char *group_name = _("Chats");
 				
-				//associate the AIChat with the gaim conv
-				imChatLookupFromConv(conv);
-				//				conv->ui_data = [chat retain];
-				//				[chatDict setObject:[NSValue valueWithPointer:conv] forKey:[[chat listObject] uniqueObjectID]];
-			}else{
 				
+				//The below is not even close to right.
+				components = g_hash_table_new_full(g_str_hash, g_str_equal,
+												   g_free, g_free);
+				
+				/*
+				 g_hash_table_replace(components,
+									  g_strdup(g_object_get_data(tmp->data, "identifier")),
+									  g_strdup_printf("%d",
+													  gtk_spin_button_get_value_as_int(tmp->data)));
+				 */
+				
+				gaimChat = gaim_chat_new(account,
+										 name,
+										 components);
+				
+				if ((group = gaim_find_group(group_name)) == NULL)
+				{
+					group = gaim_group_new(group_name);
+					gaim_blist_add_group(group, NULL);
+				}
+				
+				if (gaimChat != NULL)
+				{
+					gaim_blist_add_chat(gaimChat, group, NULL);
+					gaim_blist_save();
+				}
+				
+				//Associate our chat with the libgaim conversation
+				NSLog(@"associating the gaimconv");
+				GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_CHAT, account, name);
+				
+				chatLookupFromConv(conv);
 			}
 		}
 	}
+	
 	return conv;
 }
 
@@ -513,7 +552,7 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 			}
 			case GAIM_BUDDY_ICON: {
 				GaimBuddyIcon *buddyIcon = gaim_buddy_get_icon(buddy);
-
+				
 				updateSelector = @selector(updateIcon:withData:);
 				data = [NSData dataWithBytes:gaim_buddy_icon_get_data(buddyIcon, &(buddyIcon->len))
 									  length:buddyIcon->len];
@@ -527,10 +566,10 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 										   withObject:data];
 		}else{
 			[accountLookup(buddy->account) updateContact:theContact
-															forEvent:event];
-		}
+												forEvent:event];
 		}
 	}
+}
 
 - (void)configureSignals
 {
@@ -1544,12 +1583,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 {
 	GaimConversation *conv = convLookupFromChat(chat,nil);
 	
-	AIListObject *listObject = [chat listObject];
-	if (listObject){
-		[chatDict removeObjectForKey:[listObject uniqueObjectID]];
-	}else{
-		//Multiuser chat.  Bleh.
-	}
+	[chatDict removeObjectForKey:[chat uniqueChatID]];
 	
 	if (conv){
 		AIChat *uiDataChat = conv->ui_data;
