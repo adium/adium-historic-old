@@ -332,8 +332,7 @@ static BOOL didInitOscar = NO;
 {
 	//Check against supported property keys so this isn't done for ICQ
 	if([[self supportedPropertyKeys] containsObject:@"AvailableMessage"] &&
-	   (!strcmp(gaimStatusType, "Available"))){
-	
+	   (strcmp(gaimStatusType, "Available"))){
 		[[self gaimThread] OSCARSetAvailableMessageTo:statusMessage onAccount:self];
 
 		//Now set invisibility
