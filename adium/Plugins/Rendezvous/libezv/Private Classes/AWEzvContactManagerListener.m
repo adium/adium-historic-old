@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerListener.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerListener.m,v 1.2 2004/06/04 07:21:40 proton Exp $
+ * CVS tag:     $Id: AWEzvContactManagerListener.m,v 1.3 2004/06/16 08:20:31 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -134,8 +134,22 @@
 		       withString:@"_"
 		       options:0
 		       range:NSMakeRange(0, [contactIdentifier length])];
-		       
+    
     contact = [contacts objectForKey:contactIdentifier];
+    /* Discover the appropriate record if required */
+    if ([contact rendezvous] == nil) {
+	NSEnumerator *enumerator = [contacts objectEnumerator];
+    
+	[contactIdentifier replaceOccurrencesOfString:@"_"
+			   withString:@"."
+			   options:0
+			   range:NSMakeRange(0, [contactIdentifier length])];
+	
+	while ((contact = [enumerator nextObject])) {
+	    if ([contact rendezvous] != nil && [[contact ipaddr] compare:contactIdentifier])
+		break;
+	}
+    }
     
     if (contact == nil) {
 	AWEzvLog(@"Incoming connection from non-existent contact: %@", contactIdentifier);

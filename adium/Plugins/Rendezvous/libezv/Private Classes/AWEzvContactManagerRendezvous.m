@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerRendezvous.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.4 2004/06/15 16:08:30 proton Exp $
+ * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.5 2004/06/16 08:20:31 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -356,7 +356,21 @@ void av_resolve_reply (struct sockaddr	*interface,
 
     plist = [NSPropertyListSerialization dataFromPropertyList:JPEGData
     				    format:NSPropertyListXMLFormat_v1_0
-    				    errorDescription:&error];
+    				    errorDescription:&error];    
+    if (plist != nil) {
+	if (imageRef == NULL) {
+	    imageRef = DNSServiceRegistrationAddRecord(dnsRef, T_NULL, [plist length], [plist bytes], 10);
+	} else {
+	    DNSServiceRegistrationUpdateRecord(dnsRef, imageRef, [plist length], [plist bytes], 10);
+	}
+    }
+    
+    if (avImageRef == NULL) {
+    	avImageRef = DNSServiceRegistrationAddRecord(avDnsRef, T_NULL, [JPEGData length], [JPEGData bytes], 10);
+    } else {
+    	DNSServiceRegistrationUpdateRecord(avDnsRef, avImageRef, [JPEGData length], [JPEGData bytes], 10);
+    }
+    
     SHA1Init(&ctx);
     SHA1Update(&ctx, (unsigned char*)[JPEGData bytes], [JPEGData length]);
     SHA1Final(digest, &ctx);
@@ -367,16 +381,9 @@ void av_resolve_reply (struct sockaddr	*interface,
     }
     */
     
-    if (plist != nil) {
-	if (imageRef == NULL) {
-	    imageRef = DNSServiceRegistrationAddRecord(dnsRef, T_NULL, [plist length], [plist bytes], 10);
-	} else {
-	    DNSServiceRegistrationUpdateRecord(dnsRef, imageRef, [plist length], [plist bytes], 10);
-	}
-	[userAnnounceData setField:@"phsh" content:[NSData dataWithBytes:digest length:20]];
-	/* announce to network */
-	[self updateAnnounceInfo];
-    }
+    [userAnnounceData setField:@"phsh" content:[NSData dataWithBytes:digest length:20]];
+    /* announce to network */
+    [self updateAnnounceInfo];
 }
 
 #pragma mark DNS Decoders
@@ -687,7 +694,8 @@ NSData *decode_dns(char* buffer, int len )
 
 - (void)updateContact:(AWEzvContact *)contact
 	withData:(AWEzvRendezvousData *)rendezvousData
-	withAddress:(struct sockaddr *) address {
+	withAddress:(struct sockaddr *) address
+	av:(BOOL)av {
     NSString		*nick = nil;			/* nickname for contact */
     NSMutableString	*mutableNick = nil;		/* nickname we can modify */
     NSString		*ipAddr;			/* ip address of contact */
@@ -701,10 +709,11 @@ NSData *decode_dns(char* buffer, int len )
     
     /* check that contact exists in dictionary */
     if ([contacts objectForKey:[contact uniqueID]] == nil) {
+	NSString *uniqueID = [contact uniqueID];
 	/* So they haven't been seen before... not to worry we'll add them */
 	if ([contact uniqueID] != nil) {
 	    contact = [[AWEzvContact alloc] init];
-	    [contact setUniqueID:[contact uniqueID]];
+	    [contact setUniqueID:uniqueID];
 	    [contact setManager:self];
 	    /* save contact in dictionary */
 	    [contacts setObject:contact forKey:[contact uniqueID]];
@@ -767,39 +776,45 @@ NSData *decode_dns(char* buffer, int len )
     if (idleTime)
        [contact setIdleSinceDate: [NSDate dateWithTimeIntervalSinceReferenceDate:[idleTime doubleValue]]];
     
-    #if 0
-    dnsname = [NSString stringWithFormat:@"%@%s", [contact uniqueID], "._ichat._tcp.local."];
-    len = res_query([dnsname UTF8String], C_IN, T_NULL, buf, PACKETSZ*10);
-    if (len > 0) {
-	NSPropertyListFormat    format;     /* plist format */
-	NSString		*error;     /* error from conversion of plist */
-	id			extracted;  /* extracted data from plist */
-	NSData			*data;      /* DNS packet data */
-	
-	data = decode_dns(buf, len);
-	if (data != nil) {	
-	    format = NSPropertyListXMLFormat_v1_0;
-	    extracted = [NSPropertyListSerialization
-			    propertyListFromData: data
-			    mutabilityOption:NSPropertyListImmutable
-			    format:&format
-			    errorDescription:&error];
-
-	    /* check if there was an error in extraction */
-	    if (extracted == nil) {
-		AWEzvLog(@"Buddy icon: Unable to extract XML into plist");
-	    } else {
+    if ([rendezvousData getField:@"phsh"] != nil) {
+	dnsname = [NSString stringWithFormat:@"%@%s", [contact uniqueID], (av ? "._presence._tcp.local." : "._ichat._tcp.local.")];
+	len = res_query([dnsname UTF8String], C_IN, T_NULL, buf, PACKETSZ*10);
+	if (len > 0) {
+	    NSPropertyListFormat    format;     /* plist format */
+	    NSString		    *error;     /* error from conversion of plist */
+	    id			    extracted;  /* extracted data from plist */
+	    NSData		    *data;      /* DNS packet data */
 	    
-		/* make sure it's an NSData, or reponds to getBytes:range: */
-		if (![extracted respondsToSelector:@selector(getBytes:range:)]) {
-		    AWEzvLog(@"Buddy icon: Extracted object from XML is not an NSData");
+	    data = decode_dns(buf, len);
+	    if (data != nil) {
+		if (av) {
+		    /* parse raw Data */
+		    [contact setContactImage:[[[NSImage alloc] initWithData:data] autorelease]];
 		} else {
-		    [contact setContactImage:[[[NSImage alloc] initWithData:extracted] autorelease]];
+		    /* plist data */
+		    format = NSPropertyListXMLFormat_v1_0;
+		    extracted = [NSPropertyListSerialization
+				    propertyListFromData: data
+				    mutabilityOption:NSPropertyListImmutable
+				    format:&format
+				    errorDescription:&error];
+
+		    /* check if there was an error in extraction */
+		    if (extracted == nil) {
+			AWEzvLog(@"Buddy icon: Unable to extract XML into plist");
+		    } else {
+		    
+			/* make sure it's an NSData, or reponds to getBytes:range: */
+			if (![extracted respondsToSelector:@selector(getBytes:range:)]) {
+			    AWEzvLog(@"Buddy icon: Extracted object from XML is not an NSData");
+			} else {
+			    [contact setContactImage:[[[NSImage alloc] initWithData:extracted] autorelease]];
+			}
+		    }
 		}
 	    }
 	}
     }
-    #endif
 
     /* now set the port */
     if ([rendezvousData getField:@"port.p2pj"] == nil) {
@@ -903,7 +918,7 @@ void resolve_reply (struct sockaddr	*interface,
 		    
     AWEzvContact	*contact = context;
     AWEzvContactManager *self = [contact manager];
-    [self updateContact:contact withData:[[AWEzvRendezvousData alloc] initWithPlist:[NSString stringWithCString:txtRecord]] withAddress:address];
+    [self updateContact:contact withData:[[AWEzvRendezvousData alloc] initWithPlist:[NSString stringWithCString:txtRecord]] withAddress:address av:NO];
 }
 
 /* when we receive a reply to an AV resolve request */
@@ -915,5 +930,5 @@ void av_resolve_reply (struct sockaddr	*interface,
     AWEzvContact	*contact = context;
     AWEzvContactManager *self = [contact manager];
     
-    [self updateContact:contact withData:[[AWEzvRendezvousData alloc] initWithAVTxt:[NSString stringWithCString:txtRecord]] withAddress:address];
+    [self updateContact:contact withData:[[AWEzvRendezvousData alloc] initWithAVTxt:[NSString stringWithCString:txtRecord]] withAddress:address av:YES];
 }
