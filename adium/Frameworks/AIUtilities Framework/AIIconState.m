@@ -15,36 +15,37 @@
 
 #import "AIIconState.h"
 
+@interface AIIconState (PRIVATE)
+- (void)_init;
+@end
 
 @implementation AIIconState
 
 //
 - (id)initWithImages:(NSArray *)inImages delay:(float)inDelay looping:(BOOL)inLooping overlay:(BOOL)inOverlay
 {
+    //init
     [super init];
+    [self _init];
 
-    image = nil;
-
+    //
     animated = YES;
-    imageArray = [inImages retain];
+    imageArray = [inImages mutableCopy];
+    numberOfFrames = [imageArray count];
     delay = inDelay;
     looping = inLooping;
     overlay = inOverlay;
-    currentFrame = 0;
         
     return(self);
 }
 
 - (id)initWithImage:(NSImage *)inImage overlay:(BOOL)inOverlay
 {
+    //init
     [super init];
+    [self _init];
 
-    imageArray = nil;
-    delay = 0;
-    looping = NO;
-    currentFrame = 0;
-    
-    animated = NO;
+    //
     image = [inImage retain];
     overlay = inOverlay;
 
@@ -52,56 +53,147 @@
 }
 
 //Create a new icon state by combining/compositing others
-- (id)initByCompositingStates:(NSArray *)iconStates
+- (id)initByCompositingStates:(NSArray *)inIconStates
 {
     NSEnumerator	*enumerator;
     AIIconState		*animatingState;
-    AIIconState		*baseState;
+    AIIconState		*baseIconState;
 
-    //Common setup
+    //init
     [super init];
-    imageArray = nil;
-    image = nil;
-    looping = NO;
-    overlay = NO;
-    currentFrame = 0;
-
+    [self _init];
+    
     //Setup the base image (The image of the top-most non-overlay state)
-    enumerator = [iconStates reverseObjectEnumerator];
-    while((baseState = [enumerator nextObject]) && [baseState overlay]);
-    if(baseState){ //Skip if no base-image
-        //Setup the animation (Determined by the top-most animating state)
-        enumerator = [iconStates reverseObjectEnumerator];
+    enumerator = [inIconStates reverseObjectEnumerator];
+    while((baseIconState = [enumerator nextObject]) && [baseIconState overlay]);
+
+    //Abort if no base state image is found
+    if(!baseIconState) return(self);
+
+    //Determine the top-most animating state
+    enumerator = [inIconStates reverseObjectEnumerator];
+    while((animatingState = [enumerator nextObject]) && (![animatingState animated] || [animatingState overlay]));
+
+    //If one wasn't found, try again, but this time accept overlays as valid 'animating' states
+    if(!animatingState){
+        enumerator = [inIconStates reverseObjectEnumerator];
         while((animatingState = [enumerator nextObject]) && ![animatingState animated]);
+    }
 
-        //Composite the images
-        if(!animatingState){ //Static icon
-                             //init
-            delay = 0;
-            animated = NO;
+    
+    if(!animatingState){ //Static icon
+        //init
+        delay = 0;
+        animated = NO;
+        image = [[self _compositeStates:inIconStates withBaseState:baseIconState animatingState:animatingState forFrame:0] retain];
 
-            //Create the image
-            image = [[self _compositeStates:iconStates withBaseState:baseState animatingState:animatingState forFrame:0] retain];
+    }else{ //Animating icon
+        //init
+        animated = YES;
+        delay = [animatingState animationDelay];
+        numberOfFrames = [[animatingState imageArray] count];
+        imageArray = [[NSMutableArray alloc] init];
 
-        }else{ //Animating icon
-            NSMutableArray	*mutableImageArray = [[NSMutableArray alloc] init];
-            int			frames = [[animatingState imageArray] count];
-            int			drawFrame;
+        //Hold onto some of this info so we can render the additional images later
+        iconRendering_states = [inIconStates retain];
+        iconRendering_baseState = [baseIconState retain];
+        iconRendering_animationState = [animatingState retain];
 
-            //init
-            delay = [animatingState animationDelay];
-            animated = YES;
-
-            //Create the images
-            for(drawFrame = 0; drawFrame < frames; drawFrame++){ //Create an image for each stage in animation
-                [mutableImageArray addObject:[self _compositeStates:iconStates withBaseState:baseState animatingState:animatingState forFrame:drawFrame]];
-            }
-            imageArray = mutableImageArray;
-
-        }
+        //Render the first image
+        image = [[self _compositeStates:inIconStates withBaseState:baseIconState animatingState:animatingState forFrame:0] retain];
+        [imageArray addObject:image];
     }
 
     return(self);
+}
+
+//Generic init
+- (void)_init
+{
+    image = nil;
+    animated = NO;
+    imageArray = nil;
+
+    iconRendering_states = nil;
+    iconRendering_baseState = nil;
+    iconRendering_animationState = nil;
+    
+    delay = 1.0;
+    looping = NO;
+    overlay = NO;
+    currentFrame = 0;
+    numberOfFrames = 0;
+}
+
+- (void)dealloc
+{
+    [image release];
+    [imageArray release];
+    [iconRendering_states release];
+    [iconRendering_baseState release];
+    [iconRendering_animationState release];
+    
+    [super dealloc];
+}
+
+- (int)currentFrame
+{
+    return(currentFrame);
+}
+
+- (void)nextFrame
+{
+    if(animated){
+        //Next frame
+        currentFrame++;
+        if(currentFrame >= numberOfFrames){
+            currentFrame = 0;
+        }
+
+        //Get the new image (compositing if necessary)
+        if(currentFrame >= [imageArray count] && iconRendering_states && iconRendering_baseState && iconRendering_animationState){
+            [imageArray addObject:[self _compositeStates:iconRendering_states withBaseState:iconRendering_baseState animatingState:iconRendering_animationState forFrame:currentFrame]];
+            
+            //After rendering the last frame, we can release our icon rendering information (it's no longer needed)
+            if(currentFrame >= (numberOfFrames - 1)){
+                [iconRendering_states release]; iconRendering_states = nil;
+                [iconRendering_baseState release]; iconRendering_baseState = nil;
+                [iconRendering_animationState release]; iconRendering_animationState = nil;
+            }
+        }
+
+        [image release];
+        image = [[imageArray objectAtIndex:currentFrame] retain];
+    }
+}
+
+
+- (BOOL)animated{
+    return(animated);
+}
+
+- (float)animationDelay{
+    return(delay);
+}
+
+- (int)numberOfFrames{
+    return(numberOfFrames);
+}
+
+- (BOOL)looping{
+    return(looping);
+}
+
+- (BOOL)overlay{
+    return(overlay);
+}
+
+- (NSArray *)imageArray{
+    return(imageArray);
+}
+
+- (NSImage *)image{
+    return(image);
 }
 
 - (NSImage *)_compositeStates:(NSArray *)iconStateArray withBaseState:(AIIconState *)baseState animatingState:(AIIconState *)animatingState forFrame:(int)frame
@@ -109,7 +201,7 @@
     NSEnumerator	*enumerator;
     NSImage		*workingImage;
     AIIconState		*iconState;
-    
+
     //Use the base image as our starting point
     if([baseState animated]){
         if(baseState == animatingState){ //Only one state animates at a time
@@ -132,8 +224,8 @@
                 if(iconState == animatingState){ //Only one state animates at a time
                     overlayImage = [[iconState imageArray] objectAtIndex:frame];
                 }else{
-                    overlayImage = [[iconState imageArray] objectAtIndex:0];
-                }
+                    overlayImage = [[iconState imageArray] objectAtIndex:( ((frame + 1) / [animatingState numberOfFrames]) * ([iconState numberOfFrames] - 1)) ];
+		}
             }else{
                 overlayImage = [iconState image];
             }
@@ -145,50 +237,7 @@
         }
     }
 
-    return([workingImage autorelease]);    
-}
-
-- (int)currentFrame
-{
-    return(currentFrame);
-}
-
-- (void)nextFrame
-{
-    currentFrame++;
-    if(currentFrame >= [imageArray
-        count]){
-        currentFrame = 0;
-    }
-}
-
-
-- (BOOL)animated{
-    return(animated);
-}
-
-- (float)animationDelay{
-    return(delay);
-}
-
-- (BOOL)looping{
-    return(looping);
-}
-
-- (BOOL)overlay{
-    return(overlay);
-}
-
-- (NSArray *)imageArray{
-    return(imageArray);
-}
-
-- (NSImage *)image{
-    if(!animated){
-        return(image);
-    }else{
-        return([imageArray objectAtIndex:currentFrame]);
-    }
+    return([workingImage autorelease]);
 }
 
 @end

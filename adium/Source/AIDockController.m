@@ -218,7 +218,11 @@
 {
     //Stop any existing animation
     [animationTimer invalidate]; [animationTimer release]; animationTimer = nil;
-
+    if(observingFlash){
+        [[owner interfaceController] unregisterFlashObserver:self];
+        observingFlash = NO;
+    }
+    
     //Generate the composited icon state
     [currentIconState release];
     currentIconState = [[[AIIconState alloc] initByCompositingStates:activeIconStateArray] retain];
@@ -228,28 +232,47 @@
         if([currentIconState image]) [[NSApplication sharedApplication] setApplicationIconImage:[currentIconState image]];
 
     }else{ //Animated icon
-        //Setup the animation timer
-        animationTimer = [[NSTimer scheduledTimerWithTimeInterval:[currentIconState animationDelay]
-                                                            target:self
-                                                            selector:@selector(animateIcon:)
-                                                            userInfo:nil
-                                                            repeats:YES] retain];
+        //Our dock icon can run its animation at any speed, but we want to try and sync it with the global Adium flashing.  To do this, we delay starting our timer until the next flash occurs.
+        [[owner interfaceController] registerFlashObserver:self];
+        observingFlash = YES;
+
+        //Set the first frame of our animation
         [self animateIcon:nil]; //Set the icon and move to the next frame
-
     }
+}
 
+- (void)flash:(int)value
+{
+    //Start the flash timer
+    animationTimer = [[NSTimer scheduledTimerWithTimeInterval:[currentIconState animationDelay]
+                                                       target:self
+                                                     selector:@selector(animateIcon:)
+                                                     userInfo:nil
+                                                      repeats:YES] retain];
+
+    //Animate the icon
+    [self animateIcon:animationTimer]; //Set the icon and move to the next frame
+
+    //Once our animations stops, we no longer need to observe flashing
+    [[owner interfaceController] unregisterFlashObserver:self];
+    observingFlash = NO;
 }
 
 //Move the dock to the next animation frame (Assumes the current state is animated)
 - (void)animateIcon:(NSTimer *)timer
 {
-    NSImage	*image = [currentIconState image];
-    
-    //Set the image
-    if(image) [[NSApplication sharedApplication] setApplicationIconImage:image];
+    NSImage	*image;
 
     //Move to the next image
-    [currentIconState nextFrame];
+    if(timer){
+        [currentIconState nextFrame];
+    }
+
+    //Set the image
+    image = [currentIconState image];
+    if(image) [[NSApplication sharedApplication] setApplicationIconImage:image];
+    NSLog(@"%@",image);
+    
 }
 
 //returns the % of the dock icon's full size that it currently is (0.0 - 1.0)

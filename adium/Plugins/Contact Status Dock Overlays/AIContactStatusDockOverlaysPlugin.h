@@ -16,6 +16,12 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
+#define PREF_GROUP_DOCK_OVERLAYS		@"Dock Overlays"
+
+#define	KEY_DOCK_SHOW_STATUS			@"Show status overlays"
+#define	KEY_DOCK_SHOW_CONTENT			@"Show content overlays"
+#define	KEY_DOCK_OVERLAY_POSITION		@"Overlay Position"
+
 @class AIStatusOverlayPreferences;
 
 @interface AIContactStatusDockOverlaysPlugin : AIPlugin <AIListObjectObserver> {
@@ -23,6 +29,17 @@
     AIIconState			*overlayState;
     AIStatusOverlayPreferences	*preferences;
 
+    NSColor	*signedOffColor;
+    NSColor	*signedOnColor;
+    NSColor	*unviewedContentColor;
+
+    NSColor	*backSignedOffColor;
+    NSColor	*backSignedOnColor;
+    NSColor	*backUnviewedContentColor;
+
+    BOOL	showStatus;
+    BOOL	showContent;
+    BOOL	overlayPosition;
 }
 
 @end

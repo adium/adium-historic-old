@@ -578,7 +578,7 @@ typedef enum {
 
 @end
 
-@interface AIDockController: NSObject {
+@interface AIDockController: NSObject <AIFlashObserver> {
     IBOutlet	AIAdium 	*owner;
 
     NSTimer 			*animationTimer;
@@ -589,6 +589,8 @@ typedef enum {
     AIIconState			*currentIconState;
     
     int				currentAttentionRequest;
+
+    BOOL			observingFlash;
 }
 
 //Icon animation & states

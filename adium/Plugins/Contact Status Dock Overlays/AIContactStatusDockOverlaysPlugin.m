@@ -14,13 +14,20 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIContactStatusDockOverlaysPlugin.h"
-//#import "AIStatusOverlayPreferences.h"
 #import "AIAdium.h"
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
 
+#define DOCK_OVERLAY_DEFAULT_PREFS	@"DockOverlayDefaults"
+#define SMALLESTRADIUS			15
+#define RADIUSRANGE			36
+#define SMALLESTFONTSIZE		14
+#define FONTSIZERANGE			30
+
 @interface AIContactStatusDockOverlaysPlugin (PRIVATE)
 - (void)_setOverlay;
+- (NSImage *)overlayImageFlash:(BOOL)flash;
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIContactStatusDockOverlaysPlugin
@@ -30,11 +37,49 @@
     unviewedObjectsArray = [[NSMutableArray alloc] init];
     overlayState = nil;
 
-    //Install our preference view
-    //preferences = [[AIStatusOverlayPreferences statusOverlayPreferencesWithOwner:owner] retain];
+    //Install our preference view and register our default prefs
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_OVERLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DOCK_OVERLAYS];
+    preferences = [[AIStatusOverlayPreferences statusOverlayPreferencesWithOwner:owner] retain];
 
     //Register as a contact observer (So we can catch the unviewed content status flag)
     [[owner contactController] registerListObjectObserver:self];
+
+    //Prefs
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
+        
+    //Observe
+}
+
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:@"Contact Status Coloring"] == 0){
+        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:@"Contact Status Coloring"];
+
+        //Snatch colors from status coloring plugin's prefs    
+        signedOffColor = [[[prefDict objectForKey:@"Signed Off Color"] representedColor] retain];
+        signedOnColor = [[[prefDict objectForKey:@"Signed On Color"] representedColor] retain];
+        unviewedContentColor = [[[prefDict objectForKey:@"Unviewed Content Color"] representedColor] retain];
+    
+        backSignedOffColor = [[[prefDict objectForKey:@"Signed Off Background Color"] representedColor] retain];
+        backSignedOnColor = [[[prefDict objectForKey:@"Signed On Background Color"] representedColor] retain];
+        backUnviewedContentColor = [[[prefDict objectForKey:@"Unviewed Content Background Color"] representedColor] retain];
+
+    }
+    
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DOCK_OVERLAYS] == 0){
+        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DOCK_OVERLAYS];
+
+        //
+        showStatus = [[prefDict objectForKey:KEY_DOCK_SHOW_STATUS] boolValue];
+        showContent = [[prefDict objectForKey:KEY_DOCK_SHOW_CONTENT] boolValue];
+        overlayPosition = [[prefDict objectForKey:KEY_DOCK_OVERLAY_POSITION] boolValue];        
+
+        //Reset our overlay
+        [unviewedObjectsArray removeAllObjects];
+        [self _setOverlay];
+    }
+    
 }
 
 - (void)uninstallPlugin
@@ -44,30 +89,31 @@
 
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
 {
-    if([inModifiedKeys containsObject:@"UnviewedContent"] || [inModifiedKeys containsObject:@"Signed On"] || [inModifiedKeys containsObject:@"Signed Off"]){
+    if(showStatus || showContent){ //Skip this entirely if overlays are off
 
-        if([[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue] || [[inObject statusArrayForKey:@"Signed On"] greatestIntegerValue] || [[inObject statusArrayForKey:@"Signed Off"] greatestIntegerValue]){
-            
-            if(![unviewedObjectsArray containsObject:inObject]){
-                [unviewedObjectsArray addObject:inObject];
+        if([inModifiedKeys containsObject:@"UnviewedContent"] || [inModifiedKeys containsObject:@"Signed On"] || [inModifiedKeys containsObject:@"Signed Off"]){
+
+            if((showContent && [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]) ||
+               (showStatus && [[inObject statusArrayForKey:@"Signed On"] greatestIntegerValue]) ||
+               (showStatus && [[inObject statusArrayForKey:@"Signed Off"] greatestIntegerValue])){
+
+                if(![unviewedObjectsArray containsObject:inObject]){
+                    [unviewedObjectsArray addObject:inObject];
+                }
+
+            }else{
+                if([unviewedObjectsArray containsObject:inObject]){
+                    [unviewedObjectsArray removeObject:inObject];
+                }
             }
-            
-        }else{
-            if([unviewedObjectsArray containsObject:inObject]){
-                [unviewedObjectsArray removeObject:inObject];
-            }
+
+            [self _setOverlay]; //Redraw our overlay
         }
-
-        [self _setOverlay]; //Redraw our overlay
+        
     }
 
     return(nil);
 }
-
-#define SMALLESTRADIUS		14
-#define RADIUSRANGE		32
-#define SMALLESTFONTSIZE	13
-#define FONTSIZERANGE		26
 
 //
 - (void)_setOverlay
@@ -80,107 +126,134 @@
 
     //Create & set the new overlay state
     if([unviewedObjectsArray count] != 0){
-        NSMutableParagraphStyle	*paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-        NSEnumerator		*enumerator;
-        AIListContact		*contact;
-        NSImage			*image;
-        NSFont			*font;
-        float			dockIconScale;//, iconHeight;
-        int			iconHeight;
-        float			top, bottom;
-        
-        //Pre-calc some sizes
-        dockIconScale = 1.0 - [[owner dockController] dockIconScale];
-        iconHeight = (SMALLESTRADIUS + (RADIUSRANGE * dockIconScale));
-        top = 126;
-        bottom = top - iconHeight;
+        NSImage	*image1 = [self overlayImageFlash:NO];
+        NSImage	*image2 = [self overlayImageFlash:YES];
 
-        //Set up the string details
-        //font = [NSFont labelFontOfSize:(SMALLESTFONTSIZE + (FONTSIZERANGE * dockIconScale))];
-        font = [NSFont fontWithName:@"Lucida Grande" size:(SMALLESTFONTSIZE + (FONTSIZERANGE * dockIconScale))];
-        [paragraphStyle setLineBreakMode:NSLineBreakByClipping];
-        [paragraphStyle setAlignment:NSCenterTextAlignment];
-        
-        //Create our image
-        image = [[[NSImage alloc] initWithSize:NSMakeSize(128,128)] autorelease];
-    
-        //Draw overlays for each contact
-        enumerator = [unviewedObjectsArray reverseObjectEnumerator];
-        while((contact = [enumerator nextObject]) && top >= 0 && bottom < 128){
-            float		left, right, arcRadius, stringInset;
-            NSAttributedString	*nameString;
-            NSBezierPath	*path;
-            NSColor		*backColor, *textColor, *borderColor;
-
-            //Create the pill frame
-            arcRadius = (iconHeight/2.0); //4
-            stringInset = (iconHeight/4.0); //6
-            left = 1 + arcRadius;
-            right = 127 - arcRadius;
-            
-            path = [NSBezierPath bezierPath];
-            [path setLineWidth:((iconHeight/2.0) * 0.13333)/*(arcRadius * 0.13333)*/];
-            //Top
-            [path moveToPoint: NSMakePoint(left, top)];
-            [path lineToPoint: NSMakePoint(right, top)];
-            //Right rounded cap
-            [path appendBezierPathWithArcWithCenter:NSMakePoint(right, top - arcRadius) radius:arcRadius startAngle:90 endAngle:0 clockwise:YES];
-            [path lineToPoint: NSMakePoint(right + arcRadius, bottom + arcRadius)];
-            [path appendBezierPathWithArcWithCenter:NSMakePoint(right, bottom + arcRadius) radius:arcRadius startAngle:0 endAngle:270 clockwise:YES];
-            //Bottom
-            [path moveToPoint: NSMakePoint(right, bottom)];
-            [path lineToPoint: NSMakePoint(left, bottom)];
-            //Left rounded cap
-            [path appendBezierPathWithArcWithCenter:NSMakePoint(left, bottom + arcRadius) radius:arcRadius startAngle:270 endAngle:180 clockwise:YES];
-            [path lineToPoint: NSMakePoint(left - arcRadius, top - arcRadius)];
-            [path appendBezierPathWithArcWithCenter:NSMakePoint(left, top - arcRadius) radius:arcRadius startAngle:180 endAngle:90 clockwise:YES];
-
-            //Display
-            [image lockFocus];
-
-            if([[contact statusArrayForKey:@"Signed On"] greatestIntegerValue]){ //Signed on
-                backColor = [NSColor colorWithCalibratedRed:1.0 green:1.0 blue:1.0 alpha:0.75];
-                textColor = [NSColor colorWithCalibratedRed:0.0 green:0.2 blue:0.0 alpha:1.0];
-                borderColor = [NSColor colorWithCalibratedRed:0.0 green:0.3 blue:0.0 alpha:1.0];
-                
-            }else if([[contact statusArrayForKey:@"Signed Off"] greatestIntegerValue]){ //Signed off
-                backColor = [NSColor colorWithCalibratedRed:1.0 green:1.0 blue:1.0 alpha:0.75];
-                textColor = [NSColor colorWithCalibratedRed:0.3 green:0.0 blue:0.0 alpha:1.0];
-                borderColor = [NSColor colorWithCalibratedRed:0.3 green:0.0 blue:0.0 alpha:1.0];
-
-            }else{ //Unviewed
-                backColor = [NSColor colorWithCalibratedRed:1.0 green:1.0 blue:1.0 alpha:0.75];
-                textColor = [NSColor colorWithCalibratedWhite:0.0 alpha:1.0];
-                borderColor = [NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.0 alpha:1.0];
-                
-            }
-
-            [backColor set];
-            [path fill];
-            [borderColor set];
-            [path stroke];
-
-            //Get the contact's display name
-            nameString = [[[NSAttributedString alloc] initWithString:[contact displayName] attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, nil]] autorelease];
-
-            
-            [nameString drawInRect:NSMakeRect(0 + stringInset, bottom, 128 - (stringInset * 2), top - bottom)];
-            [image unlockFocus];
-
-            //Move down to the next pill
-            top -= (iconHeight + 7.0 * dockIconScale);
-            bottom = top - iconHeight;
-        }
-    
         //Set the state
-        overlayState = [[AIIconState alloc] initWithImage:image overlay:YES];
+        overlayState = [[AIIconState alloc] initWithImages:[NSArray arrayWithObjects:image1,image2,nil] delay:0.5 looping:YES overlay:YES];
         [[owner dockController] setIconState:overlayState];
     }   
 }
 
+//
+- (NSImage *)overlayImageFlash:(BOOL)flash
+{
+    NSMutableParagraphStyle	*paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+    NSEnumerator		*enumerator;
+    AIListContact		*contact;
+    NSImage			*image;
+    NSFont			*font;
+    float			dockIconScale;
+    int				iconHeight;
+    float			top, bottom;
+
+    //Pre-calc some sizes
+    dockIconScale = 1.0 - [[owner dockController] dockIconScale];
+    iconHeight = (SMALLESTRADIUS + (RADIUSRANGE * dockIconScale));
+    if(overlayPosition){
+        top = 126;
+        bottom = top - iconHeight;
+    }else{
+        bottom = 0;
+        top = bottom + iconHeight;
+    }
+
+    //Set up the string details
+    font = [NSFont boldSystemFontOfSize:(SMALLESTFONTSIZE + (FONTSIZERANGE * dockIconScale))];
+    [paragraphStyle setLineBreakMode:NSLineBreakByClipping];
+    [paragraphStyle setAlignment:NSCenterTextAlignment];
+
+    //Create our image
+    image = [[[NSImage alloc] initWithSize:NSMakeSize(128,128)] autorelease];
+
+    //Draw overlays for each contact
+    enumerator = [unviewedObjectsArray reverseObjectEnumerator];
+    while((contact = [enumerator nextObject]) && top >= 0 && bottom < 128){
+        float			left, right, arcRadius, stringInset;
+        NSAttributedString	*nameString;
+        NSBezierPath		*path;
+        NSColor			*backColor, *textColor, *borderColor;
+
+        //Create the pill frame
+        arcRadius = (iconHeight/2.0);
+        stringInset = (iconHeight/4.0);
+        left = 1 + arcRadius;
+        right = 127 - arcRadius;
+
+        path = [NSBezierPath bezierPath];
+        [path setLineWidth:((iconHeight/2.0) * 0.13333)];
+        //Top
+        [path moveToPoint: NSMakePoint(left, top)];
+        [path lineToPoint: NSMakePoint(right, top)];
+        //Right rounded cap
+        [path appendBezierPathWithArcWithCenter:NSMakePoint(right, top - arcRadius) radius:arcRadius startAngle:90 endAngle:0 clockwise:YES];
+        [path lineToPoint: NSMakePoint(right + arcRadius, bottom + arcRadius)];
+        [path appendBezierPathWithArcWithCenter:NSMakePoint(right, bottom + arcRadius) radius:arcRadius startAngle:0 endAngle:270 clockwise:YES];
+        //Bottom
+        [path moveToPoint: NSMakePoint(right, bottom)];
+        [path lineToPoint: NSMakePoint(left, bottom)];
+        //Left rounded cap
+        [path appendBezierPathWithArcWithCenter:NSMakePoint(left, bottom + arcRadius) radius:arcRadius startAngle:270 endAngle:180 clockwise:YES];
+        [path lineToPoint: NSMakePoint(left - arcRadius, top - arcRadius)];
+        [path appendBezierPathWithArcWithCenter:NSMakePoint(left, top - arcRadius) radius:arcRadius startAngle:180 endAngle:90 clockwise:YES];
+
+        //Display
+        [image lockFocus];
+
+        //Get our colors
+        if([[contact statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]){ //Unviewed
+            if(flash){
+                backColor = [NSColor whiteColor];
+                textColor = [NSColor blackColor];
+            }else{
+                backColor = backUnviewedContentColor;
+                textColor = unviewedContentColor;
+            }
+        }else if([[contact statusArrayForKey:@"Signed On"] greatestIntegerValue]){ //Signed on
+            backColor = backSignedOnColor;
+            textColor = signedOnColor;
+
+        }else if([[contact statusArrayForKey:@"Signed Off"] greatestIntegerValue]){ //Signed off
+            backColor = backSignedOffColor;
+            textColor = signedOffColor;
+
+        }
+
+        //Lighten/Darken the back color slightly
+        if([backColor colorIsDark]){
+            backColor = [backColor darkenBy:-0.15];
+            borderColor = [backColor darkenBy:-0.3];
+        }else{
+            backColor = [backColor darkenBy:0.15];
+            borderColor = [backColor darkenBy:0.3];
+        }
+
+        //Draw
+        [backColor set];
+        [path fill];
+        [borderColor set];
+        [path stroke];
+
+        //Get the contact's display name
+        nameString = [[[NSAttributedString alloc] initWithString:[contact displayName] attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, nil]] autorelease];
+        [nameString drawInRect:NSMakeRect(0 + stringInset, bottom + 1, 128 - (stringInset * 2), top - bottom)];
+
+        [image unlockFocus];
+
+        //Move up or down to the next pill
+        if(overlayPosition){
+            top -= (iconHeight + 7.0 * dockIconScale);
+            bottom = top - iconHeight;
+        }else{
+            bottom += (iconHeight + 7.0 * dockIconScale);
+            top = bottom + iconHeight;
+        }
+    }
+    
+    return(image);
+}
+
 @end
-
-
 
 
 

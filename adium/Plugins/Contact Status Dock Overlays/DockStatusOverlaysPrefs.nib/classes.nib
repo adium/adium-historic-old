@@ -6,9 +6,16 @@
             SUPERCLASS = NSTableView; 
         }, 
         {
+            ACTIONS = {changePreference = id; }; 
             CLASS = AIStatusOverlayPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"view_prefView" = NSView; }; 
+            OUTLETS = {
+                "checkBox_showContentOverlays" = NSButton; 
+                "checkBox_showStatusOverlays" = NSButton; 
+                "radioButton_bottomOfIcon" = NSButton; 
+                "radioButton_topOfIcon" = NSButton; 
+                "view_prefView" = NSView; 
+            }; 
             SUPERCLASS = NSObject; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }

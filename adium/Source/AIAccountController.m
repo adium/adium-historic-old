@@ -316,6 +316,7 @@
 
     // Last account used to message anyone --
     // Next, the last account used to message someone is picked, as long as it is available for sending content
+//#warning seperate accounts for each service type
     if(lastAccountIDToSendContent && (account = [self accountWithID:lastAccountIDToSendContent])){
         if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil]){
             return(account);
@@ -324,6 +325,7 @@
 
     // First available account that can see the handle -- (only applies to contacts)
     // If this is the first message opened in this session, the first account with the contact on it's contact list is choosen
+//#warning check to make sure it has the correct service type
     if(inObject && [inObject isKindOfClass:[AIListContact class]]){
         enumerator = [accountArray objectEnumerator];
         while((account = [enumerator nextObject])){
@@ -336,6 +338,7 @@
     }
         
     // If the handle does not exist on any contact lists, the first account available for sending content is used
+//#warning first account with the correct service type
     // First available account that can see the handle --
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){

@@ -123,7 +123,7 @@
     unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
 
     //Determine the correct color
-    if(unviewedContent && ([[owner interfaceController] flashState] % 2)){
+    if(unviewedContent && !([[owner interfaceController] flashState] % 2)){
 	color = unviewedContentColor;
 	invertedColor = unviewedContentInvertedColor;
         backColor = backUnviewedContentColor;
@@ -204,7 +204,7 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     //Optimize this...
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_STATUS_COLORING] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_STATUS_COLORING] == 0){
 	NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
 
 	//Release the old values..

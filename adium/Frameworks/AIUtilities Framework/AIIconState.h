@@ -17,22 +17,28 @@
 
 
 @interface AIIconState : NSObject {
-    BOOL	animated;
-    BOOL	overlay;
+    BOOL		animated;
+    BOOL		overlay;
 
     //Static
-    NSImage	*image;
+    NSImage		*image;
 
     //Animated
-    NSArray	*imageArray;
-    float	delay;
-    BOOL 	looping;
-    int		currentFrame;
+    NSMutableArray	*imageArray;
+    float		delay;
+    BOOL 		looping;
+    int			currentFrame;
+    int			numberOfFrames;
 
+    //Animated w/ delayed rendering
+    NSArray		*iconRendering_states;
+    AIIconState		*iconRendering_baseState;
+    AIIconState		*iconRendering_animationState;
 }
+
 - (id)initWithImages:(NSArray *)inImages delay:(float)inDelay looping:(BOOL)inLooping overlay:(BOOL)inOverlay;
 - (id)initWithImage:(NSImage *)inImage overlay:(BOOL)inOverlay;
-- (id)initByCompositingStates:(NSArray *)iconStates;
+- (id)initByCompositingStates:(NSArray *)inIconStates;
 - (BOOL)animated;
 - (float)animationDelay;
 - (BOOL)looping;
@@ -42,6 +48,7 @@
 - (NSImage *)_compositeStates:(NSArray *)iconStateArray withBaseState:(AIIconState *)baseState animatingState:(AIIconState *)animatingState forFrame:(int)frame;
 - (int)currentFrame;
 - (void)nextFrame;
+- (int)numberOfFrames;
 
 @end
 

@@ -35,8 +35,6 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
     //Build the array of menu locations
     locationArray = [[NSMutableArray alloc] initWithObjects:menu_Adium_About, menu_Adium_Preferences, menu_File_New, menu_File_Close, menu_File_Save, menu_File_Accounts, menu_File_Additions, menu_File_Status, menu_Edit_Bottom, menu_Edit_Additions, menu_Format_Styles, menu_Format_Palettes, menu_Format_Additions, menu_Window_Top, menu_Window_Commands, menu_Window_Auxilary, menu_Window_Fixed, menu_Help_Local, menu_Help_Web, menu_Help_Additions, menu_Contact_Manage, menu_Contact_Action, menu_Contact_NegativeAction, menu_Contact_Additions, menu_Dock_Status, nil];
 
-    NSLog (@"Initialized menubar array");
-
     //Set up our contextual menu stuff
     contextualMenu = [[NSMenu alloc] init];
     contextualMenuItemDict = [[NSMutableDictionary alloc] init];
@@ -110,7 +108,6 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
     int			targetIndex;
     int			destination;
     
-    NSLog (@"Adding menuitem %@", newItem);
     //Offset
     location = menuArrayOffset[location];
 
@@ -121,9 +118,7 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
         destination--;
         menuItem = [locationArray objectAtIndex:destination];
     }
-    NSLog (@"Here?");
     targetMenu = [menuItem menu];
-    NSLog (@"no");
     targetIndex = [targetMenu indexOfItem:menuItem];
     
     //Insert the new item and a divider (if necessary)
@@ -135,7 +130,6 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
 
     //update the location array
     [locationArray replaceObjectAtIndex:location withObject:newItem];
-    NSLog (@"Done adding menuitem %@", newItem);
 }
 
 //Remove a menu item
