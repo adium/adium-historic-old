@@ -38,6 +38,7 @@ mailSpecifier	[^:\/]+\@.+\.{domains}
 jabberSpec      xmpp:.*\@.+\.{domains}(\/.*)?
 aolIMSpec       aim:goim\?screenname=[^\ \t\n&]+(&message=.+)?
 yahooIMSpec	ymsgr:sendim\?.+
+rdarSpec	rdar:\/\/problems?\/[0-9]+(&[0-9]+)*
 
 
 %option noyywrap 8bit caseless never-interactive prefix="SH"
@@ -65,7 +66,6 @@ hydra:\/\/		|
 itms:\/\/		|
 see:\/\/		|
 afp:\/\/		|
-rdar:\/\/		|
 svn(\+ssh)?:\/\/	|
 gopher:\/\/		    {SHStringOffset += SHleng; SHValidShift = SHleng; BEGIN CANONICAL;}
 
@@ -78,6 +78,7 @@ mailto:{mailSpecifier}      {SHStringOffset += SHleng; return SH_MAILTO_VALID;}
 
 {aolIMSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
 {yahooIMSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
+{rdarSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
 
 https?:\/\/[^.]+\/	    {SHStringOffset += SHleng; return SH_URL_VALID;}
 
