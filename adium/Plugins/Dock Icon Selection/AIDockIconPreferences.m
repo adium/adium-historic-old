@@ -111,9 +111,7 @@
         iconName = [preferenceDict objectForKey:KEY_ACTIVE_DOCK_ICON];
         iconDict = [self _iconInArrayNamed:iconName];
 		
-
         [self configureForSelectedIcon:iconDict];
-		selectedIconIndex = [iconArray indexOfObject:iconDict];        
     }
 }
 
@@ -146,6 +144,9 @@
     //Remember this as selected
     [selectedIcon release]; selectedIcon = [iconDict retain];
 
+	selectedIconIndex = [iconArray indexOfObject:iconDict];
+	[tableView_icons display];
+			
     //
     iconPackDict = [[adium dockController] iconPackAtPath:[iconDict objectForKey:@"Path"]];
 
@@ -179,7 +180,7 @@
     }
 
     //Redisplay
-    [tableView_icons display];
+    [tableView_icons setNeedsDisplay:YES];
     //[self animate:nil];
 }
 
@@ -350,11 +351,10 @@
                 
                 //Get the icon pack's full path and preview state
                 fullPath = [iconPath stringByAppendingPathComponent:filePath];
-                previewState = [[[[adium dockController] iconPackAtPath:fullPath] objectForKey:@"State"] objectForKey:@"Preview"];
+				previewState = [[adium dockController] previewStateForIconPackAtPath:fullPath];
     
                 //Add this icon to our icon array
-                [iconArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:fullPath, @"Path", previewState, @"State", previewState, @"Original State", nil]];
-    
+                [iconArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:fullPath, @"Path", previewState, @"State", previewState, @"Original State", nil]];    
             }
         }
     }
