@@ -32,6 +32,7 @@ typedef enum {
     AICircleState	state;
     NSString		*string;
     BOOL		bezeled;
+    BOOL		flashColorUnique;
 
     //Drawing Cache
     NSAttributedString	*_attributedString;

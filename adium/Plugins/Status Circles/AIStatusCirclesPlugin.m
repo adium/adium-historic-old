@@ -97,11 +97,9 @@
 	
         if(!statusCircle || !tabStatusCircle){
             statusCircle = [AIStatusCircle statusCircle];
-            [statusCircle setFlashColor:unviewedContentColor];
             [iconArray setObject:statusCircle withOwner:self];
 
             tabStatusCircle = [AIStatusCircle statusCircle];
-            [tabStatusCircle setFlashColor:unviewedContentColor];
             [tabStatusCircle setBezeled:YES];
             [tabIconArray setObject:tabStatusCircle withOwner:self];
         }
@@ -143,6 +141,8 @@
 	
         [statusCircle setColor:circleColor];
         [tabStatusCircle setColor:circleColor];
+        [statusCircle setFlashColor:unviewedContentColor];
+        [tabStatusCircle setFlashColor:unviewedContentColor];
 
         //Embedded idle time
         if(idle != 0 && displayIdleTime){
@@ -276,10 +276,8 @@
 	enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
 
 	while(object = [enumerator nextObject]){
-            [self updateListObject:object keys:nil];
-	}
-
-	[[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
+            [[owner contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil]];
+        }
     }
 }
 
