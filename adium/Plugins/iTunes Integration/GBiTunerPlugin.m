@@ -37,11 +37,16 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	scriptArray = nil;
 	flatScriptArray = nil;
 	
+	//Prepare our script menu item (which will have the Scripts menu as its submenu)
+	scriptMenuItem = [[NSMenuItem alloc] initWithTitle:SCRIPTS_MENU_NAME target:self action:@selector(dummyTarget:) keyEquivalent:@""];
+
 	//Start building the script menu
 	scriptMenu = nil;
 	buildingScriptMenu = YES;
-	[self buildScriptMenu];
-	//[NSThread detachNewThreadSelector:@selector(_buildScriptMenuThread) toTarget:self withObject:nil];
+	[self buildScriptMenu]; //this also sets the submenu for the menu item.
+    //[NSThread detachNewThreadSelector:@selector(_buildScriptMenuThread) toTarget:self withObject:nil];
+
+	[[adium menuController] addMenuItem:scriptMenuItem toLocation:LOC_Edit_Additions];
 	
 	//Perform substitutions on outgoing content
 	[[adium contentController] registerOutgoingContentFilter:self];
@@ -49,9 +54,6 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	//Perform simple string substitutions
 	[[adium contentController] registerStringFilter:self];
 	
-	//Prepare our script menu item
-	scriptMenuItem = [[NSMenuItem alloc] initWithTitle:@"Script" target:self action:@selector(dummyTarget:) keyEquivalent:@""];
-	[[adium menuController] addMenuItem:scriptMenuItem toLocation:LOC_Edit_Additions];
 }
 
 //Uninstall
@@ -91,7 +93,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
  	NSMutableArray		*scripts = [NSMutableArray array];
 	NSEnumerator		*enumerator;
     NSString			*file;
-	
+
 	enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:dirPath] objectEnumerator];
     while((file = [enumerator nextObject])){
 		if([[file lastPathComponent] characterAtIndex:0] != '.'){
@@ -156,7 +158,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	[self _sortScriptsByTitle:scriptArray];
 	
 	//Build the menu
-	[scriptMenu release]; scriptMenu = [[NSMenu alloc] initWithTitle:@"Scripts"];
+	[scriptMenu release]; scriptMenu = [[NSMenu alloc] initWithTitle:SCRIPTS_MENU_NAME];
 	[self _appendScripts:scriptArray toMenu:scriptMenu atLevel:0];
 	[scriptMenuItem setSubmenu:scriptMenu];
 	
