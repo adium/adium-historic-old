@@ -77,10 +77,6 @@
 	[configuredForAccount release]; configuredForAccount = [inAccount retain];
 	[accountViewController configureForAccount:inAccount];
 	
-	//Fill in the account's name and auto-connect status
-	NSString	*formattedUID = [inAccount preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS];
-	[textField_accountName setStringValue:(formattedUID && [formattedUID length] ? formattedUID : [inAccount UID])];
-	
 	//User icon
 	if(iconData = [inAccount preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
 		NSImage *image = [[NSImage alloc] initWithData:iconData];
@@ -98,18 +94,7 @@
 	
 	//Insert the custom controls for this service
 	[self _removeCustomViewAndTabs];
-	[self _addCustomViewAndTabsForController:[inService setupView]];
-	
-	//Custom username string
-	NSString *userNameLabel = [inService userNameLabel];
-	[textField_userNameLabel setStringValue:[(userNameLabel ? userNameLabel : @"User Name") stringByAppendingString:@":"]];
-	
-	//Restrict the account name field to valid characters and length
-    [textField_accountName setFormatter:
-		[AIStringFormatter stringFormatterAllowingCharacters:[inService allowedCharactersForAccountName]
-													  length:[inService allowedLengthForAccountName]
-											   caseSensitive:[inService caseSensitive]
-												errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.",nil)]];
+	[self _addCustomViewAndTabsForController:[inService accountViewController]];
 }
 
 //Add the custom views for a controller
