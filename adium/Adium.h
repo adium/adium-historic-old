@@ -13,11 +13,27 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /** 
- * $Revision: 1.44 $
- *  $Date: 2004/08/05 03:42:34 $
+ * $Revision: 1.45 $
+ *  $Date: 2004/08/17 15:21:14 $
  *  $Author#
  *
  **/
+
+//Localization
+#ifndef AILocalizedString
+#define AILocalizedString(key, comment) [[NSBundle bundleForClass: [self class]] localizedStringForKey: (key) value:@"" table:nil]
+#endif
+
+//Static strings
+#ifndef DeclareString
+#define DeclareString(var)			static NSString * (var) = nil;
+#endif
+#ifndef InitString
+#define InitString(var,string)		if (! (var) ) (var) = [(string) retain];
+#endif
+#ifndef ReleaseString
+#define ReleaseString(var)			if ( (var) ) { [(var) release]; (var) = nil; } 
+#endif
 
 //First, as other objects are generally subclasses of AIObject
 #import "AIObject.h"

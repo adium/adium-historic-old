@@ -184,8 +184,10 @@ static NSString *QTSoundFilePlayerStoppingRunLoopMode = @"QTSoundFilePlayerStopp
 
     flags.shouldLoop = NO;
     flags.isStopping = NO;
-    
+
+	NSLog(@"old URL: retain count %i (autoreleased would be %i)",[url retainCount],[[NSString stringWithUTF8String:"blah"] retainCount]);
     url = [url standardizedURL];
+	NSLog(@"new URL: retain count %i",[url retainCount]);
     // Only file URLs are handled currently
     if (![url isFileURL])
         goto errorReturn;

@@ -17,6 +17,14 @@
 #define KEY_UNVIEWED_CONTENT	@"UnviewedContent"
 #define KEY_TYPING				@"Typing"
 
+#define	KEY_CHAT_TIMED_OUT		@"Timed Out"
+#define KEY_CHAT_CLOSED_WINDOW	@"Closed Window"
+
+typedef enum {
+	AIChatTimedOut = 0,
+	AIChatClosedWindow
+} AIChatUpdateType;
+
 @interface AIChat : ESObjectWithStatus {
     AIAccount			*account;
 	NSDate				*dateOpened;

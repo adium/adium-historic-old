@@ -6,7 +6,6 @@
 
 #import <WebKit/WebKit.h>
 #import "ESWebView.h"
-#import "JVFontPreviewField.h"
 
 typedef enum {
 	DefaultBackground = 0,

@@ -15,7 +15,6 @@
 
 #import "AIGaimOscarAccountViewController.h"
 #import "CBGaimAccount.h"
-#include "ESImageViewWithImagePicker.h"
 
 @implementation AIGaimOscarAccountViewController
 

@@ -588,9 +588,30 @@ static id<GaimThread> gaimThread = nil;
 }
 
 //Multiuser chat update
-- (oneway void)updateForChat:(AIChat *)chat type:(NSNumber *)type
+- (oneway void)convUpdateForChat:(AIChat *)chat type:(NSNumber *)type
 {
 	
+}
+
+- (oneway void)updateForChat:(AIChat *)chat type:(NSNumber *)type
+{
+	AIChatUpdateType	updateType = [type intValue];
+	NSString			*key = nil;
+	switch (updateType){
+		case AIChatTimedOut:
+			key = KEY_CHAT_TIMED_OUT;
+			break;
+			
+		case AIChatClosedWindow:
+			key = KEY_CHAT_CLOSED_WINDOW;
+			break;
+	}
+	
+	if (key){
+		[chat setStatusObject:[NSNumber numberWithBool:YES] forKey:key notify:YES];
+		[chat setStatusObject:nil forKey:key notify:NotifyNever];
+		
+	}
 }
 
 - (oneway void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat

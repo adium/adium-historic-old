@@ -141,6 +141,7 @@
 	id		cell = ([self isExpandable:item] ? groupCell : contentCell);
 	
 	if(row >= 0 && row < [self numberOfRows]){ //Somebody keeps calling this method with row = numberOfRows, which is wrong.
+#warning crashing on [self delegate] on quit?
 		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
 
 		//Draw the grid

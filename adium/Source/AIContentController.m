@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.109 2004/08/17 03:29:09 evands Exp $
+// $Id: AIContentController.m,v 1.110 2004/08/17 15:21:19 evands Exp $
 
 #import "AIContentController.h"
 
@@ -36,7 +36,8 @@
 @implementation AIContentController
 
 static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
-
+static BOOL					pauseFilteringForSafety = NO;
+static BOOL					threadedFiltersInUse = NO;
 //init
 - (void)initController
 {
@@ -242,6 +243,40 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 }
 
 //Filters an attributed string.  If the string is associated with a contact or list object, pass that object as context.
+//If inMainThread is YES, block main thread execution while the filtering occurs immediately (jumping the gun on
+//any other filtering waiting to occur in the filtering thread.
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)attributedString
+							   usingFilterType:(AIFilterType)type
+									 direction:(AIFilterDirection)direction
+									   context:(id)filterContext
+								  inMainThread:(BOOL)inMainThread
+{
+	if (inMainThread){
+		//Don't let filtering occur in the filter thread while we're doing this
+		pauseFilteringForSafety = YES;
+		
+		//Wait until the filter thread is not filtering
+		while (threadedFiltersInUse);
+		
+		//Perform the filter (in the main thread)
+		attributedString = [self _filterAttributedString:attributedString
+										   contentFilter:contentFilter[type][direction]
+										   filterContext:filterContext];
+		
+		//Unlock so the filtering thread can resume its work where it left off
+		pauseFilteringForSafety = NO;
+	}else{
+		//Filter in the filtering thread
+		attributedString = [self filterAttributedString:attributedString
+										usingFilterType:type
+											  direction:direction
+												context:filterContext];
+	}
+	
+	return attributedString;
+}
+
+//Filters an attributed string.  If the string is associated with a contact or list object, pass that object as context.
 //Selector should take two arguments.  The first will be the filtered attributedString; the second is the passed context.
 //Filtration occurs in a background thread, sequentially, and will notify target at selector when complete.
 - (void)filterAttributedString:(NSAttributedString *)attributedString
@@ -297,14 +332,14 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 										filterContext:(id)filterContext
 										   invocation:(NSInvocation *)invocation
 {
-	if (attributedString){
-		NSEnumerator		*enumerator = [inContentFilterArray objectEnumerator];
-		id<AIContentFilter>	filter;
+	//If we're using the filters in the main thread, wait until we aren't.
+	while (pauseFilteringForSafety);
 
-		while((filter = [enumerator nextObject])){
-			attributedString = [filter filterAttributedString:attributedString context:filterContext];
-		}
-	}
+	threadedFiltersInUse = YES;
+	attributedString = [self _filterAttributedString:attributedString
+									   contentFilter:inContentFilterArray
+									   filterContext:filterContext];
+	threadedFiltersInUse = NO;
 	
 	if (invocation){
 		//Put that attributed string into the invocation as the first argument after the two hidden arguments of every NSInvocation
@@ -317,6 +352,19 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 	return(attributedString);
 }
 
+- (NSAttributedString *)_filterAttributedString:(NSAttributedString *)attributedString
+								  contentFilter:(NSArray *)inContentFilterArray
+								  filterContext:(id)filterContext
+{
+	NSEnumerator		*enumerator = [inContentFilterArray objectEnumerator];
+	id<AIContentFilter>	filter;
+	
+	while((filter = [enumerator nextObject])){
+		attributedString = [filter filterAttributedString:attributedString context:filterContext];
+	}
+	
+	return attributedString;
+}
 
 //Only called once, the first time a threaded filtering is requested
 - (void)thread_createFilterRunLoopMessenger
@@ -502,16 +550,41 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 //Add content to the message view.  Doesn't do any sending or receiving, just adds the content.
 - (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters
 {
+	[self displayContentObject:inObject usingContentFilters:useContentFilters immediately:NO];
+}
+
+//Immediately YES means the main thread will halt until the content object is displayed;
+//Immediately NO shuffles it off into the filtering thread, which will handle content sequentially but allows the main
+//thread to continue operation.  
+//This facility primarily exists for message history, which needs to put its display in before the first message;
+//without this, the use of threaded filtering means that message history shows up after the first message.
+- (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters immediately:(BOOL)immediately
+{
 	if (useContentFilters){
-		[self filterAttributedString:[inObject message]
-					 usingFilterType:AIFilterContent
-						   direction:([inObject isOutgoing] ? AIFilterOutgoing : AIFilterIncoming)
-					   filterContext:inObject
-					 notifyingTarget:self
-							selector:@selector(didFilterAttributedString:contentFilterDisplayContext:)
-							 context:inObject];
+		
+		if (immediately){
+			//Filter in the main thread, set the message, and continue
+			[inObject setMessage:[self filterAttributedString:[inObject message]
+											  usingFilterType:AIFilterContent
+													direction:([inObject isOutgoing] ? AIFilterOutgoing : AIFilterIncoming)
+													  context:inObject
+												 inMainThread:YES]];
+			[self displayContentObject:inObject immediately:YES];
+			
+			
+		}else{
+			//Filter in the filter thread
+			[self filterAttributedString:[inObject message]
+						 usingFilterType:AIFilterContent
+							   direction:([inObject isOutgoing] ? AIFilterOutgoing : AIFilterIncoming)
+						   filterContext:inObject
+						 notifyingTarget:self
+								selector:@selector(didFilterAttributedString:contentFilterDisplayContext:)
+								 context:inObject];
+		}
 	}else{
-		[self displayContentObject:inObject];
+		//Just continue
+		[self displayContentObject:inObject immediately:immediately];
 	}
 }
 
@@ -519,23 +592,46 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 {
 	[inObject setMessage:filteredString];
 	
-	[self displayContentObject:inObject];
+	//Continue
+	[self displayContentObject:inObject immediately:NO];
 }
 
 //Display a content object
 //Add content to the message view.  Doesn't do any sending or receiving, just adds the content.
 - (void)displayContentObject:(AIContentObject *)inObject
 {
+	[self displayContentObject:inObject immediately:NO];
+}
+
+- (void)displayContentObject:(AIContentObject *)inObject immediately:(BOOL)immediately
+{
     //Filter the content object
     if([inObject filterContent]){
-		BOOL message = ([inObject isKindOfClass:[AIContentMessage class]] && ![(AIContentMessage *)inObject isAutoreply]);
-		[self filterAttributedString:[inObject message]
-					 usingFilterType:(message ? AIFilterMessageDisplay : AIFilterDisplay)
-						   direction:([inObject isOutgoing] ? AIFilterOutgoing : AIFilterIncoming)
-					   filterContext:inObject
-					 notifyingTarget:self
-							selector:@selector(didFilterAttributedString:displayContext:)
-							 context:inObject];
+		BOOL				message = ([inObject isKindOfClass:[AIContentMessage class]] && ![(AIContentMessage *)inObject isAutoreply]);
+		AIFilterType		filterType = (message ? AIFilterMessageDisplay : AIFilterDisplay);
+		AIFilterDirection	direction = ([inObject isOutgoing] ? AIFilterOutgoing : AIFilterIncoming);
+		
+		if (immediately){
+			
+			//Set it after filtering in the main thread, then display it
+			[inObject setMessage:[self filterAttributedString:[inObject message]
+											  usingFilterType:filterType
+													direction:direction
+													  context:inObject
+												 inMainThread:YES]];
+			[self finishDisplayContentObject:inObject];		
+			
+		}else{
+			//Filter in the filtering thread
+			[self filterAttributedString:[inObject message]
+						 usingFilterType:filterType
+							   direction:direction
+						   filterContext:inObject
+						 notifyingTarget:self
+								selector:@selector(didFilterAttributedString:displayContext:)
+								 context:inObject];
+		}
+		
     }else{
 		[self finishDisplayContentObject:inObject];
 	}
@@ -557,8 +653,6 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 
 		//Tell the interface to open the chat
 		//For incoming messages, we don't open the chat until we're sure that new content is being received.
-		//This is only necessary for the first incoming message.  The quickest way to check this is checking whether
-		//the chat already has content or not.  If there is content, this is not the first message.
 		if(![chat isOpen]) [[owner interfaceController] openChat:chat]; 
 		
 		//Add this content to the chat

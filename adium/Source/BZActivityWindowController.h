@@ -3,12 +3,10 @@
 //  Adium
 //
 //  Created by Mac-arena the Bored Zo on Sat May 08 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import <AppKit/AppKit.h>
-#import "BZProgressTracker.h"
-#import "BZProgressView.h"
+#import <AIUtilities/BZProgressTracker.h>
 
 #define TABLE_VIEW_ONLY_COLUMN @"TASK"
 

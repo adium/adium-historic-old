@@ -6,6 +6,7 @@
 //
 
 #import "AIAppleScriptAdditions.h"
+#import <Carbon/Carbon.h>
 
 @implementation NSAppleScript (AIAppleScriptAdditions)
 

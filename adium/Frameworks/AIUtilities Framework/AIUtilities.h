@@ -13,6 +13,22 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+//Localization
+#ifndef AILocalizedString
+#define AILocalizedString(key, comment) [[NSBundle bundleForClass: [self class]] localizedStringForKey: (key) value:@"" table:nil]
+#endif
+
+//Static strings
+//#ifndef DeclareString
+#define DeclareString(var)			static NSString * (var) = nil;
+//#endif
+//#ifndef InitString
+#define InitString(var,string)		if (! (var) ) (var) = [(string) retain];
+//#endif
+//#ifndef ReleaseString
+#define ReleaseString(var)			if ( (var) ) { [(var) release]; (var) = nil; } 
+//#endif
+
 #import "AIAlternatingRowOutlineView.h"
 #import "AIAlternatingRowTableView.h"
 #import "AIAnimatedFloater.h"
