@@ -74,6 +74,7 @@ BGContactNotesPlugin,
 BGEmoticonMenuPlugin,
 CBActionSupportPlugin,
 CBContactCountingDisplayPlugin,
+CBContactLastSeenPlugin,
 CBStatusMenuItemPlugin,
 CBURLHandlingPlugin,
 CPFVersionChecker,
@@ -171,6 +172,7 @@ NEHGrowlPlugin;
 	[self _loadComponentClass:[BGEmoticonMenuPlugin class]];
 	[self _loadComponentClass:[CBActionSupportPlugin class]];
 	[self _loadComponentClass:[CBContactCountingDisplayPlugin class]];
+	[self _loadComponentClass:[CBContactLastSeenPlugin class]];
 	[self _loadComponentClass:[CBStatusMenuItemPlugin class]];
 	[self _loadComponentClass:[CBURLHandlingPlugin class]];
 	[self _loadComponentClass:[CPFVersionChecker class]];

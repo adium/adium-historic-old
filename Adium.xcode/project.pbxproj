@@ -3974,6 +3974,7 @@
 				4BD7D0CA04620D7C00A8010A,
 				34ADC00205F3A75700ABFCAA,
 				3479A8AF05DCA15400998B3D,
+				9E39940D078E8281001E09A4,
 				6C05CA1505492EE70088ECBF,
 				4B6688F804A60CC300A8010A,
 				11B96D81049AF85900C6304D,
@@ -6386,6 +6387,7 @@
 				4BE35BE20787267B00D1130E,
 				3452A9F807891C8A00C3C494,
 				344F4A4D078DDC9700226DFC,
+				9E399410078E82FE001E09A4,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6979,6 +6981,7 @@
 				4BE35BE30787267B00D1130E,
 				3452A9F907891C8A00C3C494,
 				344F4A4E078DDC9900226DFC,
+				9E399411078E82FE001E09A4,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20447,6 +20450,46 @@
 		};
 		9E28FDE806ADB30D0041553E = {
 			fileRef = 9E28FDE606ADB30D0041553E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E39940D078E8281001E09A4 = {
+			children = (
+				9E39940E078E82FE001E09A4,
+				9E39940F078E82FE001E09A4,
+			);
+			isa = PBXGroup;
+			name = "Contact Last Seen";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E39940E078E82FE001E09A4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CBContactLastSeenPlugin.h;
+			path = "Plugins/Contact Last Seen/CBContactLastSeenPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E39940F078E82FE001E09A4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CBContactLastSeenPlugin.m;
+			path = "Plugins/Contact Last Seen/CBContactLastSeenPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E399410078E82FE001E09A4 = {
+			fileRef = 9E39940E078E82FE001E09A4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E399411078E82FE001E09A4 = {
+			fileRef = 9E39940F078E82FE001E09A4;
 			isa = PBXBuildFile;
 			settings = {
 			};
