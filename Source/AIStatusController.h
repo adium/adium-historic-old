@@ -39,6 +39,9 @@
 #define PREF_GROUP_STATUS_PREFERENCES			@"Status Preferences"
 #define KEY_STATUS_REPORT_IDLE					@"Report Idle"
 #define KEY_STATUS_REPORT_IDLE_INTERVAL			@"Report Idle Interval"
+#define	KEY_STATUS_AUTO_AWAY					@"Auto Away"
+#define KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID	@"Auto Away Status State ID"
+#define KEY_STATUS_AUTO_AWAY_INTERVAL			@"Auto Away Interval"
 
 //Built-in names and descriptions, which services should use when they support identical or approximately identical states
 #define	STATUS_NAME_AVAILABLE				@"Generic Available"
@@ -127,6 +130,7 @@
 - (void)finishIniting;
 - (NSArray *)stateArray;
 - (NSArray *)stateArrayForMenuItems;
+- (AIStatus *)statusStateWithUniqueStatusID:(NSNumber *)uniqueStatusID;
 
 - (NSNumber *)nextUniqueStatusID;
 
