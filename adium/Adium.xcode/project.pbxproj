@@ -18894,6 +18894,8 @@
 		};
 		7E64083E06629DEE006A5552 = {
 			children = (
+				7ED1148F066D65C400E81906,
+				7ED11490066D65C500E81906,
 				7EC35CAB066B0CB9002129B7,
 				7EC35CAC066B0CB9002129B7,
 				7ED73234066B005C0069616E,
@@ -19416,6 +19418,24 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		7ED1148F066D65C400E81906 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHABBookmarksImporter.h;
+			path = "Plugins/Bookmark Importing/SHABBookmarksImporter.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7ED11490066D65C500E81906 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHABBookmarksImporter.m;
+			path = "Plugins/Bookmark Importing/SHABBookmarksImporter.m";
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		7ED73234066B005C0069616E = {
 			fileEncoding = 30;
