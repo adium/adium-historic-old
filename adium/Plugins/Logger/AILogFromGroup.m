@@ -66,7 +66,7 @@
 			AILogToGroup    *toGroup = nil;
 			
 			while(!toGroup){
-#warning why does this alloc fail sometimes?
+				//#### Why does this alloc fail sometimes? ####
 				toGroup = [[AILogToGroup alloc] initWithPath:[path stringByAppendingPathComponent:folderName]
 														from:from
 														  to:folderName];
