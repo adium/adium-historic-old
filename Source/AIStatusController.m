@@ -500,7 +500,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 
 
 /*!
-* @brief Apply a state to all accounts
+ * @brief Apply a state to all accounts
  *
  * Applies the passed state to all accounts
  */ 
@@ -542,7 +542,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 
 #pragma mark Retrieving Status States
 /*!
-* @brief Access to Adium's user-defined states
+ * @brief Access to Adium's user-defined states
  *
  * Returns an array of available user-defined states, which are AIStatus objects
  */
@@ -565,7 +565,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 }
 
 /*!
-* @brief Return the array of built-in states
+ * @brief Return the array of built-in states
  *
  * These are basic Available and Away states which should always be visible and are (by convention) immutable.
  * The first state in BUILT_IN_STATE_ARRAY will be used as the default for accounts as they are created.
@@ -646,7 +646,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 }
 
 /*!
-* @brief Return a sorted state array for use in menu item creation
+ * @brief Return a sorted state array for use in menu item creation
  *
  * The array is created by adding the built in states to the user states, then sorting using _statusArraySort
  *
@@ -876,7 +876,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 }
 
 /*!
-* @brief Save changes to the state array and notify observers
+ * @brief Save changes to the state array and notify observers
  *
  * Saves any outstanding changes to the state array.  There should be no need to call this manually, since all the
  * state array modifying methods in this class call it automatically after making changes.
@@ -1299,7 +1299,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 }	
 
 /*!
-* @brief Menu validation
+ * @brief Menu validation
  *
  * Our state menu items should always be active, so always return YES for validation.
  *
@@ -1405,7 +1405,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 }
 
 /*!
-* @brief Select a state menu item
+ * @brief Select a state menu item
  *
  * Invoked by a state menu item, sets the state corresponding to the menu item as the active state.
  *
@@ -1608,7 +1608,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
 #pragma mark Upgrade code
 /*!
-* @brief Temporary upgrade code for 0.7x -> 0.8
+ * @brief Temporary upgrade code for 0.7x -> 0.8
  *
  * Versions 0.7x and prior stored their away messages in a different format.  This code allows a seamless
  * transition from 0.7x to 0.8.  We can easily recognize the old format because the away messages are of
