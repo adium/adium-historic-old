@@ -23,9 +23,9 @@
 #define RIGHT_MARGIN		8
 #define GROUP_PADDING		3
 #define LEFT_VIEW_PADDING	3
-#define RIGHT_VIEW_PADDING	3
+#define RIGHT_VIEW_PADDING	16
 #define INDENTATION_OFFSET	-7
-#define CELL_SIZE_ADJUST_X	12	//Adjustment for the flippy triangles
+#define CELL_SIZE_ADJUST_X	20	//Adjustment for the flippy triangles, and add some padding
 #define BACK_CELL_INDENT	2
 
 @implementation AISCLCell
@@ -36,7 +36,7 @@
     isGroup = [listObject isKindOfClass:[AIListGroup class]];
 }
 
-- (NSSize)cellSizeForBounds:(NSRect)aRect
+- (NSSize)cellSizeForBounds:(NSRect)aRect inView:(NSView *)controlView
 {
     NSFont		*font;
     NSAttributedString	*displayName;
@@ -44,7 +44,7 @@
     AIMutableOwnerArray	*leftViewArray, *rightViewArray;
     int			loop;
     NSSize		cellSize = NSMakeSize(CELL_SIZE_ADJUST_X, 0);
-
+    
     if(isGroup){ //move text away from flippy triangle
         cellSize.width += GROUP_PADDING;
     }else{ //Negate indentation
@@ -80,7 +80,7 @@
 
     //Text Font
     if(!isGroup){
-        font = [(AISCLOutlineView *)[self controlView] font];
+        font = [(AISCLOutlineView *)controlView font];
     }else{
         font = [NSFont boldSystemFontOfSize:11];
     }
@@ -93,42 +93,6 @@
     cellSize.height += displayNameSize.height;
 
     return(cellSize);
-    
-/*    NSFont		*font = [(AISCLOutlineView *)[self controlView] font];
-    NSAttributedString	*displayName;
-    NSSize		displayNameSize;
-    AIMutableOwnerArray	*leftViewArray;
-    int			loop;
-    NSSize		cellSize = NSMakeSize(CELL_SIZE_ADJUST_X, 0);
-
-    //If a left view is present
-    leftViewArray = [listObject displayArrayForKey:@"Left View"];
-    if(leftViewArray && [leftViewArray count]){
-        //Indent into the margin to save space
-        cellSize.width -= LEFT_MARGIN;
-
-        //Left aligned icon
-        for(loop = 0;loop < [leftViewArray count];loop++){
-            id <AIListObjectLeftView>	handler = [leftViewArray objectAtIndex:loop];
-
-            //Calculate the icon size
-            cellSize.width += ([handler widthForHeight:aRect.size.height computeMax:YES] + LEFT_VIEW_PADDING);
-        }
-        
-    }else{
-        //If no left views are present, insert padding to move text away from flippy triangle
-        cellSize.width += LEFT_VIEW_PADDING;
-
-    }
-
-    //Name
-    displayName = [[NSAttributedString alloc] initWithString:[listObject displayName]
-                                                  attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil]];
-    displayNameSize = [displayName size];
-    cellSize.width += displayNameSize.width;
-    cellSize.height += displayNameSize.height;
-    
-    return(cellSize);*/
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
