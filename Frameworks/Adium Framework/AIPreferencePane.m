@@ -52,7 +52,7 @@
 //Preference category
 - (PREFERENCE_CATEGORY)category
 {
-	return(AIPref_Advanced_Other);
+	return(AIPref_Advanced);
 }
 
 //Return an array of dictionaries, each dictionary of the form (key, default, group)
