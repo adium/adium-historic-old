@@ -3263,7 +3263,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" \"/Users/adamiser/Code/adium/Plugins/Gaim Service\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" \"/Users/adamiser/Code/adium/Plugins/Gaim Service\" /Users/adamiser/Code/adium/Frameworks";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3367,8 +3367,6 @@
 				4BD6738806001C2C0049CAF7,
 				4BD6738C06001C2D0049CAF7,
 				4BD6738E06001C2E0049CAF7,
-				4BD6739406001C330049CAF7,
-				4BD6739606001C330049CAF7,
 				4BD6739906001C3F0049CAF7,
 				4BD6739C06001C440049CAF7,
 				4BD6739E06001C450049CAF7,
@@ -3679,7 +3677,6 @@
 				4BD6739106001C2F0049CAF7,
 				4BD6739206001C2F0049CAF7,
 				4BD6739306001C300049CAF7,
-				4BD6739806001C340049CAF7,
 				4BD6739A06001C400049CAF7,
 				4BD673A006001C460049CAF7,
 				4BD673A606001C4E0049CAF7,
@@ -3995,8 +3992,6 @@
 				4BD6738906001C2C0049CAF7,
 				4BD6738D06001C2E0049CAF7,
 				4BD6738F06001C2F0049CAF7,
-				4BD6739506001C330049CAF7,
-				4BD6739706001C340049CAF7,
 				4BD6739B06001C410049CAF7,
 				4BD6739D06001C450049CAF7,
 				4BD6739F06001C450049CAF7,
@@ -4255,7 +4250,6 @@
 				4BD6766C06002D6E0049CAF7,
 				34BD9D59053146CC000AB133,
 				34B588A1058D833A00E7EF0D,
-				4B52F9FD061DF9F1008CC22D,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4293,7 +4287,6 @@
 				3419FE230531586A00C68BA3,
 				3419FE240531586A00C68BA3,
 				520FE46305BE20EB002D063D,
-				4B52FA00061DF9FD008CC22D,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8750,26 +8743,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B52F9FC061DF9F1008CC22D = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = Libgaim.framework;
-			path = "Plugins/Gaim Service/Libgaim.framework";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B52F9FD061DF9F1008CC22D = {
-			fileRef = 4B52F9FC061DF9F1008CC22D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B52FA00061DF9FD008CC22D = {
-			fileRef = 4B52F9FC061DF9F1008CC22D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B539C4B05EFD6CD00E5921A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -10035,6 +10008,7 @@
 				6C3E0731054471E400A4AE2E,
 				34E839060583207E00F2AADB,
 				34E83B0B05832B4300F2AADB,
+				4BDF2C92061E376C00EA75C5,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10045,11 +10019,12 @@
 				4B7F277F05440C0800CDFC90,
 				4B7F278005440C0800CDFC90,
 				4B7F278105440C0800CDFC90,
+				4BDF2C97061E377E00EA75C5,
 			);
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Plugins/Gaim Service\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Plugins/Gaim Service\" \"/Users/adamiser/Code/adium/Plugins/Gaim Service\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = "\"Plugins/Gaim Service/Libgaim.framework/Headers\" \"Plugins/Gaim Service/Include/glib\" \"Plugins/Gaim Service/Include/glib/glib\" \"Plugins/Gaim Service/Include/glib/gmodule\"";
@@ -10112,8 +10087,8 @@
 				4B7F278A05440C8D00CDFC90,
 				34048AC50617CB4C004D0B7E,
 				34048AC60617CB4C004D0B7E,
+				4BDF2C91061E376C00EA75C5,
 				34327BD6060D2FE6003D7AD9,
-				4B52F9FC061DF9F1008CC22D,
 				34415880059F8F050019246B,
 				3441587A059F8EFC0019246B,
 			);
@@ -12064,36 +12039,6 @@
 		};
 		4BD6739306001C300049CAF7 = {
 			fileRef = F555906404F0C18D01925A3C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6739406001C330049CAF7 = {
-			fileRef = F527079C04E203D40114B3C0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6739506001C330049CAF7 = {
-			fileRef = F527079D04E203D40114B3C0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6739606001C330049CAF7 = {
-			fileRef = F5E726C004E5E2980100011E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6739706001C340049CAF7 = {
-			fileRef = F5E726C104E5E2980100011E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6739806001C340049CAF7 = {
-			fileRef = F5B6215E04E2CC3F018B68D6;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -14503,6 +14448,36 @@
 			path = Source/SoundPrefs.plist;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BDF2C91061E376C00EA75C5 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = Libgaim.framework;
+			path = "Plugins/Gaim Service/Libgaim.framework";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BDF2C92061E376C00EA75C5 = {
+			fileRef = 4BDF2C91061E376C00EA75C5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BDF2C97061E377E00EA75C5 = {
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4BDF2CA5061E378400EA75C5,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BDF2CA5061E378400EA75C5 = {
+			fileRef = 4BDF2C91061E376C00EA75C5;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BE4B0E903F9C2AF00A8010A = {
 			fileEncoding = 30;
