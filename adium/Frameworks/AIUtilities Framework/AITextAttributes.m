@@ -18,6 +18,7 @@
 */
 
 #import "AITextAttributes.h"
+#define FONT_DEFAULT_NAME	@"Helvetica"
 
 @interface AITextAttributes (PRIVATE)
 - (id)initWithFontFamily:(NSString *)inFamilyName traits:(NSFontTraitMask)inTraits size:(int)inSize;
@@ -119,8 +120,24 @@
 //Updates the cached font
 - (void)updateFont
 {
-    [dictionary setObject:[[NSFontManager sharedFontManager] fontWithFamily:fontFamilyName traits:fontTraitsMask weight:5 size:fontSize] forKey:NSFontAttributeName];
+    NSFont	*font = nil;
+
+    //Ensure font size isn't 0
+    if(!fontSize) fontSize = 12;
+
+    //Create the font
+    if(fontFamilyName){
+        font = [[NSFontManager sharedFontManager] fontWithFamily:fontFamilyName traits:fontTraitsMask weight:5 size:fontSize];
+    }
     
+    //If no name was specified or the font is not available, use the default font
+    if(!font){
+        font = [[NSFontManager sharedFontManager] fontWithFamily:FONT_DEFAULT_NAME traits:fontTraitsMask weight:5 size:fontSize];
+    }
+
+    if(font){ //Just to be safe, incase the default font was unavailable for some reason
+        [dictionary setObject:font forKey:NSFontAttributeName];
+    }
 }
 
 @end
