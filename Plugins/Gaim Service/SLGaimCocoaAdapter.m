@@ -2459,13 +2459,25 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 		const char  *uidUTF8String = [UID UTF8String];
 		GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
 		const char  *aliasUTF8String = [alias UTF8String];
-		
-		if (buddy && ((aliasUTF8String && !buddy->alias) ||
-					  (!aliasUTF8String && buddy->alias) ||
-					  ((buddy->alias && aliasUTF8String && (strcmp(buddy->alias,aliasUTF8String) != 0))))){
+		const char	*oldAlias = gaim_buddy_get_alias(buddy);
+	
+		if (buddy && ((aliasUTF8String && !oldAlias) ||
+					  (!aliasUTF8String && oldAlias) ||
+					  ((oldAlias && aliasUTF8String && (strcmp(alias,aliasUTF8String) != 0))))){
+
 			
 			gaim_blist_alias_buddy(buddy,aliasUTF8String);
 			serv_alias_buddy(buddy);
+			
+			//If we had an alias before but no longer have, adiumGaimBlistUpdate() is not going to send the update
+			//(Because normally it's wasteful to send a nil alias to the account).  We need to manually invoke the update.
+			if (oldAlias && !alias){
+				AIListContact *theContact = contactLookupFromBuddy(buddy);
+				
+				[adiumAccount mainPerformSelector:@selector(updateContact:toAlias:)
+									   withObject:theContact
+									   withObject:nil];
+			}
 		}
 	}
 }
