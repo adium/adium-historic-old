@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.45 2004/04/15 12:54:18 evands Exp $
+$Id: ToDoList.txt,v 1.46 2004/04/15 13:20:40 evands Exp $
 
 Legend
 + Change or Addition
@@ -36,7 +36,6 @@ Bugs
    - (Hanji: I've had this happen, but can't trace under what circumstances. It does seem to happen when adding myself a lot, however)
 * Place contact list on external monitor, quit, reboot without external monitor.  Contact list is gone...gone..gone.gone :)
    - (Confirmed by Hanji)
-* Changes to the password field (Account prefs) aren't applied when connect is clicked. [Evan]
 
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
@@ -46,7 +45,9 @@ Unconfirmed bugs
 * Unicode (German) messages not working over ICQ ?
 * away messages aren't going away
 * Yahoo giving some users a Gaim error: unknown error 29 on connect
+	Evan: This is an unauthorized user error, so far as I can tell. I got it after trying a wrong password a ton of times in a row.  The linked image is one of those "type this distorted text to verify you're a person" things.
 * We're receiving (but not processing/interpreting) HTML over ICQ
+	Evan: Official ICQ clients send RTF, not HTML.  SIM is an unofficial one that does.  Gaim intentionally escapes HTML coming from ICQ for this reason... Odd.
 * away messages aren't clearing when a buddy comes back from away?  Online buddies with away messages?
 
 -------------------------------------------------------------------------------------------------------
@@ -56,7 +57,7 @@ Contacts:
 	+ Allow specifying an image for a contact in the inspector (Independent of address book)
 	+ Add to buddy list menu item, contextual menu item (for strangers)
 	+ Add area for typing contact notes to inspector, display notes in tooltip [Brian] 
-                // notes in, tooltips spacing funky [tooltips off]
+                // notes in, tooltips spacing funky [tooltips off] Evan: tooltip indentation sucks right now.  I'll fix it next week.
 	+ AIM accounts should show AIM as their service type, while ICQ should show ICQ, .Mac show .Mac, etc.
 	+ Add Contact should have more intelligent defaults, and generally be less of a pain [Nelson, but if anyone has any nice ideas for ways this should work, do tell]
 
@@ -310,4 +311,4 @@ Features & Changes:
 = Webkit: Add keypress forwarding
 = WebKit: Add support for displaying buddy icons using the UserIconPath status object
 = Tabbing through account pref fields (yahoo) is no longer working [regression]
-
+= Changes to the password field (Account prefs) aren't applied when connect is clicked.
