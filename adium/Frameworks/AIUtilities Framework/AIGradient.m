@@ -359,7 +359,7 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 					 *  report that to the user or something --boredzo
 					 */;
 			} //switch(elementType)
-		} //while(curElement++ < numElements)
+		} //for(curElement = 0; curElement < numElements; curElement++)
 	} //if(cgpath != NULL)
 
 	return cgpath;
