@@ -125,15 +125,15 @@
 //Stop tracking mouse movement
 - (void)_stopTrackingMouse
 {
-	//Hide tooltip
-	[delegate hideTooltip];
-
 	//Invalidate tracking
 	[tooltipMouseLocationTimer invalidate];
 	[tooltipMouseLocationTimer release];
 	tooltipMouseLocationTimer = nil;
 	tooltipCount = 0;
 	lastMouseLocation = NSMakePoint(0,0);
+	
+	//Hide tooltip
+	[delegate hideTooltip];
 }
 
 //Time to poll mouse location
