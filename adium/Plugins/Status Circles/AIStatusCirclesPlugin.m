@@ -19,8 +19,6 @@
 
 @interface AIStatusCirclesPlugin (PRIVATE)
 - (NSString *)idleStringForSeconds:(int)seconds;
-//- (void)addToFlashArray:(AIListObject *)inObject;
-//- (void)removeFromFlashArray:(AIListObject *)inObject;
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
@@ -33,18 +31,18 @@
     displayStatusCircleOnLeft	= NO;
     displayIdleTime		= NO;
     idleStringColor		= nil;
-
+	
     //Register our default preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_CIRCLES_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STATUS_CIRCLES];
     [self preferencesChanged:nil];
-
+	
     //Our preference view
     preferences = [[AIStatusCirclesPreferences statusCirclesPreferences] retain];
     [[adium contactController] registerListObjectObserver:self];
-
+	
     //Observe
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-
+	
     //flashingListObjectArray = [[NSMutableArray alloc] init];
 }
 
@@ -58,10 +56,10 @@
     [super dealloc];
 }
 
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     NSArray *modifiedAttributes = nil;
-
+	
     if(	inModifiedKeys == nil ||
         [inModifiedKeys containsObject:@"Label Color"] ||
         [inModifiedKeys containsObject:@"Typing"] ||
@@ -71,121 +69,121 @@
         [inModifiedKeys containsObject:@"Online"] ||
         [inModifiedKeys containsObject:@"Signed On"] ||
         [inModifiedKeys containsObject:@"Signed Off"]){
-
+		
         AIMutableOwnerArray	*iconArray;
         AIStatusCircle		*statusCircle;
         NSColor			*circleColor;
-
+		
         double			idle;
-
-	if(displayStatusCircleOnLeft){
-	    iconArray = [inObject displayArrayForKey:@"Left View"];
-	    [[inObject displayArrayForKey:@"Right View"] setObject:nil withOwner:self];
-	    
-	}else{
-	    iconArray = [inObject displayArrayForKey:@"Right View"];
-	    [[inObject displayArrayForKey:@"Left View"]  setObject:nil withOwner:self];
-	    
-	}
-	
-	statusCircle = [iconArray objectWithOwner:self];
-
-	if(displayStatusCircle){
-	    
-	    if(!statusCircle){
-		statusCircle = [AIStatusCircle statusCircle];
-		[iconArray setObject:statusCircle withOwner:self];
-	    }
+		
+		if(displayStatusCircleOnLeft){
+			iconArray = [inObject displayArrayForKey:@"Left View"];
+			[[inObject displayArrayForKey:@"Right View"] setObject:nil withOwner:self];
+			
+		}else{
+			iconArray = [inObject displayArrayForKey:@"Right View"];
+			[[inObject displayArrayForKey:@"Left View"]  setObject:nil withOwner:self];
+			
+		}
+		
+		statusCircle = [iconArray objectWithOwner:self];
+		
+		if(displayStatusCircle){
+			
+			if(!statusCircle){
+				statusCircle = [AIStatusCircle statusCircle];
+				[iconArray setObject:statusCircle withOwner:self];
+			}
 	        
-	    circleColor = [[inObject displayArrayForKey:@"Label Color"] averageColor];
-    
-	    if(!circleColor){
-		circleColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1.0];
-	    }
-    
-	    [statusCircle setColor:circleColor];
-
-	    idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
-    
-	    //Embedded idle time
-	    if(displayIdleTime && idle != 0){
-		[statusCircle setStringContent:[self idleStringForSeconds:idle]];
-		[statusCircle setStringColor:idleStringColor];
-	    }else{
-		[statusCircle setStringContent:nil];
-		[statusCircle setStringColor:idleStringColor];
-	    }
-	    
-	}else{
-	    if(statusCircle){
-		[iconArray setObject:nil withOwner:self];
-	    }
-	}
-	
-	modifiedAttributes = [NSArray arrayWithObjects:@"Left View", @"Right View", nil];
+			circleColor = [[inObject displayArrayForKey:@"Label Color"] averageColor];
+			
+			if(!circleColor){
+				circleColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1.0];
+			}
+			
+			[statusCircle setColor:circleColor];
+			
+			idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
+			
+			//Embedded idle time
+			if(displayIdleTime && idle != 0){
+				[statusCircle setStringContent:[self idleStringForSeconds:idle]];
+				[statusCircle setStringColor:idleStringColor];
+			}else{
+				[statusCircle setStringContent:nil];
+				[statusCircle setStringColor:idleStringColor];
+			}
+			
+		}else{
+			if(statusCircle){
+				[iconArray setObject:nil withOwner:self];
+			}
+		}
+		
+		modifiedAttributes = [NSArray arrayWithObjects:@"Left View", @"Right View", nil];
     }
-
+	
     return(modifiedAttributes);
 }
 
 /*
-//Flash all handles with unviewed content
-- (void)flash:(int)value
-{
-    NSEnumerator	*enumerator;
-    AIListObject	*object;
-    AIStatusCircle	*statusCircle;
-
-    enumerator = [flashingListObjectArray objectEnumerator];
-    while((object = [enumerator nextObject])){
-	//Set the status circle to the correct state
-	statusCircle = [[object displayArrayForKey:@"Left View"] objectWithOwner:self];
-	[statusCircle setState:((value % 2) ? AICircleFlashA: AICircleFlashB)];
-
-	statusCircle = [[object displayArrayForKey:@"Tab Left View"] objectWithOwner:self];
-	[statusCircle setState:((value % 2) ? AICircleFlashA: AICircleFlashB)];
-
-	//Force a redraw
-	[[adium notificationCenter] postNotificationName:ListObject_AttributesChanged object:object userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Left View"] forKey:@"Keys"]];
-    }
-}
-
-//Add a handle to the flash array
-- (void)addToFlashArray:(AIListObject *)inObject
-{
-    //Ensure that we're observing the flashing
-    if([flashingListObjectArray count] == 0){
-	[[adium interfaceController] registerFlashObserver:self];
-    }
-
-    //Add the contact to our flash array
-    [flashingListObjectArray addObject:inObject];
-    [self flash:[[adium interfaceController] flashState]];
-}
-
-//Remove a handle from the flash array
-- (void)removeFromFlashArray:(AIListObject *)inObject
-{
-    //Remove the contact from our flash array
-    [flashingListObjectArray removeObject:inObject];
-
-    //If we have no more flashing contacts, stop observing the flashes
-    if([flashingListObjectArray count] == 0){
-	[[adium interfaceController] unregisterFlashObserver:self];
-    }
-}
-*/
+ //Flash all handles with unviewed content
+ - (void)flash:(int)value
+ {
+	 NSEnumerator	*enumerator;
+	 AIListObject	*object;
+	 AIStatusCircle	*statusCircle;
+	 
+	 enumerator = [flashingListObjectArray objectEnumerator];
+	 while((object = [enumerator nextObject])){
+		 //Set the status circle to the correct state
+		 statusCircle = [[object displayArrayForKey:@"Left View"] objectWithOwner:self];
+		 [statusCircle setState:((value % 2) ? AICircleFlashA: AICircleFlashB)];
+		 
+		 statusCircle = [[object displayArrayForKey:@"Tab Left View"] objectWithOwner:self];
+		 [statusCircle setState:((value % 2) ? AICircleFlashA: AICircleFlashB)];
+		 
+		 //Force a redraw
+		 [[adium notificationCenter] postNotificationName:ListObject_AttributesChanged object:object userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Left View"] forKey:@"Keys"]];
+	 }
+ }
+ 
+ //Add a handle to the flash array
+ - (void)addToFlashArray:(AIListObject *)inObject
+ {
+	 //Ensure that we're observing the flashing
+	 if([flashingListObjectArray count] == 0){
+		 [[adium interfaceController] registerFlashObserver:self];
+	 }
+	 
+	 //Add the contact to our flash array
+	 [flashingListObjectArray addObject:inObject];
+	 [self flash:[[adium interfaceController] flashState]];
+ }
+ 
+ //Remove a handle from the flash array
+ - (void)removeFromFlashArray:(AIListObject *)inObject
+ {
+	 //Remove the contact from our flash array
+	 [flashingListObjectArray removeObject:inObject];
+	 
+	 //If we have no more flashing contacts, stop observing the flashes
+	 if([flashingListObjectArray count] == 0){
+		 [[adium interfaceController] unregisterFlashObserver:self];
+	 }
+ }
+ */
 
 //
 - (NSString *)idleStringForSeconds:(int)seconds
 {
     NSString	*idleString;
-
+	
     //Cap idle at 999 Hours (999*60*60 seconds)
     if(seconds > 599400){
         seconds = 599400;
     }
-
+	
     //Create the idle string
     if(seconds >= 600){
         idleString = [NSString stringWithFormat:@"%ih",seconds / 60];
@@ -194,7 +192,7 @@
     }else{
         idleString = [NSString stringWithFormat:@"%i",seconds];
     }
-
+	
     return(idleString);
 }
 
@@ -202,27 +200,27 @@
 {
     //Optimize this...
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STATUS_CIRCLES] == 0/* ||
-       [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:@"Contact Status Coloring"] == 0 */){
-	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STATUS_CIRCLES];
-
-	//Release the old values..
-	//Cache the preference values
-	displayStatusCircle		= [[prefDict objectForKey:KEY_DISPLAY_STATUS_CIRCLE] boolValue];
-	displayStatusCircleOnLeft	= [[prefDict objectForKey:KEY_DISPLAY_STATUS_CIRCLE_ON_LEFT] boolValue];
-	displayIdleTime			= [[prefDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue];
-	idleStringColor			= [[[prefDict objectForKey:KEY_IDLE_TIME_COLOR] representedColor] retain];
-
+		[(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:@"Contact Status Coloring"] == 0 */){
+		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STATUS_CIRCLES];
+		
+		//Release the old values..
+		//Cache the preference values
+		displayStatusCircle		= [[prefDict objectForKey:KEY_DISPLAY_STATUS_CIRCLE] boolValue];
+		displayStatusCircleOnLeft	= [[prefDict objectForKey:KEY_DISPLAY_STATUS_CIRCLE_ON_LEFT] boolValue];
+		displayIdleTime			= [[prefDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue];
+		idleStringColor			= [[[prefDict objectForKey:KEY_IDLE_TIME_COLOR] representedColor] retain];
+		
         //Update all our status circles
-	NSEnumerator		*enumerator;
-	AIListObject		*object;
-
+		NSEnumerator		*enumerator;
+		AIListObject		*object;
+		
         [AIStatusCircle shouldDisplayIdleTime:displayIdleTime];
         [AIStatusCircle setIsOnLeft:displayStatusCircleOnLeft];
         
-	enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
-
-	while(object = [enumerator nextObject]){
-            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil delayed:YES silent:YES] delayed:YES];
+		enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+		
+		while(object = [enumerator nextObject]){
+			[[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil silent:YES]];
         }
     }
 }
