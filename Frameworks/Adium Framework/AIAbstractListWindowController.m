@@ -67,7 +67,7 @@
 	return YES;
 }
 
-- (void)setContactListRoot:(AIListObject *)newContactListRoot
+- (void)setContactListRoot:(AIListObject <AIContainingObject> *)newContactListRoot
 {
 	[contactList release]; contactList = [newContactListRoot retain];
 	[contactListView reloadData];
@@ -273,7 +273,7 @@
 {
 	if (outlineView == contactListView){
 		[(AIListCell *)cell setListObject:item];
-		[(AIListCell *)cell setControlView:outlineView];
+		[(AIListCell *)cell setControlView:(AIListOutlineView *)outlineView];
 		
 		//	
 		//	int	icons = [iconArray count];
