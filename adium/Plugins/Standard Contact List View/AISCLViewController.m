@@ -594,6 +594,11 @@
     }
 }
 
+- (void)window:(NSWindow *)inWindow didResignMain:(NSNotification *)notification
+{
+	[self _stopTrackingMouse];
+}
+
 //Our enclosing scrollview has changed size, reset cursor tracking
 - (void)frameDidChange:(NSNotification *)notification
 {
