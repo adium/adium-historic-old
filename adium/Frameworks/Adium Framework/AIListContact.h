@@ -16,19 +16,13 @@
 #import <Foundation/Foundation.h>
 #import "AIListObject.h"
 
-@class AIHandle, AIAccount, AIContentObject;
+@class AIAccount, AIContentObject;
 
 @interface AIListContact : AIListObject {
-    NSMutableArray	*handleArray;
+    AIMutableOwnerArray		*remoteGroups;
 }
 
-- (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID;
-
-//Contained Handles
-- (AIHandle *)handleForAccount:(AIAccount *)inAccount;
-- (void)addHandle:(AIHandle *)inHandle;
-- (void)removeHandle:(AIHandle *)inHandle;
-- (void)removeAllHandles;
-- (int)numberOfHandles;
+- (void)setRemoteGroupName:(NSString *)groupName forAccount:(AIAccount *)inAccount;
+- (AIMutableOwnerArray *)remoteGroupArray;
 
 @end
