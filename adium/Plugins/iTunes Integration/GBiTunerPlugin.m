@@ -282,17 +282,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 	
 	//Append our string into the responder if possible
 	if(responder && [responder isKindOfClass:[NSTextView class]]){
-		NSAttributedString	*attrString;
-		
-		//Use typing attributes if available
-		if([responder respondsToSelector:@selector(typingAttributes)]){
-			attrString = [[[NSAttributedString alloc] initWithString:replacementText
-														  attributes:[(NSTextView *)responder typingAttributes]] autorelease];
-		}else{
-			attrString = [[[NSAttributedString alloc] initWithString:replacementText
-														  attributes:[NSDictionary dictionary]] autorelease];
-		}
-		[[(NSTextView *)responder textStorage] appendAttributedString:attrString];
+		[(NSTextView *)responder insertText:replacementText];
 	}
 }
 
