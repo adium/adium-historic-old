@@ -341,7 +341,15 @@
         [prefDict release];
         prefDict = nil;
     }
-    prefDict =	[[[owner preferenceController] preferenceForKey:[self preferencesKey] group:PREF_GROUP_EMOTICONS object:nil] mutableCopy];
+    prefDict =	[[owner preferenceController] preferenceForKey:[self preferencesKey] group:PREF_GROUP_EMOTICONS object:nil];
+    if (prefDict) {
+        prefDict = [prefDict mutableCopy];
+    }  else {
+        prefDict = [[NSMutableDictionary alloc] init];
+
+        [self _savePreferences];
+        [self loadPreferences];
+    }
 }
 
 - (NSMutableDictionary *)_preferencesDictionary

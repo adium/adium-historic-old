@@ -411,7 +411,7 @@
 
 - (void)selectEmoticon:(id)sender
 {
-    NSLog (@"Click was in emoticon table");
+    //NSLog (@"Click was in emoticon table");
     unsigned long index = ([table_curEmoticons clickedRow] * [table_curEmoticons numberOfColumns]) + [table_curEmoticons clickedColumn];
 
     if (index < [curEmoticons count]){
