@@ -142,6 +142,7 @@ static AIInfoWindowController *sharedInstance = nil;
     //    if(ownerArray && [ownerArray count]){
     [infoString appendString:@"\t" withAttributes:labelAttributes];
     [infoString appendString:/*[ownerArray objectAtIndex:0]*/[inContact displayName] withAttributes:bigValueAttributes];
+    [infoString appendString:[NSString stringWithFormat:@" (%@)", [inContact UID]] withAttributes:bigValueAttributes];
     //    }
     
     //Client
@@ -154,12 +155,29 @@ static AIInfoWindowController *sharedInstance = nil;
     //Signon Date
     NSDate *signonDate = [[inContact statusArrayForKey:@"Signon Date"] earliestDate];
     if(signonDate){
+        NSString        *currentDay, *signonDay, *signonTime;
+        NSDateFormatter	*dayFormatter, *timeFormatter;
+
         [infoString appendString:@"\r\r\tOnline For:\t" withAttributes:labelAttributes];
-        [infoString appendString:[NSDateFormatter stringForTimeIntervalSinceDate:signonDate] withAttributes:valueAttributes];
+        [infoString appendString:[NSDateFormatter stringForTimeIntervalSinceDate:signonDate showingSeconds:NO abbreviated:NO] withAttributes:valueAttributes];
         [infoString appendString:@"\r\tOnline Since:\t" withAttributes:labelAttributes];
-        [infoString appendString:[signonDate description] withAttributes:valueAttributes];
+            
+        //Create the formatters
+        dayFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%m/%d/%y" allowNaturalLanguage:YES] autorelease];
+        timeFormatter = [[[NSDateFormatter alloc] initWithDateFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES] allowNaturalLanguage:YES] autorelease];
+        
+        //Get day & time strings
+        currentDay = [dayFormatter stringForObjectValue:[NSDate date]];
+        signonDay = [dayFormatter stringForObjectValue:signonDate];
+        signonTime = [timeFormatter stringForObjectValue:signonDate];
+        
+        if([currentDay compare:signonDay] == 0){ //Show time
+            [infoString appendString:signonTime withAttributes:valueAttributes];
+            
+        }else{ //Show date and time
+            [infoString appendString:[NSString stringWithFormat:@"%@, %@", signonDay, signonTime] withAttributes:valueAttributes];
+        }
     }
-    
     //Online
     /*    int online = [[inContact statusArrayForKey:@"Online"] greatestIntegerValue];
     [infoString appendString:@"\r\tOnline:\t" withAttributes:labelAttributes];
