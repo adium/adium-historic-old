@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/details.jsp $-->
-<!--$Rev: 845 $ $Date: 2004/07/28 22:44:21 $ -->
+<!--$Rev: 854 $ $Date: 2004/08/04 16:31:54 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -134,6 +134,7 @@ try {
                     <li><a href="statistics.jsp">Statistics</a></li>
                     <li><a href="users.jsp">Users</a></li>
                     <li><a href="meta.jsp">Meta-Contacts</a></li>
+                    <li><a href="query.jsp">Query</a></li>
                 </ul>
             </div>
             <div id="sidebar-a">

@@ -26,9 +26,11 @@ try {
     } catch (NumberFormatException e) {
         meta_id = 0;
     }
-
-    pstmt.setInt(8, meta_id);
-
+    if(meta_id != 0) {
+        pstmt.setInt(8, meta_id);
+    } else {
+        pstmt.setString(8, null);
+    }
     pstmt.executeUpdate();
 
 } catch (SQLException e) {

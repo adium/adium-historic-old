@@ -162,6 +162,7 @@ try {
                     <li><a href="statistics.jsp">Statistics</a></li>
                     <li><a href="users.jsp">Users</a></li>
                     <li><a href="meta.jsp">Meta-Contacts</a></li>
+                    <li><a href="query.jsp">Query</a></li>
                 </ul>
             </div>
             <div id="sidebar-a">
@@ -508,19 +509,6 @@ try {
                 out.print("<p style=\"text-indent: 30px\">" +
                     messageContent + "<br />");
 
-                Timestamp dateTime = rset.getTimestamp("message_date");
-                long time = dateTime.getTime();
-                long fifteenAfter = time + 15*60*1000;
-                long fifteenBefore = time - 15*60*1000;
-                long thirtyAfter = time + 30*60*1000;
-                long thirtyBefore = time - 30*60*1000;
-
-                Timestamp finish = new Timestamp(fifteenAfter);
-                Timestamp start = new Timestamp(fifteenBefore);
-
-                Timestamp thirtyFinish = new Timestamp(thirtyAfter);
-                Timestamp thirtyStart = new Timestamp(thirtyBefore);
-
                 String cleanString = searchKey;
                 cleanString = cleanString.replaceAll("&", " ");
                 cleanString = cleanString.replaceAll("!", " ");
@@ -529,9 +517,8 @@ try {
                 out.print("<a href=\"index.jsp?from=" +
                 rset.getString("sender_sn") +
                 "&amp;to=" + rset.getString("recipient_sn") +
-                "&amp;finish=" + finish.toString() +
-                "&amp;start=" + start.toString() +
                 "&amp;hl=" + cleanString +
+                "&amp;message_id=" + rset.getString("message_id") +
                 "#" + rset.getInt("message_id") + "\">");
                 out.print("&#177;15&nbsp;");
                 out.print("</a>");
@@ -539,8 +526,8 @@ try {
                 out.print("<a href=\"index.jsp?from=" +
                 rset.getString("sender_sn") +
                 "&amp;to=" + rset.getString("recipient_sn") +
-                "&amp;finish=" + thirtyFinish.toString() +
-                "&amp;start=" + thirtyStart.toString() +
+                "&amp;message_id=" + rset.getString("message_id") +
+                "&amp;time=30" +
                 "&amp;hl=" + cleanString +
                 "#" + rset.getInt("message_id") + "\">");
                 out.print("&#177;30&nbsp;");
