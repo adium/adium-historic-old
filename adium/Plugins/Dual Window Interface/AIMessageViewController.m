@@ -74,7 +74,8 @@
 {
     if([[textView_outgoing attributedString] length] != 0){ //If message length is 0, don't send
         AIContentMessage	*message;
-
+	NSAttributedString	* outgoingAttributedString = [[[textView_outgoing attributedString] copy] autorelease];
+	
         //Send the message
         [[owner notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:chat userInfo:nil];
 
@@ -82,13 +83,13 @@
                                        withSource:account
                                       destination:nil //meaningless, since we get better info from the AIChat
                                              date:nil //created for us by AIContentMessage
-                                          message:[[[textView_outgoing attributedString] copy] autorelease]
+                                          message:outgoingAttributedString
                                         autoreply:NO];
-
 
         if([[owner contentController] sendContentObject:message]){
             [[owner notificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:chat userInfo:nil];
         }
+	[textView_outgoing addToHistory:outgoingAttributedString];
     }
 }
 
