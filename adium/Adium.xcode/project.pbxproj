@@ -484,10 +484,11 @@
 				F5B53FBB0333AB5C01A8010A,
 				4BD6720906001B2C0049CAF7,
 				4B7F78BA0597F42D00162728,
-				9EB3C52304F94DB7001D1F74,
-				BFEBDBF90669025600CBF845,
-				4B3717000510D19400A8010A,
+				4BF2E6BE067CB72400743318,
 				F50A325A03B5798301A8010A,
+				9EB3C52304F94DB7001D1F74,
+				4B3717000510D19400A8010A,
+				BFEBDBF90669025600CBF845,
 				29B97323FDCFA39411CA2CEA,
 				19C28FACFE9D520D11CA2CBB,
 			);
@@ -1976,20 +1977,6 @@
 			isa = PBXBuildStyle;
 			name = RC;
 		};
-		344804CF0634EFDE00A843F6 = {
-			isa = PBXFileReference;
-			lastKnownFileType = folder;
-			name = Styles;
-			path = "Plugins/WebKit Message View/Styles";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		344804D00634EFDE00A843F6 = {
-			fileRef = 344804CF0634EFDE00A843F6;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		344AB2B4057912C500384CEE = {
 			children = (
 				344AB2C30579136900384CEE,
@@ -2460,7 +2447,6 @@
 				34C2DBE6063449AF0018E5D2,
 				34C2DF02063498ED0018E5D2,
 				34C2DF03063498EF0018E5D2,
-				344804D00634EFDE00A843F6,
 				34989147064C47F20095598E,
 				4B03711606595A70008F5981,
 			);
@@ -4385,6 +4371,7 @@
 				34BD9D57053146CC000AB133,
 				34BD9D5E053146CC000AB133,
 				34BD9D5F053146CC000AB133,
+				4BF2E91F067CB76300743318,
 				34BD9D62053146CC000AB133,
 				34BD9D6A053146CC000AB133,
 				345DFF4A05564DB200CEE7B3,
@@ -4951,6 +4938,7 @@
 				4B0118090679168700FCB992,
 				4B0118110679175400FCB992,
 				4BF2E201067CAE9200743318,
+				4BF2E6BB067CB70E00743318,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8922,8 +8910,8 @@
 		4947F5EA0655E90C00B791E5 = {
 			children = (
 				4B149D4B0678FB5300D74D43,
-				4BF2DCC6067C919300743318,
 				4BF2DCC7067C919300743318,
+				4BF4A29F067CC6E700DCE812,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -17119,14 +17107,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BF2DCC6067C919300743318 = {
-			fileType = "compiled.mach-o.dylib";
-			isa = PBXReferenceProxy;
-			path = libezv.dylib;
-			refType = 3;
-			remoteRef = 4BF2DF1D067C91B600743318;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		4BF2DCC7067C919300743318 = {
 			fileType = archive.ar;
 			isa = PBXReferenceProxy;
@@ -17134,13 +17114,6 @@
 			refType = 3;
 			remoteRef = 4BF2DF1E067C91B600743318;
 			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4BF2DF1D067C91B600743318 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
 		};
 		4BF2DF1E067C91B600743318 = {
 			containerPortal = 4947F5E90655E90C00B791E5;
@@ -17159,6 +17132,70 @@
 		};
 		4BF2E201067CAE9200743318 = {
 			fileRef = 4BF2E194067CAE9200743318;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF2E6B3067CB70E00743318 = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = "Message Styles";
+			path = "Resources/Message Styles";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF2E6BB067CB70E00743318 = {
+			fileRef = 4BF2E6B3067CB70E00743318;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF2E6BE067CB72400743318 = {
+			children = (
+				4BF2E194067CAE9200743318,
+				4BF2E6B3067CB70E00743318,
+				4B24A2330482B34B00A8010A,
+				4B5829D30613D0BD0004BD25,
+			);
+			isa = PBXGroup;
+			name = "Xtras (Built In)";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF2E91F067CB76300743318 = {
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				4BF2EA3F067CB7A200743318,
+				4BF2EA40067CB7A200743318,
+				4BF2EA41067CB7A200743318,
+				4BF2EA42067CB7A200743318,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BF2EA3F067CB7A200743318 = {
+			fileRef = 4BF2E194067CAE9200743318;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF2EA40067CB7A200743318 = {
+			fileRef = 4BF2E6B3067CB70E00743318;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF2EA41067CB7A200743318 = {
+			fileRef = 4B24A2330482B34B00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF2EA42067CB7A200743318 = {
+			fileRef = 4B5829D30613D0BD0004BD25;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -17199,6 +17236,21 @@
 			path = "Plugins/Auto Linking/AIAutoLinkingPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BF4A29F067CC6E700DCE812 = {
+			fileType = "compiled.mach-o.dylib";
+			isa = PBXReferenceProxy;
+			path = libezv.dylib;
+			refType = 3;
+			remoteRef = 4BF4A38F067CC6F100DCE812;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4BF4A38F067CC6F100DCE812 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
+			remoteInfo = libezv;
 		};
 		4BF5BA10042F3CB200A8010A = {
 			fileEncoding = 30;
@@ -19838,7 +19890,6 @@
 				34C2DF00063498ED0018E5D2,
 				34C2DF01063498ED0018E5D2,
 				4B03711506595A70008F5981,
-				344804CF0634EFDE00A843F6,
 				3470663806015FB6004F0D20,
 			);
 			isa = PBXGroup;
@@ -21725,9 +21776,6 @@
 				4B191D880611C10800E8A4E7,
 				4B191D890611C10800E8A4E7,
 				F59DB6AD033EB74801A8010A,
-				4BF2E194067CAE9200743318,
-				4B24A2330482B34B00A8010A,
-				4B5829D30613D0BD0004BD25,
 				F552078B033F727F01A8010A,
 				34254F4305EC0C2700F11AD7,
 				34254F4505EC0C2E00F11AD7,
