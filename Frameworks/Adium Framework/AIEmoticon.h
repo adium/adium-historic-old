@@ -15,17 +15,21 @@
 
 #import "AIObject.h"
 
+@class AIEmoticonPack;
+
 @interface AIEmoticon : AIObject {
     NSString                *path;
     NSString                *name;
     NSArray                 *textEquivalents;
+	AIEmoticonPack			*pack;
+
     BOOL                    enabled;
     
     NSAttributedString      *_cachedAttributedString;
     NSImage                 *_cachedImage;
 }
 
-+ (id)emoticonWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName;
++ (id)emoticonWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName pack:(AIEmoticonPack *)inPack;
 - (NSArray *)textEquivalents;
 - (NSMutableAttributedString *)attributedStringWithTextEquivalent:(NSString *)textEquivalent;
 - (NSImage *)image;
