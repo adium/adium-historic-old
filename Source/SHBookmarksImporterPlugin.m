@@ -17,6 +17,12 @@
 #import "AIMenuController.h"
 #import "AIToolbarController.h"
 #import "SHBookmarksImporterPlugin.h"
+#import "SHSafariBookmarksImporter.h"
+#import "SHCaminoBookmarksImporter.h"
+#import "SHFireFoxBookmarksImporter.h"
+#import "SHMozillaBookmarksImporter.h"
+#import "SHOmniWebBookmarksImporter.h"
+#import "SHMSIEBookmarksImporter.h"
 #import <AIHyperlinks/SHMarkedHyperlink.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
@@ -27,9 +33,7 @@
 #define ROOT_MENU_TITLE     		AILocalizedString(@"Insert Bookmark",nil)
 #define BOOKMARK_MENU_TITLE     	AILocalizedString(@"Bookmark",nil)
 
-@class SHSafariBookmarksImporter, SHCaminoBookmarksImporter, SHMozillaBookmarksImporter,
-       SHFireFoxBookmarksImporter, SHMSIEBookmarksImporter, SHOmniWebBookmarksImporter,
-	   SHMarkedHyperlink;
+@class SHMarkedHyperlink;
 
 @interface SHBookmarksImporterPlugin(PRIVATE)
 - (Class)importerClassForDefaultBrowser;

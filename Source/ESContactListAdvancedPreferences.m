@@ -9,10 +9,9 @@
 #import "ESContactListAdvancedPreferences.h"
 #import "AISCLViewPlugin.h"
 #import "AIInterfaceController.h"
+#import "AIPreferenceWindowController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
-
-@class AIPreferenceWindowController;
 
 @interface ESContactListAdvancedPreferences (PRIVATE)
 - (NSMenu *)windowPositionMenu;
