@@ -53,6 +53,7 @@ should_update="yes"
 # If you want your build to be faster but potentially contain outdated plugins and the like,
 # set this to "no".
 clean_build="yes"
+svn="svn"
 
 # Don't do this unless you are a developer and want to automatically upload the .dmg to adium.sourceforge.net
 copy_to_sourceforge="no"
@@ -173,7 +174,7 @@ if [ "$should_update" == "yes" ] ; then
 	if !([ -x $adium_co_dir ]) ; then
 		echo "$adium_co_dir does not exist. Beginning new checkout."
 		echo "Begin SVN Checkout in $adium_co_dir"
-		svn co svn://svn.adiumx.com/adium/trunk adium
+		$svn co svn://svn.adiumx.com/adium/trunk adium
 	else							# Update from SVN
 		echo "Begin SVN Update in $adium_co_dir"
 
@@ -181,9 +182,9 @@ if [ "$should_update" == "yes" ] ; then
 		cd $adium_co_dir
 
 		if [ "$log" == "normal" ] ; then
-			svn update >& /dev/null		# Suppress output
+			$svn update >& /dev/null		# Suppress output
 		elif [ "$log" == "verbose" ] ; then
-			svn update
+			$svn update
 		fi
 
 		echo "SVN Update Complete"
@@ -209,12 +210,12 @@ if [ "$changelog" == "yes" ] ; then
 	fi
 
 	if [ "$log" == "normal" ] ; then	# Don't Log
-                svn log > CompleteChanges
-		svn log -r{$lastbuild}:HEAD > ChangeLog_$prettydate
+                $svn log > CompleteChanges
+		$svn log -r{$lastbuild}:HEAD > ChangeLog_$prettydate
 		ln -s $adium_co_dir/ChangeLog_$prettydate $adium_co_dir/ChangeLog >& /dev/null
 	elif [ "$log" == "verbose" ] ; then
-	    svn log -v > CompleteChanges
-            svn log -vr{$lastbuild}:HEAD > ChangeLog_$prettydate
+	    $svn log -v > CompleteChanges
+            $svn log -vr{$lastbuild}:HEAD > ChangeLog_$prettydate
             ln -s $adium_co_dir/ChangeLog_$prettydate $adium_co_dir/ChangeLog
 	fi
 	if !([ -e $adium_co_dir/ChangeLog_$prettydate ]); then
