@@ -19,7 +19,7 @@
 #import <Adium/Adium.h>
 
 @interface AILoggerPlugin : AIPlugin <AIPluginInfo> {
-
+    NSString	*logBasePath; //The base directory of all logs
 }
 
 @end

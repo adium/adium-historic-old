@@ -19,127 +19,100 @@
 #import "AIAdium.h"
 #import "AILoggerPlugin.h"
 
+#define PATH_LOGS	@"/Logs"
+
+@interface AILoggerPlugin (PRIVATE)
+- (void)_addMessage:(NSString *)message toLog:(NSString *)logName source:(NSString *)sourceName date:(NSDate *)date;
+@end
 
 @implementation AILoggerPlugin
 
-- (void)makeDir:(NSString *)path {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    BOOL folderExists, isDirectory;
+- (void)installPlugin
+{
+    NSMenuItem	*logViewerMenuItem;
 
-    folderExists = [fileManager fileExistsAtPath:path isDirectory:&isDirectory];
+    //Observe content sending and receiving
+    [[owner notificationCenter] addObserver:self selector:@selector(adiumSentContent:) name:Content_DidSendContent object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(adiumReceivedContent:) name:Content_DidReceiveContent object:nil];
 
-    if (folderExists && !isDirectory) {
-        [fileManager movePath:path toPath:[path stringByAppendingString:@".moved-aside"] handler:nil];
-        folderExists = NO;
-    }
-
-    if (!folderExists) {
-        [fileManager createDirectoryAtPath:path attributes:nil];
-    }
-}
-
-- (void)installPlugin {
-    NSMenuItem *logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Log Viewer" action:@selector(showLogViewer) keyEquivalent:@"L"] autorelease];
-    NSString *destination = [[[[owner loginController] userDirectory] stringByExpandingTildeInPath] stringByAppendingString:@"/Logs"];
-
-    [[owner notificationCenter] addObserver:self selector:@selector(adiumSentContent:) name:@"Content_DidSendContent" object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(adiumReceivedContent:) name:@"Content_DidReceiveContent" object:nil];
-
-    [self makeDir:destination];
-
-    [logViewerMenuItem setTarget:self];
-    
+    //Install the log viewer menu item
+    logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@"L"] autorelease];
     [[owner menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
+
+    //Create a logs directory
+    logBasePath = [[[[[owner loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath] retain];
+    [AIFileUtilities createDirectory:logBasePath];
 }
 
-- (void)adiumSentContent:(NSNotification *)notification {
-    AIContentMessage *content = [[notification userInfo] objectForKey:@"Object"];
-    id sender = [content source];
-    id receiver = [content destination];
-    NSString *text = [[content message] string];
-    NSString *filePath;
-    FILE *file;
-    NSCalendarDate *theDate = [NSCalendarDate calendarDate];
+//Content was sent
+- (void)adiumSentContent:(NSNotification *)notification
+{
+    AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
 
-    NSString *senderName;
-    NSString *receiverName;
+    //Message Content
+    if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
+        AIAccount	*source = [content source];
+        AIHandle	*destination = [content destination];
 
-    NSString *basePath = [[[[owner loginController] userDirectory] stringByExpandingTildeInPath] stringByAppendingString:@"/Logs"];
-    NSString *destinationPath;
-
-    char oString[1024];
-
-    if ([sender isKindOfClass:[AIHandle class]]) {
-        senderName = [sender UID];
-    } else {
-        senderName = [sender accountDescription];
+        //Source and destination are valid (account & handle)
+        if([source isKindOfClass:[AIAccount class]] && [destination isKindOfClass:[AIHandle class]]){
+            //Log the message
+            [self _addMessage:[[content message] string]
+                        toLog:[destination UIDAndServiceID]
+                       source:[source accountID]
+                         date:[content date]];
+        }
     }
-
-    if ([receiver isKindOfClass:[AIHandle class]]) {
-        receiverName = [receiver UID];
-    } else {
-        receiverName = [receiver accountDescription];
-    }
-
-    destinationPath = [basePath stringByAppendingString:[NSString stringWithFormat:@"/%@", receiverName]];
-    [self makeDir:destinationPath];
-
-    filePath = [[NSString stringWithFormat:@"%@/%i-%i-%i.log", destinationPath, [theDate monthOfYear], [theDate dayOfMonth], [theDate yearOfCommonEra]] stringByExpandingTildeInPath];
-
-    file = fopen([filePath cString], "a");
-
-    sprintf(oString, "+ (%i:%02i:%02i %s) %s: %s\n", ([theDate hourOfDay] > 12 ? [theDate hourOfDay]-12 : [theDate hourOfDay]), [theDate minuteOfHour], [theDate secondOfMinute], ([theDate hourOfDay] > 12 ? "PM" : "AM"), [senderName cString], [text cString]);
-
-    fputs(oString, file);
-
-    fclose(file);
 }
 
-- (void)adiumReceivedContent:(NSNotification *)notification {
-    AIContentMessage *content = [[notification userInfo] objectForKey:@"Object"];
-    id sender = [content source];
-    id receiver = [content destination];
-    NSString *text = [[content message] string];
-    NSString *filePath;
-    FILE *file;
-    NSCalendarDate *theDate = [NSCalendarDate calendarDate];
+//Content was received
+- (void)adiumReceivedContent:(NSNotification *)notification
+{
+    AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
 
-    NSString *senderName;
-    NSString *receiverName;
+    //Message Content
+    if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
+        AIHandle	*source = [content source];
 
-    NSString *basePath = [[[[owner loginController] userDirectory] stringByExpandingTildeInPath] stringByAppendingString:@"/Logs"];
-    NSString *destinationPath;
-
-    char oString[1024];
-
-    if ([sender isKindOfClass:[AIHandle class]]) {
-        senderName = [sender UID];
-    } else {
-        senderName = [sender accountDescription];
+        //Destination are valid (handle)
+        if([source isKindOfClass:[AIHandle class]]){
+            //Log the message
+            [self _addMessage:[[content message] string]
+                        toLog:[source UIDAndServiceID]
+                       source:[source UIDAndServiceID]
+                         date:[content date]];
+        }
     }
-
-    if ([receiver isKindOfClass:[AIHandle class]]) {
-        receiverName = [receiver UID];
-    } else {
-        receiverName = [receiver accountDescription];
-    }
-
-    destinationPath = [basePath stringByAppendingString:[NSString stringWithFormat:@"/%@", senderName]];
-    [self makeDir:destinationPath];
-
-    filePath = [[NSString stringWithFormat:@"%@/%i-%i-%i.log", destinationPath, [theDate monthOfYear], [theDate dayOfMonth], [theDate yearOfCommonEra]] stringByExpandingTildeInPath];
-
-    file = fopen([filePath cString], "a");
-
-    sprintf(oString, "- (%i:%02i:%02i %s) %s: %s\n", ([theDate hourOfDay] > 12 ? [theDate hourOfDay]-12 : [theDate hourOfDay]), [theDate minuteOfHour], [theDate secondOfMinute], ([theDate hourOfDay] > 12 ? "PM" : "AM"), [senderName cString], [text cString]);
-
-    fputs(oString, file);
-
-    fclose(file);
 }
 
-- (void)showLogViewer {
+//Show the log viewer window
+- (void)showLogViewer:(id)sender
+{
     
+}
+
+//Add a message to the specified log file
+- (void)_addMessage:(NSString *)message toLog:(NSString *)logName source:(NSString *)sourceName date:(NSDate *)date
+{
+    NSString	*logPath;
+    NSString	*logFileName;
+    NSString	*logString;
+    FILE	*file;
+
+    //Create path to log file
+    logPath = [logBasePath stringByAppendingPathComponent:logName];
+    logFileName = [NSString stringWithFormat:@"%@ (%@).adiumLog", logName, [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
+
+    //Create a directory for this log (if one doesn't exist)
+    [AIFileUtilities createDirectory:logPath];
+
+    //Format the log string
+    logString = [NSString stringWithFormat:@"(%@)%@:%@\n",[[NSDate date] descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil], sourceName, message];
+
+    //Append the new content (We use fopen/fputs/fclose for max speed)
+    file = fopen([[logPath stringByAppendingPathComponent:logFileName] cString], "a");
+    fputs([logString cString], file);
+    fclose(file);
 }
 
 - (NSString *)pluginAuthor {

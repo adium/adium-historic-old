@@ -261,11 +261,6 @@
 
 
 //Custom mouse tracking ----------------------------------------------------------------------
-- (void)setAcceptsMouseMovedEvents:(BOOL)flag
-{
-    [[self window] setAcceptsMouseMovedEvents:flag];
-}
-
 - (void)mouseMoved:(NSEvent *)theEvent
 {
     [[self delegate] mouseMoved:theEvent];

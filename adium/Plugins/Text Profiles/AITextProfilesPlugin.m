@@ -31,6 +31,9 @@
     [NSBundle loadNibNamed:CONTACT_PROFILE_NIB owner:self];
     contactProfileView = [[AIPreferenceViewController controllerWithName:@"Profile" categoryName:@"None" view:view_contactProfileInfoView delegate:self] retain];
     [[owner contactController] addContactInfoView:contactProfileView];
+
+    //Configure the profile text view
+    [textView_contactProfile setEditable:NO];
 }
 
 - (void)uninstallPlugin

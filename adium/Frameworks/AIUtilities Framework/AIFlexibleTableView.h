@@ -50,7 +50,6 @@
     //Configuration
     NSMutableArray			*columnArray;		//Our columns
     BOOL				contentBottomAligned;	//YES for bottom-aligned content
-    BOOL				scrollsOnNewContent;	//YES to enable autoscroll
 
     //Cursor tracking
     NSMutableArray			*cursorTrackingCellArray;
@@ -79,11 +78,9 @@
 - (void)reloadData;
 - (void)reloadRow:(int)inRow;
 - (void)setContentBottomAligned:(BOOL)inValue;
-- (void)setScrollsOnNewContent:(BOOL)inValue;
 - (int)selectedRow;
 - (void)editRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn;
 - (void)resizeCellHeight:(AIFlexibleTableCell *)inCell;
-- (void)setAcceptsMouseMovedEvents:(BOOL)flag;
 
 @end
 

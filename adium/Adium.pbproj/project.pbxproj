@@ -1336,6 +1336,18 @@
 			isa = PBXTargetDependency;
 			target = F53B9A0602CCED6401A8010A;
 		};
+		4B3DB8FD04547A8D00A8010A = {
+			isa = PBXFileReference;
+			name = LogViewer.nib;
+			path = Plugins/Logger/LogViewer.nib;
+			refType = 4;
+		};
+		4B3DB8FE04547A8D00A8010A = {
+			fileRef = 4B3DB8FD04547A8D00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B3E502203EC538D00A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -4052,6 +4064,84 @@
 			settings = {
 			};
 		};
+		4BC02D310452C69100A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AILinkTrackingController.h;
+			path = "Frameworks/AIUtilities Framework/AILinkTrackingController.h";
+			refType = 4;
+		};
+		4BC02D320452C69100A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AILinkTrackingController.m;
+			path = "Frameworks/AIUtilities Framework/AILinkTrackingController.m";
+			refType = 4;
+		};
+		4BC02D330452C69100A8010A = {
+			fileRef = 4BC02D310452C69100A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC02D340452C69100A8010A = {
+			fileRef = 4BC02D320452C69100A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC030360452E86200A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AILinkTextView.h;
+			path = "Frameworks/AIUtilities Framework/AILinkTextView.h";
+			refType = 4;
+		};
+		4BC030370452E86200A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AILinkTextView.m;
+			path = "Frameworks/AIUtilities Framework/AILinkTextView.m";
+			refType = 4;
+		};
+		4BC030380452E86200A8010A = {
+			fileRef = 4BC030360452E86200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC030390452E86200A8010A = {
+			fileRef = 4BC030370452E86200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC0304B0453388C00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAutoScrollView.h;
+			path = "Frameworks/AIUtilities Framework/AIAutoScrollView.h";
+			refType = 4;
+		};
+		4BC0304C0453388C00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAutoScrollView.m;
+			path = "Frameworks/AIUtilities Framework/AIAutoScrollView.m";
+			refType = 4;
+		};
+		4BC0304D0453388C00A8010A = {
+			fileRef = 4BC0304B0453388C00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC0304E0453388C00A8010A = {
+			fileRef = 4BC0304C0453388C00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BC3133503BCD2FA00A8010A = {
 			fileRef = F55B415D03AB8B5601A8010A;
 			isa = PBXBuildFile;
@@ -4082,8 +4172,6 @@
 				4BF1F04C03D7B9F000A8010A,
 				4BF1F04703D7B99700A8010A,
 				4BF1F04803D7B99700A8010A,
-				4B30AE080442680000A8010A,
-				4B30AE090442680000A8010A,
 			);
 			isa = PBXGroup;
 			name = "Flexible Table View";
@@ -5523,6 +5611,7 @@
 		9C8C7F9803CBA08400267226 = {
 			buildActionMask = 2147483647;
 			files = (
+				4B3DB8FE04547A8D00A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5629,6 +5718,7 @@
 			children = (
 				9C8C7FA403CBA21B00267226,
 				9C8C7FA503CBA21B00267226,
+				4B3DB8FD04547A8D00A8010A,
 			);
 			isa = PBXGroup;
 			name = Logger;
@@ -7026,6 +7116,9 @@
 				4B30ADFC044228BA00A8010A,
 				4B30AE0A0442680000A8010A,
 				4BB2C23C044605CE00A8010A,
+				4BC02D330452C69100A8010A,
+				4BC030380452E86200A8010A,
+				4BC0304D0453388C00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7108,6 +7201,9 @@
 				4B30ADFD044228BA00A8010A,
 				4B30AE0B0442680000A8010A,
 				4BB2C23D044605CE00A8010A,
+				4BC02D340452C69100A8010A,
+				4BC030390452E86200A8010A,
+				4BC0304E0453388C00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7755,6 +7851,10 @@
 				4B254C4303F6D8FC00A8010A,
 				F5793979033E755501A8010A,
 				F579397A033E755501A8010A,
+				4BC02D310452C69100A8010A,
+				4BC02D320452C69100A8010A,
+				4B30AE080442680000A8010A,
+				4B30AE090442680000A8010A,
 			);
 			isa = PBXGroup;
 			name = "Text / Strings";
@@ -7795,12 +7895,16 @@
 				F5793937033E74E401A8010A,
 				4B3E502203EC538D00A8010A,
 				4B3E502303EC538D00A8010A,
+				4BC0304B0453388C00A8010A,
+				4BC0304C0453388C00A8010A,
 				F570A59003704AB901A8010A,
 				F570A59103704AB901A8010A,
 				F57938F8033E745F01A8010A,
 				F57938B8033E739101A8010A,
 				F5793944033E74E401A8010A,
 				F5793945033E74E401A8010A,
+				4BC030360452E86200A8010A,
+				4BC030370452E86200A8010A,
 				4B3E502603EC651400A8010A,
 				4B3E502703EC651400A8010A,
 				F5793953033E74E401A8010A,

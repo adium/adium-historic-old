@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "AIFlexibleTableCell.h"
 
-@class AIFlexibleTableColumn, AIFlexibleLink;
+@class AIFlexibleTableColumn, AIFlexibleLink, AILinkTrackingController;
 
 @interface AIFlexibleTableTextCell : AIFlexibleTableCell {
     NSTextView			*editor;
@@ -19,13 +19,9 @@
 
     NSAttributedString		*string;
 
-    NSMutableArray		*linkArray;
-
+    
     //Link
-    AIFlexibleLink		*hoveredLink;
-    NSString			*hoveredString;
-    id				oldFirstResponder;
-    BOOL			trackingMouseMovedEvents;
+    AILinkTrackingController	*linkTrackingController;
     
     //Text rendering cache
     NSTextStorage 		*textStorage;

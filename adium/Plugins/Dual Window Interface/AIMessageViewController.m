@@ -35,6 +35,7 @@
 - (void)textDidChange:(NSNotification *)notification;
 - (void)sizeAndArrangeSubviews;
 - (void)preferencesChanged:(NSNotification *)notification;
+- (float)textHeight;
 @end
 
 @implementation AIMessageViewController
@@ -129,17 +130,13 @@
     owner = [inOwner retain];
     interface = [inInterface retain];
     contact = [inContact retain];
+    currentTextEntryHeight = 0;
     
     account = [inAccount retain];
     if(!account) account = [[[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toContact:contact] retain];
         
     //view
     [NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
-
-    //Create the message view
-    view_messages = [[owner interfaceController] messageViewForContact:contact];
-    [scrollView_messages setAndSizeDocumentView:view_messages];
-    [scrollView_messages setNextResponder:textView_outgoing];
 
     //Config the outgoing text view
     [textView_outgoing setOwner:owner];
@@ -153,10 +150,15 @@
     //Resize and arrange our views
     [self sizeAndArrangeSubviews];
 
+    //Create the message view
+    view_messages = [[owner interfaceController] messageViewForContact:contact];
+    [scrollView_messages setAndSizeDocumentView:view_messages];
+    [scrollView_messages setNextResponder:textView_outgoing];
+
     //Register for notifications
     [[owner notificationCenter] addObserver:self selector:@selector(sendMessage:) name:Interface_SendEnteredMessage object:contact];
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSViewFrameDidChangeNotification object:view_contents];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sizeAndArrangeSubviews) name:NSViewFrameDidChangeNotification object:view_contents];
 
     //Put the initial content in the outgoing text view
     [textView_outgoing setAttributedString:inContent];
@@ -201,14 +203,15 @@
 //The entered text has changed
 - (void)textDidChange:(NSNotification *)notification
 {
-    [self sizeAndArrangeSubviews]; //Resize our contents to fit the text
+    if([self textHeight] != currentTextEntryHeight){
+        [self sizeAndArrangeSubviews]; //Resize our contents to fit the text (If it's height has changed)
+    }
 }
 
 //Arrange and resize our subviews based on the current state of this view (whether or not: it's locked to a contact, the account view is visible)
 - (void)sizeAndArrangeSubviews
 {
     int		height;
-    float 	textHeight;
     NSRect	superFrame = [view_contents frame];
 
     superFrame.origin.y = 0;
@@ -229,20 +232,26 @@
     superFrame.origin.y += height;
 
     //Text entry
-    textHeight = [[textView_outgoing layoutManager] usedRectForTextContainer:[textView_outgoing textContainer]].size.height + ENTRY_TEXTVIEW_PADDING;
-    if(textHeight > ENTRY_TEXTVIEW_MAX_HEIGHT){
-        textHeight = ENTRY_TEXTVIEW_MAX_HEIGHT;
-        [scrollView_outgoingView setHasVerticalScroller:YES];
-    }else{
-        [scrollView_outgoingView setHasVerticalScroller:NO];
-    }
-
-    [scrollView_outgoingView setFrame:NSMakeRect(-1, superFrame.origin.y, superFrame.size.width + 2, textHeight)];
-    superFrame.size.height -= textHeight;
-    superFrame.origin.y += textHeight;
+    currentTextEntryHeight = [self textHeight];
+    [scrollView_outgoingView setHasVerticalScroller:(currentTextEntryHeight == ENTRY_TEXTVIEW_MAX_HEIGHT)];
+    [scrollView_outgoingView setFrame:NSMakeRect(-1, superFrame.origin.y, superFrame.size.width + 2, currentTextEntryHeight)];
+    superFrame.size.height -= currentTextEntryHeight;
+    superFrame.origin.y += currentTextEntryHeight;
 
     //Messages
     [scrollView_messages setFrame:NSMakeRect(-1, superFrame.origin.y, superFrame.size.width + 2, superFrame.size.height + 1)];
+}
+
+- (float)textHeight
+{
+    float textHeight;
+
+    textHeight = [[textView_outgoing layoutManager] usedRectForTextContainer:[textView_outgoing textContainer]].size.height + ENTRY_TEXTVIEW_PADDING;
+    if(textHeight > ENTRY_TEXTVIEW_MAX_HEIGHT){
+        textHeight = ENTRY_TEXTVIEW_MAX_HEIGHT;
+    }
+
+    return(textHeight);
 }
 
 @end
