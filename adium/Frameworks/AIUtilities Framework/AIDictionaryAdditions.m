@@ -60,13 +60,13 @@
 }
 
 // saves this dictionary to the specified path
-- (void)writeToPath:(NSString *)path withName:(NSString *)name
+- (BOOL)writeToPath:(NSString *)path withName:(NSString *)name
 {
     NSParameterAssert(path != nil); NSParameterAssert([path length] != 0);
     NSParameterAssert(name != nil); NSParameterAssert([name length] != 0);
 
 	[[NSFileManager defaultManager] createDirectoriesForPath:path]; //make sure the path exists
-    [self writeToFile:[NSString stringWithFormat:@"%@/%@.plist",path,name] atomically:YES];
+    return ([self writeToFile:[NSString stringWithFormat:@"%@/%@.plist",path,name] atomically:YES]);
 }
 
 - (BOOL)boolForKey:(NSString *)inKey{
