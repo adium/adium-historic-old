@@ -34,7 +34,7 @@
 
     //Setup our preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LOGGING];
-    preferences = [[AILoggerPreferences loggerPreferencesWithOwner:owner] retain];
+    preferences = [[AILoggerPreferences preferencePaneWithOwner:owner] retain];
 
     //Install the log viewer menu item
     logViewerMenuItem = [[NSMenuItem alloc] initWithTitle:@"Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@"l"];

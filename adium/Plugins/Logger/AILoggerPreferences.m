@@ -19,65 +19,29 @@
 #import "AILoggerPreferences.h"
 #import "AILoggerPlugin.h"
 
-#define LOGGER_PREF_NIB		@"LoggerPrefs"
-#define LOGGER_PREF_TITLE	@"Logging"
-
-@interface AILoggerPreferences (PRIVATE)
-- (id)initWithOwner:(id)inOwner;
-- (void)configureView;
-@end
-
 @implementation AILoggerPreferences
 
-//
-+ (AILoggerPreferences *)loggerPreferencesWithOwner:(id)inOwner
-{
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+//Preference pane properties
+- (PREFERENCE_CATEGORY)category{
+    return(AIPref_Messages_Sending);
+}
+- (NSString *)label{
+    return(@"G");
+}
+- (NSString *)nibName{
+    return(@"LoggerPrefs");
 }
 
-//init
-- (id)initWithOwner:(id)inOwner
-{
-    //Init
-    [super init];
-    owner = [inOwner retain];
-
-    //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Receiving withDelegate:self label:LOGGER_PREF_TITLE]];
-
-    return(self);
-}
-
-//Return the view for our preference pane
-- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    //Load our preference view nib
-    if(!view_prefView){
-        [NSBundle loadNibNamed:LOGGER_PREF_NIB owner:self];
-
-        //Configure our view
-        [self configureView];
-    }
-
-    return(view_prefView);
-}
-
-//Configures our view for the current preferences
-- (void)configureView
+//Configure the preference view
+- (void)viewDidLoad
 {
     NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING];
 
     [checkBox_enableLogging setState:[[preferenceDict objectForKey:KEY_LOGGER_ENABLE] boolValue]];
 }
 
-//Clean up our preference pane
-- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    [view_prefView release]; view_prefView = nil;
-}
-
 //
-- (IBAction)preferenceChanged:(id)sender
+- (IBAction)changePreference:(id)sender
 {
     if(sender == checkBox_enableLogging){
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]

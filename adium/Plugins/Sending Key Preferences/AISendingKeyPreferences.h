@@ -14,18 +14,10 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
 
-
-@interface AISendingKeyPreferences : NSObject {
-    IBOutlet	NSView		*view_prefView;
-    IBOutlet	NSButton	*checkBox_sendOnEnter;
+@interface AISendingKeyPreferences : AIPreferencePane {
     IBOutlet	NSButton	*checkBox_sendOnReturn;
-
-    AIAdium			*owner;
-
 }
-
-+ (AISendingKeyPreferences *)sendingKeyPreferencesWithOwner:(id)inOwner;
-- (IBAction)preferenceChanged:(id)sender;
 
 @end
