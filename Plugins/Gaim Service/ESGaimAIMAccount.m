@@ -524,7 +524,7 @@
 									  AIAvailableStatusType);
 		NSString		*statusMessage = nil;
 
-		bi = g_hash_table_lookup(od->buddyinfo, uidUTF8String);
+		bi = (od->buddyinfo ? g_hash_table_lookup(od->buddyinfo, uidUTF8String) : NULL);
 		
 		if ((bi != NULL) && (bi->availmsg != NULL) && !(userinfo->flags & AIM_FLAG_AWAY)) {
 			
