@@ -7516,6 +7516,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				B7D309EA05689D3D008A5CB9,
 				4B7F27C705440DE900CDFC90,
 				3419FDE10531585600C68BA3,
 				3419FDE30531585600C68BA3,
@@ -23432,6 +23433,12 @@
 		};
 		B7AEFA8F054EC65200B1E4CE = {
 			fileRef = B7AEFA8E054EC65200B1E4CE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B7D309EA05689D3D008A5CB9 = {
+			fileRef = 34BD9F4E05314783000AB133;
 			isa = PBXBuildFile;
 			settings = {
 			};
