@@ -97,6 +97,7 @@
 - (void)dealloc
 {
     //
+    abandonRebuilding = YES;
     [[owner notificationCenter] removeObserver:self];
     [self _flushPreferenceCache];
 
@@ -194,6 +195,7 @@
         restartRebuilding = YES;
     } else {
         restartRebuilding = NO;
+        abandonRebuilding = NO;
         [NSThread detachNewThreadSelector:@selector(_rebuildMessageViewForContentThread) toTarget:self withObject:nil];
     }
 }
@@ -204,8 +206,8 @@
     rebuilding = YES;
 
     AIContentObject    *content;
-    AIFlexibleTableRow  *row;
     NSMutableArray      *rowArray = [[NSMutableArray alloc] init];
+    AIFlexibleTableRow  *row;
     
     //The first row has no previous row
     previousRow = nil;
@@ -213,13 +215,15 @@
     //In a separate thread, so create an autorelease pool for the NSEnumerator objects
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
+    //Lock the flexible table view
+    [messageView lockTable];
+    
     //Re-add all content one row at a time (slooow)
     NSEnumerator        *enumerator_chat = [[chat contentObjectArray] reverseObjectEnumerator]; //(Content is stored in reverse order)
-    while((content = [enumerator_chat nextObject]) && !restartRebuilding){
+    while((content = [enumerator_chat nextObject]) && !restartRebuilding && !abandonRebuilding){
         NSArray *contentRowArray = [[self _rowsForAddingContentObject:content] retain];
         NSEnumerator        *enumerator_two = [contentRowArray objectEnumerator];
-        AIFlexibleTableRow  *row;
-        
+
         while (row = [enumerator_two nextObject]) {
             [rowArray addObject:row];
         }
@@ -228,43 +232,64 @@
     }
     
     //Move everything out
-    if (!restartRebuilding)
+    if (!restartRebuilding && !abandonRebuilding) {
         [messageView removeAllRows];
+    }
     
     NSEnumerator *rowArray_enumerator = [rowArray objectEnumerator];
-    while ((row = [rowArray_enumerator nextObject]) && !restartRebuilding){
-        [messageView addRow:row]; 
+    while ((row = [rowArray_enumerator nextObject]) && !restartRebuilding && !abandonRebuilding){
+        [self performSelectorOnMainThread:@selector(addRowToMessageView:) withObject:row waitUntilDone:YES];
+
     }
 
-    //restart the rebuilding process if necessar
-    if (restartRebuilding){
+    //restart the rebuilding process if necessary
+    if (restartRebuilding && !abandonRebuilding){
         restartRebuilding = NO;
         
         [self _rebuildMessageViewForContentThread];
     }
+    
+    while ([contentQueue count] && !abandonRebuilding) {
+        
+        NSEnumerator    *enumerator = [contentQueue objectEnumerator];
+        int             processedContentNumber = [contentQueue count];
+        AIContentObject *content;
+        
+        while ( (content = [enumerator nextObject]) && !abandonRebuilding) {
+            [self performSelectorOnMainThread:@selector(_addContentObject:) withObject:content waitUntilDone:YES];
+        }
+        
+        [contentQueue removeObjectsInRange:NSMakeRange(0,processedContentNumber)];
+    }
+    
     rebuilding = NO;
     
-    //catch up
-    [self _addQueuedContent];
-    
-    //Refresh the display
-    [messageView display];
-
+    [self performSelectorOnMainThread:@selector(unlockMessageView) withObject:nil waitUntilDone:YES];
+  
     [rowArray release];
     [pool release];
 }
 
-//add the queued content in order, then remove it from the contentQueue
-- (void)_addQueuedContent
+- (void)unlockMessageView
 {
-    NSEnumerator    *enumerator = [contentQueue objectEnumerator];
-    AIContentObject *content;
-    while (content = [enumerator nextObject])
-        [self _addContentObject:content];
-    
-    [contentQueue removeAllObjects];
+    [messageView unlockTable];
 }
 
+- (void)setNeedsDisplay
+{
+    [messageView setNeedsDisplay:YES];   
+}
+
+- (void)removeAllRows
+{
+    [messageView removeAllRows];
+}
+
+- (void)addRowToMessageView:(AIFlexibleTableRow *)row
+{
+    [messageView addRow:row]; 
+}
+                             
 //queue a content object for later addition to the view
 - (void)_addContentObjectToQueue:(AIContentObject *)content
 {
