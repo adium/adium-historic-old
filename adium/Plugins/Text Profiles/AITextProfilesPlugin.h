@@ -18,14 +18,8 @@
 
 @class AITextProfilePreferences, AIPreferenceViewController, AIContactObserver, AILinkTrackingController;
 
-@interface AITextProfilesPlugin : AIPlugin <AIContactObserver, AIPreferenceViewControllerDelegate> {
-    IBOutlet	NSView		*view_contactProfileInfoView;
-    IBOutlet	NSTextView	*textView_contactProfile;
-    
+@interface AITextProfilesPlugin : AIPlugin {    
     AITextProfilePreferences		*preferences;
-
-    AIPreferenceViewController		*contactProfileView;
-    AIListContact			*activeContactObject;
 }
 
 @end

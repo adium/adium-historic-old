@@ -341,8 +341,6 @@ typedef enum {
     int				largestOrder;
 
     AIContactListGeneration	*contactListGeneration;
-
-    NSMenuItem			*getInfoContextMenuItem;
 }
 
 //Account available handles changed
@@ -364,6 +362,7 @@ typedef enum {
 - (void)handleStatusChanged:(AIHandle *)inHandle modifiedStatusKeys:(NSArray *)inModifiedKeys;
 - (void)contactStatusChanged:(AIListContact *)inContact modifiedStatusKeys:(NSArray *)inModifiedKeys;
 - (void)registerContactObserver:(id)inObserver;
+- (void)unregisterContactObserver:(id)inObserver;
 - (void)objectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys;
 
 //Contact list sorting

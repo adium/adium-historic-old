@@ -17,7 +17,7 @@
 
 @class AISocket, AIGroup, AIMTOC2AccountViewController;
 
-@interface AIMTOC2Account : AIAccount <AIAccount_Content, AIAccount_Handles> {
+@interface AIMTOC2Account : AIAccount <AIAccount_Content, AIAccount_Handles, NSURLHandleClient> {
     IBOutlet		NSTextView	*textView_trafficWatchDEBUG;
     IBOutlet		NSTextField	*textField_trafficSendDEBUG;
     
@@ -42,7 +42,7 @@
     NSDictionary	*preferencesDict;	// Our preferences dictionary
 
     NSMutableDictionary	*handleDict;		// A dictionary of all available handles
-
+    
     NSTimer		*pingTimer;
     NSTimeInterval	pingInterval;
     NSDate		*firstPing;
@@ -50,6 +50,8 @@
     BOOL		waitingForFirstUpdate;
     BOOL		processingSignOnUpdates;
     int			numberOfSignOnUpdates;
+
+    NSURLHandle		*profileURLHandle;	// URLHandle for the currently loading profile	
 }
 
 - (IBAction)sendCommand:(id)sender;
