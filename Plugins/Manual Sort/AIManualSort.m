@@ -17,37 +17,38 @@
 #import "AIManualSort.h"
 #import <Adium/AIListObject.h>
 
-//Perform no sorting
-
-int manualSort(id objectA, id objectB, BOOL groups);
-
+/*!
+ * @class AIManualSort
+ * @brief AISortController to sort only by manual ordering
+ */
 @implementation AIManualSort
 
-- (NSString *)description{
-    return(@"Perform no sorting.");
-}
+/*!
+ * @brief Non-localized identifier
+ */
 - (NSString *)identifier{
     return(@"ManualSort");
 }
+
+/*!
+ * @brief Localized display name
+ */
 - (NSString *)displayName{
     return(AILocalizedString(@"Sort Contacts Manually",nil));
 }
-- (NSString *)configureSortMenuItemTitle{ 
-	return(nil);
-}
-- (NSSet *)statusKeysRequiringResort{
-	return(nil);
-}
-- (NSSet *)attributeKeysRequiringResort{
-	return(nil);
-}
+
+/*!
+ * @brief Always sort groups to the top?
+ *
+ * For manual sorting, groups get sorted like any other object
+ */
 - (BOOL)alwaysSortGroupsToTopByDefault{
 	return(NO);
 }
-- (sortfunc)sortFunction{
-	return(&manualSort);
-}
 
+/*
+ * @brief Manual sort
+ */
 int manualSort(id objectA, id objectB, BOOL groups)
 {
 	//Contacts and Groups in manual order
@@ -62,6 +63,13 @@ int manualSort(id objectA, id objectB, BOOL groups)
 		return([[objectA internalObjectID] caseInsensitiveCompare:[objectB internalObjectID]]);
 	}
 	
+}
+
+/*
+ * @brief Sort function
+ */
+- (sortfunc)sortFunction{
+	return(&manualSort);
 }
 
 @end
