@@ -32,7 +32,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 //Return the shared contact info window
 + (void)showInfoWindowForListObject:(AIListObject *)listObject
 {
-
     //Create the window
     if(!sharedContactInfoInstance){
         sharedContactInfoInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB];
@@ -89,8 +88,10 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     [tabView_category selectTabViewItem:tabViewItem];    
 	
 	//Monitor the selected contact
-    [[adium notificationCenter] addObserver:self selector:@selector(selectionChanged:) name:Interface_ContactSelectionChanged object:nil];
-	[self selectionChanged:nil];
+    [[adium notificationCenter] addObserver:self 
+								   selector:@selector(selectionChanged:)
+									   name:Interface_ContactSelectionChanged 
+									 object:nil];
     
 	//Restore the window position
     savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_INFO_WINDOW_FRAME];
@@ -148,17 +149,10 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     return(NO);
 }
 
-
-
-
-
-
 - (NSImage *)tabView:(NSTabView *)tabView imageForTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	return([NSImage imageNamed:[NSString stringWithFormat:@"info%@",[tabViewItem identifier]] forClass:[self class]]);
 }
-
-
 
 //
 - (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
