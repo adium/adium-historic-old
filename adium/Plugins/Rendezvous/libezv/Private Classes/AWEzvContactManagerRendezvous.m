@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerRendezvous.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.13 2004/07/16 12:46:29 proton Exp $
+ * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.14 2004/07/27 15:17:02 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -254,6 +254,15 @@ void av_resolve_reply (struct sockaddr	*interface,
 	if (myname != nil) {
 	    [myname release];
 	    myname = nil;
+	}
+    }
+    if (avDnsRef != NULL) {
+	DNSServiceDiscoveryDeallocate(avDnsRef);
+	avDnsRef = NULL;
+	isConnected = NO;
+	if (myavname != nil) {
+	    [myavname release];
+	    myavname = nil;
 	}
     }
 }
