@@ -74,8 +74,6 @@
 	if ((gaim_account_is_connected(account)) &&
 		(buddy = gaim_find_buddy(account, uidUTF8String))) {
 		
-		NSLog(@"%@ !!! %@ %i",self,theContact,newAway);
-
 		NSString		*statusName = nil;
 		NSString		*statusMessage = nil;
 		AIStatusType	statusType = (newAway ? AIAwayStatusType : AIAvailableStatusType);
