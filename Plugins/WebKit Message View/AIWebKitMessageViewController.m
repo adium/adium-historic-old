@@ -866,7 +866,7 @@ DeclareString(AppendNextMessage);
 								break;	
 							}
 							case Screen_Name_Display_Name: {
-								senderDisplay = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
+								senderDisplay = [NSString stringWithFormat:@"%@ (%@)",formattedUID,displayName];
 								break;	
 							}
 							case Screen_Name: {
