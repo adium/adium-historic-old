@@ -985,10 +985,10 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 		}else if([arg caseInsensitiveCompare:Color] == NSOrderedSame){
 			NSString *colorString = [inArgs objectForKey:arg];
-			[textAttributes setTextColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg]]];
+			[textAttributes setTextColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg] defaultColor:[NSColor blackColor]]];
 
 		}else if([arg caseInsensitiveCompare:Back] == NSOrderedSame){
-			[textAttributes setTextBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg]]];
+			[textAttributes setTextBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg] defaultColor:[NSColor whiteColor]]];
 
 		}
 	}
@@ -1002,7 +1002,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while((arg = [enumerator nextObject])){
 		if([arg caseInsensitiveCompare:@"BGCOLOR"] == NSOrderedSame){
-			[textAttributes setBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg]]];
+			[textAttributes setBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg] defaultcolor:[NSColor whiteColor]]];
 		}
 	}
 }
