@@ -19,10 +19,10 @@
 
 #define AWAY_SPELLING_DEFAULT_PREFS		@"AwaySpellingDefaults"
 
-#define AWAY_MESSAGE_MENU_TITLE			@"Set Away Message"
-#define AWAY_MESSAGE_MENU_TITLE_SHORT           @"Set Away"
-#define	REMOVE_AWAY_MESSAGE_MENU_TITLE		@"Remove Away Message"
-#define	CUSTOM_AWAY_MESSAGE_MENU_TITLE		@"Custom Message…"
+#define AWAY_MESSAGE_MENU_TITLE			AILocalizedString(@"Set Away Message",nil);
+#define AWAY_MESSAGE_MENU_TITLE_SHORT           AILocalizedString(@"Set Away",nil);
+#define	REMOVE_AWAY_MESSAGE_MENU_TITLE		AILocalizedString(@"Remove Away Message",nil);
+#define	CUSTOM_AWAY_MESSAGE_MENU_TITLE		AILocalizedString(@"Custom Message…",nil);
 #define AWAY_MENU_HOTKEY			@"y"
 
 @interface AIAwayMessagesPlugin (PRIVATE)
