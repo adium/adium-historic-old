@@ -2,6 +2,7 @@
 //  SLGaimCocoaAdapter.m
 //  Adium
 //  Adapts gaim to the Cocoa event loop.
+//  Requires Mac OS X 10.2.
 //
 //  Created by Scott Lamb on Sun Nov 2 2003.
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
@@ -13,10 +14,17 @@
 #include <libgaim/eventloop.h>
 
 #import "SLGaimCocoaAdapter.h"
+#import <CoreFoundation/CFSocket.h>
+#import <CoreFoundation/CFRunLoop.h>
+
+static void socketCallback(CFSocketRef s,
+                           CFSocketCallBackType callbackType,
+                           CFDataRef address,
+                           const void *data,
+                           void *infoVoid);
 
 @interface SLGaimCocoaAdapter (PRIVATE)
 - (void)callTimerFunc:(NSTimer*)timer;
-- (void)callIOFunc:(NSNotification*)notification;
 @end
 
 @implementation SLGaimCocoaAdapter
@@ -26,12 +34,6 @@
  * struct sourceInfo* values (wrapped in an NSValue).
  */
 static NSMutableDictionary *sourceInfoDict;
-
-/*
- * The sources, keyed by NSFileHandle, holding struct sourceInfo* values
- * (wrapped in an NSValue).
- */
-static NSMutableDictionary *fhDict;
 
 /*
  * A pointer to the single instance of this class active in the application.
@@ -54,10 +56,12 @@ static GaimEventLoopUiOps adiumEventLoopUiOps = {
 // The next source key; continuously incrementing
 static guint sourceId;
 
-// The structure of values of sourceInfoDict and fhDict
+// The structure of values of sourceInfoDict
 struct SourceInfo {
     guint tag;
-    id source;
+    NSTimer *timer;
+    CFSocketRef socket;
+    CFRunLoopSourceRef rls;
     GDestroyNotify notify;
     union {
         GSourceFunc sourceFunction;
@@ -70,7 +74,6 @@ struct SourceInfo {
 - (id)init
 {
     sourceInfoDict = [[NSMutableDictionary alloc] init];
-    fhDict = [[NSMutableDictionary alloc] init];
     NSAssert(myself == nil, @"SLGaimCocoaAdapter is a singleton");
     myself = self;
     gaim_eventloop_set_ui_ops(&adiumEventLoopUiOps);
@@ -94,7 +97,9 @@ static guint adium_timeout_add_full(gint priority, guint interval,
     info->tag = sourceId;
     info->notify = notify;
     info->sourceFunction = function;
-    info->source = timer;
+    info->timer = timer;
+    info->socket = NULL;
+    info->rls = NULL;
     info->channel = NULL;
     info->user_data = data;
     NSCAssert1([sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:sourceId]] == nil, @"Key %u in use", sourceId);
@@ -118,47 +123,60 @@ static guint adium_io_add_watch_full(GIOChannel *channel, gint priority,
         GIOCondition condition, GIOFunc func, gpointer user_data,
         GDestroyNotify notify)
 {
+    struct SourceInfo *info = g_new(struct SourceInfo, 1);
+
     // NSRunLoop does not support priority; that argument is ignored
 
-    // XXX Condition is very restricted: we only support G_IO_IN
-    // Should check on G_IO_ERR at least; this might be folded in with the
-    // read stuff.
+    // Build the CFSocket-style callback flags to use from the glib-style ones
+    CFOptionFlags callBackTypes = 0;
+    if ((condition & G_IO_IN ) != 0) callBackTypes |= kCFSocketReadCallBack;
+    if ((condition & G_IO_OUT) != 0) callBackTypes |= kCFSocketWriteCallBack;
+
+    // And likewise the entire CFSocket
+    CFSocketContext context = { 0, info, NULL, NULL, NULL };
     int fd = g_io_channel_unix_get_fd(channel);
-    //NSLog(@"Watching for IO on descriptor %d (tag %u)", fd, sourceId);
-    NSFileHandle *fh = [[NSFileHandle alloc] initWithFileDescriptor:fd];
-    struct SourceInfo *info = (struct SourceInfo*)malloc(sizeof(struct SourceInfo));
-    info->source = fh;
+    CFSocketRef socket = CFSocketCreateWithNative(NULL, fd, callBackTypes, socketCallback, &context);
+    NSCAssert(socket != NULL, @"CFSocket creation failed");
+    info->socket = socket;
+
+    // Re-enable callbacks automatically and _don't_ close the socket on
+    // invalidate
+    CFSocketSetSocketFlags(socket,   kCFSocketAutomaticallyReenableDataCallBack
+                                   | kCFSocketAutomaticallyReenableWriteCallBack);
+
+    // Add it to our run loop
+    CFRunLoopSourceRef rls = CFSocketCreateRunLoopSource(NULL, socket, 0);
+    CFRunLoopAddSource([[NSRunLoop currentRunLoop] getCFRunLoop], rls, kCFRunLoopCommonModes);
+    info->rls = rls;
+
+    info->timer = NULL;
     info->tag = sourceId;
     info->notify = notify;
     info->ioFunction = func;
     info->channel = channel; g_io_channel_ref(channel);
     info->user_data = user_data;
-    [[NSNotificationCenter defaultCenter] addObserver:myself
-                                             selector:@selector(callIOFunc:)
-                                                 name:NSFileHandleDataAvailableNotification
-                                               object:fh];
-    [fh waitForDataInBackgroundAndNotify];
-    //NSCAssert(condition == G_IO_IN, @"Condition is something other than pure read");
     NSCAssert1([sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:sourceId]] == nil, @"Key %u in use", sourceId);
     [sourceInfoDict setObject:[NSValue valueWithPointer:info] forKey:[NSNumber numberWithUnsignedInt:sourceId]];
-    [fhDict setObject:[NSValue valueWithPointer:info] forKey:fh];
+
+    //NSLog(@"Watching for IO on descriptor %d (tag %u)", fd, sourceId);
     return sourceId++;
 }
 
-- (void) callIOFunc:(NSNotification*)notification
+static void socketCallback(CFSocketRef s,
+                           CFSocketCallBackType callbackType,
+                           CFDataRef address,
+                           const void *data,
+                           void *infoVoid)
 {
-    NSFileHandle *fh = (NSFileHandle*) [notification object];
-    NSAssert(fh != nil, @"IO on nil NSFileHandle");
-    struct SourceInfo *info = (struct SourceInfo*) [[fhDict objectForKey:fh] pointerValue];
-    if (info == NULL) {
-        NSLog(@"Notification for fd=%d arrived after source removed", [fh fileDescriptor]);
-        return;
-    }
-    //NSLog(@"NSRunLoop reports IO on descriptor %d (tag %u)", [fh fileDescriptor], info->tag);
-    if (! info->ioFunction(info->channel, G_IO_IN|G_IO_OUT, info->user_data))
+    struct SourceInfo *info = (struct SourceInfo*) infoVoid;
+
+    GIOCondition c = 0;
+    if ((callbackType & kCFSocketReadCallBack) != 0) c |= G_IO_IN;
+    if ((callbackType & kCFSocketWriteCallBack) != 0) c |= G_IO_OUT;
+
+    //NSLog(@"NSRunLoop reports IO on tag %u", info->tag);
+    if (! info->ioFunction(info->channel, c, info->user_data))
         adium_source_remove(info->tag);
-    else // continue to watch
-        [fh waitForDataInBackgroundAndNotify];
 }
 
 static gboolean adium_source_remove(guint tag) {
@@ -169,13 +187,11 @@ static gboolean adium_source_remove(guint tag) {
     if (sourceInfo == NULL)
         return FALSE;
 
-    if ([sourceInfo->source isKindOfClass:[NSTimer class]]) {
-        NSTimer *timer = (NSTimer*) sourceInfo->source;
-        [timer invalidate];
+    if (sourceInfo->channel == NULL) { // timer
+        [sourceInfo->timer invalidate];
     } else { // file handle
-        NSFileHandle *fh = (NSFileHandle*) sourceInfo->source;
-        [fh release];
-        [fhDict removeObjectForKey:fh];
+        CFRunLoopSourceInvalidate(sourceInfo->rls);
+        CFSocketInvalidate(sourceInfo->socket);
         g_io_channel_unref(sourceInfo->channel);
     }
 
