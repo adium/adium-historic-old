@@ -340,12 +340,18 @@
 	listObject = [chat listObject];
 	if (listObject){
 		NSMutableDictionary *detailsDict, *alertDict;
+		NSAttributedString	*message;
+		
+		message = [[adium contentController] filterAttributedString:[[[textView_outgoing textStorage] copy] autorelease]
+													usingFilterType:AIFilterContent
+														  direction:AIFilterOutgoing
+															context:listObject];
 		
 		detailsDict = [NSMutableDictionary dictionary];
 		[detailsDict setObject:[[chat account] internalObjectID] forKey:@"Account ID"];
 		[detailsDict setObject:[NSNumber numberWithBool:YES] forKey:@"Allow Other"];
 		[detailsDict setObject:[listObject internalObjectID] forKey:@"Destination ID"];
-		[detailsDict setObject:[[textView_outgoing textStorage] dataRepresentation] forKey:@"Message"];
+		[detailsDict setObject:[message dataRepresentation] forKey:@"Message"];
 		
 		alertDict = [NSMutableDictionary dictionary];
 		[alertDict setObject:detailsDict forKey:@"ActionDetails"];
@@ -353,7 +359,8 @@
 		[alertDict setObject:@"SendMessage" forKey:@"ActionID"];
 		[alertDict setObject:[NSNumber numberWithBool:YES] forKey:@"OneTime"]; 
 		
-		[[adium contactAlertsController] addAlert:alertDict toListObject:listObject];
+		[[adium contactAlertsController] addAlert:alertDict 
+									 toListObject:[[adium contactController] parentContactForListObject:listObject]];
 		
 		[self didSendMessage:nil];
 	}
