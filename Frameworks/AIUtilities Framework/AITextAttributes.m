@@ -22,6 +22,7 @@
 
 @interface AITextAttributes (PRIVATE)
 - (id)initWithFontFamily:(NSString *)inFamilyName traits:(NSFontTraitMask)inTraits size:(int)inSize;
+- (id)initWithDictionary:(NSDictionary *)inAttributes;
 - (void)updateFont;
 @end
 
@@ -31,6 +32,11 @@
 + (id)textAttributesWithFontFamily:(NSString *)inFamilyName traits:(NSFontTraitMask)inTraits size:(int)inSize
 {
     return([[[self alloc] initWithFontFamily:inFamilyName traits:inTraits size:inSize] autorelease]);
+}
+
++ (id)textAttributesWithDictionary:(NSDictionary *)inAttributes
+{
+	return([[[self alloc] initWithDictionary:inAttributes] autorelease]);
 }
 
 //init
@@ -47,6 +53,29 @@
     [self updateFont];
 
     return(self);
+}
+
+- (id)initWithDictionary:(NSDictionary *)inAttributes
+{
+	[self init];
+	
+	dictionary = [inAttributes mutableCopy];
+
+	NSFont	*font = [dictionary objectForKey:NSFontAttributeName];
+	
+	if(font){
+		fontFamilyName = [[font familyName] retain];
+		fontTraitsMask = [[NSFontManager sharedFontManager] traitsOfFont:font];
+		fontSize = [font pointSize];
+	}else{
+		fontFamilyName = [@"Helvetica" retain];
+		fontTraitsMask = 0;
+		fontSize = 12;
+	}
+	
+	[self updateFont];
+	
+	return(self);
 }
 
 - (id)init
