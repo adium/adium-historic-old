@@ -1656,36 +1656,6 @@
 			settings = {
 			};
 		};
-		3433565D07936F9C00C84B15 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = GrowlPresets.plist;
-			path = "Plugins/Global Events Preferences/GrowlPresets.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3433667407948C1400C84B15 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = GrowlDefaults.plist;
-			path = "Plugins/Global Events Preferences/GrowlDefaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3433667507948C1400C84B15 = {
-			fileRef = 3433667407948C1400C84B15;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3433673307949E2200C84B15 = {
-			fileRef = 3433565D07936F9C00C84B15;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3439FD8C05794B4500B2E449 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -2877,21 +2847,6 @@
 			settings = {
 			};
 		};
-		34539E9B077BD09500A83891 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = SpeechPresets.plist;
-			path = "Plugins/Global Events Preferences/SpeechPresets.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34539E9C077BD09600A83891 = {
-			fileRef = 34539E9B077BD09500A83891;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34575E2A07CBA70D004A4FFF = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -3114,10 +3069,7 @@
 				346BA3430774C2D200628F06,
 				4BA5325D050FC5E800A8010A,
 				4B68D3880463330600A8010A,
-				4B791B2C05350BA20000969C,
-				3433667407948C1400C84B15,
-				3433565D07936F9C00C84B15,
-				34539E9B077BD09500A83891,
+				34C899AB07E51B18009357F6,
 				346BA3630774C35400628F06,
 			);
 			isa = PBXGroup;
@@ -7524,7 +7476,6 @@
 				4BD6743606001D210049CAF7,
 				4BD6744906001D460049CAF7,
 				4BD6745506001D4E0049CAF7,
-				4BD6745606001D4E0049CAF7,
 				4BD6747606001D840049CAF7,
 				4BD6747C06001D890049CAF7,
 				4BD6755206001E1E0049CAF7,
@@ -7567,9 +7518,6 @@
 				4BC5A5DF0764F75B0080ECF7,
 				346BA3640774C35500628F06,
 				34C6A3BC077A8CB500EB423C,
-				34539E9C077BD09600A83891,
-				3433667507948C1400C84B15,
-				3433673307949E2200C84B15,
 				34DFF53907A62EB200B92233,
 				34DFF54307A62EB200B92233,
 				34C14D5107A8BA00003CC138,
@@ -7616,6 +7564,7 @@
 				34A6FB8107D6FDCC00972830,
 				34A250B607E0F822009854E1,
 				4BFC2E7907E357F00063D70C,
+				34C899AC07E51B18009357F6,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9138,6 +9087,21 @@
 		};
 		34C6A4CC077AB3AD00EB423C = {
 			fileRef = 34C6A4CA077AB3AA00EB423C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C899AB07E51B18009357F6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist;
+			name = BuiltInEventPresets.plist;
+			path = Resources/BuiltInEventPresets.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C899AC07E51B18009357F6 = {
+			fileRef = 34C899AB07E51B18009357F6;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -15244,15 +15208,6 @@
 			target = 4B7F278205440C0800CDFC90;
 			targetProxy = 4B7845EB059B50820048A8BA;
 		};
-		4B791B2C05350BA20000969C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = DockBehaviorPresets.plist;
-			path = "Plugins/Global Events Preferences/DockBehaviorPresets.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B7A565A07A1742900BDC540 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -18113,12 +18068,6 @@
 		};
 		4BD6745506001D4E0049CAF7 = {
 			fileRef = 4B68D3880463330600A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6745606001D4E0049CAF7 = {
-			fileRef = 4B791B2C05350BA20000969C;
 			isa = PBXBuildFile;
 			settings = {
 			};
