@@ -243,7 +243,7 @@ static char *hash_password(const char * const password);
 // Returns an array of the status keys we support
 - (NSArray *)supportedStatusKeys
 {
-    return([NSArray arrayWithObjects:@"Online", @"IdleTime", @"IdleManuallySet", @"TextProfile", @"AwayMessage", nil]);
+    return([NSArray arrayWithObjects:@"Online", @"IdleSince", @"IdleManuallySet", @"TextProfile", @"AwayMessage", nil]);
 }
 
 // Respond to account status changes
@@ -262,15 +262,15 @@ static char *hash_password(const char * const password);
             }
         }
 
-    }else if([key compare:@"IdleTime"] == 0){
-        double		oldIdle = [[[owner accountController] statusObjectForKey:@"IdleTime" account:self] doubleValue];
-        double		newIdle = [inValue doubleValue];
+    }else if([key compare:@"IdleSince"] == 0){
+        NSDate		*oldIdle = [[owner accountController] statusObjectForKey:@"IdleSince" account:self];
+        NSDate		*newIdle = inValue;
 
-        if(oldIdle != 0 && newIdle != 0){
+        if(oldIdle != nil && newIdle != nil){
             [self AIM_SetIdle:0]; //Most AIM cliens will ignore 2 consecutive idles, so we unidle, then re-idle to the new value
         }
 
-        [self AIM_SetIdle:newIdle];
+        [self AIM_SetIdle:(-[newIdle timeIntervalSinceNow])];
 
     }else if([key compare:@"TextProfile"] == 0){
         [self AIM_SetProfile:[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]]];
@@ -1157,12 +1157,12 @@ static char *hash_password(const char * const password);
 
 - (void)AIM_SetStatus
 {
-    double 		idle = [[[owner accountController] statusObjectForKey:@"IdleTime" account:self] doubleValue];
+    NSDate 		*idle = [[owner accountController] statusObjectForKey:@"IdleSince" account:self];
     NSAttributedString 	*profile = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"TextProfile" account:self]];
     NSAttributedString 	*away = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"AwayMessage" account:self]];
     
     if(idle){
-        [self AIM_SetIdle:idle];
+        [self AIM_SetIdle:(-[idle timeIntervalSinceNow])];
     }
 
     if(profile){
