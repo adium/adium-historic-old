@@ -189,7 +189,7 @@
     NSString	*voice = nil;
     NSNumber	*pitchNumber = nil;
     NSNumber	*rateNumber = nil;
-    NSLog(@"%@",inObject);
+
     //Hold onto the object
     [activeListObject release]; activeListObject = nil;
     activeListObject = [inObject retain];
