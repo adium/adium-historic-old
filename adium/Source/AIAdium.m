@@ -126,31 +126,12 @@
     return(notificationCenter);
 }
 
-//Specific notifications can be given a human-readable name and registered as events, which can be used to trigger
-//various actions.  This is a bad idea though, because it's combining the internal workings with interface.  This
-//should be removed or modified in the future
-- (void)registerEventNotification:(NSString *)inNotification displayName:(NSString *)displayName
-{
-    [eventNotifications setObject:[NSDictionary dictionaryWithObjectsAndKeys:
-										inNotification, KEY_EVENT_NOTIFICATION, 
-										displayName, KEY_EVENT_DISPLAY_NAME, nil]
-						   forKey:inNotification];
-}
-
-//Return the current registered event notifications
-- (NSDictionary *)eventNotifications
-{
-    return(eventNotifications);
-}
-
-
 //Startup and Shutdown -------------------------------------------------------------------------------------------------
 #pragma mark Startup and Shutdown
 //Adium is almost done launching, init
 - (void)applicationWillFinishLaunching:(NSNotification *)notification
 {
     notificationCenter = nil;
-    eventNotifications = [[NSMutableDictionary alloc] init];
     completedApplicationLoad = NO;
 	advancedPrefsName = nil;
 	prefsCategory = -1;

@@ -20,6 +20,5 @@
 + (id)showEventSoundCustomPanel;
 + (void)closeEventSoundCustomPanel;
 - (IBAction)closeWindow:(id)sender;
-- (IBAction)newEventSound:(id)sender;
 
 @end

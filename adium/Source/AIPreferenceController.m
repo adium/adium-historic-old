@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.51 2004/05/27 15:52:17 dchoby98 Exp $
+// $Id: AIPreferenceController.m,v 1.52 2004/06/28 03:27:30 evands Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -38,9 +38,6 @@
     delayedNotificationGroups = [[NSMutableSet alloc] init];
     shouldDelay = NO;
     
-    //
-    [owner registerEventNotification:Preference_GroupChanged displayName:@"Preferences Changed"];    
-
     //Create the 'ByObject' and 'Accounts' object specific preference directory
 	[[NSFileManager defaultManager] createDirectoriesForPath:[[[owner loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH]];
 	[[NSFileManager defaultManager] createDirectoriesForPath:[[[owner loginController] userDirectory] stringByAppendingPathComponent:ACCOUNT_PREFS_PATH]];
@@ -247,6 +244,14 @@
 {
     return([[self loadPreferenceGroup:groupName] objectForKey:inKey]);
 }
+
+//Convenience method to allow the rest of Adium to not have to care whether 
+//it is talking to an AIListObject or the preferenceController directly
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName ignoreInheritedValues:(BOOL)ignore
+{
+	return ([self preferenceForKey:inKey group:groupName]);
+}
+
 
 //Set a preference value
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName

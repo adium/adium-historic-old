@@ -28,7 +28,9 @@
     [[adium notificationCenter] addObserver:self selector:@selector(handleError:) name:Interface_ErrorMessageReceived object:nil];
     
     //Install our contact alert
-	[[adium contactAlertsController] registerActionID:@"DisplayAlert" withHandler:self];
+	[[adium contactAlertsController] registerActionID:ERROR_MESSAGE_CONTACT_ALERT_IDENTIFIER withHandler:self];
+
+	[[adium contactAlertsController] registerEventID:INTERFACE_ERROR_MESSAGE withHandler:self globalOnly:YES];
 }
 
 - (void)uninstallPlugin
@@ -51,6 +53,10 @@
 
     //Display an alert
     [[ErrorMessageWindowController errorMessageWindowController] displayError:errorTitle withDescription:errorDesc withTitle:windowTitle];
+	
+	//Generate the event (for no list object, so only global triggers apply)
+	[[adium contactAlertsController] generateEvent:INTERFACE_ERROR_MESSAGE
+									 forListObject:nil];
 }
 
 
@@ -91,5 +97,43 @@
 							   withDescription:(alertText ? [NSString stringWithFormat:@"%@: %@", dateString, alertText] : @"")
 							   withWindowTitle:@"Contact Alert"];
 }
+
+
+#pragma mark Error Message event
+// Error Message Event (global only)
+- (NSString *)shortDescriptionForEventID:(NSString *)eventID {	return @""; }
+
+- (NSString *)globalShortDescriptionForEventID:(NSString *)eventID
+{
+	NSString	*description;
+	
+	if([eventID isEqualToString:INTERFACE_ERROR_MESSAGE]){
+		description = AILocalizedString(@"Error",nil);
+	}else{
+		description = @"";
+	}
+	
+	return(description);
+}
+
+//Evan: This exists because old X(tras) relied upon matching the description of event IDs, and I don't feel like making
+//a converter for old packs.  If anyone wants to fix this situation, please feel free :)
+- (NSString *)englishGlobalShortDescriptionForEventID:(NSString *)eventID
+{
+	NSString	*description;
+	
+	if([eventID isEqualToString:INTERFACE_ERROR_MESSAGE]){
+		description = @"Error";
+	}else{
+		description = @"";
+	}
+	
+	return(description);
+}
+
+
+- (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject	{ return @""; }
+
+
 
 @end

@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.77 2004/06/22 17:30:53 adamiser Exp $
+//$Id: AIPluginController.m,v 1.78 2004/06/28 03:27:30 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -48,7 +48,8 @@ ESFastUserSwitchingSupportPlugin, ESOpenMessageWindowContactAlertPlugin, ESSendM
 ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessagePlugin, AIContactProfilePlugin,
 JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin, AIContactSettingsPlugin,
 AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, AIContactStatusEventsPlugin,
-SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmoticonMenuPlugin, BGContactNotesPlugin, SHBookmarksImporterPlugin;
+SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmoticonMenuPlugin, BGContactNotesPlugin, SHBookmarksImporterPlugin,
+ESMessageEvents, ESAccountEvents;
 
 #ifdef ALL_IN_ONE
 @class AIWebKitMessageViewPlugin, CBGaimServicePlugin, NEHTicTacToePlugin;
@@ -62,6 +63,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmotico
 
 #ifdef ADIUM_COMPONENTS
 	//Load integrated plugins
+	[self loadPluginWithClass:[ESAccountEvents class]];
 	[self loadPluginWithClass:[AIAccountListPreferencesPlugin class]];
 	[self loadPluginWithClass:[AIAccountMenuAccessPlugin class]];
 	[self loadPluginWithClass:[AIAliasSupportPlugin class]];
@@ -93,6 +95,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmotico
 	[self loadPluginWithClass:[AILoggerPlugin class]];	
 	[self loadPluginWithClass:[AIManualSortPlugin class]];
 	[self loadPluginWithClass:[AIMessageAliasPlugin class]];
+	[self loadPluginWithClass:[ESMessageEvents class]];
 //	[self loadPluginWithClass:[AIMessageViewSelectionPlugin class]];
 	[self loadPluginWithClass:[AIOfflineContactHidingPlugin class]];
 	[self loadPluginWithClass:[AISCLViewPlugin class]];

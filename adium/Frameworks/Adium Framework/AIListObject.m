@@ -54,6 +54,7 @@ DeclareString(FormattedUID);
 	visible = YES;
     statusDictionary = [[NSMutableDictionary alloc] init];
     changedStatusKeys = [[NSMutableArray alloc] init];
+
 	
 	NSString *formattedUID = [self preferenceForKey:FormattedUID 
 											  group:ObjectStatusCache 

@@ -81,8 +81,6 @@
 //- (BZActivityWindowController *)activityWindowController;
 
 - (NSNotificationCenter *)notificationCenter;
-- (void)registerEventNotification:(NSString *)inNotification displayName:(NSString *)displayName;
-- (NSDictionary *)eventNotifications;
 
 - (IBAction)showAboutBox:(id)sender;
 - (IBAction)showHelp:(id)sender;
@@ -139,5 +137,13 @@
 #define CONTACT_STATUS_AWAY_NO			@"Contact_StatusAwayNo"
 #define CONTACT_STATUS_IDLE_YES			@"Contact_StatusIdleYes"
 #define CONTACT_STATUS_IDLE_NO			@"Contact_StatusIdleNo"
+#define CONTENT_MESSAGE_SENT			@"Content_MessageSent"
+#define CONTENT_MESSAGE_RECEIVED		@"Content_MessageReceived"
+#define CONTENT_MESSAGE_RECEIVED_FIRST	@"Content_MessageReceivedFirst"
+#define INTERFACE_ERROR_MESSAGE			@"Interface_ErrorMessageRecieved"
+#define ACCOUNT_CONNECTED				@"Account_Connected"
+#define ACCOUNT_DISCONNECTED			@"Account_Disconnected"
+
+
 #define Adium_Xtras_Changed                     @"Adium_Xtras_Changed"
 #define Adium_PluginsDidFinishLoading           @"Adium_PluginsDidFinishLoading"

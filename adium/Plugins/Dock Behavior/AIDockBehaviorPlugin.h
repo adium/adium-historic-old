@@ -16,21 +16,15 @@
 #define PREF_GROUP_DOCK_BEHAVIOR			@"DockBehavior"
 
 #define KEY_DOCK_CUSTOM_BEHAVIOR			@"Custom Behavior"
-#define KEY_DOCK_ACTIVE_BEHAVIOR_SET			@"Active Behavior Set"
+#define KEY_DOCK_ACTIVE_BEHAVIOR_SET		@"Active Behavior Set"
 
-#define KEY_DOCK_EVENT_BEHAVIOR				@"Behavior"
-#define	KEY_DOCK_EVENT_NOTIFICATION			@"Notification"
-
-
-
+#define KEY_EVENT_DOCK_BEHAVIOR				@"Behavior"
+#define	KEY_EVENT_DOCK_EVENT_ID				@"Notification"
 
 #define KEY_DOCK_BEHAVIOR_TYPE				@"BehaviorType"
 
+#define DOCK_BEHAVIOR_ALERT_IDENTIFIER		@"BounceDockIcon"
 
-
-
-
-#define CONTACT_ALERT_IDENTIFIER                        @"Bounce"
 @class AIDockBehaviorPreferences;
 
 @interface AIDockBehaviorPlugin : AIPlugin <AIActionHandler> {

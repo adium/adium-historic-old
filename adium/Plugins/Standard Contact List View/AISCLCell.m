@@ -101,7 +101,8 @@
 
 	//Padding
 	cellSize.width -= (LEFT_PADDING + RIGHT_PADDING);
-#warning Adam: The Horizontal resizing code needs to consider level and indentationPerLevel (Temporary fix)
+
+	//Adam: The Horizontal resizing code needs to consider level and indentationPerLevel (Temporary fix)
 	cellSize.width += TEMPORARY_PADDING_CORRECTION;
 	
 	//Get the size needed to display our name

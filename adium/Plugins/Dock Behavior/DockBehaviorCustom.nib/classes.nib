@@ -6,15 +6,16 @@
             SUPERCLASS = NSTableView; 
         }, 
         {
-            ACTIONS = {closeWindow = id; deleteEvent = id; newEvent = id; }; 
+            ACTIONS = {closeWindow = id; deleteEvent = id; }; 
             CLASS = AIDockCustomBehavior; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "popUp_addEvent" = NSPopUpButton; 
                 "tableView_events" = AIAlternatingRowTableView; 
             }; 
-            SUPERCLASS = NSWindowController; 
+            SUPERCLASS = AIWindowController; 
         }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {changePreference = id; }; 
             CLASS = AIPreferencePane; 
@@ -27,6 +28,11 @@
                 "view_containerView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }

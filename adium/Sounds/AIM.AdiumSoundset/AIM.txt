@@ -5,9 +5,10 @@ The original AIM sounds.
 http://www.aol.com
 
 SoundSet:
-"Contact Signed On" 		Buddy On.aif
-"Contact Signed Off"		Buddy Off.aif
-"Message Received (New)"	Receive 1st IM.aif
+"Connected"						Welcome.aif
+"Contact Signed On"				Buddy On.aif
+"Contact Signed Off"			Buddy Off.aif
+"Message Received (New)"		Receive 1st IM.aif
 "Message Received (Stranger)"	Knock-Knock.aif
-"Message Received"		Receive IM.aif
-"Message Sent"			Send IM.aif
+"Message Received"				Receive IM.aif
+"Message Sent"					Send IM.aif

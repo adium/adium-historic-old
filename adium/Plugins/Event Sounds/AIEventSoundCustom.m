@@ -73,7 +73,7 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
     [[self window] center];
 
     //
-    [popUp_addEvent setMenu:[self eventMenu]];
+    [popUp_addEvent setMenu:[[adium contactAlertsController] menuOfEventsWithTarget:self forGlobalMenu:YES]];
 
     //Configure the table view
     [tableView_sounds setDrawsAlternatingRows:YES];
@@ -146,13 +146,13 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 }
 
 //Called by the event popUp menu (Inserts a new event)
-- (IBAction)newEventSound:(id)sender
+- (IBAction)selectEvent:(id)sender
 {
     NSMutableDictionary	*soundDict;
 
     //Add the new event
     soundDict = [[NSMutableDictionary alloc] init];
-    [soundDict setObject:[sender representedObject] forKey:KEY_EVENT_SOUND_NOTIFICATION];
+    [soundDict setObject:[sender representedObject] forKey:KEY_EVENT_SOUND_EVENT_ID];
     [soundDict setObject:[firstSound stringByCollapsingBundlePath] forKey:KEY_EVENT_SOUND_PATH];
     [eventSoundArray addObject:soundDict];
 
@@ -186,6 +186,7 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
     [[adium preferenceController] setPreference:@"" forKey:KEY_EVENT_SOUND_SET group:PREF_GROUP_SOUNDS];
 }
 
+/*
 //Builds and returns an event menu
 - (NSMenu *)eventMenu
 {
@@ -212,6 +213,7 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 
     return(eventMenu);
 }
+*/
 
 //Builds and returns a sound list menu
 - (NSMenu *)soundListMenu
@@ -380,19 +382,14 @@ AIEventSoundCustom	*sharedEventSoundInstance = nil;
 
     if([identifier isEqualToString:TABLE_COLUMN_EVENT]){
         NSDictionary	*soundDict;
-        NSString	*notification;
-        NSDictionary	*eventDict;
-        NSString	*displayName;
+        NSString		*eventID;
 
         //Get the notification string
         soundDict = [eventSoundArray objectAtIndex:row];
-        notification = [soundDict objectForKey:KEY_EVENT_SOUND_NOTIFICATION];
+        eventID = [soundDict objectForKey:KEY_EVENT_SOUND_EVENT_ID];
 
         //Get that notification's display name
-        eventDict = [[adium eventNotifications] objectForKey:notification];
-        displayName = [eventDict objectForKey:KEY_EVENT_DISPLAY_NAME];
-
-        return(displayName ? displayName : notification);
+        return([[adium contactAlertsController] globalShortDescriptionForEventID:eventID]);
 
     }else{
         return(nil);

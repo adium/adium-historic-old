@@ -72,7 +72,7 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
     [[self window] center];
 
     //Build the event menu
-    [popUp_addEvent setMenu:[self eventMenu]];
+    [popUp_addEvent setMenu:[[adium contactAlertsController] menuOfEventsWithTarget:self forGlobalMenu:YES]];
 
     //Configure the 'Behavior' table column
     dataCell = [[[AITableViewPopUpButtonCell alloc] init] autorelease];
@@ -149,14 +149,14 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
 }
 
 //Called by the event popUp menu (Inserts a new event)
-- (IBAction)newEvent:(id)sender
+- (IBAction)selectEvent:(id)sender
 {
     NSMutableDictionary	*eventDict;
 
     //Add the new event
     eventDict = [NSMutableDictionary dictionary];
-    [eventDict setObject:[sender representedObject] forKey:KEY_DOCK_EVENT_NOTIFICATION];
-    [eventDict setObject:[NSNumber numberWithInt:0] forKey:KEY_DOCK_EVENT_BEHAVIOR];
+    [eventDict setObject:[sender representedObject] forKey:KEY_EVENT_DOCK_EVENT_ID];
+    [eventDict setObject:[NSNumber numberWithInt:0] forKey:KEY_EVENT_DOCK_BEHAVIOR];
     [behaviorArray addObject:eventDict];
 
     //Save custom behavior
@@ -170,6 +170,7 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
 }
 
 //Builds and returns an event menu
+/*
 - (NSMenu *)eventMenu
 {
     NSEnumerator	*enumerator;
@@ -195,6 +196,7 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
 
     return(eventMenu);
 }
+*/
 
 
 
@@ -221,20 +223,15 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
 
     if([identifier isEqualToString:TABLE_COLUMN_EVENT]){
         NSDictionary	*behaviorDict;
-        NSString	*notification;
-        NSDictionary	*eventDict;
-        NSString	*displayName;
+        NSString		*eventID;
 
         //Get the notification string
         behaviorDict = [behaviorArray objectAtIndex:row];
-        notification = [behaviorDict objectForKey:KEY_DOCK_EVENT_NOTIFICATION];
+        eventID = [behaviorDict objectForKey:KEY_EVENT_DOCK_EVENT_ID];
 
         //Get that notification's display name
-        eventDict = [[adium eventNotifications] objectForKey:notification];
-        displayName = [eventDict objectForKey:KEY_EVENT_DISPLAY_NAME];
-
-        return(displayName ? displayName : notification);
-
+        return([[adium contactAlertsController] globalShortDescriptionForEventID:eventID]);
+		
     }else{
         return(nil);
 
@@ -261,9 +258,9 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
 				selectedEventDict = [[[behaviorArray objectAtIndex:row] mutableCopy] autorelease];
 				newBehavior = [selectedMenuItem representedObject];
 				
-				if([newBehavior compare:[selectedEventDict objectForKey:KEY_DOCK_EVENT_BEHAVIOR]] != NSOrderedSame){ //Ignore a duplicate selection
+				if([newBehavior compare:[selectedEventDict objectForKey:KEY_EVENT_DOCK_BEHAVIOR]] != NSOrderedSame){ //Ignore a duplicate selection
 																										 //Set the new behavior
-					[selectedEventDict setObject:newBehavior forKey:KEY_DOCK_EVENT_BEHAVIOR];
+					[selectedEventDict setObject:newBehavior forKey:KEY_EVENT_DOCK_BEHAVIOR];
 					[behaviorArray replaceObjectAtIndex:row withObject:selectedEventDict];
 					
 					//Save custom behavior
@@ -280,7 +277,7 @@ AIDockCustomBehavior	*sharedDockCustomInstance = nil;
     NSString	*identifier = [tableColumn identifier];
 
     if([identifier isEqualToString:TABLE_COLUMN_BEHAVIOR]){
-        [cell selectItemWithRepresentedObject:[[behaviorArray objectAtIndex:row] objectForKey:KEY_DOCK_EVENT_BEHAVIOR]];
+        [cell selectItemWithRepresentedObject:[[behaviorArray objectAtIndex:row] objectForKey:KEY_EVENT_DOCK_BEHAVIOR]];
     }
 }
 
