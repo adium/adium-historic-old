@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.169 2004/08/11 23:22:47 evands Exp $
+// $Id: AIContactController.m,v 1.170 2004/08/12 01:01:12 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -928,14 +928,12 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	unsigned int	i;
 	unsigned int	count = [contactArray count];
 	NSImage			*menuServiceImage = serviceImage;
-	NSMutableArray  *addedContactsArray = [NSMutableArray array];
 	
 	contactArray = [contactArray sortedArrayUsingFunction:contactDisplayNameSort context:nil];
 	
 	for( i = 0; i < count; i++ ) {
 		AIListObject *contact = [contactArray objectAtIndex:i];
-		if (([contact online] || includeOffline) &&
-			([addedContactsArray indexOfObject:[contact uniqueObjectID]] == NSNotFound)){
+		if ([contact online] || includeOffline){
 			
 			if (!serviceImage){
 				menuServiceImage = [[[[owner accountController] serviceControllerWithIdentifier:[contact serviceID]] handleServiceType] menuImage];
@@ -949,18 +947,15 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			[tempItem setImage:menuServiceImage];
 			[contactMenu addItem:tempItem];
 			[tempItem release];
-			
-			[addedContactsArray addObject:[contact uniqueObjectID]];
 		}
 	}
 	
 	[contactMenu addItem:[NSMenuItem separatorItem]];
-
 }
 
 - (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact withTarget:(id)target
 {
-	return( [self menuOfContainedContacts:inContact forService:nil withTarget:target] );
+	return( [self menuOfContainedContacts:inContact forService:nil withTarget:target includeOffline:YES] );
 }
 
 //Contact Info --------------------------------------------------------------------------------
