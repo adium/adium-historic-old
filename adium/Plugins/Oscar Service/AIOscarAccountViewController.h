@@ -13,28 +13,24 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+
 #import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
+#import "AIAdium.h"
 
-@interface NSDictionary (AIDictionaryAdditions)
+@class AIAdium, AIOscarAccount;
 
-+ (NSDictionary *)dictionaryNamed:(NSString *)name forClass:(Class)inClass;
-+ (NSDictionary *)dictionaryAtPath:(NSString *)path withName:(NSString *)name create:(BOOL)create;
-- (void)writeToPath:(NSString *)path withName:(NSString *)name;
-- (BOOL)boolForKey:(NSString *)inKey;
-- (NSString *)stringForKey:(NSString *)inKey;
-- (int)intForKey:(NSString *)inKey;
-- (NSColor *)colorForKey:(NSString *)inKey;
-- (id)objectForIntegerKey:(int)aKey;
+@interface AIOscarAccountViewController : NSObject <AIAccountViewController> {
+    AIAdium		*owner;
+    AIOscarAccount	*account;
 
-@end
+    IBOutlet		NSView			*view_accountView;
+    IBOutlet		NSTextField		*textField_handle;
+}
 
-@interface NSMutableDictionary (AIDictionaryAdditions)
-
-+ (NSMutableDictionary *)dictionaryAtPath:(NSString *)path withName:(NSString *)name create:(BOOL)create;
-- (void)setBool:(BOOL)inValue forKey:(NSString *)inKey;
-- (void)setString:(NSString *)inString forKey:(NSString *)inKey;
-- (void)setInt:(int)inValue forKey:(NSString *)inKey;
-- (void)setColor:(NSColor *)inColor forKey:(NSString *)inKey;
-- (id)objectForIntegerKey:(int)aKey;
++ (id)accountViewForOwner:(id)inOwner account:(id)inAccount;
+- (NSView *)view;
+- (void)saveChanges;
+- (void)configureViewAfterLoad;
 
 @end

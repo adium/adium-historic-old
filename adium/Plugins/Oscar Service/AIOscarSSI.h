@@ -13,28 +13,26 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+/* PLEASE NOTE -------------------------------------------------------------------------------------------
+    The contents of this file, and the majority of this plugin, are an obj-c rewrite of Gaim's libfaim/oscar
+    library.  In fact, portions of the original Gaim code may still remain intact, and other portions may
+    have simply been re-arranged, removed, or rewritten.
+
+    More information on Gaim is available at http://gaim.sourceforge.net
+ -------------------------------------------------------------------------------------------------------*/
+
 #import <Cocoa/Cocoa.h>
 
-@interface NSDictionary (AIDictionaryAdditions)
+@protocol AIOscarModule;
+@class AIOscarAccount, AIOscarConnection;
 
-+ (NSDictionary *)dictionaryNamed:(NSString *)name forClass:(Class)inClass;
-+ (NSDictionary *)dictionaryAtPath:(NSString *)path withName:(NSString *)name create:(BOOL)create;
-- (void)writeToPath:(NSString *)path withName:(NSString *)name;
-- (BOOL)boolForKey:(NSString *)inKey;
-- (NSString *)stringForKey:(NSString *)inKey;
-- (int)intForKey:(NSString *)inKey;
-- (NSColor *)colorForKey:(NSString *)inKey;
-- (id)objectForIntegerKey:(int)aKey;
+@interface AIOscarSSI : NSObject <AIOscarModule> {
+    AIOscarAccount	*account;
+    AIOscarConnection	*connection;
 
-@end
+}
 
-@interface NSMutableDictionary (AIDictionaryAdditions)
-
-+ (NSMutableDictionary *)dictionaryAtPath:(NSString *)path withName:(NSString *)name create:(BOOL)create;
-- (void)setBool:(BOOL)inValue forKey:(NSString *)inKey;
-- (void)setString:(NSString *)inString forKey:(NSString *)inKey;
-- (void)setInt:(int)inValue forKey:(NSString *)inKey;
-- (void)setColor:(NSColor *)inColor forKey:(NSString *)inKey;
-- (id)objectForIntegerKey:(int)aKey;
+- (void)requestSSIData;
+- (void)requestSSIRights;
 
 @end

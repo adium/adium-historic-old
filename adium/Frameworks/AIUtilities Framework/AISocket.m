@@ -196,6 +196,11 @@
     return(hostIP);
 }
 
+- (int)hostPort
+{
+    return(hostPort);
+}
+
 
 //-------------------
 //  Hidden Methods
@@ -218,7 +223,8 @@
     }
     address = inet_ntoa(*((struct in_addr *)hostEnt->h_addr));
     hostIP = [[NSString alloc] initWithCString:address]; //Remember our host IP
-
+    hostPort = port;
+    
     NSLog(@"%@",hostIP);
     
     //Create the socket

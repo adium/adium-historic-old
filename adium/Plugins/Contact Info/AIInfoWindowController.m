@@ -29,7 +29,7 @@ static AIInfoWindowController *sharedInstance = nil;
 
     if([inContact isKindOfClass:[AIListContact class]]){ //Only allow this for contacts
         //Let everyone know we want profile information
-        [[inOwner notificationCenter] postNotificationName:Contact_UpdateStatus object:inContact userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"TextProfile"] forKey:@"Keys"]];
+        [[inOwner notificationCenter] postNotificationName:Contact_UpdateStatus object:inContact userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObjects:@"TextProfile", @"StatusMessage", nil] forKey:@"Keys"]];
     
         //Show the window and configure it for the contact
         [sharedInstance configureWindowForContact:inContact];
@@ -171,12 +171,18 @@ static AIInfoWindowController *sharedInstance = nil;
         int	minutes = (int)(idle % 60);
 
         [infoString appendString:@"\r\r\tIdle:\t" withAttributes:labelAttributes];
-        if(hours){
-            [infoString appendString:[NSString stringWithFormat:@"%i hour%@, %i minute%@", hours, (hours == 1 ? @"": @"s"), minutes, (minutes == 1 ? @"": @"s")]
-                      withAttributes:valueAttributes];
+
+        if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
+            [infoString appendString:@"Yes" withAttributes:valueAttributes];
+
         }else{
-            [infoString appendString:[NSString stringWithFormat:@"%i minute%@", minutes, (minutes == 1 ? @"": @"s")]
-                      withAttributes:valueAttributes];
+            if(hours){
+                [infoString appendString:[NSString stringWithFormat:@"%i hour%@, %i minute%@", hours, (hours == 1 ? @"": @"s"), minutes, (minutes == 1 ? @"": @"s")]
+                          withAttributes:valueAttributes];
+            }else{
+                [infoString appendString:[NSString stringWithFormat:@"%i minute%@", minutes, (minutes == 1 ? @"": @"s")]
+                          withAttributes:valueAttributes];
+            }
         }
     }
 

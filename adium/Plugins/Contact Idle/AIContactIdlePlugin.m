@@ -81,8 +81,8 @@
 
     enumerator = [idleObjectArray objectEnumerator];
     while((object = [enumerator nextObject])){
+        //should I really be muting here?  ?  (Does it matter either way?)
         [self setIdleForObject:object delayed:YES silent:YES]; //Update the contact's idle time
-#warning should I really be muting here?  ?  (Does it matter either way?)
     }
 }
 
@@ -121,7 +121,10 @@
     if([inObject isKindOfClass:[AIListContact class]]){
         int idle = (int)[[(AIListContact *)inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
 
-        if(idle != 0){
+        if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
+            entry = @"Yes";
+            
+        }else if(idle != 0){
             int	hours = (int)(idle / 60);
             int	minutes = (int)(idle % 60);
 
