@@ -16,6 +16,8 @@
 @interface SHFireFoxBookmarksImporter(PRIVATE)
 - (NSString *)fox8OrLessBookmarkPath;
 - (NSString *)fox9BookmarkPath;
+- (NSString *)bookmarkPath;
+- (BOOL)bookmarksExist;
 @end
 
 @implementation SHFireFoxBookmarksImporter
