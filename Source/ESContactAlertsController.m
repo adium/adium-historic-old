@@ -420,7 +420,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 }
 
 //Add an alert (passed as a dictionary) to a list object
-- (void)addAlert:(NSDictionary *)newAlert toListObject:(AIListObject *)listObject
+- (void)addAlert:(NSDictionary *)newAlert toListObject:(AIListObject *)listObject setAsNewDefaults:(BOOL)setAsNewDefaults
 {
 	NSString			*newAlertEventID = [newAlert objectForKey:KeyEventID];
 	NSMutableDictionary	*contactAlerts;
@@ -452,8 +452,8 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 	}
 	[contactAlerts release];
 	
-	//Update the default events if we were setting a listObject-specific contact alert
-	if(listObject){
+	//Update the default events if requested
+	if(setAsNewDefaults){
 		[[adium preferenceController] setPreference:newAlertEventID
 											 forKey:KEY_DEFAULT_EVENT_ID
 											  group:PREF_GROUP_CONTACT_ALERTS];
@@ -467,7 +467,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 
 - (void)addGlobalAlert:(NSDictionary *)newAlert
 {
-	[self addAlert:newAlert toListObject:nil];
+	[self addAlert:newAlert toListObject:nil setAsNewDefaults:NO];
 }
 
 //Remove the alert (passed as a dictionary, must be an exact = match) form a list object
@@ -562,9 +562,9 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 	
 	[[adium preferenceController] delayPreferenceChangedNotifications:YES];
 	
-	//Add each alert to the target (addAlert:toListObject: will ensure identical alerts aren't added more than once)
+	//Add each alert to the target (addAlert:toListObject:setAsNewDefaults: will ensure identical alerts aren't added more than once)
 	while (alertDict  = [enumerator nextObject]){
-		[self addAlert:alertDict toListObject:newObject];
+		[self addAlert:alertDict toListObject:newObject setAsNewDefaults:NO];
 	}
 	
 	//Remove the alerts from the originating list object
