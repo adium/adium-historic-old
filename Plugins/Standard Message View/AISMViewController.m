@@ -107,8 +107,10 @@
     messageView = [[AIFlexibleTableView alloc] initWithFrame:NSZeroRect];
     [messageView setForwardsKeyEvents:YES];
     [messageView setDelegate:self];
-	
+	[messageView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
+
 	scrollView_messages = [[AIAutoScrollView alloc] init];
+	[scrollView_messages setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 	[scrollView_messages setAndSizeDocumentView:messageView];
 	[scrollView_messages setAutoScrollToBottom:YES];
 	[scrollView_messages setAutoHideScrollBar:NO];
