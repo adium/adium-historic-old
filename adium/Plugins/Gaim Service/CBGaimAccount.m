@@ -977,9 +977,8 @@
 	//Silence updates
 	[self silenceAllHandleUpdatesForInterval:18.0];
 
-	//Set our initial status after a short delay (To allow libgaim to finish connecting)
+	//Set our initial status
 	[self updateAllStatusKeys];
-#warning    [self performSelector:@selector(updateAllStatusKeys) withObject:nil afterDelay:1];
 }
 
 //Reset the libgaim account, causing it to forget all saved information
@@ -1086,11 +1085,7 @@
 - (void)setAccountAwayTo:(NSAttributedString *)awayMessage
 {
     char	*awayHTML = nil;
-	if(!gc){
-		NSLog(@"Connectiong state: NO GC!");
-	}else{
-		NSLog(@"Connection state:%i",gc->state);
-	}
+
 	//Convert the away message to HTML, and pass it to libgaim
 	if(awayMessage){
         awayHTML = (char *)[[AIHTMLDecoder encodeHTML:awayMessage
