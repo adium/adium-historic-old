@@ -377,6 +377,7 @@
 				OTHER_LDFLAGS = "-seg1addr 0x11000000";
 				PRODUCT_NAME = AIHyperlinks;
 				SKIP_INSTALL = YES;
+				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = framework;
 			};
 			dependencies = (
