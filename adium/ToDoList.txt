@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.131 2004/05/14 02:35:37 adamiser Exp $
+$Id: ToDoList.txt,v 1.132 2004/05/14 02:36:58 adamiser Exp $
 
 
 Legend
@@ -13,6 +13,7 @@ If you are working on something big and it may take a while, please tag it with 
 -------------------------------------------------------------------------------------------------------
 Bugs
 -------------------------------------------------------------------------------------------------------
+* Our message view scrollbar is 1 pixel off the edge of the window
 * "Custom..." sound option is not working.
 * We are not processing HTML that arrives over an ICQ connection.  Some clients (such as iChat) send HTML over ICQ.
 * If you uncheck the "play user interface feedback sounds" in System preferences, and disable the "Use Custom Volume" checkbox in Adium, no sounds are played
