@@ -5,84 +5,11 @@
 	};
 	objectVersion = 39;
 	objects = {
-		07CE05580661D7AD00C50929 = {
-			children = (
-				07CE058F0661D7FE00C50929,
-				07CE058E0661D7FE00C50929,
-				07CE05920661D87E00C50929,
-				07CE05930661D87E00C50929,
-				07CE05940661D87E00C50929,
-				07CE05950661D87E00C50929,
-				07CE05960661D87E00C50929,
-			);
-			isa = PBXGroup;
-			name = "Activity Window";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		07CE05590661D7E600C50929 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
 			name = FileTransferProgressWindow.nib;
 			path = Source/FileTransferProgressWindow.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		07CE058E0661D7FE00C50929 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = BZActivityWindowController.m;
-			path = Source/BZActivityWindowController.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		07CE058F0661D7FE00C50929 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = BZActivityWindowController.h;
-			path = Source/BZActivityWindowController.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		07CE05920661D87E00C50929 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = stop.png;
-			path = "Source/Activity Window toolbar images/stop.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		07CE05930661D87E00C50929 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = start.png;
-			path = "Source/Activity Window toolbar images/start.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		07CE05940661D87E00C50929 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = reveal.png;
-			path = "Source/Activity Window toolbar images/reveal.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		07CE05950661D87E00C50929 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = pause.png;
-			path = "Source/Activity Window toolbar images/pause.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		07CE05960661D87E00C50929 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = delete.png;
-			path = "Source/Activity Window toolbar images/delete.png";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -464,42 +391,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		340F30E206D6FD700072E2FA = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = BZProgressView.m;
-			path = "Frameworks/Adium Framework/BZProgressView.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		340F30E306D6FD700072E2FA = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = BZProgressView.h;
-			path = "Frameworks/Adium Framework/BZProgressView.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		340F30E406D6FD700072E2FA = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = BZProgressTracker.m;
-			path = "Frameworks/Adium Framework/BZProgressTracker.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		340F30E506D6FD700072E2FA = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = BZProgressTracker.h;
-			path = "Frameworks/Adium Framework/BZProgressTracker.h";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		340F440306D8202A0072E2FA = {
 			fileEncoding = 4;
@@ -4786,6 +4677,8 @@
 			children = (
 				34FDD6E305632BFD00F5B30F,
 				34FDD6E405632BFD00F5B30F,
+				34D2E8670758BB0B0054C56D,
+				34D2E8680758BB0B0054C56D,
 				349FE301074D01D300E36B3B,
 				349FE300074D01D300E36B3B,
 				349FE2FF074D01D300E36B3B,
@@ -4794,6 +4687,7 @@
 				349FE2FD074D01D300E36B3B,
 				349FE2FC074D01D200E36B3B,
 				07CE05590661D7E600C50929,
+				34D2E86D0758BD2A0054C56D,
 				349E602307543E17008ACCED,
 				349E602407543E17008ACCED,
 				349E602507543E17008ACCED,
@@ -5750,20 +5644,6 @@
 			settings = {
 			};
 		};
-		34B9BCD4064061F10097AF93 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = Placeholder.png;
-			path = Source/Placeholder.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34B9BCD5064061F10097AF93 = {
-			fileRef = 34B9BCD4064061F10097AF93;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34B9BCFF064062170097AF93 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -6109,6 +5989,7 @@
 				349FE304074D01D300E36B3B,
 				349FE306074D01D300E36B3B,
 				349FE308074D01D300E36B3B,
+				34D2E8690758BB0C0054C56D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6219,7 +6100,6 @@
 				34BD9D29053146CC000AB133,
 				34BD9D2A053146CC000AB133,
 				34BD9D2C053146CC000AB133,
-				34BD9D2F053146CC000AB133,
 				34BD9D30053146CC000AB133,
 				34BD9D31053146CC000AB133,
 				34BD9D33053146CC000AB133,
@@ -6336,7 +6216,6 @@
 				BF00023B063A4FFE0019910B,
 				4B494B45063AB63000E2EF06,
 				4B6C3557063BF4B600D3819D,
-				34B9BCD5064061F10097AF93,
 				34B9BD01064062170097AF93,
 				34B9BD02064062170097AF93,
 				349DDCDC064064C400542726,
@@ -6388,7 +6267,6 @@
 				340F47ED06DA41DD0072E2FA,
 				4B1AB2A806E101FF00FB5EAD,
 				4B1AB2A906E101FF00FB5EAD,
-				4B1AB2C306E1074000FB5EAD,
 				4B1AB2C406E1074000FB5EAD,
 				4B1AB2C506E1074000FB5EAD,
 				4B1AB2C606E1074000FB5EAD,
@@ -6434,6 +6312,9 @@
 				3447019A0755270100565588,
 				3447019F0755271E00565588,
 				344701A00755271E00565588,
+				34D2E86E0758BD2A0054C56D,
+				34D2EB6D0758D65D0054C56D,
+				34D2EC180758FBB90054C56D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6464,12 +6345,6 @@
 		};
 		34BD9D2C053146CC000AB133 = {
 			fileRef = F55B416803AB8C0501A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9D2F053146CC000AB133 = {
-			fileRef = F5A137FC03421FEB01A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -6720,6 +6595,7 @@
 				349FE303074D01D300E36B3B,
 				349FE307074D01D300E36B3B,
 				3421D3AB0753EE2F00EBCF4F,
+				34D2E86A0758BB0C0054C56D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8053,6 +7929,79 @@
 		};
 		34CEBE6306F117DF00A89DDE = {
 			fileRef = 34CEBE6106F117DF00A89DDE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D2E8670758BB0B0054C56D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESFileTransferPreferences.h;
+			path = Source/ESFileTransferPreferences.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D2E8680758BB0B0054C56D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESFileTransferPreferences.m;
+			path = Source/ESFileTransferPreferences.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D2E8690758BB0C0054C56D = {
+			fileRef = 34D2E8670758BB0B0054C56D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D2E86A0758BB0C0054C56D = {
+			fileRef = 34D2E8680758BB0B0054C56D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D2E86D0758BD2A0054C56D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist;
+			name = FileTransferPrefs.plist;
+			path = Source/FileTransferPrefs.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D2E86E0758BD2A0054C56D = {
+			fileRef = 34D2E86D0758BD2A0054C56D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D2EB6C0758D65D0054C56D = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = FileTransferPrefs.nib;
+			path = Source/FileTransferPrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D2EB6D0758D65D0054C56D = {
+			fileRef = 34D2EB6C0758D65D0054C56D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D2EC170758FBB90054C56D = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = pref88.png;
+			path = Source/icons/pref88.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D2EC180758FBB90054C56D = {
+			fileRef = 34D2EC170758FBB90054C56D;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -10860,14 +10809,6 @@
 			settings = {
 			};
 		};
-		4B1AB2BB06E1073F00FB5EAD = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = pref1.png;
-			path = Source/icons/pref1.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B1AB2BC06E1073F00FB5EAD = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -10923,12 +10864,6 @@
 			path = Source/icons/pref9.png;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B1AB2C306E1074000FB5EAD = {
-			fileRef = 4B1AB2BB06E1073F00FB5EAD;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B1AB2C406E1074000FB5EAD = {
 			fileRef = 4B1AB2BC06E1073F00FB5EAD;
@@ -11776,10 +11711,6 @@
 				34E6D38F0727354600A2643A,
 				4BFC3412058D48A8008F7FA2,
 				4BFC3413058D48A8008F7FA2,
-				340F30E506D6FD700072E2FA,
-				340F30E406D6FD700072E2FA,
-				340F30E306D6FD700072E2FA,
-				340F30E206D6FD700072E2FA,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -20100,7 +20031,6 @@
 		};
 		9C82689903D9B23F00F1D4AF = {
 			children = (
-				4B1AB2BB06E1073F00FB5EAD,
 				4B1AB2BC06E1073F00FB5EAD,
 				4B1AB2BD06E1073F00FB5EAD,
 				4B1AB2BE06E1073F00FB5EAD,
@@ -20109,6 +20039,7 @@
 				4B1AB2C106E1074000FB5EAD,
 				4B0CB2140670E07E005821CC,
 				4B1AB2C206E1074000FB5EAD,
+				34D2EC170758FBB90054C56D,
 			);
 			isa = PBXGroup;
 			name = Icons;
@@ -21893,6 +21824,7 @@
 				D3DA2E3A052E657600A8010B,
 				D3DA2E3C052E657C00A8010B,
 				4BCB9B5E0567FF5D001D3559,
+				34D2EB6C0758D65D0054C56D,
 			);
 			isa = PBXGroup;
 			name = "About Box";
@@ -22936,14 +22868,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F5A137FC03421FEB01A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = notfound.png;
-			path = Source/notfound.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F5A3C2DD039A516E01A8010A = {
 			children = (
 				F55B416E03AB8C3201A8010A,
@@ -23070,7 +22994,6 @@
 				4BDF17240450CBDE00A8010A,
 				C497518C05BBB0C5009958A6,
 				4B333F73048144D900A8010A,
-				07CE05580661D7AD00C50929,
 				4B0DB3AB06122B53004F47D9,
 				D3B4A920052DE51000A8010B,
 				F5A3C2DD039A516E01A8010A,
@@ -23142,8 +23065,6 @@
 				F57938F0033E745F01A8010A,
 				F57938BB033E739101A8010A,
 				F57938BC033E739101A8010A,
-				F5A137FC03421FEB01A8010A,
-				34B9BCD4064061F10097AF93,
 				9C82689903D9B23F00F1D4AF,
 			);
 			isa = PBXGroup;

@@ -7,6 +7,7 @@
 
 #import "ESFileTransferController.h"
 #import "ESFileTransferProgressWindowController.h"
+#import "ESFileTransferPreferences.h"
 
 #define SEND_FILE_TO_CONTACT		AILocalizedString(@"Send File To %@",nil)
 #define SEND_FILE					AILocalizedString(@"Send File",nil)
@@ -14,13 +15,17 @@
 
 #define	SEND_FILE_IDENTIFIER		@"SendFile"
 
-#define	PREF_GROUP_FILE_TRANSFER	@"FileTransfer"
 #define	FILE_TRANSFER_DEFAULT_PREFS	@"FileTransferPrefs"
+
+#define SAFE_FILE_EXTENSIONS_SET	[NSSet setWithObjects:@"jpg",@"jpeg",@"gif",@"png",@"tif",@"tiff",@"psd",@"pdf",@"txt",@"rtf",@"html",@"htm",@"swf",@"mp3",@"wma",@"wmv",@"ogg",@"ogm",@"mov",@"mpg",@"mpeg",@"m1v",@"m2v",@"mp4",@"avi",@"vob",@"avi",@"asx",@"asf",@"pls",@"m3u",@"rmp",@"aif",@"aiff",@"aifc",@"wav",@"wave",@"m4a",@"m4p",@"m4b",@"dmg",@"udif",@"ndif",@"dart",@"sparseimage",@"cdr",@"dvdr",@"iso",@"img",@"toast",@"rar",@"sit",@"sitx",@"bin",@"hqx",@"zip",@"gz",@"tgz",@"tar",@"bz",@"bz2",@"tbz",@"z",@"taz",@"uu",@"uue",@"colloquytranscript",@"torrent",@"AdiumIcon",@"AdiumSoundset",@"AdiumEmoticon",@"AdiumMessageStyle",nil]
+
+static ESFileTransferPreferences *preferences;
 
 @interface ESFileTransferController (PRIVATE)
 - (void)configureFileTransferProgressWindow;
-- (void)showFileTransferProgress:(id)sender;
-- (NSString *)userPreferredDownloadFolder;
+- (void)showProgressWindow:(id)sender;
+
+- (BOOL)shouldOpenCompleteFileTransfer:(ESFileTransfer *)fileTransfer;
 @end
 
 @implementation ESFileTransferController
@@ -28,14 +33,8 @@
 - (void)initController
 {
 	fileTransferArray = [[NSMutableArray alloc] init];
-	
-    //Install the Send File menu item
-	menuItem_sendFile = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:SEND_FILE_TO_CONTACT,CONTACT]
-												  target:self action:@selector(sendFileToSelectedContact:)
-										   keyEquivalent:@"F"];
-	[menuItem_sendFile setKeyEquivalentModifierMask:(NSCommandKeyMask | NSShiftKeyMask)];
-	[[adium menuController] addMenuItem:menuItem_sendFile toLocation:LOC_Contact_Action];
-	
+	safeFileExtensions = nil;
+
     //Add our get info contextual menu item
     menuItem_sendFileContext = [[NSMenuItem alloc] initWithTitle:SEND_FILE
 														 target:self action:@selector(contextualMenuSendFile:)
@@ -47,6 +46,13 @@
 	[[adium contactAlertsController] registerEventID:FILE_TRANSFER_BEGAN withHandler:self globalOnly:YES];
 	[[adium contactAlertsController] registerEventID:FILE_TRANSFER_CANCELED withHandler:self globalOnly:YES];
 	[[adium contactAlertsController] registerEventID:FILE_TRANSFER_COMPLETE withHandler:self globalOnly:YES];
+
+    //Install the Send File menu item
+	menuItem_sendFile = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:SEND_FILE_TO_CONTACT,CONTACT]
+												   target:self action:@selector(sendFileToSelectedContact:)
+											keyEquivalent:@"F"];
+	[menuItem_sendFile setKeyEquivalentModifierMask:(NSCommandKeyMask | NSShiftKeyMask)];
+	[[adium menuController] addMenuItem:menuItem_sendFile toLocation:LOC_Contact_Action];
 	
 	//Add our "Send File" toolbar item
 	NSToolbarItem	*toolbarItem;
@@ -67,14 +73,24 @@
 										  forGroup:PREF_GROUP_FILE_TRANSFER];
     
     //Observe pref changes
-//	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];
-	
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_FILE_TRANSFER];
+	preferences = [[ESFileTransferPreferences preferencePane] retain];
+
+	//Set up the file transfer progress window
 	[self configureFileTransferProgressWindow];
 }
 
 - (void)closeController
 {
     
+}
+
+- (void)dealloc
+{
+	[safeFileExtensions release]; safeFileExtensions = nil;
+	[fileTransferArray release]; fileTransferArray = nil;
+
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 #pragma mark Access to file transfer objects
@@ -104,19 +120,23 @@
 	AIListContact	*listContact = [fileTransfer contact];
 	NSString		*defaultName = [fileTransfer remoteFilename];
 	NSString		*localFilename = nil;
-
+	
 	[[adium contactAlertsController] generateEvent:FILE_TRANSFER_REQUEST
 									 forListObject:listContact
 										  userInfo:fileTransfer];
-#warning PREFERENCE
-	if(TRUE /* (Autoaccept all transfers) || ((autoAccept transfers contacts on list) && (![listContact isStranger]))*/){
-		localFilename = [[self userPreferredDownloadFolder] stringByAppendingPathComponent:defaultName];
+
+	if((autoAcceptType == AutoAccept_All) ||
+	   ((autoAcceptType == AutoAccept_FromContactList) && (![listContact isStranger]))){
+		localFilename = [[[adium preferenceController] userPreferredDownloadFolder] stringByAppendingPathComponent:defaultName];
 	}else{
+		//Prompt to accept/deny
+		
+		//If(prompt to accept = NSOKButton){
 		NSSavePanel		*savePanel = [NSSavePanel savePanel];
 
 		[savePanel setTitle:[NSString stringWithFormat:@"Receive File from %@",[[fileTransfer contact] displayName]]];
 
-		if([savePanel runModalForDirectory:[self userPreferredDownloadFolder]
+		if([savePanel runModalForDirectory:[[adium preferenceController] userPreferredDownloadFolder]
 									  file:defaultName] == NSFileHandlingPanelOKButton) {
 	
 			localFilename = [savePanel filename];
@@ -127,7 +147,9 @@
 		[fileTransfer setLocalFilename:localFilename];
 		[(AIAccount<AIAccount_Files> *)[fileTransfer account] acceptFileTransferRequest:fileTransfer];
 
-		[self showFileTransferProgress:nil];
+		if(showProgressWindow){
+			[self showProgressWindow:nil];
+		}
 
 	}else{
 		[(AIAccount<AIAccount_Files> *)[fileTransfer account] rejectFileReceiveRequest:fileTransfer];        
@@ -164,39 +186,9 @@
 		//The fileTransfer object should now have everything the account needs to begin transferring
 		[(AIAccount<AIAccount_Files> *)account beginSendOfFileTransfer:fileTransfer];
 		
-		[self showFileTransferProgress:nil];
-	}
-}
-
-#pragma mark Status updates
-- (void)fileTransfer:(ESFileTransfer *)fileTransfer didSetStatus:(FileTransferStatus)status
-{
-	switch(status){
-		case Accepted_FileTransfer:
-		{
-			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_BEGAN
-											 forListObject:[fileTransfer contact] 
-												  userInfo:fileTransfer];
-			
-			[self showFileTransferProgress:nil];
-			break;
+		if(showProgressWindow){
+			[self showProgressWindow:nil];
 		}
-		case Complete_FileTransfer:
-		{		
-			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_COMPLETE
-											 forListObject:[fileTransfer contact] 
-												  userInfo:fileTransfer];
-			break;
-		}
-		case Canceled_Remote_FileTransfer:
-		{
-			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_CANCELED
-											 forListObject:[fileTransfer contact] 
-												  userInfo:fileTransfer];
-			break;
-		}
-		default:
-			break;
 	}
 }
 
@@ -226,6 +218,61 @@
 	
 	[NSApp activateIgnoringOtherApps:YES];
 	[self requestForSendingFileToListContact:listContact];
+}
+
+#pragma mark Status updates
+- (void)fileTransfer:(ESFileTransfer *)fileTransfer didSetStatus:(FileTransferStatus)status
+{
+	switch(status){
+		case Accepted_FileTransfer:
+		{
+			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_BEGAN
+											 forListObject:[fileTransfer contact] 
+												  userInfo:fileTransfer];
+			if(showProgressWindow){
+				[self showProgressWindow:nil];
+			}
+			
+			break;
+		}
+		case Complete_FileTransfer:
+		{		
+			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_COMPLETE
+											 forListObject:[fileTransfer contact] 
+												  userInfo:fileTransfer];
+			
+			//The file is complete; if we are supposed to automatically open safe files and this is one, open it
+			if([self shouldOpenCompleteFileTransfer:fileTransfer]){ 
+				[fileTransfer openFile];
+			}
+			
+			break;
+		}
+		case Canceled_Remote_FileTransfer:
+		{
+			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_CANCELED
+											 forListObject:[fileTransfer contact] 
+												  userInfo:fileTransfer];
+			break;
+		}
+		default:
+			break;
+	}
+}
+
+- (BOOL)shouldOpenCompleteFileTransfer:(ESFileTransfer *)fileTransfer
+{
+	BOOL	shouldOpen = NO;
+	
+	if(autoOpenSafe &&
+	   ([fileTransfer type] == Incoming_FileTransfer)){
+		
+		if(!safeFileExtensions) safeFileExtensions = [SAFE_FILE_EXTENSIONS_SET retain];		
+
+		shouldOpen = [safeFileExtensions containsObject:[[[fileTransfer localFilename] pathExtension] lowercaseString]];
+	}
+
+	return(shouldOpen);
 }
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
@@ -283,108 +330,27 @@
 															keyEquivalent:@"L"];
 	[menuItem_showFileTransferProgress setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask | NSShiftKeyMask)];
 	[[adium menuController] addMenuItem:menuItem_showFileTransferProgress toLocation:LOC_Window_Auxiliary];
-	
-	//Add the toolbar buttons for the window	
-/*
-	[self addFTProgressToolbarItemWithIdentifier:@"FTProgressPause"
-										   label:AILocalizedString(@"Pause",nil)
-									paletteLabel:AILocalizedString(@"Pause / Resume",nil)
-										 toolTip:AILocalizedString(@"Pause / Resume",nil)
-									  imageNamed:@"pause"
-										  action:@selector(pauseOrResume:)];
-*/
 }
 
 //Show the file transfer progress window
-- (void)showFileTransferProgress:(id)sender
+- (void)showProgressWindow:(id)sender
 {
 	[ESFileTransferProgressWindowController showFileTransferProgressWindow];
 }
 
-//Do we even need toolbar buttons in a window like this?
-- (void)addFTProgressToolbarItemWithIdentifier:(NSString *)identifier
-										 label:(NSString *)label
-								  paletteLabel:(NSString *)paletteLabel
-									   toolTip:(NSString *)toolTip
-									imageNamed:(NSString *)imageName
-										action:(SEL)action
+#pragma mark Preferences
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	NSToolbarItem	*toolbarItem;
-    toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:identifier
-														  label:label
-												   paletteLabel:paletteLabel
-														toolTip:toolTip
-														 target:self
-												settingSelector:@selector(setImage:)
-													itemContent:[NSImage imageNamed:imageName forClass:[self class]]
-														 action:action
-														   menu:nil];
-    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"FTProgress"];
-}
+	autoAcceptType = [[prefDict objectForKey:KEY_FT_AUTO_ACCEPT] intValue];
+	autoOpenSafe = [[prefDict objectForKey:KEY_FT_AUTO_OPEN_SAFE] boolValue];
 
-#pragma mark Default download location
-
-- (NSString *) userPreferredDownloadFolder {
-	OSStatus err = noErr;
-	ICInstance inst = NULL;
-	ICFileSpec folder;
-	unsigned long length = kICFileSpecHeaderSize;
-	FSRef ref;
-	unsigned char path[1024];
+	//If we created a safe file extensions set and no longer need it, desroy it
+	if(!autoOpenSafe && safeFileExtensions){
+		[safeFileExtensions release]; safeFileExtensions = nil;
+	}
 	
-	memset( path, 0, 1024 ); //clear path's memory range
-	
-	if( ( err = ICStart( &inst, 'AdiM' ) ) != noErr )
-		goto finish;
-	
-	ICGetPref( inst, kICDownloadFolder, NULL, &folder, &length );
-	ICStop( inst );
-	
-	if( ( err = FSpMakeFSRef( &folder.fss, &ref ) ) != noErr )
-		goto finish;
-	
-	if( ( err = FSRefMakePath( &ref, path, 1024 ) ) != noErr )
-		goto finish;
-	
-finish:
-		
-	if( ! strlen( path ) )
-		return [@"~/Desktop" stringByExpandingTildeInPath];
-	
-	return [NSString stringWithUTF8String:path];
-}
-
-- (void) setUserPreferredDownloadFolder:(NSString *) path {
-	OSStatus err = noErr;
-	ICInstance inst = NULL;
-	ICFileSpec *dir = NULL;
-	FSRef ref;
-	AliasHandle alias;
-	unsigned long length = 0;
-	
-	if( ( err = FSPathMakeRef( [path UTF8String], &ref, NULL ) ) != noErr )
-		return;
-	
-	if( ( err = FSNewAliasMinimal( &ref, &alias ) ) != noErr )
- 		return;
-	
-	length = ( kICFileSpecHeaderSize + GetHandleSize( (Handle) alias ) );
-	dir = malloc( length );
-	memset( dir, 0, length );
-	
-	if( ( err = FSGetCatalogInfo( &ref, kFSCatInfoNone, NULL, NULL, &dir -> fss, NULL ) ) != noErr )
-		return;
-	
-	memcpy( &dir -> alias, *alias, length - kICFileSpecHeaderSize );
-	
-	if( ( err = ICStart( &inst, 'AdiM' ) ) != noErr )
-		return;
-	
-	ICSetPref( inst, kICDownloadFolder, NULL, dir, length );
-	ICStop( inst );
-	
-	free( dir );
-	DisposeHandle( (Handle) alias );
+	showProgressWindow = [[prefDict objectForKey:KEY_FT_SHOW_PROGRESS_WINDOW] boolValue];
 }
 
 #pragma mark AIEventHandler

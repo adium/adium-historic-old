@@ -222,4 +222,9 @@
 					 inFileViewerRootedAtPath:[localFilename stringByDeletingLastPathComponent]];
 }
 
+- (void)openFile
+{
+	[[NSWorkspace sharedWorkspace] openFile:localFilename];
+}
+
 @end

@@ -1,0 +1,32 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                view = NSView; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = ESFileTransferPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_autoAcceptFiles" = NSButton; 
+                "checkBox_autoAcceptOnlyFromCLList" = NSButton; 
+                "checkBox_autoOpenFiles" = NSButton; 
+                "checkBox_showProgress" = NSButton; 
+                "popUp_downloadLocation" = NSPopUpButton; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}

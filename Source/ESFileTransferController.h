@@ -7,6 +7,18 @@
 
 #define	FileTransfer_NewFileTransfer	@"NewFileTransfer"
 
+#define	PREF_GROUP_FILE_TRANSFER		@"FileTransfer"
+
+#define	KEY_FT_AUTO_ACCEPT				@"FT AutoAccept"
+#define KEY_FT_AUTO_OPEN_SAFE			@"FT AutoOpenSafe"
+#define	KEY_FT_SHOW_PROGRESS_WINDOW		@"FT ShowProgressWindow"
+
+typedef enum {
+	AutoAccept_None = 0,
+    AutoAccept_All,
+    AutoAccept_FromContactList,
+} FTAutoAcceptType;
+
 @class ESFileTransfer, AIListContact, AIAccount;
 
 @protocol AIEventHandler;
@@ -21,6 +33,12 @@
 	NSMenuItem				*menuItem_showFileTransferProgress;
 	
 	NSMutableArray			*fileTransferArray;
+	NSSet					*safeFileExtensions;
+	
+	FTAutoAcceptType		autoAcceptType;
+	BOOL					autoChooseFolder;
+	BOOL					autoOpenSafe;
+	BOOL					showProgressWindow;
 }
 
 //Should be the only vendor of new ESFileTransfer* objects, as it creates, tracks, and returns them

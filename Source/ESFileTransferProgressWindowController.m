@@ -37,6 +37,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	
 	//Configure and show window
 	[sharedTransferProgressInstance showWindow:nil];
+	[[sharedTransferProgressInstance window] orderFront:nil];
 	
 	return (sharedTransferProgressInstance);
 }

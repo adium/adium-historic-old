@@ -38,6 +38,7 @@ typedef enum {
     AIPref_Advanced_Status,
     AIPref_Advanced_Service,
     AIPref_Advanced_Other,
+	AIPref_FileTransfer
 } PREFERENCE_CATEGORY;
 
 @class AIPreferencePane, AIAdium;
@@ -93,6 +94,10 @@ typedef enum {
 //Preference Cache
 - (NSMutableDictionary *)cachedPreferencesForGroup:(NSString *)group object:(AIListObject *)object;
 - (void)updateCachedPreferences:(NSMutableDictionary *)prefDict forGroup:(NSString *)group object:(AIListObject *)object;
+
+//Default download location
+- (NSString *)userPreferredDownloadFolder;
+- (void)setUserPreferredDownloadFolder:(NSString *)path;
 
 @end
 

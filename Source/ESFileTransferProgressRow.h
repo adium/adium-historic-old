@@ -30,12 +30,9 @@
 
 - (ESFileTransferProgressView *)view;
 
-- (void)setIsSelected:(BOOL)flag;
-
 - (void)fileTransferProgressView:(ESFileTransferProgressView *)inView
 			   heightChangedFrom:(float)oldHeight
 							  to:(float)newHeight;
-- (void)mouseDown:(NSEvent *)inEvent inView:(ESFileTransferProgressView *)inView;
 
 - (FileTransferType)type;
 
