@@ -71,7 +71,7 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 			}else{
 				[groupDict removeObjectForKey:buddyValue];
 			}
-			NSLog(@"%@ to groupName %@ contactName %@",theContact,groupName,contactName);
+
 			[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toGroupName:contactName:)
 													withObject:theContact
 													withObject:groupName
@@ -90,13 +90,13 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 			
 			if(!aliasDict) aliasDict = [[NSMutableDictionary alloc] init];
 
-			if(!(oldAliasString = [aliasDict objectForKey:buddyValue]) ||
-			   (![oldAliasString isEqualToString:aliasString])){
+			if(![aliasString isEqualToString:[theContact UID]] &&
+			   (!(oldAliasString = [aliasDict objectForKey:buddyValue]) ||
+			   (![oldAliasString isEqualToString:aliasString]))){
 
 				//Store the new string in our aliasDict
 				[aliasDict setObject:aliasString forKey:buddyValue];
 				
-				NSLog(@"%@ to alias %@",theContact,aliasString);
 				//Send it to the main thread
 				[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toAlias:)
 														withObject:theContact
