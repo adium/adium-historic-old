@@ -754,7 +754,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.137 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.138 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1010,7 +1010,7 @@
     [self setTypingFlagOfContact:contact to:NO];
     
     //Open a chat for this handle
-    chat = [[adium contentController] chatWithContact:contact initialStatus:nil];
+    chat = [[adium contentController] chatWithContact:contact];
 
     //Add a content object for the message
     messageObject = [AIContentMessage messageInChat:chat
@@ -1678,10 +1678,10 @@
 
 - (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing
 {
-    BOOL currentValue = [[contact statusObjectForKey:@"Typing"] boolValue];
+    BOOL currentValue = [[contact statusObjectForKey:KEY_TYPING] boolValue];
 	
     if(typing != currentValue){
-		[contact setStatusObject:[NSNumber numberWithBool:typing] forKey:@"Typing" notify:YES];
+		[contact setStatusObject:[NSNumber numberWithBool:typing] forKey:KEY_TYPING notify:YES];
     }
 }
 
