@@ -16,7 +16,6 @@
 // $Id$
 
 #import "AIAccount.h"
-#import "AIServiceType.h"
 #import "AIListContact.h"
 
 #define FILTERED_STRING_REFRESH    30.0    //delay in seconds between refresh of our attributed string statuses when needed
