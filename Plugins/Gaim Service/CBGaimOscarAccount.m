@@ -180,14 +180,11 @@ static BOOL didInitOscar = NO;
 
 //ICQ doesn't support automatic typing notification clearing after a send, but AIM and .Mac do, so we return YES
 //for smooth operation, particularly with iChat where this is very noticeable.
-- (BOOL)suppressTypingNotificationChangesAfterSendForListObject:(AIListObject *)listObject{
+- (BOOL)suppressTypingNotificationChangesAfterSendForListObject:(AIListObject *)listObject
+{
 	const char	firstCharacter = [[listObject UID] characterAtIndex:0];
 	
-	if(firstCharacter >= '0' && firstCharacter <= '9'){
-		return(NO);
-	}
-	
-	return(YES);
+	return !(firstCharacter >= '0' && firstCharacter <= '9');
 }
 
 #pragma mark AIListContact and AIService special cases for OSCAR
