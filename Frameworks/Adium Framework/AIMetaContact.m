@@ -844,6 +844,22 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return(longDisplayName);
 }
 
+#pragma mark Status
+- (NSString *)statusName
+{
+	return [[self preferredContact] statusObjectForKey:@"StatusName"];
+}
+
+- (AIStatusType)statusType
+{
+	NSNumber		*statusTypeNumber = [[self preferredContact] statusObjectForKey:@"StatusType"];
+	AIStatusType	statusType = (statusTypeNumber ?
+								  [statusTypeNumber intValue] :
+								  AIAvailableStatusType);
+	
+	return statusType;
+}
+
 /*!
  * @brief Determine the status message to be displayed in the contact list
  *
