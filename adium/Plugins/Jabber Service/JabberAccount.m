@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 @interface JabberAccount (PRIVATE)
+- (void)initAccount;
 - (void)connect;
 - (void)onSessionConnected:(NSNotification*)n;
 - (void)onSessionAuthReady:(NSNotification*)n;
@@ -59,7 +60,8 @@
 // Returns a dictionary of AIHandles available on this account
 - (NSDictionary *)availableHandles //return nil if no contacts/list available
 {
-    return nil;
+    int status = [[[owner accountController] propertyForKey:@"Status" account:self] intValue];
+    return (status == STATUS_ONLINE) ? handleDict : nil;
 }
 
 // Returns YES if the list is editable
@@ -111,12 +113,12 @@
 
 - (void)initAccount
 {
-    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
-    [[owner accountController] setProperty:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
+    handleDict = [[NSMutableDictionary alloc] init];
 }
 
 - (void)dealloc
 {
+    [handleDict release];
     [super dealloc];
 }
 
@@ -150,7 +152,7 @@
     return [self UID];
 }
 
-- (NSArray *)supportedStatusKeys
+- (NSArray *)supportedPropertyKeys
 {
     return([NSArray arrayWithObjects:@"Online", @"Offline", nil]);
 }
@@ -243,7 +245,33 @@
 
 - (void)onMessage:(NSNotification*)n
 {
+    JabberMessage *m = (JabberMessage*) [n object];
     NSLog(@"jabber: message");
+    NSString *from = [[m from] userhost];
+    AIHandle *handle;
+    handle = [handleDict objectForKey: from];
+    if (!handle) {
+        handle = [self addHandleWithUID:from serverGroup:nil temporary:YES];
+    }
+    if(![[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
+        [[handle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
+        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:NO silent:YES];
+    }
+    AIChat *chat = [self _openChatWithHandle:handle];
+    AIContentMessage *messageObject;
+    messageObject = [AIContentMessage messageInChat:chat
+                                         withSource:[handle containingContact]
+                                        destination:self
+                                               date:[m delayedOnDate]
+                                            message:[m body]
+                                          autoreply:NO];
+    [[owner contentController] addIncomingContentObject:messageObject];    
+}
+
+/* Without this, the onMessage listener won't register properly. But I don't understand it. What does this do? */
+- (id)copyWithZone:(NSZone*)z
+{
+    return [self retain];
 }
 
 - (void)disconnect
