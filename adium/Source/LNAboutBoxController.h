@@ -30,6 +30,7 @@
     
 	//Scrolling
     NSTimer					*scrollTimer;
+	NSTimer					*eventLoopScrollTimer;
     float					scrollLocation;
     int						maxScroll;
     float               	scrollRate;
