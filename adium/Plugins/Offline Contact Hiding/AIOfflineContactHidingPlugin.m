@@ -71,6 +71,9 @@
 		
 		//Refresh visibility of all contacts
 		[[adium contactController] updateAllListObjectsForObserver:self];
+		
+		//Resort the entire list, since we know the whole thing changed
+		[[adium contactController] sortContactList];
     }
 }
 
