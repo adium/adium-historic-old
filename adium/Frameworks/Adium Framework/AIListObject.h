@@ -19,7 +19,6 @@
 
 @interface AIListObject : AIObject {
     NSString				*UID;
-	NSString				*formattedUID;
     NSString				*serviceID;
 	BOOL					visible;				//Visibility of this object
 	
