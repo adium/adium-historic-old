@@ -42,14 +42,13 @@
     [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:IDLE_TIME_THEMABLE_PREFS forClass:[self class]]
 						     forGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
     
-    [self preferencesChanged:nil];
-
     //Our preference view
     preferences = [[AIIdleTimeDisplayPreferences preferencePane] retain];
     [[adium contactController] registerListObjectObserver:self];
 
     //Observe
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
 }
 
 - (void)uninstallPlugin
@@ -67,7 +66,7 @@
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     NSArray		*modifiedAttributes = nil;
-	
+
     if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Idle"]){
         AIMutableOwnerArray	*viewArray;
         AIIdleView		*idleView = nil;
@@ -75,16 +74,7 @@
 		
         //Set the correct idle time
         idle = [[inObject numberStatusObjectForKey:@"Idle"] intValue];
-		
-        if(displayIdleOnLeft){
-			viewArray = [inObject displayArrayForKey:@"Left View"];
-			[[inObject displayArrayForKey:@"Right View" create:NO] setObject:nil withOwner:self];
-			
-		}else{
-			viewArray = [inObject displayArrayForKey:@"Right View"];
-			[[inObject displayArrayForKey:@"Left View" create:NO]  setObject:nil withOwner:self];
-			
-		}
+		viewArray = [inObject displayArrayForKey:@"Right View"];
 		
         idleView = [viewArray objectWithOwner:self];
 
@@ -108,7 +98,7 @@
             }
         }
 		
-		modifiedAttributes = [NSArray arrayWithObjects:@"Left View", @"Right View", nil];
+		modifiedAttributes = [NSArray arrayWithObjects:@"Right View", nil];
     }
 	
     return(modifiedAttributes);
@@ -136,7 +126,7 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     //Optimize this...
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_IDLE_TIME_DISPLAY]){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_IDLE_TIME_DISPLAY]){
 		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
 		
         //Cache the preference values

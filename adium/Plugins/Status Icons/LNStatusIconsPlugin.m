@@ -54,7 +54,6 @@
 		// For now, until dragging is implemented, they are right aligned.
 		// Also, they do not always display in the proper order.
 		iconArray = [inObject displayArrayForKey:@"Right View"];
-		[[inObject displayArrayForKey:@"Left View"]  setObject:nil withOwner:self];
 		
 		statusIcon = [iconArray objectWithOwner:self];
 		
@@ -88,7 +87,7 @@
 			}
 		}
 		
-		modifiedAttributes = [NSArray arrayWithObjects:@"Left View", @"Right View", nil];
+		modifiedAttributes = [NSArray arrayWithObjects:@"Right View", nil];
 	}
 	
     return(modifiedAttributes);
