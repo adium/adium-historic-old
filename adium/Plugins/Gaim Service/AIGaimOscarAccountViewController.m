@@ -15,6 +15,7 @@
 
 #import "AIGaimOscarAccountViewController.h"
 #import "CBGaimAccount.h"
+#include "ESImageViewWithImagePicker.h"
 
 @implementation AIGaimOscarAccountViewController
 
@@ -29,6 +30,8 @@
     
     //Profile
     NSData		*profileData = [account preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
+    NSData              *data;
+    NSImage             *image;
     if(profileData){
         NSAttributedString	*profile = [NSAttributedString stringWithData:profileData];
         if(profile && [profile length]){

@@ -25,10 +25,11 @@
 {
     [super configureForAccount:inAccount];
     
-	CBGaimAccount   *theAccount = (CBGaimAccount *)inAccount;
+	CBGaimAccount           *theAccount = (CBGaimAccount *)inAccount;
 	NSString		*hostName, *proxyHostName, *proxyUserName, *proxyPassword;
 	NSNumber		*proxyTypeNumber, *proxyPortNumber;
-	int				port;
+        NSData                  *data;
+	int                     port;
 	
 	//Host name
 	hostName = [theAccount host];
@@ -71,6 +72,16 @@
 	//Check mail
 //	NSLog(@"%@ %i",[inAccount UID],[[inAccount preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]);
 	[checkBox_checkMail setState:[[inAccount preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]];
+        
+        // icon junk
+        if(data = [inAccount preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
+            NSImage *image = [[[NSImage alloc] initWithData:data] autorelease];
+            [imageView_userIcon setImage:image];
+        } 
+        else{
+            // image = {default image thing};
+            NSLog(@"help me");
+        }        
 		
 	[self configureConnectionControlDimming];
 }
@@ -143,6 +154,17 @@
 		}
 		
 	}
+}
+
+//User icon editing support
+- (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)sender didChangeToImage:(NSImage *)image
+{
+    [account setPreference:[image TIFFRepresentation] forKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
+}
+
+- (void)deleteInImageViewWithImagePicker:(ESImageViewWithImagePicker *)sender
+{
+    // this will tell us we need to remove the user icon
 }
 
 - (IBAction)changedPreference:(id)sender
