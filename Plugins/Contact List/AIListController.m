@@ -431,8 +431,6 @@ typedef enum {
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
 	
-	BOOL		allowContactDrop = ([info draggingSourceOperationMask] == NSDragOperationCopy);
-	
 	//No dropping into contacts
     if([avaliableType isEqualToString:@"AIListObject"]){
 		id	primaryDragItem = [dragItems objectAtIndex:0];
@@ -450,19 +448,13 @@ typedef enum {
 		}else{
 			//Disallow dragging contacts onto anything besides a group
 			if(index == NSOutlineViewDropOnItemIndex && ![item isKindOfClass:[AIListGroup class]]){
-				if (allowContactDrop){
-					[outlineView setDropItem:item dropChildIndex:NSOutlineViewDropOnItemIndex];
-				}else{
-					AIListObject	*containingObject = [item containingObject];
-					[outlineView setDropItem:((containingObject == contactList) ? nil : containingObject)
-							  dropChildIndex:[[item containingObject] indexOfObject:item]];
-				}
+				[outlineView setDropItem:item dropChildIndex:NSOutlineViewDropOnItemIndex];
 			}
 			
 		}
 		
 		if(index == NSOutlineViewDropOnItemIndex && ![item isKindOfClass:[AIListGroup class]]){
-			return(allowContactDrop ? NSDragOperationCopy : NSDragOperationNone);
+			return(NSDragOperationCopy);
 		}
 	}
 	
@@ -483,21 +475,30 @@ typedef enum {
 			[[adium contactController] moveListObjects:dragItems toGroup:item index:index];
 			
 		}else if ([item isKindOfClass:[AIListContact class]]){
-			AIMetaContact						*metaContact;
-			AIListObject<AIContainingObject> 	*oldContainingObject;
-			float								oldIndex;
-
-			//Keep track of where it was before
-			oldContainingObject = [[item containingObject] retain];;
-			oldIndex = [item orderIndex];
+			NSString	*promptTitle;
 			
-			//Group the dragged items plus the destination into a metaContact
-			metaContact = [[adium contactController] groupListContacts:[dragItems arrayByAddingObject:item]];
+			//Appropriate prompt
+			if([dragItems count] == 1){
+				promptTitle = [NSString stringWithFormat:@"Combine %@ and %@?", [[dragItems objectAtIndex:0] displayName], [item displayName]];
+			}else{
+				promptTitle = [NSString stringWithFormat:@"Combine these contacts with %@?",[item displayName]];
+			}
+		
+			//Metacontact creation, prompt the user
+			NSDictionary	*context = [NSDictionary dictionaryWithObjectsAndKeys:
+				item, @"item",
+				dragItems, @"dragitems", nil];
 			
-			//Position the metaContact in the group & index the drop point was before
-			[[adium contactController] moveListObjects:[NSArray arrayWithObject:metaContact] toGroup:oldContainingObject index:oldIndex];
-			
-			[oldContainingObject release];
+			NSBeginInformationalAlertSheet(promptTitle,
+										   @"Combine",
+										   @"Cancel",
+										   nil,
+										   nil,
+										   self,
+										   @selector(mergeContactSheetDidEnd:returnCode:contextInfo:),
+										   nil,
+										   [context retain], //we're responsible for retaining the content object
+										   @"Once combined, Adium will treat these contacts as a single individual both on your contact list and when sending messages.\r\rYou may un-combine these contacts by getting info on them.");
 		}
 	}
 	
@@ -505,6 +506,33 @@ typedef enum {
 	
     return(YES);
 }
+- (void)mergeContactSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	NSDictionary	*context = (NSDictionary *)contextInfo;
+
+	if(returnCode == 1){
+		AIListObject	*item = [context objectForKey:@"item"];
+		NSArray			*draggedItems = [context objectForKey:@"dragitems"];
+		AIMetaContact	*metaContact;
+
+		//Keep track of where it was before
+		AIListObject<AIContainingObject> *oldContainingObject = [[item containingObject] retain];;
+		float oldIndex = [item orderIndex];
+		
+		//Group the dragged items plus the destination into a metaContact
+		metaContact = [[adium contactController] groupListContacts:[draggedItems arrayByAddingObject:item]];
+		
+		//Position the metaContact in the group & index the drop point was before
+		[[adium contactController] moveListObjects:[NSArray arrayWithObject:metaContact]
+										   toGroup:oldContainingObject
+											 index:oldIndex];
+		
+		[oldContainingObject release];
+	}
+
+	[context release]; //We are responsible for retaining & releasing the context dict
+}
+
 
 - (void)outlineViewUserDidExpandItem:(NSNotification *)notification
 {
