@@ -126,6 +126,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 					NSString		*scriptFileName, *scriptFilePath, *keyword, *title, *arguments;
 					NSURL			*scriptURL;
 					NSNumber		*prefixOnlyNumber;
+					NSNumber		*requiresUserInteractionNumber;
 					
 					if ((scriptFileName = [scriptDict objectForKey:@"File"]) &&
 						(scriptFilePath = [scriptBundle pathForResource:scriptFileName
@@ -144,9 +145,12 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 							prefixOnlyNumber = [scriptDict objectForKey:@"Prefix Only"];
 							if (!prefixOnlyNumber) prefixOnlyNumber = [NSNumber numberWithBool:NO];
 							
+							requiresUserInteractionNumber = [scriptDict objectForKey:@"Requires User Interaction"];
+							if (!requiresUserInteractionNumber) requiresUserInteractionNumber = [NSNumber numberWithBool:NO];
+							
 							infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 								scriptURL, @"Path", keyword, @"Keyword", title, @"Title", 
-								prefixOnlyNumber, @"PrefixOnly", nil];
+								prefixOnlyNumber, @"PrefixOnly", requiresUserInteractionNumber, @"RequiresUserInteraction",nil];
 							
 							//The bundle may not be part of (or for defining) a set of scripts
 							if (scriptsSetName){
@@ -468,8 +472,32 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 {
 	NSURL 			*scriptURL = [infoDict objectForKey:@"Path"];
 	NSAppleScript   *script = [[[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:nil] autorelease];
-
-	return([[script executeFunction:@"substitute" withArguments:arguments error:nil] stringValue]);
+	NSString		*returnValue;
+	
+	if([[infoDict objectForKey:@"RequiresUserInteraction"] boolValue]){
+		NSAppleEventDescriptor	*eventDescriptor;
+		NSInvocation			*invocation;
+		NSString				*function = @"substitute";
+		SEL						selector = @selector(executeFunction:withArguments:error:);
+		
+		invocation = [NSInvocation invocationWithMethodSignature:[script methodSignatureForSelector:selector]];
+		[invocation setSelector:selector];
+		[invocation setTarget:script];
+		[invocation setArgument:&function atIndex:2];
+		[invocation setArgument:&arguments atIndex:3];
+		
+		[invocation performSelectorOnMainThread:@selector(invoke)
+									 withObject:nil
+								  waitUntilDone:YES];
+		
+		[invocation getReturnValue:&eventDescriptor];
+		returnValue = [eventDescriptor stringValue];
+		
+	}else{
+		returnValue = [[script executeFunction:@"substitute" withArguments:arguments error:nil] stringValue];		
+	}
+	
+	return(returnValue);
 }
 
 @end
