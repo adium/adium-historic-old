@@ -47,7 +47,10 @@ typedef struct context {
 					  Fingerprints entries */
     Fingerprint *active_fingerprint;   /* Which fingerprint is in use now?
                                           A pointer into the above list */
-    unsigned int their_keyid;          /* current keyid used by other side */
+    unsigned int their_keyid;          /* current keyid used by other side;
+                                          this is set to 0 if we get a
+					  OTRL_TLV_DISCONNECTED message from
+					  them. */
     gcry_mpi_t their_y;                /* Y[their_keyid] (their DH pubkey) */
     gcry_mpi_t their_old_y;            /* Y[their_keyid-1] (their prev DH
 					  pubkey) */
