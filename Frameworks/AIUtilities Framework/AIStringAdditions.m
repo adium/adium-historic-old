@@ -142,7 +142,7 @@
 	
 	if (length < [self length]) {
 		//Truncate and append the ellipsis
-		returnString = [[self substringToIndex:length] stringByAppendingString:[NSString stringWithUTF8String:"…"]];
+		returnString = [[self substringToIndex:length] stringByAppendingString:[NSString stringWithUTF8String:"\xE2\x80\xA6"]];
 	} else {
 		//We don't need to truncate, so don't append an ellipsis
 		returnString = self;
