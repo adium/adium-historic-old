@@ -60,7 +60,7 @@
 			BOOL			selected;
 			
 			tableColumn = [tableColumns objectAtIndex:tableColumnIndex];
-			cell = [tableColumn dataCell];
+			cell = [self cellForTableColumn:tableColumn item:item];
 			
 			[[self delegate] outlineView:self
 						 willDisplayCell:cell 
