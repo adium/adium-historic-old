@@ -76,7 +76,10 @@
     [borderColor release];
     [bubbleColor release];
     [dividerColor release];
-    
+    [borderColorOpaque release];
+    [bubbleColorOpaque release];
+    [dividerColorOpaque release];
+	
     [super dealloc];
 }
 
