@@ -8643,7 +8643,6 @@
 				B774EFC4058C48F6009C7C67,
 				4B6EA1BE058FA6900070A9A1,
 				4B215DB0059896B000305B3C,
-				4B8C009205BD62CD0013F4AA,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
@@ -9610,7 +9609,6 @@
 				3419FE0E0531585600C68BA3,
 				3419FE0F0531585600C68BA3,
 				3419FE100531585600C68BA3,
-				6EB4AF0D05BCEA1700D0042B,
 				3419FE110531585600C68BA3,
 				344AB7260579237600384CEE,
 				3419FE120531585600C68BA3,
@@ -21143,18 +21141,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B8C009105BD62CD0013F4AA = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 6EB4AC3305BCB81D00D0042B;
-			remoteInfo = "Message Push Preferences";
-		};
-		4B8C009205BD62CD0013F4AA = {
-			isa = PBXTargetDependency;
-			target = 6EB4AC3305BCB81D00D0042B;
-			targetProxy = 4B8C009105BD62CD0013F4AA;
-		};
 		4B8EFC0403E18F2D00A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -25128,12 +25114,6 @@
 		};
 		6EB4ADA705BCC1C300D0042B = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6EB4AF0D05BCEA1700D0042B = {
-			fileRef = 6EB4AC3405BCB81D00D0042B;
 			isa = PBXBuildFile;
 			settings = {
 			};
