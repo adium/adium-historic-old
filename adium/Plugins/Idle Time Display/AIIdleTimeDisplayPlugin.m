@@ -71,7 +71,7 @@
         //Set the correct idle time
         idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
 
-	if(displayIdleOnLeft){
+        if(displayIdleOnLeft){
 	    viewArray = [inObject displayArrayForKey:@"Left View"];
 	    [[inObject displayArrayForKey:@"Right View"] setObject:nil withOwner:self];
 
@@ -81,8 +81,8 @@
 
 	}
 
+        idleView = [viewArray objectWithOwner:self];
         if(displayIdleTime && idle != 0){
-            idleView = [viewArray objectWithOwner:self];
             //Add an idle view if one doesn't exist
             if(!idleView){
                 idleView = [AIIdleView idleView];
