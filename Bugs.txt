@@ -29,7 +29,6 @@
 	with the toolbar showing
 - Need to check whether ~/L/AS/Adium 2.0/Contact List/ exists before trying to save
 	contact list themes there.
-- Regular Window: Opacity doesn't work (window is setOpaque:YES)
 - Vertical resizing really screws up once the scrollbar becomes visible.  The list will
     not correctly resize when opening/closing groups, and will jump randomly up and down
     on the screen.
