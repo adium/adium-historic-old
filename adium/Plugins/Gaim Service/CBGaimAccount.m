@@ -302,7 +302,7 @@
     BOOL currentValue = [[[handle statusDictionary] objectForKey:@"Typing"] boolValue];
     
     if((typing && !currentValue) || (!typing && currentValue)){
-        NSLog(@"Changing typing state to %@", typing);
+        NSLog(@"Changing typing state to %i", typing);
 
         [[handle statusDictionary] setObject:[NSNumber numberWithBool:typing] forKey:@"Typing"];
         [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:YES silent:NO];
