@@ -14,15 +14,14 @@
 
     //Register our default preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_ICONS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STATUS_ICONS];
-    [self preferencesChanged:nil];
 
     //Our preference view
     preferences = [[LNStatusIconsPreferences preferencePane] retain];
-    [[adium contactController] registerListObjectObserver:self];
-
-    //Observe
+    
+	//Observe
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-
+    [self preferencesChanged:nil];
+	
     idleImage = [[NSImage imageNamed:@"IdleIcon" forClass:[self class]] retain];
     awayImage = [[NSImage imageNamed:@"AwayIcon" forClass:[self class]] retain];
 }
@@ -103,10 +102,30 @@
 		
 		//Release the old values..
 		//Cache the preference values
-		displayStatusIcon  = [[prefDict objectForKey:KEY_DISPLAY_STATUS_ICONS] boolValue];
+		BOOL newDisplayStatusIcon  = [[prefDict objectForKey:KEY_DISPLAY_STATUS_ICONS] boolValue];
 		
-        //Update all our status icons
-		[[adium contactController] updateAllListObjectsForObserver:self];
+		if (newDisplayStatusIcon && !displayStatusIcon){
+			//Start observing
+			[[adium contactController] registerListObjectObserver:self];
+
+			//Now we will be displaying status icons
+			displayStatusIcon = newDisplayStatusIcon;	
+
+			//Update all our contacts to show status icons as necessary
+			[[adium contactController] updateAllListObjectsForObserver:self];
+			
+		}else if (displayStatusIcon && !newDisplayStatusIcon){
+			//Now we won't be displaying status icons
+			displayStatusIcon = newDisplayStatusIcon;	
+
+			//Update all contacts not to display
+			[[adium contactController] updateAllListObjectsForObserver:self];
+			
+			//Stop observing
+			[[adium contactController] unregisterListObjectObserver:self];	
+		}
+		
+
     }
 }
 
