@@ -22,15 +22,13 @@
     IBOutlet    SHAutoValidatingTextView    *textView_URL;
     IBOutlet    NSImageView                 *imageView_invalidURLAlert;
     
-    BOOL                                     editLink;
-    BOOL                                     favoriteWindow;
-    
-    NSRange                                  selectionRange;
-    NSResponder                             *editableView;
-    
-    SHLinkEditorWindowController            *editorController;
-        
-    NSDictionary                            *favoritesDict;
+                BOOL                         editLink;
+                BOOL                         favoriteWindow;
+
+                NSRange                      selectionRange;
+                NSResponder                 *editableView;
+
+                NSDictionary                *favoritesDict;
 }
 
 - (void)initAddLinkWindowControllerWithResponder:(NSResponder *)responder;
