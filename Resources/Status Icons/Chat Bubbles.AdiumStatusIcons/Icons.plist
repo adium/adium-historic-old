@@ -32,6 +32,8 @@
 		<string>typing.png</string>
 		<key>enteredtext</key>
 		<string>enteredtext.png</string>
+		<key>Mobile</key>
+		<string>mobile.png</string>
 	</dict>
 	<key>Tabs</key>
 	<dict>
@@ -58,9 +60,11 @@
 		<key>content</key>
 		<string>content.png</string>
 		<key>typing</key>
-		<string>typing.png</string>
+		<string>tab-typing.png</string>
 		<key>enteredtext</key>
-		<string>enteredtext.png</string>
+		<string>tab-enteredtext.png</string>
+		<key>Mobile</key>
+		<string>tab-mobile.png</string>
 	</dict>
 </dict>
 </plist>
