@@ -112,8 +112,11 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			
 			//Check the stack trace for a third set of known offenders
 			if(!backtrace ||
-			   [backtrace rangeOfString:@"-[NSFontPanel setPanelFont:isMultiple:] (in AppKit)"].location != NSNotFound ||
-			   [backtrace rangeOfString:@"-[NSScrollView(NSScrollViewAccessibility) accessibilityChildrenAttribute]"].location != NSNotFound)
+			   [backtrace rangeOfString:@"-[NSFontPanel setPanelFont:isMultiple:] (in AppKit)"].location != NSNotFound || //NSFontPanel likes to create exceptions
+			   [backtrace rangeOfString:@"-[NSScrollView(NSScrollViewAccessibility) accessibilityChildrenAttribute]"].location != NSNotFound || //Perhaps we aren't implementing an accessibility method properly? No idea what though :(
+			   [backtrace rangeOfString:@"-[WebBridge objectLoadedFromCacheWithURL:response:data:]"].location != NSNotFound //WebBridge throws this randomly it seems
+			   )
+				
 			{
 				[super raise];
 				
