@@ -455,12 +455,6 @@
 				);
 			};
 		};
-		078DF8B107C2948200831ABF = {
-			fileRef = 078DF8AF07C2948200831ABF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		078DF8B907C2948B00831ABF = {
 			children = (
 				078DF8AE07C2948200831ABF,
@@ -468,6 +462,43 @@
 			);
 			isa = PBXGroup;
 			name = "Data object that uses wired memory";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0795641F07C3553A00F9A88F = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIWiredString.h;
+			path = "Frameworks/AIUtilities Framework/AIWiredString.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0795642007C3553A00F9A88F = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIWiredString.m;
+			path = "Frameworks/AIUtilities Framework/AIWiredString.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0795642107C3553A00F9A88F = {
+			fileRef = 0795641F07C3553A00F9A88F;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		0795642507C3555300F9A88F = {
+			children = (
+				0795641F07C3553A00F9A88F,
+				0795642007C3553A00F9A88F,
+			);
+			isa = PBXGroup;
+			name = "String object that uses wired memory";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -544,6 +575,18 @@
 		};
 		07B7AFA00797A952003B71E1 = {
 			fileRef = 07B7AF9E0797A952003B71E1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07BB5A0D07C4833E008996A0 = {
+			fileRef = 0795642007C3553A00F9A88F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07BB5A0E07C48340008996A0 = {
+			fileRef = 078DF8AF07C2948200831ABF;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -4904,6 +4947,7 @@
 				4BD1F2D506D2693200B3975E,
 				4BD1EEE706D25FFF00B3975E,
 				4BD1F33306D26D4400B3975E,
+				0795642507C3555300F9A88F,
 				4BD1EF7D06D2638A00B3975E,
 				0709598A0798F1F300B140BD,
 				4BD1F3F106D2800900B3975E,
@@ -5402,6 +5446,7 @@
 		8DC2EF500486A6940098B216 = {
 			buildActionMask = 2147483647;
 			files = (
+				076CAD6F0785B64000250504,
 				34486C3806D1DF0400DA778C,
 				34486C3A06D1DF0400DA778C,
 				34486C3C06D1DF0400DA778C,
@@ -5456,6 +5501,8 @@
 				34486CCA06D1DF0400DA778C,
 				34486CCC06D1DF0400DA778C,
 				34486CCE06D1DF0400DA778C,
+				078DF8B007C2948200831ABF,
+				0795642107C3553A00F9A88F,
 				34486CD406D1DF0400DA778C,
 				34486CD606D1DF0400DA778C,
 				34486CD806D1DF0400DA778C,
@@ -5504,14 +5551,12 @@
 				34D18392075FC2390075A380,
 				4BC5A5C30764F6ED0080ECF7,
 				079C113B0782FB500048E350,
-				076CAD6F0785B64000250504,
 				3433564E0793699400C84B15,
 				07B7AF9F0797A952003B71E1,
 				070959860798F1ED00B140BD,
 				4B84A63307B70A5000C2941D,
 				4B5CBF7707BC1887007E4075,
 				07C52D4707BD2F97006BE37C,
-				078DF8B007C2948200831ABF,
 				34F2E92E07C2D1E7007EAAAB,
 				34F2E94107C2D264007EAAAB,
 				34F2EA4A07C304C0007EAAAB,
@@ -5663,10 +5708,11 @@
 				3433564D0793699400C84B15,
 				4B84A63407B70A5000C2941D,
 				07C52D4807BD2F97006BE37C,
-				078DF8B107C2948200831ABF,
 				34F2E92D07C2D1E7007EAAAB,
 				34F2E94007C2D264007EAAAB,
 				34F2EA4B07C304C0007EAAAB,
+				07BB5A0D07C4833E008996A0,
+				07BB5A0E07C48340008996A0,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
