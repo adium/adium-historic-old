@@ -406,7 +406,10 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 						HFSTypeCode = [[fileAttributes objectForKey:NSFileHFSTypeCode] unsignedLongValue];
 						
 						//Check the HFSTypeCode (encoded to the NSString format [NSImage imageFileTypes] uses)
-						if ([[NSImage imageFileTypes] containsObject:NSFileTypeForHFSTypeCode(HFSTypeCode)]){
+						//We also want to ensure that we have a path for writing out images; otherwise a normal
+						//attachment-to-file-transfer tagging is in order.
+						if (imagesPath &&
+							[[NSImage imageFileTypes] containsObject:NSFileTypeForHFSTypeCode(HFSTypeCode)]){
 
 							NSString	*imageName = [fileWrapper preferredFilename];
 							
