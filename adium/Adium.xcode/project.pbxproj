@@ -3651,6 +3651,7 @@
 				4BD675A506001E750049CAF7,
 				4B74D3290602629300C21B7C,
 				4B74D32F0602633700C21B7C,
+				6E5A43DF061160C60078C342,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4262,6 +4263,7 @@
 				4BD675A606001E750049CAF7,
 				4B74D32A0602629300C21B7C,
 				4B74D3300602633700C21B7C,
+				6E5A43E0061160C60078C342,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8709,6 +8711,7 @@
 				9C8C7FA303CBA17B00267226,
 				F1D0C631051AC2380000000E,
 				344AB2C90579137E00384CEE,
+				6E5A43DC0611604B0078C342,
 				4BA88A320524A95F00A8010A,
 				4BDDCA01041104BB00A8010A,
 				4BC8AFD604FD3C1000A8010A,
@@ -16427,6 +16430,46 @@
 			path = "Plugins/Away Status Window/AwayStatusPrefs.plist";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		6E5A43DC0611604B0078C342 = {
+			children = (
+				6E5A43DD061160C50078C342,
+				6E5A43DE061160C50078C342,
+			);
+			isa = PBXGroup;
+			name = "Message Context Display";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E5A43DD061160C50078C342 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCMessageContextDisplayPlugin.h;
+			path = "Plugins/Message Context Display/DCMessageContextDisplayPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E5A43DE061160C50078C342 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCMessageContextDisplayPlugin.m;
+			path = "Plugins/Message Context Display/DCMessageContextDisplayPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E5A43DF061160C60078C342 = {
+			fileRef = 6E5A43DD061160C50078C342;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E5A43E0061160C60078C342 = {
+			fileRef = 6E5A43DE061160C50078C342;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		6E97F12F04A94C0100472FFF = {
 			children = (

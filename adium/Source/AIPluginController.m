@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.31 2004/03/17 05:55:23 evands Exp $
+//$Id: AIPluginController.m,v 1.32 2004/03/24 06:21:47 dchoby98 Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -42,7 +42,7 @@ AISCLViewPlugin, AISendingKeyPreferencesPlugin, AISpellCheckingPlugin,
 AIStandardToolbarItemsPlugin, AIStatusChangedMessagesPlugin, AIStatusCirclesPlugin,
 AITextForcingPlugin, AITextToolbarItemsPlugin, AITypingNotificationPlugin,
 AIVolumeControlPlugin, BGThemesPlugin, CBActionSupportPlugin, CBContactCountingDisplayPlugin,
-CBStatusMenuItemPlugin, CSDisconnectAllPlugin, ESAddressBookIntegrationPlugin,
+CBStatusMenuItemPlugin, CSDisconnectAllPlugin, DCMessageContextDisplayPlugin, ESAddressBookIntegrationPlugin,
 ESAnnouncerPlugin, ESContactAlertsPlugin, ESContactClientPlugin, ESContactListWindowHandlingPlugin,
 ESFastUserSwitchingSupportPlugin, ESOpenMessageWindowContactAlertPlugin, ESSendMessageContactAlertPlugin,
 ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessagePlugin,
@@ -103,6 +103,7 @@ AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin;
 	[self loadPluginWithClass:[CBActionSupportPlugin class]];
 	[self loadPluginWithClass:[CBContactCountingDisplayPlugin class]];
 	[self loadPluginWithClass:[CSDisconnectAllPlugin class]];
+	[self loadPluginWithClass:[DCMessageContextDisplayPlugin class]];
 	[self loadPluginWithClass:[ErrorMessageHandlerPlugin class]];
 	[self loadPluginWithClass:[ESAddressBookIntegrationPlugin class]];
 	[self loadPluginWithClass:[ESAnnouncerPlugin class]];
