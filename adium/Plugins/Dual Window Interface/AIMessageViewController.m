@@ -74,7 +74,7 @@
 									 object:chat];
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(chatStatusChanged:) 
-									   name:Content_ChatStatusChanged
+									   name:Chat_StatusChanged
 									 object:chat];
 	[[adium notificationCenter] addObserver:self 
 								   selector:@selector(chatParticipatingListObjectsChanged:)
@@ -373,7 +373,7 @@
     BOOL	listVisible;
 
     //We display the user list if it contains more than one user, or if someone has specified that it be visible.
-    if([[[chat statusDictionary] objectForKey:@"AlwaysShowUserList"] boolValue] ||
+    if([chat integerStatusObjectForKey:@"AlwaysShowUserList"] ||
        [participatingListObjects count] > 1){
         listVisible = YES;
     }else{
@@ -410,7 +410,7 @@
     }
 
     if(notification == nil || [modifiedKeys containsObject:@"DisallowAccountSwitching"]){
-        BOOL disallowAccountChanging = [[[chat statusDictionary] objectForKey:@"DisallowAccountSwitching"] boolValue];
+        BOOL disallowAccountChanging = [chat integerStatusObjectForKey:@"DisallowAccountSwitching"];
 
         //Disallow source account switching
         if(disallowAccountChanging){
