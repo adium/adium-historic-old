@@ -13,12 +13,14 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.28 2004/03/13 16:50:24 evands Exp $
+//$Id: AIPluginController.m,v 1.29 2004/03/15 05:18:49 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
 #define DIRECTORY_EXTERNAL_PLUGINS		@"/Plugins"				//Path to the external plugins
 #define EXTENSION_ADIUM_PLUGIN			@"AdiumPlugin"			//File extension of a plugin
+
+#define WEBKIT_PLUGIN					@"Webkit Message View.AdiumPlugin"
 
 @interface AIPluginController (PRIVATE)
 - (void)unloadPlugins;
@@ -167,34 +169,38 @@ AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin;
 	    //NSLog (@"Loading plugin: \"%@\"", pluginName);
 	    if([[pluginName pathExtension] caseInsensitiveCompare:EXTENSION_ADIUM_PLUGIN] == 0){
 			NS_DURING
-				//Load the plugin
-				pluginBundle = [NSBundle bundleWithPath:[pluginPath stringByAppendingPathComponent:pluginName]];
-				if(pluginBundle != nil){
-					
+				//Load the plugin; if the plugin is hte webkit plugin, verify webkit is available first
+				if (![pluginName isEqualToString:WEBKIT_PLUGIN] || [NSApp isWebKitAvailable]){
+					pluginBundle = [NSBundle bundleWithPath:[pluginPath stringByAppendingPathComponent:pluginName]];
+					if(pluginBundle != nil){
+						
 #if 1
-					//Create an instance of the plugin
-					plugin = [[pluginBundle principalClass] newInstanceOfPlugin];					
+						//Create an instance of the plugin
+						plugin = [[pluginBundle principalClass] newInstanceOfPlugin];					
 #else
-					//Plugin load timing
-					
-					NSString	*compactedName = [pluginName compactedString];
-					double		timeInterval;
-					NSDate		*startTime = [NSDate date];
-					
-					plugin = [[pluginBundle principalClass] newInstanceOfPlugin];
-					
-					timeInterval = [[NSDate date] timeIntervalSinceDate:startTime];
-					NSLog(@"%@ %f",compactedName, timeInterval);
+						//Plugin load timing
+						
+						NSString	*compactedName = [pluginName compactedString];
+						double		timeInterval;
+						NSDate		*startTime = [NSDate date];
+						
+						plugin = [[pluginBundle principalClass] newInstanceOfPlugin];
+						
+						timeInterval = [[NSDate date] timeIntervalSinceDate:startTime];
+						NSLog(@"%@ %f",compactedName, timeInterval);
 #endif
-					
-					if(plugin != nil){
-						//Add the instance to our list
-						[pluginArray addObject:plugin];
+						
+						if(plugin != nil){
+							//Add the instance to our list
+							[pluginArray addObject:plugin];
+						}else{
+							NSLog(@"Failed to initialize Plugin \"%@\"!",pluginName);
+						}
 					}else{
-						NSLog(@"Failed to initialize Plugin \"%@\"!",pluginName);
+						NSLog(@"Failed to open Plugin \"%@\"!",pluginName);
 					}
-				}else{
-					NSLog(@"Failed to open Plugin \"%@\"!",pluginName);
+				} else {
+					NSLog(AIlocalizedString(@"The WebKit Message View plugin failed to load because WebKit is not available.  Please install Safari to enable the WebKit plugin.",nil));
 				}
 			NS_HANDLER	// Handle a raised exception
 				NSLog(@"The plugin \"%@\" suffered a fatal assertion!",pluginName);
@@ -210,7 +216,15 @@ AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin;
 					[[owner notificationCenter] removeObserver:plugin];
 					[[NSNotificationCenter defaultCenter] removeObserver:plugin];
 				}
-				[[owner interfaceController] handleErrorMessage:@"Plugin load error" withDescription:[NSString stringWithFormat:@"The \"%@\" plugin failed to load properly.  It may be partially loaded.  If strange behavior ensues, remove it from Adium 2's plugin directory (\"%@\"), then quit and relaunch Adium.", [pluginName stringByDeletingPathExtension], pluginPath]];
+				NSString	*errorPartOne = AILocalizedString(@"The","definite article");
+				NSString	*errorPartTwo = AILocalizedString(@"plugin failed to load properly.  It may be partially loaded.  If strange behavior ensues, remove it from Adium 2's plugin directory","part of the plugin error message");
+				NSString	*errorPartThree = AILocalizedString(@", then quit and relaunch Adium","end of the plugin error message");
+				[[owner interfaceController] handleErrorMessage:(AILocalizedString(@"Plugin load error",nil))
+												withDescription:[NSString stringWithFormat:@"%@ \"%@\" %@ (\"%@\")%@.", errorPartOne,
+																														[pluginName stringByDeletingPathExtension],
+																														errorPartTwo,
+																														pluginPath,
+																														errorPartThree]];
 				// It would probably be unsafe to call the plugin's uninstall
 			NS_ENDHANDLER
 	    }
