@@ -604,6 +604,7 @@ typedef enum {
     int				currentAttentionRequest;
 
     BOOL			observingFlash;
+    BOOL			needsDisplay;
 }
 
 //Icon animation & states

@@ -18,8 +18,10 @@
 #import "AIDockController.h"
 
 #define DOCK_DEFAULT_PREFS	@"DockPrefs"
+#define ICON_DISPLAY_DELAY	0.1
 
 @interface AIDockController (PRIVATE)
+- (void)_setNeedsDisplay;
 - (void)_buildIcon;
 - (void)animateIcon:(NSTimer *)timer;
 - (void)_singleBounce;
@@ -42,6 +44,7 @@
     currentAttentionRequest = -1;
     animationTimer = nil;
     bounceTimer = nil;
+    needsDisplay = NO;
 
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
@@ -67,6 +70,9 @@
     while(iconState = [enumerator nextObject]){
         [self removeIconStateNamed:iconState];
     }
+
+    //Force the icon to update
+    [self _buildIcon];
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
@@ -99,11 +105,25 @@
         }
 
         //Recomposite the icon
-        [self _buildIcon];
+        [self _setNeedsDisplay];
     }
 }
 
 //Icons ------------------------------------------------------------------------------------
+- (void)_setNeedsDisplay
+{
+    if(!needsDisplay){
+        needsDisplay = YES;
+
+        //Invoke a display after a short delay
+        [NSTimer scheduledTimerWithTimeInterval:ICON_DISPLAY_DELAY
+                                         target:self
+                                       selector:@selector(_buildIcon)
+                                       userInfo:nil
+                                        repeats:NO];
+    }
+}
+
 //Load an icon pack
 - (NSMutableDictionary *)iconPackAtPath:(NSString *)folderPath
 {
@@ -192,7 +212,7 @@
 {
     if(![activeIconStateArray containsObject:inName]){
         [activeIconStateArray addObject:inName]; 	//Add the name to our array
-        [self _buildIcon];				//Rebuild our icon
+        [self _setNeedsDisplay];			//Redisplay our icon
     }
 }
 
@@ -201,7 +221,8 @@
 {
     if([activeIconStateArray containsObject:inName]){
         [activeIconStateArray removeObject:inName]; 	//Remove the name from our array
-        [self _buildIcon];				//Rebuild our icon
+        
+        [self _setNeedsDisplay];			//Redisplay our icon
     }
 }
 
@@ -282,6 +303,8 @@
         //Set the first frame of our animation
         [self animateIcon:nil]; //Set the icon and move to the next frame
     }
+
+    needsDisplay = NO;
 }
 
 - (void)flash:(int)value

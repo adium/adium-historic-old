@@ -152,26 +152,28 @@
 {
     if(autoResizeVertically){
         NSRect	newFrame = [self _desiredWindowFrame];
-        
-        //Set this as our window's size
-        if(!autoResizeHorizontal){ //Allow horiz resizing still
-            [[self window] setMaxSize:NSMakeSize(10000, newFrame.size.height)];
-            [[self window] setMinSize:NSMakeSize(minWindowSize.width, newFrame.size.height)];
-        }else{
-            [[self window] setMaxSize:newFrame.size];
-            [[self window] setMinSize:newFrame.size];
-        }
 
-        //Resize the window (We animate only if the window is main)
-        if([[self window] isMainWindow]){
-            [scrollView_contactList setAutoHideScrollBar:NO]; //Prevent scrollbar from appearing during animation
-            [scrollView_contactList setHasVerticalScroller:NO];
-            [[self window] setFrame:newFrame display:YES animate:YES];
-            [scrollView_contactList setAutoHideScrollBar:YES];
+        if(!NSEqualRects([[self window] frame], newFrame)){
+            //Set this as our window's size
+            if(!autoResizeHorizontal){ //Allow horiz resizing still
+                [[self window] setMaxSize:NSMakeSize(10000, newFrame.size.height)];
+                [[self window] setMinSize:NSMakeSize(minWindowSize.width, newFrame.size.height)];
+            }else{
+                [[self window] setMaxSize:newFrame.size];
+                [[self window] setMinSize:newFrame.size];
+            }
 
-        }else{
-            [[self window] setFrame:newFrame display:YES animate:NO];
+            //Resize the window (We animate only if the window is main)
+            if([[self window] isMainWindow]){
+                [scrollView_contactList setAutoHideScrollBar:NO]; //Prevent scrollbar from appearing during animation
+                [scrollView_contactList setHasVerticalScroller:NO];
+                [[self window] setFrame:newFrame display:YES animate:YES];
+                [scrollView_contactList setAutoHideScrollBar:YES];
 
+            }else{
+                [[self window] setFrame:newFrame display:YES animate:NO];
+
+            }
         }
     }
 }
