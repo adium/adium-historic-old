@@ -21,9 +21,22 @@
     return(self);
 }
 
+- (void)dealloc
+{
+    [serviceID release];
+    
+    [super dealloc];
+}
+
 - (NSString *)serviceID
 {
     return(serviceID);
+}
+
+- (void)setServiceID:(NSString *)inServiceID
+{
+    [serviceID release];
+    serviceID = [inServiceID retain];
 }
 
 

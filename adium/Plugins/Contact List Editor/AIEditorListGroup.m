@@ -23,6 +23,13 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     return(self);
 }
 
+- (void)dealloc
+{
+    [contents release];
+    
+    [super dealloc];
+}
+
 - (void)addObject:(AIEditorListObject *)inObject
 {
     [contents addObject:inObject];
