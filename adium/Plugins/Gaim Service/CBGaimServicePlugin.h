@@ -5,6 +5,7 @@
 //  Created by Colin Barrett on Sun Oct 19 2003.
 //
 
+//Gaim includes
 #include "internal.h"
 #include "connection.h"
 #include "conversation.h"
@@ -25,10 +26,13 @@
 
 @class AIServiceType;
 
-@interface CBGaimServicePlugin : AIPlugin <AIServiceController> {
-        AIServiceType			*handleServiceType;
-        
-        IBOutlet 	NSView		*view_preferences;
+@interface CBGaimServicePlugin : AIPlugin{
+    id  AIMService;
+    id  MSNService;
+    id  YahooService;
+    id  GaduGaduService;
+    id  NapsterService;
+    id  JabberService;
 }
 
 - (void)addAccount:(id)anAccount forGaimAccountPointer:(GaimAccount *)gaimAcct;

@@ -50,6 +50,12 @@
     return(@"AccountPrefView");
 }
 
+//Sort an array of services alphabetically by their description
+int alphabeticalServiceSort(id service1, id service2, void *context)
+{
+    return [(NSString *)[service1 description] caseInsensitiveCompare:(NSString *)[service2 description]];
+}
+
 //Configure the preference view
 - (void)viewDidLoad
 {
@@ -74,7 +80,9 @@
     [button_deleteAccount setImage:[AIImageUtilities imageNamed:@"minus" forClass:[self class]]];
     
     //Configure the service list
-    enumerator = [[[[adium accountController] availableServices] allValues] objectEnumerator];
+    NSArray *serviceListArray = [[[[adium accountController] availableServices] allValues] sortedArrayUsingFunction:alphabeticalServiceSort context:nil];
+    enumerator = [serviceListArray objectEnumerator];
+    
     [popupMenu_serviceList removeAllItems];
     while((service = [enumerator nextObject])){
         NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[service description] target:self action:@selector(selectServiceType:) keyEquivalent:@""] autorelease];
@@ -149,7 +157,7 @@
     [nextView setNextKeyView:button_autoConnect];
 	
     //Swap in the account auxilary tabs
-    enumerator = [[accountViewController auxilaryTabs] objectEnumerator];
+    enumerator = [[accountViewController auxiliaryTabs] objectEnumerator];
     while(tabViewItem = [enumerator nextObject]){
         [tabView_auxilary addTabViewItem:tabViewItem];
     }

@@ -5544,6 +5544,738 @@
 			settings = {
 			};
 		};
+		3441587A059F8EFC0019246B = {
+			children = (
+				344161C4059FC72E0019246B,
+				34415A63059F9B9B0019246B,
+				34415A64059F9B9B0019246B,
+				3441589A059F90290019246B,
+				3441589B059F90290019246B,
+				34416159059FC5330019246B,
+				3441615A059FC5340019246B,
+				34416171059FC55A0019246B,
+				34416172059FC55A0019246B,
+				344158A9059F90FA0019246B,
+				344158AA059F90FB0019246B,
+				34416165059FC5430019246B,
+				34416166059FC5430019246B,
+				34415B9B059FA8DF0019246B,
+				34415B9C059FA8DF0019246B,
+			);
+			isa = PBXGroup;
+			name = Services;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34415880059F8F050019246B = {
+			children = (
+				4B7F278705440C8D00CDFC90,
+				4B7F278805440C8D00CDFC90,
+				34415F87059FB7F40019246B,
+				34415F86059FB7F40019246B,
+				34415EFD059FB4190019246B,
+				34415960059F94F80019246B,
+				34416060059FC2450019246B,
+				34416053059FC2270019246B,
+				34416059059FC2310019246B,
+				344159A2059F971C0019246B,
+				34415BC3059FA95B0019246B,
+			);
+			isa = PBXGroup;
+			name = Accounts;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3441589A059F90290019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CBAIMService.h;
+			path = "Plugins/Gaim Service/CBAIMService.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3441589B059F90290019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CBAIMService.m;
+			path = "Plugins/Gaim Service/CBAIMService.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3441589C059F90290019246B = {
+			fileRef = 3441589A059F90290019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3441589D059F90290019246B = {
+			fileRef = 3441589B059F90290019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344158A9059F90FA0019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESMSNService.h;
+			path = "Plugins/Gaim Service/ESMSNService.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344158AA059F90FB0019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESMSNService.m;
+			path = "Plugins/Gaim Service/ESMSNService.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344158AB059F90FB0019246B = {
+			fileRef = 344158A9059F90FA0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344158AC059F90FB0019246B = {
+			fileRef = 344158AA059F90FB0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3441593F059F94C10019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimMSNAccount.h;
+			path = "Plugins/Gaim Service/ESGaimMSNAccount.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34415940059F94C10019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimMSNAccount.m;
+			path = "Plugins/Gaim Service/ESGaimMSNAccount.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34415941059F94C10019246B = {
+			fileRef = 3441593F059F94C10019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34415942059F94C10019246B = {
+			fileRef = 34415940059F94C10019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34415960059F94F80019246B = {
+			children = (
+				9EA125EE055B633000ECF349,
+				9EA125E8055B630900ECF349,
+				9EE0586F055483DE00505F31,
+				9EE05870055483DE00505F31,
+				3441598A059F96890019246B,
+				3441598B059F968A0019246B,
+				34415F90059FB85F0019246B,
+			);
+			isa = PBXGroup;
+			name = Oscar;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3441598A059F96890019246B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIGaimAIMAccountViewController.h;
+			path = "Plugins/Gaim Service/AIGaimAIMAccountViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3441598B059F968A0019246B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIGaimAIMAccountViewController.m;
+			path = "Plugins/Gaim Service/AIGaimAIMAccountViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3441598C059F968A0019246B = {
+			fileRef = 3441598A059F96890019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3441598D059F968A0019246B = {
+			fileRef = 3441598B059F968A0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344159A2059F971C0019246B = {
+			children = (
+				3441593F059F94C10019246B,
+				34415940059F94C10019246B,
+				344159B3059F977F0019246B,
+				344159B4059F97800019246B,
+			);
+			isa = PBXGroup;
+			name = MSN;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344159B3059F977F0019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimMSNAccountViewController.h;
+			path = "Plugins/Gaim Service/ESGaimMSNAccountViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344159B4059F97800019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimMSNAccountViewController.m;
+			path = "Plugins/Gaim Service/ESGaimMSNAccountViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344159B5059F97800019246B = {
+			fileRef = 344159B3059F977F0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344159B6059F97800019246B = {
+			fileRef = 344159B4059F97800019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34415A63059F9B9B0019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = GaimService.h;
+			path = "Plugins/Gaim Service/GaimService.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34415A64059F9B9B0019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = GaimService.m;
+			path = "Plugins/Gaim Service/GaimService.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34415A65059F9B9C0019246B = {
+			fileRef = 34415A63059F9B9B0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34415A66059F9B9C0019246B = {
+			fileRef = 34415A64059F9B9B0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34415B9B059FA8DF0019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESYahooService.h;
+			path = "Plugins/Gaim Service/ESYahooService.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34415B9C059FA8DF0019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESYahooService.m;
+			path = "Plugins/Gaim Service/ESYahooService.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34415B9D059FA8DF0019246B = {
+			fileRef = 34415B9B059FA8DF0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34415B9E059FA8DF0019246B = {
+			fileRef = 34415B9C059FA8DF0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34415BC3059FA95B0019246B = {
+			children = (
+				34415BD1059FA9CE0019246B,
+				34415BCF059FA9CD0019246B,
+				34415BD2059FA9CE0019246B,
+				34415BD0059FA9CE0019246B,
+			);
+			isa = PBXGroup;
+			name = "Yahoo!";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34415BCF059FA9CD0019246B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimYahooAccount.m;
+			path = "Plugins/Gaim Service/ESGaimYahooAccount.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34415BD0059FA9CE0019246B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimYahooAccountViewController.m;
+			path = "Plugins/Gaim Service/ESGaimYahooAccountViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34415BD1059FA9CE0019246B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimYahooAccount.h;
+			path = "Plugins/Gaim Service/ESGaimYahooAccount.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34415BD2059FA9CE0019246B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimYahooAccountViewController.h;
+			path = "Plugins/Gaim Service/ESGaimYahooAccountViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34415BD3059FA9CE0019246B = {
+			fileRef = 34415BCF059FA9CD0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34415BD4059FA9CE0019246B = {
+			fileRef = 34415BD0059FA9CE0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34415BD5059FA9CE0019246B = {
+			fileRef = 34415BD1059FA9CE0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34415BD6059FA9CE0019246B = {
+			fileRef = 34415BD2059FA9CE0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34415EFD059FB4190019246B = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = GaimAccountView.nib;
+			path = "Plugins/Gaim Service/GaimAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34415EFE059FB4190019246B = {
+			fileRef = 34415EFD059FB4190019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34415F86059FB7F40019246B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimAccountViewController.m;
+			path = "Plugins/Gaim Service/ESGaimAccountViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34415F87059FB7F40019246B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimAccountViewController.h;
+			path = "Plugins/Gaim Service/ESGaimAccountViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34415F88059FB7F40019246B = {
+			fileRef = 34415F86059FB7F40019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34415F89059FB7F40019246B = {
+			fileRef = 34415F87059FB7F40019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34415F90059FB85F0019246B = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ESGaimAIMAuxiliaryAccountView.nib;
+			path = "Plugins/Gaim Service/ESGaimAIMAuxiliaryAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34415F91059FB85F0019246B = {
+			fileRef = 34415F90059FB85F0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34416053059FC2270019246B = {
+			children = (
+				344160C3059FC3080019246B,
+				344160C4059FC3080019246B,
+				344160B4059FC2F50019246B,
+				344160B5059FC2F50019246B,
+			);
+			isa = PBXGroup;
+			name = Jabber;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34416059059FC2310019246B = {
+			children = (
+				34416092059FC2C00019246B,
+				34416093059FC2C00019246B,
+				344160A7059FC2DB0019246B,
+				344160A8059FC2DB0019246B,
+			);
+			isa = PBXGroup;
+			name = Napster;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34416060059FC2450019246B = {
+			children = (
+				34416070059FC27D0019246B,
+				34416071059FC27D0019246B,
+				34416085059FC2A30019246B,
+				34416086059FC2A30019246B,
+			);
+			isa = PBXGroup;
+			name = "Gadu-Gadu";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34416070059FC27D0019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimGaduGaduAccount.h;
+			path = "Plugins/Gaim Service/ESGaimGaduGaduAccount.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34416071059FC27D0019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimGaduGaduAccount.m;
+			path = "Plugins/Gaim Service/ESGaimGaduGaduAccount.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34416072059FC27E0019246B = {
+			fileRef = 34416070059FC27D0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34416073059FC27E0019246B = {
+			fileRef = 34416071059FC27D0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34416085059FC2A30019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimGaduGaduAccountViewController.h;
+			path = "Plugins/Gaim Service/ESGaimGaduGaduAccountViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34416086059FC2A30019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimGaduGaduAccountViewController.m;
+			path = "Plugins/Gaim Service/ESGaimGaduGaduAccountViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34416087059FC2A40019246B = {
+			fileRef = 34416085059FC2A30019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34416088059FC2A40019246B = {
+			fileRef = 34416086059FC2A30019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34416092059FC2C00019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimNapsterAccount.h;
+			path = "Plugins/Gaim Service/ESGaimNapsterAccount.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34416093059FC2C00019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimNapsterAccount.m;
+			path = "Plugins/Gaim Service/ESGaimNapsterAccount.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34416094059FC2C00019246B = {
+			fileRef = 34416092059FC2C00019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34416095059FC2C00019246B = {
+			fileRef = 34416093059FC2C00019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344160A7059FC2DB0019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimNapsterAccountViewController.h;
+			path = "Plugins/Gaim Service/ESGaimNapsterAccountViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344160A8059FC2DB0019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimNapsterAccountViewController.m;
+			path = "Plugins/Gaim Service/ESGaimNapsterAccountViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344160A9059FC2DB0019246B = {
+			fileRef = 344160A7059FC2DB0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344160AA059FC2DB0019246B = {
+			fileRef = 344160A8059FC2DB0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344160B4059FC2F50019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimJabberAccountViewController.h;
+			path = "Plugins/Gaim Service/ESGaimJabberAccountViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344160B5059FC2F50019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimJabberAccountViewController.m;
+			path = "Plugins/Gaim Service/ESGaimJabberAccountViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344160B6059FC2F60019246B = {
+			fileRef = 344160B4059FC2F50019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344160B7059FC2F60019246B = {
+			fileRef = 344160B5059FC2F50019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344160C3059FC3080019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimJabberAccount.h;
+			path = "Plugins/Gaim Service/ESGaimJabberAccount.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344160C4059FC3080019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimJabberAccount.m;
+			path = "Plugins/Gaim Service/ESGaimJabberAccount.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344160C5059FC3090019246B = {
+			fileRef = 344160C3059FC3080019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344160C6059FC3090019246B = {
+			fileRef = 344160C4059FC3080019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34416159059FC5330019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaduGaduService.h;
+			path = "Plugins/Gaim Service/ESGaduGaduService.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3441615A059FC5340019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaduGaduService.m;
+			path = "Plugins/Gaim Service/ESGaduGaduService.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3441615B059FC5340019246B = {
+			fileRef = 34416159059FC5330019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3441615C059FC5340019246B = {
+			fileRef = 3441615A059FC5340019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34416165059FC5430019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESNapsterService.h;
+			path = "Plugins/Gaim Service/ESNapsterService.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34416166059FC5430019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESNapsterService.m;
+			path = "Plugins/Gaim Service/ESNapsterService.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34416167059FC5440019246B = {
+			fileRef = 34416165059FC5430019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34416168059FC5440019246B = {
+			fileRef = 34416166059FC5430019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34416171059FC55A0019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESJabberService.h;
+			path = "Plugins/Gaim Service/ESJabberService.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34416172059FC55A0019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESJabberService.m;
+			path = "Plugins/Gaim Service/ESJabberService.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34416173059FC55A0019246B = {
+			fileRef = 34416171059FC55A0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34416174059FC55A0019246B = {
+			fileRef = 34416172059FC55A0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344161C4059FC72E0019246B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = GaimServices.h;
+			path = "Plugins/Gaim Service/GaimServices.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344161C5059FC72E0019246B = {
+			fileRef = 344161C4059FC72E0019246B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3445BC1B057EA05400D4D68B = {
 			buildRules = (
 			);
@@ -18482,50 +19214,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B3FF506059771400063B7A7 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIGaimAccountViewController.h;
-			path = "Plugins/Gaim Service/AIGaimAccountViewController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B3FF507059771400063B7A7 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIGaimAccountViewController.m;
-			path = "Plugins/Gaim Service/AIGaimAccountViewController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B3FF508059771410063B7A7 = {
-			fileRef = 4B3FF506059771400063B7A7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B3FF509059771410063B7A7 = {
-			fileRef = 4B3FF507059771400063B7A7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B3FF50A059772910063B7A7 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = GaimOscarAIMAccountView.nib;
-			path = "Plugins/Gaim Service/GaimOscarAIMAccountView.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B3FF50B059772910063B7A7 = {
-			fileRef = 4B3FF50A059772910063B7A7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B435D440528AEEA00A8010A = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -18686,10 +19374,10 @@
 				6CF426820577648700F27FAA,
 				34503C7E058F96C400FB7AD1,
 				34503C7F058F96C400FB7AD1,
-				348862CD05645E94003C9627,
-				348862CE05645E95003C9627,
 				34B5875B058D801D00E7EF0D,
 				34B5875A058D801D00E7EF0D,
+				348862CD05645E94003C9627,
+				348862CE05645E95003C9627,
 				4BFC33DD058D4430008F7FA2,
 				4BFC33DE058D4430008F7FA2,
 				F5793924033E74C301A8010A,
@@ -19955,7 +20643,26 @@
 				9EE058DA05548F9400505F31,
 				9EE058DB05548F9400505F31,
 				9EA125EF055B633000ECF349,
-				4B3FF508059771410063B7A7,
+				3441589C059F90290019246B,
+				344158AB059F90FB0019246B,
+				34415941059F94C10019246B,
+				3441598C059F968A0019246B,
+				344159B5059F97800019246B,
+				34415A65059F9B9C0019246B,
+				34415B9D059FA8DF0019246B,
+				34415BD5059FA9CE0019246B,
+				34415BD6059FA9CE0019246B,
+				34415F89059FB7F40019246B,
+				34416072059FC27E0019246B,
+				34416087059FC2A40019246B,
+				34416094059FC2C00019246B,
+				344160A9059FC2DB0019246B,
+				344160B6059FC2F60019246B,
+				344160C5059FC3090019246B,
+				3441615B059FC5340019246B,
+				34416167059FC5440019246B,
+				34416173059FC55A0019246B,
+				344161C5059FC72E0019246B,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19963,8 +20670,9 @@
 		4B7F277F05440C0800CDFC90 = {
 			buildActionMask = 2147483647;
 			files = (
-				4B3FF50B059772910063B7A7,
 				344157D1059F5EC80019246B,
+				34415EFE059FB4190019246B,
+				34415F91059FB85F0019246B,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19976,7 +20684,25 @@
 				4B7F278E05440C8D00CDFC90,
 				9EE05872055483DE00505F31,
 				9EA125E9055B630900ECF349,
-				4B3FF509059771410063B7A7,
+				3441589D059F90290019246B,
+				344158AC059F90FB0019246B,
+				34415942059F94C10019246B,
+				3441598D059F968A0019246B,
+				344159B6059F97800019246B,
+				34415A66059F9B9C0019246B,
+				34415B9E059FA8DF0019246B,
+				34415BD3059FA9CE0019246B,
+				34415BD4059FA9CE0019246B,
+				34415F88059FB7F40019246B,
+				34416073059FC27E0019246B,
+				34416088059FC2A40019246B,
+				34416095059FC2C00019246B,
+				344160AA059FC2DB0019246B,
+				344160B7059FC2F60019246B,
+				344160C6059FC3090019246B,
+				3441615C059FC5340019246B,
+				34416168059FC5440019246B,
+				34416174059FC55A0019246B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20085,15 +20811,8 @@
 			children = (
 				4B7F278905440C8D00CDFC90,
 				4B7F278A05440C8D00CDFC90,
-				4B7F278705440C8D00CDFC90,
-				4B7F278805440C8D00CDFC90,
-				4B3FF506059771400063B7A7,
-				4B3FF507059771400063B7A7,
-				9EA125EE055B633000ECF349,
-				9EA125E8055B630900ECF349,
-				9EE0586F055483DE00505F31,
-				9EE05870055483DE00505F31,
-				4B3FF50A059772910063B7A7,
+				34415880059F8F050019246B,
+				3441587A059F8EFC0019246B,
 				4B7F279005440CA100CDFC90,
 			);
 			isa = PBXGroup;
@@ -20163,17 +20882,17 @@
 		};
 		4B7F279005440CA100CDFC90 = {
 			children = (
-				9E2BD856054BE18200558E56,
-				34415816059F65100019246B,
+				4B7845EF059B50AF0048A8BA,
 				4B7F279205440CB800CDFC90,
 				4B7F279305440CB900CDFC90,
 				4B7F279405440CB900CDFC90,
 				4B7F279505440CB900CDFC90,
-				343FA4520567DC460049DFFB,
 				3453573D059AEE1000A83D9E,
+				343FA4520567DC460049DFFB,
+				34415816059F65100019246B,
+				9E2BD856054BE18200558E56,
 				4B7F27A005440CC900CDFC90,
 				344157CD059F5EC70019246B,
-				4B7845EF059B50AF0048A8BA,
 			);
 			isa = PBXGroup;
 			name = Libraries;
@@ -24280,7 +24999,7 @@
 				9E2BD8C2054BE18F00558E56,
 			);
 			isa = PBXGroup;
-			name = include;
+			name = Include;
 			path = "Plugins/Gaim Service/LIBS/include";
 			refType = 4;
 			sourceTree = "<group>";
@@ -29335,6 +30054,8 @@
 			children = (
 				F57938EF033E745F01A8010A,
 				F57938AA033E737001A8010A,
+				6CF42677057763E100F27FAA,
+				6CF42678057763E200F27FAA,
 				F57938F6033E745F01A8010A,
 				F57938AB033E737001A8010A,
 				4BB54FE40476794200A8010A,
@@ -29343,8 +30064,6 @@
 				F55B415D03AB8B5601A8010A,
 				9E95316703C8E0BE00415B22,
 				9E95316903C8E0C700415B22,
-				6CF42677057763E100F27FAA,
-				6CF42678057763E200F27FAA,
 				34FDD6E305632BFD00F5B30F,
 				34FDD6E405632BFD00F5B30F,
 				F57938F3033E745F01A8010A,

@@ -10,7 +10,7 @@
                 "textField_accountName" = NSTextField; 
                 "textField_password" = NSTextField; 
                 "view_accountView" = NSView; 
-                "view_auxilaryTabView" = NSTabView; 
+                "view_auxiliaryTabView" = NSTabView; 
             }; 
             SUPERCLASS = AIObject; 
         }, 

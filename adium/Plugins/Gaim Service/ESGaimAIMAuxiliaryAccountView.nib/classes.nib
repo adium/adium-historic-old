@@ -1,0 +1,38 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {accountNameChanged = id; changedPreference = id; }; 
+            CLASS = AIAccountViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                account = id; 
+                "textField_accountName" = NSTextField; 
+                "textField_password" = NSTextField; 
+                "view_accountView" = NSView; 
+                "view_auxiliaryTabView" = NSTabView; 
+            }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {
+            CLASS = AIGaimAIMAccountViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"textField_fullName" = NSTextField; "textView_textProfile" = NSTextView; }; 
+            SUPERCLASS = ESGaimAccountViewController; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = ESGaimAccountView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"view_auxiliaryGaimAccountTabView" = NSTabView; }; 
+            SUPERCLASS = AIAccountViewController; 
+        }, 
+        {
+            CLASS = ESGaimAccountViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"view_auxiliaryGaimAccountTabView" = NSTabView; }; 
+            SUPERCLASS = AIAccountViewController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

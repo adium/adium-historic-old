@@ -320,7 +320,6 @@
     filesToSendArray = [[NSMutableArray alloc] init];
 	
     //create an initial gaim account
-    NSLog(@"Creating %@",[self UID]);
     account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
     gaim_accounts_add(account);
     gc = NULL;
@@ -328,39 +327,6 @@
     
     //ensure our user icon cache path exists
     [AIFileUtilities createDirectory:[USER_ICON_CACHE_PATH stringByExpandingTildeInPath]];
-    
-    //TEMP: set profile
-    {
-#define PREF_GROUP_FORMATTING			@"Formatting"
-#define KEY_FORMATTING_FONT			@"Default Font"
-#define KEY_FORMATTING_TEXT_COLOR		@"Default Text Color"
-#define KEY_FORMATTING_BACKGROUND_COLOR		@"Default Background Color"
-#define KEY_FORMATTING_SUBBACKGROUND_COLOR	@"Default SubBackground Color"
-        
-        NSDictionary		*prefs;
-        NSColor			*textColor;
-        NSColor			*backgroundColor;
-        NSColor			*subBackgroundColor;
-        NSFont			*font;
-        NSDictionary            *attributes;
-        
-        //Get the prefs
-        prefs = [[adium preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
-        font = [[prefs objectForKey:KEY_FORMATTING_FONT] representedFont];
-        textColor = [[prefs objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor];
-        backgroundColor = [[prefs objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor];
-        subBackgroundColor = [[prefs objectForKey:KEY_FORMATTING_SUBBACKGROUND_COLOR] representedColor];
-        
-        //Setup the attributes
-        if(!subBackgroundColor){
-            attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, nil];
-        }else{
-            attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, subBackgroundColor, NSBackgroundColorAttributeName, nil];
-        }
-        NSAttributedString *profile = [[[NSAttributedString alloc] initWithString:PROFILE_STRING attributes:attributes] autorelease];
-		
-        [self setPreference:[profile dataRepresentation] forKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
-    }
 }
 
 - (void)dealloc
@@ -1034,7 +1000,7 @@
         }else if([key compare:@"TextProfile"] == 0){
             NSAttributedString	*profile = nil;
             
-            if(data = [self preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS]){
+            if(data = [self preferenceForKey:KEY_PROFILE group:GROUP_ACCOUNT_STATUS]){
                 profile = [NSAttributedString stringWithData:data];
             }
             [self setAccountProfileTo:profile];

@@ -5,7 +5,7 @@
 //  Created by Colin Barrett on Sat Nov 01 2003.
 //
 
-#import "AIGaimAccountViewController.h"
+#import "AIGaimAIMAccountViewController.h"
 #import "CBGaimAIMAccount.h"
 #import "aim.h"
 
@@ -13,7 +13,7 @@
 
 - (id <AIAccountViewController>)accountView
 {
-    return([AIGaimAccountViewController accountViewForAccount:self]);
+    return([AIGaimAIMAccountViewController accountViewForAccount:self]);
 }
 
 @end

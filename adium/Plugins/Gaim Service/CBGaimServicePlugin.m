@@ -3,13 +3,14 @@
 //  Adium
 //
 //  Created by Colin Barrett on Sun Oct 19 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import <Security/Security.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 #import "CBGaimServicePlugin.h"
 #import "CBGaimAIMAccount.h"
+
+#import "GaimServices.h"
 
 #define GAIM_EVENTLOOP_INTERVAL     0.02         //Interval at which to run libgaim's main event loop
 
@@ -275,7 +276,7 @@ static void adiumGaimConvWindowDestroy(GaimConvWindow *win)
 
 static void adiumGaimConvWindowShow(GaimConvWindow *win)
 {
-    NSLog(@"adiumGaimConvWindowShow");
+    
 }
 
 static void adiumGaimConvWindowHide(GaimConvWindow *win)
@@ -556,7 +557,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 {
     _accountDict = [[NSMutableDictionary alloc] init];
 
-    char *plugin_search_paths[1];
+    char *plugin_search_paths[2];
 
     //Register ourself as libgaim's UI handler
     gaim_core_set_ui_ops(&adiumGaimCoreOps);
@@ -564,8 +565,10 @@ static GaimCoreUiOps adiumGaimCoreOps = {
         NSLog(@"Failed to initialize gaim core");
     }
     
+    NSLog(@"loading plugins");
     //Tell libgaim to load its plugins
     plugin_search_paths[0] = (char *)[[[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingPathComponent:@"/Contents/Frameworks/Protocols/"] stringByExpandingTildeInPath] UTF8String];
+    plugin_search_paths[1] = (char *)[[[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingPathComponent:@"/Contents/Frameworks/Plugins/"] stringByExpandingTildeInPath] UTF8String];
     gaim_plugins_set_search_paths(sizeof(plugin_search_paths) / sizeof(*plugin_search_paths), plugin_search_paths);
     gaim_plugins_probe(NULL);
 
@@ -601,24 +604,28 @@ static GaimCoreUiOps adiumGaimCoreOps = {
         
     //Install the libgaim event loop timer
     [NSTimer scheduledTimerWithTimeInterval:GAIM_EVENTLOOP_INTERVAL target:self selector:@selector(gaimEventLoopTimer:) userInfo:nil repeats:YES];
-
-    //Create our handle service type
-    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"AIM"
-                                                      description:@"AIM/OSCAR c/o Libgaim"
-                                                            image:nil
-                                                    caseSensitive:NO
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
-
-    //Register this service
-    [[adium accountController] registerService:self];
     
-    /* add more services here */
+    AIMService = [[[CBAIMService alloc] initWithService:self] retain];
+    MSNService = [[[ESMSNService alloc] initWithService:self] retain];
+    YahooService = [[[ESYahooService alloc] initWithService:self] retain]; 
+    GaduGaduService = [[[ESGaduGaduService alloc] initWithService:self] retain];
+    NapsterService = [[[ESNapsterService alloc] initWithService:self] retain];
+    JabberService = [[[ESJabberService alloc] initWithService:self] retain];
+    
 }
 
 - (void)uninstallPlugin
 {
     [_accountDict release];
     _accountDict = nil;
+    
+    //Services
+    [AIMService release];
+    [MSNService release];
+    [YahooService release];
+    [GaduGaduService release];
+    [NapsterService release];
+    [JabberService release];
 }
 
 //Periodic timer to run libgaim's event loop
@@ -633,18 +640,6 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     }
 }
 
-/* super gigantic hack! this should be fixed. do we have to subclass AGAIN? or do we scan inProperties */
-- (id)accountWithUID:(NSString *)inUID
-{
-    CBGaimAIMAccount *anAccount = [[[CBGaimAIMAccount alloc] initWithUID:inUID service:self] autorelease];
-    
-    GaimAccount *gaimAcct = [anAccount gaimAccount];
-    NSLog(@"Adding GaimAccount 0x%x to account dict", gaimAcct);
-    [self addAccount:anAccount forGaimAccountPointer:gaimAcct];
-    
-    return anAccount;
-}
-
 - (void)addAccount:(id)anAccount forGaimAccountPointer:(GaimAccount *)gaimAcct 
 {
     [_accountDict setObject:anAccount forKey:[NSValue valueWithPointer:gaimAcct]];
@@ -653,20 +648,6 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 - (void)removeAccount:(GaimAccount *)gaimAcct
 {
     [_accountDict removeObjectForKey:[NSValue valueWithPointer:gaimAcct]];
-}
-
-- (NSString *)identifier
-{
-    return(@"LIBGAIM");
-}
-- (NSString *)description
-{
-    return(@"LibGaim (Unstable)");
-}
-
-- (AIServiceType *)handleServiceType
-{
-    return(handleServiceType);
 }
 
 
