@@ -51,8 +51,6 @@ typedef enum KFTypeSelectMatchAlgorithm {
     KFPrefixMatchAlgorithm = 1
 } KFTypeSelectMatchAlgorithm;
 
-extern NSString *KFTypeSelectMatchAlgorithmDefaultsKey; // = @"KFTypeSelectTableViewMatchAlgorithm"
-
 @interface KFTypeSelectTableView : NSTableView
 
 #pragma mark action methods
@@ -65,14 +63,17 @@ extern NSString *KFTypeSelectMatchAlgorithmDefaultsKey; // = @"KFTypeSelectTable
 // KVO-compliant
 - (NSString *)pattern;
 
-// the initial value is determined from KFTypeSelectMatchAlgorithmDefaultsKey, or it's
-// KFPrefixMatchAlgorithm if no default is set 
--(KFTypeSelectMatchAlgorithm)matchAlgorithm;
--(void)setMatchAlgorithm:(KFTypeSelectMatchAlgorithm)algorithm;
+// a tableview with no match algorithm set uses defaultMatchAlgorithm
+// defaultMatchAlgorithm defaults to KFPrefixMatchAlgorithm
++ (KFTypeSelectMatchAlgorithm)defaultMatchAlgorithm;
++ (void)setDefaultMatchAlgorithm:(KFTypeSelectMatchAlgorithm)algorithm;
+
+- (KFTypeSelectMatchAlgorithm)matchAlgorithm;
+- (void)setMatchAlgorithm:(KFTypeSelectMatchAlgorithm)algorithm;
 
 // defaults to NO
--(BOOL)searchWraps;
--(void)setSearchWraps:(BOOL)flag;
+- (BOOL)searchWraps;
+- (void)setSearchWraps:(BOOL)flag;
 
 // supply a set of identifiers to limit columns searched for match.
 // Only columns with identifiers in the provided set are searched.
