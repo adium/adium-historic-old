@@ -20,19 +20,30 @@
 
 @interface AIEmoticonPreferences : NSObject
 {
+    // Parents
     AIAdium					*owner;
     AIEmoticonsPlugin		*plugin;
-        
-    NSMutableArray			*packs;
     
+    // Data
+    NSMutableArray			*packs;
     NSMutableArray			*curEmoticons;
     //NSArray				*previewEmoticons;
     
+    bool					emoticonIsSelected;
+    long					selectedEmoticon;
+    
+    // IB
     IBOutlet NSView			*view_prefView;
     IBOutlet NSButton		*checkBox_enable;
     IBOutlet NSTableView	*table_packList;
     IBOutlet NSTextView		*text_packInfo;
     IBOutlet NSTableView	*table_curEmoticons;
+    // Individual Emoticons:
+    IBOutlet NSImageView	*image_emoticonImage;
+    IBOutlet NSTextField	*text_emoticonName;
+    IBOutlet NSTextField	*text_emoticonPack;
+    IBOutlet NSButton		*checkBox_enableEmoticon;
+    IBOutlet NSTableView	*table_curEmoticonTexts;
 }
 
 + (AIEmoticonPreferences *)emoticonPreferencesWithOwner:(id)inOwner plugin:(AIEmoticonsPlugin *)pluginSet;

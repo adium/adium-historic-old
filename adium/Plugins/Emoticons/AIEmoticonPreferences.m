@@ -29,7 +29,10 @@
 - (void)configureView;
 - (id)initWithOwner:(id)inOwner plugin:(AIEmoticonsPlugin *)pluginSet;
 - (void)getCurrentEmoticons;
+- (void)enableIndividualEmoticonControls:(BOOL)enable;
+- (void)populateIndividualEmoticonControls;
 - (void)initTable:(NSTableView *)table	withEmoticons:(NSArray *)emoticons;
+- (void)selectEmoticon:(id)sender;
 @end
 
 @implementation AIEmoticonPreferences
@@ -45,6 +48,20 @@
         [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
                                              forKey:@"Enable"
                                               group:PREF_GROUP_EMOTICONS];
+    }else if (sender == checkBox_enableEmoticon){
+        if (emoticonIsSelected  &&  selectedEmoticon < [curEmoticons count]) {
+            NSMutableDictionary	*emoDict = [curEmoticons objectAtIndex:selectedEmoticon];
+            if (emoDict){
+                id		emoID = [emoDict objectForKey:@"Emoticon"];
+                AIEmoticonPack	*emoPack = [emoDict objectForKey:@"Pack"];
+                
+                [emoPack setEmoticon:emoID enabled:([sender state] == NSOnState)];
+
+                //[table_curEmoticons display];
+                [self populateIndividualEmoticonControls];
+                [table_curEmoticons setNeedsDisplay:YES];
+            }
+        }
     }
 }
 
@@ -85,6 +102,7 @@
     plugin = pluginSet;
     packs = [[NSMutableArray alloc] init];
     curEmoticons = nil;
+    emoticonIsSelected = false;
 
     //Register our preference pane
     [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Emoticons withDelegate:self label:EMOTICON_PREF_TITLE]];
@@ -143,7 +161,12 @@
     [self getCurrentEmoticons];
     [table_curEmoticons setDataSource:self];
     [table_curEmoticons setDelegate:self];
+    [table_curEmoticons setTarget:self];
+    [table_curEmoticons setAction:@selector(selectEmoticon:)];
     [self initTable:table_curEmoticons  withEmoticons:curEmoticons];
+    
+    // Set up controls for currently selected emoticon
+    [self populateIndividualEmoticonControls];
 }
 
 - (void)getCurrentEmoticons
@@ -201,6 +224,40 @@
     while (emoticon = [enumerator nextObject]) {
         [curEmoticons removeObject:emoticon];
     }*/
+}
+
+- (void)enableIndividualEmoticonControls:(BOOL)enable
+{
+    [image_emoticonImage setEnabled:enable];
+    [checkBox_enableEmoticon setEnabled:enable];
+    [table_curEmoticonTexts setEnabled:enable];
+
+    [text_emoticonName setStringValue:@""];
+    [text_emoticonPack setStringValue:@""];
+}
+
+- (void)populateIndividualEmoticonControls
+{
+    if (emoticonIsSelected){
+        [self enableIndividualEmoticonControls:TRUE];
+
+        NSMutableDictionary		*emoDict = [curEmoticons objectAtIndex:selectedEmoticon];
+        id						emoID = [emoDict objectForKey:@"Emoticon"];
+        AIEmoticonPack			*emoPack = [emoDict objectForKey:@"Pack"];
+
+        if (emoDict && emoPack) {
+            [image_emoticonImage  setImage:[emoDict objectForKey:@"Image"]];
+            //[text_emoticonName	setStringValue:[emoPack emoticonName:emoID]];
+            //[text_emoticonPack  setStringValue:[NSString stringWithFormat:@"from pack %@", [emoPack title]]];
+            [text_emoticonName  setStringValue:[NSString stringWithFormat:@"\"%@\" from pack \"%@\"", [emoPack emoticonName:emoID], [emoPack title]]];
+            [checkBox_enableEmoticon setIntValue:[emoPack emoticonEnabled:emoID]];
+        }else{
+            NSLog (@"Emoticon Dict or Pack NIL");
+            [self enableIndividualEmoticonControls:FALSE];
+        }
+    }else{
+        [self enableIndividualEmoticonControls:FALSE];
+    }
 }
 
 - (void)initTable:(NSTableView *)table	withEmoticons:(NSArray *)emoticons
@@ -352,6 +409,35 @@
     }
 }
 
+- (void)selectEmoticon:(id)sender
+{
+    NSLog (@"Click was in emoticon table");
+    unsigned long index = ([table_curEmoticons clickedRow] * [table_curEmoticons numberOfColumns]) + [table_curEmoticons clickedColumn];
+
+    if (index < [curEmoticons count]){
+        emoticonIsSelected = TRUE;
+        selectedEmoticon = index;
+    }else{
+        emoticonIsSelected = FALSE;
+    }
+
+    [self populateIndividualEmoticonControls];
+    [table_curEmoticons setNeedsDisplay:YES];
+}
+
+/*- (void)tableView:(NSTableView*)tableView didClickTableColumn:(NSTableColumn *)tableColumn
+{
+    NSLog (@"Received table click");
+    if (tableView == table_curEmoticons){
+        NSLog (@"Click was in emoticon table");
+        unsigned long index = ([tableView clickedRow] * [tableView numberOfColumns]) + [tableView indexOfTableColumn:tableColumn];
+        emoticonIsSelected = TRUE;
+        selectedEmoticon = index;
+        
+        [self populateIndividualEmoticonControls];
+    }
+}*/
+
 - (BOOL)tableView:(NSTableView *)aTableView shouldSelectRow:(int)rowIndex
 {
     if (aTableView == table_packList)
@@ -364,22 +450,34 @@
 {
     if (tableView == table_curEmoticons)
     {
-        /*unsigned long index = (row * [tableView numberOfColumns]) + [tableView indexOfTableColumn:tableColumn];
-        
+        // Decide
+        unsigned long index = (row * [tableView numberOfColumns]) + [tableView indexOfTableColumn:tableColumn];
         BOOL	select = FALSE, dim = FALSE;
         
-        if (index == 3)	select = TRUE;
+         // Highlight
+        if (index == selectedEmoticon && emoticonIsSelected)	select = TRUE;
+
+         // Enablement
+        if (index < [curEmoticons count]) {
+            NSMutableDictionary	*emoDict = [curEmoticons objectAtIndex:index];
+            if (emoDict){
+                id		emoID = [emoDict objectForKey:@"Emoticon"];
+                AIEmoticonPack	*emoPack = [emoDict objectForKey:@"Pack"];
+
+                if ([emoPack emoticonEnabled:emoID] == FALSE)
+                    dim = TRUE;
+            }
+        }
         
-        if (index < [curEmoticons count] / 2)	dim = TRUE;
-        
+        // Display
         [aCell setHighlighted:select];
-        [aCell setCellAttribute:NSChangeGrayCell to:TRUE];
+        //[aCell setCellAttribute:NSChangeGrayCell to:TRUE];
         if (dim)
             [aCell setObjectEnabled:FALSE];
         else
             [aCell setObjectEnabled:TRUE];
         
-        NSLog (@"(Dim: %d)	Select: %d", dim, select);*/
+        //NSLog (@"(Dim: %d)	Select: %d", dim, select);
     }
 }
 @end
