@@ -39,7 +39,9 @@ TODO:
         
         if([[url scheme] isEqualToString:@"aim"]){
             if([[url host] caseInsensitiveCompare:@"goim"] == NSOrderedSame){                                
-                [self _openChatToContactWithName:[url queryArgumentForKey:@"screenname"] onService:@"AIM" withMessage:nil];
+                [self _openChatToContactWithName:[url queryArgumentForKey:@"screenname"] 
+									   onService:@"AIM" 
+									 withMessage:[url queryArgumentForKey:@"message"]];
             }
             
         }else if([[url scheme] isEqualToString:@"ymsgr"]){
@@ -57,18 +59,31 @@ TODO:
 
 }
 
-- (void)_openChatToContactWithName:(NSString *)name onService:(NSString *)serviceIdentifier withMessage:(NSString *)body
+- (void)_openChatToContactWithName:(NSString *)UID onService:(NSString *)serviceID withMessage:(NSString *)message
 {
-    AIAccount *account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE 
-                                                                             toListObject:[[[AIListObject alloc] initWithUID:name 
-                                                                                                                   serviceID:serviceIdentifier] 
-                                                                                                                autorelease]];
-    AIListContact *contact = [[[AIListContact alloc] initWithUID:name 
-                                                        accountID:[account uniqueObjectID]
-                                                        serviceID:serviceIdentifier]
-                                                    autorelease];
-    
-    [[adium contentController] openChatWithContact:contact];
+	AIListContact		*contact;
+	AIChat				*chat;
+
+	contact = [[adium contactController] preferredContactWithUID:UID
+													andServiceID:serviceID 
+										   forSendingContentType:CONTENT_MESSAGE_TYPE];
+	
+    chat = [[adium contentController] openChatWithContact:contact];
+
+	if (message){
+		AIContentMessage	*contentMessage;
+		AIAccount			*account;
+		
+		account = [[adium accountController] accountWithObjectID:[contact accountID]];
+#warning Need default sending options.
+		contentMessage = [AIContentMessage messageInChat:chat
+											  withSource:account
+											 destination:contact
+													date:nil
+												 message:[[[NSAttributedString alloc] initWithString:message attributes:nil] autorelease]
+											   autoreply:NO];
+		[[adium contentController] sendContentObject:contentMessage];
+	}
 }
 
 @end
