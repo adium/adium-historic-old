@@ -6881,6 +6881,8 @@
 				4BAE6C8D07CF94BA007E2820,
 				4BAE6C8F07CF94BA007E2820,
 				4BAE6C9107CF94BA007E2820,
+				4BAE6D3C07CFA0BC007E2820,
+				4BAE6D4207CFA0CB007E2820,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7177,6 +7179,7 @@
 				4BAE6C4C07CF941C007E2820,
 				4BAE6C4D07CF941C007E2820,
 				4BAE6C9507CF94C4007E2820,
+				4BAE6D5E07CFA1D7007E2820,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7368,6 +7371,8 @@
 				4BAE6C8E07CF94BA007E2820,
 				4BAE6C9007CF94BA007E2820,
 				4BAE6C9207CF94BA007E2820,
+				4BAE6D3D07CFA0BC007E2820,
+				4BAE6D4307CFA0CB007E2820,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8586,7 +8591,6 @@
 				34C68B3F0778FAB500EB423C,
 				349DDD310640680600542726,
 				349DDD320640680600542726,
-				34C6A3BB077A8CB500EB423C,
 				4B04137C041111F200A8010A,
 				4BA1300304C0A4E300A8010A,
 			);
@@ -8705,9 +8709,9 @@
 		34C6A3BB077A8CB500EB423C = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = IconPackDefaults.plist;
-			path = "Plugins/General Preferences/IconPackDefaults.plist";
+			lastKnownFileType = text.xml;
+			name = AppearanceDefaults.plist;
+			path = "Plugins/General Preferences/AppearanceDefaults.plist";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -10722,6 +10726,7 @@
 		};
 		34E0EA1507CC541A00A82198 = {
 			children = (
+				4BAE6D3707CFA09F007E2820,
 				4B60991906A447D400EC8D78,
 				F501BB0D03882A0201A8010A,
 				4BF303160687466D000DCA65,
@@ -16619,6 +16624,94 @@
 		};
 		4BAE6C9507CF94C4007E2820 = {
 			fileRef = 4BAE6C9407CF94C4007E2820;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAE6D3707CFA09F007E2820 = {
+			children = (
+				4BAE6D4007CFA0CB007E2820,
+				4BAE6D4107CFA0CB007E2820,
+				4BAE6D3A07CFA0BC007E2820,
+				4BAE6D3B07CFA0BC007E2820,
+				4BAE6D5D07CFA1D7007E2820,
+				34C6A3BB077A8CB500EB423C,
+			);
+			isa = PBXGroup;
+			name = "Appearance Preferences";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAE6D3A07CFA0BC007E2820 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAppearancePreferences.h;
+			path = Source/AIAppearancePreferences.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAE6D3B07CFA0BC007E2820 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAppearancePreferences.m;
+			path = Source/AIAppearancePreferences.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAE6D3C07CFA0BC007E2820 = {
+			fileRef = 4BAE6D3A07CFA0BC007E2820;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAE6D3D07CFA0BC007E2820 = {
+			fileRef = 4BAE6D3B07CFA0BC007E2820;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAE6D4007CFA0CB007E2820 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAppearancePreferencesPlugin.h;
+			path = Source/AIAppearancePreferencesPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAE6D4107CFA0CB007E2820 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAppearancePreferencesPlugin.m;
+			path = Source/AIAppearancePreferencesPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAE6D4207CFA0CB007E2820 = {
+			fileRef = 4BAE6D4007CFA0CB007E2820;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAE6D4307CFA0CB007E2820 = {
+			fileRef = 4BAE6D4107CFA0CB007E2820;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAE6D5D07CFA1D7007E2820 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = AppearancePrefs.nib;
+			path = Resources/AppearancePrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAE6D5E07CFA1D7007E2820 = {
+			fileRef = 4BAE6D5D07CFA1D7007E2820;
 			isa = PBXBuildFile;
 			settings = {
 			};
