@@ -44,7 +44,7 @@
 	
 	class = [textField_class stringValue];
 	instance = [textField_instance stringValue];
-	recipient = [textField_instance stringValue];
+	recipient = [textField_recipient stringValue];
 	
 	if (!instance || ![instance length]) instance = @"*";
 	if (!recipient || ![recipient length]) recipient = @"*";
