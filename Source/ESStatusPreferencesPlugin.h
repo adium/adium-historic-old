@@ -6,13 +6,12 @@
 //  Copyright 2005 The Adium Team. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Adium/AIPlugin.h>
 
 @class ESStatusPreferences;
 
 @interface ESStatusPreferencesPlugin : AIPlugin {
 	ESStatusPreferences	*preferences;
-
 }
 
 @end

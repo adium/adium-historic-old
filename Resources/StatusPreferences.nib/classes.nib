@@ -31,31 +31,22 @@
         {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {CLASS = AISmartStepper; LANGUAGE = ObjC; SUPERCLASS = NSStepper; }, 
         {
-            ACTIONS = {addAlert = id; deleteAlert = id; editAlert = id; }; 
-            CLASS = ESContactAlertsViewController; 
+            ACTIONS = {deleteState = id; editState = id; newState = id; }; 
+            CLASS = ESStatusPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "button_add" = NSButton; 
-                "button_delete" = NSButton; 
-                "button_edit" = NSButton; 
-                "tableView_actions" = AIAlternatingRowTableView; 
-                view = NSView; 
-            }; 
-            SUPERCLASS = AIObject; 
-        }, 
-        {
-            CLASS = ESGlobalEventsPreferences; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                contactAlertsViewController = ESContactAlertsViewController; 
-                "label_bounceTheDockIcon" = NSTextField; 
-                "label_displayGrowlNotifications" = NSTextField; 
-                "label_soundSet" = NSTextField; 
-                "label_speech" = NSTextField; 
-                "popUp_dockBehaviorSet" = NSPopUpButton; 
-                "popUp_growlPreset" = NSPopUpButton; 
-                "popUp_soundSet" = NSPopUpButton; 
-                "popUp_speechPreset" = NSPopUpButton; 
+                "button_deleteState" = NSButton; 
+                "button_editState" = NSButton; 
+                "checkBox_autoAway" = NSButton; 
+                "checkBox_idle" = NSButton; 
+                "checkBox_showStatusWindow" = NSButton; 
+                "popUp_autoAwayStatusState" = NSPopUpButton; 
+                "scrollView_stateList" = AIAutoScrollView; 
+                "stepper_autoAwayMinutes" = NSStepper; 
+                "stepper_idleMinutes" = NSStepper; 
+                "tableView_stateList" = NSTableView; 
+                "textField_autoAwayMinutes" = NSTextField; 
+                "textField_idleMinutes" = NSTextField; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
