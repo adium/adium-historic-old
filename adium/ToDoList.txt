@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.46 2004/04/15 13:20:40 evands Exp $
+$Id: ToDoList.txt,v 1.47 2004/04/16 06:06:15 bgannin Exp $
 
 Legend
 + Change or Addition
@@ -85,8 +85,7 @@ Message Window:
 	+ Open new windows behind the frontmost window (When not opening in tabs) [Colin]
         I don't know quite what to do here. I'd like some guideance. <<< I never got any guidence, dammit! :P
 	+ Insert emoticon menu item, contextual menu item [Brian]
-            //if you want to work on it before I get back to it I'll send the files, 
-            //just needs insert functionality and some clean-up (namely dynamism)
+            // Brian: if you want to work on it before I get back to it I'll send the files, just needs insert functionality and some clean-up (namely dynamism)
 	+ Tab-complete usernames in messages and chat
 	
 Contact List Display:

@@ -17,8 +17,10 @@
 #import "AIContactListEditorPlugin.h"
 #import "AIContactInfoWindowController.h"
 
-#define	CONTACT_NOTES_NIB			@"ContactNotes"		//Filename of the notes info view
-#define	PREF_GROUP_NOTES			@"Notes"              //Preference group to store aliases in
+#define	CONTACT_NOTES_NIB			@"ContactNotes"		 //Filename of the notes info view
+#define	PREF_GROUP_NOTES			@"Notes"                //Preference group to store notes in
+#define PREF_GROUP_ADDRESSBOOK                  @"Address Book"
+#define KEY_AB_NOTE_SYNC                        @"AB Note Sync"
 
 @interface BGContactNotesPlugin (PRIVATE) // should call an internal method to add to the list object :)
 - (NSArray *)_addNotes:(NSString *)inNotes toObject:(AIListObject *)inObject notify:(BOOL)notify;
@@ -26,6 +28,7 @@
 
 @implementation BGContactNotesPlugin
 // here follows a shameless hack of the alias support and idle time into a notes monstrosity
+// with another hacked on limb attaching it to the address book
 
 - (void)installPlugin
 {    
