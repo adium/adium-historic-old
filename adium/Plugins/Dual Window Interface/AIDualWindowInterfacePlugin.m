@@ -665,14 +665,14 @@
 		    //Create the menu item
 		    item = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"   %@",[tabViewItem labelString]] target:self action:@selector(showMessageWindow:) keyEquivalent:windowKeyString];
 		    [item setRepresentedObject:tabViewItem]; //associate this item with a tab
-
-		    //Add it to the menu and array
+			
+			//Add it to the menu and array
 		    [[adium menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
                     [windowMenuArray addObject:[item autorelease]];
 
           
                     //Create the same menu item for the dock menu
-                    item = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"   %@",[tabViewItem labelString]] target:self action:@selector(showMessageWindow:) keyEquivalent:windowKeyString];
+                    item = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"   %@",[tabViewItem labelString]] target:self action:@selector(showMessageWindow:) keyEquivalent:@""];
                     [item setRepresentedObject:tabViewItem]; //associate this item with a tab
                     
                     [[adium menuController] addMenuItem:item toLocation:LOC_Dock_Status];
