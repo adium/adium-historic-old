@@ -45,7 +45,7 @@ DeclareString(bApostropheHTML)
 DeclareString(bMdash)
 DeclareString(bMdashHTML)
 
-DeclareString(untitledString)
+//DeclareString(untitledString)
 DeclareString(bookmarkDictTitle)
 DeclareString(bookmarkDictContent)
 
@@ -80,7 +80,7 @@ DeclareString(bookmarkDictContent)
     InitString(bMdash,@"-");
     InitString(bMdashHTML,@"MDASH");
     
-    InitString(untitledString,@"untitled")
+//    InitString(untitledString,@"untitled")
     InitString(bookmarkDictTitle,SH_BOOKMARK_DICT_TITLE)
     InitString(bookmarkDictContent,SH_BOOKMARK_DICT_CONTENT)
 }
@@ -153,7 +153,7 @@ DeclareString(bookmarkDictContent)
 
 +(SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString
 {
-    NSString    *title = inString? inString : untitledString;
+    NSString    *title = inString? inString : @"untitled";
     return [[[SHMarkedHyperlink alloc] initWithString:inURLString
                                  withValidationStatus:SH_URL_VALID
                                          parentString:title
@@ -162,7 +162,7 @@ DeclareString(bookmarkDictContent)
 
 +(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
-    NSString    *titleString = inTitle? inTitle : untitledString;
+    NSString    *titleString = inTitle? inTitle : @"untitled";
     return [NSDictionary dictionaryWithObjectsAndKeys:titleString, bookmarkDictTitle, inMenuItems, bookmarkDictContent, nil];
 }
 

@@ -32,7 +32,7 @@ DeclareString(closeQuote)
 DeclareString(Aclose)
 DeclareString(DLclose)
 DeclareString(ltSign)
-DeclareString(untitledString)
+//DeclareString(untitledString)
 DeclareString(bookmarkDictTitle)
 DeclareString(bookmarkDictContent)
 
@@ -103,7 +103,7 @@ DeclareString(bookmarkDictContent)
     InitString(Aclose,@"</a")
     InitString(DLclose,@"/dl>")
     InitString(ltSign,@"<")
-    InitString(untitledString,@"untitled")
+    //InitString(untitledString,@"untitled")
     
     while(![linkScanner isAtEnd]){
         if((stringLength - [linkScanner scanLocation]) < 4){
@@ -163,7 +163,7 @@ DeclareString(bookmarkDictContent)
 
 -(SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString
 {
-    NSString    *title = inString? inString : untitledString;
+    NSString    *title = inString? inString : @"untitled";
     return [[[SHMarkedHyperlink alloc] initWithString:inURLString
                                  withValidationStatus:SH_URL_VALID
                                          parentString:title
@@ -172,7 +172,7 @@ DeclareString(bookmarkDictContent)
 
 -(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
-    NSString    *titleString = inTitle? inTitle : untitledString;
+    NSString    *titleString = inTitle? inTitle : @"untitled";
     return [NSDictionary dictionaryWithObjectsAndKeys:titleString, bookmarkDictTitle, inMenuItems, bookmarkDictTitle, nil];
 }
 
