@@ -108,23 +108,24 @@
 	contact = [[adium contactController] preferredContactWithUID:UID
 													andServiceID:serviceID 
 										   forSendingContentType:CONTENT_MESSAGE_TYPE];
-	
-    chat = [[adium contentController] openChatWithContact:contact];
-
-	if (message){
-		AIContentMessage	*contentMessage;
-		AIAccount			*account;
+	if (contact){
+		chat = [[adium contentController] openChatWithContact:contact];
 		
-		account = [[adium accountController] accountWithObjectID:[contact accountID]];
-
-		contentMessage = [AIContentMessage messageInChat:chat
-											  withSource:account
-											 destination:contact
-													date:nil
-												 message:[[[NSAttributedString alloc] initWithString:message 
-																						  attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
-											   autoreply:NO];
-		[[adium contentController] sendContentObject:contentMessage];
+		if (message){
+			AIContentMessage	*contentMessage;
+			AIAccount			*account;
+			
+			account = [[adium accountController] accountWithObjectID:[contact accountID]];
+			
+			contentMessage = [AIContentMessage messageInChat:chat
+												  withSource:account
+												 destination:contact
+														date:nil
+													 message:[[[NSAttributedString alloc] initWithString:message 
+																							  attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
+												   autoreply:NO];
+			[[adium contentController] sendContentObject:contentMessage];
+		}
 	}
 }
 
