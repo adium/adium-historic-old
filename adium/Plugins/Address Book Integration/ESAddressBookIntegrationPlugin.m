@@ -119,7 +119,7 @@
                 }
             }
         }
-    } else if (automaticSync && [inModifiedKeys containsObject: @"UserIcon"]) {
+    } else if ((automaticSync && !preferAddressBookImages) && [inModifiedKeys containsObject: @"UserIcon"]) {
         
 		//Find the person
         NSArray *results = [self searchForObject:inObject];
@@ -149,6 +149,8 @@
         displayFormat = [[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue];
         automaticSync = [[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue];
         useNickName = [[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue];
+		preferAddressBookImages = [[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue];
+		
         [self updateAllContacts];
     }
 }
@@ -184,7 +186,8 @@
 			//Apply the image at lowest priority
 			[[listObject displayArrayForKey:@"UserIcon"] setObject:image 
 														 withOwner:self
-													 priorityLevel:Low_Priority];
+													 priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];
+
 			//Notify
 			[[adium contactController] listObjectAttributesChanged:listObject
 													  modifiedKeys:[NSArray arrayWithObject:@"UserIcon"]];		

@@ -11,7 +11,6 @@
 #define ADDRESS_BOOK_FIRST_LAST_OPTION  @"First Last"
 #define ADDRESS_BOOK_FIRST_OPTION       @"First"
 #define ADDRESS_BOOK_LAST_FIRST_OPTION  @"Last, First"
-#define ADDRESS_BOOK_NONE_OPTION        @"<Disabled>"
 
 @interface ESAddressBookIntegrationAdvancedPreferences (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -26,7 +25,7 @@
     return(AIPref_Advanced_ContactList);
 }
 - (NSString *)label{
-    return(AILocalizedString(@"Address Book Integration",nil));
+    return(AILocalizedString(@"Address Book",nil));
 }
 - (NSString *)nibName{
     return(@"AddressBookPrefs");
@@ -42,14 +41,35 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self configureFormatMenu];
-    [self preferencesChanged:nil];
+	[self configureFormatMenu];
+	
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
+    
+	[checkBox_enableImport setState:[[prefDict objectForKey:KEY_AB_ENABLE_IMPORT] boolValue]];	
+	[format_menu selectItemAtIndex:[format_menu indexOfItemWithTag:[[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue]]];
+	[checkBox_useNickName setState:[[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue]];
+	[checkBox_syncAutomatic setState:[[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue]];
+	[checkBox_preferABImages setState:[[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue]];
+	
+	[self configureControlDimming];
 }
 
-- (void)viewWillClose
+- (void)configureControlDimming
 {
-    [[adium notificationCenter] removeObserver:self];
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
+	
+	BOOL			enableImport = [[prefDict objectForKey:KEY_AB_ENABLE_IMPORT] boolValue];
+	BOOL			preferABImages = [[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue];	
+	
+	//Use Nick Name and the format menu are irrelevent if importing of names is not enabled
+	[checkBox_useNickName setEnabled:enableImport];	
+	[format_menu setEnabled:enableImport];
+
+	//We will not allow image syncing if AB images are preferred
+	//so disable the control and uncheck the box to indicate this to the user
+	[checkBox_syncAutomatic setEnabled:!preferABImages];
+	if (preferABImages)
+		[checkBox_syncAutomatic setState:NSOffState];
 }
 
 - (void)configureFormatMenu
@@ -85,24 +105,6 @@
     [format_menu setFrameOrigin:oldFrame.origin];
 }
 
-//Reflect new preferences in view
-- (void)preferencesChanged:(NSNotification *)notification
-{
-    if(notification == nil || [PREF_GROUP_ADDRESSBOOK compare:[[notification userInfo] objectForKey:@"Group"]] == 0){
-        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
-        bool			enableImport = [[prefDict objectForKey:KEY_AB_ENABLE_IMPORT] boolValue];
-
-		[checkBox_enableImport setState:enableImport];
-
-        [format_menu selectItemAtIndex:[format_menu indexOfItemWithTag:[[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue]]];
-		[format_menu setEnabled:enableImport];
-
-		[checkBox_syncAutomatic setState:[[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue]];
-		[checkBox_useNickName setState:[[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue]];
-		[checkBox_useNickName setEnabled:enableImport];
-    }
-}
-
 //Save changed preference
 - (IBAction)changeFormat:(id)sender
 {
@@ -125,7 +127,13 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
                                              forKey:KEY_AB_ENABLE_IMPORT
                                               group:PREF_GROUP_ADDRESSBOOK];
+	} else if (sender == checkBox_preferABImages) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
+                                             forKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES
+                                              group:PREF_GROUP_ADDRESSBOOK];
 	}
+	
+	[self configureControlDimming];
 }
 
 @end
