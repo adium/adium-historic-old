@@ -12,6 +12,8 @@
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
 
+#define KEY_AWAY_SPELL_CHECKING		@"Custom Away"
+
 #define ENTER_AWAY_WINDOW_NIB		@"EnterAwayWindow"		//Filename of the window nib
 #define	KEY_ENTER_AWAY_WINDOW_FRAME	@"Enter Away Frame"
 #define DEFAULT_AWAY_MESSAGE		@""
@@ -107,7 +109,10 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     //Select the away text
     [textView_awayMessage setSelectedRange:NSMakeRange(0,[[textView_awayMessage textStorage] length])];
 
-    //Configure out sending view
+    //Restore spellcheck state
+    [textView_awayMessage setContinuousSpellCheckingEnabled:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SPELLING] objectForKey:KEY_AWAY_SPELL_CHECKING] boolValue]];
+
+    //Configure our sending view
     [textView_awayMessage setTarget:self action:@selector(setAwayMessage:)];
     [textView_awayMessage setSendOnReturn:NO]; //Pref for these later :)
     [textView_awayMessage setSendOnEnter:YES]; //
@@ -116,6 +121,9 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 //Close the contact list window
 - (BOOL)windowShouldClose:(id)sender
 {
+    //Save spellcheck state
+    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[textView_awayMessage isContinuousSpellCheckingEnabled]] forKey:KEY_AWAY_SPELL_CHECKING group:PREF_GROUP_SPELLING];
+
     //Save the window position
     [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_ENTER_AWAY_WINDOW_FRAME

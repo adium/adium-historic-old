@@ -151,7 +151,12 @@
 
         }
     }else{
-        [[NSColor alternateSelectedControlColor] set];
+        if([[tableView window] isKeyWindow] && [[tableView window] firstResponder] == tableView){
+            [[NSColor alternateSelectedControlColor] set];
+        }else{
+            [[NSColor secondarySelectedControlColor] set];
+        }
+
         [NSBezierPath fillRect:cellFrame];
     }
 

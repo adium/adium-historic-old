@@ -21,6 +21,8 @@
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
 
+#define DUAL_SPELLING_DEFAULT_PREFS		@"DualSpellingDefaults"
+
 #define CONTACT_LIST_WINDOW_MENU_TITLE		@"Contact List"		//Title for the contact list menu item
 #define MESSAGES_WINDOW_MENU_TITLE		@"Messages"		//Title for the messages window menu item
 #define CLOSE_TAB_MENU_TITLE			@"Close Tab"		//Title for the close tab menu item
@@ -60,6 +62,9 @@
     //init
     messageWindow = nil;
     windowMenuArray = [[NSMutableArray alloc] init];
+
+    //Register our default preferences
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_SPELLING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SPELLING];
 
     //Open the contact list window
     [self showContactList:nil];

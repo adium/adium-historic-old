@@ -52,23 +52,23 @@
     }else if(sender == checkBox_alternatingGrid){
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SCL_ALTERNATING_GRID
-                                              group:GROUP_CONTACT_LIST];
+                                              group:PREF_GROUP_CONTACT_LIST];
         
     }else if(sender == colorWell_grid){
         [[owner preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_GRID_COLOR
-                                              group:GROUP_CONTACT_LIST];    
+                                              group:PREF_GROUP_CONTACT_LIST];    
         
     }else if(sender == colorWell_background){
         [[owner preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_BACKGROUND_COLOR
-                                              group:GROUP_CONTACT_LIST];    
+                                              group:PREF_GROUP_CONTACT_LIST];    
 
     }else if(sender == slider_opacity){
         [self showOpacityPercent];
         [[owner preferenceController] setPreference:[NSNumber numberWithFloat:[sender floatValue]]
                                              forKey:KEY_SCL_OPACITY
-                                              group:GROUP_CONTACT_LIST];
+                                              group:PREF_GROUP_CONTACT_LIST];
     }
     
 }
@@ -84,7 +84,7 @@
 
     //Update the displayed font string & preferences
     [self showFont:contactListFont inField:textField_fontName];
-    [[owner preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_SCL_FONT group:GROUP_CONTACT_LIST];
+    [[owner preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_SCL_FONT group:PREF_GROUP_CONTACT_LIST];
 }
 
 //init
@@ -104,7 +104,7 @@
     [[owner preferenceController] addPreferenceView:preferenceViewController];
 
     //Load the preferences, and configure our view
-    preferenceDict = [[[owner preferenceController] preferencesForGroup:GROUP_CONTACT_LIST] retain];
+    preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST] retain];
     [self configureView];
     
     return(self);    

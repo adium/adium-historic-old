@@ -19,6 +19,8 @@
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
 
+#define KEY_MESSAGE_SPELL_CHECKING	@"Message"
+
 #define MESSAGE_VIEW_NIB		@"MessageView"		//Filename of the message view nib
 #define MESSAGE_TAB_TOOLBAR		@"MessageTab"		//ID of the message tab toolbar
 #define ACCOUNTS_VIEW_HEIGHT		27
@@ -131,7 +133,6 @@
     account = [inAccount retain];
     if(!account) account = [[[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:inHandle] retain];
 
-
     [NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
 
     if(!inHandle){ //If a handle is specified, we can skip these steps, since these views will be removed
@@ -160,7 +161,10 @@
     //Put the initial content in the outgoing text view, and give it focus
     [textView_outgoing setAttributedString:inContent];
     [[textView_outgoing window] makeFirstResponder:textView_outgoing];
-    
+
+    //Restore spellcheck state
+    [textView_outgoing setContinuousSpellCheckingEnabled:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SPELLING] objectForKey:KEY_MESSAGE_SPELL_CHECKING] boolValue]];
+
     //Configure the rest of the view
     [[popUp_accounts menu] setAutoenablesItems:NO];
     [view_account setColor:[NSColor whiteColor]];
@@ -178,6 +182,9 @@
 
 - (void)dealloc
 {
+    //Save spellcheck state
+    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[textView_outgoing isContinuousSpellCheckingEnabled]] forKey:KEY_MESSAGE_SPELL_CHECKING group:PREF_GROUP_SPELLING];
+    
     //remove notifications
     [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self];
     [[[owner accountController] accountNotificationCenter] removeObserver:self];

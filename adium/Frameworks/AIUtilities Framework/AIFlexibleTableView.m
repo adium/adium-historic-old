@@ -369,7 +369,7 @@
 
 - (void)moveDown:(id)sender
 {
-    if(selectedRow < [rowHeightArray count]){
+    if(selectedRow < [rowHeightArray count] - 1){
         [self selectRow:selectedRow + 1];
     }
 }
@@ -427,11 +427,13 @@
 
 - (BOOL)becomeFirstResponder
 {
+    [self setNeedsDisplay:YES];
     return(YES);
 }
 
 - (BOOL)resignFirstResponder
 {
+    [self setNeedsDisplay:YES];
     [self endEditing];
     return(YES);
 }

@@ -26,7 +26,7 @@
 #define CONTACT_LIST_GROUP_NAME		@"Contact List"		//The name of the main contact list group
 #define STRANGER_GROUP_NAME		@"__Strangers"		//The name of the hidden stranger group
 #define KEY_CONTACT_LIST 		@"ContactList"		//Contact list key
-#define GROUP_CONTACT_LIST		@"Contact List"		//Contact list preference group
+#define PREF_GROUP_CONTACT_LIST		@"Contact List"		//Contact list preference group
 
 @interface AIContactController (PRIVATE)
 - (AIContactHandle *)handleInGroup:(AIContactGroup *)inGroup withService:(AIServiceType *)service UID:(NSString *)UID;
@@ -601,7 +601,7 @@
 {
     NSDictionary	*saveDict = [self saveDictForGroup:contactList];
 
-    [[owner preferenceController] setPreference:saveDict forKey:KEY_CONTACT_LIST group:GROUP_CONTACT_LIST];
+    [[owner preferenceController] setPreference:saveDict forKey:KEY_CONTACT_LIST group:PREF_GROUP_CONTACT_LIST];
 }
 
 //Load the contact list from disk
@@ -611,7 +611,7 @@
     AIContactGroup	*contactListGroup;
 
     //Load & build the list
-    saveDict = [[[owner preferenceController] preferencesForGroup:GROUP_CONTACT_LIST] objectForKey:KEY_CONTACT_LIST];    
+    saveDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST] objectForKey:KEY_CONTACT_LIST];    
     if(!saveDict){
         contactListGroup = [AIContactGroup contactGroupWithUID:CONTACT_LIST_GROUP_NAME];
     }else{

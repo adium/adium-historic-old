@@ -250,7 +250,7 @@
         //Save the window position
         [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                              forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
-                                              group:PREF_GROUP_WINDOW_POSITIONS];        
+                                              group:PREF_GROUP_WINDOW_POSITIONS];
     }
     
     return(YES);

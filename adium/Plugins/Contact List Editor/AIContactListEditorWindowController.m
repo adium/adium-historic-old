@@ -24,7 +24,7 @@
 
 #define CONTACT_LIST_EDITOR_NIB			@"ContactListEditorWindow"
 #define	HANDLE_DELETE_KEY			@"Handles"
-#define	GROUP_DELETE_KEY			@"Groups"
+#define	PREF_GROUP_DELETE_KEY			@"Groups"
 #define KEY_CONTACT_LIST_EDITOR_WINDOW_FRAME	@"Contact List Editor Frame"
 
 @interface AIContactListEditorWindowController (PRIVATE)
@@ -530,7 +530,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
             [groups addObject:object];
         }
     }
-    contextInfo = [[NSDictionary dictionaryWithObjectsAndKeys:handles, HANDLE_DELETE_KEY, groups, GROUP_DELETE_KEY, nil] retain];
+    contextInfo = [[NSDictionary dictionaryWithObjectsAndKeys:handles, HANDLE_DELETE_KEY, groups, PREF_GROUP_DELETE_KEY, nil] retain];
   
     //confirm for mass amounts of deleting
     if(numGroups != 0 && numHandles > 1){
@@ -557,7 +557,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
     if(returnCode == NSAlertDefaultReturn){
         NSArray		*handles = [targetDict objectForKey:HANDLE_DELETE_KEY];
-        NSArray		*groups = [targetDict objectForKey:GROUP_DELETE_KEY];
+        NSArray		*groups = [targetDict objectForKey:PREF_GROUP_DELETE_KEY];
     
         //delete the selected handles first
         enumerator = [handles objectEnumerator];

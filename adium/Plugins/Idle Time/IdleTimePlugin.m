@@ -35,7 +35,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
     idleTimer = nil;
     
     //Register our defaults and install the preference view
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_TIME_DEFAULT_PREFERENCES forClass:[self class]] forGroup:GROUP_IDLE_TIME]; //Register our default preferences
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_TIME_DEFAULT_PREFERENCES forClass:[self class]] forGroup:PREF_GROUP_IDLE_TIME]; //Register our default preferences
     preferences = [[IdleTimePreferences idleTimePreferencesWithOwner:owner] retain]; 
 
     //Observe preference changed notifications, and setup our initial values
@@ -88,8 +88,8 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 //An idle preference has changed
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:GROUP_IDLE_TIME] == 0){
-        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:GROUP_IDLE_TIME];
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_IDLE_TIME] == 0){
+        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME];
     
         //Store the new values locally
         idleEnabled = [[prefDict objectForKey:KEY_IDLE_TIME_ENABLED] boolValue];

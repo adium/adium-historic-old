@@ -33,12 +33,12 @@
     if(sender == checkBox_enableIdle){
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_IDLE_TIME_ENABLED
-                                              group:GROUP_IDLE_TIME];
+                                              group:PREF_GROUP_IDLE_TIME];
 
     }else if(sender == textField_idleMinutes){
         [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
                                              forKey:KEY_IDLE_TIME_IDLE_MINUTES
-                                              group:GROUP_IDLE_TIME];
+                                              group:PREF_GROUP_IDLE_TIME];
 
     }
 }
@@ -61,7 +61,7 @@
     [[owner preferenceController] addPreferenceView:preferenceViewController];
 
     //Load the preferences, and configure our view
-    preferenceDict = [[[owner preferenceController] preferencesForGroup:GROUP_IDLE_TIME] retain];
+    preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME] retain];
     [self configureView];
 
     return(self);
