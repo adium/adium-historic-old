@@ -110,6 +110,8 @@ DeclareString(sOnline)
 	//Enumerate the ordering array.  For all sort types which are valid given the active sorting types,
 	//add to sortOrder[].  Finalize sortOrder with -1.
 	
+	BOOL	groupIdleOrIdleTime = (groupIdle || sortIdleTime);
+	
 	while (sortTypeNumber = [enumerator nextObject]){
 		switch ([sortTypeNumber intValue]){
 			case Available: 
@@ -118,7 +120,9 @@ DeclareString(sOnline)
 					Group all unavailable, or 
 					Group separetely the idle and the away (such that the remaining alternative is Available)
 				*/
-				if (groupAvailable || groupUnavailable || (!groupUnavailable && groupAway && groupIdle)) sortOrder[i++] = Available;
+				if (groupAvailable || 
+					groupUnavailable ||
+					(/*!groupUnavailable &&*/ groupAway && groupIdleOrIdleTime)) sortOrder[i++] = Available;
 				break;
 				
 			case Away:
@@ -136,7 +140,7 @@ DeclareString(sOnline)
 			case Unavailable: 
 				//If one of groupAway or groupIdle is off, or we need a generic unavailable sort
 				if (groupUnavailable ||
-					((groupAvailable && (!groupAway || !(groupIdle || sortIdleTime))))){
+					((groupAvailable && (!groupAway || !(groupIdleOrIdleTime))))){
 					sortOrder[i++] = Unavailable;
 				}
 				break;
@@ -147,7 +151,7 @@ DeclareString(sOnline)
 					We aren't grouping all the unavailable ones (this would imply grouping available)
 					We aren't grouping both the away and the idle ones (this would imply grouping available)
 				*/
-				if (!groupAvailable && !groupUnavailable && !(groupAway && (groupIdle || sortIdleTime))){
+				if (!groupAvailable && !groupUnavailable && !(groupAway && (groupIdleOrIdleTime))){
 					sortOrder[i++] = Online;
 				}
 				break;
