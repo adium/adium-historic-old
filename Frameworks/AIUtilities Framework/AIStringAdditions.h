@@ -19,6 +19,8 @@
 
 + (NSString *)stringWithContentsOfASCIIFile:(NSString *)path;
 
++ (id)stringWithData:(NSData *)data encoding:(NSStringEncoding)encoding;
+
 - (NSString *)compactedString;
 
 - (int)intValueFromHex;
