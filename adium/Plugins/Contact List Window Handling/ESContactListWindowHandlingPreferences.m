@@ -29,9 +29,9 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == checkBox_alwaysOnTop){
-	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]] forKey:KEY_CLWH_ALWAYS_ON_TOP group:PREF_GROUP_CONTACT_LIST];
+	[[owner preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)] forKey:KEY_CLWH_ALWAYS_ON_TOP group:PREF_GROUP_CONTACT_LIST];
     } else if(sender == checkBox_hide){
-	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]] forKey:KEY_CLWH_HIDE group:PREF_GROUP_CONTACT_LIST];
+	[[owner preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)] forKey:KEY_CLWH_HIDE group:PREF_GROUP_CONTACT_LIST];
     }
 }
 
