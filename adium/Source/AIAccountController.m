@@ -482,8 +482,6 @@
     //Save the changes
     [self saveAccounts];
 
-    if (accountArray)
-        NSLog (@"accountListChanged found %d accounts in its array.", [accountArray count]);
     //Broadcast an account list changed message
     [[owner notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
 }
@@ -499,7 +497,6 @@
     
     //Create an instance of every saved account
     savedAccountArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_ACCOUNTS] objectForKey:ACCOUNT_LIST];
-    NSLog (@"loadAccounts finds %d accounts in the prefs.", [savedAccountArray count]);
     for(loop = 0;loop < [savedAccountArray count];loop++){
         NSDictionary	*serviceDict;
         NSDictionary	*propertyDict;
@@ -519,7 +516,6 @@
             [accountArray addObject:newAccount];
         }
     }
-    NSLog (@"loadAccounts left %d accounts in its array.", [accountArray count]);
 }
 
 //Save the account list

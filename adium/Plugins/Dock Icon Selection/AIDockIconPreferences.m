@@ -24,6 +24,7 @@
 
 #define PREF_GROUP_DOCK_ICON		@"Dock Icon"
 
+
 @interface AIDockIconPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
 - (void)configureForSelectedIcon:(NSDictionary *)iconDict;
@@ -258,27 +259,35 @@
     NSDirectoryEnumerator	*fileEnumerator;
     NSString			*iconPath;
     NSString			*filePath;
+    int					curPath;
 
     //Create a fresh icon array
     [iconArray release]; iconArray = [[NSMutableArray alloc] init];
 
-    //
-    iconPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS];
-    fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:iconPath];
-    
-    //Find all the .AdiumIcon's
-    while((filePath = [fileEnumerator nextObject])){
-        if([[filePath pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == 0){
-            NSString		*fullPath;
-            AIIconState		*previewState;
+    for (curPath = 0; curPath < 2; curPath ++)
+    {
+        //
+        if (curPath == 0)
+            iconPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS];
+        else
+            iconPath = [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS];
             
-            //Get the icon pack's full path and preview state
-            fullPath = [iconPath stringByAppendingPathComponent:filePath];
-            previewState = [[[[owner dockController] iconPackAtPath:fullPath] objectForKey:@"State"] objectForKey:@"Preview"];
-
-            //Add this icon to our icon array
-            [iconArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:fullPath, @"Path", previewState, @"State", nil]];
-
+        fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:iconPath];
+        
+        //Find all the .AdiumIcon's
+        while((filePath = [fileEnumerator nextObject])){
+            if([[filePath pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == 0){
+                NSString		*fullPath;
+                AIIconState		*previewState;
+                
+                //Get the icon pack's full path and preview state
+                fullPath = [iconPath stringByAppendingPathComponent:filePath];
+                previewState = [[[[owner dockController] iconPackAtPath:fullPath] objectForKey:@"State"] objectForKey:@"Preview"];
+    
+                //Add this icon to our icon array
+                [iconArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:fullPath, @"Path", previewState, @"State", nil]];
+    
+            }
         }
     }
 

@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-@class AISocket
+@class AISocket;
 
 @interface MSNSBSocket : NSObject 
 {
