@@ -375,6 +375,13 @@
     return(outName ? outName : UID);
 }
 
+//Server-formatted UID if present, otherwise the serverDisplayName
+- (NSString *)formattedUID
+{
+    NSString	*outName = [self statusObjectForKey:@"Display UID"];	
+    return(outName ? outName : [self serverDisplayName]);	
+}
+
 //Display name, influenced by plugins
 - (NSString *)displayName
 {
