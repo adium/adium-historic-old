@@ -33,6 +33,7 @@
 {
 	[url release];
 	[title release];
+	[super dealloc];
 }
 
 - (NSRect)trackingRect{
