@@ -28,12 +28,12 @@
 	//Set up our custom text system.
 	//Using drawAtPoint: places our text at a seemingly random vertical alignment, so we do the text drawing at a
 	//slightly lower level to avoid this.
-	textStorage = [[NSTextStorage alloc] init];
-	layoutManager = [[NSLayoutManager alloc] init];
-	textContainer = [[NSTextContainer alloc] init];
-	[layoutManager addTextContainer:textContainer];
-	[textStorage addLayoutManager:layoutManager];
-	[textContainer setLineFragmentPadding:0.0];
+//	textStorage = [[NSTextStorage alloc] init];
+//	layoutManager = [[NSLayoutManager alloc] init];
+//	textContainer = [[NSTextContainer alloc] init];
+//	[layoutManager addTextContainer:textContainer];
+//	[textStorage addLayoutManager:layoutManager];
+//	[textContainer setLineFragmentPadding:0.0];
 	
     return self;
 }
@@ -49,9 +49,9 @@
 //Dealloc
 - (void)dealloc
 {
-	[textContainer release];
-	[layoutManager release];
-	[textStorage release];
+//	[textContainer release];
+//	[layoutManager release];
+//	[textStorage release];
 	[genericUserIcon release];
 	
 	[super dealloc];
@@ -164,26 +164,51 @@
 //Draw our display name
 - (void)drawDisplayNameWithFrame:(NSRect)rect
 {	
-//	[[self displayNameStringWithAttributes:YES] drawInRect:rect];
-	[textStorage setAttributedString:[self displayNameStringWithAttributes:YES]];
-	NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
-	NSRect	glyphRect = [layoutManager boundingRectForGlyphRange:glyphRange inTextContainer:textContainer];
-
+	NSAttributedString	*displayName = [self displayNameStringWithAttributes:YES];
+	NSSize				nameSize = [displayName size];
+	
 	//Alignment
 	switch([self textAlignment]){
 		case NSCenterTextAlignment:
-			rect.origin.x += (rect.size.width - glyphRect.size.width) / 2.0;
+			rect.origin.x += (rect.size.width - nameSize.width) / 2.0;
 		break;
 		case NSRightTextAlignment:
-			rect.origin.x += (rect.size.width - glyphRect.size.width);
+			rect.origin.x += (rect.size.width - nameSize.width);
 		break;
 		default:
 		break;
 	}
-
-	[layoutManager drawGlyphsForGlyphRange:glyphRange
-								   atPoint:NSMakePoint(rect.origin.x,
-													   rect.origin.y + (rect.size.height - glyphRect.size.height) / 2.0)];
+	
+	//Draw (centered vertical)
+	int half = (rect.size.height - nameSize.height) / 2.0;
+	[displayName drawInRect:NSMakeRect(rect.origin.x,
+									   rect.origin.y + half,
+									   rect.size.width,
+									   rect.size.height - half)];
+	
+	
+	
+	
+//	[[self displayNameStringWithAttributes:YES] drawInRect:rect];
+//	[textStorage setAttributedString:[self displayNameStringWithAttributes:YES]];
+//	NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
+//	NSRect	glyphRect = [layoutManager boundingRectForGlyphRange:glyphRange inTextContainer:textContainer];
+//
+//	//Alignment
+//	switch([self textAlignment]){
+//		case NSCenterTextAlignment:
+//			rect.origin.x += (rect.size.width - glyphRect.size.width) / 2.0;
+//		break;
+//		case NSRightTextAlignment:
+//			rect.origin.x += (rect.size.width - glyphRect.size.width);
+//		break;
+//		default:
+//		break;
+//	}
+//
+//	[layoutManager drawGlyphsForGlyphRange:glyphRange
+//								   atPoint:NSMakePoint(rect.origin.x,
+//													   rect.origin.y + (rect.size.height - glyphRect.size.height) / 2.0)];
 }
 
 //Returns our display name string.  If the string is only for sizing, passing NO will skip applying non-size changing

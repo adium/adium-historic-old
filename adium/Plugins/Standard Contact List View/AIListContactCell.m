@@ -268,21 +268,34 @@
 			rect.size.height -= halfHeight;
 			
 			//Format string
+
+			
+			NSParagraphStyle	*paragraphStyle;
+			
+			//Attributes
+			paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment lineBreakMode:NSLineBreakByTruncatingTail/*NSLineBreakByClipping*/];
+				
+			
+			
+			
 			NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+				paragraphStyle, NSParagraphStyleAttributeName,
 				EXTENDED_STATUS_COLOR, NSForegroundColorAttributeName,
 				EXTENDED_STATUS_FONT, NSFontAttributeName,nil];
 			
 			
 			if(string){
-				string = [string stringByTruncatingTailToWidth:rect.size.width ];
+//				string = [string stringByTruncatingTailToWidth:rect.size.width ];
 				
 				NSString *extStatus = [[[NSAttributedString alloc] initWithString:string attributes:attributes] autorelease];
 				
 				
-				[textStorage setAttributedString:extStatus];
-				glyphRange = [layoutManager glyphRangeForBoundingRect:NSMakeRect(0,0,rect.size.width,10) inTextContainer:textContainer];
-				[layoutManager drawGlyphsForGlyphRange:glyphRange
-											   atPoint:NSMakePoint(rect.origin.x, rect.origin.y)];
+				[extStatus drawInRect:rect];
+	
+//				[textStorage setAttributedString:extStatus];
+//				glyphRange = [layoutManager glyphRangeForBoundingRect:NSMakeRect(0,0,rect.size.width,10) inTextContainer:textContainer];
+//				[layoutManager drawGlyphsForGlyphRange:glyphRange
+//											   atPoint:NSMakePoint(rect.origin.x, rect.origin.y)];
 			}
 			
 			rect.origin.y -= halfHeight;

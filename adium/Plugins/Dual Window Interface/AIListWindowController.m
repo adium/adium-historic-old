@@ -52,7 +52,7 @@
 
 #define PREF_GROUP_CONTACT_STATUS_COLORING	@"Contact Status Coloring"
 
-#define BACKGROUND_ALPHA	0.5
+#define BACKGROUND_ALPHA	1.0
 
 
 #define CONTACTS_USE_MOCKIE_CELL NO

@@ -119,7 +119,7 @@
     }
 }
 
-//
+
 - (NSString *)stringByTruncatingTailToWidth:(float)inWidth
 {
     NSMutableString 	*string = [self mutableCopy];

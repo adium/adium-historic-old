@@ -23,9 +23,9 @@
 	
 	NSTextAlignment	textAlignment;
 
-	NSTextStorage 	*textStorage;
-	NSLayoutManager	*layoutManager;
-	NSTextContainer	*textContainer;
+//	NSTextStorage 	*textStorage;
+//	NSLayoutManager	*layoutManager;
+//	NSTextContainer	*textContainer;
 	
 	NSImage			*genericUserIcon;
 }
