@@ -30,5 +30,6 @@
 - (id)objectAtIndex:(unsigned)index;
 - (id)objectWithOwner:(id)inOwner;
 - (int)greatestIntegerValue;
+- (double)greatestDoubleValue;
 
 @end

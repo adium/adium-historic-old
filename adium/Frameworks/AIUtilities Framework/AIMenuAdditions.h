@@ -21,6 +21,7 @@
 - (id <NSMenuItem>)addItemWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode;
 - (id <NSMenuItem>)addItemWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode representedObject:(id)object;
 - (void)removeAllItems;
+- (void)removeAllItemsButFirst;
 
 @end
 

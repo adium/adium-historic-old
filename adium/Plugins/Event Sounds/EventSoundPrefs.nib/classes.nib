@@ -1,0 +1,38 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIAlternatingRowOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSOutlineView; 
+        }, 
+        {
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
+        {
+            ACTIONS = {
+                deleteEventSound = id; 
+                newEventSound = id; 
+                playSelectedSound = id; 
+                selectSound = id; 
+                selectSoundSet = id; 
+                showSoundSetInfo = id; 
+            }; 
+            CLASS = AIEventSoundPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_delete" = NSButton; 
+                "button_soundSetInfo" = NSButton; 
+                "popUp_addEvent" = NSPopUpButton; 
+                "popUp_soundSet" = NSPopUpButton; 
+                "tableView_sounds" = AIAlternatingRowTableView; 
+                "textField_creator" = NSTextField; 
+                "view_prefView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

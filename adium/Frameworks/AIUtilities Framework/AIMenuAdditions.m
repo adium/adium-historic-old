@@ -47,6 +47,13 @@
     }
 }
 
+- (void)removeAllItemsButFirst
+{
+    while([self numberOfItems] != 1){
+        [self removeItemAtIndex:1];
+    }
+}
+
 @end
 
 @implementation NSMenuItem (ItemCreationAdditions)

@@ -16,8 +16,13 @@
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
 
-#define	PATH_SOUNDS		@"/Sounds"
-#define PATH_INTERNAL_SOUNDS	@"/Contents/Resources/Sounds/"
+#define	PATH_SOUNDS			@"/Sounds"
+#define PATH_INTERNAL_SOUNDS		@"/Contents/Resources/Sounds/"
+#define SOUND_SET_PATH_EXTENSION	@"txt"
+
+@interface AISoundController (PRIVATE)
+- (void)addSet:(NSString *)inSet withSounds:(NSArray *)inSounds toArray:(NSMutableArray *)inArray;
+@end
 
 @implementation AISoundController
 
@@ -32,7 +37,65 @@
 
 }
 
+//Returns an array of dictionaries, each representing a soundset with the following keys:
+// (NString *)"Set" - The path of the soundset (name is the last component)
+// (NSArray *)"Sounds" - An array of sound paths (name is the last component) (NSString *'s)
+- (NSArray *)soundSetArray
+{
+    NSString 			*soundFolderPath;		//Path to Adium's sound folder
+    NSDirectoryEnumerator	*enumerator;			//Sound folder directory enumerator
+    NSString			*file;				//Current Path (relative to sound folder)
+    NSMutableArray		*soundSetArray;			//Array of available soundsets
+    NSString			*soundSetPath;			//Name of the set
+    NSMutableArray		*soundSetContents = nil;	//Array of sounds in the set
 
+    //Setup
+    soundFolderPath = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_SOUNDS] stringByExpandingTildeInPath];
+    soundSetArray = [[NSMutableArray alloc] init];
+
+    //Scan the directory
+    enumerator = [[NSFileManager defaultManager] enumeratorAtPath:soundFolderPath];
+    while((file = [enumerator nextObject])){
+        BOOL			isDirectory;
+        NSString		*fullPath;
+
+        if([[file lastPathComponent] characterAtIndex:0] != '.' &&
+           [[file pathExtension] compare:SOUND_SET_PATH_EXTENSION] != 0){//Ignore certain files
+
+            //Determine if this is a file or a directory
+            fullPath = [soundFolderPath stringByAppendingPathComponent:file];
+            [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDirectory];
+    
+            if(isDirectory){
+                //Close the current soundset, adding it to our sound set array
+                [self addSet:soundSetPath withSounds:soundSetContents toArray:soundSetArray];
+    
+                //Open a new soundset for this directory
+                soundSetPath = fullPath;
+                soundSetContents = [[[NSMutableArray alloc] init] autorelease];
+                
+            }else{
+                //Add the sound
+                [soundSetContents addObject:fullPath];
+    
+            }
+        }
+    }
+
+    //Close the last soundset, adding it to our sound set array
+    [self addSet:soundSetPath withSounds:soundSetContents toArray:soundSetArray];
+
+    return([soundSetArray autorelease]);
+}
+
+- (void)addSet:(NSString *)inSet withSounds:(NSArray *)inSounds toArray:(NSMutableArray *)inArray
+{
+    if(inSet && inSounds && inArray){
+        [inArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:inSet, KEY_SOUND_SET, inSounds, KEY_SOUND_SET_CONTENTS, nil]];
+    }
+}
+
+//Private ------------------------------------------------------------------------
 - (void)playSoundNamed:(NSString *)inName
 {
     NSString	*path;

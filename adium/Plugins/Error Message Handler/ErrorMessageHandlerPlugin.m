@@ -8,7 +8,7 @@
 - (void)installPlugin
 {
     //Install our observers
-    [[owner notificationCenter] addObserver:self selector:@selector(handleError:) name:Interface_ErrorMessageRecieved object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(handleError:) name:Interface_ErrorMessageReceived object:nil];
 }
 
 - (void)uninstallPlugin

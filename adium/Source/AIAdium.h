@@ -33,6 +33,7 @@
     IBOutlet	AIDockController	*dockController;
 
     NSNotificationCenter 	*notificationCenter;
+    NSMutableDictionary		*eventNotifications;
 }
 
 
@@ -46,7 +47,10 @@
 - (AIPreferenceController *)preferenceController;
 - (AIMenuController *)menuController;
 - (AIDockController *)dockController;
+
 - (NSNotificationCenter *)notificationCenter;
+- (void)registerEventNotification:(NSString *)inNotification displayName:(NSString *)displayName;
+- (NSDictionary *)eventNotifications;
 
 @end
 
@@ -70,6 +74,7 @@ typedef enum {
 #define PREFERENCE_CATEGORY_CONNECTIONS	@"Connections"
 #define PREFERENCE_CATEGORY_INTERFACE		@"Interface"
 #define PREFERENCE_CATEGORY_STATUS		@"Status"
+#define PREFERENCE_CATEGORY_OTHER		@"Other"
 
 //Preference groups
 #define PREF_GROUP_GENERAL 		@"General"
@@ -78,6 +83,13 @@ typedef enum {
 #define PREF_GROUP_WINDOW_POSITIONS 	@"Window Positions"
 #define PREF_GROUP_SPELLING 		@"Spelling"
 
+//Adium events
+#define KEY_EVENT_DISPLAY_NAME		@"DisplayName"
+#define KEY_EVENT_NOTIFICATION		@"Notification"
+
+//Sound Controller
+#define	KEY_SOUND_SET			@"Set"
+#define	KEY_SOUND_SET_CONTENTS		@"Sounds"
 
 //Notifications
 #define	Adium_LaunchComplete					@"Adium_LaunchComplete"
@@ -98,7 +110,7 @@ typedef enum {
 #define Interface_SendEnteredMessage				@"Interface_SendEnteredMessage"
 #define Interface_WillSendEnteredMessage 			@"Interface_WillSendEnteredMessage"
 #define Interface_DidSendEnteredMessage				@"Interface_DidSendEnteredMessage"
-#define Interface_ErrorMessageRecieved				@"Interface_ErrorMessageRecieved"
+#define Interface_ErrorMessageReceived				@"Interface_ErrorMessageRecieved"
 #define Content_ContentObjectAdded				@"Content_ContentObjectAdded"
 #define Content_WillSendContent					@"Content_WillSendContent"
 #define Content_DidSendContent					@"Content_DidSendContent"
@@ -378,6 +390,7 @@ typedef enum {
 
 - (void)playSoundNamed:(NSString *)inName;
 - (void)playSoundAtPath:(NSString *)inPath;
+- (NSArray *)soundSetArray;
 
 @end
 

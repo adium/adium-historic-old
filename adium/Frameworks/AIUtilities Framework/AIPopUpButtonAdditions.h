@@ -13,3 +13,9 @@
 - (void)selectItemWithRepresentedObject:(id)object;
 
 @end
+
+@interface NSPopUpButtonCell (AIPopUpButtonAdditions)
+
+- (void)selectItemWithRepresentedObject:(id)object;
+
+@end

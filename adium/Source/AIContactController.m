@@ -52,7 +52,9 @@
     sortControllerArray = [[NSMutableArray alloc] init];
     delayedUpdating = 0;
     contactList = nil;
-    
+
+    [owner registerEventNotification:Contact_StatusChanged displayName:@"Contact Status Changed"];
+
     //
     contactInfoCategory = [[AIPreferenceCategory categoryWithName:@"" image:nil] retain];
 }

@@ -107,6 +107,7 @@
 				4B81631903D1C27500A8010A,
 				9EDAC4ED03D5160100415B22,
 				4BBAEE9E03DD7DAB00A8010A,
+				4B52A57D03EDB96E00A8010A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -158,6 +159,7 @@
 				4B81631803D1C27500A8010A,
 				9EDAC4EC03D5160100415B22,
 				4BBAEE9D03DD7DAB00A8010A,
+				4B52A57C03EDB96E00A8010A,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -193,6 +195,7 @@
 				4B81631203D1C24E00A8010A,
 				9EB7C05703D52AFA00415B22,
 				4BBAEE9703DD7D8900A8010A,
+				4B52A58603EDB9D200A8010A,
 				F5B53FBE0333AB9201A8010A,
 				F53EA2B502C8020E01A8010A,
 				F5A01D85037980F201A8010A,
@@ -271,6 +274,7 @@
 				4B64793803DB613700A8010A,
 				4B64793903DB613700A8010A,
 				4BBAEE9F03DD7DAB00A8010A,
+				4B52A57E03EDB96E00A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -952,6 +956,58 @@
 			settings = {
 			};
 		};
+		4B3E502203EC538D00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAlternatingRowTableView.h;
+			path = "Frameworks/AIUtilities Framework/AIAlternatingRowTableView.h";
+			refType = 4;
+		};
+		4B3E502303EC538D00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAlternatingRowTableView.m;
+			path = "Frameworks/AIUtilities Framework/AIAlternatingRowTableView.m";
+			refType = 4;
+		};
+		4B3E502403EC538D00A8010A = {
+			fileRef = 4B3E502203EC538D00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B3E502503EC538D00A8010A = {
+			fileRef = 4B3E502303EC538D00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B3E502603EC651400A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AITableViewPopUpButtonCell.h;
+			path = "Frameworks/AIUtilities Framework/AITableViewPopUpButtonCell.h";
+			refType = 4;
+		};
+		4B3E502703EC651400A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AITableViewPopUpButtonCell.m;
+			path = "Frameworks/AIUtilities Framework/AITableViewPopUpButtonCell.m";
+			refType = 4;
+		};
+		4B3E502803EC651400A8010A = {
+			fileRef = 4B3E502603EC651400A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B3E502903EC651400A8010A = {
+			fileRef = 4B3E502703EC651400A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B40E1CA03DB5B7E00A8010A = {
 			buildActionMask = 2147483647;
 			dstPath = "";
@@ -980,6 +1036,7 @@
 				4B40E1DF03DB5B9600A8010A,
 				4B40E1E003DB5B9600A8010A,
 				4BBAEEA003DD7DAB00A8010A,
+				4B52A57F03EDB96E00A8010A,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1124,6 +1181,171 @@
 			isSharedContext = 0;
 			isa = PBXAppleScriptBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B52A57703EDB96E00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B52A58403EDB9B600A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B52A57803EDB96E00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B52A57903EDB96E00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B52A58503EDB9B600A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B52A57A03EDB96E00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B864DB303EDC32600A8010A,
+				4B864DB403EDC32700A8010A,
+				4B864DB503EDC32700A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B52A57B03EDB96E00A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B52A57C03EDB96E00A8010A = {
+			buildPhases = (
+				4B52A57703EDB96E00A8010A,
+				4B52A57803EDB96E00A8010A,
+				4B52A57903EDB96E00A8010A,
+				4B52A57A03EDB96E00A8010A,
+				4B52A57B03EDB96E00A8010A,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Contact Status Events";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4B52A58103EDB97500A8010A,
+				4B52A58003EDB97300A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Contact Status Events";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Contact Status Events";
+			productReference = 4B52A57D03EDB96E00A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIContactStatusEventsPlugin</string>
+</dict>
+</plist>
+";
+		};
+		4B52A57D03EDB96E00A8010A = {
+			isa = PBXBundleReference;
+			path = "Contact Status Events.AdiumPlugin";
+			refType = 3;
+		};
+		4B52A57E03EDB96E00A8010A = {
+			isa = PBXTargetDependency;
+			target = 4B52A57C03EDB96E00A8010A;
+		};
+		4B52A57F03EDB96E00A8010A = {
+			fileRef = 4B52A57D03EDB96E00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B52A58003EDB97300A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4B52A58103EDB97500A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4B52A58203EDB9B600A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContactStatusEventsPlugin.h;
+			path = "Plugins/Contact Status Events/AIContactStatusEventsPlugin.h";
+			refType = 4;
+		};
+		4B52A58303EDB9B600A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContactStatusEventsPlugin.m;
+			path = "Plugins/Contact Status Events/AIContactStatusEventsPlugin.m";
+			refType = 4;
+		};
+		4B52A58403EDB9B600A8010A = {
+			fileRef = 4B52A58203EDB9B600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B52A58503EDB9B600A8010A = {
+			fileRef = 4B52A58303EDB9B600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B52A58603EDB9D200A8010A = {
+			children = (
+				4B52A58703EDB9E000A8010A,
+				4B52A58303EDB9B600A8010A,
+			);
+			isa = PBXGroup;
+			name = "Contact Status Events";
+			path = "";
+			refType = 4;
+		};
+		4B52A58703EDB9E000A8010A = {
+			children = (
+				4B52A58203EDB9B600A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
 		};
 		4B53714903CEF16D00A8010A = {
 			fileEncoding = 4;
@@ -1703,9 +1925,11 @@
 				4BF1F04B03D7B9F000A8010A,
 				4BF1F04703D7B99700A8010A,
 				F5793936033E74E401A8010A,
+				4B3E502203EC538D00A8010A,
 				F570A59003704AB901A8010A,
 				F57938F8033E745F01A8010A,
 				F5793944033E74E401A8010A,
+				4B3E502603EC651400A8010A,
 				F5793953033E74E401A8010A,
 				4BBB05E403CB161100A8010A,
 			);
@@ -2036,6 +2260,24 @@
 			name = Headers;
 			refType = 4;
 		};
+		4B864DB303EDC32600A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B864DB403EDC32700A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B864DB503EDC32700A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B8748D103DC812900A8010A = {
 			fileRef = F570A61803704F6601A8010A;
 			isa = PBXBuildFile;
@@ -2108,6 +2350,83 @@
 		};
 		4BB17E6E03E45FC900A8010A = {
 			fileRef = 4BB17E6D03E45FC900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BB17E6F03E4633D00A8010A = {
+			isa = PBXFileReference;
+			name = EventSoundPrefs.nib;
+			path = "Plugins/Event Sounds/EventSoundPrefs.nib";
+			refType = 4;
+		};
+		4BB17E7003E4633D00A8010A = {
+			fileRef = 4BB17E6F03E4633D00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BB17E7103E4636400A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIEventSoundPreferences.h;
+			path = "Plugins/Event Sounds/AIEventSoundPreferences.h";
+			refType = 4;
+		};
+		4BB17E7203E4636400A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIEventSoundPreferences.m;
+			path = "Plugins/Event Sounds/AIEventSoundPreferences.m";
+			refType = 4;
+		};
+		4BB17E7303E4636400A8010A = {
+			fileRef = 4BB17E7103E4636400A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BB17E7403E4636400A8010A = {
+			fileRef = 4BB17E7203E4636400A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BB5809603E86BF600A8010A = {
+			includeInIndex = 1;
+			isa = PBXFolderReference;
+			name = Adium;
+			path = Sounds/Adium;
+			refType = 4;
+		};
+		4BB5809E03E86BF600A8010A = {
+			includeInIndex = 1;
+			isa = PBXFolderReference;
+			name = Aquatech;
+			path = Sounds/Aquatech;
+			refType = 4;
+		};
+		4BB580A803E86BF600A8010A = {
+			includeInIndex = 1;
+			isa = PBXFolderReference;
+			name = iChat;
+			path = Sounds/iChat;
+			refType = 4;
+		};
+		4BB580B003E86BF600A8010A = {
+			fileRef = 4BB5809603E86BF600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BB580B103E86BF600A8010A = {
+			fileRef = 4BB5809E03E86BF600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BB580B203E86BF600A8010A = {
+			fileRef = 4BB580A803E86BF600A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -3825,52 +4144,13 @@
 		};
 		F50A325A03B5798301A8010A = {
 			children = (
-				F50A325B03B579A101A8010A,
-				F50A325C03B579A101A8010A,
-				F50A325D03B579A101A8010A,
-				F50A325E03B579A101A8010A,
-				F50A325F03B579A101A8010A,
-				F50A326003B579A101A8010A,
+				4BB5809603E86BF600A8010A,
+				4BB5809E03E86BF600A8010A,
+				4BB580A803E86BF600A8010A,
 			);
 			isa = PBXGroup;
 			name = Sounds;
 			path = "";
-			refType = 4;
-		};
-		F50A325B03B579A101A8010A = {
-			isa = PBXFileReference;
-			name = "(Adium)Buddy_SignedOff.aif";
-			path = "Sounds/(Adium)Buddy_SignedOff.aif";
-			refType = 4;
-		};
-		F50A325C03B579A101A8010A = {
-			isa = PBXFileReference;
-			name = "(Adium)Buddy_SignedOn.aif";
-			path = "Sounds/(Adium)Buddy_SignedOn.aif";
-			refType = 4;
-		};
-		F50A325D03B579A101A8010A = {
-			isa = PBXFileReference;
-			name = "(Adium)Receive.aif";
-			path = "Sounds/(Adium)Receive.aif";
-			refType = 4;
-		};
-		F50A325E03B579A101A8010A = {
-			isa = PBXFileReference;
-			name = "(Adium)ReceiveFirst.aif";
-			path = "Sounds/(Adium)ReceiveFirst.aif";
-			refType = 4;
-		};
-		F50A325F03B579A101A8010A = {
-			isa = PBXFileReference;
-			name = "(Adium)Send.aif";
-			path = "Sounds/(Adium)Send.aif";
-			refType = 4;
-		};
-		F50A326003B579A101A8010A = {
-			isa = PBXFileReference;
-			name = "(Adium)Stranger.aif";
-			path = "Sounds/(Adium)Stranger.aif";
 			refType = 4;
 		};
 		F50A326B03B579BD01A8010A = {
@@ -3878,51 +4158,12 @@
 			dstPath = Sounds;
 			dstSubfolderSpec = 7;
 			files = (
-				F50A326C03B579C801A8010A,
-				F50A326D03B579C801A8010A,
-				F50A326E03B579C801A8010A,
-				F50A326F03B579C801A8010A,
-				F50A327003B579C801A8010A,
-				F50A327103B579C801A8010A,
+				4BB580B003E86BF600A8010A,
+				4BB580B103E86BF600A8010A,
+				4BB580B203E86BF600A8010A,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F50A326C03B579C801A8010A = {
-			fileRef = F50A325B03B579A101A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F50A326D03B579C801A8010A = {
-			fileRef = F50A325C03B579A101A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F50A326E03B579C801A8010A = {
-			fileRef = F50A325D03B579A101A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F50A326F03B579C801A8010A = {
-			fileRef = F50A325E03B579A101A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F50A327003B579C801A8010A = {
-			fileRef = F50A325F03B579A101A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F50A327103B579C801A8010A = {
-			fileRef = F50A326003B579A101A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F50CD61C03603BE201A8010A = {
 			children = (
@@ -4846,6 +5087,8 @@
 				4BF1F04903D7B99700A8010A,
 				4BF1F04D03D7B9F000A8010A,
 				4B8EFC0603E18F2D00A8010A,
+				4B3E502403EC538D00A8010A,
+				4B3E502803EC651400A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4920,6 +5163,8 @@
 				4BF1F04A03D7B99700A8010A,
 				4BF1F04E03D7B9F000A8010A,
 				4B8EFC0703E18F2D00A8010A,
+				4B3E502503EC538D00A8010A,
+				4B3E502903EC651400A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5589,9 +5834,11 @@
 				F549EF08036B0F2C01A8010A,
 				4BCDEB2E03D4CACA00A8010A,
 				F5793937033E74E401A8010A,
+				4B3E502303EC538D00A8010A,
 				F570A59103704AB901A8010A,
 				F57938B8033E739101A8010A,
 				F5793945033E74E401A8010A,
+				4B3E502703EC651400A8010A,
 				F5793954033E74E401A8010A,
 			);
 			isa = PBXGroup;
@@ -9282,6 +9529,8 @@
 			children = (
 				F5AAD097039BA24601A8010A,
 				F55B40FA03AB877E01A8010A,
+				4BB17E7203E4636400A8010A,
+				4BB17E6F03E4633D00A8010A,
 			);
 			isa = PBXGroup;
 			name = "Event Sounds";
@@ -9292,6 +9541,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F55B40F903AB877401A8010A,
+				4BB17E7303E4636400A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9299,6 +9549,7 @@
 		F5AAD08B039BA10901A8010A = {
 			buildActionMask = 2147483647;
 			files = (
+				4BB17E7003E4633D00A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9307,6 +9558,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F55B40FB03AB877E01A8010A,
+				4BB17E7403E4636400A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9402,6 +9654,7 @@
 		F5AAD097039BA24601A8010A = {
 			children = (
 				F55B40F803AB877401A8010A,
+				4BB17E7103E4636400A8010A,
 			);
 			isa = PBXGroup;
 			name = Headers;
@@ -9444,6 +9697,7 @@
 			);
 			isa = PBXGroup;
 			name = "----Services----";
+			path = "";
 			refType = 4;
 		};
 		F5B53FBF0333ABA701A8010A = {

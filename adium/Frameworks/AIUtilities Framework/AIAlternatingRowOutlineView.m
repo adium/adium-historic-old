@@ -186,7 +186,7 @@
     rowHeight = [self rowHeight] + [self intercellSpacing].height;
     if(numberOfRows == 0){
         rowRect = NSMakeRect(0,0,rect.size.width,rowHeight);
-        coloredRow = NO;        
+        coloredRow = YES;        
     }else{
         rowRect = [self rectOfRow:numberOfRows-1];
         rowRect.origin.y += rowHeight;
