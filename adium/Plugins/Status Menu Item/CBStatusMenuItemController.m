@@ -122,7 +122,11 @@ CBStatusMenuItemController *sharedInstance = nil;
 
 - (void)contactsChanged:(NSNotification *)notification
 {
-    if(![[notification object] isKindOfClass:[AIAccount class]]) //we don't care about accounts
+    if([[notification object] isKindOfClass:[AIAccount class]]) //do it in the other method
+    {
+        [self accountsChanged:nil];
+    }
+    else //we don't care about accounts
     {
         //snag the contact from the notification
         AIListObject *contact = [notification object];
