@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.133 2004/05/14 19:56:14 boredzo Exp $
+$Id: ToDoList.txt,v 1.134 2004/05/16 18:13:55 adamiser Exp $
 
 
 Legend
@@ -35,6 +35,9 @@ Bugs
 * Push/pop indicator could use 1-2 px extra spacing from the right & left since its nearly flush with the scrollbar 
     // brian now dons his flameproof pants :)
 * Add/Edit link menu item needs to disable when unavailable
+* Short emoticons can mask longer ones ( :) masks :)) ).  Sort emoticons longest to shortest?
+* Some webkit styles (Such as smooth operator) render incorrectly in very wide windows
+* Message history should be de-colored before being passed to the message view
 
 Applescripts:
 * Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
@@ -49,12 +52,12 @@ Contact List:
 * Auto-resizing is no longer correctly sticking to the bottom of the screen?
 * Orphans group  (Hey, the behavior is strange, so I'd consider this a bug)
 * Manual ordering is lost when Adium is quit and relaunched.
+* There is an issue with contact list resizing that can result in tooltips tracking contacts who are 'behind' the toolbar, and none of the contact list content appearing (apparently because it is 'behind' the toolbar)
 
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
 -------------------------------------------------------------------------------------------------------
 * If one tries to change one's idle time to a lower amount, (for example, from 2:32 to :36), an update will not occur, and your idle time will stay at 2:32.
-* There is an issue with contact list resizing that can result in tooltips tracking contacts who are 'behind' the toolbar, and none of the contact list content appearing (apparently because it is 'behind' the toolbar)
 * Tooltips are flashing when the contact list auto-resizes?
 * Deleting an idle contact may cause a crash when the idle updates next? http://www.visualdistortion.org/crash/view.jsp?crash=10088
 * Empty groups come back on next launch after being deleted?
