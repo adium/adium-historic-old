@@ -876,8 +876,8 @@ static void *adiumGaimNotifyUri(const char *uri)
 {
 	NSLog(@"Notify uri: %s",uri);
 	
-	NSURL   *notifyURI = [NSURL URLWithString:uri];
-	[[NSWorkspace shareworkspace] openURL:notifyURI];
+	NSURL   *notifyURI = [NSURL URLWithString:[NSString stringWithCString:uri]];
+	[[NSWorkspace sharedWorkspace] openURL:notifyURI];
 
     return(nil);
 }
