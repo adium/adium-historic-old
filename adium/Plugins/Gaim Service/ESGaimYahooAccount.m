@@ -152,7 +152,8 @@ static NSDictionary		*presetStatusesDictionary = nil;
 
 	const char				*buddyName = [[theContact UID] UTF8String];
 	
-	if ((od = gc->proto_data) &&
+	if (gc &&
+		(od = gc->proto_data) &&
 		(userInfo = g_hash_table_lookup(od->friends, buddyName))) {
 		
 		NSString		*statusMsgString = nil;
