@@ -105,8 +105,8 @@ DeclareString(bookmarkDictContent)
         while(linkDict = [enumerator nextObject]){
             if([[linkDict objectForKey:safariDictTypeKey] isEqualToString:safariDictTypeLeaf]){
                 //We found a link
-				NSDictionary	*linkDict = [self hyperlinkForSafariBookmark:linkDict];
-				if(linkDict) [array addObject:linkDict];
+				NSDictionary	*menuDict = [self hyperlinkForSafariBookmark:linkDict];
+				if(menuDict) [array addObject:menuDict];
 				
 			}else if([[linkDict objectForKey:safariDictTypeKey] isEqualToString:safariDictTypeList]){
 				//We found an array of links
