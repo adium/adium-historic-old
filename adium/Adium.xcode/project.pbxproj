@@ -3736,7 +3736,6 @@
 				348E556B053A188C0021E541,
 				34E8FA34054D9CE8008BB262,
 				4BE9FFE8055981AB00359B15,
-				4B584E1B055DD7FD00E89D48,
 				4BCB9B5F0567FF5D001D3559,
 				34536751059BA8EE00A83D9E,
 				34F2BD25059CF8070005B238,
@@ -9199,20 +9198,6 @@
 			path = Plugins/Emoticons/AIEmoticonPackCell.m;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B584E1A055DD7FD00E89D48 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = pref9.tif;
-			path = Source/icons/pref9.tif;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B584E1B055DD7FD00E89D48 = {
-			fileRef = 4B584E1A055DD7FD00E89D48;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B5AAA1F03E02EB900A8010A = {
 			fileEncoding = 30;
@@ -16725,7 +16710,6 @@
 				4B0AABAD05228F9700A8010A,
 				4B0AABAE05228F9700A8010A,
 				4B03DDF30533AC59002B2CA3,
-				4B584E1A055DD7FD00E89D48,
 			);
 			isa = PBXGroup;
 			name = Icons;
