@@ -3,7 +3,7 @@
  * File:        AWEzv.h
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzv.h,v 1.2 2004/05/16 16:07:01 proton Exp $
+ * CVS tag:     $Id: AWEzv.h,v 1.3 2004/07/27 19:06:02 evands Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -48,7 +48,7 @@
     NSDate *idleTime;
 }
 
-- initWithClient:(id <AWEzvClientProtocol, NSObject>)newClient;
+- (id) initWithClient:(id <AWEzvClientProtocol, NSObject>)newClient;
 
 - (void) login;
 - (void) logout;
@@ -59,7 +59,7 @@
 - (void) setStatus:(AWEzvStatus)status withMessage:(NSString *)message;
 - (void) setIdleTime:(NSDate *)date;
 - (void) setContactImage:(NSImage *)contactImage;
-- (AWEzvContact *)contactForIdentifier:(NSString *)uniqueID;
+- (AWEzvContact *) contactForIdentifier:(NSString *)uniqueID;
 
 // This API is subject to change
 - (void) sendFile:(NSString *)filename to:(NSString *)contact size:(size_t)size;
