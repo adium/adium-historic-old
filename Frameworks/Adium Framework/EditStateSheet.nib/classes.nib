@@ -2,25 +2,27 @@
     IBClasses = (
         {
             ACTIONS = {cancel = id; okay = id; statusControlChanged = id; }; 
-            CLASS = AICustomStatusWindowController; 
+            CLASS = AIEditStateWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "box_idle" = NSBox; 
+                "box_statusMessage" = NSBox; 
+                "button_OK" = NSButton; 
+                "button_cancel" = NSButton; 
+                "button_save" = NSButton; 
                 "checkbox_autoReply" = NSButton; 
-                "checkbox_available" = NSButton; 
-                "checkbox_away" = NSButton; 
                 "checkbox_customAutoReply" = NSButton; 
                 "checkbox_idle" = NSButton; 
                 "checkbox_invisible" = NSButton; 
+                "label_state" = NSTextField; 
+                "label_statusMessage" = NSTextField; 
+                "popUp_state" = NSPopUpButton; 
                 "scrollView_autoReply" = NSScrollView; 
-                "scrollView_available" = NSScrollView; 
-                "scrollView_away" = NSScrollView; 
                 target = id; 
                 "textField_idleHours" = NSTextField; 
                 "textField_idleMinutes" = NSTextField; 
                 "textView_autoReply" = NSTextView; 
-                "textView_available" = NSTextView; 
-                "textView_away" = NSTextView; 
+                "textView_statusMessage" = NSTextView; 
             }; 
             SUPERCLASS = AIWindowController; 
         }, 
