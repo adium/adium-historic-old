@@ -57,6 +57,7 @@ static NSImage *pushIndicatorImage = nil;
     indicator = nil;
     sendOnReturn = YES;
     sendOnEnter = YES;
+	pushPop = YES;
     insertingText = NO;
     returnArray = [[NSMutableArray alloc] init];
     historyArray = [[NSMutableArray alloc] initWithObjects:@"",nil];
