@@ -1,0 +1,56 @@
+//
+//  ESAddressBookIntegrationPlugin.h
+//  Adium
+//
+//  Created by Evan Schoenberg on Wed Nov 19 2003.
+//  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
+//
+
+#import <AddressBook/AddressBook.h>
+#import "ESAddressBookIntegrationAdvancedPreferences.h"
+
+#define PREF_GROUP_ADDRESSBOOK					@"Address Book"
+#define KEY_AB_ENABLE_IMPORT					@"AB Enable Import"
+#define KEY_AB_DISPLAYFORMAT					@"AB Display Format"
+#define KEY_AB_IMAGE_SYNC						@"AB Image Sync"
+#define KEY_AB_NOTE_SYNC						@"AB Note Sync"
+#define KEY_AB_USE_IMAGES						@"AB Use AB Images"
+#define KEY_AB_USE_NICKNAME						@"AB Use NickName"
+#define KEY_AB_PREFER_ADDRESS_BOOK_IMAGES		@"AB Prefer AB Images"
+#define	KEY_AB_CREATE_METACONTACTS				@"AB Create MetaContacts"
+
+#define AB_DISPLAYFORMAT_DEFAULT_PREFS			@"AB Display Format Defaults"
+
+typedef enum {
+    FirstLast,
+    First,
+    LastFirst,
+	LastFirstNoComma
+} NameStyle;
+
+@interface ESAddressBookIntegrationPlugin : AIPlugin <AIListObjectObserver, ABImageClient> {
+
+    ESAddressBookIntegrationAdvancedPreferences *advancedPreferences;
+    
+    NSDictionary        *serviceDict;
+	NSMutableDictionary	*addressBookDict;
+	
+	NSMutableArray		*listObjectArrayForImageData;
+	NSMutableArray		*personArrayForImageData;
+	NSTimer				*imageLookupTimer;
+    NSMutableDictionary *trackingDict;
+	NSMutableDictionary *trackingDictPersonToTagNumber;
+	NSMutableDictionary *trackingDictTagNumberToPerson;
+
+    int                 meTag;
+    
+    int                 displayFormat;
+    BOOL                enableImport;
+    BOOL                useNickName;
+    BOOL                automaticSync;
+    BOOL                preferAddressBookImages;
+    BOOL                useABImages;
+	BOOL				createMetaContacts;
+}
+
+@end
