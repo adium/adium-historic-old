@@ -30,6 +30,7 @@
                 pluginController = AIPluginController; 
                 preferenceController = AIPreferenceController; 
                 soundController = AISoundController; 
+                statusWindowController = BZStatusWindowController; 
                 toolbarController = AIToolbarController; 
             }; 
             SUPERCLASS = NSObject; 
@@ -173,6 +174,12 @@
             LANGUAGE = ObjC; 
             OUTLETS = {owner = AIAdium; }; 
             SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = BZStatusWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {owner = AIAdium; statusViewTemplate = BZStatusItemView; table = NSTableView; }; 
+            SUPERCLASS = NSWindowController; 
         }, 
         {
             CLASS = ESContactAlertsController; 

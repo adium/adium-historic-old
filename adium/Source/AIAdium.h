@@ -26,6 +26,7 @@
 #import "AIPreferenceController.h"
 #import "AISoundController.h"
 #import "AIToolbarController.h"
+#import "BZActivityWindowController.h"
 
 @class  AISortController, AILoginController, AIAccountController, AIInterfaceController, AIContactController, 
 		AIPluginController, AIPreferenceController, AIPreferencePane, AIMenuController, AILoginWindowController,
@@ -50,6 +51,7 @@
     IBOutlet	AIDockController            *dockController;
     IBOutlet    ESFileTransferController    *fileTransferController;
     IBOutlet    ESContactAlertsController   *contactAlertsController;
+    IBOutlet    BZActivityWindowController  *activityWindowController;
     
     NSNotificationCenter                    *notificationCenter;
     NSMutableDictionary                     *eventNotifications;
@@ -73,6 +75,7 @@
 - (AIDockController *)dockController;
 - (ESFileTransferController *)fileTransferController;
 - (ESContactAlertsController *)contactAlertsController;
+- (BZActivityWindowController *)activityWindowController;
 
 - (NSNotificationCenter *)notificationCenter;
 - (void)registerEventNotification:(NSString *)inNotification displayName:(NSString *)displayName;
