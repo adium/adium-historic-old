@@ -16,6 +16,12 @@
 
 #import "BDImportController.h"
 
+#import "BDFireImporter.h"
+#import "BDProteusImporter.h"
+#import "BDiChatImporter.h"
+#import "BDAdiumImporter.h"
+#import "BDGaimImporter.h"
+
 @implementation BDImportController
 
 //Data paths for other clients
@@ -101,13 +107,12 @@
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    NSDictionary   *accountsDict = [accountList objectAtIndex:row];
+    //NSDictionary   *accountsDict = [accountList objectAtIndex:row];
 	int serviceValue;
 	if ([[tableColumn identifier] isEqualTo:@"ACCOUNT_SERVICE"]) {
 		serviceValue = [[[accountList objectAtIndex:row] objectForKey:@"ACCOUNT_SERVICE"] intValue];
 		[cell selectItemAtIndex:serviceValue];
 	}
-		
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification

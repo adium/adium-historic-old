@@ -14,11 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "BDClientSupport.h"
-#import "BDFireImporter.h"
-#import "BDImporter.h"
-#import "BDProteusImporter.h"
-#import "BDiChatImporter.h"
+@class BDProteusImporter, BDFireImporter, BDiChatImporter, BDGaimImporter, BDAdiumImporter;
 
 @interface BDImportController : NSObject
 {
@@ -34,8 +30,10 @@
 	BDProteusImporter		*proteus;
 	BDFireImporter			*fire;
 	BDiChatImporter			*iChat;
+	BDGaimImporter			*gaim;
+	BDAdiumImporter			*adium;
+
 	NSMutableArray			*accountList;
-	
 }
 
 #pragma mark -

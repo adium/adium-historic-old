@@ -19,4 +19,17 @@
 
 @implementation BDiChatImporter
 
+- (void)setLogDirectory:(NSString *)logPath
+{
+}
+
+- (NSString *)logDirectory
+{
+	return nil;
+}
+
+- (void)importStatusMessageForType:(NSString *)statusType
+{
+}
+
 @end

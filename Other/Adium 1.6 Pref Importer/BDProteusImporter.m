@@ -32,6 +32,8 @@
 		return @"4";
 	}else if ([fm fileExistsAtPath:PROTEUS3_STATUS_DATA]){
 		return @"3";
+	} else {
+		return @"";
 	}
 }
 
