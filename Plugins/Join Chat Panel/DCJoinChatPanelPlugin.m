@@ -24,6 +24,8 @@
 
 - (void)dealloc
 {
+	[super dealloc];
+	
 	[joinChatMenuItem release];
 }
 
