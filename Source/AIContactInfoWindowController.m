@@ -405,10 +405,10 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 #pragma mark ESImageViewWithImagePicker Delegate
 // ESImageViewWithImagePicker Delegate ---------------------------------------------------------------------
-- (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)sender didChangeToImage:(NSImage *)image
+- (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)sender didChangeToImageData:(NSData *)imageData
 {
 	if (displayedObject){
-		[displayedObject setUserIconData:[image PNGRepresentation]];
+		[displayedObject setUserIconData:imageData];
 	}
 }
 

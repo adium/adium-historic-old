@@ -39,6 +39,8 @@
 	AIAccountProxySettings 		*accountProxyController;
 	AIAccount					*account;
 	
+	NSData						*userIconData;
+
 	//Delete if the sheet is canceled (should be YES when called on a new account, NO otherwise)
 	BOOL	deleteIfCanceled;
 }
