@@ -31,7 +31,8 @@
 - (void)configureTransparency;
 - (void)configureTransparencyForWindow:(NSWindow *)inWindow;
 - (void)_sizeColumnToFit;
-- (void)performFullRecalculationFor:(int)j;
+- (void)_performFullRecalculation;
+- (void)_performFullRecalculationFor:(int)j;
 @end
 
 @implementation AISCLOutlineView
@@ -179,8 +180,32 @@
 
     
 // Auto Sizing --------------------------------------------------------------------------
+//Updates the horizontal size of several objects, posting a desired size did change notification if necessary
+- (void)updateHorizontalSizeForObjects:(NSArray *)inObjects
+{
+	NSEnumerator	*enumerator = [inObjects objectEnumerator];
+	AIListObject	*object;
+	BOOL			changed = NO;
+	
+	while(object = [enumerator nextObject]){
+		if([self _performPartialRecalculationForObject:object]) changed = YES;
+	}
+	
+    if(changed){
+        [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self]; //Resize
+    }
+}
+
 //Updates the horizontal size of an object, posting a desired size did change notification if necessary
 - (void)updateHorizontalSizeForObject:(AIListObject *)inObject
+{
+	if([self _performPartialRecalculationForObject:inObject]){
+        [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self]; //Resize
+	}
+}
+
+//Recalulate an object's size and determine if we need to resize our view
+- (BOOL)_performPartialRecalculationForObject:(AIListObject *)inObject
 {
     NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
     AISCLCell 		*cell = [column dataCell];
@@ -188,11 +213,11 @@
     NSArray			*cellSizeArray;
     BOOL			changed = NO;
     int				j;
-	
+
 	if([self rowForItem:inObject] == -1){ //We don't cache hidden objects
 		for(j=0; j < 3; j++){ //check left, middle, and right
 			if(hadMax[j] == inObject){ //if this object was the largest in terms of j before but is now hidden, then we need to search for the now-largest
-				[self performFullRecalculationFor:j];
+				[self _performFullRecalculationFor:j];
 				changed = YES;
 			}
 		}
@@ -206,27 +231,25 @@
 				hadMax[j] = inObject;
 				changed = YES;
 			} else if ((hadMax[j] == inObject) && (cellWidth != desiredWidth[j]) ) {   //if this object was the largest in terms of j before but is not now, then we need to search for the now-largest
-				[self performFullRecalculationFor:j];
+				[self _performFullRecalculationFor:j];
 				changed = YES;
 			}
 		}   
 	}
 	
-    if(changed){
-        [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self]; //Resize
-    }
+	return(changed);
 }
 
-- (void)performFullRecalculation
+- (void)_performFullRecalculation
 {
     int j;
     for (j=0 ; j < 3 ; j++) {
-        [self performFullRecalculationFor:j];
+        [self _performFullRecalculationFor:j];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self];
 }
 
-- (void)performFullRecalculationFor:(int)j
+- (void)_performFullRecalculationFor:(int)j
 {
     NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
     AISCLCell		*cell = [column dataCell];
@@ -331,6 +354,21 @@
     }else{
         return(nil);
     }
+}
+
+//Return the selected object's containing group
+- (AIListGroup *)listObjectContainingGroup
+{
+    int selectedRow = [self selectedRow];
+	
+	//Is there a faster way to do this? (Since our object may be in multiple groups)
+	while(--selectedRow >= 0){
+		AIListObject	*object = [self itemAtRow:selectedRow];
+
+		if([object isKindOfClass:[AIListGroup class]]) return((AIListGroup *)object);
+	}
+	
+	return(nil);
 }
 
 

@@ -125,7 +125,7 @@
 	if(!object || object == contactList){
 		[contactList release]; contactList = [[[adium contactController] contactList] retain];
 		[contactListView reloadData];
-		[contactListView performFullRecalculation];
+		[contactListView _performFullRecalculation];
 	}else{
 		NSDictionary	*userInfo = [notification userInfo];
 		AIListGroup		*containingGroup = [userInfo objectForKey:@"ContainingGroup"];
@@ -265,7 +265,7 @@
         [contactListView setAlternatingRowColor:gridColor];
 
 
-        [contactListView performFullRecalculation];
+        [contactListView _performFullRecalculation];
         
     }
    
@@ -407,14 +407,11 @@
 
 - (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
 {
-    NSMutableArray      *contactArray =  [[adium contactController] allContactsInGroup:item subgroups:YES];
-    NSEnumerator        *enumerator = [contactArray objectEnumerator];
-    AIListObject        *object;
-    [item setExpanded:state];
+    NSMutableArray      *contactArray = [[adium contactController] allContactsInGroup:item subgroups:YES];
 
-    while(object=[enumerator nextObject]) {
-        [contactListView updateHorizontalSizeForObject:object]; 
-    }
+    [item setExpanded:state];
+	[contactListView updateHorizontalSizeForObjects:contactArray]; 
+	
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item
@@ -494,7 +491,7 @@
 
 - (void)screenParametersChanged:(NSNotification *)notification
 {
-    [contactListView performFullRecalculation];
+    [contactListView _performFullRecalculation];
 }
 
 
