@@ -81,16 +81,17 @@
     if(menuItem == viewContactInfoMenuItem){
         AIListContact	*selectedContact = [[owner contactController] selectedContact];
 
-        if(selectedContact){
+        if(selectedContact && [selectedContact isKindOfClass:[AIListContact class]]){
             [viewContactInfoMenuItem setTitle:[NSString stringWithFormat:@"View %@'s Info",[selectedContact displayName]]];
         }else{
             [viewContactInfoMenuItem setTitle:@"View Contact's Info"];
             valid = NO;
         }
     }else if(menuItem == getInfoContextMenuItem){
-        return([[owner menuController] contactualMenuContact] != nil);
+        AIListContact	*selectedContact = [[owner menuController] contactualMenuContact];
+        if ( !(selectedContact && [selectedContact isKindOfClass:[AIListContact class]]) )
+            valid = NO;
     }
-
     return(valid);
 }
 
