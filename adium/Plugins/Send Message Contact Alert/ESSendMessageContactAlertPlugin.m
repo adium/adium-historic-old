@@ -9,19 +9,62 @@
 #import "ESSendMessageContactAlertPlugin.h"
 #import "ESSendMessageContactAlert.h"
 
+@interface ESSendMessageContactAlertPlugin (PRIVATE)
+- (void)preferencesChanged:(NSNotification *)notification;
+@end
+
 @implementation ESSendMessageContactAlertPlugin
 - (void)installPlugin
 {
     //Install our contact alert
     [[owner contactAlertsController] registerContactAlertProvider:self];
+    
+    attributes = nil;
+    
+    //Observe preference changes
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
 }
 
 - (void)uninstallPlugin
 {
     //Uninstall our contact alert
     [[owner contactAlertsController] unregisterContactAlertProvider:self];
+    
+    [attributes release];
 }
 
+- (void)dealloc
+{
+    [attributes release];
+    [super dealloc];
+}
+
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_FORMATTING] == 0){
+        NSDictionary		*prefDict;
+        NSColor			*textColor;
+        NSColor			*backgroundColor;
+        NSColor			*subBackgroundColor;
+        NSFont			*font;
+        
+        //Get the prefs
+        prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
+        font = [[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont];
+        textColor = [[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor];
+        backgroundColor = [[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor];
+        subBackgroundColor = [[prefDict objectForKey:KEY_FORMATTING_SUBBACKGROUND_COLOR] representedColor];
+        
+        [attributes release];
+        //Setup the attributes
+        if(!subBackgroundColor){
+            attributes = [[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, nil] retain];
+        }else{
+            attributes = [[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, subBackgroundColor, NSBackgroundColorAttributeName, nil] retain];
+        }
+    }
+}
 //*****
 //ESContactAlertProvider
 //*****
@@ -55,7 +98,7 @@
     //Source account
     account = [[owner accountController] accountWithID:[detailsDict objectForKey:KEY_MESSAGE_SENDFROM]];
     
-    message = [[[NSAttributedString alloc] initWithString:details] autorelease];
+    message = [[NSAttributedString alloc] initWithString:details attributes:attributes];
 
     //intended recipient
     uid = [detailsDict objectForKey:KEY_MESSAGE_SENDTO_UID];
@@ -110,6 +153,7 @@
         [[owner interfaceController] handleMessage:title withDescription:alertMessage withWindowTitle:@"Error Sending Message"];
     }
     
+//    [message release];
     return success;
 }
 
