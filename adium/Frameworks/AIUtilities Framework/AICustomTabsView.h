@@ -16,14 +16,17 @@
 #import <Cocoa/Cocoa.h>
 #import "ESFloater.h"
 
-@class AIAdium, AICustomTabCell, AICustomTabsView;
+@class AICustomTabCell, AICustomTabsView;
 
 @protocol AICustomTabsViewDelegate <NSObject>
 - (void)customTabView:(AICustomTabsView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;
 - (void)customTabView:(AICustomTabsView *)tabView shouldCloseTabViewItem:(NSTabViewItem *)tabViewItem;
-- (void)customTabViewDidChangeNumberOfTabViewItems:(AICustomTabsView *)TabView;
-- (void)customTabViewDidChangeOrderOfTabViewItems:(AICustomTabsView *)TabView;
+- (void)customTabViewDidChangeNumberOfTabViewItems:(AICustomTabsView *)tabView;
+- (void)customTabViewDidChangeOrderOfTabViewItems:(AICustomTabsView *)tabView;
+- (void)customTabView:(AICustomTabsView *)tabView didMoveTabViewItem:(NSTabViewItem *)tabViewItem toCustomTabView:(AICustomTabsView *)destTabView index:(int)index screenPoint:(NSPoint)point;
 - (NSMenu *)customTabView:(AICustomTabsView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem;
+- (BOOL)customTabView:(AICustomTabsView *)tabView didAcceptDragPasteboard:(NSPasteboard *)pasteboard onTabViewItem:(NSTabViewItem *)tabViewItem;
+- (NSArray *)customTabViewAcceptableDragTypes:(AICustomTabsView *)tabView;
 @end
 
 @interface AICustomTabsView : NSView {
@@ -31,43 +34,28 @@
 
     NSMutableArray	*tabCellArray;
     AICustomTabCell	*selectedCustomTabCell;
-
+    BOOL                removingLastTabHidesWindow;
+    
     //Images
     NSImage		*tabDivider;
-    
-    BOOL		viewsRearranging;	//YES if our views are currently animating/rearranging
-    int			tabXOrigin;
+    NSTimer             *arrangeCellTimer;
     
     //Drag tracking and receiving
-    NSSize		hoverSize;		//The size of that object
     int			hoverIndex;		//The index it's hovering at
-    BOOL		draggingATabCell;
-    BOOL		focusedForDrag;		//YES if we are being dragged onto
-    BOOL                hovering;
-    
-    //Dragging source
-    NSImage		*dragImage;
-    ESFloater           *dragFloater;
-    NSSize		draggedSize;		//The item's size
-    NSSize		draggedOffset;
-    int			draggedIndex;       
-    BOOL                draggingLastItem;
-    float               tabBarHeight;
-    
     NSPoint		lastClickLocation;
-
-    AIAdium             *owner;
     
     //Delegate
     id <AICustomTabsViewDelegate>	delegate;
 }
 
++ (void)dragTabCell:(AICustomTabCell *)inTabCell fromCustomTabsView:(AICustomTabsView *)sourceView withEvent:(NSEvent *)inEvent;
+- (id <AICustomTabsViewDelegate>)delegate;
 - (void)removeTabViewItem:(NSTabViewItem *)tabViewItem;
-- (void)setOwner:(AIAdium *)inOwner;
-- (void)acceptDropInMessageView;
-- (void)updateHoverAtScreenPoint:(NSPoint)inPoint;
-- (void)removeHover;
-- (void)acceptDropAtScreenPoint:(NSPoint)inPoint;
+- (int)numberOfTabViewItems;
+- (void)setDelegate:(id <AICustomTabsViewDelegate>)inDelegate;
+- (id <AICustomTabsViewDelegate>)delegate;
+- (void)setRemovingLastTabHidesWindow:(BOOL)inValue;
+- (BOOL)removingLastTabHidesWindow;
 
 @end
 

@@ -382,10 +382,18 @@ static AIPreferenceWindowController *sharedInstance = nil;
     //Add in window frame padding
     height += yPadding;
 
+    if([tabView_category respondsToSelector:@selector(setHidden:)]){
+        [tabView_category setHidden:YES];
+    }
+    
     //Adjust our window's frame
     frame.origin.y += frame.size.height - height;
     frame.size.height = height;
     [[self window] setFrame:frame display:isVisible animate:isVisible];
+
+    if([tabView_category respondsToSelector:@selector(setHidden:)]){
+        [tabView_category setHidden:NO];
+    }
 }
 
 //Returns the advanced preference categories
@@ -510,9 +518,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
         
     }else if([item isKindOfClass:[AIPreferencePane class]]){
         float	cellWidth = [outlineView frameOfCellAtColumn:[outlineView indexOfTableColumn:tableColumn] row:[outlineView rowForItem:item]].size.width - 4;
-        
         return([[(AIPreferencePane *)item label] stringByTruncatingTailToWidth:cellWidth]);
-        
     }
     
     return(nil);
