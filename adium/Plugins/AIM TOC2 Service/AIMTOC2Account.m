@@ -75,7 +75,6 @@
 - (void)AIM_LeaveChat:(NSString *)chatID;
 - (NSString *)extractStringFrom:(NSString *)searchString between:(NSString *)stringA and:(NSString *)stringB;
 - (NSString *)validCopyOfString:(NSString *)inString;
-- (void)updateContactStatus:(NSNotification *)notification;
 - (void)pingFailure:(NSTimer *)inTimer;
 - (NSString *)loginStringForName:(NSString *)name password:(NSString *)pass;
 - (IBAction)sendCommand:(NSString *)command;
@@ -119,9 +118,6 @@
     //Defaults
     NSString 	*path = [[NSBundle bundleForClass:[self class]] pathForResource:TOC2_DEFAULTS_FILE ofType:@"plist"];
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:path] forGroup:GROUP_ACCOUNT_STATUS];
-    
-    //
-    [[adium notificationCenter] addObserver:self selector:@selector(updateContactStatus:) name:Contact_UpdateStatus object:nil];
 }
 
 // Return a view for the connection window
@@ -494,17 +490,12 @@
     }
 }
 
-// Update the status of a handle
-- (void)updateContactStatus:(NSNotification *)notification
-{
-    NSArray			*desiredKeys = [[notification userInfo] objectForKey:@"Keys"];
-    AIListContact	*contact = [notification object];
-	
+//Update the status of a contact
+- (void)updateContactStatus:(AIListContact *)inContact
+{	
     //AIM requires a delayed load of profiles...
-    if([[contact statusArrayForKey:@"Online"] greatestIntegerValue]){
-        if([desiredKeys containsObject:@"TextProfile"]){
-            [self AIM_GetProfile:[contact UID]];
-        }
+    if([[inContact statusObjectForKey:@"Online" withOwner:self] boolValue]){
+		[self AIM_GetProfile:[inContact UID]];
     }
 }
 
@@ -747,7 +738,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.113 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.114 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1650,9 +1641,6 @@
 // Dealloc
 - (void)dealloc
 {
-    //Stop observing
-    [[adium notificationCenter] removeObserver:self name:Contact_UpdateStatus object:nil];
-    
     [outQue release];
     [password release];
     [addDict release];

@@ -28,12 +28,10 @@ static AIInfoWindowController *sharedInstance = nil;
     }
 
     if([inContact isKindOfClass:[AIListContact class]]){ //Only allow this for contacts
-        //Let everyone know we want profile information
-        [[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:Contact_UpdateStatus object:inContact userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObjects:@"TextProfile", @"StatusMessage", nil] forKey:@"Keys"]];
+		[[[AIObject sharedAdiumInstance] contactController] updateListContactStatus:inContact];
     
         //Show the window and configure it for the contact
         [sharedInstance configureWindowForContact:inContact];
-        
         [sharedInstance showWindow:nil];
     }
         

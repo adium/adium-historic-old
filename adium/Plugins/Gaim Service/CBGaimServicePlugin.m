@@ -357,8 +357,10 @@ static void *adiumGaimNotifyEmails(size_t count, gboolean detailed, const char *
 
 static void *adiumGaimNotifyFormatted(const char *title, const char *primary, const char *secondary, const char *text, GCallback cb, void *userData)
 {
+#warning called on incoming profile.  Primary = "Buddy Information", text = HTML from info page.  No association with an account.
     //Values passed can be null
     NSLog(@"adiumGaimNotifyFormatted");
+	if(text) NSLog(@"%s",text);
     return(nil);
 }
 

@@ -143,5 +143,6 @@ typedef enum {
 
 //Methods that might be subclassed
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
+- (void)updateContactStatus:(AIListContact *)inContact;
 
 @end

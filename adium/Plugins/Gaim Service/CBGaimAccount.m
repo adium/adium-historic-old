@@ -453,7 +453,16 @@
 /*********************/
 /* AIAccount_Handles */
 /*********************/
-#pragma mark Handles
+#pragma mark Contacts
+
+//Update the status of a contact (Request their profile)
+- (void)updateContactStatus:(AIListContact *)inContact
+{	
+    //Request profile
+    if([[inContact statusObjectForKey:@"Online" withOwner:self] boolValue]){
+		serv_get_info(gc, [[inContact UID] UTF8String]);
+    }
+}
 
 - (void)removeListObjects:(NSArray *)objects
 {
