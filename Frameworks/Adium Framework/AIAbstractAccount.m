@@ -385,14 +385,6 @@
 }
 
 /*!
-* @brief The current status state of this account
- */
-- (AIStatus *)statusState
-{
-	return [self statusObjectForKey:@"StatusState"];
-}
-
-/*!
  * @brief Callback from the threaded filter performed in [self updateStatusForKey:@"StatusState"]
  */
 - (void)gotFilteredStatusMessage:(NSAttributedString *)statusMessage forStatusState:(AIStatus *)statusState
