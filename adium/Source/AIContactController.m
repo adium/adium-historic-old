@@ -159,6 +159,8 @@
 {
     AIContactGroup	*newGroup;
 
+    if(!inGroup) inGroup = [self contactList]; //If no group is specified, we create at the root level
+    
     //create the new group
     newGroup = [AIContactGroup contactGroupWithName:inName];
     [inGroup addObject:newGroup];

@@ -882,12 +882,8 @@ static char *hash_password(const char * const password);
     NSString		*type;
     NSString		*value;
     AIContactGroup	*currentGroup = nil;
-    AIContactGroup	*contactList;
     
     [[owner contactController] delayContactListUpdatesFor:10];
-    
-    //Get the root contact list group
-    contactList = [[owner contactController] contactList];
     
     //Create a scanner
     scanner = [NSScanner scannerWithString:configString];
@@ -908,7 +904,7 @@ static char *hash_password(const char * const password);
                 }else if([type compare:@"g"] == 0){ //GROUP
                     //Create the group
                     if(!(currentGroup = [[owner contactController] groupWithName:value])){
-                        currentGroup = [[owner contactController] createGroupNamed:value inGroup:contactList];
+                        currentGroup = [[owner contactController] createGroupNamed:value inGroup:nil];
                     }
                     
                     //Register as an owner of the group
