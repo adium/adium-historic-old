@@ -9,6 +9,8 @@
 		<string>Generic Available</string>
 		<key>Mutability Type</key>
 		<real>1</real>
+		<key>Unique ID</key>
+		<real>-999</real>
 	</dict>
 	<dict>
 		<key>Status Type</key>
@@ -17,6 +19,8 @@
 		<string>Generic Away</string>
 		<key>Mutability Type</key>
 		<real>1</real>
+		<key>Unique ID</key>
+		<real>-1000</real>
 	</dict>
 </array>
 </plist>
