@@ -3594,6 +3594,7 @@
 				4BAA1B4E0632EEB800D8B92C,
 				4BAA1B540632EF0000D8B92C,
 				4BAA1B5C0632EFB100D8B92C,
+				34C2D31806334A880018E5D2,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4230,6 +4231,7 @@
 				4BAA1B4F0632EEB800D8B92C,
 				4BAA1B550632EF0000D8B92C,
 				4BAA1B5D0632EFB100D8B92C,
+				34C2D31906334A880018E5D2,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6644,6 +6646,46 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34C2D31006334A460018E5D2 = {
+			children = (
+				34C2D31606334A880018E5D2,
+				34C2D31706334A880018E5D2,
+			);
+			isa = PBXGroup;
+			name = Blocking;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C2D31606334A880018E5D2 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESBlockingPlugin.h;
+			path = Plugins/Blocking/ESBlockingPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C2D31706334A880018E5D2 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESBlockingPlugin.m;
+			path = Plugins/Blocking/ESBlockingPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C2D31806334A880018E5D2 = {
+			fileRef = 34C2D31606334A880018E5D2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C2D31906334A880018E5D2 = {
+			fileRef = 34C2D31706334A880018E5D2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34CDB7AE0571D67800D50469 = {
 			children = (
 				4BE9200A03DED0E500A8010A,
@@ -8709,6 +8751,7 @@
 		};
 		4B4F5B25042D637700A8010A = {
 			children = (
+				34C2D31006334A460018E5D2,
 				C4382545062E795000F5A31D,
 				343C89B005704DEC005E0632,
 				4B28907503C1D14200A8010A,
