@@ -752,9 +752,9 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 
 static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-	NSDictionary	*messageDict;
-	NSObject<AdiumGaimDO> *adiumAccount = accountLookup(conv->account);
-	NSString		*messageString;
+	NSDictionary			*messageDict;
+	NSObject<AdiumGaimDO>	*adiumAccount = accountLookup(conv->account);
+	NSString				*messageString;
 	
 	messageString = [NSString stringWithUTF8String:message];
 	
@@ -774,17 +774,46 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const 
 
 static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-	GaimDebug (@"adiumGaimConvWriteConv: %s: %s", who, message);
+	if (flags & GAIM_MESSAGE_SYSTEM){
+		NSString			*messageString = [NSString stringWithUTF8String:message];
+		AIChatUpdateType	updateType = -1;
+		
+		if([messageString rangeOfString:@"timed out"].location != NSNotFound){
+			updateType = AIChatTimedOut;
+		}else if([messageString rangeOfString:@"closed the conversation"].location != NSNotFound){
+			updateType = AIChatClosedWindow;
+		}
+		
+		if (updateType != -1){
+			AIChat	*chat = nil;
+			if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
+				chat = chatLookupFromConv(conv);
+			}else if (gaim_conversation_get_type(conv) == GAIM_CONV_IM){
+				chat = imChatLookupFromConv(conv);
+			}
+
+			if (chat){
+				NSObject<AdiumGaimDO>	*adiumAccount = accountLookup(conv->account);
+
+				[adiumAccount mainPerformSelector:@selector(updateChat:type:)
+									   withObject:chat
+									   withObject:[NSNumber numberWithInt:updateType]];
+			}
+		}
+	}
 }
 
 static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user)
 {
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
+			NSLog(@"adiumGaimConvChatAddUser: CHAT: add %s",user);
 		[accountLookup(conv->account) mainPerformSelector:@selector(addUser:toChat:)
 											   withObject:[NSString stringWithUTF8String:user]
 											   withObject:chatLookupFromConv(conv)];
+	}else{
+		NSLog(@"adiumGaimConvChatAddUser: IM: add %s",user);
 	}
-	
+
 }
 
 static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *users)
@@ -800,10 +829,15 @@ static void adiumGaimConvChatRenameUser(GaimConversation *conv, const char *oldN
 static void adiumGaimConvChatRemoveUser(GaimConversation *conv, const char *user)
 {
  	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
+		NSLog(@"adiumGaimConvChatRemoveUser: CHAT: remove %s",user);
+
 		[accountLookup(conv->account) mainPerformSelector:@selector(removeUser:fromChat:)
 											   withObject:[NSString stringWithUTF8String:user]
 											   withObject:chatLookupFromConv(conv)];
+	}else{
+		NSLog(@"adiumGaimConvChatRemoveUser: IM: remove %s",user);
 	}
+	
 }
 
 static void adiumGaimConvChatRemoveUsers(GaimConversation *conv, GList *users)
@@ -818,7 +852,7 @@ static void adiumGaimConvSetTitle(GaimConversation *conv, const char *title)
 
 static void adiumGaimConvUpdateUser(GaimConversation *conv, const char *user)
 {
-	
+	NSLog(@"adiumGaimConvUpdateUser: %s",user);
 }
 
 static void adiumGaimConvUpdateProgress(GaimConversation *conv, float percent)
@@ -835,12 +869,11 @@ static gboolean adiumGaimConvHasFocus(GaimConversation *conv)
 static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type)
 {
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
-		[accountLookup(conv->account) mainPerformSelector:@selector(updateForChat:type:)
+		[accountLookup(conv->account) mainPerformSelector:@selector(convUpdateForChat:type:)
 											withObject:chatLookupFromConv(conv)
 											   withObject:[NSNumber numberWithInt:type]];
 		
 	}else if (gaim_conversation_get_type(conv) == GAIM_CONV_IM){
-		
 		GaimConvIm  *im = gaim_conversation_get_im_data(conv);
 		switch (type) {
 			case GAIM_CONV_UPDATE_TYPING: {
@@ -1987,6 +2020,10 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     
     //Typing preference
     gaim_prefs_set_bool("/core/conversations/im/send_typing", TRUE);
+	
+	//MSN preferences
+	gaim_prefs_set_bool("/plugins/prpl/msn/conv_close_notice", TRUE);
+	gaim_prefs_set_bool("/plugins/prpl/msn/conv_timeout_notice", TRUE);
 	
 	//Configure signals for receiving gaim events
 	[self configureSignals];

@@ -81,7 +81,10 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 - (void)windowDidLoad
 {
     //Configure the handle type menu
-    [menu_contacts setMenu:[[adium contactController] menuOfContainedContacts:contact forService:service withTarget:self includeOffline:NO]];
+    [menu_contacts setMenu:[[adium contactController] menuOfContainedContacts:contact
+																   forService:service
+																   withTarget:self
+															   includeOffline:NO]];
 	
 	if( [contact isKindOfClass:[AIMetaContact class]] ) {
 #warning Dave: This fails to select anyone for some reason

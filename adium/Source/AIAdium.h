@@ -118,11 +118,11 @@
 #define EXCEPTIONS_PATH		[@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
 #define CRASHES_PATH		[@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
 
-//Localization
-#define AILocalizedString(key, comment) [[NSBundle bundleForClass: [self class]] localizedStringForKey: (key) value:@"" table:nil]
-
 //Webkit-- Controls whether Webkit or SMV plugins work
 #define USE_WEBKIT_PLUGIN		TRUE
+
+//Localization
+#define AILocalizedString(key, comment) [[NSBundle bundleForClass: [self class]] localizedStringForKey: (key) value:@"" table:nil]
 
 //Static strings
 #define DeclareString(var)			static NSString * (var) = nil;

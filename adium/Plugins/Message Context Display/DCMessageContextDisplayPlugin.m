@@ -228,7 +228,7 @@
 																  message:message
 																autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
 						
-						[[adium contentController] displayContentObject:responseContent usingContentFilters:YES];
+						[[adium contentController] displayContentObject:responseContent usingContentFilters:YES immediately:YES];
 					}
 					
 				}
