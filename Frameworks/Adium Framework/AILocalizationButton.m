@@ -1,22 +1,22 @@
 //
-//  AILocalizationTextField.m
+//  AILocalizationButton.m
 //  Adium
 //
-//  Created by Evan Schoenberg on 11/29/04.
+//  Created by Evan Schoenberg on 12/3/04.
 //  Copyright 2004 The Adium Team. All rights reserved.
 //
 
-#import "AILocalizationTextField.h"
+#import "AILocalizationButton.h"
 
-@implementation AILocalizationTextField
+@implementation AILocalizationButton
 
 //Set up our defaults
 - (void)_initLocalizationControl
 {
-	rightAnchorMovementType = AILOCALIZATION_MOVE_ANCHOR;
+	rightAnchorMovementType = AILOCALIZATION_MOVE_SELF;
 }
 
-- (void)setStringValue:(NSString *)inStringValue
+- (void)setTitle:(NSString *)inTitle
 {
 	NSRect			oldFrame;
 	
@@ -28,9 +28,9 @@
 	}
 	
 	//Set to inStringValue, then sizeToFit
-	[super setStringValue:inStringValue];
+	[super setTitle:inTitle];
 	
-	[self _handleSizingWithOldFrame:oldFrame stringValue:inStringValue];
+	[self _handleSizingWithOldFrame:oldFrame stringValue:inTitle];
 }
 
 #include "AILocalizationControl.m"

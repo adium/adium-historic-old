@@ -1,12 +1,12 @@
 //
-//  AILocalizationTextField.h
+//  AILocalizationButton.h
 //  Adium
 //
-//  Created by Evan Schoenberg on 11/29/04.
+//  Created by Evan Schoenberg on 12/3/04.
 //  Copyright 2004 The Adium Team. All rights reserved.
 //
 
-@interface AILocalizationTextField : NSTextField {
+@interface AILocalizationButton : NSButton {
 	NSRect	originalFrame;
 	
 	IBOutlet	NSWindow	*window_anchorOnLeftSide;
@@ -14,6 +14,7 @@
 	
 	IBOutlet	NSView		*view_anchorToLeftSide;
 	IBOutlet	NSView		*view_anchorToRightSide;
+	
 	AILocalizationAnchorMovementType	rightAnchorMovementType;
 }
 
