@@ -46,13 +46,7 @@ static BOOL didInitOscar = NO;
 			if (!ICQServiceID) ICQServiceID = @"ICQ";
 			if (!ICQServiceImage){
 				ICQServiceImage = [[NSImage imageNamed:@"icq" forClass:[self class]] retain];
-				ICQServiceMenuImage = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
-				[ICQServiceMenuImage lockFocus];
-				[ICQServiceImage drawInRect:NSMakeRect(0,0,16,16)
-								   fromRect:NSMakeRect(0,0,[ICQServiceImage size].width,[ICQServiceImage size].height)
-								  operation:NSCompositeCopy
-								   fraction:1.0];
-				[ICQServiceMenuImage unlockFocus];
+				ICQServiceMenuImage = [[ICQServiceImage imageByScalingToSize:NSMakeSize(16,16)] retain];
 			}
 			
 			[self setStatusObject:ICQServiceID forKey:@"DisplayServiceID" notify:YES];

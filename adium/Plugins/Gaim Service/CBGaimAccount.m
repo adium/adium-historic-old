@@ -37,6 +37,7 @@
 
 - (void)_receivedMessage:(NSString *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date;
 - (NSString *)_processGaimImagesInString:(NSString *)inString;
+- (NSString *)_handleFileSendsWithinMessage:(NSString *)encodedMessage toContact:(AIListContact *)listContact;
 - (NSString *)_messageImageCachePathForID:(int)imageID;
 
 - (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer;
@@ -680,6 +681,12 @@ static id<GaimThread> gaimThread = nil;
 						thisPart = [message attributedSubstringFromRange:NSMakeRange(0,operativeRange.location-1)];
 						encodedMessage = [self encodedAttributedString:thisPart forListObject:listObject contentMessage:contentMessage];
 						if (encodedMessage){
+							//Check for the AdiumFT tag indicating an embedded file transfer.
+							//Only deal with scanning deeper if it's found.
+							if ([encodedMessage rangeOfString:@"<AdiumFT " options:NSCaseInsensitiveSearch].location != NSNotFound){
+								encodedMessage = [self _handleFileSendsWithinMessage:encodedMessage
+																		   toContact:(AIListContact *)[chat listObject]];
+							}
 							[gaimThread sendMessage:encodedMessage fromAccount:self inChat:chat withFlags:flags];
 							sent = YES;
 						}
@@ -693,6 +700,12 @@ static id<GaimThread> gaimThread = nil;
 			if ([message length]){
 				encodedMessage = [self encodedAttributedString:message forListObject:listObject contentMessage:contentMessage];
 				if (encodedMessage){
+					//Check for the AdiumFT tag indicating an embedded file transfer.
+					//Only deal with scanning deeper if it's found.
+					if ([encodedMessage rangeOfString:@"<AdiumFT " options:NSCaseInsensitiveSearch].location != NSNotFound){
+						encodedMessage = [self _handleFileSendsWithinMessage:encodedMessage
+																   toContact:(AIListContact *)[chat listObject]];
+					}
 					[gaimThread sendMessage:encodedMessage fromAccount:self inChat:chat withFlags:flags];
 					sent = YES;
 				}
@@ -738,6 +751,64 @@ static id<GaimThread> gaimThread = nil;
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
 {
 	return YES;
+}
+
+- (NSString *)_handleFileSendsWithinMessage:(NSString *)inString toContact:(AIListContact *)listContact
+{
+	if (listContact){
+		NSScanner			*scanner;
+		NSCharacterSet		*tagCharStart, *tagEnd, *absoluteTagEnd;
+		NSString			*chunkString;
+		NSMutableString		*processedString;
+		
+		tagCharStart = [NSCharacterSet characterSetWithCharactersInString:@"<"];
+		tagEnd = [NSCharacterSet characterSetWithCharactersInString:@" >"];
+		absoluteTagEnd = [NSCharacterSet characterSetWithCharactersInString:@">"];
+		
+		scanner = [NSScanner scannerWithString:inString];
+		[scanner setCaseSensitive:NO];
+		[scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
+		
+		processedString = [[NSMutableString alloc] init];
+		
+		//Parse the HTML
+		while(![scanner isAtEnd]){
+			//Find an HTML IMG tag
+			if([scanner scanUpToString:@"<AdiumFT" intoString:&chunkString]){
+				[processedString appendString:chunkString];
+			}
+			
+			//Process the tag
+			if([scanner scanCharactersFromSet:tagCharStart intoString:nil]){ //If a tag wasn't found, we don't process.
+																			 //            unsigned scanLocation = [scanner scanLocation]; //Remember our location (if this is an invalid tag we'll need to move back)
+				
+				//Get the tag itself
+				if([scanner scanUpToCharactersFromSet:tagEnd intoString:&chunkString]){
+					
+					if([chunkString caseInsensitiveCompare:@"AdiumFT"] == 0){
+						if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
+							
+							//Extract the file we wish to send
+							NSDictionary	*imgArguments = [AIHTMLDecoder parseArguments:chunkString];
+							NSString		*filePath = [imgArguments objectForKey:@"src"];
+							
+							//Send the file
+							[[adium fileTransferController] sendFile:filePath toListContact:listContact];
+						}
+					}
+					
+					if (![scanner isAtEnd]){
+						[scanner setScanLocation:[scanner scanLocation]+1];
+					}
+				}
+			}
+		}
+		
+		return ([processedString autorelease]);
+	}else{
+		NSLog(@"Sending a file to a chat.  Are you insane?");
+		return (inString);
+	}
 }
 
 // **XXX** Not used at present. Do we want to?
@@ -1075,8 +1146,12 @@ static id<GaimThread> gaimThread = nil;
 		gaim_proxy_info_set_host(proxy_info, (char *)[host UTF8String]);
 		gaim_proxy_info_set_port(proxy_info, port);
 		
-		gaim_proxy_info_set_username(proxy_info, (char *)[proxyUserName UTF8String]);
-		gaim_proxy_info_set_password(proxy_info, (char *)[proxyPassword UTF8String]);
+		if (proxyUserName && [proxyUserName length]){
+			gaim_proxy_info_set_username(proxy_info, (char *)[proxyUserName UTF8String]);
+			if (proxyPassword && [proxyPassword length]){
+				gaim_proxy_info_set_password(proxy_info, (char *)[proxyPassword UTF8String]);
+			}
+		}
 		
 		GaimDebug (@"Systemwide proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
 		
@@ -1346,7 +1421,6 @@ static id<GaimThread> gaimThread = nil;
 //Set our idle (Pass nil for no idle)
 - (void)setAccountIdleSinceTo:(NSDate *)idleSince
 {
-	NSLog(@"setting account idle to %f",[idleSince timeIntervalSinceNow]);
 	[gaimThread setIdleSinceTo:idleSince onAccount:self];
 	
 	//We now should update our idle status object
@@ -1523,7 +1597,6 @@ static id<GaimThread> gaimThread = nil;
 
 - (void)dealloc
 {	
-	NSLog(@"DEALLOC CBGAIMACCOUNT!");
     [chatDict release];
     [filesToSendArray release];
 	

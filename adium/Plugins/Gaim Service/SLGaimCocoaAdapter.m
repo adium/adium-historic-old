@@ -252,6 +252,7 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					
 					prpl = gaim_find_prpl(gaim_account_get_protocol_id(account));
 					prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(prpl);
+					// ************* ENUMERATE SPACE LORD
 					parts = prpl_info->chat_info(gaim_account_get_connection(account));
 					pce = parts->data;
 
@@ -260,6 +261,8 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 										  g_strdup_printf("%d", /* gc-specific identifier */
 														  pce->identifier));
 					
+					// serv_join_chat(gaim_account_get_connection(account), components);
+
 					gaimChat = gaim_chat_new(account,
 											 name,
 											 components);
