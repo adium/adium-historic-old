@@ -40,6 +40,8 @@ AIDualWindowPreferences, ESDualWindowMessageAdvancedPreferences;
 #define KEY_ENABLE_INACTIVE_TAB_CLOSE		@"Enable Inactive Tab Close"
 #define KEY_KEEP_TABS_ARRANGED				@"Keep Tabs Arranged"
 #define KEY_ARRANGE_TABS_BY_GROUP			@"Arrange Tabs By Group"
+#define	KEY_WINDOW_LEVEL					@"Window Level"
+
 #define PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
 #define KEY_SCL_BORDERLESS					@"Borderless"
 

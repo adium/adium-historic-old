@@ -234,6 +234,17 @@
 		[self updateTabArrangingBehavior];
 		[self updateTabBarVisibilityAndAnimate:!firstTime];
 		[self _updateWindowTitleAndIcon];
+
+		AIWindowLevel	windowLevel = [[prefDict objectForKey:KEY_WINDOW_LEVEL] intValue];
+		int				level;
+		
+		switch(windowLevel){
+			case AINormalWindowLevel: level = NSNormalWindowLevel; break;
+			case AIFloatingWindowLevel: level = NSFloatingWindowLevel; break;
+			case AIDesktopWindowLevel: level = kCGDesktopWindowLevel; break;
+		}
+		[[self window] setLevel:level];
+		[[self window] setIgnoresExpose:(windowLevel == AIDesktopWindowLevel)]; //Ignore expose while on the desktop
     }
 
 	//XXX - Temporary setup for multiple windows
