@@ -38,10 +38,12 @@
 //Path to Adium's application support preferences
 #ifdef NEW_APPLICATION_SUPPORT_DIRECTORY
 #   define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium X"]
-#   define ADIUM_SUBFOLDER_OF_APP_SUPPORT      @"Adium X"
+#   define ADIUM_SUBFOLDER_OF_APP_SUPPORT		@"Adium X"
+#   define ADIUM_SUBFOLDER_OF_LIBRARY			@"Application Support/Adium X"
 #else
 #   define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"]
-#   define ADIUM_SUBFOLDER_OF_APP_SUPPORT      @"Adium 2.0"
+#   define ADIUM_SUBFOLDER_OF_APP_SUPPORT		@"Adium 2.0"
+#   define ADIUM_SUBFOLDER_OF_LIBRARY			@"Application Support/Adium 2.0"
 #endif
 #define ADIUM_FAQ_PAGE						@"http://faq.adiumx.com/"
 #define ADIUM_FORUM_PAGE					@"http://forum.adiumx.com"
@@ -510,58 +512,26 @@ void Adium_HandleSignal(int i){
 //only those pathnames that exist are returned.
 - (NSArray *)resourcePathsForName:(NSString *)name
 {
-	NSFileManager *manager = [NSFileManager defaultManager];
-	NSString *path = NULL;
-	NSMutableArray *pathArray = [NSMutableArray arrayWithCapacity:4];
+	NSArray			*librarySearchPaths;
+	NSEnumerator	*searchPathEnumerator;
+	NSString		*adiumFolderName, *path;
+	NSMutableArray  *pathArray = [NSMutableArray arrayWithCapacity:4];
 
-	NSString *adiumFolderName = ADIUM_SUBFOLDER_OF_APP_SUPPORT;
-	if(name) {
-		adiumFolderName = [adiumFolderName stringByAppendingPathComponent:name];
+	adiumFolderName = (name ? [ADIUM_SUBFOLDER_OF_LIBRARY stringByAppendingPathComponent:name] : ADIUM_SUBFOLDER_OF_LIBRARY);
+
+	//Find Library directories in all domains except /System (as of Panther, that's ~/Library, /Library, and /Network/Library)
+	librarySearchPaths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSAllDomainsMask - NSSystemDomainMask, YES);
+	searchPathEnumerator = [librarySearchPaths objectEnumerator];
+
+	//Copy each discovered path into the pathArray after adding our subfolder path
+	while(path = [searchPathEnumerator nextObject]){
+		[pathArray addObject:[path stringByAppendingPathComponent:adiumFolderName]];
 	}
-
-	FSRef ref;
-	OSStatus err = noErr;
 	
-	// ~/Library/Application\ Support
-	err = FSFindFolder(kUserDomain, kApplicationSupportFolderType, kDontCreateFolder, &ref);
-	if(err == noErr) {
-		path = [NSString pathForFSRef:&ref];
-		if(path) {
-			path = [path stringByAppendingPathComponent:adiumFolderName];
-		}
-		if(path && [manager fileExistsAtPath:path]) {
-			[pathArray addObject:path];
-		}
-	}
-
-	// /Library/Application\ Support
-	err = FSFindFolder(kLocalDomain, kApplicationSupportFolderType, kDontCreateFolder, &ref);
-	if(err == noErr) {
-		path = [NSString pathForFSRef:&ref];
-		if(path) {
-			path = [path stringByAppendingPathComponent:adiumFolderName];
-		}
-		if(path && [manager fileExistsAtPath:path]) {
-			[pathArray addObject:path];
-		}
-	}
-
-	// /Network/Library/Application\ Support
-	err = FSFindFolder(kNetworkDomain, kApplicationSupportFolderType, kDontCreateFolder, &ref);
-	if(err == noErr) {
-		path = [NSString pathForFSRef:&ref];
-		if(path) {
-			path = [path stringByAppendingPathComponent:adiumFolderName];
-		}
-		if(path && [manager fileExistsAtPath:path]) {
-			[pathArray addObject:path];
-		}
-	}
-
-	//Adium bundle
+	//Add the path to the resource in Adium's bundle
 	if(name) {
 		path = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:name] stringByExpandingTildeInPath];
-		if([manager fileExistsAtPath:path]) {
+		if([[NSFileManager defaultManager] fileExistsAtPath:path]) {
 			[pathArray addObject:path];
 		}
 	}
