@@ -23,6 +23,7 @@
 
 @interface NSColor (AIColorAdditions)
 
++ (NSControlTint)currentControlTintSupportingJag;
 - (BOOL)equalToRGBColor:(NSColor *)inColor;
 - (BOOL)colorIsDark;
 - (NSColor *)darkenBy:(float)amount;

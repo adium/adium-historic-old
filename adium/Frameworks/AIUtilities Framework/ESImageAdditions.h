@@ -17,6 +17,6 @@ typedef enum {
 - (NSData *)JPEGRepresentation;
 - (void)tileInRect:(NSRect)rect;
 + (NSImage *)imageFromGWorld:(GWorldPtr)gWorldPtr;
-+ (NSImage *)systemCloseButtonImageForState:(AICloseButtonState)state;
++ (NSImage *)systemCloseButtonImageForState:(AICloseButtonState)state controlTint:(NSControlTint)inTint;
 
 @end
