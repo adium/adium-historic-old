@@ -331,10 +331,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		NSMutableString	*chunk = [[inMessageString substringWithRange:searchRange] mutableCopy];
 
 		//Font (If the color, font, or size has changed)
-		if(thingsToInclude.fontTags && (pointSize != currentSize ||
-							   ![familyName isEqualToString:currentFamily] ||
-							   (color && ![color isEqualToString:currentColor]) ||
-							   (!color && currentColor))){
+		if((thingsToInclude.fontTags && (pointSize != currentSize || ![familyName isEqualToString:currentFamily])) ||
+		   ((color && ![color isEqualToString:currentColor]) || (!color && currentColor))){
 
 			//Close any existing font tags, and open a new one
 			if(thingsToInclude.closingFontTags && openFontTag){
@@ -346,7 +344,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			}
 
 			//Family
-			if(familyName && (![familyName isEqualToString:currentFamily] || thingsToInclude.closingFontTags)){
+			if(thingsToInclude.fontTags && familyName && (![familyName isEqualToString:currentFamily] || thingsToInclude.closingFontTags)){
 				if (thingsToInclude.simpleTagsOnly){
 					[string appendString:[NSString stringWithFormat:@"<FONT FACE=\"%@\">",familyName]];
 				}else{
@@ -364,7 +362,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			}
 
 			//Size
-			if((pointSize != currentSize) && !thingsToInclude.simpleTagsOnly){
+			if(thingsToInclude.fontTags && (pointSize != currentSize) && !thingsToInclude.simpleTagsOnly){
 				[string appendString:[NSString stringWithFormat:SizeTag, (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
 				currentSize = pointSize;
 			}
