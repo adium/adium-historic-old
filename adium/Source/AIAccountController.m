@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.85 2004/06/06 16:26:44 adamiser Exp $
+// $Id: AIAccountController.m,v 1.86 2004/06/07 05:49:35 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -235,7 +235,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		
 		//Prevent any service from going in twice
 		while(existingService = [duplicateEnum nextObject]){
-			if([[existingService identifier] compare:[[[account service] handleServiceType] identifier]] == 0) break;
+			if([[existingService identifier] isEqualToString:[[[account service] handleServiceType] identifier]]) break;
 		}
 		if(existingService == nil){
 			[serviceArray addObject:[[account service] handleServiceType]];
@@ -302,7 +302,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
-        if([inID compare:[account uniqueObjectID]] == 0){
+        if([inID isEqualToString:[account uniqueObjectID]]){
             return(account);
         }
     }
@@ -318,7 +318,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     AIAccount		*account;
     
     while((account = [enumerator nextObject])){
-		if([serviceID compare:[account serviceID]] == 0) [array addObject:account];
+		if([serviceID isEqualToString:[account serviceID]]) [array addObject:account];
     }
     
     return(array);
@@ -482,7 +482,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		//First available account in our list of the correct service type
 		NSEnumerator	*enumerator = [accountArray objectEnumerator];
 		while(account = [enumerator nextObject]){
-			if([[account serviceID] compare:[inObject serviceID]] == 0 &&
+			if([[account serviceID] isEqualToString:[inObject serviceID]] &&
 			   [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType toListObject:nil]){
 				return(account);
 			}
@@ -602,7 +602,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 			if(!inObject && !inPreferred){
 				[sourceAccounts addObject:account];
 
-			}else if([[inObject serviceID] compare:[[[account service] handleServiceType] identifier]] == 0){
+			}else if([[inObject serviceID] isEqualToString:[[[account service] handleServiceType] identifier]]){
 				BOOL			knowsObject = NO;
 				BOOL			canFindObject = NO;
 				AIListContact	*contactForAccount = [[owner contactController] existingContactWithService:[inObject serviceID]
