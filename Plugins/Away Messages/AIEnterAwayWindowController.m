@@ -175,18 +175,19 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
     [super dealloc];
 }
 
+//
+- (NSString *)adiumFrameAutosaveName
+{
+	return(KEY_ENTER_AWAY_WINDOW_FRAME);
+}
+
 //Setup the window after it had loaded
 - (void)windowDidLoad
 {
-    NSString	*savedFrame;
     NSData	*lastAway;
 
-    //Restore the window position
-    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_ENTER_AWAY_WINDOW_FRAME];
-    if(savedFrame){
-        [[self window] setFrameFromString:savedFrame];
-    }
-
+	[super windowDidLoad];
+	
     //Restore the last used custom away
     lastAway = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_QUICK_AWAY_MESSAGE];
     if(lastAway){
@@ -218,15 +219,12 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
 //Close the contact list window
 - (BOOL)windowShouldClose:(id)sender
 {
+	[super windowShouldClose:sender];
+	
     //Save spellcheck state
     [[adium preferenceController] setPreference:[NSNumber numberWithBool:[textView_awayMessage isContinuousSpellCheckingEnabled]]
 										 forKey:KEY_AWAY_SPELL_CHECKING 
 										  group:PREF_GROUP_SPELLING];
-
-    //Save the window position
-    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
-                                         forKey:KEY_ENTER_AWAY_WINDOW_FRAME
-                                          group:PREF_GROUP_WINDOW_POSITIONS];
 
     //Release the shared instance
     [sharedEnterAwayInstance autorelease]; sharedEnterAwayInstance = nil;
