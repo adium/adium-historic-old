@@ -353,8 +353,8 @@
         if([tabView tabViewItemAtIndex:index] != customTabView){
             tabsChanged = YES;
             [customTabView retain];
-                [tabView removeTabViewItem:customTabView];
-                [tabView insertTabViewItem:customTabView atIndex:index];
+	    [tabView removeTabViewItem:customTabView];
+	    [tabView insertTabViewItem:customTabView atIndex:index];
             [customTabView release];
         }
         
