@@ -197,7 +197,6 @@ int HTMLEquivalentForFontSize(int fontSize);
             currentUnderline = NO;
         }
 
-        //
         searchRange.location += searchRange.length;
     }
 
@@ -205,6 +204,9 @@ int HTMLEquivalentForFontSize(int fontSize);
     [currentColor release];
 
     //Finish off the HTML
+    if(includeStyleTags && currentItalic) [string appendString:@"</I>"];
+    if(includeStyleTags && currentBold) [string appendString:@"</B>"];
+    if(includeStyleTags && currentUnderline) [string appendString:@"</U>"];
     if(includeFontTags && closeFontTags && openFontTag) [string appendString:@"</FONT>"];	//Close any open font tag
     if(includeHeaders && pageColor) [string appendString:@"</BODY>"];				//Close the body tag
     if(includeHeaders) [string appendString:@"</HTML>"];					//Close the HTML
