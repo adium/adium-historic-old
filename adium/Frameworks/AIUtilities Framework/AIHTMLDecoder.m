@@ -241,6 +241,7 @@ int HTMLEquivalentForFontSize(int fontSize)
     NSString			*chunkString, *tagOpen;
     NSMutableAttributedString	*attrString;
     AITextAttributes		*textAttributes;
+    BOOL			send, receive, inDiv;
     
     //set up
     textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
@@ -274,6 +275,25 @@ int HTMLEquivalentForFontSize(int fontSize)
                     }else if([chunkString caseInsensitiveCompare:@"/HTML"] == 0){
                         //ignore
 
+                    //PRE -- ignore attributes for logViewer
+                    }else if([chunkString caseInsensitiveCompare:@"PRE"] == 0 || 			     [chunkString caseInsensitiveCompare:@"/PRE"] == 0){
+
+                        [scanner scanUpToCharactersFromSet:absoluteTagEnd 				    intoString:&chunkString];
+                        
+                        [textAttributes setTextColor:[NSColor blackColor]];
+                    //DIV
+                    }else if ([chunkString caseInsensitiveCompare:@"DIV"] == 0){
+                        [scanner scanUpToCharactersFromSet:absoluteTagEnd 				    intoString:&chunkString];
+                        inDiv = YES;
+                        if ([chunkString caseInsensitiveCompare:@" class=\"send\""] == 0) {
+                            send = YES;
+                            receive = NO;
+                        } else if ([chunkString caseInsensitiveCompare:@" class=\"receive\""] == 0) {
+                            receive = YES;
+                            send = NO;
+                        }
+                    }else if ([chunkString caseInsensitiveCompare:@"/DIV"] == 0) {
+                        inDiv = NO;
                     //LINK
                     }else if([chunkString caseInsensitiveCompare:@"A"] == 0){
                         [textAttributes setUnderline:YES];
@@ -299,7 +319,21 @@ int HTMLEquivalentForFontSize(int fontSize)
                     //Font
                     }else if([chunkString caseInsensitiveCompare:@"FONT"] == 0){
                         if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
-                            [self processFontTagArgs:[self parseArguments:chunkString] attributes:textAttributes]; //Process the font tag's contents
+
+                            //Process the font tag if it's in a log
+                            if([chunkString
+caseInsensitiveCompare:@" class=\"sender\""] == 0) {
+                                if(inDiv && send) {
+                                    [textAttributes setTextColor:[NSColor redColor]];
+                                } else if(inDiv && receive) {
+                                    [textAttributes setTextColor:[NSColor blueColor]];
+                                }
+                            } else {
+                                [textAttributes setTextColor:[NSColor blackColor]];
+                            }
+                            
+                            //Process the font tag's contents
+                            [self processFontTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
                         }
                         
                     }else if([chunkString caseInsensitiveCompare:@"/FONT"] == 0){

@@ -106,7 +106,7 @@
     AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
 
     AIChat		*chat = nil;
-    NSString		*message = nil;
+    NSAttributedString	*message = nil;
     AIAccount		*account = nil;
     NSString		*object = nil;
     AIListObject	*source = nil;
@@ -123,10 +123,14 @@
            if(!object) object = [[chat listObject] UID];
         account	= [chat account];
 	source	= [content source];
-	message = (NSString *)[[[content message] safeString] string];
+	message = [[content message] safeString];
 	
         if(account &&/* object && */source){
-	    logMessage = [NSString stringWithFormat:@"(%@)%@:%@\n", dateString, [source UID], message];
+            if ([[account UID] isEqualTo:[source UID]]) {
+                logMessage = [NSString stringWithFormat:@"<div class=\"send\"><font class=\"timestamp\">%@</font> <font class=\"sender\">%@:</font><pre class=\"message\">%@</pre></div>\n", dateString, [source UID], [AIHTMLDecoder encodeHTML:message headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO]];
+            } else {
+                logMessage = [NSString stringWithFormat:@"<div class=\"receive\"><font class=\"timestamp\">%@</font> <font class=\"sender\">%@:</font><pre class=\"message\">%@</pre></div>\n", dateString, [source UID], [AIHTMLDecoder encodeHTML:message headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO]];
+            }
 	}
 
     }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
@@ -137,10 +141,10 @@
            if(!object) object = [[chat listObject] UID];
 	account	= [chat account];
 	source	= [content source];
-        message = (NSString *)[content message];
+        message = [content message];
 
         if(account && source){
-	    logMessage = [NSString stringWithFormat:@"<%@ (%@)>\n", message, dateString];
+	    logMessage = [NSString stringWithFormat:@"<div class=\"status\">%@ (%@)</div>\n", message, dateString];
 	}
     }
 
@@ -179,7 +183,7 @@
 
     //Create path to log file (.../Logs/ServiceID.AccountUID/HandleUID/HandleUID (YY|MM|DD).adiumLog)
     logPath = [[logBasePath stringByAppendingPathComponent:[account UIDAndServiceID]] stringByAppendingPathComponent:object];
-    logFileName = [NSString stringWithFormat:@"%@ (%@).adiumLog", object, [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
+    logFileName = [NSString stringWithFormat:@"%@_(%@).adiumLog.html", object, [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
 
     //Create a directory for this log (if one doesn't exist)
     [AIFileUtilities createDirectory:logPath];
