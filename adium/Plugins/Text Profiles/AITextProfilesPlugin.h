@@ -9,10 +9,16 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-@class AITextProfilePreferences;
+@class AITextProfilePreferences, AIPreferenceViewController;
 
-@interface AITextProfilesPlugin : AIPlugin {
+@interface AITextProfilesPlugin : AIPlugin <AIPreferenceViewControllerDelegate> {
+    IBOutlet	NSView		*view_contactProfileInfoView;
+    IBOutlet	NSTextView	*textView_contactProfile;
+    
     AITextProfilePreferences		*preferences;
+
+    AIPreferenceViewController		*contactProfileView;
+    AIContactHandle			*activeContactObject;
 }
 
 @end
