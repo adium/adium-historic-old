@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.87 2004/07/20 19:02:48 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.88 2004/07/21 14:04:24 adamiser Exp $
 
 #import "AIInterfaceController.h"
 #import "AIContactListWindowController.h"
@@ -136,19 +136,6 @@
 	if(!contactListPlugin) contactListPlugin = [inController retain];
 }
 
-//If no windows are visible, show the contact list
-- (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows
-{
-#warning re-implement
-	//    if(contactListWindowController == nil && [messageWindowControllerArray count] == 0){
-	//		[self showContactList:nil];
-	//		return(NO);
-	//    }else{
-	//		return([interface handleReopenWithVisibleWindows:visibleWindows]);    
-	//	}
-	return YES;
-}
-
 //Preferences changed
 - (void)preferencesChanged:(NSNotification *)notification
 {
@@ -171,6 +158,42 @@
 											 object:nil];
 		}
 	}
+}
+
+//Handle a reopen/dock icon click
+- (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows
+{
+    //The 'visibleWindows' variable passed by the system is unreliable, since the presence
+    //of the Adium system menu will cause it to always be YES.  We won't use it below.
+
+	//If no windows are visible, show the contact list
+	if(![contactListPlugin contactListIsVisibleAndMain] && [[interfacePlugin openContainers] count] == 0){
+		[self showContactList:nil];
+	}else{
+		//If windows are open, try switching to a chat with unviewed content
+		if(![[owner contentController] switchToMostRecentUnviewedContent]){
+			NSEnumerator    *enumerator;
+			NSWindow	    *window, *targetWindow = nil;
+			BOOL	    	unMinimizedWindows = 0;
+			
+			//If there was no unviewed content, ensure that atleast one of Adium's windows is unminimized
+			enumerator = [[NSApp windows] objectEnumerator];
+			while(window = [enumerator nextObject]){
+				//Check stylemask to rule out the system menu's window (Which reports itself as visible like a real window)
+				if(([window styleMask] & (NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask))){
+					if(!targetWindow) targetWindow = window;
+					if(![window isMiniaturized]) unMinimizedWindows++;
+				}
+			}
+			
+			//If there are no unminimized windows, unminimize the last one
+			if(unMinimizedWindows == 0 && targetWindow){
+				[targetWindow deminiaturize:nil];
+			}
+		}
+	}
+	
+    return(NO); //we handled the reopen, return NO so NSApp does nothing.
 }
 		
 
