@@ -53,6 +53,7 @@
     sendOnEnter = YES;
     returnArray = [[NSMutableArray alloc] init];
     historyArray = [[NSMutableArray alloc] initWithObjects:@"",nil];
+    pushArray = [[NSMutableArray alloc] init];
     availableForSending = YES;
     currentHistoryLocation = 0;
     [self setDrawsBackground:YES];
@@ -205,6 +206,14 @@
 
     //notify target
     [target performSelector:selector];
+
+    //Pop from the push array
+    if([pushArray count]){
+        [[self textStorage] setAttributedString:[pushArray lastObject]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
+        [self setSelectedRange:NSMakeRange([[self textStorage] length], 0)]; //selection to end
+        [pushArray removeLastObject];
+    }
 }
 
 // Required protocol methods --------------------------------------------------------
@@ -233,7 +242,7 @@
     }
 
     //
-    [self textDidChange:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
 }
 
 //
@@ -281,6 +290,13 @@
         //Display history
         [self setAttributedString:[historyArray objectAtIndex:currentHistoryLocation]];
         [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
+
+    }else{
+        //Push message
+        if([[self textStorage] length] != 0){
+            [pushArray addObject:[[self textStorage] copy]];
+            [self setAttributedString:[[[NSAttributedString alloc] initWithString:@"" attributes:[self typingAttributes]] autorelease]];
+        }
     }
 }
 
@@ -346,6 +362,8 @@
 
     [chat release];
     [returnArray release]; returnArray = nil;
+    [historyArray release]; historyArray = nil;
+    [pushArray release]; pushArray = nil;
     [super dealloc];
 }
 

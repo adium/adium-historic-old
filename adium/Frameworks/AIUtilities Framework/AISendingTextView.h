@@ -31,6 +31,7 @@
     BOOL		availableForSending;
 
     NSMutableArray	*historyArray;
+    NSMutableArray	*pushArray;
     int 		currentHistoryLocation;
 
     NSSize		lastPostedSize;
