@@ -1,17 +1,17 @@
 /*-------------------------------------------------------------------------------------------------------*\
 | Adium, Copyright (C) 2001-2004, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
-                                              \---------------------------------------------------------------------------------------------------------/
-                                              | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
-                                              | General Public License as published by the Free Software Foundation; either version 2 of the License,
-                                              | or (at your option) any later version.
-                                              |
-                                              | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
-                                              | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
-                                              | Public License for more details.
-                                              |
-                                              | You should have received a copy of the GNU General Public License along with this program; if not,
-                                              | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-                                              \------------------------------------------------------------------------------------------------------ */
+\---------------------------------------------------------------------------------------------------------/
+| This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+| General Public License as published by the Free Software Foundation; either version 2 of the License,
+| or (at your option) any later version.
+|
+| This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+| the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+| Public License for more details.
+|
+| You should have received a copy of the GNU General Public License along with this program; if not,
+| write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+\------------------------------------------------------------------------------------------------------ */
 
 #import "AIAwayMessagePreferences.h"
 #import "AIAwayMessagesPlugin.h"
@@ -156,7 +156,7 @@
     NSEnumerator	*enumerator;
     NSDictionary	*dict;
     NSMutableArray	*saveArray = [NSMutableArray array];
-    
+
     enumerator = [array objectEnumerator];
     while((dict = [enumerator nextObject])){
         NSString	*type = [dict objectForKey:@"Type"];
@@ -187,7 +187,7 @@
             [saveArray addObject:newDict];
         }
     }
-    
+
     return(saveArray);
 }
 
@@ -624,7 +624,10 @@
         }else if([type isEqualToString:@"Away"]){ //If they are dragging an away
             if(item == nil){ //To root
                 [dragItem retain];
-                [self removeObject:dragItem fromArray:awayMessageArray]; //Remove from old location.  We can't use removeObject, since it will treat similar aways as identical and remove them all!
+				
+				//Remove from old location.  We can't use removeObject, since it will treat similar aways as identical
+				//and remove them all!
+                [self removeObject:dragItem fromArray:awayMessageArray];
                 
                 if (index == -1){
                     [awayMessageArray addObject:dragItem];
@@ -650,6 +653,11 @@
     [outlineView_aways scrollRowToVisible:[outlineView_aways rowForItem:dragItem]];
     [self outlineViewSelectionDidChange:nil];
     
+	//On the next run loop, save the newly-orded away messages array
+	[self performSelector:@selector(saveAwayMessages)
+			   withObject:nil
+			   afterDelay:0.0001];
+	
     return(YES);
 }
 
