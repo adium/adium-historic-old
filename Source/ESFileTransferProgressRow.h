@@ -37,7 +37,6 @@
 							  to:(float)newHeight;
 
 - (FileTransferType)type;
-- (BOOL)isStopped;
 
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent;
 

@@ -88,6 +88,8 @@ typedef enum {
 - (AIListObject *)source;
 - (AIListObject *)destination;
 
+- (BOOL)isStopped;
+
 - (void)cancel;
 - (void)reveal;
 - (void)openFile;
