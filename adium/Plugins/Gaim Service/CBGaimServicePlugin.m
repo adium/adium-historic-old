@@ -217,17 +217,18 @@ static void adiumGaimConvDestroy(GaimConversation *conv)
 
 static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-    NSLog(@"adiumGaimConvWriteChat");
+    NSLog(@"adiumGaimConvWriteChat: %s: %s", who, message);
 }
 
 static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-    NSLog(@"adiumGaimConvWriteIm");
+    NSLog(@"adiumGaimConvWriteIm: name=%s, who=%s: %s",
+          conv->name, who, message);
 }
 
 static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-    NSLog(@"adiumGaimConvWriteConv");
+    NSLog(@"adiumGaimConvWriteConv: %s: %s", who, message);
 }
 
 static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user)
