@@ -125,7 +125,6 @@
 				3499F45006309AC80035B468,
 				3499F45106309AC80035B468,
 				4947F5CB0655E85200B791E5,
-				BFEBDBFF0669029800CBF845,
 				7ECB106706A4D1AD00812D5F,
 				349ECD2007C1BE2A0014623E,
 			);
@@ -177,7 +176,6 @@
 				34BD9CD1053146CC000AB133,
 				4B7F78B40597F42400162728,
 				34BD9F2C0531477E000AB133,
-				BFEBDBFE0669029800CBF845,
 				34BD9DAF05314751000AB133,
 				7E6642C10653363A0050E8C8,
 				4B7F278205440C0800CDFC90,
@@ -223,10 +221,13 @@
 		29B97323FDCFA39411CA2CEA = {
 			children = (
 				348E5ACA06D2A74C004C051C,
-				3448758D06D1EBDF00DA778C,
-				F531836F019E40BB01A80165,
-				34B588A0058D833A00E7EF0D,
 				F5819CE9032124CE01A8010A,
+				34D8370007CBF97A006466F2,
+				34D836FF07CBF979006466F2,
+				F531836F019E40BB01A80165,
+				3448758D06D1EBDF00DA778C,
+				34B588A0058D833A00E7EF0D,
+				34D836F307CBF960006466F2,
 				34E839050583207E00F2AADB,
 				9C103FAE057127A500F3C158,
 			);
@@ -5971,12 +5972,6 @@
 			settings = {
 			};
 		};
-		34B588A4058D83D300E7EF0D = {
-			fileRef = 34B588A0058D833A00E7EF0D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34B5EBA106589A88007B9A56 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -7361,6 +7356,7 @@
 		34BD9D57053146CC000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
+				34D835D907CBED8F006466F2,
 				3448758E06D1EBDF00DA778C,
 				7E4694830653403600E4F390,
 				3419F7760531512200C68BA3,
@@ -7526,9 +7522,11 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				INFOPLIST_FILE = Plists/Adium_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = "-seg1addr 0x10000000";
@@ -7538,6 +7536,7 @@
 				WRAPPER_EXTENSION = framework;
 			};
 			dependencies = (
+				34D8371407CBFC4C006466F2,
 			);
 			isa = PBXNativeTarget;
 			name = Adium.Framework;
@@ -7626,7 +7625,6 @@
 				34D8350707CBE889006466F2,
 				34D8350807CBE889006466F2,
 				34D8350907CBE889006466F2,
-				34D8350A07CBE889006466F2,
 				34D8350B07CBE889006466F2,
 			);
 			isa = PBXHeadersBuildPhase;
@@ -7772,7 +7770,6 @@
 				34D8351507CBE8AB006466F2,
 				34D8351607CBE8AB006466F2,
 				34D8351707CBE8AB006466F2,
-				34D8351807CBE8AB006466F2,
 				34D8351907CBE8AB006466F2,
 				34BD9DC905314751000AB133,
 				34BD9DCA05314751000AB133,
@@ -7909,8 +7906,12 @@
 		34BD9DDB05314751000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
+				34D836E507CBF593006466F2,
 				3448761406D1EC0C00DA778C,
-				34B588A4058D83D300E7EF0D,
+				34D835D807CBED81006466F2,
+				34D836F407CBF960006466F2,
+				34D8370107CBF97A006466F2,
+				34D8370207CBF97A006466F2,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9730,33 +9731,13 @@
 				34D834CD07CBE7A3006466F2,
 				34D8346E07CBE6F5006466F2,
 				34D8344007CBE6E1006466F2,
-				34D8343007CBE6BD006466F2,
 				34D8346C07CBE6F4006466F2,
 				34D8346D07CBE6F5006466F2,
 				34D8343F07CBE6E1006466F2,
-				34D8342F07CBE6BD006466F2,
 				34D8346B07CBE6F4006466F2,
 			);
 			isa = PBXGroup;
 			name = "External Sources";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34D8342F07CBE6BD006466F2 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = pxmLib.m;
-			path = "Frameworks/Adium Framework/pxmLib.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34D8343007CBE6BD006466F2 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = pxmLib.h;
-			path = "Frameworks/Adium Framework/pxmLib.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -10150,12 +10131,6 @@
 			settings = {
 			};
 		};
-		34D8350A07CBE889006466F2 = {
-			fileRef = 34D8343007CBE6BD006466F2;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34D8350B07CBE889006466F2 = {
 			fileRef = 34D8346C07CBE6F4006466F2;
 			isa = PBXBuildFile;
@@ -10228,12 +10203,6 @@
 			settings = {
 			};
 		};
-		34D8351807CBE8AB006466F2 = {
-			fileRef = 34D8342F07CBE6BD006466F2;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34D8351907CBE8AB006466F2 = {
 			fileRef = 34D8346B07CBE6F4006466F2;
 			isa = PBXBuildFile;
@@ -10251,6 +10220,96 @@
 			isa = PBXTargetDependency;
 			name = "AIUtilities (from AIUtilities.framework.xcode)";
 			targetProxy = 34D8353807CBEA21006466F2;
+		};
+		34D835D707CBED79006466F2 = {
+			fileRef = 34D834D207CBE7B2006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D835D807CBED81006466F2 = {
+			fileRef = 34D834D207CBE7B2006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D835D907CBED8F006466F2 = {
+			fileRef = 34D834D207CBE7B2006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D836E507CBF593006466F2 = {
+			fileRef = F531836F019E40BB01A80165;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D836F307CBF960006466F2 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = QuickTime.framework;
+			path = /System/Library/Frameworks/QuickTime.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		34D836F407CBF960006466F2 = {
+			fileRef = 34D836F307CBF960006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D836FF07CBF979006466F2 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = AudioUnit.framework;
+			path = /System/Library/Frameworks/AudioUnit.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		34D8370007CBF97A006466F2 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = AudioToolbox.framework;
+			path = /System/Library/Frameworks/AudioToolbox.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		34D8370107CBF97A006466F2 = {
+			fileRef = 34D836FF07CBF979006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8370207CBF97A006466F2 = {
+			fileRef = 34D8370007CBF97A006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8371307CBFC4C006466F2 = {
+			containerPortal = 3448717006D1E57700DA778C;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = AIUtilities;
+		};
+		34D8371407CBFC4C006466F2 = {
+			isa = PBXTargetDependency;
+			name = "AIUtilities (from AIUtilities.framework.xcode)";
+			targetProxy = 34D8371307CBFC4C006466F2;
+		};
+		34D8371507CBFC57006466F2 = {
+			containerPortal = 3448717006D1E57700DA778C;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = AIUtilities;
+		};
+		34D8371607CBFC57006466F2 = {
+			isa = PBXTargetDependency;
+			name = "AIUtilities (from AIUtilities.framework.xcode)";
+			targetProxy = 34D8371507CBFC57006466F2;
 		};
 		34DF006707A788AC00B92233 = {
 			fileEncoding = 4;
@@ -15116,12 +15175,11 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Plugins/Gaim Service\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Plugins/Gaim Service\" \"Frameworks/AIUtilities Framework/build\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = "\"Plugins/Gaim Service/Libgaim.framework/Headers\" \"Plugins/Gaim Service/Include/glib\" \"Plugins/Gaim Service/Include/glib/glib\" \"Plugins/Gaim Service/Include/glib/gmodule\" \"Plugins/Gaim Service/Include/\"";
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
-				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = "";
 				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = Gaim;
@@ -15303,7 +15361,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "@executable_path/../../../../Frameworks/";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
@@ -20154,6 +20212,7 @@
 		7E6642C00653363A0050E8C8 = {
 			buildActionMask = 2147483647;
 			files = (
+				34D835D707CBED79006466F2,
 				3448761706D1EC6300DA778C,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -20171,10 +20230,11 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks \"Frameworks";
+				HEADER_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				INFOPLIST_FILE = Plists/AdiumHyperlinks_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = "-seg1addr 0x10600000";
@@ -20184,6 +20244,7 @@
 				ZERO_LINK = YES;
 			};
 			dependencies = (
+				34D8371607CBFC57006466F2,
 			);
 			isa = PBXNativeTarget;
 			name = AdiumHyperlinks.framework;
@@ -21622,120 +21683,6 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
-		BFEBDBFA0669029800CBF845 = {
-			buildActionMask = 2147483647;
-			files = (
-				BFEBDC0B066903A700CBF845,
-				BFEBDC190669054A00CBF845,
-				BFEBDC1B0669054A00CBF845,
-				BFEBDC1D0669054A00CBF845,
-				BFEBDC1F0669054A00CBF845,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BFEBDBFB0669029800CBF845 = {
-			buildActionMask = 2147483647;
-			files = (
-				BFEBDC220669054A00CBF845,
-				BFEBDC230669054A00CBF845,
-				BFEBDC240669054A00CBF845,
-				BFEBDC250669054A00CBF845,
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BFEBDBFC0669029800CBF845 = {
-			buildActionMask = 2147483647;
-			files = (
-				BFEBDC1A0669054A00CBF845,
-				BFEBDC1C0669054A00CBF845,
-				BFEBDC1E0669054A00CBF845,
-				BFEBDC200669054A00CBF845,
-				BFEBDC210669054A00CBF845,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BFEBDBFD0669029800CBF845 = {
-			buildActionMask = 2147483647;
-			files = (
-				BFEBDC2C066908F700CBF845,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BFEBDBFE0669029800CBF845 = {
-			buildPhases = (
-				BFEBDBFA0669029800CBF845,
-				BFEBDBFB0669029800CBF845,
-				BFEBDBFC0669029800CBF845,
-				BFEBDBFD0669029800CBF845,
-				BFEBDC29066907D900CBF845,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = WebAdium/WebAdium.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INFOPLIST_FILE = "WebAdium/WebAdium-Info.plist";
-				INSTALL_PATH = "$(USER_APPS_DIR)";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = WebAdium;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost";
-			};
-			dependencies = (
-			);
-			isa = PBXNativeTarget;
-			name = WebAdium;
-			productName = WebAdium;
-			productReference = BFEBDBFF0669029800CBF845;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>WebAdium</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>com.MySoftwareCompany.WebAdium</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0.0d1</string>
-	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
-</dict>
-</plist>
-";
-			productType = "com.apple.product-type.application";
-		};
-		BFEBDBFF0669029800CBF845 = {
-			explicitFileType = wrapper.application;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = WebAdium.app;
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		BFEBDC010669029900CBF845 = {
 			isa = PBXFileReference;
 			lastKnownFileType = text.xml;
@@ -21752,12 +21699,6 @@
 			path = WebAdium/WebAdium.pch;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
-		};
-		BFEBDC0B066903A700CBF845 = {
-			fileRef = BFEBDC0A066903A600CBF845;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		BFEBDC0C0669054800CBF845 = {
 			fileEncoding = 30;
@@ -21871,99 +21812,6 @@
 			path = WebAdium/WebWindow.nib;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		BFEBDC190669054A00CBF845 = {
-			fileRef = BFEBDC0C0669054800CBF845;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BFEBDC1A0669054A00CBF845 = {
-			fileRef = BFEBDC0D0669054800CBF845;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BFEBDC1B0669054A00CBF845 = {
-			fileRef = BFEBDC0E0669054900CBF845;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BFEBDC1C0669054A00CBF845 = {
-			fileRef = BFEBDC0F0669054900CBF845;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BFEBDC1D0669054A00CBF845 = {
-			fileRef = BFEBDC100669054900CBF845;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BFEBDC1E0669054A00CBF845 = {
-			fileRef = BFEBDC110669054900CBF845;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BFEBDC1F0669054A00CBF845 = {
-			fileRef = BFEBDC120669054900CBF845;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BFEBDC200669054A00CBF845 = {
-			fileRef = BFEBDC130669054900CBF845;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BFEBDC210669054A00CBF845 = {
-			fileRef = BFEBDC140669054A00CBF845;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BFEBDC220669054A00CBF845 = {
-			fileRef = BFEBDC150669054A00CBF845;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BFEBDC230669054A00CBF845 = {
-			fileRef = BFEBDC160669054A00CBF845;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BFEBDC240669054A00CBF845 = {
-			fileRef = BFEBDC170669054A00CBF845;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BFEBDC250669054A00CBF845 = {
-			fileRef = BFEBDC180669054A00CBF845;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		BFEBDC29066907D900CBF845 = {
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			isa = PBXCopyFilesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BFEBDC2C066908F700CBF845 = {
-			fileRef = 9C103FAE057127A500F3C158;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 //BF0
 //BF1
