@@ -113,8 +113,12 @@
 				if ([containingObject isKindOfClass:[AIMetaContact class]]){
 					[(AIMetaContact *)containingObject containedMetaContact:self
 									  didChangeContainsOnlyOneUniqueContact:containsOnlyOneUniqueContact];
+				}else{
+					[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+															  object:self
+															userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+																								 forKey:@"Notify"]];
 				}
-				
 			}
 		}
 		
@@ -334,6 +338,8 @@
 #warning rework to handle containsOnlyOneService checking simultaneously
 - (void)_determineIfWeShouldAppearToContainOnlyOneContact
 {
+	BOOL oldOnlyOne = containsOnlyOneUniqueContact;
+	
 	unsigned int count = [self containedObjectsCount];
 	
 	if (count > 1){
@@ -424,6 +430,13 @@
 	
 	//Clear our preferred contact so the next call to it will update the preferred contact
 	_preferredContact = nil;
+	
+	if (oldOnlyOne != containsOnlyOneUniqueContact){
+		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+												  object:self
+												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+																					 forKey:@"Notify"]];
+	}
 }
 
 
@@ -675,13 +688,23 @@
 #warning debugging
 - (NSString *)displayName
 {
-	return [[super displayName] stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]];
+	NSString	*displayName = [super displayName];
+	if (!displayName){
+		displayName = [[self preferredContact] displayName];
+	}
+	
+	return [displayName stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]];
 }
 
 - (NSString *)longDisplayName
 {
-    NSString	*outName = [[self displayArrayForKey:@"Long Display Name"] objectValue];
-    return(outName ? [outName stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]] : [self displayName]);
+	NSString	*longDisplayName = [[self displayArrayForKey:@"Long Display Name"] objectValue];
+
+	if (!longDisplayName){
+		longDisplayName = [[self preferredContact] longDisplayName];
+	}
+	
+    return([longDisplayName stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]]);
 }
 
 @end
