@@ -124,7 +124,7 @@ extern void* objc_getClass(const char *name);
         id		chat;
         id		messageObject;
 
-        message = [[(AIContentMessage *)object message] string];
+        message = [AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message]];
 
         //Create a chat & send the message
         //(I guess I could cache these chats)
