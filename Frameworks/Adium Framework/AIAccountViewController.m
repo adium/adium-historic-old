@@ -63,6 +63,10 @@ Adium, Copyright 2001-2005, Adam Iser
  */
 - (void)dealloc
 {    
+	[view_setup release];
+	[view_profile release];
+	[view_options release];
+
     [[adium contactController] unregisterListObjectObserver:self];
     [[adium notificationCenter] removeObserver:self];
     
