@@ -324,7 +324,7 @@
 //Handle a request
 - (void)handleRequest:(long)requestID type:(unsigned short)type flags:(unsigned short)flags packet:(AIOscarPacket *)inPacket
 {
-    switch(type){
+     switch(type){
         case 0x0001: NSLog(@"Error: %@",inPacket); break;
         case 0x0005: [self _handleMessageRights:inPacket]; break;
         case 0x0007: [self _handleMessageIn:inPacket]; break;
@@ -391,12 +391,11 @@
 
     //Get channel
     [inPacket getShortValue:&channel];
-
     //Get standard info
     infoBlock = [AIOscarInfo extractInfoFromPacket:inPacket name:&name warnLevel:nil];
-
     //Read the message
     if(channel == 1){ //Messages
+
         AIOscarTLVBlock		*messageBlock;
         NSString		*data;
         const char		*bytes;
@@ -459,9 +458,10 @@
             offset += length;
         }
 
+        NSLog(@"OscarMessage past while; the message is %@ and the name is %@",messageString,name);
         //
         [account receivedMessage:messageString fromContact:name];
-
+        NSLog(@"this is after receivedMessage");
         //Typing
         if([messageBlock containsValueForType:0x000b]){
             [account noteContact:name typing:NO];

@@ -112,19 +112,16 @@
 - (void)update:(NSTimer *)timer
 {
     AIOscarPacket	*packet;
-
     //Process a packet
     while(packet = [AIOscarPacket packetFromSocket:socket]){
         unsigned short	family, type, flags;
         long		requestID;
-
         //Get the family and type
         if([packet getSnacFamily:&family type:&type flags:&flags requestID:&requestID]){
             id <AIOscarModule>	module;
-
             //Pass the request to the correct module
             if(module = [supportedModules objectForIntegerKey:family]){
-                //NSLog(@"->0x%04x, 0x%04x",family,type);
+             //   NSLog(@"->0x%04x, 0x%04x",family,type);
                 [module handleRequest:requestID type:type flags:flags packet:packet];
 
             }else{
