@@ -24,14 +24,15 @@
 - (void)raise
 {
     //Ignore various harmless or unavoidable exceptions the system uses
-    if ((![self reason]) || ([[self reason] isEqualToString:@"_sharedInstance is invalid."])) {
+    if ((![self reason]) ||
+		([[self reason] isEqualToString:@"_sharedInstance is invalid."])) {
     
 	    [super raise];
 		
-    } if ((![self name]) || 
+    } else if ((![self name]) || 
 		  ([[self name] isEqualToString:@"GIFReadingException"]) || 
 		  ([[self name] isEqualToString:@"NSPortTimeoutException"]) ||
-		  ([[self name] isEqualToString:@"NSAccessibilityException"]) ){
+		  ([[self name] isEqualToString:@"NSAccessibilityException"])) {
 	
 	    [super raise];
 	
