@@ -13,14 +13,16 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#define PREF_GROUP_CONTACT_SORTING			@"Sorting"
 #define KEY_CURRENT_SORT_MODE_IDENTIFIER	@"Sort Mode"
 
 @class AIContactSortPreferences;
 
 @interface AIContactSortSelectionPlugin : AIPlugin {
     AIContactSortPreferences	*preferences;
-    
+	NSMenuItem					*menuItem_sort;
+	NSMenu						*menu_sortSubmenu;
+	NSMenuItem					*menuItem_configureSort;
+	BOOL						enableConfigureSort;
 }
 
 @end
