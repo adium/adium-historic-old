@@ -313,7 +313,7 @@ DeclareString(AppendNextMessage);
 
 - (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject
 {
-	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.tiff",[inObject uniqueObjectID],[NSString randomStringOfLength:5]];
+	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.tiff",[inObject internalObjectID],[NSString randomStringOfLength:5]];
 	return([[@"~/Library/Caches/Adium" stringByExpandingTildeInPath] stringByAppendingPathComponent:filename]);
 }	
 //WebView preferences --------------------------------------------------------------------------------------------------
@@ -947,8 +947,7 @@ DeclareString(AppendNextMessage);
 		do{
 			range = [inString rangeOfString:@"%service%"];
 			if(range.location != NSNotFound){
-				NSString	*displayServiceID = [contentSource displayServiceID];
-				[inString replaceCharactersInRange:range withString:displayServiceID];
+				[inString replaceCharactersInRange:range withString:[[contentSource service] shortDescription]];
 			}
 		} while(range.location != NSNotFound);	
 
