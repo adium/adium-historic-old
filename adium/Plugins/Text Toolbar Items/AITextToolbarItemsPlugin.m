@@ -19,7 +19,7 @@
 
     //Bold
     toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"Bold"];
-    [toolbarItem setImage:[AIImageUtilities imageNamed:@"bold" forClass:[self class]]];
+    [toolbarItem setImage:[AIImageUtilities imageNamed:@"Bold_Off" forClass:[self class]]];
     [toolbarItem setTarget:self];
     [toolbarItem setAction:@selector(bold:)];
     [toolbarItem setToolTip:@"Bold"];
@@ -32,36 +32,48 @@
 
 - (IBAction)bold:(AIMiniToolbarItem *)toolbarItem
 {
-    NSView<AITextEntryView>	*text = [[toolbarItem configurationObjects] objectForKey:@"TextEntryView"];
-
-    [text setSelectedTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor yellowColor],NSBackgroundColorAttributeName,nil]];
-
-    NSLog(@"%@",text);
+    NSFontManager		*fontManager = [NSFontManager sharedFontManager];
+    NSView<AITextEntryView>	*textEntryView;
+    NSMutableAttributedString	*text;
+    NSFont			*currentFont;
+    NSRange			selectedRange;
+    NSRange			effectiveRange;
+    BOOL			makingBold;
     
-    /*
-    - (NSAttributedString *)attributedString;
-    - (void)setAttributedString:(NSAttributedString *)inAttributedString;
-    - (NSRange)selectedRange;
-    - (void)setSelectedRange:(NSRange)inRange;
-    - (void)setSelectedTextAttributes:(NSDictionary *)attributeDictionary;
-    - (NSDictionary *)selectedTextAttributes;
-*/    
+    //Get the text entry view and text
+    textEntryView = [[toolbarItem configurationObjects] objectForKey:@"TextEntryView"];
+    text = [[textEntryView attributedString] mutableCopy];
+    selectedRange = [textEntryView selectedRange];
+
+    //Figure out if we'll be adding bold, or removing bold
+    currentFont = [text attribute:NSFontAttributeName atIndex:selectedRange.location effectiveRange:nil];
+    makingBold = !([fontManager traitsOfFont:currentFont] & NSBoldFontMask);
+    
+    //Change the text
+    effectiveRange = selectedRange;
+    while(effectiveRange.location < (selectedRange.location + selectedRange.length) ){
+        currentFont = [text attribute:NSFontAttributeName atIndex:effectiveRange.location effectiveRange:&effectiveRange];
+
+        if(makingBold){ //Make the font bold
+            currentFont = [fontManager convertFont:currentFont toHaveTrait:NSBoldFontMask];
+        }else{ //make the font non-bold
+            currentFont = [fontManager convertFont:currentFont toNotHaveTrait:NSBoldFontMask];
+        }
+
+        //Apply the new attributes
+        [text addAttribute:NSFontAttributeName
+                     value:currentFont
+                     range:NSIntersectionRange(effectiveRange, selectedRange)];
+        effectiveRange.location += effectiveRange.length;
+    }
+
+    //Apply the changes
+    [textEntryView setAttributedString:text]; 
 }
 
 - (void)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
 {
-/*    NSString	*identifier = [inToolbarItem identifier];
 
-    if([identifier compare:@"NewMessage"] == 0){
-        AIContactObject		*handle = [inObjects objectForKey:@"ContactObject"];
-
-        if(handle && [handle isKindOfClass:[AIContactHandle class]]){
-            [inToolbarItem setEnabled:YES];
-        }else{
-            [inToolbarItem setEnabled:NO];
-        }
-
-    }*/
 }
         
 @end

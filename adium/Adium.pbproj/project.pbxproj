@@ -659,22 +659,6 @@
 //4A2
 //4A3
 //4A4
-//A10
-//A11
-//A12
-//A13
-//A14
-		A1D4691E03AFDDFC00A8000D = {
-			isa = PBXBundleReference;
-			name = "Standard Contact List Preferences.AdiumPlugin";
-			path = "build/Standard Contact List Preferences.AdiumPlugin";
-			refType = 4;
-		};
-//A10
-//A11
-//A12
-//A13
-//A14
 //F50
 //F51
 //F52
@@ -2586,6 +2570,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				F5DDB1CD03B6BDDA01A8010A,
 				F551A50603AC4C5001A8010A,
 				F551A50703AC4C5001A8010A,
 				F551A50803AC4C5001A8010A,
@@ -2832,6 +2817,7 @@
 		};
 		F551A4F903AC4C2301A8010A = {
 			children = (
+				F5DDB1C403B6BDDA01A8010A,
 				40AC0F0C03B5C1F000A80202,
 				F50F254A03B0431C01A80202,
 				F551A4FA03AC4C4E01A8010A,
@@ -2842,7 +2828,6 @@
 				F551A4FF03AC4C4F01A8010A,
 				F551A50003AC4C4F01A8010A,
 				F551A50103AC4C4F01A8010A,
-				A1D4691E03AFDDFC00A8000D,
 				F551A50203AC4C4F01A8010A,
 				F551A50303AC4C4F01A8010A,
 				F551A50403AC4C4F01A8010A,
@@ -7501,6 +7486,8 @@
 		F5D2FB7803B6643B01A8010A = {
 			buildActionMask = 2147483647;
 			files = (
+				F5DDB1D003B6BFBF01A8010A,
+				F5DDB1D103B6BFBF01A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7634,6 +7621,8 @@
 			children = (
 				F5D2FB8503B664AD01A8010A,
 				F5D2FB8103B6649C01A8010A,
+				F5DDB1CE03B6BFBF01A8010A,
+				F5DDB1CF03B6BFBF01A8010A,
 			);
 			isa = PBXGroup;
 			name = "Text Toolbar Items";
@@ -7721,6 +7710,42 @@
 		F5DD9944032BE95301A8010A = {
 			isa = PBXTargetDependency;
 			target = F53B9A0E02CCED8B01A8010A;
+		};
+		F5DDB1C403B6BDDA01A8010A = {
+			isa = PBXBundleReference;
+			name = "Text Toolbar Items.AdiumPlugin";
+			path = "build/Text Toolbar Items.AdiumPlugin";
+			refType = 4;
+		};
+		F5DDB1CD03B6BDDA01A8010A = {
+			fileRef = F5DDB1C403B6BDDA01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5DDB1CE03B6BFBF01A8010A = {
+			isa = PBXFileReference;
+			name = Bold_Off.tiff;
+			path = "Plugins/Text Toolbar Items/Bold_Off.tiff";
+			refType = 4;
+		};
+		F5DDB1CF03B6BFBF01A8010A = {
+			isa = PBXFileReference;
+			name = Bold_On.tiff;
+			path = "Plugins/Text Toolbar Items/Bold_On.tiff";
+			refType = 4;
+		};
+		F5DDB1D003B6BFBF01A8010A = {
+			fileRef = F5DDB1CE03B6BFBF01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5DDB1D103B6BFBF01A8010A = {
+			fileRef = F5DDB1CF03B6BFBF01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		F5E6713603B4D12601A8010A = {
 			children = (

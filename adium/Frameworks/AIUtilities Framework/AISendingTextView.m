@@ -136,7 +136,20 @@
 
 - (void)setAttributedString:(NSAttributedString *)inAttributedString
 {
+    int		length = [inAttributedString length];
+    NSRange 	oldRange = [self selectedRange];
+
+    //Change our string
     [[self textStorage] setAttributedString:inAttributedString];
+
+    //Restore the old selected range
+    if(oldRange.location < length){
+        if(oldRange.location + oldRange.length <= length){
+            [self setSelectedRange:oldRange];
+        }else{
+            [self setSelectedRange:NSMakeRange(oldRange.location, length - oldRange.location)];       
+        }
+    }
 }
 
 //Handled automatically by our superclasses:
@@ -146,12 +159,7 @@
 - (NSRange)selectedRange{
     return([super selectedRange]);
 }
-- (void)setSelectedTextAttributes:(NSDictionary *)attributeDictionary{
-    [super setSelectedTextAttributes:attributeDictionary];
-}
-- (NSDictionary *)selectedTextAttributes{
-    return([super selectedTextAttributes]);
-}
+
 
 
 //Private ------------------------------------------------------------------------------------

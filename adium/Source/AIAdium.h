@@ -117,8 +117,6 @@ typedef enum {
 - (void)setAttributedString:(NSAttributedString *)inAttributedString;
 - (NSRange)selectedRange;
 - (void)setSelectedRange:(NSRange)inRange;
-- (void)setSelectedTextAttributes:(NSDictionary *)attributeDictionary;
-- (NSDictionary *)selectedTextAttributes;
 @end
 
 @protocol AIContentHandler //Handles the display of a content type
