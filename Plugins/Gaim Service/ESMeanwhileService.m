@@ -55,5 +55,8 @@
 - (AIServiceImportance)serviceImportance{
 	return(AIServiceSecondary);
 }
+- (BOOL)canCreateGroupChats{
+	return(YES);
+}
 
 @end
