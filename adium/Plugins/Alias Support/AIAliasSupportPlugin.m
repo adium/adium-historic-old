@@ -94,7 +94,7 @@
 													  group:PREF_GROUP_ALIASES 
 									  ignoreInheritedValues:YES]
 						toObject:inObject
-						  notify:YES]);
+						  notify:/*YES*/silent]);
     }
 	
 	return(nil);
