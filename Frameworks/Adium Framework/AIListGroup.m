@@ -251,7 +251,6 @@
 	
     //Sort this group
     if(sortController){
-		//We assume that, in general, the array is already close to being properly sorted
 		NSMutableArray	*sortedListObjects;
 		
 		sortedListObjects = [[sortController sortListObjects:containedObjects] mutableCopy];

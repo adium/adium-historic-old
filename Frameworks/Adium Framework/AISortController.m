@@ -110,6 +110,17 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	return(index);
 }
 
+/*!
+ * @brief Sort an array of list objects
+ *
+ * The passed list objects are sorted using sortFunction.
+ *
+ * We assume that, in general, the array is already close to being properly sorted; we therefore generate and use a hint.
+ * This mildly hurts our worst case performance, but it improves both our best and average cases, so it is a worthwhile tradeoff.
+ *
+ * @param inObjects An NSArray of AIListObject instances to sort
+ * @result A sorted NSArray containing the same AIListObjects from inObjects
+ */
 - (NSArray *)sortListObjects:(NSArray *)inObjects
 {
 	return [inObjects sortedArrayUsingFunction:(alwaysSortGroupsToTop ? basicGroupVisibilitySort : basicVisibilitySort)
