@@ -24,23 +24,41 @@
     [super init];
 
     displayDictionary = [[NSMutableDictionary alloc] init];
-    containingGroup = nil;
+    containingGroups = [[NSMutableArray alloc] init];
     UID = [inUID retain];
     serviceID = [inServiceID retain];
-    orderIndex = -1;
-    statusDictionary = [[NSMutableDictionary alloc] init];
-	changedStatusKeys = nil;
 
-    //
-    prefDict = [[NSDictionary dictionaryAtPath:[self pathToPreferences] withName:[self UIDAndServiceID] create:NO] mutableCopy];
+	orderIndex = 0;
+	orderIndexGroup = nil;
+	multipleOrderIndex = nil;
+	delayedStatusTimers = nil;
+	
+	visible = YES;
+    statusDictionary = [[NSMutableDictionary alloc] init];
+    changedStatusKeys = [[NSMutableArray alloc] init];
+
+    //Load our object specific preferences
+    prefDict = [[NSDictionary dictionaryAtPath:[self pathToPreferences]
+									  withName:[self UIDAndServiceID] create:NO] mutableCopy];
 	
     return(self);
 }
 
 - (void)dealloc
 {
+	NSEnumerator	*enumerator;
+	NSTimer			*timer;
+	
+	//Invalidate any outstanding delayed status changes
+	enumerator = [delayedStatusTimers objectEnumerator];
+	while(timer = [enumerator nextObject]){
+		[timer invalidate];
+	}
+	[delayedStatusTimers release];
+	
+	//
     [displayDictionary release];
-    [containingGroup release];
+    [containingGroups release];
     [statusDictionary release];
     [serviceID release];
     [prefDict release];
@@ -50,20 +68,20 @@
 
 
 //Identification --------------------------------------------------------------------------------
-//UID, identification of this object
+//Unique identification string for this object
 - (NSString *)UID
 {
     return(UID);
 }
 
-//
+//Identification string for the service owning this contact
 - (NSString *)serviceID
 {
     return(serviceID);
 }
 
-//
-- (NSString *)UIDAndServiceID //ServiceID.UID
+//Super unique ID string, combining both UID and service ID
+- (NSString *)UIDAndServiceID
 {
     if(serviceID){
         return([NSString stringWithFormat:@"%@.%@",serviceID,UID]);
@@ -72,32 +90,89 @@
     }
 }
 
-//Manual Ordering
-- (void)setOrderIndex:(float)inIndex
-{
-    orderIndex = inIndex;
+
+//Visibility -----------------------------------------------------------------------------------------------------------
+//Toggle visibility of this object
+- (void)setVisible:(BOOL)inVisible
+{	
+	if(visible != inVisible){
+		NSEnumerator	*enumerator = [containingGroups objectEnumerator];
+		AIListGroup		*group;
+		
+		//
+		visible = inVisible;
+
+		//Let our containing groups know about the visibility change
+		while(group = [enumerator nextObject]){
+			[group visibilityOfContainedObject:self changedTo:inVisible];
+		}
+	}
 }
-- (float)orderIndex{
-    return(orderIndex);
+
+//Return current visibility of this object
+- (BOOL)isVisible
+{
+	return(visible);
 }
 
 
-//Nesting --------------------------------------------------------------------------------
-//Returns the group this object is in (will be nil for the root object)
-- (AIListGroup *)containingGroup
+//Grouping / Ownership ------------------------------------------------------------------------------------------
+//Return the local groups this object is in (will be nil for the root object)
+- (NSArray *)containingGroups
 {
-    return(containingGroup);
+    return(containingGroups);
 }
 
-//Sets the group this object is in
-- (void)setContainingGroup:(AIListGroup *)inGroup
+//Returns our desired placement within a group
+- (float)orderIndexForGroup:(AIListGroup *)inGroup
 {
-    if(inGroup == nil){
-        [containingGroup release]; containingGroup = nil;
+	if(orderIndexGroup == inGroup){
+		return(orderIndex);
+	}else if(multipleOrderIndex){
+		return([[multipleOrderIndex objectWithOwner:inGroup] floatValue]);
+	}else{
+		return(0);
+	}
+}
 
-    }else{
-        containingGroup = [inGroup retain];
-    }
+//Alter the placement of this object in a group (PRIVATE: These are for AIListGroup ONLY)
+- (void)setOrderIndex:(float)inIndex forGroup:(AIListGroup *)inGroup
+{
+	NSLog(@"(%@)setOrderIndex:%i forGroup:%@",[self displayName], inIndex, [inGroup displayName]);
+
+	if(inIndex != 0){ //Add
+		if((orderIndexGroup == nil && multipleOrderIndex == nil) || orderIndexGroup == inGroup){
+			//This is our first grouping, or an update to the existing grouping
+			orderIndex = inIndex;
+			orderIndexGroup = inGroup;
+		}else{
+			if(multipleOrderIndex == nil){
+				//This is a new group, giving us two groups total
+				multipleOrderIndex = [[AIMutableOwnerArray alloc] init];
+				[multipleOrderIndex setObject:[NSNumber numberWithFloat:orderIndex] withOwner:orderIndexGroup];
+				[multipleOrderIndex setObject:[NSNumber numberWithFloat:inIndex] withOwner:inGroup];
+				orderIndex = 0;
+				orderIndexGroup = nil;
+				
+			}else{
+				//This is an update or addition to the existing multiple groups
+				[multipleOrderIndex setObject:[NSNumber numberWithFloat:inIndex] withOwner:inGroup];
+				
+			}
+		}
+	}else{ //Remove
+		//Whoops, can't do that yet :)
+	}
+}
+
+//Alter the local grouping for this object (PRIVATE: These are for AIListGroup ONLY)
+- (void)addContainingGroup:(AIListGroup *)inGroup
+{
+	[containingGroups addObject:inGroup];
+}
+- (void)removeContainingGroup:(AIListGroup *)inGroup
+{
+	[containingGroups removeObject:inGroup];
 }
 
 
@@ -212,18 +287,19 @@
 {    
     //Set the new value
     if(value != nil){
-	if(!prefDict) prefDict = [[NSMutableDictionary alloc] init];
-	[prefDict setObject:value forKey:inKey];
+		if(!prefDict) prefDict = [[NSMutableDictionary alloc] init];
+		[prefDict setObject:value forKey:inKey];
     }else{
         [prefDict removeObjectForKey:inKey];
     }
     
     //Save
-    [prefDict writeToPath:[self pathToPreferences]
-		 withName:[self UIDAndServiceID]];
+    [prefDict writeToPath:[self pathToPreferences] withName:[self UIDAndServiceID]];
     
     //Broadcast a preference changed notification
-    [[adium notificationCenter] postNotificationName:Preference_GroupChanged object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
+    [[adium notificationCenter] postNotificationName:Preference_GroupChanged
+											  object:self
+											userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
 }
 
 //Retrieve a preference value (with the option of ignoring inherited values)
@@ -231,9 +307,9 @@
 {
     //If ignore is yes, retrieve a preference value for this list object only, returning nil if no value is present
     if(ignore){
-	return([prefDict objectForKey:inKey]);
+		return([prefDict objectForKey:inKey]);
     }else{
-	return([self preferenceForKey:inKey group:groupName]);
+		return([self preferenceForKey:inKey group:groupName]);
     }
 }
 
@@ -255,14 +331,17 @@
     
     //If we don't have a value
     if(!value){
-	if(containingGroup){
-	    //return the value of the group that contains us
-	    value = [containingGroup preferenceForKey:inKey group:groupName];
-	    
-	}else{
-	    //If we are the root group, return Adium's global preference for this key
-	    value = [[adium preferenceController] preferenceForKey:inKey group:groupName];
-	}
+#warning (Intentional) Preferences will only inherit from the first occurence of a list object.
+		//Is the ability to inherit from multiple locations worth the performance impact it would have
+		//for those contacts?  Is inheriting from multiple places the behavior we want?
+		if([containingGroups count]){
+			//return the value of the group that contains us
+			value = [[containingGroups objectAtIndex:0] preferenceForKey:inKey group:groupName];
+			
+		}else{
+			//If we are the root group, return Adium's global preference for this key
+			value = [[adium preferenceController] preferenceForKey:inKey group:groupName];
+		}
     }
     
     return(value);
@@ -333,6 +412,5 @@
     }
     return (outName);
 }
-
 
 @end
