@@ -47,24 +47,18 @@
 	[[adium contentController] registerChatObserver:self];
 		
     //Prefs
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DOCK_OVERLAYS];
 	
     //
     image1 = [[NSImage alloc] initWithSize:NSMakeSize(128,128)];
     image2 = [[NSImage alloc] initWithSize:NSMakeSize(128,128)];
 }
 
-- (void)preferencesChanged:(NSNotification *)notification
-{
-	NSString *group;
-	
-	group = (NSString *)[[notification userInfo] objectForKey:@"Group"];
-	
-	///*
-    if(notification == nil || [group isEqualToString:PREF_GROUP_LIST_THEME]){
-        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
-		
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+{	
+    if([group isEqualToString:PREF_GROUP_LIST_THEME]){
 		//Snatch colors from status coloring plugin's prefs    
 		[self flushPreferenceColorCache];
         signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
@@ -75,11 +69,8 @@
         backSignedOnColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor] retain];
         backUnviewedContentColor = [[[prefDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor] retain];
     }
-	//*/
     
-    if(notification == nil || [group isEqualToString:PREF_GROUP_DOCK_OVERLAYS]){
-        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DOCK_OVERLAYS];
-		
+    if([group isEqualToString:PREF_GROUP_DOCK_OVERLAYS]){
         //
         showStatus = [[prefDict objectForKey:KEY_DOCK_SHOW_STATUS] boolValue];
         showContent = [[prefDict objectForKey:KEY_DOCK_SHOW_CONTENT] boolValue];
