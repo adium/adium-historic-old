@@ -69,7 +69,7 @@
 {
     AIAccount		*account = [chat account];
     AIContentTyping	*contentObject;
- 
+
     //Send typing content object (It will go directly to the account since typing content isn't tracked or filtered)
     contentObject = [AIContentTyping typingContentInChat:chat
                                               withSource:account
@@ -94,10 +94,16 @@
 
 - (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
+    AIChat	*chat = [inTextEntryView chat];
+
+    //Send a 'not-typing' message to this contact
+    if([[[chat statusDictionary] objectForKey:WE_ARE_TYPING] boolValue] && [[chat statusDictionary] objectForKey:CAN_RECEIVE_TYPING] != nil){
+        [self _sendTyping:NO toChat:chat];
+    }
+
+    //We could choose to de-clear the contact for typing notifications here as well
     //AIChat		*chat = [inTextEntryView chat];
-    //We could choose to de-clear the contact for typing notifications here
     //[[chat statusDictionary] removeObjectForKey:CAN_RECEIVE_TYPING];
-    
 }
 
 @end
