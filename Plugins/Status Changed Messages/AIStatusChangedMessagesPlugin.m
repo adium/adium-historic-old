@@ -40,7 +40,7 @@
 	NSString		*statusType = @"away_message";
 	
 	if(statusMessage && [statusMessage length] != 0){
-		[self statusMessage:[NSString stringWithFormat:@"Away Message: %@",statusMessage] forContact:contact withType:statusType];
+		[self statusMessage:[NSString stringWithFormat:AILocalizedString(@"Away Message: %@",nil),statusMessage] forContact:contact withType:statusType];
 	}
 }
 
@@ -48,38 +48,38 @@
     AIListContact *contact = [notification object];
 	NSString *statusType = @"away";
 	
-    [self statusMessage:[NSString stringWithFormat:@"%@ went away",[contact displayName]] forContact:contact withType:statusType];
+    [self statusMessage:[NSString stringWithFormat:AILocalizedString(@"%@ went away",nil),[contact displayName]] forContact:contact withType:statusType];
 }
 - (void)Contact_StatusAwayNo:(NSNotification *)notification{
     AIListContact *contact = [notification object];
 	NSString *statusType = @"return_away";
     
     if([contact integerStatusObjectForKey:@"Online"])
-		[self statusMessage:[NSString stringWithFormat:@"%@ came back",[contact displayName]] forContact:contact withType:statusType];
+		[self statusMessage:[NSString stringWithFormat:AILocalizedString(@"%@ came back",nil),[contact displayName]] forContact:contact withType:statusType];
 }
 - (void)Contact_StatusOnlineYes:(NSNotification *)notification{
     AIListContact *contact = [notification object];
 	NSString *statusType = @"online";
 	
-	[self statusMessage:[NSString stringWithFormat:@"%@ connected",[contact displayName]] forContact:contact withType:statusType];
+	[self statusMessage:[NSString stringWithFormat:AILocalizedString(@"%@ connected",nil),[contact displayName]] forContact:contact withType:statusType];
 }
 - (void)Contact_StatusOnlineNO:(NSNotification *)notification{
     AIListContact *contact = [notification object];
 	NSString *statusType = @"offline";
 	
-	[self statusMessage:[NSString stringWithFormat:@"%@ disconnected",[contact displayName]] forContact:contact withType:statusType];
+	[self statusMessage:[NSString stringWithFormat:AILocalizedString(@"%@ disconnected",nil),[contact displayName]] forContact:contact withType:statusType];
 }
 - (void)Contact_StatusIdleYes:(NSNotification *)notification{
     AIListContact *contact = [notification object];
 	NSString *statusType = @"idle";
 	
-	[self statusMessage:[NSString stringWithFormat:@"%@ went idle",[contact displayName]] forContact:contact withType:statusType];
+	[self statusMessage:[NSString stringWithFormat:AILocalizedString(@"%@ went idle",nil),[contact displayName]] forContact:contact withType:statusType];
 }
 - (void)Contact_StatusIdleNo:(NSNotification *)notification{
     AIListContact *contact = [notification object];
 	NSString *statusType = @"return_idle";
 	
-	[self statusMessage:[NSString stringWithFormat:@"%@ became active",[contact displayName]] forContact:contact withType:statusType];
+	[self statusMessage:[NSString stringWithFormat:AILocalizedString(@"%@ became active",nil),[contact displayName]] forContact:contact withType:statusType];
 }
 
 
