@@ -17,8 +17,6 @@
 
 - (void)setImage:(NSImage *)inImage;
 - (NSImage *)image;
-- (void)setSmallImage:(NSImage *)image;
-- (NSImage *)smallImage;
 
 - (void)setToolbarItem:(NSToolbarItem *)item;
 - (NSToolbarItem *)toolbarItem;
