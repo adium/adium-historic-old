@@ -5283,6 +5283,36 @@
 			settings = {
 			};
 		};
+		34AC36B907B5C51400145239 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIStatus.h;
+			path = "Frameworks/Adium Framework/AIStatus.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34AC36BA07B5C51400145239 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIStatus.m;
+			path = "Frameworks/Adium Framework/AIStatus.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34AC36BB07B5C51500145239 = {
+			fileRef = 34AC36B907B5C51400145239;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34AC36BC07B5C51500145239 = {
+			fileRef = 34AC36BA07B5C51400145239;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34ADC00205F3A75700ABFCAA = {
 			children = (
 				34ADC03505F3A86600ABFCAA,
@@ -7131,6 +7161,7 @@
 				078C5CD2079EFF88004C75A4,
 				4B588C9D07AC23B3001832A9,
 				3448055107AC5151006A7F7B,
+				34AC36BB07B5C51500145239,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7319,6 +7350,7 @@
 				078C5CD3079EFF88004C75A4,
 				4B588C9E07AC23B3001832A9,
 				3448055007AC5151006A7F7B,
+				34AC36BC07B5C51500145239,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12994,6 +13026,8 @@
 		};
 		4B587CAB07ABFF18001832A9 = {
 			children = (
+				34AC36B907B5C51400145239,
+				34AC36BA07B5C51400145239,
 				4B588C9B07AC23B2001832A9,
 				4B588C9C07AC23B2001832A9,
 				4B588C9807AC23A9001832A9,
