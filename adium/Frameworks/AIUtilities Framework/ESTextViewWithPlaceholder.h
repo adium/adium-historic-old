@@ -1,6 +1,6 @@
 //
 //  ESTextViewWithPlaceholder.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Fri Dec 26 2003.
 

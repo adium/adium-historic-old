@@ -1,6 +1,6 @@
 //
 //  ESFloater.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Wed Oct 08 2003.
 //

@@ -51,6 +51,7 @@
     autoScrollToBottom = NO;
     autoHideScrollBar = NO;
     updateShadowsWhileScrolling = NO;
+	passKeysToDocumentView = NO;
     [self setAutoHideScrollBar:YES];
 }
 
@@ -177,6 +178,85 @@
 - (void)setUpdateShadowsWhileScrolling:(BOOL)inValue
 {
     updateShadowsWhileScrolling = inValue;   
+}
+
+//Key forwarding
+- (void)setPassKeysToDocumentView:(BOOL)inValue
+{
+	passKeysToDocumentView = inValue;
+}
+
+- (void)keyDown:(NSEvent*)theEvent
+{
+	NSString *charactersIgnoringModifiers = [theEvent charactersIgnoringModifiers];
+	
+	if ([charactersIgnoringModifiers length]) {
+		unichar inChar = [charactersIgnoringModifiers characterAtIndex:0];
+		
+		switch(inChar)
+		{
+			case NSUpArrowFunctionKey:
+			{
+				NSRect visibleRect = [self documentVisibleRect];
+				visibleRect.origin.y -= [self verticalLineScroll]*2;
+				[[self documentView] scrollRectToVisible:visibleRect]; 
+				break;
+			}
+				
+			case NSDownArrowFunctionKey:
+			{
+				NSRect visibleRect = [self documentVisibleRect];
+				visibleRect.origin.y += [self verticalLineScroll]*2;
+				[[self documentView] scrollRectToVisible:visibleRect]; 
+				break;
+			}
+				
+			case NSPageUpFunctionKey:
+			{
+				[self pageUp:nil];
+				break;
+			}
+				
+			case NSPageDownFunctionKey:
+			{
+				[self pageDown:nil];
+				break;
+			}
+				
+			case NSHomeFunctionKey:
+			{
+				NSRect visibleRect = [self documentVisibleRect];
+				visibleRect.origin.y = 0;
+				[[self documentView] scrollRectToVisible:visibleRect]; 
+				break;
+			}
+				
+			case NSEndFunctionKey:
+			{
+				NSRect frame = [[self documentView] frame];
+				frame.origin.y = frame.size.height;
+				frame.size.height = 0;
+				[[self documentView] scrollRectToVisible:frame];
+				break;
+			}
+				
+			default:
+			{
+				if (passKeysToDocumentView){
+					[[self documentView] keyDown:theEvent];
+				}else{
+					[super keyDown:theEvent];
+				}
+				break;
+			}
+		}
+	}else{
+		if (passKeysToDocumentView){
+			[[self documentView] keyDown:theEvent];
+		}else{
+			[super keyDown:theEvent];
+		}	
+	}
 }
 
 @end

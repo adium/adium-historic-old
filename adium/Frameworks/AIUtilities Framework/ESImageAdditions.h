@@ -1,6 +1,6 @@
 //
 //  ESImageAdditions.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Tue Dec 02 2003.
 

@@ -1,6 +1,6 @@
 //
 //  AILaTeXPlugin.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Stephen Poprocki on Sat Dec 13 2003.
 //

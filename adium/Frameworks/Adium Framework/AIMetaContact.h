@@ -1,6 +1,6 @@
 //
 //  AIMetaContact.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Adam Iser on Wed Jan 28 2004.
 

@@ -1,6 +1,6 @@
 //
 //  ESContactSortConfigurationWindowController.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Tue Mar 09 2004.
 

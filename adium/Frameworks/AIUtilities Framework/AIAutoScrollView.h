@@ -19,7 +19,8 @@
     BOOL	autoScrollToBottom;
     BOOL	autoHideScrollBar;
     
-    BOOL        updateShadowsWhileScrolling;
+    BOOL	updateShadowsWhileScrolling;
+	BOOL	passKeysToDocumentView;
 }
 
 - (void)setAutoHideScrollBar:(BOOL)inValue;
@@ -28,5 +29,6 @@
 - (void)scrollToBottom;
 - (void)setCorrectScrollbarVisibility;
 - (void)setUpdateShadowsWhileScrolling:(BOOL)inValue;
+- (void)setPassKeysToDocumentView:(BOOL)inValue;
 
 @end

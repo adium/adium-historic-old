@@ -1,6 +1,6 @@
 //
 //  ESAddressBookIntegrationPlugin.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 19 2003.
 //

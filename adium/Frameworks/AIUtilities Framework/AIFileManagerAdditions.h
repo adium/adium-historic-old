@@ -1,6 +1,6 @@
 //
 //  AIFileManagerAdditions.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Adam Iser on Tue Dec 23 2003.
 //

@@ -1,6 +1,6 @@
 //
 //  ESArrayAdditions.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Sat Jan 10 2004.
 

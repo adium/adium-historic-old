@@ -1,6 +1,6 @@
 //
 //  ESSendMessageContactAlert.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Fri Nov 28 2003.
 

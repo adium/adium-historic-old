@@ -1,6 +1,6 @@
 //
 //  CBContactCountingDisplayPlugin.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Colin Barrett on Sun Jan 11 2004.
 //

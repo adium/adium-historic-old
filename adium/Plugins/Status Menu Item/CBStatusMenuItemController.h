@@ -1,6 +1,6 @@
 //
 //  CBStatusMenuItemController.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Colin Barrett on Thu Nov 27 2003.
 //

@@ -1,6 +1,6 @@
 //
 //  ESContactClientPlugin.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Fri Feb 13 2004.
 //

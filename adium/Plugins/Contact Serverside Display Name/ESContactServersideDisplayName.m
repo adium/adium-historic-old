@@ -1,6 +1,6 @@
 //
 //  ESContactServersideDisplayName.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Evan Schoenberg on Mon Mar 01 2004.
 //
