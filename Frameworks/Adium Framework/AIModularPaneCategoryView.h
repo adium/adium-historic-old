@@ -15,11 +15,13 @@
 
 @interface AIModularPaneCategoryView : NSView {
     int		desiredHeight;
+	BOOL	containsPanes;
 }
 
 - (void)setDesiredHeight:(int)inHeight;
 - (int)desiredHeight;
 - (void)setPanes:(NSArray *)paneArray;
 + (int)heightForTabView:(NSTabView *)tabView;
+- (BOOL)isEmpty;
 
 @end
