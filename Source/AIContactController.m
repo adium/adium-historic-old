@@ -726,6 +726,19 @@ DeclareString(UID);
 	return success;
 }
 
+- (void)removeAllListObjectsMatching:(AIListObject *)listObject fromMetaContact:(AIMetaContact *)metaContact
+{
+	NSEnumerator	*enumerator;
+	AIListObject	*theObject;
+	
+	enumerator = [[self allContactsWithService:[listObject service]
+										  UID:[listObject UID]] objectEnumerator];
+
+	while (theObject = [enumerator nextObject]){
+		[self removeListObject:theObject fromMetaContact:metaContact];
+	}
+}
+
 - (void)removeListObject:(AIListObject *)listObject fromMetaContact:(AIMetaContact *)metaContact
 {
 	NSEnumerator		*enumerator;
