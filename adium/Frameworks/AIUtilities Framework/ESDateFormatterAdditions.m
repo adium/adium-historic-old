@@ -20,66 +20,29 @@ typedef enum
 
 + (NSString *)localizedDateFormatStringShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm
 {
-    static NSString *formatString = nil, *formatStringWithSeconds = nil, *formatStringWithAMorPM = nil, *formatStringWithSecondsAndAMorPM = nil, *cacheCheck = nil;
-        
-    NSString *checkString = [[NSUserDefaults standardUserDefaults] stringForKey:NSTimeFormatString];
-    BOOL isCache, screwedOver = NO;
+    static NSString 	*cache[4] = {nil,nil,nil,nil}; //Cache for the 4 combinations of date string
+    StringType		type;
+    
+    //Determine the type of string requested
+    if(!seconds && !showAmPm) type = NONE;
+    else if(seconds && !showAmPm) type = SECONDS;
+    else if(!seconds & showAmPm) type = AMPM;
+    else type = BOTH;
 
-    if(cacheCheck)
-        isCache = [cacheCheck isEqual:checkString]; //look for a cached value
-    else
-    {
-	isCache = NO;
-    	screwedOver = YES;
+    //Check the cache for this string, return if found
+    if(cache[type]){
+        return(cache[type]);
     }
-    
-    StringType type;
-        
-    if(!seconds && !showAmPm)
-    {
-        if(isCache && formatString)
-            return formatString;
-        else
-            type = NONE;
-    }
-    else if(seconds && !showAmPm)
-    {
-        if(isCache && formatStringWithSeconds)
-            return formatStringWithSeconds;
-        else
-            type = SECONDS;
-    }
-    else if(!seconds & showAmPm)
-    {
-        if(isCache && formatStringWithAMorPM)
-            return formatStringWithAMorPM;
-        else
-            type = AMPM;
-    }
-    else
-    {
-        if(isCache && formatStringWithSecondsAndAMorPM)
-            return formatStringWithSecondsAndAMorPM;
-        else
-            type = BOTH;
-    }
-    
-    if(screwedOver)
-	return @"%h:%M %p"; //we are screeeeewwwwwed! we're not even gonna honor their settings here, just get out!
-    if(!isCache)
-        cacheCheck = checkString; //save the cache
-    
+
     //use system-wide defaults for date format
-    NSMutableString * localizedDateFormatString = [checkString mutableCopy];
-    
-    if (!showAmPm){ 
+    NSMutableString *localizedDateFormatString = [[[NSUserDefaults standardUserDefaults] stringForKey:NSTimeFormatString] mutableCopy];
+    if(!showAmPm){ 
         //potentially could use stringForKey:NSAMPMDesignation as space isn't always the separator between time and %p
         [localizedDateFormatString replaceOccurrencesOfString:@" %p" 
                                                 withString:@"" 
                                                 options:NSLiteralSearch 
                                                 range:NSMakeRange(0,[localizedDateFormatString length])];
     }
-    
     if(!seconds){
         int secondSeparatorIndex = [localizedDateFormatString rangeOfString:@"%S" options:NSBackwardsSearch].location;
         
@@ -91,15 +54,10 @@ typedef enum
                                                 range:NSMakeRange(0,[localizedDateFormatString length])];
         }
     }
-    
-    switch(type)
-    {
-        case NONE: formatString = localizedDateFormatString; break;
-        case SECONDS: formatStringWithSeconds = localizedDateFormatString; break;
-        case AMPM: formatStringWithAMorPM = localizedDateFormatString; break;
-        case BOTH: formatStringWithSecondsAndAMorPM= localizedDateFormatString; break;
-    }
 
-    return localizedDateFormatString;
+    //Cache the result
+    cache[type] = [localizedDateFormatString retain];
+
+    return([localizedDateFormatString autorelease]);
 }
 @end

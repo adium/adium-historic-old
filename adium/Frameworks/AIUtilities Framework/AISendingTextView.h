@@ -25,7 +25,8 @@
     BOOL		sendOnEnter;
     BOOL		sendOnReturn;
     NSMutableArray	*returnArray;
-
+    BOOL		insertingText;
+    
     id			target;
     SEL			selector;
     BOOL		availableForSending;
