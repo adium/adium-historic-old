@@ -9,7 +9,7 @@
 #import "ESContactAlertsController.h"
 
 @interface ESContactAlertsController (PRIVATE)
-- (NSMutableDictionary *)appendEventsForObject:(AIListObject *)listObject toDictionary:(NSMutableDictionary *)events;
+- (NSMutableArray *)appendEventsForObject:(AIListObject *)listObject eventID:(NSString *)eventID toArray:(NSMutableArray *)events;
 - (void)addMenuItemsForEventHandlers:(NSDictionary *)inEventHandlers toArray:(NSMutableArray *)menuItemArray withTarget:(id)target forGlobalMenu:(BOOL)global;
 - (void)removeAllAlertsFromListObject:(AIListObject *)listObject;
 @end
@@ -121,28 +121,39 @@ DeclareString(KeyOneTimeAlert);
 //Generate an event
 - (void)generateEvent:(NSString *)eventID forListObject:(AIListObject *)listObject userInfo:(id)userInfo;
 {
-	NSDictionary	*dict = [self appendEventsForObject:listObject toDictionary:nil];
-	NSArray			*alerts = [dict objectForKey:eventID];
-
+	NSArray			*alerts = [self appendEventsForObject:listObject eventID:eventID toArray:nil];
+	
 	if(alerts && [alerts count]){
-		NSEnumerator	*enumerator = [alerts objectEnumerator];
-		NSDictionary	*alert;
-
+		NSEnumerator		*enumerator;
+		NSDictionary		*alert;
+		NSMutableArray		*performedActionIDs = [NSMutableArray array];
+		
+		//Use a reverse enumerator so we go from contact->group->root; a given action will only fire once for this event
+		enumerator = [alerts reverseObjectEnumerator];
 		//Process each alert (There may be more than one for an event)
 		while(alert = [enumerator nextObject]){
-			NSString				*actionID = [alert objectForKey:KeyActionID];
-			NSDictionary			*actionDetails = [alert objectForKey:KeyActionDetails];
-			id <AIActionHandler>	actionHandler = [actionHandlers objectForKey:actionID];		
+			NSString	*actionID;
 			
-			[actionHandler performActionID:actionID
-							 forListObject:listObject
-							   withDetails:actionDetails 
-						 triggeringEventID:eventID
-								  userInfo:userInfo];
-			
-			//If this alert was a single-fire alert, we can delete it now
-			if([[alert objectForKey:KeyOneTimeAlert] intValue]){
-				[self removeAlert:alert fromListObject:listObject];
+			actionID = [alert objectForKey:KeyActionID];
+
+			if (![performedActionIDs containsObject:actionID]){
+				id <AIActionHandler>	actionHandler;
+				
+				actionHandler = [actionHandlers objectForKey:actionID];		
+				
+				[actionHandler performActionID:actionID
+								 forListObject:listObject
+								   withDetails:[alert objectForKey:KeyActionDetails] 
+							 triggeringEventID:eventID
+									  userInfo:userInfo];
+				
+				//If this alert was a single-fire alert, we can delete it now
+				if([[alert objectForKey:KeyOneTimeAlert] intValue]){
+					[self removeAlert:alert fromListObject:listObject];
+				}
+				
+				//We don't want to perform this action again for this event
+				[performedActionIDs addObject:actionID];
 			}
 		}
 	}
@@ -153,25 +164,29 @@ DeclareString(KeyOneTimeAlert);
 }
 
 //
-- (NSMutableDictionary *)appendEventsForObject:(AIListObject *)listObject toDictionary:(NSMutableDictionary *)events
+- (NSMutableArray *)appendEventsForObject:(AIListObject *)listObject eventID:(NSString *)eventID toArray:(NSMutableArray *)events
 {
+	NSArray			*newEvents;
+	id				preferenceSource;
+	
 	//Get all events from the contanining object if we have an object
 	if(listObject){
 		//If listObject doesn't have a containingObject, this will pass nil
-		events = [self appendEventsForObject:[listObject containingObject] toDictionary:events];
+		events = [self appendEventsForObject:[listObject containingObject] eventID:eventID toArray:events];
 	}
 	
 	//If we don't have an object, we use the preference controller to get the global alerts
-	id  preferenceSource = listObject;
+	preferenceSource = listObject;
 	if (!preferenceSource) preferenceSource = [owner preferenceController];
 	
 	//Add events for this object (replacing any inherited from the containing object so that this object takes precendence)
-	NSDictionary	*newEvents = [preferenceSource preferenceForKey:KEY_CONTACT_ALERTS
-															  group:PREF_GROUP_CONTACT_ALERTS
-											  ignoreInheritedValues:YES];
+	newEvents = [[preferenceSource preferenceForKey:KEY_CONTACT_ALERTS
+											  group:PREF_GROUP_CONTACT_ALERTS
+							  ignoreInheritedValues:YES] objectForKey:eventID];
+	
 	if(newEvents && [newEvents count]){
-		if(!events) events = [NSMutableDictionary dictionary];
-		[events addEntriesFromDictionary:newEvents];
+		if(!events) events = [NSMutableArray array];
+		[events addObjectsFromArray:newEvents];
 	}
 	
 	return(events);
