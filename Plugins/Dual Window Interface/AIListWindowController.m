@@ -425,8 +425,8 @@
 		
 		//If the window is not near the bottom edge of the screen, or the titlebar is near the top,
 		//keep the titlebar in place
-		if((windowFrame.origin.y > applicableScreenFrame.origin.y + EDGE_CATCH_Y) /*||
-		   (windowFrame.origin.y + windowFrame.size.height > applicableScreenFrame.origin.y + applicableScreenFrame.size.height - EDGE_CATCH_Y)*/){
+		if((windowFrame.origin.y > applicableScreenFrame.origin.y + EDGE_CATCH_Y) ||
+		   (windowFrame.origin.y + windowFrame.size.height > applicableScreenFrame.origin.y + applicableScreenFrame.size.height - EDGE_CATCH_Y)){
 			newWindowFrame.origin.y = windowFrame.origin.y + (windowFrame.size.height - newWindowFrame.size.height);
 		}else{
 			newWindowFrame.origin.y = windowFrame.origin.y;
