@@ -127,21 +127,27 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 //Restore the AIListGroup grouping into which this object was last manually placed
 - (void)restoreGrouping
 {
-	NSString		*oldContainingObjectID;
-	AIListObject	*oldContainingObject;
 	BOOL			useContactListGroups;
 	
-	oldContainingObjectID = [self preferenceForKey:KEY_CONTAINING_OBJECT_ID
-												group:OBJECT_STATUS_CACHE];
-	oldContainingObject = [[adium contactController] existingListObjectWithUniqueID:oldContainingObjectID];
 	useContactListGroups = [[adium contactController] useContactListGroups];
 
-	if (oldContainingObject &&
-		[oldContainingObject isKindOfClass:[AIListGroup class]] &&
-		useContactListGroups){
+	if(useContactListGroups){
+		NSString		*oldContainingObjectID;
+		AIListObject	*oldContainingObject;
 
-		[[adium contactController] _moveContactLocally:self
-											   toGroup:(AIListGroup *)oldContainingObject];
+		oldContainingObjectID = [self preferenceForKey:KEY_CONTAINING_OBJECT_ID
+												 group:OBJECT_STATUS_CACHE];
+		oldContainingObject = [[adium contactController] existingListObjectWithUniqueID:oldContainingObjectID];
+		
+		if (oldContainingObject &&
+			[oldContainingObject isKindOfClass:[AIListGroup class]]){
+			//A previous grouping is saved; restore it
+			[[adium contactController] _moveContactLocally:self
+												   toGroup:(AIListGroup *)oldContainingObject];
+		}else{
+			//Let the remote grouping mechanism handle the restoration if no grouping is saved
+			[[adium contactController] listObjectRemoteGroupingChanged:self];	
+		}
 	}
 	
 }
