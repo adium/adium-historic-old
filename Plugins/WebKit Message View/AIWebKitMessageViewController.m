@@ -671,7 +671,7 @@ DeclareString(AppendNextMessage);
 	 we are about to display context), insert a date line.
 	 */
 	if((!previousContent && [content isKindOfClass:[AIContentContext class]]) ||
-	   (previousContent && ![content isFromSameDayAsContent:previousContent])){
+	   (![content isFromSameDayAsContent:previousContent])){
 		dateMessage = [[content date] descriptionWithCalendarFormat:[[NSDateFormatter localizedDateFormatter] dateFormat]
 														   timeZone:nil
 															 locale:nil];
