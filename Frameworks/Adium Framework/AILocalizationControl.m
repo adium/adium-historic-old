@@ -59,21 +59,30 @@
 {
 	//Textfield uses 17, button uses 14.
 	
-	NSRect		newFrame;
-
+	NSRect			newFrame;
+	NSTextAlignment	textAlignment;
+	
 	[TARGET_CONTROL sizeToFit];
 	
 	newFrame = [TARGET_CONTROL frame];
-	//Enforce a minimum width of the original frame width
-	if(newFrame.size.width < originalFrame.size.width){
-		newFrame.size.width = originalFrame.size.width;
+	
+	/* For NSButtons, sizeToFit is 8 pixels smaller than the HIG recommended size  */
+	if([self isKindOfClass:[NSButton class]]){
+		newFrame.size.width += 8;
 	}
 	
 	//Only use integral widths to keep alignment correct;
 	//round up as an extra pixel of whitespace never hurt anybody
 	newFrame.size.width = round(newFrame.size.width + 0.5);
 	
-	switch([self alignment]){
+	//Enforce a minimum width of the original frame width
+	NSLog(@"%@: new is %@; original is %@",inStringValue,NSStringFromRect(newFrame),NSStringFromRect(originalFrame));
+	if(newFrame.size.width < originalFrame.size.width){
+		newFrame.size.width = originalFrame.size.width;
+	}
+
+	textAlignment = [self alignment];
+	switch(textAlignment){
 		case NSRightTextAlignment:
 			//Keep the right edge in the same place at all times if we are right aligned
 			newFrame.origin.x = oldFrame.origin.x + oldFrame.size.width - newFrame.size.width;
@@ -103,6 +112,7 @@
 	[TARGET_CONTROL setNeedsDisplay:YES];
 	
 	//Resize the window to fit the contactNameLabel if the current size is not correct
+	
 	if(newFrame.size.width != oldFrame.size.width){
 		
 		//Too close on left; need to expand window left
@@ -155,7 +165,7 @@
 			if(view_anchorToLeftSide){
 				NSRect		leftAnchorFrame = [view_anchorToLeftSide frame];
 				float		difference = (oldFrame.origin.x - newFrame.origin.x);
-				
+	
 				leftAnchorFrame.origin.x -= difference;
 				
 				if(leftAnchorFrame.origin.x < 0){
@@ -177,6 +187,8 @@
 					}
 					
 				}else{
+					NSLog(@"%@: Moving left anchor from %@ to %@",inStringValue,NSStringFromRect([view_anchorToLeftSide frame]),
+						  NSStringFromRect(leftAnchorFrame));
 					[view_anchorToLeftSide setFrame:leftAnchorFrame];
 					[view_anchorToLeftSide setNeedsDisplay:YES];
 				}
