@@ -44,14 +44,16 @@
 	
 	if(menuItem == menuItem_inviteToChat){		
 
-		if( shouldRebuildChatList ) {
-			AIListObject *object = [[adium contactController] selectedListObjectInContactList];
-			if([object isKindOfClass:[AIListContact class]]){
+		AIListObject *object = [[adium contactController] selectedListObjectInContactList];
+
+		if ([object isKindOfClass:[AIListContact class]]){
+			if( shouldRebuildChatList ) {
 				[menuItem_inviteToChat setSubmenu:[self groupChatMenuForContact:(AIListContact *)object]];
 			}
+			return ([[menuItem_inviteToChat submenu] numberOfItems] > 0);
+		}else{
+			return NO;
 		}
-		return ([[menuItem_inviteToChat submenu] numberOfItems] > 0);
-
 		
 	} else if ( menuItem == menuItem_inviteToChatContext ) {
 		
