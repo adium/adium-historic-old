@@ -96,11 +96,15 @@ DeclareString(FormattedUID);
 - (NSString *)internalObjectID
 {
 	if(!internalObjectID){
-		internalObjectID = [[NSString stringWithFormat:@"%@.%@",[service serviceID],[self UID]] retain];
+		internalObjectID = [[AIListObject internalObjectIDForServiceID:[[self service] serviceID] UID:[self UID]] retain];
 	}
 	return(internalObjectID);
 }
 
++ (NSString *)internalObjectIDForServiceID:(NSString *)inServiceID UID:(NSString *)inUID
+{
+	return([NSString stringWithFormat:@"%@.%@",inServiceID, inUID]);
+}
 
 
 //Visibility -----------------------------------------------------------------------------------------------------------
