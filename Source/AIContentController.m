@@ -376,12 +376,11 @@ static NSLock				*filterCreationLock = nil;
 //Only called once, the first time a threaded filtering is requested
 - (void)thread_createFilterRunLoopMessenger
 {
-	NSLog(@"thread_createFilterRunLoopMessenger: creation time");
 	NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
 	
 	filterRunLoopMessenger = [NDRunLoopMessenger runLoopMessengerForCurrentRunLoop];
 	[filterRunLoopMessenger setMessageRetryTimeout:3.0];
-	NSLog(@"thread_createFilterRunLoopMessenger: Got %@",filterRunLoopMessenger);
+
 	[filterCreationLock unlock];
 		
 	CFRunLoopRun();
@@ -433,41 +432,13 @@ static NSLock				*filterCreationLock = nil;
 
 - (void)finishReceiveContentObject:(AIContentObject *)inObject
 {
-	AIChat			*chat = [inObject chat];
-	NSArray			*contentObjectArray = [chat contentObjectArray];
-	
-	BOOL			shouldBeFirstMessage = NO;
-	
-	if([inObject trackContent]) {
-		int		contentLength = [contentObjectArray count];
-		
-		// Dave's patented super-duper-uber-convoluted check for first-message-ness:
-		// If (it is literally the first message in this view) OR (the previous message is context AND this one is not context)
-		// Then, and only then, should we consider this a first message
-		if(contentLength <= 1 || 
-		   ([[(AIContentObject *)[contentObjectArray objectAtIndex:0] type] isEqualToString:CONTENT_CONTEXT_TYPE] &&
-			![[inObject type] isEqualToString:CONTENT_CONTEXT_TYPE]) ){
-			shouldBeFirstMessage = YES;
-		}
-	}
-	
 	//Display the content
 	[self displayContentObject:inObject];
 	
-	//Notify: Did Receive Content
+	//Update our most recent chat
 	if([inObject trackContent]){
-		if([contentObjectArray count] > 1 && !shouldBeFirstMessage){
-			[[owner notificationCenter] postNotificationName:Content_DidReceiveContent
-													  object:chat
-													userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
-		}else{
-			[[owner notificationCenter] postNotificationName:Content_FirstContentRecieved 
-													  object:chat
-													userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
-		}
-		mostRecentChat = chat;
+		mostRecentChat = [inObject chat];
 	}
-
 }
 
 //Send a content object
@@ -659,16 +630,34 @@ static NSLock				*filterCreationLock = nil;
     //Check if the object should display
     if([inObject displayContent]){
 		AIChat		*chat = [inObject chat];
-
+		BOOL		contentReceived = (([inObject isMemberOfClass:[AIContentMessage class]]) &&
+									   (![inObject isOutgoing]));
+		
 		//Tell the interface to open the chat
 		//For incoming messages, we don't open the chat until we're sure that new content is being received.
-		if(![chat isOpen]) [[owner interfaceController] openChat:chat]; 
+		if(![chat isOpen]){
+			[[owner interfaceController] openChat:chat];
+			
+			//If the chat wasn't open before, and this is received content, post the firstContentReceived notification
+			if (contentReceived){
+				[[owner notificationCenter] postNotificationName:Content_FirstContentRecieved 
+														  object:chat
+														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+			}
+		}else{
+			if (contentReceived){
+				[[owner notificationCenter] postNotificationName:Content_DidReceiveContent
+														  object:chat
+														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
+			}
+		}
 		
 		//Add this content to the chat
 		[chat addContentObject:inObject];
 		
 		//Notify: Content Object Added
-		[[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat
+		[[owner notificationCenter] postNotificationName:Content_ContentObjectAdded
+												  object:chat
 												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
     }
 }
