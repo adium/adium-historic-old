@@ -563,7 +563,7 @@
  */
 + (NSAppleEventDescriptor *)userRecordDescriptorWithDictionary:(NSDictionary *)aDictionary
 {
-	NSAppleEventDescriptor	* theUserRecord;
+	NSAppleEventDescriptor	* theUserRecord = nil;
 
 	if( [aDictionary count] > 0 && (theUserRecord = [self listDescriptor]) != nil )
 	{
@@ -777,7 +777,7 @@
  */
 - (NSNumber *)numberValue
 {
-	NSNumber		* theNumber;
+	NSNumber		* theNumber = nil;
 
 	switch([self descriptorType])
 	{
@@ -963,11 +963,24 @@
 }
 
 /*
- * +descriptorWithPositionalSubroutineName:argumentsArray:
+ * +descriptorWithSubroutineName:argumentsArray:
  */
 + (id)descriptorWithSubroutineName:(NSString *)aRoutineName argumentsArray:(NSArray *)aParamArray
 {
 	return [[[NSAppleEventDescriptor alloc] initWithSubroutineName:aRoutineName argumentsListDescriptor:aParamArray ? [NSAppleEventDescriptor descriptorWithArray:aParamArray] : nil] autorelease];
+}
+
+/*
+ * +descriptorWithSubroutineName:arguments:
+ */
++ (id)descriptorWithSubroutineName:(NSString *)aRoutineName arguments:(id)aFirstArg, ...
+{
+	NSAppleEventDescriptor		* theListDescriptor = nil;
+	va_list	theArgList;
+	va_start( theArgList, aFirstArg );
+	theListDescriptor = [NSAppleEventDescriptor listDescriptorWithObjects:aFirstArg arguments:theArgList];
+	va_end( theArgList );
+	return [[[self alloc] initWithSubroutineName:aRoutineName argumentsListDescriptor:theListDescriptor] autorelease];
 }
 
 /*

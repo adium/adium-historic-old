@@ -2,9 +2,6 @@
 	@header NDResourceFork
 	@abstract Defines the interface for the class <tt>NDResourceFork</tt>.
 	@discussion <tt>NDResourceFork</tt> allows your cocoa application create, delete, open, read, modify, and write resources; get information about them. A resource is data of any kind stored in a defined format in a file's resource fork. On intialization, <tt>NDResourceFork</tt> open the resource fork and then closes the resource for when it is deallocated.
- 
-	Created by nathan on Wed Dec 05 2001.
-	Copyright &#169; 2001 Nathan Day. All rights reserved.
  */
 
 #import <Foundation/Foundation.h>
