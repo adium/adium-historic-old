@@ -152,9 +152,13 @@
         [object setContainingGroup:nil];
     }
 
-    //Empty the group and hold onto it as well
-    [inGroup removeAllObjects];
-    [abandonedGroups setObject:inGroup forKey:[inGroup UID]];
+    if(inGroup != contactList){ //We don't want to break down the root contact list group
+        //Empty the group and hold onto it as well
+        [inGroup removeAllObjects];
+        [abandonedGroups setObject:inGroup forKey:[inGroup UID]];
+
+        NSLog(@"Break Down %@",[inGroup UID]);
+    }
 }
 
 
@@ -176,6 +180,7 @@
     [self handleStatusChanged:inHandle modifiedStatusKeys:nil];
 
     //After all the observers have responded to the status change, we can remove the handle
+    NSLog(@"Remove %@ from %@",inHandle,[inHandle containingContact]);
     [[inHandle containingContact] removeHandle:inHandle];
 
     //We really don't have to update the list... just leave the contact there.. no harm in it
@@ -218,11 +223,14 @@
     //We first check if a contact for this handle alredy exists on our new contact list.
     //If it does, we'll simply add this handle to the existing contact.
     contact = [self contactInGroup:contactList withService:serviceType UID:handleUID];
-    if(!contact){
+    if(!contact || [[[contact containingGroup] UID] compare:serverGroup] != 0){
         //If the contact does not exist
         //Check for it in the abandoned contact dict
         contact = [abandonedContacts objectForKey:handleUID];
-        if(contact) [abandonedContacts removeObjectForKey:handleUID]; //remove it from abandoned
+        if(contact){
+            [[contact retain] autorelease]; //We need to temporarily hold onto the contact, since removing it from the abandoned contacts array will cause it to be released immediately.
+            [abandonedContacts removeObjectForKey:handleUID]; //remove it from abandoned 
+        } 
 
         //If it wasn't in the abandoned dict, we create
         if(!contact){
@@ -235,7 +243,10 @@
         if(!group){
             //If the group does not exist, check for it in the abandoned group dict
             group = [abandonedGroups objectForKey:serverGroup];
-            if(group) [abandonedGroups removeObjectForKey:serverGroup]; //remove it from abandoned
+            if(group){
+                [[group retain] autorelease]; //We need to temporarily hold onto the group, since removing it from the abandoned groups array will cause it to be released immediately.
+                [abandonedGroups removeObjectForKey:serverGroup]; //remove it from abandoned
+            }
 
             //If it wasn't in the abandoned dict, we create
             if(!group){
