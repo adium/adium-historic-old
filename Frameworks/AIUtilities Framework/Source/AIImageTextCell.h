@@ -22,26 +22,11 @@
  * This <tt>AIGradientCell</tt> subclass displays in image on the left and one or two lines of text centered vertically in the space remaining for the cell
  */
 @interface AIImageTextCell : AIGradientCell {
-    NSFont 		*font;
+	NSFont 		*font;
     NSString	*subString;
 	float		maxImageWidth;
+	float		imageTextPadding;
 }
-
-/*
- * @brief Set the font for drawing the stringValue of the cell
- *
- * The set font is used for drawing the stringValue of the cell.
- * @param inFont The <tt>NSFont</tt> to use.
- */
-- (void)setFont:(NSFont *)inFont;
-
-/*
- * @brief Returns the font used for drawing the stringValue of the cell
- *
- * Returns the font used for drawing the stringValue of the cell
- * @return An <tt>NSFont</tt>
- */
-- (NSFont *)font;
 
 /*
  * @brief Set a string to be drawn underneath the stringValue of the cell
@@ -56,5 +41,13 @@
  * Set the maximum width of the image drawn on the left.  The default value is 24.
  */
 - (void)setMaxImageWidth:(float)inMaxImageWidth;
+
+/*
+ * @brief Set the padding between text and image
+ *
+ * Half this distance will be the padding between the left cell edge and the image or the text.
+ * Half this distance will be the padding from the right edge of the image or text and the right cell edge.
+ */
+- (void)setImageTextPadding:(float)inImageTextPadding;
 
 @end
