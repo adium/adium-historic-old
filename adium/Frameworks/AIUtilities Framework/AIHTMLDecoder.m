@@ -211,9 +211,6 @@ DeclareString(TagCharStartString);
             }
 			if (!simpleOnly){
 				openFontTag = YES;
-			}
-			
-			if (!simpleOnly){
 				[string appendString:OpenFontTag];
 			}
 
@@ -238,7 +235,7 @@ DeclareString(TagCharStartString);
             }
 
             //Size
-            if(((pointSize != currentSize) && !simpleOnly) || closeFontTags){
+            if((pointSize != currentSize) && !simpleOnly){
                 [string appendString:[NSString stringWithFormat:SizeTag, (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
                 currentSize = pointSize;
 				
