@@ -377,16 +377,6 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 		NSBeep();
 }
 
-- (void)outlineViewSelectionIsChanging:(NSNotification *)notification
-{
-	NSOutlineView	*inOutlineView = [notification object];
-
-	int	row = [inOutlineView selectedRow];
-	if(row != -1){
-		[inOutlineView setNeedsDisplayInRect:[inOutlineView rectOfRow:row]];
-	}
-}
-
 - (NSMenu *)outlineView:(NSOutlineView *)inOutlineView menuForEvent:(NSEvent *)inEvent
 {
 	NSMenu	*menu = nil;
