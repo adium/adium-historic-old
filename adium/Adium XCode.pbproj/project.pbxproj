@@ -7810,7 +7810,7 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				INSTALL_PATH = /;
-				LIBRARY_SEARCH_PATHS = "$(SRCROOT)Plugins/Gaim Service/LIBS\"";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)Plugins/Gaim\\ Service/LIBS";
 				OTHER_LDFLAGS = "";
 				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = Adium;
