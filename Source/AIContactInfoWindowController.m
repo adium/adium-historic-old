@@ -439,7 +439,10 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)outlineViewSelectionDidChange:(NSNotification *)aNotification
 {
 	if ([aNotification object] == contactListView){
-		[sharedContactInfoInstance configureForListObject:[contactListView itemAtRow:[contactListView selectedRow]]];
+		unsigned selectedRow;
+		if ((selectedRow = [contactListView selectedRow]) != -1){
+			[sharedContactInfoInstance configureForListObject:[contactListView itemAtRow:selectedRow]];
+		}
 	}
 }
 
