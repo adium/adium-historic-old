@@ -1,5 +1,4 @@
 5 - Contact list layout defaults
-5 - Contact list theme defaults
 5 - Contact list toolbar icons for toggle groups, add group, toggle offline
 5 - Implement edit sheets for layout
 5 - Implement edit sheets for themes
