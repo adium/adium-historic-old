@@ -21,7 +21,7 @@
 
 @interface SHSafariBookmarksImporter(PRIVATE)
 - (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems;
-- (NSDictionary *)hyperlinkForSafariBookmark:(NSDictionary *)inDict;
+- (SHMarkedHyperlink *)hyperlinkForSafariBookmark:(NSDictionary *)inDict;
 - (NSArray *)drillPropertyList:(id)inObject;
 @end
 
@@ -105,8 +105,8 @@ DeclareString(bookmarkDictContent)
         while(linkDict = [enumerator nextObject]){
             if([[linkDict objectForKey:safariDictTypeKey] isEqualToString:safariDictTypeLeaf]){
                 //We found a link
-				NSDictionary	*menuDict = [self hyperlinkForSafariBookmark:linkDict];
-				if(menuDict) [array addObject:menuDict];
+				SHMarkedHyperlink	*menuLink = [self hyperlinkForSafariBookmark:linkDict];
+				if(menuLink) [array addObject:menuLink];
 				
 			}else if([[linkDict objectForKey:safariDictTypeKey] isEqualToString:safariDictTypeList]){
 				//We found an array of links
@@ -128,7 +128,7 @@ DeclareString(bookmarkDictContent)
 }
 
 //Menu Item
-- (NSDictionary *)hyperlinkForSafariBookmark:(NSDictionary *)inDict
+- (SHMarkedHyperlink *)hyperlinkForSafariBookmark:(NSDictionary *)inDict
 {
 	NSString	*title = [[inDict objectForKey:safariDictURIDict] objectForKey:safariDictURITitle];
 	NSString	*url = [inDict objectForKey:safariURLString];
