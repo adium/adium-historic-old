@@ -49,42 +49,49 @@
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 }
 
-- (void)filterContentObject:(AIContentObject *)inObject
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject
 {
-    if([[inObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        AIContentMessage		*contentMessage = (AIContentMessage *)inObject;
-        NSMutableAttributedString	*message = [[[contentMessage message] mutableCopy] autorelease];
+    NSMutableAttributedString   *message = nil;
+    if (inAttributedString) {
         NSRange                         range=NSMakeRange(0, [message length]);
         if (range.length) {
             if(forceFont){
+                if (!message)
+                    message = [[inAttributedString mutableCopyWithZone:nil] autorelease];
+                
                 [message addAttribute:NSFontAttributeName value:force_desiredFont range:range];
-                [contentMessage setMessage:message];
             }
             if(forceText){
+                if (!message)
+                    message = [[inAttributedString mutableCopyWithZone:nil] autorelease];
+                
                 [message addAttribute:NSForegroundColorAttributeName value:force_desiredTextColor range:range];
-                [contentMessage setMessage:message];
             }
             if(forceBackground){
+                if (!message)
+                    message = [[inAttributedString mutableCopyWithZone:nil] autorelease];
+                
                 //Add the forced body color
                 [message addAttribute:AIBodyColorAttributeName value:force_desiredBackgroundColor range:range];
                 //Remove any 'sub-background' colors
                 [message removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange(0, [message length])];
                 
-                [contentMessage setMessage:message];
             } else {
                 NSRange backRange;
                 NSColor *bodyColor = [message attribute:NSBackgroundColorAttributeName atIndex:0 effectiveRange:&backRange];
                 if (bodyColor && (backRange.length == range.length)) {
+                    if (!message)
+                        message = [[inAttributedString mutableCopyWithZone:nil] autorelease];
+                    
                     //Add the body color
                     [message addAttribute:AIBodyColorAttributeName value:bodyColor range:range];
                     //Remove any 'sub-background' colors
                     [message removeAttribute:NSBackgroundColorAttributeName range:range];
-                    
-                    [contentMessage setMessage:message];
                 }
             }
         }
     }
+    return (message ? message : inAttributedString);
 }    
 
 - (void)preferencesChanged:(NSNotification *)notification
