@@ -66,14 +66,14 @@
 
 - (void)viewWillClose
 {
-	[colorWell_away deactivate];
-	[colorWell_idle deactivate];
-	[colorWell_signedOff deactivate];
-	[colorWell_signedOn deactivate];
-	[colorWell_typing deactivate];
-	[colorWell_unviewedContent deactivate];
-	[colorWell_idleAndAway deactivate];
-	[colorWell_offline deactivate];
+	if([colorWell_away isActive]) [colorWell_away deactivate];
+	if([colorWell_idle isActive]) [colorWell_idle deactivate];
+	if([colorWell_signedOff isActive]) [colorWell_signedOff deactivate];
+	if([colorWell_signedOn isActive]) [colorWell_signedOn deactivate];
+	if([colorWell_typing isActive]) [colorWell_typing deactivate];
+	if([colorWell_unviewedContent isActive]) [colorWell_unviewedContent deactivate];
+	if([colorWell_idleAndAway isActive]) [colorWell_idleAndAway deactivate];
+	if([colorWell_offline isActive]) [colorWell_offline deactivate];
 }
 
 //Enable/disable controls that are available/unavailable

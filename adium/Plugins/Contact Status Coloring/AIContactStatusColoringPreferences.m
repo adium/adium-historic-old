@@ -70,24 +70,24 @@
 //Preference view is closing
 - (void)viewWillClose
 {
-	[colorWell_signedOff deactivate];
-	[colorWell_signedOffLabel deactivate];
-	[colorWell_signedOn deactivate];
-	[colorWell_signedOnLabel deactivate];
-	[colorWell_away deactivate];
-	[colorWell_awayLabel deactivate];
-	[colorWell_idle deactivate];
-	[colorWell_idleLabel deactivate];
-	[colorWell_typing deactivate];
-	[colorWell_typingLabel deactivate];
-	[colorWell_unviewedContent deactivate];
-	[colorWell_unviewedContentLabel deactivate];
-	[colorWell_online deactivate];
-	[colorWell_onlineLabel deactivate];
-	[colorWell_idleAndAway deactivate];
-	[colorWell_idleAndAwayLabel deactivate];	
-	[colorWell_offline deactivate];
-	[colorWell_offlineLabel deactivate];
+	if([colorWell_signedOff isActive]) [colorWell_signedOff deactivate];
+	if([colorWell_signedOffLabel isActive]) [colorWell_signedOffLabel deactivate];
+	if([colorWell_signedOn isActive]) [colorWell_signedOn deactivate];
+	if([colorWell_signedOnLabel isActive]) [colorWell_signedOnLabel deactivate];
+	if([colorWell_away isActive]) [colorWell_away deactivate];
+	if([colorWell_awayLabel isActive]) [colorWell_awayLabel deactivate];
+	if([colorWell_idle isActive]) [colorWell_idle deactivate];
+	if([colorWell_idleLabel isActive]) [colorWell_idleLabel deactivate];
+	if([colorWell_typing isActive]) [colorWell_typing deactivate];
+	if([colorWell_typingLabel isActive]) [colorWell_typingLabel deactivate];
+	if([colorWell_unviewedContent isActive]) [colorWell_unviewedContent deactivate];
+	if([colorWell_unviewedContentLabel isActive]) [colorWell_unviewedContentLabel deactivate];
+	if([colorWell_online isActive]) [colorWell_online deactivate];
+	if([colorWell_onlineLabel isActive]) [colorWell_onlineLabel deactivate];
+	if([colorWell_idleAndAway isActive]) [colorWell_idleAndAway deactivate];
+	if([colorWell_idleAndAwayLabel isActive]) [colorWell_idleAndAwayLabel deactivate];	
+	if([colorWell_offline isActive]) [colorWell_offline deactivate];
+	if([colorWell_offlineLabel isActive]) [colorWell_offlineLabel deactivate];
 }
 
 //Called in response to all preference controls, applies new settings

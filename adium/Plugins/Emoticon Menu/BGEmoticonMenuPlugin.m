@@ -74,11 +74,15 @@ static NSMenu       *eContextualMenu = nil;
         while(object = [packEnum nextObject]){
             // read out each pack, iterate it and add its contents to its menu, then add it to its menu item
             NSMenuItem *packItem = [[NSMenuItem alloc] initWithTitle:[object name] action:nil keyEquivalent:@""];
+
             [packItem setTag:locTrack];
             [packItem setSubmenu:[self buildMenu:object]]; 
+			
             [eMenu addItem:packItem];
-            [eContextualMenu addItem:[packItem copy]];
-            locTrack++;
+            [eContextualMenu addItem:[[packItem copy] autorelease]];
+			[packItem release];
+			
+			locTrack++;
         }
         // create a menu item for the menu to attach to
         //[quickMenuItem setSubmenu:eMenu];
@@ -126,16 +130,20 @@ static NSMenu       *eContextualMenu = nil;
     {
         if([anEmoticon isEnabled] == YES)
         {
-            NSMenuItem *newItem = [[NSMenuItem alloc] initWithTitle:[anEmoticon name] target:self action:@selector(insertEmoticon:) keyEquivalent:@""];
+            NSMenuItem *newItem = [[NSMenuItem alloc] initWithTitle:[anEmoticon name]
+															 target:self
+															 action:@selector(insertEmoticon:)
+													  keyEquivalent:@""];
 
 			//We need to make a copy of the emoticons for our menu, otherwise the menu flips them in an unpredictable
 			//way, causing problems in the emoticon preferences
             [newItem setImage:[[[anEmoticon image] copy] autorelease]];
             [packMenu addItem:newItem];
-
+			
+			[newItem release];
         }
     }    
-    return packMenu;
+    return([packMenu autorelease]);
 }
 
 - (void)insertEmoticon:(id)sender

@@ -59,9 +59,9 @@
 //Preference view is closing
 - (void)viewWillClose
 {
-	[colorWell_contact deactivate];
-	[colorWell_background deactivate];
-	[colorWell_grid deactivate];
+	if([colorWell_contact isActive]) [colorWell_contact deactivate];
+	if([colorWell_background isActive]) [colorWell_background deactivate];
+	if([colorWell_grid isActive]) [colorWell_grid deactivate];
 }
 
 //Called in response to all preference controls, applies new settings

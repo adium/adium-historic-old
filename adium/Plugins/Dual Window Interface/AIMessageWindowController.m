@@ -279,7 +279,7 @@
 {
     //During a drag, the tabs will not get deallocated on occasion, so we must make sure that we are no longer set as their delegate
     [tabView_customTabs setDelegate:nil];
-        
+	[listObjectArray release];
     [interface release];
 
     [super dealloc];

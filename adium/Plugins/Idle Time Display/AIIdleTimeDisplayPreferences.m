@@ -50,7 +50,7 @@
 //Preference view is closing
 - (void)viewWillClose
 {
-	[colorWell_idleColor deactivate];
+	if([colorWell_idleColor isActive]) [colorWell_idleColor deactivate];
 }
 
 //Called in response to all preference controls, applies new settings
