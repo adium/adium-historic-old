@@ -38,6 +38,7 @@
 - (NSAttributedString *)_prefixWithFormat:(NSString *)format forContent:(AIContentMessage *)content;
 - (NSString *)_prefixStringByExpandingFormat:(NSString *)format forContent:(AIContentMessage *)content;
 - (id)_cellInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
+- (NSArray *)_cellsInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
 @end
 
 @implementation AISMViewController
@@ -238,12 +239,24 @@
     [messageView addRow:messageRow];
     
     //Merge our new message with the previous one
-    if(contentIsSimilar){
-        [[self _cellInRow:previousRow withClass:[AIFlexibleTableFramedTextCell class]] setDrawBottom:NO];
-        [[self _cellInRow:messageRow withClass:[AIFlexibleTableFramedTextCell class]] setDrawTop:NO];
-        [[self _cellInRow:messageRow withClass:[AIFlexibleTableFramedTextCell class]] setDrawTopDivider:YES];
-	if(!inlinePrefixes) [[self _cellInRow:previousRow withClass:[AIFlexibleTableImageCell class]] setRowSpan:2];
+    if(contentIsSimilar){  
+        NSEnumerator        *enumerator;
+        AIFlexibleTableFramedTextCell *cell;
+        
+        enumerator = [[self _cellsInRow:previousRow withClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
+        while (cell = [enumerator nextObject]) {
+            [cell setDrawBottom:NO];
+        }
+        
+        enumerator = [[self _cellsInRow:messageRow withClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
+        while (cell = [enumerator nextObject]) {
+            [cell setDrawTop:NO];
+            [cell setDrawTopDivider:YES];
+        }
+        
+        if(!inlinePrefixes) [[self _cellInRow:previousRow withClass:[AIFlexibleTableImageCell class]] setRowSpan:2];
     }
+
 }
 
 //Add rows for a content status object
@@ -255,7 +268,11 @@
     [messageView addRow:[self _statusRowForContent:content]];
     
     //Add a separator to our previous row if necessary
-    [[self _cellInRow:previousRow withClass:[AIFlexibleTableFramedTextCell class]] setDrawBottom:YES];
+    AIFlexibleTableFramedTextCell *cell;
+    NSEnumerator * enumerator = [[self _cellsInRow:previousRow withClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
+    while (cell = [enumerator nextObject]) {
+        [cell setDrawBottom:YES];
+    }
 }
 
 
@@ -302,6 +319,7 @@
     //Empty spacing cell
     if(!isHeader && !inlinePrefixes && combineMessages) {
         leftmostCell = [self _emptyHeadIndentCellForPreviousRow:previousRow content:content];
+      //  leftmostCell = nil;
     }
     //
     if(leftmostCell){
@@ -375,15 +393,25 @@
 
 - (AIFlexibleTableCell *)_emptyHeadIndentCellForPreviousRow:(AIFlexibleTableRow *)previousRow content:(AIContentMessage *)content
 {
-    AIFlexibleTableCell * cell = [[AIFlexibleTableCell alloc] init];
+    AIFlexibleTableFramedTextCell * cell = [[AIFlexibleTableFramedTextCell alloc] init];
     //size the cell for the previousRow headIndent value
     [cell sizeCellForWidth:[previousRow headIndent]];
+//    [cell sizeContentForWidth:[previousRow headIndent]];
+    
     //set the background color appropriately
-    if([content isOutgoing]){
+    /*if([content isOutgoing]){
         [cell setBackgroundColor:colorOutgoing];
     }else{
         [cell setBackgroundColor:colorIncoming];
+    }*/
+    if([content isOutgoing]){
+        [cell setFrameBackgroundColor:colorOutgoing borderColor:colorOutgoingBorder dividerColor:colorOutgoingDivider];
+    }else{
+        [cell setFrameBackgroundColor:colorIncoming borderColor:colorIncomingBorder dividerColor:colorIncomingDivider];
     }
+    
+    [cell setDrawTop:YES];
+    [cell setDrawBottom:(inlinePrefixes)];
     
     return ([cell autorelease]);
 }
@@ -464,14 +492,23 @@
         //If the prefix contains a message, we build it in pieces
         [prefixString appendAttributedString:[self _prefixWithFormat:[prefixFormat substringToIndex:messageRange.location] forContent:content]];
         //set the headIndent, the amount subsequent lines will need to indent
-        headIndent = [prefixString size].width;
+        //headIndent = [prefixString size].width;
+        headIndent = 10.0;
         [prefixString appendAttributedString:[content message]];
         [prefixString appendAttributedString:[self _prefixWithFormat:[prefixFormat substringFromIndex:messageRange.location] forContent:content]];
         
         if (performHeadIndent) {
             NSMutableParagraphStyle     *paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+            NSRange                     firstLineRange = [[prefixString string] lineRangeForRange:NSMakeRange(0,0)];
+            
+            //Set headIndent for the first line
             [paragraphStyle setHeadIndent:headIndent];
-            [prefixString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,[prefixString length])];
+            [prefixString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,firstLineRange.length)];
+            
+            //Indent the remaining lines of the message
+            NSMutableParagraphStyle     *paragraphStyleForRest = [paragraphStyle mutableCopy];
+            [paragraphStyleForRest setFirstLineHeadIndent:headIndent];
+            [prefixString addAttribute:NSParagraphStyleAttributeName value:paragraphStyleForRest range:NSMakeRange(firstLineRange.length, [prefixString length] - firstLineRange.length)];
         }
         
         return(prefixString);
@@ -588,4 +625,17 @@
     return(nil);
 }
 
+- (NSArray *)_cellsInRow:(AIFlexibleTableRow *)row withClass:(Class)class
+{
+    NSMutableArray      *cellArray = [[NSMutableArray alloc] init];
+    NSEnumerator        *enumerator;
+    AIFlexibleTableCell *cell;
+    
+    enumerator = [[row cellArray] objectEnumerator];
+    while(cell = [enumerator nextObject]){
+        if([cell isKindOfClass:class]) [cellArray addObject:cell];
+    }
+    
+    return([cellArray autorelease]);
+}
 @end

@@ -21,6 +21,7 @@
 }
 
 - (void)setObject:(id)anObject withOwner:(id)inOwner;
+- (void)setPrimaryObject:(id)anObject withOwner:(id)inOwner;
 - (unsigned)count;
 - (BOOL)containsAnyIntegerValueOf:(int)inValue;
 - (NSColor *)averageColor;

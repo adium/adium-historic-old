@@ -1,0 +1,39 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                view = NSView; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = ESAddressBookIntegrationAdvancedPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"format_menu" = NSPopUpButton; "format_textField" = NSTextField; }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {
+            CLASS = ESAnnouncerPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_incoming" = NSButton; 
+                "checkBox_outgoing" = NSButton; 
+                "checkBox_sender" = NSButton; 
+                "checkBox_status" = NSButton; 
+                "checkBox_time" = NSButton; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}

@@ -91,27 +91,6 @@
     [menuItem setTag:SCREEN_NAME];
     [choicesMenu addItem:menuItem];
 
-    menuItem = [ [ [ NSMenuItem alloc ] initWithTitle:@"Address Book Entry: [First Name] [Last Name]"
-                                               target:self
-                                               action:@selector( changeFormat: )
-                                        keyEquivalent:@"" ] autorelease ];
-    [ menuItem setTag:ADDRESS_BOOK_FIRST_LAST ];
-    [ choicesMenu addItem:menuItem ];
-    
-    menuItem = [ [ [ NSMenuItem alloc ] initWithTitle:@"Address Book Entry: [Last Name], [First Name]"
-                                               target:self
-                                               action:@selector( changeFormat: )
-                                        keyEquivalent:@"" ] autorelease ];
-    [ menuItem setTag:ADDRESS_BOOK_LAST_FIRST ];
-    [ choicesMenu addItem:menuItem ];
-    
-    menuItem = [ [ [ NSMenuItem alloc ] initWithTitle:@"Address Book Entry: [First Name]"
-                                               target:self
-                                               action:@selector( changeFormat: )
-                                        keyEquivalent:@"" ] autorelease ];
-    [ menuItem setTag:ADDRESS_BOOK_FIRST ];
-    [ choicesMenu addItem:menuItem ];
-
     [format_menu setMenu:choicesMenu];
 
     [format_menu selectItemAtIndex:[format_menu indexOfItemWithTag:[[[owner preferenceController] preferenceForKey:@"Long Display Format" group:PREF_GROUP_DISPLAYFORMAT object:nil] intValue]]];

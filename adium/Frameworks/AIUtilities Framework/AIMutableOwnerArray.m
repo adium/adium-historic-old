@@ -69,6 +69,35 @@
     }
 }
 
+//Adds an object with a specified owner (Pass nil to remove the object) - the object at index 0 is considered primary and is used by default
+- (void)setPrimaryObject:(id)anObject withOwner:(id)inOwner
+{
+    int	ownerIndex;
+    
+    if(!contentArray || !ownerArray) [self _createArrays];
+    
+    //Remove any existing objects
+    ownerIndex = [ownerArray indexOfObject:inOwner];
+    if(ownerIndex != NSNotFound){
+        [ownerArray removeObjectAtIndex:ownerIndex];
+        [contentArray removeObjectAtIndex:ownerIndex];
+    }
+    
+    //Add the new object
+    if(anObject != nil){
+        if ([contentArray count]) {
+            [contentArray insertObject:anObject atIndex:0];
+            [ownerArray insertObject:inOwner atIndex:0];
+        } else {
+            [contentArray addObject:anObject];
+            [ownerArray addObject:inOwner];
+        }
+    }else{
+        if([contentArray count] == 0) [self _destroyArrays];
+    }
+}
+
+
 //Returns an object with the specified owner
 - (id)objectWithOwner:(id)inOwner
 {
