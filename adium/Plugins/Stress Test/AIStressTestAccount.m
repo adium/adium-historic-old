@@ -1,0 +1,262 @@
+//
+//  AIStressTestAccount.m
+//  Adium
+//
+//  Created by Adam Iser on Fri Sep 26 2003.
+//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
+//
+
+#import "AIStressTestAccount.h"
+#import <AIUtilities/AIUtilities.h>
+#import <Adium/Adium.h>
+#import "AIAdium.h"
+
+
+@implementation AIStressTestAccount
+//
+- (void)initAccount
+{
+    handleDict = [[NSMutableDictionary alloc] init];
+    chatDict = [[NSMutableDictionary alloc] init];
+
+    commandHandle = [[AIHandle handleWithServiceID:@"TEMP"
+                                               UID:@"Command"
+                                       serverGroup:@"nope"
+                                         temporary:YES
+                                        forAccount:self] retain];
+    [[owner contactController] handle:commandHandle addedToAccount:self];
+    
+    [[commandHandle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
+    [[owner contactController] handleStatusChanged:commandHandle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:NO silent:NO];
+    
+    //
+    commandChat = [[self chatForHandle:commandHandle] retain];
+
+    //
+    [self echo:@"Stress Test\r-------------\rYou must create handles before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\r"];
+}
+
+- (AIChat *)chatForHandle:(AIHandle *)inHandle
+{
+    AIChat *chat = [chatDict objectForKey:[inHandle UID]];
+
+    if(!chat){
+        AIListContact	*containingContact = [inHandle containingContact];
+
+        chat = [[AIChat chatWithOwner:owner forAccount:self] retain];
+        [chat addParticipatingListObject:containingContact];
+        [[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
+        [[owner contentController] noteChat:chat forAccount:self];
+
+        [chatDict setObject:chat forKey:[inHandle UID]];
+    }
+
+    return(chat);
+}
+
+//Return the default properties for this account
+- (NSDictionary *)defaultProperties
+{
+    return([NSDictionary dictionary]);
+}
+
+// Return a view for the connection window
+- (id <AIAccountViewController>)accountView{
+    return(nil);
+}
+
+// Return a unique ID specific to THIS account plugin, and the user's account name
+- (NSString *)accountID{
+    return(@"TEST");
+}
+
+//The user's account name
+- (NSString *)UID{
+    return(@"TEST");
+}
+
+//The service ID (shared by any account code accessing this service)
+- (NSString *)serviceID{
+    return(@"TEST");
+}
+
+//ServiceID.UID
+- (NSString *)UIDAndServiceID{
+    return(@"TEST.TEST");
+}
+
+// Return a readable description of this account's username
+- (NSString *)accountDescription
+{
+    return(@"Stress Test");
+}
+
+
+// AIAccount_Messaging ---------------------------------------------------------------------------
+// Send a content object
+- (BOOL)sendContentObject:(AIContentObject *)object
+{
+    if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){
+        NSString	*message = [[(AIContentMessage *)object message] string];
+        NSArray		*commands = [message componentsSeparatedByString:@" "];
+        NSString	*type = [commands objectAtIndex:0];
+        
+        if([type compare:@"create"] == 0){
+            int count = [[commands objectAtIndex:1] intValue];
+            int i;
+            
+            for(i=0;i < count;i++){
+                NSString	*UID = [NSString stringWithFormat:@"Buddy%i",i];
+                AIHandle	*handle = [handleDict objectForKey:UID];
+
+                if(!handle){
+                    handle = [AIHandle handleWithServiceID:@"TEMP"
+                                                       UID:UID
+                                               serverGroup:[NSString stringWithFormat:@"Group%i",i/20]
+                                                 temporary:NO
+                                                forAccount:self];
+                    [[owner contactController] handle:handle addedToAccount:self];
+                    [handleDict setObject:handle forKey:UID];
+                }
+            }
+
+            [self echo:[NSString stringWithFormat:@"Created %i handles",count]];
+            
+        }else if([type compare:@"online"] == 0){
+            int 	count = [[commands objectAtIndex:1] intValue];
+            BOOL 	silent = NO;
+            int 	i;
+
+            if([commands count] > 2) silent = ([(NSString *)@"silent" compare:[commands objectAtIndex:2]] == 0);
+
+            for(i=0;i < count;i++){
+                AIHandle	*handle;
+                NSString	*UID = [NSString stringWithFormat:@"Buddy%i",i];
+
+                if(handle = [handleDict objectForKey:UID]){
+                    [[handle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
+                    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:silent silent:silent];
+                }
+            }
+
+            [self echo:[NSString stringWithFormat:@"%i handles signed on %@",count,(silent?@"(Silently)":@"")]];
+
+        }else if([type compare:@"offline"] == 0){
+            int 	count = [[commands objectAtIndex:1] intValue];
+            BOOL 	silent = NO;
+            int 	i;
+
+            if([commands count] > 2) silent = ([(NSString *)@"silent" compare:[commands objectAtIndex:2]] == 0);
+
+            for(i=0;i < count;i++){
+                AIHandle	*handle;
+                NSString	*UID = [NSString stringWithFormat:@"Buddy%i",i];
+
+                if(handle = [handleDict objectForKey:UID]){
+                    [[handle statusDictionary] setObject:[NSNumber numberWithBool:NO] forKey:@"Online"];
+                    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:silent silent:silent];
+                }
+            }
+
+            [self echo:[NSString stringWithFormat:@"%i handles signed off %@",count,(silent?@"(Silently)":@"")]];
+
+        }else if([type compare:@"msgin"] == 0){
+            int 	count = [[commands objectAtIndex:1] intValue];
+            int 	spread = [[commands objectAtIndex:2] intValue];
+            NSString	*message = [commands objectAtIndex:3];
+            int 	i;
+
+            for(i=0;i < count;i++){
+                AIHandle	*handle;
+                NSString	*UID = [NSString stringWithFormat:@"Buddy%i",i%spread];
+
+                if(handle = [handleDict objectForKey:UID]){
+                    AIContentMessage *messageObject;
+                    messageObject = [AIContentMessage messageInChat:[self chatForHandle:handle]
+                                                         withSource:[commandHandle containingContact]
+                                                        destination:self
+                                                               date:nil
+                                                            message:[[[NSAttributedString alloc] initWithString:message attributes:[NSDictionary dictionary]] autorelease]
+                                                          autoreply:NO];
+                    [[owner contentController] addIncomingContentObject:messageObject];
+
+                }
+            }
+
+            [self echo:[NSString stringWithFormat:@"%i messages received",count]];
+            
+        }else{
+            [self echo:[NSString stringWithFormat:@"Unknown command %@",type]];
+        }
+    }
+
+    return(YES);
+}
+
+//Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
+- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
+{
+    return(YES);
+}
+
+//Initiate a new chat
+- (AIChat *)openChatWithListObject:(AIListObject *)inListObject
+{
+    return(nil);
+}
+
+//Close a chat instance
+- (BOOL)closeChat:(AIChat *)inChat
+{
+    [chatDict removeObjectForKey:[[inChat listObject] UID]];
+    
+    return(YES); //Success
+}
+
+
+
+- (void)echo:(NSString *)string
+{
+    [self performSelector:@selector(_echo:) withObject:string afterDelay:0.0001];
+}
+
+- (void)_echo:(NSString *)string
+{
+    AIContentMessage *messageObject;
+    messageObject = [AIContentMessage messageInChat:commandChat
+                                         withSource:[commandHandle containingContact]
+                                        destination:self
+                                               date:nil
+                                            message:[[[NSAttributedString alloc] initWithString:string attributes:[NSDictionary dictionary]] autorelease]
+                                          autoreply:NO];
+    [[owner contentController] addIncomingContentObject:messageObject];
+}
+
+
+
+
+
+// AIAccount_Status --------------------------------------------------------------------------------
+// Returns an array of the status keys we support
+- (NSArray *)supportedPropertyKeys
+{
+    return([NSArray array]);
+}
+
+// Respond to account status changes
+- (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
+{
+}
+
+
+
+
+
+
+
+
+
+
+
+
+@end
