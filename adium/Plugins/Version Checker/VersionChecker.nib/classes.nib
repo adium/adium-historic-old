@@ -1,11 +1,30 @@
 {
     IBClasses = (
         {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
             ACTIONS = {setDownloadsButtonPressed = id; }; 
             CLASS = CPFVersionChecker; 
             LANGUAGE = ObjC; 
             OUTLETS = {textWithInformation = id; }; 
             SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {closeWindow = id; pressedButton = id; }; 
+            CLASS = ESVersionCheckerWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_upToDate_okay" = NSButton; 
+                "button_updateAvailable_close" = NSButton; 
+                "button_updateAvailable_downloadPage" = NSButton; 
+                "tabView_hidden" = NSTabView; 
+                "textField_upToDate" = NSTextField; 
+                "textField_updateAvailable" = NSTextField; 
+            }; 
+            SUPERCLASS = AIWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
