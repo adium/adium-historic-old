@@ -14,8 +14,8 @@
 	NSMutableArray				*progressRows;
 	ESFileTransferProgressRow	*selectedRow;
 	
-	IBOutlet NSScrollView		*scrollView;
-	IBOutlet NSView				*view;
+	IBOutlet NSScrollView					*scrollView;
+	IBOutlet AIVariableHeightOutlineView	*outlineView;
 	
 	IBOutlet NSTextField		*textField_statusBar;
 }
@@ -24,7 +24,6 @@
 
 //For use by ESFileTransferProgressRow
 - (void)progressRowDidAwakeFromNib:(ESFileTransferProgressRow *)progressView;
-- (void)setSelectedRow:(ESFileTransferProgressRow *)inRow;
 - (void)fileTransferProgressRow:(ESFileTransferProgressRow *)inRow
 			  heightChangedFrom:(float)oldHeight
 							 to:(float)newHeight;

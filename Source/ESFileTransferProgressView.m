@@ -123,10 +123,7 @@
 	NSRect	newFrame = oldFrame;
 	
 	showingDetails = !showingDetails;
-	
-#warning This may not be desired if the means of adding the views changes
-	[self setPostsFrameChangedNotifications:NO];
-	
+
 	if(showingDetails){
 		//Increase our height to make space
 		newFrame.size.height += detailsFrame.size.height;
@@ -168,28 +165,19 @@
 	[owner fileTransferProgressView:self
 				  heightChangedFrom:oldFrame.size.height
 								 to:newFrame.size.height];
-	
-	[self setPostsFrameChangedNotifications:YES];
 }
 
 #pragma mark Event handling
-- (void)mouseDown:(NSEvent *)event
-{
-	NSLog(@"%@: mouseDown: %@",self, event);
-	
-//	[super mouseDown:event];
-	[owner mouseDown:event inView:self];
-}
-
+/*
 - (void)keyDown:(NSEvent *)event
 {
 	NSLog(@"%@: keyDown: %@",self,event);
 	
 	[super keyDown:event];
 }
-
+*/
 #pragma mark Selection
-- (void)setIsSelected:(BOOL)flag
+- (void)setIsHighlighted:(BOOL)flag
 {
 	if(isSelected != flag){
 		isSelected = flag;
@@ -225,15 +213,6 @@
 		[textField_fileName setTextColor:newColor];
 		
 		[textField_transferStatus setTextColor:newColor];
-	}
-}
-
-- (void)drawRect:(NSRect)inRect
-{
-	if(isSelected){
-		AIGradient	*gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
-
-		[gradient drawInBezierPath:[NSBezierPath bezierPathWithRect:inRect]];
 	}
 }
 

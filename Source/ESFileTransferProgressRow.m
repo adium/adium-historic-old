@@ -36,7 +36,6 @@
 
 	owner = inOwner;
 	
-	NSLog(@"%@: Loading for %@",fileTransfer); 
 	[NSBundle loadNibNamed:@"ESFileTransferProgressView" owner:self];
 	
 	return(self);
@@ -276,19 +275,6 @@
 	[owner fileTransferProgressRow:self
 				 heightChangedFrom:oldHeight
 								to:newHeight];
-}
-
-//When we receive a mouse down, ask the owner to set us as selected
-- (void)mouseDown:(NSEvent *)inEvent inView:(ESFileTransferProgressView *)inView
-{
-	[owner setSelectedRow:self];
-}
-
-//Pass a setIsSelected on to the view, then mark it as needing display
-- (void)setIsSelected:(BOOL)flag
-{
-	[view setIsSelected:flag];
-	[view display];
 }
 
 #pragma mark Localized readable values

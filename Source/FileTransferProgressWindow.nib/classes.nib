@@ -29,6 +29,11 @@
             }; 
             SUPERCLASS = NSObject; 
         }, 
+        {
+            CLASS = AIAlternatingRowOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIOutlineView; 
+        }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
             ACTIONS = {pasteAsRichText = id; scrollPageDown = id; scrollPageUp = id; }; 
@@ -36,12 +41,18 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = AISendingTextView; 
         }, 
+        {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
         {
             ACTIONS = {sendContent = id; }; 
             CLASS = AISendingTextView; 
             LANGUAGE = ObjC; 
             OUTLETS = {target = id; }; 
             SUPERCLASS = NSTextView; 
+        }, 
+        {
+            CLASS = AIVariableHeightOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIAlternatingRowOutlineView; 
         }, 
         {
             CLASS = AIWindowController; 
@@ -54,9 +65,9 @@
             CLASS = ESFileTransferProgressWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                outlineView = AIVariableHeightOutlineView; 
                 scrollView = NSScrollView; 
                 "textField_statusBar" = NSTextField; 
-                view = NSView; 
             }; 
             SUPERCLASS = AIWindowController; 
         }, 
