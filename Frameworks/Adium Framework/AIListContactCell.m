@@ -508,8 +508,17 @@
 	BOOL	isEvent = [[listObject displayArrayObjectForKey:@"Is Event"] boolValue];
 	
 	if((isEvent && backgroundColorIsEvents) || (!isEvent && backgroundColorIsStatus)){
-		NSColor *labelColor = [listObject displayArrayObjectForKey:@"Label Color"];	
-		return([labelColor colorWithAlphaComponent:backgroundOpacity]);
+		NSColor		*labelColor = [listObject displayArrayObjectForKey:@"Label Color"];	
+		NSNumber	*opacityNumber;
+		float		targetOpacity = backgroundOpacity;
+		
+		//The backgroundOpacity is our eventual target; Temporary Display Opacity will be a fraction from 0 to 1 which
+		//should be applied to that target
+		if(opacityNumber = [listObject displayArrayObjectForKey:@"Temporary Display Opacity"]){
+			targetOpacity *= [opacityNumber floatValue];
+		}
+		
+		return([labelColor colorWithAlphaComponent:targetOpacity]);
 	}else{
 		return(nil);
 	}
@@ -558,7 +567,16 @@
 //
 - (float)imageOpacityForDrawing
 {
-	return([self cellIsSelected] ? SELECTED_IMAGE_OPACITY : [[listObject displayArrayObjectForKey:@"Image Opacity"] floatValue]);
+	if([self cellIsSelected]){
+		return(SELECTED_IMAGE_OPACITY);
+	}else{
+		NSNumber	*opacityNumber;
+		if(opacityNumber = [listObject displayArrayObjectForKey:@"Temporary Display Opacity"]){
+			return([opacityNumber floatValue]);
+		}else{
+			return([[listObject displayArrayObjectForKey:@"Image Opacity"] floatValue]);
+		}
+	}
 }
 
 @end
