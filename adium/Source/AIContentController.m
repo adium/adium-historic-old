@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.57 2004/04/02 21:04:35 evands Exp $
+// $Id: AIContentController.m,v 1.58 2004/04/02 23:07:35 evands Exp $
 
 #import "AIContentController.h"
 
@@ -451,10 +451,11 @@
 	//If we're dealing with a meta contact, open a chat with the preferred contact for this meta contact
 	//It's a good idea for the caller to pick the preferred contact for us, since they know the content type
 	//being sent and more information - but we'll do it here as well just to be safe.
-	if([inContact isKindOfClass:[AIMetaContact class]]){
-		inContact = [[owner contactController] preferredContactForReceivingContentType:CONTENT_MESSAGE_TYPE
-																		 forListObject:inContact];
+	if ([inContact isKindOfClass:[AIMetaContact class]]){
+		inContact = [[owner contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
+															   forListContact:inContact];
 	}
+	
 	//Search for an existing chat we can switch instead of replacing
 	enumerator = [chatArray objectEnumerator];
 	while(chat = [enumerator nextObject]){
