@@ -10,5 +10,9 @@
 	<false/>
 	<key>Enable Inactive Tab Close</key>
 	<false/>
+	<key>Keep Tabs Arranged</key>
+	<false/>
+	<key>Arrange Tabs By Group</key>
+	<false/>
 </dict>
 </plist>

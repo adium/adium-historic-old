@@ -21,13 +21,17 @@
 @protocol AIContainerInterface, AIInterfaceContainer;
 
 @interface AIMessageWindowController : AIWindowController {
-    IBOutlet	NSTabView		*tabView_messages;
+    IBOutlet	NSTabView			*tabView_messages;
     IBOutlet	AICustomTabsView	*tabView_customTabs;
 
+	NSMutableArray					*listObjectArray;
+	
     BOOL			windowIsClosing;
     AIDualWindowInterfacePlugin<AIContainerInterface> 	*interface;
 
-    BOOL                        supressHiding;
+	BOOL			keepTabsArranged;
+	BOOL			arrangeByGroup;
+    BOOL			supressHiding;
     BOOL			tabIsShowing;
     BOOL			autohide_tabBar;
 	int				force_tabBar_visible;  //-1 = Doesn't matter, 0 = NO, 1 = YES;
@@ -42,6 +46,7 @@
 - (void)selectTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
 - (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
 - (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem atIndex:(int)index;
+- (void)arrangeTabs;
 - (void)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
 - (BOOL)containsMessageContainer:(NSTabViewItem <AIInterfaceContainer> *)tabViewItem;
 - (NSTabViewItem <AIInterfaceContainer> *)containerForListObject:(AIListObject *)inListObject;

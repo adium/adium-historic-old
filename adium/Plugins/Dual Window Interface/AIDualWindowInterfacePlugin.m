@@ -30,10 +30,12 @@
 #define CLOSE_MENU_TITLE				AILocalizedString(@"Close","Title for the close menu item")
 #define PREVIOUS_MESSAGE_MENU_TITLE		AILocalizedString(@"Previous Chat",nil)
 #define NEXT_MESSAGE_MENU_TITLE			AILocalizedString(@"Next Chat",nil)
-
+#define ARRANGE_MENU_TITLE				AILocalizedString(@"Arrange Tabs","Title for the arrange tabs menu item")
+#define ARRANGE_ALTERNATE_MENU_TITLE	AILocalizedString(@"Arrange All Tabs","Title for the arrange all tabs menu item")
 #define CHAT_IN_NEW_WINDOW				AILocalizedString(@"Chat in New Window",nil)
 #define CHAT_IN_PRIMARY_WINDOW			AILocalizedString(@"Chat in Primary Window",nil)
 #define CONSOLIDATE_ALL_CHATS			AILocalizedString(@"Consolidate All Chats",nil)
+#define SPLIT_ALL_CHATS					AILocalizedString(@"Split All Chats by Group",nil)
 #define TOGGLE_TAB_BAR					AILocalizedString(@"Toggle Tab Bar",nil)
 
 @interface AIDualWindowInterfacePlugin (PRIVATE)
@@ -52,6 +54,7 @@
 - (void)closeTabViewItem:(AIMessageTabViewItem *)inTab;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_transferMessageTabContainer:(AIMessageTabViewItem *)tabViewItem toWindow:(AIMessageWindowController *)messageWindowController;
+- (void)arrangeTabs:(id)sender;
 - (AIMessageWindowController *)_primaryMessageWindow;
 - (AIMessageWindowController *)_createMessageWindow;
 - (void)_destroyMessageWindow:(AIMessageWindowController *)inWindow;
@@ -192,6 +195,14 @@
         //Cache the window spawning preferences
 		alwaysCreateNewWindows = [[preferenceDict objectForKey:KEY_ALWAYS_CREATE_NEW_WINDOWS] boolValue];
 		useLastWindow = [[preferenceDict objectForKey:KEY_USE_LAST_WINDOW] boolValue];
+		
+		//Cache the tab sorting prefs
+		keepTabsArranged = [[preferenceDict objectForKey:KEY_KEEP_TABS_ARRANGED] boolValue];
+		arrangeByGroup = [[preferenceDict objectForKey:KEY_ARRANGE_TABS_BY_GROUP] boolValue];
+
+		if( keepTabsArranged )
+			[self arrangeTabs:menuItem_arrangeTabs_alternate];
+		
     } else if( contactListWindowController &&
 			   ([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST_DISPLAY] == 0) ){
 		
@@ -619,6 +630,22 @@
 														  action:@selector(nextMessage:)
 												   keyEquivalent:rightKey];
         [[adium menuController] addMenuItem:menuItem_nextMessage toLocation:LOC_Window_Commands];
+		
+		menuItem_arrangeTabs = [[NSMenuItem alloc] initWithTitle:ARRANGE_MENU_TITLE
+														  target:self
+														 action:@selector(arrangeTabs:)
+												   keyEquivalent:@""];
+		
+		if ([NSApp isOnPantherOrBetter]) {
+			menuItem_arrangeTabs_alternate = [[NSMenuItem alloc] initWithTitle:ARRANGE_ALTERNATE_MENU_TITLE
+																 target:self
+																 action:@selector(arrangeTabs:)
+														  keyEquivalent:@""];
+			[menuItem_arrangeTabs_alternate setAlternate:YES];
+			[menuItem_arrangeTabs_alternate setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
+		}			
+		[[adium menuController] addMenuItem:menuItem_arrangeTabs toLocation:LOC_Window_Commands];
+		[[adium menuController] addMenuItem:menuItem_arrangeTabs_alternate toLocation:LOC_Window_Commands];
         
 	}
 	
@@ -641,11 +668,18 @@
 											   keyEquivalent:@"O"];
     [[adium menuController] addMenuItem:menuItem_consolidate toLocation:LOC_Window_Commands];
     
+	//menuItem_splitByGroup = [[NSMenuItem alloc] initWithTitle:SPLIT_ALL_CHATS
+	//												   target:self
+	//												   action:@selector(splitAllChatsByGroup:)
+	//											keyEquivalent:@""];
+	//[[adium menuController] addMenuItem:menuItem_splitByGroup toLocation:LOC_Window_Commands];
+		
     menuItem_toggleTabBar = [[NSMenuItem alloc] initWithTitle:TOGGLE_TAB_BAR
 													   target:nil 
 													   action:@selector(toggleForceTabBarVisible:)
 												keyEquivalent:@"\\"];
     [[adium menuController] addMenuItem:menuItem_toggleTabBar toLocation:LOC_Window_Commands];
+	
 }
 
 //Build the contents of the 'window' menu
@@ -844,7 +878,13 @@
     }else if (menuItem == menuItem_consolidate){
 		if([messageWindowControllerArray count] <= 1) enabled = NO; //only with more than one window open
 		
-    }
+    }else if (menuItem == menuItem_arrangeTabs || menuItem == menuItem_arrangeTabs_alternate){
+        if(![messageWindowControllerArray count] || keepTabsArranged) enabled = NO;
+
+	}else if (menuItem == menuItem_splitByGroup){
+        //if(![messageWindowControllerArray count]) enabled = NO;
+		enabled = NO;
+	}
 	
     return(enabled);
 }
@@ -944,6 +984,34 @@
 - (void)_transferMessageTabContainer:(AIMessageTabViewItem *)tabViewItem toWindow:(AIMessageWindowController *)newMessageWindow
 {
     [self transferMessageTabContainer:tabViewItem toWindow:newMessageWindow atIndex:-1 withTabBarAtPoint:NSMakePoint(-1,-1)];
+}
+
+
+//Arrange tabs in some or all windows with the current sort options
+- (IBAction)arrangeTabs:(id)sender
+{
+	if( sender == menuItem_arrangeTabs ) {
+		
+		if( lastUsedMessageWindow ){
+			[lastUsedMessageWindow arrangeTabs];
+		}		
+		
+	} else if( sender == menuItem_arrangeTabs_alternate ) {
+		
+		AIMessageWindowController   *controller;
+		NSEnumerator				*enumerator = [messageWindowControllerArray objectEnumerator];
+
+		while( controller = [enumerator nextObject] ) {
+			[controller arrangeTabs];
+		}
+		
+	}
+}
+
+- (IBAction)splitTabsByGroup:(id)sender
+{
+	// this is gonna be a pain
+
 }
 
 //Returns the message window housing the specified container
