@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.63 2004/01/07 21:26:03 adamiser Exp $
+// $Id: AIContactController.m,v 1.64 2004/01/07 21:27:45 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -423,50 +423,68 @@
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Handle status --------------------------------------------------------------------------------
+//List object observers ------------------------------------------------------------------------------------------------
 //Registers code to observe handle status changes
 - (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver
 {
-    NSEnumerator	*enumerator;
-    AIListContact	*contact;
+	NSEnumerator	*enumerator = [contactDict objectEnumerator];
+	AIListObject	*listObject;
     
+	//Add the observer
     [contactObserverArray addObject:inObserver];
-
-    //Let the handle observer process all existing contacts
-    enumerator = [[self allContactsInGroup:nil subgroups:YES] objectEnumerator];
-    while((contact = [enumerator nextObject])){
-        [inObserver updateListObject:contact keys:nil delayed:YES silent:YES];
-    }
-
-    //Resort and update the contact list (Since the observer has most likely changed attributes)
-    //This may be incorrect.  Will not posting attribute changed messages cause problems?
-    [self sortListGroup:nil mode:AISortGroupAndSubGroups];
-    [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
+	
+    //Let the new observer process all existing objects
+	while(listObject = [enumerator nextObject]){
+		[inObserver updateListObject:listObject keys:nil silent:YES];
+	}
 }
 
 - (void)unregisterListObjectObserver:(id)inObserver
 {
     [contactObserverArray removeObject:inObserver];
-
-    //Resort and update the contact list (Since the observer has most likely changed attributes)
-    //This may be incorrect.  Will not posting attribute changed messages cause problems?
-    [self sortListGroup:nil mode:AISortGroupAndSubGroups];
-    [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
+	[self sortContactList];
 }
+
+//Notify observers of a status change.  Returns the modified attribute keys
+- (NSArray *)_informObserversOfObjectStatusChange:(AIListObject *)inObject withKeys:(NSArray *)modifiedKeys silent:(BOOL)silent
+{
+	NSMutableArray				*attrChange = [NSMutableArray array];
+	NSEnumerator				*enumerator;
+    id <AIListObjectObserver>	observer;
+	
+	//Let our observers know
+	enumerator = [contactObserverArray objectEnumerator];
+	while((observer = [enumerator nextObject])){
+		NSArray	*newKeys;
+		
+		if((newKeys = [observer updateListObject:inObject keys:modifiedKeys silent:silent])){
+			[attrChange addObjectsFromArray:newKeys];
+		}
+	}
+	
+	//Send out the notification for other observers
+	[[owner notificationCenter] postNotificationName:ListObject_StatusChanged
+											  object:inObject
+											userInfo:(modifiedKeys ? [NSDictionary dictionaryWithObject:modifiedKeys forKey:@"Keys"] : nil)];
+	return(attrChange);
+}
+
+//Notifies observers that an object was created
+- (void)_informObserversOfObjectCreation:(AIListObject *)inObject
+{
+	NSEnumerator				*enumerator = [contactObserverArray objectEnumerator];
+    id <AIListObjectObserver>	observer;
+	
+	while((observer = [enumerator nextObject])){
+		[observer updateListObject:inObject keys:nil silent:YES];
+	}
+}
+
+
+
+//Contact List ---------------------------------------------------------------------------------------------------------
+
+
 
 
 
