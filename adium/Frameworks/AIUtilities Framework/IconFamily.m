@@ -362,12 +362,16 @@
     if (hRawMaskData) {
         HLock( hRawMaskData );
         pRawMaskData = *hRawMaskData;
-        while (pRawBitmapData < pRawBitmapDataEnd)
-            *pRawBitmapData++ = (*pRawBitmapData << 8) | *pRawMaskData++;
+        while (pRawBitmapData < pRawBitmapDataEnd){
+            *pRawBitmapData = (*pRawBitmapData << 8) | *pRawMaskData++;
+            *pRawBitmapData++;
+        }
         HUnlock( hRawMaskData );
     } else {
-        while (pRawBitmapData < pRawBitmapDataEnd)
-            *pRawBitmapData++ = (*pRawBitmapData << 8) | 0xff;
+        while (pRawBitmapData < pRawBitmapDataEnd){
+            *pRawBitmapData = (*pRawBitmapData << 8) | 0xff;
+            *pRawBitmapData++;
+        }
     }
     
     // Create a new NSBitmapImageRep with the given bitmap data.  Note that
