@@ -57,7 +57,7 @@
 	AIStatus	*status = [[[self class] allocWithZone:zone] init];
 
 	[status->statusDict release];
-	status->statusDict = [statusDict copy];
+	status->statusDict = [statusDict mutableCopy];
 
 	return status;
 }
@@ -84,11 +84,11 @@
 
     if ([decoder allowsKeyedCoding]){
         // Can decode keys in any order		
-        statusDict = [[decoder decodeObjectForKey:@"AIStatusDict"] retain];
+        statusDict = [[decoder decodeObjectForKey:@"AIStatusDict"] mutableCopy];
 		
     }else{
         // Must decode keys in same order as encodeWithCoder:		
-        statusDict = [[decoder decodeObject] retain];
+        statusDict = [[decoder decodeObject] mutableCopy];
     }
 	
 	return self;
@@ -442,10 +442,15 @@
 /*
  * @brief Set the mutability type of this status. The default is AIEditableState
  */
-- (void)setMutabilityTpye:(AIStateMutabilityType)mutabilityType
+- (void)setMutabilityType:(AIStateMutabilityType)mutabilityType
 {
 	[statusDict setObject:[NSNumber numberWithInt:mutabilityType]
 				   forKey:STATE_MUTABILITY_TYPE];
+}
+
+- (NSString *)description
+{
+	return([NSString stringWithFormat:@"%@ : %@",[super description], statusDict]);
 }
 
 @end
