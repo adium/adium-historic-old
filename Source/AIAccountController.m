@@ -209,7 +209,7 @@
 //Sort an array of services alphabetically by their description
 int _alphabeticalServiceSort(id service1, id service2, void *context)
 {
-	return([(NSString *)[service1 description] caseInsensitiveCompare:(NSString *)[service2 description]]);
+	return([(NSString *)[service1 longDescription] caseInsensitiveCompare:(NSString *)[service2 longDescription]]);
 }
 
 //Return the available services.  These are used for account creation.
@@ -295,24 +295,39 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //- The menu item's represented objects are the service controllers they represent
 - (NSMenu *)menuOfServicesWithTarget:(id)target
 {	
-    NSEnumerator	*enumerator;
-    AIService		*service;
-	
+	AIServiceImportance	importance;
+	BOOL				firstPass = YES;
+
 	//Prepare our menu
 	NSMenu *menu = [[NSMenu alloc] init];
 	[menu setAutoenablesItems:NO];
 
-    //Insert a menu item for each available service
-	enumerator = [[self availableServices] objectEnumerator];
-	while((service = [enumerator nextObject])){
-        NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[service longDescription]
-														target:target 
-														action:@selector(selectServiceType:) 
-												 keyEquivalent:@""] autorelease];
-        [item setRepresentedObject:service];
-		[item setImage:[AIServiceIcons serviceIconForService:service  type:AIServiceIconSmall direction:AIIconNormal]];
-        [menu addItem:item];
-    }
+	//Divide our menu into sections.  This helps separate less importance services from the others (sorry guys!)
+	for(importance = AIServicePrimary; importance <= AIServiceUnsupported; importance++){
+		NSEnumerator	*enumerator;
+		AIService		*service;
+
+		//Divider
+		if(firstPass){
+			firstPass = NO;
+		}else{
+			[menu addItem:[NSMenuItem separatorItem]];
+		}
+		
+		//Insert a menu item for each service of this importance
+		enumerator = [[self availableServices] objectEnumerator];
+		while((service = [enumerator nextObject])){
+			if([service serviceImportance] == importance){
+				NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[service longDescription]
+																target:target 
+																action:@selector(selectServiceType:) 
+														 keyEquivalent:@""] autorelease];
+				[item setRepresentedObject:service];
+				[item setImage:[AIServiceIcons serviceIconForService:service  type:AIServiceIconSmall direction:AIIconNormal]];
+				[menu addItem:item];
+			}
+		}
+	}
 	
 	return([menu autorelease]);
 }	

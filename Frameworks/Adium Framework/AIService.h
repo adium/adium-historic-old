@@ -8,6 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 
+//Service importance, used to group and order services
+typedef enum {
+	AIServicePrimary,
+	AIServiceSecondary,
+	AIServiceUnsupported
+} AIServiceImportance;
 
 @interface AIService : AIObject {
 
@@ -29,6 +35,7 @@
 - (NSCharacterSet *)ignoredCharacters;
 - (int)allowedLength;
 - (BOOL)caseSensitive;
+- (AIServiceImportance)serviceImportance;
 		
 //Utilities
 - (NSString *)filterUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored;
