@@ -454,7 +454,7 @@
 	[self drawGradientWithFirstColor:color1 secondColor:color2 inRect:[tempPath bounds]];
 	[image unlockFocus];
  
-	[image compositeToPoint:keepPoint operation:NSCompositeSourceAtop];
+	[image compositeToPoint:keepPoint operation:NSCompositeSourceOver];
 }
 
 //Private NSCell method which needs to be overridden to do custom highlighting properly, regardless of the false claims of the documentation.
