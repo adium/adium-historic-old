@@ -28,6 +28,26 @@
 //Offline is faded by 70%
 #define OFFLINE_MENU_IMAGE_FRACTION		0.30
 
+//Proxy
+#define KEY_ACCOUNT_GAIM_PROXY_TYPE			@"Proxy Type"
+#define KEY_ACCOUNT_GAIM_PROXY_HOST			@"Proxy Host"
+#define KEY_ACCOUNT_GAIM_PROXY_PORT			@"Proxy Port"
+#define KEY_ACCOUNT_GAIM_PROXY_USERNAME		@"Proxy Username"
+#define KEY_ACCOUNT_GAIM_PROXY_PASSWORD		@"Proxy Password"
+
+//Proxy types
+typedef enum
+{
+	Gaim_Proxy_None		= 0,
+	Gaim_Proxy_Default_SOCKS5  = 1,
+	Gaim_Proxy_HTTP		= 2,
+	Gaim_Proxy_SOCKS4   = 3,
+	Gaim_Proxy_SOCKS5   = 4,
+	Gaim_Proxy_Default_HTTP = 5,
+	Gaim_Proxy_Default_SOCKS4 = 6,
+} AdiumGaimProxyType;
+
+
 @protocol AIListObjectObserver;
 
 @class AIAdium, AIAccount, AIListObject, AIAccountViewController, DCJoinChatViewController;
