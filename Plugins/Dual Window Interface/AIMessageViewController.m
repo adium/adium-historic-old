@@ -202,6 +202,7 @@
 	[scrollView_userList release];
 	[controllerView_messages release];
 	[view_contents release];
+	[userListController release];
 	
     [super dealloc];
 }
