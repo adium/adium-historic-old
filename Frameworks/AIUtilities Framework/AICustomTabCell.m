@@ -295,7 +295,8 @@ static NSSize		rightCapSize;
 		NSParagraphStyle	    *paragraphStyle;
 		
 		//Paragraph Style (Turn off clipping by word)
-		paragraphStyle = [NSParagraphStyle styleWithAlignment:NSCenterTextAlignment lineBreakMode:NSLineBreakByClipping];
+		paragraphStyle = [NSParagraphStyle styleWithAlignment:NSCenterTextAlignment 
+												lineBreakMode:NSLineBreakByTruncatingTail];
 
 		//Update the attributed string
 		[attributedLabel release];
