@@ -7,7 +7,7 @@
 
 #import "ESAccountEvents.h"
 
-#define ACCOUNT_CONNECTION_STATUS_GROUPING  1.0
+#define ACCOUNT_CONNECTION_STATUS_GROUPING  2.0
 
 @implementation ESAccountEvents
 
