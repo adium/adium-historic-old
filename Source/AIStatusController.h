@@ -97,6 +97,9 @@
 	NSMutableDictionary		*statusDictsByServiceCodeUniqueID[STATUS_TYPES_COUNT];
 	NSMutableSet			*builtInStatusTypes[STATUS_TYPES_COUNT];
 
+	NSMutableSet			*accountsToConnect;
+	BOOL					isProcessingSelectedGlobalOffline;
+
 	//Machine idle tracking
 	BOOL					machineIsIdle;
 	double					lastSeenIdle;
