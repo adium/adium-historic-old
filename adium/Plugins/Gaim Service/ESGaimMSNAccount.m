@@ -114,6 +114,13 @@ static BOOL didInitMSN = NO;
 }
 
 #pragma mark Status
+//Update our full name on connect
+- (oneway void)accountConnectionConnected
+{
+	[super accountConnectionConnected];
+	[self updateStatusForKey:@"FullNameAttr"];
+}	
+
 //Update our status
 - (void)updateStatusForKey:(NSString *)key
 {    
@@ -141,13 +148,6 @@ static BOOL didInitMSN = NO;
  		msn_set_friendly_name(account->gc, [inAlias UTF8String]);
 		[currentFriendlyName release]; currentFriendlyName = [inAlias retain];
 	}
-}
-
-//Update all our status keys
-- (void)updateAllStatusKeys
-{
-	[super updateAllStatusKeys];
-	[self updateStatusForKey:@"FullNameAttr"];
 }
 
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact

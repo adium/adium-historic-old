@@ -985,8 +985,9 @@ static id<GaimThread> gaimThread = nil;
 	//E-mail checking
 	gaim_account_set_check_mail(account, [[self shouldCheckMail] boolValue]);
 	
-	//Status
-	[self updateAllStatusKeys];	
+	//Update a few status keys before we begin connecting.  Libgaim will send these automatically
+    [self updateStatusForKey:KEY_USER_ICON];
+    [self updateStatusForKey:@"TextProfile"];
 }
 
 //Configure libgaim's proxy settings using the current system values
@@ -1286,13 +1287,6 @@ static id<GaimThread> gaimThread = nil;
         nil];
 	
 	return supportedPropertyKeys;
-}
-
-//Update all our status keys
-- (void)updateAllStatusKeys
-{
-    [self updateStatusForKey:@"TextProfile"];
-    [self updateStatusForKey:KEY_USER_ICON];
 }
 
 //Update our status
