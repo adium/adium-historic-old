@@ -59,7 +59,7 @@
                         </form>
                         <p><span class="tiny"><a href="iseek://url/?=&amp;name=Adium%20Forums&amp;category=Foros&amp;encoding=5&amp;scheme=http&amp;url=www.funmac.com/search.php?s=%26searchdate=-1%26beforeafter=after%26forumchoice=38%26action=simplesearch%26query=">iSeek URL</a> (click to add it)</span></p>
                     
-                    <p>Try asking in our <a href="irc://irc.freenode.net/#adium">irc channel</a>:<br />
+                    <p>Try asking in our <a href="irc://irc.freenode.net/adium">irc channel</a>:<br />
                     <span class="tiny">Server: irc.freenode.net</span><br />
                     <span class="tiny">Channel: #adium</span></p>
                     <p>Get support via email: <a href="mailto:support@adiumx.com">support@adiumx.com</a></p>
