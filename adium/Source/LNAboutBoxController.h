@@ -6,6 +6,7 @@
 
     IBOutlet	NSButton	*button_duckIcon;
     IBOutlet	NSTextField	*textField_buildDate;
+    IBOutlet	NSTextField	*textField_buildTime;
     IBOutlet	AILinkTextView	*linkTextView_siteLink;
 
     NSMutableArray      *avatarArray;
@@ -19,6 +20,5 @@
 + (LNAboutBoxController *)aboutBoxControllerForOwner:(id)inOwner;
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)adiumDuckClicked:(id)sender;
-
 
 @end

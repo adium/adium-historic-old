@@ -10,6 +10,7 @@
                 "button_duckIcon" = NSButton; 
                 "linkTextView_siteLink" = AILinkTextView; 
                 "textField_buildDate" = NSTextField; 
+                "textField_buildTime" = NSTextField; 
             }; 
             SUPERCLASS = NSWindowController; 
         }
