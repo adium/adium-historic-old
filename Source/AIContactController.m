@@ -916,20 +916,19 @@ DeclareString(UID);
 	
 	//Post the list changed notification for the old containingObject
 	[self _listChangedGroup:containingObject object:metaContact];
-	
-	//Protection is overrated.
-	[metaContact release];
-	[containedObjects release];
-	[allMetaContactsDict release];
-	
+		
 	//Save the updated allMetaContactsDict which no longer lists the metaContact
 	[self _saveMetaContacts:allMetaContactsDict];
+
+	//Protection is overrated.
+	[metaContact release];
+	[containedObjects release];	
+	[allMetaContactsDict release];
 }
 
 - (void)_saveMetaContacts:(NSDictionary *)allMetaContactsDict
 {
 //	[[owner preferenceController] delayPreferenceChangedNotifications:YES];
-
 	[[owner preferenceController] setPreference:allMetaContactsDict
 										 forKey:KEY_METACONTACT_OWNERSHIP
 										  group:PREF_GROUP_CONTACT_LIST];
