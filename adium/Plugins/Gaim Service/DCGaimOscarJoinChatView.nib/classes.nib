@@ -3,6 +3,7 @@
         {
             CLASS = DCGaimOscarJoinChatViewController; 
             LANGUAGE = ObjC; 
+            OUTLETS = {"textField_roomName" = NSTextField; }; 
             SUPERCLASS = DCJoinChatViewController; 
         }, 
         {

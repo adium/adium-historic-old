@@ -14,6 +14,23 @@
 	[super configureForAccount:inAccount];
 }
 
+- (void)joinChatWithAccount:(AIAccount *)inAccount
+{	
+	NSString		*room = [textField_roomName stringValue];
+	NSString		*server = [textField_server stringValue];
+	NSString		*handle = [textField_handle stringValue];
+	NSString		*password = [textField_password stringValue];
+	NSDictionary	*chatCreationInfo;
+	
+	NSLog(@"#### Jabber joinChatWithAccount: %@ joining",inAccount);
+		
+	chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:room,@"room",server,@"server",handle,@"handle",password,@"password",nil];
+
+	[[adium contentController] chatWithName:room
+								  onAccount:inAccount
+						   chatCreationInfo:chatCreationInfo];
+}
+
 - (NSString *)nibName
 {
 	return @"DCGaimJabberJoinChatView";

@@ -280,6 +280,9 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					 */
 					list = (GAIM_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info(gc);
 					
+					// DEBUG: If this is false, we don't even try to join.
+					BOOL shouldTryToJoin = YES;
+					
 					//Look at each proto_chat_entry in the list and put it in the hash table
 					//The hash table should contain char* objects created via a g_strdup method
 					for (tmp = list; tmp; tmp = tmp->next)
@@ -291,16 +294,20 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 						if (!(pce->is_int)){
 							NSString	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
 							if (value){
+								NSLog(@"$$$$ not int: added %s:%@ to chat info",identifier,value);
 								valueUTF8String = g_strdup([value UTF8String]);
 							}else{
 								NSLog(@"String: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
+								shouldTryToJoin = NO;
 							}
 						}else{
 							NSNumber	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
 							if (value){
+								NSLog(@"$$$$  is int: added %s:%@ to chat info",identifier,value);
 								valueUTF8String = g_strdup_printf("%d",[value intValue]);
 							}else{
 								NSLog(@"Int: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
+								shouldTryToJoin = NO;
 							}							
 						}
 						
@@ -328,10 +335,14 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					//Associate our chat with the libgaim conversation
 					//NSLog(@"associating the gaimconv");
 					
+					if( shouldTryToJoin ) {
 					//Join the chat serverside - the GHsahTable components, couple with the originating GaimConnect,
 					//now contains all the information the prpl will need to process our request.
-					NSLog(@"In the event of an emergency, your GHashTable may be used as a flotation device...");
-					serv_join_chat(gc, components);
+						NSLog(@"In the event of an emergency, your GHashTable may be used as a flotation device...");
+						serv_join_chat(gc, components);
+					} else {
+						NSLog(@"#### Bailing out of group chat");
+					}
 					//Evan: I think we'll return a nil conv here.. and then Gaim will call us back with a conv...
 					//and then we'll associate it with a chat later.  That's quite possibly wrong though...
 /*

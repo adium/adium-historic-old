@@ -3,6 +3,12 @@
         {
             CLASS = DCGaimJabberJoinChatViewController; 
             LANGUAGE = ObjC; 
+            OUTLETS = {
+                "textField_handle" = NSTextField; 
+                "textField_password" = NSTextField; 
+                "textField_roomName" = NSTextField; 
+                "textField_server" = NSTextField; 
+            }; 
             SUPERCLASS = DCJoinChatViewController; 
         }, 
         {

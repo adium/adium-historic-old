@@ -7,7 +7,10 @@
 //
 
 @interface DCGaimJabberJoinChatViewController : DCJoinChatViewController {
-
+	IBOutlet		NSTextField		*textField_roomName;
+	IBOutlet		NSTextField		*textField_server;
+	IBOutlet		NSTextField		*textField_handle;
+	IBOutlet		NSTextField		*textField_password;
 }
 
 @end
