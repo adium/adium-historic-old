@@ -20,4 +20,18 @@
     return([ESGaimYahooAccountViewController accountViewForAccount:self]);
 }
 
+//Yahoo uses 
+-(NSString *)encodedStringFromAttributedString:(NSAttributedString *)inAttributedString
+{
+    //gaim's yahoo_html_to_codes seems to be messed up...
+   return ([AIHTMLDecoder encodeHTML:inAttributedString
+                                               headers:NO
+                                              fontTags:NO
+                                         closeFontTags:NO
+                                             styleTags:NO
+                            closeStyleTagsOnFontChange:NO
+                                        encodeNonASCII:NO
+                                            imagesPath:nil]);
+}
+
 @end
