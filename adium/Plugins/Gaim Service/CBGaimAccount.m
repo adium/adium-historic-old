@@ -9,8 +9,8 @@
 #import "CBGaimAccount.h"
 #import "CBGaimServicePlugin.h"
 
-//#define OWN_BUDDY_IMAGE         @"/Users/evands/Library/Caches/Adium/UserIcon_Default.bmp"
 #define OWN_BUDDY_IMAGE         @"/Users/evands/evands.jpg"
+#define PROFILE_STRING          @"I'm using Adium 2.0. Are you? www.adiumx.com"
 
 #define NO_GROUP                @"__NoGroup__"
 #define USER_ICON_CACHE_PATH    @"~/Library/Caches/Adium"
@@ -20,7 +20,6 @@
 @interface CBGaimAccount (PRIVATE)
 - (AIChat*)_openChatWithHandle:(AIHandle*)handle andConversation:(GaimConversation*)conv;
 - (void)displayError:(NSString *)errorDesc;
-- (void)setAwayMessage:(id)msg;
 - (void)setBuddyImageFromFilename:(char *)imageFilename;
 - (void)signonTimerExpired:(NSTimer*)timer;
 - (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer;
@@ -81,6 +80,7 @@
         if(profile) [self statusForKey:@"TextProfile" willChangeTo:profile];
         if(away) [self statusForKey:@"AwayMessage" willChangeTo:away];
     }
+    
     //set the image file name, which is saved in the account preferences and generally easy to access
     [[owner accountController] setProperty:OWN_BUDDY_IMAGE forKey:@"BuddyImageFileName" account:self];
     
@@ -479,6 +479,9 @@
     
     //ensure our user icon cache path exists
     [AIFileUtilities createDirectory:[USER_ICON_CACHE_PATH stringByExpandingTildeInPath]];
+    
+    //TEMP: set profile
+    [[owner accountController] setProperty:[[[[NSAttributedString alloc] initWithString:PROFILE_STRING] autorelease] dataRepresentation] forKey:@"TextProfile" account:self];
 }
 
 - (void)dealloc
@@ -510,9 +513,11 @@
         @"Online",
         @"Offline",
         @"IdleSince",
+        @"IdleManuallySet",
         @"BuddyImage",
         @"Away",
         @"AwayMessage",
+        @"TextProfile",
         @"UserIcon",
         @"DefaultUserIconFilename",
         nil]);
@@ -521,6 +526,8 @@
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
     ACCOUNT_STATUS status = [[[owner accountController] propertyForKey:@"Status" account:self] intValue];
+    
+    //Online status changed
     if([key compare:@"Online"] == 0)
     {
         if([inValue boolValue]) {
@@ -533,7 +540,9 @@
             }
         }
     } 
-    else if (status == STATUS_ONLINE) { //now look at keys which only make sense while online
+    
+    //Now look at keys which only make sense while online
+    else if (status == STATUS_ONLINE) {
         if ([key compare:@"IdleSince"] == 0){
             // Even if we're setting a non-zero idle time, set it to zero first.
             // Some clients ignore idle time changes unless it moves to/from 0.
@@ -546,7 +555,12 @@
         else if ([key compare:@"AwayMessage"] == 0) {
             [self setAwayMessage:inValue];
         }
+        else if([key compare:@"TextProfile"] == 0){
+            [self setProfile:inValue];
+        }
     }
+    
+    //User Icon can be set regardless of ONLINE state
     if ([key compare:@"UserIcon"] == 0) {
         [self setUserIcon:inValue];
         
@@ -593,9 +607,25 @@
                             closeStyleTagsOnFontChange:NO
                                         encodeNonASCII:NO] UTF8String];
     }
-    // gaim expects us to allocate the away message and leave it allocated;
-    // it takes responsibilty for freeing it.
+
     serv_set_away(gc, GAIM_AWAY_CUSTOM, newValue);
+}
+
+- (void)setProfile:(id)profile
+{
+    char *newValue = NULL;
+    
+    if (profile) {
+        newValue = (char *)[[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:profile]
+                                          headers:YES
+                                         fontTags:YES
+                                    closeFontTags:YES
+                                        styleTags:YES
+                       closeStyleTagsOnFontChange:NO
+                                   encodeNonASCII:NO] UTF8String];
+    }
+
+    serv_set_info(gc, newValue);
 }
 
 - (void)setBuddyImageFromFilename:(char *)imageFilename

@@ -102,4 +102,9 @@
 //AIAccount_Privacy
 -(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type;
 -(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type;
+
+//Private
+- (void)setAwayMessage:(id)message;
+- (void)setProfile:(id)profile;
+
 @end
