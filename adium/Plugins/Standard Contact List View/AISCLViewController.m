@@ -579,6 +579,7 @@
 }
 
 
+
 //Auto-resizing support ------------------------------------------------------------------------------------------------
 #pragma mark Auto-resizing support
 - (void)outlineViewItemDidExpand:(NSNotification *)notification
