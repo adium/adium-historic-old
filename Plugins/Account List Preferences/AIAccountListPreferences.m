@@ -129,7 +129,15 @@
 		[AIStringFormatter stringFormatterAllowingCharacters:[inService allowedCharactersForAccountName]
 													  length:[inService allowedLengthForAccountName]
 											   caseSensitive:[inService caseSensitive]
-												errorMessage:@"The characters you're entering are not valid for an account name on this service."]];
+												errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.",nil)]];
+	
+	//Hide/show the Register button as appropriate
+	BOOL shouldShowRegisterButton = [inService canRegisterNewAccounts];
+	if ([button_register respondsToSelector:@selector(setHidden:)]){
+		[button_register setHidden:(!shouldShowRegisterButton)];
+	}else{
+		[button_register setEnabled:(!shouldShowRegisterButton)];
+	}
 }
 
 //Add the custom views for a controller
@@ -239,7 +247,6 @@
 	//Get any final changes to the UID field
 	[textField_accountName fireImmediately];
 
-	
 	if([[configuredForAccount statusObjectForKey:@"Connecting"] boolValue]){
 		//cancel the currently connecting account - if the user's into that sort of thing.
 		[configuredForAccount setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
@@ -256,6 +263,36 @@
 		
 		[configuredForAccount setPreference:[NSNumber numberWithBool:goOnline] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 	}
+}
+
+- (IBAction)registerAccount:(id)sender
+{
+	//If a field doesn't send its action until the user presses enter (the password field, for example), we should save
+	//immediately so the newly-inputted value is available as we try to register
+	[accountViewController saveFieldsImmediately];
+	
+	if (![configuredForAccount UID]){
+		NSRunAlertPanel(AILocalizedString(@"Unable to Register",nil),
+						AILocalizedString(@"Please input a username and password before clicking Register.",nil),
+						AILocalizedString(@"Okay",nil), nil, nil);
+	}else{
+		if ([self requiresPassword]){
+			//Retrieve the user's password and then call connect
+			[[adium accountController] passwordForAccount:configuredForAccount 
+										  notifyingTarget:self
+												 selector:@selector(passwordReturnedForRegister:)
+												  context:nil];
+		}else{
+			//Connect immediately without retrieving a password
+			[self performRegisterWithPassword:nil];
+		}
+	}
+}
+
+//Callback after the user enters their password for registering
+- (void)passwordReturnedForRegister:(NSString *)inPassword
+{
+	[configuredForAccount performRegisterWithPassword:inPassword];
 }
 
 //User toggled the autoconnect preference
