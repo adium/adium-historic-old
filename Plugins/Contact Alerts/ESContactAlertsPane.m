@@ -41,6 +41,11 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context);
     [actionsCell setFont:[NSFont systemFontOfSize:12]];
 	[actionsCell setIgnoresFocus:YES];
 	[[tableView_actions tableColumnWithIdentifier:@"description"] setDataCell:actionsCell];
+	
+	//
+	[button_edit setTitle:@"Edit"];
+	[button_delete setEnabled:NO];
+	[button_edit setEnabled:NO];
 }
 
 //Preference view is closing
