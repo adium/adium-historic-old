@@ -39,6 +39,7 @@
                 "colorWell_signedOffLabel" = NSColorWell; 
                 "colorWell_signedOn" = NSColorWell; 
                 "colorWell_signedOnLabel" = NSColorWell; 
+                "colorWell_statusText" = NSColorWell; 
                 "colorWell_typing" = NSColorWell; 
                 "colorWell_typingLabel" = NSColorWell; 
                 "colorWell_unviewedContent" = NSColorWell; 
