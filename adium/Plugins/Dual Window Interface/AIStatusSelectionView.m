@@ -141,7 +141,7 @@
 	NSAttributedString	*awayMessage = [representedObject objectForKey:@"Message"];
 	NSAttributedString	*awayAutoResponse = [representedObject objectForKey:@"Autoresponse"];
 	[[owner accountController] setProperty:awayMessage forKey:@"AwayMessage" account:nil];
-        [[owner accountController] setProperty:awayAutoResponse forKey:@"AutoResponse" account:nil];
+        [[owner accountController] setProperty:awayAutoResponse forKey:@"Autoresponse" account:nil];
 
     }else if([title compare:STATUS_NAME_AVAILABLE] == 0){ //Available
         [[owner accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
