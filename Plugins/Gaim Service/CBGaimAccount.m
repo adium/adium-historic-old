@@ -1111,13 +1111,19 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Create an ESFileTransfer object from an xfer
 - (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID size:(unsigned long long)inSize
 {
+	return([self mainPerformSelector:@selector(_mainThreadNewFileTransferObjectWith:size:)
+						  withObject:destinationUID
+						  withObject:[NSNumber numberWithUnsignedLongLong:inSize]
+						 returnValue:YES]);
+}
+- (ESFileTransfer *)_mainThreadNewFileTransferObjectWith:(NSString *)destinationUID size:(NSNumber *)inSize
+{
 	AIListContact   *contact = [self _contactWithUID:destinationUID];
-	
     ESFileTransfer	*fileTransfer;
 	
 	fileTransfer = [[adium fileTransferController] newFileTransferWithContact:contact
 																   forAccount:self]; 
-	[fileTransfer setSize:inSize];
+	[fileTransfer setSize:[inSize unsignedLongLongValue]];
 
     return(fileTransfer);
 }
