@@ -280,6 +280,10 @@ static BOOL didInitOscar = NO;
 	formattedUID = [self formattedUID];
 
 	if (![[formattedUID lowercaseString] isEqualToString:formattedUID]){
+		
+		//Remove trailing whitespace
+		while([formattedUID hasSuffix:@" "]) formattedUID = [formattedUID substringToIndex:([formattedUID length]-1)];
+		
 		[[self gaimThread] OSCARSetFormatTo:formattedUID
 								  onAccount:self];
 	}
