@@ -287,6 +287,8 @@ void Adium_HandleSignal(int i){
 	signal(SIGABRT, SIG_IGN);
 }
 
+//Other -------------------------------------------------------------------------------------------------------
+#pragma mark Other
 //If Adium was launched by double-clicking an associated file, we get this call after willFinishLaunching but before
 //didFinishLaunching
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
@@ -370,7 +372,7 @@ void Adium_HandleSignal(int i){
 }
 
 //return zero or more pathnames to objects in the Application Support folders
-//and resources folder of the bundle
+//  and the resources folder of the application bundle.
 //only those pathnames that exist are returned.
 - (NSArray *)resourcePathsForName:(NSString *)name
 {
