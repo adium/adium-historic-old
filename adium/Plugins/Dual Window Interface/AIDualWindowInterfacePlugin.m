@@ -42,7 +42,7 @@
 - (void)buildWindowMenu;
 - (void)_updateActiveWindowMenuItem;
 - (void)_updateCloseMenuKeys;
-- (void)increaseUnviewedContentOfListObject:(AIListObject *)inObject;
+- (void)_increaseUnviewedContentOfListObject:(AIListObject *)inObject;
 - (void)_clearUnviewedContentOfChat:(AIChat *)inChat;
 - (AIMessageTabViewItem *)_createMessageTabForChat:(AIChat *)inChat;
 - (AIMessageTabViewItem *)_messageTabForChat:(AIChat *)inChat;
