@@ -60,14 +60,14 @@ static NSDictionary			*statusIconNames[NUMBER_OF_STATUS_ICON_TYPES];
 	
 	//Retrieve the service icon from our cache
 	statusIcon = [statusIcons[iconType][iconDirection] objectForKey:statusID];
-	
+
 	//Load the status icon if necessary
 	if(!statusIcon){
 		NSString	*path = [statusIconBasePath stringByAppendingPathComponent:[statusIconNames[iconType] objectForKey:statusID]];
 		
 		if(path){
-			statusIcon = [[NSImage alloc] initWithContentsOfFile:path];
-			
+			statusIcon = [[NSImage alloc] initByReferencingFile:path];
+
 			if(statusIcon){
 				if(iconDirection == AIIconFlipped) [statusIcon setFlipped:YES];
 				[statusIcons[iconType][iconDirection] setObject:statusIcon forKey:statusID];
@@ -84,13 +84,29 @@ static NSDictionary			*statusIconNames[NUMBER_OF_STATUS_ICON_TYPES];
 + (BOOL)setActiveStatusIconsFromPath:(NSString *)inPath
 {
 	if(!statusIconBasePath || ![statusIconBasePath isEqualToString:inPath]){
-		NSDictionary	*statusIconPath = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
+		NSDictionary	*statusIconDict = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
 		
-		if(statusIconPath && [[statusIconPath objectForKey:@"AdiumSetVersion"] intValue] == 1){
+		if(statusIconDict && [[statusIconDict objectForKey:@"AdiumSetVersion"] intValue] == 1){
+			[statusIconBasePath release];
 			statusIconBasePath = [inPath retain];
 			
-			statusIconNames[AIStatusIconTab] = [[statusIconPath objectForKey:@"Tabs"] retain];
-			statusIconNames[AIStatusIconList] = [[statusIconPath objectForKey:@"List"] retain];
+			[statusIconNames[AIStatusIconTab] release];
+			statusIconNames[AIStatusIconTab] = [[statusIconDict objectForKey:@"Tabs"] retain];
+			
+			[statusIconNames[AIStatusIconList] release];
+			statusIconNames[AIStatusIconList] = [[statusIconDict objectForKey:@"List"] retain];
+			
+			//Clear out the status icon cache
+			int i, j;
+			
+			for(i = 0; i < NUMBER_OF_STATUS_ICON_TYPES; i++){
+				for(j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++){
+					[statusIcons[i][j] removeAllObjects];
+				}
+			}
+			
+			[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:@"AIStatusIconSetDidChange"
+																			   object:nil];
 			
 			return(YES);
 		}else{
@@ -150,5 +166,63 @@ static NSDictionary			*statusIconNames[NUMBER_OF_STATUS_ICON_TYPES];
 	return nil;
 }
 
+#define	PREVIEW_MENU_IMAGE_SIZE		13
+#define	PREVIEW_MENU_IMAGE_MARGIN	2
+
++ (NSImage *)previewMenuImageForStatusIconsAtPath:(NSString *)inPath
+{
+	NSImage	*image = [[NSImage alloc] initWithSize:NSMakeSize((PREVIEW_MENU_IMAGE_SIZE + PREVIEW_MENU_IMAGE_MARGIN) * 4,
+															  PREVIEW_MENU_IMAGE_SIZE)];
+
+	NSDictionary	*statusIconDict = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
+	
+	if(statusIconDict && [[statusIconDict objectForKey:@"AdiumSetVersion"] intValue] == 1){
+		
+		NSDictionary	*previewStatusIconNames = [statusIconDict objectForKey:@"List"];
+		NSEnumerator	*enumerator = [[NSArray arrayWithObjects:@"available",@"away",@"idle",@"offline",nil] objectEnumerator];
+		NSString		*statusID;
+		int				xOrigin = 0;
+		
+		[image lockFocus];
+		while(statusID = [enumerator nextObject]){
+			NSString	*anIconPath = [inPath stringByAppendingPathComponent:[previewStatusIconNames objectForKey:statusID]];
+			NSImage		*statusIcon;
+			
+			statusIcon = [[NSImage alloc] initWithContentsOfFile:anIconPath];
+		
+			if(statusIcon){
+				NSSize	statusIconSize = [statusIcon size];
+				NSRect	targetRect = NSMakeRect(xOrigin, 0, PREVIEW_MENU_IMAGE_SIZE, PREVIEW_MENU_IMAGE_SIZE);
+				
+				if(statusIconSize.width < targetRect.size.width){
+					float difference = (targetRect.size.width - statusIconSize.width)/2;
+					
+					targetRect.size.width -= difference;
+					targetRect.origin.x += difference;
+				}
+				
+				if(statusIconSize.height < targetRect.size.height){
+					float difference = (targetRect.size.height - statusIconSize.height)/2;
+					
+					targetRect.size.height -= difference;
+					targetRect.origin.y += difference;
+				}
+					
+				[statusIcon drawInRect:targetRect
+							  fromRect:NSMakeRect(0,0,statusIconSize.width,statusIconSize.height)
+							 operation:NSCompositeCopy
+							  fraction:1.0];
+				xOrigin += PREVIEW_MENU_IMAGE_SIZE + PREVIEW_MENU_IMAGE_MARGIN;
+			}
+		
+			[statusIcon release];
+		}
+		[image unlockFocus];
+		
+	}
+	
+	
+	return([image autorelease]);
+}
 @end
 
