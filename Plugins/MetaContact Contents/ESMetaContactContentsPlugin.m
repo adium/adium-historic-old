@@ -36,52 +36,61 @@
     NSMutableAttributedString	*entry = nil;
 	
 	if([inObject isKindOfClass:[AIMetaContact class]]){
-		NSMutableString	*entryString;
-		AIListContact	*contact;
-		BOOL			shouldAppendString = NO;
-
-		entry = [[NSMutableAttributedString alloc] init];
-		entryString = [entry mutableString];
-
-		NSEnumerator	*enumerator = [[(AIMetaContact *)inObject listContacts] objectEnumerator];
-		while(contact = [enumerator nextObject]){
-			if (shouldAppendString){
-				[entryString appendString:@"\r"];
-			}else{
-				shouldAppendString = YES;
+		NSArray				*listContacts = [(AIMetaContact *)inObject listContacts];
+		
+		//Only display the contents if it has more than one contact within it.
+		if ([listContacts count] > 1){
+			NSMutableString	*entryString;
+			AIListContact	*contact;
+			NSEnumerator	*enumerator;
+			BOOL			shouldAppendString = NO;
+			
+			entry = [[NSMutableAttributedString alloc] init];
+			entryString = [entry mutableString];
+			
+			enumerator = [listContacts objectEnumerator];
+			while(contact = [enumerator nextObject]){
+				NSImage	*statusIcon, *serviceIcon;
+				
+				if (shouldAppendString){
+					[entryString appendString:@"\r"];
+				}else{
+					shouldAppendString = YES;
+				}
+				
+				statusIcon = [[contact displayArrayObjectForKey:@"Tab Status Icon"] imageByScalingToSize:NSMakeSize(9,9)];
+				
+				if(statusIcon){
+					NSTextAttachment		*attachment;
+					NSTextAttachmentCell	*cell;
+						
+					cell = [[[NSTextAttachmentCell alloc] init] autorelease];
+					[cell setImage:statusIcon];
+					
+					attachment = [[[NSTextAttachment alloc] init] autorelease];
+					[attachment setAttachmentCell:cell];
+					
+					[entry appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
+				}
+				
+				[entryString appendString:[contact formattedUID]];
+				
+				serviceIcon = [AIServiceIcons serviceIconForObject:contact type:AIServiceIconSmall direction:AIIconNormal];
+				//[[[listContact account] menuImage] imageByScalingToSize:NSMakeSize(9,9)];
+				if (serviceIcon){
+					NSTextAttachment		*attachment;
+					NSTextAttachmentCell	*cell;
+					
+					cell = [[[NSTextAttachmentCell alloc] init] autorelease];
+					[cell setImage:serviceIcon];
+					
+					attachment = [[[NSTextAttachment alloc] init] autorelease];
+					[attachment setAttachmentCell:cell];
+					
+					[entryString appendString:@" "];
+					[entry appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
+				}
 			}
-			
-			NSImage	*statusIcon = [[contact displayArrayObjectForKey:@"Tab Status Icon"] imageByScalingToSize:NSMakeSize(9,9)];
-			
-			if(statusIcon){
-				NSTextAttachment		*attachment;
-				
-				NSTextAttachmentCell	*cell = [[[NSTextAttachmentCell alloc] init] autorelease];
-				[cell setImage:statusIcon];
-				
-				attachment = [[[NSTextAttachment alloc] init] autorelease];
-				[attachment setAttachmentCell:cell];
-				
-				[entry appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
-			}
-			
-			[entryString appendString:[contact formattedUID]];
-			
-			NSImage	*serviceIcon = [AIServiceIcons serviceIconForObject:contact type:AIServiceIconSmall direction:AIIconNormal];
-			//[[[listContact account] menuImage] imageByScalingToSize:NSMakeSize(9,9)];
-			if (serviceIcon){
-				NSTextAttachment		*attachment;
-				
-				NSTextAttachmentCell	*cell = [[[NSTextAttachmentCell alloc] init] autorelease];
-				[cell setImage:serviceIcon];
-				
-				attachment = [[[NSTextAttachment alloc] init] autorelease];
-				[attachment setAttachmentCell:cell];
-				
-				[entryString appendString:@" "];
-				[entry appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
-			}
-			
 		}
 	}
     
