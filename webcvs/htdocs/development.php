@@ -86,9 +86,10 @@
                     </ul>
                     <p>Instructions</p>
                     <ul class="steps">
-                        <li>Paste into terminal:<br /><span class="code">cvs -d:pserver:anonymous@cvs.adiumx.com:/cvsroot/adium login</span></li>
+                        <li>Paste into terminal:<br /><span class="code">cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/adium login</span></li>
                         <li>When asked for a password, just press return. No password is required.</li>
-                        <li>Paste into terminal:<br /><span class="code">cvs -z3 -d:pserver:anonymous@cvs.adiumx.com:/cvsroot/adium co adium</span></li>
+                        <li>Paste into terminal:<br /><span class="code">cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/adium co adium</span></li>
+                        <li>Paste into terminal:<br /><span class="code">cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/adium update -Pd adium</span></li>
                     </ul>
                     <p>You can update the source (as frequently as desired), by moving into the adium folder with <span class="code">cd adium</span> and running <span class="code">cvs -z3 update -Pd</span></p>
                 </div>
@@ -105,9 +106,10 @@
                     </ul>
                     <p>Instructions</p>
                     <ul class="steps">
-                        <li>Paste into terminal:<br /><span class="code">cvs -d:pserver:anonymous@cvs.adiumx.com:/cvsroot/adium login</span></li>
+                        <li>Paste into terminal:<br /><span class="code">cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/adium login</span></li>
                         <li>When asked for a password, just press return. No password is required.</li>
-                        <li>Paste into terminal:<br /><span class="code">cvs -z3 -d:pserver:anonymous@cvs.adiumx.com:/cvsroot/adium co libgaim</span></li>
+                        <li>Paste into terminal:<br /><span class="code">cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/adium co libgaim; cd libgaim</span></li>
+                        <li>Paste into terminal:<br /><span class="code">cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/adium update -Pd libgaim</span></li>
                     </ul>
                     <p>You can update the source (as frequently as desired), by moving into the libgaim folder with <span class="code">cd libgaim</span> and running <span class="code">cvs -z3 update -Pd</span></p>
                 </div>
