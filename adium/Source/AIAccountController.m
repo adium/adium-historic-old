@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.91 2004/07/15 01:01:43 ramoth4 Exp $
+// $Id: AIAccountController.m,v 1.92 2004/07/15 08:16:55 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -41,6 +41,13 @@
 - (void)saveAccounts;
 - (void)_addMenuItemsToMenu:(NSMenu *)menu withTarget:(id)target forAccounts:(NSArray *)accounts;
 - (NSArray *)_accountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred includeOffline:(BOOL)includeOffline;
+
+- (void)_addAccountMenuItemsForPlugin:(id<AccountMenuPlugin>)accountMenuPlugin;
+- (void)_removeAccountMenuItemsForPlugin:(id<AccountMenuPlugin>)accountMenuPlugin;
+- (void)_updateMenuItem:(NSMenuItem *)menuItem forAccount:(AIAccount *)account;
+- (NSMenuItem *)_menuItemForAccount:(AIAccount *)account fromArray:(NSArray *)accountMenuItemArray;
+- (void)rebuildAllAccountMenuItems;
+
 @end
 
 @implementation AIAccountController
@@ -52,6 +59,8 @@
     accountArray = nil;
     lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];
     sleepingOnlineAccounts = nil;
+	accountMenuItemArraysDict = [[NSMutableDictionary alloc] init];
+	accountMenuPluginsArray = [[NSMutableArray alloc] init];
 	
 	//Default account preferences
 	[[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ACCOUNT_DEFAULT_PREFS forClass:[self class]]
@@ -70,7 +79,14 @@
 
 //Finish initialization once other controllers have set themselves up
 - (void)finishIniting
-{    
+{   
+	//Observe account changes, both list and online/connecting/offline
+    [[owner notificationCenter] addObserver:self
+								   selector:@selector(accountListChanged:)
+									   name:Account_ListChanged
+									 object:nil];
+    [[owner contactController] registerListObjectObserver:self];
+	
     //Load the user accounts
     [self loadAccounts];
     
@@ -79,7 +95,6 @@
                                    selector:@selector(didSendContent:)
                                        name:Content_DidSendContent
                                      object:nil];
-    
     //Autoconnect
 	if(![NSEvent shiftKey]){
 		[self autoConnectAccounts];
@@ -541,7 +556,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 											   action:@selector(selectAccount:)
 										keyEquivalent:@""] autorelease];
         [menuItem setRepresentedObject:account];
-		[menuItem setImage:[account serviceMenuImage]];
+		[menuItem setImage:[account menuImage]];
 		
         //Disabled if the account is offline
         if(![[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:account]){
@@ -585,7 +600,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 											   action:@selector(selectAccount:)
 										keyEquivalent:@""] autorelease];
         [menuItem setRepresentedObject:account];
-		[menuItem setImage:[account serviceMenuImage]];
+		[menuItem setImage:[account menuImage]];
 		
         //Disabled if the account is offline
         if(![[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:account]){
@@ -644,7 +659,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 															action:@selector(selectAccount:)
 													 keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:anAccount];
-		[menuItem setImage:[anAccount serviceMenuImage]];
+		[menuItem setImage:[anAccount menuImage]];
 		[menu addItem:menuItem];
 	}
 }
@@ -899,5 +914,193 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	}
 }
 
+// Account Connection menus -----------------------------------------------
+#pragma mark Account Connection menus
+
+#define	ACCOUNT_CONNECT_MENU_TITLE			AILocalizedString(@"Connect:","Connect account prefix")
+#define	ACCOUNT_DISCONNECT_MENU_TITLE		AILocalizedString(@"Disconnect:","Disconnect account prefix")
+#define	ACCOUNT_CONNECTING_MENU_TITLE		AILocalizedString(@"Cancel Connect:","Connecting an account prefix")
+#define	ACCOUNT_DISCONNECTING_MENU_TITLE	AILocalizedString(@"Disconnecting","Disconnecting an account prefix")
+#define	ACCOUNT_AUTO_CONNECT_MENU_TITLE		AILocalizedString(@"Auto-Connect on Launch",nil)
+
+#define ACCOUNT_TITLE   [NSString stringWithFormat:@"%@ (%@)",([[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT),[account displayServiceID]]
+
+- (void)registerAccountMenuPlugin:(id<AccountMenuPlugin>)accountMenuPlugin
+{
+	[accountMenuItemArraysDict setObject:[NSMutableArray array]
+								  forKey:[accountMenuPlugin identifier]];
+	[accountMenuPluginsArray addObject:accountMenuPlugin];
+	
+	[self _addAccountMenuItemsForPlugin:accountMenuPlugin];
+}
+- (void)unregisterAccountMenuPlugin:(id<AccountMenuPlugin>)accountMenuPlugin
+{
+	[self _removeAccountMenuItemsForPlugin:accountMenuPlugin];	
+	[accountMenuItemArraysDict removeObjectForKey:[accountMenuPlugin identifier]];
+	[accountMenuPluginsArray removeObjectIdenticalTo:accountMenuPlugin];
+}
+
+//Togle the connection of the selected account (called by the connect/disconnnect menu item)
+//MUST be called by a menu item with an account as its represented object!
+- (IBAction)toggleConnection:(id)sender
+{
+    AIAccount   *account = [sender representedObject];
+    BOOL    	online = [[account statusObjectForKey:@"Online"] boolValue];
+	BOOL		connecting = [[account statusObjectForKey:@"Connecting"] boolValue];
+	
+	// !(online || connecting) means:
+	//		If neither online nor connecting, YES - initiate a connection
+	//		If either currently online or currently in the process of connecting, NO - disconnect
+	//
+	// Setting the preference is enough to trigger the cascade which will lead to the account taking action
+	[account setPreference:[NSNumber numberWithBool:!(online || connecting)] 
+					forKey:@"Online"
+					 group:GROUP_ACCOUNT_STATUS];
+}
+
+//Create a new menu item for each account, updating it immediately to the proper current state.
+//Store these menu items in a mutableArray associated with the plugin.
+//Then, inform the plugin of the existence of the menu items so it can add them to a menu.
+- (void)_addAccountMenuItemsForPlugin:(id<AccountMenuPlugin>)accountMenuPlugin
+{
+	NSMutableArray  *menuItemArray = [accountMenuItemArraysDict objectForKey:[accountMenuPlugin identifier]];
+	
+	NSEnumerator	*enumerator;
+    AIAccount		*account;
+    NSMenuItem		*menuItem;
+	
+    //Create a menuitem for each account
+    enumerator = [[self accountArray] objectEnumerator];
+    while((account = [enumerator nextObject])){
+		
+		//Create the account's menu item (the title will be set by_updateMenuItem:forAccount:
+        menuItem = [[[NSMenuItem alloc] initWithTitle:@""
+											   target:self
+											   action:@selector(toggleConnection:)
+										keyEquivalent:@""] autorelease];
+        [menuItem setRepresentedObject:account];
+        [menuItemArray addObject:menuItem];
+        
+        [self _updateMenuItem:menuItem forAccount:account];
+    }
+	
+	//Now that we are done creating the menu items, tell the plugin about them
+	[accountMenuPlugin addAccountMenuItems:menuItemArray];
+}
+
+//Retrieve the menu items for a given plugin.  Tell it we want to remove them, which should trigger
+//removal from whatever menu the program is using them in.  Then, remove them from our tracking array.
+- (void)_removeAccountMenuItemsForPlugin:(id<AccountMenuPlugin>)accountMenuPlugin
+{
+	NSMutableArray  *menuItemArray = [accountMenuItemArraysDict objectForKey:[accountMenuPlugin identifier]];
+
+	//Inform the plugin that we are removing the items in the this array 
+	[accountMenuPlugin removeAccountMenuItems:menuItemArray];
+	
+	//Now clear the array
+	[menuItemArray removeAllObjects];
+}
+
+// Connected / Connecting / Disconnecting / Disconnected update
+- (void)_updateMenuItem:(NSMenuItem *)menuItem forAccount:(AIAccount *)account
+{
+	if(menuItem){
+        if([[account supportedPropertyKeys] containsObject:@"Online"]){
+            //Update the 'connect / disconnect' menu item
+			
+			[[menuItem menu] setMenuChangedMessagesEnabled:NO];		
+			
+			if([[account statusObjectForKey:@"Online"] boolValue]){
+				[menuItem setImage:[account onlineMenuImage]];
+				[menuItem setTitle:[ACCOUNT_DISCONNECT_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
+				[menuItem setKeyEquivalent:@""];
+				[menuItem setEnabled:YES];
+			}else if([[account statusObjectForKey:@"Connecting"] boolValue]){
+				[menuItem setImage:[account connectingMenuImage]];
+				[menuItem setTitle:[ACCOUNT_CONNECTING_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
+				[menuItem setKeyEquivalent:@"."];
+				[menuItem setEnabled:YES];
+			}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
+				[menuItem setImage:[account connectingMenuImage]];
+				[menuItem setTitle:[ACCOUNT_DISCONNECTING_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
+				[menuItem setKeyEquivalent:@""];
+				[menuItem setEnabled:NO];
+			}else{
+				[menuItem setImage:[account offlineMenuImage]];
+				[menuItem setTitle:[ACCOUNT_CONNECT_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
+				[menuItem setKeyEquivalent:@""];
+				[menuItem setEnabled:YES];
+			}
+			
+			[[menuItem menu] setMenuChangedMessagesEnabled:YES];
+        }        
+		
+    }	
+}
+
+//The account list as a whole changed.  Perform a full rebuild rather than trying to figure out what is different.
+- (void)accountListChanged:(NSNotification *)notification
+{
+	[self rebuildAllAccountMenuItems];
+}
+
+//Remove all current account menu items for all account menu item plugins, then create a new, current set.
+- (void)rebuildAllAccountMenuItems
+{
+	NSEnumerator			*enumerator = [accountMenuPluginsArray objectEnumerator];
+	id<AccountMenuPlugin>   accountMenuPlugin;
+	while (accountMenuPlugin = [enumerator nextObject]) {
+		[self _removeAccountMenuItemsForPlugin:accountMenuPlugin];
+		[self _addAccountMenuItemsForPlugin:accountMenuPlugin];
+	}
+}
+
+//Account status changed, update our menu
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+{
+    if([inObject isKindOfClass:[AIAccount class]] && 
+		([inModifiedKeys containsObject:@"Online"] ||
+		 [inModifiedKeys containsObject:@"Connecting"] ||
+		 [inModifiedKeys containsObject:@"Disconnecting"])){
+		
+		//Enumerate all arrays of menu items (for all plugins)
+		NSEnumerator			*enumerator = [accountMenuItemArraysDict objectEnumerator];
+		NSArray					*accountMenuItemArray;
+		while (accountMenuItemArray = [enumerator nextObject]) {
+			//Find the menu item for this account in this array
+			NSMenuItem  *menuItem = [self _menuItemForAccount:(AIAccount *)inObject
+													fromArray:accountMenuItemArray];
+			//Update it
+			[self _updateMenuItem:menuItem forAccount:(AIAccount *)inObject];
+		}
+    }
+	
+    //We don't change any keys
+    return(nil);
+}
+
+//Given a target account and an array of menu items, find the menu item for that account
+- (NSMenuItem *)_menuItemForAccount:(AIAccount *)account fromArray:(NSArray *)accountMenuItemArray
+{
+	NSEnumerator	*enumerator;
+	NSMenuItem		*menuItem;
+    NSMenuItem		*targetMenuItem = nil;
+	
+	//Find the menu
+	enumerator = [accountMenuItemArray objectEnumerator];
+	while((menuItem = [enumerator nextObject])){    
+		if([menuItem representedObject] == account){
+			targetMenuItem = menuItem;
+			break;
+		}
+	}
+	
+	return targetMenuItem;	
+}
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	return(YES);
+}
 
 @end

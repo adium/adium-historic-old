@@ -14,13 +14,19 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.23 $
- * $Date: 2004/07/15 01:01:43 $
- * $Author: ramoth4 $
+ * $Revision: 1.24 $
+ * $Date: 2004/07/15 08:16:55 $
+ * $Author: evands $
  **/
 
 #define Account_ListChanged 					@"Account_ListChanged"
 #define Account_HandlesChanged					@"Account_HandlesChanged"
+
+//Connecting is faded by 40%
+#define CONNECTING_MENU_IMAGE_FRACTION  0.60
+
+//Offline is faded by 70%
+#define OFFLINE_MENU_IMAGE_FRACTION		0.30
 
 @class AIServiceType, AIAdium, AIAccount, AIListObject;
 
@@ -32,7 +38,13 @@
 - (AIAccountViewController *)accountView;	//Return a view controller for the connection window
 @end
 
-@interface AIAccountController : NSObject{
+@protocol AccountMenuPlugin <NSObject>
+- (NSString *)identifier;
+- (void)addAccountMenuItems:(NSArray *)menuItemArray;
+- (void)removeAccountMenuItems:(NSArray *)menuItemArray;
+@end
+
+@interface AIAccountController : NSObject<AIListObjectObserver>{
     IBOutlet	AIAdium		*owner;	
 	
     NSMutableArray			*accountArray;				//Array of active accounts
@@ -42,6 +54,9 @@
 	
     NSMutableArray			*sleepingOnlineAccounts;	//Accounts that were connected before we slept
 	NSMutableArray			*unloadableAccounts;
+	
+	NSMutableArray			*accountMenuPluginsArray;
+	NSMutableDictionary		*accountMenuItemArraysDict;
 }
 
 //Services
