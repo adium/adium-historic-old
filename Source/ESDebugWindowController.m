@@ -68,11 +68,15 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 {    
 	NSEnumerator	*enumerator;
 	NSString		*aDebugString;
+
 	[super windowDidLoad];
 
+	//We store the reference to the mutableString of the textStore for efficiency
 	mutableDebugString = [[[textView_debug textStorage] mutableString] retain];
+	
 	[scrollView_debug setAutoScrollToBottom:YES];
 
+	//Load the logs which were added before the window was loaded
 	enumerator = [[[adium debugController] debugLogArray] objectEnumerator];
 	while(aDebugString = [enumerator nextObject]){
 		[mutableDebugString appendString:aDebugString];
@@ -81,7 +85,10 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 		}
 	}
 
-	[scrollView_debug scrollToBottom];
+	//On the next run loop, scroll to the bottom
+	[scrollView_debug performSelector:@selector(scrollToBottom)
+						   withObject:nil
+						   afterDelay:0.001];
 }
 
 //Close the window
