@@ -60,6 +60,7 @@
 - (NSArray *)activeServices;
 - (AIService *)serviceWithUniqueID:(NSString *)identifier;
 - (AIService *)firstServiceWithServiceID:(NSString *)serviceID;
+- (NSArray *)servicesWithServiceClass:(NSString *)serviceClass;
 - (void)registerService:(AIService *)inService;
 - (NSMenu *)menuOfServicesWithTarget:(id)target;
 
