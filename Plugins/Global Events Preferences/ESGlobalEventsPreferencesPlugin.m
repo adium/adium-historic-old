@@ -71,7 +71,7 @@
 									 forClass:[self class]] retain];
 	growlPresetsArray = [[NSArray arrayNamed:GROWL_PRESETS
 									forClass:[self class]] retain];
-	NSLog(@"%@",growlPresetsArray);
+
     //Register default preferences and pre-set behavior
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:EVENT_SOUNDS_DEFAULT_PREFS 
 																		forClass:[self class]] 
