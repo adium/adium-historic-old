@@ -925,7 +925,7 @@ DeclareString(UID);
 			NSArray			*contactArray = [serviceDict objectForKey:service];
 			NSImage			*serviceImage = [AIServiceIcons serviceIconForService:service
 																			 type:AIServiceIconSmall
-																		direction:AIIconNormal]
+																		direction:AIIconNormal];
 			
 			[self _addMenuItemsFromArray:contactArray
 								  toMenu:contactMenu
