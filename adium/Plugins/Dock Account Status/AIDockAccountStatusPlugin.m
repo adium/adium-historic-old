@@ -78,7 +78,7 @@
 			
 		}
 		if(inObject == nil || [inModifiedKeys containsObject:@"Away"]){
-			if([self _accountsWithKey:@"Away"] > 0){
+			if([self _accountsWithBoolKey:@"Away"] > 0){
 				[[adium dockController] setIconStateNamed:@"Away"];
 			}else{
 				[[adium dockController] removeIconStateNamed:@"Away"];
