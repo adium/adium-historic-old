@@ -75,6 +75,7 @@
 }
 
 - (IBAction)showContactList:(id)sender;
+- (IBAction)showContactListAndBringToFront:(id)sender;
 - (void)transferMessageTabContainer:(id)tabViewItem toWindow:(id)newMessageWindow atIndex:(int)index withTabBarAtPoint:(NSPoint)screenPoint;
 
 @end

@@ -24702,7 +24702,7 @@
 			productType = "com.apple.product-type.bundle";
 		};
 		9E87CF580574909B001CB886 = {
-			expectedFileType = wrapper.cfbundle;
+			expectedFileType = folder;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Status Menu Item.AdiumPlugin";

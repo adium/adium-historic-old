@@ -198,7 +198,12 @@
         contactListWindowController = [[AIContactListWindowController contactListWindowControllerForInterface:self owner:owner] retain];
     }
     [contactListWindowController makeActive:nil];
-    //Give Adium focus
+}
+
+//Show the contact list window and bring Adium to the front
+- (IBAction)showContactListAndBringToFront:(id)sender
+{
+    [self showContactList:nil];
     [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 }
 
@@ -575,7 +580,7 @@
     [windowMenuArray addObject:[item autorelease]];
     
     //Add dock Menu
-    item = [[NSMenuItem alloc] initWithTitle:CONTACT_LIST_WINDOW_MENU_TITLE target:self action:@selector(showContactList:) keyEquivalent:@""];
+    item = [[NSMenuItem alloc] initWithTitle:CONTACT_LIST_WINDOW_MENU_TITLE target:self action:@selector(showContactListAndBringToFront:) keyEquivalent:@""];
     [item setRepresentedObject:contactListWindowController];
     [[owner menuController] addMenuItem:item toLocation:LOC_Dock_Status];    
     [windowMenuArray addObject:[item autorelease]];
