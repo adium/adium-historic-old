@@ -14,7 +14,7 @@
 //Copy
 - (id)copyWithZone:(NSZone *)zone
 {
-	id newCell = [super copyWithZone:zone];
+	AIListThemePreviewCell *newCell = [super copyWithZone:zone];
 	
 	newCell->themeDict = nil;
 	[newCell setThemeDict:themeDict];
