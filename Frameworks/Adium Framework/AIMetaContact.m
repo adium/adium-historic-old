@@ -27,6 +27,8 @@
 - (void)_determineIfWeShouldAppearToContainOnlyOneContact;
 
 - (void)_addListContacts:(NSArray *)inContacts toArray:(NSMutableArray *)listContacts uniqueObjectIDs:(NSMutableArray *)uniqueObjectIDs;
+
+- (void)restoreGrouping;
 @end
 
 @implementation AIMetaContact
@@ -36,9 +38,6 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 //init
 - (id)initWithObjectID:(NSNumber *)inObjectID
 {
-	NSString		*oldContainingObjectID;
-	AIListObject	*oldContainingObject;
-	
 	objectID = [inObjectID retain];
 	statusCacheDict = [[NSMutableDictionary alloc] init];
 	_preferredContact = nil;
@@ -53,21 +52,14 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	expanded = YES;
 	containedObjectsNeedsSort = NO;
 	delayContainedObjectSorting = NO;
+	saveGroupingChanges = YES;
 	
 	largestOrder = 1.0;
 	smallestOrder = 1.0;
 		
 	//Restore the previous containedObject so we don't depend on serverside information
-	{
-		oldContainingObjectID =[self preferenceForKey:KEY_CONTAINING_OBJECT_ID
-												group:OBJECT_STATUS_CACHE];
-		oldContainingObject = [[adium contactController] existingListObjectWithUniqueID:oldContainingObjectID];
-	
-		if (oldContainingObject && [oldContainingObject isKindOfClass:[AIListGroup class]]){
-			[[adium contactController] _moveContactLocally:self
-												   toGroup:(AIListGroup *)oldContainingObject];
-		}
-	}
+	[self restoreGrouping];
+
 	return(self);
 }
 
@@ -119,14 +111,39 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 //When called, cache the internalObjectID of the new group so we can restore it immediately next time.
 - (void)setContainingObject:(AIListObject <AIContainingObject> *)inGroup
 {
-	//Save the change of containing object so it can be restored on launch next time
-	if (![[inGroup internalObjectID] isEqualToString:[[self containingObject] internalObjectID]]){
+	//Save the change of containing object so it can be restored on launch next time if we are using groups.
+	//We don't save if we are not using groups as this set will be for the contact list root and probably not desired permanently.
+	if ([[adium contactController] useContactListGroups] &&
+		![[inGroup internalObjectID] isEqualToString:[[self containingObject] internalObjectID]]){
+
 		[self setPreference:[inGroup internalObjectID]
 					 forKey:KEY_CONTAINING_OBJECT_ID
 					  group:OBJECT_STATUS_CACHE];
 	}
-	
+
 	[super setContainingObject:inGroup];
+}
+
+//Restore the AIListGroup grouping into which this object was last manually placed
+- (void)restoreGrouping
+{
+	NSString		*oldContainingObjectID;
+	AIListObject	*oldContainingObject;
+	BOOL			useContactListGroups;
+	
+	oldContainingObjectID = [self preferenceForKey:KEY_CONTAINING_OBJECT_ID
+												group:OBJECT_STATUS_CACHE];
+	oldContainingObject = [[adium contactController] existingListObjectWithUniqueID:oldContainingObjectID];
+	useContactListGroups = [[adium contactController] useContactListGroups];
+
+	if (oldContainingObject &&
+		[oldContainingObject isKindOfClass:[AIListGroup class]] &&
+		useContactListGroups){
+
+		[[adium contactController] _moveContactLocally:self
+											   toGroup:(AIListGroup *)oldContainingObject];
+	}
+	
 }
 
 //A metaContact should never be a stranger
@@ -142,7 +159,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 - (BOOL)addObject:(AIListObject *)inObject
 {
 	BOOL	success = NO;
-	
+
 	if(![containedObjects containsObject:inObject]){
 		
 		//Check if we will still be unique after adding this contact

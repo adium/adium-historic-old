@@ -73,21 +73,21 @@ typedef enum {
 
 @interface AIContactController : NSObject {
     IBOutlet	AIAdium		*owner;
-    IBOutlet 	NSMenuItem  *menuItem_getInfo;
-	IBOutlet	NSMenuItem  *menuItem_getInfoAlternate;
 	
-	NSMenuItem				*menuItem_getInfoContextualContact;
-	NSMenuItem				*menuItem_getInfoContextualGroup;
-	
+	//Contacts and metaContacts
 	NSMutableDictionary		*contactDict;
-	NSMutableDictionary		*groupDict;
 	NSMutableDictionary		*metaContactDict;
 	NSMutableDictionary		*contactToMetaContactLookupDict;
 	
+	//Contact List and Groups
     AIListGroup				*contactList;
+	NSMutableDictionary		*groupDict;
     AIListGroup				*strangerGroup;
-    NSMutableArray			*contactObserverArray;
+	BOOL					useContactListGroups;
+	NSMenuItem				*showGroupsMenuItem;
 	
+	//Status and Attribute updates
+    NSMutableArray			*contactObserverArray;
     NSTimer					*delayedUpdateTimer;
     int						delayedStatusChanges;
 	NSMutableSet			*delayedModifiedStatusKeys;
@@ -97,15 +97,19 @@ typedef enum {
 	int						delayedUpdateRequests;
 	BOOL					updatesAreDelayed;
 	
+	//Sorting
     NSMutableArray			*sortControllerArray;
     AISortController	 	*activeSortController;
-	
-    NSMutableArray			*contactInfoPanes;
-	
 	float					nextOrderIndex;
 
-    int		signedOffLength;
-    int		signedOnLength;
+	//Contact Info Menu Items
+	IBOutlet 	NSMenuItem  *menuItem_getInfo;
+	IBOutlet	NSMenuItem  *menuItem_getInfoAlternate;
+	NSMenuItem				*menuItem_getInfoContextualContact;
+	NSMenuItem				*menuItem_getInfoContextualGroup;	
+
+	//Contact Info Panes
+    NSMutableArray			*contactInfoPanes;	
 }
 
 //Contact list access
@@ -166,6 +170,7 @@ typedef enum {
 - (void)moveListObjects:(NSArray *)objectArray toGroup:(AIListObject<AIContainingObject> *)group index:(int)index;
 - (void)moveContact:(AIListContact *)listContact toGroup:(AIListObject<AIContainingObject> *)group;
 - (void)_moveContactLocally:(AIListContact *)listContact toGroup:(AIListGroup *)group;
+- (BOOL)useContactListGroups;
 
 //Contact info
 - (IBAction)showContactInfo:(id)sender;

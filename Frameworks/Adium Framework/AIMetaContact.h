@@ -23,6 +23,7 @@
 	NSMutableArray			*containedObjects;			//Manually ordered array of contents
 	BOOL					containedObjectsNeedsSort;
 	BOOL					delayContainedObjectSorting;
+	BOOL					saveGroupingChanges;
 	
     BOOL					expanded;			//Exanded/Collapsed state of this object
 	

@@ -28,7 +28,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	statusKeysRequiringResort = [[self statusKeysRequiringResort] retain];
 	attributeKeysRequiringResort = [[self attributeKeysRequiringResort] retain];
 	sortFunction = [self sortFunction];
-	alwaysSortGroupsToTop = [self alwaysSortGroupsToTop];
+	alwaysSortGroupsToTop = [self alwaysSortGroupsToTopByDefault];
 	
 	configureView = nil;
 	becameActiveFirstTime = NO;
@@ -74,11 +74,19 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	}
 }
 
-- (BOOL)alwaysSortGroupsToTop
+- (BOOL)alwaysSortGroupsToTopByDefault
 {
 	return(YES);
 }
 
+- (void)forceIgnoringOfGroups:(BOOL)shouldForce
+{
+	if(shouldForce){
+		alwaysSortGroupsToTop = NO;
+	}else{
+		alwaysSortGroupsToTop = [self alwaysSortGroupsToTopByDefault];
+	}
+}
 
 //Sorting -------------------------------------------------------------------------------------------------------
 #pragma mark Sorting

@@ -39,7 +39,7 @@ int manualSort(id objectA, id objectB, BOOL groups);
 - (NSArray *)attributeKeysRequiringResort{
 	return(nil);
 }
-- (BOOL)alwaysSortGroupsToTop{
+- (BOOL)alwaysSortGroupsToTopByDefault{
 	return(NO);
 }
 - (sortfunc)sortFunction{
