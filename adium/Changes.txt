@@ -1,6 +1,6 @@
 				Adium X Version History
 				-----------------------
-Version 0.54
+Version 0.54 (5/7/2004)
 - Added support for displaying strikethrough, subscript, and superscript text
 - Added support for basic formatting in MSN messages
 - Added an option when sorting by status to sort within the status groups alphabetically by last name
@@ -11,6 +11,7 @@ Version 0.54
 - Fixed group dragging
 - Fixed the remaining problems with tooltips appearing unnecessarily 
 - Fixed Webkit Message View for Japanese and Chinese users (the fix in 0.53 was incomplete)
+- Fixed Retro message style and added bubbleless variants, completing the classic Adium message view kit
 - Fixed issues related to custom links
 - Fixed a cosmetic issue as the contact list loaded
 - Fixed a bug which caused colors in messages to be sent improperly (broken in 0.53)
@@ -19,6 +20,8 @@ Version 0.54
 - Fixed the "Other..." option when creating a custom sound alert for a contact
 - Fixed a freeze when sending MSN messages containing certain characters including ampersand (&)
 - Fixed AIM .Mac support to allow email address screennames with underscores
+- Improved the add contact window
+- Improved the password prompt window
 - Improved Novell GroupWise protocol support
 - Significant performance improvements, particularly during sign on
 
