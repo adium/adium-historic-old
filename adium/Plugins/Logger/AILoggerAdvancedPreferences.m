@@ -16,27 +16,28 @@
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
 #import "Adium.h"
-#import "AILoggerPreferences.h"
+#import "AILoggerAdvancedPreferences.h"
 #import "AILoggerPlugin.h"
 
-@interface AILoggerPreferences (PRIVATE)
+@interface AILoggerAdvancedPreferences (PRIVATE)
+- (void)autoDim;
 - (void)preferencesChanged:(NSNotification *)notification;
 @end;
 
-@implementation AILoggerPreferences
+@implementation AILoggerAdvancedPreferences
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Messages_Sending);
+    return(AIPref_Advanced_Messages);
 }
 - (NSString *)label{
-    return(@"G");
+    return(@"Logging");
 }
 - (NSString *)nibName{
-    return(@"LoggerPrefs");
+    return(@"LoggerAdvancedPrefs");
 }
 
-//Setup preferences
+//Configure the preference view
 - (void)viewDidLoad
 {
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
@@ -48,8 +49,14 @@
 {
     if(notification == nil || [PREF_GROUP_LOGGING compare:[[notification userInfo] objectForKey:@"Group"]] == 0){
         NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING];
-
+        
         [checkBox_enableLogging setState:[[preferenceDict objectForKey:KEY_LOGGER_ENABLE] boolValue]];
+        [checkBox_enableFont setState:[[preferenceDict objectForKey:KEY_LOGGER_FONT] boolValue]];
+        [checkBox_enableStyle setState:[[preferenceDict objectForKey:KEY_LOGGER_STYLE] boolValue]];
+        [checkBox_enableStatus setState:[[preferenceDict objectForKey:KEY_LOGGER_STATUS] boolValue]];
+        [checkBox_enableHTML setState:[[preferenceDict objectForKey:KEY_LOGGER_HTML] boolValue]];
+        
+        [self autoDim];
     }
 }
 
@@ -60,7 +67,35 @@
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LOGGER_ENABLE
                                               group:PREF_GROUP_LOGGING];
+    } else if (sender == checkBox_enableStatus) {
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LOGGER_STATUS
+                                              group:PREF_GROUP_LOGGING];
+    } else if (sender == checkBox_enableFont) {
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LOGGER_FONT
+                                              group:PREF_GROUP_LOGGING];
+    } else if (sender == checkBox_enableStyle) {
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LOGGER_STYLE
+                                              group:PREF_GROUP_LOGGING];
+    } else if (sender == checkBox_enableHTML) {
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LOGGER_HTML
+                                              group:PREF_GROUP_LOGGING];
     }
+}
+
+//Dims style and font if HTML logs are not selected, all if enable logging is not selected.
+- (void)autoDim
+{
+    BOOL    loggingEnabled = [checkBox_enableLogging state];
+    BOOL    htmlEnabled = [checkBox_enableHTML state];
+    
+    [checkBox_enableHTML setEnabled:loggingEnabled];
+    [checkBox_enableFont setEnabled:(loggingEnabled && htmlEnabled)];
+    [checkBox_enableStyle setEnabled:(loggingEnabled && htmlEnabled)];
+    [checkBox_enableStatus setEnabled:loggingEnabled];
 }
 
 @end

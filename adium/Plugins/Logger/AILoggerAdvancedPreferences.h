@@ -16,8 +16,12 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-@interface AILoggerPreferences : AIPreferencePane {
+@interface AILoggerAdvancedPreferences : AIPreferencePane {
     IBOutlet	NSButton	*checkBox_enableLogging;
+    IBOutlet	NSButton	*checkBox_enableStyle;
+    IBOutlet	NSButton	*checkBox_enableFont;
+    IBOutlet	NSButton	*checkBox_enableStatus;
+    IBOutlet	NSButton	*checkBox_enableHTML;
 }
 
 @end

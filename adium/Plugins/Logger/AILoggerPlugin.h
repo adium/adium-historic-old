@@ -24,10 +24,11 @@
 #define KEY_LOGGER_STATUS	@"Enable Status Logging"
 #define	KEY_LOGGER_HTML		@"Enable HTML Logging"
 
-@class AILoggerPreferences;
+@class AILoggerPreferences, AILoggerAdvancedPreferences;
 
 @interface AILoggerPlugin : AIPlugin <AIPluginInfo> {
     AILoggerPreferences		*preferences;
+    AILoggerAdvancedPreferences *advancedPreferences;
     BOOL			observingContent, logStyle, logFont, logStatus, logHTML;
     
     NSString			*logBasePath; 			//The base directory of all logs
