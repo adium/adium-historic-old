@@ -103,18 +103,21 @@
 //Delete the selection
 - (IBAction)deleteSelection:(id)sender
 {	
-	AIListObject	*object = [[adium contactController] selectedListObjectInContactList];
-	
-	if(object){
+	NSArray			*array = [[adium contactController] arrayOfSelectedListObjectsInContactList];
+	if(array){
+		int count = [array count];
+		
+		NSString	*name = ((count == 1) ? [[array objectAtIndex:0] displayName] : [NSString stringWithFormat:@"%i contacts",count]);
+		
 		//Guard deletion with a warning prompt
-		int result = NSRunAlertPanel([NSString stringWithFormat:@"Remove %@ from your list?", [object displayName]],
+		int result = NSRunAlertPanel([NSString stringWithFormat:@"Remove %@ from your list?",name],
 									 @"Be careful, you cannot undo this action.",
 									 @"OK",
 									 @"Cancel",
 									 nil);
 		
 		if(result == NSAlertDefaultReturn){
-			[[adium contactController] removeListObjects:[NSArray arrayWithObject:object]];
+			[[adium contactController] removeListObjects:array];
 		}
 	}
 }
