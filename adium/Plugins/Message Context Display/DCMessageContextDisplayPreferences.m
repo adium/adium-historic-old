@@ -55,6 +55,7 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_DISPLAY_CONTEXT
 											  group:PREF_GROUP_CONTEXT_DISPLAY];
+		[self configureControlDimming];
 		
 	} else if( sender == textField_linesToDisplay ) {
 		
@@ -65,5 +66,15 @@
 	
 }
 
-
+- (void)configureControlDimming
+{
+	if( [checkBox_showContext state] ) {
+		[textField_linesToDisplay setEnabled:YES];
+		[stepper_linesToDisplay setEnabled:YES];
+	}else{
+		[textField_linesToDisplay setEnabled:NO];
+		[stepper_linesToDisplay setEnabled:NO];
+	}
+	
+}
 @end

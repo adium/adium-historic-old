@@ -136,14 +136,47 @@
 - (void)processNewContent
 {
 	while(webViewIsReady && [newContent count]){
+		NSString		*dateMessage = nil;
+		AIContentStatus *dateSeparator = nil;
 		AIContentObject *content = [newContent objectAtIndex:0];
 		BOOL			contentIsSimilar = NO;
+		BOOL			shouldShowDateHeader = NO;
 		
-		//
+		// Should we merge consecutive messages?
 		if(previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source]){
 			contentIsSimilar = YES;
 		}
+		
+		// Are the messages history lines from different days?
+		if( previousContent && [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 ) {
+			
+			NSCalendarDate *previousDate = [[(AIContentContext *)previousContent date] dateWithCalendarFormat:nil timeZone:nil];
+			NSCalendarDate *currentDate = [[(AIContentContext *)content date] dateWithCalendarFormat:nil timeZone:nil];
+			
+			if( [previousDate dayOfCommonEra] != [currentDate dayOfCommonEra] ) {
+				contentIsSimilar = NO;
+				shouldShowDateHeader = YES;
+			}
+		}
+		
+		// If no previous content and we have history messages, show a date header
+		if(!previousContent && ([[content type] compare:CONTENT_CONTEXT_TYPE] == 0)) {
+			shouldShowDateHeader = YES;			
+		}
 
+		// Add the date header (should be farmed out to a separate function)
+		if( shouldShowDateHeader ) {
+			dateMessage = [NSString stringWithFormat:@"%@",[[(AIContentContext *)content date] descriptionWithCalendarFormat:@"%A, %B %d, %Y" timeZone:nil locale:nil]];
+			dateSeparator = [AIContentStatus statusInChat:[content chat]
+											   withSource:[[content chat] listObject]
+											  destination:[[content chat] account]
+													 date:[NSDate date]
+												  message:dateMessage
+												 withType:@"date_separator"];
+			//Add the date header
+			[self _addContentStatus:dateSeparator similar:NO];
+		}
+		
 		//
 		if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0 || [[content type] compare:CONTENT_CONTEXT_TYPE] == 0){
 			[self _addContentMessage:(AIContentMessage *)content similar:contentIsSimilar];

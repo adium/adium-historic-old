@@ -16,6 +16,7 @@
 @interface DCMessageContextDisplayPreferences : AIPreferencePane {
     IBOutlet	NSButton		*checkBox_showContext;
 	IBOutlet	NSTextField		*textField_linesToDisplay;
+	IBOutlet	NSStepper		*stepper_linesToDisplay;
 }
 
 - (IBAction)changePreference:(id)sender;
