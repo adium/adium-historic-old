@@ -1415,79 +1415,82 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
  * @brief Add the passed state menu items
  *
  * When given menu items, make a submenu out of them for each account with a represented object referring to that account.
+ * We only add the submenu if more than one account exists, as with only one account it would be redundant.
  */
 - (void)addStateMenuItems:(NSArray *)menuItemArray
 {
-	NSArray				*originalMenuItemArray;
-	NSMutableDictionary	*temporaryMenuDict = [NSMutableDictionary dictionary];
-	NSEnumerator		*enumerator;
-	AIAccount			*account;
-	NSArray				*accountMenuItemArray;
-	
-	//Hold on to this array
-	originalMenuItemArray = [menuItemArray copy];
-
-	//Remove the menu items which we've been passed... we'll be creating our own based off of them.
-	[[adium statusController] removeAllMenuItemsForPlugin:self];
-
-	//Enumerate our accounts array
-	enumerator = [accountArray objectEnumerator];
-	while((account = [enumerator nextObject])){    
+	if([accountArray count] > 1){
+		NSArray				*originalMenuItemArray;
+		NSMutableDictionary	*temporaryMenuDict = [NSMutableDictionary dictionary];
+		NSEnumerator		*enumerator;
+		AIAccount			*account;
+		NSArray				*accountMenuItemArray;
 		
-		NSMenu			*stateMenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
-		NSEnumerator	*menuItemEnumerator = [originalMenuItemArray objectEnumerator];
-		NSMenuItem		*menuItem;
-		NSMenuItem		*accountMenuItem;
+		//Hold on to this array
+		originalMenuItemArray = [menuItemArray copy];
 		
-		//Enumerate all the menu items we were originally passed
-		while(menuItem = [menuItemEnumerator nextObject]){
-			AIStatus		*status;
-			NSDictionary	*newRepresentedObject;
-
-			//Set the represented object to indicate both the right status and the right account
-			if(status = [[menuItem representedObject] objectForKey:@"AIStatus"]){
-				newRepresentedObject = [NSDictionary dictionaryWithObjectsAndKeys:
-					status, @"AIStatus",
-					account, @"AIAccount",
-					nil];
-			}else{
-				newRepresentedObject = [NSDictionary dictionaryWithObject:account
-																   forKey:@"AIAccount"];
+		//Remove the menu items which we've been passed... we'll be creating our own based off of them.
+		[[adium statusController] removeAllMenuItemsForPlugin:self];
+		
+		//Enumerate our accounts array
+		enumerator = [accountArray objectEnumerator];
+		while((account = [enumerator nextObject])){    
+			
+			NSMenu			*stateMenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
+			NSEnumerator	*menuItemEnumerator = [originalMenuItemArray objectEnumerator];
+			NSMenuItem		*menuItem;
+			NSMenuItem		*accountMenuItem;
+			
+			//Enumerate all the menu items we were originally passed
+			while(menuItem = [menuItemEnumerator nextObject]){
+				AIStatus		*status;
+				NSDictionary	*newRepresentedObject;
+				
+				//Set the represented object to indicate both the right status and the right account
+				if(status = [[menuItem representedObject] objectForKey:@"AIStatus"]){
+					newRepresentedObject = [NSDictionary dictionaryWithObjectsAndKeys:
+						status, @"AIStatus",
+						account, @"AIAccount",
+						nil];
+				}else{
+					newRepresentedObject = [NSDictionary dictionaryWithObject:account
+																	   forKey:@"AIAccount"];
+				}
+				
+				accountMenuItem = [[menuItem copy] autorelease];
+				[accountMenuItem setRepresentedObject:newRepresentedObject];
+				
+				//Add to our menu
+				[stateMenu addItem:accountMenuItem];		
 			}
 			
-			accountMenuItem = [[menuItem copy] autorelease];
-			[accountMenuItem setRepresentedObject:newRepresentedObject];
-
-			//Add to our menu
-			[stateMenu addItem:accountMenuItem];		
+			[temporaryMenuDict setObject:stateMenu
+								  forKey:[account internalObjectID]];
 		}
-
-		[temporaryMenuDict setObject:stateMenu
-							  forKey:[account internalObjectID]];
-	}
-	
-	//Enumerate all arrays of menu items (for all plugins)
-	enumerator = [accountMenuItemArraysDict objectEnumerator];
-	while(accountMenuItemArray = [enumerator nextObject]){
-		NSEnumerator	*menuItemEnumerator = [accountMenuItemArray objectEnumerator];
-		NSMenuItem		*menuItem;
 		
-		//Enumerate each menu item in this array (the array corresponds to one plugin's menu items; each menu item
-		//will be for a distinct AIAccount).
-		while(menuItem = [menuItemEnumerator nextObject]){
-			AIAccount	*account = [menuItem representedObject];
-			NSMenu		*menu = [[[temporaryMenuDict objectForKey:[account internalObjectID]] copy] autorelease];
+		//Enumerate all arrays of menu items (for all plugins)
+		enumerator = [accountMenuItemArraysDict objectEnumerator];
+		while(accountMenuItemArray = [enumerator nextObject]){
+			NSEnumerator	*menuItemEnumerator = [accountMenuItemArray objectEnumerator];
+			NSMenuItem		*menuItem;
 			
-			//Remove the menu items which we've been passed... we'll be creating our own based off of them.
-			[[adium statusController] plugin:self didAddMenuItems:[menu itemArray]];
-
-			//Set the submenu
-			[menuItem setSubmenu:menu];
+			//Enumerate each menu item in this array (the array corresponds to one plugin's menu items; each menu item
+			//will be for a distinct AIAccount).
+			while(menuItem = [menuItemEnumerator nextObject]){
+				AIAccount	*account = [menuItem representedObject];
+				NSMenu		*menu = [[[temporaryMenuDict objectForKey:[account internalObjectID]] copy] autorelease];
+				
+				//Remove the menu items which we've been passed... we'll be creating our own based off of them.
+				[[adium statusController] plugin:self didAddMenuItems:[menu itemArray]];
+				
+				//Set the submenu
+				[menuItem setSubmenu:menu];
+			}
 		}
+		
+		//Clean up
+		[originalMenuItemArray release];
 	}
-
-	//Clean up
-	[originalMenuItemArray release];
 }
 
 /*!
