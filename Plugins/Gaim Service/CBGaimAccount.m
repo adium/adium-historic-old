@@ -830,20 +830,22 @@ static SLGaimCocoaAdapter *gaimThread = nil;
     return(sent);
 }
 
-//Return YES if we're available for sending the specified content.
+//Return YES if we're available for sending the specified content or will be soon (are currently connecting).
 //If inListObject is nil, we can return YES if we will 'most likely' be able to send the content.
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
-    BOOL	weAreOnline = [[self statusObjectForKey:@"Online"] boolValue];
+    BOOL	weAreOnline = [self online];
+	NSLog(@"*** %@: %i %i",inContact, weAreOnline,[self integerStatusObjectForKey:@"Connecting"]);
 	
     if([inType isEqualToString:CONTENT_MESSAGE_TYPE]){
-        if(weAreOnline && (inContact == nil || [[inContact statusObjectForKey:@"Online"] boolValue])){ 
+        if((weAreOnline && (inContact == nil || [inContact online])) ||
+		   ([self integerStatusObjectForKey:@"Connecting"])){ 
 			return(YES);
         }
     }else if (([inType isEqualToString:FILE_TRANSFER_TYPE]) && ([self conformsToProtocol:@protocol(AIAccount_Files)])){
 		if(weAreOnline){
 			if(inContact){
-				if([[inContact statusObjectForKey:@"Online"] boolValue]){
+				if([inContact online]){
 					return([self allowFileTransferWithListObject:inContact]);
 				}
 			}else{
