@@ -27,7 +27,10 @@
         
     if ([NSApp isOnPantherOrBetter]) {
         NSSize      shadowSize;
-        NSShadow    *textShadow = [[[NSShadow alloc] init] autorelease];
+		
+		Class NSShadowClass = NSClassFromString(@"NSShadow");
+        NSShadow    *textShadow = [[[NSShadowClass alloc] init] autorelease];
+		
         shadowSize.width = 0.0;
         shadowSize.height = -2.0;
         [textShadow setShadowOffset:shadowSize];
@@ -145,8 +148,12 @@
     
     // Set up the shadow for Panther or later
     if ([NSApp isOnPantherOrBetter]) {
-        tempShadow = [[[NSShadow alloc] init] autorelease];
-        noShadow = [[[NSShadow alloc] init] autorelease];
+		
+		Class NSShadowClass = NSClassFromString(@"NSShadow");
+		
+        tempShadow = [[[NSShadowClass alloc] init] autorelease];
+        noShadow = [[[NSShadowClass alloc] init] autorelease];
+		
         NSSize      shadowSize;
         shadowSize.width = 0.0;
         shadowSize.height = -3.0;
