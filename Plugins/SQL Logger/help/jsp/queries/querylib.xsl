@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<!-- $Rev: 921 $ $Date: 2004-11-20 10:13:59 -0600 (Sat, 20 Nov 2004) $ -->
+<!-- $Rev: 924 $ $Date: 2004-11-20 11:02:00 -0600 (Sat, 20 Nov 2004) $ -->
 
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:l="http://www.slamb.org/xmldb/library"
-  xmlns:s="http://www.slamb.org/xmldb/statement"
+  xmlns:l="http://www.slamb.org/axamol/sql-library/library"
+  xmlns:s="http://www.slamb.org/axamol/sql-library/statement"
   xmlns:xalan="http://xml.apache.org/xslt">
 
   <xsl:output method="html"
