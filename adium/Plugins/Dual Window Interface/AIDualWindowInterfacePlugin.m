@@ -81,6 +81,7 @@
 - (void)openInterface
 {
     //init
+	arrangeByGroupWindowList = [[NSMutableDictionary alloc] init];
     messageWindowControllerArray = [[NSMutableArray alloc] init];
     forceIntoNewWindow = NO;
     forceIntoTab = NO;
@@ -206,6 +207,12 @@
 			
 			arrangeByGroup = newArrangeByGroup;
 			
+			AIMessageWindowController   *controller;
+			NSEnumerator				*enumerator = [messageWindowControllerArray objectEnumerator];
+			while( controller = [enumerator nextObject] ) {
+				[[controller customTabsView] setAllowsTabDragging:(!arrangeByGroup)];
+			}
+			
 			// Force arrange by group if we should
 			if( arrangeByGroup )
 				[self arrangeTabsByGroup:menuItem_splitByGroup];
@@ -279,7 +286,6 @@
 			}
 			
 			[[newMessageWindow window] setFrame:newFrame display:NO];
-			//NSLog(@"#### newFrame: Origin: (%f, %f) Width: %f, Height: %f",newFrame.origin.x,newFrame.origin.y,newFrame.size.width,newFrame.size.height);
 
         }
         
@@ -584,7 +590,34 @@
 	
     //Create a tab for this chat
     if(!messageTabContainer){
-        if(forceIntoNewWindow || forceIntoTab){
+		if(arrangeByGroup) {
+			NSString *group;
+			if( [inChat listObject] ) {
+				group = [[[inChat listObject] containingGroup] uniqueObjectID];
+			} else {
+				group = @"Group Chats";
+			}
+			
+			AIMessageWindowController		*groupController = [arrangeByGroupWindowList objectForKey:group];
+			if( groupController ) {
+				messageTabContainer = [self _createMessageTabForChat:inChat
+										   inMessageWindowController:groupController];
+			} else {
+				messageTabContainer = [self _createMessageTabForChat:inChat inMessageWindowController:nil];
+				
+				NSEnumerator				*enumerator = [messageWindowControllerArray objectEnumerator];
+				AIMessageWindowController   *controller;
+				NSArray						*tabViewItemArray;
+				while( controller = [enumerator nextObject] ) {
+					tabViewItemArray = [controller messageContainerArray];
+					if( [tabViewItemArray indexOfObject:messageTabContainer] != NSNotFound ) {
+						[arrangeByGroupWindowList setObject:controller forKey:group];
+						break;
+					}
+				}
+				//[arrangeByGroupWindowList setObject:[messageTabContainer messageViewController] forKey:group];
+			}
+		}else if(forceIntoNewWindow || forceIntoTab){
             messageTabContainer = [self _createMessageTabForChat:inChat
 									   inMessageWindowController:(forceIntoNewWindow ? nil : [self _primaryMessageWindow])];
         }else{
@@ -612,6 +645,8 @@
 {
     AIMessageTabViewItem	*container;
     AIMessageWindowController 	*messageWindowController = nil;
+	AIMessageWindowController   *groupWindowController = nil;
+	NSString					*group;
 	
     container = [self _messageTabForChat:inChat];
     if (container)
@@ -623,6 +658,19 @@
 		
         //Close it
         [messageWindowController removeTabViewItemContainer:container];
+		
+		//Clear the group sorting cache, if necessary
+		if( arrangeByGroup ) {
+			if( [inChat listObject] )
+				group = [[[inChat listObject] containingGroup] uniqueObjectID];
+			else
+				group = @"Group Chats";
+			
+			groupWindowController = [arrangeByGroupWindowList objectForKey:group];
+			if( [[groupWindowController customTabsView] numberOfTabViewItems] == 0 ) {
+				[arrangeByGroupWindowList removeObjectForKey:group];
+			}
+		}
     }
 }
 
@@ -685,11 +733,11 @@
 			[[adium menuController] addMenuItem:menuItem_arrangeTabs_alternate toLocation:LOC_Window_Commands];
 		}			
         
-		//menuItem_splitByGroup = [[NSMenuItem alloc] initWithTitle:SPLIT_ALL_CHATS
-		//												   target:self
-		//												   action:@selector(arrangeTabsByGroup:)
-		//											keyEquivalent:@""];
-		//[[adium menuController] addMenuItem:menuItem_splitByGroup toLocation:LOC_Window_Commands];
+		menuItem_splitByGroup = [[NSMenuItem alloc] initWithTitle:SPLIT_ALL_CHATS
+														   target:self
+														   action:@selector(arrangeTabsByGroup:)
+													keyEquivalent:@""];
+		[[adium menuController] addMenuItem:menuItem_splitByGroup toLocation:LOC_Window_Commands];
 		
 	}
 	
@@ -917,7 +965,7 @@
 		if([messageWindowControllerArray count] <= 1) enabled = NO; //only with more than one window open
 		
 	}else if (menuItem == menuItem_splitByGroup){
-        if(![messageWindowControllerArray count]) enabled = NO;
+        if(![messageWindowControllerArray count] || arrangeByGroup) enabled = NO;
 		
     }else if (menuItem == menuItem_arrangeTabs || menuItem == menuItem_arrangeTabs_alternate){
         if(![messageWindowControllerArray count] || keepTabsArranged) enabled = NO;
@@ -1048,7 +1096,9 @@
 - (IBAction)arrangeTabsByGroup:(id)sender
 {
 	
+	NSMutableDictionary			*arrangeByGroupCache = [NSMutableDictionary dictionary];
 	AIMessageWindowController   *controller;
+	AIListObject				*listObject;
 	NSEnumerator				*controllerEnumerator = [messageWindowControllerArray objectEnumerator];
 	NSEnumerator				*tabCellEnumerator;
 	NSEnumerator				*dictionaryEnumerator;
@@ -1056,52 +1106,93 @@
 	AICustomTabCell				*tabCell;
 	AIMessageTabViewItem		*tabViewItem;
 	NSString					*listGroupID;
-	NSMutableDictionary			*splitDict = [NSMutableDictionary dictionary];
 	NSMutableArray				*splitArray;
+	BOOL						shouldSplit = NO;
 	
+	// First build our cache of (group, {AIMessageTabViewItem, AIMessageWindowController}) data
 	// Run through all message windows
+	
 	while( controller = [controllerEnumerator nextObject] ) {
 		
 		// Run through each tab cell and get its tabViewItem and group
 		tabCellEnumerator = [[[controller customTabsView] tabCells] objectEnumerator];
 		while( tabCell = [tabCellEnumerator nextObject] ) {
 			tabViewItem = (AIMessageTabViewItem *)[tabCell tabViewItem];
-			listGroupID = [[[[[tabViewItem messageViewController] chat] listObject] containingGroup] uniqueObjectID];
+			listObject = [[[tabViewItem messageViewController] chat] listObject];
 			
+			// Group chats don't have list objects
+			if( listObject ) {
+				listGroupID = [[listObject containingGroup] uniqueObjectID];
+			} else {
+				listGroupID = @"Group Chats";
+			}
 			// Is there an array for this group yet?
-			if( splitArray = [splitDict objectForKey:listGroupID]) {
-				// Add this chat to the existing group array
-				[splitArray addObject:tabViewItem];
+			if( splitArray = [arrangeByGroupCache objectForKey:listGroupID]) {
+				
+				// Add this (tabViewItem, controller) pair to the existing group array
+				[splitArray addObject:[NSArray arrayWithObjects:tabViewItem, controller, nil]];
+				
+				// If the previous controller is different from this controller, we MUST split the tabs into separate windows				
+				if( [[splitArray objectAtIndex:([splitArray count]-2)] objectAtIndex:1] != controller ) {
+					shouldSplit = YES;
+				}
 			} else {
 				// Create a mutable array for this group
-				[splitDict setObject:[NSMutableArray arrayWithObject:tabViewItem] forKey:listGroupID];
+				[arrangeByGroupCache setObject:[NSMutableArray arrayWithObject:[NSArray arrayWithObjects:tabViewItem, controller, nil]] forKey:listGroupID];
 			}
 			
 		}
 		
 	}
+		
+	arrangeByGroupWindowList = [[NSMutableDictionary alloc] init];
+	NSArray *tempArray;
+	dictionaryEnumerator = [arrangeByGroupCache objectEnumerator];
 	
-	// If we split into more than one group, create the windows with the appropriate tabs
-	if( ([splitDict count] > 1) ) {
-		
-		dictionaryEnumerator = [splitDict objectEnumerator];
-		
+	// If we split into more than one group or groups are spread among multiple windows, create the windows with the appropriate tabs
+	if( shouldSplit || ([arrangeByGroupCache count] > [messageWindowControllerArray count]) ) {
+				
 		while( splitArray = [dictionaryEnumerator nextObject] ) {
 			
-			//controller = [self _createMessageWindow];
 			arrayEnumerator = [splitArray objectEnumerator];
-			tabViewItem = [arrayEnumerator nextObject];
+			tabViewItem = [[arrayEnumerator nextObject] objectAtIndex:0];
 			
 			[self _transferMessageTabContainer:tabViewItem toWindow:nil];
 			controller = [self _messageWindowForContainer:tabViewItem];
 			
-			while( tabViewItem = [arrayEnumerator nextObject] ) {
+			[arrangeByGroupWindowList
+				setObject:controller
+				   forKey:[[[[[tabViewItem messageViewController] chat] listObject] containingGroup] uniqueObjectID]];
+
+			
+			while( tempArray = [arrayEnumerator nextObject] ) {
+				tabViewItem = [tempArray objectAtIndex:0];
 				[self _transferMessageTabContainer:tabViewItem toWindow:controller];
 			}
 		}
+		
+	// We still want the window list
+	} else {
+				
+		while( splitArray = [dictionaryEnumerator nextObject] ) {
+			
+			tempArray = [splitArray objectAtIndex:0];
+			
+			[arrangeByGroupWindowList
+				setObject:[tempArray objectAtIndex:1]
+				   forKey:[[[[[[tempArray objectAtIndex:0] messageViewController] chat] listObject] containingGroup] uniqueObjectID]];
+			}
+		
 	}
 
 }
+
+//Returns the message window containing only tabs from 'group', or a new one if there was none previously.
+- (AIMessageWindowController *)_messageWindowForGroup:(AIListGroup *)group
+{
+	return nil;
+}
+
 
 //Returns the message window housing the specified container
 - (AIMessageWindowController *)_messageWindowForContainer:(AIMessageTabViewItem *)container
