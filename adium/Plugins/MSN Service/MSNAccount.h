@@ -29,7 +29,7 @@
     NSString		*friendlyName;		// Current Friendly name
     
     NSMutableDictionary	*handleDict;	   // Dict of all our handles.
-    NSMutableDictionary *switchBoardDict;  // Dict containing SB Sockets and their AIHandles
+    NSMutableDictionary *switchBoardDict;  // Dict containing AIHandles and sub-dictionaries w/ their SBSockets and other info
     NSMutableDictionary	*messageDict; 	   // Dict of messages waiting for an ACK or NAK message
 }
 
