@@ -455,13 +455,18 @@
 /*********************/
 #pragma mark Handles
 
-- (void)removeListObject:(AIListObject *)object
+- (void)removeListObjects:(NSArray *)objects
 {
-	NSString	*group = [object remoteGroupNameForAccount:self];
-	GaimBuddy 	*buddy = gaim_find_buddy(account,[[object UID] UTF8String]);
+	NSEnumerator	*enumerator = [objects objectEnumerator];
+	AIListObject	*object;
 	
-	serv_remove_buddy(gc, [[object UID] UTF8String], [group UTF8String]);	//remove it from the list serverside
-	gaim_blist_remove_buddy(buddy);											//remove it gaimside
+	while(object = [enumerator nextObject]){
+		NSString	*group = [object remoteGroupNameForAccount:self];
+		GaimBuddy 	*buddy = gaim_find_buddy(account,[[object UID] UTF8String]);
+		
+		serv_remove_buddy(gc, [[object UID] UTF8String], [group UTF8String]);	//remove it from the list serverside
+		gaim_blist_remove_buddy(buddy);											//remove it gaimside
+	}
 }
 	
 	

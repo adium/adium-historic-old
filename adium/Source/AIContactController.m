@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.83 2004/01/17 03:50:10 adamiser Exp $
+// $Id: AIContactController.m,v 1.84 2004/01/17 15:53:24 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -572,17 +572,27 @@
 //Contact list editing -------------------------------------------------------------------------------------------------
 - (void)removeListObjects:(NSArray *)objectArray fromGroup:(AIListGroup *)group
 {
-//	NSEnumerator	*enumerator;
-//	AIAccount		*account;
-//	
-//	NSLog(@"removeListObject:%@ fromGroup:%@", [object displayName], [group displayName]);
-//	if([object isKindOfClass:[AIListContact class]]){
-//		//Tell all the accounts with this object to remove it
-//		enumerator = [[object remoteGroupArray] ownerEnumerator];
-//		while(account = [enumerator nextObject]){
-//			[account removeListObject:object];
-//		}
-//	}
+	NSEnumerator	*accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
+	AIAccount		*account;
+	
+	while(account = [accountEnumerator nextObject]){
+		NSMutableArray	*objectsOnAccount = [NSMutableArray array];
+		NSEnumerator	*objectEnumerator = [objectArray objectEnumerator];
+		AIListObject	*listObject;
+		
+		while(listObject = [objectEnumerator nextObject]){
+			if([listObject isKindOfClass:[AIListContact class]]){
+				if([[listObject remoteGroupArray] objectWithOwner:account]){
+					[objectsOnAccount addObject:listObject];
+				}
+			}
+		}
+		
+		if([objectsOnAccount count]){
+			NSLog(@"(%@) remove:%@ fromGroup:%@", account, objectsOnAccount, [group displayName]);
+			[account removeListObjects:objectsOnAccount];
+		}
+	}
 	
 }
 
