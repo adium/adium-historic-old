@@ -63,6 +63,11 @@ typedef enum
 
 + (NSString *)stringForTimeIntervalSinceDate:(NSDate *)inDate
 {
+    return ([self stringForTimeIntervalSinceDate:inDate abbreviated:NO]);
+}
+
++ (NSString *)stringForTimeIntervalSinceDate:(NSDate *)inDate abbreviated:(BOOL)abbreviate
+{
     NSMutableString *theString = [[NSMutableString alloc] init];
     
     double seconds = [[NSDate date] timeIntervalSinceDate:inDate];
@@ -77,15 +82,26 @@ typedef enum
         minutes = (int)(seconds / 60);
         seconds -= minutes * 60;
     }
-    if (days)
-        [theString appendString:[NSString stringWithFormat:@"%i day%@ ",days,days==1 ? @"":@"s"]];
-    if (hours)
-        [theString appendString:[NSString stringWithFormat:@"%i hour%@ ",hours,hours==1 ? @"":@"s"]];
-    if (minutes)
-        [theString appendString:[NSString stringWithFormat:@"%i minute%@ ",minutes,minutes==1 ? @"":@"s"]];
-    if (seconds)
-        [theString appendString:[NSString stringWithFormat:@"%i second%@ ",(int)seconds,seconds==1 ? @"":@"s"]];
-    
-    return theString;
+    if (abbreviate) {
+        if (days)
+            [theString appendString:[NSString stringWithFormat:@"%id ",days,days==1 ? @"":@"s"]];
+        if (hours)
+            [theString appendString:[NSString stringWithFormat:@"%ih ",hours,hours==1 ? @"":@"s"]];
+        if (minutes)
+            [theString appendString:[NSString stringWithFormat:@"%im ",minutes,minutes==1 ? @"":@"s"]];
+        if (seconds)
+            [theString appendString:[NSString stringWithFormat:@"%is ",(int)seconds,seconds==1 ? @"":@"s"]];
+    } else {
+        if (days)
+            [theString appendString:[NSString stringWithFormat:@"%i day%@ ",days,days==1 ? @"":@"s"]];
+        if (hours)
+            [theString appendString:[NSString stringWithFormat:@"%i hour%@ ",hours,hours==1 ? @"":@"s"]];
+        if (minutes)
+            [theString appendString:[NSString stringWithFormat:@"%i minute%@ ",minutes,minutes==1 ? @"":@"s"]];
+        if (seconds)
+            [theString appendString:[NSString stringWithFormat:@"%i second%@ ",(int)seconds,seconds==1 ? @"":@"s"]];
+    }
+    //Return the string without the final space
+    return ([theString substringToIndex:([theString length]-1)]);
 }
 @end

@@ -320,10 +320,6 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Configure the mouse for being over a link or not
 - (void)_setMouseOverLink:(AIFlexibleLink *)inHoveredLink atPoint:(NSPoint)inPoint
 {
-
-
-
-
     if(inHoveredLink != nil && mouseOverLink == NO){
         //Keep track of the hovered link/string
 

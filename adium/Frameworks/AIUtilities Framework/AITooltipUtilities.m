@@ -36,6 +36,7 @@ static  ESStaticView            *view_tooltipImage;
 static	NSAttributedString      *tooltipBody;
 static	NSAttributedString      *tooltipTitle;
 static  NSImage                 *tooltipImage;
+static  BOOL                    imageOnRight;
 static	NSPoint			tooltipPoint;
 static	AITooltipOrientation	tooltipOrientation;
 
@@ -47,10 +48,15 @@ static	AITooltipOrientation	tooltipOrientation;
 
 + (void)showTooltipWithAttributedString:(NSAttributedString *)inString onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation
 {
-    [self showTooltipWithTitle:nil body:inString image:nil onWindow:inWindow atPoint:inPoint orientation:inOrientation];
+    [self showTooltipWithTitle:nil body:inString image:nil imageOnRight:YES onWindow:inWindow atPoint:inPoint orientation:inOrientation];
 }
 
 + (void)showTooltipWithTitle:(NSAttributedString *)inTitle body:(NSAttributedString *)inBody image:(NSImage *)inImage onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation
+{
+    [self showTooltipWithTitle:inTitle body:inBody image:inImage imageOnRight:YES onWindow:inWindow atPoint:inPoint orientation:inOrientation];    
+}
+
++ (void)showTooltipWithTitle:(NSAttributedString *)inTitle body:(NSAttributedString *)inBody image:(NSImage *)inImage imageOnRight:(BOOL)inImageOnRight onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation
 {    
    if(inTitle || inBody || inImage){ //If passed something to display
        BOOL	newLocation = (!NSEqualPoints(inPoint,tooltipPoint) || tooltipOrientation != inOrientation);
@@ -85,6 +91,7 @@ static	AITooltipOrientation	tooltipOrientation;
             
             if (tooltipImage) [tooltipImage release];
             tooltipImage = [inImage retain];
+            imageOnRight = inImageOnRight;
             [view_tooltipImage setImage:tooltipImage];
             
             [self _sizeTooltip];
@@ -192,7 +199,6 @@ static	AITooltipOrientation	tooltipOrientation;
     
     //Limit the tooltip width - recalculate the height for the new (maxiumum) width as necessary
     if(tooltipBodyRect.size.width > TOOLTIP_MAX_WIDTH || tooltipTitleRect.size.width > TOOLTIP_MAX_WIDTH){
-        NSLog(@"Too big!");
         if (tooltipTitle) {
             [[textView_tooltipTitle textContainer] setContainerSize:NSMakeSize(TOOLTIP_MAX_WIDTH,10000000.0)];
             [[textView_tooltipTitle layoutManager] glyphRangeForTextContainer:[textView_tooltipTitle textContainer]]; //void - need to force it to lay out the glyphs for an accurate measurement
@@ -227,10 +233,16 @@ static	AITooltipOrientation	tooltipOrientation;
         if (imageSize.height > tooltipTitleRect.size.height) {
             windowHeight = imageSize.height + tooltipBodyRect.size.height + (TOOLTIP_INSET*3);
         }
-        //recenter the title to be between the left of the window and the left of the image
-        tooltipTitleRect.origin = NSMakePoint(((windowWidth - imageSize.width - tooltipTitleRect.size.width)/2 - TOOLTIP_INSET),tooltipBodyRect.size.height + TOOLTIP_INSET + (imageSize.height)/2 - tooltipTitleRect.size.height/2);
-
-        [view_tooltipImage setFrame:NSMakeRect(windowWidth - imageSize.width - TOOLTIP_INSET,windowHeight - imageSize.height - TOOLTIP_INSET,imageSize.width,imageSize.height)];
+        
+        if(imageOnRight) {
+            //recenter the title to be between the left of the window and the left of the image
+            tooltipTitleRect.origin = NSMakePoint(((windowWidth - imageSize.width - tooltipTitleRect.size.width)/2 - TOOLTIP_INSET),tooltipBodyRect.size.height + TOOLTIP_INSET + (imageSize.height)/2 - tooltipTitleRect.size.height/2);
+            [view_tooltipImage setFrame:NSMakeRect(windowWidth - imageSize.width - TOOLTIP_INSET,windowHeight - imageSize.height - TOOLTIP_INSET,imageSize.width,imageSize.height)];
+        } else {
+            //recenter the title to be between the right of the image and the right of the window
+            tooltipTitleRect.origin = NSMakePoint(((windowWidth + imageSize.width - tooltipTitleRect.size.width)/2 + TOOLTIP_INSET),tooltipBodyRect.size.height + TOOLTIP_INSET + (imageSize.height)/2 - tooltipTitleRect.size.height/2);
+            [view_tooltipImage setFrame:NSMakeRect(TOOLTIP_INSET,windowHeight - imageSize.height - TOOLTIP_INSET,imageSize.width,imageSize.height)];   
+        }
     } else {
         [view_tooltipImage setFrame:NSMakeRect(0,0,0,0)];   
     }

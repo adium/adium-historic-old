@@ -149,7 +149,7 @@ static ErrorMessageWindowController *sharedInstance = nil;
 
     }
 
-    [self showWindow:nil];
+    [[self window] makeKeyAndOrderFront:nil];
 }
 
 // prevents the system from moving our window around
