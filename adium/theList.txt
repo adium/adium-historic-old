@@ -5,6 +5,8 @@ Legend
 # Debatable (ASK and debate before doing!)
 = Done (Move to the bottom)
 
+If you are working on something big and it may take a while, please tag it with your name like: [Adam]
+
 
 -------------------------------------------------------------------------------------------------------
 Bugs
@@ -14,6 +16,7 @@ Bugs
 * Window content is drawing 2 pixels to the left when dragging tabs
 * Prevent cmd-delete from working in the message window
 * Link tracking doesn't work if the link is the entire body of the first message received UNTIL you send a message, at which point it starts working
+* Don't overwrite user specified icons in the address book.  Only overwrite iChat placed icons (and store ours such that iChat will overwrite them)
 
 
 -------------------------------------------------------------------------------------------------------
@@ -27,7 +30,7 @@ Contacts:
 Alerts:
 	+ Allow user to have more control over what is spoken by the announcer plugin
 
-Preferences: 
+Contact List: 
 	- Remove contact list font preference.  Hook this up to cmd-T
 	- Remove the advanced option for vertical resizing, this is already covered in the main preferences.
 	
@@ -36,7 +39,8 @@ Accounts:
 	- Remove account
 	+ Auto-complete aliases and address book entries in New message prompt, log viewer
 
-Menu Bar:
+Emoticons:
+	+ Clean up emoticon preference layout.  Move checkbox next to pack name, align icons, adjust padding, etc.
 	
 Message Window:
 	+ Insert/Edit link menu item, accompanying link entry panel, edit link context menu
@@ -75,16 +79,17 @@ Account auto-connect:
 
 	Steps:
 	- Remove submenus from accounts in the File menu
-	- Make selecting an account in the menu connect / disconnect
+	+ Make selecting an account in the menu connect / disconnect
 	- Remove auto-connect checkbox from account preferences
-	- Add global 'Restore previously connected accounts on launch' checkbox to account preferences
-	- Clear account's 'online' flag only if the global restore connection option is off
+	+ Add global 'Restore previously connected accounts on launch' checkbox to account preferences
+	+ Clear account's 'online' flag only if the global restore connection option is off
 
 
 Contact alerts:
 	Improve the contact alerts interface, reducing all editing to one window that is easier to use.
+	(Model: http://homepage.mac.com/adamiser/sortathis6.png)
 
-(http://homepage.mac.com/adamiser/sortathis6.png)
+	Steps:
 	- Remove alerts preference pane
 	- Remove contact menu from alert window
 	- Remove event popup from alert window
@@ -104,10 +109,11 @@ Contact alerts:
 	+ Add "Contact Alerts" menu item to window menu.. to open alert window
 	+ Auto-fill sheet for new alert based on selection in window on clicking add
 
-Sounds
-	- Remove mute while away.  This will be included in the state system window.
-
 Contact list display:
+	Add user icon and extended status display support to the contact list, and simplify it's
+	configuration to a small subset of nice looking cell arrangements.
+
+	Details:
 	+ Four components to the contact list:
 	 	+ User Name - (Text) Name / Alias
 	 	+ User Icon - (Image) AIM Buddy Icon / MSN Avatar / Address book icon
@@ -117,22 +123,6 @@ Contact list display:
 	+ User can choose whether icons are on left or right.  Status Badge always goes on opposite side
 	+ If icons are visible, extended status is displayed below user name, otherwise displayed next to user name
 
-
-------From the old list:
-Contact List
-	- Remove text color preference.  All contacts will have a status color, and groups have their own color preference.
-	- Remove show contact labels preference
-	- Remove the contact count display preferences, these are in the view menu
-	# Remove preference for idle time color.  It should be the color of the text.
-	- Remove 'Idle & Away' status coloring.  There is no need for an additional color here.
-	- Remove the label colors for online, offline, idle, away
-	- Remove the text colors for signed on, signed off, typing, and unviewed content
-
-
-Address Book Integration:
-	+ We need a way for user specified icons in the address book to not be overridden/overwritten by adium when export is turned on. 
-
-Emoticon Preferences:
 
 
 Event Info (Implement as a new plugin, to replace bezel):
