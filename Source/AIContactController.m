@@ -1084,10 +1084,10 @@ DeclareString(UID);
 - (void)breakdownAndRemoveMetaContact:(AIMetaContact *)metaContact
 {
 	//Remove the objects within it from being inside it
-	NSArray				*containedObjects = [[metaContact containedObjects] copy];
-	NSEnumerator		*metaEnumerator = [containedObjects objectEnumerator];
-	AIListObject		*containingObject = [metaContact containingObject];
-	AIListObject		*object;
+	NSArray								*containedObjects = [[metaContact containedObjects] copy];
+	NSEnumerator						*metaEnumerator = [containedObjects objectEnumerator];
+	AIListObject<AIContainingObject>	*containingObject = [metaContact containingObject];
+	AIListObject						*object;
 	
 	NSMutableDictionary *allMetaContactsDict = [[[owner preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
 																						 group:PREF_GROUP_CONTACT_LIST] mutableCopy];
@@ -1106,7 +1106,7 @@ DeclareString(UID);
 	[metaContact retain];
 	
 	//Remove it from its containing group
-	[(AIMetaContact *)containingObject removeObject:metaContact];
+	[containingObject removeObject:metaContact];
 	
 	NSString	*metaContactInternalObjectID = [metaContact internalObjectID];
 	
@@ -1847,17 +1847,20 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		NSString		*internalObjectID;
 		
 		
-		//If we've messaged this object previously, and the account we used to message it is online, return that account
+		//If we've messaged this object previously, prefer the last contact we sent to if that
+		//contact is currently available
         internalObjectID = [inContact preferenceForKey:KEY_PREFERRED_DESTINATION_CONTACT
 												 group:OBJECT_STATUS_CACHE];
 		
         if((internalObjectID) &&
 		   (preferredContact = [self existingListObjectWithUniqueID:internalObjectID]) &&
-		   ([preferredContact isKindOfClass:[AIListContact class]])){
+		   ([preferredContact isKindOfClass:[AIListContact class]]) &&
+		   ([preferredContact statusSummary] == AIAvailableStatus)){
 			returnContact = [self preferredContactForContentType:inType
 												  forListContact:(AIListContact *)preferredContact];
         }
 		
+		//If the last contact we sent to is not available, use the metaContact's preferredContact
 		if (!returnContact || ![returnContact online]){
 			//Recurse into metacontacts if necessary
 			returnContact = [self preferredContactForContentType:inType
@@ -1984,6 +1987,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	
 	while(listObject = [enumerator nextObject]){
 		if([listObject isKindOfClass:[AIMetaContact class]]){
+#warning What do we want to do when a metaContact is deleted from the contact list?
 			[self breakdownAndRemoveMetaContact:(AIMetaContact *)listObject];
 
 		}else if([listObject isKindOfClass:[AIListGroup class]]){
