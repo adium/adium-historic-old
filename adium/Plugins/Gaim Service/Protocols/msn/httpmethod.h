@@ -3,7 +3,7 @@
  *
  * gaim
  *
- * Copyright (C) 2003 Christian Hammond <chipx86@gnupdate.org>
+ * Copyright (C) 2003-2004 Christian Hammond <chipx86@gnupdate.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,9 +37,24 @@ struct _MsnHttpMethodData
 
 	gboolean virgin;
 	gboolean waiting_response;
+	gboolean dirty;
 
 	GList *queue;
 };
+
+/**
+ * Initializes the HTTP data for a session.
+ *
+ * @param session The session.
+ */
+void msn_http_session_init(MsnSession *session);
+
+/**
+ * Uninitializes the HTTP data for a session.
+ *
+ * @param session The session.
+ */
+void msn_http_session_uninit(MsnSession *session);
 
 /**
  * Writes data to the server using the HTTP connection method.

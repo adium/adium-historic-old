@@ -27,20 +27,16 @@
 #ifndef _GAIM_ACCOUNTS_H_
 #define _GAIM_ACCOUNTS_H_
 
+#include <glib.h>
+
 typedef struct _GaimAccountUiOps GaimAccountUiOps;
 typedef struct _GaimAccount      GaimAccount;
+
+typedef gboolean (*GaimFilterAccountFunc)(GaimAccount *account);
 
 #include "connection.h"
 #include "proxy.h"
 #include "prpl.h"
-
-enum
-{
-	PERMIT_ALL  = 1,
-	PERMIT_NONE,
-	PERMIT_SOME,
-	DENY_SOME
-};
 
 struct _GaimAccountUiOps
 {
@@ -579,7 +575,8 @@ void gaim_accounts_remove(GaimAccount *account);
  * Deletes an account.
  *
  * This will remove any buddies from the buddy list that belong to this
- * account, and will also destroy @a account.
+ * account, buddy pounces that belong to this account, and will also 
+ * destroy @a account.
  *
  * @param account The account.
  */
@@ -608,10 +605,10 @@ void gaim_accounts_reorder(GaimAccount *account, size_t new_index);
 GList *gaim_accounts_get_all(void);
 
 /**
- * Finds an account with the specified name and protocol number.
+ * Finds an account with the specified name and protocol id.
  *
  * @param name     The account username.
- * @param protocol The account protocol ID or number.
+ * @param protocol The account protocol ID.
  *
  * @return The account, if found, or @c FALSE otherwise.
  */

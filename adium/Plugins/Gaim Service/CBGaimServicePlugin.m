@@ -9,10 +9,9 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 #import "CBGaimServicePlugin.h"
 #import "CBGaimAIMAccount.h"
+#import "SLGaimCocoaAdapter.h"
 
 #import "GaimServices.h"
-
-#define GAIM_EVENTLOOP_INTERVAL     0.02         //Interval at which to run libgaim's main event loop
 
 @interface CBGaimServicePlugin (PRIVATE)
 - (NSDictionary *)getDictionaryFromKeychainForKey:(NSString *)key;
@@ -676,19 +675,18 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     adiumGaimCoreQuit
 };
 
-#pragma mark Beef
-// Beef ------------------------------------------------------------------------------------------------------
+#pragma mark Gaim Initialization
+//  Gaim Initialization ------------------------------------------------------------------------------------------------
 
 #define GAIM_DEFAULTS   @"GaimServiceDefaults"
 
 - (void)installPlugin
 {
-    _accountDict = [[NSMutableDictionary alloc] init];
+	char *plugin_search_paths[2];
 
 	//Register our defaults
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS forClass:[self class]]
 										  forGroup:GROUP_ACCOUNT_STATUS];
-    char *plugin_search_paths[2];
 
     //Register ourself as libgaim's UI handler
     gaim_core_set_ui_ops(&adiumGaimCoreOps);
@@ -696,6 +694,9 @@ static GaimCoreUiOps adiumGaimCoreOps = {
         NSLog(@"Failed to initialize gaim core");
     }
     
+	//Handle libgaim events with the Cocoa event loop
+	eventLoopAdapter = [[SLGaimCocoaAdapter alloc] init];
+	
     //Tell libgaim to load its plugins
     NSString *bundlePath = [[[NSBundle bundleForClass:[self class]] bundlePath] stringByExpandingTildeInPath];
     plugin_search_paths[0] = (char *)[[bundlePath stringByAppendingPathComponent:@"/Contents/Frameworks/Protocols/"] UTF8String];
@@ -706,7 +707,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     //Setup the buddy list
     gaim_set_blist(gaim_blist_new());
             
-    //**Setup libgaim core preferences**
+    //Setup libgaim core preferences
     
     //Disable gaim away handling - we do it ourselves
     gaim_prefs_set_bool("/core/conversations/away_back_on_send", FALSE);
@@ -716,26 +717,22 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     gaim_prefs_set_bool("/gaim/gtk/logging/log_chats", FALSE);
     gaim_prefs_set_bool("/gaim/gtk/logging/log_ims", FALSE);
     
-    //Typing preference!
+    //Typing preference
     gaim_prefs_set_bool("/core/conversations/im/send_typing", TRUE);
 
+	//Configure signals for receiving gaim events
 	[self configureSignals];
 
-    //Install the libgaim event loop timer
-    [NSTimer scheduledTimerWithTimeInterval:GAIM_EVENTLOOP_INTERVAL 
-                                     target:self
-                                   selector:@selector(gaimEventLoopTimer:)
-                                   userInfo:nil
-                                    repeats:YES];
+	_accountDict = [[NSMutableDictionary alloc] init];
+		
     //Install the services
     AIMService		= [[[CBAIMService alloc] initWithService:self] retain];
     GaduGaduService = [[[ESGaduGaduService alloc] initWithService:self] retain];
     MSNService		= [[[ESMSNService alloc] initWithService:self] retain];
     NapsterService  = [[[ESNapsterService alloc] initWithService:self] retain];
+	JabberService   = [[[ESJabberService alloc] initWithService:self] retain];
 	TrepiaService   = [[[ESTrepiaService alloc] initWithService:self] retain];
-    YahooService	= nil /* [[[ESYahooService alloc] initWithService:self] retain] */;
-	
-    JabberService   = nil /* [[[ESJabberService alloc] initWithService:self] retain] */;
+    YahooService	= [[[ESYahooService alloc] initWithService:self] retain];
 }
 
 - (void)uninstallPlugin
@@ -753,20 +750,11 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	[TrepiaService release]; TrepiaService = nil;
     [YahooService release]; YahooService = nil;
 
+	[eventLoopAdapter release]; eventLoopAdapter = nil;
 }
 
-//Periodic timer to run libgaim's event loop
-- (void)gaimEventLoopTimer:(NSTimer *)inTimer
-{
-    //While there are event pending, iterate
-    while(gaim_core_mainloop_events_pending()){
-		gaim_core_mainloop_iteration();
-
-        //We also have this method, which will iterate through all events.
-        //gaim_core_mainloop_finish_events();
-    }
-}
-
+#pragma mark AccountDict Methods
+// AccountDict ---------------------------------------------------------------------------------------------------------
 - (void)addAccount:(id)anAccount forGaimAccountPointer:(GaimAccount *)gaimAcct 
 {
     [_accountDict setObject:anAccount forKey:[NSValue valueWithPointer:gaimAcct]];
@@ -782,16 +770,9 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     [_accountDict removeObjectForKey:inPointer];	
 }
 
-#pragma mark Proxy
-// Proxy ------------------------------------------------------------------------------------------------------
+#pragma mark Systemwide Proxy Settings
+// Proxy ---------------------------------------------------------------------------------------------------------------
 
-/*
- "/core/proxy/type",
- _("No proxy"), "none",
- "SOCKS 4", "socks4",
- "SOCKS 5", "socks5",
- "HTTP", "http",
- */
 - (NSDictionary *)systemSOCKSSettingsDictionary
 {
 	NSMutableDictionary *systemSOCKSSettingsDictionary = nil;
@@ -813,9 +794,8 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     result = (proxyDict != NULL);
      
     // Get the enable flag.  This isn't a CFBoolean, but a CFNumber.
-    //check if SOCKS is enabled
+    // Check if SOCKS is enabled
     if (result) {
-		NSLog(@"configureGaimProxySettings: Got proxyDict.");
         enableNum = (CFNumberRef) CFDictionaryGetValue(proxyDict,
                                                        kSCPropNetProxiesSOCKSEnable);
         
@@ -823,7 +803,6 @@ static GaimCoreUiOps adiumGaimCoreOps = {
             && (CFGetTypeID(enableNum) == CFNumberGetTypeID());
     }
     if (result) {
-		NSLog(@"configureGaimProxySettings: got a value for kSCPropNetProxiesSOCKSEnable");
         result = CFNumberGetValue(enableNum, kCFNumberIntType,
                                   &enable) && (enable != 0);
     }
@@ -833,7 +812,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     // field in the Network preferences panel, the CFStringGetCString
     // function will fail and this function will return false.
     if (result) {
-		NSLog(@"configureGaimProxySettings: SOCKS is enabled; looking up kSCPropNetProxiesSOCKSProxy");
+		if (GAIM_DEBUG) NSLog(@"configureGaimProxySettings: SOCKS is enabled; looking up kSCPropNetProxiesSOCKSProxy");
         hostStr = (CFStringRef) CFDictionaryGetValue(proxyDict,
                                                      kSCPropNetProxiesSOCKSProxy);
         
@@ -843,7 +822,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     if (result) {
         result = CFStringGetCString(hostStr, host,
                                     (CFIndex) hostSize, [NSString defaultCStringEncoding]);
-		NSLog(@"configureGaimProxySettings: got a host of %s",host);
+		if (GAIM_DEBUG) NSLog(@"configureGaimProxySettings: got a host of %s",host);
     }
     
     //Get the proxy port
@@ -856,11 +835,11 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     }
     if (result) {
         result = CFNumberGetValue(portNum, kCFNumberIntType, &portInt);
-		NSLog(@"configureGaimProxySettings: got a port of %i",portInt);
+		if (GAIM_DEBUG) NSLog(@"configureGaimProxySettings: got a port of %i",portInt);
     }
     if (result) {
         //set what we've got so far
-        NSLog(@"configureGaimProxySettings: setting socks5 settings: %s:%i",host,portInt);
+        if (GAIM_DEBUG) NSLog(@"configureGaimProxySettings: setting socks5 settings: %s:%i",host,portInt);
 		
 		NSString *hostString = [NSString stringWithCString:host];
 				
@@ -872,14 +851,14 @@ static GaimCoreUiOps adiumGaimCoreOps = {
         NSDictionary* auth = [self getDictionaryFromKeychainForKey:hostString];
         
         if(auth) {
-            NSLog(@"configureGaimProxySettings: proxy username='%@' password=(in the keychain)",[auth objectForKey:@"username"]);
+            if (GAIM_DEBUG) NSLog(@"configureGaimProxySettings: proxy username='%@' password=(in the keychain)",[auth objectForKey:@"username"]);
             
 			[systemSOCKSSettingsDictionary setObject:[auth objectForKey:@"username"] forKey:@"Username"];
 			[systemSOCKSSettingsDictionary setObject:[auth objectForKey:@"password"] forKey:@"Password"];
             
         } else {
             //No username/password.  I think this doesn't need to be an error or anythign since it should have been set in the system prefs
-            NSLog(@"configureGaimProxySettings: No username/password found");
+            if (GAIM_DEBUG) NSLog(@"configureGaimProxySettings: No username/password found");
         }
     }    
     
@@ -891,7 +870,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     return [systemSOCKSSettingsDictionary autorelease];
 }    
 
-//Next two functions are from the http-mail project.  We'll write our own if their license doesn't allow this... but it'll be okay for now.
+//Next two functions are from the http-mail project.
 static NSData *OWKCGetItemAttribute(KCItemRef item, KCItemAttr attrTag)
 {
     SecKeychainAttribute    attr;

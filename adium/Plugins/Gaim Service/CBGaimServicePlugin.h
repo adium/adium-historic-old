@@ -10,6 +10,8 @@
 @class AIServiceType;
 
 @interface CBGaimServicePlugin : AIPlugin{
+	id  eventLoopAdapter;
+	
     id  AIMService;
     id  GaduGaduService;
     id  JabberService;
