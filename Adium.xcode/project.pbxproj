@@ -6733,7 +6733,6 @@
 				E03E2FF10785F02E007E75C3,
 				E03E2FF20785F02E007E75C3,
 				E03E2FF30785F02E007E75C3,
-				E03E2FF40785F02E007E75C3,
 				3452AA0B07891DFC00C3C494,
 				344F4A4C078DDC9500226DFC,
 				3433667507948C1400C84B15,
@@ -20805,7 +20804,6 @@
 				E03E2FE80785F02D007E75C3,
 				E03E2FE90785F02D007E75C3,
 				E03E2FEA0785F02D007E75C3,
-				E03E2FEB0785F02E007E75C3,
 			);
 			isa = PBXGroup;
 			name = Icons;
@@ -22450,14 +22448,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		E03E2FEB0785F02E007E75C3 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = pref9.png;
-			path = Source/icons/pref9.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		E03E2FEC0785F02E007E75C3 = {
 			fileRef = E03E2FE30785F02C007E75C3;
 			isa = PBXBuildFile;
@@ -22502,12 +22492,6 @@
 		};
 		E03E2FF30785F02E007E75C3 = {
 			fileRef = E03E2FEA0785F02D007E75C3;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		E03E2FF40785F02E007E75C3 = {
-			fileRef = E03E2FEB0785F02E007E75C3;
 			isa = PBXBuildFile;
 			settings = {
 			};

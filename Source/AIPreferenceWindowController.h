@@ -18,10 +18,6 @@
 @interface AIPreferenceWindowController : AIWindowController {
     IBOutlet	NSTabView					*tabView_category;
 
-    IBOutlet	NSTabView					*tabView_status;
-    IBOutlet	AIModularPaneCategoryView	*view_Status_Away;
-    IBOutlet	AIModularPaneCategoryView	*view_Status_Idle;
-
 	IBOutlet	AIModularPaneCategoryView	*view_General;
     IBOutlet	AIModularPaneCategoryView	*view_ContactList;
     IBOutlet	AIModularPaneCategoryView	*view_Messages;
