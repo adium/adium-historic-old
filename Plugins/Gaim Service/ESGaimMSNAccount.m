@@ -23,7 +23,7 @@
 static BOOL didInitMSN = NO;
 
 //Intercept account creation to ensure the UID will have a domain ending -- the default is @hotmail.com
-- (id)initWithUID:(NSString *)inUID internalObjectID:(int)inInternalObjectID service:(AIService *)inService
+- (id)initWithUID:(NSString *)inUID internalObjectID:(NSString *)inInternalObjectID service:(AIService *)inService
 {
 	NSString	*correctUID;
 
