@@ -1,15 +1,15 @@
 body {
-    background: #fff url("images/background.png") top left repeat-x fixed;
+    background: white url(images/background.png) center top repeat-x fixed;
 	font-family: "Lucida Grande", sans-serif;
 	font-size: 10px;
 	font-weight: normal;
-	}
+}
 				
 .container {
     position: relative;
     background: url("images/bottom_right.png") bottom right no-repeat;
-    margin: 30px 16px -15px 59px;
-    }
+	margin: 12px -6px 0px 37px;
+}
                 
 .sender {
     top: -16px;
@@ -23,7 +23,7 @@ body {
     text-shadow: 1px 1px 3px #ccc;
     padding: 13px 0 0 56px;
     margin-bottom: 0;
-    }
+}
                 
 .incoming { color: #a6002c; }
 
@@ -75,7 +75,8 @@ body {
  p {
     padding: 0;
     margin-bottom: 6px;
-    }
+	overflow: auto;
+}
     
 .status_container {
     position: relative;
@@ -104,4 +105,9 @@ body {
     text-transform: uppercase;
     font-size: 8px;
     background: url("images/status_right.png") top right no-repeat;
+}
+
+#Chat {
+	overflow: hidden;
+	margin-bottom: -6px;
 }
