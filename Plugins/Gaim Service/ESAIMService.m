@@ -28,7 +28,7 @@
 	return([NSCharacterSet characterSetWithCharactersInString:@" "]);
 }
 - (int)allowedLength{
-	return(16);
+	return(28);
 }
 - (BOOL)caseSensitive{
 	return(NO);
