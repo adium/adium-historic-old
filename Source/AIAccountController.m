@@ -1324,8 +1324,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		//Render the composite image
 		NSImage	*composite = [[NSImage alloc] initWithSize:compositeSize];
 		[composite lockFocus];
-		[serviceIcon drawInRect:compositeRect atSize:[statusIcon size] position:IMAGE_POSITION_LEFT fraction:1.0];
-		[statusIcon drawInRect:compositeRect atSize:[statusIcon size] position:IMAGE_POSITION_RIGHT fraction:1.0];
+		[statusIcon drawInRect:compositeRect atSize:[statusIcon size] position:IMAGE_POSITION_LEFT fraction:1.0];
+		[serviceIcon drawInRect:compositeRect atSize:[serviceIcon size] position:IMAGE_POSITION_RIGHT fraction:1.0];
 		[composite unlockFocus];
 
 		//Update the menu item
