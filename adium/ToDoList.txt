@@ -15,11 +15,6 @@ Bugs
 * In certain fonts, the tails of letters will stain in the text entry field after it clears.  This is visible with HoeflerText(size 12) - type a few j's and then press esc to clear the field. (hehe)
 * Adium will unhide if hidden (via cmd-H) while a tooltip is visible
 * Tooltip code does not like the contact list 'hide while in background' preference.  Lots of issues
-* 'Auto-Away' controls do not dim when there are no away messages (configureControlDimming overrides savedAwaysMenu)
-* 'Auto-Away' menu does not refresh when away messages are changed
-* 'Auto-Away' menu dimming does not refresh when away messages are changed
-* Auto-Idle does not remove when 'Auto-Away' is turned on (Set them both to 1 minute, wait, click 'return', idle stays)
-
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
@@ -62,10 +57,9 @@ Contact List Display:
 Other:
 	+ Create a plugin to hide the AIM "Your screen name is now signed in 2 locations" messages
 	# Rename all the classes in AIUtilities to have the prefix "AI" so that the framework is uniform.  This framework is designed to be Adium-independent, so we should make it easier to use in this way.
-	        Colin: Possibly use a different prefix, such as "AU", and rename the framework AdiumUtilities? The prefix has come to signify ownership/creatorship, so an "unused" prefix would seem more neutral/fair. Maybe I'm just being anal :P
+	    Colin: Possibly use a different prefix, such as "AU", and rename the framework AdiumUtilities? The prefix has come to signify ownership/creatorship, so an "unused" prefix would seem more neutral/fair. Maybe I'm just being anal :P
 		Evan: Auburn University? I'm with you though if we change it... but I really think it's okay as-is.
-                Jeff: Remember that we lose CVS history if we change
-                filenames.
+        Jeff: Remember that we lose CVS history if we change filenames.
 
 	+ '--insensitive' flag in AIEmoticon (to be placed in the TextEquivalents.txt file) that allows emoticons' text equivalents to be case-insensitive (without applying this nature globally to all emoticons).
 
@@ -215,7 +209,13 @@ Bug Fixes:
 = Libgaim disconnect errors are being displayed, and not ignored (since they are handled internally)
 = Preference window crashes if you have a color picker open, close the window, and then click inside the picker.  The colorwell just needs to be told activate:NO in viewWillClose.  Fixing this requires verifying that viewWillClose is being called on advanced preference panes.
 = Pushing escape clears the text field, instead of allowing you to convert from kanji to roman. This can be considered a bug, but some people like the escape key to be used to clear the text field too, so maybe this could be a preference or something.
-	Evan:I say we just take this nonstandard 'feature' out.
+	Evan: I say we just take this nonstandard 'feature' out.
+	Colin: It's not nonstandard and it's a good feature.
+= 'Auto-Away' controls do not dim when there are no away messages (configureControlDimming overrides savedAwaysMenu)
+= 'Auto-Away' menu does not refresh when away messages are changed
+= 'Auto-Away' menu dimming does not refresh when away messages are changed
+= Auto-Idle does not remove when 'Auto-Away' is turned on (Set them both to 1 minute, wait, click 'return', idle stays)
+
 
 Features & Changes:
 = Add support for displaying emoticon images (webkit message view)
