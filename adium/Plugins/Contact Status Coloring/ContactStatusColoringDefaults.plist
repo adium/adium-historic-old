@@ -33,9 +33,9 @@
     <key>Unviewed Content Color</key>
     <string>255,255,255</string>
     <key>Online Color</key>
-    <string>255,255,255</string>
+    <string>0,0,0</string>
     <key>Idle And Away Color</key>
-    <string>255,255,255</string>
+    <string>49,49,49</string>
     <key>Away Label Color</key>
     <string>234,234,214</string>
     <key>Idle Label Color</key>
@@ -49,8 +49,8 @@
     <key>Unviewed Content Label Color</key>
     <string>43,69,198</string>
     <key>Online Label Color</key>
-    <string>0,0,255</string>
+    <string>209,234,220</string>
     <key>Idle And Away Label Color</key>
-    <string>234,234,234</string>
+    <string>233,233,214</string>
 </dict>
 </plist>
