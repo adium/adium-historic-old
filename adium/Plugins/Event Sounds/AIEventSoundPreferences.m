@@ -204,6 +204,7 @@
                 [plugin loadSoundSetAtPath:soundSetPath creator:&creator description:nil sounds:&eventSoundArray]; //Load the soundset
                 [popUp_soundSet selectItemWithRepresentedObject:soundSetPath];	//Update the soundset popUp
                 [textField_creator setStringValue:creator];			//Update the creator string
+                [button_soundSetInfo setEnabled:YES]; 				//Enable the info button
 
                 usingCustomSoundSet = NO;
                 
@@ -213,6 +214,7 @@
                 
                 [popUp_soundSet selectItemAtIndex:0];				//Update the soundset popUp
                 [textField_creator setStringValue:@""];				//Blank the creator string
+                [button_soundSetInfo setEnabled:NO]; 				//Disable the info button
 
                 usingCustomSoundSet = YES;
 
@@ -336,6 +338,7 @@
     
     return(soundMenu);
 }
+
 
 
 //TableView datasource --------------------------------------------------------

@@ -20,7 +20,7 @@
     BOOL		trackingMouseMovedEvents;
 
     NSTimer 		*tooltipTimer;
-    int 		toolTipCount;
+    int 		tooltipCount;
 }
 
 + (AISCLViewController *)contactListViewControllerWithOwner:(id)inOwner;

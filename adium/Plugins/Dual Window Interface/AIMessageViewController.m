@@ -145,6 +145,8 @@
     [textView_outgoing setOwner:owner];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
     [[textView_outgoing window] makeFirstResponder:textView_outgoing];
+
+    NSLog(@"%@ make first responder: %@",[textView_outgoing window],textView_outgoing);
     
     //Config the toolbar
     [toolbar_bottom setIdentifier:MESSAGE_TAB_TOOLBAR];
