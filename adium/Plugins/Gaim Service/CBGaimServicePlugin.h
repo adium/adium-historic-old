@@ -19,7 +19,7 @@
 	id  MSNService;
 	id  TrepiaService;
     id  YahooService;
-	id  GroupwiseService;
+	id  NovellService;
 }
 
 - (void)addAccount:(id)anAccount forGaimAccountPointer:(GaimAccount *)gaimAcct;

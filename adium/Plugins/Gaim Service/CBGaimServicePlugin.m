@@ -860,7 +860,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 //    if(!gaim_init_toc_plugin()) NSLog(@"Error: No TOC Support");
     if(!gaim_init_trepia_plugin()) NSLog(@"Error: No Trepia Support");
     if(!gaim_init_yahoo_plugin()) NSLog(@"Error: No Yahoo Support");
-//	if(!gaim_init_groupwise_plugin()) NSLog(@"Error: No Groupwise Support");
+	if(!gaim_init_novell_plugin()) NSLog(@"Error: No Novell Support");
 
 	if(/*!gaim_init_ssl_plugin() || */!gaim_init_ssl_gnutls_plugin() || !gaim_init_msn_plugin()){
 		NSLog(@"Error: No MSN/SSL Support");
@@ -892,10 +892,10 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     GaduGaduService = [[[ESGaduGaduService alloc] initWithService:self] retain];
     MSNService		= [[[ESMSNService alloc] initWithService:self] retain];
     NapsterService  = [[[ESNapsterService alloc] initWithService:self] retain];
+	NovellService   = [[[ESNovellService alloc] initWithService:self] retain];
 	JabberService   = [[[ESJabberService alloc] initWithService:self] retain];
 	TrepiaService   = [[[ESTrepiaService alloc] initWithService:self] retain];
     YahooService	= [[[ESYahooService alloc] initWithService:self] retain];
-
 }
 
 - (void)uninstallPlugin
@@ -912,7 +912,8 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     [MSNService release]; MSNService = nil;
 	[TrepiaService release]; TrepiaService = nil;
     [YahooService release]; YahooService = nil;
-
+	[NovellService release]; NovellService = nil;
+	
 	[eventLoopAdapter release]; eventLoopAdapter = nil;
 }
 
