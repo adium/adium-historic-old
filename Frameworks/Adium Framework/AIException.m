@@ -78,7 +78,7 @@
                 [self name],[self reason],processedStackTrace] writeToFile:EXCEPTIONS_PATH 
                                                                 atomically:YES];
             
-            NSLog(@"Launching the Adium Crash Reporter because an exception of type %@ occurred:\n%@)",
+            NSLog(@"Launching the Adium Crash Reporter because an exception of type %@ occurred:\n%@",
                   [self name],[self reason]);
             
             [[NSWorkspace sharedWorkspace] launchApplication:PATH_TO_CRASH_REPORTER];
