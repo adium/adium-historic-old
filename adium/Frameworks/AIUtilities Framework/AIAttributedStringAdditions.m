@@ -88,6 +88,7 @@ NSAttributedString *_safeString(NSAttributedString *inString);
     return numberOfReplacements;
 }
 
+
 //from Adium 1.6 AIAttributedStringFormattingAdditions
 //adjust the colors in the string so they're visible on the background
 - (void)adjustColorsToShowOnBackground:(NSColor *)backgroundColor
@@ -100,7 +101,6 @@ NSAttributedString *_safeString(NSAttributedString *inString);
     backgroundColor = [backgroundColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
     backgroundBrightness = [backgroundColor brightnessComponent];
     backgroundSum = [backgroundColor redComponent] + [backgroundColor greenComponent] + [backgroundColor blueComponent];
-    
     //we need to scan each colored "chunk" of the message - and check to make sure it is a "visible" color
     while(index < stringLength){
         NSColor		*fontColor;
@@ -117,13 +117,11 @@ NSAttributedString *_safeString(NSAttributedString *inString);
         //--check brightness--
         brightness = [fontColor brightnessComponent];
         deltaBrightness = backgroundBrightness - brightness;
-        
         if(deltaBrightness >= 0 && deltaBrightness < 0.4){ //too close                    
                                                            //change the color
             fontColor = [NSColor colorWithCalibratedHue:[fontColor hueComponent] saturation:[fontColor saturationComponent] brightness:backgroundBrightness - 0.4 alpha:[fontColor alphaComponent]];
             fontColor = [fontColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
-            
-            colorChanged = YES;
+                colorChanged = YES;
             
         }else if(deltaBrightness < 0 && deltaBrightness > -0.4){ //too close
                                                                  //change the color
@@ -136,7 +134,6 @@ NSAttributedString *_safeString(NSAttributedString *inString);
         //--check components--
         sum = [fontColor redComponent] + [fontColor greenComponent] + [fontColor blueComponent];
         deltaSum = backgroundSum - sum;
-        
         if(deltaSum < 1.0 && deltaSum > -1.0){ //still too similar                    
                                                //just give up and make the color black or white
             if(backgroundBrightness <= 0.5){
@@ -144,6 +141,121 @@ NSAttributedString *_safeString(NSAttributedString *inString);
             }else{
                 fontColor = [[NSColor blackColor] colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
             }
+            colorChanged = YES;
+        }
+        
+        if(colorChanged){
+            [self addAttribute:NSForegroundColorAttributeName value:fontColor range:effectiveRange];
+        }
+        
+        index = effectiveRange.location + effectiveRange.length;
+    }
+}
+
+//adjust the colors in the string so they're visible on the background, adjusting brightness in proportion to the original background
+- (void)adjustColorsToShowOnBackgroundRelativeToOriginalBackground:(NSColor *)backgroundColor
+{
+    int 	index = 0;
+    int         stringLength = [self length];
+    float	backgroundBrightness, backgroundSum;
+    NSColor         *backColor;
+    //--get the brightness of our background--
+    if (backgroundColor) {
+        backColor = [backgroundColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+        backgroundBrightness = [backColor brightnessComponent];
+        backgroundSum = [backColor redComponent] + [backColor greenComponent] + [backColor blueComponent];
+    }
+    
+    //we need to scan each colored "chunk" of the message - and check to make sure it is a "visible" color
+    while(index < stringLength){
+        NSColor		*fontColor;
+        NSColor         *fontBackColor;
+
+        NSRange		effectiveRange, backgroundRange;
+        float		brightness, newBrightness;
+        float		deltaBrightness, deltaSum;
+        BOOL		colorChanged = NO, backgroundIsDark, fontBackIsDark;
+        
+        //--get the font color--
+        fontColor = [self attribute:NSForegroundColorAttributeName atIndex:index effectiveRange:&effectiveRange];
+        //--get the background color in this range
+        fontBackColor = [self attribute:NSBackgroundColorAttributeName atIndex:index effectiveRange:&backgroundRange];
+        if(!fontBackColor) {
+            //Background coloring
+            fontBackColor = [self attribute:AIBodyColorAttributeName atIndex:index effectiveRange:&backgroundRange];
+            if (!fontBackColor) {
+                fontBackColor = [NSColor whiteColor];
+                fontBackColor = [fontBackColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+            }
+        }
+        
+        //--use the shorter of these two ranges
+        if (backgroundRange.length < effectiveRange.length)
+            effectiveRange.length = backgroundRange.length;
+        
+        if(!fontColor) fontColor = [NSColor blackColor];
+        fontColor = [fontColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+        
+        brightness = [fontColor brightnessComponent];
+        
+        if(!backgroundColor) {
+            backColor = fontBackColor;
+            backgroundBrightness = [backColor brightnessComponent];
+            backgroundSum = [backColor redComponent] + [backColor greenComponent] + [backColor blueComponent];
+        } else {
+            deltaBrightness = (brightness - [fontBackColor brightnessComponent]);
+            backgroundIsDark = [backgroundColor colorIsDark];
+            fontBackIsDark = [fontBackColor colorIsDark];
+            if (!backgroundIsDark && fontBackIsDark) {
+                newBrightness = brightness - (deltaBrightness)/2;
+                if (newBrightness <= 0)
+                    newBrightness = .2;
+                colorChanged = YES;
+            }
+            else if (backgroundIsDark && !fontBackIsDark) {
+                newBrightness = brightness + (deltaBrightness)/2;
+                if (newBrightness >= 1)
+                    newBrightness = .8;
+                colorChanged = YES;
+            }
+            
+            if (colorChanged) {
+                fontColor = [NSColor colorWithCalibratedHue:[fontColor hueComponent] saturation:[fontColor saturationComponent] brightness:newBrightness alpha:[fontColor alphaComponent]];
+                fontColor = [fontColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+            }
+        }
+                 
+        //--check brightness--
+        brightness = [fontColor brightnessComponent];
+        deltaBrightness = backgroundBrightness - brightness;       
+        if (deltaBrightness >= 0 && deltaBrightness <= 0.4){    //too close 
+            fontColor = [fontColor adjustHue:0.0 saturation:0.0 brightness:-.4]; //change the color
+            colorChanged = YES;
+            
+        }else if (deltaBrightness >= -0.4 && deltaBrightness <0){ //too close
+                                                                 //change the color
+
+            fontColor = [fontColor adjustHue:0.0 saturation:0.0 brightness:.4];
+            
+            colorChanged = YES;
+        }
+
+        //--check luminance--
+        float hue,saturation;
+        float fontLuminance,backLuminance;
+        
+        [fontColor getHue:&hue luminance:&fontLuminance saturation:&saturation];
+        [backColor getHue:&hue luminance:&backLuminance saturation:&saturation];
+            
+        deltaSum = backLuminance - fontLuminance;
+        
+        if (deltaSum >= -0.3 && deltaSum <= 0.3){ //still too similar     
+            if(backgroundBrightness <= 0.5){
+               fontColor = [[NSColor whiteColor] colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+            }else{
+                fontColor = [[NSColor blackColor] colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+            }
+
             colorChanged = YES;
         }
         
