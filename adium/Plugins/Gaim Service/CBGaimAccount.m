@@ -11,13 +11,12 @@
 #import "CBGaimAccount.h"
 #import "CBGaimServicePlugin.h"
 
-#define PROFILE_STRING          @"I'm using Adium 2.0. Are you? www.adiumx.com"
-
 #define NO_GROUP                @"__NoGroup__"
 #define USER_ICON_CACHE_PATH    @"~/Library/Caches/Adium"
 #define USER_ICON_CACHE_NAME    @"UserIcon_%@"
 
 #define AUTO_RECONNECT_DELAY	2.0	//Delay in seconds
+#define RECONNECT_ATTEMPTS      4
 
 @interface CBGaimAccount (PRIVATE)
 - (AIChat*)_openChatWithHandle:(AIHandle*)handle andConversation:(GaimConversation*)conv;
@@ -51,13 +50,13 @@
 #pragma mark GaimBuddies
 - (void)accountNewBuddy:(GaimBuddy*)buddy
 {
-	//NSLog(@"accountNewBuddy (%s)", buddy->name);
+//	NSLog(@"accountNewBuddy (%s)", buddy->name);
     [self createHandleAssociatingWithBuddy:buddy];
 }
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {
-	//NSLog(@"accountUpdateBuddy (%s)", buddy->name);
+//	NSLog(@"accountUpdateBuddy (%s)", buddy->name);
     int                     online;
     NSMutableDictionary     *statusDict;
     NSMutableArray          *modifiedKeys = [NSMutableArray array];
@@ -84,6 +83,7 @@
     
     //Online / Offline
     online = (GAIM_BUDDY_IS_ONLINE(buddy) ? 1 : 0);
+//    NSLog(@"%s is %i",buddy->name,buddy->uc);
     if([[statusDict objectForKey:@"Online"] intValue] != online)
     {
         NSNumber *onlineNum = [NSNumber numberWithBool:online];
@@ -180,6 +180,7 @@
     
     //Broadcast any changes
     if([modifiedKeys count] > 0){
+//        NSLog(@"ModifiedKeys for %s: %@",buddy->name,modifiedKeys);
         //tell the contact controller, silencing if necessary
         [[adium contactController] handleStatusChanged:theHandle
                                     modifiedStatusKeys:modifiedKeys
@@ -190,7 +191,7 @@
 
 - (void)accountRemoveBuddy:(GaimBuddy*)buddy
 {
-	//NSLog(@"accountRemoveBuddy (%s)", buddy->name);
+//	NSLog(@"accountRemoveBuddy (%s)", buddy->name);
 
     //stored the key as a compactedString originally
     [handleDict removeObjectForKey:[[NSString stringWithFormat:@"%s", buddy->name] compactedString]];
@@ -263,6 +264,7 @@
 
 - (void)accountConvReceivedIM: (const char*)message inConversation:(GaimConversation*)conv withFlags: (GaimMessageFlags)flags atTime: (time_t)mtime
 {
+    NSLog(@"Received %s from %s",message,conv->name);
     if ((flags & GAIM_MESSAGE_SEND) != 0) {
         /*
          * TODO
@@ -292,6 +294,7 @@
         // Need to start a new chat
         chat = [self _openChatWithHandle:handle andConversation:conv];
     } else  {
+        //JABBER MESSAGES ARE RECEIVED AND FAIL AT THIS ASSERTION
         NSAssert(handle != nil, @"Existing chat yet no existing handle?");
     }
     
@@ -363,14 +366,7 @@
 	
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0) {
         AIContentMessage *cm = (AIContentMessage*)object;
-        NSString *body = [AIHTMLDecoder encodeHTML:[cm message]
-                                           headers:YES
-                                          fontTags:YES
-                                     closeFontTags:NO
-                                         styleTags:YES
-                        closeStyleTagsOnFontChange:NO
-                                    encodeNonASCII:NO
-                                        imagesPath:nil];
+        NSString *body = [self encodedStringFromAttributedString:[cm message]];
         AIChat *chat = [cm chat];
         GaimConversation *conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
         
@@ -387,10 +383,23 @@
         }
         
         GaimConvIm *im = gaim_conversation_get_im_data(conv);
+        
+//        NSLog(@"sending %s to %@",[body UTF8String],[[chat listObject] displayName]);
         gaim_conv_im_send(im, [body UTF8String]);
         sent = YES;
     }
     return sent;
+}
+-(NSString *)encodedStringFromAttributedString:(NSAttributedString *)inAttributedString
+{
+    return ([AIHTMLDecoder encodeHTML:inAttributedString
+                              headers:YES
+                             fontTags:YES
+                        closeFontTags:NO
+                            styleTags:YES
+           closeStyleTagsOnFontChange:NO
+                       encodeNonASCII:NO
+                           imagesPath:nil]);
 }
 
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
@@ -572,7 +581,7 @@
     GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
     gaim_blist_remove_group(group);                         //remove it gaimside
 															
-    //    NSLog(@"remove group %@",inGroup);
+        NSLog(@"remove group %@",inGroup);
     return YES;
 }
 // Rename a group
@@ -580,7 +589,9 @@
 {
     GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
     if (group != NULL) {                                        //if we find the GaimGroup
+        NSLog(@"serv_rename_group(%@,%@,%@)",gc,inGroup,newName);
         serv_rename_group(gc, group, [newName UTF8String]);     //rename
+        NSLog(@"gaim_blist_remove_group(%@)",inGroup);
         gaim_blist_remove_group(group);                         //remove the old one gaimside
         return YES;
     } else
@@ -813,7 +824,7 @@
 	//Set password and connect
 	gaim_account_set_password(account, [password UTF8String]);
 	gc = gaim_account_connect(account);
-	NSLog(@"Got a gc of %i",gc);
+	NSLog(@"Adium: Got a gc of %x",gc);
 }
 
 //Configure libgaim's proxy settings using the current system values
@@ -857,11 +868,13 @@
 {
     //We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
-    
+    NSLog(@"Adium: disconnect");
     //Tell libgaim to disconnect
     if(gaim_account_is_connected(account)){
+        NSLog(@"Adium: disconnecting account 0x%x",account);
         gaim_account_disconnect(account); 
     }
+    NSLog(@"Adium: disconnect complete");
 }
 /*****************************/
 /* accountConnection methods */
@@ -875,6 +888,7 @@
 //Our account has disconnected (called automatically by gaimServicePlugin)
 - (void)accountConnectionDisconnected
 {
+    NSLog(@"Adium: accountConnectionDisconnected");
     NSEnumerator    *enumerator;
     AIHandle        *handle;
     
@@ -910,6 +924,7 @@
 	if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
             [self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
 	}
+    NSLog(@"Adium: finished accountConnectionDisconnected");
 }
 
 //Our account has connected (called automatically by gaimServicePlugin)
@@ -930,17 +945,22 @@
 //We don't want libgaim keeping track of anything between sessions... we handle all that on our own
 - (void)resetLibGaimAccount
 {
+    gaim_core_mainloop_finish_events();
+    
 	//Destroy the account
 	//This will remove any gaimBuddies, account information, etc.
+    NSLog(@"Adium: deleting account 0x%x (with gc 0x%x)", account, gc);
     [(CBGaimServicePlugin *)service removeAccount:account];
-    gaim_accounts_delete(account); account = NULL;
+    gaim_accounts_remove (account); account = NULL;
     gc = NULL;
-	NSLog(@"cleared our gc");
+    NSLog(@"Adium: cleared our gc");
 
 	//Recreate a fresh version of the account
     account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
     gaim_accounts_add(account);
     [(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
+    
+    gaim_core_mainloop_finish_events();
 }
 
 
@@ -1031,21 +1051,16 @@
 - (void)setAccountAwayTo:(NSAttributedString *)awayMessage
 {
     char	*awayHTML = nil;
-
-	//Convert the away message to HTML, and pass it to libgaim
-	if(awayMessage){
-        awayHTML = (char *)[[AIHTMLDecoder encodeHTML:awayMessage
-                                              headers:YES
-                                             fontTags:YES   closeFontTags:YES
-                                            styleTags:YES   closeStyleTagsOnFontChange:NO
-                                       encodeNonASCII:NO
-                                           imagesPath:nil] UTF8String];
+    
+    //Convert the away message to HTML, and pass it to libgaim
+    if(awayMessage){
+        awayHTML = (char *)[[self encodedStringFromAttributedString:awayMessage] UTF8String];
     }
     serv_set_away(gc, GAIM_AWAY_CUSTOM, awayHTML);
-	
-	//We are now away
-	[self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:NO];
-	[self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
+    
+    //We are now away
+    [self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:NO];
+    [self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
 }
 
 //Set our text profile (Pass nil for no profile)
@@ -1055,12 +1070,7 @@
     
 	//Convert the profile to HTML, and pass it to libgaim
     if(profile){
-        profileHTML = (char *)[[AIHTMLDecoder encodeHTML:profile
-                                                 headers:YES
-                                                fontTags:YES    closeFontTags:YES
-                                               styleTags:YES    closeStyleTagsOnFontChange:NO
-                                          encodeNonASCII:NO
-                                              imagesPath:nil] UTF8String];
+        profileHTML = (char *)[[self encodedStringFromAttributedString:profile] UTF8String];
     }
     serv_set_info(gc, profileHTML);
 	
