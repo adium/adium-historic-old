@@ -19,8 +19,6 @@
 #import "AIStatusController.h"
 #import <Adium/AIAccount.h>
 
-//#define IDLE_TIME_PREFERENCE	(60*10)  //XXX - This needs to be a preference(?), seconds before auto-idle. -ai.
-
 /*!
  * @class AIAutoIdlePlugin
  * @brief Provides auto-idle functionality for the state system
@@ -34,10 +32,9 @@
 /*!
  * @brief Initialize the auto-idle system
  *
- * Initialize the auto-idle system to monitor
- *
- * Initialize the auto-reply system to monitor account status.  When an account auto-reply flag is set we begin to
- * monitor chat messaging and auto-reply as necessary.
+ * When AIMachineIdleUpdateNotification is posted, check the time idle against the time at which to report that we
+ * are idle (as specified by the user in the preferences).  When AIMachineIsActiveNotification, return us from idle
+ * if we reported as idle previously.
  */
 - (void)installPlugin
 {
@@ -52,7 +49,7 @@
 									   name:AIMachineIsActiveNotification
 									 object:nil];
 	
-	//Observe preference changes for updating sending key settings
+	//Observe preference changes for updating if and when we should report being idle
 	[[adium preferenceController] registerPreferenceObserver:self 
 													forGroup:PREF_GROUP_STATUS_PREFERENCES];	
 }
