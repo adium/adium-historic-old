@@ -9,7 +9,7 @@
 #import "aim.h"
 
 #warning change this to your SN to connect :-)
-#define SCREEN_NAME "otksu"
+#define SCREEN_NAME "tekjew invisible"
 
 //From oscar.c
 struct oscar_data {
@@ -89,6 +89,14 @@ struct oscar_data {
     return [self UIDAndServiceID];
 }
 
+- (NSArray *)supportedPropertyKeys
+{
+    return ([[super supportedPropertyKeys] arrayByAddingObjectsFromArray:
+        [NSArray arrayWithObjects:
+            @"TextProfile",
+            nil]] );
+}
+
 /*
  - (void)accountBlistNewNode:(GaimBlistNode *)node 
  {
@@ -125,28 +133,41 @@ struct oscar_data {
             
             NSNumber * isAway = [statusDict objectForKey:@"Away"];
             if (userinfo != NULL) {
+                //Update the away message and status if the contact is away (userinfo->flags & AIM_FLAG_AWAY)
+                //EDS - optimize by keeping track of the string forms separately and comparing them rather than encoding/decoding html
                 if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away_len > 0) && (userinfo->away != NULL) && (userinfo->away_encoding != NULL)) {
                     gchar *away_utf8 = oscar_encoding_to_utf8(userinfo->away_encoding, userinfo->away, userinfo->away_len);
                     if (away_utf8 != NULL) {
                         NSString * awayMessageString = [NSString stringWithUTF8String:away_utf8];
-                        if (awayMessageString && [awayMessageString length]) {
-                            if (!isAway || ![isAway boolValue]) {
+                        if (!isAway || ![isAway boolValue]) {
                                 [statusDict setObject:[NSNumber numberWithBool:YES] forKey:@"Away"];
                                 [modifiedKeys addObject:@"Away"];
                             }
                             NSAttributedString * statusMsgDecoded = [AIHTMLDecoder decodeHTML:awayMessageString];
                             if (![statusMsgDecoded isEqualToAttributedString:[statusDict objectForKey:@"StatusMessage"]]) {
-                                [statusDict setObject:[AIHTMLDecoder decodeHTML:awayMessageString] forKey:@"StatusMessage"];
+                                [statusDict setObject:statusMsgDecoded forKey:@"StatusMessage"];
                                 [modifiedKeys addObject:@"StatusMessage"];
                             }
-                        }
                     }
-                }else{
+                }else{ //remove any away message and status
                     if (!isAway || [isAway boolValue]) {
                         [statusDict setObject:[NSNumber numberWithBool:NO] forKey:@"Away"];
                         [modifiedKeys addObject:@"Away"];
                         [statusDict removeObjectForKey:@"StatusMessage"];
                         [modifiedKeys addObject:@"StatusMessage"];
+                    }
+                }
+                
+                //Update the profile if necessary
+                //EDS - optimize by keeping track of the string forms separately and comparing them rather than encoding/decoding html
+                if ((userinfo->info_len > 0) && (userinfo->info != NULL) && (userinfo->info_encoding != NULL)) {
+                    gchar *info_utf8 = oscar_encoding_to_utf8(userinfo->info_encoding, userinfo->info, userinfo->info_len);
+                    if (info_utf8 != NULL) {
+                        NSAttributedString * profileDecoded = [AIHTMLDecoder decodeHTML:[NSString stringWithUTF8String:info_utf8]];
+                        if (![profileDecoded isEqualToAttributedString:[statusDict objectForKey:@"TextProfile"]]) {
+                            [statusDict setObject:profileDecoded forKey:@"TextProfile"];
+                            [modifiedKeys addObject:@"TextProfile"];
+                        }
                     }
                 }
                 

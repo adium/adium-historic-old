@@ -18,6 +18,8 @@
 - (NSString *)UIDAndServiceID;
 - (NSString *)accountDescription;
 - (void)accountBlistUpdate:(GaimBuddyList *)list withNode:(GaimBlistNode *)node;
+- (NSArray *)supportedPropertyKeys;
+
 //- (void)accountBlistNewNode:(GaimBlistNode *)node;
 
 extern gchar *oscar_encoding_to_utf8(const char *encoding, char *text, int textlen);
