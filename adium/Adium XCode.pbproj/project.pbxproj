@@ -340,6 +340,7 @@
 				B72537BC058C4577004BA969,
 				4B7F78B50597F42400162728,
 				BF0F5BCB05A2B0070034AD18,
+				34F8A7E705A8920F00577775,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -431,6 +432,7 @@
 				3419F30905314B8100C68BA3,
 				3419F31905314B8D00C68BA3,
 				3419F32F05314B9600C68BA3,
+				34F8A7E605A8920F00577775,
 				3419F34105314BA100C68BA3,
 				3419F35605314BAB00C68BA3,
 				3419F36605314BB400C68BA3,
@@ -467,6 +469,7 @@
 				F50A325A03B5798301A8010A,
 				29B97323FDCFA39411CA2CEA,
 				19C28FACFE9D520D11CA2CBB,
+				34F8A7E805A8920F00577775,
 			);
 			isa = PBXGroup;
 			name = CocAIMe2;
@@ -17657,6 +17660,140 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34F8A7E205A8920F00577775 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34F8A7E305A8920F00577775 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34F8A7E405A8920F00577775 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34F8A7E505A8920F00577775 = {
+			buildActionMask = 2147483647;
+			files = (
+				34F8A7F505A8925F00577775,
+				34F8A7F605A8925F00577775,
+				34F8A7F705A8925F00577775,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34F8A7E605A8920F00577775 = {
+			buildPhases = (
+				34F8A7E205A8920F00577775,
+				34F8A7E305A8920F00577775,
+				34F8A7E405A8920F00577775,
+				34F8A7E505A8920F00577775,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "PLists/GBiTunerPlugin-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "iTunes Integration";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = "iTunes Integration";
+			productName = "iTunes Integration";
+			productReference = 34F8A7E705A8920F00577775;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>iTunes Integration</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.iTunes_Integration</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		34F8A7E705A8920F00577775 = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "iTunes Integration.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34F8A7E805A8920F00577775 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "iTunes Integration-Info.plist";
+			path = "/Users/evands/adium/iTunes Integration-Info.plist";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		34F8A7F505A8925F00577775 = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F8A7F605A8925F00577775 = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F8A7F705A8925F00577775 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F8A7FA05A8927F00577775 = {
+			children = (
+			);
+			isa = PBXGroup;
+			name = "iTunes Integration";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		34FDD6E305632BFD00F5B30F = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -19299,11 +19436,12 @@
 		};
 		4B4F5B29042D63DC00A8010A = {
 			children = (
-				9E791D8505768A3000547562,
-				6C60B147056059ED00CAD137,
 				4B52A58603EDB9D200A8010A,
 				4B30490B047FBD6A00A8010A,
 				40AC0EEA03B5BEDB00A80202,
+				6C60B147056059ED00CAD137,
+				34F8A7FA05A8927F00577775,
+				9E791D8505768A3000547562,
 				F501BB0D03882A0201A8010A,
 			);
 			isa = PBXGroup;
@@ -26022,6 +26160,7 @@
 			);
 			isa = PBXGroup;
 			name = "Status Menu Item";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
