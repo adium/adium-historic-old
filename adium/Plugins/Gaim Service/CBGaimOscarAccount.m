@@ -15,6 +15,7 @@
 static NSString *ICQServiceID = nil;
 static NSString *MobileServiceID = nil;
 static NSImage  *ICQServiceImage = nil;
+static NSImage  *ICQServiceMenuImage = nil;
 
 @interface CBGaimOscarAccount (PRIVATE)
 -(NSString *)serversideCommentForContact:(AIListContact *)theContact;
@@ -43,11 +44,21 @@ static BOOL didInitOscar = NO;
 		char firstCharacter = [UID characterAtIndex:0];
 		if (firstCharacter >= '0' && firstCharacter <= '9') {
 			if (!ICQServiceID) ICQServiceID = @"ICQ";
-			if (!ICQServiceImage) ICQServiceImage = [[NSImage imageNamed:@"icq" forClass:[self class]] retain];
-
+			if (!ICQServiceImage){
+				ICQServiceImage = [[NSImage imageNamed:@"icq" forClass:[self class]] retain];
+				ICQServiceMenuImage = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
+				[ICQServiceMenuImage lockFocus];
+				[ICQServiceImage drawInRect:NSMakeRect(0,0,16,16)
+								   fromRect:NSMakeRect(0,0,[ICQServiceImage size].width,[ICQServiceImage size].height)
+								  operation:NSCompositeCopy
+								   fraction:1.0];
+				[ICQServiceMenuImage unlockFocus];
+			}
+			
 			[self setStatusObject:ICQServiceID forKey:@"DisplayServiceID" notify:YES];
 			serviceImage = ICQServiceImage;
-
+			serviceMenuImage = ICQServiceMenuImage;
+			
 			accountIsICQ = YES;
 		}
 	}
@@ -62,6 +73,15 @@ static BOOL didInitOscar = NO;
 		return (serviceImage);
 	}else{
 		return ([super serviceImage]);
+	}
+}
+
+- (NSImage *)serviceMenuImage
+{
+	if (serviceMenuImage){
+		return (serviceMenuImage);
+	}else{
+		return ([super serviceMenuImage]);
 	}
 }
 

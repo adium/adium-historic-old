@@ -21,6 +21,7 @@
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Sametime"
                                                       description:@"Lotus Sametime"
                                                             image:image
+														menuImage:nil
                                                     caseSensitive:YES
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@.,_-()='/ "]
 												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]

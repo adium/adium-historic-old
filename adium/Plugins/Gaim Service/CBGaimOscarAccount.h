@@ -93,6 +93,7 @@ struct oscar_direct_im {
 	NSMutableArray  *arrayOfContactsForDelayedUpdates;
 	
 	NSImage			*serviceImage;
+	NSImage			*serviceMenuImage;
 }
 
 @end
