@@ -250,23 +250,27 @@ void Adium_HandleSignal(int i){
 }
 - (void)configureCrashReporter
 {
-    //Remove any existing crash logs
+    // Remove any existing crash logs
     [[NSFileManager defaultManager] trashFileAtPath:EXCEPTIONS_PATH];
     [[NSFileManager defaultManager] trashFileAtPath:CRASHES_PATH];
     
-    //Log and Handle all exceptions
+    // Log and Handle all exceptions
     [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:NSLogAndHandleEveryExceptionMask];
     
-    //NSExceptionHandler messes up crash signals - install a custom handler which properly terminates Adium if one is received
-    signal(4, Adium_HandleSignal);      /* illegal instruction (not reset when caught) */
-    signal(5, Adium_HandleSignal);      /* trace trap (not reset when caught) */
-    signal(7, Adium_HandleSignal);      /* EMT instruction */
-    signal(8, Adium_HandleSignal);      /* floating point exception */
-    signal(10, Adium_HandleSignal);     /* bus error */
-    signal(11, Adium_HandleSignal);     /* segmentation violation */
-    signal(12, Adium_HandleSignal);     /* bad argument to system call */
-    signal(24, Adium_HandleSignal);     /* exceeded CPU time limit */
-    signal(25, Adium_HandleSignal);     /* exceeded file size limit */    
+    // NSExceptionHandler messes up crash signals - install a custom handler which properly terminates Adium if one is received
+    signal(SIGILL, Adium_HandleSignal);		/* 4:   illegal instruction (not reset when caught) */
+    signal(SIGTRAP, Adium_HandleSignal);	/* 5:   trace trap (not reset when caught) */
+    signal(SIGEMT, Adium_HandleSignal);		/* 7:   EMT instruction */
+    signal(SIGFPE, Adium_HandleSignal);		/* 8:   floating point exception */
+    signal(SIGBUS, Adium_HandleSignal);     /* 10:  bus error */
+    signal(SIGSEGV, Adium_HandleSignal);	/* 11:  segmentation violation */
+    signal(SIGSYS, Adium_HandleSignal);     /* 12:  bad argument to system call */
+    signal(SIGXCPU, Adium_HandleSignal);	/* 24:  exceeded CPU time limit */
+    signal(SIGXFSZ, Adium_HandleSignal);	/* 25:  exceeded file size limit */    
+    
+	// Ignore SIGPIPE, which is a harmless error signal
+	// sent when write() or similar function calls fail due to a broken pipe in the network connection
+    signal(SIGPIPE, SIG_IGN);
 }
 
 //If Adium was launched by double-clicking an associated file, we get this call after willFinishLaunching but before didFinishLaunching
