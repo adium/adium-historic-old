@@ -472,14 +472,14 @@ static ESFileTransferPreferences *preferences;
 									includeSubject:(BOOL)includeSubject
 {
 	NSString		*description = nil;
-	NSString		*displayName, *remoteFilename;
+	NSString		*displayName, *displayFilename;
 	ESFileTransfer	*fileTransfer;
 
 	NSParameterAssert([userInfo isKindOfClass:[ESFileTransfer class]]);
 	fileTransfer = (ESFileTransfer *)userInfo;
 	
 	displayName = [listObject displayName];
-	remoteFilename = [fileTransfer remoteFilename];
+	displayFilename = [fileTransfer displayFilename];
 	
 	if(includeSubject){
 		NSString	*format = nil;
@@ -505,7 +505,7 @@ static ESFileTransferPreferences *preferences;
 		}
 		
 		if(format){
-			description = [NSString stringWithFormat:format,displayName,remoteFilename];
+			description = [NSString stringWithFormat:format,displayName,displayFilename];
 		}
 	}else{
 		NSString	*format = nil;
@@ -531,7 +531,7 @@ static ESFileTransferPreferences *preferences;
 		}
 		
 		if(format){
-			description = [NSString stringWithFormat:format,remoteFilename];
+			description = [NSString stringWithFormat:format,displayFilename];
 		}		
 	}
 
