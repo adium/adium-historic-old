@@ -330,6 +330,7 @@
 
 - (void)setShowLabels:(BOOL)inValue{
     showLabels = inValue;
+    [self setNeedsDisplay:YES];
 }
 - (BOOL)showLabels{
     return(showLabels);
