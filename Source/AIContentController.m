@@ -996,27 +996,41 @@ static NSLock				*filterCreationLock = nil;
 	}
 }
 
-
 //Returns all chats with the object
-- (NSArray *)allChatsWithContact:(AIListContact *)inContact
+- (NSSet *)allChatsWithContact:(AIListContact *)inContact
 {
-    NSMutableArray	*foundChats = [NSMutableArray array];
-    NSEnumerator	*chatEnumerator = [chatArray objectEnumerator];
-    AIChat			*chat;
+    NSMutableSet	*foundChats = nil;
 	
 	//Scan the objects participating in each chat, looking for the requested object
 	if([inContact isKindOfClass:[AIMetaContact class]]){
-		NSArray	*objectArray = [(AIMetaContact *)inContact containedObjects];
-		while((chat = [chatEnumerator nextObject])){
-			if([[chat participatingListObjects] firstObjectCommonWithArray:objectArray]) [foundChats addObject:chat];
+
+		NSEnumerator	*enumerator;
+		AIListContact	*listContact;
+
+		foundChats = [NSMutableSet set];
+		
+		enumerator = [[(AIMetaContact *)inContact containedObjects] objectEnumerator];
+		while(listContact = [enumerator nextObject]){
+			NSSet		*listContactChats;
+			
+			if (listContactChats = [self allChatsWithContact:listContact]){
+				[foundChats unionSet:listContactChats];
+			}
 		}
 		
 	}else{
+		NSEnumerator	*chatEnumerator = [chatArray objectEnumerator];
+		AIChat			*chat;
+
 		while((chat = [chatEnumerator nextObject])){
-			if([[chat participatingListObjects] containsObject:inContact]) [foundChats addObject:chat];
+/*			if([[chat participatingListObjects] containsObject:inContact]){ */
+			if([[[chat listObject] internalObjectID] isEqualToString:[inContact internalObjectID]]){
+				if (!foundChats) foundChats = [NSMutableSet set];
+				[foundChats addObject:chat];
+			}
 		}
 	}
-
+	
     return(foundChats);
 }
 
