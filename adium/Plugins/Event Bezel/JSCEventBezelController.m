@@ -95,10 +95,11 @@ withMessage:(NSString *)message
         }
         [bezelView setMainBuddyStatus: event];
         
-        // This is not working yet, the Plugin class needs to pass the message
         if (message) {
             [bezelView setMainBuddyStatus: [NSString stringWithFormat: @"%@: %@",[bezelView mainBuddyStatus], message]];
         }
+        
+        [bezelWindow setDisplayDuration: bezelDuration];
         
         [bezelView setNeedsDisplay:YES];
         
@@ -166,6 +167,16 @@ withMessage:(NSString *)message
 - (void)setImageBadges:(BOOL)b
 {
     imageBadges = b;
+}
+
+- (int)bezelDuration
+{
+    return bezelDuration;
+}
+
+- (void)setBezelDuration:(int)newDuration
+{
+    bezelDuration = newDuration;
 }
 
 @end

@@ -24,6 +24,7 @@
 #define KEY_EVENT_BEZEL_FIRST_MESSAGE       @"Display if First Message"
 #define KEY_EVENT_BEZEL_IMAGE_BADGES        @"Show Image Badges"
 #define KEY_EVENT_BEZEL_COLOR_LABELS        @"Show Color Labels"
+#define KEY_EVENT_BEZEL_DURATION            @"Duration"
 
 @class JSCEventBezelPreferences;
 

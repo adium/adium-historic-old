@@ -22,6 +22,7 @@
         }, 
         {
             ACTIONS = {
+                changeDuration = id; 
                 changePosition = id; 
                 toggleAvailable = id; 
                 toggleAway = id; 
@@ -48,6 +49,7 @@
                 "checkBox_online" = NSButton; 
                 "checkBox_showBezel" = NSButton; 
                 "popUp_position" = NSPopUpButton; 
+                "slider_duration" = NSSlider; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 

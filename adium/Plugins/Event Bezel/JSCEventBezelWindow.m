@@ -8,9 +8,6 @@
 
 #import "JSCEventBezelWindow.h"
 
-// This should be a preference setting
-#define DISPLAY_LENGTH 3.0
-
 @implementation JSCEventBezelWindow
 
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag
@@ -18,6 +15,8 @@
     NSWindow *result = [super initWithContentRect:contentRect styleMask:NSBorderlessWindowMask  backing:NSBackingStoreBuffered defer:NO];
     
     fadingOut = NO;
+    
+    displayDuration = 3;
     
     return result;
 }
@@ -39,7 +38,7 @@
     [self setDisplayTimer:nil];
     [self setFadingOut:YES];
     [[self contentView] setNeedsDisplay:YES];
-    [self setDisplayTimer: [NSTimer scheduledTimerWithTimeInterval:DISPLAY_LENGTH
+    [self setDisplayTimer: [NSTimer scheduledTimerWithTimeInterval:displayDuration
                                                          target:self
                                                        selector:@selector(endDisplay:)
                                                        userInfo:nil
@@ -104,6 +103,16 @@
 - (void)setFadingOut:(BOOL)newFade
 {
     fadingOut = newFade;
+}
+
+- (int)displayDuration
+{
+    return displayDuration;
+}
+
+- (void)setDisplayDuration:(int)newDuration
+{
+    displayDuration = newDuration;
 }
 
 @end

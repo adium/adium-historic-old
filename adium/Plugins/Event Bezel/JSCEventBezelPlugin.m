@@ -93,6 +93,7 @@
         prefsPosition = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_POSITION] intValue];
         [ebc setImageBadges: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IMAGE_BADGES] boolValue]];
         useColorLabels = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_COLOR_LABELS] boolValue];
+        [ebc setBezelDuration: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_DURATION] intValue]];
         
         [eventArray removeAllObjects];
         if ([[preferenceDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue])
