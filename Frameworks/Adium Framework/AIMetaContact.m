@@ -15,6 +15,9 @@
 
 #import "AIMetaContact.h"
 
+#define	KEY_CONTAINING_OBJECT_ID	@"ContainingObjectInternalObjectID"
+#define	OBJECT_STATUS_CACHE			@"Object Status Cache"
+
 @interface AIMetaContact (PRIVATE)
 - (void)_updateCachedStatusOfObject:(AIListObject *)inObject;
 - (void)_removeCachedStatusOfObject:(AIListObject *)inObject;
@@ -33,6 +36,9 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 //init
 - (id)initWithObjectID:(NSNumber *)inObjectID
 {
+	NSString		*oldContainingObjectID;
+	AIListObject	*oldContainingObject;
+	
 	objectID = [inObjectID retain];
 	statusCacheDict = [[NSMutableDictionary alloc] init];
 	_preferredContact = nil;
@@ -49,6 +55,17 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 	largestOrder = 1.0;
 	smallestOrder = 1.0;
 		
+	//Restore the previous containedObject so we don't depend on serverside information
+	{
+		oldContainingObjectID =[self preferenceForKey:KEY_CONTAINING_OBJECT_ID
+												group:OBJECT_STATUS_CACHE];
+		oldContainingObject = [[adium contactController] existingListObjectWithUniqueID:oldContainingObjectID];
+	
+		if (oldContainingObject && [oldContainingObject isKindOfClass:[AIListGroup class]]){
+			[[adium contactController] _moveContactLocally:self
+												   toGroup:(AIListGroup *)oldContainingObject];
+		}
+	}
 	return(self);
 }
 
@@ -91,6 +108,18 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 	return([[self preferredContact] service]);
 }
 
+//When called, cache the internalObjectID of the new group so we can restore it immediately next time.
+- (void)setContainingObject:(AIListObject <AIContainingObject> *)inGroup
+{
+	//Save the change of containing object so it can be restored on launch next time
+	if (![[inGroup internalObjectID] isEqualToString:[[self containingObject] internalObjectID]]){
+		[self setPreference:[inGroup internalObjectID]
+					 forKey:KEY_CONTAINING_OBJECT_ID
+					  group:OBJECT_STATUS_CACHE];
+	}
+	
+	[super setContainingObject:inGroup];
+}
 //Object Storage -------------------------------------------------------------------------------------------------------
 #pragma mark Object Storage
 //Add an object to this meta contact (PRIVATE: For contact controller only)
