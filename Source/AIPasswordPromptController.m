@@ -27,20 +27,23 @@
 
 @implementation AIPasswordPromptController
 
-- (id)initWithWindowNibName:(NSString *)windowNibName notifyingTarget:(id)inTarget selector:(SEL)inSelector
+- (id)initWithWindowNibName:(NSString *)windowNibName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
     [super initWithWindowNibName:windowNibName];
     
     target = [inTarget retain];
     selector = inSelector;
 
+	context = [inContext retain];
+	
     return(self);
 }
 
 - (void)dealloc
 {
     [target release];
-
+	[context release];
+	
     [super dealloc];
 }
 
@@ -57,8 +60,8 @@
 - (IBAction)cancel:(id)sender
 {
     //close up and notify our caller (pass nil to signify no password)
-    [self closeWindow:nil];    
-    [target performSelector:selector withObject:nil];
+    [self closeWindow:nil]; 
+    [target performSelector:selector withObject:nil withObject:context];
 }
 
 - (IBAction)okay:(id)sender
@@ -73,7 +76,7 @@
 
     //close up and notify our caller
     [self closeWindow:nil];    
-    [target performSelector:selector withObject:password];
+    [target performSelector:selector withObject:password withObject:context];
 }
 
 - (IBAction)togglePasswordSaved:(id)sender

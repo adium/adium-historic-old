@@ -10,25 +10,26 @@
 #define PROXY_PASSWORD_PROMPT_NIB		@"ProxyPasswordPrompt"
 
 @interface ESProxyPasswordPromptController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName forProxyServer:(NSString *)inServer userName:(NSString *)inUserName notifyingTarget:(id)inTarget selector:(SEL)inSelector;
+- (id)initWithWindowNibName:(NSString *)windowNibName forProxyServer:(NSString *)inServer userName:(NSString *)inUserName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
 @end
 
 @implementation ESProxyPasswordPromptController
 
-+ (void)showPasswordPromptForProxyServer:(NSString *)inServer userName:(NSString *)inUserName notifyingTarget:(id)inTarget selector:(SEL)inSelector
++ (void)showPasswordPromptForProxyServer:(NSString *)inServer userName:(NSString *)inUserName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
 	ESProxyPasswordPromptController  *controller = [[[self alloc] initWithWindowNibName:PROXY_PASSWORD_PROMPT_NIB
 																		 forProxyServer:inServer
 																			   userName:inUserName
 																		notifyingTarget:inTarget
-																			   selector:inSelector] autorelease];
+																			   selector:inSelector
+																				context:inContext] autorelease];
     //bring the window front
     [controller showWindow:nil];
 }
 
-- (id)initWithWindowNibName:(NSString *)windowNibName forProxyServer:(NSString *)inServer userName:(NSString *)inUserName notifyingTarget:(id)inTarget selector:(SEL)inSelector
+- (id)initWithWindowNibName:(NSString *)windowNibName forProxyServer:(NSString *)inServer userName:(NSString *)inUserName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
-    [super initWithWindowNibName:windowNibName notifyingTarget:inTarget selector:inSelector];
+    [super initWithWindowNibName:windowNibName notifyingTarget:inTarget selector:inSelector context:inContext];
     
     server = [inServer retain];
 	userName = [inUserName retain];
