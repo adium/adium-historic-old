@@ -78,11 +78,12 @@ static AIContactInfoWindowController *sharedInstance = nil;
     if ([[owner contactController] selectedContact] != nil) {
         //install the category
         [scrollView_contents setDocumentView:[mainCategory contentView]];
+        [[self window] setContentView:view_contact];
 
         [self configureForContact:[[owner contactController] selectedContact]];
     }else{
         //show the "No Contact Selected" view
-        [scrollView_contents setDocumentView:view_noContact];
+        [[self window] setContentView:view_noContact];
 
         [[self window] setTitle:@"Contact Info"];
     }
@@ -103,11 +104,12 @@ static AIContactInfoWindowController *sharedInstance = nil;
     if ([[owner contactController] selectedContact] != nil) {
         //install the category
         [scrollView_contents setDocumentView:[mainCategory contentView]];
-
+        [[self window] setContentView:view_contact];
+        
         [self configureForContact:[[owner contactController] selectedContact]];
     }else{
         //show the "No Contact Selected" view
-        [scrollView_contents setDocumentView:view_noContact];
+        [[self window] setContentView:view_noContact];
         
         [[self window] setTitle:@"Contact Info"];
     }

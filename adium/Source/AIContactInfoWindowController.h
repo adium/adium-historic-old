@@ -20,6 +20,7 @@
 @interface AIContactInfoWindowController : NSWindowController {
     IBOutlet	NSScrollView	*scrollView_contents;
     IBOutlet	NSView		*view_noContact;
+    IBOutlet	NSView		*view_contact;
     AIAdium 			*owner;
     
     AIPreferenceCategory	*mainCategory;
