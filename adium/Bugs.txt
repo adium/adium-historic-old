@@ -21,6 +21,10 @@
 	the user's list, and will make the contact appear offline.  Sometimes they will
 	appear on the list twice until Adium is restarted.
 
+- MSN display names shorten incorrectly
+	MSN display names are always shortened to the same length, regardless of the
+	contact list's current width.
+	
 - User icons occasionally display upside-down
 	We cannot find a pattern to when or why this happens
 
