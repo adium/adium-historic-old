@@ -457,7 +457,6 @@ float _v(float m1, float m2, float hue){
 }
 + (id)colorWithHTMLString:(NSString *)str defaultColor:(NSColor *)defaultColor
 {
-	NSLog(@"+[NSColor(AIColorAdditions) colorWithHTMLString:] called: str is \"%@\"", str);
 	if(!str) return nil;
 
 	unsigned strLength = [str length];
