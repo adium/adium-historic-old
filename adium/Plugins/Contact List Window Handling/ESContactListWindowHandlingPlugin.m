@@ -19,7 +19,7 @@
 
 - (void)uninstallPlugin
 {
-    [preferences release];
+
 }
 
 @end
