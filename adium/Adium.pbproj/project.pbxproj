@@ -2099,6 +2099,18 @@
 			settings = {
 			};
 		};
+		4BB17E6D03E45FC900A8010A = {
+			isa = PBXFileReference;
+			name = close.tif;
+			path = "Plugins/Standard Toolbar Items/close.tif";
+			refType = 4;
+		};
+		4BB17E6E03E45FC900A8010A = {
+			fileRef = 4BB17E6D03E45FC900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BBAEE9703DD7D8900A8010A = {
 			children = (
 				4B720F9D03DD859A00A8010A,
@@ -3627,6 +3639,7 @@
 				F55B410B03AB87CA01A8010A,
 				F55B410C03AB87CA01A8010A,
 				F55B410D03AB87CA01A8010A,
+				4BB17E6E03E45FC900A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3746,6 +3759,7 @@
 				F55B410303AB87CA01A8010A,
 				F55B410403AB87CA01A8010A,
 				F55B410103AB87CA01A8010A,
+				4BB17E6D03E45FC900A8010A,
 			);
 			isa = PBXGroup;
 			name = Images;
