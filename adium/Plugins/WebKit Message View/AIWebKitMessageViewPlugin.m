@@ -489,7 +489,8 @@ DeclareString(AppendNextMessage);
 																			   encodeNonASCII:YES 
 																				   imagesPath:@"/tmp"
 																			attachmentsAsText:NO
-																				   simpleTagsOnly:NO]];
+															   attachmentImagesOnlyForSending:NO
+																			   simpleTagsOnly:NO]];
 			}
 		}
 		
