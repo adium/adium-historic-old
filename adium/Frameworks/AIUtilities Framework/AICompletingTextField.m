@@ -46,7 +46,7 @@
 
 - (id)_init
 {
-    stringArray = nil;
+    stringSet = nil;
 	impliedCompletionDictionary = nil;
     minLength = 3;
     oldUserLength = 0;
@@ -56,7 +56,7 @@
 
 - (void)dealloc
 {
-    [stringArray release];
+    [stringSet release];
 	[impliedCompletionDictionary release];
 	
     [super dealloc];
@@ -71,8 +71,8 @@
 //Set the strings that this field will use to auto-complete
 - (void)setCompletingStrings:(NSArray *)strings
 {
-    [stringArray release];
-    stringArray = [strings mutableCopy];
+    [stringSet release];
+    stringSet = [[NSMutableSet setWithArray:strings] retain];
 	
 	[impliedCompletionDictionary release]; impliedCompletionDictionary = nil;
 }
@@ -80,16 +80,19 @@
 //Adds a string to the existing string list
 - (void)addCompletionString:(NSString *)string
 {
-    if(!stringArray) stringArray = [[NSMutableArray alloc] init];
+    if(!stringSet) stringSet = [[NSMutableSet alloc] init];
 
-    [stringArray addObject:string];
+    [stringSet addObject:string];
 }
 
 - (void)addCompletionString:(NSString *)string withImpliedCompletion:(NSString *)impliedCompletion
 {
-	if (!impliedCompletionDictionary) impliedCompletionDictionary = [[NSMutableDictionary alloc] init];
+	if (![string isEqualToString:impliedCompletion]){
+		if (!impliedCompletionDictionary) impliedCompletionDictionary = [[NSMutableDictionary alloc] init];
+		
+		[impliedCompletionDictionary setObject:impliedCompletion forKey:string];
+	}
 	
-	[impliedCompletionDictionary setObject:impliedCompletion forKey:string];
 	[self addCompletionString:string];
 }
 
@@ -122,8 +125,8 @@
 {
     NSEnumerator	*enumerator;
     NSString		*autoString;
-    int			length;
-    NSRange		range;
+    int				length;
+    NSRange			range;
 
     //Setup
     length = [inString length];
@@ -131,7 +134,7 @@
 
     if(length >= 3){
         //Check each auto-complete string for a match
-        enumerator = [stringArray objectEnumerator];
+        enumerator = [stringSet objectEnumerator];
         while((autoString = [enumerator nextObject])){
             if(([autoString length] > length) && [autoString compare:inString options:NSCaseInsensitiveSearch range:range] == 0){
                 return(autoString);
@@ -150,11 +153,16 @@
 		//Check if the stringValue implies a different completion; ensure that this new completion is not itself
 		//a potential completion (if it is, we assume the user's manually entered stringValue to be the intended value)
 		NSString	*impliedCompletion = [impliedCompletionDictionary objectForKey:returnString];
-
-		if (impliedCompletion && ![impliedCompletionDictionary objectForKey:impliedCompletion])
+				
+		NSString	*impliedCompletionOfImpliedCompletion = [impliedCompletionDictionary objectForKey:impliedCompletion];
+		//If we got an implied completion, and using that implied completion wouldn't get us into a loop with other
+		//completions (leading to unpredicatable behavior as far as the user would be concerned), return the implied
+		//completion
+		if (impliedCompletion && (!impliedCompletionOfImpliedCompletion || [impliedCompletionOfImpliedCompletion isEqualToString:impliedCompletion])){
 			returnString = impliedCompletion;
+		}
 	}
-	
+
 	return returnString;
 }
 

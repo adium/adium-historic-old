@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface AICompletingTextField : NSTextField {
-    NSMutableArray			*stringArray;
+    NSMutableSet			*stringSet;
 	NSMutableDictionary		*impliedCompletionDictionary;
 	
     int						minLength;
