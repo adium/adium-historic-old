@@ -260,11 +260,6 @@
 	}	
 }
 
-- (id)cellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
-{
-	return([tableColumn dataCell]);
-}
-
 - (int)heightForRow:(int)row
 {
 	return([[self dataSource] outlineView:self heightForItem:[self itemAtRow:row] atRow:row]);
@@ -286,7 +281,7 @@
 			BOOL			selected;
 			
 			tableColumn = [tableColumns objectAtIndex:tableColumnIndex];
-			cell = [self cellForTableColumn:tableColumn item:item];
+			cell = [tableColumn dataCell];
 			
 			[[self delegate] outlineView:self
 						 willDisplayCell:cell 
@@ -356,7 +351,7 @@
 		for(tableColumnIndex = 0 ; tableColumnIndex < tableColumnsCount ; tableColumnIndex++){
 			
 			NSTableColumn	*tableColumn = [tableColumns objectAtIndex:tableColumnIndex];
-			id		cell = [self cellForTableColumn:tableColumn item:item];
+			id		cell = [tableColumn dataCell];
 			
 			//Render the cell
 			[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:tableColumn item:item];
