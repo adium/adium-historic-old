@@ -58,14 +58,7 @@
 																		 traverseLink:YES];
 	
     [lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
-    
-	AILog(@"%@: Parsing %@ from %@ (fox9 %i) (exists %i) (fileProps %@)",
-		  self,
-		  bookmarkString,
-		  path,
-		  fox9,
-		  [self bookmarksExist],
-		  fileProps);
+
     return [SHMozillaCommonParser parseBookmarksfromString:bookmarkString];
 }
 
