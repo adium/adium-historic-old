@@ -241,9 +241,10 @@
 
 -(void)moveSelectedPacksToTrash
 {
+	NSString	*name = [[[selectedEmoticonPack name] copy] autorelease];
     NSBeginAlertSheet(@"Delete Emoticon Pack",@"Delete",@"Cancel",@"",[[self view] window], self, 
                       @selector(trashConfirmSheetDidEnd:returnCode:contextInfo:), nil, nil, 
-                      @"Are you sure you want to delete the %@ Emoticon Pack? It will be moved to the Trash, which may take a moment, depending on its size.",[selectedEmoticonPack name]);
+                      @"Are you sure you want to delete the %@ Emoticon Pack? It will be moved to the Trash, which may take a moment, depending on its size.",name);
 }
 
 - (void)trashConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
