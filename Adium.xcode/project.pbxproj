@@ -59,14 +59,6 @@
 			settings = {
 			};
 		};
-		07CE05590661D7E600C50929 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = FileTransferProgressWindow.nib;
-			path = Source/FileTransferProgressWindow.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 //070
 //071
 //072
@@ -209,7 +201,7 @@
 				F59DB3D7033EA9CD01A8010A,
 				344C0D4306B6D5E300DA7200,
 				344458F3070B5BF500D8E932,
-				F5741745033E731F01A8010A,
+				34575E3807CBA88E004A4FFF,
 				F5BF8A6002C7D2F401A8010A,
 				4B4F5B2C042D642500A8010A,
 				F5B53FBB0333AB5C01A8010A,
@@ -2598,27 +2590,13 @@
 				344458EE070B5BEF00D8E932,
 				34B4B5A10708B049002C4C6D,
 				34B4B5A20708B049002C4C6D,
-				34445921070B613600D8E932,
+				34575E3607CBA874004A4FFF,
 			);
 			isa = PBXGroup;
 			name = Debugging;
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		34445921070B613600D8E932 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = DebugWindow.nib;
-			path = Source/DebugWindow.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34445922070B613600D8E932 = {
-			fileRef = 34445921070B613600D8E932;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		344701970755270100565588 = {
 			isa = PBXFileReference;
@@ -3078,20 +3056,6 @@
 			settings = {
 			};
 		};
-		3452AA0A07891DFC00C3C494 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = FileTransferRequestPrompt.nib;
-			path = Source/FileTransferRequestPrompt.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3452AA0B07891DFC00C3C494 = {
-			fileRef = 3452AA0A07891DFC00C3C494;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34536750059BA8ED00A83D9E = {
 			isa = PBXFileReference;
 			lastKnownFileType = "compiled.mach-o.executable";
@@ -3122,6 +3086,119 @@
 		};
 		34539E9C077BD09600A83891 = {
 			fileRef = 34539E9B077BD09500A83891;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34575E2A07CBA70D004A4FFF = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = FileTransferRequestPrompt.nib;
+			path = Resources/FileTransferRequestPrompt.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34575E2B07CBA70D004A4FFF = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = FileTransferProgressWindow.nib;
+			path = Resources/FileTransferProgressWindow.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34575E2C07CBA70D004A4FFF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = FileTransferPrefs.plist;
+			path = Resources/FileTransferPrefs.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34575E2D07CBA70D004A4FFF = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = FileTransferPrefs.nib;
+			path = Resources/FileTransferPrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34575E2E07CBA70D004A4FFF = {
+			fileRef = 34575E2A07CBA70D004A4FFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34575E2F07CBA70D004A4FFF = {
+			fileRef = 34575E2B07CBA70D004A4FFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34575E3007CBA70D004A4FFF = {
+			fileRef = 34575E2C07CBA70D004A4FFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34575E3107CBA70D004A4FFF = {
+			fileRef = 34575E2D07CBA70D004A4FFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34575E3207CBA7CC004A4FFF = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ContactInfoWindow.nib;
+			path = Resources/ContactInfoWindow.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34575E3307CBA7CC004A4FFF = {
+			fileRef = 34575E3207CBA7CC004A4FFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34575E3407CBA7DF004A4FFF = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = LoginSelect.nib;
+			path = Resources/LoginSelect.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34575E3507CBA7E0004A4FFF = {
+			fileRef = 34575E3407CBA7DF004A4FFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34575E3607CBA874004A4FFF = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = DebugWindow.nib;
+			path = Resources/DebugWindow.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34575E3707CBA874004A4FFF = {
+			fileRef = 34575E3607CBA874004A4FFF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34575E3807CBA88E004A4FFF = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = MainMenu.nib;
+			path = Resources/MainMenu.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34575E3907CBA88E004A4FFF = {
+			fileRef = 34575E3807CBA88E004A4FFF;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -5472,7 +5549,10 @@
 				34FDD6E405632BFD00F5B30F,
 				3452A9F607891C8A00C3C494,
 				3452A9F707891C8A00C3C494,
-				3452AA0A07891DFC00C3C494,
+				34575E2A07CBA70D004A4FFF,
+				34575E2B07CBA70D004A4FFF,
+				34575E2C07CBA70D004A4FFF,
+				34575E2D07CBA70D004A4FFF,
 				349FE301074D01D300E36B3B,
 				349FE300074D01D300E36B3B,
 				349FE2FF074D01D300E36B3B,
@@ -5480,11 +5560,8 @@
 				3402E01A07CB0CEC0044F818,
 				349FE2FD074D01D300E36B3B,
 				349FE2FC074D01D200E36B3B,
-				07CE05590661D7E600C50929,
 				34D2E8670758BB0B0054C56D,
 				34D2E8680758BB0B0054C56D,
-				34D2EB6C0758D65D0054C56D,
-				34D2E86D0758BD2A0054C56D,
 				349E602307543E17008ACCED,
 				349E602407543E17008ACCED,
 				349E602507543E17008ACCED,
@@ -5583,12 +5660,6 @@
 		};
 		349FE308074D01D300E36B3B = {
 			fileRef = 349FE301074D01D300E36B3B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		349FF5E5074D6D6400E36B3B = {
-			fileRef = 07CE05590661D7E600C50929;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -7343,8 +7414,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				349C7BF307C9A948005EB896,
-				34BD9D2A053146CC000AB133,
-				34BD9D28053146CC000AB133,
 				4BD6739A06001C400049CAF7,
 				4BD6742506001CF40049CAF7,
 				349C7C7A07C9AE1B005EB896,
@@ -7378,11 +7447,7 @@
 				34A48A3006F643CA002C7C5F,
 				34A48A4806F64680002C7C5F,
 				34A48A4A06F64685002C7C5F,
-				34445922070B613600D8E932,
 				34F1022F0734499700890D3B,
-				349FF5E5074D6D6400E36B3B,
-				34D2EB6D0758D65D0054C56D,
-				34BD9D30053146CC000AB133,
 				34BD9D31053146CC000AB133,
 				34BD9D33053146CC000AB133,
 				348E556B053A188C0021E541,
@@ -7475,7 +7540,6 @@
 				3447019A0755270100565588,
 				3447019F0755271E00565588,
 				344701A00755271E00565588,
-				34D2E86E0758BD2A0054C56D,
 				34082690075B5CB900703011,
 				34082691075B5CB900703011,
 				34D183BD075FC6ED0075A380,
@@ -7496,7 +7560,6 @@
 				E0831EB70785D82300F4888E,
 				E0831EB80785D82300F4888E,
 				E0831EBA0785D82300F4888E,
-				3452AA0B07891DFC00C3C494,
 				344F4A4C078DDC9500226DFC,
 				3433667507948C1400C84B15,
 				3433673307949E2200C84B15,
@@ -7523,26 +7586,8 @@
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		34BD9D28053146CC000AB133 = {
-			fileRef = F57938C3033E73AC01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34BD9D29053146CC000AB133 = {
 			fileRef = F552078B033F727F01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9D2A053146CC000AB133 = {
-			fileRef = F5CDCE4B0350760A01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9D30053146CC000AB133 = {
-			fileRef = F5741745033E731F01A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -7920,6 +7965,14 @@
 				3402E02E07CB0DBB0044F818,
 				3402E03707CB0DFB0044F818,
 				3402E04207CB0E4D0044F818,
+				34575E2E07CBA70D004A4FFF,
+				34575E2F07CBA70D004A4FFF,
+				34575E3007CBA70D004A4FFF,
+				34575E3107CBA70D004A4FFF,
+				34575E3307CBA7CC004A4FFF,
+				34575E3507CBA7E0004A4FFF,
+				34575E3707CBA874004A4FFF,
+				34575E3907CBA88E004A4FFF,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9397,35 +9450,6 @@
 		};
 		34D2E86A0758BB0C0054C56D = {
 			fileRef = 34D2E8680758BB0B0054C56D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34D2E86D0758BD2A0054C56D = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = FileTransferPrefs.plist;
-			path = Source/FileTransferPrefs.plist;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34D2E86E0758BD2A0054C56D = {
-			fileRef = 34D2E86D0758BD2A0054C56D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34D2EB6C0758D65D0054C56D = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = FileTransferPrefs.nib;
-			path = Source/FileTransferPrefs.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34D2EB6D0758D65D0054C56D = {
-			fileRef = 34D2EB6C0758D65D0054C56D;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -22256,7 +22280,7 @@
 			children = (
 				F57938FA033E745F01A8010A,
 				F57938C2033E73AC01A8010A,
-				F57938C3033E73AC01A8010A,
+				34575E3407CBA7DF004A4FFF,
 			);
 			isa = PBXGroup;
 			name = "Login Window";
@@ -22581,14 +22605,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F5741745033E731F01A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = MainMenu.nib;
-			path = Source/MainMenu.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F57938AA033E737001A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -22659,14 +22675,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AILoginWindowController.m;
 			path = Source/AILoginWindowController.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F57938C3033E73AC01A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = LoginSelect.nib;
-			path = Source/LoginSelect.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -23105,7 +23113,7 @@
 				340F47EA06DA41DB0072E2FA,
 				4BB1E43E067F2CA100D1DB86,
 				F5148D9604C8B4AA018B6CC7,
-				F5CDCE4B0350760A01A8010A,
+				34575E3207CBA7CC004A4FFF,
 				4BBF41E10661194A001D31E1,
 				4B2DC068066F6B1200AD5AAD,
 				4BBF41E20661194A001D31E1,
@@ -23113,14 +23121,6 @@
 			);
 			isa = PBXGroup;
 			name = "Contact Info Window";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5CDCE4B0350760A01A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ContactInfoWindow.nib;
-			path = Source/ContactInfoWindow.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};

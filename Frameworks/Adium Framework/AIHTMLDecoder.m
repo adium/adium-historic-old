@@ -984,7 +984,6 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			[textAttributes setFontSize:[[inArgs objectForKey:arg] intValue]];
 
 		}else if([arg caseInsensitiveCompare:Color] == NSOrderedSame){
-			NSString *colorString = [inArgs objectForKey:arg];
 			[textAttributes setTextColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg] defaultColor:[NSColor blackColor]]];
 
 		}else if([arg caseInsensitiveCompare:Back] == NSOrderedSame){
