@@ -59,6 +59,7 @@
 }
 
 - (void) dealloc {
+	[super dealloc];
 	
 	//Ensure we log out before deallocing
 	[self logout];
