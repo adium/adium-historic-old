@@ -11,12 +11,12 @@
 
 - (void)installPlugin
 {
-//    itemController = [CBStatusMenuItemController statusMenuItemController];
+    itemController = [CBStatusMenuItemController statusMenuItemController];
 }
 
 - (void)uninstallPlugin
 {
-    //[itemController release];
+    [itemController release];
 }
 
 @end
