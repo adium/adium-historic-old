@@ -283,8 +283,6 @@
 		GaimBuddy   *buddy;
 		JabberBuddy *jb;
 		
-		NSLog(@"%@: update %@",theContact);
-	
 		if ((buddy = gaim_find_buddy(account, uidUTF8String)) &&
 			(jb = jabber_buddy_find(account->gc->proto_data, uidUTF8String, FALSE))){	
 			
