@@ -77,9 +77,8 @@
 }
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
-{
-	
-	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s",buddy->name);
+{	
+//	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s",buddy->name);
     
     /*int                     online;*/
 	
@@ -110,7 +109,7 @@
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent)event
 {
-	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s forEvent: %i",buddy->name,event);
+//	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s forEvent: %i",buddy->name,event);
     
     AIListContact           *theContact;
 	
@@ -245,7 +244,7 @@
 
 - (void)accountRemoveBuddy:(GaimBuddy*)buddy
 {
-	AIListContact	*theContact = (AIListContact *)buddy->node.ui_data ;
+	AIListContact	*theContact = (AIListContact *)buddy->node.ui_data;
 	
     if(theContact){
 		[theContact setRemoteGroupName:nil];
@@ -257,8 +256,7 @@
 }
 
 - (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy
-{
-	
+{	
 	//Set their online/available state
 	if (GAIM_BUDDY_IS_ONLINE(buddy)) {
 		[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_SIGNON];
@@ -646,6 +644,8 @@
 		if (buddy)
 			gaim_blist_remove_buddy(buddy);
 
+		[object setStatusObject:nil forKey:@"GaimBuddy" notify:NO];
+			
 		//Remove it from Adium's list
 		[object setRemoteGroupName:nil];
 	}
