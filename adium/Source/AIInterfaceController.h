@@ -19,4 +19,5 @@
 @interface AIInterfaceController (INTERNAL)
 // These methods are for internal Adium use only.  The public interface is in Adium.h.
 - (void)initController;
+
 @end
