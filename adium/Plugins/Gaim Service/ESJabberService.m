@@ -52,4 +52,9 @@
     return([ESGaimJabberAccountViewController accountView]);
 }
 
+- (DCJoinChatViewController *)joinChatView
+{
+	return([DCJoinChatViewController joinChatView]);
+}
+
 @end

@@ -51,4 +51,11 @@
     return([ESGaimYahooAccountViewController accountView]);
 }
 
+
+- (DCJoinChatViewController *)joinChatView
+{
+	return([DCJoinChatViewController joinChatView]);
+}
+
+
 @end

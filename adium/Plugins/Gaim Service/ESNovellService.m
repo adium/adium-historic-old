@@ -53,4 +53,11 @@
 }
 
 
+
+- (DCJoinChatViewController *)joinChatView
+{
+	return([DCJoinChatViewController joinChatView]);
+}
+
+
 @end

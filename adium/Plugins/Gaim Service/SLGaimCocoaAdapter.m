@@ -1195,7 +1195,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
     
     NSMutableArray  *buttonNamesArray = [NSMutableArray arrayWithCapacity:actionCount];
     GCallback 	    *callBacks = g_new0(GCallback, actionCount);
-    
+    	
     //Generate the actions names and callbacks into useable forms
     for (i = 0; i < actionCount; i += 1) {
 		//Get the name - XXX evands:need to localize!
@@ -2155,6 +2155,113 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 		gaim_conversation_destroy(conv);
 	}
 }
+
+- (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat;
+{
+	[runLoopMessenger target:self
+			 performSelector:@selector(gaimThreadAddChatUser:toChat:)
+				  withObject:contact
+				  withObject:chat];
+}
+
+- (oneway void)gaimThreadAddChatUser:(AIListObject *)listObject toChat:(AIChat *)chat
+{
+	GaimConversation	*conv = [[chatDict objectForKey:[chat uniqueChatID]] pointerValue];
+
+	NSLog(@"#### gaimThreadAddChatUser:%@ toChat:%@",[listObject UID],[chat name]);
+	// dchoby98
+	if(conv) {
+		NSLog(@"#### gaimThreadAddChatUser found conv");
+		GaimAccount *account = accountLookupFromAdiumAccount([chat account]);
+
+		if( account ) {
+			NSLog(@"#### gaimThreadAddChatUser found account");
+			//GaimBuddy		*buddy = gaim_find_buddy(account, [[listObject UID] UTF8String]);
+			GaimConvChat	*gaimChat = gaim_conversation_get_chat_data(conv);
+			//const char *temp = [[NSString stringWithString:@"Hello"] UTF8String];
+			NSLog(@"#### gaimThreadAddChatUser chat: %d buddy: %@",chat==nil,[listObject UID]);
+			serv_chat_invite(gaim_conversation_get_gc(conv),
+							 gaim_conv_chat_get_id(gaimChat),
+							 "",
+							 [[listObject UID] UTF8String]);
+			
+			//gaim_conv_chat_add_user(gaimChat,[[listObject UID] UTF8String],[[NSString stringWithString:@"Hello"] UTF8String]);
+		}
+	}
+}
+
+- (void)createNewGroupChat:(AIChat *)chat withListObject:(AIListObject *)contact
+{
+	[runLoopMessenger target:self
+			 performSelector:@selector(gaimThreadCreateNewChat:withListObject:)
+				  withObject:chat
+				  withObject:contact];
+}
+
+- (oneway void)gaimThreadCreateNewChat:(AIChat *)chat withListObject:(AIListObject *)contact
+{
+	GaimConversation	*conv = existingConvLookupFromChat(chat);
+	NSLog(@"#### gaimThreadCreateNewChat:%@ withListObject:%@",[chat name],[contact UID]);
+	if(conv) {
+		NSLog(@"#### gaimThreadCreateNewChat found conv");
+		GaimAccount *account = accountLookupFromAdiumAccount([chat account]);
+		
+		if( account ) {
+			NSLog(@"#### gaimThreadCreateNewChat found account");
+			
+			// Try #2
+			const char *name = [[chat name] UTF8String];
+			GaimChat *gaimChat = gaim_blist_find_chat (account, name);
+			
+			if( !gaimChat ) {
+				GHashTable *components;
+				GList *tmp;
+				GaimGroup *group;
+				const char *group_name = _("Chats");
+				GaimPlugin *prpl;
+				GaimPluginProtocolInfo *prpl_info = NULL;
+				struct proto_chat_entry *pce;
+				GList *parts;
+				
+				// (another) The below is not right. (Revised from: The below is not even close to right :P).
+				components = g_hash_table_new_full(g_str_hash, g_str_equal,
+												   g_free, g_free);
+				
+				prpl = gaim_find_prpl(gaim_account_get_protocol_id(account));
+				prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(prpl);
+				parts = prpl_info->chat_info(gaim_account_get_connection(account));
+				pce = parts->data;
+				
+				g_hash_table_replace(components,
+									 g_strdup(name),   /* name */
+									 g_strdup_printf("%d", /* gc-specific identifier */
+													 pce->identifier));
+				
+				gaimChat = gaim_chat_new(account,
+										 name,
+										 components);
+				if ((group = gaim_find_group(group_name)) == NULL) {
+					group = gaim_group_new(group_name);
+					gaim_blist_add_group(group, NULL);
+				}
+				
+				if (gaimChat != NULL) {
+					gaim_blist_add_chat(gaimChat, group, NULL);
+				}
+				
+				//Associate our chat with the libgaim conversation
+				//NSLog(@"#### associating the gaimconv");
+				//GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_CHAT, account, name);
+				
+				//chatLookupFromConv(conv);
+				
+				[self inviteContact:contact toChat:chat];
+
+			}
+		}
+	}
+}
+
 
 #pragma mark Account Status
 - (oneway void)setAway:(NSString *)awayHTML onAccount:(id)adiumAccount

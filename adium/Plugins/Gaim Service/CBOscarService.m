@@ -7,6 +7,7 @@
 #import "CBGaimOscarAccount.h"
 #import "CBOscarService.h"
 #import "AIGaimOscarAccountViewController.h"
+#import "DCGaimOscarJoinChatViewController.h"
 
 @implementation CBOscarService
 
@@ -51,5 +52,9 @@
     return([AIGaimOscarAccountViewController accountView]);
 }
 
+- (DCJoinChatViewController *)joinChatView
+{
+	return([DCGaimOscarJoinChatViewController joinChatView]);
+}
 
 @end

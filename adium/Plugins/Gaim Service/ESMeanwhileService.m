@@ -52,4 +52,11 @@
     return([ESGaimMeanwhileAccountViewController accountView]);
 }
 
+
+- (DCJoinChatViewController *)joinChatView
+{
+	return([DCJoinChatViewController joinChatView]);
+}
+
+
 @end

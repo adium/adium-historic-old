@@ -49,4 +49,9 @@
 	return([ESGaimAccountViewController accountView]);
 }
 
+- (DCJoinChatViewController *)joinChatView
+{
+	return nil;
+}
+
 @end

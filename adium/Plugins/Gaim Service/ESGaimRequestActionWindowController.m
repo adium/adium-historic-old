@@ -68,6 +68,23 @@
 		frame.size.height += heightChange;
 		frame.origin.y -= heightChange;
 		
+		if( !titleString ) {
+			[textField_title setHidden:YES];
+			
+			NSRect scrollFrame = [scrollView_msg frame];
+			NSRect textFrame = [textField_title frame];
+			int verticalChange = textFrame.size.height + 8;
+
+			scrollFrame.origin.y += verticalChange;
+			textFrame.origin.y += verticalChange;
+			
+			//frame.size.height -= verticalChange;
+			frame.origin.y += heightChange;
+			
+			[scrollView_msg setFrame:scrollFrame];
+			[textView_msg setFrame:textFrame];
+		}
+		
 		//Resize the window to fit the message
 		[[self window] setFrame:frame display:YES animate:YES];
 	}
