@@ -473,7 +473,6 @@
 				F50A325A03B5798301A8010A,
 				29B97323FDCFA39411CA2CEA,
 				19C28FACFE9D520D11CA2CBB,
-				34F8A7E805A8920F00577775,
 			);
 			isa = PBXGroup;
 			name = CocAIMe2;
@@ -17832,14 +17831,6 @@
 			path = "iTunes Integration.AdiumPlugin";
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		34F8A7E805A8920F00577775 = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
-			name = "iTunes Integration-Info.plist";
-			path = "/Users/evands/adium/iTunes Integration-Info.plist";
-			refType = 0;
-			sourceTree = "<absolute>";
 		};
 		34F8A7F505A8925F00577775 = {
 			fileRef = 34BD9DE105314751000AB133;
