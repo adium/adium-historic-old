@@ -486,16 +486,38 @@
 //returns an autoreleased array of the rows which represent context
 - (NSArray *)_rowsForAddingContentContext:(AIContentContext *)content
 {
-    //Previous row
-    AIContentObject     *previousContent = [previousRow representedObject];
+    //Previous row (which WILL be a AIContentMessage or AIContentContext when adding Context
+	AIContentStatus		*dateSeparator = nil;
+    AIContentMessage	*previousContent = [previousRow representedObject];
     AIFlexibleTableRow  *prefixRow = nil, *messageRow = nil;
     BOOL                contentIsSimilar = NO;
     
-    //We should merge if the previous content is a message and from the same source
+	//NSCalendarDate *previousDate = [(AIContentContext *)[previousContent date] dateWithCalendarFormat:nil timeZone:nil];
+	//NSCalendarDate *currentDate = [(AIContentContext *)[content date] dateWithCalendarFormat:nil timeZone:nil];
+
+    //We should merge if the previous content is a message and from the same source AND same day
     if((!inlinePrefixes || combineMessages) &&
-       (previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source])){
+       (previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source]) &&
+	   ([(NSCalendarDate *)[previousContent date] dayOfCommonEra] == [(NSCalendarDate *)[content date] dayOfCommonEra])){
         contentIsSimilar = YES;
     }
+	
+	//Show a date header if the messages were on different dates
+	if( !contentIsSimilar && ([(NSCalendarDate *)[previousContent date] dayOfCommonEra] != [(NSCalendarDate *)[content date] dayOfCommonEra])) {
+
+		NSString *dateMessage = [NSString stringWithFormat:@"%@",[[content date] descriptionWithCalendarFormat:@"%A, %B %d, %Y" timeZone:nil locale:nil]];
+			
+		dateSeparator = [AIContentStatus statusInChat:[content chat]
+											   withSource:[[content chat] listObject]
+											  destination:[[content chat] account]
+													 date:nil
+												  message:dateMessage
+												 withType:@"date_separator"];
+		
+		//Add the date header
+		AIFlexibleTableRow *row = [self _rowForAddingContentStatus:dateSeparator];
+		[messageView addRow:row];
+	}
 	
 	//Always start a new bubble if enough time has elapsed since the last content
 	if(contentIsSimilar && [[content date] timeIntervalSinceDate:[(AIContentContext *)previousContent date]] >= NEW_BUBBLE_TIME)
@@ -557,7 +579,7 @@
     //Add the status change
     AIFlexibleTableRow *row = [self _statusRowForContent:content];
     
-    //Add a separatorto our previous row if necessary
+    //Add a separator to our previous row if necessary
     AIFlexibleTableFramedTextCell *cell;
     NSEnumerator * enumerator = [[previousRow cellsWithClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
     while (cell = [enumerator nextObject]) {
@@ -661,11 +683,19 @@
 //Uses the current time stamp format
 - (AIFlexibleTableCell *)_statusCellForContent:(AIContentStatus *)content
 {
-    NSString		*dateString = [timeStampFormatter stringForObjectValue:[content date]];
+	NSString			*messageString;
     AIFlexibleTableCell	*statusCell;
-    
+
+	// If no date specified, don't show one
+	if( [content date] != nil ) {
+		NSString *dateString = [timeStampFormatter stringForObjectValue:[content date]];
+		messageString = [NSString stringWithFormat:@"%@ (%@)", [content message], dateString];
+	} else {
+		messageString = [NSString stringWithFormat:@"%@", [content message]];
+	}
+	
     //Create the status text cell
-    statusCell = [AIFlexibleTableTextCell cellWithString:[NSString stringWithFormat:@"%@ (%@)", [content message], dateString]
+    statusCell = [AIFlexibleTableTextCell cellWithString:messageString
 												   color:[NSColor grayColor]
 													font:[NSFont cachedFontWithName:@"Helvetica" size:11]
 											   alignment:NSCenterTextAlignment];
