@@ -149,6 +149,7 @@
     if([textView_outgoing respondsToSelector:@selector(setUsesFindPanel:)]){
 		[textView_outgoing setUsesFindPanel:YES];
     }
+	[textView_outgoing setClearOnEscape:YES];
 	[[adium contentController] didOpenTextEntryView:textView_outgoing];
 
     //Register for notifications
