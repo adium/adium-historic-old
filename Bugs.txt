@@ -1,22 +1,11 @@
 //------------------------------------------------------------------------------------
 // Already Fixed, awaiting the next Adium release
 //------------------------------------------------------------------------------------
-- MSN Emoticon key equivalents
-- Push/Pop indicator spacing
-- Sorting issues
-- [AIM] Auto-reply flag being ignored
-- Group chats are logging as (null)
-- Autolinking overwrites custom titled links with domain names in them.
-- [ICQ] Encoding problems
-- 10.2 users are losing color in their profiles & away messages (colors not
-    saving)
-- First Message Received triggered multiple times
-- [GaduGadu] Contacts not saving to the server-list
-- [MSN] Outoing chat appears twice with a display name set
-- [MSN] Display names shorten incorrectly
+- Autoreconnect after sleeping
+- Systemwide proxy settings
 
 //------------------------------------------------------------------------------------
-// Adium X 0.70 remaining issues
+// Adium X Known Issues
 //------------------------------------------------------------------------------------
 [HIGH]
 Messages & Chat
