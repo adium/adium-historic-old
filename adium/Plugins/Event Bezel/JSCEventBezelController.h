@@ -16,6 +16,7 @@
     
     int                             bezelPosition, bezelDuration;
     BOOL                            imageBadges, useBuddyIconLabel, useBuddyNameLabel;
+    NSRect                          bezelFrame;
 }
 
 + (JSCEventBezelController *)eventBezelControllerForOwner:(id)inOwner;
