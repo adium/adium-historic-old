@@ -32,7 +32,7 @@
 {
     NSString	*description = [propertiesDict objectForKey:@"Handle"];
     
-    return((description && [description length]) ? description : [self UIDAndServiceID]);
+    return((description && [description length]) ? description : [self UID]);
 }
 
 - (id <AIAccountViewController>)accountView
