@@ -44,7 +44,6 @@
             }; 
             SUPERCLASS = NSTabView; 
         }, 
-        {CLASS = AIToolbarTabViewItem; LANGUAGE = ObjC; SUPERCLASS = NSTabViewItem; }, 
         {
             CLASS = AIWindowController; 
             LANGUAGE = ObjC; 
