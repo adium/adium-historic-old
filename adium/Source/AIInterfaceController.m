@@ -276,7 +276,7 @@
 
 - (NSAttributedString *)_tooltipTitleForObject:(AIListObject *)object
 {
-    NSMutableAttributedString * titleString = [[NSMutableAttributedString alloc] init];
+    NSMutableAttributedString           *titleString = [[NSMutableAttributedString alloc] init];
     
     id <AIContactListTooltipEntry>	tooltipEntry;
     NSEnumerator			*enumerator;
@@ -351,8 +351,8 @@
     labelEnumerator = [labelArray objectEnumerator];
     
     while((entryString = [enumerator nextObject])){        
-        NSAttributedString * labelString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:\t",[labelEnumerator nextObject]]
-                                                                           attributes:labelDict];
+        NSAttributedString * labelString = [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:\t",[labelEnumerator nextObject]]
+                                                                           attributes:labelDict] autorelease];
         
         //Add a carriage return
         [titleString appendString:@"\r" withAttributes:labelEndLineDict];
