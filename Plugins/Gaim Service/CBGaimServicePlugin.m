@@ -33,7 +33,6 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS 
 																		forClass:[self class]]
 										  forGroup:GROUP_ACCOUNT_STATUS];
-	
 	[self _initGaim];
 	
     //Install the services
@@ -48,9 +47,7 @@
 	YahooJapanService	= [[ESYahooJapanService alloc] init];	
 	ZephyrService		= [[ESZephyrService alloc] init];
 
-#ifdef ENABLE_NAPSTER
 	NapsterService		= [[ESNapsterService alloc] init];
-#endif
 	
 #ifndef TREPIA_NOT_AVAILABLE
 	TrepiaService		= [[ESTrepiaService alloc] init];
@@ -74,10 +71,8 @@
 	[NovellService release]; NovellService = nil;
 	[ZephyrService release]; ZephyrService = nil;
 
-#ifdef ENABLE_NAPSTER
 	[NapsterService release]; NapsterService = nil;
-#endif
-	
+
 #ifndef TREPIA_NOT_AVAILABLE
 	[TrepiaService release]; TrepiaService = nil;
 #endif
