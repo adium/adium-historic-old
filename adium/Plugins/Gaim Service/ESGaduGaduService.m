@@ -36,7 +36,7 @@
 }
 - (NSString *)description
 {
-    return([NSString stringWithFormat:@"Gadu-Gadu %@",[self gaimDescriptionSuffix]]);
+    return @"Gadu-Gadu";
 }
 
 - (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID

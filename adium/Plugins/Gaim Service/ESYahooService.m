@@ -35,7 +35,7 @@
 }
 - (NSString *)description
 {
-    return([NSString stringWithFormat:@"Yahoo! %@",[self gaimDescriptionSuffix]]);
+    return @"Yahoo!";
 }
 
 - (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID

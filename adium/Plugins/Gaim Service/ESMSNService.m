@@ -37,7 +37,7 @@
 }
 - (NSString *)description
 {
-    return([NSString stringWithFormat:@"MSN %@",[self gaimDescriptionSuffix]]);
+    return @"MSN";
 }
 
 - (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
