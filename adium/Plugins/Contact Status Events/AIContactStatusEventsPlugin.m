@@ -60,6 +60,9 @@
 //To increase the speed of heavy contact list operations (connecting/disconnecting/etc), we don't send out any events when the contact list updates are delayed.
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
+	// Check if kind of AIListObject is not of Account class
+	if (![inObject isKindOfClass: [AIAccount class]]) {
+	
     if([inModifiedKeys containsObject:@"Online"]){ //Sign on/off
         BOOL		newStatus = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
         NSNumber	*oldStatusNumber = [onlineDict objectForKey:[inObject UIDAndServiceID]];
@@ -110,6 +113,8 @@
             
         }
     }
+	
+	} // end of the account class check
 	
     return(nil);
 }
