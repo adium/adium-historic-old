@@ -67,6 +67,7 @@ static NSMutableDictionary	*keyGenerationControllerDict = nil;
 	[super windowDidLoad];
 
 	[[self window] setTitle:AILocalizedString(@"Please wait...",nil)];
+	[[self window] center];
 
 	[progressIndicator startAnimation:nil];
 	[textField_message setStringValue:
