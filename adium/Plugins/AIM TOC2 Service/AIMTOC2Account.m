@@ -229,8 +229,9 @@ static char *hash_password(const char * const password);
     BOOL available = NO;
 
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
-        //If we're online, ("and the contant is online" or nil - implement later), return YES
-        if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE){
+        //If we're online, ("and the contant is online" or nil), return YES
+        if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE &&
+           (![[handleDict allValues] containsObject:inHandle] || [[[inHandle statusDictionary] objectForKey:@"Online"] intValue])){
             available = YES;
         }
     }

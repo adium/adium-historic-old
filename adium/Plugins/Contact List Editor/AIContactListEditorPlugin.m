@@ -70,8 +70,6 @@
 {
     //Just add it to our array
     [listEditorColumnControllerArray addObject:inController];
-
-    NSLog(@"Register %@",[inController editorColumnLabel]);
 }
 
 
