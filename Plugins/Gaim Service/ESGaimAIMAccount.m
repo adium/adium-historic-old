@@ -17,7 +17,7 @@
 #import <AIUtilities/CBObjectAdditions.h>
 
 #define DELAYED_UPDATE_INTERVAL			1.0
-#define MAX_AVAILABLE_MESSAGE_LENGTH	59
+#define MAX_AVAILABLE_MESSAGE_LENGTH	58
 
 @interface ESGaimAIMAccount (PRIVATE)
 - (NSString *)serversideCommentForContact:(AIListContact *)theContact;
