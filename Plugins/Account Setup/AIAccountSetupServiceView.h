@@ -1,0 +1,25 @@
+//
+//  AIServiceView.h
+//  Adium
+//
+//  Created by Adam Iser on 12/9/04.
+//  Copyright 2004 __MyCompanyName__. All rights reserved.
+//
+
+#import <Cocoa/Cocoa.h>
+
+
+@interface AIServiceView : NSView {
+	AIService			*service;
+	NSImage				*serviceIcon;
+	NSAttributedString	*serviceName;
+	NSSize				serviceNameSize;
+	
+	NSArray				*accounts;
+	NSSize				serviceIconSize;
+	
+	int 				accountNameHeight;
+}
+- (void)setServiceIconSize:(NSSize)inSize;
+
+@end
