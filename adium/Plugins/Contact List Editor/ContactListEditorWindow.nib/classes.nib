@@ -6,11 +6,12 @@
             SUPERCLASS = NSOutlineView; 
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {CLASS = AIBrowser; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {
             ACTIONS = {closeWindow = id; }; 
             CLASS = AIContactListEditorWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"browser_contactList" = NSBrowser; }; 
+            OUTLETS = {"browser_contactList" = AIBrowser; }; 
             SUPERCLASS = AIWindowController; 
         }, 
         {
