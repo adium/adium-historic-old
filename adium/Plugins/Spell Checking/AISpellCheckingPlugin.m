@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on Wed Aug 27 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import "AISpellCheckingPlugin.h"

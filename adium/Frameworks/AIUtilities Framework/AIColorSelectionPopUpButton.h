@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on Sun Oct 05 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 @interface AIColorSelectionPopUpButton : NSPopUpButton {

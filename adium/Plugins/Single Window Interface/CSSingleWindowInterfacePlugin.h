@@ -3,7 +3,6 @@
 //  Adium XCode
 //
 //  Created by Chris Serino on Wed Dec 31 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #define HIDE_CONTACT_LIST @"Hide Contact List"
