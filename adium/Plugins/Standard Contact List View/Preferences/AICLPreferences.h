@@ -17,7 +17,11 @@
 #define CL_OPACITY			@"Opacity"
 
 @interface AICLPreferences : AIPlugin {
-    IBOutlet	NSView		*view_prefView;
+    IBOutlet	NSView			*view_prefView;
+
+    IBOutlet	NSTextField		*textField_fontName;
+
+    IBOutlet	NSPopUpButton		*popUp_font;
 
 
     NSDictionary		*preferenceDict;
@@ -43,7 +47,9 @@
 }
 
 + (AICLPreferences *)contactListPreferencesWithOwner:(id)inOwner;
-/*
+- (IBAction)setFont:(id)sender;
+
+    /*
 
 - (void) initialize: (id) foo;
 

@@ -71,6 +71,16 @@
     [[AIPreferenceWindowController preferenceWindowControllerWithOwner:self] showWindow:nil];
 }
 
+//Notification center for preference notifications
+- (NSNotificationCenter *)preferenceNotificationCenter
+{
+    if(preferenceNotificationCenter == nil){
+        preferenceNotificationCenter = [[NSNotificationCenter alloc] init];
+    }
+
+    return(preferenceNotificationCenter);
+}
+
 
 //Adding Preferences ----------------------------------------------------------------------
 //Add a view to the preferences

@@ -676,6 +676,19 @@
 			settings = {
 			};
 		};
+		4BBC89A803B964B800A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = "SCL Defaults.plist";
+			path = "Plugins/Standard Contact List View/SCL Defaults.plist";
+			refType = 4;
+		};
+		4BBC89A903B964B800A8010A = {
+			fileRef = 4BBC89A803B964B800A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //4B0
 //4B1
 //4B2
@@ -1553,6 +1566,7 @@
 				F579399E033E75CB01A8010A,
 				F544A5DF03B3628B01A8010A,
 				F544A5E003B3628B01A8010A,
+				4BBC89A803B964B800A8010A,
 			);
 			isa = PBXGroup;
 			name = "Standard Contact List View";
@@ -1574,6 +1588,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F544A5E303B3628B01A8010A,
+				4BBC89A903B964B800A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

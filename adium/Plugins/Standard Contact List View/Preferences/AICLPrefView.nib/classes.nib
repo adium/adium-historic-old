@@ -28,20 +28,12 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {colorAndOpacity = id; fontPopUps = id; gridOptions = id; }; 
+            ACTIONS = {setFont = id; }; 
             CLASS = AICLPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                alternatingGridSwitch = id; 
-                backgroundColorWell = id; 
-                enableGridSwitch = id; 
-                facePopUp = id; 
-                fontPopUp = id; 
-                gridColorLabel = id; 
-                gridColorWell = id; 
-                opacityPercentLabel = id; 
-                opacitySlider = id; 
-                sizePopUp = id; 
+                "popUp_font" = NSPopUpButton; 
+                "textField_fontName" = NSTextField; 
                 "view_prefView" = NSView; 
             }; 
             SUPERCLASS = AIPlugin; 

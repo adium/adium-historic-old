@@ -11,6 +11,7 @@
 #import "AIAdium.h"
 #import "AICLPreferences.h"
 #import "AISCLOutlineView.h"
+#import "AISCLViewPlugin.h"
 
 #define CL_PREF_NIB		@"AICLPrefView"		//Name of preference nib
 #define CL_PREF_TITLE		@"Contact List"		//
@@ -20,11 +21,14 @@
 
 @interface AICLPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
+- (void)buildFontMenuFor:(NSPopUpButton *)inFontPopUp;
+- (void)configureView;
 
+/*
 - (void) _prefsChangedNotify;
 - (void) _buildFontMenuFor: (NSPopUpButton*)inFontPopUp;
 - (void) _buildFontFaceMenuFor:(NSPopUpButton *)inFacePopUp using:(NSPopUpButton *)inFamilyPopUp;
-- (void) _loadPrefs;
+- (void) _loadPrefs;*/
 @end
 
 @implementation AICLPreferences
@@ -34,6 +38,30 @@
     return([[[self alloc] initWithOwner:inOwner] autorelease]);
 }
 
+- (IBAction)setFont:(id)sender
+{
+    //Setup and show the font panel
+    [[textField_fontName window] makeFirstResponder:[textField_fontName window]];
+    [[NSFontManager sharedFontManager] setSelectedFont:[textField_fontName font] isMultiple:NO];
+    [[NSFontManager sharedFontManager] orderFrontFontPanel:self];
+
+}
+
+- (void)changeFont:(id)fontManager
+{
+//    [displayedValues setObject:[fontManager convertFont:[curValues objectForKey:RichTextFont]] forKey:RichTextFont];
+//    showFontInField([displayedValues objectForKey:RichTextFont], richTextFontNameField);
+
+    NSLog(@"change %@",fontManager);
+}
+
+- (BOOL)fontManager:(id)sender willIncludeFont:(NSString *)fontName
+{
+    NSLog(@"willIncludeFont %@",fontName);
+}
+
+
+//Private ---------------------------------------------------------------------------
 //init
 - (id)initWithOwner:(id)inOwner
 {
@@ -50,13 +78,44 @@
     preferenceViewController = [AIPreferenceViewController controllerWithName:CL_PREF_TITLE categoryName:PREFERENCE_CATEGORY_INTERFACE view:view_prefView];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
 
-    //Load the preferences
+    //Load the preferences, and configure our view
     preferenceDict = [[[owner preferenceController] preferencesForGroup:GROUP_CONTACT_LIST] retain];
+    [self configureView];
+
     
     return(self);    
 }
 
 
+
+//Configures our view for the current preferences
+- (void)configureView
+{
+//    NSString	*fontName;
+    
+//    [self buildFontMenuFor:popUp_font];
+    [popUp_font selectItemWithTitle:[preferenceDict objectForKey:KEY_SCL_FONT_NAME]];
+
+/*    [self _buildFontFaceMenuFor: facePopUp using: fontPopUp];
+
+    [popUp_face selectItemWithTitle:[[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"FACE"]];
+    [popUp_size selectItemWithTitle:[NSString stringWithFormat:@"%d", [[[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"SIZE"] intValue]]];
+
+    [alternatingGridSwitch setState:[[dict objectForKey: CL_ALTERNATING_GRID] boolValue]];
+
+    [backgroundColorWell setColor:[NSColor colorWithCalibratedRed:[[[dict objectForKey: CL_BACKGROUND_COLOR] objectForKey:@"RED"] floatValue]
+                                                            green:[[[dict objectForKey: CL_BACKGROUND_COLOR] objectForKey:@"GREEM"] floatValue]
+                                                             blue:[[[dict objectForKey: CL_BACKGROUND_COLOR] objectForKey:@"BLUE"] floatValue]
+                                                            alpha:[[[dict objectForKey: CL_BACKGROUND_COLOR] objectForKey:@"ALPHA"] floatValue]]];
+
+    [gridColorWell setColor: [NSColor colorWithCalibratedRed:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"RED"] floatValue]
+                                                       green:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"GREEM"] floatValue]
+                                                        blue:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"BLUE"] floatValue]
+                                                       alpha:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"ALPHA"] floatValue]]];
+    
+*/
+    
+}
 
 
 
@@ -195,24 +254,28 @@
 
 }
 
-- (void) _buildFontMenuFor: (NSPopUpButton*)inFontPopUp
+*/
+/*
+- (void)buildFontMenuFor:(NSPopUpButton *)inFontPopUp
 {
-    NSArray 	*sortedFonts;
-    NSMenu		*fontMenu = [[NSMenu alloc] initWithTitle:@"Fonts"];
-    int			loop;
+    NSEnumerator	*enumerator;
+    NSArray 		*fontArray;
+    NSMenu		*fontMenu = [[[NSMenu alloc] initWithTitle:@"Fonts"] autorelease];
+    NSString		*fontName;
+    
+    fontArray = [[NSFontManager sharedFontManager] availableFontFamilies]; //get the font list
+    fontArray = [fontArray sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)]; //alphabetize them
 
-    sortedFonts = [[[NSFontManager sharedFontManager] availableFontFamilies] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-
-    for(loop = 0;loop < [sortedFonts count];loop++){
-
-        [[fontMenu addItemWithTitle:[sortedFonts objectAtIndex:loop]
-                             action:nil
-                      keyEquivalent:@""] setTarget:self];
+    //Add each font to the menu
+    enumerator = [fontArray objectEnumerator];
+    while((fontName = [enumerator nextObject])){
+        [fontMenu addItemWithTitle:fontName target:self action:nil keyEquivalent:@""];
     }
 
-    [inFontPopUp setMenu: fontMenu];
-}
+    [inFontPopUp setMenu:fontMenu];
+}*/
 
+/*
 - (void) _buildFontFaceMenuFor:(NSPopUpButton *)inFacePopUp using:(NSPopUpButton *)inFamilyPopUp
 {
     NSString	*selectedFamily;

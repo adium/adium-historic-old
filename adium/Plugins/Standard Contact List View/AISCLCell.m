@@ -17,6 +17,7 @@
 #import <Adium/Adium.h>
 #import "AIAdium.h"
 #import "AISCLCell.h"
+#import "AISCLOutlineView.h"
 
 @implementation AISCLCell
 
@@ -27,6 +28,8 @@
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
+    NSFont	*font = [(AISCLOutlineView *)controlView font];
+    
     if([contactObject isKindOfClass:[AIContactHandle class]]){
         NSString		*name;
         NSAttributedString	*displayName;
@@ -78,7 +81,7 @@
         
         //Name
         name = [contactObject displayName];
-        displayName = [[NSAttributedString alloc] initWithString:name attributes:[NSDictionary dictionaryWithObjectsAndKeys:textColor,NSForegroundColorAttributeName,[NSFont labelFontOfSize:11],NSFontAttributeName,nil]];
+        displayName = [[NSAttributedString alloc] initWithString:name attributes:[NSDictionary dictionaryWithObjectsAndKeys:textColor,NSForegroundColorAttributeName,font,NSFontAttributeName,nil]];
 
         //Display
         [displayName drawInRect:cellFrame];
@@ -89,7 +92,7 @@
         NSString		*name;
 
         name = [contactObject displayName];
-        displayName = [[NSAttributedString alloc] initWithString:name attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont boldSystemFontOfSize:11],NSFontAttributeName,nil]];
+        displayName = [[NSAttributedString alloc] initWithString:name attributes:[NSDictionary dictionaryWithObjectsAndKeys:font,NSFontAttributeName,nil]];
 
         cellFrame.origin.x += 2;
         cellFrame.size.width -= 2;

@@ -88,6 +88,7 @@ typedef enum {
 #define Content_DidSendContent					@"Content_DidSendContent"
 #define Content_WillReceiveContent				@"Content_WillReceiveContent"
 #define Content_DidReceiveContent				@"Content_DidReceiveContent"
+#define Preference_GroupChanged					@"Preference_GroupChanged"
 
 
 
@@ -283,11 +284,13 @@ typedef enum {
 
 @interface AIPreferenceController : NSObject {
     IBOutlet	AIAdium			*owner;
-    
+
+    NSNotificationCenter		*preferenceNotificationCenter;
     NSMutableArray			*categoryArray;
-    
     NSMutableDictionary			*groupDict;		//A dictionary of pref dictionaries
 }
+
+- (NSNotificationCenter *)preferenceNotificationCenter;
 
 - (void)addPreferenceView:(AIPreferenceViewController *)inView;
 - (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)groupName;

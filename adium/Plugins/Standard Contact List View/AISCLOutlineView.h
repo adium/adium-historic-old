@@ -16,8 +16,6 @@
 #import <Cocoa/Cocoa.h>
 #import <AIUtilities/AIUtilities.h>
 
-#define	GROUP_CONTACT_LIST	@"Contact List"
-
 
 @class AIAdium;
 

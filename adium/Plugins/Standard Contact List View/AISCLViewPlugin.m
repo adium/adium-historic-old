@@ -20,6 +20,11 @@
 #import "AIAdium.h"
 #import "AICLPreferences.h"
 
+@interface AISCLViewPlugin (PRIVATE)
+- (void)preferencesChanged:(NSNotification *)notification;
+
+@end
+
 @implementation AISCLViewPlugin
 
 - (void)installPlugin
@@ -28,6 +33,9 @@
 
     //Register ourself as an available contact list view
     [[owner interfaceController] registerContactListViewController: self];
+
+    //Register our default preferences
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]] forGroup:GROUP_CONTACT_LIST];
 
     //Install the preference view
     preferences = [[AICLPreferences contactListPreferencesWithOwner:owner] retain];
@@ -48,11 +56,17 @@
     //Create the view
     SCLView = [[AISCLOutlineView alloc] init];
 
+    //Apply the preferences to the view
+    [self preferencesChanged:nil];
+
     //Install the necessary observers
     [[[owner contactController] contactNotificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
     [[[owner contactController] contactNotificationCenter] addObserver:self selector:@selector(contactChanged:) name:Contact_ObjectChanged object:nil];
+    [[[owner preferenceController] preferenceNotificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpandOrCollapse:) name:NSOutlineViewItemDidExpandNotification object:SCLView];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpandOrCollapse:) name:NSOutlineViewItemDidCollapseNotification object:SCLView];
+    
     [SCLView setTarget:self];
     [SCLView setDataSource:self];
     [SCLView setDelegate:self];
@@ -89,7 +103,27 @@
     }
 }
 
-- (void)prefsChanged: (NSNotification *)notification
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
+    AISCLOutlineView	*SCLView;
+
+    NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:GROUP_CONTACT_LIST];
+
+    while((SCLView = [enumerator nextObject])){
+        NSFont	*font = [NSFont systemFontOfSize:16];/*[prefDict objectForKey:KEY_SCL_FONT_NAME]*/
+        
+        [SCLView setFont:font];
+        [SCLView setRowHeight:[font defaultLineHeightForFont]];
+    }
+    
+    
+    
+
+    
+}
+
+/*- (void)prefsChanged: (NSNotification *)notification
 {
     NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
     AISCLOutlineView	*SCLView;
@@ -121,7 +155,7 @@
 		
         [SCLView setNeedsDisplay:YES];
     }    
-}
+}*/
 /*- (void)itemDidExpandOrCollapse:(NSNotification *)notification
 {
 //    [self desiresNewSize];

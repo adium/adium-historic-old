@@ -31,7 +31,7 @@
 - (id)init
 {
     NSTableColumn	*tableColumn;
-    NSFont *font = [NSFont systemFontOfSize:11];
+//    NSFont *font = [NSFont systemFontOfSize:11];
 
     [super init];
 
@@ -46,8 +46,8 @@
     [self setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 
     //Appearance
-    [super setFont:font];
-    [self setRowHeight:[font defaultLineHeightForFont]];
+//    [super setFont:font];
+//    [self setRowHeight:[font defaultLineHeightForFont]];
     [self setIndentationPerLevel:10];
 
     [self setBackgroundColor:[NSColor colorWithCalibratedRed:(250.0/255.0) green:(250.0/255.0) blue:(250.0/255.0) alpha:1.0]];
@@ -153,11 +153,11 @@
     trackingRectTag = [self addTrackingRect:[scrollView bounds] owner:self userData:nil assumeInside:NO];*/
 }
 
-- (void)setFont:(NSFont *)inFont
+/*- (void)setFont:(NSFont *)inFont
 {
 	[super setFont:inFont];
 	NSLog(@"font is: %@ and should be %@", [[self font] fontName], inFont);
-}
+}*/
 
 //Draw a custom 'no available contacts' message when the list is empty
 - (void)drawRect:(NSRect)rect

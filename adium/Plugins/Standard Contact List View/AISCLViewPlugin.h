@@ -16,6 +16,11 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
+#define	GROUP_CONTACT_LIST		@"Contact List"
+
+#define SCL_DEFAULT_PREFS		@"SCL Defaults"
+#define KEY_SCL_FONT_NAME		@"Font Name"
+
 
 @class AIContactGroup, AICLPreferences;
 @protocol AIContactListViewController;
@@ -30,6 +35,5 @@
 }
 
 - (IBAction)performDefaultActionOnSelectedContact:(id)sender;
-- (void)prefsChanged: (NSNotification *)notification; // temporary until i figure out what notification to send
 
 @end
