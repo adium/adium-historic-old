@@ -7508,7 +7508,7 @@
 		};
 		B7AE6657046578640051E914 = {
 			isa = PBXBundleReference;
-			path = "SQL Logger.bundle";
+			path = "SQL Logger.AdiumPlugin";
 			refType = 3;
 		};
 		B7AE6658046579290051E914 = {
