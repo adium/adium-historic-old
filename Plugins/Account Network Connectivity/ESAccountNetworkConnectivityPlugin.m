@@ -12,14 +12,27 @@
 - (void)handleConnectivityForAccount:(AIAccount *)account reachable:(BOOL)reachable;
 
 //10.3 and above
-- (void)accountListChanged:(NSNotification *)notification;
 - (void)networkConnectivityChanged:(NSNotification *)notification;
 @end
 
+/*
+ * @class ESAccountNetworkConnectivityPlugin
+ * @brief Handle account connection and disconnection
+ *
+ * Accounts are automatically connected and disconnected based on:
+ *	- Per-account autoconnect preferences (at Adium launch if the network is available)
+ *  - Network connectivity (disconnect when the Internet is not available and connect when it is available again)
+ *  - System sleep (disconnect when the system sleeps and connect when it wakes up)
+ *
+ * Uses AINetworkConnectivity and AISleepNotification from AIUtilities.
+ */
 @implementation ESAccountNetworkConnectivityPlugin
 
 static NSMutableSet							*accountsToConnect = nil;
 
+/*
+ * @brief Install plugin
+ */
 - (void)installPlugin
 {
 	accountsToConnect = [[NSMutableSet alloc] init];
@@ -50,6 +63,9 @@ static NSMutableSet							*accountsToConnect = nil;
                                                object:nil];	
 }
 
+/*
+ * @brief Uninstall plugin
+ */
 - (void)uninstallPlugin
 {
 	[accountsToConnect release]; accountsToConnect = nil;
@@ -59,6 +75,11 @@ static NSMutableSet							*accountsToConnect = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+/*
+ * @brief Adium finished launching
+ *
+ * Attempt to autoconnect accounts if shift is not being pressed
+ */
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
 	//Holding shift skips autoconnection.
@@ -67,19 +88,26 @@ static NSMutableSet							*accountsToConnect = nil;
 	}
 }
 
+/*
+ * @brief Network connectivity changed
+ *
+ * Connect or disconnect accounts as appropriate to the new network state.
+ *
+ * @param notification The object of the notification is an NSNumber indicating if the network is now available.
+ */
 - (void)networkConnectivityChanged:(NSNotification *)notification
 {
 	BOOL networkIsReachable;
-	
+
 	if (notification){
 		networkIsReachable = [[notification object] boolValue];
 	}else{
 		networkIsReachable = [AINetworkConnectivity networkIsReachable];
 	}
-	
+
 	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	AIAccount		*account;
-	
+
 	while (account = [enumerator nextObject]){
 		if ([account connectivityBasedOnNetworkReachability]){
 			[self handleConnectivityForAccount:account reachable:networkIsReachable];
@@ -88,6 +116,15 @@ static NSMutableSet							*accountsToConnect = nil;
 }
 
 #pragma mark Connecting/Disconnecting Accounts
+/*
+ * @brief Connect or disconnect an account as appropriate to a new network reachable state
+ *
+ * This method uses the accountsToConnect collection to track which accounts were disconnected and should therefore be
+ * later reconnected.
+ *
+ * @param account The account to change if appropriate
+ * @param reachable The new network reachable state
+ */
 - (void)handleConnectivityForAccount:(AIAccount *)account reachable:(BOOL)reachable
 {
 	if (reachable){
@@ -117,24 +154,32 @@ static NSMutableSet							*accountsToConnect = nil;
 }
 
 #pragma mark Update List Object
+/*
+ * @brief Update our accountsToConnect when an account connects
+ *
+ * When an account successfully goes online, take it off our list of accounts to connect
+ * so that we won't reconnect it after the user disconnects it manually.
+ */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 { 
 	if ([inObject isKindOfClass:[AIAccount class]]){
 		if ([inModifiedKeys containsObject:@"Online"] &&
 			[inObject integerStatusObjectForKey:@"Online"]){
 
-			//When an account successfully goes online, take it off our list of accounts to connect
-			//so that we won't reconnect it after the user disconnects it manually
 			[accountsToConnect removeObject:inObject];
 		}
 	}
-	
+
 	return nil;
 }
 
 //Autoconnect
 #pragma mark Autoconnecting Accounts (at startup)
-//Automatically connect to accounts flagged with an auto connect property as soon as a network connection is available
+/*
+ * @brief Auto connect accounts
+ *
+ * Automatically connect to accounts flagged with an auto connect property as soon as a network connection is available
+ */
 - (void)autoConnectAccounts
 {
     NSEnumerator	*enumerator;
@@ -160,22 +205,16 @@ static NSMutableSet							*accountsToConnect = nil;
 
 	//Attempt to connect them immediately; if this fails, they will be connected when the network
 	//becomes available.
-	if ([accountsToConnect count]){	
-		
+	if ([accountsToConnect count]){			
 		[self networkConnectivityChanged:nil];
-		/*
-		[NSTimer scheduledTimerWithTimeInterval:2.0
-										 target:[AINetworkConnectivity class]
-									   selector:@selector(refreshReachabilityAndNotify)
-									   userInfo:nil
-										repeats:NO];
-		 */
 	}
 }
 
 //Disconnect / Reconnect on sleep --------------------------------------------------------------------------------------
 #pragma mark Disconnect/Reconnect On Sleep
-//System is sleeping
+/*
+ * @brief System is sleeping
+ */
 - (void)systemWillSleep:(NSNotification *)notification
 {
     NSEnumerator	*enumerator;
@@ -196,7 +235,9 @@ static NSMutableSet							*accountsToConnect = nil;
     }
 }
 
-//System is waking
+/*
+ * @brief System is waking from sleep
+ */
 - (void)systemDidWake:(NSNotification *)notification
 {
 	//Immediately connect accounts which are ignoring the server reachability
@@ -246,10 +287,10 @@ static NSMutableSet							*accountsToConnect = nil;
 	}
 }
 
+/*
 #pragma mark Custom servers for accounts in 10.3 and greater
 - (void)accountListChanged:(NSNotification *)notification
 {
-	/*
 	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	AIAccount		*account;
 
@@ -280,8 +321,7 @@ static NSMutableSet							*accountsToConnect = nil;
 			[self scheduleReachabilityCheckFor:customServer account:account];
 		}
 	}
-	*/
 }
-
+*/
 	
 @end
