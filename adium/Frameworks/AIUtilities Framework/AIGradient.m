@@ -14,15 +14,45 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIGradient.h"
+#import "BZContextImageBridge.h"
 
 @interface AIGradient (PRIVATE)
 
 - (id)initWithFirstColor:(NSColor*)inColor1
 			 secondColor:(NSColor*)inColor2
 			   direction:(AIDirection)inDirection;
-- (void)_drawInRect:(NSRect)inRect useTransparency:(BOOL)useTransparency;
 
 @end
+
+typedef struct
+{
+	float red;
+	float green;
+	float blue;
+	float alpha;
+} FloatRGB;
+
+typedef struct
+{
+	//the start and end colours of a gradient.
+	FloatRGB start;
+	FloatRGB end;
+} TwoColors;
+
+void returnColorValue(void *refcon, const float *blendPoint, float *output);
+
+int BlendColors(FloatRGB *result, FloatRGB *a, FloatRGB *b, float scale);
+
+CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBezierPath *bezierPath);
+
+enum {
+	//number of bits for each component of a colour value.
+	//for a 24-bit RGB value, this is 8.
+	//for a 32-bit RGBA value (which is what this code uses), this is still 8.
+	bitsPerComponent = 8U,
+	componentsPerPixel = 4U, //RGBA
+	bitsPerPixel = bitsPerComponent * componentsPerPixel
+};
 
 @implementation AIGradient
 
@@ -53,7 +83,7 @@
 			 secondColor:(NSColor*)inColor2
 			   direction:(AIDirection)inDirection
 {
-	if (self = [self init]) {		
+	if (self = [self init]) {
 		[self setFirstColor:inColor1];
 		[self setSecondColor:inColor2];
 		[self setDirection:inDirection];
@@ -61,51 +91,13 @@
 	return self;
 }
 
-- (void)_drawInRect:(NSRect)inRect useTransparency:(BOOL)useTransparency
-{
-	NSColor *currentColor;
-	NSColor *newColor1;
-	NSColor *newColor2;
-	float   fraction;
-	int		x;
-	
-	if (useTransparency) {
-		newColor1 = color1;
-		newColor2 = color2;
-	} else {
-		newColor1 = [color1 colorWithAlphaComponent:1.0];
-		newColor2 = [color2 colorWithAlphaComponent:1.0];
-	}
-	
-	if (direction == AIVertical) {
-		for (x=0;x<inRect.size.height;x++)
-		{
-			NSRect newRect = NSMakeRect(inRect.origin.x,inRect.origin.y + x,inRect.size.width,1);
-			fraction = (float)(x / inRect.size.height);
-			
-			currentColor = [newColor1 blendedColorWithFraction:fraction ofColor:newColor2];
-			[currentColor set];
-			NSRectFillUsingOperation(newRect, NSCompositeSourceAtop);
-		}
-	} else {
-		for (x=0;x<inRect.size.width;x++)
-		{
-			NSRect newRect = NSMakeRect(inRect.origin.x + x,inRect.origin.y,1,inRect.size.height);
-			fraction = (float)(x / inRect.size.width);
-			
-			currentColor = [newColor1 blendedColorWithFraction:fraction ofColor:newColor2];
-			[currentColor set];
-			NSRectFillUsingOperation(newRect, NSCompositeSourceAtop);
-		}
-	}
-}
-
 #pragma mark Accessor Methods
 
 - (void)setFirstColor:(NSColor*)inColor
 {
 	if (color1) {
-		[color1 release]; color1 = nil;
+		[color1 release];
+		color1 = nil;
 	}
 	color1 = [inColor retain];
 }
@@ -117,7 +109,8 @@
 - (void)setSecondColor:(NSColor*)inColor
 {
 	if (color2) {
-		[color2 release]; color2 = nil;
+		[color2 release];
+		color2 = nil;
 	}
 	color2 = [inColor retain];
 }
@@ -137,39 +130,236 @@
 
 #pragma mark Drawing
 
-- (void)drawInRect:(NSRect)rect
+- (void)drawInRect:(NSRect)inRect
 {
-	[self _drawInRect:rect useTransparency:YES];
+	[self drawInBezierPath:[NSBezierPath bezierPathWithRect:inRect]];
 }
 
-- (void)drawInBezierPath:(NSBezierPath *)inPath fraction:(float)inFraction
-{
-	NSRect				inPathBounds = [inPath bounds];
-	NSSize				inPathBoundsSize = inPathBounds.size;
-	
-	if ( (inPathBoundsSize.width > 0) && (inPathBoundsSize.height > 0) ) {
-		
-		NSImage				*image = [[NSImage alloc] initWithSize:inPathBounds.size];
-		NSAffineTransform   *trans = [NSAffineTransform transform];
-		NSBezierPath		*tempPath = [inPath copy];
-		NSPoint				keepPoint = inPathBounds.origin;
-		
-		[trans translateXBy:(-1.0f * keepPoint.x) yBy:(-1.0f * keepPoint.y)];
-		[tempPath transformUsingAffineTransform:trans];
-		
-		[image lockFocus];
-		[tempPath fill];
-		[self _drawInRect:[tempPath bounds] useTransparency:NO];
-		[image unlockFocus];
-		
-		[image setFlipped:NO];
-		[image drawAtPoint:keepPoint 
-				  fromRect:NSMakeRect(0, 0, [image size].width, [image size].height)
-				 operation:NSCompositeSourceOver
-				  fraction:inFraction];
-		
-		[image release];	
+//used, currently.
+- (void)drawInBezierPath:(NSBezierPath *)inPath
+{   
+	NSRect inRect = [inPath bounds];
+	CGRect *cgRect = (CGRect *)&inRect;
+
+	//the transform shifts the CGPath to origin = 0,0 and scales it down to an integer width (and height).
+	float roundFactor = ((int)inRect.size.width) / inRect.size.width;
+	CGAffineTransform transform = CGAffineTransformMake(
+		/*a*/ roundFactor, /*b*/ 0.0f,
+		/*c*/ 0.0f,        /*d*/ roundFactor,
+		/*tx*/ -(inRect.origin.x), /*ty*/ -(inRect.origin.y)
+	);
+	cgRect->size = CGSizeApplyAffineTransform(cgRect->size, transform);
+
+	float   width = inRect.size.width,
+	height = inRect.size.height;
+
+	TwoColors blendPoints;
+	NSColor *startColor = [color1 retain], *endColor = [color2 retain], *temp;
+
+	if(![[startColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace])
+	{
+		temp = startColor;
+		startColor = [[startColor colorUsingColorSpaceName:NSDeviceRGBColorSpace] retain];
+		[temp release];
 	}
+
+	if(![[endColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace])
+	{
+		temp = endColor;
+		endColor = [[endColor colorUsingColorSpaceName:NSDeviceRGBColorSpace] retain];
+		[temp release];
+	}
+
+	[startColor getRed:&(blendPoints.start.red)
+	             green:&(blendPoints.start.green)
+	              blue:&(blendPoints.start.blue)
+	             alpha:&(blendPoints.start.alpha)];
+
+	[endColor getRed:&(blendPoints.end.red)
+	           green:&(blendPoints.end.green)
+	            blue:&(blendPoints.end.blue)
+	           alpha:&(blendPoints.end.alpha)];
+
+	[startColor release];
+	[endColor release];
+
+	struct CGFunctionCallbacks callbacks = { 0, returnColorValue, NULL };
+	
+	CGFunctionRef function = CGFunctionCreate(
+		&blendPoints,	// void *info,
+		1,				// size_t domainDimension,
+		NULL,			// float const *domain,
+		4,				// size_t rangeDimension,
+		NULL,			// float const *range,
+		&callbacks		// CGFunctionCallbacks const *callbacks
+	);
+	if (function != NULL)
+	{
+		CGColorSpaceRef cspace = CGColorSpaceCreateDeviceRGB();
+		if (cspace != NULL)
+		{
+			CGPoint srcPt, dstPt;
+
+			//note that the comments in this section refer to the bounds of
+			//  the context, not the window. (e.g. 'top' means 'top of the
+			//  context', not 'top of the window'.)
+			if(direction == AIVertical)
+			{
+				//draw the gradient from the top middle to the bottom middle.
+				srcPt.x = dstPt.x = width / 2.0f;
+				srcPt.y = 0.0f;
+				dstPt.y = height;
+			}
+			else
+			{
+				//draw the gradient from the middle left to the middle right.
+				srcPt.y = dstPt.y = height / 2.0f;
+				srcPt.x = 0.0f;
+				dstPt.x = width;
+			}
+
+			CGShadingRef shading = CGShadingCreateAxial(
+				cspace,		// CGColorSpaceRef colorspace,
+				srcPt,		// CGPoint start,
+				dstPt,		// CGPoint end,
+				function,	// CGFunctionRef function,
+				false,		// bool extendStart,
+				false		// bool extendEnd
+			);
+
+			if (shading != NULL)
+			{
+				BZContextImageBridge *bridge = [BZContextImageBridge bridgeWithSize:inRect.size];
+				CGContextRef context = [bridge context];
+
+				if (context != NULL)
+				{
+					CGContextBeginPath(context); //Should clear the context of its current clipping path --chris
+
+					//Drawing stuff
+					CGPathRef pathToAdd = CreateCGPathWithNSBezierPath(&transform, inPath); //thanks boredzo :)
+					if(pathToAdd != NULL)
+					{
+						CGContextAddPath(context, pathToAdd);
+						CGContextClip(context);
+
+						CGContextDrawShading(context, shading);
+
+						NSImage *image = [bridge image];
+
+						[image drawInRect:inRect fromRect:NSMakeRect(0.0f,0.0f, width, height) operation:NSCompositeSourceOver fraction:1.0f];
+						
+						CGPathRelease(pathToAdd);
+					} /* if(pathToAdd != NULL) */
+					CGContextRelease(context);
+				} /* if(context) */
+				CGShadingRelease(shading);
+			} /* if(shading) */
+			CGColorSpaceRelease(cspace);
+		} /* if(cspace) */
+		CGFunctionRelease(function);
+	} /* if(function) */
+}
+
+#pragma mark C Functions
+
+//returnColorValue
+//
+//callback function for Quartz shaders.
+//simply returns a colour along a plane, where blendPoint = 0.0f represents the
+//  start of the plane and blendPoint = 1.0f represents the end of it.
+//1 input:   the blend-point.
+//4 outputs: the four components (RGBA) of the colour resulting from the blend.
+//reference constant: a pointer to a TwoColors value giving the start and end
+//  points of the aforementioned plane.
+void returnColorValue(void *refcon, const float *blendPoint, float *output)
+{
+	TwoColors *gradient = refcon;
+
+	BlendColors((FloatRGB *)output, &(gradient->start), &(gradient->end), *blendPoint);
+
+	/*slow version:
+	FloatRGB newColor;
+	
+	BlendColors(&newColor, &(gradient->start), &(gradient->end), *blendPoint);
+
+	output[0] = newColor.red;
+	output[1] = newColor.green;
+	output[2] = newColor.blue;
+	output[3] = newColor.alpha;
+	*/
+}
+
+//BlendColors
+//
+//blend two colours, a and b, biased by scale (0.0f-1.0f).
+//components, as is typical of Quartz, are 0.0f-1.0f also.
+//return value is 0 if successful or < 0 if not.
+
+int BlendColors(FloatRGB *result, FloatRGB *a, FloatRGB *b, float scale)
+{
+	//assure that the scale value is within the range of 0.0f-1.0f.
+	if      (scale > 1.0f) scale = 1.0f;
+	else if (scale < 0.0f) scale = 0.0f;
+
+	float scaleComplement = 1.0f - scale;
+	result->alpha = scale * b->alpha + scaleComplement * a->alpha;
+	scale		  = scale * a->alpha + scaleComplement * (1.0f - b->alpha);
+	scaleComplement = 1.0f - scale;
+	result->red   = scale * b->red   + scaleComplement * a->red;
+ 	result->green = scale * b->green + scaleComplement * a->green;
+	result->blue  = scale * b->blue  + scaleComplement * a->blue;
+
+	return 0;
 }
 
 @end
+
+//transform can be NULL. --boredzo
+CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBezierPath *bezierPath)
+{
+	CGMutablePathRef cgpath = CGPathCreateMutable();
+	if(cgpath != NULL)
+	{
+		int numElements = [bezierPath elementCount];
+		int curElement;
+		NSBezierPathElement elementType;
+		NSPoint points[3];
+
+		for(curElement = 0; curElement < numElements; curElement++)
+		{
+			//the points are copied into our points array. --boredzo
+			elementType = [bezierPath elementAtIndex:curElement associatedPoints:points];
+
+			switch(elementType)
+			{
+				case NSMoveToBezierPathElement:
+					CGPathMoveToPoint(cgpath, transform,
+						points[0].x, points[0].y);
+					break;
+				case NSLineToBezierPathElement:
+					CGPathAddLineToPoint(cgpath, transform,
+						points[0].x, points[0].y);
+					break;
+				case NSCurveToBezierPathElement:
+					CGPathAddCurveToPoint(cgpath, transform,
+						points[0].x, points[0].y,
+						points[1].x, points[1].y,
+						points[2].x, points[2].y);
+					break;
+				case NSClosePathBezierPathElement:
+					CGPathCloseSubpath(cgpath);
+					break;
+				default:
+					/*do something here? --boredzo
+					 *I don't know if there are any others... --colin
+					 *there aren't, but if elementAtIndex:associatedPoints:
+					 *  returns an invalid (error) value, we might want to
+					 *  report that to the user or something --boredzo
+					 */;
+			} //switch(elementType)
+		} //while(curElement++ < numElements)
+	} //if(cgpath != NULL)
+
+	return cgpath;
+}

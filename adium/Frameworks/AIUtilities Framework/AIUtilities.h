@@ -87,6 +87,7 @@
 #import "ESURLAdditions.h"
 #import "AIVerticallyCenteredTextCell.h"
 #import "AIViewAdditions.h"
+#import "BZContextImageBridge.h"
 #import "AIWindowAdditions.h"
 
 #import "IconFamily.h"
