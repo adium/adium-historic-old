@@ -51,7 +51,7 @@
 //Returns a description for this service (User readable)
 - (NSString *)description
 {
-    return(@"AIM / ICQ (TOC2)");
+    return(@"AIM / ICQ  (TOC2)");
 }
 
 // Return an ID, description, and image for handles owned by accounts of this type
