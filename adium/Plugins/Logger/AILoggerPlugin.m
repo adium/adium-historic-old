@@ -45,7 +45,10 @@
     //Install the 'view logs' menu item
     viewContactLogsMenuItem = [[NSMenuItem alloc] initWithTitle:@"View Contact's Logs" target:self action:@selector(showLogViewerToSelectedContact:) keyEquivalent:@"L"];
     [[owner menuController] addMenuItem:viewContactLogsMenuItem toLocation:LOC_Contact_Action];
-    
+
+    //Install a 'view logs' contextual menu item
+    viewContactLogsContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"View Logs" target:self action:@selector(showLogViewerToSelectedContact:) keyEquivalent:@""];
+    [[owner menuController] addContextualMenuItem:viewContactLogsContextMenuItem toLocation:Context_Contact_Action];
     
     //Create a logs directory
     logBasePath = [[[[[owner loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath] retain];
@@ -74,6 +77,11 @@
             [viewContactLogsMenuItem setTitle:@"View Contact's Logs"];
             valid = NO;
         }
+        
+    }else if(menuItem == viewContactLogsContextMenuItem){
+        AIListContact	*selectedContact = [[owner contactController] selectedContact];
+
+        valid = (selectedContact != nil);
     }
 
     return(valid);

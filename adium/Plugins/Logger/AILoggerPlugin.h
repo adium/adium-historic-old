@@ -23,6 +23,7 @@
 
     NSMenuItem	*logViewerMenuItem;
     NSMenuItem	*viewContactLogsMenuItem;
+    NSMenuItem	*viewContactLogsContextMenuItem;
 }
 
 @end

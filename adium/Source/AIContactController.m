@@ -64,6 +64,11 @@
     //
     contactInfoCategory = [[AIPreferenceCategory categoryWithName:@"" image:nil] retain];
 
+    //Add our get info contextual menu item
+    getInfoContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"Get Info" target:self action:@selector(showContactInfo:) keyEquivalent:@""];
+    [[owner menuController] addContextualMenuItem:getInfoContextMenuItem toLocation:Context_Contact_Action];
+    
+    
     //Load the contact ordering
     [self loadContactOrdering];
 

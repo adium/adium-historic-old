@@ -104,6 +104,18 @@
 }
 
 
+// Context menu ------------------------------------------------------------------------
+- (NSMenu *)menuForEvent:(NSEvent *)theEvent
+{
+    //Pass this on to our delegate
+    if([[self delegate] respondsToSelector:@selector(outlineView:menuForEvent:)]){
+        return([[self delegate] outlineView:self menuForEvent:theEvent]);
+    }else{
+        return(nil);
+    }
+}
+
+    
 // Transparency ------------------------------------------------------------------------
 - (void)configureTransparencyForWindow:(NSWindow *)inWindow
 {
