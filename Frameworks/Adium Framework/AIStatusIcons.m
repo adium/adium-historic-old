@@ -28,21 +28,19 @@ static NSMutableDictionary	*statusIcons[NUMBER_OF_STATUS_ICON_TYPES][NUMBER_OF_I
 static NSString				*statusIconBasePath = nil;
 static NSDictionary			*statusIconNames[NUMBER_OF_STATUS_ICON_TYPES];
 
-static NSString* statusNameForListObject(AIListObject *listObject);
+static NSString *statusNameForListObject(AIListObject *listObject);
 static AIStatusType statusTypeForListObject(AIListObject *listObject);
 
-static NSString* statusNameForChat(AIChat *inChat);
+static NSString *statusNameForChat(AIChat *inChat);
 
 static BOOL					statusIconsReady = NO;
 
 + (void)initialize
 {
 	if(self == [AIStatusIcons class]){
-		int i, j;
-		
 		//Allocate our status icon cache
-		for(i = 0; i < NUMBER_OF_STATUS_ICON_TYPES; i++){
-			for(j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++){
+		for(unsigned i = 0; i < NUMBER_OF_STATUS_ICON_TYPES; i++){
+			for(unsigned j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++){
 				statusIcons[i][j] = [[NSMutableDictionary alloc] init];
 			}
 		}
@@ -82,7 +80,7 @@ static BOOL					statusIconsReady = NO;
 }
 
 /* Copied from AIStatusController... this is called with a nil statusName frequently, so avoid making lots of extra method calls. */
-NSString* defaultNameForStatusType(AIStatusType statusType)
+NSString *defaultNameForStatusType(AIStatusType statusType)
 {
 	switch(statusType){
 		case AIAvailableStatusType:
@@ -209,7 +207,7 @@ NSString* defaultNameForStatusType(AIStatusType statusType)
 }
 
 //Returns the state icon for the passed chat (new content, tpying, ...)
-static NSString* statusNameForChat(AIChat *inChat)
+static NSString *statusNameForChat(AIChat *inChat)
 {
 	if([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
 		return(@"content");
@@ -241,7 +239,7 @@ static NSString* statusNameForChat(AIChat *inChat)
  * Finally, return nil if none of these conditions are met, indicating that the statusType's default
  * should be used.
  */
-static NSString* statusNameForListObject(AIListObject *listObject)
+static NSString *statusNameForListObject(AIListObject *listObject)
 {
 	NSString		*statusName;
 	AIStatusSummary	statusSummary = [listObject statusSummary];
