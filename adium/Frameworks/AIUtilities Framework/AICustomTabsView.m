@@ -43,6 +43,7 @@ static  NSImage			*tabDivider = nil;
 //Dragging
 - (NSArray *)acceptableDragTypes;
 - (NSPoint)_dropPointForTabOfWidth:(int)dragTabWidth hoveredAtScreenPoint:(NSPoint)inPoint dropIndex:(int *)outIndex;
+- (BOOL)allowsTabRearranging;
 
 //Tab Data Access (Guarded)
 - (void)rebuildTabCells;
@@ -69,6 +70,7 @@ static  NSImage			*tabDivider = nil;
     [super initWithFrame:frameRect];
     arrangeCellTimer = nil;
     removingLastTabHidesWindow = YES;
+	allowsTabRearranging = YES;
     tabCellArray = nil;
     selectedCustomTabCell = nil;
 
@@ -130,6 +132,18 @@ static  NSImage			*tabDivider = nil;
     return(allowsInactiveTabClosing);
 }
 
+//Is the user allowed to rearrange tabs within the window?
+- (void)setAllowsTabRearranging:(BOOL)inValue
+{
+	allowsTabRearranging = inValue;
+}
+
+- (BOOL)allowsTabRearranging
+{
+	return(allowsTabRearranging);
+}
+
+
 //Allow tab switching from the background
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
 {
@@ -187,6 +201,11 @@ static  NSImage			*tabDivider = nil;
 - (NSArray *)tabCells
 {
 	return tabCellArray; //Should be immutable?
+}
+
+- (NSTabView *)tabView
+{
+	return tabView;
 }
 
 //Reposition a tab
@@ -594,7 +613,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		
 		//Perform a tab drag
 		if(lastClickLocation.x != -1 && lastClickLocation.y != -1){ //See note below about lastClickLocation
-			if(dragCell = [self tabAtPoint:lastClickLocation]){
+			if((dragCell = [self tabAtPoint:lastClickLocation])){
 				[self stopCursorTracking];
 
 				[dragCell retain];
