@@ -85,3 +85,4 @@
 #import "ESBorderlessWindow.h"
 #import "AIWindowAdditions.h"
 #import "AIFileManagerAdditions.h"
+#import "ESTextViewWithPlaceholder.h"
