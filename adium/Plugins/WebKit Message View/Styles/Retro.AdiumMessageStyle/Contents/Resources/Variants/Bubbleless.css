@@ -1,0 +1,105 @@
+body {
+	margin: 0px 0px 0px 0px;
+}
+
+#Chat {
+	overflow: hidden;
+}
+
+#Chat .context .message {
+	background: #FFF;
+	color: gray;
+}
+
+.chatbox {
+	margin: 3px 0 3px 0;
+}
+
+.buddyicon {
+	display: none;
+}
+
+.name {
+	margin: 0px 0px 2px 6px;
+	font: 11px "Lucida Grande";
+	font-weight: bold;
+	height: 13px;
+}
+
+.incoming .name {
+	color: #00207F;
+}
+
+.outgoing .name {
+	color: #007f00;
+}
+
+.incoming.context .name {
+	color: #516cbb;
+}
+
+.outgoing.context .name {
+	color: #28cb28;
+}
+
+.timestamp {
+	float: right;
+	font: 10px "Helvetica";
+	font-weight: normal;
+	color: #666;
+	display: inline;
+	margin: 1px 2px 0 0px;
+}
+
+.timestamp.additional {
+	display: none;
+}
+
+.message {
+	margin: 0 0 0 0px;
+	padding: 3px 11px;
+	position: relative;
+}
+
+.status_message {
+	text-align: center;
+	font: 11px Helvetica, sans-serif;
+	color: gray;
+}
+
+.message p {
+	margin: 0;
+	overflow: hidden;
+}
+
+.message p.additional {
+	margin: 2px 0 0;
+	padding: 2px 0 0;
+	border-style: solid;
+	border-width: 1px 0 0;
+}
+
+.incoming p.additional {
+	border-color: #b7cee6;
+}
+
+.outgoing p.additional {
+	border-color: #b8e6bf;
+}
+
+.incoming .message {
+	background: #e5f2ff;
+	border-top: 1px solid #6b8fb3;
+	border-bottom: 1px solid #6b8fb3;
+}
+
+.outgoing .message {
+	background: #e6ffea;
+	border-top: 1px solid #6bb377;
+	border-bottom: 1px solid #6bb377;
+}
+
+/*	border-style: solid;
+	border-width: 1px 0;
+	border-color: #6b8fb3;
+*/

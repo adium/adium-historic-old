@@ -35,6 +35,14 @@ body {
 	color: #007f00;
 }
 
+.incoming.context .name {
+	color: #516cbb;
+}
+
+.outgoing.context .name {
+	color: #28cb28;
+}
+
 .timestamp {
 	float: right;
 	font: 10px "Helvetica";
