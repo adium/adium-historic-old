@@ -113,6 +113,11 @@
 	return([objectArray containsObject:inObject]);
 }
 
+- (NSArray *)containedObjects
+{
+	return(objectArray);
+}
+
 //Retrieve the index of an object
 - (int)indexOfObject:(AIListObject *)inObject
 {

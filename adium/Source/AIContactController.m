@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.88 2004/01/17 21:01:25 adamiser Exp $
+// $Id: AIContactController.m,v 1.89 2004/01/17 21:34:02 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -579,15 +579,20 @@
 //Contact list editing -------------------------------------------------------------------------------------------------
 - (void)removeListObjects:(NSArray *)objectArray fromGroup:(AIListGroup *)group
 {
-	NSEnumerator	*accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
+	NSEnumerator	*objectEnumerator;
+	AIListObject	*listObject;
+	NSEnumerator	*accountEnumerator;
 	AIAccount		*account;
 
-	//Remove from accounts
+	//
+	if(!group) group = contactList;
+	
+	//Remove the contacts from any online accounts
+	accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
 	while(account = [accountEnumerator nextObject]){
 		NSMutableArray	*objectsOnAccount = [NSMutableArray array];
-		NSEnumerator	*objectEnumerator = [objectArray objectEnumerator];
-		AIListObject	*listObject;
-		
+
+		objectEnumerator = [objectArray objectEnumerator];
 		while(listObject = [objectEnumerator nextObject]){
 			if([listObject isKindOfClass:[AIListContact class]]){
 				if([[listObject remoteGroupArray] objectWithOwner:account]){
@@ -600,20 +605,30 @@
 			[account removeListObjects:objectsOnAccount];
 		}
 	}
-	
-	//Remove from the contact list
-	{
-		NSEnumerator	*objectEnumerator = [objectArray objectEnumerator];
-		AIListObject	*listObject;
-		
-		while(listObject = [objectEnumerator nextObject]){
-			[group removeObject:listObject];
-			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged
-																			 object:listObject
-																		   userInfo:[NSDictionary dictionaryWithObject:group forKey:@"ContainingGroup"]];
+
+	//Remove the contacts and groups from our list
+	objectEnumerator = [objectArray objectEnumerator];
+	while(listObject = [objectEnumerator nextObject]){
+		//If this is a group, remove it's contents first
+		if([listObject isKindOfClass:[AIListGroup class]]){
+			[self removeListObjects:[[[listObject containedObjects] copy] autorelease] fromGroup:listObject];
 		}
+		
+		//Remove this object
+		NSLog(@"Removing %@",[listObject UID]);
+		[group removeObject:listObject];
+		if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged
+																		 object:listObject
+																	   userInfo:[NSDictionary dictionaryWithObject:group forKey:@"ContainingGroup"]];
 	}
 }
 
 @end
+
+
+
+
+
+
+
 
