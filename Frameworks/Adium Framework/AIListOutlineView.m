@@ -288,16 +288,16 @@ do this when running in 10.2
 */
 - (void)drawRect:(NSRect)rect
 {	
-	/* #################### More Crappy Code ###################
-	This time for 10.3 compatability.  10.3 does NOT invalidate the shadow
-	of a transparent window correctly, forcing us to do it manually each
-	time the window content is changed.  This is absolutely horrible for
-	performance, but the only way to avoid shadow ghosting in 10.3 :(
-																	 */
-	if(updateShadowsWhileDrawing) [[self window] compatibleInvalidateShadow];
-	
 	if(![NSApp isOnPantherOrBetter]) _drawBackground = YES;
 	[super drawRect:rect];
+
+	/* #################### More Crappy Code ###################
+		This time for 10.3 compatability.  10.3 does NOT invalidate the shadow
+		of a transparent window correctly, forcing us to do it manually each
+		time the window content is changed.  This is absolutely horrible for
+		performance, but the only way to avoid shadow ghosting in 10.3 :(
+																		 */
+	if(updateShadowsWhileDrawing) [[self window] compatibleInvalidateShadow];
 }
 - (void)drawRow:(int)row clipRect:(NSRect)rect
 {
