@@ -45,7 +45,7 @@
     [self preferencesChanged:nil];
 
     //Our preference view
-    preferences = [[AIIdleTimeDisplayPreferences idleTimeDisplayPreferences] retain];
+    preferences = [[AIIdleTimeDisplayPreferences preferencePane] retain];
     [[adium contactController] registerListObjectObserver:self];
 
     //Observe

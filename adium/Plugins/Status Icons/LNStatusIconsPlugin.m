@@ -17,7 +17,7 @@
     [self preferencesChanged:nil];
 
     //Our preference view
-    preferences = [[LNStatusIconsPreferences statusIconsPreferences] retain];
+    preferences = [[LNStatusIconsPreferences preferencePane] retain];
     [[adium contactController] registerListObjectObserver:self];
 
     //Observe

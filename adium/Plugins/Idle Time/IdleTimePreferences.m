@@ -222,9 +222,7 @@
 {
 	if(notification == nil || ([[[notification userInfo] objectForKey:@"Group"] isEqualTo:PREF_GROUP_AWAY_MESSAGES] &&
 							   [[[notification userInfo] objectForKey:@"Key"] isEqualTo:KEY_SAVED_AWAYS])) {
-		if (view_prefView){
-			[self configureAutoAwayPreferences];
-		}
+		[self configureAutoAwayPreferences];
 	}
 }
 
