@@ -1942,22 +1942,23 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	
 	//Verify the buddy does not already exist and create it
 	GaimBuddy *buddy = gaim_find_buddy(account,buddyUID);
-	if(!buddy){
-		buddy = gaim_buddy_new(account, buddyUID, NULL);
-		performAdd = YES;
-		
-	}else{
+	if(buddy){
 		GaimGroup *oldGroup = gaim_find_buddys_group(buddy);
 		//If the buddy was in our strangers group before, remove from gaim's internal list
-		if (oldGroup && (strcmp(GAIM_ORPHANS_GROUP_NAME,oldGroup->name) != 0)){
+		if ((oldGroup != nil) && (strcmp(GAIM_ORPHANS_GROUP_NAME,oldGroup->name) == 0)){
 			gaim_blist_remove_buddy(buddy);
-
+			buddy = nil;
 			performAdd = YES;
 		}
+	}else{
+		performAdd = YES;	
 	}
 	
 	if (performAdd){
 		//Add the buddy locally to libgaim and then to the serverside list
+		if(!buddy){
+			buddy = gaim_buddy_new(account, buddyUID, NULL);
+		}
 		gaim_blist_add_buddy(buddy, NULL, group, NULL);
 		serv_add_buddy(account->gc, buddyUID, group);
 	}
