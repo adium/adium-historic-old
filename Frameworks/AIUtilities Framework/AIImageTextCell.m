@@ -32,22 +32,22 @@
 //Init
 - (id)init
 {
-    [super init];
+	if((self = [super init])) {
+		font = nil;
+		subString = nil;
+		maxImageWidth = DEFAULT_MAX_IMAGE_WIDTH;
+	}
 
-    font = nil;
-    subString = nil;
-    maxImageWidth = DEFAULT_MAX_IMAGE_WIDTH;
-		
-    return(self);
+	return self;
 }
 
 //Dealloc
 - (void)dealloc
 {
-    [font release];
+	[font release];
 	[subString release];
 
-    [super dealloc];
+	[super dealloc];
 }
 
 //Copy
@@ -68,22 +68,22 @@
 //Font used to display our text
 - (void)setFont:(NSFont *)obj
 {
-    if(font != obj){
-        [font release];
-        font = [obj retain];
-    }
+	if(font != obj){
+		[font release];
+		font = [obj retain];
+	}
 }
 - (NSFont *)font{
-    return(font);
+	return(font);
 }
 
 //Substring (Displayed in gray below our main string)
 - (void)setSubString:(NSString *)inSubString
 {
-    if(subString != inSubString){
-        [subString release];
-        subString = [inSubString retain];
-    }
+	if(subString != inSubString){
+		[subString release];
+		subString = [inSubString retain];
+	}
 }
 
 - (void)setMaxImageWidth:(float)inWidth
@@ -94,8 +94,8 @@
 - (NSSize)cellSizeForBounds:(NSRect)cellFrame
 {
 	NSString	*title = [self objectValue];
-    NSImage		*image = [self image];
-	NSSize		cellSize = NSMakeSize(0,0);
+	NSImage		*image = [self image];
+	NSSize		cellSize = NSZeroSize;
 	
 	if(image){
 		NSSize	destSize = [image size];
@@ -127,17 +127,17 @@
 		NSParagraphStyle	*paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																	 lineBreakMode:NSLineBreakByTruncatingTail];
 		
-        //
-        if(font){
-            attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+		//
+		if(font){
+			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 				paragraphStyle, NSParagraphStyleAttributeName,
 				font, NSFontAttributeName,
 				nil];
-        }else{
-            attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+		}else{
+			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 				paragraphStyle, NSParagraphStyleAttributeName,
 				nil];
-        }
+		}
 		
 		titleSize = [title sizeWithAttributes:attributes];
 		
@@ -146,7 +146,7 @@
 
 			attributes = [NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:10]
 													 forKey:NSFontAttributeName];
-            subStringSize = [subString sizeWithAttributes:attributes];
+			subStringSize = [subString sizeWithAttributes:attributes];
 			
 			//Use the wider of the two strings as the required width
 			if(subStringSize.width > titleSize.width){
@@ -173,28 +173,28 @@
 //Draw
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-    NSString	*title = [self objectValue];
-    NSImage		*image = [self image];
-    BOOL 	highlighted;
+	NSString	*title = [self objectValue];
+	NSImage		*image = [self image];
+	BOOL 	highlighted;
 
 //	[super drawInteriorWithFrame:cellFrame inView:controlView];
 	
-    highlighted = [self isHighlighted];
-    if(highlighted){
-        [self _drawHighlightWithFrame:cellFrame inView:controlView];
-    }
+	highlighted = [self isHighlighted];
+	if(highlighted){
+		[self _drawHighlightWithFrame:cellFrame inView:controlView];
+	}
 
-    //Draw the cell's image
-    if(image != nil){
-        NSSize	size = [image size];
-        NSSize  destSize = size;
+	//Draw the cell's image
+	if(image != nil){
+		NSSize	size = [image size];
+		NSSize  destSize = size;
 		NSPoint	destPoint = cellFrame.origin;
 
-        //Adjust the rects
-        destPoint.y += 1;
-        destPoint.x += 2;
+		//Adjust the rects
+		destPoint.y += 1;
+		destPoint.x += 2;
 
-        //Center image vertically, or scale as needed
+		//Center image vertically, or scale as needed
 		if (destSize.height > cellFrame.size.height){
 			 float proportionChange = cellFrame.size.height / size.height;
 			 destSize.height = cellFrame.size.height;
@@ -228,26 +228,26 @@
 			[image setFlipped:NO];
 		}
 	}
-    
-    //Draw the cell's text
-    if(title != nil){
-        NSColor			*textColor;
-        NSDictionary	*attributes;
-        int				stringHeight;
+	
+	//Draw the cell's text
+	if(title != nil){
+		NSColor			*textColor;
+		NSDictionary	*attributes;
+		float			 stringHeight;
 
-        //Determine the correct text color
-        if(highlighted){
-            textColor = [NSColor alternateSelectedControlTextColor]; //Draw the text inverted
-        }else{
-            if([self isEnabled]){
-                textColor = [NSColor controlTextColor]; //Draw the text regular
-            }else{
-                textColor = [NSColor grayColor]; //Draw the text disabled
-            }
-        }
+		//Determine the correct text color
+		if(highlighted){
+			textColor = [NSColor alternateSelectedControlTextColor]; //Draw the text inverted
+		}else{
+			if([self isEnabled]){
+				textColor = [NSColor controlTextColor]; //Draw the text regular
+			}else{
+				textColor = [NSColor grayColor]; //Draw the text disabled
+			}
+		}
 
-        //Adjust if a substring is present
-        if(subString) cellFrame.size.height /= 2;
+		//Adjust if a substring is present
+		if(subString) cellFrame.size.height /= 2;
 
 		//Padding
 		cellFrame.origin.x += IMAGE_TEXT_PADDING;
@@ -257,48 +257,51 @@
 		NSParagraphStyle	*paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																	 lineBreakMode:NSLineBreakByTruncatingTail];
 		
-        //
-        if(font){
-            attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+		//
+		if(font){
+			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 				paragraphStyle, NSParagraphStyleAttributeName,
 				font, NSFontAttributeName,
 				textColor, NSForegroundColorAttributeName,
 				nil];
-        }else{
-            attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+		}else{
+			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 				paragraphStyle, NSParagraphStyleAttributeName,
 				textColor, NSForegroundColorAttributeName,
 				nil];
-        }
+		}
 
-        //Calculate the centered rect
-        stringHeight = [title sizeWithAttributes:attributes].height;
-        if(stringHeight < cellFrame.size.height){
-            cellFrame.origin.y += (cellFrame.size.height - stringHeight) / 2.0;
-        }
-        
-        //Draw the string
-        [title drawInRect:cellFrame withAttributes:attributes];
+		//Calculate the centered rect
+		stringHeight = [title sizeWithAttributes:attributes].height;
+		if(stringHeight < cellFrame.size.height){
+			cellFrame.origin.y += (cellFrame.size.height - stringHeight) / 2.0;
+		}
 
-        //Draw the substring
-        if(subString){
-            //Determine the correct text color
-            if(highlighted){
-                textColor = [NSColor colorWithCalibratedWhite:0.8 alpha:1.0]; //Draw the text inverted
-            }else{
-                if([self isEnabled]){
-                    textColor = [NSColor colorWithCalibratedWhite:0.4 alpha:1.0]; //Draw the text regular
-                }else{
-                    textColor = [NSColor colorWithCalibratedWhite:0.8 alpha:1.0]; //Draw the text disabled
-                }
-            }
-            
-            cellFrame.origin.y += (cellFrame.size.height);
+		//Draw the string
+		[title drawInRect:cellFrame withAttributes:attributes];
 
-            attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont systemFontOfSize:10], NSFontAttributeName, textColor, NSForegroundColorAttributeName, nil];
-            [subString drawInRect:cellFrame withAttributes:attributes];
-        }
-    }
+		//Draw the substring
+		if(subString){
+			//Determine the correct text color
+			if(highlighted){
+				textColor = [NSColor colorWithCalibratedWhite:0.8 alpha:1.0]; //Draw the text inverted
+			}else{
+				if([self isEnabled]){
+					textColor = [NSColor colorWithCalibratedWhite:0.4 alpha:1.0]; //Draw the text regular
+				}else{
+					textColor = [NSColor colorWithCalibratedWhite:0.8 alpha:1.0]; //Draw the text disabled
+				}
+			}
+
+			cellFrame.origin.y += (cellFrame.size.height);
+
+			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+				[NSFont systemFontOfSize:10], NSFontAttributeName,
+				textColor, NSForegroundColorAttributeName,
+				nil];
+			[subString drawInRect:cellFrame withAttributes:attributes];
+		}
+	}
 }
 
 @end

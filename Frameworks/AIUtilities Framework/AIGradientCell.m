@@ -16,11 +16,11 @@
 
 - (id)init
 {
-	[super init];
-	
-	drawsGradient = NO;
-	ignoresFocus = NO;
-	
+	if((self = [super init])) {
+		drawsGradient = NO;
+		ignoresFocus = NO;
+	}
+
 	return self;
 }
 
@@ -50,7 +50,7 @@
 	return(ignoresFocus);
 }
 
-//Draw
+//Draw with the selected-control colours.
 - (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
 	NSRect goodRect = cellFrame;

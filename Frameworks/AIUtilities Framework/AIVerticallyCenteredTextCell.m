@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /*
-    A text cell with vertically centered text
+ *A text cell with vertically centered text
  */
 
 #import "AIVerticallyCenteredTextCell.h"
@@ -24,62 +24,62 @@
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-    NSFont		*font = [self font];
-    NSString	*title = [self stringValue];
-    NSColor 	*highlightColor;
-    BOOL 		highlighted;
+	NSFont		*font  = [self font];
+	NSString	*title = [self stringValue];
+	NSColor 	*highlightColor;
+	BOOL 		 highlighted;
 	
-    highlightColor = [self highlightColorWithFrame:cellFrame inView:controlView];
-    highlighted = [self isHighlighted];
-    if(highlighted){
-        [highlightColor set];
-        NSRectFill(cellFrame);
-    }
+	highlightColor = [self highlightColorWithFrame:cellFrame inView:controlView];
+	highlighted = [self isHighlighted];
+	if(highlighted){
+		[highlightColor set];
+		NSRectFill(cellFrame);
+	}
 
-    //Draw the cell's text
-    if(title != nil){
-        NSDictionary		*attributes;
-        int			stringHeight;
-        NSColor			*textColor;
+	//Draw the cell's text
+	if(title != nil){
+		NSDictionary	*attributes;
+		float			 stringHeight;
+		NSColor			*textColor;
 
-        // If we are highlighted AND are drawing with the alternate color, then we want to draw our text with the alternate text color.
-        // For any other case, we should draw using our normal text color.
-        if(highlighted && [highlightColor isEqual:[NSColor alternateSelectedControlColor]]){
-            textColor = [NSColor alternateSelectedControlTextColor]; //Draw the text inverted
-        }else{
-            if([self isEnabled]){
-                textColor = [NSColor controlTextColor]; //Draw the text regular
-            }else{
-                textColor = [NSColor grayColor]; //Draw the text disabled
-            }
-        }
+		// If we are highlighted AND are drawing with the alternate color, then we want to draw our text with the alternate text color.
+		// For any other case, we should draw using our normal text color.
+		if(highlighted && [highlightColor isEqual:[NSColor alternateSelectedControlColor]]){
+			textColor = [NSColor alternateSelectedControlTextColor]; //Draw the text inverted
+		}else{
+			if([self isEnabled]){
+				textColor = [NSColor controlTextColor]; //Draw the text regular
+			}else{
+				textColor = [NSColor grayColor]; //Draw the text disabled
+			}
+		}
 
 		//Paragraph style for alignment and clipping
 		NSMutableParagraphStyle *style = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 		[style setAlignment:[self alignment]];
 		[style setLineBreakMode:NSLineBreakByTruncatingTail];
 
-        //
-        if(font){
-            attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+		//
+		if(font){
+			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 				font, NSFontAttributeName,
 				style, NSParagraphStyleAttributeName,
 				textColor, NSForegroundColorAttributeName,nil];
-        }else{
-            attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+		}else{
+			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 				style, NSParagraphStyleAttributeName,
 				textColor, NSForegroundColorAttributeName,nil];
-        }
+		}
 
-        //Calculate the centered rect
-        stringHeight = [title sizeWithAttributes:attributes].height;
-        if(stringHeight < cellFrame.size.height){
-            cellFrame.origin.y += (cellFrame.size.height - stringHeight) / 2.0;
-        }
+		//Calculate the centered rect
+		stringHeight = [title sizeWithAttributes:attributes].height;
+		if(stringHeight < cellFrame.size.height){
+			cellFrame.origin.y += (cellFrame.size.height - stringHeight) / 2.0;
+		}
 
-        //Draw the string
-        [title drawInRect:cellFrame withAttributes:attributes];
-    }
+		//Draw the string
+		[title drawInRect:cellFrame withAttributes:attributes];
+	}
 }
 
 @end
