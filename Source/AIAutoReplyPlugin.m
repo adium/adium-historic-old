@@ -18,7 +18,8 @@
 #import "AIContentController.h"
 #import "AIPreferenceController.h"
 #import "AIStatusController.h"
-#import <AIUtilities/BZArrayAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
+#import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIContentObject.h>
@@ -54,7 +55,17 @@
 								   selector:@selector(activeStatusStateChanged:)
 									   name:AIActiveStatusStateChangedNotification
 									 object:nil];
-	[self activeStatusStateChanged:nil];
+
+	//Add observers
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(didReceiveContent:) 
+									   name:CONTENT_MESSAGE_RECEIVED object:nil];
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(didSendContent:)
+									   name:CONTENT_MESSAGE_SENT object:nil];
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(chatWillClose:)
+									   name:Chat_WillClose object:nil];
 }
 
 /*!
@@ -71,31 +82,12 @@
 /*!
  * @brief Update monitoring in response to a status change
  *
- * Update our chat monitoring in response to account status changes.  If there are no accounts with an auto-reply
- * flag set we stop monitoring messages for optimal performance.
+ * Update our chat monitoring in response to account status changes.  
+ *
+ * TODO: If there are no accounts with an auto-reply flag set we SHOULD stop monitoring messages for optimal performance.
  */
 - (void)activeStatusStateChanged:(NSNotification *)notification
 {
-	AIStatus	*statusState = (notification ? [notification object] : [[adium statusController] activeStatusState]);
-
-	//Stop observing chat
-	[[adium notificationCenter] removeObserver:self name:CONTENT_MESSAGE_RECEIVED object:nil];
-	[[adium notificationCenter] removeObserver:self name:CONTENT_MESSAGE_SENT object:nil];
-	[[adium notificationCenter] removeObserver:self name:Chat_WillClose object:nil];
-	
-	//Observe chat if an auto-reply is active
-	if([statusState hasAutoReply]){
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(didReceiveContent:) 
-										   name:CONTENT_MESSAGE_RECEIVED object:nil];
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(didSendContent:)
-										   name:CONTENT_MESSAGE_SENT object:nil];
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(chatWillClose:)
-										   name:Chat_WillClose object:nil];
-	}
-	
 	//Reset our list of contacts who have already received an auto-reply
 	[receivedAutoReply release];
 	receivedAutoReply = [[NSMutableArray alloc] init];
@@ -140,7 +132,7 @@
 	AIContentMessage	*responseContent;
 	NSAttributedString 	*autoReply;
 
-	if(autoReply = [[[adium statusController] activeStatusState] autoReply]){
+	if(autoReply = [[[chat account] statusState] autoReply]){
 		responseContent = [AIContentMessage messageInChat:chat
 											   withSource:source
 											  destination:destination
