@@ -20,7 +20,6 @@
 #import "AIDockController.h"
 #import "AIPreferenceController.h"
 #import "ESContactAlertsController.h"
-#import "AIStatusOverlayPreferences.h"
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>
