@@ -37,8 +37,7 @@
     NSColor			*labelGroupColor;
     
     float			spacing;
-    int				lastSelectedRow;
-    
+	
     float			desiredWidth[3];
     AIListObject	*hadMax[3];
     
@@ -48,7 +47,6 @@
 - (void)setFont:(NSFont *)inFont;
 - (NSFont *)font;
 - (NSSize)desiredSize;
-- (AIListObject *)listObject;
 
 - (void)setColor:(NSColor *)inColor;
 - (NSColor *)color;
