@@ -388,7 +388,8 @@ int HTMLEquivalentForFontSize(int fontSize)
 		}
     }
 
-    [AIHTMLDecoder decodeHTMLEntities:attrString];
+#warning There is no 'decodeHTMLEntities:' method.  Commented for now to stop the assertions  - Adam I (01/09/03)
+//    [AIHTMLDecoder decodeHTMLEntities:attrString];
     
     return([attrString autorelease]);
 }
