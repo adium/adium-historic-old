@@ -27,19 +27,23 @@ print " Done.\n";
 print "2.0 Logs ";
 $path = "$ENV{HOME}/Library/Application Support/Adium 2.0/Users/";
 chdir "$path" or die qq{$path};
-foreach my $user (glob '*') {
-    chdir "$user/Logs" or die or die qq{Bad user $user};
-    foreach my $folder (glob '*') {
-        chdir $folder;
-        foreach my $file (glob '*.bak') {
-            my $return = $file;
-            $return =~ s/.bak$//;
+foreach  my $account (glob '*') {
+    chdir "$account/Logs" or die;
+    foreach my $user (glob '*') {
+        chdir "$user" or die or die qq{Bad user $user};
+        foreach my $folder (glob '*') {
+            chdir $folder or die;
+            foreach my $file (glob '*.bak') {
+                my $return = $file;
+                $return =~ s/.bak$//;
 
-            system("mv", $file, $return);
+                system("mv", $file, $return);
+            }
+            chdir ".." or die;
         }
-        chdir "$path/$user";
+        print " .";
+        chdir ".." or die;
     }
-    print " .";
-    chdir "$path";
+    chdir "$path" or die;
 }
 print " Done.\n";
