@@ -22,6 +22,8 @@
 #define NEW_USER_NAME		@"New User"		//Default name of a new user
 #define LOGIN_WINDOW_NIB	@"LoginSelect"		//Filename of the login window nib
 
+#define	LOGIN_TIMEOUT		10.0
+
 @interface AILoginWindowController (PRIVATE)
 - (id)initWithOwner:(id)inOwner windowNibName:(NSString *)windowNibName;
 - (void)dealloc;
@@ -38,6 +40,7 @@
 - (void)windowDidLoad;
 - (BOOL)shouldCascadeWindows;
 - (BOOL)windowShouldClose:(id)sender;
+- (void)disableLoginTimeout;
 @end
 
 @implementation AILoginWindowController
@@ -132,6 +135,8 @@
 // Display the user list edit sheet
 - (IBAction)editUsers:(id)sender
 {
+	[self disableLoginTimeout];
+	
     [NSApp beginSheet:panel_userListEditor modalForWindow:[self window] modalDelegate:self didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:) contextInfo:nil];
 }
 
@@ -180,6 +185,8 @@
     [tableView_editableUserList selectRow:newRow byExtendingSelection:NO];
     [tableView_editableUserList scrollRowToVisible:newRow];
     [tableView_editableUserList editColumn:0 row:newRow withEvent:nil select:YES];
+	
+	[self disableLoginTimeout];	
 }
 
 // Rename a user
@@ -191,7 +198,16 @@
 
         //Refresh our user list
         [self updateUserList];
+		
+		if(loginTimer){
+			[loginTimer invalidate]; [loginTimer release]; loginTimer = nil;
+		}		
     }
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)inNotification
+{
+[self disableLoginTimeout];
 }
 
 // Delete the selected user
@@ -205,6 +221,8 @@
 
     //Refresh our user list
     [self updateUserList];
+	
+	[self disableLoginTimeout];	
 }
 
 // set up the window before it is displayed
@@ -235,6 +253,15 @@
     //Set login so it's called when the user double clicks a name
     [tableView_userList setDoubleAction:@selector(login:)];
 
+	loginTimer = [[NSTimer scheduledTimerWithTimeInterval:LOGIN_TIMEOUT
+												   target:self
+												 selector:@selector(login:)
+												 userInfo:nil
+												  repeats:NO] retain];
+	
+	[tableView_userList setDelegate:self];
+	[tableView_userList setDataSource:self];
+	
 }
 
 // prevent the system from moving our window around
@@ -246,7 +273,15 @@
 // called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
+	[loginTimer invalidate]; [loginTimer release]; loginTimer = nil;
     return(YES);
+}
+
+- (void)disableLoginTimeout
+{
+	if(loginTimer){
+		[loginTimer invalidate]; [loginTimer release]; loginTimer = nil;
+	}
 }
 
 @end

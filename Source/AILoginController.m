@@ -90,14 +90,18 @@
 		- LOGIN_LAST_USER does not indicate a valid user
 	 */
 	if(!userName){
+		BOOL userRequestedShowWindow = NO;
+		
 		if(([NSEvent optionKey]) ||
-		   ([[loginDict objectForKey:LOGIN_SHOW_WINDOW] boolValue]) || 
+		   (userRequestedShowWindow = [[loginDict objectForKey:LOGIN_SHOW_WINDOW] boolValue]) || 
 		   (!(userName = [loginDict objectForKey:LOGIN_LAST_USER]))){
 
 			//Prompt for the user
 			loginWindowController = [[AILoginWindowController loginWindowControllerWithOwner:self] retain];
 			[loginWindowController showWindow:nil];
-
+			
+			//If the user always wants to see the window, disable the login timeout
+			if(userRequestedShowWindow) [loginWindowController disableLoginTimeout];
 		}
     }
 
