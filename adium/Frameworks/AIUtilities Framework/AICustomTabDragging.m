@@ -147,10 +147,24 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 	if(destTabView == sourceTabBar){
 		//Tab re-arranging we handle internally
 		int oldIndex = [[sourceTabBar tabView] indexOfTabViewItem:[dragTabCell tabViewItem]];
-		[sourceTabBar moveTab:dragTabCell toIndex:destIndex selectTab:selectTabAfterDrag];
+
 		
-		if( ![sourceTabBar allowsTabRearranging] && oldIndex != NSNotFound )
-			[sourceTabBar moveTab:dragTabCell toIndex:oldIndex selectTab:selectTabAfterDrag];
+		if ((oldIndex == destIndex) || !([sourceTabBar allowsTabRearranging])){
+			//Rebuild our tab list to add the tab back to our list
+			[sourceTabBar rebuildTabCells];			
+			if(selectTabAfterDrag){
+				[[sourceTabBar tabView] selectTabViewItem:[dragTabCell tabViewItem]];
+			}
+			
+		}else{
+			[sourceTabBar moveTab:dragTabCell toIndex:destIndex selectTab:selectTabAfterDrag];
+
+			/*
+			if( ![sourceTabBar allowsTabRearranging] && oldIndex != NSNotFound )
+				[sourceTabBar moveTab:dragTabCell toIndex:oldIndex selectTab:selectTabAfterDrag];
+			 */
+		}
+		
 
 	}else{
 			//Moving tabs between bars is handled by the tab view delegate.  It probably shouldn't be done this way.

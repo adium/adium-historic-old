@@ -46,7 +46,6 @@ static  NSImage			*tabDivider = nil;
 - (BOOL)allowsTabRearranging;
 
 //Tab Data Access (Guarded)
-- (void)rebuildTabCells;
 - (void)removeTabCell:(AICustomTabCell *)inCell;
 - (NSArray *)tabCellArray;
 
