@@ -113,6 +113,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     [toolbarItems release];
     [loadedPanes release];
     [loadedAdvancedPanes release];
+    [_advancedCategoryArray release];
 
     [super dealloc];
 }

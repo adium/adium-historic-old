@@ -92,12 +92,6 @@ static AILogViewerWindowController *sharedInstance = nil;
         [[self window] center];
     }
 
-    //Colors and alternating rows
-//    [outlineView_contacts setBackgroundColor:[NSColor colorWithCalibratedRed:(250.0/255.0) green:(250.0/255.0) blue:(250.0/255.0) alpha:1.0]];
-//    [outlineView_contacts setDrawsAlternatingRows:YES];
-//    [outlineView_contacts setAlternatingRowColor:[NSColor colorWithCalibratedRed:(231.0/255.0) green:(243.0/255.0) blue:(255.0/255.0) alpha:1.0]];
-//    [outlineView_contacts setNeedsDisplay:YES];
-
     //Scan the user's logs    
     [self scanAvailableLogs];
 
