@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.69 2004/04/24 06:34:28 earthmkii Exp $
+$Id: ToDoList.txt,v 1.70 2004/04/26 04:23:53 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -54,6 +54,7 @@ Unconfirmed bugs
 * Yahoo ignore list is being ignored?
 * Users are still reporting issues with the contact list display format pref not being correct on launch.
 * Message history and 'ignore formatting' option is doing some odd stuff (ignoring the ignore?)
+* We can crash MSN Messenger by sending it links copied from safari?
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
@@ -90,7 +91,8 @@ Message Window:
 	+ Insert emoticon menu item, contextual menu item [Brian]
             // Brian: if you want to work on it before I get back to it I'll send the files, just needs insert functionality and some clean-up (namely dynamism)
 	+ Tab-complete usernames in messages and chat
-	
+	+ Make 'save as' menu item work	
+
 Contact List Display:
 	+ Small contact list icon to identify mobile device users
 	+ With offline contacts visible, hide the group counting 'visible' value.
