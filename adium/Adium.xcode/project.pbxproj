@@ -3660,6 +3660,8 @@
 				4BD675A006001E5C0049CAF7,
 				4BD675A306001E730049CAF7,
 				4BD675A506001E750049CAF7,
+				4B74D3290602629300C21B7C,
+				4B74D32F0602633700C21B7C,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3958,6 +3960,7 @@
 				4BD675A706001E760049CAF7,
 				4BD675A806001E760049CAF7,
 				4BD6771E06002FD50049CAF7,
+				4B74D3340602641C00C21B7C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4267,6 +4270,8 @@
 				4BD675A106001E5D0049CAF7,
 				4BD675A406001E740049CAF7,
 				4BD675A606001E750049CAF7,
+				4B74D32A0602629300C21B7C,
+				4B74D3300602633700C21B7C,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7715,6 +7720,7 @@
 				F510B76D03339ED501A8010A,
 				4B81631203D1C24E00A8010A,
 				4BE8E5390483B59800A8010A,
+				4B74D3240602627200C21B7C,
 				BF7BF5E7052BA0EF00000202,
 				4B1332140459B9A000A8010A,
 				344EE9210574504B000F342B,
@@ -9492,6 +9498,93 @@
 			path = "Frameworks/AIUtilities Framework/AIFlexibleTableStringCell.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B74D3240602627200C21B7C = {
+			children = (
+				4B74D3270602629200C21B7C,
+				4B74D3280602629200C21B7C,
+				4B74D32D0602633700C21B7C,
+				4B74D32E0602633700C21B7C,
+				4B74D3330602641C00C21B7C,
+			);
+			isa = PBXGroup;
+			name = "Connect Panel";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B74D3270602629200C21B7C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIConnectPanelPlugin.h;
+			path = "Plugins/Connect Panel/AIConnectPanelPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B74D3280602629200C21B7C = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIConnectPanelPlugin.m;
+			path = "Plugins/Connect Panel/AIConnectPanelPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B74D3290602629300C21B7C = {
+			fileRef = 4B74D3270602629200C21B7C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B74D32A0602629300C21B7C = {
+			fileRef = 4B74D3280602629200C21B7C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B74D32D0602633700C21B7C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIConnectPanelWindowController.h;
+			path = "Plugins/Connect Panel/AIConnectPanelWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B74D32E0602633700C21B7C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIConnectPanelWindowController.m;
+			path = "Plugins/Connect Panel/AIConnectPanelWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B74D32F0602633700C21B7C = {
+			fileRef = 4B74D32D0602633700C21B7C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B74D3300602633700C21B7C = {
+			fileRef = 4B74D32E0602633700C21B7C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B74D3330602641C00C21B7C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ConnectPanel.nib;
+			path = "Plugins/Connect Panel/ConnectPanel.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B74D3340602641C00C21B7C = {
+			fileRef = 4B74D3330602641C00C21B7C;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B7764BB03C3E78200A8010A = {
 			fileEncoding = 30;
