@@ -44,7 +44,6 @@
 	int							styleVersion;	
 	NSImage						*imageMask;
 	NSMutableArray				*objectsWithUserIconsArray;
-	int							imageBackgroundKind;
 }
 
 + (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;

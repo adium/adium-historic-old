@@ -64,7 +64,7 @@
 	//Install our preference view
     preferences = [[ESGlobalEventsPreferences preferencePaneForPlugin:self] retain];
 	
-	//Load simple presets (dock, speech, etc.)
+	//Load simple presets (dock, speech)
     dockBehaviorPresetsArray = [[NSArray arrayNamed:DOCK_BEHAVIOR_PRESETS
 										  forClass:[self class]] retain];
 	speechPresetsArray = [[NSArray arrayNamed:SPEECH_PRESETS

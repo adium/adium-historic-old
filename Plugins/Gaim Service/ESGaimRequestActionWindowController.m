@@ -23,35 +23,38 @@
 	requestWindowController = [[self alloc] initWithWindowNibName:REQUEST_ACTION_WINDOW_NIB
 														 withDict:infoDict];
 	
-	[[requestWindowController window] makeKeyAndOrderFront:nil];
+	[requestWindowController showWindow:nil];
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)infoDict
 {
-	theInfoDict = [infoDict retain];
-	
 	[super initWithWindowNibName:windowNibName];
+	[self showWindowWithDict:infoDict];
 	
     return(self);
 }
 
-- (void)windowDidLoad
+- (void)showWindowWithDict:(NSDictionary *)infoDict
 {
 	NSAttributedString	*attribMsg;
 	NSRect  newFrame, oldFrame, zeroFrame = NSMakeRect(0,0,0,0);
 	
-	NSArray		*buttonNamesArray = [theInfoDict objectForKey:@"Button Names"];
-	NSString	*titleString = [theInfoDict objectForKey:@"TitleString"];
-	NSString	*msg = [theInfoDict objectForKey:@"Message"];
+	NSArray		*buttonNamesArray = [infoDict objectForKey:@"Button Names"];
+	NSString	*titleString = [infoDict objectForKey:@"TitleString"];
+	NSString	*msg = [infoDict objectForKey:@"Message"];
 	
 	//msg may be in HTML; decode it just in case
+	GaimDebug (@"got msg %@",msg);
 	attribMsg = (msg ? [AIHTMLDecoder decodeHTML:msg] : nil);
-	GaimDebug (@"%@: msg %@ --> attribMsg is %@",self, msg, attribMsg);
+	GaimDebug (@"so attribMsg is %@",attribMsg);
 	
-	actionCount = [[theInfoDict objectForKey:@"Count"] intValue];
-	callBacks = [[theInfoDict objectForKey:@"callBacks"] retain];
-	userData = [[theInfoDict objectForKey:@"userData"] retain];
-
+	actionCount = [[infoDict objectForKey:@"Count"] intValue];
+	callBacks = [[infoDict objectForKey:@"callBacks"] retain];
+	userData = [[infoDict objectForKey:@"userData"] retain];
+	
+	//Ensure the window is loaded
+	[self window];
+	
 	//Title
 	[textField_title setStringValue:(titleString ? titleString : @"")];
 
@@ -166,7 +169,6 @@
 
 - (void)dealloc
 {
-	[theInfoDict release];
 	[userData release];
 	[callBacks release];
 	

@@ -2,28 +2,6 @@
     IBClasses = (
         {CLASS = AIActionDetailsPane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {
-            CLASS = AILocalizationButton; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                "view_anchorToLeftSide" = NSView; 
-                "view_anchorToRightSide" = NSView; 
-                "window_anchorOnLeftSide" = NSWindow; 
-                "window_anchorOnRightSide" = NSWindow; 
-            }; 
-            SUPERCLASS = NSButton; 
-        }, 
-        {
-            CLASS = AILocalizationTextField; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                "view_anchorToLeftSide" = NSView; 
-                "view_anchorToRightSide" = NSView; 
-                "window_anchorOnLeftSide" = NSWindow; 
-                "window_anchorOnRightSide" = NSWindow; 
-            }; 
-            SUPERCLASS = NSTextField; 
-        }, 
-        {
             ACTIONS = {changePreference = id; }; 
             CLASS = AIModularPane; 
             LANGUAGE = ObjC; 
@@ -36,9 +14,6 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_useAnotherAccount" = NSButton; 
-                "label_From" = NSTextField; 
-                "label_Message" = NSTextField; 
-                "label_To" = NSTextField; 
                 "popUp_messageFrom" = NSPopUpButton; 
                 "popUp_messageTo" = NSPopUpButton; 
                 "textView_message" = NSTextView; 

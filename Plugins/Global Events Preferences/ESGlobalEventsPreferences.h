@@ -21,11 +21,6 @@
 	IBOutlet	NSPopUpButton	*popUp_soundSet;
 	IBOutlet	NSPopUpButton	*popUp_speechPreset;
 	IBOutlet	NSPopUpButton	*popUp_growlPreset;
-	
-	IBOutlet	NSTextField		*label_bounceTheDockIcon;
-	IBOutlet	NSTextField		*label_displayGrowlNotifications;
-	IBOutlet	NSTextField		*label_soundSet;
-	IBOutlet	NSTextField		*label_speech;
 }
 
 @end

@@ -142,7 +142,7 @@
 	AIListContact		*listContact = [chat listObject];
 	
 	NSString			*objectID;
-	NSString			*accountNumber;
+	NSNumber			*accountNumber;
 	
 	contentDict = [NSMutableDictionary dictionary];
 	[contentDict setObject:[content type] forKey:@"Type"];
@@ -213,16 +213,33 @@
 				//Currently, we only add Message or Context content objects
 				if( [type isEqualToString:CONTENT_MESSAGE_TYPE] || [type isEqualToString:CONTENT_CONTEXT_TYPE] ) {
 					message = [NSAttributedString stringWithData:[messageDict objectForKey:@"Message"]];
-					
-					NSString *from = [messageDict objectForKey:@"From"];
-					NSString *to = [messageDict objectForKey:@"To"];
-					
+	
 					// The other person is always the one we're chatting with right now
 					if( [[messageDict objectForKey:@"Outgoing"] boolValue] ) {
 						dest = [chat listObject];
+
+						id from = [messageDict objectForKey:@"From"];
+						if(![from isKindOfClass:[NSString class]]){
+							if([from respondsToSelector:@selector(stringValue)]){
+								from = [from stringValue];
+							}else{
+								from = nil;
+							}
+						}
+						
 						source = [[adium accountController] accountWithInternalObjectID:from];
 					} else {
 						source = [chat listObject];
+						
+						id to = [messageDict objectForKey:@"To"];
+						if(![to isKindOfClass:[NSString class]]){
+							if([to respondsToSelector:@selector(stringValue)]){
+								to = [to stringValue];
+							}else{
+								to = nil;
+							}
+						}
+						
 						dest = [[adium accountController] accountWithInternalObjectID:to];
 					}
 
