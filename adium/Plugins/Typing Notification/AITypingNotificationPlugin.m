@@ -38,11 +38,13 @@
     AIChat		*chat = [notification object];
     NSNumber		*cleared;
 
-    cleared = [[chat statusDictionary] objectForKey:CAN_RECEIVE_TYPING];
+    cleared = [chat statusObjectForKey:CAN_RECEIVE_TYPING];
 
     //Clear this contact for receiving typing notifications
     if(!cleared){
-        [[chat statusDictionary] setObject:[NSNumber numberWithBool:1] forKey:CAN_RECEIVE_TYPING];
+        [chat setStatusObject:[NSNumber numberWithBool:1]
+					   forKey:CAN_RECEIVE_TYPING
+					   notify:NotifyNever];
     }
 }
 
@@ -59,16 +61,15 @@
 - (void)_processTypingInView:(NSText<AITextEntryView> *)inTextEntryView
 {
     AIChat				*chat = [inTextEntryView chat];
-	NSMutableDictionary *statusDictionary = [chat statusDictionary];
 	
-    if(chat && [statusDictionary objectForKey:CAN_RECEIVE_TYPING] != nil){
-		NSNumber		*previousTypingNumber = [statusDictionary objectForKey:WE_ARE_TYPING];
+    if(chat && [chat statusObjectForKey:CAN_RECEIVE_TYPING] != nil){
+		NSNumber		*previousTypingNumber = [chat statusObjectForKey:WE_ARE_TYPING];
 		AITypingState   previousTypingState = (previousTypingNumber ? [previousTypingNumber intValue] : AINotTyping);
 		AITypingState   currentTypingState;
 		NSTimer			*enteredTextTimer;
 
 		//Invalidate any timer currently watching this chat for switching it to entered text
-		if (enteredTextTimer = [statusDictionary objectForKey:ENTERED_TEXT_TIMER]){
+		if (enteredTextTimer = [chat statusObjectForKey:ENTERED_TEXT_TIMER]){
 			[enteredTextTimer invalidate];
 		}
 		
@@ -85,8 +86,9 @@
 															  userInfo:chat
 															   repeats:NO];
 			//Keep track of the timer object for early invalidation if necessary
-			[statusDictionary setObject:enteredTextTimer forKey:ENTERED_TEXT_TIMER];
-
+			[chat setStatusObject:enteredTextTimer 
+						   forKey:ENTERED_TEXT_TIMER
+						   notify:NotifyNever];
 			
 		}else{
 			//The text just changed, and the length is zero; the user is therefore not typing and has not entered text
@@ -113,13 +115,9 @@
     [[adium contentController] sendContentObject:contentObject];
     
     //Remember the state
-    if(typingState != AINotTyping){ //Add 'typing' for this contact
-        [[chat statusDictionary] setObject:[NSNumber numberWithInt:typingState] forKey:WE_ARE_TYPING];
-
-    }else{ //Remove 'typing' for this contact
-        [[chat statusDictionary] removeObjectForKey:WE_ARE_TYPING];
-
-    }
+	[chat setStatusObject:(typingState != AINotTyping ? [NSNumber numberWithInt:typingState] : nil)
+				   forKey:WE_ARE_TYPING
+				   notify:NotifyNever];
 }
 
 - (void)_switchToEnteredText:(NSTimer *)inTimer
@@ -138,7 +136,7 @@
     AIChat	*chat = [inTextEntryView chat];
 
     //Send a 'not-typing' message to this contact
-    if(([[[chat statusDictionary] objectForKey:WE_ARE_TYPING] intValue] != AINotTyping) && [[chat statusDictionary] objectForKey:CAN_RECEIVE_TYPING] != nil){
+    if(([chat integerStatusObjectForKey:WE_ARE_TYPING] != AINotTyping) && ([chat statusObjectForKey:CAN_RECEIVE_TYPING] != nil)){
         [self _sendTypingState:AINotTyping toChat:chat];
     }
 
