@@ -77,6 +77,11 @@ static BOOL KFKeyEventIsCancelEvent(NSEvent *keyEvent);
               rowIncrement:(int)rowIncrement
              searchColumns:(NSArray *)searchColumns
                    timeout:(uint64_t)timeout;
+- (BOOL)kfShouldAcceptMatch:(NSString *)match 
+                      range:(NSRange)matchedRange 
+                      inRow:(int)row;
+- (BOOL)kfCanPerformTypeSelect;
+- (BOOL)kfSelectionShouldChange;
 - (BOOL)kfCanGetTableData;
 - (NSString *)kfStringValueForTableColumn:(NSTableColumn *)column row:(int)row;
 - (NSArray *)kfSearchColumns;
@@ -84,7 +89,7 @@ static BOOL KFKeyEventIsCancelEvent(NSEvent *keyEvent);
 - (int)kfInitialRowForNewSearch;
 
 // taking action
--(void)kfPatternDidChange:(id)sender;
+- (void)kfPatternDidChange:(id)sender;
 - (void)kfDidFindMatch:(NSString *)match 
                  range:(NSRange)matchedRange 
                  inRow:(int)row;
@@ -142,7 +147,7 @@ static BOOL KFKeyEventIsCancelEvent(NSEvent *keyEvent);
     // Will we drop this event to super? 
     BOOL eatEvent = NO;
     
-    if ([self kfCanGetTableData] && ([[self window] firstResponder] == self))
+    if ([self kfCanPerformTypeSelect] && ([[self window] firstResponder] == self))
     { 
         BOOL canExtendFind = [self kfCanExtendFind];
                 
@@ -301,7 +306,7 @@ static BOOL KFKeyEventIsBeginFindEvent(NSEvent *keyEvent)
     return YES;    
 }
 
-// yes if every character in the event is alphanumeric or a space and no command, control or function modifiers 
+// yes if every character in the event is alphanumeric, punctuation or a space, and no command, control or function modifiers 
 static BOOL KFKeyEventIsExtendFindEvent(NSEvent *keyEvent)
 {
     unsigned int modifiers = [keyEvent modifierFlags] & modifierFlagsICareAboutMask;
@@ -313,14 +318,16 @@ static BOOL KFKeyEventIsExtendFindEvent(NSEvent *keyEvent)
         return NO;
     }
     
-    NSCharacterSet *alphanumericCharacterSet = [NSCharacterSet alphanumericCharacterSet];
+    NSMutableCharacterSet *extendFindCharacterSet = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
+    [extendFindCharacterSet formUnionWithCharacterSet:[NSCharacterSet punctuationCharacterSet]];
+    [extendFindCharacterSet addCharactersInString:@" "];
+    
     int i;
     unichar character;
     for (i = 0; i < numCharacters; i++)
     {
         character = [characters characterAtIndex:i];
-        if (   ![alphanumericCharacterSet characterIsMember:character] 
-               && (character != ' '))
+        if (![extendFindCharacterSet characterIsMember:character])
         {
             return NO;
         }
@@ -335,10 +342,6 @@ static BOOL KFKeyEventIsFindNextEvent(NSEvent *keyEvent)
     NSString *characters = [keyEvent characters];
     int numCharacters = [characters length];
     
-    if (numCharacters == 1 && [characters characterAtIndex:0] == NSRightArrowFunctionKey && modifiers == (NSControlKeyMask | NSFunctionKeyMask))
-    {
-        return YES;
-    }
     if (numCharacters == 1 && [characters characterAtIndex:0] == NSDownArrowFunctionKey && modifiers == (NSControlKeyMask | NSFunctionKeyMask))
     {
         return YES;
@@ -354,10 +357,6 @@ static BOOL KFKeyEventIsFindPreviousEvent(NSEvent *keyEvent)
     NSString *characters = [keyEvent characters];
     int numCharacters = [characters length];
     
-    if (numCharacters == 1 && [characters characterAtIndex:0] == NSLeftArrowFunctionKey && modifiers == (NSControlKeyMask | NSFunctionKeyMask))
-    {
-        return YES;
-    }
     if (numCharacters == 1 && [characters characterAtIndex:0] == NSUpArrowFunctionKey && modifiers == (NSControlKeyMask | NSFunctionKeyMask))
     {
         return YES;
@@ -411,30 +410,34 @@ static BOOL KFKeyEventIsCancelEvent(NSEvent *keyEvent)
 {
     NSString *lastPattern = [self kfLastSuccessfullyMatchedPattern];
     
-    if (lastPattern == nil || ![self kfCanGetTableData])
+    if (lastPattern == nil || ![self kfCanPerformTypeSelect])
     {
         NSBeep();
     }
-    
-    [self kfFindPattern:lastPattern
-             initialRow:[self selectedRow] + 1 
-            topToBottom:YES
-         allowExtension:NO];
+    else
+    {
+        [self kfFindPattern:lastPattern
+                 initialRow:[self selectedRow] + 1 
+                topToBottom:YES
+             allowExtension:NO];        
+    }
 }
 
 - (void)findPrevious:(id)sender
 {
     NSString *lastPattern = [self kfLastSuccessfullyMatchedPattern];
     
-    if (lastPattern == nil || ![self kfCanGetTableData])
+    if (lastPattern == nil || ![self kfCanPerformTypeSelect])
     {
         NSBeep();
     }
-    
-    [self kfFindPattern:lastPattern
-             initialRow:[self selectedRow] - 1 
-            topToBottom:NO
-         allowExtension:NO];
+    else
+    {
+        [self kfFindPattern:lastPattern
+                 initialRow:[self selectedRow] - 1 
+                topToBottom:NO
+             allowExtension:NO];        
+    }
 }
 
 
@@ -490,12 +493,17 @@ static BOOL KFKeyEventIsCancelEvent(NSEvent *keyEvent)
     }
     
     BOOL finished = NO;
-    int row = initialRow;
+    int row = initialRow - rowIncrement;
     while (!finished)
     {
+        row += rowIncrement;
         // Mail generates 3MB in autoreleased objects in a search through 15000 rows
         // there's a noticable pause when they're deallocated.  We'll avoid it by using
         // our own autorelease pool.
+        //
+        // Note: checking for new input no more often than 100 times a second drops time spent 
+        // in -[NSApplication nextEventMatchingMask::::] from 30-60% of total function time to .2-.5% 
+        // at a cost of < 1% for timing functions.
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         finished = [self kfWorkUnitGetMatch:&match
                                       range:&matchRange
@@ -601,7 +609,8 @@ static BOOL KFKeyEventIsCancelEvent(NSEvent *keyEvent)
         {
             candidateMatch = [self kfStringValueForTableColumn:[searchColumns objectAtIndex:col] row:row];
             rangeOfPattern = [candidateMatch rangeOfString:pattern options:patternMatchOptions];
-            if (rangeOfPattern.location != NSNotFound)
+            if (   (rangeOfPattern.location != NSNotFound)
+                && [self kfShouldAcceptMatch:candidateMatch range:rangeOfPattern inRow:row])
             {
                 *match = candidateMatch;
                 *matchRange = rangeOfPattern;
@@ -625,6 +634,27 @@ static BOOL KFKeyEventIsCancelEvent(NSEvent *keyEvent)
     return row == boundaryRow;
 }
 
+- (BOOL)kfShouldAcceptMatch:(NSString *)match 
+                      range:(NSRange)matchedRange 
+                      inRow:(int)row
+{
+    id delegate = [self delegate];
+    
+    if (   [self isKindOfClass:[NSOutlineView class]] 
+           && [delegate respondsToSelector:@selector(outlineView:shouldSelectItem:)])
+    {
+        return [delegate outlineView:(NSOutlineView *)self shouldSelectItem:[(NSOutlineView *)self itemAtRow:row]];
+    }
+    else if ([delegate respondsToSelector:@selector(tableView:shouldSelectRow:)])
+    {
+        return [delegate tableView:self shouldSelectRow:row];
+    }
+    else
+    {
+        return YES;
+    }
+}
+
 - (NSTimeInterval)kfPatternTimeout
 {
     // from Dan Wood's 'Table Techniques Taught Tastefully', as pointed out by someone
@@ -644,6 +674,30 @@ static BOOL KFKeyEventIsCancelEvent(NSEvent *keyEvent)
     return MIN(2.0/60.0*keyThreshTicks, 2.0);
 }
 
+- (BOOL)kfCanPerformTypeSelect
+{
+    return [self kfCanGetTableData] && [self kfSelectionShouldChange];
+}
+
+- (BOOL)kfSelectionShouldChange
+{
+    id delegate = [self delegate];
+    
+    if (   [self isKindOfClass:[NSOutlineView class]] 
+           && [delegate respondsToSelector:@selector(selectionShouldChangeInOutlineView:)])
+    {
+        return [delegate selectionShouldChangeInOutlineView:(NSOutlineView *)self];
+    }
+    else if ([delegate respondsToSelector:@selector(selectionShouldChangeInTableView:)])
+    {
+        return [delegate selectionShouldChangeInTableView:self];
+    }
+    else
+    {
+        return YES;
+    }    
+}
+
 - (BOOL)kfCanGetTableData
 {    
     // First case:  datasource implements NSTableViewDataSource protocol.  Usually not true when 
@@ -657,8 +711,8 @@ static BOOL KFKeyEventIsCancelEvent(NSEvent *keyEvent)
 
 - (NSString *)kfStringValueForTableColumn:(NSTableColumn *)column row:(int)row
 {
-    // There are three ways we can get this information: 1) our delegate supplies it, 2) our datasource 
-    // supplies it like an NSTableViewDataSource, 3) our datasource supplies it like an NSOutlineViewDataSource
+    // There are three ways we can get this information: (1) our delegate supplies it, (2) our datasource 
+    // supplies it like an NSTableViewDataSource, (3) our datasource supplies it like an NSOutlineViewDataSource
     
     // could optimize by factoring into three separate methods and precomputing which one to call (from keyDown:).
     // current sharking indicates this wouldn't help much.
@@ -1038,7 +1092,7 @@ static NSMutableDictionary *idToSimulatedIvarsMap = nil;
                                 forKey:@"canExtendFind"];
 }
 
-// keep track of the last delegate that we ran 
+// keep track of the last delegate for which we tried to run configureTypeSelectTableView
 - (id)kfLastConfiguredDelegate
 {
     return [[[self kfSimulatedIvars] objectForKey:@"lastConfiguredDelegate"] nonretainedObjectValue];
