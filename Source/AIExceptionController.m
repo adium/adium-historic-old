@@ -101,7 +101,6 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		   (!theName) || //Harmless
 		   [safeExceptionNames containsObject:theName])
 		{
-			NSLog(@"%@", @"Harmless 1");
 			[super raise];
 			
 		}else{
@@ -112,7 +111,6 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			   [backtrace rangeOfString:@"-[NSFontPanel setPanelFont:isMultiple:] (in AppKit)"].location != NSNotFound ||
 			   [backtrace rangeOfString:@"-[NSScrollView(NSScrollViewAccessibility) accessibilityChildrenAttribute]"].location != NSNotFound)
 			{
-				NSLog(@"%@", @"Harmless 2");
 				[super raise];
 				
 			}else{
