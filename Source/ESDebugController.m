@@ -8,7 +8,9 @@
 #import "ESDebugController.h"
 #import "ESDebugWindowController.h"
 
-#define	CACHED_DEBUG_LOGS	100		//Number of logs to keep at any given time
+#define	CACHED_DEBUG_LOGS		100		//Number of logs to keep at any given time
+#define	KEY_DEBUG_WINDOW_OPEN	@"Debug Window Open"
+#define	GROUP_DEBUG				@"Debug Group"
 
 @interface ESDebugController (PRIVATE)
 - (void)addMessage:(NSString *)actualMessage;
@@ -29,7 +31,30 @@ static NSMutableArray	*debugLogArray = nil;
 	[[owner menuController] addMenuItem:item toLocation:LOC_Adium_About];
 	
 	debugLogArray = [[NSMutableArray alloc] init];
+	
+	//Restore the debug window if it was open when we quit last time
+	if ([[[owner preferenceController] preferenceForKey:KEY_DEBUG_WINDOW_OPEN
+												  group:GROUP_DEBUG] boolValue]){
+		[ESDebugWindowController showDebugWindow];
+	}
 #endif
+}
+
+- (void)closeController
+{
+	//Save the open state of the debug window
+	[[owner preferenceController] setPreference:([ESDebugWindowController debugWindowIsOpen] ?
+												 [NSNumber numberWithBool:YES] :
+												 nil)
+										 forKey:KEY_DEBUG_WINDOW_OPEN
+										  group:GROUP_DEBUG];
+	[ESDebugWindowController closeDebugWindow];
+}
+
+- (void)dealloc
+{
+	[debugLogArray release];
+	[super dealloc];
 }
 
 - (void)showDebugWindow:(id)sender

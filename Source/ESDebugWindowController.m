@@ -30,7 +30,20 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 	//Configure and show window
 	[sharedDebugWindowInstance showWindow:nil];
 	
-	return (sharedDebugWindowInstance);
+	return(sharedDebugWindowInstance);
+}
+
++ (BOOL)debugWindowIsOpen
+{
+	return(sharedDebugWindowInstance != nil);
+}
+
+//Close the debug window
++ (void)closeDebugWindow
+{
+    if(sharedDebugWindowInstance){
+        [sharedDebugWindowInstance closeWindow:nil];
+    }
 }
 
 + (void)addedDebugMessage:(NSString *)aDebugString
@@ -43,14 +56,6 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 	if ((![aDebugString hasSuffix:@"\n"]) && (![aDebugString hasSuffix:@"\r"])){
 		[mutableDebugString appendString:@"\n"];
 	}
-}
-
-//Close the info window
-+ (void)closeInfoWindow
-{
-    if(sharedDebugWindowInstance){
-        [sharedDebugWindowInstance closeWindow:nil];
-    }
 }
 
 - (NSString *)adiumFrameAutosaveName
