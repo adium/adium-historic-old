@@ -30,7 +30,7 @@
 
 @implementation AITooltipUtilities
 
-static	NSPanel                 *tooltipWindow;
+static	NSPanel                 *tooltipWindow = nil;
 static	NSTextView				*textView_tooltipTitle = nil;
 static	NSTextView				*textView_tooltipBody = nil;
 static  NSImageView				*view_tooltipImage = nil;
@@ -92,24 +92,24 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
         tooltipPoint = inPoint;
         tooltipOrientation = inOrientation;
         onWindow = inWindow;
-		
+
         if((!tooltipTitle && !tooltipBody && !tooltipImage)){
             [self _createTooltip]; //make the window
         }
-        
+
         if(!(inBody == tooltipBody) ||
 		   !(inTitle == tooltipTitle) || 
 		   !(inImage == tooltipImage)) { //we don't exist or something changed
-            
+
 			[tooltipTitle release]; tooltipTitle = [inTitle retain];
-            
+
 			if (inTitle) {
                 [[textView_tooltipTitle textStorage] replaceCharactersInRange:NSMakeRange(0,[[textView_tooltipTitle textStorage] length])
 														 withAttributedString:tooltipTitle];
             } else {
                 [[textView_tooltipTitle textStorage] deleteCharactersInRange:NSMakeRange(0,[[textView_tooltipTitle textStorage] length])];            
             }
-            
+
             [tooltipBody release]; tooltipBody = [inBody retain];
             if (inBody) {
                 [[textView_tooltipBody textStorage] replaceCharactersInRange:NSMakeRange(0,[[textView_tooltipBody textStorage] length])
@@ -119,12 +119,12 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
             }
             
             [tooltipImage release]; tooltipImage = [inImage retain];
-				
-            imageOnRight = inImageOnRight;
-            [view_tooltipImage setImage:tooltipImage];
 
-			imageSize = (tooltipImage ? /*NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION)*/[tooltipImage size] : NSMakeSize(0,0));
-            
+			imageOnRight = inImageOnRight;
+			[view_tooltipImage setImage:tooltipImage];
+
+			imageSize = (tooltipImage ? /*NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION)*/[tooltipImage size] : NSZeroSize);
+
             [self _sizeTooltip];
 				
         }else if(newLocation){ //Everything is the same but the location is different
@@ -145,73 +145,83 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 	NSTextStorage   *textStorage;
 	NSLayoutManager *layoutManager;
 	NSTextContainer *container;
-	
-    //Create the window
-    tooltipWindow = [[NSPanel alloc] initWithContentRect:NSMakeRect(0,0,0,0) 
-											   styleMask:NSBorderlessWindowMask
-												 backing:NSBackingStoreBuffered
-												   defer:NO];
-    [tooltipWindow setHidesOnDeactivate:NO];
-    [tooltipWindow setIgnoresMouseEvents:YES];
-	[tooltipWindow setBackgroundColor:[NSColor colorWithCalibratedRed:1.000 green:1.000 blue:1.000 alpha:1.0]];
-    [tooltipWindow setAlphaValue:0.9];
-    [tooltipWindow setHasShadow:YES];
-	
-	//Just using the floating panel level is insufficient because the contact list can float, too
-    [tooltipWindow setLevel:NSStatusWindowLevel];
-    
-    //Add the title text view
-    textStorage = [[NSTextStorage alloc] init];
-    
-    layoutManager = [[NSLayoutManager alloc] init];
-    [textStorage addLayoutManager:layoutManager];
-    [layoutManager release];
-    
-    container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(TOOLTIP_MAX_WIDTH,10000000.0)];
-    [container setLineFragmentPadding:1.0]; //so widths will caclulate properly
-    [layoutManager addTextContainer:container];
-    [container release];
-    
-    textView_tooltipTitle = [[NSTextView alloc] initWithFrame:NSMakeRect(0,0,0,0) textContainer:container];
-    [textView_tooltipTitle setSelectable:NO];
-    [textView_tooltipTitle setRichText:YES];
-    [textView_tooltipTitle setDrawsBackground:NO];
-    [[tooltipWindow contentView] addSubview:textView_tooltipTitle];
-        
-    //Add the body text view
-    textStorage = [[NSTextStorage alloc] init];
-    
-    layoutManager = [[NSLayoutManager alloc] init];
-    [textStorage addLayoutManager:layoutManager];
-    [layoutManager release];
-    
-    container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(TOOLTIP_MAX_WIDTH,10000000.0)];
-    [container setLineFragmentPadding:0.0]; //so widths will caclulate properly
-    [layoutManager addTextContainer:container];
-    [container release];
-    
-    textView_tooltipBody = [[NSTextView alloc] initWithFrame:NSMakeRect(0,0,0,0) textContainer:container];
-    [textView_tooltipBody setSelectable:NO];
-    [textView_tooltipBody setRichText:YES];
-    [textView_tooltipBody setDrawsBackground:NO];
 
-    [[tooltipWindow contentView] addSubview:textView_tooltipBody];
-    
-    view_tooltipImage = [[NSImageView alloc] initWithFrame:NSMakeRect(0,0,0,0)];
-    [[tooltipWindow contentView] addSubview:view_tooltipImage];    
+	if(!tooltipWindow) {
+		//Create the window
+		tooltipWindow = [[NSPanel alloc] initWithContentRect:NSZeroRect 
+												   styleMask:NSBorderlessWindowMask
+													 backing:NSBackingStoreBuffered
+													   defer:NO];
+		[tooltipWindow setHidesOnDeactivate:NO];
+		[tooltipWindow setIgnoresMouseEvents:YES];
+		[tooltipWindow setBackgroundColor:[NSColor whiteColor]];
+		[tooltipWindow setAlphaValue:0.9];
+		[tooltipWindow setHasShadow:YES];
+
+		//Just using the floating panel level is insufficient because the contact list can float, too
+		[tooltipWindow setLevel:NSStatusWindowLevel];
+	}
+
+    if(!textView_tooltipTitle) {
+		//create and add the title text view
+		textStorage = [[NSTextStorage alloc] init];
+
+		layoutManager = [[NSLayoutManager alloc] init];
+		[textStorage addLayoutManager:layoutManager];
+		[layoutManager release];
+
+		container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(TOOLTIP_MAX_WIDTH,10000000.0)];
+		[container setLineFragmentPadding:1.0]; //so widths will caclulate properly
+		[layoutManager addTextContainer:container];
+		[container release];
+		[textStorage release];
+
+		textView_tooltipTitle = [[NSTextView alloc] initWithFrame:NSZeroRect textContainer:container];
+		[textView_tooltipTitle setSelectable:NO];
+		[textView_tooltipTitle setRichText:YES];
+		[textView_tooltipTitle setDrawsBackground:NO];
+		[[tooltipWindow contentView] addSubview:textView_tooltipTitle];
+	}
+
+	if(!textView_tooltipBody) {
+		//create and add the body text view
+		textStorage = [[NSTextStorage alloc] init];
+		
+		layoutManager = [[NSLayoutManager alloc] init];
+		[textStorage addLayoutManager:layoutManager];
+		[layoutManager release];
+		
+		container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(TOOLTIP_MAX_WIDTH,10000000.0)];
+		[container setLineFragmentPadding:0.0]; //so widths will caclulate properly
+		[layoutManager addTextContainer:container];
+		[container release];
+		[textStorage release];
+
+		textView_tooltipBody = [[NSTextView alloc] initWithFrame:NSZeroRect textContainer:container];
+		[textView_tooltipBody setSelectable:NO];
+		[textView_tooltipBody setRichText:YES];
+		[textView_tooltipBody setDrawsBackground:NO];
+
+		[[tooltipWindow contentView] addSubview:textView_tooltipBody];
+	}
+
+    if(!view_tooltipImage) {
+		view_tooltipImage = [[NSImageView alloc] initWithFrame:NSZeroRect];
+		[[tooltipWindow contentView] addSubview:view_tooltipImage];
+	}
 }
 
 + (void)_closeTooltip
 {
     [tooltipWindow orderOut:nil];
-    [textView_tooltipBody release]; textView_tooltipBody = nil;
+    [textView_tooltipBody release];  textView_tooltipBody = nil;
     [textView_tooltipTitle release]; textView_tooltipTitle = nil;
-    [view_tooltipImage release]; view_tooltipImage = nil;
-    [tooltipWindow release]; tooltipWindow = nil;
-    [tooltipBody release]; tooltipBody = nil;
-    [tooltipTitle release]; tooltipTitle = nil;
-    [tooltipImage release]; tooltipImage = nil;
-    tooltipPoint = NSMakePoint(0,0);
+    [view_tooltipImage release];     view_tooltipImage = nil;
+    [tooltipWindow release];         tooltipWindow = nil;
+    [tooltipBody release];           tooltipBody = nil;
+    [tooltipTitle release];          tooltipTitle = nil;
+    [tooltipImage release];          tooltipImage = nil;
+    tooltipPoint = NSZeroPoint;
 }
 
 + (void)_sizeTooltip
@@ -228,7 +238,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
         [[textView_tooltipTitle layoutManager] glyphRangeForTextContainer:[textView_tooltipTitle textContainer]]; //void - need to force it to lay out the glyphs for an accurate measurement
         tooltipTitleRect = [[textView_tooltipTitle layoutManager] usedRectForTextContainer:[textView_tooltipTitle textContainer]];
     } else {
-        tooltipTitleRect = NSMakeRect(0,0,0,0);
+        tooltipTitleRect = NSZeroRect;
     }
     
     if (hasBody) {
@@ -237,7 +247,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
         [[textView_tooltipBody layoutManager] glyphRangeForTextContainer:[textView_tooltipBody textContainer]]; //void - need to force it to lay out the glyphs for an accurate measurement
         tooltipBodyRect = [[textView_tooltipBody layoutManager] usedRectForTextContainer:[textView_tooltipBody textContainer]];
     } else {
-        tooltipBodyRect = NSMakeRect(0,0,0,0);   
+        tooltipBodyRect = NSZeroRect;   
     }
     
     float titleAndBodyMargin = (hasTitle && hasBody) ? TOOLTIP_TITLE_BODY_MARGIN : 0;
