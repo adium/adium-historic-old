@@ -170,20 +170,26 @@
 - (IBAction)selectVolume:(id)sender
 {
     NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
-    float			value = [slider_volume floatValue];
-    BOOL			mute = (value == 0.0);
+    float			volume, oldVolume;
+    BOOL			mute, oldMute;
     BOOL			playSample = NO;
-    
+
+	volume = [slider_volume floatValue];
+	oldVolume = [[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue];
+
+	mute = (volume == 0.0);
+	oldMute = [[prefDict objectForKey:KEY_SOUND_MUTE] intValue];
+
     //Volume
-    if(value != [[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]){
-        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:value]
+    if(volume != oldVolume){
+        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:volume]
                                              forKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL
                                               group:PREF_GROUP_SOUNDS];
         playSample = YES;
     }
-	
+
     //Muted
-    if(mute != [[prefDict objectForKey:KEY_SOUND_MUTE] intValue]){
+    if(mute != oldMute){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:mute]
                                              forKey:KEY_SOUND_MUTE
                                               group:PREF_GROUP_SOUNDS];
