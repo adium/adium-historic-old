@@ -488,7 +488,13 @@
 				    dividerColor:[bodyColor adjustHue:0.0 saturation:+0.1 brightness:-0.1]];
 	}
     }else{
-	[messageCell setFrameBackgroundColor:colorOutgoing borderColor:colorOutgoingBorder dividerColor:colorOutgoingDivider];
+	if(!bodyColor || [bodyColor equalToRGBColor:[NSColor whiteColor]]){
+	    [messageCell setFrameBackgroundColor:colorOutgoing borderColor:colorOutgoingBorder dividerColor:colorOutgoingDivider];
+	}else{
+	    [messageCell setFrameBackgroundColor:bodyColor
+							  borderColor:[bodyColor adjustHue:0.0 saturation:+0.3 brightness:-0.3]
+							 dividerColor:[bodyColor adjustHue:0.0 saturation:+0.1 brightness:-0.1]];
+	}
     }
     
     return(messageCell);
