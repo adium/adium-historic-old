@@ -121,6 +121,9 @@
 - (ESDebugController *)debugController{
 	return(debugController);
 }
+- (AIPluginController *)pluginController{
+	return(pluginController);
+}
 //- (BZActivityWindowController *)activityWindowController {
 //	return activityWindowController;
 //}

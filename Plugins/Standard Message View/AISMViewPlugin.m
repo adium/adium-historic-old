@@ -24,7 +24,10 @@
 - (void)installPlugin
 {
 
-	if( !USE_WEBKIT_PLUGIN || ![NSApp isOnPantherOrBetter] || ![NSApp isWebKitAvailable]){
+	//[[adium pluginController] setSMVPluginWasLoaded:YES];
+	
+	if( [[adium interfaceController] preferredMessageView] == DCStandardMessageView ) {
+	//if( !USE_WEBKIT_PLUGIN || ![NSApp isOnPantherOrBetter] || ![NSApp isWebKitAvailable]){
 		//Register ourself as a message list view plugin
 		[[adium interfaceController] registerMessageViewPlugin:self];
 		

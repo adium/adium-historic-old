@@ -12,7 +12,10 @@
 
 - (void)installPlugin
 {
-	if(USE_WEBKIT_PLUGIN && [NSApp isOnPantherOrBetter]){
+	//[[adium pluginController] setWebkitPluginWasLoaded:YES];
+	
+	if([[adium interfaceController] preferredMessageView] == DCWebkitMessageView) {
+	//if(USE_WEBKIT_PLUGIN && [NSApp isOnPantherOrBetter]){
 		//Init
 
 		styleDictionary = nil;

@@ -15,12 +15,14 @@
 
 @interface AIPluginController : NSObject {
     IBOutlet	AIAdium		*owner;
-    NSMutableArray		*pluginArray;
+    NSMutableArray			*pluginArray;
 }
 
 //Private
 - (void)initController;
 - (void)finishIniting;
 - (void)closeController;
+
+- (BOOL)pluginEnabled:(NSString *)pluginName;
 
 @end
