@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.51 2004/05/30 21:17:55 adamiser Exp $
+// $Id: AIPreferenceWindowController.m,v 1.52 2004/06/03 23:17:07 adamiser Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -188,13 +188,8 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	//Enable the "Restore Defaults" Button
 	[button_restoreDefaults setEnabled:YES];
 	
-    //Restore the window position
-//    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_WINDOW_FRAME];
-//    if(savedFrame){
-//        [[self window] setFrameFromString:savedFrame];
-//    }else{
-//        [[self window] center];
-//    }
+    //Center the window
+	[[self window] center];
 	
     //Let everyone know we will open
     [[adium notificationCenter] postNotificationName:Preference_WindowWillOpen object:nil];
@@ -233,9 +228,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     //Save the selected category
     [[adium preferenceController] setPreference:[NSNumber numberWithInt:[tabView_category indexOfTabViewItem:[tabView_category selectedTabViewItem]]] forKey:KEY_PREFERENCE_SELECTED_CATEGORY group:PREF_GROUP_WINDOW_POSITIONS];
     
-    //Save the window position
-    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame] forKey:KEY_PREFERENCE_WINDOW_FRAME group:PREF_GROUP_WINDOW_POSITIONS];
-
     //Close all open panes
     enumerator = [loadedPanes objectEnumerator];
     while(pane = [enumerator nextObject]){
