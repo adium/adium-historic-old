@@ -6,7 +6,7 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
-@interface AIConnectPanelWindowController : AIWindowController {
+@interface AIConnectPanelWindowController : AIWindowController <AIListObjectObserver> {
 	IBOutlet	NSPopUpButton		*popupMenu_serviceList;
 }
 
