@@ -7,22 +7,14 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
 
-@class AIAdium;
-
-@interface ESAnnouncerPreferences : NSObject {
-    AIAdium			*owner;
-
-    IBOutlet	NSView		*view_prefView;
-	
+@interface ESAnnouncerPreferences : AIPreferencePane {
     IBOutlet	NSButton	*checkBox_outgoing;
     IBOutlet	NSButton	*checkBox_incoming;
     IBOutlet	NSButton	*checkBox_status;
     IBOutlet	NSButton	*checkBox_time;
     IBOutlet	NSButton	*checkBox_sender;
 }
-
-+ (ESAnnouncerPreferences *)announcerPreferencesWithOwner:(id)inOwner;
-- (IBAction)changePreference:(id)sender;
 
 @end

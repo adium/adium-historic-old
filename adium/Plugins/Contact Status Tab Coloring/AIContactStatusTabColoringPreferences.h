@@ -14,14 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
 
-@class AIAdium;
-
-@interface AIContactStatusTabColoringPreferences : NSObject {
-    AIAdium			*owner;
-
-    IBOutlet	NSView		*view_prefView;
-
+@interface AIContactStatusTabColoringPreferences : AIPreferencePane {
     IBOutlet	NSButton	*checkBox_signedOff;
     IBOutlet	NSColorWell	*colorWell_signedOff;
 
@@ -46,8 +41,5 @@
     IBOutlet	NSButton	*checkBox_unviewedFlash;
 
 }
-
-+ (AIContactStatusTabColoringPreferences *)contactStatusTabColoringPreferencesWithOwner:(id)inOwner;
-- (IBAction)changePreference:(id)sender;
 
 @end

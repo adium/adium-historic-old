@@ -43,7 +43,7 @@
 
     //Setup our preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TAB_COLORING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
-    preferences = [[AIContactStatusTabColoringPreferences contactStatusTabColoringPreferencesWithOwner:owner] retain];
+    preferences = [[AIContactStatusTabColoringPreferences preferencePaneWithOwner:owner] retain];
 
     //Observe list object changes
     [[owner contactController] registerListObjectObserver:self];

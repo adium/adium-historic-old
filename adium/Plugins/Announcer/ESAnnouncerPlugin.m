@@ -23,7 +23,7 @@
 - (void)installPlugin
 {
     //Setup our preferences
-    preferences = [[ESAnnouncerPreferences announcerPreferencesWithOwner:owner] retain];
+    preferences = [[ESAnnouncerPreferences preferencePaneWithOwner:owner] retain];
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ANNOUNCER_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_ANNOUNCER];
 
     //Install the contact info view

@@ -1,7 +1,6 @@
 {
     IBClasses = (
         {
-            ACTIONS = {changePreference = id; }; 
             CLASS = AIContactStatusTabColoringPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -20,11 +19,24 @@
                 "colorWell_signedOn" = NSColorWell; 
                 "colorWell_typing" = NSColorWell; 
                 "colorWell_unviewedContent" = NSColorWell; 
-                "view_prefView" = NSView; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                view = NSView; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }
