@@ -3451,6 +3451,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/WebKit_Message_View.plist;
+				OTHER_LDFLAGS = "-undefined suppress -flat_namespace";
 				PRODUCT_NAME = "WebKit Message View";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -6070,6 +6071,7 @@
 				4BC5A5DB0764F75B0080ECF7,
 				4BC5A5DD0764F75B0080ECF7,
 				34E8298D0766B18500EFB3BC,
+				34DCA50607686CA500381D3C,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6398,6 +6400,7 @@
 				34D183BF075FC6ED0075A380,
 				34D183C0075FC6ED0075A380,
 				4BC5A5DF0764F75B0080ECF7,
+				34DCA52007686DAB00381D3C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6669,6 +6672,7 @@
 				4BC5A5DC0764F75B0080ECF7,
 				4BC5A5DE0764F75B0080ECF7,
 				34E8298C0766B18500EFB3BC,
+				34DCA50707686CA500381D3C,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8271,6 +8275,50 @@
 		};
 		34D5B281061263B300B98336 = {
 			fileRef = 83DB8F230611460E00A5C28C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DCA50407686CA500381D3C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESShowContactInfoPromptController.h;
+			path = Source/ESShowContactInfoPromptController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DCA50507686CA500381D3C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESShowContactInfoPromptController.m;
+			path = Source/ESShowContactInfoPromptController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DCA50607686CA500381D3C = {
+			fileRef = 34DCA50407686CA500381D3C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DCA50707686CA500381D3C = {
+			fileRef = 34DCA50507686CA500381D3C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34DCA51F07686DAB00381D3C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ShowContactInfoPrompt.nib;
+			path = Source/ShowContactInfoPrompt.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34DCA52007686DAB00381D3C = {
+			fileRef = 34DCA51F07686DAB00381D3C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -23241,6 +23289,9 @@
 				340F47EA06DA41DB0072E2FA,
 				340F47EB06DA41DB0072E2FA,
 				F5CDCE4B0350760A01A8010A,
+				34DCA50407686CA500381D3C,
+				34DCA50507686CA500381D3C,
+				34DCA51F07686DAB00381D3C,
 				4BCC20A6066B99F4007C8449,
 			);
 			isa = PBXGroup;
