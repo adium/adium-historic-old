@@ -1403,6 +1403,7 @@
 				34416093059FC2C00019246B,
 				344160A7059FC2DB0019246B,
 				344160A8059FC2DB0019246B,
+				3460EF7B06458C2C0099922D,
 			);
 			isa = PBXGroup;
 			name = Napster;
@@ -1416,6 +1417,7 @@
 				34416071059FC27D0019246B,
 				34416085059FC2A30019246B,
 				34416086059FC2A30019246B,
+				3460EF7706458C1D0099922D,
 			);
 			isa = PBXGroup;
 			name = "Gadu-Gadu";
@@ -1981,6 +1983,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "buildnum=`$SYMROOT/../Other/buildnum`\nbuilddate=`perl -e 'print time;'`\nme=`whoami`\necho $buildnum \"|\" $builddate \"|\" $me > $SYMROOT/Adium.app/Contents/Resources/buildnum\necho \\<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?\\>\\<!DOCTYPE plist PUBLIC \\\"-//Apple Computer//DTD PLIST 1.0//EN\\\" \\\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\\\"\\>\\<plist version=\\\"1.0\\\"\\>\\<dict\\>\\<key\\>adium-version\\</key\\>\\<real\\>$builddate\\</real\\>\\</dict\\>\\</plist\\> > $SYMROOT/version.plist\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
+		};
+		3460EF7706458C1D0099922D = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ESGaimGaduGaduAccountView.nib;
+			path = "Plugins/Gaim Service/ESGaimGaduGaduAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3460EF7806458C1D0099922D = {
+			fileRef = 3460EF7706458C1D0099922D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3460EF7B06458C2C0099922D = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ESGaimNapsterAccountView.nib;
+			path = "Plugins/Gaim Service/ESGaimNapsterAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3460EF7C06458C2C0099922D = {
+			fileRef = 3460EF7B06458C2C0099922D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3460EF7F06458C3C0099922D = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ESGaimTrepiaAccountView.nib;
+			path = "Plugins/Gaim Service/ESGaimTrepiaAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3460EF8006458C3C0099922D = {
+			fileRef = 3460EF7F06458C3C0099922D;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		346C970505FF8EEB000F5A8A = {
 			fileEncoding = 30;
@@ -7505,6 +7549,7 @@
 				34F142A105E95B0E00B32FD7,
 				34F1429E05E95B0E00B32FD7,
 				34F142A005E95B0E00B32FD7,
+				3460EF7F06458C3C0099922D,
 			);
 			isa = PBXGroup;
 			name = Trepia;
@@ -9777,12 +9822,16 @@
 				F570A58903704A8F01A8010A,
 				F570A58A03704A8F01A8010A,
 				F570A58B03704A8F01A8010A,
+				341F08E6058A97AB00A5A7AB,
+				341F08E5058A97AB00A5A7AB,
 				F57938F8033E745F01A8010A,
 				F57938B8033E739101A8010A,
 				4BFFA4430644C74E00FC068D,
 				4BFFA4440644C74E00FC068D,
 				4B6660A204ADF2DD00A8010A,
 				4B6660A304ADF2DD00A8010A,
+				34BD83DB054E530700EB2652,
+				34BD83DA054E530700EB2652,
 				4B9AB61704D2C84700A8010A,
 				4B9AB61804D2C84700A8010A,
 			);
@@ -10626,6 +10675,9 @@
 				34C2CF87063340540018E5D2,
 				34C2CF88063340540018E5D2,
 				34C2E9E40634D56E0018E5D2,
+				3460EF7806458C1D0099922D,
+				3460EF7C06458C2C0099922D,
+				3460EF8006458C3C0099922D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19492,10 +19544,6 @@
 				F5793951033E74E401A8010A,
 				4BB2C23A044605CE00A8010A,
 				4BB2C23B044605CE00A8010A,
-				34BD83DB054E530700EB2652,
-				34BD83DA054E530700EB2652,
-				341F08E6058A97AB00A5A7AB,
-				341F08E5058A97AB00A5A7AB,
 			);
 			isa = PBXGroup;
 			name = Interface;
