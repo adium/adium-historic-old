@@ -102,8 +102,7 @@
     [slider_labelOpacity            setEnabled:labelsAreEnabled];
     [checkbox_labelGroups           setEnabled:labelsAreEnabled];
     [checkbox_useGradient           setEnabled:labelsAreEnabled];
-    [colorWell_labelGroupsColor     setEnabled:labelsAreEnabled];
-    [colorWell_labelGroupsColor		setEnabled:(labelsAreEnabled ? [checkbox_labelGroups state] : NO)];
+    [colorWell_labelGroupsColor		setEnabled:(labelsAreEnabled ? [[preferenceDict objectForKey:KEY_SCL_LABEL_GROUPS] boolValue] : NO)];
 }
 
 @end
