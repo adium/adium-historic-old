@@ -26,6 +26,7 @@
 #define KEY_SIGNED_ON_ENABLED		@"Signed On Enabled"
 #define KEY_UNVIEWED_ENABLED		@"Unviewed Content Enabled"
 #define KEY_ONLINE_ENABLED		@"Online Enabled"
+#define KEY_OPEN_TAB_ENABLED		@"Open Tab Enabled"
 #define KEY_IDLE_AWAY_ENABLED		@"Idle And Away Enabled"
 
 #define KEY_AWAY_COLOR			@"Away Color"
@@ -35,16 +36,18 @@
 #define KEY_SIGNED_ON_COLOR		@"Signed On Color"
 #define KEY_UNVIEWED_COLOR		@"Unviewed Content Color"
 #define KEY_ONLINE_COLOR		@"Online Color"
+#define KEY_OPEN_TAB_COLOR		@"Open Tab Color"
 #define KEY_IDLE_AWAY_COLOR		@"Idle And Away Color"
 
-#define KEY_BACK_AWAY_COLOR		@"Away Background Color"
-#define KEY_BACK_IDLE_COLOR		@"Idle Background Color"
-#define KEY_BACK_TYPING_COLOR		@"Typing Background Color"
-#define KEY_BACK_SIGNED_OFF_COLOR	@"Signed Off Background Color"
-#define KEY_BACK_SIGNED_ON_COLOR	@"Signed On Background Color"
-#define KEY_BACK_UNVIEWED_COLOR		@"Unviewed Content Background Color"
-#define KEY_BACK_ONLINE_COLOR		@"Online Background Color"
-#define KEY_BACK_IDLE_AWAY_COLOR	@"Idle And Away Background Color"
+#define KEY_LABEL_AWAY_COLOR		@"Away Label Color"
+#define KEY_LABEL_IDLE_COLOR		@"Idle Label Color"
+#define KEY_LABEL_TYPING_COLOR		@"Typing Label Color"
+#define KEY_LABEL_SIGNED_OFF_COLOR	@"Signed Off Label Color"
+#define KEY_LABEL_SIGNED_ON_COLOR	@"Signed On Label Color"
+#define KEY_LABEL_UNVIEWED_COLOR	@"Unviewed Content Label Color"
+#define KEY_LABEL_ONLINE_COLOR		@"Online Label Color"
+#define KEY_LABEL_OPEN_TAB_COLOR	@"Open Tab Label Color"
+#define KEY_LABEL_IDLE_AWAY_COLOR	@"Idle And Away Label Color"
 
 
 @class AIContactStatusColoringPreferences;
@@ -61,6 +64,7 @@
     BOOL		typingEnabled;
     BOOL		unviewedContentEnabled;
     BOOL		onlineEnabled;
+    BOOL		openTabEnabled;
     BOOL		idleAndAwayEnabled;
     
     NSColor		*awayColor;
@@ -70,6 +74,7 @@
     NSColor		*typingColor;
     NSColor		*unviewedContentColor;
     NSColor		*onlineColor;
+    NSColor		*openTabColor;
     NSColor		*idleAndAwayColor;
     
     NSColor		*awayInvertedColor;
@@ -79,16 +84,18 @@
     NSColor		*typingInvertedColor;
     NSColor		*unviewedContentInvertedColor;
     NSColor		*onlineInvertedColor;
+    NSColor		*openTabInvertedColor;
     NSColor		*idleAndAwayInvertedColor;
 
-    NSColor		*backAwayColor;
-    NSColor		*backIdleColor;
-    NSColor		*backSignedOffColor;
-    NSColor		*backSignedOnColor;
-    NSColor		*backTypingColor;
-    NSColor		*backUnviewedContentColor;
-    NSColor		*backOnlineColor;
-    NSColor		*backIdleAndAwayColor;
+    NSColor		*awayLabelColor;
+    NSColor		*idleLabelColor;
+    NSColor		*signedOffLabelColor;
+    NSColor		*signedOnLabelColor;
+    NSColor		*typingLabelColor;
+    NSColor		*unviewedContentLabelColor;
+    NSColor		*onlineLabelColor;
+    NSColor		*openTabLabelColor;
+    NSColor		*idleAndAwayLabelColor;
     
 }
 

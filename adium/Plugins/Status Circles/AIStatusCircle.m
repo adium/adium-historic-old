@@ -44,6 +44,7 @@
     color = nil;
     flashColor = nil;
     string = nil;
+    stringColor = nil;
     state = AICircleNormal;
     bezeled = NO;
     flashColorUnique = YES;
@@ -81,6 +82,15 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
     if(string != inString){
         [string release];
         string = [inString retain];
+        [self _flushDrawingCache];
+    }
+}
+
+- (void)setStringColor:(NSColor *)inColor
+{
+    if(stringColor != inColor){
+        [stringColor release];
+        stringColor = [inColor retain];
         [self _flushDrawingCache];
     }
 }
@@ -416,7 +426,7 @@ imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
     
     //Create the attributed string
     attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-        [NSColor blackColor], NSForegroundColorAttributeName,
+        stringColor, NSForegroundColorAttributeName,
         [NSFont cachedFontWithName:@"Lucida Grande" size:fontSize], NSFontAttributeName,
         paragraphStyle, NSParagraphStyleAttributeName, nil];
 

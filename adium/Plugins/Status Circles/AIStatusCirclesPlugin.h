@@ -19,8 +19,13 @@
 #define STATUS_CIRCLES_DEFAULT_PREFS	@"StatusCirclesDefaults"
 #define PREF_GROUP_STATUS_CIRCLES	@"StatusCircles"
 
-#define KEY_DISPLAY_IDLE_TIME		@"Display Idle Time"
+#define KEY_DISPLAY_BACKGROUND_STATUS_BAR	@"Display Background Status Bar"
+#define KEY_DISPLAY_STATUS_CIRCLE		@"Display Status Circle"
+#define KEY_DISPLAY_STATUS_CIRCLE_ON_LEFT	@"Display Status Circle on Left"
+#define KEY_DISPLAY_IDLE_TIME			@"Display Idle Time"
+#define KEY_IDLE_TIME_COLOR			@"Idle Time Text Color"
 
+/*
 #define KEY_AWAY_COLOR			@"Away Color"
 #define KEY_IDLE_AWAY_COLOR		@"Idle & Away Color"
 #define KEY_IDLE_COLOR			@"Idle Color"
@@ -30,17 +35,23 @@
 #define KEY_SIGNED_ON_COLOR		@"Signed On Color"
 #define KEY_UNVIEWED_COLOR		@"Unviewed Content Color"
 #define KEY_WARNING_COLOR		@"Warning Color"
+*/
 
 @class AIStatusCirclesPreferences;
 //@class AIStatusCircle;
 
-@interface AIStatusCirclesPlugin : AIPlugin <AIFlashObserver, AIListObjectObserver> {
+@interface AIStatusCirclesPlugin : AIPlugin </*AIFlashObserver, */AIListObjectObserver> {
     AIStatusCirclesPreferences *preferences;
 
-    NSMutableArray	*flashingListObjectArray;
+//    NSMutableArray	*flashingListObjectArray;
 
+    BOOL		displayBackgroundStatusBar;
+    BOOL		displayStatusCircle;
+    BOOL		displayStatusCircleOnLeft;
     BOOL		displayIdleTime;
+    NSColor		*idleStringColor;
 
+/*
     NSColor		*awayColor;
     NSColor		*idleColor;
     NSColor		*idleAwayColor;
@@ -50,6 +61,7 @@
     NSColor		*signedOnColor;
     NSColor		*unviewedContentColor;
     NSColor		*warningColor;
+*/
 }
 
 @end

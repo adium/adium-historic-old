@@ -19,7 +19,7 @@
 #import "AIContactStatusColoringPreferences.h"
 
 #define	CONTACT_STATUS_COLORING_PREF_NIB	@"ContactStatusColoringPrefs"
-#define CONTACT_STATUS_COLORING_PREF_TITLE	@"Contact Coloring"
+#define CONTACT_STATUS_COLORING_PREF_TITLE	@"Status Coloring"
 
 @interface AIContactStatusColoringPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
@@ -72,6 +72,11 @@
                                              forKey:KEY_ONLINE_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
+    }else if(sender == colorWell_openTab){
+        [[owner preferenceController] setPreference:[[colorWell_openTab color] stringRepresentation]
+                                             forKey:KEY_OPEN_TAB_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
     }else if(sender == colorWell_idleAndAway){
         [[owner preferenceController] setPreference:[[colorWell_idleAndAway color] stringRepresentation]
                                              forKey:KEY_IDLE_AWAY_COLOR
@@ -79,44 +84,49 @@
 
 
         
-    }else if(sender == colorWell_backSignedOff){
-        [[owner preferenceController] setPreference:[[colorWell_backSignedOff color] stringRepresentation]
-                                             forKey:KEY_BACK_SIGNED_OFF_COLOR
+    }else if(sender == colorWell_signedOffLabel){
+        [[owner preferenceController] setPreference:[[colorWell_signedOffLabel color] stringRepresentation]
+                                             forKey:KEY_LABEL_SIGNED_OFF_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
-    }else if(sender == colorWell_backSignedOn){
-        [[owner preferenceController] setPreference:[[colorWell_backSignedOn color] stringRepresentation]
-                                             forKey:KEY_BACK_SIGNED_ON_COLOR
+    }else if(sender == colorWell_signedOnLabel){
+        [[owner preferenceController] setPreference:[[colorWell_signedOnLabel color] stringRepresentation]
+                                             forKey:KEY_LABEL_SIGNED_ON_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
-    }else if(sender == colorWell_backAway){
-        [[owner preferenceController] setPreference:[[colorWell_backAway color] stringRepresentation]
-                                             forKey:KEY_BACK_AWAY_COLOR
+    }else if(sender == colorWell_awayLabel){
+        [[owner preferenceController] setPreference:[[colorWell_awayLabel color] stringRepresentation]
+                                             forKey:KEY_LABEL_AWAY_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
-    }else if(sender == colorWell_backIdle){
-        [[owner preferenceController] setPreference:[[colorWell_backIdle color] stringRepresentation]
-                                             forKey:KEY_BACK_IDLE_COLOR
+    }else if(sender == colorWell_idleLabel){
+        [[owner preferenceController] setPreference:[[colorWell_idleLabel color] stringRepresentation]
+                                             forKey:KEY_LABEL_IDLE_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
-    }else if(sender == colorWell_backTyping){
-        [[owner preferenceController] setPreference:[[colorWell_backTyping color] stringRepresentation]
-                                             forKey:KEY_BACK_TYPING_COLOR
+    }else if(sender == colorWell_typingLabel){
+        [[owner preferenceController] setPreference:[[colorWell_typingLabel color] stringRepresentation]
+                                             forKey:KEY_LABEL_TYPING_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
-    }else if(sender == colorWell_backUnviewedContent){
-        [[owner preferenceController] setPreference:[[colorWell_backUnviewedContent color] stringRepresentation]
-                                             forKey:KEY_BACK_UNVIEWED_COLOR
+    }else if(sender == colorWell_unviewedContentLabel){
+        [[owner preferenceController] setPreference:[[colorWell_unviewedContentLabel color] stringRepresentation]
+                                             forKey:KEY_LABEL_UNVIEWED_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
-    }else if(sender == colorWell_backOnline){
-        [[owner preferenceController] setPreference:[[colorWell_backOnline color] stringRepresentation]
-                                             forKey:KEY_BACK_ONLINE_COLOR
+    }else if(sender == colorWell_onlineLabel){
+        [[owner preferenceController] setPreference:[[colorWell_onlineLabel color] stringRepresentation]
+                                             forKey:KEY_LABEL_ONLINE_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
-    }else if(sender == colorWell_backIdleAndAway){
-        [[owner preferenceController] setPreference:[[colorWell_backIdleAndAway color] stringRepresentation]
-                                             forKey:KEY_BACK_IDLE_AWAY_COLOR
+    }else if(sender == colorWell_openTabLabel){
+        [[owner preferenceController] setPreference:[[colorWell_openTabLabel color] stringRepresentation]
+                                             forKey:KEY_LABEL_OPEN_TAB_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
+    }else if(sender == colorWell_idleAndAwayLabel){
+        [[owner preferenceController] setPreference:[[colorWell_idleAndAwayLabel color] stringRepresentation]
+                                             forKey:KEY_LABEL_IDLE_AWAY_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         
 
@@ -163,12 +173,18 @@
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
+    }else if(sender == checkBox_openTab){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_OPEN_TAB_ENABLED
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+        [self configureControlDimming];
+
     }else if(sender == checkBox_idleAndAway){
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_IDLE_AWAY_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
-        
+
     }
 }
 
@@ -220,16 +236,18 @@
     [colorWell_typing setColor:[[preferenceDict objectForKey:KEY_TYPING_COLOR] representedColor]];
     [colorWell_unviewedContent setColor:[[preferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
     [colorWell_online setColor:[[preferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
+    [colorWell_openTab setColor:[[preferenceDict objectForKey:KEY_OPEN_TAB_COLOR] representedColor]];
     [colorWell_idleAndAway setColor:[[preferenceDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor]];
 
-    [colorWell_backAway setColor:[[preferenceDict objectForKey:KEY_BACK_AWAY_COLOR] representedColor]];
-    [colorWell_backIdle setColor:[[preferenceDict objectForKey:KEY_BACK_IDLE_COLOR] representedColor]];
-    [colorWell_backSignedOff setColor:[[preferenceDict objectForKey:KEY_BACK_SIGNED_OFF_COLOR] representedColor]];
-    [colorWell_backSignedOn setColor:[[preferenceDict objectForKey:KEY_BACK_SIGNED_ON_COLOR] representedColor]];
-    [colorWell_backTyping setColor:[[preferenceDict objectForKey:KEY_BACK_TYPING_COLOR] representedColor]];
-    [colorWell_backUnviewedContent setColor:[[preferenceDict objectForKey:KEY_BACK_UNVIEWED_COLOR] representedColor]];
-    [colorWell_backOnline setColor:[[preferenceDict objectForKey:KEY_BACK_ONLINE_COLOR] representedColor]];
-    [colorWell_backIdleAndAway setColor:[[preferenceDict objectForKey:KEY_BACK_IDLE_AWAY_COLOR] representedColor]];
+    [colorWell_awayLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
+    [colorWell_idleLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
+    [colorWell_signedOffLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor]];
+    [colorWell_signedOnLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor]];
+    [colorWell_typingLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_TYPING_COLOR] representedColor]];
+    [colorWell_unviewedContentLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
+    [colorWell_onlineLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
+    [colorWell_openTabLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_OPEN_TAB_COLOR] representedColor]];
+    [colorWell_idleAndAwayLabel setColor:[[preferenceDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColor]];
 
     [checkBox_signedOff setState:[[preferenceDict objectForKey:KEY_SIGNED_OFF_ENABLED] boolValue]];
     [checkBox_signedOn setState:[[preferenceDict objectForKey:KEY_SIGNED_ON_ENABLED] boolValue]];
@@ -238,6 +256,7 @@
     [checkBox_typing setState:[[preferenceDict objectForKey:KEY_TYPING_ENABLED] boolValue]];
     [checkBox_unviewedContent setState:[[preferenceDict objectForKey:KEY_UNVIEWED_ENABLED] boolValue]];
     [checkBox_online setState:[[preferenceDict objectForKey:KEY_ONLINE_ENABLED] boolValue]];
+    [checkBox_openTab setState:[[preferenceDict objectForKey:KEY_OPEN_TAB_ENABLED] boolValue]];
     [checkBox_idleAndAway setState:[[preferenceDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue]];
 
     [self configureControlDimming];
@@ -247,28 +266,31 @@
 - (void)configureControlDimming
 {
     [colorWell_signedOff setEnabled:[checkBox_signedOff state]];
-    [colorWell_backSignedOff setEnabled:[checkBox_signedOff state]];
+    [colorWell_signedOffLabel setEnabled:[checkBox_signedOff state]];
 
     [colorWell_signedOn setEnabled:[checkBox_signedOn state]];
-    [colorWell_backSignedOn setEnabled:[checkBox_signedOn state]];
+    [colorWell_signedOnLabel setEnabled:[checkBox_signedOn state]];
 
     [colorWell_away setEnabled:[checkBox_away state]];
-    [colorWell_backAway setEnabled:[checkBox_away state]];
+    [colorWell_awayLabel setEnabled:[checkBox_away state]];
 
     [colorWell_idle setEnabled:[checkBox_idle state]];
-    [colorWell_backIdle setEnabled:[checkBox_idle state]];
+    [colorWell_idleLabel setEnabled:[checkBox_idle state]];
 
     [colorWell_typing setEnabled:[checkBox_typing state]];
-    [colorWell_backTyping setEnabled:[checkBox_typing state]];
+    [colorWell_typingLabel setEnabled:[checkBox_typing state]];
 
     [colorWell_unviewedContent setEnabled:[checkBox_unviewedContent state]];
-    [colorWell_backUnviewedContent setEnabled:[checkBox_unviewedContent state]];
+    [colorWell_unviewedContentLabel setEnabled:[checkBox_unviewedContent state]];
 
     [colorWell_online setEnabled:[checkBox_online state]];
-    [colorWell_backOnline setEnabled:[checkBox_online state]];
+    [colorWell_onlineLabel setEnabled:[checkBox_online state]];
+
+    [colorWell_openTab setEnabled:[checkBox_openTab state]];
+    [colorWell_openTabLabel setEnabled:[checkBox_openTab state]];
 
     [colorWell_idleAndAway setEnabled:[checkBox_idleAndAway state]];
-    [colorWell_backIdleAndAway setEnabled:[checkBox_idleAndAway state]];
+    [colorWell_idleAndAwayLabel setEnabled:[checkBox_idleAndAway state]];
 }
 
 @end

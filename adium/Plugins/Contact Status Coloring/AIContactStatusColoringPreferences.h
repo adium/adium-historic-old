@@ -24,35 +24,39 @@
 
     IBOutlet	NSButton	*checkBox_signedOff;
     IBOutlet	NSColorWell	*colorWell_signedOff;
-    IBOutlet	NSColorWell	*colorWell_backSignedOff;
+    IBOutlet	NSColorWell	*colorWell_signedOffLabel;
 
     IBOutlet	NSButton	*checkBox_signedOn;
     IBOutlet	NSColorWell	*colorWell_signedOn;
-    IBOutlet	NSColorWell	*colorWell_backSignedOn;
+    IBOutlet	NSColorWell	*colorWell_signedOnLabel;
 
     IBOutlet	NSButton	*checkBox_away;
     IBOutlet	NSColorWell	*colorWell_away;
-    IBOutlet	NSColorWell	*colorWell_backAway;
+    IBOutlet	NSColorWell	*colorWell_awayLabel;
 
     IBOutlet	NSButton	*checkBox_idle;
     IBOutlet	NSColorWell	*colorWell_idle;
-    IBOutlet	NSColorWell	*colorWell_backIdle;
+    IBOutlet	NSColorWell	*colorWell_idleLabel;
 
     IBOutlet	NSButton	*checkBox_typing;
     IBOutlet	NSColorWell	*colorWell_typing;
-    IBOutlet	NSColorWell	*colorWell_backTyping;
+    IBOutlet	NSColorWell	*colorWell_typingLabel;
 
     IBOutlet	NSButton	*checkBox_unviewedContent;
     IBOutlet	NSColorWell	*colorWell_unviewedContent;
-    IBOutlet	NSColorWell	*colorWell_backUnviewedContent;
+    IBOutlet	NSColorWell	*colorWell_unviewedContentLabel;
 
     IBOutlet	NSButton	*checkBox_online;
     IBOutlet	NSColorWell	*colorWell_online;
-    IBOutlet	NSColorWell	*colorWell_backOnline;
+    IBOutlet	NSColorWell	*colorWell_onlineLabel;
+
+    IBOutlet	NSButton	*checkBox_openTab;
+    IBOutlet	NSColorWell	*colorWell_openTab;
+    IBOutlet	NSColorWell	*colorWell_openTabLabel;
 
     IBOutlet	NSButton	*checkBox_idleAndAway;
     IBOutlet	NSColorWell	*colorWell_idleAndAway;
-    IBOutlet	NSColorWell	*colorWell_backIdleAndAway;
+    IBOutlet	NSColorWell	*colorWell_idleAndAwayLabel;
 }
 
 + (AIContactStatusColoringPreferences *)contactStatusColoringPreferencesWithOwner:(id)inOwner;

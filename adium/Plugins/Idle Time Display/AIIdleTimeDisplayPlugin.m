@@ -32,6 +32,7 @@
 {
     //init
     displayIdleTime = NO;
+    displayIdleOnLeft = NO;
     idleTextColor = nil;
 
     //Register our default preferences
@@ -63,24 +64,34 @@
     NSArray		*modifiedAttributes = nil;
 
     if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Idle"]){
-        AIMutableOwnerArray	*rightViewArray = [inObject displayArrayForKey:@"Right View"];
-        AIIdleView		*idleView = [rightViewArray objectWithOwner:self];
+        AIMutableOwnerArray	*viewArray;
+        AIIdleView		*idleView;
         double			idle;
-        BOOL			attributesChanged = NO;
 
         //Set the correct idle time
         idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
 
-        if(idle != 0 && displayIdleTime){
+	if(displayIdleOnLeft){
+	    viewArray = [inObject displayArrayForKey:@"Left View"];
+	    [[inObject displayArrayForKey:@"Right View"] setObject:nil withOwner:self];
+
+	}else{
+	    viewArray = [inObject displayArrayForKey:@"Right View"];
+	    [[inObject displayArrayForKey:@"Left View"]  setObject:nil withOwner:self];
+
+	}
+
+        if(displayIdleTime){
+
+	    idleView = [viewArray objectWithOwner:self];
             //Add an idle view if one doesn't exist
             if(!idleView){
                 idleView = [AIIdleView idleView];
-                [rightViewArray setObject:idleView withOwner:self];
+                [viewArray setObject:idleView withOwner:self];
             }
 
             //Set the correct time
-            [idleView setStringContent:[self idleStringForSeconds:idle]];
-            attributesChanged = YES;
+            [idleView setStringContent:(idle != 0 ? [self idleStringForSeconds:idle] : @"")];
 
             //Set the correct color
             [idleView setColor:idleTextColor];
@@ -88,57 +99,16 @@
         }else{
             //Remove the idle view if one exists
             if(idleView){
-                [rightViewArray setObject:nil withOwner:self];
-                attributesChanged = YES;
+                [viewArray setObject:nil withOwner:self];
             }
 
         }
 
-        if(attributesChanged){
-            modifiedAttributes = [NSArray arrayWithObjects:@"Right View", nil];
-        }
+	modifiedAttributes = [NSArray arrayWithObjects:@"Left View", @"Right View", nil];
     }
 
     return(modifiedAttributes);
 }
-/*{
-NSArray		*modifiedAttributes = nil;
-
-    if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Idle"]){
-        AIMutableOwnerArray	*rightViewArray = [inObject displayArrayForKey:@"Right View"];
-        AIIdleView		*idleView = [rightViewArray objectWithOwner:self];
-        double			idle;
-
-        //Set the correct idle time
-        idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
-
-        if(displayIdleTime){
-            //Add an idle view if one doesn't exist
-            if(!idleView){
-                idleView = [AIIdleView idleView];
-                [rightViewArray setObject:idleView withOwner:self];
-            }
-
-            //Set the correct time
-            if(idle != 0){
-                [idleView setStringContent:[self idleStringForSeconds:idle]];
-            }else{
-                [idleView setStringContent:@""];
-            }
-
-        }else{
-            //Remove the idle view if one exists
-            if(idleView){
-                [rightViewArray setObject:nil withOwner:self];
-            }
-
-        }
-
-        modifiedAttributes = [NSArray arrayWithObjects:@"Right View", nil];
-    }
-
-    return(modifiedAttributes);
-}*/
 
 //
 - (NSString *)idleStringForSeconds:(int)seconds
@@ -171,6 +141,7 @@ NSArray		*modifiedAttributes = nil;
         //Cache the preference values
         [idleTextColor release];
 	displayIdleTime = [[prefDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue];
+	displayIdleOnLeft = [[prefDict objectForKey:KEY_DISPLAY_IDLE_TIME_ON_LEFT] boolValue];
         idleTextColor = [[[prefDict objectForKey:KEY_IDLE_TIME_COLOR] representedColor] retain];
         
         //Update all our idle views

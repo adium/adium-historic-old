@@ -2,25 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>Away Color</key>
-    <string>229,229,102</string>
+    <key>Display Background Status Bar</key>
+    <true/>
+    <key>Display Status Circle</key>
+    <true/>
+    <key>Display Status Circle on Left</key>
+    <true/>
     <key>Display Idle Time</key>
     <true/>
-    <key>Idle &amp; Away Color</key>
-    <string>229,229,153</string>
-    <key>Idle Color</key>
-    <string>204,204,204</string>
-    <key>Online Color</key>
-    <string>255,255,255</string>
-    <key>Open Tab Color</key>
-    <string>165,229,178</string>
-    <key>Signed Off Color</key>
-    <string>178,0,0</string>
-    <key>Signed On Color</key>
-    <string>102,102,229</string>
-    <key>Unviewed Content Color</key>
-    <string>255,178,0</string>
-    <key>Warning Color</key>
-    <string>178,0,0</string>
+    <key>Idle Time Text Color</key>
+    <string>52,52,52</string>
 </dict>
 </plist>

@@ -71,9 +71,9 @@
     NSArray	*keys = [[notification userInfo] objectForKey:@"Keys"];
 
     //We only need to redraw if the text color has changed
-    if([keys containsObject:@"Tab Back Color"]){
+    if([keys containsObject:@"Tab Color"]){
         //This should really be optimized and cleaned up.  Right now we're assuming the tab view's delegate is our custom tabs, and telling them to display - obviously not the best solution, but good enough for now.
-        [self setColor:[[[messageView listObject] displayArrayForKey:@"Tab Back Color"] averageColor]];
+        [self setColor:[[[messageView listObject] displayArrayForKey:@"Tab Color"] averageColor]];
         [[[self tabView] delegate] setNeedsDisplay:YES];
     }
 
