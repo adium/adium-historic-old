@@ -115,8 +115,8 @@
     //The interface depends upon the plugins, so it must load after them
     [interfaceController loadDualInterface];
 
-    //Broadcast a finished launching notification
-    [[NSNotificationCenter defaultCenter] postNotificationName:Adium_LaunchComplete object:nil];
+    [contactController finishIniting];
+    [accountController finishIniting];
 }
 
 @end

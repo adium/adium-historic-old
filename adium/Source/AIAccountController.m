@@ -53,9 +53,6 @@
     accountNotificationCenter = nil;
     availableServiceArray = [[NSMutableArray alloc] init];
     accountArray = [[NSMutableArray alloc] init];
-    
-    //Observe
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adiumLaunchComplete:) name:Adium_LaunchComplete object:nil];
 }
 
 // dealloc
@@ -68,7 +65,7 @@
     [super dealloc];
 }
 
-- (void)adiumLaunchComplete:(NSNotification *)notification
+- (void)finishIniting
 {
     //Load the user accounts
     [self loadAccounts];
