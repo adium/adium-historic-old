@@ -56,11 +56,17 @@
 	
     [lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
     
+	AILog(@"%@: Parsing %@",bookmarkString);
     return [SHMozillaCommonParser parseBookmarksfromString:bookmarkString];
 }
 
 -(BOOL)bookmarksExist
 {
+	AILog(@"%@: fox9: %i; path \"%@\"; exists? %i",self,
+		  fox9,
+		  (fox9 ? [self fox9BookmarkPath] : [self bookmarkPath]),
+		  [[NSFileManager defaultManager] fileExistsAtPath:(fox9 ? [self fox9BookmarkPath] : [self bookmarkPath])]);
+	
     return [[NSFileManager defaultManager] fileExistsAtPath:(fox9 ? [self fox9BookmarkPath] : [self bookmarkPath])];
 }
 
