@@ -25,6 +25,7 @@
  * ask them for one so we can take this out.
  */
 NSMutableDictionary *_accountDict;
+static CBGaimServicePlugin  *servicePluginInstance;
 
 @implementation CBGaimServicePlugin
 
@@ -448,6 +449,8 @@ static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, c
 {
     //Values passed can be null
     NSLog(@"adiumGaimNotifyMessage: %s: %s, %s", title, primary, secondary);
+	[servicePluginInstance handleNotifyMessageOfType:type withTitle:title primary:primary secondary:secondary];
+
     return(nil);
 }
 
@@ -491,6 +494,74 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
     adiumGaimNotifyClose
 };
 
+- (void)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
+{
+    NSString *primaryString = [NSString stringWithUTF8String:primary];
+	NSString *secondaryString = [NSString stringWithUTF8String:secondary];
+	NSString *titleString;
+	if (title){
+		titleString = [NSString stringWithFormat:@"Adium Notice: %@",[NSString stringWithUTF8String:title]];
+	}else{
+		titleString = AILocalizedString(@"Adium : Notice", nil);
+	}
+	
+	NSString *errorMessage = nil;
+	NSString *description = nil;
+			
+	if ([secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound){
+		return;
+	}
+	
+    if ([primaryString rangeOfString: @"Yahoo! message did not get sent."].location != NSNotFound){
+		//Yahoo send error
+		errorMessage = AILocalizedString(@"Your Yahoo! message did not get sent.", nil);
+		
+	}else if ([primaryString rangeOfString: @"did not get sent"].location != NSNotFound){
+		//Oscar send error
+		NSString *targetUserName = [[[[primaryString componentsSeparatedByString:@" message to "] objectAtIndex:1] componentsSeparatedByString:@" did not get "] objectAtIndex:0];
+		
+		errorMessage = [NSString stringWithFormat:AILocalizedString(@"Your message to %@ did not get sent",nil),targetUserName];
+		
+		if ([secondaryString rangeOfString:@"Rate"].location != NSNotFound){
+			description = AILocalizedString(@"You are sending messages too quickly; wait a moment and try again.",nil);
+		}else if ([secondaryString isEqualToString:@"Service unavailable"] || [secondaryString isEqualToString:@"Not logged in"]){
+			description = AILocalizedString(@"Connection error.",nil);
+		}else if ([secondaryString isEqualToString:@"Refused by client"]){
+			description = AILocalizedString(@"Your message was refused by the other user.",nil);
+		}else if ([secondaryString isEqualToString:@"Reply too big"]){
+			description = AILocalizedString(@"Your message was too big.",nil);
+		}else if ([secondaryString isEqualToString:@"In local permit/deny"]){
+			description = AILocalizedString(@"The other user is in your deny list.",nil);
+		}else if ([secondaryString rangeOfString:@"Too evil"].location != NSNotFound){
+			description = AILocalizedString(@"Warning level is too high.",nil);
+		}else if ([secondaryString isEqualToString:@"User temporarily unavailable"]){
+			description = AILocalizedString(@"The other user is temporarily unavailable.",nil);
+		}else{
+			description = AILocalizedString(@"No reason was given.",nil);
+		}
+		
+    }else if ([primaryString rangeOfString: @"Authorization Denied"].location != NSNotFound){
+		//Authorization denied; grab the user name and reason
+		NSArray		*parts = [[[secondaryString componentsSeparatedByString:@" user "] objectAtIndex:1] componentsSeparatedByString:@" has denied your request to add them to your buddy list for the following reason:\n"];
+		NSString	*targetUserName =  [parts objectAtIndex:0];
+		NSString	*reason = ([parts count] > 1 ? [parts objectAtIndex:1] : AILocalizedString(@"(No reason given)",nil));
+		
+		errorMessage = [NSString stringWithFormat:AILocalizedString(@"%@ denied authorization:",nil),targetUserName];
+		description = reason;
+
+    }else if ([primaryString rangeOfString: @"Authorization Granted"].location != NSNotFound){
+		//ICQ Authorization granted
+		NSString *targetUserName = [[[[secondaryString componentsSeparatedByString:@" user "] objectAtIndex:1] componentsSeparatedByString:@" has "] objectAtIndex:0];
+		
+		errorMessage = [NSString stringWithFormat:AILocalizedString(@"%@ granted authorization.",nil),targetUserName];
+	}	
+		
+	//If we didn't grab a translated version using AILocalizedString, at least display the English version Gaim supplied
+	[[adium interfaceController] handleMessage:([errorMessage length] ? errorMessage : primaryString)
+							  withDescription:([description length] ? description : ([secondaryString length] ? secondaryString : @"") )
+							  withWindowTitle:titleString];
+}
+
 #pragma mark Request
 // Request ------------------------------------------------------------------------------------------------------
 static void *adiumGaimRequestInput(const char *title, const char *primary, const char *secondary, const char *defaultValue, gboolean multiline, gboolean masked, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb, void *userData)
@@ -501,25 +572,27 @@ static void *adiumGaimRequestInput(const char *title, const char *primary, const
 	 We may receive any combination of primary and secondary text (either, both, or neither).
 	 */
 	
-	NSString	    *titleString = (title ? [NSString stringWithUTF8String:title] : @"Input Requested");
-	NSString	    *msg = [NSString stringWithFormat:@"%s%s%s",
-		(primary ? primary : ""),
-		((primary && secondary) ? "\n\n" : ""),
-		(secondary ? secondary : "")];
 	NSString	*okButtonText = [NSString stringWithUTF8String:okText];
 	NSString	*cancelButtonText = [NSString stringWithUTF8String:cancelText];
-	NSString	*defaultValueString = (defaultValue ? [NSString stringWithUTF8String:defaultValue] : nil);
 
-	//Default value may be nil; it should be last in the dictionaryWithObjectsAndKeys: call so if it is, we just stop there
-	NSDictionary *infoDict = [NSDictionary dictionaryWithObjectsAndKeys:titleString,@"Title",
-											msg,@"Message",
-											okButtonText,@"OK Text",
+	NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:okButtonText,@"OK Text",
 											cancelButtonText,@"Cancel Text",
 											[NSValue valueWithPointer:okCb],@"OK Callback",
 											[NSValue valueWithPointer:cancelCb],@"Cancel Callback",
-											[NSValue valueWithPointer:userData],@"userData",
-											defaultValueString,@"Default Value",nil];
-
+											[NSValue valueWithPointer:userData],@"userData",nil];
+	if (title){
+		[infoDict setObject:[NSString stringWithUTF8String:title] forKey:@"Title"];	
+	}
+	if (defaultValue){
+		[infoDict setObject:[NSString stringWithUTF8String:defaultValue] forKey:@"Default Value"];
+	}
+	if (primary){
+		[infoDict setObject:[NSString stringWithUTF8String:primary] forKey:@"Primary Text"];
+	}
+	if (secondary){
+		[infoDict setObject:[NSString stringWithUTF8String:secondary] forKey:@"Secondary Text"];
+	}
+	
 	[ESGaimRequestWindowController showInputWindowWithDict:infoDict multiline:multiline masked:masked];
 
     return(nil);
@@ -756,7 +829,8 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 - (void)installPlugin
 {
 //	char *plugin_search_paths[2];
-
+	servicePluginInstance = self;
+	
 	//Register our defaults
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS forClass:[self class]]
 										  forGroup:GROUP_ACCOUNT_STATUS];
@@ -786,7 +860,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 //    if(!gaim_init_toc_plugin()) NSLog(@"Error: No TOC Support");
     if(!gaim_init_trepia_plugin()) NSLog(@"Error: No Trepia Support");
     if(!gaim_init_yahoo_plugin()) NSLog(@"Error: No Yahoo Support");
-
+//	if(!gaim_init_groupwise_plugin()) NSLog(@"Error: No Groupwise Support");
 
 	if(/*!gaim_init_ssl_plugin() || */!gaim_init_ssl_gnutls_plugin() || !gaim_init_msn_plugin()){
 		NSLog(@"Error: No MSN/SSL Support");

@@ -7,12 +7,19 @@
 
 #import "CBGaimServicePlugin.h"
 
-@interface ESGaimRequestWindowController : AIWindowController {
-	BOOL			masked;
-	NSDictionary	*infoDict;
+@interface ESGaimRequestWindowController : AIWindowController {	
+	IBOutlet		NSTextField		*textField_primary;
+	IBOutlet		NSTextField	*textField_secondary;
+	IBOutlet		NSTextField	*textField_input;
+	IBOutlet		NSButton		*button_okay;
+	IBOutlet		NSButton		*button_cancel;
+	
+	NSValue			*okayCallbackValue;
+	NSValue			*cancelCallbackValue;
+	NSValue			*userDataValue;
 }
 
 + (void)showInputWindowWithDict:(NSDictionary *)infoDict multiline:(BOOL)multiline masked:(BOOL)masked;
-- (id)initWithWindowNibName:(NSString *)windowNibName masked:(BOOL)inMasked withDict:(NSDictionary *)inInfoDict;
-
+- (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)infoDict multiline:(BOOL)multiline masked:(BOOL)masked;
+- (IBAction)pressedButton:(id)sender;
 @end
