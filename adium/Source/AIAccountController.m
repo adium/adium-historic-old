@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.84 2004/06/04 06:58:22 evands Exp $
+// $Id: AIAccountController.m,v 1.85 2004/06/06 16:26:44 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -52,7 +52,6 @@
     accountArray = nil;
     lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];
     sleepingOnlineAccounts = nil;
-    enableAccountSaving = YES;
 	
 	//Default account preferences
 	[[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ACCOUNT_DEFAULT_PREFS forClass:[self class]]
@@ -106,6 +105,7 @@
     
     //Cleanup
     [accountArray release];
+	[unloadableAccounts release];
     [availableServiceDict release];
     [lastAccountIDToSendContent release];
 }
@@ -122,7 +122,8 @@
 
 	//Close down any existing accounts
 	[accountArray release]; accountArray = [[NSMutableArray alloc] init];
-		
+	[unloadableAccounts release]; unloadableAccounts = [[NSMutableArray alloc] init];	
+	
 	accountList = [[owner preferenceController] preferenceForKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
 	
     //Create an instance of every saved account
@@ -142,15 +143,12 @@
         if(serviceType && [serviceType length] && accountUID && [accountUID length]){
             if(newAccount = [self createAccountOfType:serviceType withUID:accountUID objectID:objectID]){
                 [accountArray addObject:newAccount];
-            }
+            }else{
+				NSLog(@"Unable to load account %i: %@, %@", objectID, serviceType, accountUID);
+				[unloadableAccounts addObject:accountDict];
+			}
         }
     }
-	
-	//If we ran into some sort of error, don't save accounts (for dev builds) and throw an assertion
-	if ([accountList count] != [accountArray count]){
-		enableAccountSaving = NO;
-		NSAssert(([accountList count] == [accountArray count]), @"Error loading accounts. If you add an account plugin, be sure to remove associated accounts before removing the plugin.  If you are building from CVS, please try a clean build.");
-	}
 	
 	//Broadcast an account list changed notification
     [[owner notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
@@ -159,30 +157,31 @@
 //Save the accounts
 - (void)saveAccounts
 {
-	if (enableAccountSaving){
-		NSMutableArray	*flatAccounts = [NSMutableArray array];
-		NSEnumerator	*enumerator;
-		AIAccount		*account;
+	NSMutableArray	*flatAccounts = [NSMutableArray array];
+	NSEnumerator	*enumerator;
+	AIAccount		*account;
+	
+	//Build a flattened array of the accounts
+	enumerator = [accountArray objectEnumerator];
+	while(account = [enumerator nextObject]){
+		NSMutableDictionary		*flatAccount = [NSMutableDictionary dictionary];
 		
-		//Build a flattened array of the accounts
-		enumerator = [accountArray objectEnumerator];
-		while(account = [enumerator nextObject]){
-			NSMutableDictionary		*flatAccount = [NSMutableDictionary dictionary];
-			
-			[flatAccount setObject:[[account service] identifier] forKey:ACCOUNT_TYPE]; //Unique plugin ID
-			[flatAccount setObject:[account serviceID] forKey:ACCOUNT_SERVICE];	    	//Shared service ID
-			[flatAccount setObject:[account UID] forKey:ACCOUNT_UID];		    		//Account UID
-			[flatAccount setObject:[account uniqueObjectID] forKey:ACCOUNT_OBJECT_ID];  //Account Object ID
-			
-			[flatAccounts addObject:flatAccount];
-		}
+		[flatAccount setObject:[[account service] identifier] forKey:ACCOUNT_TYPE]; //Unique plugin ID
+		[flatAccount setObject:[account serviceID] forKey:ACCOUNT_SERVICE];	    	//Shared service ID
+		[flatAccount setObject:[account UID] forKey:ACCOUNT_UID];		    		//Account UID
+		[flatAccount setObject:[account uniqueObjectID] forKey:ACCOUNT_OBJECT_ID];  //Account Object ID
 		
-		//Save
-		[[owner preferenceController] setPreference:flatAccounts forKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
-		
-		//Broadcast an account list changed notification
-		[[owner notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
+		[flatAccounts addObject:flatAccount];
 	}
+	
+	//Add any unloadable accounts so they're not lost
+	[flatAccounts addObjectsFromArray:unloadableAccounts];
+	
+	//Save
+	[[owner preferenceController] setPreference:flatAccounts forKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
+	
+	//Broadcast an account list changed notification
+	[[owner notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
 }
 
 //Returns a new account of the specified type (Unique service plugin ID)
