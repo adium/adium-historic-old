@@ -1,11 +1,14 @@
 {
     IBClasses = (
         {
-            ACTIONS = {closeWindow = id; }; 
-            CLASS = AIContactListEditorWindowController; 
+            CLASS = AILocalizationTextField; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"browser_contactList" = AIBrowser; }; 
-            SUPERCLASS = AIWindowController; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSTextField; 
         }, 
         {
             ACTIONS = {addContact = id; cancel = id; closeWindow = id; }; 
@@ -16,9 +19,13 @@
                 "popUp_contactType" = NSPopUpButton; 
                 "popUp_targetGroup" = NSPopUpButton; 
                 "tableView_accounts" = NSTableView; 
+                "textField_addToAccounts" = AILocalizationTextField; 
+                "textField_alias" = AILocalizationTextField; 
                 "textField_contactAlias" = NSTextField; 
                 "textField_contactName" = NSTextField; 
                 "textField_contactNameLabel" = NSTextField; 
+                "textField_inGroup" = AILocalizationTextField; 
+                "textField_type" = AILocalizationTextField; 
             }; 
             SUPERCLASS = AIWindowController; 
         }, 
