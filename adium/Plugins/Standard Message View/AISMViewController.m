@@ -255,6 +255,7 @@
     AIFlexibleTableCell	*cell;
 
     //Create the cell
+    
     cell = [AIFlexibleTableTextCell cellWithAttributedString:[content message]];
     [cell setBackgroundColor:[self backgroundColorOfContent:content]];
 

@@ -59,13 +59,13 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
     view_blank = [[NSView alloc] init];
     [view_blank retain];
-    
+
     if ( view_main && [[view_main subviews] count] == 0 ) //there are no subviews yet
         [view_main addSubview:view_blank];
-    
+
     //nothing's selected, obviously, so row = -1
     row = -1;
-    
+
     [super init];
     return self;
 }
@@ -333,6 +333,8 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     }
 
     [self configureWithSubview:view_details_message];
+
+    [[view_details_message window] makeFirstResponder:textField_message_actionDetails];
 }
 
 //Builds and returns an event menu
@@ -727,6 +729,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     [textField_actionDetails setStringValue:(details ? details : @"")];
 
     [self configureWithSubview:view_details_text];
+    [[view_details_text window] makeFirstResponder:textField_actionDetails];
 }
 
 - (void)configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu

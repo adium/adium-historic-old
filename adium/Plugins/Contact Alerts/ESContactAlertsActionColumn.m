@@ -26,7 +26,7 @@
 
 - (void)setInstance:(ESContactAlerts *)inInstance
 {
-    instance =  inInstance;
+    instance = inInstance;
 }
 
 - (id)dataCellForRow:(int)row

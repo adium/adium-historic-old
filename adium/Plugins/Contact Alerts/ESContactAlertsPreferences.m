@@ -46,7 +46,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     owner = [inOwner retain];
 
     offsetDictionary = [[NSMutableDictionary alloc] init];
-    
+
     //Register our preference pane
     [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Alerts withDelegate:self label:ALERTS_PREF_TITLE]];
 
@@ -61,12 +61,16 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         [NSBundle loadNibNamed:ALERTS_PREF_NIB owner:self];
 
         [view_prefView retain];
-        
+
         //Configure our view
         [self configureView];
 
+        [[owner notificationCenter] removeObserver:self];
         [[owner notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:Window_Changed_Alerts object:nil];
         [[owner notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:One_Time_Event_Fired object:nil];
+        //Observe account changes
+        [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
+
     }
 
     return(view_prefView);
@@ -76,9 +80,9 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
 {
     [[owner notificationCenter] removeObserver:self];
-    
+
     [view_prefView release]; view_prefView = nil;
-    
+
     [prefAlertsArray release]; prefAlertsArray = nil;
     [activeContactObject release];
     [instance release];
@@ -99,9 +103,9 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [instance retain];
 
     [instance configForObject:activeContactObject];
-    
+
     [actionColumn setInstance:instance];
-    
+
     //Build the action menu
     actionMenu = [instance actionListMenu];
 
@@ -111,7 +115,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [tableView_actions setDrawsAlternatingRows:YES];
     [tableView_actions setAlternatingRowColor:[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0]];
     [tableView_actions setTarget:self];
-//    [tableView_actions setDoubleAction:@selector(testSelectedEvent:)];
+    //    [tableView_actions setDoubleAction:@selector(testSelectedEvent:)];
     [tableView_actions setDataSource:self];
 
     [button_delete setEnabled:NO];
@@ -119,11 +123,11 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
     //Update the outline view
     [tableView_actions reloadData];
-    
-//    [[[tableView_actions tableColumns] objectAtIndex:2] sizeToFit];
-//    [[[tableView_actions tableColumns] objectAtIndex:1] sizeToFit];
-//    [[[tableView_actions tableColumns] objectAtIndex:0] sizeToFit];
-    
+
+    //    [[[tableView_actions tableColumns] objectAtIndex:2] sizeToFit];
+    //    [[[tableView_actions tableColumns] objectAtIndex:1] sizeToFit];
+    //    [[[tableView_actions tableColumns] objectAtIndex:0] sizeToFit];
+
     if ([prefAlertsArray count]) //some alerts do exist
     {
         [tableView_actions selectRow:0 byExtendingSelection:NO];
@@ -134,6 +138,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         [popUp_addEvent setMenu:[instance eventMenu]];
     }
 
+    [[view_prefView window] makeFirstResponder:tableView_actions]; //the table is a logical firstResponder for the all-alerts-at-once view
 }
 
 -(void)configureViewForContact:(AIListObject *)inContact
@@ -178,7 +183,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     {
         [instance configForObject:contact];
         thisInstanceCount = [instance count];
-        if (thisInstanceCount) 
+        if (thisInstanceCount)
         {
             [offsetDictionary setObject:[NSNumber numberWithInt:offset] forKey:[contact UID]];
             for (arrayCounter=0 ; arrayCounter < thisInstanceCount ; arrayCounter++)
@@ -192,7 +197,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 -(IBAction)anInstanceChanged:(id)sender
 {
-//    AIListObject * object = [[instance activeObject] autorelease];
+    //    AIListObject * object = [[instance activeObject] autorelease];
     [self rebuildPrefAlertsArray];
     [self configureViewForContact:activeContactObject];
 }
@@ -211,44 +216,44 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 -(IBAction)deleteEventAction:(id)sender
 {
-    if ([tableView_actions selectedRow] != -1) 
+    if ([tableView_actions selectedRow] != -1)
     {
         [instance configForObject:activeContactObject];
-        
+
         AIListObject *activeObject = activeContactObject; //store it now so we'll be okay if deletion releases the instance
 
         int index = [prefAlertsArray indexOfObject:activeObject];
 
-    [instance deleteEventAction:nil]; //delete the event from the instance
+        [instance deleteEventAction:nil]; //delete the event from the instance
         int count = [instance count]; //store new count now
-        
-    [[owner notificationCenter] postNotificationName:Pref_Changed_Alerts
-                                              object:activeObject
-                                            userInfo:nil]; //notify that the change occured
 
-    [prefAlertsArray removeObjectAtIndex:index]; //take one instance for this contact out of our array
-    
-    index += count;
-    NSRange theRange;
+        [[owner notificationCenter] postNotificationName:Pref_Changed_Alerts
+                                                  object:activeObject
+                                                userInfo:nil]; //notify that the change occured
 
-    theRange.length = [prefAlertsArray count] - index;
-    if (theRange.length > 0) //this isn't the last one
-    {
-        theRange.location = index;
+        [prefAlertsArray removeObjectAtIndex:index]; //take one instance for this contact out of our array
 
-        NSMutableSet * prefAlertsSet = [[NSMutableSet alloc] init];
-        [prefAlertsSet addObjectsFromArray:[prefAlertsArray subarrayWithRange:theRange]]; //each instance past the instance we just modified is now in prefAlertsSet
+        index += count;
+        NSRange theRange;
 
-        NSEnumerator * enumerator = [prefAlertsSet objectEnumerator];
-        AIListObject * thisObject;
-        while (thisObject = [enumerator nextObject])
+        theRange.length = [prefAlertsArray count] - index;
+        if (theRange.length > 0) //this isn't the last one
         {
-            NSString * UID = [thisObject UID];
-            NSNumber * offset = [offsetDictionary objectForKey:UID];
-            [offsetDictionary setObject:[NSNumber numberWithInt:([offset intValue] - 1)] forKey:UID];
+            theRange.location = index;
+
+            NSMutableSet * prefAlertsSet = [[NSMutableSet alloc] init];
+            [prefAlertsSet addObjectsFromArray:[prefAlertsArray subarrayWithRange:theRange]]; //each instance past the instance we just modified is now in prefAlertsSet
+
+            NSEnumerator * enumerator = [prefAlertsSet objectEnumerator];
+            AIListObject * thisObject;
+            while (thisObject = [enumerator nextObject])
+            {
+                NSString * UID = [thisObject UID];
+                NSNumber * offset = [offsetDictionary objectForKey:UID];
+                [offsetDictionary setObject:[NSNumber numberWithInt:([offset intValue] - 1)] forKey:UID];
+            }
         }
-    }
-    [self tableViewSelectionDidChange:nil];
+        [self tableViewSelectionDidChange:nil];
 
 
     }
@@ -270,9 +275,24 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 -(void)externalChangedAlerts:(NSNotification *)notification
 {
-        [self rebuildPrefAlertsArray];
-        [tableView_actions reloadData]; //necessary?
+    [self rebuildPrefAlertsArray];
+    [tableView_actions reloadData]; //necessary?
 }
+
+
+-(void)accountListChanged:(NSNotification *)notification
+{
+    //    NSLog(@"account list changed");
+    [popUp_contactList setMenu:[self switchContactMenu]];
+    if ( activeContactObject && ([popUp_contactList indexOfItemWithRepresentedObject:activeContactObject] == -1) ) {
+        if ([popUp_contactList numberOfItems] ) {
+            [popUp_contactList selectItemAtIndex:0];
+            activeContactObject = [[popUp_contactList selectedItem] representedObject];
+        }
+    }
+}
+
+
 
 //TableView datasource --------------------------------------------------------
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
@@ -286,7 +306,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     AIListObject *object = [prefAlertsArray objectAtIndex:row];
     [instance configForObject:object];
     row -= [[offsetDictionary objectForKey:[object UID]] intValue]; //acount for offset from here on out
-    
+
     if([identifier compare:TABLE_COLUMN_EVENT] == 0){
         NSDictionary	*actionDict;
         NSString	*displayName;
@@ -296,7 +316,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
         [instance configForObject:activeContactObject];
         return(displayName);
-        
+
     }else if([identifier compare:TABLE_COLUMN_ACTION] == 0){
         NSDictionary	*actionDict;
         NSString	*action;
@@ -309,7 +329,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
     }else if([identifier compare:TABLE_COLUMN_CONTACT] == 0){
         NSString *contact;
-       contact = [[instance activeObject] displayName]; //just the display name for now
+        contact = [[instance activeObject] displayName]; //just the display name for now
 
         [instance configForObject:activeContactObject];
         return (contact);
@@ -325,9 +345,9 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         AIListObject *object = [prefAlertsArray objectAtIndex:row];
         [instance configForObject:object];
         row -= [[offsetDictionary objectForKey:[object UID]] intValue];
-        
+
         [cell selectItemWithRepresentedObject:[[instance dictAtIndex:row] objectForKey:KEY_EVENT_ACTION]];
-        
+
         [instance configForObject:activeContactObject];
     }
 }
@@ -343,7 +363,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         AIListObject *listObject = [prefAlertsArray objectAtIndex:row];
 
         [instance configForObject:listObject];
-        
+
         selectedMenuItem = [[[tableColumn dataCellForRow:row] menu] itemAtIndex:[object intValue]];
 
         row -= [[offsetDictionary objectForKey:[listObject UID]] intValue]; //change row to account for offset
@@ -382,11 +402,11 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
         NSDictionary * selectedActionDict = [[[instance dictAtIndex:row] copy] autorelease];
         NSString *action = [selectedActionDict objectForKey:KEY_EVENT_ACTION];
-        
+
         [[[actionColumn dataCellForRow:row] menu] performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]]; //will appply appropriate subview in the process
         [button_oneTime setState:[[selectedActionDict objectForKey:KEY_EVENT_DELETE] intValue]];
         [button_active setState:[[selectedActionDict objectForKey:KEY_EVENT_ACTIVE] intValue]];
-        
+
         [button_delete setEnabled:YES];
         [button_oneTime setEnabled:YES];
         [button_active setEnabled:YES];
@@ -454,12 +474,12 @@ int alphabeticalSort(id objectA, id objectB, void *context);
                 NSMenuItem	*groupItem;
                 if ([contactMenu numberOfItems] > 0) [contactMenu addItem:[NSMenuItem separatorItem]];
                 groupItem = [[[NSMenuItem alloc] initWithTitle:[[contact containingGroup] displayName]
-                                                            target:self
-                                                            action:@selector(switchToContact:)
-                                                     keyEquivalent:@""] autorelease];
+                                                        target:self
+                                                        action:@selector(switchToContact:)
+                                                 keyEquivalent:@""] autorelease];
                 [groupItem setRepresentedObject:[contact containingGroup]];
-                    [contactMenu addItem:groupItem];
-                    firstOfflineSearch = YES; //start searching for an offline contact
+                [contactMenu addItem:groupItem];
+                firstOfflineSearch = YES; //start searching for an offline contact
             }
 
             if (firstOfflineSearch)
@@ -479,7 +499,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
             [contactMenu addItem:menuItem];
 
-groupName = [[contact containingGroup] displayName];
+            groupName = [[contact containingGroup] displayName];
         }
         [contactMenu setAutoenablesItems:NO];
     }

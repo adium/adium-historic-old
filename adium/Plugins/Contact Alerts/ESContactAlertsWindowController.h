@@ -41,4 +41,6 @@
 - (IBAction)addedEvent:(id)sender;
 - (IBAction)onlyWhileActive:(id)sender;
 
+- (void)accountListChanged:(NSNotification *)notification;
+
 @end
