@@ -19,7 +19,8 @@ message_id      serial primary key,
 message_date    timestamp default now(),
 message         varchar(8096),
 sender_id       int references im.users(user_id) not null,
-recipient_id    int references im.users(user_id) not null
+recipient_id    int references im.users(user_id) not null,
+random_id       float8 default random()
 );
 
  -- Stores aliases/display names for users, with history.
