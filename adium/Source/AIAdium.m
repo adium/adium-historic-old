@@ -115,7 +115,6 @@
 
 
 // Internal --------------------------------------------------------------------------------
-
 - (void)applicationWillFinishLaunching:(NSNotification *)notification
 {
     //init

@@ -15,20 +15,20 @@
 #define WINDOW_FADE_SNAP                        0.05 //How close to min/max we must get before fade is finished
 
 @interface ESFloater (PRIVATE)
-- (id)initWithImage:(NSImage *)inImage frame:(BOOL)frame;
+- (id)initWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask;
 - (void)_setWindowOpacity:(float)opacity;
 @end
 
 @implementation ESFloater
 
 //
-+ (id)floaterWithImage:(NSImage *)inImage frame:(BOOL)frame
++ (id)floaterWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask
 {
-    return([[self alloc] initWithImage:inImage frame:frame]);
+    return([[self alloc] initWithImage:inImage styleMask:styleMask]);
 }
 
 //
-- (id)initWithImage:(NSImage *)inImage frame:(BOOL)showFrame
+- (id)initWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask
 {
     NSRect  frame;
     
@@ -41,13 +41,12 @@
     //Set up the panel
     frame = NSMakeRect(0, 0, [inImage size].width, [inImage size].height);    
     panel = [[NSPanel alloc] initWithContentRect:frame
-                                       styleMask:((showFrame ? NSTitledWindowMask : NSBorderlessWindowMask) | NSTexturedBackgroundWindowMask)
+                                       styleMask:styleMask
                                          backing:NSBackingStoreBuffered
                                            defer:NO];
     [panel setHidesOnDeactivate:NO];
     [panel setIgnoresMouseEvents:YES];
     [panel setLevel:NSStatusWindowLevel];
-    [panel setHasShadow:NO];
     [self _setWindowOpacity:WINDOW_FADE_MIN];
     
     //Setup the static view

@@ -18,7 +18,7 @@
 
 #define MINI_TOOLBAR_POOF		@"poof"			//Filename of the poof animation
 #define MINI_TOOLBAR_MENU_NIB		@"MiniToolbarMenu"	//Filename of the minitoolbar nib
-#define MINI_TOOLBAR_ITEM_SPACING	0 //3			//Space between toolbar items
+#define MINI_TOOLBAR_ITEM_SPACING	-2 //3			//Space between toolbar items
 #define MINI_TOOLBAR_EDGE_SPACING	0 //2
 #define MINI_TOOLBAR_FPS		30.0			//Animation speed
 
@@ -214,7 +214,7 @@
     int	imageWidth;
 
     //Fill the rect with aqua stripes
-    if(!([[self window] styleMask] & NSTexturedBackgroundWindowMask)){ //Don't do this on brushed metal windows
+    if(![[self window] isTextured]){ //Don't do this on brushed metal windows
         imageWidth = [toolbarBackground size].width;
         if(toolbarBackground && imageWidth){
             int xOffset = 0;

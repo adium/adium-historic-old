@@ -172,26 +172,30 @@
 //Drawing
 - (void)drawLabel:(BOOL)shouldTruncateLabel inRect:(NSRect)labelRect
 {
-    AIListObject		*listObject = [[messageView chat] listObject];
-    NSColor			*textColor = nil;
-    BOOL 			selected;
-
+    BOOL		texturedWindow = [[[self tabView] window] isTextured];
+    AIListObject	*listObject = [[messageView chat] listObject];
+    NSColor		*textColor = nil;
+    BOOL		selected;
+    
     //Disable sub-pixel rendering.  It looks horrible with embossed text
     CGContextSetShouldSmoothFonts([[NSGraphicsContext currentContext] graphicsPort], 0);
 
     //
     selected = ([[self tabView] selectedTabViewItem] == self);
     textColor = [[listObject displayArrayForKey:@"Tab Text Color"] averageColor];
-    if(!textColor) textColor = [NSColor colorWithCalibratedWhite:0.16 alpha:1.0];
+    if(!textColor) textColor = (texturedWindow ? [NSColor colorWithCalibratedWhite:0.16 alpha:1.0] : [NSColor controlTextColor]);
 
-    //Draw name
-    if([textColor colorIsDark]){
-        [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
+    //Emboss the name (Textured window only)
+    if(texturedWindow){
+	if([textColor colorIsDark]){
+	    [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
                                     drawInRect:NSOffsetRect(labelRect, 0, -1)];
-    }else{
-        [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.0 alpha:0.4]]
+	}else{
+	    [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.0 alpha:0.4]]
                                     drawInRect:NSOffsetRect(labelRect, 0, -1)];
+	}
     }
+
     [[self attributedLabelStringWithColor:textColor] drawInRect:labelRect];
 }
 
@@ -226,7 +230,8 @@
 //
 - (NSAttributedString *)attributedLabelStringWithColor:(NSColor *)textColor
 {
-    NSFont		    *font = [NSFont boldSystemFontOfSize:11];
+    BOOL		    texturedWindow = [[[self tabView] window] isTextured];
+    NSFont		    *font = (texturedWindow ? [NSFont boldSystemFontOfSize:11] : [NSFont systemFontOfSize:11]);
     NSAttributedString      *displayName;
     NSParagraphStyle	    *paragraphStyle;
 

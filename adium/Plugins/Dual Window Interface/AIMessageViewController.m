@@ -24,7 +24,7 @@
 #define ENTRY_TEXTVIEW_MAX_HEIGHT	70
 #define RESIZE_CORNER_TOOLBAR_OFFSET 	0
 #define TEXT_ENTRY_PADDING 2
-#define SEND_BUTTON_PADDING 2
+#define SEND_BUTTON_PADDING 0
 #define fixed_width 100
 #define fixed_padding 4
 
@@ -386,11 +386,11 @@
     }
 
     //Send Button
-    int buttonWidth = [button_send frame].size.width;
-    [button_send setFrame:NSMakeRect(superFrame.origin.x + superFrame.size.width - buttonWidth,
+    int buttonWidth = 0;//[button_send frame].size.width;
+/*    [button_send setFrame:NSMakeRect(superFrame.origin.x + superFrame.size.width - buttonWidth,
                                      superFrame.origin.y - 1,
                                      [button_send frame].size.width,
-                                     [button_send frame].size.height)];
+                                     [button_send frame].size.height)];*/
 
     //Text entry
     textHeight = [textView_outgoing desiredSize].height;

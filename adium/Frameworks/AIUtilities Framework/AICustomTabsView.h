@@ -36,8 +36,6 @@
     BOOL                removingLastTabHidesWindow;
     BOOL		allowsInactiveTabClosing;
     
-    //Images
-    NSImage		*tabDivider;
     NSTimer             *arrangeCellTimer;
     
     //Drag tracking and receiving
