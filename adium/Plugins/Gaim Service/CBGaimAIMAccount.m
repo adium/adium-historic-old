@@ -19,14 +19,15 @@
 //AIM doesn't require we close our tags, so don't waste the characters
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
-	BOOL	isICQ = NO;
+	BOOL	noHTML = NO;
 	
+	//We don't want to send HTML to ICQ users, or mobile phone users
 	if(inListObject){
 		char	firstCharacter = [[inListObject UID] characterAtIndex:0];
-		isICQ = (firstCharacter >= '0' && firstCharacter <= '9');
+		noHTML = ((firstCharacter >= '0' && firstCharacter <= '9') || firstCharacter == '+');
 	}
-	
-    return((isICQ ? [inAttributedString string] : [AIHTMLDecoder encodeHTML:inAttributedString
+
+    return((noHTML ? [inAttributedString string] : [AIHTMLDecoder encodeHTML:inAttributedString
 																	headers:YES
 																   fontTags:YES
 															  closeFontTags:NO
