@@ -88,6 +88,7 @@
                 "menu_Adium_Preferences" = NSMenuItem; 
                 "menu_Contact_Action" = NSMenuItem; 
                 "menu_Contact_Additions" = NSMenuItem; 
+                "menu_Contact_Editing" = NSMenuItem; 
                 "menu_Contact_Manage" = NSMenuItem; 
                 "menu_Contact_NegativeAction" = NSMenuItem; 
                 "menu_Dock_Status" = id; 
