@@ -186,9 +186,10 @@ File Transfer:
 Deferring of initial message:
    Don't pop up a message window if one doesn't already exist.  Use some kind of dock indicator / list indicator.  Double click on list or dock menu item would display the message.  If a window is already open, new messages would create a tab as normal.  We could associate this option with the state system for some pretty cool behavior.
 
-Contact List import/export:
+Contact List import/export: [Steve]
 	+ Export to plist
-   Import/export code is not fun. 
+   Import/export code is not fun.
+   Steve: In addition to our own plist format, we should probably support importing from the official clients formats.  Perhaps exporting - but why would anyone want to go back?  ;)   I might need some help with this one re: adding contacts back to the list.  We'll see.
 
 Too many tabs issue:
 	It seems that if you have too many tabs, then the tabs come to a point of not being usable. Tabs rock, but with 15 open windows intrinsic issues with this approach start to appear. We could:
