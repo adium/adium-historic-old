@@ -349,7 +349,7 @@
 	//Get the prefered variant (or the default if a prefered is not available)
 	activeVariant = [[prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:activeStyle]] retain];
 	if(!activeVariant) activeVariant = [[messageStyle defaultVariant] retain];
-	
+
 	//Update message style behavior
 	[messageStyle setShowUserIcons:[[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue]];
 	[messageStyle setShowHeader:[[prefDict objectForKey:KEY_WEBKIT_SHOW_HEADER] boolValue]];
