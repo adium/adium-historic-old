@@ -226,61 +226,28 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 #define THREADED_FILTERING TRUE
 
 //Filters an attributed string.  If the string is associated with a contact or list object, pass that object as context.
+//This does not filter in the filtering thread; instead it waits until the thread is not processing (to avoid threading
+//conflicts) and then filters, returning its result immediately.
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)attributedString
 							   usingFilterType:(AIFilterType)type
 									 direction:(AIFilterDirection)direction
 									   context:(id)filterContext
 {
-#if THREADED_FILTERING
-	//Perform the filter in our filter thread to avoid threading conflicts, waiting for a result and then returning it
-	attributedString = [[self filterRunLoopMessenger] target:self 
-											 performSelector:@selector(thread_filterAttributedString:contentFilter:filterContext:invocation:) 
-												  withObject:attributedString
-												  withObject:contentFilter[type][direction]
-												  withObject:filterContext
-												  withObject:nil
-												  withResult:YES];
-#else
-	attributedString = [self thread_filterAttributedString:attributedString
-											 contentFilter:contentFilter[type][direction]
-											 filterContext:filterContext
-												invocation:nil];
-#endif
-	return (attributedString);
-}
-
-//Filters an attributed string.  If the string is associated with a contact or list object, pass that object as context.
-//If inMainThread is YES, block main thread execution while the filtering occurs immediately (jumping the gun on
-//any other filtering waiting to occur in the filtering thread.
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)attributedString
-							   usingFilterType:(AIFilterType)type
-									 direction:(AIFilterDirection)direction
-									   context:(id)filterContext
-								  inMainThread:(BOOL)inMainThread
-{
-	if (inMainThread){
-		//Don't let filtering occur in the filter thread while we're doing this
-		pauseFilteringForSafety = YES;
-		
-		//Wait until the filter thread is not filtering
-		while (threadedFiltersInUse);
-		
-		//Perform the filter (in the main thread)
-		attributedString = [self _filterAttributedString:attributedString
-										   contentFilter:contentFilter[type][direction]
-										   filterContext:filterContext];
-		
-		//Unlock so the filtering thread can resume its work where it left off
-		pauseFilteringForSafety = NO;
-	}else{
-		//Filter in the filtering thread
-		attributedString = [self filterAttributedString:attributedString
-										usingFilterType:type
-											  direction:direction
-												context:filterContext];
-	}
+	//Don't let filtering occur in the filter thread while we're doing this
+	pauseFilteringForSafety = YES;
 	
-	return attributedString;
+	//Wait until the filter thread is not filtering
+	while (threadedFiltersInUse);
+	
+	//Perform the filter (in the main thread)
+	attributedString = [self _filterAttributedString:attributedString
+									   contentFilter:contentFilter[type][direction]
+									   filterContext:filterContext];
+	
+	//Unlock so the filtering thread can resume its work where it left off
+	pauseFilteringForSafety = NO;
+	
+	return (attributedString);
 }
 
 //Filters an attributed string.  If the string is associated with a contact or list object, pass that object as context.
@@ -346,6 +313,11 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	//If we're using the filters in the main thread, wait until we aren't.
 	while (pauseFilteringForSafety);
 
+	/*
+	 Running a filter may take multiple run loops (e.g. applescript execution).
+	 it is not acceptable for our autorelease pool to be released between these loops
+	 as we have autoreleased objects upon which we are depending.
+	 */
 	threadedFiltersInUse = YES;
 	attributedString = [self _filterAttributedString:attributedString
 									   contentFilter:inContentFilterArray
@@ -363,6 +335,8 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	return(attributedString);
 }
 
+//Perform the filtering of an attributedString on the specified content filter. Pass filterContext while filtering.
+//This may be called by either thread but never by both at once (guards or locks should be protecting against that).
 - (NSAttributedString *)_filterAttributedString:(NSAttributedString *)attributedString
 								  contentFilter:(NSArray *)inContentFilterArray
 								  filterContext:(id)filterContext
@@ -405,18 +379,12 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 //Our autoreleased objects will only be released when the outermost autorelease pool is released.
 //This is handled automatically in the main thread, but we need to do it manually here.
 //Release the current pool, then create a new one.
-static BOOL	allowFilterThreadAutoreleasePoolRefresh = YES;
 - (void)refreshAutoreleasePool:(NSTimer *)inTimer
 {
-	if (allowFilterThreadAutoreleasePoolRefresh){
+	if (!threadedFiltersInUse){
 		[currentAutoreleasePool release];
 		currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
 	}
-}
-
-- (void)setAllowFilterThreadAutoreleasePoolRefresh:(BOOL)flag
-{
-	allowFilterThreadAutoreleasePoolRefresh = flag;
 }
 
 //Messaging ------------------------------------------------------------------------------------------------------------
@@ -575,8 +543,7 @@ static BOOL	allowFilterThreadAutoreleasePoolRefresh = YES;
 			[inObject setMessage:[self filterAttributedString:[inObject message]
 											  usingFilterType:AIFilterContent
 													direction:([inObject isOutgoing] ? AIFilterOutgoing : AIFilterIncoming)
-													  context:inObject
-												 inMainThread:YES]];
+													  context:inObject]];
 			[self displayContentObject:inObject immediately:YES];
 			
 			
@@ -625,8 +592,7 @@ static BOOL	allowFilterThreadAutoreleasePoolRefresh = YES;
 			[inObject setMessage:[self filterAttributedString:[inObject message]
 											  usingFilterType:filterType
 													direction:direction
-													  context:inObject
-												 inMainThread:YES]];
+													  context:inObject]];
 			[self finishDisplayContentObject:inObject];		
 			
 		}else{

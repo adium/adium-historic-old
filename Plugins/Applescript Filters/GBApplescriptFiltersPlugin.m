@@ -510,11 +510,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	
 	script = [[NSAppleScript alloc] initWithContentsOfURL:[infoDict objectForKey:@"Path"]
 													error:nil];
-	
-	//Running an applescript will take multiple run loops; it is not acceptable for our autorelease pool
-	//to be released between these loops as we have autoreleased objects upon which we are depending
-	[[adium contentController] setAllowFilterThreadAutoreleasePoolRefresh:NO];
-	
+
 	if([[infoDict objectForKey:@"RequiresUserInteraction"] boolValue]){
 		NSAppleEventDescriptor	*eventDescriptor;
 		NSInvocation			*invocation;
@@ -539,8 +535,6 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	}
 
 	[script release];
-	
-	[[adium contentController] setAllowFilterThreadAutoreleasePoolRefresh:YES];
 		
 	return([returnValue autorelease]);
 }
