@@ -35,6 +35,7 @@
 + (NDRunLoopMessenger *)gaimThreadMessenger;
 
 - (void)addAdiumAccount:(id)adiumAccount;
+- (void)removeAdiumAccount:(id)adiumAccount;
 - (BOOL)sendEncodedMessage:(NSString *)encodedMessage
 		   originalMessage:(NSString *)originalMessage 
 			   fromAccount:(id)sourceAccount
@@ -80,6 +81,7 @@
 - (void *)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
 
 - (oneway void)performContactMenuActionFromDict:(NSDictionary *)dict;
+- (oneway void)performAccountMenuActionFromDict:(NSDictionary *)dict;
 
 - (oneway void)requestSecureMessaging:(BOOL)inSecureMessaging
 							   inChat:(AIChat *)inChat;
