@@ -95,14 +95,18 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 - (void)requestSetManualIdleTime:(NSNotification *)notification
 {
 	NSNumber	*requestedManualIdleTime = [notification object];
-	[self setManualIdleTime:(requestedManualIdleTime ? [requestedManualIdleTime doubleValue] : 0)];
+	[self setManualIdleTime:(requestedManualIdleTime ? [requestedManualIdleTime doubleValue] : 0)];	
 }
 
 //Set the requested manual idle time
 - (void)setManualIdleTime:(double)inSeconds
 {
-    manualIdleTime = inSeconds;
-    [self setIdleState:AIManualIdle];
+    if (inSeconds){
+		manualIdleTime = inSeconds;
+		[self setIdleState:AIManualIdle];
+	}else{
+		[self setIdleState:AINotIdle];
+	}	
 }
 
 
