@@ -121,7 +121,7 @@
 	
 	//If the user has already been informed of this update previously, don't bother them
 	if(checkingManually || !lastDateDisplayedToUser || ![lastDateDisplayedToUser isEqualToDate:newestDate]){
-		if([thisDate isEqualToDate:newestDate] || thisDate == [thisDate laterDate:newestDate]){
+		if([thisDate isEqualToDate:newestDate] || [thisDate isEqualToDate:[thisDate laterDate:newestDate]]){
 			//Display the 'up to date' message if the user checked for updates manually
 			if(checkingManually){
 				[ESVersionCheckerWindowController showUpToDateWindow];
