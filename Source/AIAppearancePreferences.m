@@ -670,7 +670,10 @@ typedef enum {
 		NSDictionary	*layout;
 		
 		while(layout = [enumerator nextObject]){
-			if([newName isEqualToString:[layout objectForKey:@"name"]]) return(layout);
+			if([newName isEqualToString:[layout objectForKey:@"name"]]){
+				if(duplicatePreset) *duplicatePreset = layout;
+				break;
+			}
 		}
 	}
 
