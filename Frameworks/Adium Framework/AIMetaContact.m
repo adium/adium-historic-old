@@ -386,7 +386,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return contactsDict;
 }
 
-- (int)uniqueContainedObjectsCount
+- (unsigned)uniqueContainedObjectsCount
 {
 	return [[self listContacts] count];
 }

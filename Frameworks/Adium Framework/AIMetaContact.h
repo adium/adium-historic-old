@@ -49,7 +49,7 @@
 
 //Similarly, YES if the metaContact has only one serviceID within it.
 - (BOOL)containsOnlyOneService;
-- (int)uniqueContainedObjectsCount;
+- (unsigned)uniqueContainedObjectsCount;
 - (AIListObject *)uniqueObjectAtIndex:(int)inIndex;
 
 - (NSDictionary *)dictionaryOfServiceClassesAndListContacts;
@@ -61,7 +61,7 @@
 - (BOOL)addObject:(AIListObject *)inObject;
 - (void)removeObject:(AIListObject *)inObject;
 
-//An flat array of AIListContacts each with a different internalObjectID
+//A flat array of AIListContacts each with a different internalObjectID
 - (NSArray *)listContacts;
 
 //Delay sorting the contained object list; this should only be used by the contactController. Be sure to set it back to YES when operations are done
