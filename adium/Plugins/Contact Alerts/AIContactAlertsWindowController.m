@@ -150,6 +150,13 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [menuItem setRepresentedObject:@"Message"];
     [actionListMenu addItem:menuItem];
 
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Show an alert"
+                                           target:self
+                                           action:@selector(actionDisplayAlert:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setRepresentedObject:@"Alert"];
+    [actionListMenu addItem:menuItem];
+
     return(actionListMenu);
 }
 
@@ -157,6 +164,11 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 - (IBAction)actionSendMessage:(id)sender
 {	[self configureForTextDetails:@"Message to send:"];	}
 
+//setup display for displaying an alert
+- (IBAction)actionDisplayAlert:(id)sender {
+    [self configureForTextDetails:@"Alert text:"];
+}
+    
 //setup display for playing a sound
 - (IBAction)actionPlaySound:(id)sender
 {    [self configureForMenuDetails:@"Sound to play:" menuToDisplay:[self soundListMenu]];	}
@@ -222,8 +234,10 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 - (void) configureForTextDetails:(NSString *)instructions
 {
     int row = [tableView_actions selectedRow];
-    NSString * details;
+    NSString *details;
 
+    details = [NSString alloc];
+    
     if (row != -1 /* && row < [eventActionArray count] */)
         details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
 

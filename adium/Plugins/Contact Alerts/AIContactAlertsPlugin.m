@@ -113,6 +113,10 @@
                 [[owner contentController] sendContentObject:responseContent];
                 }
             }
+            else if ([action compare:@"Alert"] == 0) {
+                NSAttributedString *message = [[NSAttributedString alloc] initWithString:[actionDict objectForKey:KEY_EVENT_DETAILS]];
+                NSRunInformationalAlertPanel(@"Buddy Alert", [message string], @"Okay", nil, nil);
+            }
         }
     }
     return nil; //we don't change any attributes
