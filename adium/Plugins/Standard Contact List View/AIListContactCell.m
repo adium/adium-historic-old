@@ -33,6 +33,15 @@
 //NSRightTextAlignment	= 1, /* Visually right aligned */
 //NSCenterTextAlignment	= 2,
 
+//Copy
+- (id)copyWithZone:(NSZone *)zone
+{
+	AIListContactCell	*newCell = [[AIListContactCell alloc] init];
+	[newCell setListObject:listObject];
+	return(newCell);
+}
+
+
 - (NSFont *)font
 {
 	return(CONTACT_FONT);
