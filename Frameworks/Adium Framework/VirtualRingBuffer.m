@@ -194,7 +194,7 @@ static void deallocateVirtualBuffer(void *buffer, UInt32 bufferLength);
 
 void *allocateVirtualBuffer(UInt32 bufferLength)
 {
-    kern_return_t error;
+    kern_return_t error = 0;
     vm_address_t originalAddress = NULL;
     vm_address_t realAddress = NULL;
     mach_port_t memoryEntry;
@@ -238,7 +238,7 @@ void *allocateVirtualBuffer(UInt32 bufferLength)
 
     // Then make a memory entry for the area we just allocated.
     memoryEntryLength = bufferLength;
-    error = mach_make_memory_entry(mach_task_self(), &memoryEntryLength, realAddress, VM_PROT_READ | VM_PROT_WRITE, &memoryEntry, NULL);
+    error = mach_make_memory_entry(mach_task_self(), &memoryEntryLength, realAddress, VM_PROT_READ | VM_PROT_WRITE, &memoryEntry, 0);
     if (error) {
 #if DEBUG
         mach_error("mach_make_memory_entry", error);

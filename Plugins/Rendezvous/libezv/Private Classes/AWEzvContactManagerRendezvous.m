@@ -327,7 +327,7 @@ void av_resolve_reply (struct sockaddr	*interface,
     mydata = [userAnnounceData dataAsPackedPString];
     
     /* register it */
-    errorCode = DNSServiceRegistrationUpdateRecord(dnsRef, NULL, [mydata length], [mydata bytes], 3600);
+    errorCode = DNSServiceRegistrationUpdateRecord(dnsRef, 0, [mydata length], [mydata bytes], 3600);
     if (errorCode < 0) {
 	AWEzvLog(@"Received Rendezvous error %d when updating TXT record", errorCode);
 	[[client client] reportError:@"Received Rendezvous errorwhen updating TXT record"
@@ -339,7 +339,7 @@ void av_resolve_reply (struct sockaddr	*interface,
     mydata = [userAnnounceData avDataAsPackedPString];
     
     /* register it */
-    errorCode = DNSServiceRegistrationUpdateRecord(avDnsRef, NULL, [mydata length], [mydata bytes], 3600);
+    errorCode = DNSServiceRegistrationUpdateRecord(avDnsRef, 0, [mydata length], [mydata bytes], 3600);
     if (errorCode < 0) {
 	AWEzvLog(@"Received Rendezvous error %d when updating AV TXT record", errorCode);
 	[[client client] reportError:@"Received Rendezvous errorwhen updating AV TXT record"

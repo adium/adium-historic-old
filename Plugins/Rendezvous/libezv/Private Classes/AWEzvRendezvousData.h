@@ -44,7 +44,7 @@
 - (AWEzvRendezvousData *) initWithPlist:(NSString *)plist;
 - (AWEzvRendezvousData *) initWithDictionary:(NSDictionary *)dictionary;
 - (AWEzvRendezvousData *) initWithAVTxt:(NSString *)txt;
-- (void) setField:(NSString *)fieldName content:(NSString *)content;
+- (void) setField:(NSString *)fieldName content:(NSObject *)content;
 - (NSString *) getField:(NSString *)fieldName;
 - (BOOL) fieldExists:(NSString *)fieldName;
 - (void) deleteField:(NSString *)fieldName;

@@ -237,7 +237,7 @@
 		[self _updateWindowTitleAndIcon];
 
 		AIWindowLevel	windowLevel = [[prefDict objectForKey:KEY_WINDOW_LEVEL] intValue];
-		int				level;
+		int				level = NSNormalWindowLevel;
 		
 		switch(windowLevel){
 			case AINormalWindowLevel: level = NSNormalWindowLevel; break;

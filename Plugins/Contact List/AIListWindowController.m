@@ -141,7 +141,7 @@
 {
     if([group isEqualToString:PREF_GROUP_CONTACT_LIST]){
 		AIWindowLevel	windowLevel = [[prefDict objectForKey:KEY_CL_WINDOW_LEVEL] intValue];
-		int				level;
+		int				level = NSNormalWindowLevel;
 		
 		switch(windowLevel){
 			case AINormalWindowLevel: level = NSNormalWindowLevel; break;

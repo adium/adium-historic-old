@@ -75,7 +75,7 @@
 		OSStatus err = FSRefMakePath(object, pathbuf, PATH_MAX);
 
 		if(err == noErr) {
-			path = [(NSString *)CFStringCreateWithCString(kCFAllocatorDefault, pathbuf, kCFStringEncodingUTF8) autorelease];
+			path = [(NSString *)CFStringCreateWithCString(kCFAllocatorDefault, (char *)pathbuf, kCFStringEncodingUTF8) autorelease];
 		}
 
 		free(pathbuf);

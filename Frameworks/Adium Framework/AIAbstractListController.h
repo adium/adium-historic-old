@@ -149,7 +149,7 @@ typedef enum {
 #define KEY_LIST_THEME_FADE_OFFLINE_IMAGES			@"Fade Offline Images"
 
 @protocol AIListControllerDelegate
-- (void)performDefaultActionOnSelectedObject:(AIListObject *)listObject sender:(id)sender;
+- (IBAction)performDefaultActionOnSelectedObject:(AIListObject *)selectedObject sender:(NSOutlineView *)sender;
 @end
 
 @interface AIAbstractListController : AIObject <AISmoothTooltipTrackerDelegate> {	
@@ -188,7 +188,7 @@ typedef enum {
 
 - (void)setBackgroundOpacity:(float)opacity;
 
-- (IBAction)performDefaultActionOnSelectedItem:(id)sender;
+- (IBAction)performDefaultActionOnSelectedItem:(NSOutlineView *)sender;
 
 - (void)updateLayoutFromPrefDict:(NSDictionary *)prefDict andThemeFromPrefDict:(NSDictionary *)themeDict;
 - (void)updateCellRelatedThemePreferencesFromDict:(NSDictionary *)prefDict;

@@ -16,6 +16,50 @@ const NSString		* NDAppleScriptOffendingObject = @"Error Offending Object",
 						* NDAppleScriptPartialResult = @"Error Partial Result";
 
 /*
+ * function AppleScriptActiveProc
+ */
+static OSErr AppleScriptActiveProc( long aRefCon )
+{
+	NDComponentInstance	* self = (id)aRefCon;
+	id							theActiveTarget = [self activeTarget];
+	OSErr						theError = errOSASystemError;
+
+	NSCParameterAssert( self != nil );
+	
+	if( theActiveTarget != nil )
+		theError = [theActiveTarget appleScriptActive] ? noErr : errOSASystemError;
+	else
+		theError = (self->defaultActiveProcPtr)( self->defaultActiveProcRefCon );
+
+	return theError;
+}
+
+static OSErr AppleEventResumeHandler(const AppleEvent * anAppleEvent, AppleEvent * aReply, long aRefCon )
+{
+	NDComponentInstance			* self = (id)aRefCon;
+	OSErr								theError = errAEEventNotHandled;
+	id									theResumeHandler = [self appleEventResumeHandler];
+	NSAppleEventDescriptor		* theResult = nil;	
+
+	NSCParameterAssert( self != nil );
+
+	if( theResumeHandler == nil )
+		theResumeHandler = self;
+
+	theResult = [theResumeHandler handleResumeAppleEvent:[NSAppleEventDescriptor descriptorWithAEDesc:anAppleEvent]];
+	
+	if( theResult )
+	{
+		NSCParameterAssert( [theResult getAEDesc:aReply] );
+		theError = noErr;
+	}
+	else
+		theError = errOSASystemError;
+	
+	return theError;
+}
+
+/*
  * category interface NDComponentInstance (Private)
  */
 @interface NDComponentInstance (Private)
@@ -249,8 +293,6 @@ static NDComponentInstance		* sharedComponentInstance = nil;
  */
 - (void)setActiveTarget:(id<NDScriptDataActive>)aTarget
 {
-	static OSErr		AppleScriptActiveProc( long aRefCon );
-
 	if( aTarget != activeTarget )
 	{
 		NSParameterAssert( sizeof(long) == sizeof(id) );
@@ -315,7 +357,6 @@ static NDComponentInstance		* sharedComponentInstance = nil;
  */
 - (void)setAppleEventResumeHandler:(id<NDScriptDataAppleEventResumeHandler>)aHandler
 {
-	static OSErr AppleEventResumeHandler(const AppleEvent * anAppleEvent, AppleEvent * aReply, long aRefCon );
 	if( aHandler != appleEventResumeHandler )
 	{
 		if( defaultResumeProcPtr == NULL )
@@ -496,25 +537,6 @@ OSErr AppleEventSendProc( const AppleEvent *anAppleEvent, AppleEvent *aReply, AE
 	return theError;
 }
 
-/*
- * function AppleScriptActiveProc
- */
-static OSErr AppleScriptActiveProc( long aRefCon )
-{
-	NDComponentInstance	* self = (id)aRefCon;
-	id							theActiveTarget = [self activeTarget];
-	OSErr						theError = errOSASystemError;
-
-	NSCParameterAssert( self != nil );
-	
-	if( theActiveTarget != nil )
-		theError = [theActiveTarget appleScriptActive] ? noErr : errOSASystemError;
-	else
-		theError = (self->defaultActiveProcPtr)( self->defaultActiveProcRefCon );
-
-	return theError;
-}
-
 #if 0
 static OSErr AppleEventSpecialHandler(const AppleEvent * anAppleEvent, AppleEvent * aReply, long aRefCon )
 {
@@ -540,31 +562,6 @@ static OSErr AppleEventSpecialHandler(const AppleEvent * anAppleEvent, AppleEven
 	return theError;
 }
 #endif
-
-static OSErr AppleEventResumeHandler(const AppleEvent * anAppleEvent, AppleEvent * aReply, long aRefCon )
-{
-	NDComponentInstance			* self = (id)aRefCon;
-	OSErr								theError = errAEEventNotHandled;
-	id									theResumeHandler = [self appleEventResumeHandler];
-	NSAppleEventDescriptor		* theResult = nil;	
-
-	NSCParameterAssert( self != nil );
-
-	if( theResumeHandler == nil )
-		theResumeHandler = self;
-
-	theResult = [theResumeHandler handleResumeAppleEvent:[NSAppleEventDescriptor descriptorWithAEDesc:anAppleEvent]];
-	
-	if( theResult )
-	{
-		NSCParameterAssert( [theResult getAEDesc:aReply] );
-		theError = noErr;
-	}
-	else
-		theError = errOSASystemError;
-	
-	return theError;
-}
 
 @end
 

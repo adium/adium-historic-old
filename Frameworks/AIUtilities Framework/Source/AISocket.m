@@ -273,7 +273,7 @@
 
     {//Check for errors (that could case a SIGPIPE ?:\)
         int 	error;
-        int	size = sizeof(error);
+        socklen_t	size = sizeof(error);
 
         getsockopt(theSocket, SOL_SOCKET, SO_ERROR, &error, &size);
         if(error != 0){

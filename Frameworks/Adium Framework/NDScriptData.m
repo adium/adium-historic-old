@@ -552,7 +552,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 /*
  * -initWithContentsOfFile:aPathparentScriptData:
  */
-- (id)initWithContentsOfFile:aPath parentScriptData:(NDScriptData *)aParentData
+- (id)initWithContentsOfFile:(NSString *)aPath parentScriptData:(NDScriptData *)aParentData
 {
 	if( (self = [self initWithContentsOfFile:aPath componentInstance:[aParentData componentInstance]]) != nil )
 	{

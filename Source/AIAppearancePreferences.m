@@ -671,7 +671,7 @@ typedef enum {
 - (NSArray *)duplicatePreset:(NSDictionary *)preset inPresets:(NSArray *)presets createdDuplicate:(id *)duplicatePreset
 {
 	NSString	*newName = [NSString stringWithFormat:@"%@ (%@)", [preset objectForKey:@"name"], AILocalizedString(@"Copy",nil)];
-	NSArray		*newPresets;
+	NSArray		*newPresets = nil;
 	
 	if(presets == _listLayouts){
 		[AISCLViewPlugin duplicateSetWithName:[preset objectForKey:@"name"]

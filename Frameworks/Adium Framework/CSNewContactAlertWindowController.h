@@ -50,7 +50,7 @@
 		 onWindow:(NSWindow *)parentWindow
   notifyingTarget:(id)inTarget 
 		 delegate:(id)inDelegate
-		 oldAlert:(NSDictionary *)inOldAlert
+		 oldAlert:(id)inOldAlert
 	configureForGlobal:(BOOL)inConfigureForGlobal
    defaultEventID:(NSString *)defaultEventID;
 

@@ -484,7 +484,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	return([drawer_metaContact trailingOffset]);
 }
 
-- (void)performDefaultActionOnSelectedObject:(AIListObject *)listObject sender:(id)sender
+- (void)performDefaultActionOnSelectedObject:(AIListObject *)listObject sender:(NSOutlineView *)sender
 {
 
 }

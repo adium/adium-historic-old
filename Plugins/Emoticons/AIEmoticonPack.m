@@ -135,7 +135,8 @@
     AIEmoticonPack	*newPack = [[AIEmoticonPack alloc] initFromPath:path];   
     
 	newPack->emoticonArray = [emoticonArray mutableCopy];
-	newPack->serviceClass = [serviceClass release];
+	[newPack->serviceClass release];
+	newPack->serviceClass = nil;
 	
     return(newPack);
 }

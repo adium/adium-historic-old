@@ -15,7 +15,7 @@
  */
 
 #import "AIContactSettingsPane.h"
-#import "AIContentCOntroller.h"
+#import "AIContentController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/ESDelayedTextField.h>

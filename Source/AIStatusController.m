@@ -242,6 +242,7 @@
 {
 	[stateArray release]; stateArray = nil;
 	[_sortedFullStateArray release]; _sortedFullStateArray = nil;
+	[super dealloc];
 }
 
 #pragma mark Status registration
