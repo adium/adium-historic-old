@@ -36,6 +36,9 @@
 + (void)applySetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder toPreferenceGroup:(NSString *)preferenceGroup;
 + (BOOL)createSetFromPreferenceGroup:(NSString *)preferenceGroup withName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder;
 + (BOOL)deleteSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder;
++ (NSArray *)availableLayoutSets;
++ (NSArray *)availableThemeSets;
 + (NSArray *)availableSetsWithExtension:(NSString *)extension fromFolder:(NSString *)folder;
++ (void)resetXtrasCache;
 
 @end
