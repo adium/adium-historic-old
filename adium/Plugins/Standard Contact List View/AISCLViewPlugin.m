@@ -207,7 +207,6 @@
 {
     [[[notification userInfo] objectForKey:@"NSObject"] setExpanded:NO];
 }
-//    [self desiresNewSize];
 
 
 //Double click in outline view

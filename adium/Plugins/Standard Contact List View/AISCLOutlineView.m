@@ -25,6 +25,11 @@
 @interface AISCLOutlineView (PRIVATE)
 - (void)configureView;
 - (void)frameChanged:(NSNotification *)notification;
+- (void)configureTransparency;
+- (void)configureScrollbarHiding;
+- (void)cleanUpScrollbarHiding;
+- (void)configureTransparencyForWindow:(NSWindow *)inWindow;
+- (void)setCorrectScrollbarVisibility;
 @end
 
 @implementation AISCLOutlineView
@@ -48,12 +53,15 @@
     [self setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
     [self setIndentationPerLevel:10];
 
+    [self configureScrollbarHiding];
+    
     return(self);
 }
 
 - (void)dealloc
 {
     [font release];
+    [self cleanUpScrollbarHiding];
     
     [super dealloc];
 }
@@ -61,27 +69,42 @@
 //Called before we're inserted in a window
 - (void)viewWillMoveToSuperview:(NSView *)newSuperview
 {
-    float	backgroundAlpha;
-    
-    //Remove the old observer
+    //Observe frame changes
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:[self enclosingScrollView]];
-    
-    //Install our scroll view frame changed notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameChanged:) name:NSViewFrameDidChangeNotification object:[newSuperview superview]];
-
+    
     //Turn on transparency for our destination window (if necessary)
+    [self configureTransparencyForWindow:[newSuperview window]];
+}
+
+//Called when our frame changes
+- (void)frameChanged:(NSNotification *)notification
+{
+    [self setCorrectScrollbarVisibility]; //Correct the scrollbar
+    [self sizeLastColumnToFit]; //Keep the table column at full width
+}
+
+//Override set frame size to force our rect to always be the correct height.  Without this the scrollview will stretch too tall vertically when resized beyond the bottom of our contact list.
+- (void)setFrame:(NSRect)frameRect
+{
+    frameRect.size.height = [self numberOfRows] * ([self rowHeight] + [self intercellSpacing].height);
+    [super setFrame:frameRect];
+}
+
+
+// Transparency ------------------------------------------------------------------------
+- (void)configureTransparencyForWindow:(NSWindow *)inWindow
+{
+    float	backgroundAlpha;
+
     //This is handled automatically by AISCLViewPlugin when the transparency preference is altered - but the first time preferences are applied our view is not yet installed.  The solution is to re-set the window transparency here, as our view is being inserted into the window.
     //Needed for proper transparency... but not the cleanest way.
     backgroundAlpha = [[[self backgroundColor] colorUsingColorSpaceName:NSDeviceRGBColorSpace] alphaComponent];
-    [[newSuperview window] setAlphaValue:(backgroundAlpha == 100.0 ? 1.0 : 0.9999999)];
+    [inWindow setAlphaValue:(backgroundAlpha == 100.0 ? 1.0 : 0.9999999)];
 }
 
-//Called after we're inserted into a window
-- (void)viewDidMoveToSuperview
-{
-    [self frameChanged:nil]; //Force our scrollbar to hide/show correctly
-}
 
+// Keyboard Navigation ------------------------------------------------------------------
 // Navigate the contact list with the keyboard
 - (void)keyDown:(NSEvent *)theEvent
 {
@@ -121,19 +144,39 @@
     }
 }    
 
-//Override set frame size to force our rect to always be the correct height.  Without this the scrollview will stretch too tall vertically when resized beyond the bottom of our contact list.
-- (void)setFrame:(NSRect)frameRect
+
+//Automatic scrollbar hiding ---------------------------------------------------------------
+- (void)configureScrollbarHiding
 {
-    frameRect.size.height = [self numberOfRows] * ([self rowHeight] + [self intercellSpacing].height);
-    [super setFrame:frameRect];
+    //Listen to our own notification for expanding and collapsing items
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpand:) name:NSOutlineViewItemDidExpandNotification object:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidCollapse:) name:NSOutlineViewItemDidCollapseNotification object:self];
 }
-    
-//Automatically hide/show the scrollbar
-- (void)frameChanged:(NSNotification *)notification
+
+- (void)cleanUpScrollbarHiding
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)viewDidMoveToSuperview
+{
+    [self setCorrectScrollbarVisibility];
+}
+- (void)itemDidExpand:(NSNotification *)notification
+{
+    [self setCorrectScrollbarVisibility];
+}
+- (void)itemDidCollapse:(NSNotification *)notification
+{
+    [self setCorrectScrollbarVisibility];
+}
+
+//Hides or shows the scrollbar as necessary
+- (void)setCorrectScrollbarVisibility
 {
     int 		visibleHeight;
     int 		totalHeight;
-    NSScrollView	*scrollView = [self enclosingScrollView]; 
+    NSScrollView	*scrollView = [self enclosingScrollView];
 
     //Hide or show scrollbar
     visibleHeight = [scrollView documentVisibleRect].size.height;
@@ -143,19 +186,18 @@
     }else{
         [scrollView setHasVerticalScroller:NO];
     }
-
-    //Keep the table column at full width
-    [self sizeLastColumnToFit];
-    
-
-    //Update tracking rect
-/*    if(trackingRectTag != 0){
-        [self removeTrackingRect:trackingRectTag];
-    }
-    
-    trackingRectTag = [self addTrackingRect:[scrollView bounds] owner:self userData:nil assumeInside:NO];*/
 }
 
+//When the data changes we need to update our scrollbar as well
+- (void)reloadData
+{
+    [super reloadData];
+    
+    [self setCorrectScrollbarVisibility];
+}
+
+
+//Custom font settings ------------------------------------------------------------------
 //We have to handle setting our font manually.  Outline view responds to set font, but it does nothing.
 - (void)setFont:(NSFont *)inFont
 {
@@ -168,6 +210,8 @@
     return(font);
 }
 
+
+//No available contacts ------------------------------------------------------------------
 //Draw a custom 'no available contacts' message when the list is empty
 - (void)drawRect:(NSRect)rect
 {
@@ -176,8 +220,7 @@
 
     [super drawRect:rect];
 
-    if(numberOfRows == 0)
-	{
+    if(numberOfRows == 0){
         NSDictionary		*attributes;
         NSAttributedString	*emptyMessage;
         int			position;
@@ -194,16 +237,4 @@
     }
 }
 
-// Hide the selection when the cursor isn't over the contact list
-/*- (void)mouseEntered:(NSEvent *)theEvent
-{
-    [self selectRow:oldSelection byExtendingSelection:NO];
-}
-- (void)mouseExited:(NSEvent *)theEvent
-{
-    oldSelection = [self selectedRow];
-    [self deselectAll:nil];
-}*/
-
 @end
-
