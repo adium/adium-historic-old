@@ -16,12 +16,12 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-@protocol AIContactObserver, AIContactListTooltipEntry;
+@protocol AIListObjectObserver, AIContactListTooltipEntry;
 
-@interface AIContactIdlePlugin : AIPlugin <AIContactObserver, AIContactListTooltipEntry> {
+@interface AIContactIdlePlugin : AIPlugin <AIListObjectObserver, AIContactListTooltipEntry> {
 
-    NSMutableArray	*idleContactArray;
-    NSTimer		*idleContactTimer;
+    NSMutableArray	*idleObjectArray;
+    NSTimer		*idleObjectTimer;
 }
 
 @end

@@ -15,14 +15,13 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAdium, AIListContact, AIAccount;
+@class AIAdium, AIListObject, AIAccount, AIChat;
 @protocol AITextEntryView;
 
 @interface AISendingTextView : NSTextView <AITextEntryView> {
     AIAdium		*owner;
-    AIListContact	*contact;
-    AIAccount		*account;
-
+    AIChat		*chat;
+    
     BOOL		sendOnEnter;
     BOOL		sendOnReturn;
     NSMutableArray	*returnArray;
@@ -40,11 +39,9 @@
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent;
 - (void)insertText:(NSString *)aString;
 - (void)interpretKeyEvents:(NSArray *)eventArray;
-- (void)setContact:(AIListContact *)inContact;
-- (AIListContact *)contact;
-- (void)setAccount:(AIAccount *)inAccount;
-- (AIAccount *)account;
 - (void)setAvailableForSending:(BOOL)inBool;
 - (BOOL)availableForSending;
+- (void)setChat:(AIChat *)inChat;
+- (AIChat *)chat;
 
 @end

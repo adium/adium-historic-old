@@ -9,9 +9,9 @@
 #import <Cocoa/Cocoa.h>
 
 @class AIAdium, AIListContact;
-@protocol AIContactObserver;
+@protocol AIListObjectObserver;
 
-@interface AIInfoWindowController : NSWindowController <AIContactObserver> {
+@interface AIInfoWindowController : NSWindowController <AIListObjectObserver> {
     IBOutlet	NSTextView	*textView_contactProfile;
 
     AIAdium		*owner;

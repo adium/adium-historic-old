@@ -26,7 +26,7 @@ typedef enum {
     AICircleFlashB
 } AICircleState;
 
-@interface AIStatusCircle : NSObject <AIContactLeftView> {
+@interface AIStatusCircle : NSObject <AIListObjectLeftView> {
     NSColor		*color;
     NSColor		*flashColor;
     AICircleState	state;

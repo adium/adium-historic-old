@@ -23,7 +23,7 @@
 #define LEFT_MARGIN		0
 
 @interface AIMessageTabViewItem (PRIVATE)
-- (id)initWithIdentifier:(id)identifier messageView:(AIMessageViewController *)inMessageView owner:(id)inOwner;
+- (id)initWithMessageView:(AIMessageViewController *)inMessageView owner:(id)inOwner;
 - (void)drawLabel:(BOOL)shouldTruncateLabel inRect:(NSRect)labelRect;
 - (NSSize)sizeOfLabel:(BOOL)computeMin;
 - (NSAttributedString *)attributedLabelString;
@@ -32,21 +32,21 @@
 @implementation AIMessageTabViewItem
 
 //
-+ (AIMessageTabViewItem *)messageTabViewItemWithIdentifier:(id)identifier messageView:(AIMessageViewController *)inMessageView owner:(id)inOwner
++ (AIMessageTabViewItem *)messageTabWithView:(AIMessageViewController *)inMessageView owner:(id)inOwner
 {
-    return([[[self alloc] initWithIdentifier:identifier messageView:inMessageView owner:inOwner] autorelease]);
+    return([[[self alloc] initWithMessageView:inMessageView owner:inOwner] autorelease]);
 }
 
 //init
-- (id)initWithIdentifier:(id)identifier messageView:(AIMessageViewController *)inMessageView owner:(id)inOwner
+- (id)initWithMessageView:(AIMessageViewController *)inMessageView owner:(id)inOwner
 {
-    [super initWithIdentifier:identifier];
+    [super initWithIdentifier:nil];
 
     messageView = [inMessageView retain];
     owner = [inOwner retain];
 
     //Observer
-    [[owner notificationCenter] addObserver:self selector:@selector(contactAttributesChanged:) name:Contact_AttributesChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) name:ListObject_AttributesChanged object:nil];
     
     //Set our contents
     [self setView:[messageView view]];
@@ -57,15 +57,15 @@
 //
 - (void)dealloc
 {
-    [[owner notificationCenter] removeObserver:self name:Contact_AttributesChanged object:nil];
-    [owner release];
     [messageView release];
+    [[owner notificationCenter] removeObserver:self name:ListObject_AttributesChanged object:nil];
+    [owner release];
     
     [super dealloc];
 }
 
 //Redisplay the modified object
-- (void)contactAttributesChanged:(NSNotification *)notification
+- (void)listObjectAttributesChanged:(NSNotification *)notification
 {
     NSArray	*keys = [[notification userInfo] objectForKey:@"Keys"];
     
@@ -101,10 +101,18 @@
     [messageView makeTextEntryViewFirstResponder];
 }
 
-//
+//Access to our message view controller
 - (AIMessageViewController *)messageViewController
 {
     return(messageView);
+}
+
+- (BOOL)tabShouldClose:(id)sender
+{    
+    //Close down our message view
+    [messageView closeMessageView];
+    
+    return(YES);
 }
 
 //Close this container
@@ -119,7 +127,7 @@
     AIMutableOwnerArray	*leftViewArray;
 
     //Draw icon
-    leftViewArray = [[messageView contact] displayArrayForKey:@"Tab Left View"];
+    leftViewArray = [[messageView listObject] displayArrayForKey:@"Tab Left View"];
 
     //If a left view is present
     if(leftViewArray && [leftViewArray count]){
@@ -131,7 +139,7 @@
 
         //Draw all icons
         for(loop = 0;loop < [leftViewArray count];loop++){
-            id <AIContactLeftView>	handler = [leftViewArray objectAtIndex:loop];
+            id <AIListObjectLeftView>	handler = [leftViewArray objectAtIndex:loop];
             NSRect			drawRect = labelRect;
 
             //Get the icon's dest drawing rect
@@ -160,7 +168,7 @@
     size = [[self attributedLabelString] size];
 
     //Icon widths
-    leftViewArray = [[messageView contact] displayArrayForKey:@"Tab Left View"];
+    leftViewArray = [[messageView listObject] displayArrayForKey:@"Tab Left View"];
     if(leftViewArray && [leftViewArray count]){ //If a left view is present
         int	loop;
 
@@ -169,7 +177,7 @@
 
         //Account for the width of each icon
         for(loop = 0;loop < [leftViewArray count];loop++){
-            id <AIContactLeftView>	handler = [leftViewArray objectAtIndex:loop];
+            id <AIListObjectLeftView>	handler = [leftViewArray objectAtIndex:loop];
 
             size.width += [handler widthForHeight:LEFT_VIEW_HEIGHT computeMax:NO] + LEFT_VIEW_PADDING;
         }
@@ -186,26 +194,26 @@
 //
 - (NSString *)labelString
 {
-    return([[messageView contact] displayName]);
+    return([[messageView listObject] displayName]);
 }
 
 //
 - (NSAttributedString *)attributedLabelString
 {
-    AIListContact	*contact = [messageView contact];
+    AIListObject	*object = [messageView listObject];
     NSFont		*font = [NSFont systemFontOfSize:11];
     NSAttributedString	*displayName;
     NSColor		*textColor;
 
     
     //Color
-    textColor = [[contact displayArrayForKey:@"Text Color"] averageColor];
+    textColor = [[object displayArrayForKey:@"Text Color"] averageColor];
     if(!textColor){
         textColor = [NSColor blackColor];
     }
 
     //Name
-    displayName = [[NSAttributedString alloc] initWithString:[contact displayName] attributes:[NSDictionary dictionaryWithObjectsAndKeys:textColor,NSForegroundColorAttributeName,font,NSFontAttributeName,nil]];
+    displayName = [[NSAttributedString alloc] initWithString:[object displayName] attributes:[NSDictionary dictionaryWithObjectsAndKeys:textColor,NSForegroundColorAttributeName,font,NSFontAttributeName,nil]];
 
     return([displayName autorelease]);
 }

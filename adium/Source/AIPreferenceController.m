@@ -145,12 +145,12 @@
 
 //Using Handle/Group Specific Preferences --------------------------------------------------------------
 //Return an object specific preference.
-- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListContact *)object
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object
 {
-    return([self preferenceForKey:inKey group:groupName contactKey:[NSString stringWithFormat:@"(%@)", [object UIDAndServiceID]]]);
+    return([self preferenceForKey:inKey group:groupName objectKey:[NSString stringWithFormat:@"(%@)", [object UIDAndServiceID]]]);
 }
 
-- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName contactKey:(NSString *)prefDictKey
+- (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName objectKey:(NSString *)prefDictKey
 {
     NSMutableDictionary	*prefDict, *objectPrefDict;
     id			value = nil;
@@ -169,12 +169,12 @@
 }
 
 //Set an object specific preference
-- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName contact:(AIListContact *)object
+- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object
 {
-    [self setPreference:value forKey:inKey group:groupName contactKey:[NSString stringWithFormat:@"(%@.%@)", [object serviceID], [object UID]]];
+    [self setPreference:value forKey:inKey group:groupName objectKey:[NSString stringWithFormat:@"(%@.%@)", [object serviceID], [object UID]]];
 }
 
-- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName contactKey:(NSString *)prefDictKey
+- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName objectKey:(NSString *)prefDictKey
 {
     NSMutableDictionary	*prefDict, *objectPrefDict;
     

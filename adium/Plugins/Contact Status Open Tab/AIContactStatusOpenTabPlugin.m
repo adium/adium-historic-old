@@ -29,29 +29,31 @@
 
 - (void)initiateMessage:(NSNotification *)notification
 {
-    AIListContact	*contact = (AIListContact *)[[notification userInfo] objectForKey:@"To"];
+    AIListObject	*listObject = [[notification userInfo] objectForKey:@"To"];
 
-    [self updateOpenTabStatusOnContact:contact withStatus:YES];
+    [self updateOpenTabStatusOnListObject:listObject withStatus:YES];
 }
 
 - (void)didRecieveContent:(NSNotification *)notification
 {
-    AIListContact	*contact = (AIListContact *)[notification object];
+    AIChat		*chat = [notification object];
+    AIListObject	*listObject = [chat object];
 
-    [self updateOpenTabStatusOnContact:contact withStatus:YES];
+    [self updateOpenTabStatusOnListObject:listObject withStatus:YES];
 }
 
 - (void)closeMessage:(NSNotification *)notification
 {
-    AIListContact	*contact = (AIListContact *)[notification object];
+    AIChat		*chat = [notification object];
+    AIListObject	*listObject = [chat object];
 
-    [self updateOpenTabStatusOnContact:contact withStatus:NO];
+    [self updateOpenTabStatusOnListObject:listObject withStatus:NO];
 }
 
-- (void)updateOpenTabStatusOnContact:(AIListContact *)inContact withStatus:(BOOL)inStatus
+- (void)updateOpenTabStatusOnListObject:(AIListObject *)inObject withStatus:(BOOL)inStatus
 {
-    [[inContact statusArrayForKey:@"Open Tab"] setObject:[NSNumber numberWithBool:(BOOL)inStatus] withOwner:self];
-    [[owner contactController] contactStatusChanged:inContact modifiedStatusKeys:[NSArray arrayWithObject:@"Open Tab"]];
+    [[inObject statusArrayForKey:@"Open Tab"] setObject:[NSNumber numberWithBool:inStatus] withOwner:self];
+    [[owner contactController] listObjectStatusChanged:inObject modifiedStatusKeys:[NSArray arrayWithObject:@"Open Tab"]];
 }
 
 @end

@@ -82,7 +82,7 @@
 //Configures the account menu (dimming invalid accounts if applicable)
 - (void)configureAccountMenu
 {
-    AIListContact	*contact = [delegate contact];
+    AIListObject	*contact = [delegate contact];
     NSEnumerator	*enumerator;
     AIAccount		*anAccount;
 
@@ -92,7 +92,7 @@
     //insert a menu for each account
     enumerator = [[[owner accountController] accountArray] objectEnumerator];
     while((anAccount = [enumerator nextObject])){
-        
+
         //Accounts only show up in the menu if they're the correct handle type.
         if(!contact || [[contact serviceID] compare:[[[anAccount service] handleServiceType] identifier]] == 0){
             NSMenuItem	*menuItem;
@@ -101,16 +101,17 @@
             [menuItem setRepresentedObject:anAccount];
 
             //They are disabled if the account is offline
-            if(![[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toContact:nil onAccount:anAccount]){
+            if(![[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil onAccount:anAccount]){
                 [menuItem setEnabled:NO];
             }
 
             [[popUp_accounts menu] addItem:menuItem];
         }
     }
-    
+
     //Select our current account
     [popUp_accounts selectItemAtIndex:[popUp_accounts indexOfItemWithRepresentedObject:[delegate account]]];
+        
 }
 
 //The account list/status changed

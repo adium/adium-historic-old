@@ -10,7 +10,7 @@
 #import <Adium/Adium.h>
 
 @interface AITypingNotificationPlugin (PRIVATE)
-- (void)_sendTyping:(BOOL)typing toContact:(AIListContact *)contact onAccount:(AIAccount *)account;
+- (void)_sendTyping:(BOOL)typing toChat:(AIChat *)chat;
 @end
 
 @implementation AITypingNotificationPlugin
@@ -53,34 +53,40 @@
 
 - (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
-    AIListContact	*contact = [inTextEntryView contact];
-    AIAccount		*account = [inTextEntryView account];
-    NSString		*key = [NSString stringWithFormat:@"(%@)%@",[account accountID],[contact UIDAndServiceID]];
+    AIChat		*chat = [inTextEntryView chat];
+    AIAccount		*account = [chat account];
+    AIListObject	*object = [chat object];
+    NSString		*key = [NSString stringWithFormat:@"(%@)%@",[account accountID],[object UIDAndServiceID]];
 
-    if(contact && account){
+    if(object && account){
         if([[inTextEntryView attributedString] length] == 0 && [messagedDict objectForKey:key] != nil){
-            [self _sendTyping:NO toContact:contact onAccount:account]; //Not typing
+            [self _sendTyping:NO toChat:chat]; //Not typing
             
         }else{
             if(![[typingDict objectForKey:key] boolValue] && [messagedDict objectForKey:key] != nil){
-                [self _sendTyping:YES toContact:contact onAccount:account]; //Typing
+                [self _sendTyping:YES toChat:chat]; //Typing
             }
             
         }
     }
 }
 
-- (void)_sendTyping:(BOOL)typing toContact:(AIListContact *)contact onAccount:(AIAccount *)account
+- (void)_sendTyping:(BOOL)typing toChat:(AIChat *)chat
 {
+    AIAccount		*account = [chat account];
+    AIListObject	*object = [chat object];
     AIContentTyping	*contentObject;
     NSString		*key;
-
+ 
     //Send typing content object (It will go directly to the account since typing content isn't tracked or filtered)
-    contentObject = [AIContentTyping typingContentWithSource:account destination:contact typing:typing];
+    contentObject = [AIContentTyping typingContentInChat:chat
+                                              withSource:account
+                                             destination:object
+                                                  typing:typing];
     [[owner contentController] sendContentObject:contentObject];
     
     //Remember the state
-    key = [NSString stringWithFormat:@"(%@)%@",[account accountID],[contact UIDAndServiceID]];
+    key = [NSString stringWithFormat:@"(%@)%@",[account accountID],[object UIDAndServiceID]];
     if(typing){
         //Add 'typing' for this contact
         [typingDict setObject:[NSNumber numberWithBool:YES] forKey:key];

@@ -119,18 +119,22 @@
 
 - (IBAction)sendMessage:(AIMiniToolbarItem *)toolbarItem
 {
-    NSDictionary		*objects = [toolbarItem configurationObjects];
-    AIListObject		*object = [objects objectForKey:@"ContactObject"];
+    NSDictionary	*objects = [toolbarItem configurationObjects];
+    AIChat		*chat = [objects objectForKey:@"Chat"];
 
-    [[owner notificationCenter] postNotificationName:Interface_SendEnteredMessage object:object userInfo:nil];
+    if(chat){
+        [[owner notificationCenter] postNotificationName:Interface_SendEnteredMessage object:chat userInfo:nil];
+    }
 }
 
 - (IBAction)closeMessage:(AIMiniToolbarItem *)toolbarItem
 {
-    NSDictionary		*objects = [toolbarItem configurationObjects];
-    AIListObject		*object = [objects objectForKey:@"ContactObject"];
+    NSDictionary	*objects = [toolbarItem configurationObjects];
+    AIChat		*chat = [objects objectForKey:@"Chat"];
 
-    [[owner notificationCenter] postNotificationName:Interface_CloseMessage object:object userInfo:nil];
+    if(chat){
+        [[owner notificationCenter] postNotificationName:Interface_CloseMessage object:chat userInfo:nil];
+    }
 }
 
 - (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
@@ -148,7 +152,7 @@
         AIListObject		*object = [inObjects objectForKey:@"ContactObject"];
         NSText<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
 
-        enabled = (text && [text availableForSending] && object && [object isKindOfClass:[AIListContact class]]);
+        enabled = (text && [text availableForSending] && object && [object isKindOfClass:[AIListObject class]]);
 
     }
 

@@ -35,7 +35,7 @@
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ALIASES_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_ALIASES];
 
     //Register ourself as a handle observer
-    [[owner contactController] registerContactObserver:self];
+    [[owner contactController] registerListObjectObserver:self];
     
     //Install the contact info view
     [NSBundle loadNibNamed:CONTACT_ALIAS_NIB owner:self];
@@ -45,7 +45,7 @@
     //Wait for the contact list editor to init so we can add our column
     [[owner notificationCenter] addObserver:self selector:@selector(registerColumn:) name:CONTACT_EDITOR_REGISTER_COLUMNS object:nil];
     
-    activeContactObject = nil;
+    activeListObject = nil;
 }
 
 - (void)uninstallPlugin
@@ -58,10 +58,10 @@
     NSString	*alias = [textField_alias stringValue];
     
     //Apply
-    [self _applyAlias:alias toObject:activeContactObject];
+    [self _applyAlias:alias toObject:activeListObject];
 
     //Save the alias
-    [[owner preferenceController] setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES contact:activeContactObject];
+    [[owner preferenceController] setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES object:activeListObject];
 }
 
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
@@ -69,29 +69,27 @@
     NSString	*alias;
 
     //Hold onto the object
-    [activeContactObject release]; activeContactObject = nil;
-    if([inObject isKindOfClass:[AIListContact class]]){
-        activeContactObject = [inObject retain];
+    [activeListObject release]; activeListObject = nil;
+    activeListObject = [inObject retain];
 
-        //Fill in the current alias
-        alias = [[owner preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES object:inObject];
-        if(alias){
-            [textField_alias setStringValue:alias];
-        }else{
-            [textField_alias setStringValue:@""];
-        }        
-    }
+    //Fill in the current alias
+    alias = [[owner preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES object:inObject];
+    if(alias){
+        [textField_alias setStringValue:alias];
+    }else{
+        [textField_alias setStringValue:@""];
+    }        
 
 }
 
 //Called as contacts are created, load their alias
-- (NSArray *)updateContact:(AIListContact *)inContact keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
 {
     if(inModifiedKeys == nil){ //Only set an alias on contact creation
-        NSString	*alias = [[owner preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES object:inContact];
+        NSString	*alias = [[owner preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES object:inObject];
 
         if(alias != nil && [alias length] != 0){
-            [self _applyAlias:alias toObject:inContact];
+            [self _applyAlias:alias toObject:inObject];
         }
     }
     
@@ -120,7 +118,7 @@
 
 - (NSString *)editorColumnStringForServiceID:(NSString *)inServiceID UID:(NSString *)inUID
 {
-    NSString	*alias = [[owner preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES contactKey:[NSString stringWithFormat:@"(%@.%@)", inServiceID, inUID]];
+    NSString	*alias = [[owner preferenceController] preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES objectKey:[NSString stringWithFormat:@"(%@.%@)", inServiceID, inUID]];
 
     return(alias != nil ? alias : @"");
 }
@@ -141,7 +139,7 @@
         [[owner preferenceController] setPreference:value
                                              forKey:@"Alias"
                                               group:PREF_GROUP_ALIASES
-                                         contactKey:[NSString stringWithFormat:@"(%@.%@)", inServiceID, inUID]];
+                                          objectKey:[NSString stringWithFormat:@"(%@.%@)", inServiceID, inUID]];
     }
 
     return(YES);
@@ -162,7 +160,7 @@
         [displayNameArray setObject:nil withOwner:self]; //Remove the alias
     }
     
-    [[owner contactController] objectAttributesChanged:activeContactObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
+    [[owner contactController] listObjectAttributesChanged:activeListObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
 }
 
 @end

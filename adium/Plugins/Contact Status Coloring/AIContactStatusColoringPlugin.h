@@ -42,12 +42,11 @@
 #define KEY_WARNING_INVERTED_COLOR		@"Warning Inverted Color"
 
 @class AIContactStatusColoringPreferences;
-//@protocol AIContactObserver;
 
-@interface AIContactStatusColoringPlugin : AIPlugin <AIContactObserver, AIFlashObserver> {
+@interface AIContactStatusColoringPlugin : AIPlugin <AIListObjectObserver, AIFlashObserver> {
     AIContactStatusColoringPreferences *preferences;
 
-    NSMutableArray	*flashingContactArray;
+    NSMutableArray	*flashingListObjectArray;
 
     NSColor		*awayColor;
     NSColor		*idleColor;

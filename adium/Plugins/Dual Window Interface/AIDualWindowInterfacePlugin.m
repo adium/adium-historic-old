@@ -36,10 +36,12 @@
 - (void)addMenuItems;
 - (void)removeMenuItems;
 - (void)buildWindowMenu;
-- (AIMessageTabViewItem *)messageTabWithContact:(AIListContact *)inContact account:(AIAccount *)inAccount content:(NSAttributedString *)inContent create:(BOOL)create;
 - (void)updateActiveWindowMenuItem;
-- (void)increaseUnviewedContentOfContact:(AIListContact *)inContact;
-- (void)clearUnviewedContentOfContact:(AIListContact *)inContact;
+- (void)increaseUnviewedContentOfListObject:(AIListObject *)inObject;
+- (void)clearUnviewedContentOfListObject:(AIListObject *)inObject;
+- (AIMessageTabViewItem *)_messageTabForChat:(AIChat *)inChat;
+- (AIMessageTabViewItem *)_messageTabForListObject:(AIListObject *)inObject;
+- (AIMessageTabViewItem *)_createMessageTabForChat:(AIChat *)inChat;
 @end
 
 @implementation AIDualWindowInterfacePlugin
@@ -129,7 +131,7 @@
         AIMessageTabViewItem	*container = (AIMessageTabViewItem *)[messageWindowController selectedTabViewItemContainer];
 
         [[owner notificationCenter] postNotificationName:Interface_CloseMessage
-                                                  object:[[container messageViewController] contact]
+                                                  object:[[container messageViewController] chat]
                                                 userInfo:nil];
     }
 }
@@ -208,7 +210,7 @@
 
     //Set the container's handle's content as viewed
     if([inContainer isKindOfClass:[AIMessageTabViewItem class]]){
-        [self clearUnviewedContentOfContact:[[(AIMessageTabViewItem *)inContainer messageViewController] contact]];
+        [self clearUnviewedContentOfListObject:[[(AIMessageTabViewItem *)inContainer messageViewController] listObject]];
     }
 
     //Update the close window/close tab menu item keys
@@ -252,21 +254,48 @@
 //Called when the user requests to initiate a message
 - (void)initiateMessage:(NSNotification *)notification
 {
-    NSDictionary		*userInfo = [notification userInfo];
-    AIMessageTabViewItem	*container;
+    NSDictionary	*userInfo;
+    AIAccount		*account;
+    AIListObject	*object;
+    AIChat		*chat;
 
     //Get the information from the notification
-    if([userInfo objectForKey:@"To"]){
-        container = [self messageTabWithContact:[userInfo objectForKey:@"To"]
-                                        account:[userInfo objectForKey:@"From"]
-                                        content:[userInfo objectForKey:@"Content"]
-                                         create:YES];
-        [[container messageViewController] setAccountSelectionMenuVisible:YES]; //Show the message view's account selection menu
-        [container makeActive:nil];			//Select the tab
+    userInfo = [notification userInfo];
+    account = [userInfo objectForKey:@"From"];
+    object = [userInfo objectForKey:@"To"];
+    chat = [userInfo objectForKey:@"Chat"];
+    
+    //Create the message view
+    if(object){
+        AIMessageTabViewItem	*messageTabContainer;
+
+        //Look for an existing tab container
+        messageTabContainer = [self _messageTabForListObject:object];
+        if(!messageTabContainer){ //If no tab exists, we create a new one
+            //Ensure we have a valid account
+            if(!account){
+                account = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:object];
+            }
+
+            //Create the chat and container
+            if(!chat){
+                chat = [[owner contentController] chatWithListObject:object onAccount:account];
+            }
+            messageTabContainer = [self _createMessageTabForChat:chat];
+        }
+
+        //If this is a contact, Show the account selector
+        if([object isKindOfClass:[AIListContact class]]){
+            [[messageTabContainer messageViewController] setAccountSelectionMenuVisible:YES];
+        }
+
+        //Select the tab
+        [messageTabContainer makeActive:nil];
         
     }else{
         //No destination was specified, invoke the standard new message prompt
         [AINewMessagePrompt newMessagePromptWithOwner:owner];
+
     }
     
 }
@@ -275,43 +304,52 @@
 - (void)didReceiveContent:(NSNotification *)notification
 {
     NSDictionary		*userInfo = [notification userInfo];
-    AIMessageTabViewItem	*container;
-    id <AIContentObject>	object = [userInfo objectForKey:@"Object"];
+    AIMessageTabViewItem	*messageTabContainer;
+    AIContentObject		*object;
 
-    //Ensure a message window/view is open for this contact
-    container = [self messageTabWithContact:[notification object]
-                                    account:[object destination]
-                                    content:nil
-                                        create:YES];
+    //Get the content object
+    object = [userInfo objectForKey:@"Object"];
     
-    //Make sure the account that was messaged is the active account
-    if([object destination] != [[container messageViewController] account]){
-        //Select the correct account, and re-show the account menu
-        [[container messageViewController] setAccount:[object destination]];
-        [[container messageViewController] setAccountSelectionMenuVisible:YES];            
-    }
+    //Get the message tab for this chat
+    messageTabContainer = [self _messageTabForChat:[object chat]];
+    if(!messageTabContainer){ //If one does not exist
 
+        //Check if a message tab is open for this contact (and just configured for a different chat)
+        messageTabContainer = [self _messageTabForListObject:[object source]];
+        if(messageTabContainer){ //If a tab does exist
+            AIMessageViewController	*messageViewController;
+
+            //Switch the existing message tab to the new account
+            messageViewController = [messageTabContainer messageViewController];
+            [messageViewController setAccount:[object destination]];
+            [messageViewController setAccountSelectionMenuVisible:YES];            
+
+        }else{
+            //Create a new message tab for this contact
+            messageTabContainer = [self _createMessageTabForChat:[object chat]];
+
+        }
+
+    }    
+    
     //Increase the handle's unviewed count (If it's not the active container)
-    if(container != activeContainer){
-        [self increaseUnviewedContentOfContact:[object source]];        
+    if(messageTabContainer != activeContainer){
+        [self increaseUnviewedContentOfListObject:[[object chat] object]];        
     }
 }
 
 //Called when the user requests to close a message
 - (void)closeMessage:(NSNotification *)notification
 {
+    AIChat			*chat = [notification object];
     AIMessageTabViewItem	*container;
 
     if(messageWindowController){
         //Remove unviewed content for this contact
-        [self clearUnviewedContentOfContact:[notification object]];
+        [self clearUnviewedContentOfListObject:[chat object]];
 
         //Find the message controller for this handle, and close it
-        container = [self messageTabWithContact:[notification object]
-                                        account:nil
-                                        content:nil
-                                         create:NO];
-
+        container = [self _messageTabForChat:[notification object]];
         if(container) [messageWindowController removeTabViewItemContainer:container];
     }
 }
@@ -451,43 +489,62 @@
 
 
 //Messages ---------------------------------------------------------------------------
-//Returns (creating if necessary & desired) a message view controller for the specified contact
-- (AIMessageTabViewItem *)messageTabWithContact:(AIListContact *)inContact account:(AIAccount *)inAccount content:(NSAttributedString *)inContent create:(BOOL)create
+//Returns the existing messsage tab for the specified chat
+- (AIMessageTabViewItem *)_messageTabForChat:(AIChat *)inChat
 {
-    id <AIInterfaceContainer>	container = nil;
+    NSEnumerator		*enumerator;
+    AIMessageTabViewItem	*tabViewItem;
 
-    if(!messageWindowController){ //If the message window isn't loaded, create it
+    //Check each message tab for a matching chat
+    enumerator = [[messageWindowController messageContainerArray] objectEnumerator];
+    while((tabViewItem = [enumerator nextObject])){
+        if([[tabViewItem messageViewController] chat] == inChat){
+            return(tabViewItem); //We've found a match
+        }
+    }
+
+    return(nil);
+}
+
+//Returns the existing messsage tab for the specified contact
+- (AIMessageTabViewItem *)_messageTabForListObject:(AIListObject *)inObject
+{
+    NSEnumerator		*enumerator;
+    AIMessageTabViewItem	*tabViewItem;
+
+    //Check each message tab for a matching chat
+    enumerator = [[messageWindowController messageContainerArray] objectEnumerator];
+    while((tabViewItem = [enumerator nextObject])){
+        if([[tabViewItem messageViewController] listObject] == inObject){
+            return(tabViewItem); //We've found a match
+        }
+    }
+
+    return(nil);
+}
+
+- (AIMessageTabViewItem *)_createMessageTabForChat:(AIChat *)inChat
+{
+    AIMessageTabViewItem	*messageTabContainer;
+    AIMessageViewController	*messageViewController;
+
+    //Make sure our message window is loaded
+    if(!messageWindowController){
         messageWindowController = [[AIMessageWindowController messageWindowControllerWithOwner:owner interface:self] retain];
 
         //Register to be notified when the message window closes
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageWindowWillClose:) name:NSWindowWillCloseNotification object:[messageWindowController window]];
-
-    }else{ //Otherwise, search it for and existing tab for this contact
-        NSEnumerator		*enumerator;
-        AIMessageTabViewItem	*tabViewItem;
-
-        enumerator = [[messageWindowController messageContainerArray] objectEnumerator];
-        while((tabViewItem = [enumerator nextObject])){
-            if([tabViewItem identifier] == inContact){
-                container = tabViewItem;
-            }
-        }
     }
 
-    //If the view doesn't exist, create it
-    if(!container && create){
-        AIMessageViewController	*controller;
+    //Create the message view & tab
+    messageViewController = [AIMessageViewController messageViewControllerForChat:inChat owner:owner];
+    messageTabContainer = [AIMessageTabViewItem messageTabWithView:messageViewController owner:owner];
 
-        //Create the message view & tab
-        controller = [AIMessageViewController messageViewControllerForContact:inContact account:inAccount content:inContent owner:owner interface:self];
-        container = [AIMessageTabViewItem messageTabViewItemWithIdentifier:inContact messageView:controller owner:owner];
+    //Add it to the message window & Rebuild the window menu
+    [messageWindowController addTabViewItemContainer:messageTabContainer];
+    [self buildWindowMenu];
 
-        //Add it to the message window & Rebuild the window menu
-        [messageWindowController addTabViewItemContainer:container];
-        [self buildWindowMenu];
-    }
-
-    return(container);
+    return(messageTabContainer);
 }
 
 //Called as the message window closes
@@ -499,32 +556,31 @@
     [messageWindowController release]; messageWindowController = nil; 
 }
 
-
 //
-- (void)increaseUnviewedContentOfContact:(AIListContact *)inContact
+- (void)increaseUnviewedContentOfListObject:(AIListObject *)inObject
 {
-    AIMutableOwnerArray	*ownerArray = [inContact statusArrayForKey:@"UnviewedContent"];
+    AIMutableOwnerArray	*ownerArray = [inObject statusArrayForKey:@"UnviewedContent"];
     int			currentUnviewed;
 
     //'UnviewedContent'++
-    currentUnviewed = [[ownerArray objectWithOwner:inContact] intValue];
-    [ownerArray setObject:[NSNumber numberWithInt:(currentUnviewed+1)] withOwner:inContact];
+    currentUnviewed = [[ownerArray objectWithOwner:inObject] intValue];
+    [ownerArray setObject:[NSNumber numberWithInt:(currentUnviewed+1)] withOwner:inObject];
 
     //
-    [[owner contactController] contactStatusChanged:inContact modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"]];
+    [[owner contactController] listObjectStatusChanged:inObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"]];
 }
 
 //
-- (void)clearUnviewedContentOfContact:(AIListContact *)inContact
+- (void)clearUnviewedContentOfListObject:(AIListObject *)inObject
 {
-    AIMutableOwnerArray	*ownerArray = [inContact statusArrayForKey:@"UnviewedContent"];
+    AIMutableOwnerArray	*ownerArray = [inObject statusArrayForKey:@"UnviewedContent"];
 
-    if([[ownerArray objectWithOwner:inContact] intValue]){
+    if([[ownerArray objectWithOwner:inObject] intValue]){
         //Set 'UnviewedContent' to 0
-        [ownerArray setObject:[NSNumber numberWithInt:0] withOwner:inContact];
+        [ownerArray setObject:[NSNumber numberWithInt:0] withOwner:inObject];
 
         //
-        [[owner contactController] contactStatusChanged:inContact modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"]];
+        [[owner contactController] listObjectStatusChanged:inObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"]];
     }
 }
 

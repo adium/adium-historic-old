@@ -15,8 +15,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAdium, AIHandleIdentifier, AIServiceType, AIMessageObject, AIListContact, AIHandle;
-@protocol AIContentObject, AIServiceController, AIAccountViewController;
+@class AIAdium, AIHandleIdentifier, AIServiceType, AIMessageObject, AIListContact, AIHandle, AIChat, AIContentObject;
+@protocol AIServiceController, AIAccountViewController;
 
 typedef enum {
     STATUS_NA = -1,
@@ -31,22 +31,14 @@ typedef enum {
 //Support for sending content to contacts
 @protocol AIAccount_Content
     // Send a message object to its destination
-    - (BOOL)sendContentObject:(id <AIContentObject>)object;
+    - (BOOL)sendContentObject:(AIContentObject *)object;
     // Returns YES if the handle is available for receiving content of the specified type
-    - (BOOL)availableForSendingContentType:(NSString *)inType toHandle:(AIHandle *)inHandle;
+    - (BOOL)availableForSendingContentType:(NSString *)inType toChat:(AIChat *)inChat;
 
-
-
-//Get the chat instance for messaging a handle
-//- (AIChat *)chatForSendingContentToContact:(AIListContact *)inContact;
-
-//Close a chat instance
-//- (BOOL)closeChat:(AIChat *)inChat;
-
-//Invite a handle to an existing chat
-//- (BOOL)inviteHandle:(AIHandle *)inHandle toChat:(AIChat *)inChat;
-
-
+    //Open a chat instance
+    - (BOOL)openChat:(AIChat *)inChat;
+    //Close a chat instance
+    - (BOOL)closeChat:(AIChat *)inChat;
 
 @end
 

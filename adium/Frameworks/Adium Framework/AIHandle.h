@@ -16,7 +16,6 @@
 #import <Foundation/Foundation.h>
 
 @class AIListContact, AIAccount, AIMutableOwnerArray;
-@protocol AIContentObject;
 
 @interface AIHandle : NSObject {
     NSString		*UID;

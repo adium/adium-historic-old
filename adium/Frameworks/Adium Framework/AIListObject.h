@@ -22,13 +22,17 @@
     AIListGroup 	*containingGroup;	//The group this object is in
     NSString		*UID;
     float		orderIndex;
-  
+    NSMutableDictionary	*statusDictionary;
+    NSString		*serviceID;
+
 }
 
-- (id)initWithUID:(NSString *)inUID;
+- (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID;
 
 //Identifying information
 - (NSString *)UID;
+- (NSString *)serviceID;
+- (NSString *)UIDAndServiceID;
 
 //Display
 - (NSString *)displayName;
@@ -41,5 +45,9 @@
 //Manual Ordering
 - (void)setOrderIndex:(float)inIndex;
 - (float)orderIndex;
-    
+
+//Status
+- (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey;
+
+
 @end

@@ -21,27 +21,27 @@
 #define DARKEN_LIGHTEN_MODIFIER		0.2
 
 @interface AISMViewController (PRIVATE)
-- (id)initForContact:(AIListContact *)inContact owner:(id)inOwner;
+- (id)initForChat:(AIChat *)inChat owner:(id)inOwner;
 - (void)preferencesChanged:(NSNotification *)notification;
-- (AIFlexibleTableCell *)emptyCellForContent:(id <AIContentObject>)content;
-- (AIFlexibleTableCell *)messageCellForContent:(AIContentMessage *)content previousContent:(id <AIContentObject>)previousContent;
-- (AIFlexibleTableCell *)senderCellForContent:(AIContentMessage *)content previousContent:(id <AIContentObject>)previousContent;
-- (AIFlexibleTableCell *)timeStampCellForContent:(id <AIContentObject>)content previousContent:(id <AIContentObject>)previousContent;
-- (NSColor *)backgroundColorOfContent:(id <AIContentObject>)content;
+- (AIFlexibleTableCell *)emptyCellForContent:(AIContentObject *)content;
+- (AIFlexibleTableCell *)messageCellForContent:(AIContentMessage *)content previousContent:(AIContentObject *)previousContent;
+- (AIFlexibleTableCell *)senderCellForContent:(AIContentObject *)content previousContent:(AIContentObject *)previousContent;
+- (AIFlexibleTableCell *)timeStampCellForContent:(AIContentObject *)content previousContent:(AIContentObject *)previousContent;
+- (NSColor *)backgroundColorOfContent:(AIContentObject *)content;
 @end
 
 @implementation AISMViewController
-+ (AISMViewController *)messageViewControllerForContact:(AIListContact *)inContact owner:(id)inOwner
++ (AISMViewController *)messageViewControllerForChat:(AIChat *)inChat owner:(id)inOwner
 {
-    return([[[self alloc] initForContact:inContact owner:inOwner] autorelease]);
+    return([[[self alloc] initForChat:inChat owner:inOwner] autorelease]);
 }
 
-- (id)initForContact:(AIListContact *)inContact owner:(id)inOwner
+- (id)initForChat:(AIChat *)inChat owner:(id)inOwner
 {
     //init
     [super init];
     owner = [inOwner retain];
-    contact = [inContact retain];
+    chat = [inChat retain];
 
     //observe
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
@@ -66,7 +66,7 @@
     [messageView reloadData]; //Load any existing messages
     
     //Observe
-    [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:contact];
+    [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:chat];
 
     return(self);
 }
@@ -126,10 +126,10 @@
     return(messageView);
 }
 
-//Return our contact
-- (AIListContact *)contact
+//Return our chat
+- (AIChat *)chat
 {
-    return(contact);
+    return(chat);
 }
 
 
@@ -140,10 +140,10 @@
 
 - (AIFlexibleTableCell *)cellForColumn:(AIFlexibleTableColumn *)inCol row:(int)inRow
 {
-    NSArray			*contentArray = [contact contentObjectArray];
-    id <AIContentObject>	content;
-    id <AIContentObject>	previousContent = nil;
-    AIFlexibleTableCell		*cell = nil;
+    NSArray		*contentArray = [chat contentObjectArray];
+    AIContentObject	*content;
+    AIContentObject	*previousContent = nil;
+    AIFlexibleTableCell	*cell = nil;
 
     //Get the content objects
     content = [contentArray objectAtIndex:([contentArray count] - 1) - inRow]; //Content is stored in reverse order
@@ -156,7 +156,7 @@
             cell = [self senderCellForContent:content previousContent:previousContent];
                 
         }else if(inCol == messageCol){
-            cell = [self messageCellForContent:content previousContent:previousContent];
+            cell = [self messageCellForContent:(AIContentMessage *)content previousContent:previousContent];
 
         }else if(inCol == timeCol){
             cell = [self timeStampCellForContent:content previousContent:previousContent];
@@ -208,7 +208,7 @@
 }
 
 //Returns an empty cell
-- (AIFlexibleTableCell *)emptyCellForContent:(id <AIContentObject>)content
+- (AIFlexibleTableCell *)emptyCellForContent:(AIContentObject *)content
 {
     AIFlexibleTableCell	*cell;
 
@@ -225,7 +225,7 @@
 }
 
 //Returns a message cell
-- (AIFlexibleTableCell *)messageCellForContent:(AIContentMessage *)content previousContent:(id <AIContentObject>)previousContent
+- (AIFlexibleTableCell *)messageCellForContent:(AIContentMessage *)content previousContent:(AIContentObject *)previousContent
 {
     AIFlexibleTableCell	*cell;
 
@@ -240,7 +240,7 @@
 }
 
 //Returns a sender cell
-- (AIFlexibleTableCell *)senderCellForContent:(AIContentMessage *)content previousContent:(id <AIContentObject>)previousContent
+- (AIFlexibleTableCell *)senderCellForContent:(AIContentObject *)content previousContent:(AIContentObject *)previousContent
 {
     id			messageSource = [content source];
     NSColor		*gradientColor, *prefixColor, *backgroundColor;
@@ -287,7 +287,7 @@
 }
 
 //Returns a time stamp cell
-- (AIFlexibleTableCell *)timeStampCellForContent:(id <AIContentObject>)content previousContent:(id <AIContentObject>)previousContent
+- (AIFlexibleTableCell *)timeStampCellForContent:(AIContentObject *)content previousContent:(AIContentObject *)previousContent
 {
     AIFlexibleTableCell	*cell;
     BOOL		backgroundIsDark;
@@ -326,7 +326,7 @@
     
 }
 
-- (NSColor *)backgroundColorOfContent:(id <AIContentObject>)content
+- (NSColor *)backgroundColorOfContent:(AIContentObject *)content
 {
     NSColor	*backgroundColor = nil;
 
@@ -345,7 +345,7 @@
 
 - (int)numberOfRows
 {
-    return([[contact contentObjectArray] count]);
+    return([[chat contentObjectArray] count]);
 }
 
 @end

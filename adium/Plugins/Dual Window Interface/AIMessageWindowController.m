@@ -81,8 +81,10 @@
 //Remove a tab view item container
 - (void)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
 {
-    [tabView_messages removeTabViewItem:inTabViewItem];
-    [interface containerDidClose:inTabViewItem];
+    if([(AIMessageTabViewItem *)inTabViewItem tabShouldClose:nil]){
+        [tabView_messages removeTabViewItem:inTabViewItem];
+        [interface containerDidClose:inTabViewItem];
+    }
 
     //If that was our last container, close the window (unless we're already closing)
     if(!windowIsClosing && [tabView_messages numberOfTabViewItems] == 0){
@@ -154,7 +156,7 @@
     enumerator = [viewArrayCopy objectEnumerator];
     while((tabViewItem = [enumerator nextObject])){
         [[owner notificationCenter] postNotificationName:Interface_CloseMessage
-                                                  object:[[tabViewItem messageViewController] contact]
+                                                  object:[[tabViewItem messageViewController] chat]
                                                 userInfo:nil];
     }
 

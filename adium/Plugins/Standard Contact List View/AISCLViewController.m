@@ -62,7 +62,7 @@
     //Install the necessary observers
     [[owner notificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(contactOrderChanged:) name:Contact_OrderChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(contactAttributesChanged:) name:Contact_AttributesChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) name:ListObject_AttributesChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
 //    [contactListView setIndentationPerLevel:0];
@@ -82,7 +82,7 @@
     //Remove observers (general)
     [[owner notificationCenter] removeObserver:self name:Contact_ListChanged object:nil];
     [[owner notificationCenter] removeObserver:self name:Contact_OrderChanged object:nil];
-    [[owner notificationCenter] removeObserver:self name:Contact_AttributesChanged object:nil];
+    [[owner notificationCenter] removeObserver:self name:ListObject_AttributesChanged object:nil];
     [[owner notificationCenter] removeObserver:self name:Preference_GroupChanged object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSOutlineViewItemDidExpandNotification object:contactListView];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSOutlineViewItemDidCollapseNotification object:contactListView];
@@ -127,12 +127,12 @@
 }
 
 //Redisplay the modified object
-- (void)contactAttributesChanged:(NSNotification *)notification
+- (void)listObjectAttributesChanged:(NSNotification *)notification
 {
-    AIListContact	*contact = [notification object];
+    AIListObject	*object = [notification object];
 
-    if(contact){ //Simply redraw the modified contact
-        int row = [contactListView rowForItem:contact];
+    if(object){ //Simply redraw the modified contact
+        int row = [contactListView rowForItem:object];
 
         if(row >= 0){
             [contactListView setNeedsDisplayInRect:[contactListView rectOfRow:row]];

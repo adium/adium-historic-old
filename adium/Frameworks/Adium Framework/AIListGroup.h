@@ -20,17 +20,13 @@
 
 @interface AIListGroup : AIListObject {
     NSMutableArray    	*objectArray;		//Manual ordered array of contents
-//    NSMutableArray    	*sortedObjectArray;	//Dynamically sorted array of contents
     int			visibleCount;		//The number of visible buddies in the sorted array
     BOOL		expanded;
-//    int			index;
 }
 
-- (NSString *)displayName;
+- (id)initWithUID:(NSString *)inUID;
 
-//Manual Ordering
-/*- (int)index;
-- (void)setIndex:(int)inIndex;*/
+- (NSString *)displayName;
 
 //Contained Objects
 - (NSEnumerator *)objectEnumerator;
@@ -43,16 +39,12 @@
 - (BOOL)isExpanded;
 
 //Sorting
-//- (unsigned)sortedCount;
-//- (id)sortedObjectAtIndex:(unsigned)index;
 - (void)sortGroupAndSubGroups:(BOOL)subGroups sortController:(id <AIListSortController>)sortController;
 
 //Editing
 - (void)addObject:(AIListObject *)inObject;
-//- (void)insertObject:(AIListObject *)inObject atIndex:(int)index;
 - (void)replaceObject:(AIListObject *)oldObject with:(AIListObject *)newObject;
 - (void)removeObject:(AIListObject *)inObject;
-//- (int)indexOfObject:(AIListObject *)inObject;
 - (void)removeAllObjects;
 
 @end

@@ -99,9 +99,9 @@
 {
     [messageViewArray addObject:inController];
 }
-- (NSView *)messageViewForContact:(AIListContact *)inContact
+- (NSView *)messageViewForChat:(AIChat *)inChat
 {
-    return([[messageViewArray objectAtIndex:0] messageViewForContact:inContact]);
+    return([[messageViewArray objectAtIndex:0] messageViewForChat:inChat]);
 }
 
 

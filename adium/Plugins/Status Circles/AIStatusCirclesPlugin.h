@@ -34,10 +34,10 @@
 @class AIStatusCirclesPreferences;
 //@class AIStatusCircle;
 
-@interface AIStatusCirclesPlugin : AIPlugin <AIFlashObserver> {
+@interface AIStatusCirclesPlugin : AIPlugin <AIFlashObserver, AIListObjectObserver> {
     AIStatusCirclesPreferences *preferences;
 
-    NSMutableArray	*flashingContactArray;
+    NSMutableArray	*flashingListObjectArray;
 
     BOOL		displayIdleTime;
 

@@ -8,7 +8,7 @@
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
-            ACTIONS = {sendCommand = id; }; 
+            ACTIONS = {sendDirectDebugCommand = id; }; 
             CLASS = AIMTOC2Account; 
             LANGUAGE = ObjC; 
             OUTLETS = {

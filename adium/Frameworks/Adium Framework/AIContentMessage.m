@@ -14,35 +14,26 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIContentMessage.h"
+#import "AIContentObject.h"
 #import "AIAccount.h"
 #import "AIAdium.h"
 
 @interface AIContentMessage (PRIVATE)
-- (id)initWithSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage;
+- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage;
 @end
 
 @implementation AIContentMessage
 
 //Create a content message
-+ (id)messageWithSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage
++ (id)messageInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage
 {
-    return([[[self alloc] initWithSource:inSource destination:inDest date:inDate message:inMessage] autorelease]);
+    return([[[self alloc] initWithChat:inChat source:inSource destination:inDest date:inDate message:inMessage] autorelease]);
 }
 
 //Return the type ID of this content
 - (NSString *)type
 {
     return(CONTENT_MESSAGE_TYPE);
-}
-
-- (BOOL)filterObject
-{
-    return(YES); //Message content should pass through the content filters
-}
-
-- (BOOL)trackObject
-{
-    return(YES); //Message content should be tracked by the contact
 }
 
 //The attributed message contents
@@ -52,20 +43,10 @@
 
 - (void)setMessage:(NSAttributedString *)inMessage{
     if(message != inMessage){
-        [message release]; //we should probably hold onto the origional content...
+        [message release]; //we should probably hold onto the original content...
                            //That would allow us to 'refilter' a piece of content to dynamically update the previously displayed messages as preferences are changed... which would be very cool
         message = [inMessage retain];
     }
-}
-
-//Message source (may return a contact handle, or an account)
-- (id)source{
-    return(source);
-}
-
-//Message destination (may return a contact handle, or an account(
-- (id)destination{
-    return(destination);
 }
 
 //Return the date and time this message was sent
@@ -75,16 +56,10 @@
 
 // Private ------------------------------------------------------------------------------
 //init
-- (id)initWithSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage;
+- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage;
 {
-    [super init];
+    [super initWithChat:inChat source:inSource destination:inDest];
     
-//    NSParameterAssert([inSource isKindOfClass:[AIContactHandle class]] || [inSource isKindOfClass:[AIAccount class]]);
-    
-    //Store source and dest
-    source = [inSource retain];
-    destination = [inDest retain];
-
     //Store the date and message
     if(!date){
         date = [[NSDate date] retain];
@@ -98,8 +73,6 @@
 
 - (void)dealloc
 {
-    [source release];
-    [destination release];
     [date release];
     [message release];
 

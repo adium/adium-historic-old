@@ -169,9 +169,7 @@
 
     //Remove the handle, and re-add it with the new name
     [account removeHandleWithUID:[handle UID]];
-    [account addHandleWithUID:name
-                  serverGroup:handleGroup
-                    temporary:NO];
+    [account addHandleWithUID:name serverGroup:handleGroup temporary:NO];
 
     //
     [super _renameHandle:handle to:name];

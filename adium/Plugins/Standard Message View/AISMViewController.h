@@ -15,13 +15,14 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIListContact, AIAdium, AIFlexibleTableView, AIFlexibleTableColumn;
+@class AIListContact, AIAdium, AIFlexibleTableView, AIFlexibleTableColumn, AIChat;
 @protocol AIFlexibleTableViewDelegate;
 
 @interface AISMViewController : NSObject <AIFlexibleTableViewDelegate> {
     AIAdium			*owner;
 
-    AIListContact		*contact;
+//    AIListContact		*contact;
+    AIChat			*chat;
     AIFlexibleTableView		*messageView;
 
     AIFlexibleTableColumn	*senderCol;
@@ -60,8 +61,8 @@
     NSString			*prefixOutgoing;
 }
 
-+ (AISMViewController *)messageViewControllerForContact:(AIListContact *)inContact owner:(id)inOwner;
++ (AISMViewController *)messageViewControllerForChat:(AIChat *)inChat owner:(id)inOwner;
 - (NSView *)messageView;
-- (AIListContact *)contact;
+- (AIChat *)chat;
 
 @end

@@ -23,37 +23,19 @@
 
 - (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID
 {
-    [super initWithUID:inUID];
+    [super initWithUID:inUID serviceID:inServiceID];
     
-    serviceID = [inServiceID retain];
     handleArray = [[NSMutableArray alloc] init];
-    statusDictionary = [[NSMutableDictionary alloc] init];
-    contentObjectArray = [[NSMutableArray alloc] init];
     
     return(self);
 }
 
-- (NSString *)serviceID
+- (void)dealloc
 {
-    return(serviceID);
+    [handleArray release];
+    
+    [super dealloc];
 }
-
-- (NSString *)UIDAndServiceID //ServiceID.UID
-{
-    return([NSString stringWithFormat:@"%@.%@",serviceID,UID]);
-}
-
-- (NSString *)description
-{
-    return([NSString stringWithFormat:@"%@.%@ (%@)",serviceID,UID,[super description]]);
-}
-
-
-//Contained Handles
-/*- (NSEnumerator *)handleEnumerator
-{
-    return([handleArray objectEnumerator]);
-}*/
 
 - (AIHandle *)handleForAccount:(AIAccount *)inAccount
 {
@@ -108,53 +90,6 @@
     return([handleArray count]);
 }
 
-
-
-//Content
-//Return our array of content objects
-- (NSArray *)contentObjectArray
-{
-    return(contentObjectArray);
-}
-
-//Add a message object to this handle
-- (void)addContentObject:(id <AIContentObject>)inObject
-{
-    //Add the object
-    [contentObjectArray insertObject:inObject atIndex:0];
-
-    //Keep the array under X number of objects
-/*    if([contentObjectArray count] > CONTENT_OBJECT_SCROLLBACK){
-        int i;
-
-        NSLog(@"Flush %i",([contentObjectArray count] - CONTENT_OBJECT_SCROLLBACK));
-        for(i = 0;i < ([contentObjectArray count] - CONTENT_OBJECT_SCROLLBACK); i++){
-            [contentObjectArray removeLastObject];
-        }
-
-        //let everyone know we flushed
-        //        [[owner notificationCenter] postNotificationName:Content_ContentObjectsChanged object:self userInfo:nil];
-    }*/
-
-}
-
-
-//Status
-//Returns the requested status array for this object
-- (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey
-{
-    AIMutableOwnerArray	*array = [statusDictionary objectForKey:inKey];
-
-    if(!array){
-        array = [[AIMutableOwnerArray alloc] init];
-        [statusDictionary setObject:array forKey:inKey];
-        [array release];
-    }
-
-    return(array);
-}
-
-
 - (NSString *)displayName
 {
     AIMutableOwnerArray	*displayName;
@@ -180,7 +115,6 @@
     }
 
     return(outName);
-    //return([NSString stringWithFormat:@"(%0.3f) %@",orderIndex,outName]);
 }
 
 @end

@@ -26,11 +26,11 @@
 - (void)installPlugin
 {
     //init
-    unviewedContactsArray = [[NSMutableArray alloc] init];
+    unviewedObjectsArray = [[NSMutableArray alloc] init];
     overlayState = nil;
 
     //Register as a contact observer (So we can catch the unviewed content status flag)
-    [[owner contactController] registerContactObserver:self];
+    [[owner contactController] registerListObjectObserver:self];
 }
 
 - (void)uninstallPlugin
@@ -38,19 +38,19 @@
 
 }
 
-- (NSArray *)updateContact:(AIListContact *)inContact keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
 {
     if([inModifiedKeys containsObject:@"UnviewedContent"] || [inModifiedKeys containsObject:@"Signed On"] || [inModifiedKeys containsObject:@"Signed Off"]){
-        if([[inContact statusArrayForKey:@"UnviewedContent"] greatestIntegerValue] || [[inContact statusArrayForKey:@"Signed On"] greatestIntegerValue] || [[inContact statusArrayForKey:@"Signed Off"] greatestIntegerValue]){
-            if(![unviewedContactsArray containsObject:inContact]){
-                [unviewedContactsArray addObject:inContact];
-//                [self _setOverlay]; //Redraw our overlay
+
+        if([[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue] || [[inObject statusArrayForKey:@"Signed On"] greatestIntegerValue] || [[inObject statusArrayForKey:@"Signed Off"] greatestIntegerValue]){
+            
+            if(![unviewedObjectsArray containsObject:inObject]){
+                [unviewedObjectsArray addObject:inObject];
             }
             
         }else{
-            if([unviewedContactsArray containsObject:inContact]){
-                [unviewedContactsArray removeObject:inContact];
-//                [self _setOverlay]; //Redraw our overlay
+            if([unviewedObjectsArray containsObject:inObject]){
+                [unviewedObjectsArray removeObject:inObject];
             }
         }
 
@@ -75,7 +75,7 @@
     }
 
     //Create & set the new overlay state
-    if([unviewedContactsArray count] != 0){
+    if([unviewedObjectsArray count] != 0){
         NSMutableParagraphStyle	*paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
         NSEnumerator		*enumerator;
         AIListContact		*contact;
@@ -101,7 +101,7 @@
         image = [[[NSImage alloc] initWithSize:NSMakeSize(128,128)] autorelease];
     
         //Draw overlays for each contact
-        enumerator = [unviewedContactsArray reverseObjectEnumerator];
+        enumerator = [unviewedObjectsArray reverseObjectEnumerator];
         while((contact = [enumerator nextObject]) && top >= 0 && bottom < 128){
             float		left, right, arcRadius, stringInset;
             NSAttributedString	*nameString;

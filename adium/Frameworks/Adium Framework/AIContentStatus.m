@@ -14,19 +14,19 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIContentStatus.h"
-
+#import "AIContentObject.h"
 
 @interface AIContentStatus (PRIVATE)
-- (id)initWithSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage;
+- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage;
 @end
 
 
 @implementation AIContentStatus
 
 //Create a new status content object
-+ (id)statusWithSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage
++ (id)statusInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage
 {
-    return([[[self alloc] initWithSource:inSource destination:inDest date:inDate message:inMessage] autorelease]);
+    return([[[self alloc] initWithChat:inChat source:inSource destination:inDest date:inDate message:inMessage] autorelease]);
 }
 
 //Return the type ID of this content
@@ -35,29 +35,19 @@
     return(CONTENT_STATUS_TYPE);
 }
 
-- (BOOL)filterObject
+- (BOOL)filterContent
 {
-    return(YES); //Staus content can pass through the content filters (I'm sure something will want to filter them in the future)
+    return(NO); //There is no need to filter status content
 }
 
-- (BOOL)trackObject
+- (BOOL)trackContent
 {
-    return(YES); //Status content should be tracked by the contact
+    return(NO); //Status content should NOT be tracked by contacts
 }
 
 //Return our status message content
 - (NSString *)message{
     return(message);
-}
-
-//Message source (may return a contact handle, or an account)
-- (id)source{
-    return(source);
-}
-
-//Message destination (may return a contact handle, or an account(
-- (id)destination{
-    return(destination);
 }
 
 //Return the date and time this message was sent
@@ -67,9 +57,9 @@
 
 // Private ------------------------------------------------------------------------------
 //init
-- (id)initWithSource:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage
+- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage
 {
-    [super init];
+    [super initWithChat:inChat source:inSource destination:inDest];
 
     //Store source and dest
     source = [inSource retain];
@@ -88,8 +78,6 @@
 
 - (void)dealloc
 {
-    [source release];
-    [destination release];
     [date release];
     [message release];
 

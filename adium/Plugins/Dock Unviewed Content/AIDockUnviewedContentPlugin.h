@@ -16,8 +16,8 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-@interface AIDockUnviewedContentPlugin : AIPlugin <AIContactObserver> {
-    NSMutableArray		*unviewedContactsArray;
+@interface AIDockUnviewedContentPlugin : AIPlugin <AIListObjectObserver> {
+    NSMutableArray		*unviewedObjectsArray;
     AIIconState			*unviewedState;
 
 }

@@ -15,11 +15,11 @@
 
 #import <Adium/Adium.h>
 
-@protocol AIContactObserver;
+@protocol AIListObjectObserver;
 
 @interface AIContactStatusOpenTabPlugin : AIPlugin {
 }
 
-- (void)updateOpenTabStatusOnContact:(AIListContact *)inContact withStatus:(BOOL)inStatus;
+- (void)updateOpenTabStatusOnListObject:(AIListObject *)inObject withStatus:(BOOL)inStatus;
 
 @end

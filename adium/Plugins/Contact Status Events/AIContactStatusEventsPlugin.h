@@ -22,11 +22,10 @@
 #define KEY_SIGNED_OFF_LENGTH			@"Signed Off Length"
 #define KEY_SIGNED_ON_LENGTH			@"Signed On Length"
 
-@protocol AIContactObserver;
-
+@protocol AIListObjectObserver;
 @class AIContactStatusEventsPreferences;
 
-@interface AIContactStatusEventsPlugin : AIPlugin <AIContactObserver> {
+@interface AIContactStatusEventsPlugin : AIPlugin <AIListObjectObserver> {
     AIContactStatusEventsPreferences	*preferences;
     
     NSMutableDictionary		*onlineDict;

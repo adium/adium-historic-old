@@ -52,9 +52,9 @@
 
             //Left aligned icon
             for(loop = 0;loop < [leftViewArray count];loop++){
-                id <AIContactLeftView>	handler = [leftViewArray objectAtIndex:loop];
-                NSRect			drawRect;
-                float			width, maxWidth;
+                id <AIListObjectLeftView>	handler = [leftViewArray objectAtIndex:loop];
+                NSRect				drawRect;
+                float				width, maxWidth;
     
                 //Calculate the icon size
                 maxWidth = [handler widthForHeight:cellFrame.size.height computeMax:YES];

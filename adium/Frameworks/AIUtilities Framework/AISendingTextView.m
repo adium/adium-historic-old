@@ -43,8 +43,7 @@
     target = nil;
     selector = nil;
     owner = nil;
-    contact = nil;
-    account = nil;
+    chat = nil;
     sendOnReturn = YES;
     sendOnEnter = YES;
     returnArray = [[NSMutableArray alloc] init];
@@ -214,29 +213,16 @@
 
 //Contact menu ---------------------------------------------------------------
 //Set and return the selected contact (to auto-configure the contact menu)
-- (void)setContact:(AIListContact *)inContact
+- (void)setChat:(AIChat *)inChat
 {
-    if(contact != inContact){
-        [contact release];
-        contact = [inContact retain];
+    if(chat != inChat){
+        [chat release];
+        chat = [inChat retain];
     }
 }
-- (AIListContact *)contact{
-    return(contact);
+- (AIChat *)chat{
+    return(chat);
 }
-
-//Set and return the selected account ()
-- (void)setAccount:(AIAccount *)inAccount
-{
-    if(account != inAccount){
-        [account release];
-        account = [inAccount retain];
-    }
-}
-- (AIAccount *)account{
-    return(account);
-}
-
 
 
 //Private ------------------------------------------------------------------------------------
@@ -245,7 +231,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [returnArray release]; returnArray = nil;
-//    [target release]; target = nil;
     [super dealloc];
 }
 

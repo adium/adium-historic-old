@@ -29,7 +29,7 @@ static NSString *linkDetailString[] = { //Anything matching these keys is linked
     [[owner contentController] registerOutgoingContentFilter:self];
 }
 
-- (void)filterContentObject:(id <AIContentObject>)inObject
+- (void)filterContentObject:(AIContentObject *)inObject
 {
 
     if([[inObject type] compare:CONTENT_MESSAGE_TYPE] == 0){

@@ -17,6 +17,7 @@
 #import "AIPreferenceViewController.h"
 #import "AIPlugin.h"
 #import "AIServiceType.h"
+#import "AIContentObject.h"
 #import "AIContentMessage.h"
 #import "AIPreferenceCategory.h"
 #import "AISendingTextView.h"
@@ -28,3 +29,5 @@
 #import "AIListObject.h"
 #import "AIContentStatus.h"
 #import "AIContentTyping.h"
+#import "AIChat.h"
+#import "AIListChat.h"

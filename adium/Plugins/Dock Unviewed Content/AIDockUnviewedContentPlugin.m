@@ -24,11 +24,11 @@
 - (void)installPlugin
 {
     //init
-    unviewedContactsArray = [[NSMutableArray alloc] init];
+    unviewedObjectsArray = [[NSMutableArray alloc] init];
     unviewedState = nil;
 
     //Register as a contact observer (So we can catch the unviewed content status flag)
-    [[owner contactController] registerContactObserver:self];
+    [[owner contactController] registerListObjectObserver:self];
 
 }
 
@@ -38,23 +38,23 @@
 }
 
 
-- (NSArray *)updateContact:(AIListContact *)inContact keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
 {
     if([inModifiedKeys containsObject:@"UnviewedContent"]){
-        if([[inContact statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]){
+        if([[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]){
             //If this is the first contact with unviewed content, animate the dock
             if(unviewedState == nil){
                 unviewedState = [[owner dockController] setIconStateNamed:@"Alert"];
             }
 
-            [unviewedContactsArray addObject:inContact];
+            [unviewedObjectsArray addObject:inObject];
 
         }else{
-            if([unviewedContactsArray containsObject:inContact]){
-                [unviewedContactsArray removeObject:inContact];
+            if([unviewedObjectsArray containsObject:inObject]){
+                [unviewedObjectsArray removeObject:inObject];
 
                 //If there are no more contacts with unviewed content, stop animating the dock
-                if([unviewedContactsArray count] == 0 && unviewedState != nil){
+                if([unviewedObjectsArray count] == 0 && unviewedState != nil){
                     [[owner dockController] removeIconState:unviewedState];
                     unviewedState = nil;
                 }

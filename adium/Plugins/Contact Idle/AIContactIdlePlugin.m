@@ -17,9 +17,9 @@
 #import <AIUtilities/AIUtilities.h>
 
 @interface AIContactIdlePlugin (PRIVATE)
-- (void)contact:(AIListContact *)inContact isIdle:(BOOL)inIdle;
-- (void)setIdleForContact:(AIListContact *)inContact;
-- (void)updateIdleContactsTimer:(NSTimer *)inTimer;
+- (void)listObject:(AIListObject *)inObject isIdle:(BOOL)inIdle;
+- (void)setIdleForObject:(AIListObject *)inObject;
+- (void)updateIdleObjectsTimer:(NSTimer *)inTimer;
 @end
 
 @implementation AIContactIdlePlugin
@@ -28,30 +28,30 @@
 - (void)installPlugin
 {
     //
-    idleContactArray = nil;
+    idleObjectArray = nil;
 
     //Install our tooltip entry
     [[owner interfaceController] registerContactListTooltipEntry:self];
 
     //
-    [[owner contactController] registerContactObserver:self];
+    [[owner contactController] registerListObjectObserver:self];
 }
 
 - (void)uninstallPlugin
 {
     //Stop tracking all idle handles
-    [idleContactTimer invalidate]; [idleContactTimer release]; idleContactTimer = nil;
-    [idleContactArray release]; idleContactArray = nil;
+    [idleObjectTimer invalidate]; [idleObjectTimer release]; idleObjectTimer = nil;
+    [idleObjectArray release]; idleObjectArray = nil;
 }
 
 //Called when a handle's status changes
-- (NSArray *)updateContact:(AIListContact *)inContact keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys
 {
     if(	inModifiedKeys == nil ||
         [inModifiedKeys containsObject:@"IdleSince"]){
         
         //Start/Stop tracking the handle
-        [self contact:inContact isIdle:([[inContact statusArrayForKey:@"IdleSince"] earliestDate] != nil)];
+        [self listObject:inObject isIdle:([[inObject statusArrayForKey:@"IdleSince"] earliestDate] != nil)];
     }
 
     return(nil);
@@ -60,66 +60,63 @@
         
 //Adds or removes a handle from our idle tracking array
 //Handles in the array have their idle times increased every minute
-- (void)contact:(AIListContact *)inContact isIdle:(BOOL)inIdle
+- (void)listObject:(AIListObject *)inObject isIdle:(BOOL)inIdle
 {
     if(inIdle){
         //Track the handle
-        if(!idleContactArray){
-            idleContactArray = [[NSMutableArray alloc] init];
-            idleContactTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateIdleContactsTimer:) userInfo:nil repeats:YES] retain];
+        if(!idleObjectArray){
+            idleObjectArray = [[NSMutableArray alloc] init];
+            idleObjectTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateIdleObjectsTimer:) userInfo:nil repeats:YES] retain];
         }
-        [idleContactArray addObject:inContact];
+        [idleObjectArray addObject:inObject];
         
     }else{
         //Stop tracking the handle
-        [idleContactArray removeObject:inContact];
-        if([idleContactArray count] == 0){
-            [idleContactTimer invalidate]; [idleContactTimer release]; idleContactTimer = nil;
-            [idleContactArray release]; idleContactArray = nil;
+        [idleObjectArray removeObject:inObject];
+        if([idleObjectArray count] == 0){
+            [idleObjectTimer invalidate]; [idleObjectTimer release]; idleObjectTimer = nil;
+            [idleObjectArray release]; idleObjectArray = nil;
         }
 
     }
 
     //Set the correct idle value
-    [self setIdleForContact:inContact];
+    [self setIdleForObject:inObject];
 
 }
 
 //Updates the idle duration of all idle handles
-- (void)updateIdleContactsTimer:(NSTimer *)inTimer
+- (void)updateIdleObjectsTimer:(NSTimer *)inTimer
 {
     NSEnumerator	*enumerator;
-    AIListContact	*contact;
+    AIListObject	*object;
 
     [[owner contactController] setHoldContactListUpdates:YES]; //Hold updates to prevent multiple updates and re-sorts
 
-    enumerator = [idleContactArray objectEnumerator];
-    while((contact = [enumerator nextObject])){
-        [self setIdleForContact:contact]; //Update the contact's idle time
+    enumerator = [idleObjectArray objectEnumerator];
+    while((object = [enumerator nextObject])){
+        [self setIdleForObject:object]; //Update the contact's idle time
     }
 
     [[owner contactController] setHoldContactListUpdates:NO]; //Resume updates
 }
 
 //Give a contact its correct idle value
-- (void)setIdleForContact:(AIListContact *)inContact
+- (void)setIdleForObject:(AIListObject *)inObject
 {
-    NSDate		*idleSince = [[inContact statusArrayForKey:@"IdleSince"] earliestDate];
+    NSDate	*idleSince = [[inObject statusArrayForKey:@"IdleSince"] earliestDate];
     
-//    NSMutableDictionary	*statusDict = [inHandle statusDictionary];
-//    NSDate		*idleSince = [statusDict objectForKey:@"IdleSince"];
-
     if(idleSince){ //Set the handle's 'idle' value
         double	idle = -[idleSince timeIntervalSinceNow] / 60.0;
-        [[inContact statusArrayForKey:@"Idle"] setObject:[NSNumber numberWithDouble:idle] withOwner:inContact];
+        [[inObject statusArrayForKey:@"Idle"] setObject:[NSNumber numberWithDouble:idle] withOwner:inObject];
         
     }else{ //Remove its idle value
-        [[inContact statusArrayForKey:@"Idle"] setObject:nil withOwner:inContact];
+        [[inObject statusArrayForKey:@"Idle"] setObject:nil withOwner:inObject];
     }
 
     //Let everyone know we changed it
-    [[owner contactController] contactStatusChanged:inContact
-                                modifiedStatusKeys:[NSArray arrayWithObject:@"Idle"]];
+    [[owner contactController] listObjectStatusChanged:inObject
+                                    modifiedStatusKeys:[NSArray arrayWithObject:@"Idle"]];
 }
 
 

@@ -8,19 +8,15 @@
 
 #import <Cocoa/Cocoa.h>
 #import "AIAdium.h"
+#import "AIContentObject.h"
 
 #define CONTENT_TYPING_TYPE		@"Typing"		//Type ID for this content
 
-@interface AIContentTyping : NSObject <AIContentObject> {
-    id 				source;
-    id	 			destination;
+@interface AIContentTyping : AIContentObject {
     BOOL			typing;
 }
 
-+ (id)typingContentWithSource:(id)inSource destination:(id)inDest typing:(BOOL)inTyping;
-- (NSString *)type;		//Return the unique type identifier for this object
-- (id)source;
-- (id)destination;
++ (id)typingContentInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest typing:(BOOL)inTyping;
 - (BOOL)typing;			//YES if typing, NO if not typing
 
 @end
