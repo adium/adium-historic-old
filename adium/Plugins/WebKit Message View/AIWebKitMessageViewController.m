@@ -62,8 +62,6 @@
 	//Feed it to the webview
 	[[webView mainFrame] loadHTMLString:templateHTML baseURL:nil];
 	
-	
-	
 	//Time Stamps
 #define PREF_GROUP_STANDARD_MESSAGE_DISPLAY	@"Message Display"
 #define	KEY_SMV_TIME_STAMP_FORMAT		@"Time Stamp"
@@ -199,22 +197,22 @@
 	
 	if ([content isKindOfClass:[AIContentMessage class]]) {
         // this must be before %sender, so it gets the "ScreenName" part.
-        range = [inString rangeOfString:@"%senderScreenName"];
+        range = [inString rangeOfString:@"%senderScreenName%"];
         if(range.location != NSNotFound){
            [inString replaceCharactersInRange:range withString:[[content source] UID]];
         }
         
-        range = [inString rangeOfString:@"%sender"];
+        range = [inString rangeOfString:@"%sender%"];
         if(range.location != NSNotFound){
             [inString replaceCharactersInRange:range withString:[[content source] displayName]];
         }
         
-        range = [inString rangeOfString:@"%service"];
+        range = [inString rangeOfString:@"%service%"];
         if(range.location != NSNotFound){
            [inString replaceCharactersInRange:range withString:[[content source] serviceID]];
         }
 #warning This disables any fonts in the webkit view other than what is specified by the template.
-        range = [inString rangeOfString:@"%message"];
+        range = [inString rangeOfString:@"%message%"];
         if(range.location != NSNotFound){
             // Using a safeString so image attachments are removed
             // while waiting for a permanent fix that would allows us to use emoticons
@@ -225,24 +223,24 @@
                   imagesPath:nil]];
         }
 		
-        range = [inString rangeOfString:@"%time"];
+        range = [inString rangeOfString:@"%time%"];
         if(range.location != NSNotFound){
 			[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[(AIContentMessage *)content date]]];
         }
 		
-		range = [inString rangeOfString:@"%stime"];
+		range = [inString rangeOfString:@"%stime%"];
         if(range.location != NSNotFound) {
 			[inString replaceCharactersInRange:range withString:[timeStampFormatterMinutesSeconds stringForObjectValue:[(AIContentMessage *)content date]]];
         }
 		
 	} else {
 #warning Statuses should be able to know what kind of status it is, for class="away" style tags.
-        range = [inString rangeOfString:@"%message"];
+        range = [inString rangeOfString:@"%messag%e"];
         if(range.location != NSNotFound){
             [inString replaceCharactersInRange:range withString:[(AIContentStatus *)content message]];
         }
         
-        range = [inString rangeOfString:@"%time"];
+        range = [inString rangeOfString:@"%time%"];
         if(range.location != NSNotFound){
                 [inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[(AIContentStatus *)content date]]];
         }
