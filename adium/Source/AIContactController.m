@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.123 2004/04/18 17:24:50 adamiser Exp $
+// $Id: AIContactController.m,v 1.124 2004/04/18 18:15:18 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -793,7 +793,7 @@
 															target:nil 
 															action:nil
 													 keyEquivalent:@""] autorelease];
-			[item setSubmenu:[self menuOfAllContactsInGroup:object withTarget:target]];
+			[item setSubmenu:[self menuOfAllContactsInGroup:(AIListGroup *)object withTarget:target]];
 			[menu addItem:item];
 
 		}else if([object isMemberOfClass:[AIListContact class]]){
