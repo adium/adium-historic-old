@@ -95,10 +95,8 @@
 {
 	float 				leftWidth, rightWidth;
     NSFont				*font;
-    NSAttributedString	*displayName;
     NSSize				displayNameSize;
     NSSize				cellSize = NSMakeSize(0, 0);
-    NSMutableArray      *cellSizeArray = [NSMutableArray array];
 
     //Text Font
 	font = (isGroup ? [controlView groupFont] : [controlView font]);
@@ -246,7 +244,6 @@
 		
 		//Draw our label
 		if(labelColor){
-			int 		innerLeft, innerRight, innerTop, innerBottom;
 			NSRect		labelRect = cellFrame;
 			
 			//Restict our label to the object name if desired
