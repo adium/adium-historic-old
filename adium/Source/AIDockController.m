@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIDockController.m,v 1.50 2004/04/15 17:12:32 evands Exp $
+// $Id: AIDockController.m,v 1.51 2004/04/23 04:59:10 adamiser Exp $
 
 #import "AIDockController.h"
 
@@ -390,7 +390,8 @@
 }
 
 
-//Bouncing ------------------------------------------------------------------------------------
+//Bouncing -------------------------------------------------------------------------------------------------------------
+#pragma mark Bouncing
 //Perform a bouncing behavior
 - (void)performBehavior:(DOCK_BEHAVIOR)behavior
 {
@@ -411,6 +412,26 @@
     }    
 }
 
+//Return a string description of the bouncing behavior
+- (NSString *)descriptionForBehavior:(DOCK_BEHAVIOR)behavior
+{
+	NSString	*desc;
+	
+    switch(behavior){
+        case BOUNCE_NONE: desc=@"None"; break;
+        case BOUNCE_ONCE: desc=@"Once"; break;
+        case BOUNCE_REPEAT: desc=@"Repeatedly"; break;
+        case BOUNCE_DELAY5: desc=@"Every 5 Seconds"; break;
+        case BOUNCE_DELAY10: desc=@"Every 10 Seconds"; break;
+        case BOUNCE_DELAY15: desc=@"Every 15 Seconds"; break;
+        case BOUNCE_DELAY30: desc=@"Every 30 Seconds"; break;
+        case BOUNCE_DELAY60: desc=@"Every 60 Seconds"; break;
+        default: desc=@"Invalid"; break;
+    }    
+	
+	return(AILocalizedString(desc,""));
+}
+
 //Start a delayed bounce
 - (void)_bounceWithInterval:(double)delay
 {
@@ -422,6 +443,7 @@
                                                   userInfo:nil
                                                    repeats:YES] retain];
 }
+
 //Activated by the time after each delay
 - (void)bounceWithTimer:(NSTimer *)timer
 {

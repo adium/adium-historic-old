@@ -10,7 +10,7 @@
 
 #define	CONTACT_ANNOUNCER_NIB		@"ContactAnnouncer"		//Filename of the announcer info view
 #define ANNOUNCER_ALERT_SHORT		@"Speak Text"
-#define ANNOUNCER_ALERT_LONG		@"Speak Text"
+#define ANNOUNCER_ALERT_LONG		@"Speak the text \"%@\""
 
 @interface ESAnnouncerPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -246,7 +246,7 @@
 	NSString *textToSpeak = [details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
 
 	if(textToSpeak && [textToSpeak length]){
-		return([NSString stringWithFormat:@"%@: %@",ANNOUNCER_ALERT_LONG, textToSpeak]);
+		return([NSString stringWithFormat:ANNOUNCER_ALERT_LONG, textToSpeak]);
 	}else{
 		return(ANNOUNCER_ALERT_LONG);
 	}

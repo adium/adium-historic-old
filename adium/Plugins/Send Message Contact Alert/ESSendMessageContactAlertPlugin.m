@@ -8,8 +8,8 @@
 #import "ESSendMessageContactAlertPlugin.h"
 #import "ESSendMessageAlertDetailPane.h"
 
-#define SEND_MESSAGE_ALERT_SHORT	@"Send a message to %a"
-#define SEND_MESSAGE_ALERT_LONG		@"Send a message to %a"
+#define SEND_MESSAGE_ALERT_SHORT	@"Send a message"
+#define SEND_MESSAGE_ALERT_LONG		@"Send %@ the message \"%@\""
 
 @interface ESSendMessageContactAlertPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -43,7 +43,12 @@
 
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
-	return(SEND_MESSAGE_ALERT_LONG);
+	NSString		*messageText = [details objectForKey:KEY_MESSAGE_SEND_MESSAGE];
+	NSString		*destUniqueID = [details objectForKey:KEY_MESSAGE_SEND_TO];
+	AIListContact	*contact = nil;
+
+	if(destUniqueID) contact = (AIListContact *)[[adium contactController] existingListObjectWithUniqueID:destUniqueID];
+	return([NSString stringWithFormat:SEND_MESSAGE_ALERT_LONG, [contact displayName], messageText]);
 }
 
 - (NSImage *)imageForActionID:(NSString *)actionID

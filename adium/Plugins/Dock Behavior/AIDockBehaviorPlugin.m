@@ -20,7 +20,7 @@
 #define DOCK_BEHAVIOR_DEFAULT_PREFS	@"DockBehaviorDefaults"
 #define DOCK_BEHAVIOR_PRESETS		@"DockBehaviorPresets"
 #define DOCK_BEHAVIOR_ALERT_SHORT	@"Bounce the dock icon"
-#define DOCK_BEHAVIOR_ALERT_LONG	@"Bounce the dock icon"
+#define DOCK_BEHAVIOR_ALERT_LONG	@"Bounce the dock icon %@"
 
 @interface AIDockBehaviorPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -190,31 +190,13 @@ Methods for custom behvaior and contact alert classes
 //Builds and returns a dock behavior list menu
 + (NSMenu *)behaviorListMenuForTarget:(id)target
 {
-    NSMenu		*behaviorMenu = [[[NSMenu alloc] init] autorelease];
-    
-    //Build the menu items
-    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_ONCE 
-														   withName:AILocalizedString(@"Once",nil) target:target]];
+    NSMenu			*behaviorMenu = [[[NSMenu alloc] init] autorelease];
+    DOCK_BEHAVIOR	behavior;
 	
-    [behaviorMenu addItem:[NSMenuItem separatorItem]];
-	
-    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_REPEAT
-														   withName:AILocalizedString(@"Repeatedly",nil) target:target]];
-	
-    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY5 
-														   withName:AILocalizedString(@"Every 5 Seconds",nil) target:target]];
-	
-    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY10 
-														   withName:AILocalizedString(@"Every 10 Seconds",nil) target:target]];
-	
-    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY15 
-														   withName:AILocalizedString(@"Every 15 Seconds",nil) target:target]];
-	
-    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY30
-														   withName:AILocalizedString(@"Every 30 Seconds",nil) target:target]];
-	
-    [behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:BOUNCE_DELAY60
-														   withName:AILocalizedString(@"Every Minute",nil) target:target]];
+	for(behavior = 0; behavior < BOUNCE_DELAY60; behavior++){
+		NSString *name = [[[AIObject sharedAdiumInstance] dockController] descriptionForBehavior:behavior];
+		[behaviorMenu addItem:[AIDockBehaviorPlugin menuItemForBehavior:behavior withName:name target:target]];
+	}
     
     [behaviorMenu setAutoenablesItems:NO];
     
@@ -248,7 +230,8 @@ Methods for custom behvaior and contact alert classes
 
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
-	return(DOCK_BEHAVIOR_ALERT_LONG);
+	int behavior = [[details objectForKey:KEY_DOCK_BEHAVIOR_TYPE] intValue];
+	return([NSString stringWithFormat:DOCK_BEHAVIOR_ALERT_LONG, [[adium dockController] descriptionForBehavior:behavior]]);
 }
 
 - (NSImage *)imageForActionID:(NSString *)actionID
