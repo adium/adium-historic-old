@@ -5,6 +5,8 @@
 //  Based on SpeechUtilities framework by Raphael Sebbe.
 //  Revised by Evan Schoenberg on Tue Sep 30 2003.
 //  Optimized and expanded by Evan Schoenberg.
+//  $Id: SUSpeaker.m,v 1.6 2003/12/14 05:19:24 jmelloy Exp $
+
 
 #import "SUSpeaker.h"
 #include <unistd.h>
