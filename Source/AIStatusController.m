@@ -98,9 +98,61 @@
 	[self buildBuiltInStatusTypes];
 }
 
+/*
+ * @brief Finish initing the status controller
+ *
+ * Set our initial status state, and restore our array of accounts to connect when a global state is selected.
+ */
 - (void)finishIniting
 {
 	[self setInitialStatusState];
+	
+	/* Load our array of accounts which were connected when we quit; these will be the accounts to connect if an online
+	 * status is selected with no accounts online. */
+	NSArray	*savedAccountsToConnect = [[adium preferenceController] preferenceForKey:@"SavedAccountsToConnect"
+																			   group:GROUP_ACCOUNT_STATUS];
+	if(savedAccountsToConnect){
+		NSEnumerator	*enumerator = [savedAccountsToConnect objectEnumerator];
+		NSString		*internalObjectID;
+		
+		while(internalObjectID = [enumerator nextObject]){
+			[accountsToConnect addObject:[[adium accountController] accountWithInternalObjectID:internalObjectID]];
+		}
+	}else{
+		/* First launch situation.  Use auto connect if possible to avoid signing on all accounts. */
+		NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
+		AIAccount		*account;
+		
+		while(account = [enumerator nextObject]){
+			if([[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]){
+				[accountsToConnect addObject:account];
+			}
+		}		
+	}
+}
+
+/*!
+ * @brief Begin closing the status controller
+ *
+ * Save the currently array of accountsToConnect so we can make use of them on next launch for better
+ * global status behavior.
+ *
+ * Note: accountsToConnect is not the same as online accounts. It may, for example, have a single entry which is
+ * the last account to have been connected (if no accounts are currently online).
+ */
+- (void)beginClosing
+{
+	NSMutableArray	*savedAccountsToConnect = [NSMutableArray array];
+	NSEnumerator	*enumerator = [accountsToConnect objectEnumerator];
+	AIAccount		*account;
+
+	while(account = [enumerator nextObject]){
+		[savedAccountsToConnect addObject:[account internalObjectID]];
+	}
+
+	[[adium preferenceController] setPreference:savedAccountsToConnect
+										 forKey:@"SavedAccountsToConnect"
+										  group:GROUP_ACCOUNT_STATUS];
 }
 
 /*!
