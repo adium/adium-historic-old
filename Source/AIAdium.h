@@ -119,6 +119,8 @@
 //  @"/L/AS/Adium 2.0/Scripts" }.
 - (NSArray *)resourcePathsForName:(NSString *)name;
 
+- (NSString *)pathOfPackWithName:(NSString *)name extension:(NSString *)extension resourceFolderName:(NSString *)folderName;
+
 @end
 
 //Crash Reporter

@@ -116,7 +116,7 @@
 		NSString			*iconPath;
 		
 		//Load the new icon pack
-		iconPath = [adium pathOfPackWIthName:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]
+		iconPath = [adium pathOfPackWithName:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]
 								   extension:@"AdiumIcon"
 						  resourceFolderName:FOLDER_DOCK_ICONS];
 
