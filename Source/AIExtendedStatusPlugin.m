@@ -81,13 +81,13 @@
 	//Idle time
     if(inModifiedKeys == nil || 
 	   (showIdle && [inModifiedKeys containsObject:@"Idle"]) ||
-	   (showStatus && [inModifiedKeys containsObject:@"StatusMessage"])){
+	   (showStatus && [inModifiedKeys containsObject:@"StatusState"])){
 		NSMutableString	*statusMessage = nil;
 		NSString		*finalMessage = nil;
 		int				idle;
 		
 		if (showStatus){
-			statusMessage = [[[[[[adium contentController] filterAttributedString:[inObject statusObjectForKey:@"StatusMessage"]
+			statusMessage = [[[[[[adium contentController] filterAttributedString:[[inObject statusState] statusMessage]
 																  usingFilterType:AIFilterDisplay
 																		direction:AIFilterIncoming
 																		  context:inObject] string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];

@@ -71,7 +71,6 @@ static int  sizeOfSortOrder;
 - (void)pruneAndSetSortOrderFromArray:(NSArray *)sortOrderArray;
 @end
 
-DeclareString(sAway)
 DeclareString(sIdle)
 DeclareString(sOnline)
 
@@ -88,7 +87,6 @@ DeclareString(sOnline)
  */
 - (id)init
 {
-	InitString(sAway,@"Away");
 	InitString(sIdle,@"Idle");
 	InitString(sOnline,@"Online");
 	
@@ -222,7 +220,7 @@ DeclareString(sOnline)
  * @brief Status keys which, when changed, should trigger a resort
  */
 - (NSSet *)statusKeysRequiringResort{
-	return([NSSet setWithObjects:sOnline,sIdle,sAway,nil]);
+	return([NSSet setWithObjects:sOnline,sIdle,@"StatusState",nil]);
 }
 
 /*!
@@ -572,8 +570,8 @@ int statusSort(id objectA, id objectB, BOOL groups)
 			int				objectCounter;
 			
 			//Get the away state and idle times now rather than potentially doing each twice below
-			away[0] = [objectA integerStatusObjectForKey:sAway fromAnyContainedObject:NO];
-			away[1] = [objectB integerStatusObjectForKey:sAway fromAnyContainedObject:NO];
+			away[0] = ([[objectA statusState] statusType] == AIAwayStatusType);
+			away[1] = ([[objectB statusState] statusType] == AIAwayStatusType);
 			
 			idle[0] = [objectA integerStatusObjectForKey:sIdle fromAnyContainedObject:NO];
 			idle[1] = [objectB integerStatusObjectForKey:sIdle fromAnyContainedObject:NO];
