@@ -1798,9 +1798,6 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			//Create
 			contact = [[AIListContact alloc] initWithUID:inUID account:inAccount service:inService];
 
-			//Place new contacts at the bottom of our list (by giving them the largest ordering index)
-//			largestOrder += 1.0;
-//			[contact setOrderIndex:largestOrder];
 			//Make sure this contact's order index isn't bigger than our current nextOrderIndex we'll vend to new contacts
 			float orderIndex = [contact orderIndex];
 			if (orderIndex > nextOrderIndex) nextOrderIndex = orderIndex + 1;
@@ -1816,6 +1813,11 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 				   (on future launches, the metaContact will obtain it automatically since all contacts matching this UID
 				   and serviceID should be included). */
 				[self _performAddListObject:contact toMetaContact:metaContact];
+			}
+			
+			//Set the contact as mobile if it is a phone number
+			if([inUID characterAtIndex:0] == '+'){
+				[contact setIsMobile:YES notify:NotifyNever];
 			}
 
 			//Add
