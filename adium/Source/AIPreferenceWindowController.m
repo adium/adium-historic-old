@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.53 2004/06/04 15:23:49 adamiser Exp $
+// $Id: AIPreferenceWindowController.m,v 1.54 2004/06/04 16:47:10 adamiser Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -276,19 +276,21 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
             case 7:
 				[view_Emoticons setPanes:[self _panesInCategory:AIPref_Emoticons]];
 			break;
-            case 8:
+			case 8:
+				[view_Keys setPanes:[self _panesInCategory:AIPref_Keys]];
+				break;
+            case 9:
                 [outlineView_advanced reloadData];
 
                 //Select the previously selected row
 				int row = [[[adium preferenceController] preferenceForKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW
 																	group:PREF_GROUP_WINDOW_POSITIONS] intValue];
+				if(row < 0 || row >= [outlineView_advanced numberOfRows]) row = 1;
+				
 				if([self outlineView:outlineView_advanced shouldSelectItem:[outlineView_advanced itemAtRow:row]]){
 					[outlineView_advanced selectRow:row byExtendingSelection:NO];
 				}
             break;
-			case 9:
-				[view_Keys setPanes:[self _panesInCategory:AIPref_Keys]];
-			break;
         }
 
 		//Update the selected toolbar item (10.3 or higher)
@@ -316,8 +318,8 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		case 5: return([view_Dock desiredHeight]); break;
 		case 6: return([view_Sound desiredHeight]); break;
 		case 7: return([view_Emoticons desiredHeight]); break;
-		case 8: return(ADVANCED_PANE_HEIGHT); break;
-		case 9: return([view_Keys desiredHeight]); break;
+		case 8: return([view_Keys desiredHeight]); break;
+		case 9: return(ADVANCED_PANE_HEIGHT); break;
 		default: return(0); break;
 	}
 }
