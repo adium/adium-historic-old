@@ -20,13 +20,12 @@
 #define	KEY_DOCK_SHOW_CONTENT			@"Show content overlays"
 #define	KEY_DOCK_OVERLAY_POSITION		@"Overlay Position"
 
-@class AIStatusOverlayPreferences, AIStatusOverlayAdvancedPreferences;
+@class AIStatusOverlayPreferences;
 
 @interface AIContactStatusDockOverlaysPlugin : AIPlugin <AIListObjectObserver> {
     NSMutableArray		*unviewedObjectsArray;
     AIIconState			*overlayState;
     AIStatusOverlayPreferences	*preferences;
-    AIStatusOverlayAdvancedPreferences	*advancedPrefs;
 
     NSColor	*signedOffColor;
     NSColor	*signedOnColor;
