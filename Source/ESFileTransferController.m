@@ -204,9 +204,9 @@ static ESFileTransferPreferences *preferences;
 - (void)requestForSendingFileToListContact:(AIListContact *)listContact
 {
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-	[openPanel setTitle:[NSString stringWithFormat:@"Send File to %@",[listContact displayName]]];
+	[openPanel setTitle:[NSString stringWithFormat:AILocalizedString(@"Send File to %@",nil),[listContact displayName]]];
 	
-	if ([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton) {
+	if([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton){
 		[self sendFile:[openPanel filename] toListContact:listContact];
 	}
 }
