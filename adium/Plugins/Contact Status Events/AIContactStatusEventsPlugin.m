@@ -82,13 +82,13 @@
 		if(![[inObject containingGroup] isKindOfClass:[AIMetaContact class]]){ //Ignore children of meta contacts
 			if([modifiedKeys containsObject:@"Online"]){
 				if([self updateChache:onlineCache forKey:@"Online" ofType:@selector(numberStatusObjectForKey:) listObject:inObject] && !silent){
-					[[adium contactAlertsController] generateEvent:([inObject integerStatusObjectForKey:@"Online"] ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO)
+					[[adium contactAlertsController] generateEvent:([[inObject numberStatusObjectForKey:@"Online"] boolValue] ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO)
 													 forListObject:inObject];
 				}
 			}
 			if([modifiedKeys containsObject:@"Away"]){
 				if([self updateChache:awayCache forKey:@"Away" ofType:@selector(numberStatusObjectForKey:) listObject:inObject] && !silent){
-					[[adium contactAlertsController] generateEvent:([inObject integerStatusObjectForKey:@"Away"] ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO)
+					[[adium contactAlertsController] generateEvent:([[inObject numberStatusObjectForKey:@"Away"] boolValue] ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO)
 													 forListObject:inObject];
 				}
 			}
