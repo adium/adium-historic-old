@@ -11,9 +11,10 @@
     NSMutableDictionary *statusDictionary;
     NSMutableArray		*contentObjectArray;
     NSMutableArray		*participatingListObjects;
+	NSString			*name;
 }
 
-+ (id)chatForAccount:(AIAccount *)inAccount;
++ (id)chatForAccount:(AIAccount *)inAccount initialStatusDictionary:(NSDictionary *)inDictionary;
 - (NSMutableDictionary *)statusDictionary;
 - (AIAccount *)account;
 - (void)setAccount:(AIAccount *)inAccount;
@@ -30,5 +31,7 @@
 - (void)appendContentArray:(NSArray *)inContentArray;
 - (void)removeAllContent;
 
+- (NSString *)name;
+- (void)setName:(NSString *)inName;
 
 @end

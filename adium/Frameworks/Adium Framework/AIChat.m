@@ -8,22 +8,23 @@
 #import "AIChat.h"
 
 @interface AIChat (PRIVATE)
-- (id)initForAccount:(AIAccount *)inAccount;
+- (id)initForAccount:(AIAccount *)inAccount initialStatusDictionary:(NSDictionary *)inDictionary;
 @end
 
 @implementation AIChat
 
-+ (id)chatForAccount:(AIAccount *)inAccount
++ (id)chatForAccount:(AIAccount *)inAccount initialStatusDictionary:(NSDictionary *)inDictionary
 {
-    return([[[self alloc] initForAccount:inAccount] autorelease]);
+    return([[[self alloc] initForAccount:inAccount initialStatusDictionary:inDictionary] autorelease]);
 }
 
-- (id)initForAccount:(AIAccount *)inAccount
+- (id)initForAccount:(AIAccount *)inAccount initialStatusDictionary:(NSDictionary *)inDictionary
 {
     [super init];
 
+	name = nil;
     account = [inAccount retain];
-    statusDictionary = [[NSMutableDictionary alloc] init];
+    statusDictionary = (inDictionary ? [inDictionary mutableCopy] : [[NSMutableDictionary alloc] init]);
     contentObjectArray = [[NSMutableArray alloc] init];
     participatingListObjects = [[NSMutableArray alloc] init];
     
@@ -63,6 +64,14 @@
 - (NSMutableDictionary *)statusDictionary
 {
     return(statusDictionary);
+}
+- (NSString *)name
+{
+	return (name ? name : [[self listObject] displayName]);
+}
+- (void)setName:(NSString *)inName
+{
+	[name release]; name = [inName retain]; 
 }
 
 
