@@ -43,6 +43,7 @@
 	NSString	*selectedSound = [inDetails objectForKey:KEY_ALERT_SOUND_PATH];
 	if([[popUp_actionDetails menu] indexOfItemWithRepresentedObject:selectedSound] == NSNotFound){
 		[self addSound:selectedSound toMenu:[popUp_actionDetails menu]];
+		NSLog(@"Adding custom sound %@",selectedSound);
 	}
 	
     //Set the menu to its previous setting if the stored event matches
@@ -74,6 +75,7 @@
 	NSEnumerator	*enumerator;
 	NSDictionary	*soundSetDict;
 	NSMenuItem		*menuItem;
+	NSLog(@"build soundListMenu");
 	
 	//Add all soundsets to our menu
 	enumerator = [[[adium soundController] soundSetArray] objectEnumerator];
@@ -159,9 +161,8 @@
         [[adium soundController] playSoundAtPath:soundPath]; //Play the sound
 
         //Update the menu and and the selection
-        [popUp_actionDetails setMenu:[self soundListMenu]];
+		[self addSound:soundPath toMenu:[popUp_actionDetails menu]];
         [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:soundPath]];
-        [popUp_actionDetails autosizeAndCenterHorizontally];
     }
 }
 
