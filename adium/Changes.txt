@@ -2,56 +2,45 @@
 				-----------------------
 
 Version 0.57 (5/21/2004)
-- Added contact notes support
-- Added support for seeing jabber status changes
-- added delete contact contextual menu item
+- Added contact notes
+- Added delete contact contextual menu item
 - Added support for addBuddy links
 - Added support for request add contact panels
 - Added an advanced preference for keeping tabs sorted
-
-- Updated the allowed characters / lengths for several protocols
+- Updated the allowed characters and lengths for several protocols
 - Updated several message view styles
-- Updated appearance of message window history (We now remove text color)
-
-- Improved link editing
-- Improved performance and reduced beachballing, especially on slow networks
-- Improved group counting when offline contacts are visible
-- Improved Adium's response to being knocked off by another login
+- Updated appearance of message window history
+- Improved performance and reduced beach-balling, especially on slow networks
 - Improved behavior of dragging groups on the contact list
-- Improved Adium's recognition of several HTML tags
+- Improved group counting when offline contacts are visible
+- Improved link editing
 - Improved automatic link recognition
-
-- Cleaned up emoticon prefs
-
+- Improved support for seeing jabber status changes
+- Improved recognition of several HTML tags
+- Improved response to being knocked off by another login
+- Cleaned up emoticon preferences
 - Fixed issue with HTML sending to MSN users
-- Fixed issue with MSN display names, AIM name formatting
+- Fixed issue with MSN display names, AIM name formatting not displaying
 - Fixed issue with multiple message tabs being created
-- Fixed bug causing ordering info to get lost
-- Fixed an issue with the version checker falsly reporting new releases
-- Fixed emoticons flipping in prefs
+- Fixed issues with the contact list not remembering manual order
 - Fixed several cases where text would be incorrectly turned into a link
-- Fixed message view scrollbar positioning
 - Fixed issue with message formatting resetting after sending a message
 - Fixed issue with receiving pasted content from iChat
+- Fixed emoticons displaying upside-down in the preferences
 - Fixed a bug causing auto-scroll to always happen on receiving messages
 - Fixed a bug with scripts being executed in other peoples profiles
-- Fixed bug sending wrong text color out.. green text
-- Fixed crashes caused by poorly formed dock icon packs
-- fixed issue preventing mobile and ICQ service types from showing up
-- Fixed several memory leaks
-- Fixed issues with auto-resizing not saying on bottom of screen
-- Fixed other option for custom sound alerts
-- Fixed issues with clicking AIM subprofile links (links containing %n)
+- Fixed a bug causing some message text to appear green instead of black
 - Fixed an issue with re-ordering away messages
-- Fixed issue with toolbar menu items not dimming
-- Fixed issue with contact list selecting the first contact when opened
-
-
-
-
-
-
-
+- Fixed crashes caused by poorly formed dock icon packs
+- Fixed an issue preventing mobile and ICQ service types from showing up
+- Fixed issues with auto-resizing not sticking to the bottom of the screen
+- Fixed issues with clicking AIM sub-profile links (links containing %n)
+- Fixed the 'other...' option for custom sound alerts
+- Fixed message view scrollbar positioning
+- Fixed an issue with toolbar menu items not dimming
+- Fixed an issue with the contact list selecting the first contact when opened
+- Fixed an issue with the version checker falsely reporting new releases
+- Fixed several memory leaks
 
 Version 0.56 (5/14/2004)
 - Added 'Insert Emoticon' to the Edit menu, contextual menus
@@ -134,13 +123,13 @@ Version 0.53 (4/30/2004)
 - Cleaned up sound preferences
 - Cleaned up contact list name display format preferences (moved to the View menu)
 - Fixed several MSN crashes [libgaim]
-- Fixed several issues related to tooltips appearing at impropoer times
+- Fixed several issues related to tooltips appearing at improper times
 - Fixed a crash when arranging away messages
 - Fixed odd behavior and crashes in Alert window
 - Fixed an issue with dropping text on message tabs
 - Fixed an issue with apostrophes on Jabber
 - Fixed an issue with 'first message received' sounds not playing
-- Fixed an issue with the version checker falsly reporting new releases
+- Fixed an issue with the version checker falsely reporting new releases
 - Fixed an issue preventing the version checker from saying how old the current version is
 - Fixed cosmetic issue with away message menu
 - Fixed an issue with the contact list position when a multiscreen configuration changed
