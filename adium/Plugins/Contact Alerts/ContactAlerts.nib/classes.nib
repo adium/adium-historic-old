@@ -1,0 +1,23 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
+        {
+            ACTIONS = {closeWindow = id; }; 
+            CLASS = AIContactAlertsWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_delete" = NSButton; 
+                "popUp_addEvent" = NSPopUpButton; 
+                "tableView_actions" = AIAlternatingRowTableView; 
+                "textField_contactName" = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
