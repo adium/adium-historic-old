@@ -163,7 +163,8 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 - (void)showLogViewerToSelectedContact:(id)sender
 {
     AIListObject   *selectedObject = [[adium contactController] selectedListObject];
-    [AILogViewerWindowController openForContact:selectedObject plugin:self];
+    [AILogViewerWindowController openForContact:([selectedObject isKindOfClass:[AIListContact class]] ? (AIListContact *)selectedObject : nil)
+										 plugin:self];
 }
 
 //Show the log viewer, displaying the selected contact's logs
