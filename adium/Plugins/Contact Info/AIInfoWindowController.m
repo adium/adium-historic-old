@@ -315,7 +315,6 @@ static AIInfoWindowController *sharedInstance = nil;
 //
 - (void)dealloc
 {
-    [timer invalidate]; [timer release];
     [owner release];
     [activeContactObject release];
 
@@ -357,10 +356,7 @@ static AIInfoWindowController *sharedInstance = nil;
 
     //Stop observing, and release the shared instance
     [[owner contactController] unregisterListObjectObserver:self];
-    if (timer) {
-        [timer invalidate];
-        timer = nil;
-    }
+    [timer invalidate]; [timer release]; timer = nil;
 
     [sharedInstance autorelease]; sharedInstance = nil;
     
