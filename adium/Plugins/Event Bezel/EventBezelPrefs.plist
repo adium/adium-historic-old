@@ -26,5 +26,7 @@
         <true/>
         <key>Include Text</key>
         <true/>
+		<key>Ignore Clicks</key>
+		<false/>
 </dict>
 </plist>

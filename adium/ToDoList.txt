@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.119 2004/05/11 23:08:16 bgannin Exp $
+$Id: ToDoList.txt,v 1.120 2004/05/12 12:00:40 eevyl Exp $
 
 
 Legend
@@ -175,15 +175,15 @@ Status badges:
 	+ Add images based status badges to the contact list
 	+ Allow user to select icon sets (packaged in a bundle) in preferences
 
-Event Notifications (the feature formerly known as Event Bezel:
+Event Notifications (the feature formerly known as Event Bezel):
     + Hook the thing into the new alert system. Give it a nice icon for it too.
     + Give the notification window a close widget to quick-dismish the event, if it is the last one close the thing entirely. Maybe if clicking it with option hold down should close all queued events altogether.
     + Give the notification window a mail dock icon like badge to show the total number of recent events to be shown on it
     + Add small pretty protocol icons (we need nice icons for this)
-    + Add one more advanced preference to make it unclickable, yet maybe would be nice that in this mode it could be clicked and moved while holding command as in the borderless contact list
     # Add status icons (the desired thing should be to use the same ones as the ones in the forthcoming new contact list)
 	# Give the notification window a titlebar, and allow it to be repositioned while visible.
       not sure about adding a titlebar to it [Jorge]
+    = Add one more advanced preference to make it unclickable, changing the visual appearance of the window so it is less obstrusive.
     = Detect when the bezel is displaying with no position info (from autoSaveFrameName) and put it in a default position like the old bezel "default" one.
 	= Color the entire bezel to match the event being displayed
 	= Make the bezel smaller, clearer, easier to read, prettier
