@@ -181,10 +181,9 @@
 {
     AIHandle	*handle;
 
-        if(inTemporary) inGroup = @"__Strangers";
-    if(inTemporary) inGroup = @"Strangers";
-    
+    if(inTemporary) inGroup = @"__Strangers";    
     if(!inGroup) inGroup = @"Unknown";
+    
     //Check to see if the handle already exists, and remove the duplicate if it does
     if(handle = [handleDict objectForKey:inUID]){
         [self removeHandleWithUID:inUID]; //Remove the handle
@@ -423,7 +422,6 @@
 
         //Correctly enable/disable the chat
         handleIsOnline = [[[handle statusDictionary] objectForKey:@"Online"] boolValue];
-        NSLog(@"TOC : handleIsOnline %i",handleIsOnline);
         [[chat statusDictionary] setObject:[NSNumber numberWithBool:handleIsOnline] forKey:@"Enabled"];
 
         //
@@ -875,7 +873,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.85 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.86 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1139,8 +1137,6 @@
     
     //Open a chat for this handle
     chat = [self _openChatWithHandle:handle];
-    
-
     
     //Add a content object for the message
     messageObject = [AIContentMessage messageInChat:chat

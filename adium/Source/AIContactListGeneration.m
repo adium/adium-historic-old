@@ -302,7 +302,12 @@
         AIHandle		*contactHandle;
 
         if(contactHandle = [contact handleForAccount:account]){ //We found one
-            return([contactHandle serverGroup]);
+            if([contactHandle temporary]){
+                return(@"Strangers");
+            }else{
+                return([contactHandle serverGroup]);
+            }
+
         }
     }
 
