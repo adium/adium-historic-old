@@ -32,5 +32,5 @@
 }
 
 - (void)removeAccount:(GaimAccount *)gaimAcct;
-
+- (void)configureGaimProxySettings;
 @end
