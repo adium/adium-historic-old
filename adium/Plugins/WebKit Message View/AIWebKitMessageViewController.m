@@ -16,6 +16,7 @@
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_flushPreferenceCache;
 - (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar;
+- (void)_addContentContext:(AIContentContext *)content similar:(BOOL)contentIsSimilar;
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar;
 - (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content;
 - (NSMutableString *)escapeString:(NSMutableString *)inString;
@@ -147,6 +148,9 @@
 		//
 		if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
 			[self _addContentMessage:(AIContentMessage *)content similar:contentIsSimilar];
+		} else if([[content type] compare:CONTENT_CONTEXT_TYPE] == 0){
+			[self _addContentContext:(AIContentContext *)content similar:contentIsSimilar];
+
 		}else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
 			[self _addContentStatus:(AIContentStatus *)content similar:contentIsSimilar];
 		}
@@ -176,6 +180,42 @@
 }
 
 - (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar
+{
+	NSString		*stylePath = [[[NSBundle bundleForClass:[self class]] pathForResource:@"template" ofType:@"html"] stringByDeletingLastPathComponent];
+	NSMutableString	*newHTML;
+	
+	//
+	if([content isOutgoing]){
+		stylePath = [stylePath stringByAppendingPathComponent:@"Outgoing"];
+	}else{
+		stylePath = [stylePath stringByAppendingPathComponent:@"Incoming"];
+	}
+	
+	//
+	NSString	*contentTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Content.html"]];
+	NSString	*nextContentTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"NextContent.html"]];
+	
+	//
+	if(!contentIsSimilar){
+		newHTML = [[contentTemplate mutableCopy] autorelease];
+		newHTML = [self fillKeywords:newHTML forContent:content];
+		newHTML = [self escapeString:newHTML];
+        
+		[webView stringByEvaluatingJavaScriptFromString:
+			[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();", newHTML]];
+		
+	}else{
+		newHTML = [[nextContentTemplate mutableCopy] autorelease];
+		newHTML = [self fillKeywords:newHTML forContent:content];
+		newHTML = [self escapeString:newHTML];
+		
+		[webView stringByEvaluatingJavaScriptFromString:
+			[NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();", newHTML]];
+		
+	}
+}
+
+- (void)_addContentContext:(AIContentContext *)content similar:(BOOL)contentIsSimilar
 {
 	NSString		*stylePath = [[[NSBundle bundleForClass:[self class]] pathForResource:@"template" ofType:@"html"] stringByDeletingLastPathComponent];
 	NSMutableString	*newHTML;

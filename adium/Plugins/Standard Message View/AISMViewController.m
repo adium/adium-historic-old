@@ -28,17 +28,19 @@
 - (void)_addContentObject:(AIContentObject *)content;
 - (void)_addContentMessage:(AIContentMessage *)content;
 - (void)_addContentMessageRow:(AIFlexibleTableRow *)row;
+- (void)_addContentContext:(AIContentContext *)content;
 - (void)_addContentStatus:(AIContentStatus *)content;
 - (void)_addContentObjectToThreadQueue:(AIContentObject *)content;
 - (void)_addQueuedContent;
 - (NSArray *)_rowsForAddingContentObject:(AIContentObject *)content;
 - (NSArray *)_rowsForAddingContentMessage:(AIContentMessage *)content;
+- (NSArray *)_rowsForAddingContentContext:(AIContentContext *)content;
 - (AIFlexibleTableRow *)_rowForAddingContentStatus:(AIContentStatus *)content;
 - (AIFlexibleTableRow *)_statusRowForContent:(AIContentStatus *)content;
 - (AIFlexibleTableRow *)_prefixRowForContent:(AIContentMessage *)content;
 - (AIFlexibleTableRow *)_messageRowForContent:(AIContentMessage *)content previousRow:(AIFlexibleTableRow *)thePreviousRow header:(BOOL)isHeader;
 - (AIFlexibleTableCell *)_statusCellForContent:(AIContentStatus *)content;
-- (AIFlexibleTableCell *)_userIconCellForContent:(AIContentMessage *)content span:(BOOL)span;
+- (AIFlexibleTableCell *)_userIconCellForContent:(AIContentObject *)content span:(BOOL)span;
 - (AIFlexibleTableCell *)_emptyImageSpanCellForPreviousRow:(AIFlexibleTableRow *)thePreviousRow;
 - (AIFlexibleTableCell *)_emptyHeadIndentCellForPreviousRow:(AIFlexibleTableRow *)thePreviousRow content:(AIContentMessage *)content;
 - (AIFlexibleTableCell *)_prefixCellForContent:(AIContentMessage *)content;
@@ -48,6 +50,7 @@
 - (NSAttributedString *)_prefixStringForContent:(AIContentMessage *)content performHeadIndent:(BOOL)performHeadIndent;
 - (NSAttributedString *)_prefixWithFormat:(NSString *)format forContent:(AIContentMessage *)content;
 - (NSString *)_prefixStringByExpandingFormat:(NSString *)format forContent:(AIContentMessage *)content;
+- (NSAttributedString *)_stringWithContextStyle:(NSAttributedString *)inString;
 - (NSAttributedString *)_stringByRemovingAllStyles:(NSAttributedString *)inString;
 - (NSAttributedString *)_stringByFixingTextColor:(NSAttributedString *)inString forColor:(NSColor *)inColor;
 @end
@@ -348,6 +351,8 @@
 {
     if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
         [self _addContentMessage:(AIContentMessage *)content];
+	}else if([[content type] compare:CONTENT_CONTEXT_TYPE] == 0){
+        [self _addContentContext:(AIContentContext *)content];
     }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
         [self _addContentStatus:(AIContentStatus *)content];
     }
@@ -357,6 +362,8 @@
 {
     if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
         return [self _rowsForAddingContentMessage:(AIContentMessage *)content];
+	} else if([[content type] compare:CONTENT_CONTEXT_TYPE] == 0){
+        return [self _rowsForAddingContentContext:(AIContentContext *)content];
     }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
         return [NSArray arrayWithObject:[self _rowForAddingContentStatus:(AIContentStatus *)content]];
     }
@@ -379,6 +386,23 @@
     
     [rowArray release];
 }
+
+//Add rows for a context message object
+- (void)_addContentContext:(AIContentContext *)content
+{
+    NSArray             *rowArray = [[self _rowsForAddingContentContext:content] retain];
+    
+    NSEnumerator        *enumerator = [rowArray objectEnumerator];
+    AIFlexibleTableRow  *row;
+    
+    while (row = [enumerator nextObject]) {
+        [messageView addRow:row];
+    }
+    
+    [rowArray release];
+}
+
+
 //Add rows for a queued content message object
 - (void)_addQueuedContentMessage:(AIContentMessage *)content
 {
@@ -458,6 +482,67 @@
         returnArray = [NSArray arrayWithObject:messageRow];
     return (returnArray);
 }
+
+//returns an autoreleased array of the rows which represent context
+- (NSArray *)_rowsForAddingContentContext:(AIContentContext *)content
+{
+    //Previous row
+    AIContentObject     *previousContent = [previousRow representedObject];
+    AIFlexibleTableRow  *prefixRow = nil, *messageRow = nil;
+    BOOL                contentIsSimilar = NO;
+    
+    //We should merge if the previous content is a message and from the same source
+    if((!inlinePrefixes || combineMessages) &&
+       (previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source])){
+        contentIsSimilar = YES;
+    }
+	
+	//Always start a new bubble if enough time has elapsed since the last content
+	if(contentIsSimilar && [[content date] timeIntervalSinceDate:[(AIContentContext *)previousContent date]] >= NEW_BUBBLE_TIME)
+		contentIsSimilar = NO;
+    
+    //If we are using inline prefixes, and this message is different from the previous one, insert a prefix row 
+    if(inlinePrefixes && !contentIsSimilar){
+        prefixRow = [self _prefixRowForContent:(AIContentMessage *)content];
+    }
+    
+    //Add our message
+    messageRow = [self _messageRowForContent:(AIContentMessage *)content
+								 previousRow:(prefixRow ? prefixRow : previousRow)
+									  header:(!inlinePrefixes && !contentIsSimilar)];
+    
+    //Merge our new message with the previous one
+    if(contentIsSimilar){  
+        NSEnumerator        *enumerator;
+        AIFlexibleTableFramedTextCell *cell;
+        
+        enumerator = [[previousRow cellsWithClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
+        while (cell = [enumerator nextObject]) {
+            [cell setDrawBottom:NO];
+        }
+		
+        enumerator = [[messageRow cellsWithClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
+        while (cell = [enumerator nextObject]) {
+            [cell setDrawTop:NO];
+        }
+        
+        //draw the between-messages divider in the last framedTextCell in the row, which should be the message
+        [[messageRow lastCellWithClass:[AIFlexibleTableFramedTextCell class]] setDrawTopDivider:YES];
+        
+        if(!inlinePrefixes) [[previousRow cellWithClass:[AIFlexibleTableImageCell class]] setRowSpan:2];
+    }
+    
+    previousRow = messageRow;
+    
+    NSArray *returnArray;
+    if (prefixRow)
+        returnArray = [NSArray arrayWithObjects:prefixRow,messageRow,nil];
+    else
+        returnArray = [NSArray arrayWithObject:messageRow];
+    return (returnArray);
+}
+
+
 
 //Add rows for a content status object
 - (void)_addContentStatus:(AIContentStatus *)content
@@ -539,7 +624,14 @@
 		messageCell = [self _messageCellForContent:content includingPrefixes:NO shouldPerformHeadIndent:NO];
 		
 		if (emptyHeadIndentCell) {
-			NSColor *messageBackgroundColor = [messageCell contentBackgroundColor];
+			
+			//dchoby98 -- empty indent space
+			NSColor *messageBackgroundColor;
+			if( [content isKindOfClass:[AIContentContext class]] )
+				messageBackgroundColor = [[messageCell contentBackgroundColor] darkenAndAdjustSaturationBy:-0.3];
+			else
+				messageBackgroundColor = [messageCell contentBackgroundColor];
+				
 			if (messageBackgroundColor) {
 				[leftmostCell setBackgroundColor:messageBackgroundColor];
 				
@@ -584,7 +676,7 @@
 }
 
 //User icon cell
-- (AIFlexibleTableCell *)_userIconCellForContent:(AIContentMessage *)content span:(BOOL)span
+- (AIFlexibleTableCell *)_userIconCellForContent:(AIContentObject *)content span:(BOOL)span
 {
     AIFlexibleTableImageCell    *imageCell;
     NSImage			*userImage;
@@ -626,14 +718,21 @@
 - (AIFlexibleTableCell *)_emptyHeadIndentCellForPreviousRow:(AIFlexibleTableRow *)thePreviousRow content:(AIContentMessage *)content
 {
     AIFlexibleTableFramedTextCell * cell = [[AIFlexibleTableFramedTextCell alloc] init];
+	NSColor *currentOutgoingDividerColor = colorOutgoingDivider;
+	NSColor *currentIncomingDividerColor = colorIncomingDivider;
+	
+	if( [content isKindOfClass:[AIContentContext class]] ) {
+		currentOutgoingDividerColor = [currentOutgoingDividerColor darkenAndAdjustSaturationBy:-0.3];
+		currentIncomingDividerColor = [currentIncomingDividerColor darkenAndAdjustSaturationBy:-0.3];
+	}
 	
     //size the cell for the previousRow headIndent value
     [cell sizeCellForWidth:[thePreviousRow headIndent]];
 	
     if([content isOutgoing]){
-        [cell setFrameBackgroundColor:colorOutgoing borderColor:colorOutgoingBorder dividerColor:colorOutgoingDivider];
+        [cell setFrameBackgroundColor:colorOutgoing borderColor:colorOutgoingBorder dividerColor:currentOutgoingDividerColor];
     }else{
-        [cell setFrameBackgroundColor:colorIncoming borderColor:colorIncomingBorder dividerColor:colorIncomingDivider];
+        [cell setFrameBackgroundColor:colorIncoming borderColor:colorIncomingBorder dividerColor:currentIncomingDividerColor];
     }
 	
     return ([cell autorelease]);
@@ -677,6 +776,7 @@
     AIFlexibleTableFramedTextCell   *messageCell;
     NSAttributedString		    	*messageString;
  	NSColor 						*bodyColor = nil;
+	NSColor							*backgroundColor;
 	
     //Get the message string
     if(includePrefixes){
@@ -704,7 +804,14 @@
 	}
     if(![content isOutgoing]){
 		if(ignoreTextStyles || !bodyColor || [bodyColor equalToRGBColor:[NSColor whiteColor]]){
-			[messageCell setFrameBackgroundColor:colorIncoming borderColor:colorIncomingBorder dividerColor:colorIncomingDivider];
+	
+			//dchoby98
+			if( [content isKindOfClass:[AIContentContext class]] )
+				backgroundColor = [colorIncoming darkenAndAdjustSaturationBy:-0.3];
+			else
+				backgroundColor = colorIncoming;
+			
+			[messageCell setFrameBackgroundColor:backgroundColor borderColor:colorIncomingBorder dividerColor:colorIncomingDivider];
 		}else{
 			[messageCell setFrameBackgroundColor:bodyColor
 									 borderColor:[bodyColor darkenAndAdjustSaturationBy:0.3]
@@ -712,7 +819,14 @@
 		}
     }else{
 		if(!bodyColor || [bodyColor equalToRGBColor:[NSColor whiteColor]]){
-			[messageCell setFrameBackgroundColor:colorOutgoing borderColor:colorOutgoingBorder dividerColor:colorOutgoingDivider];
+			
+			//dchoby98
+			if( [content isKindOfClass:[AIContentContext class]] )
+				backgroundColor = [colorOutgoing darkenAndAdjustSaturationBy:-0.3];
+			else
+				backgroundColor = colorOutgoing;
+			
+			[messageCell setFrameBackgroundColor:backgroundColor borderColor:colorOutgoingBorder dividerColor:colorOutgoingDivider];
 		}else{
 			[messageCell setFrameBackgroundColor:bodyColor
 									 borderColor:[bodyColor darkenAndAdjustSaturationBy:0.3]
@@ -730,7 +844,9 @@
 - (NSAttributedString *)_messageStringForContent:(AIContentMessage *)content
 {
 	//Strip all coloring and formatting of received messages if desired
-    if([content isOutgoing] || !ignoreTextStyles) {
+	if([content isKindOfClass:[AIContentContext class]]) {
+		return([self _stringWithContextStyle:[content message]]);
+	}else if([content isOutgoing] || !ignoreTextStyles) {
         return([content message]);
     }else{
         return([self _stringByRemovingAllStyles:[content message]]);
@@ -784,9 +900,17 @@
 {
     NSString    *string = [self _prefixStringByExpandingFormat:format forContent:content];
 	
+	NSColor		*currentOutgoingSourceColor = outgoingSourceColor;
+	NSColor		*currentIncomingSourceColor = incomingSourceColor;
+	
+	if( [content isKindOfClass:[AIContentContext class]] ) {
+		currentOutgoingSourceColor = [currentOutgoingSourceColor darkenAndAdjustSaturationBy:-0.3];
+		currentIncomingSourceColor = [currentIncomingSourceColor darkenAndAdjustSaturationBy:-0.3];
+	}
+	
     //Create an attributed string from it with the prefix font and colors
     NSDictionary    *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-        ([content isOutgoing] ? outgoingSourceColor : incomingSourceColor), NSForegroundColorAttributeName,
+        ([content isOutgoing] ? currentOutgoingSourceColor : currentIncomingSourceColor), NSForegroundColorAttributeName,
         prefixFont, NSFontAttributeName,
         nil];
     
@@ -882,6 +1006,25 @@
 	[mutableTemp removeAttribute:NSFontAttributeName range:range];
     return(mutableTemp);
 }
+
+//Lighten a string's text color if it is to be displayed as context
+- (NSAttributedString *)_stringWithContextStyle:(NSAttributedString *)inString
+{
+	
+	NSAttributedString			*tempString;
+	NSMutableAttributedString   *mutableTemp;
+	
+	// Remove all attributes
+	tempString = [self _stringByRemovingAllStyles:inString];
+	mutableTemp = [[tempString mutableCopy] autorelease];
+	NSRange range = NSMakeRange(0,[mutableTemp length]);
+	
+	// Then make the string gray
+	[mutableTemp addAttribute:NSForegroundColorAttributeName value:[NSColor grayColor] range:range];
+	return(mutableTemp);
+
+}
+
 
 //Modifies an attributed string to be visible on the background color
 - (NSAttributedString *)_stringByFixingTextColor:(NSAttributedString *)inString forColor:(NSColor *)inColor
