@@ -652,6 +652,7 @@
 				DSTROOT = "$(BUILT_PRODUCTS_DIR)/Adium";
 				INSTALL_MODE_FLAG = "go-w,o+rX";
 				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "-DDEVELOPMENT_BUILD";
 			};
 			isa = PBXBuildStyle;
 			name = Development;

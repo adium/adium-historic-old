@@ -383,19 +383,25 @@
 
 - (BOOL)acceptsFirstResponder
 {
+#ifdef DEVELOPMENT_BUILD
     NSLog(@"acceptsFirstResponder");
+#endif
     return(YES);
 }
 
 - (BOOL)becomeFirstResponder
 {
+#ifdef DEVELOPMENT_BUILD
     NSLog(@"becomeFirstResponder");
+#endif
     return(YES);
 }
 
 - (BOOL)resignFirstResponder
 {
+#ifdef DEVELOPMENT_BUILD
     NSLog(@"resignFirstResponder");
+#endif
     [self endEditing];
     
     return(YES);
