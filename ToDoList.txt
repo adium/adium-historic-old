@@ -165,8 +165,16 @@ Standardize/enhance Xtras pref panes [brian]
   - Support %escapes in spoken alert (such as %n to speak the contact's name)
 
 //Saving and Exporting
-  - Allow 'save as' from within the log viewer to export logs
   - Allow 'save as' from a message window to export the current conversation
+  - Allow 'save as' from within the log viewer to export logs
+
+//Logging
+  - Per account account logging preferences would allow users to choose which accounts are
+    logged instead of the all-or-none approach we have now.
+           - Add tab in all accounts with [x] Log chats
+           - We can move the logging format pref. to this as well.
+           - Other requirement would be a flag in the logging code to check account & pref.
+  - Support printing from Log Viewer and its toolbar (add item)
 
 //First run
   - We need a more intuitive interface for a first-time user to get started with Adium.
