@@ -33,7 +33,7 @@
 - (void)frameDidChange:(NSNotification *)notification;
 - (void)mouseEntered:(NSEvent *)theEvent;
 - (void)mouseExited:(NSEvent *)theEvent;
-- (void)_endTrackingMouse;
+
 - (void)mouseMoved:(NSEvent *)theEvent;
 - (void)_showTooltipAtPoint:(NSPoint)screenPoint;
 - (void)updateTooltipTrackingRect;
@@ -53,11 +53,12 @@
 
     //Init
     contactListView = [[AISCLOutlineView alloc] initWithFrame:NSMakeRect(0,0,100,100)]; //Arbitrary frame
-    tooltipTrackingTag = 0;
+    tooltipTrackingTag = -1;
     trackingMouseMovedEvents = NO;
     tooltipTimer = nil;
     tooltipCount = 0;
-
+    fixedShadows = NO;
+    
     //Install the necessary observers
     [[adium notificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(contactOrderChanged:) name:Contact_OrderChanged object:nil];
@@ -114,15 +115,19 @@
     [contactListView reloadData];
     
     [contactListView performFullRecalculation];
-    //Recalculate all sizes after giving the contact list a second to update itself
-//    [NSTimer scheduledTimerWithTimeInterval:1 target:contactListView selector:@selector(performFullRecalculation) userInfo:nil repeats:NO];
+    
+    [contactListView display];
+    [[contactListView window] compatibleInvalidateShadow];
 }
 
 //Reload the contact list (if updates aren't delayed)
 - (void)contactOrderChanged:(NSNotification *)notification
 {
     [contactListView reloadData]; //Redisplay
-    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:contactListView]; //Resize
+    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:contactListView];
+    
+    [contactListView display];
+    [[contactListView window] compatibleInvalidateShadow];
 }
 
 //Redisplay the modified object (Attribute change)
@@ -146,8 +151,8 @@
 //A contact list preference has changed
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0){
-        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST_DISPLAY] == 0){
+        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
         float		alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
         NSColor		*color = [[prefDict objectForKey:KEY_SCL_CONTACT_COLOR] representedColor];
         NSColor		*backgroundColor = [[prefDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColorWithAlpha:alpha];
@@ -158,34 +163,71 @@
         BOOL		customGroupColor = [[prefDict objectForKey:KEY_SCL_CUSTOM_GROUP_COLOR] boolValue];
         BOOL		boldGroups = [[prefDict objectForKey:KEY_SCL_BOLD_GROUPS] boolValue];
         BOOL		showLabels = [[prefDict objectForKey:KEY_SCL_SHOW_LABELS] boolValue];
-        NSFont		*boldFont = nil;
+        BOOL            labelAroundContactOnly = [[prefDict objectForKey:KEY_SCL_LABEL_AROUND_CONTACT] boolValue];
+        
+        isBorderless = [[prefDict objectForKey:KEY_SCL_BORDERLESS] boolValue];
+        
+        float           spacing = [[prefDict objectForKey:KEY_SCL_SPACING] floatValue];
+        BOOL            outlineGroups = [[prefDict objectForKey:KEY_SCL_OUTLINE_GROUPS] boolValue];
+        NSColor         *outlineGroupsColor = [[prefDict objectForKey:KEY_SCL_OUTLINE_GROUPS_COLOR] representedColor];
+        
+        allowTooltipsInBackground = [[prefDict objectForKey:KEY_SCL_BACKGROUND_TOOLTIPS] boolValue];
+        
+        //Borderless
+        [contactListView setIsBorderless:isBorderless];
         
         //Fonts
+        NSFont		*boldFont = nil;
         [contactListView setFont:font];
         if(boldGroups){
             boldFont = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSBoldFontMask];
+         //   if (TRANSPARENT_SKIN)
+         //       boldFont = [[NSFontManager sharedFontManager] convertFont:boldFont toSize:([font pointSize]+2.0)];
         }
         [contactListView setGroupFont:(boldFont ? boldFont : font)];
 
+        //Row Height
+        float fontHeight = [font defaultLineHeightForFont];
+        if (boldFont) {
+            float boldHeight = [boldFont defaultLineHeightForFont];            
+            if (boldHeight > fontHeight) fontHeight = boldHeight;
+        }            
+        [contactListView setRowHeight:fontHeight];
+        
+        //Spacing between rows
+        [contactListView setIntercellSpacing:NSMakeSize(3.0,spacing)];      
+          
         //Colors
         [contactListView setShowLabels:showLabels];
+        [contactListView setLabelAroundContactOnly:labelAroundContactOnly];
         [contactListView setColor:color];
         [contactListView setGroupColor:(customGroupColor ? groupColor : color)];
         [contactListView setBackgroundColor:backgroundColor];
-
-        //Row Height
-        [contactListView setRowHeight:[font defaultLineHeightForFont]];
+        [(NSScrollView *)[[contactListView superview] superview] setDrawsBackground:NO];
+        if (outlineGroups)
+            [contactListView setOutlineGroupColor:outlineGroupsColor];          
+        else
+            [contactListView setOutlineGroupColor:nil];          
         
         //Grid
         [contactListView setDrawsAlternatingRows:alternatingGrid];
         [contactListView setAlternatingRowColor:gridColor];
 
+        if ([[[contactListView superview] superview] respondsToSelector:@selector(setUpdateShadowsWhileScrolling:)]) {
+            [(AIAutoScrollView *)[[contactListView superview] superview] setUpdateShadowsWhileScrolling:(alpha != 1.0)];
+        }
+        
         /*
             For this view to be transparent, it's containing window must be set as non-opaque.  It would make sense to use: [[contactListView window] setOpaque:(alpha == 100.0)];
 
             However, setting a window to opaque causes it's contents to be shadowed.  It is a pain (and a major speed hit) to maintain shadows beneath the contact list text.  A little trick to prevent the window manager from shadowing the window content is to set the window itself as non-opaque.  The contents of a window that is non-opaque will not cast a shadow.  Setting the window's alpha value to 0.9999999 removes the shadowing without giving the slightest appearance of opacity to the window titlebar and widgets.
             */
-        [[contactListView window] setAlphaValue:(alpha == 100.0 ? 1.0 : 0.9999999)];
+        [[contactListView window] setOpaque:NO];
+        [[contactListView window] setAlphaValue:(/*alpha == 1.0 ? 1.0 :*/ 0.9999999)];
+        [contactListView display];
+        [[contactListView window] compatibleInvalidateShadow];
+        
+        [contactListView performFullRecalculation];
     }
    
 
@@ -193,7 +235,7 @@
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0){
         //This is sloppy, we shouldn't be reading the interface plugin's preferences
         //We need to convert the desired size of SCLOutlineView to a lazy cache, so we can always tell it to resize from here
-        //and not care what the interface is doing with the informatin.
+        //and not care what the interface is doing with the information.
         NSDictionary    *notOurPrefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
         horizontalResizingEnabled = [[notOurPrefDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
         
@@ -285,6 +327,12 @@
     }
 }
 
+/*
+- (void)outlineView:(NSOutlineView *)outlineView willDisplayOutlineCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
+}
+*/
+
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
     return(@"");
@@ -292,6 +340,15 @@
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
+    //Changing the selection with the mouse calls outlineViewSelectionWillChange before we get here; changing it with the keyboard does not.  It would be wasteful to update the shadow display twice, hence the check below.
+    if (!fixedShadows) {
+        //update the shadows
+        [contactListView display];
+        [[contactListView window] compatibleInvalidateShadow];
+    } else {
+        fixedShadows = NO;   
+    }
+    
     AIListObject	*selectedObject = nil;
     NSOutlineView	*outlineView = [notification object];
     int			selectedRow;
@@ -309,8 +366,18 @@
     
     }else{
         [[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged object:outlineView userInfo:nil];
-    
     }
+    
+}
+
+- (void)outlineViewSelectionIsChanging:(NSNotification *)notification
+{
+    //update the shadows
+    [contactListView display];
+    [[contactListView window] compatibleInvalidateShadow];
+    
+    //Don't need to fix shadows after the selection changes
+    fixedShadows = YES;
 }
 
 - (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
@@ -390,7 +457,8 @@
     [self _endTrackingMouse]; //Hide any open tooltips
 
     //Remove the existing tracking rect
-    [windowContentView removeTrackingRect:tooltipTrackingTag];
+    if (tooltipTrackingTag != -1)
+        [windowContentView removeTrackingRect:tooltipTrackingTag];
 
 
     //Add a new tracking rect
@@ -480,7 +548,7 @@
 - (void)_showTooltipAtPoint:(NSPoint)screenPoint
 {
     if(screenPoint.x != 0 && screenPoint.y != 0){
-        if([[contactListView window] isKeyWindow]){
+        if((allowTooltipsInBackground && [NSApp isActive]) || [[contactListView window] isKeyWindow]){
             NSPoint		viewPoint;
             AIListObject	*hoveredObject;
             int			hoveredRow;

@@ -71,7 +71,12 @@
         if( (newOrigin.y+windowFrame.size.height) > (screenFrame.origin.y+screenFrame.size.height) ){
 
             newOrigin.y=screenFrame.origin.y + (screenFrame.size.height-windowFrame.size.height);
+        } else if ( (newOrigin.y+windowFrame.size.height) < 10 ) {
+            newOrigin.y = 10 - windowFrame.size.height;
         }
+        
+        if((newOrigin.x + windowFrame.size.width) < 1)
+            newOrigin.x = 1 - windowFrame.size.width;
         
         //go ahead and move the window to the new location
         [self setFrameOrigin:newOrigin];

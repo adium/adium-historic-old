@@ -50,6 +50,7 @@
 {
     autoScrollToBottom = NO;
     autoHideScrollBar = NO;
+    updateShadowsWhileScrolling = NO;
     [self setAutoHideScrollBar:YES];
 }
 
@@ -130,6 +131,10 @@
     if(autoHideScrollBar){
         [self setCorrectScrollbarVisibility];
     }
+    if (updateShadowsWhileScrolling){
+        [self display];
+        [[self window] compatibleInvalidateShadow];
+    }
 }
 
 //Scroll to the top of our view
@@ -167,6 +172,11 @@
     }
 }
 
+//Shadow updating when scrolling ----------------------
+- (void)setUpdateShadowsWhileScrolling:(BOOL)inValue
+{
+    updateShadowsWhileScrolling = inValue;   
+}
 @end
 
 

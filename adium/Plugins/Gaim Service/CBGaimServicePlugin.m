@@ -265,14 +265,12 @@ static GaimConversationUiOps *adiumGaimConvWindowGetConvUiOps()
 
 static void adiumGaimConvWindowNew(GaimConvWindow *win)
 {
-    //Once again, we can put anything we want in win's ui_data
-    NSLog(@"adiumGaimConvWindowNew");
+    //We can put anything we want in win's ui_data
 }
 
 static void adiumGaimConvWindowDestroy(GaimConvWindow *win)
 {
     //Cleanup what we placed in win's ui_data earlier
-    NSLog(@"adiumGaimConvWindowDestroy");
 }
 
 static void adiumGaimConvWindowShow(GaimConvWindow *win)
@@ -287,12 +285,10 @@ static void adiumGaimConvWindowHide(GaimConvWindow *win)
 
 static void adiumGaimConvWindowRaise(GaimConvWindow *win)
 {
-    NSLog(@"adiumGaimConvWindowRaise");
 }
 
 static void adiumGaimConvWindowFlash(GaimConvWindow *win)
 {
-    NSLog(@"adiumGaimConvWindowFlash");
 }
 
 static void adiumGaimConvWindowSwitchConv(GaimConvWindow *win, unsigned int index)
@@ -302,12 +298,10 @@ static void adiumGaimConvWindowSwitchConv(GaimConvWindow *win, unsigned int inde
 
 static void adiumGaimConvWindowAddConv(GaimConvWindow *win, GaimConversation *conv)
 {
-    NSLog(@"adiumGaimConvWindowAddConv");
 }
 
 static void adiumGaimConvWindowRemoveConv(GaimConvWindow *win, GaimConversation *conv)
 {
-    NSLog(@"adiumGaimConvWindowRemoveConv");
 }
 
 static void adiumGaimConvWindowMoveConv(GaimConvWindow *win, GaimConversation *conv, unsigned int newIndex)

@@ -19,17 +19,24 @@
     BOOL			editing;		//YES when the list is in edit mode... (temp)
 
     BOOL			showLabels;
+    BOOL                        labelAroundContactOnly;
+        
     NSFont			*font;
     NSFont			*groupFont;
     NSColor			*color;
     NSColor			*invertedColor;
     NSColor			*groupColor;
     NSColor			*invertedGroupColor;
-
+    NSColor                     *outlineGroupColor;
+    
+    float                       spacing;
+    BOOL                        isBorderless;
     int				lastSelectedRow;
     
     float                       desiredWidth[3];
     AIListObject                *hadMax[3];
+    
+    NSCell                      *selectedItem;
 }
 
 - (void)setFont:(NSFont *)inFont;
@@ -45,6 +52,14 @@
 - (NSColor *)groupColor;
 - (NSColor *)invertedGroupColor;
 
+- (void)setOutlineGroupColor:(NSColor *)inOutlineGroupColor;
+- (NSColor *)outlineGroupColor;
+
+- (void)setIsBorderless:(BOOL)inIsBorderless;
+
+- (void)setLabelAroundContactOnly:(BOOL)inLabelAroundContactOnly;
+- (BOOL)labelAroundContactOnly;
+
 - (void)setShowLabels:(BOOL)inValue;
 - (BOOL)showLabels;
 
@@ -53,5 +68,6 @@
 
 - (void)updateHorizontalSizeForObject:(AIListObject *)inObject;
 - (void)performFullRecalculation;
+
 
 @end

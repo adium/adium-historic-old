@@ -6,6 +6,8 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
+//evands note: may want to use a mutableOnwerArray inside chat statusDictionary properties so that we can have multiple gaim accounts in the same chat.
+
 #import "CBGaimAccount.h"
 #import "CBGaimServicePlugin.h"
 
@@ -173,7 +175,7 @@
         }
 */
     }
-    
+
     //snag the correct alias, and the current display name
     char *alias = (char *)gaim_get_buddy_alias(buddy);
     char *disp_name = (char *)[[statusDict objectForKey:@"Display Name"] UTF8String];
@@ -303,6 +305,14 @@
         case GAIM_CONV_UPDATE_TYPING:
             {
                 [self setTypingFlagOfHandle:handle to:(gaim_conv_im_get_typing_state(im) == GAIM_TYPING)];
+            }
+            break;
+        case GAIM_CONV_UPDATE_AWAY:
+            {
+            //If the conversation update is UPDATE_AWAY, it seems to suppress the typing state being updated
+            //Reset gaim's typing tracking, then update to receive a GAIM_CONV_UPDATE_TYPING message
+            gaim_conv_im_set_typing_state(im, GAIM_NOT_TYPING);
+            gaim_conv_im_update_typing(im);
             }
             break;
         default:
@@ -491,8 +501,15 @@
 - (void)initAccount
 {
     handleDict = [[NSMutableDictionary alloc] init];
-//    chatDict = [[NSMutableDictionary alloc] init];
+    chatDict = [[NSMutableDictionary alloc] init];
     filesToSendArray = [[NSMutableArray alloc] init];
+
+    //EDS
+//    [handleDict release];
+//    [handleDict setObject:@"blah" forKey:@"blah"];
+ //   NSLog(@"now %@",handleDict);
+    
+// [handleDict setObject:nil forKey:@"evan!"];
     
     //create an initial gaim account
     account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
@@ -500,6 +517,8 @@
     gc = NULL;
     NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
     signonTimer = nil;
+
+
     
     //ensure our user icon cache path exists
     [AIFileUtilities createDirectory:[USER_ICON_CACHE_PATH stringByExpandingTildeInPath]];
@@ -544,7 +563,7 @@
     NSLog(@"CBGaimAccount dealloc");
     [(CBGaimServicePlugin *)service removeAccount:account];
     
-//    [chatDict release];
+    [chatDict release];
     [handleDict release];
     [filesToSendArray release];
     if (signonTimer != nil) {
@@ -697,16 +716,17 @@
 {
     if(inPassword && [inPassword length] != 0)
     {
+        //
+        needToRemoveGaimObjects = YES;
+        
         //now we start to connect
         [[adium accountController] 
             setProperty:[NSNumber numberWithInt:STATUS_CONNECTING]
-            forKey:@"Status" account:self];
-
+                 forKey:@"Status" account:self];
+        
         //setup the account, get things ready
-     //   GaimAccount *testAccount = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
-       // gaim_account_set_password(testAccount, [inPassword UTF8String]);
- gaim_account_set_password(account, [inPassword UTF8String]);
- 
+        gaim_account_set_password(account, [inPassword UTF8String]);
+        
         //configure at sign on time so we get the latest settings from the system
         if ([(CBGaimServicePlugin *)service configureGaimProxySettings]) {
             
@@ -737,7 +757,7 @@
             proxy_info->username = (char *)gaim_prefs_get_string("/core/proxy/username"),
                 proxy_info->password = (char *)gaim_prefs_get_string("/core/proxy/password");
             
-//            gaim_account_set_proxy_info(testAccount,proxy_info);
+            //            gaim_account_set_proxy_info(testAccount,proxy_info);
             gaim_account_set_proxy_info(account,proxy_info);
         }
         //NSLog(@"%i %s %i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
@@ -785,7 +805,19 @@
                                         imagesPath:nil];
         AIChat *chat = [cm chat];
         GaimConversation *conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
-        NSAssert(conv != NULL, @"Not a gaim conversation");
+        
+        //create a new conv if necessary - this happens, for example, if an existing chat is suddenly our responsibility
+        //whereas it previously belonged to another account
+        if (conv == NULL) {
+            //***NOTE: need to check if the chat is an IM or a CHAT and handle accordingly
+            conv = gaim_conversation_new(GAIM_CONV_IM, account, [[[chat listObject] UID] UTF8String]);
+            //associate the AIChat with the gaim conv
+            conv->ui_data = chat;
+            [[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
+            //***NOTE: listObject is probably the wrong thing to use here - won't that mess up multiuser chats?
+            [chatDict setObject:chat forKey:[[chat listObject] UID]];                
+        }
+        
         GaimConvIm *im = gaim_conversation_get_im_data(conv);
         gaim_conv_im_send(im, [body UTF8String]);
         sent = YES;
@@ -845,7 +877,7 @@
         //associate the AIChat with the gaim conv
         conv->ui_data = chat;
         [[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
-//        [chatDict setObject:chat forKey:[handle UID]];
+        [chatDict setObject:chat forKey:[handle UID]];
         [[adium contentController] noteChat:chat forAccount:self];
     } 
     return chat;
@@ -860,7 +892,7 @@
     GaimConversation *conv = (GaimConversation*) [[[inChat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
     NSAssert(conv != nil, @"No gaim conversation associated with chat");
     gaim_conversation_destroy(conv);
-//    [chatDict removeObjectForKey: inChat];
+    [chatDict removeObjectForKey:inChat];
     return YES;
 }
 
@@ -1102,12 +1134,20 @@
     while((handle = [enumerator nextObject])){
         [self removeAllStatusFlagsFromHandle:handle];
     }
+    //Clear out the GaimConv pointers in the chat statusDictionaries, as they no longer have meaning
+    AIChat *chat;
+    enumerator = [chatDict objectEnumerator];
+    while (chat = [enumerator nextObject]) {
+        [[chat statusDictionary] removeObjectForKey:@"GaimConv"];
+    }       
     
     //Remove all our handles
     [handleDict release]; handleDict = [[NSMutableDictionary alloc] init];
     [[adium contactController] handlesChangedForAccount:self];
     
-
+    //Remove our chat dictionary
+    [chatDict release]; chatDict = [[NSMutableDictionary alloc] init];
+        
     gaim_account_disconnect(account); gc = NULL;
     
     //we don't want gaim keeping tracking of our buddies between sessions - we do that.
