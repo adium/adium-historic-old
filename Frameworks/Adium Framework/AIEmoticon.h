@@ -23,7 +23,8 @@
     NSString                *name;
     NSArray                 *textEquivalents;
 	AIEmoticonPack			*pack;
-
+	NSString				*serviceClass;
+	
     BOOL                    enabled;
     
     NSAttributedString      *_cachedAttributedString;
@@ -33,6 +34,7 @@
 + (id)emoticonWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName pack:(AIEmoticonPack *)inPack;
 - (NSArray *)textEquivalents;
 - (NSMutableAttributedString *)attributedStringWithTextEquivalent:(NSString *)textEquivalent;
+- (BOOL)isAppropriateForServiceClass:(NSString *)inServiceClass;
 - (NSImage *)image;
 - (NSString *)name;
 - (void)setEnabled:(BOOL)inEnabled;
