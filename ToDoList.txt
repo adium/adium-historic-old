@@ -48,7 +48,6 @@
 - Wrapped messages in minimal are indenting into the margin
 - Show header preference needs to disable for styles without a header
 - Custom background preferences needs to disable if styles disallow it
-- Restore defaults is broken, just remove it?
 - Update included layouts, themes, and message views
 - Group spacing is incorrect for non-standard lists
 
