@@ -513,9 +513,9 @@ static NSString                             *filterForContactName = nil;	//Conta
 	}
 	
 	if(filterForAccountName && [filterForAccountName length]){
-		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" in chats on %@",nil),filterForAccountName]];
+		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" of chats on %@",nil),filterForAccountName]];
 	}else if(filterForContactName && [filterForContactName length]){
-		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" in chats with %@",nil),filterForContactName]];
+		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" of chats with %@",nil),filterForContactName]];
 	}
 
     //Append indexing progress
