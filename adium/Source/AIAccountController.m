@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.50 2004/02/08 00:23:00 adamiser Exp $
+// $Id: AIAccountController.m,v 1.51 2004/02/11 15:23:54 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -223,7 +223,10 @@
 //Returns a default account
 - (AIAccount *)defaultAccount
 {
-    return([self accountOfType:@"AIM (TOC2)" withUID:@""]);
+	if ([NSApp isOnPantherOrBetter])
+	   return([self accountOfType:@"AIM-LIBGAIM" withUID:@""]);
+	else
+		return([self accountOfType:@"AIM (TOC2)" withUID:@""]);
 }
 
 //Returns a new account of the specified type (Unique service plugin ID)
