@@ -24,7 +24,7 @@
 //Mutability types
 typedef enum {
 	AIEditableState = 0, /* A user created state which can be modified -- the default, should be 0 */
-	AILockedState /* A state which is built into Adium and can should not be modified */
+	AILockedState /* A state which is built into Adium and can not be modified */
 } AIStateMutabilityType;
 
 //General status types
