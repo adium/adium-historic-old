@@ -81,7 +81,14 @@
     messageView = [[AIFlexibleTableView alloc] initWithFrame:NSZeroRect];
     [messageView setForwardsKeyEvents:YES];
     [messageView setDelegate:self];
-    
+	
+	scrollView_messages = [[AIAutoScrollView alloc] init];
+	[scrollView_messages setAndSizeDocumentView:messageView];
+	[scrollView_messages setAutoScrollToBottom:YES];
+	[scrollView_messages setAutoHideScrollBar:NO];
+	[scrollView_messages setHasVerticalScroller:YES];
+	[scrollView_messages setBorderType:NSBezelBorder];
+   
     [[adium notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:chat];
 
     //Observe preferences
@@ -105,6 +112,7 @@
     //
 	[contentThreadQueue release];
     [messageView release];
+	[scrollView_messages release];
     [chat release];
     [iconIncoming release];
     [iconOutgoing release];
@@ -308,7 +316,7 @@
 //Return our message view
 - (NSView *)messageView
 {
-    return(messageView);
+    return(scrollView_messages);
 }
 
 //Return our chat

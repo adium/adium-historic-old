@@ -19,6 +19,7 @@
 @interface AISMViewController : AIObject <AIMessageViewController> {
     AIChat			*chat;
     AIFlexibleTableView		*messageView;
+	AIAutoScrollView		*scrollView_messages;
     AIFlexibleTableRow          *previousRow;
     
     NSImage			*iconIncoming;
