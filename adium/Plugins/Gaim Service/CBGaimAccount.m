@@ -266,10 +266,13 @@
     NSLog(@"accountRemoveBuddy (%s)", buddy->name);
     //stored the key as a compactedString originally
     [handleDict removeObjectForKey:[[NSString stringWithFormat:@"%s", buddy->name] compactedString]];
-    NSAssert(buddy->node.ui_data != NULL, @"Removing a node we don't have a handle for");
-    [(AIHandle *)buddy->node.ui_data release];
-    buddy->node.ui_data = NULL;
-    [[owner contactController] handlesChangedForAccount:self];
+    if (buddy->node.ui_data != NULL) {
+        [(AIHandle *)buddy->node.ui_data release];
+        buddy->node.ui_data = NULL;
+        [[owner contactController] handlesChangedForAccount:self];
+    } else {
+        NSLog(@"Removing a node we don't have a handle for");   
+    }
 }
 
 /***********************/
@@ -770,38 +773,45 @@
     NSString    *handleServerGroup = [handle serverGroup];
     
     //Add the handle
-    GaimBuddy *buddy = gaim_find_buddy(account,[handleUID UTF8String]); //see if the account somehow already has the buddy
-    if (buddy == NULL) {                                            //it really should not have the buddy already
-        NSLog(@"Creating a new buddy");
-        buddy = gaim_buddy_new(account,[handleUID UTF8String],NULL);    //so create a buddy
-    }
-    GaimGroup *group = gaim_find_group([handleServerGroup UTF8String]);       //get the GaimGroup
-    if (group == NULL) {                                            //if the group doesn't exist yet
+    GaimGroup *group = gaim_find_group([handleServerGroup UTF8String]); //get the GaimGroup
+    if (group == NULL) {                                                //if the group doesn't exist yet
         NSLog(@"Creating a new group");
-        group = gaim_group_new([handleServerGroup UTF8String]);               //create the GaimGroup
+        group = gaim_group_new([handleServerGroup UTF8String]);         //create the GaimGroup
+        gaim_blist_add_group(group, NULL);                              //add it gaimside (server will add as needed)
     }
+    
+    GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]);     //verify the buddy does not already exist
+    if (buddy == NULL) {                                                //should always be null
+        buddy = gaim_buddy_new(account, [handleUID UTF8String], NULL);  //create a GaimBuddy
+    }
+    
+    NSLog(@"gaim adding");
+    gaim_blist_add_buddy(buddy, NULL, group, NULL);                     //add the buddy to the gaimside list
+    serv_add_buddy(gc,[handleUID UTF8String],group);                    //and add the buddy serverside
 
-    gaim_blist_add_buddy(buddy,NULL,group,NULL);                    //and add the buddy serverside
-
-    [handleDict setObject:handle forKey:[handle UID]];              //Add it locally
+    NSLog(@"adium updates");
+    [handleDict setObject:handle forKey:[handle UID]];                  //Add it locally
 
     //From TOC2
     //[self silenceUpdateFromHandle:handle]; //Silence the server's initial update command
     
     //Update the contact list
     [[owner contactController] handle:handle addedToAccount:self];
-    
-    [self accountUpdateBuddy:buddy];
-    
+        
+    NSLog(@"done adding");
     return(handle);
 }
 
 // Remove a handle from this account
 - (BOOL)removeHandleWithUID:(NSString *)inUID
 {
-    GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]); //get the GaimBuddy
-    if (buddy !=  NULL) {                                           //if we find the GaimBuddy
-        gaim_blist_remove_buddy(buddy);                             //remove it from the list serverside
+    AIHandle	*handle;
+    if(handle = [handleDict objectForKey:inUID]){
+        GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]);
+        
+        serv_remove_buddy(gc,[inUID UTF8String],[[handle serverGroup] UTF8String]); //remove it from the list serverside
+        gaim_blist_remove_buddy(buddy);                                             //remove it gaimside
+        
         NSLog(@"removed %@",inUID);
         return YES;
     } else 
@@ -812,30 +822,51 @@
 - (BOOL)addServerGroup:(NSString *)inGroup
 {
     GaimGroup *group = gaim_group_new([inGroup UTF8String]);    //create the GaimGroup
-    gaim_blist_add_group(group,NULL);                           //add it serverside
+    gaim_blist_add_group(group,NULL);                           //add it gaimside (server will make it as needed)
     NSLog(@"added group %@",inGroup);
     return NO;
 }
 // Remove a group
 - (BOOL)removeServerGroup:(NSString *)inGroup
 {
+    serv_remove_group(gc,[inGroup UTF8String]);             //remove it from the list serverside
+    
     GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
-    if (group != NULL) {                                        //if we find the GaimGroup
-        gaim_blist_remove_group(group);                         //remove it from the list serverside
-        NSLog(@"remove group %@",inGroup);
-        return YES;
-    } else
-        return NO;
+    gaim_blist_remove_group(group);                         //remove it gaimside
+    NSLog(@"remove group %@",inGroup);
+    return YES;
 }
 // Rename a group
 - (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName
 {
     GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
     if (group != NULL) {                                        //if we find the GaimGroup
-        gaim_blist_rename_group(group, [newName UTF8String]);
+        serv_rename_group(gc, group, [newName UTF8String]);     //rename
+        gaim_blist_remove_group(group);                         //remove the old one gaimside
         return YES;
     } else
         return NO;
+}
+
+- (BOOL)moveHandleWithUID:(NSString *)inUID toGroup:(NSString *)inGroup
+{
+    AIHandle	*handle;
+    if(handle = [handleDict objectForKey:inUID]){
+        GaimGroup *oldGroup = gaim_find_group([[handle serverGroup] UTF8String]);   //get the GaimGroup        
+        GaimGroup *newGroup = gaim_find_group([inGroup UTF8String]);                //get the GaimGroup
+        if (newGroup == NULL) {                                                        //if the group doesn't exist yet
+            NSLog(@"Creating a new group");
+            newGroup = gaim_group_new([inGroup UTF8String]);                           //create the GaimGroup
+        }
+        
+        GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]);
+        if (buddy != NULL) {
+            serv_move_buddy(buddy,oldGroup,newGroup);
+        } else {
+            return NO;
+        }
+    }
+    return NO;
 }
 
 - (void)displayError:(NSString *)errorDesc
