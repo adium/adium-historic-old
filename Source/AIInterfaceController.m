@@ -46,10 +46,7 @@
 #define PREF_GROUP_FORMATTING			@"Formatting"
 #define KEY_FORMATTING_FONT				@"Default Font"
 
-
-#define CONTACT_LIST_WINDOW_MENU_TITLE  AILocalizedString(@"Contact List","Title for the contact list menu item")
 #define MESSAGES_WINDOW_MENU_TITLE		AILocalizedString(@"Messages","Title for the messages window menu item")
-
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns/"	//Path to the internal plugins
 #define DIRECTORY_EXTERNAL_PLUGINS		@"/PlugIns"				//Path to the external plugins
@@ -136,7 +133,7 @@
     [self showContactList:nil];
 
 	//Contact list menu tem
-    NSMenuItem *item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:CONTACT_LIST_WINDOW_MENU_TITLE
+    NSMenuItem *item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:CONTACT_LIST_TITLE
 																			 target:self
 																			 action:@selector(toggleContactList:)
 																	  keyEquivalent:@"/"] autorelease];
