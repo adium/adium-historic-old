@@ -81,9 +81,9 @@
 	
     [proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"None",nil) tag:Gaim_Proxy_None]];
 	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"Systemwide SOCKS Settings",nil) tag:Gaim_Proxy_Default]];
-	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"HTTP",nil) tag:Gaim_Proxy_HTTP]];
-	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"SOCKS4",nil) tag:Gaim_Proxy_SOCKS4]];
-	[proxyMenu addItem:[self _proxyMenuItemWithTitle:AILocalizedString(@"SOCKS5",nil) tag:Gaim_Proxy_SOCKS5]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"HTTP" tag:Gaim_Proxy_HTTP]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"SOCKS4" tag:Gaim_Proxy_SOCKS4]];
+	[proxyMenu addItem:[self _proxyMenuItemWithTitle:@"SOCKS5" tag:Gaim_Proxy_SOCKS5]];
 				
 	return [proxyMenu autorelease];
 }
