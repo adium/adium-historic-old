@@ -10,6 +10,8 @@
 	<string>Lucida Grande</string>
 	<key>DefaultFontSize</key>
 	<integer>11</integer>
+	<key>Min Font Size</key>
+	<integer>9</integer>
 	<key>Name Format</key>
 	<integer>0</integer>
 	<key>Combine Consecutive Messages</key>
