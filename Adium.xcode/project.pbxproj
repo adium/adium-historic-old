@@ -210,6 +210,7 @@
 				4B3717000510D19400A8010A,
 				29B97323FDCFA39411CA2CEA,
 				19C28FACFE9D520D11CA2CBB,
+				4B2D602F0781C56200315A60,
 			);
 			isa = PBXGroup;
 			name = CocAIMe2;
@@ -6230,6 +6231,7 @@
 				34C68B2B0778FA5C00EB423C,
 				34C68B5A0778FC6400EB423C,
 				07836212077B0CA90032D975,
+				4B2D5FBA0781C1F500315A60,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6542,6 +6544,7 @@
 				34C6A24F077A7B2500EB423C,
 				34C6A3BC077A8CB500EB423C,
 				34539E9C077BD09600A83891,
+				4B2D60300781C56200315A60,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6802,6 +6805,7 @@
 				34C68B260778FA1300EB423C,
 				34C68B2C0778FA5C00EB423C,
 				34C68B5B0778FC6400EB423C,
+				4B2D5FBB0781C1F500315A60,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11581,6 +11585,50 @@
 			settings = {
 			};
 		};
+		4B2D5FB80781C1F500315A60 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AITypingNotificationPreferences.h;
+			path = "Plugins/Typing Notification/AITypingNotificationPreferences.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B2D5FB90781C1F500315A60 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AITypingNotificationPreferences.m;
+			path = "Plugins/Typing Notification/AITypingNotificationPreferences.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B2D5FBA0781C1F500315A60 = {
+			fileRef = 4B2D5FB80781C1F500315A60;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B2D5FBB0781C1F500315A60 = {
+			fileRef = 4B2D5FB90781C1F500315A60;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B2D602F0781C56200315A60 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = TypingPrefs.nib;
+			path = "Plugins/Typing Notification/TypingPrefs.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B2D60300781C56200315A60 = {
+			fileRef = 4B2D602F0781C56200315A60;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B2DC055066F687100AD5AAD = {
 			children = (
 				4B2DC058066F689A00AD5AAD,
@@ -12400,6 +12448,8 @@
 			children = (
 				4B5B152E0493BFE600A8010A,
 				4B5B152F0493BFE600A8010A,
+				4B2D5FB80781C1F500315A60,
+				4B2D5FB90781C1F500315A60,
 			);
 			isa = PBXGroup;
 			name = "Typing Notification";
