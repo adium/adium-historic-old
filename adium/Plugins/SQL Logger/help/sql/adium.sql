@@ -1,9 +1,10 @@
 create schema adium;
 
 create table adium.users (
-user_id serial primary key,
-username varchar(50) not null,
-service varchar(30) not null default 'AIM',
+user_id     serial primary key,
+username    varchar(50) not null,
+service     varchar(30) not null default 'AIM',
+login       boolean default false,
 unique(username,service)
 );
 

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
-<html xmlns:xalan="http://xml.apache.org/xslt">
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ascii">
+<meta content="text/html; charset=ascii" http-equiv="Content-Type">
 <title>Performance / Maintenance</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
@@ -76,7 +76,7 @@ vacuumdb -z</pre></div>
    has a nasty query plan, and it's very difficult to learn anything
    constructive from it.</p>
 <p>The important parts of the example above are boldfaced.
-   I've boldfaced the term "Index Scan", because that indicates it is using
+   I've boldfaced the term &quot;Index Scan&quot;, because that indicates it is using
    the index (named adium_msg_date_sender_recipient) to determine where the
    proper dates are.  This is good.  Index Scans are much faster than
    Sequential Scans for large tables.</p>

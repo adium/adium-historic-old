@@ -28,5 +28,5 @@ try {
 }
 %>
 <html>
-<body onLoad="window.close()"></body>
+<body onLoad="window.opener.parent.location.reload(); window.close()"></body>
 </html>

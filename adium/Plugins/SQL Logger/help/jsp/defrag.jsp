@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 487 $ $Date: 2004/01/21 07:12:29 $ -->
+<!--$Rev: 487 $ $Date: 2004/05/04 21:29:54 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -25,7 +25,6 @@ loginUsers = Boolean.valueOf(request.getParameter("login")).booleanValue();
 <html>
     <head>
         <title>Adium Statistics</title>
-        <link rel="stylesheet" type="text/css" href="stylesheet.css">
     </head>
     <body>
     <% 
