@@ -14,7 +14,6 @@
 - Move maximum width slider from layout to main pane
 - Version 3 message styles need a default variant, or need to apply their default variant
 - Webkit background image type selector needs to be re-implemented
-- Existing message windows should not update for preference changes for performance reasons
 - Status window when away preference is not implemented
 - Status set state after inactivity is not implemented
 - Status delete and edit buttons don't dim correctly on panel load

@@ -395,6 +395,9 @@
 	if([preview respondsToSelector:@selector(setShouldForwardEvents:)]){
 		[(ESWebView *)preview setShouldForwardEvents:NO];		
 	}
+	
+	//Enable live refreshing of our preview
+	[previewController setShouldReflectPreferenceChanges:YES];
 }
 
 /*!
