@@ -3,6 +3,6 @@
 <plist version="1.0">
 <dict>
 	<key>Active Behavior Set</key>
-	<string>On New Messages</string>
+	<string>On New Messages And Errors</string>
 </dict>
 </plist>
