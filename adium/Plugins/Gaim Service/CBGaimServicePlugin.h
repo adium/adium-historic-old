@@ -13,12 +13,13 @@
     id  OscarService;
     id  GaduGaduService;
     id  JabberService;
-	id  NapsterService;
+	id  MeanwhileService;
 	id  MSNService;
+	id  NapsterService;
+	id  NovellService;
 	id  TrepiaService;
     id  YahooService;
 	id  YahooJapanService;
-	id  NovellService;
 }
 
 @end

@@ -7,6 +7,7 @@
 #import "CBOscarService.h"
 #import "ESGaduGaduService.h"
 #import "ESJabberService.h"
+#import "ESMeanwhileService.h"
 #import "ESNapsterService.h"
 #import "ESNovellService.h"
 #import "ESTrepiaService.h"
