@@ -94,6 +94,10 @@
 	[popUp_contactTextAlignment compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue]];
 	[popUp_groupTextAlignment compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue]];
 	[popUp_windowStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue]];
+
+	[popUp_userIconPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_POSITION] intValue]];
+	[popUp_statusIconPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue]];
+	[popUp_serviceIconPosition compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION] intValue]];
 	
 	[slider_userIconSize setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue]];
 	[self updateDisplayedUserIconSize];
@@ -124,6 +128,21 @@
 											  group:PREF_GROUP_LIST_LAYOUT];
 		[self configureControlDimming];
 
+	}else if(sender == popUp_userIconPosition){
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
+											 forKey:KEY_LIST_LAYOUT_USER_ICON_POSITION
+											  group:PREF_GROUP_LIST_LAYOUT];
+		
+	}else if(sender == popUp_statusIconPosition){
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
+											 forKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION
+											  group:PREF_GROUP_LIST_LAYOUT];
+		
+	}else if(sender == popUp_serviceIconPosition){
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
+											 forKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION
+											  group:PREF_GROUP_LIST_LAYOUT];
+		
 	}else if(sender == slider_userIconSize){
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
 											 forKey:KEY_LIST_LAYOUT_USER_ICON_SIZE

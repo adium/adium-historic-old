@@ -8,9 +8,7 @@
 
 #import "AIListGroupCell.h"
 
-#define VERTICAL_GROUP_PADDING	2
-#define FLIPPY_RIGHT_PADDING	2
-#define FLIPPY_LEFT_PADDING		1
+#define FLIPPY_TEXT_PADDING		3
 #define GROUP_FONT_SIZE			11
 
 #define GROUP_TEXT_ALIGN		NSCenterTextAlignment// NSLeftTextAlignment //NSCenterTextAlignment
@@ -25,9 +23,36 @@
 	return(newCell);
 }
 
+
+
+
+
+//Padding.  Gives our cell a bit of edge padding so the user icon and name do not touch the sides
+- (int)topPadding{
+	return([super topPadding] + 1);
+}
+- (int)bottomPadding{
+	return([super bottomPadding] + 1);
+}
+- (int)leftPadding{
+	return([super leftPadding] + 2);
+}
+- (int)rightPadding{
+	return([super rightPadding] + 4);
+}
+
+
+
+
+
+
+
+
 - (NSSize)cellSize
 {
-	return(NSMakeSize(0, (int)[[self font] defaultLineHeightForFont] + (VERTICAL_GROUP_PADDING * 2)));
+	NSSize	size = [super cellSize];
+
+	return(NSMakeSize(0, [[self font] defaultLineHeightForFont] + size.height));
 }
 
 - (NSColor *)flippyColor
@@ -48,10 +73,6 @@
 //Draw content of our cell
 - (void)drawContentWithFrame:(NSRect)rect
 {
-	//Fixed Indent
-	rect.origin.x += FLIPPY_LEFT_PADDING;
-	rect.size.width -= FLIPPY_LEFT_PADDING;
-	
 	//Draw flippy
 	[[self flippyColor] set];
 	
@@ -72,8 +93,8 @@
 	[arrowPath fill];
 
 	if([self textAlignment] != NSCenterTextAlignment){
-		rect.origin.x += rect.size.height*.4 + rect.size.height*.2 + FLIPPY_RIGHT_PADDING;
-		rect.size.width -= rect.size.height*.4 + rect.size.height*.2 + FLIPPY_RIGHT_PADDING;
+		rect.origin.x += rect.size.height*.4 + rect.size.height*.2 + FLIPPY_TEXT_PADDING;
+		rect.size.width -= rect.size.height*.4 + rect.size.height*.2 + FLIPPY_TEXT_PADDING;
 	}
 
 	[self drawDisplayNameWithFrame:rect];

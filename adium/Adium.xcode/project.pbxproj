@@ -9760,7 +9760,7 @@
 			children = (
 				4B57CCA106848F05003FF229,
 				4B25352706BECC14003498D4,
-				4BAEFBAB06BFD0E900F9F24D,
+				4BF9D7E806C05CF200122E4A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -15190,21 +15190,6 @@
 			settings = {
 			};
 		};
-		4BAEFBAB06BFD0E900F9F24D = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libexpat.a;
-			refType = 3;
-			remoteRef = 4BAEFCA706BFD0F800F9F24D;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4BAEFCA706BFD0F800F9F24D = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
-			remoteInfo = expat;
-		};
 		4BB17E6F03E4633D00A8010A = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -19241,6 +19226,21 @@
 			path = "Frameworks/AIUtilities Framework/AITableViewAdditions.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BF9D7E806C05CF200122E4A = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libexpat.a;
+			refType = 3;
+			remoteRef = 4BF9D8E406C05CFF00122E4A;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4BF9D8E406C05CFF00122E4A = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
+			remoteInfo = expat;
 		};
 		4BFC33DD058D4430008F7FA2 = {
 			fileEncoding = 30;
