@@ -75,6 +75,11 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DOCK_BEHAVIOR];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_ANNOUNCER];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GROWL];
+	
+	[label_bounceTheDockIcon setStringValue:AILocalizedString(@"Bounce the dock icon:",nil)];
+	[label_displayGrowlNotifications setStringValue:AILocalizedString(@"Display Growl notifications:",nil)];
+	[label_soundSet setStringValue:AILocalizedString(@"Sound set:",nil)];
+	[label_speech setStringValue:AILocalizedString(@"Speech:",nil)];
 }
 
 //Preference view is closing
