@@ -340,12 +340,12 @@ int HTMLEquivalentForFontSize(int fontSize)
                             //Process the font tag if it's in a log
                             if([chunkString caseInsensitiveCompare:@" class=\"sender\""] == 0) {
                                 if(inDiv && send) {
-                                    [textAttributes setTextColor:[NSColor redColor]];
+                                    [textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.5 blue:0.0 alpha:1.0]];
                                 } else if(inDiv && receive) {
-                                    [textAttributes setTextColor:[NSColor blueColor]];
+                                    [textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.5 alpha:1.0]];
                                 }
                             } else {
-                                [textAttributes setTextColor:[NSColor blackColor]];
+                                [textAttributes setTextColor:[NSColor grayColor]];
                             }
                             
                             //Process the font tag's contents
@@ -364,12 +364,12 @@ int HTMLEquivalentForFontSize(int fontSize)
                             //Process the span tag if it's in a log
                             if([chunkString caseInsensitiveCompare:@" class=\"sender\""] == 0) {
                                 if(inDiv && send) {
-                                    [textAttributes setTextColor:[NSColor redColor]];
+                                    [textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.5 blue:0.0 alpha:1.0]];
                                 } else if(inDiv && receive) {
-                                    [textAttributes setTextColor:[NSColor blueColor]];
+                                    [textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.5 alpha:1.0]];
                                 }
                             } else {
-                                [textAttributes setTextColor:[NSColor blackColor]];
+                                [textAttributes setTextColor:[NSColor grayColor]];
                             }
                         }
                     } else if ([chunkString caseInsensitiveCompare:@"/SPAN"] == 0 ) {

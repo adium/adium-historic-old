@@ -23,16 +23,48 @@
 
 @class AILoggerPreferences, AILoggerAdvancedPreferences;
 
-@interface AILoggerPlugin : AIPlugin <AIPluginInfo> {
+@interface AILoggerPlugin : AIPlugin {
     AILoggerPreferences		*preferences;
     AILoggerAdvancedPreferences *advancedPreferences;
-    BOOL			observingContent, logStyle, logFont, logStatus, logHTML;
     
-    NSString			*logBasePath; 			//The base directory of all logs
+    //Current logging settings
+    BOOL		    observingContent;
+    BOOL		    logStyle;
+    BOOL		    logFont;
+    BOOL		    logStatus;
+    BOOL		    logHTML;
+    BOOL		    logIndexingEnabled; //Does this system support log indexing?
+    
+    //Log viewer menu items
+    NSMenuItem		    *logViewerMenuItem;
+    NSMenuItem		    *viewContactLogsMenuItem;
+    NSMenuItem		    *viewContactLogsContextMenuItem;
 
-    NSMenuItem			*logViewerMenuItem;
-    NSMenuItem			*viewContactLogsMenuItem;
-    NSMenuItem			*viewContactLogsContextMenuItem;
+    //Log content search index
+    SKIndexRef		    index_Content;      
+
+    //Dirty all information (First build of the dirty cache)
+    NSLock		    *indexingThreadLock;    //Locked when a dirty all or clean thread is running
+    BOOL		    stopIndexingThreads;    //Set to YES to abort a dirty all or clean
+    BOOL		    suspendDirtyArraySave;  //YES to prevent saving of the dirty index
+    
+    //Array of dirty logs / Logs that need re-indexing.  (Locked access)
+    NSMutableArray	    *dirtyLogArray;
+    NSLock		    *dirtyLogLock;
+    
+    //Indexing progress
+    int			    logsToIndex;
+    int			    logsIndexed;
+    
 }
 
++ (NSString *)logBasePath;
+- (void)initLogIndexing;
+- (void)prepareLogContentSearching;
+- (SKIndexRef)logContentIndex;
+- (void)cleanUpLogContentSearching;
+- (BOOL)getIndexingProgress:(int *)complete outOf:(int *)total;
+- (void)markChatLogAsDirty:(AIChat *)chat atPath:(NSString *)path;
+
 @end
+

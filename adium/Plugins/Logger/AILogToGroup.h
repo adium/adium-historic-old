@@ -13,17 +13,15 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface AIAutoScrollView : NSScrollView {
-    NSRect	oldDocumentFrame;
-    
-    BOOL	autoScrollToBottom;
-    BOOL	autoHideScrollBar;
+@interface AILogToGroup : NSObject {
+    NSString	    *path;
+    NSString	    *to;
+    NSString	    *from;
+    NSMutableArray  *logArray;
 }
 
-- (void)setAutoHideScrollBar:(BOOL)inValue;
-- (void)setAutoScrollToBottom:(BOOL)inValue;
-- (void)scrollToTop;
-- (void)scrollToBottom;
-- (void)setCorrectScrollbarVisibility;
+- (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo;
+- (NSArray *)logArray;
+- (NSString *)to;
 
 @end

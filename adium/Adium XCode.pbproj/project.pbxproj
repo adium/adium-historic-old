@@ -1462,6 +1462,9 @@
 				3419F34605314BA100C68BA3,
 				3419F34705314BA100C68BA3,
 				4B037C070558B5C700FF5530,
+				4B85F4AE057723D90017333D,
+				4B85F4B0057723D90017333D,
+				4B85F4B2057723D90017333D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1491,6 +1494,7 @@
 				3419F34A05314BA100C68BA3,
 				3419F34B05314BA100C68BA3,
 				4B037C110558B6CD00FF5530,
+				4B85F4B50577241B0017333D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1520,6 +1524,9 @@
 				3419F34E05314BA100C68BA3,
 				3419F34F05314BA100C68BA3,
 				4B037C080558B5C700FF5530,
+				4B85F4AF057723D90017333D,
+				4B85F4B1057723D90017333D,
+				4B85F4B3057723D90017333D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2308,7 +2315,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F3B305314BE000C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "SQL Logger.AdiumPlugin";
@@ -5627,7 +5634,7 @@
 			};
 		};
 		3481DDE405704EEC00CD38D6 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Address Book Integration.AdiumPlugin";
@@ -19286,6 +19293,128 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B85F4A7057723A00017333D = {
+			children = (
+				4B85F4A8057723D80017333D,
+				4B85F4A9057723D90017333D,
+				4B85F4AA057723D90017333D,
+				4B85F4AB057723D90017333D,
+				4B85F4AC057723D90017333D,
+				4B85F4AD057723D90017333D,
+				4BD68227045B010D00A8010A,
+				4BD68228045B010D00A8010A,
+				4B3DB8FD04547A8D00A8010A,
+				4B85F4B40577241B0017333D,
+			);
+			isa = PBXGroup;
+			name = "Log Viewer";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B85F4A8057723D80017333D = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILog.h;
+			path = Plugins/Logger/AILog.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B85F4A9057723D90017333D = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILog.m;
+			path = Plugins/Logger/AILog.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B85F4AA057723D90017333D = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILogFromGroup.h;
+			path = Plugins/Logger/AILogFromGroup.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B85F4AB057723D90017333D = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILogFromGroup.m;
+			path = Plugins/Logger/AILogFromGroup.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B85F4AC057723D90017333D = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILogToGroup.h;
+			path = Plugins/Logger/AILogToGroup.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B85F4AD057723D90017333D = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILogToGroup.m;
+			path = Plugins/Logger/AILogToGroup.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B85F4AE057723D90017333D = {
+			fileRef = 4B85F4A8057723D80017333D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B85F4AF057723D90017333D = {
+			fileRef = 4B85F4A9057723D90017333D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B85F4B0057723D90017333D = {
+			fileRef = 4B85F4AA057723D90017333D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B85F4B1057723D90017333D = {
+			fileRef = 4B85F4AB057723D90017333D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B85F4B2057723D90017333D = {
+			fileRef = 4B85F4AC057723D90017333D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B85F4B3057723D90017333D = {
+			fileRef = 4B85F4AD057723D90017333D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B85F4B40577241B0017333D = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = LogViewerJag.nib;
+			path = Plugins/Logger/LogViewerJag.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B85F4B50577241B0017333D = {
+			fileRef = 4B85F4B40577241B0017333D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B863DF9055297D000814AEF = {
 			expectedFileType = image.tiff;
 			isa = PBXFileReference;
@@ -22922,11 +23051,9 @@
 		};
 		9C8C7FA303CBA17B00267226 = {
 			children = (
+				4B85F4A7057723A00017333D,
 				9C8C7FA403CBA21B00267226,
 				9C8C7FA503CBA21B00267226,
-				4BD68227045B010D00A8010A,
-				4BD68228045B010D00A8010A,
-				4B3DB8FD04547A8D00A8010A,
 				4B54D1020502865F00A8010A,
 				4B54D1030502865F00A8010A,
 				4B54D10805028DAE00A8010A,
@@ -22968,7 +23095,7 @@
 			sourceTree = "<group>";
 		};
 		9CBADC550571267C005187DA = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "WebKit Message View.AdiumPlugin";
@@ -24137,7 +24264,7 @@
 			sourceTree = "<group>";
 		};
 		9E87CDF105748FFA001CB886 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Fast User Switching Support.AdiumPlugin";
@@ -24238,7 +24365,7 @@
 			productType = "com.apple.product-type.bundle";
 		};
 		9E87CF580574909B001CB886 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Status Menu Item.AdiumPlugin";
