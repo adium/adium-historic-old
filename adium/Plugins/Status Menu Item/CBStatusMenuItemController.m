@@ -24,7 +24,7 @@ CBStatusMenuItemController *sharedInstance = nil;
 + (CBStatusMenuItemController *)statusMenuItemController
 {
     if (!sharedInstance) {
-        sharedInstance = [[self alloc] init];
+#warning       sharedInstance = [[self alloc] init];
     }
     return (sharedInstance);
 }

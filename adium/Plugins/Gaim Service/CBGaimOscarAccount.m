@@ -98,8 +98,10 @@ struct oscar_data {
 {
     //General updates
     [super accountUpdateBuddy:buddy];
-    
-        [NSTimer scheduledTimerWithTimeInterval:OSCAR_DELAYED_UPDATE_INTERVAL target:self selector:@selector(_delayedBlistUpdate:) userInfo:[NSValue valueWithPointer:buddy] repeats:NO];
+	
+#warning we delay for 2 seconds to wait for the away message to come in... is there not some kind of notification when this happens instead?
+
+	[NSTimer scheduledTimerWithTimeInterval:OSCAR_DELAYED_UPDATE_INTERVAL target:self selector:@selector(_delayedBlistUpdate:) userInfo:[NSValue valueWithPointer:buddy] repeats:NO];
 }
 
 - (void)_delayedBlistUpdate:(NSTimer *)inTimer
@@ -122,9 +124,9 @@ struct oscar_data {
         if (buddy != nil) {
             int online = (GAIM_BUDDY_IS_ONLINE(buddy) ? 1 : 0);
             
-            NSMutableArray *modifiedKeys = [NSMutableArray array];
-            AIHandle *theHandle = (AIHandle *)node->ui_data;
-            NSMutableDictionary * statusDict = [theHandle statusDictionary];
+//            NSMutableArray *modifiedKeys = [NSMutableArray array];
+            AIListContact *theContact = (AIListContact *)node->ui_data;
+//            NSMutableDictionary * statusDict = [theHandle statusDictionary];
             
             if (online) {
                 struct oscar_data *od = gc->proto_data;
@@ -141,20 +143,23 @@ struct oscar_data {
                             if (away_utf8 != NULL) {
                                 NSString * awayMessageString = [NSString stringWithUTF8String:away_utf8];
                                 NSAttributedString * statusMsgDecoded = [AIHTMLDecoder decodeHTML:awayMessageString];
-                                if (![statusMsgDecoded isEqualToAttributedString:[statusDict objectForKey:@"StatusMessage"]]) {
-                                    [statusDict setObject:statusMsgDecoded forKey:@"StatusMessage"];
-                                    [modifiedKeys addObject:@"StatusMessage"];
-                                    [statusDict setObject:[NSNumber numberWithBool:YES] forKey:@"Away"];
-                                    [modifiedKeys addObject:@"Away"];
+                                if (![statusMsgDecoded isEqualToAttributedString:[theContact statusObjectForKey:@"StatusMessage" withOwner:self]]) {
+//                                    [statusDict setObject:statusMsgDecoded forKey:@"StatusMessage"];
+                                    [theContact setStatusObject:statusMsgDecoded withOwner:self forKey:@"StatusMessage" notify:NO];
+//                                    [modifiedKeys addObject:@"StatusMessage"];
+                                    [theContact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Away" notify:NO];
+//                                    [modifiedKeys addObject:@"Away"];
                                 }
                                 g_free(away_utf8);
                             }
                         }else{ //remove any away message
-                            if ([statusDict objectForKey:@"StatusMessage"]) {
-                                [statusDict removeObjectForKey:@"StatusMessage"];
-                                [modifiedKeys addObject:@"StatusMessage"];
-                                [statusDict setObject:[NSNumber numberWithBool:NO] forKey:@"Away"];
-                                [modifiedKeys addObject:@"Away"];
+                            if ([theContact statusObjectForKey:@"StatusMessage" withOwner:self]) {
+								[theContact setStatusObject:nil withOwner:self forKey:@"StatusMessage" notify:NO];
+								[theContact setStatusObject:[NSNumber numberWithBool:NO] withOwner:self forKey:@"Away" notify:NO];
+//                           [statusDict removeObjectForKey:@"StatusMessage"];
+//                                [modifiedKeys addObject:@"StatusMessage"];
+//                                [statusDict setObject:[NSNumber numberWithBool:NO] forKey:@"Away"];
+//                                [modifiedKeys addObject:@"Away"];
                             }
                         }
                         
@@ -164,31 +169,33 @@ struct oscar_data {
                             gchar *info_utf8 = oscar_encoding_to_utf8(userinfo->info_encoding, userinfo->info, userinfo->info_len);
                             if (info_utf8 != NULL) {
                                 NSAttributedString * profileDecoded = [AIHTMLDecoder decodeHTML:[NSString stringWithUTF8String:info_utf8]];
-                                if (![profileDecoded isEqualToAttributedString:[statusDict objectForKey:@"TextProfile"]]) {
-                                    [statusDict setObject:profileDecoded forKey:@"TextProfile"];
-                                    [modifiedKeys addObject:@"TextProfile"];
+                                if (![profileDecoded isEqualToAttributedString:[theContact statusObjectForKey:@"TextProfile" withOwner:self]]) {
+									[theContact setStatusObject:profileDecoded withOwner:self forKey:@"TextProfile" notify:NO];
+//                                    [statusDict setObject:profileDecoded forKey:@"TextProfile"];
+//                                    [modifiedKeys addObject:@"TextProfile"];
                                 }
                                 g_free(info_utf8);
                             }
                         }
                         
                         //Set the signon date if one hasn't already been set
-                        if ( (![statusDict objectForKey:@"Signon Date"]) && ((userinfo->onlinesince) != 0) ) {
-                            [statusDict setObject:[NSDate dateWithTimeIntervalSince1970:(userinfo->onlinesince)] forKey:@"Signon Date"];
-                            [modifiedKeys addObject:@"Signon Date"];
+                        if ( (![theContact statusObjectForKey:@"Signon Date" withOwner:self]) && ((userinfo->onlinesince) != 0) ) {
+                            [theContact setStatusObject:[NSDate dateWithTimeIntervalSince1970:(userinfo->onlinesince)] withOwner:self forKey:@"Signon Date" notify:NO];
+//                            [modifiedKeys addObject:@"Signon Date"];
                         }
                     }
                 }
             }
             
             //if anything changed
-            if([modifiedKeys count] > 0)
-            {
-                //tell the contact controller, silencing if necessary
-                [[adium contactController] handleStatusChanged:theHandle
-                                            modifiedStatusKeys:modifiedKeys
-                                                        silent:silentAndDelayed];
-            }
+			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+//            if([modifiedKeys count] > 0)
+//            {
+//                //tell the contact controller, silencing if necessary
+//                [[adium contactController] handleStatusChanged:theHandle
+//                                            modifiedStatusKeys:modifiedKeys
+//                                                        silent:silentAndDelayed];
+//            }
         }
     }
 }
