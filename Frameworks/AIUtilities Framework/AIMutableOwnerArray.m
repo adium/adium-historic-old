@@ -357,16 +357,16 @@
 - (void)_createArrays
 {
     contentArray = [[NSMutableArray alloc] init];
-    ownerArray = [[NSMutableArray alloc] init];
     priorityArray = [[NSMutableArray alloc] init];
+    ownerArray = [[NSMutableArray alloc] init];
 }
 
 //Destroy our storage arrays
 - (void)_destroyArrays
 {
     [contentArray release]; contentArray = nil;
-    [ownerArray release]; ownerArray = nil;
     [priorityArray release]; priorityArray = nil;
+	[ownerArray release]; ownerArray = nil;
 }
 
 //Delegation -----------------------------------------------------------------------------------------

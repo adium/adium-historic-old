@@ -25,6 +25,7 @@
 //The objectID is unique to a meta contact and is used as the UID for purposes of AIListContact inheritance
 - (id)initWithObjectID:(NSNumber *)objectID;
 - (NSNumber *)objectID;
++ (NSString *)internalObjectIDFromObjectID:(NSNumber *)inObjectID;
 
 - (AIListContact *)preferredContact;
 - (AIListContact *)preferredContactWithService:(AIService *)inService;
@@ -35,6 +36,7 @@
 - (BOOL)containsOnlyOneService;
 - (int)uniqueContainedObjectsCount;
 - (AIListObject *)uniqueObjectAtIndex:(int)inIndex;
+- (NSArray *)listContacts;
 
 - (NSDictionary *)dictionaryOfServicesAndListContacts;
 
