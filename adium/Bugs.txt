@@ -114,4 +114,6 @@
 	(They still show up in the info, apparently)
 - AIM Passwords with question marks in them prevent libgaim from connecting?
 - Out of curiosity - is there a reason we use .adiumEmoticonset instead of
-	.adiumEmoticonSet (call me a capitalization nut :)? 
+	.adiumEmoticonSet (call me a capitalization nut :)?
+	[Dave] Since we do case-insensitive compares, and the Finder doesn't seem to care, we COULD use AdiumEmoticonSet
+- Crash reporter doesn't appear for some users (snu on IRC in particular)
