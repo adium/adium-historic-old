@@ -3519,6 +3519,7 @@
 				7E824CE606387FAF00813072,
 				7E824CE806387FAF00813072,
 				7E824CEA06387FAF00813072,
+				BF000238063A4D2E0019910B,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3836,6 +3837,7 @@
 				7E824CDD06387FAF00813072,
 				7E824CDE06387FAF00813072,
 				7E824CDF06387FAF00813072,
+				BF00023B063A4FFE0019910B,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4157,6 +4159,7 @@
 				7E824CE706387FAF00813072,
 				7E824CE906387FAF00813072,
 				7E824CEB06387FAF00813072,
+				BF000239063A4D2E0019910B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18130,6 +18133,50 @@
 //BF2
 //BF3
 //BF4
+		BF000236063A4D2E0019910B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CSMessageToOfflineContactWindowController.h;
+			path = "Plugins/Dual Window Interface/CSMessageToOfflineContactWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF000237063A4D2E0019910B = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CSMessageToOfflineContactWindowController.m;
+			path = "Plugins/Dual Window Interface/CSMessageToOfflineContactWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF000238063A4D2E0019910B = {
+			fileRef = BF000236063A4D2E0019910B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF000239063A4D2E0019910B = {
+			fileRef = BF000237063A4D2E0019910B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF00023A063A4FFE0019910B = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = OfflineContactMessage.nib;
+			path = "Plugins/Dual Window Interface/OfflineContactMessage.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BF00023B063A4FFE0019910B = {
+			fileRef = BF00023A063A4FFE0019910B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		BF0F5BD805A2B1590034AD18 = {
 			children = (
 				BF0F5BD905A2B1E30034AD18,
@@ -19468,6 +19515,9 @@
 			children = (
 				4BACB70103C8CB5E00A8010A,
 				4BACB70203C8CB5E00A8010A,
+				BF000236063A4D2E0019910B,
+				BF000237063A4D2E0019910B,
+				BF00023A063A4FFE0019910B,
 				F570A5CD03704D3D01A8010A,
 				F570A5CE03704D3D01A8010A,
 				F5793984033E756E01A8010A,
