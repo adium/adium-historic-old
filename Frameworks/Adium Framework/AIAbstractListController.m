@@ -90,13 +90,13 @@
 	[contactListView registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs",nil]];
 }
 
-- (void)setContactListRoot:(AIListObject <AIContainingObject> *)newContactListRoot
+- (void)setContactListRoot:(ESObjectWithStatus <AIContainingObject> *)newContactListRoot
 {
 	[contactList release]; contactList = [newContactListRoot retain];
 	[contactListView reloadData];
 }
 
-- (AIListObject <AIContainingObject> *)contactListRoot
+- (ESObjectWithStatus <AIContainingObject> *)contactListRoot
 {
 	return contactList;
 }
@@ -294,9 +294,6 @@
 		[(AIListContactMockieCell *)contentCell setDrawsGrid:[[prefDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
 	}
 }
-
-
-
 
 //Outline View data source ---------------------------------------------------------------------------------------------
 #pragma mark Outline View data source
