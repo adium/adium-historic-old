@@ -18,7 +18,7 @@
 #import "AIAttributedStringAdditions.h"
 
 #define TOOLTIP_MAX_WIDTH           1000
-#define TOOLTIP_INSET               3.0
+#define TOOLTIP_INSET               4.0
 #define TOOLTIP_TITLE_BODY_MARGIN   16.0
 #define IMAGE_DIMENSION             48.0
 
@@ -282,9 +282,8 @@ static	AITooltipOrientation	tooltipOrientation;
     //Draw the dividing line
     if (titleAndBodyMargin) {
         [[tooltipWindow contentView] lockFocus];
-       // [[[NSColor lightGrayColor] colorWithAlphaComponent:.5] set];
-        [[NSColor lightGrayColor] set];
-        [NSBezierPath setDefaultLineWidth:1];
+        [[[NSColor grayColor] colorWithAlphaComponent:.7] set];
+        [NSBezierPath setDefaultLineWidth:0.5];
         [NSBezierPath strokeLineFromPoint:NSMakePoint(TOOLTIP_INSET,titleAndBodyMargin/2 + tooltipBodyRect.size.height + 1)
                                   toPoint:NSMakePoint(windowWidth - TOOLTIP_INSET,titleAndBodyMargin/2 + tooltipBodyRect.size.height + 1)];
         [[tooltipWindow contentView] unlockFocus];
