@@ -73,7 +73,7 @@
     [newItem setLabel:[item label]];
     [newItem setPaletteLabel:[item paletteLabel]];
     if([item view] != NULL){
-        [newItem setView:[[[item view] copy] autorelease]];
+        [newItem setView:[item view]/*[[[item view] copy] autorelease]*/];
     }else{
         [newItem setImage:[item image]];
     }
@@ -86,8 +86,10 @@
     //If we have a custom view, we *have* to set the min/max size - otherwise, it'll default to 0,0 and the custom
     //view won't show up at all!  This doesn't affect toolbar items with images, however.
     if([newItem view] != NULL){
-        [newItem setMinSize:[[item view] bounds].size];
-        [newItem setMaxSize:[[item view] bounds].size];
+		NSLog(@"min: %i %i",(int)[item minSize].width, (int)[item minSize].height);
+		NSLog(@"max: %i %i",(int)[item maxSize].width, (int)[item maxSize].height);
+        [newItem setMinSize:[item minSize]/*[[item view] bounds].size*/];
+        [newItem setMaxSize:[item maxSize]/*[[item view] bounds].size*/];
 		
 		if([[newItem view] respondsToSelector:@selector(setToolbarItem:)]){
 			[[newItem view] setToolbarItem:newItem];
