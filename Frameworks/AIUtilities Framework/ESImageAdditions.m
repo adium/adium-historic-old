@@ -308,10 +308,10 @@
 
 //Fun drawing toys
 //Draw an image, altering and returning the available destination rect
-- (NSRect)drawInRect:(NSRect)rect atSize:(NSSize)size position:(IMAGE_POSITION)position
+- (NSRect)drawInRect:(NSRect)rect atSize:(NSSize)size position:(IMAGE_POSITION)position fraction:(float)fraction
 {
 	NSRect	drawRect = [self rectForDrawingInRect:rect atSize:size position:position];
-
+	
 	//If we're passed a 0,0 size, use the image's size
 	if(size.width == 0 || size.height == 0) size = [self size];
 	
@@ -319,7 +319,7 @@
 	[self drawInRect:drawRect
 			fromRect:NSMakeRect(0, 0, [self size].width, [self size].height)
 		   operation:NSCompositeSourceOver
-			fraction:1.0];
+			fraction:fraction];
 	
 	if(position == IMAGE_POSITION_LEFT) rect.origin.x += size.width;
 	rect.size.width -= size.width;
