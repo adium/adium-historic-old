@@ -238,8 +238,14 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 //Set the idle time of all accounts
 - (void)_setAllAccountsIdleTo:(double)inSeconds
 {
-    [[owner accountController] setStatusObject:[NSDate dateWithTimeIntervalSinceNow:(-inSeconds)] forKey:@"IdleSince" account:nil];
-    [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"IdleSetManually" account:nil];
+    if(inSeconds){
+        [[owner accountController] setStatusObject:[NSDate dateWithTimeIntervalSinceNow:(-inSeconds)] forKey:@"IdleSince" account:nil];
+        [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"IdleSetManually" account:nil];
+    }else{
+        [[owner accountController] setStatusObject:nil forKey:@"IdleSince" account:nil];
+        [[owner accountController] setStatusObject:nil forKey:@"IdleSetManually" account:nil];
+    }
+    
 }
 
 //Returns the current # of seconds the user has been idle

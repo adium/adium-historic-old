@@ -249,9 +249,9 @@ static char *hash_password(const char * const password);
 // Respond to account status changes
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
-    if([key compare:@"Online"] == 0){
-        ACCOUNT_STATUS		status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
+    ACCOUNT_STATUS	status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
 
+    if([key compare:@"Online"] == 0){
         if([inValue boolValue]){ //Connect
             if(status == STATUS_OFFLINE){
                 [self connect];
@@ -262,7 +262,11 @@ static char *hash_password(const char * const password);
             }
         }
 
-    }else if([key compare:@"IdleSince"] == 0){
+    }
+
+    //Ignore the following keys unless we're online
+    if(status == STATUS_ONLINE){
+       if([key compare:@"IdleSince"] == 0){
         NSDate		*oldIdle = [[owner accountController] statusObjectForKey:@"IdleSince" account:self];
         NSDate		*newIdle = inValue;
 
@@ -272,14 +276,15 @@ static char *hash_password(const char * const password);
 
         [self AIM_SetIdle:(-[newIdle timeIntervalSinceNow])];
 
-    }else if([key compare:@"TextProfile"] == 0){
-        [self AIM_SetProfile:[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]]];
-
-    }else if([key compare:@"AwayMessage"] == 0){
-        if(inValue){
-            [self AIM_SetAway:[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]]];
-        }else{
-            [self AIM_SetAway:nil];
+        }else if([key compare:@"TextProfile"] == 0){
+            [self AIM_SetProfile:[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]]];
+    
+        }else if([key compare:@"AwayMessage"] == 0){
+            if(inValue){
+                [self AIM_SetAway:[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]]];
+            }else{
+                [self AIM_SetAway:nil];
+            }
         }
     }
 
