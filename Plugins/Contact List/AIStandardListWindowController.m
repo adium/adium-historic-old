@@ -12,6 +12,7 @@
 
 @interface AIStandardListWindowController (PRIVATE)
 - (void)_configureToolbar;
+- (void)activeStateChanged:(NSNotification *)notification;
 @end
 
 @implementation AIStandardListWindowController
