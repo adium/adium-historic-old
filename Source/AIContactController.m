@@ -698,7 +698,7 @@ DeclareString(UID);
 {
 	BOOL success;
 	
-	AIListObject *localGroup = [listObject containingObject];
+	AIListObject<AIContainingObject> *localGroup = [listObject containingObject];
 
 	//Remove the object from its previous containing group
 	if (localGroup && (localGroup != metaContact)){
@@ -1761,7 +1761,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 				}
 				
 				//Move the metaContact itself
-				[listContact setContainedObject:group];
+				[listContact setContainingObject:group];
 				
 			}else if([listContact isKindOfClass:[AIListContact class]]){
 				//Move the object 
