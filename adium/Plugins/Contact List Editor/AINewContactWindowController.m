@@ -244,7 +244,7 @@
 		if([selectedObject isKindOfClass:[AIListGroup class]]){
 			group = (AIListGroup*)selectedObject;
 		}else{
-			group = [selectedObject containingGroup];
+			group = [selectedObject containingObject];
 		}
 		
 		if(group){

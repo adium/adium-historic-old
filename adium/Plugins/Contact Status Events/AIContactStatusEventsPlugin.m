@@ -131,7 +131,7 @@
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)modifiedKeys silent:(BOOL)silent
 {
 	if((![inObject isKindOfClass:[AIAccount class]]) &&							//Ignore accounts
-	   (![[inObject containingGroup] isKindOfClass:[AIMetaContact class]])){	//Ignore children of meta contacts
+	   (![[inObject containingObject] isKindOfClass:[AIMetaContact class]])){	//Ignore children of meta contacts
 		
 		if([modifiedKeys containsObject:@"Online"]){
 			if([self updateCache:onlineCache

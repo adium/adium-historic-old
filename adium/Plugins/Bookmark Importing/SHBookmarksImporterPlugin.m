@@ -51,15 +51,15 @@
 		//Wait for Adium to finish launching before we build the content of our menus
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(adiumFinishedLaunching:)
-										   name:Adium_PluginsDidFinishLoading
+										   name:Adium_CompletedApplicationLoad
 										 object:nil];
-                
-                [[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(toolbarWillAddItem:)
-												 name:NSToolbarWillAddItemNotification
-											   object:nil];
-                [self registerToolbarItem];
-        }
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(toolbarWillAddItem:)
+													 name:NSToolbarWillAddItemNotification
+												   object:nil];
+		[self registerToolbarItem];
+	}
 }
 
 //Uninstall

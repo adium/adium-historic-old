@@ -125,7 +125,7 @@ DeclareString(bookmarkDictContent)
             
             [arrayStack addObject:bookmarksArray];
             bookmarksArray = [NSMutableArray array];
-            [[arrayStack lastObject] addObject:[self menuDictWithTitle:omniTitleString
+            [(NSMutableArray *)[arrayStack lastObject] addObject:[self menuDictWithTitle:omniTitleString
                                                              menuItems:bookmarksArray]];
                                                              
         }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:Aopen]){
