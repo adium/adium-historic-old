@@ -246,9 +246,10 @@
 	selectedObject = [[adium contactController] selectedListObject];
 
 	if(selectedObject != nil) {
+		//Find the first containing object which is an AIListGroup, starting with the selected object itself
 		group = (AIListGroup*)selectedObject;
 		while (group && ![group isKindOfClass:[AIListGroup class]]){
-			group = (AIListGroup*)[selectedObject containingObject];
+			group = (AIListGroup*)[group containingObject];
 		}
 		
 		if(group){
