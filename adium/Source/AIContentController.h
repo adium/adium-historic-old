@@ -13,21 +13,12 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#define Chat_WillClose								@"Chat_WillClose"
-#define	Chat_Created								@"Chat_Created"
-#define Chat_DidOpen								@"Chat_DidOpen"
-#define Chat_AttributesChanged						@"Chat_AttributesChanged"
-#define Chat_StatusChanged							@"Chat_StatusChagned"
-
 #define Content_ContentObjectAdded					@"Content_ContentObjectAdded"
 #define Content_WillSendContent						@"Content_WillSendContent"
 #define Content_DidSendContent						@"Content_DidSendContent"
 #define Content_WillReceiveContent					@"Content_WillReceiveContent"
 #define Content_DidReceiveContent					@"Content_DidReceiveContent"
 #define Content_FirstContentRecieved				@"Content_FirstContentRecieved"
-#define Content_ChatParticipatingListObjectsChanged @"Content_ChatParticipatingListObjectsChanged"
-#define Content_ChatAccountChanged 					@"Content_ChatAccountChanged"
-
 
 typedef enum {
 	AIFilterContent = 0,		// Changes actual message and non-message content

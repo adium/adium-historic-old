@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.107 2004/08/16 22:55:40 evands Exp $
+// $Id: AIContentController.m,v 1.108 2004/08/16 23:48:37 evands Exp $
 
 #import "AIContentController.h"
 
@@ -728,6 +728,7 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 			
 			break;
 		}
+		 
 	}
 	if(!chat){
 		
@@ -864,16 +865,23 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 
 		//Close down the chat on account A
 		[(AIAccount<AIAccount_Content> *)oldAccount closeChat:chat];
+
+		//Set the account and the listObject
+		{
+			[chat setAccount:newAccount];
+			
+			//We want to keep the same destination for the chat but switch it to a listContact on the desired account.
+			AIListContact	*newContact = [[owner contactController] contactWithService:[[chat listObject] serviceID]
+																			  accountID:[[chat account] uniqueObjectID]
+																					UID:[[chat listObject] UID]];
+			[chat setListObject:newContact];
+		}
 		
 		//Open the chat on account B
-		[chat setAccount:newAccount];
 		[(AIAccount<AIAccount_Content> *)newAccount openChat:chat];
 		
 		//Clean up
 		[chat release];
-		
-		//We want to keep the same destination for the chat but switch it to a listContact on the desired account.
-		[self switchChat:chat toListContact:[chat listObject]];
 	}
 }
 
@@ -884,7 +892,22 @@ static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 	AIListContact	*newContact = [[owner contactController] contactWithService:[inContact serviceID]
 																	  accountID:[[chat account] uniqueObjectID]
 																			UID:[inContact UID]];
-	[chat setListObject:newContact];
+	if (newContact != [chat listObject]){
+		//Hang onto stuff until we're done
+		[chat retain];
+		
+		//Close down the chat on the account, as the account may need to perform actions such as closing a connection
+		[[chat account] closeChat:chat];
+		
+		//Set to the new listContact
+		[chat setListObject:newContact];
+		
+		//Reopen the chat on the account
+		[[chat account] openChat:chat];
+		
+		//Clean up
+		[chat release];
+	}
 }
 
 
