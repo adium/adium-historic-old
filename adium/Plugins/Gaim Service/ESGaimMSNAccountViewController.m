@@ -17,27 +17,9 @@
 - (void)configureForAccount:(AIAccount *)inAccount
 {
     [super configureForAccount:inAccount];
-    
-    //Serverside alias - Friendly Name
-    NSString		*friendlyName = [account preferenceForKey:@"FullName" group:GROUP_ACCOUNT_STATUS];
-    if(friendlyName){
-        [textField_friendlyName setStringValue:friendlyName];
-    }
 	
 	BOOL HTTPConnect = [[account preferenceForKey:KEY_MSN_HTTP_CONNECT_METHOD group:GROUP_ACCOUNT_STATUS] boolValue];
 	[checkBox_HTTPConnectMethod setState:HTTPConnect];
-}
-
-//Save changes made to a preference control
-- (IBAction)changedPreference:(id)sender
-{
-    [super changedPreference:sender];
-    
-    //Our custom preferences
-    if(sender == textField_friendlyName){
-        [account setPreference:[sender stringValue] forKey:@"FullName" group:GROUP_ACCOUNT_STATUS];    
-        
-    }
 }
 
 - (IBAction)changedConnectionPreference:(id)sender

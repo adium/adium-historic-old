@@ -639,6 +639,7 @@ static void adiumGaimRequestFile(GaimXfer *xfer)
         [accountLookup(xfer->account) accountXferRequestFileReceiveWithXfer:xfer];
     } else if (xferType == GAIM_XFER_SEND) {
 		NSCAssert(xfer->local_filename != nil, @"adiumGaimRequestFile: Attempted to send nil file...");
+		NSLog(@"beginning send %s.",xfer->local_filename);
 		gaim_xfer_request_accepted(xfer, xfer->local_filename);
 	}
 }
@@ -655,7 +656,7 @@ static void adiumGaimAddXfer(GaimXfer *xfer)
 
 static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
 {
-	//   NSLog(@"transfer update: %s is now %f%% done",xfer->filename,(percent*100));
+	NSLog(@"transfer update: %s is now %f%% done",xfer->filename,(percent*100));
     [accountLookup(xfer->account) accountXferUpdateProgress:xfer percent:percent];
 }
 

@@ -21,7 +21,7 @@
         {
             CLASS = AIGaimOscarAccountViewController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"textField_fullName" = NSTextField; "textView_textProfile" = NSTextView; }; 
+            OUTLETS = {"textView_textProfile" = NSTextView; }; 
             SUPERCLASS = ESGaimAccountViewController; 
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
@@ -37,6 +37,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "menu_proxy" = NSPopUpButton; 
+                "textField_alias" = NSTextField; 
                 "textField_hostName" = NSTextField; 
                 "textField_portNumber" = NSTextField; 
                 "textField_proxyHostName" = NSTextField; 

@@ -27,12 +27,6 @@
 {
     [super configureForAccount:inAccount];
     
-    //Full name
-    NSString	*fullName = [account preferenceForKey:@"FullName" group:GROUP_ACCOUNT_STATUS];
-    if(fullName){
-        [textField_fullName setStringValue:fullName];
-    }
-    
     //Profile
     NSData		*profileData = [account preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
     if(profileData){
@@ -42,17 +36,6 @@
         }else{
             [textView_textProfile setString:@""];
 		}
-    }
-}
-
-//Save changes made to a preference control
-- (IBAction)changedPreference:(id)sender
-{
-    [super changedPreference:sender];
-    
-    //Our custom preferences
-    if(sender == textField_fullName){
-        [account setPreference:[sender stringValue] forKey:@"FullName" group:GROUP_ACCOUNT_STATUS];    
     }
 }
 

@@ -19,6 +19,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "menu_proxy" = NSPopUpButton; 
+                "textField_alias" = NSTextField; 
                 "textField_hostName" = NSTextField; 
                 "textField_portNumber" = NSTextField; 
                 "textField_proxyHostName" = NSTextField; 
