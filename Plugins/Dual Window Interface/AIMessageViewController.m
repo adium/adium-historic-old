@@ -290,7 +290,7 @@
 		if (!sendMessagesToOfflineContact &&
 			![chat name] &&
 			![[chat listObject] online] &&
-			![[chat listObject] integerStatusObjectForKey:@"Stranger"]){
+			![[chat listObject] isStranger]){
 			
 			//Contact is offline.  Ask how the user wants to handle the situation.
 			[CSMessageToOfflineContactWindowController showSheetInWindow:[view_contents window] forMessageViewController:self];

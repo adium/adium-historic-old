@@ -369,11 +369,11 @@
 //Contextual menu for tabs
 - (NSMenu *)customTabView:(AICustomTabsView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem
 {
-    AIListObject	*selectedObject = [[(AIMessageTabViewItem *)tabViewItem chat] listObject];
+    AIListContact	*selectedObject = [[(AIMessageTabViewItem *)tabViewItem chat] listObject];
     
     if(selectedObject){
 		NSArray *locations;
-		if ([selectedObject integerStatusObjectForKey:@"Stranger"]){
+		if ([selectedObject isStranger]){
 			locations = [NSArray arrayWithObjects:
 				[NSNumber numberWithInt:Context_Contact_Manage],
 				[NSNumber numberWithInt:Context_Contact_Action],
