@@ -17,15 +17,15 @@
 	A quick and simple HTML to Attributed string converter (ha! --jmelloy)
 */
 
-#import "AIHTMLDecoder.h"
-#import "AITextAttributes.h"
-#import "AIAttributedStringAdditions.h"
-#import "AIColorAdditions.h"
-#import "CBApplicationAdditions.h"
-#import "AIStringUtilities.h"
-#import "AITextAttachmentExtension.h"
-#import "ESFileWrapperExtension.h"
-#import "AIFileManagerAdditions.h"
+#import <AIUtilites/AIHTMLDecoder.h>
+#import <AIUtilites/AITextAttributes.h>
+#import <AIUtilites/AIAttributedStringAdditions.h>
+#import <AIUtilites/AIColorAdditions.h>
+#import <AIUtilites/CBApplicationAdditions.h>
+#import <AIUtilites/AIStringUtilities.h>
+#import <AIUtilites/AITextAttachmentExtension.h>
+#import <AIUtilites/ESFileWrapperExtension.h>
+#import <AIUtilites/AIFileManagerAdditions.h>
 
 int HTMLEquivalentForFontSize(int fontSize);
 
