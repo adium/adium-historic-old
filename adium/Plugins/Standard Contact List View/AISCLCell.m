@@ -39,6 +39,7 @@
 - (void)drawGradientWithFirstColor:(NSColor*)color1 secondColor:(NSColor*)color2 withOpacity:(float)inOpacity inBezierPath:(NSBezierPath*)inPath;
 - (NSAttributedString *)displayNameStringWithAttributes:(BOOL)applyAttributes inView:(AISCLOutlineView *)controlView;
 - (NSBezierPath *)bezierPathLabelOfSize:(NSSize)backgroundSize;
+- (NSBezierPath *)bezierPathLabelWithRect:(NSRect)bounds;
 - (float)displayViews:(NSArray *)viewArray inRect:(NSRect)drawRect onLeft:(BOOL)onLeft;
 - (float)labelEdgePaddingRequiredForLabelOfSize:(NSSize)backgroundSize;
 - (NSColor *)textColorInView:(AISCLOutlineView *)controlView;
@@ -221,7 +222,7 @@
 	//Draw all left Views before the background if drawing a label around the contact only
 	if(labelAroundContactOnly && ([[listObject displayArrayForKey:@"Left View"] count]) ){
 		int sideViewWidth = [self displayViews:[[listObject displayArrayForKey:@"Left View"] allValues]
-										inRect:NSOffsetRect(cellFrame, STATUS_CIRCLE_MARGIN_HACK, 0)
+										inRect:NSOffsetRect(cellFrame, STATUS_CIRCLE_MARGIN_HACK, 0.0f)
 										onLeft:YES];
 		cellFrame.origin.x += (sideViewWidth + STATUS_CIRCLE_MARGIN_HACK);
 		cellFrame.size.width -= (sideViewWidth + STATUS_CIRCLE_MARGIN_HACK);
@@ -247,44 +248,40 @@
 		//Draw our label
 		if(labelColor){
 			int 		innerLeft, innerRight, innerTop, innerBottom;
-			float 		centerY, circleRadius;
 			NSRect		labelRect = cellFrame;
 			
 			//Restict our label to the object name if desired
 			if(labelAroundContactOnly) {				
-				labelRect.size.width = [displayName size].width;
+				labelRect.size.width = [displayName size].width/* + (cellFrame.size.height / 2.0f)*/;
 			}
 			
 			//Indent our label into the available margins
 			float	indent = [self labelEdgePaddingRequiredForLabelOfSize:labelRect.size];
 			labelRect.origin.x -= indent;
 			
-			//EDS - This should technically be * 2 but that doesn't look right at present.
-			labelRect.size.width += indent * 3;
+			//EDS - This should technically be * 2.0f but that doesn't look right at present.
+			labelRect.size.width += indent * 3.0f;
 			
 			//Adjust labels slightly when displaying for a group (to avoid overlapping the flippy triangle)
 			if(isGroup){
 				labelRect.origin.x += GROUP_LABEL_OFFSET;
-				labelRect.size.width -= GROUP_LABEL_OFFSET;
+				labelRect.size.width -= 2.0f * GROUP_LABEL_OFFSET;
 			}
 			
 			//Retrieve the label and shift it into position
-			pillPath = [self bezierPathLabelOfSize:labelRect.size];
-			NSAffineTransform *transform = [NSAffineTransform transform];
-			[transform translateXBy:labelRect.origin.x yBy:labelRect.origin.y];
-			[pillPath transformUsingAffineTransform:transform];
+			pillPath = [self bezierPathLabelWithRect:labelRect];
 			
 			//Fill the label
 			if(![outlineView useGradient]){
 				[labelColor set];
 				[pillPath fill];
 			}else{
-				[[AIGradient gradientWithFirstColor:labelColor secondColor:[labelColor darkenAndAdjustSaturationBy:0.2] direction:AIVertical] drawInBezierPath:pillPath fraction:[outlineView labelOpacity]];
+				[[AIGradient gradientWithFirstColor:labelColor secondColor:[labelColor darkenAndAdjustSaturationBy:0.4f] direction:AIVertical] drawInBezierPath:pillPath];
 			}
 			
 			//Outline the label
 			if([outlineView outlineLabels]){
-				[pillPath setLineWidth:1.0];
+				[pillPath setLineWidth:1.0f];
 				[[self textColorInView:outlineView] set];
 				[pillPath stroke];
 			}
@@ -395,22 +392,64 @@
 	innerLeft = circleRadius;
 	innerRight = backgroundSize.width - circleRadius;
 
-	//Create the circle path
+	//Create the subpath
 	pillPath = [NSBezierPath bezierPath];
 	[pillPath moveToPoint: NSMakePoint(innerLeft, innerTop)];
-	[pillPath lineToPoint: NSMakePoint(innerRight, innerTop)];
+
 	[pillPath appendBezierPathWithArcWithCenter:NSMakePoint(innerRight, centerY)
 										 radius:circleRadius
 									 startAngle:270
 									   endAngle:90
 									  clockwise:NO];
-	[pillPath lineToPoint: NSMakePoint(innerLeft, innerBottom)];
+
 	[pillPath appendBezierPathWithArcWithCenter:NSMakePoint(innerLeft, centerY)
 										 radius:circleRadius
 									 startAngle:90
 									   endAngle:270
 									  clockwise:NO];
 	
+	[pillPath closePath];
+
+	return(pillPath);
+}
+
+- (NSBezierPath *)bezierPathLabelWithRect:(NSRect)bounds
+{
+	float 		innerLeft, innerRight, innerTop, innerBottom;
+	float 		centerY, circleRadius;
+	NSBezierPath	*pillPath;
+    
+	//Calculate some points
+	circleRadius = bounds.size.height / 2.0f;
+	innerTop    = bounds.origin.y;
+	innerBottom = bounds.origin.y + bounds.size.height;
+	centerY = (innerTop + innerBottom) / 2.0f;
+
+	//Compensate for our rounded caps
+	innerLeft  =  bounds.origin.x + circleRadius;
+	innerRight = (bounds.origin.x + bounds.size.width) - (circleRadius * 2.0f);
+
+	//Create the path and its subpath
+	pillPath = [NSBezierPath bezierPath];
+
+	[pillPath moveToPoint: NSMakePoint(innerLeft, innerTop)];
+
+	//top edge, right end.
+	[pillPath appendBezierPathWithArcWithCenter:NSMakePoint(innerRight, centerY)
+										 radius:circleRadius
+									 startAngle:270.0f
+									   endAngle:90.0f
+									  clockwise:NO];
+
+	//bottom edge, left end.
+	[pillPath appendBezierPathWithArcWithCenter:NSMakePoint(innerLeft, centerY)
+										 radius:circleRadius
+									 startAngle:90.0f
+									   endAngle:270.0f
+									  clockwise:NO];
+
+	[pillPath closePath];
+
 	return(pillPath);
 }
 
