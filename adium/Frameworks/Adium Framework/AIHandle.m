@@ -51,6 +51,7 @@
     [serverGroup release];
     [account release];
     [UIDAndServiceID release];
+    [statusDictionary release];
 
     [super dealloc];
 }
