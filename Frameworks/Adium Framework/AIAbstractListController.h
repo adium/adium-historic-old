@@ -144,7 +144,7 @@ typedef enum {
 - (void)performDefaultActionOnSelectedObject:(AIListObject *)listObject sender:(id)sender;
 @end
 
-@interface AIAbstractListController : AIObject {	
+@interface AIAbstractListController : AIObject <AISmoothTooltipTrackerDelegate> {	
 	AIAutoScrollView					*scrollView_contactList;
     AIListOutlineView					*contactListView;
 	
