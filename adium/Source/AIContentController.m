@@ -311,6 +311,21 @@
     }
 }
 
+- (NSAttributedString *)filteredAttributedString:(NSAttributedString *)inString
+{
+    AIContentMessage *object = [AIContentMessage messageInChat:nil
+                                                    withSource:nil
+                                                   destination:nil
+                                                          date:nil
+                                                       message:inString
+                                                     autoreply:NO];
+
+    //Run through the filters; do both incoming and outgoing filters so we get links and emoticons
+    [[owner contentController] filterObject:object isOutgoing:YES];
+    [[owner contentController] filterObject:object isOutgoing:NO];
+    
+    return ([object message]);
+}
 
 //Chats -------------------------------------------------------------------------------------------------
 //Open a chat on the specified account, or returns an existing chat
