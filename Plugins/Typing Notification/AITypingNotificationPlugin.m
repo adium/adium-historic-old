@@ -35,8 +35,18 @@
 #define ENTERED_TEXT_TIMER		@"EnteredTextTimer"
 #define ENTERED_TEXT_INTERVAL   3.0
 
+/*
+ * @class AITypingNotificationPlugin
+ * @brief Component to send typing notifications in open chats
+ *
+ * The possible typing notifications are 'actively typing', 'entered text', and 'not typing'.
+ * Not all protocols will support the 'entered text' notification; it may be treated as actively typing as appropriate.
+ */
 @implementation AITypingNotificationPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
     //Register as an entry filter and observe content
@@ -50,16 +60,23 @@
 }
 
 //Text entry -----------------------------------------------------------------------------------------------------------
-- (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
-{
-    //Ignored
-}
+/*
+ * @brief Text entry view was opened
+ *
+ * Sent because we are a text entry view filter; ignored.
+ */
+- (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView {};
 
+/*
+ * @brief Text entry view will close
+ *
+ * Be sure to clear the typing state of a chat when its text entry view closes
+ */
 - (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
     AIChat		*chat = [inTextEntryView chat];
 	
-    //Send a 'not-typing' message to this contact
+    //Send a 'not-typing' message to this chat
     if([chat integerStatusObjectForKey:WE_ARE_TYPING] != AINotTyping){
         [self _sendTypingState:AINotTyping toChat:chat];
     }
@@ -68,16 +85,32 @@
 	[self _removeTypingTimerForChat:chat];
 }
 
+/*
+ * @brief A string was added to a text entry view
+ */
 - (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
+	NSLog(@"string added");
     [self _processTypingInView:inTextEntryView];
 }
 
+/*
+ * @brief The contents of a text entry view changed
+ */
 - (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
+	NSLog(@"contents changed");
     [self _processTypingInView:inTextEntryView];
 }
 
+/*
+ * @brief Process the current typing state in a text entry view
+ *
+ * When the user makes a change or adds text, mark the chat with an AITyping state.
+ * After a timeout with no changes, change that state to AIEnteredText.
+ *
+ * When the user makes a change resulting in an empty text view, however, clear the typing state.
+ */
 - (void)_processTypingInView:(NSText<AITextEntryView> *)inTextEntryView
 {
     AIChat		*chat = [inTextEntryView chat];
@@ -131,6 +164,10 @@
 		[self performSelector:@selector(_removeSuppressFlagFromChat:) withObject:chat afterDelay:0.0000001];
 	}
 }
+
+/*
+ * @brief Remove the typing suppression for a chat
+ */
 - (void)_removeSuppressFlagFromChat:(AIChat *)chat
 {
 	[chat setStatusObject:nil
@@ -138,9 +175,10 @@
 				   notify:NotifyNever];
 }
 
-
-
 //Typing state ---------------------------------------------------------------------------------------------------------
+/*
+ * @brief Send an AIContentTyping object for an AITypingState on a given chat
+ */
 - (void)_sendTypingState:(AITypingState)typingState toChat:(AIChat *)chat
 {
 	if([chat sendTypingNotifications] ||
@@ -162,6 +200,13 @@
 				   notify:NotifyNever];
 }
 
+/*
+ * @brief Switch the typing state to AIEnteredText
+ *
+ * Called after a timeout when the user has entered text but is not actively typing
+ *
+ * @param inTimer An NSTimer whose userInfo is an AIChat
+ */
 - (void)_switchToEnteredText:(NSTimer *)inTimer
 {
 	AIChat  *chat = [inTimer userInfo];
@@ -171,7 +216,9 @@
 
 
 //Typing timer ---------------------------------------------------------------------------------------------------------
-//Add, remove, or reset the timer responsible for detecting when the user stops typing
+/*
+ * @brief Add the timer responsible for detecting when the user stops typing
+ */
 - (void)_addTypingTimerForChat:(AIChat *)chat
 {
 	NSTimer	*enteredTextTimer = [NSTimer scheduledTimerWithTimeInterval:ENTERED_TEXT_INTERVAL
@@ -182,6 +229,11 @@
 	[chat setStatusObject:enteredTextTimer forKey:ENTERED_TEXT_TIMER notify:NotifyNever];
 }
 
+/*
+ * @brief Reset the timer responsible for detecting when the user stops typing
+ *
+ * This is done because it is cheaper than removing the old timer and adding a new one
+ */
 - (void)_resetTypingTimerForChat:(AIChat *)chat
 {
 	NSTimer	*enteredTextTimer = [chat statusObjectForKey:ENTERED_TEXT_TIMER];
@@ -190,6 +242,9 @@
 	}
 }
 
+/*
+ * @brief Remove the timer responsible for detecting when the user stops typing
+ */
 - (void)_removeTypingTimerForChat:(AIChat *)chat
 {
 	NSTimer	*enteredTextTimer = [chat statusObjectForKey:ENTERED_TEXT_TIMER];
