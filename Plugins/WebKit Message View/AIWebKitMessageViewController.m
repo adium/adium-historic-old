@@ -36,7 +36,7 @@
 
 //User Icons
 - (void)participatingListObjectsChanged:(NSNotification *)notification;
-- (void)accountChanged:(NSNotification *)notification;
+- (void)sourceOrDestinationChanged:(NSNotification *)notification;
 - (void)_updateUserIconForObject:(AIListObject *)inObject;
 - (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject;
 
@@ -467,7 +467,7 @@ DeclareString(AppendNextMessage);
 	//Refresh the webkitimages for objects if needed because the mask changed
 	if (oldImageMask != imageMask){
 		[self participatingListObjectsChanged:nil];
-		[self accountChanged:nil];
+		[self sourceOrDestinationChanged:nil];
 	}
 
 	//Background Preferences [Style specific]
