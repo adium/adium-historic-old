@@ -338,7 +338,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			
 		}else /*if ([setOrObject isKindOfClass:[NSSet class]])*/{
 			NSEnumerator	*enumerator;
-			BOOL			checkedForMetaContact = NO;
+//			BOOL			checkedForMetaContact = NO;
 
 			//Apply the image to each listObject at the appropriate priority
 			enumerator = [(NSSet *)setOrObject objectEnumerator];
