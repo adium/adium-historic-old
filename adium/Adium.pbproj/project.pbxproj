@@ -9235,6 +9235,7 @@
 			files = (
 				9E6C448B048D681F00415B22,
 				9E6C448D048D682100415B22,
+				9EC861AA0494968E00415B22,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9251,6 +9252,7 @@
 			files = (
 				9E6C448C048D682100415B22,
 				9E6C448E048D682200415B22,
+				9EC861AB0494968E00415B22,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9350,6 +9352,8 @@
 				9E2E3076046CAB0000415B22,
 				9E2E307D046CB05F00415B22,
 				9E2E307E046CB05F00415B22,
+				9EC861A80494968E00415B22,
+				9EC861A90494968E00415B22,
 				9E1D5C54048EB63C00415B22,
 			);
 			isa = PBXGroup;
@@ -9545,6 +9549,32 @@
 		};
 		9EB7C05C03D52C0300415B22 = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EC861A80494968E00415B22 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = MSNStringAdditions.h;
+			path = "Plugins/MSN Service/MSNStringAdditions.h";
+			refType = 4;
+		};
+		9EC861A90494968E00415B22 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = MSNStringAdditions.m;
+			path = "Plugins/MSN Service/MSNStringAdditions.m";
+			refType = 4;
+		};
+		9EC861AA0494968E00415B22 = {
+			fileRef = 9EC861A80494968E00415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EC861AB0494968E00415B22 = {
+			fileRef = 9EC861A90494968E00415B22;
 			isa = PBXBuildFile;
 			settings = {
 			};

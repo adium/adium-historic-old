@@ -18,7 +18,7 @@
 
 @class AISocket, AIGroup;
 
-@interface MSNAccount : AIAccount <AIAccount_Content/*, AIAccount_Handles, AIAccount_Groups*/>
+@interface MSNAccount : AIAccount <AIAccount_Content, AIAccount_Handles/*, AIAccount_Groups*/>
 {
     AISocket 		*socket;		// The connection socket
     int			connectionPhase;	// Offline/Connecting/Online/Disconnecting
@@ -26,14 +26,15 @@
     NSString		*screenName;		// Current signed on actualSN
     NSString		*password;		// Current signed on password
     NSString		*friendlyName;		// Current Friendly name
+    
+    NSMutableDictionary	*handleDict;		// Dict of all our handles.
 }
 
 //AIAccount_Content
-// Send a message object to its destination
 - (BOOL)sendContentObject:(id <AIContentObject>)object;
 // Returns YES if the contact is available for receiving content of the specified type
 - (BOOL)availableForSendingContentType:(NSString *)inType toHandle:(AIHandle *)inHandle;
-/*
+
 //AIAccount_Handles
 // Returns a dictionary of AIHandles available on this account
 - (NSDictionary *)availableHandles; //return nil if no contacts/list available
@@ -53,7 +54,7 @@
 // Rename a group
 - (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName;
 
-//AIAccount_Groups
+/*//AIAccount_Groups
 // Add a group to this account
 - (BOOL)addGroup:(NSString *)inGroup;
 // Remove a group from this account
