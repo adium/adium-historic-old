@@ -120,163 +120,44 @@
 - (void)windowBecameMain:(NSNotification *)notification
 {
 	[self setNeedsDisplay:YES];
-	NSLog(@"Unhide selection");
 }
 
 //Hide the selection
 - (void)windowResignedMain:(NSNotification *)notification
 {
 	[self setNeedsDisplay:YES];
-	NSLog(@"Hide selection");
 }
 
     
-//Auto Sizing --------------------------------------------------------------------------
-//Updates the horizontal size of several objects, posting a desired size did change notification if necessary
-//- (void)updateHorizontalSizeForObjects:(NSArray *)inObjects
-//{
-//	NSEnumerator	*enumerator = [inObjects objectEnumerator];
-//	AIListObject	*object;
-//	BOOL			changed = NO;
-//	
-//	while(object = [enumerator nextObject]){
-//		if([self _performPartialRecalculationForObject:object]) changed = YES;
-//	}
-//	
-//    if(changed){
-//        [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self]; //Resize
-//    }
-//}
-//
-////Updates the horizontal size of an object, posting a desired size did change notification if necessary
-//- (void)updateHorizontalSizeForObject:(AIListObject *)inObject
-//{
-//	if([self _performPartialRecalculationForObject:inObject]){
-//        [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self]; //Resize
-//	}
-//}
-//
-////Recalulate an object's size and determine if we need to resize our view
-//- (BOOL)_performPartialRecalculationForObject:(AIListObject *)inObject
-//{
-//    NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
-//    AISCLCell 		*cell = [column dataCell];
-//    float			cellWidth;
-//    NSArray			*cellSizeArray;
-//    BOOL			changed = NO;
-//    int				j;
-//
-//	if([self rowForItem:inObject] == -1){ //We don't cache hidden objects
-//		for(j=0; j < 3; j++){ //check left, middle, and right
-//			if(hadMax[j] == inObject){ //if this object was the largest in terms of j before but is now hidden, then we need to search for the now-largest
-//				[self _performFullRecalculationFor:j];
-//				changed = YES;
-//			}
-//		}
-//	}else{ //object is in the active contact list
-//		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:column item:inObject];        
-//		for(j=0 ; j < 3; j++){  //check left, middle, and right
-//			cellSizeArray = [cell cellSizeArrayForBounds:NSMakeRect(0,0,0,[self rowHeight]) inView:self];
-//			cellWidth = [[cellSizeArray objectAtIndex:j] floatValue];
-//			if(cellWidth > desiredWidth[j]) {
-//				desiredWidth[j] = cellWidth;
-//				hadMax[j] = inObject;
-//				changed = YES;
-//			} else if ((hadMax[j] == inObject) && (cellWidth != desiredWidth[j]) ) {   //if this object was the largest in terms of j before but is not now, then we need to search for the now-largest
-//				[self _performFullRecalculationFor:j];
-//				changed = YES;
-//			}
-//		}   
-//	}
-//	
-//	return(changed);
-//}
-//
-//- (void)_performFullRecalculation
-//{
-//    int j;
-//    for (j=0 ; j < 3 ; j++) {
-//        [self _performFullRecalculationFor:j];
-//    }
-//    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self];
-//}
-//
-//- (void)_performFullRecalculationFor:(int)j
-//{
-//    NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
-//    AISCLCell		*cell = [column dataCell];
-//    AIListObject	*object;
-//    float			cellWidth;
-//    NSArray			*cellSizeArray;
-//    int				i;
-//    
-//	desiredWidth[j]=0;
-//	hadMax[j]=nil;
-//    for(i = 0; i < [self numberOfRows]; i++){
-//        object = [self itemAtRow:i];
-//
-//        [[self delegate] outlineView:self willDisplayCell:cell forTableColumn:column item:object];
-//        
-//        cellSizeArray = [cell cellSizeArrayForBounds:NSMakeRect(0,0,0,[self rowHeight]) inView:self];
-//		
-//        cellWidth = [[cellSizeArray objectAtIndex:j] floatValue];
-//        if(cellWidth > desiredWidth[j]){
-//            desiredWidth[j] = cellWidth;
-//            hadMax[j] = object;
-//        }
-//    } 
-//}
-//
 
 // Returns our desired size
-#define EMPTY_HEIGHT				24
+#define EMPTY_HEIGHT				48
 #define EMPTY_WIDTH					140
-- (NSSize)desiredSize
+- (int)desiredHeight
 {
-	if([self numberOfRows] == 0){
-		return(NSMakeSize(EMPTY_WIDTH, EMPTY_HEIGHT));
-	}else{
-		NSLog(@"totalHeight = %i",(int)[self totalHeight]);
-		return(NSMakeSize(EMPTY_WIDTH, [self totalHeight] + 2));
-	}
+	int desiredHeight = [self totalHeight]+2;
+	return(desiredHeight > EMPTY_HEIGHT ? desiredHeight : EMPTY_HEIGHT);
 }
 
-//    //We need to convert this to a lazy cache
-//    
-//    if([self numberOfRows] == 0){
-//        return( NSMakeSize(EMPTY_WIDTH, EMPTY_HEIGHT) );
-//    }else{
-//        float	desiredHeight;
-//        int     j;
-//        float   totalWidth = 0;
-//        
-//        desiredHeight = [self numberOfRows] * ([self rowHeight] + [self intercellSpacing].height);
-//         for (j = 0; j < 3; j++) {
-//             totalWidth += desiredWidth[j]; 
-//         }
-//         
-//         totalWidth += [self intercellSpacing].width + 3; //+3 is to account for variable-width letters.  stupid things.
-//         
-//         if(totalWidth < DESIRED_MIN_WIDTH) totalWidth = DESIRED_MIN_WIDTH;
-//         if(desiredHeight < DESIRED_MIN_HEIGHT) desiredHeight = DESIRED_MIN_HEIGHT;
-//         
-//         return( NSMakeSize(totalWidth, desiredHeight) );
-//    }
-//}
-
-
-//- (void)outlineViewItemDidExpand:(NSNotification *)notification
-//{
-//    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification
-//														object:contactListView];
-//}
-//
-//- (void)outlineViewItemDidCollapse:(NSNotification *)notification
-//{
-//    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification
-//														object:contactListView];
-//}
+- (int)desiredWidth
+{
+	int row;
+	int widestCell = 0;
 	
+	//Enumerate all rows, find the widest one
+	for(row = 0; row < [self numberOfRows]; row++){
+		id		item = [self itemAtRow:row];
+		id		cell = ([self isExpandable:item] ? groupCell : contentCell);
+		
+		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
+		int	width = [cell cellWidth];
+		if(width > widestCell) widestCell = width;
+	}
+
+	return(widestCell > EMPTY_WIDTH ? widestCell : EMPTY_WIDTH);
+}
+
+
 
 //Contact menu ---------------------------------------------------------------
 //Return the selected object (to auto-configure the contact menu)

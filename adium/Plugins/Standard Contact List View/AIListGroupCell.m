@@ -40,6 +40,13 @@
 	return(NSMakeSize(0, [[self font] defaultLineHeightForFont] + size.height));
 }
 
+- (int)cellWidth
+{
+	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[self labelString]
+																	   attributes:[self labelAttributes]];
+	return([super cellWidth] + [self flippyIndent] + [displayName size].width + 1);
+}
+
 - (NSColor *)flippyColor
 {
 	return([self textColor]);
