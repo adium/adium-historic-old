@@ -36,7 +36,7 @@
 	}else if([eventID isEqualToString:ACCOUNT_DISCONNECTED]){
 		description = AILocalizedString(@"Disconnected",nil);
 	}else if ([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]){
-		description = AILocaliedString(@"New Mail Received",nil);
+		description = AILocalizedString(@"New Mail Received",nil);
 	}else{
 		description = @"";	
 	}
@@ -55,7 +55,7 @@
 	}else if([eventID isEqualToString:ACCOUNT_DISCONNECTED]){
 		description = @"Disconnected";
 	}else if ([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]){
-		description = @"New Mail Received"
+		description = @"New Mail Received";
 	}else{
 		description = @"";	
 	}
