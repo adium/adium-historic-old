@@ -22,7 +22,7 @@
 
 #define CL_PREF_NIB			@"AICLPrefView"		//Name of preference nib
 #define CL_PREF_GENERAL_TITLE		@"General Appearance"	//
-#define CL_PREF_GROUPS_TITLE		@"Groups"		//
+#define CL_PREF_GROUPS_TITLE		@"General Appearance"		//
 
 //Handles the interface interaction, and sets preference values
 //The outline view plugin is responsible for reading & setting the preferences, as well as observing changes in them

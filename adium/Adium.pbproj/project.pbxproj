@@ -1658,7 +1658,6 @@
 				34878F6B05182855003B2F21,
 			);
 			buildSettings = {
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1710,7 +1709,7 @@
 		};
 		34878F6D05182855003B2F21 = {
 			isa = PBXBundleReference;
-			path = "Contact List Window Handling.bundle";
+			path = "Contact List Window Handling.AdiumPlugin";
 			refType = 3;
 		};
 		34878F6E05182880003B2F21 = {

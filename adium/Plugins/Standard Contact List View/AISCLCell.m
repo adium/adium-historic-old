@@ -86,8 +86,28 @@
 	font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSBoldFontMask];
     }
 
+    
+    //string
+    NSMutableString 	*displayString = [NSMutableString stringWithString:@""];
+    AIMutableOwnerArray *leftTextArray = [listObject displayArrayForKey:@"Left Text"];
+    AIMutableOwnerArray *rightTextArray = [listObject displayArrayForKey:@"Right Text"];
+    NSString *leftText = [leftTextArray count] > 0 ? [leftTextArray objectAtIndex:0] : nil;
+    NSString *rightText = [rightTextArray count] > 0 ? [rightTextArray objectAtIndex:0] : nil;
+    
+    if(leftText)
+    {
+    	[displayString appendString:leftText];
+    }
+    
+    [displayString appendString:[listObject longDisplayName]];
+    
+    if(rightText)
+    {
+    	[displayString appendString:rightText];
+    }
+    
     //Name
-    displayName = [[NSAttributedString alloc] initWithString:[listObject longDisplayName]
+    displayName = [[NSAttributedString alloc] initWithString:(NSString *)displayString
                                                   attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil]];
     displayNameSize = [displayName size];
     cellSize.width += displayNameSize.width;
@@ -104,10 +124,11 @@
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
     NSFont			*font;
-    NSString			*name;
-    NSAttributedString		*displayName;  
+    NSAttributedString		*displayName;
+    NSMutableString 		*displayString;
+    NSString			*rightText, *leftText;
     NSColor			*textColor, *backgroundColor = nil;
-    AIMutableOwnerArray		*leftViewArray, *rightViewArray;
+    AIMutableOwnerArray		*leftViewArray, *rightViewArray, *leftTextArray, *rightTextArray;
     NSMutableParagraphStyle	*paragraphStyle;
     int				loop;
 
@@ -236,8 +257,27 @@
     [paragraphStyle setLineBreakMode:NSLineBreakByClipping];
 
     //Get the name string
-    name = [listObject longDisplayName];
-    displayName = [[NSAttributedString alloc] initWithString:name attributes:[NSDictionary dictionaryWithObjectsAndKeys:textColor, NSForegroundColorAttributeName, font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil]];
+    
+    //string
+    leftTextArray = [listObject displayArrayForKey:@"Left Text"];
+    rightTextArray = [listObject displayArrayForKey:@"Right Text"];
+    displayString = [NSMutableString stringWithString:@""];
+    leftText = [leftTextArray count] > 0 ? [leftTextArray objectAtIndex:0] : nil;
+    rightText = [rightTextArray count] > 0 ? [rightTextArray objectAtIndex:0] : nil;
+    
+    if(leftText)
+    {
+    	[displayString appendString:leftText];
+    }
+    
+    [displayString appendString:[listObject longDisplayName]];
+    
+    if(rightText)
+    {
+    	[displayString appendString:rightText];
+    }
+    
+    displayName = [[NSAttributedString alloc] initWithString:(NSString *)displayString attributes:[NSDictionary dictionaryWithObjectsAndKeys:textColor, NSForegroundColorAttributeName, font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil]];
 
     //Draw the name
     [displayName drawInRect:NSOffsetRect(cellFrame, 0, -1)];//Adjust the strings up 1 pixel
