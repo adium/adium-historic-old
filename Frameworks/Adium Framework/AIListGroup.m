@@ -166,7 +166,7 @@
 {
 	BOOL success = NO;
 	
-	if(![containedObjects containsObject:inObject]){
+	if(![containedObjects containsObjectIdenticalTo:inObject]){
 		//Update our visible count
 		if([inObject visible]){
 			[self _setVisibleCount:visibleCount+1];
