@@ -151,9 +151,12 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		view_Advanced,
 		nil] retain];
 	
-    //Make the previously selected category active
-	[self selectCategory:[[[adium preferenceController] preferenceForKey:KEY_PREFERENCE_SELECTED_CATEGORY
-																   group:PREF_GROUP_WINDOW_POSITIONS] intValue]];
+    //Make the previously selected category active if it is valid
+	int previouslySelectedCategory = [[[adium preferenceController] preferenceForKey:KEY_PREFERENCE_SELECTED_CATEGORY
+																			   group:PREF_GROUP_WINDOW_POSITIONS] intValue];
+	[self selectCategory:(((previouslySelectedCategory > 0) && (previouslySelectedCategory < [viewArray count])) ?
+						  previouslySelectedCategroy :
+						  0)];
 }
 
 /*!
