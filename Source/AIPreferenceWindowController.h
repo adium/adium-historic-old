@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIModularPaneCategoryView;
+@class AIModularPaneCategoryView, AIAutoScrollView, AIColoredBoxView, AIPreferencePane;
 
 @interface AIPreferenceWindowController : AIWindowController {
     IBOutlet	NSTabView					*tabView_category;
@@ -30,7 +30,9 @@
     IBOutlet 	AIModularPaneCategoryView	*view_Emoticons;
     IBOutlet 	AIModularPaneCategoryView	*view_FileTransfer;
 
-    IBOutlet	NSOutlineView				*outlineView_advanced;
+    IBOutlet	NSTableView					*tableView_advanced;
+	IBOutlet	AIAutoScrollView			*scrollView_advanced;
+
     IBOutlet	AIModularPaneCategoryView   *view_Advanced;
     IBOutlet	NSTextField					*textField_advancedTitle;
     IBOutlet	AIColoredBoxView			*coloredBox_advancedTitle;
