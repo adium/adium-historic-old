@@ -10,7 +10,7 @@
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = SHAutoValidatingTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {
-            ACTIONS = {acceptURL = id; cancel = id; closeWindow = id; }; 
+            ACTIONS = {acceptURL = id; cancel = id; closeWindow = id; removeURL = id; }; 
             CLASS = SHLinkEditorWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {

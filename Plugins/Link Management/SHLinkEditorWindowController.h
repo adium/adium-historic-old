@@ -18,12 +18,12 @@
     IBOutlet    NSButton                    *button_Cancel;
     
     IBOutlet    NSTextField                 *textField_linkText;
-	IBOutlet	AIAutoScrollView			*scrollView_URL;
+    IBOutlet	AIAutoScrollView            *scrollView_URL;
     IBOutlet    SHAutoValidatingTextView    *textView_URL;
     IBOutlet    NSImageView                 *imageView_invalidURLAlert;
     
-	NSTextView					*textView;
-	id							target;
+    NSTextView                              *textView;
+    id                                       target;
 }
 
 + (void)showLinkEditorForTextView:(NSTextView *)inTextView onWindow:(NSWindow *)parentWindow showFavorites:(BOOL)showFavorites notifyingTarget:(id)inTarget;
@@ -32,5 +32,6 @@
 - (IBAction)cancel:(id)sender;
 
 - (IBAction)acceptURL:(id)sender;
+- (IBAction)removeURL:(id)sender;
 
 @end
