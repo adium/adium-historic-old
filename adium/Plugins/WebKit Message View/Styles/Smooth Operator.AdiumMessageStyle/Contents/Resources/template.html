@@ -59,7 +59,6 @@
 			head.removeChild( document.getElementById( id ) );
 			head.appendChild( documentFragment );
 		}
-		
 		document.onclick = imageCheck;
 		function imageCheck() {
 			node = event.target;
@@ -100,7 +99,7 @@
 	<style id="mainStyle" type="text/css" media="screen,print">	@import url( "%@" ); </style>
 	
 </head>
-<body onload="alignChat();" style="%bodyBackground%">
+<body onload="alignChat();" style="==bodyBackground==">
 %@
 <div id="Chat">
 </div>

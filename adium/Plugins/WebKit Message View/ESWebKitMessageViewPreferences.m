@@ -16,6 +16,7 @@
 
 @interface ESWebKitMessageViewPreferences (PRIVATE)
 - (void)updatePreview;
+- (void)_updateViewForStyle:(NSBundle *)style variant:(NSString *)variant;
 - (void) _loadPreviewFromStylePath:(NSString *)inStylePath;
 - (void)_createListObjectsFromDict:(NSDictionary *)previewDict withLoadedPreviewDirectory:(NSString *)loadedPreviewDirectory;
 - (void)processNewContent;
@@ -160,7 +161,7 @@
 
 - (IBAction)changeBackground:(id)sender
 {
-	NSString	*key = [plugin keyForDesiredBackgroundOfStyle:[[popUp_styles selectedItem] title]];
+	NSString	*key = [plugin backgroundKeyForStyle:[[popUp_styles selectedItem] title]];
 	NSString	*newPreference = nil;
 	
 	if ([sender tag] == CustomBackground){
@@ -292,11 +293,10 @@
 		basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];	
 		headerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Header.html"]];
 		footerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Footer.html"]];
-		templateHTML = [NSMutableString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
+		templateHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
 
+		templateHTML = [NSMutableString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];
 		templateHTML = [plugin fillKeywords:templateHTML forStyle:style forChat:chat];
-	
-		templateHTML = [NSString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];
 		
 		//Feed it to the webview after ensuring the newContent array is clear
 		[newContent removeAllObjects];
