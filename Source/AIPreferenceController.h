@@ -56,6 +56,11 @@ typedef enum {
     NSMutableSet			*delayedNotificationGroups;  	//Groups with delayed changes
 }
 
+- (void)initController;
+- (void)willFinishIniting;
+- (void)beginClosing;
+- (void)closeController;
+
 - (void)movePreferenceFolderFromAdium2ToAdium;
 
 //Preference Window
