@@ -1056,6 +1056,82 @@
 			settings = {
 			};
 		};
+		4B70F28903D1CA1C00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAwayMessagePreferences.h;
+			path = "Plugins/Away Messages/AIAwayMessagePreferences.h";
+			refType = 4;
+		};
+		4B70F28A03D1CA1C00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAwayMessagePreferences.m;
+			path = "Plugins/Away Messages/AIAwayMessagePreferences.m";
+			refType = 4;
+		};
+		4B70F28B03D1CA1C00A8010A = {
+			fileRef = 4B70F28903D1CA1C00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B70F28C03D1CA1C00A8010A = {
+			fileRef = 4B70F28A03D1CA1C00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B70F28D03D1CC6400A8010A = {
+			isa = PBXFileReference;
+			name = AwayMessagePrefs.nib;
+			path = "Plugins/Away Messages/AwayMessagePrefs.nib";
+			refType = 4;
+		};
+		4B70F28E03D1CC6400A8010A = {
+			fileRef = 4B70F28D03D1CC6400A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B70F28F03D1D04900A8010A = {
+			isa = PBXFileReference;
+			name = EnterAwayWindow.nib;
+			path = "Plugins/Away Messages/EnterAwayWindow.nib";
+			refType = 4;
+		};
+		4B70F29003D1D04900A8010A = {
+			fileRef = 4B70F28F03D1D04900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B70F29103D1D13800A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIEnterAwayWindowController.h;
+			path = "Plugins/Away Messages/AIEnterAwayWindowController.h";
+			refType = 4;
+		};
+		4B70F29203D1D13800A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIEnterAwayWindowController.m;
+			path = "Plugins/Away Messages/AIEnterAwayWindowController.m";
+			refType = 4;
+		};
+		4B70F29303D1D13800A8010A = {
+			fileRef = 4B70F29103D1D13800A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B70F29403D1D13800A8010A = {
+			fileRef = 4B70F29203D1D13800A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B71CD4E03CBCA2600A8010A = {
 			children = (
 				4B71CD6303CBCB0300A8010A,
@@ -1451,6 +1527,10 @@
 			children = (
 				4B81632203D1C2A900A8010A,
 				4B81631F03D1C2A600A8010A,
+				4B70F28A03D1CA1C00A8010A,
+				4B70F29203D1D13800A8010A,
+				4B70F28D03D1CC6400A8010A,
+				4B70F28F03D1D04900A8010A,
 			);
 			isa = PBXGroup;
 			name = "Away Messages";
@@ -1461,6 +1541,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B81632003D1C2A600A8010A,
+				4B70F28B03D1CA1C00A8010A,
+				4B70F29303D1D13800A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1468,6 +1550,8 @@
 		4B81631403D1C27500A8010A = {
 			buildActionMask = 2147483647;
 			files = (
+				4B70F28E03D1CC6400A8010A,
+				4B70F29003D1D04900A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1476,6 +1560,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B81632103D1C2A600A8010A,
+				4B70F28C03D1CA1C00A8010A,
+				4B70F29403D1D13800A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1587,7 +1673,7 @@
 			refType = 4;
 		};
 		4B81631F03D1C2A600A8010A = {
-			fileEncoding = 4;
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AIAwayMessagesPlugin.m;
 			path = "Plugins/Away Messages/AIAwayMessagesPlugin.m";
@@ -1608,6 +1694,8 @@
 		4B81632203D1C2A900A8010A = {
 			children = (
 				4B81631E03D1C2A600A8010A,
+				4B70F28903D1CA1C00A8010A,
+				4B70F29103D1D13800A8010A,
 			);
 			isa = PBXGroup;
 			name = Headers;

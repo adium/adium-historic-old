@@ -120,7 +120,7 @@ static AIOutOfSyncWindowController	*sharedInstance = nil;
 //Disconnect from all accounts with a sync condition
 - (IBAction)disconnect:(id)sender
 {
-#warning no owner, disabled for now
+// no owner, disabled for now
     /*    NSEnumerator	*enumerator;
     NSMutableDictionary	*dict;
 
