@@ -1,6 +1,13 @@
 {
     IBClasses = (
         {
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {CLASS = AIImageTextView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {
             CLASS = AIWindowController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSWindowController; 
@@ -11,10 +18,10 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkbox_oneTime" = NSButton; 
+                headerView = AIImageTextView; 
                 "popUp_action" = NSPopUpButton; 
                 "popUp_event" = NSPopUpButton; 
                 target = id; 
-                userInfo = id; 
                 "view_auxiliary" = NSView; 
             }; 
             SUPERCLASS = AIWindowController; 
