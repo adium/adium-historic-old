@@ -451,15 +451,15 @@ float _v(float m1, float m2, float hue){
 	NSLog(@"+[NSColor(AIColorAdditions) colorWithHTMLString:] called: str is %@", str);
 	if(!str) return nil;
 
+	NSString *colorValue = str;
 	if((![str length]) || ([str characterAtIndex:0] != '#')) {
 		//look it up; it's a colour name
 		NSDictionary *colorValues = [self colorNamesDictionary];
-		NSString *str2 = [colorValues objectForKey:str];
-		if(!str2) {
+		colorValue = [colorValues objectForKey:str];
+		if(!colorValue) {
 			NSLog(@"+[NSColor(AIColorAdditions) colorWithHTMLString:] called with unrecognised color name: str is %@", str);
 			return nil;
 		}
-		str = str2;
 	}
 
 	const char	*hexString = [colorValue UTF8String];
