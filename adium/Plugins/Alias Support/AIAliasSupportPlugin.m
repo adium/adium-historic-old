@@ -15,6 +15,7 @@
 
 #import "AIAliasSupportPlugin.h"
 #import "AIContactListEditorPlugin.h"
+#import "AIContactInfoWindowController.h"
 
 #define	CONTACT_ALIAS_NIB		@"ContactAlias"		//Filename of the alias info view
 #define	PREF_GROUP_ALIASES		@"Aliases"		//Preference group to store aliases in
@@ -270,6 +271,8 @@
 //need to watch it as it changes as we can't catch the window closing
 -(void) controlTextDidChange:(NSNotification *)theNotification
 {
+    [(AIContactInfoWindowController *)[[contactView window] windowController] ignoreSelectionChanges:YES];
     [self setAlias:nil];
+    [(AIContactInfoWindowController *)[[contactView window] windowController] ignoreSelectionChanges:NO];
 }
 @end
