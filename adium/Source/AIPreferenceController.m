@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.46 2004/03/26 03:42:57 adamiser Exp $
+// $Id: AIPreferenceController.m,v 1.47 2004/05/22 18:19:17 adamiser Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -194,31 +194,6 @@
 	[objectPrefCache setObject:prefs forKey:cacheKey];
     [prefs writeToPath:[userDirectory stringByAppendingPathComponent:path]
 			  withName:objectKey];
-}
-
-//Private
-- (BOOL)tempImportOldPreferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object
-{
-    if(![object isKindOfClass:[AIAccount class]]){
-		NSString		*objectKey = [NSString stringWithFormat:@"(%@)", [object uniqueObjectID]];
-		NSMutableDictionary     *prefDict = [self loadPreferenceGroup:groupName];
-		NSMutableDictionary     *objectPrefDict = [prefDict objectForKey:objectKey];
-		id			oldValue;
-		
-		if(oldValue = [objectPrefDict objectForKey:inKey]){
-			NSLog(@"Imported preference: %@ : %@",objectKey,inKey);
-			[object setPreference:oldValue forKey:inKey group:groupName];
-			
-			//Delete old
-			[objectPrefDict removeObjectForKey:inKey];
-			[prefDict setObject:objectPrefDict forKey:objectKey];
-			[self savePreferences:prefDict forGroup:groupName];
-			
-			return(YES);
-		}
-    }
-	
-    return(NO);
 }
 
     
