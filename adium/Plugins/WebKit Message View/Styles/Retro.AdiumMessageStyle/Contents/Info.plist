@@ -18,5 +18,7 @@
 	<string>Helvetica</string>
 	<key>DefaultFontSize</key>
 	<integer>11</integer>
+    <key>DisableCustomBackground</key>
+	<true/>
 </dict>
 </plist>

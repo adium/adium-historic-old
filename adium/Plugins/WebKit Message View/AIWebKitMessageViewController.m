@@ -121,7 +121,7 @@
 		if (!notification ||  (stylePath && [stylePath isEqualToString:newStylePath])){
 			NSString *desiredVariant, *CSS;
 			
-			desiredVariant = [[adium preferenceController] preferenceForKey:[plugin keyForDesiredVariantOfStyle:styleName]
+			desiredVariant = [[adium preferenceController] preferenceForKey:[plugin variantKeyForStyle:styleName]
 																	  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];			
 			CSS = (desiredVariant ? [NSString stringWithFormat:@"Variants/%@.css",desiredVariant] : @"main.css");
 			
@@ -139,10 +139,13 @@
 				
 				[plugin loadPreferencesForWebView:webView withStyleNamed:styleName];
 				
+				
 				basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];	
 				headerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Header.html"]];
 				footerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Footer.html"]];
-				templateHTML = [NSMutableString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
+				templateHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
+				
+				templateHTML = [NSMutableString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];
 				templateHTML = [plugin fillKeywords:templateHTML forStyle:style forChat:chat];
 				
 				templateHTML = [NSString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];

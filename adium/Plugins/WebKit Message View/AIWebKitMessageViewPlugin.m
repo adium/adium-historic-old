@@ -498,12 +498,13 @@ DeclareString(AppendNextMessage);
 	
 	//Background
 	{
-		range = [inString rangeOfString:@"%bodyBackground%"];
+		range = [inString rangeOfString:@"==bodyBackground=="];
+		NSLog(@"found it? %i",range.location);
 		if(range.location != NSNotFound){
 			
-			NSString	*background = [[adium preferenceController] preferenceForKey:[self keyForDesiredBackgroundOfStyle:[style name]]
+			NSString	*background = [[adium preferenceController] preferenceForKey:[self backgroundKeyForStyle:[style name]]
 																			   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-			NSColor		*backgroundColor = [[[adium preferenceController] preferenceForKey:[self keyForDesiredBackgroundColorOfStyle:[style name]]
+			NSColor		*backgroundColor = [[[adium preferenceController] preferenceForKey:[self backgroundColorKeyForStyle:[style name]]
 																					 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] representedColor];
 			NSMutableString *backgroundTag = nil;
 			
