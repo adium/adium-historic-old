@@ -88,9 +88,9 @@
 	[checkBox_horizontalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue]];
 	
 	//Localized strings
-	[label_serviceIcons setStringValue:AILocalizedString(@"Service icons:","Label for preference to select the icon pack to used for service (AIM, MSN, etc.)")];
-	[label_statusIcons setStringValue:AILocalizedString(@"Status icons:","Label for preference to select status icon pack")];
-	[label_dockIcons setStringValue:AILocalizedString(@"Dock icons:","Label for preference to select dock icon")];
+	[label_serviceIcons setLocalizedString:AILocalizedString(@"Service icons:","Label for preference to select the icon pack to used for service (AIM, MSN, etc.)")];
+	[label_statusIcons setLocalizedString:AILocalizedString(@"Status icons:","Label for preference to select status icon pack")];
+	[label_dockIcons setLocalizedString:AILocalizedString(@"Dock icons:","Label for preference to select dock icon")];
 }
 
 /*!

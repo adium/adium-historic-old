@@ -97,9 +97,9 @@
     [scrollView_requestDetails setDrawsBackground:NO];
 
 	//Setup the buttons
-	[button_save setTitle:AILocalizedString(@"Save",nil)];
-	[button_saveAs setTitle:AILocalizedString(@"Save As...",nil)];
-	[button_cancel setTitle:AILocalizedString(@"Cancel",nil)];
+	[button_save setLocalizedString:AILocalizedString(@"Save",nil)];
+	[button_saveAs setLocalizedString:AILocalizedString(@"Save As...",nil)];
+	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
 
 	//Setup the imageView for the file's icon
 	NSImage		*iconImage;

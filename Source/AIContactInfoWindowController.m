@@ -322,7 +322,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 			[textField_service setStringValue:(displayServiceID ? displayServiceID : @"")];
 			
 		}else if([inObject isKindOfClass:[AIListGroup class]]){
-			[textField_service setStringValue:AILocalizedString(@"Group",nil)];
+			[textField_service setLocalizedString:AILocalizedString(@"Group",nil)];
 		}else{
 			[textField_service setStringValue:@""];
 		}

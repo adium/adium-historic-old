@@ -38,7 +38,7 @@
 {
 	[super viewDidLoad];
 	
-	[textView_textToSpeakLabel setStringValue:AILocalizedString(@"Text To Speak:",nil)];
+	[textView_textToSpeakLabel setLocalizedString:AILocalizedString(@"Text To Speak:",nil)];
 }
 
 /*
