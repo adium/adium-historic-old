@@ -14,6 +14,11 @@
 
 #import "SLGaimCocoaAdapter.h"
 
+@interface SLGaimCocoaAdapter (PRIVATE)
+- (void)callTimerFunc:(id)obj;
+- (void)callIOFunc:(id)obj;
+@end
+
 @implementation SLGaimCocoaAdapter
 
 /*
@@ -62,7 +67,7 @@ struct SourceInfo {
     gpointer user_data;
 };
 
-+ init
+- (id)init
 {
     sourceInfoDict = [[NSMutableDictionary alloc] init];
     fhDict = [[NSMutableDictionary alloc] init];
@@ -79,11 +84,11 @@ static guint adium_timeout_add_full(gint priority, guint interval,
 
     struct SourceInfo *info = (struct SourceInfo*)malloc(sizeof(struct SourceInfo));
 
-    NSTimer *timer = [NSTimer timerWithTimeInterval:(NSTimeInterval)interval/1e6
-                                             target:myself
-                                           selector:@selector(callTimerFunc:)
-                                          userInfo:[NSValue valueWithPointer:info]
-                                           repeats:YES];
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:(NSTimeInterval)interval/1e3
+                                                      target:myself
+                                                    selector:@selector(callTimerFunc:)
+                                                    userInfo:[NSValue valueWithPointer:info]
+                                                     repeats:YES];
     info->tag = sourceId;
     info->notify = notify;
     info->sourceFunction = function;
@@ -94,9 +99,9 @@ static guint adium_timeout_add_full(gint priority, guint interval,
     return sourceId++;
 }
 
-- (void) callTimerFunc:(id)userInfo
+- (void) callTimerFunc:(id)timer
 {
-    struct SourceInfo *info = [userInfo pointerValue];
+    struct SourceInfo *info = [[timer userInfo] pointerValue];
     if (! info->sourceFunction(info->user_data))
         adium_source_remove(info->tag);
 }
@@ -148,7 +153,6 @@ static gboolean adium_source_remove(guint tag) {
     if ([sourceInfo->source isKindOfClass:[NSTimer class]]) {
         NSTimer *timer = (NSTimer*) sourceInfo->source;
         [timer invalidate];
-        [timer release];
     } else { // file handle
         NSFileHandle *fh = (NSFileHandle*) sourceInfo->source;
         [fh release];
