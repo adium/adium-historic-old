@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.60 2004/04/18 23:58:09 evands Exp $
+$Id: ToDoList.txt,v 1.61 2004/04/20 13:27:56 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -104,6 +104,9 @@ Other:
     	+ "New message..." dialog should search for all contacts, and then after that offer the protocols from where you can talk to the buddy found. The way it works now seems a bit rare, as you have to select the protocol first, and maybe you just don't remember or something and you type the name (address book for example) of your buddy just to see it doesn't work.
 	+ Add preferences to disable 'Fast User Switching' auto-away, and to customize the message. [Colin]
 	+ Create a plugin to parse sed expressions, similar to the tex plugin.
+	+ Add export option to log viewer
+
+
 -------------------------------------------------------------------------------------------------------
 Big Stuff
 -------------------------------------------------------------------------------------------------------
@@ -221,6 +224,9 @@ Event integration:
 
 Deferring of initial message:
    Don't pop up a message window if one doesn't already exist.  Use some kind of dock indicator / list indicator.  Double click on list or dock menu item would display the message.  If a window is already open, new messages would create a tab as normal.  We could associate this option with the state system for some pretty cool behavior.
+
+Contact List import/export:
+   Import/export code is not fun. 
 
 
 -------------------------------------------------------------------------------------------------------
