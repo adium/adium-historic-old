@@ -9,8 +9,11 @@
 #import "ESAnnouncerAlertDetailPane.h"
 
 #define	CONTACT_ANNOUNCER_NIB		@"ContactAnnouncer"		//Filename of the announcer info view
-#define ANNOUNCER_ALERT_SHORT		@"Speak Text"
-#define ANNOUNCER_ALERT_LONG		@"Speak the text \"%@\""
+#define ANNOUNCER_ALERT_SHORT		AILocalizedString(@"Speak Specific Text",nil)
+#define ANNOUNCER_ALERT_LONG		AILocalizedString(@"Speak the text \"%@\"",nil)
+
+#define	ANNOUNCER_EVENT_ALERT_SHORT	AILocalizedString(@"Speak Event","short phrase for the contact alert which speaks the event")
+#define	ANNOUNCER_EVENT_ALERT_LONG	AILocalizedString(@"Speak the event aloud","short phrase for the contact alert which speaks the event")
 
 @interface ESAnnouncerPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -20,24 +23,30 @@
 
 - (void)installPlugin
 {
-    //Install our contact alert
-	[[adium contactAlertsController] registerActionID:@"SpeakText" withHandler:self];
+    //Install our contact alerts
+	[[adium contactAlertsController] registerActionID:CONTACT_ALERT_SPEAK_TEXT_IDENTIFIER
+										  withHandler:self];
+	[[adium contactAlertsController] registerActionID:CONTACT_ALERT_SPEAK_EVENT_IDENTIFIER
+										  withHandler:self];
     
     //Setup our preferences
     preferences = [[ESAnnouncerPreferences preferencePane] retain];
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ANNOUNCER_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_ANNOUNCER];
 
     //Install the contact info view
-    [NSBundle loadNibNamed:CONTACT_ANNOUNCER_NIB owner:self];
-//    contactView = [[AIPreferenceViewController controllerWithName:@"Announcer" categoryName:@"None" view:view_contactAnnouncerInfoView delegate:self] retain];
-//    [[adium contactController] addContactInfoView:contactView];
+/*
+	[NSBundle loadNibNamed:CONTACT_ANNOUNCER_NIB owner:self];
+    contactView = [[AIPreferenceViewController controllerWithName:@"Announcer" categoryName:@"None" view:view_contactAnnouncerInfoView delegate:self] retain];
+    [[adium contactController] addContactInfoView:contactView];
     [popUp_voice addItemsWithTitles:[[adium soundController] voices]];
+ */
     
     observingContent = NO;
     lastSenderString = nil;
 	
     //Observer preference changes
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_ANNOUNCER];
+	[[adium preferenceController] registerPreferenceObserver:self 
+													forGroup:PREF_GROUP_ANNOUNCER];
 }
 
 - (void)uninstallPlugin
@@ -240,17 +249,25 @@
 #pragma mark Speak Text Alert
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-	return(ANNOUNCER_ALERT_SHORT);
+	if([actionID isEqualToString:CONTACT_ALERT_SPEAK_TEXT_IDENTIFIER]){
+		return(ANNOUNCER_ALERT_SHORT);
+	}else{ /*Speak Event*/
+		return(ANNOUNCER_EVENT_ALERT_SHORT);
+	}
 }
 
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
-	NSString *textToSpeak = [details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
-
-	if(textToSpeak && [textToSpeak length]){
-		return([NSString stringWithFormat:ANNOUNCER_ALERT_LONG, textToSpeak]);
-	}else{
-		return(ANNOUNCER_ALERT_LONG);
+	if([actionID isEqualToString:CONTACT_ALERT_SPEAK_TEXT_IDENTIFIER]){		
+		NSString *textToSpeak = [details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
+		
+		if(textToSpeak && [textToSpeak length]){
+			return([NSString stringWithFormat:ANNOUNCER_ALERT_LONG, textToSpeak]);
+		}else{
+			return(ANNOUNCER_ALERT_LONG);
+		}
+	}else{ /*Speak Event*/
+		return(ANNOUNCER_EVENT_ALERT_LONG);
 	}
 }
 
@@ -261,12 +278,26 @@
 
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
-	return([ESAnnouncerAlertDetailPane actionDetailsPane]);
+	if([actionID isEqualToString:CONTACT_ALERT_SPEAK_TEXT_IDENTIFIER]){
+		return([ESAnnouncerAlertDetailPane actionDetailsPane]);
+	}else{ /*Speak Event*/
+		return(/*[ESAnnouncerEventAlertDetailPane actionDetailsPane]*/nil);
+	}
 }
 
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
-	NSString *textToSpeak = [details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
+	NSString *textToSpeak = nil;
+	
+	if([actionID isEqualToString:CONTACT_ALERT_SPEAK_TEXT_IDENTIFIER]){
+		textToSpeak = [details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
+	}else{ /*Speak Event*/
+		textToSpeak = [[adium contactAlertsController] naturalLanguageDescriptionForEventID:eventID
+																				 listObject:listObject
+																				   userInfo:userInfo
+																			 includeSubject:YES];		
+	}
+
 	if(textToSpeak){
 		[[adium soundController] speakText:textToSpeak];
 	}
@@ -274,7 +305,11 @@
 
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
 {
-	return(YES);
+	if([actionID isEqualToString:CONTACT_ALERT_SPEAK_TEXT_IDENTIFIER]){
+		return(YES);
+	}else{ /*Speak Event*/
+		return(NO);
+	}
 }
 
 @end

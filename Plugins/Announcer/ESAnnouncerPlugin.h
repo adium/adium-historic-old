@@ -8,30 +8,23 @@
 #import "ESAnnouncerPreferences.h"
 
 #define ANNOUNCER_DEFAULT_PREFS 	@"AnnouncerDefaults"
-#define PREF_GROUP_ANNOUNCER	@"Announcer"
-#define KEY_ANNOUNCER_ENABLED   @"Speech Enabled"
-#define KEY_ANNOUNCER_OUTGOING	@"Speak Outgoing"
-#define KEY_ANNOUNCER_INCOMING 	@"Speak Incoming"
-#define KEY_ANNOUNCER_STATUS	@"Speak Status"
-#define KEY_ANNOUNCER_TIME	@"Speak Time"
-#define KEY_ANNOUNCER_SENDER	@"Speak Sender"
-#define KEY_ANNOUNCER_MESSAGETEXT @"Speak Message Text"
+#define PREF_GROUP_ANNOUNCER		@"Announcer"
+#define KEY_ANNOUNCER_ENABLED		@"Speech Enabled"
+#define KEY_ANNOUNCER_OUTGOING		@"Speak Outgoing"
+#define KEY_ANNOUNCER_INCOMING		@"Speak Incoming"
+#define KEY_ANNOUNCER_STATUS		@"Speak Status"
+#define KEY_ANNOUNCER_TIME			@"Speak Time"
+#define KEY_ANNOUNCER_SENDER		@"Speak Sender"
+#define KEY_ANNOUNCER_MESSAGETEXT	@"Speak Message Text"
 
+#define KEY_ANNOUNCER_TEXT_TO_SPEAK @"TextToSpeak"
 
+#define VOICE_STRING				@"Voice"
+#define PITCH						@"Pitch"
+#define RATE						@"Rate"
 
-#define KEY_ANNOUNCER_TEXT_TO_SPEAK 	@"TextToSpeak"
-
-
-
-
-
-
-
-#define VOICE_STRING			@"Voice"
-#define PITCH				@"Pitch"
-#define RATE				@"Rate"
-
-#define CONTACT_ALERT_IDENTIFIER        @"Speak"
+#define CONTACT_ALERT_SPEAK_TEXT_IDENTIFIER		@"SpeakText"
+#define CONTACT_ALERT_SPEAK_EVENT_IDENTIFIER	@"SpeakEvent"
 
 @interface ESAnnouncerPlugin : AIPlugin <AIActionHandler> {
     ESAnnouncerPreferences	*preferences;
