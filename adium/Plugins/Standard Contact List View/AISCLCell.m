@@ -41,8 +41,8 @@
     NSFont		*font;
     NSAttributedString	*displayName;
     NSSize		displayNameSize;
-    AIMutableOwnerArray	*leftViewArray, *rightViewArray;
-    int			loop;
+    //AIMutableOwnerArray	*leftViewArray, *rightViewArray;
+    //int			loop;
     NSSize		cellSize = NSMakeSize(CELL_SIZE_ADJUST_X, 0);
     
     if(isGroup){ //move text away from flippy triangle
@@ -55,7 +55,7 @@
     cellSize.width += RIGHT_MARGIN;
 
     //Display all 'Left Views'
-    leftViewArray = [listObject displayArrayForKey:@"Left View"];
+/*    leftViewArray = [listObject displayArrayForKey:@"Left View"];
     if(leftViewArray && [leftViewArray count]){
         //Indent into the margin to save space
         cellSize.width -= LEFT_MARGIN;
@@ -76,7 +76,7 @@
 
             cellSize.width += ([handler widthForHeight:aRect.size.height computeMax:YES] + RIGHT_VIEW_PADDING);
         }
-    }
+    }*/
 
     //Text Font
     font = [(AISCLOutlineView *)controlView font];
@@ -165,23 +165,21 @@
         for(loop = 0;loop < [leftViewArray count];loop++){
             id <AIListObjectLeftView>	handler = [leftViewArray objectAtIndex:loop];
             NSRect				drawRect;
-            float				width, maxWidth;
+            float				width;
 
             //Calculate the icon size
-            maxWidth = [handler widthForHeight:cellFrame.size.height computeMax:YES];
-            width = [handler widthForHeight:cellFrame.size.height computeMax:NO];
+            width = [handler widthForHeight:cellFrame.size.height];
 
             //Create a destination rect for the icon
             drawRect = cellFrame;
-            drawRect.origin.x += (maxWidth - width);
             drawRect.size.width = width;
 
             //Draw the icon
             [handler drawInRect:drawRect];
 
             //Subtract the drawn area from the remaining rect
-            cellFrame.origin.x += (maxWidth + LEFT_VIEW_PADDING);
-            cellFrame.size.width -= (maxWidth + LEFT_VIEW_PADDING);
+            cellFrame.origin.x += (width + LEFT_VIEW_PADDING);
+            cellFrame.size.width -= (width + LEFT_VIEW_PADDING);
         }
     }
     
@@ -191,11 +189,10 @@
         for(loop = 0;loop < [rightViewArray count];loop++){
             id <AIListObjectLeftView>	handler = [rightViewArray objectAtIndex:loop];
             NSRect				drawRect;
-            float				width, maxWidth;
+            float				width;
 
             //Calculate the icon size
-            maxWidth = [handler widthForHeight:cellFrame.size.height computeMax:YES];
-            width = [handler widthForHeight:cellFrame.size.height computeMax:NO];
+            width = [handler widthForHeight:cellFrame.size.height];
 
             //Create a destination rect for the icon
             drawRect = cellFrame;
@@ -206,7 +203,7 @@
             [handler drawInRect:drawRect];
 
             //Subtract the drawn area from the remaining rect
-            cellFrame.size.width -= (maxWidth + RIGHT_VIEW_PADDING);
+            cellFrame.size.width -= (width + RIGHT_VIEW_PADDING);
         }
     }
 

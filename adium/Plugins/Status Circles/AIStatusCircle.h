@@ -52,7 +52,7 @@ typedef enum {
 - (void)setBezeled:(BOOL)inBezeled;
 
 - (void)drawInRect:(NSRect)inRect;
-- (float)widthForHeight:(int)inHeight computeMax:(BOOL)computeMax;
+- (float)widthForHeight:(int)inHeight;
 
     
 @end
