@@ -96,12 +96,18 @@
 										  userInfo:fileTransfer];
 }
 
-- (void)transferCanceled:(ESFileTransfer *)fileTransfer
+- (void)transferCanceledRemotely:(ESFileTransfer *)fileTransfer
 {
-    NSLog(@"canceled a file transfer...");	
 	[[owner contactAlertsController] generateEvent:FILE_TRANSFER_CANCELED
 									 forListObject:[fileTransfer contact] 
 										  userInfo:fileTransfer];
+	
+	[self transferCanceled:fileTransfer];
+}
+
+- (void)transferCanceled:(ESFileTransfer *)fileTransfer
+{
+    NSLog(@"canceled a file transfer...");	
 }
 
 - (void)transferComplete:(ESFileTransfer *)fileTransfer
@@ -183,7 +189,7 @@
 	}else if([eventID isEqualToString:FILE_TRANSFER_BEGAN]){
 		description = AILocalizedString(@"File Transfer Began",nil);
 	}else if([eventID isEqualToString:FILE_TRANSFER_CANCELED]){
-		description = AILocalizedString(@"File Transfer Canceled",nil);
+		description = AILocalizedString(@"File Transfer Canceled Remotely",nil);
 	}else if([eventID isEqualToString:FILE_TRANSFER_COMPLETE]){
 		description = AILocalizedString(@"File Transfer Complete",nil);
 	}else{		
@@ -204,7 +210,7 @@
 	}else if([eventID isEqualToString:FILE_TRANSFER_BEGAN]){
 		description = @"File Transfer Began";
 	}else if([eventID isEqualToString:FILE_TRANSFER_CANCELED]){
-		description = @"File Transfer Canceled";
+		description = @"File Transfer Canceled Remotely";
 	}else if([eventID isEqualToString:FILE_TRANSFER_COMPLETE]){
 		description = @"File Transfer Complete";
 	}else{		
