@@ -34,6 +34,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIServiceIcons.h>
+#import "KFTypeSelectTableView.h"
 
 #define LOG_VIEWER_NIB					@"LogViewer"
 #define LOG_VIEWER_JAG_NIB				@"LogViewerJag"
@@ -1489,6 +1490,11 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
     [self deleteSelectedLogs:nil];
+}
+
+- (void)configureTypeSelectTableView:(KFTypeSelectTableView *)tableView
+{
+    [tableView setSearchColumnIdentifiers:[NSSet setWithObjects:@"To", @"From", nil]];
 }
 
 - (IBAction)toggleDrawer:(id)sender
