@@ -118,8 +118,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 - (id)init
 {
 	NSTimer	*autoreleaseTimer;
-	
-	
+
 	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
 	
 	[super init];
@@ -1341,9 +1340,9 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 	NSMutableParagraphStyle		*centeredParagraphStyle;
 	NSMutableAttributedString   *message;
 	
-	centeredParagraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+	centeredParagraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
 	[centeredParagraphStyle setAlignment:NSCenterTextAlignment];
-	message = [[[NSMutableAttributedString alloc] init] autorelease];
+	message = [[NSMutableAttributedString alloc] init];
 	
 	//Title
 	NSString		*title;
@@ -1416,7 +1415,9 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 	[ESGaimNotifyEmailWindowController mainPerformSelector:@selector(showNotifyEmailWindowWithMessage:URL:)
 														withObject:message
 													   withObject:(urls ? [NSString stringWithUTF8String:urls[0]] : nil)];
-	
+	[centeredParagraphStyle release];
+	[message release];
+
 	return(gaim_adium_get_handle());
 }
 
