@@ -245,6 +245,14 @@
 	[menuItemSubmenu setMenuChangedMessagesEnabled:NO];
 	[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:NO];
 	
+	[menuItemSubmenu setAutoenablesItems:NO];
+	[contextualMenuItemSubmenu setAutoenablesItems:NO];
+
+	if([menuItemSubmenu respondsToSelector:@selector(setDelegate:)]){
+		[menuItemSubmenu setDelegate:self];
+		[contextualMenuItemSubmenu setDelegate:self];
+	}
+	
 	while(object = [enumerator nextObject]){
 		if([object isKindOfClass:NSDictionaryClass]){
 			[self insertBookmarks:object intoMenu:menuItemSubmenu];
@@ -324,7 +332,7 @@
 																				  action:nil
 																		   keyEquivalent:@""] autorelease];
 	[item setSubmenu:menu];
-	[menu setAutoenablesItems:YES];
+	[menu setAutoenablesItems:NO];
 	[inMenu addItem:item];
 }
 
@@ -348,25 +356,9 @@
  */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)sender
 {
-	if(sender == bookmarkRootMenuItem || sender == bookmarkRootContextualMenuItem){
-		//Does the bookmark menu need an update?
-		if(([importer bookmarksUpdated]) &&
-		   (!updatingMenu)){
-			[bookmarkRootMenuItem setSubmenu:nil];
-			[bookmarkRootContextualMenuItem setSubmenu:nil];
-			
-			[NSThread detachNewThreadSelector:@selector(buildBookmarkMenuThread)
-									 toTarget:self
-								   withObject:nil];
-		}
-		
-		//We only care to disable the main menu item (The rest are hidden within it, and do not matter)
-		NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-		return(responder && [responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]);
-		
-	}else{
-		return(YES);
-	}
+	//We only care to disable the main menu item (The rest are hidden within it, and do not matter)
+	NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+	return(responder && [responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]);
 }
 
 /*
@@ -418,8 +410,10 @@
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
 	
 	if([[item itemIdentifier] isEqualToString:@"InsertBookmark"]){
-		[self updateMenuForToolbarItem:item];
-		
+		[self performSelector:@selector(updateMenuForToolbarItem:)
+				   withObject:item
+				   afterDelay:0];
+
 		if (!toolbarItemArray) toolbarItemArray = [[NSMutableArray alloc] init];
 		[toolbarItemArray addObject:item];
 	}
@@ -460,6 +454,7 @@
 - (void)updateMenuForToolbarItem:(NSToolbarItem *)item
 {
 	NSMenu		*menu = [[[bookmarkRootMenuItem submenu] copy] autorelease];
+	[menu setDelegate:self];
 	NSString	*menuTitle = [menu title];
 	
 	//Add menu to view
@@ -470,6 +465,20 @@
 	[mItem setSubmenu:menu];
 	[mItem setTitle:(menuTitle ? menuTitle : @"")];
 	[item setMenuFormRepresentation:mItem];	
+}
+
+- (void)menuNeedsUpdate:(NSMenu *)menu
+{	
+	//Does the bookmark menu need an update?
+	if(([importer bookmarksUpdated]) &&
+	   (!updatingMenu)){
+		[bookmarkRootMenuItem setSubmenu:nil];
+		[bookmarkRootContextualMenuItem setSubmenu:nil];
+		
+		[NSThread detachNewThreadSelector:@selector(buildBookmarkMenuThread)
+								 toTarget:self
+							   withObject:nil];
+	}
 }
 
 @end
