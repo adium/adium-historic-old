@@ -10473,6 +10473,7 @@
 			fileRef = 4B7F278A05440C8D00CDFC90;
 			isa = PBXBuildFile;
 			settings = {
+				COMPILER_FLAGS = "-fconstant-cfstrings";
 			};
 		};
 		4B7F27C705440DE900CDFC90 = {
