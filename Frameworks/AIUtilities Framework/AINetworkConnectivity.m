@@ -46,15 +46,11 @@ static void localIPsChangedCallback(SCDynamicStoreRef store, CFArrayRef changedK
 static void networkReachabilityChangedCallback(SCNetworkReachabilityRef target, SCNetworkConnectionFlags flags, void *info);
 static BOOL checkGenericReachability();
 
-static AINetworkConnectivity				*myself = nil;
-//static NSMutableArray						*customReachabilityRefArray = nil;
-
 static NSTimer								*aggregatedChangesTimer = nil;
 static BOOL									networkIsReachable = NO;
 
 + (void)load
 {
-	myself = self;
 	if (USE_10_3_METHODS_CHECK){
 		//Schedule our generic reachability check which will be used for most accounts
 		//This is triggered as soon as it is added to the run loop, which means our networkIsReachable flag will be set.
