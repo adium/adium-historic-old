@@ -124,7 +124,7 @@
 			if(awayMessage && [awayMessage length] != 0){
 				AIChat	*chat = [contentObject chat];
 				//Create and send an idle bounce message (If the sender hasn't received one already)
-				if((![receivedAwayMessage containsObjectIdenticalTo:chat]) && ([chat listObject])){
+				if((![receivedAwayMessage containsObjectIdenticalTo:chat]) && ([chat name] == nil)){
 					[receivedAwayMessage addObject:chat];
 					
 					AIContentMessage	*responseContent;
