@@ -33,5 +33,6 @@
 - (double)greatestDoubleValue;
 - (NSDate *)earliestDate;
 - (NSImage *)firstImage;
+- (NSEnumerator *)objectEnumerator;
 
 @end
