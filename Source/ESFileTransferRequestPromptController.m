@@ -72,12 +72,12 @@
 }
 
 // called as the window closes
-- (BOOL)windowShouldClose:(id)sender
-{    
+- (void)windowWillClose:(id)sender
+{
+	[super windowWillClose:sender];
+	
     //release the window controller (ourself)
     [self autorelease];
-	
-    return(YES);
 }
 
 - (void)windowDidLoad
@@ -197,14 +197,6 @@
 				   withObject:nil
 				   afterDelay:0];
 	}
-}
-
-// closes this window
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
 }
 
 @end

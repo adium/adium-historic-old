@@ -24,9 +24,7 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)dealloc;
 - (void)refreshErrorDialog;
-- (BOOL)shouldCascadeWindows;
 - (void)windowDidLoad;
-- (BOOL)windowShouldClose:(id)sender;
 @end
 
 @implementation ErrorMessageWindowController
@@ -169,12 +167,6 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
     [[self window] makeKeyAndOrderFront:nil];
 }
 
-// prevents the system from moving our window around
-- (BOOL)shouldCascadeWindows
-{
-    return(NO);
-}
-
 // called after the about window loads, so we can set up the window before it's displayed
 - (void)windowDidLoad
 {
@@ -191,13 +183,13 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
 }
 
 // called as the window closes
-- (BOOL)windowShouldClose:(id)sender
-{    
+- (void)windowWillClose:(id)sender
+{
+	[super windowWillClose:sender];
+	
     //release the window controller (ourself)
     sharedErrorMessageInstance = nil;
     [self autorelease];
-
-    return(YES);
 }
 
 @end

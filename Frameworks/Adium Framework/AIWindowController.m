@@ -137,6 +137,14 @@
 }
 
 /*!
+ * Prevent the system from cascading our windows, since it interferes with window position memory
+ */
+- (BOOL)shouldCascadeWindows
+{
+    return(NO);
+}
+
+/*!
  * @brief Auto-saving window frame key
  *
  * This is the string used for saving this window's frame.  It should be unique to this window.

@@ -151,10 +151,10 @@
  * independently without needing a separate object to retain and release it.
  * We always allow our window to close, so always return YES from this method
  */
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
+	[super windowWillClose:sender];
 	[self autorelease];
-    return(YES);
 }
 
 /*!
@@ -163,14 +163,6 @@
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     [sheet orderOut:nil];
-}
-
-/*!
- * Prevent the system from cascading our windows, since it interferes with window position memory
- */
-- (BOOL)shouldCascadeWindows
-{
-    return(NO);
 }
 
 

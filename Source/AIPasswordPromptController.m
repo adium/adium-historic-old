@@ -22,11 +22,6 @@
 #define 	PASSWORD_PROMPT_NIB 		@"PasswordPrompt"
 #define		KEY_PASSWORD_WINDOW_FRAME	@"Password Prompt Frame"
 
-@interface AIPasswordPromptController (PRIVATE)
-- (BOOL)shouldCascadeWindows;
-- (BOOL)windowShouldClose:(id)sender;
-@end
-
 @implementation AIPasswordPromptController
 
 - (id)initWithWindowNibName:(NSString *)windowNibName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
@@ -104,25 +99,11 @@
 	[button_OK setEnabled:([[textField_password secureStringValue] length] != 0)];
 }
 
-// closes this window
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
-}
-
-// prevent the system from moving our window around
-- (BOOL)shouldCascadeWindows
-{
-    return(NO);
-}
-
 // called as the window closes
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
+	[super windowWillClose:sender];
     [self autorelease];
-    return(YES);
 }
 
 @end

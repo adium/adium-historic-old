@@ -141,16 +141,10 @@
     [[self window] center];
 }
 
-- (BOOL)shouldCascadeWindows
+- (void)windowWillClose:(id)sender
 {
-    return(NO);
-}
-
-- (BOOL)windowShouldClose:(id)sender
-{
+	[super windowWillClose:sender];
 	[[self class] destroySharedInstance];
-
-    return(YES);
 }
 
 @end

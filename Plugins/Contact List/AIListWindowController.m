@@ -49,7 +49,6 @@
 
 @interface AIListWindowController (PRIVATE)
 - (void)windowDidLoad;
-- (BOOL)windowShouldClose:(id)sender;
 - (void)_configureAutoResizing;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureToolbar;
@@ -121,10 +120,10 @@
 }
 
 //Close the contact list window
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
-	[super windowShouldClose:sender];
-	
+	[super windowWillClose:sender];
+		
     //Stop observing
 	[[adium preferenceController] unregisterPreferenceObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -133,8 +132,6 @@
     //Tell the interface to unload our window
     [[adium notificationCenter] postNotificationName:Interface_ContactListDidResignMain object:self];
 	[[adium notificationCenter] postNotificationName:Interface_ContactListDidClose object:self];
-
-    return(YES);
 }
 
 //Preferences have changed
@@ -341,11 +338,6 @@
 	}
 }
 
-//Prevent the system from altering our window positioning
-- (BOOL)shouldCascadeWindows
-{
-    return(NO);
-}
 
 // Auto-resizing support ------------------------------------------------------------------------------------------------
 #pragma mark Auto-resizing support

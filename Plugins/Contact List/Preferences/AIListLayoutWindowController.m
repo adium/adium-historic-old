@@ -98,12 +98,12 @@
 }
 
 //Window is closing
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
+	[super windowWillClose:sender];
+	
 	[tabViewItem_advancedContactBubbles autorelease];
 	[self autorelease];
-	
-    return(YES);
 }
 
 //Called as the sheet closes, dismisses the sheet

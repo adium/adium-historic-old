@@ -187,10 +187,10 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  * We always allow closing of the preference window, so always return YES from this method.  We take this
  * opportunity to save the state of our window and clean up before the window closes.
  */
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
-	[super windowShouldClose:sender];
-
+	[super windowWillClose:sender];
+		
 	//Save changes
 	[self _saveControlChanges];
 	
@@ -205,8 +205,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     //Close all panes and our shared instance
 	[loadedPanes makeObjectsPerformSelector:@selector(closeView)];
     [sharedPreferenceInstance autorelease]; sharedPreferenceInstance = nil;
-	
-    return(YES);
 }
 
 

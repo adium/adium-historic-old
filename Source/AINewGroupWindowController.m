@@ -49,14 +49,6 @@
 }
 
 /*!
- * @brief Stop automatic window positioning
- */
-- (BOOL)shouldCascadeWindows
-{
-    return(NO);
-}
-
-/*!
  * @brief Called as the user list edit sheet closes, dismisses the sheet
  */
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo

@@ -79,11 +79,10 @@
 /*!
  * @brief Window should close?
  */
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
+	[super windowWillClose:sender];
 	[[adium contactController] unregisterListObjectObserver:self];
-	
-	return [super windowShouldClose:sender];
 }
 
 /*!

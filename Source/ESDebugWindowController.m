@@ -92,14 +92,6 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 						   afterDelay:0.001];
 }
 
-//Close the window
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
-}
-
 //Close the debug window
 + (void)closeDebugWindow
 {
@@ -109,15 +101,13 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 }
 
 //called as the window closes
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
-	[super windowShouldClose:sender];
+	[super windowWillClose:sender];
 	
 	//Close down
 	[mutableDebugString release]; mutableDebugString = nil;
     [self autorelease]; sharedDebugWindowInstance = nil;
-	
-    return(YES);
 }
 
 #endif

@@ -97,11 +97,12 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 /*!
  * @brief Called as the window closes, release the shared window controller
  */
-- (BOOL)windowShouldClose:(id)sender
-{    
+- (void)windowWillClose:(id)sender
+{
+	[super windowWillClose:sender];
+	
     [sharedVersionCheckerInstance autorelease];
     sharedVersionCheckerInstance = nil;
-    return(YES);
 }
 
 

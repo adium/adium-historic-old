@@ -160,14 +160,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	[self setupMetaContactDrawer];
 }
 
-//Close the window
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
-}
-
 - (void)localizeTabViewItemTitles
 {
 	NSEnumerator	*enumerator = [[tabView_category tabViewItems] objectEnumerator];
@@ -196,12 +188,12 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 }
 
 //called as the window closes
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {	
 	NSEnumerator 		*enumerator;
     AIContactInfoPane	*pane;
 	
-	[super windowShouldClose:sender];
+	[super windowWillClose:sender];
 	
 	//Take focus away from any controls to ensure that they register changes and save
     [[self window] makeFirstResponder:tabView_category];
@@ -220,14 +212,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	//Close down
 	[[adium notificationCenter] removeObserver:self];
     [self autorelease]; sharedContactInfoInstance = nil;
-	
-    return(YES);
-}
-
-//prevent the system from moving our window around
-- (BOOL)shouldCascadeWindows
-{
-    return(NO);
 }
 
 - (NSImage *)tabView:(NSTabView *)tabView imageForTabViewItem:(NSTabViewItem *)tabViewItem

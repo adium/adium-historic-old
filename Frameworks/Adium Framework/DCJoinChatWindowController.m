@@ -28,8 +28,6 @@
 @interface DCJoinChatWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)windowDidLoad;
-- (BOOL)windowShouldClose:(id)sender;
-- (BOOL)shouldCascadeWindows;
 @end
 
 @implementation DCJoinChatWindowController
@@ -143,17 +141,11 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 	[self configureForAccount:selectedAccount];
 }
 
-- (BOOL)shouldCascadeWindows
+- (void)windowWillClose:(id)sender
 {
-    return(NO);
-}
-
-- (BOOL)windowShouldClose:(id)sender
-{
+	[super windowWillClose:sender];
 	sharedJoinChatInstance = nil;
     [self autorelease]; //Close the shared instance
-	
-    return(YES);
 }
 
 //Dealloc

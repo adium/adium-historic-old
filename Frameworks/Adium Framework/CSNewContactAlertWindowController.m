@@ -132,17 +132,10 @@
 }
 
 //Window is closing
-- (BOOL)windowShouldClose:(id)sender
+- (void)windowWillClose:(id)sender
 {
+	[super windowWillClose:sender];
 	[self cleanUpDetailsPane];
-	
-    return(YES);
-}
-
-//Stop automatic window positioning
-- (BOOL)shouldCascadeWindows
-{
-    return(NO);
 }
 
 //Called as the user list edit sheet closes, dismisses the sheet
