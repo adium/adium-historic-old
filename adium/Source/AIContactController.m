@@ -508,9 +508,6 @@
     return(delayedUpdating != 0);
 }
 
-#warning testing new syncmail
-
-
 // Internal --------------------------------------------------------------------------------
 //Call after making changes to an object on the contact list
 - (void)updateListForObject:(AIContactObject *)inObject saveChanges:(BOOL)saveChanges
