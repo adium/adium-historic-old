@@ -362,9 +362,10 @@ void Adium_HandleSignal(int i){
     return success;
 }
 
-//return zero or more pathnames to objects in the Application Support folders.
+//return zero or more pathnames to objects in the Application Support folders
+//and resources folder of the bundle
 //only those pathnames that exist are returned.
-- (NSArray *)applicationSupportPathsForName:(NSString *)name
+- (NSArray *)resourcePathsForName:(NSString *)name
 {
 	NSFileManager *manager = [NSFileManager defaultManager];
 	NSString *path = NULL;
@@ -377,6 +378,14 @@ void Adium_HandleSignal(int i){
 
 	FSRef ref;
 	OSStatus err = noErr;
+	
+	//Adium bundle
+	if(name) {
+		path = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:name] stringByExpandingTildeInPath];
+		if([manager fileExistsAtPath:path]) {
+			[pathArray addObject:path];
+		}
+	}
 
 	// ~/Library/Application\ Support
 	err = FSFindFolder(kUserDomain, kApplicationSupportFolderType, kDontCreateFolder, &ref);

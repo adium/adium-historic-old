@@ -64,7 +64,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 //Load our scripts
 - (void)loadScripts
 {
-	NSString		*internalPath = [[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_SCRIPTS] stringByExpandingTildeInPath];
+//	NSString		*internalPath = [[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_SCRIPTS] stringByExpandingTildeInPath];
 	NSEnumerator	*enumerator;
 	NSString 		*path;
 	
@@ -73,10 +73,10 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context);
 	[flatScriptArray release]; flatScriptArray = [[NSMutableArray alloc] init];
 	
 	//Load built-in scripts (within the bundle).
-	[scriptArray addObjectsFromArray:[self _loadScriptsFromDirectory:internalPath intoUsageArray:flatScriptArray]];
+//	[scriptArray addObjectsFromArray:[self _loadScriptsFromDirectory:internalPath intoUsageArray:flatScriptArray]];
 	
-	//Load external scripts (Application Support folders)
-	enumerator = [[adium applicationSupportPathsForName:@"Scripts"] objectEnumerator];
+	//Load scripts
+	enumerator = [[adium resourcePathsForName:@"Scripts"] objectEnumerator];
 	while(path = [enumerator nextObject]){
 		[scriptArray addObjectsFromArray:[self _loadScriptsFromDirectory:path intoUsageArray:flatScriptArray]];
 	}
