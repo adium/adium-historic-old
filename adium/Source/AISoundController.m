@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.33 2004/02/27 22:28:55 evands Exp $
+// $Id: AISoundController.m,v 1.34 2004/03/05 03:08:43 evands Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -209,12 +209,8 @@
     soundThreadActive = YES;
     [soundLock lock];
 
-#warning is this where the crash report below is crashing? Or perhaps in quicktime code?
-	//http://www.visualdistortion.org/crash/view.jsp?crash=6128
-	//evands - added a retain/release - necessary?
-	
     //Load the sound (The system apparently caches these)
-    sound = [[[NSSound alloc] initWithContentsOfFile:inPath byReference:YES] retain];
+    sound = [[NSSound alloc] initWithContentsOfFile:inPath byReference:YES];
     [sound setDelegate:self];
 
     //Play the sound
@@ -231,7 +227,6 @@
     //Unlock and cleanup
     [soundLock unlock];
     soundThreadActive = NO;
-	[sound release];
 	
     [pool release];
 }
@@ -248,10 +243,22 @@
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){    
         NSDictionary *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
-    
-        //Remember the values of some preferences
-        useCustomVolume = [[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] intValue];
-        customVolume = ([[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue] * 512.0);
+		
+		NSNumber *customVolumeNumber = [preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL];
+
+		//On Panther, we only use the QuickTime sound playing code if a customvolume is set,
+		//but on Jaguar we must always use QuickTime code since our threaded sound code will crash
+		if ([NSApp isOnPantherOrBetter]) {
+			useCustomVolume = [[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] intValue];
+			customVolume = ([customVolumeNumber floatValue] * 512.0);
+		} else {
+			useCustomVolume = YES;
+			if (customVolumeNumber)
+				customVolume = ([customVolumeNumber floatValue] * 512.0);
+			else
+				customVolume = 256.0;
+		}
+		
         muteSounds = ( [[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue] || [[preferenceDict objectForKey:KEY_SOUND_TEMPORARY_MUTE] intValue] );
         
         //If we should be muted now, clear out the speech array.
