@@ -132,14 +132,14 @@
     while((dict = [enumerator nextObject])){
         NSString	*type = [dict objectForKey:@"Type"];
 
-        if([type compare:@"Group"] == 0){
+        if([type isEqualToString:@"Group"]){
             [mutableArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
                 @"Group", @"Type",
                 [self _loadAwaysFromArray:[dict objectForKey:@"Contents"]], @"Contents",
                 [dict objectForKey:@"Name"], @"Name",
                 nil]];
 
-        }else if([type compare:@"Away"] == 0){
+        }else if([type isEqualToString:@"Away"]){
             [mutableArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
                 @"Away", @"Type",
                 [NSAttributedString stringWithData:[dict objectForKey:@"Message"]], @"Message",

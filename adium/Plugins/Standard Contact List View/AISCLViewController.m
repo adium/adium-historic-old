@@ -213,7 +213,7 @@
 //A contact list preference has changed
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST_DISPLAY] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]{
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 		
         NSColor		*color = [[prefDict objectForKey:KEY_SCL_CONTACT_COLOR] representedColor];
@@ -303,7 +303,7 @@
     }
    
     //Resizing
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]){
         //This is sloppy, we shouldn't be reading the interface plugin's preferences
         //We need to convert the desired size of SCLOutlineView to a lazy cache, so we can always tell it to resize from here
         //and not care what the interface is doing with the information.
@@ -521,7 +521,7 @@
 	
 	//No longer in a drag, so allow tooltips again
 	//No dropping into contacts
-    if([avaliableType compare:@"AIListObject"] == 0){
+    if([avaliableType isEqualToString:@"AIListObject"]){
 		id	primaryDragItem = [dragItems objectAtIndex:0];
 		
 		if([primaryDragItem isKindOfClass:[AIListGroup class]]){
@@ -557,7 +557,7 @@
     NSString	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
     
 	//No longer in a drag, so allow tooltips again
-    if([availableType compare:@"AIListObject"] == 0){
+    if([availableType isEqualToString:@"AIListObject"]){
 		//The tree root is not associated with our root contact list group, so we need to make that association here
 		if(item == nil) item = contactList;
 		

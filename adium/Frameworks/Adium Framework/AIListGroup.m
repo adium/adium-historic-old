@@ -133,7 +133,7 @@
 	AIListObject	*object;
 	
 	while(object = [enumerator nextObject]){
-		if([inUID compare:[object UID]] == 0 && [inServiceID compare:[object serviceID]] == 0){
+		if([inUID isEqualToString:[object UID]] && [inServiceID isEqualToString:[object serviceID]]){
 			return(object);
 		}
 	}

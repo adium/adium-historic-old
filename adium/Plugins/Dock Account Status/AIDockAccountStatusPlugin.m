@@ -49,10 +49,10 @@
 {
     NSString    *group = [[notification userInfo] objectForKey:@"Group"];
     
-    if(notification == nil || [group compare:PREF_GROUP_GENERAL] == 0){
+    if(notification == nil || [group isEqualToString:PREF_GROUP_GENERAL]){
 		NSString    *key = [[notification userInfo] objectForKey:@"Key"];
 
-		if(notification == nil || [key compare:KEY_ACTIVE_DOCK_ICON] == 0){
+		if(notification == nil || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]){
 			[self updateListObject:nil keys:nil silent:NO];
 		}
     }

@@ -721,7 +721,7 @@
     NSImage			*userImage;
     
     //Get the user icon
-    userImage = [[[content source] displayArrayForKey:@"UserIcon"] objectValue];
+    userImage = [[[content source] displayArrayForKey:KEY_USER_ICON] objectValue];
     if(!userImage) userImage = ([content isOutgoing] ? iconOutgoing : iconIncoming);
     
     //Create the spanning image cell
@@ -1056,8 +1056,6 @@
 //Lighten a string's text color if it is to be displayed as context
 - (NSAttributedString *)_stringWithContextStyle:(NSAttributedString *)inString
 {
-	
-	NSAttributedString			*tempString;
 	NSMutableAttributedString   *mutableTemp;
 	
 	// Remove all attributes

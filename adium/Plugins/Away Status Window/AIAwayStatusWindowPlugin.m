@@ -51,8 +51,8 @@
     NSString    *group = [[notification userInfo] objectForKey:@"Group"];
 
 	if(notification == nil ||
-	   [group compare:PREF_GROUP_AWAY_STATUS_WINDOW] == 0 ||
-	   ([group compare:GROUP_ACCOUNT_STATUS] == 0 && [notification object] == nil)){
+	   [group isEqualToString:PREF_GROUP_AWAY_STATUS_WINDOW] ||
+	   ([group isEqualToString:GROUP_ACCOUNT_STATUS] && [notification object] == nil)){
 
 		//Hide or show the away status window
 		if([[[adium preferenceController] preferenceForKey:KEY_SHOW_AWAY_STATUS_WINDOW group:PREF_GROUP_AWAY_STATUS_WINDOW] boolValue] && 

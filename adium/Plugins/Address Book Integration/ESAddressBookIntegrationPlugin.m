@@ -119,14 +119,14 @@
 			}
 		}
 		
-    } else if (automaticSync && [inModifiedKeys containsObject: @"UserIcon"]) {
+    } else if (automaticSync && [inModifiedKeys containsObject: KEY_USER_ICON]) {
         
 		//Find the person
         ABPerson *person = [self searchForObject:inObject];
         
         if (person){
 			//Set the person's image to the inObject's serverside User Icon.
-			NSImage	*image = [inObject statusObjectForKey:@"UserIcon"];
+			NSImage	*image = [inObject statusObjectForKey:KEY_USER_ICON];
 			if(image){
 				[person setImageData:[image TIFFRepresentation]];
 			}
@@ -162,7 +162,7 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_ADDRESSBOOK] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_ADDRESSBOOK]){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
         //load new displayFormat
 		enableImport = [[prefDict objectForKey:KEY_AB_ENABLE_IMPORT] boolValue];
@@ -184,7 +184,7 @@
     if (inData) {
         //Check if we retrieved data from the 'me' address book card
 		/*        if ((tag == meTag) && useABImages) {
-		[[adium preferenceController] setPreference:inData forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
+		[[adium preferenceController] setPreference:inData forKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
 		meTag = -1;
         }else{
 */
@@ -198,13 +198,13 @@
 				AIListObject            *listObject = [trackingDict objectForKey:tagNumber];
 				
 				//Apply the image at lowest priority
-				[[listObject displayArrayForKey:@"UserIcon"] setObject:image 
+				[[listObject displayArrayForKey:KEY_USER_ICON] setObject:image 
 															 withOwner:self
 														 priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];
 				
 				//Notify
 				[[adium contactController] listObjectAttributesChanged:listObject
-														  modifiedKeys:[NSArray arrayWithObject:@"UserIcon"]];	
+														  modifiedKeys:[NSArray arrayWithObject:KEY_USER_ICON]];	
 				
 			}
 			//No further need for the dictionary entry
@@ -273,7 +273,7 @@
 			//Default buddy icon
 			NSData *imageData = [me imageData];
 			if (imageData){
-				[[adium preferenceController] setPreference:imageData forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
+				[[adium preferenceController] setPreference:imageData forKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
 			}
 			
 			//Set account display names

@@ -373,12 +373,12 @@
 {
 	NSString	*identifier = [tableColumn identifier];
 	
-	if([identifier compare:@"check"] == 0){
+	if([identifier isEqualToString:@"check"]){
 		return([[accounts objectAtIndex:row] contactListEditable] ?
 			   [[accounts objectAtIndex:row] preferenceForKey:KEY_ADD_CONTACT_TO 
 														group:PREF_GROUP_ADD_CONTACT] :
 			   [NSNumber numberWithBool:NO]);
-	}else if([identifier compare:@"account"] == 0){
+	}else if([identifier isEqualToString:@"account"]){
 		return([[accounts objectAtIndex:row] formattedUID]);
 	}else{
 		return(@"");
@@ -395,7 +395,7 @@
 {
 	NSString	*identifier = [tableColumn identifier];
 
-	if([identifier compare:@"check"] == 0){
+	if([identifier isEqualToString:@"check"]){
 		[[accounts objectAtIndex:row] setPreference:[NSNumber numberWithBool:[object boolValue]] 
 											 forKey:KEY_ADD_CONTACT_TO 
 											  group:PREF_GROUP_ADD_CONTACT];

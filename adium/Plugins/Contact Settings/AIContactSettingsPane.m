@@ -3,13 +3,9 @@
 //  Adium
 //
 //  Created by Adam Iser on Thu Jun 03 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIContactSettingsPane.h"
-
-#define 		PREF_GROUP_ALIASES 			@"Aliases"
-#define			PREF_GROUP_NOTES			@"Notes"		//Preference group to store notes in
 
 @implementation AIContactSettingsPane
 

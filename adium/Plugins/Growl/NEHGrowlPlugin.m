@@ -102,7 +102,7 @@
 			description = [NSString stringWithFormat: AILocalizedString(@"%@",nil), message];
 		}
 		
-		if(buddyIcon = [[contact displayArrayForKey:@"UserIcon"] objectValue]){
+		if(buddyIcon = [[contact displayArrayForKey:KEY_USER_ICON] objectValue]){
 			iconData = [buddyIcon TIFFRepresentation];
 		}
 		

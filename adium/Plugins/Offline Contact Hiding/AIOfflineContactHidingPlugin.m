@@ -61,7 +61,7 @@
 //Our preferences have changed
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST_DISPLAY] == 0){
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]){
 		BOOL showOffline = [[[adium preferenceController] preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
 																	 group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
 		if(showOffline != [showOfflineMenuItem state]){

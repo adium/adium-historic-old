@@ -91,11 +91,11 @@
 {
     NSString    *group = [[notification userInfo] objectForKey:@"Group"];
     
-    if([group compare:GROUP_ACCOUNT_STATUS] == 0){
+    if([group isEqualToString:GROUP_ACCOUNT_STATUS]){
 		AIAccount	*account = [notification object];
 		NSString    *key = [[notification userInfo] objectForKey:@"Key"];
 		
-		if(account && [key compare:@"AutoConnect"] == 0){
+		if(account && [key isEqualToString:@"AutoConnect"]){
 			[self updateMenuForAccount:account];
 		}
     }

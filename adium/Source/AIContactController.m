@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.144 2004/06/07 05:53:48 evands Exp $
+// $Id: AIContactController.m,v 1.145 2004/06/07 06:54:13 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -1095,7 +1095,7 @@
 {
 	AIListGroup		*group;
 	
-	if(!groupUID || ![groupUID length] || [groupUID compare:ADIUM_ROOT_GROUP_NAME] == 0){
+	if(!groupUID || ![groupUID length] || [groupUID isEqualToString:ADIUM_ROOT_GROUP_NAME]){
 		//Return our root group if it is requested
 		group = contactList;
 	}else{

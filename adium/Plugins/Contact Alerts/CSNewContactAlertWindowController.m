@@ -145,7 +145,7 @@
 	NSString	*eventID = [alert objectForKey:KEY_EVENT_ID];
 	enumerator = [[popUp_event itemArray] objectEnumerator];
 	while(menuItem = [enumerator nextObject]){
-		if([eventID compare:[menuItem representedObject]] == 0){
+		if([eventID isEqualToString:[menuItem representedObject]]){
 			[popUp_event selectItem:menuItem];
 			break;
 		}
@@ -155,7 +155,7 @@
 	NSString	*actionID = [alert objectForKey:KEY_ACTION_ID];
 	enumerator = [[popUp_action itemArray] objectEnumerator];
 	while(menuItem = [enumerator nextObject]){
-		if([actionID compare:[menuItem representedObject]] == 0){
+		if([actionID isEqualToString:[menuItem representedObject]]){
 			[popUp_action selectItem:menuItem];
 			break;
 		}

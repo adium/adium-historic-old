@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.76 2004/06/01 18:34:22 evands Exp $
+// $Id: AIContentController.m,v 1.77 2004/06/07 06:54:14 evands Exp $
 
 #import "AIContentController.h"
 
@@ -418,7 +418,7 @@
 		   [[chat listObject] containingGroup] == [inContact containingGroup]){
 
 			//If we're on a different account now, switch the chat over
-			if([[inContact accountID] compare:[(AIListContact *)[chat listObject] accountID]] != 0){
+			if(![[inContact accountID] isEqualToString:[(AIListContact *)[chat listObject] accountID]]){
 				[self switchChat:chat
 					   toAccount:[[owner accountController] accountWithObjectID:[inContact accountID]]];
 			}
@@ -580,7 +580,7 @@
 	AIAccount		*account;
 	
 	while(account = [enumerator nextObject]){
-		if([[inObject serviceID] compare:[[[account service] handleServiceType] identifier]] == 0){
+		if([[inObject serviceID] isEqualToString:[[[account service] handleServiceType] identifier]]){
 			BOOL			knowsObject = NO;
 			BOOL			couldSendContent = NO;
 			AIListContact	*contactForAccount = [[owner contactController] existingContactWithService:[inObject serviceID]

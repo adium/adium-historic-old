@@ -296,7 +296,7 @@
         itemEnumerator = [itemArray objectEnumerator];
         while((item = [itemEnumerator nextObject])){
             
-            if([itemIdentifier compare:[item identifier]] == 0){
+            if([itemIdentifier isEqualToString:[item identifier]]){
                 existingItem = item;
                 break;
             }
@@ -475,7 +475,7 @@
     NSString		*toolbarIdentifier = [pasteboard stringForType:MINI_TOOLBAR_TYPE];
     
     //We only focus/accept a drag from ourself or the customization palette
-    if(toolbarIdentifier && [identifier compare:toolbarIdentifier] == 0){
+    if(toolbarIdentifier && [identifier isEqualToString:toolbarIdentifier]){
         //Start tracking the drag
         hoverSize = [[sender draggedImage] size];
         [self setFocusedForDrag:YES];
@@ -491,7 +491,7 @@
     NSString		*toolbarIdentifier = [pasteboard stringForType:MINI_TOOLBAR_TYPE];
     NSDragOperation	dragOperation = NSDragOperationNone;
     
-    if(toolbarIdentifier && [identifier compare:toolbarIdentifier] == 0){
+    if(toolbarIdentifier && [identifier isEqualToString:toolbarIdentifier]){
         NSEnumerator		*enumerator = [itemArray objectEnumerator];
         AIMiniToolbarItem	*toolbarItem;
         int			dragXLocation = [sender draggingLocation].x - [self frame].origin.x;
@@ -535,7 +535,7 @@
     NSString		*toolbarIdentifier = [pasteboard stringForType:MINI_TOOLBAR_TYPE];
 
     //We only focus/accept a drag from ourself or the customization palette
-    if(toolbarIdentifier && [identifier compare:toolbarIdentifier] == 0){
+    if(toolbarIdentifier && [identifier isEqualToString:toolbarIdentifier]){
         //Stop tracking the drag
         hoverIndex = -1;
         [self setFocusedForDrag:NO];
