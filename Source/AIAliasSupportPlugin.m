@@ -23,7 +23,7 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <Adium/AIListObject.h>
-#import <AiUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AIDictionaryAdditions.h>
 
 #define ALIASES_DEFAULT_PREFS		@"Alias Defaults"
 #define DISPLAYFORMAT_DEFAULT_PREFS	@"Display Format Defaults"
