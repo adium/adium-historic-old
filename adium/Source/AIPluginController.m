@@ -14,6 +14,7 @@
 					      \------------------------------------------------------------------------------------------------------ */
 
 #import <Adium/Adium.h>
+#import <AIUtilities/AIUtilities.h>
 #import "AIAdium.h"
 #import "AIPluginController.h"
 
@@ -64,7 +65,7 @@
 	if (counter == 0) { //bundle
 	    pluginPath = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath];
 	}else {  //user's folder, creating if necessary
-	    NSString *pluginPath = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath];
+	    pluginPath = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath];
 	    [AIFileUtilities createDirectory:pluginPath];
 	}
 	
@@ -109,7 +110,7 @@
 			    [[owner notificationCenter] removeObserver:plugin];
 			    [[NSNotificationCenter defaultCenter] removeObserver:plugin];
 			}
-			[[owner interfaceController] handleErrorMessage:@"Plugin load error" withDescription:[NSString stringWithFormat:@"The \"%@\" plugin failed to load properly.  It may be partially loaded.  If strange behavior ensues, remove it from Adium 2's plugin directory, then quit and relaunch Adium.", [pluginName stringByDeletingPathExtension]]];
+			[[owner interfaceController] handleErrorMessage:@"Plugin load error" withDescription:[NSString stringWithFormat:@"The \"%@\" plugin failed to load properly.  It may be partially loaded.  If strange behavior ensues, remove it from Adium 2's plugin directory (\"%@\"), then quit and relaunch Adium.", [pluginName stringByDeletingPathExtension], pluginPath]];
 			// It would probably be unsafe to call the plugin's uninstall
 		    NS_ENDHANDLER
 	    }
