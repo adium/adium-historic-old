@@ -5238,6 +5238,7 @@
 				4B3E885A06C2611300ABEA43,
 				C45F7F6506C75E210056B1F2,
 				4BF5264606CA736900CDBCEB,
+				34C1889C06CAB35D00FF5FF9,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5891,6 +5892,7 @@
 				4B3E885B06C2611300ABEA43,
 				C45F7F6606C75E210056B1F2,
 				4BF5264706CA736900CDBCEB,
+				34C1889D06CAB35D00FF5FF9,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7956,6 +7958,46 @@
 			path = "Adium 1.6 Pref Importer.app";
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34C1889A06CAB35D00FF5FF9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESAccountNetworkConnectivityPlugin.h;
+			path = "Plugins/Account Network Connectivity/ESAccountNetworkConnectivityPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1889B06CAB35D00FF5FF9 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESAccountNetworkConnectivityPlugin.m;
+			path = "Plugins/Account Network Connectivity/ESAccountNetworkConnectivityPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C1889C06CAB35D00FF5FF9 = {
+			fileRef = 34C1889A06CAB35D00FF5FF9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C1889D06CAB35D00FF5FF9 = {
+			fileRef = 34C1889B06CAB35D00FF5FF9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C188A006CAB36400FF5FF9 = {
+			children = (
+				34C1889A06CAB35D00FF5FF9,
+				34C1889B06CAB35D00FF5FF9,
+			);
+			isa = PBXGroup;
+			name = "Account Network Connectivity";
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		34C1CA8705B15B170055C2E3 = {
 			fileEncoding = 30;
@@ -10872,6 +10914,7 @@
 				34E385FF068FAA5100303451,
 				F5B53FBF0333ABA701A8010A,
 				F510B76D03339ED501A8010A,
+				34C188A006CAB36400FF5FF9,
 				4B81631203D1C24E00A8010A,
 				4BE8E5390483B59800A8010A,
 				4B74D3240602627200C21B7C,
