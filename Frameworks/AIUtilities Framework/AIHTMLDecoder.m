@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /*
-    A quick and simple HTML to Attributed string converter
+	A quick and simple HTML to Attributed string converter (ha! --jmelloy)
 */
 
 #import "AIHTMLDecoder.h"
@@ -24,13 +24,17 @@
 
 int HTMLEquivalentForFontSize(int fontSize);
 
+//this instance is used to do the work when class methods are called.
+static AIHTMLDecoder *classMethodInstance = nil;
+
 @interface AIHTMLDecoder (PRIVATE)
-+ (void)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
-+ (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
-+ (void)processLinkTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
-+ (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
-+ (BOOL)appendImage:(NSImage *)attachmentImage toString:(NSMutableString *)string withName:(NSString *)fileSafeChunk  altString:(NSString *)attachmentString imagesPath:(NSString *)imagesPath;
-+ (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string;
++ (AIHTMLDecoder *)classMethodInstance;
+- (void)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
+- (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
+- (void)processLinkTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
+- (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
+- (BOOL)appendImage:(NSImage *)attachmentImage toString:(NSMutableString *)string withName:(NSString *)fileSafeChunk  altString:(NSString *)attachmentString imagesPath:(NSString *)imagesPath;
+- (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string;
 @end
 
 @implementation AIHTMLDecoder
@@ -144,127 +148,181 @@ DeclareString(SpaceHTML);
 	InitString(SpaceHTML,@" &nbsp;");
 }
 
-//For compatability
-+ (NSString *)encodeHTML:(NSAttributedString *)inMessage encodeFullString:(BOOL)encodeFullString
++ (AIHTMLDecoder *)decoder
 {
-    if(encodeFullString){
-        return([self encodeHTML:inMessage headers:YES fontTags:YES includingColorTags:YES closeFontTags:YES
-					  styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES encodeSpaces:YES imagesPath:nil 
-			  attachmentsAsText:YES attachmentImagesOnlyForSending:NO simpleTagsOnly:NO]);
-    }else{
-        return([self encodeHTML:inMessage headers:NO fontTags:NO includingColorTags:NO closeFontTags:NO 
-					  styleTags:YES closeStyleTagsOnFontChange:NO encodeNonASCII:NO encodeSpaces:NO imagesPath:nil
-			  attachmentsAsText:YES attachmentImagesOnlyForSending:NO simpleTagsOnly:NO]);
-    }
+	return [[self new] autorelease];
 }
 
-// inMessage: AttributedString to encode
-// headers: YES to include HTML and BODY tags
-// fontTags: YES to include FONT tags
-// closeFontTags: YES to close the font tags
-// styleTags: YES to include B/I/U tags
-// closeStyleTagsOnFontChange: YES to close and re-insert style tags when opening a new font tag
-// encodeNonASCII: YES to encode non-ASCII characters as their HTML equivalents
-// encodeSpaces: YES to preserve spacing when displaying the HTML in a web browser by converting multiple spaces and tabs to &nbsp codes.
-// attachmentsAsText: YES to convert all attachments to their text equivalent if possible; NO to imbed <IMG SRC="...> tags
-// attachmentImagesOnlyForSending: YES to only convert attachments to <IMG SRC="...> tags which should be sent to another user
-// simpleTagsOnly: YES to separate out FONT tags and include only the most basic HTML elements
-+ (NSString *)encodeHTML:(NSAttributedString *)inMessage
-				 headers:(BOOL)includeHeaders 
-				fontTags:(BOOL)includeFontTags
-	  includingColorTags:(BOOL)includeColorTags 
-		   closeFontTags:(BOOL)closeFontTags
-			   styleTags:(BOOL)includeStyleTags
- closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange 
-		  encodeNonASCII:(BOOL)encodeNonASCII
-			encodeSpaces:(BOOL)encodeSpaces
-			  imagesPath:(NSString *)imagesPath
-	   attachmentsAsText:(BOOL)attachmentsAsText
-attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
-		  simpleTagsOnly:(BOOL)simpleOnly
++ (AIHTMLDecoder *)classMethodInstance
 {
-    NSFontManager	*fontManager = [NSFontManager sharedFontManager];
-    NSRange			searchRange;
-    NSColor			*pageColor = nil;
-    BOOL			openFontTag = NO;
+	if(classMethodInstance == nil)
+		classMethodInstance = [self new];
+	return classMethodInstance;
+}
 
-    //Setup the destination HTML string
-    NSMutableString *string = [NSMutableString stringWithString:(includeHeaders ? @"<HTML>" : @"")];
+- (id)initWithHeaders:(BOOL)includeHeaders
+			 fontTags:(BOOL)includeFontTags
+		closeFontTags:(BOOL)closeFontTags
+			colorTags:(BOOL)includeColorTags
+			styleTags:(BOOL)includeStyleTags
+	   encodeNonASCII:(BOOL)encodeNonASCII
+		 encodeSpaces:(BOOL)encodeSpaces
+	attachmentsAsText:(BOOL)attachmentsAsText
+attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
+	   simpleTagsOnly:(BOOL)simpleOnly
+{
+	self = [self init];
+	thingsToInclude.headers                        = includeHeaders;
+	thingsToInclude.fontTags                       = includeFontTags;
+	thingsToInclude.closingFontTags                = closeFontTags;
+	thingsToInclude.colorTags                      = includeColorTags;
+	thingsToInclude.styleTags                      = includeStyleTags;
+	thingsToInclude.nonASCII                       = encodeNonASCII;
+	thingsToInclude.allSpaces                      = encodeSpaces;
+	thingsToInclude.attachmentTextEquivalents      = attachmentsAsText;
+	thingsToInclude.attachmentImagesOnlyForSending = attachmentImagesOnlyForSending;
+	thingsToInclude.simpleTagsOnly                 = simpleOnly;
+	return self;
+}
 
-    //Setup the incoming message as a regular string, and get its length
-    NSString		*inMessageString = [inMessage string];
-    int				messageLength = [inMessageString length];
++ (AIHTMLDecoder *)decoderWithHeaders:(BOOL)includeHeaders
+							 fontTags:(BOOL)includeFontTags
+						closeFontTags:(BOOL)closeFontTags
+							colorTags:(BOOL)includeColorTags
+							styleTags:(BOOL)includeStyleTags
+					   encodeNonASCII:(BOOL)encodeNonASCII
+						 encodeSpaces:(BOOL)encodeSpaces
+					attachmentsAsText:(BOOL)attachmentsAsText
+	   attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
+					   simpleTagsOnly:(BOOL)simpleOnly
+{
+	return [[[self alloc] initWithHeaders:includeHeaders
+								 fontTags:includeFontTags
+							closeFontTags:closeFontTags
+								colorTags:includeColorTags
+								styleTags:includeStyleTags
+						   encodeNonASCII:encodeNonASCII
+							 encodeSpaces:encodeSpaces
+						attachmentsAsText:attachmentsAsText
+		   attachmentImagesOnlyForSending:attachmentImagesOnlyForSending
+						   simpleTagsOnly:simpleOnly] autorelease];
+}
+
+#pragma mark Work methods
+
+- (NSDictionary *)parseArguments:(NSString *)arguments
+{
+	NSMutableDictionary		*argDict;
+	NSScanner				*scanner;
+	static NSCharacterSet	*equalsSet = nil,
+		*dquoteSet = nil,
+		*squoteSet = nil,
+		*spaceSet = nil;
+	NSString				*key = nil, *value = nil;
+
+	//Setup
+	if(!equalsSet) equalsSet = [[NSCharacterSet characterSetWithCharactersInString:@"="]  retain];
+	if(!dquoteSet) dquoteSet = [[NSCharacterSet characterSetWithCharactersInString:@"\""] retain];
+	if(!squoteSet) squoteSet = [[NSCharacterSet characterSetWithCharactersInString:@"'"]  retain];
+	if(!spaceSet)  spaceSet  = [[NSCharacterSet characterSetWithCharactersInString:@" "]  retain];
+
+	scanner = [NSScanner scannerWithString:arguments];
+	argDict = [NSMutableDictionary dictionary];
+
+	while(![scanner isAtEnd]){
+		BOOL	validKey, validValue;
+
+		//Find a tag
+		validKey = [scanner scanUpToCharactersFromSet:equalsSet intoString:&key];
+		[scanner scanCharactersFromSet:equalsSet intoString:nil];
+
+		//check for quotes
+		if([scanner scanCharactersFromSet:dquoteSet intoString:nil]){
+			validValue = [scanner scanUpToCharactersFromSet:dquoteSet intoString:&value];
+			[scanner scanCharactersFromSet:dquoteSet intoString:nil];
+		} else if([scanner scanCharactersFromSet:squoteSet intoString:nil]) {
+			validValue = [scanner scanUpToCharactersFromSet:squoteSet intoString:&value];
+			[scanner scanCharactersFromSet:squoteSet intoString:nil];
+		} else {
+			validValue = [scanner scanUpToCharactersFromSet:spaceSet intoString:&value];
+		}
+
+		//Store in dict
+		if(validValue && value != nil && [value length] != 0 && validKey && key != nil && [key length] != 0){ //Watch out for invalid & empty tags
+			[argDict setObject:value forKey:key];
+		}
+	}
+
+	return argDict;
+}
+
+- (NSString *)encodeHTML:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesPath
+{
+	NSFontManager	*fontManager = [NSFontManager sharedFontManager];
+	NSRange			searchRange;
+	NSColor			*pageColor = nil;
+	BOOL			openFontTag = NO;
+
+	//Setup the destination HTML string
+	NSMutableString *string = [NSMutableString string];
+	if(thingsToInclude.headers) [string appendString:@"<HTML>"];
+
+	//Setup the incoming message as a regular string, and get its length
+	NSString		*inMessageString = [inMessage string];
+	int				messageLength = [inMessageString length];
 		
-    //Setup the default attributes
-    NSString		*currentFamily = [@"Helvetica" retain];
-    NSString		*currentColor = nil;
-    int				currentSize = 12;
-    BOOL			currentItalic = NO;
-    BOOL			currentBold = NO;
-    BOOL			currentUnderline = NO;
-    
-    //Append the body tag (If there is a background color)
-    if(includeHeaders && messageLength > 0 && (pageColor = [inMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil])){
-        [string appendString:@"<BODY BGCOLOR=\"#"];
-        [string appendString:[pageColor hexString]];
-        [string appendString:@"\">"];
-    }
+	//Setup the default attributes
+	NSString		*currentFamily = [@"Helvetica" retain];
+	NSString		*currentColor = nil;
+	int				currentSize = 12;
+	BOOL			currentItalic = NO;
+	BOOL			currentBold = NO;
+	BOOL			currentUnderline = NO;
+	
+	//Append the body tag (If there is a background color)
+	if(thingsToInclude.headers && messageLength > 0 && (pageColor = [inMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil])){
+		[string appendString:@"<BODY BGCOLOR=\"#"];
+		[string appendString:[pageColor hexString]];
+		[string appendString:@"\">"];
+	}
 
-    //Loop through the entire string
-    searchRange = NSMakeRange(0,0);
-    while(searchRange.location < messageLength){
-        NSDictionary	*attributes = [inMessage attributesAtIndex:searchRange.location effectiveRange:&searchRange];
-        NSFont			*font = [attributes objectForKey:NSFontAttributeName];
-        NSString		*color = [[attributes objectForKey:NSForegroundColorAttributeName] hexString];
-        NSString		*familyName = [font familyName];
-        float			pointSize = [font pointSize];
-        
-        NSFontTraitMask	traits = [fontManager traitsOfFont:font];
-        BOOL			hasUnderline = [[attributes objectForKey:NSUnderlineStyleAttributeName] intValue];
-        BOOL			isBold = (traits & NSBoldFontMask);
-        BOOL			isItalic = (traits & NSItalicFontMask);
-        
-        NSString		*link = [attributes objectForKey:NSLinkAttributeName];
-        NSMutableString	*chunk = [[inMessageString substringWithRange:searchRange] mutableCopy];
+	//Loop through the entire string
+	searchRange = NSMakeRange(0,0);
+	while(searchRange.location < messageLength){
+		NSDictionary	*attributes = [inMessage attributesAtIndex:searchRange.location effectiveRange:&searchRange];
+		NSFont			*font = [attributes objectForKey:NSFontAttributeName];
+		NSString		*color = [[attributes objectForKey:NSForegroundColorAttributeName] hexString];
+		NSString		*familyName = [font familyName];
+		float			pointSize = [font pointSize];
 
-        //
-        //if(!color) color = defaultColor;
-        
-        //Font (If the color, font, or size has changed)
-        if(includeFontTags && (pointSize != currentSize ||
+		NSFontTraitMask	traits = [fontManager traitsOfFont:font];
+		BOOL			hasUnderline = [[attributes objectForKey:NSUnderlineStyleAttributeName] intValue];
+		BOOL			isBold = (traits & NSBoldFontMask);
+		BOOL			isItalic = (traits & NSItalicFontMask);
+
+		NSString		*link = [attributes objectForKey:NSLinkAttributeName];
+		NSMutableString	*chunk = [[inMessageString substringWithRange:searchRange] mutableCopy];
+
+		//Font (If the color, font, or size has changed)
+		if(thingsToInclude.fontTags && (pointSize != currentSize ||
 							   ![familyName isEqualToString:currentFamily] ||
 							   (color && ![color isEqualToString:currentColor]) ||
 							   (!color && currentColor))){
-		
-            //Close any existing font tags, and open a new one
-            if(closeFontTags && openFontTag){
-                [string appendString:CloseFontTag];
-            }
-			if (!simpleOnly){
+
+			//Close any existing font tags, and open a new one
+			if(thingsToInclude.closingFontTags && openFontTag){
+				[string appendString:CloseFontTag];
+			}
+			if (!thingsToInclude.simpleTagsOnly){
 				openFontTag = YES;
 				[string appendString:OpenFontTag];
 			}
 
-            //Family
-            if(![familyName isEqualToString:currentFamily] || closeFontTags){
-                
-				if (simpleOnly){
+			//Family
+			if(familyName && (![familyName isEqualToString:currentFamily] || thingsToInclude.closingFontTags)){
+				if (thingsToInclude.simpleTagsOnly){
 					[string appendString:[NSString stringWithFormat:@"<FONT FACE=\"%@\">",familyName]];
 				}else{
-					/*
-					int langNum = 0; 
-					
-					//(traits | NSNonStandardCharacterSetFontMask) seems to be the proper test... but it is true for all fonts!
-					//NSMacOSRomanStringEncoding seems to be the encoding of all standard Roman fonts... and langNum="11" seems to make the others send properly.
-					//It serves us well here.  Once non-AIM HTML is coming through, this will probably need to be an option in the function call.
-					if ([font mostCompatibleStringEncoding] != NSMacOSRomanStringEncoding) {
-						langNum = 11;
-					}   
-					
-					[string appendString:[NSString stringWithFormat:@" FACE=\"%@\" LANG=\"%i\"",familyName,langNum]];
-					 */
-					
-					
 					//(traits | NSNonStandardCharacterSetFontMask) seems to be the proper test... but it is true for all fonts!
 					//NSMacOSRomanStringEncoding seems to be the encoding of all standard Roman fonts... and langNum="11" seems to make the others send properly.
 					//It serves us well here.  Once non-AIM HTML is coming through, this will probably need to be an option in the function call.
@@ -273,39 +331,37 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 					} else {
 						[string appendString:[NSString stringWithFormat:@" FACE=\"%@\"",familyName]];
 					}
-					
 
 				}
-                [currentFamily release]; currentFamily = [familyName retain];
-            }
+				[currentFamily release]; currentFamily = [familyName retain];
+			}
 
-            //Size
-            if((pointSize != currentSize) && !simpleOnly){
-                [string appendString:[NSString stringWithFormat:SizeTag, (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
-                currentSize = pointSize;
-				
-            }
-			
-            //Color
-            if(includeColorTags && (([color compare:currentColor] || (currentColor && !color)) || closeFontTags)){
+			//Size
+			if((pointSize != currentSize) && !thingsToInclude.simpleTagsOnly){
+				[string appendString:[NSString stringWithFormat:SizeTag, (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
+				currentSize = pointSize;
+			}
+
+			//Color
+			if(thingsToInclude.colorTags && (([color compare:currentColor] || (currentColor && !color)) || thingsToInclude.closingFontTags)){
 				if (color){
-					if(simpleOnly){
+					if(thingsToInclude.simpleTagsOnly){
 						[string appendString:[NSString stringWithFormat:@"<FONT COLOR=\"#%@\">",color]];	
 					}else{
 						[string appendString:[NSString stringWithFormat:@" COLOR=\"#%@\"",color]];
 					}
 				}
-                [currentColor release]; currentColor = [color retain];
-            }
+				[currentColor release]; currentColor = [color retain];
+			}
 
-            //Close the font tag if necessary
-			if (!simpleOnly){
+			//Close the font tag if necessary
+			if (!thingsToInclude.simpleTagsOnly){
 				[string appendString:GreaterThan];
 			}
-        }
+		}
 
-        //Style (Bold, italic, underline)
-        if(includeStyleTags){			
+		//Style (Bold, italic, underline)
+		if(thingsToInclude.styleTags){			
 			if(currentItalic && !isItalic){
 				[string appendString:@"</I>"];
 				currentItalic = NO;
@@ -329,25 +385,25 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 				[string appendString:@"<B>"];
 				currentBold = YES;
 			}
-        }
-        
-        //Link
-        if(link && [link length] != 0){
+		}
+
+		//Link
+		if(link && [link length] != 0){
 			NSString	*linkString = ([link isKindOfClass:[NSURL class]] ? [(NSURL *)link absoluteString] : link);
-			
-            [string appendString:@"<a href=\""];
+
+			[string appendString:@"<a href=\""];
 			[string appendString:linkString];
-			if (!simpleOnly){
+			if (!thingsToInclude.simpleTagsOnly){
 				[string appendString:@"\" title=\""];
 				[string appendString:linkString];
 			}
-            [string appendString:@"\">"];
-        }
+			[string appendString:@"\">"];
+		}
 
-        //Image Attachments
+		//Image Attachments
 		if([attributes objectForKey:NSAttachmentAttributeName]){
 			int i;
-			
+
 			for(i = 0; (i < searchRange.length); i++){ //Each attachment takes a character.. they are grouped by the attribute scan
 				NSTextAttachment *textAttachment = [[inMessage attributesAtIndex:searchRange.location+i effectiveRange:nil] objectForKey:NSAttachmentAttributeName];
 				if (textAttachment){
@@ -357,8 +413,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 						//Suppress compiler stupidity
 						AITextAttachmentExtension *attachment = (AITextAttachmentExtension *)textAttachment;
-						
-						//
+
 						if((imagesPath) &&
 						   ([attachment shouldSaveImageForLogging]) && 
 						   ([[attachment attachmentCell] respondsToSelector:@selector(image)])){
@@ -373,13 +428,13 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 										 withName:[attachmentString safeFilenameString]
 										altString:attachmentString
 									   imagesPath:imagesPath]){
-								
+
 								//We were succesful appending the image tag, so release this chunk
 								[chunk release]; chunk = nil;	
 							}
-							
-						}else if(!attachmentsAsText &&
-								 (!attachmentImagesOnlyForSending || ![attachment shouldAlwaysSendAsText])){
+
+						}else if(!thingsToInclude.attachmentTextEquivalents &&
+								 (!thingsToInclude.attachmentImagesOnlyForSending || ![attachment shouldAlwaysSendAsText])){
 							//We want attachments as images where appropriate, and this attachment is not marked
 							//to always send as text.  The attachment will have an imagePath pointing to a file
 							//which we can link directly via an img tag.
@@ -389,10 +444,10 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 							[string appendFormat:@"<img src=\"file://%@\" alt=\"%@\" width=\"%i\" height=\"%i\">",
 								[[attachment imagePath] stringByEscapingForHTML], [[attachment string] stringByEscapingForHTML],
 								(int)imageSize.width, (int)imageSize.height];
-							
+
 							//Release the chunk
 							[chunk release]; chunk = nil;
-							
+
 						}else{
 							//We should replace the attachment with its textual equivalent if possible
 
@@ -400,7 +455,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 							if (attachmentString){
 								[string appendString:attachmentString];
 							}
-							
+
 							[chunk release]; chunk = nil;
 						}
 					}else{
@@ -409,9 +464,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 						NSFileWrapper   *fileWrapper = [textAttachment fileWrapper];
 						NSDictionary	*fileAttributes = [fileWrapper fileAttributes];
 						OSType			HFSTypeCode;
-						
+
 						HFSTypeCode = [[fileAttributes objectForKey:NSFileHFSTypeCode] unsignedLongValue];
-						
+
 						//Check the HFSTypeCode (encoded to the NSString format [NSImage imageFileTypes] uses)
 						//We also want to ensure that we have a path for writing out images; otherwise a normal
 						//attachment-to-file-transfer tagging is in order.
@@ -419,7 +474,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 							[[NSImage imageFileTypes] containsObject:NSFileTypeForHFSTypeCode(HFSTypeCode)]){
 
 							NSString	*imageName = [fileWrapper preferredFilename];
-							
+
 							//We've got an image, so the attachment's attachmentCell 
 							//already has the NSImage we want to append
 							if ([self appendImage:[[textAttachment attachmentCell] performSelector:@selector(image)]
@@ -427,12 +482,11 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 										 withName:imageName
 										altString:imageName
 									   imagesPath:imagesPath]){
-								
+
 								//We were succesful appending the image tag, so release this chunk
 								[chunk release]; chunk = nil;	
 							}
 						}else{
-							
 							//Got a non-image file.  Use a special Adium tag so code elsewhere knows to handle what
 							//was previously the attachment as a file transfer.
 							if ([fileWrapper isKindOfClass:[ESFileWrapperExtension class]]){
@@ -447,20 +501,18 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 									if (path){
 										[self appendFileTransferReferenceFromPath:path
 																		 toString:string];
-										
+
 										//We were succesful appending the FT tag, so release this chunk
 										[chunk release]; chunk = nil;	
 									}
 								}
-								
 							}
 						}
 					}
 				}
-			}			
+			}
 		}
-		
-       
+
 		if(chunk){
 			//Escape special HTML characters.
 			[chunk replaceOccurrencesOfString:Ampersand withString:AmpersandHTML
@@ -469,8 +521,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
 			[chunk replaceOccurrencesOfString:GreaterThan withString:GreaterThanHTML
 									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
-			
-			if(encodeSpaces){
+
+			if(thingsToInclude.allSpaces){
 				// Replace the tabs first, if they exist, so that it creates a leading " " when the tab is the initial character, and 
 				// so subsequent tab formatting is preserved.
 				[chunk replaceOccurrencesOfString:Tab withString:TabHTML
@@ -488,10 +540,11 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 										  options:NSLiteralSearch
 											range:NSMakeRange(0, [chunk length])];
 			}
-			
-			//If we need to encode non-ASCII to HTML, append string character by character, replacing any non-ascii characters with the designated unicode
-			//escape sequence.
-			if (encodeNonASCII) {
+
+			//If we need to encode non-ASCII to HTML, append string character by
+			//  character, replacing any non-ascii characters with the
+			//  designated SGML escape sequence.
+			if (thingsToInclude.nonASCII) {
 				unsigned i;
 				unsigned length = [chunk length];
 				for(i = 0; i < length; i++){
@@ -512,327 +565,305 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 				[chunk replaceOccurrencesOfString:Newline withString:BRTag options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
 				[string appendString:chunk];
 			}
-			
+
 			//Release the chunk
 			[chunk release];
 		}
-			
-        //Close Link
-        if(link && [link length] != 0){
-            [string appendString:@"</a>"];
-        }
 
-        searchRange.location += searchRange.length;
-    }
+		//Close Link
+		if(link && [link length] != 0){
+			[string appendString:@"</a>"];
+		}
 
-    [currentFamily release];
-    [currentColor release];
-	
-    //Finish off the HTML
-    if(includeStyleTags && currentItalic) [string appendString:@"</I>"];
-    if(includeStyleTags && currentBold) [string appendString:@"</B>"];
-    if(includeStyleTags && currentUnderline) [string appendString:@"</U>"];
-    if(includeFontTags && closeFontTags && openFontTag) [string appendString:CloseFontTag];	//Close any open font tag
-    if(includeHeaders && pageColor) [string appendString:@"</BODY>"];				//Close the body tag
-    if(includeHeaders) [string appendString:@"</HTML>"];					//Close the HTML
+		searchRange.location += searchRange.length;
+	}
 
-    return(string);
+	[currentFamily release];
+	[currentColor release];
+
+	//Finish off the HTML
+	if(thingsToInclude.styleTags) {
+		if(currentItalic) [string appendString:@"</I>"];
+		if(currentBold) [string appendString:@"</B>"];
+		if(currentUnderline) [string appendString:@"</U>"];
+	}
+	if(thingsToInclude.fontTags && thingsToInclude.closingFontTags && openFontTag) [string appendString:CloseFontTag]; //Close any open font tag
+	if(thingsToInclude.headers && pageColor) [string appendString:@"</BODY>"]; //Close the body tag
+	if(thingsToInclude.headers) [string appendString:@"</HTML>"]; //Close the HTML
+
+	NSLog(@"encoded %@", inMessage);
+	NSLog(@"to HTML %@", string);
+	return(string);
 }
 
-int HTMLEquivalentForFontSize(int fontSize)
+- (NSAttributedString *)decodeHTML:(NSString *)inMessage
 {
-    if(fontSize <= 9){
-        return(1);
-    }else if(fontSize <= 10){
-        return(2);
-    }else if(fontSize <= 12){
-        return(3);
-    }else if(fontSize <= 14){
-        return(4);
-    }else if(fontSize <= 18){
-        return(5);
-    }else if(fontSize <= 24){
-        return(6);
-    }else{
-        return(7);
-    }
-}
+	NSScanner					*scanner;
+	static NSCharacterSet		*tagCharStart = nil, *tagEnd = nil, *charEnd = nil, *absoluteTagEnd = nil;
+	NSString					*chunkString, *tagOpen;
+	NSMutableAttributedString	*attrString;
+	AITextAttributes			*textAttributes;
+	BOOL						send = NO, receive = NO, inDiv = NO;
 
-//
-+ (NSAttributedString *)decodeHTML:(NSString *)inMessage
-{
-    NSScanner					*scanner;
-    NSCharacterSet				*tagCharStart, *tagEnd, *charEnd, *absoluteTagEnd;
-    NSString					*chunkString, *tagOpen;
-    NSMutableAttributedString	*attrString;
-    AITextAttributes			*textAttributes;
-    BOOL						send = NO, receive = NO, inDiv = NO;
+	//set up
+	textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
+	attrString = [[NSMutableAttributedString alloc] init];
 
-    //set up
-    textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
-    attrString = [[NSMutableAttributedString alloc] init];
+	if(!tagCharStart)     tagCharStart = [[NSCharacterSet characterSetWithCharactersInString:TagCharStartString] retain];
+	if(!tagEnd)                 tagEnd = [[NSCharacterSet characterSetWithCharactersInString:SpaceGreaterThan] retain];
+	if(!charEnd)               charEnd = [[NSCharacterSet characterSetWithCharactersInString:Semicolon]          retain];
+	if(!absoluteTagEnd) absoluteTagEnd = [[NSCharacterSet characterSetWithCharactersInString:GreaterThan] retain];
 
-    tagCharStart = [NSCharacterSet characterSetWithCharactersInString:TagCharStartString];
-    tagEnd = [NSCharacterSet characterSetWithCharactersInString:SpaceGreaterThan];
-    charEnd = [NSCharacterSet characterSetWithCharactersInString:Semicolon];
-    absoluteTagEnd = [NSCharacterSet characterSetWithCharactersInString:GreaterThan];
+	scanner = [NSScanner scannerWithString:inMessage];
+	[scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
 
-    scanner = [NSScanner scannerWithString:inMessage];
-    [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
+	//Parse the HTML
+	while(![scanner isAtEnd]){
+		//Find an HTML tag or escaped character
+		if([scanner scanUpToCharactersFromSet:tagCharStart intoString:&chunkString]){
+			[attrString appendString:chunkString withAttributes:[textAttributes dictionary]];
+		}
 
-    //Parse the HTML
-    while(![scanner isAtEnd]){
-        //Find an HTML tag or escaped character
-        if([scanner scanUpToCharactersFromSet:tagCharStart intoString:&chunkString]){
-            [attrString appendString:chunkString withAttributes:[textAttributes dictionary]];
-        }
+		//Process the tag
+		if([scanner scanCharactersFromSet:tagCharStart intoString:&tagOpen]){ //If a tag wasn't found, we don't process.
+			unsigned scanLocation = [scanner scanLocation]; //Remember our location (if this is an invalid tag we'll need to move back)
 
-        //Process the tag
-        if([scanner scanCharactersFromSet:tagCharStart intoString:&tagOpen]){ //If a tag wasn't found, we don't process.
-            unsigned scanLocation = [scanner scanLocation]; //Remember our location (if this is an invalid tag we'll need to move back)
-
-            if([tagOpen isEqualToString:LessThan]){ // HTML <tag>
-                BOOL validTag = [scanner scanUpToCharactersFromSet:tagEnd intoString:&chunkString]; //Get the tag
-                if(validTag){ 
-                    //HTML
-                    if([chunkString caseInsensitiveCompare:HTML] == 0){
+			if([tagOpen isEqualToString:LessThan]){ // HTML <tag>
+				BOOL validTag = [scanner scanUpToCharactersFromSet:tagEnd intoString:&chunkString]; //Get the tag
+				if(validTag){ 
+					//HTML
+					if([chunkString caseInsensitiveCompare:HTML] == 0){
 						//We ignore stuff inside the HTML tag, but don't want to see the end of it
-                        [scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
-                    }else if([chunkString caseInsensitiveCompare:CloseHTML] == 0){
-                        //We are done
+						[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
+					}else if([chunkString caseInsensitiveCompare:CloseHTML] == 0){
+						//We are done
 						break;
 
-                    //PRE -- ignore attributes for logViewer
-                    }else if([chunkString caseInsensitiveCompare:@"PRE"] == 0 ||
+					//PRE -- ignore attributes for logViewer
+					}else if([chunkString caseInsensitiveCompare:@"PRE"] == 0 ||
 							 [chunkString caseInsensitiveCompare:@"/PRE"] == 0){
 
-                        [scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
-                        
-                        [textAttributes setTextColor:[NSColor blackColor]];
-                    //DIV
-                    }else if ([chunkString caseInsensitiveCompare:@"DIV"] == 0){
-                        [scanner scanUpToCharactersFromSet:absoluteTagEnd 				
+						[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
+
+						[textAttributes setTextColor:[NSColor blackColor]];
+					//DIV
+					}else if ([chunkString caseInsensitiveCompare:@"DIV"] == 0){
+						[scanner scanUpToCharactersFromSet:absoluteTagEnd
 												intoString:&chunkString];
-                        inDiv = YES;
-                        if ([chunkString caseInsensitiveCompare:@" class=\"send\""] == 0) {
-                            send = YES;
-                            receive = NO;
-                        } else if ([chunkString caseInsensitiveCompare:@" class=\"receive\""] == 0) {
-                            receive = YES;
-                            send = NO;
-                        } else if ([chunkString caseInsensitiveCompare:@" class=\"status\""] == 0) {
-                            [textAttributes setTextColor:[NSColor grayColor]];
-                        }
-                    }else if ([chunkString caseInsensitiveCompare:@"/DIV"] == 0) {
-                        inDiv = NO;
-                    //LINK
-                    }else if([chunkString caseInsensitiveCompare:@"A"] == 0){
-                        //[textAttributes setUnderline:YES];
-                        //[textAttributes setTextColor:[NSColor blueColor]];
-                        if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
-                            [self processLinkTagArgs:[self parseArguments:chunkString] attributes:textAttributes]; //Process the linktag's contents
-                        }
+						inDiv = YES;
+						if ([chunkString caseInsensitiveCompare:@" class=\"send\""] == 0) {
+							send = YES;
+							receive = NO;
+						} else if ([chunkString caseInsensitiveCompare:@" class=\"receive\""] == 0) {
+							receive = YES;
+							send = NO;
+						} else if ([chunkString caseInsensitiveCompare:@" class=\"status\""] == 0) {
+							[textAttributes setTextColor:[NSColor grayColor]];
+						}
+					}else if ([chunkString caseInsensitiveCompare:@"/DIV"] == 0) {
+						inDiv = NO;
+					//LINK
+					}else if([chunkString caseInsensitiveCompare:@"A"] == 0){
+						//[textAttributes setUnderline:YES];
+						//[textAttributes setTextColor:[NSColor blueColor]];
+						if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
+							[self processLinkTagArgs:[self parseArguments:chunkString] attributes:textAttributes]; //Process the linktag's contents
+						}
 
-                    }else if([chunkString caseInsensitiveCompare:@"/A"] == 0){
-                        [textAttributes setLinkURL:nil];
-                        //[textAttributes setUnderline:NO];
-                        //[textAttributes setTextColor:[NSColor blackColor]];
+					}else if([chunkString caseInsensitiveCompare:@"/A"] == 0){
+						[textAttributes setLinkURL:nil];
 
-                    //Body
-                    }else if([chunkString caseInsensitiveCompare:Body] == 0){
-                        if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
-                            [self processBodyTagArgs:[self parseArguments:chunkString] attributes:textAttributes]; //Process the font tag's contents
-                        }
+					//Body
+					}else if([chunkString caseInsensitiveCompare:Body] == 0){
+						if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
+							[self processBodyTagArgs:[self parseArguments:chunkString] attributes:textAttributes]; //Process the font tag's contents
+						}
 
-                    }else if([chunkString caseInsensitiveCompare:CloseBody] == 0){
-                        //ignore
+					}else if([chunkString caseInsensitiveCompare:CloseBody] == 0){
+						//ignore
 
-                    //Font
-                    }else if([chunkString caseInsensitiveCompare:Font] == 0){
-                        if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
+					//Font
+					}else if([chunkString caseInsensitiveCompare:Font] == 0){
+						if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
 
-                            //Process the font tag if it's in a log
-                            if([chunkString caseInsensitiveCompare:@" class=\"sender\""] == 0) {
-                                if(inDiv && send) {
-                                    [textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.5 blue:0.0 alpha:1.0]];
-                                } else if(inDiv && receive) {
-                                    [textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.5 alpha:1.0]];
-                                }
-                            }
-                            
-                            //Process the font tag's contents
-                            [self processFontTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
-                        }
-                        
-                    }else if([chunkString caseInsensitiveCompare:CloseFont] == 0){
-                        [textAttributes setTextColor:[NSColor blackColor]];
-                        [textAttributes setFontFamily:@"Helvetica"];
-                        [textAttributes setFontSize:12];
+							//Process the font tag if it's in a log
+							if([chunkString caseInsensitiveCompare:@" class=\"sender\""] == 0) {
+								if(inDiv && send) {
+									[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.5 blue:0.0 alpha:1.0]];
+								} else if(inDiv && receive) {
+									[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.5 alpha:1.0]];
+								}
+							}
 
-                    //span
-                    }else if([chunkString caseInsensitiveCompare:Span] == 0){
-                        if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
+							//Process the font tag's contents
+							[self processFontTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
+						}
 
-                            //Process the span tag if it's in a log
-                            if([chunkString caseInsensitiveCompare:@" class=\"sender\""] == 0) {
-                                if(inDiv && send) {
-                                    [textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.5 blue:0.0 alpha:1.0]];
-                                } else if(inDiv && receive) {
-                                    [textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.5 alpha:1.0]];
-                                }
-                            } else {
-                                [textAttributes setTextColor:[NSColor grayColor]];
-                            }
-                        }
-                    } else if ([chunkString caseInsensitiveCompare:CloseSpan] == 0 ) {
-                        [textAttributes setTextColor:[NSColor blackColor]];
-                        [textAttributes setFontFamily:@"Helvetica"];
-                        [textAttributes setFontSize:12];
-						
+					}else if([chunkString caseInsensitiveCompare:CloseFont] == 0){
+						[textAttributes setTextColor:[NSColor blackColor]];
+						[textAttributes setFontFamily:@"Helvetica"];
+						[textAttributes setFontSize:12];
+
+					//span
+					}else if([chunkString caseInsensitiveCompare:Span] == 0){
+						if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
+
+							//Process the span tag if it's in a log
+							if([chunkString caseInsensitiveCompare:@" class=\"sender\""] == 0) {
+								if(inDiv && send) {
+									[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.5 blue:0.0 alpha:1.0]];
+								} else if(inDiv && receive) {
+									[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.5 alpha:1.0]];
+								}
+							} else {
+								[textAttributes setTextColor:[NSColor grayColor]];
+							}
+						}
+					} else if ([chunkString caseInsensitiveCompare:CloseSpan] == 0 ) {
+						[textAttributes setTextColor:[NSColor blackColor]];
+						[textAttributes setFontFamily:@"Helvetica"];
+						[textAttributes setFontSize:12];
+
 					//Line Break
-                    }else if([chunkString caseInsensitiveCompare:BR] == 0 || 
+					}else if([chunkString caseInsensitiveCompare:BR] == 0 || 
 							 [chunkString caseInsensitiveCompare:BRSlash] == 0 ||
 							 [chunkString caseInsensitiveCompare:CloseBR] == 0){
-						[attrString appendString:Return withAttributes:nil];								 
+						[attrString appendString:Return withAttributes:nil];
 						//Make sure the tag closes, since it may have a <BR /> which stopped the scanner at the space, not the >
-                        [scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
-	
-                    //Bold
-                    }else if([chunkString caseInsensitiveCompare:B] == 0){
-                        [textAttributes enableTrait:NSBoldFontMask];
-                    }else if([chunkString caseInsensitiveCompare:CloseB] == 0){
-                        [textAttributes disableTrait:NSBoldFontMask];
+						[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
 
-                    //Strong (interpreted as bold)
-                    }else if([chunkString caseInsensitiveCompare:@"STRONG"] == 0){
-                        [textAttributes enableTrait:NSBoldFontMask];
-                    }else if([chunkString caseInsensitiveCompare:@"/STRONG"] == 0){
-                        [textAttributes disableTrait:NSBoldFontMask];
+					//Bold
+					}else if([chunkString caseInsensitiveCompare:B] == 0){
+						[textAttributes enableTrait:NSBoldFontMask];
+					}else if([chunkString caseInsensitiveCompare:CloseB] == 0){
+						[textAttributes disableTrait:NSBoldFontMask];
 
-                    //Italic
-                    }else if([chunkString caseInsensitiveCompare:I] == 0){
-                        [textAttributes enableTrait:NSItalicFontMask];
-                    }else if([chunkString caseInsensitiveCompare:CloseI] == 0){
-                        [textAttributes disableTrait:NSItalicFontMask];
+					//Strong (interpreted as bold)
+					}else if([chunkString caseInsensitiveCompare:@"STRONG"] == 0){
+						[textAttributes enableTrait:NSBoldFontMask];
+					}else if([chunkString caseInsensitiveCompare:@"/STRONG"] == 0){
+						[textAttributes disableTrait:NSBoldFontMask];
 
-                    //Emphasised (interpreted as italic)
-                    }else if([chunkString caseInsensitiveCompare:@"EM"] == 0){
-                        [textAttributes enableTrait:NSItalicFontMask];
-                    }else if([chunkString caseInsensitiveCompare:@"/EM"] == 0){
-                        [textAttributes disableTrait:NSItalicFontMask];
+					//Italic
+					}else if([chunkString caseInsensitiveCompare:I] == 0){
+						[textAttributes enableTrait:NSItalicFontMask];
+					}else if([chunkString caseInsensitiveCompare:CloseI] == 0){
+						[textAttributes disableTrait:NSItalicFontMask];
 
-                    //Underline
-                    }else if([chunkString caseInsensitiveCompare:U] == 0){
-                        [textAttributes setUnderline:YES];
-                    }else if([chunkString caseInsensitiveCompare:CloseU] == 0){
-                        [textAttributes setUnderline:NO];
-                        
-                    //Strikethrough: <s> is deprecated, but people use it
-                    } else if([chunkString caseInsensitiveCompare:@"S"] == 0)  {
-                      [textAttributes setStrikethrough:YES];
-                    } else if([chunkString caseInsensitiveCompare:@"/S"] == 0)  {
-                      [textAttributes setStrikethrough:NO];
-                      
-                    // Subscript
-                    } else if([chunkString caseInsensitiveCompare:@"SUB"] == 0)  {
-                      [textAttributes setSubscript:YES];
-                    } else if([chunkString caseInsensitiveCompare:@"/SUB"] == 0)  {
-                      [textAttributes setSubscript:NO];
-                      
-                    // Superscript
-                    } else if([chunkString caseInsensitiveCompare:@"SUP"] == 0)  {
-                      [textAttributes setSuperscript:YES];
-                    } else if([chunkString caseInsensitiveCompare:@"/SUP"] == 0)  {
-                      [textAttributes setSuperscript:NO];
-						
-                    //Image
-                    } else if([chunkString caseInsensitiveCompare:IMG] == 0){
-                        if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
-                            NSAttributedString *attachString = [self processImgTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
-                            [attrString appendAttributedString:attachString];
-                        }
+					//Emphasised (interpreted as italic)
+					}else if([chunkString caseInsensitiveCompare:@"EM"] == 0){
+						[textAttributes enableTrait:NSItalicFontMask];
+					}else if([chunkString caseInsensitiveCompare:@"/EM"] == 0){
+						[textAttributes disableTrait:NSItalicFontMask];
+
+					//Underline
+					}else if([chunkString caseInsensitiveCompare:U] == 0){
+						[textAttributes setUnderline:YES];
+					}else if([chunkString caseInsensitiveCompare:CloseU] == 0){
+						[textAttributes setUnderline:NO];
+
+					//Strikethrough: <s> is deprecated, but people use it
+					} else if([chunkString caseInsensitiveCompare:@"S"] == 0) {
+						[textAttributes setStrikethrough:YES];
+					} else if([chunkString caseInsensitiveCompare:@"/S"] == 0) {
+						[textAttributes setStrikethrough:NO];
+
+					// Subscript
+					} else if([chunkString caseInsensitiveCompare:@"SUB"] == 0)  {
+						[textAttributes setSubscript:YES];
+					} else if([chunkString caseInsensitiveCompare:@"/SUB"] == 0)  {
+						[textAttributes setSubscript:NO];
+
+					// Superscript
+					} else if([chunkString caseInsensitiveCompare:@"SUP"] == 0)  {
+						[textAttributes setSuperscript:YES];
+					} else if([chunkString caseInsensitiveCompare:@"/SUP"] == 0)  {
+						[textAttributes setSuperscript:NO];
+
+					//Image
+					} else if([chunkString caseInsensitiveCompare:IMG] == 0){
+						if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
+							NSAttributedString *attachString = [self processImgTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
+							[attrString appendAttributedString:attachString];
+						}
 					} else if([chunkString caseInsensitiveCompare:CloseIMG] == 0){
 						//just ignore </img> if we find it
-					
+
 					// Ignore <p> for those wacky AIM express users
 					} else if ([chunkString caseInsensitiveCompare:P] == 0 ||
 							   [chunkString caseInsensitiveCompare:CloseP] == 0) {
 
-                    //Invalid
-                    } else {
-                        validTag = NO;
-                    }
-                }
+					//Invalid
+					} else {
+						validTag = NO;
+					}
+				}
 
-                if(validTag){ //Skip over the end tag character '>'
-                    if (![scanner isAtEnd])
-                        [scanner setScanLocation:[scanner scanLocation]+1];
-                }else{
-                    //When an invalid tag is encountered, we add the <, and then move our scanner back to continue processing
-                    [attrString appendString:LessThan withAttributes:[textAttributes dictionary]];
-                    [scanner setScanLocation:scanLocation];
-                }
+				if(validTag){ //Skip over the end tag character '>'
+					if (![scanner isAtEnd])
+						[scanner setScanLocation:[scanner scanLocation]+1];
+				}else{
+					//When an invalid tag is encountered, we add the <, and then move our scanner back to continue processing
+					[attrString appendString:LessThan withAttributes:[textAttributes dictionary]];
+					[scanner setScanLocation:scanLocation];
+				}
 
-            }else if([tagOpen compare:Ampersand] == 0){ // escape character, eg &gt;
-                BOOL validTag = [scanner scanUpToCharactersFromSet:charEnd intoString:&chunkString];
-                
-                if(validTag){
-                    // We could upgrade this to use an NSDictionary with lots of chars
-                    // but for now, if-blocks will do
-                    if ([chunkString caseInsensitiveCompare:@"GT"] == 0){
-                        [attrString appendString:GreaterThan withAttributes:[textAttributes dictionary]];
-                        
-                    }else if ([chunkString caseInsensitiveCompare:@"LT"] == 0){
-                        [attrString appendString:LessThan withAttributes:[textAttributes dictionary]];
+			}else if([tagOpen compare:Ampersand] == 0){ // escape character, eg &gt;
+				BOOL validTag = [scanner scanUpToCharactersFromSet:charEnd intoString:&chunkString];
 
-                    }else if ([chunkString caseInsensitiveCompare:@"AMP"] == 0){
-                        [attrString appendString:Ampersand withAttributes:[textAttributes dictionary]];
+				if(validTag){
+					// We could upgrade this to use an NSDictionary with lots of chars
+					// but for now, if-blocks will do
+					if ([chunkString caseInsensitiveCompare:@"GT"] == 0){
+						[attrString appendString:GreaterThan withAttributes:[textAttributes dictionary]];
 
-                    }else if ([chunkString caseInsensitiveCompare:@"QUOT"] == 0){
-                        [attrString appendString:@"\"" withAttributes:[textAttributes dictionary]];
+					}else if ([chunkString caseInsensitiveCompare:@"LT"] == 0){
+						[attrString appendString:LessThan withAttributes:[textAttributes dictionary]];
 
-                    }else if ([chunkString caseInsensitiveCompare:@"APOS"] == 0){
-                        [attrString appendString:@"'" withAttributes:[textAttributes dictionary]];
-						
-                    }else if ([chunkString caseInsensitiveCompare:@"NBSP"] == 0){
-                        [attrString appendString:@" " withAttributes:[textAttributes dictionary]];
+					}else if ([chunkString caseInsensitiveCompare:@"AMP"] == 0){
+						[attrString appendString:Ampersand withAttributes:[textAttributes dictionary]];
 
-                    }else if ([chunkString hasPrefix:@"#x"]) {
-                        [attrString appendString:[NSString stringWithFormat:@"%C",
-                            [chunkString substringFromIndex:1]]
-                            withAttributes:[textAttributes dictionary]];
-                    }else if ([chunkString hasPrefix:@"#"]) {
-                        [attrString appendString:[NSString stringWithFormat:@"%C", 
-                            [[chunkString substringFromIndex:1] intValue]] 
-                            withAttributes:[textAttributes dictionary]];
-                    }
-                    else{ //Invalid
-                        validTag = NO;
-                    }           
-                }
+					}else if ([chunkString caseInsensitiveCompare:@"QUOT"] == 0){
+						[attrString appendString:@"\"" withAttributes:[textAttributes dictionary]];
 
-                
-                if(validTag){ //Skip over the end tag character ';'
-                    [scanner scanCharactersFromSet:charEnd intoString:nil];
-                }else{
-                    //When an invalid tag is encountered, we add the &, and then move our scanner back to continue processing
-                    [attrString appendString:Ampersand withAttributes:[textAttributes dictionary]];
-                    [scanner setScanLocation:scanLocation];
-                }
-                
-            }else{ //Invalid tag character (most likely a stray < or &)
-                if([tagOpen length] > 1){
-                    //If more than one character was scanned, add the first one, and move the scanner back to re-process the additional characters
-                    [attrString appendString:[tagOpen substringToIndex:1] withAttributes:[textAttributes dictionary]];
-                    [scanner setScanLocation:[scanner scanLocation] - ([tagOpen length]-1)]; 
-                    
-                }else{
-                    [attrString appendString:tagOpen withAttributes:[textAttributes dictionary]];
+					}else if ([chunkString caseInsensitiveCompare:@"APOS"] == 0){
+						[attrString appendString:@"'" withAttributes:[textAttributes dictionary]];
 
-                }
-            }
-        }
-    }
+					}else if ([chunkString caseInsensitiveCompare:@"NBSP"] == 0){
+						[attrString appendString:@" " withAttributes:[textAttributes dictionary]];
+
+					}else if ([chunkString hasPrefix:@"#x"]) {
+						[attrString appendString:[NSString stringWithFormat:@"%C",
+							[chunkString substringFromIndex:1]]
+							withAttributes:[textAttributes dictionary]];
+					}else if ([chunkString hasPrefix:@"#"]) {
+						[attrString appendString:[NSString stringWithFormat:@"%C", 
+							[[chunkString substringFromIndex:1] intValue]] 
+							withAttributes:[textAttributes dictionary]];
+					}
+					else{ //Invalid
+						validTag = NO;
+					}
+				}
+
+				if(validTag){ //Skip over the end tag character ';'
+					[scanner scanCharactersFromSet:charEnd intoString:nil];
+				}else{
+					//When an invalid tag is encountered, we add the &, and then move our scanner back to continue processing
+					[attrString appendString:Ampersand withAttributes:[textAttributes dictionary]];
+					[scanner setScanLocation:scanLocation];
+				}
+			}else{ //Invalid tag character (most likely a stray < or &)
+				if([tagOpen length] > 1){
+					//If more than one character was scanned, add the first one, and move the scanner back to re-process the additional characters
+					[attrString appendString:[tagOpen substringToIndex:1] withAttributes:[textAttributes dictionary]];
+					[scanner setScanLocation:[scanner scanLocation] - ([tagOpen length]-1)]; 
+				}else{
+					[attrString appendString:tagOpen withAttributes:[textAttributes dictionary]];
+				}
+			}
+		}
+	}
 	
 	//If the string has a constant NSBackgroundColorAttributeName attribute and no AIBodyColorAttributeName,
 	//we want to move the NSBackgroundColorAttributeName attribute to AIBodyColorAttributeName (Things are a
@@ -851,149 +882,108 @@ int HTMLEquivalentForFontSize(int fontSize)
 		}
 	}
 	
-    return([attrString autorelease]);
+	return([attrString autorelease]);
 }
+
+#pragma mark Tag-parsing
+
+/*methods in this section take a parsed tag (see -parseArguments:) and transfer
+ *  its specification to a text-attributes object.
+ */
 
 //Process the contents of a font tag
-+ (void)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
+- (void)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
 {
-    NSEnumerator 	*enumerator;
-    NSString		*arg;
+	NSEnumerator 	*enumerator;
+	NSString		*arg;
 
-    enumerator = [[inArgs allKeys] objectEnumerator];
-    while((arg = [enumerator nextObject])){
-        if([arg caseInsensitiveCompare:Face] == 0){
-            [textAttributes setFontFamily:[inArgs objectForKey:arg]];
+	enumerator = [[inArgs allKeys] objectEnumerator];
+	while((arg = [enumerator nextObject])){
+		if([arg caseInsensitiveCompare:Face] == 0){
+			[textAttributes setFontFamily:[inArgs objectForKey:arg]];
 
-        }else if([arg caseInsensitiveCompare:SIZE] == 0){
-            int	size;
+		}else if([arg caseInsensitiveCompare:SIZE] == 0){
+			//Always prefer an ABSZ to a size
+			if(![inArgs objectForKey:ABSZ] && ![inArgs objectForKey:@"absz"]){
+				unsigned absSize = [[inArgs objectForKey:arg] intValue];
+				static int pointSizes[] = { 9, 10, 12, 14, 18, 24, 48, 72 };
+				int size = (absSize <= 8 ? pointSizes[absSize-1] : 12);
+				NSLog(@"absSize %u to size %i\n", absSize, size);
+				[textAttributes setFontSize:size];
+			}
 
-            //Always prefer an ABSZ to a size
-            if(![inArgs objectForKey:ABSZ] && ![inArgs objectForKey:@"absz"]){
-                switch([[inArgs objectForKey:arg] intValue]){
-                    case 1: size = 9; break;
-                    case 2: size = 10; break;
-                    case 3: size = 12; break;
-                    case 4: size = 14; break;
-                    case 5: size = 18; break;
-                    case 6: size = 24; break;
-                    case 7: size = 48; break;
-                    case 8: size = 72; break;
-                    default: size = 12; break;
-                }
-                [textAttributes setFontSize:size];
-            }
+		}else if([arg caseInsensitiveCompare:ABSZ] == 0){
+			[textAttributes setFontSize:[[inArgs objectForKey:arg] intValue]];
 
-        }else if([arg caseInsensitiveCompare:ABSZ] == 0){
-            [textAttributes setFontSize:[[inArgs objectForKey:arg] intValue]];
+		}else if([arg caseInsensitiveCompare:Color] == 0){
+			[textAttributes setTextColor:[[inArgs objectForKey:arg] hexColor]];
 
-        }else if([arg caseInsensitiveCompare:Color] == 0){
-            [textAttributes setTextColor:[[inArgs objectForKey:arg] hexColor]];
+		}else if([arg caseInsensitiveCompare:Back] == 0){
+			[textAttributes setTextBackgroundColor:[[inArgs objectForKey:arg] hexColor]];
 
-        }else if([arg caseInsensitiveCompare:Back] == 0){
-            [textAttributes setTextBackgroundColor:[[inArgs objectForKey:arg] hexColor]];
-            
-        }
-    }
+		}
+	}
 }
 
-+ (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
+- (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
 {
-    NSEnumerator 	*enumerator;
-    NSString		*arg;
+	NSEnumerator 	*enumerator;
+	NSString		*arg;
 
-    enumerator = [[inArgs allKeys] objectEnumerator];
-    while((arg = [enumerator nextObject])){
-        if([arg caseInsensitiveCompare:@"BGCOLOR"] == 0){
-            [textAttributes setBackgroundColor:[[inArgs objectForKey:arg] hexColor]];
-        }
-    }
+	enumerator = [[inArgs allKeys] objectEnumerator];
+	while((arg = [enumerator nextObject])){
+		if([arg caseInsensitiveCompare:@"BGCOLOR"] == 0){
+			[textAttributes setBackgroundColor:[[inArgs objectForKey:arg] hexColor]];
+		}
+	}
 }
 
-+ (void)processLinkTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
+- (void)processLinkTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
 {
-    NSEnumerator 	*enumerator;
-    NSString		*arg;
+	NSEnumerator 	*enumerator;
+	NSString		*arg;
 
-    enumerator = [[inArgs allKeys] objectEnumerator];
-    while((arg = [enumerator nextObject])){
-        if([arg caseInsensitiveCompare:@"HREF"] == 0){
-            [textAttributes setLinkURL:[inArgs objectForKey:arg]];
-        }
-    }
+	enumerator = [[inArgs allKeys] objectEnumerator];
+	while((arg = [enumerator nextObject])){
+		if([arg caseInsensitiveCompare:@"HREF"] == 0){
+			[textAttributes setLinkURL:[inArgs objectForKey:arg]];
+		}
+	}
 }
 
-+ (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
+- (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
 {
-    NSEnumerator				*enumerator;
-    NSString					*arg;
-    NSAttributedString			*attachString;
-    NSFileWrapper				*fileWrapper = nil;
+	NSEnumerator				*enumerator;
+	NSString					*arg;
+	NSAttributedString			*attachString;
+	NSFileWrapper				*fileWrapper = nil;
 	NSString					*path = nil;
-    AITextAttachmentExtension   *attachment = [[[AITextAttachmentExtension alloc] init] autorelease];
+	AITextAttachmentExtension   *attachment = [[[AITextAttachmentExtension alloc] init] autorelease];
 
-    enumerator = [inArgs keyEnumerator];
-    while((arg = [enumerator nextObject])){
-        if([arg caseInsensitiveCompare:@"SRC"] == 0){
+	enumerator = [inArgs keyEnumerator];
+	while((arg = [enumerator nextObject])){
+		if([arg caseInsensitiveCompare:@"SRC"] == 0){
 			path = [inArgs objectForKey:arg];
-            fileWrapper = [[[NSFileWrapper alloc] initWithPath:path] autorelease];
-        }
-        if([arg caseInsensitiveCompare:@"ALT"] == 0){
-            [attachment setString:[inArgs objectForKey:arg]];
+			fileWrapper = [[[NSFileWrapper alloc] initWithPath:path] autorelease];
+		}
+		if([arg caseInsensitiveCompare:@"ALT"] == 0){
+			[attachment setString:[inArgs objectForKey:arg]];
 			[attachment setHasAlternate:YES];
-        }
-    }
+		}
+	}
 	
 	if (![attachment hasAlternate] && path) {
 		[attachment setString:path];
 	}
-    
-    [attachment setFileWrapper:fileWrapper];
+	
+	[attachment setFileWrapper:fileWrapper];
 	[attachment setShouldSaveImageForLogging:YES];
-    attachString = [NSAttributedString attributedStringWithAttachment:attachment];
-    return attachString;
-}
-
-+ (NSDictionary *)parseArguments:(NSString *)arguments
-{
-    NSMutableDictionary	*argDict;
-    NSScanner			*scanner;
-    NSCharacterSet		*equalsSet, *quoteSet, *spaceSet;
-    NSString			*key = nil, *value = nil;
-
-    //Setup
-    equalsSet = [NSCharacterSet characterSetWithCharactersInString:@"="];
-    quoteSet = [NSCharacterSet characterSetWithCharactersInString:@"\""];
-    spaceSet = [NSCharacterSet characterSetWithCharactersInString:@" "];
-    scanner = [NSScanner scannerWithString:arguments];
-    argDict = [[NSMutableDictionary alloc] init];
-    
-    while(![scanner isAtEnd]){
-        BOOL	validKey, validValue;
-        
-        //Find a tag
-        validKey = [scanner scanUpToCharactersFromSet:equalsSet intoString:&key];
-        [scanner scanCharactersFromSet:equalsSet intoString:nil];
-        
-        //check for quotes
-        if([scanner scanCharactersFromSet:quoteSet intoString:nil]){
-            validValue = [scanner scanUpToCharactersFromSet:quoteSet intoString:&value];
-            [scanner scanCharactersFromSet:quoteSet intoString:nil];           
-        }else{
-            validValue = [scanner scanUpToCharactersFromSet:spaceSet intoString:&value];
-        }
-
-        //Store in dict
-        if(validValue && value != nil && [value length] != 0 && validKey && key != nil && [key length] != 0){ //Watch out for invalid & empty tags
-            [argDict setObject:value forKey:key];
-        }
-    }
-    
-    return([argDict autorelease]);
+	attachString = [NSAttributedString attributedStringWithAttachment:attachment];
+	return attachString;
 }
 
 #warning Currently always appends as png.  This is probably not always best as Windows DirectIM will not handle it.
-+ (BOOL)appendImage:(NSImage *)attachmentImage
+- (BOOL)appendImage:(NSImage *)attachmentImage
 		   toString:(NSMutableString *)string
 		   withName:(NSString *)fileSafeChunk 
 		  altString:(NSString *)attachmentString
@@ -1022,13 +1012,235 @@ int HTMLEquivalentForFontSize(int fontSize)
 		NSLog(@"failed to write log image");
 	}
 
-
 	return success;
 }
 
-+ (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string
+- (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string
 {
 	[string appendFormat:@"<AdiumFT src=\"%@\">", [path stringByEscapingForHTML]];	
 }
 
+#pragma mark Accessors
+
+- (BOOL)includesHeaders
+{
+	return thingsToInclude.headers;
+}
+- (void)setIncludesHeaders:(BOOL)newValue
+{
+	thingsToInclude.headers = newValue;
+}
+
+- (BOOL)includesFontTags
+{
+	return thingsToInclude.fontTags;
+}
+- (void)setIncludesFontTags:(BOOL)newValue
+{
+	thingsToInclude.fontTags = newValue;
+}
+
+- (BOOL)closesFontTags
+{
+	return thingsToInclude.closingFontTags;
+}
+- (void)setClosesFontTags:(BOOL)newValue
+{
+	thingsToInclude.closingFontTags = newValue;
+}
+
+- (BOOL)includesColorTags
+{
+	return thingsToInclude.colorTags;
+}
+- (void)setIncludesColorTags:(BOOL)newValue
+{
+	thingsToInclude.colorTags = newValue;
+}
+
+- (BOOL)includesStyleTags
+{
+	return thingsToInclude.styleTags;
+}
+- (void)setIncludesStyleTags:(BOOL)newValue
+{
+	thingsToInclude.styleTags = newValue;
+}
+
+- (BOOL)encodesNonASCII
+{
+	return thingsToInclude.nonASCII;
+}
+- (void)setEncodesNonASCII:(BOOL)newValue
+{
+	thingsToInclude.nonASCII = newValue;
+}
+
+- (BOOL)preservesAllSpaces
+{
+	return thingsToInclude.allSpaces;
+}
+- (void)setPreservesAllSpaces:(BOOL)newValue
+{
+	thingsToInclude.allSpaces = newValue;
+}
+
+- (BOOL)usesAttachmentTextEquivalents
+{
+	return thingsToInclude.attachmentTextEquivalents;
+}
+- (void)setUsesAttachmentTextEquivalents:(BOOL)newValue
+{
+	thingsToInclude.attachmentTextEquivalents = newValue;
+}
+
+- (BOOL)onlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage
+{
+	return thingsToInclude.attachmentImagesOnlyForSending;
+}
+- (void)setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:(BOOL)newValue
+{
+	thingsToInclude.attachmentImagesOnlyForSending = newValue;
+}
+
+- (BOOL)onlyUsesSimpleTags
+{
+	return thingsToInclude.simpleTagsOnly;
+}
+- (void)setOnlyUsesSimpleTags:(BOOL)newValue
+{
+	thingsToInclude.simpleTagsOnly = newValue;
+}
+
 @end
+
+@implementation AIHTMLDecoder (ClassMethodCompatibility)
+
+//For compatibility
++ (NSString *)encodeHTML:(NSAttributedString *)inMessage encodeFullString:(BOOL)encodeFullString
+{
+	[self classMethodInstance];
+	classMethodInstance->thingsToInclude.headers = 
+	classMethodInstance->thingsToInclude.fontTags = 
+	classMethodInstance->thingsToInclude.closingFontTags = 
+	classMethodInstance->thingsToInclude.colorTags = 
+	classMethodInstance->thingsToInclude.nonASCII = 
+	classMethodInstance->thingsToInclude.allSpaces = 
+		encodeFullString;
+	classMethodInstance->thingsToInclude.styleTags = 
+	classMethodInstance->thingsToInclude.attachmentTextEquivalents = 
+		YES;
+	classMethodInstance->thingsToInclude.attachmentImagesOnlyForSending = 
+	classMethodInstance->thingsToInclude.simpleTagsOnly = 
+		NO;
+	return [classMethodInstance encodeHTML:inMessage imagesPath:nil];
+}
+
+// inMessage: AttributedString to encode
+// headers: YES to include HTML and BODY tags
+// fontTags: YES to include FONT tags
+// closeFontTags: YES to close the font tags
+// styleTags: YES to include B/I/U tags
+// closeStyleTagsOnFontChange: YES to close and re-insert style tags when opening a new font tag
+// encodeNonASCII: YES to encode non-ASCII characters as their HTML equivalents
+// encodeSpaces: YES to preserve spacing when displaying the HTML in a web browser by converting multiple spaces and tabs to &nbsp codes.
+// attachmentsAsText: YES to convert all attachments to their text equivalent if possible; NO to imbed <IMG SRC="...> tags
+// attachmentImagesOnlyForSending: YES to only convert attachments to <IMG SRC="...> tags which should be sent to another user
+// simpleTagsOnly: YES to separate out FONT tags and include only the most basic HTML elements
++ (NSString *)encodeHTML:(NSAttributedString *)inMessage
+				 headers:(BOOL)includeHeaders 
+				fontTags:(BOOL)includeFontTags
+	  includingColorTags:(BOOL)includeColorTags 
+		   closeFontTags:(BOOL)closeFontTags
+			   styleTags:(BOOL)includeStyleTags
+ closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange 
+		  encodeNonASCII:(BOOL)encodeNonASCII
+			encodeSpaces:(BOOL)encodeSpaces
+			  imagesPath:(NSString *)imagesPath
+	   attachmentsAsText:(BOOL)attachmentsAsText
+attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
+		  simpleTagsOnly:(BOOL)simpleOnly
+{
+#pragma unused(closeStyleTagsOnFontChange)
+	[self classMethodInstance];
+	classMethodInstance->thingsToInclude.headers = includeHeaders;
+	classMethodInstance->thingsToInclude.fontTags = includeFontTags;
+	classMethodInstance->thingsToInclude.closingFontTags = closeFontTags;
+	classMethodInstance->thingsToInclude.colorTags = includeColorTags;
+	classMethodInstance->thingsToInclude.styleTags = includeStyleTags;
+	classMethodInstance->thingsToInclude.nonASCII = encodeNonASCII;
+	classMethodInstance->thingsToInclude.allSpaces = encodeSpaces;
+	classMethodInstance->thingsToInclude.attachmentTextEquivalents = attachmentsAsText;
+	classMethodInstance->thingsToInclude.attachmentImagesOnlyForSending = attachmentImagesOnlyForSending;
+	classMethodInstance->thingsToInclude.simpleTagsOnly = simpleOnly;
+	return [classMethodInstance encodeHTML:inMessage imagesPath:imagesPath];
+}
+
++ (NSAttributedString *)decodeHTML:(NSString *)inMessage
+{
+	return [[self classMethodInstance] decodeHTML:inMessage];
+}
+
++ (NSDictionary *)parseArguments:(NSString *)arguments
+{
+	return [[self classMethodInstance] parseArguments:arguments];
+#if 0
+	NSMutableDictionary	*argDict;
+	NSScanner			*scanner;
+	NSCharacterSet		*equalsSet, *quoteSet, *spaceSet;
+	NSString			*key = nil, *value = nil;
+
+	//Setup
+	equalsSet = [NSCharacterSet characterSetWithCharactersInString:@"="];
+	quoteSet = [NSCharacterSet characterSetWithCharactersInString:@"\""];
+	spaceSet = [NSCharacterSet characterSetWithCharactersInString:@" "];
+	scanner = [NSScanner scannerWithString:arguments];
+	argDict = [[NSMutableDictionary alloc] init];
+	
+	while(![scanner isAtEnd]){
+		BOOL	validKey, validValue;
+
+		//Find a tag
+		validKey = [scanner scanUpToCharactersFromSet:equalsSet intoString:&key];
+		[scanner scanCharactersFromSet:equalsSet intoString:nil];
+
+		//check for quotes
+		if([scanner scanCharactersFromSet:quoteSet intoString:nil]){
+			validValue = [scanner scanUpToCharactersFromSet:quoteSet intoString:&value];
+			[scanner scanCharactersFromSet:quoteSet intoString:nil];
+		}else{
+			validValue = [scanner scanUpToCharactersFromSet:spaceSet intoString:&value];
+		}
+
+		//Store in dict
+		if(validValue && value != nil && [value length] != 0 && validKey && key != nil && [key length] != 0){ //Watch out for invalid & empty tags
+			[argDict setObject:value forKey:key];
+		}
+	}
+	
+	return([argDict autorelease]);
+#endif
+}
+
+@end
+
+#pragma mark C functions
+
+int HTMLEquivalentForFontSize(int fontSize)
+{
+	if(fontSize <= 9){
+		return(1);
+	}else if(fontSize <= 10){
+		return(2);
+	}else if(fontSize <= 12){
+		return(3);
+	}else if(fontSize <= 14){
+		return(4);
+	}else if(fontSize <= 18){
+		return(5);
+	}else if(fontSize <= 24){
+		return(6);
+	}else{
+		return(7);
+	}
+}
