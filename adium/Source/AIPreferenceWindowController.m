@@ -204,7 +204,6 @@ static AIPreferenceWindowController *sharedInstance = nil;
         NSString 	*identifier = [tabViewItem identifier];
         NSString	*label = [tabViewItem label];
 
-        NSLog(@"%@",identifier);
         if(![toolbarItems objectForKey:identifier]){
             [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
                                     withIdentifier:identifier
