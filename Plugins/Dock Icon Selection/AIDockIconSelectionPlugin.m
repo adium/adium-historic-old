@@ -27,7 +27,7 @@
     [adium createResourcePathForName:FOLDER_DOCK_ICONS];
     
     //Install our preference view
-    preferences = [[AIDockIconPreferences preferencePane] retain];
+//preferences = [[AIDockIconPreferences preferencePane] retain];
 }
 
 //
