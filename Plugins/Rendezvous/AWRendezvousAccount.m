@@ -34,31 +34,33 @@
 - (void)initAccount
 {
     [super initAccount];
+	
     libezvContacts = [[NSMutableDictionary alloc] init];
     
     libezv = [[AWEzv alloc] initWithClient:self];
 }
 
+- (void)dealloc
+{
+	[libezvContacts release];
+	[libezv release];
+}
+
 - (BOOL)disconnectOnFastUserSwitch
 {
-	return YES;
-}
-
-//Return the default properties for this account
-- (NSDictionary *)defaultProperties
-{
-    return([NSDictionary dictionary]);
-}
-
-// Return a unique ID specific to THIS account plugin, and the user's account name
-- (NSString *)accountID{
-    return([self internalObjectID]);
+	return(YES);
 }
 
 //No need for a password for Rendezvous accounts
 - (BOOL)requiresPassword
 {
-	return NO;
+	return(NO);
+}
+
+//Rendezvous need not disconnect/reconnect as the network changes
+- (BOOL)connectivityBasedOnNetworkReachability
+{
+	return(NO);
 }
 
 - (void)connect
@@ -76,12 +78,6 @@
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
     
     [libezv logout];
-}
-
-//Rendezvous need not disconnect/reconnect as the network changes
-- (BOOL)connectivityBasedOnNetworkReachability
-{
-	return NO;
 }
 
 - (void)removeContacts:(NSArray *)objects
