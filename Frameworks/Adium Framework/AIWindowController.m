@@ -47,9 +47,23 @@
 	NSString	*key = [self adiumFrameAutosaveName];
 
 	if(key){
-		NSString	*frameString = [[adium preferenceController] preferenceForKey:key
-																			group:PREF_GROUP_WINDOW_POSITIONS];
+		NSString	*frameString;
+		int			numberOfScreens;
+
+		//Unique key for each number of screens
+		numberOfScreens = [[NSScreen screens] count];
 		
+		frameString = [[adium preferenceController] preferenceForKey:((numberOfScreens == 1) ? 
+																	  key :
+																	  [NSString stringWithFormat:@"%@-%i",key,numberOfScreens])
+															   group:PREF_GROUP_WINDOW_POSITIONS];
+
+		if(!frameString && (numberOfScreens > 1)){
+			//Fall back on the single screen preference if necessary (this is effectively a preference upgrade).
+			frameString = [[adium preferenceController] preferenceForKey:key
+																   group:PREF_GROUP_WINDOW_POSITIONS];
+		}
+
 		if(frameString){
 			NSRect		windowFrame = NSRectFromString(frameString);
 			NSSize		minSize = [[self window] minSize];
@@ -110,9 +124,15 @@
 	NSString	*key = [self adiumFrameAutosaveName];
 
  	if(key){
+		//Unique key for each number of screens
+		int	numberOfScreens = [[NSScreen screens] count];
+
 		[[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
-											 forKey:key
+											 forKey:((numberOfScreens == 1) ? 
+													 key :
+													 [NSString stringWithFormat:@"%@-%i",key,numberOfScreens])
 											  group:PREF_GROUP_WINDOW_POSITIONS];
+		
 	}
 }
 
