@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface AIToolbarController : NSObject {
-    IBOutlet	AIAdium		*owner;
+    IBOutlet	AIAdium		*adium;
     NSMutableDictionary		*toolbarItems;
 }
 
