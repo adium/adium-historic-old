@@ -127,7 +127,10 @@
     if(![theContact remoteGroupNameForAccount:self]){
         GaimGroup *g = gaim_find_buddys_group(buddy);
 		if(g/* && strcmp([[theContact remoteGroupNameForAccount:self] UTF8String], g->name)*/){
-			[theContact setRemoteGroupName:[NSString stringWithUTF8String:g->name] forAccount:self];
+		    NSString *groupName = [NSString stringWithUTF8String:g->name];
+		    if (![groupName length])
+			groupName = [self unknownGroupName];
+		    [theContact setRemoteGroupName:groupName forAccount:self];
         }
     }
     
@@ -307,6 +310,10 @@
 
 - (NSString *)accountDescription {
     return [self UIDAndServiceID];
+}
+
+- (NSString *)unknownGroupName {
+    return (@"Unknown");
 }
 
 - (NSDictionary *)defaultProperties { return([NSDictionary dictionary]); }
@@ -1028,5 +1035,6 @@
 	//We now have an icon
 	[self setStatusObject:image forKey:@"UserIcon" notify:YES];
 }
+
 
 @end

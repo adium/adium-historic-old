@@ -63,6 +63,7 @@
 - (NSArray *)supportedPropertyKeys;
 - (void)updateStatusForKey:(NSString *)key;
 - (NSDictionary *)defaultProperties;
+- (NSString *)unknownGroupName;
 - (id <AIAccountViewController>)accountView;
 
 //AIAccount_Handles
