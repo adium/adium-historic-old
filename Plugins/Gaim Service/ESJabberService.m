@@ -56,7 +56,8 @@
 	return(@"Jabber");
 }
 - (NSCharacterSet *)allowedCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-()|"]);
+	/* Some rare Jabber servers assign actual IDs with %. */
+	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-()%|"]);
 }
 - (NSCharacterSet *)allowedCharactersForUIDs{ 
 	/* Allow % for use in transport names, username%hotmail.com@msn.blah.jabber.org */
