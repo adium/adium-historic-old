@@ -51,7 +51,7 @@
 
     NSURLHandle		*profileURLHandle;	// URLHandle for the currently loading profile
 
-
+    
 }
 
 - (IBAction)sendDirectDebugCommand:(id)sender;

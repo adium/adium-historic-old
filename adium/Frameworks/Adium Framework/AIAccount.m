@@ -106,6 +106,10 @@
     return [NSString stringWithFormat:@"%@.%@", [self serviceID], [self UID]];
 }
 
+- (NSImage *)userIcon {
+    return [self propertyForKey:@"BuddyImage"];
+}
+
 //Functions for subclasses to override
 - (void)initAccount{};
 - (NSView *)accountView{return(nil);};

@@ -150,6 +150,13 @@ Methods used by ESContactAlert instances
     NSMutableDictionary *stateDictionary = [arrayOfStateDictionaries objectWithOwner:inOwner];
     return [stateDictionary objectForKey:ACTIVE_OBJECT];
 }
+//The window in which the contactAlert is displaying
+- (NSWindow *)currentWindowForContactAlert:(ESContactAlert *)contactAlert
+{
+    id inOwner = [self _ownerOfContactAlert:contactAlert];
+    return [inOwner performSelector:@selector(activeWindow)];
+}
+
 //Save changes to an array of alerts
 - (void)saveEventActionArrayForContactAlert:(ESContactAlert *)contactAlert
 {

@@ -373,7 +373,11 @@
     
     //Get the user icon
     if([content isOutgoing]){
-	userImage = iconOutgoing; //messageImage = [(AIAccount *)messageSource userIcon];
+//	userImage = iconOutgoing; 
+        userImage = [(AIAccount *)[content source] userIcon];
+        //userImage = [[owner accountController] propertyForKey:@"BuddyImage" account:(AIAccount *)[content source]];
+        if (!userImage)
+            userImage = iconOutgoing;
     }else{
 	userImage = [[[chat listObject] statusArrayForKey:@"BuddyImage"] firstImage];
 	if(!userImage) userImage = iconIncoming;

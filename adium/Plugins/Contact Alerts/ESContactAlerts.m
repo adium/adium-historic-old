@@ -33,7 +33,7 @@
 @end
 
 
-int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
+int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *context);
 
 @implementation ESContactAlerts
 
@@ -164,6 +164,8 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 {   return ([eventActionArray count]);                  }
 - (AIListObject *)activeObject
 {   return activeContactObject;                         }
+- (NSWindow *)activeWindow
+{   return [view_main window];                          }
 
     // Actions! ---------------------------------------------------------------------------------------------------------------------
 - (NSMenu *)actionListMenu //menu of possible actions
@@ -382,7 +384,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 }
 
 //Sorting function
-int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
+int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *context)
 {
     BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
     BOOL	invisibleB = [[objectB displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
