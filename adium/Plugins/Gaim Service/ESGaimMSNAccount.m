@@ -113,7 +113,7 @@ static BOOL didInitMSN = NO;
 		NSData  *data;
 
 		if([key compare:@"FullNameAttr"] == 0){
-			NSLog(@"Updating FullNameAttr to %@",[[self autoRefreshingOutgoingContentForStatusKey:key] string]);
+			if (GAIM_DEBUG) NSLog(@"Updating FullNameAttr to %@",[[self autoRefreshingOutgoingContentForStatusKey:key] string]);
 			[self _setFriendlyNameTo:[[self autoRefreshingOutgoingContentForStatusKey:key] string]];
 		}
 	}

@@ -64,7 +64,7 @@ static BOOL didInitOscar = NO;
 														   attachmentsAsText:YES]));
 }
 */
-//Override _mainThreadContactWithUID to mark mobile and ICQ users as such via the displayServiceID
+//Override _contactWithUID to mark mobile and ICQ users as such via the displayServiceID
 - (AIListContact *)_contactWithUID:(NSString *)sourceUID
 {
 	AIListContact   *contact;
@@ -85,9 +85,7 @@ static BOOL didInitOscar = NO;
 			}
 			
 			//Apply any changes
-			[contact performSelectorOnMainThread:@selector(notifyOfChangedStatusNumberSilently:)
-										 withObject:[NSNumber numberWithBool:silentAndDelayed]
-									  waitUntilDone:NO];
+			[contact notifyOfChangedStatusSilently:silentAndDelayed];
 		}
 	}
 	
@@ -147,13 +145,13 @@ static BOOL didInitOscar = NO;
 }
 
 #pragma mark Buddy updates
-- (oneway void)updateContact:(AIListContact *)theContact forEvent:(GaimBuddyEvent)event
+- (oneway void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
 {
 	[super updateContact:theContact forEvent:event];
 	
-
 	SEL updateSelector = nil;
-	switch(event){
+	
+	switch([event intValue]){
 		case GAIM_BUDDY_STATUS_MESSAGE: {
 			updateSelector = @selector(updateStatusMessage:);
 			break;
@@ -169,9 +167,8 @@ static BOOL didInitOscar = NO;
 	}
 	
 	if (updateSelector){
-		[self performSelectorOnMainThread:updateSelector
-							   withObject:theContact
-							waitUntilDone:NO];
+		[self performSelector:updateSelector
+				   withObject:theContact];
 	}
 }
 	
@@ -186,7 +183,8 @@ static BOOL didInitOscar = NO;
 	
 	const char				*buddyName = [[theContact UID] UTF8String];
 	
-	if ((od = gc->proto_data) &&
+	if (gc &&
+		(od = gc->proto_data) &&
 		(userinfo = aim_locate_finduserinfo(od->sess, buddyName))){
 	
 		bi = g_hash_table_lookup(od->buddyinfo, buddyName);
@@ -240,7 +238,8 @@ static BOOL didInitOscar = NO;
 	aim_userinfo_t		*userinfo;
 	GaimBuddy			*buddy;
 	
-	if ((od = gc->proto_data) &&
+	if (gc &&
+		(od = gc->proto_data) &&
 		(userinfo = aim_locate_finduserinfo(od->sess, [[theContact UID] UTF8String]))){
 			
 		//Update the profile if necessary - length must be greater than one since we get "" with info_len 1
@@ -280,7 +279,8 @@ static BOOL didInitOscar = NO;
 	aim_userinfo_t		*userinfo;
 	GaimBuddy			*buddy;
 	
-	if ((od = gc->proto_data) && 
+	if (gc &&
+		(od = gc->proto_data) && 
 		(userinfo = aim_locate_finduserinfo(od->sess, [[theContact UID] UTF8String]))){
 	
 	/*

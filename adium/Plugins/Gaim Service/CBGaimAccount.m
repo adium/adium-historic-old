@@ -148,7 +148,7 @@ static id<GaimThread> gaimThread = nil;
 	}
 }
 
-- (oneway void)updateContact:(AIListContact *)theContact forEvent:(GaimBuddyEvent)event
+- (oneway void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
 {
 	
 }		
@@ -488,14 +488,14 @@ static id<GaimThread> gaimThread = nil;
 }
 
 //Typing update in an IM
-- (oneway void)typingUpdateForIMChat:(AIChat *)chat typing:(BOOL)typing
+- (oneway void)typingUpdateForIMChat:(AIChat *)chat typing:(NSNumber *)typing
 {
 	[self setTypingFlagOfContact:(AIListContact*)[chat listObject]
-							  to:typing];
+							  to:[typing boolValue]];
 }
 
 //Multiuser chat update
-- (oneway void)updateForChat:(AIChat *)chat type:(GaimConvUpdateType)type
+- (oneway void)updateForChat:(AIChat *)chat type:(NSNumber *)type
 {
 	
 }
@@ -712,14 +712,33 @@ static id<GaimThread> gaimThread = nil;
 	return (type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray);
 }
 
--(oneway void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID
+-(oneway void)privacyPermitListAdded:(NSString *)sourceUID
+{
+	[self accountPrivacyList:PRIVACY_PERMIT added:sourceUID];
+}
+-(oneway void)privacyDenyListAdded:(NSString *)sourceUID
+{
+	[self accountPrivacyList:PRIVACY_DENY added:sourceUID];
+}
+
+-(void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID
 {
 	//Get our contact
 	AIListContact   *contact = [self _contactWithUID:[sourceUID compactedString]];
 	
 	[(type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray) addObject:contact];
 }
--(oneway void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID
+
+-(oneway void)privacyPermitListRemoved:(NSString *)sourceUID
+{
+	[self accountPrivacyList:PRIVACY_PERMIT removed:sourceUID];
+}
+-(oneway void)privacyDenyListRemoved:(NSString *)sourceUID
+{
+	[self accountPrivacyList:PRIVACY_DENY removed:sourceUID];
+}
+
+-(void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID
 {
 	//Get our contact, which must already exist for us to care about its removal
 	AIListContact   *contact = [[adium contactController] existingContactWithService:[[service handleServiceType] identifier]
@@ -816,10 +835,10 @@ static id<GaimThread> gaimThread = nil;
 }
 
 //Update an ESFileTransfer object progress
-- (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(float)percent bytesSent:(float)bytesSent
+- (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(NSNumber *)percent bytesSent:(NSNumber *)bytesSent
 {
-	NSLog(@"File Transfer: %f%% complete",percent);
-    [fileTransfer setPercentDone:percent bytesSent:bytesSent];
+	NSLog(@"File Transfer: %f%% complete",[percent floatValue]);
+    [fileTransfer setPercentDone:[percent floatValue] bytesSent:[bytesSent floatValue]];
 }
 
 //The remote side canceled the transfer, the fool.  Tell the fileTransferController then destroy the xfer
@@ -891,16 +910,16 @@ static id<GaimThread> gaimThread = nil;
 	//Set password and connect
 	gaim_account_set_password(account, [password UTF8String]);
 
-	if (GAIM_DEBUG) NSLog(@"Adium: Connect: Initiating connection.");
+	if (GAIM_DEBUG) NSLog(@"Adium: Connect: %@ initiating connection.",[self UID]);
 
 	[gaimThread connectAccount:self];
 
-	while (!gc){
+/*	while (!gc){
 		gc = gaim_account_get_connection(account);
-		if (!gc) NSLog(@"no gc, retrying");
+		//if (!gc) NSLog(@"no gc, retrying");
 	}
-
-	if (GAIM_DEBUG) NSLog(@"Adium: Connect: Done initiating connection %x.",gc);
+*/
+	if (GAIM_DEBUG) NSLog(@"Adium: Connect: %@ done initiating connection %x.",[self UID], gc);
 }
 
 //Configure libgaim's proxy settings using the current system values
@@ -1074,10 +1093,10 @@ static id<GaimThread> gaimThread = nil;
 
 //	[self accountConnectionDisconnected];
 }
-- (oneway void)accountConnectionNotice:(const char*)text
+- (oneway void)accountConnectionNotice:(NSString *)connectionNotice
 {
     [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Connection Notice",[self UID],[self serviceID]]
-                                    withDescription:[NSString stringWithUTF8String:text]];	
+                                    withDescription:connectionNotice];	
 }
 
 //Our account has disconnected (called automatically by gaimServicePlugin)
@@ -1100,9 +1119,7 @@ static id<GaimThread> gaimThread = nil;
 		if (reconnectAttemptsRemaining && 
 			[self shouldAttemptReconnectAfterDisconnectionError:lastDisconnectionError] && !(connectionIsSuicidal)) {
 
-			[self performSelectorOnMainThread:@selector(autoReconnectAfterNumberDelay:)
-								   withObject:[NSNumber numberWithInt:AUTO_RECONNECT_DELAY]
-								waitUntilDone:YES];
+			[self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
 			reconnectAttemptsRemaining--;
 		}else{
 			if (lastDisconnectionError){
@@ -1133,6 +1150,8 @@ static id<GaimThread> gaimThread = nil;
 	[self setStatusObject:nil forKey:@"ConnectionProgressString" notify:NO];
 	[self setStatusObject:nil forKey:@"ConnectionProgressPercent" notify:NO];	
 
+	gc = gaim_account_get_connection(account);
+	
 	//Apply any changes
 	[self notifyOfChangedStatusSilently:NO];
 	
@@ -1150,18 +1169,15 @@ static id<GaimThread> gaimThread = nil;
 	[lastDisconnectionError release]; lastDisconnectionError = nil;
 }
 
-- (oneway void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count
+- (oneway void)accountConnectionProgressStep:(NSNumber *)step percentDone:(NSNumber *)connectionProgressPrecent
 {
-	NSString	*connectionProgressString = [self connectionStringForStep:step];
-	NSNumber	*connectionProgressPrecent = [NSNumber numberWithFloat:((float)step/(float)(step_count-1))];
+	NSString	*connectionProgressString = [self connectionStringForStep:[step intValue]];
 
 	[self setStatusObject:connectionProgressString forKey:@"ConnectionProgressString" notify:NO];
 	[self setStatusObject:connectionProgressPrecent forKey:@"ConnectionProgressPercent" notify:NO];	
 
 	//Apply any changes
-	[self performSelectorOnMainThread:@selector(notifyOfChangedStatusNumberSilently:)
-						   withObject:[NSNumber numberWithBool:NO]
-						waitUntilDone:YES];
+	[self notifyOfChangedStatusSilently:NO];
 }
 
 //Sublcasses should override to provide a string for each progress step
@@ -1495,9 +1511,7 @@ static id<GaimThread> gaimThread = nil;
 	}
 	
 	//Apply any changes
-	[theContact performSelectorOnMainThread:@selector(notifyOfChangedStatusNumberSilently:)
-						   withObject:[NSNumber numberWithBool:YES]
-						waitUntilDone:NO];
+	[theContact notifyOfChangedStatusSilently:YES];
 }
 
 - (NSArray *)contactStatusFlags
@@ -1518,9 +1532,7 @@ static id<GaimThread> gaimThread = nil;
 		[contact setStatusObject:[NSNumber numberWithBool:typing]
 						  forKey:@"Typing"
 						  notify:NO];
-		[contact performSelectorOnMainThread:@selector(notifyOfChangedStatusNumberSilently:)
-									 withObject:[NSNumber numberWithBool:NO]
-								  waitUntilDone:NO];
+		[contact notifyOfChangedStatusSilently:NO];
     }
 }
 

@@ -8,8 +8,10 @@
 #import "SLGaimCocoaAdapter.h"
 
 @protocol AdiumGaimDO
+
 - (GaimAccount*)gaimAccount;
 
+/*
 - (oneway void)accountConnectionConnected;
 - (oneway void)accountConnectionReportDisconnect:(NSString *)text;
 - (oneway void)accountConnectionNotice:(const char*)text;
@@ -42,11 +44,13 @@
 - (oneway void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID;
 - (oneway void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID;
 
-- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID;
 - (oneway void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer;
 - (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(float)percent bytesSent:(float)bytesSent;
 - (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer;
 - (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer;
+*/
+
+- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID;
 
 - (AIListContact *)_contactWithUID:(NSString *)inUID;
 - (AIChat *)chatWithName:(NSString *)name;
@@ -129,15 +133,15 @@
 #pragma mark Gaim callback handling methods
 - (oneway void)accountConnectionConnected;
 - (oneway void)accountConnectionReportDisconnect:(NSString *)text;
-- (oneway void)accountConnectionNotice:(const char*)text;
+- (oneway void)accountConnectionNotice:(NSString *)text;
 - (oneway void)accountConnectionDisconnected;
-- (oneway void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count;
+- (oneway void)accountConnectionProgressStep:(NSNumber *)step percentDone:(NSNumber *)connectionProgressPrecent;
 
 - (oneway void)newContact:(AIListContact *)theContact;
 - (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName;
 - (oneway void)updateContact:(AIListContact *)theContact;
 - (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias;
-- (oneway void)updateContact:(AIListContact *)theContact forEvent:(GaimBuddyEvent)event;
+- (oneway void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event;
 - (oneway void)updateSignon:(AIListContact *)theContact withData:(void *)data;
 - (oneway void)updateSignoff:(AIListContact *)theContact withData:(void *)data;
 - (oneway void)updateSignonTime:(AIListContact *)theContact withData:(NSDate *)signonDate;
@@ -149,8 +153,8 @@
 - (oneway void)removeContact:(AIListContact *)theContact;
 
 - (oneway void)addChat:(AIChat *)chat;
-- (oneway void)typingUpdateForIMChat:(AIChat *)chat typing:(BOOL)typing;
-- (oneway void)updateForChat:(AIChat *)chat type:(GaimConvUpdateType)type;
+- (oneway void)typingUpdateForIMChat:(AIChat *)chat typing:(NSNumber *)typing;
+- (oneway void)updateForChat:(AIChat *)chat type:(NSNumber *)type;
 - (oneway void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
 - (oneway void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
 - (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat;
@@ -161,7 +165,7 @@
 
 - (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID;
 - (oneway void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer;
-- (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(float)percent bytesSent:(float)bytesSent;
+- (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(NSNumber *)percent bytesSent:(NSNumber *)bytesSent;
 - (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer;
 - (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer;
 
