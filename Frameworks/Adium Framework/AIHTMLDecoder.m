@@ -322,7 +322,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		[string appendString:[pageColor hexString]];
 		[string appendString:@"\">"];
 	}
-	
+
 	//Loop through the entire string
 	searchRange = NSMakeRange(0,0);
 	while(searchRange.location < messageLength){
@@ -1009,7 +1009,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		}else if([arg caseInsensitiveCompare:Color] == NSOrderedSame){
 			NSString *colorString = [inArgs objectForKey:arg];
 			
-			//If colorString is a name, obtain its hex value (it may already be a hex value)
+			//If colorString is a name, obtain its hex value (if it isn't already a hex value)
 			NSString *colorValue  = [colorNames objectForKey:[colorString lowercaseString]];
 			if(colorValue) colorString = colorValue;
 			
@@ -1018,7 +1018,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		}else if([arg caseInsensitiveCompare:Back] == NSOrderedSame){
 			NSString *colorString = [inArgs objectForKey:arg];
 			
-			//If colorString is a name, obtain its hex value (it may already be a hex value)
+			//If colorString is a name, obtain its hex value (if it isn't already a hex value)
 			NSString *colorValue  = [colorNames objectForKey:[colorString lowercaseString]];
 			if(colorValue) colorString = colorValue;
 			[textAttributes setTextBackgroundColor:[colorString hexColor]];
@@ -1036,6 +1036,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	while((arg = [enumerator nextObject])){
 		if([arg caseInsensitiveCompare:@"BGCOLOR"] == NSOrderedSame){
 			NSString *colorString = [inArgs objectForKey:arg];
+			//If colorString is a name, obtain its hex value (if it isn't already a hex value)
 			NSString *colorValue  = [colorNames objectForKey:[colorString lowercaseString]];
 			if(colorValue) colorString = colorValue;
 			[textAttributes setBackgroundColor:[colorString hexColor]];
