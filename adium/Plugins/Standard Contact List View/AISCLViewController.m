@@ -205,6 +205,7 @@
 				[contactListView updateHorizontalSizeForObject:object];
 			}
 		}else{
+			[contactListView reloadData];
 			[contactListView _performFullRecalculation];	
 		}
     }
