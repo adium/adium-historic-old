@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.103 2004/08/16 23:48:37 evands Exp $
+// $Id: AIInterfaceController.m,v 1.104 2004/08/17 03:29:09 evands Exp $
 
 #import "AIInterfaceController.h"
 #import "AIStandardListWindowController.h"
@@ -327,6 +327,7 @@
 //Last chat to be active (should only be nil if no chats are open)
 - (AIChat *)mostRecentActiveChat
 {
+	NSLog(@"*** returning %@",mostRecentActiveChat);
 	return(mostRecentActiveChat);
 }
 //Solely for key-value pairing purposes
