@@ -13,12 +13,14 @@
 extern const NSString	* NDAppleScriptOffendingObject,
 								* NDAppleScriptPartialResult;
 
+@protocol NDScriptDataAppleEventResumeHandler;
+
 /*!
 	@class NDComponentInstance
 	@abstract A class to represent a component instance.
 	@discussion A component instance is a connection to a component (osa component) used to compile and execute AppleScripts. This class is to be used with <tt>NDAppleScriptObject</tt>.
  */
-@interface NDComponentInstance : NSObject <NDScriptDataSendEvent, NDScriptDataActive, NDScriptDataAppleEventResumeHandler, NSCopying>
+@interface NDComponentInstance : NSObject <NDScriptDataObjectSendEvent, NDScriptDataObjectActive, NDScriptDataAppleEventResumeHandler, NSCopying>
 {
 @private
 	ComponentInstance									instanceRecord;
