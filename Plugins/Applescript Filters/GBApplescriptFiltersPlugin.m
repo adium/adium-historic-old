@@ -1,17 +1,17 @@
 //
-//  GBiTunerPlugin.m
+//  GBApplescriptFiltersPlugin.m
 //  Adium
 //
 //  Created by Gregory Barchard on Wed Dec 10 2003.
 //
 
-#import "GBiTunerPlugin.h"
+#import "GBApplescriptFiltersPlugin.h"
 
 #define SCRIPT_BUNDLE_EXTENSION	@"AdiumScripts"
 #define SCRIPTS_PATH_NAME		@"Scripts"
 #define SCRIPT_EXTENSION		@"scpt"
 
-@interface GBiTunerPlugin (PRIVATE)
+@interface GBApplescriptFiltersPlugin (PRIVATE)
 - (void)_appendScripts:(NSArray *)scripts toMenu:(NSMenu *)menu;
 - (void)_sortScriptsByTitle:(NSMutableArray *)sortArray;
 - (NSMutableArray *)_loadScriptsFromDirectory:(NSString *)dirPath intoUsageArray:(NSMutableArray *)useArray;
@@ -25,7 +25,7 @@
 int _scriptTitleSort(id scriptA, id scriptB, void *context);
 int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 
-@implementation GBiTunerPlugin
+@implementation GBApplescriptFiltersPlugin
 
 //Install plugin
 - (void)installPlugin
