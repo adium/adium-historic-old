@@ -21,6 +21,7 @@ Adium, Copyright 2001-2005, Adam Iser
 @interface AIEditStateWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName customState:(AIStatus *)inState notifyingTarget:(id)inTarget;
 - (id)_positionControl:(id)control relativeTo:(id)guide height:(int *)height;
+- (void)configureStateMenu;
 @end
 
 /*!
@@ -67,7 +68,7 @@ Adium, Copyright 2001-2005, Adam Iser
 
 	originalStatusState = [inStatusState retain];
 	target = inTarget;
-	
+
 	return(self);
 }
 
@@ -81,17 +82,26 @@ Adium, Copyright 2001-2005, Adam Iser
 }
 
 /*!
- * Configure the window after it loads
+ * @brief Configure the window after it loads
  */
 - (void)windowDidLoad
 {
 	//Center our window if we're not a sheet (or opening a sheet failed)
 	[[self window] center];
-	
-	[popUp_state setMenu:[[adium statusController] menuOfStatusesWithTarget:self]];
+
+	[self configureStateMenu];
 
 	//Configure our editor for the passed state
 	[self configureForState:originalStatusState];
+}
+
+/*!
+ * @brief Configure the state menu with a fresh menu of active statuses
+ */
+- (void)configureStateMenu
+{
+	[popUp_state setMenu:[[adium statusController] menuOfStatusesWithTarget:self]];
+	needToRebuildPopUpState = NO;	
 }
 
 /*!
@@ -251,6 +261,26 @@ Adium, Copyright 2001-2005, Adam Iser
  */
 - (void)configureForState:(AIStatus *)statusState
 {
+	//State menu
+	NSString	*description;
+	int			index;
+
+	if(needToRebuildPopUpState){
+		[self configureStateMenu];
+	}
+	
+	description = [self descriptionForStateOfStatus:statusState];
+	index = [popUp_state indexOfItemWithTitle:description];
+	if(index != -1){
+		[popUp_state selectItemAtIndex:index];
+	}else{
+		[popUp_state setTitle:[NSString stringWithFormat:@"%@ (%@)",
+			description,
+			AILocalizedString(@"No compatible accounts connected",nil)]];
+		
+		needToRebuildPopUpState = YES;
+	}
+
 	//Toggles
 	[checkbox_invisible setState:[statusState invisible]];
 	[checkbox_idle setState:[statusState shouldForceInitialIdleTime]];
@@ -283,7 +313,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	double		idleStart = [textField_idleHours intValue]*3600 + [textField_idleMinutes intValue]*60;
 	
 	statusState = (originalStatusState ? [[originalStatusState copy] autorelease] : [AIStatus status]);
-	[statusState setMutabilityTpye:AIEditableState];
+	[statusState setMutabilityType:AIEditableState];
 	
 	//XXX
 	/*[statusState setTitle:]*/
