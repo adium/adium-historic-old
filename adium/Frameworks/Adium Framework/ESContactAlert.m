@@ -3,7 +3,6 @@
 //  Adium XCode
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #import "ESContactAlert.h"
@@ -35,6 +34,7 @@
 {
     NSMutableArray * eventActionArray = [[adium contactAlertsController] eventActionArrayForContactAlert:self];
     int row = [[adium contactAlertsController] rowForContactAlert:self];
+    NSLog(@"eventActionArray is %@, row is %i",eventActionArray,row);
     NSMutableDictionary *currentDict = [[eventActionArray objectAtIndex:row] mutableCopy];
     
     if (object)

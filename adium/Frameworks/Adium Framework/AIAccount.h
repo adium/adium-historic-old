@@ -97,10 +97,13 @@ typedef enum {
  * accounts, check out 'working with accounts' and 'creating service code'.
  */
 @interface AIAccount : AIListObject {
-    id <AIServiceController>	service;				//The service controller that spawned us
-	NSString					*password;				//Password of this account
-
-    BOOL						silentAndDelayed; 			//We are waiting for and processing our sign on updates
+    id <AIServiceController>	service;                            //The service controller that spawned us
+    NSString                    *password;                          //Password of this account
+    
+    BOOL                        silentAndDelayed;                   //We are waiting for and processing our sign on updates
+    
+    NSTimer                     *refreshTimer;
+    NSMutableDictionary         *refreshDict;
 }
 
 - (id)initWithUID:(NSString *)inUID service:(id <AIServiceController>)inService;
@@ -124,15 +127,19 @@ typedef enum {
  */
 - (id <AIServiceController>)service;
 
-//Methods that might be subclassed
--(NSString *)encodedStringFromAttributedString:(NSAttributedString *)inAttributedString;
-
 //Methods that should be subclassed
 - (void)initAccount; 				//Init anything relating to the account
 - (id <AIAccountViewController>)accountView;	//Return a view controller for the connection window
 - (NSArray *)supportedPropertyKeys;		//Return an array of supported status keys
 - (void)updateStatusForKey:(NSString *)key; //The account's status did change
+
+- (void)updateAttributedStatusString:(NSAttributedString *)inAttributedString forKey:(NSString *)key;
+- (void)setAttributedStatusString:(NSAttributedString *)inAttributedString forKey:(NSString *)key;
+
 - (void)connect;
 - (void)disconnect;
+
+//Methods that might be subclassed
+-(NSString *)encodedStringFromAttributedString:(NSAttributedString *)inAttributedString;
 
 @end
