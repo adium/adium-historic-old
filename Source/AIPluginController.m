@@ -151,19 +151,40 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin;
 	[self loadPluginWithClass:[ESMetaContactContentsPlugin class]];
 	
 	//	[self loadPluginWithClass:[AISMViewPlugin class]];
-		
+#endif
+	
+	[[owner notificationCenter] addObserver:self 
+								   selector:@selector(adiumVersionWillBeUpgraded:) 
+									   name:Adium_VersionWillBeUpgraded
+									 object:nil];
+}
+
+- (void)finishIniting
+{
+#ifdef ADIUM_COMPONENTS
 	#ifdef ALL_IN_ONE
 		[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
 		[self loadPluginWithClass:[CBGaimServicePlugin class]];
 		[self loadPluginWithClass:[NEHTicTacToePlugin class]];
 	#endif
+#endif
 		
-#endif
-	
 #ifndef ALL_IN_ONE
-	[self loadPluginsFromPath:[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath] confirmLoading:NO];
-	[self loadPluginsFromPath:[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath] confirmLoading:YES];
+	[self loadPluginsFromPath:[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath]
+			   confirmLoading:NO];
+	[self loadPluginsFromPath:[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath] 
+			   confirmLoading:YES];
 #endif
+}
+
+- (void)adiumVersionWillBeUpgraded:(NSNotification *)notification
+{
+	//When the version is upgraded, re-request confirmation for external plugins.
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:CONFIRMED_PLUGINS];
+	
+	[[owner notificationCenter] removeObserver:self
+										  name:Adium_VersionWillBeUpgraded
+										object:nil];
 }
 
 //close

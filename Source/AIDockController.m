@@ -139,6 +139,10 @@
 - (void)adiumVersionUpgraded:(NSNotification *)notification
 {
 	[self updateAppBundleIcon];
+	
+	[[owner notificationCenter] removeObserver:self
+										  name:Adium_VersionUpgraded
+										object:nil];
 }
 
 - (void)updateAppBundleIcon
