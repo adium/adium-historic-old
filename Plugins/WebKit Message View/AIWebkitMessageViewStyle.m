@@ -477,11 +477,11 @@ DeclareString(AppendNextMessage);
 }
 
 /*!
- * @brief Default variant for styles version 3 and later
+ * @brief Default variant for all style versions
  */
 - (NSString *)defaultVariant
 {
-	return([styleBundle objectForInfoDictionaryKey:@"DefaultVariant"]);
+	return(styleVersion < 3 ? [self noVariantName] : [styleBundle objectForInfoDictionaryKey:@"DefaultVariant"]);
 }
 
 
