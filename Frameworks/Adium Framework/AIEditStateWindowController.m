@@ -19,6 +19,7 @@
 #import "AIStatusController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
+#import <AIUtilities/AISendingTextView.h>
 #import <AIUtilities/AIWindowAdditions.h>
 
 #define CONTROL_SPACING			8

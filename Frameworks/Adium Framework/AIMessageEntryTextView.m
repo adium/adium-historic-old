@@ -364,12 +364,12 @@ static NSImage *pushIndicatorImage = nil;
 }
 
 //Return the selected list object (to auto-configure the contact menu)
-- (AIListObject *)listObject
+- (AIListContact *)listObject
 {
 	return([chat listObject]);
 }
 
-- (AIListObject *)preferredListObject
+- (AIListContact *)preferredListObject
 {
 	return([chat preferredListObject]);
 }
