@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.130 2004/05/13 09:21:56 eevyl Exp $
+$Id: ToDoList.txt,v 1.131 2004/05/14 02:35:37 adamiser Exp $
 
 
 Legend
@@ -33,6 +33,7 @@ Bugs
 * "Customize Toolbar..." menu item remains active even when "Show Toolbar" is inactive since there isn't one. 
 * Push/pop indicator could use 1-2 px extra spacing from the right & left since its nearly flush with the scrollbar 
     // brian now dons his flameproof pants :)
+* Add/Edit link menu item needs to disable when unavailable
 
 Applescripts:
 * Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
@@ -45,7 +46,6 @@ Contact List:
 * Adding a contact with no groups defined crashes adium.
 * Adding a group makes the contact list window reappear.
 * Auto-resizing is no longer correctly sticking to the bottom of the screen?
-* Offline contacts are not always displaying (Show them, disconnect, and then re-connect.  They are gone)
 * Orphans group  (Hey, the behavior is strange, so I'd consider this a bug)
 * Manual ordering is lost when Adium is quit and relaunched.
 
@@ -411,3 +411,4 @@ Features & Changes:
 = Magnetic Windows:  Use Fire's 'solution' of sliding them to screen edges after a drag.
 = Our 'new message' toolbar button is gooooone gone gone gone gone
 = For contacts with no Adium alias and a matching address book card, the contact list format preference will be ignored.  So, if it's set to "Alias (Contact Name)", it will only display the address book name at first.  If the preference is toggled, the correct formatting will be applied.
+= Offline contacts are not always displaying (Show them, disconnect, and then re-connect.  They are gone)
