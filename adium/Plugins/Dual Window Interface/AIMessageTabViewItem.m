@@ -83,11 +83,11 @@
 {
     //Observe it's primary list object's status
     [[adium notificationCenter] removeObserver:self name:ListObject_AttributesChanged object:nil];
-    if([notification object]){
-        [[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:)
+	if([messageView listObject]){
+		[[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:)
 										   name:ListObject_AttributesChanged
-										 object:[[notification object] listObject]];
-    }
+										 object:[messageView listObject]];
+	}
 }
 
 //
