@@ -70,7 +70,7 @@
 }
 
 //
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     NSArray		*modifiedAttributes = nil;
 
@@ -221,11 +221,11 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_STATUS_COLORING] == 0){
-	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
         NSEnumerator	*enumerator;
         AIListObject	*object;
-
-	//Release the old values..
+		
+		//Release the old values..
         [signedOffColor release];
         [signedOnColor release];
         [awayColor release];
@@ -234,7 +234,7 @@
         [unviewedContentColor release];
         [onlineColor release];
         [idleAndAwayColor release];
-
+		
         [signedOffInvertedColor release];
         [signedOnInvertedColor release];
         [awayInvertedColor release];
@@ -243,7 +243,7 @@
         [unviewedContentInvertedColor release];
         [onlineInvertedColor release];
         [idleAndAwayInvertedColor release];
-
+		
         [awayLabelColor release];
         [idleLabelColor release];
         [signedOffLabelColor release];
@@ -253,7 +253,7 @@
         [onlineLabelColor release];
         [idleAndAwayLabelColor release];
         
-	//Cache the preference values
+		//Cache the preference values
         signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
         signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
         awayColor = [[[prefDict objectForKey:KEY_AWAY_COLOR] representedColor] retain];
@@ -262,7 +262,7 @@
         unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
         onlineColor = [[[prefDict objectForKey:KEY_ONLINE_COLOR] representedColor] retain];
         idleAndAwayColor = [[[prefDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor] retain];
-
+		
         signedOffInvertedColor = [[signedOffColor colorWithInvertedLuminance] retain];
         signedOnInvertedColor = [[signedOnColor colorWithInvertedLuminance] retain];
         awayInvertedColor = [[awayColor colorWithInvertedLuminance] retain];
@@ -271,7 +271,7 @@
         unviewedContentInvertedColor = [[unviewedContentColor colorWithInvertedLuminance] retain];
         onlineInvertedColor = [[onlineColor colorWithInvertedLuminance] retain];
         idleAndAwayInvertedColor = [[idleAndAwayColor colorWithInvertedLuminance] retain];
-
+		
         awayLabelColor = [[[prefDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColorWithAlpha:alpha] retain];
         idleLabelColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColorWithAlpha:alpha] retain];
         signedOffLabelColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColorWithAlpha:alpha] retain];
@@ -280,7 +280,7 @@
         unviewedContentLabelColor = [[[prefDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColorWithAlpha:alpha] retain];
         onlineLabelColor = [[[prefDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColorWithAlpha:alpha] retain];
         idleAndAwayLabelColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColorWithAlpha:alpha] retain];
-
+		
         //
         awayEnabled = [[prefDict objectForKey:KEY_AWAY_ENABLED] boolValue];
         idleEnabled = [[prefDict objectForKey:KEY_IDLE_ENABLED] boolValue];
@@ -290,15 +290,15 @@
         unviewedContentEnabled = [[prefDict objectForKey:KEY_UNVIEWED_ENABLED] boolValue];
         onlineEnabled = [[prefDict objectForKey:KEY_ONLINE_ENABLED] boolValue];
         idleAndAwayEnabled = [[prefDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue];
-
+		
         //
         alpha = [[prefDict objectForKey:KEY_STATUS_LABEL_OPACITY] floatValue];
-
+		
         //Force each contact to update (Messy)
-	enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
-	while((object = [enumerator nextObject])){
-            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil delayed:YES silent:YES] delayed:YES];
-	}
+		enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+		while((object = [enumerator nextObject])){
+            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil silent:YES]];
+		}
     }
 }
 

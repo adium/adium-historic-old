@@ -86,6 +86,7 @@
 - (void)_AIMHandleMessageInFromUID:(NSString *)name rawMessage:(NSString *)rawMessage;
 - (AIChat *)_openChatWithContact:(AIListContact *)contact;
 - (void)removeAllStatusFlagsFromContact:(AIListContact *)contact;
+- (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing;
 @end
 
 @implementation AIMTOC2Account
@@ -705,7 +706,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.104 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.105 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)

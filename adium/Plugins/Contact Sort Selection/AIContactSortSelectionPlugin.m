@@ -46,28 +46,24 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_SORTING] == 0){
-        NSEnumerator			*enumerator;
-        id <AIListSortController>	controller;
-        NSString			*identifier;
-
-        //
-        identifier = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING] objectForKey:KEY_CURRENT_SORT_MODE_IDENTIFIER];
-        
-        //
-        enumerator = [[[adium contactController] sortControllerArray] objectEnumerator];
-        while((controller = [enumerator nextObject])){
-            if([identifier compare:[controller identifier]] == 0){
-                [[adium contactController] setActiveSortController:controller];
-                break;
-            }
-        }
-    }
+        if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Key"] compare:KEY_CURRENT_SORT_MODE_IDENTIFIER] == 0){
+			NSEnumerator				*enumerator;
+			AISortController 			*controller;
+			NSString					*identifier;
+			
+			//
+			identifier = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING] objectForKey:KEY_CURRENT_SORT_MODE_IDENTIFIER];
+			
+			//
+			enumerator = [[[adium contactController] sortControllerArray] objectEnumerator];
+			while((controller = [enumerator nextObject])){
+				if([identifier compare:[controller identifier]] == 0){
+					[[adium contactController] setActiveSortController:controller];
+					break;
+				}
+			}
+		}
+	}
 }
         
 @end
-
-
-
-
-
-
