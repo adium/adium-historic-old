@@ -203,7 +203,10 @@
     stepTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/TIMES_PER_SECOND
         target:self
         selector:@selector(update:)
-        userInfo:[[NSMutableString alloc] initWithString:@""]
+        userInfo:[[NSMutableDictionary alloc] initWithObjectsAndKeys:
+            @"", @"String",
+            [NSNumber numberWithInt:0], @"Number",
+            nil]
         repeats:YES];
 }
 
@@ -360,7 +363,6 @@
                     NSData *mdData = [NSData dataWithBytes:(const int *)MD5([tempData bytes],
                                     [tempData length], NULL) length:16];
                             
-                    
                     NSString *temp = [mdData description];
                     temp = [temp substringWithRange:NSMakeRange(1,[temp length]-2)];
                     temp = [temp stringByTrimmingCharactersInSet:
@@ -369,7 +371,7 @@
                     
                     NSLog (@"Password encrypted");
                     
-                    [[timer userInfo] setString:temp];
+                    [[timer userInfo] setObject:temp forKey:@"String"];
                     connectionPhase ++;
                 }
                 break;
@@ -377,12 +379,12 @@
             case 14:
                 if ([socket readyForSending])
                 {
-                    NSString *temp = [timer userInfo];
+                    NSString *temp = [[timer userInfo] objectForKey:@"String"];
                     NSLog (@"Password being sent");
                     [socket sendData:[[NSString stringWithFormat:@"USR 3 MD5 S %@\r\n", temp]
                         dataUsingEncoding:NSUTF8StringEncoding]];
                     NSLog(@">>> %@",[NSString stringWithFormat:@"USR 3 MD5 S %@", temp]);
-                    [[timer userInfo] setString:@""];
+                    [[timer userInfo] setObject:@"" forKey:@"String"];
                     connectionPhase ++;
                 }
                 break;
@@ -412,7 +414,7 @@
                     if([[message objectAtIndex:0] isEqual:@"MSG"]) 
                     {
                         NSLog(@"%d",[[message objectAtIndex:3] intValue]);
-                        [[timer userInfo] setString:[message objectAtIndex:3]];
+                        [[timer userInfo] setObject:[message objectAtIndex:3] forKey:@"String"];
                         connectionPhase++;
                     }
                 }
@@ -421,10 +423,11 @@
             case 17:
                 if ([socket readyForReceiving])
                 {
-                    [socket getData:&inData ofLength:[[timer userInfo] intValue]];
+                    [socket getData:&inData ofLength:
+                        [[[timer userInfo] objectForKey:@"String"] intValue]];
                     NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
                         length:[inData length]]);
-                    [[timer userInfo] setString:@""];
+                    [[timer userInfo] setObject:@"" forKey:@"String"];
                     connectionPhase++;
                 }
                 break;
@@ -560,6 +563,100 @@
     }
 }
 
+- (void)getPackets:(NSTimer *)timer
+{
+    /*NSData *inData = nil;
+    if ([socket isValid])
+    {
+        switch([[[timer userInfo] objectForKey:@"Number"] intValue])
+        {
+            case 0: //read
+                if([socket readyForReceiving])
+                {
+                    [socket getDataToNewline:&inData];
+                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]]);
+                    NSArray *message = [[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]-2] 
+                    componentsSeparatedByString:@" "];
+                    
+                    NSString *command = [message objectAtIndex:0];
+                    
+                    if([command isEqual:@"CHL"])
+                    {
+                        //create the data
+                        NSData *tempData = [[NSString stringWithFormat:@"%@Q1P7W2E4J9R8U3S5",
+                                [message objectAtIndex:2]]
+                            dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+                        
+                        //md5 it
+                        NSData *mdData = [NSData dataWithBytes:(const int *)MD5([tempData bytes],
+                                        [tempData length], NULL) length:16];
+                        
+                        //do stuff to get the number right
+                        NSString *temp = [mdData description];
+                        temp = [temp substringWithRange:NSMakeRange(1,[temp length]-2)];
+                        temp = [temp stringByTrimmingCharactersInSet:
+                            [NSCharacterSet whitespaceCharacterSet]];
+                        temp = [[temp componentsSeparatedByString:@" "]
+                            componentsJoinedByString:@""];
+                        
+                        //set it in userInfo
+                        [[timer userInfo] setObject:temp forKey:@"String"];
+                        
+                        //go to sending stage
+                        [[timer userInfo] setObject:[NSNumber numberWithInt:1] forKey:@"Number"];
+                    }
+                    else if([command isEqual:@""])
+                    {
+                        //do stuff...
+                    }
+                }
+                break;
+                
+            case 1: //Send
+                if([socket readyForSending])
+                {
+                    //send it out
+                    [socket sendData:[[[timer userInfo] objectForKey:@"String"]
+                        dataUsingEncoding:NSUTF8StringEncoding]];
+                    NSLog(@">>> %@", [[timer userInfo] objectForKey:@"String"]);
+                    
+                    //reset the string
+                    [[timer userInfo] setObject:@"" forKey:@"String"];
+                    
+                    //go back to reading
+                    [[timer userInfo] setObject:[NSNumber numberWithInt:0] forKey:@"Number"];
+                    
+                }
+                break;
+                
+            case 2: //recieve a payload command, the length is in String.
+                if([socket readyForReceiving])
+                {
+                    //read data of length in String, then receive.
+                    
+                    //do some checking here
+                    
+                    //go back to reading packets, only if we are done here, though.
+                    [[timer userInfo] setObject:[NSNumber numberWithInt:0] forKey:@"Number"];
+                }
+            break;
+        }
+    }
+    else //socket is dead
+    {
+        NSLog (@"NS Socket found to be invalid");
+        [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] 			forKey:@"Status" account:self];
+    }
+    
+    //now enumerate over each SB socket, and check for packets on each one.
+    //if there is a packet, go to some kind of handling method
+    
+    //CODE GO HERE, MONKEY!
+*/
+}
+
 - (void)update:(NSTimer *)timer
 {
     ACCOUNT_STATUS status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
@@ -567,6 +664,7 @@
 	switch (status)
 	{
         case STATUS_ONLINE:
+            [self getPackets:timer];
             break;
         case STATUS_OFFLINE:
         case STATUS_NA:
@@ -582,7 +680,15 @@
 
 - (void)disconnect
 {
+    if([socket isValid] && [socket readyForSending])
+    {
+        [socket sendData:[@"OUT\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        NSLog(@">>> %@", @"OUT");
+    }
     [socket release];
+    
+    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE]
+        forKey:@"Status" account:self];
 }
 
 /*- (void)connect
