@@ -694,7 +694,7 @@
     BOOL messageAlreadyExists;
     
     //Get us an array of all the keys in the dictionary
-    NSArray *fireKeyArray = [[NSArray alloc] initWithArray:[fireMessageDict allKeys]];
+    NSArray *fireKeyArray = [[[NSArray alloc] initWithArray:[fireMessageDict allKeys]] autorelease];
               
     NSEnumerator *fireEnumerator = [fireKeyArray objectEnumerator];
     while(fireMsgTitle = [fireEnumerator nextObject])
