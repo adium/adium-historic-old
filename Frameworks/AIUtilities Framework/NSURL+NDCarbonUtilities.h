@@ -1,6 +1,6 @@
 /*!
 	@header NSURL+NDCarbonUtilities
-	@abstract Provides method for interacting with Carbon APIs.
+	@brief Provides method for interacting with Carbon APIs.
 	@discussion The methods in <tt>NSURL(NDCarbonUtilities)</tt> are simply wrappers for functions that can be found within the carbon API.
  */
 
@@ -9,14 +9,14 @@
 
 /*!
 	@category NSURL(NDCarbonUtilities)
-	@abstract Provides method for interacting with Carbon APIs.
+	@brief Provides method for interacting with Carbon APIs.
 	@discussion Methods for dealing with <tt>FSRef</tt>&rsquo;s, <tt>FSSpec</tt> and other useful carbon stuff.
  */
 @interface NSURL (NDCarbonUtilities)
 
 /*!
 	@method URLWithFSRef:
-	@abstract Alloc and intialize a <tt>NSURL</tt>.
+	@brief Alloc and intialize a <tt>NSURL</tt>.
 	@discussion Returns a file url for the file refered to by a <tt>FSRef</tt>.
 	@param fsRef A pointer to a <tt>FSRef</tt>.
 	@result A <tt>NSURL</tt> containing a file url.
@@ -25,7 +25,7 @@
 
 	/*!
 @method URLWithFileSystemPathHFSStyle:
-	 @abstract Alloc and intialize a <tt>NSURL</tt>.
+	 @brief Alloc and intialize a <tt>NSURL</tt>.
 	 @discussion Returns a file url for the file refered to by a HFS style path.
 	 @param hfsString A <tt>NSString</tt> containing a HFS style path.
 	 @result A <tt>NSURL</tt> containing a file url.
@@ -33,49 +33,49 @@
 + (NSURL *)URLWithFileSystemPathHFSStyle:(NSString *)hfsString;
 	/*!
 	@method getFSRef:
-	@abstract Get a <tt>FSRef</tt>.
+	@brief Get a <tt>FSRef</tt>.
 	@discussion Obtain a <tt>FSRef</tt> for a file url.
 	@param fsRef A pointer to a <tt>FSRef</tt> struct, to be filled by the method.
 	@result Returns <tt>YES</tt> if successful, if the method returns <tt>NO</tt> then <tt>fsRef</tt> contains garbage.
- */
+  */
 - (BOOL)getFSRef:(FSRef *)fsRef;
 
 /*!
 	@method getFSSpec:
-	@abstract Get a <tt>FSSpec</tt>.
+	@brief Get a <tt>FSSpec</tt>.
 	@discussion Obtain a <tt>FSSpec</tt> for a file url.
 	@param fsSpec A pointer to a <tt>FSSpec</tt> struct, to be filled by the method.
 	@result Returns <tt>YES</tt> if successful, if the method returns <tt>NO</tt> then <tt>fsSpec</tt> contains garbage.
- */
+  */
 - (BOOL)getFSSpec:(FSSpec *)fsSpec;
 
 /*!
 	@method URLByDeletingLastPathComponent
-	@abstract Delete last component of a url.
+	@brief Delete last component of a url.
 	@discussion Returns a new <tt>NSURL</tt> equivelent to the receiver with the last component removed.
 	@result A new <tt>NSURL</tt>
- */
+  */
 - (NSURL *)URLByDeletingLastPathComponent;
 
 /*!
 	@method fileSystemPathHFSStyle
-	@abstract Returns a HFS style path.
+	@brief Returns a HFS style path.
 	@discussion Returns a <tt>NSString</tt> containg a HFS style path (e.g. <tt>Macitosh HD:Users:</tt>) useful for display purposes.
 	@result A new <tt>NSString</tt> containing a HFS style path for the same file or directory as the receiver.
- */
+  */
 - (NSString *)fileSystemPathHFSStyle;
 
 /*!
 	@method resolveAliasFile
-	@abstract Resolve an alias file.
+	@brief Resolve an alias file.
 	@discussion Returns an file url <tt>NSURL</tt> refered to by the receveive if the receveive refers to an alias file. If it does not refer to an alias file the a url identical to the receveive is returned.
 	@result An file url <tt>NSURL</tt>.
- */
+  */
 - (NSURL *)resolveAliasFile;
 
 /*!
 	@method finderInfoFlags:type:creator:
-	@abstract Get finder info flags creator and type.
+	@brief Get finder info flags creator and type.
 	@discussion The bits of the finder info flag are
 	<blockquote>
 	<table border = "1"  width = "90%">
@@ -100,20 +100,20 @@
 	@param type Contains finder type on return.
 	@param creator Contains creator on return.
 	@result Return <tt>YES</tt> if successful, otherwise <tt>NO</tt> and the returned values are invalid.
- */
+  */
 - (BOOL)finderInfoFlags:(UInt16*)flags type:(OSType*)type creator:(OSType*)creator;
 
 /*!
 	@method finderLocation
-	@abstract Return a finder items location.
+	@brief Return a finder items location.
 	@discussion Returns a finder items location within its parent window.
 	@result A <tt>NSPoint</tt>
- */
+  */
 - (NSPoint)finderLocation;
 
 /*!
 	@method setFinderInfoFlags:mask:type:creator:
-	@abstract Set finder info flags, creator and type.
+	@brief Set finder info flags, creator and type.
 	@discussion The bits of the finder info flag are
 	<blockquote>
 		<table border = "1"  width = "90%">
@@ -139,16 +139,16 @@
 	@param type The Finder file type
 	@param creator The application creator code
 	@result Returns <tt>YES</tt> if successful.
- */
+  */
 - (BOOL)setFinderInfoFlags:(UInt16)flags mask:(UInt16)aMask type:(OSType)type creator:(OSType)creator;
 
 /*!
 	@method setFinderLocation:
-	@abstract Sets the location a finder item.
+	@brief Sets the location a finder item.
 	@discussion Set the location of a finder item within in container.
 	@param location The location
 	@result Returns <tt>YES</tt> if successful.
- */
+  */
 - (BOOL)setFinderLocation:(NSPoint)location;
 
 
@@ -156,16 +156,16 @@
 
 /*!
 	@category NSURL(NDCarbonUtilitiesInfoFlags)
-	@abstract Adds methods to <tt>NSURL</tt> 
+	@brief Adds methods to <tt>NSURL</tt> 
 	@discussion Adds methods to simplify testing of the flags returned from <tt>finderInfoFlags:type:creator:</tt>
  */
 @interface NSURL (NDCarbonUtilitiesInfoFlags)
 /*!
 	@method hasCustomIcon
-	@abstract Test if a file has a custom icon.
+	@brief Test if a file has a custom icon.
 	@discussion Test to see if the file refered to by the receiver has a custom icon. The is equivelent to testing for the <tt>kHasCustomIcon</tt> flag 
 	@result Returns <tt>YES</tt> if the file has a custom icon.
- */
+  */
 - (BOOL)hasCustomIcon;
 
 @end

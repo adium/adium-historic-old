@@ -115,7 +115,7 @@
     [dictionary setObject:inColor forKey:NSBackgroundColorAttributeName];
 }
 
-//Set the text background color
+//Set the background color
 - (void)setBackgroundColor:(NSColor *)inColor
 {
     [dictionary setObject:inColor forKey:AIBodyColorAttributeName];

@@ -14,10 +14,11 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /*!
-	@class AIAlternatingRowTableView
-	@abstract An NSTableView subclass supporting alternating rows.
-	@discussion An <tt>NSTableView</tt> subclass supporting alternating rows.
-*/
+ * @class AIAlternatingRowTableView
+ * @brief An NSTableView subclass supporting alternating rows.
+ *
+ * An <tt>NSTableView</tt> subclass supporting alternating rows.
+ */
 @interface AIAlternatingRowTableView : NSTableView {
 	BOOL	acceptFirstMouse;
     BOOL	drawsAlternatingRows;
@@ -25,27 +26,27 @@
 }
 
 /*!
-	@method setDrawsAlternatingRows:
-	@abstract Set if the table view draws a grid, alternating by rows
-	@discussion Set if the table view draws a grid, alternating by rows. The grid will be drawn alternating between the background color and the color specified by setAlternatingRowColor:, which has a sane, light blue default.
-	@param flag YES if the alternating rows should be drawn
-*/
+ * @brief Set if the table view draws a grid, alternating by rows
+ *
+ * Set if the table view draws a grid, alternating by rows. The grid will be drawn alternating between the background color and the color specified by setAlternatingRowColor:, which has a sane, light blue default.
+ * @param flag YES if the alternating rows should be drawn
+ */
 - (void)setDrawsAlternatingRows:(BOOL)flag;
 
 /*!
-	@method setAlternatingRowColor:
-	@abstract Set the color used for drawing alternating row backgrounds.
-	@discussion Set the color used for drawing alternating row backgrounds. Ignored if drawsAlternatingRows is NO.
-	@param color The <tt>NSColor</tt> to use for drawing alternating row backgrounds.
-*/
+ * @brief Set the color used for drawing alternating row backgrounds.
+ *
+ * Set the color used for drawing alternating row backgrounds. Ignored if drawsAlternatingRows is NO.
+ * @param color The <tt>NSColor</tt> to use for drawing alternating row backgrounds.
+ */
 - (void)setAlternatingRowColor:(NSColor *)color;
 
 /*!
-	@method setAcceptsFirstMouse:
-	@abstract Set the return value of -(BOOL)acceptsFirstMouse
-	@discussion Set the return value of -(BOOL)acceptsFirstMouse. See the <tt>NSView</tt> documentation for details.
-	@param acceptFirstMouse The new value to return for -(BOOL)acceptsFirstMouse
-*/
+ * @brief Set the return value of -(BOOL)acceptsFirstMouse
+ *
+ * Set the return value of -(BOOL)acceptsFirstMouse. See the <tt>NSView</tt> documentation for details.
+ * @param acceptFirstMouse The new value to return for -(BOOL)acceptsFirstMouse
+ */
 - (void)setAcceptsFirstMouse:(BOOL)acceptFirstMouse;
 
 @end

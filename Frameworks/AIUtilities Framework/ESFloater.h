@@ -7,6 +7,12 @@
 
 #import <Foundation/Foundation.h>
 
+/*!
+ * @class ESFloater
+ * @brief A programtically movable, fadable <tt>NSImage</tt> display class
+ *
+ * <tt>ESFloater</tt> allows for the display of an <tt>NSImage</tt>, including an animating one, anywhere on the screen.  The image can be easily moved programatically and will fade into and out of view as requested. 
+ */
 @interface ESFloater : NSObject {
     NSImageView			*staticView;
     NSPanel				*panel;

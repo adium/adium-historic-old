@@ -55,7 +55,7 @@
  Returns YES if the recursiveLock is completely unlocked -- that is, 
  is not locked by any thread including the calling one. This may be needed because -(BOOL)tryLock
  will return YES if the lock is locked by the current thread.
- */
+  */
 - (BOOL)isUnlocked
 {
 	return(locksByCurrentOwner == 0);

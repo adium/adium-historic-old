@@ -35,11 +35,12 @@
 @end
 
 /*!
-	@class AICustomTabsView
-	@abstract Dynamic, draggable, separatable tabs, with full-featured delegate-driven behavior
-	@discussion <tt>AICustomTabsView</tt> is the public class which displays and manages dynamic, draggable tabs.
-		(**INCOMPLETE**)
-*/
+ * @class AICustomTabsView
+ * @brief Dynamic, draggable, separatable tabs, with full-featured delegate-driven behavior
+ *
+ * <tt>AICustomTabsView</tt> is the public class which displays and manages dynamic, draggable tabs.
+ * 		(**INCOMPLETE**)
+ */
 @interface AICustomTabsView : NSView {
     IBOutlet	NSTabView			*tabView;
 

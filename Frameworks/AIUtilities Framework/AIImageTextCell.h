@@ -14,10 +14,11 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /*!
-	@class AIImageTextCell
-	@abstract A cell which displays an image and one or two lines of text
-	@discussion This <tt>AIGradientCell</tt> subclass displays in image on the left and one or two lines of text centered vertically in the space remaining for the cell
-*/
+ * @class AIImageTextCell
+ * @brief A cell which displays an image and one or two lines of text
+ *
+ * This <tt>AIGradientCell</tt> subclass displays in image on the left and one or two lines of text centered vertically in the space remaining for the cell
+ */
 @interface AIImageTextCell : AIGradientCell {
     NSFont 		*font;
     NSString	*subString;
@@ -25,33 +26,33 @@
 }
 
 /*
-	@method setFont:
-	@abstract Set the font for drawing the stringValue of the cell
-	@discussion The set font is used for drawing the stringValue of the cell.
-	@param inFont The <tt>NSFont</tt> to use.
-*/
+ * @brief Set the font for drawing the stringValue of the cell
+ *
+ * The set font is used for drawing the stringValue of the cell.
+ * @param inFont The <tt>NSFont</tt> to use.
+ */
 - (void)setFont:(NSFont *)inFont;
 
 /*
-	@method font
-	@abstract Returns the font used for drawing the stringValue of the cell
-	@discussion Returns the font used for drawing the stringValue of the cell
-	@result An <tt>NSFont</tt>
-*/
+ * @brief Returns the font used for drawing the stringValue of the cell
+ *
+ * Returns the font used for drawing the stringValue of the cell
+ * @return An <tt>NSFont</tt>
+ */
 - (NSFont *)font;
 
 /*
-	@method setSubString:
-	@abstract Set a string to be drawn underneath the stringValue of the cell
-	@discussion If non-nil, this string will be drawn underneath the stringValue of the cell.  The two will, together, be vertically centered (when not present, the stringValue alone is vertically centered). It is drawn in with the system font, at size 10.
-*/
+ * @brief Set a string to be drawn underneath the stringValue of the cell
+ *
+ * If non-nil, this string will be drawn underneath the stringValue of the cell.  The two will, together, be vertically centered (when not present, the stringValue alone is vertically centered). It is drawn in with the system font, at size 10.
+ */
 - (void)setSubString:(NSString *)inSubString;
 
 /*
-	@method setMaxImageWidth
-	@abstract Set the maximum width of the image drawn on the left
-	@discussion Set the maximum width of the image drawn on the left.  The default value is 24.
-*/
+ * @brief Set the maximum width of the image drawn on the left
+ *
+ * Set the maximum width of the image drawn on the left.  The default value is 24.
+ */
 - (void)setMaxImageWidth:(float)inMaxImageWidth;
 
 @end

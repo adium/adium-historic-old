@@ -16,20 +16,21 @@
 @class AILinkTrackingController, NSTextView;
 
 /*!
-	@class AILinkTextView
-	@abstract A text view that supports link tracking and clicking
-	@discussion A text view that supports link tracking (displaying the system link cursor when hovering over a link, and optionally showing a tooltip when the link's display text differs from the URL to which it links) and clicking
-*/
+ * @class AILinkTextView
+ * @brief A text view that supports link tracking and clicking
+ *
+ * A text view that supports link tracking (displaying the system link cursor when hovering over a link, and optionally showing a tooltip when the link's display text differs from the URL to which it links) and clicking
+ */
 @interface AILinkTextView : NSTextView {
     AILinkTrackingController		*linkTrackingController;
 }
 
 /*!
-	@method setShowTooltip:
-	@abstract Set if links should show a tooltip when hovered
-	@discussion Set if links should show a tooltip when hovered if applicable.  A link will only show a tooltip if the displayed text ("Adium") differs from the link itself ("www.adiumx.com").
-	@param inShowTooltip YES if tooltips should be shown.
-*/
+ * @brief Set if links should show a tooltip when hovered
+ *
+ * Set if links should show a tooltip when hovered if applicable.  A link will only show a tooltip if the displayed text ("Adium") differs from the link itself ("www.adiumx.com").
+ * @param inShowTooltip YES if tooltips should be shown.
+ */
 - (void)setShowTooltip:(BOOL)inShowTooltip;
 
 @end

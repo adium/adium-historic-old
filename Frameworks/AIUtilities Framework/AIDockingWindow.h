@@ -6,10 +6,11 @@
 //
 
 /*!
-	@class AIDockingWindow
-	@abstract An NSWindow subclass which docks to screen edges
-	@discussion An NSWindow subclass which docks to screen edges.
-*/
+ * @class AIDockingWindow
+ * @brief An NSWindow subclass which docks to screen edges
+ *
+ * An NSWindow subclass which docks to screen edges.
+ */
 
 @interface AIDockingWindow : NSWindow {
 	NSRect			oldWindowFrame;
