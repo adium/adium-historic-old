@@ -85,7 +85,6 @@
     AIChat			*chat = nil;
     NSString		*message = nil;
     AIAccount		*account = nil;
-    NSString		*object = nil;
     AIListObject	*source = nil;
     NSCalendarDate	*date = nil;
     NSString		*dateString = nil;
@@ -97,8 +96,6 @@
 		if(speakMessages && ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]) ){
 			date = [[content date] dateWithCalendarFormat:nil timeZone:nil];
 			chat	= [notification object];
-			object  = [[chat statusDictionary] objectForKey:@"DisplayName"];
-			if(!object) object = [[chat listObject] UID];
 			account	= [chat account];
 			source	= [content source];
 			message = [[[content message] safeString] string];
