@@ -429,7 +429,9 @@ int HTMLEquivalentForFontSize(int fontSize)
                             NSAttributedString *attachString = [self processImgTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
                             [attrString appendAttributedString:attachString];
                         }
-                    
+					// Ignore <p> for those wacky AIM express users
+					} else if ([chunkString caseInsensitiveCompare:@"P"] || [chunkString caseInsensitiveCompare:@"/P"]) {
+
                     //Invalid
                     }else{
                         validTag = NO;
