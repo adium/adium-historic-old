@@ -91,7 +91,6 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 	return([[self preferredContact] service]);
 }
 
-
 //Object Storage -------------------------------------------------------------------------------------------------------
 #pragma mark Object Storage
 //Add an object to this meta contact (PRIVATE: For contact controller only)
@@ -815,6 +814,11 @@ int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *con
 - (NSEnumerator *)objectEnumerator
 {
     return([containedObjects objectEnumerator]);
+}
+
+- (NSEnumerator *)listContactsEnumerator
+{
+	return([[self listContacts] objectEnumerator]);
 }
 
 //Remove all the objects from this group (PRIVATE: For contact controller only)

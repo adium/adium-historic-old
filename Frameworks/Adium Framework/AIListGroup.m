@@ -133,6 +133,11 @@
     return([containedObjects objectEnumerator]);
 }
 
+- (NSEnumerator *)listContactsEnumerator
+{
+	return([self objectEnumerator]);
+}
+
 //Remove all the objects from this group (PRIVATE: For contact controller only)
 - (void)removeAllObjects
 {
