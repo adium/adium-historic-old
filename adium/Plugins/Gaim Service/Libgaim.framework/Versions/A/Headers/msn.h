@@ -1,0 +1,113 @@
+/**
+ * @file msn.h The MSN protocol plugin
+ *
+ * gaim
+ *
+ * Copyright (C) 2003-2004 Christian Hammond <chipx86@gnupdate.org>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+#ifndef _MSN_H_
+#define _MSN_H_
+
+#include <libgaim/internal.h>
+
+#include <libgaim/account.h>
+#include <libgaim/accountopt.h>
+#include <libgaim/blist.h>
+#include <libgaim/connection.h>
+#include <libgaim/conversation.h>
+#include <libgaim/debug.h>
+#include <libgaim/md5.h>
+#include <libgaim/notify.h>
+#include <libgaim/privacy.h>
+#include <libgaim/proxy.h>
+#include <libgaim/prpl.h>
+#include <libgaim/request.h>
+#include <libgaim/server.h>
+#include <libgaim/sha.h>
+#include <libgaim/sslconn.h>
+#include <libgaim/util.h>
+
+#define MSN_BUF_LEN 8192
+
+#define USEROPT_MSNSERVER 3
+#define MSN_SERVER "messenger.hotmail.com"
+#define USEROPT_MSNPORT 4
+#define MSN_PORT 1863
+
+#define MSN_TYPING_RECV_TIMEOUT 6
+#define MSN_TYPING_SEND_TIMEOUT	4
+
+#define HOTMAIL_URL "http://www.hotmail.com/cgi-bin/folders"
+#define PASSPORT_URL "http://lc1.law13.hotmail.passport.com/cgi-bin/dologin?login="
+#define PROFILE_URL "http://members.msn.com/"
+
+#define USEROPT_HOTMAIL 0
+
+
+#define MSN_FT_GUID "{5D3E02AB-6190-11d3-BBBB-00C04F795683}"
+
+#define MSN_CONNECT_STEPS 8
+
+#define MSN_CLIENTINFO \
+	"Client-Name: Gaim/" VERSION "\r\n" \
+	"Chat-Logging: Y\r\n"
+
+
+typedef enum
+{
+	MSN_LIST_FL_OP = 0x01,
+	MSN_LIST_AL_OP = 0x02,
+	MSN_LIST_BL_OP = 0x04,
+	MSN_LIST_RL_OP = 0x08
+
+} MsnListOp;
+
+typedef enum
+{
+	MSN_CLIENT_CAP_WIN_MOBILE = 0x01,
+	MSN_CLIENT_CAP_UNKNOWN_1  = 0x02,
+	MSN_CLIENT_CAP_VIEW_INK   = 0x04,
+	MSN_CLIENT_CAP_SEND_INK   = 0x08,
+	MSN_CLIENT_CAP_VIDEO_CHAT = 0x10,
+	MSN_CLIENT_CAP_BASE       = 0x20,
+	MSN_CLIENT_CAP_UNKNOWN_2  = 0x40,
+	MSN_CLIENT_CAP_UNKNOWN_3  = 0x80
+
+} MsnClientCaps;
+
+typedef enum
+{
+	MSN_CLIENT_VER_5_0 = 0x00,
+	MSN_CLIENT_VER_6_0 = 0x10,
+	MSN_CLIENT_VER_6_1 = 0x20
+
+} MsnClientVerId;
+
+#define MSN_CLIENT_ID_VERSION      MSN_CLIENT_VER_6_0
+#define MSN_CLIENT_ID_RESERVED_1   0x00
+#define MSN_CLIENT_ID_RESERVED_2   0x00
+#define MSN_CLIENT_ID_CAPABILITIES (MSN_CLIENT_CAP_BASE | MSN_CLIENT_CAP_VIEW_INK)
+
+#define MSN_CLIENT_ID \
+	((MSN_CLIENT_ID_VERSION    << 24) | \
+	 (MSN_CLIENT_ID_RESERVED_1 << 16) | \
+	 (MSN_CLIENT_ID_RESERVED_2 <<  8) | \
+	 (MSN_CLIENT_ID_CAPABILITIES))
+
+#endif /* _MSN_H_ */
+
+void msn_set_friendly_name(GaimConnection *gc, const char *entry);
