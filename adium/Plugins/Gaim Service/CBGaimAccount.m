@@ -109,11 +109,11 @@ static id<GaimThread> gaimThread = nil;
 
 - (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias
 {
-	//Remove any display name we'd previosly placed
-	[[theContact displayArrayForKey:@"Display Name"] setObject:nil withOwner:self];
-
 	//Insert the new display name
 	if([[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]){
+		//Remove any display name we'd previously placed
+		[[theContact displayArrayForKey:@"Display Name"] setObject:nil withOwner:self];
+
 		if(![gaimAlias isEqualToString:[theContact formattedUID]]){
 			[theContact setStatusObject:gaimAlias
 								 forKey:@"FormattedUID"
@@ -123,7 +123,8 @@ static id<GaimThread> gaimThread = nil;
 			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 		}
 	}else{
-		if(![gaimAlias isEqualToString:[theContact statusObjectForKey:@"Server Display Name"]]){
+		if(![gaimAlias isEqualToString:[theContact displayName]] &&
+		   ![gaimAlias isEqualToString:[theContact statusObjectForKey:@"Server Display Name"]]){
 			//Set the server display name status object as the full display name
 			[theContact setStatusObject:gaimAlias
 								 forKey:@"Server Display Name"
@@ -1485,9 +1486,14 @@ static id<GaimThread> gaimThread = nil;
 					alias = [[listObject preferenceForKey:@"Alias"
 													group:PREF_GROUP_ALIASES 
 									ignoreInheritedValues:YES] UTF8String];
+
+					if ((alias && !buddy->alias) ||
+						(!alias && buddy->alias) ||
+						(strcmp(buddy->alias,alias) != 0)){
 					
-					gaim_blist_server_alias_buddy(buddy,alias);
-					serv_alias_buddy(buddy);
+						gaim_blist_alias_buddy(buddy,alias);
+						serv_alias_buddy(buddy);
+					}
 				}
 			}
 		}
