@@ -67,19 +67,23 @@ DeclareString(Idle);
 																   repeats:YES] retain];
             }
             [idleObjectArray addObject:inObject];
+			
+			//Set the correct idle value
+			[self setIdleForObject:inObject silent:silent];
 
         }else{
-            //Stop tracking the handle
-            [idleObjectArray removeObject:inObject];
-            if([idleObjectArray count] == 0){
-                [idleObjectTimer invalidate]; [idleObjectTimer release]; idleObjectTimer = nil;
-                [idleObjectArray release]; idleObjectArray = nil;
-            }
-
+			if ([idleObjectArray containsObjectIdenticalTo:inObject]){
+				//Stop tracking the handle
+				[idleObjectArray removeObject:inObject];
+				if([idleObjectArray count] == 0){
+					[idleObjectTimer invalidate]; [idleObjectTimer release]; idleObjectTimer = nil;
+					[idleObjectArray release]; idleObjectArray = nil;
+				}
+				
+				//Set the correct idle value
+				[self setIdleForObject:inObject silent:silent];
+			}
         }
-
-        //Set the correct idle value
-        [self setIdleForObject:inObject silent:silent];
     }
 
     return(nil);
@@ -112,6 +116,12 @@ DeclareString(Idle);
 
     if(idleSince){ //Set the handle's 'idle' value
         int	idle = -[idleSince timeIntervalSinceNow] / 60.0;
+		
+		/* They are idle; a non-zero idle time is needed.  We'll treat them as generically idle until this updates */
+		if (idle == 0){
+			idle = -1;
+		}
+
 		[inObject setStatusObject:[NSNumber numberWithInt:idle]
 						   forKey:Idle
 						   notify:NO];
@@ -133,7 +143,7 @@ DeclareString(Idle);
     int 		idle = [[inObject numberStatusObjectForKey:@"Idle"] intValue];
     NSString	*entry = nil;
 	
-    if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
+    if((idle > 599400) || (idle == -1)){ //Cap idle at 999 Hours (999*60*60 seconds)
 		entry = @"Idle";
     }else if(idle != 0){
 		entry = @"Idle Time";
@@ -147,7 +157,7 @@ DeclareString(Idle);
     int 				idle = [[inObject numberStatusObjectForKey:Idle] intValue];
     NSAttributedString	*entry = nil;
 	
-    if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
+    if((idle > 599400) || (idle == -1)){ //Cap idle at 999 Hours (999*60*60 seconds)
 		entry = [[NSAttributedString alloc] initWithString:@"Yes"];
 		
     }else if(idle != 0){
