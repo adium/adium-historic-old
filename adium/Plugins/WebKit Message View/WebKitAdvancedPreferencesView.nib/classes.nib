@@ -20,8 +20,13 @@
             SUPERCLASS = AIModularPane; 
         }, 
         {
+            ACTIONS = {changeFormat = id; }; 
             CLASS = ESWKMVAdvancedPreferences; 
             LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_combineConsecutive" = NSButton; 
+                "popUp_nameFormat" = NSPopUpButton; 
+            }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 

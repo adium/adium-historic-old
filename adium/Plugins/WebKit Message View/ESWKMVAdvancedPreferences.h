@@ -4,10 +4,11 @@
 //
 //  Created by Evan Schoenberg on Fri Apr 30 2004.
 
-#import "AIWebKitMessageViewPlugin.h"
-
 @interface ESWKMVAdvancedPreferences : AIPreferencePane {
-
+	IBOutlet	NSPopUpButton   *popUp_nameFormat;
+	IBOutlet	NSButton		*checkBox_combineConsecutive;
 }
+
+- (IBAction)changeFormat:(id)sender;
 
 @end

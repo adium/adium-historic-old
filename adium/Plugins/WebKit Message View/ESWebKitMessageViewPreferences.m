@@ -10,12 +10,13 @@
 
 #define PREVIEW_FILE	@"Preview"
 
-#define NO_BACKGROUND_ITEM_TITLE   AILocalizedString(@"No Image",nil)
+#define NO_BACKGROUND_ITEM_TITLE		AILocalizedString(@"No Image",nil)
 #define DEFAULT_BACKGROUND_ITEM_TITLE   AILocalizedString(@"Default",nil)
-#define CUSTOM_BACKGROUND_ITEM_TITLE   AILocalizedString(@"Custom...",nil)
+#define CUSTOM_BACKGROUND_ITEM_TITLE	AILocalizedString(@"Custom...",nil)
 
 @interface ESWebKitMessageViewPreferences (PRIVATE)
 - (void)updatePreview;
+- (void)preferencesChanged:(NSNotification *)notification;
 - (void)_updateViewForStyle:(NSBundle *)style variant:(NSString *)variant;
 - (void) _loadPreviewFromStylePath:(NSString *)inStylePath;
 - (void)_createListObjectsFromDict:(NSDictionary *)previewDict withLoadedPreviewDirectory:(NSString *)loadedPreviewDirectory;
@@ -76,7 +77,12 @@
 		[popUp_styles selectItemWithTitle:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
 	}
 
-	[self updatePreview];
+	//Observe preference changes and set our initial preferences
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged
+									 object:nil];
+	[self preferencesChanged:nil];
 }
 
 //Close the preference view
@@ -90,6 +96,12 @@
 	[stylePath release]; stylePath = nil;
 }
 
+- (void)preferencesChanged:(NSNotification *)notification
+{
+	if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] == 0){
+		[self updatePreview];
+	}
+}
 
 #pragma mark Changing preferences
 //Save changed preference
@@ -106,12 +118,15 @@
                                               group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	}else if (sender == popUp_font){
 		[preview setFontFamily:[[popUp_font selectedItem] representedObject]];
+		[self updatePreview];
 		
 	}else if (sender == popUp_fontSize){
 		[[preview preferences] setDefaultFontSize:[[popUp_fontSize selectedItem] tag]];
+		[self updatePreview];
 		
 	}else if (sender == popUp_minimumFontSize){
 		[[preview preferences] setMinimumFontSize:[[popUp_minimumFontSize selectedItem] tag]];
+		[self updatePreview];	
 		
 	}else if (sender == colorWell_customBackgroundColor){
 		NSString	*key = [plugin backgroundColorKeyForStyle:[[popUp_styles selectedItem] title]];
@@ -126,8 +141,6 @@
                                              forKey:key
                                               group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	}
-	
-	[self updatePreview];
 }
 
 - (IBAction)changeStyle:(id)sender

@@ -10,5 +10,9 @@
 	<string>Lucida Grande</string>
 	<key>DefaultFontSize</key>
 	<integer>11</integer>
+	<key>Name Format</key>
+	<integer>0</integer>
+	<key>Combine Consecutive Messages</key>
+	<true/>
 </dict>
 </plist>

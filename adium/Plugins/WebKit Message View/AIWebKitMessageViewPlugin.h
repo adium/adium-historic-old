@@ -18,8 +18,9 @@
 
 #define	KEY_WEBKIT_TIME_STAMP_FORMAT		@"Time Stamp"
 #define KEY_WEBKIT_SHOW_USER_ICONS			@"Show User Icons"
+#define KEY_WEBKIT_NAME_FORMAT				@"Name Format"
 #define KEY_WEBKIT_STYLE					@"Message Style"
-
+#define KEY_WEBKIT_COMBINE_CONSECUTIVE		@"Combine Consecutive Messages"
 #define KEY_WEBKIT_DEFAULT_FONT_FAMILY		@"DefaultFontFamily"
 #define KEY_WEBKIT_DEFAULT_FONT_SIZE		@"DefaultFontSize"
 
@@ -28,12 +29,23 @@
 #define MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT @"Message Styles"
 
 #import "ESWebKitMessageViewPreferences.h"
+#import "ESWKMVAdvancedPreferences.h"
 
+typedef enum {
+	Display_Name,
+	Display_Name_Screen_Name,
+	Screen_Name_Display_Name,
+	Screen_Name
+} NameFormat;
 
 @interface AIWebKitMessageViewPlugin : AIPlugin <AIMessageViewPlugin> {
 	ESWebKitMessageViewPreferences  *preferences;
+	ESWKMVAdvancedPreferences		*advancedPreferences;
+	
 	NSDateFormatter					*timeStampFormatter;
 	BOOL							showUserIcons;
+	NameFormat						nameFormat;
+	BOOL							combineConsecutive;
 	
 	NSMutableDictionary				*styleDictionary;
 }
