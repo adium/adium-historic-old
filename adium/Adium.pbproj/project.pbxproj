@@ -1488,6 +1488,69 @@
 			settings = {
 			};
 		};
+		3454A7840539D6C4005F0B24 = {
+			children = (
+				3454A7860539D6ED005F0B24,
+				3454A7870539D6ED005F0B24,
+				3454A7850539D6ED005F0B24,
+				3454A7880539D6ED005F0B24,
+			);
+			isa = PBXGroup;
+			name = "Still Images";
+			refType = 4;
+		};
+		3454A7850539D6ED005F0B24 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESStaticView.h;
+			path = "Frameworks/AIUtilities Framework/ESStaticView.h";
+			refType = 4;
+		};
+		3454A7860539D6ED005F0B24 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESFloater.h;
+			path = "Frameworks/AIUtilities Framework/ESFloater.h";
+			refType = 4;
+		};
+		3454A7870539D6ED005F0B24 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESFloater.m;
+			path = "Frameworks/AIUtilities Framework/ESFloater.m";
+			refType = 4;
+		};
+		3454A7880539D6ED005F0B24 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESStaticView.m;
+			path = "Frameworks/AIUtilities Framework/ESStaticView.m";
+			refType = 4;
+		};
+		3454A7890539D6ED005F0B24 = {
+			fileRef = 3454A7850539D6ED005F0B24;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3454A78A0539D6ED005F0B24 = {
+			fileRef = 3454A7860539D6ED005F0B24;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3454A78B0539D6ED005F0B24 = {
+			fileRef = 3454A7870539D6ED005F0B24;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3454A78C0539D6ED005F0B24 = {
+			fileRef = 3454A7880539D6ED005F0B24;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		346E6401051532D6003B2F21 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -17532,6 +17595,8 @@
 				34F77077052B72C4004616D4,
 				D34F70BF05359A5D00A8010B,
 				BF959DD4053938C700000202,
+				3454A7890539D6ED005F0B24,
+				3454A78A0539D6ED005F0B24,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17648,6 +17713,8 @@
 				34F77078052B72C4004616D4,
 				D34F70C005359A5D00A8010B,
 				BF959DD5053938C700000202,
+				3454A78B0539D6ED005F0B24,
+				3454A78C0539D6ED005F0B24,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18344,6 +18411,7 @@
 		};
 		F549EF11036B0FD401A8010A = {
 			children = (
+				3454A7840539D6C4005F0B24,
 				F549EF0A036B0F5B01A8010A,
 				4B6660A104ADF2C400A8010A,
 				4B95210204C049CD00A8010A,
