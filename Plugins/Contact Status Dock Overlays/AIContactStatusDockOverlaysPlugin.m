@@ -23,7 +23,7 @@
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>
-#import <AIUtilities/BZArrayAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
 #import <Adium/AIAbstractListController.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>

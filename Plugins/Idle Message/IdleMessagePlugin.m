@@ -18,7 +18,7 @@
 #import "IdleMessagePreferences.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/BZArrayAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
 
 @interface IdleMessagePlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;

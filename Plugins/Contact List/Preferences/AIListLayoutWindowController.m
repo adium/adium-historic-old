@@ -20,7 +20,7 @@
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
-#import <AIUtilities/BZArrayAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/JVFontPreviewField.h>
 #import <Adium/AIAbstractListController.h>
 
