@@ -1678,6 +1678,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				}
 				
 				if([buddyIconData writeToFile:buddyIconFilename atomically:YES]){
+					GaimDebug (@"%@ setBuddyIcon:%@ onAccount:%@",gaimThread,buddyIconFilename,self);
 					[gaimThread setBuddyIcon:buddyIconFilename onAccount:self];
 					
 				}else{
