@@ -89,14 +89,16 @@
 //Initiate a drag if command is held while clicking
 - (void)mouseDown:(NSEvent *)theEvent
 {
-    if(![[AIMiniToolbarCenter defaultCenter] customizing]){
-        if(([theEvent modifierFlags] & NSCommandKeyMask) && [[self superview] isKindOfClass:[AIMiniToolbar class]]){
-            [(AIMiniToolbar *)[self superview] initiateDragWithEvent:theEvent];
+    AIMiniToolbar	*toolbar = (AIMiniToolbar *)[self superview];
+
+    if(![[AIMiniToolbarCenter defaultCenter] customizing:toolbar]){
+        if([theEvent modifierFlags] & NSCommandKeyMask){
+            [toolbar initiateDragWithEvent:theEvent];
         }else{
             [super mouseDown:theEvent];
         }
     }else{
-        [(AIMiniToolbar *)[self superview] initiateDragWithEvent:theEvent];
+        [toolbar initiateDragWithEvent:theEvent];
     }
 }
 
@@ -109,7 +111,9 @@
 
 - (void)drawRect:(NSRect)rect
 {
-    if([[AIMiniToolbarCenter defaultCenter] customizing]){
+    AIMiniToolbar *toolbar = (AIMiniToolbar *)[self superview];
+    
+    if([[AIMiniToolbarCenter defaultCenter] customizing:toolbar]){
         [[NSColor grayColor] set];
         [NSBezierPath strokeRect:rect];
     }

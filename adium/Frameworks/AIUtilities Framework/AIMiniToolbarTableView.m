@@ -30,7 +30,7 @@
     //Get the clicked item
     dragRow = [self rowAtPoint:clickLocation];
     if(dragRow != -1){
-        [[AIMiniToolbarCenter defaultCenter] dragItemAtRow:dragRow fromPoint:clickLocation withEvent:theEvent];
+        [[self delegate] dragItemAtRow:dragRow fromPoint:clickLocation withEvent:theEvent];
     }
 }
 

@@ -24,17 +24,12 @@
 @class AIMiniToolbarItem, AIMiniToolbar;
 
 @interface AIMiniToolbarCenter : NSObject {
-    IBOutlet	NSPanel		*panel_customization;
-    IBOutlet	NSTableView	*tableView_items;
-
-    BOOL			customizing;
-    
-    NSMutableArray		*itemImageArray;
-    NSMutableArray		*itemArray;
 
     NSMutableDictionary		*toolbarDict;
     NSMutableDictionary		*itemDict;
-    
+
+    NSMutableArray		*customizingArray; //array of toolbar identifiers that are customizing 
+
 }
 
 + (id)defaultCenter;
@@ -42,10 +37,10 @@
 - (void)setItems:(NSArray *)inItems forToolbar:(NSString *)inType;
 - (void)registerItem:(AIMiniToolbarItem *)inItem;
 - (AIMiniToolbarItem *)itemWithIdentifier:(NSString *)inIdentifier;
+- (NSArray *)allItems;
 
 - (IBAction)customizeToolbar:(AIMiniToolbar *)toolbar;
-- (BOOL)customizing;
-- (IBAction)endCustomization:(id)sender;
-- (void)dragItemAtRow:(int)dragRow fromPoint:(NSPoint)inLocation withEvent:(NSEvent *)inEvent;
+- (BOOL)customizing:(AIMiniToolbar *)toolbar;
+- (IBAction)endCustomization:(AIMiniToolbar *)toolbar;
 
 @end

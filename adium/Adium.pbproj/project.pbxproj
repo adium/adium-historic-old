@@ -1910,6 +1910,7 @@
 				F570A61903704F6601A8010A,
 				F55B415B03AB8B2601A8010A,
 				F55B417303AB8C5601A8010A,
+				F55596B603B784C801A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1974,6 +1975,7 @@
 				F55B415503AB8AF901A8010A,
 				F55B415703AB8B0901A8010A,
 				F55B417503AB8C6201A8010A,
+				F55596B703B784C801A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2635,13 +2637,12 @@
 		};
 		F549EF08036B0F2C01A8010A = {
 			children = (
+				F54D96BE03B75F3501A8010A,
 				F570A5C203704CB801A8010A,
-				F55B417403AB8C6201A8010A,
 				F570A5BE03704CB801A8010A,
 				F55B415403AB8AF901A8010A,
 				F570A5C003704CB801A8010A,
 				F5CC42440386D8F901A8010A,
-				F5CC42450386D8F901A8010A,
 			);
 			isa = PBXGroup;
 			name = "Mini Toolbars";
@@ -2777,6 +2778,16 @@
 			isa = PBXGroup;
 			name = Messages;
 			path = "";
+			refType = 4;
+		};
+		F54D96BE03B75F3501A8010A = {
+			children = (
+				F55596B503B784C801A8010A,
+				F55B417403AB8C6201A8010A,
+				F5CC42450386D8F901A8010A,
+			);
+			isa = PBXGroup;
+			name = Customize;
 			refType = 4;
 		};
 		F5519B2903AC3EB501A8010A = {
@@ -2997,6 +3008,30 @@
 		F55263BC0333CA4401A8010A = {
 			isa = PBXTargetDependency;
 			target = F59F9A89032BE6B101A8010A;
+		};
+		F55596B403B784C801A8010A = {
+			isa = PBXFileReference;
+			name = AIMiniToolbarCustomizeController.h;
+			path = "Frameworks/AIUtilities Framework/AIMiniToolbarCustomizeController.h";
+			refType = 4;
+		};
+		F55596B503B784C801A8010A = {
+			isa = PBXFileReference;
+			name = AIMiniToolbarCustomizeController.m;
+			path = "Frameworks/AIUtilities Framework/AIMiniToolbarCustomizeController.m";
+			refType = 4;
+		};
+		F55596B603B784C801A8010A = {
+			fileRef = F55596B403B784C801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F55596B703B784C801A8010A = {
+			fileRef = F55596B503B784C801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		F55B40F803AB877401A8010A = {
 			fileEncoding = 30;
@@ -5780,6 +5815,7 @@
 		F5793978033E74F001A8010A = {
 			children = (
 				F5793952033E74E401A8010A,
+				F55596B403B784C801A8010A,
 				F55B415903AB8B2601A8010A,
 				F55B417203AB8C5601A8010A,
 				F570A5A103704BCE01A8010A,

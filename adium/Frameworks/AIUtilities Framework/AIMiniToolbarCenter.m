@@ -17,8 +17,7 @@
 #import "AIMiniToolbarItem.h"
 #import "AIMiniToolbar.h"
 #import "AIVerticallyCenteredTextCell.h"
-
-#define MINI_TOOLBAR_CUSTOMIZE_NIB	@"MiniToolbarCustomize"	//Filename of the minitoolbar nib
+#import "AIMiniToolbarCustomizeController.h"
 
 @interface AIMiniToolbarCenter (PRIVATE)
 - (id)init;
@@ -41,6 +40,12 @@ static AIMiniToolbarCenter *defaultCenter = nil;
 - (NSArray *)itemsForToolbar:(NSString *)inType
 {
     return([toolbarDict objectForKey:inType]);
+}
+
+//Returns all the available toolbar items
+- (NSArray *)allItems
+{
+    return([itemDict allValues]);
 }
 
 //Set the toolbar item identifiers associated with a toolbar
@@ -68,54 +73,37 @@ static AIMiniToolbarCenter *defaultCenter = nil;
 //Show the customization palette
 - (IBAction)customizeToolbar:(AIMiniToolbar *)toolbar
 {
-    NSEnumerator	*enumerator;
-    AIMiniToolbarItem	*toolbarItem;
-    
-    //Load the customization nib
-    [NSBundle loadNibNamed:MINI_TOOLBAR_CUSTOMIZE_NIB owner:self];
-    [[tableView_items tableColumnWithIdentifier:@"icon"] setDataCell:[[[NSImageCell alloc] init] autorelease]];
-    [[tableView_items tableColumnWithIdentifier:@"label"] setDataCell:[[[AIVerticallyCenteredTextCell alloc] init] autorelease]];
- 
-    //Turn customization mode on
-    customizing = YES;
+    if(![self customizing:toolbar]){ //Do nothing if this toolbar is already being customized
+        //Display the customization palette
+        [AIMiniToolbarCustomizeController showCustomizationWindowForToolbar:toolbar];
+
+        //Add it to our customizing list and notify
+        [customizingArray addObject:[toolbar identifier]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:AIMiniToolbar_RefreshItem object:nil];
+    }
+}
+
+//Returns yes if the specified toolbar is being customized
+- (BOOL)customizing:(AIMiniToolbar *)toolbar
+{
+    NSString		*identifier = [toolbar identifier];
+
+    if([customizingArray containsObject:identifier]){
+        return(YES);
+    }else{
+        return(NO);
+    }
+}
+
+//Closes the customization palettes
+- (IBAction)endCustomization:(AIMiniToolbar *)toolbar
+{
+    //Remove it from our list and notify
+    [customizingArray removeObject:[toolbar identifier]];
     [[NSNotificationCenter defaultCenter] postNotificationName:AIMiniToolbar_RefreshItem object:nil];
 
-    //Build an array of views for every available toolbar item
-    if(itemImageArray) [itemImageArray release];
-    if(itemArray) [itemArray release];
-    itemImageArray = [[NSMutableArray alloc] init];
-    itemArray = [[NSMutableArray alloc] init];
-    enumerator = [[itemDict allValues] objectEnumerator];
-    while((toolbarItem = [enumerator nextObject])){
-        if([toolbarItem configureForObjects:[toolbar configurationObjects]]){
-            //Add the item if it applies to this toolbar's objects
-            NSView	*itemView = [toolbarItem view];
-            NSRect	itemFrame = [itemView frame];
-            NSImage	*itemImage = [[NSImage alloc] initWithSize:itemFrame.size];
-            
-            [itemImage lockFocus];
-                [itemView drawRect:NSMakeRect(0, 0, itemFrame.size.width, itemFrame.size.height)];
-            [itemImage unlockFocus];
-    
-            [itemImageArray addObject:[itemImage autorelease]];
-            [itemArray addObject:toolbarItem];
-        }
-    }
-
-    //Display the customization palette
-    [panel_customization makeKeyAndOrderFront:nil];
-}
-
-//Returns yes if the toolbars are being customized
-- (BOOL)customizing{
-    return(customizing);
-}
-
-//Closes the customization palette
-- (IBAction)endCustomization:(id)sender
-{
     //Turn customization mode off
-    customizing = NO;
+/*    customizing = NO;
     [[NSNotificationCenter defaultCenter] postNotificationName:AIMiniToolbar_RefreshItem object:nil];
 
     //Release the array of views
@@ -124,14 +112,9 @@ static AIMiniToolbarCenter *defaultCenter = nil;
     //Close the customization palette
     [panel_customization orderOut:nil];
     [panel_customization autorelease]; panel_customization = nil;
-}
+*/}
 
-- (BOOL)windowShouldClose:(id)sender
-{
-    [self endCustomization:nil];
 
-    return(YES);
-}
 
 // Private ---------------------------------------------------------------------------
 - (id)init
@@ -140,74 +123,19 @@ static AIMiniToolbarCenter *defaultCenter = nil;
     
     toolbarDict = [[NSMutableDictionary alloc] init];
     itemDict = [[NSMutableDictionary alloc] init];
-    customizing = NO;
+    customizingArray = [[NSMutableArray alloc] init];
     
     return(self);
 }
 
 - (void)dealloc
 {
-    [itemImageArray release];
-    [itemArray release];
     [toolbarDict release];
     [itemDict release];
+    [customizingArray release];
 
     [super dealloc];
 }
-
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
-{
-    return([itemArray count]);
-}
-
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
-{
-    NSString	*identifier = [tableColumn identifier];
-
-    if([identifier compare:@"icon"] == 0){
-        return([itemImageArray objectAtIndex:row]);
-    }else if([identifier compare:@"label"] == 0){
-        return([[itemArray objectAtIndex:row] paletteLabel]);
-    }else{
-        return([itemArray objectAtIndex:row]);
-    }
-}
-
-- (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(int)row
-{
-    return(NO);
-}
-
-- (void)dragItemAtRow:(int)dragRow fromPoint:(NSPoint)inLocation withEvent:(NSEvent *)inEvent
-{
-    NSImage		*image, *opaqueImage;
-    NSPasteboard	*pboard;
-    AIMiniToolbarItem	*dragItem;
-    NSSize		imageSize;
-    
-    dragItem = [itemArray objectAtIndex:dragRow];
-    image = [itemImageArray objectAtIndex:dragRow];
-
-    //Put information on the pasteboard
-    pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
-    [pboard declareTypes:[NSArray arrayWithObjects:MINI_TOOLBAR_ITEM_DRAGTYPE,nil] owner:self];
-    [pboard setString:[dragItem identifier] forType:MINI_TOOLBAR_ITEM_DRAGTYPE];
-
-    //Create an image of the item
-    imageSize = [image size];
-    opaqueImage = [[[NSImage alloc] initWithSize:imageSize] autorelease];
-    [opaqueImage setBackgroundColor:[NSColor clearColor]];
-    [opaqueImage lockFocus];
-        [image dissolveToPoint:NSMakePoint(0,0) fraction:0.7];
-    [opaqueImage unlockFocus];
-
-    //Initiate the drag
-    [tableView_items dragImage:opaqueImage
-                    at:NSMakePoint(inLocation.x - (imageSize.width/2.0), inLocation.y + (imageSize.height/2.0) )
-                offset:NSMakeSize(0,0)
-                 event:inEvent pasteboard:pboard source:self slideBack:YES];
-}
-
 
 
 @end

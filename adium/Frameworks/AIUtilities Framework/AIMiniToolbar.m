@@ -226,7 +226,7 @@
     }
     
     //Draw the 'acceptance' focus ring
-    if(focusedForDrag || [[AIMiniToolbarCenter defaultCenter] customizing]){
+    if(focusedForDrag || [[AIMiniToolbarCenter defaultCenter] customizing:self]){
         NSSetFocusRingStyle(NSFocusRingOnly);
         NSRectFill(rect);
     }
@@ -444,7 +444,7 @@
     
     //Mark the toolbar for redisplay
     [self setNeedsDisplay:YES];
-    if(focusedForDrag || [[AIMiniToolbarCenter defaultCenter] customizing]){
+    if(focusedForDrag || [[AIMiniToolbarCenter defaultCenter] customizing:self]){
         [self setKeyboardFocusRingNeedsDisplayInRect:[self frame]];
     }
 
@@ -467,9 +467,15 @@
 //Called when a drag enters this toolbar, begin parting the items to make space
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
-    //Start tracking the drag
-    hoverSize = [[sender draggedImage] size];
-    [self setFocusedForDrag:YES];
+    NSPasteboard 	*pasteboard = [sender draggingPasteboard];
+    NSString		*toolbarIdentifier = [pasteboard stringForType:MINI_TOOLBAR_TYPE];
+    
+    //We only focus/accept a drag from ourself or the customization palette
+    if(toolbarIdentifier && [identifier compare:toolbarIdentifier] == 0){
+        //Start tracking the drag
+        hoverSize = [[sender draggedImage] size];
+        [self setFocusedForDrag:YES];
+    }
 
     return(NSDragOperationNone);
 }
@@ -477,62 +483,62 @@
 //Called when the drag moves within this toolbar
 - (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender
 {
-    NSEnumerator	*enumerator = [itemArray objectEnumerator];
-    AIMiniToolbarItem	*toolbarItem;
     NSPasteboard 	*pasteboard = [sender draggingPasteboard];
-    int			dragXLocation = [sender draggingLocation].x - [self frame].origin.x;
-    int			lastLocation = 0;
-    int			index = -1;
-
-    //Figure out where the user is hovering the toolbar item
-    while((toolbarItem = [enumerator nextObject])){
-        NSRect	 frame = [[toolbarItem view] frame];
+    NSString		*toolbarIdentifier = [pasteboard stringForType:MINI_TOOLBAR_TYPE];
+    NSDragOperation	dragOperation = NSDragOperationNone;
     
-        if((dragXLocation > lastLocation) && (dragXLocation < frame.origin.x + (frame.size.width / 2.0) ) ){
-            index = [itemArray indexOfObject:toolbarItem];
-            break;
+    if(toolbarIdentifier && [identifier compare:toolbarIdentifier] == 0){
+        NSEnumerator		*enumerator = [itemArray objectEnumerator];
+        AIMiniToolbarItem	*toolbarItem;
+        int			dragXLocation = [sender draggingLocation].x - [self frame].origin.x;
+        int			lastLocation = 0;
+        int			index = -1;
+        
+        //Figure out where the user is hovering the toolbar item
+        while((toolbarItem = [enumerator nextObject])){
+            NSRect	 frame = [[toolbarItem view] frame];
+        
+            if((dragXLocation > lastLocation) && (dragXLocation < frame.origin.x + (frame.size.width / 2.0) ) ){
+                index = [itemArray indexOfObject:toolbarItem];
+                break;
+            }
+    
+            lastLocation = frame.origin.x;
+        }
+        //If they're way off right, append the item to the toolbar's end 
+        if(index == -1 && dragXLocation > lastLocation) index = [itemArray count];
+    
+        //Set the new drag index
+        if(hoverIndex != index){
+            hoverIndex = index;
+            if(!itemsRearranging){
+                [self smoothlyArrangeItems];
+            }
         }
 
-        lastLocation = frame.origin.x;
-    }
-    
-    //Append the item to the end of the toolbar
-    if(index == -1 && dragXLocation > lastLocation){
-        index = [itemArray count];
-    }
-
-    //Set the new drag index
-    if(hoverIndex != index){
-        hoverIndex = index;
-        if(!itemsRearranging){
-            [self smoothlyArrangeItems];
+        if(index != -1){
+            dragOperation = NSDragOperationPrivate;
         }
     }
 
-    //Return the correct drag operation
-    if(index == -1){
-        return(NSDragOperationNone);
-    }else{
-        NSString	*toolbarIdentifier = [pasteboard stringForType:MINI_TOOLBAR_TYPE];
-    
-        if(toolbarIdentifier != nil && [identifier compare:toolbarIdentifier] == 0){ 
-            return(NSDragOperationPrivate);
-        }else{
-            return(NSDragOperationMove);
-        }
-    }
+    return(dragOperation);
 }
 
 //Called when the drag exits this toolbar, restore items to their normal positions
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
-    //Stop tracking the drag
-    hoverIndex = -1;
-    [self setFocusedForDrag:NO];
-    
-    //Let all the views settle back into place
-    if(!itemsRearranging){
-        [self smoothlyArrangeItems];
+    NSPasteboard 	*pasteboard = [sender draggingPasteboard];
+    NSString		*toolbarIdentifier = [pasteboard stringForType:MINI_TOOLBAR_TYPE];
+
+    if(toolbarIdentifier && [identifier compare:toolbarIdentifier] == 0){
+        //Stop tracking the drag
+        hoverIndex = -1;
+        [self setFocusedForDrag:NO];
+        
+        //Let all the views settle back into place
+        if(!itemsRearranging){
+            [self smoothlyArrangeItems];
+        }
     }
 }
 
@@ -550,7 +556,6 @@
     draggedItem = nil;
     enumerator = [itemArray objectEnumerator];
     while((toolbarItem = [enumerator nextObject])){
-        
         viewFrame = [[toolbarItem view] frame];
         if(NSPointInRect(clickLocation, viewFrame)){
             draggedItem = toolbarItem;
@@ -613,7 +618,7 @@
 
     //NSDragOperationDelete - Dragged to trash can (delete)
     //NSDragOperationNone - Dragged off the toolbar, to a non receptor on the screen (POOF, delete)
-    //NSDragOperationMove - Dragged to anothe toolbar (delete)
+ ///////////NSDragOperationCopy - Dragged to another toolbar (delete)
     //NSDragOperationPrivate - Dragged to another toolbar of the same type (nothing)
     
     //Dragged to no destination, show the animated poof
@@ -628,9 +633,8 @@
         [AIAnimatedFloater animatedFloaterWithImage:[AIImageUtilities imageNamed:MINI_TOOLBAR_POOF forClass:[self class]] size:puffSize frames:5 delay:0.08  at:puffOrigin];
     }
 
-    //Move the item
-    if(operation != NSDragOperationPrivate){ //Moved to an identical (or the same) toolbar
-        //Remove the item that was dragged from the toolbar
+    //Remove the item that was dragged from the toolbar
+    if(operation != NSDragOperationPrivate){
         [self removeItemAtIndex:draggedIndex];
     }
 }
