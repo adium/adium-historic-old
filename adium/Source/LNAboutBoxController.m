@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-//$Id: LNAboutBoxController.m,v 1.33 2004/03/25 04:00:33 adamiser Exp $
+//$Id: LNAboutBoxController.m,v 1.34 2004/03/25 13:36:20 adamiser Exp $
 
 #import "LNAboutBoxController.h"
 
@@ -151,7 +151,7 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
     NSDictionary    *infoDict = [[NSBundle mainBundle] infoDictionary];
     NSString	    *version = [infoDict objectForKey:@"CFBundleVersion"];
 	
-    return([NSString stringWithFormat:@"Adium %@",(version ? version : @"")]);
+    return([NSString stringWithFormat:@"Adium X %@",(version ? version : @"")]);
 }
 
 //Load the current build date and our cryptic, non-sequential build number ;)
