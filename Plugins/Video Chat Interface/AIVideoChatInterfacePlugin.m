@@ -26,7 +26,7 @@
 //	NSMenuItem	*menuItem;
 //	
 //	//View my webcam menu
-//	menuItem = [[NSMenuItem alloc] initWithTitle:@"My Webcam"
+//	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"My Webcam",nil)
 //										  target:self 
 //										  action:@selector(openSelfVideo:)
 //								   keyEquivalent:@""];
