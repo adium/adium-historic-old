@@ -20,6 +20,8 @@ typedef enum {
 - (NSData *)BMPRepresentation;
 - (void)tileInRect:(NSRect)rect;
 - (NSImage *)imageByScalingToSize:(NSSize)size;
+- (NSImage *)imageByFadingToFraction:(float)delta;
+- (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta;
 + (NSImage *)imageFromGWorld:(GWorldPtr)gWorldPtr;
 + (NSImage *)systemCloseButtonImageForState:(AICloseButtonState)state controlTint:(NSControlTint)inTint;
 + (NSImage *)systemCheckmark;
