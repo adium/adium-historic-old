@@ -17,6 +17,12 @@
 #define InfoIndentB			80
 #define REFRESH_RATE                    300
 
+@interface AIInfoWindowController (PRIVATE)
+
+- (AIContentMessage *)contentMessageForAttributedString:(NSAttributedString *)inString;
+
+@end
+
 @implementation AIInfoWindowController
 
 //Open a new info window
@@ -213,7 +219,11 @@ static AIInfoWindowController *sharedInstance = nil;
         NSMutableParagraphStyle		*indentStyle;
         NSMutableAttributedString 	*textProfile = [[ownerArray objectAtIndex:0] mutableCopy];
         NSRange				firstLineRange = [[textProfile string] lineRangeForRange:NSMakeRange(0,0)];
-
+        AIContentMessage		*message = [self contentMessageForAttributedString:textProfile];
+        //Run the profile through the filters
+        [[owner contentController] filterObject:message];
+        textProfile = [[message message] mutableCopy];
+        
         //Set correct indent & tabbing on the first line of the profile
         [textProfile addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,firstLineRange.length)];
 
@@ -251,6 +261,16 @@ static AIInfoWindowController *sharedInstance = nil;
     [textView_contactProfile setNeedsDisplay:YES];
 }
 
+- (AIContentMessage *)contentMessageForAttributedString:(NSAttributedString *)inString
+{
+    AIContentMessage *object = [AIContentMessage messageInChat:nil
+                                                    withSource:nil
+                                                   destination:nil
+                                                          date:nil
+                                                       message:inString
+                                                     autoreply:NO];
+    return (object);
+}
 
 //Private ---------------------------------------------------------------------------
 //init
