@@ -13,9 +13,12 @@
 @implementation AIMessageAliasPlugin
 
 - (void)installPlugin
-{//Register us as a filter
+{
+    //Register us as a filter
     [[owner contentController] registerOutgoingContentFilter:self];
-    
+  
+    //Build the dictionary
+    //	Eventually This Dictionary will become mutable and be updated from a preference pane 
     hash = [[NSDictionary alloc] initWithObjectsAndKeys:@"$var$", @"%n", 
 							@"$var$", @"%m", 
 							@"$var$", @"%t", 
@@ -38,7 +41,7 @@
 	NSEnumerator *enumerator = [hash keyEnumerator];
 	
 	while ((pattern = [enumerator nextObject]))
-	{
+	{//This loop gets run for every key in the dictionary
 	    NSRange range; 
 	    int location;
 	    int length;
@@ -46,31 +49,37 @@
 	    replaceWith = [hash objectForKey:pattern];
 	
 	    if([replaceWith isEqualToString:@"$var$"])
-	    {
+	    {//if key is a var go find out what the replacement text should be
 		replaceWith = [self hashLookup:pattern contentMessage:inObj];
 	    }
 
+	    //create a range...
+	    //	The initial position doesn't make sense...it gets set to 0 in a few lines
+	    // 	this is just to make things more dynamic in the do/while loop
 	    range = NSMakeRange( (0 - [replaceWith length])    , [[mesg string] length]);
 	    do
-	    {
+	    {//execute this loop until we don't see any more instances of the pattern
 		location = range.location + [replaceWith length];
 		length = [[mesg string] length] - location;
 	
+		//find the pattern in the message
+		//	notice that the range gets moved to just behind the last replacement
+		//	this is to prevent infinite loops 
 		range = [[mesg string] rangeOfString:pattern options:nil range:(NSMakeRange(location, length))];
-
+		
 		if(range.location != NSNotFound)
-		{
+		{//If pattern was found in string do the replacement
 		    [mesg replaceCharactersInRange:range withString:replaceWith];
 		}
 	    }while( range.location != NSNotFound );
 	}
 
-	[inObj setMessage:mesg];
+	[inObj setMessage:mesg]; 
 	[mesg release];
     }
 }
 
-- (NSString*) hashLookup:(NSString*)pattern contentMessage:(AIContentObject *)content
+- (NSString*) hashLookup:(NSString*)pattern contentMessage:(AIContentMessage *)content
 {
     if([pattern isEqualToString:@"%a"])
     {
@@ -152,7 +161,7 @@
 
 - (void) dealloc
 {
-NSLog(@"Deallocating AIMessageAliasPlugin");
+    NSLog(@"Deallocating AIMessageAliasPlugin");
     [hash release];
     [super dealloc];
 }
