@@ -25,6 +25,8 @@
 
 #define BUTTON_OK   AILocalizedString(@"OK","")
 #define BUTTON_ERR  AILocalizedString(@"OK","")
+#define BUTTON_YES  AILocalizedString(@"Yes","")
+#define BUTTON_NO   AILocalizedString(@"No","")
 
 //Tag values for the play as radio button group
 #define				TAG_PLAYER_1		0

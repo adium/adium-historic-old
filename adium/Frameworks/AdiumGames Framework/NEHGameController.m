@@ -9,9 +9,6 @@
 #import "NEHGameController.h"
 #import "NEHGamePlugin.h"
 
-#define BUTTON_OK   AILocalizedString(@"OK","")
-#define BUTTON_ERR  AILocalizedString(@"OK","")
-
 #define INVITE_CANCELLED			AILocalizedString(@"Invite cancelled","")
 #define INVITE_CANCELLED_MESSAGE	AILocalizedString(@"The invitation was cancelled.","")
 #define INVITE_REJECTED				AILocalizedString(@"Invite rejected","")
@@ -20,6 +17,8 @@
 #define GAME_ENDED_MESSAGE	AILocalizedString(@"Your opponent cancelled the game.","")
 #define TIMEOUT				AILocalizedString(@"Invitation timed out.","")
 #define TIMEOUT_MESSAGE		AILocalizedString(@"The invitation timed out. The other player most likely is not using the appropriate plugin.","")
+#define END_GAME			AILocalizedString(@"End game?","")
+#define END_GAME_MESSAGE	AILocalizedString(@"Are you sure you want to end the game?","")
 
 #define GAME_OVER			AILocalizedString(@"Game Over","Title for game end pane")
 #define YOU_WIN				AILocalizedString(@"You win!","")
@@ -189,8 +188,7 @@
 {
 	if(state == State_Playing)
 	{
-		[self sendMessage:@"" ofType:MSG_TYPE_END_GAME];
-		[self end:nil returnCode:0 contextInfo:NULL];
+		NSBeginAlertSheet(END_GAME,BUTTON_YES,BUTTON_NO,nil,[self window],self,NULL,@selector(end:returnCode:contextInfo:),(void*)1,END_GAME_MESSAGE);
 	}
 	else if(state == State_GameOver)
 	{
@@ -211,14 +209,14 @@
 - (IBAction)rejectInvite:(id)sender
 {
 	[self sendMessage:@"" ofType:MSG_TYPE_REJECT];
-	[self end:nil returnCode:0 contextInfo:NULL];
+	[self end:nil returnCode:NSAlertDefaultReturn contextInfo:NULL];
 }
 
 - (IBAction)retractInvite:(id)sender
 {
 	if(timeout)[timeout invalidate];
 	[self sendMessage:@"" ofType:MSG_TYPE_CANCEL];
-	[self end:nil returnCode:0 contextInfo:NULL];
+	[self end:nil returnCode:NSAlertDefaultReturn contextInfo:NULL];
 }
 
 - (void)inviteTimedOut: (NSTimer*) timer
@@ -254,8 +252,13 @@
 
 - (void)end:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-	[self close];
-	[plugin endGameWith:contact_OtherPlayer fromAccount:account_Player];
+	if(returnCode == NSAlertDefaultReturn)
+	{
+		if(contextInfo)
+			[self sendMessage:@"" ofType:MSG_TYPE_END_GAME];
+		[self close];
+		[plugin endGameWith:contact_OtherPlayer fromAccount:account_Player];
+	}
 }
 
 - (void)closeSheet
