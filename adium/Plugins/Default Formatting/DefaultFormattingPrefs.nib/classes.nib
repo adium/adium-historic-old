@@ -12,7 +12,7 @@
                 "button_setFont" = NSButton; 
                 "colorPopUp_backgroundColor" = AIColorSelectionPopUpButton; 
                 "colorPopUp_textColor" = AIColorSelectionPopUpButton; 
-                "textField_desiredFont" = NSTextField; 
+                "textField_desiredFont" = JVFontPreviewField; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
@@ -30,6 +30,12 @@
             SUPERCLASS = NSObject; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {chooseFontWithFontPanel = id; selectFont = id; }; 
+            CLASS = JVFontPreviewField; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTextField; 
+        }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
