@@ -13,8 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /** 
- * $Revision: 1.37 $
- *  $Date: 2004/04/26 09:55:19 $
+ * $Revision: 1.38 $
+ *  $Date: 2004/05/02 10:37:27 $
  *  $Author#
  *
  **/
@@ -50,3 +50,4 @@
 #import "AIServiceType.h"
 #import "AISortController.h"
 #import "AIWindowController.h"
+#import "AIContextMenuTextView.h"

@@ -42,6 +42,20 @@ static NSMenu *contextualMenu = nil;
     return contextualMenu; //return the menu
 }
 
+- (void)textDidChange:(NSNotification *)notification
+{
+    if((0 == [self selectedRange].location) && (0 == [self selectedRange].length)){ //remove attributes if we're changing text at (0,0)
+        NSMutableDictionary *textAttribs = [[[NSMutableDictionary alloc] initWithDictionary:[self typingAttributes]] autorelease];
+        if([textAttribs objectForKey:NSLinkAttributeName]){ // but only if we currently have a link there.
+            [textAttribs removeObjectsForKeys:[NSArray arrayWithObjects:NSLinkAttributeName, //the link
+                                                                        NSUnderlineStyleAttributeName, //the line
+                                                                        NSForegroundColorAttributeName, //the blue
+                                                                        nil]]; //the myth
+            [self setTypingAttributes:textAttribs];
+        }
+    }
+}
+
 /*
 - (void)dealloc
 {
