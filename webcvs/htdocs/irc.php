@@ -9,7 +9,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Adium X : Team</title>
+<title>Adium X : IRC Howto</title>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <link rel="stylesheet" type="text/css" href="styles/layout.css" />
 <link rel="stylesheet" type="text/css" href="styles/default.css" />
@@ -115,10 +115,10 @@
                     		<li>Some time.</li>
                     	</ul>
                     <p>Go to <a href="https://sourceforge.net/project/showfiles.php?group_id=74267">https://sourceforge.net/project/showfiles.php?group_id=74267</a> to download Colloquy. Here is a screen shot of that page as it is right now:</p>
-                    <img class="irchowto" width="500" border="0" src="images/irchowto/irchowto1.jpg" alt="avatar" />
+                    <img class="irchowto" width="500" border="0" src="images/irchowto/irchowto1.jpg" alt="irchowto1" />
                     <p>You'll notice a couple of versions there, you probably want the latest version. Click on the file name which is underneath the bold title for the version you wish to download.</p>
                     <p>You will then come to a web page that looks a little like this:</p><br />
-                    <img class="irchowto" width="500" border="0" src="images/irchowto/irchowto2.jpg" alt="avatar" />
+                    <img class="irchowto" width="500" border="0" src="images/irchowto/irchowto2.jpg" alt="irchowto2" />
                     <p>Click on the picture under the download column on the right. The trick to this page is to figure out which of these places is closest to you, which makes it a much faster download.</p>
                     <p>Once Colloquy is downloaded, if your browser has not automatically opened the file, go ahead and double click on it. It will expand the compressed file, and you will then get to copy it to where you want it.</p>
                 </div>
@@ -127,9 +127,9 @@
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 					<p>The second step to getting to talk to a Adium user or developer live, in real time, for support or to just chit chat, is to launch Colloquy, and then configure it to connect to the correct place. Go ahead and launch Colloquy from where you copied it to. Once you have done that, it should look something like this:</p>
-                     <img class="irchowto" width="470" border="0" src="images/irchowto/irchowto3.jpg" alt="avatar" />
+                     <img class="irchowto" width="470" border="0" src="images/irchowto/irchowto3.jpg" alt="irchowto3" />
                 	<p>Click the details triangle, and then fill in the fields for this panel to look something like this:</p>
-                     <img class="irchowto" width="470" border="0" src="images/irchowto/irchowto4.jpg" alt="avatar" />
+                     <img class="irchowto" width="470" border="0" src="images/irchowto/irchowto4.jpg" alt="irchowto4" />
                 	<p>Ensure that the Chat Server is setup to irc.freenode.net, and that you have added #Adium to the Join Rooms</p>
                 	<p>Once you are done filling everything out, click the connect button.</p>
                     <div class="cleanHackLeft"> </div>
@@ -139,7 +139,7 @@
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
                     <p>You should be connected within moments, and it should look like this:</p>
-                     <img class="irchowto" width="470" border="0" src="images/irchowto/irchowto5.jpg" alt="avatar" />
+                     <img class="irchowto" width="470" border="0" src="images/irchowto/irchowto5.jpg" alt="irchowto5" />
                     <div class="cleanHackLeft"> </div>
                 </div>
                 <div class="boxWideBottom"></div>
