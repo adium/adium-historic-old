@@ -1,4 +1,5 @@
-$Id: ToDoList.txt,v 1.76 2004/04/30 17:23:21 adamiser Exp $
+$Id: ToDoList.txt,v 1.77 2004/05/01 04:45:17 the_tick Exp $
+
 
 Legend
 + Change or Addition
@@ -163,6 +164,7 @@ Event Info (Implement as a new plugin, to replace bezel):
 	+ Give the event info few preferences if any.
 
 
+[Colin]
 Contact Blocking:
     	Allow the user to easily block/unblock users by name, or users on their list.  Provide a way for them to see
     	all blocked names and add/remove from the list.  Ignore the AIM specific block 'modes'.
