@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.70 2004/04/25 06:46:47 bgannin Exp $
+// $Id: AIContentController.m,v 1.71 2004/04/26 02:27:49 evands Exp $
 
 #import "AIContentController.h"
 
@@ -38,7 +38,8 @@
     textEntryFilterArray = [[NSMutableArray alloc] init];
     textEntryContentFilterArray = [[NSMutableArray alloc] init];
     textEntryViews = [[NSMutableArray alloc] init];
-    
+    defaultFormattingAttributes = nil;
+	
     //Chat tracking
     chatArray = [[NSMutableArray alloc] init];
 
@@ -165,6 +166,16 @@
     while((filter = [enumerator nextObject])){
         [filter willCloseTextEntryView:inTextEntryView];
     }
+}
+
+- (void)setDefaultFormattingAttributes:(NSDictionary *)inDict
+{
+	[defaultFormattingAttributes release];
+	defaultFormattingAttributes	= [inDict retain];
+}
+- (NSDictionary *)defaultFormattingAttributes
+{
+	return defaultFormattingAttributes;
 }
 
 
@@ -605,7 +616,7 @@
     
 	//Lower the chat count for this contact
 	if(listObject = [inChat listObject]){
-        int currentCount = [listObject integerStatusObjectForKey:@"ChatsCount"];
+        int currentCount = [[listObject numberStatusObjectForKey:@"ChatsCount"] intValue];
         if(currentCount > 0) {
 			[listObject setStatusObject:[NSNumber numberWithInt:(currentCount - 1)]
 								 forKey:@"ChatsCount"
@@ -686,7 +697,7 @@
 //Switch to a chat with the most recent unviewed content.  Returns YES if one existed
 - (BOOL)switchToMostRecentUnviewedContent
 {
-    if(mostRecentChat && [mostRecentChat listObject] && [[mostRecentChat listObject] integerStatusObjectForKey:@"UnviewedContent"]){
+    if(mostRecentChat && [mostRecentChat listObject] && [[[mostRecentChat listObject] numberStatusObjectForKey:@"UnviewedContent"] intValue]){
 		[[owner interfaceController] setActiveChat:mostRecentChat];
 		return(YES);
     }else{
