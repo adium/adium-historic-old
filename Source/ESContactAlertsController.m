@@ -49,24 +49,39 @@ DeclareString(KeyOneTimeAlert);
 //Events ---------------------------------------------------------------------------------------------------------------
 #pragma mark Events
 //Register a potential event
-- (void)registerEventID:(NSString *)eventID withHandler:(id <AIEventHandler>)handler
-{
-	[eventHandlers setObject:handler forKey:eventID];
-}
-
-- (void)registerEventID:(NSString *)eventID withHandler:(id <AIEventHandler>)handler globalOnly:(BOOL)global
+- (void)registerEventID:(NSString *)eventID
+			withHandler:(id <AIEventHandler>)handler
+				inGroup:(AIEventHandlerGroupType)inGroup
+			 globalOnly:(BOOL)global
 {
 	if (global){
 		[globalOnlyEventHandlers setObject:handler forKey:eventID];
+		
+		if(!globalOnlyEventHandlersByGroup[inGroup]) globalOnlyEventHandlersByGroup[inGroup] = [[NSMutableDictionary alloc] init];
+		[globalOnlyEventHandlersByGroup[inGroup] setObject:handler forKey:eventID];
+		
 	}else{
-		[self registerEventID:eventID withHandler:handler];
+		[eventHandlers setObject:handler forKey:eventID];
+		
+		if(!eventHandlersByGroup[inGroup]) eventHandlersByGroup[inGroup] = [[NSMutableDictionary alloc] init];
+		[eventHandlersByGroup[inGroup] setObject:handler forKey:eventID];
 	}
 }
 
-//Return all available events
+//Return all events for groups/contacts
 - (NSDictionary *)eventHandlers
 {
 	return(eventHandlers);
+}
+
+- (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject
+{
+	id <AIEventHandler> handler;
+	
+	handler = [eventHandlers objectForKey:eventID];
+	if(!handler) handler = [globalOnlyEventHandlers objectForKey:eventID];
+	
+	return([handler longDescriptionForEventID:eventID forListObject:listObject]);
 }
 
 //Returns a menu of all events
@@ -77,24 +92,47 @@ DeclareString(KeyOneTimeAlert);
 	NSEnumerator		*enumerator;
 	NSMenuItem			*item;
 	NSMenu				*menu;
+	BOOL				addedItems = NO;
+	int					i;
 	
 	//Prepare our menu
 	menu = [[NSMenu alloc] init];
 	[menu setAutoenablesItems:NO];
-	
-	//Create an array of menu items
-	NSMutableArray *menuItemArray = [NSMutableArray array];
-	
-	[self addMenuItemsForEventHandlers:eventHandlers toArray:menuItemArray withTarget:target forGlobalMenu:global];
-	if (global) [self addMenuItemsForEventHandlers:globalOnlyEventHandlers toArray:menuItemArray withTarget:target forGlobalMenu:global];
-	
-	//Sort the array of menuItems alphabetically by title
-	[menuItemArray sortUsingFunction:eventMenuItemSort context:nil];
-	
-	enumerator = [menuItemArray objectEnumerator];
-	while((item = [enumerator nextObject])){
-		//Insert a menu item for each available event
-        [menu addItem:item];
+
+	for(i = 0; i < EVENT_HANDLER_GROUP_COUNT; i++){
+		NSMutableArray		*groupMenuItemArray;
+
+		//Create an array of menu items for this group
+		groupMenuItemArray = [NSMutableArray array];
+		
+		[self addMenuItemsForEventHandlers:eventHandlersByGroup[i]
+								   toArray:groupMenuItemArray
+								withTarget:target
+							 forGlobalMenu:global];
+		if (global){
+			[self addMenuItemsForEventHandlers:globalOnlyEventHandlersByGroup[i]
+									   toArray:groupMenuItemArray
+									withTarget:target
+								 forGlobalMenu:global];
+		}
+		
+		if([groupMenuItemArray count]){
+			//Add a separator if we are adding a group and we have added before
+			if(addedItems){
+				[menu addItem:[NSMenuItem separatorItem]];
+			}else{
+				addedItems = YES;
+			}
+			
+			//Sort the array of menuItems alphabetically by title within this group
+			[groupMenuItemArray sortUsingFunction:eventMenuItemSort context:nil];
+			
+			enumerator = [groupMenuItemArray objectEnumerator];
+			while((item = [enumerator nextObject])){
+				//Insert a menu item for each available event in this group
+				[menu addItem:item];
+			}
+		}
 	}
 	
 	return([menu autorelease]);
@@ -105,7 +143,7 @@ DeclareString(KeyOneTimeAlert);
 	NSEnumerator		*enumerator;
 	NSString			*eventID;
 	NSMenuItem			*item;
-		
+	
 	enumerator = [inEventHandlers keyEnumerator];
 	while((eventID = [enumerator nextObject])){
 		id <AIEventHandler>	eventHandler = [inEventHandlers objectForKey:eventID];		
