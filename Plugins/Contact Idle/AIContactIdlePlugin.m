@@ -140,21 +140,21 @@ DeclareString(Idle);
 //Tooltip entry ---------------------------------------------------------------------------------
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    int 		idle = [[inObject numberStatusObjectForKey:@"Idle"] intValue];
+    int 		idle = [inObject integerStatusObjectForKey:Idle];
     NSString	*entry = nil;
-	
+
     if((idle > 599400) || (idle == -1)){ //Cap idle at 999 Hours (999*60*60 seconds)
 		entry = @"Idle";
     }else if(idle != 0){
 		entry = @"Idle Time";
     }
-    
+
     return(entry);
 }
 
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-    int 				idle = [[inObject numberStatusObjectForKey:Idle] intValue];
+    int 				idle = [inObject integerStatusObjectForKey:Idle];
     NSAttributedString	*entry = nil;
 	
     if((idle > 599400) || (idle == -1)){ //Cap idle at 999 Hours (999*60*60 seconds)

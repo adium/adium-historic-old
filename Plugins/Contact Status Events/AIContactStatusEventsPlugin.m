@@ -167,15 +167,14 @@
 														  userInfo:nil];
 				}
 			}
-			if([inModifiedKeys containsObject:@"IdleSince"]){
-				id newValue = [inObject earliestDateStatusObjectForKey:@"IdleSince"
-												fromAnyContainedObject:NO];
+			if([inModifiedKeys containsObject:@"IsIdle"]){
+				id newValue = [inObject numberStatusObjectForKey:@"IsIdle" fromAnyContainedObject:NO];
 				if([self updateCache:idleCache
-							  forKey:@"IdleSince"
+							  forKey:@"IsIdle"
 							newValue:newValue
 						  listObject:inObject
-					  performCompare:NO] && !silent){
-					NSString	*event = ((newValue != nil) ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO);
+					  performCompare:YES] && !silent){
+					NSString	*event = ([newValue boolValue] ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO);
 					[[adium contactAlertsController] generateEvent:event
 													 forListObject:inObject
 														  userInfo:nil];

@@ -267,7 +267,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-//Idletime
+//Idle time
 - (void)updateWentIdle:(AIListContact *)theContact withData:(NSDate *)idleSinceDate
 {
 	if (idleSinceDate){
@@ -280,6 +280,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 							 forKey:@"Idle"
 							 notify:NO];
 	}
+
+	//@"Idle", for a contact with an IdleSince date, will be changing every minute.  @"IsIdle" provides observers a way
+	//to perform an action when the contact becomes/comes back from idle, regardless of whether an IdleSince is available,
+	//without having to do that action every minute for other contacts.
+	[theContact setStatusObject:[NSNumber numberWithBool:YES]
+						 forKey:@"IsIdle"
+						 notify:NO];
 	
 	//Apply any changes
 	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
@@ -291,6 +298,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 						 notify:NO];
 	[theContact setStatusObject:nil
 						 forKey:@"Idle"
+						 notify:NO];
+	
+	[theContact setStatusObject:nil
+						 forKey:@"IsIdle"
 						 notify:NO];
 	
 	//Apply any changes

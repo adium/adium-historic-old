@@ -6,6 +6,7 @@
 //
 
 #import "ESGaimMSNAccount.h"
+#import "libgaim/state.h"
 
 #define KEY_MSN_HOST	@"MSN:Host"
 #define KEY_MSN_PORT	@"MSN:Port"
@@ -114,6 +115,23 @@ static BOOL didInitMSN = NO;
 				   attachmentsAsText:YES
 	  attachmentImagesOnlyForSending:NO
 					  simpleTagsOnly:YES]);
+}
+
+//MSN (as of libgaim 1.1.0) tells us a buddy is away when they are merely idle.  Avoid passing that information on.
+- (oneway void)updateWentAway:(AIListContact *)theContact withData:(void *)data
+{
+	const char  *uidUTF8String = [[theContact UID] UTF8String];
+	GaimBuddy   *buddy;
+	BOOL		shouldUpdateAway = YES;
+
+	if ((buddy = gaim_find_buddy(account, uidUTF8String)) &&
+		(MSN_AWAY_TYPE(buddy->uc) == MSN_IDLE)){
+			shouldUpdateAway = NO;
+	}
+
+	if(shouldUpdateAway){
+		[super updateWentAway:theContact withData:data];
+	}
 }
 
 #pragma mark Status

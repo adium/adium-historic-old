@@ -384,15 +384,15 @@ DeclareString(FormattedUID);
 
 - (AIStatusSummary)statusSummary
 {
-	if ([[self numberStatusObjectForKey:@"Online"] boolValue]){
-		if ([[self numberStatusObjectForKey:@"Away" fromAnyContainedObject:NO] boolValue]){
-			if ([self integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO] != 0){
+	if ([self integerStatusObjectForKey:@"Online"]){
+		if ([self integerStatusObjectForKey:@"Away" fromAnyContainedObject:NO]){
+			if ([self integerStatusObjectForKey:@"IsIdle" fromAnyContainedObject:NO]){
 				return AIAwayAndIdleStatus;
 			}else{
 				return AIAwayStatus;
 			}
-			
-		}else if (([self statusObjectForKey:@"Idle" fromAnyContainedObject:NO]) != 0){
+
+		}else if ([self integerStatusObjectForKey:@"IsIdle" fromAnyContainedObject:NO]){
 			return AIIdleStatus;
 			
 		}else{

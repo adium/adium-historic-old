@@ -34,7 +34,7 @@
 	if(inModifiedKeys == nil ||
 	   [inModifiedKeys containsObject:@"Stranger"] ||
 	   [inModifiedKeys containsObject:@"Away"] ||
-	   [inModifiedKeys containsObject:@"IdleSince"] ||
+	   [inModifiedKeys containsObject:@"IsIdle"] ||
 	   [inModifiedKeys containsObject:@"Online"]){
 		
 		//Tab
