@@ -35,7 +35,6 @@
                                           group:PREF_GROUP_EVENT_BEZEL];
     
     //Enable others checkboxes if this one is checked
-    [popUp_position setEnabled: [checkBox_showBezel state]];
     [checkBox_online setEnabled: [checkBox_showBezel state]];
     [checkBox_offline setEnabled: [checkBox_showBezel state]];
     [checkBox_available setEnabled: [checkBox_showBezel state]];
@@ -43,10 +42,6 @@
     [checkBox_noIdle setEnabled: [checkBox_showBezel state]];
     [checkBox_idle setEnabled: [checkBox_showBezel state]];
     [checkBox_firstMessage setEnabled: [checkBox_showBezel state]];
-    [checkBox_imageBadges setEnabled: [checkBox_showBezel state]];
-    [checkBox_colorLabels setEnabled: [checkBox_showBezel state]];
-    [checkBox_nameLabels setEnabled: [checkBox_showBezel state]];
-    [slider_duration setEnabled: [checkBox_showBezel state]];
 }
 
 - (IBAction)changePosition:(id)sender
@@ -160,7 +155,6 @@
     [checkBox_nameLabels setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_NAME_LABELS] boolValue]];
     
     // Enable or disable checkboxes based on the "show bezel" checkbox
-    [popUp_position setEnabled: [checkBox_showBezel state]];
     [checkBox_online setEnabled: [checkBox_showBezel state]];
     [checkBox_offline setEnabled: [checkBox_showBezel state]];
     [checkBox_available setEnabled: [checkBox_showBezel state]];
@@ -168,10 +162,6 @@
     [checkBox_noIdle setEnabled: [checkBox_showBezel state]];
     [checkBox_idle setEnabled: [checkBox_showBezel state]];
     [checkBox_firstMessage setEnabled: [checkBox_showBezel state]];
-    [checkBox_imageBadges setEnabled: [checkBox_showBezel state]];
-    [checkBox_colorLabels setEnabled: [checkBox_showBezel state]];
-    [checkBox_nameLabels setEnabled: [checkBox_showBezel state]];
-    [slider_duration setEnabled: [checkBox_showBezel state]];
 }
 
 @end
