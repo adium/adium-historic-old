@@ -52,4 +52,7 @@
 //Content
 - (void)processQueuedContent;
 
+//Other
+- (void)setShouldReflectPreferenceChanges:(BOOL)inValue;
+
 @end
