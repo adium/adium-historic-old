@@ -189,8 +189,7 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 
 static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-    NSLog(@"adiumGaimConvWriteIm: name=%s, who=%s: %s",
-          conv->name, who, message);
+//    NSLog(@"adiumGaimConvWriteIm: name=%s, who=%s: %s",conv->name, who, message);
     [accountLookup(conv->account) accountConvReceivedIM: message inConversation: conv withFlags: flags atTime: mtime];
 }
 
