@@ -13,12 +13,12 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.30 2004/02/08 00:23:00 adamiser Exp $
+// $Id: AISoundController.m,v 1.31 2004/02/27 00:16:13 evands Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
 
-#define	PATH_SOUNDS					@"/Sounds"
+#define	PATH_SOUNDS					@"/Sounds/"
 #define PATH_INTERNAL_SOUNDS		@"/Contents/Resources/Sounds/"
 #define SOUND_SET_PATH_EXTENSION	@"txt"
 #define SOUND_DEFAULT_PREFS			@"SoundPrefs"
@@ -298,7 +298,6 @@
             //Determine if this is a file or a directory
             fullPath = [soundFolderPath stringByAppendingPathComponent:file];
             [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDirectory];
-
             if(isDirectory){
                 if([soundSetContents count] != 0){
                     //Close the current soundset, adding it to our sound set array
@@ -323,9 +322,9 @@
 
 - (void)_addSet:(NSString *)inSet withSounds:(NSArray *)inSounds toArray:(NSMutableArray *)inArray
 {
-    if(inSet && inSounds && inArray){
-        [inArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:inSet, KEY_SOUND_SET, inSounds, KEY_SOUND_SET_CONTENTS, nil]];
-    }
+	if(inSet && inSounds && inArray){
+		[inArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:inSet, KEY_SOUND_SET, inSounds, KEY_SOUND_SET_CONTENTS, nil]];
+	}
 }
 
 - (NSArray *)voices
