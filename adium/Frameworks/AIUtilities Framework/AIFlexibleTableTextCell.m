@@ -163,7 +163,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
 
 // Link Tracking -------------------------------------------------------------------------------
-- (void)resetCursorRectsAtOffset:(NSPoint)offset visibleRect:(NSRect)visibleRect inView:(NSView *)controlView
+//Returns YES if cursor rects were modified
+- (BOOL)resetCursorRectsAtOffset:(NSPoint)offset visibleRect:(NSRect)visibleRect inView:(NSView *)controlView
 {
     if(containsLinks){
         //Setup our link tracking
@@ -174,6 +175,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
         //Update for the new rect
         [linkTrackingController trackLinksInRect:visibleRect withOffset:offset];
     }
+
+    return(containsLinks);
 }
 
 //Handle a mouse down

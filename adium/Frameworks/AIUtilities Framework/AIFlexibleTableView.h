@@ -43,7 +43,7 @@
     BOOL				forwardsKeyEvents;	//Pass keypresses to next responder
 
     //Cursor tracking & selecting
-    NSMutableArray			*cursorTrackingCellArray;
+    NSMutableArray			*cursorTrackingRowArray;
     NSPoint				selection_startPoint;
     int					selectClicks;
 }

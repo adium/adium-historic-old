@@ -77,12 +77,12 @@
 }
 
 //Adjust for our padding
-- (void)resetCursorRectsAtOffset:(NSPoint)offset visibleRect:(NSRect)visibleRect inView:(NSView *)controlView
+- (BOOL)resetCursorRectsAtOffset:(NSPoint)offset visibleRect:(NSRect)visibleRect inView:(NSView *)controlView
 {
     offset.x += FRAME_PAD_LEFT;
     offset.y += FRAME_PAD_BOTTOM;
 
-    [super resetCursorRectsAtOffset:offset visibleRect:visibleRect inView:controlView];
+    return([super resetCursorRectsAtOffset:offset visibleRect:visibleRect inView:controlView]);
 }
 
 //Adjust for our padding
