@@ -27,6 +27,7 @@ Version 0.61 (6/25/2004)
 - Fixed issue with the announcer preferences
 - Fixed issue with encoding on Yahoo! Japan
 - Fixed issue with speaking status messages
+- Fixed issue with contact list getting stuck under the toolbar/window titlebar
 - Fixed issue with contacts losing their display names when moving between groups
 - Fixed issue with the group menu in the 'Add Contact' panel
 - Fixed issue with the 'delete' contextual menu item on tabs
