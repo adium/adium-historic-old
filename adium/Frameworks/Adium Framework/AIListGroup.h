@@ -33,6 +33,7 @@
 - (id)objectAtIndex:(unsigned)index;
 - (unsigned)visibleCount;
 - (unsigned)count;
+- (NSArray *)containedObjects;
 
 //Visibility (PRIVATE: For list objects only)
 - (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible;
