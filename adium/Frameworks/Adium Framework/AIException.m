@@ -24,9 +24,11 @@
 - (void)raise
 {
     //Ignore various harmless or unavoidable exceptions the system uses
-    if ((![self reason]) ||
-		([[self reason] isEqualToString:@"_sharedInstance is invalid."])) {
-		NSLog(@"ignoring an exception with no reason");
+    if ((![self reason]) || //Harmless
+		([[self reason] isEqualToString:@"_sharedInstance is invalid."]) || //Address book framework is weird sometimes
+		([[self reason] isEqualToString:@"No text was found"])) //ICeCoffEE is an APE haxie which would crash us whenever a user pasted, or something like that
+	{
+
 	    [super raise];
 		
     } else if ((![self name]) || 
