@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.142 2004/06/05 18:30:14 evands Exp $
+// $Id: AIContactController.m,v 1.143 2004/06/06 10:46:42 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -106,32 +106,6 @@
 
 	//
     [owner registerEventNotification:ListObject_StatusChanged displayName:@"Contact Status Changed"];
-	
-	if([NSApp isOnPantherOrBetter]) {
-		//Install the alternate Get Info menu item which will let us mangle the shortcut as desired
-        menuItem_getInfoAlternate = [[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_INFO 
-															   target:self 
-															   action:@selector(showContactInfo:)
-														keyEquivalent:@"i"];
-        [menuItem_getInfoAlternate setKeyEquivalentModifierMask:ALTERNATE_GET_INFO_MASK];
-        [menuItem_getInfoAlternate setAlternate:YES];
-        [[owner menuController] addMenuItem:menuItem_getInfoAlternate toLocation:LOC_Contact_Editing];      
-        
-        //Register for the contact list notifications
-        [[owner notificationCenter] addObserver:self selector:@selector(contactListDidBecomeMain:) 
-										   name:Interface_ContactListDidBecomeMain 
-										 object:nil];
-        [[owner notificationCenter] addObserver:self selector:@selector(contactListDidResignMain:)
-										   name:Interface_ContactListDidResignMain 
-										 object:nil];
-		
-		//Watch changes in viewContactInfoMenuItem_alternate's menu so we can maintain its alternate status
-		//(it will expand into showing both the normal and the alternate items when the menu changes)
-		[[owner notificationCenter] addObserver:self selector:@selector(menuChanged:)
-										   name:Menu_didChange 
-										 object:[menuItem_getInfoAlternate menu]];
-		
-    }
 }
 
 //finish initing
@@ -550,7 +524,7 @@
 {
 	AIListObject *listObject = nil;
 	
-	if (sender == menuItem_getInfoContextual){
+	if ((sender == menuItem_getInfoContextualContact) || (sender == menuItem_getInfoContextualGroup)){
 		listObject = [[owner menuController] contactualMenuContact];
 	}else{
 		listObject = [self selectedListObject];
@@ -581,9 +555,46 @@
 //	[[owner menuController] addMenuItem:menuItem_getInfo toLocation:LOC_Contact_Manage];
 	
 	//Add our get info contextual menu item
-	menuItem_getInfoContextual = [[NSMenuItem alloc] initWithTitle:VIEW_INFO target:self action:@selector(showContactInfo:) keyEquivalent:@""];
-	[[owner menuController] addContextualMenuItem:menuItem_getInfoContextual toLocation:Context_Contact_Manage];
+	menuItem_getInfoContextualContact = [[NSMenuItem alloc] initWithTitle:VIEW_INFO
+															target:self
+															action:@selector(showContactInfo:) 
+													 keyEquivalent:@""];
+	[[owner menuController] addContextualMenuItem:menuItem_getInfoContextualContact
+									   toLocation:Context_Contact_Manage];
 	
+	menuItem_getInfoContextualGroup = [[NSMenuItem alloc] initWithTitle:VIEW_INFO
+																   target:self
+																   action:@selector(showContactInfo:) 
+															keyEquivalent:@""];
+	[[owner menuController] addContextualMenuItem:menuItem_getInfoContextualGroup
+									   toLocation:Context_Group_Manage];
+	
+	if([NSApp isOnPantherOrBetter]) {
+		//Install the alternate Get Info menu item which will let us mangle the shortcut as desired
+        menuItem_getInfoAlternate = [[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_INFO 
+															   target:self 
+															   action:@selector(showContactInfo:)
+														keyEquivalent:@"i"];
+        [menuItem_getInfoAlternate setKeyEquivalentModifierMask:ALTERNATE_GET_INFO_MASK];
+        [menuItem_getInfoAlternate setAlternate:YES];
+        [[owner menuController] addMenuItem:menuItem_getInfoAlternate toLocation:LOC_Contact_Editing];      
+        
+        //Register for the contact list notifications
+        [[owner notificationCenter] addObserver:self selector:@selector(contactListDidBecomeMain:) 
+										   name:Interface_ContactListDidBecomeMain 
+										 object:nil];
+        [[owner notificationCenter] addObserver:self selector:@selector(contactListDidResignMain:)
+										   name:Interface_ContactListDidResignMain 
+										 object:nil];
+		
+		//Watch changes in viewContactInfoMenuItem_alternate's menu so we can maintain its alternate status
+		//(it will expand into showing both the normal and the alternate items when the menu changes)
+		[[owner notificationCenter] addObserver:self selector:@selector(menuChanged:)
+										   name:Menu_didChange 
+										 object:[menuItem_getInfoAlternate menu]];
+		
+    }
+		
 	//Add our get info toolbar item
 	NSToolbarItem   *toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"ShowInfo"
 																		   label:@"Info"
@@ -602,7 +613,8 @@
 {
 	if((menuItem == menuItem_getInfo) || (menuItem == menuItem_getInfoAlternate)){
 		return([self selectedListObject] != nil);
-	}else if (menuItem == menuItem_getInfoContextual){
+	}else if ((menuItem == menuItem_getInfoContextualContact) || 
+			  (menuItem == menuItem_getInfoContextualGroup)){
 		return([[owner menuController] contactualMenuContact] != nil);
 	}
 	

@@ -66,6 +66,9 @@ typedef enum {
     IBOutlet 	NSMenuItem  *menuItem_getInfo;
 	IBOutlet	NSMenuItem  *menuItem_getInfoAlternate;
 	
+	NSMenuItem				*menuItem_getInfoContextualContact;
+	NSMenuItem				*menuItem_getInfoContextualGroup;
+	
 	NSMutableDictionary		*contactDict;
 	NSMutableDictionary		*groupDict;
 	
@@ -84,8 +87,6 @@ typedef enum {
     AISortController	 	*activeSortController;
 	
     NSMutableArray			*contactInfoPanes;
-	
-    NSMenuItem				*menuItem_getInfoContextual;
 	
     NSMutableDictionary		*listOrderDict;
     NSMutableDictionary		*reverseListOrderDict;
