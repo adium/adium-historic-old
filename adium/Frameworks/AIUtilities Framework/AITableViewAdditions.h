@@ -47,6 +47,9 @@ typedef enum {
     NSTableViewLastColumnOnlyAutoresizingStyle,
     NSTableViewFirstColumnOnlyAutoresizingStyle
 } NSTableViewColumnAutoresizingStyle;
+
+- (void)setColumnAutoresizingStyle:(NSTableViewColumnAutoresizingStyle)style;
+
 @end
 
 @interface NSTableColumn (TigerCompatibility)
@@ -55,5 +58,8 @@ typedef enum {
     NSTableColumnAutoresizingMask = ( 1 << 0 ),     // This column can be resized as the table is resized.
     NSTableColumnUserResizingMask = ( 1 << 1 ),     // The user can resize this column manually.
 };
+
+- (void)setResizingMask:(int)resizingMask;
+
 @end
 #endif
