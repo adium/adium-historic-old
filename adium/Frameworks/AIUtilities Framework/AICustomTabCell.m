@@ -281,6 +281,7 @@ static NSImage		*tabCloseFrontRollover = nil;
     NSDictionary    *eventData = [theEvent userData];
     NSView          *view = [eventData objectForKey:@"view"];
 
+	//Scrubs the tab if control is down.
 	if (([theEvent modifierFlags] & NSControlKeyMask) && !selected) {
 		[[tabViewItem tabView] selectTabViewItem:tabViewItem];
 	}
@@ -358,8 +359,16 @@ static NSImage		*tabCloseFrontRollover = nil;
 {
     BOOL	hovering = NSPointInRect(stopPoint, [self _closeButtonRect]);
 	
-	//If the mouse was released over the close button, close our tab
-    if(hovering){
+	//Closes all the other tabs in the current window if option is held down.
+	if (hovering && ([[[controlView window] currentEvent] modifierFlags] & NSAlternateKeyMask) && [[tabViewItem tabView] numberOfTabViewItems] > 1) {
+		NSEnumerator *enumerator = [[(AICustomTabsView *)controlView tabCells] objectEnumerator];
+		AICustomTabCell *tabCell;
+		while (tabCell = [enumerator nextObject]) {
+			if (tabCell != self) {
+				[(AICustomTabsView *)controlView closeTab:tabCell];
+			}
+		}
+	} else if (hovering) {  //If the mouse was released over the close button, close our tab
         [(AICustomTabsView *)controlView closeTab:self];
     }
 	

@@ -55,7 +55,6 @@ Message Window:
 	+ Tab-complete usernames in messages and chat
 	+ Allow cmd-shift-left/right to cycle tabs in addition to cmd left/right
 	+ Remember last X lines of previous conversation, restore to new message windows
-	+ Make option-clicking a tab close button close all other tabs
 	- [Colin] Remove "per-contact" window position/size saving.  Use size/position of last window, cascade new ones 
 	
 Contact List Display:
@@ -240,3 +239,4 @@ Features & Changes:
 = Add checkboxes in source list to enable/disable packs
 = Add support for the scrolling / paging keys in the WebKit View
 = Tab scrubbing.  If control is held when mousing over a tab, select that tab
+= Make option-clicking a tab close button close all other tabs
