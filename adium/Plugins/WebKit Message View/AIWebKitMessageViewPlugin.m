@@ -182,7 +182,7 @@ DeclareString(AppendNextMessage);
 }
 
 
-- (void)loadStyle:(NSBundle *)style withName:(NSString *)styleName withCSS:(NSString *)CSS forChat:(AIChat *)chat intoWebView:(WebView *)webView
+- (void)loadStyle:(NSBundle *)style withName:(NSString *)styleName withCSS:(NSString *)CSS forChat:(AIChat *)chat intoWebView:(ESWebView *)webView
 {
 	NSString		*basePath, *headerHTML, *footerHTML, *stylePath;
 	NSMutableString *templateHTML;
