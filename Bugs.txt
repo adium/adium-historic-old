@@ -26,10 +26,12 @@
 - Metacontacts display no service icon
 - Double clicking two names in succession causes the first name to highlight
     the second time. (wordsaboutmehere)
+- [Jeff] Dragging an image to the background of the message preference tries to
+  send me that file.
 
 [Other]
 - Metacontact drawer in get info crashes upon dragging
-    
+
 [Will not do]
 - Create default layouts & styles for the contact list preferences
 - What to do with contact list bottom bar?
