@@ -18,10 +18,10 @@
 
 @protocol AIListObjectObserver, StateMenuPlugin;
 
-@interface AIStandardListWindowController : AIListWindowController<AIListObjectObserver, StateMenuPlugin> {
-	NSDictionary		*toolbarItems;
+@interface AIStandardListWindowController : AIListWindowController <StateMenuPlugin> {
+	IBOutlet	NSPopUpButton	*popUp_state;
 
-	IBOutlet		NSPopUpButton	*popUp_state;
+	NSDictionary			*toolbarItems;
 }
 
 @end

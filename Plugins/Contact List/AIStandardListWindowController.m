@@ -63,17 +63,16 @@
 	[self _configureToolbar];
 	
 	//Configure the state menu
-	[[popUp_state menu] removeAllItems];
 	[[adium statusController] registerStateMenuPlugin:self];
+	[[popUp_state cell] setUsesItemFromMenu:NO];
+	[[popUp_state cell] setAltersStateOfSelectedItem:NO];
 
 	//Update the selections in our state menu when the active state changes
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(activeStateChanged:)
-									   name:AIStatusStateArrayChangedNotification
+									   name:AIStatusActiveStateChangedNotification
 									 object:nil];
 	[self activeStateChanged:nil];
-	
-	[[adium contactController] registerListObjectObserver:self];
 }
 
 /*!
@@ -94,12 +93,15 @@
  */
 - (void)addStateMenuItems:(NSArray *)menuItemArray
 {
+    NSMenu			*menu = [[[NSMenu alloc] init] autorelease];
 	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
 	NSMenuItem		*menuItem;
 	
-    while((menuItem = [enumerator nextObject])){
-		[[popUp_state menu] addItem:menuItem];
-    }
+	while((menuItem = [enumerator nextObject])){
+		[menu addItem:menuItem];
+	}
+	
+	[popUp_state setMenu:menu];
 }
 
 /*!
@@ -111,70 +113,23 @@
  */
 - (void)removeStateMenuItems:(NSArray *)menuItemArray
 {
-	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
-	NSMenuItem		*menuItem;
-	
-    while((menuItem = [enumerator nextObject])){    
-		[[popUp_state menu] removeItem:menuItem];
-    }
+	[popUp_state setMenu:nil];
 }
 
 /*
  * Update popup button to match selected menu item
- *
- * The popup button needs an extra push to update its display to match the active item in the menu.
  */
 - (void)activeStateChanged:(NSNotification *)notification
 {
-	if([[adium accountController] oneOrMoreConnectedAccounts]){
-		AIStatus	*activeStatusState;
-		NSArray		*stateArrayForMenuItems;
-		unsigned	index, numberOfItems;
-
-		activeStatusState = [[adium statusController] activeStatusState];;
-		stateArrayForMenuItems = [[adium statusController] stateArrayForMenuItems];
-		numberOfItems =  [popUp_state numberOfItems];;
-
-		if([stateArrayForMenuItems containsObjectIdenticalTo:activeStatusState]){
-			for(index = 0 ; index < numberOfItems ; index++){
-				NSMenuItem	*menuItem = [popUp_state itemAtIndex:index];
-				if(activeStatusState == [[menuItem representedObject] objectForKey:@"AIStatus"]){
-					[popUp_state selectItemAtIndex:index];
-					break;
-				}
-			}
-		}else{
-			//A custom state is active
-			AIStatusType statusType = [activeStatusState statusType];
-			
-			for(index = 0 ; index < numberOfItems ; index++){
-				NSMenuItem	*menuItem = [popUp_state itemAtIndex:index];
-				
-				//Find the menu item with the appropriate tag and no AIStatus associated with it
-				if(([menuItem tag] == statusType) && ([[menuItem representedObject] objectForKey:@"AIStatus"] == nil)){
-					[popUp_state selectItemAtIndex:index];
-					break;
-				}
-				
-			}
-		}
-	}else{
-		//Offline
-		[popUp_state selectItemAtIndex:[popUp_state indexOfItemWithTag:AIOfflineStatusType]];		
-	}
-}
-
-- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
-{
-	if([inObject isKindOfClass:[AIAccount class]]){
-		if([inModifiedKeys containsObject:@"Online"] ||
-		   [inModifiedKeys containsObject:@"StatusState"]){
-			
-			[self activeStateChanged:nil];
-		}
-	}
-    
-    return(nil);
+	AIStatus	*activeStatus = [[adium statusController] activeStatusState];
+	NSMenuItem	*menuItem = [[[NSMenuItem alloc] initWithTitle:[activeStatus title]
+														target:self
+														action:@selector(selectCustomState:)
+												 keyEquivalent:@""] autorelease];
+	
+	[menuItem setImage:[activeStatus icon]];
+	NSLog(@"Active state changed to %@",[activeStatus title]);
+	[[popUp_state cell] setMenuItem:menuItem];
 }
 
 
