@@ -24,7 +24,7 @@
 # Note that the last three parameters are optional, you can alternatively change
 # the defaults below in the configuration section.
 #
-# $Id: ciabot.pl,v 1.4 2003/11/10 08:47:38 ramoth4 Exp $
+# $Id: ciabot.pl,v 1.5 2003/11/10 09:03:08 ramoth4 Exp $
 
 use strict;
 use vars qw ($project $from_email $dest_email $sendmail $max_lines $max_files
@@ -196,13 +196,13 @@ if (-f $syncfile) {
 
 # Open our mail program
 
-{
-  my $sendmail;
+#{
+#  my $sendmail;
 
   #print "Will use sendmail: $sendmail\n";
   open (MAIL, "| $sendmail -t -oi -oem")
       or die "$0: can't execute sendmail: $!";
-}
+#}
 
 
 # The mail header
