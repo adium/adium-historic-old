@@ -445,9 +445,6 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 					
 					//Set this string and scroll to the top/bottom/occurrence
 					[[textView_content textStorage] setAttributedString:logText];
-					
-					//Set this string and scroll to the top/bottom/occurrence
-					[[textView_content textStorage] setAttributedString:logText];
 					if((searchMode == LOG_SEARCH_CONTENT) || automaticSearch){
 						[textView_content scrollRangeToVisible:scrollRange];
 					}else{
