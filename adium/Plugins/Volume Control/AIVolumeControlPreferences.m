@@ -79,10 +79,10 @@
 //Apply a changed controls
 - (IBAction)changePreference:(id)sender
 {
-	[super changePreference:sender];
 	[[adium preferenceController] setPreference:[NSNumber numberWithBool:[checkbox_useCustomVolume state]]
 										 forKey:KEY_SOUND_USE_CUSTOM_VOLUME
 										  group:PREF_GROUP_GENERAL];
+	[super changePreference:sender];
 }
 
 //Configure control dimming

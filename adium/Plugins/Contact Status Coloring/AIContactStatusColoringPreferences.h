@@ -13,9 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface AIContactStatusColoringPreferences : AIObject {
-    IBOutlet	NSView		*view_prefView;
-
+@interface AIContactStatusColoringPreferences : AIPreferencePane {
     IBOutlet	NSButton	*checkBox_signedOff;
     IBOutlet	NSColorWell	*colorWell_signedOff;
     IBOutlet	NSColorWell	*colorWell_signedOffLabel;
@@ -52,8 +50,5 @@
     IBOutlet	NSColorWell	*colorWell_offline;
     IBOutlet	NSColorWell	*colorWell_offlineLabel;
 }
-
-+ (AIContactStatusColoringPreferences *)contactStatusColoringPreferences;
-- (IBAction)changePreference:(id)sender;
 
 @end
