@@ -1190,16 +1190,20 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 - (void)registerAccountMenuPlugin:(id<AccountMenuPlugin>)accountMenuPlugin
 {
+	NSNumber	*identifier = [NSNumber numberWithInt:[accountMenuPlugin hash]];
+	
 	[accountMenuItemArraysDict setObject:[NSMutableArray array]
-								  forKey:[accountMenuPlugin identifier]];
+								  forKey:identifier];
 	[accountMenuPluginsArray addObject:accountMenuPlugin];
 	
 	[self _addAccountMenuItemsForPlugin:accountMenuPlugin];
 }
 - (void)unregisterAccountMenuPlugin:(id<AccountMenuPlugin>)accountMenuPlugin
 {
+	NSNumber	*identifier = [NSNumber numberWithInt:[accountMenuPlugin hash]];
+
 	[self _removeAccountMenuItemsForPlugin:accountMenuPlugin];	
-	[accountMenuItemArraysDict removeObjectForKey:[accountMenuPlugin identifier]];
+	[accountMenuItemArraysDict removeObjectForKey:identifier];
 	[accountMenuPluginsArray removeObjectIdenticalTo:accountMenuPlugin];
 }
 
@@ -1226,7 +1230,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Then, inform the plugin of the existence of the menu items so it can add them to a menu.
 - (void)_addAccountMenuItemsForPlugin:(id<AccountMenuPlugin>)accountMenuPlugin
 {
-	NSMutableArray  *menuItemArray = [accountMenuItemArraysDict objectForKey:[accountMenuPlugin identifier]];
+	NSNumber		*identifier = [NSNumber numberWithInt:[accountMenuPlugin hash]];
+	NSMutableArray  *menuItemArray = [accountMenuItemArraysDict objectForKey:identifier];
 	
 	NSEnumerator	*enumerator;
     AIAccount		*account;
@@ -1257,7 +1262,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //removal from whatever menu the program is using them in.  Then, remove them from our tracking array.
 - (void)_removeAccountMenuItemsForPlugin:(id<AccountMenuPlugin>)accountMenuPlugin
 {
-	NSMutableArray  *menuItemArray = [accountMenuItemArraysDict objectForKey:[accountMenuPlugin identifier]];
+	NSNumber		*identifier = [NSNumber numberWithInt:[accountMenuPlugin hash]];
+	NSMutableArray  *menuItemArray = [accountMenuItemArraysDict objectForKey:identifier];
 
 	//Inform the plugin that we are removing the items in the this array 
 	[accountMenuPlugin removeAccountMenuItems:menuItemArray];
