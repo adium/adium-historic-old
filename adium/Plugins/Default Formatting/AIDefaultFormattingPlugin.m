@@ -70,7 +70,7 @@
 
 
 // Private --------------------------------------------------------------------------
-//Resets all the text in an entry view to the default values\
+//Resets all the text in an entry view to the default values
 - (void)_resetFormattingInView:(NSText<AITextEntryView> *)inTextEntryView
 {
     NSMutableAttributedString	*contents;
