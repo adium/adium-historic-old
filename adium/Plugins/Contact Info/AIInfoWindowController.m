@@ -9,8 +9,8 @@
 
 #define KEY_TEXT_PROFILE_WINDOW_FRAME	@"Text Profile Window"
 #define INFO_WINDOW_NIB					@"ContactInfo"
-#define InfoIndentA						75
-#define InfoIndentB						80
+#define InfoIndentA						80
+#define InfoIndentB						85
 #define REFRESH_RATE                    300
 
 @interface AIInfoWindowController (PRIVATE)
