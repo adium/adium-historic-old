@@ -22,3 +22,8 @@
 + (NSToolbarItem *)toolbarItemFromDictionary:(NSDictionary *)theDict withIdentifier:(NSString *)itemIdentifier;
 
 @end
+
+@interface NSObject (AIToolbarUtilitiesAdditions)
+- (void)setToolbarItem:(NSToolbarItem *)item;
+@end
+
