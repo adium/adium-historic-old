@@ -159,8 +159,8 @@ typedef enum {
 - (void)addAlert:(NSDictionary *)alert toListObject:(AIListObject *)listObject setAsNewDefaults:(BOOL)setAsNewDefaults;
 - (void)addGlobalAlert:(NSDictionary *)newAlert;
 - (void)removeAlert:(NSDictionary *)victimAlert fromListObject:(AIListObject *)listObject;
+- (void)setAllGlobalAlerts:(NSArray *)allGlobalAlerts;
 - (void)removeAllGlobalAlertsWithActionID:(NSString *)actionID;
 - (void)mergeAndMoveContactAlertsFromListObject:(AIListObject *)oldObject intoListObject:(AIListObject *)newObject;
-
 
 @end
