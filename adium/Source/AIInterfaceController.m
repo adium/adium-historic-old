@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.73 2004/06/28 03:37:55 evands Exp $
+// $Id: AIInterfaceController.m,v 1.74 2004/07/10 06:20:42 evands Exp $
 
 #import "AIInterfaceController.h"
 
@@ -154,7 +154,7 @@
     
     //Post a notification that an error was recieved
     errorDict = [NSDictionary dictionaryWithObjectsAndKeys:inTitle,@"Title",inDesc,@"Description",inWindowTitle,@"Window Title",nil];
-    [[owner notificationCenter] postNotificationName:Interface_ErrorMessageReceived object:nil userInfo:errorDict];
+    [[owner notificationCenter] postNotificationName:Interface_ShouldDisplayErrorMessage object:nil userInfo:errorDict];
 }
 
 //Flashing

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.88 2004/06/30 21:58:26 evands Exp $
+// $Id: AIAccountController.m,v 1.89 2004/07/10 06:20:42 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -277,6 +277,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 														action:@selector(selectServiceType:) 
 												 keyEquivalent:@""] autorelease];
         [item setRepresentedObject:service];
+		[item setImage:[[service handleServiceType] menuImage]];
         [menu addItem:item];
     }
 	
@@ -528,6 +529,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 											   action:@selector(selectAccount:)
 										keyEquivalent:@""] autorelease];
         [menuItem setRepresentedObject:account];
+		[menuItem setImage:[account serviceMenuImage]];
 		
         //Disabled if the account is offline
         if(![[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:account]){
@@ -586,6 +588,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 															action:@selector(selectAccount:)
 													 keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:anAccount];
+		[menuItem setImage:[anAccount serviceMenuImage]];
 		[menu addItem:menuItem];
 	}
 }

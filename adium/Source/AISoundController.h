@@ -25,6 +25,7 @@
 #define PREF_GROUP_SOUNDS					@"Sounds"
 #define KEY_EVENT_MUTE_WHILE_AWAY			@"Mute While Away"
 
+@class SUSpeaker;
 
 @interface AISoundController : NSObject {
     IBOutlet	AIAdium		*owner;
