@@ -11845,6 +11845,7 @@
 		4B7F78B30597F42400162728 = {
 			buildActionMask = 2147483647;
 			files = (
+				CA0C977906DBFDB8004436BE,
 				3448769906D1EF6100DA778C,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -11870,6 +11871,7 @@
 				PRODUCT_NAME = "Adium Crash Reporter";
 			};
 			dependencies = (
+				CA0C977806DBFDA1004436BE,
 			);
 			isa = PBXNativeTarget;
 			name = "Adium Crash Reporter";
@@ -21440,6 +21442,24 @@
 //CA4
 		CA0C973A06DBF37A004436BE = {
 			fileRef = 34BD9F390531477E000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		CA0C977706DBFDA1004436BE = {
+			containerPortal = 3448717006D1E57700DA778C;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = AIUtilities;
+		};
+		CA0C977806DBFDA1004436BE = {
+			isa = PBXTargetDependency;
+			name = "AIUtilities (from AIUtilities.framework.xcode)";
+			targetProxy = CA0C977706DBFDA1004436BE;
+		};
+		CA0C977906DBFDB8004436BE = {
+			fileRef = 3448717206D1E57700DA778C;
 			isa = PBXBuildFile;
 			settings = {
 			};
