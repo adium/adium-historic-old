@@ -164,6 +164,7 @@
 //Draw our display name
 - (void)drawDisplayNameWithFrame:(NSRect)rect
 {	
+//	[[self displayNameStringWithAttributes:YES] drawInRect:rect];
 	[textStorage setAttributedString:[self displayNameStringWithAttributes:YES]];
 	NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
 	NSRect	glyphRect = [layoutManager boundingRectForGlyphRange:glyphRange inTextContainer:textContainer];
@@ -211,20 +212,18 @@
 		
 	//Add the display attributes
 	if(applyAttributes){
-		NSColor				*textColor;
+		NSDictionary		*additionalAttributes = [self displayNameAttributes];
+		NSColor				*textColor = [self textColor];
 		NSParagraphStyle	*paragraphStyle;
 		
-		//Text Color (If this cell is selected, use the inverted color, or white)
-		textColor = [self textColor];
-		
-		//Font & Clipping paragraph style
-		paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment lineBreakMode:NSLineBreakByClipping];
-		
-		attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+		//Attributes
+		paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment lineBreakMode:NSLineBreakByTruncatingTail/*NSLineBreakByClipping*/];
+		attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 			textColor, NSForegroundColorAttributeName,
 			paragraphStyle, NSParagraphStyleAttributeName,
 			font, NSFontAttributeName,
 			nil];
+		if(additionalAttributes) [attributes addEntriesFromDictionary:additionalAttributes];
 		
 	}else{
 		attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
@@ -233,19 +232,26 @@
 	return([[[NSAttributedString alloc] initWithString:displayString attributes:attributes] autorelease]);
 }
 
-//Text Color (If this cell is selected, use the inverted color, or white)
+//Additional attributes for the display name
+- (NSDictionary *)displayNameAttributes
+{
+	return(nil);
+}
+
+//Text Color (If this cell is selected, use the inverted color)
 - (NSColor *)textColor
 {
-	NSColor	*textColor = nil;
-	
-	if(![self isHighlighted] || ![[controlView window] isKeyWindow] || [[controlView window] firstResponder] != controlView){
-		textColor = [[listObject displayArrayForKey:@"Text Color"] objectValue];
-		if(!textColor) textColor = [NSColor blackColor];
+	if([self isSelectionInverted]){
+		return([NSColor alternateSelectedControlTextColor]);
 	}else{
-		textColor = [NSColor alternateSelectedControlTextColor];
-	}    
-	
-	return(textColor);
+		return([NSColor blackColor]);
+	}
+}
+
+//Should our selection be drawn inverted?
+- (BOOL)isSelectionInverted
+{
+	return([self isHighlighted] && [[controlView window] isKeyWindow] && [[controlView window] firstResponder] == controlView);
 }
 
 @end

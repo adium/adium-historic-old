@@ -100,4 +100,21 @@
 	[self drawDisplayNameWithFrame:rect];
 }
 
+//Draw our display name
+//- (NSRect)drawDisplayNameWithFrame:(NSRect)rect
+//{	
+//	rect = [super drawDisplayNameWithFrame:rect];
+//	
+//	rect.origin.y -= 1;
+//	
+//	[textStorage setAttributedString:[self displayNameStringWithAttributes:YES color:[self greenColor]]];
+//	NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
+//	NSRect	glyphRect = [layoutManager boundingRectForGlyphRange:glyphRange inTextContainer:textContainer];
+//	[layoutManager drawGlyphsForGlyphRange:glyphRange
+//								   atPoint:NSMakePoint(rect.origin.x,
+//													   rect.origin.y + (rect.size.height - glyphRect.size.height) / 2.0)];
+//	return(rect);
+//}
+
+
 @end
