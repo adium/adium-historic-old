@@ -144,7 +144,7 @@
                     <div class="teamMember">
                         <h2>Nelson Elhage <span class="teamDescription">(Games)</span></h2>
                         <img class="teamAvatar" width="64" height="64" border="0" src="images/avatars/avatar_Nelson Elhage.png" alt="avatar" />
-                        <span class="teamData">Email:</span><a href="mailto:hanji@users.sourceforge.net">hanji@users.sourceforge.net</a><br />
+                        <span class="teamData">Email:</span>nelhage[at]gmail[dot]com<br />
                         <span class="teamData">AIM:</span>HanjiTheArcher<br />
                         <span class="teamData">Jabber:</span>Hanji@jabber.org
                     </div>
