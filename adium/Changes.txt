@@ -6,8 +6,10 @@ Version 0.55
 - Fixed a crash when editing links that are in the view at load time
 - Fixed emoticon pack loading to ignore empty packs
 - Fixed a bug preventing Jabber names with "-" in them from connecting
+- Fixed a crash when quitting while a tooltip is visible
 - Fixed a bug causing passwords to be cleared unnecessarily, particularly when network errors occurred while connecting
 - Disabled dragging web links into the message view
+- Added advanced Webkit Message View preferences, which currently allow the customization of the contact name display in the message view.
 
 Version 0.54 (5/7/2004)
 - Added support for displaying strikethrough, subscript, and superscript text
