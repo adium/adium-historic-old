@@ -25,6 +25,8 @@
     NSTrackingRectTag	tooltipTrackingTag;
     BOOL		trackingMouseMovedEvents;
 
+    BOOL                horizontalResizingEnabled;
+    
     NSTimer 		*tooltipTimer;
     int 		tooltipCount;
 }
