@@ -8643,6 +8643,7 @@
 				B774EFC4058C48F6009C7C67,
 				4B6EA1BE058FA6900070A9A1,
 				4B215DB0059896B000305B3C,
+				4B8C009205BD62CD0013F4AA,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
@@ -21141,6 +21142,18 @@
 			path = "Plugins/Contact List Editor/AIEditorCollection.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B8C009105BD62CD0013F4AA = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 6EB4AC3305BCB81D00D0042B;
+			remoteInfo = "Message Push Preferences";
+		};
+		4B8C009205BD62CD0013F4AA = {
+			isa = PBXTargetDependency;
+			target = 6EB4AC3305BCB81D00D0042B;
+			targetProxy = 4B8C009105BD62CD0013F4AA;
 		};
 		4B8EFC0403E18F2D00A8010A = {
 			fileEncoding = 4;
