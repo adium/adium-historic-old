@@ -17456,6 +17456,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
 				GCC_ALTIVEC_EXTENSIONS = NO;
+				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
@@ -17475,6 +17476,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUGGING_SYMBOLS = YES;
 				GCC_ALTIVEC_EXTENSIONS = NO;
+				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
@@ -26015,7 +26017,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			name = AIAwayStatusWindowController.h;
-			path = "Plugins/Away Messages/AIAwayStatusWindowController.h";
+			path = "Plugins/Away Status Window/AIAwayStatusWindowController.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -26024,7 +26026,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIAwayStatusWindowController.m;
-			path = "Plugins/Away Messages/AIAwayStatusWindowController.m";
+			path = "Plugins/Away Status Window/AIAwayStatusWindowController.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
