@@ -31,20 +31,19 @@ static NSDictionary		*presetStatusesDictionary = nil;
 - (void)initAccount
 {
 	[super initAccount];
-	
+
 	if (!presetStatusesDictionary){
 		presetStatusesDictionary = [[NSDictionary dictionaryWithObjectsAndKeys:
-			AILocalizedString(@"Be Right Back",nil),	[NSNumber numberWithInt:YAHOO_STATUS_BRB],
-			AILocalizedString(@"Busy",nil),				[NSNumber numberWithInt:YAHOO_STATUS_BUSY],
-			AILocalizedString(@"Not At Home",nil),		[NSNumber numberWithInt:YAHOO_STATUS_NOTATHOME],
-			AILocalizedString(@"Not At My Desk",nil),   [NSNumber numberWithInt:YAHOO_STATUS_NOTATDESK],
-			AILocalizedString(@"Not In The Office",nil),[NSNumber numberWithInt:YAHOO_STATUS_NOTINOFFICE],
-			AILocalizedString(@"On The Phone",nil),		[NSNumber numberWithInt:YAHOO_STATUS_ONPHONE],
-			AILocalizedString(@"On Vacation",nil),		[NSNumber numberWithInt:YAHOO_STATUS_ONVACATION],
-			AILocalizedString(@"Out To Lunch",nil),		[NSNumber numberWithInt:YAHOO_STATUS_OUTTOLUNCH],
-			AILocalizedString(@"Stepped Out",nil),		[NSNumber numberWithInt:YAHOO_STATUS_STEPPEDOUT],
-			AILocalizedString(@"Invisible",nil),		[NSNumber numberWithInt:YAHOO_STATUS_INVISIBLE],
-			AILocalizedString(@"Idle",nil),				[NSNumber numberWithInt:YAHOO_STATUS_IDLE],nil] retain];
+			STATUS_DESCRIPTION_BRB,				[NSNumber numberWithInt:YAHOO_STATUS_BRB],
+			STATUS_DESCRIPTION_BUSY,			[NSNumber numberWithInt:YAHOO_STATUS_BUSY],
+			STATUS_DESCRIPTION_NOT_AT_HOME,		[NSNumber numberWithInt:YAHOO_STATUS_NOTATHOME],
+			STATUS_DESCRIPTION_NOT_AT_DESK,		[NSNumber numberWithInt:YAHOO_STATUS_NOTATDESK],
+			STATUS_DESCRIPTION_NOT_IN_OFFICE,	[NSNumber numberWithInt:YAHOO_STATUS_NOTINOFFICE],
+			STATUS_DESCRIPTION_PHONE,			[NSNumber numberWithInt:YAHOO_STATUS_ONPHONE],
+			STATUS_DESCRIPTION_VACATION,		[NSNumber numberWithInt:YAHOO_STATUS_ONVACATION],
+			STATUS_DESCRIPTION_LUNCH,			[NSNumber numberWithInt:YAHOO_STATUS_OUTTOLUNCH],
+			STATUS_DESCRIPTION_STEPPED_OUT,		[NSNumber numberWithInt:YAHOO_STATUS_STEPPEDOUT],
+			AILocalizedString(@"Invisible",nil),[NSNumber numberWithInt:YAHOO_STATUS_INVISIBLE],nil] retain];
 	}
 }
 
@@ -192,56 +191,54 @@ static NSDictionary		*presetStatusesDictionary = nil;
 		NSString		*statusMsgString = nil;
 		NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString"];
 		
-		if (f != NULL){
-			if (f->status == YAHOO_STATUS_IDLE){
-				/*
-				//Now idle
-				int		idle = f->idle;
-				NSDate	*idleSince;
-
-				NSLog(@"%@ YAHOO_STATUS_IDLE %i (%d)",[theContact UID],idle,idle);
-
-				if (idle != -1){
-					idleSince = [NSDate dateWithTimeIntervalSinceNow:-idle];
-					NSLog(@"So that's %i minutes ago",([[NSDate date] timeIntervalSinceDate:idleSince]/60));
-				}else{
-					idleSince = [NSDate date];
-				}
-
-				[theContact setStatusObject:idleSince
-									 forKey:@"IdleSince"
-									 notify:NO];
-				 */
-
-			}else{
-				if (f->msg != NULL) {
-					statusMsgString = [NSString stringWithUTF8String:f->msg];
-				} else if (f->status != YAHOO_STATUS_AVAILABLE) {
-					statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:f->status]];
-				}
-			}
+		if (f->status == YAHOO_STATUS_IDLE){
+			/*
+			 //Now idle
+			 int		idle = f->idle;
+			 NSDate	*idleSince;
+			 
+			 NSLog(@"%@ YAHOO_STATUS_IDLE %i (%d)",[theContact UID],idle,idle);
+			 
+			 if (idle != -1){
+				 idleSince = [NSDate dateWithTimeIntervalSinceNow:-idle];
+				 NSLog(@"So that's %i minutes ago",([[NSDate date] timeIntervalSinceDate:idleSince]/60));
+			 }else{
+				 idleSince = [NSDate date];
+			 }
+			 
+			 [theContact setStatusObject:idleSince
+								  forKey:@"IdleSince"
+								  notify:NO];
+			 */
 			
-			if (statusMsgString && [statusMsgString length]) {
-				if (![statusMsgString isEqualToString:oldStatusMsgString]) {
-					NSAttributedString *attrStr;
-					
-					attrStr = [[NSAttributedString alloc] initWithString:statusMsgString];
-					
-					[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
-					[theContact setStatusObject:attrStr forKey:@"StatusMessage" notify:NO];
-					
-					[attrStr release];
-				}
-				
-			} else if (oldStatusMsgString && [oldStatusMsgString length]) {
-				//If we had a message before, remove it
-				[theContact setStatusObject:nil forKey:@"StatusMessageString" notify:NO];
-				[theContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
+		}else{
+			if (f->msg != NULL) {
+				statusMsgString = [NSString stringWithUTF8String:f->msg];
+			} else if (f->status != YAHOO_STATUS_AVAILABLE) {
+				statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:f->status]];
 			}
-			
-			//apply changes
-			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 		}
+		
+		if (statusMsgString && [statusMsgString length]) {
+			if (![statusMsgString isEqualToString:oldStatusMsgString]) {
+				NSAttributedString *attrStr;
+				
+				attrStr = [[NSAttributedString alloc] initWithString:statusMsgString];
+				
+				[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
+				[theContact setStatusObject:attrStr forKey:@"StatusMessage" notify:NO];
+				
+				[attrStr release];
+			}
+			
+		} else if (oldStatusMsgString && [oldStatusMsgString length]) {
+			//If we had a message before, remove it
+			[theContact setStatusObject:nil forKey:@"StatusMessageString" notify:NO];
+			[theContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
+		}
+		
+		//apply changes
+		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
 }
 
