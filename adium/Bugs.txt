@@ -52,8 +52,6 @@
 
 - Double history on chat re-open
 
-- Insert emoticon contextual menu does follow the enable/disable setting of particular emoticons in the sets for the submenus, but it inserts the text-equivalent as they were all enabled, that is wrong for any emoticon after the first you have disabled.
-
 	
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
