@@ -66,7 +66,6 @@
 
 - (void)dealloc
 {
-#warning may need a setDelegate:nil here
 	[contactListController release];
 	[super dealloc];
 }
