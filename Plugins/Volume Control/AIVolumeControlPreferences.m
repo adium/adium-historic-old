@@ -104,7 +104,7 @@
 
 - (NSMenu *)outputDeviceMenu
 {
-	NSMenu		*outputDeviceMenu = [[NSMenu alloc] init];
+	NSMenu		*outputDeviceMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
 	NSMenuItem  *menuItem;
 	
 	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"System Output Device",nil)
