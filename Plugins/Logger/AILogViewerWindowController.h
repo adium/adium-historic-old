@@ -15,6 +15,7 @@
 
 #import "AILoggerPlugin.h"
 
+#define	KEY_LOG_VIEWER_EMOTICONS	@"Log Viewer Emoticons"
 #define	KEY_LOG_VIEWER_DRAWER_STATE	@"Log Viewer Drawer State"
 #define	KEY_LOG_VIEWER_DRAWER_SIZE	@"Log Viewer Drawer Size"
 
