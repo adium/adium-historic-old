@@ -325,20 +325,26 @@
 //Draw an image, altering and returning the available destination rect
 - (NSRect)drawInRect:(NSRect)rect atSize:(NSSize)size position:(IMAGE_POSITION)position fraction:(float)fraction
 {
-	NSRect	drawRect = [self rectForDrawingInRect:rect atSize:size position:position];
-	
 	//We use our own size for drawing purposes no matter the passed size to avoid distorting the image via stretching
 	NSSize	ownSize = [self size];
 
 	//If we're passed a 0,0 size, use the image's size for the area taken up by the image 
 	//(which may exceed the actual image dimensions)
 	if(size.width == 0 || size.height == 0) size = ownSize;
-
+	
+	NSRect	drawRect = [self rectForDrawingInRect:rect atSize:size position:position];
+	
 	//If we are drawing in a rect wider than we are, center horizontally
-	if (drawRect.size.width > ownSize.width) drawRect.origin.x += (drawRect.size.width - ownSize.width) / 2;
+	if (drawRect.size.width > ownSize.width){
+		drawRect.origin.x += (drawRect.size.width - ownSize.width) / 2;
+		drawRect.size.width -= (drawRect.size.width - ownSize.width);
+	}
 
 	//If we are drawing in a rect higher than we are, center vertically
-	if (drawRect.size.height > ownSize.height) drawRect.origin.y += (drawRect.size.height - ownSize.height) / 2;
+	if (drawRect.size.height > ownSize.height){
+		drawRect.origin.y += (drawRect.size.height - ownSize.height) / 2;
+		drawRect.size.height -= (drawRect.size.height - ownSize.height);
+	}
 
 	//Draw
 	[self drawInRect:drawRect
