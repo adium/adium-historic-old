@@ -23,6 +23,7 @@
                 "button_oneTime" = NSButton; 
                 "popUp_actionDetails" = NSPopUpButton; 
                 "popUp_addEvent" = NSPopUpButton; 
+                "popUp_contactList" = NSPopUpButton; 
                 "tableView_actions" = AIAlternatingRowTableView; 
                 "textField_actionDetails" = NSTextField; 
                 "textField_description_popUp" = NSTextField; 
