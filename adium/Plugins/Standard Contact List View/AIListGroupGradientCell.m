@@ -44,4 +44,16 @@
 									direction:AIVertical]);
 }
 
+//Shadow our text to make it prettier
+- (NSDictionary *)displayNameAttributes
+{
+	NSShadow	*shadow = [[[NSShadow alloc] init] autorelease];
+	
+	[shadow setShadowOffset:NSMakeSize(0.0, -1.0)];
+	[shadow setShadowBlurRadius:2.0];
+	[shadow setShadowColor:[NSColor grayColor]];
+	
+	return([NSDictionary dictionaryWithObject:shadow forKey:NSShadowAttributeName]);
+}
+
 @end

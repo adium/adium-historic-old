@@ -79,6 +79,18 @@
 	return([super rightPadding] + 4);
 }
 
+//Draw using our contact's status color
+- (NSColor *)textColor
+{
+	if([self isSelectionInverted]){
+		return([super textColor]);
+	}else{
+		NSColor	*textColor = [[listObject displayArrayForKey:@"Text Color"] objectValue];
+		return(textColor ? textColor : [NSColor blackColor]);
+	}
+}
+
+
 
 //Configure ------------------------------------------------------------------------------------------------------------
 #pragma mark Configure

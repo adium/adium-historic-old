@@ -50,7 +50,7 @@
 		
 		//Restict our label to the object name if desired
 		if(BUBBLE_NAME_ONLY){				
-			labelRect.size.width = [[self displayNameStringWithAttributes:NO] size].width + (EDGE_INDENT * 2);
+			labelRect.size.width = [[self displayNameStringWithAttributes:NO color:nil] size].width + (EDGE_INDENT * 2);
 		}
 
 		//Retrieve the label and shift it into position
