@@ -14,6 +14,6 @@
     AIAdium         *owner;
 }
 
-- (id)initWithOwner:(AIAdium *)owner;
++ (CBStatusMenuItemController *)statusMenuItemControllerForOwner:(id)inOwner;
 
 @end

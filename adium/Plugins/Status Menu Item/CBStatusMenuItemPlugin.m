@@ -12,12 +12,12 @@
 
 - (void)installPlugin
 {
-    itemController = [[CBStatusMenuItemController alloc] initWithOwner:owner];
+    itemController = [CBStatusMenuItemController statusMenuItemControllerForOwner:self];
 }
 
 - (void)uninstallPlugin
 {
-    [itemController release];
+    //[itemController release];
 }
 
 @end
