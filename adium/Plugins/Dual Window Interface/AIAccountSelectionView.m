@@ -108,7 +108,6 @@
     if(delegate){
 		AIListObject	*listObject = [delegate listObject];
 		int				selectedIndex;
-		NSArray			*sources;
 		
 		//
 		[popUp_accounts setMenu:[[adium accountController] menuOfAccountsForSendingContentType:CONTENT_MESSAGE_TYPE
