@@ -55,7 +55,7 @@
 - (void)textDidChange:(NSNotification *)notification
 {
     if(continiousURLValidation) {//call the URL validatation if set
-        SHHyperlinkScanner  *laxScanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
+        SHHyperlinkScanner  *laxScanner = [[[SHHyperlinkScanner alloc] initWithStrictChecking:NO] autorelease];
         
         URLIsValid = [laxScanner isStringValidURL:[[self textStorage] string]];
         validStatus = [laxScanner validationStatus];

@@ -21,6 +21,12 @@
     return self;
 }
 
+-(void)dealloc
+{
+    [pString release];
+    [super dealloc];
+}
+
 -(NSRange)range
 {
     return linkRange;
