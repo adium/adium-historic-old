@@ -31,7 +31,7 @@
 {
     [self configureDimming]; // this has to go first.
     
-    if(sender == enabledCheckBox)
+    if(sender == enableBouncingCheckBox)
     {
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                         forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT
@@ -39,7 +39,8 @@
     }
     else if(sender == bounceField)
     {	
-        if([sender intValue] >= 0)
+        
+    if([sender intValue] >= 0)
         {
             [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
                                             forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM
@@ -79,6 +80,13 @@
             [[sender window] makeFirstResponder:bounceField];
         }
     }
+    
+    else if(sender == enableAnimationCheckBox)
+    {
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                        forKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_ANIMATE
+                                        group:PREF_GROUP_DOCK_BEHAVIOR];
+    }
 } 
 
 //-------Private----------------------------------
@@ -107,7 +115,7 @@
 //configure our view
 - (void)configureView 
 {
-    [enabledCheckBox setState:
+    [enableBouncingCheckBox setState:
         [[preferenceDict objectForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT] boolValue]];
     
     if([[preferenceDict objectForKey:PREF_DOCK_BOUNCE_ON_RECEIVE_CONTENT_NUM] intValue] == -1)
@@ -130,8 +138,10 @@
 //enable and disable the items
 - (void)configureDimming
 {	
-    [delayField setEnabled:[enabledCheckBox state]];
-    [bounceMatrix setEnabled:[enabledCheckBox state]];
-    [bounceField setEnabled:([[bounceMatrix selectedCell] tag] == 1 && [enabledCheckBox state])];
+    [delayField setEnabled:([enableBouncingCheckBox state] || [enableAnimationCheckBox state])];
+    [bounceMatrix setEnabled:([enableBouncingCheckBox state] || [enableAnimationCheckBox state])];
+    [bounceField setEnabled:
+        ([[bounceMatrix selectedCell] tag] == 1 
+        && ([enableBouncingCheckBox state] || [enableAnimationCheckBox state]))];
 }   
 @end

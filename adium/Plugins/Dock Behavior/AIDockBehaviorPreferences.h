@@ -16,7 +16,8 @@
     IBOutlet	NSView		*view_prefView;
     IBOutlet 	NSTextField	*bounceField;
     IBOutlet	NSTextField	*delayField;
-    IBOutlet	NSButton	*enabledCheckBox;
+    IBOutlet	NSButton	*enableBouncingCheckBox;
+    IBOutlet	NSButton	*enableAnimationCheckBox;
     IBOutlet	NSMatrix	*bounceMatrix;
     
     NSDictionary		*preferenceDict;
