@@ -14,8 +14,8 @@
 		<string>tab-idle.png</string>
 		<key>offline</key>
 		<string>tab-offline.png</string>
-		<key>stranger</key>
-		<string>tab-stranger.png</string>
+		<key>unknown</key>
+		<string>tab-unknown.png</string>
 		<key>typing</key>
 		<string>tab-typing.png</string>
 		<key>entered-text</key>
