@@ -11,12 +11,25 @@
 
 - (void)installPlugin
 {
+    [self createStatusItem];
+}
+
+- (void)createStatusItem
+{
     itemController = [CBStatusMenuItemController statusMenuItemController];
+}
+
+- (void)destroyStatusItem
+{
+    if(itemController){
+        [itemController release];
+        itemController = nil;
+    }
 }
 
 - (void)uninstallPlugin
 {
-    [itemController release];
+    [self destroyStatusItem];
 }
 
 @end
