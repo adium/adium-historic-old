@@ -32,7 +32,6 @@
 - (void)updateCommonStatusForKey:(NSString *)key;
 - (void)setStatusState:(AIStatus *)statusState;
 - (void)setStatusStateAndRemainOffline:(AIStatus *)statusState;
-- (AIStatus *)statusState;
 
 //Auto-Refreshing Status String
 - (NSAttributedString *)autoRefreshingOutgoingContentForStatusKey:(NSString *)key;
