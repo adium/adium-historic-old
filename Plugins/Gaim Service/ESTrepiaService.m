@@ -12,50 +12,46 @@
 
 @implementation ESTrepiaService
 
-- (id)initWithService:(id)inService
-{
-    [super initWithService:inService];
-    
-    //Create our handle service type
-    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Trepia"
-                                                      description:@"Trepia"
-                                                            image:nil
-														menuImage:nil
-                                                    caseSensitive:NO
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._"]
-												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
-													allowedLength:24] retain];
-    
-    //Register this service
-    [[adium accountController] registerService:self];
-    
-    return self;
+//Account Creation
+- (Class)accountClass{
+	return([ESGaimTrepiaAccount class]);
 }
 
-- (NSString *)identifier
-{
-    return(@"Trepia-LIBGAIM");
-}
-- (NSString *)description
-{
-    return @"Trepia";
-}
-
-- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
-{    
-    return([[[ESGaimTrepiaAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
-}
-
-- (AIAccountViewController *)accountView
-{
+- (AIAccountViewController *)accountView{
     return([ESGaimTrepiaAccountViewController accountView]);
 }
 
-
-- (DCJoinChatViewController *)joinChatView
-{
+- (DCJoinChatViewController *)joinChatView{
 	return([DCGaimTrepiaJoinChatViewController joinChatView]);
 }
 
+//Service Description
+- (NSString *)serviceCodeUniqueID{
+	return(@"libgaim-Trepia");
+}
+- (NSString *)serviceID{
+	return(@"Trepia");
+}
+- (NSString *)serviceClass{
+	return(@"Trepia");
+}
+- (NSString *)shortDescription{
+	return(@"Trepia");
+}
+- (NSString *)longDescription{
+	return(@"Trepia");
+}
+- (NSCharacterSet *)allowedCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._"]);
+}
+- (NSCharacterSet *)ignoredCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+}
+- (int)allowedLength{
+	return(24);
+}
+- (BOOL)caseSensitive{
+	return(NO);
+}
 
 @end
