@@ -1470,7 +1470,6 @@
 				6C644D3805776BC700D79723,
 				6C644D3A05776BC700D79723,
 				6C644D3E05776BF000D79723,
-				B799BC8405793C1300338E54,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1534,7 +1533,6 @@
 				6C644D3905776BC700D79723,
 				6C644D3B05776BC700D79723,
 				6C644D3F05776BF000D79723,
-				B799BC8305793C1300338E54,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2265,6 +2263,7 @@
 			files = (
 				3419F3A805314BE000C68BA3,
 				341591E305463DA800291275,
+				3439FDA905794D0F00B2E449,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2289,6 +2288,7 @@
 			files = (
 				3419F3AD05314BE000C68BA3,
 				341591E505463DA800291275,
+				3439FDAA05794D1300B2E449,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2323,7 +2323,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F3B305314BE000C68BA3 = {
-			expectedFileType = wrapper.cfbundle;
+			expectedFileType = folder;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "SQL Logger.AdiumPlugin";
@@ -5142,6 +5142,62 @@
 		};
 		342DC7FF05784463000E1D83 = {
 			fileRef = 342DC7FE05784463000E1D83;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3439FD8A05794B4400B2E449 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESAlertMessageContactAlert.h;
+			path = "Plugins/Error Message Handler/ESAlertMessageContactAlert.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3439FD8B05794B4500B2E449 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESAlertMessageContactAlert.m;
+			path = "Plugins/Error Message Handler/ESAlertMessageContactAlert.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3439FD8C05794B4500B2E449 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = AlertMessageContactAlert.nib;
+			path = "Plugins/Error Message Handler/AlertMessageContactAlert.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3439FD9005794B8000B2E449 = {
+			fileRef = 3439FD8C05794B4500B2E449;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3439FD9105794B8100B2E449 = {
+			fileRef = 3439FD8A05794B4400B2E449;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3439FD9205794B8100B2E449 = {
+			fileRef = 3439FD8B05794B4500B2E449;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3439FDA905794D0F00B2E449 = {
+			fileRef = B799BC8105793C1300338E54;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3439FDAA05794D1300B2E449 = {
+			fileRef = B799BC8005793C1200338E54;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -15834,6 +15890,7 @@
 			files = (
 				34BDA1A405314851000AB133,
 				34BDA1A505314851000AB133,
+				3439FD9105794B8100B2E449,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15854,6 +15911,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34BDA1A705314851000AB133,
+				3439FD9005794B8000B2E449,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15869,6 +15927,7 @@
 			files = (
 				34BDA1A905314851000AB133,
 				34BDA1AA05314851000AB133,
+				3439FD9205794B8100B2E449,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -16598,6 +16657,9 @@
 				40AC0F0F03B5C29E00A80202,
 				40AC0F1003B5C29E00A80202,
 				40AC0F1303B5C34800A80202,
+				3439FD8A05794B4400B2E449,
+				3439FD8B05794B4500B2E449,
+				3439FD8C05794B4500B2E449,
 			);
 			isa = PBXGroup;
 			name = "Error Message Handler";
@@ -25415,7 +25477,7 @@
 //B73
 //B74
 		B799BB0005793A6400338E54 = {
-			expectedFileType = wrapper.cfbundle;
+			expectedFileType = folder;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Open Message Window Contact Alert.AdiumPlugin";
@@ -25448,18 +25510,6 @@
 		};
 		B799BC8205793C1300338E54 = {
 			fileRef = B799BC7F05793C1200338E54;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		B799BC8305793C1300338E54 = {
-			fileRef = B799BC8005793C1200338E54;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		B799BC8405793C1300338E54 = {
-			fileRef = B799BC8105793C1300338E54;
 			isa = PBXBuildFile;
 			settings = {
 			};

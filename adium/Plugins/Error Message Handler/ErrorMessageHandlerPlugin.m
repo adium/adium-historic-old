@@ -15,7 +15,7 @@
 
 #import "ErrorMessageHandlerPlugin.h"
 #import "ErrorMessageWindowController.h"
-
+#import "ESAlertMessageContactAlert.h"
 
 @implementation ErrorMessageHandlerPlugin
 
@@ -23,10 +23,17 @@
 {
     //Install our observers
     [[owner notificationCenter] addObserver:self selector:@selector(handleError:) name:Interface_ErrorMessageReceived object:nil];
+    
+    //Install our contact alert
+    [[owner contactAlertsController] registerContactAlertProvider:self];
+    
 }
 
 - (void)uninstallPlugin
 {
+    //Uninstall our contact alert
+    [[owner contactAlertsController] unregisterContactAlertProvider:self];
+    
     [ErrorMessageWindowController closeSharedInstance]; //Close the error window
 }
 
@@ -49,5 +56,34 @@
     //Display an alert
     [[ErrorMessageWindowController errorMessageWindowControllerWithOwner:owner] displayError:errorTitle withDescription:errorDesc withTitle:windowTitle];
 }
+
+//*****
+//ESContactAlertProvider
+//*****
+
+- (NSString *)identifier
+{
+    return CONTACT_ALERT_IDENTIFIER;
+}
+
+- (ESContactAlert *)contactAlert
+{
+    return [ESAlertMessageContactAlert contactAlertWithOwner:owner];   
+}
+
+//performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
+- (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status actionName:(NSString *)actionName
+{
+    NSString *title = [NSString stringWithFormat:@"%@ %@", [inObject displayName], actionName];
+    [[owner interfaceController] handleMessage:title withDescription:details withWindowTitle:@"Contact Alert"];
+    return YES;
+}
+
+//continue processing after a successful action
+- (BOOL)shouldKeepProcessing
+{
+    return YES;
+}
+
 
 @end
