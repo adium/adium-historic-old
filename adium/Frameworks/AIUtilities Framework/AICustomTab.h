@@ -25,12 +25,18 @@
     NSImage		*tabFrontMiddle;
     NSImage		*tabFrontRight;
     NSImage		*tabDivider;
+    NSImage		*tabCloseFront;
+    NSImage		*tabCloseFrontPressed;
     
     //Properties
     BOOL		selected;
     BOOL		depressed;
     BOOL		dragging;
     BOOL		drawDivider;
+
+    NSRect		closeButtonRect;
+    BOOL		trackingClose;
+    BOOL		hoveringClose;
     
     NSTrackingRectTag	trackingRectTag;
     NSTabViewItem	*tabViewItem;

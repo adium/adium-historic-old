@@ -6563,6 +6563,18 @@
 			settings = {
 			};
 		};
+		4B9C09A704B618C000A8010A = {
+			isa = PBXFileReference;
+			name = TabClose_Front_Pressed.tif;
+			path = "Frameworks/AIUtilities Framework/Images/TabClose_Front_Pressed.tif";
+			refType = 4;
+		};
+		4B9C09A804B618C000A8010A = {
+			fileRef = 4B9C09A704B618C000A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B9E73D803F7085300A8010A = {
 			buildActionMask = 2147483647;
 			files = (
@@ -9421,6 +9433,18 @@
 		};
 		4BF367FD040AB78700A8010A = {
 			fileRef = 4BCDEB3803D4DC6F00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF3F78104B3E14C00A8010A = {
+			isa = PBXFileReference;
+			name = TabClose_Front.tif;
+			path = "Frameworks/AIUtilities Framework/Images/TabClose_Front.tif";
+			refType = 4;
+		};
+		4BF3F78204B3E14C00A8010A = {
+			fileRef = 4BF3F78104B3E14C00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -12646,6 +12670,8 @@
 				4B6660BD04ADF2F200A8010A,
 				4B6660BE04ADF2F200A8010A,
 				4B6660BF04ADF2F200A8010A,
+				4BF3F78204B3E14C00A8010A,
+				4B9C09A804B618C000A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13480,6 +13506,8 @@
 				4B6660B004ADF2F200A8010A,
 				4B6660B104ADF2F200A8010A,
 				4B6660B204ADF2F200A8010A,
+				4BF3F78104B3E14C00A8010A,
+				4B9C09A704B618C000A8010A,
 			);
 			isa = PBXGroup;
 			name = Images;

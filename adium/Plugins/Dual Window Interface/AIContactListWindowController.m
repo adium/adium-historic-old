@@ -99,10 +99,17 @@
     [[self window] setMaxSize:newFrame.size];
     [[self window] setMinSize:newFrame.size];    
     
-    //Resize the window
-    [scrollView_contactList setAutoHideScrollBar:NO]; //Prevent scrollbar from appearing during animation
-    [[self window] setFrame:newFrame display:YES animate:YES];
-    [scrollView_contactList setAutoHideScrollBar:YES];
+    //Resize the window (We animate only if the window is main)
+    if([[self window] isMainWindow]){
+        [scrollView_contactList setAutoHideScrollBar:NO]; //Prevent scrollbar from appearing during animation
+        [[self window] setFrame:newFrame display:YES animate:YES];
+        [scrollView_contactList setAutoHideScrollBar:YES];
+
+    }else{
+        [[self window] setFrame:newFrame display:YES animate:NO];
+
+    }
+
 }
 
 - (NSRect)windowWillUseStandardFrame:(NSWindow *)sender defaultFrame:(NSRect)defaultFrame

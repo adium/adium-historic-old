@@ -31,6 +31,12 @@
 
 #define TAB_LABEL_INSET		-4	//Pixels the tab's label is inset into it's endcap
 #define TAB_DRAG_DISTANCE 	4	//Distance required before a drag kicks in
+#define TAB_CLOSE_LEFTPAD	0
+#define TAB_CLOSE_RIGHTPAD	2
+#define TAB_CLOSE_Y_OFFSET	-4
+#define TAB_BADGE_PADDING	2
+#define TAB_BADGE_X_OFFSET	0
+#define TAB_BADGE_Y_OFFSET	-4
 
 @implementation AICustomTab
 
@@ -70,7 +76,7 @@
 //Return the desired size of this tab
 - (NSSize)size
 {
-    return( NSMakeSize([tabFrontLeft size].width + [tabViewItem sizeOfLabel:NO].width - (TAB_LABEL_INSET * 2) + [tabFrontRight size].width, [tabFrontLeft size].height) ); //the label is inset into each cap
+    return( NSMakeSize([tabFrontLeft size].width + TAB_CLOSE_LEFTPAD + [tabCloseFront size].width + TAB_CLOSE_RIGHTPAD + [tabViewItem sizeOfLabel:NO].width + TAB_CLOSE_LEFTPAD + [tabCloseFront size].width + TAB_CLOSE_RIGHTPAD + [tabFrontRight size].width, [tabFrontLeft size].height) ); //the label is inset into each cap
 }
 
 - (NSComparisonResult)compareWidth:(AICustomTab *)tab
@@ -98,21 +104,30 @@
 {
     [super initWithFrame:frameRect];
 
-    tabFrontLeft = [[AIImageUtilities imageNamed:@"Tab_Left.tiff" forClass:[self class]] retain];
-    tabFrontMiddle = [[AIImageUtilities imageNamed:@"Tab_Middle.tiff" forClass:[self class]] retain];
-    tabFrontRight = [[AIImageUtilities imageNamed:@"Tab_Right.tiff" forClass:[self class]] retain];
+    tabFrontLeft = [[AIImageUtilities imageNamed:@"Tab_Left" forClass:[self class]] retain];
+    tabFrontMiddle = [[AIImageUtilities imageNamed:@"Tab_Middle" forClass:[self class]] retain];
+    tabFrontRight = [[AIImageUtilities imageNamed:@"Tab_Right" forClass:[self class]] retain];
 
-    tabBackLeft = [[AIImageUtilities imageNamed:@"TabMask_Left.tiff" forClass:[self class]] retain];
-    tabBackRight = [[AIImageUtilities imageNamed:@"TabMask_Right.tiff" forClass:[self class]] retain];
-    tabBackMiddle = [[AIImageUtilities imageNamed:@"TabMask_Middle.tiff" forClass:[self class]] retain];
+    tabBackLeft = [[AIImageUtilities imageNamed:@"TabMask_Left" forClass:[self class]] retain];
+    tabBackRight = [[AIImageUtilities imageNamed:@"TabMask_Right" forClass:[self class]] retain];
+    tabBackMiddle = [[AIImageUtilities imageNamed:@"TabMask_Middle" forClass:[self class]] retain];
 
-    tabDivider = [[AIImageUtilities imageNamed:@"Tab_Divider.tiff" forClass:[self class]] retain];
+    tabDivider = [[AIImageUtilities imageNamed:@"Tab_Divider" forClass:[self class]] retain];
 
+    tabCloseFront = [[AIImageUtilities imageNamed:@"TabClose_Front" forClass:[self class]] retain];
+    tabCloseFrontPressed = [[AIImageUtilities imageNamed:@"TabClose_Front_Pressed" forClass:[self class]] retain];
+    
     tabViewItem = [inTabViewItem retain];
     selected = NO;
     dragging = NO;
     trackingRectTag = 0;
-    
+
+    //
+    closeButtonRect = NSMakeRect([tabFrontLeft size].width + TAB_CLOSE_LEFTPAD,
+                                 frameRect.size.height + TAB_CLOSE_Y_OFFSET - [tabCloseFront size].height,
+                                 [tabCloseFront size].width,
+                                 [tabCloseFront size].height);
+        
     return(self);
 }
 
@@ -126,6 +141,10 @@
     [tabFrontLeft release];
     [tabFrontMiddle release];
     [tabFrontRight release];
+    [tabDivider release];
+
+    [tabCloseFront release];
+    [tabCloseFrontPressed release];
 
     [super dealloc];
 }
@@ -143,8 +162,9 @@
 //Draw
 - (void)drawRect:(NSRect)rect
 {
-    int		leftCapWidth, rightCapWidth, middleSourceWidth, middleRightEdge, middleLeftEdge, middleWidth;
+    int		leftCapWidth, rightCapWidth, middleSourceWidth, middleRightEdge, middleLeftEdge, middleWidth, tabCloseWidth, tabBadgeWidth;
     NSRect	sourceRect, destRect;
+    NSPoint	destPoint;
     NSSize	labelSize;
       
     //Pre-calc some dimensions
@@ -155,6 +175,8 @@
     middleRightEdge = (rect.origin.x + rect.size.width - rightCapWidth);
     middleLeftEdge = (rect.origin.x + leftCapWidth);
     middleWidth = middleRightEdge - middleLeftEdge;
+    tabCloseWidth = [tabCloseFront size].width;
+    tabBadgeWidth = tabCloseWidth;
 
     if(selected){
         //Draw left mask
@@ -183,6 +205,7 @@
 
         //Draw the right cap
         [tabFrontRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
+
     }else{
         if(drawDivider){
             //Draw the divider
@@ -192,15 +215,30 @@
         
     }
     
-    //Draw the title
-    destRect = NSMakeRect(rect.origin.x + leftCapWidth - TAB_LABEL_INSET,
-                          rect.origin.y + (int)((rect.size.height - labelSize.height) / 2.0), //center it vertically
-                          middleWidth + (TAB_LABEL_INSET * 2),
-			  labelSize.height);
+    //Draw the close widget
+    if(selected){
+        destPoint = NSMakePoint(rect.origin.x + leftCapWidth + TAB_CLOSE_LEFTPAD, rect.origin.y + rect.size.height + TAB_CLOSE_Y_OFFSET);
 
+        if(hoveringClose){
+            [tabCloseFrontPressed compositeToPoint:destPoint operation:NSCompositeSourceOver];
+        }else{
+            [tabCloseFront compositeToPoint:destPoint operation:NSCompositeSourceOver];
+        }
+    }
+
+    //Draw the title
+    destRect = NSMakeRect(rect.origin.x + leftCapWidth + TAB_CLOSE_LEFTPAD + tabCloseWidth + TAB_CLOSE_RIGHTPAD,
+                          rect.origin.y + (int)((rect.size.height - labelSize.height) / 2.0), //center it vertically
+                          middleWidth - tabCloseWidth - TAB_CLOSE_LEFTPAD - tabBadgeWidth - TAB_CLOSE_RIGHTPAD,
+                          labelSize.height);
     [tabViewItem drawLabel:YES inRect:destRect];
+
+    //Draw the Badge
+    destPoint = NSMakePoint(rect.origin.x + leftCapWidth + middleWidth - TAB_CLOSE_LEFTPAD - tabBadgeWidth - TAB_CLOSE_RIGHTPAD, rect.origin.y + rect.size.height + TAB_BADGE_Y_OFFSET);
+//    [tabCloseFront compositeToPoint:destPoint operation:NSCompositeSourceOver];
 }
 
+// <leftCapWidth>[<Tab close width>]<LabelWidth>[<Tab badge width>]<RightCapWidth>
 
 //Grippy Spot --------------------------------------------------------------------
 //Install cursor rects for our 'grippy' spot
@@ -225,15 +263,41 @@
 //Mouse tracking / Clicking -------------------------------------------
 - (void)mouseDown:(NSEvent *)theEvent
 {
-    //Select our tab
-    [[tabViewItem tabView] selectTabViewItem:tabViewItem];
+    if(selected){
+        NSPoint	location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+
+        //Check for a hit on the close button
+        if(NSPointInRect(location, closeButtonRect)){
+            trackingClose = YES;
+            hoveringClose = YES;
+            [self setNeedsDisplay:YES];
+        }else{
+            [self setNeedsDisplay:YES];
+        }
+        
+        
+    }else{
+        //Select our tab
+        [[tabViewItem tabView] selectTabViewItem:tabViewItem];
+        
+    }
+    
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent
 {
-    NSPoint	location = [[self superview] convertPoint:[theEvent locationInWindow] fromView:nil];	//local to super
+    NSPoint	location = [[self superview] convertPoint:[theEvent locationInWindow] fromView:nil];
 
-    if(dragging){
+    if(trackingClose){
+        NSPoint	location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        BOOL	hovering = NSPointInRect(location, closeButtonRect);
+
+        if(hoveringClose != hovering){
+            hoveringClose = hovering;
+            [self setNeedsDisplay:YES];
+        }
+        
+    }else if(dragging){
         //Update an existing drag
         [(AICustomTabsView *)[self superview] updateDragAtOffset:(int)location.x];
 
@@ -250,9 +314,23 @@
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
-    if(dragging){
-        //End dragging
-        dragging = NO;
+    if(trackingClose){
+        NSPoint	location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+
+        //End tracking
+        trackingClose = NO;
+        hoveringClose = NO;
+        [self setNeedsDisplay:YES];
+
+        //Close the tab?
+        if(NSPointInRect(location, closeButtonRect)){
+            NSBeep();
+            //[[tabViewItem tabView] selectTabViewItem:tabViewItem];
+        }        
+        
+    }else if(dragging){
+        dragging = NO; //End dragging
+        
         [[self window] invalidateCursorRectsForView:self];
         [(AICustomTabsView *)[self superview] concludeDrag];
 
