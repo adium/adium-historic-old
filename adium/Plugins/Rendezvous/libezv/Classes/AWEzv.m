@@ -3,7 +3,7 @@
  * File:        AWEzv.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzv.m,v 1.4 2004/06/19 03:34:46 proton Exp $
+ * CVS tag:     $Id: AWEzv.m,v 1.5 2004/07/27 19:06:03 evands Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -65,7 +65,7 @@
 }
 
 - (void) login {
-    manager = [[AWEzvContactManager alloc] initWithClient:self];
+    manager = [(AWEzvContactManager *)[AWEzvContactManager alloc] initWithClient:self];
     [manager listen];
     [manager login];
     [manager startBrowsing];
