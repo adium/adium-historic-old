@@ -21,6 +21,7 @@
     IBOutlet NSButton       *checkBox_nameLabels;
     IBOutlet NSSlider       *slider_duration;
     IBOutlet NSPopUpButton  *popUp_size;
+    IBOutlet NSPopUpButton  *popUp_background;
 }
 
 - (IBAction)toggleShowBezel:(id)sender;
@@ -37,5 +38,6 @@
 - (IBAction)toggleNameLabels:(id)sender;
 - (IBAction)changeDuration:(id)sender;
 - (IBAction)changeSize:(id)sender;
+- (IBAction)changeBackground:(id)sender;
 
 @end

@@ -28,9 +28,13 @@
 #define KEY_EVENT_BEZEL_NAME_LABELS         @"Show Name Labels"
 #define CONTACT_DISABLE_BEZEL               @"Disable Bezel For Contact"
 #define KEY_EVENT_BEZEL_SIZE                @"Size"
+#define KEY_EVENT_BEZEL_BACKGROUND          @"Background"
 
 #define SIZE_NORMAL                         0
 #define SIZE_SMALL                          1
+
+#define BACKGROUND_NORMAL                   0
+#define BACKGROUND_DARK                     1
 
 @class JSCEventBezelPreferences;
 

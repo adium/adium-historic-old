@@ -54,4 +54,7 @@
 - (void)setUseBuddyNameLabel:(BOOL)b;
 - (NSSize)bezelSize;
 - (void)setBezelSize:(NSSize)newSize;
+
+- (NSImage *)backdropImage;
+- (void)setBackdropImage:(NSImage *)newImage;
 @end
