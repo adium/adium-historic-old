@@ -88,7 +88,7 @@ should_update="yes"
 clean_build="yes"
 
 # Don't do this unless you are a developer and want to automatically upload the .dmg to adium.sourceforge.net
-copy_to_sourceforge="no"
+copy_to_sourceforge="yes"
 
 # Where all the nightly build files are kept
 # adium/ is created by CVS checkout beneath this dir
@@ -112,7 +112,7 @@ log="verbose"
 changelog="no"
 
 # Replace Running Adium with new version
-replace_running_adium="yes"
+replace_running_adium="no"
 
 # Determines where Adium.app is installed
 # set as systemwide or user or none
@@ -248,9 +248,14 @@ ranlib $liboscar
 # Delete the (empty) Adium.pbproj
 # We only want one .pbproj file so we don't have to tell
 # xcodebuild which project file to use
-echo "Deleting old (empty) Adium.pbproj"
 if [ -e $adium_co_dir/Adium.pbproj ]; then
+	echo "Deleting old (empty) Adium.pbproj"
 	rm -r $adium_co_dir/Adium.pbproj
+fi
+
+if [ -e $adium_co_dir/Adium\ XCode.pbproj ]; then
+	echo "Deleting Adium XCode.pbproj in favor of Adium.xcode"
+	rm -r $adium_co_dir/Adium\ XCode.pbproj
 fi
 
 if [ -e $adium_co_dir/Plugins ]; then
