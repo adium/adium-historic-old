@@ -733,17 +733,15 @@
 - (AIListContact *)contactAssociatedWithBuddy:(GaimBuddy *)buddy
 {
 	AIListContact	*contact;
-	NSString		*UID = [NSString stringWithUTF8String:(buddy->name)];
+	NSString		*contactUID = [NSString stringWithUTF8String:(buddy->name)];
+	
 	//Get our contact
 	contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-														UID:[UID compactedString]];
+														UID:[contactUID compactedString]];
 	
     //Associate the handle with ui_data and the buddy with our statusDictionary
     buddy->node.ui_data = [contact retain];
     [contact setStatusObject:[NSValue valueWithPointer:buddy] withOwner:self forKey:@"GaimBuddy" notify:NO];
-	
-	NSLog(@"%@ %@",UID,[UID compactedString]);
-	[contact setStatusObject:UID withOwner:self forKey:@"Server Display Name" notify:NO];
 	
 	return(contact);
 }
