@@ -135,12 +135,15 @@
     //Hide or show scrollbar
     visibleHeight = [scrollView documentVisibleRect].size.height;
     totalHeight = [self numberOfRows] * ([self rowHeight] + [self intercellSpacing].height);
-
     if(totalHeight > visibleHeight){
         [scrollView setHasVerticalScroller:YES];
     }else{
         [scrollView setHasVerticalScroller:NO];
     }
+
+    //Keep the table column at full width
+    [self sizeLastColumnToFit];
+    
 
     //Update tracking rect
 /*    if(trackingRectTag != 0){
