@@ -345,6 +345,7 @@
 				3419F45B05314C5A00C68BA3,
 				3419F47005314C6900C68BA3,
 				4B7F278305440C0800CDFC90,
+				6C05C9FF05492DE50088ECBF,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -398,6 +399,7 @@
 				34BDA011053147B9000AB133,
 				34BDA026053147BF000AB133,
 				34BDA058053147C6000AB133,
+				6C05C9FE05492DE50088ECBF,
 				34BDA06C053147CC000AB133,
 				34BDA07C053147D6000AB133,
 				34BDA090053147E1000AB133,
@@ -6452,6 +6454,7 @@
 				34BD9D0E053146CC000AB133,
 				34BD9D0F053146CC000AB133,
 				6C3E0150054445BA00A4AE2E,
+				6C05CA1C05492FB70088ECBF,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
@@ -7409,6 +7412,7 @@
 				3419FDF20531585600C68BA3,
 				3419FDF30531585600C68BA3,
 				3419FDF40531585600C68BA3,
+				6C05CA1D054930AF0088ECBF,
 				3419FDF50531585600C68BA3,
 				3419FDF60531585600C68BA3,
 				3419FDF70531585600C68BA3,
@@ -15503,6 +15507,7 @@
 				34878F710518289B003B2F21,
 				4BAE85A40498194200A8010A,
 				4BD7D0CB04620D8800A8010A,
+				6C05CA1505492EE70088ECBF,
 				4B6688F804A60CC300A8010A,
 				4B0E342E04C4677700A8010A,
 				4B5D67D3050CF56700A8010A,
@@ -20585,6 +20590,182 @@
 //6C2
 //6C3
 //6C4
+		6C05C9FA05492DE50088ECBF = {
+			buildActionMask = 2147483647;
+			files = (
+				6C05CA1905492F360088ECBF,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6C05C9FB05492DE50088ECBF = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6C05C9FC05492DE50088ECBF = {
+			buildActionMask = 2147483647;
+			files = (
+				6C05CA1805492F360088ECBF,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6C05C9FD05492DE50088ECBF = {
+			buildActionMask = 2147483647;
+			files = (
+				6C05CA0705492E960088ECBF,
+				6C05CA1205492ED60088ECBF,
+				6C05CA0205492E810088ECBF,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6C05C9FE05492DE50088ECBF = {
+			buildPhases = (
+				6C05C9FA05492DE50088ECBF,
+				6C05C9FB05492DE50088ECBF,
+				6C05C9FC05492DE50088ECBF,
+				6C05C9FD05492DE50088ECBF,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "Contact Online For-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Contact Online For";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = "Contact Online For";
+			productName = "Contact Online For";
+			productReference = 6C05C9FF05492DE50088ECBF;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Contact Online For</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Contact_Online_For</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		6C05C9FF05492DE50088ECBF = {
+			expectedFileType = folder;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Contact Online For.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6C05CA0205492E810088ECBF = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C05CA0705492E960088ECBF = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C05CA1205492ED60088ECBF = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C05CA1505492EE70088ECBF = {
+			children = (
+				6C05CA1605492F350088ECBF,
+				6C05CA1705492F360088ECBF,
+			);
+			isa = PBXGroup;
+			name = "Contact Online For";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C05CA1605492F350088ECBF = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = SAContactOnlineFor.m;
+			path = "Plugins/Contact Online For/SAContactOnlineFor.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C05CA1705492F360088ECBF = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = SAContactOnlineForPlugin.h;
+			path = "Plugins/Contact Online For/SAContactOnlineForPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C05CA1805492F360088ECBF = {
+			fileRef = 6C05CA1605492F350088ECBF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C05CA1905492F360088ECBF = {
+			fileRef = 6C05CA1705492F360088ECBF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C05CA1B05492FB70088ECBF = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 6C05C9FE05492DE50088ECBF;
+			remoteInfo = "Contact Online For";
+		};
+		6C05CA1C05492FB70088ECBF = {
+			isa = PBXTargetDependency;
+			target = 6C05C9FE05492DE50088ECBF;
+			targetProxy = 6C05CA1B05492FB70088ECBF;
+		};
+		6C05CA1D054930AF0088ECBF = {
+			fileRef = 6C05C9FF05492DE50088ECBF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		6C1CC23105415D5700B64925 = {
 			expectedFileType = "compiled.mach-o.executable";
 			isa = PBXFileReference;
