@@ -35,51 +35,18 @@
     #									    #
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# Username should be set by CVSROOT
-# Sourceforge login requires you to set up ssh keys so you can login without 
-# a password - this is necessary for crontab.
-
 	#--------#  In a file (I use ~/.crontab):
 	# Usage: #  MM HH * * * /full/path/to/script >& /path/to/log.file	
 	#--------#  crontab ~/.crontab 
 	
 		 #  MM and HH should be two digits, 24hr time.
 
-	   	 #  Example:  /Users/ahaig/AdiumNightly/buildDaily.sh >& \
-		 #	      /Users/ahaig/AdiumNightly/log/AdiumNightly.log
+	   	 #  Example:  /Users/ahaig/AdiumDaily/buildDaily.sh >& \
+		 #	      /Users/ahaig/AdiumDaily/log/AdiumDaily.log
 		 
 		 #  That's all on ONE line or two with the \ separating them..
 
-# CVS Root - Needs to be set somewhere. If you're running the script from a
-# shell prompt, you can set it as an environment variable. Running from cron
-# you should set it here as well.
-# 
-# Format: CVSROOT=":ext:<user>@cvs.adium.sourceforge.net:/cvsroot/adium"
-# - replace <user> with anonymous or your dev login.
-# If you use a dev login you _must_ have ssh keys set to use cron.
-#
-# export CVSROOT=":ext:anonymous@cvs.adium.sourceforge.net:/cvsroot/adium"
-
-# Anonymous? Set No if you have your own login
-# This overrides setting a user
-anonymous="no"
-
-# Login user not the same as your local user?
-diffuser=""
-
-if [ "$anonymous" == "no" ] ; then
-	username=`whoami`
-elif [ "$anonymous" == "yes" ] ; then
-	username="anonymous"
-elif !([ -z "$diffuser" ]) ; then
-       	username=$diffuser
-fi
-
-if !([ -z "$CVSROOT" ]) ; then
-	export CVSROOT=":ext:$username@cvs.adiumx.com:/cvsroot/adium"
-fi
-
-# If you want to use the script to build without updating via CVS, set this to
+# If you want to use the script to build without updating via SVN, set this to
 # "no".
 should_update="yes"
 
@@ -90,9 +57,9 @@ clean_build="yes"
 # Don't do this unless you are a developer and want to automatically upload the .dmg to adium.sourceforge.net
 copy_to_sourceforge="no"
 
-# Where all the nightly build files are kept
+# Where all the daily build files are kept
 # adium/ is created by CVS checkout beneath this dir
-adium_build_dir="$HOME/AdiumNightly"
+adium_build_dir="$HOME/AdiumDaily"
 
 # Where Adium gets built - all the source
 adium_co_dir="$adium_build_dir/adium"
@@ -112,7 +79,8 @@ log="verbose"
 changelog="no"
 
 # Replace Running Adium with new version
-replace_running_adium="no"
+replace_running_adium="yes"
+launch_options="--user Default"
 
 # Determines where Adium.app is installed
 # set as systemwide or user or none
@@ -136,9 +104,6 @@ package="no"
 # All I have to say is that you better not still be using NS4....
 
 adium_app_name="Adium"
-
-# CVS will use rsh if you don't tell it otherwise. rsh won't use keys.
-export CVS_RSH=/usr/bin/ssh
 
 ###############################################################################
 #			      Stop Editing Here!! 			      #
@@ -200,60 +165,34 @@ else
 	lastbuild=$today
 fi
 
-
-
 # Everything should happen in $adium_build_dir
 cd $adium_build_dir
 
-# If adium exists we'll update it. If not we'll get it from CVS
+# If adium exists we'll update it. If not we'll get it from SVN
 if [ "$should_update" == "yes" ] ; then
 	if !([ -x $adium_co_dir ]) ; then
 		echo "$adium_co_dir does not exist. Beginning new checkout."
-		echo "Begin CVS Checkout in $adium_co_dir"
-		if [ "$anonymous" == "yes" ] ; then 
-			echo "Using Anonymous - Logging in"
-			cvs -z3 login
-		fi
-		cvs -z3 co adium
-		cd adium
-		cvs -z3 update -Pd
-	else							# Update from CVS
-		echo "Begin CVS Update in $adium_co_dir"
+		echo "Begin SVN Checkout in $adium_co_dir"
+		svn co svn://svn.adiumx.com/adium/trunk adium
+	else							# Update from SVN
+		echo "Begin SVN Update in $adium_co_dir"
 	
 		# Update happens from inside adium
 		cd $adium_co_dir
-	
-		# Clean up files that have merge problems
-		if [ -e "$adium_co_dir/Plugins/Gaim?Service/LIBS/liboscar.a" ] ; then
-			rm "Plugins/Gaim?Service/LIBS/liboscar.a"
-		fi
-	
+
 		if [ "$log" == "normal" ] ; then
-			cvs update -Pd >& /dev/null		# Suppress output
+			svn update >& /dev/null		# Suppress output
 		elif [ "$log" == "verbose" ] ; then
-			cvs update -Pd
+			svn update
 		fi
 	
-		echo "CVS Update Complete"
+		echo "SVN Update Complete"
 	fi
 fi
 	
 
 # Time to start
 cd $adium_co_dir				# Really just ./adium
-
-# Delete the (empty) Adium.pbproj
-# We only want one .pbproj file so we don't have to tell
-# xcodebuild which project file to use
-if [ -e $adium_co_dir/Adium.pbproj ]; then
-	echo "Deleting old (empty) Adium.pbproj"
-	rm -r $adium_co_dir/Adium.pbproj
-fi
-
-if [ -e $adium_co_dir/Adium\ XCode.pbproj ]; then
-	echo "Deleting Adium XCode.pbproj in favor of Adium.xcode"
-	rm -r $adium_co_dir/Adium\ XCode.pbproj
-fi
 
 if [ -e $adium_co_dir/Plugins ]; then
 
@@ -263,6 +202,7 @@ fi
 
 # Produce Changelog
 # Probably don't care about this unless we're building a .dmg for distribution
+### XXX Does not work with SVN
 if [ "$changelog" == "yes" ] ; then
 	echo "Creating ChangeLog_$prettydate relative to $lastbuild..."
 	if [ -e $adium_co_dir/ChangeLog ]; then
@@ -284,7 +224,7 @@ if [ "$changelog" == "yes" ] ; then
 fi
 
 # build Adium - OPTIMIZATION_CFLAGS is in the env
-xcodebuild -target Adium -buildstyle Deployment
+xcodebuild -project Adium.xcode -target Adium -buildstyle Deployment
 
 # Check for build output dir
 if !([ -e $build_output_dir ]); then
@@ -310,7 +250,7 @@ if [ "$replace_running_adium" == "yes" ] && [ -x "$adium_co_dir/build/Adium.app"
 		rm -r "$install_dir/$adium_app_name.old.app"
 		mv "$install_dir/$adium_app_name.app" "$install_dir/$adium_app_name.old.app"
 		mv "$adium_co_dir/build/Adium.app" "$install_dir/$adium_app_name.app"
-		open "$install_dir/$adium_app_name.app"
+		"$install_dir/$adium_app_name.app/Contents/MacOS/Adium" $launch_options
 else
 		cp -r "$adium_co_dir/build/Adium.app" "$install_dir/$adium_app_name.app"
 fi
