@@ -14,6 +14,9 @@
 @interface ESGeneralPreferences (PRIVATE)
 - (NSMenu *)outputDeviceMenu;
 - (NSMenu *)tabKeysMenu;
+
+- (NSMenu *)statusIconsMenu;
+- (NSMenu *)serviceIconsMenu;
 @end
 
 @implementation ESGeneralPreferences
@@ -42,8 +45,8 @@
 
 	[popUp_statusIcons setMenu:[self statusIconsMenu]];
 	[popUp_statusIcons selectItemWithTitle:[prefDict objectForKey:KEY_STATUS_ICON_PACK]];
-//	[popUp_serviceIcons setMenu:[self serviceIconsMenu]];
-//	[popUp_serviceIcons selectItemWithTitle:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]];
+	[popUp_serviceIcons setMenu:[self serviceIconsMenu]];
+	[popUp_serviceIcons selectItemWithTitle:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]];
 
 	//Chat Cycling
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CHAT_CYCLING];
@@ -123,6 +126,10 @@
 	}else if(sender == popUp_statusIcons){
         [[adium preferenceController] setPreference:[[popUp_statusIcons selectedItem] title]
                                              forKey:KEY_STATUS_ICON_PACK
+                                              group:PREF_GROUP_INTERFACE];
+	}else if(sender == popUp_serviceIcons){
+        [[adium preferenceController] setPreference:[[popUp_serviceIcons selectedItem] title]
+                                             forKey:KEY_SERVICE_ICON_PACK
                                               group:PREF_GROUP_INTERFACE];
 	}
 	
@@ -245,7 +252,24 @@
 
 - (NSMenu *)serviceIconsMenu
 {
-	
+	NSMenu			*serviceIconsMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+	NSMenuItem		*menuItem;
+
+	NSEnumerator	*enumerator = [[self _allPacksWithExtension:@"AdiumServiceIcons" inFolder:@"Service Icons"] objectEnumerator];
+	NSString		*packPath;
+	while(packPath = [enumerator nextObject]){
+		NSString	*name = [[packPath lastPathComponent] stringByDeletingPathExtension];
+		
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
+																		 target:nil
+																		 action:nil
+																  keyEquivalent:@""] autorelease];
+		[menuItem setRepresentedObject:name];
+		[menuItem setImage:[AIServiceIcons previewMenuImageForServiceIconsAtPath:packPath]];
+		[serviceIconsMenu addItem:menuItem];		
+	}
+
+	return(serviceIconsMenu);	
 }
 
 - (NSArray *)_allPacksWithExtension:(NSString *)extension inFolder:(NSString *)inFolder
