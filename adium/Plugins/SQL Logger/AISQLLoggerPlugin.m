@@ -16,8 +16,8 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.34 $
- * $Date: 2003/12/22 18:22:24 $
+ * $Revision: 1.35 $
+ * $Date: 2003/12/22 21:36:49 $
  * $Author: jmelloy $
  *
  */
@@ -50,23 +50,23 @@
     //Install Menu item
     logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"SQL Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@""] autorelease];
     [[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
-	
+
 	//Watch for pref changes
 	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 	[self preferencesChanged:nil];
-	
+
 	if([username isEqualToString:@""] ) {
 		username = nil;
 	}
-	
+
 	if ([database isEqualToString:@""] ) {
 		database = nil;
 	}
-	
+
 	connInfo = [NSString stringWithFormat:@"host=\'%@\' port=\'%@\' user=\'%@\' password=\'%@\' dbname=\'%@\' sslmode=\'prefer\'", 
 						(tmp = url) ? tmp: @"", (tmp = port) ? tmp: @"", (tmp = username) ? tmp: NSUserName(), 
 				   (tmp = password) ? tmp: @"", (tmp = database) ? tmp: NSUserName()];
-		
+
     conn = PQconnectdb([connInfo cString]);
     if (PQstatus(conn) == CONNECTION_BAD)
     {
