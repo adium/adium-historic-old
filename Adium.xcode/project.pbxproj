@@ -953,14 +953,6 @@
 			settings = {
 			};
 		};
-		341591E005463DA700291275 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = JMSQLLogViewerWindowController.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		341591E105463DA800291275 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -968,28 +960,8 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		341591E205463DA800291275 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = JMSQLLogViewerWindowController.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		341591E305463DA800291275 = {
-			fileRef = 341591E005463DA700291275;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		341591E405463DA800291275 = {
 			fileRef = 341591E105463DA800291275;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		341591E505463DA800291275 = {
-			fileRef = 341591E205463DA800291275;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1036,7 +1008,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3419F3A805314BE000C68BA3,
-				341591E305463DA800291275,
 				3439FDA905794D0F00B2E449,
 			);
 			isa = PBXHeadersBuildPhase;
@@ -1052,7 +1023,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				341591E405463DA800291275,
-				B7AEFA8F054EC65200B1E4CE,
 				B7FD6C170596550F000C4D9D,
 			);
 			isa = PBXResourcesBuildPhase;
@@ -1062,7 +1032,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3419F3AD05314BE000C68BA3,
-				341591E505463DA800291275,
 				3439FDAA05794D1300B2E449,
 			);
 			isa = PBXSourcesBuildPhase;
@@ -20526,9 +20495,6 @@
 				B799BC8105793C1300338E54,
 				B7AE664F0465778E0051E914,
 				B7AE66500465778E0051E914,
-				341591E005463DA700291275,
-				341591E205463DA800291275,
-				B7AEFA8E054EC65200B1E4CE,
 				341591E105463DA800291275,
 			);
 			isa = PBXGroup;
@@ -20554,19 +20520,6 @@
 			path = "Plugins/SQL Logger/AISQLLoggerPlugin.m";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
-		};
-		B7AEFA8E054EC65200B1E4CE = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			path = SQLLogViewer.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		B7AEFA8F054EC65200B1E4CE = {
-			fileRef = B7AEFA8E054EC65200B1E4CE;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		B7F09288058C3F16000F9CBE = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
