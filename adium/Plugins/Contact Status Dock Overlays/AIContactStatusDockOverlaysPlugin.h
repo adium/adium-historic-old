@@ -40,6 +40,8 @@
     BOOL	showStatus;
     BOOL	showContent;
     BOOL	overlayPosition;
+
+    NSImage	*image;
 }
 
 @end

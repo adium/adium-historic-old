@@ -49,7 +49,8 @@
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
         
-    //Observe
+    //
+    image = [[NSImage alloc] initWithSize:NSMakeSize(128,128)];
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
@@ -143,7 +144,6 @@
     NSMutableParagraphStyle	*paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
     NSEnumerator		*enumerator;
     AIListContact		*contact;
-    NSImage			*image;
     NSFont			*font;
     float			dockIconScale;
     int				iconHeight;
@@ -165,8 +165,10 @@
     [paragraphStyle setLineBreakMode:NSLineBreakByClipping];
     [paragraphStyle setAlignment:NSCenterTextAlignment];
 
-    //Create our image
-    image = [[[NSImage alloc] initWithSize:NSMakeSize(128,128)] autorelease];
+    //Clear our image
+    [image lockFocus];
+    [[NSColor clearColor] set];
+    NSRectFillUsingOperation(NSMakeRect(0, 0, 128, 128), NSCompositeCopy);
 
     //Draw overlays for each contact
     enumerator = [unviewedObjectsArray reverseObjectEnumerator];
@@ -198,9 +200,6 @@
         [path appendBezierPathWithArcWithCenter:NSMakePoint(left, bottom + arcRadius) radius:arcRadius startAngle:270 endAngle:180 clockwise:YES];
         [path lineToPoint: NSMakePoint(left - arcRadius, top - arcRadius)];
         [path appendBezierPathWithArcWithCenter:NSMakePoint(left, top - arcRadius) radius:arcRadius startAngle:180 endAngle:90 clockwise:YES];
-
-        //Display
-        [image lockFocus];
 
 /*
         //Get our colors
@@ -251,10 +250,11 @@
         [path stroke];
 
         //Get the contact's display name
+        [[contact displayName] drawInRect:NSMakeRect(0 + stringInset, bottom + 1, 128 - (stringInset * 2), top - bottom)
+                           withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, nil]];
+/*        
         nameString = [[[NSAttributedString alloc] initWithString:[contact displayName] attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, nil]] autorelease];
-        [nameString drawInRect:NSMakeRect(0 + stringInset, bottom + 1, 128 - (stringInset * 2), top - bottom)];
-
-        [image unlockFocus];
+        [nameString drawInRect:NSMakeRect(0 + stringInset, bottom + 1, 128 - (stringInset * 2), top - bottom)];*/
 
         //Move up or down to the next pill
         if(overlayPosition){
@@ -265,6 +265,8 @@
             top = bottom + iconHeight;
         }
     }
+
+    [image unlockFocus];
     
     return(image);
 }
