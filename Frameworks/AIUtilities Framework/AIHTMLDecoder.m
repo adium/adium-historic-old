@@ -38,6 +38,8 @@ int HTMLEquivalentForFontSize(int fontSize);
 
 @implementation AIHTMLDecoder
 
+static AITextAttributes *_defaultTextDecodingAttributes = nil;
+
 DeclareString(HTML);
 DeclareString(CloseHTML);
 DeclareString(Body);
@@ -145,6 +147,10 @@ DeclareString(SpaceHTML);
 	
 	InitString(Space,@"  ");
 	InitString(SpaceHTML,@" &nbsp;");
+	
+	if (!_defaultTextDecodingAttributes){
+		_defaultTextDecodingAttributes = [[AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12] retain];
+	}
 }
 
 + (AIHTMLDecoder *)decoder
@@ -598,9 +604,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	AITextAttributes			*textAttributes;
 	BOOL						send = NO, receive = NO, inDiv = NO;
 
-	//set up
-	textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
-	attrString = [[NSMutableAttributedString alloc] init];
+    //set up
+    textAttributes = [[_defaultTextDecodingAttributes copy] autorelease];
+    attrString = [[NSMutableAttributedString alloc] init];
 
 	if(!tagCharStart)     tagCharStart = [[NSCharacterSet characterSetWithCharactersInString:TagCharStartString] retain];
 	if(!tagEnd)                 tagEnd = [[NSCharacterSet characterSetWithCharactersInString:SpaceGreaterThan] retain];
