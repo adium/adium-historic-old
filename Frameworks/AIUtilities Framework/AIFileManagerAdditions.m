@@ -69,26 +69,34 @@
 	}	
 }
 
-//Creates all the folders specified in 'fullPath' (if they don't exist)
-- (void)createDirectoriesForPath:(NSString *)fullPath
+//Creates all the folders specified in 'fullPath' (if they don't exist). Returns YES if any directories were created.
+- (BOOL)createDirectoriesForPath:(NSString *)fullPath
 {
     NSParameterAssert(fullPath != nil && [fullPath length] != 0);
 
     BOOL			isDir;
     NSMutableArray	*neededFolders = [[NSMutableArray alloc] init];
-    short			folder;
+    unsigned		count;
 	
-    while(![[NSFileManager defaultManager]fileExistsAtPath:fullPath isDirectory:&isDir] || !isDir){
+    while(![[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDir] || !isDir){
         [neededFolders addObject:[fullPath lastPathComponent]];
         fullPath = [fullPath stringByDeletingLastPathComponent];
     }
 	
-    for(folder = [neededFolders count]-1;folder >= 0;folder--){
-        fullPath = [fullPath stringByAppendingPathComponent:[neededFolders objectAtIndex:folder]];
-        [[NSFileManager defaultManager] createDirectoryAtPath:fullPath attributes:nil];
-    }
+	
+	count = [neededFolders count];
+	if(count){
+		NSFileManager	*defaultManager = [NSFileManager defaultManager];
+		short			folderIndex;
+		for(folderIndex = count-1; folderIndex >= 0; folderIndex--){
+			fullPath = [fullPath stringByAppendingPathComponent:[neededFolders objectAtIndex:folderIndex]];
+			[defaultManager createDirectoryAtPath:fullPath attributes:nil];
+		}
+	}
 	
     [neededFolders release];
+	
+	return(count > 0);
 }
 
 @end
