@@ -20,19 +20,10 @@
             OUTLETS = {
                 "button_layoutDelete" = NSButton; 
                 "button_layoutEdit" = NSButton; 
-                "button_setFont" = NSButton; 
                 "button_themeDelete" = NSButton; 
                 "button_themeEdit" = NSButton; 
-                "checkBox_alternatingGrid" = NSButton; 
-                "checkBox_showLabels" = NSButton; 
-                "checkBox_tooltips" = NSButton; 
-                "colorWell_background" = NSColorWell; 
-                "colorWell_contact" = NSColorWell; 
-                "colorWell_grid" = NSColorWell; 
                 "tableView_layout" = NSTableView; 
                 "tableView_theme" = NSTableView; 
-                "textField_fontName" = NSTextField; 
-                "view_prefViewGeneral" = NSView; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
