@@ -12,6 +12,7 @@
 @interface AIChat : ESObjectWithStatus {
     AIAccount			*account;
 	NSDate				*dateOpened;
+	BOOL				isOpen;
 	
     NSMutableArray		*contentObjectArray;
     NSMutableArray		*participatingListObjects;
@@ -31,6 +32,7 @@
 
 - (NSDate *)dateOpened;
 - (void)setDateOpened:(NSDate *)inDate;
+- (BOOL)isOpen;
 
 - (NSArray *)participatingListObjects;
 - (void)addParticipatingListObject:(AIListContact *)inObject;
