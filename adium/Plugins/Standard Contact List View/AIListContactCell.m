@@ -11,10 +11,9 @@
 
 @implementation AIListContactCell
 
+
+
 #define USER_ICON_ON_LEFT		YES
-#define VERTICAL_ICON_PADDING	1
-#define ICON_LEFT_PADDING 		4
-#define ICON_RIGHT_PADDING 		1
 #define ICON_TEXT_PADDING		3
 #define STATUS_ICON_ON_LEFT		NO
 #define CONTACT_FONT 			[NSFont systemFontOfSize:11]
@@ -89,12 +88,19 @@
 
 
 
-
-
-
-
-
-
+//Padding.  Gives our cell a bit of edge padding so the user icon and name do not touch the sides
+- (int)topPadding{
+	return([super topPadding] + 1);
+}
+- (int)bottomPadding{
+	return([super bottomPadding] + 1);
+}
+- (int)leftPadding{
+	return([super leftPadding] + 4);
+}
+- (int)rightPadding{
+	return([super rightPadding] + 4);
+}
 
 
 
@@ -114,11 +120,6 @@
 
 
 
-
-
-
-
-
 - (NSFont *)font
 {
 	return(CONTACT_FONT);
@@ -127,16 +128,18 @@
 
 - (NSSize)cellSize
 {
+	NSSize	size = [super cellSize];
+	
 	if(userIconVisible){
-		return(NSMakeSize(0, userIconSize + (VERTICAL_ICON_PADDING * 2)));
+		return(NSMakeSize(0, size.height + userIconSize));
 	}else{
 		
-#warning I hate OS X font sizing
+#warning I hate OS X font sizing ... cache this
 		
 NSAttributedString *		attrString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[NSDictionary dictionaryWithObject:[self font] forKey:NSFontAttributeName]] autorelease];
 int		textHeight = [attrString heightWithWidth:1e7];
 
-		return(NSMakeSize(0, /*(int)([[self font] boundingRectForFont].size.height)*/textHeight + (VERTICAL_ICON_PADDING * 2)));
+		return(NSMakeSize(0, /*(int)([[self font] boundingRectForFont].size.height)*/ size.height + textHeight));
 	}
 }
 
@@ -148,8 +151,8 @@ int		textHeight = [attrString heightWithWidth:1e7];
 	//Draw the user image
 	if(userIconVisible){
 		//Indent
-		rect.origin.x += ICON_LEFT_PADDING;
-		rect.size.width -= ICON_LEFT_PADDING;
+//		rect.origin.x += ICON_LEFT_PADDING;
+//		rect.size.width -= ICON_LEFT_PADDING;
 		
 		if(USER_ICON_ON_LEFT){
 			iconRect = NSMakeRect(rect.origin.x,
@@ -157,7 +160,7 @@ int		textHeight = [attrString heightWithWidth:1e7];
 								  userIconSize,
 								  userIconSize);
 		}else{
-			iconRect = NSMakeRect(rect.origin.x + rect.size.width - ICON_RIGHT_PADDING - userIconSize,
+			iconRect = NSMakeRect(rect.origin.x + rect.size.width - userIconSize,
 								  rect.origin.y + (rect.size.height - userIconSize) / 2.0,
 								  userIconSize,
 								  userIconSize);
@@ -165,9 +168,9 @@ int		textHeight = [attrString heightWithWidth:1e7];
 		
 		[self drawUserIconInRect:iconRect];
 
-		if(USER_ICON_ON_LEFT) rect.origin.x += userIconSize + ICON_RIGHT_PADDING;
+		if(USER_ICON_ON_LEFT) rect.origin.x += userIconSize;// + ICON_RIGHT_PADDING;
 		if(USER_ICON_ON_LEFT) rect.origin.x += ICON_TEXT_PADDING;
-		rect.size.width -= userIconSize + ICON_RIGHT_PADDING;
+//		rect.size.width -= userIconSize + ICON_RIGHT_PADDING;
 	}
 
 	//Service badge
