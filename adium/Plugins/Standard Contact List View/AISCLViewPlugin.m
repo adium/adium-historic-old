@@ -20,7 +20,7 @@
 #import "ESCLViewAdvancedPreferences.h"
 #import "ESCLViewLabelsAdvancedPrefs.h"
 #import "AISCLViewController.h"
-#import "AIContactListWindowController.h"
+#import "AIStandardListWindowController.h"
 #import "AIContactListAdvancedPrefs.h"
 
 @interface AISCLViewPlugin (PRIVATE)
@@ -57,7 +57,7 @@
 - (void)showContactListAndBringToFront:(BOOL)bringToFront
 {
     if(!contactListWindowController){ //Load the window
-        contactListWindowController = [[AIContactListWindowController contactListWindowControllerWithPlugin:self] retain];
+        contactListWindowController = [[AIStandardListWindowController listWindowController] retain];
     }
     [contactListWindowController makeActive:nil];
 

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIMiniToolbar, AIAutoScrollView;
+@class AIAutoScrollView, AIListOutlineView;
 @protocol AIContactListViewController, AIInterfaceContainer, AIContainerInterface;
 
 #define PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
@@ -21,20 +21,11 @@
 #define KEY_DUAL_RESIZE_VERTICAL			@"Autoresize Vertical"
 #define KEY_DUAL_RESIZE_HORIZONTAL			@"Autoresize Horizontal"
 
-
-@protocol AIContactListCleanup <NSObject>
-- (void)unloadContactListWindow;
-@end
-
-@class AISCLViewPlugin;
-
-@interface AIContactListWindowController : AIWindowController <AIInterfaceContainer> {
-	AISCLViewPlugin 		*plugin;
-
+@interface AIListWindowController : AIWindowController <AIInterfaceContainer> {
     IBOutlet	AIAutoScrollView		*scrollView_contactList;
+    IBOutlet	AIListOutlineView		*contactListView;
 
-    id <AIContactListViewController>	contactListViewController;
-    NSView								*contactListView;
+//    id <AIContactListViewController>	contactListViewController;
 
     NSDictionary						*toolbarItems;
 	BOOL                                borderless;
@@ -42,9 +33,33 @@
     NSSize								minWindowSize;
     BOOL								autoResizeVertically;
     BOOL								autoResizeHorizontally;
+
+
+
+
+
+
+    AIListGroup			*contactList;
+	
+    BOOL                horizontalResizingEnabled;
+	NSPoint				lastMouseLocation;
+    
+	NSTimer				*tooltipMouseLocationTimer;
+	NSPoint				tooltipLocation;
+    NSTrackingRectTag	tooltipTrackingTag;
+    int 				tooltipCount;
+	BOOL				tooltipShouldDisplay;
+	BOOL				windowHidesOnDeactivate;
+	
+	BOOL				inDrag;
+	NSArray				*dragItems;
+	
+	BOOL				alreadyDidDealloc;
+	
 }
 
-+ (AIContactListWindowController *)contactListWindowControllerWithPlugin:(AISCLViewPlugin *)inPlugin;
++ (AIListWindowController *)listWindowController;
+- (NSString *)nibName;
 - (void)makeActive:(id)sender;
 - (void)close:(id)sender;
 

@@ -1,20 +1,36 @@
 {
     IBClasses = (
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {CLASS = AIDockingWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
+        {
+            CLASS = AIListOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIMultiCellOutlineView; 
+        }, 
         {
             ACTIONS = {close = id; makeActive = id; }; 
-            CLASS = AIContactListWindowController; 
+            CLASS = AIListWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                contactListViewController = id; 
-                interface = id; 
+                contactListView = AIListOutlineView; 
                 "scrollView_contactList" = AIAutoScrollView; 
-                "toolbar_bottom" = AIMiniToolbar; 
             }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {CLASS = AIMultiCellOutlineView; LANGUAGE = ObjC; SUPERCLASS = AIOutlineView; }, 
+        {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
+        {
+            CLASS = AIStandardListOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIListOutlineView; 
+        }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
             SUPERCLASS = NSWindowController; 
         }, 
-        {CLASS = AIDockingWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }

@@ -21,6 +21,7 @@
 #define Interface_ShouldDisplayErrorMessage			@"Interface_ShouldDisplayErrorMessage"
 #define Interface_ContactListDidBecomeMain			@"Interface_ContactListDidBecomeMain"
 #define Interface_ContactListDidResignMain			@"Interface_contactListDidResignMain"
+#define Interface_ContactListDidClose				@"Interface_contactListDidClose"
 #define Interface_TabArrangingPreferenceChanged		@"Interface_TabArrangingPreferenceChanged"
 #define AIViewDesiredSizeDidChangeNotification		@"AIViewDesiredSizeDidChangeNotification"
 

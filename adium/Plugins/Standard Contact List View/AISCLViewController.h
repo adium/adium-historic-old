@@ -13,12 +13,12 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIListGroup, AISCLOutlineView;
+@class AIListGroup, AIStandardListOutlineView;
 @protocol AIContactListViewController;
 
 @interface AISCLViewController : AIObject <AIContactListViewController> {    
     AIListGroup			*contactList;
-    AISCLOutlineView	*contactListView;
+    AIStandardListOutlineView	*contactListView;
 
     BOOL                horizontalResizingEnabled;
 	NSPoint				lastMouseLocation;
