@@ -24,7 +24,7 @@
 
 - (void)uninstallPlugin
 {
-    //[[adium contactController] unregisterHandleObserver:self];
+    [[adium contactController] unregisterListObjectObserver:self];
 }
 
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
@@ -44,9 +44,9 @@
 				[inObject setVisible:YES]; //Visible
 			}
 		}else if([inObject isKindOfClass:[AIListGroup class]]){
-//			int		visible = [[inObject statusObjectForKey:@"VisibleObjectCount"] intValue];
-//
-			[inObject setVisible:YES/*(visible != 0)*/];			
+			int visibleCount = [(AIListGroup *)inObject visibleCount];
+			
+			[inObject setVisible:(visibleCount > 0)];
 		}
 	}
 	
