@@ -43,6 +43,9 @@
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
 //------------------------------------------------------------------------------------
+- [MSN] Crash moving contacts between groups
+	I think this is libgaim side and already fixed in their source.  Not 100% sure.
+
 - [ICQ] Displaying raw HTML (Messages sent from iChat)
 	Libgaim is escaping all incoming HTML characters over ICQ. (Bug report filed 
 	on the Gaim tracker)
@@ -63,9 +66,7 @@
 
 - [Yahoo] Fil transfer limitations
 	Files over 1 MB in size fail to send
-	
-- [MSN] Crash moving contacts between groups
-	
+
 
 //------------------------------------------------------------------------------------
 // Bugs - Resources
