@@ -18,6 +18,7 @@
 - (id)initForAccount:(AIAccount *)inAccount withOwner:(id)inOwner;
 - (AIEditorListGroup *)generateEditorListGroup;
 - (AIEditorListHandle *)_handleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group;
+- (AIEditorListGroup *)_groupNamed:(NSString *)name;
 @end
 
 @implementation AIEditorAccountCollection
@@ -122,17 +123,19 @@
 //Quickly check if a handle with the specified UID is on our account
 - (BOOL)containsHandleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
 {
-    if([[account availableHandles] objectForKey:UID]){
-        return(YES);
-    }else{
-        return(NO);
-    }
+    return([[account availableHandles] objectForKey:UID] != nil);
 }
 
 - (AIEditorListHandle *)handleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
 {
     return([self _handleNamed:UID inGroup:list]);
 }
+
+- (AIEditorListGroup *)groupWithUID:(NSString *)UID
+{
+    return([self _groupNamed:UID]);
+}
+
 
 //Add an object to our account
 - (void)addObject:(AIEditorListObject *)inObject
@@ -299,6 +302,23 @@
             if((object = [self _handleNamed:name inGroup:(AIEditorListGroup *)object])){
                 return((AIEditorListHandle *)object);
             }
+        }
+    }
+
+    return(nil);
+}
+
+//Scan for a group on our list
+- (AIEditorListGroup *)_groupNamed:(NSString *)name
+{
+    NSEnumerator	*enumerator;
+    AIEditorListGroup	*group;
+
+    //Look for this group
+    enumerator = [list objectEnumerator];
+    while(group = [enumerator nextObject]){
+        if([name caseInsensitiveCompare:[group UID]] == 0){
+            return(group);
         }
     }
 

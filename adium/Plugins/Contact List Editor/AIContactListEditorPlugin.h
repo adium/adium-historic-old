@@ -50,7 +50,7 @@
 - (AIEditorListHandle *)handleNamed:(NSString *)targetHandleName onCollection:(id <AIEditorCollection>)collection;
 - (AIEditorListHandle *)createHandleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group onCollection:(id <AIEditorCollection>)collection temporary:(BOOL)temporary;
 - (AIEditorListGroup *)createGroupNamed:(NSString *)name onCollection:(id <AIEditorCollection>)collection temporary:(BOOL)temporary;
-- (void)renameObject:(AIEditorListObject *)object onCollection:(id <AIEditorCollection>)collection to:(NSString *)name;
+- (BOOL)renameObject:(AIEditorListObject *)object onCollection:(id <AIEditorCollection>)collection to:(NSString *)inName;
 - (void)moveObject:(AIEditorListObject *)object fromCollection:(id <AIEditorCollection>)sourceCollection toGroup:(AIEditorListGroup *)destGroup collection:(id <AIEditorCollection>)destCollection;
 - (void)deleteObject:(AIEditorListObject *)object fromCollection:(id <AIEditorCollection>)collection;
 - (AIEditorListGroup *)groupNamed:(NSString *)targetGroupName onCollection:(id <AIEditorCollection>)collection;

@@ -26,6 +26,11 @@
     return(NO);
 }
 
+- (AIEditorListGroup *)groupWithUID:(NSString *)UID
+{
+    return(nil);
+}
+
 - (AIEditorListHandle *)handleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
 {
     return(NO);
