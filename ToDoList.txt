@@ -58,6 +58,7 @@ Standardize/enhance Xtras pref panes [brian]
   Tab auto-completion in the message window
 	- Contact names (Mainly for multi-user chat)
 	- Bookmark URLs (From bookmark integration) [Evan: As cool as this would be, I don't think it's worth the overhead.]
+                                                    [Steve: agreed]
 
 //Message Save and Print
   Common mac file menu operations should work on message windows, this includes
@@ -77,6 +78,8 @@ Standardize/enhance Xtras pref panes [brian]
   The fast user switching plugin needs to provide advanced preferences for
 	- Enabling or disabling the feature
 	- Changing the status message used when switched
+  [Steve: Must these go in the 'advanced' pane?  Can't we find a better home for them?
+   Seems the 'status' pane makes sense - maybe a set up not unlike auto-idle? It serves a similar purpose.]
 
 //Kill Plugins
   Refactoring is fun, refactoring is scary, refactoring could greatly simplify our code
