@@ -6,6 +6,7 @@
 //
 
 #import "DCGaimOscarJoinChatViewController.h"
+#import "DCJoinChatWindowController.h"
 
 @interface DCGaimOscarJoinChatViewController (PRIVATE)
 - (void)validateEnteredText;
@@ -25,7 +26,7 @@
 - (void)configureForAccount:(AIAccount *)inAccount
 {
 	if( delegate ) {
-		[delegate setJoinChatEnabled:([[textField_roomName stringValue] length] > 0)];
+		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:([[textField_roomName stringValue] length] > 0)];
 	}
 	
 	[[view window] makeFirstResponder:textField_roomName];

@@ -6,6 +6,7 @@
 //
 
 #import "DCGaimYahooJoinChatViewController.h"
+#import "DCJoinChatWindowController.h"
 
 @interface DCGaimYahooJoinChatViewController (PRIVATE)
 - (void)validateEnteredText;
@@ -15,7 +16,7 @@
 
 - (void)configureForAccount:(AIAccount *)inAccount
 {
-	[delegate setJoinChatEnabled:([[textField_roomName stringValue] length] > 0)];
+	[(DCJoinChatWindowController *)delegate setJoinChatEnabled:([[textField_roomName stringValue] length] > 0)];
 	[[view window] makeFirstResponder:textField_roomName];
 	[super configureForAccount:inAccount];
 }
