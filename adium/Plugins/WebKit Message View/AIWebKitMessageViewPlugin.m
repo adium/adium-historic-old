@@ -27,7 +27,6 @@ DeclareString(AppendNextMessage);
 {
 	
 	if([NSApp isOnPantherOrBetter]){
-#warning --willmove--
 		InitString(AppendMessageWithScroll,@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();");
 		InitString(AppendNextMessageWithScroll,@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();");
 		InitString(AppendMessage,@"appendMessage(\"%@\");");
@@ -38,7 +37,6 @@ DeclareString(AppendNextMessage);
 										   name:Preference_GroupChanged
 										 object:nil];
 		[self preferencesChanged:nil];
-#warning --willmove--
 		
 		//Init
 
@@ -100,7 +98,7 @@ DeclareString(AppendNextMessage);
                 NSString		*fullPath;
                 AIIconState		*previewState;
                 NSBundle		*style;
-#warning --store strings, not bundles--
+
 				//Load the style and add it to our dictionary
 				style = [NSBundle bundleWithPath:[resourcePath stringByAppendingPathComponent:filePath]];
 				if(style){

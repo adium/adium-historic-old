@@ -60,7 +60,7 @@
 	range.length = 0;
 	
 	outName = [self mutableCopy];
-	CFStringLowercase(outName, /*locale*/ NULL);
+	CFStringLowercase((CFMutableStringRef)outName, /*locale*/ NULL);
 	len = [outName length];
 	
 	while(pos < len) {

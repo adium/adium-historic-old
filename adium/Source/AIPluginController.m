@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.76 2004/06/21 18:51:46 adamiser Exp $
+//$Id: AIPluginController.m,v 1.77 2004/06/22 17:30:53 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -77,7 +77,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmotico
 	[self loadPluginWithClass:[AIContactSortSelectionPlugin class]];
 	[self loadPluginWithClass:[AIContactStatusColoringPlugin class]];
 	[self loadPluginWithClass:[AIContactStatusDockOverlaysPlugin class]];
-	[self loadPluginWithClass:[AIContactStatusTabColoringPlugin class]];
+//	[self loadPluginWithClass:[AIContactStatusTabColoringPlugin class]];
 	[self loadPluginWithClass:[AIContactSettingsPlugin class]];
 	[self loadPluginWithClass:[AIContactWarningLevelPlugin class]];
 	[self loadPluginWithClass:[AIDefaultFormattingPlugin class]];
@@ -134,10 +134,10 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmotico
 	[self loadPluginWithClass:[SAContactOnlineForPlugin class]];
 	[self loadPluginWithClass:[AIContactStatusEventsPlugin class]];
 //	[self loadPluginWithClass:[SHOutputDeviceControlPlugin class]];
-        [self loadPluginWithClass:[SHLinkManagementPlugin class]];
-        [self loadPluginWithClass:[SHBookmarksImporterPlugin class]];
-        [self loadPluginWithClass:[AIContactAccountsPlugin class]];
-//	[self loadPluginWithClass:[AISMViewPlugin class]];
+	[self loadPluginWithClass:[SHLinkManagementPlugin class]];
+	[self loadPluginWithClass:[SHBookmarksImporterPlugin class]];
+	[self loadPluginWithClass:[AIContactAccountsPlugin class]];
+	//	[self loadPluginWithClass:[AISMViewPlugin class]];
 		
 	#ifdef ALL_IN_ONE
 		[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
