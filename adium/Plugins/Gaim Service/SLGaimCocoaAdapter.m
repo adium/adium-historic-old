@@ -339,6 +339,14 @@ static GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 
 					chatLookupFromConv(conv);
  */
+					//CLear the chat's status object.   This needs to be done in the main thread.
+					//Need a number version!
+					/*
+					[chat mainThreadPerformSelector:@selector(setStatusObject:forKey:notify:)
+										 withObject:nil
+										 withObject:@"ChatCreationInfo"
+										 withObject:notifyNever];
+					 */
 				}
 			}
 		}
@@ -1012,6 +1020,28 @@ static void *adiumGaimNotifyFormatted(const char *title, const char *primary, co
     return(nil);
 }
 
+static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who, const char *title, const char *primary, const char *secondary, const char *text, GCallback cb,void *userData)
+{
+	NSLog(@"%s - %s: %s\n%s\n%s\n%s",gc->account->username,who,title,primary, secondary, text);
+//	NSString	*titleString = [NSString stringWithUTF8String:title];
+//	NSString	*primaryString = [NSString stringWithUTF8String:primary];
+//	NSString	*secondaryString = [NSString stringWithUTF8String:secondary];
+	NSString	*textString = [NSString stringWithUTF8String:text];
+
+	if (gc){
+		GaimAccount		*account = gc->account;
+		GaimBuddy		*buddy = gaim_find_buddy(account,who);
+		AIListContact   *theContact = contactLookupFromBuddy(buddy);
+		
+		
+		[accountLookup(account) mainPerformSelector:@selector(updateUserInfo:withData:)
+										 withObject:theContact
+										 withObject:textString];
+	}
+	
+    return(nil);
+}
+
 static void *adiumGaimNotifyUri(const char *uri)
 {
 	if (uri){
@@ -1032,6 +1062,7 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
     adiumGaimNotifyEmail,
     adiumGaimNotifyEmails,
     adiumGaimNotifyFormatted,
+	adiumGaimNotifyUserinfo,
     adiumGaimNotifyUri,
     adiumGaimNotifyClose
 };
