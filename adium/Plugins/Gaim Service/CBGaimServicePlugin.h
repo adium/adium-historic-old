@@ -35,8 +35,4 @@
 - (void)removeAccount:(GaimAccount *)gaimAcct;
 - (BOOL)configureGaimProxySettings;
 
-extern    void g_locale_charset_raw;
-extern    void g_locale_charset_unalias;
-extern void    g_locale_get_charset_aliases;
-
 @end
