@@ -158,25 +158,30 @@
 //Add a tab view item container (without changing the current selection)
 - (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem atIndex:(int)index
 {    
-	
 	AIListObject *newListObject = [[(AIMessageTabViewItem *)inTabViewItem messageViewController] listObject];
 	int objectIndex = 0;
 	
     [self window]; //Ensure our window has loaded
-    	
+	
 	// Add the list object to our sorting array, and sort the result if need be
-	if(keepTabsArranged) {
-		objectIndex = [[[adium contactController] activeSortController] indexForInserting:newListObject intoObjects:listObjectArray];
-		[listObjectArray insertObject:newListObject atIndex:objectIndex];		
-		[tabView_messages insertTabViewItem:inTabViewItem atIndex:objectIndex]; //Add the tab at the specified index
-	} else {
-		if (index == -1) {
-			[listObjectArray addObject:newListObject];			//Add the list object at the end
-		    [tabView_messages addTabViewItem:inTabViewItem];    //Add the tab
+	if (newListObject){
+		if(keepTabsArranged) {
+			objectIndex = [[[adium contactController] activeSortController] indexForInserting:newListObject
+																				  intoObjects:listObjectArray];
+			[listObjectArray insertObject:newListObject atIndex:objectIndex];		
+			[tabView_messages insertTabViewItem:inTabViewItem atIndex:objectIndex]; //Add the tab at the specified index
 		} else {
-			[listObjectArray insertObject:newListObject atIndex:index];			//Add the list object
-		    [tabView_messages insertTabViewItem:inTabViewItem atIndex:index];   //Add the tab at the specified index
+			if (index == -1) {
+				[listObjectArray addObject:newListObject];			//Add the list object at the end
+				[tabView_messages addTabViewItem:inTabViewItem];    //Add the tab
+			} else {
+				[listObjectArray insertObject:newListObject atIndex:index];			//Add the list object
+				[tabView_messages insertTabViewItem:inTabViewItem atIndex:index];   //Add the tab at the specified index
+			}
 		}
+	}else{
+		//Always add chats at the bottom of the stack
+		[tabView_messages addTabViewItem:inTabViewItem];			//Add the tab
 	}
 
     [interface containerDidOpen:inTabViewItem]; //Let the interface know it opened
@@ -186,7 +191,6 @@
 
 - (void)arrangeTabs
 {
-	
 	NSEnumerator	*enumerator;
 	AICustomTabCell *tabCell;
 	AIListObject	*listObject;
@@ -205,6 +209,11 @@
 			newIndex = [listObjectArray indexOfObjectIdenticalTo:listObject];
 			if( newIndex != NSNotFound )
 				[tabView_customTabs moveTab:tabCell toIndex:newIndex selectTab:NO];
+			
+		} else {
+			//Move chats to the bottom of the stack - they will be moved to the end in the order they were before since
+			//we are using a forward enumerator
+			[tabView_customTabs moveTab:tabCell toIndex:([tabView_customTabs numberOfTabViewItems]-1) selectTab:NO];			
 		}
 	}
 	
@@ -219,7 +228,10 @@
     }
 
 	// Get rid of the list object from our sorting array
-	[listObjectArray removeObjectIdenticalTo:[[(AIMessageTabViewItem *)inTabViewItem messageViewController] listObject]];
+	AIListObject *listObject = [[(AIMessageTabViewItem *)inTabViewItem messageViewController] listObject];
+	if (listObject){
+		[listObjectArray removeObjectIdenticalTo:listObject];
+	}
 
     //Remove the tab and let the interface know a container closed
     [tabView_messages removeTabViewItem:inTabViewItem];
