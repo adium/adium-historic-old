@@ -162,43 +162,34 @@ struct oscar_data {
                     
                     if (userinfo != NULL) {
                         //Update the away message and status if the contact is away (userinfo->flags & AIM_FLAG_AWAY)
-                        //EDS - optimize by keeping track of the string forms separately and comparing them rather than encoding/decoding html
                         if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away_len > 0) && (userinfo->away != NULL) && (userinfo->away_encoding != NULL)) {
-                            //                    NSLog(@"%s",userinfo->away);
                             gchar *away_utf8 = oscar_encoding_to_utf8(userinfo->away_encoding, userinfo->away, userinfo->away_len);
                             if (away_utf8 != NULL) {
-                                NSString * awayMessageString = [NSString stringWithUTF8String:away_utf8];
-                                NSAttributedString * statusMsgDecoded = [AIHTMLDecoder decodeHTML:awayMessageString];
-                                if (![statusMsgDecoded isEqualToAttributedString:[theContact statusObjectForKey:@"StatusMessage" withOwner:self]]) {
-//                                    [statusDict setObject:statusMsgDecoded forKey:@"StatusMessage"];
+                                NSString * statusMsgString = [NSString stringWithUTF8String:away_utf8];
+                                if (![statusMsgString isEqualToString:[theContact statusObjectForKey:@"StatusMessageString" withOwner:self]]) {
+                                    NSAttributedString * statusMsgDecoded = [AIHTMLDecoder decodeHTML:statusMsgString];
+                                    [theContact setStatusObject:statusMsgString withOwner:self forKey:@"StatusMessageString" notify:NO];
                                     [theContact setStatusObject:statusMsgDecoded withOwner:self forKey:@"StatusMessage" notify:NO];
-//                                    [modifiedKeys addObject:@"StatusMessage"];
                                     [theContact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Away" notify:NO];
-//                                    [modifiedKeys addObject:@"Away"];
                                 }
                                 g_free(away_utf8);
                             }
                         }else{ //remove any away message
                             if ([theContact statusObjectForKey:@"StatusMessage" withOwner:self]) {
-								[theContact setStatusObject:nil withOwner:self forKey:@"StatusMessage" notify:NO];
-								[theContact setStatusObject:[NSNumber numberWithBool:NO] withOwner:self forKey:@"Away" notify:NO];
-//                           [statusDict removeObjectForKey:@"StatusMessage"];
-//                                [modifiedKeys addObject:@"StatusMessage"];
-//                                [statusDict setObject:[NSNumber numberWithBool:NO] forKey:@"Away"];
-//                                [modifiedKeys addObject:@"Away"];
+                                [theContact setStatusObject:nil withOwner:self forKey:@"StatusMessage" notify:NO];
+                                [theContact setStatusObject:[NSNumber numberWithBool:NO] withOwner:self forKey:@"Away" notify:NO];
                             }
                         }
                         
                         //Update the profile if necessary
-                        //EDS - optimize by keeping track of the string forms separately and comparing them rather than encoding/decoding html
                         if ((userinfo->info_len > 0) && (userinfo->info != NULL) && (userinfo->info_encoding != NULL)) {
                             gchar *info_utf8 = oscar_encoding_to_utf8(userinfo->info_encoding, userinfo->info, userinfo->info_len);
                             if (info_utf8 != NULL) {
-                                NSAttributedString * profileDecoded = [AIHTMLDecoder decodeHTML:[NSString stringWithUTF8String:info_utf8]];
-                                if (![profileDecoded isEqualToAttributedString:[theContact statusObjectForKey:@"TextProfile" withOwner:self]]) {
-									[theContact setStatusObject:profileDecoded withOwner:self forKey:@"TextProfile" notify:NO];
-//                                    [statusDict setObject:profileDecoded forKey:@"TextProfile"];
-//                                    [modifiedKeys addObject:@"TextProfile"];
+                                NSString *profileString = [NSString stringWithUTF8String:info_utf8];
+                                if (![profileString isEqualToString:[theContact statusObjectForKey:@"TextProfileString" withOwner:self]]) {
+                                    NSAttributedString *profileDecoded = [AIHTMLDecoder decodeHTML:profileString];
+                                    [theContact setStatusObject:profileString withOwner:self forKey:@"TextProfileString" notify:NO];
+                                    [theContact setStatusObject:profileDecoded withOwner:self forKey:@"TextProfile" notify:NO];
                                 }
                                 g_free(info_utf8);
                             }
