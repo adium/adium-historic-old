@@ -72,7 +72,20 @@
 {
 	//Get the new accounts
 	[accounts release];
-	accounts = [[[adium accountController] accountsWithServiceClassOfService:[listObject service]] retain];
+	
+	if ([listObject isKindOfClass:[AIMetaContact class]]){
+		NSEnumerator	*enumerator;
+		NSString		*serviceClass;
+		
+		accounts = [[NSMutableArray alloc] init];
+		enumerator = [[(AIMetaContact *)listObject dictionaryOfServiceClassesAndListContacts] keyEnumerator];
+		while (serviceClass = [enumerator nextObject]){
+			[(NSMutableArray *)accounts addObjectsFromArray:[[adium accountController] accountsWithServiceClass:serviceClass]];
+		}
+		
+	}else{
+		accounts = [[[adium accountController] accountsWithServiceClassOfService:[listObject service]] retain];
+	}
 	
 	//Refresh our table
 	[tableView_accounts reloadData];
