@@ -200,7 +200,7 @@
 
 - (void)tableViewSelectionDidChange:(NSNotification *)inNotification
 {
-[self disableLoginTimeout];
+	[self disableLoginTimeout];
 }
 
 // Delete the selected user

@@ -1086,17 +1086,26 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 //Password Storage -----------------------------------------------------------------------------------------------------
 #pragma mark Password Storage
+
 - (NSString *)_accountNameForAccount:(AIAccount *)inAccount{
 	return([NSString stringWithFormat:@"%@.%@",[[inAccount service] serviceID],[inAccount internalObjectID]]);
 }
 - (NSString *)_passKeyForAccount:(AIAccount *)inAccount{
-	return([NSString stringWithFormat:@"Adium.%@",[self _accountNameForAccount:inAccount]]);
+	if([[[adium loginController] userArray] count] > 1){
+		return([NSString stringWithFormat:@"Adium.%@.%@",[[adium loginController] currentUser],[self _accountNameForAccount:inAccount]]);
+	}else{
+		return([NSString stringWithFormat:@"Adium.%@",[self _accountNameForAccount:inAccount]]);
+	}
 }
 - (NSString *)_accountNameForProxyServer:(NSString *)proxyServer userName:(NSString *)userName{
 	return([NSString stringWithFormat:@"%@.%@",proxyServer,userName]);
 }
 - (NSString *)_passKeyForProxyServer:(NSString *)proxyServer{
-	return([NSString stringWithFormat:@"Adium.%@",proxyServer]);	
+	if([[[adium loginController] userArray] count] > 1){
+		return([NSString stringWithFormat:@"Adium.%@.%@",[[adium loginController] currentUser],proxyServer]);
+	}else{
+		return([NSString stringWithFormat:@"Adium.%@",proxyServer]);	
+	}
 }
 
 
