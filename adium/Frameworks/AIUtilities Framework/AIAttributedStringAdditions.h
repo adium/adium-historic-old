@@ -18,6 +18,7 @@
 - (void)appendString:(NSString *)aString withAttributes:(NSDictionary *)attrs;
 - (NSData *)dataRepresentation;
 - (NSAttributedString *)safeString;
+- (unsigned int)replaceOccurrencesOfString:(NSString *)target withString:(NSString*)replacement options:(unsigned)opts range:(NSRange)searchRange;
 
 @end
 

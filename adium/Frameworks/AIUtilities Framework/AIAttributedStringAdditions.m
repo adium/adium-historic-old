@@ -48,6 +48,26 @@ NSAttributedString *_safeString(NSAttributedString *inString);
     return(_safeString((NSAttributedString *)self));
 }
 
+- (unsigned int)replaceOccurrencesOfString:(NSString *)target withString:(NSString*)replacement options:(unsigned)opts range:(NSRange)searchRange
+{
+    NSRange theRange;
+    int numberOfReplacements = 0;
+    
+    while ( (theRange = [[self string] rangeOfString:target options:opts range:searchRange]).location != NSNotFound ) {
+        NSLog(@"begin: %@ %i %i ; %i %i",[self string],searchRange.location,searchRange.length,theRange.location);
+        [self replaceCharactersInRange:theRange withString:replacement];
+        numberOfReplacements++;
+        searchRange.length = searchRange.length - ((theRange.location + theRange.length) - searchRange.location);
+        
+        searchRange.location = theRange.location + theRange.length;
+        if (searchRange.length - searchRange.location < 1)
+            break;
+        NSLog(@"end: %@ %i %i",[self string],searchRange.location,searchRange.length);
+    }
+    NSLog(@"%i replacements",numberOfReplacements);
+    return numberOfReplacements;
+}
+
 @end
 
 @implementation NSAttributedString (AIAttributedStringAdditions)
