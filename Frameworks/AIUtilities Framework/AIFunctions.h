@@ -16,3 +16,15 @@
 BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow);
 
 void AIWipeMemory(void *buf, size_t len);
+/*AIReallocWired is for use with wired memory. it returns a block that is
+ *	already wired in memory.
+ *before freeing the old block, it wipes (see AIWipeMemory) and unlocks it.
+ *if the new block could not be allocated or wired,
+ *	the old block is still valid, wired, and unchanged.
+ *all other aspects of its behaviour are the same as realloc(3)
+ *	(for example, realloc(NULL, x) == malloc(x)).
+ */
+void *AIReallocWired(void *oldBuf, size_t newLen);
+
+//sets every byte in buf within range to ch.
+void AISetRangeInMemory(void *buf, NSRange range, int ch);
