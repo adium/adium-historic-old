@@ -106,7 +106,10 @@
 //Preference view is closing
 - (void)viewWillClose
 {
-
+	[layoutStandard release]; layoutStandard = nil;
+	[layoutBorderless release]; layoutBorderless = nil;
+	[layoutMockie release]; layoutMockie = nil;
+	[layoutPillows release]; layoutPillows = nil;
 }
 
 //Installed xtras have changed
@@ -162,6 +165,25 @@
 			[tableView_theme selectRow:[themeArray indexOfObject:dict] byExtendingSelection:NO];
 		}
 	}
+	
+	[self configureControlDimming];
+}
+
+- (void)configureControlDimming
+{
+	IBOutlet	NSButton		*button_layoutDelete;
+	IBOutlet	NSButton		*button_themeDelete;
+	IBOutlet	NSButton		*button_layoutEdit;
+	IBOutlet	NSButton		*button_themeEdit;
+	
+	BOOL haveLayouts = ([layoutArray count] > 0);
+	BOOL haveThemes = ([themeArray count] > 0);
+	
+	[button_layoutDelete setEnabled:haveLayouts];
+	[button_layoutEdit setEnabled:haveLayouts];
+
+	[button_themeDelete setEnabled:haveThemes];
+	[button_themeEdit setEnabled:haveThemes];
 }
 
 
