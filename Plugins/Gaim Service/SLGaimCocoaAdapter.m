@@ -2365,18 +2365,21 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 - (oneway void)closeChat:(AIChat *)chat
 {
 	[runLoopMessenger target:self
-			 performSelector:@selector(gaimThreadCloseChat:)
-				  withObject:chat];
+			 performSelector:@selector(gaimThreadCloseGaimConversation:withChatID:)
+				  withObject:[NSValue valueWithPointer:existingConvLookupFromChat(chat)]
+				  withObject:[chat uniqueChatID]];
 }
-- (oneway void)gaimThreadCloseChat:(AIChat *)chat
+- (oneway void)gaimThreadCloseGaimConversation:(NSValue *)convValue withChatID:(NSString *)chatUniqueUD
 {
-	GaimConversation *conv = existingConvLookupFromChat(chat);
+	GaimConversation *conv = [convValue pointerValue];
 	
-	if (conv){
-		[chatDict removeObjectForKey:[chat uniqueChatID]];
-		[chat release];
-			
-		conv->ui_data = nil;
+	if(conv){
+		[chatDict removeObjectForKey:chatUniqueUD];
+
+		if(conv->ui_data){
+			[conv->ui_data release];
+			conv->ui_data = nil;
+		}
 		
 		gaim_conversation_destroy(conv);
 	}
