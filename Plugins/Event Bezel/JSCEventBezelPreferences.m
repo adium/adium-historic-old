@@ -83,52 +83,48 @@
     }
 }
 
+//Observe preference changes
 - (void)viewDidLoad
 {
-    //Observer preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EVENT_BEZEL];
 }
 
 - (void)viewWillClose
 {
-    [[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 //Configure the preference view
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if (notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_EVENT_BEZEL]) {
-		NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
-		
-		// Set the values of the checkboxes
-		[checkBox_showBezel setState:[[preferenceDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue]];
+	//Set the values of the checkboxes
+	[checkBox_showBezel setState:[[prefDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue]];
 				
-		[slider_duration setIntValue: [[preferenceDict objectForKey: KEY_EVENT_BEZEL_DURATION] intValue]];
-		
-		[checkBox_online setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_ONLINE] boolValue]];
-		[checkBox_offline setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_OFFLINE] boolValue]];
-		[checkBox_available setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_AVAILABLE] boolValue]];
-		[checkBox_away setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_AWAY] boolValue]];
-		[checkBox_noIdle setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_NO_IDLE] boolValue]];
-		[checkBox_idle setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IDLE] boolValue]];
-		[checkBox_firstMessage setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue]];
-		[checkBox_includeText setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_INCLUDE_TEXT] boolValue]];
+	[slider_duration setIntValue: [[prefDict objectForKey: KEY_EVENT_BEZEL_DURATION] intValue]];
+	
+	[checkBox_online setState: [[prefDict objectForKey:KEY_EVENT_BEZEL_ONLINE] boolValue]];
+	[checkBox_offline setState: [[prefDict objectForKey:KEY_EVENT_BEZEL_OFFLINE] boolValue]];
+	[checkBox_available setState: [[prefDict objectForKey:KEY_EVENT_BEZEL_AVAILABLE] boolValue]];
+	[checkBox_away setState: [[prefDict objectForKey:KEY_EVENT_BEZEL_AWAY] boolValue]];
+	[checkBox_noIdle setState: [[prefDict objectForKey:KEY_EVENT_BEZEL_NO_IDLE] boolValue]];
+	[checkBox_idle setState: [[prefDict objectForKey:KEY_EVENT_BEZEL_IDLE] boolValue]];
+	[checkBox_firstMessage setState: [[prefDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue]];
+	[checkBox_includeText setState: [[prefDict objectForKey:KEY_EVENT_BEZEL_INCLUDE_TEXT] boolValue]];
 				
-		[checkBox_showHidden setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_HIDDEN] boolValue]];
-		[checkBox_showAway setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
-		[checkBox_ignoreClicks setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IGNORE_CLICKS] boolValue]];
-		
-		// Enable or disable checkboxes based on the "show bezel" checkbox
-		BOOL showBezel = [checkBox_showBezel state];
-		[checkBox_online setEnabled:showBezel];
-		[checkBox_offline setEnabled:showBezel];
-		[checkBox_available setEnabled:showBezel];
-		[checkBox_away setEnabled:showBezel];
-		[checkBox_noIdle setEnabled:showBezel];
-		[checkBox_idle setEnabled:showBezel];
-		[checkBox_firstMessage setEnabled:showBezel];
-	}
+	[checkBox_showHidden setState: [[prefDict objectForKey:KEY_EVENT_BEZEL_SHOW_HIDDEN] boolValue]];
+	[checkBox_showAway setState: [[prefDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
+	[checkBox_ignoreClicks setState: [[prefDict objectForKey:KEY_EVENT_BEZEL_IGNORE_CLICKS] boolValue]];
+	
+	// Enable or disable checkboxes based on the "show bezel" checkbox
+	BOOL showBezel = [checkBox_showBezel state];
+	[checkBox_online setEnabled:showBezel];
+	[checkBox_offline setEnabled:showBezel];
+	[checkBox_available setEnabled:showBezel];
+	[checkBox_away setEnabled:showBezel];
+	[checkBox_noIdle setEnabled:showBezel];
+	[checkBox_idle setEnabled:showBezel];
+	[checkBox_firstMessage setEnabled:showBezel];
 }
 
 @end
