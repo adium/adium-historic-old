@@ -5,7 +5,7 @@
 	<key>Always Create New Windows</key>
 	<false/>
 	<key>Use Last Window</key>
-	<false/>
+	<true/>
 	<key>Autohide Tab Bar</key>
 	<true/>
 	<key>Enable Inactive Tab Close</key>

@@ -7,6 +7,7 @@
 
 @interface ESDualWindowMessageWindowPreferences : AIPreferencePane {
     IBOutlet	NSButton	*createMessages_inTabs;
+	IBOutlet	NSButton	*createTabs_inLastWindow;
 }
 
 @end
