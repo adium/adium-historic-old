@@ -51,7 +51,9 @@
 - (void)accountNewBuddy:(GaimBuddy*)buddy
 {
 //	NSLog(@"accountNewBuddy (%s)", buddy->name);
-    [self createHandleAssociatingWithBuddy:buddy];
+	AIHandle *handle = [handleDict objectForKey:[[NSString stringWithUTF8String:(buddy->name)] compactedString]];
+	if (!handle)
+		[self createHandleAssociatingWithBuddy:buddy];
 }
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
@@ -513,6 +515,8 @@
     NSString    *handleServerGroup = [handle serverGroup];
     
     //Add the handle
+	[handleDict setObject:handle forKey:[handle UID]];                  //Add it locally
+	
     GaimGroup *group = gaim_find_group([handleServerGroup UTF8String]); //get the GaimGroup
     if (group == NULL) {                                                //if the group doesn't exist yet
         group = gaim_group_new([handleServerGroup UTF8String]);         //create the GaimGroup
@@ -526,8 +530,6 @@
 	
     gaim_blist_add_buddy(buddy, NULL, group, NULL);                     //add the buddy to the gaimside list
     serv_add_buddy(gc,[handleUID UTF8String],group);                    //and add the buddy serverside
-	
-    [handleDict setObject:handle forKey:[handle UID]];                  //Add it locally
 	
     //From TOC2
     //[self silenceUpdateFromHandle:handle]; //Silence the server's initial update command
