@@ -20,7 +20,6 @@
 #import "AISCLOutlineView.h"
 
 #define LEFT_MARGIN		19
-//#define LEFT_VIEW_INDENT_SIZE	1.2 //must be close to square then
 #define LEFT_VIEW_PADDING	3
 #define CELL_SIZE_ADJUST_X	12	//Adjustment for the flippy triangles
 
@@ -31,15 +30,13 @@
     listObject = inObject;
 }
 
-#warning temp...
 - (NSSize)cellSizeForBounds:(NSRect)aRect
 {
     NSFont		*font = [(AISCLOutlineView *)[self controlView] font];
-    NSString		*name;
     NSAttributedString	*displayName;
+    NSSize		displayNameSize;
     AIMutableOwnerArray	*leftViewArray;
     int			loop;
-    int			width = 0;
     NSSize		cellSize = NSMakeSize(CELL_SIZE_ADJUST_X, 0);
 
     //If a left view is present
@@ -51,7 +48,6 @@
         //Left aligned icon
         for(loop = 0;loop < [leftViewArray count];loop++){
             id <AIListObjectLeftView>	handler = [leftViewArray objectAtIndex:loop];
-            NSRect				drawRect;
 
             //Calculate the icon size
             cellSize.width += ([handler widthForHeight:aRect.size.height computeMax:YES] + LEFT_VIEW_PADDING);
@@ -63,12 +59,11 @@
     }
 
     //Name
-    name = [listObject displayName];
-    displayName = [[NSAttributedString alloc] initWithString:name attributes:[NSDictionary dictionaryWithObjectsAndKeys:font,NSFontAttributeName,nil]];
-
-
-    cellSize.width += [displayName size].width;
-    cellSize.height += [displayName size].height;
+    displayName = [[NSAttributedString alloc] initWithString:[listObject displayName]
+                                                  attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil]];
+    displayNameSize = [displayName size];
+    cellSize.width += displayNameSize.width;
+    cellSize.height += displayNameSize.height;
     
     return(cellSize);
 }
