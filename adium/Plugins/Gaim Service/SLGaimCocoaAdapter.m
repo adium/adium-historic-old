@@ -1027,7 +1027,6 @@ static void *adiumGaimRequestChoice(const char *title, const char *primary, cons
 }
 
 //Gaim requests the user take an action such as accept or deny a buddy's attempt to add us to her list 
-#warning Modal. Need to fix and make threadsafe.
 static void *adiumGaimRequestAction(const char *title, const char *primary, const char *secondary, unsigned int default_action,void *userData, size_t actionCount, va_list actions)
 {
 	if (GAIM_DEBUG) NSLog(@"adiumGaimRequestAction");
