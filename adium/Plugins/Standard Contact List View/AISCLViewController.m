@@ -60,9 +60,6 @@
     tooltipTimer = nil;
     tooltipCount = 0;
 
-    //Apply the preferences to our view
-    [self preferencesChanged:nil];
-
     //Install the necessary observers
     [[owner notificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(contactOrderChanged:) name:Contact_OrderChanged object:nil];
@@ -73,10 +70,13 @@
     [contactListView setDataSource:self];
     [contactListView setDelegate:self];
     [contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
-    
+
     //Fetch and update the contact list
     [self contactListChanged:nil];
-    
+
+    //Apply the preferences to our view - needs to happen _after_ fetching & updating the contact list
+    [self preferencesChanged:nil];
+
     return(self);
 }
 
