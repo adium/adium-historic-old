@@ -59,14 +59,14 @@
     
     //Disable and uncheck show user icons when not using an inline prefix
     if([[preferenceDict objectForKey:KEY_SMV_PREFIX_INCOMING] rangeOfString:@"%m"].location != NSNotFound){
-	[checkBox_showUserIcons setState:NSOffState];
-	[checkBox_showUserIcons setEnabled:NO];
+		[checkBox_showUserIcons setState:NSOffState];
+		[checkBox_showUserIcons setEnabled:NO];
     }else{
-	[checkBox_showUserIcons setState:[[preferenceDict objectForKey:KEY_SMV_SHOW_USER_ICONS] boolValue]];
-	[checkBox_showUserIcons setEnabled:YES];
+		[checkBox_showUserIcons setState:[[preferenceDict objectForKey:KEY_SMV_SHOW_USER_ICONS] boolValue]];
+		[checkBox_showUserIcons setEnabled:YES];
     }
     [checkBox_ignoreTextStyles setState:[[preferenceDict objectForKey:KEY_SMV_IGNORE_TEXT_STYLES] boolValue]];
-
+	
     [checkBox_combineMessages setState:[[preferenceDict objectForKey:KEY_SMV_COMBINE_MESSAGES] boolValue]];
     
     [popUp_timeStamps selectItemWithRepresentedObject:[preferenceDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT]];
