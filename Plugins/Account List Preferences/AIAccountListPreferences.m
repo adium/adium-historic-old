@@ -407,9 +407,11 @@
     AIImageTextCell			*cell;
 	
     //Configure our tableView
-    cell = [[[AIImageTextCell alloc] init] autorelease];
+    cell = [[AIImageTextCell alloc] init];
     [cell setFont:[NSFont systemFontOfSize:12]];
     [[tableView_accountList tableColumnWithIdentifier:@"description"] setDataCell:cell];
+	[cell release];
+	
     [tableView_accountList registerForDraggedTypes:[NSArray arrayWithObjects:ACCOUNT_DRAG_TYPE,nil]];
     [scrollView_accountList setAutoHideScrollBar:YES];
     
