@@ -15,6 +15,8 @@ Adium, Copyright 2001-2005, Adam Iser
 
 #import <Cocoa/Cocoa.h>
 
+@class ESTextViewWithPlaceholder, AIStatus, AIService;
+
 @interface AIEditStateWindowController : AIWindowController {
 	IBOutlet	NSTextField		*label_state;
 	IBOutlet	NSPopUpButton	*popUp_state;
@@ -23,10 +25,11 @@ Adium, Copyright 2001-2005, Adam Iser
 	IBOutlet	NSTextField		*label_statusMessage;
 	IBOutlet	NSBox			*box_statusMessage;
 	IBOutlet	NSTextView		*textView_statusMessage;
+	IBOutlet	AIAutoScrollView *scrollView_statusMessage;
 
 	IBOutlet	NSButton		*checkbox_autoReply;
 	IBOutlet	NSButton		*checkbox_customAutoReply;
-	IBOutlet	NSScrollView	*scrollView_autoReply;
+	IBOutlet	AIAutoScrollView	*scrollView_autoReply;
 	IBOutlet	NSTextView		*textView_autoReply;
 
 	IBOutlet	NSButton		*checkbox_idle;
@@ -41,6 +44,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	IBOutlet	NSButton		*button_OK;
 
 	AIStatus	*originalStatusState;
+	AIService	*service;
 	id			target;
 }
 

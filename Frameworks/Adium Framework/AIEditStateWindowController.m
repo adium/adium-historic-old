@@ -22,6 +22,7 @@ Adium, Copyright 2001-2005, Adam Iser
 - (id)initWithWindowNibName:(NSString *)windowNibName customState:(AIStatus *)inState notifyingTarget:(id)inTarget;
 - (id)_positionControl:(id)control relativeTo:(id)guide height:(int *)height;
 - (void)configureStateMenu;
+- (void)updateBasedOnSelectedStatus;
 @end
 
 /*!
@@ -66,9 +67,12 @@ Adium, Copyright 2001-2005, Adam Iser
 {
     [super initWithWindowNibName:windowNibName];
 
-	originalStatusState = [inStatusState retain];
+	originalStatusState = (inStatusState ? [inStatusState retain] : [[AIStatus status] retain]);
 	target = inTarget;
-
+	
+	//XXX
+	service = nil;
+	
 	return(self);
 }
 
@@ -87,8 +91,20 @@ Adium, Copyright 2001-2005, Adam Iser
 - (void)windowDidLoad
 {
 	//Center our window if we're not a sheet (or opening a sheet failed)
-	[[self window] center];
+	[[self window] betterCenter];
 
+	[scrollView_statusMessage setAutoHideScrollBar:YES];
+	[scrollView_statusMessage setAlwaysDrawFocusRingIfFocused:YES];
+	[textView_statusMessage setTarget:self action:@selector(okay)];
+	[textView_statusMessage setSendOnReturn:YES];
+	[textView_statusMessage setSendOnEnter:NO];
+
+	[scrollView_autoReply setAutoHideScrollBar:YES];
+	[scrollView_autoReply setAlwaysDrawFocusRingIfFocused:YES];
+	[textView_autoReply setTarget:self action:@selector(okay)];
+	[textView_autoReply setSendOnReturn:YES];
+	[textView_autoReply setSendOnEnter:NO];
+	
 	[self configureStateMenu];
 
 	//Configure our editor for the passed state
@@ -100,7 +116,7 @@ Adium, Copyright 2001-2005, Adam Iser
  */
 - (void)configureStateMenu
 {
-	[popUp_state setMenu:[[adium statusController] menuOfStatusesWithTarget:self]];
+	[popUp_state setMenu:[[adium statusController] menuOfStatusesForService:service withTarget:self]];
 	needToRebuildPopUpState = NO;	
 }
 
@@ -143,11 +159,22 @@ Adium, Copyright 2001-2005, Adam Iser
  */
 - (IBAction)okay:(id)sender
 {
+	NSLog(@"Okay");
 	if(target && [target respondsToSelector:@selector(customStatusState:changedTo:)]){
 		[target customStatusState:originalStatusState changedTo:[self currentConfiguration]];
 	}
 	
 	[self closeWindow:nil];
+}
+
+/*!
+ * @brief Okay
+ *
+ * Save changes, notify our target of the new configuration, and close the editor.
+ */
+- (void)okay
+{
+	[self okay:nil];
 }
 
 /*!
@@ -171,9 +198,12 @@ Adium, Copyright 2001-2005, Adam Iser
 	[self updateControlVisibilityAndResizeWindow];
 }
 
+/*!
+ * @brief Invoked when a new status type is selected
+ */
 - (IBAction)selectStatus:(id)sender
 {
-	
+	[self updateBasedOnSelectedStatus];
 }
 
 /*!
@@ -280,7 +310,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	//Strings
 	[[textView_statusMessage textStorage] setAttributedString:[statusState statusMessage]];
 	[[textView_autoReply textStorage] setAttributedString:[statusState autoReply]];
-	
+
 	//Idle start
 	double	idleStart = [statusState forcedInitialIdleTime];
 	[textField_idleMinutes setStringValue:[NSString stringWithFormat:@"%i",(int)(idleStart/60)]];
@@ -288,6 +318,18 @@ Adium, Copyright 2001-2005, Adam Iser
 
 	//Update visiblity and size
 	[self updateControlVisibilityAndResizeWindow];
+	
+	[self updateBasedOnSelectedStatus];
+}
+
+- (void)updateBasedOnSelectedStatus
+{
+/*
+	NSDictionary	*stateDict = [[popUp_state selectedItem] representedObject];
+	if(stateDict){
+		[statusState setStatusType:[[stateDict objectForKey:KEY_STATUS_TYPE] intValue]];
+	}		
+ */
 }
 
 /*!
