@@ -546,6 +546,8 @@
 			while((chat = [chatEnumerator nextObject]) && [chat listObject] != object);
 			
 			//Move that chat to the correct spot, and step along to the next listobject
+#warning Can this modify any of the arrays or sets we are currently enumerating? -eds
+			//See http://www.visualdistortion.org/crash/view.jsp?crash=68395 for example...
 			if(chat) [interfacePlugin moveChat:chat toContainerWithID:containerID index:index++];
 		}
 	}
