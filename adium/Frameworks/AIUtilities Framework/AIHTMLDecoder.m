@@ -119,11 +119,14 @@ int HTMLEquivalentForFontSize(int fontSize);
 
             //Family
             if([familyName caseInsensitiveCompare:currentFamily] != 0){
-                //The langNum is weird.  HTML calls for a two-letter code... AIM seems to put 11 here for Japanese.  Any other data?
-                //Putting 11 in that spot for all text messes up English fonts, apparently, sometimes.
-                int langNum = 0; 
-//                [string appendString:[NSString stringWithFormat:@" FACE=\"%@\" LANG=\"%i\"",familyName,langNum]];
                 [string appendString:[NSString stringWithFormat:@" FACE=\"%@\"",familyName]];
+                
+                //( NSNonstandardCharacterSetFontMask = 0x00000008 ) is defined internally but not externally
+                //It serves us well here.  Once non-AIM HTML is coming through, this will probably need to be an option in the function call.
+                if (traits || 0x00000008) {
+                    [string appendString:@" LANG=\"11\""];   
+                }
+             
                 [currentFamily release]; currentFamily = [familyName retain];
             }
 
@@ -181,8 +184,10 @@ int HTMLEquivalentForFontSize(int fontSize);
             }else if(currentChar == '\r' || currentChar == '\n'){
                 [string appendString:@"<BR>"];
             }else{
-             //   [string appendFormat:@"%c", currentChar]; //x is unichar but does not work?
-                [string appendString:[chunk substringWithRange:NSMakeRange(i, 1)]];
+                //unichar characters may have a length of up to 3; be careful to get the whole character
+                NSRange composedCharRange = [chunk rangeOfComposedCharacterSequenceAtIndex:i];
+                [string appendString:[chunk substringWithRange:composedCharRange]];
+                i += composedCharRange.length - 1;
             }
         }
 
