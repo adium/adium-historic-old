@@ -38,11 +38,6 @@
 #import <AIUtilities/ESOutlineViewAdditions.h>
 #import <Adium/KFTypeSelectTableView.h>
 
-#warning crosslink
-#import "AIAppearancePreferencesPlugin.h"
-
-//#import <limits.h>
-
 #define CONTENT_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
 #define STATUS_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
 #define GROUP_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
