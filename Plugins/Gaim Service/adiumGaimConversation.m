@@ -509,7 +509,6 @@ static void adiumGaimConvWindowMoveConv(GaimConvWindow *win, GaimConversation *c
 
 static int adiumGaimConvWindowGetActiveIndex(const GaimConvWindow *win)
 {
-    GaimDebug (@"adiumGaimConvWindowGetActiveIndex");
     return(0);
 }
 
