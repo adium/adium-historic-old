@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.107 2004/02/27 17:56:18 evands Exp $
+// $Id: AIContactController.m,v 1.108 2004/02/28 01:41:12 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -597,6 +597,8 @@
 	NSEnumerator	*enumerator;
 	AIListObject	*listObject;
 	
+	[self delayListObjectNotifications];
+		
     //Reset all contacts
 	enumerator = [contactDict objectEnumerator];
 	while(listObject = [enumerator nextObject]){
@@ -612,7 +614,7 @@
 	}
 	
 	//Sort the entire list
-	[self sortContactList];
+	//[self sortContactList];
 }
 
 //Notify observers of a status change.  Returns the modified attribute keys
