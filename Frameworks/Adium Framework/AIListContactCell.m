@@ -114,8 +114,7 @@
 	if(statusIconsVisible &&
 	   (statusIconPosition != LIST_POSITION_BADGE_LEFT && statusIconPosition != LIST_POSITION_BADGE_RIGHT)){
 		width += [[self statusImage] size].width;
-		if(statusIconPosition != IMAGE_POSITION_LOWER_LEFT && statusIconPosition != IMAGE_POSITION_LOWER_RIGHT)
-			width += STATUS_ICON_LEFT_PAD + STATUS_ICON_RIGHT_PAD;
+		width += STATUS_ICON_LEFT_PAD + STATUS_ICON_RIGHT_PAD;
 	}
 
 	//Service icon
