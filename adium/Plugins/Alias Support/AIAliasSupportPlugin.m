@@ -53,7 +53,11 @@
 								   selector:@selector(preferencesChanged:)
 									   name:Preference_GroupChanged 
 									 object:nil];
-    
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(applyAliasRequested:)
+									   name:Contact_ApplyDisplayName
+									 object:nil];
+		
     //Install the contact info view
     [NSBundle loadNibNamed:CONTACT_ALIAS_NIB owner:self];
     contactView = [[AIPreferenceViewController controllerWithName:@"Alias" 
@@ -137,13 +141,11 @@
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     if((inModifiedKeys == nil) || ([inModifiedKeys containsObject:@"FormattedUID"])){
-		if([inObject isKindOfClass:[AIListContact class]]){
-			return([self _applyAlias:[inObject preferenceForKey:@"Alias"
-														  group:PREF_GROUP_ALIASES 
-										  ignoreInheritedValues:YES]
-							toObject:inObject
-							  notify:YES]);
-		}
+		return([self _applyAlias:[inObject preferenceForKey:@"Alias"
+													  group:PREF_GROUP_ALIASES 
+									  ignoreInheritedValues:YES]
+						toObject:inObject
+						  notify:YES]);
     }
 	
 	return(nil);
@@ -167,6 +169,24 @@
     }
 }
 
+- (void)applyAliasRequested:(NSNotification *)notification
+{
+	AIListObject	*object = [notification object];
+	NSDictionary	*userInfo = [notification userInfo];
+	
+	NSNumber		*shouldNotifyNumber = [userInfo objectForKey:@"Notify"];
+	
+	NSString		*alias = [[notification userInfo] objectForKey:@"Alias"];
+	if (!alias){
+		alias = [object preferenceForKey:@"Alias"
+								   group:PREF_GROUP_ALIASES 
+				   ignoreInheritedValues:YES];
+	}
+	
+	[self _applyAlias:alias
+			 toObject:object
+			   notify:(shouldNotifyNumber ? [shouldNotifyNumber boolValue] : NO)];
+}
 
 //Private ---------------------------------------------------------------------------------------
 //Apply an alias to an object (Does not save the alias!)
