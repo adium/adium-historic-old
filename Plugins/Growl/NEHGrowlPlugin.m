@@ -110,12 +110,12 @@
 		}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_NO]) {
 			description = AILocalizedString(@"is no longer idle","");
 		}else if([notificationName isEqualToString: Content_FirstContentRecieved]){
-			message = [[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] string];
+			message = [[[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] safeString] string];
 			description = [NSString stringWithFormat: AILocalizedString(@"%@","New content notification"), message];
 		}else if([notificationName isEqualToString: Content_DidReceiveContent]) {
 			if(![NSApp isHidden])
 				return;
-			message = [[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] string];
+			message = [[[(AIContentObject*)[[notification userInfo] objectForKey:@"Object"] message] safeString] string];
 			description = [NSString stringWithFormat: AILocalizedString(@"%@","Message notification while hidden"), message];
 		}else{
 			description = @"OMGWTFBBQ!";
