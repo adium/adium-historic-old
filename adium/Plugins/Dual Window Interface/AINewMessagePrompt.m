@@ -20,14 +20,15 @@
 @interface AINewMessagePrompt (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)windowDidLoad;
-- (BOOL)shouldCascadeWindows;
 - (BOOL)windowShouldClose:(id)sender;
+- (BOOL)shouldCascadeWindows;
+- (void)_configureTextFieldForAccount:(AIAccount *)account;
 @end
-
 
 @implementation AINewMessagePrompt
 
 static AINewMessagePrompt *sharedNewMessageInstance = nil;
+
 + (void)newMessagePrompt
 {
     if(!sharedNewMessageInstance){
@@ -65,7 +66,9 @@ static AINewMessagePrompt *sharedNewMessageInstance = nil;
     UID = [serviceType filterUID:[textField_handle impliedStringValue] removeIgnoredCharacters:YES];
         
     //Find the contact
-	contact = [[adium contactController] contactWithService:[serviceType identifier] accountID:[account uniqueObjectID] UID:UID];
+	contact = [[adium contactController] contactWithService:[serviceType identifier]
+												  accountID:[account uniqueObjectID] 
+														UID:UID];
     if(contact){
         AIChat	*chat;
         
@@ -80,7 +83,30 @@ static AINewMessagePrompt *sharedNewMessageInstance = nil;
 
 - (IBAction)selectAccount:(id)sender
 {
+	AIAccount			*selectedAccount = [sender representedObject];
+	[self _configureTextFieldForAccount:selectedAccount];
+}
 
+- (void)_configureTextFieldForAccount:(AIAccount *)account
+{
+	NSEnumerator		*enumerator;
+    AIListContact		*contact;
+	
+	//Clear the completing strings
+	[textField_handle setCompletingStrings:nil];
+	
+	//Configure the auto-complete view to autocomplete for contacts matching the selected account's service
+    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+    while((contact = [enumerator nextObject])){
+		
+		if ([[contact serviceID] isEqualToString:[account serviceID]]){
+			NSString *UID = [contact UID];
+			[textField_handle addCompletionString:[contact formattedUID] withImpliedCompletion:UID];
+			[textField_handle addCompletionString:[contact displayName] withImpliedCompletion:UID];
+			[textField_handle addCompletionString:UID];
+		}
+    }
+	
 }
 
 
@@ -101,29 +127,22 @@ static AINewMessagePrompt *sharedNewMessageInstance = nil;
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
-    NSEnumerator		*enumerator;
-    AIListContact		*contact;
-    
 	[textField_handle setMinStringLength:2];
 	
-#warning This should really only autocomplete contacts which match the service type of the selected account
-    //Configure the auto-complete view
-    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
-    while((contact = [enumerator nextObject])){
-		NSString *UID = [contact UID];
-		[textField_handle addCompletionString:[contact formattedUID] withImpliedCompletion:UID];
-		[textField_handle addCompletionString:[contact displayName] withImpliedCompletion:UID];
-		[textField_handle addCompletionString:UID];
-    }
-
     //Configure the handle type menu
     [popUp_service setMenu:[[adium accountController] menuOfAccountsWithTarget:self]];
 
     //Select the last used account / Available online account
-	int serviceIndex = [popUp_service indexOfItemWithRepresentedObject:[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
-																														   toListObject:nil]];
+	AIAccount   *preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
+																						toListObject:nil];
+	int			serviceIndex = [popUp_service indexOfItemWithRepresentedObject:preferredAccount];
+	
     if(serviceIndex < [popUp_service numberOfItems] && serviceIndex >= 0){
+		//Select the account
 		[popUp_service selectItemAtIndex:serviceIndex];
+		
+		//Configure the autocompleting field
+		[self _configureTextFieldForAccount:preferredAccount];
 	}
 
     //Center the window
