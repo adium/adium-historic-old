@@ -8,6 +8,7 @@
 #import "ESGaduGaduService.h"
 #import "ESGaimGaduGaduAccount.h"
 #import "ESGaimGaduGaduAccountViewController.h"
+#import "DCGaimGaduGaduJoinChatViewController.h"
 
 @implementation ESGaduGaduService
 
@@ -50,6 +51,12 @@
 - (AIAccountViewController *)accountView
 {
     return([ESGaimGaduGaduAccountViewController accountView]);
+}
+
+
+- (DCJoinChatViewController *)joinChatView
+{
+	return([DCGaimGaduGaduJoinChatViewController joinChatView]);
 }
 
 @end

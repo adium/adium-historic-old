@@ -1618,6 +1618,21 @@ static id<GaimThread> gaimThread = nil;
 	return [self encodedAttributedString:inAttributedString forListObject:inListObject];
 }
 
+- (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat
+{
+	[gaimThread inviteContact:contact toChat:chat];
+	
+	return YES;
+}
+
+- (BOOL)createNewGroupChatWithChat:(AIChat *)chat
+{
+	//AIChat *chat = [[adium contentController] chatWithContact:contact initialStatus:nil];
+	//[chat setName:@"Adium Test Chat"];
+	//[gaimThread createNewGroupChat:chat withListObject:contact];
+	return YES;
+}
+
 - (void)preferencesChanged:(NSNotification *)notification
 {
 	NSDictionary	*userInfo = [notification userInfo];
