@@ -71,7 +71,7 @@
     NSSet		*modifiedAttributes = nil;
 	
 	if(inModifiedKeys == nil ||
-	   [inModifiedKeys containsObject:@"Stranger"] ||
+	   [inModifiedKeys containsObject:@"NotAStranger"] ||
 	   [inModifiedKeys containsObject:@"StatusName"] ||
 	   [inModifiedKeys containsObject:@"StatusType"] ||
 	   [inModifiedKeys containsObject:@"IsIdle"] ||

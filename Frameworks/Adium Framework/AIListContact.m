@@ -118,7 +118,7 @@
 //A listContact is a stranger if it has a nil remoteGroupName
 - (BOOL)isStranger
 {
-	return([self integerStatusObjectForKey:@"Stranger"]);
+	return(![self integerStatusObjectForKey:@"NotAStranger"]);
 }
 
 
