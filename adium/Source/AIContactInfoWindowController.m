@@ -27,10 +27,12 @@
 
 @implementation AIContactInfoWindowController
 
-//Return the shared contact info window
 static AIContactInfoWindowController *sharedContactInfoInstance = nil;
+
+//Return the shared contact info window
 + (void)showInfoWindowForListObject:(AIListObject *)listObject
 {
+
     //Create the window
     if(!sharedContactInfoInstance){
         sharedContactInfoInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB];
@@ -61,7 +63,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)dealloc
 {
 	[displayedObject release];
-    
+    NSLog(@"dealloc info window");
     [super dealloc];
 }	
 
@@ -85,7 +87,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     [tabView_category selectTabViewItem:tabViewItem];    
 	
 	//Monitor the selected contact
-//    [[adium notificationCenter] addObserver:self selector:@selector(selectionChanged:) name:Interface_ContactSelectionChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(selectionChanged:) name:Interface_ContactSelectionChanged object:nil];
 	[self selectionChanged:nil];
     
 	//Restore the window position
@@ -133,7 +135,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	
 	//Close down
 	[[adium notificationCenter] removeObserver:self];
-    [sharedContactInfoInstance autorelease]; sharedContactInfoInstance = nil;
+    [self autorelease]; //sharedContactInfoInstance = nil;
 	
     return(YES);
 }
@@ -185,9 +187,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 			[[[self window] toolbar] setSelectedItemIdentifier:[tabViewItem identifier]];
 		}
     }
-	
-    //Update the window title
-//    [[self window] setTitle:[NSString stringWithFormat:@"%@ : %@",PREFERENCE_WINDOW_TITLE,[tabViewItem label]]];    	
 }
 
 //Loads, alphabetizes, and caches prefs for the speficied category
@@ -202,6 +201,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
         if([pane contactInfoCategory] == inCategory){
             [paneArray addObject:pane];
             [loadedPanes addObject:pane];
+			[pane configureForListObject:displayedObject];
         }
     }
 	
@@ -211,15 +211,11 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     return(paneArray);
 }
 
-
-
-
 //When the contact list selection changes, then configure the window for the new contact
 - (void)selectionChanged:(NSNotification *)notification
 {
 	[self configureForListObject:[[adium contactController] selectedListObject]];
 }
-
 
 //Configure our views for the specified list object
 - (void)configureForListObject:(AIListObject *)inObject
@@ -241,7 +237,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		while(pane = [enumerator nextObject]){
 			[pane configureForListObject:displayedObject];
 		}
-		
 	}
 }
 
