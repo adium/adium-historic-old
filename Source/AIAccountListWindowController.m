@@ -203,22 +203,24 @@
 - (IBAction)deleteAccount:(id)sender
 {
     int 		index = [tableView_accountList selectedRow];
-    AIAccount	*targetAccount;
-    NSString    *accountFormattedUID;
-    
-    NSParameterAssert(accountArray != nil);
-	NSParameterAssert(index >= 0 && index < [accountArray count]);
 
-    //Confirm
-    targetAccount = [accountArray objectAtIndex:index];
-    accountFormattedUID = [targetAccount formattedUID];
-	
-    NSBeginAlertSheet(AILocalizedString(@"Delete Account",nil),
-					  AILocalizedString(@"Delete",nil),
-					  AILocalizedString(@"Cancel",nil),
-					  @"",[[self view] window], self, 
-					  @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, targetAccount, 
-					  AILocalizedString(@"Delete the account %@?",nil), ([accountFormattedUID length] ? accountFormattedUID : NEW_ACCOUNT_DISPLAY_TEXT));
+    if(index != -1){		
+		AIAccount	*targetAccount;
+		NSString    *accountFormattedUID;
+
+		targetAccount = [accountArray objectAtIndex:index];
+		accountFormattedUID = [targetAccount formattedUID];
+
+		//Confirm before deleting
+		NSBeginAlertSheet(AILocalizedString(@"Delete Account",nil),
+						  AILocalizedString(@"Delete",nil),
+						  AILocalizedString(@"Cancel",nil),
+						  @"",[[self view] window], self, 
+						  @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, targetAccount, 
+						  AILocalizedString(@"Delete the account %@?",nil), ([accountFormattedUID length] ? accountFormattedUID : NEW_ACCOUNT_DISPLAY_TEXT));
+	}else{
+		NSBeep();
+	}
 }
 
 /*!
