@@ -24,7 +24,7 @@
 
 #define KEY_ALWAYS_CREATE_NEW_WINDOWS 		@"Always Create New Windows"
 #define KEY_USE_LAST_WINDOW			@"Use Last Window"
-
+#define KEY_AUTOHIDE_TABBAR			@"Autohide Tab Bar"
 @class AIAdium, AIContactListWindowController, AIMessageWindowController, AIMessageViewController, AIDualWindowPreferences, ESDualWindowMessageWindowPreferences;
 @protocol AIMessageView, AIInterfaceController, AITabHoldingInterface, AIContactListCleanup;
 

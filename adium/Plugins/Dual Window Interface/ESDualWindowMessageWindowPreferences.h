@@ -16,12 +16,14 @@
     IBOutlet	NSView		*view_pref;
 
     IBOutlet	NSMatrix	*matrix_windowMode;
-    IBOutlet	NSButtonCell		*modeWindow;
-    IBOutlet	NSButtonCell		*modeTab;
+    IBOutlet	NSButtonCell	*modeWindow;
+    IBOutlet	NSButtonCell	*modeTab;
     
     IBOutlet	NSMatrix	*matrix_tabPref;
-    IBOutlet	NSButtonCell		*primaryWindow;
-    IBOutlet	NSButtonCell		*lastUsedWindow;
+    IBOutlet	NSButtonCell	*primaryWindow;
+    IBOutlet	NSButtonCell	*lastUsedWindow;
+
+    IBOutlet	NSButton	*autohide_tabBar;
 }
 + (ESDualWindowMessageWindowPreferences *)dualWindowMessageWindowInterfacePreferencesWithOwner:(id)inOwner;
 - (IBAction)changePreference:(id)sender;
