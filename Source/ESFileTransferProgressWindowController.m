@@ -151,6 +151,8 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 //called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {	
+	[super windowShouldClose:sender];
+
 	//release the window controller (ourself)
     sharedTransferProgressInstance = nil;
     [self autorelease];
