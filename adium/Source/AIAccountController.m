@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.38 2003/12/22 19:04:27 adamiser Exp $
+// $Id: AIAccountController.m,v 1.39 2003/12/22 19:22:15 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -24,7 +24,7 @@
 #define PREF_GROUP_PREFERRED_ACCOUNTS		@"Preferred Accounts"
 
 //Preference keys
-#define ACCOUNT_LIST				@"Account List"		//Array of accounts
+#define ACCOUNT_LIST				@"Accounts"		//Array of accounts
 #define ACCOUNT_TYPE				@"Type"			//Account type
 #define ACCOUNT_SERVICE				@"Service"		//Account service
 #define ACCOUNT_UID				@"UID"			//Account UID
@@ -76,7 +76,7 @@
 - (void)finishIniting
 {
     //### TEMPORARY (OLD ACCOUNT PREFERENCE IMPORT CODE) #######
-    NSArray     *oldAccountArray = [[[owner preferenceController] preferencesForGroup:@"Accounts"] objectForKey:ACCOUNT_LIST];
+    NSArray     *oldAccountArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_ACCOUNTS] objectForKey:@"Account List"];
     if(oldAccountArray && [oldAccountArray count]){
 	NSMutableArray     *importedAccounts = [NSMutableArray array];
 	NSLog(@"Importing old accounts");
@@ -105,7 +105,7 @@
 	}
 	
 	[self saveAccounts:importedAccounts];
-	[[owner preferenceController] setPreference:nil forKey:@"Accounts" group:ACCOUNT_LIST];
+	[[owner preferenceController] setPreference:nil forKey:@"Account List" group:PREF_GROUP_ACCOUNTS];
     }
     //#########################################################
     
