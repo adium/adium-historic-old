@@ -57,30 +57,39 @@
 
 - (id)_filterString:(NSString *)inString originalObject:(id)originalObject contentObject:(AIContentObject *)content listObject:(AIListObject *)listObject
 {
-	id<DummyStringProtocol>   mesg = nil;
-	
+	id<DummyStringProtocol>		mesg = nil;
+	NSMutableString				* str = nil;
+		
     if(inString){
-        NSEnumerator            *enumerator = [hash keyEnumerator];
-        NSString                *pattern;	
-        NSString                *replaceWith;
+        NSEnumerator			* enumerator = [hash keyEnumerator];
+        NSString                * pattern;	
+        NSString                * replaceWith;
+		NSRange					range, searchRange = NSMakeRange(0,[inString length]);
         
         //This loop gets run for every key in the dictionary
 		while (pattern = [enumerator nextObject]){
             //if the original string contained this pattern
-            if ([inString rangeOfString:pattern].location != NSNotFound){
-                if (!mesg){
-                    mesg = [[originalObject mutableCopy] autorelease];
-                }
-                
-                //if key is a var go find out what the replacement text should be
-                if([(replaceWith = [hash objectForKey:pattern]) isEqualToString:@"$var$"]){
-                    replaceWith = [self hashLookup:pattern contentObject:content listObject:listObject];
-                }
-                
-                [mesg replaceOccurrencesOfString:pattern 
-                                      withString:replaceWith
-                                         options:NSLiteralSearch 
-                                           range:NSMakeRange(0,[mesg length])];
+			if([inString rangeOfString:pattern].location != NSNotFound) {
+				if (!mesg){				//This is potentially unecessary, if the %* is actually followed by an alnum, and so does not get replaced
+					mesg = [[originalObject mutableCopy] autorelease];
+					str = [mesg mutableString];
+				}
+				replaceWith = nil;
+				while(searchRange.location < [str length] && (range = [str rangeOfString:pattern options:NSLiteralSearch range:searchRange]).location != NSNotFound) {
+					searchRange.location = range.location + range.length;
+					searchRange.length = [str length] - searchRange.location;
+					if(searchRange.location < [str length] && isalnum([str characterAtIndex:searchRange.location]) && [str characterAtIndex:searchRange.location] != '-')
+						continue;
+					
+					if(replaceWith == nil) {
+						//if key is a var go find out what the replacement text should be
+						if([(replaceWith = [hash objectForKey:pattern]) isEqualToString:@"$var$"]){
+							replaceWith = [self hashLookup:pattern contentObject:content listObject:listObject];
+						}
+					}
+					
+					[str replaceCharactersInRange:range withString:replaceWith];
+				}
             }
         }
     }

@@ -66,6 +66,7 @@
 #import "AIMiniToolbarCenter.h"
 #import "AIMiniToolbarItem.h"
 #import "AIMutableOwnerArray.h"
+#import "NEHMutableStringAdditions.h"
 #import "AIParagraphStyleAdditions.h"
 #import "AIPlasticButton.h"
 #import "AIPopUpButtonAdditions.h"

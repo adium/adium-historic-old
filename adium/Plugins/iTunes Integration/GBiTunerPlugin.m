@@ -237,6 +237,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 - (id)_filterString:(NSString *)inString originalObject:(id)originalObject
 {
 	id<DummyStringProtocol>		mesg = nil;
+	NSMutableString				* str = nil;
 	NSRange						range;
 	
 	if (!hasGeneratedScriptMenu) {
@@ -253,14 +254,14 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
             //if the original string contained this pattern
 			range = [inString rangeOfString:pattern];
             if(range.location != NSNotFound) {
-				if(!mesg) mesg = [[originalObject mutableCopy] autorelease];
-				if(range.location > 0 && [inString characterAtIndex:range.location - 1] == '\\')
-					[mesg deleteCharactersInRange:NSMakeRange(range.location-1,1)];
-				else
-					[mesg replaceOccurrencesOfString:pattern 
-										  withString:[self hashLookup:pattern] 
-											 options:NSLiteralSearch 
-											   range:NSMakeRange(0,[mesg length])];
+				if(!mesg) {
+					mesg = [[originalObject mutableCopy] autorelease];
+					str = [mesg mutableString];
+				}
+				[str replaceOccurrencesOfString:pattern 
+									 withString:[self hashLookup:pattern] 
+										options:NSLiteralSearch 
+										  range:NSMakeRange(0,[mesg length])];
             }
         }
     }

@@ -4993,6 +4993,7 @@
 				4BC5216A05FF5D8D00B03139,
 				4BC5216C05FF5D8D00B03139,
 				346C970705FF8EEC000F5A8A,
+				521C570F0604B594005EB21A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5652,6 +5653,7 @@
 				4BC5216B05FF5D8D00B03139,
 				4BC5216D05FF5D8D00B03139,
 				346C970805FF8EEC000F5A8A,
+				521C57100604B594005EB21A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15310,6 +15312,36 @@
 			settings = {
 			};
 		};
+		521C570D0604B594005EB21A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NEHMutableStringAdditions.h;
+			path = "Frameworks/AIUtilities Framework/NEHMutableStringAdditions.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		521C570E0604B594005EB21A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NEHMutableStringAdditions.m;
+			path = "Frameworks/AIUtilities Framework/NEHMutableStringAdditions.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		521C570F0604B594005EB21A = {
+			fileRef = 521C570D0604B594005EB21A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		521C57100604B594005EB21A = {
+			fileRef = 521C570E0604B594005EB21A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		5233D6A705B606FA00E9A4EC = {
 			children = (
 				5233D6A805B606FA00E9A4EC,
@@ -21222,6 +21254,8 @@
 				34004D87057C7DCA0022CA56,
 				F570A5B103704C3701A8010A,
 				F570A5B203704C3701A8010A,
+				521C570D0604B594005EB21A,
+				521C570E0604B594005EB21A,
 				4BCB9AC80567E7A8001D3559,
 				4BCB9AC90567E7A9001D3559,
 				4B8EFC0403E18F2D00A8010A,
