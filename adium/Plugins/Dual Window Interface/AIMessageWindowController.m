@@ -224,14 +224,16 @@
     tabIsShowing = YES;
     supressHiding = NO;
     
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(messageTabDragCompleteNotification:) name:AIMessageTabDragCompleteNotification object:nil];
-
-    [self preferencesChanged:nil];
     
+    //Load our window
     [super initWithWindowNibName:windowNibName owner:self];
-    [self window];	//Load our window
-      
+    [self window];	
+
+    //Prefs
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
+
     //register as a drag observer:
     [[self window] registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
 
@@ -308,7 +310,8 @@
         NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
         autohide_tabBar = [[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
-
+	[tabView_customTabs setAllowsInactiveTabClosing:[[preferenceDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
+	
         [self updateTabBarVisibilityAndAnimate:(notification != nil)];
     }
 }

@@ -14,12 +14,12 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface AICustomTabCell : NSCell {
-    
     //Properties
     BOOL		selected;
     BOOL		highlighted;
     BOOL		dragging;
-
+    BOOL		allowsInactiveTabClosing;
+    
     NSRect		closeButtonRect;
     BOOL		trackingClose;
     BOOL		hoveringClose;
@@ -36,6 +36,7 @@
 }
 
 + (id)customTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
+- (void)setAllowsInactiveTabClosing:(BOOL)inValue;
 - (void)setSelected:(BOOL)inSelected;
 - (BOOL)isSelected;
 - (NSTabViewItem *)tabViewItem;

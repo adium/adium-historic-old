@@ -27,18 +27,24 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == createMessages_inTabs){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:([createMessages_inTabs state]==NSOffState)]
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:![sender state]]
                                              forKey:KEY_ALWAYS_CREATE_NEW_WINDOWS
                                               group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
     }else if(sender == createTabs_inLastWindow){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:([createTabs_inLastWindow state]==NSOnState)]
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_USE_LAST_WINDOW
                                               group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-    }else if (sender == autohide_tabBar){
-	[[owner preferenceController] setPreference:[NSNumber numberWithBool:([autohide_tabBar state]==NSOffState)]
+    }else if(sender == autohide_tabBar){
+	[[owner preferenceController] setPreference:[NSNumber numberWithBool:![sender state]]
 				      forKey:KEY_AUTOHIDE_TABBAR
 				       group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+
+    }else if(sender == checkBox_allowInactiveClosing){
+	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+								  forKey:KEY_ENABLE_INACTIVE_TAB_CLOSE
+								   group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+	
     }
 
     [self configureControlDimming];
@@ -52,6 +58,7 @@
     [createMessages_inTabs setState:![[preferenceDict objectForKey:KEY_ALWAYS_CREATE_NEW_WINDOWS] boolValue]];
     [createTabs_inLastWindow setState:[[preferenceDict objectForKey:KEY_USE_LAST_WINDOW] boolValue]];
     [autohide_tabBar setState:![[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue]];
+    [checkBox_allowInactiveClosing setState:[[preferenceDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
     
     [self configureControlDimming];
 }

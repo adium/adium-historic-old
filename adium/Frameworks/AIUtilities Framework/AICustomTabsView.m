@@ -298,6 +298,25 @@ static  NSSize                  dragCellSize;           //Size of the cell being
     return(removingLastTabHidesWindow);
 }
 
+//Can the user close inactive tabs?
+- (void)setAllowsInactiveTabClosing:(BOOL)inValue
+{
+    NSEnumerator		*enumerator;
+    AICustomTabCell		*tabCell;
+    
+    //Save the value
+    allowsInactiveTabClosing = inValue;
+    
+    //Pass it onto our tabs
+    enumerator = [tabCellArray objectEnumerator];
+    while((tabCell = [enumerator nextObject])){            
+	[tabCell setAllowsInactiveTabClosing:allowsInactiveTabClosing];
+    }
+}
+- (BOOL)allowsInactiveTabClosing{
+    return(allowsInactiveTabClosing);
+}
+
 //Change our selection to match the current selected tabViewItem
 - (void)tabView:(NSTabView *)inTabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
@@ -377,7 +396,8 @@ static  NSSize                  dragCellSize;           //Size of the cell being
         //Create a new tab cell
         tabCell = [AICustomTabCell customTabForTabViewItem:tabViewItem];
         [tabCell setSelected:(tabViewItem == [tabView selectedTabViewItem])];
-        
+        [tabCell setAllowsInactiveTabClosing:allowsInactiveTabClosing];
+	
         //Update our direct reference to the selected cell
         if(tabViewItem == [tabView selectedTabViewItem]){
             [selectedCustomTabCell release]; selectedCustomTabCell = [tabCell retain];

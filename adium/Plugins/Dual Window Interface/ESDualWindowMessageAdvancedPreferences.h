@@ -9,6 +9,7 @@
     IBOutlet	NSButton	*createMessages_inTabs;
     IBOutlet	NSButton	*createTabs_inLastWindow;
     IBOutlet	NSButton	*autohide_tabBar;
+    IBOutlet    NSButton	*checkBox_allowInactiveClosing;
 }
 
 @end
