@@ -987,9 +987,7 @@
 			children = (
 				17587328FF379C6511CA2CBB,
 				F53EA2CE02C803C101A8010A,
-				4BCFC91804E930D300A8010A,
 				6576A009050269FA000EB664,
-				9E2E306E046CA9BF00415B22,
 				4B1F0F3504AE303600A8010A,
 				9EB3C52A04F94DD5001D1F74,
 				F5B53FC70333AFB501A8010A,
@@ -1075,8 +1073,6 @@
 				F53B9A0E02CCED8B01A8010A,
 				F53B9A0602CCED6401A8010A,
 				F53EA2CD02C803C101A8010A,
-				4BCFC91704E930D300A8010A,
-				9E2E306D046CA9BF00415B22,
 				6576A008050269FA000EB664,
 				F5B53FC60333AFB501A8010A,
 				F510B77303339F1C01A8010A,
@@ -1196,11 +1192,9 @@
 				WRAPPER_EXTENSION = app;
 			};
 			dependencies = (
-				4BD0E3FB04E9587C00A8010A,
 				4BF1F04F03D84D1E00A8010A,
 				4BF1F05203D84D1E00A8010A,
 				4B64792403DB613700A8010A,
-				9E6C448F048D6CC700415B22,
 				4B64792D03DB613700A8010A,
 				4B64792C03DB613700A8010A,
 				9E4CF9F304AA6D5600415B22,
@@ -2495,30 +2489,6 @@
 			name = Attributes;
 			path = "";
 			refType = 4;
-		};
-		4B163D7704E93E7F00A8010A = {
-			fileRef = F53B9A0702CCED6401A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B163D7904E93E8000A8010A = {
-			fileRef = F53B9A0F02CCED8B01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B163D7A04E93E8100A8010A = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B163D7B04E9501E00A8010A = {
-			fileRef = 9E1D5C54048EB63C00415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B187A0203D59B4C00A8010A = {
 			fileRef = F531836F019E40BB01A80165;
@@ -4073,9 +4043,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				4BC8AFDF04FD3C2800A8010A,
-				4BD0E3FA04E9586300A8010A,
 				4B40E1CB03DB5B9600A8010A,
-				9E6C4494048D6DEB00415B22,
 				4B1F0F3704AE303600A8010A,
 				4B40E1D303DB5B9600A8010A,
 				4B40E1D203DB5B9600A8010A,
@@ -6900,18 +6868,6 @@
 			path = "Plugins/Oscar Service/AIOscarServicePlugin.h";
 			refType = 4;
 		};
-		4B8CD80904E9630300A8010A = {
-			fileRef = 4B8CD80704E9630300A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B8CD80A04E9630300A8010A = {
-			fileRef = 4B8CD80804E9630300A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B8EFC0403E18F2D00A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -7083,14 +7039,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		4B9A664B04E963BF00A8010A = {
-			isa = PBXTargetDependency;
-			target = F53B9A0E02CCED8B01A8010A;
-		};
-		4B9A664C04E963BF00A8010A = {
-			isa = PBXTargetDependency;
-			target = F53B9A0602CCED6401A8010A;
 		};
 		4B9AB61704D2C84700A8010A = {
 			fileEncoding = 4;
@@ -8722,161 +8670,6 @@
 			name = "AIM (OSCAR)";
 			refType = 4;
 		};
-		4BCFC91204E930D300A8010A = {
-			buildActionMask = 2147483647;
-			files = (
-				4BCFC95004E9376F00A8010A,
-				4BCFC95204E9376F00A8010A,
-				4BCFC95404E9376F00A8010A,
-				4BCFC95604E9376F00A8010A,
-				4BCFC95804E9376F00A8010A,
-				4BCFC95A04E9376F00A8010A,
-				4BCFC95C04E9376F00A8010A,
-				4BCFC95E04E9376F00A8010A,
-				4BCFC96004E9376F00A8010A,
-				4BCFC96204E9376F00A8010A,
-				4BCFC96404E9376F00A8010A,
-				4BCFC96604E9376F00A8010A,
-				4BCFC96804E9376F00A8010A,
-				4BCFC96A04E9376F00A8010A,
-				4BCFC96C04E9376F00A8010A,
-				4BCFC96E04E9376F00A8010A,
-				4BCFC97204E9376F00A8010A,
-				4BCFC97404E9376F00A8010A,
-				4BCFC97604E9376F00A8010A,
-				4BCFC97804E9376F00A8010A,
-				4BCFC97A04E9376F00A8010A,
-				4BCFC97E04E9376F00A8010A,
-				4BCFC98004E9376F00A8010A,
-				4BCFC98204E9376F00A8010A,
-				4BCFC98404E9376F00A8010A,
-				4B8CD80A04E9630300A8010A,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4BCFC91304E930D300A8010A = {
-			buildActionMask = 2147483647;
-			files = (
-				4BCFC98604E9376F00A8010A,
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4BCFC91404E930D300A8010A = {
-			buildActionMask = 2147483647;
-			files = (
-				4BCFC95104E9376F00A8010A,
-				4BCFC95304E9376F00A8010A,
-				4BCFC95504E9376F00A8010A,
-				4BCFC95704E9376F00A8010A,
-				4BCFC95904E9376F00A8010A,
-				4BCFC95B04E9376F00A8010A,
-				4BCFC95D04E9376F00A8010A,
-				4BCFC95F04E9376F00A8010A,
-				4BCFC96104E9376F00A8010A,
-				4BCFC96304E9376F00A8010A,
-				4BCFC96504E9376F00A8010A,
-				4BCFC96704E9376F00A8010A,
-				4BCFC96904E9376F00A8010A,
-				4BCFC96B04E9376F00A8010A,
-				4BCFC96D04E9376F00A8010A,
-				4BCFC96F04E9376F00A8010A,
-				4BCFC97304E9376F00A8010A,
-				4BCFC97504E9376F00A8010A,
-				4BCFC97704E9376F00A8010A,
-				4BCFC97904E9376F00A8010A,
-				4BCFC97B04E9376F00A8010A,
-				4BCFC97F04E9376F00A8010A,
-				4BCFC98104E9376F00A8010A,
-				4BCFC98304E9376F00A8010A,
-				4BCFC98504E9376F00A8010A,
-				4B8CD80904E9630300A8010A,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4BCFC91504E930D300A8010A = {
-			buildActionMask = 2147483647;
-			files = (
-				4B163D7704E93E7F00A8010A,
-				4B163D7904E93E8000A8010A,
-				4B163D7A04E93E8100A8010A,
-				4B163D7B04E9501E00A8010A,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4BCFC91604E930D300A8010A = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4BCFC91704E930D300A8010A = {
-			buildPhases = (
-				4BCFC91204E930D300A8010A,
-				4BCFC91304E930D300A8010A,
-				4BCFC91404E930D300A8010A,
-				4BCFC91504E930D300A8010A,
-				4BCFC91604E930D300A8010A,
-			);
-			buildSettings = {
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "AIM (Oscar)";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				4B9A664B04E963BF00A8010A,
-				4B9A664C04E963BF00A8010A,
-			);
-			isa = PBXBundleTarget;
-			name = "AIM (Oscar)";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
-			productName = "AIM (Oscar)";
-			productReference = 4BCFC91804E930D300A8010A;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string></string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string></string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string></string>
-	<key>CFBundlePackageType</key>
-	<string>BNDL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>0.0.1d1</string>
-	<key>NSPrincipalClass</key>
-	<string>AIOscarServicePlugin</string>
-</dict>
-</plist>
-";
-		};
-		4BCFC91804E930D300A8010A = {
-			isa = PBXBundleReference;
-			path = "AIM (Oscar).AdiumPlugin";
-			refType = 3;
-		};
 		4BCFC91904E9376F00A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -9233,312 +9026,6 @@
 			path = "Plugins/Oscar Service/OscarAccountView.nib";
 			refType = 4;
 		};
-		4BCFC95004E9376F00A8010A = {
-			fileRef = 4BCFC91904E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC95104E9376F00A8010A = {
-			fileRef = 4BCFC91A04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC95204E9376F00A8010A = {
-			fileRef = 4BCFC91B04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC95304E9376F00A8010A = {
-			fileRef = 4BCFC91C04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC95404E9376F00A8010A = {
-			fileRef = 4BCFC91D04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC95504E9376F00A8010A = {
-			fileRef = 4BCFC91E04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC95604E9376F00A8010A = {
-			fileRef = 4BCFC91F04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC95704E9376F00A8010A = {
-			fileRef = 4BCFC92004E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC95804E9376F00A8010A = {
-			fileRef = 4BCFC92104E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC95904E9376F00A8010A = {
-			fileRef = 4BCFC92204E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC95A04E9376F00A8010A = {
-			fileRef = 4BCFC92304E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC95B04E9376F00A8010A = {
-			fileRef = 4BCFC92404E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC95C04E9376F00A8010A = {
-			fileRef = 4BCFC92504E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC95D04E9376F00A8010A = {
-			fileRef = 4BCFC92604E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC95E04E9376F00A8010A = {
-			fileRef = 4BCFC92704E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC95F04E9376F00A8010A = {
-			fileRef = 4BCFC92804E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC96004E9376F00A8010A = {
-			fileRef = 4BCFC92904E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC96104E9376F00A8010A = {
-			fileRef = 4BCFC92A04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC96204E9376F00A8010A = {
-			fileRef = 4BCFC92B04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC96304E9376F00A8010A = {
-			fileRef = 4BCFC92C04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC96404E9376F00A8010A = {
-			fileRef = 4BCFC92D04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC96504E9376F00A8010A = {
-			fileRef = 4BCFC92E04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC96604E9376F00A8010A = {
-			fileRef = 4BCFC92F04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC96704E9376F00A8010A = {
-			fileRef = 4BCFC93004E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC96804E9376F00A8010A = {
-			fileRef = 4BCFC93104E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC96904E9376F00A8010A = {
-			fileRef = 4BCFC93204E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC96A04E9376F00A8010A = {
-			fileRef = 4BCFC93304E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC96B04E9376F00A8010A = {
-			fileRef = 4BCFC93404E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC96C04E9376F00A8010A = {
-			fileRef = 4BCFC93504E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC96D04E9376F00A8010A = {
-			fileRef = 4BCFC93604E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC96E04E9376F00A8010A = {
-			fileRef = 4BCFC93704E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC96F04E9376F00A8010A = {
-			fileRef = 4BCFC93804E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC97204E9376F00A8010A = {
-			fileRef = 4BCFC93B04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC97304E9376F00A8010A = {
-			fileRef = 4BCFC93C04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC97404E9376F00A8010A = {
-			fileRef = 4BCFC93D04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC97504E9376F00A8010A = {
-			fileRef = 4BCFC93E04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC97604E9376F00A8010A = {
-			fileRef = 4BCFC93F04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC97704E9376F00A8010A = {
-			fileRef = 4BCFC94004E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC97804E9376F00A8010A = {
-			fileRef = 4BCFC94104E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC97904E9376F00A8010A = {
-			fileRef = 4BCFC94204E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC97A04E9376F00A8010A = {
-			fileRef = 4BCFC94304E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC97B04E9376F00A8010A = {
-			fileRef = 4BCFC94404E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC97E04E9376F00A8010A = {
-			fileRef = 4BCFC94704E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC97F04E9376F00A8010A = {
-			fileRef = 4BCFC94804E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC98004E9376F00A8010A = {
-			fileRef = 4BCFC94904E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC98104E9376F00A8010A = {
-			fileRef = 4BCFC94A04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC98204E9376F00A8010A = {
-			fileRef = 4BCFC94B04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC98304E9376F00A8010A = {
-			fileRef = 4BCFC94C04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC98404E9376F00A8010A = {
-			fileRef = 4BCFC94D04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC98504E9376F00A8010A = {
-			fileRef = 4BCFC94E04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCFC98604E9376F00A8010A = {
-			fileRef = 4BCFC94F04E9376F00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BCFC98704E9377100A8010A = {
 			children = (
 				4BCFC94304E9376F00A8010A,
@@ -9625,16 +9112,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		4BD0E3FA04E9586300A8010A = {
-			fileRef = 4BCFC91804E930D300A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD0E3FB04E9587C00A8010A = {
-			isa = PBXTargetDependency;
-			target = 4BCFC91704E930D300A8010A;
 		};
 		4BD68227045B010D00A8010A = {
 			fileEncoding = 4;
@@ -12563,12 +12040,6 @@
 			path = /usr/lib/libcrypto.0.9.dylib;
 			refType = 0;
 		};
-		9E1D5C55048EB63C00415B22 = {
-			fileRef = 9E1D5C54048EB63C00415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		9E23C02604D996D9008A581D = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -12582,139 +12053,6 @@
 			name = MSNAccountViewController.m;
 			path = "Plugins/MSN Service/MSNAccountViewController.m";
 			refType = 4;
-		};
-		9E23C02804D996D9008A581D = {
-			fileRef = 9E23C02604D996D9008A581D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E23C02904D996D9008A581D = {
-			fileRef = 9E23C02704D996D9008A581D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E2E3068046CA9BF00415B22 = {
-			buildActionMask = 2147483647;
-			files = (
-				9E6C448B048D681F00415B22,
-				9E6C448D048D682100415B22,
-				9EC861AA0494968E00415B22,
-				9EF608C604CDFF9000415B25,
-				9E23C02804D996D9008A581D,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9E2E3069046CA9BF00415B22 = {
-			buildActionMask = 2147483647;
-			files = (
-				9ECA6F2704D846410083F70D,
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9E2E306A046CA9BF00415B22 = {
-			buildActionMask = 2147483647;
-			files = (
-				9E6C448C048D682100415B22,
-				9E6C448E048D682200415B22,
-				9EC861AB0494968E00415B22,
-				9EF608C704CDFF9000415B25,
-				9E23C02904D996D9008A581D,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9E2E306B046CA9BF00415B22 = {
-			buildActionMask = 2147483647;
-			files = (
-				9E2E3079046CAB2F00415B22,
-				9E2E307A046CAB3000415B22,
-				9E2E307B046CAB3000415B22,
-				9E1D5C55048EB63C00415B22,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9E2E306C046CA9BF00415B22 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9E2E306D046CA9BF00415B22 = {
-			buildPhases = (
-				9E2E3068046CA9BF00415B22,
-				9E2E3069046CA9BF00415B22,
-				9E2E306A046CA9BF00415B22,
-				9E2E306B046CA9BF00415B22,
-				9E2E306C046CA9BF00415B22,
-			);
-			buildSettings = {
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = MSN;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				9E2E3072046CAA4F00415B22,
-				9E2E3071046CAA4500415B22,
-			);
-			isa = PBXBundleTarget;
-			name = MSN;
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
-			productName = MSN;
-			productReference = 9E2E306E046CA9BF00415B22;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string></string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string></string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string></string>
-	<key>CFBundlePackageType</key>
-	<string>BNDL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>0.0.1d1</string>
-	<key>NSPrincipalClass</key>
-	<string>MSNServicePlugin</string>
-</dict>
-</plist>
-";
-		};
-		9E2E306E046CA9BF00415B22 = {
-			isa = PBXBundleReference;
-			path = MSN.AdiumPlugin;
-			refType = 3;
-		};
-		9E2E3071046CAA4500415B22 = {
-			isa = PBXTargetDependency;
-			target = F53B9A0E02CCED8B01A8010A;
-		};
-		9E2E3072046CAA4F00415B22 = {
-			isa = PBXTargetDependency;
-			target = F53B9A0602CCED6401A8010A;
 		};
 		9E2E3073046CAA5F00415B22 = {
 			children = (
@@ -12749,24 +12087,6 @@
 			name = MSNServicePlugin.m;
 			path = "Plugins/MSN Service/MSNServicePlugin.m";
 			refType = 4;
-		};
-		9E2E3079046CAB2F00415B22 = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E2E307A046CAB3000415B22 = {
-			fileRef = F53B9A0F02CCED8B01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E2E307B046CAB3000415B22 = {
-			fileRef = F53B9A0702CCED6401A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		9E2E307D046CB05F00415B22 = {
 			fileEncoding = 4;
@@ -12979,40 +12299,6 @@
 		};
 		9E4CF9FB04AA6DDF00415B22 = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E6C448B048D681F00415B22 = {
-			fileRef = 9E2E3075046CAB0000415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E6C448C048D682100415B22 = {
-			fileRef = 9E2E3076046CAB0000415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E6C448D048D682100415B22 = {
-			fileRef = 9E2E307D046CB05F00415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E6C448E048D682200415B22 = {
-			fileRef = 9E2E307E046CB05F00415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9E6C448F048D6CC700415B22 = {
-			isa = PBXTargetDependency;
-			target = 9E2E306D046CA9BF00415B22;
-		};
-		9E6C4494048D6DEB00415B22 = {
-			fileRef = 9E2E306E046CA9BF00415B22;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -13318,29 +12604,11 @@
 			path = "Plugins/MSN Service/MSNStringAdditions.m";
 			refType = 4;
 		};
-		9EC861AA0494968E00415B22 = {
-			fileRef = 9EC861A80494968E00415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9EC861AB0494968E00415B22 = {
-			fileRef = 9EC861A90494968E00415B22;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		9ECA6F2604D846410083F70D = {
 			isa = PBXFileReference;
 			name = MSNAccountView.nib;
 			path = "Plugins/MSN Service/MSNAccountView.nib";
 			refType = 4;
-		};
-		9ECA6F2704D846410083F70D = {
-			fileRef = 9ECA6F2604D846410083F70D;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		9ECA6F2804D846680083F70D = {
 			children = (
@@ -13489,18 +12757,6 @@
 			name = MSNSBSocket.m;
 			path = "Plugins/MSN Service/MSNSBSocket.m";
 			refType = 4;
-		};
-		9EF608C604CDFF9000415B25 = {
-			fileRef = 9EF608C404CDFF9000415B25;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9EF608C704CDFF9000415B25 = {
-			fileRef = 9EF608C504CDFF9000415B25;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		9EFA2FF904AE71E900415B22 = {
 			fileRef = 4B6660A804ADF2F200A8010A;
