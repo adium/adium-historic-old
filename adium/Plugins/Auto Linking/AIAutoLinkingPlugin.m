@@ -31,14 +31,13 @@ static NSString *linkDetailString[] = { //Anything matching these keys is linked
     [[adium contentController] registerIncomingContentFilter:self];
 }
 
-- (void)filterContentObject:(AIContentObject *)inObject
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject
 {
-    if([[inObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
+    NSMutableAttributedString   *replacementMessage = nil;
+    if (inAttributedString) {
         int				loop;
         BOOL				mayContainLinks = NO;
-        AIContentMessage		*contentMessage = (AIContentMessage *)inObject;
-        NSString			*messageString = [[contentMessage message] string];
-        NSMutableAttributedString	*replacementMessage = nil;
+        NSString			*messageString = [inAttributedString string];
 
         //First, we do a quick scan of the message for any substrings that might end up being links
         //This avoids having to do the slower, more complicated scan for the majority of messages.
@@ -102,7 +101,9 @@ static NSString *linkDetailString[] = { //Anything matching these keys is linked
                             
                             //Scan the template string after *, up to next * or end
                             templateIndex += 1;
-                            wildRange = [template rangeOfString:@"*" options:0 range:NSMakeRange(templateIndex, [template length] - templateIndex)];
+                            wildRange = [template rangeOfString:@"*" 
+                                                        options:0 
+                                                          range:NSMakeRange(templateIndex, [template length] - templateIndex)];
                             
                             if(wildRange.location != NSNotFound){
                                 templateSegment = [template substringWithRange:NSMakeRange(templateIndex, wildRange.location - templateIndex)];
@@ -120,7 +121,8 @@ static NSString *linkDetailString[] = { //Anything matching these keys is linked
                         }
 
                         //One final check.  Our URL must be complete at the right location (If the template doesn't end with a *)
-                        if([template characterAtIndex:[template length]-1] != '*' && [urlScanner scanLocation] != [urlString length]){
+                        if([template characterAtIndex:[template length]-1] != '*' 
+                           && [urlScanner scanLocation] != [urlString length]){
                             URLIsValid = NO; //Didn't end
                         }
 
@@ -129,11 +131,13 @@ static NSString *linkDetailString[] = { //Anything matching these keys is linked
                             NSRange	urlRange = NSMakeRange([messageScanner scanLocation] - [urlString length], [urlString length]);
 
 			    //Make sure this text doesn't already have a link attribute
-                            if(![[contentMessage message] attribute:NSLinkAttributeName atIndex:urlRange.location effectiveRange:nil]){
+                            if(![inAttributedString attribute:NSLinkAttributeName
+                                                            atIndex:urlRange.location
+                                                     effectiveRange:nil]){
 				
 				//Make sure we've got a replacement message string made
 				if(!replacementMessage){
-				    replacementMessage = [[[contentMessage message] mutableCopy] autorelease];
+				    replacementMessage = [[inAttributedString mutableCopy] autorelease];
 				}
     
 				//Set this segment as a link, appending http:// if necessary
@@ -155,8 +159,12 @@ static NSString *linkDetailString[] = { //Anything matching these keys is linked
 				}
     
 				//Color it blue and underline for good measure
-				[replacementMessage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:urlRange];
-				[replacementMessage addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:1] range:urlRange];
+				[replacementMessage addAttribute:NSForegroundColorAttributeName 
+                                                           value:[NSColor blueColor]
+                                                           range:urlRange];
+				[replacementMessage addAttribute:NSUnderlineStyleAttributeName 
+                                                           value:[NSNumber numberWithInt:1] 
+                                                           range:urlRange];
                             }
 			    
                         }
@@ -165,12 +173,8 @@ static NSString *linkDetailString[] = { //Anything matching these keys is linked
                 [messageScanner scanCharactersFromSet:whitespaceSet intoString:nil];
             }
         }
-
-        //If any links were created, apply the new message
-        if(replacementMessage){
-            [contentMessage setMessage:replacementMessage];
-        }
     }
+    return (replacementMessage ? replacementMessage : inAttributedString);
 }
 
 
