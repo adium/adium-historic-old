@@ -781,7 +781,7 @@
 	
 	//This is potentially problematic
 	AIListObject *listObject = [chat listObject];
-	NSLog(@"listObject is %@",listObject);
+//	NSLog(@"listObject is %@",listObject);
 	//If a listObject is set for the chat, then it is an IM; otherwise, it is a multiuser chat
 	if (listObject) {
 		//Associate our chat with the libgaim conversation
