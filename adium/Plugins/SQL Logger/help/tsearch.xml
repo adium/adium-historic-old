@@ -6,7 +6,7 @@
     <p>Installing the tsearch module for Adium/PostgreSQL is not very difficult.
     These instructions assume you've either compiled it from source or
     installed the package by Mark Liyanage.</p>
-    <p>The first thing to do is download the source from postgresql's website.
+    <p>The first thing to do is download the source from the PostgreSQL website.
     Get it from <a
       href="http://www.postgresql.org/mirrors-ftp.html" class="offsite">http://www.postgresql.org/mirrors-ftp.html</a>.
     Download the full version.  (About 10 megs.)  Unpack it with Stuffit
@@ -19,7 +19,7 @@
     </div>
     
     <p>If you've installed Postgres using Fink, or have it in a nonstandard
-    location, you can add flags to tell the configure script where postgres
+    location, you can add flags to tell the configure script where Postgres
     is.
     The configure script should chug through for a few minutes, and then complete
     successfully.
@@ -60,9 +60,9 @@ psql <i>USERNAME</i> &lt; tsearch.sql</pre>
     <div class="tutorialcode">
       <pre>psql &lt; tsearch.sql</pre>
     </div>
-    <p>Tsearch indexing adds new datatypes to the table.  The first sql script adds them, and the second one specifically adds to the messages table, and creates an index on it.  If there are a lot of messages in this table, creating the index can take a few minutes to run.</p>
+    <p>Tsearch indexing adds new datatypes to the table.  The first SQL script adds them, and the second one specifically adds to the messages table, and creates an index on it.  If there are a lot of messages in this table, creating the index can take a few minutes to run.</p>
     <p>tsearch also has a slightly different search syntax.
-    Before instaling this module, you would run a search by typing:</p>
+    Before installing this module, you would run a search by typing:</p>
     <div class="tutorialcode">
       <pre>select * from messages where message ~ 'search string';</pre>
     </div>

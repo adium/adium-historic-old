@@ -122,7 +122,7 @@
     </ul>
     </p>
 
-    <p>The JSP files will allow you to view IMs with a web interface.  These
+    <p>The JSP files will allow you to view logs through a web interface.  These
     can be used locally and from the world-wide web.</p>
     <p>The SQL files are a language that tells the database what type of
     information to store and tables to create.  They are split into two files: 
@@ -177,11 +177,11 @@ jmelloy=#</pre></div>
   history.  Message_v contains a combination of everything: the message, the
   screenname who sent it, and their display name at the time the message was
   sent.  Message_v is complicated and slightly slow.  simple_message_v is very
-bare-bones: the sending and receiving screenames, the message, and a date.</p>
+bare-bones: the sending and receiving screennames, the message, and a date.</p>
 <p>At this point, you're ready to use the plugin.
   You can run <code>parser.pl</code> to insert all of your old logs into the
   database.  
-  To run the script, a few modules are needed for your perl installation.
+  To run the script, a few modules are needed for your Perl installation.
   The first one is called "DBI" (DataBase Interface) and the second "DBD-PG"
   (DataBase Driver-PostgreSQL).  Both can be gotten from fink or CPAN.
   The fink modules are called dbi-pm and dbd-pg-pm (in unstable).  More
@@ -213,7 +213,7 @@ bare-bones: the sending and receiving screenames, the message, and a date.</p>
   in the Adium application as discussed above.  This will not work without
   PostgreSQL installed on your system, and the proper database setup.</p>
 
-<p>Currently, the plugin doesn't have any prefs.  If your databae setup is
+<p>Currently, the plugin doesn't have any preferences.  If your database setup is
   non-standard, you need to set an environmental variable (PGHOST, PGUSER,
   etc) as described in the PostgreSQL docs.  If the plugin is installed correctly, it works very unobtrusively.  It
   never does anything unless there is a problem, so if you start it up and

@@ -49,7 +49,7 @@ root #] mkdir /usr/local/pgsql/data
 root #] chown -R postgres /usr/local/pgsql
 root #] su postgres
 postgres $] /usr/local/bin/initdb -D /usr/local/pgsql/data</pre></div>
-<p>This initially sets up PostgreSQL.  For the perl script and JSP stuff to
+<p>This initially sets up PostgreSQL.  For the Perl script and JSP stuff to
   work, the file <code>/usr/local/pgsql/data/postgresql.conf</code> needs to
   be edited.  Type <code>pico /usr/local/pgsql/data/postgresql.conf</code> (as
   postgres or root) and change the line that says <code>enable_tcpip</code> to
@@ -67,10 +67,10 @@ CLASSPATH=/usr/local/pgsql/share/java/postgresql.jar:$CLASSPATH
 export PATH CLASSPATH</pre></div>
 <p>Now you're ready to use the Adium stuff.</p>
 <div class="tutorialcode"><pre>cd ~/adium/Plugins/SQL Logger/help/sql
-    psql &lt; adium.sql</pre></div>
+psql &lt; adium.sql</pre></div>
 
 <h3>Installing Perl (DBI and DBD::Pg)</h3>
-<p>To install the perl stuff (if CPAN asks you about manual setup, just say
+<p>To install the Perl stuff (if CPAN asks you about manual setup, just say
   no):</p>
 <div class="tutorialcode"><pre>su
 perl -MCPAN -e 'install DBI'
@@ -84,7 +84,7 @@ perl -MCPAN -e 'force install DBD::Pg'</pre></div><br />
 <p>Now you can run parser/parser-2.pl.  You may need to edit the paths at the 
   top of the scripts to be "#!/usr/bin/perl".</p>
 
-<h3>Instaling tsearch and Resin</h3>
+<h3>Installing tsearch and Resin</h3>
 <div class="tutorialcode"><pre>jmelloy $] cd <i>POSTGRES_SOURCE_LOCATION</i>/contrib/tsearch
 jmelloy $] make
 jmelloy $] sudo make install
@@ -99,7 +99,7 @@ jmelloy $] psql &lt; tsearch.sql</pre></div>
   download the latest 3.0 version or the latest 2.0, install instructions are
   similar.  Change directories into the Resin folder.</p>
 
-<h4>If you have downloaded Resin 2.1</h4> <a href="#resin3">Resin 3.0 </a><a
+<h4>If you have downloaded Resin 2.1</h4> <a href="#resin3">Resin 3.0 </a> | <a
   href="#comp">End of install</a>
 <div class="tutorialcode"><pre>pico conf/resin.conf</pre></div>
     <p>Look for the section that looks like this:</p>
