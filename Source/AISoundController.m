@@ -24,7 +24,7 @@
 #define MAX_CACHED_SOUNDS			4					//Max cached sounds
 
 #define TEXT_TO_SPEAK				@"Text"
-#define VOICE_INDEX					@"Voice"
+#define VOICE						@"Voice"
 #define PITCH						@"Pitch"
 #define RATE						@"Rate"
 
@@ -36,6 +36,9 @@
 - (void)_scanSoundSetsFromPath:(NSString *)soundFolderPath intoArray:(NSMutableArray *)soundSetArray;
 - (void)_addSet:(NSString *)inSet withSounds:(NSArray *)inSounds toArray:(NSMutableArray *)inArray;
 - (void)preferencesChanged:(NSNotification *)notification;
+
+- (void)loadVoiceArray;
+- (SUSpeaker *)_speakerForVoice:(NSString *)voiceString index:(int *)voiceIndex;
 - (void)speakNext;
 - (void)initDefaultVoiceIfNecessary;
 - (void)_stopSpeakingNow;
@@ -51,11 +54,12 @@
     soundCacheArray = [[NSMutableArray alloc] init];
 	soundCacheCleanupTimer = nil;
 
-    voiceArray = [[SUSpeaker voiceNames] retain];  //voiceArray will be in the same order that SUSpeaker expects
     speechArray = [[NSMutableArray alloc] init];
     resetNextTime = NO;
     speaking = NO;
-    
+
+	[self loadVoiceArray];
+
     //Create a custom sounds directory ~/Library/Application Support/Adium 2.0/Sounds
     [[AIObject sharedAdiumInstance] createResourcePathForName:PATH_SOUNDS];
     
@@ -84,9 +88,6 @@
 	while (soundFilePlayer = [enumerator nextObject]){
 		[soundFilePlayer stop];
 	}
-	
-	//If using CFAlertSound, remove system alert IDs
-	//    [self _removeSystemAlertIDs];
 }
 
 - (void)dealloc
@@ -278,114 +279,6 @@
 	}
 }
 
-//NSSound - Not used --------------------------------------------------------------------------------------------------------------
-/*
-#pragma mark NSSound
- + NSSound can be threaded to avoid blocking Adium while the sound hardware wakes up
- + NSSound is fast
- - NSSound does not offer volume control
- - NSSound only plays a few formats
- + Cached by the system
-Play a sound using NSSound.  Meant to be detached as a new thread.
-- (void)_threadPlaySound:(NSString *)inPath
-{
-    NSAutoreleasePool 	*pool = [[NSAutoreleasePool alloc] init];
-    NSSound		*sound;
-
-    //Lock to avoid trying to play two sounds at once from two different threads.
-    soundThreadActive = YES;
-    [soundLock lock];
-
-    //Load the sound (The system apparently caches these)
-    sound = [[NSSound alloc] initWithContentsOfFile:inPath byReference:YES];
-    [sound setDelegate:self];
-
-    //Play the sound
-    [sound play];
-
-    //When run on a laptop using battery power, the play method may block while the audio
-    //hardware warms up.  If it blocks, the sound WILL NOT PLAY after the block ends.
-    //To get around this, we check to make sure the sound is playing, and if it isn't
-    //we call the play method again.
-    if(![sound isPlaying]){
-        [sound play];
-    }
-
-    //Unlock and cleanup
-    [soundLock unlock];
-    soundThreadActive = NO;
-	
-    [pool release];
-}
-
-NSSound finished playing callback
-- (void)sound:(NSSound *)sound didFinishPlaying:(BOOL)aBool
-{
-    //Clean up the sound
-    [sound release];
-}
-*/
-
-/*
-//CF Alert Sound - Not used -------------------------------------------------------------------------------------------------------
-//#pragma mark CF Alert Sound
-// Play a sound using the CF sound API's available in 10.2+ (or so says apple)
-// It's slightly more flexable than NSSound, but higher level than CoreAudio.  Good compromise?
-// ? threadable (works in 10.3, crashes in 10.2 regardless of running in thread or not)
-// + faster then QuickTime
-// + respects system settings for Alerts (including volume and output device)
-// - plays a few formats
-// ? system will interrupt sounds when a new event triggers
-// Ref: http://developer.apple.com/technotes/tn2002/tn2102.html
-- (void)_threadPlaySoundAsAlert:(NSString *)inPath
-{
-    NSAutoreleasePool 	*pool = [[NSAutoreleasePool alloc] init];
-    SystemSoundActionID  soundID = 0;
-    FSRef                soundRef;
-    OSStatus             err;
-    
-    
-    soundThreadActive = YES;
-    [soundLock lock];
-    
-    // to use this API, we have to work with carbon - so need to use CF's File Manager
-    // to get a refrence to the file and then use that to register the event sound with the system
-    // BUT, first, we see if the system sound ID we need has already been generated.
-    soundID = (SystemSoundActionID)[[systemSoundIDDict objectForKey:inPath] unsignedLongValue];
-    
-    //if not, then we have to generate it and save it for later (for graceful removal)
-    if(!soundID){
-        err = FSPathMakeRef ([inPath fileSystemRepresentation], &soundRef, NULL);
-        if(noErr == err)
-            err = SystemSoundGetActionID(&soundRef, &soundID);
-        if(noErr == err){
-            [systemSoundIDDict setObject:[NSNumber numberWithUnsignedLong:soundID] forKey:inPath];
-        }
-    }
-    
-    //play the sound (system takes care of queueing and waking audio hardware)
-    SystemSoundPlay(soundID);
-    
-    [soundLock unlock];
-    soundThreadActive = NO;
-    
-    [pool release];
-}
-
-// the SystemSoundGetActionID's generated in the above method need to be gracefully
-// removed from the system.  We do that here.
-// called from closeController:
-- (void)_removeSystemAlertIDs
-{
-    NSEnumerator            *enumerator = [systemSoundIDDict objectEnumerator];
-    SystemSoundActionID      soundID = 0;
-    
-    while((soundID = (SystemSoundActionID)[[enumerator nextObject] intValue])){
-        SystemSoundRemoveActionID(soundID);
-    }
-}
-*/
-
 //Sound Sets -----------------------------------------------------------------------------------------------------------
 #pragma mark Sound Sets
 //Returns an array of dictionaries, each representing a soundset with the following keys:
@@ -465,22 +358,50 @@ NSSound finished playing callback
 
 //Text to Speech -------------------------------------------------------------------------------------------------------
 #pragma mark Text to Speech
+/* Text to Speech
+ * We use SUSpeaker to provide maximum flexibility over speech.  NSSpeechSynthesizer does not gives us pitch/rate controls,
+ * and is not compatible with 10.2, as well.
+ * The only significant bug in SUSpeaker is that it does not reset to the system default voice when it is asked to. We
+ * therefore use 2 instances of SUSpeaker: one for default settings, and one for custom settings.
+ */
+
+//Convenience method: speak the given text with default values
 - (void)speakText:(NSString *)text
 {
     [self speakText:text withVoice:nil andPitch:0 andRate:0];
 }
 
+//Speak a voice-specific sample text at the passed settings
+- (void)speakDemoTextForVoice:(NSString *)voiceString withPitch:(float)pitch andRate:(int)rate
+{		
+	NSString	*demoText;	
+	int			voiceIndex;
+	SUSpeaker	*theSpeaker;
+
+	[self _stopSpeakingNow];
+	theSpeaker = [self _speakerForVoice:voiceString index:&voiceIndex];
+	demoText = [theSpeaker demoTextForVoiceAtIndex:((voiceIndex != NSNotFound) ? voiceIndex : -1)];
+
+	[self speakText:demoText
+		  withVoice:voiceString
+		   andPitch:pitch
+			andRate:rate];
+}
+
+//Return an array of voices in the same order as expected by SUSpeaker
 - (NSArray *)voices
 {
     return voiceArray;
 }
 
+//The systemwide default rate. This is cached when first used; it does not update if the systemwide default updates.
 - (int)defaultRate
 {
     [self initDefaultVoiceIfNecessary];
     return defaultRate;
 }
 
+//The systemwide default pitch. This is cached when first used; it does not update if the systemwide default updates.
 - (int)defaultPitch
 { 
     [self initDefaultVoiceIfNecessary];
@@ -503,16 +424,10 @@ NSSound finished playing callback
 				[dict setObject:text forKey:TEXT_TO_SPEAK];
 			}
 			
-			if(voiceString){
-				int voiceIndex = [voiceArray indexOfObject:voiceString];
-				if(voiceIndex != NSNotFound){
-					[dict setObject:[NSNumber numberWithInt:voiceIndex] forKey:VOICE_INDEX];
-				}
-			}
-			
+			if(voiceString) [dict setObject:voiceString forKey:VOICE];			
 			if(pitch) [dict setObject:[NSNumber numberWithFloat:pitch] forKey:PITCH];
 			if(rate) [dict setObject:[NSNumber numberWithInt:rate] forKey:RATE];
-			
+
 			[speechArray addObject:dict];
 			[dict release];
 			
@@ -526,37 +441,26 @@ NSSound finished playing callback
 {
     //we have items left to speak and aren't already speaking
     if([speechArray count] && !speaking){
+		//If we are on Panther and can easily check, don't speak on top of other apps; instead, wait 1 second and try again
+		if([NSApp isOnPantherOrBetter]){
+			if([NSClassFromString(@"NSSpeechSynthesizer") isAnyApplicationSpeaking]){
+				[self performSelector:@selector(speakNext)
+						   withObject:nil
+						   afterDelay:1.0];
+				return;
+			}
+		}
+
 		speaking = YES;
 		NSMutableDictionary *dict = [speechArray objectAtIndex:0];
 		NSString 			*text = [dict objectForKey:TEXT_TO_SPEAK];
-		NSNumber 			*voiceNumber = [dict objectForKey:VOICE_INDEX];
 		NSNumber 			*pitchNumber = [dict objectForKey:PITCH];
 		NSNumber 			*rateNumber = [dict objectForKey:RATE];
-		SUSpeaker 			*theSpeaker;
-		
-		if(voiceNumber){
-			if(!speaker_variableVoice){ //initVariableVoiceifNecessary
-				speaker_variableVoice = [[SUSpeaker alloc] init];
-				[speaker_variableVoice setDelegate:self];
-			}
-			theSpeaker = speaker_variableVoice;
-			[theSpeaker setVoice:[voiceNumber intValue]];
-		}else{
-			[self initDefaultVoiceIfNecessary];
-			theSpeaker = speaker_defaultVoice;
-		}
-		
-		if(pitchNumber){
-			[theSpeaker setPitch:[pitchNumber floatValue]];
-		}else{
-			[theSpeaker setPitch:defaultPitch];
-		}
-		if(rateNumber){
-			[theSpeaker setRate:[rateNumber intValue]];
-		}else{
-			[theSpeaker setRate:defaultRate];
-		}
-		
+		SUSpeaker 			*theSpeaker = [self _speakerForVoice:[dict objectForKey:VOICE] index:NULL];
+
+		[theSpeaker setPitch:(pitchNumber ? [pitchNumber floatValue] : defaultPitch)];
+		[theSpeaker setRate:(rateNumber ? [rateNumber intValue] : defaultRate)];
+
 		[theSpeaker speakText:text];
 		[speechArray removeObjectAtIndex:0];
     }
@@ -568,12 +472,14 @@ NSSound finished playing callback
     [self speakNext];
 }
 
+//Immediately stop speaking
 - (void)_stopSpeakingNow
 {
 	[speaker_defaultVoice stopSpeaking];
 	[speaker_variableVoice stopSpeaking];
 }
 
+//INitialize the default voice if it has not yet been done
 - (void)initDefaultVoiceIfNecessary
 {
     if(!speaker_defaultVoice){
@@ -582,6 +488,55 @@ NSSound finished playing callback
 		defaultRate = [speaker_defaultVoice rate];
 		defaultPitch = [speaker_defaultVoice pitch];
     }
+}
+
+//Return the SUSpeaker which should be used for a given voice name, configured for that voice. Optionally, return
+//the index of that voice in our array by reference.
+- (SUSpeaker *)_speakerForVoice:(NSString *)voiceString index:(int *)voiceIndex;
+{
+	int theIndex = (voiceIndex ? *voiceIndex : 0);
+	SUSpeaker	*theSpeaker;
+
+	if(voiceString){
+		theIndex = [voiceArray indexOfObject:voiceString];
+	}else{
+		theIndex = NSNotFound;
+	}
+
+	if(theIndex != NSNotFound){
+		if(!speaker_variableVoice){ //initVariableVoiceifNecessary
+			speaker_variableVoice = [[SUSpeaker alloc] init];
+			[speaker_variableVoice setDelegate:self];
+		}
+		theSpeaker = speaker_variableVoice;
+		[theSpeaker setVoice:theIndex];
+
+	}else{
+		[self initDefaultVoiceIfNecessary];
+		theSpeaker = speaker_defaultVoice;
+	}
+
+	if (voiceIndex) *voiceIndex = theIndex;
+		
+	return theSpeaker;
+}
+
+- (void)loadVoiceArray
+{
+	NSArray			*originalVoiceArray = [SUSpeaker voiceNames];
+	NSMutableArray	*ourVoiceArray = [originalVoiceArray mutableCopy];
+	int messedUpIndex;
+
+	//Vicki, a new voice in 10.3, returns an invalid name to SUSpeaker, Vicki3Smallurrent. If we see that name,
+	//replace it with just Vicki.  If this gets fixed in a future release of OS X, this code will simply do nothing.
+	messedUpIndex = [ourVoiceArray indexOfObject:@"Vicki3Smallurrent"];
+	if(messedUpIndex != NSNotFound){
+		[ourVoiceArray replaceObjectAtIndex:messedUpIndex
+								 withObject:@"Vicki"];
+	}
+
+	//ourVoiceArray is retained, so just assign it
+    voiceArray = ourVoiceArray;  //voiceArray will be in the same order that SUSpeaker expects
 }
 
 @end

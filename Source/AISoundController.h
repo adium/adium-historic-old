@@ -69,7 +69,10 @@ typedef enum{
 - (NSArray *)soundSetArray;
 - (void)speakText:(NSString *)text;
 - (void)speakText:(NSString *)text withVoice:(NSString *)voiceString andPitch:(float)pitch andRate:(int)rate;
+
 - (NSArray *)voices;
+- (void)speakSampleTextForVoice:(NSString *)voiceString withPitch:(float)pitch andRate:(int)rate;
+
 - (int)defaultRate;
 - (int)defaultPitch;
 
