@@ -12,14 +12,19 @@
             CLASS = ESStatusSort; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "buttonCell_allUnavailable" = NSButtonCell; 
                 "buttonCell_alphabetically" = NSButtonCell; 
                 "buttonCell_manually" = NSButtonCell; 
+                "buttonCell_separateUnavailable" = NSButtonCell; 
                 "checkBox_alphabeticallyByLastName" = NSButton; 
                 "checkBox_groupAvailable" = NSButton; 
                 "checkBox_groupAway" = NSButton; 
                 "checkBox_groupIdle" = NSButton; 
+                "checkBox_groupIdleAndAway" = NSButton; 
                 "checkBox_sortIdleTime" = NSButton; 
                 "matrix_resolution" = NSMatrix; 
+                "matrix_unavailableGrouping" = NSMatrix; 
+                "tableView_sortOrder" = NSTableView; 
             }; 
             SUPERCLASS = AISortController; 
         }, 
