@@ -6,6 +6,8 @@
 	<string>Lucida Grande,11</string>
 	<key>Alternating Grid</key>
 	<false/>
+	<key>Show Tooltips</key>
+	<true/>
 	<key>Background Color</key>
 	<string>255,255,255</string>
 	<key>Grid Color</key>

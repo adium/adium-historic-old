@@ -27,6 +27,7 @@
 	NSPoint				tooltipLocation;
     NSTrackingRectTag	tooltipTrackingTag;
     int 				tooltipCount;
+	BOOL				tooltipShouldDisplay;
 	BOOL				windowHidesOnDeactivate;
 	
 	BOOL				inDrag;

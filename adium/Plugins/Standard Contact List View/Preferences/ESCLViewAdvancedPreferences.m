@@ -33,6 +33,7 @@
 		[defaultPrefs objectForKey:KEY_SCL_OPACITY],KEY_SCL_OPACITY,
 		[defaultPrefs objectForKey:KEY_SCL_OUTLINE_GROUPS],KEY_SCL_OUTLINE_GROUPS,
 		[defaultPrefs objectForKey:KEY_SCL_OUTLINE_GROUPS_COLOR],KEY_SCL_OUTLINE_GROUPS_COLOR,
+		[defaultPrefs objectForKey:KEY_SCL_SHOW_TOOLTIPS],KEY_SCL_SHOW_TOOLTIPS,
 		nil];
 								
 	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultsTemp forKey:PREF_GROUP_CONTACT_LIST_DISPLAY];
@@ -66,8 +67,12 @@
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_OUTLINE_GROUPS_COLOR
                                               group:PREF_GROUP_CONTACT_LIST_DISPLAY];
-    }
-           
+    }else if(sender == checkBox_tooltips){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_SCL_SHOW_TOOLTIPS
+											  group:PREF_GROUP_CONTACT_LIST_DISPLAY];
+	}
+			
     [self configureControlDimming];
 }
 
@@ -80,7 +85,8 @@
     [checkbox_borderless setState:[[preferenceDict objectForKey:KEY_SCL_BORDERLESS] boolValue]];
     [checkbox_shadows setState:[[preferenceDict objectForKey:KEY_SCL_SHADOWS] boolValue]];
     [checkbox_shadows setToolTip:@"Stay close to the Vorlon."];
-    
+    [checkBox_tooltips setState:[[preferenceDict objectForKey:KEY_SCL_SHOW_TOOLTIPS] boolValue]];
+	
     [slider_rowSpacing setFloatValue:[[preferenceDict objectForKey:KEY_SCL_SPACING] floatValue]];
     [checkbox_outlineGroups setState:[[preferenceDict objectForKey:KEY_SCL_OUTLINE_GROUPS] boolValue]];
     [colorWell_outlineGroupsColor setColor:[[preferenceDict objectForKey:KEY_SCL_OUTLINE_GROUPS_COLOR] representedColor]];
