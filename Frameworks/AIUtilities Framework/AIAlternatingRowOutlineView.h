@@ -16,14 +16,14 @@
 #import "AIOutlineView.h"
 
 @interface AIAlternatingRowOutlineView : AIOutlineView {
-    BOOL	drawsAlternatingRows;
-    NSColor	*alternatingRowColor;
-
-	BOOL		hidesSelectionWhenNotMain;
+    NSColor		*alternatingRowColor;
 	
-	int			lastSelectedRow;
-//    id			lastSelectedRowIndexes; //NSIndexSet* - OS X 10.3
+	BOOL		hidesSelectionWhenNotMain;
+    BOOL		drawsAlternatingRows;
+	BOOL		drawsBackground;
+	
 	BOOL		isOnPantherOrBetter;
+	int			lastSelectedRow;
 }
 
 - (void)_init;
@@ -33,5 +33,7 @@
 - (NSColor *)alternatingRowColor;
 - (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected;
 - (NSColor *)backgroundColorForRow:(int)row;
+- (void)setDrawsBackground:(BOOL)inDraw;
+- (BOOL)drawsBackground;
 
 @end

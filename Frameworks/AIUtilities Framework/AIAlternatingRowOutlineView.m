@@ -67,23 +67,24 @@
 	[super _init];
 	
     drawsAlternatingRows = NO;
+	drawsBackground = YES;
 	hidesSelectionWhenNotMain = NO;
     alternatingRowColor = [[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0] retain];
     isOnPantherOrBetter = [NSApp isOnPantherOrBetter];
 }
 
-// Configuring ----------------------------------------------------------------------
+//Configuring ----------------------------------------------------------------------
+//Toggle the drawing of alternating rows
 - (void)setDrawsAlternatingRows:(BOOL)flag
 {
     drawsAlternatingRows = flag;
     [self setNeedsDisplay:YES];
 }
-
-- (BOOL)drawsAlternatingRows
-{
+- (BOOL)drawsAlternatingRows{
 	return(drawsAlternatingRows);
 }
 
+//Set the alternating row color
 - (void)setAlternatingRowColor:(NSColor *)color
 {
     if(color != alternatingRowColor){
@@ -94,6 +95,17 @@
 }
 - (NSColor *)alternatingRowColor{
 	return(alternatingRowColor);
+}
+
+//Toggle drawing of our background (Including the alternating grid)
+//Set this to NO if cells are going to take responsibility for drawing the background or grid
+- (void)setDrawsBackground:(BOOL)inDraw
+{
+	drawsBackground = inDraw;
+    [self setNeedsDisplay:YES];
+}
+- (BOOL)drawsBackground{
+	return(drawsBackground);
 }
 
 //Returns the color which will be drawn behind the specified row
@@ -110,7 +122,7 @@
 	//Draw the rest of the outline view first
 	[super drawRect:rect];
 	
-    if(drawsAlternatingRows){
+    if(drawsBackground && drawsAlternatingRows){
 		NSRect	rowRect;
 		int		rowHeight;
 		BOOL	coloredRow;
@@ -146,7 +158,7 @@
 //Draw alternating colors
 - (void)drawRow:(int)row clipRect:(NSRect)rect
 {
-    if(drawsAlternatingRows){
+    if(drawsBackground && drawsAlternatingRows){
 		[self _drawRowInRect:[self rectOfRow:row] colored:!(row % 2) selected:[self isRowSelected:row]];
 	}
 	
@@ -174,7 +186,7 @@
 
 - (void)drawGridInClipRect:(NSRect)rect
 {
-    if(drawsAlternatingRows){
+    if(drawsBackground && drawsAlternatingRows){
 		//We do our grid drawing later
 	}else{
 		[super drawGridInClipRect:rect];
