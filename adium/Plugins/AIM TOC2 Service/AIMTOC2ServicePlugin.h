@@ -21,8 +21,8 @@
 #define AIM_TOC2_DEFAULT_PREFS 		@"Default Preferences"
 
 //Account property keys
-#define AIM_TOC2_KEY_HOST		@"Host"
-#define AIM_TOC2_KEY_PORT		@"Port"
+#define AIM_TOC2_KEY_HOST			@"TOC2 Host"
+#define AIM_TOC2_KEY_PORT			@"TOC2 Port"
 #define AIM_TOC2_KEY_PROFILE	@"TextProfile"
 
 @class AIServiceType;
