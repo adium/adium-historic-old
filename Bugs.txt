@@ -14,14 +14,23 @@ Logs
     - View Logs searches for screename instead of using the newer filtering style.
 
 [LOW]
+
+Contacts
   - Adding contact that already exists
     Adding an existing contact causes issues.  It may result in duplicate contacts on
     the user's list, and will make the contact appear offline.  Sometimes they will
     appear on the list twice until Adium is restarted.
+    
+List and Tabs
   - Tooltip alignment fails in long away messages and other large blocks of text.
   - Double clicking two names in succession causes the first name to highlight
     the second time.
   - An incoming message which opens a new tab will also unminimize the associated window
+  
+Insert Link sheet
+  - Multiple sheets can be invoked at the same time (needs to be modal sheet)
+  - Tabs in the URL field, when deleted, still make it think it has incorrectly
+    formatted URLs (just tab a few times, delete, and it'll still insert)
 
 //------------------------------------------------------------------------------------
 // Bugs - Libgaim
