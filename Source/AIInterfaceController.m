@@ -260,7 +260,7 @@
 #warning Temporary setup for multiple windows
 	if(!tabbedChatting){
 		if([inChat listObject]){
-			containerID = [[inChat listObject] uniqueObjectID];
+			containerID = [[inChat listObject] internalObjectID];
 		}else{
 			containerID = [inChat name];
 		}
@@ -922,7 +922,7 @@
     if ([object isKindOfClass:[AIListContact class]]){
 		
 		//Add the serviceID, three spaces away
-		NSString	*displayServiceID = [object displayServiceID];
+		NSString	*displayServiceID = [[object service] shortDescription];
 		if (!displayServiceID) displayServiceID = META_SERVICE_STRING;
 		
         [titleString appendString:[NSString stringWithFormat:@"   %@",displayServiceID]
@@ -1015,33 +1015,33 @@
     BOOL                            firstEntry = YES;
     
     //Calculate the widest label while loading the arrays
-    enumerator = [contactListTooltipSecondaryEntryArray objectEnumerator];
-    
-    while (tooltipEntry = [enumerator nextObject]){
-        
-        entryString = [[tooltipEntry entryForObject:object] mutableCopy];
-        if (entryString && [entryString length]) {
-            
-            NSString        *labelString = [tooltipEntry labelForObject:object];
-            if (labelString && [labelString length]) {
-                
-                [entryArray addObject:entryString];
-                [labelArray addObject:labelString];
-                
-                NSAttributedString * labelAttribString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@:",labelString] 
-                                                                                         attributes:labelDict];
-                
-                //The largest size should be the label's size plus the distance to the next tab at least a space past its end
-                labelWidth = [labelAttribString size].width;
-                [labelAttribString release];
-                
-                if (labelWidth > maxLabelWidth)
-                    maxLabelWidth = labelWidth;
-            }
-        }
-        [entryString release];
-    }
-    
+	enumerator = [contactListTooltipSecondaryEntryArray objectEnumerator];
+	
+	while (tooltipEntry = [enumerator nextObject]){
+		
+		entryString = [[tooltipEntry entryForObject:object] mutableCopy];
+		if (entryString && [entryString length]) {
+			
+			NSString        *labelString = [tooltipEntry labelForObject:object];
+			if (labelString && [labelString length]) {
+				
+				[entryArray addObject:entryString];
+				[labelArray addObject:labelString];
+				
+				NSAttributedString * labelAttribString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@:",labelString] 
+																						 attributes:labelDict];
+				
+				//The largest size should be the label's size plus the distance to the next tab at least a space past its end
+				labelWidth = [labelAttribString size].width;
+				[labelAttribString release];
+				
+				if (labelWidth > maxLabelWidth)
+					maxLabelWidth = labelWidth;
+			}
+		}
+		[entryString release];
+	}
+		
     //Add labels plus entires to the toolTip
     enumerator = [entryArray objectEnumerator];
     labelEnumerator = [labelArray objectEnumerator];
