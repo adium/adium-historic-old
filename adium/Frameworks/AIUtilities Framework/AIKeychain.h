@@ -18,8 +18,8 @@
 }
 
 + (NSString *)getPasswordFromKeychainForService:(NSString *)service account:(NSString *)account;
-+ (void)putPasswordInKeychainForService:(NSString *)service account:(NSString *)account password:(NSString *)password;
-+ (void)removePasswordFromKeychainForService:(NSString *)service account:(NSString *)account;
++ (BOOL)putPasswordInKeychainForService:(NSString *)service account:(NSString *)account password:(NSString *)password;
++ (BOOL)removePasswordFromKeychainForService:(NSString *)service account:(NSString *)account;
 + (NSDictionary *)getDictionaryFromKeychainForKey:(NSString *)key;
 
 @end
