@@ -83,6 +83,8 @@ typedef enum {
     BOOL						disconnectedByFastUserSwitch;	//We are offline because of a fast user switch
 	int							accountNumber;					//Unique integer that represents this account
 	
+	BOOL						namesAreCaseSensitive;
+	
 	//Auto-reconnect
 	NSTimer						*reconnectTimer;
 

@@ -35,8 +35,10 @@
 - (id)initWithUID:(NSString *)inUID accountNumber:(int)inAccountNumber service:(AIService *)inService
 {
 	accountNumber = inAccountNumber;
-
+	
     [super initWithUID:inUID service:inService];
+	
+	namesAreCaseSensitive = [[self service] caseSensitive];
 	
     //Handle the preference changed monitoring (for account status) for our subclass
     [[adium notificationCenter] addObserver:self
@@ -61,8 +63,7 @@
 	silenceAllContactUpdatesTimer = nil;
 	
 	disconnectedByFastUserSwitch = NO;
-	
-	
+
     //Init the account
 	[self initFUSDisconnecting];
     [self initAccount];
@@ -455,7 +456,11 @@
 //Contacts -------------------------------------------------------------------------------------------------------------
 #pragma mark Contacts
 - (AIListContact *)_contactWithUID:(NSString *)sourceUID
-{
+{	
+	if (!namesAreCaseSensitive){
+		sourceUID = [sourceUID compactedString];
+	}
+	
 	return([[adium contactController] contactWithService:service
 												 account:self
 													 UID:sourceUID]);
