@@ -1,11 +1,12 @@
 {
     IBClasses = (
         {
-            ACTIONS = {comeBack = id; }; 
+            ACTIONS = {comeBack = id; toggleMute = id; }; 
             CLASS = AIAwayStatusWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_comeBack" = NSButton; 
+                "button_mute" = NSButton; 
                 "textField_awayTime" = NSTextField; 
                 "textView_awayMessage" = NSTextView; 
             }; 

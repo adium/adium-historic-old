@@ -15,6 +15,7 @@
 
 #import "AIAwayStatusWindowController.h"
 #import "AIAwayStatusWindowPlugin.h"
+#import "AIEventSoundsPlugin.h"
 #import "AIAdium.h"
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
@@ -68,6 +69,14 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
     [mySharedInstance updateWindow];
 }
 
+//Called when "Mute" button is clicked
+- (IBAction)toggleMute:(id)sender
+{
+    [[owner preferenceController] setPreference: [NSNumber numberWithBool:[button_mute state]]
+                                         forKey:KEY_EVENT_MUTE_WHILE_AWAY
+                                          group:PREF_GROUP_SOUNDS];
+}
+
 // 
 - (void)updateWindow
 {
@@ -103,6 +112,8 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
         
         //Update the time text
         [self updateAwayTime:nil];
+        
+        [button_mute setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS] objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
         
     } else {
         // No away message, hide the window
@@ -177,7 +188,9 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
     [[textView_awayMessage textStorage] setAttributedString:[NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"AwayMessage" account:nil]]];
     
     [self updateAwayTime:nil];
-
+    
+    [button_mute setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS] objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
+    
     // Still to Add:
     // Put the time we went away in the text field
     // Add prefs: toggle showing the window, toggle window visibility on deactivate
