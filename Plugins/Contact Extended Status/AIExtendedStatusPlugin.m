@@ -103,7 +103,7 @@
 	if(seconds > 599400){//Cap idle at 999 Hours (999*60*60 seconds)
 		idleString = @"Idle";
 	}else if(seconds >= 600){
-		idleString = [NSString stringWithFormat:@"%i",seconds / 60];
+		idleString = [NSString stringWithFormat:@"%ih",seconds / 60];
 	}else if(seconds >= 60){
 		idleString = [NSString stringWithFormat:@"%i:%02i",seconds / 60, seconds % 60];
 	}else{
