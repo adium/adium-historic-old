@@ -11,7 +11,7 @@
 @implementation AIContentObject
 
 //
-- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest
+- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate*)inDate
 {
     [super init];
 
@@ -27,7 +27,13 @@
     chat = inChat; //Not retained.  Chats hold onto, and store content.  Content need not hold onto chats.
     outgoing = ([source isKindOfClass:[AIAccount class]]);
     
-    date = [[NSDate date] retain];
+    //Store the date
+    if(!inDate){
+        date = [[NSDate date] retain];
+    } else {
+		date = [inDate retain];
+	}
+	
     
     return(self);
 }
@@ -36,6 +42,7 @@
 {
     [source release];
     [destination release];
+	[date release];
 
     [super dealloc];
 }
@@ -52,6 +59,7 @@
     return(destination);
 }
 
+//Return the date and time this message was sent
 - (NSDate *)date{
     return(date);
 }

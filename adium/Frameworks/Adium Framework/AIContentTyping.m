@@ -34,7 +34,7 @@
 //init
 - (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest typing:(BOOL)inTyping
 {
-    [super initWithChat:inChat source:inSource destination:inDest];
+    [super initWithChat:inChat source:inSource destination:inDest date:nil];
 
 	//Typing content should NOT be filtered, tracked, or displayed
 	filterContent = NO;

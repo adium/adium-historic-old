@@ -53,16 +53,11 @@
     }
 }
 
-//Return the date and time this message was sent
-- (NSDate *)date{
-    return(date);
-}
-
 // Private ------------------------------------------------------------------------------
 //init
 - (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage withType:(NSString *)inStatus
 {
-    [super initWithChat:inChat source:inSource destination:inDest];
+    [super initWithChat:inChat source:inSource destination:inDest date:inDate];
 
 	//Filter so that triggers in messages can be resolved
 	filterContent = YES;
@@ -75,13 +70,6 @@
     source = [inSource retain];
     destination = [inDest retain];
 
-    //Store the date and message
-    if(!inDate){
-		// dchoby98: I removed this to allow status messages without timestamps (for message history)
-        //date = [[NSDate date] retain];
-    }else{
-        date = [inDate retain];
-    }
     message = [inMessage retain];
 	statusType = [inStatus retain];
 
@@ -90,7 +78,6 @@
 
 - (void)dealloc
 {
-    [date release];
     [message release];
 	[statusType release];
 	

@@ -48,11 +48,6 @@
     }
 }
 
-//Return the date and time this message was sent
-- (NSDate *)date{
-    return(date);
-}
-
 //
 - (BOOL)autoreply{
     return(autoreply);
@@ -62,22 +57,16 @@
 //init
 - (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSAttributedString *)inMessage autoreply:(BOOL)inAutoreply
 {
-    [super initWithChat:inChat source:inSource destination:inDest];
+    [super initWithChat:inChat source:inSource destination:inDest date:inDate];
     
-    //Store the date and message
-    if(!inDate){
-        [date release];
-        date = [[NSDate date] retain];
-    }
     message = [inMessage retain];
     autoreply = inAutoreply;
-    
+	
     return(self);
 }
 
 - (void)dealloc
 {
-    [date release];
     [message release];
 
     [super dealloc];
