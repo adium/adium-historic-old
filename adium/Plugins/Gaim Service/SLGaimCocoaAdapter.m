@@ -25,7 +25,7 @@
 #import "ESGaimRequestActionWindowController.h"
 #import "ESGaimNotifyEmailWindowController.h"
 
-#include "jabber.h"
+#include "CBGaimOscarAccount.h"
 
 #define ACCOUNT_IMAGE_CACHE_PATH		@"~/Library/Caches/Adium"
 #define MESSAGE_IMAGE_CACHE_NAME		@"Image_%@_%i"
@@ -2246,15 +2246,54 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	gaim_xfer_request_denied(xfer);
 }
 
-#pragma mark Protocol specific accessors
-- (oneway void)MSNRequestBuddyIconFor:(NSString *)inUID onAccount:(id)adiumAccount
+#pragma mark Account settings
+- (oneway void)setCheckMail:(NSNumber *)checkMail forAccount:(id)adiumAccount
 {
 	[runLoopMessenger target:self
-			 performSelector:@selector(gaimMSNRequestBuddyIconFor:onAccount:)
+			 performSelector:@selector(gaimThreadSetCheckMail:forAccount:)
+				  withObject:checkMail
+				  withObject:adiumAccount];
+}
+- (oneway void)gaimThreadSetCheckMail:(NSNumber *)checkMail forAccount:(id)adiumAccount
+{
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	BOOL		shouldCheckMail = [checkMail boolValue];
+
+	gaim_account_set_check_mail(account, shouldCheckMail);
+}
+
+#pragma mark Protocol specific accessors
+- (oneway void)OSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount
+{
+	[runLoopMessenger target:self
+			 performSelector:@selector(gaimThreadOSCAREditComment:forUID:onAccount:)
 				  withObject:inUID
 				  withObject:adiumAccount];
 }
-- (oneway void)gaimMSNRequestBuddyIconFor:(NSString *)inUID onAccount:(id)adiumAccount
+- (oneway void)gaimThreadOSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount
+{
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	if (gaim_account_is_connected(account)){
+		GaimGroup   *g;
+		OscarData   *od;
+
+		const char  *uidUTF8String = [inUID UTF8String];
+		GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
+
+		if ((g = gaim_find_buddys_group(buddy)) && (od = account->gc->proto_data)){
+			aim_ssi_editcomment(od->sess, g->name, uidUTF8String, [comment UTF8String]);	
+		}
+	}
+}
+		
+- (oneway void)MSNRequestBuddyIconFor:(NSString *)inUID onAccount:(id)adiumAccount
+{
+	[runLoopMessenger target:self
+			 performSelector:@selector(gaimThreadMSNRequestBuddyIconFor:onAccount:)
+				  withObject:inUID
+				  withObject:adiumAccount];
+}
+- (oneway void)gaimThreadMSNRequestBuddyIconFor:(NSString *)inUID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (gaim_account_is_connected(account)){

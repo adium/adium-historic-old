@@ -42,7 +42,7 @@
 - (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer;
 
 - (void)displayError:(NSString *)errorDesc;
-- (BOOL)shouldCheckMail;
+- (NSNumber *)shouldCheckMail;
 @end
 
 @implementation CBGaimAccount
@@ -981,7 +981,7 @@ static id<GaimThread> gaimThread = nil;
 	}
 	
 	//E-mail checking
-	gaim_account_set_check_mail(account, [self shouldCheckMail]);
+	gaim_account_set_check_mail(account, [[self shouldCheckMail] boolValue]);
 }
 
 //Configure libgaim's proxy settings using the current system values
@@ -1564,9 +1564,8 @@ static id<GaimThread> gaimThread = nil;
 		
 	}else if (([notification object] == self) && ([prefGroup isEqualToString:GROUP_ACCOUNT_STATUS])){
 		//Update the mail checking setting
-		if (account){
-			gaim_account_set_check_mail(account, [self shouldCheckMail]);
-		}
+		[gaimThread setCheckMail:[self shouldCheckMail]
+					  forAccount:self];
 	}
 }
 
@@ -1671,9 +1670,9 @@ static id<GaimThread> gaimThread = nil;
 - (NSString *)hostKey { return nil; };
 - (NSString *)portKey { return nil; };
 
-- (BOOL)shouldCheckMail
+- (NSNumber *)shouldCheckMail
 {
-	return ([[self preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]); 
+	return ([self preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS]);
 }
 
 - (NSString *)uniqueObjectID
