@@ -136,7 +136,9 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     [[[tableView_sourceList tableColumns] objectAtIndex:0] setDataCell:newCell];
     [scrollView_sourceList setAutoScrollToBottom:NO];
     [scrollView_sourceList setAutoHideScrollBar:YES];
+    [tableView_sourceList registerForDraggedTypes:[NSArray arrayWithObject:@"AIContactObjects"]];
 
+    
     //Install our window toolbar and generate our collections
     [self installToolbar];
     [self generateCollectionsArray];
@@ -254,8 +256,8 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     if([collection showOwnershipColumns]){ //If this collection requests display of the ownership column
         //Do a quick count of how many collections want to be in the ownership column
         enumerator = [collectionsArray objectEnumerator];
-        while((collection = [enumerator nextObject])){
-            if([collection includeInOwnershipColumn]){
+        while((object = [enumerator nextObject])){
+            if([object includeInOwnershipColumn]){
                 ownerCount++;
             }
         }
@@ -393,6 +395,29 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     [cell setImage:[collection icon]]; //Set the correct account icon
     [cell setLabel:[collection name] subLabel:[collection subLabel]];    
 }
+
+- (NSDragOperation)tableView:(NSTableView*)tableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)op
+{
+    if(op == NSTableViewDropOn){
+        if([tableView selectedRow] != row){
+            [tableView selectRow:row byExtendingSelection:NO];
+            [self tableViewSelectionIsChanging:nil];
+        }
+
+        return(NSDragOperationPrivate);
+
+    }else{
+        return(NSDragOperationNone);
+        
+    }
+
+}
+
+
+
+
+
+
 
 
 // Contact Outline View Delegate ---------------------------------------------------------

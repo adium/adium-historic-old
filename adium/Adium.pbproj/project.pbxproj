@@ -237,6 +237,7 @@
 				HEADER_SEARCH_PATHS = "";
 				INSTALL_PATH = /;
 				LIBRARY_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = Adium;
@@ -495,6 +496,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -856,6 +858,7 @@
 				4B0473BE043E443A00A8010A,
 			);
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1076,6 +1079,7 @@
 				4B1332190459BA3900A8010A,
 			);
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1189,6 +1193,7 @@
 				4B1332220459BA6F00A8010A,
 			);
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1631,6 +1636,7 @@
 				4B18A5240459F8AF00A8010A,
 			);
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1917,6 +1923,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -2582,6 +2589,7 @@
 				4B4FA11304125F3F00A8010A,
 			);
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -2773,6 +2781,7 @@
 				4B52A57B03EDB96E00A8010A,
 			);
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -2984,6 +2993,7 @@
 				4B55411A044DF01600A8010A,
 			);
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -3404,6 +3414,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -3818,6 +3829,7 @@
 				4B7BD8620412584500A8010A,
 			);
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -4054,6 +4066,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -4389,6 +4402,7 @@
 				4B9E73DC03F7085300A8010A,
 			);
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -4747,6 +4761,7 @@
 				4BBAEE9C03DD7DAB00A8010A,
 			);
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -5316,6 +5331,7 @@
 				4BD7D0D004620DAC00A8010A,
 			);
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -5463,6 +5479,7 @@
 				4BD7D0DF04620E7200A8010A,
 			);
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -5628,6 +5645,7 @@
 				4BDDCA06041104ED00A8010A,
 			);
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -5970,6 +5988,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -6918,6 +6937,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -7128,6 +7148,7 @@
 				9E2E306C046CA9BF00415B22,
 			);
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -7440,6 +7461,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -7588,6 +7610,7 @@
 				HEADER_SEARCH_PATHS = "\"/sw/postgresql:include\" /usr/local/pgsql/include";
 				INSTALL_PATH = /Adium.app/Contents/Plugins/;
 				LIBRARY_SEARCH_PATHS = "/sw/lib /usr/local/pgsql/lib";
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lpq -lssl -lcrypto";
 				OTHER_REZFLAGS = "";
@@ -7752,6 +7775,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -7959,6 +7983,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -8038,6 +8063,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -8315,6 +8341,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -8467,6 +8494,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -8661,6 +8689,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -8905,6 +8934,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				INSTALL_PATH = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-seg1addr 0x10100000";
 				OTHER_LIBTOOL_FLAGS = "";
@@ -9041,6 +9071,7 @@
 				FRAMEWORK_SEARCH_PATHS = "";
 				FRAMEWORK_VERSION = A;
 				INSTALL_PATH = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_LDFLAGS = "-seg1addr 0x10000000";
 				OTHER_LIBTOOL_FLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -9203,6 +9234,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -9365,6 +9397,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -10427,6 +10460,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -12698,6 +12732,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -12821,6 +12856,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -12995,6 +13031,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -13140,6 +13177,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -13282,6 +13320,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -13524,6 +13563,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
