@@ -123,15 +123,19 @@
     
     //
     soundSetPath = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS] objectForKey:KEY_EVENT_SOUND_SET];
-    [plugin loadSoundSetAtPath:soundSetPath creator:nil description:&description sounds:nil]; //Load the soundset
 
-    //Display the info sheet
-    NSBeginInformationalAlertSheet([soundSetPath lastPathComponent],
-                                   @"Okay",
-                                   nil, nil,
-                                   [button_soundSetInfo window],
-                                   nil, nil, nil, nil,
-                                   description);
+    //Load the soundset
+    if([plugin loadSoundSetAtPath:soundSetPath creator:nil description:&description sounds:nil]){
+        //Display the info sheet
+        NSBeginInformationalAlertSheet([soundSetPath lastPathComponent],
+                                       @"Okay",
+                                       nil, nil,
+                                       [button_soundSetInfo window],
+                                       nil, nil, nil, nil,
+                                       description);
+        
+    } 
+
 
 }
 
@@ -208,12 +212,16 @@
             if(soundSetPath && [soundSetPath length] != 0){ //Soundset
                 NSString	*creator;
 
-                [plugin loadSoundSetAtPath:soundSetPath creator:&creator description:nil sounds:&eventSoundArray]; //Load the soundset
-                [popUp_soundSet selectItemWithRepresentedObject:soundSetPath];	//Update the soundset popUp
-                [textField_creator setStringValue:creator];			//Update the creator string
-                [button_soundSetInfo setEnabled:YES]; 				//Enable the info button
+                //Load the soundset
+                if([plugin loadSoundSetAtPath:soundSetPath creator:&creator description:nil sounds:&eventSoundArray]){
 
-                usingCustomSoundSet = NO;
+                    [popUp_soundSet selectItemWithRepresentedObject:soundSetPath];	//Update the soundset popUp
+                    [textField_creator setStringValue:creator];			//Update the creator string
+                    [button_soundSetInfo setEnabled:YES]; 				//Enable the info button
+
+                    usingCustomSoundSet = NO;
+                } 
+
                 
             }else{ //Custom
                 eventSoundArray = [[preferenceDict objectForKey:KEY_EVENT_CUSTOM_SOUNDSET] mutableCopy]; //Load the user's custom set
@@ -278,15 +286,23 @@
     
     enumerator = [[[owner soundController] soundSetArray] objectEnumerator];
     while((soundSetDict = [enumerator nextObject])){
-        NSString	*setTitle = [[soundSetDict objectForKey:KEY_SOUND_SET] lastPathComponent];
+        NSString	*setPath = [soundSetDict objectForKey:KEY_SOUND_SET];
         NSMenuItem	*menuItem;
+        NSString	*soundSetFile;
 
-        menuItem = [[[NSMenuItem alloc] initWithTitle:setTitle
-                                               target:self
-                                               action:@selector(selectSoundSet:)
-                                        keyEquivalent:@""] autorelease];
-        [menuItem setRepresentedObject:[soundSetDict objectForKey:KEY_SOUND_SET]];
-        [soundSetMenu addItem:menuItem];
+        //Ensure this folder contains a soundset file (Otherwise, we ignore it)
+        soundSetFile = [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@/%@.txt", setPath, [setPath lastPathComponent]]];
+        if(soundSetFile && [soundSetFile length] != 0){
+
+            //Add a menu item for the set
+            menuItem = [[[NSMenuItem alloc] initWithTitle:[setPath lastPathComponent]
+                                                   target:self
+                                                   action:@selector(selectSoundSet:)
+                                            keyEquivalent:@""] autorelease];
+            [menuItem setRepresentedObject:[soundSetDict objectForKey:KEY_SOUND_SET]];
+            [soundSetMenu addItem:menuItem];
+
+        }
     }
 
     return(soundSetMenu);

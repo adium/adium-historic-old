@@ -38,6 +38,6 @@
     NSMutableDictionary		*soundPathDict;
 }
 
-- (void)loadSoundSetAtPath:(NSString *)inPath creator:(NSString **)outCreator description:(NSString **)outDesc sounds:(NSArray **)outArray;
+- (BOOL)loadSoundSetAtPath:(NSString *)inPath creator:(NSString **)outCreator description:(NSString **)outDesc sounds:(NSArray **)outArray;
 
 @end

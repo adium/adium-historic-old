@@ -137,9 +137,9 @@
     }else if(signedOn){
 	color = signedOnColor;
 	invertedColor = signedOnInvertedColor;
-    }else if(typing){
+/*    }else if(typing){
 	color = typingColor;
-	invertedColor = typingInvertedColor;
+	invertedColor = typingInvertedColor;*/
     }else if(openTab){
 	color = openTabColor;
 	invertedColor = openTabInvertedColor;

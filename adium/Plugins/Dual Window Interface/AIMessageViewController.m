@@ -197,7 +197,11 @@
 {
     //Save spellcheck state
     [[owner preferenceController] setPreference:[NSNumber numberWithBool:[textView_outgoing isContinuousSpellCheckingEnabled]] forKey:KEY_MESSAGE_SPELL_CHECKING group:PREF_GROUP_SPELLING];
-    
+
+    //Clear the message entry text view
+    [textView_outgoing setString:@""];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing]; //Force a textDidChange: notification
+
     //remove notifications
     [[owner notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];

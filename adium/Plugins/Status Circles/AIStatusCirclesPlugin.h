@@ -50,7 +50,6 @@
     NSColor		*openTabColor;
     NSColor		*signedOffColor;
     NSColor		*signedOnColor;
-    NSColor		*typingColor;
     NSColor		*unviewedContentColor;
     NSColor		*warningColor;
 }

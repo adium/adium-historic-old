@@ -38,7 +38,6 @@
     idleAwayColor = nil;
     onlineColor = nil;
     openTabColor = nil;
-    typingColor = nil;
     signedOffColor = nil;
     signedOnColor = nil;
     unviewedContentColor = nil;
@@ -85,7 +84,7 @@
         [inModifiedKeys containsObject:@"Warning"]){
 
         AIMutableOwnerArray	*iconArray, *tabIconArray;
-        AIStatusCircle		*statusCircle;
+        AIStatusCircle		*statusCircle, *tabStatusCircle;
         NSColor			*circleColor;
         int			away, online, openTab, signedOn, signedOff, typing, unrespondedContent, unviewedContent, warning;
         double			idle;
@@ -94,12 +93,17 @@
         iconArray = [inContact displayArrayForKey:@"Left View"];
         tabIconArray = [inContact displayArrayForKey:@"Tab Left View"];
         statusCircle = [iconArray objectWithOwner:self];
+        tabStatusCircle = [tabIconArray objectWithOwner:self];
 	
-        if(!statusCircle){
+        if(!statusCircle || !tabStatusCircle){
             statusCircle = [AIStatusCircle statusCircle];
             [statusCircle setFlashColor:unviewedContentColor];
             [iconArray setObject:statusCircle withOwner:self];
-            [tabIconArray setObject:statusCircle withOwner:self];
+
+            tabStatusCircle = [AIStatusCircle statusCircle];
+            [tabStatusCircle setFlashColor:unviewedContentColor];
+            [tabStatusCircle setBezeled:YES];
+            [tabIconArray setObject:tabStatusCircle withOwner:self];
         }
 
         //Get all the values
@@ -121,8 +125,6 @@
 	    circleColor = signedOffColor;
         }else if(signedOn){
 	    circleColor = signedOnColor;
-        }else if(typing){
-            circleColor = typingColor;
         }else if(openTab){
             circleColor = openTabColor;
         }else if(idle != 0 && away){
@@ -140,19 +142,27 @@
         }
 	
         [statusCircle setColor:circleColor];
+        [tabStatusCircle setColor:circleColor];
 
         //Embedded idle time
-        if(idle != 0 && displayIdleTime){            
+        if(idle != 0 && displayIdleTime){
             [statusCircle setStringContent:[self idleStringForSeconds:idle]];
+            [tabStatusCircle setStringContent:[self idleStringForSeconds:idle]];
         }else{
             [statusCircle setStringContent:nil];
+            [tabStatusCircle setStringContent:nil];
         }
 
         //Set the circle state
-        if(!unviewedContent){
+        if(typing){
+            [statusCircle setState:AICirclePreFlash];
+            [tabStatusCircle setState:AICirclePreFlash];
+        }else if(!unviewedContent){
             [statusCircle setState:(unrespondedContent ? AICircleDot : AICircleNormal)];
+            [tabStatusCircle setState:(unrespondedContent ? AICircleDot : AICircleNormal)];
         }else{
             [statusCircle setState:(([[owner interfaceController] flashState] % 2) ? AICircleFlashA: AICircleFlashB)];
+            [tabStatusCircle setState:(([[owner interfaceController] flashState] % 2) ? AICircleFlashA: AICircleFlashB)];
         }
 
         modifiedAttributes = [NSArray arrayWithObjects:@"Left View", @"Tab Left View", nil];
@@ -183,6 +193,9 @@
     while((contact = [enumerator nextObject])){
         //Set the status circle to the correct state
         statusCircle = [[contact displayArrayForKey:@"Left View"] objectWithOwner:self];
+        [statusCircle setState:((value % 2) ? AICircleFlashA: AICircleFlashB)];
+
+        statusCircle = [[contact displayArrayForKey:@"Tab Left View"] objectWithOwner:self];
         [statusCircle setState:((value % 2) ? AICircleFlashA: AICircleFlashB)];
 
         //Force a redraw
@@ -254,7 +267,6 @@
 	openTabColor = [[[prefDict objectForKey:KEY_OPEN_TAB_COLOR] representedColor] retain];
 	signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
 	signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
-        typingColor = [[[prefDict objectForKey:KEY_TYPING_COLOR] representedColor] retain];
 	unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
         warningColor = [[[prefDict objectForKey:KEY_WARNING_COLOR] representedColor] retain];
 

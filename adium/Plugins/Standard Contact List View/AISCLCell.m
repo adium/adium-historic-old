@@ -19,7 +19,7 @@
 #import "AISCLCell.h"
 #import "AISCLOutlineView.h"
 
-#define LEFT_MARGIN		14
+#define LEFT_MARGIN		19
 //#define LEFT_VIEW_INDENT_SIZE	1.2 //must be close to square then
 #define LEFT_VIEW_PADDING	3
 

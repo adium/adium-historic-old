@@ -82,6 +82,17 @@
     tabPushLeft = [[AISystemTabRendering tabPushLeft] retain];
     tabPushMiddle = [[AISystemTabRendering tabPushMiddle] retain];
     tabPushRight = [[AISystemTabRendering tabPushRight] retain];
+
+    //Flip our images
+    [tabFrontLeft setFlipped:YES];
+    [tabFrontMiddle setFlipped:YES];
+    [tabFrontRight setFlipped:YES];
+    [tabBackLeft setFlipped:YES];
+    [tabBackMiddle setFlipped:YES];
+    [tabBackRight setFlipped:YES];
+    [tabPushLeft setFlipped:YES];
+    [tabPushMiddle setFlipped:YES];
+    [tabPushRight setFlipped:YES];
     
     tabViewItem = [inTabViewItem retain];
     selected = NO;
@@ -106,6 +117,11 @@
     [tabPushRight release];
 
     [super dealloc];
+}
+
+- (BOOL)isFlipped
+{
+    return(YES);
 }
 
 //Draw
@@ -133,28 +149,28 @@
     middleRightEdge = (rect.origin.x + rect.size.width - rightCapWidth);
 
     //Draw the left cap
-    [left compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y) operation:NSCompositeSourceOver];
+    [left compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
 
     //Draw the middle
     sourceRect = NSMakeRect(0, 0, [middle size].width, [middle size].height);
-    destRect = NSMakeRect(rect.origin.x + leftCapWidth, rect.origin.y, sourceRect.size.width, sourceRect.size.height);
+    destRect = NSMakeRect(rect.origin.x + leftCapWidth, rect.origin.y + rect.size.height, sourceRect.size.width, sourceRect.size.height);
 
     while(destRect.origin.x < middleRightEdge){
         //Crop
         if((destRect.origin.x + destRect.size.width) > middleRightEdge){
-            destRect.size.width -= (destRect.origin.x + destRect.size.width) - middleRightEdge;
+            sourceRect.size.width -= (destRect.origin.x + destRect.size.width) - middleRightEdge;
         }
 
-        [middle drawInRect:destRect fromRect:sourceRect operation:NSCompositeSourceOver fraction:1.0];
+        [middle compositeToPoint:destRect.origin fromRect:sourceRect operation:NSCompositeSourceOver];
         destRect.origin.x += destRect.size.width;
     }
 
     //Draw the right cap
-    [right compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y) operation:NSCompositeSourceOver];
+    [right compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y + rect.size.height) operation:NSCompositeSourceOver];
 
     //Draw the title
     destRect = NSMakeRect(rect.origin.x + leftCapWidth - TAB_LABEL_INSET,
-                          rect.origin.y + 3 + (int)((rect.size.height - labelSize.height) / 2.0), //center it vertically
+                          rect.origin.y - 1 + (int)((rect.size.height - labelSize.height) / 2.0), //center it vertically
                           labelSize.width,
                           labelSize.height);
     [tabViewItem drawLabel:NO inRect:destRect];

@@ -21,6 +21,7 @@
 typedef enum {
     AICircleNormal,
     AICircleDot,
+    AICirclePreFlash,
     AICircleFlashA,
     AICircleFlashB
 } AICircleState;
@@ -30,6 +31,7 @@ typedef enum {
     NSColor		*flashColor;
     AICircleState	state;
     NSString		*string;
+    BOOL		bezeled;
 
     //Drawing Cache
     NSAttributedString	*_attributedString;
@@ -44,8 +46,10 @@ typedef enum {
 - (void)setColor:(NSColor *)inColor;
 - (void)setFlashColor:(NSColor *)inColor;
 - (void)setStringContent:(NSString *)inString;
+- (void)setBezeled:(BOOL)inBezeled;
 
 - (void)drawInRect:(NSRect)inRect;
 - (float)widthForHeight:(int)inHeight computeMax:(BOOL)computeMax;
 
+    
 @end
