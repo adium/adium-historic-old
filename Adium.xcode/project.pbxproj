@@ -202,7 +202,6 @@
 				F50A325A03B5798301A8010A,
 				9EB3C52304F94DB7001D1F74,
 				4B3717000510D19400A8010A,
-				BFEBDBF90669025600CBF845,
 				29B97323FDCFA39411CA2CEA,
 				19C28FACFE9D520D11CA2CBB,
 			);
@@ -5659,6 +5658,7 @@
 			);
 			isa = PBXGroup;
 			name = "Group Chat";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -5746,6 +5746,7 @@
 			);
 			isa = PBXGroup;
 			name = "Contact Alerts";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -6084,7 +6085,6 @@
 				6E5A43DF061160C60078C342,
 				3420E6600611D80100AE67E3,
 				3420E6620611D80100AE67E3,
-				4B0DB3AE06122B94004F47D9,
 				34D5B281061263B300B98336,
 				9E6417070613C55D006AF387,
 				3404893306173DAB004D0B7E,
@@ -6330,7 +6330,6 @@
 				4BD6759806001E510049CAF7,
 				4BD6759906001E510049CAF7,
 				3420E6640611D80100AE67E3,
-				4B0DB3B506123423004F47D9,
 				344ECBAE0620F323007256C6,
 				344ECBB00620F323007256C6,
 				6E7C19BE0623BF80008A1C99,
@@ -6686,7 +6685,6 @@
 				6E5A43E0061160C60078C342,
 				3420E6610611D80100AE67E3,
 				3420E6630611D80100AE67E3,
-				4B0DB3AF06122B94004F47D9,
 				34D5B262061260AE00B98336,
 				9E6417080613C55D006AF387,
 				3404893406173DAB004D0B7E,
@@ -10923,61 +10921,6 @@
 			settings = {
 			};
 		};
-		4B0DB3AB06122B53004F47D9 = {
-			children = (
-				4B0DB3AC06122B94004F47D9,
-				4B0DB3AD06122B94004F47D9,
-				4B0DB3B406123423004F47D9,
-			);
-			isa = PBXGroup;
-			name = "License Agreement";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B0DB3AC06122B94004F47D9 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AILicenseWindowController.h;
-			path = Source/AILicenseWindowController.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B0DB3AD06122B94004F47D9 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AILicenseWindowController.m;
-			path = Source/AILicenseWindowController.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B0DB3AE06122B94004F47D9 = {
-			fileRef = 4B0DB3AC06122B94004F47D9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B0DB3AF06122B94004F47D9 = {
-			fileRef = 4B0DB3AD06122B94004F47D9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B0DB3B406123423004F47D9 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = LicenseWindow.nib;
-			path = Source/LicenseWindow.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B0DB3B506123423004F47D9 = {
-			fileRef = 4B0DB3B406123423004F47D9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B0E342E04C4677700A8010A = {
 			children = (
 				4B31E8C004C46A9100A8010A,
@@ -11743,8 +11686,8 @@
 		};
 		4B3717000510D19400A8010A = {
 			children = (
-				6C1CC23205415D5700B64925,
-				6C1CC23105415D5700B64925,
+				7ECB106D06A4D21700812D5F,
+				BFEBDBF90669025600CBF845,
 			);
 			includeInIndex = 0;
 			isa = PBXGroup;
@@ -12051,8 +11994,8 @@
 				4B5827E90613CE9D0004BD25,
 				3426FD0A0699D3D100751059,
 				3426FD090699D3D100751059,
-				34B70349076EDB410016E8BA,
-				34B7033B076EDB240016E8BA,
+				4BFC3412058D48A8008F7FA2,
+				4BFC3413058D48A8008F7FA2,
 				349DDD5206406A7D00542726,
 			);
 			isa = PBXGroup;
@@ -12075,8 +12018,6 @@
 				F5793912033E748F01A8010A,
 				34E6D38E0727354600A2643A,
 				34E6D38F0727354600A2643A,
-				4BFC3412058D48A8008F7FA2,
-				4BFC3413058D48A8008F7FA2,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -15499,7 +15440,6 @@
 		};
 		4BD672C706001B560049CAF7 = {
 			children = (
-				7ECB106D06A4D21700812D5F,
 				B782F088058BB60B00AF4BBA,
 				B7AE664D0465778E0051E914,
 				52C623DE06697AFA0006C387,
@@ -18333,8 +18273,8 @@
 			lastKnownFileType = "compiled.mach-o.executable";
 			name = buildnum;
 			path = Other/buildnum;
-			refType = 4;
-			sourceTree = "<group>";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		6C1CC23205415D5700B64925 = {
 			fileEncoding = 30;
@@ -20415,6 +20355,7 @@
 			);
 			isa = PBXGroup;
 			name = AOLamer;
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -21076,7 +21017,7 @@
 				9EB3C52C04F94E84001D1F74,
 			);
 			isa = PBXGroup;
-			name = "Adium 1.6 Pref Importer";
+			name = "Migration Assistant";
 			path = "Other/Adium 1.6 Pref Importer";
 			refType = 4;
 			sourceTree = "<group>";
@@ -22373,6 +22314,8 @@
 				34F6A92E0710E20000F485C4,
 				34F6A92F0710E20000F485C4,
 				34F6A9300710E20000F485C4,
+				6C1CC23205415D5700B64925,
+				6C1CC23105415D5700B64925,
 			);
 			isa = PBXGroup;
 			name = Resources;
@@ -22559,7 +22502,7 @@
 				4B09D5C105D5265800BC00F0,
 			);
 			isa = PBXGroup;
-			name = "Contacts & Handles";
+			name = "Contacts & Chats";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -22612,8 +22555,10 @@
 				4B422C0A05ACB248005E720B,
 				4B4F5B2D042D645F00A8010A,
 				F5300A2B032F760B01A8010A,
+				34B70349076EDB410016E8BA,
 				340F444F06D87A830072E2FA,
 				F5300A2C032F761101A8010A,
+				34B7033B076EDB240016E8BA,
 				4B4F5B2E042D647600A8010A,
 				34D18983076114D20075A380,
 				F5B89EFC033CA8CC01A8010A,
@@ -23425,7 +23370,6 @@
 				4BDF17240450CBDE00A8010A,
 				C497518C05BBB0C5009958A6,
 				4B333F73048144D900A8010A,
-				4B0DB3AB06122B53004F47D9,
 				D3B4A920052DE51000A8010B,
 				F5A3C2DD039A516E01A8010A,
 				F5CDCE460350758501A8010A,
