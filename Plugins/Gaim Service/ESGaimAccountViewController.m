@@ -20,6 +20,13 @@
     return(@"GaimAccountView");
 }
 
+- (void)awakeFromNib
+{
+	[super awakeFromNib];
+	
+	[menu_proxy setMenu:[self _proxyMenu]];
+}
+
 //Configure our controls
 - (void)configureForAccount:(AIAccount *)inAccount
 {
@@ -44,7 +51,6 @@
 	}
 	
 	//Proxy type
-	[menu_proxy setMenu:[self _proxyMenu]];
 	proxyTypeNumber = [theAccount preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
 	[menu_proxy selectItemAtIndex:[menu_proxy indexOfItemWithTag:[proxyTypeNumber intValue]]];
 	
@@ -71,20 +77,20 @@
 	
 	//Check mail
 	[checkBox_checkMail setState:[[inAccount preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]];
-        
-        // icon junk
-        [imageView_userIcon setImageFrameStyle:NSImageFramePhoto];
-        if(data = [inAccount preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
-            NSImage *image;
-			
-			image = [[NSImage alloc] initWithData:data];
-            [imageView_userIcon setImage:image];
-			[image release];
-        } 
-        else{
-            // image = {default image thing};
-        }        
+	
+	// icon junk
+	[imageView_userIcon setImageFrameStyle:NSImageFramePhoto];
+	if(data = [inAccount preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
+		NSImage *image;
 		
+		image = [[NSImage alloc] initWithData:data];
+		[imageView_userIcon setImage:image];
+		[image release];
+	} 
+	else{
+		// image = {default image thing};
+	}        
+	
 	[self configureConnectionControlDimming];
 }
 
