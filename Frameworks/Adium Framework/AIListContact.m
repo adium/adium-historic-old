@@ -122,8 +122,9 @@
 }
 
 
-//Applescript ----------------------------------------------------------------------------------------------------------
-#pragma mark Applescript
+//AppleScript ----------------------------------------------------------------------------------------------------------
+#pragma mark AppleScript
+
 - (id)sendScriptCommand:(NSScriptCommand *)command {
 	NSDictionary	*evaluatedArguments = [command evaluatedArguments];
 	NSString		*message = [evaluatedArguments objectForKey:@"message"];
