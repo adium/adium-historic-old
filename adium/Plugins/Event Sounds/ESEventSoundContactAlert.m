@@ -35,6 +35,7 @@
                                            action:@selector(actionPlaySound:)
                                     keyEquivalent:@""] autorelease];
     [menuItem setRepresentedObject:CONTACT_ALERT_IDENTIFIER];
+    NSLog(@"menuItem %@",CONTACT_ALERT_IDENTIFIER);
     return (menuItem);
 }
 

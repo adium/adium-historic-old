@@ -148,6 +148,7 @@
     [interfaceController initController];
     [dockController initController];
     [fileTransferController initController];
+    [contactAlertsController initController];
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
 
     //
@@ -159,6 +160,7 @@
 {
     //Close the controllers in reverse order
     [pluginController closeController]; //should always unload first.  Plugins rely on all the controllers.
+    [contactAlertsController closeController];
     [fileTransferController closeController];
     [dockController closeController];
     [interfaceController closeController];

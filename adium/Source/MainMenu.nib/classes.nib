@@ -12,6 +12,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 accountController = AIAccountController; 
+                contactAlertsController = ESContactAlertsController; 
                 contactController = AIContactController; 
                 contentController = AIContentController; 
                 dockController = AIDockController; 
@@ -147,6 +148,12 @@
         }, 
         {
             CLASS = AIToolbarController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {owner = AIAdium; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = ESContactAlertsController; 
             LANGUAGE = ObjC; 
             OUTLETS = {owner = AIAdium; }; 
             SUPERCLASS = NSObject; 

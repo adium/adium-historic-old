@@ -39,7 +39,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
 - (id)initWithDetailsView:(NSView *)inView withTable:(AIAlternatingRowTableView*)inTable withPrefView:(NSView *)inPrefView owner:(id)inOwner
 {
-    
+    actionListMenu_cached = nil;
     cachedAlertsDict = [[NSMutableDictionary alloc] init];
     
     owner = inOwner;
@@ -168,7 +168,10 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     // Actions! ---------------------------------------------------------------------------------------------------------------------
 - (NSMenu *)actionListMenu //menu of possible actions
 {
-    return ([[owner contactAlertsController] actionListMenuWithOwner:self]);
+    if (!actionListMenu_cached) {
+        actionListMenu_cached = [[[owner contactAlertsController] actionListMenuWithOwner:self] retain];
+    }
+    return actionListMenu_cached;
 }
 
 // Saving --------------------------------------------------------------------------------------------------------------------------------

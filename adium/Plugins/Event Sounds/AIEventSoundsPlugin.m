@@ -182,6 +182,7 @@
 
 - (ESContactAlert *)contactAlert
 {
+    NSLog(@"make me a contact alert!");
     return [ESEventSoundContactAlert contactAlertWithOwner:owner];   
 }
 
