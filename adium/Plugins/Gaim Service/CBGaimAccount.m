@@ -65,6 +65,11 @@ static id<GaimThread> gaimThread = nil;
     return account;
 }
 
+- (id<GaimThread>)gaimThread
+{
+	return gaimThread;
+}
+
 - (void)initSSL
 {
 	if (!didInitSSL) didInitSSL = gaim_init_ssl_gnutls_plugin();
@@ -495,13 +500,14 @@ static id<GaimThread> gaimThread = nil;
 {
 	AIChat *chat;
 	
+	//First, make sure the chat is created
 	[[adium contentController] mainPerformSelector:@selector(chatWithContact:initialStatus:)
 										withObject:contact
 										withObject:nil
 									 waitUntilDone:YES];
 		
-	chat = [[adium contentController] chatWithContact:contact
-										initialStatus:nil];
+	//Now return the existing chat
+	chat = [[adium contentController] existingChatWithContact:contact];
 	
 	return chat;
 }
@@ -510,15 +516,15 @@ static id<GaimThread> gaimThread = nil;
 {
 	AIChat *chat;
 	
+	//First, make sure the chat is created
 	[[adium contentController] mainPerformSelector:@selector(chatWithName:onAccount:initialStatus:)
 										withObject:name
 										withObject:self
 										withObject:nil
 									 waitUntilDone:YES];
 	
-	chat = [[adium contentController] chatWithName:name
-										 onAccount:self
-									 initialStatus:nil];
+	//Now return the existing chat
+	chat = [[adium contentController] existingChatWithName:name onAccount:self];
 	
 	return chat;
 }
