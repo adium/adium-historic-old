@@ -81,13 +81,20 @@
 	//Idle time
     if(inModifiedKeys == nil || 
 	   (showIdle && [inModifiedKeys containsObject:@"Idle"]) ||
-	   (showStatus && [inModifiedKeys containsObject:@"StatusState"])){
+	   (showStatus && ([inModifiedKeys containsObject:@"StatusState"] || [inModifiedKeys containsObject:@"ContactListStatusMessage"]))){
 		NSMutableString	*statusMessage = nil;
 		NSString		*finalMessage = nil;
 		int				idle;
 		
 		if (showStatus){
-			statusMessage = [[[[[[adium contentController] filterAttributedString:[[inObject statusState] statusMessage]
+			NSAttributedString	*sourceMessage;
+
+			/* Prefer the ContactListStatusMesssage status object.
+			 * If it isn't set, use the object's current statusState's statusMessage */
+			sourceMessage = [inObject statusObjectForKey:@"ContactListStatusMessage"];
+			if(!sourceMessage) sourceMessage = [[inObject statusState] statusMessage];
+			
+			statusMessage = [[[[[[adium contentController] filterAttributedString:sourceMessage
 																  usingFilterType:AIFilterDisplay
 																		direction:AIFilterIncoming
 																		  context:inObject] string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];
@@ -98,8 +105,10 @@
 																   [statusMessage length] - STATUS_MAX_LENGTH)];
 			}
 			
-			//Linebreaks in the status message cause vertical alignment issues.  We can either cut off at the first break
-			//or prune them all.  First, we remove duplicate linebreaks
+			/* Linebreaks in the status message cause vertical alignment issues.
+			 * We will replace line breaks with '/' as is done with multiple lines of a poem displayed on a single line.
+			 * 
+			 * First, we remove duplicate linebreaks. */
 			while([statusMessage replaceOccurrencesOfString:@"\r\r"
 												 withString:@"\r"
 													options:NSLiteralSearch
