@@ -349,7 +349,6 @@ void Adium_HandleSignal(int i){
 		
     } else if ([extension caseInsensitiveCompare:@"AdiumTheme"] == NSOrderedSame){
         destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Themes"];
-        requiresRestart = NO;
         fileDescription = AILocalizedString(@"Adium theme",nil);
 		prefsButton = AILocalizedString(@"Open Theme Prefs",nil);
 		prefsCategory = AIPref_Advanced_Other;
@@ -357,34 +356,29 @@ void Adium_HandleSignal(int i){
 		
     } else if ([extension caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Dock Icons"];
-        requiresRestart = NO;
         fileDescription = AILocalizedString(@"dock icon set",nil);
 		prefsButton = AILocalizedString(@"Open Dock Prefs",nil);
 		prefsCategory = AIPref_Dock;
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumSoundset"] == NSOrderedSame){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Sounds"];
-		requiresRestart = NO;
 		fileDescription = AILocalizedString(@"sound set",nil);
 		prefsButton = AILocalizedString(@"Open Sound Prefs",nil);
 		prefsCategory = AIPref_Sound;
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumEmoticonset"] == NSOrderedSame){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Emoticons"];
-		requiresRestart = NO;
 		fileDescription = AILocalizedString(@"emoticon set",nil);
 		prefsButton = AILocalizedString(@"Open Emoticon Prefs",nil);
 		prefsCategory = AIPref_Emoticons;
 		
 	} else if ([extension caseInsensitiveCompare:@"AdiumScripts"] == NSOrderedSame) {
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Scripts"];
-		requiresRestart = YES;
 		fileDescription = AILocalizedString(@"AppleScript set",nil);
 		
 	} else if ([extension caseInsensitiveCompare:@"AdiumMessageStyle"] == NSOrderedSame){
 		if ([NSApp isOnPantherOrBetter]){
 			destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Message Styles"];
-			requiresRestart = NO;
 			fileDescription = AILocalizedString(@"message style",nil);
 			prefsButton = AILocalizedString(@"Open Message Prefs",nil);
 			prefsCategory = AIPref_Messages;
@@ -444,7 +438,7 @@ void Adium_HandleSignal(int i){
 		}
 		
 		[[self notificationCenter] postNotificationName:Adium_Xtras_Changed
-												 object:nil];
+												 object:[[filename lastPathComponent] pathExtension]];
 		
         buttonPressed = NSRunInformationalAlertPanel(alertTitle,alertMsg,nil,prefsButton,nil);
 		
