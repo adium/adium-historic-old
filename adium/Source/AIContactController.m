@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.119 2004/03/29 20:45:23 evands Exp $
+// $Id: AIContactController.m,v 1.120 2004/04/02 23:00:51 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -828,12 +828,43 @@
 	}
 }
 
-- (AIListContact *)preferredContactForReceivingContentType:(NSString *)inType forListObject:(AIListObject *)inObject
+- (AIListContact *)preferredContactForContentType:(NSString *)inType forListContact:(AIListContact *)inContact
 {
-	AIAccount	*account = [[owner accountController] preferredAccountForSendingContentType:inType
-																			   toListObject:inObject];
-
-	return([self contactWithService:[inObject serviceID] accountID:[account uniqueObjectID] UID:[inObject UID]]);
+	AIListContact   *returnContact = nil;
+	AIAccount		*account;
+	
+	if ([inContact isKindOfClass:[AIMetaContact class]]){
+		AIListObject	*containedObject;
+		
+		NSEnumerator	*enumerator = [(AIMetaContact *)inContact objectEnumerator];
+		
+		while ((containedObject = [enuemrator nextObject]) && !returnContact){
+			
+			//Recurse into metacontacts if necessary
+			if ([containedObject isKindOfClass:[AIMetaContact class]]){
+				returnContact = [self preferredContactForContentType:inType
+													  forListContact:containedObject];
+			}else{
+				account = [[owner accountController] preferredAccountForSendingContentType:inType
+																			  toListObject:containedObject];
+				if (account) {
+					returnContact = [self contactWithService:[containedObject serviceID]
+												   accountID:[account uniqueObjectID] 
+														 UID:[containedObject UID]];
+				}
+			}
+		}
+	} else{
+		account = [[owner accountController] preferredAccountForSendingContentType:inType
+																	  toListObject:inContact];
+		if (account) {
+			returnContact = [self contactWithService:[inObject serviceID]
+										   accountID:[account uniqueObjectID] 
+												 UID:[inObject UID]];
+		}
+ 	}
+	
+	return(returnContact);
 }
 
 //Retrieve a group from the contact list (Creating if necessary)

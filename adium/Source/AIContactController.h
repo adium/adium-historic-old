@@ -118,7 +118,7 @@ typedef enum {
 - (void)sortListObject:(AIListObject *)inObject;
 
 //
-- (AIListContact *)preferredContactForReceivingContentType:(NSString *)inType forListObject:(AIListObject *)inObject;
+- (AIListContact *)preferredContactForContentType:(NSString *)inType forListContact:(AIListContact *)inContact;
 
 //Editing
 - (void)addContacts:(NSArray *)contactArray toGroup:(AIListGroup *)group;
