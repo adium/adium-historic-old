@@ -17,16 +17,47 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
+@class NEHTicTacToeController;
+@class AIPlugin, AICompletingTextField;
+@protocol AIContentFilter;
 
-#import "NEHTicTacToeController.h"
+#pragma mark Message defitions
 
-@interface NEHTicTacToePlugin : AIPlugin {
-	NSMenuItem				* menuItem_TTTBoard;
+#define MSG_TYPE_INVITE		@"Invite"
+#define MSG_TYPE_ACK		@"Acknowledge"
+#define MSG_TYPE_ACCEPT		@"Accept"
+#define MSG_TYPE_REJECT		@"Reject"
+#define MSG_TYPE_CANCEL		@"Cancel"
+#define MSG_TYPE_END_GAME   @"End Game"
+#define MSG_TYPE_MOVE		@"Move"
+
+#define MSG_BUSY			@"Busy"
+#define MSG_TIMEOUT			@"Timeout"
+
+#define BUTTON_OK   AILocalizedString(@"OK","")
+#define BUTTON_ERR  AILocalizedString(@"OK","")
+
+@interface NEHTicTacToePlugin : AIPlugin <AIContentFilter> {
 	NSMenuItem				* menuItem_invite;
+	NSMenuItem				* menuItem_newGame;
+	
+	//This dictionary maps [account UIDAndServiceID] => 
+	//{NSDictionary of [contact UIDAndServiceID] =>  NEHTicTacToeController*}
+	NSMutableDictionary		* gamesForAccounts;
+	
+	IBOutlet NSWindow		* window_newGame;
+	IBOutlet AICompletingTextField	* textField_handle;
+	IBOutlet NSPopUpButton  * popUp_account;
+	IBOutlet NSMatrix		* radio_playAs;
+	IBOutlet NSWindowController * windowController;
 }
 
-- (void)showBoard: (id)sender;
++ (NEHTicTacToePlugin*)plugin;
+
+- (void)endGameFor:(NEHTicTacToeController*)control;
+- (IBAction)newGame:(id)sender;
+
+- (IBAction)sendInvite:(id)sender;
+- (IBAction)cancelInvite:(id)sender;
 
 @end

@@ -17,9 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#import <AIUtilities/AIUtilities.h>
-#import "AIAdium.h"
+#import <Cocoa/Cocoa.h>
+
 #import "NEHTicTacToeController.h"
+#import "NEHTicTacToePlugin.h"
 
 #define TTT_NIB @"TicTacToeBoard"
 
@@ -27,75 +28,102 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #pragma mark Strings
 
-#define BUTTON_OK   AILocalizedString(@"OK","")
-#define BUTTON_ERR  AILocalizedString(@"OK","")
-
-#define GAME_OVER   AILocalizedString(@"Game Over","Title for game end pane")
-#define YOU_WIN		AILocalizedString(@"You win!","")
-#define YOU_LOSE		AILocalizedString(@"You lost...","")
-#define TIE			AILocalizedString(@"It's a Tie!","Message when the game ends in a tie")
-#define TURN_X		AILocalizedString(@"X's turn","")
-#define TURN_O		AILocalizedString(@"O's turn","")
-#define CONTACT_NOT_FOUND			AILocalizedString(@"Contact Not Found","")
-#define CONTACT_NOT_FOUND_MESSAGE   AILocalizedString(@"Unable to find contact '%@'","")
-#define PLAY_FIRST  AILocalizedString(@"(You will play first)","")
-#define PLAY_SECOND AILocalizedString(@"(You will play second)","")
+#define GAME_OVER			AILocalizedString(@"Game Over","Title for game end pane")
+#define YOU_WIN				AILocalizedString(@"You win!","")
+#define YOU_LOSE			AILocalizedString(@"You lost...","")
+#define TIE					AILocalizedString(@"It's a Tie!","Message when the game ends in a tie")
+#define TURN_X				AILocalizedString(@"X's turn","")
+#define TURN_O				AILocalizedString(@"O's turn","")
+#define PLAY_FIRST			AILocalizedString(@"(You will play first)","")
+#define PLAY_SECOND			AILocalizedString(@"(You will play second)","")
 #define STATE_NO_GAME		AILocalizedString(@"No game.","Status message when there is no game in progress")
 #define STATE_YOUR_TURN		AILocalizedString(@"Your turn.","")
 #define STATE_THEIR_TURN	AILocalizedString(@"Waiting for opponent","Status message when it is the other player's turn")
 #define INVITE_CANCELLED			AILocalizedString(@"Invite cancelled","")
 #define INVITE_CANCELLED_MESSAGE	AILocalizedString(@"The invitation was cancelled.","")
-#define INVITE_REJECTED			AILocalizedString(@"Invite rejected","")
-#define INVITE_REJECTED_MESSAGE	AILocalizedString(@"The invitation was turned down.","")
+#define INVITE_REJECTED				AILocalizedString(@"Invite rejected","")
+#define INVITE_REJECTED_MESSAGE		AILocalizedString(@"The invitation was turned down.","")
 #define GAME_ENDED			AILocalizedString(@"Game ended","")
 #define GAME_ENDED_MESSAGE	AILocalizedString(@"Your opponent cancelled the game.","")
 #define TIMEOUT				AILocalizedString(@"Invitation timed out.","")
 #define TIMEOUT_MESSAGE		AILocalizedString(@"The invitation timed out. The other player most likely is not using the TicTacToe plugin.","")
 
-#pragma mark Message defitions
-
-#define MSG_TYPE_INVITE		@"Invite"
-#define MSG_TYPE_ACK		@"Acknowledge"
-#define MSG_TYPE_ACCEPT		@"Accept"
-#define MSG_TYPE_REJECT		@"Reject"
-#define MSG_TYPE_CANCEL		@"Cancel"
-#define MSG_TYPE_END_GAME   @"End Game"
-#define MSG_TYPE_MOVE		@"Move"
-
-#define MSG_BUSY			@"Busy"
-#define MSG_TIMEOUT			@"Timeout"
-
 #define TIMEOUT_SECONDS		10
 
 #pragma mark Init/Shutdown stuff
-
-static NEHTicTacToeController * sharedInstance = nil;
-
-+ (id)install
-{
-	if(!sharedInstance)
-		sharedInstance = [[self alloc] initWithWindowNibName:TTT_NIB];
-	return sharedInstance;
-}
-
-+ (void)uninstall
-{
-	[sharedInstance cleanup];
-	[sharedInstance release];
-}
-
-+ (id)showBoard
-{
-	[sharedInstance showWindow:nil];
-	return sharedInstance;
-}
 
 - (void)awakeFromNib
 {
 	image_X = [self loadImage:@"X"];
 	image_O = [self loadImage:@"O"];
-//	board = [[NEHTicTacToeBoard alloc] init];
 	[self reset];
+}
+
+- (id)init
+{
+	[super initWithWindowNibName:TTT_NIB];
+	return self;
+}
+
+- (void)handleInvitation:(NSString *)msg account:(AIAccount*)account contact:(AIListContact*)contact
+{
+	account_Player = account;
+	contact_OtherPlayer = contact;
+	[self showWindow:nil];
+	[self updateTitle];
+	
+	[self sendMessage:@"" ofType:MSG_TYPE_ACK];
+	
+	[textField_remoteContact setStringValue:[contact displayName]];
+	if([msg isEqualToString:@"X"])
+		player = PLAYER_O;				//This is not a typo - the message is what *they* will play as
+	else
+		player = PLAYER_X;
+		
+	if(player == PLAYER_X)
+	{
+		[imageView_acceptPlayAs setImage:image_X];
+		[textField_acceptMove setStringValue:PLAY_FIRST];
+	}
+	else
+	{
+		[imageView_acceptPlayAs setImage:image_O];
+		[textField_acceptMove setStringValue:PLAY_SECOND];
+	}
+	
+	[NSApp beginSheet:sheet_acceptInvite modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	state = State_InviteReceived;
+}
+
+
+- (void)sendInvitation:(Player)inPlayer account:(AIAccount*)account contact:(AIListContact*)contact
+{
+	account_Player = account;
+	contact_OtherPlayer = contact;
+	[self showWindow:nil];
+	[self updateTitle];
+	player = inPlayer;
+	
+	//Send the invitation, including info on who we wish to play as
+	[self sendMessage:(player == PLAYER_X)?@"X":@"O" ofType:MSG_TYPE_INVITE];
+	if(player == PLAYER_X)
+	{
+		[imageView_sentPlayAs setImage:image_X];
+		[textField_sentMove setStringValue:PLAY_FIRST];
+	}
+	else
+	{
+		[imageView_sentPlayAs setImage:image_O];
+		[textField_sentMove setStringValue:PLAY_SECOND];
+	}
+	[NSApp beginSheet:sheet_inviteSent modalForWindow:[self window] modalDelegate:self didEndSelector: NULL contextInfo: nil];
+	timeout = [NSTimer scheduledTimerWithTimeInterval:TIMEOUT_SECONDS target:self selector:@selector(inviteTimedOut:) userInfo:nil repeats:NO];
+	state = State_InviteSent;
+}
+
+- (void)updateTitle
+{
+	[[self window] setTitle: [NSString stringWithFormat:@"TTT : %@",[contact_OtherPlayer displayName]]];
 }
 
 - (NSImage*) loadImage:(NSString*)name
@@ -114,25 +142,10 @@ static NEHTicTacToeController * sharedInstance = nil;
 	return img;
 }
 
-- (id)initWithWindowNibName:(NSString*)nib
-{
-	[super initWithWindowNibName:nib];
-	[[adium contentController] registerIncomingContentFilter:self];
-	return self;
-}
-- (void)dealloc
-{
-	[[adium contentController] unregisterIncomingContentFilter:self];
-	[super dealloc];
-}
-
 - (void)cleanup
 {
 	[image_X release];
 	[image_O release];
-//	[board release];
-//	if(state == State_Playing)
-//		[self sendMessage:@"Client Quit" ofType:MSG_TYPE_END_GAME];
 }
 
 #pragma mark Main window actions
@@ -143,11 +156,9 @@ static NEHTicTacToeController * sharedInstance = nil;
 	{
 		[self reset];
 		[self sendMessage:@"" ofType:MSG_TYPE_END_GAME];
+		[self end:nil returnCode:0 contextInfo:NULL];
 	}
-	else if(state == State_GameOver)
-		[self reset];
-	else
-		NSBeep();
+	else NSBeep();
 }
 
 - (IBAction)move:(id)sender
@@ -162,110 +173,6 @@ static NEHTicTacToeController * sharedInstance = nil;
 	}
 	else
 		NSBeep();
-}
-
-- (IBAction)newGame:(id)sender
-{
-	if(state != State_None && state != State_GameOver)
-	{
-		NSBeep();
-		return;
-	}
-	AIListContact   *selectedContact = [[adium contactController] selectedContact];
-	if(selectedContact)
-		[textField_handle setStringValue:[selectedContact UID]];
-	
-	[self showWindow:nil];
-	[NSApp beginSheet:sheet_newGame modalForWindow:boardWindow
-				modalDelegate:self didEndSelector:NULL contextInfo:nil];
-	
-	NSEnumerator		*enumerator;
-    AIListContact		*contact;
-    AIAccount			*account;
-    
-    //Configure the auto-complete view
-    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
-    while((contact = [enumerator nextObject])){
-        [textField_handle addCompletionString:[contact UID]];
-    }
-
-    //Configure the handle type menu
-    [popUp_account removeAllItems];
-    [[popUp_account menu] setAutoenablesItems:NO];
-
-    //Insert a menu item for each available account
-    enumerator = [[[adium accountController] accountArray] objectEnumerator];
-    while((account = [enumerator nextObject])){
-        NSMenuItem	*menuItem;
-        
-        //Create the menu item
-        menuItem = [[[NSMenuItem alloc] initWithTitle:[account displayName] target:self action:@selector(selectAccount:) keyEquivalent:@""] autorelease];
-        [menuItem setRepresentedObject:account];
-
-        //Disabled the menu item if the account is offline
-        if(![[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:account]){
-            [menuItem setEnabled:NO];
-        }else{
-            [menuItem setEnabled:YES];
-        }
-
-        //add the menu item
-        [[popUp_account menu] addItem:menuItem];
-    }
-
-    //Select the last used account / Available online account
-    [popUp_account selectItemAtIndex:[popUp_account indexOfItemWithRepresentedObject:[[adium accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]]];
-	state = State_InviteSent;
-}
-
-#pragma mark Invite Window Actions
-
-- (IBAction) cancelInvite:(id)sender
-{
-	[timeout invalidate];
-	[self reset];
-}
-
-- (IBAction) sendInvite: (id)sender
-{
-	[sheet_newGame orderOut:nil];
-    [NSApp endSheet:sheet_newGame];
-	
-    NSString		*UID;
-    AIServiceType	*serviceType;
-
-    //Get the service type and UID
-    account_Player = [[popUp_account selectedItem] representedObject];
-    serviceType = [[account_Player service] handleServiceType];
-    UID = [serviceType filterUID:[textField_handle stringValue]];
-        
-    //Find the contact
-    contact_OtherPlayer = [[adium contactController] contactWithService:[serviceType identifier] UID:UID];
-    if(contact_OtherPlayer){
-        int playAs = [radio_playAs selectedRow];
-		if(playAs == 2) playAs = rand()%2;
-		player = playAs?PLAYER_O:PLAYER_X;
-		//Send the invitation, including info on who we wish to play as
-		[self sendMessage:(player == PLAYER_X)?@"X":@"O" ofType:MSG_TYPE_INVITE];
-		[newGame setEnabled:NO];
-		if(player == PLAYER_X)
-		{
-			[imageView_sentPlayAs setImage:image_X];
-			[textField_sentMove setStringValue:PLAY_FIRST];
-		}
-		else
-		{
-			[imageView_sentPlayAs setImage:image_O];
-			[textField_sentMove setStringValue:PLAY_SECOND];
-		}
-		[NSApp beginSheet:sheet_inviteSent modalForWindow: boardWindow modalDelegate: self 
-					didEndSelector: NULL contextInfo: nil];
-		timeout = [NSTimer scheduledTimerWithTimeInterval:TIMEOUT_SECONDS target:self selector:@selector(inviteTimedOut:) userInfo:nil repeats:NO];
-    }
-	else
-	{
-		NSBeginAlertSheet(CONTACT_NOT_FOUND,BUTTON_ERR,nil,nil,boardWindow,self,NULL,NULL,NULL,CONTACT_NOT_FOUND_MESSAGE,[textField_handle stringValue]);
-	}
 }
 
 #pragma mark Other actions
@@ -286,8 +193,9 @@ static NEHTicTacToeController * sharedInstance = nil;
 
 - (IBAction)retractInvite:(id)sender
 {
-	[self reset];
+	if(timeout)[timeout invalidate];
 	[self sendMessage:@"" ofType:MSG_TYPE_CANCEL];
+	[self end:nil returnCode:0 contextInfo:NULL];
 }
 
 - (IBAction)selectAccount: (id) sender
@@ -302,7 +210,7 @@ static NEHTicTacToeController * sharedInstance = nil;
 	[self sendMessage:MSG_TIMEOUT ofType:MSG_TYPE_CANCEL];
 	[timer invalidate];
 	timeout = nil;
-	NSBeginAlertSheet(TIMEOUT,BUTTON_OK,nil,nil,boardWindow,self,NULL,NULL,NULL,TIMEOUT_MESSAGE);
+	NSBeginAlertSheet(TIMEOUT,BUTTON_OK,nil,nil,[self window],self,NULL,@selector(end:returnCode:contextInfo:),NULL,TIMEOUT_MESSAGE);
 }
 
 #pragma mark Board Management Stuff
@@ -317,7 +225,7 @@ static NEHTicTacToeController * sharedInstance = nil;
 
 - (void)reset
 {
-	NSWindow * sheet = [boardWindow attachedSheet];
+	NSWindow * sheet = [[self window] attachedSheet];
 	if(sheet)
 	{
 		[sheet orderOut:nil];
@@ -326,7 +234,6 @@ static NEHTicTacToeController * sharedInstance = nil;
 	[board endGame];
 	[self clearBoard];
 	[squares setEnabled:NO];
-	[newGame setEnabled:YES];
 	[endGame setEnabled:NO];
 	state = State_None;
 	[self updateStatus];
@@ -337,7 +244,6 @@ static NEHTicTacToeController * sharedInstance = nil;
 	[board newGame];
 	[self clearBoard];
 	[squares setEnabled:YES];
-	[newGame setEnabled:NO];
 	[endGame setEnabled:YES];
 	state = State_Playing;
 	[self updateStatus];
@@ -376,24 +282,22 @@ static NEHTicTacToeController * sharedInstance = nil;
 			winner = [board winner];
 			if(winner != PLAYER_NONE)
 			{
-				NSBeginAlertSheet(GAME_OVER,BUTTON_OK,nil,nil,boardWindow,self,NULL,NULL,NULL,(winner == player)?YOU_WIN:YOU_LOSE);
+				NSBeginAlertSheet(GAME_OVER,BUTTON_OK,nil,nil,[self window],self,NULL,@selector(end:returnCode:contextInfo:),NULL,(winner == player)?YOU_WIN:YOU_LOSE);
 				[status setStringValue: (winner == player)?YOU_WIN:YOU_LOSE];
 				[squares setEnabled:NO];
 			}
 			else				//Tie
 			{
-				NSBeginAlertSheet(GAME_OVER,BUTTON_OK,nil,nil,boardWindow,self,NULL,NULL,NULL,TIE);
+				NSBeginAlertSheet(GAME_OVER,BUTTON_OK,nil,nil,[self window],self,NULL,@selector(end:returnCode:contextInfo:),NULL,TIE);
 				[status setStringValue: TIE];
 				[squares setEnabled:NO];
 			}
 			state = State_GameOver;
-			[newGame setEnabled:YES];
 		}
 		else [self updateStatus];
 		return YES;
 	}
 	return NO;
-
 }
 
 #pragma mark Message-passing stuff
@@ -427,69 +331,8 @@ static NEHTicTacToeController * sharedInstance = nil;
 	[[adium contentController] sendContentObject:content];
 }
 
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inobj
+- (void)handleMessage:(NSString*)msg ofType:(NSString*)type
 {
-	if(![[inobj type] isEqual:CONTENT_MESSAGE_TYPE])
-		return inAttributedString;
-	NSString * str = [[((AIContentMessage*)inobj) message] string];
-	NSRange start = [str rangeOfString:@"[TTT/"];
-	NSRange end = [str rangeOfString:@"]:"];
-	if(start.location != 0 || end.location == NSNotFound)
-		return inAttributedString;
-	NSRange r;
-	r.location = start.length;
-	r.length = end.location - r.location;
-	NSString * type = [str substringWithRange:r];
-	NSString * msg;
-	if([str length] > end.location+end.length)
-		msg = [str substringFromIndex:(end.location+end.length)];
-	else
-		msg = @"";
-		
-	AIListContact * contact = [inobj source];
-	[inobj setDisplayContent:NO];
-	[inobj setTrackContent:NO];
-	if([type isEqualToString:MSG_TYPE_INVITE])
-	{
-		if(state == State_None || state == State_GameOver)
-		{
-			[self showWindow:nil];
-			account_Player = [inobj destination];
-			contact_OtherPlayer = contact;
-			state = State_InviteReceived;
-			
-			[textField_remoteContact setStringValue:[contact displayName]];
-			if([msg isEqualToString:@"X"])
-				player = PLAYER_O;
-			else
-				player = PLAYER_X;
-			if(player == PLAYER_X)
-			{
-				[imageView_acceptPlayAs setImage:image_X];
-				[textField_acceptMove setStringValue:PLAY_FIRST];
-			}
-			else
-			{
-				[imageView_acceptPlayAs setImage:image_O];
-				[textField_acceptMove setStringValue:PLAY_SECOND];
-			}
-			[self sendMessage:@"" ofType:MSG_TYPE_ACK];
-			[NSApp beginSheet:sheet_acceptInvite modalForWindow:boardWindow
-				modalDelegate:self didEndSelector:NULL contextInfo:nil];
-		}
-		else
-			[self sendMessage:MSG_BUSY ofType:MSG_TYPE_REJECT toContact:contact fromAccount:[inobj destination] inChat:[inobj chat]];
-	}
-	if([inobj source] != contact_OtherPlayer)
-	{
-		NSLog(@"TTT:Dropped %@ message from account %@",type,[[inobj source] displayName]);
-		return inAttributedString;
-	}
-	if([inobj destination] != account_Player)
-	{
-		NSLog(@"TTT:Dropped %@ message to account %@",type,[[inobj destination] displayName]);
-		return inAttributedString;
-	}
 	if([type isEqualToString:MSG_TYPE_ACK])
 	{
 		if(timeout)
@@ -523,7 +366,7 @@ static NEHTicTacToeController * sharedInstance = nil;
 				timeout = nil;
 			}
 			[self reset];
-			NSBeginAlertSheet(INVITE_REJECTED,BUTTON_OK,nil,nil,boardWindow,self,NULL,NULL,NULL,INVITE_REJECTED_MESSAGE);
+			NSBeginAlertSheet(INVITE_REJECTED,BUTTON_OK,nil,nil,[self window],self,NULL,@selector(end:returnCode:contextInfo:),NULL,INVITE_REJECTED_MESSAGE);
 		}
 		else NSLog(@"TTT:Reject message received with state %d.",state);
 	}
@@ -532,7 +375,7 @@ static NEHTicTacToeController * sharedInstance = nil;
 		if(state == State_InviteReceived)
 		{
 			[self reset];
-			NSBeginAlertSheet(INVITE_CANCELLED,BUTTON_OK,nil,nil,boardWindow,self,NULL,NULL,NULL,INVITE_CANCELLED_MESSAGE);
+			NSBeginAlertSheet(INVITE_CANCELLED,BUTTON_OK,nil,nil,[self window],self,NULL,@selector(end:returnCode:contextInfo:),NULL,INVITE_CANCELLED_MESSAGE);
 		}
 		else NSLog(@"TTT:Cancel message received with state %d.",state);
 	}
@@ -552,12 +395,17 @@ static NEHTicTacToeController * sharedInstance = nil;
 		if(state == State_Playing)
 		{
 			[self reset];
-			NSBeginAlertSheet(GAME_ENDED,BUTTON_OK,nil,nil,boardWindow,self,NULL,NULL,NULL,GAME_ENDED_MESSAGE);
+			NSBeginAlertSheet(GAME_ENDED,BUTTON_OK,nil,nil,[self window],self,NULL,@selector(end:returnCode:contextInfo:),NULL,GAME_ENDED_MESSAGE);
 		}
 		else NSLog(@"TTT:End game message received with state %d.",state);
 	}
-	
-	return(inAttributedString);
+}
+
+- (void)end:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	[self close];
+	[self cleanup];
+	[[NEHTicTacToePlugin plugin] endGameFor:self];
 }
 
 @end
