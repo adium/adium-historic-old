@@ -39,12 +39,25 @@
 
 - (void)_init
 {
+    //
+    availableColors = nil;
+    customColor = nil;
+    
     //Create the custom menu item
     customMenuItem = [[NSMenuItem alloc] initWithTitle:COLOR_CUSTOM_TITLE target:self action:@selector(openColorPanel:) keyEquivalent:@""];
 
     //Setup our default colors
     customColor = [[NSColor blackColor] retain];
     [self setAvailableColors:[NSArray arrayWithObjects:@"Red", [NSColor redColor], @"Blue", [NSColor blueColor], @"Green", [NSColor greenColor], @"Yellow", [NSColor yellowColor], nil]];
+}
+
+- (void)dealloc
+{
+    [availableColors release];
+    [customColor release];
+    [customMenuItem release];
+    
+    [super dealloc];
 }
 
 //The currently selected color
@@ -119,8 +132,12 @@
     NSColor		*color;
     NSString		*label;
 
+    //Empty our menu
+    if(![self menu]){
+        [self setMenu:[[[NSMenu alloc] init] autorelease]]; //Make sure we have a menu
+    }
     [self removeAllItems];
-
+    
     //Colors
     enumerator = [availableColors objectEnumerator];
     while((label = [enumerator nextObject])){

@@ -14,28 +14,20 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
 
-@class AIAdium;
+@class AIColorSelectionPopUpButton;
 
-@interface AITextForcingPreferences : NSObject {
-    AIAdium			*owner;
+@interface AITextForcingPreferences : AIPreferencePane {
+    IBOutlet	NSButton                    *checkBox_forceFont;
+    IBOutlet	NSTextField                 *textField_desiredFont;
+    IBOutlet	NSButton                    *button_setFont;
 
-    IBOutlet	NSView			*view_prefView;
+    IBOutlet	NSButton                    *checkBox_forceTextColor;
+    IBOutlet	AIColorSelectionPopUpButton *colorPopUp_textColor;
 
-    IBOutlet	NSButton		*checkBox_forceFont;
-    IBOutlet	NSTextField		*textField_desiredFont;
-    IBOutlet	NSButton		*button_setFont;
-
-    IBOutlet	NSButton		*checkBox_forceTextColor;
-    IBOutlet	NSColorWell		*colorWell_textColor;
-
-    IBOutlet	NSButton		*checkBox_forceBackgroundColor;
-    IBOutlet	NSColorWell		*colorWell_backgroundColor;
-    
-
+    IBOutlet	NSButton                    *checkBox_forceBackgroundColor;
+    IBOutlet	AIColorSelectionPopUpButton *colorPopUp_backgroundColor;
 }
-
-+ (AITextForcingPreferences *)textForcingPreferencesWithOwner:(id)inOwner;
-- (IBAction)changePreference:(id)sender;
 
 @end
