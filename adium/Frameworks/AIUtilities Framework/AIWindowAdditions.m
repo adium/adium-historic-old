@@ -25,11 +25,12 @@
 
 - (void)compatibleInvalidateShadow
 {
-    if ([NSApp isOnPantherOrBetter])
+    if ([NSApp isOnJaguarOrBetter])
         [self invalidateShadow];
     else {
-        [self setHasShadow:NO];
-        [self setHasShadow:YES];
+        BOOL hadShadow = [self hasShadow];
+        [self setHasShadow:!hadShadow];
+        [self setHasShadow:hadShadow];
     }
 }
 
