@@ -7,11 +7,14 @@
 #import "ESGaimJabberAccountViewController.h"
 #import "ESGaimJabberAccount.h"
 
-#import <Libgaim/si.h>
+#include <Libgaim/buddy.h>
+#include <Libgaim/presence.h>
+#include <Libgaim/si.h>
 
 @implementation ESGaimJabberAccount
 
-static BOOL didInitJabber = NO;
+static BOOL				didInitJabber = NO;
+static NSDictionary		*presetStatusesDictionary = nil;
 
 - (const char*)protocolPlugin
 {
@@ -22,6 +25,14 @@ static BOOL didInitJabber = NO;
 
 - (void)initAccount
 {
+	if (!presetStatusesDictionary){
+		presetStatusesDictionary = [[NSDictionary dictionaryWithObjectsAndKeys:
+			AILocalizedString(@"Away",nil),				[NSNumber numberWithInt:JABBER_STATE_AWAY],
+			AILocalizedString(@"Chatty",nil),			[NSNumber numberWithInt:JABBER_STATE_CHAT],
+			AILocalizedString(@"Extended Away",nil),	[NSNumber numberWithInt:JABBER_STATE_XA],
+			AILocalizedString(@"Do Not Disturb",nil),	[NSNumber numberWithInt:JABBER_STATE_DND],nil] retain];
+	}
+	
 	[super initAccount];
 }
 - (void)dealloc
@@ -135,6 +146,14 @@ static BOOL didInitJabber = NO;
 	[super accountConnectionConnected];
 }
 
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
+{
+	if (disconnectionError && ([disconnectionError rangeOfString:@"401"].location != NSNotFound)) {
+		[[adium accountController] forgetPasswordForAccount:self];
+	}
+	
+	return YES;
+}
 
 #pragma mark File transfer
 - (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
@@ -159,5 +178,76 @@ static BOOL didInitJabber = NO;
     [super rejectFileReceiveRequest:fileTransfer];    
 }
 
+#pragma mark Status Messages
+- (void)updateContact:(AIListContact *)theContact forEvent:(GaimBuddyEvent) event
+{
+	[super updateContact:theContact forEvent:event];
+	
+	SEL updateSelector = nil;
+	
+	switch (event){
+		case GAIM_BUDDY_STATUS_MESSAGE: {
+			updateSelector = @selector(updateStatusMessage:);
+			break;
+		}
+	}
+	
+	if (updateSelector){
+		[self performSelector:updateSelector
+				   withObject:theContact];
+	}
+}
 
+- (void)updateStatusMessage:(AIListContact *)theContact
+{
+	const char  *uidUTF8String = [[theContact UID] UTF8String];
+	GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
+	JabberBuddy *jb = jabber_buddy_find(gc->proto_data, uidUTF8String, FALSE);	
+	
+	//Retrieve the current status string
+	NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString"];
+	NSString		*statusMsgString = nil;
+	
+	//Get the custom jabber status message if one is set
+	const char		*msg = jabber_buddy_get_status_msg(jb);
+	if (msg){
+		statusMsgString = [NSString stringWithUTF8String:msg];
+	}
+	//If no custom status message, but the buddy's uc matches the UC_UNAVAILABLE mask, lookup the preset string for the status
+	if (!statusMsgString && (buddy->uc & UC_UNAVAILABLE)){
+		statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:buddy->uc]];
+	}
+	
+	//Update as necessary
+	if ([statusMsgString length] && ![statusMsgString isEqualToString:@"Online"]) {
+		if (![statusMsgString isEqualToString:oldStatusMsgString]) {
+			NSAttributedString *attrStr = [[[NSAttributedString alloc] initWithString:statusMsgString] autorelease];
+			
+			[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
+			[theContact setStatusObject:attrStr forKey:@"StatusMessage" notify:NO];
+			
+			//apply changes
+			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+		}
+		
+	} else if ([oldStatusMsgString length]) {
+		//If we had a message before, remove it
+		[theContact setStatusObject:nil forKey:@"StatusMessageString" notify:NO];
+		[theContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
+		
+		//apply changes
+		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	}
+}
+
+- (oneway void)updateWentAway:(AIListContact *)theContact withData:(void *)data
+{
+	[super updateWentAway:theContact withData:data];
+	[self updateStatusMessage:theContact];
+}
+- (oneway void)updateAwayReturn:(AIListContact *)theContact withData:(void *)data
+{
+	[super updateAwayReturn:theContact withData:data];
+	[self updateStatusMessage:theContact];	
+}
 @end
