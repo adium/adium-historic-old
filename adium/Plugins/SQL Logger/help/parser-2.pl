@@ -2,7 +2,7 @@
 
 # Jeffrey Melloy <jmelloy@visualdistortion.org>
 # $URL: http://svn.visualdistortion.org/repos/projects/adium/parser-2.pl $
-# $Rev: 689 $ $Date: 2004/04/28 05:45:38 $
+# $Rev: 754 $ $Date: 2004/05/14 00:40:37 $
 #
 # Script will parse Adium logs >= 2.0 and put them in postgresql table.
 # Table is created with "adium.sql"
@@ -19,6 +19,7 @@ my $vacuum = 1;
 my $verbose = 1;
 my $quiet = 0;
 my $debug = 0;
+my $status = 1;
 
 my $username = $ENV{USER};
 
@@ -33,6 +34,10 @@ for (my $i = 0; $i < @ARGV; $i++) {
     
     if ($ARGV[$i] eq "--quiet") {
         $quiet = 1;
+    }
+    
+    if ($ARGV[$i] eq "--disable-status") {
+        $status = 0;
     }
 }
 
@@ -145,7 +150,7 @@ foreach my $outer_user (glob '*') {
                         $_ = $contents[$i];
 
                         ($message_type, $message) =
-                        /.*class\=\"(.*?)\"\>(.*)\<\/div\>/;
+                        /.*class\=\"(.*?)\"\>(.*)\<\/div\>/s;
 
                         if($message_type ne "status") {
                             ($message_type, $time, $sender, $message) =
@@ -183,7 +188,9 @@ foreach my $outer_user (glob '*') {
                             print $query;
                         }
 
-                        $outtext .= $query;
+                        if($status || $message_type ne "status") {
+                            $outtext .= $query;
+                        }
                     }
                 }
                 print OUT $outtext or warn qq{$outtext};
