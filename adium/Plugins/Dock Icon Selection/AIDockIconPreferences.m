@@ -83,6 +83,11 @@
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
     
+	//Observe for installation of new dock icon sets
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(xtrasChanged:)
+									   name:Adium_Xtras_Changed
+									 object:nil];
     //Start animating
     [self _startAnimating];
 }
@@ -120,6 +125,20 @@
 			
         [self configureForSelectedIcon:iconDict];
     }
+}
+
+- (void)xtrasChanged:(NSNotification *)notification
+{
+	if ([[notification object] caseInsensitiveCompare:@"AdiumIcon"] == 0){
+		//Start animating
+		[self _stopAnimating];
+		
+		//Load our icons
+		[self _buildIconArray];
+		
+		//Make sure the proper selection is made
+		[self preferencesChanged:nil];
+	}
 }
 
 //Configures our view for the passed icon being selected
