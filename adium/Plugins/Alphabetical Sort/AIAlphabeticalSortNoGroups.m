@@ -15,7 +15,7 @@
 
 #import "AIAlphabeticalSortNoGroups.h"
 
-int alphabeticalSortNoGroups(id objectA, id objectB, void *context);
+int alphabeticalSortNoGroups(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups);
 
 @implementation AIAlphabeticalSortNoGroups
 
@@ -28,54 +28,28 @@ int alphabeticalSortNoGroups(id objectA, id objectB, void *context);
 - (NSString *)displayName{
     return(@"Alphabetical (Groups Not Sorted)");
 }
-
-- (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys
-{
-    return(NO); //Ignore
+- (NSArray *)statusKeysRequiringResort{
+	return(nil);
+}
+- (NSArray *)attributeKeysRequiringResort{
+	return([NSArray arrayWithObject:@"Display Name"]);
+}
+- (sortfunc)sortFunction{
+	return(&alphabeticalSortNoGroups);
 }
 
-- (BOOL)shouldSortForModifiedAttributeKeys:(NSArray *)inModifiedKeys
+int alphabeticalSortNoGroups(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups)
 {
-    if([inModifiedKeys containsObject:@"Hidden"] || [inModifiedKeys containsObject:@"Display Name"]){
-        return(YES);
-    }else{
-        return(NO);
-    }
-}
-
-- (void)sortListObjects:(NSMutableArray *)inObjects
-{
-    [inObjects sortUsingFunction:alphabeticalSortNoGroups context:nil];
-}
-
-int alphabeticalSortNoGroups(id objectA, id objectB, void *context)
-{
-    BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
-    BOOL	invisibleB = [[objectB displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
-    
-    if(invisibleA && !invisibleB){
-        return(NSOrderedDescending);
-    }else if(!invisibleA && invisibleB){
-        return(NSOrderedAscending);
-    }else{
-        BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
-        BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
-
-        if(groupA && !groupB){
-            return(NSOrderedAscending);
-        }else if(!groupA && groupB){
-            return(NSOrderedDescending);
-        }else if(!groupA && !groupB){
-            return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
-        }else{
-            //Keep groups in manual order
-            if([objectA orderIndex] > [objectB orderIndex]){
-                return(NSOrderedDescending);
-            }else{
-                return(NSOrderedAscending);
-            }
-        }
-    }
+	if(!groups){
+		return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
+	}else{
+		//Keep groups in manual order
+		if([objectA orderIndexForGroup:containingGroup] > [objectB orderIndexForGroup:containingGroup]){
+			return(NSOrderedDescending);
+		}else{
+			return(NSOrderedAscending);
+		}
+	}
 }
 
 @end
