@@ -50,8 +50,7 @@ Logs
 //------------------------------------------------------------------------------------
 // Bugs - Unconfirmed
 //------------------------------------------------------------------------------------
-- If one tries to change one's idle time to a lower amount, (for example, from 2:32
-    to :36), an update will not occur, and your idle time will stay at 2:32.
+- Pasted content with line breaks may fail to send via Rendezvous
 - Yahoo ignore list is being ignored?
 - Messages with invalid looking HTML <tags> received via jabber (from ICQ user over
     transport), the invalid tags are being eaten? (Our HTML decoder isn't
