@@ -342,6 +342,7 @@
 				4B7F78B50597F42400162728,
 				BF0F5BCB05A2B0070034AD18,
 				BF380C3105A8FF9000A74E9F,
+				52AEBD6105ABA95700B19C56,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -457,6 +458,7 @@
 				3419F44E05314C5900C68BA3,
 				3419F46005314C6800C68BA3,
 				B72537BB058C4577004BA969,
+				52AEBD6005ABA95700B19C56,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -19568,6 +19570,7 @@
 				34F8A7FA05A8927F00577775,
 				9E791D8505768A3000547562,
 				F501BB0D03882A0201A8010A,
+				52AEBD8405ABAAAB00B19C56,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -23583,6 +23586,364 @@
 //4B2
 //4B3
 //4B4
+//520
+//521
+//522
+//523
+//524
+		52AEBD5C05ABA95700B19C56 = {
+			buildActionMask = 2147483647;
+			files = (
+				52AEBD7605ABA9AA00B19C56,
+				52AEBD7805ABA9AA00B19C56,
+				52AEBD7A05ABA9AA00B19C56,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		52AEBD5D05ABA95700B19C56 = {
+			buildActionMask = 2147483647;
+			files = (
+				52AEBD7305ABA9AA00B19C56,
+				52AEBD7405ABA9AA00B19C56,
+				52AEBD7C05ABA9AA00B19C56,
+				52AEBD7D05ABA9AA00B19C56,
+				52AEBD7E05ABA9AA00B19C56,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		52AEBD5E05ABA95700B19C56 = {
+			buildActionMask = 2147483647;
+			files = (
+				52AEBD7705ABA9AA00B19C56,
+				52AEBD7905ABA9AA00B19C56,
+				52AEBD7B05ABA9AA00B19C56,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		52AEBD5F05ABA95700B19C56 = {
+			buildActionMask = 2147483647;
+			files = (
+				52AEBDD005ABAD0F00B19C56,
+				52AEBDD105ABAD0F00B19C56,
+				52AEBDD205ABAD0F00B19C56,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		52AEBD6005ABA95700B19C56 = {
+			buildPhases = (
+				52AEBD5C05ABA95700B19C56,
+				52AEBD5D05ABA95700B19C56,
+				52AEBD5E05ABA95700B19C56,
+				52AEBD5F05ABA95700B19C56,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "Plists/TicTacToe-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = TicTacToe;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = TicTacToe;
+			productName = TicTacToe;
+			productReference = 52AEBD6105ABA95700B19C56;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>TicTacToe</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.TicTacToe</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		52AEBD6105ABA95700B19C56 = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = TicTacToe.AdiumPlugin;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		52AEBD6205ABA95800B19C56 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "TicTacToe-Info.plist";
+			path = "Plists/TicTacToe-Info.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52AEBD6405ABA9A800B19C56 = {
+			children = (
+				52AEBD6505ABA9A800B19C56,
+			);
+			isa = PBXVariantGroup;
+			name = Localizable.strings;
+			path = Plugins/TicTacToe/English.lproj;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52AEBD6505ABA9A800B19C56 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = English;
+			path = Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52AEBD6605ABA9A800B19C56 = {
+			children = (
+				52AEBD6705ABA9A800B19C56,
+			);
+			isa = PBXVariantGroup;
+			name = TicTacToeBoard.nib;
+			path = Plugins/TicTacToe/English.lproj;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52AEBD6705ABA9A800B19C56 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = TicTacToeBoard.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52AEBD6A05ABA9A900B19C56 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NEHTicTacToeBoard.h;
+			path = Plugins/TicTacToe/NEHTicTacToeBoard.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52AEBD6B05ABA9A900B19C56 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NEHTicTacToeBoard.m;
+			path = Plugins/TicTacToe/NEHTicTacToeBoard.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52AEBD6C05ABA9A900B19C56 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NEHTicTacToeController.h;
+			path = Plugins/TicTacToe/NEHTicTacToeController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52AEBD6D05ABA9A900B19C56 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NEHTicTacToeController.m;
+			path = Plugins/TicTacToe/NEHTicTacToeController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52AEBD6E05ABA9A900B19C56 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NEHTicTacToePlugin.h;
+			path = Plugins/TicTacToe/NEHTicTacToePlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52AEBD6F05ABA9A900B19C56 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NEHTicTacToePlugin.m;
+			path = Plugins/TicTacToe/NEHTicTacToePlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52AEBD7005ABA9A900B19C56 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = O.png;
+			path = Plugins/TicTacToe/O.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52AEBD7105ABA9A900B19C56 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text;
+			name = README;
+			path = Plugins/TicTacToe/README;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52AEBD7205ABA9AA00B19C56 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = X.png;
+			path = Plugins/TicTacToe/X.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52AEBD7305ABA9AA00B19C56 = {
+			fileRef = 52AEBD6405ABA9A800B19C56;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52AEBD7405ABA9AA00B19C56 = {
+			fileRef = 52AEBD6605ABA9A800B19C56;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52AEBD7605ABA9AA00B19C56 = {
+			fileRef = 52AEBD6A05ABA9A900B19C56;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52AEBD7705ABA9AA00B19C56 = {
+			fileRef = 52AEBD6B05ABA9A900B19C56;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52AEBD7805ABA9AA00B19C56 = {
+			fileRef = 52AEBD6C05ABA9A900B19C56;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52AEBD7905ABA9AA00B19C56 = {
+			fileRef = 52AEBD6D05ABA9A900B19C56;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52AEBD7A05ABA9AA00B19C56 = {
+			fileRef = 52AEBD6E05ABA9A900B19C56;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52AEBD7B05ABA9AA00B19C56 = {
+			fileRef = 52AEBD6F05ABA9A900B19C56;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52AEBD7C05ABA9AA00B19C56 = {
+			fileRef = 52AEBD7005ABA9A900B19C56;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52AEBD7D05ABA9AA00B19C56 = {
+			fileRef = 52AEBD7105ABA9A900B19C56;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52AEBD7E05ABA9AA00B19C56 = {
+			fileRef = 52AEBD7205ABA9AA00B19C56;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52AEBD8205ABA9F000B19C56 = {
+			children = (
+				52AEBD6405ABA9A800B19C56,
+				52AEBD6605ABA9A800B19C56,
+				52AEBD6A05ABA9A900B19C56,
+				52AEBD6B05ABA9A900B19C56,
+				52AEBD6C05ABA9A900B19C56,
+				52AEBD6D05ABA9A900B19C56,
+				52AEBD6E05ABA9A900B19C56,
+				52AEBD6F05ABA9A900B19C56,
+				52AEBD7005ABA9A900B19C56,
+				52AEBD7205ABA9AA00B19C56,
+				52AEBD7105ABA9A900B19C56,
+				52AEBD6205ABA95800B19C56,
+			);
+			isa = PBXGroup;
+			name = TicTacToe;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52AEBD8405ABAAAB00B19C56 = {
+			children = (
+				52AEBD8205ABA9F000B19C56,
+			);
+			isa = PBXGroup;
+			name = Games;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		52AEBDD005ABAD0F00B19C56 = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52AEBDD105ABAD0F00B19C56 = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		52AEBDD205ABAD0F00B19C56 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//520
+//521
+//522
+//523
+//524
 //650
 //651
 //652
