@@ -13,6 +13,7 @@
 - (BOOL)cacheAndSetUserIconFromPreferenceForListObject:(AIListObject *)inObject;
 - (BOOL)_cacheUserIconData:(NSData *)inData forObject:(AIListObject *)inObject;
 - (NSString *)_cachedImagePathForObject:(AIListObject *)inObject;
+- (BOOL)destroyCacheForListObject:(AIListObject *)inObject;
 @end
 
 @implementation ESUserIconHandlingPlugin
@@ -120,7 +121,9 @@
 	if([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_USERICONS]){
 		AIListObject	*listObject = [notification object];
 		if (listObject){
-			[self cacheAndSetUserIconFromPreferenceForListObject:listObject];
+			if (![self cacheAndSetUserIconFromPreferenceForListObject:listObject]){
+				[self destroyCacheForListObject:listObject];
+			}
 		}
 	}
 }
@@ -154,6 +157,7 @@
 	
 	return (imageData != nil);
 }
+
 /*
 - (BOOL)_cacheUserIcon:(NSImage *)inImage forObject:(AIListObject *)inObject
 {
@@ -194,6 +198,19 @@
 	}
 	
 	return success;
+}
+- (BOOL)destroyCacheForListObject:(AIListObject *)inObject
+{
+	NSString	*cachedImagePath = [self _cachedImagePathForObject:inObject];
+	BOOL		success;
+	
+	if(success = [[NSFileManager defaultManager] trashFileAtPath:cachedImagePath]){
+		[inObject setStatusObject:nil 
+						   forKey:@"UserIconPath"
+						   notify:YES];
+	}
+	
+	return (success);
 }
 
 - (NSString *)_cachedImagePathForObject:(AIListObject *)inObject
