@@ -113,9 +113,6 @@
  */
 - (void)windowDidLoad
 {
-	//Center our window if we're not a sheet (or opening a sheet failed)
-	[[self window] betterCenter];
-
 	[scrollView_statusMessage setAutoHideScrollBar:YES];
 	[scrollView_statusMessage setAlwaysDrawFocusRingIfFocused:YES];
 	[textView_statusMessage setTarget:self action:@selector(okay:)];
@@ -132,6 +129,8 @@
 
 	//Configure our editor for the passed state
 	[self configureForState:workingStatusState];
+	
+	[super windowDidLoad];
 }
 
 /*!
@@ -149,7 +148,6 @@
  *
  * As our window is closing, we auto-release this window controller instance.  This allows our editor to function
  * independently without needing a separate object to retain and release it.
- * We always allow our window to close, so always return YES from this method
  */
 - (void)windowWillClose:(id)sender
 {
