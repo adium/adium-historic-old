@@ -621,15 +621,17 @@
     while((column = [columnEnumerator nextObject])){
         AIFlexibleTableCell	*cell = [delegate cellForColumn:column row:inRow];
 
-        if([column addCell:cell forRow:inRow]){ //Returns YES if the column's width was changed
-            columnWidthDidChange = YES;
-        }
+        if(cell){
+            if([column addCell:cell forRow:inRow]){ //Returns YES if the column's width was changed
+                columnWidthDidChange = YES;
+            }
 
-        [cell setTableView:self];
+            [cell setTableView:self];
 
-        //By comparing the heights of each cell, we find the largest height and set it as the height of our row
-        if([cell cellSize].height > newRowHeight){
-            newRowHeight = [cell cellSize].height;
+            //By comparing the heights of each cell, we find the largest height and set it as the height of our row
+            if([cell cellSize].height > newRowHeight){
+                newRowHeight = [cell cellSize].height;
+            }
         }
     }
 
