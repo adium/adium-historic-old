@@ -1,40 +1,116 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
-<html>
-<head>
-<meta content="text/html; charset=ascii" http-equiv="Content-Type">
-<title>SQL Logger</title>
-<link rel="stylesheet" type="text/css" href="stylesheet.css">
-</head>
-<body><div id="container">
-<div id="banner"><h2 class="titlebar">SQL Logger</h2></div>
-<div id="sidebar-a">
-<h4>SQL Logger<br>
-</h4>
-<a href="index.html" class="sidebar">Home</a><br><a href="http://www.visualdistortion.org/sqllogger/screenshots.jsp" class="offsides">Screenshots</a><br><a href="install.html" class="sidebar">Installation</a><br><a href="technical.html" class="sidebar">Technical
-              Details</a><br><a href="performance.html" class="sidebar">Maintenance/Performance</a><br><a href="changes.txt" class="offsides">Changelog</a><br><a href="http://www.visualdistortion.org/sqllogger/sqllogger.tar.gz" class="offsides"><b>JSP/HTML package</b></a><br><h4>Adium</h4>
-<a href="http://www.adiumx.com/" class="offsides">Adium</a><br><a href="http://forums.adiumx.com" class="offsides">Adium
-                Forums</a><br><a href="http://planet.adiumx.com" class="offsides">Planet Adium</a><br><a href="http://cia.navi.cx/stats/project/adium/" class="offsides">SVN Changes</a><br><a href="http://www.visualdistortion.org/sqllogger/adium-sql.tar.gz" class="offsides"><b>Adium Plugin (.63)</b></a><br><a href="http://www.visualdistortion.org/sqllogger/SQL_Logger_70.tar.gz" class="offsides"><b>Adium Plugin (.70)</b></a><br><h4>Fire</h4>
-<a href="http://fire.sourceforge.net" class="offsides">Fire</a><br><h4>PostgreSQL</h4>
-<a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.4/interactive/index.html" class="offsides">PgSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a><br><h4>Visual Distortion</h4>
-<a href="http://www.visualdistortion.org/" class="offsides">Visual Distortion Home</a>
-</div>
-<div id="content">
-<p>SQL Logging implements logging from instant messenger clients into a PostgreSQL database.  It consists of a
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $URL$ -->
+<!-- $Rev$ $Date$ -->
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" dir="ltr">
+    <head>
+        <title>
+            SQL Logger
+        </title>
+        <meta http-equiv="Content-Type" content="text/html; charset=(iso-8859-1" />
+        <style type="text/css" media="screen" >@import url("layout/css/fixed.css");</style>
+        <script type="text/javascript" src="layout/js/styleswitcher.js"></script>
+        <script type="text/javascript" src="layout/js/geckostyle.js"></script>
+        <link rel="stylesheet" type="text/css" href="stylesheet.css" />
+    </head>
+    <body>
+        <div id="pgContainerWrap">
+            <div id="pgContainer">
+                <div id="pgHeaderContainer">
+                    <div id="pgHeader">
+                        <div id="pgHeaderLogoLeft">
+                            <img src="layout/images/hdr_left_grn.png" width="20" height="80" alt="" />
+                        </div>
+                        <div id="pgHeaderLogoRight">
+                            <img
+                                src="layout/images/hdr_right_grn.png" width="20" height="80" alt=""/>
+                        </div>
+                        <h1><a href="/sqllogger/">SQL Logger</a></h1>
+                    </div>
+                    <h2 class="pgBlockHide">Site Navigation</h2>
+                    <div id="pgTopNav">
+                        <div id="pgTopNavLeft">
+                            <img src="layout/images/nav_lft.png" width="7" height="23" alt="" />
+                        </div>
+                        <div id="pgTopNavRight">
+                            <img src="layout/images/nav_rgt.png" width="7" height="23" alt="" />
+                        </div>
+                        <ul id="pgTopNavList">
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="http://www.visualdistortion.org/sqllogger/index.jsp?page=screenshots.jsp">
+                            Screenshots</a></li>
+                            <li><a href="install.html">
+                            Installation</a></li>
+                            <li><a href="technical.html">
+                            Technical Details</a></li>
+                            <li><a href="performance.html">Maintenance/Performance</a></li>
+                            <li><a href="http://www.visualdistortion.org/sqllogger/index.jsp?page=changelog.txt">Changes</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="pgContent">
+                    <div id="pgSideWrap">
+                        <div id="pgSideNav">
+                            <ul>
+                                <li><a href="http://www.adiumx.com">Adium</a></li>
+                                <ul>
+                                    <li><a
+                                    href="http://forums.adiumx.com">Forums</a></li>
+                                    <li><a
+                                    href="http://www.visualdistortion.org/sqllogger/adium_63.tar.gz">Plugin (.63)</a></li>
+                                    <li><a
+                                    href="http://www.visualdistortion.org/sqllogger/adium_70.tar.gz">Plugin (.70)</a></li>
+                                    <li class="last-child"><a
+                                    href="http://www.visualdistortion.org/sqllogger/adium_80.tar.gz">Plugin
+                                    (.80)</a></li>
+                                </ul>
+                                <li><a
+                                href="http://fire.sourceforge.net">Fire</a></li>
+                                <ul>
+                                    <li><a
+                                    href="http://fire.sourceforge.net/forums/">Forums</a></li>
+                                    <li class="last-child"><a
+                                    href="http://www.visualdistortion.org/sqllogger/fire_15.tar.gz">Plugin</a></li>
+                                </ul>
+                                <li><a
+                                href="http://wwww.postgresql.org">PostgreSQL</a></li>
+                                <ul>
+                                    <li><a
+                                    href="http://www.postgresql.org/docs/7.4/interactive/index.html">Documentation</a></li>
+                                    <li><a
+                                    href="http://www.xceltech.net/products/freeware_products.html">PostMan
+                                    Query</a></li>
+                                </ul>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div id="pgContentWrap">
+                        <div id="pgDownloadsWrap">
+                            <div id="pgDownloads">
+                            
+                                        <h3>SQL Logger</h3>
+    <p>SQL Logging implements logging from instant messenger clients into a PostgreSQL database.  It consists of a
       plugin, a web-interface for the logs written in JSP, and HTML
       documentation.</p>
-<p>SQL Logging  offers several advantages over normal methods:</p>
-<ul>
+    <p>SQL Logging  offers several advantages over normal methods:</p>
+    <ul>
       <li>Extremely fast boolean searching</li>
       <li>Exceptionally detailed statistics</li>
       <li>Very easy to view logs between certain time periods</li>
       <li>Easy to view simultaneous conversations</li>
       <li>Meta-contacts</li>
       <li>Extensible contact information stored for each contact</li>
-    </ul>
-<table>
+    </ul><br />
+
+    <table>
       <tr>
-        <td>
-<img src="http://www.visualdistortion.org/sqllogger/screenshots/notes-th.png" alt="Notes" width="200" height="174">
+        <td><img
+            src="http://www.visualdistortion.org/sqllogger/screenshots/thumbs/index_notes.png"
+            alt="Notes" width="200" height="174"/>
         </td>
         <td>
           <ul>
@@ -47,7 +123,9 @@
       </tr>
       <tr>
         <td>
-          <img src="http://www.visualdistortion.org/sqllogger/screenshots/search-th.png" alt="Search" width="200" height="174">
+          <img
+            src="http://www.visualdistortion.org/sqllogger/screenshots/thumbs/search.png"
+            alt="Search" width="200" height="174"/>
         </td>
         <td>
           <ul>
@@ -59,7 +137,9 @@
       </tr>
       <tr>
         <td>
-          <img src="http://www.visualdistortion.org/sqllogger/screenshots/stats-th.png" alt="Stats" width="200" height="174">
+          <img
+            src="http://www.visualdistortion.org/sqllogger/screenshots/thumbs/stats.png"
+            alt="Stats" width="200" height="174"/>
         </td>
         <td>
           <ul>
@@ -73,13 +153,43 @@
         </td>
       </tr>
     </table>
-<p>Installation details and screenshots are in the sidebar to the left.</p>
-<p>A package containing installation details and the JSP files can be
-      downloaded at <a href="http://www.visualdistortion.org/sqllogger/sqllogger.tar.gz">
-        http://www.visualdistortion.org/sqllogger/sqllogger.tar.gz</a>
-</p>
-</div>
-<div id="footer">SQL Logger<br><a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a>
-</div>
-</div></body>
+
+    <p>Installation details and screenshots are in the sidebar to the left.</p>
+    <p>A package containing installation details and the JSP files can be
+      downloaded at <a
+        href="http://www.visualdistortion.org/sqllogger/sqllogger.tar.gz">
+        http://www.visualdistortion.org/sqllogger/sqllogger.tar.gz</a></p>
+    <h3>Acknowledgements</h3>
+    <ul>
+      <li><a href="http://www.slamb.org/projects/axamol/sql-library/">Axamol
+          SQL Library</a> by <a href="http://www.slamb.org/">Scott Lamb</a></li>
+      <li>Icons by <a href="http://mattahan.deviantart.com">mattahan</a></li>
+    </ul>
+
+                            
+                            </div>
+                        </div>
+
+                        <div id="pgQuickDownloadsWrap">
+                            <div id="pgQuickDownloads">
+                                <dl>
+                                    <dt>Downloads</dt>
+                                    <dd>
+                                        <p><a
+                                        href="sqllogger.tar.gz">WAR/HTML/Plugins</a></p>
+                                        <p><a href="sqllogger.war">SQL Logger
+                                        WAR</a></p>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                    <br class="pgClearBoth" />
+                </div>
+                <div id="pgFooter">
+
+                </div>
+            </div>
+        </div>
+    </body>
 </html>
