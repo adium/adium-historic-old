@@ -8,8 +8,10 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-@interface ESDualWindowMessageWindowPreferences : AIPreferencePane {
+@interface ESDualWindowMessageAdvancedPreferences : AIPreferencePane {
     IBOutlet	NSButton	*createMessages_inTabs;
+    IBOutlet	NSButton	*createTabs_inLastWindow;
+    IBOutlet	NSButton	*autohide_tabBar;
 }
 
 @end

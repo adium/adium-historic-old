@@ -29,7 +29,7 @@
 
 #define TAB_CELL_IDENTIFIER                     @"Tab Cell Identifier"
 
-@class AIAdium, AIContactListWindowController, AIMessageWindowController, AIMessageViewController, AIDualWindowPreferences, ESDualWindowMessageWindowPreferences;
+@class AIAdium, AIContactListWindowController, AIMessageWindowController, AIMessageViewController, AIDualWindowPreferences, AIDualWindowAdvancedPrefs, ESDualWindowMessageWindowPreferences, ESDualWindowMessageAdvancedPreferences;
 @protocol AIMessageView, AIInterfaceController, AITabHoldingInterface, AIContactListCleanup;
 
 @protocol AIInterfaceContainer <NSObject>
@@ -65,8 +65,11 @@
     AIMessageWindowController		*lastUsedMessageWindow;
     
     //Preferences
-    AIDualWindowPreferences		*preferenceController;
-    ESDualWindowMessageWindowPreferences *preferenceMessageController;
+    AIDualWindowPreferences                 *preferenceController;
+    AIDualWindowAdvancedPrefs               *preferenceAdvController;
+    ESDualWindowMessageWindowPreferences    *preferenceMessageController;
+    ESDualWindowMessageAdvancedPreferences  *preferenceMessageAdvController;
+    
     BOOL				alwaysCreateNewWindows;
     BOOL				useLastWindow;
     

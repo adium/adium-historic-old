@@ -13899,6 +13899,8 @@
 				34BDA1660531483E000AB133,
 				34BDA1670531483E000AB133,
 				34BDA1680531483E000AB133,
+				4B970BE20535B6AC002F28F9,
+				4B970BFA0535B864002F28F9,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13977,6 +13979,8 @@
 				34BDA1720531483F000AB133,
 				34BDA1730531483F000AB133,
 				34BDA1740531483F000AB133,
+				4B970BE50535B6BE002F28F9,
+				4B970BFD0535B879002F28F9,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14060,6 +14064,8 @@
 				34BDA17D0531483F000AB133,
 				34BDA17E0531483F000AB133,
 				34BDA17F0531483F000AB133,
+				4B970BE30535B6AC002F28F9,
+				4B970BFB0535B864002F28F9,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17737,6 +17743,94 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B970BE00535B6AC002F28F9 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIDualWindowAdvancedPrefs.h;
+			path = "Plugins/Dual Window Interface/AIDualWindowAdvancedPrefs.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B970BE10535B6AC002F28F9 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIDualWindowAdvancedPrefs.m;
+			path = "Plugins/Dual Window Interface/AIDualWindowAdvancedPrefs.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B970BE20535B6AC002F28F9 = {
+			fileRef = 4B970BE00535B6AC002F28F9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B970BE30535B6AC002F28F9 = {
+			fileRef = 4B970BE10535B6AC002F28F9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B970BE40535B6BE002F28F9 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = DualWindowAdvanced.nib;
+			path = "Plugins/Dual Window Interface/DualWindowAdvanced.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B970BE50535B6BE002F28F9 = {
+			fileRef = 4B970BE40535B6BE002F28F9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B970BF80535B864002F28F9 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESDualWindowMessageAdvancedPreferences.h;
+			path = "Plugins/Dual Window Interface/ESDualWindowMessageAdvancedPreferences.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B970BF90535B864002F28F9 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESDualWindowMessageAdvancedPreferences.m;
+			path = "Plugins/Dual Window Interface/ESDualWindowMessageAdvancedPreferences.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B970BFA0535B864002F28F9 = {
+			fileRef = 4B970BF80535B864002F28F9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B970BFB0535B864002F28F9 = {
+			fileRef = 4B970BF90535B864002F28F9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B970BFC0535B879002F28F9 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = DualWindowMessageAdvanced.nib;
+			path = "Plugins/Dual Window Interface/DualWindowMessageAdvanced.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B970BFD0535B879002F28F9 = {
+			fileRef = 4B970BFC0535B879002F28F9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B9AB61704D2C84700A8010A = {
 			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
@@ -17811,10 +17905,16 @@
 			children = (
 				4BA12FFF04C0A2D900A8010A,
 				4BA1300004C0A2D900A8010A,
+				4BA12FFD04C0A17300A8010A,
+				4B970BE00535B6AC002F28F9,
+				4B970BE10535B6AC002F28F9,
+				4B970BE40535B6BE002F28F9,
 				34D434FA051A6559003B2F21,
 				34D434FB051A6559003B2F21,
 				34D434FE051A6AA7003B2F21,
-				4BA12FFD04C0A17300A8010A,
+				4B970BF80535B864002F28F9,
+				4B970BF90535B864002F28F9,
+				4B970BFC0535B879002F28F9,
 				4BA1300304C0A4E300A8010A,
 				34D43504051ADC10003B2F21,
 			);

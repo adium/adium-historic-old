@@ -24,6 +24,7 @@
 #import "AINewMessagePrompt.h"
 #import "AIDualWindowPreferences.h"
 #import "ESDualWindowMessageWindowPreferences.h"
+#import "ESDualWindowMessageAdvancedPreferences.h"
 
 #define DUAL_INTERFACE_DEFAULT_PREFS		@"DualWindowDefaults"
 #define DUAL_INTERFACE_WINDOW_DEFAULT_PREFS	@"DualWindowMessageDefaults"
@@ -87,9 +88,11 @@
         [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_WINDOW_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
     //Install Preference Views
-    preferenceController = [[AIDualWindowPreferences dualWindowInterfacePreferencesWithOwner:owner] retain];
-    preferenceMessageController = [[ESDualWindowMessageWindowPreferences dualWindowMessageWindowInterfacePreferencesWithOwner:owner] retain];
-    
+    preferenceController = [[AIDualWindowPreferences preferencePaneWithOwner:owner] retain];
+    preferenceAdvController = [[AIDualWindowAdvancedPrefs preferencePaneWithOwner:owner] retain];
+    preferenceMessageController = [[ESDualWindowMessageWindowPreferences preferencePaneWithOwner:owner] retain];
+    preferenceMessageAdvController = [[ESDualWindowMessageAdvancedPreferences preferencePaneWithOwner:owner] retain];
+   
     //Open the contact list window
     [self showContactList:nil];
 

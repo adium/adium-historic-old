@@ -14,7 +14,7 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            CLASS = ESDualWindowMessageWindowPreferences; 
+            CLASS = ESDualWindowMessageAdvancedPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "autohide_tabBar" = NSButton; 

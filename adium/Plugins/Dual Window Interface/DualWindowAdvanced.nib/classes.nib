@@ -1,10 +1,21 @@
 {
     IBClasses = (
         {
+            CLASS = AIDualWindowAdvancedPrefs; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"checkBox_autoResize" = NSButton; "checkBox_horizontalResize" = NSButton; }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
             CLASS = AIDualWindowPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"checkBox_autoResize" = NSButton; }; 
-            SUPERCLASS = AIPreferencePane; 
+            OUTLETS = {
+                "checkBox_autoResize" = NSButton; 
+                "checkBox_horizontalResize" = NSButton; 
+                "view_resizing" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
         }, 
         {
             ACTIONS = {changePreference = id; }; 

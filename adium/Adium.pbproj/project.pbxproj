@@ -8476,10 +8476,16 @@
 			children = (
 				4BA12FFF04C0A2D900A8010A,
 				4BA1300004C0A2D900A8010A,
+				4BA12FFD04C0A17300A8010A,
+				D3F4157505365D7500A8010B,
+				D3F4157605365D7500A8010B,
+				D3F4157705365D7500A8010B,
 				34D434FA051A6559003B2F21,
 				34D434FB051A6559003B2F21,
 				34D434FE051A6AA7003B2F21,
-				4BA12FFD04C0A17300A8010A,
+				D3F4157905365D7500A8010B,
+				D3F4157A05365D7500A8010B,
+				D3F4157805365D7500A8010B,
 				4BA1300304C0A4E300A8010A,
 				34D43504051ADC10003B2F21,
 			);
@@ -15389,6 +15395,82 @@
 			settings = {
 			};
 		};
+		D3F4157505365D7500A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIDualWindowAdvancedPrefs.h;
+			path = "Plugins/Dual Window Interface/AIDualWindowAdvancedPrefs.h";
+			refType = 4;
+		};
+		D3F4157605365D7500A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIDualWindowAdvancedPrefs.m;
+			path = "Plugins/Dual Window Interface/AIDualWindowAdvancedPrefs.m";
+			refType = 4;
+		};
+		D3F4157705365D7500A8010B = {
+			isa = PBXFileReference;
+			name = DualWindowAdvanced.nib;
+			path = "Plugins/Dual Window Interface/DualWindowAdvanced.nib";
+			refType = 4;
+		};
+		D3F4157805365D7500A8010B = {
+			isa = PBXFileReference;
+			name = DualWindowMessageAdvanced.nib;
+			path = "Plugins/Dual Window Interface/DualWindowMessageAdvanced.nib";
+			refType = 4;
+		};
+		D3F4157905365D7500A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESDualWindowMessageAdvancedPreferences.h;
+			path = "Plugins/Dual Window Interface/ESDualWindowMessageAdvancedPreferences.h";
+			refType = 4;
+		};
+		D3F4157A05365D7500A8010B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESDualWindowMessageAdvancedPreferences.m;
+			path = "Plugins/Dual Window Interface/ESDualWindowMessageAdvancedPreferences.m";
+			refType = 4;
+		};
+		D3F4157B05365D7500A8010B = {
+			fileRef = D3F4157505365D7500A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3F4157C05365D7500A8010B = {
+			fileRef = D3F4157605365D7500A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3F4157D05365D7500A8010B = {
+			fileRef = D3F4157705365D7500A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3F4157E05365D7500A8010B = {
+			fileRef = D3F4157805365D7500A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3F4157F05365D7500A8010B = {
+			fileRef = D3F4157905365D7500A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D3F4158005365D7500A8010B = {
+			fileRef = D3F4157A05365D7500A8010B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //D30
 //D31
 //D32
@@ -19016,6 +19098,8 @@
 				4BA1300104C0A2D900A8010A,
 				4B776A2204C981C700A8010A,
 				34D434FC051A6559003B2F21,
+				D3F4157B05365D7500A8010B,
+				D3F4157F05365D7500A8010B,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19034,6 +19118,8 @@
 				4B776A2504C9832F00A8010A,
 				34D434FF051A6AA7003B2F21,
 				34D43505051ADC10003B2F21,
+				D3F4157D05365D7500A8010B,
+				D3F4157E05365D7500A8010B,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19051,6 +19137,8 @@
 				4BA1300204C0A2D900A8010A,
 				4B776A2304C981C700A8010A,
 				34D434FD051A6559003B2F21,
+				D3F4157C05365D7500A8010B,
+				D3F4158005365D7500A8010B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
