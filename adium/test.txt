@@ -1,4 +1,11 @@
+blargh
+
+<<<<<<< test.txt
+asdlkj
+asdfaa
+=======
 I"m teiredasdf
+>>>>>>> 1.8
 hhahaaha
 blargh!
 test file
