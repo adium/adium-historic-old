@@ -8,7 +8,7 @@
 #import "AIContactStatusEventsPlugin.h"
 
 @interface AIContactStatusEventsPlugin (PRIVATE)
-- (BOOL)updateCache:(NSMutableDictionary *)cache forKey:(NSString *)key ofType:(SEL)selector listObject:(AIListObject *)inObject performCompare:(BOOL)performCompare;
+- (BOOL)updateCache:(NSMutableDictionary *)cache forKey:(NSString *)key newValue:(id)newStatus listObject:(AIListObject *)inObject performCompare:(BOOL)performCompare;
 @end
 
 @implementation AIContactStatusEventsPlugin
@@ -206,15 +206,15 @@
 //If it is YES, a change from one value to another is considered worthy of an update.
 - (BOOL)updateCache:(NSMutableDictionary *)cache forKey:(NSString *)key newValue:(id)newStatus listObject:(AIListObject *)inObject performCompare:(BOOL)performCompare
 {
-	id		oldStatus = [cache objectForKey:[inObject uniqueObjectID]];
+	id		oldStatus = [cache objectForKey:[inObject internalObjectID]];
 	if((newStatus && !oldStatus) ||
 	   (oldStatus && !newStatus) ||
 	   ((performCompare && newStatus && oldStatus && ![newStatus performSelector:@selector(compare:) withObject:oldStatus] == 0))){
 		
 		if (newStatus){
-			[cache setObject:newStatus forKey:[inObject uniqueObjectID]];
+			[cache setObject:newStatus forKey:[inObject internalObjectID]];
 		}else{
-			[cache removeObjectForKey:[inObject uniqueObjectID]];
+			[cache removeObjectForKey:[inObject internalObjectID]];
 		}
 		return(YES);
 	}else{
