@@ -1036,6 +1036,7 @@
 				F1D0C62C051AC1B90000000E,
 				4BA88A390524A98F00A8010A,
 				4BA88A530524AFF600A8010A,
+				BF7BF5EE052BA13000000202,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -1093,6 +1094,7 @@
 				4B52A57C03EDB96E00A8010A,
 				11B96D82049AF87D00C6304D,
 				4BC2C6E70480540A00A8010A,
+				BF7BF5ED052BA13000000202,
 				4B1332230459BA6F00A8010A,
 				9EDAC4EC03D5160100415B22,
 				4B13321A0459BA3900A8010A,
@@ -1249,6 +1251,7 @@
 				F1D0C62D051AC1B90000000E,
 				4BA88A3A0524A98F00A8010A,
 				4BA88A540524AFF600A8010A,
+				BF7BF5EF052BA13000000202,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -1367,6 +1370,7 @@
 				4B0AABB305228F9700A8010A,
 				4B0AABB405228F9700A8010A,
 				4B0AABB505228F9700A8010A,
+				BF7BF5F0052BA13000000202,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3177,6 +3181,7 @@
 		};
 		4B13323E0459BDF900A8010A = {
 			children = (
+				BF7BF5E7052BA0EF00000202,
 				F510B76D03339ED501A8010A,
 				4B1332140459B9A000A8010A,
 			);
@@ -14554,6 +14559,191 @@
 //B72
 //B73
 //B74
+//BF0
+//BF1
+//BF2
+//BF3
+//BF4
+		BF7BF5E7052BA0EF00000202 = {
+			children = (
+				BF7BF5F6052BA16200000202,
+				BF7BF5F7052BA16200000202,
+			);
+			isa = PBXGroup;
+			name = "Disconnect All";
+			refType = 4;
+		};
+		BF7BF5E8052BA13000000202 = {
+			buildActionMask = 2147483647;
+			files = (
+				BF7BF5F8052BA16200000202,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF7BF5E9052BA13000000202 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF7BF5EA052BA13000000202 = {
+			buildActionMask = 2147483647;
+			files = (
+				BF7BF5F9052BA16200000202,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF7BF5EB052BA13000000202 = {
+			buildActionMask = 2147483647;
+			files = (
+				BF7BF5F3052BA13F00000202,
+				BF7BF5F4052BA13F00000202,
+				BF7BF5F5052BA13F00000202,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF7BF5EC052BA13000000202 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF7BF5ED052BA13000000202 = {
+			buildPhases = (
+				BF7BF5E8052BA13000000202,
+				BF7BF5E9052BA13000000202,
+				BF7BF5EA052BA13000000202,
+				BF7BF5EB052BA13000000202,
+				BF7BF5EC052BA13000000202,
+			);
+			buildSettings = {
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Disconnect All";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				BF7BF5FA052BA1A800000202,
+				BF7BF5FB052BA1A800000202,
+			);
+			isa = PBXBundleTarget;
+			name = "Disconnect All";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Disconnect All";
+			productReference = BF7BF5EE052BA13000000202;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>DisconnectAllPlugin</string>
+</dict>
+</plist>
+";
+		};
+		BF7BF5EE052BA13000000202 = {
+			isa = PBXBundleReference;
+			path = "Disconnect All.bundle";
+			refType = 3;
+		};
+		BF7BF5EF052BA13000000202 = {
+			isa = PBXTargetDependency;
+			target = BF7BF5ED052BA13000000202;
+		};
+		BF7BF5F0052BA13000000202 = {
+			fileRef = BF7BF5EE052BA13000000202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF7BF5F3052BA13F00000202 = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF7BF5F4052BA13F00000202 = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF7BF5F5052BA13F00000202 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF7BF5F6052BA16200000202 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = DisconnectAllPlugin.h;
+			path = "Plugins/Disconnect All/DisconnectAllPlugin.h";
+			refType = 4;
+		};
+		BF7BF5F7052BA16200000202 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = DisconnectAllPlugin.m;
+			path = "Plugins/Disconnect All/DisconnectAllPlugin.m";
+			refType = 4;
+		};
+		BF7BF5F8052BA16200000202 = {
+			fileRef = BF7BF5F6052BA16200000202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF7BF5F9052BA16200000202 = {
+			fileRef = BF7BF5F7052BA16200000202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF7BF5FA052BA1A800000202 = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		BF7BF5FB052BA1A800000202 = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+//BF0
+//BF1
+//BF2
+//BF3
+//BF4
 //D20
 //D21
 //D22
