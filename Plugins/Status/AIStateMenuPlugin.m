@@ -113,7 +113,7 @@ Adium, Copyright 2001-2005, Adam Iser
 												  action:@selector(selectState:)
 										   keyEquivalent:@""];
 			
-			[menuItem setImage:[[adium statusController] iconForState:state]];
+			[menuItem setImage:[[[[adium statusController] iconForState:state] copy] autorelease]];
 			[menuItem setRepresentedObject:state];
 			[stateMenuItemArray addObject:menuItem];
 			[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_State];
