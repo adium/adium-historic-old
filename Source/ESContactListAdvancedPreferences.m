@@ -142,6 +142,9 @@
 	return(defaultsDict);
 }
 
+/*
+ * @brief Configure control dimming
+ */
 - (void)configureControlDimming
 {
 	[checkBox_showTooltipsInBackground setEnabled:([checkBox_showTooltips state] == NSOnState)];
