@@ -181,13 +181,13 @@
         while(dict = [enumerator nextObject]){
             NSString * title = [dict objectForKey:@"Title"];
             if(title){
-            menuItem = [[[NSMenuItem alloc] initWithTitle:title
-                                                    target:self
-                                                    action:@selector(changeAwayPreference:)
-                                             keyEquivalent:@""] autorelease];
+				menuItem = [[[NSMenuItem alloc] initWithTitle:title
+													   target:self
+													   action:nil
+												keyEquivalent:@""] autorelease];
             }else{
                 NSString * message = [[dict objectForKey:@"Message"] string];
-    
+				
                 //Cap the away menu title (so they're not incredibly long)
                 if([message length] > MENU_AWAY_DISPLAY_LENGTH){
                     message = [[message substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:ELIPSIS_STRING];
@@ -195,7 +195,7 @@
                 
                 menuItem = [[[NSMenuItem alloc] initWithTitle:message
                                                        target:self
-                                                       action:@selector(changeAwayPreference:)
+                                                       action:nil
                                                 keyEquivalent:@""] autorelease];
             }
             [menuItem setRepresentedObject:dict];
@@ -203,17 +203,17 @@
             [savedAwaysMenu addItem:menuItem];        
         }
     }else{
-            menuItem = [[[NSMenuItem alloc] initWithTitle:AUTO_AWAY_NO_AWAYS_TITLE
-                                                    target:nil
-                                                    action:nil
-                                                keyEquivalent:@""] autorelease];
-            [menuItem setEnabled:NO];
-            [savedAwaysMenu addItem:menuItem];
-			[checkBox_enableAutoAway setState:NO];
-            [checkBox_enableAutoAway setEnabled:NO];
-            [textField_autoAwayMinutes setEnabled:NO];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:AUTO_AWAY_NO_AWAYS_TITLE
+											   target:nil
+											   action:nil
+										keyEquivalent:@""] autorelease];
+		[menuItem setEnabled:NO];
+		[savedAwaysMenu addItem:menuItem];
+		[checkBox_enableAutoAway setState:NO];
+		[checkBox_enableAutoAway setEnabled:NO];
+		[textField_autoAwayMinutes setEnabled:NO];
 	}            
-
+	
     [savedAwaysMenu setAutoenablesItems:NO];
     return savedAwaysMenu;
 }

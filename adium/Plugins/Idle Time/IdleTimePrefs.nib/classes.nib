@@ -33,16 +33,19 @@
             OUTLETS = {"view_preferences" = NSView; }; 
             SUPERCLASS = AIService; 
         }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {CLASS = AIService; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AISmartStepper; LANGUAGE = ObjC; SUPERCLASS = NSStepper; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {
-                changeAwayPreference = id; 
-                changePreference = id; 
-                refreshAutoAwayPreferences = id; 
-            }; 
             CLASS = IdleTimePreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -53,10 +56,10 @@
                 "stepper_idleMinutes" = NSStepper; 
                 "textField_autoAwayMinutes" = NSTextField; 
                 "textField_idleMinutes" = NSTextField; 
-                "view_prefView" = NSView; 
             }; 
-            SUPERCLASS = AIObject; 
-        }
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }
