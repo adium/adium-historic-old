@@ -21,6 +21,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				ZERO_LINK = NO;
 			};
 			isa = PBXBuildStyle;
