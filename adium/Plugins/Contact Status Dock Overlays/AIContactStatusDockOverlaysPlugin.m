@@ -112,7 +112,7 @@
 			   (showStatus && [inObject integerStatusObjectForKey:@"Signed Off"])){
 				
 				//Ignore any objects within a meta contact
-				if(![[inObject containingGroup] isKindOfClass:[AIMetaContact class]]){
+				if(![[inObject containingObject] isKindOfClass:[AIMetaContact class]]){
 					
 					if(![unviewedObjectsArray containsObject:inObject]){
 						[unviewedObjectsArray addObject:inObject];

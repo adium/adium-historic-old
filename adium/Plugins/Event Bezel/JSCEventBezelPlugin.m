@@ -147,7 +147,7 @@
 		}
     } else {
         contact = [notification object];
-		if([[contact containingGroup] isKindOfClass:[AIMetaContact class]]){
+		if([[contact containingObject] isKindOfClass:[AIMetaContact class]]){
 			contact = nil;
 		}
     }
@@ -155,7 +155,7 @@
 	if(contact){
 		//Check to be sure bezel for contact and for its group is enabled
 		NSNumber *contactDisabledNumber = [contact preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL];
-		//NSNumber *groupDisabledNumber = [[contact containingGroup] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL];
+		//NSNumber *groupDisabledNumber = [[contact containingObject] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL];
 		BOOL contactEnabled = !contactDisabledNumber || (![contactDisabledNumber boolValue]);
 		//BOOL groupEnabled = !groupDisabledNumber || (![groupDisabledNumber boolValue]);
 		// If Adium is hidden, check if we want it to show (and unhide Adium in the process)

@@ -13,9 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /*
- * $Revision: 1.16 $
- * $Date: 2004/06/25 01:19:46 $
- * $Author: jmelloy $
+ * $Revision: 1.17 $
+ * $Date: 2004/07/27 19:08:21 $
+ * $Author: evands $
  */
 
 #import "JMSQLLogViewerWindowController.h"
@@ -239,7 +239,7 @@ static JMSQLLogViewerWindowController *sharedSQLViewerInstance = nil;
             AIListContact	*contact = [[adium contactController] contactInGroup:nil withService:serviceID UID:accountUID];
             /*
 			if(contact){
-                serverGroup = [[contact containingGroup] UID];
+                serverGroup = [[contact containingObject] UID];
             }
             if(!serverGroup) serverGroup = @"Strangers"; //Default group
 			 */

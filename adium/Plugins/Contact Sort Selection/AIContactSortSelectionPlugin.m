@@ -51,7 +51,7 @@
 	//Wait for Adium to finish launching before we set up the sort controller
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumFinishedLaunching:)
-									   name:Adium_PluginsDidFinishLoading
+									   name:Adium_CompletedApplicationLoad
 									 object:nil];
 }
 

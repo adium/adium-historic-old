@@ -47,7 +47,7 @@
 	//Wait for Adium to finish launching before we set up our sounds so the event plugins are ready
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumFinishedLaunching:)
-									   name:Adium_PluginsDidFinishLoading
+									   name:Adium_CompletedApplicationLoad
 									 object:nil];
 }
 
@@ -70,7 +70,7 @@
 	}
 	
 	[[adium notificationCenter] removeObserver:self
-										  name:Adium_PluginsDidFinishLoading
+										  name:Adium_CompletedApplicationLoad
 										object:nil];
 }
 

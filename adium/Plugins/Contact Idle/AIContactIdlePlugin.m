@@ -102,7 +102,7 @@ DeclareString(Idle);
         [self setIdleForObject:object silent:YES];
     }
 	
-	[[adium contactController] endListObjectNotificationDelay];
+	[[adium contactController] endListObjectNotificationsDelay];
 }
 
 //Give a contact its correct idle value
