@@ -833,7 +833,7 @@
     [[adium menuController] addMenuItem:item toLocation:LOC_Dock_Status];    
     [windowMenuArray addObject:[item autorelease]];
 	
-    //Messages window and any open messasge
+    //Messages window and any open messasges
     if([messageWindowControllerArray count])
     {
 		//Add a 'Messages' menu item
