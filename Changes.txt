@@ -5,11 +5,17 @@ Version 0.72
 - Fixed major stability issues involving Applescript filters
 - Fixed issues with erroneous autolinkification of text with multiple periods
 - Fixed issues with automatic away after idle 
+- Fixed issues with manual ordering of contacts
 - Fixed a crash when deleting logs
-- Improved Contact List vertical autosizing when placed at the bottom of the screen
+- Fixed a crash when selecting Undo in the Enter Away Message window
+- Fixed a memory leak
+- Improved Contact List autosizing
+- (AIM) Fixed issues with setting serverside aliases
+- (AIM) Fixed issue with _ or @ in screennames
+- (Jabber) Fixed issues with rejoining group chats
 - (Jabber) Fixed issue with messages appearing gray.
 - (Jabber) Fixed issue with % in Jabber IDs
-- (AIM) Fixed issue with _ or @ in screennames
+- (Rendezvous) Improved behavior when changing IPs or locations
 
 Version 0.71 (11/01/2004)
 - Fixed issues with "Systemwide HTTP/SOCKS4/SOCKS5" proxy settings 
