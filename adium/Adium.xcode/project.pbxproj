@@ -2679,24 +2679,12 @@
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		346C9D6B06004728000F5A8A = {
-			fileRef = 346C9D6A06004728000F5A8A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		346C9DA406004754000F5A8A = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.cfbundle;
 			path = "Standard Message View.AdiumPlugin";
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		346C9DA506004754000F5A8A = {
-			fileRef = 346C9DA406004754000F5A8A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		346C9DBA06004765000F5A8A = {
 			fileRef = 346C9DA406004754000F5A8A;
@@ -3970,8 +3958,6 @@
 				4BD675A706001E760049CAF7,
 				4BD675A806001E760049CAF7,
 				4BD6771E06002FD50049CAF7,
-				346C9D6B06004728000F5A8A,
-				346C9DA506004754000F5A8A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
