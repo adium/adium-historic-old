@@ -10,87 +10,80 @@
 #import "AIEditorImportCollection.h"
 
 @interface AIEditorImportCollection (PRIVATE)
-- (id)init;
 - (id)initWithPath:(NSString *)path;
 - (void)importFromPath:(NSString *)path;
 - (NSString *)makeStringPretty:(NSString *)string;
-- (AIEditorListGroup *)importContactsFromPath:(NSString *)path;
+- (AIEditorListGroup *)importContactsFromPath:(NSString *)inPath;
 @end
 
 @implementation AIEditorImportCollection
 
 //Return an empty collection 
-+ (AIEditorImportCollection *)editorCollection
-{
-    return([[[self alloc] init] autorelease]);
-}
-
 //Retun collection from a path, set the name
-+ (AIEditorImportCollection *)editorCollectionWithPath:(NSString *)path
++ (AIEditorImportCollection *)editorCollectionWithPath:(NSString *)inPath
 {
-    return([[[self alloc] initWithPath:path] autorelease]);
-}
-
-//empty initializer
-- (id)init
-{
-    [super init];
-    
-    list = [[AIEditorListGroup alloc] initWithUID:@"Self" temporary:NO];
-    
-    return self;
+    return([[[self alloc] initWithPath:inPath] autorelease]);
 }
 
 //path initializer
-- (id)initWithPath:(NSString *)path
+- (id)initWithPath:(NSString *)inPath
 {
     [super init];
-        
+
+    path = [inPath retain];
     [self importFromPath:path];
     
     return self;
 }
 
-//Return our text description
-- (NSString *)name
-{
+//Large black drawer label
+- (NSString *)name{
+    return([path lastPathComponent]);
+}
+
+//Small gray drawer text label
+- (NSString *)subLabel{
     return(@"Imported Contacts");
 }
 
-//Return a unique identifier
+//Window title when collection is selected
+- (NSString *)collectionDescription{
+    return([path lastPathComponent]);
+}
+
+//Used to store group collapse/expand state
 - (NSString *)UID{
     return(@"ImportedContacts");
 }
 
-- (NSString *)subLabel{
-    return(@"");
-}
-
-- (NSString *)collectionDescription{
-    return(@"Imported Contacts");
-}
-
+//Display ownership/checkbox column?
 - (BOOL)showOwnershipColumns{
     return(NO);
 }
+
+//Display custom columns (alias, ...)?
 - (BOOL)showCustomEditorColumns{
     return(NO);
 }
 
+//Does this collection get a check box in the ownership column?
 - (BOOL)includeInOwnershipColumn
 {
     return(NO);
 }
 
+//All handles are of the service type of our imported file (AIM for now)
 - (NSString *)serviceID
 {
     return(@"AIM");
 }
 
+//Quickly check if a handle with the specified UID is in this file
 - (BOOL)containsHandleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
 {
-    return(NO);
+    return(NO); //Not needed
 }
+
 
 //Return our icon description
 - (NSImage *)icon
@@ -101,7 +94,7 @@
 //Return YES if this collection is enabled
 - (BOOL)enabled
 {
-    return([list count] != 0);
+    return(YES);
 }
 
 //Return an Editor List Group containing everything in this collection
@@ -134,33 +127,11 @@
     //ignored
 }
 
-- (void)importAndAppendContactsFromPath:(NSString *)path
-{
-    AIEditorListGroup *appendList = [self importContactsFromPath:path];
-    
-    NSEnumerator *appendListEnumerator;
-    AIEditorListObject *anObject;
-    
-    if([list count] == 0)//no contacts in the first place!
-    {
-        list = appendList;
-    }
-    else // we need to append
-    {
-        appendListEnumerator = [appendList objectEnumerator];
-        while(anObject = [appendListEnumerator nextObject])
-        {
-            NSLog(@"%s%@%s","adding ",[anObject UID]," to the master list");
-            [list addObject:anObject]; //add the objects individually, we don't want one big group.
-        }
-    }
-}
-
 //used in the constructor
-- (void)importFromPath:(NSString *)path
+- (void)importFromPath:(NSString *)inPath
 {
     [list release];
-    list = [self importContactsFromPath:path];
+    list = [self importContactsFromPath:inPath];
 }
 
 //strips surrounding whitespace and quotes
@@ -180,10 +151,10 @@
 }
 
 //grab the contacts form a file and return them in a list group
-- (AIEditorListGroup *)importContactsFromPath:(NSString *)path
+- (AIEditorListGroup *)importContactsFromPath:(NSString *)inPath
 {
     NSScanner *blt = [NSScanner scannerWithString:
-                    [NSString stringWithContentsOfFile:path]];
+                    [NSString stringWithContentsOfFile:inPath]];
     
     NSCharacterSet *whiteN = [NSCharacterSet whitespaceAndNewlineCharacterSet];
     NSCharacterSet *white = [NSCharacterSet whitespaceCharacterSet];
@@ -251,4 +222,5 @@
     
     return alist;
 }
+
 @end

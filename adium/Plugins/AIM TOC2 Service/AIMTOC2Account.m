@@ -618,7 +618,6 @@ static char *hash_password(const char * const password);
 {
     NSMutableArray	*contentsArray;
 
-    NSLog(@"add %@ to %@",handleUID,groupName);
     //If this handle is in the delete dict, it is removed, otherwise the handle is placed in the add dict.
     contentsArray = [deleteDict objectForKey:groupName];
     if(contentsArray && [contentsArray containsObject:handleUID]){

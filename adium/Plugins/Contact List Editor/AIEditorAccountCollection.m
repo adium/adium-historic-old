@@ -35,7 +35,7 @@
     owner = [inOwner retain];
     account = [inAccount retain];
     list = [[self generateEditorListGroup] retain];
-    controlledChanges = 0;
+    controlledChanges = NO;
 
     //Observe our account's changes
     [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:account];
@@ -130,7 +130,7 @@
 //Add an object to our account
 - (void)addObject:(AIEditorListObject *)inObject
 {
-    controlledChanges = 1;
+    controlledChanges = YES;
     
     if([inObject isKindOfClass:[AIEditorListHandle class]]){
         AIServiceType	*serviceType = [[account service] handleServiceType];
@@ -144,12 +144,14 @@
         [account addServerGroup:[inObject UID]];
         
     }
+
+    controlledChanges = NO;
 }
 
 //Delete an object from our account
 - (void)deleteObject:(AIEditorListObject *)inObject
 {
-    controlledChanges = 1;
+    controlledChanges = YES;
     
     if([inObject isKindOfClass:[AIEditorListHandle class]]){
         AIServiceType	*serviceType = [[account service] handleServiceType];
@@ -160,45 +162,52 @@
         [account removeServerGroup:[inObject UID]];
 
     }
+
+    controlledChanges = NO;
 }
 
 //Rename an existing object
 - (void)renameObject:(AIEditorListObject *)inObject to:(NSString *)newName
 {
+    controlledChanges = YES;
+
     if([inObject isKindOfClass:[AIEditorListHandle class]]){
         AIServiceType	*serviceType = [[account service] handleServiceType];
         NSString	*newUID = [serviceType filterUID:newName];
         NSString	*handleGroup = [[(AIEditorListHandle *)inObject containingGroup] UID];
         
         //Remove the handle, and re-add it with the new name
-        controlledChanges = 2;
         [account removeHandleWithUID:[inObject UID]];
         [account addHandleWithUID:newUID
                       serverGroup:handleGroup
                         temporary:NO];
 
     }else if([inObject isKindOfClass:[AIEditorListGroup class]]){
-        controlledChanges = 1;
         [account renameServerGroup:[inObject UID] to:newName];
 
     }
+
+    controlledChanges = NO;
 }
 
 //Move an existing object
 - (void)moveObject:(AIEditorListObject *)inObject toGroup:(AIEditorListGroup *)inGroup
 {
+    controlledChanges = YES;
+
     if([inObject isKindOfClass:[AIEditorListHandle class]]){
         AIServiceType	*serviceType = [[account service] handleServiceType];
         NSString	*handleUID = [[[serviceType filterUID:[(AIEditorListHandle *)inObject UID]] retain] autorelease];
 
         //Remove the handle, and re-add it into the correct group
-        controlledChanges = 2;
         [account removeHandleWithUID:handleUID];
         [account addHandleWithUID:handleUID serverGroup:[inGroup UID] temporary:NO];
 
     }else if([inObject isKindOfClass:[AIEditorListGroup class]]){
         //Not yet
     }
+
+    controlledChanges = NO;
 }
 
 //Create and return the editor list (editor groups and handles)
@@ -251,7 +260,6 @@
 //Our account's handles changed
 - (void)accountHandlesChanged:(NSNotification *)notification
 {
-
     //The controlledChanges variable is used to make things faster by avoiding unnecessary regeneration of our editor list group.  Before making changes, we set controlledChanges to the number of accountHandlesChanged messages that are expected.  If more changes are received than expected, or changes are received when none are expected, we regenerate the list.  Yah, it's a messy hack, but it give a huge speed boost that is worth it in the long run.
     
     if(!controlledChanges){
@@ -264,7 +272,6 @@
         [[owner notificationCenter] postNotificationName:Editor_CollectionContentChanged object:self];
     }else{
         NSLog(@"(ignored)accountHandlesChanged / generateEditorListGroup");
-        controlledChanges--;
     }
 }
 

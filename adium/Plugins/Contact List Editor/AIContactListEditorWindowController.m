@@ -213,6 +213,9 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         //Notify
         [[owner notificationCenter] postNotificationName:Editor_ActiveCollectionChanged object:selectedCollection];
 
+        //Give first responder to outline view, and select its first row
+        [[self window] makeFirstResponder:outlineView_contactList];
+        [outlineView_contactList selectRow:0 byExtendingSelection:NO];
     }
 }
 
@@ -791,6 +794,11 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
     //Get the currently selected group, and make sure it's expanded
     selectedGroup = [self selectedGroup];
+    if(!selectedGroup){
+        //Create them a new group
+        selectedGroup = [plugin createGroupNamed:@"New Group" onCollection:selectedCollection temporary:YES];
+    }
+    [outlineView_contactList reloadData];
     [outlineView_contactList expandItem:selectedGroup];
 
     //Create the new handle
@@ -820,13 +828,15 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 //Finish up the importing panel
 - (void)concludeImportPanel:(NSOpenPanel *)panel returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
+    if(returnCode == NSOKButton){
+        [plugin importFile:[[panel filenames] objectAtIndex:0]];
+    }
+    
 /*    NSEnumerator *enumerator = [[plugin collectionsArray] objectEnumerator];
     id anObject;
     int index = 0;
     AIEditorImportCollection *defaultCollection = [AIEditorImportCollection editorCollection];
         
-    if(returnCode == NSOKButton)
-    {
         while (anObject = [enumerator nextObject])
         {
             if([anObject isMemberOfClass:[AIEditorImportCollection class]])
@@ -994,7 +1004,14 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     //Get the currently selected group
     selectedItem = [outlineView_contactList itemAtRow:[outlineView_contactList selectedRow]];
     if(selectedItem == nil){
-        selectedGroup = [selectedCollection list];
+        AIEditorListGroup	*list = [selectedCollection list];
+
+        if([list count]){
+            selectedGroup = (AIEditorListGroup *)[list objectAtIndex:0];
+        }else{
+            selectedGroup = nil;
+        }
+
     }else if([selectedItem isKindOfClass:[AIEditorListHandle class]]){
         selectedGroup = [selectedItem containingGroup];
     }else{
