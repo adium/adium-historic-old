@@ -12,6 +12,9 @@
     id       owner;
     NSDate  *lastModDate;
     BOOL     fox9;
+	
+	NSString	*bookmarkPath;
+	NSString	*fox9BookmarkPath;
 }
 
 @end

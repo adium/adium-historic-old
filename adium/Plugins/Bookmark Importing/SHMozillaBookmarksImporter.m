@@ -26,12 +26,27 @@
     return [[[self alloc] init] autorelease];
 }
 
+- (id)init
+{
+	[super init];
+	
+	lastModDate = nil;
+	return self;
+}
+
+- (void)dealloc
+{
+	[lastModDate release];
+	[super dealloc];
+}
+
 - (NSArray *)availableBookmarks
 {
-    NSString    *bookmarkString = [NSString stringWithContentsOfFile:[self bookmarkPath]];
+    NSString		*bookmarkString = [NSString stringWithContentsOfFile:[self bookmarkPath]];
     
-    NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[self bookmarkPath] traverseLink:YES];
-    [lastModDate autorelease]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
+    NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[self bookmarkPath]
+																		 traverseLink:YES];
+    [lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
     
     return [SHMozillaCommonParser parseBookmarksfromString:bookmarkString];
 }

@@ -87,36 +87,36 @@ DeclareString(bookmarkDictContent)
 
 + (NSArray *)parseBookmarksfromString:(NSString *)inString
 {
-    NSMutableArray      *bookmarksArray = [NSMutableArray array];
+    NSMutableArray      *bookmarksArray = [[NSMutableArray alloc] init];
     NSMutableArray      *arrayStack = [NSMutableArray array];
-    NSScanner   *linkScanner = [NSScanner scannerWithString:inString];
-    NSString    *titleString, *urlString;
+    NSScanner			*linkScanner = [NSScanner scannerWithString:inString];
+    NSString			*titleString = nil, *urlString = nil;
     
-    unsigned int stringLength = [inString length];
+    unsigned int		stringLength = [inString length];
     
     
-    NSCharacterSet  *quotesSet = [NSCharacterSet characterSetWithCharactersInString:@"'\""];
+    NSCharacterSet		*quotesSet = [NSCharacterSet characterSetWithCharactersInString:@"'\""];
     
     while(![linkScanner isAtEnd]){
         if((stringLength - [linkScanner scanLocation]) < 4){
             [linkScanner setScanLocation:[inString length]];
+			
         }else if([[inString substringWithRange:NSMakeRange([linkScanner scanLocation],3)] isEqualToString:Hopen]){
             if((stringLength - [linkScanner scanLocation]) > 3) [linkScanner setScanLocation:[linkScanner scanLocation] + 3];
             [linkScanner scanUpToString:gtSign intoString:nil];
             if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
             
+			titleString = nil;
+			
             if([linkScanner scanUpToString:Hclose intoString:&titleString]){
                 // decode html stuff
                 titleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:titleString];
                 [linkScanner setScanLocation:[linkScanner scanLocation] + 3];
-            }else{
-                [titleString release];
-                titleString = nil;
             }
             [arrayStack addObject:bookmarksArray];
-            bookmarksArray = [NSMutableArray array];
+            [bookmarksArray release]; bookmarksArray = [[NSMutableArray alloc] init];
             [(NSMutableArray *)[arrayStack lastObject] addObject:[self menuDictWithTitle:titleString
-                                                             menuItems:bookmarksArray]];
+																			   menuItems:bookmarksArray]];
 
         }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:Aopen]){
             [linkScanner scanUpToString:hrefStr intoString:nil];
@@ -126,12 +126,11 @@ DeclareString(bookmarkDictContent)
                 [linkScanner scanUpToString:gtSign intoString:nil];
                 if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
                 
+				titleString = nil;
+				
                 if([linkScanner scanUpToString:Aclose intoString:&titleString]){
                     // decode html stuff
                     titleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:titleString];
-                }else{
-                    [titleString release];
-                    titleString = nil;
                 }
             
                 [bookmarksArray addObject:[self hyperlinkForTitle:titleString URL:urlString]];
@@ -140,7 +139,14 @@ DeclareString(bookmarkDictContent)
             if((stringLength - [linkScanner scanLocation]) > 4) [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
             
             if([arrayStack count]){
-                bookmarksArray = [arrayStack lastObject];
+				//Set bookmarks array to the last array added to the arrayStack to avoid an extra alloc/init.
+				//However, if we somehow get here and bookmarksArray is already that object, we don't want to release
+				//and set as that would later lead to a double release.
+				NSMutableArray *previousBookmarksArray = [arrayStack lastObject];
+				if (bookmarksArray != previousBookmarksArray){
+					[bookmarksArray release]; bookmarksArray = [previousBookmarksArray retain];
+				}
+
                 [arrayStack removeLastObject];
             }
         }else{
@@ -148,7 +154,8 @@ DeclareString(bookmarkDictContent)
             if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
         }
     }
-    return bookmarksArray;
+	
+    return [bookmarksArray autorelease];
 }
 
 +(SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString

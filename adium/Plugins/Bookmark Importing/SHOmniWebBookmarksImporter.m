@@ -45,13 +45,22 @@ DeclareString(bookmarkDictContent)
 
 - (id)init
 {
+	[super init];
+	
     useOW5 = [[NSFileManager defaultManager] fileExistsAtPath:[OW5_BOOKMARKS_PATH stringByExpandingTildeInPath]];
-    [super init];
     
     InitString(bookmarkDictTitle,SH_BOOKMARK_DICT_TITLE)
     InitString(bookmarkDictContent,SH_BOOKMARK_DICT_CONTENT)
     
-    return self;
+	lastModDate = nil;
+    
+	return self;
+}
+
+- (void)dealloc
+{
+	[lastModDate release];
+	[super dealloc];
 }
 
 - (NSArray *)availableBookmarks
@@ -60,7 +69,7 @@ DeclareString(bookmarkDictContent)
     NSString    *bookmarkString = [NSString stringWithContentsOfFile:bookmarkPath];
     
     NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarkPath traverseLink:YES];
-    [lastModDate autorelease]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
+    [lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
     
     return [self parseBookmarksFile:bookmarkString];
 }

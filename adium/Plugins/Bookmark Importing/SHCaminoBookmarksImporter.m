@@ -48,8 +48,14 @@ static NSArray *emptyArray;
     
     [super init];
     emptyArray = [[NSArray alloc] init];
-    
+    lastModDate = nil;
     return self;
+}
+
+- (void)dealloc
+{
+	[lastModDate release];
+	[super dealloc];
 }
 
 - (NSArray *)availableBookmarks
@@ -58,7 +64,7 @@ static NSArray *emptyArray;
     NSDictionary    *bookmarkDict = [NSDictionary dictionaryWithContentsOfFile:bookmarkPath];
     
     NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarkPath traverseLink:YES];
-    [lastModDate autorelease]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
+    [lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
     
     return [self drillPropertyList:[bookmarkDict objectForKey:CaminoDictChildKey]];
 }
