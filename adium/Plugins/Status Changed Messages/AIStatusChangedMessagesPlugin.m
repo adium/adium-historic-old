@@ -86,10 +86,10 @@
 
     //Create our content object
     content = [AIContentStatus statusWithSource:contact
-                                    destination:contact
+                                    destination:[[owner accountController] accountForSendingContentType:CONTENT_STATUS_TYPE toContact:contact]
                                            date:[NSDate date]
                                         message:[NSString stringWithFormat:message,[contact displayName]]];
-
+    
     //Add the object
     [contact addContentObject:content];
     [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded
@@ -99,9 +99,3 @@
 
 
 @end
-
-
-
-
-
-
