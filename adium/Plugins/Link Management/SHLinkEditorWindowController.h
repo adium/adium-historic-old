@@ -6,7 +6,6 @@
 
 #define PREF_GROUP_LINK_FAVORITES       @"URL Favorites"
 #define LINK_MANAGEMENT_DEFAULTS        @"LinkManagementDefaults"
-#define INITAL_FAVES                    @"Favorites Initially Set"
 
 @class SHAutoValidatingTextView;
 
