@@ -13,6 +13,14 @@
 
 @implementation ESWebView
 
+- (id)initWithView:(NSRect)frameRect frameName:(NSString *)frameName groupName:(NSString *)groupName
+{
+	[super initWithView:frameRect frameName:frameName groupName:groupName];
+
+	draggingDelegate = nil;
+	
+	return self;
+}
 //Font Family ----------------------------------------------------------------------------------------------------------
 #pragma mark Font Family
 - (void)setFontFamily:(NSString *)familyName
@@ -67,20 +75,39 @@
 	
 }
 
+//Dragging
+- (void)setDraggingDelegate:(id)inDelegate
+{
+	draggingDelegate = inDelegate;
+}
+
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
-	return YES;
+	NSLog(@"prepare %@ %@",sender,draggingDelegate);
+	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(prepareForDragOperation:)]){
+		return [draggingDelegate prepareForDragOperation:sender];
+	}else{
+		return [super prepareForDragOperation:sender];
+	}
 }
 
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
-	//we should do magic things here, catch the text, images, files or URLs being dragged and act accordingly.
-	return YES;
+		NSLog(@"performDragOperation %@ %@",sender,draggingDelegate);
+	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(performDragOperation:)]){
+		return [draggingDelegate performDragOperation:sender];
+	}else{
+		return [super performDragOperation:sender];
+	}
 }
 
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
-	
+	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(concludeDragOperation:)]){
+		[draggingDelegate performSelector:@selector(concludeDragOperation:) withObject:sender];
+	}else{
+		[super concludeDragOperation:sender];
+	}
 }
 
 @end
