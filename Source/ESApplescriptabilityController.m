@@ -57,7 +57,7 @@
 													 group:GROUP_ACCOUNT_STATUS]);
 			
 }
-- (void)setDefaultImage:(NSData *)newDefaultImageData
+- (void)setDefaultImageData:(NSData *)newDefaultImageData
 {
 	[[owner preferenceController] setPreference:newDefaultImageData
 										 forKey:KEY_USER_ICON 
