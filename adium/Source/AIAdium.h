@@ -47,7 +47,10 @@
     
     NSNotificationCenter                    *notificationCenter;
     NSMutableDictionary                     *eventNotifications;
-    
+
+	//pathnames to the different Application Support folders.
+    NSArray                                 *appSupportPaths;
+
     BOOL                                    completedApplicationLoad;
 }
 
@@ -72,6 +75,16 @@
 - (IBAction)showAboutBox:(id)sender;
 - (IBAction)showHelp:(id)sender;
 - (IBAction)confirmQuit:(id)sender;
+
+//return zero or more pathnames to objects in the Application Support folders.
+//only those pathnames that exist are returned.
+//you can pass nil as the name to get all the Adium application-support folders
+//  that exist.
+//example: say you call [adium aSPFN:@"Scripts"], and there's a Scripts folder
+//  in ~/L/AS/Adium\ 2.0 and in /L/AS/Adium\ 2.0, but not /N/L/AS/Adium\ 2.0.
+//the array you get back will be { @"/Users/you/L/AS/Adium 2.0/Scripts",
+//  @"/L/AS/Adium 2.0/Scripts" }.
+- (NSArray *)applicationSupportPathsForName:(NSString *)name;
 
 @end
 

@@ -20,6 +20,8 @@
 
 - (BOOL) getFSSpec:(FSSpec*)fsSpec createFileIfNecessary:(BOOL)createFile;
 
+//given a Carbon FSRef, get a POSIX-style pathname in an NSString.
++ (NSString *)pathForFSRef:(FSRef *)object;
 @end
 
 #endif
