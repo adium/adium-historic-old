@@ -27,6 +27,8 @@
 //Swap two menu items
 + (void)swapMenuItem:(NSMenuItem *)existingItem with:(NSMenuItem *)newItem;
 
+//Recollapse an alternate menu item
++ (void)updateAlternateMenuItem:(NSMenuItem *)alternateItem;
 @end
 
 @interface NSMenuItem (ItemCreationAdditions)
