@@ -32,7 +32,6 @@
 	[self setHelperAppForKey:"\pHelper¥ymsgr" withInstance:ICInst];
         [self setHelperAppForKey:"\pHelper¥xmpp" withInstance:ICInst];
 	
-        Err = ICEnd(ICInst);
     [[NSAppleEventManager sharedAppleEventManager] setEventHandler:self 
                                                        andSelector:@selector(handleURLEvent:withReplyEvent:)
                                                      forEventClass:kInternetEventClass
