@@ -689,9 +689,9 @@
 	// If no date specified, don't show one
 	if( [content date] != nil ) {
 		NSString *dateString = [timeStampFormatter stringForObjectValue:[content date]];
-		messageString = [NSString stringWithFormat:@"%@ (%@)", [content message], dateString];
+		messageString = [NSString stringWithFormat:@"%@ (%@)", [[content message] string], dateString];
 	} else {
-		messageString = [NSString stringWithFormat:@"%@", [content message]];
+		messageString = [NSString stringWithFormat:@"%@", [[content message] string]];
 	}
 	
     //Create the status text cell
