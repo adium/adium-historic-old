@@ -17,7 +17,7 @@
 	return([ESGaimAntepoAccount class]);
 }
 - (AIAccountViewController *)accountView{
-    return([ESGaimAntepoAccountViewController accountView]);
+    return([ESGaimAntepoAccountViewController accountViewController]);
 }
 
 //Service Description
