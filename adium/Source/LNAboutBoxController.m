@@ -48,7 +48,7 @@ LNAboutBoxController *sharedInstance = nil;
     {
         FILE *f = fopen(path, "r");
         fscanf(f, "%s | %s", num, date);
-		fclose(f);
+        fclose(f);
         if(*num)
             buildNumber = [[NSString stringWithFormat:@"Build Number: %s", num] retain];
         if(*date)
@@ -109,7 +109,7 @@ LNAboutBoxController *sharedInstance = nil;
     [[linkTextView_siteLink textStorage] setAttributedString:siteLink];
     [linkTextView_siteLink resetCursorRects];
 
-	[siteLink release];
+    [siteLink release];
 
     [button_buildButton setTitle:buildDate];
 
