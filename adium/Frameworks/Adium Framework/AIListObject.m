@@ -138,8 +138,6 @@
 //Alter the placement of this object in a group (PRIVATE: These are for AIListGroup ONLY)
 - (void)setOrderIndex:(float)inIndex forGroup:(AIListGroup *)inGroup
 {
-	NSLog(@"(%@)setOrderIndex:%i forGroup:%@",[self displayName], inIndex, [inGroup displayName]);
-
 	if(inIndex != 0){ //Add
 		if((orderIndexGroup == nil && multipleOrderIndex == nil) || orderIndexGroup == inGroup){
 			//This is our first grouping, or an update to the existing grouping

@@ -4,7 +4,7 @@
 //
 //  Created by Evan Schoenberg on Wed Nov 12 2003.
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
-//  $Id: ESFileTransferController.m,v 1.4 2003/12/08 06:03:52 jmelloy Exp $
+//  $Id: ESFileTransferController.m,v 1.5 2004/01/09 04:16:37 adamiser Exp $
 
 #import "ESFileTransferController.h"
 
@@ -13,7 +13,7 @@
 //init and close
 - (void)initController
 {
-    NSLog(@"init file transfer");
+
 }
 
 - (void)closeController
