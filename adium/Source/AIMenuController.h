@@ -72,7 +72,12 @@ typedef enum {
     NSMenu                              *contextualMenu;
     NSMutableDictionary			*contextualMenuItemDict;
     AIListContact                       *contactualMenuContact;
-    NSTextView                          *contextualMenuTextView;
+    
+    //disabled until post .53
+#ifdef USE_TEXTVIEW_CONTEXTMENUS
+    NSMenu                              *textViewContextualMenu;
+    NSTextView                          *contextualMenu_TextView;
+#endif
     
     NSMutableArray                      *locationArray;
     BOOL                                 isTracking;
@@ -86,8 +91,12 @@ typedef enum {
 //Contextual menu items
 - (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(CONTEXT_MENU_LOCATION)location;
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forListObject:(AIListObject *)inObject;
-- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forTextView:(NSTextView *)inObject;
 - (AIListContact *)contactualMenuContact;
+
+#ifdef USE_TEXTVIEW_CONTEXTMENUS
+- (NSTextView *)contextualMenuTextView;
+- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forTextView:(NSTextView *)inObject;
+#endif
 
 //Control over the italics menu item
 - (void)removeItalicsKeyEquivalent;
