@@ -33,7 +33,6 @@
     AIAccount						*tempDragAccount;
 }
 
-+ (AIAccountListWindowController *)accountListWindowController;
 - (IBAction)deleteAccount:(id)sender;
 - (IBAction)editAccount:(id)sender;
 - (void)updateAccountOverview;
