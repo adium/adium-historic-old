@@ -3569,6 +3569,7 @@
 			fileRef = 3495ACE3068C738700EB5380;
 			isa = PBXBuildFile;
 			settings = {
+				COMPILER_FLAGS = "-fconstant-cfstrings";
 			};
 		};
 		3495AD18068C746100EB5380 = {
