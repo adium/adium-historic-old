@@ -22,8 +22,6 @@
 #import "AITextAttachmentExtension.h"
 #import "AIAttributedStringAdditions.h"
 
-#define FRACTIONAL_PADDING 1.0
-
 @interface AIFlexibleTableTextCell (PRIVATE)
 - (NSRange)validRangeFromIndex:(int)sourceIndex to:(int)destIndex;
 - (NSTextStorage *)createTextSystemWithString:(NSAttributedString *)inString size:(NSSize)inSize container:(NSTextContainer **)outContainer layoutManager:(NSLayoutManager **)outLayoutManager;
@@ -91,7 +89,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     aLayoutManager = [[NSLayoutManager alloc] init];
 
     //Setup
-    [aContainer setLineFragmentPadding:0.0];
+    [aContainer setLineFragmentPadding:1.0]; //A value of 0.0 appears to be invalid (it causes attribute display issues when the text container is resized to certain widths), so we'll use 1.0 since it's close though to 0 :)
     [aLayoutManager addTextContainer:[aContainer autorelease]];
     [aTextStorage addLayoutManager:[aLayoutManager autorelease]];
 
@@ -116,10 +114,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Resize the content of this cell to the desired width, returns new height
 - (int)sizeContentForWidth:(float)inWidth
 {
-    if(![[tableRow tableView] inLiveResize]){
-        //We add padding to offset any fractional character widths
-        inWidth -= FRACTIONAL_PADDING;
-        
+    if(![[tableRow tableView] inLiveResize]){        
         //Reformat the text
         [textContainer setContainerSize:NSMakeSize(inWidth, 1e7)];
         glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
