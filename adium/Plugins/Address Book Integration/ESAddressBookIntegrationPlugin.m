@@ -167,25 +167,29 @@
 {
     if (inData) {
         //Check if we retrieved data from the 'me' address book card
-        if (tag == meTag) {
+        if ((tag == meTag) && useABImages) {
 			[[adium preferenceController] setPreference:inData forKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
             meTag = -1;
         }else{
-            //Apply the image to the appropriate listObject
-            NSImage                 *image= [[[NSImage alloc] initWithData:inData] autorelease];
-            NSNumber                *tagNumber = [NSNumber numberWithInt:tag];
-            
-            //Get the object from our tracking dictionary
-            AIListObject            *listObject = [trackingDict objectForKey:tagNumber];
+			NSNumber                *tagNumber = [NSNumber numberWithInt:tag];
 			
-			//Apply the image at lowest priority
-			[[listObject displayArrayForKey:@"UserIcon"] setObject:image 
-														 withOwner:self
-													 priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];
-			
-			//Notify
-			[[adium contactController] listObjectAttributesChanged:listObject
-													  modifiedKeys:[NSArray arrayWithObject:@"UserIcon"]];		
+			if( useABImages ) {
+				//Apply the image to the appropriate listObject
+				NSImage                 *image= [[[NSImage alloc] initWithData:inData] autorelease];
+				
+				//Get the object from our tracking dictionary
+				AIListObject            *listObject = [trackingDict objectForKey:tagNumber];
+				
+				//Apply the image at lowest priority
+				[[listObject displayArrayForKey:@"UserIcon"] setObject:image 
+															 withOwner:self
+														 priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];
+				
+				//Notify
+				[[adium contactController] listObjectAttributesChanged:listObject
+														  modifiedKeys:[NSArray arrayWithObject:@"UserIcon"]];	
+				
+			}
 			//No further need for the dictionary entry
 			[trackingDict removeObjectForKey:tagNumber];
 		}
