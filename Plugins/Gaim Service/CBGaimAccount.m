@@ -1065,7 +1065,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Set up the ESFileTransfer and query the fileTransferController for a save location
 - (oneway void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
-    NSLog(@"file transfer request received");
+    NSLog(@"File transfer request received");
+	GaimDebug (@"File transfer request received");
     [[adium fileTransferController] receiveRequestForFileTransfer:fileTransfer];
 }
 
@@ -1131,7 +1132,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Subsequently inform the fileTransferController that the fun has begun.
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
 {
-    NSLog(@"accept file transfer");
+    NSLog(@"Accept file transfer");
+    GaimDebug (@"Accept file transfer");
+	
     GaimXfer * xfer = [[fileTransfer accountData] pointerValue];
     
 
