@@ -139,6 +139,8 @@
 	
 	if(listObject){
 		if([listObject isKindOfClass:[AIListContact class]]){
+			//Use the parent
+			listObject = [[adium contactController] parentContactForListObject:listObject];
 			title = [listObject longDisplayName];
 		}else{
 			title = [listObject formattedUID];
