@@ -467,19 +467,25 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
 			[chunk replaceOccurrencesOfString:GreaterThan withString:GreaterThanHTML
 									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
-			// Replace the tabs first, if they exist, so that it creates a leading " " when the tab is the initial character, and 
-			// so subsequent tab formatting is preserved.
-			[chunk replaceOccurrencesOfString:Tab withString:TabHTML
-									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
-			// Check to make sure chunk exists before checking the characterAtIndex and then replace the leading ' ' with "&nbsp;" to preserve formatting.
-			if([chunk length] > 0 && [chunk characterAtIndex:0] == ' '){
-				[chunk replaceOccurrencesOfString:LeadSpace withString:LeadSpaceHTML
-										  options:NSLiteralSearch range:NSMakeRange(0, 1)];
+			
+			if(!simpleOnly){
+				// Replace the tabs first, if they exist, so that it creates a leading " " when the tab is the initial character, and 
+				// so subsequent tab formatting is preserved.
+				[chunk replaceOccurrencesOfString:Tab withString:TabHTML
+										  options:NSLiteralSearch
+											range:NSMakeRange(0, [chunk length])];
+				// Check to make sure chunk exists before checking the characterAtIndex and then replace the leading ' ' with "&nbsp;" to preserve formatting.
+				if([chunk length] > 0 && [chunk characterAtIndex:0] == ' '){
+					[chunk replaceOccurrencesOfString:LeadSpace withString:LeadSpaceHTML
+											  options:NSLiteralSearch
+												range:NSMakeRange(0, 1)];
+				}
+				// Replace all remaining blocks of "  " (<space><space>) with " &nbsp;" (<space><&nbsp;>) so that formatting of large blocks of spaces
+				// in the middle of a line is preserved, and so WebKit properly line-wraps.
+				[chunk replaceOccurrencesOfString:Space withString:SpaceHTML
+										  options:NSLiteralSearch
+											range:NSMakeRange(0, [chunk length])];
 			}
-			// Replace all remaining blocks of "  " (<space><space>) with " &nbsp;" (<space><&nbsp;>) so that formatting of large blocks of spaces
-			// in the middle of a line is preserved, and so WebKit properly line-wraps.
-			[chunk replaceOccurrencesOfString:Space withString:SpaceHTML
-									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
 			
 			//If we need to encode non-ASCII to HTML, append string character by character, replacing any non-ascii characters with the designated unicode
 			//escape sequence.
