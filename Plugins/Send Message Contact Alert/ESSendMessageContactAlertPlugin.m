@@ -74,7 +74,7 @@
 	BOOL					useAnotherAccount;
 		
 	//Intended source and dest
-	account = [[adium accountController] accountWithAccountNumber:[[details objectForKey:KEY_MESSAGE_SEND_FROM] intValue]];
+	account = [[adium accountController] accountWithInternalObjectID:[details objectForKey:KEY_MESSAGE_SEND_FROM]];
 	destUniqueID = [details objectForKey:KEY_MESSAGE_SEND_TO];
 	if(destUniqueID) contact = (AIListContact *)[[adium contactController] existingListObjectWithUniqueID:destUniqueID];
 
