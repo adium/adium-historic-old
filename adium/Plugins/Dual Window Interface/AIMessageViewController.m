@@ -235,10 +235,12 @@
     return([chat account]);
 }
 
+//Set the target list object of this message view's chat to be identical to listContact (though not necessarily on
+//the same account - use setAccount: to change the source account.)
 - (void)setListObject:(AIListContact *)listContact
 {
 	if(listContact != [chat listObject]){
-		[[adium contentController] switchChat:chat toListContact:listContact];
+		[[adium contentController] switchChat:chat toListContact:listContact usingContactAccount:NO];
 	}
 }
 
