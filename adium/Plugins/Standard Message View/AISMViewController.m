@@ -23,25 +23,30 @@
 - (void)rebuildMessageViewForContent;
 - (void)_addContentObject:(AIContentObject *)content;
 - (void)_addContentMessage:(AIContentMessage *)content;
+- (void)_addContentMessageRow:(AIFlexibleTableRow *)row;
 - (void)_addContentStatus:(AIContentStatus *)content;
+- (void)_addContentObjectToQueue:(AIContentObject *)content;
+- (void)_addQueuedContent;
+- (NSArray *)_rowsForAddingContentMessage:(AIContentMessage *)content;
 - (AIFlexibleTableRow *)_statusRowForContent:(AIContentStatus *)content;
 - (AIFlexibleTableRow *)_prefixRowForContent:(AIContentMessage *)content;
-- (AIFlexibleTableRow *)_messageRowForContent:(AIContentMessage *)content previousRow:(AIFlexibleTableRow *)previousRow header:(BOOL)isHeader;
+- (AIFlexibleTableRow *)_messageRowForContent:(AIContentMessage *)content previousRow:(AIFlexibleTableRow *)thePreviousRow header:(BOOL)isHeader;
 - (AIFlexibleTableCell *)_statusCellForContent:(AIContentStatus *)content;
 - (AIFlexibleTableCell *)_userIconCellForContent:(AIContentMessage *)content span:(BOOL)span;
-- (AIFlexibleTableCell *)_emptyImageSpanCellForPreviousRow:(AIFlexibleTableRow *)previousRow;
-- (AIFlexibleTableCell *)_emptyHeadIndentCellForPreviousRow:(AIFlexibleTableRow *)previousRow content:(AIContentMessage *)content;
+- (AIFlexibleTableCell *)_emptyImageSpanCellForPreviousRow:(AIFlexibleTableRow *)thePreviousRow;
+- (AIFlexibleTableCell *)_emptyHeadIndentCellForPreviousRow:(AIFlexibleTableRow *)thePreviousRow content:(AIContentMessage *)content;
 - (AIFlexibleTableCell *)_prefixCellForContent:(AIContentMessage *)content;
 - (AIFlexibleTableCell *)_timeStampCellForContent:(AIContentMessage *)content;
 - (AIFlexibleTableCell *)_messageCellForContent:(AIContentMessage *)content includingPrefixes:(BOOL)includePrefixes shouldPerformHeadIndent:(BOOL)performHeadIndent;
+- (NSAttributedString *)_messageStringForContent:(AIContentMessage *)content;
 - (NSAttributedString *)_prefixStringForContent:(AIContentMessage *)content performHeadIndent:(BOOL)performHeadIndent;
 - (NSAttributedString *)_prefixWithFormat:(NSString *)format forContent:(AIContentMessage *)content;
 - (NSString *)_prefixStringByExpandingFormat:(NSString *)format forContent:(AIContentMessage *)content;
 - (id)_cellInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
 - (id)_lastCellInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
 - (NSArray *)_cellsInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
-- (NSAttributedString *)_stringByRemoveTextColor:(NSAttributedString *)inString;
-- (NSAttributedString *)_messageStringForContent:(AIContentMessage *)content;
+- (NSAttributedString *)_stringByRemovingTextColor:(NSAttributedString *)inString;
+- (NSAttributedString *)_stringByFixingTextColor:(NSAttributedString *)inString;
 @end
 
 @implementation AISMViewController
@@ -57,8 +62,13 @@
 {
     //init
     [super init];
+    
+    rebuilding = NO;
+    
     owner = [inOwner retain];
     chat = [inChat retain];
+    contentQueue = [[NSMutableArray alloc] init];
+    previousRow = nil;
     
     //Cache our icons (temp?)
     iconIncoming = [[AIImageUtilities imageNamed:@"blue" forClass:[self class]] retain];
@@ -98,6 +108,7 @@
 //
 - (void)preferencesChanged:(NSNotification *)notification
 {
+    NSLog(@"preferences changed...");
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] == 0){
         NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         
@@ -112,7 +123,8 @@
         prefixIncoming = [[prefDict objectForKey:KEY_SMV_PREFIX_INCOMING] retain];
         prefixOutgoing = [[prefDict objectForKey:KEY_SMV_PREFIX_OUTGOING] retain];
 	inlinePrefixes = ([prefixIncoming rangeOfString:@"%m"].location == NSNotFound);
-	
+        NSLog(@"**** Prefs: incoming:%@ outgoing:%@",prefixIncoming,prefixOutgoing);
+        
 	//Time Stamps
         timeStampFormat = [[prefDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT] retain];
         timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeStampFormat allowNaturalLanguage:NO];
@@ -146,7 +158,6 @@
         incomingLightSourceColor = [[[prefDict objectForKey:KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR] representedColor] retain];
         prefixFont = [[[prefDict objectForKey:KEY_SMV_PREFIX_FONT] representedFont] retain];        
         
-	
         //Reset all content objects
         [self rebuildMessageViewForContent];
     }
@@ -177,17 +188,84 @@
 //Rebuild our view for any existing content
 - (void)rebuildMessageViewForContent
 {
-    NSEnumerator    *enumerator;
-    AIContentObject *content;
+    NSLog(@"rebuildMessageViewForContent");
+    if (rebuilding) {
+        restartRebuilding = YES;
+    } else {
+        restartRebuilding = NO;
+        [NSThread detachNewThreadSelector:@selector(_rebuildMessageViewForContentThread) toTarget:self withObject:nil];
+    }
+}
 
+-(void)_rebuildMessageViewForContentThread
+{
+    //lock the addition of rows down with rebuilding=YES
+    rebuilding = YES;
+
+    AIContentMessage    *content;
+    AIFlexibleTableRow  *row;
+    NSMutableArray      *rowArray = [[NSMutableArray alloc] init];
+    
     //Move everything out
     [messageView removeAllRows];
-
+    //The first row has no previous row
+    previousRow = nil;
+    
+    //In a separate thread, so create an autorelease pool for the NSEnumerator objects
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
     //Re-add all content one row at a time (slooow)
-    enumerator = [[chat contentObjectArray] reverseObjectEnumerator]; //(Content is stored in reverse order)
-    while(content = [enumerator nextObject]){
-        [self _addContentObject:content];
+    NSEnumerator        *enumerator_chat = [[chat contentObjectArray] reverseObjectEnumerator]; //(Content is stored in reverse order)
+    while((content = [enumerator_chat nextObject]) && !restartRebuilding){
+        NSArray *contentRowArray = [[self _rowsForAddingContentMessage:content] retain];
+        NSEnumerator        *enumerator_two = [contentRowArray objectEnumerator];
+        AIFlexibleTableRow  *row;
+        
+        while (row = [enumerator_two nextObject]) {
+            [rowArray addObject:row];
+        }
+        
+        [contentRowArray release];
     }
+    
+    NSEnumerator *rowArray_enumerator = [rowArray objectEnumerator];
+    while ((row = [rowArray_enumerator nextObject]) && !restartRebuilding){
+        [messageView addRow:row]; 
+    }
+
+    //restart the rebuilding process if necessar
+    if (restartRebuilding){
+        restartRebuilding = NO;
+        
+        [self _rebuildMessageViewForContentThread];
+    }
+    rebuilding = NO;
+    
+    //catch up
+    [self _addQueuedContent];
+    
+    //Refresh the display
+    [messageView display];
+
+    [rowArray release];
+    [pool release];
+}
+
+//add the queued content in order, then remove it from the contentQueue
+- (void)_addQueuedContent
+{
+    NSEnumerator    *enumerator = [contentQueue objectEnumerator];
+    AIContentObject *content;
+    while (content = [enumerator nextObject])
+        [self _addContentObject:content];
+    
+    [contentQueue removeAllObjects];
+}
+
+//queue a content object for later addition to the view
+- (void)_addContentObjectToQueue:(AIContentObject *)content
+{
+    [contentQueue addObject:content];
 }
 
 //Return our message view
@@ -206,8 +284,12 @@
 - (void)contentObjectAdded:(NSNotification *)notification
 {
     AIContentObject	*content = [[notification userInfo] objectForKey:@"Object"];
-
-    [self _addContentObject:content];
+    
+    //If we are not currently rebuilding, add it immediately; if we are, add it to our queue
+    if (!rebuilding)
+        [self _addContentObject:content];
+    else
+        [self _addContentObjectToQueue:content];
 }
 
 //Add rows for a content object
@@ -225,8 +307,25 @@
 //Add rows for a content message object
 - (void)_addContentMessage:(AIContentMessage *)content
 {
+    NSArray             *rowArray = [[self _rowsForAddingContentMessage:content] retain];
+    NSEnumerator        *enumerator = [rowArray objectEnumerator];
+    AIFlexibleTableRow  *row;
+    
+    while (row = [enumerator nextObject]) {
+        [messageView addRow:row];
+    }
+    
+    [rowArray release];
+}
+//Add a preconstructed row to the messageView
+- (void)_addContentMessageRow:(AIFlexibleTableRow *)row
+{
+    [messageView addRow:row];   
+}
+//returns an autoreleased array of the rows which represent content
+- (NSArray *)_rowsForAddingContentMessage:(AIContentMessage *)content
+{
     //Previous row
-    AIFlexibleTableRow  *previousRow = [messageView rowAtIndex:0];
     AIContentObject     *previousContent = [previousRow representedObject];
     AIFlexibleTableRow  *prefixRow = nil, *messageRow = nil;
     BOOL                contentIsSimilar = NO;
@@ -240,14 +339,12 @@
     //If we are using inline prefixes, and this message is different from the previous one, insert a prefix row 
     if(inlinePrefixes && !contentIsSimilar){
         prefixRow = [self _prefixRowForContent:content];
-	[messageView addRow:prefixRow];
     }
     
     //Add our message
     messageRow = [self _messageRowForContent:content
 				 previousRow:(prefixRow ? prefixRow : previousRow)
 				      header:(!inlinePrefixes && !contentIsSimilar)];
-    [messageView addRow:messageRow];
     
     //Merge our new message with the previous one
     if(contentIsSimilar){  
@@ -269,18 +366,24 @@
         
         if(!inlinePrefixes) [[self _cellInRow:previousRow withClass:[AIFlexibleTableImageCell class]] setRowSpan:2];
     }
-
+    
+    previousRow = messageRow;
+    
+    NSArray *returnArray;
+    if (prefixRow)
+        returnArray = [NSArray arrayWithObjects:prefixRow,messageRow,nil];
+    else
+        returnArray = [NSArray arrayWithObject:messageRow];
+    return (returnArray);
 }
 
 //Add rows for a content status object
 - (void)_addContentStatus:(AIContentStatus *)content
 {
-    AIFlexibleTableRow  *previousRow = [messageView rowAtIndex:0];
-    
     //Add the status change
     [messageView addRow:[self _statusRowForContent:content]];
     
-    //Add a separator to our previous row if necessary
+    //Add a separatorto our previous row if necessary
     AIFlexibleTableFramedTextCell *cell;
     NSEnumerator * enumerator = [[self _cellsInRow:previousRow withClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
     while (cell = [enumerator nextObject]) {
@@ -316,7 +419,7 @@
 }
 
 //Create a bubbled message row for a content object
-- (AIFlexibleTableRow *)_messageRowForContent:(AIContentMessage *)content previousRow:(AIFlexibleTableRow *)previousRow header:(BOOL)isHeader
+- (AIFlexibleTableRow *)_messageRowForContent:(AIContentMessage *)content previousRow:(AIFlexibleTableRow *)thePreviousRow header:(BOOL)isHeader
 {
     AIFlexibleTableCell     *leftmostCell = nil;
     NSArray		    *cellArray;
@@ -325,13 +428,13 @@
     if(showUserIcons){
 	if(isHeader){
 	    leftmostCell = [self _userIconCellForContent:content span:NO];
-	}else if(previousRow){
-	    leftmostCell = [self _emptyImageSpanCellForPreviousRow:previousRow];
+	}else if(thePreviousRow){
+	    leftmostCell = [self _emptyImageSpanCellForPreviousRow:thePreviousRow];
 	}        
     }
     //Empty spacing cell
     if(!isHeader && !inlinePrefixes && combineMessages) {
-        leftmostCell = [self _emptyHeadIndentCellForPreviousRow:previousRow content:content];
+        leftmostCell = [self _emptyHeadIndentCellForPreviousRow:thePreviousRow content:content];
     }
     //
     if(leftmostCell){
@@ -373,11 +476,7 @@
     
     //Get the user icon
     if([content isOutgoing]){
-//	userImage = iconOutgoing; 
         userImage = [(AIAccount *)[content source] userIcon];
-        //userImage = [[owner accountController] propertyForKey:@"BuddyImage" account:(AIAccount *)[content source]];
-        if (!userImage)
-            userImage = [[owner accountController] defaultUserIcon];
         if (!userImage)
             userImage = iconOutgoing;
     }else{
@@ -396,25 +495,25 @@
 }
 
 //Span cell with the last image cell as it's master
-- (AIFlexibleTableCell *)_emptyImageSpanCellForPreviousRow:(AIFlexibleTableRow *)previousRow
+- (AIFlexibleTableCell *)_emptyImageSpanCellForPreviousRow:(AIFlexibleTableRow *)thePreviousRow
 {
     id  cell;
     
-    if(cell = [self _cellInRow:previousRow withClass:[AIFlexibleTableImageCell class]]){
+    if(cell = [self _cellInRow:thePreviousRow withClass:[AIFlexibleTableImageCell class]]){
 	return([AIFlexibleTableSpanCell spanCellFor:cell]);
-    }else if(cell = [self _cellInRow:previousRow withClass:[AIFlexibleTableSpanCell class]]){
+    }else if(cell = [self _cellInRow:thePreviousRow withClass:[AIFlexibleTableSpanCell class]]){
 	return([AIFlexibleTableSpanCell spanCellFor:[cell masterCell]]);
     }
     
     return(nil);
 }
 
-- (AIFlexibleTableCell *)_emptyHeadIndentCellForPreviousRow:(AIFlexibleTableRow *)previousRow content:(AIContentMessage *)content
+- (AIFlexibleTableCell *)_emptyHeadIndentCellForPreviousRow:(AIFlexibleTableRow *)thePreviousRow content:(AIContentMessage *)content
 {
     AIFlexibleTableFramedTextCell * cell = [[AIFlexibleTableFramedTextCell alloc] init];
 
     //size the cell for the previousRow headIndent value
-    [cell sizeCellForWidth:[previousRow headIndent]];
+    [cell sizeCellForWidth:[thePreviousRow headIndent]];
 
     if([content isOutgoing]){
         [cell setFrameBackgroundColor:colorOutgoing borderColor:colorOutgoingBorder dividerColor:colorOutgoingDivider];
@@ -510,10 +609,15 @@
 //Message without a prefix
 - (NSAttributedString *)_messageStringForContent:(AIContentMessage *)content
 {
-    if([content isOutgoing] || !ignoreTextColor){
-	return([content message]);
+    if([content isOutgoing] || (!ignoreTextColor/* && !ignoreBackgroundColor*/)){
+        return([content message]);
+    /*} else if (!ignoreTextColor && ignoreBackgroundColor){ //incoming message, ignoring the background color but not the text color
+        NSLog(@"fixing");
+        return([self _stringByFixingTextColor:[content message]]);
+*/
     }else{
-	return([self _stringByRemoveTextColor:[content message]]);
+  //      NSLog(@"removing text color");
+	return([self _stringByRemovingTextColor:[content message]]);
     }    
 }
 
@@ -538,7 +642,7 @@
 	if([content isOutgoing] || !ignoreTextColor){
 	    [prefixString appendAttributedString:[content message]];
 	}else{
-	    [prefixString appendAttributedString:[self _stringByRemoveTextColor:[content message]]];
+	    [prefixString appendAttributedString:[self _stringByRemovingTextColor:[content message]]];
 	}
         [prefixString appendAttributedString:[self _prefixWithFormat:[prefixFormat substringFromIndex:messageRange.location] forContent:content]];
         
@@ -573,7 +677,7 @@
 
     //Create an attributed string from it with the prefix font and colors
     NSDictionary    *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-        ([content isOutgoing] ? outgoingSourceColor : incomingSourceColor), NSForegroundColorAttributeName,
+        [content isOutgoing] ? outgoingSourceColor : incomingSourceColor), NSForegroundColorAttributeName,
         prefixFont, NSFontAttributeName,
         nil];
     
@@ -699,12 +803,22 @@
 }
 
 //Forces an attributed string to the default text color
-- (NSAttributedString *)_stringByRemoveTextColor:(NSAttributedString *)inString
+- (NSAttributedString *)_stringByRemovingTextColor:(NSAttributedString *)inString
 {
     NSMutableAttributedString   *mutableTemp = [[inString mutableCopy] autorelease];
     [mutableTemp addAttribute:NSForegroundColorAttributeName value:[NSColor blackColor] range:NSMakeRange(0,[mutableTemp length])];
     return(mutableTemp);
 }
 
+//Modifies an attributed string to be visible on the background color
+- (NSAttributedString *)_stringByFixingTextColor:(NSAttributedString *)inString
+{
+    NSMutableAttributedString   *mutableTemp = [[inString mutableCopy] autorelease];
+    
+    //adjust foreground colors for the incoming message background
+    [mutableTemp adjustColorsToShowOnBackground:colorIncoming];
+    
+    return(mutableTemp);    
+}
 @end
 

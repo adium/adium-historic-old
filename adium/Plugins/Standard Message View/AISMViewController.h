@@ -21,7 +21,8 @@
 
     AIChat			*chat;
     AIFlexibleTableView		*messageView;
-
+    AIFlexibleTableRow          *previousRow;
+    
     NSImage			*iconIncoming;
     NSImage			*iconOutgoing;
 
@@ -52,7 +53,10 @@
     BOOL			inlinePrefixes;
     BOOL                        showUserIcons;
     float                       headIndent;
-
+    
+    BOOL                        rebuilding;
+    BOOL                        restartRebuilding;
+    NSMutableArray              *contentQueue;
 }
 
 + (AISMViewController *)messageViewControllerForChat:(AIChat *)inChat owner:(id)inOwner;

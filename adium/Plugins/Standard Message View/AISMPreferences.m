@@ -106,12 +106,14 @@
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         
     }else if(sender == popUp_prefixFormat){
+        [[owner preferenceController] delayPreferenceChangedNotifications:YES];
         [[owner preferenceController] setPreference:[[popUp_prefixFormat selectedItem] representedObject]
                                              forKey:KEY_SMV_PREFIX_INCOMING
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         [[owner preferenceController] setPreference:[[popUp_prefixFormat selectedItem] representedObject]
                                              forKey:KEY_SMV_PREFIX_OUTGOING
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+        [[owner preferenceController] delayPreferenceChangedNotifications:NO];
         
     }
 }
