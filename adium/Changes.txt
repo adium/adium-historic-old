@@ -2,10 +2,28 @@
 				-----------------------
 				
 Version 0.53 (4/  /2004)				
+- Added Novell GroupWise protocol support
+- Added Yahoo! Japan protocol support
+- Reduced launch time by about 50%
+- Added custom link insertion for all text entry views
+- Message history preferences are now customizable at an hourly level
+- The connection process for accounts can now be canceled
+- Added an "Add Contact" contextual menu item for contacts not on your list
+- Improved error message handling on all services
+- Added "Contact Notes" to the Contact Inspector, allowing the display of comments in the Get Info window (and soon in tooltips)
+- AIM: aim://goim URLs can now send messages in addition to opening message windows
+- ICQ: Implemented ICQ Authorization Requests to add contacts who require authorization
+- Jabber: Fixed Jabber message receiving to display apostrophes properly
+- Improved detection of URLs for autolinking purposes to include mailto:// links and all Top Level Domains
+- Fixed "First mesage received" sounds in windows with lines from the previous conversation
+- Fixed a cosmetic bug in the Build Number applescript
+- Fixed several memory leaks
+- Fixed a crash when reorganizing saved away messages
+- Fixed iTunes Currently Playing applescripts to work with Internet Radio tracks
 - Cleaned up address book integration advanced preferences
-
-
-
+- Cleaned up Contact List Window preferences
+- Reduced binary size
+- Improved version checking
 
 				
 				
