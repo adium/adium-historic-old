@@ -33,7 +33,6 @@
 - (void)updateThemes;
 - (void)updateSelectedLayoutAndTheme;
 
-- (NSArray *)availableSetsWithExtension:(NSString *)extension fromFolder:(NSString *)folder;
 - (void)applySet:(NSDictionary *)setDictionary toPreferenceGroup:(NSString *)preferenceGroup;
 
 @end
@@ -110,14 +109,19 @@
 	[layoutBorderless release]; layoutBorderless = nil;
 	[layoutMockie release]; layoutMockie = nil;
 	[layoutPillows release]; layoutPillows = nil;
+	
+	[AISCLViewPlugin resetXtrasCache];
 }
 
 //Installed xtras have changed
 - (void)xtrasChanged:(NSNotification *)notification
 {
 	if(notification == nil || [[notification object] caseInsensitiveCompare:LIST_LAYOUT_EXTENSION] == 0){
+		[AISCLViewPlugin resetXtrasCache];
 		[self updateLayouts];
+		
 	}else if(notification == nil || [[notification object] caseInsensitiveCompare:LIST_THEME_EXTENSION] == 0){
+		[AISCLViewPlugin resetXtrasCache];
 		[self updateThemes];
 	}
 }
@@ -126,7 +130,7 @@
 - (void)updateLayouts
 {
 	[layoutArray release];
-	layoutArray = [[AISCLViewPlugin availableSetsWithExtension:LIST_LAYOUT_EXTENSION fromFolder:LIST_LAYOUT_FOLDER] retain];
+	layoutArray = [[AISCLViewPlugin availableLayoutSets] retain];
 	[tableView_layout reloadData];
 	[self updateSelectedLayoutAndTheme];
 }
@@ -135,7 +139,7 @@
 - (void)updateThemes
 {
 	[themeArray release];
-	themeArray = [[AISCLViewPlugin availableSetsWithExtension:LIST_THEME_EXTENSION fromFolder:LIST_THEME_FOLDER] retain];
+	themeArray = [[AISCLViewPlugin availableThemeSets] retain];
 	[tableView_theme reloadData];
 	[self updateSelectedLayoutAndTheme];
 }

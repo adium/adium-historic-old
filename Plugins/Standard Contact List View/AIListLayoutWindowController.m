@@ -117,8 +117,6 @@
 											withName:[textField_layoutName stringValue]
 										   extension:LIST_LAYOUT_EXTENSION
 											inFolder:LIST_LAYOUT_FOLDER]){
-		[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:LIST_LAYOUT_EXTENSION];
-
 		[[adium preferenceController] setPreference:newName
 											 forKey:KEY_LIST_LAYOUT_NAME
 											  group:PREF_GROUP_CONTACT_LIST];

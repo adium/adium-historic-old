@@ -24,9 +24,12 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 
 @interface AISCLViewPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
++ (NSDictionary *)cachedSetDictWithName:(NSString *)setName extension:(NSString *)extension;
 @end
 
 @implementation AISCLViewPlugin
+
+static 	NSMutableDictionary	*_xtrasDict = nil;
 
 - (void)installPlugin
 {
@@ -151,16 +154,29 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 + (void)applySetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder toPreferenceGroup:(NSString *)preferenceGroup
 {
 	AIAdium			*adiumInstance = [AIObject sharedAdiumInstance];
-	NSString		*destFolder, *fileName, *path;
-	NSDictionary	*setDictionary;
+	NSFileManager	*defaultManager = [NSFileManager defaultManager];
 	NSEnumerator	*enumerator;
+	NSString		*fileName, *resourcePath;
 	NSString		*key;
+	NSDictionary	*setDict, *setDictionary = nil;
+
+	if (setDict = [self cachedSetDictWithName:setName extension:extension]){
+		setDictionary = [setDict objectForKey:@"preferences"];
+	}
 	
-	//Load the set
-	destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
-	fileName = [setName stringByAppendingPathExtension:extension];
-	path = [destFolder stringByAppendingPathComponent:fileName];
-	setDictionary = [NSDictionary dictionaryWithContentsOfFile:path];
+	if (!setDictionary){
+		//If we didn't find a setDictionary already loaded, look in each resource location until we find it
+		fileName = [setName stringByAppendingPathExtension:extension];
+		
+		enumerator = [[adiumInstance resourcePathsForName:folder] objectEnumerator];
+		while((resourcePath = [enumerator nextObject]) && !setDictionary) {
+			NSString		*filePath = [resourcePath stringByAppendingPathComponent:fileName];
+			
+			if ([defaultManager fileExistsAtPath:filePath]){
+				setDictionary = [NSDictionary dictionaryWithContentsOfFile:filePath];
+			}
+		}
+	}
 	
 	//Apply its values
 	[[adiumInstance preferenceController] delayPreferenceChangedNotifications:YES];
@@ -176,11 +192,18 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 //Create a layout or theme set
 + (BOOL)createSetFromPreferenceGroup:(NSString *)preferenceGroup withName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder
 {
-	NSString	*destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
-	NSString	*fileName = [setName stringByAppendingPathExtension:extension];
-	NSString	*path = [destFolder stringByAppendingPathComponent:fileName];
+	NSString		*path, *destFolder;
+	NSString		*fileName = [setName stringByAppendingPathExtension:extension];
+	AIAdium			*sharedAdiumInstance = [AIObject sharedAdiumInstance];
 	
-	if([[[[AIObject sharedAdiumInstance] preferenceController] preferencesForGroup:preferenceGroup] writeToFile:path atomically:NO]){
+	//If we don't find one, create a path to the application support directory
+	destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
+	path = [destFolder stringByAppendingPathComponent:fileName];
+	
+	if([[[sharedAdiumInstance preferenceController] preferencesForGroup:preferenceGroup] writeToFile:path atomically:NO]){
+		
+		[[sharedAdiumInstance notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
+
 		return(YES);
 	}else{
 		NSRunAlertPanel(@"Error Saving Theme",
@@ -197,11 +220,77 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 //Delete a layout or theme set
 + (BOOL)deleteSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder
 {
-	NSString	*destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
-	NSString	*fileName = [setName stringByAppendingPathExtension:extension];
-	NSString	*path = [destFolder stringByAppendingPathComponent:fileName];
+	NSString		*path = nil;
+	NSDictionary	*setDict;
+	BOOL			success;
 	
-	return([[NSFileManager defaultManager] removeFileAtPath:path handler:nil]);
+	if (setDict = [self cachedSetDictWithName:setName extension:extension]){
+		path = [setDict objectForKey:@"path"];
+	}
+	
+	if (!path){
+		NSString	*destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
+		NSString	*fileName = [setName stringByAppendingPathExtension:extension];
+		path = [destFolder stringByAppendingPathComponent:fileName];
+	}
+	
+	success = [[NSFileManager defaultManager] removeFileAtPath:path handler:nil];
+	
+	//The availability of an xtras just changed, since we deleted it... post a notification so we can update
+	[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
+	
+	return(success);
+}
+
+//When our preferences view closes, clear out the cache of all the various themes and layouts which we had in memory
++ (void)resetXtrasCache
+{
+	[_xtrasDict release]; _xtrasDict = nil;
+}
+
++ (NSArray *)availableLayoutSets
+{
+	NSArray	*availableLayoutSets = [_xtrasDict objectForKey:LIST_LAYOUT_EXTENSION];
+
+	if (!availableLayoutSets){
+		availableLayoutSets = [AISCLViewPlugin availableSetsWithExtension:LIST_LAYOUT_EXTENSION 
+															   fromFolder:LIST_LAYOUT_FOLDER];
+
+		if (!_xtrasDict) _xtrasDict = [[NSMutableDictionary alloc] init];
+		[_xtrasDict setObject:availableLayoutSets
+					   forKey:LIST_LAYOUT_EXTENSION];
+	}
+
+	return availableLayoutSets;
+}
++ (NSArray *)availableThemeSets
+{
+	NSArray	*availableThemeSets = [_xtrasDict objectForKey:LIST_THEME_EXTENSION];
+
+	if (!availableThemeSets){
+		availableThemeSets = [AISCLViewPlugin availableSetsWithExtension:LIST_THEME_EXTENSION fromFolder:LIST_THEME_FOLDER];
+		
+		if (!_xtrasDict) _xtrasDict = [[NSMutableDictionary alloc] init];
+		[_xtrasDict setObject:availableThemeSets
+					   forKey:LIST_THEME_EXTENSION];
+	}
+
+	return availableThemeSets;
+}
+
++ (NSDictionary *)cachedSetDictWithName:(NSString *)setName extension:(NSString *)extension
+{
+	NSArray			*setArray = [_xtrasDict objectForKey:extension];
+	NSEnumerator	*enumerator;
+	NSDictionary	*setDict;
+	
+	//Try to find an existing object with this name to overwrite
+	enumerator = [setArray objectEnumerator];
+	while (setDict = [enumerator nextObject]){
+		if ([[setDict objectForKey:@"name"] isEqualToString:setName]) break;
+	}
+	
+	return(setDict);
 }
 
 //
@@ -210,6 +299,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	NSMutableArray	*setArray = [NSMutableArray array];
 	NSEnumerator	*enumerator = [[[AIObject sharedAdiumInstance] resourcePathsForName:folder] objectEnumerator];
 	NSString		*resourcePath;
+	NSMutableArray	*alreadyAddedArray = [NSMutableArray array];
 	
     while(resourcePath = [enumerator nextObject]) {
         NSEnumerator 	*fileEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:resourcePath] objectEnumerator];
@@ -222,11 +312,18 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 				NSDictionary 	*themeDict = [NSDictionary dictionaryWithContentsOfFile:themePath];
 				
 				if(themeDict){
-					[setArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-						[filePath stringByDeletingPathExtension], @"name",
-						themePath, @"path",
-						themeDict, @"preferences",
-						nil]];
+					NSString	*name = [filePath stringByDeletingPathExtension];
+					
+					//The Adium resource path is last in our resourcePaths array; by only adding sets we haven't
+					//already added, we allow precedence to occur rather than conflict.
+					if ([alreadyAddedArray indexOfObject:name] == NSNotFound){
+						[setArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+							name, @"name",
+							themePath, @"path",
+							themeDict, @"preferences",
+							nil]];
+						[alreadyAddedArray addObject:name];
+					}
 				}
 			}
 		}
