@@ -79,6 +79,7 @@ LNAboutBoxController *sharedInstance = nil;
 
     //Start scrolling    
     scrollLocation = 0; 
+    scrollRate = 1.0;
     maxScroll = [[textView_credits textStorage] size].height - [[textView_credits enclosingScrollView] documentVisibleRect].size.height;
     scrollTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/20.0) target:self selector:@selector(scrollTimer:) userInfo:nil repeats:YES] retain];
     
@@ -110,7 +111,7 @@ LNAboutBoxController *sharedInstance = nil;
 - (void)scrollTimer:(NSTimer *)scrollTimer
 {    
     if([[textView_credits window] isMainWindow]){
-	scrollLocation += 1.0;
+	scrollLocation += scrollRate;
 	if(scrollLocation > maxScroll) scrollLocation = 0;    
 	[textView_credits scrollPoint:NSMakePoint(0, scrollLocation)];
     }
@@ -153,6 +154,16 @@ LNAboutBoxController *sharedInstance = nil;
         [button_buildButton setTitle:buildDate];
     }else{
 	[button_buildButton setTitle:buildNumber];
+    }
+}
+
+//Receive the flags changed event for reversing the scroll direction via option
+- (void)flagsChanged:(NSEvent *)theEvent
+{
+    if ([theEvent modifierFlags] & NSAlternateKeyMask) {
+        scrollRate = -1.0;
+    } else {
+        scrollRate = 1.0;   
     }
 }
 
