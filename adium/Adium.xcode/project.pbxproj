@@ -574,7 +574,6 @@
 			};
 			dependencies = (
 				B7F09289058C3F16000F9CBE,
-				B7F0928B058C3F1B000F9CBE,
 			);
 			isa = PBXNativeTarget;
 			name = "SQL Logger";
@@ -2753,7 +2752,6 @@
 			};
 			dependencies = (
 				346C9CBD060045E9000F5A8A,
-				346C9CBF060045EC000F5A8A,
 			);
 			isa = PBXNativeTarget;
 			name = "Standard Message View";
@@ -2858,7 +2856,6 @@
 			};
 			dependencies = (
 				346C9C9B06004585000F5A8A,
-				346C9C9D06004588000F5A8A,
 			);
 			isa = PBXNativeTarget;
 			name = "WebKit Message View";
@@ -2923,17 +2920,6 @@
 			target = 34BD9DAF05314751000AB133;
 			targetProxy = 346C9C9A06004585000F5A8A;
 		};
-		346C9C9C06004588000F5A8A = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DE205314755000AB133;
-			remoteInfo = AIUtilities.Framework;
-		};
-		346C9C9D06004588000F5A8A = {
-			isa = PBXTargetDependency;
-			targetProxy = 346C9C9C06004588000F5A8A;
-		};
 		346C9CBC060045E9000F5A8A = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -2945,17 +2931,6 @@
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133;
 			targetProxy = 346C9CBC060045E9000F5A8A;
-		};
-		346C9CBE060045EC000F5A8A = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DE205314755000AB133;
-			remoteInfo = AIUtilities.Framework;
-		};
-		346C9CBF060045EC000F5A8A = {
-			isa = PBXTargetDependency;
-			targetProxy = 346C9CBE060045EC000F5A8A;
 		};
 		346C9CC706004608000F5A8A = {
 			fileRef = 4BE9200A03DED0E500A8010A;
@@ -4385,13 +4360,6 @@
 			settings = {
 			};
 		};
-		34BD98AB0531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0602CCED6401A8010A;
-			remoteInfo = AIUtilities.Framework;
-		};
 		34BD98B20531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -4406,26 +4374,12 @@
 			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
 			remoteInfo = Adium.Framework;
 		};
-		34BD98BE0531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0602CCED6401A8010A;
-			remoteInfo = AIUtilities.Framework;
-		};
 		34BD98D10531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
 			proxyType = 1;
 			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
 			remoteInfo = Adium.Framework;
-		};
-		34BD99080531467B000AB133 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = F53B9A0602CCED6401A8010A;
-			remoteInfo = AIUtilities.Framework;
 		};
 		34BD991B0531467B000AB133 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
@@ -5878,7 +5832,6 @@
 			};
 			dependencies = (
 				34BD9E9505314758000AB133,
-				34BD9E9605314758000AB133,
 			);
 			isa = PBXNativeTarget;
 			name = "AIM (TOC2)";
@@ -5891,10 +5844,6 @@
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133;
 			targetProxy = 34BD98B20531467B000AB133;
-		};
-		34BD9E9605314758000AB133 = {
-			isa = PBXTargetDependency;
-			targetProxy = 34BD98BE0531467B000AB133;
 		};
 		34BD9E9705314758000AB133 = {
 			buildActionMask = 2147483647;
@@ -6075,7 +6024,6 @@
 			};
 			dependencies = (
 				34BD9EB60531475B000AB133,
-				34BD9EB70531475B000AB133,
 			);
 			isa = PBXNativeTarget;
 			name = Jabber;
@@ -6088,10 +6036,6 @@
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133;
 			targetProxy = 34BD98BB0531467B000AB133;
-		};
-		34BD9EB70531475B000AB133 = {
-			isa = PBXTargetDependency;
-			targetProxy = 34BD98AB0531467B000AB133;
 		};
 		34BD9EB80531475B000AB133 = {
 			buildActionMask = 2147483647;
@@ -6198,7 +6142,6 @@
 			};
 			dependencies = (
 				34BD9EE10531476D000AB133,
-				34BD9EE20531476D000AB133,
 			);
 			isa = PBXNativeTarget;
 			name = "Stress Test";
@@ -6211,10 +6154,6 @@
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133;
 			targetProxy = 34BD98D10531467B000AB133;
-		};
-		34BD9EE20531476D000AB133 = {
-			isa = PBXTargetDependency;
-			targetProxy = 34BD99080531467B000AB133;
 		};
 		34BD9EE30531476D000AB133 = {
 			buildActionMask = 2147483647;
@@ -6313,7 +6252,6 @@
 				WRAPPER_EXTENSION = app;
 			};
 			dependencies = (
-				4B6EA1BA058FA6880070A9A1,
 			);
 			isa = PBXNativeTarget;
 			name = "Adium 1.6 Pref Importer";
@@ -7561,7 +7499,6 @@
 			};
 			dependencies = (
 				4947F5BD0655E85200B791E5,
-				4947F5BE0655E85200B791E5,
 			);
 			isa = PBXNativeTarget;
 			name = Rendezvous;
@@ -7574,10 +7511,6 @@
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133;
 			targetProxy = 34BD98D10531467B000AB133;
-		};
-		4947F5BE0655E85200B791E5 = {
-			isa = PBXTargetDependency;
-			targetProxy = 34BD99080531467B000AB133;
 		};
 		4947F5BF0655E85200B791E5 = {
 			buildActionMask = 2147483647;
@@ -9264,17 +9197,6 @@
 			settings = {
 			};
 		};
-		4B215DAD059896A000305B3C = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DE205314755000AB133;
-			remoteInfo = AIUtilities.Framework;
-		};
-		4B215DAE059896A000305B3C = {
-			isa = PBXTargetDependency;
-			targetProxy = 4B215DAD059896A000305B3C;
-		};
 		4B215DAF059896B000305B3C = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -10265,17 +10187,6 @@
 			settings = {
 			};
 		};
-		4B53CDA506B08CB300FCDA0C = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DE205314755000AB133;
-			remoteInfo = AIUtilities.Framework;
-		};
-		4B53CDA606B08CB300FCDA0C = {
-			isa = PBXTargetDependency;
-			targetProxy = 4B53CDA506B08CB300FCDA0C;
-		};
 		4B54D1020502865F00A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -10826,17 +10737,6 @@
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B6EA1B9058FA6880070A9A1 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DE205314755000AB133;
-			remoteInfo = AIUtilities.Framework;
-		};
-		4B6EA1BA058FA6880070A9A1 = {
-			isa = PBXTargetDependency;
-			targetProxy = 4B6EA1B9058FA6880070A9A1;
 		};
 		4B6EA1BD058FA6900070A9A1 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
@@ -11472,7 +11372,6 @@
 			};
 			dependencies = (
 				6C3E0152054445C000A4AE2E,
-				6C3E0154054445C400A4AE2E,
 			);
 			isa = PBXNativeTarget;
 			name = Gaim;
@@ -11656,7 +11555,6 @@
 				PRODUCT_NAME = "Adium Crash Reporter";
 			};
 			dependencies = (
-				4B215DAE059896A000305B3C,
 			);
 			isa = PBXNativeTarget;
 			name = "Adium Crash Reporter";
@@ -15729,17 +15627,6 @@
 			target = 34BD9DAF05314751000AB133;
 			targetProxy = 4BED6DE705D5F5FA00ACFD49;
 		};
-		4BED6DE905D5F5FA00ACFD49 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DE205314755000AB133;
-			remoteInfo = AIUtilities.Framework;
-		};
-		4BED6DEA05D5F5FA00ACFD49 = {
-			isa = PBXTargetDependency;
-			targetProxy = 4BED6DE905D5F5FA00ACFD49;
-		};
 		4BF000CC06B5513400C32219 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -16701,7 +16588,6 @@
 			dependencies = (
 				520FE3B805BE209D002D063D,
 				4BED6DE805D5F5FA00ACFD49,
-				4BED6DEA05D5F5FA00ACFD49,
 			);
 			isa = PBXNativeTarget;
 			name = TicTacToe;
@@ -16990,7 +16876,6 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
-				4B53CDA606B08CB300FCDA0C,
 			);
 			isa = PBXNativeTarget;
 			name = Growl;
@@ -17340,17 +17225,6 @@
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133;
 			targetProxy = 6C3E0151054445C000A4AE2E;
-		};
-		6C3E0153054445C400A4AE2E = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DE205314755000AB133;
-			remoteInfo = AIUtilities.Framework;
-		};
-		6C3E0154054445C400A4AE2E = {
-			isa = PBXTargetDependency;
-			targetProxy = 6C3E0153054445C400A4AE2E;
 		};
 		6C3E0730054471CD00A4AE2E = {
 			fileRef = 34BD9DE105314751000AB133;
@@ -20235,7 +20109,6 @@
 			};
 			dependencies = (
 				B72537BE058C45CF004BA969,
-				B72537C0058C45D3004BA969,
 			);
 			isa = PBXNativeTarget;
 			name = "Latex Plugin";
@@ -20291,17 +20164,6 @@
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133;
 			targetProxy = B72537BD058C45CF004BA969;
-		};
-		B72537BF058C45D3004BA969 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DE205314755000AB133;
-			remoteInfo = AIUtilities.Framework;
-		};
-		B72537C0058C45D3004BA969 = {
-			isa = PBXTargetDependency;
-			targetProxy = B72537BF058C45D3004BA969;
 		};
 		B72537C4058C45EF004BA969 = {
 			fileRef = 34BD9DE105314751000AB133;
@@ -20444,17 +20306,6 @@
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133;
 			targetProxy = B7F09288058C3F16000F9CBE;
-		};
-		B7F0928A058C3F1B000F9CBE = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DE205314755000AB133;
-			remoteInfo = AIUtilities.Framework;
-		};
-		B7F0928B058C3F1B000F9CBE = {
-			isa = PBXTargetDependency;
-			targetProxy = B7F0928A058C3F1B000F9CBE;
 		};
 		B7FD6C160596550F000C4D9D = {
 			fileEncoding = 30;
@@ -20767,7 +20618,6 @@
 				WARNING_CFLAGS = "-Wmost";
 			};
 			dependencies = (
-				BFEBDC07066902D600CBF845,
 			);
 			isa = PBXNativeTarget;
 			name = WebAdium;
@@ -20821,17 +20671,6 @@
 			path = "WebAdium/WebAdium-Info.plist";
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
-		};
-		BFEBDC06066902D600CBF845 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DE205314755000AB133;
-			remoteInfo = AIUtilities.Framework;
-		};
-		BFEBDC07066902D600CBF845 = {
-			isa = PBXTargetDependency;
-			targetProxy = BFEBDC06066902D600CBF845;
 		};
 		BFEBDC0A066903A600CBF845 = {
 			fileEncoding = 4;

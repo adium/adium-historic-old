@@ -83,7 +83,7 @@ DeclareString(LeadSpaceHTML);
 DeclareString(Space);
 DeclareString(SpaceHTML);
 
-+ (void)load
++ (void)initialize
 {
 	InitString(HTML,@"HTML");
 	InitString(CloseHTML,@"/HTML");
