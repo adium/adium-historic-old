@@ -72,8 +72,6 @@
 	timeStampFormat = [[prefDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT] retain];
 	timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeStampFormat allowNaturalLanguage:NO];
 	
-	timeStampFormatterMinutesSeconds = [[NSDateFormatter alloc] initWithDateFormat:@"%M:%S" allowNaturalLanguage:NO];
-	
     return(self);
 }
 
@@ -229,10 +227,22 @@
         if(range.location != NSNotFound){
 			[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[(AIContentMessage *)content date]]];
         }
-		
-		range = [inString rangeOfString:@"%stime%"];
+
+		//Replaces %time{x}% with a timestamp formatted like x (using NSDateFormatter)
+		range = [inString rangeOfString:@"%time{"];
         if(range.location != NSNotFound) {
-			[inString replaceCharactersInRange:range withString:[timeStampFormatterMinutesSeconds stringForObjectValue:[(AIContentMessage *)content date]]];
+			NSRange endRange;
+			endRange = [inString rangeOfString:@"}%"];
+			if(endRange.location != NSNotFound && endRange.location > range.location + range.length) {
+
+				NSRange textRange = NSMakeRange(range.location + range.length, (endRange.location - range.location - range.length));
+				NSRange finalRange = NSMakeRange(range.location, (endRange.location - range.location) + endRange.length);
+				
+				NSString *timeFormat = [inString substringWithRange:textRange];
+				
+				[inString replaceCharactersInRange:finalRange withString:[[[NSDateFormatter alloc] initWithDateFormat:timeFormat allowNaturalLanguage:NO] stringForObjectValue:[(AIContentMessage *)content date]]];
+				
+			}
         }
 		
 	} else {
