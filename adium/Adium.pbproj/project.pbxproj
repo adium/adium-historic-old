@@ -11169,6 +11169,7 @@
 				9E6C448B048D681F00415B22,
 				9E6C448D048D682100415B22,
 				9EC861AA0494968E00415B22,
+				9EF608C604CDFF9000415B25,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11186,6 +11187,7 @@
 				9E6C448C048D682100415B22,
 				9E6C448E048D682200415B22,
 				9EC861AB0494968E00415B22,
+				9EF608C704CDFF9000415B25,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11285,6 +11287,8 @@
 				9E2E3076046CAB0000415B22,
 				9E2E307D046CB05F00415B22,
 				9E2E307E046CB05F00415B22,
+				9EF608C404CDFF9000415B25,
+				9EF608C504CDFF9000415B25,
 				9EC861A80494968E00415B22,
 				9EC861A90494968E00415B22,
 				9E1D5C54048EB63C00415B22,
@@ -11830,6 +11834,32 @@
 		9EDAC4F103D516F900415B22 = {
 			isa = PBXTargetDependency;
 			target = F53B9A0602CCED6401A8010A;
+		};
+		9EF608C404CDFF9000415B25 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = MSNSBSocket.h;
+			path = "Plugins/MSN Service/MSNSBSocket.h";
+			refType = 4;
+		};
+		9EF608C504CDFF9000415B25 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = MSNSBSocket.m;
+			path = "Plugins/MSN Service/MSNSBSocket.m";
+			refType = 4;
+		};
+		9EF608C604CDFF9000415B25 = {
+			fileRef = 9EF608C404CDFF9000415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EF608C704CDFF9000415B25 = {
+			fileRef = 9EF608C504CDFF9000415B25;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		9EFA2FF904AE71E900415B22 = {
 			fileRef = 4B6660A804ADF2F200A8010A;
