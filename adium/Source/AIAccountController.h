@@ -14,8 +14,8 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.12 $
- * $Date: 2004/03/05 23:50:33 $
+ * $Revision: 1.13 $
+ * $Date: 2004/03/13 00:11:11 $
  * $Author: adamiser $
  **/
 
@@ -48,6 +48,7 @@
 - (NSArray *)activeServiceTypes;
 - (id <AIServiceController>)serviceControllerWithIdentifier:(NSString *)inType;
 - (void)registerService:(id <AIServiceController>)inService;
+- (NSMenu *)menuOfServicesWithTarget:(id)target;
 
 //Accounts
 - (NSArray *)accountArray;

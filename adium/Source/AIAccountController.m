@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.62 2004/03/06 18:36:32 adamiser Exp $
+// $Id: AIAccountController.m,v 1.63 2004/03/13 00:11:11 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -237,6 +237,33 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 {
     [availableServiceDict setObject:inService forKey:[inService identifier]];
 }
+
+//Returns a menu of all services.
+//- Selector called on service selection is selectAccount:
+//- The menu item's represented objects are the service controllers they represent
+- (NSMenu *)menuOfServicesWithTarget:(id)target
+{	
+    NSEnumerator				*enumerator;
+    id <AIServiceController>	service;
+	
+	//Prepare our menu
+	NSMenu *menu = [[NSMenu alloc] init];
+	[menu setAutoenablesItems:NO];
+
+    //Insert a menu item for each available service
+	enumerator = [[self availableServices] objectEnumerator];
+	while((service = [enumerator nextObject])){
+        NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[service description]
+														target:target 
+														action:@selector(selectServiceType:) 
+												 keyEquivalent:@""] autorelease];
+        [item setRepresentedObject:service];
+        [menu addItem:item];
+    }
+	
+	return([menu autorelease]);
+}	
+
 
 
 //Accounts -------------------------------------------------------------------------------------------------------
