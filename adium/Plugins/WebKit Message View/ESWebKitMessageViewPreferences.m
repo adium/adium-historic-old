@@ -106,8 +106,8 @@
 {
 	NSDictionary *newStyleDict = [sender representedObject];
 	
-	NSString	*newStylePath = [newStyleDict objectForKey:@"stylePath"];
-	[[adium preferenceController] setPreference:newStylePath
+	NSString	*newStyleName = [newStyleDict objectForKey:@"styleName"];
+	[[adium preferenceController] setPreference:newStyleName
 										 forKey:KEY_WEBKIT_STYLE
 										  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	
@@ -117,9 +117,8 @@
 	//leave the variant preference alone - this will let the previously selected variant be selected automatically
 	NSString	*variant = [newStyleDict objectForKey:@"variant"];
 	if (variant){
-		NSString	*style = [[newStylePath lastPathComponent] stringByDeletingPathExtension];
 		[[adium preferenceController] setPreference:[variant length] ? variant : nil
-											 forKey:[plugin keyForDesiredVariantOfStyle:style]
+											 forKey:[plugin keyForDesiredVariantOfStyle:newStyleName]
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	}
 	
@@ -297,7 +296,7 @@
 															 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		[stylePath release];
 		style = [plugin messageStyleBundleWithName:styleName];
-		
+
 		//If the preferred style is unavailable, load Smooth Operator
 		if (!style){
 			styleName = AILocalizedString(@"Smooth Operator","Smooth Operator message style name. Make sure this matches the localized Smooth Operator style bundle's name!");
