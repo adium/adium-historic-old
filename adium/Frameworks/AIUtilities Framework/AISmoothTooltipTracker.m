@@ -36,7 +36,8 @@
 											 selector:@selector(resetCursorTracking)
 												 name:NSViewFrameDidChangeNotification
 											   object:view];
-
+	[self installCursorRect];
+	
 	return(self);
 }
 
@@ -135,7 +136,7 @@
 {
 	NSPoint mouseLocation = [NSEvent mouseLocation];
 
-	if(NSPointInRect([[view window] convertScreenToBase:mouseLocation], [view frame])){
+	if([[view window] isVisible] && NSPointInRect([[view window] convertScreenToBase:mouseLocation], [view frame])){
 		//tooltipCount is used for delaying the appearence of tooltips.  We reset it to 0 when the mouse moves.  When
 		//the mouse is left still tooltipCount will eventually grow greater than TOOL_TIP_DELAY, and we will begin
 		//displaying the tooltips
@@ -154,7 +155,8 @@
 			}
 		}
 	}else{
-		//Failsafe for if the mouse is outside the window yet the timer is still firing
+		//If the cursor has left our frame or the window is no logner visible, stop tracking the cursor.
+		//This protects us in the cases where we do not receive a mouse exited message.
 		[self _stopTrackingMouse];
 	}
 }
