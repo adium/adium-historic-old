@@ -430,20 +430,6 @@
 			settings = {
 			};
 		};
-		34048B620617D4AE004D0B7E = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = eventloop.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34048B630617D4AE004D0B7E = {
-			fileRef = 34048B620617D4AE004D0B7E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34086A1005E5E17B00ABB759 = {
 			children = (
 				34086A7705E5E42500ABB759,
@@ -1034,135 +1020,6 @@
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		343FA4520567DC460049DFFB = {
-			isa = PBXFileReference;
-			lastKnownFileType = archive.ar;
-			name = liboscar.a;
-			path = "Plugins/Gaim Service/LIBS/liboscar.a";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		343FA4530567DC460049DFFB = {
-			fileRef = 343FA4520567DC460049DFFB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		344157CD059F5EC70019246B = {
-			isa = PBXFileReference;
-			lastKnownFileType = folder;
-			name = Plugins;
-			path = "Plugins/Gaim Service/Plugins";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		344157D1059F5EC80019246B = {
-			fileRef = 344157CD059F5EC70019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		344157ED059F5EF20019246B = {
-			fileRef = 344157CD059F5EC70019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		344157F9059F61870019246B = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = libcipher.dylib;
-			path = "Plugins/Gaim Service/LIBS/libcipher.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		344157FA059F61870019246B = {
-			fileRef = 344157F9059F61870019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34415806059F61A00019246B = {
-			fileRef = 344157F9059F61870019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34415809059F631A0019246B = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = libx509.dylib;
-			path = "Plugins/Gaim Service/LIBS/libx509.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3441580A059F631A0019246B = {
-			fileRef = 34415809059F631A0019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3441580D059F63280019246B = {
-			fileRef = 34415809059F631A0019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3441580E059F648D0019246B = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = libminitasn1.dylib;
-			path = "Plugins/Gaim Service/LIBS/libminitasn1.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3441580F059F648D0019246B = {
-			fileRef = 3441580E059F648D0019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34415812059F65020019246B = {
-			fileRef = 3441580E059F648D0019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34415816059F65100019246B = {
-			children = (
-				3453573F059AEE1000A83D9E,
-				344157F9059F61870019246B,
-				34415809059F631A0019246B,
-				3461F425061942D10054C1A8,
-				3441580E059F648D0019246B,
-				3453573E059AEE1000A83D9E,
-				3441581C059F67060019246B,
-			);
-			isa = PBXGroup;
-			name = "SSL Libraries";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3441581C059F67060019246B = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = libmpi.dylib;
-			path = "Plugins/Gaim Service/LIBS/libmpi.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3441581D059F67070019246B = {
-			fileRef = 3441581C059F67060019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34415820059F67140019246B = {
-			fileRef = 3441581C059F67060019246B;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		3441587A059F8EFC0019246B = {
 			children = (
@@ -2055,48 +1912,6 @@
 			settings = {
 			};
 		};
-		3453573D059AEE1000A83D9E = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = libz.1.dylib;
-			path = "Plugins/Gaim Service/LIBS/libz.1.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3453573E059AEE1000A83D9E = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = "libgpg-error.0.dylib";
-			path = "Plugins/Gaim Service/LIBS/libgpg-error.0.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3453573F059AEE1000A83D9E = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = libgnutls.10.1.3.dylib;
-			path = "Plugins/Gaim Service/LIBS/libgnutls.10.1.3.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34535741059AEE1000A83D9E = {
-			fileRef = 3453573D059AEE1000A83D9E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34535742059AEE1000A83D9E = {
-			fileRef = 3453573E059AEE1000A83D9E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34535743059AEE1000A83D9E = {
-			fileRef = 3453573F059AEE1000A83D9E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34536678059BA7E200A83D9E = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -2154,46 +1969,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "buildnum=`$SYMROOT/../Other/buildnum`\nbuilddate=`perl -e 'print time;'`\nme=`whoami`\necho $buildnum \"|\" $builddate \"|\" $me > $SYMROOT/Adium.app/Contents/Resources/buildnum\necho \\<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?\\>\\<!DOCTYPE plist PUBLIC \\\"-//Apple Computer//DTD PLIST 1.0//EN\\\" \\\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\\\"\\>\\<plist version=\\\"1.0\\\"\\>\\<dict\\>\\<key\\>adium-version\\</key\\>\\<real\\>$builddate\\</real\\>\\</dict\\>\\</plist\\> > $SYMROOT/version.plist\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
-		};
-		3461F425061942D10054C1A8 = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = libgcrypt.7.adium.dylib;
-			path = "Plugins/Gaim Service/LIBS/libgcrypt.7.adium.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3461F426061942D10054C1A8 = {
-			fileRef = 3461F425061942D10054C1A8;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3461F431061943000054C1A8 = {
-			fileRef = 3461F425061942D10054C1A8;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3461F432061943B60054C1A8 = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = libiconv.2.dylib;
-			path = "Plugins/Gaim Service/LIBS/libiconv.2.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3461F433061943B60054C1A8 = {
-			fileRef = 3461F432061943B60054C1A8;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3461F439061943D80054C1A8 = {
-			fileRef = 3461F432061943B60054C1A8;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		346C970505FF8EEB000F5A8A = {
 			fileEncoding = 30;
@@ -3006,12 +2781,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		3482223805EA069B0015055E = {
-			fileRef = 34F152AE05E9FF0100B32FD7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3483928405E68B05002BC6C0 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -3494,7 +3263,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" \"/Users/adamiser/Code/adium/Plugins/Gaim Service\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -4486,6 +4255,7 @@
 				4BD6766C06002D6E0049CAF7,
 				34BD9D59053146CC000AB133,
 				34B588A1058D833A00E7EF0D,
+				4B52F9FD061DF9F1008CC22D,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4520,21 +4290,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				34415806059F61A00019246B,
-				3441580D059F63280019246B,
-				34F2BD23059CF23F0005B238,
-				34415812059F65020019246B,
-				34415820059F67140019246B,
 				3419FE230531586A00C68BA3,
-				4B7845FA059B558C0048A8BA,
-				3461F439061943D80054C1A8,
 				3419FE240531586A00C68BA3,
-				4B7F279C05440CB900CDFC90,
-				4B7F279D05440CB900CDFC90,
-				4B7845F4059B53E50048A8BA,
-				4B7845F5059B54680048A8BA,
-				3461F431061943000054C1A8,
 				520FE46305BE20EB002D063D,
+				4B52FA00061DF9FD008CC22D,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7000,29 +6759,6 @@
 			settings = {
 			};
 		};
-		34F152A505E9FEB500B32FD7 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = msn.h;
-			path = msn/msn.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34F152A605E9FEB500B32FD7 = {
-			fileRef = 34F152A505E9FEB500B32FD7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34F152AE05E9FF0100B32FD7 = {
-			isa = PBXFileReference;
-			lastKnownFileType = archive.ar;
-			name = libmsn.a;
-			path = "Plugins/Gaim Service/LIBS/libmsn.a";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34F2BC67059CC2840005B238 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -7049,26 +6785,6 @@
 		};
 		34F2BC6A059CC2850005B238 = {
 			fileRef = 34F2BC68059CC2840005B238;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34F2BD0A059CF1E80005B238 = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = libcharset.dylib;
-			path = "Plugins/Gaim Service/LIBS/libcharset.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34F2BD0B059CF1E90005B238 = {
-			fileRef = 34F2BD0A059CF1E80005B238;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34F2BD23059CF23F0005B238 = {
-			fileRef = 34F2BD0A059CF1E80005B238;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -9034,6 +8750,26 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B52F9FC061DF9F1008CC22D = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = Libgaim.framework;
+			path = "Plugins/Gaim Service/Libgaim.framework";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B52F9FD061DF9F1008CC22D = {
+			fileRef = 4B52F9FC061DF9F1008CC22D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B52FA00061DF9FD008CC22D = {
+			fileRef = 4B52F9FC061DF9F1008CC22D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B539C4B05EFD6CD00E5921A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -10052,38 +9788,6 @@
 			target = 4B7F278205440C0800CDFC90;
 			targetProxy = 4B7845EB059B50820048A8BA;
 		};
-		4B7845EF059B50AF0048A8BA = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = "libgaim-0.0.0.dylib";
-			path = "Plugins/Gaim Service/LIBS/libgaim-0.0.0.dylib";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4B7845F0059B50AF0048A8BA = {
-			fileRef = 4B7845EF059B50AF0048A8BA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B7845F4059B53E50048A8BA = {
-			fileRef = 3453573E059AEE1000A83D9E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B7845F5059B54680048A8BA = {
-			fileRef = 3453573F059AEE1000A83D9E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B7845FA059B558C0048A8BA = {
-			fileRef = 4B7845EF059B50AF0048A8BA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B791A230534C4130000969C = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -10248,10 +9952,6 @@
 				4B7F278B05440C8D00CDFC90,
 				4B7F278D05440C8D00CDFC90,
 				9EE05871055483DE00505F31,
-				9EE058D805548F9400505F31,
-				9EE058D905548F9400505F31,
-				9EE058DA05548F9400505F31,
-				9EE058DB05548F9400505F31,
 				9EA125EF055B633000ECF349,
 				3441589C059F90290019246B,
 				344158AB059F90FB0019246B,
@@ -10278,9 +9978,7 @@
 				34F142A305E95B0F00B32FD7,
 				34F142A905E95B4D00B32FD7,
 				34F142AC05E962A500B32FD7,
-				34F152A605E9FEB500B32FD7,
 				34048AC70617CB4C004D0B7E,
-				34048B630617D4AE004D0B7E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10288,7 +9986,6 @@
 		4B7F277F05440C0800CDFC90 = {
 			buildActionMask = 2147483647;
 			files = (
-				344157D1059F5EC80019246B,
 				34415EFE059FB4190019246B,
 				34415F91059FB85F0019246B,
 				34F1529605E9FDF200B32FD7,
@@ -10334,46 +10031,30 @@
 		4B7F278105440C0800CDFC90 = {
 			buildActionMask = 2147483647;
 			files = (
-				3482223805EA069B0015055E,
 				6C3E0730054471CD00A4AE2E,
 				6C3E0731054471E400A4AE2E,
-				4B7F279705440CB900CDFC90,
-				4B7F279805440CB900CDFC90,
-				343FA4530567DC460049DFFB,
 				34E839060583207E00F2AADB,
 				34E83B0B05832B4300F2AADB,
-				34535741059AEE1000A83D9E,
-				34535742059AEE1000A83D9E,
-				34535743059AEE1000A83D9E,
-				4B7845F0059B50AF0048A8BA,
-				34F2BD0B059CF1E90005B238,
-				344157FA059F61870019246B,
-				3441580A059F631A0019246B,
-				3441580F059F648D0019246B,
-				3441581D059F67070019246B,
-				3461F426061942D10054C1A8,
-				3461F433061943B60054C1A8,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4B7F278205440C0800CDFC90 = {
 			buildPhases = (
-				9CC84FAB056AFAFC006AB00E,
 				4B7F277E05440C0800CDFC90,
 				4B7F277F05440C0800CDFC90,
 				4B7F278005440C0800CDFC90,
 				4B7F278105440C0800CDFC90,
-				4B7F27C005440D4F00CDFC90,
 			);
 			buildRules = (
 			);
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "\"Plugins/Gaim Service\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS/include\" \"Plugins/Gaim Service/LIBS/include/libgaim\" \"Plugins/Gaim Service/LIBS/include/glib-2.0\"";
+				HEADER_SEARCH_PATHS = "\"Plugins/Gaim Service/Libgaim.framework/Headers\" \"Plugins/Gaim Service/Include/glib\" \"Plugins/Gaim Service/Include/glib/glib\" \"Plugins/Gaim Service/Include/glib/gmodule\"";
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
-				LIBRARY_SEARCH_PATHS = "\"Plugins/Gaim Service/LIBS\" \"/Users/evands/adium/Plugins/Gaim Service/LIBS\"";
+				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = "-undefined suppress -flat_namespace";
 				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = Gaim;
@@ -10429,10 +10110,12 @@
 				340915F105C0A5DF00CDE3DD,
 				4B7F278905440C8D00CDFC90,
 				4B7F278A05440C8D00CDFC90,
+				34048AC50617CB4C004D0B7E,
+				34048AC60617CB4C004D0B7E,
 				34327BD6060D2FE6003D7AD9,
+				4B52F9FC061DF9F1008CC22D,
 				34415880059F8F050019246B,
 				3441587A059F8EFC0019246B,
-				4B7F279005440CA100CDFC90,
 			);
 			isa = PBXGroup;
 			name = Gaim;
@@ -10499,93 +10182,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		4B7F279005440CA100CDFC90 = {
-			children = (
-				34048AC50617CB4C004D0B7E,
-				34048AC60617CB4C004D0B7E,
-				4B7845EF059B50AF0048A8BA,
-				34F2BD0A059CF1E80005B238,
-				4B7F279205440CB800CDFC90,
-				3461F432061943B60054C1A8,
-				4B7F279305440CB900CDFC90,
-				3453573D059AEE1000A83D9E,
-				343FA4520567DC460049DFFB,
-				34F152AE05E9FF0100B32FD7,
-				34415816059F65100019246B,
-				9E2BD856054BE18200558E56,
-				4B7F27A005440CC900CDFC90,
-				344157CD059F5EC70019246B,
-			);
-			isa = PBXGroup;
-			name = Libraries;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7F279205440CB800CDFC90 = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = "libglib-2.0.0.dylib";
-			path = "Plugins/Gaim Service/LIBS/libglib-2.0.0.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7F279305440CB900CDFC90 = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			name = "libgmodule-2.0.0.dylib";
-			path = "Plugins/Gaim Service/LIBS/libgmodule-2.0.0.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7F279705440CB900CDFC90 = {
-			fileRef = 4B7F279205440CB800CDFC90;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B7F279805440CB900CDFC90 = {
-			fileRef = 4B7F279305440CB900CDFC90;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B7F279C05440CB900CDFC90 = {
-			fileRef = 4B7F279205440CB800CDFC90;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B7F279D05440CB900CDFC90 = {
-			fileRef = 4B7F279305440CB900CDFC90;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B7F27A005440CC900CDFC90 = {
-			isa = PBXFileReference;
-			lastKnownFileType = folder;
-			name = Protocols;
-			path = "Plugins/Gaim Service/Protocols";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B7F27BD05440D3900CDFC90 = {
-			fileRef = 4B7F27A005440CC900CDFC90;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B7F27C005440D4F00CDFC90 = {
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				4B7F27BD05440D3900CDFC90,
-				344157ED059F5EF20019246B,
-			);
-			isa = PBXCopyFilesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4B7F27C705440DE900CDFC90 = {
 			fileRef = 4B7F278305440C0800CDFC90;
@@ -17038,19 +16634,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		9CC84FAB056AFAFC006AB00E = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			isa = PBXShellScriptBuildPhase;
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/tcsh;
-			shellScript = "ranlib \"$SRCROOT/Plugins/Gaim Service/LIBS/liboscar.a\"\nranlib \"$SRCROOT/Plugins/Gaim Service/LIBS/libmsn.a\"";
-		};
 		9CDF247703E8CBAA000001C9 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -17093,989 +16676,6 @@
 			lastKnownFileType = text.plist.xml;
 			name = ContactCountingDisplayDefaults.plist;
 			path = "Plugins/Contact Counting Display/ContactCountingDisplayDefaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD856054BE18200558E56 = {
-			children = (
-				9E2BD857054BE18200558E56,
-				9E2BD858054BE18200558E56,
-				9E2BD859054BE18300558E56,
-				9E2BD89C054BE18A00558E56,
-				9E2BD89D054BE18A00558E56,
-				9E2BD89E054BE18A00558E56,
-				9E2BD89F054BE18B00558E56,
-				9E2BD8C1054BE18F00558E56,
-				9E2BD8C2054BE18F00558E56,
-			);
-			isa = PBXGroup;
-			name = Include;
-			path = "Plugins/Gaim Service/LIBS/include";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD857054BE18200558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = autosprintf.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD858054BE18200558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = "gettext-po.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD859054BE18300558E56 = {
-			children = (
-				9E2BD85A054BE18300558E56,
-				9E2BD887054BE18800558E56,
-				9E2BD888054BE18800558E56,
-				9E2BD889054BE18800558E56,
-				9E2BD88A054BE18800558E56,
-			);
-			isa = PBXGroup;
-			path = "glib-2.0";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD85A054BE18300558E56 = {
-			children = (
-				9E2BD85B054BE18300558E56,
-				9E2BD85C054BE18300558E56,
-				9E2BD85D054BE18300558E56,
-				9E2BD85E054BE18300558E56,
-				9E2BD85F054BE18300558E56,
-				9E2BD860054BE18300558E56,
-				9E2BD861054BE18300558E56,
-				9E2BD862054BE18400558E56,
-				9E2BD863054BE18400558E56,
-				9E2BD864054BE18400558E56,
-				9E2BD865054BE18400558E56,
-				9E2BD866054BE18400558E56,
-				9E2BD867054BE18400558E56,
-				9E2BD868054BE18400558E56,
-				9E2BD869054BE18400558E56,
-				9E2BD86A054BE18400558E56,
-				9E2BD86B054BE18500558E56,
-				9E2BD86C054BE18500558E56,
-				9E2BD86D054BE18500558E56,
-				9E2BD86E054BE18500558E56,
-				9E2BD86F054BE18500558E56,
-				9E2BD870054BE18500558E56,
-				9E2BD871054BE18500558E56,
-				9E2BD872054BE18500558E56,
-				9E2BD873054BE18500558E56,
-				9E2BD874054BE18600558E56,
-				9E2BD875054BE18600558E56,
-				9E2BD876054BE18600558E56,
-				9E2BD877054BE18600558E56,
-				9E2BD878054BE18600558E56,
-				9E2BD879054BE18600558E56,
-				9E2BD87A054BE18600558E56,
-				9E2BD87B054BE18600558E56,
-				9E2BD87C054BE18600558E56,
-				9E2BD87D054BE18700558E56,
-				9E2BD87E054BE18700558E56,
-				9E2BD87F054BE18700558E56,
-				9E2BD880054BE18700558E56,
-				9E2BD881054BE18700558E56,
-				9E2BD882054BE18700558E56,
-				9E2BD883054BE18700558E56,
-				9E2BD884054BE18700558E56,
-				9E2BD885054BE18700558E56,
-				9E2BD886054BE18800558E56,
-			);
-			isa = PBXGroup;
-			path = glib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD85B054BE18300558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = galloca.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD85C054BE18300558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = garray.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD85D054BE18300558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gasyncqueue.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD85E054BE18300558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gbacktrace.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD85F054BE18300558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gcache.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD860054BE18300558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gcompletion.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD861054BE18300558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gconvert.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD862054BE18400558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gdataset.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD863054BE18400558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gdate.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD864054BE18400558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gdir.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD865054BE18400558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gerror.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD866054BE18400558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gfileutils.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD867054BE18400558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = ghash.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD868054BE18400558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = ghook.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD869054BE18400558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = giochannel.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD86A054BE18400558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = glist.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD86B054BE18500558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gmacros.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD86C054BE18500558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gmain.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD86D054BE18500558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gmarkup.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD86E054BE18500558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gmem.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD86F054BE18500558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gmessages.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD870054BE18500558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gnode.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD871054BE18500558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gpattern.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD872054BE18500558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gprimes.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD873054BE18500558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gprintf.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD874054BE18600558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gqsort.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD875054BE18600558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gquark.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD876054BE18600558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gqueue.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD877054BE18600558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = grand.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD878054BE18600558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = grel.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD879054BE18600558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gscanner.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD87A054BE18600558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gshell.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD87B054BE18600558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gslist.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD87C054BE18600558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gspawn.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD87D054BE18700558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gstrfuncs.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD87E054BE18700558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gstring.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD87F054BE18700558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gthread.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD880054BE18700558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gthreadpool.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD881054BE18700558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gtimer.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD882054BE18700558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gtree.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD883054BE18700558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gtypes.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD884054BE18700558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gunicode.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD885054BE18700558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gutils.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD886054BE18800558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gwin32.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD887054BE18800558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = "glib-object.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD888054BE18800558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = glib.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD889054BE18800558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gmodule.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD88A054BE18800558E56 = {
-			children = (
-				9E2BD88B054BE18800558E56,
-				9E2BD88C054BE18800558E56,
-				9E2BD88D054BE18800558E56,
-				9E2BD88E054BE18800558E56,
-				9E2BD88F054BE18900558E56,
-				9E2BD890054BE18900558E56,
-				9E2BD891054BE18900558E56,
-				9E2BD892054BE18900558E56,
-				9E2BD893054BE18900558E56,
-				9E2BD894054BE18900558E56,
-				9E2BD895054BE18900558E56,
-				9E2BD896054BE18900558E56,
-				9E2BD897054BE18900558E56,
-				9E2BD898054BE18A00558E56,
-				9E2BD899054BE18A00558E56,
-				9E2BD89A054BE18A00558E56,
-				9E2BD89B054BE18A00558E56,
-			);
-			isa = PBXGroup;
-			path = gobject;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD88B054BE18800558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gboxed.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD88C054BE18800558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gclosure.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD88D054BE18800558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = genums.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD88E054BE18800558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gmarshal.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD88F054BE18900558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gobject.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD890054BE18900558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.c;
-			path = gobjectnotifyqueue.c;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD891054BE18900558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gparam.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD892054BE18900558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gparamspecs.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD893054BE18900558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gsignal.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD894054BE18900558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gsourceclosure.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD895054BE18900558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gtype.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD896054BE18900558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gtypemodule.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD897054BE18900558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gtypeplugin.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD898054BE18A00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gvalue.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD899054BE18A00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gvaluearray.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD89A054BE18A00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gvaluecollector.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD89B054BE18A00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = gvaluetypes.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD89C054BE18A00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = glibconfig.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD89D054BE18A00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = iconv.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD89E054BE18A00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = libcharset.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD89F054BE18B00558E56 = {
-			children = (
-				9EE058D105548F9300505F31,
-				9E2BD8A0054BE18B00558E56,
-				9E2BD8A1054BE18B00558E56,
-				9E2BD8A2054BE18B00558E56,
-				9E2BD8A3054BE18B00558E56,
-				9E2BD8A4054BE18B00558E56,
-				9E2BD8A5054BE18B00558E56,
-				9E2BD8A6054BE18B00558E56,
-				9E2BD8A7054BE18B00558E56,
-				34048B620617D4AE004D0B7E,
-				9E2BD8A8054BE18C00558E56,
-				9E2BD8A9054BE18C00558E56,
-				9E2BD8AA054BE18C00558E56,
-				9E2BD8AB054BE18C00558E56,
-				9E2BD8AC054BE18C00558E56,
-				9E2BD8AD054BE18C00558E56,
-				9E2BD8AE054BE18C00558E56,
-				9E2BD8AF054BE18C00558E56,
-				9E2BD8B0054BE18D00558E56,
-				9E2BD8B1054BE18D00558E56,
-				9E2BD8B2054BE18D00558E56,
-				9E2BD8B3054BE18D00558E56,
-				9E2BD8B4054BE18D00558E56,
-				9E2BD8B5054BE18D00558E56,
-				9E2BD8B6054BE18D00558E56,
-				9E2BD8B7054BE18D00558E56,
-				9E2BD8B8054BE18D00558E56,
-				9E2BD8B9054BE18E00558E56,
-				9E2BD8BA054BE18E00558E56,
-				9E2BD8BB054BE18E00558E56,
-				9E2BD8BC054BE18E00558E56,
-				9E2BD8BD054BE18E00558E56,
-				9E2BD8BE054BE18E00558E56,
-				9E2BD8BF054BE18E00558E56,
-				9E2BD8C0054BE18E00558E56,
-			);
-			isa = PBXGroup;
-			path = libgaim;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8A0054BE18B00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = account.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8A1054BE18B00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = accountopt.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8A2054BE18B00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = blist.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8A3054BE18B00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = buddyicon.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8A4054BE18B00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = connection.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8A5054BE18B00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = conversation.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8A6054BE18B00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = core.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8A7054BE18B00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = debug.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8A8054BE18C00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = ft.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8A9054BE18C00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.c;
-			path = imgstore.c;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8AA054BE18C00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = imgstore.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8AB054BE18C00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = internal.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8AC054BE18C00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = log.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8AD054BE18C00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.c;
-			path = md5.c;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8AE054BE18C00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = md5.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8AF054BE18C00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = multi.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8B0054BE18D00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = notify.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8B1054BE18D00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = plugin.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8B2054BE18D00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = pounce.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8B3054BE18D00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = prefs.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8B4054BE18D00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = privacy.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8B5054BE18D00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = proxy.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8B6054BE18D00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = prpl.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8B7054BE18D00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = request.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8B8054BE18D00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = server.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8B9054BE18E00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = sha.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8BA054BE18E00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = signals.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8BB054BE18E00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = sound.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8BC054BE18E00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = sslconn.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8BD054BE18E00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = status.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8BE054BE18E00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = util.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8BF054BE18E00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = value.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8C0054BE18E00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = xmlnode.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8C1054BE18F00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = libintl.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9E2BD8C2054BE18F00558E56 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = localcharset.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -18488,84 +17088,6 @@
 		};
 		9EE05872055483DE00505F31 = {
 			fileRef = 9EE05870055483DE00505F31;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9EE058D105548F9300505F31 = {
-			children = (
-				34F152A505E9FEB500B32FD7,
-				9EE058D205548F9300505F31,
-			);
-			isa = PBXGroup;
-			path = Protocols;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9EE058D205548F9300505F31 = {
-			children = (
-				9EE058D305548F9300505F31,
-				9EE058D405548F9400505F31,
-				9EE058D505548F9400505F31,
-				9EE058D605548F9400505F31,
-			);
-			isa = PBXGroup;
-			path = oscar;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9EE058D305548F9300505F31 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = aim.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9EE058D405548F9400505F31 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = aim_cbtypes.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9EE058D505548F9400505F31 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = aim_internal.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9EE058D605548F9400505F31 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = faimconfig.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9EE058D805548F9400505F31 = {
-			fileRef = 9EE058D305548F9300505F31;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9EE058D905548F9400505F31 = {
-			fileRef = 9EE058D405548F9400505F31;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9EE058DA05548F9400505F31 = {
-			fileRef = 9EE058D505548F9400505F31;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9EE058DB05548F9400505F31 = {
-			fileRef = 9EE058D605548F9400505F31;
 			isa = PBXBuildFile;
 			settings = {
 			};

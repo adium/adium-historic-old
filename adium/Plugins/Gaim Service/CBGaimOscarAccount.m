@@ -6,7 +6,7 @@
 //
 
 #import "CBGaimOscarAccount.h"
-#import "aim.h"
+#import <Libgaim/aim.h>
 
 #define OSCAR_DELAYED_UPDATE_INTERVAL   3
 
