@@ -196,8 +196,8 @@ Adium, Copyright 2001-2005, Adam Iser
 		[checkBox_checkMail setState:[[inAccount preferenceForKey:KEY_ACCOUNT_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]];
 		
 		//Encryption
-		[popUp_encryption selectItemWithTag:[[account preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
-																 group:GROUP_ENCRYPTION] intValue]];
+		[popUp_encryption compatibleSelectItemWithTag:[[account preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
+																		   group:GROUP_ENCRYPTION] intValue]];
 	}
 }
 
@@ -276,7 +276,9 @@ Adium, Copyright 2001-2005, Adam Iser
  */
 - (NSMenu *)encryptionMenu
 {
-	NSMenu *encryptionMenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
+	NSMenu		*encryptionMenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
+	NSMenuItem	*menuItem;
+
 	[encryptionMenu setAutoenablesItems:NO];
 
 	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Disable chat encryption",nil)
