@@ -34,6 +34,7 @@
     NSMutableDictionary	*handleDict;
     NSString *screenName;
     GaimAccount *account;
+    GaimConnection *gc;
     NSMutableDictionary *chatDict;
 }
 

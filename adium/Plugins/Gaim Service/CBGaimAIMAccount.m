@@ -25,24 +25,12 @@
     return "prpl-oscar";
 }
 
-- (NSArray *)supportedPropertyKeys
-{
-    NSMutableArray *arr = [NSMutableArray arrayWithArray:[super supportedPropertyKeys]];
-    [arr addObject:@"Away"];
-    return arr;
-}
-
 - (NSString *)UID{
     return([NSString stringWithUTF8String:SCREEN_NAME]);
 }
     
 - (NSString *)serviceID{
     return @"AIM";
-}
-
-- (NSString *)accountDescription
-{
-    return [self UIDAndServiceID];
 }
 
 @end
