@@ -324,15 +324,13 @@ void Adium_HandleSignal(int i){
 //didFinishLaunching
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
 {
-    NSString    *extension = [filename pathExtension];
-    NSString    *destination = nil;
-    BOOL        success = NO;
-    NSString    *fileDescription = nil;
-	NSString	*prefsButton = nil;
+    NSString			*extension = [filename pathExtension];
+    NSString			*destination = nil;
+	NSString			*errorMessage = nil;
+    NSString			*fileDescription = nil, *prefsButton = nil, *advancedPrefsName = nil;
+	BOOL				success = NO, requiresRestart = NO;
+	int					buttonPressed;
 	PREFERENCE_CATEGORY prefsCategory;
-	NSString	*advancedPrefsName;
-    BOOL        requiresRestart = NO;
-	int			buttonPressed;
     
     //Specify a file extension and a human-readable description of what the files of this type do
     if ([extension caseInsensitiveCompare:@"AdiumPlugin"] == NSOrderedSame){
@@ -371,26 +369,35 @@ void Adium_HandleSignal(int i){
 		prefsCategory = AIPref_Emoticons;
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumMessageStyle"] == NSOrderedSame){
-		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Message Styles"];
-		requiresRestart = NO;
-		fileDescription = AILocalizedString(@"message style",nil);
-		prefsButton = AILocalizedString(@"Open Message Prefs",nil);
-		prefsCategory = AIPref_Messages;
+		if ([NSApp isOnPantherOrBetter]){
+			destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Message Styles"];
+			requiresRestart = NO;
+			fileDescription = AILocalizedString(@"message style",nil);
+			prefsButton = AILocalizedString(@"Open Message Prefs",nil);
+			prefsCategory = AIPref_Messages;
+		}else{
+			errorMessage = AILocalizedString(@"Sorry, but Adium Message Styles are not supported in OS X 10.2 (Jaguar) at this time.",nil);
+		}
 	}
 
     if (destination){
         NSString    *destinationFilePath = [destination stringByAppendingPathComponent:[filename lastPathComponent]];
         
-        NSString *alertTitle = nil;
-        //For example: "Installation of the Adium plugin MakeToast"
-        NSString *alertMsg = [NSString stringWithFormat:AILocalizedString(@"Installation of the %@ %@","Installation sentence"),
-            fileDescription,
-            [[filename lastPathComponent] stringByDeletingPathExtension]];
+        NSString	*alertTitle = nil;
+        NSString	*alertMsg = nil;
+		NSString	*format;
 		
 		if([filename isEqualToString:destinationFilePath]) {
 			// Don't copy the file if it's already in the right place!!
 			alertTitle= AILocalizedString(@"Installation Successful","Title of installation successful window");
-			alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" was successful because the file was already in the correct location.",nil)];
+			
+			format = AILocalizedString(@"Installation of the %@ %@ was successful because the file was already in the correct location.",
+									   "Installation introduction, like 'Installation of the message style Fiat was successful...'.");
+			
+			alertMsg = [NSString stringWithFormat:format,
+				fileDescription,
+				[[filename lastPathComponent] stringByDeletingPathExtension]];
+			
 		} else {
 			//Trash the old file if one exists (since we know it isn't ourself)
 			[[NSFileManager defaultManager] trashFileAtPath:destinationFilePath];
@@ -404,7 +411,11 @@ void Adium_HandleSignal(int i){
 												 handler:nil]){
 				
 				alertTitle = AILocalizedString(@"Installation Successful","Title of installation successful window");
-				alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" was successful.","End of installation succesful sentence")];
+				alertMsg = [NSString stringWithFormat:AILocalizedString(@"Installation of the %@ %@ was successful.",
+																		   "Installation sentence, like 'Installation of the message style Fiat was successful.'."),
+					fileDescription,
+					[[filename lastPathComponent] stringByDeletingPathExtension]];
+				
 				if (requiresRestart){
 					alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" Please restart Adium.",nil)];
 				}
@@ -412,13 +423,17 @@ void Adium_HandleSignal(int i){
 				success = YES;
 			}else{
 				alertTitle = AILocalizedString(@"Installation Failed","Title of installation failed window");
-				alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" was unsuccessful.","End of installation failed sentence")];
+				alertMsg = [NSString stringWithFormat:AILocalizedString(@"Installation of the %@ %@ was unsuccessful.",
+																		"Installation failed sentence, like 'Installation of the message style Fiat was unsuccessful.'."),
+					fileDescription,
+					[[filename lastPathComponent] stringByDeletingPathExtension]];
 			}
 		}
 		
 		[[self notificationCenter] postNotificationName:Adium_Xtras_Changed
-													 object:nil];
-        buttonPressed = NSRunInformationalAlertPanel(alertTitle,alertMsg,@"OK",prefsButton,nil);
+												 object:nil];
+		
+        buttonPressed = NSRunInformationalAlertPanel(alertTitle,alertMsg,nil,prefsButton,nil);
 		
 		// User clicked the "open prefs" button
 		if( buttonPressed == NSAlertAlternateReturn ) {
@@ -433,7 +448,15 @@ void Adium_HandleSignal(int i){
 					[preferenceController openPreferencesToCategory:prefsCategory];
 			}
 		}
-    }
+    }else{
+		if (!errorMessage){
+			errorMessage = AILocalizedString(@"An error occurred while installing the X(tra).",nil);
+		}
+		
+		NSRunAlertPanel(AILocalizedString(@"Installation Failed","Title of installation failed window"),
+						errorMessage,
+						nil,nil,nil);
+	}
 
     return success;
 }
