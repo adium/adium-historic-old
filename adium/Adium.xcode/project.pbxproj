@@ -1475,6 +1475,7 @@
 				34E3C8880638D40500AA3EF7,
 				34564738069F43A800F728BC,
 				3456477F069F469E00F728BC,
+				3483148C06A70A57002C097A,
 				34564781069F469E00F728BC,
 				34564782069F469E00F728BC,
 				34564783069F469E00F728BC,
@@ -3261,6 +3262,20 @@
 			path = "Plugins/Address Book Integration/AB Display Format Defaults.plist";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		3483148C06A70A57002C097A = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "yahoo-menu.png";
+			path = "Plugins/Gaim Service/yahoo-menu.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3483148D06A70A57002C097A = {
+			fileRef = 3483148C06A70A57002C097A;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		3483928405E68B05002BC6C0 = {
 			fileEncoding = 30;
@@ -13178,6 +13193,7 @@
 				34564790069F469F00F728BC,
 				34564793069F469F00F728BC,
 				34564794069F469F00F728BC,
+				3483148D06A70A57002C097A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
