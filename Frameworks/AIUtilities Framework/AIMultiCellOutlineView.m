@@ -50,6 +50,10 @@
 {
 	[contentCell release];
 	[groupCell release];
+	
+	[backgroundImage release];
+	[backgroundColor release];
+
 	[super dealloc];
 }
 

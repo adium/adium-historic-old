@@ -79,7 +79,7 @@
 		tooltipTracker = nil;
 	}
 	
-	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[AIListContactCell alloc] init]];
+	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[[AIListContactCell alloc] init] autorelease]];
 	
 	//Targeting
     [contactListView setTarget:self];
