@@ -1,0 +1,31 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = AIPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
+            }; 
+            SUPERCLASS = AIModularPane; 
+        }, 
+        {
+            CLASS = ESWKMVAdvancedPreferences; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}

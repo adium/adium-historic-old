@@ -14,6 +14,7 @@
 \------------------------------------------------------------------------------------------------------ */
 
 #define PREF_GROUP_WEBKIT_MESSAGE_DISPLAY	@"WebKit Message Display"
+#define WEBKIT_DEFAULT_PREFS				@"WebKit Defaults"
 
 #define	KEY_WEBKIT_TIME_STAMP_FORMAT		@"Time Stamp"
 #define KEY_WEBKIT_SHOW_USER_ICONS			@"Show User Icons"
