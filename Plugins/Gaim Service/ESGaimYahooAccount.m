@@ -185,7 +185,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 				if (![statusMsgString isEqualToString:oldStatusMsgString]) {
 					NSAttributedString *attrStr;
 					
-					attrStr = [[[NSAttributedString alloc] initWithString:statusMsgString] autorelease];
+					attrStr = [[NSAttributedString alloc] initWithString:statusMsgString];
 					
 					[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
 					[theContact setStatusObject:attrStr forKey:@"StatusMessage" notify:NO];
