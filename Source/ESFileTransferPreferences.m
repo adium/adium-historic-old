@@ -114,8 +114,8 @@
 
 	[self configureControlDimming];
 	
-	[label_whenReceivingFiles setStringValue:AILocalizedString(@"When receiving files:","FT Preferences")];
-	[label_defaultReceivingFolder setStringValue:AILocalizedString(@"Default receiving folder:","FT Preferences")];
+	[label_whenReceivingFiles setStringValue:AILocalizedString(@"Receiving files:","FT Preferences")];
+	[label_defaultReceivingFolder setStringValue:AILocalizedString(@"Save files to:","FT Preferences")];
 	[label_safeFilesDescription setStringValue:AILocalizedString(@"\"Safe\" files include movies, pictures,\nsounds, text documents, and archives.","Description of safe files (files which Adium can open automatically without danger to the user). This description should be on two lines; the lines are separated by \n.")];
 	[label_transferProgress setStringValue:AILocalizedString(@"Transfer progress:","FT Preferences")];
 	
