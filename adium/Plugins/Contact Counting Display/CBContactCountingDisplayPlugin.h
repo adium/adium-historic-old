@@ -10,6 +10,8 @@
 #define KEY_COUNT_ALL_CONTACTS      @"Count All Contacts"
 #define KEY_COUNT_VISIBLE_CONTACTS  @"Count Visible Contacts"
 
+@class CBContactCountingDisplayPreferences;
+
 @interface CBContactCountingDisplayPlugin : AIPlugin 
 {
     BOOL                                allCount;
