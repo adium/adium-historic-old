@@ -39,37 +39,52 @@
  */
 @implementation AIAccountListWindowController
 
-AIAccountListWindowController *sharedAccountWindowInstance = nil;
 /*!
- * @brief Return a shared instance of AIAccountListWindowController.
- *
- * @result The shared instance, created if necessary
+* @brief Preference pane properties
  */
-+ (AIAccountListWindowController *)accountListWindowController
-{
-    if(!sharedAccountWindowInstance){
-        sharedAccountWindowInstance = [[self alloc] initWithWindowNibName:@"AccountListWindow"];
-    }
-    return(sharedAccountWindowInstance);
+- (PREFERENCE_CATEGORY)category{
+    return(AIPref_Accounts);
+}
+- (NSString *)label{
+    return(AILocalizedString(@"Accounts","Appearance preferences label"));
+}
+- (NSString *)nibName{
+    return(@"AccountListWindow");
 }
 
-/*!
- * @brief Auto save name for AIWindowController
- */
-- (NSString *)adiumFrameAutosaveName
-{
-	return(@"AIAccountListWindow");
-}
+
+//AIAccountListWindowController *sharedAccountWindowInstance = nil;
+///*!
+// * @brief Return a shared instance of AIAccountListWindowController.
+// *
+// * @result The shared instance, created if necessary
+// */
+//+ (AIAccountListWindowController *)accountListWindowController
+//{
+//    if(!sharedAccountWindowInstance){
+//        sharedAccountWindowInstance = [[self alloc] initWithWindowNibName:@"AccountListWindow"];
+//    }
+//    return(sharedAccountWindowInstance);
+//}
+//
+///*!
+// * @brief Auto save name for AIWindowController
+// */
+//- (NSString *)adiumFrameAutosaveName
+//{
+//	return(@"AIAccountListWindow");
+//}
 
 /*!
  * @brief Configure the window initially
  *
  * Center the window on screen and then configure the list and menus
  */
-- (void)windowDidLoad
+//- (void)windowDidLoad
+- (void)viewDidLoad
 {
 	//Center this panel
-	[[self window] center];
+//	[[[self view] window] center];
 
 	//Configure the account list
 	[self configureAccountList];
@@ -89,23 +104,24 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 									   name:AIStatusIconSetDidChangeNotification
 									 object:nil];
 
-	[super windowDidLoad];
+//	[super windowDidLoad];
 }
 
 /*!
  * @brief Perform actions before the window closes
  */
-- (BOOL)windowShouldClose:(id)sender
+//- (BOOL)windowShouldClose:(id)sender
+- (void)viewWillClose;
 {
 	[[adium contactController] unregisterListObjectObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 	
 	//Cleanup and close our shared instance
-	[sharedAccountWindowInstance autorelease]; sharedAccountWindowInstance = nil;
+//	[sharedAccountWindowInstance autorelease]; sharedAccountWindowInstance = nil;
 	
-	[super windowShouldClose:sender];
+//	[super windowShouldClose:sender];
 	
-	return(YES);
+//	return(YES);
 }
 
 /*!
@@ -160,7 +176,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	[tableView_accountList scrollRowToVisible:accountRow];
 
 	[AIEditAccountWindowController editAccount:account
-									  onWindow:[self window]
+									  onWindow:[[self view] window]
 							  deleteIfCanceled:YES];
 }
 
@@ -172,7 +188,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     int	selectedRow = [tableView_accountList selectedRow];
 	if(selectedRow >= 0 && selectedRow < [accountArray count]){		
 		[AIEditAccountWindowController editAccount:[accountArray objectAtIndex:selectedRow] 
-										  onWindow:[self window]
+										  onWindow:[[self view] window]
 								  deleteIfCanceled:NO];
     }
 }
@@ -198,7 +214,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     NSBeginAlertSheet(AILocalizedString(@"Delete Account",nil),
 					  AILocalizedString(@"Delete",nil),
 					  AILocalizedString(@"Cancel",nil),
-					  @"",[self window], self, 
+					  @"",[[self view] window], self, 
 					  @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, targetAccount, 
 					  AILocalizedString(@"Delete the account %@?",nil), ([accountFormattedUID length] ? accountFormattedUID : NEW_ACCOUNT_DISPLAY_TEXT));
 }
@@ -245,6 +261,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	[button_editAccount setTitle:@"Edit"];
 	
 	//Configure our table view
+	[tableView_accountList setTarget:self];
 	[tableView_accountList setDoubleAction:@selector(editAccount:)];
 	[tableView_accountList setIntercellSpacing:NSMakeSize(4,4)];
     [scrollView_accountList setAutoHideScrollBar:YES];
@@ -254,8 +271,14 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	
     //Custom vertically-centered text cell for account names
     cell = [[AIVerticallyCenteredTextCell alloc] init];
-    [cell setFont:[NSFont systemFontOfSize:13]];
+    [cell setFont:[NSFont boldSystemFontOfSize:13]];
     [[tableView_accountList tableColumnWithIdentifier:@"name"] setDataCell:cell];
+	[cell release];
+
+    cell = [[AIVerticallyCenteredTextCell alloc] init];
+    [cell setFont:[NSFont systemFontOfSize:13]];
+    [cell setAlignment:NSRightTextAlignment];
+    [[tableView_accountList tableColumnWithIdentifier:@"status"] setDataCell:cell];
 	[cell release];
     
 	//Observe changes to the account list
@@ -355,7 +378,23 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	}else if([identifier isEqualToString:@"name"]){
 		return([[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT);
 		
+	}else if([identifier isEqualToString:@"status"]){
+		NSString	*title;
+		
+		if([[account statusObjectForKey:@"Connecting"] boolValue]){
+			title = @"Connecting";
+		}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
+			title = @"Disconnecting";
+		}else if([[account statusObjectForKey:@"Online"] boolValue]){
+			title = @"Online";
+		}else{
+			title = @"Offline";
+		}
+
+		return(title);
+		
 	}else if([identifier isEqualToString:@"statusicon"]){
+
 		return([AIStatusIcons statusIconForListObject:account type:AIStatusIconList direction:AIIconNormal]);
 		
 	}else if([identifier isEqualToString:@"enabled"]){
@@ -376,6 +415,11 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	if([identifier isEqualToString:@"enabled"]){
 		BOOL online = [[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue];
 		[cell setState:(online ? NSOnState : NSOffState)];
+
+	}else if([identifier isEqualToString:@"status"]){
+		[cell setEnabled:([[account statusObjectForKey:@"Connecting"] boolValue] ||
+						  [[account statusObjectForKey:@"Disconnecting"] boolValue] ||
+						  [[account statusObjectForKey:@"Online"] boolValue])];
 	}
 	
 }

@@ -22,6 +22,7 @@
 @interface AIPreferenceWindowController : AIWindowController {
     IBOutlet	NSTabView					*tabView_category;
 
+	IBOutlet	AIModularPaneCategoryView	*view_Accounts;
 	IBOutlet	AIModularPaneCategoryView	*view_General;
 	IBOutlet	AIModularPaneCategoryView	*view_Appearance;
     IBOutlet	AIModularPaneCategoryView	*view_Messages;

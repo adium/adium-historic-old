@@ -14,12 +14,12 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIWindowController.h>
+#import <Adium/AIPreferencePane.h>
 
 @class AIAccountController, AIAccount, AIAutoScrollView, ESImageViewWithImagePicker;
 @protocol AIListObjectObserver;
 
-@interface AIAccountListWindowController : AIWindowController <AIListObjectObserver> {
+@interface AIAccountListWindowController : /*AIWindowController*/AIPreferencePane <AIListObjectObserver> {
 	//Account list
     IBOutlet		AIAutoScrollView			*scrollView_accountList;
     IBOutlet		NSTableView					*tableView_accountList;

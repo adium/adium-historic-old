@@ -7180,6 +7180,8 @@
 				4BAE6C9507CF94C4007E2820,
 				4BAE6D5E07CFA1D7007E2820,
 				4BF3CB4207D1771E00A8112A,
+				4BF3CBED07D192F500A8112A,
+				4B082CCB07D2236E0034A001,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13333,6 +13335,20 @@
 			settings = {
 			};
 		};
+		4B082CCA07D2236E0034A001 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "pref-contactList.png";
+			path = "Resources/pref-contactList.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B082CCB07D2236E0034A001 = {
+			fileRef = 4B082CCA07D2236E0034A001;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B09D5C005D5265800BC00F0 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -18797,6 +18813,20 @@
 			settings = {
 			};
 		};
+		4BF3CBEC07D192F500A8112A = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "pref-accounts.png";
+			path = "Resources/pref-accounts.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF3CBED07D192F500A8112A = {
+			fileRef = 4BF3CBEC07D192F500A8112A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BF45A970483C6CD00A8010A = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -20861,10 +20891,12 @@
 		};
 		9C82689903D9B23F00F1D4AF = {
 			children = (
+				4BF3CBEC07D192F500A8112A,
 				34D8336607CBD807006466F2,
 				34D8336707CBD807006466F2,
 				34D8336807CBD807006466F2,
 				4BF3CB4107D1771E00A8112A,
+				4B082CCA07D2236E0034A001,
 				34D8336A07CBD807006466F2,
 				34D8336B07CBD807006466F2,
 				34D8336C07CBD807006466F2,

@@ -12,7 +12,7 @@
                 "tableView_accountList" = NSTableView; 
                 "textField_overview" = NSTextField; 
             }; 
-            SUPERCLASS = AIWindowController; 
+            SUPERCLASS = AIPreferencePane; 
         }, 
         {
             CLASS = AIAlternatingRowOutlineView; 
@@ -41,10 +41,18 @@
             SUPERCLASS = AIWindowController; 
         }, 
         {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {
             CLASS = AIMultiCellOutlineView; 
             LANGUAGE = ObjC; 
             SUPERCLASS = AIVariableHeightOutlineView; 
         }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
         {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSPopUpButton; }, 
         {
@@ -54,6 +62,7 @@
         }, 
         {CLASS = AIPlasticMinusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
         {CLASS = AIPlasticPlusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {
             CLASS = AIVariableHeightOutlineView; 
             LANGUAGE = ObjC; 

@@ -39,22 +39,26 @@
  */
 - (void)installPlugin
 {
-	NSMenuItem	*menuItem;
-	
-    //Adium menu item
-    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ACCOUNT_MENU_TITLE
-																	 target:self
-																	 action:@selector(showAccountWindow:)
-															  keyEquivalent:@"a"] autorelease];
-	[menuItem setKeyEquivalentModifierMask:NSCommandKeyMask | NSShiftKeyMask];
-    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
+//	NSMenuItem	*menuItem;
+//	
+//    //Adium menu item
+//    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ACCOUNT_MENU_TITLE
+//																	 target:self
+//																	 action:@selector(showAccountWindow:)
+//															  keyEquivalent:@"a"] autorelease];
+//	[menuItem setKeyEquivalentModifierMask:NSCommandKeyMask | NSShiftKeyMask];
+//    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
+//
+//	//Status menu item
+//	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ACCOUNT_EDIT_MENU_TITLE
+//																	target:self
+//																	action:@selector(showAccountWindow:)
+//															 keyEquivalent:@""];
+//	[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_Additions];
 
-	//Status menu item
-	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ACCOUNT_EDIT_MENU_TITLE
-																	target:self
-																	action:@selector(showAccountWindow:)
-															 keyEquivalent:@""];
-	[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_Additions];
+	
+    [[AIAccountListWindowController preferencePaneForPlugin:self] retain];	
+
 }
 
 /*!

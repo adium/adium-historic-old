@@ -78,7 +78,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:@"EmoticonDefaults" 
 																		forClass:[self class]]
 										  forGroup:PREF_GROUP_EMOTICONS];
-    prefs = [[AIEmoticonPreferences preferencePaneForPlugin:self] retain];
+    //prefs = [[AIEmoticonPreferences preferencePaneForPlugin:self] retain];
     
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];
 	
