@@ -1276,11 +1276,14 @@ static id<GaimThread> gaimThread = nil;
 - (void)disconnect
 {
     //We are disconnecting
-    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
-	[[adium contactController] delayListObjectNotificationsUntilInactivity];
-	
-    //Tell libgaim to disconnect
-	[gaimThread disconnectAccount:self];
+	if ([[self statusObjectForKey:@"Online"] boolValue] || [[self statusObjectForKey:@"Connecting"] boolValue]){
+		[self setStatusObject:nil forKey:@"Connecting" notify:NO];
+		[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
+		[[adium contactController] delayListObjectNotificationsUntilInactivity];
+		
+		//Tell libgaim to disconnect
+		[gaimThread disconnectAccount:self];
+	}
 }
 
 //Our account was disconnected, report the error
@@ -1305,7 +1308,7 @@ static id<GaimThread> gaimThread = nil;
 		[self removeAllStatusFlagsFromContact:contact silently:YES];
 	}
 	
-	[[adium contactController] endListObjectNotificationDelay];
+	[[adium contactController] endListObjectNotificationsDelay];
 	
 }
 
@@ -1597,10 +1600,6 @@ static id<GaimThread> gaimThread = nil;
     [filesToSendArray release];
 	
     [super dealloc];
-}
-
-- (NSString *)accountDescription {
-    return [self uniqueObjectID];
 }
 
 - (NSString *)unknownGroupName {
