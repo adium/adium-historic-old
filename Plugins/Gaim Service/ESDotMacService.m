@@ -7,8 +7,14 @@
 
 #import "ESDotMacService.h"
 #import "ESGaimDotMacAccountViewController.h"
+#import "ESGaimDotMacAccount.h"
 
 @implementation ESDotMacService
+
+//Account Creation
+- (Class)accountClass{
+	return([ESGaimDotMacAccount class]);
+}
 
 //
 - (AIAccountViewController *)accountView{

@@ -113,7 +113,6 @@
 - (oneway void)updateSignonTime:(AIListContact *)theContact withData:(NSDate *)signonDate;
 - (oneway void)updateWentAway:(AIListContact *)theContact withData:(void *)data;
 - (oneway void)updateAwayReturn:(AIListContact *)theContact withData:(void *)data;
-- (oneway void)updateIdle:(AIListContact *)theContact withData:(NSDate *)idleSinceDate;
 - (oneway void)updateEvil:(AIListContact *)theContact withData:(NSNumber *)evilNumber;
 - (oneway void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData;
 - (oneway void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString;
