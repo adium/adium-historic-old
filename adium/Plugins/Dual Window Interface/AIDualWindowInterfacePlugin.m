@@ -626,18 +626,16 @@
 															  action:@selector(previousMessage:)
 													   keyEquivalent:leftKey];
         [menuItem_shiftPreviousMessage setKeyEquivalentModifierMask:NSCommandKeyMask|NSShiftKeyMask];
-        [menuItem_shiftPreviousMessage setHidden:YES];
         [[adium menuController] addMenuItem:menuItem_shiftPreviousMessage toLocation:LOC_Window_Commands];
-		
+        [menuItem_shiftPreviousMessage setHidden:YES];
+
         menuItem_shiftNextMessage = [[NSMenuItem alloc] initWithTitle:@"super secret hidden switch right" 
 														  target:self
 														  action:@selector(nextMessage:)
 												   keyEquivalent:rightKey];
         [menuItem_shiftNextMessage setKeyEquivalentModifierMask:NSCommandKeyMask|NSShiftKeyMask];
-        [menuItem_shiftNextMessage setHidden:YES];
         [[adium menuController] addMenuItem:menuItem_shiftNextMessage toLocation:LOC_Window_Commands];
-
-        
+        [menuItem_shiftNextMessage setHidden:YES];
         
     }
 	
