@@ -327,19 +327,16 @@
 //
 - (NSMenu *)customTabView:(AICustomTabsView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem
 {
-    AIListObject	*selectedContact = [[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject];
+    AIListObject	*selectedObject = [[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject];
     
-    if(selectedContact && [selectedContact isKindOfClass:[AIListContact class]]){
+    if(selectedObject){
         return([[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
             [NSNumber numberWithInt:Context_Contact_Manage],
             [NSNumber numberWithInt:Context_Contact_Action],
             [NSNumber numberWithInt:Context_Contact_NegativeAction],
             [NSNumber numberWithInt:Context_Contact_Additions], nil]
-                                                        forContact:(AIListContact *)selectedContact]);
+													 forListObject:selectedObject]);
         
-    }else{
-        return(nil);
-
     }
 }
 

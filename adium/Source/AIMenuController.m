@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIMenuController.m,v 1.20 2004/01/18 18:38:58 adamiser Exp $
+// $Id: AIMenuController.m,v 1.21 2004/01/20 15:17:20 adamiser Exp $
 
 #import "AIMenuController.h"
 
@@ -220,7 +220,7 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  8,9,  10,11,12,  13,14,15,16
 }
 
 //Pass an array of NSNumbers corresponding to the desired contextual menu locations
-- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forContact:(AIListContact *)inContact
+- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forListObject:(AIListObject *)inObject
 {
     NSEnumerator	*enumerator;
     NSNumber		*location;
@@ -232,7 +232,7 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  8,9,  10,11,12,  13,14,15,16
 
     //Remember what our menu is configured for
     [contactualMenuContact release];
-    contactualMenuContact = [inContact retain];
+    contactualMenuContact = [inObject retain];
 
     //Process each specified location
     enumerator = [inLocationArray objectEnumerator];
