@@ -16,6 +16,7 @@
 #import "AIContentController.h"
 #import "AIAdium.h"
 #import <Adium/Adium.h>
+#import <AIUtilities/AIUtilities.h>
 
 @implementation AIContentController
 
@@ -108,6 +109,7 @@
 //Add a message object to a handle
 - (void)addIncomingContentObject:(id <AIContentObject>)inObject toHandle:(AIContactHandle *)inHandle
 {
+    AIMutableOwnerArray	*ownerArray;
     NSEnumerator	*enumerator;
     id<AIContentFilter>	filter;
     
@@ -122,6 +124,12 @@
 
     //Add the object
     [inHandle addContentObject:inObject];
+
+    //Set 'UnrespondedContent' to YES  (This could be done by a seperate plugin, but I'm not sure that's necessary)
+    ownerArray = [inHandle statusArrayForKey:@"UnrespondedContent"];
+    [ownerArray removeObjectsWithOwner:self];
+    [ownerArray addObject:[NSNumber numberWithBool:YES] withOwner:self];
+    [[owner contactController] handleStatusChanged:inHandle modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];    
     
     //content object addeed
     [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",[NSNumber numberWithBool:YES],@"Incoming",nil]];
@@ -132,6 +140,7 @@
 
 - (void)sendContentObject:(id <AIContentObject>)inObject toHandle:(AIContactHandle *)inHandle
 {
+    AIMutableOwnerArray	*ownerArray;
     NSEnumerator	*enumerator;
     id<AIContentFilter>	filter;
 
@@ -149,7 +158,13 @@
     
     //Add the object
     [inHandle addContentObject:inObject];
-    
+
+    //Set 'UnrespondedContent' to NO  (This could be done by a seperate plugin, but I'm not sure that's necessary)
+    ownerArray = [inHandle statusArrayForKey:@"UnrespondedContent"];
+    [ownerArray removeObjectsWithOwner:self];
+    [ownerArray addObject:[NSNumber numberWithBool:NO] withOwner:self];
+    [[owner contactController] handleStatusChanged:inHandle modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
+
     //Content object added
     [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",[NSNumber numberWithBool:NO],@"Incoming",nil]];
 

@@ -19,12 +19,6 @@
 
 @interface AIStatusCirclesPlugin : AIPlugin {
 
-    AIStatusCircle	*circleAway;
-    AIStatusCircle	*circleIdle;
-    AIStatusCircle	*circleIdleAway;
-    AIStatusCircle	*circleOffline;
-    AIStatusCircle	*circleEmpty;
-
 }
 
 @end

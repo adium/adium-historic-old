@@ -19,16 +19,17 @@
 
 @implementation AIStatusCircle
 
-+ (id)statusCircleWithColor:(NSColor *)inColor
++ (id)statusCircleWithColor:(NSColor *)inColor dot:(BOOL)inDot
 {
-    return([[[self alloc] initWithColor:inColor] autorelease]);
+    return([[[self alloc] initWithColor:inColor dot:inDot] autorelease]);
 }
 
-- (id)initWithColor:(NSColor *)inColor
+- (id)initWithColor:(NSColor *)inColor dot:(BOOL)inDot
 {
     [super init];
 
     color = [inColor retain];
+    dot = inDot;
 
     return(self);
 }
@@ -95,7 +96,23 @@
     //draw the contents
     [color set];
     [pillPath fill];
-    
+
+    //draw the dot (for unreplied messages)
+    if(dot){
+        NSRect		dotRect;
+        NSBezierPath 	*dotPath;
+
+        dotRect = NSMakeRect(inRect.origin.x + (circleRadius - (circleRadius*(1.0/6.0))),
+                             inRect.origin.y + (circleRadius),
+                             circleRadius*(1.0/3.0),		//1/3rd the width of the main circle
+                             (circleRadius*(1.0/3.0)));		//1/3rd the width of the main circle
+
+        dotPath = [NSBezierPath bezierPathWithOvalInRect:dotRect];
+        [dotPath setLineWidth:(circleRadius * 0.13333)];
+        [[NSColor blackColor] set];
+        [dotPath stroke];
+    }
+
     //draw the pill frame
     [[NSColor grayColor] set];
     [pillPath stroke];
