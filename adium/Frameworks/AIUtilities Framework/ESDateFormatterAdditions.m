@@ -17,6 +17,25 @@ typedef enum
 
 @implementation NSDateFormatter (ESDateFormatterAdditions)
 
++ (NSString *)localizedDateFormatString
+{
+	static NSString		*cache = nil;
+	static NSString		*oldFormatString = nil;
+	
+	NSString *currentFormatString = [[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString];
+	
+	// If the format string changed,clear the cache and save the new one
+	if( [currentFormatString compare:oldFormatString] != 0 ) {
+		[oldFormatString release];
+		oldFormatString = [currentFormatString retain];
+	}
+	
+	cache = [currentFormatString retain];
+	
+	return( [currentFormatString autorelease] );
+}
+
+
 + (NSString *)localizedDateFormatStringShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm
 {
     static NSString 	*cache[4] = {nil,nil,nil,nil}; //Cache for the 4 combinations of date string
