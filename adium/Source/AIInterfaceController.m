@@ -213,11 +213,10 @@
             NSMutableParagraphStyle     *paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
 
             //Hold onto the new object
-            [tooltipListObject release];
-            tooltipListObject = [object retain];
+            [tooltipListObject release]; tooltipListObject = [object retain];
 
-            [tooltipImage release]; tooltipImage = nil;
             //Buddy Icon
+            [tooltipImage release]; tooltipImage = nil;
             AIMutableOwnerArray *ownerArray = [tooltipListObject statusArrayForKey:@"BuddyImage"];
             if(ownerArray && [ownerArray count]){
                 tooltipImage = [[ownerArray objectAtIndex:0] retain];
@@ -229,8 +228,7 @@
             maxLabelWidth = 0;
             
             //Build a tooltip string for the primary information
-            [tooltipTitle release]; tooltipTitle = nil;
-            tooltipTitle = [[self _tooltipTitleForObject:object] retain];
+            [tooltipTitle release]; tooltipTitle = [[self _tooltipTitleForObject:object] retain];
             
             //If there is an image, set the title tab and indentation settings independently
             if (tooltipImage) {
@@ -251,7 +249,8 @@
             tooltipBody = [[self _tooltipBodyForObject:object] retain];
             
             //Set a right-align tab at the maximum label width for the body and a left-align just past it
-            tabArray = [[NSArray alloc] initWithObjects:[[NSTextTab alloc] initWithType:NSRightTabStopType location:maxLabelWidth],[[NSTextTab alloc] initWithType:NSLeftTabStopType location:maxLabelWidth + LABEL_ENTRY_SPACING],nil];
+            tabArray = [[[NSArray alloc] initWithObjects:[[[NSTextTab alloc] initWithType:NSRightTabStopType location:maxLabelWidth] autorelease],
+                [[[NSTextTab alloc] initWithType:NSLeftTabStopType location:maxLabelWidth + LABEL_ENTRY_SPACING] autorelease], nil] autorelease];
             [paragraphStyle setTabStops:tabArray];
             [paragraphStyle setHeadIndent:(maxLabelWidth + LABEL_ENTRY_SPACING)];
             
@@ -281,8 +280,8 @@
     id <AIContactListTooltipEntry>	tooltipEntry;
     NSEnumerator			*enumerator;
     NSEnumerator                        *labelEnumerator;
-    NSMutableArray                      *labelArray = [[NSMutableArray alloc] init];
-    NSMutableArray                      *entryArray = [[NSMutableArray alloc] init];
+    NSMutableArray                      *labelArray = [NSMutableArray array];
+    NSMutableArray                      *entryArray = [NSMutableArray array];
     NSMutableAttributedString           *entryString;
     float                               labelWidth;
     BOOL                                isFirst = YES;
@@ -387,8 +386,8 @@
     id <AIContactListTooltipEntry>  tooltipEntry;
     NSEnumerator                    *enumerator;
     NSEnumerator                    *labelEnumerator; 
-    NSMutableArray                  *labelArray = [[NSMutableArray alloc] init];
-    NSMutableArray                  *entryArray = [[NSMutableArray alloc] init];    
+    NSMutableArray                  *labelArray = [NSMutableArray array];
+    NSMutableArray                  *entryArray = [NSMutableArray array];    
     NSMutableAttributedString       *entryString;
     float                           labelWidth;
     BOOL                            firstEntry = YES;
@@ -424,8 +423,8 @@
     enumerator = [entryArray objectEnumerator];
     labelEnumerator = [labelArray objectEnumerator];
     while((entryString = [enumerator nextObject])){
-        NSMutableAttributedString * labelString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:\t",[labelEnumerator nextObject]]
-                                                                                         attributes:labelDict];
+        NSMutableAttributedString *labelString = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:\t",[labelEnumerator nextObject]]
+                                                                                         attributes:labelDict] autorelease];
         
         if (firstEntry) {
             firstEntry = NO;
