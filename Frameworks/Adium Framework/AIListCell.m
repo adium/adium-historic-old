@@ -18,6 +18,8 @@
 
 @implementation AIListCell
 
+static NSParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
+
 //Init
 - (id)init
 {
@@ -38,6 +40,11 @@
 	
 	useAliasesAsRequested = YES;
 	
+	if (!leftParagraphStyleWithTruncatingTail){
+		leftParagraphStyleWithTruncatingTail = [[NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
+																	   lineBreakMode:NSLineBreakByTruncatingTail] retain];
+	}
+
     return(self);
 }
 
@@ -334,14 +341,12 @@
 {
 	NSMutableDictionary	*labelAttributes;
 	NSDictionary		*additionalAttributes = [self additionalLabelAttributes];
-	NSParagraphStyle	*paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
-																 lineBreakMode:NSLineBreakByTruncatingTail];
 	NSColor				*currentTextColor = ([self isSelectionInverted] ? [self invertedTextColor] : [self textColor]);
 	
 	if (additionalAttributes){
 		labelAttributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 			currentTextColor, NSForegroundColorAttributeName,
-			paragraphStyle, NSParagraphStyleAttributeName,
+			leftParagraphStyleWithTruncatingTail, NSParagraphStyleAttributeName,
 			[self font], NSFontAttributeName,
 			nil];
 		[labelAttributes addEntriesFromDictionary:additionalAttributes];
@@ -349,7 +354,7 @@
 	}else{
 		labelAttributes = (NSMutableDictionary *)[NSDictionary dictionaryWithObjectsAndKeys:
 			currentTextColor, NSForegroundColorAttributeName,
-			paragraphStyle, NSParagraphStyleAttributeName,
+			leftParagraphStyleWithTruncatingTail, NSParagraphStyleAttributeName,
 			[self font], NSFontAttributeName,
 			nil];
 	}
