@@ -168,6 +168,7 @@ typedef enum {
 - (void)contactListDesiredSizeChanged:(NSNotification *)notification;
 - (void)updateTransparency;
 - (BOOL)useAliasesInContactListAsRequested;
+- (BOOL)shouldUseContactTextColors;
 
 //Tooltip
 - (void)showTooltipAtPoint:(NSPoint)screenPoint;
