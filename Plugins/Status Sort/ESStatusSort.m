@@ -540,13 +540,13 @@ int statusSort(id objectA, id objectB, BOOL groups)
 				if (returnValue == NSOrderedSame){
 					returnValue = [displayNameA caseInsensitiveCompare:displayNameB];
 					if (returnValue == NSOrderedSame){
-						returnValue = [[objectA uniqueObjectID] caseInsensitiveCompare:[objectB uniqueObjectID]];
+						returnValue = [[objectA internalObjectID] caseInsensitiveCompare:[objectB internalObjectID]];
 					}
 				}
 			}else{
 				returnValue = [[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]];
 				if (returnValue == NSOrderedSame){
-					returnValue = [[objectA uniqueObjectID] caseInsensitiveCompare:[objectB uniqueObjectID]];
+					returnValue = [[objectA internalObjectID] caseInsensitiveCompare:[objectB internalObjectID]];
 				}
 			}
 			
