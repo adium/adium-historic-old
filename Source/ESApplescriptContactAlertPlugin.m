@@ -34,8 +34,6 @@
 	[[adium contactAlertsController] registerActionID:APPLESCRIPT_CONTACT_ALERT_IDENTIFIER withHandler:self];
 }
 
-//Run Applescript Alert -------------------------------------------------------------------------------------------------
-#pragma mark Run Applescript Alert
 /*!
  * @brief Short description
  * @result A short localized description of the action
