@@ -208,19 +208,12 @@ static AIInfoWindowController *sharedInstance = nil;
         NSColor	*backgroundColor;
 
         //Display the string
-        [textView_contactProfile setString:@""];
         [[textView_contactProfile textStorage] setAttributedString:infoString];
+        [textView_contactProfile resetCursorRects]; //Why must I call this manually?
 
         //Set the background color
         backgroundColor = [infoString attribute:AIBodyColorAttributeName atIndex:0 longestEffectiveRange:nil inRange:NSMakeRange(0,[infoString length])];
         [textView_contactProfile setBackgroundColor:(backgroundColor ? backgroundColor : [NSColor whiteColor])];
-
-    }else{
-        //Remove any existing profile
-        [textView_contactProfile setString:@""];
-
-        //Set background back to white
-        [textView_contactProfile setBackgroundColor:[NSColor whiteColor]];
 
     }
 
@@ -265,6 +258,9 @@ static AIInfoWindowController *sharedInstance = nil;
     }else{
         [[self window] center];
     }
+
+    //
+    [textView_contactProfile setEditable:NO];
 }
 
 //Close the window
