@@ -259,11 +259,6 @@
 		};
 		29B97314FDCFA39411CA2CEA = {
 			children = (
-				CA2C842606F8A3E70024B20E,
-				CA2C842706F8A3E70024B20E,
-				CA2C842806F8A3E80024B20E,
-				CA2C842906F8A3E80024B20E,
-				CA2C842A06F8A3E80024B20E,
 				4B191D8C0611C11000E8A4E7,
 				34B5EBA106589A88007B9A56,
 				4B191D8E0611C11400E8A4E7,
@@ -21630,41 +21625,6 @@
 			isa = PBXTargetDependency;
 			name = "AIUtilities (from AIUtilities.framework.xcode)";
 			targetProxy = CA0C977706DBFDA1004436BE;
-		};
-		CA2C842606F8A3E70024B20E = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.icns;
-			path = Adium.icns;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		CA2C842706F8A3E70024B20E = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			path = Awake.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		CA2C842806F8A3E80024B20E = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			path = ErrorAlert.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		CA2C842906F8A3E80024B20E = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			path = notfound.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		CA2C842A06F8A3E80024B20E = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			path = pref4.tif;
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		CA2C84A306F8B91D0024B20E = {
 			isa = PBXFileReference;
