@@ -20,7 +20,8 @@
     onlineCache = [[NSMutableDictionary alloc] init];
     awayCache = [[NSMutableDictionary alloc] init];
     idleCache = [[NSMutableDictionary alloc] init];
-
+	statusMessageCache = [[NSMutableDictionary alloc] init];
+	
 	//Register the events we generate
 	[[adium contactAlertsController] registerEventID:CONTACT_STATUS_ONLINE_YES withHandler:self];
 	[[adium contactAlertsController] registerEventID:CONTACT_STATUS_ONLINE_NO withHandler:self];
@@ -130,24 +131,57 @@
 //
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)modifiedKeys silent:(BOOL)silent
 {
-	if(![inObject isKindOfClass:[AIAccount class]]){ //Ignore accounts
-		if(![[inObject containingGroup] isKindOfClass:[AIMetaContact class]]){ //Ignore children of meta contacts
-			if([modifiedKeys containsObject:@"Online"]){
-				if([self updateCache:onlineCache forKey:@"Online" ofType:@selector(numberStatusObjectForKey:) listObject:inObject] && !silent){
-					[[adium contactAlertsController] generateEvent:([[inObject numberStatusObjectForKey:@"Online"] boolValue] ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO)
-													 forListObject:inObject];
-				}
+	if((![inObject isKindOfClass:[AIAccount class]]) &&							//Ignore accounts
+	   (![[inObject containingGroup] isKindOfClass:[AIMetaContact class]])){	//Ignore children of meta contacts
+		
+		if([modifiedKeys containsObject:@"Online"]){
+			if([self updateCache:onlineCache forKey:@"Online" ofType:@selector(numberStatusObjectForKey:) listObject:inObject] && !silent){
+				NSString	*event = ([[inObject numberStatusObjectForKey:@"Online"] boolValue] ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO);
+				[[adium contactAlertsController] generateEvent:event
+												 forListObject:inObject];
+				
+				[[adium notificationCenter] postNotificationName:event
+														  object:inObject
+														userInfo:nil];
 			}
+		}
+		
+		//Events which are irrelevent if the contact is not online - these changes occur when we are just doing bookkeeping
+		//e.g. an away contact signs off, we clear the away flag, but they didn't actually come back from away.
+		if ([[inObject numberStatusObjectForKey:@"Online"] boolValue]){
 			if([modifiedKeys containsObject:@"Away"]){
 				if([self updateCache:awayCache forKey:@"Away" ofType:@selector(numberStatusObjectForKey:) listObject:inObject] && !silent){
-					[[adium contactAlertsController] generateEvent:([[inObject numberStatusObjectForKey:@"Away"] boolValue] ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO)
+					NSString	*event = ([[inObject numberStatusObjectForKey:@"Away"] boolValue] ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO);
+					[[adium contactAlertsController] generateEvent:event
 													 forListObject:inObject];
+					
+					[[adium notificationCenter] postNotificationName:event
+															  object:inObject 
+															userInfo:nil];
 				}
 			}
 			if([modifiedKeys containsObject:@"IdleSince"]){
 				if([self updateCache:idleCache forKey:@"IdleSince" ofType:@selector(earliestDateStatusObjectForKey:) listObject:inObject] && !silent){
-					[[adium contactAlertsController] generateEvent:(([inObject earliestDateStatusObjectForKey:@"IdleSince"] != nil) ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO)
+					NSString	*event = (([inObject earliestDateStatusObjectForKey:@"IdleSince"] != nil) ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO);
+					[[adium contactAlertsController] generateEvent:event
 													 forListObject:inObject];
+					
+					[[adium notificationCenter] postNotificationName:event
+															  object:inObject 
+															userInfo:nil];
+				}
+			}
+			if([modifiedKeys containsObject:@"StatusMessage"]){
+				if([self updateCache:statusMessageCache forKey:@"StatusMessage" ofType:@selector(stringFromAttributedStringStatusObjectForKey:) listObject:inObject] && !silent){
+					if ([inObject statusObjectForKey:@"StatusMessage"] != nil){
+						//Evan: Not yet a contact alert - how could/should we use this?
+						[[adium contactAlertsController] generateEvent:CONTACT_STATUS_MESSAGE
+														 forListObject:inObject];
+						
+						[[adium notificationCenter] postNotificationName:CONTACT_STATUS_MESSAGE
+																  object:inObject 
+																userInfo:nil];
+					}
 				}
 			}
 		}
@@ -156,13 +190,20 @@
 	return(nil);	
 }
 
+//Caches status changes, returning YES if it was a true change and NO if the change already happened for this listObject via another account
 - (BOOL)updateCache:(NSMutableDictionary *)cache forKey:(NSString *)key ofType:(SEL)selector listObject:(AIListObject *)inObject 
 {
 	id		newStatus = [inObject performSelector:selector withObject:key];
 	id		oldStatus = [cache objectForKey:[inObject uniqueObjectID]];
-	
-	if(newStatus && (oldStatus == nil || ![newStatus performSelector:@selector(compare:) withObject:oldStatus] == 0)){
-		[cache setObject:newStatus forKey:[inObject uniqueObjectID]];
+	if((newStatus && !oldStatus) ||
+	   (oldStatus && !newStatus) ||
+	   (newStatus && oldStatus && ![newStatus performSelector:@selector(compare:) withObject:oldStatus] == 0)){
+		
+		if (newStatus){
+			[cache setObject:newStatus forKey:[inObject uniqueObjectID]];
+		}else{
+			[cache removeObjectForKey:[inObject uniqueObjectID]];
+		}
 		return(YES);
 	}else{
 		return(NO);

@@ -9,7 +9,7 @@
 	NSMutableDictionary		*onlineCache;
 	NSMutableDictionary		*awayCache;
 	NSMutableDictionary		*idleCache;
-	
+	NSMutableDictionary		*statusMessageCache;
 }
 
 @end
