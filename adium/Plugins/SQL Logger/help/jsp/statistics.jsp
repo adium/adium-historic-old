@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 444 $ $Date: 2003/10/12 16:30:23 $ -->
+<!--$Rev: 474 $ $Date: 2003/11/09 06:56:53 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -13,12 +13,13 @@ Connection conn = source.getConnection();
 int sender;
 String sender_sn;
 int total_messages = 0;
-
+boolean loginUsers = false;
 try {
     sender = Integer.parseInt(request.getParameter("sender"));
 } catch (NumberFormatException e) {
     sender = 0;
 }
+loginUsers = Boolean.valueOf(request.getParameter("login")).booleanValue();
 %>
 <html>
     <head>
@@ -29,6 +30,11 @@ try {
     if (sender == 0) {
         out.print("<div align=\"center\">");
         out.print("<h3>Please choose a user:</h3>");
+        if(!loginUsers) {
+            out.print("<a href=\"statistics.jsp?login=true\">Login Users</a>");
+        } else {
+            out.print("<a href=\"statistics.jsp\">All Users</a>");
+        }
         out.print("</div>");
     }
     %>
@@ -37,6 +43,7 @@ try {
 <%
 PreparedStatement pstmt = null;
 Statement stmt = null;
+Statement modCounter = null;
 ResultSet rset = null;
 ResultSet totals = null;
 ResultSet year = null;
@@ -327,15 +334,43 @@ try {
     <% if (sender != 0) out.print("<h4>Users:</h4>"); %>
     <font size="2">
 <%
-    rset = stmt.executeQuery("select user_id, username from adium.users" +
-    " order by username");
+    if(!loginUsers) {
+        rset = stmt.executeQuery("select user_id, username from adium.users" +
+            " order by username");
+    } else {
+        rset = stmt.executeQuery("select sender_id as user_id, username "+
+            "from user_statistics, users where sender_id = user_id "+
+            " group by sender_id, username "+
+            " having count(*) > 1 order by username");
+    }
 
     int peopleCnt = 1;
+    int modCount = 0;
+
+    modCounter = conn.createStatement();
+    
+    totals = modCounter.executeQuery("select case when count(*) > 150 "+
+        " then count(*) / 5 + case when count(*) % 5 > 0 then 1 end "+
+        " else 30 end from users");
+
+    totals.next();
+
+    modCount = totals.getInt(1);
+    
+    if(sender != 0) {
+        if (loginUsers) {
+            out.print("<a href=\"statistics.jsp?sender=" + sender + "&login=false\">All Users</a><br /><br />");
+        } else {
+            out.print("<a href=\"statistics.jsp?sender=" + sender + "&login=true\">Login Users</a><br /><br />");
+        }
+    }
     
     while (rset.next())  {
         if (rset.getInt("user_id") != sender) {
             out.print("<a href=\"statistics.jsp?sender=" + 
-            rset.getString("user_id") + "\">" + rset.getString("username") +
+            rset.getString("user_id") + "&login=" + 
+            Boolean.toString(loginUsers) +
+            "\">" + rset.getString("username") +
             "</a>");
         }
         else {
@@ -343,7 +378,7 @@ try {
         }
         out.print("<br>");
         
-        if (sender == 0 && peopleCnt++ % 30 == 0) {
+        if (sender == 0 && peopleCnt++ % modCount == 0) {
             out.print("</font></td><td width=\"150\" valign=\"top\"" +
             "align=\"right\"><font size=\"2\">");
         }
