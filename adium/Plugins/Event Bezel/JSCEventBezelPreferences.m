@@ -36,6 +36,7 @@
     
     //Enable others checkboxes if this one is checked
     [popUp_position setEnabled: [checkBox_showBezel state]];
+    [popUp_buddyNameFormat setEnabled: [checkBox_showBezel state]];
 }
 
 - (IBAction)changePosition:(id)sender
@@ -43,6 +44,13 @@
     //NSLog(@"%d", [popUp_position indexOfSelectedItem]);
     [[owner preferenceController] setPreference: [NSNumber numberWithInt: [popUp_position indexOfSelectedItem]]
                                          forKey: KEY_EVENT_BEZEL_POSITION
+                                          group: PREF_GROUP_EVENT_BEZEL];
+}
+
+- (IBAction)changeBuddyNameFormat:(id)sender
+{
+    [[owner preferenceController] setPreference: [NSNumber numberWithInt: [popUp_buddyNameFormat indexOfSelectedItem]]
+                                         forKey: KEY_EVENT_BEZEL_BUDDY_NAME_FORMAT
                                           group: PREF_GROUP_EVENT_BEZEL];
 }
 
@@ -55,9 +63,11 @@
     [checkBox_showBezel setState:[[preferenceDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue]];
     
     [popUp_position selectItemAtIndex: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_POSITION] intValue]];
+    [popUp_buddyNameFormat selectItemAtIndex: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_BUDDY_NAME_FORMAT] intValue]];
     
     // Enable or disable checkboxes based on the "show bezel" checkbox
     [popUp_position setEnabled: [checkBox_showBezel state]];
+    [popUp_buddyNameFormat setEnabled: [checkBox_showBezel state]];
 }
 
 @end

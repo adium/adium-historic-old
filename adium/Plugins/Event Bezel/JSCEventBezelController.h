@@ -17,6 +17,10 @@
 
 + (JSCEventBezelController *)eventBezelControllerForOwner:(id)inOwner;
 
-- (void)showBezelWithContact:(AIListContact *)contact forEvent:(NSString *)event withMessage:(NSString *)message atPosition:(int)position;
+- (void)showBezelWithContact:(NSString *)contactName
+withImage:(NSImage *)buddyIcon
+forEvent:(NSString *)event
+withMessage:(NSString *)message
+atPosition:(int)position;
 
 @end

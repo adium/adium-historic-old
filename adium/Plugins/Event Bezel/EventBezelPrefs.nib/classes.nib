@@ -15,10 +15,14 @@
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {changePosition = id; toggleShowBezel = id; }; 
+            ACTIONS = {changeBuddyNameFormat = id; changePosition = id; toggleShowBezel = id; }; 
             CLASS = JSCEventBezelPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"checkBox_showBezel" = NSButton; "popUp_position" = NSPopUpButton; }; 
+            OUTLETS = {
+                "checkBox_showBezel" = NSButton; 
+                "popUp_buddyNameFormat" = NSPopUpButton; 
+                "popUp_position" = NSPopUpButton; 
+            }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }

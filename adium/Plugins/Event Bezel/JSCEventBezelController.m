@@ -74,10 +74,13 @@ JSCEventBezelController *sharedInstance = nil;
     //NSLog(@"despertando controlador");
 }
 
-- (void)showBezelWithContact:(AIListContact *)contact forEvent:(NSString *)event withMessage:(NSString *)message atPosition:(int)position
+- (void)showBezelWithContact:(NSString *)contactName
+withImage:(NSImage *)buddyIcon
+forEvent:(NSString *)event
+withMessage:(NSString *)message
+atPosition:(int)position
 {
     if ([self window]) {
-        AIMutableOwnerArray         *ownerArray;
         // bezel position variables
         NSSize mainScreenSize;
         NSRect windowSize;
@@ -85,12 +88,7 @@ JSCEventBezelController *sharedInstance = nil;
         //NSAttributedString          *status = nil;
         //NSMutableAttributedString   *statusString;
         
-        ownerArray = [contact statusArrayForKey:@"BuddyImage"];
-        if(ownerArray && [ownerArray count]) {
-            [bezelView setBuddyIconImage:[ownerArray objectAtIndex:0]];
-        }else{
-            [bezelView setBuddyIconImage:nil];
-        }
+        [bezelView setBuddyIconImage:buddyIcon];
         
         if ([bezelWindow fadingOut]) {
             [bezelView setQueueField: [NSString stringWithFormat:@"%@ %@ %@\n%@",
@@ -99,7 +97,7 @@ JSCEventBezelController *sharedInstance = nil;
             [bezelView setQueueField: @""];
         }
         
-        [bezelView setMainBuddyName: [NSString stringWithFormat: @"%@",[contact displayName]]];
+        [bezelView setMainBuddyName: contactName];
         
         if ([event isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
             [bezelView setMainBuddyStatus: @"is now online"];
