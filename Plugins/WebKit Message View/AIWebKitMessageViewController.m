@@ -413,8 +413,9 @@ DeclareString(AppendNextMessage);
 - (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject
 {
 	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.tiff",[inObject internalObjectID],[NSString randomStringOfLength:5]];
-	return([[@"~/Library/Caches/Adium" stringByExpandingTildeInPath] stringByAppendingPathComponent:filename]);
-}	
+	return([[adium cachesPath] stringByAppendingPathComponent:filename]);
+}
+
 //WebView preferences --------------------------------------------------------------------------------------------------
 #pragma mark WebView preferences
 //The controller observes for preferences which are applied to the WebView
