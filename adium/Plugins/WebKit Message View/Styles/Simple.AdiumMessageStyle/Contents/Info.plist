@@ -21,7 +21,7 @@
 	<key>DefaultFontSize</key>
 	<integer>12</integer>
 	<key>DisplayNameForNoVariant</key>
-	<string>Alias</string>
+	<string>Name</string>
 	<key>ShowsUserIcons</key>
 	<false/>
     <key>DisableCustomBackground</key>

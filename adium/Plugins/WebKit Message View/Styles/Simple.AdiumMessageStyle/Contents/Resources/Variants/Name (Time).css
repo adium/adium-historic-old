@@ -6,10 +6,6 @@
 }
 
 .prefix .sender {
-	display: none;
-}
-
-.prefix .senderScreenName {
 	display: inline;
 }
 
