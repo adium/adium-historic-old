@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.77 2004/07/13 16:33:53 evands Exp $
+// $Id: AIInterfaceController.m,v 1.78 2004/07/13 16:37:09 adamiser Exp $
 
 #import "AIInterfaceController.h"
 #import "AIContactListWindowController.h"
@@ -288,6 +288,7 @@ arrangeChats = YES;
 //A chat has become active: update our chat closing keys and flag this chat as selected in the window menu
 - (void)chatDidBecomeActive:(AIChat *)inChat
 {
+	NSLog(@"chatDidBecomeActive:%@",inChat);
 	[activeChat release]; activeChat = [inChat retain];
 	[self clearUnviewedContentOfChat:inChat];
 	[self updateCloseMenuKeys];
