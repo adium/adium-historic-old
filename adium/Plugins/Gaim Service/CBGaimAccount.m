@@ -11,8 +11,10 @@
 #import <Adium/Adium.h>
 #import "AIAdium.h"
 
-#define SCREEN_NAME "libgadium"
-#define PASSWORD "roxor"
+#warning change this to your username to connect :)
+#define SCREEN_NAME "otsku"
+
+//don't change this
 #define PROTOCOL "prpl-oscar"
 
 @implementation CBGaimAccount
@@ -23,6 +25,7 @@
 
 - (void)accountBlistNewNode:(GaimBlistNode *)node
 {
+    //NSLog(@"New node");
     if(node && GAIM_BLIST_NODE_IS_BUDDY(node))
     {
         GaimBuddy *buddy = (GaimBuddy *)node;
@@ -37,33 +40,46 @@
         [handleDict setObject:theHandle forKey:[NSString stringWithFormat:@"%s", buddy->name]];
         
         node->ui_data = [theHandle retain];
+    
+        [[owner contactController] handlesChangedForAccount:self];
     }
 }
 
 - (void)accountBlistUpdate:(GaimBuddyList *)list withNode:(GaimBlistNode *)node
 {
-    if(node && GAIM_BLIST_NODE_IS_BUDDY(node))
+    //NSLog(@"Update");
+    if(node)
     {
-        GaimBuddy *buddy = (GaimBuddy *)node;
-        if(buddy->present == GAIM_BUDDY_SIGNING_ON || buddy->present == GAIM_BUDDY_ONLINE)
+        GaimBuddy *buddy;
+        if(GAIM_BLIST_NODE_IS_BUDDY(node))
+            buddy = (GaimBuddy *)node;
+        else if(GAIM_BLIST_NODE_IS_CONTACT(node))
+            buddy = ((GaimContact *)node)->priority;
+            
+        if(GAIM_BUDDY_IS_ONLINE(buddy))
         {
-            AIHandle *theHandle = node->ui_data;
+            NSLog(@"Online");
+            AIHandle *theHandle = (AIHandle *)node->ui_data;
             
             [[theHandle statusDictionary] 
                 setObject:[NSNumber numberWithInt:1] 
                 forKey:@"Online"];
-                
-            [[theHandle statusDictionary] 
-                setObject:[NSString stringWithCString:buddy->server_alias]
-                forKey:@"Display Name"];
-                
+            
+            if(buddy->server_alias) //if there is a server alias
+                [[theHandle statusDictionary] 
+                    setObject:[NSString stringWithCString:buddy->server_alias]
+                    forKey:@"Display Name"];
+            
             [[owner contactController] handleStatusChanged:theHandle
                 modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", @"Display Name",nil]
                 delayed:NO
-                silent:NO];
+                silent:(gaim_connection_get_state(gaim_account_get_connection(buddy->account)) 
+                    != GAIM_CONNECTING)];
         }
-        else if(buddy->present == GAIM_BUDDY_SIGNING_OFF || buddy->present == GAIM_BUDDY_OFFLINE)
+        else
         {
+            //NSLog(@"Offline");
+            
             AIHandle *theHandle = (AIHandle *)node->ui_data;
             
             [[theHandle statusDictionary] 
@@ -73,7 +89,7 @@
             [[owner contactController] handleStatusChanged:theHandle
                 modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", nil]
                 delayed:NO
-                silent:NO];
+                silent:(buddy->present != GAIM_BUDDY_SIGNING_OFF)];
         }
     }
 }
@@ -83,6 +99,8 @@
     [handleDict removeObjectForKey:[NSString stringWithFormat:@"%s", ((GaimBuddy *)node)->name]];
     [(AIHandle *)node->ui_data release];
     node->ui_data = NULL;
+    
+    [[owner contactController] handlesChangedForAccount:self];
 }
 
 /********************************/
@@ -120,26 +138,51 @@
                 [[owner accountController] 
                     setProperty:[NSNumber numberWithInt:STATUS_CONNECTING]
                     forKey:@"Status" account:self];
-                    
-                //****** Create a test account *********
-                //#warning put username and pass here to connect!! :)
-                GaimAccount *testAccount = gaim_account_new(SCREEN_NAME, PROTOCOL);
-                gaim_account_set_password(testAccount, PASSWORD);
-                gaim_account_connect(testAccount);
-                //**************************************
                 
-                [[owner accountController]
-                    setProperty:[NSNumber numberWithInt:STATUS_ONLINE]
-                    forKey:@"Status" account:self];
+                //get password
+                [[owner accountController] passwordForAccount:self 
+                    notifyingTarget:self selector:@selector(finishConnect:)];
+                
             }
         }
         else //Disconnect
         {
             if(status == STATUS_ONLINE)
             {
-                NSLog(@"We don't do that yet. :P Quit to disconnect");
+                [[owner accountController] 
+                    setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING]
+                    forKey:@"Status" account:self];
+
+                GaimAccount *account;
+                if(account = gaim_accounts_find(SCREEN_NAME, PROTOCOL))
+                {
+                    gaim_account_disconnect(account);
+                    gaim_accounts_delete(account);
+                }
+                
+                [[owner accountController] 
+                    setProperty:[NSNumber numberWithInt:STATUS_OFFLINE]
+                    forKey:@"Status" account:self];
             }
         }
+    }
+}
+
+- (void)finishConnect:(NSString *)inPassword
+{
+    if(inPassword && [inPassword length] != 0)
+    {
+        //****** Create a test account *********
+        GaimAccount *testAccount = gaim_account_new(SCREEN_NAME, PROTOCOL);
+        gaim_account_set_password(testAccount, [inPassword cString]);
+        gaim_account_connect(testAccount);
+        gaim_accounts_add(testAccount);
+        //**************************************
+        
+        [[owner accountController]
+            setProperty:[NSNumber numberWithInt:STATUS_ONLINE]
+            forKey:@"Status" account:self];
+
     }
 }
 
