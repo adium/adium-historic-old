@@ -13,8 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /** 
- * $Revision: 1.23 $
- *  $Date: 2003/11/10 08:32:37 $
+ * $Revision: 1.24 $
+ *  $Date: 2003/11/10 08:52:43 $
  *  $Author#
  *
  **/
@@ -37,4 +37,4 @@
 #import "AIChat.h"
 #import "AIPreferenceViewController.h"
 #import "AIFlippedCategoryView.h"
-//a comment, to test
+//a comment, to test, again
