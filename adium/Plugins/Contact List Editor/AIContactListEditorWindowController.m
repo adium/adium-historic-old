@@ -389,9 +389,6 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 - (BOOL)outlineView:(NSOutlineView *)olv writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
 {
-    NSEnumerator	*enumerator;
-    AIContactHandle	*handle;
-
     [pboard declareTypes:[NSArray arrayWithObjects:@"AIContactObjects",nil] owner:self];
 
     //Build a list of all the highlighted objects
