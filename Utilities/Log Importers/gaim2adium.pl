@@ -38,9 +38,9 @@ sub process_log
 {
 	-f or return;
 	#gaim logs are LOG_BASE/Protocol/Account/Contact/YYYY-MM-DD-TIME.(html|txt)
-	if($File::Find::name =~ m!^$inDir(?:/)?(.*?)/(.*?)/(.*?)/(\d{4})-(\d{2})-(\d{2})\.\d+\.(html|txt)!)
+	if($File::Find::name =~ m!^$inDir(?:/)?(.*?)/(.*?)/(.*?)/(\d{4})-(\d{2})-(\d{2})\.(\d{4})(\d{2}).(html|txt)!)
 	{
-		my ($proto,$acct,$contact,$year,$month,$day,$ext) = ($1,$2,$3,$4,$5,$6,$7);
+		my ($proto,$acct,$contact,$year,$month,$day,$hour,$seconds,$ext) = ($1,$2,$3,$4,$5,$6,$7,$8,$9);
 		return unless defined ($proto = $Protocols{lc $proto});
 		$foundLogs = 1;		#Set the logs found flag
 		my $outFN = "$contact ($year|$month|$day).";
@@ -56,6 +56,7 @@ sub process_log
 		} else {
 			copy($File::Find::name,$file);
 		}
+		`touch -t $year$month$day$hour.$seconds '$file'`;
 	}
 }
 
