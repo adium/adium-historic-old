@@ -300,7 +300,7 @@ int themeSort(id themeDictA, id themeDictB, void *context)
 		//Rebuild the themes list since it changed
 		[self buildThemesList];
 	}else{
-		NSRunAlertPanel(@"Your theme was not saved",@"Adium was unable to save your theme in the Themes directory. Please try again.",@"Okay",nil,nil);
+		NSRunAlertPanel(@"Your theme was not saved",@"Adium was unable to save your theme in the Themes directory. Please try again.",@"OK",nil,nil);
 	}
 	
 }

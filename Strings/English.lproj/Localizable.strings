@@ -298,7 +298,7 @@
 "Retrieving buddy list" = "Retrieving buddy list";
 
 /* ESGaimRequestWindowController */
-"Okay" = "Okay";
+"Okay" = "OK";
 
 /* ESGaimTrepiaAccount */
 "Connecting" = "Connecting";
@@ -370,8 +370,8 @@
 "It's a Tie!" = "It's a Tie!";
 
 /* NEHGamePlugin */
-"Okay" = "Okay";
-"Okay" = "Okay";
+"Okay" = "OK";
+"Okay" = "OK";
 "Yes" = "Yes";
 "No" = "No";
 "Invite to play game" = "Invite to play game";
@@ -390,8 +390,8 @@
 "Waiting for opponent" = "Waiting for opponent";
 
 /* NEHTicTacToePlugin */
-"Okay" = "Okay";
-"Okay" = "Okay";
+"Okay" = "OK";
+"Okay" = "OK";
 
 /*SHLinkEditorWindowController*/
 "Select..." = "Select…";
