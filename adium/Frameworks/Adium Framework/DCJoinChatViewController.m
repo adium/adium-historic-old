@@ -31,10 +31,6 @@
     return(self);
 }
 
-- (void)configureForAccount:(AIAccount *)inAccount
-{
-}
-
 - (NSView *)view
 {
 	return view;
@@ -43,6 +39,15 @@
 - (NSString *)nibName
 {
 	return nil;
+}
+
+- (void)configureForAccount:(AIAccount *)inAccount
+{
+}
+
+- (void)joinChatWithAccount:(AIAccount *)inAccount
+{
+	NSLog(@"#### DCJoinChatViewController: joinChatWithAccount %@",inAccount);
 }
 
 @end

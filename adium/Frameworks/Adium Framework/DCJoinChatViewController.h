@@ -13,8 +13,10 @@
 + (DCJoinChatViewController *)joinChatView;
 
 - (id)init;
-- (void)configureForAccount:(AIAccount *)inAccount;
 - (NSView *)view;
 - (NSString *)nibName;
+
+- (void)configureForAccount:(AIAccount *)inAccount;
+- (void)joinChatWithAccount:(AIAccount *)inAccount;
 
 @end
