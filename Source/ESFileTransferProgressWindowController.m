@@ -104,8 +104,6 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	NSEnumerator	*enumerator;
 	ESFileTransfer	*fileTransfer;
 
-	[super windowDidLoad];
-
 	//Set the localized title
 	[[self window] setTitle:AILocalizedString(@"File Transfers",nil)];
 
@@ -132,22 +130,58 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	[outlineView setDataSource:self];
 	[outlineView setDelegate:self];
 
+	//Set up and size our Clear button
+	{
+		NSRect	newFrame, oldFrame;
+		
+		//Clear
+		[button_clear setAutoresizingMask:(NSViewMaxXMargin | NSViewMaxYMargin)];
+
+		oldFrame = [button_clear frame];
+		[button_clear setFont:[NSFont systemFontOfSize:[NSFont smallSystemFontSize]]];
+		[button_clear setTitle:AILocalizedString(@"Clear",nil)];
+		[button_clear sizeToFit];
+		newFrame = [button_clear frame];
+		
+		//Don't let the button get smaller than it was initially
+		if(newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
+		
+		//Keep the origin and height the same - we just want to size for width
+		NSLog(@"before changes, new %@ ; old %@",NSStringFromRect(newFrame),NSStringFromRect(oldFrame));
+//		newFrame.origin = oldFrame.origin;
+		newFrame.size.height = oldFrame.size.height;
+		[button_clear setFrame:newFrame];
+		[button_clear setNeedsDisplay:YES];
+
+		//Resize the status bar text
+		int widthChange = oldFrame.size.width - newFrame.size.width;
+		if(widthChange){
+			NSRect	statusFrame;
+			
+			statusFrame = [textField_statusBar frame];
+			statusFrame.origin.x += widthChange;
+			statusFrame.size.width -= widthChange;
+			[textField_statusBar setFrame:statusFrame];
+			[textField_statusBar setNeedsDisplay:YES];
+		}
+	}
+	
+	//Call super's implementation
+	[super windowDidLoad];
+
 	//Observe for new file transfers
 	[[adium notificationCenter] addObserver:self
                                    selector:@selector(newFileTransfer:)
                                        name:FileTransfer_NewFileTransfer
 									 object:nil];
-
+	
 	//Create progress rows for all existing file transfers
 	shouldScrollToNewFileTransfer = NO;
 	enumerator = [[[adium fileTransferController] fileTransferArray] objectEnumerator];
 	while(fileTransfer = [enumerator nextObject]){
 		[self addFileTransfer:fileTransfer];
 	}
-
-	//Update our status bar
-	[self updateStatusBar];
-
+	
 	//Go time
 	[self reloadAllData];
 	
@@ -163,6 +197,23 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	//release the window controller (ourself)
     sharedTransferProgressInstance = nil;
     [self autorelease];
+}
+
+- (void)configureControlDimming
+{	
+	NSEnumerator				*enumerator;
+	ESFileTransferProgressRow	*row;
+	BOOL						enableClear = NO;
+	
+	enumerator = [progressRows objectEnumerator];
+	while(row = [enumerator nextObject]){
+		if([[row fileTransfer] isStopped]){
+			enableClear = YES;
+			break;
+		}
+	}
+	
+	[button_clear setEnabled:enableClear];
 }
 
 //Called when a progress row has loaded its view and is ready to be added to our window
@@ -187,7 +238,6 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 							 to:(float)newHeight
 {
 	if(shouldScrollToNewFileTransfer){
-		
 		[self reloadAllData];
 		
 		[outlineView scrollRectToVisible:[outlineView rectOfRow:[progressRows indexOfObject:progressRow]]];
@@ -223,9 +273,10 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 
 - (ESFileTransferProgressRow *)existingRowForFileTransfer:(ESFileTransfer *)inFileTransfer
 {
-	NSEnumerator				*enumerator = [progressRows objectEnumerator];
+	NSEnumerator				*enumerator;
 	ESFileTransferProgressRow	*row;
 
+	enumerator = [progressRows objectEnumerator];
 	while(row = [enumerator nextObject]){
 		if([row fileTransfer] == inFileTransfer) break;
 	}
@@ -251,20 +302,22 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 		row = [progressRows indexOfObject:progressRow];
 		[progressRows removeObject:progressRow];
 		[[adium fileTransferController] _removeFileTransfer:fileTransfer];
-
-		//Refresh the outline view
-		[self reloadAllData];
-
-		//Determine the row to reselect.  If the current row is valid, keep it.  If it isn't, use the last row.
-		if(row >= [progressRows count]){
-			row = [progressRows count] - 1;
+		
+		if(shouldScrollToNewFileTransfer){
+			//Refresh the outline view
+			[self reloadAllData];
+			
+			//Determine the row to reselect.  If the current row is valid, keep it.  If it isn't, use the last row.
+			if(row >= [progressRows count]){
+				row = [progressRows count] - 1;
+			}
+			[clipView scrollToPoint:[clipView constrainScrollPoint:([outlineView rectOfRow:row].origin)]];
+			
+			[self updateStatusBar];
 		}
-		[clipView scrollToPoint:[clipView constrainScrollPoint:([outlineView rectOfRow:row].origin)]];
-
+		
 		//Clean up
 		[progressRow release];
-
-		[self updateStatusBar];
 	}
 }
 
@@ -281,17 +334,20 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	[self updateStatusBar];
 }
 
+- (void)progressRowDidChangeStatus:(ESFileTransferProgressRow *)progressRow
+{
+	[self configureControlDimming];
+}
+
 //Update the status bar at the bottom of the window
 - (void)updateStatusBar
 {
-	NSString	*statusBarString;
-	NSString	*downloadsString = nil;
-	NSString	*uploadsString = nil;
-	unsigned	downloads = 0;
-	unsigned	uploads = 0;
-
-	NSEnumerator				*enumerator = [progressRows objectEnumerator];
+	NSEnumerator				*enumerator;
 	ESFileTransferProgressRow	*aRow;
+	NSString					*statusBarString, *downloadsString = nil, *uploadsString = nil;
+	unsigned					downloads = 0, uploads = 0;
+	
+	enumerator = [progressRows objectEnumerator];
 	while(aRow = [enumerator nextObject]){
 		FileTransferType type = [aRow type];
 		if(type == Incoming_FileTransfer){
@@ -326,6 +382,23 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	}
 
 	[textField_statusBar setStringValue:statusBarString];
+}
+
+- (IBAction)clearAllCompleteTransfers:(id)sender
+{
+	NSEnumerator				*enumerator;
+	ESFileTransferProgressRow	*row;
+	
+	shouldScrollToNewFileTransfer = NO;
+	enumerator = [progressRows objectEnumerator];
+	while(row = [enumerator nextObject]){
+		if([[row fileTransfer] isStopped]) [self _removeFileTransferRow:row];
+	}	
+	shouldScrollToNewFileTransfer = YES;
+	
+	[self reloadAllData];
+
+	[outlineView scrollRectToVisible:[outlineView rectOfRow:0]];	
 }
 
 #pragma mark OutlineView dataSource
@@ -404,6 +477,13 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	return(menu);
 }
 
+/*
+ * @brief Reload all data
+ *
+ * After removing the subviews of the outline view, reload the data.
+ * Next, ensure the height of the outline view is still correct.
+ * Finally, update our display and associated controls.
+ */
 - (void)reloadAllData
 {
 	[[[[outlineView subviews] copy] autorelease] makeObjectsPerformSelector:@selector(removeFromSuperviewWithoutNeedingDisplay)];
@@ -418,6 +498,12 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 		[outlineView setFrame:outlineFrame];
 		[outlineView setNeedsDisplay:YES];
 	}
+
+	//Update our status bar
+	[self updateStatusBar];
+
+	//Enable/disable our controls
+	[self configureControlDimming];
 }
 
 #pragma mark Window zoom

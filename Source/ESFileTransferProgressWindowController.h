@@ -25,7 +25,8 @@
 	IBOutlet NSScrollView					*scrollView;
 	IBOutlet AIVariableHeightOutlineView	*outlineView;
 	
-	IBOutlet NSTextField		*textField_statusBar;
+	IBOutlet NSButton						*button_clear;
+	IBOutlet NSTextField					*textField_statusBar;
 
 	BOOL						shouldScrollToNewFileTransfer;
 }
@@ -33,12 +34,15 @@
 + (id)showFileTransferProgressWindow;
 + (void)removeFileTransfer:(ESFileTransfer *)inFileTransfer;
 
+- (IBAction)clearAllCompleteTransfers:(id)sender;
+
 //For use by ESFileTransferProgressRow
 - (void)progressRowDidAwakeFromNib:(ESFileTransferProgressRow *)progressView;
 - (void)fileTransferProgressRow:(ESFileTransferProgressRow *)inRow
 			  heightChangedFrom:(float)oldHeight
 							 to:(float)newHeight;
 - (void)progressRowDidChangeType:(ESFileTransferProgressRow *)progressRow;
+- (void)progressRowDidChangeStatus:(ESFileTransferProgressRow *)progressRow;
 
 - (void)_removeFileTransferRow:(ESFileTransferProgressRow *)progressRow;
 

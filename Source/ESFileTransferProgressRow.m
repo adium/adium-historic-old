@@ -144,6 +144,7 @@
 	[self gotUpdateForFileTransfer:inFileTransfer];
 	
 	[view setAllowsCancel:![inFileTransfer isStopped]];
+	[owner progressRowDidChangeStatus:self];
 	
 	[[view window] display];
 	forceUpdate = NO;
