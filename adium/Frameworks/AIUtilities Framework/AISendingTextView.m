@@ -557,51 +557,52 @@ static NSImage *pushIndicatorImage = nil;
 		[super keyDown:inEvent];
 	} else {
 		inChar = [[inEvent charactersIgnoringModifiers] characterAtIndex:0];
-	}
-	unsigned int flags = [inEvent modifierFlags];
-	//We have to test ctrl first, because otherwise we'd miss ctrl-option-* events
-	if(flags & NSControlKeyMask)
-	{
-		if(inChar == NSUpArrowFunctionKey)
-			[self _popContent];
-		else if(inChar == NSDownArrowFunctionKey)
-			if(flags & NSAlternateKeyMask)
+	
+		unsigned int flags = [inEvent modifierFlags];
+		//We have to test ctrl first, because otherwise we'd miss ctrl-option-* events
+		if(flags & NSControlKeyMask)
+		{
+			if(inChar == NSUpArrowFunctionKey)
+				[self _popContent];
+			else if(inChar == NSDownArrowFunctionKey)
+				if(flags & NSAlternateKeyMask)
+				{
+					NSLog(@"Ctrl-Opt-Down");
+					[self _pushClicked];
+				}
+				else
+					[self _pushContent];
+			else
+				[super keyDown:inEvent];
+		}
+		else if(flags & NSAlternateKeyMask)
+		{
+			if(inChar == NSUpArrowFunctionKey)
+				[self _historyUp];
+			else if(inChar == NSDownArrowFunctionKey)
+				[self _historyDown];
+			else
+				[super keyDown:inEvent];
+		}
+		else if(flags & NSCommandKeyMask)
+		{
+			if(inChar == NSUpArrowFunctionKey)
 			{
-				NSLog(@"Ctrl-Opt-Down");
-				[self _pushClicked];
+				NSRect visibleRect = [messageScrollView documentVisibleRect];
+				visibleRect.origin.y -= [messageScrollView verticalLineScroll]*2;
+				[[messageScrollView documentView] scrollRectToVisible:visibleRect]; 
+			}
+			else if(inChar == NSDownArrowFunctionKey)
+			{
+				NSRect visibleRect = [messageScrollView documentVisibleRect];
+				visibleRect.origin.y += [messageScrollView verticalLineScroll]*2;
+				[[messageScrollView documentView] scrollRectToVisible:visibleRect]; 
 			}
 			else
-				[self _pushContent];
-		else
-			[super keyDown:inEvent];
-	}
-	else if(flags & NSAlternateKeyMask)
-	{
-		if(inChar == NSUpArrowFunctionKey)
-			[self _historyUp];
-		else if(inChar == NSDownArrowFunctionKey)
-			[self _historyDown];
-		else
-			[super keyDown:inEvent];
-	}
-	else if(flags & NSCommandKeyMask)
-	{
-		if(inChar == NSUpArrowFunctionKey)
-		{
-			NSRect visibleRect = [messageScrollView documentVisibleRect];
-			visibleRect.origin.y -= [messageScrollView verticalLineScroll]*2;
-			[[messageScrollView documentView] scrollRectToVisible:visibleRect]; 
+				[super keyDown:inEvent];
 		}
-		else if(inChar == NSDownArrowFunctionKey)
-		{
-			NSRect visibleRect = [messageScrollView documentVisibleRect];
-			visibleRect.origin.y += [messageScrollView verticalLineScroll]*2;
-			[[messageScrollView documentView] scrollRectToVisible:visibleRect]; 
-		}
-		else
-			[super keyDown:inEvent];
+		else [super keyDown:inEvent];
 	}
-	else [super keyDown:inEvent];
 }
 
 
