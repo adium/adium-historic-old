@@ -267,9 +267,11 @@
 	//Background
 	[contentCell setBackgroundOpacity:backgroundAlpha];
 	[contactListView setDrawsAlternatingRows:[[themeDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
+	
 	//Disable background image if we're in mockie or pillows
 	[contactListView setDrawsBackground:(windowStyle != WINDOW_STYLE_MOCKIE &&
 										 !(pillowsOrPillowsFittedWindowStyle))];
+	[contactListView setBackgroundStyle:[[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_STYLE] intValue]];
 
 	//Shadow
 	[[contactListView window] setHasShadow:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
@@ -283,7 +285,7 @@
 	[contactListView setContentCell:contentCell];
 	[contactListView setNeedsDisplay:YES];
 	
-	[self contactListDesiredSizeChanged:nil];
+	[self contactListDesiredSizeChanged];
 }
 
 //Adjust an iconPosition to be valid for a fitted aligned pillow; 
@@ -530,7 +532,7 @@
 
 //----------------
 //For Subclasses
-- (void)contactListDesiredSizeChanged:(NSNotification *)notification {};
+- (void)contactListDesiredSizeChanged {};
 - (void)updateTransparency {};
 - (BOOL)useAliasesInContactListAsRequested{
 	return YES;

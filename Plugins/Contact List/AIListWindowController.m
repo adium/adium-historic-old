@@ -171,111 +171,99 @@
 		}
 	}
 
-	//Layout ------------
-    if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_LAYOUT])){
+	//Layout and Theme ------------
+	BOOL groupLayout = ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_LAYOUT]);
+	BOOL groupTheme = ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_THEME]);
+    if((notification == nil) || groupLayout || groupTheme){
         NSDictionary	*layoutDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
 		NSDictionary	*themeDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
-		int				windowStyle = [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
-		BOOL			autoResizeVertically = [[layoutDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
-		BOOL			autoResizeHorizontally = [[layoutDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
 		
-		int				forcedWindowWidth, maxWindowWidth;
-		
-		//User icon cache size
-		int iconSize = [[layoutDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue];
-		[AIUserIcons setListUserIconSize:NSMakeSize(iconSize,iconSize)];
-
-		
-		if (autoResizeHorizontally){
-			//If autosizing, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH determines the maximum width; no forced width.
-			maxWindowWidth = [[layoutDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue];
-			forcedWindowWidth = -1;
-		}else{
-			if (windowStyle == WINDOW_STYLE_STANDARD/* || windowStyle == WINDOW_STYLE_BORDERLESS*/){
-				//In the non-transparent non-autosizing modes, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH has no meaning
-				maxWindowWidth = 10000;
+		//Layout only
+		if (groupLayout || (notification == nil)){
+			int				windowStyle = [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+			BOOL			autoResizeVertically = [[layoutDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
+			BOOL			autoResizeHorizontally = [[layoutDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
+			int				forcedWindowWidth, maxWindowWidth;
+			
+			//User icon cache size
+			int iconSize = [[layoutDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue];
+			[AIUserIcons setListUserIconSize:NSMakeSize(iconSize,iconSize)];
+			
+			if (autoResizeHorizontally){
+				//If autosizing, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH determines the maximum width; no forced width.
+				maxWindowWidth = [[layoutDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue];
 				forcedWindowWidth = -1;
 			}else{
-				//In the transparent non-autosizing modes, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH determines the width of the window
-				forcedWindowWidth = [[layoutDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue];
-				maxWindowWidth = forcedWindowWidth;
+				if (windowStyle == WINDOW_STYLE_STANDARD/* || windowStyle == WINDOW_STYLE_BORDERLESS*/){
+					//In the non-transparent non-autosizing modes, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH has no meaning
+					maxWindowWidth = 10000;
+					forcedWindowWidth = -1;
+				}else{
+					//In the transparent non-autosizing modes, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH determines the width of the window
+					forcedWindowWidth = [[layoutDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue];
+					maxWindowWidth = forcedWindowWidth;
+				}
 			}
-		}
-		
-		//Show the resize indicator if either or both of the autoresizing options is NO
-		[[self window] setShowsResizeIndicator:!(autoResizeVertically && autoResizeHorizontally)];
-		
-		/*
-		 Reset the minimum and maximum sizes in case [self contactListDesiredSizeChanged:nil]; doesn't cause a sizing change
-		 (and therefore the min and max sizes aren't set there).
-		 */
-							  
-		NSSize	thisMinimumSize = minWindowSize;
-		NSSize	thisMaximumSize = NSMakeSize(maxWindowWidth, 10000);
-		NSRect	currentFrame = [[self window] frame];
-	
-		if (forcedWindowWidth != -1){
-			/*
-			 If we have a forced width but we are doing no autoresizing, set our frame now so we don't have t be doing checks every time
-			contactListDesiredSizeChanged is called.
-			 */
 			
-			if(!(autoResizeVertically || autoResizeHorizontally)){
-				thisMinimumSize.width = forcedWindowWidth;
-				
-				[[self window] setFrame:NSMakeRect(currentFrame.origin.x,currentFrame.origin.y,forcedWindowWidth,currentFrame.size.height) 
-								display:YES
-								animate:NO];
+			//Show the resize indicator if either or both of the autoresizing options is NO
+			[[self window] setShowsResizeIndicator:!(autoResizeVertically && autoResizeHorizontally)];
+			
+			/*
+			 Reset the minimum and maximum sizes in case [self contactListDesiredSizeChanged:nil]; doesn't cause a sizing change
+			 (and therefore the min and max sizes aren't set there).
+			 */
+			NSSize	thisMinimumSize = minWindowSize;
+			NSSize	thisMaximumSize = NSMakeSize(maxWindowWidth, 10000);
+			NSRect	currentFrame = [[self window] frame];
+			
+			if (forcedWindowWidth != -1){
+				/*
+				 If we have a forced width but we are doing no autoresizing, set our frame now so we don't have t be doing checks every time
+				 contactListDesiredSizeChanged is called.
+				 */
+				if(!(autoResizeVertically || autoResizeHorizontally)){
+					thisMinimumSize.width = forcedWindowWidth;
+					
+					[[self window] setFrame:NSMakeRect(currentFrame.origin.x,currentFrame.origin.y,forcedWindowWidth,currentFrame.size.height) 
+									display:YES
+									animate:NO];
+				}
+			}
+			
+			//If vertically resizing, make the minimum and maximum heights the current height
+			if (autoResizeVertically){
+				thisMinimumSize.height = currentFrame.size.height;
+				thisMaximumSize.height = currentFrame.size.height;
+			}
+			
+			//If horizontally resizing, make the minimum and maximum widths the current width
+			if (autoResizeHorizontally){
+				thisMinimumSize.width = currentFrame.size.width;
+				thisMaximumSize.width = currentFrame.size.width;			
+			}
+			
+			[[self window] setMinSize:thisMinimumSize];
+			[[self window] setMaxSize:thisMaximumSize];
+			
+			[contactListController setAutoresizeHorizontally:autoResizeHorizontally];
+			[contactListController setAutoresizeVertically:autoResizeVertically];
+			[contactListController setForcedWindowWidth:forcedWindowWidth];
+			[contactListController setMaxWindowWidth:maxWindowWidth];
+		}
+		
+		//Theme only
+		if (groupTheme || (notification == nil)){
+			NSString		*imagePath = [themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH];
+			
+			//Background Image
+			if(imagePath && [imagePath length] && [[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]){
+				[contactListView setBackgroundImage:[[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease]];
+			}else{
+				[contactListView setBackgroundImage:nil];
 			}
 		}
-		
-		//If vertically resizing, make the minimum and maximum heights the current height
-		if (autoResizeVertically){
-			thisMinimumSize.height = currentFrame.size.height;
-			thisMaximumSize.height = currentFrame.size.height;
-		}
 
-		//If horizontally resizing, make the minimum and maximum widths the current width
-		if (autoResizeHorizontally){
-			thisMinimumSize.width = currentFrame.size.width;
-			thisMaximumSize.width = currentFrame.size.width;			
-		}
-				
-		[[self window] setMinSize:thisMinimumSize];
-		[[self window] setMaxSize:thisMaximumSize];
-
-		[contactListController setAutoresizeHorizontally:autoResizeHorizontally];
-		[contactListController setAutoresizeVertically:autoResizeVertically];
-		[contactListController setForcedWindowWidth:forcedWindowWidth];
-		[contactListController setMaxWindowWidth:maxWindowWidth];
-		
-		[contactListController contactListDesiredSizeChanged:nil];
-
-
-		
-		[contactListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
-		[contactListController updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];
-
-		[contactListController contactListDesiredSizeChanged];
-	}
-	
-	//Theme
-    if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LIST_THEME])){
-        NSDictionary	*themeDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
-		NSDictionary	*layoutDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
-
-		NSString		*imagePath = [themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH];
-		
-		//Background Image
-		if(imagePath && [imagePath length] && [[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]){
-			[contactListView setBackgroundImage:[[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease]];
-		}else{
-			[contactListView setBackgroundImage:nil];
-		}
-		
-		//Background
-#warning only a temporary solution
-//		[contactListController updateCellRelatedThemePreferencesFromDict:themeDict];
+		//Both layout and theme
 		[contactListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
 		[contactListController updateTransparencyFromLayoutDict:layoutDict themeDict:themeDict];
 	}
