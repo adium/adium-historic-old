@@ -19,7 +19,7 @@
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"
 #define ERROR_MESSAGE_WINDOW_TITLE		@"Adium : Error"
-#define MAX_TOOLTIP_ENTRY_WIDTH                 200.0
+#define MAX_TOOLTIP_ENTRY_WIDTH                 45.0
 #define DISPLAY_IMAGE_ON_RIGHT                  NO
 
 @interface AIInterfaceController (PRIVATE)
@@ -261,7 +261,7 @@
         [fontManager convertFont:[NSFont toolTipsFontOfSize:9] toHaveTrait:NSBoldFontMask], NSFontAttributeName, nil];
     NSDictionary        *entryDict =[NSDictionary dictionaryWithObjectsAndKeys:
         toolTipsFont, NSFontAttributeName, nil];
-    
+    NSMutableDictionary *labelEndLineDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:2] , NSFontAttributeName, nil];
     NSDictionary        *titleDict = [NSDictionary dictionaryWithObjectsAndKeys:
         [fontManager convertFont:[NSFont toolTipsFontOfSize:12] toHaveTrait:NSBoldFontMask],NSFontAttributeName, nil];
     
@@ -275,27 +275,31 @@
     
     if ([object isKindOfClass:[AIListContact class]]){
         [titleString appendString:[NSString stringWithFormat:@" \t%@",[object serviceID]]
-                                              withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                  [fontManager convertFont:[NSFont toolTipsFontOfSize:9] 
-                                                               toHaveTrait:NSBoldFontMask],NSFontAttributeName, nil]];
+                   withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                       [fontManager convertFont:[NSFont toolTipsFontOfSize:9] 
+                                    toHaveTrait:NSBoldFontMask],NSFontAttributeName, nil]];
     }
-
-//Entries from plugins
-if([contactListTooltipEntryArray count] != 0){
+    
+    //Entries from plugins
     id <AIContactListTooltipEntry>	tooltipEntry;
     NSEnumerator			*enumerator;
     enumerator = [contactListTooltipEntryArray objectEnumerator];
-
+    BOOL isFirst = YES;
     while((tooltipEntry = [enumerator nextObject])){
         NSString	*entryString = [tooltipEntry entryForObject:object];
         if (entryString && [entryString length]) {
-            //Add a carriage return and the label
-            [titleString appendString:[NSString stringWithFormat:@"\r%@: ",[tooltipEntry labelForObject:object]] withAttributes:labelDict];
+            if (isFirst) {
+                [titleString appendString:@"\r\r" withAttributes:labelEndLineDict];
+                [titleString appendString:[NSString stringWithFormat:@"%@: ",[tooltipEntry labelForObject:object]] withAttributes:labelDict];
+                isFirst = NO;
+            } else {
+                //Add a carriage return and the label
+                [titleString appendString:[NSString stringWithFormat:@"\r%@: ",[tooltipEntry labelForObject:object]] withAttributes:labelDict];
+            }
             [titleString appendString:entryString withAttributes:entryDict];
         }
     }
-}
-return [titleString autorelease];
+    return [titleString autorelease];
 }
 
 - (NSAttributedString *)_tooltipBodyForObject:(AIListObject *)object
@@ -308,125 +312,135 @@ return [titleString autorelease];
     
     NSMutableDictionary        *labelDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
         [fontManager convertFont:[NSFont toolTipsFontOfSize:9] toHaveTrait:NSBoldFontMask], NSFontAttributeName, nil];
+    NSMutableDictionary        *labelEndLineDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:1] , NSFontAttributeName, nil];
     NSMutableDictionary        *entryDict =[NSMutableDictionary dictionaryWithObjectsAndKeys:
         toolTipsFont, NSFontAttributeName, nil];
     
     NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-   
-    //Entries from plugins
-    if([contactListTooltipSecondaryEntryArray count] != 0){
-        id <AIContactListTooltipEntry>	tooltipEntry;
-        NSEnumerator			*enumerator;
-        NSEnumerator                    *labelEnumerator;
-        NSMutableAttributedString       *lineBreakAndSpaceToColumnString = nil;     
-        NSMutableArray                  *labelArray = [[NSMutableArray alloc] init];
-        NSMutableArray                  *entryArray = [[NSMutableArray alloc] init];    
-        NSMutableString                 *entryString;
-        float                           maxLabelWidth = 0;
-        float                           labelWidth;
-        int                             lineBreakAndSpaceToColumnStringLength;
-        BOOL                            firstEntry = YES;
-        
-        //Calculate the widest label while loading the arrays
-        enumerator = [contactListTooltipSecondaryEntryArray objectEnumerator];
-
-        while (tooltipEntry = [enumerator nextObject]){
-            
-            entryString = [[tooltipEntry entryForObject:object] mutableCopy];
-            if (entryString && [entryString length]) {
-                
-                NSString        *labelString = [tooltipEntry labelForObject:object];
-                if (labelString && [labelString length]) {
-                    NSAttributedString * labelAttribString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@:",labelString] attributes:labelDict];
     
-                    [entryArray addObject:entryString];
-                    [labelArray addObject:labelString];
-                    
-                    //The largest size should be the label's size plus the distance to the next tab at least a space past its end
-                    labelWidth = [labelAttribString size].width;
-                    
-                    if (labelWidth > maxLabelWidth)
-                        maxLabelWidth = labelWidth;
-                }
+    //Entries from plugins
+    id <AIContactListTooltipEntry>  tooltipEntry;
+    NSEnumerator                    *enumerator;
+    NSEnumerator                    *labelEnumerator;
+    NSMutableAttributedString       *lineBreakAndSpaceToColumnString = nil;     
+    NSMutableArray                  *labelArray = [[NSMutableArray alloc] init];
+    NSMutableArray                  *entryArray = [[NSMutableArray alloc] init];    
+    NSMutableString                 *entryString;
+    float                           maxLabelWidth = 0;
+    float                           labelWidth;
+    int                             lineBreakAndSpaceToColumnStringLength;
+    BOOL                            firstEntry = YES;
+    BOOL                            keepSearching;
+    
+    //Calculate the widest label while loading the arrays
+    enumerator = [contactListTooltipSecondaryEntryArray objectEnumerator];
+    
+    while (tooltipEntry = [enumerator nextObject]){
+        
+        entryString = [[tooltipEntry entryForObject:object] mutableCopy];
+        if (entryString && [entryString length]) {
+            
+            NSString        *labelString = [tooltipEntry labelForObject:object];
+            if (labelString && [labelString length]) {
+                NSAttributedString * labelAttribString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@:",labelString] attributes:labelDict];
+                
+                [entryArray addObject:entryString];
+                [labelArray addObject:labelString];
+                
+                //The largest size should be the label's size plus the distance to the next tab at least a space past its end
+                labelWidth = [labelAttribString size].width;
+                
+                if (labelWidth > maxLabelWidth)
+                    maxLabelWidth = labelWidth;
             }
         }
+    }
+    
+    //Set a right-align tab at the maximum label width and a left-align just past it
+    NSArray * tabArray = [[NSArray alloc] initWithObjects:[[NSTextTab alloc] initWithType:NSRightTabStopType location:maxLabelWidth],[[NSTextTab alloc] initWithType:NSLeftTabStopType location:maxLabelWidth+1],nil];
+    [paragraphStyle setTabStops:tabArray];
+    [labelDict setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
+    [labelEndLineDict setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
+    [entryDict setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
+    
+    //Used for wrapping text to the tabbed location
+    lineBreakAndSpaceToColumnString = [[NSMutableAttributedString alloc] initWithString:@"\r\t\t" attributes:entryDict]; 
+    lineBreakAndSpaceToColumnStringLength = [lineBreakAndSpaceToColumnString length];
+    
+    //Add labels plus entires to the toolTip
+    enumerator = [entryArray objectEnumerator];
+    labelEnumerator = [labelArray objectEnumerator];
+    while((entryString = [enumerator nextObject])){
+        NSMutableAttributedString * labelString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:",[labelEnumerator nextObject]]
+                                                                                         attributes:labelDict];
         
-        //Set a right-align tab at the maximum label width and a left-align just past it
-        NSArray * tabArray = [[NSArray alloc] initWithObjects:[[NSTextTab alloc] initWithType:NSRightTabStopType location:maxLabelWidth],[[NSTextTab alloc] initWithType:NSLeftTabStopType location:maxLabelWidth+1],nil];
-        [paragraphStyle setTabStops:tabArray];
-        [labelDict setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
-        [entryDict setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
- 
-        //Used for wrapping text to the tabbed location
-        lineBreakAndSpaceToColumnString = [[NSMutableAttributedString alloc] initWithString:@"\r\t\t" attributes:entryDict]; 
-        lineBreakAndSpaceToColumnStringLength = [lineBreakAndSpaceToColumnString length];
+        //Add a tab to the label to make lining up multiple-line entries a whole lot easier
+        [labelString appendString:@"\t " withAttributes:labelDict];
         
-        //Add labels plus entires to the toolTip
-        enumerator = [entryArray objectEnumerator];
-        labelEnumerator = [labelArray objectEnumerator];
-        while((entryString = [enumerator nextObject])){
-            NSMutableAttributedString * labelString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:",[labelEnumerator nextObject]]
-                                                                                             attributes:labelDict];
-            
-            //Add a tab to the label to make lining up multiple-line entries a whole lot easier
-            [labelString appendString:@"\t " withAttributes:labelDict];
-            
-            if (firstEntry) {
-                //Add the label (with its spacing)
-                [tipString appendAttributedString:labelString];
-                firstEntry = NO;
-            } else {
-                //Add a carriage return, skip a line, then add the label (with its spacing)
-                [tipString appendString:@"\r\r" withAttributes:labelDict];
-                [tipString appendAttributedString:labelString];
+        if (firstEntry) {
+            //Add the label (with its spacing)
+            [tipString appendAttributedString:labelString];
+            firstEntry = NO;
+        } else {
+            //Add a carriage return, skip a line, then add the label (with its spacing)
+            [tipString appendString:@"\r\r" withAttributes:labelEndLineDict];
+            [tipString appendAttributedString:labelString];
+        }
+        
+        //convert returns to new lines so return can be used internally without interference
+        [entryString replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange(0, [entryString length])];
+        
+        NSMutableAttributedString * entryAttribString = [[NSMutableAttributedString alloc] initWithString:entryString attributes:entryDict];
+        
+        int lineBreakIndex = 0; 
+        int entryAttribStringLength = [entryAttribString length];
+        entryAttribStringLength--; //make the length relative to an index instead of being a count
+
+        NSRange remainingRange = NSMakeRange(0, entryAttribStringLength);
+        
+        while ((entryAttribStringLength - lineBreakIndex) > MAX_TOOLTIP_ENTRY_WIDTH) {  
+            //Jump from line ending to line ending until we find a line which needs wrapping          
+            NSString * tempString = [entryAttribString string];
+            NSRange nextEndLine = nextEndLine = [tempString rangeOfString:@"\n" options:NSLiteralSearch range:remainingRange];
+            if ((nextEndLine.location != NSNotFound)) {
+                keepSearching = YES;
+                while ( keepSearching && nextEndLine.location < (lineBreakIndex + MAX_TOOLTIP_ENTRY_WIDTH)) {
+                    lineBreakIndex = nextEndLine.location + 1;
+                    //Update the remaining range to scan
+                    remainingRange.location = lineBreakIndex;
+                    remainingRange.length = entryAttribStringLength - lineBreakIndex + 1; //length is from 0 instead of 1, so add 1
+                    nextEndLine = [tempString rangeOfString:@"\n" options:NSLiteralSearch range:remainingRange];
+                    if (nextEndLine.location == NSNotFound) {
+                        keepSearching = NO;
+                    }
+                }
             }
             
-            //convert returns to new lines so return can be used internally without interference
-            [entryString replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange(0, [entryString length])];
-            
-            NSMutableAttributedString * entryAttribString = [[NSMutableAttributedString alloc] initWithString:entryString attributes:entryDict];
-            
-            int lineBreakIndex = 0; 
-            int entryAttribStringLength = [entryAttribString length];
-            NSRange replacementRange;   replacementRange.length=1;
-            
-            NSRange remainingRange = NSMakeRange(0, entryAttribStringLength);
-            float currentSizeForRange = [[entryAttribString attributedSubstringFromRange:remainingRange] size].width;
-            
-            while (currentSizeForRange > MAX_TOOLTIP_ENTRY_WIDTH) {           
-                //Hone the length down - the amount the length goes down each time is arbitrary and simply an accuracy-speed tradeoff
-                while (currentSizeForRange > MAX_TOOLTIP_ENTRY_WIDTH) {
-                    remainingRange.length -= 4;
-                    currentSizeForRange = [[entryAttribString attributedSubstringFromRange:remainingRange] size].width;
-                }
+            if (lineBreakIndex < (entryAttribStringLength-MAX_TOOLTIP_ENTRY_WIDTH)) {
+                lineBreakIndex += MAX_TOOLTIP_ENTRY_WIDTH;
                 
                 //Find the first character of the current word
-                lineBreakIndex = [entryAttribString nextWordFromIndex:(lineBreakIndex + remainingRange.length) forward:NO];
+                lineBreakIndex = [entryAttribString nextWordFromIndex:lineBreakIndex forward:NO];
                 
                 //Replace the space before it with the line-break plus tabs
                 [entryAttribString insertAttributedString:lineBreakAndSpaceToColumnString atIndex:lineBreakIndex-1];
-                
-                //Update lineBreakIndex
-                lineBreakIndex = lineBreakIndex + lineBreakAndSpaceToColumnStringLength;
-                
-                //Update the remaining range to scan
                 entryAttribStringLength += lineBreakAndSpaceToColumnStringLength;
+
+                //Update the remaining range to scan
                 remainingRange.location = lineBreakIndex;
-                remainingRange.length = entryAttribStringLength - lineBreakIndex;             
-                currentSizeForRange = [[entryAttribString attributedSubstringFromRange:remainingRange] size].width;
+                remainingRange.length = entryAttribStringLength - lineBreakIndex;  
             }
-            
-            NSMutableString * finalEntryString = [[entryAttribString string] mutableCopy];
-            //convert new lines (and returns which were changed to new lines before the while loop) into new-line-plus-tabs
-            [finalEntryString replaceOccurrencesOfString:@"\n" withString:[lineBreakAndSpaceToColumnString string] options:NSLiteralSearch range:NSMakeRange(0, [finalEntryString length])];
-            
-            //Add the entry
-            [tipString appendString:finalEntryString withAttributes:entryDict];
         }
-        return([tipString autorelease]);
-    } else {
-        return nil;
+        
+        NSMutableString * finalEntryString = [[entryAttribString string] mutableCopy];
+        
+        //convert new lines (and returns which were changed to new lines before the while loop) into new-line-plus-tabs
+        [finalEntryString replaceOccurrencesOfString:@"\n" withString:[NSString stringWithFormat:@"%@ ",[lineBreakAndSpaceToColumnString string]] options:NSLiteralSearch range:NSMakeRange(0, [finalEntryString length])];
+        
+        //Add the entry
+        [tipString appendString:finalEntryString withAttributes:entryDict];
     }
+    return([tipString autorelease]);
 }
 
 //Custom pasting ----------------------------------------------------------------------------------------------------
