@@ -94,6 +94,7 @@ typedef enum {
  * @brief Return the direction for the gradient
  *
  * @result The <tt>AIDirection</tt> for the gradient
+ */
 - (AIDirection)direction;
 
 /*!
