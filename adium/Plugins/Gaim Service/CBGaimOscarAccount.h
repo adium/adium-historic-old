@@ -92,8 +92,12 @@ struct oscar_direct_im {
 	NSTimer			*delayedSignonUpdateTimer;
 	NSMutableArray  *arrayOfContactsForDelayedUpdates;
 	
-	NSImage			*serviceImage;
-	NSImage			*serviceMenuImage;
+	NSImage			*image;
+	NSImage			*menuImage;
+	NSImage			*onlineMenuImage;
+	NSImage			*connectingMenuImage;
+	NSImage			*offlineMenuImage;
+	
 }
 
 @end
