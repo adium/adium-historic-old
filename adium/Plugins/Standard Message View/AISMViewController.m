@@ -523,7 +523,7 @@
     NSImage			*userImage;
     
     //Get the user icon
-    userImage = [[[chat listObject] statusArrayForKey:@"UserIcon"] firstImage];
+    userImage = [[[content source] statusArrayForKey:@"UserIcon"] firstImage];
     if(!userImage) userImage = ([content isOutgoing] ? iconOutgoing : iconIncoming);
     
     //Create the spanning image cell
