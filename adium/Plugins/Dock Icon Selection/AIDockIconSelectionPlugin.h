@@ -13,9 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
-
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"
 
 @class AIDockIconPreferences;

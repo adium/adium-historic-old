@@ -13,8 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Cocoa/Cocoa.h>
-
 #define MAIN_COLUMN_WIDTH	160		//Width of the main column
 #define ALIAS_COLUMN_WIDTH	160		//Width of the alias column
 #define SUB_COLUMN_WIDTH	12		//Width of the account columns

@@ -18,15 +18,12 @@
 
 /**
  * 
- * $Revision: 1.4 $
- * $Date: 2003/10/28 15:59:16 $
- * $Author: jmelloy $
+ * $Revision: 1.5 $
+ * $Date: 2003/11/09 02:32:08 $
+ * $Author: adamiser $
  *
  **/
 
-
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
 #import "libpq-fe.h"
 
 @interface AISQLLoggerPlugin : AIPlugin <AIPluginInfo> {

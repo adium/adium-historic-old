@@ -21,8 +21,6 @@
     More information on Gaim is available at http://gaim.sourceforge.net
  -------------------------------------------------------------------------------------------------------*/
 
-#import <Cocoa/Cocoa.h>
-
 typedef enum{
     OscarInfo_General = 0x00001,
     OscarInfo_AwayMessage = 0x00003,

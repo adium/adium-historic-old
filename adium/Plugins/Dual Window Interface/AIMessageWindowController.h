@@ -13,8 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Cocoa/Cocoa.h>
-
 #define AIMessageWindow_ControllersChanged 		@"AIMessageWindow_ControllersChanged"
 #define AIMessageWindow_ControllerOrderChanged 		@"AIMessageWindow_ControllerOrderChanged"
 #define AIMessageWindow_SelectedControllerChanged 	@"AIMessageWindow_SelectedControllerChanged"

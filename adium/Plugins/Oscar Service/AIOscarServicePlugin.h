@@ -21,9 +21,6 @@
     More information on Gaim is available at http://gaim.sourceforge.net
  -------------------------------------------------------------------------------------------------------*/
 
-#import <Cocoa/Cocoa.h>
-#import <AIAdium.h>
-
 @class AIServiceType;
 
 @interface AIOscarServicePlugin : AIPlugin <AIServiceController> {

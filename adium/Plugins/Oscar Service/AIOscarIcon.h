@@ -21,8 +21,6 @@
     More information on Gaim is available at http://gaim.sourceforge.net
  -------------------------------------------------------------------------------------------------------*/
 
-#import <Cocoa/Cocoa.h>
-
 @protocol AIOscarModule;
 @class AIOscarAccount, AISocket, AIOscarConnection;
 

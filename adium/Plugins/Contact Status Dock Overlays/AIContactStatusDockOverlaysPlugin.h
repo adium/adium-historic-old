@@ -13,9 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
-
 #define PREF_GROUP_DOCK_OVERLAYS		@"Dock Overlays"
 
 #define	KEY_DOCK_SHOW_STATUS			@"Show status overlays"

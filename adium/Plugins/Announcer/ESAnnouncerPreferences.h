@@ -6,9 +6,6 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
-
 @interface ESAnnouncerPreferences : AIPreferencePane {
     IBOutlet	NSButton	*checkBox_outgoing;
     IBOutlet	NSButton	*checkBox_incoming;

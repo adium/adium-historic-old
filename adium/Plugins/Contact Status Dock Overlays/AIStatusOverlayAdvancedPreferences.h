@@ -6,9 +6,6 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
-
 @interface AIStatusOverlayAdvancedPreferences : AIPreferencePane {
     IBOutlet	NSButton	*radioButton_topOfIcon;
     IBOutlet	NSButton	*radioButton_bottomOfIcon;
