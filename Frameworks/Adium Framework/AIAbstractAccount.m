@@ -24,6 +24,7 @@
 #import "AIService.h"
 #import "AIStatus.h"
 #import <AIUtilities/AIMutableOwnerArray.h>
+#import <AIUtilities/AISleepNotification.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/CBApplicationAdditions.h>
 
@@ -768,7 +769,7 @@
  *
  * Subclasses should call this on self after connecting
  */
-- (void)accountDidConnect
+- (void)didConnect
 {
     //We are now online
     [self setStatusObject:nil forKey:@"Connecting" notify:NO];
@@ -816,6 +817,97 @@
 	reconnectTimer = nil;
 }
 
+/*
+ * @brief Allow the system to sleep if it wants to
+ *
+ * Removes the hold on system sleep placed previously
+ */
+- (void)allowSystemToSleep
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:AISystemContinueSleep_Notification
+														object:nil];	
+}
+
+/*
+ * @brief Remove the status objects from a listContact which we placed there
+ *
+ * Called for each contact to reduce our memory footprint after a contact signs off or an account disconnects.
+ */
+- (void)removeStatusObjectsFromContact:(AIListContact *)listContact silently:(BOOL)silent
+{
+	NSEnumerator	*enumerator = [[self contactStatusObjectKeys] objectEnumerator];
+	NSString		*key;
+	
+	while(key = [enumerator nextObject]){
+		[listContact setStatusObject:nil forKey:key notify:NotifyLater];
+	}
+	
+	//Apply any changes
+	[listContact notifyOfChangedStatusSilently:silent];
+}
+
+/*!
+* @brief Remove all contacts owned by this account and clear their status objects set by this account
+ */
+- (void)removeAllContacts
+{
+	NSEnumerator    *enumerator;
+	AIListContact	*listContact;
+	
+	[[adium contactController] delayListObjectNotifications];
+	
+	//Clear status flags on all contacts for this account, and set their remote group to nil
+	enumerator = [[[adium contactController] allContactsInGroup:nil
+													  subgroups:YES 
+													  onAccount:self] objectEnumerator];
+	while(listContact = [enumerator nextObject]){
+		[listContact setRemoteGroupName:nil];
+		[self removeStatusObjectsFromContact:listContact silently:YES];
+	}
+	
+	[[adium contactController] endListObjectNotificationsDelay];
+}
+
+/*
+ * @brief Contact status object keys
+ *
+ * @result An NSSet of the keys we should clear from contacts when signing off
+ */
+- (NSSet *)contactStatusObjectKeys
+{
+	static NSSet *_contactStatusObjectKeys = nil;
+	
+	if (!_contactStatusObjectKeys)
+		_contactStatusObjectKeys = [[NSSet alloc] initWithObjects:@"Online",@"Warning",@"IdleSince",
+			@"Signon Date",@"StatusName",@"StatusType",@"StatusMessage",@"Client",nil];
+	
+	return _contactStatusObjectKeys;
+}
+
+/*
+ * @brief Did disconnect
+ */
+- (void)didDisconnect
+{
+	//Remove all contacts
+	[self removeAllContacts];
+	
+	//We are now offline
+    [self setStatusObject:nil forKey:@"Disconnecting" notify:NO];
+    [self setStatusObject:nil forKey:@"Connecting" notify:NO];
+    [self setStatusObject:nil forKey:@"Online" notify:NO];
+	
+	//Apply any changes
+    [self notifyOfChangedStatusSilently:NO];
+
+	//Cancel our sleep hold timeout
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(allowSystemToSleep)
+											   object:nil];
+	//And allow sleep
+	[self allowSystemToSleep];
+}
+
 /*!
  * @brief Applescript connect
  *
@@ -835,7 +927,6 @@
 {
 	[self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];	
 }
-
 
 //Fast user switch disconnecting ---------------------------------------------------------------------------------------
 #pragma mark Fast user switch disconnecting
