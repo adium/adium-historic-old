@@ -19,11 +19,13 @@
 #import "AIContentController.h"
 #import "AIDockController.h"
 #import "AIPreferenceController.h"
+#import "ESContactAlertsController.h"
 #import "AIStatusOverlayPreferences.h"
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/ESImageAdditions.h>
 #import <Adium/AIAbstractListController.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
@@ -34,6 +36,9 @@
 #define SMALLESTFONTSIZE			14
 #define FONTSIZERANGE				30
 
+#define	DOCK_OVERLAY_ALERT_SHORT	AILocalizedString(@"Display name in the dock icon",nil)
+#define DOCK_OVERLAY_ALERT_LONG		DOCK_OVERLAY_ALERT_SHORT
+
 @interface AIContactStatusDockOverlaysPlugin (PRIVATE)
 - (void)_setOverlay;
 - (NSImage *)overlayImageFlash:(BOOL)flash;
@@ -43,57 +48,154 @@
 
 @implementation AIContactStatusDockOverlaysPlugin
 
+/*!
+* @brief Install
+ */
 - (void)installPlugin
 {
-    //init
-    unviewedObjectsArray = [[NSMutableArray alloc] init];
+	overlayObjectsArray = [[NSMutableArray alloc] init];
     overlayState = nil;
 	
-    //Install our preference view and register our default prefs
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_OVERLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DOCK_OVERLAYS];
-//    preferences = [[AIStatusOverlayPreferences preferencePane] retain];
-
     //Register as a contact observer (For signed on / signed off)
     [[adium contactController] registerListObjectObserver:self];
-
+	
 	//Register as a chat observer (for unviewed content)
 	[[adium contentController] registerChatObserver:self];
-
+	
     //Prefs
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DOCK_OVERLAYS];
-
+	
     //
     image1 = [[NSImage alloc] initWithSize:NSMakeSize(128,128)];
     image2 = [[NSImage alloc] initWithSize:NSMakeSize(128,128)];
+	
+	//Install our contact alert
+	[[adium contactAlertsController] registerActionID:DOCK_OVERLAY_ALERT_IDENTIFIER withHandler:self];
+}
+
+/*!
+* @brief Short description
+ * @result A short localized description of the action
+ */
+- (NSString *)shortDescriptionForActionID:(NSString *)actionID
+{
+	return(DOCK_OVERLAY_ALERT_SHORT);
+}
+
+/*!
+* @brief Long description
+ * @result A longer localized description of the action which should take into account the details dictionary as appropraite.
+ */
+- (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
+{
+	return(DOCK_OVERLAY_ALERT_LONG);
+}
+
+/*!
+* @brief Image
+ */
+- (NSImage *)imageForActionID:(NSString *)actionID
+{
+	//XXX
+	return([NSImage imageNamed:@"DockAlert" forClass:[self class]]);
+}
+
+/*!
+ * @brief Details pane
+ * @result An <tt>AIModularPane</tt> to use for configuring this action, or nil if no configuration is possible.
+ */
+- (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
+{
+	return nil;
+}
+
+/*!
+* @brief Perform an action
+ *
+ * @param actionID The ID of the action to perform
+ * @param listObject The listObject associated with the event triggering the action. It may be nil
+ * @param details If set by the details pane when the action was created, the details dictionary for this particular action
+ * @param eventID The eventID which triggered this action
+ * @param userInfo Additional information associated with the event; userInfo's type will vary with the actionID.
+ */
+- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
+{
+	BOOL isMessageEvent = [[adium contactAlertsController] isMessageEvent:eventID];
+	
+	if(isMessageEvent){
+		AIChat	*inChat = [userInfo objectForKey:@"AIChat"];
+
+		if(![overlayObjectsArray containsObjectIdenticalTo:inChat]){
+			[overlayObjectsArray addObject:inChat];
+			[self _setOverlay];
+
+			/* The chat observer method is responsible for removing this overlay later */
+		}
+
+	}else{
+		NSTimer	*removeTimer;
+		
+		//Clear any current timer for this object o ahve its overlay removed
+		if(removeTimer = [listObject statusObjectForKey:@"DockOverlayRemoveTimer"]) [removeTimer invalidate];
+		
+		//Add a timer to remove this overlay
+		removeTimer = [NSTimer scheduledTimerWithTimeInterval:5
+													   target:self
+													 selector:@selector(removeDockOverlay:)
+													 userInfo:listObject
+													  repeats:NO];
+		[listObject setStatusObject:removeTimer
+							 forKey:@"DockOverlayRemoveTimer"
+							 notify:NotifyNever];
+
+		if(![overlayObjectsArray containsObject:listObject]){
+			[overlayObjectsArray addObject:listObject];
+		}
+
+		//Do set overlay now as our coloring or whatever may have changed
+		[self _setOverlay];
+	}
+}
+
+- (void)removeDockOverlay:(NSTimer *)removeTimer
+{
+	AIListObject	*inObject = [removeTimer userInfo];
+
+	[overlayObjectsArray removeObjectIdenticalTo:inObject];
+	
+	[inObject setStatusObject:nil
+					   forKey:@"DockOverlayRemoveTimer"
+					   notify:NotifyNever];
+	
+	[self _setOverlay];
+}
+
+/*!
+* @brief Allow multiple actions?
+ *
+ * If this method returns YES, every one of this action associated with the triggering event will be executed.
+ * If this method returns NO, only the first will be.
+ *
+ * Don't allow multiple dock actions to occur.  While a series of "Bounce every 5 seconds," "Bounce every 10 seconds,"
+ * and so on actions could be combined sanely, a series of "Bounce once" would make the dock go crazy.
+ */
+- (BOOL)allowMultipleActionsWithID:(NSString *)actionID
+{
+	return(NO);
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {	
-    if([group isEqualToString:PREF_GROUP_LIST_THEME]){
-		//Snatch colors from status coloring plugin's prefs    
-		[self flushPreferenceColorCache];
-        signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
-        signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
-        unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
-		
-        backSignedOffColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor] retain];
-        backSignedOnColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor] retain];
-        backUnviewedContentColor = [[[prefDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor] retain];
-    }
-    
-    if([group isEqualToString:PREF_GROUP_DOCK_OVERLAYS]){
-        //
-        showStatus = [[prefDict objectForKey:KEY_DOCK_SHOW_STATUS] boolValue];
-        showContent = [[prefDict objectForKey:KEY_DOCK_SHOW_CONTENT] boolValue];
-        overlayPosition = [[prefDict objectForKey:KEY_DOCK_OVERLAY_POSITION] boolValue];        
-		
-        //Reset our overlay
-        [unviewedObjectsArray removeAllObjects];
-        [self _setOverlay];
-    }
-    
+	//Grab colors from status coloring plugin's prefs    
+	[self flushPreferenceColorCache];
+	signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
+	signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
+	unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
+	
+	backSignedOffColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor] retain];
+	backSignedOnColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor] retain];
+	backUnviewedContentColor = [[[prefDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor] retain];
 }
 
 - (void)flushPreferenceColorCache
@@ -106,78 +208,47 @@
 	[backUnviewedContentColor release]; backUnviewedContentColor = nil;	
 }
 
-- (void)uninstallPlugin
-{
-	
-}
-
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	//Skip this entirely if overlays are off or this contact is within a metaContact
-    if(showStatus){
-		if([inObject isKindOfClass:[AIAccount class]]){
-			//When an account signs on or off, force an overlay update as it may have silently changed
-			//contacts' statuses
-			if([inModifiedKeys containsObject:@"Online"]){
-				NSEnumerator	*enumerator = [[[unviewedObjectsArray copy] autorelease] objectEnumerator];
-				AIListObject	*listObject;
-				while(listObject = [enumerator nextObject]){
-					if(([listObject respondsToSelector:@selector(account)]) &&
-					   ([(id)listObject account] == inObject)){
-						   [unviewedObjectsArray removeObject:listObject];
-					   }
+	if([inObject isKindOfClass:[AIAccount class]]){
+		//When an account signs on or off, force an overlay update as it may have silently changed
+		//contacts' statuses
+		if([inModifiedKeys containsObject:@"Online"]){
+			NSEnumerator	*enumerator = [[[overlayObjectsArray copy] autorelease] objectEnumerator];
+			AIListObject	*listObject;
+			BOOL			madeChanges = NO;
+			
+			while(listObject = [enumerator nextObject]){
+				if(([listObject respondsToSelector:@selector(account)]) &&
+				   ([(id)listObject account] == inObject) &&
+				   ([overlayObjectsArray containsObjectIdenticalTo:listObject])){
+					[overlayObjectsArray removeObject:listObject];
+					madeChanges = YES;
 				}
-				
-				[self _setOverlay];
 			}
 			
-		}else if(![[inObject containingObject] isKindOfClass:[AIMetaContact class]]){ 
-			BOOL containsSignedOn = [inModifiedKeys containsObject:@"Signed On"];
-			BOOL containsSignedOff = [inModifiedKeys containsObject:@"Signed Off"];
-			
-			if (containsSignedOn || containsSignedOff){
-				if((containsSignedOn && [inObject integerStatusObjectForKey:@"Signed On"]) ||
-				   (containsSignedOff && [inObject integerStatusObjectForKey:@"Signed Off"])){
-					
-					if(![unviewedObjectsArray containsObject:inObject]){
-						[unviewedObjectsArray addObject:inObject];
-					}
-					
-				}else{
-					if([unviewedObjectsArray containsObject:inObject]){
-						[unviewedObjectsArray removeObject:inObject];
-					}
-				}
-				
-				if(!silent){
-					[self _setOverlay];
-				}
-			}
+			if(madeChanges) [self _setOverlay];
 		}
 	}
-
+	
 	return(nil);
 }
 
+/*
+ * @brief When a chat no longer has unviewed content, remove it from display
+ */
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	if(showContent){
-		if (inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
-			
-			if([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
-				if(![unviewedObjectsArray containsObjectIdenticalTo:inChat]){
-					[unviewedObjectsArray addObject:inChat];
-					[self _setOverlay];
-				}
-				
-			}else{
-				if([unviewedObjectsArray containsObjectIdenticalTo:inChat]){
-					[unviewedObjectsArray removeObjectIdenticalTo:inChat];
-					[self _setOverlay];
-				}
+	if (inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
+		
+		if(![inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
+			if([overlayObjectsArray containsObjectIdenticalTo:inChat]){
+				NSLog(@"Removing chat %@",inChat);
+				[overlayObjectsArray removeObjectIdenticalTo:inChat];
+				[self _setOverlay];
 			}
-			
 		}
+		
 	}
 	
 	return nil;
@@ -193,7 +264,7 @@
     }
 
     //Create & set the new overlay state
-    if([unviewedObjectsArray count] != 0){
+    if([overlayObjectsArray count] != 0){
         //Set the state
         overlayState = [[AIIconState alloc] initWithImages:[NSArray arrayWithObjects:[self overlayImageFlash:NO], [self overlayImageFlash:YES], nil]
 													 delay:0.5
@@ -216,16 +287,13 @@
     NSImage				*image = (flash ? image1 : image2);
 	
     //Pre-calc some sizes
-    dockIconScale = 1.0 - [[adium dockController] dockIconScale];
+#warning 1 - [[adium dockController] dockIconScale] is the wrong relationship?
+    dockIconScale = 1- [[adium dockController] dockIconScale];
     iconHeight = (SMALLESTRADIUS + (RADIUSRANGE * dockIconScale));
-    if(overlayPosition){
-        top = 126;
-        bottom = top - iconHeight;
-    }else{
-        bottom = 0;
-        top = bottom + iconHeight;
-    }
-	
+
+	top = 126;
+	bottom = top - iconHeight;
+
     //Set up the string details
     font = [NSFont boldSystemFontOfSize:(SMALLESTFONTSIZE + (FONTSIZERANGE * dockIconScale))];
     paragraphStyle = [NSParagraphStyle styleWithAlignment:NSCenterTextAlignment lineBreakMode:NSLineBreakByClipping];
@@ -236,7 +304,7 @@
     NSRectFillUsingOperation(NSMakeRect(0, 0, 128, 128), NSCompositeCopy);
 	
     //Draw overlays for each contact
-    enumerator = [unviewedObjectsArray reverseObjectEnumerator];
+    enumerator = [overlayObjectsArray reverseObjectEnumerator];
     while((object = [enumerator nextObject]) && !(top < 0) && bottom < 128){
         float			left, right, arcRadius, stringInset;
         NSBezierPath	*path;
@@ -335,14 +403,9 @@
 			nameString = [[[NSAttributedString alloc] initWithString:[contact displayName] attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, nil]] autorelease];
         [nameString drawInRect:NSMakeRect(0 + stringInset, bottom + 1, 128 - (stringInset * 2), top - bottom)];*/
 		
-        //Move up or down to the next pill
-        if(overlayPosition){
-            top -= (iconHeight + 7.0 * dockIconScale);
-            bottom = top - iconHeight;
-        }else{
-            bottom += (iconHeight + 7.0 * dockIconScale);
-            top = bottom + iconHeight;
-        }
+        //Move down to the next pill
+		top -= (iconHeight + 7.0 * dockIconScale);
+		bottom = top - iconHeight;
     }
 	
     [image unlockFocus];
