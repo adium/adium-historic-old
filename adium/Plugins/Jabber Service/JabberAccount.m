@@ -28,13 +28,52 @@
 
 - (BOOL)sendContentObject:(AIContentObject *)object
 {
-    return NO;
+    BOOL                sent = NO;
+    AIListContact       *listObject;
+    AIHandle            *handle;
+
+    if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){
+        NSString *body = [[(AIContentMessage*)object message] string];
+        //Get the destination handle
+        listObject = (AIListContact *)[[object chat] listObject];
+        handle = [listObject handleForAccount:self];
+        if(!handle){
+            handle = [self addHandleWithUID:[[listObject UID] compactedString] serverGroup:nil temporary:YES];
+        }
+        JabberMessage *msg = [[JabberMessage alloc]
+            initWithRecipient:[[JabberID alloc] initWithUserHost:[listObject UID] andResource:nil]
+                      andBody:body];
+        [session sendElement: msg];
+        sent = YES;
+    }
+    return sent;
 }
 
 // Returns YES if the contact is available for receiving content of the specified type
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
-    return NO;
+    BOOL        available = NO;
+    BOOL        weAreOnline = ([[[owner accountController] propertyForKey:@"Status" account:self] intValue]
+                               == STATUS_ONLINE);
+
+    if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
+        if(weAreOnline){
+            if(inListObject == nil){
+                available = YES; //If we're online, we're most likely available to message this object
+
+            }else{
+                if([inListObject isKindOfClass:[AIListContact class]]){
+                    AIHandle    *handle = [(AIListContact *)inListObject handleForAccount:self];
+
+                    if(handle && [[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
+                        available = YES; //This handle is online and on our list
+                    }
+                }
+            }
+        }
+    }
+
+    return(available);
 }
 
 - (AIChat *)openChatWithListObject:(AIListObject *)inListObject
@@ -319,7 +358,7 @@
                                          withSource:[handle containingContact]
                                         destination:self
                                                date:nil//[m delayedOnDate]
-                                            message:[m body]
+                                            message:[[NSAttributedString alloc] initWithString:[m body]]
                                           autoreply:NO];
     NSLog(@"adding incoming content object");
     [[owner contentController] addIncomingContentObject:messageObject];
