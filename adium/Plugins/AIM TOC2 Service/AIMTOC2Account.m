@@ -559,7 +559,7 @@ static char *hash_password(const char * const password);
                 o = d - a + b + 71665152;
 
 //                message = [NSString stringWithFormat:@"toc2_signon login.oscar.aol.com 5190 %@ %s english TIC:AIMM 160 %lu",[screenName compactedString],hash_password([password cString]),o];
-                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.72 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
+                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.73 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
 
                 [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 
@@ -1064,11 +1064,11 @@ static char *hash_password(const char * const password);
             [handleStatusDict setObject:[NSNumber numberWithInt:warning] forKey:@"Warning"];
             [alteredStatusKeys addObject:@"Warning"];
 
-	    if(warning < [storedValue intValue]){
-		[handleStatusDict setObject:[NSNumber numberWithBool:YES] forKey:@"Cooldown"];
+	    if([storedValue intValue] == 0){
+		[handleStatusDict setObject:[NSNumber numberWithInt:warning] forKey:@"Cooldown"];
 		[alteredStatusKeys addObject:@"Cooldown"];
 	    }else{
-		[handleStatusDict setObject:[NSNumber numberWithBool:NO] forKey:@"Cooldown"];
+		[handleStatusDict setObject:[NSNumber numberWithInt:[storedValue intValue]] forKey:@"Cooldown"];
 		[alteredStatusKeys addObject:@"Cooldown"];
 	    }
         }
@@ -1372,16 +1372,17 @@ static char *hash_password(const char * const password);
 {
     NSString	*level = [message TOCStringArgumentAtIndex:1];
     NSString	*enemy = [message TOCStringArgumentAtIndex:2];
-    BOOL	cooldown = [[statusDict objectForKey:@"Cooldown"] boolValue];
-    
-    if((enemy == nil) && (!cooldown)){
-	[[owner interfaceController] handleErrorMessage:@"Warning Level (Anonymous)" withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
 
-    }if((cooldown) && ([level compare:@"0"])){
-	[[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"Warning Level Cleared"] withDescription:[NSString stringWithFormat:@"Your warning level is now normal"]];
-	
-    }else{
-	[[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"Warning Level (%@)",enemy] withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
+    int		cooldown = [[[[handleDict objectForKey:[self UID]] statusDictionary] objectForKey:@"Cooldown"] intValue];
+    
+    if(enemy !=nil){
+	[[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ : Warning Level (%@)",[self UID],enemy] withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
+
+    }else if(cooldown < [level intValue]){
+	[[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ : Warning Level (Anonymous)", [self UID]] withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
+
+    }else if([level intValue] == 0){
+	[[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ : Warning Level Cleared",[self UID]] withDescription:[NSString stringWithFormat:@"Your warning level is now normal"]];
     }
 }
 
