@@ -90,7 +90,7 @@ SecAccessRef createAccess(NSString *accessLabel)
 }
 
 // Puts a password on the keychain for the specified service and account
-+ (void)putPasswordInKeychainForService:(NSString *)service account:(NSString *)account password:(NSString *)password
++ (BOOL)putPasswordInKeychainForService:(NSString *)service account:(NSString *)account password:(NSString *)password
 {
     OSStatus			ret;
 	SecKeychainItemRef  itemRef = nil;
@@ -141,10 +141,17 @@ SecAccessRef createAccess(NSString *accessLabel)
 	
 	//Cleanup
 	if (itemRef) CFRelease(itemRef);
+	
+	if (ret != noErr){
+		NSLog(@"putPasswordInKeychain: Keychain error number %d",ret);
+		return NO;
+	}
+	
+	return YES;
 }
 
 // Removes a password from the keychain
-+ (void)removePasswordFromKeychainForService:(NSString *)service account:(NSString *)account
++ (BOOL)removePasswordFromKeychainForService:(NSString *)service account:(NSString *)account
 {	
 	SecKeychainItemRef  itemRef = nil;
 	OSStatus			ret;
@@ -157,6 +164,13 @@ SecAccessRef createAccess(NSString *accessLabel)
 	
 	//Cleanup
 	if (itemRef) CFRelease(itemRef);
+	
+	if (ret != noErr){
+		NSLog(@"removePasswordFromKeychain: Keychain error number %d",ret);
+		return NO;
+	}
+	
+	return YES;
 }
 
 //Next two functions are from the http-mail project.
