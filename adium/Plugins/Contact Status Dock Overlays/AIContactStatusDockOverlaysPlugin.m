@@ -25,6 +25,7 @@
 - (void)_setOverlay;
 - (NSImage *)overlayImageFlash:(BOOL)flash;
 - (void)preferencesChanged:(NSNotification *)notification;
+- (void)flushPreferenceColorCache;
 @end
 
 @implementation AIContactStatusDockOverlaysPlugin
@@ -57,11 +58,11 @@
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:@"Contact Status Coloring"] == 0){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:@"Contact Status Coloring"];
 		
-        //Snatch colors from status coloring plugin's prefs    
+		//Snatch colors from status coloring plugin's prefs    
+		[self flushPreferenceColorCache];
         signedOffColor = [[[prefDict objectForKey:@"Signed Off Color"] representedColor] retain];
         signedOnColor = [[[prefDict objectForKey:@"Signed On Color"] representedColor] retain];
         unviewedContentColor = [[[prefDict objectForKey:@"Unviewed Content Color"] representedColor] retain];
-		
         backSignedOffColor = [[[prefDict objectForKey:@"Signed Off Label Color"] representedColor] retain];
         backSignedOnColor = [[[prefDict objectForKey:@"Signed On Label Color"] representedColor] retain];
         backUnviewedContentColor = [[[prefDict objectForKey:@"Unviewed Content Label Color"] representedColor] retain];
@@ -81,6 +82,16 @@
         [self _setOverlay];
     }
     
+}
+
+- (void)flushPreferenceColorCache
+{
+	[signedOffColor release]; signedOffColor = nil;
+	[signedOnColor release]; signedOnColor = nil;
+	[unviewedContentColor release]; unviewedContentColor = nil;
+	[backSignedOffColor release]; backSignedOffColor = nil;
+	[backSignedOnColor release]; backSignedOnColor = nil;
+	[backUnviewedContentColor release]; backUnviewedContentColor = nil;	
 }
 
 - (void)uninstallPlugin
