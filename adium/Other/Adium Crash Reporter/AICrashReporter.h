@@ -12,8 +12,12 @@
 @interface AICrashReporter : NSObject {
     IBOutlet	NSWindow		*window_MainWindow;
 	IBOutlet	NSTextField		*textField_emailAddress;
-	IBOutlet	NSTextField		*textField_emailDescription;
+	IBOutlet	NSTextField		*textField_accountIM;
+	IBOutlet	NSTextField		*textField_description;
 	IBOutlet	NSTextView		*textView_details;
+	
+	IBOutlet	NSPanel			*panel_privacySheet;
+	IBOutlet	NSTextView		*textView_crashLog;
 	
 	NSString	*crashLog;		//Current crash log
 }
@@ -23,5 +27,7 @@
 - (IBAction)send:(id)sender;
 - (void)awakeFromNib;
 - (IBAction)reportCrashForLogAtPath:(NSString *)inPath;
+- (IBAction)showPrivacyDetails:(id)sender;
+- (IBAction)closePrivacyDetails:(id)sender;
 
 @end
