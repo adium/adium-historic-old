@@ -31,7 +31,7 @@ typedef enum {
 //Account Creation
 - (id)accountWithUID:(NSString *)inUID internalObjectID:(NSString *)inInternalObjectID;
 - (Class)accountClass;
-- (AIAccountViewController *)accountView;
+- (AIAccountViewController *)accountViewController;
 - (DCJoinChatViewController *)joinChatView;
 
 //Service Description

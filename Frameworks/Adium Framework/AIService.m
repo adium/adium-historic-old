@@ -71,7 +71,7 @@ Adium, Copyright 2001-2005, Adam Iser
  * on this service.
  * @return An <tt>AIAccountViewController</tt> or subclass for this service.
  */
-- (AIAccountViewController *)accountView
+- (AIAccountViewController *)accountViewController
 {
 	return(nil);
 }
