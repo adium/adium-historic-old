@@ -16,7 +16,7 @@
 - (Class)accountClass{
 	return([ESGaimAntepoAccount class]);
 }
-- (AIAccountViewController *)accountView{
+- (AIAccountViewController *)accountViewController{
     return([ESGaimAntepoAccountViewController accountViewController]);
 }
 

@@ -18,7 +18,7 @@
 	return([CBGaimOscarAccount class]);
 }
 
-- (AIAccountViewController *)accountView{
+- (AIAccountViewController *)accountViewController{
     return([AIGaimOscarAccountViewController accountViewController]);
 }
 

@@ -17,7 +17,7 @@
 }
 
 //
-- (AIAccountViewController *)accountView{
+- (AIAccountViewController *)accountViewController{
     return([ESGaimDotMacAccountViewController accountViewController]);
 }
 

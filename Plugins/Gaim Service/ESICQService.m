@@ -16,7 +16,7 @@
 	return([ESGaimICQAccount class]);
 }
 
-- (AIAccountViewController *)accountView{
+- (AIAccountViewController *)accountViewController{
     return([ESGaimICQAccountViewController accountViewController]);
 }
 
