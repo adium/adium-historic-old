@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.45 2004/01/18 17:51:19 adamiser Exp $
+// $Id: AIContentController.m,v 1.46 2004/01/25 00:17:00 evands Exp $
 
 #import "AIContentController.h"
 
@@ -240,14 +240,18 @@
 
 - (void)_filterContentObject:(AIContentObject *)inObject usingFilterArray:(NSArray *)inArray
 {
-    // Only CONTENT_MESSAGE_TYPE contentObjects have an attributed string,
-    // but all contentObjects should be passed through the filters
-    if([[inObject type] isEqual:CONTENT_MESSAGE_TYPE]){
-        
+    // All contentObjects should be passed through the filters
+    if ([[inObject type] isEqualToString:CONTENT_MESSAGE_TYPE]){
+        //AIContentMessages have an attributed string for a message
         [(AIContentMessage *)inObject setMessage:[self _filterAttributedString:[(AIContentMessage *)inObject message]
                                                               forContentObject:inObject
                                                               usingFilterArray:inArray]];
-    } else {
+    } else if  ([[inObject type] isEqualToString:CONTENT_STATUS_TYPE]){
+		//AIContentStatus have a string for a message
+        [(AIContentStatus *)inObject setMessage:[[self _filterAttributedString:[[[NSAttributedString alloc] initWithString:[(AIContentStatus *)inObject message]] autorelease]
+                                                              forContentObject:inObject
+                                                              usingFilterArray:inArray] string]];
+	} else {
         [self _filterAttributedString:nil
                      forContentObject:inObject
                      usingFilterArray:inArray];
