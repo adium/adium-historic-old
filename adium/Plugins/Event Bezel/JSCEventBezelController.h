@@ -21,6 +21,7 @@
     NSColor                         *buddyIconLabelColor;
     NSColor                         *buddyNameLabelColor;
     NSImage                         *backdropImage;
+    BOOL                            doFadeIn, doFadeOut;
 }
 
 + (JSCEventBezelController *)eventBezelControllerForOwner:(id)inOwner;
@@ -47,5 +48,9 @@ withMessage:(NSString *)message;
 - (void)setBezelSize:(NSSize)newSize;
 - (NSImage *)backdropImage;
 - (void)setBackdropImage:(NSImage *)newImage;
+- (BOOL)doFadeOut;
+- (void)setDoFadeOut:(BOOL)b;
+- (BOOL)doFadeIn;
+- (void)setDoFadeIn:(BOOL)b;
 
 @end

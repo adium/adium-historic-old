@@ -32,5 +32,9 @@
         <integer>0</integer>
         <key>Background</key>
         <integer>0</integer>
+        <key>Fade In</key>
+        <false/>
+        <key>Fade Out</key>
+        <true/>
 </dict>
 </plist>

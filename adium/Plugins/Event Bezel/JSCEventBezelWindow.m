@@ -15,6 +15,9 @@
     NSWindow *result = [super initWithContentRect:contentRect styleMask:NSBorderlessWindowMask  backing:NSBackingStoreBuffered defer:NO];
     
     fadingOut = NO;
+    fadingIn = NO;
+    doFadeIn = NO;
+    doFadeOut = YES;
     
     displayDuration = 3;
     
@@ -26,12 +29,28 @@
     return NO;
 }
 
+- (void)showBezelWindow
+{
+    if (doFadeIn && !fadingOut) {
+        [self setAlphaValue:0.0];
+        [self setFadingOut:NO];
+        [self setFadingIn:YES];
+        [self setFadeTimer: [NSTimer scheduledTimerWithTimeInterval:0.1
+                                                             target:self
+                                                           selector:@selector(fadeIn:)
+                                                           userInfo:nil
+                                                            repeats:YES]];
+    } else {
+        [self setAlphaValue:1.0];
+        [self startTimer];
+    }
+}
+
 - (void)startTimer;
 {
-    [self setAlphaValue:1.0];
-    [self setFadeTimer:nil];
-    [self setDisplayTimer:nil];
     [self setFadingOut:YES];
+    [self setFadingIn:NO];
+    [self setFadeTimer:nil];
     [self setDisplayTimer: [NSTimer scheduledTimerWithTimeInterval:displayDuration
                                                          target:self
                                                        selector:@selector(endDisplay:)
@@ -41,11 +60,29 @@
 
 - (void)endDisplay:(NSTimer *)timer
 {
-    [self setFadeTimer: [NSTimer scheduledTimerWithTimeInterval:0.1
-                                                         target:self
-                                                       selector:@selector(fadeOut:)
-                                                       userInfo:nil
-                                                        repeats:YES]];
+    if (doFadeOut) {
+        [self setFadeTimer: [NSTimer scheduledTimerWithTimeInterval:0.1
+                                                            target:self
+                                                          selector:@selector(fadeOut:)
+                                                          userInfo:nil
+                                                           repeats:YES]];
+    } else {
+        [self setFadingOut:NO];
+        [self close];
+    }
+}
+
+// Called repeatedly after the window is show
+- (void)fadeIn:(NSTimer *)timer
+{
+    if ([self alphaValue]<1.0) {
+        [self setAlphaValue: [self alphaValue]+0.2];
+    }
+    if ([self alphaValue]>=1.0) {
+        [self setFadeTimer:nil];
+        [self setFadingIn:NO];
+        [self startTimer];
+    }
 }
 
 // Called repeatedly after the window is shown
@@ -98,6 +135,16 @@
     fadingOut = newFade;
 }
 
+- (BOOL)fadingIn
+{
+    return fadingIn;
+}
+
+- (void)setFadingIn:(BOOL)newFade
+{
+    fadingIn = newFade;
+}
+
 - (int)displayDuration
 {
     return displayDuration;
@@ -106,6 +153,26 @@
 - (void)setDisplayDuration:(int)newDuration
 {
     displayDuration = newDuration;
+}
+
+- (BOOL)doFadeOut
+{
+    return doFadeOut;
+}
+
+- (void)setDoFadeOut:(BOOL)b
+{
+    doFadeOut = b;
+}
+
+- (BOOL)doFadeIn
+{
+    return doFadeIn;
+}
+
+- (void)setDoFadeIn:(BOOL)b
+{
+    doFadeIn = b;
 }
 
 @end

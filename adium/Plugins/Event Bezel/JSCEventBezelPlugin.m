@@ -124,6 +124,8 @@
         [ebc setUseBuddyIconLabel: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_COLOR_LABELS] boolValue]];
         [ebc setUseBuddyNameLabel: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_NAME_LABELS] boolValue]];
         [ebc setBezelDuration: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_DURATION] intValue]];
+        [ebc setDoFadeIn: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_FADE_IN] boolValue]];
+        [ebc setDoFadeOut: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_FADE_OUT] boolValue]];
         
         [eventArray removeAllObjects];
         if ([[preferenceDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue])

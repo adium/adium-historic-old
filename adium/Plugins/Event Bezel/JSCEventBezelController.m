@@ -75,11 +75,14 @@ withMessage:(NSString *)message
 {
     if ([self window]) {
         
+        [bezelWindow setDoFadeIn: [self doFadeIn]];
+        [bezelWindow setDoFadeOut: [self doFadeOut]];
+        
         [bezelView setBackdropImage: [self backdropImage]];
         
         [bezelView setBuddyIconImage:buddyIcon];
         
-        if ([bezelWindow fadingOut]) {
+        if ([bezelWindow fadingOut] || [bezelWindow fadingIn]) {
             [bezelView setQueueField: [NSString stringWithFormat:@"%@ %@\n%@",
                 [bezelView mainBuddyName], [bezelView mainBuddyStatus], [bezelView queueField]]];
             [bezelView setNeedsDisplay:YES];
@@ -119,7 +122,9 @@ withMessage:(NSString *)message
         }
         [[self window] setFrame: bezelFrame display:NO];
         [self showWindow:nil];
-        [bezelWindow startTimer];
+        if (![bezelWindow fadingIn]) {
+            [bezelWindow showBezelWindow];
+        }
         
     }
 }
@@ -247,6 +252,26 @@ withMessage:(NSString *)message
     [newImage retain];
     [backdropImage release];
     backdropImage = newImage;
+}
+
+- (BOOL)doFadeOut
+{
+    return doFadeOut;
+}
+
+- (void)setDoFadeOut:(BOOL)b
+{
+    doFadeOut = b;
+}
+
+- (BOOL)doFadeIn
+{
+    return doFadeIn;
+}
+
+- (void)setDoFadeIn:(BOOL)b
+{
+    doFadeIn = b;
 }
 
 @end

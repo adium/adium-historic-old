@@ -144,6 +144,21 @@
                                           group: PREF_GROUP_EVENT_BEZEL];
 }
 
+- (IBAction)toggleFadeIn:(id)sender
+{
+    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                         forKey:KEY_EVENT_BEZEL_FADE_IN
+                                          group:PREF_GROUP_EVENT_BEZEL];
+}
+
+- (IBAction)toggleFadeOut:(id)sender
+{
+    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                         forKey:KEY_EVENT_BEZEL_FADE_OUT
+                                          group:PREF_GROUP_EVENT_BEZEL];
+}
+
+
 //Configure the preference view
 - (void)viewDidLoad
 {
@@ -170,6 +185,9 @@
     [popUp_size selectItemAtIndex: [[preferenceDict objectForKey: KEY_EVENT_BEZEL_SIZE] intValue]];
     
     [popUp_background selectItemAtIndex: [[preferenceDict objectForKey: KEY_EVENT_BEZEL_BACKGROUND] intValue]];
+    
+    [checkBox_fadeIn setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_FADE_IN] boolValue]];
+    [checkBox_fadeOut setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_FADE_OUT] boolValue]];
     
     // Enable or disable checkboxes based on the "show bezel" checkbox
     [checkBox_online setEnabled: [checkBox_showBezel state]];
