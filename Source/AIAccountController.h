@@ -30,7 +30,7 @@
 
 @protocol AIListObjectObserver;
 
-@class AIServiceType, AIAdium, AIAccount, AIListObject, AIAccountViewController, DCJoinChatViewController;
+@class AIAdium, AIAccount, AIListObject, AIAccountViewController, DCJoinChatViewController;
 
 @protocol AccountMenuPlugin <NSObject>
 - (NSString *)identifier;

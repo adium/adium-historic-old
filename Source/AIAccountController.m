@@ -251,7 +251,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     return([availableServiceDict objectForKey:identifier]);
 }
 
-//Return the first AIServiceType with the specified serviceID
+//Return the first service with the specified serviceID
 - (AIService *)firstServiceWithServiceID:(NSString *)serviceID
 {
 	NSEnumerator	*enumerator = [availableServiceDict objectEnumerator];
