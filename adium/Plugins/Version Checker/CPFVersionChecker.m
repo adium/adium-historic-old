@@ -120,7 +120,7 @@
 																				group:PREF_GROUP_UPDATING];
 	
 	//If the user has already been informed of this update previously, don't bother them
-	if(checkingManually || !lastDateDisplayedToUser || (![lastDateDisplayedToUser isEqualToDate:newestDate]){
+	if(checkingManually || !lastDateDisplayedToUser || (![lastDateDisplayedToUser isEqualToDate:newestDate])){
 		if(!newestDate && checkingManually){
 			//Display connection error message
 			[ESVersionCheckerWindowController showCannotConnectWindow];
