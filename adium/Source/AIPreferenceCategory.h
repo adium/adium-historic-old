@@ -34,5 +34,6 @@
 - (NSView *)contentView;
 - (void)addView:(AIPreferenceViewController *)inView;
 - (NSArray *)viewArray;
+- (void)configureForObject:(id)inObject;
 
 @end

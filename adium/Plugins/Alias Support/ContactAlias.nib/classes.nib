@@ -1,9 +1,10 @@
 {
     IBClasses = (
         {
+            ACTIONS = {setAlias = id; }; 
             CLASS = AIAliasSupportPlugin; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"view_contactAliasInfoView" = NSView; }; 
+            OUTLETS = {"textField_alias" = NSTextField; "view_contactAliasInfoView" = NSView; }; 
             SUPERCLASS = AIPlugin; 
         }, 
         {CLASS = AIPlugin; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 

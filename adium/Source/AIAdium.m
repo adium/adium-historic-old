@@ -23,8 +23,6 @@
 #import "AIContentController.h"
 #import "AIPluginController.h"
 #import "AIPreferenceController.h"
-#import "AIPreferenceViewController.h"
-#import "AIContactInfoViewController.h"
 #import "AIMenuController.h"
 #import <AIUtilities/AIUtilities.h>
 

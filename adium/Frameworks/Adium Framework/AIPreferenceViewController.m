@@ -19,7 +19,7 @@
 #define PREFERENCE_VIEW_NIB		@"PreferenceView"	//Filename of the preference view nib
 
 @interface AIPreferenceViewController (PRIVATE)
-- (id)initWithName:(NSString *)inName categoryName:(NSString *)inCategoryName view:(NSView *)inView;
+- (id)initWithName:(NSString *)inName categoryName:(NSString *)inCategoryName view:(NSView *)preferenceView delegate:(id <AIPreferenceViewControllerDelegate>)inDelegate;
 - (NSString *)name;
 - (NSView *)view;
 - (NSString *)categoryName;
@@ -27,12 +27,20 @@
 
 @implementation AIPreferenceViewController
 
-//Create a new preference view controller
+//Create a new preference view controller (without delegate)
 + (AIPreferenceViewController *)controllerWithName:(NSString *)inName categoryName:(NSString *)inCategoryName view:(NSView *)inView
 {
-    return([[[self alloc] initWithName:inName categoryName:inCategoryName view:inView] autorelease]);
+    return([[[self alloc] initWithName:inName categoryName:inCategoryName view:inView delegate:nil] autorelease]);
 }
 
+//Create a new preference view controller (with delegate)
++ (AIPreferenceViewController *)controllerWithName:(NSString *)inName categoryName:(NSString *)inCategoryName view:(NSView *)inView delegate:(id <AIPreferenceViewControllerDelegate>)inDelegate
+{
+    return([[[self alloc] initWithName:inName categoryName:inCategoryName view:inView delegate:inDelegate] autorelease]);
+}
+
+
+//Accessors
 - (NSString *)name{
     return(name);
 }
@@ -49,21 +57,35 @@
     return(desiredHeight);
 }
 
+- (id <AIPreferenceViewControllerDelegate>)delegate{
+    return(delegate);
+}
+
+
 //Compare to another category view (for sorting on the preference window)
 - (NSComparisonResult)compare:(AIPreferenceViewController *)inView
 {
     return([name caseInsensitiveCompare:[inView name]]);
 }
 
+//Configure for an object
+- (void)configureForObject:(id)inObject
+{
+    if(delegate){
+        [delegate configurePreferenceViewController:self forObject:inObject];
+    }    
+}
+
 
 //Private ---------------------------------------------------------------------------------------
 //init
-- (id)initWithName:(NSString *)inName categoryName:(NSString *)inCategoryName view:(NSView *)preferenceView
+- (id)initWithName:(NSString *)inName categoryName:(NSString *)inCategoryName view:(NSView *)preferenceView delegate:(id <AIPreferenceViewControllerDelegate>)inDelegate
 {
     [super init];
     
     name = [inName retain];
     categoryName = [inCategoryName retain];
+    delegate = [inDelegate retain];
     
     //Load the container view from our nib
     if(![NSBundle loadNibNamed:PREFERENCE_VIEW_NIB owner:self]){
@@ -98,7 +120,8 @@
 {
     [name release];
     [categoryName release];
-
+    [delegate release];
+    
     [super dealloc];
 }
 

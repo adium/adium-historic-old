@@ -75,7 +75,8 @@ static AIContactInfoWindowController *sharedInstance = nil;
 //Configure our views for the specified contact
 - (void)configureForContact:(AIContactHandle *)inContact
 {
-    NSLog(@"%@",[inContact displayName]);
+    //Configure the preference views
+    [mainCategory configureForObject:inContact];
 }
 
 //Setup the window before it is displayed
