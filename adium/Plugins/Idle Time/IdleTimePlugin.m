@@ -395,7 +395,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
         [self setIdleState:AINotIdle];
     }else{ //Set idle
         [self setIdleState:AIDelayedManualIdle];
- R   }
+    }
 }
 
 - (void)selectCustomIdleMenu:(id)sender
