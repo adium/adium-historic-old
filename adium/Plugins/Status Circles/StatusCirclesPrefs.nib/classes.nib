@@ -13,7 +13,6 @@
                 "colorWell_openTab" = NSColorWell; 
                 "colorWell_signedOff" = NSColorWell; 
                 "colorWell_signedOn" = NSColorWell; 
-                "colorWell_typing" = NSColorWell; 
                 "colorWell_unviewedContent" = NSColorWell; 
                 "colorWell_warning" = NSColorWell; 
                 "view_prefView" = NSView; 

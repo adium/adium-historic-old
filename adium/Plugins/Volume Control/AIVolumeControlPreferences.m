@@ -51,7 +51,7 @@
     [NSBundle loadNibNamed:VOLUME_CONTROL_PREF_NIB owner:self];
 
     //Install our preference view
-    preferenceViewController = [AIPreferenceViewController controllerWithName:VOLUME_CONTROL_PREF_TITLE categoryName:PREFERENCE_CATEGORY_OTHER view:view_prefView];
+    preferenceViewController = [AIPreferenceViewController controllerWithName:VOLUME_CONTROL_PREF_TITLE categoryName:PREFERENCE_CATEGORY_SOUNDS view:view_prefView];
     [[owner preferenceController] addPreferenceView:preferenceViewController];
 
     //Load the preferences, and configure our view

@@ -350,6 +350,57 @@
 			settings = {
 			};
 		};
+		11B1D44904956F11002782CE = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ContactStatusEventsDefaults.plist;
+			path = "Plugins/Contact Status Events/ContactStatusEventsDefaults.plist";
+			refType = 4;
+		};
+		11B1D44A04956F11002782CE = {
+			fileRef = 11B1D44904956F11002782CE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		11B1D44B049571B9002782CE = {
+			isa = PBXFileReference;
+			name = ContactStatusEventsPrefs.nib;
+			path = "Plugins/Contact Status Events/ContactStatusEventsPrefs.nib";
+			refType = 4;
+		};
+		11B1D44C049571B9002782CE = {
+			fileRef = 11B1D44B049571B9002782CE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		11B1D451049572C7002782CE = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContactStatusEventsPreferences.h;
+			path = "Plugins/Contact Status Events/AIContactStatusEventsPreferences.h";
+			refType = 4;
+		};
+		11B1D452049572C7002782CE = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContactStatusEventsPreferences.m;
+			path = "Plugins/Contact Status Events/AIContactStatusEventsPreferences.m";
+			refType = 4;
+		};
+		11B1D453049572C7002782CE = {
+			fileRef = 11B1D451049572C7002782CE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		11B1D454049572C7002782CE = {
+			fileRef = 11B1D452049572C7002782CE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		11F2C7FB047ACDC50021C483 = {
 			isa = PBXFileReference;
 			name = ContactStatusColoringPrefs.nib;
@@ -2390,8 +2441,8 @@
 				4B30491B047FBDCE00A8010A,
 				4B30491E047FBED400A8010A,
 				4B30491F047FBED400A8010A,
-				4B33401104815A0600A8010A,
 				4BDD982D047FC48B00A8010A,
+				4B33401104815A0600A8010A,
 			);
 			isa = PBXGroup;
 			name = "Dock Icon Selection";
@@ -3332,6 +3383,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B52A58403EDB9B600A8010A,
+				11B1D453049572C7002782CE,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3339,6 +3391,8 @@
 		4B52A57803EDB96E00A8010A = {
 			buildActionMask = 2147483647;
 			files = (
+				11B1D44A04956F11002782CE,
+				11B1D44C049571B9002782CE,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3347,6 +3401,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B52A58503EDB9B600A8010A,
+				11B1D454049572C7002782CE,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3479,6 +3534,10 @@
 			children = (
 				4B52A58203EDB9B600A8010A,
 				4B52A58303EDB9B600A8010A,
+				11B1D451049572C7002782CE,
+				11B1D452049572C7002782CE,
+				11B1D44B049571B9002782CE,
+				11B1D44904956F11002782CE,
 			);
 			isa = PBXGroup;
 			name = "Contact Status Events";
