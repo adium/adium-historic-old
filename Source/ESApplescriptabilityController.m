@@ -92,7 +92,7 @@
 - (void)setMyStatus:(AIStatusSummary)newStatus
 {
 	if (newStatus == AIAvailableStatus){
-		[[adium preferenceController] setPreference:nil forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
+		[[owner preferenceController] setPreference:nil forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
 	}
 }
 
