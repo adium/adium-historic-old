@@ -25,6 +25,8 @@
 
 	[progressIndicator setUsesThreadedAnimation:YES];
 	[progressIndicator setIndeterminate:YES];
+	progressVisible = YES;
+		
 	showingDetails = NO;
 	[view_details retain];
 
@@ -97,12 +99,54 @@
 		[progressIndicator stopAnimation:self];	
 	}
 }
+- (void)setProgressVisible:(BOOL)flag
+{
+	if(flag != progressVisible){
+		progressVisible = flag;
+		if(progressVisible){
+			//Redisplay the progress bar.  We never do this at present, so unimplemented for now.
+		}else{
+			NSRect	progressRect = [progressIndicator frame];
+			NSPoint	origin;
+			float	distanceToMove = progressRect.size.height / 2;
+			
+			[progressIndicator setDisplayedWhenStopped:NO];
+			[progressIndicator setIndeterminate:YES];
+			[progressIndicator stopAnimation:self];
+
+			//Top objects moving down
+			{
+				origin = [textField_fileName frame].origin;
+				origin.y -= distanceToMove;
+				[textField_fileName setFrameOrigin:origin];
+			}
+			
+			//Bottom objects moving up
+			{
+				origin = [twiddle_details frame].origin;
+				origin.y += distanceToMove;
+				[twiddle_details setFrameOrigin:origin];
+				
+				origin = [textField_detailsLabel frame].origin;
+				origin.y += distanceToMove;
+				[textField_detailsLabel setFrameOrigin:origin];
+				
+				origin = [box_transferStatusFrame frame].origin;
+				origin.y += distanceToMove;
+				[box_transferStatusFrame setFrameOrigin:origin];
+			}
+		}
+		
+		//Display immediately
+		[[self window] display];
+	}
+}
 
 - (void)setTransferBytesStatus:(NSString *)inTransferBytesStatus
 			   remainingStatus:(NSString *)inTransferRemainingStatus
 				   speedStatus:(NSString *)inTransferSpeedStatus
 {
-	NSString	*transferStatus;
+	[transferStatus release];
 	
 	if(inTransferBytesStatus && inTransferRemainingStatus){
 		transferStatus = [NSString stringWithFormat:@"%@ - %@",
@@ -116,8 +160,10 @@
 		transferStatus = @"";
 	}
 	
-	[textField_transferStatus setStringValue:transferStatus];
-
+	[transferStatus retain];
+	
+//	[textField_transferStatus setStringValue:transferStatus];
+	[self setNeedsDisplayInRect:[box_transferStatusFrame frame]];
 	[textField_rate setStringValue:(inTransferSpeedStatus ? inTransferSpeedStatus : @"")];
 }
 
@@ -201,8 +247,9 @@
 		[textField_source setTextColor:newColor];
 		[textField_destination setTextColor:newColor];		
 		[textField_fileName setTextColor:newColor];
-		
-		[textField_transferStatus setTextColor:newColor];
+
+#warning color
+//		[textField_transferStatus setTextColor:newColor];
 		
 		[self updateButtonStopResume];
 		[self updateButtonReveal];
@@ -252,6 +299,56 @@
 		[self updateButtonReveal];
 
 	}
+}
+
+static NSDictionary	*transferStatusAttributes = nil;
+static NSDictionary	*transferStatusSelectedAttributes = nil;
+
+//Draw the transfer status after other views draw.  This lets us use custom drawing behavior including the
+//NSLineBreakByTruncatingTail paragraph style.  We draw into a frame reserved for us by box_transferStatusFrame;
+//this lets us not worry about autosizing and positioning since the view takes care of that for us.
+- (void)drawRect:(NSRect)rect
+{
+
+	[super drawRect:rect];
+
+	NSDictionary	*attributes;
+	NSRect			primaryControlsRect = [box_primaryControls frame];
+	NSRect			targetRect = [box_transferStatusFrame frame];
+
+	targetRect.origin.x += primaryControlsRect.origin.x;
+	targetRect.origin.y += primaryControlsRect.origin.y;
+
+	if(isSelected){
+		if(!transferStatusSelectedAttributes){
+			NSMutableParagraphStyle	*paragraphStyle = [NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
+																					lineBreakMode:NSLineBreakByTruncatingTail];
+			[paragraphStyle setMaximumLineHeight:[box_transferStatusFrame frame].size.height];
+			
+			transferStatusSelectedAttributes = [[NSDictionary dictionaryWithObjectsAndKeys:
+				paragraphStyle, NSParagraphStyleAttributeName,
+				[NSFont systemFontOfSize:9], NSFontAttributeName, 
+				[NSColor whiteColor], NSForegroundColorAttributeName, nil] retain];
+		}
+		
+		attributes = transferStatusSelectedAttributes;
+	}else{
+		if(!transferStatusAttributes){
+			NSMutableParagraphStyle	*paragraphStyle = [NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
+																					lineBreakMode:NSLineBreakByTruncatingTail];
+			[paragraphStyle setMaximumLineHeight:[box_transferStatusFrame frame].size.height];
+			
+			transferStatusAttributes = [[NSDictionary dictionaryWithObjectsAndKeys:
+				paragraphStyle, NSParagraphStyleAttributeName,
+				[NSFont systemFontOfSize:9], NSFontAttributeName, 
+				[NSColor disabledControlTextColor], NSForegroundColorAttributeName, nil] retain];
+		}
+		
+		attributes = transferStatusAttributes;
+	}
+	
+	[transferStatus drawInRect:targetRect
+				withAttributes:attributes];
 }
 
 @end

@@ -95,10 +95,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	
 	//Set the localized title
 	[[self window] setTitle:AILocalizedString(@"File Transfer Progress",nil)];
-
-	//Hide the window's toolbar button since we don't have a toolbar
-	[[[self window] standardWindowButton:NSWindowToolbarButton] setFrame:NSZeroRect];
-	
+	   
 	//Configure the scroll view
 	[scrollView setHasVerticalScroller:YES];
 	[scrollView setHasHorizontalScroller:NO];

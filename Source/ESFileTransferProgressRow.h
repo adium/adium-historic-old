@@ -27,6 +27,7 @@
 
 - (IBAction)stopResumeAction:(id)sender;
 - (IBAction)revealAction:(id)sender;
+- (IBAction)openFileAction:(id)sender;
 
 - (ESFileTransfer *)fileTransfer;
 - (ESFileTransferProgressView *)view;

@@ -11,8 +11,7 @@
 
 #define	BYTES_RECEIVED		[NSString stringWithFormat:AILocalizedString(@"%@ received","(a bytes string) received"),bytesString]
 #define	BYTES_SENT			[NSString stringWithFormat:AILocalizedString(@"%@ sent","(a bytes string) sent"),bytesString]
-#define	TRANSFER_COMPLETE	AILocalizedString(@"Transfer complete: %@","Transfer complete: (bytes sent or received string)")
-#define	ZERO_BYTES			AILocalizedString( @"Zero bytes", "no file size" )
+#define	ZERO_BYTES			AILocalizedString(@"Zero bytes", "no file size")
 
 @interface ESFileTransferProgressRow (PRIVATE)
 - (NSString *)stringForSize:(unsigned long long)size;
@@ -161,14 +160,12 @@
 			[view setProgressDoubleValue:[inFileTransfer percentDone]];
 			break;
 		case Complete_FileTransfer:
-			[view setProgressIndeterminate:YES];
-			[view setProgressAnimation:NO];
+			[view setProgressVisible:NO];
 			transferSpeedStatus = AILocalizedString(@"Complete",nil);
 			break;
 		case Canceled_Local_FileTransfer:
 		case Canceled_Remote_FileTransfer:
-			[view setProgressIndeterminate:YES];
-			[view setProgressAnimation:NO];
+			[view setProgressVisible:NO];
 			transferSpeedStatus = AILocalizedString(@"Stopped",nil);
 			break;
 	}
@@ -202,10 +199,10 @@
 				NSString			*bytesString = [self stringForSize:bytesSent];
 				switch(type){
 					case Incoming_FileTransfer:
-						transferBytesStatus = [NSString stringWithFormat:TRANSFER_COMPLETE, BYTES_RECEIVED];
+						transferBytesStatus = BYTES_RECEIVED;
 						break;
 					case Outgoing_FileTransfer:
-						transferBytesStatus = [NSString stringWithFormat:TRANSFER_COMPLETE, BYTES_SENT];
+						transferBytesStatus = BYTES_SENT;
 						break;
 					default:
 						break;
@@ -285,6 +282,12 @@
 - (IBAction)revealAction:(id)sender
 {
 	[fileTransfer reveal];	
+}
+- (IBAction)openFileAction:(id)sender
+{
+	if([fileTransfer status] == Complete_FileTransfer){
+		[fileTransfer openFile];
+	}
 }
 
 //Pass height change information on to our owner
