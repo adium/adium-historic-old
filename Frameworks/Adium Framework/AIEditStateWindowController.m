@@ -23,6 +23,7 @@
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AISendingTextView.h>
 #import <AIUtilities/AIWindowAdditions.h>
+#import <AIUtilities/CBApplicationAdditions.h>
 
 #define CONTROL_SPACING			8
 #define WINDOW_HEIGHT_PADDING	60
@@ -161,7 +162,7 @@ static	NSMutableDictionary	*controllerDict = nil;
  */
 - (void)windowDidLoad
 {
-	NSNumberFormatter	*intFormatter;
+//	NSNumberFormatter	*intFormatter;
 	BOOL				sendOnEnter;
 	
 	sendOnEnter = [[[adium preferenceController] preferenceForKey:SEND_ON_ENTER
