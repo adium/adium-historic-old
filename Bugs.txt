@@ -23,8 +23,6 @@ Vertical resizing errors
   - In Mockie style, with offline contacts hidden and a contact from an empty group (the
     contact is the first to connect from that group) signs on, the vertical scrollbar
     appears although it is not needed.
-  - Vertical resizing doesn't lock the bottom of the contact list in place in all the
-	right situations.
   - Vertical resizing is initially too small by the height of the toolbar in Standard
 	with the toolbar showing
   - Vertical resizing really screws up once the scrollbar becomes visible.  The list will
@@ -48,8 +46,6 @@ Meta Contacts
 	and that contact is within a metaContact
   - Own autoresponse is sometimes sent on the wrong chat when a contact within a metaContact
 	sends a message
-  - MetaContacts should remember the last messaged contact and use that rather than the
-    "preferredContact" by default
   - Unchecking the address book consolidate contacts option has no effect [Evan]
 
 [MEDIUM]
@@ -64,8 +60,6 @@ Meta Contacts
   - Tooltip alignment fails in long away messages and other large blocks of text.
   - Double clicking two names in succession causes the first name to highlight
     the second time.
-  - The stranger status doesn't get set anymore... which means that strangers are always
-	treated as offline and prompt the Send Now / Send Later sheet.
   - An incoming message which opens a new tab will also unminimize the associated window
   
 //------------------------------------------------------------------------------------
@@ -76,7 +70,9 @@ Meta Contacts
 - (Jaber) Authorization problems
 - (AIM) Contacts can get incorrectly tagged as being on an AOL Mobile Device
 - (AIM) Group Chat : Japanese (and probably other charsets) doesn't get sent properly, 
-	but can be received
+	but can be received - only with certain default languages. English default language
+	works fine for these charactersets... so the default C encoding must be being used
+	(incorrectly) somewhere in libgaim?
 - (All) Gaim's proxy support is unreliable at best
 
 
