@@ -11,6 +11,10 @@
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
 
+@interface AIDualWindowPreferences (PRIVATE)
+- (void)preferencesChanged:(NSNotification *)notification;
+@end
+
 @implementation AIDualWindowPreferences
 
 //Preference pane properties
@@ -18,7 +22,7 @@
     return(AIPref_ContactList_General);
 }
 - (NSString *)label{
-    return(@"V");
+    return(@"General Appearance");
 }
 - (NSString *)nibName{
     return(@"DualWindowPrefs");
@@ -31,18 +35,20 @@
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_DUAL_RESIZE_VERTICAL
                                               group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_DUAL_RESIZE_HORIZONTAL
+                                              group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
     }
 }
 
 //Configure the preference view
 - (void)viewDidLoad
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-
-    [checkBox_autoResize setState:[[preferenceDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue]];
-
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:PREF_GROUP_DUAL_WINDOW_INTERFACE object:nil];
+    [checkBox_autoResize setAllowsMixedState:YES];
+    
+    [self preferencesChanged:nil];
+    
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 }
 
 //Keep the preferences current
@@ -52,8 +58,17 @@
         NSString	*key = [[notification userInfo] objectForKey:@"Key"];
 
         //If the Behavior set changed
-        if(notification == nil || [key compare:KEY_DUAL_RESIZE_VERTICAL] == 0){
-            [checkBox_autoResize setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE] objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue]];
+        if(notification == nil || ([key compare:KEY_DUAL_RESIZE_VERTICAL] == 0) || ([key compare:KEY_DUAL_RESIZE_HORIZONTAL] == 0) ){
+            NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+            
+            BOOL vertical = [[preferenceDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue];
+            BOOL horizontal = [[preferenceDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
+            if (vertical && horizontal) {
+                [checkBox_autoResize setState:NSOnState];
+            } else if (vertical || horizontal) {
+                [checkBox_autoResize setState:NSMixedState];
+            } else 
+                [checkBox_autoResize setState:NSOffState];
         }
     }
 }

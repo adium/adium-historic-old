@@ -81,8 +81,7 @@
 
     //Observe preference changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
-            
+
     return(self);
 }
 
@@ -105,19 +104,17 @@
     if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0)){
 	//Handle window ordering
 	NSDictionary * prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
-
 	if ([[prefDict objectForKey:KEY_CLWH_ALWAYS_ON_TOP] boolValue]) {
 	    [[self window] setLevel:NSFloatingWindowLevel]; //always on top
-	}else {
+	} else {
 	    [[self window] setLevel:NSNormalWindowLevel]; //normal
 	}
+        
 	[[self window] setHidesOnDeactivate:[[prefDict objectForKey:KEY_CLWH_HIDE] boolValue]];  //hides in background
-	
     }
 
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0){
+    if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0)){
         NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-
         autoResizeVertically = [[prefDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue];
         autoResizeHorizontal = [[prefDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
 
@@ -258,7 +255,6 @@
 
     [scrollView_contactList setFrameSize:NSMakeSize(contactListFrame.size.width, contactListFrame.size.height - 16)];
 
-    
     //Swap in the contact list view
     contactListViewController = [[[owner interfaceController] contactListViewController] retain];
     contactListView = [[contactListViewController contactListView] retain];
@@ -281,7 +277,7 @@
     //
     [toolbar_bottom setIdentifier:CONTACT_LIST_TOOLBAR];
 
-    //apply initial preference-based settings
+    //Apply initial preference-based settings
     [self preferencesChanged:nil];
 
     //Tell the interface to open our window
