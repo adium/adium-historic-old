@@ -1,0 +1,28 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {
+                closePrivacyDetails = id; 
+                reportCrashForLogAtPath = id; 
+                send = id; 
+                showPrivacyDetails = id; 
+            }; 
+            CLASS = AICrashReporter; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "panel_privacySheet" = NSPanel; 
+                "progress_sending" = NSProgressIndicator; 
+                "textField_accountIM" = NSTextField; 
+                "textField_description" = NSTextField; 
+                "textField_emailAddress" = NSTextField; 
+                "textView_crashLog" = NSTextView; 
+                "textView_details" = NSTextView; 
+                "window_MainWindow" = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = ESTextViewWithPlaceholder; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
