@@ -50,7 +50,7 @@
 	[checkBox_useNickName setState:[[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue]];
 	[checkBox_syncAutomatic setState:[[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue]];
 	[checkBox_useABImages setState:[[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue]];
-
+	[checkBox_enableNoteSync setState:[[prefDict objectForKey:KEY_AB_NOTE_SYNC] boolValue]];
 	[checkBox_preferABImages setState:[[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue]];
 	
 	[self configureControlDimming];
@@ -60,8 +60,8 @@
 {
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
 	
-	BOOL			enableImport = [[prefDict objectForKey:KEY_AB_ENABLE_IMPORT] boolValue];
-	BOOL			useImages = [[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue];
+	BOOL            enableImport = [[prefDict objectForKey:KEY_AB_ENABLE_IMPORT] boolValue];
+	BOOL            useImages = [[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue];
 	
 	//Use Nick Name and the format menu are irrelevent if importing of names is not enabled
 	[checkBox_useNickName setEnabled:enableImport];	
@@ -115,8 +115,8 @@
 - (IBAction)changeFormat:(id)sender
 {
         [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]]
-                                             forKey:KEY_AB_DISPLAYFORMAT
-                                              group:PREF_GROUP_ADDRESSBOOK];
+                                            forKey:KEY_AB_DISPLAYFORMAT
+                                            group:PREF_GROUP_ADDRESSBOOK];
 }
 
 - (IBAction)changePreference:(id)sender
@@ -125,8 +125,8 @@
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
                                              forKey:KEY_AB_IMAGE_SYNC
                                               group:PREF_GROUP_ADDRESSBOOK];
-	} else if (sender == checkBox_useABImages) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
+    } else if (sender == checkBox_useABImages) {
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
                                              forKey:KEY_AB_USE_IMAGES
                                               group:PREF_GROUP_ADDRESSBOOK];
     } else if (sender == checkBox_useNickName) {
@@ -134,16 +134,21 @@
                                              forKey:KEY_AB_USE_NICKNAME
                                               group:PREF_GROUP_ADDRESSBOOK];
     } else if (sender == checkBox_enableImport) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
                                              forKey:KEY_AB_ENABLE_IMPORT
                                               group:PREF_GROUP_ADDRESSBOOK];
-	} else if (sender == checkBox_preferABImages) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
+    } else if (sender == checkBox_preferABImages) {
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
                                              forKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES
                                               group:PREF_GROUP_ADDRESSBOOK];
-	}
-	
-	[self configureControlDimming];
+    }
+    else if (sender == checkBox_enableNoteSync) {
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
+                                             forKey:KEY_AB_NOTE_SYNC
+                                              group:PREF_GROUP_ADDRESSBOOK];
+    }
+
+    [self configureControlDimming];
 }
 
 @end

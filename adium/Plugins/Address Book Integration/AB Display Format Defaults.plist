@@ -8,6 +8,8 @@
 	<true/>
 	<key>AB Image Sync</key>
 	<false/>
+        <key>AB Note Sync</key>
+	<false/>
 	<key>AB Use NickName</key>
 	<true/>
 	<key>AB Prefer AB Images</key>
