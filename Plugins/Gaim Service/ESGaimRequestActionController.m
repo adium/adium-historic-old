@@ -100,7 +100,7 @@
 
 	if ((callBackIndex != -1) && (theCallBacks[callBackIndex] != NULL)){
 		[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
-										 performSelector:@selector(gaimThreadDoRequestActionCbValue:withUserDataValue:inputString:)
+										 performSelector:@selector(gaimThreadDoRequestActionCbValue:withUserDataValue:callBackIndex:)
 											  withObject:[NSValue valueWithPointer:theCallBacks[callBackIndex]]
 											  withObject:[userInfo objectForKey:@"userData"]
 											  withObject:[NSNumber numberWithInt:callBackIndex]];
