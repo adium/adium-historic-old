@@ -125,7 +125,6 @@
 }
 
 - (void)windowWillClose:(id)sender
-//- (void)viewWillClose
 {
 	viewIsOpen = NO;
 
@@ -170,11 +169,14 @@
 - (void)_configureEmoticonListForSelection
 {
     int         rowHeight = EMOTICON_MIN_ROW_HEIGHT;
-    
+	int			selectedRow = [table_emoticonPacks selectedRow];
+	NSArray		*availableEmoticonPacks = [[adium emoticonController] availableEmoticonPacks];
+	
     //Remember the selected pack
-    if([table_emoticonPacks numberOfSelectedRows] == 1 && [table_emoticonPacks selectedRow] != -1){
+    if([table_emoticonPacks numberOfSelectedRows] == 1 &&
+	   ((selectedRow != -1) && (seletedRow < [availableEmoticonPacks count]))){
 		[selectedEmoticonPack release];
-        selectedEmoticonPack = [[[[adium emoticonController] availableEmoticonPacks] objectAtIndex:[table_emoticonPacks selectedRow]] retain];
+        selectedEmoticonPack = [[availableEmoticonPacks objectAtIndex:selectedRow] retain];
     }else{
         selectedEmoticonPack = nil;
     }
