@@ -361,7 +361,7 @@
 				//Check for each service the address book supports
 				while(serviceID = [servicesEnumerator nextObject]){
 					NSString		*addressBookKey = [serviceDict objectForKey:serviceID];
-					NSEnumerator	*accountsArray = [[[adium accountController] accountsWithServiceID:serviceID] objectEnumerator];
+					NSEnumerator	*accountsArray = [[[adium accountController] accountsWithService:[[adium accountController] firstServiceWithServiceID:serviceID]] objectEnumerator];
 					AIAccount		*account;
 					
 					//Look at each account on this service, searching for one a matching UID
