@@ -35,6 +35,8 @@
 	
 	NSMutableArray		*permittedContactsArray;
 	NSMutableArray		*deniedContactsArray;
+
+	BOOL				inDealloc;
 }
 
 - (const char*)protocolPlugin;
