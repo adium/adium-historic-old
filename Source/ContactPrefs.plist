@@ -4,7 +4,5 @@
 <dict>
 	<key>TopMetaContactID</key>
 	<integer>1</integer>
-	<key>Use Contact List Groups</key>
-	<true/>
 </dict>
 </plist>
