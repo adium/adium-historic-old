@@ -3509,6 +3509,12 @@
 				4BAA1B5C0632EFB100D8B92C,
 				34C2D31806334A880018E5D2,
 				4BFF665C063693FB00308A3B,
+				7E824CE006387FAF00813072,
+				7E824CE206387FAF00813072,
+				7E824CE406387FAF00813072,
+				7E824CE606387FAF00813072,
+				7E824CE806387FAF00813072,
+				7E824CEA06387FAF00813072,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3828,6 +3834,9 @@
 				4BAA1B5F0632EFB100D8B92C,
 				4BAA1B610632EFE700D8B92C,
 				4BAA1B630632F00000D8B92C,
+				7E824CDD06387FAF00813072,
+				7E824CDE06387FAF00813072,
+				7E824CDF06387FAF00813072,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4145,6 +4154,12 @@
 				4BAA1B5D0632EFB100D8B92C,
 				34C2D31906334A880018E5D2,
 				4BFF665B063693FA00308A3B,
+				7E824CE106387FAF00813072,
+				7E824CE306387FAF00813072,
+				7E824CE506387FAF00813072,
+				7E824CE706387FAF00813072,
+				7E824CE906387FAF00813072,
+				7E824CEB06387FAF00813072,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8810,6 +8825,7 @@
 				4B6D0E43047D490700A8010A,
 				4B1332130459B98E00A8010A,
 				11C157D504A88DE0008E0C76,
+				7E824CCD06387FAF00813072,
 				9C8C7FA303CBA17B00267226,
 				F1D0C631051AC2380000000E,
 				344AB2C90579137E00384CEE,
@@ -16796,6 +16812,248 @@
 //6E2
 //6E3
 //6E4
+//7E0
+//7E1
+//7E2
+//7E3
+//7E4
+		7E824CCD06387FAF00813072 = {
+			children = (
+				7E824CCE06387FAF00813072,
+				7E824CCF06387FAF00813072,
+				7E824CD006387FAF00813072,
+				7E824CD106387FAF00813072,
+				7E824CD206387FAF00813072,
+				7E824CD306387FAF00813072,
+				7E824CD406387FAF00813072,
+				7E824CD506387FAF00813072,
+				7E824CD606387FAF00813072,
+				7E824CD706387FAF00813072,
+				7E824CD806387FAF00813072,
+				7E824CD906387FAF00813072,
+				7E824CDA06387FAF00813072,
+				7E824CDB06387FAF00813072,
+				7E824CDC06387FAF00813072,
+			);
+			isa = PBXGroup;
+			name = "Link Management";
+			path = "Plugins/Link Management";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E824CCE06387FAF00813072 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			path = LinkEditor.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E824CCF06387FAF00813072 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			path = LinkManagementDefaults.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E824CD006387FAF00813072 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			path = LinkPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E824CD106387FAF00813072 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = SHAutoValidatingTextView.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E824CD206387FAF00813072 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = SHAutoValidatingTextView.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E824CD306387FAF00813072 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = SHLinkEditorWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E824CD406387FAF00813072 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = SHLinkEditorWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E824CD506387FAF00813072 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = SHLinkFavoritesManageView.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E824CD606387FAF00813072 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = SHLinkFavoritesManageView.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E824CD706387FAF00813072 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = SHLinkFavoritesPreferences.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E824CD806387FAF00813072 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = SHLinkFavoritesPreferences.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E824CD906387FAF00813072 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = SHLinkLexer.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E824CDA06387FAF00813072 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.lex;
+			path = SHLinkLexer.l;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E824CDB06387FAF00813072 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = SHLinkManagementPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E824CDC06387FAF00813072 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = SHLinkManagementPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E824CDD06387FAF00813072 = {
+			fileRef = 7E824CCE06387FAF00813072;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E824CDE06387FAF00813072 = {
+			fileRef = 7E824CCF06387FAF00813072;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E824CDF06387FAF00813072 = {
+			fileRef = 7E824CD006387FAF00813072;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E824CE006387FAF00813072 = {
+			fileRef = 7E824CD106387FAF00813072;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E824CE106387FAF00813072 = {
+			fileRef = 7E824CD206387FAF00813072;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E824CE206387FAF00813072 = {
+			fileRef = 7E824CD306387FAF00813072;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E824CE306387FAF00813072 = {
+			fileRef = 7E824CD406387FAF00813072;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E824CE406387FAF00813072 = {
+			fileRef = 7E824CD506387FAF00813072;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E824CE506387FAF00813072 = {
+			fileRef = 7E824CD606387FAF00813072;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E824CE606387FAF00813072 = {
+			fileRef = 7E824CD706387FAF00813072;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E824CE706387FAF00813072 = {
+			fileRef = 7E824CD806387FAF00813072;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E824CE806387FAF00813072 = {
+			fileRef = 7E824CD906387FAF00813072;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E824CE906387FAF00813072 = {
+			fileRef = 7E824CDA06387FAF00813072;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E824CEA06387FAF00813072 = {
+			fileRef = 7E824CDB06387FAF00813072;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E824CEB06387FAF00813072 = {
+			fileRef = 7E824CDC06387FAF00813072;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//7E0
+//7E1
+//7E2
+//7E3
+//7E4
 //830
 //831
 //832

@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.47 2004/04/22 02:12:33 adamiser Exp $
+//$Id: AIPluginController.m,v 1.48 2004/04/22 23:39:57 earthmkii Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -48,7 +48,7 @@ ESFastUserSwitchingSupportPlugin, ESOpenMessageWindowContactAlertPlugin, ESSendM
 ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessagePlugin,
 JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin,
 AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, AIContactStatusEventsPlugin,
-SHOutputDeviceControlPlugin;
+SHOutputDeviceControlPlugin, SHLinkManagementPlugin;
 
 @implementation AIPluginController
 //init
@@ -125,6 +125,7 @@ SHOutputDeviceControlPlugin;
 	[self loadPluginWithClass:[SAContactOnlineForPlugin class]];
 	[self loadPluginWithClass:[AIContactStatusEventsPlugin class]];
 	[self loadPluginWithClass:[SHOutputDeviceControlPlugin class]]; //Crash on launch = 1
+        [self loadPluginWithClass:[SHLinkManagementPlugin class]];
 
 //	[self loadPluginWithClass:[AISMViewPlugin class]];
 //	[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
