@@ -19,6 +19,10 @@
 - (NSImage *)dragImageForRows:(unsigned int[])buf count:(unsigned int)count tableColumns:(NSArray *)tableColumns event:(NSEvent*)dragEvent offset:(NSPointPointer)dragImageOffset;
 @end
 
+@interface NSCell (UndocumentedHighlightDrawing)
+- (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
+@end
+
 @implementation AIVariableHeightOutlineView
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -222,7 +226,6 @@
 		[cell setHighlighted:selected];
 		
 		//Draw the grid
-#warning drawGridBehindCell needs to be a required part of a protocol for cell
 		if([self drawsAlternatingRows] && [cell drawGridBehindCell]){
 			[self _drawRowInRect:NSIntersectionRect([self rectOfRow:row], rect)
 						 colored:!(row % 2)

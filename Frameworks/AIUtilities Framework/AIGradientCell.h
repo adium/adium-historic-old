@@ -5,7 +5,6 @@
 //  Created by Chris Serino on Wed Jan 28 2004.
 //
 
-
 @interface AIGradientCell : NSCell {
 	BOOL			drawsGradient;
 	BOOL			ignoresFocus;
@@ -15,6 +14,5 @@
 - (BOOL)drawsGradientHighlight;
 - (void)setIgnoresFocus:(BOOL)inIgnoresFocus;
 - (BOOL)ignoresFocus;
-- (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
 
 @end

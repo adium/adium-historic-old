@@ -22,6 +22,10 @@
 #define DEFAULT_MAX_IMAGE_WIDTH 24
 #define IMAGE_TEXT_PADDING		2
 
+@interface NSCell (UndocumentedHighlightDrawing)
+- (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
+@end
+
 @implementation AIImageTextCell
 
 //Init
