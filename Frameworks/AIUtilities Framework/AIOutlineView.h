@@ -5,12 +5,16 @@
 //  Created by Adam Iser on Tue Mar 23 2004.
 //
 
+#define AIOutlineViewUserDidExpandItemNotification		@"AIOutlineViewUserDidExpandItemNotification"
+#define AIOutlineViewUserDidCollapseItemNotification	@"AIOutlineViewUserDidCollapseItemNotification"
+
 @protocol AIOutlineViewDelegateAdditions
 - (void)outlineView:(NSOutlineView *)outlineView draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation;
 @end
 
 @interface AIOutlineView : NSOutlineView {
     BOOL		needsReload;
+	BOOL		ignoreExpandCollapse;
 }
 
 - (void)itemDidExpand:(NSNotification *)notification;
