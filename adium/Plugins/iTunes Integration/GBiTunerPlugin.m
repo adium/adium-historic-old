@@ -26,16 +26,17 @@
 {
     //Dictionary of the scripts to be run for various keys
     scriptDict = [[NSDictionary alloc] initWithObjectsAndKeys:
-        @"tell application \"iTunes\" \n set theAlbum to album of current track \n end tell \n return theAlbum as string",@"%_album",
-        @"tell application \"iTunes\" \n set theArtist to artist of current track \n end tell \n return theArtist as string",@"%_artist",
-        @"tell application \"iTunes\" \n set theGenre to genre of current track \n end tell \n return theGenre as string",@"%_genre",
-        @"tell application \"iTunes\" \n set theTrack to name of current track \n end tell \n return theTrack as string",@"%_track",
-        @"tell application \"iTunes\" \n  set theYear to year of current track \n end tell \n return theYear as string",@"%_year",
-        @"tell application \"iTunes\" \n  set theRating to the rating of current track \n end tell \n return theRating * 5 div 100 & \"/5\" as string",@"%_rating",
-        @"tell application \"iTunes\" \n  set theComposer to the composer of current track \n end tell \n return theComposer as string",@"%_composer",
-        @"tell application \"iTunes\" \n  set theStatus to player state \n end tell \n return theStatus as string",@"%_status",
-        @"tell application \"iTunes\" \n  set thePosition to player position \n end tell \n return thePosition div 60 & \":\" & thePosition mod 60 as string",@"%_position",
-        @"tell application \"iTunes\" \n  set thePlayCount to the played count of the current track \n end tell \n return thePlayCount as string",@"%_playcount",
+
+        @"tell application \"System Events\" \n if ((application processes whose (name is equal to \"iTunes\")) count) is greater than 0 then \n tell application \"iTunes\" \n set theAlbum to album of current track \n end tell \n return theAlbum as string \n end if \n end tell",@"%_album",
+        @"tell application \"System Events\" \n if ((application processes whose (name is equal to \"iTunes\")) count) is greater than 0 then \n tell application \"iTunes\" \n set theArtist to artist of current track \n end tell \n return theArtist as string \n end if \n end tell",@"%_artist",
+        @"tell application \"System Events\" \n if ((application processes whose (name is equal to \"iTunes\")) count) is greater than 0 then \n tell application \"iTunes\" \n set theGenre to genre of current track \n end tell \n return theGenre as string \n end if \n end tell",@"%_genre",
+        @"tell application \"System Events\" \n if ((application processes whose (name is equal to \"iTunes\")) count) is greater than 0 then \n tell application \"iTunes\" \n set theTrack to name of current track \n end tell \n return theTrack as string \n end if \n end tell",@"%_track",
+        @"tell application \"System Events\" \n if ((application processes whose (name is equal to \"iTunes\")) count) is greater than 0 then \n tell application \"iTunes\" \n  set theYear to year of current track \n end tell \n return theYear as string \n end if \n end tell",@"%_year",
+        @"tell application \"System Events\" \n if ((application processes whose (name is equal to \"iTunes\")) count) is greater than 0 then \n tell application \"iTunes\" \n  set theRating to the rating of current track \n end tell \n return theRating * 5 div 100 & \"/5\" as string \n end if \n end tell",@"%_rating",
+        @"tell application \"System Events\" \n if ((application processes whose (name is equal to \"iTunes\")) count) is greater than 0 then \n tell application \"iTunes\" \n  set theComposer to the composer of current track \n end tell \n return theComposer as string \n end if \n end tell",@"%_composer",
+        @"tell application \"System Events\" \n if ((application processes whose (name is equal to \"iTunes\")) count) is greater than 0 then \n tell application \"iTunes\" \n  set theStatus to player state \n end tell \n return theStatus as string \n end if \n end tell",@"%_status",
+        @"tell application \"System Events\" \n if ((application processes whose (name is equal to \"iTunes\")) count) is greater than 0 then \n tell application \"iTunes\" \n  set thePosition to player position \n end tell \n return thePosition div 60 & \":\" & thePosition mod 60 as string \n end if \n end tell",@"%_position",
+        @"tell application \"System Events\" \n if ((application processes whose (name is equal to \"iTunes\")) count) is greater than 0 then \n tell application \"iTunes\" \n  set thePlayCount to the played count of the current track \n end tell \n return thePlayCount as string \n end if \n end tell",@"%_playcount",
         nil];
     
     //Register us as a filter
@@ -86,7 +87,6 @@
 		while (pattern = [enumerator nextObject]){
             //if the original string contained this pattern
             if([originalAttributedString rangeOfString:pattern].location != NSNotFound){
-				if(![self iTunesIsOpen]) break; //Abort if iTunes isn't running
 				
                 if(!mesg){
                     mesg = [[inAttributedString mutableCopyWithZone:nil] autorelease];
@@ -103,20 +103,6 @@
     return (mesg ? mesg : inAttributedString);
 }
 
-//Check if iTunes is open
-- (BOOL)iTunesIsOpen
-{
-	NSEnumerator	*enumerator;
-	NSDictionary	*appDict;
-
-	enumerator = [[[NSWorkspace sharedWorkspace] launchedApplications] objectEnumerator];
-	while(appDict = [enumerator nextObject]){
-		if([(NSString *)[appDict objectForKey:APP_BUNDLE_IDENTIFIER] compare:ITUNES_IDENTIFIER] == 0) return(YES);
-	}
-
-	return(NO);
-}
-
 - (NSString*)hashLookup:(NSString*)pattern
 {
     NSString        *returnString = nil;
@@ -131,10 +117,10 @@
     //@"" as the return string causes all sorts of problems because we can end up with a content message with no text
     //instead, turn a non-nil but zero-length returnString into a single space - this way, the pattern is still removed
     //but problems are avoided.
-    if (returnString && ([returnString length]==0))
+    if ((returnString && ([returnString length]==0)) || !returnString)
         returnString = @" ";
     
-    return (returnString ? returnString : pattern);	
+    return (returnString);	
 }
 
 - (void) uninstallPlugin
