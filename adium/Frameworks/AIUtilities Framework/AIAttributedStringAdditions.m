@@ -42,6 +42,11 @@
     return([self RTFFromRange:NSMakeRange(0,[self length]) documentAttributes:nil]);
 }
 
+- (NSString *)safeString
+{
+    return [[self copy] safeString];
+}
+
 @end
 
 @implementation NSAttributedString (AIAttributedStringAdditions)

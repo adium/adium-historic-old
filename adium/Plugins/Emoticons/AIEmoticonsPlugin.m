@@ -109,10 +109,12 @@
 				       //--make sure this emoticon's not inside a link--
 		if([tempMessage attribute:NSLinkAttributeName atIndex:emoticonRange.location effectiveRange:&attributeRange] == nil){
 
-		    NSAttributedString *replacement = [currentEmo attributedEmoticon];
+		    NSMutableAttributedString *replacement = [[currentEmo attributedEmoticon] mutableCopy];
+
+		    [replacement addAttributes:[tempMessage attributesAtIndex:emoticonRange.location effectiveRange:nil] range:NSMakeRange(0,1)];
 
 		    //--insert the emoticon--
-		    [tempMessage replaceCharactersInRange:emoticonRange withAttributedString:replacement];
+		    [tempMessage replaceCharactersInRange:emoticonRange withAttributedString:[replacement copy]];
 
 		    //shrink the emoticon range to 1 character (the multicharacter chunk has been replaced with a single character/emoticon)
 		    emoticonRange.length = 1;
