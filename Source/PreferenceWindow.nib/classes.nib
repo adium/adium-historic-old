@@ -25,9 +25,8 @@
                 "view_Emoticons" = AIModularPaneCategoryView; 
                 "view_Events" = AIModularPaneCategoryView; 
                 "view_FileTransfer" = AIModularPaneCategoryView; 
-                "view_Keys" = AIModularPaneCategoryView; 
+                "view_General" = AIModularPaneCategoryView; 
                 "view_Messages" = AIModularPaneCategoryView; 
-                "view_Sound" = AIModularPaneCategoryView; 
                 "view_Status_Away" = AIModularPaneCategoryView; 
                 "view_Status_Idle" = AIModularPaneCategoryView; 
             }; 

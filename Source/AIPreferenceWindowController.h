@@ -22,13 +22,12 @@
     IBOutlet	AIModularPaneCategoryView	*view_Status_Away;
     IBOutlet	AIModularPaneCategoryView	*view_Status_Idle;
 
+	IBOutlet	AIModularPaneCategoryView	*view_General;
     IBOutlet	AIModularPaneCategoryView	*view_ContactList;
     IBOutlet	AIModularPaneCategoryView	*view_Messages;
 	IBOutlet	AIModularPaneCategoryView	*view_Events;
     IBOutlet	AIModularPaneCategoryView	*view_Dock;
-    IBOutlet	AIModularPaneCategoryView	*view_Sound;
     IBOutlet 	AIModularPaneCategoryView	*view_Emoticons;
-    IBOutlet 	AIModularPaneCategoryView	*view_Keys;
     IBOutlet 	AIModularPaneCategoryView	*view_FileTransfer;
 
     IBOutlet	NSOutlineView				*outlineView_advanced;
