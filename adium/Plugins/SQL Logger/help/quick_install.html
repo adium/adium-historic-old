@@ -45,7 +45,7 @@ fink install ant</pre></div>
 <div class="tutorialcode">
 <pre>./configure --bindir=/usr/local/bin --mandir=/usr/local/share/man/ \
     --enable-recode --with-CXX --enable-odbc --with-java \
-    --enable-syslog \  --enable-unicode-conversion --enable-multibyte \
+    --enable-syslog --enable-unicode-conversion --enable-multibyte \
     --with-includes=/sw/include --with-libs=/sw/lib
 make
 sudo make install</pre>
@@ -70,7 +70,7 @@ root #] mkdir /usr/local/pgsql/data
 root #] chown -R postgres /usr/local/pgsql
 root #] su postgres
 postgres $] /usr/local/bin/initdb -D /usr/local/pgsql/data</pre></div>
-<p>This initially sets up PostgreSQL.  For the perl script and JSP stuff to
+<p>This initially sets up PostgreSQL.  For the Perl script and JSP stuff to
   work, the file <code>/usr/local/pgsql/data/postgresql.conf</code> needs to
   be edited.  Type <code>pico /usr/local/pgsql/data/postgresql.conf</code> (as
   postgres or root) and change the line that says <code>enable_tcpip</code> to
@@ -90,7 +90,7 @@ export PATH CLASSPATH</pre></div>
 <div class="tutorialcode"><pre>cd ~/adium/Plugins/SQL Logger/help/sql
 psql &lt; adium.sql</pre></div>
 <h3>Installing Perl (DBI and DBD::Pg)</h3>
-<p>To install the perl stuff (if CPAN asks you about manual setup, just say
+<p>To install the Perl stuff (if CPAN asks you about manual setup, just say
   no):</p>
 <div class="tutorialcode"><pre>su
 perl -MCPAN -e 'install DBI'
