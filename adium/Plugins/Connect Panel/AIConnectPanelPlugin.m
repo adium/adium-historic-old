@@ -21,7 +21,7 @@
 														target:self 
 														action:@selector(newConnection:) 
 												 keyEquivalent:@""];
-    //[[adium menuController] addMenuItem:menuItem_newConnection toLocation:LOC_File_New];
+    [[adium menuController] addMenuItem:menuItem_newConnection toLocation:LOC_File_New];
 	
 }
 
