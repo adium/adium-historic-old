@@ -53,6 +53,7 @@
 //Dealloc
 - (void)dealloc
 {
+	[contactList release];
 	[contactListView setDelegate:nil];
 	
 	[contactListView release]; contactListView = nil;
