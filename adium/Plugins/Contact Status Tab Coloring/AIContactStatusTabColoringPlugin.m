@@ -128,7 +128,7 @@
         }else if( [inObject integerStatusObjectForKey:@"Signed On"] && (signedOnEnabled || contactListSignedOnEnabled) ){
             color = signedOnColor;
 
-        }else if( [inObject integerStatusObjectForKey:@"Typing"] && (typingEnabled || contactListTypingEnabled) ){
+        }else if( ([inObject integerStatusObjectForKey:@"Typing"] == AITyping) && (typingEnabled || contactListTypingEnabled) ){
             color = typingColor;
 
         }
