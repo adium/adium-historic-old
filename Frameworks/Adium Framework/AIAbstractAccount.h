@@ -21,6 +21,8 @@ Adium, Copyright 2001-2005, Adam Iser
 - (id)initWithUID:(NSString *)inUID internalObjectID:(NSString *)inInternalObjectID service:(AIService *)inService;
 - (NSData *)userIconData;
 - (void)setUserIconData:(NSData *)inData;
+- (NSString *)host;
+- (int)port;
 
 //Status
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object

@@ -110,7 +110,7 @@ Adium, Copyright 2001-2005, Adam Iser
 }
 
 /*!
-* @brief User icon
+ * @brief User icon
  *
  * Convenience method for accessing the user icon (from the status preferences) for this account.
  * @return NSData for this account's user icon
@@ -121,7 +121,7 @@ Adium, Copyright 2001-2005, Adam Iser
 }
 
 /*!
-* @brief Set user icon
+ * @brief Set user icon
  *
  * Convenience method for setting the user icon (into the status preferences) for this account.
  * @param inData NSData for this account's user icon
@@ -131,6 +131,26 @@ Adium, Copyright 2001-2005, Adam Iser
 	[self setPreference:inData
 				 forKey:KEY_USER_ICON
 				  group:GROUP_ACCOUNT_STATUS];
+}
+
+/*!
+ * @brief Connect Host
+ *
+ * Convenience method for retrieving the connect host for this account
+ */
+- (NSString *)host
+{
+	return([self preferenceForKey:KEY_CONNECT_HOST group:GROUP_ACCOUNT_STATUS]);
+}
+
+/*!
+* @brief Connect Port
+ *
+ * Convenience method for retrieving the connect port for this account
+ */
+- (int)port
+{
+	return([[self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS] intValue]);
 }
 
 
