@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.46 2004/01/09 18:17:28 adamiser Exp $
+// $Id: AIAccountController.m,v 1.47 2004/01/13 19:06:17 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -372,7 +372,7 @@
 {
     AIAccount	*newAccount;
     NSString    *accountUID = [[[inAccount UID] copy] autorelease]; //Deleting the account will release the UID
-    int			index = [accountArray indexOfObject:inAccount];
+    int		index = [accountArray indexOfObject:inAccount];
 	
     //Delete the existing account
     [self deleteAccount:inAccount];
