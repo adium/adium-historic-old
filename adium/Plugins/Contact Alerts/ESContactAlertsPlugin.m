@@ -138,7 +138,7 @@
                                                                   destination:contact
                                                                          date:nil
                                                                       message:message
-                                                                    autorelpy:NO];
+                                                                    autoreply:NO];
                             success = [[owner contentController] sendContentObject:responseContent];
 
                             if (!success)
