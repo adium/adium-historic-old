@@ -130,7 +130,7 @@
     AIListContact	*contact;
     
     contact = [[owner contactController] contactInGroup:nil
-                                            withService:[[owner accountController] serviceTypeWithID:inServiceID]
+                                            withService:inServiceID
                                                     UID:inUID];
 
     if(contact){

@@ -26,8 +26,7 @@
 #define Editor_CollectionArrayChanged		@"Editor_CollectionArrayChanged"
 #define Editor_ActiveCollectionChanged		@"Editor_ActiveCollectionChanged"
 
-@class AIEditorListObject, AIEditorListHandle, AIEditorListGroup;
-@protocol AIEditorCollection;
+@class AIEditorListObject, AIEditorListHandle, AIEditorListGroup, AIEditorCollection;
 
 @protocol AIListEditorColumnController <NSObject>
 - (NSString *)editorColumnLabel;
@@ -47,13 +46,13 @@
 - (NSArray *)listEditorColumnControllers;
 - (void)registerListEditorColumnController:(id <AIListEditorColumnController>)inController;
 - (NSArray *)collectionsArray;
-- (AIEditorListHandle *)handleNamed:(NSString *)targetHandleName onCollection:(id <AIEditorCollection>)collection;
-- (AIEditorListHandle *)createHandleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group onCollection:(id <AIEditorCollection>)collection temporary:(BOOL)temporary;
-- (AIEditorListGroup *)createGroupNamed:(NSString *)name onCollection:(id <AIEditorCollection>)collection temporary:(BOOL)temporary;
-- (BOOL)renameObject:(AIEditorListObject *)object onCollection:(id <AIEditorCollection>)collection to:(NSString *)inName;
-- (void)moveObject:(AIEditorListObject *)object fromCollection:(id <AIEditorCollection>)sourceCollection toGroup:(AIEditorListGroup *)destGroup collection:(id <AIEditorCollection>)destCollection;
-- (void)deleteObject:(AIEditorListObject *)object fromCollection:(id <AIEditorCollection>)collection;
-- (AIEditorListGroup *)groupNamed:(NSString *)targetGroupName onCollection:(id <AIEditorCollection>)collection;
+//- (AIEditorListHandle *)handleNamed:(NSString *)targetHandleName onCollection:(AIEditorCollection *)collection;
+//- (AIEditorListHandle *)createHandleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group onCollection:(AIEditorCollection *)collection temporary:(BOOL)temporary;
+//- (AIEditorListGroup *)createGroupNamed:(NSString *)name onCollection:(AIEditorCollection *)collection temporary:(BOOL)temporary;
+//- (BOOL)renameObject:(AIEditorListObject *)object onCollection:(AIEditorCollection *)collection to:(NSString *)inName;
+//- (void)moveHandle:(AIEditorListHandle *)handle fromCollection:(AIEditorCollection *)sourceCollection toGroup:(AIEditorListGroup *)destGroup collection:(AIEditorCollection *)destCollection;
+//- (void)deleteObject:(AIEditorListObject *)object fromCollection:(AIEditorCollection *)collection;
+//- (AIEditorListGroup *)groupNamed:(NSString *)targetGroupName onCollection:(AIEditorCollection *)collection;
 - (void)importFile:(NSString *)inPath;
 
 @end

@@ -25,7 +25,6 @@
     NSMutableArray	*handleArray;
 
     NSString		*serviceID;
-    int			index;
 }
 
 - (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID;
@@ -48,8 +47,5 @@
 //Status
 - (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey;
 
-//Manual Ordering
-- (int)index;
-- (void)setIndex:(int)inIndex;
 
 @end

@@ -27,7 +27,6 @@
     handleArray = [[NSMutableArray alloc] init];
     statusDictionary = [[NSMutableDictionary alloc] init];
     contentObjectArray = [[NSMutableArray alloc] init];
-    index = -1;
     
     return(self);
 }
@@ -89,15 +88,6 @@
 }
 
 
-//Manual Ordering
-- (void)setIndex:(int)inIndex
-{
-    index = inIndex;
-}
-- (int)index{
-    return(index);
-}
-
 
 //Content
 //Return our array of content objects
@@ -158,6 +148,7 @@
     }
 
     return(outName);
+    //return([NSString stringWithFormat:@"(%0.3f) %@",orderIndex,outName]);
 }
 
 @end

@@ -21,7 +21,8 @@
     NSMutableDictionary	*displayDictionary;	//A dictionary of values affecting this object's display
     AIListGroup 	*containingGroup;	//The group this object is in
     NSString		*UID;
-    
+    float		orderIndex;
+  
 }
 
 - (id)initWithUID:(NSString *)inUID;
@@ -37,4 +38,8 @@
 - (void)setContainingGroup:(AIListGroup *)inGroup;
 - (AIListGroup *)containingGroup;
 
+//Manual Ordering
+- (void)setOrderIndex:(float)inIndex;
+- (float)orderIndex;
+    
 @end

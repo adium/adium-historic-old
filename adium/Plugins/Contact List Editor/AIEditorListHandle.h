@@ -14,16 +14,24 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Foundation/Foundation.h>
-#import "AIEditorListObject.h"
 
-@class AIHandle;
+@class AIEditorListGroup;
 
-@interface AIEditorListHandle : AIEditorListObject {
-    NSString		*serviceID;
+@interface AIEditorListHandle : NSObject {
+    NSString		*UID;
+    AIEditorListGroup	*containingGroup;
+    BOOL		temporary;
+    float		orderIndex;
 }
 
-- (id)initWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID temporary:(BOOL)inTemporary;
-- (NSString *)serviceID;
-- (void)setServiceID:(NSString *)inServiceID;
+- (id)initWithUID:(NSString *)inUID temporary:(BOOL)inTemporary;
+- (NSString *)UID;
+- (void)setUID:(NSString *)inUID;
+- (BOOL)temporary;
+- (void)setTemporary:(BOOL)inTemporary;
+- (void)setContainingGroup:(AIEditorListGroup *)inGroup;
+- (AIEditorListGroup *)containingGroup;
+- (float)orderIndex;
+- (void)setOrderIndex:(float)inIndex;
 
 @end

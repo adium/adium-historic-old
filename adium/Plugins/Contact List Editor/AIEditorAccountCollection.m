@@ -17,15 +17,12 @@
 #import "AIEditorAccountCollection.h"
 #import "AIEditorListHandle.h"
 #import "AIEditorListGroup.h"
-#import "AIEditorListObject.h"
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
 
 @interface AIEditorAccountCollection (PRIVATE)
 - (id)initForAccount:(AIAccount *)inAccount withOwner:(id)inOwner;
-- (AIEditorListGroup *)generateEditorListGroup;
-- (AIEditorListHandle *)_handleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group;
-- (AIEditorListGroup *)_groupNamed:(NSString *)name;
+- (void)generateEditorListArray;
 @end
 
 @implementation AIEditorAccountCollection
@@ -39,12 +36,14 @@
 //init
 - (id)initForAccount:(AIAccount *)inAccount withOwner:(id)inOwner
 {
-    [super init];
+    [super initWithOwner:inOwner];
 
-    owner = [inOwner retain];
+    //init
     account = [inAccount retain];
-    list = [[self generateEditorListGroup] retain];
-    controlledChanges = NO;
+    sortMode = AISortByName;
+
+    //Generate our list
+    [self generateEditorListArray];
 
     //Observe our account's changes
     [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:account];
@@ -61,9 +60,7 @@
     [[owner notificationCenter] removeObserver:self];
 
     //Cleanup
-    [owner release];
     [account release];
-    [list release];
     [super dealloc];
 }
 
@@ -71,170 +68,128 @@
 - (NSString *)name{
     return([account accountDescription]); //Return our account's description
 }
-
-//Small gray drawer text label
-- (NSString *)subLabel{
-    if([account availableHandles] != nil){ //Let the user know this is a server-side list
-        return([NSString stringWithFormat:@"%@'s contacts",[account accountDescription]]
-               /*[NSString stringWithFormat:@"%@ Server-Side List",[account serviceID]]*/);
-    }else{
-        return(@"(Connect to edit)"
-               /*[NSString stringWithFormat:@"%@ (Unavailable)",[account serviceID]]*/);
-    }
-}
-
-//Used to store group collapse/expand state
 - (NSString *)UID{
     return([account UID]); //Our UID is just the account UID, this is unique enough
 }
-
-//Display ownership/checkbox column?
 - (BOOL)showOwnershipColumns{
     return(NO);
 }
-
-//Display custom columns (alias, ...)?
-//We really shouldn't display these, since this information is not stored server-side.  But it's convenient to have those columns, and not too big of a deal :)
-- (BOOL)showCustomEditorColumns{
-    return(YES); 
+- (BOOL)showIndexColumn{
+    return(NO);
 }
-
-//Does this collection get a check box in the ownership column?
+- (BOOL)showCustomEditorColumns{
+    return(YES); //We really shouldn't display these, since this information is not stored server-side.  But it's convenient to have those columns, and not too big of a deal :)
+}
 - (BOOL)includeInOwnershipColumn{
     return(YES);
 }
-
-//Use our accounts large icon
 - (NSImage *)icon{
-    return([AIImageUtilities imageNamed:@"AccountLarge" forClass:[self class]]);
+    return([AIImageUtilities imageNamed:@"AccountLarge" forClass:[self class]]); //Use our accounts icon
 }
-
-//All handles are of the service type of our account
 - (NSString *)serviceID{
-    return([account serviceID]);
+    return([account serviceID]); //All handles are of the service type of our account
 }
-
-//Window title when collection is selected
 - (NSString *)collectionDescription{
-    return([NSString stringWithFormat:@"%@'s Server-Side Contacts",[account accountDescription]]);
+    return([NSString stringWithFormat:@"%@'s Contacts",[account accountDescription]]);
 }
-
-//Return YES if this collection is enabled
 - (BOOL)enabled{
     return([account contactListEditable]);
 }
 
-//Return an Editor List Group containing everything in this collection
-- (AIEditorListGroup *)list{
-    return(list);
+//Quickly check if a handle with the specified UID is on our account.  For accounts we can figure this out quicker than the default method in AIEditorCollection!
+- (BOOL)containsHandleWithUID:(NSString *)targetHandleName
+{
+    return([[account availableHandles] objectForKey:targetHandleName] != nil);
 }
 
-//Quickly check if a handle with the specified UID is on our account
-- (BOOL)containsHandleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
+//We override these functions to filter contact names the user enters
+- (AIEditorListHandle *)addHandleNamed:(NSString *)inName inGroup:(AIEditorListGroup *)group index:(int)index temporary:(BOOL)temporary
 {
-    return([[account availableHandles] objectForKey:UID] != nil);
+    return([super addHandleNamed:[[[account service] handleServiceType] filterUID:inName]
+                         inGroup:group
+                           index:index
+                       temporary:temporary]);
 }
 
-- (AIEditorListHandle *)handleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
+- (void)renameHandle:(AIEditorListHandle *)inHandle to:(NSString *)newName
 {
-    return([self _handleNamed:UID inGroup:list]);
+    [super renameHandle:inHandle
+                     to:[[[account service] handleServiceType] filterUID:newName]];
 }
 
-- (AIEditorListGroup *)groupWithUID:(NSString *)UID
+//Add the group to our account
+- (void)_addGroup:(AIEditorListGroup *)group
 {
-    return([self _groupNamed:UID]);
+    [account addServerGroup:[group UID]];    
+    [super _addGroup:group];
 }
 
-
-//Add an object to our account
-- (void)addObject:(AIEditorListObject *)inObject
+//Rename on the account
+- (void)_renameGroup:(AIEditorListGroup *)group to:(NSString *)name
 {
-    controlledChanges = YES;
-    
-    if([inObject isKindOfClass:[AIEditorListHandle class]]){        
-        //Add a new handle
-        [account addHandleWithUID:[(AIEditorListHandle *)inObject UID]
-                      serverGroup:[[(AIEditorListHandle *)inObject containingGroup] UID]
-                        temporary:NO];
+    [account renameServerGroup:[group UID] to:name];
+    [super _renameGroup:group to:name];
+}
 
-    }else if([inObject isKindOfClass:[AIEditorListGroup class]]){
-        [account addServerGroup:[inObject UID]];
-        
+//Delete from the account
+- (void)_deleteGroup:(AIEditorListGroup *)group
+{
+    [account removeServerGroup:[group UID]];
+    [super _deleteGroup:group];
+}
+
+//Add handle to account
+- (void)_addHandle:(AIEditorListHandle *)handle toGroup:(AIEditorListGroup *)group index:(int)index
+{    
+    [account addHandleWithUID:[handle UID] serverGroup:[group UID] temporary:NO];
+    [super _addHandle:handle toGroup:group index:index];
+}
+
+- (void)_moveHandle:(AIEditorListHandle *)handle toGroup:(AIEditorListGroup *)group index:(int)index
+{
+    if([handle containingGroup] != group){
+        [account removeHandleWithUID:[handle UID]];
+        [account addHandleWithUID:[handle UID] serverGroup:[group UID] temporary:NO];
     }
 
-    controlledChanges = NO;
+    [super _moveHandle:handle toGroup:group index:index];
 }
 
-//Delete an object from our account
-- (void)deleteObject:(AIEditorListObject *)inObject
+//Delete handle from account
+- (void)_deleteHandle:(AIEditorListHandle *)handle
 {
-    controlledChanges = YES;
-    
-    if([inObject isKindOfClass:[AIEditorListHandle class]]){
-        [account removeHandleWithUID:[(AIEditorListHandle *)inObject UID]];
-        
-    }else if([inObject isKindOfClass:[AIEditorListGroup class]]){
-        [account removeServerGroup:[inObject UID]];
-
-    }
-
-    controlledChanges = NO;
+    [account removeHandleWithUID:[handle UID]];
+    [super _deleteHandle:handle];
 }
 
-//Rename an existing object
-- (void)renameObject:(AIEditorListObject *)inObject to:(NSString *)newName
+//Rename handle on the account
+- (void)_renameHandle:(AIEditorListHandle *)handle to:(NSString *)name
 {
-    controlledChanges = YES;
+    NSString	*handleGroup = [[handle containingGroup] UID];
 
-    if([inObject isKindOfClass:[AIEditorListHandle class]]){
-        NSString	*handleGroup = [[(AIEditorListHandle *)inObject containingGroup] UID];
+    //Remove the handle, and re-add it with the new name
+    [account removeHandleWithUID:[handle UID]];
+    [account addHandleWithUID:name
+                  serverGroup:handleGroup
+                    temporary:NO];
 
-        //Remove the handle, and re-add it with the new name
-        [account removeHandleWithUID:[inObject UID]];
-        [account addHandleWithUID:newName
-                      serverGroup:handleGroup
-                        temporary:NO];
-
-    }else if([inObject isKindOfClass:[AIEditorListGroup class]]){
-        [account renameServerGroup:[inObject UID] to:newName];
-
-    }
-
-    controlledChanges = NO;
+    //
+    [super _renameHandle:handle to:name];
 }
 
-//Move an existing object
-- (void)moveObject:(AIEditorListObject *)inObject toGroup:(AIEditorListGroup *)inGroup
-{
-    controlledChanges = YES;
-
-    if([inObject isKindOfClass:[AIEditorListHandle class]]){
-        NSString	*handleUID = [[[(AIEditorListHandle *)inObject UID] retain] autorelease];
-
-        //Remove the handle, and re-add it into the correct group
-        [account removeHandleWithUID:handleUID];
-        [account addHandleWithUID:handleUID serverGroup:[inGroup UID] temporary:NO];
-
-    }else if([inObject isKindOfClass:[AIEditorListGroup class]]){
-        //Not yet
-    }
-
-    controlledChanges = NO;
-}
-
-//Create and return the editor list (editor groups and handles)
-- (AIEditorListGroup *)generateEditorListGroup
+//Create the editor list (editor groups and handles)
+- (void)generateEditorListArray
 {
     NSEnumerator	*enumerator;
     AIHandle		*handle;
-    AIEditorListGroup	*listGroup;
-    NSMutableDictionary	*groupDict;
+    NSMutableDictionary	*tempGroupDict;
 
-    //Create the main list group
-    listGroup = [[[AIEditorListGroup alloc] initWithUID:@"" temporary:NO] autorelease];
+    //Create the main list array
+    [list release];
+    list = [[NSMutableArray alloc] init];
 
-    //Set up a dictionary to hold our subgroups
-    groupDict = [[[NSMutableDictionary alloc] init] autorelease];
+    //Set up a temporary dictionary to hold our subgroups
+    tempGroupDict = [[[NSMutableDictionary alloc] init] autorelease];
     
     //Process the handles
     enumerator = [[[account availableHandles] allValues] objectEnumerator];
@@ -245,20 +200,21 @@
 
         if(![handle temporary]){
             //Make sure a group exists for this handle
-            editorGroup = [groupDict objectForKey:serverGroup];
+            editorGroup = [tempGroupDict objectForKey:serverGroup];
             if(!editorGroup){ //Create and add the group
                 editorGroup = [[[AIEditorListGroup alloc] initWithUID:serverGroup temporary:NO] autorelease];
-                [listGroup addObject:editorGroup];
-                [groupDict setObject:editorGroup forKey:serverGroup];
+                [editorGroup setOrderIndex:[[owner contactController] orderIndexOfKey:serverGroup]];
+                [list addObject:editorGroup];
+                [tempGroupDict setObject:editorGroup forKey:serverGroup];
             }
 
             //Create the handle and add it to the group
-            editorHandle = [[[AIEditorListHandle alloc] initWithServiceID:[handle serviceID] UID:[handle UID] temporary:NO] autorelease];
-            [editorGroup addObject:editorHandle];
+            editorHandle = [[[AIEditorListHandle alloc] initWithUID:[handle UID] temporary:NO] autorelease];
+            [editorGroup addHandle:editorHandle];
         }
     }
 
-    return(listGroup);
+    [self sortUsingMode:[self sortMode]];
 }
 
 //Our account's status changed
@@ -271,12 +227,9 @@
 //Our account's handles changed
 - (void)accountHandlesChanged:(NSNotification *)notification
 {
-    //The controlledChanges variable is used to make things faster by avoiding unnecessary regeneration of our editor list group.  Before making changes, we set controlledChanges to the number of accountHandlesChanged messages that are expected.  If more changes are received than expected, or changes are received when none are expected, we regenerate the list.  Yah, it's a messy hack, but it give a huge speed boost that is worth it in the long run.
-    
     if(!controlledChanges){
         //Regenerate our list
-        [list release];
-        list = [[self generateEditorListGroup] retain];
+        [self generateEditorListArray];
 
         //Let the contact list know our handles changed
         [[owner notificationCenter] postNotificationName:Editor_CollectionContentChanged object:self];
@@ -290,54 +243,4 @@
     [[owner notificationCenter] postNotificationName:Editor_CollectionStatusChanged object:self];
 }
 
-//Recursively scan for a handle on our list
-- (AIEditorListHandle *)_handleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group
-{
-    NSEnumerator	*enumerator;
-    AIEditorListObject	*object;
-
-    //Scan all objects in this group
-    enumerator = [group objectEnumerator];
-    while(object = [enumerator nextObject]){
-        if([object isKindOfClass:[AIEditorListHandle class]]){ //Compare the handle names
-            if([name compare:[object UID]] == 0){
-                return((AIEditorListHandle *)object);
-            }
-
-        }else if([object isKindOfClass:[AIEditorListGroup class]]){ //Scan the subgroup
-            if((object = [self _handleNamed:name inGroup:(AIEditorListGroup *)object])){
-                return((AIEditorListHandle *)object);
-            }
-        }
-    }
-
-    return(nil);
-}
-
-//Scan for a group on our list
-- (AIEditorListGroup *)_groupNamed:(NSString *)name
-{
-    NSEnumerator	*enumerator;
-    AIEditorListGroup	*group;
-
-    //Look for this group
-    enumerator = [list objectEnumerator];
-    while(group = [enumerator nextObject]){
-        if([name caseInsensitiveCompare:[group UID]] == 0){
-            return(group);
-        }
-    }
-
-    return(nil);
-}
-
 @end
-
-
-
-
-
-
-
-
-

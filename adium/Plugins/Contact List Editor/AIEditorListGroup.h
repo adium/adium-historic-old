@@ -13,21 +13,31 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Foundation/Foundation.h>
-#import "AIEditorListObject.h"
+#import <Cocoa/Cocoa.h>
+#import "AIEditorListHandle.h"
 
-@interface AIEditorListGroup : AIEditorListObject {
+@interface AIEditorListGroup : NSObject {
+    BOOL		temporary;
     NSMutableArray	*contents;
-    BOOL		expanded;
+    NSString		*UID;
+    float		orderIndex;
 }
 
 - (id)initWithUID:(NSString *)inUID temporary:(BOOL)inTemporary;
-- (void)addObject:(AIEditorListObject *)inObject;
-- (AIEditorListObject *)objectAtIndex:(unsigned)index;
-- (void)removeObject:(AIEditorListObject *)inObject;
-- (NSEnumerator *)objectEnumerator;
+- (NSString *)UID;
+- (void)setUID:(NSString *)inUID;
+- (BOOL)temporary;
+- (void)setTemporary:(BOOL)inTemporary;
+- (void)addHandle:(AIEditorListHandle *)inHandle toIndex:(int)index;
+- (void)removeHandle:(AIEditorListHandle *)inHandle;
+- (AIEditorListHandle *)handleAtIndex:(unsigned)index;
+- (AIEditorListHandle *)handleNamed:(NSString *)inName;
+- (NSEnumerator *)handleEnumerator;
 - (unsigned)count;
-- (void)sort;
-- (AIEditorListObject *)objectNamed:(NSString *)inName isGroup:(BOOL)isGroup;
+- (NSMutableArray *)contentArray;
+- (void)addHandle:(AIEditorListHandle *)inHandle;
+- (int)indexOfHandle:(AIEditorListHandle *)handle;
+- (float)orderIndex;
+- (void)setOrderIndex:(float)inIndex;
 
 @end

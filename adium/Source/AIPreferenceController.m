@@ -145,7 +145,7 @@
 //Return an object specific preference.
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListContact *)object
 {
-    return([self preferenceForKey:inKey group:groupName contactKey:[NSString stringWithFormat:@"(%@.%@)", [object serviceID], [object UID]]]);
+    return([self preferenceForKey:inKey group:groupName contactKey:[NSString stringWithFormat:@"(%@)", [object UIDAndServiceID]]]);
 }
 
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName contactKey:(NSString *)prefDictKey

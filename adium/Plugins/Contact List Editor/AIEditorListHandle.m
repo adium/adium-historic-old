@@ -14,37 +14,76 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIEditorListHandle.h"
+#import "AIEditorListGroup.h"
 #import <Adium/Adium.h>
 
 
 @implementation AIEditorListHandle
 
-- (id)initWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID temporary:(BOOL)inTemporary
+- (id)initWithUID:(NSString *)inUID temporary:(BOOL)inTemporary
 {
-    [super initWithUID:inUID temporary:inTemporary];
+    [super init];
 
-    serviceID = [inServiceID retain];
+    UID = [inUID retain];
+    temporary = inTemporary;
+    containingGroup = nil;
+    orderIndex = -1;
     
     return(self);
 }
 
 - (void)dealloc
 {
-    [serviceID release];
+    [UID release];
+    [containingGroup release];
     
     [super dealloc];
 }
 
-- (NSString *)serviceID
+
+//UID
+- (NSString *)UID
 {
-    return(serviceID);
+    return(UID);
+}
+- (void)setUID:(NSString *)inUID
+{
+    [UID release];
+    UID = [inUID retain];
 }
 
-- (void)setServiceID:(NSString *)inServiceID
+
+//Index
+- (float)orderIndex
 {
-    [serviceID release];
-    serviceID = [inServiceID retain];
+    return(orderIndex);
+}
+- (void)setOrderIndex:(float)inIndex
+{
+    orderIndex = inIndex;
 }
 
+
+//Temporary
+- (BOOL)temporary
+{
+    return(temporary);
+}
+- (void)setTemporary:(BOOL)inTemporary
+{
+    temporary = inTemporary;
+}
+
+
+//Containing group
+- (void)setContainingGroup:(AIEditorListGroup *)inGroup
+{
+    [containingGroup release];
+    containingGroup = [inGroup retain];
+}
+- (AIEditorListGroup *)containingGroup
+{
+    return(containingGroup);
+}
 
 @end

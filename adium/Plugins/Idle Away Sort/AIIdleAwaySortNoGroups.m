@@ -84,10 +84,8 @@ int idleAwaySortNoGroups(id objectA, id objectB, void *context)
                 return([[objectA displayName] caseInsensitiveCompare:[objectB displayName]]);
             }
         }else{
-            AIListGroup	*group = [objectA containingGroup];
-
             //Keep groups in manual order
-            if([group indexOfObject:objectA] > [group indexOfObject:objectB]){
+            if([objectA orderIndex] > [objectB orderIndex]){
                 return(NSOrderedDescending);
             }else{
                 return(NSOrderedAscending);

@@ -86,11 +86,6 @@
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
-/*{
-    [self drawInteriorWithFrame:cellFrame inView:controlView];
-}
-
-- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView*/
 {
     NSImage	*image = nil;
     BOOL	enabled, highlighted;

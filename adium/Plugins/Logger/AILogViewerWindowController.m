@@ -155,16 +155,12 @@ static AILogViewerWindowController *sharedInstance = nil;
             userEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:accountFolderPath] objectEnumerator];
             while((folderName = [userEnumerator nextObject])){
                 NSString		*serverGroup = nil;
-                AIServiceType	*serviceType;
                 NSString		*contactKey;
 
                 //Find the group this contact is in on our contact list
-                serviceType = [[owner accountController] serviceTypeWithID:serviceID];
-                if(serviceType){
-                    AIListContact	*contact = [[owner contactController] contactInGroup:nil withService:serviceType UID:folderName];
-                    if(contact){
-                        serverGroup = [[contact containingGroup] UID];
-                    }
+                AIListContact	*contact = [[owner contactController] contactInGroup:nil withService:serviceID UID:folderName];
+                if(contact){
+                    serverGroup = [[contact containingGroup] UID];
                 }
                 if(!serverGroup) serverGroup = @"Strangers"; //Default group
 

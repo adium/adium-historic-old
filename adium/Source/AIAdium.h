@@ -256,20 +256,29 @@ typedef enum {
     NSMutableDictionary		*accountStatusDict;
 }
 
+//Access to the account list
 - (NSArray *)accountArray;
 - (AIAccount *)accountWithID:(NSString *)inID;
+- (AIAccount *)accountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact;
+
+//Managing accounts
 - (AIAccount *)newAccountAtIndex:(int)index;
 - (void)deleteAccount:(AIAccount *)inAccount;
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
 - (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(id <AIServiceController>)inService;
-- (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector;
-- (void)forgetPasswordForAccount:(AIAccount *)inAccount;
-- (NSArray *)availableServiceArray;
-- (void)registerService:(id <AIServiceController>)inService;
-- (AIAccount *)accountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact;
+
+//Account status
 - (void)setStatusObject:(id)inValue forKey:(NSString *)key account:(AIAccount *)inAccount;
 - (id)statusObjectForKey:(NSString *)key account:(AIAccount *)inAccount;
-- (AIServiceType *)serviceTypeWithID:(NSString *)inServiceID;
+
+//Account password storage
+- (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector;
+- (void)forgetPasswordForAccount:(AIAccount *)inAccount;
+
+//Access to services
+- (NSArray *)availableServiceArray;
+//- (AIServiceType *)serviceTypeWithID:(NSString *)inServiceID;
+- (void)registerService:(id <AIServiceController>)inService;
 
 @end
 
@@ -282,18 +291,22 @@ typedef enum {
     NSMutableArray		*incomingContentFilterArray;
 }
 
+//Content default handlers
 - (void)registerDefaultHandler:(id <AIContentHandler>)inHandler forContentType:(NSString *)inType;
 - (void)invokeDefaultHandlerForObject:(id <AIContentObject>)inObject;
 
+//Sending / Receiving content
 - (void)addIncomingContentObject:(id <AIContentObject>)inObject;
 - (BOOL)sendContentObject:(id <AIContentObject>)inObject;
 
+//Filtering text entry
 - (void)registerTextEntryFilter:(id <AITextEntryFilter>)inFilter;
-//- (NSArray *)textEntryFilters;
+- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
+- (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
+
+//Filtering content
 - (void)registerOutgoingContentFilter:(id <AIContentFilter>)inFilter;
 - (void)registerIncomingContentFilter:(id <AIContentFilter>)inFilter;
-- (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
-- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
 
 @end
 
@@ -313,46 +326,58 @@ typedef enum {
     NSMenuItem			*menuItem_getInfo;
 
     NSMutableDictionary		*listOrderDict;
+    NSMutableDictionary		*reverseListOrderDict;
     int				largestOrder;
 
     AIContactListGeneration	*contactListGeneration;
 }
 
+//Account available handles changed
 - (void)handlesChangedForAccount:(AIAccount *)inAccount;
 - (void)handle:(AIHandle *)inHandle addedToAccount:(AIAccount *)inAccount;
 - (void)handle:(AIHandle *)inHandle removedFromAccount:(AIAccount *)inAccount;
 
-- (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(AIServiceType *)service UID:(NSString *)UID;
-- (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(AIServiceType *)service UID:(NSString *)UID serverGroup:(NSString *)serverGroup;
-
+//Contact list access
 - (AIListGroup *)contactList;
+- (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(NSString *)serviceID UID:(NSString *)UID;
+- (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(NSString *)serviceID UID:(NSString *)UID serverGroup:(NSString *)serverGroup;
 - (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups;
+- (AIListGroup *)groupInGroup:(AIListGroup *)inGroup withUID:(NSString *)UID;
 
+//Handle access
 - (AIHandle *)handleOfContact:(AIListContact *)inContact forReceivingContentType:(NSString *)inType fromAccount:(AIAccount *)inAccount create:(BOOL)create;
 
-- (void)objectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys;
-
+//Contact status & Attributes
 - (void)handleStatusChanged:(AIHandle *)inHandle modifiedStatusKeys:(NSArray *)inModifiedKeys;
 - (void)registerContactObserver:(id)inObserver;
+- (void)objectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys;
 
-- (void)registerListSortController:(id <AIListSortController>)inController;
+//Contact list sorting
 - (NSArray *)sortControllerArray;
-
+- (void)registerListSortController:(id <AIListSortController>)inController;
 - (void)setActiveSortController:(id <AIListSortController>)inController;
 - (id <AIListSortController>)activeSortController;
 - (void)sortListGroup:(AIListGroup *)inGroup mode:(AISortMode)sortMode;
 
+//Contact info
 - (IBAction)showContactInfo:(id)sender;
 - (void)showInfoForContact:(AIListContact *)inContact;
 - (void)addContactInfoView:(AIPreferenceViewController *)inView;
 
+//Interface selection
 - (AIListContact *)selectedContact;
 
+//Update optimization
 - (void)setHoldContactListUpdates:(BOOL)inHoldUpdates;
 - (BOOL)holdContactListUpdates;
 
-- (void)_setOrderIndexOfContact:(AIListContact *)contact;
-
+//Contact ordering
+- (float)orderIndexOfContact:(AIListContact *)contact;
+- (float)orderIndexOfGroup:(AIListGroup *)group;
+- (float)orderIndexOfKey:(NSString *)key;
+- (float)setOrderIndexOfContactWithServiceID:(NSString *)serviceID UID:(NSString *)UID to:(float)index;
+- (float)setOrderIndexOfGroupWithUID:(NSString *)UID to:(float)index;
+        
 @end
 
 @interface AIInterfaceController : NSObject {
@@ -374,16 +399,29 @@ typedef enum {
 
 }
 
+//Interface controllers
+- (void)registerInterfaceController:(id <AIInterfaceController>)inController;
+
+//Contact list views
 - (void)registerContactListViewController:(id <AIContactListViewController>)inController;
 - (id <AIContactListViewController>)contactListViewController;
+
+//Message views
 - (void)registerMessageViewController:(id <AIMessageViewController>)inController;
 - (NSView *)messageViewForContact:(AIListContact *)inContact;
+
+//Messaging
 - (IBAction)initiateMessage:(id)sender;
-- (void)registerInterfaceController:(id <AIInterfaceController>)inController;
+
+//Error messages
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc;
+
+//Flash Syncing
 - (void)registerFlashObserver:(id <AIFlashObserver>)inObserver;
 - (void)unregisterFlashObserver:(id <AIFlashObserver>)inObserver;
 - (int)flashState;
+
+//Tooltips
 - (void)showTooltipForListObject:(AIListObject *)object atPoint:(NSPoint)point;
 - (void)registerContactListTooltipEntry:(id <AIContactListTooltipEntry>)inEntry;
 
@@ -403,19 +441,21 @@ typedef enum {
     NSMutableDictionary			*groupDict;		//A dictionary of pref dictionaries
 }
 
-- (void)addPreferenceView:(AIPreferenceViewController *)inView;
-- (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)groupName;
+//Preference window
 - (IBAction)showPreferenceWindow:(id)sender;
 - (void)openPreferencesToView:(AIPreferenceViewController *)inView;
 
+//Preference views
+- (void)addPreferenceView:(AIPreferenceViewController *)inView;
+
+//Defaults and access to preferencecs
+- (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)groupName;
+- (NSDictionary *)preferencesForGroup:(NSString *)groupName;
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListContact *)object;
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName contactKey:(NSString *)prefDictKey;
+- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName contact:(AIListContact *)object;
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName contactKey:(NSString *)prefDictKey;
-
-- (NSDictionary *)preferencesForGroup:(NSString *)groupName;
-- (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;
-
 
 @end
 
@@ -451,6 +491,7 @@ typedef enum {
     NSMutableArray		*locationArray;
 }
 
+//Custom menu items
 - (void)addMenuItem:(NSMenuItem *)newItem toLocation:(MENU_LOCATION)location;
 - (void)removeMenuItem:(NSMenuItem *)targetItem;
 
@@ -469,6 +510,7 @@ typedef enum {
     NSLock		*soundLock;
 }
 
+//Sounds
 - (void)playSoundNamed:(NSString *)inName;
 - (void)playSoundAtPath:(NSString *)inPath;
 - (NSArray *)soundSetArray;
@@ -494,12 +536,17 @@ typedef enum {
     int				currentAttentionRequest;
 }
 
+//Icon animation & states
 - (AIIconState *)setIconStateNamed:(NSString *)inName;
 - (void)setIconState:(AIIconState *)iconState;
 - (void)removeIconState:(AIIconState *)inState;
 - (float)dockIconScale;
-- (void)performBehavior:(DOCK_BEHAVIOR)behavior;
+
+//Special access to icon pack loading
 - (NSDictionary *)iconPackAtPath:(NSString *)folderPath;
+
+//Bouncing & behavior
+- (void)performBehavior:(DOCK_BEHAVIOR)behavior;
 
 @end
 

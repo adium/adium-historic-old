@@ -18,9 +18,8 @@
 @class AISocket, AIGroup, AIMTOC2AccountViewController;
 
 @interface AIMTOC2Account : AIAccount <AIAccount_Content, AIAccount_Handles> {
+    IBOutlet		NSTextView	*textView_trafficWatchDEBUG;
     
-    AIMTOC2AccountViewController	*accountViewController;
-
     AISocket 		*socket;		// The connection socket
     int			connectionPhase;	// Offline/Connecting/Online/Disconnecting
 

@@ -27,6 +27,7 @@
     displayDictionary = [[NSMutableDictionary alloc] init];
     containingGroup = nil;
     UID = [inUID retain];
+    orderIndex = -1;
 
     return(self);
 }
@@ -51,6 +52,17 @@
     [UID release]; UID = nil;
     UID = [inUID retain];
 }*/
+
+
+//Manual Ordering
+- (void)setOrderIndex:(float)inIndex
+{
+    orderIndex = inIndex;
+}
+- (float)orderIndex{
+    return(orderIndex);
+}
+
 
 //Display
 - (NSString *)displayName

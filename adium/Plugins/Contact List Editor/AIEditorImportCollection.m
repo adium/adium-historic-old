@@ -17,143 +17,76 @@
 #import "AIEditorImportCollection.h"
 
 @interface AIEditorImportCollection (PRIVATE)
-- (id)initWithPath:(NSString *)path;
-- (void)importFromPath:(NSString *)path;
+- (id)initWithPath:(NSString *)inPath owner:(id)inOwner;
+- (void)importFromPath:(NSString *)inPath;
 - (NSString *)makeStringPretty:(NSString *)string;
-- (AIEditorListGroup *)importContactsFromPath:(NSString *)inPath;
+- (NSMutableArray *)importContactsFromPath:(NSString *)inPath;
 @end
 
 @implementation AIEditorImportCollection
 
 //Return an empty collection 
 //Retun collection from a path, set the name
-+ (AIEditorImportCollection *)editorCollectionWithPath:(NSString *)inPath
+ + (AIEditorImportCollection *)editorCollectionWithPath:(NSString *)inPath owner:(id)inOwner
 {
-    return([[[self alloc] initWithPath:inPath] autorelease]);
+    return([[[self alloc] initWithPath:inPath owner:inOwner] autorelease]);
 }
 
 //path initializer
-- (id)initWithPath:(NSString *)inPath
+- (id)initWithPath:(NSString *)inPath owner:(id)inOwner
 {
-    [super init];
+    [super initWithOwner:inOwner];
 
     path = [inPath retain];
     [self importFromPath:path];
     
-    return self;
+    return(self);
 }
 
-//Large black drawer label
 - (NSString *)name{
-    return([path lastPathComponent]);
+    return([path lastPathComponent]); //Large black drawer label
 }
-
-//Small gray drawer text label
-- (NSString *)subLabel{
-    return(@"Imported Contacts");
-}
-
-//Window title when collection is selected
 - (NSString *)collectionDescription{
-    return([path lastPathComponent]);
+    return([path lastPathComponent]); //Window title when collection is selected
 }
-
-//Used to store group collapse/expand state
 - (NSString *)UID{
-    return(@"ImportedContacts");
-}
-
-//Display ownership/checkbox column?
+    return(@"ImportedContacts"); //Used to store group collapse/expand state
+} 
 - (BOOL)showOwnershipColumns{
-    return(NO);
+    return(NO); //Display ownership/checkbox column?
 }
-
-//Display custom columns (alias, ...)?
 - (BOOL)showCustomEditorColumns{
+    return(NO);//Display custom columns (alias, ...)?
+}
+- (BOOL)includeInOwnershipColumn{
+    return(NO);//Does this collection get a check box in the ownership column?
+}
+- (BOOL)showIndexColumn{
     return(NO);
 }
-
-//Does this collection get a check box in the ownership column?
-- (BOOL)includeInOwnershipColumn
-{
-    return(NO);
+- (NSString *)serviceID{
+    return(@"AIM"); //All handles are of the service type of our imported file (AIM for now)
 }
-
-//All handles are of the service type of our imported file (AIM for now)
-- (NSString *)serviceID
-{
-    return(@"AIM");
+- (NSImage *)icon{
+    return([AIImageUtilities imageNamed:@"AllContacts" forClass:[self class]]); //Return our icon description
 }
-
-//Quickly check if a handle with the specified UID is in this file
-- (BOOL)containsHandleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
-{
-    return(NO); //Not needed
-}
-
-- (AIEditorListGroup *)groupWithUID:(NSString *)UID
-{
-    return(nil); //Not needed
-}
-
-- (AIEditorListHandle *)handleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
-{
-    return(NO); //Not needed
-}
-
-//Return our icon description
-- (NSImage *)icon
-{
-    return([AIImageUtilities imageNamed:@"AllContacts" forClass:[self class]]);
-}
-
-//Return YES if this collection is enabled
-- (BOOL)enabled
-{
-    return(YES);
-}
-
-//Return an Editor List Group containing everything in this collection
-- (AIEditorListGroup *)list
-{
-    return(list);
-}
-
-//Add an object to the collection
-- (void)addObject:(AIEditorListObject *)inObject
-{
-    //ignored
-}
-
-//Delete an object from the collection
-- (void)deleteObject:(AIEditorListObject *)inObject
-{
-    //ignored
-}
-
-//Rename an existing object
-- (void)renameObject:(AIEditorListObject *)inObject to:(NSString *)newName
-{
-    //ignored
-}
-
-//Move an existing object
-- (void)moveObject:(AIEditorListObject *)inObject toGroup:(AIEditorListGroup *)inGroup
-{
-    //ignored
+- (BOOL)enabled{
+    return(YES); //Return YES if this collection is enabled
 }
 
 //used in the constructor
 - (void)importFromPath:(NSString *)inPath
 {
     [list release];
-    list = [self importContactsFromPath:inPath];
+    list = [[self importContactsFromPath:inPath] retain];
+
+    [self sortUsingMode:[self sortMode]];
 }
 
 //strips surrounding whitespace and quotes
 - (NSString *)makeStringPretty:(NSString *)string
 {
-    /*string = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]; //strip the whitespace */ //this doesn't work!
+    //string = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]; //strip the whitespace  //this doesn't work!
     
     NSMutableString *tempMString = [[string mutableCopy] autorelease];
     CFStringTrimWhitespace((CFMutableStringRef)tempMString); //this does
@@ -167,7 +100,7 @@
 }
 
 //grab the contacts form a file and return them in a list group
-- (AIEditorListGroup *)importContactsFromPath:(NSString *)inPath
+- (NSMutableArray *)importContactsFromPath:(NSString *)inPath
 {
     NSScanner *blt = [NSScanner scannerWithString:
                     [NSString stringWithContentsOfFile:inPath]];
@@ -177,12 +110,12 @@
     
     NSString *value;
     
-    AIEditorListGroup *currentGroup = nil;
-    AIEditorListHandle *currentHandle = nil;
+    AIEditorListGroup 	*currentGroup = nil;
+    AIEditorListHandle 	*currentHandle = nil;
     
     BOOL inGroup = NO, end = NO;
     
-    AIEditorListGroup *alist = [[[AIEditorListGroup alloc] initWithUID:@"Imported" temporary:NO] autorelease];
+    NSMutableArray *alist = [NSMutableArray array];
 
     [blt setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@"\t"]];
     
@@ -230,8 +163,8 @@
             }
             else
             {
-                currentHandle = [[[AIEditorListHandle alloc] initWithServiceID:@"AIM" UID:value temporary:NO] autorelease];
-                [currentGroup addObject:currentHandle];
+                currentHandle = [[[AIEditorListHandle alloc] initWithUID:value temporary:NO] autorelease];
+                [currentGroup addHandle:currentHandle];
             }
         }
     }

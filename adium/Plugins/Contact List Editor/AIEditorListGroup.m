@@ -22,58 +22,97 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 - (id)initWithUID:(NSString *)inUID temporary:(BOOL)inTemporary
 {
-    [super initWithUID:inUID temporary:inTemporary];
+    [super init];
 
+    temporary = inTemporary;
+    UID = [inUID retain];
     contents = [[NSMutableArray alloc] init];
-    expanded = YES;
-    
+    orderIndex = -1;
+ 
     return(self);
 }
 
 - (void)dealloc
 {
     [contents release];
+    [UID release];
     
     [super dealloc];
 }
 
-- (void)addObject:(AIEditorListObject *)inObject
-{
-    [contents addObject:inObject];
-    [inObject setContainingGroup:self];
 
-    [self sort]; //resort
+//UID
+- (NSString *)UID
+{
+    return(UID);
+}
+- (void)setUID:(NSString *)inUID
+{
+    [UID release];
+    UID = [inUID retain];
 }
 
-- (void)removeObject:(AIEditorListObject *)inObject
+
+//orderIndex
+- (float)orderIndex
 {
-    [inObject setContainingGroup:nil];
-    [contents removeObject:inObject];
-    
-    [self sort]; //resort
+    return(orderIndex);
+}
+- (void)setOrderIndex:(float)inIndex
+{
+    orderIndex = inIndex;
 }
 
-- (AIEditorListObject *)objectAtIndex:(unsigned)index
+
+//Temporary
+- (BOOL)temporary
+{
+    return(temporary);
+}
+- (void)setTemporary:(BOOL)inTemporary
+{
+    temporary = inTemporary;
+}
+
+
+//Contents
+- (void)addHandle:(AIEditorListHandle *)inHandle
+{
+    [contents addObject:inHandle];
+    [inHandle setContainingGroup:self];
+}
+
+- (void)addHandle:(AIEditorListHandle *)inHandle toIndex:(int)index
+{
+    [contents insertObject:inHandle atIndex:index];
+    [inHandle setContainingGroup:self];
+}
+
+- (void)removeHandle:(AIEditorListHandle *)inHandle
+{
+    [inHandle setContainingGroup:nil];
+    [contents removeObject:inHandle];
+}
+
+- (AIEditorListHandle *)handleAtIndex:(unsigned)index
 {
     return([contents objectAtIndex:index]);
 }
 
-- (AIEditorListObject *)objectNamed:(NSString *)inName isGroup:(BOOL)isGroup
+- (AIEditorListHandle *)handleNamed:(NSString *)inName
 {
     NSEnumerator	*enumerator;
-    AIEditorListObject	*object;
+    AIEditorListHandle	*handle;
     
     enumerator = [contents objectEnumerator];
-    while((object = [enumerator nextObject])){
-        if((isGroup && [object isKindOfClass:[AIEditorListGroup class]]) || (!isGroup && [object isKindOfClass:[AIEditorListHandle class]])){
-            if([inName compare:[object UID]] == 0) return(object);
-        }
+    while((handle = [enumerator nextObject])){
+        if([inName compare:[handle UID]] == 0) return(handle);
     }
 
     return(nil);
 }
 
-- (NSEnumerator *)objectEnumerator
+- (NSEnumerator *)handleEnumerator
 {
     return([contents objectEnumerator]);
 }
@@ -83,25 +122,15 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     return([contents count]);
 }
 
-- (void)sort
+- (int)indexOfHandle:(AIEditorListHandle *)handle
 {
-    [contents sortUsingFunction:alphabeticalSort context:nil];
+    return([contents indexOfObject:handle]);    
 }
 
-int alphabeticalSort(id objectA, id objectB, void *context)
+- (NSMutableArray *)contentArray
 {
-    BOOL	groupA = [objectA isKindOfClass:[AIEditorListGroup class]];
-    BOOL	groupB = [objectB isKindOfClass:[AIEditorListGroup class]];
-
-    if(groupA && !groupB){
-        return(NSOrderedAscending);
-    }else if(!groupA && groupB){
-        return(NSOrderedDescending);
-    }else{
-        return([[objectA UID] caseInsensitiveCompare:[objectB UID]]);
-    }
+    return(contents);
 }
-
 
 @end
 

@@ -112,7 +112,7 @@
 {
     NSClipView	*contentView = [self contentView];
     
-    [contentView scrollToPoint:NSMakePoint(0, [[self documentView] frame].size.height - [self documentVisibleRect].size.height)];
+    [contentView scrollToPoint:NSMakePoint(0, [[self documentView] frame].size.height - [self documentVisibleRect].size.height) ];
     [self reflectScrolledClipView:contentView];
 }
 
