@@ -157,7 +157,6 @@ DeclareString(UID);
 {
     [contactList release];
     [contactObserverArray release]; contactObserverArray = nil;
-//    [contactInfoCategory release];
 
     [super dealloc];
 }
@@ -165,7 +164,7 @@ DeclareString(UID);
 - (void)adiumVersionWillBeUpgraded:(NSNotification *)notification
 {
 	//After 0.63 - metaContacts dictionary changed; old dictionary is very large and quite useless.
-	if ([[[notification userInfo] objectForKey:@"lastLaunchedVersion"] floatValue] <= 0.63){
+	if ([[[notification userInfo] objectForKey:@"lastLaunchedVersion"] floatValue] < 0.681){
 		[[owner preferenceController] setPreference:nil
 					 forKey:KEY_FLAT_METACONTACTS
 					  group:PREF_GROUP_CONTACT_LIST];
@@ -194,44 +193,7 @@ DeclareString(UID);
 	[[owner preferenceController] setPreference:[self _arrayRepresentationOfListObjects:[groupDict allValues]]
 										 forKey:KEY_FLAT_GROUPS
 										  group:PREF_GROUP_CONTACT_LIST];	
-//	[[owner preferenceController] setPreference:[self _arrayRepresentationOfListObjects:[contactDict allValues]]
-//										 forKey:KEY_FLAT_CONTACTS
-//										  group:PREF_GROUP_CONTACT_LIST];
 }
-
-//Return the current largest order index + 1
-//- (float)largestOrderIndex
-//{
-//	largestOrder += 1;
-//	return(largestOrder);
-//}
-
-//List objects from flattened array
-//- (void)_loadContactsFromArray:(NSArray *)array
-//{
-//	NSEnumerator	*enumerator = [array objectEnumerator];
-//	NSDictionary	*infoDict;
-//	
-//	NSString	*Ordering = @"Ordering";
-//	
-//	while(infoDict = [enumerator nextObject]){
-//		AIListObject	*object = nil;
-//		
-//		//Object
-//		object = [self contactWithService:[[owner accountController] serviceWithUniqueID:[infoDict objectForKey:ServiceID]]
-//								  account:[[owner accountController] accountWithAccountNumber:[[infoDict objectForKey:AccountID] intValue]]
-//									  UID:[infoDict objectForKey:UID]];
-//		//Ordering
-//		if(object){
-//			float orderIndex = [[infoDict objectForKey:Ordering] floatValue];
-//			
-//			if(orderIndex > largestOrder) largestOrder = orderIndex;
-//			if(orderIndex < smallestOrder) smallestOrder = orderIndex;
-//			
-//			[object setOrderIndex:orderIndex];
-//		}
-//	}
-//}
 
 //List objects from flattened array
 - (void)_loadGroupsFromArray:(NSArray *)array
@@ -240,7 +202,6 @@ DeclareString(UID);
 	NSDictionary	*infoDict;
 	
 	NSString	*Expanded = @"Expanded";
-//	NSString	*Ordering = @"Ordering";
 	
 	while(infoDict = [enumerator nextObject]){
 		AIListObject	*object = nil;
@@ -267,32 +228,18 @@ DeclareString(UID);
 	NSMutableArray	*array = [NSMutableArray array];
 	NSEnumerator	*enumerator = [listObjects objectEnumerator];;
 	AIListObject	*object;
-	
-	
+
 	//Create temporary strings outside the loop
-	// NSString	*Contact = @"Contact"; // related to the commented block below
 	NSString	*Group = @"Group";
 	NSString	*Type = @"Type";
-//	NSString	*Ordering = @"Ordering";
 	NSString	*Expanded = @"Expanded";
 	
 	while(object = [enumerator nextObject]){
-//		if([object isKindOfClass:[AIListContact class]]){
-//			[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-//				Contact, Type,
-//				[object UID], UID,
-//				[NSNumber numberWithInt:[[(AIListContact *)object account] accountNumber]], AccountID,
-//				[[object service] serviceID], ServiceID,
-//				[NSNumber numberWithFloat:[object orderIndex]], Ordering,
-//				nil]];
-//			
-//		}else if([object isKindOfClass:[AIListGroup class]]){
 			[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 				Group, Type,
 				[object UID], UID,
 				[NSNumber numberWithBool:[(AIListGroup *)object isExpanded]], Expanded,
 				nil]];
-//		}
 	}
 	
 	return(array);
@@ -370,6 +317,11 @@ DeclareString(UID);
 	containingObject = [inObject containingObject];
 
 	if ([containingObject isKindOfClass:[AIMetaContact class]]){
+		
+		//Make sure we traverse metaContacts as close to the root as possible; an automatic metaContact may be within
+		//a manually created one, for example, in the most common situation.
+		containingObject = [self parentContactForListObject:containingObject];
+		
 		//If the object's 'group' is a metaContact, and that metaContact isn't in our list yet
 		//use the object's remote grouping as our grouping.
 		if (![containingObject containingObject] && [remoteGroup length]){
@@ -834,11 +786,6 @@ DeclareString(UID);
 	AIMetaContact   *metaContact = nil;
 	
 	//Look for an existing MetaContact we can use.  The first one we find is the lucky winner.
-	//
-	//It is possible for one listContact to be currently within the metaContact while its twin sister on another
-	//account is not, in the case that the latter account just signed on for the first time.  This is why we look
-	//at the internalUniqueObjectID, which is account-specific, causing a relatively cheap increase in computational
-	//demands in terms of the search but a better behavior overall.
 	enumerator = [contactsToGroupArray objectEnumerator];
 	while ((listContact = [enumerator nextObject]) && (metaContact == nil)){
 		metaContact = [contactToMetaContactLookupDict objectForKey:[listContact internalObjectID]];
