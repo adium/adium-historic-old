@@ -16,6 +16,8 @@
 
 #import "AIObject.h"
 
+@class AIChat, AIAccount;
+
 @interface DCJoinChatViewController : AIObject {
 	IBOutlet		NSView			*view;			// Custom view
 	AIChat							*chat;			// The newly created chat

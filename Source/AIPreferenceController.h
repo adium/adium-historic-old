@@ -35,7 +35,7 @@ typedef enum {
     AIPref_Advanced
 } PREFERENCE_CATEGORY;
 
-@class AIPreferencePane, AIAdium;
+@class AIPreferencePane, AIAdium, AIListObject;
 
 @interface AIPreferenceController : NSObject {
     IBOutlet	AIAdium		*adium;

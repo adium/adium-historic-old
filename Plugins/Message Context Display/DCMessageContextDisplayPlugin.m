@@ -31,6 +31,7 @@
 @interface DCMessageContextDisplayPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 - (BOOL)contextShouldBeDisplayed:(NSCalendarDate *)inDate;
+- (NSDictionary *)savableContentObject:(AIContentObject *)content;
 @end
 
 @implementation DCMessageContextDisplayPlugin

@@ -21,7 +21,7 @@
 
 @protocol AIAccount_Files;
 
-@class AIAccount, ESFileTransfer;
+@class AIAccount, AIListObject, ESFileTransfer;
 
 @protocol FileTransferDelegate
 -(void)fileTransfer:(ESFileTransfer *)fileTransfer didSetType:(FileTransferType)type;

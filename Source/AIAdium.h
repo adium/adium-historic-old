@@ -17,14 +17,10 @@
 #define	BETA_RELEASE FALSE
 
 @class  AISortController, AILoginController, AIAccountController, AIInterfaceController, AIContactController, 
-		AICorePluginLoader, AIPreferenceController, AIPreferencePane, AIMenuController, AILoginWindowController,
-		AIAccountWindowController, AIAccount, AIMessageObject, AIContactInfoView, AICoreComponentLoader,
-		AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, 
-		AIPreferenceViewController, AISoundController, AIDockController, AIHandle, AIListContact, AIListGroup,
-		AIListObject, AIIconState, AIContactListGeneration, AIChat, AIContentObject, ESFileTransferController, 
-		ESFileTransfer, ESContactAlertsController, ESContactAlert, AIMutableOwnerArray, ESApplescriptabilityController,
-		AIStatusController, ESDebugController;
-@class SUSpeaker;
+		AICorePluginLoader, AIPreferenceController, AIMenuController, AILoginWindowController,
+		AICoreComponentLoader, AIContentController, AIToolbarController, AIContactInfoViewController, 
+		AIPreferenceViewController, AISoundController, AIDockController, ESFileTransferController, 
+		ESContactAlertsController, ESApplescriptabilityController, AIStatusController, ESDebugController;
 
 @interface AIAdium : NSObject {
     IBOutlet	AIAccountController				*accountController;
@@ -45,18 +41,15 @@
 
 	IBOutlet	AICoreComponentLoader			*componentLoader;
 	IBOutlet	AICorePluginLoader				*pluginLoader;
-
-//    IBOutlet    BZActivityWindowController  *activityWindowController;
     
-    NSNotificationCenter                    *notificationCenter;
-    NSMutableDictionary                     *eventNotifications;
+    NSNotificationCenter						*notificationCenter;
+    NSMutableDictionary							*eventNotifications;
 
 	//pathnames to the different Application Support folders.
-    NSArray                                 *appSupportPaths;
+    NSArray										*appSupportPaths;
 
-    BOOL                                    completedApplicationLoad;
-	NSString								*advancedPrefsName;
-	
+    BOOL										completedApplicationLoad;
+	NSString									*advancedPrefsName;	
 }
 
 + (NSString *)applicationSupportDirectory;
@@ -86,32 +79,9 @@
 - (IBAction)confirmQuit:(id)sender;
 - (IBAction)launchJeeves:(id)sender;
 
-//create a resource folder in the Library/Application\ Support/Adium\ 2.0 folder.
-//pass it the name of the folder (e.g. @"Scripts").
-//if it is found to already in a library folder, returns that pathname (using
-//  the same order of preference as resourcePathsForName:).
-//otherwise, creates it in the user library and returns the pathname to it.
 - (NSString *)createResourcePathForName:(NSString *)name;
-
-//return zero or more pathnames to objects in the Application Support folders,
-//  as well as within the Resources/ directory of the Adium bundle.
-//only those pathnames that exist are returned.
-//you can pass nil as the name to get all the Adium application-support folders
-//  that exist.
-//example: say you call [adium resourcePathsForName:@"Scripts"], and there's a
-//  Scripts folder in ~/L/AS/Adium\ 2.0 and in /L/AS/Adium\ 2.0, but not in
-//  /N/L/AS/Adium\ 2.0.
-//the array you get back will be { @"/Users/you/L/AS/Adium 2.0/Scripts",
-//  @"/L/AS/Adium 2.0/Scripts" }.
 - (NSArray *)resourcePathsForName:(NSString *)name;
-
 - (NSString *)pathOfPackWithName:(NSString *)name extension:(NSString *)extension resourceFolderName:(NSString *)folderName;
-
-/*
- * Return the path to be used for caching files for this user. It will be something like:
- * ~/Library/Caches/Adium/UserName
- * It is already tilde-expanded and is cached by AIAdium.
- */
 - (NSString *)cachesPath;
 
 @end
@@ -121,21 +91,12 @@
 #define EXCEPTIONS_PATH               [@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
 #define CRASHES_PATH                  [@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
 
-//Localization
-#define AILocalizedString(key, comment) NSLocalizedStringFromTableInBundle(key,nil,[NSBundle bundleForClass: [self class]],comment)
-#define AILocalizedStringFromTable(key, table, comment) NSLocalizedStringFromTableInBundle(key,table,[NSBundle bundleForClass: [self class]],comment)
-
 //Debugging
 #if BETA_RELEASE			/* Automatically turn on DEBUG_BUILD for all BETA_RELEASE builds */
 	#ifndef DEBUG_BUILD
 		#define DEBUG_BUILD
 	#endif
 #endif
-
-//Static strings
-#define DeclareString(var)			static NSString * (var) = nil;
-#define InitString(var,string)		if (! (var) ) (var) = [(string) retain];
-#define ReleaseString(var)			if ( (var) ) { [(var) release]; (var) = nil; } 
 
 //Adium events
 #define KEY_EVENT_DISPLAY_NAME		@"DisplayName"

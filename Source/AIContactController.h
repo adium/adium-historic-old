@@ -16,7 +16,7 @@
 
 @protocol AIListObjectObserver, AIContainingObject;
 
-@class AIContactHandle, AIMessageObject, AIMetaContact, AIService, AIContactInfoPane, AIListContact, AIListGroup,
+@class AIAccount, AIListObject,  AIListContact, AIListGroup, AIMetaContact, AIMessageObject, AIService, AIContactInfoPane,
 	   AISortController;
 
 #define ListObject_AttributesChanged			@"ListObject_AttributesChanged"

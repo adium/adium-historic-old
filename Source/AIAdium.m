@@ -243,7 +243,8 @@ static PREFERENCE_CATEGORY						prefsCategory;
 	 */
     [accountController finishIniting];
 	[contactController finishIniting];
-    [interfaceController finishIniting];
+    [statusController finishIniting];
+	[interfaceController finishIniting];
 	
 	//Open the preferences if we were unable to because application:openFile: was called before we got here
 	[self openAppropriatePreferencesIfNeeded];
@@ -506,11 +507,13 @@ static PREFERENCE_CATEGORY						prefsCategory;
 	}
 }
 
-//Create a resource folder in the Library/Application\ Support/Adium\ 2.0 folder.
-//Pass it the name of the folder (e.g. @"Scripts").
-//If it is found to already in a library folder, return that pathname (using
-//  the same order of preference as resourcePathsForName:).
-//Otherwise, create it in the user library and return the pathname to it.
+/*
+ * @brief Create a resource folder in the Library/Application\ Support/Adium\ 2.0 folder.
+ *
+ * Pass it the name of the folder (e.g. @"Scripts").
+ * If it is found to already in a library folder, return that pathname, using the same order of preference as
+ * -[AIAdium resourcePathsForName:]. Otherwise, create it in the user library and return the pathname to it.
+ */
 - (NSString *)createResourcePathForName:(NSString *)name
 {
     NSString		*targetPath;    //This is the subfolder for the user domain (i.e. ~/L/AS/Adium\ 2.0).
@@ -555,9 +558,23 @@ static PREFERENCE_CATEGORY						prefsCategory;
     return targetPath;
 }
 
-//return zero or more pathnames to objects in the Application Support folders
-//  and the resources folder of the application bundle.
-//only those pathnames that exist are returned.  The Adium bundle's resource path should be the last item in the array.
+/*
+ * @brief Return zero or more resource pathnames to an filename 
+ *
+ * Searches in the Application Support folders and the Resources/ folder of the Adium.app bundle.
+ * Only those pathnames that exist are returned.  The Adium bundle's resource path will be the last item in the array,
+ * so precedence is given to the user and system Application Support folders.
+ * 
+ * Pass nil to receive an array of paths to existing Adium Application Support folders (plus the Resouces folder).
+ *
+ * Example: If you call[adium resourcePathsForName:@"Scripts"], and there's a
+ * Scripts folder in ~/Library/Application Support/Adium\ 2.0 and in /Library/Application Support/Adium\ 2.0, but not
+ * in /System/Library/ApplicationSupport/Adium\ 2.0 or /Network/Library/Application Support/Adium\ 2.0.
+ * The array you get back will be { @"/Users/username/Library/Application Support/Adium 2.0/Scripts",
+ * @"/Library/Application Support/Adium 2.0/Scripts" }.
+ *
+ * @param name The full name (including extension as appropriate) of the resource for which to search
+ */
 - (NSArray *)resourcePathsForName:(NSString *)name
 {
 	NSArray			*librarySearchPaths;
@@ -597,6 +614,11 @@ static PREFERENCE_CATEGORY						prefsCategory;
 	return(pathArray);
 }
 
+/*
+ * @brief Return the path to be used for caching files for this user.
+ *
+ * @result A cached, tilde-expanded full path.
+ */
 - (NSString *)cachesPath
 {
 	static NSString *cachesPath = nil;

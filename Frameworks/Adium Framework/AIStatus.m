@@ -83,8 +83,13 @@
  */
 - (id)copyWithZone:(NSZone *)zone
 {
-	AIStatus	*status = [[[self class] allocWithZone:zone] init];
+	return [self retain];
+}
 
+- (id)mutableCopy
+{
+	AIStatus	*status = [[[self class] alloc] init];
+	
 	[status->statusDict release];
 	status->statusDict = [statusDict mutableCopy];
 

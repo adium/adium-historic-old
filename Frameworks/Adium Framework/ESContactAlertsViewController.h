@@ -18,7 +18,7 @@
 
 #define CONTACT_ALERTS_DETAILS_FOR_HEADER_CHANGED	@"ContactAlertDetailsForHeaderChanged"
 
-@class AIAlternatingRowTableView;
+@class AIAlternatingRowTableView, AIListObject;
 
 @interface ESContactAlertsViewController : AIObject {
 	IBOutlet	NSView						*view;

@@ -16,7 +16,7 @@
 
 #import "AIWindowController.h"
 
-@class AICompletingTextField;
+@class AIListContact, AICompletingTextField;
 
 @interface AIAccountPlusFieldPromptController : AIWindowController {
     IBOutlet	AICompletingTextField	*textField_handle;

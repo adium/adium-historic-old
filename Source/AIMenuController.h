@@ -16,6 +16,8 @@
 
 #define Menu_didChange  @"Menu_didChange"
 
+@class AIListObject;
+
 typedef enum {
     LOC_Adium_About = 0, LOC_Adium_Preferences,
     LOC_File_New, LOC_File_Close, LOC_File_Save, LOC_File_Additions,

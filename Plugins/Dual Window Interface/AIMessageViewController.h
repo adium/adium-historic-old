@@ -16,7 +16,7 @@
 
 #import "ESChatUserListController.h"
 
-@class AIAccountSelectionView, AIAccount, AISplitView, AIMessageEntryTextView;
+@class AIAccount, AIListContact, AIListObject, AIAccountSelectionView, AISplitView, AIMessageEntryTextView;
 @protocol AIMessageViewController;
 
 @interface AIMessageViewController : AIObject <AIListControllerDelegate> {

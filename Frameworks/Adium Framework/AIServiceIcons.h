@@ -30,7 +30,7 @@ typedef enum {
 } AIIconDirection;
 #define NUMBER_OF_ICON_DIRECTIONS		2
 
-@class AIService;
+@class AIService, AIListObject;
 
 @interface AIServiceIcons : NSObject {
 
