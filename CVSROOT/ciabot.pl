@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w
 #
+#
 # ciabot -- Mail a CVS log message to a given address, for the purposes of CIA
 #
 # Loosely based on cvslog by Russ Allbery <rra@stanford.edu>
@@ -29,7 +30,7 @@
 # below.
 #
 #
-# $Id: ciabot.pl,v 1.23 2004/01/23 05:13:31 ramoth4 Exp $
+# $Id: ciabot.pl,v 1.24 2004/01/23 05:16:43 ramoth4 Exp $
 
 use strict;
 use vars qw ($project $from_email $dest_email $rpc_uri $sendmail $sync_delay
