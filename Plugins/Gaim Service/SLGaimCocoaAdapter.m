@@ -467,13 +467,7 @@ static void adiumGaimBlistNewList(GaimBuddyList *list)
 
 static void adiumGaimBlistNewNode(GaimBlistNode *node)
 {
-	if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
-		GaimBuddy *buddy = (GaimBuddy*)node;
-		
-		[accountLookup(buddy->account) mainPerformSelector:@selector(newContact:withName:)
-												withObject:contactLookupFromBuddy(buddy)
-												withObject:[NSString stringWithUTF8String:buddy->name]];
-	}
+
 }
 
 static void adiumGaimBlistShow(GaimBuddyList *list)
@@ -489,19 +483,29 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 		AIListContact *theContact = contactLookupFromBuddy(buddy);
 		
 		//Group changes - gaim buddies start off in no group, so this is an important update for us
+		//We also use this opportunity to check the contact's name against its formattedUID
 		if(![theContact remoteGroupName]){
-			GaimGroup *g = gaim_find_buddys_group(buddy);
-			if(g && g->name){
-				NSString *groupName = [NSString stringWithUTF8String:g->name];
-				[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toGroupName:)
-														withObject:theContact
-														withObject:groupName];
-			}
-		}
+			GaimGroup	*g = gaim_find_buddys_group(buddy);
+			NSString	*groupName;
+			NSString	*contactName;
 
-		[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toAlias:)
-												withObject:theContact
-												withObject:[NSString stringWithUTF8String:gaim_buddy_get_alias(buddy)]];
+			groupName = ((g && g->name) ?
+						 [NSString stringWithUTF8String:g->name] :
+						 nil);
+			contactName = [NSString stringWithUTF8String:buddy->name];
+				
+			[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toGroupName:contactName:)
+													withObject:theContact
+													withObject:groupName
+													withObject:contactName];
+		}
+		
+		const char	*alias = gaim_buddy_get_alias(buddy);
+		if (alias){
+			[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toAlias:)
+													withObject:theContact
+													withObject:[NSString stringWithUTF8String:alias]];
+		}
 	}
 }
 
