@@ -279,7 +279,7 @@ lineColorDarkDivider = [[backColorIn darkenBy:0.2] retain];
 - (void)addCellsForContactObject:(NSObject<AIContentObject> *)object
 {
     AISMVMessageCell	*messageCell;
-    float		width = [self frame].size.width;
+    float		width;// = [self frame].size.width - maxSenderWidth;
     
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){ //Message content
         NSMutableParagraphStyle	*paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
@@ -336,6 +336,7 @@ lineColorDarkDivider = [[backColorIn darkenBy:0.2] retain];
 
         //Create a message cell
         messageCell = [AISMVMessageCell messageCellWithString:[contentMessage message]];
+        width = [self frame].size.width - maxSenderWidth;
         height = [messageCell sizeCellForWidth:width].height;
         if([messageSource isKindOfClass:[AIAccount class]]){
             [messageCell setBackgroundColor:backColorOut];
