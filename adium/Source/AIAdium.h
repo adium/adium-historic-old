@@ -92,14 +92,17 @@ typedef enum {
     AIPref_Accounts_Profile,
     AIPref_Accounts_Hosts,
     AIPref_ContactList_General,
-    AIPref_ContactList_Display,
+    AIPref_ContactList_Groups,
+    AIPref_ContactList_Contacts,
     AIPref_Messages_Display,
     AIPref_Messages_Sending,
     AIPref_Messages_Receiving,
     AIPref_Status_Away,
     AIPref_Status_Idle,
-    AIPref_Dock,
-    AIPref_Sound
+    AIPref_Dock_General,
+    AIPref_Dock_Icon,
+    AIPref_Sound,
+    AIPref_Emoticons
 } PREFERENCE_CATEGORY;
 
 //Preference groups

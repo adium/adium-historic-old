@@ -19,7 +19,7 @@
 #import "AIContactStatusColoringPreferences.h"
 
 #define	CONTACT_STATUS_COLORING_PREF_NIB	@"ContactStatusColoringPrefs"
-#define CONTACT_STATUS_COLORING_PREF_TITLE	@"Status - Contact Name"
+#define CONTACT_STATUS_COLORING_PREF_TITLE	@"Contact Coloring"
 
 @interface AIContactStatusColoringPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
@@ -108,7 +108,7 @@
     owner = [inOwner retain];
 
     //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Display withDelegate:self label:CONTACT_STATUS_COLORING_PREF_TITLE]];
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Contacts withDelegate:self label:CONTACT_STATUS_COLORING_PREF_TITLE]];
 
     return(self);
 }

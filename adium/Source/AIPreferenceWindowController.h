@@ -15,28 +15,41 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAdium, AIPreferenceViewController;
+@class AIAdium, AIFlippedCategoryView;
 
 @interface AIPreferenceWindowController : NSWindowController {
-    IBOutlet	NSTabView	*tabView_category;
+    IBOutlet	NSTabView			*tabView_category;
+
+    IBOutlet	NSTabView			*tabView_accounts;
+    IBOutlet	AIFlippedCategoryView		*view_Accounts_Connections;
+    IBOutlet	AIFlippedCategoryView		*view_Accounts_Profile;
+    IBOutlet	AIFlippedCategoryView		*view_Accounts_Hosts;
+
+    IBOutlet	NSTabView			*tabView_contactList;
+    IBOutlet	AIFlippedCategoryView		*view_ContactList_General;
+    IBOutlet	AIFlippedCategoryView		*view_ContactList_Groups;
+    IBOutlet	AIFlippedCategoryView		*view_ContactList_Contacts;
+
+    IBOutlet	NSTabView			*tabView_messages;
+    IBOutlet	AIFlippedCategoryView		*view_Messages_Display;
+    IBOutlet	AIFlippedCategoryView		*view_Messages_Sending;
+    IBOutlet	AIFlippedCategoryView		*view_Messages_Receiving;
+    IBOutlet	AIFlippedCategoryView		*view_Messages_Emoticons;
+
+    IBOutlet	NSTabView			*tabView_status;
+    IBOutlet	AIFlippedCategoryView		*view_Status_Away;
+    IBOutlet	AIFlippedCategoryView		*view_Status_Idle;
+
+    IBOutlet	NSTabView			*tabView_dock;
+    IBOutlet	AIFlippedCategoryView		*view_Dock_General;
+    IBOutlet	AIFlippedCategoryView		*view_Dock_Icon;
     
-    IBOutlet	NSView		*view_Accounts_Connections;
-    IBOutlet	NSView		*view_Accounts_Profile;
-    IBOutlet	NSView		*view_Accounts_Hosts;
-    IBOutlet	NSView		*view_ContactList_General;
-    IBOutlet	NSView		*view_ContactList_Display;
-    IBOutlet	NSView		*view_Messages_Display;
-    IBOutlet	NSView		*view_Messages_Sending;
-    IBOutlet	NSView		*view_Messages_Receiving;
-    IBOutlet	NSView		*view_Status_Away;
-    IBOutlet	NSView		*view_Status_Idle;
-    IBOutlet	NSView		*view_Dock;
-    IBOutlet	NSView		*view_Sound;
+    IBOutlet	AIFlippedCategoryView		*view_Sound;
 
     AIAdium			*owner;
     NSMutableDictionary		*toolbarItems;
 
-    
+    int				yPadding;    
 }
 
 + (AIPreferenceWindowController *)preferenceWindowControllerWithOwner:(id)inOwner;

@@ -19,7 +19,7 @@
 #import "AISendingKeyPreferences.h"
 
 #define SENDING_KEY_PREF_NIB		@"SendingKeyPrefs"
-#define SENDING_KEY_PREF_TITLE		@"Sending Keys"
+#define SENDING_KEY_PREF_TITLE		@"Send Messages When:"
 
 @interface AISendingKeyPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;

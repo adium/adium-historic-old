@@ -20,7 +20,7 @@
 #import "AIAdium.h"
 
 #define	DEFAULT_FORMATTING_PREF_NIB		@"DefaultFormattingPrefs"
-#define DEFAULT_FORMATTING_PREF_TITLE		@"Default message style"
+#define DEFAULT_FORMATTING_PREF_TITLE		@"Default Message Style"
 
 @interface AIDefaultFormattingPreferences (PRIVATE)
 - (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField;

@@ -21,9 +21,9 @@
 #define AISM_PREFIX_COLORS		@"PrefixColors"
 
 #define AISM_PREF_NIB			@"AISMPrefView"
-#define AISM_PREF_TITLE_PREFIX		@"Message Prefixes"
-#define AISM_PREF_TITLE_TIMES		@"Message Time Stamps"
-#define AISM_PREF_TITLE_GRID		@"Message Gridding"
+#define AISM_PREF_TITLE_PREFIX		@"Prefixes"
+#define AISM_PREF_TITLE_TIMES		@"Time Stamps"
+#define AISM_PREF_TITLE_GRID		@"Gridding"
 #define AISM_PREF_TITLE_ALIAS		@"Message Alias"
 
 #define COLOR_SAMPLE_WIDTH		16

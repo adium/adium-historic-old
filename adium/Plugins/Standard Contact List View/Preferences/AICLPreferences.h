@@ -19,8 +19,12 @@
 
 @interface AICLPreferences : NSObject {
     AIAdium		*owner;
-    
-    IBOutlet	NSView			*view_prefView;
+
+    AIPreferencePane		*generalPane;
+    IBOutlet	NSView			*view_prefViewGeneral;
+
+    AIPreferencePane		*groupsPane;
+    IBOutlet	NSView			*view_prefViewGroups;
 
     IBOutlet	NSButton		*button_setFont;
     IBOutlet	NSTextField		*textField_fontName;

@@ -20,8 +20,9 @@
 #import "AISCLOutlineView.h"
 #import "AISCLViewPlugin.h"
 
-#define CL_PREF_NIB		@"AICLPrefView"		//Name of preference nib
-#define CL_PREF_TITLE		@"General Appearance"	//
+#define CL_PREF_NIB			@"AICLPrefView"		//Name of preference nib
+#define CL_PREF_GENERAL_TITLE		@"General Appearance"	//
+#define CL_PREF_GROUPS_TITLE		@"Groups"		//
 
 //Handles the interface interaction, and sets preference values
 //The outline view plugin is responsible for reading & setting the preferences, as well as observing changes in them
@@ -114,8 +115,13 @@
     [super init];
     owner = [inOwner retain];
 
-    //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Display withDelegate:self label:CL_PREF_TITLE]];
+    //Register our preference panes
+    generalPane = [AIPreferencePane preferencePaneInCategory:AIPref_ContactList_General withDelegate:self label:CL_PREF_GENERAL_TITLE];
+    [[owner preferenceController] addPreferencePane:generalPane];
+
+    groupsPane = [AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Groups withDelegate:self label:CL_PREF_GROUPS_TITLE];
+    [[owner preferenceController] addPreferencePane:groupsPane];
+
     
     return(self);    
 }
@@ -124,14 +130,18 @@
 - (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
 {
     //Load our preference view nib
-    if(!view_prefView){
+    if(!view_prefViewGeneral){
         [NSBundle loadNibNamed:CL_PREF_NIB owner:self];
 
         //Configure our view
         [self configureView];
     }
 
-    return(view_prefView);
+    if(preferencePane == generalPane){
+        return(view_prefViewGeneral);
+    }else{
+        return(view_prefViewGroups);
+    }
 }
 
 //Display the name of a font in our text field

@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <AIUtilities/AIUtilities.h>
+#import <Adium/Adium.h>
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
 #import "AIPreferenceController.h"
@@ -26,8 +27,8 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
 - (void)configureToolbarItems;
 - (void)installToolbar;
-//- (void)showCategory:(AIPreferenceCategory *)inCategory;
-- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(NSView *)inView;
+- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIFlippedCategoryView *)inView;
+- (void)_sizeWindowToFitTabView:(NSTabView *)tabView;
 @end
 
 @implementation AIPreferenceWindowController
@@ -107,6 +108,9 @@ static AIPreferenceWindowController *sharedInstance = nil;
     NSString	*savedFrame;
 //    NSArray	*categoryArray;
 
+    //Remember the amount of vertical padding to our window's frame
+    yPadding = [[self window] frame].size.height;
+    
     //Restore the window position
     savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_WINDOW_FRAME];
     if(savedFrame){
@@ -167,7 +171,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     [toolbar setAllowsUserCustomization:NO];
     [toolbar setAutosavesConfiguration:NO];
     [toolbar setDisplayMode: NSToolbarDisplayModeIconAndLabel];
-    [toolbar setSizeMode: NSToolbarSizeModeSmall];
+    [toolbar setSizeMode: NSToolbarSizeModeRegular];
 
     //install it
     [[self window] setToolbar:toolbar];
@@ -221,22 +225,30 @@ static AIPreferenceWindowController *sharedInstance = nil;
             [self _insertPanesForCategory:AIPref_Accounts_Connections intoView:view_Accounts_Connections];
             [self _insertPanesForCategory:AIPref_Accounts_Profile intoView:view_Accounts_Profile];
             [self _insertPanesForCategory:AIPref_Accounts_Hosts intoView:view_Accounts_Hosts];
+            [self _sizeWindowToFitTabView:tabView_accounts];
         break;
         case 2:
             [self _insertPanesForCategory:AIPref_ContactList_General intoView:view_ContactList_General];
-            [self _insertPanesForCategory:AIPref_ContactList_Display intoView:view_ContactList_Display];
+            [self _insertPanesForCategory:AIPref_ContactList_Groups intoView:view_ContactList_Groups];
+            [self _insertPanesForCategory:AIPref_ContactList_Contacts intoView:view_ContactList_Contacts];
+            [self _sizeWindowToFitTabView:tabView_contactList];
         break;
         case 3:
             [self _insertPanesForCategory:AIPref_Messages_Display intoView:view_Messages_Display];
             [self _insertPanesForCategory:AIPref_Messages_Sending intoView:view_Messages_Sending];
             [self _insertPanesForCategory:AIPref_Messages_Receiving intoView:view_Messages_Receiving];
+            [self _insertPanesForCategory:AIPref_Emoticons intoView:view_Messages_Emoticons];
+            [self _sizeWindowToFitTabView:tabView_messages];
         break;
         case 4:
             [self _insertPanesForCategory:AIPref_Status_Away intoView:view_Status_Away];
             [self _insertPanesForCategory:AIPref_Status_Idle intoView:view_Status_Idle];
+            [self _sizeWindowToFitTabView:tabView_status];
         break;
         case 5:
-            [self _insertPanesForCategory:AIPref_Dock intoView:view_Dock];
+            [self _insertPanesForCategory:AIPref_Dock_General intoView:view_Dock_General];
+            [self _insertPanesForCategory:AIPref_Dock_Icon intoView:view_Dock_Icon];
+            [self _sizeWindowToFitTabView:tabView_dock];
         break;
         case 6:
             [self _insertPanesForCategory:AIPref_Sound intoView:view_Sound];
@@ -249,7 +261,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     
 }
 
-- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(NSView *)inView
+- (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIFlippedCategoryView *)inView
 {
     NSEnumerator	*enumerator;
     AIPreferencePane	*pane;
@@ -280,8 +292,42 @@ static AIPreferenceWindowController *sharedInstance = nil;
         yPos += [paneView frame].size.height;
     }
 
+    //Set the desired height of this view
+    [inView setDesiredHeight:yPos];
 }
 
+//Resize our window to fit the specified tabview
+- (void)_sizeWindowToFitTabView:(NSTabView *)tabView
+{
+    NSEnumerator	*enumerator;
+    NSTabViewItem	*tabViewItem;
+    int			maxHeight = 0;
+    NSRect 		frame = [[self window] frame];
+
+    //Determine the tallest view contained within this tab view.
+    enumerator = [[tabView tabViewItems] objectEnumerator];
+    while(tabViewItem = [enumerator nextObject]){
+        NSEnumerator	*subViewEnumerator;
+        NSView		*subView;
+
+        subViewEnumerator = [[[tabViewItem view] subviews] objectEnumerator];
+        while(subView = [subViewEnumerator nextObject]){
+            int		height = [(AIFlippedCategoryView *)subView desiredHeight];
+
+            if(height > maxHeight){
+                maxHeight = height;
+            }
+        }
+    }
+
+    //Add in window frame padding
+    maxHeight += yPadding;
+
+    //Adjust our window's frame
+    frame.origin.y += frame.size.height -maxHeight;
+    frame.size.height = maxHeight;
+    [[self window] setFrame:frame display:YES animate:YES];
+}
 
 //Toolbar item methods
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem

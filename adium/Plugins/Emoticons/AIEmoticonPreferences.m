@@ -73,7 +73,7 @@
     packs = [[NSMutableArray alloc] init];
 
     //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Display withDelegate:self label:EMOTICON_PREF_TITLE]];
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Emoticons withDelegate:self label:EMOTICON_PREF_TITLE]];
 
     return(self);
 }

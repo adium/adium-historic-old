@@ -40,6 +40,15 @@
     [NSBezierPath fillRect:rect];
 }*/
 
+- (void)setDesiredHeight:(int)inHeight
+{
+    desiredHeight = inHeight;
+}
+
+- (int)desiredHeight
+{
+    return(desiredHeight);
+}
 
 - (void)dealloc
 {
