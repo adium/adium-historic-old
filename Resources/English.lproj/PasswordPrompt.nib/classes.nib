@@ -20,7 +20,7 @@
         {
             CLASS = ESAccountPasswordPromptController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"textField_account" = NSTextField; "textField_service" = NSTextField; }; 
+            OUTLETS = {"imageView_service" = NSImageView; "textField_account" = NSTextField; }; 
             SUPERCLASS = AIPasswordPromptController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
