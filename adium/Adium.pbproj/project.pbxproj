@@ -99,7 +99,6 @@
 				F5A01D8C0379813301A8010A,
 				F501BB1403882A2901A8010A,
 				F5AAD090039BA10901A8010A,
-				A1D4690703AFDCBF00A8000D,
 				F50F253A03B0425301A80202,
 			);
 			isa = PBXGroup;
@@ -136,7 +135,6 @@
 				F53B9ACB02CD12CB01A8010A,
 				F5370C9802D76F3B01A8010A,
 				F51DEFAE032633E301A8010A,
-				A1D468F103AFDCBF00A8000D,
 				F59F9A89032BE6B101A8010A,
 				F510B77303339F1C01A8010A,
 				F5B53FC60333AFB501A8010A,
@@ -163,7 +161,6 @@
 				F53B9AC502CD12AB01A8010A,
 				F59F9A7F032BE67901A8010A,
 				F51DEFA40326330101A8010A,
-				A1D4690803AFDD1900A8000D,
 				F5BD46C402D0786601A8010A,
 				F5370C9202D76F1F01A8010A,
 				F510B76D03339ED501A8010A,
@@ -230,7 +227,6 @@
 				F5CED5F10388303901A8010A,
 				F55263BC0333CA4401A8010A,
 				F51DEFB00326341601A8010A,
-				A1D4691403AFDD5F00A8000D,
 				F5370C9A02D76F5101A8010A,
 				F5BD470702D0845E01A8010A,
 				F5BD46D902D078CC01A8010A,
@@ -415,190 +411,6 @@
 //A12
 //A13
 //A14
-		A1D468F103AFDCBF00A8000D = {
-			buildPhases = (
-				A1D468F303AFDCBF00A8000D,
-				A1D468F603AFDCBF00A8000D,
-				A1D468FF03AFDCBF00A8000D,
-				A1D4690203AFDCBF00A8000D,
-				A1D4690603AFDCBF00A8000D,
-			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "Standard Contact List Preferences";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				A1D468F203AFDCBF00A8000D,
-			);
-			isa = PBXBundleTarget;
-			name = "Standard Contact List Preferences";
-			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
-			productName = "Account List Preferences";
-			productReference = A1D4690703AFDCBF00A8000D;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>Standard Contact List Preferences</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string></string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string></string>
-	<key>CFBundlePackageType</key>
-	<string>BNDL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>0.0.1d1</string>
-	<key>NSPrincipalClass</key>
-	<string>AIContactListPreferencesPlugin</string>
-</dict>
-</plist>
-";
-		};
-		A1D468F203AFDCBF00A8000D = {
-			isa = PBXTargetDependency;
-			target = F53B9A0E02CCED8B01A8010A;
-		};
-		A1D468F303AFDCBF00A8000D = {
-			buildActionMask = 2147483647;
-			files = (
-				A1D4690F03AFDD1900A8000D,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A1D468F603AFDCBF00A8000D = {
-			buildActionMask = 2147483647;
-			files = (
-				A1D4691103AFDD1900A8000D,
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A1D468FF03AFDCBF00A8000D = {
-			buildActionMask = 2147483647;
-			files = (
-				A1D4691003AFDD1900A8000D,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A1D4690203AFDCBF00A8000D = {
-			buildActionMask = 2147483647;
-			files = (
-				A1D4690303AFDCBF00A8000D,
-				A1D4690403AFDCBF00A8000D,
-				A1D4690503AFDCBF00A8000D,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A1D4690303AFDCBF00A8000D = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		A1D4690403AFDCBF00A8000D = {
-			fileRef = F53B9A3602CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		A1D4690503AFDCBF00A8000D = {
-			fileRef = F53B9A3702CCEF4801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		A1D4690603AFDCBF00A8000D = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A1D4690703AFDCBF00A8000D = {
-			isa = PBXBundleReference;
-			path = "Standard Contact List Preferences.AdiumPlugin";
-			refType = 3;
-		};
-		A1D4690803AFDD1900A8000D = {
-			children = (
-				A1D4691303AFDD4600A8000D,
-				A1D4690B03AFDD1900A8000D,
-				A1D4690C03AFDD1900A8000D,
-			);
-			isa = PBXGroup;
-			name = "Standard Contact List Preferences";
-			path = "Plugins/Standard Contact List Preferences";
-			refType = 4;
-		};
-		A1D4690A03AFDD1900A8000D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = AIContactListPreferencesPlugin.h;
-			refType = 4;
-		};
-		A1D4690B03AFDD1900A8000D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = AIContactListPreferencesPlugin.m;
-			refType = 4;
-		};
-		A1D4690C03AFDD1900A8000D = {
-			isa = PBXFileReference;
-			path = ContactListPrefView.nib;
-			refType = 4;
-		};
-		A1D4690F03AFDD1900A8000D = {
-			fileRef = A1D4690A03AFDD1900A8000D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		A1D4691003AFDD1900A8000D = {
-			fileRef = A1D4690B03AFDD1900A8000D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		A1D4691103AFDD1900A8000D = {
-			fileRef = A1D4690C03AFDD1900A8000D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		A1D4691303AFDD4600A8000D = {
-			children = (
-				A1D4690A03AFDD1900A8000D,
-			);
-			isa = PBXGroup;
-			name = Headers;
-			refType = 4;
-		};
-		A1D4691403AFDD5F00A8000D = {
-			isa = PBXTargetDependency;
-			target = A1D468F103AFDCBF00A8000D;
-		};
 		A1D4691E03AFDDFC00A8000D = {
 			isa = PBXBundleReference;
 			name = "Standard Contact List Preferences.AdiumPlugin";
