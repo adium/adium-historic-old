@@ -56,11 +56,35 @@
 - (void)viewWillMoveToSuperview:(NSView *)newSuperview
 {
 	[super viewWillMoveToSuperview:newSuperview];
-	
+
 	if(trackingTag != -1){
-		[self removeTrackingRect:trackingTag];
+		[[self superview] removeTrackingRect:trackingTag];
 		trackingTag = -1;
-	}	
+	}
+}
+
+- (void)viewDidMoveToSuperview
+{
+	[super viewDidMoveToSuperview];
+
+	[self resetCursorRects];
+}
+
+- (void)viewWillMoveToWindow:(NSWindow *)newWindow
+{
+	[super viewWillMoveToWindow:newWindow];
+
+	if(trackingTag != -1){
+		[[self superview] removeTrackingRect:trackingTag];
+		trackingTag = -1;
+	}
+}
+
+- (void)viewDidMoveToWindow
+{
+	[super viewDidMoveToWindow];
+
+	[self resetCursorRects];
 }
 
 - (void)rolloverFrameDidChange:(NSNotification *)inNotification
@@ -71,22 +95,20 @@
 //Reset our cursor tracking
 - (void)resetCursorRects
 {
-	NSRect	frame = [self frame];
-		
 	//Stop any existing tracking
 	if(trackingTag != -1){
-		[self removeTrackingRect:trackingTag];
+		[[self superview] removeTrackingRect:trackingTag];
 		trackingTag = -1;
 	}
 	
 	//Add a tracking rect if our superview and window are ready
-	if([self window]){
-		NSRect	trackRect = NSMakeRect(0,0,frame.size.width, frame.size.height);
+	if([self superview] && [self window]){
+		NSRect	trackRect = /*NSMakeRect(0,0,frame.size.width, frame.size.height)*/ [self frame];
 		NSPoint	localPoint = [self convertPoint:[[self window] convertScreenToBase:[NSEvent mouseLocation]]
-									   fromView:nil];
+									   fromView:[self superview]];
 		BOOL	mouseInside = NSPointInRect(localPoint, trackRect);
 		
-		trackingTag = [self addTrackingRect:trackRect owner:self userData:nil assumeInside:mouseInside];
+		trackingTag = [[self superview] addTrackingRect:trackRect owner:self userData:nil assumeInside:mouseInside];
 		if(mouseInside) [self mouseEntered:nil];
 	}
 }
@@ -95,12 +117,16 @@
 - (void)mouseEntered:(NSEvent *)theEvent
 {
 	[delegate rolloverButton:self mouseChangedToInsideButton:YES];
+	
+	[super mouseEntered:theEvent];
 }
 
 //Cursor left our view
 - (void)mouseExited:(NSEvent *)theEvent
 {
 	[delegate rolloverButton:self mouseChangedToInsideButton:NO];
+
+	[super mouseExited:theEvent];
 }
 
 @end
