@@ -62,6 +62,7 @@ typedef enum {
     LOC_Format_Styles, LOC_Format_Palettes, LOC_Format_Additions, 
     LOC_Window_Commands, LOC_Window_Auxilary, LOC_Window_Fixed,
     LOC_Help_Local, LOC_Help_Web, LOC_Help_Additions,
+    LOC_Contact_Manage, LOC_Contact_Action, LOC_Contact_NegativeAction, LOC_Contact_Additions
 } MENU_LOCATION;
 
 typedef enum {
@@ -292,44 +293,21 @@ typedef enum {
     NSMutableDictionary		*groupDict;
     NSMutableDictionary		*abandonedContacts;
     NSMutableDictionary		*abandonedGroups;
+
+    NSMenuItem			*menuItem_getInfo;
 }
+
 - (void)handlesChangedForAccount:(AIAccount *)inAccount;
 - (void)handle:(AIHandle *)inHandle addedToAccount:(AIAccount *)inAccount;
 - (void)handle:(AIHandle *)inHandle removedFromAccount:(AIAccount *)inAccount;
 
-
-    /*
-- (void)addAccount:(AIAccount *)inAccount toObject:(AIContactObject *)inObject;
-- (void)removeAccount:(AIAccount *)inAccount fromObject:(AIContactObject *)inObject;
-
-- (AIContactHandle *)createHandleWithService:(AIServiceType *)inService UID:(NSString *)inUID inGroup:(AIContactGroup *)inGroup forAccount:(AIAccount *)inAccount;
-- (AIContactGroup *)createGroupNamed:(NSString *)inName inGroup:(AIContactGroup *)inGroup;
-
-- (void)deleteObject:(AIContactObject *)object;
-- (void)renameObject:(AIContactObject *)object to:(NSString *)newName;
-- (void)moveObject:(AIContactObject *)object toGroup:(AIContactGroup *)destGroup index:(int)inIndex;
-
-*/
-
 - (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(AIServiceType *)service UID:(NSString *)UID;
 - (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(AIServiceType *)service UID:(NSString *)UID serverGroup:(NSString *)serverGroup;
 
-    //Account code calls these methods after modifying its available handles
-//- (void)handleWasAdded:(AIHandle *)inHandle;
-//- (void)handleWasRemoved:(AIHandle *)inHandle;
-//- (void)refreshContactList;
-
-
 - (AIListGroup *)contactList;
-/*
-- (AIContactGroup *)groupWithName:(NSString *)inName;
-- (AIContactHandle *)handleWithService:(AIServiceType *)inService UID:(NSString *)inUID forAccount:(AIAccount *)inAccount;
-- (NSMutableArray *)allContactsInGroup:(AIContactGroup *)inGroup subgroups:(BOOL)subGroups ownedBy:(AIAccount *)inAccount;
-*/
 - (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups;
 
 - (AIHandle *)handleOfContact:(AIListContact *)inContact forReceivingContentType:(NSString *)inType fromAccount:(AIAccount *)inAccount create:(BOOL)create;
-
 
 - (void)objectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys;
 
@@ -343,8 +321,11 @@ typedef enum {
 - (id <AIListSortController>)activeSortController;
 - (void)sortListGroup:(AIListGroup *)inGroup mode:(AISortMode)sortMode;
 
+- (IBAction)showContactInfo:(id)sender;
 - (void)showInfoForContact:(AIListContact *)inContact;
 - (void)addContactInfoView:(AIPreferenceViewController *)inView;
+
+- (AIListContact *)selectedContact;
 
 - (void)setHoldContactListUpdates:(BOOL)inHoldUpdates;
 - (BOOL)holdContactListUpdates;
@@ -367,6 +348,7 @@ typedef enum {
     
     NSString		*errorTitle;
     NSString		*errorDesc;
+
 }
 
 - (void)registerContactListViewController:(id <AIContactListViewController>)inController;
@@ -435,6 +417,10 @@ typedef enum {
     IBOutlet	NSMenuItem	*menu_Help_Local;
     IBOutlet	NSMenuItem	*menu_Help_Web;
     IBOutlet	NSMenuItem	*menu_Help_Additions;
+    IBOutlet	NSMenuItem	*menu_Contact_Manage;
+    IBOutlet	NSMenuItem	*menu_Contact_Action;
+    IBOutlet	NSMenuItem	*menu_Contact_NegativeAction;
+    IBOutlet	NSMenuItem	*menu_Contact_Additions;
 
     NSMutableArray		*locationArray;
 }

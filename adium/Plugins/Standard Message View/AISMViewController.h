@@ -55,5 +55,6 @@
 
 + (AISMViewController *)messageViewControllerForContact:(AIListContact *)inContact owner:(id)inOwner;
 - (NSView *)messageView;
+- (AIListContact *)contact;
 
 @end

@@ -144,6 +144,7 @@
     //Config the outgoing text view
     [textView_outgoing setOwner:owner];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
+    [textView_outgoing setContact:inContact];
     
     //Config the toolbar
     [toolbar_bottom setIdentifier:MESSAGE_TAB_TOOLBAR];
