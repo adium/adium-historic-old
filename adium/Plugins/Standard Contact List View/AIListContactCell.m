@@ -225,7 +225,7 @@
 //
 - (NSImage *)serviceImage
 {
-	return([[[[AIObject sharedAdiumInstance] accountController] accountWithObjectID:[(AIListContact *)listObject accountID]] menuImage]);
+	return([[(AIListContact *)listObject account] menuImage]);
 }
 
 
