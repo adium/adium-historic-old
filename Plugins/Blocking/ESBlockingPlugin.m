@@ -8,10 +8,11 @@
 
 #import "ESBlockingPlugin.h"
 
-#define BLOCK_CONTACT @"Block Contact"
+#define BLOCK_CONTACT	AILocalizedString(@"Block", @"Block Contact menu item")
+#define UNBLOCK_CONTACT AILocalizedString(@"Unblock", @"Unblock Contact menu item")
 
 @interface ESBlockingPlugin(PRIVATE)
-- (void)blockContact:(AIListContact *)contact forAccount:(AIAccount *)account;
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem;
 @end
 
 @implementation ESBlockingPlugin
@@ -26,43 +27,90 @@
 	//[[adium menuController] addMenuItem:blockContactMenuItem toLocation:LOC_Contact_NegativeAction];
 	
     //Add our get info contextual menu item
-    blockContactContextualMenuItem = [[NSMenuItem alloc] initWithTitle:BLOCK_CONTACT target:self action:@selector(blockContextContact:) keyEquivalent:@""];
+    blockContactContextualMenuItem = [[NSMenuItem alloc] initWithTitle:BLOCK_CONTACT
+																target:self
+																action:@selector(blockContact:)
+														 keyEquivalent:@""];
     //[[adium menuController] addContextualMenuItem:blockContactContextualMenuItem toLocation:Context_Contact_NegativeAction];
-	
+}
+
+- (void)uninstallPlugin
+{
+	[blockContactMenuItem release];
+	[blockContactContextualMenuItem release];
 }
 
 - (IBAction)blockContact:(id)sender
 {
-    AIListObject *object = [[adium contactController] selectedListObject];
-    
-    //We don't want to block groups
-    if([object isKindOfClass:[AIListContact class]]){
-        AIListContact *contact = (AIListContact *)object;
-        [self blockContact:contact forAccount:[contact account]];
-    }
-}
-
-- (IBAction)blockContextContact:(id)sender
-{
-    AIListObject *object = [[adium menuController] contactualMenuObject];
+	AIListObject *object;
+	
+	if(sender == blockContactMenuItem){
+		object = [[adium contactController] selectedListObject];
+	}else{
+		object = [[adium menuController] contactualMenuObject];
+	}
+	
+	
+	//don't block groups
 	if([object isKindOfClass:[AIListContact class]]){
-		AIListContact	*contact = (AIListContact *)object;
-		[self blockContact:contact forAccount:[contact account]];
+		AIListContact *contact = (AIListContact *)object;
+		
+		if([[contact account] conformsToProtocol:@protocol(AIAccount_Privacy)]){
+			AIAccount <AIAccount_Privacy> *account = [contact account];
+			//if it's not on the block list, block it. otherwise, unblock it
+			if([[account listObjectsOnPrivacyList:PRIVACY_DENY] indexOfObjectIdenticalTo:contact] == NSNotFound){
+				if(NSRunAlertPanel([NSString stringWithFormat:AILocalizedString(@"Are you sure you want to block %@?",nil), [object displayName]],
+								   @"",
+								   AILocalizedString(@"OK",nil),
+								   AILocalizedString(@"Cancel",nil),
+								   nil) 
+								== NSAlertDefaultReturn){
+					NSLog(@"Blocking");
+					if([account addListObject:object toPrivacyList:PRIVACY_DENY]){ NSLog(@"Success!"); }
+				}
+			}else{
+				if(NSRunAlertPanel([NSString stringWithFormat:AILocalizedString(@"Are you sure you want to unblock %@?",nil), [object displayName]],
+								   @"",
+								   AILocalizedString(@"OK",nil),
+								   AILocalizedString(@"Cancel",nil),
+								   nil)
+								== NSAlertDefaultReturn){
+					NSLog(@"Unblocking");
+					if([account removeListObject:object fromPrivacyList:PRIVACY_DENY]){ NSLog(@"Success!"); }
+				}
+			}
+		}
 	}
 }
 
-- (void)blockContact:(AIListContact *)contact forAccount:(AIAccount *)account
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-    if([account conformsToProtocol:@protocol(AIAccount_Privacy)]){
-        if([(AIAccount <AIAccount_Privacy> *)account addListObject:contact toPrivacyList:PRIVACY_DENY]){
-            
-        }else{
-                //NSLog(@"Not blocked");
-        }
-    }else{
-        //NSLog(@"No privacy protcol");
-        //NSLog(@"%@",[account class]);
-    }
+	AIListObject *object;
+	
+	if(menuItem == blockContactMenuItem){
+		object = [[adium contactController] selectedListObject];
+	}else{
+		object = [[adium menuController] contactualMenuObject];
+	}
+	
+	if([object isKindOfClass:[AIListContact class]]){
+		AIListContact *contact = (AIListContact *)object;
+		
+		if([[contact account] conformsToProtocol:@protocol(AIAccount_Privacy)]){
+			AIAccount <AIAccount_Privacy> *account = [contact account];
+			if([[account listObjectsOnPrivacyList:PRIVACY_DENY] indexOfObjectIdenticalTo:contact] == NSNotFound){
+				[menuItem setTitle:BLOCK_CONTACT];
+				return YES;
+			}else{
+				[menuItem setTitle:UNBLOCK_CONTACT];
+				return YES;
+			}
+		}
+	}
+	
+	//reset the title to the default if it's disabled
+	[menuItem setTitle:BLOCK_CONTACT];
+	return NO;
 }
 
 @end
