@@ -26,6 +26,8 @@
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIStringFormatter.h>
 
+#define KEY_DISABLE_TYPING_NOTIFICATIONS		@"Disable Typing Notifications"
+
 /*!
  * @class AIAccountViewController
  * @brief Base account view controller
@@ -207,8 +209,13 @@
 		}
 		
 		//Check for new mail
-		[checkBox_checkMail setState:[[inAccount preferenceForKey:KEY_ACCOUNT_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]];
+		[checkBox_checkMail setState:[[inAccount preferenceForKey:KEY_ACCOUNT_CHECK_MAIL
+															group:GROUP_ACCOUNT_STATUS] boolValue]];
 		
+		//Typing (inverse preference)
+		[checkBox_sendTyping setState:![[inAccount preferenceForKey:KEY_DISABLE_TYPING_NOTIFICATIONS
+															  group:GROUP_ACCOUNT_STATUS] boolValue]];
+
 		//Encryption
 		[popUp_encryption compatibleSelectItemWithTag:[[account preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 																		   group:GROUP_ENCRYPTION] intValue]];
@@ -262,7 +269,6 @@
 					 group:GROUP_ACCOUNT_STATUS];
 	
 	//Typing (preference is the inverse of the displayed checkbox)
-#define KEY_DISABLE_TYPING_NOTIFICATIONS		@"Disable Typing Notifications"
 	[account setPreference:[NSNumber numberWithBool:![checkBox_sendTyping state]]
 					forKey:KEY_DISABLE_TYPING_NOTIFICATIONS
 					 group:GROUP_ACCOUNT_STATUS];
