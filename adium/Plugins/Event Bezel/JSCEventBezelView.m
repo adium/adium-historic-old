@@ -11,6 +11,10 @@
 #define ORIGINAL_HEIGHT             206.0
 #define IMAGE_DIMENSION             48.0
 
+@interface JSCEventBezelView (PRIVATE)
+- (NSBezierPath *)bezierPathLabelOfSize:(NSSize)backgroundSize;
+@end
+
 @implementation JSCEventBezelView
 
 - (void)awakeFromNib
@@ -97,6 +101,7 @@
     float           relativeX = 1.0;
     float           relativeY = 1.0;
 	NSSize			buddyIconSize;
+	BOOL			minFontSize;
         
     // Clear the view and paint the backdrop image
     [[NSColor clearColor] set];
@@ -180,41 +185,48 @@
         [buddyIconBadge compositeToPoint: NSMakePoint(buddyIconPoint.x -6.0, buddyIconPoint.y - 6-0) operation:NSCompositeSourceOver];
     }
     
-    
     [mainAttributes setObject:[[NSFontManager sharedFontManager] 
-        convertFont:[NSFont systemFontOfSize:24.0] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];
-    [mainAttributesMask setObject:[[NSFontManager sharedFontManager] 
-        convertFont:[NSFont systemFontOfSize:24.0] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];
+        convertFont:[NSFont systemFontOfSize:buddyNameFontSize] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];
     buddyNameSize = [mainBuddyName sizeWithAttributes: mainAttributes];
     
-    while (buddyNameSize.width > ((187.0*relativeX) - (buddyNameSize.height / 2.0))) {
-        buddyNameFontSize-= 1.0;
-        [mainAttributes setObject:[[NSFontManager sharedFontManager] 
-            convertFont:[NSFont systemFontOfSize:buddyNameFontSize] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];
-        [mainAttributesMask setObject:[[NSFontManager sharedFontManager] 
-            convertFont:[NSFont systemFontOfSize:buddyNameFontSize] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];
-        buddyNameSize = [mainBuddyName sizeWithAttributes: mainAttributes];
+	minFontSize = NO;
+    while(buddyNameSize.width > ((187.0*relativeX) - (buddyNameSize.height / 2.0))) {
+		minFontSize = (buddyNameFontSize<=12.0);
+		if (minFontSize) {
+			[self setMainBuddyName: [mainBuddyName substringToIndex: [mainBuddyName length]-1]];
+		} else {
+			buddyNameFontSize-= 1.0;
+		}
+		[mainAttributes setObject:[[NSFontManager sharedFontManager] 
+			convertFont:[NSFont systemFontOfSize:buddyNameFontSize] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];
+		buddyNameSize = [mainBuddyName sizeWithAttributes: mainAttributes];
     }
+	if (minFontSize) {
+		[self setMainBuddyName: [NSString stringWithFormat:@"%@É",[mainBuddyName substringToIndex: [mainBuddyName length]-1]]];
+	}
+	[mainAttributesMask setObject:[[NSFontManager sharedFontManager] 
+		convertFont:[NSFont systemFontOfSize:buddyNameFontSize] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];
     
     buddyNameRect.size.height = buddyNameSize.height;
     
     // Paint the main name label if selected, and the strings
-        NSRect  labelRect;
-        int     borderWidth = (buddyNameSize.height / 2.0);
-        int     maxWidth = ((187.0*relativeX) - buddyNameSize.height);
-        if (buddyNameSize.width > maxWidth) {
-            labelRect = NSMakeRect(12.0 + borderWidth,buddyNameRect.origin.y,maxWidth,buddyNameSize.height-2.0);
-        } else {
-            labelRect = NSMakeRect(106.0*relativeX - (buddyNameSize.width / 2.0),buddyNameRect.origin.y,buddyNameSize.width,buddyNameSize.height-2.0);
-        }
+	NSRect  labelRect;
+	int     maxWidth = (187.0*relativeX);
+	if (buddyNameSize.width > maxWidth) {
+		labelRect = NSMakeRect(12.0,buddyNameRect.origin.y,maxWidth,buddyNameSize.height-3.0);
+	} else {
+		labelRect = NSMakeRect(106.0*relativeX - (buddyNameSize.width / 2.0) - (buddyNameSize.height / 2.0),buddyNameRect.origin.y,buddyNameSize.width + buddyNameSize.height,buddyNameSize.height-3.0);
+	}
+		
     if (useBuddyNameLabel && buddyIconLabelColor) {
         [buddyIconLabelColor set];
     } else {
 		[[[NSColor blackColor] colorWithAlphaComponent:0.3] set];
 	}
-	NSBezierPath	*labelPath = [NSBezierPath bezierPathWithOvalInRect: NSMakeRect(labelRect.origin.x - (labelRect.size.height / 2.0),labelRect.origin.y,labelRect.size.height,labelRect.size.height)];
-	[labelPath appendBezierPathWithRect: labelRect];
-	[labelPath appendBezierPathWithOvalInRect: NSMakeRect(labelRect.origin.x + labelRect.size.width - (labelRect.size.height / 2.0),labelRect.origin.y,labelRect.size.height,labelRect.size.height)];
+	NSBezierPath *labelPath = [self bezierPathLabelOfSize:labelRect.size];
+	NSAffineTransform *transform = [NSAffineTransform transform];
+	[transform translateXBy:labelRect.origin.x yBy:labelRect.origin.y];
+	[labelPath transformUsingAffineTransform: transform];
 	[labelPath fill];
 
     if (useBuddyNameLabel && buddyNameLabelColor) {
@@ -392,6 +404,42 @@
     [backdropImage release];
     backdropImage = newImage;
     [backdropImage setScalesWhenResized:YES];
+}
+
+//Returns a bezier path for our label
+- (NSBezierPath *)bezierPathLabelOfSize:(NSSize)backgroundSize
+{
+	int 		innerLeft, innerRight, innerTop, innerBottom;
+	float 		centerY, circleRadius;
+	NSBezierPath	*pillPath;
+    
+	//Calculate some points
+	circleRadius = backgroundSize.height / 2.0;
+	innerTop = 0;
+	innerBottom = backgroundSize.height;
+	centerY = (innerTop + innerBottom) / 2.0;
+
+	//Conpensate for our rounded caps
+	innerLeft = circleRadius;
+	innerRight = backgroundSize.width - circleRadius;
+
+	//Create the circle path
+	pillPath = [NSBezierPath bezierPath];
+	[pillPath moveToPoint: NSMakePoint(innerLeft, innerTop)];
+	[pillPath lineToPoint: NSMakePoint(innerRight, innerTop)];
+	[pillPath appendBezierPathWithArcWithCenter:NSMakePoint(innerRight, centerY)
+										 radius:circleRadius
+									 startAngle:270
+									   endAngle:90
+									  clockwise:NO];
+	[pillPath lineToPoint: NSMakePoint(innerLeft, innerBottom)];
+	[pillPath appendBezierPathWithArcWithCenter:NSMakePoint(innerLeft, centerY)
+										 radius:circleRadius
+									 startAngle:90
+									   endAngle:270
+									  clockwise:NO];
+	
+	return(pillPath);
 }
 
 @end
