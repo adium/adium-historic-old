@@ -25,7 +25,7 @@ try {
 
     pstmt.executeUpdate();
 
-    response.sendRedirect("users.jsp");
+    response.sendRedirect("meta.jsp");
 } catch (SQLException e) {
     out.println("<br/>" + e.getMessage());
 } catch (NumberFormatException e) {

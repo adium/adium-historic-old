@@ -17,6 +17,7 @@ try {
 
 PreparedStatement pstmt = null;
 ResultSet rset = null;
+String username = new String();
 
 try {
     pstmt = conn.prepareStatement("select username, key_id, key_name, coalesce(value, '') as value from adium.users natural left join adium.information_keys natural left join adium.contact_information where user_id = ? and delete = false order by key_name");
@@ -24,30 +25,34 @@ try {
     pstmt.setInt(1, user_id);
 
     rset = pstmt.executeQuery();
-    rset.next();
+    if(rset.isBeforeFirst()) {
+        rset.next();
+        username = rset.getString("username");
+        rset.beforeFirst();
+    }
 %>
 <html>
-    <head><title>Edit User <%= rset.getString("username") %></title></head>
+    <head><title>Edit User <%= username  %></title></head>
     <link rel="stylesheet" type="text/css" href="styles/default.css" />
     <link rel="stylesheet" type="text/css" href="styles/users.css" />
     <body style="background :#fff">
         <form action="updateUser.jsp" method="get">
             <table border="0" cellpadding="0" cellspacing="5">
 <%
-    rset.beforeFirst();
+    if(rset.isBeforeFirst()) {
+        while(rset.next()) {
+            out.println("<tr><td align=\"right\">");
+            out.println("<label for=\"" + rset.getString("key_name") + "\">" +
+                rset.getString("key_name") + "</label>");
 
-    while(rset.next()) {
-        out.println("<tr><td align=\"right\">");
-        out.println("<label for=\"" + rset.getString("key_name") + "\">" +
-            rset.getString("key_name") + "</label>");
+            out.println("</td><td>");
 
-        out.println("</td><td>");
+            out.println("<input type=\"text\" name=\"" +
+                rset.getString("key_id") + "\" size=\"20\" value=\"" +
+                rset.getString("value") + "\">");
 
-        out.println("<input type=\"text\" name=\"" +
-            rset.getString("key_id") + "\" size=\"20\" value=\"" +
-            rset.getString("value") + "\">");
-
-        out.println("</td></tr>");
+            out.println("</td></tr>");
+        }
     }
 
 %>
