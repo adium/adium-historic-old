@@ -7,7 +7,7 @@
 //
 
 @interface AITabStatusIconsPlugin : AIPlugin <AIListObjectObserver> {
-	NSImage		*tabStranger;
+	NSImage		*tabUnknown;
 	NSImage		*tabAway;
 	NSImage		*tabIdle;
 	NSImage		*tabOffline;

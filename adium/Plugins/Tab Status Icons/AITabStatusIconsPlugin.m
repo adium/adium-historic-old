@@ -18,7 +18,7 @@
 - (void)installPlugin
 {
 	//Load our icons (Hard coded for now)		
-	tabStranger = [[NSImage imageNamed:@"tab-stranger" forClass:[self class]] retain];
+	tabUnknown = [[NSImage imageNamed:@"tab-unknown" forClass:[self class]] retain];
 	tabAway = [[NSImage imageNamed:@"tab-away" forClass:[self class]] retain];
 	tabIdle = [[NSImage imageNamed:@"tab-idle" forClass:[self class]] retain];
 	tabOffline = [[NSImage imageNamed:@"tab-offline" forClass:[self class]] retain];
@@ -76,22 +76,32 @@
 //Returns the status icon for the passed contact (away, idle, online, stranger, ...)
 - (NSImage *)_statusIconForListObject:(AIListObject *)listObject
 {
-	if([[listObject numberStatusObjectForKey:@"Away"] boolValue]){
-		return(tabAway);
-		
-	}else if([listObject statusObjectForKey:@"IdleSince"]){
-		return(tabIdle);
-		
-	}else if([[listObject numberStatusObjectForKey:@"Online"] boolValue]){
-		return(tabAvailable);
-		
-	}else if([listObject integerStatusObjectForKey:@"Stranger"]){
-		return(tabStranger);
-		
-	}else{
-		return(tabOffline);
-		
+	AIStatusSummary statusSummary = [listObject statusSummary];
+
+	switch (statusSummary){
+		case AIAwayStatus:
+		case AIAwayAndIdleStatus:
+			return(tabAway);
+			break;
+
+		case AIIdleStatus:
+			return (tabIdle);
+			break;
+
+		case AIAvailableStatus:
+			return (tabAvailable);
+			break;
+
+		case AIOfflineStatus:
+			return(tabOffline);
+			break;
+
+		case AIUnknownStatus:
+		default:
+			return(tabUnknown);
 	}
+	
+	return nil;
 }
 
 @end
