@@ -19,16 +19,12 @@
 }
 
 /*!
- * @brief Set the controlSize
- *
- * Set the <tt>NSControlSize</tt> at which the button will be displayed.
+ * @brief Set the <tt>NSControlSize</tt> at which the button will be displayed.
  * @param inSize A value of type <tt>NSControlSize</tt>
 */ 
 - (void)setControlSize:(NSControlSize)inSize;
 /*!
- * @brief Returns the controlSize
- *
- * The current <tt>NSControlSize</tt> at which the button will be displayed.
+ * @brief The current <tt>NSControlSize</tt> at which the button will be displayed.
  * @return A value of type <tt>NSControlSize</tt>
 */ 
 - (NSControlSize)controlSize;
@@ -36,14 +32,12 @@
 /*!
  * @brief Set the image of the button
  *
- * Set the image of the button.  It will be automatically sized as necessary.
+ * It will be automatically sized as necessary.
  * @param inImage An <tt>NSImage</tt> to use.
 */ 
 - (void)setImage:(NSImage *)inImage;
 /*!
  * @brief Returns the image of the button
- *
- * Returns the image of the button
  * @return An <tt>NSImage</tt>.
 */ 
 - (NSImage *)image;
@@ -51,15 +45,13 @@
 /*!
  * @brief Set the toolbar item associated with this button
  *
- * Set the toolbar item associated with this button. This is used for synchronizing sizing.
+ * This is used for synchronizing sizing.
  * @param item The <tt>NSToolbarItem</tt> to associate.
  */
 - (void)setToolbarItem:(NSToolbarItem *)item;
 
 /*!
  * @brief Returns the toolbar item associated with this button
- *
- * Returns the toolbar item associated with this button.
  * @return The <tt>NSToolbarItem</tt>
  */
 - (NSToolbarItem *)toolbarItem;
@@ -67,14 +59,13 @@
 /*!
  * @brief Set whether the button draws a dropdown arrow.
  *
- * Set whether the button draws a dropdown arrow. The arrow is black and positioned in the lower righthand corner of the button; it is used to indicate that clicking on the button will reveal further information or choices.
+ * The arrow is black and positioned in the lower righthand corner of the button; it is used to indicate that clicking on the button will reveal further information or choices.
  * @param inDraw YES if the arrow should be drawn.
  */
 - (void)setDrawsArrow:(BOOL)inDraw;
+
 /*!
  * @brief Returns if the button draws its arrow
- *
- * Returns if the button draws its arrow
  * @return YES if the arrow is drawn.
  */
 - (BOOL)drawsArrow;
