@@ -106,6 +106,8 @@
 //Dealloc
 - (void)dealloc
 {
+	[contactListView setDelegate:nil];
+
 	[groupCell release];
 	[contentCell release];
 
