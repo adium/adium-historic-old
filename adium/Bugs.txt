@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------------------
 - Crash when re-arranging emoticon packs
 - Crash when displaying/dismissing certain error messages
+- Crash when accepting an invitation to join a multiuser chat
 - Status messages have '{}' appended to them in Jaguar.
 
 //------------------------------------------------------------------------------------
@@ -34,10 +35,6 @@
 
 - User icons occasionally display upside-down
 	We cannot find a pattern to when or why this happens
-
-- Crashes with chat rooms and conferences
-	We don't support chats at this time.  But we're still displaying the invite panels
-	and crashing when the user joins or soon after.
 	
 
 //------------------------------------------------------------------------------------
@@ -119,7 +116,6 @@
 	transport), the invalid tags are being eaten? (Our HTML decoder isn't eating them, is libgaim?) 
 - We aren't fetching the display names of ICQ users, some icq users, when over AIM?
 	(They still show up in the info, apparently)
-- Dragging buddies on MSN account not working
 - AIM Passwords with question marks in them prevent libgaim from connecting?
 - Out of curiosity - is there a reason we use .adiumEmoticonset instead of
 	.adiumEmoticonSet (call me a capitalization nut :)? 
