@@ -63,7 +63,8 @@
     delegate = nil;
     [[adium contactController] unregisterListObjectObserver:self];
     [[adium notificationCenter] removeObserver:self];
-    
+    [view_contents release]; view_contents = nil;
+		
     [super dealloc];
 }
 
