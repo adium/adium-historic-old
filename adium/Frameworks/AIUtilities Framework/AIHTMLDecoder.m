@@ -151,7 +151,7 @@ int HTMLEquivalentForFontSize(int fontSize);
         while (loop < (searchRange.location + searchRange.length))
         {
             long currentChar = [inMessageString characterAtIndex:loop];
-            
+            /*
             if(currentChar == 60){ //replace less-than's (<) with their HTML code (&lt;)
                 [string appendString:@"&lt;"];
                 
@@ -161,7 +161,7 @@ int HTMLEquivalentForFontSize(int fontSize);
             }else if(currentChar == '&'){ //replace with (&amp;) (breaks links, but we'll deal with that later)
                 [string appendString:@"&amp;"];
 
-            }else{
+            }else*/{
                 [string appendCharacter:currentChar]; //!! Undocumented / Private method !!
 
             }
@@ -204,8 +204,8 @@ int HTMLEquivalentForFontSize(int fontSize)
 + (NSAttributedString *)decodeHTML:(NSString *)inMessage
 {
     NSScanner			*scanner;
-    NSCharacterSet		*tagStart, *tagEnd, *absoluteTagEnd;
-    NSString			*chunkString;
+    NSCharacterSet		*tagStart, *tagEnd, *charEnd, *absoluteTagEnd, *absoluteCharEnd;
+    NSString			*chunkString, *tagOpen;
     NSMutableAttributedString	*attrString;
     AITextAttributes		*textAttributes;
     int				tagType;
@@ -214,8 +214,10 @@ int HTMLEquivalentForFontSize(int fontSize)
     textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
     attrString = [[NSMutableAttributedString alloc] init];
 
-    tagStart = [NSCharacterSet characterSetWithCharactersInString:@"<"];
+    tagStart = [NSCharacterSet characterSetWithCharactersInString:@"<&"];
     tagEnd = [NSCharacterSet characterSetWithCharactersInString:@" >"];
+    charEnd = [NSCharacterSet characterSetWithCharactersInString:@" <;"];
+    absoluteCharEnd = [NSCharacterSet characterSetWithCharactersInString:@";"];
     absoluteTagEnd = [NSCharacterSet characterSetWithCharactersInString:@">"];
 
     scanner = [NSScanner scannerWithString:inMessage];
@@ -227,121 +229,159 @@ int HTMLEquivalentForFontSize(int fontSize)
         if([scanner scanUpToCharactersFromSet:tagStart intoString:&chunkString]){        
             [attrString appendString:chunkString withAttributes:[textAttributes dictionary]];
         }
-        [scanner scanCharactersFromSet:tagStart intoString:nil];
+        [scanner scanCharactersFromSet:tagStart intoString:&tagOpen];
         
         //Get the tag type
         tagType = 0;
-        if([scanner scanUpToCharactersFromSet:tagEnd intoString:&chunkString]){
-            //HTML
-            if([chunkString caseInsensitiveCompare:@"HTML"] == 0){
-                //ignore
-            }else if([chunkString caseInsensitiveCompare:@"/HTML"] == 0){
-                //ignore
+		if ([tagOpen compare:@"<"] == 0)
+		{
+			if([scanner scanUpToCharactersFromSet:tagEnd intoString:&chunkString]){
+				//HTML
+				if([chunkString caseInsensitiveCompare:@"HTML"] == 0){
+					//ignore
+				}else if([chunkString caseInsensitiveCompare:@"/HTML"] == 0){
+					//ignore
+	
+				//A LINK
+				}else if([chunkString caseInsensitiveCompare:@"A"] == 0){
+					[textAttributes setUnderline:YES];
+					[textAttributes setTextColor:[NSColor blueColor]];
+					
+				}else if([chunkString caseInsensitiveCompare:@"/A"] == 0){
+					[textAttributes setUnderline:NO];
+					[textAttributes setTextColor:[NSColor blackColor]];
+	
+				//Body
+				}else if([chunkString caseInsensitiveCompare:@"BODY"] == 0){
+				}else if([chunkString caseInsensitiveCompare:@"/BODY"] == 0){
+				
+				//Font
+				}else if([chunkString caseInsensitiveCompare:@"FONT"] == 0){
+					tagType = 1;
+				}else if([chunkString caseInsensitiveCompare:@"/FONT"] == 0){
+					//ignore
+				
+				//Line Break
+				}else if([chunkString caseInsensitiveCompare:@"BR"] == 0){
+					[attrString appendString:@"\r" withAttributes:nil];
+	
+				//Bold
+				}else if([chunkString caseInsensitiveCompare:@"B"] == 0){
+					[textAttributes enableTrait:NSBoldFontMask];
+				}else if([chunkString caseInsensitiveCompare:@"/B"] == 0){
+					[textAttributes disableTrait:NSBoldFontMask];
+	
+				//Italic
+				}else if([chunkString caseInsensitiveCompare:@"I"] == 0){
+					[textAttributes enableTrait:NSItalicFontMask];
+				}else if([chunkString caseInsensitiveCompare:@"/I"] == 0){
+					[textAttributes disableTrait:NSItalicFontMask];
+					
+				//Underline
+				}else if([chunkString caseInsensitiveCompare:@"U"] == 0){
+					[textAttributes setUnderline:YES];
+				}else if([chunkString caseInsensitiveCompare:@"/U"] == 0){
+					[textAttributes setUnderline:NO];
+				
+				//Invalid
+				}else{
+					tagType = -1;
+					[attrString appendString:@"<" withAttributes:[textAttributes dictionary]];
+					[attrString appendString:chunkString withAttributes:[textAttributes dictionary]];
+				}
+			}
 
-            //A LINK
-            }else if([chunkString caseInsensitiveCompare:@"A"] == 0){
-                [textAttributes setUnderline:YES];
-                [textAttributes setTextColor:[NSColor blueColor]];
-                
-            }else if([chunkString caseInsensitiveCompare:@"/A"] == 0){
-                [textAttributes setUnderline:NO];
-                [textAttributes setTextColor:[NSColor blackColor]];
-
-            //Body
-            }else if([chunkString caseInsensitiveCompare:@"BODY"] == 0){
-            }else if([chunkString caseInsensitiveCompare:@"/BODY"] == 0){
-            
-            //Font
-            }else if([chunkString caseInsensitiveCompare:@"FONT"] == 0){
-                tagType = 1;
-            }else if([chunkString caseInsensitiveCompare:@"/FONT"] == 0){
-                //ignore
-            
-            //Line Break
-            }else if([chunkString caseInsensitiveCompare:@"BR"] == 0){
-                [attrString appendString:@"\r" withAttributes:nil];
-
-            //Bold
-            }else if([chunkString caseInsensitiveCompare:@"B"] == 0){
-                [textAttributes enableTrait:NSBoldFontMask];
-            }else if([chunkString caseInsensitiveCompare:@"/B"] == 0){
-                [textAttributes disableTrait:NSBoldFontMask];
-
-            //Italic
-            }else if([chunkString caseInsensitiveCompare:@"I"] == 0){
-                [textAttributes enableTrait:NSItalicFontMask];
-            }else if([chunkString caseInsensitiveCompare:@"/I"] == 0){
-                [textAttributes disableTrait:NSItalicFontMask];
-                
-            //Underline
-            }else if([chunkString caseInsensitiveCompare:@"U"] == 0){
-                [textAttributes setUnderline:YES];
-            }else if([chunkString caseInsensitiveCompare:@"/U"] == 0){
-                [textAttributes setUnderline:NO];
-            
-            //Invalid
-            }else{
-                tagType = -1;
-                [attrString appendString:@"<" withAttributes:[textAttributes dictionary]];
-                [attrString appendString:chunkString withAttributes:[textAttributes dictionary]];
+			//Get the tag contents
+			if(tagType != -1){
+				if(![scanner scanCharactersFromSet:absoluteTagEnd intoString:nil]){
+					if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
+						NSDictionary	*argDict;
+						NSArray		*keys;
+						int			loop;
+					
+						//Get the args
+						argDict = [self parseArguments:chunkString];
+						keys = [argDict allKeys];
+	
+						//Parse the args                  
+						switch(tagType){
+							case 1: //Font
+								for(loop = 0;loop < [keys count];loop++){
+									NSString *arg = [keys objectAtIndex:loop];
+									
+									if([arg caseInsensitiveCompare:@"FACE"] == 0){
+										[textAttributes setFontFamily:[argDict objectForKey:arg]];
+	
+									}else if([arg caseInsensitiveCompare:@"SIZE"] == 0){
+										int	size;
+									
+										//Always prefer an ABSZ to a size
+										if(![keys containsObject:@"ABSZ"] && ![keys containsObject:@"absz"]){
+											switch([[argDict objectForKey:arg] intValue]){
+												case 1: size = 9; break;
+												case 2: size = 10; break;
+												case 3: size = 12; break;
+												case 4: size = 14; break;
+												case 5: size = 18; break;
+												case 6: size = 24; break;
+												case 7: size = 48; break;
+												case 8: size = 72; break;
+												default: size = 12; break;
+											}
+											[textAttributes setFontSize:size];
+										}
+	
+									}else if([arg caseInsensitiveCompare:@"ABSZ"] == 0){
+										[textAttributes setFontSize:[[argDict objectForKey:arg] intValue]];
+										
+									}else if([arg caseInsensitiveCompare:@"COLOR"] == 0){
+										[textAttributes setTextColor:[[argDict objectForKey:arg] hexColor]];
+									}
+								}
+							break;
+							default:
+							break;
+						}
+					}
+					[scanner scanCharactersFromSet:absoluteTagEnd intoString:nil];
+				}
             }
         }
-
-        //Get the tag contents
-        if(tagType != -1){
-            if(![scanner scanCharactersFromSet:absoluteTagEnd intoString:nil]){
-                if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
-                    NSDictionary	*argDict;
-                    NSArray		*keys;
-                    int			loop;
-                
-                    //Get the args
-                    argDict = [self parseArguments:chunkString];
-                    keys = [argDict allKeys];
-
-                    //Parse the args                  
-                    switch(tagType){
-                        case 1: //Font
-                            for(loop = 0;loop < [keys count];loop++){
-                                NSString *arg = [keys objectAtIndex:loop];
-                                
-                                if([arg caseInsensitiveCompare:@"FACE"] == 0){
-                                    [textAttributes setFontFamily:[argDict objectForKey:arg]];
-
-                                }else if([arg caseInsensitiveCompare:@"SIZE"] == 0){
-                                    int	size;
-                                
-                                    //Always prefer an ABSZ to a size
-                                    if(![keys containsObject:@"ABSZ"] && ![keys containsObject:@"absz"]){
-                                        switch([[argDict objectForKey:arg] intValue]){
-                                            case 1: size = 9; break;
-                                            case 2: size = 10; break;
-                                            case 3: size = 12; break;
-                                            case 4: size = 14; break;
-                                            case 5: size = 18; break;
-                                            case 6: size = 24; break;
-                                            case 7: size = 48; break;
-                                            case 8: size = 72; break;
-                                            default: size = 12; break;
-                                        }
-                                        [textAttributes setFontSize:size];
-                                    }
-
-                                }else if([arg caseInsensitiveCompare:@"ABSZ"] == 0){
-                                    [textAttributes setFontSize:[[argDict objectForKey:arg] intValue]];
-                                    
-                                }else if([arg caseInsensitiveCompare:@"COLOR"] == 0){
-                                    [textAttributes setTextColor:[[argDict objectForKey:arg] hexColor]];
-                                }
-                            }
-                        break;
-                        default:
-                        break;
-                    }
-                }
-                [scanner scanCharactersFromSet:absoluteTagEnd intoString:nil];
-            }
-        }
+		else 	// escape character, eg &gt;
+		{
+			if([scanner scanUpToCharactersFromSet:charEnd intoString:&chunkString]){
+				// We could upgrade this to use an NSDictionary with lots of chars
+				// but for now, if-blocks will do
+				if ([chunkString caseInsensitiveCompare:@"GT"] == 0)
+				{
+					[attrString appendString:@">" withAttributes:[textAttributes dictionary]];
+				}
+				else if ([chunkString caseInsensitiveCompare:@"LT"] == 0)
+				{
+					[attrString appendString:@"<" withAttributes:[textAttributes dictionary]];
+				}
+				else if ([chunkString caseInsensitiveCompare:@"AMP"] == 0)
+				{
+					[attrString appendString:@"&" withAttributes:[textAttributes dictionary]];
+				}
+				else if ([chunkString caseInsensitiveCompare:@"NBSP"] == 0)
+				{
+					[attrString appendString:@"Ê" withAttributes:[textAttributes dictionary]];
+				}
+				
+				//Invalid
+				else
+				{
+					[attrString appendString:@"&" withAttributes:[textAttributes dictionary]];
+					[attrString appendString:chunkString withAttributes:[textAttributes dictionary]];
+				}
+				[scanner scanCharactersFromSet:absoluteCharEnd intoString:nil];
+			}
+			else
+			{
+				[attrString appendString:@"&" withAttributes:[textAttributes dictionary]];
+			}
+		}
     }
 
     [AIHTMLDecoder decodeHTMLEntities:attrString];
