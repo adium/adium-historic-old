@@ -21,6 +21,11 @@
 
 @implementation AIEditorBlockedCollection
 
+- (BOOL)containsHandleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
+{
+    return(NO);
+}
+
 //
 + (AIEditorBlockedCollection *)blockedCollectionWithOwner:(id)inOwner;
 {

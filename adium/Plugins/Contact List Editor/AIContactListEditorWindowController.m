@@ -41,37 +41,15 @@
 
 @interface AIContactListEditorWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner plugin:(AIContactListEditorPlugin *)inPlugin;
-- (void)windowDidLoad;
-- (void)buildAccountColumns;
-- (void)accountListChanged:(NSNotification *)notification;
-- (void)contactListChanged:(NSNotification *)notification;
-- (void)contactChanged:(NSNotification *)notification;
-- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item;
-- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item;
-- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item;
-- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item;
-- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item;
-- (BOOL)outlineView:(NSOutlineView *)outlineView shouldEditTableColumn:(NSTableColumn *)tableColumn item:(id)item;
-- (void)removeEditor:(id)sender;
-- (void)outlineViewSelectionDidChange:(NSNotification *)notification;
-- (void)outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item;
-- (IBAction)inspect:(id)sender;
-- (IBAction)delete:(id)sender;
-- (IBAction)group:(id)sender;
-- (IBAction)handle:(id)sender;
-- (IBAction)import:(id)sender;
-- (IBAction)toggleDrawer:(id)sender;
+- (void)sizeContentColumnsToFit:(NSNotification *)notification;
 - (void)installToolbar;
-- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem;
-- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag;
-- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar;
-- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar;
-- (void)concludeDeleteSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
-- (void)concludeImportPanel:(NSOpenPanel *)panel returnCode:(int)returnCode contextInfo:(void *)contextInfo;
-- (AIEditorListGroup *)editorListGroupForAccount:(AIAccount *)inAccount;
 - (void)generateCollectionsArray;
-- (void)refreshContentOutlineView;
+- (IBAction)toggleDrawer:(id)sender;
+- (void)generateCollectionsArray;
 - (void)configureForCollection:(id <AIEditorCollection>)collection;
+- (void)refreshContentOutlineView;
+- (IBAction)delete:(id)sender;
+- (void)concludeDeleteSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 @end
 
 @implementation AIContactListEditorWindowController
@@ -255,7 +233,9 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 {
     NSEnumerator			*enumerator;
     id <AIListEditorColumnController>	columnController;
-    
+    id <AIEditorCollection> 		object;
+    int					ownerCount = 0;
+        
     //Update the window title
     [[self window] setTitle:[collection collectionDescription]];
 
@@ -271,33 +251,40 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     }
 
     //Add the ownership columns
-    if([collection showOwnershipColumns] && [[[owner accountController] accountArray] count] > 1){
-        NSEnumerator	*accountEnumerator;
-        AIAccount	*account;
-        int		numberOfAccounts = [[[owner accountController] accountArray] count];
-
-        //Add a column for all accounts
-        accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
-        while((account = [accountEnumerator nextObject])){
-            NSTableColumn	*tableColumn = [[[NSTableColumn alloc] initWithIdentifier:account] autorelease];
-
-            //Create and configure the table column
-            tableColumn = [[[NSTableColumn alloc] initWithIdentifier:account] autorelease];
-            [tableColumn setWidth:CHECK_COLUMN_WIDTH];
-            [tableColumn setMinWidth:CHECK_COLUMN_WIDTH];
-            [tableColumn setMaxWidth:CHECK_COLUMN_WIDTH];
-            [[tableColumn headerCell] setStringValue:[account accountDescription]];
-            [tableColumn setDataCell:[[[AIContactListCheckbox alloc] init] autorelease]];
-
-            //Add it
-            [outlineView_contactList addTableColumn:tableColumn];
+    if([collection showOwnershipColumns]){ //If this collection requests display of the ownership column
+        //Do a quick count of how many collections want to be in the ownership column
+        enumerator = [collectionsArray objectEnumerator];
+        while((collection = [enumerator nextObject])){
+            if([collection includeInOwnershipColumn]){
+                ownerCount++;
+            }
         }
 
-        //Move the contact UID column back to its correct place
-        [outlineView_contactList moveColumn:0 toColumn:[outlineView_contactList numberOfColumns]-1];
+        //We don't display the ownership column unless there are two or more collections that request it.
+        if(ownerCount > 1){
+            //Add a column for all collections that want one
+            enumerator = [collectionsArray objectEnumerator];
+            while((object = [enumerator nextObject])){
+                if([object includeInOwnershipColumn]){
+                    NSTableColumn	*tableColumn = [[[NSTableColumn alloc] initWithIdentifier:object] autorelease];
+                
+                    //Create and configure the table column
+                    [tableColumn setWidth:CHECK_COLUMN_WIDTH];
+                    [tableColumn setMinWidth:CHECK_COLUMN_WIDTH];
+                    [tableColumn setMaxWidth:CHECK_COLUMN_WIDTH];
+                    [[tableColumn headerCell] setStringValue:[object name]];
+                    [tableColumn setDataCell:[[[AIContactListCheckbox alloc] init] autorelease]];
+                
+                    //Add it
+                    [outlineView_contactList addTableColumn:tableColumn];
+                }
+            }
 
+            //Move the contact UID column back to its correct place, since the owner columns should appear to the left of it
+            [outlineView_contactList moveColumn:0 toColumn:[outlineView_contactList numberOfColumns]-1];
+        }
     }
-    
+
     //Add the custom list editor columns
     if([collection showCustomEditorColumns]){
         enumerator = [[plugin listEditorColumnControllers] objectEnumerator];
@@ -325,7 +312,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 }
 
 //Adjust outline view columns
-- (void)sizeContentColumnsToFit:(NSNotification)notification
+- (void)sizeContentColumnsToFit:(NSNotification *)notification
 {
     NSEnumerator	*enumerator;
     NSTableColumn	*column;
@@ -444,10 +431,10 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     if([identifier isKindOfClass:[NSString class]]){
         value = [item UID];
 
-    }else if([identifier isKindOfClass:[AIAccount class]]){
+    }else if([identifier conformsToProtocol:@protocol(AIEditorCollection)]){
         //Return the correct checkbox state
         if([item isKindOfClass:[AIEditorListHandle class]]){
-            if([[item ownerAccountArray] containsObject:identifier]){
+            if([identifier containsHandleWithUID:[item UID] serviceID:[item serviceID]]){
                 value = [NSNumber numberWithInt:1];
             }else{
                 value = [NSNumber numberWithInt:0];
@@ -460,7 +447,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
             BOOL		notOwned = NO;
 
             while((handle = [enumerator nextObject])){
-                if([[handle ownerAccountArray] containsObject:identifier]){
+                if([identifier containsHandleWithUID:[handle UID] serviceID:[handle serviceID]]){
                     owned = YES;
                 }else{
                     notOwned = YES;

@@ -62,6 +62,15 @@
     return(YES);
 }
 
+- (BOOL)containsHandleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
+{
+    if([[account availableHandles] objectForKey:UID]){
+        return(YES);
+    }else{
+        return(NO);
+    }
+}
+
 //Return our icon description
 - (NSImage *)icon{
     return([AIImageUtilities imageNamed:@"AccountLarge" forClass:[self class]]);
@@ -186,6 +195,11 @@
     }
 
     return(listGroup);
+}
+
+- (BOOL)includeInOwnershipColumn
+{
+    return(YES);
 }
 
 @end
