@@ -34,8 +34,6 @@
 - (void)sizeCellForWidth:(float)inWidth;
 - (void)drawContentsWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
 - (void)editAtRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn inView:(NSView *)controlView;
-- (void)endEditing;
-- (id <NSCopying>)objectValue;
-- (void)setString:(NSAttributedString *)inString;
+- (id <NSCopying>)endEditing;
 
 @end

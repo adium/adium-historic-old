@@ -45,8 +45,7 @@
 //Access
 - (NSSize)paddingInset;
 - (void)editAtRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn inView:(NSView *)controlView;
-- (void)endEditing;
-- (id <NSCopying>)objectValue;
+- (id <NSCopying>)endEditing;
 
 //Sizing
 - (NSSize)cellSize;

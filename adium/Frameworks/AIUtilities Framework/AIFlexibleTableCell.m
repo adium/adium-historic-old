@@ -113,16 +113,11 @@
     
 }
 
-- (id <NSCopying>)objectValue
-{
-    return(nil);
-}
-
 
 //Editing ------------------------------------------------------------------------------
-- (void)endEditing
+- (id <NSCopying>)endEditing
 {
-    
+    return(nil);
 }
 
 
