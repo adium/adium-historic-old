@@ -169,7 +169,7 @@
 					ProjectRef = 4947F5E90655E90C00B791E5;
 				},
 				{
-					ProductGroup = 3448717106D1E57700DA778C;
+					ProductGroup = 34D834D107CBE7B2006466F2;
 					ProjectRef = 3448717006D1E57700DA778C;
 				},
 			);
@@ -1142,7 +1142,6 @@
 		3419F3AE05314BE000C68BA3 = {
 			buildActionMask = 2147483647;
 			files = (
-				34FF934A06DE3F4300C1D683,
 				3448769A06D1EF7300DA778C,
 				3419F75C05314FED00C68BA3,
 			);
@@ -2463,54 +2462,10 @@
 		3448717006D1E57700DA778C = {
 			explicitFileType = "wrapper.pb-project";
 			isa = PBXFileReference;
-			path = AIUtilities.framework.xcode;
+			name = AIUtilities.framework.xcode;
+			path = "Frameworks/AIUtilities Framework/AIUtilities.framework.xcode";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		3448717106D1E57700DA778C = {
-			children = (
-				34FF8DA906DE3D1F00C1D683,
-			);
-			isa = PBXGroup;
-			name = Products;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3448745306D1E64C00DA778C = {
-			containerPortal = 3448717006D1E57700DA778C;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = AIUtilities;
-		};
-		3448745406D1E64C00DA778C = {
-			isa = PBXTargetDependency;
-			name = "AIUtilities (from AIUtilities.framework.xcode)";
-			targetProxy = 3448745306D1E64C00DA778C;
-		};
-		3448745506D1E6B000DA778C = {
-			containerPortal = 3448717006D1E57700DA778C;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = AIUtilities;
-		};
-		3448745606D1E6B000DA778C = {
-			isa = PBXTargetDependency;
-			name = "AIUtilities (from AIUtilities.framework.xcode)";
-			targetProxy = 3448745506D1E6B000DA778C;
-		};
-		3448745B06D1E6D300DA778C = {
-			containerPortal = 3448717006D1E57700DA778C;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = AIUtilities;
-		};
-		3448745C06D1E6D300DA778C = {
-			isa = PBXTargetDependency;
-			name = "AIUtilities (from AIUtilities.framework.xcode)";
-			targetProxy = 3448745B06D1E6D300DA778C;
 		};
 		3448758D06D1EBDF00DA778C = {
 			isa = PBXFileReference;
@@ -3195,7 +3150,6 @@
 		346C9C4706004517000F5A8A = {
 			buildActionMask = 2147483647;
 			files = (
-				34FF934D06DE3F4E00C1D683,
 				3448761F06D1ED9E00DA778C,
 				346C9C6906004536000F5A8A,
 			);
@@ -3296,7 +3250,6 @@
 		346C9C5206004525000F5A8A = {
 			buildActionMask = 2147483647;
 			files = (
-				34FF934E06DE3F5100C1D683,
 				3448761D06D1ED8E00DA778C,
 				346C9C7C06004560000F5A8A,
 				346C9C700600453C000F5A8A,
@@ -6670,7 +6623,6 @@
 				ZERO_LINK = YES;
 			};
 			dependencies = (
-				3448745406D1E64C00DA778C,
 				7E6642F9065336C70050E8C8,
 				34BD9CD2053146CC000AB133,
 				4B7845EC059B50820048A8BA,
@@ -7408,7 +7360,6 @@
 		34BD9D57053146CC000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34FF933E06DE3EDD00C1D683,
 				3448758E06D1EBDF00DA778C,
 				7E4694830653403600E4F390,
 				3419F7760531512200C68BA3,
@@ -7440,7 +7391,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				34FF934106DE3F1D00C1D683,
 				7E6642F7065336BA0050E8C8,
 				3419FE230531586A00C68BA3,
 				34E9F1F20790BF5500662E8E,
@@ -7587,7 +7537,6 @@
 				WRAPPER_EXTENSION = framework;
 			};
 			dependencies = (
-				3448745C06D1E6D300DA778C,
 			);
 			isa = PBXNativeTarget;
 			name = Adium.Framework;
@@ -7663,6 +7612,21 @@
 				34F2E81207C2CD5E007EAAAB,
 				34F2E81A07C2CD6C007EAAAB,
 				34F2E83B07C2CDBE007EAAAB,
+				34D834FD07CBE889006466F2,
+				34D834FE07CBE889006466F2,
+				34D834FF07CBE889006466F2,
+				34D8350007CBE889006466F2,
+				34D8350107CBE889006466F2,
+				34D8350207CBE889006466F2,
+				34D8350307CBE889006466F2,
+				34D8350407CBE889006466F2,
+				34D8350507CBE889006466F2,
+				34D8350607CBE889006466F2,
+				34D8350707CBE889006466F2,
+				34D8350807CBE889006466F2,
+				34D8350907CBE889006466F2,
+				34D8350A07CBE889006466F2,
+				34D8350B07CBE889006466F2,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7796,6 +7760,19 @@
 		34BD9DC805314751000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
+				34D8350D07CBE8AB006466F2,
+				34D8350E07CBE8AB006466F2,
+				34D8350F07CBE8AB006466F2,
+				34D8351007CBE8AB006466F2,
+				34D8351107CBE8AB006466F2,
+				34D8351207CBE8AB006466F2,
+				34D8351307CBE8AB006466F2,
+				34D8351407CBE8AB006466F2,
+				34D8351507CBE8AB006466F2,
+				34D8351607CBE8AB006466F2,
+				34D8351707CBE8AB006466F2,
+				34D8351807CBE8AB006466F2,
+				34D8351907CBE8AB006466F2,
 				34BD9DC905314751000AB133,
 				34BD9DCA05314751000AB133,
 				34BD9DCB05314751000AB133,
@@ -7931,7 +7908,6 @@
 		34BD9DDB05314751000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34FF934406DE3F2A00C1D683,
 				3448761406D1EC0C00DA778C,
 				34B588A4058D83D300E7EF0D,
 			);
@@ -8043,7 +8019,6 @@
 		34BD9EEA0531476D000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
-				34FF934B06DE3F4700C1D683,
 				3448762106D1EDB300DA778C,
 				3419F6F505314E9C00C68BA3,
 			);
@@ -9747,6 +9722,523 @@
 			settings = {
 			};
 		};
+		34D8342B07CBE6A4006466F2 = {
+			children = (
+				34D834D007CBE7B1006466F2,
+				34D834E207CBE7D5006466F2,
+				34D834CD07CBE7A3006466F2,
+				34D8346E07CBE6F5006466F2,
+				34D8344007CBE6E1006466F2,
+				34D8343007CBE6BD006466F2,
+				34D8346C07CBE6F4006466F2,
+				34D8346D07CBE6F5006466F2,
+				34D8343F07CBE6E1006466F2,
+				34D8342F07CBE6BD006466F2,
+				34D8346B07CBE6F4006466F2,
+			);
+			isa = PBXGroup;
+			name = "External Sources";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8342F07CBE6BD006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = pxmLib.m;
+			path = "Frameworks/Adium Framework/pxmLib.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8343007CBE6BD006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = pxmLib.h;
+			path = "Frameworks/Adium Framework/pxmLib.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8343907CBE6E1006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = QTSoundFilePlayer.m;
+			path = "Frameworks/Adium Framework/QTSoundFilePlayer.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8343A07CBE6E1006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = QTSoundFilePlayer.h;
+			path = "Frameworks/Adium Framework/QTSoundFilePlayer.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8343B07CBE6E1006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSURL+NDCarbonUtilities.m";
+			path = "Frameworks/Adium Framework/NSURL+NDCarbonUtilities.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8343C07CBE6E1006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSURL+NDCarbonUtilities.h";
+			path = "Frameworks/Adium Framework/NSURL+NDCarbonUtilities.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8343D07CBE6E1006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSString+NDCarbonUtilities.m";
+			path = "Frameworks/Adium Framework/NSString+NDCarbonUtilities.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8343E07CBE6E1006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSString+NDCarbonUtilities.h";
+			path = "Frameworks/Adium Framework/NSString+NDCarbonUtilities.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8343F07CBE6E1006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSString+CarbonFSSpecCreation.m";
+			path = "Frameworks/Adium Framework/NSString+CarbonFSSpecCreation.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8344007CBE6E1006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSString+CarbonFSSpecCreation.h";
+			path = "Frameworks/Adium Framework/NSString+CarbonFSSpecCreation.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8344107CBE6E1006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSAppleEventDescriptor+NDAppleScriptObject.m";
+			path = "Frameworks/Adium Framework/NSAppleEventDescriptor+NDAppleScriptObject.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8344207CBE6E1006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSAppleEventDescriptor+NDAppleScriptObject.h";
+			path = "Frameworks/Adium Framework/NSAppleEventDescriptor+NDAppleScriptObject.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8344307CBE6E1006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NDRunLoopMessenger.m;
+			path = "Frameworks/Adium Framework/NDRunLoopMessenger.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8344407CBE6E2006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NDRunLoopMessenger.h;
+			path = "Frameworks/Adium Framework/NDRunLoopMessenger.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8344507CBE6E2006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NDResourceFork.m;
+			path = "Frameworks/Adium Framework/NDResourceFork.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8344607CBE6E2006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NDResourceFork.h;
+			path = "Frameworks/Adium Framework/NDResourceFork.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8344707CBE6E2006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NDComponentInstance.m;
+			path = "Frameworks/Adium Framework/NDComponentInstance.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8344807CBE6E2006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NDComponentInstance.h;
+			path = "Frameworks/Adium Framework/NDComponentInstance.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8344907CBE6E2006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NDAppleScriptObject_Protocols.h;
+			path = "Frameworks/Adium Framework/NDAppleScriptObject_Protocols.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8344A07CBE6E2006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NDAppleScriptObject.m;
+			path = "Frameworks/Adium Framework/NDAppleScriptObject.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8344B07CBE6E2006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NDAppleScriptObject.h;
+			path = "Frameworks/Adium Framework/NDAppleScriptObject.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8344C07CBE6E2006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = JVFontPreviewField.m;
+			path = "Frameworks/Adium Framework/JVFontPreviewField.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8344D07CBE6E2006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = JVFontPreviewField.h;
+			path = "Frameworks/Adium Framework/JVFontPreviewField.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8346907CBE6F4006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = VirtualRingBuffer.m;
+			path = "Frameworks/Adium Framework/VirtualRingBuffer.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8346A07CBE6F4006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = VirtualRingBuffer.h;
+			path = "Frameworks/Adium Framework/VirtualRingBuffer.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8346B07CBE6F4006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SUSpeaker.m;
+			path = "Frameworks/Adium Framework/SUSpeaker.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8346C07CBE6F4006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SUSpeaker.h;
+			path = "Frameworks/Adium Framework/SUSpeaker.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8346D07CBE6F5006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = IconFamily.m;
+			path = "Frameworks/Adium Framework/IconFamily.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D8346E07CBE6F5006466F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = IconFamily.h;
+			path = "Frameworks/Adium Framework/IconFamily.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D834CD07CBE7A3006466F2 = {
+			children = (
+				34D8344C07CBE6E2006466F2,
+				34D8344D07CBE6E2006466F2,
+			);
+			isa = PBXGroup;
+			name = "Text field for previewing font preferences";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D834D007CBE7B1006466F2 = {
+			children = (
+				34D8344B07CBE6E2006466F2,
+				34D8344907CBE6E2006466F2,
+				34D8344807CBE6E2006466F2,
+				34D8344607CBE6E2006466F2,
+				34D8344407CBE6E2006466F2,
+				34D8344207CBE6E1006466F2,
+				34D8343E07CBE6E1006466F2,
+				34D8343C07CBE6E1006466F2,
+				34D8344A07CBE6E2006466F2,
+				34D8344707CBE6E2006466F2,
+				34D8344507CBE6E2006466F2,
+				34D8344307CBE6E1006466F2,
+				34D8344107CBE6E1006466F2,
+				34D8343D07CBE6E1006466F2,
+				34D8343B07CBE6E1006466F2,
+			);
+			isa = PBXGroup;
+			name = "Applescript Running";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D834D107CBE7B2006466F2 = {
+			children = (
+				34D834D207CBE7B2006466F2,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D834D207CBE7B2006466F2 = {
+			fileType = wrapper.framework;
+			isa = PBXReferenceProxy;
+			path = AIUtilities.framework;
+			refType = 3;
+			remoteRef = 34D834DC07CBE7BB006466F2;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34D834DC07CBE7BB006466F2 = {
+			containerPortal = 3448717006D1E57700DA778C;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = AIUtilities;
+		};
+		34D834E207CBE7D5006466F2 = {
+			children = (
+				34D8346907CBE6F4006466F2,
+				34D8346A07CBE6F4006466F2,
+				34D8343907CBE6E1006466F2,
+				34D8343A07CBE6E1006466F2,
+			);
+			isa = PBXGroup;
+			name = "Sound Playing";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D834FD07CBE889006466F2 = {
+			fileRef = 34D8344B07CBE6E2006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D834FE07CBE889006466F2 = {
+			fileRef = 34D8344907CBE6E2006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D834FF07CBE889006466F2 = {
+			fileRef = 34D8344807CBE6E2006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8350007CBE889006466F2 = {
+			fileRef = 34D8344607CBE6E2006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8350107CBE889006466F2 = {
+			fileRef = 34D8344407CBE6E2006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8350207CBE889006466F2 = {
+			fileRef = 34D8344207CBE6E1006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8350307CBE889006466F2 = {
+			fileRef = 34D8343E07CBE6E1006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8350407CBE889006466F2 = {
+			fileRef = 34D8343C07CBE6E1006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8350507CBE889006466F2 = {
+			fileRef = 34D8346A07CBE6F4006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8350607CBE889006466F2 = {
+			fileRef = 34D8343A07CBE6E1006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8350707CBE889006466F2 = {
+			fileRef = 34D8344D07CBE6E2006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8350807CBE889006466F2 = {
+			fileRef = 34D8346E07CBE6F5006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8350907CBE889006466F2 = {
+			fileRef = 34D8344007CBE6E1006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8350A07CBE889006466F2 = {
+			fileRef = 34D8343007CBE6BD006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8350B07CBE889006466F2 = {
+			fileRef = 34D8346C07CBE6F4006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8350D07CBE8AB006466F2 = {
+			fileRef = 34D8344A07CBE6E2006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8350E07CBE8AB006466F2 = {
+			fileRef = 34D8344707CBE6E2006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8350F07CBE8AB006466F2 = {
+			fileRef = 34D8344507CBE6E2006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8351007CBE8AB006466F2 = {
+			fileRef = 34D8344307CBE6E1006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8351107CBE8AB006466F2 = {
+			fileRef = 34D8344107CBE6E1006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8351207CBE8AB006466F2 = {
+			fileRef = 34D8343D07CBE6E1006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8351307CBE8AB006466F2 = {
+			fileRef = 34D8343B07CBE6E1006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8351407CBE8AB006466F2 = {
+			fileRef = 34D8346907CBE6F4006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8351507CBE8AB006466F2 = {
+			fileRef = 34D8343907CBE6E1006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8351607CBE8AB006466F2 = {
+			fileRef = 34D8346D07CBE6F5006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8351707CBE8AB006466F2 = {
+			fileRef = 34D8343F07CBE6E1006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8351807CBE8AB006466F2 = {
+			fileRef = 34D8342F07CBE6BD006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34D8351907CBE8AB006466F2 = {
+			fileRef = 34D8346B07CBE6F4006466F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34DF006707A788AC00B92233 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -11317,14 +11809,6 @@
 			remoteRef = 34FF932D06DE3D2800C1D683;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		34FF8DA906DE3D1F00C1D683 = {
-			fileType = wrapper.framework;
-			isa = PBXReferenceProxy;
-			path = AIUtilities.framework;
-			refType = 3;
-			remoteRef = 34FF932E06DE3D2800C1D683;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		34FF932C06DE3D2800C1D683 = {
 			containerPortal = 4947F5E90655E90C00B791E5;
 			isa = PBXContainerItemProxy;
@@ -11338,97 +11822,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
 			remoteInfo = "libezv (Static)";
-		};
-		34FF932E06DE3D2800C1D683 = {
-			containerPortal = 3448717006D1E57700DA778C;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
-			remoteInfo = AIUtilities;
-		};
-		34FF933E06DE3EDD00C1D683 = {
-			fileRef = 34FF8DA906DE3D1F00C1D683;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34FF934106DE3F1D00C1D683 = {
-			fileRef = 34FF8DA906DE3D1F00C1D683;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34FF934206DE3F2400C1D683 = {
-			fileRef = 34FF8DA906DE3D1F00C1D683;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34FF934406DE3F2A00C1D683 = {
-			fileRef = 34FF8DA906DE3D1F00C1D683;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34FF934506DE3F2C00C1D683 = {
-			fileRef = 34FF8DA906DE3D1F00C1D683;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34FF934706DE3F3600C1D683 = {
-			fileRef = 34FF8DA906DE3D1F00C1D683;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34FF934806DE3F3B00C1D683 = {
-			fileRef = 34FF8DA906DE3D1F00C1D683;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34FF934906DE3F4000C1D683 = {
-			fileRef = 34FF8DA906DE3D1F00C1D683;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34FF934A06DE3F4300C1D683 = {
-			fileRef = 34FF8DA906DE3D1F00C1D683;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34FF934B06DE3F4700C1D683 = {
-			fileRef = 34FF8DA906DE3D1F00C1D683;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34FF934D06DE3F4E00C1D683 = {
-			fileRef = 34FF8DA906DE3D1F00C1D683;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34FF934E06DE3F5100C1D683 = {
-			fileRef = 34FF8DA906DE3D1F00C1D683;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34FF934F06DE3F5400C1D683 = {
-			fileRef = 34FF8DA906DE3D1F00C1D683;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34FF935006DE3F5B00C1D683 = {
-			fileRef = 34FF8DA906DE3D1F00C1D683;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 //340
 //341
@@ -11689,7 +12082,6 @@
 		4947F5C60655E85200B791E5 = {
 			buildActionMask = 2147483647;
 			files = (
-				34FF934F06DE3F5400C1D683,
 				4947F5C70655E85200B791E5,
 				49778165067F558700401CC7,
 				3448761606D1EC3000DA778C,
@@ -14692,7 +15084,6 @@
 		4B7F278105440C0800CDFC90 = {
 			buildActionMask = 2147483647;
 			files = (
-				34FF934806DE3F3B00C1D683,
 				3448763B06D1EF0500DA778C,
 				6C3E0730054471CD00A4AE2E,
 				4BDF2C92061E376C00EA75C5,
@@ -14883,7 +15274,6 @@
 		4B7F78B30597F42400162728 = {
 			buildActionMask = 2147483647;
 			files = (
-				34FF934206DE3F2400C1D683,
 				3448769906D1EF6100DA778C,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -14909,7 +15299,6 @@
 				PRODUCT_NAME = "Adium Crash Reporter";
 			};
 			dependencies = (
-				CA0C977806DBFDA1004436BE,
 			);
 			isa = PBXNativeTarget;
 			name = "Adium Crash Reporter";
@@ -19752,7 +20141,6 @@
 		7E6642C00653363A0050E8C8 = {
 			buildActionMask = 2147483647;
 			files = (
-				34FF934706DE3F3600C1D683,
 				3448761706D1EC6300DA778C,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -19783,7 +20171,6 @@
 				ZERO_LINK = YES;
 			};
 			dependencies = (
-				3448745606D1E6B000DA778C,
 			);
 			isa = PBXNativeTarget;
 			name = AdiumHyperlinks.framework;
@@ -20216,7 +20603,6 @@
 		7ECB106506A4D1AD00812D5F = {
 			buildActionMask = 2147483647;
 			files = (
-				34FF935006DE3F5B00C1D683,
 				3448769F06D1EFA000DA778C,
 				7ECB108C06A4D32B00812D5F,
 			);
@@ -20939,7 +21325,6 @@
 		B72537BA058C4577004BA969 = {
 			buildActionMask = 2147483647;
 			files = (
-				34FF934906DE3F4000C1D683,
 				3448763D06D1EF3C00DA778C,
 				B72537C4058C45EF004BA969,
 			);
@@ -21262,7 +21647,6 @@
 		BFEBDBFD0669029800CBF845 = {
 			buildActionMask = 2147483647;
 			files = (
-				34FF934506DE3F2C00C1D683,
 				BFEBDC2C066908F700CBF845,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -21676,18 +22060,6 @@
 //CA2
 //CA3
 //CA4
-		CA0C977706DBFDA1004436BE = {
-			containerPortal = 3448717006D1E57700DA778C;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = AIUtilities;
-		};
-		CA0C977806DBFDA1004436BE = {
-			isa = PBXTargetDependency;
-			name = "AIUtilities (from AIUtilities.framework.xcode)";
-			targetProxy = CA0C977706DBFDA1004436BE;
-		};
 		CA25AA9F07B428C600DDBD7E = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -22297,6 +22669,7 @@
 		};
 		F53B9A1302CCEDCA01A8010A = {
 			children = (
+				34D8342B07CBE6A4006466F2,
 				F59DB3E7033EB4B601A8010A,
 				4B587CA507ABFEFD001832A9,
 				4B587CA807ABFF02001832A9,
