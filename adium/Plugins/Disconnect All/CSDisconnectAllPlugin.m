@@ -11,6 +11,7 @@
 #import <AIUtilities/AIUtilities.h>
 #import "CSDisconnectAllPlugin.h"
 
+#define CONNECT_MENU_TITLE @"Connect All"
 #define DISCONNECT_MENU_TITLE @"Disconnect All"
 
 @implementation CSDisconnectAllPlugin
@@ -21,7 +22,12 @@
                                                 target:self
                                                 action:@selector(disconnectAll:)
                                          keyEquivalent:@"D"] autorelease];
-//    [disconnectItem setEnabled:NO];
+    connectItem = [[[NSMenuItem alloc] initWithTitle:CONNECT_MENU_TITLE
+                                              target:self
+                                              action:@selector(connectAll:)
+                                       keyEquivalent:@""] autorelease];
+
+    [[owner menuController] addMenuItem:connectItem toLocation:LOC_File_Accounts];
     [[owner menuController] addMenuItem:disconnectItem toLocation:LOC_File_Accounts];
 }
 
@@ -32,8 +38,14 @@
 
 -(void)disconnectAll:(id)sender
 {
-    //calls the VERY convenient method to disconnect all the accounts
+    //disconnects all the accounts
     [[owner accountController] disconnectAllAccounts];
+}
+
+-(void)connectAll:(id)sender
+{
+    //connects all the accounts
+    [[owner accountController] connectAllAccounts];
 }
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
@@ -41,12 +53,24 @@
     NSEnumerator *accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
     AIAccount	 *account;
 
-    while (account = [accountEnumerator nextObject]) {
-        if([[account supportedPropertyKeys] containsObject:@"Online"]){
-            if([[[owner accountController] propertyForKey:@"Online" account:account] boolValue]) {
-                return YES;
+    if (menuItem == disconnectItem) {
+        while (account = [accountEnumerator nextObject]) {
+            if([[account supportedPropertyKeys] containsObject:@"Online"]){
+                if([[[owner accountController] propertyForKey:@"Online" account:account] boolValue]) {
+                    return YES;
+                }
             }
         }
+        return NO;
+    } else if (menuItem == connectItem) {
+        while (account = [accountEnumerator nextObject]) {
+            if([[account supportedPropertyKeys] containsObject:@"Online"]){
+                if(![[[owner accountController] propertyForKey:@"Online" account:account] boolValue]) {
+                    return YES;
+                }
+            }
+        }
+        return NO;
     }
     return NO;
 }
