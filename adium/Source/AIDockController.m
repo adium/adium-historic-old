@@ -48,7 +48,7 @@
     }
 }
 - (void)bounceWithInterval:(float)delay times:(int)num // if num = 0, bounce forever
-{
+{    
     if(delay == 0 && num == 0) //bouncing is constant and forvever
     {
         if([NSApplication instancesRespondToSelector:@selector(requestUserAttention:)])
@@ -57,26 +57,35 @@
         }
         
     }
-    else //there is some kind of interval, or we want to bounce a certain # of times
+    else //there is some kind of interval, we want to bounce a certain # of times, or both
     {
-        if(num == 0) // bounce forever!!
+        if(num == 0) // bounce forever!! hard to stop as of yet
         {
-            [NSTimer scheduledTimerWithTimeInterval:(double)delay target:self selector: @selector(bounce) userInfo:nil repeats:YES];
+            [NSTimer scheduledTimerWithTimeInterval:(double)delay target:self selector: @selector(bounceWithTimer) userInfo:nil repeats:YES];
         }
         else // bounce num # of times
         {
-            //Dont know what to do here...so bounce forever for now.
-            [NSTimer scheduledTimerWithTimeInterval:(double)delay target:self selector: @selector(bounce) userInfo:nil repeats:YES];
+            for(int i = 1; i <= num; i ++) //install a bunch of timers to go off. again hard to stop.
+            {
+                [NSTimer scheduledTimerWithTimeInterval:(double)(delay*num) target:self selector: @selector(bounceWithTimer) userInfo:nil repeats:NO];
+            }
         }
     }
 }
 
-- (void)stopBouncing
+- (void)stopBouncing //Only problem here is that we dont cancel bouncing forever.
 {
         if([NSApplication instancesRespondToSelector:@selector(cancelUserAttentionRequest:)])
         {
             [NSApp cancelUserAttentionRequest:0];
         }
+}
+
+//PRIVATE ========
+
+- (void)bounceWithTimer:(NSTimer *)timer
+{
+    [self bounce];
 }
 
 @end
