@@ -211,7 +211,7 @@
 {
     //validate our URL's
     [textView_URL textDidChange:aNotification];
-    if([NSApp isOnPantherOrBetter]) {
+	if([imageView_invalidURLAlert respondsToSelector:@selector(setHidden:)]){
         [imageView_invalidURLAlert setHidden:[textView_URL isURLValid]];
     }else{ //for those stuck in jag, we can't use setHidden
         if([textView_URL isURLValid]) {
