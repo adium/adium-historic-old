@@ -45,6 +45,7 @@
 #endif
 #define ADIUM_FAQ_PAGE						@"http://faq.adiumx.com/"
 #define ADIUM_FORUM_PAGE					@"http://forum.adiumx.com"
+#define ADIUM_XTRAS_PAGE					@"http://www.adiumxtras.com/"
 #define ADIUM_BUG_PAGE						@"mailto:bugs@adiumx.com"
 #define ADIUM_FEEDBACK_PAGE					@"mailto:feedback@adiumx.com"
 #define KEY_USER_VIEWED_LICENSE				@"AdiumUserLicenseViewed"
@@ -258,6 +259,9 @@
 }
 - (IBAction)showForums:(id)sender{
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_FORUM_PAGE]];
+}
+- (IBAction)showXtras:(id)sender{
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_XTRAS_PAGE]];
 }
 
 //Last call to perform actions before the app shuffles off its mortal coil and joins the bleeding choir invisible
