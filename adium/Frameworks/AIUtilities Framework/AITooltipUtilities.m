@@ -120,7 +120,7 @@ static	AITooltipOrientation	tooltipOrientation;
 {
     //Create the window
     tooltipWindow = [[NSPanel alloc] initWithContentRect:NSMakeRect(0,0,0,0) styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
-    [tooltipWindow setFloatingPanel:YES];
+    [tooltipWindow setLevel:NSStatusWindowLevel]; //Just using the floating panel level is insufficient because the contact list can float, too
     [tooltipWindow setHidesOnDeactivate:NO];
     [tooltipWindow setBackgroundColor:[NSColor colorWithCalibratedRed:1.000 green:1.000 blue:0.800 alpha:1.0]];
     [tooltipWindow setAlphaValue:0.9];
@@ -289,7 +289,6 @@ static	AITooltipOrientation	tooltipOrientation;
           tooltipOrigin.x = tooltipPoint.x;
         }
 
-        NSLog(@"tooltipPoint %f ; screenRect.origin.y %f screenRect.size.height %f tooltipSize.height",tooltipPoint.y,screenRect.origin.y , screenRect.size.height , tooltipSize.height);
         if(tooltipPoint.y > (screenRect.origin.y + screenRect.size.height - tooltipSize.height)){
             tooltipOrigin.y = screenRect.origin.y + screenRect.size.height - tooltipSize.height;
         }else{
