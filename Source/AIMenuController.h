@@ -74,6 +74,63 @@ typedef enum {
     IBOutlet	id		menu_Dock_Status;
     IBOutlet    id  	menuItem_Format_Italics;
     
+	//Menu items in MainMenu.nib for localization purposes
+	IBOutlet	NSMenuItem	*menuItem_file;
+	IBOutlet	NSMenuItem	*menuItem_edit;
+	IBOutlet	NSMenuItem	*menuItem_view;
+	IBOutlet	NSMenuItem	*menuItem_status;
+	IBOutlet	NSMenuItem	*menuItem_contact;
+	IBOutlet	NSMenuItem	*menuItem_format;
+	IBOutlet	NSMenuItem	*menuItem_window;
+	IBOutlet	NSMenuItem	*menuItem_help;
+	
+	//Adium menu
+	IBOutlet	NSMenuItem	*menuItem_aboutAdium;
+	IBOutlet	NSMenuItem	*menuItem_adiumXtras;
+	IBOutlet	NSMenuItem	*menuItem_preferences;
+	IBOutlet	NSMenuItem	*menuItem_hideAdium;
+	IBOutlet	NSMenuItem	*menuItem_hideOthers;
+	IBOutlet	NSMenuItem	*menuItem_showAll;
+	IBOutlet	NSMenuItem	*menuItem_quitAdium;
+	
+	//File menu
+	IBOutlet	NSMenuItem	*menuItem_close;
+	IBOutlet	NSMenuItem	*menuItem_closeChat;
+	IBOutlet	NSMenuItem	*menuItem_saveAs;
+	IBOutlet	NSMenuItem	*menuItem_pageSetup;
+	IBOutlet	NSMenuItem	*menuItem_print;
+	
+	//Edit menu
+	IBOutlet	NSMenuItem	*menuItem_cut;
+	IBOutlet	NSMenuItem	*menuItem_copy;
+	IBOutlet	NSMenuItem	*menuItem_paste;
+	IBOutlet	NSMenuItem	*menuItem_pasteFormatted;
+	IBOutlet	NSMenuItem	*menuItem_clear;
+	IBOutlet	NSMenuItem	*menuItem_selectAll;
+	IBOutlet	NSMenuItem	*menuItem_find;
+	IBOutlet	NSMenuItem	*menuItem_spelling;
+	IBOutlet	NSMenuItem	*menuItem_speech;
+	
+	//View menu
+	IBOutlet	NSMenuItem	*menuItem_customizeToolbar;
+	
+	//Format menu
+	IBOutlet	NSMenuItem	*menuItem_bold;
+	IBOutlet	NSMenuItem	*menuItem_italic;
+	IBOutlet	NSMenuItem	*menuItem_underline;
+	IBOutlet	NSMenuItem	*menuItem_showFonts;
+	IBOutlet	NSMenuItem	*menuItem_showColors;
+	
+	//Window menu
+	IBOutlet	NSMenuItem	*menuItem_minimize;
+	IBOutlet	NSMenuItem	*menuItem_bringAllToFront;
+
+	//Help menu
+	IBOutlet	NSMenuItem	*menuItem_adiumHelp;
+	IBOutlet	NSMenuItem	*menuItem_reportABug;
+	IBOutlet	NSMenuItem	*menuItem_sendFeedback;
+	IBOutlet	NSMenuItem	*menuItem_adiumForums;
+	
     NSMenu                              *contextualMenu;
     NSMutableDictionary					*contextualMenuItemDict;
     AIListObject						*currentContextMenuObject;
