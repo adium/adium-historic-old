@@ -108,7 +108,7 @@
     NSView	*superview = [self superview];
 
     if([superview isKindOfClass:[AIMiniToolbar class]]){
-        toolbar = superview;
+        toolbar = (AIMiniToolbar *)superview;
     }else{
         toolbar = nil;
     }
