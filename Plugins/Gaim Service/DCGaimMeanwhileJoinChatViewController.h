@@ -21,9 +21,10 @@
 @interface DCGaimMeanwhileJoinChatViewController : DCJoinChatViewController {
 	IBOutlet		NSTextField					*textField_topic;
 	IBOutlet		AICompletingTextField		*textField_inviteUsers;
-	
-	AIAccount									*account;
-
 }
+
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender;
+- (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender;
+- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender;
 
 @end

@@ -1,6 +1,16 @@
 {
     IBClasses = (
-        {CLASS = AICompletingTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
+        {
+            CLASS = AICompletingTextField; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AITextFieldWithDraggingDelegate; 
+        }, 
+        {
+            CLASS = AITextFieldWithDraggingDelegate; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {dragDelegate = id; }; 
+            SUPERCLASS = NSTextField; 
+        }, 
         {
             CLASS = DCGaimOscarJoinChatViewController; 
             LANGUAGE = ObjC; 

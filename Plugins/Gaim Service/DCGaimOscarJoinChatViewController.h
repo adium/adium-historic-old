@@ -22,8 +22,10 @@
 	IBOutlet		NSTextField				*textField_roomName;
 	IBOutlet		NSTextField				*textField_inviteMessage;
 	IBOutlet		AICompletingTextField	*textField_inviteUsers;
-	
-	AIAccount								*account;
 }
+
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender;
+- (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender;
+- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender;
 
 @end
