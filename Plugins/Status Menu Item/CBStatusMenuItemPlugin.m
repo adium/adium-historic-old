@@ -38,9 +38,22 @@
                                               forClass:[self class]]
                                               forGroup:PREF_GROUP_STATUS_MENU_ITEM];
 
-        //Observe
-		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_STATUS_MENU_ITEM];
-    }
+		//Wait for Adium to finish launching before we perform further actions
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(adiumFinishedLaunching:)
+										   name:Adium_CompletedApplicationLoad
+										 object:nil];
+	}		
+}
+
+- (void)adiumFinishedLaunching:(NSNotification *)notification
+{
+	//Observe for preference changes, initially loading our status menu item controller if necessary
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_STATUS_MENU_ITEM];
+
+	[[adium notificationCenter] removeObserver:self
+										  name:Adium_CompletedApplicationLoad
+										object:nil];
 }
 
 - (void)uninstallPlugin

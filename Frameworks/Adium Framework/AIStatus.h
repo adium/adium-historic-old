@@ -17,23 +17,23 @@
 #import "AIObject.h"
 
 //Keys used for storage and retrieval
-#define	STATE_STATUS_MESSAGE				@"Status Message"
-#define	STATE_HAS_AUTO_REPLY				@"Has AutoReply"
-#define	STATE_AUTO_REPLY_IS_STATUS_MESSAGE	@"AutoReply is Status Message"
-#define	STATE_AUTO_REPLY_MESSAGE			@"AutoReply Message"
-#define	STATE_TITLE							@"Title"
-#define	STATE_STATUS_TYPE					@"Status Type"
-#define	STATE_STATUS_NAME					@"Status Name"
-#define STATE_SHOULD_FORCE_INITIAL_IDLE_TIME @"Should Force Initial Idle Time"
-#define	STATE_FORCED_INITIAL_IDLE_TIME		@"Forced Initial Idle Time"
-#define STATE_INVISIBLE						@"Invisible"
-#define STATE_MUTABILITY_TYPE				@"Mutability Type"
+#define	STATUS_STATUS_MESSAGE				@"Status Message"
+#define	STATUS_HAS_AUTO_REPLY				@"Has AutoReply"
+#define	STATUS_AUTO_REPLY_IS_STATUS_MESSAGE	@"AutoReply is Status Message"
+#define	STATUS_AUTO_REPLY_MESSAGE			@"AutoReply Message"
+#define	STATUS_TITLE						@"Title"
+#define	STATUS_STATUS_TYPE					@"Status Type"
+#define	STATUS_STATUS_NAME					@"Status Name"
+#define STATUS_SHOULD_FORCE_INITIAL_IDLE_TIME @"Should Force Initial Idle Time"
+#define	STATUS_FORCED_INITIAL_IDLE_TIME		@"Forced Initial Idle Time"
+#define STATUS_INVISIBLE					@"Invisible"
+#define STATUS_MUTABILITY_TYPE				@"Mutability Type"
 
 //Mutability types
 typedef enum {
-	AIEditableState = 0, /* A user created state which can be modified -- the default, should be 0 */
-	AILockedState /* A state which is built into Adium and can not be modified */
-} AIStateMutabilityType;
+	AIEditableStatusState = 0, /* A user created state which can be modified -- the default, should be 0 */
+	AILockedStatusState /* A state which is built into Adium and can not be modified */
+} AIStatusMutabilityType;
 
 //General status types
 typedef enum {
@@ -82,8 +82,8 @@ typedef enum {
 - (BOOL)invisible;
 - (void)setInvisible:(BOOL)invisible;
 
-- (AIStateMutabilityType)mutabilityType;
-- (void)setMutabilityType:(AIStateMutabilityType)mutabilityType;
+- (AIStatusMutabilityType)mutabilityType;
+- (void)setMutabilityType:(AIStatusMutabilityType)mutabilityType;
 
 + (NSImage *)statusIconForStatusType:(AIStatusType)inStatusType;
 

@@ -143,18 +143,20 @@
 - (NSImage *)icon
 {
 	NSString	*statusID;
-	
-	switch([self statusType])
-	{
-		case AIAvailableStatusType:
-			statusID = @"available";
-			break;			
-		case AIAwayStatusType:
-			statusID = @"away";
-			break;
-	}/*else if([self isIdleState]){
+
+	if([self shouldForceInitialIdleTime]){
 		statusID = @"idle";
-	}*/
+	}else{
+		switch([self statusType])
+		{
+			case AIAvailableStatusType:
+				statusID = @"available";
+				break;			
+			case AIAwayStatusType:
+				statusID = @"away";
+				break;
+		}
+	}
 
 	return([AIStatusIcons statusIconForStatusID:statusID type:AIStatusIconList direction:AIIconNormal]);
 }
@@ -169,7 +171,7 @@
 	NSAttributedString	*statusMessage = nil;
 	NSData				*statusMessageData;
 	
-	if(statusMessageData = [statusDict objectForKey:STATE_STATUS_MESSAGE]){
+	if(statusMessageData = [statusDict objectForKey:STATUS_STATUS_MESSAGE]){
 		statusMessage = [NSAttributedString stringWithData:statusMessageData];
 	}
 	
@@ -187,9 +189,9 @@
 {
 	if(statusMessage){
 		[statusDict setObject:[statusMessage dataRepresentation]
-					   forKey:STATE_STATUS_MESSAGE];
+					   forKey:STATUS_STATUS_MESSAGE];
 	}else{
-		[statusDict removeObjectForKey:STATE_STATUS_MESSAGE];
+		[statusDict removeObjectForKey:STATUS_STATUS_MESSAGE];
 	}
 }
 
@@ -200,9 +202,9 @@
 {
 	if(statusMessageData){
 		[statusDict setObject:statusMessageData
-					   forKey:STATE_STATUS_MESSAGE];
+					   forKey:STATUS_STATUS_MESSAGE];
 	}else{
-		[statusDict removeObjectForKey:STATE_STATUS_MESSAGE];
+		[statusDict removeObjectForKey:STATUS_STATUS_MESSAGE];
 	}
 }
 
@@ -221,7 +223,7 @@
 		}else{
 			NSData				*autoReplyData;
 
-			if(autoReplyData = [statusDict objectForKey:STATE_AUTO_REPLY_MESSAGE]){
+			if(autoReplyData = [statusDict objectForKey:STATUS_AUTO_REPLY_MESSAGE]){
 				autoReply = [NSAttributedString stringWithData:autoReplyData];				
 			}
 		}
@@ -241,9 +243,9 @@
 {
 	if(autoReply){
 		[statusDict setObject:[autoReply dataRepresentation]
-					   forKey:STATE_AUTO_REPLY_MESSAGE];
+					   forKey:STATUS_AUTO_REPLY_MESSAGE];
 	}else{
-		[statusDict removeObjectForKey:STATE_AUTO_REPLY_MESSAGE];
+		[statusDict removeObjectForKey:STATUS_AUTO_REPLY_MESSAGE];
 	}
 }
 
@@ -254,9 +256,9 @@
 {
 	if(autoReplyData){
 		[statusDict setObject:autoReplyData
-					   forKey:STATE_AUTO_REPLY_MESSAGE];
+					   forKey:STATUS_AUTO_REPLY_MESSAGE];
 	}else{
-		[statusDict removeObjectForKey:STATE_AUTO_REPLY_MESSAGE];
+		[statusDict removeObjectForKey:STATUS_AUTO_REPLY_MESSAGE];
 	}
 }
 
@@ -265,7 +267,7 @@
  */
 - (BOOL)hasAutoReply
 {
-	return([[statusDict objectForKey:STATE_HAS_AUTO_REPLY] boolValue]);
+	return([[statusDict objectForKey:STATUS_HAS_AUTO_REPLY] boolValue]);
 }
 
 /*
@@ -274,7 +276,7 @@
 - (void)setHasAutoReply:(BOOL)hasAutoReply
 {
 	[statusDict setObject:[NSNumber numberWithBool:hasAutoReply]
-				   forKey:STATE_HAS_AUTO_REPLY];
+				   forKey:STATUS_HAS_AUTO_REPLY];
 }
 
 /*
@@ -282,7 +284,7 @@
  */
 - (BOOL)autoReplyIsStatusMessage
 {
-	return([[statusDict objectForKey:STATE_AUTO_REPLY_IS_STATUS_MESSAGE] boolValue]);
+	return([[statusDict objectForKey:STATUS_AUTO_REPLY_IS_STATUS_MESSAGE] boolValue]);
 }
 
 /*
@@ -291,7 +293,7 @@
 - (void)setAutoReplyIsStatusMessage:(BOOL)autoReplyIsStatusMessage
 {
 	[statusDict setObject:[NSNumber numberWithBool:autoReplyIsStatusMessage]
-				   forKey:STATE_AUTO_REPLY_IS_STATUS_MESSAGE];
+				   forKey:STATUS_AUTO_REPLY_IS_STATUS_MESSAGE];
 }
 
 /*!
@@ -307,7 +309,7 @@
 
 	//If the state has a title, we simply use it
 	if(!title){
-		NSString *string = [statusDict objectForKey:STATE_TITLE];
+		NSString *string = [statusDict objectForKey:STATUS_TITLE];
 		if(string && [string length]) title = string;
 	}
 
@@ -328,12 +330,11 @@
 	//If the state is an away state, use the description of the away state
 	if(!title &&
 	   ([self statusType] == AIAwayStatusType)){
-		
-		[[adium statusController] descriptionForStateOfStatus:self];
+		title = [[adium statusController] descriptionForStateOfStatus:self];
 	}
 	
 	//If the state is simply idle, use the string "Idle"
-	if(!title && [self forcedInitialIdleTime]){
+	if(!title && [self shouldForceInitialIdleTime]){
 		title = AILocalizedString(@"Idle",nil);
 	}
 	
@@ -355,9 +356,9 @@
 {
 	if(inTitle){
 		[statusDict setObject:inTitle
-					   forKey:STATE_TITLE];
+					   forKey:STATUS_TITLE];
 	}else{
-		[statusDict removeObjectForKey:STATE_TITLE];
+		[statusDict removeObjectForKey:STATUS_TITLE];
 	}
 }
 
@@ -368,7 +369,7 @@
  */
 - (AIStatusType)statusType
 {
-	return([[statusDict objectForKey:STATE_STATUS_TYPE] intValue]);
+	return([[statusDict objectForKey:STATUS_STATUS_TYPE] intValue]);
 }
 
 /*
@@ -379,7 +380,7 @@
 - (void)setStatusType:(AIStatusType)statusType
 {
 	[statusDict setObject:[NSNumber numberWithInt:statusType]
-				   forKey:STATE_STATUS_TYPE];
+				   forKey:STATUS_STATUS_TYPE];
 }
 
 /*
@@ -391,7 +392,7 @@
  */
 - (NSString *)statusName
 {
-	return([statusDict objectForKey:STATE_STATUS_NAME]);
+	return([statusDict objectForKey:STATUS_STATUS_NAME]);
 }
 
 /*
@@ -404,7 +405,7 @@
 {
 	if(statusName){
 		[statusDict setObject:statusName
-					   forKey:STATE_STATUS_NAME];
+					   forKey:STATUS_STATUS_NAME];
 	}else{
 		[statusDict removeObjectForKey:statusName];
 	}
@@ -413,24 +414,24 @@
 //XXX
 - (BOOL)shouldForceInitialIdleTime
 {
-	return([[statusDict objectForKey:STATE_SHOULD_FORCE_INITIAL_IDLE_TIME] boolValue]);	
+	return([[statusDict objectForKey:STATUS_SHOULD_FORCE_INITIAL_IDLE_TIME] boolValue]);	
 }
 //XXX
 - (void)setShouldForceInitialIdleTime:(BOOL)shouldForceInitialIdleTime
 {
 	[statusDict setObject:[NSNumber numberWithBool:shouldForceInitialIdleTime]
-				   forKey:STATE_SHOULD_FORCE_INITIAL_IDLE_TIME];
+				   forKey:STATUS_SHOULD_FORCE_INITIAL_IDLE_TIME];
 }
 //XXX
 - (double)forcedInitialIdleTime
 {
-	return([[statusDict objectForKey:STATE_FORCED_INITIAL_IDLE_TIME] doubleValue]);
+	return([[statusDict objectForKey:STATUS_FORCED_INITIAL_IDLE_TIME] doubleValue]);
 }
 //XXX
 - (void)setForcedInitialIdleTime:(double)forcedInitialIdleTime
 {
 	[statusDict setObject:[NSNumber numberWithDouble:forcedInitialIdleTime]
-				   forKey:STATE_FORCED_INITIAL_IDLE_TIME];
+				   forKey:STATUS_FORCED_INITIAL_IDLE_TIME];
 }
 
 /*
@@ -438,7 +439,7 @@
  */
 - (BOOL)invisible
 {
-	return([[statusDict objectForKey:STATE_INVISIBLE] boolValue]);
+	return([[statusDict objectForKey:STATUS_INVISIBLE] boolValue]);
 }
 
 /*
@@ -452,29 +453,29 @@
 - (void)setInvisible:(BOOL)invisible
 {
 	[statusDict setObject:[NSNumber numberWithBool:invisible]
-				   forKey:STATE_INVISIBLE];
+				   forKey:STATUS_INVISIBLE];
 }
 
 /*
- * @brief Is this state mutable?
+ * @brief Is this status state mutable?
  *
- * If this method indicates the state is not mutable,  it should not be presented to the user for editing. This should be the 
- * condition for (and only for) basic saved states built in to Adium.
+ * If this method indicates the status state is not mutable,  it should not be presented to the user for editing. 
+ * This should be the condition for (and only for) basic saved states built in to Adium.
  *
  * @result AIStateMutabilityType value
  */
-- (AIStateMutabilityType)mutabilityType
+- (AIStatusMutabilityType)mutabilityType
 {
-	return([[statusDict objectForKey:STATE_MUTABILITY_TYPE] intValue]);
+	return([[statusDict objectForKey:STATUS_MUTABILITY_TYPE] intValue]);
 }
 
 /*
  * @brief Set the mutability type of this status. The default is AIEditableState
  */
-- (void)setMutabilityType:(AIStateMutabilityType)mutabilityType
+- (void)setMutabilityType:(AIStatusMutabilityType)mutabilityType
 {
 	[statusDict setObject:[NSNumber numberWithInt:mutabilityType]
-				   forKey:STATE_MUTABILITY_TYPE];
+				   forKey:STATUS_MUTABILITY_TYPE];
 }
 
 + (NSImage *)statusIconForStatusType:(AIStatusType)inStatusType
