@@ -33,8 +33,8 @@
 - (void)_buildLinkArray;
 - (void)_showTooltipForEvent:(NSEvent *)theEvent;
 - (void)_endTrackingMouse;
-- (BOOL)_handleEmoticonClicks:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)offset;
-- (NSArray *)_emoticonMenuItemsForEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)offset;
+- (BOOL)_handleAttachmentClicks:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)offset;
+- (NSArray *)_attachmentMenuItemsForEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)offset;
 - (NSRange)_validRangeFromIndex:(int)sourceIndex to:(int)destIndex;
 @end
 
@@ -183,6 +183,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
 
 //Selection ---------------------------------------------------------------------------------
+#pragma mark Selection
 //Return the character index under the specified point
 - (int)_characterIndexAtPoint:(NSPoint)point fractionOffset:(float)offset
 {
@@ -204,6 +205,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
 
 // Link Tracking -------------------------------------------------------------------------------
+#pragma mark Link tracking
 //Returns YES if cursor rects were modified
 - (BOOL)resetCursorRectsAtOffset:(NSPoint)offset visibleRect:(NSRect)visibleRect inView:(NSView *)controlView
 {
@@ -220,6 +222,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     return(containsLinks);
 }
 
+#pragma mark Mouse down events
 //Handle a mouse down
 - (BOOL)handleMouseDownEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)inOffset
 {
@@ -230,32 +233,34 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
         handled = ([linkTrackingController handleMouseDown:theEvent withOffset:inOffset]);
     }
 
-    //Check for an emoticon click
-    if(!handled /*&& containsEmoticons*/){
-        handled = [self _handleEmoticonClicks:theEvent atPoint:inPoint offset:inOffset];
+    //Check for an attachment click
+    if(!handled){
+        handled = [self _handleAttachmentClicks:theEvent atPoint:inPoint offset:inOffset];
     }
 
     return(handled);
 }
 
-//Handle emoticon click toggling
-- (BOOL)_handleEmoticonClicks:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)offset
+//Handle attachment click toggling
+- (BOOL)_handleAttachmentClicks:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)offset
 {
-    BOOL		handled = NO;
+    BOOL			handled = NO;
     unsigned int	charIndex;
 
     //Find clicked char index
     charIndex = [self _characterIndexAtPoint:inPoint fractionOffset:1.0];
     if(charIndex >= 0 && charIndex < [textStorage length]){
        if([[textStorage string] characterAtIndex:charIndex] == NSAttachmentCharacter){ //Check for emoticons to turn into text
-           NSString	*repStr = [[textStorage attribute:NSAttachmentAttributeName atIndex:charIndex effectiveRange:nil] string];
+		   AITextAttachmentExtension	*attachment = [textStorage attribute:NSAttachmentAttributeName atIndex:charIndex effectiveRange:nil];
+           NSString						*repStr = [attachment string];
 
-           if(repStr != nil){
+		   //Check if the string exists and wants its alternate text to be used
+           if(repStr != nil && [attachment hasAlternate]) {
                NSMutableAttributedString	*repAttStr = [[NSMutableAttributedString alloc] initWithString:repStr];
-               AITextAttachmentExtension	*origSmiley = [textStorage attribute:NSAttachmentAttributeName atIndex:charIndex effectiveRange:nil];
-               NSMutableDictionary		*attributes = [[textStorage attributesAtIndex:charIndex effectiveRange:nil] mutableCopy];
-               unsigned int			tempIndex = charIndex;
-               NSColor				*tempColor = nil;
+
+               NSMutableDictionary			*attributes = [[textStorage attributesAtIndex:charIndex effectiveRange:nil] mutableCopy];
+               unsigned int					tempIndex = charIndex;
+               NSColor						*tempColor = nil;
 
                if(tempIndex > 0){
                    while((tempColor = [textStorage attribute:NSForegroundColorAttributeName atIndex: --tempIndex effectiveRange:nil]) == nil && tempIndex != 0);
@@ -264,7 +269,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
                }
 
                if(tempColor) [attributes setObject:tempColor forKey:NSForegroundColorAttributeName];
-               [attributes setObject:origSmiley forKey:@"IKHiddenAttachment"];
+               [attributes setObject:attachment forKey:@"IKHiddenAttachment"];
                [attributes setObject:[NSNumber numberWithInt:uniqueEmoticonID++] forKey:@"IKHiddenAttachmentUniq"]; //Add unique ID so ranges remain distinct
                [attributes removeObjectForKey:NSAttachmentAttributeName];
                [repAttStr addAttributes:attributes range:NSMakeRange(0,[repAttStr length])];
@@ -390,6 +395,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 }
 
 //****Contextual menu items
+#pragma mark Contextual menu items
 
 //Supply menu items
 - (NSArray *)menuItemsForEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)inOffset
@@ -397,7 +403,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     NSArray *menuItemArray = nil;
 
     //Get emoticon menu items
-    menuItemArray = [self _emoticonMenuItemsForEvent:theEvent atPoint:inPoint offset:inOffset];
+    menuItemArray = [self _attachmentMenuItemsForEvent:theEvent atPoint:inPoint offset:inOffset];
     
     //Add link menu items
     if (containsLinks){
@@ -411,49 +417,53 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     return(menuItemArray);
 }
 
-//Return the menu items for an emoticon, if appropriate
-- (NSArray *)_emoticonMenuItemsForEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)offset
+//Return the menu items for an attachment
+- (NSArray *)_attachmentMenuItemsForEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)offset
 {
     NSMutableArray      *menuItemArray = nil;
     NSMenuItem          *menuItem;
-    unsigned int	charIndex;
+    unsigned int		charIndex;
     
     //Find clicked char index
     charIndex = [self _characterIndexAtPoint:inPoint fractionOffset:1.0];
     if(charIndex >= 0 && charIndex < [textStorage length]){
         //Check for emoticons in image form
         if( ([[textStorage string] characterAtIndex:charIndex] == NSAttachmentCharacter) ) {
-            //get the string value of the emoticon
-            NSString	*repStr = [[textStorage attribute:NSAttachmentAttributeName atIndex:charIndex effectiveRange:nil] string];
-            
-            //If a string value exists, we're good to go
-            if (repStr != nil) {
-                //Make an array for transmitting the items
-                menuItemArray = [[[NSMutableArray alloc] init] autorelease];
-                
-                AITextAttachmentExtension	*attachment = [textStorage attribute:NSAttachmentAttributeName 
-                                                                             atIndex:charIndex
-                                                                      effectiveRange:nil];   
-                NSImage                         *image = [(NSTextAttachmentCell *)[attachment attachmentCell] image];
-                
-                menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_IMAGE
-                                                       target:self
-                                                       action:@selector(copyImage:)
-                                                keyEquivalent:@""] autorelease];
-                [menuItem setRepresentedObject:image];
-                [menuItemArray addObject:menuItem];
-                
-                
-                NSAttributedString *formattedText = [[NSAttributedString alloc] initWithString:repStr
-                                                                                            attributes:[textStorage attributesAtIndex:charIndex effectiveRange:nil]];
-                menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_TEXT
-                                                       target:self
-                                                       action:@selector(copyText:)
-                                                keyEquivalent:@""] autorelease];
-                [menuItem setRepresentedObject:[formattedText autorelease]];                
-                [menuItemArray addObject:menuItem];
-            } 
-        }
+			AITextAttachmentExtension	*attachment;
+			NSImage						*image;
+			NSString					*repStr;
+			
+			//Make an array for transmitting the items
+			menuItemArray = [[[NSMutableArray alloc] init] autorelease];
+			
+			attachment = [textStorage attribute:NSAttachmentAttributeName 
+																	 atIndex:charIndex
+															  effectiveRange:nil];   
+			image = [(NSTextAttachmentCell *)[attachment attachmentCell] image];
+			
+			menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_IMAGE
+												   target:self
+												   action:@selector(copyImage:)
+											keyEquivalent:@""] autorelease];
+			[menuItem setRepresentedObject:image];
+			[menuItemArray addObject:menuItem];
+			
+			//get the string value
+			repStr = [attachment string];
+			
+			//Check if the string exists and wants its alternate text to be used
+			if(repStr != nil && [attachment hasAlternate]) {
+				
+				NSAttributedString *formattedText = [[NSAttributedString alloc] initWithString:repStr
+																					attributes:[textStorage attributesAtIndex:charIndex effectiveRange:nil]];
+				menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_TEXT
+													   target:self
+													   action:@selector(copyText:)
+												keyEquivalent:@""] autorelease];
+				[menuItem setRepresentedObject:[formattedText autorelease]];                
+				[menuItemArray addObject:menuItem];
+			}
+		} 
         //Check for emoticons in text form
         else if ([textStorage attribute:@"IKHiddenAttachment" atIndex:charIndex effectiveRange:nil]) {
             //Make an array for transmitting the items

@@ -20,7 +20,9 @@
 - (id)init
 {
     [super init];
+	stringRepresentation = nil;
     shouldSaveImageForLogging = NO;
+	hasAlternate = NO;
     return self;
 }
     
@@ -34,10 +36,12 @@
 
 - (NSString *)string
 {
-    if(stringRepresentation == nil){
-	[self setString:[super description]];
+	
+	if(stringRepresentation == nil){
+		[self setString:[super description]];
     }
-    return stringRepresentation;
+	
+    return (stringRepresentation);
 }
 
 - (BOOL)shouldSaveImageForLogging
@@ -48,6 +52,16 @@
 - (void)setShouldSaveImageForLogging:(BOOL)flag
 {
     shouldSaveImageForLogging = flag;
+}
+
+- (BOOL)hasAlternate
+{
+	return hasAlternate;
+}
+
+- (void)setHasAlternate:(BOOL)flag
+{
+	hasAlternate = flag;
 }
 
 @end

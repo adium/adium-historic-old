@@ -16,11 +16,14 @@
 @interface AITextAttachmentExtension : NSTextAttachment {
     NSString	*stringRepresentation;
     BOOL        shouldSaveImageForLogging;
+	BOOL		hasAlternate;
 }
 
 - (void)setString:(NSString *)inString;
 - (NSString *)string;
 - (BOOL)shouldSaveImageForLogging;
 - (void)setShouldSaveImageForLogging:(BOOL)flag;
+- (BOOL)hasAlternate;
+- (void)setHasAlternate:(BOOL)flag;
 
 @end
