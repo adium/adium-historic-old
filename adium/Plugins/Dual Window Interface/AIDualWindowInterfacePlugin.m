@@ -18,8 +18,7 @@
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
 #import "AIMessageTabViewItem.h"
-#import "AIDualWindowPreferences.h"
-#import "AIDualWindowAdvancedPrefs.h"
+#import "AIContactListAdvancedPrefs.h"
 #import "ESDualWindowMessageWindowPreferences.h"
 #import "ESDualWindowMessageAdvancedPreferences.h"
 
@@ -41,6 +40,8 @@
 
 	//Preferences
 #warning clean up used
+#warning AIContactListAdvancedPrefs
+	
 //    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_DEFAULT_PREFS forClass:[self class]] 
 //										  forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 //    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_WINDOW_DEFAULT_PREFS forClass:[self class]] 

@@ -5,10 +5,10 @@
 //  Created by Adam Iser on Sat Jul 12 2003.
 //
 
-#import "AIDualWindowAdvancedPrefs.h"
+#import "AIContactListAdvancedPrefs.h"
 #import "AIDualWindowInterfacePlugin.h"
 
-@implementation AIDualWindowAdvancedPrefs
+@implementation AIContactListAdvancedPrefs
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{

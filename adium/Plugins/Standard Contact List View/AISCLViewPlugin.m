@@ -20,6 +20,7 @@
 #import "ESCLViewAdvancedPreferences.h"
 #import "ESCLViewLabelsAdvancedPrefs.h"
 #import "AISCLViewController.h"
+#import "AIContactListWindowController.h"
 
 @interface AISCLViewPlugin (PRIVATE)
 @end
@@ -31,8 +32,7 @@
 
 - (void)installPlugin
 {
-    //Register ourself as a contact list view plugin
-    [[adium interfaceController] registerContactListViewPlugin:self];
+    [[adium interfaceController] registerContactListController:self];
 
     //Register our default preferences and install our preference views
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
@@ -45,13 +45,44 @@
     preferencesGroup = [[AICLGroupPreferences preferencePane] retain];
     preferencesAdvanced = [[ESCLViewAdvancedPreferences preferencePane] retain];
     preferencesLabelsAdvanced = [[ESCLViewLabelsAdvancedPrefs preferencePane] retain];
+	
+#warning	[[AIContactListAdvancedPrefs preferencePane] retain];
 }
 
-//Return a new contact list view controller
-- (id <AIContactListViewController>)contactListViewController
+
+
+//Contact List Controller ----------------------------------------------------------------------------------------------
+#pragma mark Contact List Controller
+//
+- (void)showContactListAndBringToFront:(BOOL)bringToFront
 {
-    return([AISCLViewController contactListViewController]);
+    if(!contactListWindowController){ //Load the window
+        contactListWindowController = [[AIContactListWindowController contactListWindowControllerWithPlugin:self] retain];
+    }
+    [contactListWindowController makeActive:nil];
+
+    if(bringToFront) [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 }
+
+- (BOOL)contactListIsVisibleAndMain
+{
+	return(contactListWindowController && [[contactListWindowController window] isMainWindow]);
+}
+
+- (void)closeContactList
+{
+    if(contactListWindowController){
+        [[contactListWindowController window] performClose:nil];
+    }
+}
+
+//Callback when the contact list closes, clear our reference to it
+- (void)contactListDidClose
+{
+	[contactListWindowController release];
+	contactListWindowController = nil;
+}
+
 
 @end
 

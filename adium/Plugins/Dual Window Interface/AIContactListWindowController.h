@@ -26,7 +26,11 @@
 - (void)unloadContactListWindow;
 @end
 
+@class AISCLViewPlugin;
+
 @interface AIContactListWindowController : AIWindowController <AIInterfaceContainer> {
+	AISCLViewPlugin 		*plugin;
+
     IBOutlet	AIAutoScrollView		*scrollView_contactList;
 
     id <AIContactListViewController>	contactListViewController;
@@ -40,7 +44,7 @@
     BOOL								autoResizeHorizontally;
 }
 
-+ (AIContactListWindowController *)contactListWindowController;
++ (AIContactListWindowController *)contactListWindowControllerWithPlugin:(AISCLViewPlugin *)inPlugin;
 - (void)makeActive:(id)sender;
 - (void)close:(id)sender;
 
