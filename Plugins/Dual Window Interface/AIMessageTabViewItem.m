@@ -135,8 +135,8 @@
 	
 	//Redraw if the icon has changed
 	if(keys == nil || [keys containsObject:@"Tab State Icon"]){
+		[[self container] updateIconForTabViewItem:self];
 		[[[self tabView] delegate] redisplayTabForTabViewItem:self];
-		[[self container] updateIconForTabViewItem:self];		
 	}
 		
 }
@@ -147,8 +147,8 @@
 
 	//Redraw if the icon has changed
 	if(keys == nil || [keys containsObject:@"Tab Status Icon"]){
-		[[[self tabView] delegate] redisplayTabForTabViewItem:self];
 		[[self container] updateIconForTabViewItem:self];
+		[[[self tabView] delegate] redisplayTabForTabViewItem:self];
 	}
 	
     //If the list object's display name changed, we resize the tabs
