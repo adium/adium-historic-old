@@ -32,7 +32,7 @@
 
 - (AIListContact *)contactAssociatedWithBuddy:(GaimBuddy *)buddy;
 - (AIListContact *)contactAssociatedWithConversation:(GaimConversation *)conv withBuddy:(GaimBuddy *)buddy;
-- (AIListContact *)_contactAssociatedWithBuddy:(GaimBuddy *)buddy usingUID:(NSString)contactUID;
+- (AIListContact *)_contactAssociatedWithBuddy:(GaimBuddy *)buddy usingUID:(NSString *)contactUID;
 
 - (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy;
 - (void)removeAllStatusFlagsFromContact:(AIListContact *)contact;
