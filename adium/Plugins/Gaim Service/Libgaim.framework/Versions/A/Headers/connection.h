@@ -55,8 +55,8 @@ typedef enum
 
 } GaimConnectionState;
 
-#include "account.h"
-#include "plugin.h"
+#include <libgaim/account.h>
+#include <libgaim/plugin.h>
 
 typedef struct
 {
@@ -268,6 +268,13 @@ GList *gaim_connections_get_all(void);
  * @return A list of connecting connections.
  */
 GList *gaim_connections_get_connecting(void);
+
+/**
+ * Checks if gc is still a valid pointer to a gc.
+ *
+ * @return @c TRUE if gc is valid.
+ */
+#define GAIM_CONNECTION_IS_VALID(gc) (g_list_find(gaim_connections_get_all(), (gc)) || g_list_find(gaim_connections_get_connecting(), (gc)))
 
 /*@}*/
 

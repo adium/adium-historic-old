@@ -29,7 +29,7 @@
 #include <glib-object.h>
 #include <glib.h>
 
-#include "account.h"
+#include <libgaim/account.h>
 
 /**
  * Request types.

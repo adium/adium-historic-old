@@ -150,12 +150,56 @@ static BOOL didInitMSN = NO;
 	[self updateStatusForKey:@"FullNameAttr"];
 }
 
+#pragma mark File transfer
+- (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
+{
+	[super _beginSendOfFileTransfer:fileTransfer];
+}
+
+- (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
+{
+	if (gaim_account_is_connected(account)){
+		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
+		
+		return msn_xfer_new(account->gc,destsn);
+	}
+	
+	return nil;
+}
+
+- (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
+{
+    [super acceptFileTransferRequest:fileTransfer];    
+}
+
+- (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
+{
+    [super rejectFileReceiveRequest:fileTransfer];    
+}
+
+
+
 /*
  //Added to msn.c
 //**ADIUM
 void msn_set_friendly_name(GaimConnection *gc, const char *entry)
 {
 	msn_act_id(gc, entry);
+}
+
+GaimXfer *msn_xfer_new(GaimConnection *gc, char *who)
+{
+	session = gc->proto_data;
+	
+	xfer = gaim_xfer_new(gc->account, GAIM_XFER_SEND, who);
+	
+	slplink = msn_session_get_slplink(session, who);
+	
+	xfer->data = slplink;
+	
+	gaim_xfer_set_init_fnc(xfer, t_msn_xfer_init);
+	
+	return xfer;
 }
 */
  

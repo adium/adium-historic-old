@@ -3,7 +3,9 @@
  *
  * gaim
  *
- * Copyright (C) 2003-2004 Christian Hammond <chipx86@gnupdate.org>
+ * Gaim is the legal property of its developers, whose names are too numerous
+ * to list here.  Please refer to the COPYRIGHT file distributed with this
+ * source distribution.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,16 +32,18 @@
 #include <libgaim/connection.h>
 #include <libgaim/conversation.h>
 #include <libgaim/debug.h>
+#include <libgaim/ft.h>
 #include <libgaim/md5.h>
 #include <libgaim/notify.h>
 #include <libgaim/privacy.h>
 #include <libgaim/proxy.h>
 #include <libgaim/prpl.h>
 #include <libgaim/request.h>
-#include <libgaim/server.h>
 #include <libgaim/sha.h>
 #include <libgaim/sslconn.h>
 #include <libgaim/util.h>
+
+#include "servconn.h"
 
 /* XXX */
 #include <libgaim/gaim.h>
@@ -111,6 +115,9 @@ typedef enum
 	 (MSN_CLIENT_ID_RESERVED_2 <<  8) | \
 	 (MSN_CLIENT_ID_CAPABILITIES))
 
+void msn_request_buddy_icon(GaimConnection *gc, const char *who);
+
 #endif /* _MSN_H_ */
 
 void msn_set_friendly_name(GaimConnection *gc, const char *entry);
+GaimXfer *msn_xfer_new(GaimConnection *gc, char *who);

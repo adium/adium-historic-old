@@ -1,4 +1,4 @@
-/* $Id: libgg.h,v 1.7 2004/05/24 03:31:29 evands Exp $ */
+/* $Id: libgg.h,v 1.8 2004/06/23 21:56:03 evands Exp $ */
 
 /*
  *  (C) Copyright 2001 Wojtek Kaniewski <wojtekka@irc.pl>,
@@ -29,7 +29,9 @@ extern "C" {
   #define INADDR_NONE 0xffffffff
 #endif
 
-#include <stdint.h>
+#ifdef HAVE_STDINT_H
+#  include <stdint.h>
+#endif
 #include <sys/types.h>
 
 /*
@@ -160,6 +162,7 @@ void gg_free_session(struct gg_session *sess);
 void gg_logoff(struct gg_session *sess);
 int gg_write(struct gg_session *sess, const char *buf, int length);
 int gg_change_status(struct gg_session *sess, int status);
+int gg_change_status_descr(struct gg_session *sess, int status, const char *descr);
 int gg_send_message(struct gg_session *sess, int msgclass, uin_t recipient, const unsigned char *message);
 int gg_send_message_richtext(struct gg_session *sess, int msgclass, uin_t recipient, const unsigned char *message, const unsigned char *format, int formatlen);
 int gg_ping(struct gg_session *sess);
@@ -528,6 +531,8 @@ __attribute__ ((packed))
 #define GG_STATUS_BLOCKED 0x0006		/* zablokowany */
 
 #define GG_STATUS_FRIENDS_MASK 0x8000		/* tylko dla znajomych (4.6) */
+
+#define GG_STATUS_DESCR_MAXSIZE 70
 
 /* GG_S() stan bez uwzglêdnienia trybu tylko dla znajomych */
 #define GG_S(x) ((x) & ~GG_STATUS_FRIENDS_MASK)

@@ -27,7 +27,7 @@
 
 typedef struct _GaimBuddyIcon GaimBuddyIcon;
 
-#include "account.h"
+#include <libgaim/account.h>
 
 struct _GaimBuddyIcon
 {

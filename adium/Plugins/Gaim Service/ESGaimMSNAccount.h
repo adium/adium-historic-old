@@ -9,7 +9,7 @@
 
 #define KEY_MSN_HTTP_CONNECT_METHOD @"MSN:HTTP Connect Method"
 
-@interface ESGaimMSNAccount : CBGaimAccount {
+@interface ESGaimMSNAccount : CBGaimAccount <AIAccount_Files>{
 	NSString	*currentFriendlyName;
 }
 

@@ -28,7 +28,7 @@
 typedef struct _GaimPounce GaimPounce;
 
 #include <glib.h>
-#include "account.h"
+#include <libgaim/account.h>
 
 /**
  * Events that trigger buddy pounces.

@@ -26,7 +26,7 @@
 #define _GAIM_PROXY_H_
 
 #include <glib.h>
-#include "eventloop.h"
+#include <libgaim/eventloop.h>
 
 /**
  * A type of proxy connection.
@@ -57,7 +57,7 @@ typedef struct
 } GaimProxyInfo;
 
 
-#include "account.h"
+#include <libgaim/account.h>
 
 #ifdef __cplusplus
 extern "C" {
