@@ -36,8 +36,7 @@ Messages & Chat
   - Chat windows can re-open when contact status changed (If using cmd-n to change source
     account)
   - Issues with time crossing midnight and messages not appearing in the window afterwards
-
-
+	  
 Meta Contacts
   - To/From bar in messages can get into a weird infinite loop when multiple possible source
 	and target accounts/contacts exist on the same serviceClass
@@ -65,8 +64,10 @@ Meta Contacts
   - Tooltip alignment fails in long away messages and other large blocks of text.
   - Double clicking two names in succession causes the first name to highlight
     the second time.
-
-
+  - The stranger status doesn't get set anymore... which means that strangers are always
+	treated as offline and prompt the Send Now / Send Later sheet.
+  - An incoming message which opens a new tab will also unminimize the associated window
+  
 //------------------------------------------------------------------------------------
 // Bugs - Libgaim
 //------------------------------------------------------------------------------------
@@ -74,6 +75,8 @@ Meta Contacts
 - (Yahoo) Files over 1 MB in size fail to send
 - (Jaber) Authorization problems
 - (AIM) Contacts can get incorrectly tagged as being on an AOL Mobile Device
+- (AIM) Group Chat : Japanese (and probably other charsets) doesn't get sent properly, 
+	but can be received
 - (All) Gaim's proxy support is unreliable at best
 
 
