@@ -867,6 +867,9 @@ DeclareString(AppendNextMessage);
 					[bodyTag appendString:[NSString stringWithFormat:@"background-color: #%@; ", [customBackgroundColor hexString]]];
 				}
  			}
+			
+			//Replace the body background tag
+ 			[inString replaceCharactersInRange:range withString:(bodyTag ? (NSString *)bodyTag : @"")];
  		}
  	}
 
