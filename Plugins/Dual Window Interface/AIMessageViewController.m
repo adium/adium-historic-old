@@ -71,6 +71,7 @@
 	
 	//Configure our chat
 	chat = [inChat retain];
+
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(sendMessage:) 
 									   name:Interface_SendEnteredMessage
@@ -194,6 +195,8 @@
 	
     [messageViewController release];
 	[scrollView_userList release];
+	[controllerView_messages release];
+	[view_contents release];
 	
     [super dealloc];
 }
