@@ -26,6 +26,8 @@
 #define	AIM_ERRORS_FILE		@"AIMErrors"	//Filename of the AIM Errors plist
 #define MESSAGE_QUE_DELAY	2.0		//Delay before sending contact list changes to the server
 
+#define AIM_PACKET_MAX_LENGTH	2048
+
 #define SIGN_ON_MAX_WAIT	5.0		//Max amount of time to wait for first sign on packet
 #define SIGN_ON_UPKEEP_INTERVAL	0.4		//Max wait before sign up updates
 
@@ -253,13 +255,15 @@ static char *hash_password(const char * const password);
 // Return YES if the contact list is editable
 - (BOOL)contactListEditable
 {
-    return([[[owner accountController] statusObjectForKey:@"Online" account:self] boolValue]);
+    return([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
 }
 
 // Return a dictionary of our handles
 - (NSDictionary *)availableHandles
 {
-    if([[[owner accountController] statusObjectForKey:@"Online" account:self] boolValue]){
+    int	status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
+    
+    if(status == STATUS_ONLINE || status == STATUS_CONNECTING){
         return(handleDict);
     }else{
         return(nil);
@@ -272,12 +276,24 @@ static char *hash_password(const char * const password);
 // Send a content object
 - (BOOL)sendContentObject:(id <AIContentObject>)object
 {
+    BOOL	sent = NO;
+    NSString	*message;
+
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        [self AIM_SendMessage:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message] encodeFullString:YES]
-                     toHandle:[[object destination] UID]];
+        message = [self validCopyOfString:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message] encodeFullString:YES]];
+
+        if([message length] <= AIM_PACKET_MAX_LENGTH){
+            [self AIM_SendMessage:message toHandle:[[object destination] UID]];
+            sent = YES;
+
+        }else{
+            [[owner interfaceController] handleErrorMessage:@"Message too big" withDescription:@"The message you're trying to send it too large.  Try breaking it into parts and sending them one at a time."];
+
+        }
+
     }
     
-    return(YES);
+    return(sent);
 }
 
 // Return YES if we're available for sending the specified content
@@ -597,7 +613,14 @@ static char *hash_password(const char * const password);
 
     //Send any packets in the outQue
     while([outQue count] && [socket readyForSending]){
-        [[outQue objectAtIndex:0] sendToSocket:socket];
+        AIMTOC2Packet	*packet = [outQue objectAtIndex:0];
+
+        if([packet length] <= 2048){
+            [[outQue objectAtIndex:0] sendToSocket:socket];
+        }else{
+            NSLog(@"Attempted to send invalid packet (Too large, %i)",[packet length]);
+        }
+            
 //        NSLog(@"(%@)-> %@",screenName,[[outQue objectAtIndex:0] string]);
         [outQue removeObjectAtIndex:0];
     }
@@ -796,7 +819,7 @@ static char *hash_password(const char * const password);
     NSString	*command;
 
     //Create the message string
-    command = [NSString stringWithFormat:@"toc2_send_im %@ \"%@\"",handleUID,[self validCopyOfString:inMessage]];
+    command = [NSString stringWithFormat:@"toc2_send_im %@ \"%@\"",handleUID,inMessage];
     
     //Send the message
     [outQue addObject:[AIMTOC2Packet dataPacketWithString:command sequence:&localSequence]];
