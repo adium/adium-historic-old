@@ -23,6 +23,8 @@
 - Adiumy dock icons don't show away/idle status, related to localization?
 - Get Info on a group after getting info on a contact shows the group's service as the last viewed contact's service, or nothing at all
 - Double-clicking a contact with more than one message window open opens a new tab in the first opened window (instead of the frontmost)
+- Group chat userlist is using contact list background colors
+- Dragging a group chat's tab, then clicking a user in the userlist crashes
 - Should we be logging colors?
 
 //-------------------------------------------------------------------------------------------------------
