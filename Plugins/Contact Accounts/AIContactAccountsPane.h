@@ -8,6 +8,7 @@
 
 @interface AIContactAccountsPane : AIContactInfoPane {
 	IBOutlet	AIAlternatingRowTableView	*tableView_accounts;
+	IBOutlet	AILocalizationTextField		*label_listedOnTheFollowingOfYourAccounts;
 
 	AIListObject			*listObject;
 	NSArray					*accounts;

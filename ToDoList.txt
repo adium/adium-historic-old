@@ -35,12 +35,6 @@
 	- Bookmark URLs (From bookmark integration) [Evan: As cool as this would be, I don't think it's worth the overhead.]
                                                     [Steve: agreed]
 
-//Message Save and Print
-  Common mac file menu operations should work on message windows, this includes
-	- Save As
-	- Print (Done)
-  These are grouped because they are functionally similar.	
-
 //File Receive Prompt
   The receive file prompt should be its own panel, and provide options for
 	- Save (To desktop / download folder)
@@ -110,10 +104,6 @@
   - Display the number of new messages in the dock (Similar to mail)
   - Allow retrieval of these messages from the status/dock menu and contact list
 
-//Growl notifications
-  - Remove existing notification code
-  - Add global preferences for which events to display
-
 //Contact list editing
   We need contact list editing to feel safe
   - Improve drag images
@@ -125,12 +115,13 @@
 
 //Improved info window
   Update the info window appearance and profile display
-  - Fix support for sub-profile links
+  - Fix support for sub-profile links [Evan: These work for me.  Confirmation, anyone?]
   - Use WebKit to handle the HTML unless there is some overwhelming reason we parse it
     // this should resolve several issues and gives great benefits - like tooltips & copy link
   
 //Preferences
-  - Improve organization of advanced preferences
+  - Improve organization of advanced preferences (group several small panes into a general
+		advanced pane, possibly on a per-category basis)
   - Add advanced categories for service specific preferences
   - Make heights of preference panes equal where possible
   - Fade between preference panes when switching?
@@ -182,7 +173,7 @@
 	- Add "Block contacts not on my list" to AIM account preferences
         
 //Sound Preferences
-        - Provide a way to manage (delete at minimum) soundsets
+	- Provide a way to manage (delete at minimum) soundsets
 
 //Announcer Improvements
 	- Allow user to have more control over what is spoken by the announcer plugin
@@ -200,7 +191,6 @@
 		a contact with no groups has no visible effect.
 
 //Alerts
-  - Organize event and action menus
   - Clarify wording, clean up alert panes
 
 //Status on message window
@@ -210,4 +200,6 @@
 	- User documentation
 
 //Message context improvements
-  The message context system will not work well with deferred messages.
+	- The message context system will not work well with deferred messages.
+
+- Make command-= an alternate for Add Contact (command-shift-=, or command-+)

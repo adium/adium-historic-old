@@ -17,20 +17,24 @@ typedef enum {
 
 @interface ESStatusSort : AISortController {
 	IBOutlet	NSButton		*checkBox_groupAvailable;
+	
+	IBOutlet	NSMatrix		*matrix_unavailableGrouping;
+	IBOutlet	NSButtonCell	*buttonCell_allUnavailable;
+	IBOutlet	NSButtonCell	*buttonCell_separateUnavailable;
 	IBOutlet	NSButton		*checkBox_groupAway;
 	IBOutlet	NSButton		*checkBox_groupIdle;
 	IBOutlet	NSButton		*checkBox_groupIdleAndAway;
+	
 	IBOutlet	NSButton		*checkBox_sortIdleTime;
 	
+	IBOutlet	AILocalizationTextField	*label_sortWithinEachStatusGrouping;
+
 	IBOutlet	NSMatrix		*matrix_resolution;
 	IBOutlet	NSButtonCell	*buttonCell_alphabetically;
 	IBOutlet	NSButton		*checkBox_alphabeticallyByLastName;
 	IBOutlet	NSButtonCell	*buttonCell_manually;
 	
-	IBOutlet	NSMatrix		*matrix_unavailableGrouping;
-	IBOutlet	NSButtonCell	*buttonCell_allUnavailable;
-	IBOutlet	NSButtonCell	*buttonCell_separateUnavailable;
-		
+	IBOutlet	AILocalizationTextField	*label_statusGroupOrdering;	
 	IBOutlet	NSTableView		*tableView_sortOrder;
 }
 

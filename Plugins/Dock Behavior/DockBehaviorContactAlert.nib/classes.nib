@@ -2,6 +2,28 @@
     IBClasses = (
         {CLASS = AIActionDetailsPane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {
+            CLASS = AILocalizationButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSButton; 
+        }, 
+        {
+            CLASS = AILocalizationTextField; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSTextField; 
+        }, 
+        {
             ACTIONS = {changePreference = id; }; 
             CLASS = AIModularPane; 
             LANGUAGE = ObjC; 
@@ -12,13 +34,10 @@
         {
             CLASS = ESDockAlertDetailPane; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"popUp_actionDetails" = NSPopUpButton; }; 
-            SUPERCLASS = AIActionDetailsPane; 
-        }, 
-        {
-            CLASS = ESDockBehaviorContactAlert; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {"popUp_actionDetails" = NSPopUpButton; }; 
+            OUTLETS = {
+                "label_behavior" = AILocalizationTextField; 
+                "popUp_actionDetails" = NSPopUpButton; 
+            }; 
             SUPERCLASS = AIActionDetailsPane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }

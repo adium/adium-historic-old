@@ -10,6 +10,9 @@
 	IBOutlet		AILinkTextView			*textView_profile;
 	IBOutlet		AILinkTextView			*textView_status;
 
+	IBOutlet		AILocalizationTextField	*label_status;
+	IBOutlet		AILocalizationTextField	*label_profileIfAvailable;
+	
 	AIListObject						*listObject;
 	
 	BOOL								viewIsOpen;

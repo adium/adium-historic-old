@@ -101,8 +101,8 @@
 
     while (uniqueID = [enumerator nextObject]) {
 		listContact = [[adium contactController] existingContactWithService:service
-															 account:self
-																 UID:uniqueID];
+																	account:self
+																		UID:uniqueID];
 		[listContact setRemoteGroupName:nil];
     }
     [libezvContacts removeAllObjects];

@@ -99,7 +99,7 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 	[button_homepage setTitle:AILocalizedString(@"Adium Homepage",nil)];
 	[button_license setTitle:AILocalizedString(@"License",nil)];
 
-    [[self window] center];
+    [[self window] betterCenter];
 }
 
 //Close the about box

@@ -10,10 +10,10 @@
     IBOutlet		NSPopUpButton   *popUp_service;				//Account selector
     IBOutlet		NSView			*view_customView;			//View containing service-specific controls
 	
-	IBOutlet		AILocalizationTextField		*textField_accountLabel;
-	IBOutlet		NSButton					*button_joinChat;
-	IBOutlet		NSButton					*button_cancel;
-	
+	IBOutlet		AILocalizationTextField		*label_account;
+	IBOutlet		AILocalizationButton		*button_joinChat;
+	IBOutlet		AILocalizationButton		*button_cancel;
+
 	DCJoinChatViewController		*controller;				//Current view controller
 	NSView							*currentView;				//
 }

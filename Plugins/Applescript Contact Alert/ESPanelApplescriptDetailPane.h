@@ -9,6 +9,9 @@
 @interface ESPanelApplescriptDetailPane : AIActionDetailsPane {
 	IBOutlet	NSTextField		*textField_scriptName;
 	NSString					*scriptPath;
+	
+	IBOutlet	AILocalizationTextField	*label_applescript;
+	IBOutlet	AILocalizationButton	*button_browse;
 }
 
 - (IBAction)chooseFile:(id)sender;

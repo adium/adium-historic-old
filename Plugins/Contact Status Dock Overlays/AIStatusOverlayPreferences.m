@@ -25,6 +25,10 @@
 //Configures our view for the current preferences
 - (void)viewDidLoad
 {
+	[checkBox_showContentOverlays setTitle:AILocalizedString(@"With unviewed messages","Option for'Show Contacts:'")];
+	[checkBox_showStatusOverlays setTitle:AILocalizedString(@"Who connect and disconnect","Option for'Show Contacts:'")];
+	[label_showContacts setStringValue:AILocalizedString(@"Show Contacts:",nil)];
+	
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DOCK_OVERLAYS];
 
     [checkBox_showStatusOverlays setState:[[preferenceDict objectForKey:KEY_DOCK_SHOW_STATUS] boolValue]];

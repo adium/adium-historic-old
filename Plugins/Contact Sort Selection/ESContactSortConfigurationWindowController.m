@@ -52,4 +52,11 @@
 	[[self window] setContentSize:newSize];
 }
 
+- (void)windowDidLoad
+{
+	[super windowDidLoad];
+	
+	[[self window] setTitle:AILocalizedString(@"Configure Sort","Configure Sort window title")];
+}
+
 @end

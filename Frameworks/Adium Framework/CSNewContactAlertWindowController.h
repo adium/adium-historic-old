@@ -12,8 +12,14 @@
 	IBOutlet NSView					*view_auxiliary;
 	IBOutlet NSPopUpButton			*popUp_event;
 	IBOutlet NSPopUpButton			*popUp_action;
+
 	IBOutlet NSButton				*checkbox_oneTime;
-	
+
+	IBOutlet NSButton				*button_OK;
+	IBOutlet NSButton				*button_cancel;
+	IBOutlet NSTextField			*label_Event;
+	IBOutlet NSTextField			*label_Action;
+
 	AIActionDetailsPane				*detailsPane;
 	NSView							*detailsView;
 	NSMutableDictionary				*alert;

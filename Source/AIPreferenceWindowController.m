@@ -191,6 +191,8 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	//Hide the toolbar toggle button, since this window needs a toolbar to be functional
 	[[[self window] standardWindowButton:NSWindowToolbarButton] setFrame:NSMakeRect(0,0,0,0)];
 
+	[[self window] setTitle:AILocalizedString(@"Preferences",nil)];
+
     //Center the window
 	[[self window] betterCenter];
 }

@@ -23,17 +23,22 @@
             SUPERCLASS = NSTextField; 
         }, 
         {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
             ACTIONS = {closeWindow = id; joinChat = id; }; 
             CLASS = DCJoinChatWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "button_cancel" = NSButton; 
-                "button_joinChat" = NSButton; 
+                "button_cancel" = AILocalizationButton; 
+                "button_joinChat" = AILocalizationButton; 
+                "label_account" = AILocalizationTextField; 
                 "popUp_service" = NSPopUpButton; 
-                "textField_accountLabel" = NSTextField; 
                 "view_customView" = NSView; 
             }; 
-            SUPERCLASS = NSWindowController; 
+            SUPERCLASS = AIWindowController; 
         }, 
         {
             ACTIONS = {joinChat = id; }; 

@@ -2,6 +2,17 @@
     IBClasses = (
         {CLASS = AIActionDetailsPane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {
+            CLASS = AILocalizationTextField; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSTextField; 
+        }, 
+        {
             ACTIONS = {changePreference = id; }; 
             CLASS = AIModularPane; 
             LANGUAGE = ObjC; 
@@ -12,7 +23,10 @@
         {
             CLASS = ESEventSoundAlertDetailPane; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"popUp_actionDetails" = NSPopUpButton; }; 
+            OUTLETS = {
+                "label_sound" = AILocalizationTextField; 
+                "popUp_actionDetails" = NSPopUpButton; 
+            }; 
             SUPERCLASS = AIActionDetailsPane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }

@@ -35,7 +35,7 @@
 
 - (NSControl *)viewForSizing
 {
-	return([self controlView]);
+	return((NSControl *)[self controlView]);
 }
 
 #include "AILocalizationControl.m"

@@ -36,8 +36,16 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	[[tableView_actions tableColumnWithIdentifier:@"description"] setDataCell:actionsCell];
 	[actionsCell release];
 	
-	//
-	[button_edit setTitle:@"Edit"];
+	//This is a custom button, not one of our AILocalizationButton objects, so manually size it and position it
+	NSRect	newEditFrame, oldEditFrame = [button_edit frame];
+	[button_edit setTitle:AILocalizedString(@"Edit",nil)];
+	[button_edit sizeToFit];
+	newEditFrame = [button_edit frame];
+	newEditFrame.origin.x = oldEditFrame.origin.x;
+	if(newEditFrame.size.width < oldEditFrame.size.width) newEditFrame.size.width = oldEditFrame.size.width;
+	[button_edit setFrame:newEditFrame];
+
+	//Disable edit and delete by default; if a selection is made they will be enabled
 	[button_delete setEnabled:NO];
 	[button_edit setEnabled:NO];
 

@@ -10,6 +10,8 @@
 
 @interface ESDockAlertDetailPane : AIActionDetailsPane {
     IBOutlet	NSPopUpButton		*popUp_actionDetails;
+	
+	IBOutlet	AILocalizationTextField	*label_behavior;
 }
 
 @end

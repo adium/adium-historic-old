@@ -29,12 +29,22 @@
 //Configure the detail view
 - (void)viewDidLoad
 {
+	[label_sound setStringValue:AILocalizedString(@"Sound:",nil)];
+
 	//Loading and using the real file icons is slow, and all the sound files should have the same icons anyway.  So
 	//we can cheat and load a sound icon from our bundle here (for all the menu items) for a nice speed boost.
-	soundFileIcon = [NSImage imageNamed:@"SoundFileIcon" forClass:[self class]];
+	if(!soundFileIcon) soundFileIcon = [[NSImage imageNamed:@"SoundFileIcon" forClass:[self class]] retain];
 	
 	//Prepare our sound menu
     [popUp_actionDetails setMenu:[self soundListMenu]];
+	
+	[super viewDidLoad];
+}
+
+- (void)viewWillClose
+{
+	[soundFileIcon release]; soundFileIcon = nil;
+	[super viewWillClose];
 }
 
 //Configure for the action

@@ -15,6 +15,10 @@
 
 @interface AINewGroupWindowController : AIWindowController {
 	IBOutlet	NSTextField		*textField_groupName;
+	
+	IBOutlet	AILocalizationTextField	*label_groupName;
+	IBOutlet	AILocalizationButton	*button_add;
+	IBOutlet	AILocalizationButton	*button_cancel;
 }
 
 + (void)promptForNewGroupOnWindow:(NSWindow *)parentWindow;
