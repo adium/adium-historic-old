@@ -1483,7 +1483,7 @@
 		serv_set_away(gc, GAIM_AWAY_CUSTOM, awayHTML);
     
     //We are now away
-    [self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:NO];
+    [self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:YES];
     [self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
 }
 
@@ -1501,7 +1501,7 @@
     if (GAIM_DEBUG) NSLog(@"updating profile to %@",[profile string]);
     
     //We now have a profile
-    [self setStatusObject:profile forKey:@"TextProfile" notify:NO];
+    [self setStatusObject:profile forKey:@"TextProfile" notify:YES];
 }
 
 // *** USER IMAGE
