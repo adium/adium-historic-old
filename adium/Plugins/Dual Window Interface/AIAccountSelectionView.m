@@ -23,7 +23,7 @@
 {
     [super initWithFrame:frameRect];
 
-    delegate = inDelegate;
+    delegate = [inDelegate retain];
     adium = [AIObject sharedAdiumInstance];
 
     [self configureView];
@@ -41,6 +41,7 @@
 
 - (void)dealloc
 {
+    [delegate release]; delegate = nil;
     [[adium contactController] unregisterListObjectObserver:self];
     [[adium notificationCenter] removeObserver:self];
     
@@ -80,6 +81,7 @@
 //Configures the account menu (dimming invalid accounts if applicable)
 - (void)configureAccountMenu
 {
+    NSLog(@"configureAccountMenu");
     AIListObject	*listObject = [delegate listObject];
     NSEnumerator	*enumerator;
     AIAccount		*anAccount;

@@ -289,7 +289,6 @@
     //nib
     [view_contents removeAllSubviews];
     [view_contents release]; view_contents = nil;
-    [view_accountSelection release];
     [messageViewController release];
     [account release]; account = nil;
     [super dealloc];
