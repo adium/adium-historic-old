@@ -178,7 +178,7 @@ static OtrgDialogWaitHandle otrg_adium_dialog_private_key_wait_start(const char 
 static void otrg_adium_dialog_private_key_wait_done(OtrgDialogWaitHandle handle)
 {
 	NSString	*identifier = handle->identifier;
-	
+
 	[ESGaimOTRPrivateKeyGenerationWindowController finishedGeneratingForIdentifier:identifier];
 
 	[identifier release];

@@ -24,15 +24,26 @@ static NSMutableDictionary	*keyGenerationControllerDict = nil;
  */
 + (void)startedGeneratingForIdentifier:(NSString *)inIdentifier
 {
+	[self performSelectorOnMainThread:@selector(mainThreadStartedGeneratingForIdentifier:)
+						   withObject:inIdentifier
+						waitUntilDone:NO];
+}
+
++ (void)mainThreadStartedGeneratingForIdentifier:(NSString *)inIdentifier
+{
 	if(!keyGenerationControllerDict) keyGenerationControllerDict = [[NSMutableDictionary alloc] init];
 	
 	if(![keyGenerationControllerDict objectForKey:inIdentifier]){
 		ESGaimOTRPrivateKeyGenerationWindowController	*controller;
 		
-		controller = [[self alloc] initWithWindowNibName:@"GaimOTRPrivateKeyGenerationWindow" forIdentifier:inIdentifier];
-		[controller showWindow:nil];
-		[[controller window] makeKeyAndOrderFront:nil];		
-	}	
+		if(controller = [[self alloc] initWithWindowNibName:@"GaimOTRPrivateKeyGenerationWindow" forIdentifier:inIdentifier]){
+			[controller showWindow:nil];
+			[[controller window] makeKeyAndOrderFront:nil];
+			
+			[keyGenerationControllerDict setObject:controller
+											forKey:inIdentifier];
+		}
+	}
 }
 
 /*
@@ -78,10 +89,18 @@ static NSMutableDictionary	*keyGenerationControllerDict = nil;
  */
 + (void)finishedGeneratingForIdentifier:(NSString *)inIdentifier
 {
+	[self performSelectorOnMainThread:@selector(mainThreadFinishedGeneratingForIdentifier:)
+						   withObject:inIdentifier
+						waitUntilDone:NO];
+}
+
++ (void)mainThreadFinishedGeneratingForIdentifier:(NSString *)inIdentifier
+{	
 	ESGaimOTRPrivateKeyGenerationWindowController	*controller;
 
 	controller = [keyGenerationControllerDict objectForKey:inIdentifier];
-	[controller close];
+	NSLog(@"Retrieved %@",controller);
+	[controller closeWindow:nil];
 	
 	[keyGenerationControllerDict removeObjectForKey:inIdentifier];
 }
