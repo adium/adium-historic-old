@@ -38,6 +38,7 @@
 - (void)_removeCursorRect;
 - (void)_startTrackingMouse;
 - (void)_stopTrackingMouse;
+- (void)_killMouseMovementTimer;
 - (void)_showTooltipAtPoint:(NSPoint)screenPoint;
 - (void)_desiredSizeChanged;
 - (void)_configureTransparencyAndShadows;
@@ -679,6 +680,16 @@
 - (void)_stopTrackingMouse
 {
 	[self _showTooltipAtPoint:NSMakePoint(0,0)];
+	[self _killMouseMovementTimer];
+}
+
+- (void)_killMouseMovementTimer
+{
+	[tooltipMouseLocationTimer invalidate];
+	[tooltipMouseLocationTimer release];
+	tooltipMouseLocationTimer = nil;
+	tooltipCount = 0;
+	lastMouseLocation = NSMakePoint(0,0);
 }
 
 //Time to poll mouse location
@@ -730,9 +741,7 @@
 			hoveredRow = [contactListView rowAtPoint:viewPoint];
 			hoveredObject = [contactListView itemAtRow:hoveredRow];
 		}else{
-			[tooltipMouseLocationTimer invalidate];
-			[tooltipMouseLocationTimer release];
-			tooltipMouseLocationTimer = nil;	
+			[self _killMouseMovementTimer];
 		}
 		
 		[[adium interfaceController] showTooltipForListObject:hoveredObject atScreenPoint:screenPoint onWindow:window];
