@@ -52,7 +52,7 @@
 #endif
 
 #define ADIUM_FAQ_PAGE						AILocalizedString(@"http://faq.adiumx.com/","Adium FAQ page. Localize only if a translated version exists.")
-#define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com","Adium forums page. Localize only if a translated version exists.")
+#define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localize only if a translated version exists.")
 #define ADIUM_XTRAS_PAGE					@"http://www.adiumxtras.com/"
 #define ADIUM_BUG_PAGE						@"mailto:bugs@adiumx.com"
 #define ADIUM_FEEDBACK_PAGE					@"mailto:feedback@adiumx.com"
