@@ -71,6 +71,11 @@
 - Webkit styles must support multi-line status messages
 	The included style with problems is Smooth Operator 
 
+- Bottom alignment issues
+    The simple message style has a bottom alignment issue.  Send a few messages, but not enough to make
+    the scrollbar visible, then type a two line message into the entry field.  The message view will
+    incorrectly render extra bottom margin.
+
 
 //-------------------------------------------------------------------------------------------------------
 // Bugs - Deferred (Awaiting a rewrite / other change)
