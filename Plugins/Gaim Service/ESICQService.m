@@ -7,9 +7,19 @@
 //
 
 #import "ESICQService.h"
-
+#import "ESGaimICQAccount.h"
+#import "ESGaimICQAccountViewController.h"
 
 @implementation ESICQService
+
+//Account Creation
+- (Class)accountClass{
+	return([ESGaimICQAccount class]);
+}
+
+- (AIAccountViewController *)accountView{
+    return([ESGaimICQAccountViewController accountView]);
+}
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{

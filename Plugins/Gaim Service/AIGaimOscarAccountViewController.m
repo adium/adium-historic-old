@@ -39,14 +39,21 @@
 	}else{
 		[textView_textProfile setString:@""];
 	}
-
-    [[NSNotificationCenter defaultCenter] addObserver:textView_textProfile selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:textView_textProfile];
 }
 
 //Profile text was changed
 - (void)textDidEndEditing:(NSNotification *)notification
 {
-    [account setPreference:[[textView_textProfile textStorage] dataRepresentation] forKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
+    [account setPreference:[[textView_textProfile textStorage] dataRepresentation] 
+					forKey:@"TextProfile"
+					 group:GROUP_ACCOUNT_STATUS];
+}
+
+- (void)saveFieldsImmediately
+{
+	[account setPreference:[[textView_textProfile textStorage] dataRepresentation] 
+					forKey:@"TextProfile"
+					 group:GROUP_ACCOUNT_STATUS];	
 }
 
 @end

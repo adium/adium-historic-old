@@ -1,0 +1,69 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {changedPreference = id; }; 
+            CLASS = AIAccountViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                account = id; 
+                "textField_password" = NSTextField; 
+                "view_accountView" = NSView; 
+                "view_auxiliaryTabView" = NSTabView; 
+            }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIContextMenuTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
+        {
+            CLASS = AIGaimAIMAccountViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"textField_fullName" = NSTextField; "textView_textProfile" = NSTextView; }; 
+            SUPERCLASS = ESGaimAccountViewController; 
+        }, 
+        {
+            CLASS = AIGaimOscarAccountViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"textView_textProfile" = NSTextView; }; 
+            SUPERCLASS = ESGaimAccountViewController; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = ESGaimAccountView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"view_auxiliaryGaimAccountTabView" = NSTabView; }; 
+            SUPERCLASS = AIAccountViewController; 
+        }, 
+        {
+            ACTIONS = {changedConnectionPreference = id; }; 
+            CLASS = ESGaimAccountViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_checkMail" = NSButton; 
+                "imageView_userIcon" = ESImageViewWithImagePicker; 
+                "menu_proxy" = NSPopUpButton; 
+                "textField_alias" = NSTextField; 
+                "textField_hostName" = NSTextField; 
+                "textField_portNumber" = NSTextField; 
+                "textField_proxyHostName" = NSTextField; 
+                "textField_proxyPassword" = NSSecureTextField; 
+                "textField_proxyPortNumber" = NSTextField; 
+                "textField_proxyUserName" = NSTextField; 
+            }; 
+            SUPERCLASS = AIAccountViewController; 
+        }, 
+        {
+            CLASS = ESGaimICQAccountViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"textField_encoding" = NSTextField; }; 
+            SUPERCLASS = ESGaimAccountViewController; 
+        }, 
+        {
+            ACTIONS = {copy = id; paste = id; }; 
+            CLASS = ESImageViewWithImagePicker; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSImageView; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

@@ -87,17 +87,10 @@ struct oscar_direct_im {
 
 @interface CBGaimOscarAccount : CBGaimAccount <AIAccount_Files>
 {
-	BOOL			accountIsICQ;
-	
 	NSTimer			*delayedSignonUpdateTimer;
 	NSMutableArray  *arrayOfContactsForDelayedUpdates;
-	
-	NSImage			*image;
-	NSImage			*menuImage;
-	NSImage			*onlineMenuImage;
-	NSImage			*connectingMenuImage;
-	NSImage			*offlineMenuImage;
-	
 }
+
+- (BOOL)useGaimUserInfo;
 
 @end
