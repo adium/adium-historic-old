@@ -260,25 +260,24 @@
 //194
 		19C28FACFE9D520D11CA2CBB = {
 			children = (
-				F5A3238104A7C61201888466,
 				34BD9DA9053146CC000AB133,
+				34BD9F390531477E000AB133,
+				4B7F78B50597F42400162728,
 				34BD9DE105314751000AB133,
 				34BD9E9305314755000AB133,
+				520FE3A105BE1FC5002D063D,
 				34BD9EB405314758000AB133,
-				34BD9ECA0531475B000AB133,
-				34BD9EDF0531476A000AB133,
-				34BD9EF10531476E000AB133,
 				34BD9F0805314771000AB133,
 				34BD9F1B05314776000AB133,
 				34BD9F2B0531477A000AB133,
-				343C89A505704D8D005E0632,
-				34BD9F390531477E000AB133,
+				3481DDE405704EEC00CD38D6,
 				34BD9F6305314788000AB133,
 				34BD9F730531478D000AB133,
 				34BD9F8A05314791000AB133,
 				34BD9F9E05314796000AB133,
 				34BD9FB90531479C000AB133,
 				34BD9FD0053147A1000AB133,
+				BF380C3105A8FF9000A74E9F,
 				34BD9FEC053147A6000AB133,
 				34BDA000053147AF000AB133,
 				9E57136305B2146200283CAD,
@@ -286,6 +285,7 @@
 				34BDA025053147BA000AB133,
 				34BDA057053147C0000AB133,
 				34BDA06B053147C7000AB133,
+				6C05C9FF05492DE50088ECBF,
 				34BDA07B053147CD000AB133,
 				34BDA08F053147D7000AB133,
 				34BDA0A3053147E1000AB133,
@@ -302,8 +302,10 @@
 				34BDA18705314840000AB133,
 				34BDA19F05314849000AB133,
 				34BDA1B205314852000AB133,
+				6C60B13D0560594B00CAD137,
 				34BDA1C60531485C000AB133,
-				344EE94B057456BE000F342B,
+				9E87CDF105748FFA001CB886,
+				4B7F278305440C0800CDFC90,
 				34BDA1D805314867000AB133,
 				34BDA1EA05314875000AB133,
 				3419F2E605314B6500C68BA3,
@@ -312,42 +314,35 @@
 				3419F31805314B8100C68BA3,
 				3419F32E05314B8D00C68BA3,
 				3419F34005314B9700C68BA3,
+				34BD9ECA0531475B000AB133,
 				34F8A7E705A8920F00577775,
+				B72537BC058C4577004BA969,
 				3419F35505314BA200C68BA3,
 				3419F36505314BAB00C68BA3,
 				3419F37305314BB500C68BA3,
+				6EB4AC3405BCB81D00D0042B,
+				34BD9EDF0531476A000AB133,
 				3419F38105314BBF00C68BA3,
-				344AB6ED0579231800384CEE,
+				B799BB0005793A6400338E54,
+				342DC47505783AF0000E1D83,
 				3419F39305314BCA00C68BA3,
+				BF0F5BCB05A2B0070034AD18,
 				3419F3A505314BD400C68BA3,
 				3419F3B305314BE000C68BA3,
 				3419F3C105314BEB00C68BA3,
 				3419F3D605314BF700C68BA3,
 				3419F3E905314C0600C68BA3,
+				9E87CF580574909B001CB886,
 				3419F40105314C1300C68BA3,
 				3419F41805314C2700C68BA3,
 				3419F42A05314C3200C68BA3,
+				34BD9EF10531476E000AB133,
 				3419F43C05314C3F00C68BA3,
 				3419F44D05314C4C00C68BA3,
+				C42C16FF05BA682C00135D3C,
+				52AEBD6105ABA95700B19C56,
 				3419F45B05314C5A00C68BA3,
 				3419F47005314C6900C68BA3,
-				4B7F278305440C0800CDFC90,
-				6C05C9FF05492DE50088ECBF,
-				6C60B13D0560594B00CAD137,
-				3481DDE405704EEC00CD38D6,
-				9CBADC550571267C005187DA,
-				9E87CDF105748FFA001CB886,
-				9E87CF580574909B001CB886,
-				342DC47505783AF0000E1D83,
-				B799BB0005793A6400338E54,
-				B72537BC058C4577004BA969,
-				4B7F78B50597F42400162728,
-				BF0F5BCB05A2B0070034AD18,
-				BF380C3105A8FF9000A74E9F,
-				52AEBD6105ABA95700B19C56,
-				C42C16FF05BA682C00135D3C,
-				6EB4AC3405BCB81D00D0042B,
-				520FE3A105BE1FC5002D063D,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -385,16 +380,12 @@
 			projectDirPath = "";
 			targets = (
 				34BD9CD1053146CC000AB133,
-				34BD9DAF05314751000AB133,
-				34BD9DE205314755000AB133,
 				4B7F78B40597F42400162728,
 				34BD9F2C0531477E000AB133,
-				9C6C7C3C057110FB00231613,
-				4B7F278205440C0800CDFC90,
+				34BD9DAF05314751000AB133,
+				34BD9DE205314755000AB133,
+				520FE3A005BE1FC5002D063D,
 				34BD9E9405314758000AB133,
-				34BD9EB50531475B000AB133,
-				34BD9ECB0531475E000AB133,
-				34BD9EE00531476D000AB133,
 				34BD9EF205314771000AB133,
 				34BD9F0905314776000AB133,
 				34BD9F1C0531477A000AB133,
@@ -433,6 +424,7 @@
 				6C60B13C0560594B00CAD137,
 				34BDA1B30531485B000AB133,
 				344EE91105744F5F000F342B,
+				4B7F278205440C0800CDFC90,
 				34BDA1C705314866000AB133,
 				34BDA1D905314874000AB133,
 				3419F2D705314B6400C68BA3,
@@ -442,10 +434,13 @@
 				3419F31905314B8D00C68BA3,
 				3419F32F05314B9600C68BA3,
 				34F8A7E605A8920F00577775,
+				34BD9EB50531475B000AB133,
+				B72537BB058C4577004BA969,
 				3419F34105314BA100C68BA3,
 				3419F35605314BAB00C68BA3,
 				3419F36605314BB400C68BA3,
 				6EB4AC3305BCB81D00D0042B,
+				34BD9ECB0531475E000AB133,
 				344AB2A40579128A00384CEE,
 				3419F37405314BBE00C68BA3,
 				3419F38205314BC900C68BA3,
@@ -460,14 +455,13 @@
 				3419F40205314C2600C68BA3,
 				3419F41905314C3200C68BA3,
 				9E87CF570574909B001CB886,
+				34BD9EE00531476D000AB133,
 				3419F42B05314C3E00C68BA3,
 				3419F43D05314C4C00C68BA3,
+				C42C16F205BA682C00135D3C,
+				52AEBD6005ABA95700B19C56,
 				3419F44E05314C5900C68BA3,
 				3419F46005314C6800C68BA3,
-				B72537BB058C4577004BA969,
-				52AEBD6005ABA95700B19C56,
-				C42C16F205BA682C00135D3C,
-				520FE3A005BE1FC5002D063D,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -497,7 +491,7 @@
 				01BD68FF015E255C7F000001,
 				4BDB241F04AF52B000A8010A,
 				F5819CE9032124CE01A8010A,
-				D2547F1D050AD55B00A80164,
+				4BED6DB305D5F49200ACFD49,
 				34E839050583207E00F2AADB,
 				34E83B0A05832B4300F2AADB,
 				6576A01305026B4F000EB664,
@@ -1348,6 +1342,8 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				4BED6DD005D5F5D600ACFD49,
+				4BED6DD205D5F5D600ACFD49,
 			);
 			isa = PBXNativeTarget;
 			name = "Idle Time Display";
@@ -2618,6 +2614,8 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				4BED6DE405D5F5F200ACFD49,
+				4BED6DE605D5F5F200ACFD49,
 			);
 			isa = PBXNativeTarget;
 			name = "Status Icons";
@@ -4921,6 +4919,8 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				4BED6DE005D5F5EC00ACFD49,
+				4BED6DE205D5F5EC00ACFD49,
 			);
 			isa = PBXNativeTarget;
 			name = "Send Message Contact Alert";
@@ -5177,7 +5177,7 @@
 				343C895505704B89005E0632,
 				343C895605704B89005E0632,
 				343C895705704B89005E0632,
-				343C895805704B89005E0632,
+				4BED6DB405D5F49200ACFD49,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5201,6 +5201,8 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				4BED6DC005D5F5B000ACFD49,
+				4BED6DC205D5F5B000ACFD49,
 			);
 			isa = PBXNativeTarget;
 			name = "Address Book Integration";
@@ -5255,12 +5257,6 @@
 			settings = {
 			};
 		};
-		343C895805704B89005E0632 = {
-			fileRef = D2547F1D050AD55B00A80164;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		343C896905704C3C005E0632 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -5272,19 +5268,6 @@
 			isa = PBXTargetDependency;
 			target = 343C893805704B5D005E0632;
 			targetProxy = 343C896905704C3C005E0632;
-		};
-		343C89A505704D8D005E0632 = {
-			isa = PBXFileReference;
-			lastKnownFileType = folder;
-			path = "Address Book Integration.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		343C89AB05704DCB005E0632 = {
-			fileRef = 343C89A505704D8D005E0632;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		343C89B005704DEC005E0632 = {
 			children = (
@@ -6239,6 +6222,8 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				4BED6DDC05D5F5E700ACFD49,
+				4BED6DDE05D5F5E700ACFD49,
 			);
 			isa = PBXNativeTarget;
 			name = "Open Message Window Contact Alert";
@@ -6389,19 +6374,6 @@
 			settings = {
 			};
 		};
-		344AB6ED0579231800384CEE = {
-			isa = PBXFileReference;
-			lastKnownFileType = folder;
-			path = "Open Message Window Contact Alert.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		344AB7260579237600384CEE = {
-			fileRef = 344AB6ED0579231800384CEE;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		344AB73E0579258A00384CEE = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -6465,6 +6437,8 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				4BED6DCC05D5F5D000ACFD49,
+				4BED6DCE05D5F5D000ACFD49,
 			);
 			isa = PBXNativeTarget;
 			name = "Fast User Switching Support";
@@ -6566,19 +6540,6 @@
 		};
 		344EE9300574510C000F342B = {
 			fileRef = 344EE92E0574510C000F342B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		344EE94B057456BE000F342B = {
-			isa = PBXFileReference;
-			lastKnownFileType = folder;
-			path = "Fast User Switching Support.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		344EE97C05745706000F342B = {
-			fileRef = 344EE94B057456BE000F342B;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -9165,6 +9126,9 @@
 				34536751059BA8EE00A83D9E,
 				34F2BD25059CF8070005B238,
 				C4FD6E3505BA79FF00E72643,
+				4BED6CEE05D5F1DF00ACFD49,
+				4BED6CEF05D5F1E000ACFD49,
+				4BED6D1A05D5F1F500ACFD49,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9469,7 +9433,6 @@
 				34BD9D58053146CC000AB133,
 				34BD9D59053146CC000AB133,
 				34BD9D5A053146CC000AB133,
-				34BD9D5D053146CC000AB133,
 				34B588A1058D833A00E7EF0D,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -9489,12 +9452,6 @@
 		};
 		34BD9D5A053146CC000AB133 = {
 			fileRef = F531836F019E40BB01A80165;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9D5D053146CC000AB133 = {
-			fileRef = D2547F1D050AD55B00A80164;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -9594,14 +9551,11 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				4B7F27C705440DE900CDFC90,
-				3419FDE10531585600C68BA3,
-				3419FDE30531585600C68BA3,
-				3419FDE40531585600C68BA3,
 				3419FDE50531585600C68BA3,
 				3419FDE60531585600C68BA3,
 				3419FDE70531585600C68BA3,
-				343C89AB05704DCB005E0632,
+				4BED6DED05D5F91300ACFD49,
+				3419FDE10531585600C68BA3,
 				3419FDE90531585600C68BA3,
 				3419FDEA0531585600C68BA3,
 				3419FDEB0531585600C68BA3,
@@ -9635,7 +9589,8 @@
 				3419FE040531585600C68BA3,
 				6C60B1D40560634F00CAD137,
 				3419FE050531585600C68BA3,
-				344EE97C05745706000F342B,
+				4BED6DEE05D5F96F00ACFD49,
+				4B7F27C705440DE900CDFC90,
 				3419FE060531585600C68BA3,
 				3419FE070531585600C68BA3,
 				3419FE080531585600C68BA3,
@@ -9650,8 +9605,9 @@
 				3419FE0F0531585600C68BA3,
 				3419FE100531585600C68BA3,
 				6E99205A05BDC9510070E854,
+				3419FDE30531585600C68BA3,
 				3419FE110531585600C68BA3,
-				344AB7260579237600384CEE,
+				4BED6DEF05D5F99500ACFD49,
 				3419FE120531585600C68BA3,
 				344AB29D0579125C00384CEE,
 				3419FE130531585600C68BA3,
@@ -9662,6 +9618,7 @@
 				3419FE180531585600C68BA3,
 				3419FE190531585600C68BA3,
 				3419FE1A0531585600C68BA3,
+				3419FDE40531585600C68BA3,
 				3419FE1B0531585600C68BA3,
 				3419FE1C0531585600C68BA3,
 				349E247A05C6DE2D00231A84,
@@ -14645,6 +14602,8 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				4BED6DC805D5F5C300ACFD49,
+				4BED6DCA05D5F5C300ACFD49,
 			);
 			isa = PBXNativeTarget;
 			name = "Contact Status Tab Coloring";
@@ -17249,6 +17208,8 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				4BED6DD405D5F5DC00ACFD49,
+				4BED6DD605D5F5DC00ACFD49,
 			);
 			isa = PBXNativeTarget;
 			name = "iTunes Integration";
@@ -22912,6 +22873,320 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4BED6CEE05D5F1DF00ACFD49 = {
+			fileRef = 9E87CDF105748FFA001CB886;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BED6CEF05D5F1E000ACFD49 = {
+			fileRef = 3481DDE405704EEC00CD38D6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BED6D1A05D5F1F500ACFD49 = {
+			fileRef = B799BB0005793A6400338E54;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BED6DB305D5F49200ACFD49 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = AddressBook.framework;
+			path = /System/Library/Frameworks/AddressBook.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		4BED6DB405D5F49200ACFD49 = {
+			fileRef = 4BED6DB305D5F49200ACFD49;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BED6DBF05D5F5B000ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		4BED6DC005D5F5B000ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = 4BED6DBF05D5F5B000ACFD49;
+		};
+		4BED6DC105D5F5B000ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		4BED6DC205D5F5B000ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 4BED6DC105D5F5B000ACFD49;
+		};
+		4BED6DC305D5F5BB00ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		4BED6DC405D5F5BB00ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = 4BED6DC305D5F5BB00ACFD49;
+		};
+		4BED6DC505D5F5BB00ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		4BED6DC605D5F5BB00ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 4BED6DC505D5F5BB00ACFD49;
+		};
+		4BED6DC705D5F5C300ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		4BED6DC805D5F5C300ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = 4BED6DC705D5F5C300ACFD49;
+		};
+		4BED6DC905D5F5C300ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		4BED6DCA05D5F5C300ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 4BED6DC905D5F5C300ACFD49;
+		};
+		4BED6DCB05D5F5D000ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		4BED6DCC05D5F5D000ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = 4BED6DCB05D5F5D000ACFD49;
+		};
+		4BED6DCD05D5F5D000ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		4BED6DCE05D5F5D000ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 4BED6DCD05D5F5D000ACFD49;
+		};
+		4BED6DCF05D5F5D600ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		4BED6DD005D5F5D600ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = 4BED6DCF05D5F5D600ACFD49;
+		};
+		4BED6DD105D5F5D600ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		4BED6DD205D5F5D600ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 4BED6DD105D5F5D600ACFD49;
+		};
+		4BED6DD305D5F5DC00ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		4BED6DD405D5F5DC00ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = 4BED6DD305D5F5DC00ACFD49;
+		};
+		4BED6DD505D5F5DC00ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		4BED6DD605D5F5DC00ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 4BED6DD505D5F5DC00ACFD49;
+		};
+		4BED6DD705D5F5E200ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		4BED6DD805D5F5E200ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = 4BED6DD705D5F5E200ACFD49;
+		};
+		4BED6DD905D5F5E200ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		4BED6DDA05D5F5E200ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 4BED6DD905D5F5E200ACFD49;
+		};
+		4BED6DDB05D5F5E700ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		4BED6DDC05D5F5E700ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = 4BED6DDB05D5F5E700ACFD49;
+		};
+		4BED6DDD05D5F5E700ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		4BED6DDE05D5F5E700ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 4BED6DDD05D5F5E700ACFD49;
+		};
+		4BED6DDF05D5F5EC00ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		4BED6DE005D5F5EC00ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = 4BED6DDF05D5F5EC00ACFD49;
+		};
+		4BED6DE105D5F5EC00ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		4BED6DE205D5F5EC00ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 4BED6DE105D5F5EC00ACFD49;
+		};
+		4BED6DE305D5F5F200ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		4BED6DE405D5F5F200ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = 4BED6DE305D5F5F200ACFD49;
+		};
+		4BED6DE505D5F5F200ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		4BED6DE605D5F5F200ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 4BED6DE505D5F5F200ACFD49;
+		};
+		4BED6DE705D5F5FA00ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		4BED6DE805D5F5FA00ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = 4BED6DE705D5F5FA00ACFD49;
+		};
+		4BED6DE905D5F5FA00ACFD49 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		4BED6DEA05D5F5FA00ACFD49 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 4BED6DE905D5F5FA00ACFD49;
+		};
+		4BED6DED05D5F91300ACFD49 = {
+			fileRef = 3481DDE405704EEC00CD38D6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BED6DEE05D5F96F00ACFD49 = {
+			fileRef = 9E87CDF105748FFA001CB886;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BED6DEF05D5F99500ACFD49 = {
+			fileRef = B799BB0005793A6400338E54;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BEF4FEA0534B56C00F02853 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
@@ -23664,6 +23939,8 @@
 			};
 			dependencies = (
 				520FE3B805BE209D002D063D,
+				4BED6DE805D5F5FA00ACFD49,
+				4BED6DEA05D5F5FA00ACFD49,
 			);
 			isa = PBXNativeTarget;
 			name = TicTacToe;
@@ -24505,7 +24782,6 @@
 		6C60B13B0560594B00CAD137 = {
 			buildActionMask = 2147483647;
 			files = (
-				6CC070540563FA7B0013E642,
 				6C60B13F056059BF00CAD137,
 				6C60B140056059C900CAD137,
 				4BA4B7EA05B4A2AD00CAA37D,
@@ -25084,12 +25360,6 @@
 			settings = {
 			};
 		};
-		6CC070540563FA7B0013E642 = {
-			fileRef = D2547F1D050AD55B00A80164;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		6CC851C10574B314008A5F66 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -25589,6 +25859,8 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				4BED6DD805D5F5E200ACFD49,
+				4BED6DDA05D5F5E200ACFD49,
 			);
 			isa = PBXNativeTarget;
 			name = "Message Push Preferences";
@@ -25796,12 +26068,6 @@
 			refType = 0;
 			sourceTree = "<absolute>";
 		};
-		9C103FAF057127A600F3C158 = {
-			fileRef = 9C103FAE057127A500F3C158;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		9C1040640571281200F3C158 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -25811,143 +26077,7 @@
 		};
 		9C1040650571281200F3C158 = {
 			isa = PBXTargetDependency;
-			target = 9C6C7C3C057110FB00231613;
 			targetProxy = 9C1040640571281200F3C158;
-		};
-		9C6C7C38057110FB00231613 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9C6C7C39057110FB00231613 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9C6C7C3A057110FB00231613 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9C6C7C3B057110FB00231613 = {
-			buildActionMask = 2147483647;
-			files = (
-				9C6C7C460571139B00231613,
-				9C6C7C470571139B00231613,
-				9C6C7C480571139B00231613,
-				9C103FAF057127A600F3C158,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9C6C7C3C057110FB00231613 = {
-			buildPhases = (
-				9C6C7C38057110FB00231613,
-				9C6C7C39057110FB00231613,
-				9C6C7C3A057110FB00231613,
-				9C6C7C3B057110FB00231613,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INFOPLIST_FILE = Plists/WebKit_Message_View.plist;
-				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "WebKit Message View";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				9C6C7C430571136B00231613,
-				9C6C7C450571136B00231613,
-			);
-			isa = PBXNativeTarget;
-			name = "WebKit Message View";
-			productName = "WebKit Message View";
-			productReference = 9CBADC550571267C005187DA;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>WebKit Message View</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>com.MySoftwareCompany.WebKit_Message_View</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0.0d1</string>
-</dict>
-</plist>
-";
-			productType = "com.apple.product-type.bundle";
-		};
-		9C6C7C420571136B00231613 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DAF05314751000AB133;
-			remoteInfo = Adium.Framework;
-		};
-		9C6C7C430571136B00231613 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DAF05314751000AB133;
-			targetProxy = 9C6C7C420571136B00231613;
-		};
-		9C6C7C440571136B00231613 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DE205314755000AB133;
-			remoteInfo = AIUtilities.Framework;
-		};
-		9C6C7C450571136B00231613 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DE205314755000AB133;
-			targetProxy = 9C6C7C440571136B00231613;
-		};
-		9C6C7C460571139B00231613 = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9C6C7C470571139B00231613 = {
-			fileRef = 34BD9E9305314755000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		9C6C7C480571139B00231613 = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		9C82689903D9B23F00F1D4AF = {
 			children = (
@@ -26010,14 +26140,6 @@
 			name = "WebKit Message View";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		9CBADC550571267C005187DA = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = "WebKit Message View.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		9CC84FAB056AFAFC006AB00E = {
 			buildActionMask = 2147483647;
@@ -27196,6 +27318,8 @@
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
+				4BED6DC405D5F5BB00ACFD49,
+				4BED6DC605D5F5BB00ACFD49,
 			);
 			isa = PBXNativeTarget;
 			name = "Contact Counting Display";
@@ -29292,25 +29416,6 @@
 //C42
 //C43
 //C44
-//D20
-//D21
-//D22
-//D23
-//D24
-		D2547F1D050AD55B00A80164 = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
-			lastKnownFileType = wrapper.framework;
-			name = AddressBook.framework;
-			path = /System/Library/Frameworks/AddressBook.framework;
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-//D20
-//D21
-//D22
-//D23
-//D24
 //D30
 //D31
 //D32
@@ -32264,14 +32369,6 @@
 			path = Source/notfound.png;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		F5A3238104A7C61201888466 = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXBundleReference;
-			lastKnownFileType = file;
-			path = "MX LaTeX Plugin.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F5A3C2DD039A516E01A8010A = {
 			children = (
