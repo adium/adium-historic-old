@@ -33,17 +33,17 @@ DeclareString(Value);
 {
 	NSEnumerator	*enumerator;
 	NSTimer			*timer;
-	
+
 	//Invalidate any outstanding delayed status changes
 	enumerator = [delayedStatusTimers objectEnumerator];
 	while(timer = [enumerator nextObject]){
 		[timer invalidate];
 	}
 	[delayedStatusTimers release]; delayedStatusTimers = nil;
-	
-	[statusDictionary release];
-	[changedStatusKeys release];
-	[displayDictionary release];
+
+	[statusDictionary release]; statusDictionary = nil;
+	[changedStatusKeys release]; changedStatusKeys = nil;
+	[displayDictionary release]; displayDictionary = nil;
 	
 	[super dealloc];
 }
