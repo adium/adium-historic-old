@@ -13,8 +13,6 @@
 - (void)_initGaim;
 @end
 
-static CBGaimServicePlugin  *servicePluginInstance;
-
 @implementation CBGaimServicePlugin
 
 - (void)_initGaim
@@ -31,8 +29,6 @@ static CBGaimServicePlugin  *servicePluginInstance;
 
 - (void)installPlugin
 {
-	servicePluginInstance = self;
-
 	//Register our defaults
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS 
 																		forClass:[self class]]
@@ -46,13 +42,16 @@ static CBGaimServicePlugin  *servicePluginInstance;
 	DotMacService		= [[ESDotMacService alloc] init];
 	GaduGaduService		= [[ESGaduGaduService alloc] init];
 	MSNService			= [[ESMSNService alloc] init];
-	NapsterService		= [[ESNapsterService alloc] init];
 	NovellService		= [[ESNovellService alloc] init];
 	JabberService		= [[ESJabberService alloc] init];
 	YahooService		= [[ESYahooService alloc] init];
 	YahooJapanService	= [[ESYahooJapanService alloc] init];	
 	ZephyrService		= [[ESZephyrService alloc] init];
 
+#ifdef ENABLE_NAPSTER
+	NapsterService		= [[ESNapsterService alloc] init];
+#endif
+	
 #ifndef TREPIA_NOT_AVAILABLE
 	TrepiaService		= [[ESTrepiaService alloc] init];
 #endif
@@ -69,13 +68,16 @@ static CBGaimServicePlugin  *servicePluginInstance;
 	[DotMacService release]; DotMacService = nil;
 	[GaduGaduService release]; GaduGaduService = nil;
 	[JabberService release]; JabberService = nil;
-	[NapsterService release]; NapsterService = nil;
 	[MSNService release]; MSNService = nil;
 	[YahooService release]; YahooService = nil;
 	[YahooJapanService release]; YahooJapanService = nil;
 	[NovellService release]; NovellService = nil;
 	[ZephyrService release]; ZephyrService = nil;
 
+#ifdef ENABLE_NAPSTER
+	[NapsterService release]; NapsterService = nil;
+#endif
+	
 #ifndef TREPIA_NOT_AVAILABLE
 	[TrepiaService release]; TrepiaService = nil;
 #endif
