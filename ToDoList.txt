@@ -7,7 +7,6 @@
 - Move maximum width slider from layout to main pane
 - Status window when away preference is not implemented
 - Status set state after inactivity is not implemented [Evan]
-- MSN display names as extended status isn't working
 - Implement 'edit menu' sheets for deleting list layouts and themes
 - Improve behavior when customizing existing layouts and themes
 - Improve behavior when canceling changes to layouts and themes
@@ -16,7 +15,6 @@
 - Add a warning sheet about window moving/performance for non-standard styles
 - Contact menu is inconsistent with menu item naming, item grouping
 - Update included layouts, themes, and message views
-- OTR Private key generation should be cleaner [Evan]
 - Jabber account registration
 - The crash reporter shouldn't force people to reopen Adium after a crash.
 - Custom Status should remember the last status state used for that type of custom status rather than populating
