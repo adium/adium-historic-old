@@ -10259,6 +10259,7 @@
 				BF818D7B05C7AD460067008D,
 				4BA7F23905E2E8D200ABF4FC,
 				34A7DA6105E34C3B00FFAC63,
+				9EEDAD9D05E7463E00CB537D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10988,6 +10989,7 @@
 				BF818D7C05C7AD460067008D,
 				4BA7F23A05E2E8D200ABF4FC,
 				34A7DA6005E34C3B00FFAC63,
+				9EEDAD9C05E7463E00CB537D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -27338,6 +27340,36 @@
 			settings = {
 			};
 		};
+		9EEDAD9A05E7463D00CB537D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = BZContextImageBridge.m;
+			path = "Frameworks/AIUtilities Framework/BZContextImageBridge.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9EEDAD9B05E7463D00CB537D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = BZContextImageBridge.h;
+			path = "Frameworks/AIUtilities Framework/BZContextImageBridge.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9EEDAD9C05E7463E00CB537D = {
+			fileRef = 9EEDAD9A05E7463D00CB537D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EEDAD9D05E7463E00CB537D = {
+			fileRef = 9EEDAD9B05E7463D00CB537D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //9E0
 //9E1
 //9E2
@@ -29375,6 +29407,8 @@
 		};
 		F549EF0E036B0F8D01A8010A = {
 			children = (
+				9EEDAD9A05E7463D00CB537D,
+				9EEDAD9B05E7463D00CB537D,
 				F570A5AD03704C1101A8010A,
 				F570A5AE03704C1101A8010A,
 				F5793946033E74E401A8010A,
