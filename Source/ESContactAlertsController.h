@@ -34,6 +34,14 @@
 #define	KEY_ACTION_DETAILS			@"ActionDetails"
 #define KEY_ONE_TIME_ALERT			@"OneTime"
 
+typedef enum {
+	AIContactsEventHandlerGroup = 0,
+	AIMessageEventHandlerGroup,
+	AIAccountsEventHandlerGroup,
+	AIFileTransferEventHandlerGroup,
+	AIOtherEventHandlerGroup
+} AIEventHandlerGroupType;
+#define EVENT_HANDLER_GROUP_COUNT 5
 
 @interface ESContactAlertsController : NSObject {
     IBOutlet	AIAdium			*adium;
@@ -41,6 +49,9 @@
 	NSMutableDictionary			*globalOnlyEventHandlers;
 	NSMutableDictionary			*eventHandlers;
 	NSMutableDictionary			*actionHandlers;
+
+	NSMutableDictionary			*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_COUNT];
+	NSMutableDictionary			*eventHandlersByGroup[EVENT_HANDLER_GROUP_COUNT];
 }
 
 //
@@ -48,14 +59,14 @@
 - (void)closeController;
 
 //Events
-- (void)registerEventID:(NSString *)eventID withHandler:(id <AIEventHandler>)handler;
-- (void)registerEventID:(NSString *)eventID withHandler:(id <AIEventHandler>)handler globalOnly:(BOOL)global;
+- (void)registerEventID:(NSString *)eventID withHandler:(id <AIEventHandler>)handler inGroup:(AIEventHandlerGroupType)inGroup globalOnly:(BOOL)global;
 - (NSDictionary *)eventHandlers;
 - (NSMenu *)menuOfEventsWithTarget:(id)target forGlobalMenu:(BOOL)global;
 - (void)generateEvent:(NSString *)eventID forListObject:(AIListObject *)listObject userInfo:(id)userInfo;
 - (NSString *)defaultEventID;
 - (NSString *)eventIDForEnglishDisplayName:(NSString *)displayName;
 - (NSString *)globalShortDescriptionForEventID:(NSString *)eventID;
+- (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject;
 
 //Actions
 - (void)registerActionID:(NSString *)actionID withHandler:(id <AIActionHandler>)handler;
@@ -70,5 +81,6 @@
 - (void)removeAlert:(NSDictionary *)victimAlert fromListObject:(AIListObject *)listObject;
 - (void)removeAllGlobalAlertsWithActionID:(NSString *)actionID;
 - (void)mergeAndMoveContactAlertsFromListObject:(AIListObject *)oldObject intoListObject:(AIListObject *)newObject;
+
 
 @end
