@@ -23,6 +23,8 @@
 - (void)_setPushIndicatorVisible:(BOOL)visible;
 - (void)_positionIndicator:(NSNotification *)notification;
 - (void)_resetCacheAndPostSizeChanged;
+- (NSMenu *)_menuItemsTop;
+- (NSMenu *)_menuItemsBottom;
 @end
 
 static NSImage *pushIndicatorImage = nil;
@@ -50,7 +52,10 @@ static NSImage *pushIndicatorImage = nil;
     _desiredSizeCached = NSMakeSize(0,0);
 
 	[self setAllowsUndo:YES];
-	
+        
+    //set up contextual menus
+    [self setMenu:[self contextualMenuForAISendingTextView:self mergeWithMenu:[self menu]]];
+
     //
     if(!pushIndicatorImage) pushIndicatorImage = [[NSImage imageNamed:@"stackImage" forClass:[self class]] retain];
 
@@ -521,4 +526,52 @@ static NSImage *pushIndicatorImage = nil;
     [[self enclosingScrollView] setNeedsDisplay:YES];
 }
 
+#pragma mark Contextual Menus
+- (NSMenu *)contextualMenuForAISendingTextView:(AISendingTextView *)textView  mergeWithMenu:(NSMenu *)mergeMenu
+{
+    NSMenu          *oldMenu;
+    NSMenu          *newMenuTop = [self _menuItemsTop];
+    NSMenu          *newMenuBottom = [self _menuItemsBottom];
+    NSArray         *menuItems;
+    NSEnumerator    *enumerator;
+    NSMenuItem      *itemForInsertion;
+    
+    if(newMenuTop) {
+        [mergeMenu addItem:[NSMenuItem separatorItem]];
+        menuItems = [[newMenuTop itemArray] retain];
+        enumerator = [menuItems objectEnumerator];
+            while((itemForInsertion = [enumerator nextObject])) {
+                [newMenuTop removeItem:itemForInsertion];
+                NSLog(@"Adding: %@",[itemForInsertion title]);
+                [mergeMenu addItem:itemForInsertion];
+        }
+    }
+    
+    if(newMenuBottom){
+        [mergeMenu addItem:[NSMenuItem separatorItem]];
+        menuItems = [newMenuBottom itemArray];
+        enumerator = [menuItems objectEnumerator];
+            while((itemForInsertion = [enumerator nextObject])) {
+                [newMenuBottom removeItem:itemForInsertion];
+                NSLog(@"Adding: %@",[itemForInsertion title]);
+                [mergeMenu addItem:itemForInsertion];
+        }
+    }
+    return(mergeMenu);
+}
+
+- (NSMenu *)_menuItemsTop
+{
+    return([[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObject:
+                                                               [NSNumber numberWithInt:Context_TextView_EmoticonAction]]
+                                                   forTextView:self]);
+}
+
+- (NSMenu *)_menuItemsBottom
+{
+    return([[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
+                                            [NSNumber numberWithInt:Context_TextView_LinkAction],
+                                            [NSNumber numberWithInt:Context_TextView_General], nil]
+                                   forTextView:self]);
+}
 @end
