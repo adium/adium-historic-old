@@ -380,6 +380,7 @@
 			buildStyles = (
 				4A9504CCFFE6A4B311CA0CBA,
 				4A9504CDFFE6A4B311CA0CBA,
+				3445BC1B057EA05400D4D68B,
 			);
 			hasScannedForEncodings = 1;
 			isa = PBXProject;
@@ -2353,7 +2354,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F3B305314BE000C68BA3 = {
-			expectedFileType = folder;
+			expectedFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "SQL Logger.AdiumPlugin";
@@ -5420,6 +5421,24 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		3445BC1B057EA05400D4D68B = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "-DDEVELOPMENT_BUILD";
+				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
+				ZERO_LINK = YES;
+			};
+			isa = PBXBuildStyle;
+			name = evands;
 		};
 		344AB29D0579125C00384CEE = {
 			fileRef = 342DC47505783AF0000E1D83;
@@ -8626,7 +8645,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				9C1040690571283700F3C158,
 				B7D309EA05689D3D008A5CB9,
 				4B7F27C705440DE900CDFC90,
 				3419FDE10531585600C68BA3,
@@ -8714,7 +8732,6 @@
 				34BD9DC805314751000AB133,
 				34BD9DDB05314751000AB133,
 				34BD9DDE05314751000AB133,
-				3F24C7E8056AAA0000F48CA9,
 			);
 			buildRules = (
 			);
@@ -16655,29 +16672,6 @@
 //3C2
 //3C3
 //3C4
-//3F0
-//3F1
-//3F2
-//3F3
-//3F4
-		3F24C7E8056AAA0000F48CA9 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			isa = PBXShellScriptBuildPhase;
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/tcsh;
-			shellScript = "ranlib $SRCROOT/Plugins/Gaim\\ Service/LIBS/liboscar.a";
-		};
-//3F0
-//3F1
-//3F2
-//3F3
-//3F4
 //400
 //401
 //402
@@ -23519,12 +23513,6 @@
 			target = 9C6C7C3C057110FB00231613;
 			targetProxy = 9C1040640571281200F3C158;
 		};
-		9C1040690571283700F3C158 = {
-			fileRef = 9CBADC550571267C005187DA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		9C6C7C38057110FB00231613 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -23741,7 +23729,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "ranlib \"`pwd`/Plugins/Gaim Service/LIBS/liboscar.a\"\n";
+			shellScript = "ranlib $SRCROOT/Plugins/Gaim\\ Service/LIBS/liboscar.a";
 		};
 		9CDF247703E8CBAA000001C9 = {
 			expectedFileType = sourcecode.c.h;
