@@ -14292,6 +14292,7 @@
 				34BDA044053147BF000AB133,
 				34BDA045053147BF000AB133,
 				4BBDE39505B2E34F00EA51E7,
+				4BBDE39905B2F2DA00EA51E7,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -22442,6 +22443,20 @@
 			settings = {
 			};
 		};
+		4BBDE39805B2F2DA00EA51E7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = AddContact.nib;
+			path = "Plugins/Contact List Editor/AddContact.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BBDE39905B2F2DA00EA51E7 = {
+			fileRef = 4BBDE39805B2F2DA00EA51E7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BBEC8B70563E7CC0013C8F7 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -28838,6 +28853,7 @@
 				4B7BB57D05B1AB7F00598C55,
 				4B7BB64505B1D27F00598C55,
 				4B7BB64605B1D27F00598C55,
+				4BBDE39805B2F2DA00EA51E7,
 			);
 			isa = PBXGroup;
 			name = "Contact List Editor";
