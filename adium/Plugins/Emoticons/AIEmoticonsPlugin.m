@@ -133,56 +133,56 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
 //most of this is ripped right from 1.x, YAY!
 - (NSMutableAttributedString *)convertSmiliesInMessage:(NSAttributedString *)inMessage
 {
-
     NSRange 		emoticonRange;
     NSRange		attributeRange;
     int			currentLocation = 0;
-
+    
     NSEnumerator	*emoEnumerator = [emoticons objectEnumerator];
     AIEmoticon		*currentEmo = nil;
     NSString		*currentEmoText = nil;
-
+    
     NSMutableAttributedString	*tempMessage = [inMessage mutableCopy];
     BOOL			messageChanged = NO;
-
+    
     while(currentEmo = [emoEnumerator nextObject]){
 	currentEmoText = [currentEmo representedText];
-
+	
 	//start at the beginning of the string
 	currentLocation = 0;
-
+	
 	//--find emoticon--
 	emoticonRange = [[tempMessage string] rangeOfString:currentEmoText options:0 range:NSMakeRange(currentLocation,[tempMessage length] - currentLocation)];
-
+	
 	while(emoticonRange.length != 0){ //if we found a emoticon
-				   //--make sure this emoticon's not inside a link--
+	    
+	    //--make sure this emoticon is not inside a link--
 	    if([tempMessage attribute:NSLinkAttributeName atIndex:emoticonRange.location effectiveRange:&attributeRange] == nil){
-
+		
 		NSMutableAttributedString *replacement = [[[currentEmo attributedEmoticon] mutableCopy] autorelease];
-
+		
 		[replacement addAttributes:[tempMessage attributesAtIndex:emoticonRange.location effectiveRange:nil] range:NSMakeRange(0,1)];
-
+		
 		//--insert the emoticon--
 		[tempMessage replaceCharactersInRange:emoticonRange withAttributedString:replacement];
-
+		
 		//shrink the emoticon range to 1 character (the multicharacter chunk has been replaced with a single character/emoticon)
 		emoticonRange.length = 1;
-
+		
 		messageChanged = YES;
 	    }
-
+	    
 	    //--move our location--
 	    currentLocation = emoticonRange.location + emoticonRange.length;
-
+	    
 	    //--find the next emoticon--
 	    emoticonRange = [[tempMessage string] rangeOfString:currentEmoText options:0 range:NSMakeRange(currentLocation,[[tempMessage string] length] - currentLocation)];
         }
     }
-
+    
     if(!messageChanged){
 	tempMessage = nil;
     }
-
+    
     return tempMessage;
 }
 
@@ -529,19 +529,20 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context)
 {
     BOOL	emoticonA = [objectA isKindOfClass:[AIEmoticon class]];
     BOOL	emoticonB = [objectB isKindOfClass:[AIEmoticon class]];
+    int		returnVal = NSOrderedSame;
 
     if(emoticonA && emoticonB){
 	int lengthA = [[objectA representedText] length];
 	int lengthB = [[objectB representedText] length];
 
 	if (lengthA < lengthB){
-	    return(NSOrderedDescending);
-	}else{
-	    return(NSOrderedAscending);
+	    returnVal = NSOrderedDescending;
+	}else if (lengthA > lengthB){
+	    returnVal = NSOrderedAscending;
 	}
-    }else{
-	return(NSOrderedAscending);
     }
+
+    return returnVal;
 }
 
 @end
