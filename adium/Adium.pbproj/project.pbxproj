@@ -1020,6 +1020,8 @@
 				9E4CF9F204AA6D5600415B22,
 				4B1F0F3504AE303600A8010A,
 				4B31E8DE04C4711100A8010A,
+				F5F846F704C7020601A80106,
+				F5F8471404C70B8A01A80106,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -1102,6 +1104,7 @@
 				6E97F13504A94C1800472FFF,
 				9E4CF9F104AA6D5600415B22,
 				4B31E8DD04C4711100A8010A,
+				F5F846F604C7020601A80106,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -1163,6 +1166,7 @@
 				WRAPPER_EXTENSION = app;
 			};
 			dependencies = (
+				F5F8478D04C7135801A80106,
 				4BF1F04F03D84D1E00A8010A,
 				4BF1F05203D84D1E00A8010A,
 				9E6C448F048D6CC700415B22,
@@ -1328,6 +1332,7 @@
 				4BDF17250450CBDE00A8010A,
 				4B333F74048144D900A8010A,
 				4B24A26B0482B34B00A8010A,
+				F5F8471A04C70B8A01A80106,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4002,6 +4007,7 @@
 				6E97F13804A94C1800472FFF,
 				9E4CF9F404AA6D5600415B22,
 				111C5BB104AAC4C9003A0881,
+				F5F8471B04C70BA601A80106,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4229,6 +4235,7 @@
 				4B52A58603EDB9D200A8010A,
 				40AC0EEA03B5BEDB00A80202,
 				F501BB0D03882A0201A8010A,
+				F5F846FE04C702DB01A80106,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -18103,6 +18110,191 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		F5F846F104C7020601A80106 = {
+			buildActionMask = 2147483647;
+			files = (
+				F5F8470104C7035601A80106,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5F846F204C7020601A80106 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5F846F304C7020601A80106 = {
+			buildActionMask = 2147483647;
+			files = (
+				F5F8471C04C70C4601A80106,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5F846F404C7020601A80106 = {
+			buildActionMask = 2147483647;
+			files = (
+				F5F846FA04C7029E01A80106,
+				F5F846FD04C702A101A80106,
+				F5F8470404C703C801A80106,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5F846F504C7020601A80106 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5F846F604C7020601A80106 = {
+			buildPhases = (
+				F5F846F104C7020601A80106,
+				F5F846F204C7020601A80106,
+				F5F846F304C7020601A80106,
+				F5F846F404C7020601A80106,
+				F5F846F504C7020601A80106,
+			);
+			buildSettings = {
+				JAVA_COMPILER_DEBUGGING_SYMBOLS = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "User Switching Menuitem";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				F5F8478E04C7136B01A80106,
+				F5F8478F04C7136B01A80106,
+			);
+			isa = PBXBundleTarget;
+			name = "User Switching Menuitem";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "User Switching Menuitem";
+			productReference = F5F846F704C7020601A80106;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIUserSwitchingMenuitemPlugin</string>
+</dict>
+</plist>
+";
+		};
+		F5F846F704C7020601A80106 = {
+			isa = PBXBundleReference;
+			path = "User Switching Menuitem.AdiumPlugin";
+			refType = 3;
+		};
+		F5F846FA04C7029E01A80106 = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5F846FD04C702A101A80106 = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5F846FE04C702DB01A80106 = {
+			children = (
+				F5F8470004C7035601A80106,
+				F5F846FF04C7035601A80106,
+			);
+			isa = PBXGroup;
+			name = "User Switching Menuitem";
+			path = "Plugins/User Switching Menuitem";
+			refType = 4;
+		};
+		F5F846FF04C7035601A80106 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = AIUserSwitchingMenuitemPlugin.m;
+			refType = 4;
+		};
+		F5F8470004C7035601A80106 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = AIUserSwitchingMenuitemPlugin.h;
+			refType = 4;
+		};
+		F5F8470104C7035601A80106 = {
+			fileRef = F5F846FF04C7035601A80106;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5F8470404C703C801A80106 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5F8471404C70B8A01A80106 = {
+			isa = PBXBundleReference;
+			path = "User Switching Menuitem.AdiumPlugin";
+			refType = 3;
+		};
+		F5F8471A04C70B8A01A80106 = {
+			fileRef = F5F8471404C70B8A01A80106;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5F8471B04C70BA601A80106 = {
+			fileRef = F5F8471404C70B8A01A80106;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5F8471C04C70C4601A80106 = {
+			fileRef = F5F846FF04C7035601A80106;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5F8478D04C7135801A80106 = {
+			isa = PBXTargetDependency;
+			target = F5F846F604C7020601A80106;
+		};
+		F5F8478E04C7136B01A80106 = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		F5F8478F04C7136B01A80106 = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
 		};
 	};
 	rootObject = 29B97313FDCFA39411CA2CEA;

@@ -149,7 +149,7 @@
 {
     //Close the controllers in reverse order
     [pluginController closeController]; //should always load last.  Plugins rely on all the controllers.
-    [dockController initController];
+    [dockController closeController];
     [interfaceController closeController];
     [contentController closeController];
     [contactController closeController];
@@ -158,6 +158,9 @@
     [menuController closeController];
     [preferenceController closeController];
     [toolbarController closeController];
+    
+    // Clear out old event notifications
+    //[eventNotifications removeAllObjects];
 }
 
 @end

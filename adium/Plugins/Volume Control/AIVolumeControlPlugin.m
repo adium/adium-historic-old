@@ -31,4 +31,10 @@
     preferences = [[AIVolumeControlPreferences volumeControlPreferencesWithOwner:owner] retain];
 }
 
+- (void)uninstallPlugin
+{
+    [[owner notificationCenter] removeObserver:preferences];
+    [[NSNotificationCenter defaultCenter] removeObserver:preferences];
+}
+    
 @end

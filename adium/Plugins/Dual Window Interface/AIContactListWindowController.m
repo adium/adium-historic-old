@@ -81,6 +81,10 @@
 //dealloc
 - (void)dealloc
 {
+    //Remove observers (general)
+    [[owner notificationCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     [owner release];
     [interface release];
 

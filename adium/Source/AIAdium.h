@@ -258,6 +258,7 @@ typedef enum {
 }
 
 - (NSString *)userDirectory;
+- (void)switchUsers;
 
 @end
 
