@@ -116,48 +116,48 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] == 0){
-
+		
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         //Release the old preference cache
-	[self _flushPreferenceCache];
-
-	//Config
+		[self _flushPreferenceCache];
+		
+		//Config
         combineMessages = [[prefDict objectForKey:KEY_SMV_COMBINE_MESSAGES] boolValue];
-	showUserIcons = [[prefDict objectForKey:KEY_SMV_SHOW_USER_ICONS] boolValue];
-
-	//Prefix
+		showUserIcons = [[prefDict objectForKey:KEY_SMV_SHOW_USER_ICONS] boolValue];
+		
+		//Prefix
         prefixIncoming = [[prefDict objectForKey:KEY_SMV_PREFIX_INCOMING] retain];
         prefixOutgoing = [[prefDict objectForKey:KEY_SMV_PREFIX_OUTGOING] retain];
-	inlinePrefixes = ([prefixIncoming rangeOfString:@"%m"].location == NSNotFound);
+		inlinePrefixes = ([prefixIncoming rangeOfString:@"%m"].location == NSNotFound);
         
-	//Time Stamps
+		//Time Stamps
         timeStampFormat = [[prefDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT] retain];
         timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeStampFormat allowNaturalLanguage:NO];
-
-	//Coloring
-	colorIncoming = [[NSColor colorWithCalibratedRed:(229.0/255.0) green:(242.0/255.0) blue:(255.0/255.0) alpha:1.0] retain];
-	colorIncomingBorder = [[colorIncoming adjustHue:0.0 saturation:+0.3 brightness:-0.3] retain];
-	colorIncomingDivider = [[colorIncoming adjustHue:0.0 saturation:+0.1 brightness:-0.1] retain];
-	colorOutgoing = [[NSColor colorWithCalibratedRed:(230.0/255.0) green:(255.0/255.0) blue:(234.0/255.0) alpha:1.0] retain];
-	colorOutgoingBorder = [[colorOutgoing adjustHue:0.0 saturation:+0.3 brightness:-0.3] retain];
-	colorOutgoingDivider = [[colorOutgoing adjustHue:0.0 saturation:+0.1 brightness:-0.1] retain];
-
-	//Ignorance
-	ignoreTextColor = [[prefDict objectForKey:KEY_SMV_IGNORE_TEXT_COLOR] boolValue];
-	ignoreBackgroundColor = [[prefDict objectForKey:KEY_SMV_IGNORE_BACKGROUND_COLOR] boolValue];
-	
-	//Force icons off for side prefixes
+		
+		//Coloring
+		colorIncoming = [[NSColor colorWithCalibratedRed:(229.0/255.0) green:(242.0/255.0) blue:(255.0/255.0) alpha:1.0] retain];
+		colorIncomingBorder = [[colorIncoming adjustHue:0.0 saturation:+0.3 brightness:-0.3] retain];
+		colorIncomingDivider = [[colorIncoming adjustHue:0.0 saturation:+0.1 brightness:-0.1] retain];
+		colorOutgoing = [[NSColor colorWithCalibratedRed:(230.0/255.0) green:(255.0/255.0) blue:(234.0/255.0) alpha:1.0] retain];
+		colorOutgoingBorder = [[colorOutgoing adjustHue:0.0 saturation:+0.3 brightness:-0.3] retain];
+		colorOutgoingDivider = [[colorOutgoing adjustHue:0.0 saturation:+0.1 brightness:-0.1] retain];
+		
+		//Ignorance
+		ignoreTextColor = [[prefDict objectForKey:KEY_SMV_IGNORE_TEXT_COLOR] boolValue];
+		ignoreBackgroundColor = [[prefDict objectForKey:KEY_SMV_IGNORE_BACKGROUND_COLOR] boolValue];
+		
+		//Force icons off for side prefixes
         if([prefixIncoming rangeOfString:@"%m"].location != NSNotFound) showUserIcons = NO;
-	
-	//Pad bottom of the message view depending on mode
-	[messageView setContentPaddingTop:0 bottom:(inlinePrefixes ? 3 : 0)];
-
+		
+		//Pad bottom of the message view depending on mode
+		[messageView setContentPaddingTop:0 bottom:(inlinePrefixes ? 3 : 0)];
+		
         //Indentation when combining messages in appropriate modes
         headIndent = [[prefDict objectForKey:KEY_SMV_COMBINE_MESSAGES_INDENT] floatValue];
         
-	
+		
         //Old
-	outgoingSourceColor = [[[prefDict objectForKey:KEY_SMV_OUTGOING_PREFIX_COLOR] representedColor] retain];
+		outgoingSourceColor = [[[prefDict objectForKey:KEY_SMV_OUTGOING_PREFIX_COLOR] representedColor] retain];
         outgoingLightSourceColor = [[[prefDict objectForKey:KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR] representedColor] retain];
         incomingSourceColor = [[[prefDict objectForKey:KEY_SMV_INCOMING_PREFIX_COLOR] representedColor] retain];
         incomingLightSourceColor = [[[prefDict objectForKey:KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR] representedColor] retain];
