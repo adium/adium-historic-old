@@ -1,6 +1,6 @@
 /*
 TicTacToe plugin for Adium
-Copyright (C) 2003 Nelson El-Hage
+Copyright (C) 2003 Nelson Elhage
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
