@@ -120,6 +120,7 @@ typedef enum {
 - (AIStatusSummary)statusSummary;
 
 - (BOOL)isStranger;
+- (BOOL)isMobile;
 
 - (NSString *)displayName;
 - (void)setDisplayName:(NSString *)alias;
