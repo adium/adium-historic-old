@@ -91,8 +91,8 @@
     //If we have a custom view, we *have* to set the min/max size - otherwise, it'll default to 0,0 and the custom
     //view won't show up at all!  This doesn't affect toolbar items with images, however.
     if([newItem view] != NULL){
-        [newItem setMinSize:[item minSize]/*[[item view] bounds].size*/];
-        [newItem setMaxSize:[item maxSize]/*[[item view] bounds].size*/];
+        [newItem setMinSize:[item minSize]];
+        [newItem setMaxSize:[item maxSize]];
 		
 		if([[newItem view] respondsToSelector:@selector(setToolbarItem:)]){
 			[[newItem view] setToolbarItem:newItem];

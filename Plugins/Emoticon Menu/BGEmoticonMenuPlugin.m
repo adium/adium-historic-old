@@ -103,6 +103,8 @@
                                                          itemContent:button
                                                               action:@selector(insertEmoticon:)
                                                                 menu:nil] retain];
+	[toolbarItem setMinSize:NSMakeSize(32,32)];
+	[toolbarItem setMaxSize:NSMakeSize(32,32)];
 	[button setToolbarItem:toolbarItem];
         [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
 }
