@@ -21,7 +21,7 @@
     IBOutlet		NSView						*view_accountPreferences;
     IBOutlet		NSView						*view_accountDetails;
     IBOutlet		NSPopUpButton				*popupMenu_serviceList;
-	IBOutlet		NSTextField					*textField_accountName;
+	IBOutlet		ESDelayedTextField			*textField_accountName;
     IBOutlet		NSButton					*button_autoConnect;
 
 	//Account list
@@ -44,5 +44,6 @@
 - (IBAction)newAccount:(id)sender;
 - (IBAction)selectServiceType:(id)sender;
 - (IBAction)toggleAutoConnect:(id)sender;
+- (IBAction)changeUIDField:(id)sender;
 
 @end

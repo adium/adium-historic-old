@@ -8,7 +8,7 @@
         }, 
         {
             ACTIONS = {
-                accountNameChanged = id; 
+                changeUIDField = id; 
                 deleteAccount = id; 
                 newAccount = id; 
                 selectServiceType = id; 
@@ -17,10 +17,10 @@
             CLASS = AIAccountListPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                accountViewController = id; 
                 "button_autoConnect" = NSButton; 
                 "button_deleteAccount" = NSButton; 
                 "button_newAccount" = NSButton; 
+                configuredForService = id; 
                 "popupMenu_serviceList" = NSPopUpButton; 
                 "scrollView_accountList" = AIAutoScrollView; 
                 "tabView_auxiliary" = NSTabView; 
@@ -81,6 +81,7 @@
             SUPERCLASS = NSObject; 
         }, 
         {CLASS = AIService; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = ESDelayedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
