@@ -34,27 +34,28 @@
 - (BOOL)shouldSelectRow:(int)inRow;
 - (id)initWithOwner:(id)inOwner forPlugin:(id)inPlugin;
 - (void)configureView;
-//- (void)preferencesChanged:(NSNotification *)notification;
 - (void)saveEventActionArray;
-- (void) configureForTextDetails:(NSString *)instructions;
-- (void) configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu;
+- (void)configureForTextDetails:(NSString *)instructions;
+- (void)configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu;
+- (NSMenuItem *)eventMenuItem:(NSString *)event withDisplay:(NSString *)displayName;
 @end
 
 @implementation AIContactAlertsWindowController
 //Open a new info window
 static AIContactAlertsWindowController *sharedInstance = nil;
-+ (id)showContactAlertsWindowWithOwner:(id)inOwner forContact:(AIListContact *)inContact
+//+ (id)showContactAlertsWindowWithOwner:(id)inOwner forContact:(AIListContact *)inContact
++ (id)showContactAlertsWindowWithOwner:(id)inOwner forContact:(AIListObject *)inContact
 {
     if(!sharedInstance){
         sharedInstance = [[self alloc] initWithWindowNibName:CONTACT_ALERT_WINDOW_NIB owner:inOwner];
     }
 
-    //Allow for groups?
-//    if([inContact isKindOfClass:[AIListContact class]]){ //Only allow this for contacts
+    //Allow for groups
+ //   if([inContact isKindOfClass:[AIListContact class]]){ //Only allow this for contacts
         //Show the window and configure it for the contact
         [sharedInstance configureWindowForContact:inContact];
         [sharedInstance showWindow:nil];
-//    }
+ //   }
 
     return(sharedInstance);
 }
@@ -71,19 +72,19 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 - (IBAction)closeWindow:(id)sender
 {
     if([self windowShouldClose:nil]){
+        //Save the window position
+        [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+                                             forKey:KEY_CONTACT_ALERTS_WINDOW_FRAME
+                                              group:PREF_GROUP_WINDOW_POSITIONS];
+        
         [[self window] close];
     }
 }
 
-/*
-- (NSDictionary *)eventNotifications
-{
-    return(eventNotifications);
-}
-*/
 
 //Configure the actions window for the specified contact
-- (void)configureWindowForContact:(AIListContact *)inContact
+//- (void)configureWindowForContact:(AIListContact *)inContact
+- (void)configureWindowForContact:(AIListObject *)inContact
 {
 
     //Make sure our window is loaded
@@ -117,8 +118,8 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
     [popUp_actionDetails setEnabled:NO];
     [textField_actionDetails setEnabled:NO];
+    [textField_actionDetails setDelegate:self];
 
-    
     eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
 
     if(!eventActionArray) eventActionArray = [[NSMutableArray alloc] init];
@@ -127,22 +128,36 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     [tableView_actions reloadData];
 }
 
-- (NSMenuItem *)eventMenuItem:(NSString *)event withDisplay:(NSString *)displayName
+//Actions!
+- (NSMenu *)actionListMenu //menu of possible actions
 {
-    NSMenuItem *menuItem;
-    NSMutableDictionary *menuDict;
-    
-    menuItem = [[[NSMenuItem alloc] initWithTitle:displayName
+    NSMenu		*actionListMenu = [[NSMenu alloc] init];
+    NSMenuItem		*menuItem;
+
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Play a sound"
                                            target:self
-                                           action:@selector(newEvent:)
+                                           action:@selector(actionPlaySound:)
                                     keyEquivalent:@""] autorelease];
-    menuDict = [[NSMutableDictionary alloc] init];
-    [menuDict setObject:displayName 	forKey:KEY_EVENT_DISPLAYNAME];
-    [menuDict setObject:event 		forKey:KEY_EVENT_NOTIFICATION];
-    [menuItem setRepresentedObject:menuDict];
-    return menuItem;
-    
+    [menuItem setRepresentedObject:@"Sound"];
+    [actionListMenu addItem:menuItem];
+
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Send a message"
+                                           target:self
+                                           action:@selector(actionSendMessage:)
+                                    keyEquivalent:@""] autorelease];
+    [menuItem setRepresentedObject:@"Message"];
+    [actionListMenu addItem:menuItem];
+
+    return(actionListMenu);
 }
+
+//setup display for sending a message
+- (IBAction)actionSendMessage:(id)sender
+{	[self configureForTextDetails:@"Message to send:"];	}
+
+//setup display for playing a sound
+- (IBAction)actionPlaySound:(id)sender
+{    [self configureForMenuDetails:@"Sound to play:" menuToDisplay:[self soundListMenu]];	}
 
 //Builds and returns an event menu
 - (NSMenu *) eventMenu
@@ -155,32 +170,15 @@ static AIContactAlertsWindowController *sharedInstance = nil;
     //Add a menu item for each event
     NSMenuItem	*menuItem;
 
-    menuItem = [self eventMenuItem:@"Signed On" withDisplay:@"Signed On"];
-    [eventMenu addItem:menuItem];
-
-    menuItem = [self eventMenuItem:@"Signed Off" withDisplay:@"Signed Off"];
-    [eventMenu addItem:menuItem];
-
-    menuItem = [self eventMenuItem:@"Away" withDisplay:@"Went Away"];
-    [eventMenu addItem:menuItem];
-
-    menuItem = [self eventMenuItem:@"!Away" withDisplay:@"Came Back From Away"];
-    [eventMenu addItem:menuItem];
-
-    menuItem = [self eventMenuItem:@"Idle" withDisplay:@"Became Idle"];
-    [eventMenu addItem:menuItem];
-
-    menuItem = [self eventMenuItem:@"!Idle" withDisplay:@"Became Unidle"];
-    [eventMenu addItem:menuItem];
-
-    menuItem = [self eventMenuItem:@"Typing" withDisplay:@"Is Typing"];
-    [eventMenu addItem:menuItem];
-
-    menuItem = [self eventMenuItem:@"UnviewedContent" withDisplay:@"Has Unviewed Content"];
-    [eventMenu addItem:menuItem];
-
-    menuItem = [self eventMenuItem:@"Warning" withDisplay:@"Was Warned"];
-    [eventMenu addItem:menuItem];
+    menuItem = [self eventMenuItem:@"Signed On" withDisplay:@"Signed On"];	[eventMenu addItem:menuItem];
+    menuItem = [self eventMenuItem:@"Signed Off" withDisplay:@"Signed Off"];    [eventMenu addItem:menuItem];
+    menuItem = [self eventMenuItem:@"Away" withDisplay:@"Went Away"];	    	[eventMenu addItem:menuItem];
+    menuItem = [self eventMenuItem:@"!Away" withDisplay:@"Came Back From Away"];    		[eventMenu addItem:menuItem];
+    menuItem = [self eventMenuItem:@"Idle" withDisplay:@"Became Idle"];		[eventMenu addItem:menuItem];
+    menuItem = [self eventMenuItem:@"!Idle" withDisplay:@"Became Unidle"];    	[eventMenu addItem:menuItem];
+    menuItem = [self eventMenuItem:@"Typing" withDisplay:@"Is Typing"];		[eventMenu addItem:menuItem];
+    menuItem = [self eventMenuItem:@"UnviewedContent" withDisplay:@"Has Unviewed Content"];	[eventMenu addItem:menuItem];
+    menuItem = [self eventMenuItem:@"Warning" withDisplay:@"Was Warned"];	[eventMenu addItem:menuItem];
 
     return(eventMenu);
 }
@@ -213,22 +211,81 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
 }
 
-
 - (void)testSelectedEvent
 {
     //action to take when action is selected in the window
 }
 
+
+- (void) configureForTextDetails:(NSString *)instructions
+{
+    int row = [tableView_actions selectedRow];
+    NSString * details;
+
+    if (row != -1 /* && row < [eventActionArray count] */)
+        details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
+
+    [textField_description_textField setStringValue:instructions];
+    [textField_description_popUp setStringValue:@""];
+    [popUp_actionDetails setEnabled:NO];
+    [textField_actionDetails setEnabled:YES];
+
+    [textField_actionDetails setStringValue:(details ? details : @"")];
+}
+
+- (void) configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu
+{
+    int row = [tableView_actions selectedRow];
+    [textField_description_popUp setStringValue:instructions];
+    [textField_description_textField setStringValue:@""];
+    [popUp_actionDetails setEnabled:YES];
+    [textField_actionDetails setEnabled:NO];
+    [popUp_actionDetails setMenu:detailsMenu];
+    if (row != -1 /* && row < [eventActionArray count] */)
+        [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]]];
+    
+}
+
+//editing is over
+- (void)controlTextDidEndEditing:(NSNotification *)notification
+{
+    NSLog(@"Ended editing.");
+    int row = [tableView_actions selectedRow];
+    NSMutableDictionary	*selectedActionDict;
+
+    selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
+    [selectedActionDict setObject:[textField_actionDetails stringValue] forKey:KEY_EVENT_DETAILS];
+    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+    [self saveEventActionArray];
+}
+
+//used for each item of the eventMenu
+- (NSMenuItem *)eventMenuItem:(NSString *)event withDisplay:(NSString *)displayName
+{
+    NSMenuItem *menuItem;
+    NSMutableDictionary *menuDict;
+
+    menuItem = [[[NSMenuItem alloc] initWithTitle:displayName
+                                           target:self
+                                           action:@selector(newEvent:)
+                                    keyEquivalent:@""] autorelease];
+    menuDict = [[NSMutableDictionary alloc] init];
+    [menuDict setObject:displayName 	forKey:KEY_EVENT_DISPLAYNAME];
+    [menuDict setObject:event 		forKey:KEY_EVENT_NOTIFICATION];
+    [menuItem setRepresentedObject:menuDict];
+    return menuItem;
+
+}
+
 //Delete the selected action
 - (IBAction)deleteEventAction:(id)sender
 {
-    
     //Remove the event
     [eventActionArray removeObjectAtIndex:[tableView_actions selectedRow]];
 
     //Save event sound preferences
     [self saveEventActionArray];
-    
+
     //Update the outline view
     [tableView_actions reloadData];
 }
@@ -298,7 +355,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 {
     NSString	*soundPath = [sender representedObject];
     int row = [tableView_actions selectedRow];
-    
+
     if(soundPath != nil && [soundPath length] != 0){
         [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
     }
@@ -311,85 +368,7 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 
     //Save event sound preferences
     [self saveEventActionArray];
-        
 }
-
-//called by textfield_actionDetails when editing is over
-- (IBAction)endEditing:(id)sender
-{
-    int row = [tableView_actions selectedRow];
-    NSMutableDictionary	*selectedActionDict;
-    
-    selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
-    [selectedActionDict setObject:[textField_actionDetails stringValue] forKey:KEY_EVENT_DETAILS];
-    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
-    [self saveEventActionArray];
-}
-
-//Actions!
-- (NSMenu *)actionListMenu //menu of possible actions
-{
-    NSMenu		*actionListMenu = [[NSMenu alloc] init];
-    NSMenuItem		*menuItem;
-
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Play a sound"
-                                           target:self
-                                           action:@selector(actionPlaySound:)
-                                    keyEquivalent:@""] autorelease];
-    [menuItem setRepresentedObject:@"Sound"];
-    [actionListMenu addItem:menuItem];
-    
-    
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Send a message"
-                                           target:self
-                                           action:@selector(actionSendMessage:)
-                                    keyEquivalent:@""] autorelease];
-    [menuItem setRepresentedObject:@"Message"];
-
-    [actionListMenu addItem:menuItem];
-
-
-    return(actionListMenu);
-
-}
-
-//setup display for sending a message
-- (IBAction)actionSendMessage:(id)sender
-{
-    [self configureForTextDetails:@"Message to send:"];
-}
-
-//setup display for playing a sound
-- (IBAction)actionPlaySound:(id)sender
-{
-    [self configureForMenuDetails:@"Sound to play:" menuToDisplay:[self soundListMenu]];
- }
-
-- (void) configureForTextDetails:(NSString *)instructions
-{
-    int row = [tableView_actions selectedRow];
-    NSString * details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
-
-    [textField_description_textField setStringValue:instructions];
-    [textField_description_popUp setStringValue:@""];
-    [popUp_actionDetails setEnabled:NO];
-    [textField_actionDetails setEnabled:YES];
-
-    [textField_actionDetails setStringValue:(details ? details : @"")];
-}
-
-- (void) configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu
-{
-    int row = [tableView_actions selectedRow];
-    [textField_description_popUp setStringValue:instructions];
-    [textField_description_textField setStringValue:@""];
-    [popUp_actionDetails setEnabled:YES];
-    [textField_actionDetails setEnabled:NO];
-    [popUp_actionDetails setMenu:detailsMenu];
-    [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]]];
-    
-}
-
 
 //TableView datasource --------------------------------------------------------
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
@@ -472,10 +451,12 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotfication
 {
     int row = [tableView_actions selectedRow];
-    NSMenu * actionsMenu = [[self actionListMenu] autorelease];
-    NSString *action = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_ACTION];
-
-    [actionsMenu performActionForItemAtIndex:[actionsMenu indexOfItemWithRepresentedObject:action]];
+    if (row != -1)
+    {
+        NSMenu * actionsMenu = [[self actionListMenu] autorelease];
+        NSString *action = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_ACTION];
+        [actionsMenu performActionForItemAtIndex:[actionsMenu indexOfItemWithRepresentedObject:action]];
+    }
 }
 
 - (BOOL)shouldSelectRow:(int)inRow
@@ -507,16 +488,16 @@ static AIContactAlertsWindowController *sharedInstance = nil;
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
- /*   NSString	*savedFrame;
+    NSString	*savedFrame;
 
     //Restore the window position
-    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_TEXT_PROFILE_WINDOW_FRAME];
+    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_CONTACT_ALERTS_WINDOW_FRAME];
     if(savedFrame){
         [[self window] setFrameFromString:savedFrame];
     }else{
         [[self window] center];
     }
-*/
+
 }
 
 

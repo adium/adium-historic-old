@@ -62,11 +62,14 @@
     NSString * event;
     int status, event_status;
     BOOL status_matches;
+
+    [eventActionArray addObjectsFromArray:[[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:[inObject containingGroup]] ]; //get the group array, as well
+    
     actionsEnumerator = [eventActionArray objectEnumerator];
     while(actionDict = [actionsEnumerator nextObject])
     {
         event = [actionDict objectForKey:KEY_EVENT_NOTIFICATION];
-//        NSLog(@"modified keys are %@; the event is %@; the statusArrayForKey is %@; giv is %i and looking for %i",inModifiedKeys, event, [inObject statusArrayForKey:event], [[inObject statusArrayForKey:event] greatestIntegerValue],  [[actionDict objectForKey:KEY_EVENT_STATUS] intValue]);
+        NSLog(@"modified keys are %@; the event is %@; the statusArrayForKey is %@; giv is %i and looking for %i",inModifiedKeys, event, [inObject statusArrayForKey:event], [[inObject statusArrayForKey:event] greatestIntegerValue],  [[actionDict objectForKey:KEY_EVENT_STATUS] intValue]);
 
         status = [[inObject statusArrayForKey:event] greatestIntegerValue];
         event_status = [[actionDict objectForKey:KEY_EVENT_STATUS] intValue];
@@ -86,6 +89,8 @@
 
             else if ([action compare:@"Message"] == 0)
             { //message
+                if ([[inObject statusArrayForKey:@"Online"] greatestIntegerValue]) //must still be online to prevent an error message
+                {
                 NSMutableArray * onlineAccounts = [NSMutableArray array];
                 NSEnumerator * accountEnumerator;
                 AIAccount * account;
@@ -107,6 +112,7 @@
                                                              date:nil
                                                           message:message];
                 [[owner contentController] sendContentObject:responseContent];
+                }
             }
         }
     }
