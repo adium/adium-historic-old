@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.81 2004/04/21 15:47:45 adamiser Exp $
+// $Id: AIAccountController.m,v 1.82 2004/05/06 08:20:11 evands Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -330,13 +330,13 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     
     AIAccount	*newAccount = [self defaultAccount];
     
-	[self insertAccount:newAccount atIndex:index];
+	[self insertAccount:newAccount atIndex:index save:YES];
 		
     return(newAccount);
 }
 
 //Insert an account
-- (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index
+- (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index save:(BOOL)shouldSave
 {    
     NSParameterAssert(inAccount != nil);
     NSParameterAssert(accountArray != nil);
@@ -349,11 +349,13 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		[accountArray addObject:inAccount];
 	}
 	
-    [self saveAccounts];
+	if (shouldSave){
+		[self saveAccounts];
+	}
 }
 
 //Delete an account
-- (void)deleteAccount:(AIAccount *)inAccount
+- (void)deleteAccount:(AIAccount *)inAccount save:(BOOL)shouldSave
 {
     NSParameterAssert(inAccount != nil);
     NSParameterAssert(accountArray != nil);
@@ -361,7 +363,9 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 	[inAccount retain]; //Don't let the account dealloc until we have a chance to notify everyone that it's gone
 	[accountArray removeObject:inAccount];
-	[self saveAccounts];
+	if (shouldSave){
+		[self saveAccounts];
+	}
 	[inAccount release];
 }
 
@@ -372,10 +376,10 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	AIAccount	*newAccount = [self createAccountOfType:[inService identifier]
 												withUID:[inAccount UID]
 											   objectID:[[inAccount uniqueObjectID] intValue]];
-    [self insertAccount:newAccount atIndex:[accountArray indexOfObject:inAccount]];
+    [self insertAccount:newAccount atIndex:[accountArray indexOfObject:inAccount] save:NO];
     
     //Delete the old account
-    [self deleteAccount:inAccount];
+    [self deleteAccount:inAccount save:YES];
     
     return(newAccount);
 }
@@ -394,14 +398,14 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 						group:GROUP_ACCOUNT_STATUS];
 	
 	int oldAccountIndex = [accountArray indexOfObject:inAccount];
-	//The accout should be in the accountArray, but sanity checking never hurt anyone
+	//The old accout should be in the accountArray, but sanity checking never hurt anyone
 	if (oldAccountIndex != NSNotFound) {
-		[self insertAccount:newAccount atIndex:oldAccountIndex];
+		[self insertAccount:newAccount atIndex:oldAccountIndex save:NO];
 		
 		//Delete the old account
-		[self deleteAccount:inAccount];
+		[self deleteAccount:inAccount save:YES];
 	}else{
-		[self insertAccount:newAccount atIndex:0];	
+		[self insertAccount:newAccount atIndex:0 save:YES];
 	}
 	
     return(newAccount);

@@ -14,9 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.18 $
- * $Date: 2004/04/21 15:47:18 $
- * $Author: adamiser $
+ * $Revision: 1.19 $
+ * $Date: 2004/05/06 08:20:11 $
+ * $Author: evands $
  **/
 
 #define Account_ListChanged 					@"Account_ListChanged"
@@ -59,8 +59,8 @@
 
 //Account Editing
 - (AIAccount *)newAccountAtIndex:(int)index;
-- (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index;
-- (void)deleteAccount:(AIAccount *)inAccount;
+- (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index save:(BOOL)shouldSave;
+- (void)deleteAccount:(AIAccount *)inAccount save:(BOOL)shouldSave;
 - (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(id <AIServiceController>)inService;
 - (AIAccount *)changeUIDOfAccount:(AIAccount *)inAccount to:(NSString *)inUID;
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
