@@ -19,19 +19,16 @@
 #import "AISCLOutlineView.h"
 #import "AIAdium.h"
 #import "AICLPreferences.h"
+#import "AISCLViewController.h"
 
 @interface AISCLViewPlugin (PRIVATE)
-- (void)preferencesChanged:(NSNotification *)notification;
-- (void)itemDidExpand:(NSNotification *)notification;
-- (void)itemDidCollapse:(NSNotification *)notification;
-- (void)expandCollapseGroup:(AIListGroup *)inGroup subgroups:(BOOL)subgroups supergroups:(BOOL)supergroups outlineView:(NSOutlineView *)inView;
 @end
 
 @implementation AISCLViewPlugin
 
 - (void)installPlugin
 {
-    SCLViewArray = [[NSMutableArray alloc] init];
+    controllerArray = [[NSMutableArray alloc] init];
 
     //Register ourself as an available contact list view
     [[owner interfaceController] registerContactListViewController: self];
@@ -50,309 +47,33 @@
 
 - (void)dealloc
 {
-    [SCLViewArray release];
-    [contactList release];
+    [controllerArray release];
 
     [super dealloc];
 }
 
-//Return our view
+//Return a new contact list view
 - (NSView *)contactListView
 {
-    AISCLOutlineView	*SCLView;
+    AISCLViewController	*controller = [AISCLViewController contactListViewControllerWithOwner:owner];
 
-    //Create the view
-    SCLView = [[AISCLOutlineView alloc] init];
-    [SCLViewArray addObject:SCLView];
+    [controllerArray addObject:controller];
 
-    //Apply the preferences to the view
-    [self preferencesChanged:nil];
-
-    //Install the necessary observers (general)
-    if([SCLViewArray count] == 1){ //If this is the first view opened
-        [[owner notificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
-        [[owner notificationCenter] addObserver:self selector:@selector(contactOrderChanged:) name:Contact_OrderChanged object:nil];
-        [[owner notificationCenter] addObserver:self selector:@selector(contactAttributesChanged:) name:Contact_AttributesChanged object:nil];
-        [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    }
-
-    //View specific
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpand:) name:NSOutlineViewItemDidExpandNotification object:SCLView];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidCollapse:) name:NSOutlineViewItemDidCollapseNotification object:SCLView];
-    [SCLView setTarget:self];
-    [SCLView setDataSource:self];
-    [SCLView setDelegate:self];
-    [SCLView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
-    [self expandCollapseGroup:contactList subgroups:YES supergroups:NO outlineView:SCLView]; //Correctly expand/collapse groups
-    
-    //Fetch and retain the contact list
-    contactList = [[[owner contactController] contactList] retain];
-
-    return([SCLView autorelease]);
+    return([controller contactListView]);
 }
 
+//Close a contact list view
 - (void)closeContactListView:(NSView *)inView
-{    
-    if([inView isKindOfClass:[AISCLOutlineView class]]){
-        AISCLOutlineView	*view = (AISCLOutlineView *)inView;
-
-        //Remove observers (general)
-        if([SCLViewArray count] == 1){ //If this is the last view closed
-            [[owner notificationCenter] removeObserver:self name:Contact_ListChanged object:nil];
-            [[owner notificationCenter] removeObserver:self name:Contact_OrderChanged object:nil];
-            [[owner notificationCenter] removeObserver:self name:Contact_AttributesChanged object:nil];
-            [[owner notificationCenter] removeObserver:self name:Preference_GroupChanged object:nil];
-        }
-    
-        //View specific
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSOutlineViewItemDidExpandNotification object:view];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSOutlineViewItemDidCollapseNotification object:view];
-        
-        //Close down and release the view
-        [view setTarget:nil];
-        [view setDataSource:nil];
-        [view setDelegate:nil];
-        [SCLViewArray removeObject:view];
-    }
-}
-
-
-//Notifications
-//Reload the contact list
-- (void)contactListChanged:(NSNotification *)notification
-{
-    NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
-    AISCLOutlineView	*SCLView;
-
-    //Fetch the new contact list
-    [contactList release]; contactList = [[[owner contactController] contactList] retain];
-
-    //Redisplay
-    while((SCLView = [enumerator nextObject])){
-        [SCLView reloadData];
-        [self expandCollapseGroup:contactList subgroups:YES supergroups:NO outlineView:SCLView]; //Correctly expand/collapse groups
-    }
-}
-
-//Reload the contact list (if updates aren't delayed)
-- (void)contactOrderChanged:(NSNotification *)notification
-{
-    if(![[owner contactController] holdContactListUpdates]){
-        AIListObject		*object = [notification object];
-        NSEnumerator		*enumerator = [SCLViewArray objectEnumerator];
-        AISCLOutlineView	*SCLView;
-        
-        //Redisplay
-        while((SCLView = [enumerator nextObject])){
-            [SCLView reloadData];
-
-            //Correctly expand/collapse the groups
-            if(!object){ //If passed nil, expand the entire contact list
-                [self expandCollapseGroup:nil subgroups:YES supergroups:NO outlineView:SCLView];
-
-            }else if([object isKindOfClass:[AIListGroup class]]){ //If passed a group, expand it and all groups above it
-                [self expandCollapseGroup:(AIListGroup *)object subgroups:NO supergroups:YES outlineView:SCLView];
-                
-            }else if([object isKindOfClass:[AIListContact class]]){ //If passed a contact, expand its containing group and all groups above it
-                [self expandCollapseGroup:[object containingGroup] subgroups:NO supergroups:YES outlineView:SCLView];
-
-            }
-        }
-    }
-}
-
-//Redisplay the modified object
-- (void)contactAttributesChanged:(NSNotification *)notification
-{
-    AIListContact	*contact = [notification object];
-    NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
-    AISCLOutlineView	*SCLView;
-
-    if(contact){
-        //Simply redraw the modified contact
-        while((SCLView = [enumerator nextObject])){
-            int row = [SCLView rowForItem:contact];
-
-            if(row >= 0){
-                [SCLView setNeedsDisplayInRect:[SCLView rectOfRow:row]];
-            }
-        }
-    }
-}
-
-//A contact list preference has changed
-- (void)preferencesChanged:(NSNotification *)notification
-{
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0){
-        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
-        NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
-        AISCLOutlineView	*SCLView;
-    
-        while((SCLView = [enumerator nextObject])){
-            NSFont	*font = [[prefDict objectForKey:KEY_SCL_FONT] representedFont];
-            float	alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
-            NSColor	*backgroundColor = [[prefDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColorWithAlpha:alpha];
-            NSColor	*gridColor = [[prefDict objectForKey:KEY_SCL_GRID_COLOR] representedColorWithAlpha:alpha];
-            BOOL	alternatingGrid = [[prefDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue];
-            
-            //Display
-            [SCLView setFont:font];
-            [SCLView setRowHeight:[font defaultLineHeightForFont]];
-            [SCLView setBackgroundColor:backgroundColor];
-            
-            //Grid
-            [SCLView setDrawsAlternatingRows:alternatingGrid];
-            [SCLView setAlternatingRowColor:gridColor];
-    
-            /*
-             For this view to be transparent, it's containing window must be set as non-opaque.  It would make sense to use: [[SCLView window] setOpaque:(alpha == 100.0)];
-
-             However, setting a window to opaque causes it's contents to be shadowed.  It is a pain (and a major speed hit) to maintain shadows beneath the contact list text.  A little trick to prevent the window manager from shadowing the window content is to set the window itself as non-opaque.  The contents of a window that is non-opaque will not cast a shadow.  Setting the window's alpha value to 0.9999999 removes the shadowing without giving the slightest appearance of opacity to the window titlebar and widgets.
-             */
-            [[SCLView window] setAlphaValue:(alpha == 100.0 ? 1.0 : 0.9999999)];
-
-        }
-    }
-}
-
-//Expand & collapse a group
-- (void)itemDidExpand:(NSNotification *)notification
-{
-    [[[notification userInfo] objectForKey:@"NSObject"] setExpanded:YES];
-}
-- (void)itemDidCollapse:(NSNotification *)notification
-{
-    [[[notification userInfo] objectForKey:@"NSObject"] setExpanded:NO];
-}
-
-
-//Double click in outline view
-- (IBAction)performDefaultActionOnSelectedContact:(id)sender
-{
-    AIListObject	*selectedObject;
-
-    selectedObject = [sender itemAtRow:[sender selectedRow]];
-
-    if([selectedObject isKindOfClass:[AIListGroup class]]){
-        //Expand or collapse the group
-        if([sender isItemExpanded:selectedObject]){
-            [sender collapseItem:selectedObject];
-        }else{
-            [sender expandItem:selectedObject];
-        }
-    
-    }else{
-        NSDictionary	*notificationDict;
-
-        //Open a new message with the contact
-        notificationDict = [NSDictionary dictionaryWithObjectsAndKeys:selectedObject, @"To", nil];
-        [[owner notificationCenter] postNotificationName:Interface_InitiateMessage object:nil userInfo:notificationDict];
-    }
-}
-
-// Outline View data source methods
-- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
-{
-    if(item == nil){
-        return([contactList sortedObjectAtIndex:index]);
-    }else{
-        return([item sortedObjectAtIndex:index]);
-    }
-}
-
-- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
-{
-    if([item isKindOfClass:[AIListGroup class]]){
-        return(YES);
-    }else{
-        return(NO);
-    }
-}
-
-- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
-{
-    if(item == nil){
-        return([contactList sortedCount]);
-    }else{
-        return([item sortedCount]);
-    }
-}
-
-// outlineView:willDisplayCell: The outline view is about to tell one of our cells to draw
-- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
-{
-    //Before one of our cells gets told to draw, we need to make sure it knows what contact it's drawing for.
-    if([cell isKindOfClass:[AISCLCell class]]){
-        [(AISCLCell *)cell setContact:item];
-    }
-}
-
-- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
-{
-    return(@"");
-}
-
-- (void)outlineViewSelectionDidChange:(NSNotification *)notification
-{
-    AIListObject	*selectedObject = nil;
-    NSOutlineView	*outlineView = [notification object];
-    int			selectedRow;
-
-    //Get the selected object
-    selectedRow = [outlineView selectedRow];
-    if(selectedRow >= 0 && selectedRow < [outlineView numberOfRows]){    
-        selectedObject = [outlineView itemAtRow:selectedRow];
-    }
-
-    //Post a 'contact list selection changed' notification on the interface center
-    if(selectedObject){
-        NSDictionary	*notificationDict = [NSDictionary dictionaryWithObjectsAndKeys:selectedObject, @"Object", nil];
-        [[owner notificationCenter] postNotificationName:Interface_ContactSelectionChanged object:outlineView userInfo:notificationDict];
-    
-    }else{
-        [[owner notificationCenter] postNotificationName:Interface_ContactSelectionChanged object:outlineView userInfo:nil];
-    
-    }
-
-}
-
-//Correctly sets the contact groups as expanded or collapsed, depending on their saved state
-- (void)expandCollapseGroup:(AIListGroup *)inGroup subgroups:(BOOL)subgroups supergroups:(BOOL)supergroups outlineView:(NSOutlineView *)inView
 {
     NSEnumerator	*enumerator;
-    AIListObject	*object;
-    
-    if(!inGroup) inGroup = contactList;
+    AISCLViewController	*controller;
 
-    //Expand/Collapse the group that was passed to us
-    if(inGroup != contactList){
-        ([inGroup isExpanded] ? [inView expandItem:inGroup] : [inView collapseItem:inGroup]);
-    }
-    
-    //Expand/Collapse its supergroups
-    if(supergroups){
-        AIListGroup	*containingGroup = [inGroup containingGroup];
-        
-        if(containingGroup){
-            //Expand the supergroup
-            [self expandCollapseGroup:containingGroup subgroups:NO supergroups:YES outlineView:inView];
-
-            //Correctly expand/collapse the group
-            ([containingGroup isExpanded] ? [inView expandItem:containingGroup] : [inView collapseItem:containingGroup]);
-        }
-    }
-    
-    //Expand/Collapse its subgroups
-    enumerator = [inGroup objectEnumerator];
-    while((object = [enumerator nextObject])){
-        if([object isKindOfClass:[AIListGroup class]]){
-            //Correctly expand/collapse the group
-            ([(AIListGroup *)object isExpanded] ? [inView expandItem:object] : [inView collapseItem:object]);
-
-            //Expand/collapse any subgroups
-            if(subgroups){
-                [self expandCollapseGroup:(AIListGroup *)object subgroups:YES supergroups:NO outlineView:inView];
-            }
+    //Remove the view from our array
+    enumerator = [controllerArray objectEnumerator];
+    while((controller = [enumerator nextObject])){
+        if([controller contactListView] == inView){
+            [controllerArray removeObject:controller];
+            return; //We've found and removed our view, return.
         }
     }
 }

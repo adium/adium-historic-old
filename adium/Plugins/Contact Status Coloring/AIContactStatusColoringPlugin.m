@@ -74,8 +74,9 @@
 - (void)applyColorToContact:(AIListContact *)inContact
 {
     AIMutableOwnerArray		*colorArray = [inContact displayArrayForKey:@"Text Color"];
+    AIMutableOwnerArray		*invertedColorArray = [inContact displayArrayForKey:@"Inverted Text Color"];
     int				away, idle, warning, online, unviewedContent, signedOn, signedOff;
-    NSColor			*color = nil;
+    NSColor			*color = nil, *invertedColor = nil;
 
     //Get all the values
     away = [[inContact statusArrayForKey:@"Away"] greatestIntegerValue];
@@ -88,23 +89,31 @@
 
     //Determine the correct color
     if(unviewedContent && ([[owner interfaceController] flashState] % 2)){
-        color = [NSColor orangeColor];
+        color = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(127.0/255.0) blue:(0.0/255.0) alpha:1.0];
+        invertedColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(223.0/255.0) blue:(191.0/255.0) alpha:1.0];
     }else if(signedOff){
         color = [NSColor colorWithCalibratedRed:(102.0/255.0) green:(0.0/255.0) blue:(0.0/255.0) alpha:1.0];
+        invertedColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(216.0/255.0) blue:(216.0/255.0) alpha:1.0];
     }else if(!online){
-        color = [NSColor colorWithCalibratedRed:(68.0/255.0) green:(0.0/255.0) blue:(1.0/255.0) alpha:1.0];
+        color = [NSColor colorWithCalibratedRed:(68.0/255.0) green:(0.0/255.0) blue:(0.0/255.0) alpha:1.0];
+        invertedColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(216.0/255.0) blue:(216.0/255.0) alpha:1.0];
     }else if(signedOn){
         color = [NSColor colorWithCalibratedRed:(0.0/255.0) green:(0.0/255.0) blue:(102.0/255.0) alpha:1.0];
+        invertedColor = [NSColor colorWithCalibratedRed:(216.0/255.0) green:(216.0/255.0) blue:(255.0/255.0) alpha:1.0];
     }else if(idle != 0 && away){
         color = [NSColor colorWithCalibratedRed:(89.0/255.0) green:(89.0/255.0) blue:(59.0/255.0) alpha:1.0];
+        invertedColor = [NSColor colorWithCalibratedRed:(216.0/255.0) green:(216.0/255.0) blue:(143.0/255.0) alpha:1.0];
     }else if(idle != 0){
         color = [NSColor colorWithCalibratedRed:(67.0/255.0) green:(67.0/255.0) blue:(67.0/255.0) alpha:1.0];
+        invertedColor = [NSColor colorWithCalibratedRed:(216.0/255.0) green:(216.0/255.0) blue:(216.0/255.0) alpha:1.0];
     }else if(away){
         color = [NSColor colorWithCalibratedRed:(66.0/255.0) green:(66.0/255.0) blue:(0.0/255.0) alpha:1.0];
+        invertedColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(255.0/255.0) blue:(191.0/255.0) alpha:1.0];
     }
 
     //Add the new color
     [colorArray setObject:color withOwner:self];
+    [invertedColorArray setObject:invertedColor withOwner:self];
 }
 
 //Flash all handles with unviewed content

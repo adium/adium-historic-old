@@ -20,7 +20,12 @@
 - (NSRange)validRangeFromIndex:(int)sourceIndex to:(int)destIndex;
 - (NSTextStorage *)createTextSystemWithString:(NSAttributedString *)inString size:(NSSize)inSize container:(NSTextContainer **)outContainer layoutManager:(NSLayoutManager **)outLayoutManager;
 - (void)_buildLinkArray;
+- (void)_showTooltipForEvent:(NSEvent *)theEvent;
+- (void)_endTrackingMouse;
 @end
+
+BOOL _mouseInRects(NSPoint aPoint, NSRectArray someRects, int arraySize, BOOL flipped);
+NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
 @implementation AIFlexibleTableTextCell
 
@@ -125,19 +130,6 @@
             //Remove the white
             [layoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:NSMakeRange(0,[textStorage length])];
 
-        }
-    }
-
-    //Draw blue frames around the links
-    {
-        NSEnumerator	*enumerator;
-        AIFlexibleLink	*link;
-
-        //Insert a tracking rect for each link
-        enumerator = [linkArray objectEnumerator];
-        while((link = [enumerator nextObject])){
-            [[NSColor blueColor] set];
-            [NSBezierPath strokeRect:[link trackingRect]];
         }
     }
 }
@@ -307,6 +299,8 @@
     NSEnumerator	*enumerator;
     AIFlexibleLink	*link;
 
+    [self _endTrackingMouse]; //remove any existing tooltips
+    
     //Remove all existing tracking rects
     enumerator = [linkArray objectEnumerator];
     while((link = [enumerator nextObject])){
@@ -328,7 +322,7 @@
     }
 
     return(YES);
-}
+}    
 
 //Builds an array of links within our text content
 - (void)_buildLinkArray
@@ -376,24 +370,192 @@
     }
 }
 
-//Called when the mouse enters a link rect
+//Called when the mouse enters the link
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-    NSPoint	point = [[theEvent window] convertBaseToScreen:[theEvent locationInWindow]];
-    NSString	*url = [[theEvent userData] url];
-    
+    hoveredLink = [(AIFlexibleLink *)[theEvent userData] retain];
+    hoveredString = [[NSString stringWithFormat:@"%@", [hoveredLink url]] retain];
+
+    //We need to set ourself as first responder to get mouse moved events.  We preserve the current first responder first, and restore it when the mouse leaves our rect
+    oldFirstResponder = [[tableView window] firstResponder];
+    [[tableView window] makeFirstResponder:tableView];
+
     [[NSCursor handPointCursor] set]; //Set the link cursor
-    [AITooltipUtilities showTooltipWithString:[NSString stringWithFormat:@"%@", url] onWindow:nil atPoint:point];
+    [tableView setAcceptsMouseMovedEvents:YES]; //Start generating mouse-moved events
+    [self _showTooltipForEvent:theEvent]; //Show the tooltip
 }
 
-//Called when the mouse leaves a link rect
+//Called when the mouse leaves the link
 - (void)mouseExited:(NSEvent *)theEvent
 {
-    [[NSCursor arrowCursor] set]; //Restore the regular cursor
-    [AITooltipUtilities showTooltipWithString:nil onWindow:nil atPoint:NSMakePoint(0,0)];
+    [self _endTrackingMouse];
 }
 
+//Stop tracking mouse events
+- (void)_endTrackingMouse
+{
+    [[NSCursor arrowCursor] set]; //Restore the regular cursor
+    [tableView setAcceptsMouseMovedEvents:NO]; //Stop generating mouse-moved events
+    [self _showTooltipForEvent:nil]; //Hide the tooltip
+
+    [[tableView window] makeFirstResponder:oldFirstResponder];
+
+    [hoveredLink release]; hoveredLink = nil;
+    [hoveredString release]; hoveredString = nil;
+}
+
+//Called when the mouse moves within the link
+- (void)mouseMoved:(NSEvent *)theEvent
+{
+    [self _showTooltipForEvent:theEvent];
+}
+
+//Show the tooltip
+- (void)_showTooltipForEvent:(NSEvent *)theEvent
+{
+    if(theEvent){ //Show tooltip for it
+        if([[tableView window] isKeyWindow]){
+            [AITooltipUtilities showTooltipWithString:hoveredString
+                                            onWindow:nil
+                                            atPoint:[[theEvent window] convertBaseToScreen:[theEvent locationInWindow]]];
+        }
+    }else{
+        [AITooltipUtilities showTooltipWithString:nil onWindow:nil atPoint:NSMakePoint(0,0)];
+        
+    }
+}
+
+
+- (BOOL)mouseDown:(NSEvent *)theEvent
+{
+    BOOL		success = NO;
+    NSPoint		mouseLoc;
+    unsigned int	glyphIndex;
+    unsigned int	charIndex;
+    NSRectArray		linkRects = nil;
+
+    [self _endTrackingMouse]; //Remove any tooltips
+    
+    //Find clicked char index
+    mouseLoc = [tableView convertPoint:[theEvent locationInWindow] fromView:nil];
+    mouseLoc.x -= [self frame].origin.x;
+    mouseLoc.y -= [self frame].origin.y;
+    
+    glyphIndex = [layoutManager glyphIndexForPoint:mouseLoc inTextContainer:textContainer fractionOfDistanceThroughGlyph:nil];
+    charIndex = [layoutManager characterIndexForGlyphAtIndex:glyphIndex];
+    
+    if(charIndex >= 0 && charIndex < [textStorage length]){
+        NSString	*linkString;
+        NSURL		*linkURL;
+        NSRange		linkRange;
+
+        //Check if click is in valid link attributed range, and is inside the bounds of that style range, else fall back to default handler
+        linkString = [textStorage attribute:NSLinkAttributeName atIndex:charIndex effectiveRange:&linkRange];
+        if(linkString == nil || [linkString length] == 0)
+            return [super mouseDown:theEvent];
+
+        //add http:// to the link string if a protocol wasn't specified
+        if([linkString rangeOfString:@"://"].location == NSNotFound && [linkString rangeOfString:@"mailto:"].location == NSNotFound){
+            linkURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@",linkString]];
+        }else{
+            linkURL = [NSURL URLWithString:linkString];
+        }
+
+        //bail if a link couldn't be made
+        if(linkURL){
+            unsigned int	eventMask;
+            NSDate		*distantFuture;
+            int			linkCount;
+            BOOL		done = NO;
+            BOOL		inRects = NO;
+
+            //Setup Tracking Info
+            distantFuture = [NSDate distantFuture];
+            eventMask = NSLeftMouseUpMask | NSRightMouseUpMask | NSLeftMouseDraggedMask | NSRightMouseDraggedMask;
+
+            //Find region of clicked link
+            linkRects = [layoutManager rectArrayForCharacterRange:linkRange
+                                     withinSelectedCharacterRange:linkRange
+                                                  inTextContainer:textContainer
+                                                        rectCount:&linkCount];
+            linkRects = _copyRectArray(linkRects, linkCount);
+
+            //One last check to make sure we're really in the bounds of the link. Useful when the link runs up to the end of the document and a click in the blank area below still pases the style range test above.
+            if(_mouseInRects(mouseLoc, linkRects, linkCount, NO)){
+                //Draw ourselves as clicked and kick off tracking
+                [textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor orangeColor] range:linkRange];
+                [tableView setNeedsDisplayInRect:[self frame]];
+                
+                while(!done){
+                    NSPoint		mouseLoc;
+
+                    //Get the next event and mouse location
+                    theEvent = [NSApp nextEventMatchingMask:eventMask untilDate:distantFuture inMode:NSEventTrackingRunLoopMode dequeue:YES];
+                    mouseLoc = [tableView convertPoint:[theEvent locationInWindow] fromView:nil];
+                    mouseLoc.x -= [self frame].origin.x;
+                    mouseLoc.y -= [self frame].origin.y;
+
+                    switch([theEvent type]){
+                        case NSRightMouseUp:		//Done Tracking Clickscr
+                        case NSLeftMouseUp:
+                            //If we were still inside the link, draw unclicked and open link
+                            if(_mouseInRects(mouseLoc, linkRects, linkCount, NO)){
+                                [[NSWorkspace sharedWorkspace] openURL:linkURL];
+                            }
+                            [textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:linkRange];
+                            [tableView setNeedsDisplayInRect:[self frame]];
+                            done = YES;
+                        break;
+                        case NSLeftMouseDragged:	//Mouse Moved
+                        case NSRightMouseDragged:
+                            //Check if we crossed the link region edge
+                            if(_mouseInRects(mouseLoc, linkRects, linkCount, NO) && inRects == NO){
+                                [textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor orangeColor] range:linkRange];
+                                [tableView setNeedsDisplayInRect:[self frame]];
+                                inRects = YES;
+                            }else if(!_mouseInRects(mouseLoc, linkRects, linkCount, NO) && inRects == YES){
+                                [textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:linkRange];
+                                [tableView setNeedsDisplayInRect:[self frame]];
+                                inRects = NO;
+                            }
+                        break;
+                        default:
+                        break;
+                    }
+                }
+
+                success = YES;
+            }
+        }
+    }
+
+    //Free our copy of the link region
+    if(linkRects) free(linkRects);
+    return(success);
+}
+
+//Check for the presence of a point in multiple rects
+BOOL _mouseInRects(NSPoint aPoint, NSRectArray someRects, int arraySize, BOOL flipped)
+{
+    int	index;
+
+    for(index = 0; index < arraySize; index++){
+        if(NSMouseInRect(aPoint, someRects[index], flipped)){
+            return(YES);
+        }
+    }
+
+    return(NO);
+}
+
+NSRectArray _copyRectArray(NSRectArray someRects, int arraySize)
+{
+    NSRectArray		newArray;
+
+    newArray = malloc(sizeof(NSRect)*arraySize);
+    memcpy( newArray, someRects, sizeof(NSRect)*arraySize );
+    return newArray;
+}
+    
 @end
-
-
 

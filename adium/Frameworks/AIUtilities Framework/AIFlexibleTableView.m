@@ -145,33 +145,36 @@
     //Determine the clicked cell/row/column
     clickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     cell = [self cellAtPoint:clickLocation row:&row column:&column];
+
+    //Give the cell a chance to process the mouse down.  If it returns YES, we ignore the event.
+    if(![cell mouseDown:theEvent]){
+        //Select the row
+        [self selectRow:row];
     
-    //Select the row
-    [self selectRow:row];
-
-    //Text selection
-    {
-        NSPoint			localPoint;
-
-        //Deselect all text
-        [self deselectAll];
-
-        //Set the new selection start and end
-        localPoint = NSMakePoint(clickLocation.x - [cell frame].origin.x, clickLocation.y - [cell frame].origin.y);
-        selection_startRow = row;
-        selection_startColumn = column;
-        selection_startIndex = [cell characterIndexAtPoint:localPoint];
-        selection_endRow = selection_startRow;
-        selection_endColumn = selection_startColumn;
-        selection_endIndex = selection_startIndex;
-        
-        //Redisplay
-        [self setNeedsDisplay:YES];
-    }
-
-    //Open the selected cell for editing (If this was a double click)
-    if([theEvent clickCount] >= 2){
-        [self editRow:row column:[self columnAtIndex:column]];
+        //Text selection
+        {
+            NSPoint			localPoint;
+    
+            //Deselect all text
+            [self deselectAll];
+    
+            //Set the new selection start and end
+            localPoint = NSMakePoint(clickLocation.x - [cell frame].origin.x, clickLocation.y - [cell frame].origin.y);
+            selection_startRow = row;
+            selection_startColumn = column;
+            selection_startIndex = [cell characterIndexAtPoint:localPoint];
+            selection_endRow = selection_startRow;
+            selection_endColumn = selection_startColumn;
+            selection_endIndex = selection_startIndex;
+            
+            //Redisplay
+            [self setNeedsDisplay:YES];
+        }
+    
+        //Open the selected cell for editing (If this was a double click)
+        if([theEvent clickCount] >= 2){
+            [self editRow:row column:[self columnAtIndex:column]];
+        }
     }
 }
 
@@ -179,6 +182,27 @@
 {
 
 }
+
+//Enable/disable mouse moved events
+- (void)setAcceptsMouseMovedEvents:(BOOL)flag
+{
+    [[self window] setAcceptsMouseMovedEvents:flag];
+}
+
+//pass mouse moved events to the hovered cell
+- (void)mouseMoved:(NSEvent *)theEvent
+{
+    AIFlexibleTableCell		*cell;
+    int				row, column;
+    NSPoint			hoverLocation;
+
+    //Determine the clicked cell/row/column
+    hoverLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    cell = [self cellAtPoint:hoverLocation row:&row column:&column];
+
+    [cell mouseMoved:theEvent];
+}
+
 
 
 //Selecting --------------------------------------------------------------------------------
@@ -795,6 +819,9 @@
         [self _resizeRows];
         [self _resizeCellsRowHeightsChanged:YES];
     }
+
+    //Reset our tracking rects
+    [self resetCursorRects];
 }
 
 //Adjust the height of an existing row
@@ -805,8 +832,6 @@
     int				newRowHeight = 0;
 
     //We subtract this row's height from our total, recalculate the new required row height, then add the new height back the total.
-    contentsHeight -= [[rowHeightArray objectAtIndex:inRow] intValue];
-
     columnEnumerator = [columnArray objectEnumerator];
     while((column = [columnEnumerator nextObject])){
         int	cellHeight;
@@ -822,11 +847,11 @@
         }
     }
 
-    contentsHeight += newRowHeight;
     [rowHeightArray replaceObjectAtIndex:inRow withObject:[NSNumber numberWithInt:newRowHeight]];
 
     //Resize and redisplay
     [self resizeToFillContainerView];
+    [self resizeContents];
     [self setNeedsDisplay:YES];
 }
 

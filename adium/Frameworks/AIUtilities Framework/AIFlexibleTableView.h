@@ -84,6 +84,7 @@
 - (int)selectedRow;
 - (void)editRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn;
 - (void)setHeightOfCellAtRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn to:(int)inHeight;
+- (void)setAcceptsMouseMovedEvents:(BOOL)flag;
 
 @end
 

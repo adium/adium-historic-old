@@ -19,7 +19,7 @@
 #import "AISCLCell.h"
 #import "AISCLOutlineView.h"
 
-#define LEFT_MARGIN		9
+#define LEFT_MARGIN		0 //9
 #define LEFT_VIEW_INDENT_SIZE	1.2 //must be close to square then
 #define LEFT_VIEW_PADDING	3
 
@@ -34,7 +34,7 @@
 {
     NSFont	*font = [(AISCLOutlineView *)controlView font];
 
-    if([listObject isKindOfClass:[AIListContact class]]){
+//    if([listObject isKindOfClass:[AIListContact class]]){
         NSString		*name;
         NSAttributedString	*displayName;
         NSColor			*textColor;
@@ -81,9 +81,13 @@
         }
 
         //Color
-        textColor = [[listObject displayArrayForKey:@"Text Color"] averageColor];
-        if(!textColor){
-            textColor = [NSColor blackColor];
+        //If this cell is selected, use the inverted color, or white
+        if([self isHighlighted] && [[controlView window] isKeyWindow] && [[controlView window] firstResponder] == controlView){
+            textColor = [[listObject displayArrayForKey:@"Inverted Text Color"] averageColor];
+            if(!textColor) textColor = [NSColor whiteColor];
+        }else{ //use the regular color, or black
+            textColor = [[listObject displayArrayForKey:@"Text Color"] averageColor];
+            if(!textColor) textColor = [NSColor blackColor];
         }
         
         //Name
@@ -96,7 +100,7 @@
 
         [displayName release];
         
-    }else{
+/*    }else{
         NSAttributedString	*displayName;
         NSString		*name;
 
@@ -109,7 +113,7 @@
         cellFrame.origin.y -= 1; //Adjust the strings up 1 pixel
         [displayName drawAtPoint:cellFrame.origin];
         [displayName release];
-    }
+    }*/
 
 }
 

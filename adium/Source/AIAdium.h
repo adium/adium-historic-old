@@ -370,6 +370,7 @@ typedef enum {
 - (void)registerFlashObserver:(id <AIFlashObserver>)inObserver;
 - (void)unregisterFlashObserver:(id <AIFlashObserver>)inObserver;
 - (int)flashState;
+- (void)showTooltipForListObject:(AIListObject *)object atPoint:(NSPoint)point;
 
 @end
 
