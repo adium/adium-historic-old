@@ -25,9 +25,9 @@
     [[owner contactController] registerHandleObserver:self];
 }
 
-- (BOOL)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys
 {
-    BOOL	handleChanged = NO;
+    NSArray		*modifiedAttributes = nil;
 
     if(	inModifiedKeys == nil || 
         [inModifiedKeys containsObject:@"Away"] || 
@@ -56,11 +56,11 @@
         }else if(away){
             [colorArray addObject:[NSColor colorWithCalibratedRed:(66.0/255.0) green:(66.0/255.0) blue:(0.0/255.0) alpha:1.0] withOwner:self];
         }
- 
-        handleChanged = YES;
+
+        modifiedAttributes = [NSArray arrayWithObject:@"Text Color"];
     }
 
-    return(handleChanged);
+    return(modifiedAttributes);
 
 }
 

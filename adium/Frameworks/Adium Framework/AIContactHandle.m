@@ -74,33 +74,6 @@
     return(array);
 }
 
-//Compares our display name (and other factors) to another handle
-//If we come first, result is -1.  If object comes first, the result is 1.
-#warning Compares should be merged/moved into a seperate sort module
-/*- (NSComparisonResult)compare:(AIContactObject *)object
-{
-    NSComparisonResult 	result;
-    BOOL		weAreInvisible = NO;
-    BOOL		theyAreInvisible = NO;
-    
-    if([[self displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1]){
-        weAreInvisible = YES;
-    }
-    if([object isKindOfClass:[AIContactHandle class]] && [[(AIContactHandle *)object displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1]){
-        theyAreInvisible = YES;
-    }
-    
-    if(weAreInvisible && !theyAreInvisible){
-        result = 1;
-    }else if(!weAreInvisible && theyAreInvisible){
-        result = -1;
-    }else{
-        result = [[self displayName] caseInsensitiveCompare:[object displayName]];
-    }
-
-    return(result);
-}*/
-
 //Return our array of content objects
 - (NSArray *)contentObjectArray
 {

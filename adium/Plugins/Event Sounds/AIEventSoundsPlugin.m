@@ -41,8 +41,8 @@
     [[owner soundController] playSoundNamed:@"(Adium)Send.aif"];
 }
 
-- (BOOL)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys
-{
+- (NSArray *)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys
+{ 
     if(![[owner contactController] contactListUpdatesDelayed]){ //Don't play sounds whens signing on
         //Sign on/off
         if([inModifiedKeys containsObject:@"Online"]){
@@ -61,7 +61,7 @@
         }
     }
         
-    return(NO);
+    return(nil);
 }
 
 @end

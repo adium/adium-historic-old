@@ -55,6 +55,12 @@ typedef enum {
     LOC_Help_Local, LOC_Help_Web, LOC_Help_Additions,
 } MENU_LOCATION;
 
+typedef enum {
+    AISortGroup = 0,
+    AISortGroupAndSubGroups,
+    AISortGroupAndSuperGroups
+} AISortMode;
+
 //Preference Categories
 #define PREFERENCE_CATEGORY_CONNECTIONS	@"Connections"
 #define PREFERENCE_CATEGORY_INTERFACE		@"Interface"
@@ -72,9 +78,13 @@ typedef enum {
 #define Account_ListChanged 					@"Account_ListChanged"
 #define Account_PropertiesChanged				@"Account_PropertiesChanged"
 #define Account_StatusChanged					@"Account_StatusChanged"
-#define Account_IdleStatusChanged					@"Account_IdleStatusChanged"
+#define Account_IdleStatusChanged				@"Account_IdleStatusChanged"
+#define Contact_AttributesChanged				@"Contact_AttributesChanged"
+#define Contact_StatusChanged					@"Contact_StatusChanged"
 #define Contact_ObjectChanged					@"Contact_ObjectChanged"
-#define Contact_ListChanged						@"Contact_ListChanged"
+#define Contact_ListChanged					@"Contact_ListChanged"
+
+
 #define Interface_ContactSelectionChanged		@"Interface_ContactSelectionChanged"
 // Interface_ContactDefaultAction ... make double click generic?
 #define Interface_InitiateMessage				@"Interface_InitiateMessage"
@@ -94,7 +104,7 @@ typedef enum {
 
 // Public core controller protocols ------------------------------------------------------------
 @protocol AIHandleObserver //notified of changes
-    - (BOOL)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys;
+    - (NSArray *)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys;
 @end
 
 @protocol AIHandleLeftView //Draws to the left of a handle
@@ -146,6 +156,12 @@ typedef enum {
 @protocol AIAccountViewController <NSObject>
 - (NSView *)view;
 - (void)saveChanges;
+@end
+
+@protocol AIContactSortController <NSObject>
+- (void)sortContactObjects:(NSMutableArray *)inObjects;
+- (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys;
+- (BOOL)shouldSortForModifiedAttributeKeys:(NSArray *)inModifiedKeys;
 @end
 
 
@@ -211,6 +227,7 @@ typedef enum {
     AIContactGroup		*strangerGroup;
     NSNotificationCenter	*contactNotificationCenter;
     NSMutableArray		*handleObserverArray;
+    NSMutableArray		*sortControllerArray;
     int				delayedUpdating;
 
     AIPreferenceCategory	*contactInfoCategory;
@@ -233,8 +250,12 @@ typedef enum {
 - (AIContactHandle *)handleWithService:(AIServiceType *)inService UID:(NSString *)inUID forAccount:(AIAccount *)inAccount;
 - (NSMutableArray *)allContactsInGroup:(AIContactGroup *)inGroup subgroups:(BOOL)subGroups ownedBy:(AIAccount *)inAccount;
 
+- (void)objectAttributesChanged:(AIContactObject *)inObject modifiedKeys:(NSArray *)inModifiedKeys;
 - (void)handleStatusChanged:(AIContactHandle *)inHandle modifiedStatusKeys:(NSArray *)InModifiedKeys;
 - (void)registerHandleObserver:(id)inObserver;
+
+- (void)registerContactSortController:(id <AIContactSortController>)inController;
+- (void)sortContactGroup:(AIContactGroup *)inGroup mode:(AISortMode)sortMode;
 
 - (void)showInfoForContact:(AIContactHandle *)inContact;
 - (void)addContactInfoView:(AIPreferenceViewController *)inView;

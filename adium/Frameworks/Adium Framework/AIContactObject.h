@@ -30,7 +30,6 @@
 
 - (id)initWithUID:(NSString *)inUID;
 - (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey;
-- (NSComparisonResult)compare:(AIContactObject *)object;
 - (NSString *)displayName;
 - (AIContactGroup *)containingGroup;
 - (void)setContainingGroup:(AIContactGroup *)inGroup;

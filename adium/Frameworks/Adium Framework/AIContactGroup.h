@@ -17,6 +17,7 @@
 #import "AIContactObject.h"
 
 @class AIAccount;
+@protocol AIContactSortController;
 
 @interface AIContactGroup : AIContactObject {
     NSMutableArray    	*contactArray;		//Manual ordered array of contents
@@ -31,8 +32,8 @@
 - (NSEnumerator *)objectEnumerator;
 - (unsigned)sortedCount;
 - (id)sortedObjectAtIndex:(unsigned)index;
-- (void)sortGroupAndSubGroups:(BOOL)subGroups;
 - (int)contentsBelongToAccount:(AIAccount *)inAccount;
+- (void)sortGroupAndSubGroups:(BOOL)subGroups sortController:(id <AIContactSortController>)sortController;
 
 //Semi-Private
 - (void)addObject:(AIContactObject *)inObject;

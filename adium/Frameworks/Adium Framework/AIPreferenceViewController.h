@@ -44,5 +44,6 @@
 - (NSString *)categoryName;
 - (int)desiredHeight;
 - (NSComparisonResult)compare:(AIPreferenceViewController *)inView;
+- (void)configureForObject:(id)inObject;
 
 @end
