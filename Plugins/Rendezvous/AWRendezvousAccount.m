@@ -113,6 +113,7 @@
     AWEzvContact	*contact;
 	AIListContact	*listContact;
 	
+	[[adium contactController] delayListObjectNotifications];
     while (contact = [enumerator nextObject]) {
 		listContact = [[adium contactController] existingContactWithService:service
 																	account:self
@@ -120,7 +121,8 @@
 		[listContact setRemoteGroupName:nil];
     }
     [libezvContacts removeAllObjects];
-    
+   	[[adium contactController] endListObjectNotificationsDelay];
+ 
 	//We are now offline
     [self setStatusObject:nil forKey:@"Disconnecting" notify:NO];
     [self setStatusObject:nil forKey:@"Connecting" notify:NO];
