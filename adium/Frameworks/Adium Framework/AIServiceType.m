@@ -53,10 +53,10 @@
 }
 
 //Compare this service type to another
-- (NSComparisonResult)compare:(AIServiceType *)inService
+/*- (NSComparisonResult)compare:(AIServiceType *)inService
 {
     return([identifier compare:[inService identifier]]);
-}
+}*/
 
 //Compare our UID (The passed handle shuold be of this service type!) and service to another handle
 - (NSComparisonResult)compareUID:(NSString *)inUID toHandle:(AIContactHandle *)inHandle
@@ -70,7 +70,7 @@
     }
 
     if(result == 0){ //If they match, double check to ensure the service matches this one
-        result = [self compare:[inHandle service]];
+        result = [identifier compare:[inHandle serviceID]];
     }
 
     return(result);

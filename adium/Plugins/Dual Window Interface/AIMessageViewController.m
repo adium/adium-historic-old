@@ -348,7 +348,7 @@
     while((anAccount = [enumerator nextObject])){
 
         //Accounts only show up in the menu if they're the correct handle type.
-        if(!handle || [[handle service] compare:[[anAccount service] handleServiceType]] == 0){
+        if(!handle || [[handle serviceID] compare:[[[anAccount service] handleServiceType] description]] == 0){
             NSMenuItem	*menuItem;
 
             menuItem = [[[NSMenuItem alloc] initWithTitle:[anAccount accountDescription] target:nil action:nil keyEquivalent:@""] autorelease];

@@ -26,12 +26,18 @@
 
 #define CONTACT_LIST_GROUP_NAME		@"Contact List"		//The name of the main contact list group
 #define STRANGER_GROUP_NAME		@"__Strangers"		//The name of the hidden stranger group
+#define KEY_CONTACT_LIST 		@"ContactList"		//Contact list key
+#define GROUP_CONTACT_LIST		@"Contact List"		//Contact list preference group
 
 @interface AIContactController (PRIVATE)
 - (AIContactHandle *)handleInGroup:(AIContactGroup *)inGroup withService:(AIServiceType *)service UID:(NSString *)UID;
-- (void)updateListForObject:(AIContactObject *)inObject;
+- (void)updateListForObject:(AIContactObject *)inObject saveChanges:(BOOL)saveChanges;
 - (AIContactGroup *)groupInGroup:(AIContactGroup *)inGroup withName:(NSString *)inName;
 - (void)delayedUpdateTimer:(NSTimer *)inTimer;
+- (void)saveContactList;
+- (AIContactGroup *)loadContactList;
+- (AIContactGroup *)createGroupFromDict:(NSDictionary *)groupDict;
+- (NSDictionary *)saveDictForGroup:(AIContactGroup *)inGroup;
 @end
 
 @implementation AIContactController
@@ -39,8 +45,16 @@
 //init
 - (void)initController
 {
-    contactList = [[AIContactGroup contactGroupWithName:CONTACT_LIST_GROUP_NAME] retain];
+    //Load the contact list
+    contactList = [[self loadContactList] retain];
+    [self updateListForObject:contactList saveChanges:NO];
+
+    //Create a dynamic strangers group
     strangerGroup = [self createGroupNamed:STRANGER_GROUP_NAME inGroup:contactList];
+    [[strangerGroup displayArrayForKey:@"Dynamic"] addObject:[NSNumber numberWithBool:YES] withOwner:self];
+    [self updateListForObject:strangerGroup saveChanges:NO];
+
+    //
     handleObserverArray = [[NSMutableArray alloc] init];
     delayedUpdating = 0;
     
@@ -116,7 +130,7 @@
     }
 
     //Re-order and update the list
-    [self updateListForObject:inObject];
+    [self updateListForObject:inObject saveChanges:NO];
 }
 
 //Remove an account from an existing handle/cluster
@@ -150,7 +164,7 @@
     }
 
     //Re-order and update the list
-    [self updateListForObject:inObject];
+    [self updateListForObject:inObject saveChanges:NO];
 }
 
 // Groups --------------------------------------------------------------------------------
@@ -167,7 +181,7 @@
     
     //Re-order and update the list
     [newGroup sortGroupAndSubGroups:NO]; //update the group
-    [self updateListForObject:newGroup]; //update the list
+    [self updateListForObject:newGroup saveChanges:YES]; //update the list
     
     return(newGroup);
 }
@@ -200,7 +214,7 @@
     [[inGroup containingGroup] removeObject:inGroup];
     
     //Re-order and update the list
-    [self updateListForObject:containingGroup];
+    [self updateListForObject:containingGroup saveChanges:YES];
 }
 
 //rename a group
@@ -225,7 +239,7 @@
     [inGroup setName:newName];
     
     //Re-order and update the list
-    [self updateListForObject:inGroup];
+    [self updateListForObject:inGroup saveChanges:YES];
 }
 
 // Handles --------------------------------------------------------------------------------
@@ -254,7 +268,7 @@
     [containingGroup removeObject:inHandle];
     
     //Re-order and update the list
-    [self updateListForObject:containingGroup];
+    [self updateListForObject:containingGroup saveChanges:YES];
 }
 
 //Rename a handle
@@ -264,7 +278,13 @@
     AIAccount		*account;
 
     //Filter the UID (force lowercase, and/or remove invalid characters)
-    newName = [[inHandle service] filterUID:newName];
+    //We let each owner account's service have a chance at filtering
+    enumerator = [[[owner accountController] accountArray] objectEnumerator];
+    while((account = [enumerator nextObject])){
+        if([inHandle belongsToAccount:account]){
+            newName = [[[account service] handleServiceType] filterUID:newName];
+        }
+    }
 
     //notify the account(s) that the handle will been renamed
     enumerator = [[[owner accountController] accountArray] objectEnumerator];
@@ -284,7 +304,7 @@
     [inHandle setUID:newName];
     
     //Re-order and update the list
-    [self updateListForObject:inHandle];
+    [self updateListForObject:inHandle saveChanges:YES];
 }
 
 //Move a handle
@@ -311,7 +331,7 @@
     [inHandle release];
     
     //Re-order and update the list
-    [self updateListForObject:inHandle];    
+    [self updateListForObject:inHandle saveChanges:YES];    
 }
     
  
@@ -361,7 +381,7 @@
         inUID = [inService filterUID:inUID];
         
         //Create the handle
-        handle = [AIContactHandle handleWithService:inService UID:inUID];
+        handle = [AIContactHandle handleWithServiceID:[inService identifier] UID:inUID];
         [inGroup addObject:handle];
 
     }else{
@@ -382,7 +402,7 @@
     if(inAccount && ![handle belongsToAccount:inAccount]){
         [handle registerOwner:inAccount];
     }
-    [self updateListForObject:handle];
+    [self updateListForObject:handle saveChanges:YES];
     [self handleStatusChanged:handle modifiedStatusKeys:nil]; //let all observers touch this new handle
     
     //Return the handle
@@ -408,7 +428,7 @@
     }
 
     if(handleAltered){ //If the handle was modified
-        [self updateListForObject:inHandle];
+        [self updateListForObject:inHandle saveChanges:NO];
     }        
 }
 
@@ -477,7 +497,7 @@
 
 // Internal --------------------------------------------------------------------------------
 //Call after making changes to an object on the contact list
-- (void)updateListForObject:(AIContactObject *)inObject
+- (void)updateListForObject:(AIContactObject *)inObject saveChanges:(BOOL)saveChanges
 {
     AIContactObject	*object = inObject;
 
@@ -490,6 +510,12 @@
 
     //Post an 'object' changed message, signaling that the object's status has changed.
     [[self contactNotificationCenter] postNotificationName:Contact_ObjectChanged object:inObject];
+
+    //Save the changes 
+    if(saveChanges && !delayedUpdating){ //Skip saving when updates are delayed
+        [self saveContactList];
+    }
+
 }
 
 //Returns the handle with the specified Service and UID in the group (or any subgroups)
@@ -554,8 +580,101 @@
     delayedUpdating--;
     if(delayedUpdating == 0){
         [inTimer invalidate]; //end the delay
+        [self saveContactList]; //Save the contact list (since saving has been skipped while delayed)
     }
 }
+
+//Save the contact list to disk
+- (void)saveContactList
+{
+    NSDictionary	*saveDict = [self saveDictForGroup:contactList];
+
+    [[owner preferenceController] setPreference:saveDict forKey:KEY_CONTACT_LIST group:GROUP_CONTACT_LIST];
+}
+
+//Load the contact list from disk
+- (AIContactGroup *)loadContactList
+{
+    NSDictionary	*saveDict = [[[owner preferenceController] preferencesForGroup:GROUP_CONTACT_LIST] objectForKey:KEY_CONTACT_LIST];
+    
+    if(!saveDict){
+        return([AIContactGroup contactGroupWithName:CONTACT_LIST_GROUP_NAME]);
+    }else{
+        return([self createGroupFromDict:saveDict]);
+    }
+}
+
+//Create a group from the passed dictionary
+- (AIContactGroup *)createGroupFromDict:(NSDictionary *)groupDict
+{
+    AIContactGroup	*group;
+    NSString		*groupName;
+    NSEnumerator	*enumerator;
+    NSArray		*contentsArray;
+    NSDictionary	*objectDict;
+
+    //Create and config the group
+    groupName = [groupDict objectForKey:@"Name"];
+    group = [AIContactGroup contactGroupWithName:groupName];
+
+    //Create it's contents
+    contentsArray = [groupDict objectForKey:@"Contents"];
+    enumerator = [contentsArray objectEnumerator];
+    while((objectDict = [enumerator nextObject])){
+        NSString *type = [objectDict objectForKey:@"Type"];
+
+        if([type compare:@"Contact"] == 0){
+            NSString 	*UID = [objectDict objectForKey:@"UID"];
+            NSString 	*service = [objectDict objectForKey:@"Service"];
+
+            [group addObject:[AIContactHandle handleWithServiceID:service UID:UID]];
+            
+        }else if([type compare:@"Group"] == 0){
+            [group addObject:[self createGroupFromDict:objectDict]];
+
+        }
+        
+    }
+
+    return(group);
+}
+
+//Create a dictionary from the passed group
+- (NSDictionary *)saveDictForGroup:(AIContactGroup *)inGroup
+{
+    NSMutableDictionary	*saveDict = [[NSMutableDictionary alloc] init];
+    NSMutableArray	*objectArray = [[NSMutableArray alloc] init];
+    NSEnumerator	*enumerator;
+    AIContactObject	*object;
+
+    //Add the group keys
+    [saveDict setObject:@"Group" forKey:@"Type"];
+    [saveDict setObject:[inGroup displayName] forKey:@"Name"];
+
+    //Add all contained objects
+    enumerator = [inGroup objectEnumerator];
+    while((object = [enumerator nextObject])){
+        if(![[object displayArrayForKey:@"Dynamic"] containsAnyIntegerValueOf:1]){ //Don't save dynamic objects
+            if([object isKindOfClass:[AIContactHandle class]]){ //Handle
+                NSMutableDictionary	*objectDict = [[NSMutableDictionary alloc] init];
+    
+                [objectDict setObject:@"Contact" forKey:@"Type"];
+                [objectDict setObject:[(AIContactHandle *)object UID] forKey:@"UID"];
+                [objectDict setObject:[(AIContactHandle *)object serviceID] forKey:@"Service"];
+    
+                [objectArray addObject:[objectDict autorelease]];
+    
+            }else{ //Group
+                [objectArray addObject:[self saveDictForGroup:(AIContactGroup *)object]]; //Add the group and it's contents
+    
+            }
+        }
+    }
+    [saveDict setObject:objectArray forKey:@"Contents"];
+
+    return([saveDict autorelease]);
+}
+
 
 @end
 

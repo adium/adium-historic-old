@@ -356,10 +356,10 @@
 				F570A5B803704C6101A8010A,
 				F570A60A03704E9701A8010A,
 				F5B9714A0379874801A8010A,
-				F55B415F03AB8B5601A8010A,
 				F55B416303AB8BED01A8010A,
 				F55B416503AB8BF501A8010A,
 				F55B416703AB8BFC01A8010A,
+				4BC3133503BCD2FA00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -711,6 +711,12 @@
 		};
 		4BBC8E4E03BA0DB900A8010A = {
 			fileRef = 4BBC8E4C03BA0DB900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BC3133503BCD2FA00A8010A = {
+			fileRef = F55B415D03AB8B5601A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -3648,12 +3654,6 @@
 			settings = {
 			};
 		};
-		F55B415F03AB8B5601A8010A = {
-			fileRef = F55B415D03AB8B5601A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		F55B416003AB8BE301A8010A = {
 			isa = PBXFileReference;
 			name = settings.tif;
@@ -4836,6 +4836,7 @@
 		F57938AB033E737001A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lineEnding = 0;
 			name = AIContactController.m;
 			path = Source/AIContactController.m;
 			refType = 4;

@@ -69,6 +69,11 @@
     return([contactArray objectAtIndex:index]);
 }
 
+- (NSEnumerator *)objectEnumerator
+{
+    return([contactArray objectEnumerator]);
+}
+
 //Returns the number of visible/sorted objects in this group
 - (unsigned)sortedCount
 {

@@ -229,7 +229,8 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
-    if([item isKindOfClass:[AIContactGroup class]]){
+    //Only allow expanding of non-dynamic groups    
+    if([item isKindOfClass:[AIContactGroup class]] && ![[item displayArrayForKey:@"Dynamic"] containsAnyIntegerValueOf:1]){
         return(YES);
     }else{
         return(NO);
@@ -289,7 +290,8 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         if([item isKindOfClass:[AIContactGroup class]]){
             [cell setImage:folderImage];
         }else{
-            [cell setImage: [[(AIContactHandle *)item service] image]];
+            [cell setImage:nil];
+// temporarily off [cell setImage: [[(AIContactHandle *)item service] image]];
         }
     }
 }
