@@ -182,26 +182,14 @@
 //Build the menu of contact service types
 - (void)buildContactTypeMenu
 {
-	NSEnumerator	*enumerator;
-
-	//Empty the menu
-	[popUp_contactType removeAllItems];
+	[popUp_contactType setMenu:[[adium accountController] menuOfServicesWithTarget:self 
+																activeServicesOnly:YES
+																   longDescription:NO]];
 	
-	NSMenu				*menu = [popUp_contactType menu];
-	
-	//Add an item for each service
-	enumerator = [[[adium accountController] activeServices] objectEnumerator];
-	while(service = [enumerator nextObject]){
-		NSMenuItem  *menuItem = [[[NSMenuItem alloc] initWithTitle:[service shortDescription]
-															target:self
-															action:@selector(selectServiceType:)
-													 keyEquivalent:@""] autorelease];
-		[menuItem setRepresentedObject:service];
-//		[menuItem setImage:[service menuImage]];
-		[menu addItem:menuItem];
-	}
+	//- (BOOL)validateMenuItem:(NSMenuItem *)menuItem below will automatically manage the enabling/disabling 
+	//when we call update.
 	[[popUp_contactType menu] update];
-
+	
 	[self selectFirstValidServiceType];
 }
 
@@ -219,6 +207,20 @@
 	}
 	
 	[self selectServiceType:nil];
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+	NSEnumerator	*enumerator;
+	AIAccount		*account;
+	
+	enumerator = [[[adium accountController] accountsWithServiceClassOfService:[menuItem representedObject]] objectEnumerator];
+	while(account = [enumerator nextObject]){
+		if([account contactListEditable]){
+			return YES;
+		}
+	}
+	return NO;
 }
 
 //Service type selected from the menu
@@ -443,7 +445,7 @@
 	}
 }
 
-//I don't want the table to display it's selection.
+//I don't want the table to display its selection.
 //Returning NO from 'shouldSelectRow' would work, but if we do that
 //the checkbox cells stop working.  The best solution I've come up with
 //so far is to just force a deselect here :( .
@@ -452,20 +454,6 @@
 }
 - (void)tableViewSelectionDidChange:(NSNotification *)notification{
 	[tableView_accounts deselectAll:nil];
-}
-
-- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
-{
-	NSEnumerator	*enumerator;
-	AIAccount		*account;
-	
-	enumerator = [[[adium accountController] accountsWithServiceClassOfService:[menuItem representedObject]] objectEnumerator];
-	while(account = [enumerator nextObject]){
-		if([account contactListEditable]){
-			return YES;
-		}
-	}
-	return NO;
 }
 
 - (void)selectGroup:(id)sender
