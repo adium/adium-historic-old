@@ -74,6 +74,6 @@ typedef enum {
 - (void)setInvisible:(BOOL)invisible;
 
 - (AIStateMutabilityType)mutabilityType;
-- (void)setMutabilityTpye:(AIStateMutabilityType)mutabilityType;
+- (void)setMutabilityType:(AIStateMutabilityType)mutabilityType;
 
 @end
