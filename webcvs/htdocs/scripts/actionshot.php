@@ -27,7 +27,7 @@ function RandomActionShoot()
     list($picWidth, $picHeight, $type, $attr) = getimagesize($picturesDir."/".$picture);
     list($thumbWidth, $thumbHeight, $type, $attr) = getimagesize($thumbsDir."/".$picture);
     
-    return "<a href=\"$picturesDir/$picture\" onclick=\"window.open('$picture','popup','width=$picWidth,height=$picHeight,scrollbars=yes,toolbar=no,status=yes'); return false\"><img src=\"$thumbsDir/$picture\" width=\"$thumbWidth\" height=\"$thumbHeight\" alt=\"actionshot\" /></a>";
+    return "<a href=\"$picturesDir/$picture\" onclick=\"window.open('$picturesDir/$picture','popup','width=$picWidth,height=$picHeight,scrollbars=yes,toolbar=no,status=yes'); return false\"><img src=\"$thumbsDir/$picture\" width=\"$thumbWidth\" height=\"$thumbHeight\" alt=\"actionshot\" /></a>";
 }
 
 ?>
