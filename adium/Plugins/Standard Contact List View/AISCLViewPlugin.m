@@ -21,7 +21,11 @@
 #import "ESCLViewLabelsAdvancedPrefs.h"
 #import "AISCLViewController.h"
 #import "AIStandardListWindowController.h"
+#import "AIBorderlessListWindowController.h"
 #import "AIContactListAdvancedPrefs.h"
+
+
+#define BORDERLESS_CONTACT_LIST	NO
 
 @interface AISCLViewPlugin (PRIVATE)
 @end
@@ -57,7 +61,11 @@
 - (void)showContactListAndBringToFront:(BOOL)bringToFront
 {
     if(!contactListWindowController){ //Load the window
-        contactListWindowController = [[AIStandardListWindowController listWindowController] retain];
+		if(BORDERLESS_CONTACT_LIST){
+			contactListWindowController = [[AIBorderlessListWindowController listWindowController] retain];
+		}else{
+			contactListWindowController = [[AIStandardListWindowController listWindowController] retain];
+		}
     }
     [contactListWindowController makeActive:nil];
 
