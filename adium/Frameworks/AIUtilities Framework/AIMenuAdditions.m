@@ -69,6 +69,17 @@
     return(self);
 }
 
+- (id)initWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode keyMask:(unsigned int)keyMask
+{
+    if (!aString) aString = @"";
+    [self initWithTitle:aString action:aSelector keyEquivalent:charCode];
+
+    [self setTarget:target];
+    [self setKeyEquivalentModifierMask:keyMask];
+    
+    return self;
+}
+
 extern MenuRef _NSGetCarbonMenu(NSMenu *);
 
 // Must be called after NSApp delegate's applicationDidFinishLaunching.
