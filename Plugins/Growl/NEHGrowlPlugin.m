@@ -202,4 +202,9 @@
 {
     return nil;
 }
+
+- (BOOL)allowMultipleActionsWithID:(NSString *)actionID
+{
+	return NO;
+}
 @end
