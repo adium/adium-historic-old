@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------------------
 - Emoticon menu inserts the wrong emoticons if some are disabled
 - 'Combine Consecutive Messages', when disabled, causes messages to nest within eathocher
+- Links with custom titles are not persistent under Jaguar
 
 //------------------------------------------------------------------------------------
 // Bugs - Adium
@@ -32,11 +33,7 @@
 
 - Tooltips are not appearing for links in profile text.
 
-- Links with custom titles are not persistent under Jaguar.
-	If a link is added to a text field intended to keep persistent data (profiles, for example)
-	the link attributes will be stripped from the text when the view is closed.
-	Also (unrelated), links do not have the expected coloration when inserted into
-	a text view in Jaguar.  They do not appear as blue and underlined.
+- Links do not appear as blue and underlined in Jaguar TextViews, including the new info pane.
 
 - Dock bouncing
 	If a "bounce until Adium becomes active" event occurs followed by a "bounce once" event,
