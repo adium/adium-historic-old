@@ -192,7 +192,7 @@
     stepTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/TIMES_PER_SECOND
         target:self
         selector:@selector(update:)
-        userInfo:nil/*[[NSMutableDictionary alloc] initWithObjectsAndKeys:]*/
+        userInfo:[[NSMutableString alloc] initWithString:@""]
         repeats:YES];
 }
 
@@ -271,13 +271,11 @@
 						socketWithHost:[hostAndPort objectAtIndex:0]
 						port:[[hostAndPort objectAtIndex:1] intValue]]
 					retain];
-				connectionPhase += 2;	// The only reason I'm skipping a phase number is b/c
-										// I had an extra phase number in earlier.  Didn't want
-										// to renumber.
+				connectionPhase ++;
 			}
 			break;
 			
-		case 9:
+		case 8:
 			if ([socket readyForSending])
 			{
 				[socket sendData:[@"VER 0 MSNP7 MSNP6 MSNP5 MSNP4 CVR0\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
@@ -286,7 +284,7 @@
 			}
 			break;
 		
-		case 10:
+		case 9:
 			if ([socket readyForReceiving])
 			{
 				[socket getDataToNewline:&inData];
@@ -296,7 +294,7 @@
 			}
 			break;
 			
-		case 11:
+		case 10:
 			if ([socket readyForSending])
 			{
 				[socket sendData:[@"INF 1\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
@@ -305,7 +303,7 @@
 			}
 			break;
 		
-		case 12:
+		case 11:
 			if ([socket readyForReceiving])
 			{
 				[socket getDataToNewline:&inData];
@@ -315,7 +313,7 @@
 			}
 			break;
 			
-		case 13:
+		case 12:
 			if ([socket readyForSending])
 			{
 				[socket sendData:[[NSString stringWithFormat:@"USR 2 MD5 I %s\r\n",[screenName cString]] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -324,7 +322,7 @@
 			}
 			break;
 		
-		case 14:
+		case 13:
 			if ([socket readyForReceiving])
 			{
 				[socket getDataToNewline:&inData];
@@ -339,30 +337,32 @@
 				NSData *mdData = [NSData dataWithBytes:(const int *)MD5([tempData bytes],
 						[tempData length], NULL) length:16];
 					
-				temp = [mdData description];
+				
+                                NSString *temp = [mdData description];
 				temp = [temp substringWithRange:NSMakeRange(1,[temp length]-2)];
 				temp = [temp stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-				temp = [[[temp componentsSeparatedByString:@" "] componentsJoinedByString:@""] retain];
+				temp = [[temp componentsSeparatedByString:@" "] componentsJoinedByString:@""];
 				
 				NSLog (@"Password encrypted");
 				
+                                [[timer userInfo] setString:temp];
 				connectionPhase ++;
 			}
 			break;
 			
-		case 15:
+		case 14:
 			if ([socket readyForSending])
 			{
-				NSLog (@"Password being sent");
+				NSString *temp = [timer userInfo];
+                                NSLog (@"Password being sent");
 				[socket sendData:[[NSString stringWithFormat:@"USR 3 MD5 S %@\r\n", temp] dataUsingEncoding:NSUTF8StringEncoding]];
 				NSLog(@">>> %@",[NSString stringWithFormat:@"USR 3 MD5 S %@", temp]);
-				[temp release];
-				temp = nil;
+				[[timer userInfo] setString:@""];
 				connectionPhase ++;
 			}
 			break;
 		
-		case 16:
+		case 15:
 			if ([socket readyForReceiving])
 			{
 				[socket getDataToNewline:&inData];
@@ -373,7 +373,7 @@
 			break;
 			
 		// Contact List Update	//
-		case 17:
+		case 16:
 			if ([socket readyForReceiving])
 			{
 				[socket getDataToNewline:&inData];
@@ -384,24 +384,23 @@
 				if([[message objectAtIndex:0] isEqual:@"MSG"]) //this is some kind of message from the server
 				{
 					NSLog(@"%d",[[message objectAtIndex:3] intValue]);
-					temp = [[message objectAtIndex:3] retain];
+					[[timer userInfo] setString:[message objectAtIndex:3]];
 					connectionPhase++;
 				}
 			}
 			break;
 		
-		case 18:
+		case 17:
 			if ([socket readyForReceiving])
 			{
-				[socket getData:&inData ofLength:[temp intValue]];
+				[socket getData:&inData ofLength:[[timer userInfo] intValue]];
 				NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] length:[inData length]]);
-				[temp release];
-				temp = nil;
+				[[timer userInfo] setString:@""];
 				connectionPhase++;
 			}
 			break;
 		
-		case 19:
+		case 18:
 			//now we send out our SYN, only the first time, though.
 			if ([socket readyForSending])
 			{
@@ -411,7 +410,7 @@
 			}
 			break;
 			
-		case 20:
+		case 19:
 		
 			if ([socket readyForReceiving])
 			{
@@ -453,7 +452,7 @@
 			}
 			break;
 			
-		case 21:
+		case 20:
 			NSLog (@"MSN Last phase!");
 			connectionPhase ++;
 			break;
@@ -477,16 +476,16 @@
 	
 	switch (status)
 	{
-	case STATUS_ONLINE:
-		break;
-	case STATUS_OFFLINE:
-	case STATUS_NA:
-		break;
-	case STATUS_CONNECTING:
-		[self connect:timer];
-		break;
-	case STATUS_DISCONNECTING:
-		break;
+            case STATUS_ONLINE:
+                break;
+            case STATUS_OFFLINE:
+            case STATUS_NA:
+                break;
+            case STATUS_CONNECTING:
+                [self connect:timer];
+                break;
+            case STATUS_DISCONNECTING:
+                break;
 	}
 }
 
