@@ -8,7 +8,7 @@
 
 @interface DCJoinChatWindowController : AIWindowController {	
     IBOutlet		NSPopUpButton   *popUp_service;				//Account selector
-    IBOutlet		NSTabView		*view_customView;			//View containing service-specific controls
+    IBOutlet		NSView			*view_customView;			//View containing service-specific controls
 	
 	IBOutlet		NSTextField		*textField_accountLabel;
 	IBOutlet		NSButton		*button_joinChat;
