@@ -1737,17 +1737,42 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		
 		if ([group isKindOfClass:[AIListGroup class]]){
 			if([listContact isKindOfClass:[AIMetaContact class]]){
-				//This is a meta contact, move the objects within it
-//#warning No no no.  Bad contact controller.
-				NSEnumerator	*metaEnumerator = [[(AIMetaContact *)listContact containedObjects] objectEnumerator];
-				AIListObject	*metaObject;
+				//This is a meta contact, move the objects within it.  listContacts will give us a flat array of AIListContacts.
+				NSEnumerator	*metaEnumerator;
+				AIListContact	*aContainedContact;
+				AIListObject	*listContactContainingObject;
 				
-				while(metaObject = [metaEnumerator nextObject]){
-					[self _moveObject:metaObject toGroup:(AIListGroup *)group];
+				metaEnumerator = [[(AIMetaContact *)listContact listContacts] objectEnumerator];
+				while(aContainedContact = [metaEnumerator nextObject]){
+					NSEnumerator	*allContactsEnumerator;
+					AIListContact	*specificContact;
+					
+					//Leave no contact behind.
+					allContactsEnumerator = [[self allContactsWithService:[aContainedContact service]
+																	  UID:[aContainedContact UID]] objectEnumerator];
+					while (specificContact = [allContactsEnumerator nextObject]){
+						[self _moveObject:specificContact toGroup:(AIListGroup *)group];
+					}
 				}
 				
-				//Move the metaContact itself
-				[listContact setContainingObject:group];
+				//Protect with a retain while we are removing and adding the contact to our arrays
+				[listContact retain];
+				
+				//Remove this object from any local groups we have it in currently
+				listContactContainingObject = [listContact containingObject];
+				if(listContactContainingObject && [listContactContainingObject isKindOfClass:[AIListGroup class]]){
+					//Remove the object
+					[(AIListGroup *)listContactContainingObject removeObject:listContact];
+					
+					[self _listChangedGroup:(AIListGroup *)listContactContainingObject object:listContact];
+				}
+
+				//Add this contact to the group
+				[(AIListGroup *)group addObject:listContact];
+				[self _listChangedGroup:(AIListGroup *)group object:listContact];
+				
+				//Cleanup
+				[listContact release];
 				
 			}else if([listContact isKindOfClass:[AIListContact class]]){
 				//Move the object 
@@ -1764,7 +1789,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Move an object to another group
 - (void)_moveObject:(AIListObject *)listObject toGroup:(AIListGroup *)group
 {
-	[[(AIListContact *)listObject account] moveListObjects:[NSArray arrayWithObject:listObject] toGroup:group];
+	AIAccount	*account = [(AIListContact *)listObject account];
+	if ([account online]){
+		[account moveListObjects:[NSArray arrayWithObject:listObject] toGroup:group];
+	}
 }
 
 //Rename a group
