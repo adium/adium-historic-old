@@ -50,9 +50,8 @@
     //[[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxiliary];
 
 	//Watch for pref changes
-	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-	[self preferencesChanged:nil];
-
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SQL_LOGGING];
+	
 	if([username isEqualToString:@""] ) {
 		username = nil;
 	}
@@ -73,30 +72,28 @@
     }
 }
 
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [PREF_GROUP_SQL_LOGGING isEqualToString:[[notification userInfo] objectForKey:@"Group"]]){
-        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SQL_LOGGING];
-		bool			newLogValue;
+	bool			newLogValue;
+	
+	newLogValue = [[prefDict objectForKey:KEY_SQL_LOGGER_ENABLE] boolValue];
+	username = [prefDict objectForKey:KEY_SQL_USERNAME];
+	url = [prefDict objectForKey:KEY_SQL_URL];
+	port = [prefDict objectForKey:KEY_SQL_PORT];
+	database = [prefDict objectForKey:KEY_SQL_DATABASE];
+	password = [prefDict objectForKey:KEY_SQL_PASSWORD];
+	
+	if(newLogValue != observingContent){
+		observingContent = newLogValue;
 		
-		newLogValue = [[preferenceDict objectForKey:KEY_SQL_LOGGER_ENABLE] boolValue];
-		username = [preferenceDict objectForKey:KEY_SQL_USERNAME];
-		url = [preferenceDict objectForKey:KEY_SQL_URL];
-		port = [preferenceDict objectForKey:KEY_SQL_PORT];
-		database = [preferenceDict objectForKey:KEY_SQL_DATABASE];
-		password = [preferenceDict objectForKey:KEY_SQL_PASSWORD];
-		
-		if(newLogValue != observingContent){
-			observingContent = newLogValue;
-
-			if(!observingContent){ //Stop Logging
-				[[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
-
-			}else{ //Start Logging
-				[[adium notificationCenter] addObserver:self selector:@selector(adiumSentOrReceivedContent:) name:Content_ContentObjectAdded object:nil];		
-			}
+		if(!observingContent){ //Stop Logging
+			[[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
+			
+		}else{ //Start Logging
+			[[adium notificationCenter] addObserver:self selector:@selector(adiumSentOrReceivedContent:) name:Content_ContentObjectAdded object:nil];		
 		}
-    }
+	}
 }
 
 - (void)uninstallPlugin {
