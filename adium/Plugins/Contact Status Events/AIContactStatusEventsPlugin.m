@@ -130,8 +130,10 @@
 //
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)modifiedKeys silent:(BOOL)silent
 {
-	if((![inObject isKindOfClass:[AIAccount class]]) &&							//Ignore accounts
-	   (![inObject isKindOfClass:[AIMetaContact class]])){	//Ignore meta contacts since their children will be handled
+	//Ignore accounts.
+	//Ignore meta contact children since the actual meta contact provides a better event.
+	if((![inObject isKindOfClass:[AIAccount class]]) &&		//Ignore accounts
+	   (![[inObject containedObject] isKindOfClass:[AIMetaContact class]])){	
 		
 		if([modifiedKeys containsObject:@"Online"]){
 			if([self updateCache:onlineCache
