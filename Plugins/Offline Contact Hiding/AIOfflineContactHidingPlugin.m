@@ -20,6 +20,7 @@
 #define HIDE_OFFLINE_MENU_TITLE				AILocalizedString(@"Hide Offline Contacts",nil)
 #define KEY_SHOW_OFFLINE_CONTACTS			@"Show Offline Contacts"
 #define OFFLINE_CONTACTS_IDENTIFER			@"OfflineContacts"
+#define	KEY_USE_CONTACT_LIST_GROUPS			@"Use Contact List Groups"
 
 @interface AIOfflineContactHidingPlugin (PRIVATE)
 - (void)configureOfflineContactHiding;
@@ -30,12 +31,10 @@
 
 //Install
 - (void)installPlugin
-{
-	//Configure the preferences first to have correct values for the following calls
-    [self configurePreferences];
-	
-	//Observe contact and preference changes
-    [[adium contactController] registerListObjectObserver:self];
+{	
+	//Register preference observer first so values will be correct for the following calls
+	[[adium preferenceController] registerPreferenceObserver:self
+													forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 	
 	//Show offline contacts menu item
     showOfflineMenuItem = [[NSMenuItem alloc] initWithTitle:(showOfflineContacts ?
@@ -57,7 +56,7 @@
 													itemContent:[NSImage imageNamed:@"offlineContacts" forClass:[self class]]
 														 action:@selector(toggleOfflineContactsMenu:)
 														   menu:nil];
-    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];	
 }
 
 //Uninstall
@@ -67,23 +66,36 @@
     [[adium contactController] unregisterListObjectObserver:self];
 }
 
-//Set up preferences initially
-- (void)configurePreferences
+/*
+ * @brief Preferences changed
+ */
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	showOfflineContacts = [[[adium preferenceController] preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
-																	group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
+	showOfflineContacts = [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue];
+	useContactListGroups = [[prefDict objectForKey:KEY_USE_CONTACT_LIST_GROUPS] boolValue];
+
+	if(firstTime){
+		//Observe contact and preference changes
+		[[adium contactController] registerListObjectObserver:self];
+	}else{
+		//Refresh visibility of all contacts
+		[[adium contactController] updateAllListObjectsForObserver:self];
+		
+		//Resort the entire list, forcing the visibility changes to hae an immediate effect (we return nil in the 
+		//updateListObject: method call, so the contact controller doesn't know we changed anything)
+		[[adium contactController] sortContactList];
+	}
 }
 
 //Toggle the display of offline contacts (call from menu)
 - (IBAction)toggleOfflineContactsMenu:(id)sender
 {
-	showOfflineContacts = !showOfflineContacts;
-	
 	//Store the preference
-	[[adium preferenceController] setPreference:[NSNumber numberWithBool:showOfflineContacts]
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:!showOfflineContacts]
 										 forKey:KEY_SHOW_OFFLINE_CONTACTS
 										  group:PREF_GROUP_CONTACT_LIST_DISPLAY];
-	
+
 	//Update the menu item's title
 	[self configureOfflineContactHiding];
 }
@@ -93,12 +105,6 @@
 {
 	//The menu item shows the opposite of the current state, since that what happens if you toggle it
 	[showOfflineMenuItem setTitle:(showOfflineContacts ? HIDE_OFFLINE_MENU_TITLE : SHOW_OFFLINE_MENU_TITLE)];
-
-	//Refresh visibility of all contacts
-	[[adium contactController] updateAllListObjectsForObserver:self];
-
-	//Resort the entire list, since we know the whole thing changed
-	[[adium contactController] sortContactList];	
 }
 
 //Update visibility of a list object
@@ -110,8 +116,8 @@
 	   [inModifiedKeys containsObject:@"VisibleObjectCount"]){
 
 		if([inObject isKindOfClass:[AIListContact class]]){
-			int		online = [inObject online];
-			int		justSignedOff = [inObject integerStatusObjectForKey:@"Signed Off"];
+			BOOL	online = [inObject online];
+			BOOL	justSignedOff = [inObject integerStatusObjectForKey:@"Signed Off"];
 
 			if([inObject isKindOfClass:[AIMetaContact class]]){
 				[inObject setVisible:((online) || 
@@ -123,9 +129,9 @@
 			}
 
 		}else if([inObject isKindOfClass:[AIListGroup class]]){
-			int visibleCount = [(AIListGroup *)inObject visibleCount];
 
-			[inObject setVisible:(showOfflineContacts || visibleCount > 0)];
+			[inObject setVisible:((useContactListGroups) &&
+								  (showOfflineContacts || [(AIListGroup *)inObject visibleCount] > 0))];
 		}
 	}
 	
