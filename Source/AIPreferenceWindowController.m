@@ -299,19 +299,11 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[[self window] makeFirstResponder:tabView_category];
 }
 
-/*!
-* @brief Configure tab view item labels
- *
- * Use the tab view item identifiers to set the (localized) labels for the tab view items.
- */
-- (void)_configreTabViewItemLabels
+- (NSDictionary *)identifierToLabelDict
 {
-	NSEnumerator	*enumerator = [[tabView_category tabViewItems] objectEnumerator];
-	NSTabViewItem	*tabViewItem;
-
-	static NSDictionary	*identifierToLabelDict = nil;
-	if(!identifierToLabelDict){
-		identifierToLabelDict = [[NSDictionary alloc] initWithObjectsAndKeys:
+	static NSDictionary	*_identifierToLabelDict = nil;
+	if(!_identifierToLabelDict){
+		_identifierToLabelDict = [[NSDictionary alloc] initWithObjectsAndKeys:
 			ACCOUNTS_TITLE,@"accounts",
 			AILocalizedString(@"General",nil),@"general",
 			AILocalizedString(@"Appearance",nil),@"appearance",
@@ -323,6 +315,20 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 			AILocalizedString(@"Loading",nil),@"loading",
 			nil];
 	}
+
+	return _identifierToLabelDict;
+}
+
+/*!
+* @brief Configure tab view item labels
+ *
+ * Use the tab view item identifiers to set the (localized) labels for the tab view items.
+ */
+- (void)_configreTabViewItemLabels
+{
+	NSEnumerator	*enumerator = [[tabView_category tabViewItems] objectEnumerator];
+	NSTabViewItem	*tabViewItem;
+	NSDictionary	*identifierToLabelDict = [self identifierToLabelDict];
 
 	while(tabViewItem = [enumerator nextObject]){
 		NSString	*localizedLabel;
@@ -381,6 +387,21 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 - (NSImage *)tabView:(NSTabView *)tabView imageForTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	return([NSImage imageNamed:[NSString stringWithFormat:PREFERENCE_ICON_FORMAT, [tabViewItem identifier]] forClass:[self class]]);
+}
+
+/*!
+ * @brief Returns the localized label for the tab view item
+ */
+- (NSString *)tabView:(NSTabView *)tabView labelForTabView:(NSTabViewItem *)tabViewItem
+{
+	if(tabView == tabView_category){
+		NSString	*identifier;
+		if(identifier = [tabViewItem identifier]){
+			return [[self identifierToLabelDict] objectForkey:identifier];
+		}
+	}
+	
+	return nil;
 }
 
 /*!
