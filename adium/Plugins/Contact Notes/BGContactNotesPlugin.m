@@ -46,9 +46,7 @@
     [textField_notes setDelegate:self];
     
     //Install our tooltip entry
-    // currently the tooltip works, but longer entries and just about anything
-    // can make the spacing/alignment/edges go a bit bitchy
-    //[[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:NO];
+    [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
     
     //Observe preferences changes
     [[adium notificationCenter] addObserver:self 
