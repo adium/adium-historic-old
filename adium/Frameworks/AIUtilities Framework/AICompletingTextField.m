@@ -48,7 +48,7 @@
 {
     stringSet = nil;
 	impliedCompletionDictionary = nil;
-    minLength = 3;
+    minLength = 1;
     oldUserLength = 0;
 
     return(self);
@@ -132,7 +132,7 @@
     length = [inString length];
     range = NSMakeRange(0, length);
 
-    if(length >= 3){
+    if(length >= minLength){
         //Check each auto-complete string for a match
         enumerator = [stringSet objectEnumerator];
         while((autoString = [enumerator nextObject])){
