@@ -82,8 +82,6 @@
 						   chatCreationInfo:chatCreationInfo];
 	
 	// Invite users to the chat
-	
-#warning Dave: do we need to strip spaces out of user names?
 	NSArray *usersArray = [[textField_inviteUsers stringValue] componentsSeparatedByString:@","];
 	
 	NSLog(@"#### users to invite: %@",usersArray);
@@ -108,7 +106,9 @@
 	int					i = [(NSNumber *)[userInfo objectForKey:@"i"] intValue];
 	int					count = [contactArray count];
 	
-	AIListContact *newContact = [[adium contactController] contactWithService:[[account service] identifier] accountID:[account uniqueObjectID] UID:[contactArray objectAtIndex:i]];
+	AIListContact *newContact = [[adium contactController] contactWithService:[[account service] identifier] 
+																	accountID:[account uniqueObjectID] 
+																		  UID:[[contactArray objectAtIndex:i] compactedString]];
 	NSLog(@"#### inviteUsers: (%d/%d) inviting %@",i,count,[contactArray objectAtIndex:i]);
 	//[chat inviteListContact:newContact withMessage:[textField_inviteMessage stringValue]];
 		

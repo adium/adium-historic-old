@@ -38,4 +38,15 @@ static BOOL didInitZephyr = NO;
 	gaim_account_set_string(account, "encoding", [encoding UTF8String]);
 }
 
+//No need for a password for Zephyr accounts
+- (BOOL)requiresPassword
+{
+	return NO;
+}
+
+- (const char *)customServerToCheckForReachability
+{
+	return "localhost";
+}
+
 @end
