@@ -147,23 +147,21 @@
  */ 
 - (NSImage *)icon
 {
-	NSString	*statusID;
+	NSString		*statusName;
+	AIStatusType	statusType;
 
 	if([self shouldForceInitialIdleTime]){
-		statusID = @"idle";
+		statusName = @"idle";
+		statusType = AIAwayStatusType;
 	}else{
-		switch([self statusType])
-		{
-			case AIAvailableStatusType:
-				statusID = @"available";
-				break;			
-			case AIAwayStatusType:
-				statusID = @"away";
-				break;
-		}
+		statusName = [self statusName];
+		statusType = [self statusType];
 	}
 
-	return([AIStatusIcons statusIconForStatusID:statusID type:AIStatusIconList direction:AIIconNormal]);
+	return([AIStatusIcons statusIconForStatusName:statusName
+									   statusType:statusType
+										 iconType:AIStatusIconList
+										direction:AIIconNormal]);
 }
 
 /*!
@@ -173,17 +171,12 @@
  */
 - (NSAttributedString *)statusMessage
 {
-	NSAttributedString	*statusMessage = nil;
-	NSData				*statusMessageData;
+	NSAttributedString	*statusMessage;
 	
-	if(statusMessageData = [statusDict objectForKey:STATUS_STATUS_MESSAGE]){
-		statusMessage = [NSAttributedString stringWithData:statusMessageData];
-	}
-	
-	if(statusMessage && ([statusMessage length] == 0)){
-		statusMessage = nil;
-	}
-	
+	statusMessage = [statusDict objectForKey:STATUS_STATUS_MESSAGE];
+
+	if(![statusMessage length]) statusMessage = nil;
+
 	return statusMessage;
 }
 
@@ -193,20 +186,7 @@
 - (void)setStatusMessage:(NSAttributedString *)statusMessage
 {
 	if(statusMessage){
-		[statusDict setObject:[statusMessage dataRepresentation]
-					   forKey:STATUS_STATUS_MESSAGE];
-	}else{
-		[statusDict removeObjectForKey:STATUS_STATUS_MESSAGE];
-	}
-}
-
-/*!
- * @brief Set the status message data
- */
-- (void)setStatusMessageData:(NSData *)statusMessageData
-{
-	if(statusMessageData){
-		[statusDict setObject:statusMessageData
+		[statusDict setObject:statusMessage
 					   forKey:STATUS_STATUS_MESSAGE];
 	}else{
 		[statusDict removeObjectForKey:STATUS_STATUS_MESSAGE];
@@ -223,20 +203,12 @@
 	NSAttributedString	*autoReply = nil;
 
 	if([self hasAutoReply]){
-		if([self autoReplyIsStatusMessage]){
-			autoReply = [self statusMessage];
-		}else{
-			NSData				*autoReplyData;
-
-			if(autoReplyData = [statusDict objectForKey:STATUS_AUTO_REPLY_MESSAGE]){
-				autoReply = [NSAttributedString stringWithData:autoReplyData];				
-			}
-		}
+		autoReply = ([self autoReplyIsStatusMessage] ?
+					 [self statusMessage] :
+					 [statusDict objectForKey:STATUS_AUTO_REPLY_MESSAGE]);
 	}
 
-	if(autoReply && ([autoReply length] == 0)){
-		autoReply = nil;
-	}
+	if(![autoReply length]) autoReply = nil;
 	
 	return autoReply;
 }
@@ -247,20 +219,7 @@
 - (void)setAutoReply:(NSAttributedString *)autoReply
 {
 	if(autoReply){
-		[statusDict setObject:[autoReply dataRepresentation]
-					   forKey:STATUS_AUTO_REPLY_MESSAGE];
-	}else{
-		[statusDict removeObjectForKey:STATUS_AUTO_REPLY_MESSAGE];
-	}
-}
-
-/*!
- * @brief Set the autReply data
- */
-- (void)setAutoReplyData:(NSData *)autoReplyData
-{
-	if(autoReplyData){
-		[statusDict setObject:autoReplyData
+		[statusDict setObject:autoReply
 					   forKey:STATUS_AUTO_REPLY_MESSAGE];
 	}else{
 		[statusDict removeObjectForKey:STATUS_AUTO_REPLY_MESSAGE];
@@ -342,12 +301,7 @@
 	if(!title && [self shouldForceInitialIdleTime]){
 		title = AILocalizedString(@"Idle",nil);
 	}
-	
-	//If the state is simply invisible, use the string "Invisible"
-	if(!title && [self invisible]){
-		title = AILocalizedString(@"Invisible",nil);
-	}
-	
+
 	//If the state is none of the above, use the string "Available"
 	if(!title) title = AILocalizedString(@"Available",nil);
 	
@@ -416,49 +370,45 @@
 	}
 }
 
-//XXX
+/*!
+ * @brief Should this state force an account to be idle?
+ *
+ * @result YES if the account will be forced to be idle
+ */
 - (BOOL)shouldForceInitialIdleTime
 {
 	return([[statusDict objectForKey:STATUS_SHOULD_FORCE_INITIAL_IDLE_TIME] boolValue]);	
 }
-//XXX
-- (void)setShouldForceInitialIdleTime:(BOOL)shouldForceInitialIdleTime
+
+/*!
+ * @brief Set if this state should force an account to be idle?
+ *
+ * @param shouldForceInitialIdle YES if the account will be forced to be idle
+ */- (void)setShouldForceInitialIdleTime:(BOOL)shouldForceInitialIdleTime
 {
 	[statusDict setObject:[NSNumber numberWithBool:shouldForceInitialIdleTime]
 				   forKey:STATUS_SHOULD_FORCE_INITIAL_IDLE_TIME];
 }
-//XXX
+
+/*!
+ * @brief The time the account should be set to have been idle when this state is set
+ *
+ * @result Number of seconds idle 
+ */
 - (double)forcedInitialIdleTime
 {
 	return([[statusDict objectForKey:STATUS_FORCED_INITIAL_IDLE_TIME] doubleValue]);
 }
-//XXX
+
+/*!
+ * @brief The time the account should be set to have been idle when this state is set
+ *
+ * @param forcedInitialIdleTime Number of seconds idle 
+ */
 - (void)setForcedInitialIdleTime:(double)forcedInitialIdleTime
 {
 	[statusDict setObject:[NSNumber numberWithDouble:forcedInitialIdleTime]
 				   forKey:STATUS_FORCED_INITIAL_IDLE_TIME];
-}
-
-/*!
- * @brief Is this an invisible status?
- */
-- (BOOL)invisible
-{
-	return([[statusDict objectForKey:STATUS_INVISIBLE] boolValue]);
-}
-
-/*!
- * @brief Set if this is an invisible status
- *
- * This is treated independently of the status name/status type, even though for many protocols
- * it will superceded whatever status is set.  This is to allow a status to be specified both to be
- * invisible where possible and to also be a specific state (e.g. Away with the message "No Purple Dinosaurs!")
- * for those protocols which don't support invisible.
- */
-- (void)setInvisible:(BOOL)invisible
-{
-	[statusDict setObject:[NSNumber numberWithBool:invisible]
-				   forKey:STATUS_INVISIBLE];
 }
 
 /*!
@@ -481,23 +431,6 @@
 {
 	[statusDict setObject:[NSNumber numberWithInt:mutabilityType]
 				   forKey:STATUS_MUTABILITY_TYPE];
-}
-
-+ (NSImage *)statusIconForStatusType:(AIStatusType)inStatusType
-{
-	NSString	*statusID;
-	
-	switch(inStatusType)
-	{
-		case AIAvailableStatusType:
-			statusID = @"available";
-			break;			
-		case AIAwayStatusType:
-			statusID = @"away";
-			break;
-	}
-
-	return([AIStatusIcons statusIconForStatusID:statusID type:AIStatusIconList direction:AIIconNormal]);
 }
 
 - (NSString *)description
