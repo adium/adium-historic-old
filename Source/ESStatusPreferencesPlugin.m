@@ -9,8 +9,15 @@
 #import "ESStatusPreferencesPlugin.h"
 #import "ESStatusPreferences.h"
 
+/*
+ * @class ESStatusPreferencesPlugin
+ * @brief Component to install our status preferences pane
+ */
 @implementation ESStatusPreferencesPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
 	//Install our preference view
