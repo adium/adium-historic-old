@@ -26,22 +26,16 @@
 
 - (void)installPlugin
 {
-
-    //Register default preferences and pre-set behavior
+    //Setup our preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_MESSAGE_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_IDLE_MESSAGE];
+    preferences = [[IdleMessagePreferences preferencePaneWithOwner:owner] retain];
 
-    //Install our preference view
-    preferences = [[IdleMessagePreferences idleMessagePreferencesWithOwner:owner] retain];
-
-    // Observe
+    //Observe
     [[owner notificationCenter] addObserver:self selector:@selector(accountIdleStatusChanged:) name:Account_PropertiesChanged object:nil];
-    
 }
-
 
 - (void)accountIdleStatusChanged:(NSNotification *)notification
 {
-
     if(notification == nil || [notification object] == nil){
         //We ignore account-specific status changes
         NSString	*modifiedKey = [[notification userInfo] objectForKey:@"Key"];
@@ -66,21 +60,18 @@
             }
         }
     }
-
 }
 
 //Called when Adium receives content
 - (void)didReceiveContent:(NSNotification *)notification
 {
     AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
-    // TEMPORARY!!!
     NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"IdleMessage" account:nil]];
-    //NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"AwayMessage" account:nil]];
 
     //If the user received a message, send our idle message to them
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
         if(idleMessage && [idleMessage length] != 0){
-            // Only send if there's no away message up!
+            //Only send if there's no away message up!
             if([[owner accountController] propertyForKey:@"AwayMessage" account:nil] == nil) {
                 AIListContact	*contact = [contentObject source];
 
@@ -116,12 +107,6 @@
             [receivedIdleMessage addObject:senderUID];
         }
     }
-}
-
-
-- (void)uninstallPlugin
-{
-
 }
 
 @end
