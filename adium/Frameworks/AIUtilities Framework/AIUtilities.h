@@ -36,6 +36,7 @@
 #import "ESDateFormatterAdditions.h"
 #import "ESDelayedTextField.h"
 #import "AIDictionaryAdditions.h"
+#import "AIDockingWindow.h"
 #import "AIEventAdditions.h"
 #import "AIFileManagerAdditions.h"
 #import "AIFileUtilities.h"
