@@ -167,7 +167,7 @@
 
 			//We need to make a copy of the emoticons for our menu, otherwise the menu flips them in an unpredictable
 			//way, causing problems in the emoticon preferences
-            [newItem setImage:[[[anEmoticon image] copy] autorelease]];
+            [newItem setImage:[[anEmoticon image] imageByScalingToSize:NSMakeSize(16, 16)]];
 			[newItem setRepresentedObject:anEmoticon];
 			[packMenu addItem:newItem];
 			[newItem release];
