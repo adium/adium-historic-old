@@ -19,7 +19,6 @@
  */
  
 #import "AINetworkConnectivity.h"
-#import "AISleepNotification.h"
 
 #import <SystemConfiguration/SystemConfiguration.h>
 
@@ -81,17 +80,6 @@ static BOOL									networkIsReachable = NO;
 		//Determine our initial network reachability
 		networkIsReachable = checkGenericReachability();
 	}
-	
-	//Monitor system sleep so we can clear our networkIsReachableFlag
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(systemWillSleep:)
-                                                 name:AISystemWillSleep_Notification
-                                               object:nil];
-}
-
-+ (void)systemWillSleep:(NSNotification *)inNotification
-{
-	networkIsReachable = NO;
 }
 
 //Here's where the magic happens.  The timer is called after a clump of network updates culminating in a valid
