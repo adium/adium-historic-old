@@ -14,36 +14,21 @@
 //------------------------------------------------------------------------------------
 // Bugs - Adium
 //------------------------------------------------------------------------------------
-- Adium doesn't crash enough.
-	Starting Adium is just so enjoyable we should find ways to do it more often.
-	[Dave] I can make Adium crash on EVERY startup, should I do it?
-
 - Adding contact that already exists
 	Adding an existing contact causes issues.  It may result in duplicate contacts on
 	the user's list, and will make the contact appear offline.  Sometimes they will
 	appear on the list twice until Adium is restarted.
 
-- MSN display names shorten incorrectly
-	MSN display names are always shortened to the same length, regardless of the
-	contact list's current width.
-
 - User icons occasionally display upside-down
 	We cannot find a pattern to when or why this happens
 
-- Event Notification window moves out of place between resolution changes.
-
 - Tooltips are not appearing for links in profile text.
 
-- Messaging the same person from two different accounts is confusing and
-  problematic.
-
-- [Jaguar]: Links do not appear as blue and underlined in TextViews, including the new info pane.
 
 
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
 //------------------------------------------------------------------------------------
-
 - [ICQ] Encoding problems
 	Encoding, specifically in Hebrew, is not being received properly.  Sending
 	appears to work fine.
@@ -56,6 +41,9 @@
 
 - [Yahoo] File transfer limitations
 	Files over 1 MB in size fail to send
+	
+- [AIM] Auto-reply flag being ignored
+	We seem to be passing libgaim the correct flags, but our messages are not sending as auto-replies.
 
 - [GaduGadu] Contacts not saving to the server-list
 
@@ -78,13 +66,26 @@
 	The key equivelants for MSN's blush emoticon do not include :$.  Other emoticons
 	may be incorrect.
 
-- Push/pop indicator could use 1-2 px extra spacing from the right & left since its nearly flush with the scrollbar
+- Push/pop indicator spacing
+	It could use 1-2 px extra spacing from the right & left since its nearly flush with the scrollbar
+
 
 //------------------------------------------------------------------------------------
 // Bugs - Deferred (Awaiting a rewrite / other change)
 //------------------------------------------------------------------------------------
 - AIM chats are logging as (null)
 	Happens with both loggers.  Waiting on full multi-chat support.
+	
+- Event Notification window moves out of place between resolution changes.
+	Will be replaced by growl
+
+- MSN display names shorten incorrectly
+	MSN display names are always shortened to the same length, regardless of the
+	contact list's current width.  Will be sweeped in the contact list revamp
+
+- [Jaguar]: Links do not appear as blue and underlined in TextViews, including the new info pane.
+	Tiger is coming
+	
 
 //------------------------------------------------------------------------------------
 // Bugs - Unconfirmed
@@ -112,8 +113,4 @@
 - Adium will remain invisible to 2nd party after a Jabber authorization confirmation (from xtapo on IRC)
 	"Well, I hit grant to his auth request, and he still won't be able to see me." -- xtapo
 	previously authorized contacts work as expected.
-
-
-
-
 
