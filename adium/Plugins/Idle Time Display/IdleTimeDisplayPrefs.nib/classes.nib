@@ -6,26 +6,9 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_displayIdle" = NSButton; 
+                "checkBox_displayIdleOnLeft" = NSButton; 
+                "checkBox_displayIdleOnRight" = NSButton; 
                 "colorWell_idleColor" = NSColorWell; 
-                "view_prefView" = NSView; 
-            }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            ACTIONS = {changePreference = id; }; 
-            CLASS = AIStatusCirclesPreferences; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                "checkBox_displayIdle" = NSButton; 
-                "colorWell_away" = NSColorWell; 
-                "colorWell_idle" = NSColorWell; 
-                "colorWell_idleAway" = NSColorWell; 
-                "colorWell_online" = NSColorWell; 
-                "colorWell_openTab" = NSColorWell; 
-                "colorWell_signedOff" = NSColorWell; 
-                "colorWell_signedOn" = NSColorWell; 
-                "colorWell_unviewedContent" = NSColorWell; 
-                "colorWell_warning" = NSColorWell; 
                 "view_prefView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 

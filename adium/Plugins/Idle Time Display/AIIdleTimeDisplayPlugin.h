@@ -20,6 +20,7 @@
 #define PREF_GROUP_IDLE_TIME_DISPLAY	@"Idle Display"
 
 #define KEY_DISPLAY_IDLE_TIME		@"Display Idle Time"
+#define KEY_DISPLAY_IDLE_TIME_ON_LEFT	@"Display Idle Time On Left"
 #define KEY_IDLE_TIME_COLOR		@"Idle Time Text Color"
 
 @class AIIdleTimeDisplayPreferences;
@@ -28,6 +29,7 @@
     AIIdleTimeDisplayPreferences *preferences;
 
     BOOL		displayIdleTime;
+    BOOL		displayIdleOnLeft;
     NSColor		*idleTextColor;
 }
 

@@ -16,6 +16,8 @@
     <true/>
     <key>Online Enabled</key>
     <false/>
+    <key>Open Tab Enabled</key>
+    <false/>
     <key>Idle And Away Enabled</key>
     <false/>
     <key>Away Color</key>
@@ -32,23 +34,27 @@
     <string>255,255,255</string>
     <key>Online Color</key>
     <string>255,255,255</string>
+    <key>Open Tab Color</key>
+    <string>255,255,255</string>
     <key>Idle And Away Color</key>
     <string>255,255,255</string>
-    <key>Away Background Color</key>
+    <key>Away Label Color</key>
     <string>234,234,234</string>
-    <key>Idle Background Color</key>
+    <key>Idle Label Color</key>
     <string>234,234,234</string>
-    <key>Signed Off Background Color</key>
+    <key>Signed Off Label Color</key>
     <string>199,54,42</string>
-    <key>Signed On Background Color</key>
+    <key>Signed On Label Color</key>
     <string>91,187,99</string>
-    <key>Typing Background Color</key>
+    <key>Typing Label Color</key>
     <string>255,145,71</string>
-    <key>Unviewed Content Background Color</key>
+    <key>Unviewed Content Label Color</key>
     <string>0,144,197</string>
-    <key>Online Background Color</key>
-    <string>255,0,0</string>
-    <key>Idle And Away Background Color</key>
+    <key>Online Label Color</key>
+    <string>0,0,255</string>
+    <key>Open Tab Label Color</key>
+    <string>0,255,0</string>
+    <key>Idle And Away Label Color</key>
     <string>234,234,234</string>
 </dict>
 </plist>

@@ -40,6 +40,19 @@
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_DISPLAY_IDLE_TIME
                                               group:PREF_GROUP_IDLE_TIME_DISPLAY];
+
+    }else if(sender == checkBox_displayIdleOnLeft){
+	[[owner preferenceController] setPreference:[NSNumber numberWithBool:YES]
+					     forKey:KEY_DISPLAY_IDLE_TIME_ON_LEFT
+					      group:PREF_GROUP_IDLE_TIME_DISPLAY];
+        [checkBox_displayIdleOnRight setState:NSOffState];
+
+    }else if(sender == checkBox_displayIdleOnRight){
+	[[owner preferenceController] setPreference:[NSNumber numberWithBool:NO]
+					     forKey:KEY_DISPLAY_IDLE_TIME_ON_LEFT
+					      group:PREF_GROUP_IDLE_TIME_DISPLAY];
+        [checkBox_displayIdleOnLeft setState:NSOffState];
+	
     }else if(sender == colorWell_idleColor){
         [[owner preferenceController] setPreference:[[colorWell_idleColor color] stringRepresentation]
                                              forKey:KEY_IDLE_TIME_COLOR
@@ -90,6 +103,8 @@
     NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
 
     [checkBox_displayIdle setState:[[preferenceDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue]];
+    [checkBox_displayIdleOnLeft setState:[[preferenceDict objectForKey:KEY_DISPLAY_IDLE_TIME_ON_LEFT] boolValue]];
+    [checkBox_displayIdleOnRight setState:![[preferenceDict objectForKey:KEY_DISPLAY_IDLE_TIME_ON_LEFT] boolValue]];
     [colorWell_idleColor setColor:[[preferenceDict objectForKey:KEY_IDLE_TIME_COLOR] representedColor]];
 }
 

@@ -1,17 +1,17 @@
 /*-------------------------------------------------------------------------------------------------------*\
 | Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
- | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
- | General Public License as published by the Free Software Foundation; either version 2 of the License,
- | or (at your option) any later version.
- |
- | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
- | Public License for more details.
- |
- | You should have received a copy of the GNU General Public License along with this program; if not,
- | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- \------------------------------------------------------------------------------------------------------ */
+| This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+| General Public License as published by the Free Software Foundation; either version 2 of the License,
+| or (at your option) any later version.
+|
+| This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+| the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+| Public License for more details.
+|
+| You should have received a copy of the GNU General Public License along with this program; if not,
+| write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+\------------------------------------------------------------------------------------------------------ */
 
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
@@ -21,8 +21,8 @@
 
 @interface AIStatusCirclesPlugin (PRIVATE)
 - (NSString *)idleStringForSeconds:(int)seconds;
-- (void)addToFlashArray:(AIListObject *)inObject;
-- (void)removeFromFlashArray:(AIListObject *)inObject;
+//- (void)addToFlashArray:(AIListObject *)inObject;
+//- (void)removeFromFlashArray:(AIListObject *)inObject;
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
@@ -31,8 +31,13 @@
 - (void)installPlugin
 {
     //init
-    displayIdleTime = NO;
+    displayBackgroundStatusBar	= NO;
+    displayStatusCircle		= NO;
+    displayStatusCircleOnLeft	= NO;
+    displayIdleTime		= NO;
+    idleStringColor		= nil;
 
+    /*
     awayColor = nil;
     idleColor = nil;
     idleAwayColor = nil;
@@ -42,6 +47,7 @@
     signedOnColor = nil;
     unviewedContentColor = nil;
     warningColor = nil;
+    */
 
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_CIRCLES_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STATUS_CIRCLES];
@@ -54,7 +60,7 @@
     //Observe
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
-    flashingListObjectArray = [[NSMutableArray alloc] init];
+    //flashingListObjectArray = [[NSMutableArray alloc] init];
 }
 
 - (void)uninstallPlugin
@@ -70,118 +76,168 @@
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
     NSArray		*modifiedAttributes = nil;
-    
-    if(	inModifiedKeys == nil || 
-        [inModifiedKeys containsObject:@"Away"] ||
-        [inModifiedKeys containsObject:@"Idle"] ||
-        [inModifiedKeys containsObject:@"Online"] ||
-        [inModifiedKeys containsObject:@"Open Tab"] || 
-        [inModifiedKeys containsObject:@"Signed On"] ||
-        [inModifiedKeys containsObject:@"Signed Off"] ||
+
+    if(	inModifiedKeys == nil ||
+        [inModifiedKeys containsObject:@"Status Color"] ||
         [inModifiedKeys containsObject:@"Typing"] ||
         [inModifiedKeys containsObject:@"UnviewedContent"] ||
         [inModifiedKeys containsObject:@"UnrespondedContent"] ||
-        [inModifiedKeys containsObject:@"Warning"]){
+        [inModifiedKeys containsObject:@"Away"] ||
+        [inModifiedKeys containsObject:@"Idle"] ||
+        [inModifiedKeys containsObject:@"Online"] ||
+        [inModifiedKeys containsObject:@"Open Tab"] ||
+        [inModifiedKeys containsObject:@"Signed On"] ||
+        [inModifiedKeys containsObject:@"Signed Off"]){
 
         AIMutableOwnerArray	*iconArray, *tabIconArray;
         AIStatusCircle		*statusCircle, *tabStatusCircle;
         NSColor			*circleColor;
-        int			away, online, openTab, signedOn, signedOff, typing, unrespondedContent, unviewedContent, warning;
+	//int			away, online, openTab, signedOn, signedOff, typing, unrespondedContent, unviewedContent, warning;
+	int 			typing, unrespondedContent, unviewedContent;
         double			idle;
-        
-        //Get the status circle
-        iconArray = [inObject displayArrayForKey:@"Left View"];
-        tabIconArray = [inObject displayArrayForKey:@"Tab Left View"];
-        statusCircle = [iconArray objectWithOwner:self];
-        tabStatusCircle = [tabIconArray objectWithOwner:self];
+
+	if(displayStatusCircleOnLeft){
+	    iconArray = [inObject displayArrayForKey:@"Left View"];
+	    [[inObject displayArrayForKey:@"Right View"] setObject:nil withOwner:self];
+	    
+	}else{
+	    iconArray = [inObject displayArrayForKey:@"Right View"];
+	    [[inObject displayArrayForKey:@"Left View"]  setObject:nil withOwner:self];
+	    
+	}
 	
-        if(!statusCircle || !tabStatusCircle){
-            statusCircle = [AIStatusCircle statusCircle];
-            [iconArray setObject:statusCircle withOwner:self];
+	statusCircle = [iconArray objectWithOwner:self];
 
-            tabStatusCircle = [AIStatusCircle statusCircle];
-            [tabStatusCircle setBezeled:YES];
-            [tabIconArray setObject:tabStatusCircle withOwner:self];
-        }
+	//tabIconArray = [inObject displayArrayForKey:@"Tab Left View"];
+	//tabStatusCircle = [tabIconArray objectWithOwner:self];
 
-        //Get all the values
-        away = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
-        idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
-        online = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
-        openTab = [[inObject statusArrayForKey:@"Open Tab"] greatestIntegerValue];
-        signedOn = [[inObject statusArrayForKey:@"Signed On"] greatestIntegerValue];
-        signedOff = [[inObject statusArrayForKey:@"Signed Off"] greatestIntegerValue];
-        typing = [[inObject statusArrayForKey:@"Typing"] greatestIntegerValue];
-        unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
-        unrespondedContent = [[inObject statusArrayForKey:@"UnrespondedContent"] greatestIntegerValue];
-        warning = [[inObject statusArrayForKey:@"Warning"] greatestIntegerValue];
-        
-        //Set the circle color
-        if(signedOff){
-	    circleColor = signedOffColor;
-	}else if(!online){
-	    circleColor = signedOffColor;
-        }else if(signedOn){
-	    circleColor = signedOnColor;
-        }else if(idle != 0 && away){
-	    circleColor = idleAwayColor;
-        }else if(idle != 0){
-	    circleColor = idleColor;
-        }else if(away){
-	    circleColor = awayColor;
-        }else if(warning){
-	    circleColor = warningColor;
-        }else if(openTab){
-            circleColor = openTabColor;
-        }else if(online){	// this should be the last 'if' before the final 'else'
-	    circleColor = onlineColor;
-        }else{
-            circleColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1.0];
-        }
+	if(displayStatusCircle){
+	    
+	    if(!statusCircle){
+		statusCircle = [AIStatusCircle statusCircle];
+		[iconArray setObject:statusCircle withOwner:self];
+	    }
+
+	    /*
+	    if(!tabStatusCircle){
+		tabStatusCircle = [AIStatusCircle statusCircle];
+		[tabStatusCircle setBezeled:YES];
+		[tabIconArray setObject:tabStatusCircle withOwner:self];
+	    }
+	    */
+    
+	    unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
+	    unrespondedContent = [[inObject statusArrayForKey:@"UnrespondedContent"] greatestIntegerValue];
+	    idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
+	    
+	    /*
+	    //Get all the values
+	    away = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
+	    online = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
+	    openTab = [[inObject statusArrayForKey:@"Open Tab"] greatestIntegerValue];
+	    idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
+	    signedOn = [[inObject statusArrayForKey:@"Signed On"] greatestIntegerValue];
+	    signedOff = [[inObject statusArrayForKey:@"Signed Off"] greatestIntegerValue];
+	    typing = [[inObject statusArrayForKey:@"Typing"] greatestIntegerValue];
+	    unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
+	    unrespondedContent = [[inObject statusArrayForKey:@"UnrespondedContent"] greatestIntegerValue];
+	    warning = [[inObject statusArrayForKey:@"Warning"] greatestIntegerValue];
+	    //Set the circle color
+	    if(signedOff){
+		circleColor = signedOffColor;
+	    }else if(!online){
+		circleColor = signedOffColor;
+	    }else if(signedOn){
+		circleColor = signedOnColor;
+	    }else if(idle != 0 && away){
+		circleColor = idleAwayColor;
+	    }else if(idle != 0){
+		circleColor = idleColor;
+	    }else if(away){
+		circleColor = awayColor;
+	    }else if(warning){
+		circleColor = warningColor;
+	    }else if(openTab){
+		circleColor = openTabColor;
+	    }else if(online){	// this should be the last 'if' before the final 'else'
+		circleColor = onlineColor;
+	    }else{
+		circleColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1.0];
+	    }
+	    */
+    
+	    circleColor = [[inObject displayArrayForKey:@"Status Color"] averageColor];
+    
+	    if(!circleColor){
+		circleColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1.0];
+	    }
+    
+	    [statusCircle setColor:circleColor];
+	    //[tabStatusCircle setColor:circleColor];
+	    //[statusCircle setFlashColor:unviewedContentColor];
+	    //[tabStatusCircle setFlashColor:unviewedContentColor];
+    
+	    //Embedded idle time
+	    if(displayIdleTime && idle > 0){
+		[statusCircle setStringContent:[self idleStringForSeconds:idle]];
+		[statusCircle setStringColor:idleStringColor];
+		//[tabStatusCircle setStringContent:[self idleStringForSeconds:idle]];
+	    }else{
+		[statusCircle setStringContent:@""];
+		//[tabStatusCircle setStringContent:nil];
+	    }
+	    
+	    /*
+	    //Set the circle state
+	    if(typing){
+		[statusCircle setState:AICirclePreFlash];
+		[tabStatusCircle setState:AICirclePreFlash];
+	    }else if(!unviewedContent){
+		[statusCircle setState:(unrespondedContent ? AICircleDot : AICircleNormal)];
+		[tabStatusCircle setState:(unrespondedContent ? AICircleDot : AICircleNormal)];
+	    }else{
+		[statusCircle setState:AICircleNormal];
+		[tabStatusCircle setState:AICircleNormal];
+	    }else{
+		[statusCircle setState:(([[owner interfaceController] flashState] % 2) ? AICircleFlashA: AICircleFlashB)];
+		[tabStatusCircle setState:(([[owner interfaceController] flashState] % 2) ? AICircleFlashA: AICircleFlashB)];
+	    }
+	    */
+	}else{
+	    if(statusCircle){
+		[iconArray setObject:nil withOwner:self];
+	    }
+	}
 	
-        [statusCircle setColor:circleColor];
-        [tabStatusCircle setColor:circleColor];
-        [statusCircle setFlashColor:unviewedContentColor];
-        [tabStatusCircle setFlashColor:unviewedContentColor];
-
-        //Embedded idle time
-        if(idle != 0 && displayIdleTime){
-            [statusCircle setStringContent:[self idleStringForSeconds:idle]];
-            [tabStatusCircle setStringContent:[self idleStringForSeconds:idle]];
-        }else{
-            [statusCircle setStringContent:nil];
-            [tabStatusCircle setStringContent:nil];
-        }
-
-        //Set the circle state
-        if(typing){
-            [statusCircle setState:AICirclePreFlash];
-            [tabStatusCircle setState:AICirclePreFlash];
-        }else if(!unviewedContent){
-            [statusCircle setState:(unrespondedContent ? AICircleDot : AICircleNormal)];
-            [tabStatusCircle setState:(unrespondedContent ? AICircleDot : AICircleNormal)];
-        }else{
-            [statusCircle setState:(([[owner interfaceController] flashState] % 2) ? AICircleFlashA: AICircleFlashB)];
-            [tabStatusCircle setState:(([[owner interfaceController] flashState] % 2) ? AICircleFlashA: AICircleFlashB)];
-        }
-
-        modifiedAttributes = [NSArray arrayWithObjects:@"Left View", @"Tab Left View", nil];
+	modifiedAttributes = [NSArray arrayWithObjects:@"Left View", @"Right View", nil];
     }
 
+    /*
     //Update our flash array (To reflect unviewed content)
     if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"UnviewedContent"]){
-        int unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
-        
-        if(unviewedContent && ![flashingListObjectArray containsObject:inObject]){ //Start flashing
-            [self addToFlashArray:inObject];
-        }else if(!unviewedContent && [flashingListObjectArray containsObject:inObject]){ //Stop flashing
-            [self removeFromFlashArray:inObject];
-        }
+	int unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
+
+	if(unviewedContent && ![flashingListObjectArray containsObject:inObject]){ //Start flashing
+	    [self addToFlashArray:inObject];
+	}else if(!unviewedContent && [flashingListObjectArray containsObject:inObject]){ //Stop flashing
+	    [self removeFromFlashArray:inObject];
+	}
+    }
+    */
+
+    if(displayBackgroundStatusBar){
+	[[inObject displayArrayForKey:@"Background Color"] setObject:[[inObject displayArrayForKey:@"Status Color"] averageColor] withOwner:self];
+
+	[[modifiedAttributes mutableCopy] addObject:@"Background Color"];
+	modifiedAttributes = [NSArray arrayWithObjects:@"Left View", @"Right View", nil];
+    }else{
+	[[inObject displayArrayForKey:@"Background Color"] setObject:nil withOwner:self];
     }
 
     return(modifiedAttributes);
 }
 
+/*
 //Flash all handles with unviewed content
 - (void)flash:(int)value
 {
@@ -191,15 +247,15 @@
 
     enumerator = [flashingListObjectArray objectEnumerator];
     while((object = [enumerator nextObject])){
-        //Set the status circle to the correct state
-        statusCircle = [[object displayArrayForKey:@"Left View"] objectWithOwner:self];
-        [statusCircle setState:((value % 2) ? AICircleFlashA: AICircleFlashB)];
+	//Set the status circle to the correct state
+	statusCircle = [[object displayArrayForKey:@"Left View"] objectWithOwner:self];
+	[statusCircle setState:((value % 2) ? AICircleFlashA: AICircleFlashB)];
 
-        statusCircle = [[object displayArrayForKey:@"Tab Left View"] objectWithOwner:self];
-        [statusCircle setState:((value % 2) ? AICircleFlashA: AICircleFlashB)];
+	statusCircle = [[object displayArrayForKey:@"Tab Left View"] objectWithOwner:self];
+	[statusCircle setState:((value % 2) ? AICircleFlashA: AICircleFlashB)];
 
-        //Force a redraw
-        [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:object userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Left View"] forKey:@"Keys"]];
+	//Force a redraw
+	[[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:object userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Left View"] forKey:@"Keys"]];
     }
 }
 
@@ -208,7 +264,7 @@
 {
     //Ensure that we're observing the flashing
     if([flashingListObjectArray count] == 0){
-        [[owner interfaceController] registerFlashObserver:self];
+	[[owner interfaceController] registerFlashObserver:self];
     }
 
     //Add the contact to our flash array
@@ -224,9 +280,10 @@
 
     //If we have no more flashing contacts, stop observing the flashes
     if([flashingListObjectArray count] == 0){
-        [[owner interfaceController] unregisterFlashObserver:self];
+	[[owner interfaceController] unregisterFlashObserver:self];
     }
 }
+*/
 
 //
 - (NSString *)idleStringForSeconds:(int)seconds
@@ -253,13 +310,19 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     //Optimize this...
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STATUS_CIRCLES] == 0){
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STATUS_CIRCLES] == 0 ||
+       [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:@"Contact Status Coloring"] == 0 ){
 	NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STATUS_CIRCLES];
 
 	//Release the old values..
 	//Cache the preference values
-	displayIdleTime = [[prefDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue];
+	displayBackgroundStatusBar	= [[prefDict objectForKey:KEY_DISPLAY_BACKGROUND_STATUS_BAR] boolValue];
+	displayStatusCircle		= [[prefDict objectForKey:KEY_DISPLAY_STATUS_CIRCLE] boolValue];
+	displayStatusCircleOnLeft	= [[prefDict objectForKey:KEY_DISPLAY_STATUS_CIRCLE_ON_LEFT] boolValue];
+	displayIdleTime			= [[prefDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue];
+	idleStringColor			= [[[prefDict objectForKey:KEY_IDLE_TIME_COLOR] representedColor] retain];
 
+	/*
 	awayColor = [[[prefDict objectForKey:KEY_AWAY_COLOR] representedColor] retain];
 	idleColor = [[[prefDict objectForKey:KEY_IDLE_COLOR] representedColor] retain];
 	idleAwayColor = [[[prefDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor] retain];
@@ -268,7 +331,8 @@
 	signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
 	signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
 	unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
-        warningColor = [[[prefDict objectForKey:KEY_WARNING_COLOR] representedColor] retain];
+	warningColor = [[[prefDict objectForKey:KEY_WARNING_COLOR] representedColor] retain];
+	*/
 
         //Update all our status circles
 	NSEnumerator		*enumerator;

@@ -19,11 +19,12 @@
 #import "AIStatusCirclesPreferences.h"
 
 #define	STATUS_CIRCLES_PREF_NIB		@"StatusCirclesPrefs"
-#define STATUS_CIRCLES_PREF_TITLE	@"Status - Contact Status Circles"
+#define STATUS_CIRCLES_PREF_TITLE	@"Status Display"
 
 @interface AIStatusCirclesPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
 - (void)configureView;
+- (void)configureControlDimming;
 @end
 
 @implementation AIStatusCirclesPreferences
@@ -36,6 +37,41 @@
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
+    if(sender == checkBox_displayBackgroundStatusBar){
+	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+					     forKey:KEY_DISPLAY_BACKGROUND_STATUS_BAR
+					      group:PREF_GROUP_STATUS_CIRCLES];
+	
+    }else if(sender == checkBox_displayStatusCircle){
+	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+					     forKey:KEY_DISPLAY_STATUS_CIRCLE
+					      group:PREF_GROUP_STATUS_CIRCLES];
+	[self configureControlDimming];
+
+    }else if(sender == checkBox_displayStatusCircleOnLeft){
+	[[owner preferenceController] setPreference:[NSNumber numberWithBool:YES]
+					     forKey:KEY_DISPLAY_STATUS_CIRCLE_ON_LEFT
+					      group:PREF_GROUP_STATUS_CIRCLES];
+        [checkBox_displayStatusCircleOnRight setState:NSOffState];
+
+    }else if(sender == checkBox_displayStatusCircleOnRight){
+	[[owner preferenceController] setPreference:[NSNumber numberWithBool:NO]
+					     forKey:KEY_DISPLAY_STATUS_CIRCLE_ON_LEFT
+					      group:PREF_GROUP_STATUS_CIRCLES];
+        [checkBox_displayStatusCircleOnLeft setState:NSOffState];
+	
+    }else if(sender == checkBox_displayIdle){
+	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+					     forKey:KEY_DISPLAY_IDLE_TIME
+					      group:PREF_GROUP_STATUS_CIRCLES];
+    }else if(sender == colorWell_idleColor){
+        [[owner preferenceController] setPreference:[[colorWell_idleColor color] stringRepresentation]
+                                             forKey:KEY_IDLE_TIME_COLOR
+                                              group:PREF_GROUP_STATUS_CIRCLES];
+
+    }
+
+/*
     if(sender == colorWell_signedOff){
         [[owner preferenceController] setPreference:[[colorWell_signedOff color] stringRepresentation]
                                              forKey:KEY_SIGNED_OFF_COLOR
@@ -86,6 +122,7 @@
                                              forKey:KEY_DISPLAY_IDLE_TIME
                                               group:PREF_GROUP_STATUS_CIRCLES];
     }
+ */
 }
 
 //Private ---------------------------------------------------------------------------
@@ -128,8 +165,16 @@
 {
     NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STATUS_CIRCLES];
 
+    [checkBox_displayBackgroundStatusBar setState:[[preferenceDict objectForKey:KEY_DISPLAY_BACKGROUND_STATUS_BAR] boolValue]];
+    [checkBox_displayStatusCircle setState:[[preferenceDict objectForKey:KEY_DISPLAY_STATUS_CIRCLE] boolValue]];
+    [checkBox_displayStatusCircleOnLeft setState:[[preferenceDict objectForKey:KEY_DISPLAY_STATUS_CIRCLE_ON_LEFT] boolValue]];
+    [checkBox_displayStatusCircleOnRight setState:![[preferenceDict objectForKey:KEY_DISPLAY_STATUS_CIRCLE_ON_LEFT] boolValue]];
     [checkBox_displayIdle setState:[[preferenceDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue]];
+    [colorWell_idleColor setColor:[[preferenceDict objectForKey:KEY_IDLE_TIME_COLOR] representedColor]];
 
+    [self configureControlDimming];
+	
+/*
     [colorWell_away setColor:[[preferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
     [colorWell_idle setColor:[[preferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
     [colorWell_idleAway setColor:[[preferenceDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor]];
@@ -139,6 +184,15 @@
     [colorWell_signedOn setColor:[[preferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
     [colorWell_unviewedContent setColor:[[preferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
     [colorWell_warning setColor:[[preferenceDict objectForKey:KEY_WARNING_COLOR] representedColor]];
+*/
+}
+//Enable/disable controls that are available/unavailable
+- (void)configureControlDimming
+{
+    [checkBox_displayStatusCircleOnLeft setEnabled:[checkBox_displayStatusCircle state]];
+    [checkBox_displayStatusCircleOnRight setEnabled:[checkBox_displayStatusCircle state]];
+    [checkBox_displayIdle setEnabled:[checkBox_displayStatusCircle state]];
+    [colorWell_idleColor setEnabled:[checkBox_displayStatusCircle state]];
 }
 
 @end

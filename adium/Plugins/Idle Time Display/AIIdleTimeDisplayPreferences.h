@@ -22,6 +22,8 @@
 
     IBOutlet	NSView			*view_prefView;
     IBOutlet	NSButton		*checkBox_displayIdle;
+    IBOutlet	NSButton		*checkBox_displayIdleOnLeft;
+    IBOutlet	NSButton		*checkBox_displayIdleOnRight;
     IBOutlet	NSColorWell		*colorWell_idleColor;
 }
 
