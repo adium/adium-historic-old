@@ -96,7 +96,9 @@
 
 - (void)eventNotification:(NSNotification *)notification
 {
-    [[owner soundController] playSoundAtPath:[soundPathDict objectForKey:[notification name]]];
+    NSDictionary    *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
+    if (!([[preferenceDict objectForKey:KEY_EVENT_MUTE_WHEN_AWAY] boolValue] && [[owner accountController] propertyForKey:@"AwayMessage" account:nil]))
+        [[owner soundController] playSoundAtPath:[soundPathDict objectForKey:[notification name]]];
 }
 
 

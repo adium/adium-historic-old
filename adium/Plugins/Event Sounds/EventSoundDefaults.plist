@@ -4,5 +4,7 @@
 <dict>
 	<key>Event Sound Set</key>
 	<string>$$BundlePath$$/Contents/Resources/Sounds/Adium</string>
+        <key>Mute When Away</key>
+            <false />
 </dict>
 </plist>

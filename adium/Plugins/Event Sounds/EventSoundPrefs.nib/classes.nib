@@ -21,10 +21,10 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {
-            ACTIONS = {selectSoundSet = id; }; 
+            ACTIONS = {selectSoundSet = id; toggleMuteWhenAway = id; }; 
             CLASS = AIEventSoundPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"popUp_soundSet" = NSPopUpButton; }; 
+            OUTLETS = {"button_muteWhenAway" = NSButton; "popUp_soundSet" = NSPopUpButton; }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
         {
