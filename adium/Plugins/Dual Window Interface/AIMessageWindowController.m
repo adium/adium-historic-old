@@ -319,7 +319,7 @@
     //Close all our tabs
     enumerator = [viewArrayCopy objectEnumerator];
     while((tabViewItem = [enumerator nextObject])){
-		chat = [[tabViewItem messageViewController] chat]
+		chat = [[tabViewItem messageViewController] chat];
 		if (chat){
 			[[adium interfaceController] closeChat:chat];
 		}
