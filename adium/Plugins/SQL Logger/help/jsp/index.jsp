@@ -8,7 +8,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 586 $ $Date: 2004/02/10 00:25:18 $ -->
+<!--$Rev: 679 $ $Date: 2004/04/21 01:30:35 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -206,11 +206,11 @@ try {
     }
 
     if (from_sn != null && to_sn != null) {
-        queryText += " and (((sender_sn = ? " + 
-        " and recipient_sn = ?) or " +
-        "(sender_sn = ? and recipient_sn = ?)) or " +
-        "((scramble(sender_sn) = ? and scramble(recipient_sn) = ?) or " +
-        "(scramble(recipient_sn) = ? and scramble(sender_sn) = ?)))";
+        queryText += " and (((sender_sn like ? " + 
+        " and recipient_sn like ?) or " +
+        "(sender_sn like ? and recipient_sn like ?)) or " +
+        "((scramble(sender_sn) like ? and scramble(recipient_sn) like ?) or " +
+        "(scramble(recipient_sn) like ? and scramble(sender_sn) like ?)))";
         commandArray[aryCount++] = new String(to_sn);
         commandArray[aryCount++] = new String(from_sn);
         commandArray[aryCount++] = new String(from_sn);
@@ -221,20 +221,20 @@ try {
         commandArray[aryCount++] = new String(from_sn);
     
     } else if (from_sn != null && to_sn == null) {
-        queryText += " and (sender_sn = ? or scramble(sender_sn) = ?)";
+        queryText += " and (sender_sn like ? or scramble(sender_sn) like ?)";
         
         commandArray[aryCount++] = new String(from_sn);
         commandArray[aryCount++] = new String(from_sn);
 
     } else if (from_sn == null && to_sn != null) {
-        queryText += " and (recipient_sn = ? or scramble(recipient_sn) =?)";
+        queryText += " and (recipient_sn like ? or scramble(recipient_sn) like ?)";
         
         commandArray[aryCount++] = new String(to_sn);
         commandArray[aryCount++] = new String(to_sn);
     }
 
     if (contains_sn != null) {
-        queryText += " and (recipient_sn = ? or sender_sn = ? or scramble(recipient_sn) = ? or scramble(sender_sn) = ?) ";
+        queryText += " and (recipient_sn like ? or sender_sn like ? or scramble(recipient_sn) like ? or scramble(sender_sn) like ?) ";
         commandArray[aryCount++] = new String(contains_sn);
         commandArray[aryCount++] = new String(contains_sn);
         commandArray[aryCount++] = new String(contains_sn);
@@ -370,10 +370,9 @@ try {
             int oldIndex = 0;
             while(m.find()) {
                 sb.append(message.substring(oldIndex,m.start()));
-                if(sb.toString().lastIndexOf('>') > 
-                  sb.toString().lastIndexOf('<')) {
-                    sb.append(m.group(1) + 
-                    "<b style=\"color:black;background-color:" +
+                if(sb.toString().lastIndexOf('<') <= 
+                  sb.toString().lastIndexOf('>')) {
+                    sb.append(m.group(1) + "<b style=\"color:black;background-color:" +
                     hlColor[i % hlColor.length] + "\">");
                     sb.append(m.group(2) + "</b>" + m.group(3));
                 } else {

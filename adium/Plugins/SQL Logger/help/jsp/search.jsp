@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/search.jsp $-->
-<!--$Rev: 506 $ $Date: 2003/12/20 02:54:57 $ -->
+<!--$Rev: 679 $ $Date: 2004/04/21 01:30:36 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -153,11 +153,11 @@ try {
             "message ~ ? ");
 
             if (sender != null) {
-                shortQuery += "and sender_sn = ? ";
+                shortQuery += "and sender_sn like ? ";
             }
             
             if (recipient != null) {
-                shortQuery += "and recipient_sn = ? ";
+                shortQuery += "and recipient_sn like ? ";
             }
 
             if (orderBy != null) {
@@ -243,12 +243,12 @@ try {
             cmdAry[cmdCntr++] = new String(searchKey);
 
             if (sender != null) {
-                queryString += "and s.username = ?";
+                queryString += "and s.username like ?";
                 cmdAry[cmdCntr++] = new String(sender);
             }
 
             if (recipient != null) {
-                queryString += " and r.username = ? ";
+                queryString += " and r.username like ? ";
                 cmdAry[cmdCntr++] = new String(recipient);
             }
 
@@ -334,9 +334,10 @@ try {
         Timestamp thirtyBefore = new Timestamp(beforeThirty);
         Timestamp thirtyAfter = new Timestamp(afterThirty);
 
-        String cleanString = searchString;
+        String cleanString = searchKey;
         cleanString = cleanString.replaceAll("&", " ");
         cleanString = cleanString.replaceAll("!", " ");
+        cleanString = cleanString.replaceAll("\\|", " ");
 
         out.print("<td><a href=\"index.jsp?from=" +
         rset.getString("sender_sn") +
