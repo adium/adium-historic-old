@@ -75,9 +75,8 @@
 	NSArray			*repArray = [sender representedObject];
 	AIListContact	*listContact = [repArray objectAtIndex:1];
 	AIChat			*chat = [repArray objectAtIndex:0];
-	AIService		*service = [repArray objectAtIndex:2];
 	
-	[DCInviteToChatWindowController inviteToChatWindowForChat:chat contact:listContact service:service];
+	[DCInviteToChatWindowController inviteToChatWindowForChat:chat contact:listContact];
 }
 
 #pragma mark Private
@@ -86,63 +85,74 @@
 {
 	NSArray			*openChats = [[adium interfaceController] openChats];
 	AIChat			*chat;
-	NSMenu			*menu_chatMenu = [[NSMenu alloc] initWithTitle:@""];
+	NSMenu			*menu_chatMenu = nil;
 	NSDictionary	*serviceDict;
-	AIService		*service;
+	NSString		*serviceClass;
 	int i;
 	
-	if( contact && ![contact isKindOfClass:[AIListGroup class]] ) {
-				
-		// Get a dictionary of (service, contacts in that service)
-		if([contact isKindOfClass:[AIMetaContact class]])
-			serviceDict = [(AIMetaContact *)contact dictionaryOfServicesAndListContacts];
-		else
-			serviceDict = [NSDictionary dictionaryWithObject:contact forKey:[[contact service] serviceID]];
+	if(contact && ![contact isKindOfClass:[AIListGroup class]]) {
+		NSEnumerator *enumerator;
+		unsigned	currentNumberOfItems, numberOfMenuItems = 0;
 		
-		NSEnumerator *enumerator = [serviceDict keyEnumerator];
-		
+		// Get a dictionary of (service class, contacts in that service)
+		serviceDict = ([contact isKindOfClass:[AIMetaContact class]] ?
+					   [(AIMetaContact *)contact dictionaryOfServiceClassesAndListContacts] :
+					   [NSDictionary dictionaryWithObject:contact forKey:[[contact service] serviceClass]]);
+
 		[menu_chatMenu setMenuChangedMessagesEnabled:NO];
-		
-		while( service = [enumerator nextObject] ) {
-						
+
+		enumerator = [serviceDict keyEnumerator];
+		while(serviceClass = [enumerator nextObject]){
+			
+			//Each iteration, if we have more menu items now than before, add a separator item
+			currentNumberOfItems = [menu_chatMenu numberOfItems];
+			if (currentNumberOfItems > numberOfMenuItems){
+				[menu_chatMenu addItem:[NSMenuItem separatorItem]];
+				numberOfMenuItems = currentNumberOfItems + 1;
+			}
+			
 			// Loop through all chats
-			for( i = 0; i < [openChats count]; i++ ) {
+			for(i = 0; i < [openChats count]; i++){
 				chat = [openChats objectAtIndex:i];
 				
-				// Is this the same service as this contact?				
-				if( [[chat account] service] == service ) {
+				// Is this the same serviceClass as this contact?				
+				if( [[[[chat account] service] serviceClass] isEqualToString:serviceClass] ) {
 					
-					NSLog(@"#   Considering chat %@. Name: %@. Participants: %d",chat,[chat name],[[chat participatingListObjects] count]);
 					// Is this a group chat?
 					if( [chat name] ) {
 						NSLog(@"##  Chat %@ has a name: %@",chat,[chat name]);
+						if (!menu_chatMenu){
+							menu_chatMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+						}
 						
 						if( [menu_chatMenu indexOfItemWithTitle:[chat name]] == -1 ) {
-
-							NSLog(@"### and it's not in the menu!");
-							NSMenuItem *chatItem = [[NSMenuItem alloc] initWithTitle:[chat name]
-																			  target:self
-																			  action:@selector(inviteToChat:)
-																	   keyEquivalent:@""];
-							[chatItem setRepresentedObject:[NSArray arrayWithObjects:chat,contact,service,nil]];
-							[menu_chatMenu addItem:chatItem];
-							[chatItem release];
+							NSMenuItem *menuItem;
+							NSLog(@"### and it's not in the menu - %@, %@!",chat,contact);
+							menuItem = [[NSMenuItem alloc] initWithTitle:[chat name]
+																  target:self
+																  action:@selector(inviteToChat:)
+														   keyEquivalent:@""];
+							[menuItem setRepresentedObject:[NSArray arrayWithObjects:chat,contact,nil]];
+							[menu_chatMenu addItem:menuItem];
+							[menuItem release];
 						}
 					}
 				}
 			}
-			
-			[menu_chatMenu addItem:[NSMenuItem separatorItem]];
 		}
 		
-		// Remove the last separator
-		[menu_chatMenu removeItemAtIndex:([menu_chatMenu numberOfItems]-1)];
-		[menu_chatMenu setMenuChangedMessagesEnabled:YES];
+		//Remove the last separator if our new number of items isn't bigger than the previous one (that is, we haven't added any items since the last separator)
+		currentNumberOfItems = [menu_chatMenu numberOfItems];
+		if ((currentNumberOfItems <= numberOfMenuItems) &&
+			(currentNumberOfItems > 0)){
+			
+			[menu_chatMenu removeItemAtIndex:(currentNumberOfItems-1)];
+		}
 		
-		return menu_chatMenu;
+		[menu_chatMenu setMenuChangedMessagesEnabled:YES];
 	}
 	
-	return nil;
+	return(menu_chatMenu);
 }
 
 // Dummy target so that we get validateMenuItem calls

@@ -15,7 +15,7 @@
 	AIChat						*chat;
 }
 
-+ (void)inviteToChatWindowForChat:(AIChat *)inChat contact:(AIListContact *)inContact service:(AIService *)inService;
++ (void)inviteToChatWindowForChat:(AIChat *)inChat contact:(AIListContact *)inContact;
 + (void)closeSharedInstance;
 
 - (IBAction)invite:(id)sender;
