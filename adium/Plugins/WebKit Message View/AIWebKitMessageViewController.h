@@ -19,8 +19,6 @@
 	
 	id							plugin;
 	
-	NSImage						*userIconMaskImage;
-	
 	NSString					*contentInHTML;
 	NSString					*nextContentInHTML;
 	NSString					*contextInHTML;
@@ -42,6 +40,8 @@
 	BOOL						useCustomNameFormat;
 	BOOL						combineConsecutive;
 	int							styleVersion;	
+	NSImage						*imageMask;
+	NSMutableArray				*objectsWithMaskedUserIconsArray;
 }
 
 + (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;

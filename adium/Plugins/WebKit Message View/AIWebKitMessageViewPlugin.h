@@ -58,4 +58,6 @@ typedef enum {
 - (NSString *)backgroundColorKeyForStyle:(NSString *)desiredStyle;
 
 - (BOOL)boolForKey:(NSString *)key style:(NSBundle *)style variant:(NSString *)variant boolDefault:(BOOL)defaultValue;
+- (id)valueForKey:(NSString *)key style:(NSBundle *)style variant:(NSString *)variant;
+
 @end
