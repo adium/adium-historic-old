@@ -19,60 +19,21 @@
 #import "AIVolumeControlPreferences.h"
 #import "AIVolumeControlPlugin.h"
 
-#define VOLUME_CONTROL_PREF_NIB		@"VolumeControlPrefs"	//Name of preference nib
-#define VOLUME_CONTROL_PREF_TITLE	@"Adium Volume"		//Title of the preference view
-
-@interface AIVolumeControlPreferences (PRIVATE)
-- (id)initWithOwner:(id)inOwner;
-- (void)configureView;
-@end
-
 @implementation AIVolumeControlPreferences
 
-//Return a new instance
-+ (AIVolumeControlPreferences *)volumeControlPreferencesWithOwner:(id)inOwner
-{
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+//Preference pane properties
+- (PREFERENCE_CATEGORY)category{
+    return(AIPref_Sound);
 }
-
-
-//Private ---------------------------------------------------------------------------
-//init
-- (id)initWithOwner:(id)inOwner
-{
-    //Init
-    [super init];
-    owner = [inOwner retain];
-
-    //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Sound withDelegate:self label:VOLUME_CONTROL_PREF_TITLE]];
-
-    return(self);
+- (NSString *)label{
+    return(@"X");
 }
-
-//Return the view for our preference pane
-- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    //Load our preference view nib
-    if(!view_prefView){
-        [NSBundle loadNibNamed:VOLUME_CONTROL_PREF_NIB owner:self];
-
-        //Configure our view
-        [self configureView];
-    }
-
-    return(view_prefView);
-}
-
-//Clean up our preference pane
-- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    [view_prefView release]; view_prefView = nil;
-
+- (NSString *)nibName{
+    return(@"VolumeControlPrefs");
 }
 
 //Configures our view for the current preferences
-- (void)configureView
+- (void)viewDidLoad
 {
     NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
     
@@ -110,16 +71,12 @@
     }
 
     //Volume
-   // NSLog (@"Could save slider volume of %f", value);
     if(value != [[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]){
-        //NSLog (@"Old sound volume: %@", [preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL]);
         [[owner preferenceController] setPreference:[NSNumber numberWithFloat:value]
                                              forKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL
                                               group:PREF_GROUP_GENERAL];
         playSample = YES;
-        //NSLog (@"New sound volume: %f", value);
     }
-    //NSLog (@"Opportunity for this over: 'Could save slider volume of %f'", value);
 
     //Muted
     if(mute != [[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue]){

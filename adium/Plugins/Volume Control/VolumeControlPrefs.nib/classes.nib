@@ -1,17 +1,27 @@
 {
     IBClasses = (
         {
-            ACTIONS = {selectVolume = id; }; 
-            CLASS = AIVolumeControlPreferences; 
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIPreferencePane; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "checkBox_mute" = NSButton; 
-                "slider_volume" = NSSlider; 
-                "view_prefView" = NSView; 
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                view = NSView; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {
+            ACTIONS = {selectVolume = id; }; 
+            CLASS = AIVolumeControlPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"slider_volume" = NSSlider; }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }

@@ -3566,6 +3566,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3419F46705314C6800C68BA3,
+				4BEF4FEC0534B56C00F02853,
+				4BEF4FED0534B56C00F02853,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -16492,6 +16494,8 @@
 				4B554123044DF05700A8010A,
 				4B554124044DF05700A8010A,
 				4B554127044DF5A200A8010A,
+				4BEF4FEB0534B56C00F02853,
+				4BEF4FEA0534B56C00F02853,
 			);
 			isa = PBXGroup;
 			name = "Volume Control";
@@ -19283,6 +19287,34 @@
 			path = "Plugins/Alphabetical Sort/AIAlphabeticalSortPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BEF4FEA0534B56C00F02853 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = SoundHigh.tiff;
+			path = "Plugins/Volume Control/SoundHigh.tiff";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BEF4FEB0534B56C00F02853 = {
+			expectedFileType = image.tiff;
+			isa = PBXFileReference;
+			name = SoundLow.tiff;
+			path = "Plugins/Volume Control/SoundLow.tiff";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BEF4FEC0534B56C00F02853 = {
+			fileRef = 4BEF4FEA0534B56C00F02853;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BEF4FED0534B56C00F02853 = {
+			fileRef = 4BEF4FEB0534B56C00F02853;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BEF84CD03BE41C700A8010A = {
 			expectedFileType = sourcecode.c.h;

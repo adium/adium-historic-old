@@ -28,7 +28,7 @@
 - (void)installPlugin
 {
     //Install our preference view
-    preferences = [[AIVolumeControlPreferences volumeControlPreferencesWithOwner:owner] retain];
+    preferences = [[AIVolumeControlPreferences preferencePaneWithOwner:owner] retain];
 }
 
 - (void)uninstallPlugin
