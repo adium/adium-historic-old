@@ -50,7 +50,8 @@
     [checkBox_unviewedContent setState:[[preferenceDict objectForKey:KEY_TAB_UNVIEWED_ENABLED] boolValue]];
     [checkBox_idleAndAway setState:[[preferenceDict objectForKey:KEY_TAB_IDLE_AWAY_ENABLED] boolValue]];
     [checkBox_unviewedFlash setState:[[preferenceDict objectForKey:KEY_TAB_UNVIEWED_FLASH_ENABLED] boolValue]];
-    
+    [checkBox_useCustomColors setState:[[preferenceDict objectForKey:KEY_TAB_USE_CUSTOM_COLORS] boolValue]];
+
     [self configureControlDimming];
 }
 
@@ -153,6 +154,15 @@
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
+    }
+    else if(sender == checkBox_useCustomColors){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_TAB_USE_CUSTOM_COLORS
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+        [self configureControlDimming];
+        // need to deactivate all controls besides this one & flash (all colors)
+        // copy over the CL colors first
+        NSLog(@"why didn't my programmer fix me?");
     }
 }
 
