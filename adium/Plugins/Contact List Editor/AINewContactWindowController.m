@@ -24,11 +24,16 @@
 	
 	newContactWindow = [[self alloc] initWithWindowNibName:ADD_CONTACT_PROMPT_NIB];
 	
-    [NSApp beginSheet:[newContactWindow window]
-	   modalForWindow:parentWindow
-		modalDelegate:newContactWindow
-	   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
-		  contextInfo:nil];
+	if(parentWindow){
+		[NSApp beginSheet:[newContactWindow window]
+		   modalForWindow:parentWindow
+			modalDelegate:newContactWindow
+		   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
+			  contextInfo:nil];
+	}else{
+		[newContactWindow showWindow:nil];
+	}
+	
 }
 
 //Build the menu of contact service types
@@ -94,7 +99,11 @@
 //
 - (IBAction)cancel:(id)sender
 {
-    [NSApp endSheet:[self window]];
+	if([[self window] isSheet]){
+		[NSApp endSheet:[self window]];
+	}else{
+		[self closeWindow:nil];
+	}
 }
 
 //Called as the user list edit sheet closes, dismisses the sheet
@@ -118,7 +127,11 @@
 									onAccounts:[[adium accountController] accountArray]];
 	}
 	
-    [NSApp endSheet:[self window]];
+	if([[self window] isSheet]){
+		[NSApp endSheet:[self window]];
+	}else{
+		[self closeWindow:nil];
+	}
 }
 
 - (void)controlTextDidChange:(NSNotification *)notification

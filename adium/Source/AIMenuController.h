@@ -16,11 +16,11 @@
 typedef enum {
     LOC_Adium_About, LOC_Adium_Preferences,
     LOC_File_New, LOC_File_Close, LOC_File_Save, LOC_File_Accounts, LOC_File_Additions, LOC_File_Status,
-    LOC_Edit_Additions,
+    LOC_Edit_Bottom, LOC_Edit_Additions,
     LOC_Format_Styles, LOC_Format_Palettes, LOC_Format_Additions, 
-    LOC_Window_Commands, LOC_Window_Auxilary, LOC_Window_Fixed,
+    LOC_Window_Top, LOC_Window_Commands, LOC_Window_Auxilary, LOC_Window_Fixed,
     LOC_Help_Local, LOC_Help_Web, LOC_Help_Additions,
-    LOC_Contact_Manage, LOC_Contact_Action, LOC_Contact_NegativeAction, LOC_Contact_Additions,
+    LOC_Contact_Editing, LOC_Contact_Manage, LOC_Contact_Action, LOC_Contact_NegativeAction, LOC_Contact_Additions,
     LOC_Dock_Status
 } MENU_LOCATION;
 
@@ -52,6 +52,7 @@ typedef enum {
     IBOutlet	NSMenuItem	*menu_Help_Local;
     IBOutlet	NSMenuItem	*menu_Help_Web;
     IBOutlet	NSMenuItem	*menu_Help_Additions;
+    IBOutlet	NSMenuItem	*menu_Contact_Editing;
     IBOutlet	NSMenuItem	*menu_Contact_Manage;
     IBOutlet	NSMenuItem	*menu_Contact_Action;
     IBOutlet	NSMenuItem	*menu_Contact_NegativeAction;

@@ -18,9 +18,12 @@
 #import "AIEditorAccountCollection.h"
 #import "AIEditorImportCollection.h"
 #import "AIEditorAllContactsCollection.h"
+#import "AINewContactWindowController.h"
 
 #define EDIT_CONTACT_LIST   AILocalizedString(@"Edit Contact List…",nil)
 #define EDIT_CONTACT_LIST_TOOLBAR   AILocalizedString(@"Edit Contact List",nil)
+#define ADD_CONTACT   AILocalizedString(@"Add Contact…",nil)
+
 @interface AIContactListEditorPlugin (PRIVATE)
 - (void)_generateCollectionsArray;
 - (AIEditorListHandle *)_handleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group;
@@ -40,6 +43,10 @@
     menuItem = [[[NSMenuItem alloc] initWithTitle:EDIT_CONTACT_LIST target:self action:@selector(showContactListEditor:) keyEquivalent:@"<"] autorelease];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
 
+	//Add contact menu item
+    menuItem = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT target:self action:@selector(addContact:) keyEquivalent:@""] autorelease];
+    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
+	
     //Edit contact list toolbar item
     NSToolbarItem   *toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"EditContactList"
 									   label:EDIT_CONTACT_LIST_TOOLBAR
@@ -67,6 +74,16 @@
 {
     [[AIContactListEditorWindowController contactListEditorWindowControllerForPlugin:self] showWindow:nil];
 }
+
+//
+- (IBAction)addContact:(id)sender
+{
+	[AINewContactWindowController promptForNewContactOnWindow:nil];
+}
+
+
+
+
 
 
 //Extra List Editor Columns --------------------------------------------------------------------
