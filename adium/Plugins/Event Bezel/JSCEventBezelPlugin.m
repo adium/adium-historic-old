@@ -12,6 +12,7 @@
 //#import "ESEventBezelContactAlert.h"
 
 #define CONTACT_BEZEL_NIB   @"ContactEventBezel"
+#define EVENT_BEZEL_ALERT   @"Show Event Notification Window"
 
 @interface JSCEventBezelPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -22,6 +23,9 @@
 
 - (void)installPlugin
 {
+    //Install our contact alert
+	[[adium contactAlertsController] registerActionID:@"ShowEventBezel" withHandler:self];
+
     //Register our default preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:EVENT_BEZEL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_EVENT_BEZEL];
     
@@ -195,6 +199,7 @@
 				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
 			} else if ([notificationName isEqualToString: CONTACT_STATUS_AWAY_NO]) {
 				tempEvent = AILocalizedString(@"is available",nil);
+				#warning Jorge: Here would be nice to have a check on the contact status and color accordingly
 				[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
 				[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
 			} else if ([notificationName isEqualToString: CONTACT_STATUS_IDLE_YES]) {
@@ -246,18 +251,16 @@
     }
 }
 
-//*****
-//ESContactAlertProvider
-//*****
+#pragma mark Event Notification Alert
 
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-	return(@"Display event bezel");
+	return(EVENT_BEZEL_ALERT);
 }
 
-- (NSString *)longDescriptionForActionID:(NSString *)actionID
+- (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
-	return(@"Display event bezel");
+	return(EVENT_BEZEL_ALERT);
 }
 
 - (NSImage *)imageForActionID:(NSString *)actionID
@@ -265,9 +268,14 @@
 	return([NSImage imageNamed:@"BezelAlert" forClass:[self class]]);
 }
 
+- (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
+{
+	return nil;
+}
+
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details
 {
-	
+	// Display the Event Notification
 }
 
 //        NSString * ContactStatusString = nil;
