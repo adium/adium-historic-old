@@ -944,7 +944,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		return ([processedString autorelease]);
 	}else{
-		//NSLog(@"Sending a file to a chat.  Are you insane?");
+		GaimDebug (@"Sending a file to a chat.  Are you insane?");
 		return (inString);
 	}
 }
@@ -1750,8 +1750,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		}
 		
 		[gaimThread setInfo:profileHTML onAccount:self];
-		
-		GaimDebug (@"updating profile to %@",[profile string]);
 		
 		//We now have a profile
 		[self setStatusObject:profile forKey:@"TextProfile" notify:YES];
