@@ -14,20 +14,17 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
-#import <Adium/Adium.h>
 
-#define PREF_GROUP_FORMATTING			@"Formatting"
+@class AIAdium;
 
-#define KEY_FORMATTING_FONT			@"Default Font"
-#define KEY_FORMATTING_TEXT_COLOR		@"Default Text Color"
-#define KEY_FORMATTING_BACKGROUND_COLOR		@"Default Background Color"
-#define KEY_FORMATTING_SUBBACKGROUND_COLOR	@"Default SubBackground Color"
+@interface AISpellCheckingPreferences : NSObject {
+    AIAdium			*owner;
 
-@class AIDefaultFormattingPreferences;
-
-@interface AIDefaultFormattingPlugin : AIPlugin {
-    AIDefaultFormattingPreferences	*preferences;
-
+    IBOutlet	NSView			*view_prefView;
+    IBOutlet	NSButton		*checkBox_spellChecking;
 }
+
++ (AISpellCheckingPreferences *)spellCheckingPreferencesWithOwner:(id)inOwner;
+- (IBAction)changePreference:(id)sender;
 
 @end

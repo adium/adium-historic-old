@@ -9,9 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-@protocol AITextEntryFilter;
-
-@interface AITypingNotificationPlugin : AIPlugin <AITextEntryFilter> {
+@interface AITypingNotificationPlugin : AIPlugin {
     NSMutableDictionary		*typingDict;
 }
 

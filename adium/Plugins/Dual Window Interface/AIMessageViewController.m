@@ -21,8 +21,6 @@
 #import "AIDualWindowInterfacePlugin.h"
 #import "AIAccountSelectionView.h"
 
-#define KEY_MESSAGE_SPELL_CHECKING	@"Message"
-
 #define MESSAGE_VIEW_NIB		@"MessageView"		//Filename of the message view nib
 #define MESSAGE_TAB_TOOLBAR		@"MessageTab"		//ID of the message tab toolbar
 #define ENTRY_TEXTVIEW_MIN_HEIGHT	20
@@ -243,6 +241,7 @@
     [textView_outgoing setOwner:owner];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
     [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
+    [[owner contentController] didOpenTextEntryView:textView_outgoing];
 
     //Resize and arrange our views
     [self sizeAndArrangeSubviews];
@@ -257,11 +256,9 @@
 
 - (void)closeMessageView
 {
-    //Save spellcheck state
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[textView_outgoing isContinuousSpellCheckingEnabled]] forKey:KEY_MESSAGE_SPELL_CHECKING group:PREF_GROUP_SPELLING];
-
-    //Clear the message entry text view
+    //Clear and close the message entry text view
     [self clearTextEntryView];
+    [[owner contentController] willCloseTextEntryView:textView_outgoing];
 
     //Close our chat
     if(chat){
@@ -362,9 +359,6 @@
     //Configure the message sending keys
     [textView_outgoing setSendOnEnter:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:@"Send On Enter"] boolValue]];
     [textView_outgoing setSendOnReturn:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:@"Send On Return"] boolValue]];
-
-    //Configure spellchecking
-    [textView_outgoing setContinuousSpellCheckingEnabled:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SPELLING] objectForKey:KEY_MESSAGE_SPELL_CHECKING] boolValue]];
 }
 
 //The entered text has changed
