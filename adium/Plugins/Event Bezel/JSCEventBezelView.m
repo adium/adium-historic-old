@@ -118,22 +118,22 @@ BOOL pantherOrLater;
     // Set up the Rects
     if (queueField && (![queueField isEqualToString:@""])) {
         // Buddy Icon Image and label
-        buddyIconPoint = NSMakePoint(82.0*relativeX,150.0*relativeY);
-        buddyIconLabelRect = NSMakeRect(buddyIconPoint.x-2,buddyIconPoint.y-2,52.0*relativeX,52.0*relativeX);
+        buddyIconPoint = NSMakePoint(ceil(82.0*relativeX),ceil(150.0*relativeY));
+        buddyIconLabelRect = NSMakeRect(buddyIconPoint.x-2,buddyIconPoint.y-2,[buddyIconImage size].width+4,[buddyIconImage size].height+4);
         // Main buddy name
-        buddyNameRect = NSMakeRect(12.0,116.0*relativeY,187.0*relativeX,30.0*relativeY);
+        buddyNameRect = NSMakeRect(12.0,ceil(116.0*relativeY),ceil(187.0*relativeX),ceil(30.0*relativeY));
         // Main buddy Status
-        buddyStatusRect = NSMakeRect(12.0,73.0*relativeY,187.0*relativeX,44.0*relativeY);
+        buddyStatusRect = NSMakeRect(12.0,ceil(73.0*relativeY),ceil(187.0*relativeX),ceil(44.0*relativeY));
         // Queue stack
-        queueRect = NSMakeRect(12.0,8.0,187.0*relativeX,52.0*relativeY);
+        queueRect = NSMakeRect(12.0,8.0,ceil(187.0*relativeX),ceil(52.0*relativeY));
     } else {
         // Buddy Icon Image and label
-        buddyIconPoint = NSMakePoint(82.0*relativeX,120.0*relativeY);
-        buddyIconLabelRect = NSMakeRect(buddyIconPoint.x-2,buddyIconPoint.y-2,52.0*relativeX,52.0*relativeX);
+        buddyIconPoint = NSMakePoint(ceil(82.0*relativeX),ceil(120.0*relativeY));
+        buddyIconLabelRect = NSMakeRect(buddyIconPoint.x-2,buddyIconPoint.y-2,[buddyIconImage size].width+4,[buddyIconImage size].height+4);
         // Main buddy name
-        buddyNameRect = NSMakeRect(12.0,80.0*relativeY,187.0*relativeX,30.0*relativeY);
+        buddyNameRect = NSMakeRect(12.0,ceil(80.0*relativeY),ceil(187.0*relativeX),ceil(30.0*relativeY));
         // Main buddy Status
-        buddyStatusRect = NSMakeRect(12.0,37.0*relativeY,187.0*relativeX,44.0*relativeY);
+        buddyStatusRect = NSMakeRect(12.0,ceil(37.0*relativeY),ceil(187.0*relativeX),ceil(44.0*relativeY));
         // Queue stack empty, no rect
         queueRect = NSMakeRect(0.0,0.0,0.0,0.0);
     }
