@@ -101,7 +101,6 @@
     
     //Cleanup
     [windowMenuArray release];
-    [super dealloc];
 }
 
 //Contact List ---------------------------------------------------------------------

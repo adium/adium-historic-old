@@ -368,7 +368,6 @@
 }
 
 
-
 //A collection's content has changed
 - (void)collectionContentChanged:(NSNotification *)notification
 {
