@@ -94,7 +94,7 @@ Adium, Copyright 2001-2005, Adam Iser
  */
 - (void)beginClosing
 {
-    [AIPreferenceWindowController closeSharedInstance];
+    [AIPreferenceWindowController closePreferenceWindow];
 }
 
 /*
@@ -150,7 +150,7 @@ Adium, Copyright 2001-2005, Adam Iser
  */
 - (IBAction)showPreferenceWindow:(id)sender
 {
-    [[AIPreferenceWindowController preferenceWindowController] showWindow:nil];
+	[AIPreferenceWindowController openPreferenceWindow];
 }
 
 /*
@@ -162,9 +162,7 @@ Adium, Copyright 2001-2005, Adam Iser
  */
 - (void)openPreferencesToCategory:(PREFERENCE_CATEGORY)category
 {
-	AIPreferenceWindowController	*preferenceWindow = [AIPreferenceWindowController preferenceWindowController];
-    [preferenceWindow showCategory:category];
-    [preferenceWindow showWindow:nil];
+	[AIPreferenceWindowController openPreferenceWindowToCategory:category];
 }
 
 /*
@@ -173,12 +171,9 @@ Adium, Copyright 2001-2005, Adam Iser
  * Opens the preference window if necessary
  *
  */
-// Does this still work? -eds
-- (void)openPreferencesToAdvancedPane:(NSString *)paneName inCategory:(PREFERENCE_CATEGORY)category
+- (void)openPreferencesToAdvancedPane:(NSString *)paneName
 {
-	AIPreferenceWindowController	*preferenceWindow = [AIPreferenceWindowController preferenceWindowController];
-	[preferenceWindow showAdvancedPane:paneName inCategory:category];
-	[preferenceWindow showWindow:nil];
+	[AIPreferenceWindowController openPreferenceWindowToAdvancedPane:paneName];
 }
 
 /*
