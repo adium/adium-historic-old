@@ -33,7 +33,7 @@
 }
 - (NSString *)description
 {
-    return([NSString stringWithFormat:@"AIM %@",[self gaimDescriptionSuffix]]);
+    return([NSString stringWithFormat:@"AIM / ICQ %@",[self gaimDescriptionSuffix]]);
 }
 
 - (id)accountWithUID:(NSString *)inUID
