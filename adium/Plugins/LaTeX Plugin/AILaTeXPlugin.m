@@ -16,6 +16,10 @@
     [[adium contentController] registerDisplayingContentFilter:self];
 }
 
+- (void)uninstallPlugin
+{
+	[[adium contentController] unregisterOutgoingContentFilter:self];
+}
 
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject
 {
