@@ -56,4 +56,9 @@
 	[script executeAndReturnError:nil];
 }
 
+- (BOOL)allowMultipleActionsWithID:(NSString *)actionID
+{
+	return(YES);
+}
+
 @end
