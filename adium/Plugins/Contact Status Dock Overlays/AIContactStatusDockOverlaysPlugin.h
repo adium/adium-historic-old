@@ -22,7 +22,7 @@
 
 @class AIStatusOverlayPreferences;
 
-@interface AIContactStatusDockOverlaysPlugin : AIPlugin <AIListObjectObserver> {
+@interface AIContactStatusDockOverlaysPlugin : AIPlugin <AIListObjectObserver, AIChatObserver> {
     NSMutableArray				*unviewedObjectsArray;
     AIIconState					*overlayState;
     AIStatusOverlayPreferences	*preferences;
