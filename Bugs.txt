@@ -6,6 +6,9 @@
 // Adium X Known Issues
 //------------------------------------------------------------------------------------
 [HIGH]
+Group Chat
+	- When your nick in a chat room isn't the same as your account name, messages are mirrored back
+	  to you as incoming after they are dispalayed as outgoing.
 
 [MEDIUM]
 Contact List
@@ -13,6 +16,9 @@ Contact List
 
 Contacts
 	- MSN Authorization requests seem to fail to show up at least sometimes.
+
+Rendezvous
+	- Messages with line breaks break the Rendezvous connection with the destination contact
 
 [LOW]
 
@@ -44,7 +50,6 @@ Other
 //------------------------------------------------------------------------------------
 // Bugs - Unconfirmed
 //------------------------------------------------------------------------------------
-- Pasted content with line breaks may fail to send via Rendezvous
 - Messages with invalid looking HTML <tags> received via jabber (from ICQ user over
     transport), the invalid tags are being eaten? (Our HTML decoder isn't
     eating them, is libgaim?)
@@ -56,6 +61,8 @@ Other
     previously authorized contacts work as expected.
 - (Yahoo) yahoo_html_to_codes() produces output which Fire and perhaps other clients
 	do not process. Is this a libgaim bug or a Fire/other clients bug?
+- (Yahoo) typing in a group chat sending typing to all open yahoo chats?
+
 //------------------------------------------------------------------------------------
 // Bugs - Unavoidable
 //------------------------------------------------------------------------------------
