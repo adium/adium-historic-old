@@ -14,13 +14,13 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.26 $
- * $Date: 2004/07/15 18:29:27 $
+ * $Revision: 1.27 $
+ * $Date: 2004/07/27 19:17:58 $
  * $Author: evands $
  **/
 
 #define Account_ListChanged 					@"Account_ListChanged"
-#define Account_HandlesChanged					@"Account_HandlesChanged"
+#define Adium_RequestSetManualIdleTime			@"Adium_RequestSetManualIdleTime"
 
 //Connecting is faded by 40%
 #define CONNECTING_MENU_IMAGE_FRACTION  0.60
@@ -97,6 +97,7 @@
 - (void)autoConnectAccounts;
 - (void)connectAllAccounts;
 - (void)disconnectAllAccounts;
+- (BOOL)oneOrMoreConnectedAccounts;
 
 //Password Storage
 - (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount;
