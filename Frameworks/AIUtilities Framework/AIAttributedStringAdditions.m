@@ -314,6 +314,15 @@ NSAttributedString *_safeString(NSAttributedString *inString);
 
 @implementation NSAttributedString (AIAttributedStringAdditions)
 
+//Height of a string
+#define FONT_HEIGHT_STRING		@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()"
++ (float)stringHeightForAttributes:(NSDictionary *)attributes
+{
+	NSAttributedString	*string = [[[NSAttributedString alloc] initWithString:FONT_HEIGHT_STRING
+																   attributes:attributes] autorelease];
+	return([string heightWithWidth:1e7]);
+}
+
 + (NSAttributedString *)stringWithString:(NSString *)inString
 {
 	return([[[NSAttributedString alloc] initWithString:inString] autorelease]);

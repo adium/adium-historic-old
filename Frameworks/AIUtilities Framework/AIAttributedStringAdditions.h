@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface NSMutableAttributedString (AIAttributedStringAdditions)
-
 - (void)appendString:(NSString *)aString withAttributes:(NSDictionary *)attrs;
 - (NSData *)dataRepresentation;
 - (NSAttributedString *)safeString;
@@ -31,7 +30,7 @@
 @end
 
 @interface NSAttributedString (AIAttributedStringAdditions)
-
++ (float)stringHeightForAttributes:(NSDictionary *)attributes;
 - (float)heightWithWidth:(float)width;
 - (NSData *)dataRepresentation;
 + (NSAttributedString *)stringWithData:(NSData *)inData;
