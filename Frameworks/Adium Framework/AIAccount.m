@@ -135,12 +135,22 @@ Adium, Copyright 2001-2005, Adam Iser
  * Returns an array of status keys supported by this account.  This account will not be informed of changes to keys
  * it does not support.  Available keys are:
  *   @"Display Name", @"Online", @"Offline", @"IdleSince", @"IdleManuallySet", @"User Icon"
- *   @"Away", @"AwayMessage", @"TextProfile", @"DefaultUserIconFilename"
- * @return NSArray of supported keys
+ *   @"Away", @"AwayMessage", @"TextProfile", @"DefaultUserIconFilename", @"Invisible", @"AvailableMessage"
+ * @return NSSet of supported keys
  */
-- (NSArray *)supportedPropertyKeys
+- (NSSet *)supportedPropertyKeys
 {
-	return([NSArray array]);
+	static	NSSet	*supportedPropertyKeys = nil;
+	if(!supportedPropertyKeys){
+		supportedPropertyKeys = [[NSSet alloc] initWithObjects:
+			@"FormattedUID",
+			@"FullNameAttr",
+			@"Display Name",
+			KEY_USER_ICON,
+			nil];
+	}
+			
+	return(supportedPropertyKeys);
 }
 
 /*!

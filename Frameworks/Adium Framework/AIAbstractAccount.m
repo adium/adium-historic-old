@@ -165,7 +165,9 @@ Adium, Copyright 2001-2005, Adam Iser
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	if(!object || object == self){
-		[self updateStatusForKey:key];
+		if([[self supportedPropertyKeys] containsObject:key]){
+			[self updateStatusForKey:key];
+		}
 	}
 }
 
