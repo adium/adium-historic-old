@@ -179,7 +179,7 @@ static NDComponentInstance		* sharedComponentInstance = nil;
 		/*	need to save the default send proceedure as we will call it in our send proceedure	*/
 		if( aTarget != nil )
 		{
-			if( defaultSendProcPtr == NULL )		// need to save this so we can restor it
+			if( defaultSendProcPtr == NULL )		// need to save this so we can restore it
 			{
 				ComponentInstance		theComponent = [self scriptingComponent];
 
@@ -261,15 +261,15 @@ static NDComponentInstance		* sharedComponentInstance = nil;
 - (NSAppleEventDescriptor *)sendAppleEvent:(NSAppleEventDescriptor *)theAppleEventDescriptor sendMode:(AESendMode)aSendMode sendPriority:(AESendPriority)aSendPriority timeOutInTicks:(long)aTimeOutInTicks idleProc:(AEIdleUPP)anIdleProc filterProc:(AEFilterUPP)aFilterProc
 {
 	NSAppleEventDescriptor		* theReplyAppleEventDesc = nil;
-	AppleEvent						theReplyAppleEvent;
-
+	AppleEvent					theReplyAppleEvent;
+	
 	NSParameterAssert( defaultSendProcPtr != NULL );
 
 	if( defaultSendProcPtr( [theAppleEventDescriptor aeDesc], &theReplyAppleEvent, aSendMode, aSendPriority, aTimeOutInTicks, anIdleProc, aFilterProc, defaultSendProcRefCon ) == noErr )
 	{
 		theReplyAppleEventDesc = [NSAppleEventDescriptor descriptorWithAEDescNoCopy:&theReplyAppleEvent];
 	}
-	
+
 	return theReplyAppleEventDesc;
 }
 
@@ -316,13 +316,20 @@ OSErr AppleEventSendProc( const AppleEvent *anAppleEvent, AppleEvent *aReply, AE
 	NSCParameterAssert( self != nil );
 	
 	/*	if we have an instance, it has a target and we can create a NSAppleEventDescriptor	*/
+
 	if( theSendTarget != nil && theAppleEventDescriptor != nil )
 	{
-		theAppleEventDescReply = [theSendTarget sendAppleEvent:theAppleEventDescriptor sendMode:aSendMode sendPriority:aSendPriority timeOutInTicks:aTimeOutInTicks idleProc:anIdleProc filterProc:aFilterProc];
-
-		if( [theAppleEventDescReply getAEDesc:(AEDesc*)aReply] )
+		if( theAppleEventDescReply = [theSendTarget sendAppleEvent:theAppleEventDescriptor sendMode:aSendMode sendPriority:aSendPriority timeOutInTicks:aTimeOutInTicks idleProc:anIdleProc filterProc:aFilterProc] )
+		{			
+			if( [theAppleEventDescReply getAEDesc:(AEDesc*)aReply] )
+			{
+				theError = noErr;			// NO ERROR
+			}
+		}
+		else
 		{
-			theError = noErr;			// NO ERROR
+			/* if theSendTarget replies NULL, use the defaultSendProcPtr */
+			theError = (self->defaultSendProcPtr)( anAppleEvent, aReply, aSendMode, aSendPriority, aTimeOutInTicks, anIdleProc, aFilterProc, self->defaultSendProcRefCon );			
 		}
 	}
 	else if( self->defaultSendProcPtr != NULL )
