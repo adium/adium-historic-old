@@ -61,6 +61,7 @@ irc:\/\/	|
 nntp:\/\/       |
 cifs:\/\/	|
 smb:\/\/	|
+hydra:\/\/	|
 itms:\/\/	|
 see:\/\/        |
 afp:\/\/	|
