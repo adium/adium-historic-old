@@ -65,7 +65,7 @@ static AINewMessagePrompt *sharedInstance = nil;
     UID = [serviceType filterUID:[textField_handle stringValue]];
         
     //Find the contact
-    contact = [[adium contactController] contactInGroup:nil withService:[serviceType identifier] UID:UID serverGroup:nil create:YES];
+	contact = [[adium contactController] contactWithService:[serviceType identifier] UID:UID];
     if(contact){
         AIChat	*chat;
         

@@ -57,28 +57,28 @@
     [super dealloc];
 }
 
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     NSArray		*modifiedAttributes = nil;
-
+	
     if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Idle"]){
         AIMutableOwnerArray	*viewArray;
         AIIdleView		*idleView = nil;
         double			idle;
-
+		
         //Set the correct idle time
         idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
-
+		
         if(displayIdleOnLeft){
-	    viewArray = [inObject displayArrayForKey:@"Left View"];
-	    [[inObject displayArrayForKey:@"Right View"] setObject:nil withOwner:self];
-
-	}else{
-	    viewArray = [inObject displayArrayForKey:@"Right View"];
-	    [[inObject displayArrayForKey:@"Left View"]  setObject:nil withOwner:self];
-
-	}
-
+			viewArray = [inObject displayArrayForKey:@"Left View"];
+			[[inObject displayArrayForKey:@"Right View"] setObject:nil withOwner:self];
+			
+		}else{
+			viewArray = [inObject displayArrayForKey:@"Right View"];
+			[[inObject displayArrayForKey:@"Left View"]  setObject:nil withOwner:self];
+			
+		}
+		
         idleView = [viewArray objectWithOwner:self];
         if(displayIdleTime && idle != 0){
             //Add an idle view if one doesn't exist
@@ -86,10 +86,10 @@
                 idleView = [AIIdleView idleView];
                 [viewArray setObject:idleView withOwner:self];
             }
-
+			
             //Set the correct time
             [idleView setStringContent:[self idleStringForSeconds:idle]];
-
+			
             //Set the correct color
             [idleView setColor:idleTextColor];
             
@@ -99,10 +99,10 @@
                 [viewArray setObject:nil withOwner:self];
             }
         }
-
-	modifiedAttributes = [NSArray arrayWithObjects:@"Left View", @"Right View", nil];
+		
+		modifiedAttributes = [NSArray arrayWithObjects:@"Left View", @"Right View", nil];
     }
-
+	
     return(modifiedAttributes);
 }
 
@@ -129,22 +129,22 @@
 {
     //Optimize this...
     if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_IDLE_TIME_DISPLAY] == 0){
-	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
-
+		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
+		
         //Cache the preference values
         [idleTextColor release];
-	displayIdleTime = [[prefDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue];
-	displayIdleOnLeft = [[prefDict objectForKey:KEY_DISPLAY_IDLE_TIME_ON_LEFT] boolValue];
+		displayIdleTime = [[prefDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue];
+		displayIdleOnLeft = [[prefDict objectForKey:KEY_DISPLAY_IDLE_TIME_ON_LEFT] boolValue];
         idleTextColor = [[[prefDict objectForKey:KEY_IDLE_TIME_COLOR] representedColor] retain];
         
         //Update all our idle views
-	NSEnumerator		*enumerator;
-	AIListObject		*object;
-
-	enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
-
-	while(object = [enumerator nextObject]){
-            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil delayed:YES silent:YES] delayed:YES];
+		NSEnumerator		*enumerator;
+		AIListObject		*object;
+		
+		enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+		
+		while(object = [enumerator nextObject]){
+            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil silent:YES]];
         }
     }
 }
