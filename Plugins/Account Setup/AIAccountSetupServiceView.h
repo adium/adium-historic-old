@@ -15,8 +15,13 @@
 	NSAttributedString	*serviceName;
 	NSSize				serviceNameSize;
 	
+	BOOL				mouseIn;
+	NSTrackingRectTag	trackingTag;
+	
 	NSArray				*accounts;
 	NSSize				serviceIconSize;
+	
+	AIAccount		*hoveredAccount;
 	
 	int 				accountNameHeight;
 }

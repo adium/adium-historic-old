@@ -188,7 +188,7 @@ AIAccountSetupWindowController *sharedAccountSetupWindowInstance = nil;
 	
 	//New user header
 	if(![box_newUserHeader isHidden]){
-		windowHeight += [box_newUserHeader frame].size.height - 15;
+		windowHeight += [box_newUserHeader frame].size.height;
 	}else{
 		windowHeight += 16;
 	}

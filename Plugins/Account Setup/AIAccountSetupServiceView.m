@@ -51,8 +51,72 @@
 //
 - (void)resetCursorRects
 {
+	if(trackingTag){
+		[self removeTrackingRect:trackingTag];
+		trackingTag = 0;
+	}
 	
+	if([self window]){
+		
+		if([accounts count]){
+			NSEnumerator	*enumerator = [accounts objectEnumerator];
+			AIAccount		*account;
+			
+			while(account = [enumerator nextObject]){
+
+				NSRect	rect = NSMakeRect(serviceIconSize.width + SERVICE_ICON_NAME_PADDING,
+										  [self frame].size.height - (serviceNameSize.height + (accountNameHeight + ACCOUNT_NAME_SPACING) * ([accounts indexOfObject:account]+1)),
+										  [self frame].size.width - (serviceIconSize.width + SERVICE_ICON_NAME_PADDING),
+										  accountNameHeight);
+				
+				
+				trackingTag = [self addTrackingRect:rect
+											  owner:self
+										   userData:account
+									   assumeInside:NO];
+				
+				
+				
+				
+			}
+			
+			
+		}else{
+			trackingTag = [self addTrackingRect:NSMakeRect(0, 0, [self frame].size.width, [self frame].size.height)
+										  owner:self
+									   userData:nil
+								   assumeInside:NO];
+		}
+	}
 }
+
+- (void)mouseEntered:(NSEvent *)theEvent
+{
+	mouseIn = YES;
+	hoveredAccount = [theEvent userData];
+	[self setNeedsDisplay:YES];
+}
+
+- (void)mouseExited:(NSEvent *)theEvent
+{
+	mouseIn = NO;
+	hoveredAccount = nil;
+	[self setNeedsDisplay:YES];
+}
+
+
+
+
+- (void)mouseDown:(NSEvent *)theEvent
+{
+
+}
+
+
+
+
+
+
 
 - (void)addAccounts:(NSArray *)array
 {
@@ -84,6 +148,13 @@
 	NSRect				frame = NSMakeRect(0, 0, [self frame].size.width, [self frame].size.height);
 	NSRect				rect;
 
+	
+	if(mouseIn && !hoveredAccount){
+//		[[NSColor controlHighlightColor] set];
+		[[NSColor selectedControlColor] set];
+		[NSBezierPath fillRect:drawRect];
+	}
+	
 	//Service Icon
 	rect = NSMakeRect(frame.origin.x,
 					  frame.origin.y + frame.size.height - serviceIconSize.height,
@@ -121,6 +192,14 @@
 		while(account = [enumerator nextObject]){
 			NSImage *statusIcon = [AIStatusIcons statusIconForStatusID:@"available" type:AIStatusIconTab direction:AIIconNormal];
 			NSSize	iconSize = [statusIcon size];
+
+			if(mouseIn && hoveredAccount == account){
+				[[NSColor selectedControlColor] set];
+				[NSBezierPath fillRect:NSMakeRect(frame.origin.x,
+												  frame.origin.y + frame.size.height - accountNameHeight + ACCOUNT_NAME_OFFSET,
+												  frame.size.width,
+												  accountNameHeight)];
+			}
 			
 			//Status icon
 			rect = NSMakeRect(frame.origin.x + STATUS_ICON_INDENT,
