@@ -148,7 +148,7 @@
                     sendOrReceive = [NSString stringWithString:@"receive"];
                 }
 
-                logMessage = [NSString stringWithFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@:</span><pre class=\"message\"> %@</pre></div>\n", sendOrReceive, dateString, [source UID], [AIHTMLDecoder encodeHTML:message headers:NO fontTags:logFont closeFontTags:logFont styleTags:logStyle closeStyleTagsOnFontChange:closeStyle encodeNonASCII:YES]];
+                logMessage = [NSString stringWithFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@: </span><pre class=\"message\">%@</pre></div>\n", sendOrReceive, dateString, [source UID], [AIHTMLDecoder encodeHTML:message headers:NO fontTags:logFont closeFontTags:logFont styleTags:logStyle closeStyleTagsOnFontChange:closeStyle encodeNonASCII:YES]];
 
             } else {
                 logMessage = [NSString stringWithFormat:@"(%@) %@: %@\n", dateString, [source UID], [message string]];
