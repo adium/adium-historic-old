@@ -65,7 +65,12 @@
 
 //Accepting Drags ------------------------------------------------------------------------------------------------------
 #pragma mark Accepting Drags
-- (unsigned int)draggingEntered:(id <NSDraggingInfo>)sender
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
+{
+	return NSDragOperationCopy;
+}
+
+- (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender
 {
 	return NSDragOperationCopy;
 }
