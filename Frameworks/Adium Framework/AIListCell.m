@@ -70,7 +70,7 @@
 }
 
 //Set our control view (Better than passing this around like crazy)
-- (void)setControlView:(NSView *)inControlView
+- (void)setControlView:(AIListOutlineView *)inControlView
 {
 	controlView = inControlView;
 }
