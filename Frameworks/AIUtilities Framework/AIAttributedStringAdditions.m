@@ -412,7 +412,6 @@ NSMutableAttributedString  *str = [self mutableCopy];
 
 @end
 
-
 //Separated out to avoid code duplication
 NSAttributedString *_safeString(NSAttributedString *inString)
 {
