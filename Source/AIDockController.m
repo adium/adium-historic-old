@@ -56,17 +56,13 @@
     needsDisplay = NO;
 
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_DEFAULT_PREFS
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_DEFAULT_PREFS
 																		forClass:[self class]] 
 										  forGroup:PREF_GROUP_GENERAL];
     
     //Observe pref changes
-    [[owner notificationCenter] addObserver:self
-								   selector:@selector(preferencesChanged:) 
-									   name:Preference_GroupChanged
-									 object:nil];
-    [self preferencesChanged:nil];
-
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];
+	
     //We always want to stop bouncing when Adium is made active
     [[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(appWillChangeActive:) 
@@ -79,7 +75,7 @@
 												 name:NSApplicationWillResignActiveNotification 
 											   object:nil];
 
-    [[owner notificationCenter] addObserver:self 
+    [[adium notificationCenter] addObserver:self 
 								   selector:@selector(adiumVersionUpgraded:) 
 									   name:Adium_VersionUpgraded
 									 object:nil];
@@ -105,44 +101,38 @@
 	[stateArrayCopy release];
 }
 
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_GENERAL]){
-        NSString	*key = [[notification userInfo] objectForKey:@"Key"];
-        
-        if(notification == nil || (key && [key isEqualToString:KEY_ACTIVE_DOCK_ICON])){
-            NSDictionary        *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
-            NSMutableDictionary	*newAvailableIconStateDict;
-            NSString			*iconPath;
-            
-            //Load the new icon pack
-            iconPath = [self _pathOfIconPackWithName:[preferenceDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
-            if(iconPath){
-                if(newAvailableIconStateDict = [[self iconPackAtPath:iconPath] retain]){
-                    [availableIconStateDict release]; availableIconStateDict = newAvailableIconStateDict;
-                }
-            }
-    
-#ifdef MAC_OS_X_VERSION_10_0
-            //Write the icon to the Adium application bundle so finder will see it
-
-			//On launch we only need to update the icon file if this is a new version of Adium.  When preferences
-			//change we always want to update it
-			if(notification != nil){
-				[self updateAppBundleIcon];
+	if(!key || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]){
+		NSMutableDictionary	*newAvailableIconStateDict;
+		NSString			*iconPath;
+		
+		//Load the new icon pack
+		iconPath = [self _pathOfIconPackWithName:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
+		if(iconPath){
+			if(newAvailableIconStateDict = [[self iconPackAtPath:iconPath] retain]){
+				[availableIconStateDict release]; availableIconStateDict = newAvailableIconStateDict;
 			}
-#endif
-            //Recomposite the icon
-            [self _setNeedsDisplay];
-        }
-    }
+		}
+		
+		//Write the icon to the Adium application bundle so finder will see it
+		//On launch we only need to update the icon file if this is a new version of Adium.  When preferences
+		//change we always want to update it
+		if(!group){
+			[self updateAppBundleIcon];
+		}
+
+		//Recomposite the icon
+		[self _setNeedsDisplay];
+	}
 }
 
 - (void)adiumVersionUpgraded:(NSNotification *)notification
 {
 	[self updateAppBundleIcon];
 	
-	[[owner notificationCenter] removeObserver:self
+	[[adium notificationCenter] removeObserver:self
 										  name:Adium_VersionUpgraded
 										object:nil];
 }
@@ -380,7 +370,7 @@
     //Stop any existing animation
     [animationTimer invalidate]; [animationTimer release]; animationTimer = nil;
     if(observingFlash){
-        [[owner interfaceController] unregisterFlashObserver:self];
+        [[adium interfaceController] unregisterFlashObserver:self];
         observingFlash = NO;
     }
 
@@ -406,7 +396,7 @@
 
     }else{ //Animated icon
         //Our dock icon can run its animation at any speed, but we want to try and sync it with the global Adium flashing.  To do this, we delay starting our timer until the next flash occurs.
-        [[owner interfaceController] registerFlashObserver:self];
+        [[adium interfaceController] registerFlashObserver:self];
         observingFlash = YES;
 
         //Set the first frame of our animation
@@ -429,7 +419,7 @@
     [self animateIcon:animationTimer]; //Set the icon and move to the next frame
 
     //Once our animations stops, we no longer need to observe flashing
-    [[owner interfaceController] unregisterFlashObserver:self];
+    [[adium interfaceController] unregisterFlashObserver:self];
     observingFlash = NO;
 }
 

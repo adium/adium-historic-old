@@ -37,7 +37,7 @@ typedef enum {
 @protocol AIFlashObserver;
 
 @interface AIDockController: NSObject <AIFlashObserver> {
-    IBOutlet	AIAdium 	*owner;
+    IBOutlet	AIAdium 	*adium;
 	
     NSTimer 				*animationTimer;
     NSTimer					*bounceTimer;
