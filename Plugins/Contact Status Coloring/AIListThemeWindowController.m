@@ -111,9 +111,7 @@
 	if([AISCLViewPlugin createSetFromPreferenceGroup:PREF_GROUP_LIST_THEME
 											withName:[textField_themeName stringValue]
 										   extension:LIST_THEME_EXTENSION
-											inFolder:LIST_THEME_FOLDER]){
-		[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:LIST_THEME_EXTENSION];
-		
+											inFolder:LIST_THEME_FOLDER]){		
 		[[adium preferenceController] setPreference:newName
 											 forKey:KEY_LIST_THEME_NAME
 											  group:PREF_GROUP_CONTACT_LIST];
