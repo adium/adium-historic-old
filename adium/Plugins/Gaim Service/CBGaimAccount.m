@@ -1313,7 +1313,7 @@ static id<GaimThread> gaimThread = nil;
 			NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			[self setAccountIdleTo:(idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil)];
 			
-		}else if(([key compare:@"AwayMessage"] == 0) || ([key compare:@"TextProfile"] == 0)){
+		}else if([key compare:@"AwayMessage"] == 0){
 			[self setAccountAwayTo:[self autoRefreshingOutgoingContentForStatusKey:key]];
 			
 		}else if([key compare:@"TextProfile"] == 0){
