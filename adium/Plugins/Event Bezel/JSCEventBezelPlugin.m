@@ -114,8 +114,17 @@
 
 - (void)actionNotification:(NSNotification *)notification
 {
-    if (!showEventBezel || (![eventArray containsObject:[notification name]])) {
-        [self processBezelForNotification:notification];
+    if (!showEventBezel || (![eventArray containsObject:[notification object]])) {
+        NSDictionary * info = [notification userInfo];
+        
+        //Retain to be on the safe side
+        NSString * notificationName = [[notification object] retain];
+        AIListContact * contact = [[info objectForKey:@"object"] retain];
+        
+        [self processBezelForNotification:[NSNotification notificationWithName:notificationName object:contact]];
+
+        //Now release, having displayed the bezel
+        [notificationName release]; [contact release];
     }
 }
 
@@ -148,7 +157,6 @@
     if(ownerArray && [ownerArray count]) {
         tempBuddyIcon = [ownerArray objectAtIndex:0];
     }
-    
     if (isFirstMessage) {
         AIContentMessage    *contentMessage = [[notification userInfo] objectForKey:@"Object"];
         statusMessage = [[contentMessage message] string];
@@ -164,7 +172,6 @@
         }*/
     }
     
-    // Prepare the event string and label color
     if ([notificationName isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
         tempEvent = @"is now online";
         if (useColorLabels)
@@ -214,7 +221,6 @@
     if ([ebc bezelPosition] != prefsPosition) {
         [ebc setBezelPosition: prefsPosition];
     }
-    
     [ebc showBezelWithContact: [contact longDisplayName]
                     withImage: tempBuddyIcon
                      forEvent: tempEvent

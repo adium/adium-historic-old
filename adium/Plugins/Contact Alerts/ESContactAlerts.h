@@ -77,11 +77,14 @@
 - (IBAction)saveMessageDetails:(id)sender;
 - (IBAction)saveOpenMessageDetails:(id)sender;
 
+/*
 - (IBAction)actionBounceDock:(id)sender;
 - (IBAction)actionDisplayAlert:(id)sender;
 - (IBAction)actionPlaySound:(id)sender;
 - (IBAction)actionSendMessage:(id)sender;
 - (IBAction)actionSpeakText:(id)sender;
+- (IBAction)actionDisplayBezel:(id)sender;
+*/
 
 - (BOOL)isEqual:(id)inInstance;
 - (unsigned) hash;

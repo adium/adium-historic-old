@@ -8,6 +8,7 @@
 #import "ESContactAlertsPlugin.h"
 #import "ESContactAlertsWindowController.h"
 #import "ESContactAlertsPreferences.h"
+#import "AIContactStatusEventsPlugin.h"
 
 @interface ESContactAlertsPlugin(PRIVATE)
 - (void)processEventActionArray:(NSMutableArray *)eventActionArray forObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys;
@@ -57,6 +58,10 @@
     {
         NSMutableArray * eventActionArray;
         
+        //To track actions which should only be done once, for the user if possible, then for the group is still needed
+        //Such behaviors are dock bouncing and event bezel display
+        processedForUser = NO;
+        
         //load inObject events
         eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject];
         //process inObject events
@@ -93,7 +98,7 @@
             int onlyWhileActive = [[actionDict objectForKey:KEY_EVENT_ACTIVE] intValue];
             BOOL success = NO;
 
-            if ([action compare:@"Message"] == 0) { //message - uses Only While Active in a special way
+            if ([action isEqualToString:@"Message"]) { //message - uses Only While Active in a special way
 
                 AIAccount * account;
                 AIContentMessage * responseContent;
@@ -129,7 +134,7 @@
                     if (!onlyWhileActive || (![[owner accountController] propertyForKey:@"IdleSince" account:account] && ![[owner accountController] propertyForKey:@"AwayMessage" account:account])) {
                         if ([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) {
                             AIChat	*chat = [[owner contentController] openChatOnAccount:account withListObject:contact];
-
+                            
                             [[owner interfaceController] setActiveChat:chat];
                             responseContent = [AIContentMessage messageInChat:chat
                                                                    withSource:account
@@ -138,77 +143,112 @@
                                                                       message:message
                                                                     autoreply:NO];
                             success = [[owner contentController] sendContentObject:responseContent];
-
+                            
                             if (!success)
                                 errorReason = @"failed while sending the message.";
                         }
                         else { //target contact is not online
                             errorReason = [NSString stringWithFormat:@"failed because %@ is currently unavailable.",[contact displayName]];                            success = NO;
                         }
-
+                        
                     }
                     else { //target account not active
                         displayError = NO; //don't display an error message, even if the preference is to do so
                         success = NO;
                     }
                 }
-
+                
                 if (!success && displayError) { //Would have had it if it weren't for those pesky account and contact kids...
                     NSString *alertMessage = [NSString stringWithFormat:@"The attempt to send \"%@\" to %@ %@",[message string],[contact displayName],errorReason];
                     NSString *title = [NSString stringWithFormat:@"%@ %@", [inObject displayName], [actionDict objectForKey:KEY_EVENT_DISPLAYNAME]];
                     [[owner interfaceController] handleMessage:title withDescription:alertMessage withWindowTitle:@"Error Sending Message"];
                 }
             }
-
+            
             else { //use Only While Active in a global sense from here on out
                 if (!onlyWhileActive || (![[owner accountController] propertyForKey:@"IdleSince" account:nil] && ![[owner accountController] propertyForKey:@"AwayMessage" account:nil])) {
-                    if ([action compare:@"Sound"] == 0) {
-                        if (details != nil && [details length] != 0) {
+                    if ([action isEqualToString:@"Sound"]) {
+                        if (details != nil && [details length] != 0 && !processedForUser) {
+                            processedForUser = YES;
                             [[owner soundController] playSoundAtPath:details]; //Play the sound
                             success = YES;
                         }
                         else
                             success = NO;
                     }
-
-                    else if ([action compare:@"Alert"] == 0) {
+                    
+                    else if ([action isEqualToString:@"Alert"]) {
                         NSString *title = [[[NSString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", [inObject displayName], [actionDict objectForKey:KEY_EVENT_DISPLAYNAME]]] autorelease];
                         [[owner interfaceController] handleMessage:title withDescription:details withWindowTitle:@"Contact Alert"];
                         success = YES;
                     }
-
-                    else if ([action compare:@"Bounce"] == 0) {
-                        //Perform the behavior
-                        [[owner dockController] performBehavior:[details intValue]];
-                        success = YES;
-                    }
-
-                    else if ([action compare:@"Speak"] == 0) {
-			[[owner soundController] speakText:details];
-                        success = YES;
-                    }
-
-                    else if ([action compare:@"Open Message"] == 0) { //Force open a chat window
-                        NSDictionary * detailsDict = [actionDict objectForKey:KEY_EVENT_DETAILS_DICT];
-                        AIAccount * account = [[owner accountController] accountWithID:details];
-                        success = YES;
-                        if ([[account propertyForKey:@"Status"] intValue] == STATUS_OFFLINE) { //desired account not available
-                            if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) { //use another account if necessary pref
-                                account = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:inObject];
-                            }
-                            if (!account)
-                                    success = NO;
+                    
+                    else if ([action isEqualToString:@"Bounce"]) {
+                        if (!processedForUser) {
+                            processedForUser = YES;
+                            //Perform the behavior
+                            [[owner dockController] performBehavior:[details intValue]];
+                            success = YES;
                         }
-                        if (success) {
-                            AIChat	*chat = [[owner contentController] openChatOnAccount:account withListObject:inObject];
-                            [[owner interfaceController] setActiveChat:chat];
+                    }
+                    
+                    else if ([action isEqualToString:@"Speak"]) {
+                        [[owner soundController] speakText:details];
+                        success = YES;
+                    }
+                    
+                    else if ([action isEqualToString:@"Open Message"]) { //Force open a chat window
+                        if (!processedForUser) {
+                            processedForUser = YES;
+                            NSDictionary * detailsDict = [actionDict objectForKey:KEY_EVENT_DETAILS_DICT];
+                            AIAccount * account = [[owner accountController] accountWithID:details];
+                            success = YES;
+                            if ([[account propertyForKey:@"Status"] intValue] == STATUS_OFFLINE) { //desired account not available
+                                if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) { //use another account if necessary pref
+                                    account = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:inObject];
+                                }
+                                if (!account)
+                                    success = NO;
+                            }
+                            if (success) {
+                                AIChat	*chat = [[owner contentController] openChatOnAccount:account withListObject:inObject];
+                                [[owner interfaceController] setActiveChat:chat];
+                            }
+                        } 
+                    }
+                    else if ([action isEqualToString:@"Bezel"]) {
+                        if (!processedForUser) {
+                            processedForUser = YES;
+                            NSString * ContactStatusString = nil;
+                            if ([event isEqualToString:@"Signed On"]) {
+                                ContactStatusString = CONTACT_STATUS_ONLINE_YES;
+                            } else  if ([event isEqualToString:@"Signed Off"]) {
+                                ContactStatusString = CONTACT_STATUS_ONLINE_NO;
+                            } else {
+                                if (event_status) { //positive
+                                    if ([event isEqualToString:@"Away"]) {
+                                        ContactStatusString = CONTACT_STATUS_AWAY_YES;
+                                    } else if ([event isEqualToString:@"Idle"]) {
+                                        ContactStatusString = CONTACT_STATUS_IDLE_YES;
+                                    }
+                                } else {
+                                    if ([event isEqualToString:@"Away"]) {
+                                        ContactStatusString = CONTACT_STATUS_AWAY_NO;
+                                    } else if ([event isEqualToString:@"Idle"]) {
+                                        ContactStatusString = CONTACT_STATUS_IDLE_NO;
+                                    }
+                                }
+                            }
+                            
+                            if (ContactStatusString) {
+                                [[owner notificationCenter] postNotificationName:@"Display Event Bezel" object:ContactStatusString userInfo:[NSDictionary dictionaryWithObject:inObject forKey:@"object"]];
+                                success = YES;
+                            }
                         }
                     } //end of action code
-
                 } //close if (test for active)
-
             } //close else
-
+            
             //after all tests
             if (delete && success) { //delete the action from the array
                 [eventActionArray removeObject:actionDict];
@@ -219,7 +259,6 @@
                                                           object:inObject
                                                         userInfo:nil];
             }
-
         } //close status_matches && containsKey
     } //close while
 } //end function

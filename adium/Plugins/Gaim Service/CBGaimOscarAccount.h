@@ -10,7 +10,8 @@
 #import "CBGaimAccount.h"
 #import "aim.h"
 
-@interface CBGaimOscarAccount : CBGaimAccount {
+@interface CBGaimOscarAccount : CBGaimAccount <AIAccount_Files>
+{
 
 }
 

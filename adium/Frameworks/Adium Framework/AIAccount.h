@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium, AIHandleIdentifier, AIServiceType, AIMessageObject, AIListContact, AIHandle, AIChat, AIContentObject, AIListObject;
+@class AIAdium, AIHandleIdentifier, AIServiceType, AIMessageObject, AIListContact, AIHandle, AIChat, AIContentObject, AIListObject, ESFileTransfer;
 @protocol AIServiceController, AIAccountViewController;
 
 typedef enum {
@@ -61,7 +61,17 @@ typedef enum {
     - (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName;
 @end
 
+//Support for file transfer
+@protocol AIAccount_Files
+    //Instructs the account to accept a file transfer request
+    - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer;
 
+    //Instructs the account to reject a file receive request
+    - (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer;
+
+    //Instructs the account to initiate sending of a file
+    //- (void)initiateSendOfFile:(NSString *)filename toContact:(AIListContact *)inContact;
+@end
 
 @interface AIAccount : NSObject {
     AIAdium			*owner;

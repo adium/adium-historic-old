@@ -25,7 +25,7 @@
 #include "sound.h"
 #include "util.h"
 
-@interface CBGaimAccount : AIAccount <AIAccount_Handles>
+@interface CBGaimAccount : AIAccount <AIAccount_Handles,AIAccount_Content>
 {
     NSMutableDictionary	*handleDict;
     NSString *screenName;
@@ -33,6 +33,8 @@
     GaimConnection *gc;
     NSMutableDictionary *chatDict;
 
+    NSMutableArray *filesToSendArray;
+    
     NSTimer *signonTimer;
     BOOL silentAndDelayed;
 }
@@ -53,6 +55,12 @@
 //accountConv methods
 - (void)accountConvUpdated:(GaimConversation*)conv type:(GaimConvUpdateType)type;
 - (void)accountConvReceivedIM:(const char*)message inConversation:(GaimConversation*)conv withFlags:(GaimMessageFlags)flags atTime:(time_t)mtime;
+
+//accountXfer methods
+- (void)accountXferRequestFileReceiveWithXfer:(GaimXfer *)xfer;
+- (void)accountXferBeginFileSendWithXfer:(GaimXfer *)xfer;
+- (void)accountXferUpdateProgress:(GaimXfer *)xfer percent:(float)percent;
+- (void)accountXferCanceledRemotely:(GaimXfer *)xfer;
 
 //AIAccount sublcassed methods
 - (void)initAccount;
@@ -86,5 +94,10 @@
 // Rename a group
 - (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName;
 
-- (AIAdium *)owner;
+//AIAccount_Files
+//Instructs the account to accept a file transfer request
+- (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer;
+//Instructs the account to reject a file receive request
+- (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer;
+
 @end
