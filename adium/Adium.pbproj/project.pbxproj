@@ -106,6 +106,7 @@
 				4BED5A5A03C34F4800A8010A,
 				9C8C7F9D03CBA08400267226,
 				4B71CD5503CBCA7E00A8010A,
+				4B81631903D1C27500A8010A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -154,6 +155,7 @@
 				4BED5A5903C34F4800A8010A,
 				9C8C7F9C03CBA08400267226,
 				4B71CD5403CBCA7E00A8010A,
+				4B81631803D1C27500A8010A,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -186,6 +188,7 @@
 				4BED5A5303C34F1E00A8010A,
 				9C8C7FA303CBA17B00267226,
 				4B71CD4E03CBCA2600A8010A,
+				4B81631203D1C24E00A8010A,
 				F5B53FBE0333AB9201A8010A,
 				F53EA2B502C8020E01A8010A,
 				F5A01D85037980F201A8010A,
@@ -262,6 +265,7 @@
 				4BED5A5B03C34F4800A8010A,
 				9C8C7F9E03CBA08400267226,
 				4B71CD5603CBCA7E00A8010A,
+				4B81631A03D1C27500A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -1034,6 +1038,24 @@
 			settings = {
 			};
 		};
+		4B70F28603D1C55B00A8010A = {
+			fileRef = F53B9A3602CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B70F28703D1C55B00A8010A = {
+			fileRef = F53B9A3702CCEF4801A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B70F28803D1C55C00A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B71CD4E03CBCA2600A8010A = {
 			children = (
 				4B71CD6303CBCB0300A8010A,
@@ -1424,6 +1446,172 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		4B81631203D1C24E00A8010A = {
+			children = (
+				4B81632203D1C2A900A8010A,
+				4B81631F03D1C2A600A8010A,
+			);
+			isa = PBXGroup;
+			name = "Away Messages";
+			path = "";
+			refType = 4;
+		};
+		4B81631303D1C27500A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B81632003D1C2A600A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B81631403D1C27500A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B81631503D1C27500A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B81632103D1C2A600A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B81631603D1C27500A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4B70F28603D1C55B00A8010A,
+				4B70F28703D1C55B00A8010A,
+				4B70F28803D1C55C00A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B81631703D1C27500A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B81631803D1C27500A8010A = {
+			buildPhases = (
+				4B81631303D1C27500A8010A,
+				4B81631403D1C27500A8010A,
+				4B81631503D1C27500A8010A,
+				4B81631603D1C27500A8010A,
+				4B81631703D1C27500A8010A,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Away Messages";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4B81631C03D1C27E00A8010A,
+				4B81631D03D1C28000A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Away Messages";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Away Messages";
+			productReference = 4B81631903D1C27500A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIAwayMessagesPlugin</string>
+</dict>
+</plist>
+";
+		};
+		4B81631903D1C27500A8010A = {
+			isa = PBXBundleReference;
+			path = "Away Messages.AdiumPlugin";
+			refType = 3;
+		};
+		4B81631A03D1C27500A8010A = {
+			isa = PBXTargetDependency;
+			target = 4B81631803D1C27500A8010A;
+		};
+		4B81631B03D1C27500A8010A = {
+			fileRef = 4B81631903D1C27500A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B81631C03D1C27E00A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4B81631D03D1C28000A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4B81631E03D1C2A600A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAwayMessagesPlugin.h;
+			path = "Plugins/Away Messages/AIAwayMessagesPlugin.h";
+			refType = 4;
+		};
+		4B81631F03D1C2A600A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAwayMessagesPlugin.m;
+			path = "Plugins/Away Messages/AIAwayMessagesPlugin.m";
+			refType = 4;
+		};
+		4B81632003D1C2A600A8010A = {
+			fileRef = 4B81631E03D1C2A600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B81632103D1C2A600A8010A = {
+			fileRef = 4B81631F03D1C2A600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B81632203D1C2A900A8010A = {
+			children = (
+				4B81631E03D1C2A600A8010A,
+			);
+			isa = PBXGroup;
+			name = Headers;
+			refType = 4;
 		};
 		4BACB70103C8CB5E00A8010A = {
 			fileEncoding = 4;
@@ -3987,6 +4175,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				4B81631B03D1C27500A8010A,
 				4BBF317D03CBCD2600A8010A,
 				4BBF317F03CBCD2F00A8010A,
 				4BED5A5C03C34F4800A8010A,
