@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.55 2004/06/04 17:25:46 adamiser Exp $
+// $Id: AIPreferenceWindowController.m,v 1.56 2004/06/04 17:46:21 adamiser Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -162,8 +162,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[self configureAdvancedPreferencesForPane:nil];
 
     [loadedPanes release];
+	[loadedAdvancedPanes release];
 	[_advancedCategoryArray release];
-
+	
     [super dealloc];
 }
 
