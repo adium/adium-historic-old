@@ -29,6 +29,8 @@
     BOOL							windowIsClosing;
     AIDualWindowInterfacePlugin<AIContainerInterface> 	*interface;
 
+	NSDictionary	*toolbarItems;
+	
 	BOOL			keepTabsArranged;
 	BOOL			arrangeByGroup;
     BOOL			supressHiding;

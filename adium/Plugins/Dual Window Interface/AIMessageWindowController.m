@@ -22,6 +22,7 @@
 #define	MESSAGE_WINDOW_NIB                      @"MessageWindow"		//Filename of the message window nib
 #define TAB_BAR_FPS                             20.0
 #define TAB_BAR_STEP                            0.6
+#define TOOLBAR_MESSAGE_WINDOW					@"MessageWindow"				//Toolbar identifier
 
 //The tabbed window that contains messages
 @interface NSWindow (UNDOCUMENTED) //Handy undocumented window method
@@ -41,6 +42,7 @@
 - (void)_resizeTabBarTimer:(NSTimer *)inTimer;
 - (BOOL)_resizeTabBarAbsolute:(BOOL)absolute;
 - (void)_supressTabBarHiding:(BOOL)supress;
+- (void)_configureToolbar;
 @end
 
 @implementation AIMessageWindowController
@@ -294,6 +296,7 @@
 
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
+	[self _configureToolbar];
 
     //Remove any tabs from our tab view, it needs to start out empty
     while([tabView_messages numberOfTabViewItems] > 0){
@@ -584,6 +587,46 @@
     supressHiding = supress;
     [self updateTabBarVisibilityAndAnimate:YES];
 }
+
+
+//Toolbar --------------------------------------------------------------------------------------------------------------
+#pragma mark Toolbar
+//Install our toolbar
+- (void)_configureToolbar
+{
+    NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_MESSAGE_WINDOW] autorelease];
+	
+    [toolbar setDelegate:self];
+    [toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
+    [toolbar setSizeMode:NSToolbarSizeModeSmall];
+    [toolbar setVisible:YES];
+    [toolbar setAllowsUserCustomization:YES];
+    [toolbar setAutosavesConfiguration:YES];
+	
+    //
+    toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", nil]] retain];
+    [[self window] setToolbar:toolbar];
+}
+
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
+{
+    return([AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier]);
+}
+
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
+{
+    return([NSArray arrayWithObjects:@"ShowInfo", NSToolbarSeparatorItemIdentifier, @"NewMessage", NSToolbarFlexibleSpaceItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, @"ShowPreferences", nil]);
+}
+
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
+{
+    return([[toolbarItems allKeys] arrayByAddingObjectsFromArray:
+		[NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier,
+			NSToolbarSpaceItemIdentifier,
+			NSToolbarFlexibleSpaceItemIdentifier,
+			NSToolbarCustomizeToolbarItemIdentifier, nil]]);
+}
+
 
 @end
 
