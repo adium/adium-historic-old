@@ -17,7 +17,8 @@
 
 @class	AIAdium, AISendingTextView;
 
-@interface AIAwayStatusWindowController : NSWindowController {
+@interface AIAwayStatusWindowController : NSWindowController
+{
     AIAdium *owner;
     
     IBOutlet NSButton 		*button_comeBack;
@@ -26,6 +27,7 @@
     
     NSDate	*awayDate;
     NSTimer	*awayTimer;
+    NSString 	*timeStampFormat;
 }
 
 + (AIAwayStatusWindowController *)awayStatusWindowControllerForOwner:(id)inOwner;
