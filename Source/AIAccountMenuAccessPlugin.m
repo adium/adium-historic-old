@@ -29,6 +29,28 @@
  */
 - (void)installPlugin
 {
+	//Wait for Adium to finish launching so status icons, etc. are ready and we aren't forced to immediately rebuild.
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(adiumFinishedLaunching:)
+									   name:Adium_CompletedApplicationLoad
+									 object:nil];
+}
+
+/*!
+ * @brief Deallocate
+ */
+- (void)dealloc
+{
+	[[adium notificationCenter] removeObserver:self];
+	
+	[super dealloc];
+}
+
+/*!
+ * @brief Adium finished launching
+ */
+- (void)adiumFinishedLaunching:(NSNotification *)notification
+{
 	[[adium accountController] registerAccountMenuPlugin:self];
 }
 
