@@ -311,6 +311,26 @@
 			settings = {
 			};
 		};
+		3408254D075B078B00703011 = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = "Dock Icons";
+			path = "Resources/Dock Icons";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3408254E075B078B00703011 = {
+			fileRef = 3408254D075B078B00703011;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34082675075B079800703011 = {
+			fileRef = 3408254D075B078B00703011;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34086A1005E5E17B00ABB759 = {
 			children = (
 				34086A7705E5E42500ABB759,
@@ -6314,6 +6334,7 @@
 				34D2E86E0758BD2A0054C56D,
 				34D2EB6D0758D65D0054C56D,
 				34D2EC180758FBB90054C56D,
+				3408254E075B078B00703011,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10931,15 +10952,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		4B24A2330482B34B00A8010A = {
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			lastKnownFileType = folder;
-			name = "Dock Icons";
-			path = "Source/Dock Icons";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		4B25363306BECC97003498D4 = {
 			children = (
@@ -16992,8 +17004,8 @@
 		};
 		4BF2E6BE067CB72400743318 = {
 			children = (
+				3408254D075B078B00703011,
 				34A29D9406ED68BF00E1366C,
-				4B24A2330482B34B00A8010A,
 				4BF2E194067CAE9200743318,
 				4BF2E6B3067CB70E00743318,
 				4BB1E47D067F2E9F00D1DB86,
@@ -17013,12 +17025,12 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
+				34082675075B079800703011,
 				4BA62D8E06C51257001D6B3C,
 				4BAFD68406E00D1700FF7FBC,
 				34A29DB706ED68C000E1366C,
 				4BF2EA3F067CB7A200743318,
 				4BF2EA40067CB7A200743318,
-				4BF2EA41067CB7A200743318,
 				4BF2EA42067CB7A200743318,
 				4BB1E493067F2EAC00D1DB86,
 			);
@@ -17033,12 +17045,6 @@
 		};
 		4BF2EA40067CB7A200743318 = {
 			fileRef = 4BF2E6B3067CB70E00743318;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BF2EA41067CB7A200743318 = {
-			fileRef = 4B24A2330482B34B00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
