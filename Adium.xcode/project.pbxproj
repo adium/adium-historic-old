@@ -1794,6 +1794,7 @@
 		};
 		34415960059F94F80019246B = {
 			children = (
+				4B387DE10719931C004DE713,
 				34F52BD506E2B22800887BE2,
 				9EA125EE055B633000ECF349,
 				9EA125E8055B630900ECF349,
@@ -10026,8 +10027,8 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
-			name = AIAccountListPreferences.h;
-			path = "Plugins/Account List Preferences/AIAccountListPreferences.h";
+			name = AIAccountListWindowController.h;
+			path = "Plugins/Account List Preferences/AIAccountListWindowController.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -10035,8 +10036,8 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
-			name = AIAccountListPreferences.m;
-			path = "Plugins/Account List Preferences/AIAccountListPreferences.m";
+			name = AIAccountListWindowController.m;
+			path = "Plugins/Account List Preferences/AIAccountListWindowController.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -10825,6 +10826,47 @@
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B387DE10719931C004DE713 = {
+			children = (
+				4B387EB707199FE5004DE713,
+				4B387EB807199FE5004DE713,
+			);
+			isa = PBXGroup;
+			name = .Mac;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B387EB707199FE5004DE713 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimDotMacAccountViewController.h;
+			path = "Plugins/Gaim Service/ESGaimDotMacAccountViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B387EB807199FE5004DE713 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimDotMacAccountViewController.m;
+			path = "Plugins/Gaim Service/ESGaimDotMacAccountViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B387EB907199FE5004DE713 = {
+			fileRef = 4B387EB707199FE5004DE713;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B387EBA07199FE5004DE713 = {
+			fileRef = 4B387EB807199FE5004DE713;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B3DB8FD04547A8D00A8010A = {
 			isa = PBXFileReference;
@@ -11965,6 +12007,7 @@
 				4BAFD5AB06E00AD300FF7FBC,
 				34F52BD106E2AFF700887BE2,
 				34F52BDA06E2B24200887BE2,
+				4B387EB907199FE5004DE713,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12071,6 +12114,7 @@
 				4BAFD5AC06E00AD300FF7FBC,
 				34F52BD206E2AFF700887BE2,
 				34F52BDB06E2B24200887BE2,
+				4B387EBA07199FE5004DE713,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -22155,8 +22199,8 @@
 		F55B414203AB897201A8010A = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = AccountPrefView.nib;
-			path = "Plugins/Account List Preferences/AccountPrefView.nib";
+			name = AccountListWindow.nib;
+			path = "Plugins/Account List Preferences/AccountListWindow.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
