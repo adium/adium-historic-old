@@ -42,6 +42,12 @@
 	
 	[self configureViewsAndTooltips];
 	
+	//Watch for drags ending so we can clear any cached drag data
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(listControllerDragEnded:)
+									   name:@"AIListControllerDragEnded"
+									 object:nil];
+
 	return(self);
 }
 
@@ -67,6 +73,8 @@
 	[groupCell release];
 	[contentCell release];
 	
+	[[adium notificationCenter] removeObserver:self]; 
+
     [super dealloc];
 }
 
@@ -533,6 +541,13 @@
 }
 
 - (void)outlineView:(NSOutlineView *)outlineView draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation
+{
+	//Post a notification that the drag ended so any other list controllers which have cached the drag can clear it
+	[[adium notificationCenter] postNotificationName:@"AIListControllerDragEnded"
+											  object:nil];
+}
+
+- (void)listControllerDragEnded:(NSNotification *)notification
 {
 	if(dragItems){
 		[dragItems release]; dragItems = nil;
