@@ -107,7 +107,9 @@ static NSImage *pushIndicatorImage = nil;
 			}
 			
 		}else if((flags & NSCommandKeyMask) && !(flags & NSShiftKeyMask)){
-			if(inChar == NSUpArrowFunctionKey || inChar == NSDownArrowFunctionKey){
+			if((inChar == NSUpArrowFunctionKey || inChar == NSDownArrowFunctionKey) ||
+			   (inChar == NSHomeFunctionKey || inChar == NSEndFunctionKey) ||
+			   (inChar == NSPageUpFunctionKey || inChar == NSPageDownFunctionKey)){
 				//Pass the associatedView a keyDown event equivalent equal to inEvent except without the modifier flags
 				[associatedView keyDown:[NSEvent keyEventWithType:[inEvent type]
 														 location:[inEvent locationInWindow]
