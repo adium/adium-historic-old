@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/search.jsp $-->
-<!--$Rev: 487 $ $Date: 2003/11/27 06:37:44 $ -->
+<!--$Rev: 506 $ $Date: 2003/12/20 02:54:57 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -288,12 +288,29 @@ try {
         out.print("<div align=\"center\"><i>No results found.</i>");
         warning = conn.getWarnings();
         if(warning != null) {
-            out.print("<br>" + warning.getMessage());
+            out.print("<br />" + warning.getMessage());
+            while(warning.getNextWarning() != null) {
+                out.print("<br>" + warning.getMessage());
+            }
+        }
+        warning = rset.getWarnings();
+        if(warning != null) {
+            out.print("<br />" + warning.getMessage());
+            while(warning.getNextWarning() != null) {
+                out.print("<br />" + warning.getMessage());
+            }
         }
         out.print("</div>");
     }
 
     while(rset != null && rset.next()) {
+        warning = rset.getWarnings();
+        if(warning != null) {
+            out.print("<br />" + warning.getMessage());
+            while(warning.getNextWarning() != null) {
+                out.print("<br />" + warning.getMessage());
+            }
+        }
         String messageContent = rset.getString("message");
         messageContent = messageContent.replaceAll("\n", "<br>");
         messageContent = messageContent.replaceAll("   ", " &nbsp; ");
