@@ -281,8 +281,19 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 			
 		//Service
 		if([inObject isKindOfClass:[AIListContact class]]){
-			NSString	*displayServiceID = [[inObject service] shortDescription];
-			[textField_service setStringValue:(displayServiceID ? displayServiceID : META_SERVICE_STRING)];
+			NSString	*displayServiceID;
+			if ([inObject isKindOfClass:[AIMetaContact class]]){
+				if ([[(AIMetaContact *)inObject listContacts] count] > 1){
+					displayServiceID = META_SERVICE_STRING;
+				}else{
+					displayServiceID = [[[(AIMetaContact *)inObject preferredContact] service] shortDescription];
+				}
+			}else{
+				displayServiceID = [[inObject service] shortDescription];
+			}
+			
+			[textField_service setStringValue:(displayServiceID ? displayServiceID : @"")];
+			
 		} else if([inObject isKindOfClass:[AIListGroup class]]) {
 			[textField_service setStringValue:AILocalizedString(@"Group",nil)];
 		} else {
