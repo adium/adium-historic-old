@@ -105,15 +105,15 @@
 
 - (void) reportLoggedOut 
 {
-    NSEnumerator *enumerator = [libezvContacts objectEnumerator];
-    NSString *uniqueID;
-    AIListContact *user;
+    NSEnumerator	*enumerator = [libezvContacts objectEnumerator];
+    NSString		*uniqueID;
+    AIListContact	*listContact;
 
     while (uniqueID = [enumerator nextObject]) {
-		user = [[adium contactController] existingContactWithService:service
+		listContact = [[adium contactController] existingContactWithService:service
 															 account:self
 																 UID:uniqueID];
-		[user setRemoteGroupName:nil];
+		[listContact setRemoteGroupName:nil];
     }
     [libezvContacts removeAllObjects];
     
@@ -128,56 +128,54 @@
 
 - (void) userChangedState:(AWEzvContact *)contact
 {
-    AIListContact *user;
+    AIListContact	*listContact;
+	NSString		*contactName;
 	
-    user = [[adium contactController] contactWithService:service
+    listContact = [[adium contactController] contactWithService:service
 												 account:self
 													 UID:[contact uniqueID]];  
 	
-	[user setRemoteGroupName:AILocalizedString(@"Rendezvous", @"Rendezvous group name")];
-	[user setStatusObject:[contact statusMessage] forKey:@"StatusMessageString" notify:NO];
+	[listContact setRemoteGroupName:AILocalizedString(@"Rendezvous", @"Rendezvous group name")];
+	[listContact setStatusObject:[contact statusMessage] forKey:@"StatusMessageString" notify:NO];
 	
-	[user setStatusObject:nil forKey:@"Away" notify:NO];
-	[user setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
+	[listContact setStatusObject:nil forKey:@"Away" notify:NO];
+	[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
 	
 	switch ([contact status]) {
 		case AWEzvAway:
-			[user setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Away" notify:NO];
+			[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Away" notify:NO];
 			break;
 		case AWEzvOnline:
 		case AWEzvIdle:
 		default:
-			[user setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
+			[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
 	}
 	
 	if ([contact idleSinceDate])
-		[user setStatusObject:[contact idleSinceDate] forKey:@"IdleSince" notify:NO];
+		[listContact setStatusObject:[contact idleSinceDate] forKey:@"IdleSince" notify:NO];
     else
-		[user setStatusObject:nil forKey:@"IdleSince" notify:NO];
+		[listContact setStatusObject:nil forKey:@"IdleSince" notify:NO];
 	
     if ([contact statusMessage])
-		[user setStatusObject:[[[NSAttributedString alloc] initWithString:[contact statusMessage]] autorelease]
+		[listContact setStatusObject:[[[NSAttributedString alloc] initWithString:[contact statusMessage]] autorelease]
 					   forKey:@"StatusMessage" notify:NO];
     else
-		[user setStatusObject:nil forKey:@"StatusMessage" notify:NO];
+		[listContact setStatusObject:nil forKey:@"StatusMessage" notify:NO];
 	
-    [user setStatusObject:[contact contactImage] forKey:KEY_USER_ICON notify:NO];
-    
-	
-    //Set the server display name status object as the full display name
-	if (![[user statusObjectForKey:@"Server Display Name"] isEqualToString:[contact name]]){
-		[user setStatusObject:[contact name] forKey:@"Server Display Name" notify:NO];
-		[[user displayArrayForKey:@"Display Name"] setObject:[[contact name] stringWithEllipsisByTruncatingToLength:25] 
-												   withOwner:self
-											   priorityLevel:Lowest_Priority];
-		[[adium contactController] listObjectAttributesChanged:user 
-												  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
+    [listContact setStatusObject:[contact contactImage] forKey:KEY_USER_ICON notify:NO];
+
+    //The Rendezvous UID is useless; we'll use the contact alias as the formatted UID
+	contactName = [contact name];
+	if (![[listContact formattedUID] isEqualToString:contactName]){
+		[listContact setStatusObject:contactName
+							 forKey:@"FormattedUID"
+							 notify:NO];
 	}
 	
     [libezvContacts setObject:[contact uniqueID] forKey:[contact uniqueID]];   
 	
     //Apply any changes
-    [user notifyOfChangedStatusSilently:silentAndDelayed];
+    [listContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
 - (void) userLoggedOut:(AWEzvContact *)contact
