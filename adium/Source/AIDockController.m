@@ -47,7 +47,7 @@
         [NSApp requestUserAttention:NSInformationalRequest];
     }
 }
-- (void)bounceWithInterval:(float)delay times:(int)num // if num = 0, bounce forever
+- (void)bounceWithInterval:(double)delay times:(int)num // if num = 0, bounce forever
 {    
     if(delay == 0 && num == 0) //bouncing is constant and forvever
     {
@@ -59,27 +59,25 @@
     }
     else //there is some kind of interval, we want to bounce a certain # of times, or both
     {
-        if(num == 0) // bounce forever!! hard to stop as of yet
+        if(num == 0) // bounce forever!!
         {
-            [NSTimer scheduledTimerWithTimeInterval:(double)delay target:self selector: @selector(bounceWithTimer) userInfo:nil repeats:YES];
+            currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay target:self selector: @selector(bounceWithTimer) userInfo:0 repeats:YES];
         }
         else // bounce num # of times
         {
-            int i;
-            for(i = 1; i <= num; i ++) //install a bunch of timers to go off. again hard to stop.
-            {
-                [NSTimer scheduledTimerWithTimeInterval:(double)(delay*num) target:self selector: @selector(bounceWithTimer) userInfo:nil repeats:NO];
-            }
+            currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay target:self selector: @selector(bounceWithTimer) userInfo:[NSNumber numberWithInt:num] repeats:NO];
         }
     }
 }
 
-- (void)stopBouncing //Only problem here is that we dont cancel bouncing forever.
+- (void)stopBouncing //sketchy about wether 
 {
         if([NSApplication instancesRespondToSelector:@selector(cancelUserAttentionRequest:)])
         {
             [NSApp cancelUserAttentionRequest:0];
         }
+        
+        [currentTimer invalidate];
 }
 
 //PRIVATE ========
@@ -87,6 +85,13 @@
 - (void)bounceWithTimer:(NSTimer *)timer
 {
     [self bounce];
+    if([timer isValid])
+    {
+        if([[timer userInfo] intValue] > 1)
+        {
+            [self bounceWithInterval:[timer timeInterval] times:([[timer userInfo] intValue]-1)];
+        }
+    }
 }
 
 @end

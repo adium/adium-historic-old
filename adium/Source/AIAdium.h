@@ -388,13 +388,15 @@ typedef enum {
     NSNotificationCenter	*dockNotificationCenter;
     
     AIIconFamily		*iconFamily;
+    
+    NSTimer 			*currentTimer;
 }
 
 - (AIIconFamily *)currentIconFamily;
 - (void)setIconFamily:(AIIconFamily *)iconFamily;
 
 - (void)bounce;
-- (void)bounceWithInterval:(float)delay times:(int)num; //if num = 0, bounce forever
+- (void)bounceWithInterval:(double)delay times:(int)num; //if num = 0, bounce forever
 - (void)stopBouncing;
 
 @end

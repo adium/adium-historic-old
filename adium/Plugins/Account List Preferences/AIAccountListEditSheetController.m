@@ -80,7 +80,7 @@
 // closes this window and delete the account we got here from clicking the "new" button
 - (IBAction)closeWindow:(id)sender
 {
-    if(![[sender title] isEqualToString:@"Cancel"] /*|| [account isEqual:[[owner accountController] defaultAccount]]*/) // if we hit the cancel button, OR if the account is still a blank account (2nd part not implimented)
+    if(![[sender title] isEqualToString:@"Cancel"] ) // if we hit the cancel button we want the blank account to go away!
     {
         del = NO;  // if we hit OK, we only want to close the window!
     }
