@@ -10075,7 +10075,7 @@
 				3419FE170531585600C68BA3,
 				344EE9D305749E38000F342B,
 				3419FE180531585600C68BA3,
-				6C5C458C05F6729000490341,
+				B723DD9D05F85928003913CC,
 				3419FE1A0531585600C68BA3,
 				3419FDE40531585600C68BA3,
 				3419FE1C0531585600C68BA3,
@@ -19452,6 +19452,7 @@
 				4BDEC3B505F1A47E00416138,
 				4BDEC3B605F1A47E00416138,
 				6C5C3DC205F655B500490341,
+				B723DD2D05F85459003913CC,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -24901,12 +24902,6 @@
 			settings = {
 			};
 		};
-		6C5C458C05F6729000490341 = {
-			fileRef = 3419F41805314C2700C68BA3;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		6C60B1380560594B00CAD137 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -25839,6 +25834,7 @@
 		};
 		9CBADC5005712615005187DA = {
 			children = (
+				B723DD1D05F85459003913CC,
 				4B539C4B05EFD6CD00E5921A,
 				4B539C4C05EFD6CD00E5921A,
 				4B539C5105EFD6FA00E5921A,
@@ -27767,6 +27763,26 @@
 //B72
 //B73
 //B74
+		B723DD1D05F85459003913CC = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = images;
+			path = "Plugins/WebKit Message View/images";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		B723DD2D05F85459003913CC = {
+			fileRef = B723DD1D05F85459003913CC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B723DD9D05F85928003913CC = {
+			fileRef = 3419F41805314C2700C68BA3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		B72537B6058C4577004BA969 = {
 			buildActionMask = 2147483647;
 			files = (
