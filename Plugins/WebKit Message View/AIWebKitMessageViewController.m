@@ -650,19 +650,21 @@ DeclareString(AppendNextMessage);
 		}
 	}
 	
-	//We no longer need the update timer
-	if(newContentTimer){
-		[newContentTimer invalidate]; [newContentTimer release];
-		newContentTimer = nil;
-	}
-	
 	//If we still have content to process, we'll try again after a brief delay
 	if([newContent count]){
-		newContentTimer = [[NSTimer scheduledTimerWithTimeInterval:NEW_CONTENT_RETRY_DELAY
-															target:self
-														  selector:@selector(processNewContent)
-														  userInfo:nil
-														   repeats:NO] retain]; 
+		if (!newContentTimer){
+			newContentTimer = [[NSTimer scheduledTimerWithTimeInterval:NEW_CONTENT_RETRY_DELAY
+																target:self
+															  selector:@selector(processNewContent)
+															  userInfo:nil
+															   repeats:YES] retain];
+		}
+	}else{
+		//We no longer need the update timer
+		if(newContentTimer){
+			[newContentTimer invalidate]; [newContentTimer release];
+			newContentTimer = nil;
+		}
 	}
 }
 
