@@ -663,12 +663,23 @@
 		}else{
 			NSString	*oldGroupName = [self _mapOutgoingGroupName:[listObject remoteGroupName]];
 			
+//			NSLog(@"Old %@ ; New %@",oldGroupName,[group UID]);
+			
 			//Get the gaim buddy and group for this move
-			GaimGroup *oldGroup = gaim_find_group([oldGroupName UTF8String]);       
 			GaimBuddy *buddy = gaim_find_buddy(account,[[listObject UID] UTF8String]);
-			if(oldGroup && buddy){
-				//Procede to move the buddy gaim-side and locally
-				serv_move_buddy(buddy, oldGroup, destGroup);
+			GaimGroup *oldGroup = gaim_find_buddys_group(buddy);
+			
+//			NSLog(@"%i %i",(oldGroup!=NULL),(buddy!=NULL));
+			
+			if(buddy){
+				if (oldGroup) {
+					//Procede to move the buddy gaim-side and locally
+					serv_move_buddy(buddy, oldGroup, destGroup);
+				} else {
+					//The buddy was not in any group before; add the buddy to the desired group
+					serv_add_buddy(gc, buddy->name, destGroup);
+				}
+				
 				[listObject setRemoteGroupName:[group UID]]; //Use the non-mapped group name locally
 			}
 		}		
