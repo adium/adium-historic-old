@@ -160,9 +160,8 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	}
 
 	[self reloadAllData];
-	
-	NSClipView	*clipView = [scrollView contentView];
-	[clipView scrollToPoint:[clipView constrainScrollPoint:([outlineView rectOfRow:[progressRows indexOfObject:progressRow]].origin)]];
+
+	[outlineView scrollRectToVisible:[outlineView rectOfRow:[progressRows indexOfObject:progressRow]]];	
 }
 
 #pragma mark Progress row details twiddle
@@ -173,8 +172,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 {
 	[self reloadAllData];
 
-	NSClipView	*clipView = [scrollView contentView];	
-	[clipView scrollToPoint:[clipView constrainScrollPoint:([outlineView rectOfRow:[progressRows indexOfObject:progressRow]].origin)]];
+	[outlineView scrollRectToVisible:[outlineView rectOfRow:[progressRows indexOfObject:progressRow]]];
 }
 
 #pragma mark Adding file transfers
@@ -363,6 +361,14 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	[[[[outlineView subviews] copy] autorelease] makeObjectsPerformSelector:@selector(removeFromSuperviewWithoutNeedingDisplay)];
 	
 	[outlineView reloadData];
+	
+	NSRect	outlineFrame = [outlineView frame];
+	int		totalHeight = [outlineView totalHeight];
+	
+	if(outlineFrame.size.height != totalHeight){
+		outlineFrame.size.height = totalHeight;
+		[outlineView setFrame:outlineFrame];
+	}
 }
 
 #pragma mark Window zoom

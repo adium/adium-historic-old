@@ -81,10 +81,10 @@
 	[self updateSourceAndDestination];
 	[self fileTransfer:fileTransfer didSetSize:[fileTransfer size]];
 	[self fileTransfer:fileTransfer didSetLocalFilename:[fileTransfer localFilename]];
-	[self gotUpdateForFileTransfer:fileTransfer];
-	
-	//This always calls displayIfNeeded, so do it last
 	[self fileTransfer:fileTransfer didSetType:[fileTransfer type]];
+	
+	//This always calls gotUpdate and display, so do it last
+	[self fileTransfer:fileTransfer didSetStatus:[fileTransfer status]];
 }
 
 - (void)fileTransfer:(ESFileTransfer *)inFileTransfer didSetType:(FileTransferType)type
