@@ -22,6 +22,7 @@
 + (id)stringWithData:(NSData *)data encoding:(NSStringEncoding)encoding;
 
 + (id)ellipsis;
+- (NSString *)stringByAppendingEllipsis;
 
 - (NSString *)compactedString;
 

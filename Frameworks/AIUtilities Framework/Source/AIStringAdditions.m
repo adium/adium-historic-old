@@ -68,6 +68,11 @@
 	return [NSString stringWithUTF8String:"\xE2\x80\xA6"];
 }
 
+- (NSString *)stringByAppendingEllipsis
+{
+	return [self stringByAppendingString:[NSString stringWithUTF8String:"\xE2\x80\xA6"]];
+}
+
 /*	compactedString
  *	returns the string in all lowercase without spaces
  */
