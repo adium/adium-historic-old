@@ -136,10 +136,11 @@
 			
 			enumerator = [contactNames objectEnumerator];		
 			while (aContactName = [enumerator nextObject]){
-				listContact = [[adium contactController] contactWithService:[inAccount service] 
-																	account:inAccount 
-																		UID:aContactName];
-				[contactsArray addObject:listContact];
+				if(listContact = [[adium contactController] contactWithService:[inAccount service] 
+																	   account:inAccount 
+																		   UID:aContactName]){
+					[contactsArray addObject:listContact];
+				}
 			}
 		}
 	}
