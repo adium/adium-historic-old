@@ -336,6 +336,15 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //- The menu item's represented objects are the service controllers they represent
 - (NSMenu *)menuOfServicesWithTarget:(id)target activeServicesOnly:(BOOL)activeServicesOnly longDescription:(BOOL)longDescription
 {	
+	return([self menuOfServicesWithTarget:target
+					   activeServicesOnly:activeServicesOnly
+						  longDescription:longDescription
+								   format:@"%@"]);
+	
+}
+
+- (NSMenu *)menuOfServicesWithTarget:(id)target activeServicesOnly:(BOOL)activeServicesOnly longDescription:(BOOL)longDescription format:(NSString *)format
+{
 	AIServiceImportance	importance;
 	unsigned			numberOfItems = 0;
 	NSArray				*serviceArray;
@@ -364,9 +373,9 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		enumerator = [serviceArray objectEnumerator];
 		while((service = [enumerator nextObject])){
 			if([service serviceImportance] == importance){
-				NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:(longDescription ?
-																		[service longDescription] :
-																		[service shortDescription])
+				NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:format,(longDescription ?
+																										  [service longDescription] :
+																										  [service shortDescription])]
 																target:target 
 																action:@selector(selectServiceType:) 
 														 keyEquivalent:@""] autorelease];
@@ -507,6 +516,26 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     
 	[self insertAccount:newAccount atIndex:index save:YES];
 		
+    return(newAccount);
+}
+
+- (AIAccount *)newAccountAtIndex:(int)index forService:(AIService *)service
+{
+    NSParameterAssert(accountArray != nil);
+    NSParameterAssert(index >= 0 && index <= [accountArray count]);
+
+	AIAccount *newAccount;
+	
+	if(service){
+		newAccount = [self createAccountWithService:service
+												UID:@""
+									  accountNumber:0];
+	}else{
+		newAccount = [self defaultAccount];
+	}
+	
+	[self insertAccount:newAccount atIndex:index save:YES];
+	
     return(newAccount);
 }
 

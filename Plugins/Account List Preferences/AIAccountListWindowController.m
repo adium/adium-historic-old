@@ -74,9 +74,10 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	//Configure controls
 	NSMenu	*serviceMenu = [[adium accountController] menuOfServicesWithTarget:self 
 															activeServicesOnly:NO
-															   longDescription:YES];
+															   longDescription:YES
+																		format:AILocalizedString(@"Add %@ Account...",nil)];
 	[serviceMenu setAutoenablesItems:YES];
-	[popupMenu_serviceList setMenu:serviceMenu];
+	[button_newAccount setMenu:serviceMenu];
     [textField_accountName setDelayInterval:1.0];
 	[self configureAccountList];
 
@@ -86,7 +87,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	//If no account are available, create one.  Called on a delay so it doesn't happen until our view
 	//is visible in the preference window (And the first-responder stuff works correctly)
 	if([[[adium accountController] accountArray] count] == 0){
-		[self performSelector:@selector(newAccount:) withObject:nil afterDelay:0.0001];
+		[self performSelector:@selector(selectServiceType:) withObject:nil afterDelay:0.0001];
 	}
 	
 	//Center this panel
@@ -160,7 +161,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 {
 	//Select the new service
 	configuredForService = inService;
-    [popupMenu_serviceList selectItemAtIndex:[popupMenu_serviceList indexOfItemWithRepresentedObject:inService]];
+//    [popupMenu_serviceList selectItemAtIndex:[popupMenu_serviceList indexOfItemWithRepresentedObject:inService]];
 	
 	//Insert the custom controls for this service
 	[self _removeCustomViewAndTabs];
@@ -242,7 +243,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 		[nextView setNextKeyView:tableView_accountList];
 		
 		//Account list goes to service menu
-		[tableView_accountList setNextKeyView:popupMenu_serviceList];
+//		[tableView_accountList setNextKeyView:popupMenu_serviceList];
 /*	}else{
 		responderChainTimer = [[NSTimer scheduledTimerWithTimeInterval:0.001
 															   target:self
@@ -273,13 +274,6 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 
 //Controls -------------------------------------------------------------------------------------------------------------
 #pragma mark Controls
-//User changed the service of our account
-- (IBAction)selectServiceType:(id)sender
-{
-	id <AIServiceController>	service = [sender representedObject];
-	[[adium accountController] switchAccount:configuredForAccount toService:service];
-}
-
 - (IBAction)changeUIDField:(id)sender
 {
 	NSString *newUID = [textField_accountName stringValue];
@@ -370,7 +364,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 							   ![[configuredForAccount statusObjectForKey:@"Connecting"] boolValue] &&
 							   ![[configuredForAccount statusObjectForKey:@"Disconnecting"] boolValue]);
 	
-	[popupMenu_serviceList setEnabled:(configuredForAccount && accountEditable)];
+//	[popupMenu_serviceList setEnabled:(configuredForAccount && accountEditable)];
 	[textField_accountName setEnabled:(configuredForAccount && accountEditable)];
 	[button_autoConnect setEnabled:(configuredForAccount != nil)];
 	[button_deleteAccount setEnabled:([accountArray count] > 1 && configuredForAccount && accountEditable)];
@@ -447,7 +441,10 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 //causing it to save any outstanding changes.
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	[[popupMenu_serviceList window] makeFirstResponder:popupMenu_serviceList];
+	//XXX
+//	[[popupMenu_serviceList window] makeFirstResponder:popupMenu_serviceList];
+		[[button_newAccount window] makeFirstResponder:button_newAccount];
+	
 	return(YES);
 }
 
@@ -495,20 +492,22 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 }
 
 //Create a new account
-- (IBAction)newAccount:(id)sender
+- (IBAction)selectServiceType:(id)sender
 {
-    int		index = [tableView_accountList selectedRow] + 1;
+	AIService	*service = [sender representedObject];
+    int			index = [tableView_accountList selectedRow] + 1;
+	
     AIAccount	*newAccount;
     
     //Add the new account
-    newAccount = [[adium accountController] newAccountAtIndex:index];
-    
+    newAccount = [[adium accountController] newAccountAtIndex:index forService:service];
+
     //Select the new account
     [tableView_accountList selectRow:index byExtendingSelection:NO];
     
     //Select the 'Account' tab and put focus on the account fields
     [tabView_auxiliary selectTabViewItemAtIndex:0];
-    [[popupMenu_serviceList window] makeFirstResponder:textField_accountName];
+    [[textField_accountName window] makeFirstResponder:textField_accountName];
 }
 
 //Delete the selected account
@@ -660,4 +659,23 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     [[tabView window] makeFirstResponder:existingResponder];
 }
 
+#if 0
+/* XXX Tiger Thoughts */
+/*
+NSWindow
+
+Methods have been added to allow a window to automatically recalculate the key view loop after views have been added.
+- (void)setAutorecalculatesKeyViewLoop:(BOOL)flag;
+- (BOOL)autorecalculatesKeyViewLoop;
+- (void)recalculateKeyViewLoop;
+	If the autorecalculatesKeyViewLoop is YES, then whenever a view is added to the window, the key view loop
+	is dirtied and recalculated automatically when -[NSWindow selectKeyViewFollowingView] or
+-[NSWindow selectKeyViewPrecedingView] are called. If autorecalculatesKeyViewLoop is NO, then adding views
+	will not dirty the key view loop and the loop will not be recalculated. You can always call explicitly
+	recalculateKeyViewLoop to recalculate the loop and clear the dirty key view loop flag. The method is also 
+	called if the key view loop needs to be calculated when the window is first ordered in. The loop computed
+	is the same as the default one if initialFirstResponder is not set. It is based on the geometric order of 
+	the views in the window.
+*/
+#endif
 @end
