@@ -3,7 +3,7 @@
  * File:        AWEzvContactManagerRendezvous.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.3 2004/05/16 16:07:01 proton Exp $
+ * CVS tag:     $Id: AWEzvContactManagerRendezvous.m,v 1.4 2004/06/15 16:08:30 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -64,6 +64,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <SystemConfiguration/SystemConfiguration.h>
+
 /* DNS parser will want this */
 typedef struct
 {
@@ -83,7 +85,18 @@ void browse_reply  (DNSServiceBrowserReplyResultType resultType,
 		    const char *replyDomain,
 		    DNSServiceDiscoveryReplyFlags flags,
 		    void *context);
+void av_browse_reply  (DNSServiceBrowserReplyResultType resultType,
+		    const char *replyName,
+		    const char *replyType,
+		    const char *replyDomain,
+		    DNSServiceDiscoveryReplyFlags flags,
+		    void *context);
 void resolve_reply (struct sockaddr	*interface,
+		    struct sockaddr	*address,
+		    const char		*txtRecord,
+		    DNSServiceDiscoveryReplyFlags flags,
+		    void		*context);
+void av_resolve_reply (struct sockaddr	*interface,
 		    struct sockaddr	*address,
 		    const char		*txtRecord,
 		    DNSServiceDiscoveryReplyFlags flags,
@@ -103,6 +116,7 @@ void resolve_reply (struct sockaddr	*interface,
     /* used for any version */
     NSHost		*currentHost;
     NSMutableString	*instanceName;
+    NSString		*avInstanceName;
     NSEnumerator        *enumerator;
     NSRange             range;
     
@@ -181,6 +195,43 @@ void resolve_reply (struct sockaddr	*interface,
 		ofLevel:AWEzvError];
 	[self disconnect];
     }
+    
+    avInstanceName = [NSString stringWithFormat:@"%@@%@",
+			SCDynamicStoreCopyConsoleUser(NULL, NULL, NULL),
+			SCDynamicStoreCopyComputerName(NULL, NULL)];
+    myavname = [avInstanceName retain];
+    
+    /* register service with mDNSResponder */
+    dns_client = DNSServiceRegistrationCreate (
+	   [avInstanceName UTF8String],
+	   "_presence._tcp",
+	   "",
+	   port,
+	   [[userAnnounceData avDataAsDNSTXT] UTF8String],
+	   reg_reply,
+	   self
+	   );
+    
+    /* get mach port and configure for run loop */
+    mach_port = DNSServiceDiscoveryMachPort(dns_client);
+    if (mach_port) {
+	cfMachPort = CFMachPortCreateWithPort (kCFAllocatorDefault, mach_port,
+					       (CFMachPortCallBack) handleMachMessage, &context,
+					       &shouldFreeInfo);
+	
+	/* setup run loop */
+	rls = CFMachPortCreateRunLoopSource (NULL, cfMachPort, 0);
+	CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode);
+	CFRelease(rls);
+	
+	/* save data for later release */
+	avDnsRef = dns_client;
+    } else {
+	AWEzvLog(@"Could not obtain client port for Mach messaging (advertise AV)");
+	[[client client] reportError:@"Could not obtain client port for Mach messaging (advertise AV)"
+			     ofLevel:AWEzvError];
+	[self disconnect];
+    }
 
 
 }
@@ -244,10 +295,10 @@ void resolve_reply (struct sockaddr	*interface,
     
     /* check for idle */
     if ([client idleTime])
-	[userAnnounceData setField:@"away" content:[NSString stringWithFormat:@"%f",
-				[[client idleTime] timeIntervalSinceReferenceDate]]];
+      [userAnnounceData setField:@"away" content:[NSString stringWithFormat:@"%f",
+                              [[client idleTime] timeIntervalSinceReferenceDate]]];
     else
-	[userAnnounceData deleteField:@"away"];
+      [userAnnounceData deleteField:@"away"];
     
     /* announce to network */
     if (isConnected == YES)
@@ -273,6 +324,19 @@ void resolve_reply (struct sockaddr	*interface,
 		ofLevel:AWEzvError];
 	[self disconnect];
     }
+    
+    /* get data to be announced */
+    mydata = [userAnnounceData avDataAsPackedPString];
+    
+    /* register it */
+    errorCode = DNSServiceRegistrationUpdateRecord(avDnsRef, NULL, [mydata length], [mydata bytes], 3600);
+    if (errorCode < 0) {
+	AWEzvLog(@"Received Rendezvous error %d when updating AV TXT record", errorCode);
+	[[client client] reportError:@"Received Rendezvous errorwhen updating AV TXT record"
+			     ofLevel:AWEzvError];
+	[self disconnect];
+    }
+    
 }
 
 - (void) updatedName {
@@ -514,6 +578,33 @@ NSData *decode_dns(char* buffer, int len )
 		ofLevel:AWEzvError];
 	[self disconnect];
     }
+    
+    /* create AV browser */
+    avBrowseRef = DNSServiceBrowserCreate (
+					 "_presence._tcp",
+					 "",
+					 av_browse_reply,
+					 self
+					 );
+    
+    /* get mach port */
+    mach_port = DNSServiceDiscoveryMachPort(avBrowseRef);
+    
+    /* if port was successfully created */
+    if (mach_port) {
+	/* Core foundation port */
+	cfMachPort = CFMachPortCreateWithPort (kCFAllocatorDefault, mach_port, (CFMachPortCallBack) handleMachMessage, &context, &shouldFreeInfo);
+	
+	/* setup run loop */
+	rls = CFMachPortCreateRunLoopSource (NULL, cfMachPort, 0);
+	CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode);
+	CFRelease(rls);
+    } else {
+	AWEzvLog(@"Could not obtain client port for Mach messaging (AV browse)");
+	[[client client] reportError:@"Could not obtain client port for Mach messaging (AV browse)"
+			     ofLevel:AWEzvError];
+	[self disconnect];
+    }
 }
 
 /* handle a message from our browser */
@@ -521,7 +612,8 @@ NSData *decode_dns(char* buffer, int len )
 	name:(const char *)replyName
 	type:(const char *)replyType
 	domain:(const char *)replyDomain
-	flags:(DNSServiceDiscoveryReplyFlags)flags {
+	flags:(DNSServiceDiscoveryReplyFlags)flags
+	av:(BOOL) av {
 	
     /* mach port variables */
     CFMachPortRef	cfMachPort;
@@ -569,7 +661,7 @@ NSData *decode_dns(char* buffer, int len )
 	    replyName,
 	    replyType,
 	    replyDomain,
-	    resolve_reply,
+	    (av ? av_resolve_reply : resolve_reply),
 	    contact
 	    );
 	    
@@ -605,20 +697,31 @@ NSData *decode_dns(char* buffer, int len )
     NSString		*dnsname;			/* DNS name to lookup NULL */
     int			len;				/* record length */
     u_char		buf[PACKETSZ*10];		/* NULL record return */
-    NSNumber		*idleTime = nil;		    /* idle time */
-    
+    NSNumber           *idleTime = nil;			/* idle time */
     
     /* check that contact exists in dictionary */
     if ([contacts objectForKey:[contact uniqueID]] == nil) {
-	AWEzvLog(@"Contact to update not in dictionary");
-        return;
+	/* So they haven't been seen before... not to worry we'll add them */
+	if ([contact uniqueID] != nil) {
+	    contact = [[AWEzvContact alloc] init];
+	    [contact setUniqueID:[contact uniqueID]];
+	    [contact setManager:self];
+	    /* save contact in dictionary */
+	    [contacts setObject:contact forKey:[contact uniqueID]];
+	} else {
+	    AWEzvLog(@"Conect to update not in dictionary and has bad identifier");
+	}
     }
+    
+    if ([rendezvousData getField:@"slumming"] != nil)
+	// We don't want to live in a slum
+	return;
     
     if ([contact rendezvous] != nil) {
 	oldrendezvous = [contact rendezvous];
 	/* check serials */
 	if ([contact serial] > [contact serial]) {
-	    AWEzvLog(@"Rendezvous update for %@ with lower serial, updating anyway", [contact uniqueID]);
+	    /* AWEzvLog(@"Rendezvous update for %@ with lower serial, updating anyway", [contact uniqueID]); */
             /* we'll update anyway, and hopefully we'll be back in sync with the network */
 	}
     }
@@ -657,14 +760,13 @@ NSData *decode_dns(char* buffer, int len )
 	else
 	    [contact setStatus: AWEzvOnline];
     }
-
+    
     /* Set idle time */
     if ([rendezvousData getField:@"away"])
-	idleTime = [NSNumber numberWithLong:strtol([[rendezvousData getField:@"away"] UTF8String], NULL, 0)];
+       idleTime = [NSNumber numberWithLong:strtol([[rendezvousData getField:@"away"] UTF8String], NULL, 0)];
     if (idleTime)
-	[contact setIdleSinceDate: [NSDate dateWithTimeIntervalSinceReferenceDate:[idleTime doubleValue]]];
-
-    /* Don't do this in Adium -- blocking call will freeze UI */
+       [contact setIdleSinceDate: [NSDate dateWithTimeIntervalSinceReferenceDate:[idleTime doubleValue]]];
+    
     #if 0
     dnsname = [NSString stringWithFormat:@"%@%s", [contact uniqueID], "._ichat._tcp.local."];
     len = res_query([dnsname UTF8String], C_IN, T_NULL, buf, PACKETSZ*10);
@@ -698,7 +800,7 @@ NSData *decode_dns(char* buffer, int len )
 	}
     }
     #endif
-    
+
     /* now set the port */
     if ([rendezvousData getField:@"port.p2pj"] == nil) {
 	AWEzvLog(@"Invalid rendezvous announcement for %@: no port specified", [contact uniqueID]);
@@ -723,6 +825,10 @@ NSData *decode_dns(char* buffer, int len )
 /* Don't touch stuff here unless you're the mach port callbacks below... */
 - (NSString *)myname {
     return myname;
+}
+
+- (NSString *)myavname {
+    return myavname;
 }
 
 
@@ -771,8 +877,22 @@ void browse_reply  (DNSServiceBrowserReplyResultType resultType,
     
     AWEzvContactManager *self = context;
     if ([[self myname] compare:[NSString stringWithCString:replyName]] != NSOrderedSame)
-	[self browseResult:resultType name:replyName type:replyType domain:replyDomain flags:flags];
+	[self browseResult:resultType name:replyName type:replyType domain:replyDomain flags:flags av:NO];
 }
+
+/* when we receive a reply to an AV browse request */
+void av_browse_reply  (DNSServiceBrowserReplyResultType resultType,
+		    const char *replyName,
+		    const char *replyType,
+		    const char *replyDomain,
+		    DNSServiceDiscoveryReplyFlags flags,
+		    void *context) {
+    
+    AWEzvContactManager *self = context;
+    if ([[self myavname] compare:[NSString stringWithCString:replyName]] != NSOrderedSame)
+	[self browseResult:resultType name:replyName type:replyType domain:replyDomain flags:flags av:YES];
+}
+
 
 /* when we receive a reply to a resolve request */
 void resolve_reply (struct sockaddr	*interface,
@@ -784,4 +904,16 @@ void resolve_reply (struct sockaddr	*interface,
     AWEzvContact	*contact = context;
     AWEzvContactManager *self = [contact manager];
     [self updateContact:contact withData:[[AWEzvRendezvousData alloc] initWithPlist:[NSString stringWithCString:txtRecord]] withAddress:address];
+}
+
+/* when we receive a reply to an AV resolve request */
+void av_resolve_reply (struct sockaddr	*interface,
+		    struct sockaddr	*address,
+		    const char		*txtRecord,
+		    DNSServiceDiscoveryReplyFlags flags,
+		    void		*context) {
+    AWEzvContact	*contact = context;
+    AWEzvContactManager *self = [contact manager];
+    
+    [self updateContact:contact withData:[[AWEzvRendezvousData alloc] initWithAVTxt:[NSString stringWithCString:txtRecord]] withAddress:address];
 }

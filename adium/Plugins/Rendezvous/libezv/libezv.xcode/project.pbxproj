@@ -141,6 +141,7 @@
 //104
 		1058C7B0FEA5585E11CA2CBB = {
 			children = (
+				499C9CD7067F4E4000D88CC0,
 				49D2B14805C63189000207CB,
 			);
 			isa = PBXGroup;
@@ -719,6 +720,7 @@
 			files = (
 				496F57D305CE4E9B00B6A0F5,
 				496F57D205CE4E9600B6A0F5,
+				499C9CD9067F4E4000D88CC0,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -731,6 +733,26 @@
 		};
 		496F57D305CE4E9B00B6A0F5 = {
 			fileRef = 49D2B14805C63189000207CB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		499C9CD7067F4E4000D88CC0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = SystemConfiguration.framework;
+			path = /System/Library/Frameworks/SystemConfiguration.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		499C9CD8067F4E4000D88CC0 = {
+			fileRef = 499C9CD7067F4E4000D88CC0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		499C9CD9067F4E4000D88CC0 = {
+			fileRef = 499C9CD7067F4E4000D88CC0;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1268,6 +1290,7 @@
 			files = (
 				49D2B14A05C63189000207CB,
 				496F53AB05CE0B1C00B6A0F5,
+				499C9CD8067F4E4000D88CC0,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

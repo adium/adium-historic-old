@@ -1,9 +1,9 @@
 /*
  * Project:     Libezv
- * File:        AWEzvRendezvousData.h
+ * File:        AWEzvRendezvousData.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvRendezvousData.m,v 1.1 2004/05/15 18:47:09 evands Exp $
+ * CVS tag:     $Id: AWEzvRendezvousData.m,v 1.2 2004/06/15 16:08:30 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -198,6 +198,30 @@ NSString	*endn = @"\x00\x00\x00\x00";
     return self;
 }
 
+/* initialise object with an AV TXT record */
+- (AWEzvRendezvousData *)initWithAVTxt:(NSString *)txt {
+    NSArray *attribs;
+    NSEnumerator    *enumerator;
+    NSString *key;
+    
+    self = [self init];
+    
+    attribs = [txt componentsSeparatedByString:@"\001"];
+    enumerator = [attribs objectEnumerator];
+
+    while ((key = [enumerator nextObject])) {
+	NSRange range;
+	
+	range = [key rangeOfString:@"="];
+	if (range.location != NSNotFound) {
+	    [self setField:[key substringToIndex:range.location]
+		   content:[key substringFromIndex:range.location+1]];
+	}
+    }
+    
+    return self;
+}
+
 /* deallocate, destroy our dictionary */
 - (void)dealloc
 {
@@ -264,7 +288,7 @@ NSString	*endn = @"\x00\x00\x00\x00";
     [data appendBytes:&serial length:4];
     [data appendBytes:[endn UTF8String] length:[endn length]];
     /* add a field containing the number of fields for the rest of the data */
-    keycount = [keys count];
+    keycount = [keys count] + 1; /* +1 for slumming field */
     [data appendBytes:&keycount length:4];
 
     /* enumerator to loop through fields for announcement */
@@ -290,6 +314,16 @@ NSString	*endn = @"\x00\x00\x00\x00";
 	    [data appendBytes:[value UTF8String] length:[(NSData *)value length]];
 	}
     }
+    
+    /* we're slumming it in iChat-land */
+    key = @"slumming";
+    fieldlen = [key length];
+    [data appendBytes:&fieldlen length:2];
+    [data appendBytes:[key UTF8String] length:[key length]];
+    value = @"1";
+    fieldlen = [(NSData *)value length];
+    [data appendBytes:&fieldlen length:2];
+    [data appendBytes:[value UTF8String] length:[(NSData *)value length]];
     
     /* create XML plist of data and convert to string */
     xmlData = [NSPropertyListSerialization dataFromPropertyList:data
@@ -322,6 +356,44 @@ NSString	*endn = @"\x00\x00\x00\x00";
     return [[infoData copy] autorelease];
 }
 
+/* ichat AV style TXT record */
+-(NSString *)avDataAsDNSTXT {
+    NSMutableString *infoData = [NSMutableString string];
+    NSEnumerator    *enumerator;
+    id value;
+    NSString	    *key;
+    
+    [infoData appendString:@"\001txtvers=1"];
+    [infoData appendString:@"\001version=1"];
+    
+    /* enumerator to loop through fields for announcement */
+    enumerator = [keys keyEnumerator];
+    
+    while ((key = [enumerator nextObject])) {	    
+	[infoData appendString:@"\001"];	
+	[infoData appendString:key];
+	[infoData appendString:@"="];
+	value = [keys objectForKey:key];
+	
+	if ([value isKindOfClass: [NSData class]]) {
+	    /* convert binary to hex */
+	    char *hexdata = (char *)malloc([(NSData *)value length] * 2 + 1);
+	    int i;
+	    
+	    for (i = 0; i < 20; i++) {
+		sprintf(hexdata + (i*2), "%.2x", ((unsigned char *)[(NSData *)value bytes])[i]);
+	    }
+	    hexdata[[(NSData *)value length] * 2] = '\0';
+	    
+	    [infoData appendString:[NSString stringWithCString:hexdata]];
+	} else {
+	    [infoData appendString:value];
+	}
+    }
+    
+    return infoData;
+}
+
 /*
  * Converts data: to packed PString format as required by the low level rendezvous
  * functions when passing an opaque RData structure
@@ -348,5 +420,51 @@ NSString	*endn = @"\x00\x00\x00\x00";
     /* return copy so it is immutable */
     return [[data copy] autorelease];
 }
+
+/* ichat AV style TXT record */
+-(NSData *)avDataAsPackedPString {
+    NSMutableString *infoData = [NSMutableString string];
+    NSEnumerator    *enumerator;
+    id value;
+    NSString	    *key;
+    
+    [infoData appendString:@"\x09txtvers=1"];
+    [infoData appendString:@"\x09version=1"];
+    
+    /* enumerator to loop through fields for announcement */
+    enumerator = [keys keyEnumerator];
+    
+    while ((key = [enumerator nextObject])) {
+	/* convert binary to hex */
+	char *hexdata;
+	int i;
+	
+	value = [keys objectForKey:key];
+	
+	if ([value isKindOfClass:[NSData class]]) {
+	    hexdata = (char *)malloc([(NSData *)value length] * 2 + 1);
+	    
+	    for (i = 0; i < 20; i++) {
+		sprintf(hexdata + (i*2), "%.2x", ((unsigned char *)[(NSData *)value bytes])[i]);
+	    }
+	    hexdata[[(NSData *)value length] * 2] = '\0';
+	    
+	    [infoData appendFormat:@"%c", ([(NSData *)value length] * 2 + [key length] + 1)];
+	    [infoData appendString:key];
+	    [infoData appendString:@"="];
+	    [infoData appendString:[NSString stringWithCString:hexdata]];
+	    
+	} else {
+	    
+	    [infoData appendFormat:@"%c", [(NSString *)value length] + [key length] + 1];
+	    [infoData appendString:key];
+	    [infoData appendString:@"="];
+	    [infoData appendString:value];
+	}
+    }
+    
+    return [NSData dataWithBytes:[infoData UTF8String] length:[infoData length]];
+}
+
 
 @end

@@ -3,7 +3,7 @@
  * File:        AWEzvContact.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContact.m,v 1.4 2004/06/04 05:37:35 proton Exp $
+ * CVS tag:     $Id: AWEzvContact.m,v 1.5 2004/06/15 16:08:30 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -139,7 +139,7 @@
     [xNode addAttribute:@"xmlns" withValue:@"jabber:x:event"];
     [messageNode addChild:xNode];
     
-    if (typingStatus == AWEzvIsTyping) {
+    if (composingNode != nil) {
 	composingNode = [[AWEzvXMLNode alloc] initWithType:XMLElement name:@"composing"];
 	[xNode addChild:composingNode];
     }

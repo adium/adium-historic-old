@@ -8607,6 +8607,7 @@
 				4947F5C70655E85200B791E5,
 				4947F5C80655E85200B791E5,
 				4947F5C90655E85200B791E5,
+				49778165067F558700401CC7,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8915,7 +8916,7 @@
 			children = (
 				4B149D4B0678FB5300D74D43,
 				4BF2DCC7067C919300743318,
-				4BB1E350067F2B5D00D1DB86,
+				4977808C067F556500401CC7,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -9443,6 +9444,27 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		4977808C067F556500401CC7 = {
+			fileType = "compiled.mach-o.dylib";
+			isa = PBXReferenceProxy;
+			path = libezv.dylib;
+			refType = 3;
+			remoteRef = 49778167067F559100401CC7;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		49778165067F558700401CC7 = {
+			fileRef = 34E839050583207E00F2AADB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		49778167067F559100401CC7 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
+			remoteInfo = libezv;
 		};
 //490
 //491
@@ -13694,21 +13716,6 @@
 			path = "Plugins/Contact List Editor/AINewContactWindowController.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4BB1E350067F2B5D00D1DB86 = {
-			fileType = "compiled.mach-o.dylib";
-			isa = PBXReferenceProxy;
-			path = libezv.dylib;
-			refType = 3;
-			remoteRef = 4BB1E43D067F2B7A00D1DB86;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4BB1E43D067F2B7A00D1DB86 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
 		};
 		4BB1E43E067F2CA100D1DB86 = {
 			isa = PBXFileReference;
