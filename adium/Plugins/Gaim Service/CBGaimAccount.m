@@ -45,10 +45,10 @@
 - (const char*)protocolPlugin { return NULL; }
 
 
-	/************************/
-	/* accountBlist methods */
-	/************************/
-
+/************************/
+/* accountBlist methods */
+/************************/
+#pragma mark GaimBuddies
 - (void)accountNewBuddy:(GaimBuddy*)buddy
 {
 	//NSLog(@"accountNewBuddy (%s)", buddy->name);
@@ -209,7 +209,7 @@
 /***********************/
 /* accountConv methods */
 /***********************/
-
+#pragma mark GaimConversations
 - (void)accountConvDestroy:(GaimConversation*)conv
 {
     AIChat *chat = (AIChat*) conv->ui_data;
@@ -312,7 +312,7 @@
 /********************************/
 /* AIAccount subclassed methods */
 /********************************/
-
+#pragma mark AIAccount Subclassed Methods
 - (void)initAccount
 {
     handleDict = [[NSMutableDictionary alloc] init];
@@ -371,16 +371,9 @@
     [chatDict release];
     [handleDict release];
     [filesToSendArray release];
-	
-    //  is deleting the accoutn necessary?  this seems to throw an exception.
-	//    gaim_accounts_delete(account); account = NULL;
-    
-    // TODO: remove this from the account dict that the ServicePlugin keeps
-    
+
     [super dealloc];
 }
-
-
 
 - (NSString *)accountID {
     return [NSString stringWithFormat:@"GAIM-%@.%@", [self serviceID], [self UID]];
@@ -394,10 +387,10 @@
 - (id <AIAccountViewController>)accountView{ return(nil); }
 
 
-	/*********************/
-	/* AIAccount_Content */
-	/*********************/
-
+/*********************/
+/* AIAccount_Content */
+/*********************/
+#pragma mark Content
 - (BOOL)sendContentObject:(AIContentObject*)object
 {
     BOOL            sent = NO;
@@ -521,7 +514,7 @@
 /*********************/
 /* AIAccount_Handles */
 /*********************/
-
+#pragma mark Handles
 // Returns a dictionary of AIHandles available on this account
 - (NSDictionary *)availableHandles //return nil if no contacts/list available
 {
@@ -601,7 +594,8 @@
 {
     GaimGroup *group = gaim_group_new([inGroup UTF8String]);    //create the GaimGroup
     gaim_blist_add_group(group,NULL);                           //add it gaimside (server will make it as needed)
-																//    NSLog(@"added group %@",inGroup);
+                                                                
+    //    NSLog(@"added group %@",inGroup);
     return NO;
 }
 // Remove a group
@@ -611,7 +605,8 @@
     
     GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
     gaim_blist_remove_group(group);                         //remove it gaimside
-															//    NSLog(@"remove group %@",inGroup);
+															
+    //    NSLog(@"remove group %@",inGroup);
     return YES;
 }
 // Rename a group
@@ -633,7 +628,8 @@
         GaimGroup *oldGroup = gaim_find_group([[handle serverGroup] UTF8String]);   //get the GaimGroup        
         GaimGroup *newGroup = gaim_find_group([inGroup UTF8String]);                //get the GaimGroup
         if (newGroup == NULL) {                                                        //if the group doesn't exist yet
-																					   //           NSLog(@"Creating a new group");
+                                                                                                                                                                
+            //           NSLog(@"Creating a new group");
             newGroup = gaim_group_new([inGroup UTF8String]);                           //create the GaimGroup
         }
         
@@ -675,7 +671,7 @@
 /*********************/
 /* AIAccount_Privacy */
 /*********************/
-
+#pragma mark Privacy
 -(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type
 {
     if (type == PRIVACY_PERMIT)
@@ -691,16 +687,10 @@
         return (gaim_privacy_deny_remove(account,[[inObject UID] UTF8String],FALSE));
 }
 
-/*****************************/
-/* accountConnection methods */
-/*****************************/
-
-
-
-
 /*****************************************************/
 /* File transfer / AIAccount_Files inherited methods */
 /*****************************************************/
+#pragma mark File Transfer
 
 //The account requested that we received a file; set up the ESFileTransfer and query the fileTransferController for a save location
 - (void)accountXferRequestFileReceiveWithXfer:(GaimXfer *)xfer
@@ -807,7 +797,7 @@
 /***************************/
 /* Account private methods */
 /***************************/
-
+#pragma mark Private
 // Removes all the possible status flags (that are valid on the calling account) from the passed handle
 - (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle
 {
@@ -843,21 +833,8 @@
     return([[USER_ICON_CACHE_PATH stringByAppendingPathComponent:userIconCacheFilename] stringByExpandingTildeInPath]);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //Account Connectivity -------------------------------------------------------------------------------------------------
+#pragma mark Account Connectivity
 //Connect this account (Our password should be in the instance variable 'password' all ready for us)
 - (void)connect
 {
@@ -915,12 +892,14 @@
     //We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
     
-	//Tell libgaim to disconnect
+    //Tell libgaim to disconnect
     if(gaim_account_is_connected(account)){
         gaim_account_disconnect(account); 
-	}
+    }
 }
-
+/*****************************/
+/* accountConnection methods */
+/*****************************/
 //Our account was disconnected, report the error
 - (void)accountConnectionReportDisconnect:(const char*)text
 {
@@ -933,17 +912,17 @@
     NSEnumerator    *enumerator;
     AIHandle        *handle;
     
-	//We are now offline
+    //We are now offline
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
-
+    
     //Flush all our handle status flags
     enumerator = [[handleDict allValues] objectEnumerator];
     while((handle = [enumerator nextObject])){
         [self removeAllStatusFlagsFromHandle:handle];
     }
-	
+    
     //Clear out the GaimConv pointers in the chat statusDictionaries, as they no longer have meaning
     AIChat *chat;
     enumerator = [chatDict objectEnumerator];
@@ -963,22 +942,22 @@
 
 	//If we were disconnected unexpectedly, attempt a reconnect
 	if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
-		[self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
+            [self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
 	}
 }
 
 //Our account has connected (called automatically by gaimServicePlugin)
 - (void)accountConnectionConnected
 {
-	//We are now online
+    //We are now online
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
     
-	//Silence updates
-	[self silenceAllHandleUpdatesForInterval:18.0];
-
-	//Set our initial status
-	[self updateAllStatusKeys];
+    //Silence updates
+    [self silenceAllHandleUpdatesForInterval:18.0];
+    
+    //Set our initial status
+    [self updateAllStatusKeys];
 }
 
 //Reset the libgaim account, causing it to forget all saved information
@@ -1000,6 +979,7 @@
 
 
 //Account Status ------------------------------------------------------------------------------------------------------
+#pragma mark Account Status
 //Status keys this account supports
 - (NSArray *)supportedPropertyKeys
 {
@@ -1036,30 +1016,30 @@
 
     //Now look at keys which only make sense while online
     if([[self statusObjectForKey:@"Online"] boolValue]){
-
+        
         if([key compare:@"IdleSince"] == 0){
             NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
-			[self setAccountIdleTo:(idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil)];
-        
-		}else if ([key compare:@"AwayMessage"] == 0){
-			NSAttributedString	*awayMessage = nil;
-						
-			if(data = [self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]){
-				awayMessage = [NSAttributedString stringWithData:data];
-			}
-			[self setAccountAwayTo:awayMessage];
-        
-		}else if([key compare:@"TextProfile"] == 0){
-			NSAttributedString	*profile = nil;
-			
-			if(data = [self preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS]){
-				profile = [NSAttributedString stringWithData:data];
-			}
-			[self setAccountProfileTo:profile];
-
-		}
+            [self setAccountIdleTo:(idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil)];
+            
+        }else if ([key compare:@"AwayMessage"] == 0){
+            NSAttributedString	*awayMessage = nil;
+            
+            if(data = [self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]){
+                awayMessage = [NSAttributedString stringWithData:data];
+            }
+            [self setAccountAwayTo:awayMessage];
+            
+        }else if([key compare:@"TextProfile"] == 0){
+            NSAttributedString	*profile = nil;
+            
+            if(data = [self preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS]){
+                profile = [NSAttributedString stringWithData:data];
+            }
+            [self setAccountProfileTo:profile];
+            
+        }
     }
-	
+    
 	//User Icon can be set regardless of ONLINE state
 	if([key compare:@"UserIcon"] == 0) {
 		if(data = [self preferenceForKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS]){
@@ -1090,10 +1070,8 @@
 	if(awayMessage){
         awayHTML = (char *)[[AIHTMLDecoder encodeHTML:awayMessage
                                               headers:YES
-                                             fontTags:YES
-										closeFontTags:YES
-                                            styleTags:YES
-						   closeStyleTagsOnFontChange:NO
+                                             fontTags:YES   closeFontTags:YES
+                                            styleTags:YES   closeStyleTagsOnFontChange:NO
                                        encodeNonASCII:NO
                                            imagesPath:nil] UTF8String];
     }
@@ -1112,13 +1090,11 @@
 	//Convert the profile to HTML, and pass it to libgaim
     if(profile){
         profileHTML = (char *)[[AIHTMLDecoder encodeHTML:profile
-												 headers:YES
-												fontTags:YES
-										   closeFontTags:YES
-											   styleTags:YES
-							  closeStyleTagsOnFontChange:NO
-										  encodeNonASCII:NO
-											  imagesPath:nil] UTF8String];
+                                                 headers:YES
+                                                fontTags:YES    closeFontTags:YES
+                                               styleTags:YES    closeStyleTagsOnFontChange:NO
+                                          encodeNonASCII:NO
+                                              imagesPath:nil] UTF8String];
     }
     serv_set_info(gc, profileHTML);
 	
