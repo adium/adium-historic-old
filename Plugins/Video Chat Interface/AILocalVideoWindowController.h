@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on 12/5/04.
-//  Copyright 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
@@ -14,5 +13,7 @@
 	IBOutlet	NSImageView		*videoImageView;
 	AIVideoCapture				*localVideo;
 }
+
++ (void)showLocalVideoWindow;
 
 @end
