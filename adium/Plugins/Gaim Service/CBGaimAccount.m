@@ -912,10 +912,6 @@
     
     //We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
-    
-    //tell gaim to disconnect    
-#warning    silentAndDelayed = YES;
-    NSLog(@"Setting handle updates to silent and delayed (disconnecting)");
 	
     //Flush all our handle status flags
     enumerator = [[handleDict allValues] objectEnumerator];
