@@ -26,6 +26,10 @@
 - (void)addFormattingForLinks;			//Set color and underline attributes for any areas with NSLinkAttributeName set
 @end
 
+@interface NSData (AIAttributedStringAdditions)
+- (NSAttributedString *)attributedString;
+@end
+
 @interface NSAttributedString (AIAttributedStringAdditions)
 
 - (float)heightWithWidth:(float)width;
