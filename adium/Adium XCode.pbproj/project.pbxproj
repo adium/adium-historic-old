@@ -307,6 +307,7 @@
 				340869E905E5E01E00ABB759,
 				3419F47005314C6900C68BA3,
 				3479A8A105DCA0F900998B3D,
+				4B539C4705EFD35400E5921A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -424,6 +425,7 @@
 				3419F44E05314C5900C68BA3,
 				340869E805E5E01E00ABB759,
 				3419F46005314C6800C68BA3,
+				4B539C4605EFD35400E5921A,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -2961,6 +2963,7 @@
 				3484645405910E7E00241F68,
 				3453667D059BA7E300A83D9E,
 				34C1CA8805B15B170055C2E3,
+				4B539B0705EFB10000E5921A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19286,6 +19289,99 @@
 			path = "Plugins/Status Circles/StatusCirclesPrefs.nib";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B539B0705EFB10000E5921A = {
+			fileRef = 4B6EF58B04C576A200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B539C4205EFD35400E5921A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B539C4305EFD35400E5921A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B539C4405EFD35400E5921A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B539C4505EFD35400E5921A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B539C4605EFD35400E5921A = {
+			buildPhases = (
+				4B539C4205EFD35400E5921A,
+				4B539C4305EFD35400E5921A,
+				4B539C4405EFD35400E5921A,
+				4B539C4505EFD35400E5921A,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = "Plists/Webkit_Message_View-Info.plist";
+				PRODUCT_NAME = "Webkit Message View";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = "Webkit Message View";
+			productName = "Webkit Message View";
+			productReference = 4B539C4705EFD35400E5921A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Webkit Message View</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Webkit_Message_View</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		4B539C4705EFD35400E5921A = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Webkit Message View.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		4B54D1020502865F00A8010A = {
 			fileEncoding = 4;
