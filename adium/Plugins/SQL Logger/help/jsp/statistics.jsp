@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 707 $ $Date: 2004/05/04 21:29:54 $ -->
+<!--$Rev: 716 $ $Date: 2004/05/04 22:57:23 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -127,9 +127,15 @@ try {
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
 <%
-    rset = stmt.executeQuery("select user_id, scramble(username) "+
-        " as username from adium.users where login = " + loginUsers +
-        " order by username");
+    rset = stmt.executeQuery("select user_id, " +
+        " scramble(display_name) as display_name, " +
+        " scramble(username) " +
+        " as username from adium.users " +
+        " natural join adium.user_display_name udn" +
+        " where login = " + loginUsers +
+        " and not exists (select 'x' from adium.user_display_name where " +
+        " user_id = users.user_id and effdate > udn.effdate) " +
+        " order by scramble(display_name), username");
 
     if(!loginUsers) {
         out.print("<p><i><a href=\"statistics.jsp?sender=" + 
@@ -147,7 +153,8 @@ try {
             out.println("<p><a href=\"statistics.jsp?sender=" + 
             rset.getString("user_id") + "&login=" + 
             Boolean.toString(loginUsers) +
-            "\">" + rset.getString("username") +
+            "\" title=\"" + rset.getString("username") + "\">" +
+            rset.getString("display_name") +
             "</a></p>");
         }
         else {

@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/details.jsp $-->
-<!--$Rev: 704 $ $Date: 2004/05/04 21:29:54 $ -->
+<!--$Rev: 716 $ $Date: 2004/05/04 22:57:21 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -111,6 +111,7 @@ try {
                     <li><a href="index.jsp">Viewer</a></li>
                     <li><a href="search.jsp">Search</a></li>
                     <li><a href="statistics.jsp">Statistics</a></li>
+                    <li><a href="users.jsp">Users</a></li>
                 </ul>
             </div>
             <div id="sidebar-a">
@@ -148,33 +149,24 @@ try {
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
 <%
-    if(!loginUsers) {
-        rset = stmt.executeQuery("select user_id, scramble(username) "+
-            " as username from adium.users" +
-            " order by username");
+    rset = stmt.executeQuery("select user_id, " +
+        " scramble(display_name) as display_name, " +
+        " scramble(username) " +
+        " as username from adium.users " +
+        " natural join adium.user_display_name udn" +
+        " where login = " + loginUsers +
+        " and not exists (select 'x' from adium.user_display_name where " +
+        " user_id = users.user_id and effdate > udn.effdate) " +
+        " order by scramble(display_name), username");
 
-        if(sender != 0) {
-            out.print("<p><i><a href=\"statistics.jsp?sender=" + 
-                sender + "&login=true\">Login Users</a></i></p>");
-        } else {
-            out.print("<p><i><a href=\"statistics.jsp?login=true\">" + 
-                "Login Users</a></i></p>");
-        }
+    if(!loginUsers) {
+        out.print("<p><i><a href=\"statistics.jsp?sender=" + 
+            sender + "&login=true\">Login Users</a></i></p>");
     } else {
-        rset = stmt.executeQuery("select sender_id as user_id, "+
-            " scramble(username) as username "+
-            "from user_statistics, users where sender_id = user_id "+
-            " group by sender_id, username "+
-            " having count(*) > 1 order by username");
-        
-        if(sender != 0) {
-            out.print("<p><i><a href=\"statistics.jsp?sender=" + 
-                sender + "&login=false\">All Users</a></i></p>");
-        } else {
-            out.print("<p><i><a href=\"statistics.jsp?login=false\">" + 
-                "All Users</a></i></p>");
-        }
-    }
+        out.print("<p><i><a href=\"statistics.jsp?sender=" +
+            sender + "&login=false\">" + 
+            "All Users</a></i></p>");
+    }    
     out.println("<p></p>");
     
     while (rset.next())  {
@@ -182,7 +174,8 @@ try {
             out.println("<p><a href=\"statistics.jsp?sender=" + 
             rset.getString("user_id") + "&login=" + 
             Boolean.toString(loginUsers) +
-            "\">" + rset.getString("username") +
+            "\" + title=\"" + rset.getString("username") + "\">" + 
+            rset.getString("display_name") +
             "</a></p>");
         }
         else {
