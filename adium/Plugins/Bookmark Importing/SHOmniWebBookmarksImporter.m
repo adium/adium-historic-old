@@ -89,14 +89,14 @@ static NSMenu   *omniTopMenu;
     
     [linkScanner setCaseSensitive:NO];
     
-    NSString    *gtSign = @">";
-    NSString    *Hopen = @"h3";
-    NSString    *Aopen = @"a ";
-    NSString    *hrefStr = @"href=\"";
-    NSString    *closeQuote = @"\"";
-    NSString    *Aclose = @"</a";
-    NSString    *DLclose = @"/dl>";
-    NSString    *ltSign = @"<";
+    static NSString    *gtSign = @">";
+    static NSString    *Hopen = @"h3";
+    static NSString    *Aopen = @"a ";
+    static NSString    *hrefStr = @"href=\"";
+    static NSString    *closeQuote = @"\"";
+    static NSString    *Aclose = @"</a";
+    static NSString    *DLclose = @"/dl>";
+    static NSString    *ltSign = @"<";
     
     while(![linkScanner isAtEnd]){
         if((stringLength - [linkScanner scanLocation]) < 4){
