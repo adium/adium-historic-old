@@ -1163,6 +1163,7 @@
 				01BD68FF015E255C7F000001,
 				4BDB241F04AF52B000A8010A,
 				F5819CE9032124CE01A8010A,
+				D2547F1D050AD55B00A80164,
 			);
 			isa = PBXGroup;
 			name = "Linked Frameworks";
@@ -1400,6 +1401,7 @@
 				F59DB3DE033EB08D01A8010A,
 				4B28908D03C1D19A00A8010A,
 				4B28909103C1D1A900A8010A,
+				D2547F1E050AD55B00A80164,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3160,6 +3162,7 @@
 				4B28909403C1D20F00A8010A,
 				4BF1F0BE03D86DBB00A8010A,
 				4BF1F0BF03D86DBB00A8010A,
+				D2547F1F050AD55B00A80164,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13682,6 +13685,34 @@
 //B72
 //B73
 //B74
+//D20
+//D21
+//D22
+//D23
+//D24
+		D2547F1D050AD55B00A80164 = {
+			isa = PBXFrameworkReference;
+			name = AddressBook.framework;
+			path = /System/Library/Frameworks/AddressBook.framework;
+			refType = 0;
+		};
+		D2547F1E050AD55B00A80164 = {
+			fileRef = D2547F1D050AD55B00A80164;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D2547F1F050AD55B00A80164 = {
+			fileRef = D2547F1D050AD55B00A80164;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//D20
+//D21
+//D22
+//D23
+//D24
 //F50
 //F51
 //F52
