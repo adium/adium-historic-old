@@ -194,10 +194,12 @@ typedef enum {
     NSNotificationCenter 	*accountNotificationCenter;	//Shared account notification center
 
     NSMutableArray		*availableServiceArray;
+    NSString			*lastAccountIDToSendContent;
 }
 
 - (NSNotificationCenter *)accountNotificationCenter;
 - (NSArray *)accountArray;
+- (AIAccount *)accountWithID:(NSString *)inID;
 - (AIAccount *)newAccountAtIndex:(int)index;
 - (void)deleteAccount:(AIAccount *)inAccount;
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
@@ -206,6 +208,7 @@ typedef enum {
 - (void)forgetPasswordForAccount:(AIAccount *)inAccount;
 - (NSArray *)availableServiceArray;
 - (void)registerService:(id <AIServiceController>)inService;
+- (AIAccount *)accountForSendingContentToHandle:(AIContactHandle *)inHandle;
 
 @end
 

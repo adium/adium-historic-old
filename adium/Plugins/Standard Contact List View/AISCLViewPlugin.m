@@ -91,7 +91,7 @@
 }
 
 - (void)closeContactListView:(NSView *)inView
-{
+{    
     if([inView isKindOfClass:[AISCLOutlineView class]]){
         AISCLOutlineView	*view = (AISCLOutlineView *)inView;
 

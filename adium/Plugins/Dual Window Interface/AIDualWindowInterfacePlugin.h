@@ -17,9 +17,9 @@
 #import <Adium/Adium.h>
 
 @class AIAdium, AIContactListWindowController, AIMessageWindowController, AIMessageViewController;
-@protocol AIMessageView, AIInterfaceController, AITabHoldingInterface;
+@protocol AIMessageView, AIInterfaceController, AITabHoldingInterface, AIContactListCleanup;
 
-@interface AIDualWindowInterfacePlugin : AIPlugin <AIInterfaceController, AITabHoldingInterface> {
+@interface AIDualWindowInterfacePlugin : AIPlugin <AIInterfaceController, AITabHoldingInterface, AIContactListCleanup> {
     AIContactListWindowController 	*contactListWindowController;
     NSMutableArray			*windowMenuArray;
 

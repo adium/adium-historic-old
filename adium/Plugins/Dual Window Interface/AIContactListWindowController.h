@@ -18,17 +18,22 @@
 @class AIAdium, AIContactGroup, AIMiniToolbar;
 @protocol AIContactListViewController;
 
+@protocol AIContactListCleanup <NSObject>
+- (void)unloadContactListWindow;
+@end
+
 @interface AIContactListWindowController : NSWindowController {
-    IBOutlet	NSScrollView	*scrollView_contactList;
-    IBOutlet	AIMiniToolbar	*toolbar_bottom;
+    IBOutlet	NSScrollView		*scrollView_contactList;
+    IBOutlet	AIMiniToolbar		*toolbar_bottom;
 
     id <AIContactListViewController>	contactListViewController;
     NSView				*contactListView;
-        
-    AIAdium		*owner;
+
+    id <AIContactListCleanup>		interface;
+    AIAdium				*owner;
 }
 
-+ (AIContactListWindowController *)contactListWindowControllerWithOwner:(id)inOwner;
++ (AIContactListWindowController *)contactListWindowControllerForInterface:(id <AIContactListCleanup>)inInterface owner:(id)inOwner;
 - (IBAction)closeWindow:(id)sender;
 
 @end

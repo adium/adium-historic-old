@@ -23,19 +23,21 @@
 #define	KEY_DUAL_CONTACT_LIST_WINDOW_FRAME	@"Dual Contact List Frame"
 
 @interface AIContactListWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
+- (id)initWithWindowNibName:(NSString *)windowNibName interface:(id <AIContactListCleanup>)inInterface owner:(id)inOwner;
+- (void)contactSelectionChanged:(NSNotification *)notification;
 - (void)windowDidLoad;
+- (BOOL)windowShouldClose:(id)sender;
 @end
 
 @implementation AIContactListWindowController
 
-// Return an instance of AIContactListWindowController
-+ (AIContactListWindowController *)contactListWindowControllerWithOwner:(id)inOwner
+//Return a new contact list window controller
++ (AIContactListWindowController *)contactListWindowControllerForInterface:(id <AIContactListCleanup>)inInterface owner:(id)inOwner
 {
-    return([[[self alloc] initWithWindowNibName:CONTACT_LIST_WINDOW_NIB owner:inOwner] autorelease]);
+    return([[[self alloc] initWithWindowNibName:CONTACT_LIST_WINDOW_NIB interface:inInterface owner:inOwner] autorelease]);
 }
 
-//closes this window
+//Closes this window
 - (IBAction)closeWindow:(id)sender
 {
     if([self windowShouldClose:nil]){
@@ -45,26 +47,22 @@
 
 
 //Private ----------------------------------------------------------------
-// init the account window controller
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
+//init the contact list window controller
+- (id)initWithWindowNibName:(NSString *)windowNibName interface:(id <AIContactListCleanup>)inInterface owner:(id)inOwner
 {
-    NSParameterAssert(windowNibName != nil && [windowNibName length] != 0);
-
-    //Retain our owner
-    owner = [inOwner retain];
-    
-    //Listen
-
     [super initWithWindowNibName:windowNibName owner:self];
+
+    owner = [inOwner retain];
+    interface = [inInterface retain];
         
     return(self);
 }
 
+//dealloc
 - (void)dealloc
 {
     [owner release];
-    [contactListViewController release];
-    [contactListView release];
+    [interface release];
 
     [super dealloc];
 }
@@ -78,6 +76,7 @@
     [toolbar_bottom configureForObjects:[NSDictionary dictionaryWithObjectsAndKeys:[self window],@"Window",object,@"ContactObject",nil]];
 }
 
+//Setup the window after it had loaded
 - (void)windowDidLoad
 {
     NSString	*savedFrame;
@@ -92,7 +91,7 @@
     contactListViewController = [[[owner interfaceController] contactListViewController] retain];
     contactListView = [[contactListViewController contactListView] retain];
     [scrollView_contactList setAndSizeDocumentView:contactListView];
-    
+
     //Register for the selection notification
     [[[owner interfaceController] interfaceNotificationCenter] addObserver:self selector:@selector(contactSelectionChanged:) name:Interface_ContactSelectionChanged object:contactListView];
 
@@ -102,10 +101,13 @@
     [toolbar_bottom setIdentifier:CONTACT_LIST_TOOLBAR];
 }
 
+//Close the contact list window
 - (BOOL)windowShouldClose:(id)sender
 {
-    //Let the contact list view close
+    //Close the contact list view
     [contactListViewController closeContactListView:contactListView];
+    [contactListViewController release];
+    [contactListView release];
 
     //Stop observing
     [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:Interface_ContactSelectionChanged object:contactListView];
@@ -116,7 +118,15 @@
                                          forKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 
+    //Tell the interface to unload our window
+    [interface unloadContactListWindow];
+    
     return(YES);
+}
+
+- (BOOL)shouldCascadeWindows
+{
+    return(NO);
 }
 
 @end

@@ -45,7 +45,7 @@
 + (AIMessageWindowController *)messageWindowControllerWithOwner:(id)inOwner interface:(id <AITabHoldingInterface>)inInterface;
 - (void)selectMessageViewController:(id <AIMessageView>)inController;
 - (void)addMessageViewController:(id <AIMessageView>)inController;
-- (void)removeMessageViewController:(id <AIMessageView>)inController;
+- (BOOL)removeMessageViewController:(id <AIMessageView>)inController;
 - (int)count;
 - (NSArray *)messageViewArray;
 - (IBAction)closeWindow:(id)sender;
