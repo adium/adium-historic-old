@@ -72,29 +72,22 @@
 	   ([self isExpandable:item]) && 
 	   (viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.width)){
 		
-		//Wait for the next event
+		//Wait for the next event - don't dequeue it so it will be handled as normal
 		NSEvent *nextEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask)
 														untilDate:[NSDate distantFuture]
 														   inMode:NSEventTrackingRunLoopMode
 														  dequeue:NO];
-		
+
+		//Handle the original event
+		[super mouseDown:theEvent];
+
 		if([nextEvent type] == NSLeftMouseUp){
-			//If they press and release, expand/collapse the item
+			//If they pressed and released, expand/collapse the item
 			if([self isItemExpanded:item]){
 				[self collapseItem:item];
 			}else{
 				[self expandItem:item];
 			}
-
-			[super mouseDown:theEvent];   
-			[super mouseUp:nextEvent];   
-
-		}else if([nextEvent type] == (NSEventType)NSLeftMouseDraggedMask){
-			//If they drag, handle the drag as normal
-			[super mouseDown:theEvent];
-			[self mouseDragged:theEvent];
-		}else{
-			[super mouseDown:theEvent];
 		}
 
 	}else{
