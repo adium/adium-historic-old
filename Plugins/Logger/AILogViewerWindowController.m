@@ -124,8 +124,9 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     availableLogArray = [[NSMutableArray alloc] init];
     selectedLogArray = [[NSMutableArray alloc] init];
     fromArray = [[NSMutableArray alloc] init];
+    fromServiceArray = [[NSMutableArray alloc] init];
     toArray = [[NSMutableArray alloc] init];
-    serviceArray = [[NSMutableArray alloc] init];
+    toServiceArray = [[NSMutableArray alloc] init];
     resultsLock = [[NSLock alloc] init];
     searchingLock = [[NSLock alloc] init];
     	
@@ -140,8 +141,9 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     [resultsLock release];
     [searchingLock release];
     [fromArray release];
+    [fromServiceArray release];
     [toArray release];
-    [serviceArray release];
+    [toServiceArray release];
     [availableLogArray release];
     [selectedLogArray release];
     [selectedColumn release];
@@ -185,13 +187,14 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
                     }
                     
                     [fromArray addObject:from];
-                    [serviceArray addObject:service];
+                    [fromServiceArray addObject:service];
                     
                     // to processing
                     while(currentToGroup = [toEnum nextObject]){
                         if(![[currentToGroup to] isEqual:@".DS_Store"]){
                             if(![toArray containsObject:[currentToGroup to]]){
                                 [toArray addObject:[currentToGroup to]]; 
+								[toServiceArray addObject:service];
                             }                            
                         }
                     }
@@ -256,8 +259,9 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
     // invisible fix0ring... rebuild the 'global' log indexes
     [availableLogArray removeAllObjects];
     [toArray removeAllObjects]; //note: even if there are no logs, the name will remain [bug or feature?]
+    [toServiceArray removeAllObjects];
     [fromArray removeAllObjects];
-    [serviceArray removeAllObjects];
+    [fromServiceArray removeAllObjects];
     [self initLogFiltering];
 }
 
@@ -305,8 +309,13 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
 }
 
 //Return our handy dandy services list to match above
-- (NSMutableArray *)serviceArray{
-    return serviceArray;
+- (NSMutableArray *)fromServiceArray{
+    return fromServiceArray;
+}
+
+//Return our handy dandy services list to match above
+- (NSMutableArray *)toServiceArray{
+    return toServiceArray;
 }
 
 //Return our handy dandy services list to match above

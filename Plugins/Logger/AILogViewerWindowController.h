@@ -40,8 +40,9 @@ typedef enum {
     //Misc
     NSMutableArray		*availableLogArray;		//Array/tree of all available logs
     NSMutableArray		*fromArray;				//Array of account names
-    NSMutableArray		*serviceArray;			//Array of services for accounts
+    NSMutableArray		*fromServiceArray;		//Array of services for accounts
     NSMutableArray		*toArray;				//Array of contacts
+    NSMutableArray		*toServiceArray;		//Array of services for accounts
     NSTableColumn		*selectedColumn;		//Selected/active sort column
     BOOL				sortDirection;			//Direction to sort
     LogSearchMode		searchMode;				//Currently selected search mode
@@ -76,7 +77,8 @@ typedef enum {
 - (void)setSearchString:(NSString *)inString mode:(LogSearchMode)inMode;
 - (void)resetSearch;
 - (NSMutableArray *)fromArray;
-- (NSMutableArray *)serviceArray;
+- (NSMutableArray *)toServiceArray;
+- (NSMutableArray *)fromServiceArray;
 - (NSMutableArray *)toArray;
 
 @end
