@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.34 2003/12/08 06:31:06 jmelloy Exp $
+// $Id: AIContentController.m,v 1.35 2003/12/09 03:56:18 adamiser Exp $
 
 #import "AIContentController.h"
 
@@ -416,14 +416,15 @@
     return chatArray;
 }
 
-- (void)switchToMostRecentChat
+//Switch to a chat with the most recent unviewed content.  Returns YES if one existed
+- (BOOL)switchToMostRecentUnviewedContent
 {
-    [[owner interfaceController] setActiveChat:mostRecentChat];
-}
-
-- (void)setMostRecentChat:(AIChat *)inChat
-{
-    mostRecentChat = inChat;
+    if(mostRecentChat && [mostRecentChat listObject] && [[[mostRecentChat listObject] statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]){
+	[[owner interfaceController] setActiveChat:mostRecentChat];
+	return(YES);
+    }else{
+	return(NO);
+    }
 }
 
 @end

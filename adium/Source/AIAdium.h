@@ -274,6 +274,7 @@ typedef enum {
 - (void)openChat:(AIChat *)inChat;
 - (void)closeChat:(AIChat *)inChat;
 - (void)setActiveChat:(AIChat *)inChat;
+- (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows;
 @end
 
 @protocol AIFlashObserver <NSObject>
@@ -396,8 +397,7 @@ typedef enum {
 - (void)noteChat:(AIChat *)inChat forAccount:(AIAccount *)inAccount;
 - (BOOL)closeChat:(AIChat *)inChat;
 - (NSArray *)chatArray;
-- (void)switchToMostRecentChat;
-- (void)setMostRecentChat:(AIChat *)inChat;
+- (BOOL)switchToMostRecentUnviewedContent;
 
 //Sending / Receiving content
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject onAccount:(AIAccount *)inAccount;
@@ -561,6 +561,9 @@ typedef enum {
 
 //Custom font menus
 - (IBAction)toggleFontTrait:(id)sender;
+
+//Activation
+- (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows;
 
 @end
 
@@ -738,8 +741,6 @@ typedef enum {
 //Bouncing & behavior
 - (void)performBehavior:(DOCK_BEHAVIOR)behavior;
 
-//respond to the dock icon being clicked
-- (void)handleDockIconClick;
 @end
 
 //*** File transfer ***//

@@ -136,8 +136,7 @@
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag
 {
-    [dockController handleDockIconClick];
-    return YES;
+    return([interfaceController handleReopenWithVisibleWindows:flag]);
 }
 
 // Called by the login controller when a user has been selected

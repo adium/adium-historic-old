@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIDockController.m,v 1.44 2003/12/08 05:43:29 jmelloy Exp $
+// $Id: AIDockController.m,v 1.45 2003/12/09 03:56:18 adamiser Exp $
 
 #import "AIDockController.h"
 
@@ -459,12 +459,6 @@
 - (void)appWillChangeActive:(NSNotification *)notification
 {
     [self _stopBouncing]; //Stop any bouncing
-}
-
-- (void)handleDockIconClick
-{
-    [[owner interfaceController] showContactList];
-    [[owner contentController] switchToMostRecentChat];
 }
 
 @end
