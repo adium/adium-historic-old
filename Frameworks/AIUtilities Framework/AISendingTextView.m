@@ -43,6 +43,13 @@
     return(self);
 }
 
+- (void)dealloc
+{
+	[returnArray release]; returnArray = nil;
+	
+	[super dealloc];
+}
+
 //If true we will invoke selector on target when a send key is pressed
 - (void)setSendingEnabled:(BOOL)inBool
 {
