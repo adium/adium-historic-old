@@ -19,6 +19,11 @@ Adium, Copyright 2001-2005, Adam Iser
 
 #define GROUP_ACCOUNT_STATUS   @"Account Status"
 
+//Connect host and port keys
+#define KEY_CONNECT_HOST 			@"Connect Host"
+#define KEY_CONNECT_PORT 			@"Connect Port"
+#define KEY_ACCOUNT_CHECK_MAIL		@"Check Mail"
+
 #define NEW_ACCOUNT_DISPLAY_TEXT	AILocalizedString(@"<New Account>",nil)
 
 typedef enum {
