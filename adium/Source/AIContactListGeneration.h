@@ -33,5 +33,6 @@
 - (void)handle:(AIHandle *)inHandle removedFromAccount:(AIAccount *)inAccount;
 - (void)handlesChangedForAccount:(AIAccount *)inAccount;
 - (void)saveGroupState;
+- (AIListContact *)createContactWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID;
 
 @end

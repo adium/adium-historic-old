@@ -66,19 +66,7 @@ static AINewMessagePrompt *sharedInstance = nil;
     UID = [serviceType filterUID:[textField_handle stringValue]];
         
     //Find the contact
-    contact = [[owner contactController] contactInGroup:nil withService:[serviceType identifier] UID:UID];
-
-    //If one does not exist, we need to create it as a temporary handle
-    if(!contact){
-        AIAccount	*account;
-        AIHandle	*handle;
-        
-        //Find the first available account, and create a temporary handle on it for the new contact
-        account = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toContact:nil];
-        handle = [(AIAccount<AIAccount_Handles> *)account addHandleWithUID:UID serverGroup:nil temporary:YES];
-        contact = [handle containingContact];
-    }
-
+    contact = [[owner contactController] contactInGroup:nil withService:[serviceType identifier] UID:UID serverGroup:nil create:YES];
     if(contact){
         //Close the prompt
         [AINewMessagePrompt closeSharedInstance];

@@ -67,7 +67,7 @@
         owner = [inOwner retain];
 
         //Let observers know we're inited
-        [[owner contentController] contentsChangedInTextEntryView:self];
+        [[owner contentController] initTextEntryView:self];
     }
 }
 

@@ -109,17 +109,9 @@ static char *hash_password(const char * const password);
     //Load our preferences
     preferencesDict = [[preferenceController preferencesForGroup:AIM_TOC2_PREFS] retain];
 
-    //We have a choice here between:
-    //Option 1: Automatically remembering the online state, and restoring it on launch
-    //Auto-Connect (via state-restore)
-    //if([[[owner accountController] statusObjectForKey:@"Online" account:self] boolValue]){
-    //    [self connect];
-    //}
-    //Option 2:Clearing the online state, and using the classic 'auto-Connect' option system
+    //Clear the online state.  'Auto-Connect' values are used, not the previous online state.
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
     [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
-    //Option 1 is very neat, but is more annoying than helpful - so we'll stick with 2 for now :)
-
 
     //Traffic watch debug window
     if([NSEvent controlKey]){
@@ -128,29 +120,29 @@ static char *hash_password(const char * const password);
 }
 
 // Return a view for the connection window
-- (id <AIAccountViewController>)accountView
-{
+- (id <AIAccountViewController>)accountView{
     return([AIMTOC2AccountViewController accountViewForOwner:owner account:self]);
 }
-
 
 // Return a unique ID specific to THIS account plugin, and the user's account name
 - (NSString *)accountID{
     return([NSString stringWithFormat:@"TOC2.%@",[[propertiesDict objectForKey:@"Handle"] compactedString]]);
 }
+
 //The user's account name
 - (NSString *)UID{
     return([[propertiesDict objectForKey:@"Handle"] compactedString]);
 }
+
 //The service ID (shared by any account code accessing this service)
 - (NSString *)serviceID{
     return(@"AIM");
 }
+
 //ServiceID.UID
 - (NSString *)UIDAndServiceID{
     return([NSString stringWithFormat:@"%@.%@",[self serviceID],[self UID]]);
 } 
-
 
 // Return a readable description of this account's username
 - (NSString *)accountDescription
@@ -566,7 +558,7 @@ static char *hash_password(const char * const password);
                 o = d - a + b + 71665152;
 
 //                message = [NSString stringWithFormat:@"toc2_signon login.oscar.aol.com 5190 %@ %s english TIC:AIMM 160 %lu",[screenName compactedString],hash_password([password cString]),o];
-                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.67 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
+                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.68 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
 
                 [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 

@@ -159,6 +159,26 @@
     [groupStateDict release];
 }
 
+- (AIListContact *)createContactWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID
+{
+    AIListContact	*contact;
+    //We assume this is being called by contact controller, that the contact list has already been searched for this contact, and that it does not exist.
+    
+    //Does this contact already exist in our abandoned contact cache?
+    contact = [abandonedContacts objectForKey:inUID];
+    if(!contact){ //If not
+
+        //Create the contact
+        contact = [[AIListContact alloc] initWithUID:inUID serviceID:inServiceID];
+        [contact setOrderIndex:[[owner contactController] orderIndexOfContact:contact]];
+
+        //Shove it right into our abandoned contact cache (It belongs there because it is empty)
+        [abandonedContacts setObject:contact forKey:inUID];
+    }
+
+    return(contact);
+}
+
 
 //Private ------------------------------------------------------------------------
 //Adds a handle to the contact list

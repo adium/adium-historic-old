@@ -24,7 +24,7 @@
 #define KEY_HAS_IMPORTED_16_LOGS	@"Has Imported Adium 1.6 Logs"
 
 @interface AILoggerPlugin (PRIVATE)
-- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andHandle:(AIHandle *)handle onDate:(NSDate *)date;
+- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andContact:(AIListContact *)contact onDate:(NSDate *)date;
 @end
 
 @implementation AILoggerPlugin
@@ -98,12 +98,12 @@
         NSString	*dateString = [date descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
         NSString	*message = [[content message] string];
         AIAccount	*account = [content source];
-        AIHandle	*handle = [content destination];
+        AIListContact	*contact = [content destination];
 
         //Log the message
         [self _addMessage:[NSString stringWithFormat:@"(%@)%@:%@\n", dateString, [account UID], message]
             betweenAccount:account
-                andHandle:handle
+                andContact:contact
                     onDate:date];
     }
 }
@@ -119,12 +119,12 @@
         NSString	*dateString = [date descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
         NSString	*message = [[content message] string];
         AIAccount	*account = [content destination];
-        AIHandle	*handle = [content source];
+        AIListContact	*contact = [content source];
         
         //Log the message
-        [self _addMessage:[NSString stringWithFormat:@"(%@)%@:%@\n", dateString, [handle UID], message]
+        [self _addMessage:[NSString stringWithFormat:@"(%@)%@:%@\n", dateString, [contact UID], message]
            betweenAccount:account
-                andHandle:handle
+               andContact:contact
                    onDate:date];
     }
 }
@@ -148,15 +148,15 @@
 }
 
 //Add a message to the specified log file
-- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andHandle:(AIHandle *)handle onDate:(NSDate *)date
+- (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andContact:(AIListContact *)contact onDate:(NSDate *)date
 {
     NSString	*logPath;
     NSString	*logFileName;
     FILE	*file;
 
     //Create path to log file (.../Logs/ServiceID.AccountUID/HandleUID/HandleUID (YY|MM|DD).adiumLog)
-    logPath = [[logBasePath stringByAppendingPathComponent:[account UIDAndServiceID]] stringByAppendingPathComponent:[handle UID]];
-    logFileName = [NSString stringWithFormat:@"%@ (%@).adiumLog", [handle UID], [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
+    logPath = [[logBasePath stringByAppendingPathComponent:[account UIDAndServiceID]] stringByAppendingPathComponent:[contact UID]];
+    logFileName = [NSString stringWithFormat:@"%@ (%@).adiumLog", [contact UID], [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil]];
 
     //Create a directory for this log (if one doesn't exist)
     [AIFileUtilities createDirectory:logPath];

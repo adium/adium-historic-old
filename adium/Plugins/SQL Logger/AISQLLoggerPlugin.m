@@ -61,10 +61,10 @@
     //Message Content
     if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
         AIAccount	*source = [content source];
-        AIHandle	*destination = [content destination];
+        AIListContact	*destination = [content destination];
         
         //Source and destination are valid (account & handle)
-        if([source isKindOfClass:[AIAccount class]] && [destination isKindOfClass:[AIHandle class]]){
+        if([source isKindOfClass:[AIAccount class]] && [destination isKindOfClass:[AIListContact class]]){
             //Log the message
             [self _addMessage:[content message]
                         dest:[destination UID]
@@ -83,11 +83,11 @@
     
     //Message Content
     if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        AIHandle	*source = [content source];
+        AIListContact	*source = [content source];
         AIAccount	*destination = [content destination];
         
         //Destination are valid (handle)
-        if([source isKindOfClass:[AIHandle class]]){
+        if([source isKindOfClass:[AIListContact class]]){
             //Log the message
             [self _addMessage:[content message]
                         dest:[destination UID]

@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIMiniToolbar, AIListContact, AIAdium, AIAccount, AISendingTextView, AIHandle, AIAutoScrollView;
+@class AIMiniToolbar, AIListContact, AIAdium, AIAccount, AISendingTextView, AIAutoScrollView;
 @protocol AIContainerInterface, AIAccountSelectionViewDelegate;
 
 @interface AIMessageViewController : NSObject <AIAccountSelectionViewDelegate> {
@@ -32,7 +32,6 @@
     AIAdium			*owner;
     id <AIContainerInterface> 	interface;
     AIListContact		*contact;
-//    AIHandle			*handle;
     AIAccount			*account;
     float			currentTextEntryHeight;
 }
