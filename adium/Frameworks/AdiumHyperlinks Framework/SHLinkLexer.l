@@ -4,7 +4,7 @@
  * 
  * Written by Stephen Holt for Adium, released under the GPL
  *
- * Optoins used:	noyywrap            : act as if yywrap always returns 1
+ * Options used:	noyywrap            : act as if yywrap always returns 1
  *			8bit                : always force 8-bit chars.
  *			caseless            : case insensitive lexer
  *                      never-interactive   : prevents flex from including some calls to gettty() and such
@@ -35,12 +35,12 @@ domains		({ccTLD}|{sTLD}|{uTLD}|arpa)
 urlSpecifier	([^@\/\.][^\/\.]+\.)+{domains}(:[0-9]+)?(\/.*)?
 ipURL		([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]+)?(\/.*)?
 mailSpecifier	[^:\/]+\@.+\.{domains}
-jabberSpec      xmpp:.*@.+\.{domains}(\/.*)?
-aolIMSpec       aim:goim\?screenname=[^\s&]+(&message=.+)?
+jabberSpec      xmpp:.*\@.+\.{domains}(\/.*)?
+aolIMSpec       aim:goim\?screenname=[^\ \t\n&]+(&message=.+)?
 yahooIMSpec	ymsgr:sendim\?.+
 
 
-%option noyywrap 8bit caseless never-interactive prefix="SH"
+%option noyywrap 8bit caseless never-interactive prefix="SH" debug
 
 %x CANONICAL
 %%
@@ -68,9 +68,10 @@ gopher:\/\/		    {SHStringOffset += SHleng; SHValidShift = SHleng; BEGIN CANONIC
 mailto:{mailSpecifier}      {SHStringOffset += SHleng; return SH_MAILTO_VALID;}
 {mailSpecifier}		    {SHStringOffset += SHleng; return SH_MAILTO_DEGENERATE;}	
 
+{jabberSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
+
 {urlSpecifier}		    {SHStringOffset += SHleng; return SH_URL_DEGENERATE;}
 
-{jabberSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
 {aolIMSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
 {yahooIMSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
 
