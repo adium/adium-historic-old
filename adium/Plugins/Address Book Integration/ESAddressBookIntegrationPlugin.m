@@ -163,7 +163,7 @@
 - (void)consumeImageData:(NSData *)inData forTag:(int)tag
 {
     if (inData) {
-        /*NSImage *image = [[[NSImage alloc] initWithData:inData] autorelease];*/
+        NSImage *image= [[[NSImage alloc] initWithData:inData] autorelease];
         
         //Check if we retrieved data from the 'me' address book card
         if (tag == meTag) {
