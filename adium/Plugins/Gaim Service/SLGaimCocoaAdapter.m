@@ -1638,25 +1638,33 @@ guint adium_timeout_add(guint interval, GSourceFunc function, gpointer data)
 	NSTimeInterval intervalInSec = (NSTimeInterval)interval/1000;
 	CFRunLoopTimerContext runLoopTimerContext = { 0, info, NULL, NULL, NULL };
 	CFRunLoopTimerRef runLoopTimer = CFRunLoopTimerCreate(kCFAllocatorDefault, /* default allocator */
-														(CFAbsoluteTimeGetCurrent() + intervalInSec), /* The time at which the timer should first fire */
-														intervalInSec, /* firing interval */
-														0, /* flags, currently ignored */
-														0, /* order, currently ignored */
-														callTimerFunc, /* CFRunLoopTimerCallBack callout */
-														&runLoopTimerContext /* context */);
-    info->tag = sourceId;
-    info->sourceFunction = function;
-    info->timer = runLoopTimer;
-    info->socket = NULL;
-    info->rls = NULL;
-    info->user_data = data;
+		(CFAbsoluteTimeGetCurrent() + intervalInSec), /* The time at which the timer should first fire */
+		intervalInSec, /* firing interval */
+		0, /* flags, currently ignored */
+		0, /* order, currently ignored */
+		callTimerFunc, /* CFRunLoopTimerCallBack callout */
+		&runLoopTimerContext /* context */);
+
+	info->sourceFunction = function;
+	info->timer = runLoopTimer;
+	info->socket = NULL;
+	info->rls = NULL;
+	info->user_data = data;
 
 	CFRunLoopAddTimer(CFRunLoopGetCurrent(), runLoopTimer, kCFRunLoopCommonModes);
 
-    NSCAssert1([sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:sourceId]] == nil, @"Key %u in use", sourceId);
-    [sourceInfoDict setObject:[NSValue valueWithPointer:info]
-					   forKey:[NSNumber numberWithUnsignedInt:sourceId]];
-    return sourceId;
+	NSNumber	*key = [NSNumber numberWithUnsignedInt:sourceId];
+	//Make sure we end up with a valid source id
+	while ([sourceInfoDict objectForKey:key]){
+		sourceId++;
+		key = [NSNumber numberWithUnsignedInt:sourceId];
+	}
+	info->tag = sourceId;
+
+	[sourceInfoDict setObject:[NSValue valueWithPointer:info]
+					   forKey:key];
+
+	return sourceId;
 }
 
 guint adium_input_add(int fd, GaimInputCondition condition,

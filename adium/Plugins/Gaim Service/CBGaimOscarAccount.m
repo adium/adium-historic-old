@@ -729,7 +729,8 @@ aim_srv_setavailmsg(od->sess, text);
 		AIListObject *listObject = [notification object];
 		
 		//If the notification object is a listContact belonging to this account, update the serverside information
-		if ([listObject isKindOfClass:[AIListContact class]] && 
+		if (account &&
+			[listObject isKindOfClass:[AIListContact class]] && 
 			[[(AIListContact *)listObject accountID] isEqualToString:[self uniqueObjectID]]){
 			
 			if ([[userInfo objectForKey:@"Key"] isEqualToString:@"Notes"]){
