@@ -16,8 +16,6 @@
 #define KEY_CRASH_EMAIL_ADDRESS		@"AdiumCrashReporterEmailAddress"
 #define KEY_CRASH_AIM_ACCOUNT		@"AdiumCrashReporterAIMAccount"
 
-#define DETAILED_INSTRUCTIONS           @"A detailed explanation of what you were doing when Adium crashed"
-
 #define CRASH_REPORT_SLAY_ATTEMPTS		100
 #define CRASH_REPORT_SLAY_INTERVAL		0.1
 
@@ -48,7 +46,6 @@
 - (void)awakeFromNib
 {
     [textView_details setPlaceholder:[textView_details string]];
-    [textView_details setString:@""];
     
     //Search for an exception log
     if([[NSFileManager defaultManager] fileExistsAtPath:EXCEPTIONS_PATH]){
@@ -275,7 +272,7 @@
 	}
 	
 	if(*unixDate){
-	    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%B %e, %Y" allowNaturalLanguage:NO] autorelease];
+	    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%m-%d-%y" allowNaturalLanguage:NO] autorelease];
             NSDate	    *date;
 	    
 	    date = [NSDate dateWithTimeIntervalSince1970:[[NSString stringWithCString:unixDate] doubleValue]];
