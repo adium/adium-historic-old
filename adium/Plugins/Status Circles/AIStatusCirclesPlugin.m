@@ -24,6 +24,8 @@
 
 @implementation AIStatusCirclesPlugin
 
+#define STATUS_CIRCLES_THEMABLE_PREFS   @"Status Circles Themable Prefs"
+
 - (void)installPlugin
 {
     //init
@@ -39,7 +41,10 @@
     //Our preference view
     preferences = [[AIStatusCirclesPreferences statusCirclesPreferences] retain];
     [[adium contactController] registerListObjectObserver:self];
-	
+    
+    //Register themable preferences
+    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:STATUS_CIRCLES_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_STATUS_CIRCLES];
+    
     //Observe
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 	

@@ -204,6 +204,7 @@
 				F5F0FE9C04B12CAC01A80106,
 				F5F0FE9D04B12CAC01A80106,
 				F5F0FEA004B1336C01A80106,
+				C497514905BBAC25009958A6,
 				F5F0FEA204B133AB01A80106,
 			);
 			isa = PBXGroup;
@@ -2495,6 +2496,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3419F3CA05314BF600C68BA3,
+				C497519405BBBC93009958A6,
 				3419F3CB05314BF600C68BA3,
 				3419F3CC05314BF600C68BA3,
 			);
@@ -2807,6 +2809,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3419F3F405314C1200C68BA3,
+				C497519305BBBC71009958A6,
 				3419F3F505314C1200C68BA3,
 				3484645405910E7E00241F68,
 				3453667D059BA7E300A83D9E,
@@ -2974,6 +2977,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3419F40A05314C2600C68BA3,
+				C497519205BBBC37009958A6,
 				3419F40B05314C2600C68BA3,
 				3419F40C05314C2600C68BA3,
 				3419F40D05314C2600C68BA3,
@@ -9083,6 +9087,7 @@
 		34BD9D24053146CC000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
+				C497518D05BBB979009958A6,
 				34BD9D27053146CC000AB133,
 				34BD9D28053146CC000AB133,
 				34BD9D29053146CC000AB133,
@@ -14517,6 +14522,7 @@
 		34BDA096053147E1000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
+				C497518F05BBBB7B009958A6,
 				34BDA097053147E1000AB133,
 				34BDA098053147E1000AB133,
 			);
@@ -14638,6 +14644,7 @@
 		34BDA0A8053147E8000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
+				C494631705BC620C00780FE2,
 				34BDA0A9053147E8000AB133,
 				34BDA0AA053147E8000AB133,
 			);
@@ -15929,6 +15936,7 @@
 				34BDA16E0531483F000AB133,
 				34BDA16F0531483F000AB133,
 				34BDA1700531483F000AB133,
+				C497519105BBBC03009958A6,
 				34BDA1710531483F000AB133,
 				34BDA1720531483F000AB133,
 				34BDA1730531483F000AB133,
@@ -16190,6 +16198,7 @@
 			files = (
 				34BDA19105314848000AB133,
 				34BDA19205314848000AB133,
+				C497519005BBBBCC009958A6,
 				4B584E17055DD7EA00E89D48,
 			);
 			isa = PBXResourcesBuildPhase;
@@ -16856,6 +16865,7 @@
 				34CDB7A70571D66800D50469,
 				34CDB7A60571D66800D50469,
 				4BE9201003DEE2FE00A8010A,
+				C497516205BBAEB1009958A6,
 				4B5AAA1F03E02EB900A8010A,
 				34F2BD0A059CF1E80005B238,
 			);
@@ -19474,6 +19484,7 @@
 				4B5D67D5050CF57E00A8010A,
 				4B5D67D6050CF57E00A8010A,
 				4B5D67D7050CF57E00A8010A,
+				C497514605BB99DC009958A6,
 				4B5D67D8050CF57E00A8010A,
 				4B5D67D9050CF57E00A8010A,
 			);
@@ -21449,6 +21460,7 @@
 				4B970BF90535B864002F28F9,
 				4B970BFC0535B879002F28F9,
 				4BA1300304C0A4E300A8010A,
+				C497516305BBAFE4009958A6,
 				34D43504051ADC10003B2F21,
 			);
 			isa = PBXGroup;
@@ -28308,6 +28320,117 @@
 			settings = {
 			};
 		};
+		C494631705BC620C00780FE2 = {
+			fileRef = C497514605BB99DC009958A6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C497514605BB99DC009958A6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "Tab Coloring Themable Prefs.plist";
+			path = "Plugins/Contact Status Tab Coloring/Tab Coloring Themable Prefs.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C497514705BB9FD2009958A6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "Status Circles Themable Prefs.plist";
+			path = "Plugins/Status Circles/Status Circles Themable Prefs.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C497514805BBAA38009958A6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "SCL Themable Prefs.plist";
+			path = "Plugins/Standard Contact List View/SCL Themable Prefs.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C497514905BBAC25009958A6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "Emoticon Themable Prefs.plist";
+			path = "Plugins/Emoticons/Emoticon Themable Prefs.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C497516205BBAEB1009958A6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "SMV Themable Prefs.plist";
+			path = "Plugins/Standard Message View/SMV Themable Prefs.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C497516305BBAFE4009958A6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "Dual Window Themable Prefs.plist";
+			path = "Plugins/Dual Window Interface/Dual Window Themable Prefs.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C497518C05BBB0C5009958A6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "Dock Themable Prefs.plist";
+			path = "Source/Dock Themable Prefs.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C497518D05BBB979009958A6 = {
+			fileRef = C497518C05BBB0C5009958A6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C497518F05BBBB7B009958A6 = {
+			fileRef = C497514605BB99DC009958A6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C497519005BBBBCC009958A6 = {
+			fileRef = C497514905BBAC25009958A6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C497519105BBBC03009958A6 = {
+			fileRef = C497516305BBAFE4009958A6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C497519205BBBC37009958A6 = {
+			fileRef = C497516205BBAEB1009958A6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C497519305BBBC71009958A6 = {
+			fileRef = C497514805BBAA38009958A6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C497519405BBBC93009958A6 = {
+			fileRef = C497514705BB9FD2009958A6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		C4FD6E3405BA79FE00E72643 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.icns;
@@ -28832,6 +28955,7 @@
 				F579399E033E75CB01A8010A,
 				3484644C05910DFF00241F68,
 				34C1CA8705B15B170055C2E3,
+				C497514805BBAA38009958A6,
 				4BBC89A803B964B800A8010A,
 			);
 			isa = PBXGroup;
@@ -28999,6 +29123,7 @@
 				4B52077B04C4890000A8010A,
 				4B52077C04C4890000A8010A,
 				4B52078204C4890000A8010A,
+				C497514705BB9FD2009958A6,
 				4B52078104C4890000A8010A,
 			);
 			isa = PBXGroup;
@@ -31421,6 +31546,7 @@
 				34E8FA33054D9CE7008BB262,
 				348E556A053A188C0021E541,
 				4BDF17240450CBDE00A8010A,
+				C497518C05BBB0C5009958A6,
 				4B333F73048144D900A8010A,
 				D3B4A920052DE51000A8010B,
 				F5A3C2DD039A516E01A8010A,

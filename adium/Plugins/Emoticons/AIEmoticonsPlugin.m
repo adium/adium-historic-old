@@ -39,7 +39,8 @@
 
 @implementation AIEmoticonsPlugin
 
-//
+#define EMOTICONS_THEMABLE_PREFS      @"Emoticon Themable Prefs"
+
 - (void)installPlugin
 {
     //Init    
@@ -57,6 +58,9 @@
     //Setup Preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:@"EmoticonDefaults" forClass:[self class]] forGroup:PREF_GROUP_EMOTICONS];
     prefs = [[AIEmoticonPreferences preferencePaneForPlugin:self] retain];
+    
+    //Register themable preferences
+    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:EMOTICONS_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_EMOTICONS];
 
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];

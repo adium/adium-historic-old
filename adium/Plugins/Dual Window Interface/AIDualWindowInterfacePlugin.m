@@ -62,6 +62,8 @@
 
 @implementation AIDualWindowInterfacePlugin
 
+#define DUAL_WINDOW_THEMABLE_PREFS      @"Dual Window Themable Prefs"
+
 //Plugin setup ------------------------------------------------------------------
 - (void)installPlugin
 {
@@ -88,6 +90,10 @@
     //Register our default preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_WINDOW_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];    
+    
+    //Register themable preferences
+    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:DUAL_WINDOW_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+    
     //Install Preference Views
     preferenceController = [[AIDualWindowPreferences preferencePane] retain];
     preferenceAdvController = [[AIDualWindowAdvancedPrefs preferencePane] retain];

@@ -95,9 +95,16 @@
 
 -(IBAction)applyTheme:(id)sender
 {
-    // pass the plugin the selected theme's name and it will go from there
-    [themesPlugin createThemeNamed:@"Last Theme Used" by:@"Adium" version:@"1.0"];
-    [themesPlugin applyTheme:[self selectedTheme]];
+    if([themes count] == 0)
+    {
+        NSRunAlertPanel(@"No themes present",@"To apply a theme please install one and select it first.",@"Return",nil,nil);
+    }
+    else
+    {  
+        // pass the plugin the selected theme's name and it will go from there
+        [themesPlugin createThemeNamed:@"Last Theme Used" by:@"Adium" version:@"1.0"];
+        [themesPlugin applyTheme:[self selectedTheme]];
+    }
 }
 
 -(void)setPlugin:(BGThemesPlugin *)newPlugin
