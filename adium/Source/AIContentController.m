@@ -24,6 +24,10 @@
 {
 
 }
+- (void)closeController
+{
+
+}
 
 //dealloc
 - (void)dealloc

@@ -41,6 +41,13 @@ static AIPreferenceWindowController *sharedInstance = nil;
     return(sharedInstance);
 }
 
++ (void)closeSharedInstance
+{
+    if(sharedInstance){
+        [sharedInstance closeWindow:nil];
+    }
+}
+
 //Make the specified preference view visible
 - (void)showView:(AIPreferenceViewController *)inView
 {

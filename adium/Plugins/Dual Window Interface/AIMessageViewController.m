@@ -13,11 +13,11 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import "AIMessageViewController.h"
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
 #import "AIAdium.h"
-#import "AIDualWindowInterface.h"
+#import "AIMessageViewController.h"
+#import "AIMessageWindowController.h"
 
 #define MESSAGE_VIEW_NIB		@"MessageView"		//Filename of the message view nib
 #define MESSAGE_TAB_TOOLBAR		@"MessageTab"		//ID of the message tab toolbar
@@ -28,7 +28,7 @@
 #define RESIZE_CORNER_TOOLBAR_OFFSET 	0
 
 @interface AIMessageViewController (PRIVATE)
-- (id)initWithOwner:(id)inOwner handle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent interface:(AIDualWindowInterface *)inInterface;
+- (id)initWithOwner:(id)inOwner handle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent interface:(id <AITabHoldingInterface>)inInterface;
 - (void)lockToHandle:(AIContactHandle *)inHandle;
 - (void)sizeAndArrangeSubviews;
 - (IBAction)selectNewAccount:(id)sender;
@@ -38,7 +38,7 @@
 @implementation AIMessageViewController
 
 //Create a new message view controller
-+ (AIMessageViewController *)messageViewControllerWithHandle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent owner:(id)inOwner interface:(AIDualWindowInterface *)inInterface
++ (AIMessageViewController *)messageViewControllerWithHandle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent owner:(id)inOwner interface:(id <AITabHoldingInterface>)inInterface
 {
     return([[[self alloc] initWithOwner:inOwner handle:inHandle account:inAccount content:inContent interface:inInterface] autorelease]);
 }
@@ -115,7 +115,7 @@
 
 
 //Private -----------------------------------------------------------------------------
-- (id)initWithOwner:(id)inOwner handle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent interface:(AIDualWindowInterface *)inInterface
+- (id)initWithOwner:(id)inOwner handle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent interface:(id <AITabHoldingInterface>)inInterface
 {
     [super init];
 

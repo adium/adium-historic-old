@@ -25,6 +25,7 @@
 }
 
 + (AIPreferenceWindowController *)preferenceWindowControllerWithOwner:(id)inOwner;
++ (void)closeSharedInstance;
 - (IBAction)closeWindow:(id)sender;
 - (void)showView:(AIPreferenceViewController *)inView;
 

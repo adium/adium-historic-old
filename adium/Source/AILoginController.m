@@ -33,11 +33,17 @@
     userDirectory = nil;
 }
 
+// Close this controller
+- (void)closeController
+{
+
+}
+
 // Dealloc
 - (void)dealloc
 {
     [userDirectory release];
-    
+
     [super dealloc];
 }
 
@@ -86,16 +92,16 @@
 {
     NSParameterAssert(userName != nil);
     
-    // Close the login panel
+    //Close the login panel
     if(loginWindowController){
         [loginWindowController closeWindow:nil];
         [loginWindowController release]; loginWindowController = nil;
     }
 
-    // Save the user directory
+    //Save the user directory
     userDirectory = [[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:userName] retain];
     
-    // Tell Adium to complete login
+    //Tell Adium to complete login
     [target performSelector:selector];
 }
 
@@ -136,7 +142,7 @@
 
     NSParameterAssert(inUserName != nil);
 
-    // Create the source and dest paths
+    //Create the source and dest paths
     sourcePath = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:inUserName];
     destPath = [[PATH_TRASH stringByAppendingPathComponent:inUserName] stringByExpandingTildeInPath];
     
@@ -154,10 +160,10 @@
     
     NSParameterAssert(inUserName != nil);
 
-    // Create the user path
+    //Create the user path
     userPath = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:inUserName];
     
-    // Create a folder for the new user
+    //Create a folder for the new user
     [AIFileUtilities createDirectory:userPath];
 }
 
@@ -169,7 +175,7 @@
     NSParameterAssert(oldName != nil);
     NSParameterAssert(newName != nil);
 
-    // Create the source and dest paths
+    //Create the source and dest paths
     sourcePath = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:oldName];
     destPath = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_USERS] stringByAppendingPathComponent:newName];
 

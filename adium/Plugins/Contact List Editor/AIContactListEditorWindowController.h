@@ -53,5 +53,7 @@
 }
 
 + (id)contactListEditorWindowControllerWithOwner:(id)inOwner;
++ (void)closeSharedInstance;
+- (IBAction)closeWindow:(id)sender;
 
 @end

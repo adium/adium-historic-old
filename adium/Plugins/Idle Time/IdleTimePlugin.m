@@ -39,6 +39,11 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
     [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
 }
 
+- (void)uninstallPlugin
+{
+    //unregister, remove, ...
+}
+
 - (void)goIdle
 {
     double seconds = CGSSecondsSinceLastInputEvent(-1);

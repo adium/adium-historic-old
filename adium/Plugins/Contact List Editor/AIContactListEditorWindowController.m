@@ -68,6 +68,13 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     return(sharedInstance);
 }
 
++ (void)closeSharedInstance
+{
+    if(sharedInstance){
+        [sharedInstance closeWindow:nil];
+    }
+}
+
 //init
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
 {
@@ -135,6 +142,14 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     [outlineView_contactList registerForDraggedTypes:[NSArray arrayWithObject:@"AIContactObjects"]];
 
     [outlineView_contactList setNeedsDisplay:YES];
+}
+
+//Close the window
+- (IBAction)closeWindow:(id)sender
+{
+    if([self windowShouldClose:nil]){
+        [[self window] close];
+    }
 }
 
 - (BOOL)windowShouldClose:(id)sender

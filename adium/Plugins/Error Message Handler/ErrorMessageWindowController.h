@@ -22,6 +22,7 @@
 }
 
 + (id)errorMessageWindowControllerWithOwner:(id)inOwner;
++ (void)closeSharedInstance;
 - (void)displayError:(NSString *)inTitle withDescription:(NSString *)inDesc;
 - (IBAction)okay:(id)sender;
 - (IBAction)okayToAll:(id)sender;

@@ -44,6 +44,11 @@
     [self buildAccountMenus];
 }
 
+- (void)uninstallPlugin
+{
+    //remove account menus
+}
+
 - (void)dealloc
 {
     [accountMenuArray release];

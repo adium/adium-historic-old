@@ -41,6 +41,11 @@
     [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
 }
 
+- (void)uninstallPlugin
+{
+    [AIContactListEditorWindowController closeSharedInstance]; //Close the contact list editor
+}
+
 //Show the contact list editor window
 - (IBAction)showContactListEditor:(id)sender
 {

@@ -19,5 +19,7 @@
 @interface AIAccountController (INTERNAL)
 // These methods are for internal Adium use only.  The public interface is in Adium.h.
 - (void)initController;
+- (void)closeController;
+- (void)finishIniting;
 - (void)saveAccounts;
 @end

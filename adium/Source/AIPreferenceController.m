@@ -52,6 +52,14 @@
     [[AIMiniToolbarCenter defaultCenter] registerItem:toolbarItem];
 }
 
+//close
+- (void)closeController
+{
+    [AIPreferenceWindowController closeSharedInstance]; //Close the preference window
+    
+    //Preferences are (always) saved as they're modified, so there's no need to save them here.
+}
+
 //dealloc
 - (void)dealloc
 {

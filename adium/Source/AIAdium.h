@@ -116,12 +116,14 @@ typedef enum {
 
 @end
 
-@protocol AIContactListViewController
+@protocol AIContactListViewController <NSObject>
 - (NSView *)contactListView;
+- (void)closeContactListView:(NSView *)inView;
 @end
 
-@protocol AIMessageViewController
+@protocol AIMessageViewController <NSObject>
 - (NSView *)messageViewForHandle:(AIContactHandle *)inHandle;
+- (void)closeMessageView:(NSView *)inView;
 @end
 
 @protocol AITextEntryView //Handles any attributed text entry
@@ -162,6 +164,11 @@ typedef enum {
 - (void)sortContactObjects:(NSMutableArray *)inObjects;
 - (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys;
 - (BOOL)shouldSortForModifiedAttributeKeys:(NSArray *)inModifiedKeys;
+@end
+
+@protocol AIInterfaceController <NSObject>
+- (void)openInterface;
+- (void)closeInterface;
 @end
 
 
@@ -272,18 +279,19 @@ typedef enum {
 
     NSMutableArray		*contactListViewArray;
     NSMutableArray		*messageViewArray;
-    
+    NSMutableArray		*interfaceArray;
+
     NSString		*errorTitle;
     NSString		*errorDesc;
 }
 
 - (NSNotificationCenter *)interfaceNotificationCenter;
 - (void)registerContactListViewController:(id <AIContactListViewController>)inController;
-- (NSView *)contactListView;
+- (id <AIContactListViewController>)contactListViewController;
 - (void)registerMessageViewController:(id <AIMessageViewController>)inController;
 - (NSView *)messageViewForHandle:(AIContactHandle *)inHandle;
 - (IBAction)initiateMessage:(id)sender;
-
+- (void)registerInterfaceController:(id <AIInterfaceController>)inController;
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc;
 
 @end

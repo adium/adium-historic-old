@@ -14,6 +14,11 @@
     [interfaceNotificationCenter addObserver:self selector:@selector(handleError:) name:Interface_ErrorMessageRecieved object:nil];
 }
 
+- (void)uninstallPlugin
+{
+    [ErrorMessageWindowController closeSharedInstance]; //Close the error window
+}
+
 - (void)handleError:(NSNotification *)notification
 {
     NSDictionary	*userInfo;

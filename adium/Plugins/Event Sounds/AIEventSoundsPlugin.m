@@ -31,6 +31,12 @@
     onlineDict = [[NSMutableDictionary alloc] init];
 }
 
+- (void)uninstallPlugin
+{
+    //[[owner contactController] unregisterHandleObserver:self];
+    //remove observers
+}
+
 - (void)messageIn:(NSNotification *)notification
 {
     [[owner soundController] playSoundNamed:@"(Adium)Receive.aif"];

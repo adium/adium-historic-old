@@ -25,6 +25,11 @@
     [[owner contactController] registerHandleObserver:self];
 }
 
+- (void)uninstallPlugin
+{
+    //[[owner contactController] unregisterHandleObserver:self];
+}
+
 - (NSArray *)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys
 {
     NSArray		*modifiedAttributes = nil;

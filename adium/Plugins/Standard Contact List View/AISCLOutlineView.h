@@ -22,9 +22,6 @@
 @interface AISCLOutlineView : AIAlternatingRowOutlineView {    
     NSTrackingRectTag		trackingRectTag;	//Tracing rect for the whole outline view
     int				oldSelection;		//Holds the selection when it's hidden
-    
-    AIAdium			*owner;
-    
     BOOL			editing;		//YES when the list is in edit mode... (temp)
 
     NSFont			*font;

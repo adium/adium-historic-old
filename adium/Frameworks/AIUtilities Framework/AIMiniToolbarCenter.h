@@ -43,5 +43,6 @@
 - (IBAction)customizeToolbar:(AIMiniToolbar *)toolbar;
 - (BOOL)customizing:(AIMiniToolbar *)toolbar;
 - (IBAction)endCustomization:(AIMiniToolbar *)toolbar;
+- (void)customizationDidEnd:(AIMiniToolbar *)inToolbar;
 
 @end

@@ -23,6 +23,7 @@
 @interface AILoginController (INTERNAL) 
 // These methods are for internal Adium use only.  The public interface is in Adium.h.
 - (void)initController;
+- (void)closeController;
 - (void)requestUserNotifyingTarget:(id)inTarget selector:(SEL)inSelector;
 - (NSArray *)userArray;
 - (void)deleteUser:(NSString *)inUserName;

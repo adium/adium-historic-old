@@ -31,6 +31,11 @@
     
 }
 
+- (void)uninstallPlugin
+{
+    //[[AIMiniToolbarCenter defaultCenter] unregisterItem:[toolbarItem autorelease]];
+}
+
 - (IBAction)bold:(AIMiniToolbarItem *)toolbarItem
 {
     NSFontManager		*fontManager = [NSFontManager sharedFontManager];

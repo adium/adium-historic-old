@@ -20,6 +20,11 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [[owner contactController] registerContactSortController:self];
 }
 
+- (void)uninstallPlugin
+{
+    //[[owner contactController] unregisterContactSortController:self];
+}
+
 - (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys
 {
     return(NO); //Ignore

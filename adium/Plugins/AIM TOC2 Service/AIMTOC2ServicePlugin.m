@@ -50,6 +50,12 @@
     [[owner accountController] registerService:self];
 }
 
+- (void)uninstallPlugin
+{
+    //[[owner accountController] unregisterService:self];
+    //unregister, remove, ...
+}
+
 //Return a new account with the specified properties
 - (id)accountWithProperties:(NSDictionary *)inProperties owner:(id)inOwner
 {

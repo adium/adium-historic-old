@@ -57,6 +57,13 @@
     contactInfoCategory = [[AIPreferenceCategory categoryWithName:@"" image:nil] retain];
 }
 
+//close
+- (void)closeController
+{
+    [self saveContactList]; //Save the contact list
+    //The contact list is saved as changes are made, but some changes (such as the expanding and collapsing of groups) are not saved, so we save on closing just to make sure nothing is lost.
+}
+
 //dealloc
 - (void)dealloc
 {
@@ -79,7 +86,6 @@
     [[strangerGroup displayArrayForKey:@"Dynamic"] addObject:[NSNumber numberWithBool:YES] withOwner:self];
     [self updateListForObject:strangerGroup saveChanges:NO];
 }
-
 
 //Notification center for contact notifications
 - (NSNotificationCenter *)contactNotificationCenter
@@ -506,12 +512,6 @@
 
 // Internal --------------------------------------------------------------------------------
 //Call after making changes to an object on the contact list
-
-// Save list and update?
-
-//
-
-//
 - (void)updateListForObject:(AIContactObject *)inObject saveChanges:(BOOL)saveChanges
 {
     //Resort its group, and any groups above it
@@ -630,6 +630,7 @@
 - (AIContactGroup *)createGroupFromDict:(NSDictionary *)groupDict
 {
     AIContactGroup	*group;
+    NSNumber		*expanded;
     NSString		*groupName;
     NSEnumerator	*enumerator;
     NSArray		*contentsArray;
@@ -637,7 +638,10 @@
 
     //Create and config the group
     groupName = [groupDict objectForKey:@"Name"];
+    expanded = [groupDict objectForKey:@"Expanded"];
     group = [AIContactGroup contactGroupWithUID:groupName];
+    [group setExpanded:(expanded == nil || [expanded boolValue] == YES)];
+    
 
     //Create it's contents
     contentsArray = [groupDict objectForKey:@"Contents"];
@@ -677,6 +681,7 @@
     //Add the group keys
     [saveDict setObject:@"Group" forKey:@"Type"];
     [saveDict setObject:[inGroup UID] forKey:@"Name"];
+    [saveDict setObject:[NSNumber numberWithBool:[inGroup isExpanded]] forKey:@"Expanded"];
 
     //Add all contained objects
     enumerator = [inGroup objectEnumerator];

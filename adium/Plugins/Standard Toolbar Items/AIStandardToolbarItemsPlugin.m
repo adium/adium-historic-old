@@ -104,6 +104,11 @@
 
 }
 
+- (void)uninstallPlugin
+{
+    //unregister items
+}
+
 - (IBAction)newMessage:(AIMiniToolbarItem *)toolbarItem
 {
     NSDictionary	*objects = [toolbarItem configurationObjects];

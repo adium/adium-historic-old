@@ -45,6 +45,14 @@
     [super dealloc];
 }
 
+//Close the window
+- (IBAction)closeWindow:(id)sender
+{
+    if([self windowShouldClose:nil]){
+        [[self window] close];
+    }
+}
+
 - (void)windowDidLoad
 {
     NSEnumerator	*enumerator;
@@ -142,7 +150,7 @@
     //Save the frame
     [[self window] saveFrameUsingName:TOOLBAR_CONFIG_FRAME];
 
-    [[AIMiniToolbarCenter defaultCenter] endCustomization:toolbar];
+    [[AIMiniToolbarCenter defaultCenter] customizationDidEnd:toolbar];
 
     return(YES);
 }

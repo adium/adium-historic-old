@@ -42,6 +42,7 @@
 - (void)accountListChanged;
 - (void)buildAccountMenus;
 - (void)autoConnectAccounts;
+- (void)disconnectAllAccounts;
 @end
 
 @implementation AIAccountController
@@ -49,10 +50,16 @@
 // init
 - (void)initController
 {
-    //init
     accountNotificationCenter = nil;
     availableServiceArray = [[NSMutableArray alloc] init];
     accountArray = [[NSMutableArray alloc] init];
+}
+
+// close
+- (void)closeController
+{
+    [self disconnectAllAccounts]; //Disconnect all accounts
+    //The account list is saved as changes are made, so there is no need to save it on close
 }
 
 // dealloc
@@ -220,6 +227,20 @@
     }
 }
 
+//Disconnects all the accounts
+- (void)disconnectAllAccounts
+{
+    NSEnumerator		*enumerator;
+    AIAccount<AIAccount_Status>	*account;
+
+    enumerator = [accountArray objectEnumerator];
+    while((account = [enumerator nextObject])){
+        if([account conformsToProtocol:@protocol(AIAccount_Status)] && [account status] != STATUS_OFFLINE){
+            [account disconnect];
+        }
+    }
+}
+
 - (void)accountPropertiesChanged:(NSNotification *)notification
 {
     //Save the changes
@@ -336,41 +357,6 @@
 
     return(newAccount);
 }
-
-//Builds an array of available service types and descriptions
-/*- (NSMutableArray *)loadServices
-{
-    NSString		*servicePath;
-    NSMutableArray	*serviceArray;
-    NSArray		*directoryContents;
-    NSString		*fileName;
-    NSEnumerator	*enumerator;
-    
-    //Create the arrays
-    serviceArray = [[NSMutableArray alloc] init];
-
-    //Fetch the list of available services
-    servicePath = [[[[NSBundle mainBundle] bundlePath]
-        stringByAppendingPathComponent:DIRECTORY_INTERNAL_SERVICES]
-        stringByExpandingTildeInPath];
-
-    directoryContents = [[NSFileManager defaultManager] directoryContentsAtPath:servicePath];
-
-    //Get type and description info from each bundle
-    enumerator = [directoryContents objectEnumerator];
-    while((fileName = [enumerator nextObject])){
-        if([[fileName pathExtension] compare:EXTENSION_ADIUM_SERVICE] == 0){
-            NSString		*bundlePath = [servicePath stringByAppendingPathComponent:fileName];
-            NSBundle		*serviceBundle = [NSBundle bundleWithPath:bundlePath];
-            AIService		*service = [[serviceBundle principalClass] serviceWithOwner:owner];
-            
-            [serviceArray addObject:service];
-        }
-    }
-    
-    return([serviceArray autorelease]);
-}*/
-
 
 @end
 

@@ -34,6 +34,8 @@
 
     [super init];
 
+    font = nil;
+
     //Set up the table view
     tableColumn = [[[NSTableColumn alloc] init] autorelease];
     [tableColumn setDataCell:[[[AISCLCell alloc] init] autorelease]];
@@ -48,6 +50,13 @@
     return(self);
 }
 
+- (void)dealloc
+{
+    [font release];
+    
+    [super dealloc];
+}
+
 //Called before we're inserted in a window
 - (void)viewWillMoveToSuperview:(NSView *)newSuperview
 {
@@ -57,17 +66,6 @@
     //Install our scroll view frame changed notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameChanged:) name:NSViewFrameDidChangeNotification object:[newSuperview enclosingScrollView]];
 }
-
-// Hide the selection when the cursor isn't over the contact list
-/*- (void)mouseEntered:(NSEvent *)theEvent
-{
-    [self selectRow:oldSelection byExtendingSelection:NO];
-}
-- (void)mouseExited:(NSEvent *)theEvent
-{
-    oldSelection = [self selectedRow];
-    [self deselectAll:nil];
-}*/
 
 // Navigate the contact list with the keyboard
 - (void)keyDown:(NSEvent *)theEvent
@@ -180,6 +178,17 @@
         [emptyMessage release];
     }
 }
+
+// Hide the selection when the cursor isn't over the contact list
+/*- (void)mouseEntered:(NSEvent *)theEvent
+{
+    [self selectRow:oldSelection byExtendingSelection:NO];
+}
+- (void)mouseExited:(NSEvent *)theEvent
+{
+    oldSelection = [self selectedRow];
+    [self deselectAll:nil];
+}*/
 
 @end
 

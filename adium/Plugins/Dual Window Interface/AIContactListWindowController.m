@@ -33,7 +33,16 @@
 + (AIContactListWindowController *)contactListWindowControllerWithOwner:(id)inOwner
 {
     return([[[self alloc] initWithWindowNibName:CONTACT_LIST_WINDOW_NIB owner:inOwner] autorelease]);
-}     
+}
+
+//closes this window
+- (IBAction)closeWindow:(id)sender
+{
+    if([self windowShouldClose:nil]){
+        [[self window] close];
+    }
+}
+
 
 //Private ----------------------------------------------------------------
 // init the account window controller
@@ -54,6 +63,8 @@
 - (void)dealloc
 {
     [owner release];
+    [contactListViewController release];
+    [contactListView release];
 
     [super dealloc];
 }
@@ -69,7 +80,6 @@
 
 - (void)windowDidLoad
 {
-    NSView	*newView;
     NSString	*savedFrame;
     
     //Restore the window position
@@ -79,11 +89,12 @@
     }
 
     //Swap in the contact list view
-    newView = [[owner interfaceController] contactListView];
-    [scrollView_contactList setAndSizeDocumentView:newView];
+    contactListViewController = [[[owner interfaceController] contactListViewController] retain];
+    contactListView = [[contactListViewController contactListView] retain];
+    [scrollView_contactList setAndSizeDocumentView:contactListView];
     
     //Register for the selection notification
-    [[[owner interfaceController] interfaceNotificationCenter] addObserver:self selector:@selector(contactSelectionChanged:) name:Interface_ContactSelectionChanged object:newView];
+    [[[owner interfaceController] interfaceNotificationCenter] addObserver:self selector:@selector(contactSelectionChanged:) name:Interface_ContactSelectionChanged object:contactListView];
 
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
@@ -93,6 +104,13 @@
 
 - (BOOL)windowShouldClose:(id)sender
 {
+    //Let the contact list view close
+    [contactListViewController closeContactListView:contactListView];
+
+    //Stop observing
+    [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:Interface_ContactSelectionChanged object:contactListView];
+
+    
     //Save the window position
     [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME

@@ -136,6 +136,15 @@
     [visibleArray addObject:[NSNumber numberWithInt:(sortedCount == 0)] withOwner:self];
 }
 
+//Set whether this group is expanded or collapsed
+- (void)setExpanded:(BOOL)inExpanded
+{
+    expanded = inExpanded;
+}
+- (BOOL)isExpanded{
+    return(expanded);
+}
+
 // Semi-Private ---------------------------------------------------------------------------------
 //Adds an object to this group
 - (void)addObject:(AIContactObject *)inObject
@@ -196,6 +205,7 @@
     //Create object array
     contactArray = [[NSMutableArray alloc] init];
     sortedContactArray = [[NSMutableArray alloc] init];
+    expanded = YES;
 
     return(self);
 }

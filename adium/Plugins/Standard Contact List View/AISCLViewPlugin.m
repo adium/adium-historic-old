@@ -22,7 +22,9 @@
 
 @interface AISCLViewPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
-
+- (void)itemDidExpand:(NSNotification *)notification;
+- (void)itemDidCollapse:(NSNotification *)notification;
+- (void)expandCollapseGroup:(AIContactGroup *)inGroup subgroups:(BOOL)subgroups outlineView:(NSOutlineView *)inView;
 @end
 
 @implementation AISCLViewPlugin
@@ -41,11 +43,17 @@
     preferences = [[AICLPreferences contactListPreferencesWithOwner:owner] retain];
 }
 
+- (void)uninstallPlugin
+{
+    //[[owner interfaceController] unregisterContactListViewController: self];
+}
+
 - (void)dealloc
 {
     [SCLViewArray release];
     [contactList release];
 
+    [super dealloc];
 }
 
 //Return our view
@@ -60,17 +68,17 @@
     //Apply the preferences to the view
     [self preferencesChanged:nil];
 
-    //Install the necessary observers
-    [[[owner contactController] contactNotificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
-    [[[owner contactController] contactNotificationCenter] addObserver:self selector:@selector(contactObjectChanged:) name:Contact_ObjectChanged object:nil];
-    [[[owner contactController] contactNotificationCenter] addObserver:self selector:@selector(contactAttributesChanged:) name:Contact_AttributesChanged object:nil];
+    //Install the necessary observers (general)
+    if([SCLViewArray count] == 1){ //If this is the first view opened
+        [[[owner contactController] contactNotificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
+        [[[owner contactController] contactNotificationCenter] addObserver:self selector:@selector(contactObjectChanged:) name:Contact_ObjectChanged object:nil];
+        [[[owner contactController] contactNotificationCenter] addObserver:self selector:@selector(contactAttributesChanged:) name:Contact_AttributesChanged object:nil];
+        [[[owner preferenceController] preferenceNotificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    }
 
-
-    [[[owner preferenceController] preferenceNotificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpandOrCollapse:) name:NSOutlineViewItemDidExpandNotification object:SCLView];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpandOrCollapse:) name:NSOutlineViewItemDidCollapseNotification object:SCLView];
-    
+    //View specific
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpand:) name:NSOutlineViewItemDidExpandNotification object:SCLView];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidCollapse:) name:NSOutlineViewItemDidCollapseNotification object:SCLView];
     [SCLView setTarget:self];
     [SCLView setDataSource:self];
     [SCLView setDelegate:self];
@@ -81,6 +89,32 @@
 
     return([SCLView autorelease]);
 }
+
+- (void)closeContactListView:(NSView *)inView
+{
+    if([inView isKindOfClass:[AISCLOutlineView class]]){
+        AISCLOutlineView	*view = (AISCLOutlineView *)inView;
+
+        //Remove observers (general)
+        if([SCLViewArray count] == 1){ //If this is the last view closed
+            [[[owner contactController] contactNotificationCenter] removeObserver:self name:Contact_ListChanged object:nil];
+            [[[owner contactController] contactNotificationCenter] removeObserver:self name:Contact_ObjectChanged object:nil];
+            [[[owner contactController] contactNotificationCenter] removeObserver:self name:Contact_AttributesChanged object:nil];
+            [[[owner preferenceController] preferenceNotificationCenter] removeObserver:self name:Preference_GroupChanged object:nil];
+        }
+    
+        //View specific
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSOutlineViewItemDidExpandNotification object:view];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSOutlineViewItemDidCollapseNotification object:view];
+        
+        //Close down and release the view
+        [view setTarget:nil];
+        [view setDataSource:nil];
+        [view setDelegate:nil];
+        [SCLViewArray removeObject:view];
+    }
+}
+
 
 //Notifications
 //Reload the contact list
@@ -95,6 +129,7 @@
     //Redisplay
     while((SCLView = [enumerator nextObject])){
         [SCLView reloadData];
+        [self expandCollapseGroup:contactList subgroups:YES outlineView:SCLView]; //Correctly expand/collapse groups
     }
 }
 
@@ -104,9 +139,14 @@
     if(![[owner contactController] contactListUpdatesDelayed]){
         NSEnumerator		*enumerator = [SCLViewArray objectEnumerator];
         AISCLOutlineView	*SCLView;
-
+        BOOL			isGroup = [[notification object] isKindOfClass:[AIContactGroup class]];
+            
         while((SCLView = [enumerator nextObject])){
             [SCLView reloadData];
+
+            if(isGroup){ //Correctly expand/collapse the group
+                [self expandCollapseGroup:(AIContactGroup *)[notification object] subgroups:YES outlineView:SCLView]; 
+            }
         }
     }
 }
@@ -122,8 +162,7 @@
     }
 }
 
-
-
+//A contact list preference has changed
 - (void)preferencesChanged:(NSNotification *)notification
 {
     NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:GROUP_CONTACT_LIST];
@@ -152,10 +191,17 @@
 
 }
 
-/*- (void)itemDidExpandOrCollapse:(NSNotification *)notification
+//Expand & collapse a group
+- (void)itemDidExpand:(NSNotification *)notification
 {
+    [[[notification userInfo] objectForKey:@"NSObject"] setExpanded:YES];
+}
+- (void)itemDidCollapse:(NSNotification *)notification
+{
+    [[[notification userInfo] objectForKey:@"NSObject"] setExpanded:NO];
+}
 //    [self desiresNewSize];
-}*/
+
 
 //Double click in outline view
 - (IBAction)performDefaultActionOnSelectedContact:(id)sender
@@ -246,6 +292,30 @@
     }
 
 }
+
+//Correctly sets the contact groups as expanded or collapsed, depending on their saved state
+- (void)expandCollapseGroup:(AIContactGroup *)inGroup subgroups:(BOOL)subgroups outlineView:(NSOutlineView *)inView
+{
+    NSEnumerator	*enumerator = [inGroup objectEnumerator];
+    AIContactObject	*object;
+
+    while((object = [enumerator nextObject])){
+        if([object isKindOfClass:[AIContactGroup class]]){
+            //Correctly expand/collapse the group
+            if([(AIContactGroup *)object isExpanded]){
+                [inView expandItem:object];
+            }else{
+                [inView collapseItem:object];
+            }
+
+            //Expand/collapse any subgroups
+            if(subgroups){
+                [self expandCollapseGroup:(AIContactGroup *)object subgroups:YES outlineView:inView];
+            }
+        }
+    }
+}
+
 
 @end
 

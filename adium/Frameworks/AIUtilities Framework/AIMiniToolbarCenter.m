@@ -97,9 +97,7 @@ static AIMiniToolbarCenter *defaultCenter = nil;
 //Returns yes if the specified toolbar is being customized
 - (BOOL)customizing:(AIMiniToolbar *)toolbar
 {
-    NSString		*identifier = [toolbar identifier];
-
-    if(customizeIdentifier && [customizeIdentifier compare:identifier] == 0){
+    if(customizeIdentifier && (toolbar == nil || [customizeIdentifier compare:[toolbar identifier]] == 0)){
         return(YES);
     }else{
         return(NO);
@@ -109,6 +107,12 @@ static AIMiniToolbarCenter *defaultCenter = nil;
 //Closes the customization palettes
 - (IBAction)endCustomization:(AIMiniToolbar *)toolbar
 {
+    [customizeController closeWindow:nil];
+}
+
+//Called by the customization window as it closes
+- (void)customizationDidEnd:(AIMiniToolbar *)inToolbar
+{
     //Release the customization panel
     [customizeController autorelease]; customizeController = nil;
 
@@ -117,7 +121,7 @@ static AIMiniToolbarCenter *defaultCenter = nil;
     [[NSNotificationCenter defaultCenter] postNotificationName:AIMiniToolbar_RefreshItem object:nil];
 
     //Turn customization mode off
-/*    customizing = NO;
+    /*    customizing = NO;
     [[NSNotificationCenter defaultCenter] postNotificationName:AIMiniToolbar_RefreshItem object:nil];
 
     //Release the array of views
@@ -126,8 +130,8 @@ static AIMiniToolbarCenter *defaultCenter = nil;
     //Close the customization palette
     [panel_customization orderOut:nil];
     [panel_customization autorelease]; panel_customization = nil;
-*/}
-
+    */
+}
 
 
 // Private ---------------------------------------------------------------------------
