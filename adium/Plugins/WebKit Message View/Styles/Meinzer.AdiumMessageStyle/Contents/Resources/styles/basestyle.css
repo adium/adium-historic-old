@@ -1,0 +1,40 @@
+.msg1 {
+    background-color: #dddddd;
+}
+
+.msg1_again {
+    border-top: 1px dashed #888;
+    background-color: #dddddd;
+}
+
+.msg2 {
+    background: rgba(255,255,255,0.6); 
+}
+
+.msg2_again {
+    background: rgba(255,255,255,0.6); 
+    border-top: 1px dashed #888;
+}
+
+.shadow {
+    border-bottom: #afafaf; 
+    border-top: 1px solid #afafaf; 
+    background: url(shadow.png) repeat-x; 
+}
+
+.name_time {
+	text-shadow: 2px 2px 4px #888;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.timestamp{
+	font-size: 13px;
+	color: #444;
+	text-shadow: none;
+	font-weight: normal;
+}
+
+.context {
+	    background: rgba(255,255,255,0.4);
+}
