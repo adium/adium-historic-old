@@ -97,6 +97,12 @@ static NSImage *pushIndicatorImage = nil;
     sendOnEnter = inBool;
 }
 
+//Configure the push/pop behavior
+- (void)setPushPop:(BOOL)inBool
+{
+	pushPop = inBool;
+}
+
 //Selector and target to invoke on send
 - (void)setTarget:(id)inTarget action:(SEL)inSelector
 {
@@ -302,7 +308,7 @@ static NSImage *pushIndicatorImage = nil;
 // Pop into the message entry field
 - (void)_popContent
 {
-	if([pushArray count]){
+	if([pushArray count] && pushPop){
         [self setAttributedString:[pushArray lastObject]];
 		[self setSelectedRange:NSMakeRange([[self textStorage] length], 0)]; //selection to end
         [pushArray removeLastObject];
@@ -316,7 +322,7 @@ static NSImage *pushIndicatorImage = nil;
 // Push out of the message entry field
 - (void)_pushContent
 {
-	if([[self textStorage] length] != 0){
+	if([[self textStorage] length] != 0 && pushPop){
 		[pushArray addObject:[[self textStorage] copy]];
 		[self setString:@""];
 		[self _setPushIndicatorVisible:YES];
@@ -480,22 +486,24 @@ static NSImage *pushIndicatorImage = nil;
 				[self _pushContent];
 			else if(inChar == 's')
 			{
-				// Is there text?
-				NSAttributedString *tempMessage = nil;
-				NSAttributedString *tempPush = nil;
-
-				if( [[self textStorage] length] != 0 ){
-					tempMessage = [[self textStorage] copy];
-				}
-				
-				if( [pushArray count] )
-					[self _popContent];
-				else
-					[self setString:@""];
-			
-				if( tempMessage ) {
-					[pushArray addObject:tempMessage];
-					[self _setPushIndicatorVisible:YES];
+				if( pushPop ) {
+					// Is there text?
+					NSAttributedString *tempMessage = nil;
+					NSAttributedString *tempPush = nil;
+					
+					if( [[self textStorage] length] != 0 ){
+						tempMessage = [[self textStorage] copy];
+					}
+					
+					if( [pushArray count] )
+						[self _popContent];
+					else
+						[self setString:@""];
+					
+					if( tempMessage ) {
+						[pushArray addObject:tempMessage];
+						[self _setPushIndicatorVisible:YES];
+					}
 				}
 			}
 			else
