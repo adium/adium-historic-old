@@ -47,7 +47,6 @@
 	//Proxy type
 	[menu_proxy setMenu:[self _proxyMenu]];
 	proxyTypeNumber = [theAccount preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
-	NSLog(@"%@",proxyTypeNumber);
 	[menu_proxy selectItemAtIndex:[menu_proxy indexOfItemWithTag:[proxyTypeNumber intValue]]];
 	
 	//Proxy name
