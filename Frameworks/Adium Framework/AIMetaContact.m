@@ -14,8 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContactController.h"
 #import "AIMetaContact.h"
+#import "AIContactController.h"
+#import "AIListContact.h"
 #import "AIService.h"
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIArrayAdditions.h>
