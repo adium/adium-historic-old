@@ -13,6 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+// $Id: AILoginController.m,v 1.9 2003/12/08 06:32:42 jmelloy Exp $
+
 #import "AILoginController.h"
 #import "AILoginWindowController.h"
 
