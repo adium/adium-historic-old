@@ -28,10 +28,10 @@ Adium, Copyright 2001-2005, Adam Iser
  */
 - (id)init
 {
-	[super init];
-	
-	//Register this service with Adium
-    [[adium accountController] registerService:self];
+	if(self = [super init]){
+		//Register this service with Adium
+		[[adium accountController] registerService:self];
+	}
 	
 	return(self);
 }
