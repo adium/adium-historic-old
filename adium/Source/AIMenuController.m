@@ -35,6 +35,8 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
     //Build the array of menu locations
     locationArray = [[NSMutableArray alloc] initWithObjects:menu_Adium_About, menu_Adium_Preferences, menu_File_New, menu_File_Close, menu_File_Save, menu_File_Accounts, menu_File_Additions, menu_File_Status, menu_Edit_Bottom, menu_Edit_Additions, menu_Format_Styles, menu_Format_Palettes, menu_Format_Additions, menu_Window_Top, menu_Window_Commands, menu_Window_Auxilary, menu_Window_Fixed, menu_Help_Local, menu_Help_Web, menu_Help_Additions, menu_Contact_Manage, menu_Contact_Action, menu_Contact_NegativeAction, menu_Contact_Additions, menu_Dock_Status, nil];
 
+    NSLog (@"Initialized menubar array");
+
     //Set up our contextual menu stuff
     contextualMenu = [[NSMenu alloc] init];
     contextualMenuItemDict = [[NSMutableDictionary alloc] init];
@@ -45,12 +47,57 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
 - (void)closeController
 {
     //There's no need to remove the menu items, the system will take them out for us.
+    
+    //Unless, of course, we are only switching users, and not quitting.  This might be better in a separate method,
+    //not sure.
+    /*NSMutableArray	*tempArray = [[NSMutableArray alloc] initWithObjects:menu_Adium_About, menu_Adium_Preferences, menu_File_New, menu_File_Close, menu_File_Save, menu_File_Accounts, menu_File_Additions, menu_File_Status, menu_Edit_Bottom, menu_Edit_Additions, menu_Format_Styles, menu_Format_Palettes, menu_Format_Additions, menu_Window_Top, menu_Window_Commands, menu_Window_Auxilary, menu_Window_Fixed, menu_Help_Local, menu_Help_Web, menu_Help_Additions, menu_Contact_Manage, menu_Contact_Action, menu_Contact_NegativeAction, menu_Contact_Additions, menu_Dock_Status, nil];
+    int i, o;
+    
+    for (o = i = 0; i < [tempArray count]; i++, o++)
+    {
+        if (menuArrayOffset[o] != i)
+            i = menuArrayOffset[o];
+    
+        NSMenuItem *topItem = [[tempArray objectAtIndex:i] retain],
+                   *lastItem = [locationArray objectAtIndex:i],
+                   *curItem = lastItem;
+        NSMenu	   *targetMenu = [curItem menu]; 
+        int			curCount = 1, ind = [targetMenu indexOfItem:topItem] + 1, count = [targetMenu indexOfItem:lastItem] - [targetMenu indexOfItem:topItem];
+        
+        NSLog (@"About to remove item %@", curItem);
+        while (curItem != topItem)
+        //for (; curCount <= count; curCount ++)
+        {
+            int nextInd = [targetMenu indexOfItem:curItem] - 1;
+            //curItem = [targetMenu itemAtIndex:ind];
+            NSLog (@"Removing item %@", curItem);
+            
+            if (nextInd >= 0)
+            {
+                [targetMenu removeItem:curItem];
+            
+                curItem = [targetMenu itemAtIndex:nextInd];
+            }
+            else
+            {
+                NSLog (@"Couldn't remove item %@", curItem);
+                curItem = topItem;
+                //ind++;
+            }
+        }
+    }
+    
+    [tempArray release];*/
+    
+    // Releases to match allocs in initController
+    [locationArray release];
+    [contactualMenuContact release];
 }
 
 - (void)dealloc
 {
-    [locationArray release];
-    [contactualMenuContact release];
+    //[locationArray release];
+    //[contactualMenuContact release];
 
     [super dealloc];
 }
@@ -63,6 +110,7 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
     int			targetIndex;
     int			destination;
     
+    NSLog (@"Adding menuitem %@", newItem);
     //Offset
     location = menuArrayOffset[location];
 
@@ -73,7 +121,9 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
         destination--;
         menuItem = [locationArray objectAtIndex:destination];
     }
+    NSLog (@"Here?");
     targetMenu = [menuItem menu];
+    NSLog (@"no");
     targetIndex = [targetMenu indexOfItem:menuItem];
     
     //Insert the new item and a divider (if necessary)
@@ -85,6 +135,7 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
 
     //update the location array
     [locationArray replaceObjectAtIndex:location withObject:newItem];
+    NSLog (@"Done adding menuitem %@", newItem);
 }
 
 //Remove a menu item

@@ -44,6 +44,8 @@
 {
     //[[owner contactController] unregisterHandleObserver:self];
     //remove observers
+    [[owner notificationCenter] removeObserver:preferences];
+    [[NSNotificationCenter defaultCenter] removeObserver:preferences];
 }
 
 

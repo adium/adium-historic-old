@@ -31,6 +31,8 @@
 //
 - (void)uninstallPlugin
 {
+    [[owner notificationCenter] removeObserver:preferences];
+    [[NSNotificationCenter defaultCenter] removeObserver:preferences];
 }
 
 @end
