@@ -55,12 +55,8 @@
     [self installAwayMenu];
     
     //Observe account status changes
-    [[adium notificationCenter] addObserver:self
-				   selector:@selector(preferencesChanged:)
-				       name:Preference_GroupChanged
-				     object:nil];
-
-    [self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_AWAY_MESSAGES];
 }
 
 //
@@ -259,12 +255,10 @@
 }
 
 //Update our menu if the away list changes
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    NSString    *group = [[notification userInfo] objectForKey:@"Group"];
-    NSString    *key = [[notification userInfo] objectForKey:@"Key"];
-    
-	if(notification == nil || ([group isEqualToString:GROUP_ACCOUNT_STATUS] && [notification object] == nil)){
+	if(!group || ([group isEqualToString:GROUP_ACCOUNT_STATUS] && !object)){
 		if(!key || [key isEqualToString:@"AwayMessage"]){
 			//Update our away menus
 			[self _updateMenusToReflectAwayState:[self shouldConfigureForAway]];
@@ -293,7 +287,7 @@
 			//Flush our array of 'responded' contacts
 			[receivedAwayMessage release]; receivedAwayMessage = [[NSMutableArray alloc] init];
 		}
-    } else if([group isEqualToString:PREF_GROUP_AWAY_MESSAGES]){
+    }else if([group isEqualToString:PREF_GROUP_AWAY_MESSAGES]){
 		//Rebuild the away menu
 		if([key isEqualToString:KEY_SAVED_AWAYS]){
 			[self _updateAwaySubmenus];
