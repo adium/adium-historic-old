@@ -13,7 +13,6 @@ body {
 
 .message { /* Text of message */
     position: relative;
-    border: 1px dotted #000;
     padding-left: 3px;
     padding-right: 3px;
     font-size: 11px;
@@ -21,6 +20,7 @@ body {
     padding-bottom: 1px;
     padding-top: 1px;
     margin-bottom: 5px;
+    background: url(whitesquare.png) repeat-xy;
 }
 
 .messagemore {
