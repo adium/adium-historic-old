@@ -5,53 +5,35 @@
 //  Created by Evan Schoenberg on Mon Jul 14 2003.
 //
 
-#import "ESContactAlertsWindowController.h"
+#import "ESContactAlertsPane.h"
 #import "ESContactAlertsPlugin.h"
 #import "CSNewContactAlertWindowController.h"
 
 #define CONTACT_ALERT_WINDOW_NIB	@"ContactAlerts"
 
-@interface ESContactAlertsWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName forObject:(AIListObject *)inListObject;
+@interface ESContactAlertsPane (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 int alertAlphabeticalSort(id objectA, id objectB, void *context);
 
-@implementation ESContactAlertsWindowController
+@implementation ESContactAlertsPane
 
-//Open a new info window
-+ (void)showContactAlertsWindowForObject:(AIListObject *)inListObject
-{
-	ESContactAlertsWindowController	*controller;
-	controller = [[self alloc] initWithWindowNibName:CONTACT_ALERT_WINDOW_NIB forObject:inListObject];
-    [controller showWindow:nil];
+//Preference pane properties
+- (CONTACT_INFO_CATEGORY)contactInfoCategory{
+    return(AIInfo_Alerts);
+}
+- (NSString *)label{
+    return(@"Contact Alerts");
+}
+- (NSString *)nibName{
+    return(@"ContactAlerts");
 }
 
-//Init
-- (id)initWithWindowNibName:(NSString *)windowNibName forObject:(AIListObject *)inListObject
-{
-    [super initWithWindowNibName:windowNibName];
-	
-	listObject = [inListObject retain];
-	
-    return(self);
-}
-
-//Dealloc
-- (void)dealloc
-{
-	[listObject release];
-	[super dealloc];
-}
-
-//Setup the window before it is displayed
-- (void)windowDidLoad
+//Configure the preference view
+- (void)viewDidLoad
 {
 	AIImageTextCell *actionsCell;
-
-	//Configure Window
-	[[self window] setTitle:[NSString stringWithFormat:@"%@'s Alerts",[listObject displayName]]];
 	
 	//Configure Table view
 	[tableView_actions setDrawsAlternatingRows:YES];
@@ -60,36 +42,27 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context);
 	actionsCell = [[[AIImageTextCell alloc] init] autorelease];
     [actionsCell setFont:[NSFont systemFontOfSize:12]];
 	[[tableView_actions tableColumnWithIdentifier:@"description"] setDataCell:actionsCell];
-	
+}
+
+//Preference view is closing
+- (void)viewWillClose
+{
+	[alertArray release]; alertArray = nil;
+    [listObject release]; listObject = nil;
+	[[adium notificationCenter] removeObserver:self]; 
+}
+
+//Configure the pane for a list object
+- (void)configureForListObject:(AIListObject *)inObject
+{
+	//New list object
+	[listObject release];
+	listObject = [inObject retain];
+
 	//Observe alert changes for our list object
+	[[adium notificationCenter] removeObserver:self name:Preference_GroupChanged object:nil]; 
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:listObject];
 	[self preferencesChanged:nil];
-}
-
-//Window is closing
-- (BOOL)windowShouldClose:(id)sender
-{
-	//remove all observers
-	[[adium notificationCenter] removeObserver:self]; 
-	
-	//Close ourself
-	[self autorelease];
-
-    return(YES);
-}
-
-//Stop automatic window positioning
-- (BOOL)shouldCascadeWindows
-{
-    return(NO);
-}
-
-//Close the window
-- (IBAction)closeWindow:(id)sender
-{
-    if([self windowShouldClose:nil]){
-        [[self window] close];
-    }
 }
 
 //Alerts have changed
@@ -123,12 +96,13 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context)
 }
 
 
+
 //Alert Editing --------------------------------------------------------------------------------------------------------
 #pragma mark Actions
 //Add new alert
 - (IBAction)addAlert:(id)sender
 {
-	[CSNewContactAlertWindowController editAlert:nil forListObject:listObject onWindow:[self window] notifyingTarget:self userInfo:nil];
+	[CSNewContactAlertWindowController editAlert:nil forListObject:listObject onWindow:[[self view] window] notifyingTarget:self userInfo:nil];
 }
 
 //Edit existing alert
@@ -136,7 +110,7 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context)
 {
 	NSDictionary	*alert = [alertArray objectAtIndex:[tableView_actions selectedRow]];
 
-	[CSNewContactAlertWindowController editAlert:alert forListObject:listObject onWindow:[self window] notifyingTarget:self userInfo:alert];
+	[CSNewContactAlertWindowController editAlert:alert forListObject:listObject onWindow:[[self view] window] notifyingTarget:self userInfo:alert];
 }
 
 //Delete an alert

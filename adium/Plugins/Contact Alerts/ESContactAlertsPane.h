@@ -7,7 +7,7 @@
 
 @class AIAlternatingRowTableView;
 
-@interface ESContactAlertsWindowController : AIWindowController {
+@interface ESContactAlertsPane : AIContactInfoPane {
     IBOutlet	AIAlternatingRowTableView	*tableView_actions;
     IBOutlet	NSButton					*button_delete;
     IBOutlet	NSButton					*button_edit;
@@ -16,9 +16,6 @@
 	NSMutableArray				*alertArray;
 }
 
-+ (void)showContactAlertsWindowForObject:(AIListObject *)inListObject;
-
-- (IBAction)closeWindow:(id)sender;
 - (IBAction)addAlert:(id)sender;
 - (IBAction)editAlert:(id)sender;
 - (IBAction)deleteAlert:(id)sender;
