@@ -251,9 +251,11 @@
 
 	enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
 
-	while((contact = [enumerator nextObject])){
+	while(contact = [enumerator nextObject]){
 	    [self updateContact:contact handle:nil keys:nil];
 	}
+
+	[[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
     }
 }
 

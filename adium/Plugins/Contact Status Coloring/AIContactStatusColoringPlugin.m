@@ -233,6 +233,8 @@
 	while((contact = [enumerator nextObject])){
 	    [self updateContact:contact handle:nil keys:nil];
 	}
+
+	[[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
     }
 }
 
