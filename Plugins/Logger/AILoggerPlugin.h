@@ -13,16 +13,16 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#define PATH_LOGS                   @"/Logs"
-#define LOGGING_DEFAULT_PREFS       @"LoggingDefaults"
-#define PREF_GROUP_LOGGING          @"Logging"
-#define KEY_LOGGER_ENABLE           @"Enable Logging"
-#define	KEY_LOGGER_HTML             @"Enable HTML Logging"
+#define PATH_LOGS                       @"/Logs"
+#define LOGGING_DEFAULT_PREFS           @"LoggingDefaults"
+#define PREF_GROUP_LOGGING              @"Logging"
+#define KEY_LOGGER_ENABLE               @"Enable Logging"
+#define	KEY_LOGGER_HTML                 @"Enable HTML Logging"
 
 @class AILoggerPreferences, AILoggerAdvancedPreferences;
 
 @interface AILoggerPlugin : AIPlugin {
-    AILoggerPreferences		*preferences;
+    AILoggerPreferences                 *preferences;
     
     //Current logging settings
     BOOL				observingContent;
@@ -30,12 +30,12 @@
     BOOL				logHTML;
 	
     //Log viewer menu items
-    NSMenuItem		    *logViewerMenuItem;
-    NSMenuItem		    *viewContactLogsMenuItem;
-    NSMenuItem		    *viewContactLogsContextMenuItem;
+    NSMenuItem                          *logViewerMenuItem;
+    NSMenuItem                          *viewContactLogsMenuItem;
+    NSMenuItem                          *viewContactLogsContextMenuItem;
 
     //Log content search index
-    SKIndexRef		    index_Content;	
+    SKIndexRef                          index_Content;	
 
     //Dirty all information (First build of the dirty cache)
     BOOL				stopIndexingThreads;    //Set to YES to abort a dirty all or clean
@@ -49,12 +49,12 @@
 	NSLock				*logAccessLock;
     
     //Array of dirty logs / Logs that need re-indexing.  (Locked access)
-    NSMutableArray	    *dirtyLogArray;
+    NSMutableArray                      *dirtyLogArray;
     NSLock				*dirtyLogLock;
     
     //Indexing progress
-    int			    logsToIndex;
-    int			    logsIndexed;
+    int                                 logsToIndex;
+    int                                 logsIndexed;
     
 }
 

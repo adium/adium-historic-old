@@ -20,21 +20,21 @@
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 
-#define LOG_INDEX_PATH		    	@"~/Library/Caches/Adium"
-#define LOG_INDEX_NAME		    	@"Logs_%@.index"
-#define DIRTY_LOG_ARRAY_NAME	    @"DirtyLogs_%@.plist"
-#define KEY_LOG_INDEX_VERSION		@"Log Index Version"
+#define LOG_INDEX_PATH                          @"~/Library/Caches/Adium"
+#define LOG_INDEX_NAME                          @"Logs_%@.index"
+#define DIRTY_LOG_ARRAY_NAME                    @"DirtyLogs_%@.plist"
+#define KEY_LOG_INDEX_VERSION                   @"Log Index Version"
 
-#define LOG_INDEX_STATUS_INTERVAL   20      //Interval before updating the log indexing status
-#define LOG_CLEAN_SAVE_INTERVAL     500     //Number of logs to index continuiously before saving the dirty array and index
+#define LOG_INDEX_STATUS_INTERVAL               20      //Interval before updating the log indexing status
+#define LOG_CLEAN_SAVE_INTERVAL                 500     //Number of logs to index continuiously before saving the dirty array and index
 
 #define LOG_VIEWER	    			AILocalizedString(@"Log Viewer",nil)
-#define VIEW_CONTACTS_LOGS  		AILocalizedString(@"View Contact's Logs",nil)
+#define VIEW_CONTACTS_LOGS                      AILocalizedString(@"View Contact's Logs",nil)
 #define VIEW_LOGS	    			AILocalizedString(@"View Logs",nil)
 
-#define	CURRENT_LOG_VERSION			3 		//Version of the log index.  Increase this number to reset everyones index.
+#define	CURRENT_LOG_VERSION			3       //Version of the log index.  Increase this number to reset everyones index.
 
-#define	LOG_VIEWER_IDENTIFIER		@"LogViewer"
+#define	LOG_VIEWER_IDENTIFIER                   @"LogViewer"
 
 @interface AILoggerPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -74,8 +74,8 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 	
     //Setup our preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS 
-																		forClass:[self class]] 
-										  forGroup:PREF_GROUP_LOGGING];
+                                                                        forClass:[self class]] 
+                                                                        forGroup:PREF_GROUP_LOGGING];
     preferences = [[AILoggerPreferences preferencePane] retain];
 
     //Install the log viewer menu items
@@ -91,14 +91,14 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     //Toolbar item
 	NSToolbarItem	*toolbarItem;
     toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:LOG_VIEWER_IDENTIFIER
-														  label:AILocalizedString(@"Logs",nil)
-												   paletteLabel:AILocalizedString(@"View Logs",nil)
-														toolTip:AILocalizedString(@"View logs of this contact or chat",nil)
-														 target:self
-												settingSelector:@selector(setImage:)
-													itemContent:[NSImage imageNamed:@"LogViewer" forClass:[self class]]
-														 action:@selector(showLogViewerToSelectedContact:)
-														   menu:nil];
+                                                        label:AILocalizedString(@"Logs",nil)
+                                                   paletteLabel:AILocalizedString(@"View Logs",nil)
+                                                        toolTip:AILocalizedString(@"View logs of this contact or chat",nil)
+                                                         target:self
+                                                settingSelector:@selector(setImage:)
+                                                    itemContent:[NSImage imageNamed:@"LogViewer" forClass:[self class]]
+                                                         action:@selector(showLogViewerToSelectedContact:)
+                                                           menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
 
     //Init index searching
@@ -107,7 +107,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 
 //Update for the new preferences
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
+                            object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
 	BOOL            newLogValue;
 	
@@ -123,11 +123,10 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 			
 		}else{ //Start Logging
 			[[adium notificationCenter] addObserver:self 
-										   selector:@selector(contentObjectAdded:) 
-											   name:Content_ContentObjectAdded 
-											 object:nil];
-			
-		}
+                                                       selector:@selector(contentObjectAdded:) 
+                                                           name:Content_ContentObjectAdded 
+                                                         object:nil];
+                }
 	}
 }
 
@@ -206,15 +205,15 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 - (void)showLogViewerToSelectedContact:(id)sender
 {
     AIListObject   *selectedObject = [[adium contactController] selectedListObject];
-    [AILogViewerWindowController openForContact:([selectedObject isKindOfClass:[AIListContact class]] ? (AIListContact *)selectedObject : nil)
-										 plugin:self];
+    [AILogViewerWindowController openForContact:([selectedObject isKindOfClass:[AIListContact class]] ? (AIListContact *)selectedObject : nil)  plugin:self];
 }
 
 //Show the log viewer, displaying the selected contact's logs
 - (void)showLogViewerToSelectedContextContact:(id)sender
 {
 	[NSApp activateIgnoringOtherApps:YES];
-    [[[AILogViewerWindowController openForContact:[[adium menuController] contactualMenuContact] plugin:self] window] makeKeyAndOrderFront:nil];
+        [[[AILogViewerWindowController openForContact:[[adium menuController] contactualMenuContact] plugin:self] window]
+                                 makeKeyAndOrderFront:nil];
 }
 
 
@@ -242,9 +241,9 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 			if(!objectUID) objectUID = [[chat listObject] UID];
 
 			relativePath = [self _writeMessage:logString
-								betweenAccount:[chat account] 
-									 andObject:objectUID
-										onDate:[content date]];
+                                            betweenAccount:[chat account] 
+                                                 andObject:objectUID
+                                                    onDate:[content date]];
 
 			[self markLogDirtyAtPath:relativePath forChat:chat];
 		}
@@ -254,28 +253,28 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 //Generate a plain-text string representing a content message
 - (NSString *)stringForContentMessage:(AIContentMessage *)content
 {
-	NSString			*date = [[content date] descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
-	NSAttributedString  *message = [[content message] safeString];
+	NSString		*date = [[content date] descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
+	NSAttributedString      *message = [[content message] safeString];
 	AIListObject		*source = [content source];
-	NSString			*logString = nil;
+	NSString		*logString = nil;
 
 	if(date && message && source){
 		if(logHTML){
 			logString = [NSString stringWithFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@: </span><pre class=\"message\">%@</pre></div>\n",
 				([content isOutgoing] ? @"send" : @"receive"), date, [source UID],
 				[AIHTMLDecoder encodeHTML:message
-								  headers:NO 
-								 fontTags:NO 
-					   includingColorTags:YES
-							closeFontTags:NO 
-								styleTags:YES
-			   closeStyleTagsOnFontChange:YES
-						   encodeNonASCII:YES 
-							 encodeSpaces:NO
-							   imagesPath:nil 
-						attachmentsAsText:YES 
-		   attachmentImagesOnlyForSending:NO 
-						   simpleTagsOnly:NO]];
+                                                  headers:NO 
+                                                 fontTags:NO 
+                                       includingColorTags:YES
+                                            closeFontTags:NO 
+                                                styleTags:YES
+                               closeStyleTagsOnFontChange:YES
+                                           encodeNonASCII:YES
+                                             encodeSpaces:NO
+                                               imagesPath:nil
+                                        attachmentsAsText:YES 
+                           attachmentImagesOnlyForSending:NO 
+                                           simpleTagsOnly:NO]];
 		}else{
 			logString = [NSString stringWithFormat:@"(%@) %@: %@\n", date, [source UID], [message string]];
 		}
@@ -348,8 +347,8 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 
 	//Disable logging
 	[[adium preferenceController] setPreference:[NSNumber numberWithBool:NO]
-										 forKey:KEY_LOGGER_ENABLE
-										  group:PREF_GROUP_LOGGING];
+                                             forKey:KEY_LOGGER_ENABLE
+                                              group:PREF_GROUP_LOGGING];
 }
 
 
@@ -510,8 +509,8 @@ this problem is along the lines of:
 		}else{
 			[self resetLogIndex];
 			[[adium preferenceController] setPreference:[NSNumber numberWithInt:CURRENT_LOG_VERSION]
-												 forKey:KEY_LOG_INDEX_VERSION
-												  group:PREF_GROUP_LOGGING];
+                                                             forKey:KEY_LOG_INDEX_VERSION
+                                                              group:PREF_GROUP_LOGGING];
 		}
 	}
 }
@@ -556,11 +555,11 @@ this problem is along the lines of:
 - (void)_dirtyAllLogsThread
 {
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
-    NSEnumerator		*fromEnumerator, *toEnumerator, *logEnumerator;
-    NSString			*fromName;
+    NSEnumerator	*fromEnumerator, *toEnumerator, *logEnumerator;
+    NSString		*fromName;
     AILogFromGroup      *fromGroup = nil;
-    AILogToGroup		*toGroup;
-    AILog				*theLog;
+    AILogToGroup	*toGroup;
+    AILog               *theLog;    
 
     [indexingThreadLock lock];      //Prevent anything from closing until this thread is complete.
     suspendDirtyArraySave = YES;    //Prevent saving of the dirty array until we're finished building it
@@ -669,9 +668,10 @@ this problem is along the lines of:
 				//Update our progress
 				logsIndexed++;
 				if(lastUpdate == 0 || TickCount() > lastUpdate + LOG_INDEX_STATUS_INTERVAL){
-					[[AILogViewerWindowController existingWindowController] performSelectorOnMainThread:@selector(logIndexingProgressUpdate) 
-																							 withObject:nil
-																						  waitUntilDone:NO];
+					[[AILogViewerWindowController existingWindowController]
+                                            performSelectorOnMainThread:@selector(logIndexingProgressUpdate) 
+                                                             withObject:nil
+                                                          waitUntilDone:NO];
 					lastUpdate = TickCount();
 				}
 				
@@ -704,8 +704,8 @@ this problem is along the lines of:
 		//Update our progress
 		logsToIndex = 0;
 		[[AILogViewerWindowController existingWindowController] performSelectorOnMainThread:@selector(logIndexingProgressUpdate) 
-																				 withObject:nil
-																			  waitUntilDone:NO];
+                                                                                         withObject:nil
+                                                                                      waitUntilDone:NO];
     }
     
     [indexingThreadLock unlock];
