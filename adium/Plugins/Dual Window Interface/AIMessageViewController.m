@@ -139,7 +139,6 @@
     
         //Get our new account
         [account release]; account = [[inChat account] retain];
-        NSLog(@"account is now %@",[account UID]);
         //Config the outgoing text view
         [textView_outgoing setChat:chat];
     
