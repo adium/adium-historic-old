@@ -22,6 +22,26 @@ Version 0.57
 - Hide/show toolbar dim correctly
 - Updated away status window
 - Contact list no longer selects first contact
+- Formatting no longer resets when messages are sent
+- We now recognize <br /> .. so pasting from ichat will work right
+- sped up keychain accesss
+- Improvements to contact list drag targeting
+- Fixed an issue with re-ordering away messages
+- Fixed fighting over being kicked by another client
+- Updated allowed characters / lengths for several protocols
+- Fixed a bug causing auto-scroll to always happen on receiving messages
+- Added overflow scrollbars to all the message styles
+- Tab sorting menu items (no prefs yet)
+- Fixed a bug with scripts being recognized in other peoples profiles
+- Fixed bug sending wrong text color out.. green text
+- added delete contact menu item
+- implemeneted requestAddContact panels.. xx has added you, add them?
+- Fixed crashes caused by poorly formed dock icon packs
+- autolink improvements
+- fixed issue preventing mobile and ICQ service types from showing up
+- AIM escapes (%n %d, etc) are now processed in links.. fixed subprofile links
+
+
 
 Version 0.56 (5/14/2004)
 - Added 'Insert Emoticon' to the Edit menu, contextual menus
