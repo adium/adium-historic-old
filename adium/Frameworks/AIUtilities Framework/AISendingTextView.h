@@ -69,4 +69,5 @@
 - (void)setChat:(AIChat *)inChat;
 - (AIChat *)chat;
 
+- (void)pasteAsRichText:(id)sender;
 @end

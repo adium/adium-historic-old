@@ -68,6 +68,8 @@ static NSImage *pushIndicatorImage = nil;
     [self setDrawsBackground:YES];
     _desiredSizeCached = NSMakeSize(0,0);
 
+	[self setAllowsUndo:YES];
+	
     //
     if(!pushIndicatorImage) pushIndicatorImage = [[AIImageUtilities imageNamed:@"stackImage" forClass:[self class]] retain];
 
@@ -94,12 +96,6 @@ static NSImage *pushIndicatorImage = nil;
 - (void)setSendOnEnter:(BOOL)inBool
 {
     sendOnEnter = inBool;
-}
-
-//Configure the push/pop behavior
-- (void)setPushPop:(BOOL)inBool
-{
-	pushPop = inBool;
 }
 
 //Selector and target to invoke on send
@@ -279,8 +275,36 @@ static NSImage *pushIndicatorImage = nil;
     }
 }
 
+- (void)pasteAsRichText:(id)sender
+{
+	NSAttributedString  *attribString;
+	NSRange				range = NSMakeRange(0,0);
+	NSDictionary		*attributes = nil;
+	id					link;
+
+	attribString = [NSAttributedString stringWithData:[[NSPasteboard generalPasteboard] dataForType:NSRTFPboardType]];
+	NSLog(@"%@",[self textStorage]);
+	int originalLength = [[self textStorage] length];
+	while (range.location + range.length < originalLength) {
+		if (link = [attribString attribute:NSLinkAttributeName atIndex:range.location effectiveRange:&range])
+			break;
+	}
+	
+	//If pasting a link, save the current typing attributes
+	if (link) {
+		NSLog(@"found it");
+		attributes = [[[self typingAttributes] copy] autorelease];
+	}
+	
+	[super pasteAsRichText:sender];
+		
+	//Restore previous typing attributes if we saved them
+	if (attributes)
+		[self setTypingAttributes:attributes];
+}
 
 //History --------------------------------------------------------------------
+#pragma mark History
 //Move up through the history
 - (void)_historyUp
 {
@@ -310,6 +334,13 @@ static NSImage *pushIndicatorImage = nil;
 }
 
 //Push and Pop -----------------------------------------------------------------
+#pragma mark Push and Pop
+
+//Configure the push/pop behavior
+- (void)setPushPop:(BOOL)inBool
+{
+	pushPop = inBool;
+}
 
 // Pop into the message entry field
 - (void)_popContent
@@ -394,6 +425,7 @@ static NSImage *pushIndicatorImage = nil;
 
 
 //Contact menu ---------------------------------------------------------------
+#pragma mark Contact menu
 //Set and return the selected chat (to auto-configure the contact menu)
 - (void)setChat:(AIChat *)inChat
 {
@@ -413,6 +445,7 @@ static NSImage *pushIndicatorImage = nil;
 
 
 //Auto Sizing --------------------------------------------------------------------------
+#pragma mark Auto-sizing
 //Returns our desired size
 - (NSSize)desiredSize
 {
@@ -460,6 +493,7 @@ static NSImage *pushIndicatorImage = nil;
 
 
 //Keyboard navigation ------------------------------------------------------------------------
+#pragma mark Keyboard navigation
 //Page up or down in the message view
 - (void)scrollPageUp:(id)sender
 {

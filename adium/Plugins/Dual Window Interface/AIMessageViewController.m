@@ -223,9 +223,18 @@
 - (IBAction)sendMessage:(id)sender
 {
     if([[textView_outgoing attributedString] length] != 0){ //If message length is 0, don't send
-        AIContentMessage	*message;
-		NSAttributedString	* outgoingAttributedString = [[[textView_outgoing attributedString] copy] autorelease];
+        AIContentMessage			*message;
+		NSMutableAttributedString	*outgoingAttributedString;
 		
+		//Reset to the default typing attributes if an NSURL was converted to a string, to remove the blue underline
+		if ([[textView_outgoing textStorage] convertNSURLtoString]) {
+			[textView_outgoing resetToDefaultTypingAttributes];
+			[[textView_outgoing textStorage] setAttributes:[textView_outgoing defaultTypingAttributes]
+													 range:NSMakeRange(0, [[textView_outgoing textStorage] length])];
+		}
+				
+		outgoingAttributedString = [[[textView_outgoing textStorage] copy] autorelease];
+
         //Send the message
         [[adium notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:chat userInfo:nil];
 		
@@ -258,8 +267,10 @@
 //Clear the message entry text view
 - (void)clearTextEntryView
 {
-    [textView_outgoing setString:@""];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing];
+	[textView_outgoing setString:@""];
+	
+    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification
+														object:textView_outgoing];
 }
 
 //Add to the message entry text view (at the insertion point, replacing the selection if present)
