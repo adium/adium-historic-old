@@ -33,6 +33,7 @@ extern NSString		* kConnectionDoesNotExistsException;
 	NSPort			* port;
 	NSMutableArray  * queuedPortMessageArray;
 	NSTimer			* queuedPortMessageTimer;
+	BOOL			insideMessageInvocation;
 	
 	NSTimeInterval  messageRetryTimeout;
 	NSTimeInterval  messageRetry;
