@@ -144,7 +144,7 @@ typedef enum {
         minutes = (int)(seconds / 60);
         seconds -= minutes * 60;
     }
-	
+		
     if(abbreviate){
         if(days)
             [theString appendString:[NSString stringWithFormat:@"%id ",days]];
@@ -192,7 +192,7 @@ typedef enum {
 		}
 
 		//Don't show seconds if we showed days; that's just ridiculous.
-		if (showSeconds && (seconds >= 1) && (days == 0)){
+		if(showSeconds && (seconds >= 1) && (days == 0)){
 			if(seconds == 1){
 				[theString appendString:ONE_SECOND];
 			}else{
