@@ -278,9 +278,12 @@
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_FORUM_PAGE]];
 }
 
-//A hook for guaring the quit menu item... not really necessary anymore, but it's not hurting anything being here
+//Last call to perform actions before the app shuffles off its mortal coil and joins the bleeding choir invisible
 - (IBAction)confirmQuit:(id)sender
 {
+	//Disconnect all the accounts before quitting
+    [accountController disconnectAllAccounts];
+	
 	[NSApp terminate:nil];
 }
 
