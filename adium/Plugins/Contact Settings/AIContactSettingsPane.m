@@ -8,7 +8,8 @@
 
 #import "AIContactSettingsPane.h"
 
-#define 		PREF_GROUP_ALIASES 		@"Aliases"
+#define 		PREF_GROUP_ALIASES 			@"Aliases"
+#define			PREF_GROUP_NOTES			@"Notes"		//Preference group to store notes in
 
 @implementation AIContactSettingsPane
 
@@ -38,6 +39,7 @@
 //Configure the pane for a list object
 - (void)configureForListObject:(AIListObject *)inObject
 {
+	NSString	*note;
 	NSString	*alias;
 
 	//Be sure we've set the last changes before changing which object we are editing
@@ -53,9 +55,16 @@
 	}else{
 		[textField_alias setStringValue:@""];
 	}
+	
+	//Current note
+    if(note = [inObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES]){
+        [textField_notes setStringValue:note];
+    }else{
+        [textField_notes setStringValue:@""];
+    }
 }
 
-//
+//Apply an alias
 - (IBAction)setAlias:(id)sender
 {
     if(listObject){
@@ -67,6 +76,18 @@
         
         //Save the alias
         [listObject setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];
+    }
+}
+
+//Save contact notes
+- (IBAction)setNotes:(id)sender
+{
+    if(listObject){
+        NSString 	*notes = [textField_notes stringValue];
+        if([notes length] == 0) notes = nil; 
+
+		//Save the note
+        [listObject setPreference:notes forKey:@"Notes" group:PREF_GROUP_NOTES];
     }
 }
 

@@ -2,10 +2,13 @@
     IBClasses = (
         {CLASS = AIContactInfoPane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {
-            ACTIONS = {setAlias = id; }; 
+            ACTIONS = {setAlias = id; setNotes = id; }; 
             CLASS = AIContactSettingsPane; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"textField_alias" = ESDelayedTextField; }; 
+            OUTLETS = {
+                "textField_alias" = ESDelayedTextField; 
+                "textField_notes" = ESDelayedTextField; 
+            }; 
             SUPERCLASS = AIContactInfoPane; 
         }, 
         {

@@ -15,18 +15,18 @@
 
 @protocol AIListEditorColumnController;
 
-@interface BGContactNotesPlugin : AIPlugin <AIListObjectObserver, AIContactListTooltipEntry> {
-    IBOutlet    NSView                  *view_contactNotesInfoView;
-    IBOutlet	ESDelayedTextField		*textField_notes;
-
-    AIPreferenceViewController			*contactView;
-    AIListObject                        *activeListObject;
-    BOOL noteSync;
+@interface BGContactNotesPlugin : AIPlugin </*AIListObjectObserver, */AIContactListTooltipEntry> {
+//    IBOutlet    NSView                  *view_contactNotesInfoView;
+//    IBOutlet	ESDelayedTextField		*textField_notes;
+//
+//    AIPreferenceViewController			*contactView;
+//    AIListObject                        *activeListObject;
+//    BOOL noteSync;
 }
 
-- (void)installPlugin;
-- (void)updateAllContacts;
-- (IBAction)setNotes:(id)sender;
-- (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject;
+//- (void)installPlugin;
+//- (void)updateAllContacts;
+//- (IBAction)setNotes:(id)sender;
+//- (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject;
 
 @end

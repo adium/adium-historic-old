@@ -87,6 +87,7 @@
 		07CE05580661D7AD00C50929 = {
 			children = (
 				07CE05590661D7E600C50929,
+				07CE0D400661E11600C50929,
 				07CE058F0661D7FE00C50929,
 				07CE058E0661D7FE00C50929,
 				07CE05920661D87E00C50929,
@@ -108,12 +109,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		07CE055A0661D7E600C50929 = {
-			fileRef = 07CE05590661D7E600C50929;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		07CE058E0661D7FE00C50929 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -131,18 +126,6 @@
 			path = Source/BZActivityWindowController.h;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		07CE05900661D7FE00C50929 = {
-			fileRef = 07CE058E0661D7FE00C50929;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		07CE05910661D7FE00C50929 = {
-			fileRef = 07CE058F0661D7FE00C50929;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		07CE05920661D87E00C50929 = {
 			isa = PBXFileReference;
@@ -184,36 +167,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		07CE05970661D87E00C50929 = {
-			fileRef = 07CE05920661D87E00C50929;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		07CE05980661D87E00C50929 = {
-			fileRef = 07CE05930661D87E00C50929;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		07CE05990661D87E00C50929 = {
-			fileRef = 07CE05940661D87E00C50929;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		07CE059A0661D87E00C50929 = {
-			fileRef = 07CE05950661D87E00C50929;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		07CE059B0661D87E00C50929 = {
-			fileRef = 07CE05960661D87E00C50929;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		07CE0D090661E0D200C50929 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -252,12 +205,6 @@
 			path = "Frameworks/AIUtilities Framework/BZProgressTracker.h";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		07CE0D410661E11600C50929 = {
-			fileRef = 07CE0D400661E11600C50929;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		07CE0D420661E12900C50929 = {
 			fileEncoding = 4;
@@ -4679,7 +4626,6 @@
 				4BBF41E30661194A001D31E1,
 				4BBF41E50661194A001D31E1,
 				4BBF44A00661354F001D31E1,
-				07CE05910661D7FE00C50929,
 				7E64084706629E10006A5552,
 				7E64084B06629E10006A5552,
 				7E64084E06629E31006A5552,
@@ -4992,15 +4938,8 @@
 				349DDD420640687D00542726,
 				349DDD6A06406CBD00542726,
 				3401925D06406D9200192BC4,
-				4B091037065CE9D700FF0528,
 				4BBF41E70661194A001D31E1,
 				4BBF41E80661194A001D31E1,
-				07CE055A0661D7E600C50929,
-				07CE05970661D87E00C50929,
-				07CE05980661D87E00C50929,
-				07CE05990661D87E00C50929,
-				07CE059A0661D87E00C50929,
-				07CE059B0661D87E00C50929,
 				4BCC20AB066B9A00007C8449,
 				4BCC20AC066B9A00007C8449,
 				4BCC20AD066B9A00007C8449,
@@ -5310,7 +5249,6 @@
 				4BBF41E40661194A001D31E1,
 				4BBF41E60661194A001D31E1,
 				4BBF44A10661354F001D31E1,
-				07CE05900661D7FE00C50929,
 				7E64084806629E10006A5552,
 				7E64084C06629E10006A5552,
 				7E64084D06629E2E006A5552,
@@ -5950,7 +5888,6 @@
 				0742B0450647FFA400FDE635,
 				4BBF41F306611A15001D31E1,
 				07CE0D0C0661E0D200C50929,
-				07CE0D410661E11600C50929,
 				07CE0D470661E12A00C50929,
 				07CE0D490661E12A00C50929,
 				4BDC4F27066229D700C28445,
@@ -9651,12 +9588,6 @@
 		};
 		4B091036065CE9D600FF0528 = {
 			fileRef = C4382549062E798500F5A31D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B091037065CE9D700FF0528 = {
-			fileRef = C438254A062E798500F5A31D;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -16646,7 +16577,6 @@
 		};
 		4BDB240B04AF501400A8010A = {
 			children = (
-				07CE0D400661E11600C50929,
 				4BDB240C04AF502B00A8010A,
 				4BDB240D04AF502B00A8010A,
 				4B33F8DC0511F45000A8010A,
@@ -21329,7 +21259,6 @@
 			children = (
 				C4382548062E798500F5A31D,
 				C4382549062E798500F5A31D,
-				C438254A062E798500F5A31D,
 			);
 			isa = PBXGroup;
 			name = "Contact Notes";
@@ -21351,14 +21280,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = BGContactNotesPlugin.m;
 			path = "Plugins/Contact Notes/BGContactNotesPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C438254A062E798500F5A31D = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ContactNotes.nib;
-			path = "Plugins/Contact Notes/ContactNotes.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};

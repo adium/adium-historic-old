@@ -107,9 +107,9 @@
 - (ESContactAlertsController *)contactAlertsController{
     return(contactAlertsController);
 }
-- (BZActivityWindowController *)activityWindowController {
-	return activityWindowController;
-}
+//- (BZActivityWindowController *)activityWindowController {
+//	return activityWindowController;
+//}
 
 //Notifications --------------------------------------------------------------------------------------------------------
 #pragma mark Notifications
@@ -223,7 +223,7 @@
     [fileTransferController initController];
     [contactAlertsController initController];
 	[NSBundle loadNibNamed:@"ActivityWindow" owner:self];
-    [activityWindowController initController];
+//    [activityWindowController initController];
 	
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
 	
