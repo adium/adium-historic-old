@@ -52,10 +52,10 @@
 {
     validStatus = SH_URL_INVALID; // assume the URL is invalid
     SH_BUFFER_STATE buf;  // buffer for flex to scan from
-    
+
     // initialize the buffer (flex automatically switches to the buffer in this function)
     buf = SH_scan_string([inString UTF8String]);
-    
+
     // call flex to parse the input
     validStatus = SHlex();
     
@@ -90,10 +90,15 @@
 {
     NSString    *scanString = [[NSString alloc] init];
     int location = SHStringOffset; //get our location from SHStringOffset, so we can pick up where we left off.
+    NSMutableCharacterSet *skipSet = [[NSMutableCharacterSet alloc] init];
+    [skipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    [skipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
+    [skipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
     
     // scan upto the next whitespace char so that we don't unnecessarity confuse flex
     // otherwise we end up validating urls that look like this "http://www.adiumx.com/ <--cool"
     NSScanner *preScanner = [[[NSScanner alloc] initWithString:inString] autorelease];
+    [preScanner setCharactersToBeSkipped:skipSet];
     [preScanner setScanLocation:location];
     while([preScanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&scanString]){
         SHStringOffset = [preScanner scanLocation] - [scanString length];
