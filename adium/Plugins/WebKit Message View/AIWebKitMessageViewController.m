@@ -27,13 +27,30 @@
     //init
     [super init];
     
+	//Observe content
+	[[adium notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:inChat];
+
+	//Create our webview
+	webView = [[WebView alloc] initWithFrame:NSMakeRect(0,0,100,100) //Arbitrary frame
+								   frameName:nil
+								   groupName:nil];
+
+	//Set it up with the javascript appender template
+	NSString	*template = [NSString stringWithContentsOfFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"template" ofType:@"html"]];
+	[[webView mainFrame] loadHTMLString:template baseURL:nil];
+
 	
     return(self);
 }
 
 - (NSView *)messageView
 {
-	return(nil);
+	return(webView);
+}
+
+- (void)contentObjectAdded:(NSNotification *)notification
+{
+	
 }
 
 //Dealloc
