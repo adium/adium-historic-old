@@ -31,6 +31,7 @@
 - (void)configureAccountList;
 - (void)accountListChanged:(NSNotification *)notification;
 - (void)_configureResponderChain:(NSTimer *)inTimer;
+- (void)passwordReturnedForRegister:(NSString *)inPassword;
 @end
 
 @implementation AIAccountListPreferences
@@ -276,7 +277,7 @@
 						AILocalizedString(@"Please input a username and password before clicking Register.",nil),
 						AILocalizedString(@"Okay",nil), nil, nil);
 	}else{
-		if ([self requiresPassword]){
+		if ([configuredForAccount requiresPassword]){
 			//Retrieve the user's password and then call connect
 			[[adium accountController] passwordForAccount:configuredForAccount 
 										  notifyingTarget:self
@@ -284,7 +285,7 @@
 												  context:nil];
 		}else{
 			//Connect immediately without retrieving a password
-			[self performRegisterWithPassword:nil];
+			[self passwordReturnedForRegister:nil];
 		}
 	}
 }
