@@ -39,7 +39,6 @@
 static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 static BOOL					pauseFilteringForSafety = NO;
 static BOOL					threadedFiltersInUse = NO;
-static NSLock				*threadCreationLock = nil;
 //init
 - (void)initController
 {
@@ -321,19 +320,7 @@ static NSLock				*threadCreationLock = nil;
 - (NDRunLoopMessenger *)filterRunLoopMessenger
 {
 	if (!filterRunLoopMessenger){
-		//Lock before calling the thread
-		threadCreationLock = [[NSLock alloc] init];
-		[threadCreationLock lock];
-		
-		[NSThread detachNewThreadSelector:@selector(thread_createFilterRunLoopMessenger) 
-								 toTarget:self
-							   withObject:nil];
-		
-		//Obtain the lock, which won't be available until thread_createFilterRunLoopMessenger unlocks it 
-		[threadCreationLock lockBeforeDate:[NSDate distantFuture]];
-		
-		//We should never need the lock again
-		[threadCreationLock release]; threadCreationLock = nil;
+		[NSThread detachNewThreadSelector:@selector(thread_createFilterRunLoopMessenger) toTarget:self withObject:nil];
 		
 		while (!filterRunLoopMessenger);
 	}
@@ -389,7 +376,6 @@ static NSLock				*threadCreationLock = nil;
 	filterRunLoopMessenger = [NDRunLoopMessenger runLoopMessengerForCurrentRunLoop];
 	[filterRunLoopMessenger setMessageRetryTimeout:3.0];
 	NSLog(@"thread_createFilterRunLoopMessenger: Got %@",filterRunLoopMessenger);
-	[threadCreationLock unlock];
 	CFRunLoopRun();
 	
 	[pool release];
@@ -535,7 +521,7 @@ static NSLock				*threadCreationLock = nil;
 	
     //Send the object
 	if ([inObject sendContent]){
-		if([(AIAccount <AIAccount_Content> *)[inObject source] sendContentObject:inObject]){
+		if([[inObject source] sendContentObject:inObject]){
 			if([inObject displayContent]){
 				//Add the object
 				[self displayContentObject:inObject];
@@ -680,13 +666,9 @@ static NSLock				*threadCreationLock = nil;
 }
 
 //Returns YES if the account/chat is available for sending content
-- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject onAccount:(AIAccount *)inAccount 
+- (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount 
 {
-    if([inAccount conformsToProtocol:@protocol(AIAccount_Content)]){
-        return([(AIAccount <AIAccount_Content> *)inAccount availableForSendingContentType:inType toListObject:inListObject]);
-    }else{
-        return(NO);
-    }
+	return([inAccount availableForSendingContentType:inType toContact:inContact]);
 }
 
 
@@ -816,10 +798,9 @@ static NSLock				*threadCreationLock = nil;
 	enumerator = [chatArray objectEnumerator];
 	while(chat = [enumerator nextObject]){
 		//If a chat for this object already exists
-		if([[chat uniqueChatID] isEqualToString:[inContact uniqueObjectID]]) {
-			if (!([chat listObject] == inContact)){
-				[self switchChat:chat
-					   toAccount:[[owner accountController] accountWithObjectID:[inContact accountID]]];
+		if([[chat uniqueChatID] isEqualToString:[inContact internalObjectID]]) {
+			if(!([chat listObject] == inContact)){
+				[self switchChat:chat toAccount:[inContact account]];
 			}
 			
 			break;
@@ -837,25 +818,22 @@ static NSLock				*threadCreationLock = nil;
 		 
 	}
 	if(!chat){
-		
-		AIAccount *account = [[owner accountController] accountWithObjectID:[inContact accountID]];
+		AIAccount *account = [inContact account];
 	
-		if([account conformsToProtocol:@protocol(AIAccount_Content)]){
-			//Create a new chat
-			chat = [AIChat chatForAccount:account];
-			[chat addParticipatingListObject:inContact];
-			[chatArray addObject:chat];
-
-			//Inform the account of its creation and post a notification if successful
-			if([(AIAccount<AIAccount_Content> *)account openChat:chat]){
-				[[owner notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
-			}else{
-				[chatArray removeObject:chat];
-				chat = nil;
-			}
-			
-			
+		//Create a new chat
+		chat = [AIChat chatForAccount:account];
+		[chat addParticipatingListObject:inContact];
+		[chatArray addObject:chat];
+		
+		//Inform the account of its creation and post a notification if successful
+		if([account openChat:chat]){
+			[[owner notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
+		}else{
+			[chatArray removeObject:chat];
+			chat = nil;
 		}
+		
+		
 	}
 	
 	return(chat);
@@ -891,24 +869,22 @@ static NSLock				*threadCreationLock = nil;
 	//Search for an existing chat we can use instead of creating a new one
 	chat = [self existingChatWithName:inName onAccount:account];
 	
-	if (!chat){
-		if([account conformsToProtocol:@protocol(AIAccount_Content)]){
-			//Create a new chat
-			chat = [AIChat chatForAccount:account];
-			[chat setName:inName];
-			[chatArray addObject:chat];
-			
-			if (chatCreationInfo) [chat setStatusObject:chatCreationInfo
-												 forKey:@"ChatCreationInfo"
-												 notify:NotifyNever];
-			
-			//Inform the account of its creation and post a notification if successful
-			if([(AIAccount<AIAccount_Content> *)account openChat:chat]){
-				[[owner notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
-			}else{
-				[chatArray removeObject:chat];
-				chat = nil;
-			}
+	if(!chat){
+		//Create a new chat
+		chat = [AIChat chatForAccount:account];
+		[chat setName:inName];
+		[chatArray addObject:chat];
+		
+		if (chatCreationInfo) [chat setStatusObject:chatCreationInfo
+											 forKey:@"ChatCreationInfo"
+											 notify:NotifyNever];
+		
+		//Inform the account of its creation and post a notification if successful
+		if([account openChat:chat]){
+			[[owner notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
+		}else{
+			[chatArray removeObject:chat];
+			chat = nil;
 		}
 	}
 	return(chat);
@@ -949,7 +925,7 @@ static NSLock				*threadCreationLock = nil;
         mostRecentChat = nil;
     
     //Notify the account and send out the Chat_WillClose notification
-    [(AIAccount<AIAccount_Content> *)[inChat account] closeChat:inChat];
+    [[inChat account] closeChat:inChat];
     [[owner notificationCenter] postNotificationName:Chat_WillClose object:inChat userInfo:nil];
 
     //Remove the chat
@@ -970,21 +946,21 @@ static NSLock				*threadCreationLock = nil;
 		[chat retain];
 
 		//Close down the chat on account A
-		[(AIAccount<AIAccount_Content> *)oldAccount closeChat:chat];
+		[oldAccount closeChat:chat];
 
 		//Set the account and the listObject
 		{
 			[chat setAccount:newAccount];
 			
 			//We want to keep the same destination for the chat but switch it to a listContact on the desired account.
-			AIListContact	*newContact = [[owner contactController] contactWithService:[[chat listObject] serviceID]
-																			  accountID:[[chat account] uniqueObjectID]
+			AIListContact	*newContact = [[owner contactController] contactWithService:[[chat listObject] service]
+																				account:[chat account]
 																					UID:[[chat listObject] UID]];
 			[chat setListObject:newContact];
 		}
 		
 		//Open the chat on account B
-		[(AIAccount<AIAccount_Content> *)newAccount openChat:chat];
+		[newAccount openChat:chat];
 		
 		//Clean up
 		[chat release];
@@ -997,15 +973,15 @@ static NSLock				*threadCreationLock = nil;
 	AIAccount		*newAccount = (useContactAccount ? [inContact account] : [chat account]);
 	
 	//Switch the inContact over to a contact on the new account so we send messages to the right place.
-	AIListContact	*newContact = [[owner contactController] contactWithService:[inContact serviceID]
-																	  accountID:[newAccount uniqueObjectID]
+	AIListContact	*newContact = [[owner contactController] contactWithService:[inContact service]
+																		account:newAccount
 																			UID:[inContact UID]];
 	if (newContact != [chat listObject]){
 		//Hang onto stuff until we're done
 		[chat retain];
 		
 		//Close down the chat on the account, as the account may need to perform actions such as closing a connection
-		[(AIAccount<AIAccount_Content> *)[chat account] closeChat:chat];
+		[[chat account] closeChat:chat];
 		
 		//Set to the new listContact and account as needed
 		[chat setListObject:newContact];
@@ -1013,7 +989,7 @@ static NSLock				*threadCreationLock = nil;
 		
 		
 		//Reopen the chat on the account
-		[(AIAccount<AIAccount_Content> *)[chat account] openChat:chat];
+		[[chat account] openChat:chat];
 		
 		//Clean up
 		[chat release];
@@ -1022,29 +998,24 @@ static NSLock				*threadCreationLock = nil;
 
 
 //Returns all chats with the object
-- (NSArray *)allChatsWithListObject:(AIListObject *)inObject
+- (NSArray *)allChatsWithContact:(AIListContact *)inContact
 {
     NSMutableArray	*foundChats = [NSMutableArray array];
-    NSEnumerator	*chatEnumerator;
+    NSEnumerator	*chatEnumerator = [chatArray objectEnumerator];
     AIChat			*chat;
-	NSArray			*objectArray;
 	
-	if ([inObject isKindOfClass:[AIMetaContact class]]){
-		objectArray = [(AIMetaContact *)inObject containedObjects];
+	//Scan the objects participating in each chat, looking for the requested object
+	if([inContact isKindOfClass:[AIMetaContact class]]){
+		NSArray	*objectArray = [(AIMetaContact *)inContact containedObjects];
+		while((chat = [chatEnumerator nextObject])){
+			if([[chat participatingListObjects] firstObjectCommonWithArray:objectArray]) [foundChats addObject:chat];
+		}
+		
 	}else{
-		objectArray = [NSArray arrayWithObject:inObject];
+		while((chat = [chatEnumerator nextObject])){
+			if([[chat participatingListObjects] containsObject:inContact]) [foundChats addObject:chat];
+		}
 	}
-	
-    //Scan all the open chats
-    chatEnumerator = [chatArray objectEnumerator];
-    while((chat = [chatEnumerator nextObject])){
-		NSArray			*participatingListObjects = [chat participatingListObjects];
-
-		//Scan the objects participating in this chat, looking for the requested object
-		if ([participatingListObjects firstObjectCommonWithArray:objectArray]){
-			[foundChats addObject:chat];
-        }
-    }
 
     return(foundChats);
 }
@@ -1095,21 +1066,19 @@ static NSLock				*threadCreationLock = nil;
 	AIAccount		*account;
 	
 	while(account = [enumerator nextObject]){
-		if([[inObject serviceID] isEqualToString:[[[account service] handleServiceType] identifier]]){
+		if([inObject service] == [account service]){
 			BOOL			knowsObject = NO;
 			BOOL			couldSendContent = NO;
-			AIListContact	*contactForAccount = [[owner contactController] existingContactWithService:[inObject serviceID]
-																							 accountID:[account UID]
+			AIListContact	*contactForAccount = [[owner contactController] existingContactWithService:[inObject service]
+																							   account:account
 																								   UID:[inObject UID]];
 			//Does the account know this object?
 			if(contactForAccount){
-				knowsObject = [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType
-														 toListObject:contactForAccount];
+				knowsObject = [account availableForSendingContentType:inType toContact:contactForAccount];
 			}
 			
 			//Could the account send this
-			couldSendContent = [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:inType
-														  toListObject:nil];
+			couldSendContent = [account availableForSendingContentType:inType toContact:nil];
 			
 			if((inPreferred && knowsObject) || (!inPreferred && !knowsObject && couldSendContent)){
 				[sourceAccounts addObject:account];
