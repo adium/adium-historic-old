@@ -3554,6 +3554,7 @@
 				9E6417070613C55D006AF387,
 				3404893306173DAB004D0B7E,
 				BF99B529061D74EE00BF2252,
+				6E7C19BC0623BF80008A1C99,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3864,6 +3865,8 @@
 				344ECBAE0620F323007256C6,
 				344ECBAF0620F323007256C6,
 				344ECBB00620F323007256C6,
+				6ECFABC50622370E001C7E93,
+				6E7C19BE0623BF80008A1C99,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4181,6 +4184,7 @@
 				9E6417080613C55D006AF387,
 				3404893406173DAB004D0B7E,
 				BF99B52A061D74EE00BF2252,
+				6E7C19BD0623BF80008A1C99,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4454,6 +4458,7 @@
 				4B09D5C205D5265800BC00F0,
 				3483928705E68B05002BC6C0,
 				4B5827EA0613CE9D0004BD25,
+				6ECFABC806223733001C7E93,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4609,6 +4614,7 @@
 				4B09D5C305D5265800BC00F0,
 				3483928605E68B05002BC6C0,
 				4B5827EB0613CE9D0004BD25,
+				6ECFABC906223733001C7E93,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -16373,6 +16379,10 @@
 			children = (
 				6E5A43DD061160C50078C342,
 				6E5A43DE061160C50078C342,
+				6E7C19B90623BF7F008A1C99,
+				6E7C19BA0623BF7F008A1C99,
+				6ECFABC40622370D001C7E93,
+				6E7C19BB0623BF80008A1C99,
 			);
 			isa = PBXGroup;
 			name = "Message Context Display";
@@ -16405,6 +16415,50 @@
 		};
 		6E5A43E0061160C60078C342 = {
 			fileRef = 6E5A43DE061160C50078C342;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E7C19B90623BF7F008A1C99 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DCMessageContextDisplayPreferences.h;
+			path = "Plugins/Message Context Display/DCMessageContextDisplayPreferences.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E7C19BA0623BF7F008A1C99 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DCMessageContextDisplayPreferences.m;
+			path = "Plugins/Message Context Display/DCMessageContextDisplayPreferences.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E7C19BB0623BF80008A1C99 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = MessageContextDisplayPrefs.nib;
+			path = "Plugins/Message Context Display/MessageContextDisplayPrefs.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6E7C19BC0623BF80008A1C99 = {
+			fileRef = 6E7C19B90623BF7F008A1C99;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E7C19BD0623BF80008A1C99 = {
+			fileRef = 6E7C19BA0623BF7F008A1C99;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6E7C19BE0623BF80008A1C99 = {
+			fileRef = 6E7C19BB0623BF80008A1C99;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -16502,6 +16556,51 @@
 			path = "Plugins/Away Status Window/AIAwayStatusWindowController.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		6ECFABC40622370D001C7E93 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = MessageContextDisplayDefaults.plist;
+			path = "Plugins/Message Context Display/MessageContextDisplayDefaults.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6ECFABC50622370E001C7E93 = {
+			fileRef = 6ECFABC40622370D001C7E93;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6ECFABC606223733001C7E93 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIContentContext.h;
+			path = "Frameworks/Adium Framework/AIContentContext.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6ECFABC706223733001C7E93 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIContentContext.m;
+			path = "Frameworks/Adium Framework/AIContentContext.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6ECFABC806223733001C7E93 = {
+			fileRef = 6ECFABC606223733001C7E93;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6ECFABC906223733001C7E93 = {
+			fileRef = 6ECFABC706223733001C7E93;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		6EF3F85F05EF179B0037D3CC = {
 			fileEncoding = 30;
@@ -18393,6 +18492,8 @@
 			children = (
 				4B82139D049CC3A000A8010A,
 				4B82139E049CC3A000A8010A,
+				6ECFABC606223733001C7E93,
+				6ECFABC706223733001C7E93,
 				F579392B033E74C401A8010A,
 				F5793911033E748F01A8010A,
 				4BFC5407043E509A00A8010A,

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.61 2004/04/06 02:41:01 ramoth4 Exp $
+// $Id: AIContentController.m,v 1.62 2004/04/07 05:14:02 dchoby98 Exp $
 
 #import "AIContentController.h"
 
@@ -292,6 +292,14 @@
                                                               forContentObject:inObject
 															 listObjectContext:nil
                                                               usingFilterArray:inArray]];
+		
+	} else if ([[inObject type] isEqualToString:CONTENT_CONTEXT_TYPE]){
+		//AIContentContexts have an attributed string for a message
+		[(AIContentContext *)inObject setMessage:[self _filterAttributedString:[(AIContentContext *)inObject message]
+															  forContentObject:inObject
+															 listObjectContext:nil
+															  usingFilterArray:inArray]];
+		
     } else if ([[inObject type] isEqualToString:CONTENT_STATUS_TYPE]){
 		//AIContentStatus have a string for a message
         [(AIContentStatus *)inObject setMessage:[self _filterString:[(AIContentStatus *)inObject message]
@@ -325,6 +333,13 @@
         if([inObject filterContent]){
             [self _filterContentObject:inObject usingFilterArray:incomingContentFilterArray];
         }
+
+		//Post the Chat_DidOpen notification BEFORE anything displays
+		#warning dchoby98: Another bad place to put Chat_DidOpen
+		if([inObject trackContent] && [[chat contentObjectArray] count] < 1) {
+			[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
+			NSLog(@"#### Posted Chat_DidOpen from addIncomingContentObject");
+		}
 
         //Add/Display the object
         if([inObject displayContent]){
@@ -432,11 +447,11 @@
 {
 	AIChat	*chat = [self chatWithContact:inContact initialStatus:nil];
 	if(chat) [[owner interfaceController] openChat:chat]; 
-	
+
 	#warning dchoby98: Is there a better place to post the Chat_DidOpen notification?
 	[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
-	NSLog(@"----New Chat Created: %@",chat);
-	
+	NSLog(@"#### Posted Chat_DidOpen from openChatWithContact");
+
 	return(chat);	
 }
 

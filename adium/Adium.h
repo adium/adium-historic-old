@@ -13,8 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /** 
- * $Revision: 1.34 $
- *  $Date: 2004/03/26 02:42:34 $
+ * $Revision: 1.35 $
+ *  $Date: 2004/04/07 05:14:00 $
  *  $Author#
  *
  **/
@@ -27,6 +27,7 @@
 #import "AIChat.h"
 #import "ESContactAlert.h"
 #import "AIContentMessage.h"
+#import "AIContentContext.h"
 #import "AIContentObject.h"
 #import "AIContentStatus.h"
 #import "AIContentTyping.h"
