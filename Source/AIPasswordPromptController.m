@@ -47,6 +47,9 @@
 - (void)windowDidLoad
 {
 	[[self window] center];
+	[[self window] makeKeyAndOrderFront:nil];
+	
+	[super windowDidLoad];
 }
 
 - (NSString *)savedPasswordKey
@@ -101,6 +104,11 @@
 {
 	[super windowWillClose:sender];
     [self autorelease];
+}
+
+- (void)windowDidBecomeKey:(NSNotification *)aNotification
+{
+	[[self window] makeFirstResponder:textField_password];
 }
 
 @end
