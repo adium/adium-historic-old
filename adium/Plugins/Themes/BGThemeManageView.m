@@ -95,14 +95,18 @@
 
 -(IBAction)removeTheme:(id)sender
 {
-    // bam! we get rid of that nasty theme
-    NSString *selectedThemePath = [self selectedTheme];
-    if (selectedThemePath) {
-		[[NSFileManager defaultManager] removeFileAtPath:selectedThemePath handler:self];
-		[self buildThemesList];
-		[table reloadData];
-                [self configureControlDimming];
-	}
+    NSString *warningText = [NSString stringWithFormat:@"Do you really want to permanently delete %@?", [[self selectedTheme] lastPathComponent]];
+    int returnCode = NSRunAlertPanel(@"Delete Theme", warningText, @"Delete", @"Cancel",nil);
+     if(returnCode == 1)
+     {
+         NSString *selectedThemePath = [self selectedTheme];
+         if (selectedThemePath) {
+             [[NSFileManager defaultManager] removeFileAtPath:selectedThemePath handler:self];
+             [self buildThemesList];
+             [table reloadData];
+             [self configureControlDimming];
+         }
+     }
 }
 
 -(IBAction)applyTheme:(id)sender
