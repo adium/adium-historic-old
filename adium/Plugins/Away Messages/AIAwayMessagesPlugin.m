@@ -81,7 +81,7 @@
 {
     //Remove the away status flag	
     [[owner accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
-    [[owner accountController] setProperty:nil forKey:" account:nil];
+    [[owner accountController] setProperty:nil forKey:@"Autoresponse" account:nil];
 }
 
 //Update our menu when the away status changes
