@@ -26,21 +26,21 @@ static	BOOL alreadyMoving = NO;
 
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag
 {
-	[super initWithContentRect:contentRect styleMask:aStyle backing:bufferingType defer:flag];
-    [self _init];
-	return(self);
+	self = [super initWithContentRect:contentRect styleMask:aStyle backing:bufferingType defer:flag];
+	self = [self _init];
+	return self;
 }
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    [super initWithCoder:aDecoder];
-    [self _init];
-    return(self);
+	self = [super initWithCoder:aDecoder];
+	self = [self _init];
+	return self;
 }
 - (id)init
 {
-	[super init];
-    [self _init];
-    return(self);
+	self = [super init];
+	self = [self _init];
+	return self;
 }
 
 //Observe window movement
