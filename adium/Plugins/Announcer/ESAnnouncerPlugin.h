@@ -10,6 +10,7 @@
 
 #define ANNOUNCER_DEFAULT_PREFS 	@"AnnouncerDefaults"
 #define PREF_GROUP_ANNOUNCER	@"Announcer"
+#define KEY_ANNOUNCER_ENABLED   @"Speech Enabled"
 #define KEY_ANNOUNCER_OUTGOING	@"Speak Outgoing"
 #define KEY_ANNOUNCER_INCOMING 	@"Speak Incoming"
 #define KEY_ANNOUNCER_MESSAGETEXT @"Speak Message Text"
@@ -28,6 +29,7 @@
 
     NSString 			*lastSenderString;
     
+	BOOL						speechEnabled;
     BOOL                        speakIncoming;
     BOOL                        speakOutgoing;
     BOOL                        speakMessages;

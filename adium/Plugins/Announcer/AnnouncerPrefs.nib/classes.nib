@@ -14,15 +14,21 @@
             SUPERCLASS = NSObject; 
         }, 
         {
+            ACTIONS = {closeOptions = id; openOptions = id; }; 
             CLASS = ESAnnouncerPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "checkBox_enableSpeech" = NSButton; 
                 "checkBox_incoming" = NSButton; 
                 "checkBox_messageText" = NSButton; 
                 "checkBox_outgoing" = NSButton; 
                 "checkBox_sender" = NSButton; 
                 "checkBox_status" = NSButton; 
                 "checkBox_time" = NSButton; 
+                "panel_options" = NSWindow; 
+                "pushButton_OK" = NSButton; 
+                "pushButton_cancel" = NSButton; 
+                "pushButton_options" = NSButton; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
