@@ -58,6 +58,8 @@
 
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
+if (!silent) //We do things.  If silent, don't do them.
+{
     NSMutableArray * eventActionArray =  [[[[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject] mutableCopy] autorelease];
     NSEnumerator * actionsEnumerator;
     NSDictionary * actionDict;
@@ -132,6 +134,7 @@
             }
         }
     }
+}
     return nil; //we don't change any attributes
 }
 
