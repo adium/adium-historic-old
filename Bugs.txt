@@ -72,7 +72,6 @@ Meta Contacts
     eating them, is libgaim?)
 - We aren't fetching the display names of some ICQ users when over AIM?
     (They still show up in the info, apparently)
-- AIM Passwords with question marks in them prevent libgaim from connecting?
 - Adium will remain invisible to 2nd party after a Jabber authorization confirmation (from xtapo on IRC)
     "Well, I hit grant to his auth request, and he still won't be able to see
     me." -- xtapo
