@@ -4338,20 +4338,6 @@
 			settings = {
 			};
 		};
-		349DDD6906406CBD00542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = idle.png;
-			path = "Plugins/Idle Time/idle.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349DDD6A06406CBD00542726 = {
-			fileRef = 349DDD6906406CBD00542726;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		349E2E8B07A8AF0C00EAB76A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -6523,7 +6509,6 @@
 				349DDD200640672800542726,
 				349DDD330640680600542726,
 				349DDD340640680600542726,
-				349DDD6A06406CBD00542726,
 				3401925D06406D9200192BC4,
 				4BBF41E80661194A001D31E1,
 				4BCC20AB066B9A00007C8449,
@@ -12301,7 +12286,6 @@
 				4BE8E5390483B59800A8010A,
 				BF7BF5E7052BA0EF00000202,
 				6E97F12F04A94C0100472FFF,
-				F50F253F03B042BC01A80202,
 			);
 			isa = PBXGroup;
 			name = Accounts;
@@ -15872,41 +15856,6 @@
 			isa = PBXGroup;
 			name = "Text Forcing";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BBB05E803CB2CDA00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = IdleTimePreferences.h;
-			path = "Plugins/Idle Time/IdleTimePreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BBB05E903CB2CDA00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = IdleTimePreferences.m;
-			path = "Plugins/Idle Time/IdleTimePreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BBB05EC03CB2EF500A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = IdleTimePrefs.nib;
-			path = "Plugins/Idle Time/IdleTimePrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BBB05EE03CB38FB00A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = IdleDefaultPrefs.plist;
-			path = "Plugins/Idle Time/IdleDefaultPrefs.plist";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -22834,69 +22783,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F50F253B03B042AC01A80202 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = IdleTimePlugin.h;
-			path = "Plugins/Idle Time/IdleTimePlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F50F253C03B042AC01A80202 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = IdleTimePlugin.m;
-			path = "Plugins/Idle Time/IdleTimePlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F50F253F03B042BC01A80202 = {
-			children = (
-				F50F253B03B042AC01A80202,
-				F50F253C03B042AC01A80202,
-				F50F255C03B04FB801A80202,
-				F50F255D03B04FB801A80202,
-				4BBB05E803CB2CDA00A8010A,
-				4BBB05E903CB2CDA00A8010A,
-				F50F255603B04C5B01A80202,
-				4BBB05EC03CB2EF500A8010A,
-				4BBB05EE03CB38FB00A8010A,
-				F55E2CD003B0F91F01A80202,
-			);
-			isa = PBXGroup;
-			name = "Idle Time";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F50F255603B04C5B01A80202 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = SetIdleTime.nib;
-			path = "Plugins/Idle Time/SetIdleTime.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F50F255C03B04FB801A80202 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = IdleTimeWindowController.h;
-			path = "Plugins/Idle Time/IdleTimeWindowController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F50F255D03B04FB801A80202 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = IdleTimeWindowController.m;
-			path = "Plugins/Idle Time/IdleTimeWindowController.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		F510B76D03339ED501A8010A = {
 			children = (
 				34E2A0C207AF593B006735BC,
@@ -23157,15 +23043,6 @@
 			lastKnownFileType = sourcecode.c.h;
 			name = AIPasswordPromptController.h;
 			path = Source/AIPasswordPromptController.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F55E2CD003B0F91F01A80202 = {
-			children = (
-				349DDD6906406CBD00542726,
-			);
-			isa = PBXGroup;
-			name = Images;
 			refType = 4;
 			sourceTree = "<group>";
 		};
