@@ -4624,6 +4624,8 @@
 				4B2DC06D066F705800AD5AAD,
 				7E6FDD660672B89A00B5C3D4,
 				4B01180E0679172E00FCB992,
+				4B052CA0067E39B100A43B4A,
+				4B052CA6067E39BE00A43B4A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4872,7 +4874,6 @@
 				4BD6759806001E510049CAF7,
 				4BD6759906001E510049CAF7,
 				4BD6759F06001E590049CAF7,
-				4BD675A206001E5D0049CAF7,
 				4B74D3340602641C00C21B7C,
 				4B191D8A0611C10800E8A4E7,
 				4B191D8B0611C10800E8A4E7,
@@ -4939,6 +4940,8 @@
 				4B0118110679175400FCB992,
 				4BF2E201067CAE9200743318,
 				4BF2E6BB067CB70E00743318,
+				4BB1E43F067F2CA100D1DB86,
+				4BB1E482067F2E9F00D1DB86,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5252,6 +5255,8 @@
 				4B2DC06E066F705800AD5AAD,
 				7E6FDD670672B89A00B5C3D4,
 				4B01180F0679172E00FCB992,
+				4B052CA1067E39B100A43B4A,
+				4B052CA7067E39BE00A43B4A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8167,7 +8172,6 @@
 			children = (
 				340042D005AA98C00047226F,
 				340042CF05AA98C00047226F,
-				4BA7F22405E2E1EF00ABF4FC,
 			);
 			isa = PBXGroup;
 			name = "Applescript Filters";
@@ -8911,7 +8915,7 @@
 			children = (
 				4B149D4B0678FB5300D74D43,
 				4BF2DCC7067C919300743318,
-				4B0529FB067DE01B00A43B4A,
+				4BB1E350067F2B5D00D1DB86,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -9650,20 +9654,78 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B0529FB067DE01B00A43B4A = {
-			fileType = "compiled.mach-o.dylib";
-			isa = PBXReferenceProxy;
-			path = libezv.dylib;
-			refType = 3;
-			remoteRef = 4B052AE8067DE02100A43B4A;
-			sourceTree = BUILT_PRODUCTS_DIR;
+		4B052C9B067E399300A43B4A = {
+			children = (
+				4B052C9E067E39B100A43B4A,
+				4B052C9F067E39B100A43B4A,
+				4B052CA4067E39BE00A43B4A,
+				4B052CA5067E39BE00A43B4A,
+				4BB1E43E067F2CA100D1DB86,
+			);
+			isa = PBXGroup;
+			name = "Contact Accounts";
+			refType = 4;
+			sourceTree = "<group>";
 		};
-		4B052AE8067DE02100A43B4A = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
+		4B052C9E067E39B100A43B4A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIContactAccountsPlugin.h;
+			path = "Plugins/Contact Accounts/AIContactAccountsPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B052C9F067E39B100A43B4A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIContactAccountsPlugin.m;
+			path = "Plugins/Contact Accounts/AIContactAccountsPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B052CA0067E39B100A43B4A = {
+			fileRef = 4B052C9E067E39B100A43B4A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B052CA1067E39B100A43B4A = {
+			fileRef = 4B052C9F067E39B100A43B4A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B052CA4067E39BE00A43B4A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIContactAccountsPane.h;
+			path = "Plugins/Contact Accounts/AIContactAccountsPane.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B052CA5067E39BE00A43B4A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIContactAccountsPane.m;
+			path = "Plugins/Contact Accounts/AIContactAccountsPane.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B052CA6067E39BE00A43B4A = {
+			fileRef = 4B052CA4067E39BE00A43B4A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B052CA7067E39BE00A43B4A = {
+			fileRef = 4B052CA5067E39BE00A43B4A;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B090DCD065CD50D00FF0528 = {
 			fileEncoding = 30;
@@ -10961,6 +11023,7 @@
 				343C89B005704DEC005E0632,
 				4B28907503C1D14200A8010A,
 				34C2D31006334A460018E5D2,
+				4B052C9B067E399300A43B4A,
 				F5148D9404C8B3BF018B6CC7,
 				4BD7D0CB04620D8800A8010A,
 				C4382545062E795000F5A31D,
@@ -13083,14 +13146,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BA7F22405E2E1EF00ABF4FC = {
-			isa = PBXFileReference;
-			lastKnownFileType = folder;
-			name = Scripts;
-			path = "Plugins/iTunes Integration/Scripts";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BA7F23705E2E8D100ABF4FC = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -13639,6 +13694,55 @@
 			path = "Plugins/Contact List Editor/AINewContactWindowController.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BB1E350067F2B5D00D1DB86 = {
+			fileType = "compiled.mach-o.dylib";
+			isa = PBXReferenceProxy;
+			path = libezv.dylib;
+			refType = 3;
+			remoteRef = 4BB1E43D067F2B7A00D1DB86;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4BB1E43D067F2B7A00D1DB86 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
+			remoteInfo = libezv;
+		};
+		4BB1E43E067F2CA100D1DB86 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ContactAccounts.nib;
+			path = "Plugins/Contact Accounts/ContactAccounts.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BB1E43F067F2CA100D1DB86 = {
+			fileRef = 4BB1E43E067F2CA100D1DB86;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BB1E47D067F2E9F00D1DB86 = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = Scripts;
+			path = Resources/Scripts;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BB1E482067F2E9F00D1DB86 = {
+			fileRef = 4BB1E47D067F2E9F00D1DB86;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BB1E493067F2EAC00D1DB86 = {
+			fileRef = 4BB1E47D067F2E9F00D1DB86;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BB2C23A044605CE00A8010A = {
 			fileEncoding = 4;
@@ -16597,12 +16701,6 @@
 			settings = {
 			};
 		};
-		4BD675A206001E5D0049CAF7 = {
-			fileRef = 4BA7F22405E2E1EF00ABF4FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6766C06002D6E0049CAF7 = {
 			fileRef = 4BED6DB305D5F49200ACFD49;
 			isa = PBXBuildFile;
@@ -17171,6 +17269,7 @@
 				4BF2E6B3067CB70E00743318,
 				4B24A2330482B34B00A8010A,
 				4B5829D30613D0BD0004BD25,
+				4BB1E47D067F2E9F00D1DB86,
 			);
 			isa = PBXGroup;
 			name = "Xtras (Built In)";
@@ -17187,6 +17286,7 @@
 				4BF2EA40067CB7A200743318,
 				4BF2EA41067CB7A200743318,
 				4BF2EA42067CB7A200743318,
+				4BB1E493067F2EAC00D1DB86,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,8 +9,6 @@
 #import "ESContactAlertsPlugin.h"
 #import "CSNewContactAlertWindowController.h"
 
-#define CONTACT_ALERT_WINDOW_NIB	@"ContactAlerts"
-
 @interface ESContactAlertsPane (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 @end

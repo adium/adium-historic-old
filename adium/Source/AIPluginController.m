@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.72 2004/06/04 19:20:36 evands Exp $
+//$Id: AIPluginController.m,v 1.73 2004/06/15 14:09:40 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -40,7 +40,7 @@ AIIdleAwaySortPlugin, AIIdleSortPlugin, AIIdleTimeDisplayPlugin, AILaTeXPlugin, 
 AIManualSortPlugin, AIMessageAliasPlugin, AIMessageViewSelectionPlugin, AIOfflineContactHidingPlugin, AIPlugin,
 AISCLViewPlugin, AISendingKeyPreferencesPlugin, AISpellCheckingPlugin,
 AIStandardToolbarItemsPlugin, AIStatusChangedMessagesPlugin, AIStatusCirclesPlugin,
-AITextForcingPlugin, AITextToolbarItemsPlugin, AITypingNotificationPlugin,
+AITextForcingPlugin, AITextToolbarItemsPlugin, AITypingNotificationPlugin, AIContactAccountsPlugin,
 AIVolumeControlPlugin, BGThemesPlugin, CBActionSupportPlugin, CBContactCountingDisplayPlugin,
 CBStatusMenuItemPlugin, CBURLHandlingPlugin, CSDisconnectAllPlugin, DCMessageContextDisplayPlugin, ESAddressBookIntegrationPlugin,
 ESAnnouncerPlugin, ESContactAlertsPlugin, ESContactClientPlugin, ESContactListWindowHandlingPlugin,
@@ -131,6 +131,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmotico
 //	[self loadPluginWithClass:[SHOutputDeviceControlPlugin class]];
         [self loadPluginWithClass:[SHLinkManagementPlugin class]];
         [self loadPluginWithClass:[SHBookmarksImporterPlugin class]];
+        [self loadPluginWithClass:[AIContactAccountsPlugin class]];
 //	[self loadPluginWithClass:[AISMViewPlugin class]];
 //	[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
 #endif
