@@ -43,6 +43,15 @@ static  BOOL                    imageOnRight;
 static	NSPoint					tooltipPoint;
 static	AITooltipOrientation	tooltipOrientation;
 
+static	NSColor					*titleAndBodyMarginLineColor = nil;
+
++ (void)initialize
+{
+	if (!titleAndBodyMarginLineColor){
+		titleAndBodyMarginLineColor = [[[NSColor grayColor] colorWithAlphaComponent:.7] retain];
+	}
+}
+
 //Tooltips
 + (void)showTooltipWithString:(NSString *)inString onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation
 {
@@ -241,28 +250,34 @@ static	AITooltipOrientation	tooltipOrientation;
 //  tooltipTitleRect.origin =  NSMakePoint(windowWidth/2 - tooltipTitleRect.size.width/2,TOOLTIP_INSET + tooltipBodyRect.size.height); //center the title
     tooltipTitleRect.origin =  NSMakePoint(TOOLTIP_INSET,titleAndBodyMargin + TOOLTIP_INSET + tooltipBodyRect.size.height); //left
     tooltipBodyRect.origin =  NSMakePoint(TOOLTIP_INSET, TOOLTIP_INSET);
-    
+
     if (tooltipImage) {
+		BOOL imageIsTallerThanTitle;
+		
         //if the image isn't going to fit without overlapping the title, expand the window's width
         float neededWidth = imageSize.width + tooltipTitleRect.size.width + (TOOLTIP_INSET*3);
         if (neededWidth > windowWidth) {
             windowWidth = neededWidth;   
         }
-        //The image should not overlap the body of the tooltip, so increase the window height (the body has an origin at the bottom-left so will move with the window)
-        if (IMAGE_DIMENSION > tooltipTitleRect.size.height) {
-            windowHeight = titleAndBodyMargin + imageSize.height + tooltipBodyRect.size.height + TOOLTIP_INSET*2;
+		
+		imageIsTallerThanTitle = (IMAGE_DIMENSION > tooltipTitleRect.size.height);
+        if (imageIsTallerThanTitle) {
+			//The image should not overlap the body of the tooltip, so increase the window height (the body has an origin at the bottom-left so will move with the window)
+			windowHeight = titleAndBodyMargin + imageSize.height + tooltipBodyRect.size.height + TOOLTIP_INSET*2;
+			
+			//If the image is taller than the title, shift the title up 
+			tooltipTitleRect.origin.y = (windowHeight - (imageSize.height)/2 - tooltipTitleRect.size.height/2);
         }
-        
+
         if(imageOnRight) {
-            //recenter the title to be between the left of the window and the left of the image
-            //tooltipTitleRect.origin = NSMakePoint(((windowWidth - imageSize.width - tooltipTitleRect.size.width)/2 - TOOLTIP_INSET),tooltipBodyRect.size.height + TOOLTIP_INSET + (imageSize.height)/2 - tooltipTitleRect.size.height/2);
-            tooltipTitleRect.origin = NSMakePoint(TOOLTIP_INSET,windowHeight - (imageSize.height)/2 - tooltipTitleRect.size.height/2);
+            //Recenter the title to be between the left of the window and the left of the image
+			tooltipTitleRect.origin.x = TOOLTIP_INSET;
+
             [view_tooltipImage setFrameOrigin:NSMakePoint(windowWidth - imageSize.width - TOOLTIP_INSET,windowHeight - imageSize.height - TOOLTIP_INSET)];
         } else {
-            //recenter the title to be between the right of the image and the right of the window
-            //tooltipTitleRect.origin = NSMakePoint(((windowWidth + imageSize.width - tooltipTitleRect.size.width)/2 + TOOLTIP_INSET),tooltipBodyRect.size.height + TOOLTIP_INSET + (imageSize.height)/2 - tooltipTitleRect.size.height/2);
-//            tooltipTitleRect.origin = NSMakePoint((imageSize.width + TOOLTIP_INSET * 2),tooltipBodyRect.size.height + TOOLTIP_INSET*2 + (imageSize.height)/2 - tooltipTitleRect.size.height/2);
-            tooltipTitleRect.origin = NSMakePoint((imageSize.width + TOOLTIP_INSET * 2),windowHeight - (imageSize.height)/2 - tooltipTitleRect.size.height/2);
+            //Recenter the title to be between the right of the image and the right of the window
+			tooltipTitleRect.origin.x = (imageSize.width + TOOLTIP_INSET * 2);
+
             [view_tooltipImage setFrameOrigin:NSMakePoint(TOOLTIP_INSET,windowHeight - imageSize.height - TOOLTIP_INSET)];
         }
     }
@@ -288,7 +303,7 @@ static	AITooltipOrientation	tooltipOrientation;
     //Draw the dividing line
     if (titleAndBodyMargin) {
         [[tooltipWindow contentView] lockFocus];
-        [[[NSColor grayColor] colorWithAlphaComponent:.7] set];
+        [titleAndBodyMarginLineColor set];
         [NSBezierPath setDefaultLineWidth:0.5];
         [NSBezierPath strokeLineFromPoint:NSMakePoint(TOOLTIP_INSET,titleAndBodyMargin/2 + tooltipBodyRect.size.height + 4)
                                   toPoint:NSMakePoint(windowWidth - TOOLTIP_INSET,titleAndBodyMargin/2 + tooltipBodyRect.size.height + 4)];
