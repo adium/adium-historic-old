@@ -53,26 +53,33 @@
 //Navigate outline view with the keyboard, send select actions to delegate
 - (void)keyDown:(NSEvent *)theEvent
 {
-    if(!([theEvent modifierFlags] & NSCommandKeyMask)){
-		if([theEvent keyCode] == NSDeleteFunctionKey || [theEvent keyCode] == 127){ //Delete
+	if(!([theEvent modifierFlags] & NSCommandKeyMask)){
+		
+		NSString	*charString = [theEvent charactersIgnoringModifiers];
+		unichar		pressedChar = 0;
+		
+		//Get the pressed character
+		if([charString length] == 1) pressedChar = [charString characterAtIndex:0];
+		
+    	if(pressedChar == NSDeleteFunctionKey || pressedChar == NSBackspaceCharacter || pressedChar == NSDeleteCharacter){ //Delete
 			if([[self dataSource] respondsToSelector:@selector(outlineViewDeleteSelectedRows:)]){
 				[[self dataSource] outlineViewDeleteSelectedRows:self];
 			}
 			
-		}else if([theEvent keyCode] == 36){ //Enter or return
+		}else if(pressedChar == NSCarriageReturnCharacter || pressedChar == NSEnterCharacter){ //Enter or return
 			//doubleAction is NULL by default
 			SEL doubleActionSelector = [self doubleAction];
 			if (doubleActionSelector){
 				[[self delegate] performSelector:doubleActionSelector withObject:self];
 			}
 			
-        }else if([theEvent keyCode] == 123){ //left
+        }else if(pressedChar == NSLeftArrowFunctionKey){ //left
             id 	object = [self itemAtRow:[self selectedRow]];
             if(object && [self isExpandable:object] && [self isItemExpanded:object]){
 				[self collapseItem:object];
             }
 			
-        }else if([theEvent keyCode] == 124){ //right
+        }else if(pressedChar == NSRightArrowFunctionKey){ //right
             id 	object = [self itemAtRow:[self selectedRow]];
             if(object && [self isExpandable:object] && ![self isItemExpanded:object]){
 				[self expandItem:object];
