@@ -138,7 +138,7 @@
 				//gaimAlias - this may be either a distinct name ("Friendly Name" for example) or a formatted UID
 				{
 					NSString *gaimAlias = [NSString stringWithUTF8String:gaim_get_buddy_alias(buddy)];
-					if ([[gaimAlias compactedString] isEqualToString:UID]) {
+					if ([[gaimAlias compactedString] isEqualToString:[theContact UID]]) {
 						[theContact setStatusObject:gaimAlias
 											 forKey:@"Formatted UID"
 											 notify:NO];
