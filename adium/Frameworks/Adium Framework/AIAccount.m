@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.52 2004/03/28 23:35:11 evands Exp $
+// $Id: AIAccount.m,v 1.53 2004/04/13 20:27:39 evands Exp $
 
 #import "AIAccount.h"
 
@@ -397,8 +397,6 @@
 													 selector:@selector(autoReconnectTimer:)
 													 userInfo:nil
 													  repeats:NO] retain];
-	
-    NSLog(@"Auto-Reconnect in %i seconds",delay);
 }
 
 //Perform the auto-reconnect
@@ -413,7 +411,9 @@
     if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue] &&
 	   ![[self statusObjectForKey:@"Online"] boolValue] && ![[self statusObjectForKey:@"Connecting"] boolValue]){
         NSLog(@"Attempting Auto-Reconnect");
-        [self connect];
+		[self setPreference:[NSNumber numberWithBool:YES] 
+					 forKey:@"Online" 
+					  group:GROUP_ACCOUNT_STATUS];
     }
 }
 

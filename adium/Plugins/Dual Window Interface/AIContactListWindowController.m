@@ -259,7 +259,6 @@
 					newFrame.origin.y = oldFrame.origin.y;
 				}
 				
-#warning Evan: I disabled contact list resizing animation. IMO, the animation does not look better and is much slower.
 				//Resize the window
 				[[self window] setFrame:newFrame display:YES animate:NO];
 				

@@ -74,6 +74,9 @@
 //Preference view is closing
 - (void)viewWillClose
 {
+	[[adium contactController] unregisterListObjectObserver:self];
+	[[adium notificationCenter] removeObserver:self];
+	
 	//Halt any incomplete timers
 	[responderChainTimer invalidate];
 	[responderChainTimer release];
@@ -82,9 +85,8 @@
 	//Get any final changes to the UID field
 	[textField_accountName fireImmediately];
 	
-    [[adium contactController] unregisterListObjectObserver:self];
+	[configuredForAccount release]; configuredForAccount = nil;
     [accountViewController release]; accountViewController = nil;
-    [[adium notificationCenter] removeObserver:self];
 }
 
 
@@ -99,7 +101,7 @@
 	}
 
 	//Configure for the account
-	configuredForAccount = inAccount;
+	[configuredForAccount release]; configuredForAccount = [inAccount retain];
 	[accountViewController configureForAccount:inAccount];
 	[self enableDisableControls];
 	[self updateAccountConnectionProgress];

@@ -32,4 +32,13 @@
 														   attachmentsAsText:YES]));
 }
 
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
+{
+	if (([disconnectionError rangeOfString:@"Incorrect nickname or password."].location != NSNotFound)) {
+		[[adium accountController] forgetPasswordForAccount:self];
+	}
+	
+	return YES;
+}
+
 @end

@@ -20,6 +20,7 @@
                 "scrollView_messages" = NSView; 
                 "scrollView_outgoingView" = NSScrollView; 
                 "scrollView_userList" = AIAutoScrollView; 
+                "splitView_outgoingView" = NSSplitView; 
                 "tableView_userList" = NSTableView; 
                 "textView_outgoing" = AIMessageEntryTextView; 
                 "toolbar_bottom" = AIMiniToolbar; 

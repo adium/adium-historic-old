@@ -495,8 +495,8 @@
         [self openChat:[object chat]];
     }
 	
-    //Increase the handle's unviewed count (If it's not the active container)
-    if(messageTabContainer && messageTabContainer != activeContainer){
+    //Increase the contacts unviewed count (If it's not the active container and is the listObject of this cat)
+    if(messageTabContainer && messageTabContainer != activeContainer && ([[object chat] listObject]==[object source])){
         [self _increaseUnviewedContentOfListObject:[object source]];
     }
 }
@@ -512,14 +512,13 @@
 - (void)openChat:(AIChat *)inChat
 {
     AIMessageTabViewItem	*messageTabContainer = nil;
-    AIListObject		*listObject;
+//    AIListObject		*listObject;
 	
     //Check for an existing message container with this list object
-    if(listObject = [inChat listObject]){
-        messageTabContainer = [self _messageTabForListObject:listObject];
-		
-        //If one already exists, we want to use it for this new chat
-        if(messageTabContainer){
+ //   if(listObject = [inChat listObject]){
+ //       messageTabContainer = [self _messageTabForListObject:listObject];
+      //If one already exists, we want to use it for this new chat
+//        if(messageTabContainer){
 			//            [[messageTabContainer messageViewController] setChat:inChat];
 			//
 			//            //Honor any temporary preference override for window spawning
@@ -528,9 +527,12 @@
 			//            }
 			
 			//            [messageTabContainer makeActive:nil];
-        }
-    }
-    
+//        }
+  //  }
+#warning Evan: Potential problem: We now use the chat instead of the listobject to check for a unique tab.  Any problems?
+	//Use the current message tab for this chat if one exists
+	messageTabContainer = [self _messageTabForChat:inChat];
+	
     //Create a tab for this chat
     if(!messageTabContainer){
         if(forceIntoNewWindow || forceIntoTab){

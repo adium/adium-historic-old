@@ -76,9 +76,11 @@
 {
 	if (([disconnectionError rangeOfString:@"signed on from another location"].location != NSNotFound)) {
 		return NO;
-	}else{
-		return YES;
+	}else if (([disconnectionError rangeOfString:@"Type your e-mail address and password correctly"].location != NSNotFound)) {
+		[[adium accountController] forgetPasswordForAccount:self];
 	}
+	
+	return YES;
 }
 
 #pragma mark Encoding

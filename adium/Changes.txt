@@ -4,18 +4,24 @@ Version 0.52
 - Message history - when a chat window opens, display a specified number of lines from previous conversation(s) with that person
 - Added proxy connect options to Yahoo! accounts
 - Added proxy connect, host, port, connect via, resource, and encryption options to Jabber accounts
+- Fixed Jabber message sending and receiving (formatting is not yet supported)
+- Fixed MSN and Yahoo reconnect behavior to not attempt a reconnect if you sign on from another location
+- An attempt to connect with an invalid password now reprompts for a correct password
 - Fixed address book integration for contacts with spaces in their screennames
+- Fixed retrieval of AIM away messages and profiles which contain non-Roman characters
 - Fixed autocompletion in the New Message window
 - Fixed issues related to the applescript-based substitutions
 - Fixed a crash when editing saved away messages
-- Fixed a potential crash when deleting a new account
+- Fixed a crash when deleting a new account
 - Fixed a crash when dragging text across the message window tabs
 - Fixed a crash if an improperly formed emoticon pack was installed
 - Fixed a crash when going away automatically after a certain amount of time idle.
-- Fixed several crashes when running in OS X 10.2
-- Version checking improvements
+- Fixed a crash if an invalid move was attempted in games
+- Fixed several crashes specific to running in OS X 10.2
+- Version checking improvements: Inform the user if the attempt to check for the latest version failed
 - No longer show a blank profile when an AIM account attempts to get the profile of an AOL account (which can not be done)
-- Miscellaneous cosmetic and speed improvements
+- Speed improvements: launch time, creation of new accounts
+- Cosmetic improvements to the account preferences
 
 Version 0.51 (4/08/2004)
 - Adium now works in 10.2 (Fixed crash on launch in 10.2)
