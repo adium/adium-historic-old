@@ -147,6 +147,11 @@
 	return [currentChatsController activeChat];
 }
 
+- (CSCurrentChatsListViewController*)currentChatsController
+{
+	return currentChatsController;
+}
+
 #pragma mark Delegate Methods
 
 - (BOOL)windowShouldClose:(id)sender

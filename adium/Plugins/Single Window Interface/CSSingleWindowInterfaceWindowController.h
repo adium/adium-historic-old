@@ -25,6 +25,7 @@
 - (void)setChat:(AIChat *)inChat;
 - (void)closeChat:(AIChat *)inChat;
 - (AIChat*)activeChat;
+- (CSCurrentChatsListViewController*)currentChatsController;
 - (void)collapseContactList:(id)sender;
 
 @end
