@@ -1,6 +1,13 @@
 {
     IBClasses = (
         {
+            ACTIONS = {cancel = id; okay = id; }; 
+            CLASS = AIAccountSetupConnectionView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"view_proxySettings" = NSView; }; 
+            SUPERCLASS = AIAccountSetupView; 
+        }, 
+        {
             ACTIONS = {okay = id; }; 
             CLASS = AIAccountSetupEditAccountView; 
             LANGUAGE = ObjC; 
@@ -19,7 +26,7 @@
             SUPERCLASS = AIAccountSetupView; 
         }, 
         {
-            ACTIONS = {cancel = id; }; 
+            ACTIONS = {cancel = id; okay = id; }; 
             CLASS = AIAccountSetupNewAccountView; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -58,6 +65,7 @@
             CLASS = AIAccountSetupWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "view_connection" = AIAccountSetupView; 
                 "view_editAccount" = AIAccountSetupView; 
                 "view_newAccount" = AIAccountSetupView; 
                 "view_overview" = AIAccountSetupView; 

@@ -24,10 +24,11 @@
 
 	AIAccountViewController			*accountViewController;
 	
-	AIService			*service;
+	AIAccount						*account;
 }
 
-- (void)configureForService:(AIService *)inService;
+- (void)configureForAccount:(AIAccount *)inAccount;
 - (IBAction)cancel:(id)sender;
+- (IBAction)okay:(id)sender;
 
 @end

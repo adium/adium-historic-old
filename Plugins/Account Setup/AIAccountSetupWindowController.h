@@ -19,8 +19,10 @@
 	IBOutlet	AIAccountSetupView	*view_overview;
 	IBOutlet	AIAccountSetupView	*view_newAccount;
 	IBOutlet	AIAccountSetupView	*view_editAccount;
+	IBOutlet	AIAccountSetupView	*view_connection;
 	
 	AIAccountSetupView				*activeView;
+	AIAccount						*newAccount;
 }
 
 + (AIAccountSetupWindowController *)accountSetupWindowController;

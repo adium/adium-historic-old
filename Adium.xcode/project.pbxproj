@@ -6300,6 +6300,8 @@
 				4B360F370785D1FD00650101,
 				4B360F390785D1FD00650101,
 				34A1A74D07863132005FA1A5,
+				4BE35BA80787183600D1130E,
+				4BE35BE20787267B00D1130E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6625,6 +6627,7 @@
 				E03E2FF20785F02E007E75C3,
 				E03E2FF30785F02E007E75C3,
 				E03E2FF40785F02E007E75C3,
+				4BE35BFD0787271100D1130E,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6885,6 +6888,8 @@
 				4B360F380785D1FD00650101,
 				4B360F3A0785D1FD00650101,
 				34A1A74C07863132005FA1A5,
+				4BE35BA90787183600D1130E,
+				4BE35BE30787267B00D1130E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12258,6 +12263,8 @@
 				4B360F340785D1FD00650101,
 				4B360F350785D1FD00650101,
 				4B360F360785D1FD00650101,
+				4BE35BA60787183600D1130E,
+				4BE35BA70787183600D1130E,
 			);
 			isa = PBXGroup;
 			name = "Setup Views";
@@ -12296,10 +12303,13 @@
 		};
 		4B5041990783189D005490C8 = {
 			children = (
-				4B95956D076E072C0090C905,
-				4B95956E076E072C0090C905,
 				4B959571076E072C0090C905,
 				4B959572076E072C0090C905,
+				4B95956D076E072C0090C905,
+				4B95956E076E072C0090C905,
+				4BE35BE00787267B00D1130E,
+				4BE35BE10787267B00D1130E,
+				4BE35BFC0787271100D1130E,
 			);
 			isa = PBXGroup;
 			name = Accessories;
@@ -17010,6 +17020,80 @@
 		};
 		4BDF2CA5061E378400EA75C5 = {
 			fileRef = 4BDF2C91061E376C00EA75C5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE35BA60787183600D1130E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAccountSetupConnectionView.h;
+			path = "Plugins/Account Setup/AIAccountSetupConnectionView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BE35BA70787183600D1130E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAccountSetupConnectionView.m;
+			path = "Plugins/Account Setup/AIAccountSetupConnectionView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BE35BA80787183600D1130E = {
+			fileRef = 4BE35BA60787183600D1130E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE35BA90787183600D1130E = {
+			fileRef = 4BE35BA70787183600D1130E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE35BE00787267B00D1130E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAccountProxySettings.h;
+			path = "Plugins/Account Setup/AIAccountProxySettings.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BE35BE10787267B00D1130E = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAccountProxySettings.m;
+			path = "Plugins/Account Setup/AIAccountProxySettings.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BE35BE20787267B00D1130E = {
+			fileRef = 4BE35BE00787267B00D1130E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE35BE30787267B00D1130E = {
+			fileRef = 4BE35BE10787267B00D1130E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE35BFC0787271100D1130E = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = AccountProxy.nib;
+			path = "Plugins/Account Setup/AccountProxy.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BE35BFD0787271100D1130E = {
+			fileRef = 4BE35BFC0787271100D1130E;
 			isa = PBXBuildFile;
 			settings = {
 			};
