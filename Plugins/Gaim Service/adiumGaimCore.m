@@ -28,6 +28,8 @@
 #import "adiumGaimSignals.h"
 #import "adiumGaimWebcam.h"
 
+#import <AIUtilities/AIFileManagerAdditions.h>
+
 #pragma mark Debug
 // Debug ------------------------------------------------------------------------------------------------------
 #if (GAIM_DEBUG)
