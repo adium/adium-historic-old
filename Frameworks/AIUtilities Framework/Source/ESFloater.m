@@ -21,10 +21,10 @@
 
 @implementation ESFloater
 
-//
+//Because the floater can control its own display, it retains itself and releases when it closes.
 + (id)floaterWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask
 {
-    return [[[self alloc] initWithImage:inImage styleMask:styleMask] autorelease];
+    return [[self alloc] initWithImage:inImage styleMask:styleMask];
 }
 
 //
