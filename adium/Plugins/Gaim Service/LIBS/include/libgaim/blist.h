@@ -119,6 +119,7 @@ struct _GaimContact {
 	int currentsize;	    /**< The number of buddies in this contact corresponding to online accounts */
 	int online;			    /**< The number of buddies in this contact who are currently online */
 	GaimBuddy *priority;    /**< The "top" buddy for this contact */
+	int score;                             /**< The priority score. */
 };
 
 
@@ -378,6 +379,15 @@ void gaim_buddy_set_icon(GaimBuddy *buddy, GaimBuddyIcon *icon);
 GaimBuddyIcon *gaim_buddy_get_icon(const GaimBuddy *buddy);
 
 /**
+ * Returns a buddy's contact.
+ *
+ * @param buddy The buddy.
+ *
+ * @return The buddy's contact.
+ */
+GaimContact *gaim_buddy_get_contact(GaimBuddy *buddy);
+
+/**
  * Adds a new buddy to the buddy list.
  *
  * The buddy will be inserted right after node or prepended to the
@@ -438,9 +448,9 @@ void gaim_blist_add_contact(GaimContact *contact, GaimGroup *group, GaimBlistNod
  * All of the buddies from source will be moved to target
  *
  * @param source  The contact to merge
- * @param target  The contact to be merged into
+ * @param node    The place to merge to (a buddy or contact)
  */
-void gaim_blist_merge_contact(GaimContact *source, GaimContact *target);
+void gaim_blist_merge_contact(GaimContact *source, GaimBlistNode *node);
 
 /**
  * Returns the highest priority buddy for a given contact.

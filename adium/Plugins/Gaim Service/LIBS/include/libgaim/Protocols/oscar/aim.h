@@ -79,6 +79,10 @@ typedef fu16_t flap_seqnum_t;
 #define TRUE (!FALSE)
 #endif
 
+#ifndef bool
+#define bool fu8_t
+#endif
+
 /* 
  * Current Maximum Length for Screen Names (not including NULL) 
  *
@@ -205,6 +209,15 @@ struct client_info_s {
 	"us", "en", \
 }
 
+#define CLIENTINFO_AIM_5_5_3415 { \
+	"AOL Instant Messenger, version 5.5.3415/WIN32", \
+	0x0109, \
+	0x0005, 0x0005, \
+	0x0000, 0x0057, \
+	0x000000ef, \
+	"us", "en", \
+}
+
 #define CLIENTINFO_ICHAT_1_0 { \
 	"Apple iChat", \
 	0x311a, \
@@ -243,7 +256,7 @@ struct client_info_s {
 	"us", "en", \
 }
 
-#define CLIENTINFO_ICQBasic_14_3_1068 { \
+#define CLIENTINFO_ICQBASIC_14_3_1068 { \
 	"ICQBasic", \
 	0x010a, \
 	0x0014, 0x0003, \
@@ -252,7 +265,7 @@ struct client_info_s {
 	"us", "en", \
 }
 
-#define CLIENTINFO_Netscape_7_0_1 { \
+#define CLIENTINFO_NETSCAPE_7_0_1 { \
 	"Netscape 2000 an approved user of AOL Instant Messenger (SM)", \
 	0x1d0d, \
 	0x0007, 0x0000, \
@@ -365,12 +378,6 @@ typedef struct aim_msgcookie_s {
 	struct aim_msgcookie_s *next;
 } aim_msgcookie_t;
 
-/* Values for sess->flags */
-#define AIM_SESS_FLAGS_SNACLOGIN         0x00000001
-#define AIM_SESS_FLAGS_XORLOGIN          0x00000002
-#define AIM_SESS_FLAGS_NONBLOCKCONNECT   0x00000004
-#define AIM_SESS_FLAGS_DONTTIMEOUTONICBM 0x00000008
-
 /*
  * AIM Session: The main client-data interface.  
  *
@@ -426,7 +433,7 @@ typedef struct aim_session_s {
 		char password[128];
 	} socksproxy;
 
-	fu32_t flags; /* AIM_SESS_FLAGS_ */
+	bool nonblocking;
 
 	int debug;
 	void (*debugcb)(struct aim_session_s *sess, int level, const char *format, va_list va); /* same as faim_debugging_callback_t */
@@ -447,7 +454,8 @@ typedef struct aim_session_s {
 
 	struct {
 		struct aim_userinfo_s *userinfo;
-		struct userinfo_node *request_queue;
+		struct userinfo_node *torequest;
+		struct userinfo_node *requested;
 		int waiting_for_response;
 	} locate;
 
@@ -546,7 +554,6 @@ faim_export int aim_clientready(aim_session_t *sess, aim_conn_t *conn);
 faim_export int aim_sendflapver(aim_session_t *sess, aim_conn_t *conn);
 faim_export int aim_request_login(aim_session_t *sess, aim_conn_t *conn, const char *sn);
 faim_export int aim_send_login(aim_session_t *, aim_conn_t *, const char *, const char *, struct client_info_s *, const char *key);
-faim_export int aim_encode_password_md5(const char *password, const char *key, fu8_t *digest);
 faim_export void aim_purge_rxqueue(aim_session_t *);
 faim_export void aim_cleansnacs(aim_session_t *, int maxage);
 
@@ -577,7 +584,7 @@ faim_export int aim_conn_isconnecting(aim_conn_t *conn);
 
 typedef void (*faim_debugging_callback_t)(aim_session_t *sess, int level, const char *format, va_list va);
 faim_export int aim_setdebuggingcb(aim_session_t *sess, faim_debugging_callback_t);
-faim_export void aim_session_init(aim_session_t *, fu32_t flags, int debuglevel);
+faim_export void aim_session_init(aim_session_t *, bool nonblocking, int debuglevel);
 faim_export void aim_session_kill(aim_session_t *);
 faim_export void aim_setupproxy(aim_session_t *sess, const char *server, const char *username, const char *password);
 faim_export aim_conn_t *aim_getconn_type(aim_session_t *, int type);
@@ -586,8 +593,9 @@ faim_export aim_conn_t *aim_getconn_fd(aim_session_t *, int fd);
 
 
 
-/* service.c */
+/* 0x0001 - service.c */
 faim_export int aim_srv_setavailmsg(aim_session_t *sess, char *msg);
+faim_export int aim_srv_setidle(aim_session_t *sess, fu32_t idletime);
 
 
 
@@ -606,15 +614,12 @@ faim_export int aim_srv_setavailmsg(aim_session_t *sess, char *msg);
 faim_export int aim_sendpauseack(aim_session_t *sess, aim_conn_t *conn);
 faim_export int aim_nop(aim_session_t *, aim_conn_t *);
 faim_export int aim_flap_nop(aim_session_t *sess, aim_conn_t *conn);
-faim_export int aim_bos_setidle(aim_session_t *, aim_conn_t *, fu32_t);
 faim_export int aim_bos_changevisibility(aim_session_t *, aim_conn_t *, int, const char *);
-faim_export int aim_bos_setbuddylist(aim_session_t *, aim_conn_t *, const char *);
 faim_export int aim_bos_setgroupperm(aim_session_t *, aim_conn_t *, fu32_t mask);
 faim_export int aim_bos_setprivacyflags(aim_session_t *, aim_conn_t *, fu32_t);
 faim_export int aim_reqpersonalinfo(aim_session_t *, aim_conn_t *);
 faim_export int aim_reqservice(aim_session_t *, aim_conn_t *, fu16_t);
 faim_export int aim_bos_reqrights(aim_session_t *, aim_conn_t *);
-faim_export int aim_bos_reqbuddyrights(aim_session_t *, aim_conn_t *);
 faim_export int aim_setextstatus(aim_session_t *sess, fu32_t status);
 
 #define AIM_CLIENTTYPE_UNKNOWN  0x0000
@@ -1032,7 +1037,8 @@ typedef struct aim_userinfo_s {
 #define AIM_CAPS_SECUREIM		0x00200000
 #define AIM_CAPS_SMS			0x00400000
 #define AIM_CAPS_GENERICUNKNOWN	0x00800000
-#define AIM_CAPS_LAST			0x01000000
+#define AIM_CAPS_VIDEO			0x01000000
+#define AIM_CAPS_LAST			0x02000000
 
 #define AIM_SENDMEMBLOCK_FLAG_ISREQUEST  0
 #define AIM_SENDMEMBLOCK_FLAG_ISHASH     1
@@ -1066,7 +1072,8 @@ struct aim_invite_priv {
 faim_export aim_userinfo_t *aim_locate_finduserinfo(aim_session_t *sess, const char *sn);
 
 /* 0x0002 */ faim_export int aim_locate_reqrights(aim_session_t *sess);
-/* 0x0004 */ faim_export int aim_locate_setprofile(aim_session_t *sess, const char *profile_encoding, const char *profile, const int profile_len, const char *awaymsg_encoding, const char *awaymsg, const int awaymsg_len, fu32_t caps);
+/* 0x0004 */ faim_export int aim_locate_setprofile(aim_session_t *sess, const char *profile_encoding, const char *profile, const int profile_len, const char *awaymsg_encoding, const char *awaymsg, const int awaymsg_len);
+/* 0x0004 */ faim_export int aim_locate_setcaps(aim_session_t *sess, fu32_t caps);
 /* 0x0005 */ faim_export int aim_locate_getinfo(aim_session_t *sess, const char *, fu16_t);
 /* 0x0009 */ faim_export int aim_locate_setdirinfo(aim_session_t *sess, const char *first, const char *middle, const char *last, const char *maiden, const char *nickname, const char *street, const char *city, const char *state, const char *zip, int country, fu16_t privacy);
 /* 0x000b */ faim_export int aim_locate_000b(aim_session_t *sess, const char *sn);
@@ -1076,10 +1083,12 @@ faim_export aim_userinfo_t *aim_locate_finduserinfo(aim_session_t *sess, const c
 
 
 /* 0x0003 - buddylist.c */
-/* 0x0004 */ faim_export int aim_add_buddy(aim_session_t *, aim_conn_t *, const char *);
-/* 0x0005 */ faim_export int aim_remove_buddy(aim_session_t *, aim_conn_t *, const char *);
-/* 0x000b */ faim_export int aim_sendbuddyoncoming(aim_session_t *sess, aim_conn_t *conn, aim_userinfo_t *info);
-/* 0x000c */ faim_export int aim_sendbuddyoffgoing(aim_session_t *sess, aim_conn_t *conn, const char *sn);
+/* 0x0002 */ faim_export int aim_buddylist_reqrights(aim_session_t *, aim_conn_t *);
+/* 0x0004 */ faim_export int aim_buddylist_set(aim_session_t *, aim_conn_t *, const char *);
+/* 0x0004 */ faim_export int aim_buddylist_addbuddy(aim_session_t *, aim_conn_t *, const char *);
+/* 0x0005 */ faim_export int aim_buddylist_removebuddy(aim_session_t *, aim_conn_t *, const char *);
+/* 0x000b */ faim_export int aim_buddylist_oncoming(aim_session_t *sess, aim_conn_t *conn, aim_userinfo_t *info);
+/* 0x000c */ faim_export int aim_buddylist_offgoing(aim_session_t *sess, aim_conn_t *conn, const char *sn);
 
 
 
@@ -1226,6 +1235,7 @@ faim_export int aim_ssi_deletelist(aim_session_t *sess);
 faim_export int aim_ssi_setpermdeny(aim_session_t *sess, fu8_t permdeny, fu32_t vismask);
 faim_export int aim_ssi_setpresence(aim_session_t *sess, fu32_t presence);
 faim_export int aim_ssi_seticon(aim_session_t *sess, fu8_t *iconsum, fu16_t iconsumlen);
+faim_export int aim_ssi_delicon(aim_session_t *sess);
 
 
 
@@ -1341,8 +1351,8 @@ struct aim_emailinfo {
 	struct aim_emailinfo *next;
 };
 
-faim_export int aim_email_sendcookies(aim_session_t *sess, aim_conn_t *conn);
-faim_export int aim_email_activate(aim_session_t *sess, aim_conn_t *conn);
+faim_export int aim_email_sendcookies(aim_session_t *sess);
+faim_export int aim_email_activate(aim_session_t *sess);
 
 
 

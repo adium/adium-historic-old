@@ -271,7 +271,7 @@ FILE *gaim_mkstemp(char **path);
 /**
  * Checks if the given program name is valid and executable.
  *
- * @parm program The file name of the application.
+ * @param program The file name of the application.
  *
  * @return True if the program is runable.
  */
@@ -302,11 +302,12 @@ char *gaim_fd_get_ip(int fd);
  * g_strdup() it. Also, calling normalize() twice in the same line
  * will lead to problems.
  *
- * @param str The string to normalize.
+ * @param account  The account the string belongs to.
+ * @param str      The string to normalize.
  *
  * @return A pointer to the normalized version stored in a static buffer.
  */
-const char *gaim_normalize(const char *str);
+const char *gaim_normalize(const GaimAccount *account, const char *str);
 
 /**
  * Looks for %n, %d, or %t in a string, and replaces them with the
@@ -369,11 +370,11 @@ char *gaim_strdup_withhtml(const char *src);
 char *gaim_str_add_cr(const char *str);
 
 /**
- * Strips all linefeeds from a string.
+ * Strips all carriage returns from a string.
  *
- * @param str The string to strip linefeeds from.
+ * @param str The string to strip carriage returns from.
  */
-void gaim_str_strip_linefeed(char *str);
+void gaim_str_strip_cr(char *str);
 
 /**
  * Given a string, this replaces one substring with another
@@ -505,6 +506,16 @@ char *gaim_utf8_try_convert(const char *str);
  *          1 if @a is greater than @a b.
  */
 int gaim_utf8_strcasecmp(const char *a, const char *b);
+
+/**
+ * Checks for messages starting with "/me "
+ *
+ * @param message The message to check
+ * @param len     The message length, or -1
+ *
+ * @return TRUE if it starts with /me, and it has been removed, otherwise FALSE
+ */
+gboolean gaim_message_meify(char *message, size_t len);
 
 /*@}*/
 
