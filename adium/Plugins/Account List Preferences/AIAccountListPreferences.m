@@ -44,10 +44,16 @@
     return(AIPref_Accounts);
 }
 - (NSString *)label{
-    return(@"Accounts");
+    return(AILocalizedString(@"Accounts",nil));
 }
 - (NSString *)nibName{
     return(@"AccountPrefView");
+}
+
+//Sort an array of services alphabetically by their description
+int alphabeticalServiceSort(id service1, id service2, void *context)
+{
+	return [(NSString *)[service1 description] caseInsensitiveCompare:(NSString *)[service2 description]];
 }
 
 //Configure the preference view
@@ -75,16 +81,24 @@
     
     //Configure the service list
     [popupMenu_serviceList removeAllItems];
-    enumerator = [[[adium accountController] availableServices] objectEnumerator];
+	enumerator = [[[[adium accountController] availableServices] sortedArrayUsingFunction:alphabeticalServiceSort 
+																				  context:nil] objectEnumerator];
+	
     while((service = [enumerator nextObject])){
-        NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[service description] target:self action:@selector(selectServiceType:) keyEquivalent:@""] autorelease];
+        NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[service description]
+														target:self 
+														action:@selector(selectServiceType:) 
+												 keyEquivalent:@""] autorelease];
 	
         [item setRepresentedObject:service];
         [[popupMenu_serviceList menu] addItem:item];
     }
 
     //Install our observers
-    [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(accountListChanged:) 
+									   name:Account_ListChanged 
+									 object:nil];
     [[adium contactController] registerListObjectObserver:self];
     
     //Refresh our view
@@ -216,7 +230,9 @@
     BOOL	autoConnect = [sender state];
     
     //Apply the new value
-    [selectedAccount setPreference:[NSNumber numberWithBool:autoConnect] forKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS];
+    [selectedAccount setPreference:[NSNumber numberWithBool:autoConnect]
+							forKey:@"AutoConnect"
+							 group:GROUP_ACCOUNT_STATUS];
 }
 
 //Create a new account
@@ -249,7 +265,9 @@
     NSParameterAssert(index >= 0 && index < [accountArray count]);
     targetAccount = [accountArray objectAtIndex:index];
     
-    NSBeginAlertSheet(@"Delete Account",@"Delete",@"Cancel",@"",[view_accountPreferences window], self, @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, targetAccount, @"Delete the account %@?", [targetAccount displayName]);
+    NSBeginAlertSheet(@"Delete Account",@"Delete",@"Cancel",@"",[view_accountPreferences window], self, 
+					  @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, targetAccount, 
+					  @"Delete the account %@?", [targetAccount displayName]);
 }
 
 //Finishes the delete action when the sheet is closed
