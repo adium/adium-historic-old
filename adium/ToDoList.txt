@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.66 2004/04/20 14:44:28 adamiser Exp $
+$Id: ToDoList.txt,v 1.67 2004/04/21 12:40:27 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -34,6 +34,7 @@ Bugs
 * Multi-user chat (MSN) - sent messages appear twice.
 * Message history 'date' timestamps are not using localized time strings
 * Apple scripts will prompt for the location of itunes multiple times on launch if it's not installed.
+* For contacts with no Adium alias and a matching address book card, the contact list format preference will be ignored.  So, if it's set to "Alias (Contact Name)", it will only display the address book name at first.  If the preference is toggled, the correct formatting will be applied.
 
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
@@ -113,6 +114,7 @@ Other:
 	+ Add some indication of service to the 'enter password' window.  Multiple accounts with the same name are indistinguishable
 	+ Fetch yahoo profiles from http://profiles.yahoo.com/[BUDDYNAME] for the info window (libgaim doesn't do this for us?)
 	+ Jabber links, support xmpp:user@host/resource or xmpp:user@host  
+	+ Interact with libgaim via a thread to improve responsiveness during connect/disconnect/poor connectivity
 
 -------------------------------------------------------------------------------------------------------
 Big Stuff
