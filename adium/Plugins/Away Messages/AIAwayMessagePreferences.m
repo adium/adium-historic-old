@@ -38,7 +38,7 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Sound);
+    return(AIPref_Status_Away);
 }
 - (NSString *)label{
     return(@"Away Message Prefs");
