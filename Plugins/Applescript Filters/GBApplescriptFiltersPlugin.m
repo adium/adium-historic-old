@@ -523,7 +523,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 - (NSString *)_executeScript:(NSMutableDictionary *)infoDict withArguments:(NSArray *)arguments
 {
 	NDAppleScriptObject	*script;
-	NSString				*returnValue;
+	NSString			*result;
 	
 	//Attempt to use a cached script
 	script = [infoDict objectForKey:@"NDAppleScriptObject"];
@@ -544,8 +544,15 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	[currentComponentInstance setAppleEventSendTarget:self];
 
 	[script executeSubroutineNamed:@"substitute" argumentsArray:arguments];
+	result = [script resultAsString];
 	
-	return([script resultAsString]);
+	//Result will be enclosed in quotes; we don't want 'em
+	if (result && ([result length] >= 2)){
+		result = [result substringWithRange:NSMakeRange(1, [result length]-2)];
+	}
+	
+	NSLog(@"%@",result);
+	return(result);
 }
 
 //Receive apple events, then have them processed as normal but on the main thread
@@ -557,28 +564,37 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 								filterProc:(AEFilterUPP)filterProc
 {
 	NSAppleEventDescriptor	*eventDescriptor;
-	NSInvocation			*invocation;
-	SEL						selector;
-		
-	selector = @selector(sendAppleEvent:sendMode:sendPriority:timeOutInTicks:idleProc:filterProc:);
-	
-	invocation = [NSInvocation invocationWithMethodSignature:[currentComponentInstance methodSignatureForSelector:selector]];
-	[invocation setSelector:selector];
-	[invocation setTarget:currentComponentInstance];
-	
-	[invocation setArgument:&appleEventDescriptor atIndex:2];
-	[invocation setArgument:&sendMode atIndex:3];
-	[invocation setArgument:&sendPriority atIndex:4];
-	[invocation setArgument:&timeOutInTicks atIndex:5];
-	[invocation setArgument:&idleProc atIndex:6];
-	[invocation setArgument:&filterProc atIndex:7];
 				
-	[invocation performSelectorOnMainThread:@selector(invoke)
-								 withObject:nil
-							  waitUntilDone:YES];
-	
-	[invocation getReturnValue:&eventDescriptor];
-	
+	if ([appleEventDescriptor eventClass] == 'syso'){
+		NSInvocation			*invocation;
+		SEL						selector;
+		
+		selector = @selector(sendAppleEvent:sendMode:sendPriority:timeOutInTicks:idleProc:filterProc:);
+		
+		invocation = [NSInvocation invocationWithMethodSignature:[currentComponentInstance methodSignatureForSelector:selector]];
+		[invocation setSelector:selector];
+		[invocation setTarget:currentComponentInstance];
+		
+		[invocation setArgument:&appleEventDescriptor atIndex:2];
+		[invocation setArgument:&sendMode atIndex:3];
+		[invocation setArgument:&sendPriority atIndex:4];
+		[invocation setArgument:&timeOutInTicks atIndex:5];
+		[invocation setArgument:&idleProc atIndex:6];
+		[invocation setArgument:&filterProc atIndex:7];
+		
+		[invocation performSelectorOnMainThread:@selector(invoke)
+									 withObject:nil
+								  waitUntilDone:YES];
+		[invocation getReturnValue:&eventDescriptor];
+	}else{
+		eventDescriptor = [currentComponentInstance sendAppleEvent:appleEventDescriptor
+														  sendMode:sendMode
+													  sendPriority:sendPriority
+													timeOutInTicks:timeOutInTicks
+														  idleProc:idleProc
+														filterProc:filterProc];
+	}
+
 	return(eventDescriptor);
 }
 
@@ -617,7 +633,6 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
 	
 	if(!notification || ([[item itemIdentifier] isEqualToString:SCRIPT_IDENTIFIER])){
-		NSLog(@"GBApplescriptFilters: %@ ; %@",item,toolbarItem);
 		NSMenu		*menu = [[[scriptMenuItem submenu] copy] autorelease];
 		
 		//Add menu to view
