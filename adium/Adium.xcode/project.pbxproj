@@ -1507,7 +1507,6 @@
 				34E3C8880638D40500AA3EF7,
 				348D8D1A06CC079F00449EBB,
 				348D8D1B06CC079F00449EBB,
-				348D8D3506CC07E300449EBB,
 			);
 			isa = PBXGroup;
 			name = Services;
@@ -3831,9 +3830,36 @@
 				348D8D1206CC078C00449EBB,
 			);
 			isa = PBXGroup;
-			name = Images;
+			name = "Service Images";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		348D8DFC06CC09F400449EBB = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			path = rendezvous.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		348D8DFD06CC09F500449EBB = {
+			fileRef = 348D8DFC06CC09F400449EBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		348D8E1D06CC0CA800449EBB = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			path = "rendezvous-menu.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		348D8E1E06CC0CA800449EBB = {
+			fileRef = 348D8E1D06CC0CA800449EBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		348E4ED9053667A40021E541 = {
 			fileEncoding = 30;
@@ -9592,6 +9618,8 @@
 				4947F5CF0655E90C00B791E5,
 				4947F5CC0655E90C00B791E5,
 				4947F5CD0655E90C00B791E5,
+				348D8DFC06CC09F400449EBB,
+				348D8E1D06CC0CA800449EBB,
 				4947F5D00655E90C00B791E5,
 			);
 			isa = PBXGroup;
@@ -9693,6 +9721,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4947F60E0655E90D00B791E5,
+				348D8DFD06CC09F500449EBB,
+				348D8E1E06CC0CA800449EBB,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14131,6 +14161,7 @@
 				3441587A059F8EFC0019246B,
 				34F59B760667A33900F01E8C,
 				34C2CF8F0633405C0018E5D2,
+				348D8D3506CC07E300449EBB,
 				34C2CFE6063340780018E5D2,
 			);
 			isa = PBXGroup;
