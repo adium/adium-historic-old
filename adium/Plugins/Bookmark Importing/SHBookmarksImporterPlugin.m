@@ -37,7 +37,6 @@
 														   action:@selector(dummyTarget:)
 													keyEquivalent:@""] autorelease];
 		[bookmarkRootMenuItem setRepresentedObject:self];
-		[bookmarkRootMenuItem setSubmenu:[[[NSMenu alloc] initWithTitle:@""] autorelease]];
 		[[adium menuController] addMenuItem:bookmarkRootMenuItem toLocation:LOC_Edit_Additions];
 		
 		//Contextual bookmark menu item
@@ -46,7 +45,6 @@
 																	 action:@selector(dummyTarget:)
 															  keyEquivalent:@""] autorelease];
 		[bookmarkRootContextualMenuItem setRepresentedObject:self];
-		[bookmarkRootContextualMenuItem setSubmenu:[[[NSMenu alloc] initWithTitle:@""] autorelease]];
 		[[adium menuController] addContextualMenuItem:bookmarkRootContextualMenuItem toLocation:Context_TextView_LinkAction];
 		
 		//Wait for Adium to finish launching before we build the content of our menus
@@ -61,7 +59,7 @@
 - (void)uninstallPlugin
 {
     [[adium notificationCenter] removeObserver:self];
-	[importer release];
+	[importer release]; importer = nil;
 }
 
 //Once Adium has finished launching, detach our bookmark thread and start building the menu
@@ -153,35 +151,31 @@
 		NSEnumerator		*enumerator = [[importer availableBookmarks] objectEnumerator];
 		id					object;
 		
+		NSMenu				*menuItemSubmenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+		NSMenu				*contextualMenuItemSubmenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+		
 		while(object = [enumerator nextObject]){
 			if([object isKindOfClass:[NSDictionary class]]){
-				[self performSelectorOnMainThread:@selector(insertBookmarks:)
-									   withObject:object
-									waitUntilDone:YES];
+				[self insertBookmarks:object intoMenu:menuItemSubmenu];
+				[self insertBookmarks:object intoMenu:contextualMenuItemSubmenu];
+				
 			}else if([object isKindOfClass:[SHMarkedHyperlink class]]){
-				[self performSelectorOnMainThread:@selector(insertBookmark:)
-									   withObject:object
-									waitUntilDone:YES];
+				[self insertMenuItemForBookmark:object intoMenu:menuItemSubmenu];
+				[self insertMenuItemForBookmark:object intoMenu:contextualMenuItemSubmenu];
+
 			}	
 		}
-
+		
+		[bookmarkRootMenuItem performSelectorOnMainThread:@selector(setSubmenu:)
+											   withObject:menuItemSubmenu
+											waitUntilDone:YES];
+		[bookmarkRootContextualMenuItem performSelectorOnMainThread:@selector(setSubmenu:)
+														 withObject:contextualMenuItemSubmenu
+													  waitUntilDone:YES];
+		
 		[pool release];
 		updatingMenu = NO;
 	}
-}
-
-//(Main thread) entry point for inserting a submenu of bookmarks
-- (void)insertBookmarks:(NSDictionary *)bookmarkArray
-{
-	[self insertBookmarks:bookmarkArray intoMenu:[bookmarkRootMenuItem submenu]];
-	[self insertBookmarks:bookmarkArray intoMenu:[bookmarkRootContextualMenuItem submenu]];
-}
-
-//(Main thread) entry point for inserting a single bookmark
-- (void)insertBookmark:(SHMarkedHyperlink *)bookmark
-{
-	[self insertMenuItemForBookmark:bookmark intoMenu:[bookmarkRootMenuItem submenu]];
-	[self insertMenuItemForBookmark:bookmark intoMenu:[bookmarkRootContextualMenuItem submenu]];
 }
 
 //Insert a bookmark (or an array of bookmarks) into the menu
@@ -192,20 +186,19 @@
 	NSEnumerator	*enumerator = [[bookmarks objectForKey:SH_BOOKMARK_DICT_CONTENT] objectEnumerator];
 	id				object;
 	
-
 	while(object = [enumerator nextObject]){		
 		if([object isKindOfClass:[SHMarkedHyperlink class]]){
 			//Add a menu item for this link
-                        if(nil != (SHMarkedHyperlink *)[object URL])
-                            [self insertMenuItemForBookmark:object intoMenu:menu];
+			if(nil != (SHMarkedHyperlink *)[object URL])
+				[self insertMenuItemForBookmark:object intoMenu:menu];
 			
 		}else if([object isKindOfClass:[NSDictionary class]]){
 			//Add another submenu
 			[self insertBookmarks:object intoMenu:menu];
-
+			
 		}
 	}
-
+	
 	//Insert the submenu we built into the menu
 	NSMenuItem		*item = [[[NSMenuItem alloc] initWithTitle:[bookmarks objectForKey:SH_BOOKMARK_DICT_TITLE] action:nil
 												 keyEquivalent:@""] autorelease];
@@ -233,8 +226,8 @@
 	if(sender == bookmarkRootMenuItem || sender == bookmarkRootContextualMenuItem){
 		//Does the bookmark menu need an update?
 		if([importer bookmarksUpdated]){
-			[[bookmarkRootMenuItem submenu] removeAllItems];
-			[[bookmarkRootContextualMenuItem submenu] removeAllItems];
+			[bookmarkRootMenuItem setSubmenu:nil];
+			[bookmarkRootContextualMenuItem setSubmenu:nil];
 			[NSThread detachNewThreadSelector:@selector(buildBookmarkMenuThread)
 									 toTarget:self
 								   withObject:nil];
