@@ -1,24 +1,24 @@
-/* 
+/*
  * Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  * General Public License as published by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
  * Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program; if not,
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
 #import "adiumGaimConversation.h"
-#import <AIUtilities/AIHTMLDecoder.h>
 #import <AIUtilities/CBObjectAdditions.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentTyping.h>
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 
 #pragma mark Gaim Images
@@ -37,48 +37,48 @@ static NSString* _processGaimImages(NSString* inString, CBGaimAccount* adiumAcco
     NSMutableString		*newString;
 	NSString			*targetString = @"<IMG ID=\"";
     int imageID;
-	
+
     //set up
 	newString = [[NSMutableString alloc] init];
-	
+
     scanner = [NSScanner scannerWithString:inString];
     [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
-	
-	//A gaim image tag takes the form <IMG ID="12"></IMG> where 12 is the reference for use in GaimStoredImage* gaim_imgstore_get(int)	 
-    
+
+	//A gaim image tag takes the form <IMG ID="12"></IMG> where 12 is the reference for use in GaimStoredImage* gaim_imgstore_get(int)
+
 	//Parse the incoming HTML
     while(![scanner isAtEnd]){
-		
+
 		//Find the beginning of a gaim IMG ID tag
 		if ([scanner scanUpToString:targetString intoString:&chunkString]) {
 			[newString appendString:chunkString];
 		}
-		
+
 		if ([scanner scanString:targetString intoString:&chunkString]) {
-			
+
 			//Get the image ID from the tag
 			[scanner scanInt:&imageID];
-			
+
 			//Scan up to ">
 			[scanner scanString:@"\">" intoString:nil];
-			
+
 			//Get the image, then write it out as a png
 			GaimStoredImage		*gaimImage = gaim_imgstore_get(imageID);
 			if (gaimImage){
 				NSString			*imagePath = _messageImageCachePath(imageID, adiumAccount);
-				
+
 				//First make an NSImage, then request a TIFFRepresentation to avoid an obscure bug in the PNG writing routines
 				//Exception: PNG writer requires compacted components (bits/component * components/pixel = bits/pixel)
-				NSImage				*image = [[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_imgstore_get_data(gaimImage) 
+				NSImage				*image = [[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_imgstore_get_data(gaimImage)
 																						  length:gaim_imgstore_get_size(gaimImage)]];
 				NSData				*imageTIFFData = [image TIFFRepresentation];
 				NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
-				
+
 				//If writing the PNG file is successful, write an <IMG SRC="filepath"> tag to our string
 				if ([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES]){
 					[newString appendString:[NSString stringWithFormat:@"<IMG SRC=\"%@\">",imagePath]];
 				}
-				
+
 				[image release];
 			}else{
 				//If we didn't get a gaimImage, just leave the tag for now.. maybe it was important?
@@ -86,7 +86,7 @@ static NSString* _processGaimImages(NSString* inString, CBGaimAccount* adiumAcco
 			}
 		}
 	}
-	
+
 	return ([newString autorelease]);
 }
 
@@ -96,9 +96,9 @@ static void adiumGaimConvDestroy(GaimConversation *conv)
 	//Gaim is telling us a conv was destroyed.  We've probably already cleaned up, but be sure in case gaim calls this
 	//when we don't ask it to (for example if we are summarily kicked from a chat room and gaim closes the 'window').
 	AIChat *chat;
-	
+
 	chat = (AIChat *)conv->ui_data;
-	
+
 	//Chat will be nil if we've already cleaned up, at which point no further action is needed.
 	if (chat){
 		//The chat's uniqueChatID may have changed before we got here.  Make sure we are talking about the proper conv
@@ -106,8 +106,8 @@ static void adiumGaimConvDestroy(GaimConversation *conv)
 		NSMutableDictionary	*chatDict = get_chatDict();
 		if (conv == [[chatDict objectForKey:[chat uniqueChatID]] pointerValue]){
 			[chatDict removeObjectForKey:[chat uniqueChatID]];
-		}			
-		
+		}
+
 		[chat release];
 		conv->ui_data = nil;
 	}
@@ -119,14 +119,14 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 	if((flags & GAIM_MESSAGE_SEND) == 0){
 		NSDictionary	*messageDict;
 		NSString		*messageString;
-		
+
 		messageString = [NSString stringWithUTF8String:message];
 		AILog(@"Source: %s \t Name: %s \t Nick: %s", who, gaim_conversation_get_name(conv), gaim_conv_chat_get_nick(GAIM_CONV_CHAT(conv)));
 		messageDict = [NSDictionary dictionaryWithObjectsAndKeys:[AIHTMLDecoder decodeHTML:messageString],@"AttributedMessage",
 			[NSString stringWithUTF8String:who],@"Source",
 			[NSNumber numberWithInt:flags],@"GaimMessageFlags",
 			[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
-		
+
 		[accountLookup(conv->account) mainPerformSelector:@selector(receivedMultiChatMessage:inChat:)
 											   withObject:messageDict
 											   withObject:chatLookupFromConv(conv)];
@@ -141,21 +141,21 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const 
 		CBGaimAccount		*adiumAccount = accountLookup(conv->account);
 		NSString			*messageString;
 		AIChat				*chat;
-		
+
 		messageString = [NSString stringWithUTF8String:message];
 		chat = imChatLookupFromConv(conv);
-		
+
 		GaimDebug (@"adiumGaimConvWriteIm: Received %@ from %@",messageString,[[chat listObject] UID]);
-		
+
 		//Process any gaim imgstore references into real HTML tags pointing to real images
 		if ([messageString rangeOfString:@"<IMG ID=\"" options:NSCaseInsensitiveSearch].location != NSNotFound) {
 			messageString = _processGaimImages(messageString, adiumAccount);
 		}
-		
+
 		messageDict = [NSDictionary dictionaryWithObjectsAndKeys:[AIHTMLDecoder decodeHTML:messageString],@"AttributedMessage",
 			[NSNumber numberWithInt:flags],@"GaimMessageFlags",
 			[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
-		
+
 		[adiumAccount mainPerformSelector:@selector(receivedIMChatMessage:inChat:)
 							   withObject:messageDict
 							   withObject:chat];
@@ -170,19 +170,19 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 	}else if (gaim_conversation_get_type(conv) == GAIM_CONV_IM){
 		chat = imChatLookupFromConv(conv);
 	}
-	
+
 	if (chat){
 		if (flags & GAIM_MESSAGE_SYSTEM){
 			NSString			*messageString = [NSString stringWithUTF8String:message];
 			if (messageString){
 				AIChatUpdateType	updateType = -1;
-				
+
 				if([messageString rangeOfString:@"timed out"].location != NSNotFound){
 					updateType = AIChatTimedOut;
 				}else if([messageString rangeOfString:@"closed the conversation"].location != NSNotFound){
 					updateType = AIChatClosedWindow;
 				}
-				
+
 				if (updateType != -1){
 					[accountLookup(conv->account) mainPerformSelector:@selector(updateForChat:type:)
 														   withObject:chat
@@ -193,67 +193,67 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 			NSString			*messageString = [NSString stringWithUTF8String:message];
 			if (messageString){
 				AIChatErrorType	errorType = -1;
-				
+
 				if([messageString rangeOfString:@"Unable to send message"].location != NSNotFound){
 					if(([messageString rangeOfString:@"Not logged in"].location != NSNotFound) ||
 					   ([messageString rangeOfString:@"is not online"].location != NSNotFound)){
 						errorType = AIChatUserNotAvailable;
-						
+
 					}else if(([messageString rangeOfString:@"Refused by client"].location != NSNotFound) ||
 							 ([messageString rangeOfString:@"message is too large"].location != NSNotFound)){
 						//XXX - there may be other conditions, but this seems the most common so that's how we'll classify it
 						errorType = AIChatMessageSendingTooLarge;
 					}
-					
+
 				}else if([messageString rangeOfString:@"You missed"].location != NSNotFound){
 					if (([messageString rangeOfString:@"because they were too large"].location != NSNotFound) ||
 						([messageString rangeOfString:@"because it was too large"].location != NSNotFound)){
 						//The actual message when on AIM via libgaim is "You missed 2 messages" but this is a lie.
 						errorType = AIChatMessageReceivingMissedTooLarge;
-						
+
 					}else if(([messageString rangeOfString:@"because it was invalid"].location != NSNotFound) ||
 							 ([messageString rangeOfString:@"because they were invalid"].location != NSNotFound)){
 						errorType = AIChatMessageReceivingMissedInvalid;
-						
+
 					}else if([messageString rangeOfString:@"because the rate limit has been exceeded"].location != NSNotFound){
 						errorType = AIChatMessageReceivingMissedRateLimitExceeded;
-						
+
 					}else if([messageString rangeOfString:@"because he/she was too evil"].location != NSNotFound){
 						errorType = AIChatMessageReceivingMissedRemoteIsTooEvil;
-						
+
 					}else if([messageString rangeOfString:@"because you are too evil"].location != NSNotFound){
 						errorType = AIChatMessageReceivingMissedLocalIsTooEvil;
-						
+
 					}
-					
+
 				}else if([messageString rangeOfString:@"Message may have not been sent because a time out occurred"].location != NSNotFound){
 					errorType = AIChatMessageSendingTimeOutOccurred;
-					
+
 				}else if([messageString isEqualToString:@"Command failed"]){
 					errorType = AIChatCommandFailed;
-					
+
 				}else if([messageString isEqualToString:@"Wrong number of arguments"]){
 					errorType = AIChatInvalidNumberOfArguments;
-					
+
 				}else if([messageString rangeOfString:@"transfer"].location != NSNotFound){
 					//Ignore the transfer errors; we will handle them locally
 					errorType = -2;
-					
+
 				}else if ([messageString rangeOfString:@"User information not available"].location != NSNotFound){
 					//Ignore user information errors; they are irrelevent
 					errorType = -2;
 				}
-				
+
 				if (errorType == -1){
 					errorType = AIChatUnknownError;
 				}
-				
+
 				if (errorType != -2) {
 					[accountLookup(conv->account) mainPerformSelector:@selector(errorForChat:type:)
 														   withObject:chat
 														   withObject:[NSNumber numberWithInt:errorType]];
 				}
-				
+
 				GaimDebug (@"*** Conversation error (%@): %@",
 						   ([chat listObject] ? [[chat listObject] UID] : [chat name]),messageString);
 			}
@@ -273,23 +273,23 @@ static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user, g
 	}else{
 		GaimDebug (@"adiumGaimConvChatAddUser: IM: add %s",user);
 	}
-	
+
 }
 
 static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *users)
 {
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
 		NSMutableArray	*usersArray = [NSMutableArray array];
-		
+
 		GList *l;
 		for (l = users; l != NULL; l = l->next) {
 			[usersArray addObject:[NSString stringWithUTF8String:(char *)l->data]];
 		}
-		
+
 		[accountLookup(conv->account) mainPerformSelector:@selector(addUsersArray:toChat:)
 											   withObject:usersArray
 											   withObject:existingChatLookupFromConv(conv)];
-		
+
 	}else{
 		GaimDebug (@"adiumGaimConvChatAddUsers: IM");
 	}
@@ -309,23 +309,23 @@ static void adiumGaimConvChatRemoveUser(GaimConversation *conv, const char *user
 	}else{
 		GaimDebug (@"adiumGaimConvChatRemoveUser: IM: remove %s",user);
 	}
-	
+
 }
 
 static void adiumGaimConvChatRemoveUsers(GaimConversation *conv, GList *users)
 {
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
 		NSMutableArray	*usersArray = [NSMutableArray array];
-		
+
 		GList *l;
 		for (l = users; l != NULL; l = l->next) {
 			[usersArray addObject:[NSString stringWithUTF8String:gaim_normalize(conv->account, (char *)l->data)]];
 		}
-		
+
 		[accountLookup(conv->account) mainPerformSelector:@selector(removeUsersArray:fromChat:)
 											   withObject:usersArray
 											   withObject:existingChatLookupFromConv(conv)];
-		
+
 	}else{
 		GaimDebug (@"adiumGaimConvChatRemoveUser: IM");
 	}
@@ -358,14 +358,14 @@ static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type
 		[accountLookup(conv->account) mainPerformSelector:@selector(convUpdateForChat:type:)
 											   withObject:existingChatLookupFromConv(conv)
 											   withObject:[NSNumber numberWithInt:type]];
-		
+
 	}else if (gaim_conversation_get_type(conv) == GAIM_CONV_IM){
 		GaimConvIm  *im = gaim_conversation_get_im_data(conv);
 		switch (type) {
 			case GAIM_CONV_UPDATE_TYPING: {
-				
+
 				AITypingState typingState;
-				
+
 				switch (gaim_conv_im_get_typing_state(im)){
 					case GAIM_TYPING:
 						typingState = AITyping;
@@ -377,9 +377,9 @@ static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type
 						typingState = AIEnteredText;
 						break;
 				}
-				
+
 				NSNumber	*typingStateNumber = [NSNumber numberWithInt:typingState];
-				
+
 				[accountLookup(conv->account) mainPerformSelector:@selector(typingUpdateForIMChat:typing:)
 													   withObject:imChatLookupFromConv(conv)
 													   withObject:typingStateNumber];
@@ -463,12 +463,12 @@ static void adiumGaimConvWindowSwitchConv(GaimConvWindow *win, unsigned int inde
 static void adiumGaimConvWindowAddConv(GaimConvWindow *win, GaimConversation *conv)
 {
 	GaimDebug (@"adiumGaimConvWindowAddConv");
-	
+
 	//Pass chats along to the account
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
-		
+
 		AIChat *chat = chatLookupFromConv(conv);
-		
+
 		[accountLookup(conv->account) mainPerformSelector:@selector(addChat:)
 											   withObject:chat];
 	}
@@ -509,3 +509,4 @@ GaimConvWindowUiOps *adium_gaim_conversation_get_win_ui_ops(void)
 {
 	return &adiumGaimWindowOps;
 }
+
