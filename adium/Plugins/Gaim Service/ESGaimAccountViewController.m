@@ -168,12 +168,32 @@
 	NSNumber			*proxyTypeNumber = [account preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
 
 	AdiumGaimProxyType  proxyType = (proxyTypeNumber ? [proxyTypeNumber intValue] : Gaim_Proxy_Default);
-	BOOL				enableProxySettings = ((proxyType != Gaim_Proxy_None) && (proxyType != Gaim_Proxy_Default));
+	BOOL				editableProxySettings = ((proxyType != Gaim_Proxy_None) && (proxyType != Gaim_Proxy_Default));
+	BOOL				accountOffline = ![[account statusObjectForKey:@"Online"] boolValue];
+	BOOL				enableProxySettings = editableProxySettings && accountOffline;
+	
+	[textField_hostName			setEnabled:accountOffline];
+	[textField_portNumber		setEnabled:accountOffline];
 
-	[textField_proxyHostName setEnabled:enableProxySettings];
-	[textField_proxyPortNumber setEnabled:enableProxySettings];
-	[textField_proxyUserName setEnabled:enableProxySettings];
-	[textField_proxyPassword  setEnabled:(enableProxySettings && [[textField_proxyUserName stringValue] length])];
+	[menu_proxy					setEnabled:accountOffline];
+	
+	[textField_proxyHostName	setEnabled:enableProxySettings];
+	[textField_proxyPortNumber  setEnabled:enableProxySettings];
+	[textField_proxyUserName	setEnabled:enableProxySettings];
+	[textField_proxyPassword	setEnabled:(enableProxySettings && [[textField_proxyUserName stringValue] length])];
+}
+
+//Update display for account status change
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+{
+	if(inObject == nil || inObject == account){
+		if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"]){
+			[self configureConnectionControlDimming];
+			
+		}
+	}
+	
+	return(	[super updateListObject:inObject keys:inModifiedKeys silent:silent] );
 }
 
 @end
