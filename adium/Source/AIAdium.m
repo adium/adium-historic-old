@@ -183,6 +183,9 @@
 #warning Crash reporter enabled.
     [self configureCrashReporter];
 #endif
+    //Ignore SIGPIPE, which is a harmless error signal
+    //sent when write() or similar function calls fail due to a broken pipe in the network connection
+    signal(SIGPIPE, SIG_IGN);
 
     //Load and init the components
     [loginController initController];
@@ -301,10 +304,6 @@ void Adium_HandleSignal(int i){
     signal(SIGSYS, Adium_HandleSignal);		/* 12:  bad argument to system call */
     signal(SIGXCPU, Adium_HandleSignal);	/* 24:  exceeded CPU time limit */
     signal(SIGXFSZ, Adium_HandleSignal);	/* 25:  exceeded file size limit */    
-    
-    //Ignore SIGPIPE, which is a harmless error signal
-    //sent when write() or similar function calls fail due to a broken pipe in the network connection
-    signal(SIGPIPE, SIG_IGN);
 	
 	//I think SIGABRT is an exception... maybe we should ignore it? I'm really not sure.
 	signal(SIGABRT, SIG_IGN);
