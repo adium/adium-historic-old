@@ -27,6 +27,7 @@
 #import "AISoundController.h"
 #import "AIToolbarController.h"
 #import "BZActivityWindowController.h"
+#import "ESApplescriptabilityController.h"
 
 @class  AISortController, AILoginController, AIAccountController, AIInterfaceController, AIContactController, 
 		AIPluginController, AIPreferenceController, AIPreferencePane, AIMenuController, AILoginWindowController,
@@ -34,23 +35,24 @@
 		AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, 
 		AIPreferenceViewController, AISoundController, AIDockController, AIHandle, AIListContact, AIListGroup,
 		AIListObject, AIIconState, AIContactListGeneration, AIChat, AIContentObject, ESFileTransferController, 
-		ESFileTransfer, ESContactAlertsController, ESContactAlert, AIMutableOwnerArray;
+		ESFileTransfer, ESContactAlertsController, ESContactAlert, AIMutableOwnerArray, ESApplescriptabilityController;
 @class SUSpeaker;
 
 @interface AIAdium : NSObject {
-    IBOutlet	AIMenuController            *menuController;
-    IBOutlet	AILoginController           *loginController;
-    IBOutlet	AIAccountController         *accountController;
-    IBOutlet	AIInterfaceController       *interfaceController;
-    IBOutlet	AIContactController         *contactController;
-    IBOutlet	AIContentController         *contentController;
-    IBOutlet	AIPluginController          *pluginController;
-    IBOutlet	AIPreferenceController      *preferenceController;
-    IBOutlet	AIToolbarController         *toolbarController;
-    IBOutlet	AISoundController           *soundController;
-    IBOutlet	AIDockController            *dockController;
-    IBOutlet    ESFileTransferController    *fileTransferController;
-    IBOutlet    ESContactAlertsController   *contactAlertsController;
+    IBOutlet	AIMenuController				*menuController;
+    IBOutlet	AILoginController				*loginController;
+    IBOutlet	AIAccountController				*accountController;
+    IBOutlet	AIInterfaceController			*interfaceController;
+    IBOutlet	AIContactController				*contactController;
+    IBOutlet	AIContentController				*contentController;
+    IBOutlet	AIPluginController				*pluginController;
+    IBOutlet	AIPreferenceController			*preferenceController;
+    IBOutlet	AIToolbarController				*toolbarController;
+    IBOutlet	AISoundController				*soundController;
+    IBOutlet	AIDockController				*dockController;
+    IBOutlet    ESFileTransferController		*fileTransferController;
+    IBOutlet    ESContactAlertsController		*contactAlertsController;
+	IBOutlet	ESApplescriptabilityController  *applescriptabilityController;
 //    IBOutlet    BZActivityWindowController  *activityWindowController;
     
     NSNotificationCenter                    *notificationCenter;
@@ -150,5 +152,5 @@
 #define FILE_TRANSFER_CANCELED			@"FileTransfer_Canceled"
 #define FILE_TRANSFER_COMPLETE			@"FileTransfer_Complete"
 
-#define Adium_Xtras_Changed                     @"Adium_Xtras_Changed"
-#define Adium_PluginsDidFinishLoading           @"Adium_PluginsDidFinishLoading"
+#define Adium_Xtras_Changed				@"Adium_Xtras_Changed"
+#define Adium_CompletedApplicationLoad  @"Adium_CompletedApplicationLoad"
