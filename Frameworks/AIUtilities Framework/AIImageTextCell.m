@@ -20,6 +20,7 @@
 #import "AIImageTextCell.h"
 
 #define DEFAULT_MAX_IMAGE_WIDTH 24
+#define IMAGE_TEXT_PADDING		2
 
 @implementation AIImageTextCell
 
@@ -148,8 +149,8 @@
     //Draw the cell's text
     if(title != nil){
         NSColor			*textColor;
-        NSDictionary		*attributes;
-        int			stringHeight;
+        NSDictionary	*attributes;
+        int				stringHeight;
 
         //Determine the correct text color
         if(highlighted){
@@ -165,11 +166,26 @@
         //Adjust if a substring is present
         if(subString) cellFrame.size.height /= 2;
 
+		//Padding
+		cellFrame.origin.x += IMAGE_TEXT_PADDING;
+		cellFrame.size.width -= IMAGE_TEXT_PADDING*2;
+		
+		//Truncating paragraph style
+		NSParagraphStyle	*paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
+																	 lineBreakMode:NSLineBreakByTruncatingTail];
+		
         //
         if(font){
-            attributes = [NSDictionary dictionaryWithObjectsAndKeys:font,NSFontAttributeName,textColor,NSForegroundColorAttributeName,nil];
+            attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+				paragraphStyle, NSParagraphStyleAttributeName,
+				font, NSFontAttributeName,
+				textColor, NSForegroundColorAttributeName,
+				nil];
         }else{
-            attributes = [NSDictionary dictionaryWithObjectsAndKeys:textColor,NSForegroundColorAttributeName,nil];
+            attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+				paragraphStyle, NSParagraphStyleAttributeName,
+				textColor, NSForegroundColorAttributeName,
+				nil];
         }
 
         //Calculate the centered rect
