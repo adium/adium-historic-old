@@ -35,6 +35,7 @@
     id <AIContainerInterface>		interface;
     AIAdium				*owner;
 
+    NSSize				minWindowSize;
     BOOL				autoResizeVertically;
     BOOL				autoResizeHorizontal;
 }

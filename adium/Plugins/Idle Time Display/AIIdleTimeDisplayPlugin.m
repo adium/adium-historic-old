@@ -32,6 +32,7 @@
 {
     //init
     displayIdleTime = NO;
+    idleTextColor = nil;
 
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_TIME_DISPLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
@@ -52,6 +53,8 @@
 
 - (void)dealloc
 {
+    [idleTextColor release];
+
     [super dealloc];
 }
 
@@ -78,6 +81,9 @@
             //Set the correct time
             [idleView setStringContent:[self idleStringForSeconds:idle]];
             attributesChanged = YES;
+
+            //Set the correct color
+            [idleView setColor:idleTextColor];
 
         }else{
             //Remove the idle view if one exists
@@ -162,9 +168,11 @@ NSArray		*modifiedAttributes = nil;
     if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_IDLE_TIME_DISPLAY] == 0){
 	NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
 
-	//Cache the preference values
+        //Cache the preference values
+        [idleTextColor release];
 	displayIdleTime = [[prefDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue];
-
+        idleTextColor = [[[prefDict objectForKey:KEY_IDLE_TIME_COLOR] representedColor] retain];
+        
         //Update all our idle views
 	NSEnumerator		*enumerator;
 	AIListObject		*object;

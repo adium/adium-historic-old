@@ -2,6 +2,17 @@
     IBClasses = (
         {
             ACTIONS = {changePreference = id; }; 
+            CLASS = AIIdleTimeDisplayPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_displayIdle" = NSButton; 
+                "colorWell_idleColor" = NSColorWell; 
+                "view_prefView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
             CLASS = AIStatusCirclesPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {

@@ -182,7 +182,7 @@ int HTMLEquivalentForFontSize(int fontSize);
 
         //Disable Link
         if(link && [link length] != 0){
-            [string appendString:@"</a"];
+            [string appendString:@"</a>"];
         }
 
         //Disable bold/italic/underline
@@ -314,7 +314,7 @@ int HTMLEquivalentForFontSize(int fontSize)
                         //ignore
 
                     //Line Break
-                    }else if([chunkString caseInsensitiveCompare:@"BR"] == 0){
+                    }else if([chunkString caseInsensitiveCompare:@"BR"] == 0 || [chunkString caseInsensitiveCompare:@"/BR"] == 0){
                         [attrString appendString:@"\r" withAttributes:nil];
 
                     //Bold

@@ -23,6 +23,8 @@
     NSSize		_attributedStringSize;
     float		_maxWidth;
     float		cachedHeight;
+
+    NSColor		*textColor;
 }
 
 + (id)idleView;
@@ -30,6 +32,7 @@
 - (void)setStringContent:(NSString *)inString;
 - (void)drawInRect:(NSRect)inRect;
 - (float)widthForHeight:(int)inHeight computeMax:(BOOL)computeMax;
+- (void)setColor:(NSColor *)inColor;
 
     
 @end
