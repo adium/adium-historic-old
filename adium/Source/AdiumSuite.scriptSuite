@@ -126,7 +126,7 @@
 			<string>NSCoreSuite.AbstractObject</string>
 			<key>Attributes</key>
 			<dict>
-				<key>activeChat</key>
+				<key>mostRecentActiveChat</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>AiAC</string>
