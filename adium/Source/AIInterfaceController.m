@@ -18,6 +18,7 @@
 #import "AIInterfaceController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"
+#define ERROR_MESSAGE_WINDOW_TITLE		@"Adium : Error"
 
 @interface AIInterfaceController (PRIVATE)
 - (void)loadDualInterface;
@@ -114,13 +115,17 @@
 //Errors
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc
 {
+    [self handleMessage:inTitle withDescription:inDesc withWindowTitle:ERROR_MESSAGE_WINDOW_TITLE];
+}
+
+- (void)handleMessage:(NSString *)inTitle withDescription:(NSString *)inDesc withWindowTitle:(NSString *)inWindowTitle;
+{
     NSDictionary	*errorDict;
 
     //Post a notification that an error was recieved
-    errorDict = [NSDictionary dictionaryWithObjectsAndKeys:inTitle,@"Title",inDesc,@"Description",nil];    
+    errorDict = [NSDictionary dictionaryWithObjectsAndKeys:inTitle,@"Title",inDesc,@"Description",inWindowTitle,@"Window Title",nil];
     [[owner notificationCenter] postNotificationName:Interface_ErrorMessageReceived object:nil userInfo:errorDict];
 }
-
 
 //Flashing
 - (void)registerFlashObserver:(id <AIFlashObserver>)inObserver
