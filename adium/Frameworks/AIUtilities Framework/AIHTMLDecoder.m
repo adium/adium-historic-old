@@ -175,7 +175,6 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
     NSMutableString *string = [NSMutableString stringWithString:(includeHeaders ? @"<HTML>" : @"")];
 
     //Setup the incoming message as a regular string, and get its length
-	NSLog(@"inMessage: %@",inMessage);
     NSString		*inMessageString = [inMessage string];
     int				messageLength = [inMessageString length];
 		
@@ -342,22 +341,21 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			for(i = 0; (i < searchRange.length); i++){ //Each attachment takes a character.. they are grouped by the attribute scan
 				NSTextAttachment *textAttachment = [[inMessage attributesAtIndex:searchRange.location+i effectiveRange:nil] objectForKey:NSAttachmentAttributeName];
 				if (textAttachment){
-					NSLog(@"it exists");
+
 					//We can work efficiently on an AITextAttachmentExtension
 					if ([textAttachment isKindOfClass:[AITextAttachmentExtension class]]){
-						NSLog(@"it is");
+
 						//Suppress compiler stupidity
 						AITextAttachmentExtension *attachment = (AITextAttachmentExtension *)textAttachment;
 						
 						//
-						NSLog(@"%@ %i %i",imagesPath,[attachment shouldSaveImageForLogging],[[attachment attachmentCell] respondsToSelector:@selector(image)]);
 						if((imagesPath) &&
 						   ([attachment shouldSaveImageForLogging]) && 
 						   ([[attachment attachmentCell] respondsToSelector:@selector(image)])){
 
 							//We have an NSImage but no file at which to point the img tag
 							NSString			*attachmentString;
-							NSLog(@"using %@",attachment);
+
 							attachmentString = [attachment string];
 
 							if ([self appendImage:[[attachment attachmentCell] performSelector:@selector(image)]
@@ -375,7 +373,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 							//We want attachments as images where appropriate, and this attachment is not marked
 							//to always send as text.  The attachment will have an imagePath pointing to a file
 							//which we can link directly via an img tag.
-							NSLog(@"we want attachments as images where appropriate");
+
 							[string appendFormat:@"<img src=\"file://%@\" alt=\"%@\" width=\"%i\" height=\"%i\">",
 								[[attachment imagePath] stringByEscapingForHTML], [[attachment string] stringByEscapingForHTML],
 								(int)[attachment imageSize].width, (int)[attachment imageSize].height];
@@ -385,7 +383,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 							
 						}else{
 							//We should replace the attachment with its textual equivalent if possible
-							NSLog(@"//We should replace the attachment with its textual equivalent if possible");
+
 							NSString	*attachmentString = [attachment string];
 							if (attachmentString){
 								[string appendString:attachmentString];
@@ -404,7 +402,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 						
 						//Check the HFSTypeCode (encoded to the NSString format [NSImage imageFileTypes] uses)
 						if ([[NSImage imageFileTypes] containsObject:NSFileTypeForHFSTypeCode(HFSTypeCode)]){
-							NSLog(@"Standard NSTextAttachment: Image");
+
 							NSString	*imageName = [fileWrapper preferredFilename];
 							
 							//We've got an image, so the attachment's attachmentCell 
@@ -420,7 +418,6 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 							}
 						}else{
 							
-							NSLog(@"Standard NSTextAttachment: FIle TRANSFER WOOO! %@",fileWrapper);
 							//Got a non-image file.  Use a special Adium tag so code elsewhere knows to handle what
 							//was previously the attachment as a file transfer.
 							if ([fileWrapper isKindOfClass:[ESFileWrapperExtension class]]){
@@ -431,7 +428,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 								}else{
 									//Regular file.  It's go time.
 									NSString	*path = [(ESFileWrapperExtension *)fileWrapper originalPath];
-									NSLog(@"path %@",path);
+
 									if (path){
 										[self appendFileTransferReferenceFromPath:path
 																		 toString:string];
@@ -999,7 +996,6 @@ int HTMLEquivalentForFontSize(int fontSize)
 + (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string
 {
 	[string appendFormat:@"<AdiumFT src=\"%@\">", path];	
-	NSLog(@"string is now %@",string);
 }
 
 @end
