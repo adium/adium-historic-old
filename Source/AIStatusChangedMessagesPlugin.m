@@ -49,13 +49,13 @@ static	NSDictionary	*statusTypeDict = nil;
 		nil] retain];
 		
     //Observe contact status changes
-    [[adium notificationCenter] addObserver:self selector:@selector(contactStatusChanged:) name:CONTACT_STATUS_AWAY_YES object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(contactStatusChanged:) name:CONTACT_STATUS_AWAY_NO object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(contactStatusChanged:) name:CONTACT_STATUS_ONLINE_YES object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(contactStatusChanged:) name:CONTACT_STATUS_ONLINE_NO object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(contactStatusChanged:) name:CONTACT_STATUS_IDLE_YES object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(contactStatusChanged:) name:CONTACT_STATUS_IDLE_NO object:nil];
 
+	[[adium notificationCenter] addObserver:self selector:@selector(contactAwayChanged:) name:CONTACT_STATUS_AWAY_YES object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(contactAwayChanged:) name:CONTACT_STATUS_AWAY_NO object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(contact_statusMessage:) name:CONTACT_STATUS_MESSAGE object:nil];
 }
 
@@ -70,11 +70,11 @@ static	NSDictionary	*statusTypeDict = nil;
 	
 	allChats = [[adium contentController] allChatsWithContact:contact];
 	if([allChats count]){	
-		NSString		*statusMessage = [contact stringFromAttributedStringStatusObjectForKey:@"StatusMessage"
-																		fromAnyContainedObject:YES];
+		NSString		*statusMessage = [[[contact statusState] statusMessage] string];
 		NSString		*statusType = [statusTypeDict objectForKey:CONTACT_STATUS_MESSAGE];
-		
+
 		if(statusMessage && [statusMessage length] != 0){
+#warning Away message or status message as appropriate
 			[self statusMessage:[NSString stringWithFormat:AILocalizedString(@"Away Message: %@",nil),statusMessage] 
 					 forContact:contact
 					   withType:statusType
@@ -107,6 +107,20 @@ static	NSDictionary	*statusTypeDict = nil;
 				 forContact:contact
 				   withType:[statusTypeDict objectForKey:name]
 					inChats:allChats];
+	}
+}
+
+/*
+ * @brief Special handling for away changes
+ *
+ * We only display the "Went away" message if a status message for the away hasn't already been printed
+ */
+- (void)contactAwayChanged:(NSNotification *)notification
+{
+	NSDictionary	*userInfo = [notification userInfo];
+	
+	if(![[userInfo objectForKey:@"Already Posted StatusMessage"] boolValue]){
+		[self contactStatusChanged:notification];
 	}
 }
 
