@@ -27,10 +27,7 @@
     [[adium contentController] registerTextEntryFilter:self];
 
     //Observe preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) 
-									   name:Preference_GroupChanged 
-									 object:nil];
-    [self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SPELLING];
 }
 
 - (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
@@ -56,19 +53,18 @@
     }
 }
 
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_SPELLING]){
-        BOOL		spellEnabled = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_SPELLING] objectForKey:KEY_SPELL_CHECKING] boolValue];
-        NSEnumerator	*enumerator;
-        id		entryView;
-
-        //Set spellcheck state of all open views
-        enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
-        while(entryView = [enumerator nextObject]){
-            [self _setSpellCheckingForObject:entryView enabled:spellEnabled];
-        }
-    }
+	BOOL			spellEnabled = [[prefDict objectForKey:KEY_SPELL_CHECKING] boolValue];
+	NSEnumerator	*enumerator;
+	id				entryView;
+	
+	//Set spellcheck state of all open views
+	enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
+	while(entryView = [enumerator nextObject]){
+		[self _setSpellCheckingForObject:entryView enabled:spellEnabled];
+	}
 }
 
 //

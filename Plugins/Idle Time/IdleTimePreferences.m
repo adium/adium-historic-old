@@ -53,11 +53,7 @@
     [checkBox_enableAutoAway setState:[[preferenceDict objectForKey:KEY_AUTO_AWAY_ENABLED] boolValue]];
     [textField_autoAwayMinutes setIntValue:[[preferenceDict objectForKey:KEY_AUTO_AWAY_IDLE_MINUTES] intValue]];
 	
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(preferencesChanged:)
-									   name:Preference_GroupChanged 
-									 object:nil];
-	[self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_AWAY_MESSAGES];
 	
     [self configureControlDimming];
 }
@@ -65,7 +61,7 @@
 //Preference view is closing
 - (void)viewWillClose
 {
-	[[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 //Enable/disable controls that are available/unavailable
@@ -219,10 +215,10 @@
     return savedAwaysMenu;
 }
 
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-	if(notification == nil || ([[[notification userInfo] objectForKey:@"Group"] isEqualTo:PREF_GROUP_AWAY_MESSAGES] &&
-							   [[[notification userInfo] objectForKey:@"Key"] isEqualTo:KEY_SAVED_AWAYS])) {
+	if([key isEqualTo:KEY_SAVED_AWAYS]){
 		[self configureAutoAwayPreferences];
 	}
 }

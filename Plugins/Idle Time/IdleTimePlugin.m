@@ -63,11 +63,8 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
     preferences = [[IdleTimePreferences preferencePane] retain]; 
 
     //Observe preference changed notifications, and setup our initial values
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:)
-									   name:Preference_GroupChanged
-									 object:nil];
-    [self preferencesChanged:nil];
-    
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_IDLE_TIME];
+	
     //Install the menu item to manually set idle time
     [self installIdleMenu];
 
@@ -128,37 +125,32 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 }
 
 //An idle preference has changed
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || 
-	   [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_IDLE_TIME]){
-		
-        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME];
-
-        //Store the new values locally
-        idleEnabled = [[prefDict objectForKey:KEY_IDLE_TIME_ENABLED] boolValue];
-        idleThreshold = [[prefDict objectForKey:KEY_IDLE_TIME_IDLE_MINUTES] intValue] * 60; //convert to seconds
-		
-		autoAwayEnabled = [[prefDict objectForKey:KEY_AUTO_AWAY_ENABLED] boolValue];
-		autoAwayThreshold = [[prefDict objectForKey:KEY_AUTO_AWAY_IDLE_MINUTES] intValue] * 60; //also convert this to seconds
-		
-		NSNumber *autoAwayMessageIndexNumber = [prefDict objectForKey:KEY_AUTO_AWAY_MESSAGE_INDEX];
-		if (autoAwayMessageIndexNumber){
-			autoAwayMessageIndex = [autoAwayMessageIndexNumber intValue];
-		}else{
-			autoAwayMessageIndex = -1;	
-		}
-
-        /*
-		 Reset our idle state if:
-			- We are setting up for the first time
-			- We went idle automatically but now are not watching idle
-		 */
-        if((idleState == -999999) ||
-		   ((idleState == AIAutoIdle) && !idleEnabled)){
-            [self setIdleState:AINotIdle];
-        }
-    }
+	//Store the new values locally
+	idleEnabled = [[prefDict objectForKey:KEY_IDLE_TIME_ENABLED] boolValue];
+	idleThreshold = [[prefDict objectForKey:KEY_IDLE_TIME_IDLE_MINUTES] intValue] * 60; //convert to seconds
+	
+	autoAwayEnabled = [[prefDict objectForKey:KEY_AUTO_AWAY_ENABLED] boolValue];
+	autoAwayThreshold = [[prefDict objectForKey:KEY_AUTO_AWAY_IDLE_MINUTES] intValue] * 60; //also convert this to seconds
+	
+	NSNumber *autoAwayMessageIndexNumber = [prefDict objectForKey:KEY_AUTO_AWAY_MESSAGE_INDEX];
+	if (autoAwayMessageIndexNumber){
+		autoAwayMessageIndex = [autoAwayMessageIndexNumber intValue];
+	}else{
+		autoAwayMessageIndex = -1;	
+	}
+	
+	/*
+	 Reset our idle state if:
+	 - We are setting up for the first time
+	 - We went idle automatically but now are not watching idle
+	 */
+	if((idleState == -999999) ||
+	   ((idleState == AIAutoIdle) && !idleEnabled)){
+		[self setIdleState:AINotIdle];
+	}
 }
 
 //Idle Control -----------------------------------------------------------------------------------

@@ -86,11 +86,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     [[NSFileManager defaultManager] createDirectoriesForPath:logBasePath];
 
     //Observe preference changes
-    [[adium notificationCenter] addObserver:self
-								   selector:@selector(preferencesChanged:)
-									   name:Preference_GroupChanged
-									 object:nil];
-    [self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LOGGING];
 
     //Toolbar item
 	NSToolbarItem	*toolbarItem;
@@ -110,31 +106,29 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 }
 
 //Update for the new preferences
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_LOGGING]){
-        NSDictionary    *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LOGGING];
-        BOOL            newLogValue;
+	BOOL            newLogValue;
+	
+	logHTML = [[prefDict objectForKey:KEY_LOGGER_HTML] boolValue];
+	
+	//Start/Stop logging
+	newLogValue = [[prefDict objectForKey:KEY_LOGGER_ENABLE] boolValue];
+	if(newLogValue != observingContent){
+		observingContent = newLogValue;
 		
-		logHTML = [[preferenceDict objectForKey:KEY_LOGGER_HTML] boolValue];
-		
-        //Start/Stop logging
-        newLogValue = [[preferenceDict objectForKey:KEY_LOGGER_ENABLE] boolValue];
-        if(newLogValue != observingContent){
-            observingContent = newLogValue;
+		if(!observingContent){ //Stop Logging
+			[[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
 			
-            if(!observingContent){ //Stop Logging
-                [[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
-				
-            }else{ //Start Logging
-                [[adium notificationCenter] addObserver:self 
-											   selector:@selector(contentObjectAdded:) 
-												   name:Content_ContentObjectAdded 
-												 object:nil];
-                
-            }
-        }
-    }
+		}else{ //Start Logging
+			[[adium notificationCenter] addObserver:self 
+										   selector:@selector(contentObjectAdded:) 
+											   name:Content_ContentObjectAdded 
+											 object:nil];
+			
+		}
+	}
 }
 
 
