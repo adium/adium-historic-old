@@ -7,14 +7,8 @@
 #import "CBGaimServicePlugin.h"
 #import "CBGaimAccount.h"
 
-@interface GaimService : AIObject <AIServiceController> {
-    AIServiceType           *handleServiceType;
-    CBGaimServicePlugin     *service;
-    
-    IBOutlet 	NSView      *view_preferences;
-}
+@interface GaimService : AIService {
 
-- (id)initWithService:(CBGaimServicePlugin *)inService;
-- (NSString *)gaimDescriptionSuffix;
+}
 
 @end
