@@ -549,30 +549,40 @@ void Adium_HandleSignal(int i){
 //Otherwise, create it in the user library and return the pathname to it.
 - (NSString *)createResourcePathForName:(NSString *)name
 {
-    BOOL             createIt;
-    //this is the subfolder for the user domain (i.e. ~/L/AS/Adium\ 2.0).
-    NSString        *targetPath            = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:name];
-    NSFileManager   *mgr                   = [NSFileManager defaultManager];
-    static NSString *bundleResourcesFolder = nil;
-    NSArray         *existing              = [self resourcePathsForName:name];
+    NSString		*targetPath;    //This is the subfolder for the user domain (i.e. ~/L/AS/Adium\ 2.0).
+    NSFileManager	*defaultManager;
+    NSArray			*existingResourcePaths;
 
-    if(bundleResourcesFolder == nil) bundleResourcesFolder = [[NSBundle mainBundle] resourcePath];
+	defaultManager = [NSFileManager defaultManager];
+	existingResourcePaths = [self resourcePathsForName:name];
+	targetPath = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:name];	
+	
+    /*
+	 If the targetPath doesn't exist, create it, as this method was called to ensure that it exists
+	 for creating files in the user domain.
+	 */
+    if([existingResourcePaths indexOfObject:targetPath] == NSNotFound) {
+        if(![defaultManager createDirectoryAtPath:targetPath attributes:nil]) {
+			BOOL error;
+			
+			//If the directory could not be created, there may be a file in the way. Death to file.
+			error = ![defaultManager trashFileAtPath:targetPath];
 
-    //if any resource paths exist *besides* the one in the application bundle,
-    //  then we create the one in ~/L/AS/Adium\ 2.0.
-    createIt = !([existing count] - ([existing indexOfObject:[bundleResourcesFolder stringByAppendingPathComponent:name]] != NSNotFound));
-    if(createIt) {
-        if(![mgr createDirectoryAtPath:targetPath attributes:nil]) {
-			targetPath = nil;
-			//future expansion: provide a button to launch Disk Utility --boredzo
-			NSRunAlertPanel([NSString stringWithFormat:AILocalizedString(@"Could not create the %@ folder",nil), name],
-							AILocalizedString(@"Try running Repair Permissions from Disk Utility.",nil),
-							AILocalizedString(@"Okay",nil), 
-							nil, 
-							nil);
+			if (!error) error = ![defaultManager createDirectoryAtPath:targetPath attributes:nil];
+
+			if (error){
+				targetPath = nil;
+				
+				//Future expansion: provide a button to launch Disk Utility --boredzo
+				NSRunAlertPanel([NSString stringWithFormat:AILocalizedString(@"Could not create the %@ folder",nil), name],
+								AILocalizedString(@"Try running Repair Permissions from Disk Utility.",nil),
+								AILocalizedString(@"Okay",nil), 
+								nil, 
+								nil);
+			}
 		}
     } else {
-        targetPath = [existing objectAtIndex:0];
+        targetPath = [existingResourcePaths objectAtIndex:0];
     }
 
     return targetPath;
@@ -587,7 +597,9 @@ void Adium_HandleSignal(int i){
 	NSEnumerator	*searchPathEnumerator;
 	NSString		*adiumFolderName, *path;
 	NSMutableArray  *pathArray = [NSMutableArray arrayWithCapacity:4];
-
+	NSFileManager	*defaultManager = [NSFileManager defaultManager];
+	BOOL			isDir;
+			
 	adiumFolderName = (name ? [ADIUM_SUBFOLDER_OF_LIBRARY stringByAppendingPathComponent:name] : ADIUM_SUBFOLDER_OF_LIBRARY);
 
 	//Find Library directories in all domains except /System (as of Panther, that's ~/Library, /Library, and /Network/Library)
@@ -596,21 +608,26 @@ void Adium_HandleSignal(int i){
 
 	//Copy each discovered path into the pathArray after adding our subfolder path
 	while(path = [searchPathEnumerator nextObject]){
-		NSString	*fullPath = [path stringByAppendingPathComponent:adiumFolderName];
-		if([[NSFileManager defaultManager] fileExistsAtPath:fullPath]) {
+		NSString	*fullPath;
+		
+		fullPath = [path stringByAppendingPathComponent:adiumFolderName];
+		if(([defaultManager fileExistsAtPath:fullPath isDirectory:&isDir]) &&
+		   (isDir)){
+			
 			[pathArray addObject:fullPath];
 		}
 	}
 	
 	//Add the path to the resource in Adium's bundle
-	if(name) {
+	if(name){
 		path = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:name] stringByExpandingTildeInPath];
-		if([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+		if(([defaultManager fileExistsAtPath:path isDirectory:&isDir]) &&
+		   (isDir)){
 			[pathArray addObject:path];
 		}
 	}
     
-	return pathArray;
+	return(pathArray);
 }
 
 //If this is the first time running a version, post Adium_versionUpgraded with information about the old and new versions.
@@ -695,6 +712,14 @@ void Adium_HandleSignal(int i){
 		returnString = @"0.682";
 	}else if ([inString isEqualToString:@"0.7b4"]){
 		returnString = @"0.683";
+	}else if ([inString isEqualToString:@"0.7b5"]){
+		returnString = @"0.684";
+	}else if ([inString isEqualToString:@"0.7b6"]){
+		returnString = @"0.685";
+	}else if ([inString isEqualToString:@"0.7b7"]){
+		returnString = @"0.686";
+	}else if ([inString isEqualToString:@"0.7b8"]){
+		returnString = @"0.687";
 	}
 	
 	return(returnString ? returnString : inString);
