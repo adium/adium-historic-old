@@ -6,7 +6,7 @@
 @interface JabberAccountViewController (PRIVATE)
 - (id)initForOwner:(id)inOwner account:(id)inAccount;
 - (void)dealloc;
-- (void)accountStatusChanged:(NSNotification *)notification;
+- (void)accountPropertiesChanged:(NSNotification *)notification;
 - (void)initAccountView;
 @end
 
@@ -23,21 +23,28 @@
 }
 
 //Save the changed properties
-- (void)saveChanges
+- (IBAction)preferenceChanged:(id)sender
 {
-    [[account properties] setObject:[textField_username stringValue] forKey:@"Username"];
-    [[account properties] setObject:[textField_host stringValue] forKey:@"Host"];
-
-    //Broadcast a properties changed message
-    [[owner notificationCenter] postNotificationName:Account_PropertiesChanged
-                                                                         object:self
-                                                                       userInfo:nil];
+    if (sender == textField_username) {
+        [[owner accountController] setProperty: [sender stringValue]
+                                        forKey: @"Username"
+                                       account: account];
+    } else if (sender == textField_host) {
+        [[owner accountController] setProperty: [sender stringValue]
+                                        forKey: @"Host"
+                                       account: account];
+    }
 }
 
 - (void)configureViewAfterLoad
 {
     //highlight the username field
     [[[view_accountView superview] window] setInitialFirstResponder:textField_username];
+}
+
+- (NSArray *)auxilaryTabs
+{
+    return nil;
 }
 
 /*******************/
@@ -57,7 +64,8 @@
         NSLog(@"couldn't load account view bundle");
     }
     
-    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:account];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:account];
+    [self accountPropertiesChanged:nil];
     
     [textField_username setFormatter:[AIStringFormatter stringFormatterAllowingCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789+-._"] length:129 caseSensitive:NO errorMessage:@"Improper Format"]];
 
@@ -68,7 +76,8 @@
 
 - (void)dealloc
 {
-    [[owner notificationCenter] removeObserver:self name:Account_StatusChanged object:account];
+    [[owner notificationCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [view_accountView release];
     
@@ -78,9 +87,15 @@
     [super dealloc];
 }
 
-- (void)accountStatusChanged:(NSNotification *)notification
+- (void)accountPropertiesChanged:(NSNotification *)notification
 {
-    BOOL	isOnline = [[[owner accountController] statusObjectForKey:@"Online" account:account] boolValue];
+    if (notification != nil) {
+        NSString *key = [[notification userInfo] objectForKey:@"Key"];
+        if ([key compare:@"Online"] != 0)
+            return;
+    }
+
+    BOOL	isOnline = [[[owner accountController] propertyForKey:@"Online" account:account] boolValue];
 
     //Dim unavailable controls
     [textField_username setEnabled:!isOnline];

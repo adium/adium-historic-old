@@ -111,8 +111,8 @@
 
 - (void)initAccount
 {
-    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
-    [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
+    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
+    [[owner accountController] setProperty:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
 }
 
 - (void)dealloc
@@ -157,7 +157,8 @@
 
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
-    ACCOUNT_STATUS status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
+    NSLog(@"jabber: statusForKey: %@ willChangeTo: %d", key, inValue);
+    ACCOUNT_STATUS status = [[[owner accountController] propertyForKey:@"Status" account:self] intValue];
         
     if([key compare:@"Online"] == 0)
     {
@@ -187,7 +188,7 @@
 {
     NSLog(@"jabber: connect");
     myID = [JabberID withUserHost:[self UID] andResource:@"Adium"];
-    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_CONNECTING]
+    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_CONNECTING]
                                         forKey:@"Status" account:self];
     session = [[JabberSession alloc] init];
     NSLog(@"adding session connected listener");
@@ -204,8 +205,8 @@
     NSLog(@"adding started listener");
     [session addObserver:self selector:@selector(onSessionStarted:) name:JSESSION_STARTED];
     NSLog(@"adding message listener");
-    /*[session addObserver:self selector:@selector(onMessage:)
-             xpath:@"/message[!@type='groupchat']"]; */
+    [session addObserver:self selector:@selector(onMessage:)
+             xpath:@"/message[!@type='groupchat']"];
     NSLog(@"starting session");
     [session startSession:myID onPort:5222];
 }
@@ -213,7 +214,7 @@
 - (void)onSessionStarted:(NSNotification*)n
 {
     NSLog(@"jabber: session started");
-    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE]
+    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_ONLINE]
                                         forKey:@"Status" account:self];
     [session sendString:@"<presence><priority>5</priority></presence>"];
 }
@@ -248,7 +249,7 @@
 - (void)disconnect
 {
     NSLog(@"jabber: disconnect");
-    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_DISCONNECTING]
+    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING]
         forKey:@"Status" account:self];
     [session stopSession];
     [session removeObserver:self];
@@ -258,7 +259,7 @@
     myID = nil;
 
     // Set status as offline
-    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE]
+    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_OFFLINE]
         forKey:@"Status" account:self];
 }
 
