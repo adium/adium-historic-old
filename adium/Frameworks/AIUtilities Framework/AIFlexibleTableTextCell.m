@@ -157,8 +157,27 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 - (void)drawContentsWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
     if(glyphRange.length != 0){
-        [layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:cellFrame.origin];
-        [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:cellFrame.origin];
+        if (isOpaque) {
+            [layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:cellFrame.origin];
+            [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:cellFrame.origin];
+        } else {
+            NSImage             *image;
+            
+            //Build an image of our rect before we draw
+            image = [[NSImage alloc] initWithSize:cellFrame.size];
+            [image setFlipped:[controlView isFlipped]];
+            [image addRepresentation:[[[NSBitmapImageRep alloc] initWithFocusedViewRect:cellFrame] autorelease]];
+            
+            [controlView lockFocus];
+            //Draw our glyphs
+            [layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:cellFrame.origin];
+            [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:cellFrame.origin];
+            
+            //Fade our new drawing back towards the original
+            [image drawInRect:cellFrame fromRect:NSMakeRect(0,0,cellFrame.size.width,cellFrame.size.height) operation:NSCompositeSourceOver fraction:(1-opacity)];
+            [controlView unlockFocus];
+            [image release];
+        }
     }
 }
 

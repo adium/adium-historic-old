@@ -34,6 +34,7 @@
 - (void)_drawFlatTopInRect:(NSRect)frame;
 - (void)_drawFlatBottomInRect:(NSRect)frame;
 - (void)_drawBubbleDividerInRect:(NSRect)frame;
+- (void)_updateColorsWithAlpha;
 @end
 
 @implementation AIFlexibleTableFramedTextCell
@@ -115,18 +116,40 @@
 //Set the frame, border, and divider colors
 - (void)setFrameBackgroundColor:(NSColor *)inBubbleColor borderColor:(NSColor *)inBorderColor dividerColor:(NSColor *)inDividerColor
 {
-    if(borderColor != inBorderColor){
-        [borderColor release];
-        borderColor = [inBorderColor retain];
+    if(borderColorOpaque != inBorderColor){
+        [borderColorOpaque release];
+        borderColorOpaque = [inBorderColor retain];
     }
-    if(bubbleColor != inBubbleColor){
-        [bubbleColor release];
-        bubbleColor = [inBubbleColor retain];
+    if(bubbleColorOpaque != inBubbleColor){
+        [bubbleColorOpaque release];
+        bubbleColorOpaque = [inBubbleColor retain];
     }
-    if(dividerColor != inDividerColor){
-        [dividerColor release];
-        dividerColor = [inDividerColor retain];
+    if(dividerColorOpaque != inDividerColor){
+        [dividerColorOpaque release];
+        dividerColorOpaque = [inDividerColor retain];
     }
+    [self _updateColorsWithAlpha];
+}
+
+- (void)setOpacity:(float)inOpacity
+{
+    //Update the opacity
+    [super setOpacity:inOpacity];
+    //Now update our cached transparent colors
+    [self _updateColorsWithAlpha];
+}
+
+- (void)_updateColorsWithAlpha
+{
+    NSLog(@"updating with alpha",opacity);
+    [borderColor release];
+    borderColor = [[borderColorOpaque colorWithAlphaComponent:opacity] retain];
+    
+    [bubbleColor release];
+    bubbleColor = [[bubbleColorOpaque colorWithAlphaComponent:opacity] retain];
+
+    [dividerColor release];
+    dividerColor = [[dividerColorOpaque colorWithAlphaComponent:opacity] retain];
 }
 
 //Adjust for our padding

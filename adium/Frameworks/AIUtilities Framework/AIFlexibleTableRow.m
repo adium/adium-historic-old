@@ -44,6 +44,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     tableView = nil;
     spansRows = NO;
     isSpannedInto = NO;
+    tag = -1;
     
     //Let all the cells know we are their row
     enumerator = [cellArray objectEnumerator];
@@ -442,6 +443,28 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight)
     return((cellHeight > currentHeight) ? cellHeight : currentHeight );
 }
 
+//Tags
+- (void)setTag:(int)inTag
+{
+    tag = inTag;
+}
+- (int)tag
+{
+    return tag;
+}
+
+//Opacity
+- (void)setOpacity:(float)opacity
+{
+    NSEnumerator	*enumerator;
+    AIFlexibleTableCell	*cell;
+    
+    //Set our cells' opacities
+    enumerator = [cellArray objectEnumerator];
+    while(cell = [enumerator nextObject]){
+        [cell setOpacity:opacity];
+    }
+}
 @end
 
 

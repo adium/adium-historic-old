@@ -462,12 +462,17 @@
 - (void)addRow:(AIFlexibleTableRow *)inRow
 {
     //Add the new row (To the head of our array)
-    [rowArray insertObject:inRow atIndex:0];
+    [self addRow:inRow atIndex:0];
+}
+- (void)addRow:(AIFlexibleTableRow *)inRow atIndex:(int)index
+{
+    //Add the new row
+    [rowArray insertObject:inRow atIndex:index];
     [inRow setTableView:self];
-
+    
     //Resize the row above (if necessary) to update any spanning
     if([inRow isSpannedInto]){
-	[self resizeRow:[rowArray objectAtIndex:1]];
+	[self resizeRow:[rowArray objectAtIndex:(index+1)]];
     }
     
     //Resize the new row
@@ -478,8 +483,6 @@
             [self resetCursorRects];
         }
     }
-    
-    //   [self setNeedsDisplay:YES];
 }
 
 //Remove all rows
@@ -494,6 +497,43 @@
     [self setNeedsDisplay:YES];
 }
 
+- (void)removeBlockOfRowsWithTag:(int)tag
+{
+    NSEnumerator        *rowEnumerator;
+    AIFlexibleTableRow  *row;
+    
+    //Enumerate through each row
+    //We move from the bottom up, so we can avoid enumerating through rows after we remove a block of rows with a given tag
+    NSMutableArray *rowsToRemove = [NSMutableArray arrayWithCapacity:2]; //2 is a good guess for our purposes; NSMutableArray expands as necessary if we need more rows
+    
+    BOOL foundTag  = NO;
+    
+    
+    rowEnumerator = [rowArray objectEnumerator];
+    while((row = [rowEnumerator nextObject])){
+        if ([row tag] == tag) {
+            [rowsToRemove addObject:row];
+            foundTag = YES;
+        }else{
+            if (foundTag) break; //Stop scanning once we hit a non-match (after having found an approriate row or rows)
+        }
+    }
+    
+    //removeObjectsFromArray is the intuitive choice, but our rows don't respond to hash and isEqual (nor do we want them to) so it isn't applicable
+    if ([rowsToRemove count]) {
+        rowEnumerator = [rowsToRemove objectEnumerator];
+        while (row = [rowEnumerator nextObject]){
+            [rowArray removeObjectIdenticalTo:row];
+        }
+        
+        if (!lockFocus) {
+            [self resetCursorRects];
+            [self _resizeContents:YES];
+        }
+        
+        [self setNeedsDisplay:YES];
+    }
+}
 
 
 

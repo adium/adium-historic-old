@@ -71,7 +71,25 @@
 //Draw our custom content
 - (void)drawContentsWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-    [string drawInRect:cellFrame];
+    if (isOpaque) {
+        [string drawInRect:cellFrame];
+    } else {
+        NSImage             *image;
+        
+        //Build an image of our rect before we draw
+        image = [[NSImage alloc] initWithSize:cellFrame.size];
+        [image setFlipped:[controlView isFlipped]];
+        [image addRepresentation:[[[NSBitmapImageRep alloc] initWithFocusedViewRect:cellFrame] autorelease]];
+        
+        [controlView lockFocus];
+        //Draw our string
+        [string drawInRect:cellFrame];
+        
+        //Fade our new drawing back towards the original
+        [image drawInRect:cellFrame fromRect:NSMakeRect(0,0,cellFrame.size.width,cellFrame.size.height) operation:NSCompositeSourceOver fraction:(1-opacity)];
+        [controlView unlockFocus];
+        [image release];
+    }
 }
 
 @end

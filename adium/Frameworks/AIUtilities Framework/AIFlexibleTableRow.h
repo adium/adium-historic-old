@@ -23,6 +23,8 @@
     BOOL		isSpannedInto;
     id                  representedObject;
     float               headIndent;
+    
+    int                 tag;
 }
 
 + (id)rowWithCells:(NSArray *)inCells representedObject:(id)inRepresentedObject;
@@ -52,4 +54,8 @@
 - (void)setTableView:(AIFlexibleTableView *)inView;
 - (AIFlexibleTableView *)tableView;
 
+- (void)setTag:(int)inTag;
+- (int)tag;
+
+- (void)setOpacity:(float)opacity;
 @end

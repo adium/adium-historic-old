@@ -55,10 +55,12 @@
 
 
 - (void)addRow:(AIFlexibleTableRow *)inRow;
+- (void)addRow:(AIFlexibleTableRow *)inRow atIndex:(int)index;
 - (void)resizeRow:(AIFlexibleTableRow *)inRow;
 - (void)setContentBottomAligned:(BOOL)inValue;
 - (void)setForwardsKeyEvents:(BOOL)inValue;
 - (void)removeAllRows;
+- (void)removeBlockOfRowsWithTag:(int)tag;
 - (AIFlexibleTableRow *)rowAtIndex:(int)index;
 - (void)setContentPaddingTop:(int)inTop bottom:(int)inBottom;
 - (void)lockTable;

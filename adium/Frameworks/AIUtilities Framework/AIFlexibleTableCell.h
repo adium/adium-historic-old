@@ -32,6 +32,10 @@
 
     //Size / Drawing
     NSSize		contentSize;
+    
+    //Opacity
+    float               opacity;
+    BOOL                isOpaque;
 }
 
 - (void)setTableRow:(AIFlexibleTableRow *)inRow;
@@ -40,6 +44,7 @@
 //Configure
 - (void)setBackgroundColor:(NSColor *)inColor;
 - (void)setPaddingLeft:(int)inLeft top:(int)inTop right:(int)inRight bottom:(int)inBottom;
+- (void)setOpacity:(float)inOpacity;
 
 //Access
 - (NSSize)paddingInset;
