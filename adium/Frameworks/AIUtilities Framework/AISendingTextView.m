@@ -241,13 +241,13 @@
                     _sendNextRet=NO;
                 }
 */				
-				optionPressedWithNext = ([theEvent modifierFlags] & NSAlternateKeyMask);
-
+				optionPressedWithNext = ([theEvent modifierFlags] & NSAlternateKeyMask) != 0;
+				
             } else if (lastChar == NSEnterCharacter) {
                 nextIsReturn = NO;
                 nextIsEnter = YES;
 				
-                optionPressedWithNext = ([theEvent modifierFlags] & NSAlternateKeyMask);
+                optionPressedWithNext = ([theEvent modifierFlags] & NSAlternateKeyMask) != 0;
             }
         }
 		
