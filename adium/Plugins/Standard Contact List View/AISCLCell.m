@@ -218,6 +218,15 @@
     }
 	cellFrame.size.width -= RIGHT_PADDING;
 	
+	//Draw all left Views before the background if drawing a label around the contact only
+	if(labelAroundContactOnly && ([[listObject displayArrayForKey:@"Left View"] count]) ){
+		int sideViewWidth = [self displayViews:[[listObject displayArrayForKey:@"Left View"] allValues]
+										inRect:NSOffsetRect(cellFrame, STATUS_CIRCLE_MARGIN_HACK, 0)
+										onLeft:YES];
+		cellFrame.origin.x += (sideViewWidth + STATUS_CIRCLE_MARGIN_HACK);
+		cellFrame.size.width -= (sideViewWidth + STATUS_CIRCLE_MARGIN_HACK);
+	}
+	
 	//List Object Label
     if([outlineView showLabels]){
 		NSColor			*labelColor = nil;
@@ -280,8 +289,8 @@
 		}
     }
     
-    //Draw all left Views
-	if([[listObject displayArrayForKey:@"Left View"] count]){
+    //Draw all left Views after the background if drawing a label around the entire width
+	if(!labelAroundContactOnly && ([[listObject displayArrayForKey:@"Left View"] count]) ){
 		int sideViewWidth = [self displayViews:[[listObject displayArrayForKey:@"Left View"] allValues]
 										inRect:NSOffsetRect(cellFrame, STATUS_CIRCLE_MARGIN_HACK, 0)
 										onLeft:YES];
