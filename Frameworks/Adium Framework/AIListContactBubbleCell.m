@@ -36,7 +36,6 @@
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
 	if(![self cellIsSelected]){
-		int		row = [controlView rowForItem:listObject];
 		NSColor	*labelColor;
 		
 		//Label color.  If there is no label color we draw the background color (taking care of gridding if needed)
