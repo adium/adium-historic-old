@@ -190,7 +190,7 @@
 - (id)initWithType:(FRAMETYPE)inFrameType sequence:(unsigned short *)inSequence data:(NSData *)inData
 {
     [super init];
-    
+
     //init the header
     frameType = inFrameType;
     sequence = *inSequence;

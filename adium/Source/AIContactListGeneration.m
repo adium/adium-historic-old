@@ -106,6 +106,7 @@
             AIHandle		*handle;
 
             handleEnumerator = [[[(AIAccount<AIAccount_Handles> *)account availableHandles] allValues] objectEnumerator];
+            NSLog(@"%@ (%i)",[account accountDescription],[[(AIAccount<AIAccount_Handles> *)account availableHandles] count]);
             while((handle = [handleEnumerator nextObject])){
                 [self _addHandle:handle];
             }
@@ -140,6 +141,12 @@
         if([groupName compare:[[contact containingGroup] UID]] != 0){
             [self _moveContact:contact toGroupNamed:groupName]; //Move contact to the correct group
             updateList = YES;
+
+            NSLog(@"Add (Contact already exists, Moved to group %@) %@",groupName, [handle UID]);
+
+        }else{
+            NSLog(@"Add (Contact already exists) %@",[handle UID]);
+            
         }
         
     }else{ //If it doesn't
@@ -153,6 +160,8 @@
             //Add our handle
             [contact addHandle:handle];
 
+            NSLog(@"Add (Recycled from abandoned) %@",[handle UID]);
+
         }else{ //If it doesn't
             //create a new contact
             contact = [[AIListContact alloc] initWithUID:handleUID serviceID:[serviceType identifier]];
@@ -162,6 +171,7 @@
             //Add our handle
             [contact addHandle:handle];
 
+            NSLog(@"Add (New Contact) %@",[handle UID]);
         }
     }
 
@@ -202,6 +212,8 @@
             [contactList addObject:group];			//Add the group to our contact list
             [groupDict setObject:group forKey:serverGroup];	//Add it to our group tracking dict
             [abandonedGroups removeObjectForKey:serverGroup]; 	//remove it from the abandoned cache
+
+            NSLog(@"  Group %@ (Recycle)",serverGroup);
             
         }else{ //If it doesn't
             //Create the group
@@ -210,8 +222,11 @@
             [self _correctlyExpandCollapseGroup:group];		//Correctly set the group as expanded or collapsed
             [contactList addObject:group];			//Add the group to our contact list
             [groupDict setObject:group forKey:serverGroup];	//Add it to our group tracking dict
-            
+
+            NSLog(@"  Group %@ (Create)",serverGroup);
         }
+    }else{
+//        NSLog(@"  Group %@ (Exists)",serverGroup);
     }
 
     //Return the group

@@ -41,6 +41,8 @@
 		<string>Incoming message delivery failure (Message too big)</string>
 		<key>962</key>
 		<string>Incoming message delivery failure (Message sent too fast)</string>
+		<key>964</key>
+		<string>Outgoing message delivery failure (Message too big)</string>
 		<key>970</key>
 		<string>User information is currently unavilable (1)</string>
 		<key>971</key>

@@ -141,10 +141,11 @@
 }
 
 //Send a message object to a handle
-- (void)sendContentObject:(id <AIContentObject>)inObject
+- (BOOL)sendContentObject:(id <AIContentObject>)inObject
 {
     AIHandle		*handle = [inObject destination];
     AIListContact 	*contact = [handle containingContact];
+    BOOL		sent = NO;
 
     if(contact){
         NSEnumerator		*enumerator;
@@ -160,21 +161,25 @@
         }
     
         //Send the object
-        [(AIAccount <AIAccount_Content> *)[inObject source] sendContentObject:inObject];
-        
-        //Add the object
-        [contact addContentObject:inObject];
-    
-        //Set 'UnrespondedContent' to NO  (This could be done by a seperate plugin, but I'm not sure that's necessary)
-        [[handle statusDictionary] setObject:[NSNumber numberWithBool:NO] forKey:@"UnrespondedContent"];
-        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
-    
-        //Content object added
-        [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
-    
-        //Did send content
-        [[owner notificationCenter] postNotificationName:Content_DidSendContent object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+        if([(AIAccount <AIAccount_Content> *)[inObject source] sendContentObject:inObject]){
+            //Add the object
+            [contact addContentObject:inObject];
+
+            //Set 'UnrespondedContent' to NO  (This could be done by a seperate plugin, but I'm not sure that's necessary)
+            [[handle statusDictionary] setObject:[NSNumber numberWithBool:NO] forKey:@"UnrespondedContent"];
+            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"]];
+
+            //Content object added
+            [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+
+            //Did send content
+            [[owner notificationCenter] postNotificationName:Content_DidSendContent object:contact userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+
+            sent = YES;
+        }
     }
+
+    return(sent);
 }
 
 @end

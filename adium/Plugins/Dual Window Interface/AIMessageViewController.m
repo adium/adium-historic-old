@@ -52,9 +52,6 @@
     if([[textView_outgoing attributedString] length] != 0){ //If message length is 0, don't send
         AIContentMessage	*message;
 
-        //Hide the account selection menu
-        [self setAccountSelectionMenuVisible:NO];
-
         //Send the message
         [[owner notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:contact userInfo:nil];
         message = [AIContentMessage messageWithSource:account
@@ -62,14 +59,23 @@
                                                  date:nil
                                               message:[[[textView_outgoing attributedString] copy] autorelease]];
 
-        [[owner contentController] sendContentObject:message];
-        [[owner notificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:contact userInfo:nil];
-    
-        //Clear the message entry text view
-        [textView_outgoing setString:@""];
-        [self textDidChange:nil]; //force the view to resize
+        if([[owner contentController] sendContentObject:message]){
+            [[owner notificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:contact userInfo:nil];
+        }
     }
 }
+
+//The entered message was sent
+- (IBAction)didSendMessage:(id)sender
+{
+    //Hide the account selection menu
+    [self setAccountSelectionMenuVisible:NO];
+
+    //Clear the message entry text view
+    [textView_outgoing setString:@""];
+    [self textDidChange:nil]; //force the view to resize
+}
+    
 
 //Return our view
 - (NSView *)view
@@ -172,6 +178,7 @@
 
     //Register for notifications
     [[owner notificationCenter] addObserver:self selector:@selector(sendMessage:) name:Interface_SendEnteredMessage object:contact];
+    [[owner notificationCenter] addObserver:self selector:@selector(didSendMessage:) name:Interface_DidSendEnteredMessage object:contact];
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sizeAndArrangeSubviews) name:NSViewFrameDidChangeNotification object:view_contents];
 

@@ -279,7 +279,7 @@ typedef enum {
 - (void)invokeDefaultHandlerForObject:(id <AIContentObject>)inObject;
 
 - (void)addIncomingContentObject:(id <AIContentObject>)inObject;
-- (void)sendContentObject:(id <AIContentObject>)inObject;
+- (BOOL)sendContentObject:(id <AIContentObject>)inObject;
 
 - (void)registerTextEntryFilter:(id <AITextEntryFilter>)inFilter;
 //- (NSArray *)textEntryFilters;
