@@ -84,7 +84,7 @@
         if(notification == nil || [key compare:KEY_DOCK_ACTIVE_BEHAVIOR_SET] == 0){
             NSString	*activePreset = [plugin activePreset];
 
-            if(activePreset){
+            if(activePreset && ([activePreset length] != 0)){
                 [popUp_behaviorSet selectItemWithRepresentedObject:activePreset];
             }else{
                 [popUp_behaviorSet selectItem:[popUp_behaviorSet lastItem]];

@@ -111,7 +111,7 @@
 //Active behavior preset.  Pass and return nil for custom behavior
 - (void)setActivePreset:(NSString *)presetName
 {
-    [[owner preferenceController] setPreference:presetName
+    [[owner preferenceController] setPreference:(presetName ? presetName : @"")
                                          forKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET
                                           group:PREF_GROUP_DOCK_BEHAVIOR];
 }
