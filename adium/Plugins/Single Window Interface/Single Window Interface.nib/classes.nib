@@ -1,0 +1,23 @@
+{
+    IBClasses = (
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            CLASS = CSSingleWindowInterfaceWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "box_messageView" = NSBox; 
+                contactListViewController = id; 
+                "scrollView_contactList" = AIAutoScrollView; 
+                "view_noActiveChat" = NSView; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
