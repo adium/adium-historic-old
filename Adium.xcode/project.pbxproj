@@ -8002,6 +8002,7 @@
 				34A6FEB907D7E2E200972830,
 				34A6FEBB07D7E2E400972830,
 				34BFD7F507E6A22700AD984D,
+				34BFDB2E07E7710C00AD984D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8130,6 +8131,7 @@
 				3402D38B07CB04FC0044F818,
 				4BFE2EA807E61FB200C07EBE,
 				34BFD7F607E6A22700AD984D,
+				34BFDB3907E7714300AD984D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8215,6 +8217,7 @@
 				34A6FEBA07D7E2E300972830,
 				34A6FEBC07D7E2E500972830,
 				34BFD7F707E6A22700AD984D,
+				34BFDB2F07E7710C00AD984D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8553,6 +8556,9 @@
 				34BFD7F207E6A22700AD984D,
 				34BFD7F407E6A22700AD984D,
 				34BFD7F307E6A22700AD984D,
+				34BFDB2C07E7710C00AD984D,
+				34BFDB2D07E7710C00AD984D,
+				34BFDB3807E7714200AD984D,
 			);
 			isa = PBXGroup;
 			name = "Preset Manager";
@@ -8646,6 +8652,53 @@
 		};
 		34BFD80107E6A51D00AD984D = {
 			fileRef = 34BFD7FF07E6A51D00AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFDB2C07E7710C00AD984D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESPresetNameSheetController.h;
+			path = "Frameworks/Adium Framework/ESPresetNameSheetController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFDB2D07E7710C00AD984D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESPresetNameSheetController.m;
+			path = "Frameworks/Adium Framework/ESPresetNameSheetController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFDB2E07E7710C00AD984D = {
+			fileRef = 34BFDB2C07E7710C00AD984D;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		34BFDB2F07E7710C00AD984D = {
+			fileRef = 34BFDB2D07E7710C00AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFDB3807E7714200AD984D = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = PresetNameSheet.nib;
+			path = "Frameworks/Adium Framework/PresetNameSheet.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFDB3907E7714300AD984D = {
+			fileRef = 34BFDB3807E7714200AD984D;
 			isa = PBXBuildFile;
 			settings = {
 			};
