@@ -81,16 +81,17 @@
 
 @end
 
-@interface NSMenuItem (ESMenuItemAdditionsPRIVATE)
+//Note: AdditionsFromCarbonMenuManager require the menu item already be added to a menu. 
+@interface NSMenuItem (AdditionsFromCarbonMenuManagerPRIVATE)
 - (void)_setCarbonMenuItemAttributes:(MenuItemAttributes)attributes enabled:(BOOL)enabled;
 - (BOOL)_hasCarbonMenuItemAttributes:(MenuItemAttributes)inAttributes;
 @end
 
-@implementation NSMenuItem (ESMenuItemAdditions)
+@implementation NSMenuItem (AdditionsFromCarbonMenuManager)
 
 extern MenuRef _NSGetCarbonMenu(NSMenu *);
 
-// Must be called after NSApp delegate's applicationDidFinishLaunching.
+// Must be called after NSApp delegate's applicationDidFinishLaunching and after the menuItem is added to a menu
 - (void)setDynamic:(BOOL)dynamic
 {	
 	[self _setCarbonMenuItemAttributes:kMenuItemAttrDynamic enabled:dynamic];
@@ -100,6 +101,7 @@ extern MenuRef _NSGetCarbonMenu(NSMenu *);
     return ([self _hasCarbonMenuItemAttributes:kMenuItemAttrDynamic]);
 }
 
+// Must be called after NSApp delegate's applicationDidFinishLaunching and after the menuItem is added to a menu
 - (void)setHidden:(BOOL)hidden
 {
 	[self _setCarbonMenuItemAttributes:kMenuItemAttrHidden enabled:hidden];
