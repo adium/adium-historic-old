@@ -129,4 +129,6 @@ typedef enum {
 - (BOOL)isSecure;
 - (BOOL)supportsSecureMessagingToggling;
 
+- (BOOL)canSendImages;
+
 @end
