@@ -197,7 +197,12 @@ static AIInfoWindowController *sharedInstance = nil;
             [infoString appendString:@"\r\r\tStatus:\t" withAttributes:labelAttributes];
         }
         
-        [infoString appendString:(status != nil ? [status string] : @"Yes") withAttributes:valueAttributes];
+        if (status) {
+            NSMutableAttributedString * statusString = [[[owner contentController] filteredAttributedString:status] mutableCopy];
+            [infoString appendAttributedString:[statusString addAttributes:valueAttributes range:NSMakeRange(0,[statusString length])]];
+        } else {
+            [infoString appendString:@"Yes" withAttributes:valueAttributes];
+        }
     }
     
     //Idle Since
@@ -232,11 +237,12 @@ static AIInfoWindowController *sharedInstance = nil;
     //Text Profile
     ownerArray = [inContact statusArrayForKey:@"TextProfile"];
     if(ownerArray && [ownerArray count]){
-        NSMutableAttributedString 	*textProfile = [[ownerArray objectAtIndex:0] mutableCopy];
+        NSAttributedString 	*textProfile = [ownerArray objectAtIndex:0];
         //Only show the profile is one exists
         if (textProfile && [textProfile length]) {
             [infoString appendString:@"\r\r\tProfile:\t" withAttributes:labelAttributes];
-            [infoString appendAttributedString:[[owner contentController] filteredAttributedString:textProfile]];
+            NSMutableAttributedString * textProfileString = [[[owner contentController] filteredAttributedString:textProfile] mutableCopy];
+            [infoString appendAttributedString:[textProfileString addAttributes:valueAttributes range:NSMakeRange(0,[textProfileString length])]];
         }
     }
     
