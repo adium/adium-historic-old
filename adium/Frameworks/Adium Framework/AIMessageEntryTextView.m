@@ -263,7 +263,7 @@ static NSImage *pushIndicatorImage = nil;
 
 	//We set the insertingText flag to YES to prevent out 'textDidChange' method from notifying Adium
 	//about this change, since we will notify Adium in a more efficient way from this method.
-	insertingText = YES; 
+	insertingText = YES;
 	[super insertText:aString];
 	insertingText = NO; 
 	
@@ -273,6 +273,7 @@ static NSImage *pushIndicatorImage = nil;
     }else if([aString isKindOfClass:[NSAttributedString class]]){
         theString = [aString string];
     }
+
 	[[adium contentController] stringAdded:theString toTextEntryView:self];
 }
 
