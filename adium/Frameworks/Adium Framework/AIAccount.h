@@ -32,8 +32,22 @@ typedef enum {
 @protocol AIAccount_Content
     // Send a message object to its destination
     - (BOOL)sendContentObject:(id <AIContentObject>)object;
-    // Returns YES if the contact is available for receiving content of the specified type
+    // Returns YES if the handle is available for receiving content of the specified type
     - (BOOL)availableForSendingContentType:(NSString *)inType toHandle:(AIHandle *)inHandle;
+
+
+
+//Get the chat instance for messaging a handle
+//- (AIChat *)chatForSendingContentToContact:(AIListContact *)inContact;
+
+//Close a chat instance
+//- (BOOL)closeChat:(AIChat *)inChat;
+
+//Invite a handle to an existing chat
+//- (BOOL)inviteHandle:(AIHandle *)inHandle toChat:(AIChat *)inChat;
+
+
+
 @end
 
 //Support for standard UID based contacts
@@ -57,40 +71,7 @@ typedef enum {
     - (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName;
 @end
 
-//Additional group management methods
-@protocol AIAccount_Groups
-    // Add a group to this account
-    - (BOOL)addGroup:(NSString *)inGroup;
-    // Remove a group from this account
-    - (BOOL)removeGroup:(NSString *)inGroup;
-@end
 
-    // Contact list is editable
-/*    - (BOOL)contactListEditable;
-
-    //Add an object
-    - (BOOL)addObject:(AIContactObject *)object;
-    // Remove an object
-    - (BOOL)removeObject:(AIContactObject *)object;
-    // Rename an object
-    - (BOOL)renameObject:(AIContactObject *)object to:(NSString *)inName;*/
-
-//Support for UID based, grouped contacts
-/*@protocol AIAccount_GroupedContacts
-    // Contact list is editable
-    - (BOOL)contactListEditable;
-
-    // Add an object to the specified groups
-    - (BOOL)addObject:(AIContactObject *)object toGroup:(AIContactGroup *)group;    
-    // Remove an object from the specified groups
-    - (BOOL)removeObject:(AIContactObject *)object fromGroup:(AIContactGroup *)group;
-    // Rename an object
-    - (BOOL)renameObject:(AIContactObject *)object inGroup:(AIContactGroup *)group to:(NSString *)inName;
-    // Move an object
-    - (BOOL)moveObject:(AIContactObject *)object fromGroup:(AIContactGroup *)sourceGroup toGroup:(AIContactGroup *)destGroup;
-
-//If the service doesn't support groups within groups, group arrays can be compressed, or 'super'groups can be ignored
-@end*/
 
 @interface AIAccount : NSObject {
     AIAdium			*owner;

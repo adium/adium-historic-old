@@ -117,14 +117,14 @@
     //If the user received a message, send our away message to them
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
         if(awayMessage && [awayMessage length] != 0){
-            AIHandle	*handle = [contentObject source];
+            AIListContact	*contact = [contentObject source];
 
             //Create and send an away bounce message (If the sender hasn't received one already)
-            if(![receivedAwayMessage containsObject:[handle UIDAndServiceID]]){
+            if(![receivedAwayMessage containsObject:[contact UIDAndServiceID]]){
                 AIContentMessage	*responseContent;
     
                 responseContent = [AIContentMessage messageWithSource:[contentObject destination]
-                                                          destination:handle
+                                                          destination:contact
                                                                  date:nil
                                                               message:awayMessage];
     
@@ -140,8 +140,8 @@
     id <AIContentObject>	contentObject = [[notification userInfo] objectForKey:@"Object"];
 
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        AIHandle	*handle = [contentObject destination];
-        NSString 	*senderUID = [handle UIDAndServiceID];
+        AIListContact	*contact = [contentObject destination];
+        NSString 	*senderUID = [contact UIDAndServiceID];
 
         //Add the handle's UID to our 'already received away message' array, so they only receive the message once.
         if(![receivedAwayMessage containsObject:senderUID]){

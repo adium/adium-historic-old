@@ -575,11 +575,15 @@
 //Returns the handle with the specified Service and UID in the group (or any subgroups)
 - (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(NSString *)serviceID UID:(NSString *)UID
 {
-    return([self contactInGroup:inGroup withService:serviceID UID:UID serverGroup:nil]);
+    return([self contactInGroup:inGroup withService:serviceID UID:UID serverGroup:nil create:NO]);
+}
+- (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(NSString *)serviceID UID:(NSString *)UID serverGroup:(NSString *)serverGroup
+{
+    return([self contactInGroup:inGroup withService:serviceID UID:UID serverGroup:serverGroup create:NO]);
 }
 
 //Returns the handle with the specified Service and UID in the group (or any subgroups)
-- (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(NSString *)serviceID UID:(NSString *)UID serverGroup:(NSString *)serverGroup
+- (AIListContact *)contactInGroup:(AIListGroup *)inGroup withService:(NSString *)serviceID UID:(NSString *)UID serverGroup:(NSString *)serverGroup create:(BOOL)create
 {
     NSEnumerator	*enumerator;
     AIListObject 	*object;
@@ -590,7 +594,7 @@
     enumerator = [inGroup objectEnumerator];
     while((object = [enumerator nextObject])){
         if([object isKindOfClass:[AIListGroup class]]){
-            if((subGroupObject = [self contactInGroup:(AIListGroup *)object withService:serviceID UID:UID serverGroup:serverGroup])){
+            if((subGroupObject = [self contactInGroup:(AIListGroup *)object withService:serviceID UID:UID serverGroup:serverGroup create:NO])){
                 return(subGroupObject); //Match in a subgroup
             }
         }else if([object isKindOfClass:[AIListContact class]]){
@@ -604,7 +608,11 @@
         }
     }
 
-    return(nil);
+    if(create){
+        return([contactListGeneration createContactWithUID:UID serviceID:serviceID]);
+    }else{
+        return(nil);
+    }
 }
 
 //Returns the group with the specified UID in the group (or any subgroups)
