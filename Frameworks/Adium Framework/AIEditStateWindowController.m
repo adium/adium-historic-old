@@ -102,12 +102,12 @@ static	NSMutableDictionary	*controllerDict = nil;
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget
 {
-    [super initWithWindowNibName:windowNibName];
-
-	[self setOriginalStatusState:inStatusState forType:inStatusType];
-	[self setAccount:inAccount];
-	
-	target = inTarget;
+    if(self = [super initWithWindowNibName:windowNibName]){
+		[self setOriginalStatusState:inStatusState forType:inStatusType];
+		[self setAccount:inAccount];
+		
+		target = inTarget;
+	}
 	
 	return(self);
 }
