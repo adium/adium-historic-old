@@ -15,12 +15,15 @@
 
 @class AIListObject, AISCLOutlineView;
 
+#define FONT_HEIGHT_STRING		@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()"
+
 @interface AIListCell : NSCell {
 	AIListOutlineView	*controlView;
     AIListObject		*listObject;
     BOOL				isGroup;
 	
 	NSTextAlignment		textAlignment;
+	int					labelFontHeight;
 	
 	int					topSpacing;
 	int					bottomSpacing;
