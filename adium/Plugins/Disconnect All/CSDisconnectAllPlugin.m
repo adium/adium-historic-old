@@ -25,7 +25,11 @@
 												 target:self
 												 action:@selector(disconnectAll:)
 										  keyEquivalent:@""];
-	
+    
+    connectDockItem = [[NSMenuItem alloc] initWithTitle:CONNECT_MENU_TITLE
+                                              target:self
+                                              action:@selector(connectAll:)
+                                       keyEquivalent:@""];
 	
     connectItem = [[[NSMenuItem alloc] initWithTitle:CONNECT_MENU_TITLE
                                               target:self
@@ -33,17 +37,15 @@
                                        keyEquivalent:@"k"] autorelease];
     [connectItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
 
-    
-    connectDockItem = [[NSMenuItem alloc] initWithTitle:CONNECT_MENU_TITLE
-                                              target:self
-                                              action:@selector(connectAll:)
-                                       keyEquivalent:@""];
-    
+	[[adium menuController] addMenuItem:connectDockItem toLocation:LOC_Dock_Status];
+	[[adium menuController] addMenuItem:disconnectDockItem toLocation:LOC_Dock_Status];
     
     cancelConnectItem = [[[NSMenuItem alloc] initWithTitle:CANCEL_MENU_TITLE
                                                     target:self
                                                     action:@selector(cancelAll:)
                                              keyEquivalent:@"."] autorelease];
+	[[adium menuController] removeMenuItem:connectDockItem];
+	[[adium menuController] removeMenuItem:disconnectDockItem];
     [cancelConnectItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
 	
     [[adium menuController] addMenuItem:connectItem toLocation:LOC_File_Accounts];
@@ -56,9 +58,12 @@
 
 -(void)uninstallPlugin
 {
+	//Menu Items
     [[adium menuController] removeMenuItem:disconnectItem];
     [[adium menuController] removeMenuItem:connectItem];
     [[adium menuController] removeMenuItem:cancelConnectItem];
+	
+	//Dock Items
 	[[adium menuController] removeMenuItem:connectDockItem];
 	[[adium menuController] removeMenuItem:disconnectDockItem];
 }
