@@ -148,6 +148,11 @@
 			//Select the loading tab view
 			[super selectTabViewItem:tabViewItem_loading];
 			
+			if(![[self delegate] respondsToSelector:@selector(immediatelyShowLoadingIndicatorForTabView:willSelectTabViewItem:)] ||
+			   [[self delegate] immediatelyShowLoadingIndicatorForTabView:self willSelectTabViewItem:tabViewItem]){
+				[[self window] display];
+			}
+			
 			/* Now inform our delegate that we will be selecting the desired tab view 
 			 * since after [super selectTabViewItem:tabViewItem_loading]; it thinks we are selecting tabViewItem_loading */
 			if([[self delegate] respondsToSelector:@selector(tabView:willSelectTabViewItem:)]){

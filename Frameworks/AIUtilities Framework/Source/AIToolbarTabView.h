@@ -52,5 +52,18 @@
  */
 - (int)tabView:(NSTabView *)tabView heightForTabViewItem:(NSTabViewItem *)tabViewItem;
 
+/*
+ * @brief Should the loading indicator be shown immediately until a tab view item is selected?
+ *
+ * If this method is implemented and returns YES, the loading pane will immediately be shown with its spinning progress
+ * indicator animating.  If this method is not implemented or returns NO, the load pane will not be shown until the run
+ * loop after the user's click.  YES is appropriate if loading may take an appreciable amount of time; NO looks better
+ * if the loading process is near-instanteous.
+ *
+ * For example, in Adium, the first time a preferences tab is selected, this method returns YES.
+ * For subsequent displays, when information is already cached and ready, the method returns NO.
+ */
+- (BOOL)immediatelyShowLoadingIndicatorForTabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem;
+
 @end
 
