@@ -15,6 +15,10 @@
 
 #define STATE_DRAG_TYPE	@"AIState"
 
+@interface ESStatusPreferences (PRIVATE)
+- (void)configureOtherControls;
+@end
+
 @implementation ESStatusPreferences
 
 /*
@@ -54,7 +58,7 @@
 									 object:nil];
 	[self stateArrayChanged:nil];
 
-	[self configureControlDimming];
+	[self configureOtherControls];
 }
 
 /*
@@ -62,7 +66,7 @@
  */
 - (void)viewWillClose
 {
-
+	[self saveTimeValues];
 }
 
 /*
@@ -293,8 +297,23 @@
 }
 
 #pragma mark Other status-related controls
+
 /*
- * @brief Configure control dimming for idle, auto-away, etc. preferences.
+ * @brief Configure initial values for idle, auto-away, etc., preferences.
+ */
+
+- (void)configureOtherControls
+{
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STATUS_PREFERENCES];
+	
+	[checkBox_idle setState:[[prefDict objectForKey:KEY_STATUS_REPORT_IDLE] boolValue]];
+	[textField_idleMinutes setDoubleValue:([[prefDict objectForKey:KEY_STATUS_REPORT_IDLE_INTERVAL] doubleValue] / 60.0)];
+	
+	[self configureControlDimming];
+}
+
+/*
+ * @brief Configure control dimming for idle, auto-away, etc., preferences.
  */
 - (void)configureControlDimming
 {
@@ -310,5 +329,56 @@
 	[stepper_autoAwayMinutes setEnabled:autoAwayControlsEnabled];	
 }
 
+/*
+ * @brief Change preference
+ *
+ * Sent when controls are clicked
+ */
+- (void)changePreference:(id)sender
+{
+	if(sender == checkBox_idle){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_STATUS_REPORT_IDLE
+											  group:PREF_GROUP_STATUS_PREFERENCES];
+		[self configureControlDimming];
+	}else if(sender == checkBox_autoAway){
+		/*
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_STATUS_REPORT_IDLE
+											  group:PREF_GROUP_STATUS_PREFERENCES];
+		 */
+		[self configureControlDimming];
+	}
+}
+
+/*
+ * @brief Control text did end editing
+ *
+ * In an attempt to get closer to a live-apply of preferences, save the preference when the
+ * text field loses focus.  See saveTimeValues for more information.
+ */
+- (void)controlTextDidEndEditing:(NSNotification *)notification
+{
+	[self saveTimeValues];
+}
+
+/*
+ * @brief Save time text field values
+ *
+ * We can't get notified when the associated NSStepper is clicked, so we just save as requested.
+ * This method should be called before the view closes.
+ */
+- (void)saveTimeValues
+{
+	[[adium preferenceController] setPreference:[NSNumber numberWithDouble:([textField_idleMinutes doubleValue]*60.0)]
+										 forKey:KEY_STATUS_REPORT_IDLE_INTERVAL
+										  group:PREF_GROUP_STATUS_PREFERENCES];
+
+	/*
+	[[adium preferenceController] setPreference:[NSNumber numberWithDouble:([textField_autoAwayMinutes doubleValue]*60.0)]
+										 forKey:KEY_STATUS_REPORT_IDLE_INTERVAL
+										  group:PREF_GROUP_STATUS_PREFERENCES];
+	 */
+}
+
 @end
- 

@@ -19,7 +19,7 @@
 #import "AIStatusController.h"
 #import <Adium/AIAccount.h>
 
-#define IDLE_TIME_PREFERENCE	(60*10)  //XXX - This needs to be a preference(?), seconds before auto-idle. -ai.
+//#define IDLE_TIME_PREFERENCE	(60*10)  //XXX - This needs to be a preference(?), seconds before auto-idle. -ai.
 
 /*!
  * @class AIAutoIdlePlugin
@@ -51,6 +51,10 @@
 								   selector:@selector(machineIsActive:)
 									   name:AIMachineIsActiveNotification
 									 object:nil];
+	
+	//Observe preference changes for updating sending key settings
+	[[adium preferenceController] registerPreferenceObserver:self 
+													forGroup:PREF_GROUP_STATUS_PREFERENCES];	
 }
 
 /*!
@@ -64,6 +68,18 @@
 	[super dealloc];
 }
 
+/*
+ * @brief Preferences changed
+ *
+ * Note whether we are supposed to report idle time, and, if so, after how much time.
+ */
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	reportIdleTime = [[prefDict objectForKey:KEY_STATUS_REPORT_IDLE] boolValue];
+	idleTimeInterval = [[prefDict objectForKey:KEY_STATUS_REPORT_IDLE_INTERVAL] doubleValue];	
+}
+
 /*!
  * @brief Invoked when machine idle updates
  *
@@ -72,10 +88,10 @@
  */
 - (void)machineIdleUpdate:(NSNotification *)notification
 {
-	if(!automaticIdleSet){
+	if(!automaticIdleSet && reportIdleTime){
 		double	duration = [[[notification userInfo] objectForKey:@"Duration"] doubleValue];
 		
-		if(duration > IDLE_TIME_PREFERENCE){
+		if(duration > idleTimeInterval){
 			//If we are over the idle threshold, set our accounts to idle
 			automaticIdleSet = YES;
 			automaticIdleDate = [[[notification userInfo] objectForKey:@"IdleSince"] retain];

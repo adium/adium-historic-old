@@ -35,6 +35,10 @@
 #define KEY_STATUS_DESCRIPTION					@"Status Description"
 #define	KEY_STATUS_TYPE							@"Status Type"
 
+#define PREF_GROUP_STATUS_PREFERENCES			@"Status Preferences"
+#define KEY_STATUS_REPORT_IDLE					@"Report Idle"
+#define KEY_STATUS_REPORT_IDLE_INTERVAL			@"Report Idle Interval"
+
 //Built-in names and descriptions, which services should use when they support identical or approximately identical states
 #define	STATUS_NAME_AVAILABLE				@"Generic Available"
 #define	STATUS_DESCRIPTION_AVAILABLE		AILocalizedString(@"Available", nil)
