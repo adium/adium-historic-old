@@ -139,7 +139,7 @@ static AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
 		//Associate the handle with ui_data and the buddy with our statusDictionary
 //		buddy->node.ui_data = [theContact retain];
 		buddy->node.ui_data = theContact;
-//		[contactDict setObject:[NSValue valueWithPointer:buddy] forKey:[theContact uniqueObjectID]];
+//		[contactDict setObject:[NSValue valueWithPointer:buddy] forKey:[theContact internalObjectID]];
 	}
 	
 	return theContact;
@@ -2652,7 +2652,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 - (NSString *)_messageImageCachePathForID:(int)imageID forAdiumAccount:(id<AdiumGaimDO>)adiumAccount
 {
-    NSString    *messageImageCacheFilename = [NSString stringWithFormat:MESSAGE_IMAGE_CACHE_NAME, [adiumAccount uniqueObjectID], imageID];
+    NSString    *messageImageCacheFilename = [NSString stringWithFormat:MESSAGE_IMAGE_CACHE_NAME, [adiumAccount internalObjectID], imageID];
     return([[[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:messageImageCacheFilename] stringByAppendingPathExtension:@"png"] stringByExpandingTildeInPath]);	
 }
 
