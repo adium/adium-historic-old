@@ -5,6 +5,11 @@
 //  Created by Nelson Elhage on Sun Jan 18 2004.
 //
 
+#ifndef AILocalizedString
+#define AILocalizedString(key, comment) NSLocalizedStringFromTableInBundle(key,nil,[NSBundle bundleForClass: [self class]],comment)
+#define AILocalizedStringFromTable(key, table, comment) NSLocalizedStringFromTableInBundle(key,table,[NSBundle bundleForClass: [self class]],comment)
+#endif
+
 #import <Foundation/Foundation.h>
 
 @class AIPlugin;
@@ -22,10 +27,10 @@
 #define MSG_BUSY			@"Busy"
 #define MSG_TIMEOUT			@"Timeout"
 
-#define BUTTON_OK   NSLocalizedString(@"Okay","")
-#define BUTTON_ERR  NSLocalizedString(@"Okay","")
-#define BUTTON_YES  NSLocalizedString(@"Yes","")
-#define BUTTON_NO   NSLocalizedString(@"No","")
+#define BUTTON_OK   AILocalizedString(@"Okay","")
+#define BUTTON_ERR  AILocalizedString(@"Okay","")
+#define BUTTON_YES  AILocalizedString(@"Yes","")
+#define BUTTON_NO   AILocalizedString(@"No","")
 
 //Tag values for the play as radio button group
 #define				TAG_PLAYER_1		0
