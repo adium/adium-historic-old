@@ -377,6 +377,7 @@
 //A container was closed
 - (void)containerDidClose:(id <AIInterfaceContainer>)inContainer
 {
+        NSLog(@"container did close");
     if(inContainer == contactListWindowController){
         [contactListWindowController release]; contactListWindowController = nil;
     }
@@ -874,6 +875,10 @@
 //Destroy a message window
 - (void)_destroyMessageWindow:(AIMessageWindowController *)inWindow
 {
+    //Cler the lastUsedMessageWindow tracking variable if necessary
+    if (lastUsedMessageWindow==inWindow)
+        lastUsedMessageWindow = nil;
+    
     //Stop observing the message window
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillCloseNotification object:inWindow];
 
