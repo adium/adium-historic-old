@@ -16,10 +16,6 @@
 }
 
 //Overriden from CBGAimAccount
-- (NSArray *)supportedPropertyKeys;
-- (NSString *)accountID;
 - (NSString *)UID;
 - (NSString *)serviceID;
-- (NSString *)UIDAndServiceID;
-- (NSString *)accountDescription;
 @end

@@ -26,6 +26,9 @@
     return account;
 }
 
+// Subclasses must override this
+- (const char*)protocolPlugin { return NULL; }
+
 /*****************************/
 /* accountConnection methods */
 /*****************************/
@@ -177,6 +180,14 @@
             }
         }     
         
+        // Away status
+        BOOL newAway = (buddy->uc & UC_UNAVAILABLE) != 0;
+        id storedValue = [[theHandle statusDictionary] objectForKey:@"Away"];
+        if (storedValue == nil || newAway != [storedValue boolValue]) {
+            [[theHandle statusDictionary] setObject:[NSNumber numberWithBool:newAway] forKey:@"Away"];
+            [modifiedKeys addObject:@"Away"];
+        }
+
         //if anything chnaged
         if([modifiedKeys count] > 0)
         {
@@ -277,6 +288,7 @@
         @"Offline",
         @"IdleSince",
         @"BuddyImage",
+        @"Away",
         nil]);
 }
 
@@ -305,8 +317,18 @@
                     setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING]
                     forKey:@"Status" account:self];
                 
-                gaim_account_disconnect(account);
+                gaim_account_disconnect(account); gc = NULL;
             }
+        }
+    }
+    if ([key compare:@"IdleSince"] == 0)
+    {
+        // Even if we're setting a non-zero idle time, set it to zero first.
+        // Some clients ignore idle time changes unless it moves to/from 0.
+        serv_set_idle(gc, 0);
+        if (inValue != nil) {
+            int newIdle = -[inValue timeIntervalSinceNow];
+            serv_set_idle(gc, newIdle);
         }
     }
 }
@@ -324,7 +346,7 @@
         GaimAccount *testAccount = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
         gaim_account_set_password(testAccount, [inPassword cString]);
         
-        GaimConnection *conn =  gaim_account_connect(testAccount);
+        gc = gaim_account_connect(testAccount);
     }
 }
 
@@ -427,7 +449,6 @@
 
 - (BOOL)closeChat:(AIChat*)inChat
 {
-    /*
     AIHandle *handle = [(AIListContact*)[inChat listObject] handleForAccount:self];
     if ([handle temporary]) {
         [self removeHandleWithUID:[handle UID]];
@@ -435,10 +456,8 @@
     GaimConversation *conv = (GaimConversation*) [[[inChat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
     NSAssert(conv != nil, @"No gaim conversation associated with chat");
     gaim_conversation_destroy(conv);
-    [chatDict removeOjectForKey: inChat];
+    [chatDict removeObjectForKey: inChat];
     return YES;
-    */
-    return NO;
 }
 
 
