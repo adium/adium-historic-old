@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AITextFieldAdditions.h"
-
+#import "AIWiredString.h"
 
 @implementation NSTextField (AITextFieldAdditions)
 
@@ -25,6 +25,22 @@
     fieldEditor = [[self window] fieldEditor:YES forObject:self];
 
     [fieldEditor setSelectedRange:range];
+}
+
+- (AIWiredString *)secureStringValue
+{
+	//unfortunately, there is no really good way to do this.
+	//the best we can do is to take our string value using normal NSString,
+	//	get it released as soon as possible, and return a wired version.
+	AIWiredString *result = nil;
+
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+	NSString *stringValue = [self stringValue];
+	result = [[AIWiredString alloc] initWithString:stringValue];
+
+	[pool release];
+	return [result autorelease];
 }
 
 @end
