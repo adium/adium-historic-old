@@ -1,2 +1,7 @@
-#import "GrowlAppBridgeDefines.h"
-#import "GrowlAppBridge.h"
+#import "GrowlDefinesCarbon.h"
+#import "GrowlApplicationBridge-Carbon.h"
+
+#ifdef __OBJC__
+#import "GrowlDefines.h"
+#import "GrowlApplicationBridge.h"
+#endif
