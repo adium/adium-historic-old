@@ -10663,6 +10663,32 @@
 			path = "Plugins/MSN Service/MSNAccount.m";
 			refType = 4;
 		};
+		9E49CC5C04BF6F8700415B22 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = CBEmbossedTextField.h;
+			path = "Frameworks/AIUtilities Framework/CBEmbossedTextField.h";
+			refType = 4;
+		};
+		9E49CC5D04BF6F8700415B22 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = CBEmbossedTextField.m;
+			path = "Frameworks/AIUtilities Framework/CBEmbossedTextField.m";
+			refType = 4;
+		};
+		9E49CC5E04BF6F8700415B22 = {
+			fileRef = 9E49CC5C04BF6F8700415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E49CC5F04BF6F8700415B22 = {
+			fileRef = 9E49CC5D04BF6F8700415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		9E4CF9D104AA69B000415B22 = {
 			children = (
 				9E4CF9D704AA6A0700415B22,
@@ -12628,6 +12654,7 @@
 				11F486DB04A7F802007575DA,
 				4B6660C004ADF30900A8010A,
 				4BDB240E04AF502B00A8010A,
+				9E49CC5E04BF6F8700415B22,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12717,6 +12744,7 @@
 				11F486DC04A7F802007575DA,
 				4B6660C104ADF30900A8010A,
 				4BDB240F04AF502B00A8010A,
+				9E49CC5F04BF6F8700415B22,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13422,6 +13450,8 @@
 				4BC0304B0453388C00A8010A,
 				4BC0304C0453388C00A8010A,
 				F570A59003704AB901A8010A,
+				9E49CC5D04BF6F8700415B22,
+				9E49CC5C04BF6F8700415B22,
 				F570A59103704AB901A8010A,
 				F57938F8033E745F01A8010A,
 				F57938B8033E739101A8010A,
