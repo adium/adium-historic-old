@@ -116,6 +116,21 @@ static void adiumGaimCoreUiInit(void)
 	
 	//Setup the buddy list; then load the blist.
 	gaim_set_blist(gaim_blist_new());
+
+	//Clear the local blist on first launch of .80... temporary code.
+	NSUserDefaults	*userDefaults = [NSUserDefaults standardUserDefaults];
+	NSNumber		*clearedBlist = [userDefaults objectForKey:@"Adium:Cleared blist.xml when installing 0.80"];
+	if(!clearedBlist || ![clearedBlist boolValue]){
+		[userDefaults setObject:[NSNumber numberWithBool:YES]
+						 forKey:@"Adium:Cleared blist.xml when installing 0.80"];
+
+		char *user_dir = gaim_user_dir();
+		[[NSFileManager defaultManager] trashFileAtPath:
+			[[NSString stringWithUTF8String:user_dir] stringByAppendingPathComponent:@"blist.xml"]];
+		
+		[userDefaults synchronize];
+	}
+
 	gaim_blist_load();
 	
 	//Configure signals for receiving gaim events
