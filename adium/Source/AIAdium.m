@@ -33,27 +33,16 @@
 //Path to Adium's application support preferences
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"]
 
-#define ADIUM_FAQ_PAGE                          @"http://adium.sourceforge.net/faq/"
+#define ADIUM_FAQ_PAGE						@"http://adium.sourceforge.net/faq/"
 
 @interface AIAdium (PRIVATE)
 - (void)configureCrashReporter;
 - (void)completeLogin;
 @end
 
-void Adium_HandleSignal(int i){
-    NSLog(@"Launching the Adium Crash Reporter because Adium went *boom* (Signal %i)",i);
-    [[NSWorkspace sharedWorkspace] launchApplication:PATH_TO_CRASH_REPORTER];
-    //Move along, citizen, nothing more to see here.
-    exit(-1);
-}
-
 @implementation AIAdium
 
-//Returns the shared AIAdium instance
-//static AIAdium *sharedInstance = nil;
-/*+ (AIAdium *)sharedInstance{
-    return(sharedInstance);
-}*/
+//Init
 - (id)init{
     [AIObject _setSharedAdiumInstance:self];
     return([super init]);
@@ -65,55 +54,50 @@ void Adium_HandleSignal(int i){
     return([ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath]);
 }
 
+
+//Core Controllers -----------------------------------------------------------------------------------------------------
+#pragma mark Core Controllers
 - (AILoginController *)loginController{
     return(loginController);
 }
-
 - (AIMenuController *)menuController{
     return(menuController);
 }
-
 - (AIAccountController *)accountController{
     return(accountController);
 }
-
 - (AIContentController *)contentController{
     return(contentController);
 }
-
 - (AIContactController *)contactController{
     return(contactController);
 }
-
 - (AISoundController *)soundController{
     return(soundController);
 }
-
 - (AIInterfaceController *)interfaceController{
     return(interfaceController);
 }
-
 - (AIPreferenceController *)preferenceController{
     return(preferenceController);
 }
-
 - (AIToolbarController *)toolbarController{
     return(toolbarController);
 }
-
 - (AIDockController *)dockController{
     return(dockController);
 }
-
 - (ESFileTransferController *)fileTransferController{
     return(fileTransferController);    
 }
-
 - (ESContactAlertsController *)contactAlertsController{
     return(contactAlertsController);
 }
 
-// Notifications --
+
+//Notifications --------------------------------------------------------------------------------------------------------
+#pragma mark Notifications
+//Return the shared Adium notification center
 - (NSNotificationCenter *)notificationCenter
 {
     if(notificationCenter == nil){
@@ -123,7 +107,9 @@ void Adium_HandleSignal(int i){
     return(notificationCenter);
 }
 
-// Specific notifications can be given a human-readable name and registered as events - which can be used to trigger various actions
+//Specific notifications can be given a human-readable name and registered as events, which can be used to trigger
+//various actions.  This is a bad idea though, because it's combining the internal workings with interface.  This
+//should be removed or modified in the future
 - (void)registerEventNotification:(NSString *)inNotification displayName:(NSString *)displayName
 {
     [eventNotifications setObject:[NSDictionary dictionaryWithObjectsAndKeys:
@@ -132,22 +118,47 @@ void Adium_HandleSignal(int i){
 						   forKey:inNotification];
 }
 
-
+//Return the current registered event notifications
 - (NSDictionary *)eventNotifications
 {
     return(eventNotifications);
 }
 
 
-// Internal --------------------------------------------------------------------------------
+//Startup and Shutdown -------------------------------------------------------------------------------------------------
+#pragma mark Startup and Shutdown
+//Adium is almost done launching, init
+- (void)applicationWillFinishLaunching:(NSNotification *)notification
+{
+    notificationCenter = nil;
+    eventNotifications = [[NSMutableDictionary alloc] init];
+    completedApplicationLoad = NO;
+}
 
+//Adium has finished launching
+- (void)applicationDidFinishLaunching:(NSNotification *)notification
+{
+	//Load the crash reporter
+#ifdef CRASH_REPORTER
+    [self configureCrashReporter];
+#endif
 
+    //Load and init the components
+    [loginController initController];
+    
+    //Begin Login
+    [loginController requestUserNotifyingTarget:self selector:@selector(completeLogin)];
+    
+    completedApplicationLoad = YES;
+}
+
+//Forward a re-open message to the interface controller
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag
 {
     return([interfaceController handleReopenWithVisibleWindows:flag]);
 }
 
-// Called by the login controller when a user has been selected
+//Called by the login controller when a user has been selected, continue logging in
 - (void)completeLogin
 {
     //Init the controllers.
@@ -170,6 +181,7 @@ void Adium_HandleSignal(int i){
     [accountController finishIniting];
 }
 
+//Give all the controllers a chance to close down
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
 	//Preference controller needs to close the prefs window before the plugins that control it are unloaded
@@ -188,72 +200,49 @@ void Adium_HandleSignal(int i){
     [menuController closeController];
     [toolbarController closeController];
     [preferenceController closeController];
-    
-    // Clear out old event notifications
-    //[eventNotifications removeAllObjects];
 }
 
+
+//Menu Item Hooks ------------------------------------------------------------------------------------------------------
+#pragma mark Menu Item Hooks
+//Show the about box
 - (IBAction)showAboutBox:(id)sender
 {
     [[LNAboutBoxController aboutBoxController] showWindow:nil];
 }
+
+//Show our help
 - (IBAction)showHelp:(id)sender
 {
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_FAQ_PAGE]];
 }
 
-
+//A hook for guaring the quit menu item... not really necessary anymore, but it's not hurting anything being here
 - (IBAction)confirmQuit:(id)sender
 {
-/*    if([[contentController chatArray] count] > 0)
-    {
-        if(NSRunCriticalAlertPanel(@"Quit Adium?", @"You have open conversations, do you want to quit Adium? ", @"Quit", @"Cancel", nil) == NSAlertDefaultReturn)
-        {
-            [NSApp terminate:nil];
-        }
-    }
-    else
-    {*/
-        [NSApp terminate:nil];
-//    }
+	[NSApp terminate:nil];
 }
 
-- (void)applicationWillFinishLaunching:(NSNotification *)notification
-{
-    //init
-    notificationCenter = nil;
-    eventNotifications = [[NSMutableDictionary alloc] init];
-    completedApplicationLoad = NO;
-    //play a sound to prevent a delay later when quicktime loads
-    //    [AISoundController playSoundNamed:@"Beep"];
+
+//Crash Reporter -------------------------------------------------------------------------------------------------------
+#pragma mark Crash Reporter
+//Handle a singal by loading the crash reporter and closing Adium down
+void Adium_HandleSignal(int i){
+    [[NSWorkspace sharedWorkspace] launchApplication:PATH_TO_CRASH_REPORTER];
+    exit(-1);
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)notification
-{
-	
-#ifdef CRASH_REPORTER
-#warning Crash reporter active!
-    [self configureCrashReporter];
-#endif
-	
-    //Load and init the components
-    [loginController initController];
-    
-    //Begin Login
-    [loginController requestUserNotifyingTarget:self selector:@selector(completeLogin)];
-    
-    completedApplicationLoad = YES;
-}
+//Setup the crash reporter
 - (void)configureCrashReporter
 {
-    // Remove any existing crash logs
+    //Remove any existing crash logs
     [[NSFileManager defaultManager] trashFileAtPath:EXCEPTIONS_PATH];
     [[NSFileManager defaultManager] trashFileAtPath:CRASHES_PATH];
     
-    // Log and Handle all exceptions
+    //Log and Handle all exceptions
     [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:NSLogAndHandleEveryExceptionMask];
     
-    // NSExceptionHandler messes up crash signals - install a custom handler which properly terminates Adium if one is received
+    //Install custom handlers which properly terminate Adium if one is received
     signal(SIGILL, Adium_HandleSignal);		/* 4:   illegal instruction (not reset when caught) */
     signal(SIGTRAP, Adium_HandleSignal);	/* 5:   trace trap (not reset when caught) */
     signal(SIGEMT, Adium_HandleSignal);		/* 7:   EMT instruction */
@@ -264,21 +253,21 @@ void Adium_HandleSignal(int i){
     signal(SIGXCPU, Adium_HandleSignal);	/* 24:  exceeded CPU time limit */
     signal(SIGXFSZ, Adium_HandleSignal);	/* 25:  exceeded file size limit */    
     
-    // Ignore SIGPIPE, which is a harmless error signal
-    // sent when write() or similar function calls fail due to a broken pipe in the network connection
+    //Ignore SIGPIPE, which is a harmless error signal
+    //sent when write() or similar function calls fail due to a broken pipe in the network connection
     signal(SIGPIPE, SIG_IGN);
 	
-	// I think SIGABRT is an exception... maybe we should ignore it? I'm really not sure.
+	//I think SIGABRT is an exception... maybe we should ignore it? I'm really not sure.
 	signal(SIGABRT, SIG_IGN);
 }
 
-//If Adium was launched by double-clicking an associated file, we get this call after willFinishLaunching but before didFinishLaunching
+//If Adium was launched by double-clicking an associated file, we get this call after willFinishLaunching but before
+//didFinishLaunching
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
 {
     NSString    *extension = [filename pathExtension];
     NSString    *destination = nil;
     BOOL        success = NO;
-    
     NSString    *fileDescription = nil;
     BOOL        requiresRestart = NO;
     
