@@ -202,12 +202,9 @@ Multi-user chat:  [Dave]
 Contact status coloring:
     Status coloring that is easy to configure and consistent throughout Adium.
 
-Meta Contacts:
+Meta Contacts: [Evan]
     Provide a way for users to create and manage their own meta contacts.    
-		- Evan: The current AIMetaContact is a start but will need to be rethought to not be dependent upon all contained contacts
-			having the same serviceID.  Also, the contactController currently expects metacontacts to have a UID equal to
-			the UID of the contained contacts, which should all be the same UID as well.
-			
+
 Protocol Specific Functions:
     Provide a menu for service code to insert protocol specific options.  Things such as buddy search,
     password changing, getting info on non-listed users, etc.
