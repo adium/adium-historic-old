@@ -44,14 +44,14 @@
 //    NSCell			*selectedItem;
 	
 	//Selection hiding
-	int					lastSelectedRow;
+//	int					lastSelectedRow;
 
 	//Tooltops
-	NSTimer				*tooltipMouseLocationTimer;
-	NSPoint				tooltipLocation;
-	NSPoint				lastMouseLocation;
-    NSTrackingRectTag	tooltipTrackingTag;        
-    int 				tooltipCount;
+//	NSTimer				*tooltipMouseLocationTimer;
+//	NSPoint				tooltipLocation;
+//	NSPoint				lastMouseLocation;
+//    NSTrackingRectTag	tooltipTrackingTag;        
+//    int 				tooltipCount;
 }
 
 - (void)setDelegate:(id)delegate;

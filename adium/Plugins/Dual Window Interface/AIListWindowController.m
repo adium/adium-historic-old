@@ -46,7 +46,12 @@
 
 
 
+
+
+
 #define GROUPS_USE_GRADIENT_CELL		YES
+#define DRAW_ALTERNATING_GRID	YES
+#define ALTERNATING_GRID_COLOR	[NSColor colorWithCalibratedRed:0.926 green:0.949 blue:0.992 alpha:1.0]
 
 
 @interface AIListWindowController (PRIVATE)
@@ -120,7 +125,10 @@
 	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
 	[contactListView setContentCell:[[AIListContactCell alloc] init]];
 	[contactListView setGroupCell:(GROUPS_USE_GRADIENT_CELL ? [[AIListGroupGradientCell alloc] init] : [[AIListGroupCell alloc] init])];	
-
+	
+	[contactListView setDrawsAlternatingRows:YES];
+	[contactListView setAlternatingRowColor:ALTERNATING_GRID_COLOR];
+	
 #warning grr
 	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[AIListContactCell alloc] init]];	
 

@@ -8,7 +8,7 @@
 
 #import "AIOutlineView.h"
 
-@interface AIMultiCellOutlineView : AIOutlineView {
+@interface AIMultiCellOutlineView : AIAlternatingRowOutlineView {
 	int 	*rowHeightCache;
 	int 	*rowOriginCache;
 	int		totalHeight;
