@@ -65,8 +65,10 @@
                                               group:PREF_GROUP_CONTACT_LIST];    
 
     }else if(sender == slider_opacity){
+        float	opacity = (100.0 - [sender floatValue]) * 0.01;
+        
         [self showOpacityPercent];
-        [[owner preferenceController] setPreference:[NSNumber numberWithFloat:[sender floatValue]]
+        [[owner preferenceController] setPreference:[NSNumber numberWithFloat:opacity]
                                              forKey:KEY_SCL_OPACITY
                                               group:PREF_GROUP_CONTACT_LIST];
     }
@@ -121,7 +123,9 @@
 
 - (void)showOpacityPercent
 {
-    [textField_opacityPercent setStringValue:[NSString stringWithFormat:@"%i",(int)([slider_opacity floatValue] * 100.0)]];
+    float	opacity = [slider_opacity floatValue];
+
+    [textField_opacityPercent setStringValue:[NSString stringWithFormat:@"%i",(int)opacity]];
 }
 
 //Configures our view for the current preferences
@@ -136,7 +140,7 @@
     [colorWell_grid setColor:[[preferenceDict objectForKey:KEY_SCL_GRID_COLOR] representedColor]];
 
     //Alpha
-    [slider_opacity setFloatValue:[[preferenceDict objectForKey:KEY_SCL_OPACITY] floatValue]];
+    [slider_opacity setFloatValue:(100 * (1.0 - [[preferenceDict objectForKey:KEY_SCL_OPACITY] floatValue]))];
     [self showOpacityPercent];
 }
 

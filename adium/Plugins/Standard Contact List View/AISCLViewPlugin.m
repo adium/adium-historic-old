@@ -187,8 +187,13 @@
             [SCLView setDrawsAlternatingRows:alternatingGrid];
             [SCLView setAlternatingRowColor:gridColor];
     
-            //Needed for proper transparency... but not the cleanest way.
-            [[SCLView window] setOpaque:(alpha == 100.0)];
+            /*
+             For this view to be transparent, it's containing window must be set as non-opaque.  It would make sense to use: [[SCLView window] setOpaque:(alpha == 100.0)];
+
+             However, setting a window to opaque causes it's contents to be shadowed.  It is a pain (and a major speed hit) to maintain shadows beneath the contact list text.  A little trick to prevent the window manager from shadowing the window content is to set the window itself as non-opaque.  The contents of a window that is non-opaque will not cast a shadow.  Setting the window's alpha value to 0.9999999 removes the shadowing without giving the slightest appearance of opacity to the window titlebar and widgets.
+             */
+            [[SCLView window] setAlphaValue:(alpha == 100.0 ? 1.0 : 0.9999999)];
+
         }
     }
 }

@@ -73,7 +73,7 @@
     //This is handled automatically by AISCLViewPlugin when the transparency preference is altered - but the first time preferences are applied our view is not yet installed.  The solution is to re-set the window transparency here, as our view is being inserted into the window.
     //Needed for proper transparency... but not the cleanest way.
     backgroundAlpha = [[[self backgroundColor] colorUsingColorSpaceName:NSDeviceRGBColorSpace] alphaComponent];
-    [[newSuperview window] setOpaque:(backgroundAlpha == 100.0)];
+    [[newSuperview window] setAlphaValue:(backgroundAlpha == 100.0 ? 1.0 : 0.9999999)];
 }
 
 //Called after we're inserted into a window
