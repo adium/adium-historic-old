@@ -143,6 +143,15 @@ extern MenuRef _NSGetCarbonMenu(NSMenu *);
 
 @implementation NSMenu (AIMenuAdditions)
 
+- (void)setAllMenuItemsToState:(int)state
+{
+	NSEnumerator	*enumerator = [[self itemArray] objectEnumerator];
+	NSMenuItem		*menuItem;
+	while (menuItem = [enumerator nextObject]){
+		[menuItem setState:state];
+	}
+}
+
 //Swap two menu items
 + (void)swapMenuItem:(NSMenuItem *)existingItem with:(NSMenuItem *)newItem
 {

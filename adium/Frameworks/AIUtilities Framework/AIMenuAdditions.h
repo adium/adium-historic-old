@@ -24,6 +24,8 @@
 
 @interface NSMenu (AIMenuAdditions)
 
+- (void)setAllMenuItemsToState:(int)state;
+
 //Swap two menu items
 + (void)swapMenuItem:(NSMenuItem *)existingItem with:(NSMenuItem *)newItem;
 
