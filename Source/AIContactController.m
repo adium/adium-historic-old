@@ -73,7 +73,6 @@
 #define	HIDE_GROUPS_MENU_TITLE			AILocalizedString(@"Hide Contact List Groups",nil)
 #define SHOW_GROUPS_IDENTIFER			@"ShowGroups"
 
-#define	PREF_GROUP_CONTACT_LIST_DISPLAY	@"Contact List Display"
 #define	KEY_USE_CONTACT_LIST_GROUPS		@"Use Contact List Groups"
 
 @interface AIContactController (PRIVATE)
@@ -644,7 +643,7 @@ DeclareString(UID);
 	//Store the preference
 	[[adium preferenceController] setPreference:[NSNumber numberWithBool:useContactListGroups]
 										 forKey:KEY_USE_CONTACT_LIST_GROUPS
-										  group:PREF_GROUP_CONTACT_LIST_DISPLAY];	
+										  group:PREF_GROUP_CONTACT_LIST];	
 	
 	//Configure the sort controller to force ignoring of groups as appropriate
 	[[self activeSortController] forceIgnoringOfGroups:(useContactListGroups ? NO : YES)];
@@ -688,7 +687,7 @@ DeclareString(UID);
 {
 	//Load the preference
 	useContactListGroups = [[[adium preferenceController] preferenceForKey:KEY_USE_CONTACT_LIST_GROUPS
-																	 group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
+																	 group:PREF_GROUP_CONTACT_LIST] boolValue];
 	
 	//Show offline contacts menu item
     showGroupsMenuItem = [[NSMenuItem alloc] initWithTitle:(useContactListGroups ? 
