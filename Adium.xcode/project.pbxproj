@@ -6693,7 +6693,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" Plugins/Growl \"/Users/evands/adium/Frameworks/AIHyperlinks Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" Plugins/Growl \"Frameworks/AIHyperlinks Framework/build\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6701,7 +6701,7 @@
 				GCC_USE_GCC3_PFE_SUPPORT = YES;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				HEADER_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				HEADER_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\"";
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				INSTALL_PATH = /;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
