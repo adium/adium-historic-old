@@ -25,9 +25,10 @@
 //init
 - (id)initWithUID:(NSString *)inUID
 {
-    [super initWithUID:inUID serviceID:nil];
+    [super initWithUID:inUID service:nil];
 	
     containedObjects = [[NSMutableArray alloc] init];
+	expanded = YES;
 
 	//Default invisible
     visibleCount = 0;
@@ -35,6 +36,13 @@
 //	[self setStatusObject:[NSNumber numberWithInt:visibleCount] forKey:@"VisibleObjectCount" notify:YES];
     
     return(self);
+}
+
+- (void)dealloc
+{
+	[containedObjects release];
+	
+	[super dealloc];
 }
 
 //Visibility -----------------------------------------------------------------------------------------------------------
@@ -74,8 +82,67 @@
 	[[adium contactController] sortListObject:self];
 }
 
+
 //Object Storage ---------------------------------------------------------------------------------------------
 #pragma mark Object Storage
+//Return our contained objects
+- (NSArray *)containedObjects
+{
+	return(containedObjects);
+}
+
+//Number of containd objects
+- (unsigned)containedObjectsCount
+{
+    return([containedObjects count]);
+}
+
+//Test for the presence of an object in our group
+- (BOOL)containsObject:(AIListObject *)inObject
+{
+	return([containedObjects containsObject:inObject]);
+}
+
+//Retrieve an object by index
+- (id)objectAtIndex:(unsigned)index
+{
+    return([containedObjects objectAtIndex:index]);
+}
+
+//Retrieve the index of an object
+- (int)indexOfObject:(AIListObject *)inObject
+{
+    return([containedObjects indexOfObject:inObject]);
+}
+
+//Return an enumerator of our content
+- (NSEnumerator *)objectEnumerator
+{
+    return([containedObjects objectEnumerator]);
+}
+
+//Remove all the objects from this group (PRIVATE: For contact controller only)
+- (void)removeAllObjects
+{
+	//Remove all the objects
+	while([containedObjects count]){
+		[self removeObject:[containedObjects objectAtIndex:0]];
+	}
+}
+
+//Retrieve a specific object by service and UID
+- (AIListObject *)objectWithService:(AIService *)inService UID:(NSString *)inUID
+{
+	NSEnumerator	*enumerator = [containedObjects objectEnumerator];
+	AIListObject	*object;
+	
+	while(object = [enumerator nextObject]){
+		if([inUID isEqualToString:[object UID]] && [object service] == inService) break;
+	}
+	
+	return(object);
+}
+
 //Add an object to this group (PRIVATE: For contact controller only)
 //Returns YES if the object was added (that is, was not already present)
 - (BOOL)addObject:(AIListObject *)inObject
@@ -131,6 +198,7 @@
 	}
 }
 
+
 //Sorting --------------------------------------------------------------------------------------------------------------
 #pragma mark Sorting
 //Resort an object in this group (PRIVATE: For contact controller only)
@@ -165,6 +233,20 @@
     if(sortController){
         [sortController sortListObjects:containedObjects];
     }
+}
+
+
+//Expanded State -------------------------------------------------------------------------------------------------------
+#pragma mark Expanded State
+//Set the expanded/collapsed state of this group (PRIVATE: For the contact list view to let us know our state)
+- (void)setExpanded:(BOOL)inExpanded
+{
+    expanded = inExpanded;
+}
+//Returns the current expanded/collapsed state of this group
+- (BOOL)isExpanded
+{
+    return(expanded);
 }
 
 @end
