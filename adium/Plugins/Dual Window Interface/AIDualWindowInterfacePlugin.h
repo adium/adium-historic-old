@@ -31,6 +31,8 @@
 @interface AIDualWindowInterfacePlugin : AIPlugin <AIInterfaceController> {
     ESDualWindowMessageAdvancedPreferences  *preferenceMessageAdvController;
     
+	BOOL					applicationIsHidden;
+	NSMutableArray			*delayedContainerShowArray;
 	NSMutableDictionary		*containers;
 	int						uniqueContainerNumber;
 }

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIMenuController.m,v 1.35 2004/06/01 20:42:58 evands Exp $
+// $Id: AIMenuController.m,v 1.36 2004/07/13 18:53:14 adamiser Exp $
 
 #import "AIMenuController.h"
 
@@ -142,7 +142,7 @@
 		[targetMenu insertItem:newItem atIndex:targetIndex+1];
     }else{
 		//If it's attached to an NSMenu (and not an NSMenuItem), insert at the top of the menu
-		[(NSMenu *)menuItem addItem:newItem];
+		[(NSMenu *)menuItem insertItem:newItem atIndex:0];
     }
     
     //update the location array

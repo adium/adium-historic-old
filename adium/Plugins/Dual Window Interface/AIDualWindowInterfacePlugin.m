@@ -18,7 +18,6 @@
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
 #import "AIMessageTabViewItem.h"
-#import "AINewMessagePrompt.h"
 #import "AIDualWindowPreferences.h"
 #import "AIDualWindowAdvancedPrefs.h"
 #import "ESDualWindowMessageWindowPreferences.h"
@@ -45,6 +44,18 @@
 //    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_WINDOW_DEFAULT_PREFS forClass:[self class]] 
 //										  forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];    
 //	preferenceMessageAdvController = [[ESDualWindowMessageAdvancedPreferences preferencePane] retain];
+
+	//Watch Adium hide and unhide (Used for better window opening behavior)
+	delayedContainerShowArray = [[NSMutableArray alloc] init];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(applicationDidHide:)
+												 name:NSApplicationDidHideNotification
+											   object:NSApp];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(applicationDidUnhide:)
+												 name:NSApplicationDidUnhideNotification
+											   object:NSApp];
+
 }
 
 //Close the interface
@@ -167,6 +178,7 @@
 	return([[containers objectForKey:containerName] containedChats]);
 }
 
+
 //Containers -----------------------------------------------------------------------------------------------------------
 #pragma mark Containers
 //Open a new container
@@ -176,6 +188,12 @@
 	if(!container){
 		container = [AIMessageWindowController messageWindowControllerForInterface:self withName:containerName];
 		[containers setObject:container forKey:containerName];
+		
+		if(!applicationIsHidden){
+			[container showWindow:nil];
+		}else{
+			[delayedContainerShowArray addObject:container];
+		}
 	}
 	
 	return(container);
@@ -192,6 +210,44 @@
 	NSString	*key = [[containers allKeysForObject:container] lastObject];
 	if(key) [containers removeObjectForKey:key];
 }
+
+
+
+- (void)applicationDidHide:(NSNotification *)notification
+{
+	applicationIsHidden = YES;
+	
+	
+	NSLog(@"hide");
+}
+
+- (void)applicationDidUnhide:(NSNotification *)notification
+{
+	applicationIsHidden = NO;
+
+	
+	NSEnumerator	*enumerator = [delayedContainerShowArray objectEnumerator];
+	AIMessageWindowController	*container;
+	
+	while(container = [enumerator nextObject]){
+		[container showWindow:nil];
+	}
+	
+	[delayedContainerShowArray removeAllObjects];
+	
+	
+	NSLog(@"show");
+	
+}
+
+
+
+
+
+
+
+
+
 
 
 //Custom Tab Management ------------------------------------------------------------------------------------------------

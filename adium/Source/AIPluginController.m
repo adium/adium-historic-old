@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.80 2004/07/12 22:24:37 adamiser Exp $
+//$Id: AIPluginController.m,v 1.81 2004/07/13 18:53:14 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -39,7 +39,7 @@ AIEventSoundsPlugin, AIGroupedAwayByIdleSortPlugin, AIGroupedIdleAwaySortPlugin,
 AIIdleAwaySortPlugin, AIIdleSortPlugin, AIIdleTimeDisplayPlugin, AILaTeXPlugin, AILoggerPlugin,
 AIManualSortPlugin, AIMessageAliasPlugin, AIMessageViewSelectionPlugin, AIOfflineContactHidingPlugin, AIPlugin,
 AISCLViewPlugin, AISendingKeyPreferencesPlugin, AISpellCheckingPlugin, AITabStatusIconsPlugin,
-AIStandardToolbarItemsPlugin, AIStatusChangedMessagesPlugin, AIStatusCirclesPlugin,
+AIStandardToolbarItemsPlugin, AIStatusChangedMessagesPlugin, AIStatusCirclesPlugin, AINewMessagePanelPlugin,
 AITextForcingPlugin, AITextToolbarItemsPlugin, AITypingNotificationPlugin, AIContactAccountsPlugin,
 AIVolumeControlPlugin, BGThemesPlugin, CBActionSupportPlugin, CBContactCountingDisplayPlugin,
 CBStatusMenuItemPlugin, CBURLHandlingPlugin, CSDisconnectAllPlugin, DCMessageContextDisplayPlugin, ESAddressBookIntegrationPlugin,
@@ -98,6 +98,7 @@ ESMessageEvents, ESAccountEvents;
 	[self loadPluginWithClass:[AIMessageAliasPlugin class]];
 	[self loadPluginWithClass:[ESMessageEvents class]];
 //	[self loadPluginWithClass:[AIMessageViewSelectionPlugin class]];
+	[self loadPluginWithClass:[AINewMessagePanelPlugin class]];
 	[self loadPluginWithClass:[AIOfflineContactHidingPlugin class]];
 	[self loadPluginWithClass:[AISCLViewPlugin class]];
 	[self loadPluginWithClass:[AISendingKeyPreferencesPlugin class]];
