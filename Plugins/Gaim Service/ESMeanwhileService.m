@@ -67,7 +67,7 @@
 	return(AIServiceSecondary);
 }
 - (BOOL)canCreateGroupChats{
-	return(YES);
+	return(NO);
 }
 - (void)registerStatuses{
 	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE
