@@ -153,8 +153,6 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	[AIEditAccountWindowController editAccount:account
 									  onWindow:[self window]
 							  deleteIfCanceled:YES];
-	
-	[self editAccount:nil];
 }
 
 /*
@@ -383,6 +381,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
 	if([[tableColumn identifier] isEqualToString:@"enabled"]){
+		NSLog(@"Setting %@ %@",[accountArray objectAtIndex:row],object);
 		[[accountArray objectAtIndex:row] setPreference:object forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 		[[accountArray objectAtIndex:row] setPreference:object forKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS];
 	}
