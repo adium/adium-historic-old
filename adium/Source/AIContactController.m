@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.162 2004/07/30 20:34:59 evands Exp $
+// $Id: AIContactController.m,v 1.163 2004/08/02 07:11:25 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -566,7 +566,6 @@ DeclareString(UID);
 	AIMetaContact   *metaContact;
 	BOOL			shouldRestoreContacts = YES;
 	
-	NSLog(@"metaContactWithObjectID: passed inObjectID %@",inObjectID);
 	//If no object ID is provided, use the next available object ID
 	//(MetaContacts should always have an individually unique object id)
 	if(!inObjectID){
@@ -631,8 +630,6 @@ DeclareString(UID);
 - (void)addListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact
 {
 	AIMetaContact		*oldMetaContact;
-	
-	NSLog(@"addListObject: %@ to toMetaContact: %@",listObject,metaContact);
 	
 	//Obtain any metaContact this listObject is current within, so we can remove it later
 	oldMetaContact = [contactToMetaContactLookupDict objectForKey:[listObject ultraUniqueObjectID]];
@@ -1197,7 +1194,7 @@ DeclareString(UID);
 //Notify observers of a status change.  Returns the modified attribute keys
 - (NSArray *)_informObserversOfObjectStatusChange:(AIListObject *)inObject withKeys:(NSArray *)modifiedKeys silent:(BOOL)silent
 {
-	NSMutableArray				*attrChange = [NSMutableArray array];
+	NSMutableArray				*attrChange = nil;
 	NSEnumerator				*enumerator;
     id <AIListObjectObserver>	observer;
 	
@@ -1207,6 +1204,7 @@ DeclareString(UID);
 		NSArray	*newKeys;
 		
 		if((newKeys = [observer updateListObject:inObject keys:modifiedKeys silent:silent])){
+			if (!attrChange) attrChange = [NSMutableArray array];
 			[attrChange addObjectsFromArray:newKeys];
 		}
 	}
@@ -1214,7 +1212,8 @@ DeclareString(UID);
 	//Send out the notification for other observers
 	[[owner notificationCenter] postNotificationName:ListObject_StatusChanged
 											  object:inObject
-											userInfo:(modifiedKeys ? [NSDictionary dictionaryWithObject:modifiedKeys forKey:@"Keys"] : nil)];
+											userInfo:(modifiedKeys ? [NSDictionary dictionaryWithObject:modifiedKeys 
+																								 forKey:@"Keys"] : nil)];
 	
 	return(attrChange);
 }
