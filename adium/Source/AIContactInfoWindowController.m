@@ -238,11 +238,17 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		}
 		
 		//Account name
-		[textField_accountName setStringValue:(inObject ? [inObject formattedUID] : @"")];	
+		if (inObject){
+			NSString	*formattedUID = [inObject formattedUID];
+			[textField_accountName setStringValue:(formattedUID ? formattedUID : [inObject displayName])];	
+		}else{
+			[textField_accountName setStringValue:@""];
+		}
 			
 		//Service
 		if([inObject isKindOfClass:[AIListContact class]]){
-			[textField_service setStringValue:[inObject displayServiceID]];
+			NSString	*displayServiceID = [inObject displayServiceID];
+			[textField_service setStringValue:(displayServiceID ? displayServiceID : META_SERVICE_STRING)];
 		}
 		
 		//User Icon

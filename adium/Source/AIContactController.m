@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.160 2004/07/29 14:54:17 evands Exp $
+// $Id: AIContactController.m,v 1.161 2004/07/30 17:26:52 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -35,6 +35,8 @@
 #define KEY_OBJECTID				@"objectID"
 #define KEY_METACONTACT_OWNERSHIP   @"MetaContact Ownership"
 #define CONTACT_DEFAULT_PREFS		@"ContactPrefs"
+
+#warning Nested metaContacts make a coding mess.. probably should avoid them if at all possible.
 
 @interface AIContactController (PRIVATE)
 - (AIListGroup *)processGetGroupNamed:(NSString *)serverGroup;
