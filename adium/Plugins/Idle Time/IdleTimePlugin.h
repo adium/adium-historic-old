@@ -9,18 +9,30 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
+
+#define IDLE_TIME_DEFAULT_PREFERENCES	@"IdleDefaultPrefs"
+
+#define GROUP_IDLE_TIME			@"Idle"
+#define KEY_IDLE_TIME_ENABLED		@"Idle Enabled"
+#define KEY_IDLE_TIME_IDLE_MINUTES	@"Threshold"
+
+
 @protocol AIMiniToolbarItemDelegate;
 
-@class IdleTimeWindowController;
+@class IdleTimeWindowController, IdleTimePreferences;
 
 @interface AIIdleTimePlugin : AIPlugin <AIMiniToolbarItemDelegate> {
-    NSTimer	*idleTimer;
-    NSTimer	*unidleTimer;
+    IdleTimePreferences	*preferences;
+
+    BOOL		isIdle;
+    NSTimer		*idleTimer;
+
+    BOOL		idleEnabled;
+    double		idleThreshold;
 }
+
+- (void)installPlugin;
+- (void)uninstallPlugin;
 - (IBAction)showIdleTimeWindow:(id)sender;
-- (void)installIdleTimer;
-- (void)installUnidleTimer;
-- (void)removeTimer:(NSTimer *)timer;
-- (void)goIdle;
-- (void)unIdle;
+
 @end

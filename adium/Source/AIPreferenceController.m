@@ -40,6 +40,7 @@
     
     [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_CONNECTIONS image:[AIImageUtilities imageNamed:@"notfound" forClass:[self class]]]];
     [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_INTERFACE image:[AIImageUtilities imageNamed:@"notfound" forClass:[self class]]]];
+    [categoryArray addObject:[AIPreferenceCategory categoryWithName:PREFERENCE_CATEGORY_STATUS image:[AIImageUtilities imageNamed:@"notfound" forClass:[self class]]]];
 
     //Register our toolbar item
     toolbarItem = [[[AIMiniToolbarItem alloc] initWithIdentifier:@"ShowPreferences"] autorelease];
@@ -183,7 +184,7 @@
     [self savePreferences:prefDict forGroup:groupName];
     
     //Broadcast a group changed notification
-    [[self preferenceNotificationCenter] postNotificationName:Preference_GroupChanged object:groupName userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inKey,@"Key",nil]];
+    [[self preferenceNotificationCenter] postNotificationName:Preference_GroupChanged object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
 }
     
 //Using General Preferences ----------------------------------------------------------------------
@@ -206,7 +207,7 @@
     [self savePreferences:prefDict forGroup:groupName];
 
     //Broadcast a group changed notification
-    [[self preferenceNotificationCenter] postNotificationName:Preference_GroupChanged object:groupName userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inKey,@"Key",nil]];
+    [[self preferenceNotificationCenter] postNotificationName:Preference_GroupChanged object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
 }
 
 //Internal ----------------------------------------------------------------------

@@ -745,7 +745,7 @@
 				4B28907A03C1D17500A8010A,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				FRAMEWORK_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1243,6 +1243,57 @@
 			settings = {
 			};
 		};
+		4BBB05E803CB2CDA00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = IdleTimePreferences.h;
+			path = "Plugins/Idle Time/IdleTimePreferences.h";
+			refType = 4;
+		};
+		4BBB05E903CB2CDA00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = IdleTimePreferences.m;
+			path = "Plugins/Idle Time/IdleTimePreferences.m";
+			refType = 4;
+		};
+		4BBB05EA03CB2CDA00A8010A = {
+			fileRef = 4BBB05E803CB2CDA00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BBB05EB03CB2CDA00A8010A = {
+			fileRef = 4BBB05E903CB2CDA00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BBB05EC03CB2EF500A8010A = {
+			isa = PBXFileReference;
+			name = IdleTimePrefs.nib;
+			path = "Plugins/Idle Time/IdleTimePrefs.nib";
+			refType = 4;
+		};
+		4BBB05ED03CB2EF500A8010A = {
+			fileRef = 4BBB05EC03CB2EF500A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BBB05EE03CB38FB00A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = IdleDefaultPrefs.plist;
+			path = "Plugins/Idle Time/IdleDefaultPrefs.plist";
+			refType = 4;
+		};
+		4BBB05EF03CB38FB00A8010A = {
+			fileRef = 4BBB05EE03CB38FB00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BBC89A803B964B800A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -1371,7 +1422,7 @@
 				4BED5A5803C34F4800A8010A,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				FRAMEWORK_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1583,8 +1634,7 @@
 				9C8C7F9B03CBA08400267226,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Compile/adium/build;
-				OPTIMIZATION_CFLAGS = "";
+				FRAMEWORK_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1636,7 +1686,7 @@
 		};
 		9C8C7F9D03CBA08400267226 = {
 			isa = PBXBundleReference;
-			path = Logger.bundle;
+			path = Logger.AdiumPlugin;
 			refType = 3;
 		};
 		9C8C7F9E03CBA08400267226 = {
@@ -2303,6 +2353,7 @@
 			files = (
 				F50F253D03B042AC01A80202,
 				F50F255E03B04FB801A80202,
+				4BBB05EA03CB2CDA00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2312,6 +2363,8 @@
 			files = (
 				F50F255503B0470E01A80202,
 				F50F255703B04C5B01A80202,
+				4BBB05ED03CB2EF500A8010A,
+				4BBB05EF03CB38FB00A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2321,6 +2374,7 @@
 			files = (
 				F50F253E03B042AC01A80202,
 				F50F255F03B04FB801A80202,
+				4BBB05EB03CB2CDA00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2396,7 +2450,10 @@
 				F55E2CCF03B0F8F601A80202,
 				F50F253C03B042AC01A80202,
 				F50F255D03B04FB801A80202,
+				4BBB05E903CB2CDA00A8010A,
 				F50F255603B04C5B01A80202,
+				4BBB05EC03CB2EF500A8010A,
+				4BBB05EE03CB38FB00A8010A,
 				F55E2CD003B0F91F01A80202,
 			);
 			isa = PBXGroup;
@@ -4693,6 +4750,7 @@
 			children = (
 				F50F253B03B042AC01A80202,
 				F50F255C03B04FB801A80202,
+				4BBB05E803CB2CDA00A8010A,
 			);
 			isa = PBXGroup;
 			name = Headers;
