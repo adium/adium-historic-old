@@ -1332,7 +1332,7 @@ static BOOL didInitSSL = NO;
 	gaim_account_set_password(account, [password UTF8String]);
 
 	if (GAIM_DEBUG) NSLog(@"Adium: Connect: Initiating connection.");
-	[gaimThread makeAccount:self performSelector:@selector(performConnect)];
+	[gaimThread makeAccount:(id)self performSelector:@selector(performConnect)];
 	if (GAIM_DEBUG) NSLog(@"Adium: Connect: Done initiating connection.");
 }
 
@@ -1580,6 +1580,12 @@ static BOOL didInitSSL = NO;
 //Our account has connected (called automatically by gaimServicePlugin)
 - (void)accountConnectionConnected
 {
+	[self performSelectorOnMainThread:@selector(_accountConnectionConnected)
+						   withObject:nil
+						waitUntilDone:YES];
+}
+- (void)_accountConnectionConnected
+{
     //We are now online
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO];
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
@@ -1587,19 +1593,14 @@ static BOOL didInitSSL = NO;
 	[self setStatusObject:nil forKey:@"ConnectionProgressPercent" notify:NO];	
 
 	//Apply any changes
-	[self performSelectorOnMainThread:@selector(notifyOfChangedStatusNumberSilently:)
-								 withObject:[NSNumber numberWithBool:NO]
-							  waitUntilDone:YES];    
+	[self notifyOfChangedStatusSilently:NO];
+	
     //Silence updates
     [self silenceAllHandleUpdatesForInterval:18.0];
-	[[adium contactController] performSelectorOnMainThread:@selector(delayListObjectNotificationsUntilInactivity)
-												withObject:nil
-											 waitUntilDone:YES];
+	[[adium contactController] delayListObjectNotificationsUntilInactivity];
 
     //Set our initial status
-    [self performSelectorOnMainThread:@selector(updateAllStatusKeys)
-						   withObject:nil
-						waitUntilDone:YES];
+    [self updateAllStatusKeys];
 
     //Reset reconnection attempts
     reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
@@ -1610,8 +1611,11 @@ static BOOL didInitSSL = NO;
 
 - (void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count withText:(const char *)text
 {
-	[self setStatusObject:[self connectionStringForStep:step] forKey:@"ConnectionProgressString" notify:NO];
-	[self setStatusObject:[NSNumber numberWithFloat:((float)step/(float)(step_count-1))] forKey:@"ConnectionProgressPercent" notify:NO];	
+	NSString	*connectionProgressString = [self connectionStringForStep:step];
+	NSNumber	*connectionProgressPrecent = [NSNumber numberWithFloat:((float)step/(float)(step_count-1))];
+
+	[self setStatusObject:connectionProgressString forKey:@"ConnectionProgressString" notify:NO];
+	[self setStatusObject:connectionProgressPrecent forKey:@"ConnectionProgressPercent" notify:NO];	
 
 	//Apply any changes
 	[self performSelectorOnMainThread:@selector(notifyOfChangedStatusNumberSilently:)
@@ -1622,26 +1626,12 @@ static BOOL didInitSSL = NO;
 //Sublcasses should override to provide a string for each progress step
 - (NSString *)connectionStringForStep:(int)step { return nil; };
 
-//Reset the libgaim account, causing it to forget all saved information
-//We don't want libgaim keeping track of anything between sessions... we handle all that on our own
-/*
-- (void)resetLibGaimAccount
-{
-	//Remove the account - may want to also destroy it?  Just destroying it causes crashes.
-	//This will remove any gaimBuddies, account information, etc.
-    [(GaimService *)service removeAccount:account];
-    gaim_accounts_remove (account); account = NULL;
-    gc = NULL;
-
-    [self createNewGaimAccount];
-}
-*/
-
 - (void)createNewGaimAccount
 {
 	gaimThread = [[NSConnection rootProxyForConnectionWithRegisteredName:@"GaimThread"
 																	host:nil] retain];
 	[gaimThread setProtocolForProxy:@protocol(GaimThread)];
+	NSLog(@"gaimThread = %@",[gaimThread description]);
 	
 	//Create a fresh version of the account
     account = gaim_account_new([UID UTF8String], [self protocolPlugin]);
