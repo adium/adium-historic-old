@@ -29,6 +29,7 @@ int HTMLEquivalentForFontSize(int fontSize);
 + (void)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 + (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 + (void)processLinkTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
++ (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 @end
 
 @implementation AIHTMLDecoder
@@ -37,9 +38,9 @@ int HTMLEquivalentForFontSize(int fontSize);
 + (NSString *)encodeHTML:(NSAttributedString *)inMessage encodeFullString:(BOOL)encodeFullString
 {
     if(encodeFullString){
-        return([self encodeHTML:inMessage headers:YES fontTags:YES closeFontTags:YES styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES]);
+        return([self encodeHTML:inMessage headers:YES fontTags:YES closeFontTags:YES styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES imagesPath:nil]);
     }else{
-        return([self encodeHTML:inMessage headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO encodeNonASCII:NO]);
+        return([self encodeHTML:inMessage headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO encodeNonASCII:NO imagesPath:nil]);
     }
 }
 
@@ -50,7 +51,7 @@ int HTMLEquivalentForFontSize(int fontSize);
 // styleTags: YES to include B/I/U tags
 // closeStyleTagsOnFontChange: YES to close and re-insert style tags when opening a new font tag
 // encodeNonASCII: YES to encode non-ASCII characters as their HTML equivalents
-+ (NSString *)encodeHTML:(NSAttributedString *)inMessage headers:(BOOL)includeHeaders fontTags:(BOOL)includeFontTags closeFontTags:(BOOL)closeFontTags styleTags:(BOOL)includeStyleTags closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange encodeNonASCII:(BOOL)encodeNonASCII
++ (NSString *)encodeHTML:(NSAttributedString *)inMessage headers:(BOOL)includeHeaders fontTags:(BOOL)includeFontTags closeFontTags:(BOOL)closeFontTags styleTags:(BOOL)includeStyleTags closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange encodeNonASCII:(BOOL)encodeNonASCII imagesPath:(NSString *)imagesPath
 {
     NSFontManager	*fontManager = [NSFontManager sharedFontManager];
     NSRange		searchRange;
@@ -95,7 +96,7 @@ int HTMLEquivalentForFontSize(int fontSize);
         BOOL		italic = (traits & NSItalicFontMask);
         
         NSString	*link = [attributes objectForKey:NSLinkAttributeName];
-
+        AITextAttachmentExtension *attachment = [attributes objectForKey:NSAttachmentAttributeName];
         NSMutableString	*chunk = [[inMessageString substringWithRange:searchRange] mutableCopy];
 
         //
@@ -169,6 +170,34 @@ int HTMLEquivalentForFontSize(int fontSize);
             [string appendString:@"\">"];
         }
 
+        //Image Attachments
+        if(attachment && [attachment shouldSaveImageForLogging] && [[attachment attachmentCell] respondsToSelector:@selector(image)] && imagesPath){
+            NSImage *attachmentImage = [[attachment attachmentCell] performSelector:@selector(image)];
+            NSBitmapImageRep *bitmapRep = [NSBitmapImageRep imageRepWithData:[attachmentImage TIFFRepresentation]];
+            NSMutableString *fileSafeChunk = [[chunk mutableCopy] autorelease];
+            NSString *shortFileName;
+            NSString *fileName;
+            
+            //change the '/' characters to ':' so they work in the filesystem
+            [fileSafeChunk replaceOccurrencesOfString:@"/" withString:@":" options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
+            shortFileName = [fileSafeChunk stringByAppendingPathExtension:@"png"];
+            fileName = [imagesPath stringByAppendingPathComponent:shortFileName];
+            
+            //create the images directory if it doesn't exist
+            [AIFileUtilities createDirectory:imagesPath];
+            
+            if([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:fileName atomically:YES]){
+                [string appendString:@"<img src=\""];
+                [string appendString:fileName];
+                [string appendString:@"\" alt=\""];
+                [string appendString:chunk];
+                [string appendString:@"\">"];
+                [chunk setString:@""];
+            }
+            else
+                NSLog(@"failed to write log image");
+        }
+        
         //Escape special HTML characters.
         [chunk replaceOccurrencesOfString:@"&" withString:@"&amp;"
             options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
@@ -398,6 +427,13 @@ int HTMLEquivalentForFontSize(int fontSize)
                     }else if([chunkString caseInsensitiveCompare:@"/U"] == 0){
                         [textAttributes setUnderline:NO];
 
+                    //Image
+                    }else if([chunkString caseInsensitiveCompare:@"IMG"] == 0){
+                        if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
+                            NSAttributedString *attachString = [self processImgTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
+                            [attrString appendAttributedString:attachString];
+                        }
+                    
                     //Invalid
                     }else{
                         validTag = NO;
@@ -542,6 +578,28 @@ int HTMLEquivalentForFontSize(int fontSize)
     }
 }
 
++ (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
+{
+    NSEnumerator 	*enumerator;
+    NSString		*arg;
+    NSAttributedString  *attachString;
+    NSFileWrapper       *fileWrapper;
+    AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
+    
+    enumerator = [[inArgs allKeys] objectEnumerator];
+    while((arg = [enumerator nextObject])){
+        if([arg caseInsensitiveCompare:@"SRC"] == 0){
+            fileWrapper = [[[NSFileWrapper alloc] initWithPath:[inArgs objectForKey:arg]] autorelease];
+        }
+        if([arg caseInsensitiveCompare:@"ALT"] == 0){
+            [attachment setString:[inArgs objectForKey:arg]];
+        }
+    }
+    
+    [attachment setFileWrapper:fileWrapper];
+    attachString = [NSAttributedString attributedStringWithAttachment:attachment];
+    return attachString;
+}
 
 + (NSDictionary *)parseArguments:(NSString *)arguments
 {

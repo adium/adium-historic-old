@@ -8,7 +8,7 @@
 #import "CBGaimAIMAccount.h"
 #import "aim.h"
 
-#define SCREEN_NAME "tekjew"
+#define SCREEN_NAME "fetchgreebledonx"
 
 @implementation CBGaimAIMAccount
 

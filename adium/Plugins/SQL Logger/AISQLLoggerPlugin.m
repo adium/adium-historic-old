@@ -16,9 +16,9 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.30 $
- * $Date: 2003/12/15 03:24:57 $
- * $Author: adamiser $
+ * $Revision: 1.31 $
+ * $Date: 2003/12/17 07:02:50 $
+ * $Author: jmelloy $
  *
  */
 
@@ -38,7 +38,7 @@
 {
     NSMenuItem	*logViewerMenuItem;
     //Observe content sending and receiving
-    [[owner notificationCenter] addObserver:self selector:@selector(adiumSentOrReceivedContent:) name:Content_ContentObjectAdded object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(adiumSentOrReceivedContent:) name:Content_ContentObjectAdded object:nil];
 
     //Install some prefs.
 
@@ -46,13 +46,13 @@
     
     //Install Menu item
     logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"SQL Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@""] autorelease];
-    [[owner menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
+    [[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
 
     conn = PQconnectdb("");
     if (PQstatus(conn) == CONNECTION_BAD)
     {
         NSString *error =  [NSString stringWithCString:PQerrorMessage(conn)];
-        [[owner interfaceController] handleErrorMessage:@"Connection to database failed." withDescription:error];
+        [[adium interfaceController] handleErrorMessage:@"Connection to database failed." withDescription:error];
     }
 }
 
@@ -140,7 +140,7 @@
 {
     NSString	*sqlStatement;
     NSMutableString 	*escapeHTMLMessage;
-    escapeHTMLMessage = [NSMutableString stringWithString:[AIHTMLDecoder encodeHTML:message headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO encodeNonASCII:YES]];
+    escapeHTMLMessage = [NSMutableString stringWithString:[AIHTMLDecoder encodeHTML:message headers:NO fontTags:NO closeFontTags:NO styleTags:YES closeStyleTagsOnFontChange:NO encodeNonASCII:YES imagesPath:nil]];
         
     char	escapeMessage[[escapeHTMLMessage length] * 2 + 1];
     char	escapeSender[[sourceName length] * 2 + 1];
@@ -162,7 +162,7 @@
     res = PQexec(conn, [sqlStatement UTF8String]);
     if (!res || PQresultStatus(res) != PGRES_COMMAND_OK) {
         NSLog(@"%s / %s\n%@", PQresStatus(PQresultStatus(res)), PQresultErrorMessage(res), sqlStatement);
-        [[owner interfaceController] handleErrorMessage:@"Insertion failed." withDescription:@"Database Insert Failed"];
+        [[adium interfaceController] handleErrorMessage:@"Insertion failed." withDescription:@"Database Insert Failed"];
         if (res) {
             PQclear(res);
         }
@@ -173,7 +173,7 @@
             conn = PQconnectdb("");
             if (PQstatus(conn) == CONNECTION_BAD)
             {
-                [[owner interfaceController] handleErrorMessage:@"Database reconnect failed.." 			withDescription:@"Check your settings and try again."];
+                [[adium interfaceController] handleErrorMessage:@"Database reconnect failed.." 			withDescription:@"Check your settings and try again."];
                 NSLog(@"%s", PQerrorMessage(conn));
             } else {
                 NSLog(@"Connection to PostgreSQL successfully made.");

@@ -59,6 +59,7 @@
 }
 
 + (NSString *)logBasePath;
++ (NSString *)logPathWithAccount:(AIAccount *)account andObject:(NSString *)object;
 - (void)initLogIndexing;
 - (void)prepareLogContentSearching;
 - (SKIndexRef)logContentIndex;
