@@ -75,7 +75,7 @@
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {
-//	if(GAIM_DEBUG) NSLog(@"update: %s",buddy->name);
+	if(GAIM_DEBUG) NSLog(@"update: %s",buddy->name);
     
     int                     online;
     AIListContact           *theContact;
@@ -107,7 +107,7 @@
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent)event
 {
-//	if(GAIM_DEBUG) NSLog(@"update: %s forEvent: %i",buddy->name,event);
+	if(GAIM_DEBUG) NSLog(@"update: %s forEvent: %i",buddy->name,event);
     
     AIListContact           *theContact;
 	
