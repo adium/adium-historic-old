@@ -75,7 +75,7 @@ static BOOL didInitOscar = NO;
 										 headers:YES
 										fontTags:YES
 							  includingColorTags:YES
-								   closeFontTags:NO
+								   closeFontTags:YES
 									   styleTags:YES
 					  closeStyleTagsOnFontChange:NO
 								  encodeNonASCII:NO
@@ -113,7 +113,7 @@ static BOOL didInitOscar = NO;
 													 headers:YES
 													fontTags:YES
 										  includingColorTags:YES
-											   closeFontTags:NO
+											   closeFontTags:YES
 												   styleTags:YES
 								  closeStyleTagsOnFontChange:NO
 											  encodeNonASCII:NO
@@ -385,7 +385,7 @@ static BOOL didInitOscar = NO;
 												   encoding:userinfo->info_encoding];
 			
 			NSString *oldProfileString = [theContact statusObjectForKey:@"TextProfileString"];
-
+			NSLog(@"%@\n%@",[theContact UID],profileString);
 			if (profileString && [profileString length]) {
 				if (![profileString isEqualToString:oldProfileString]) {
 
