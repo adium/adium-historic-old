@@ -130,7 +130,7 @@
 - (void)downloadDidFinish:(NSURLDownload *)download {
 	NSPipe			*outputPipe = [NSPipe pipe];
 	NSFileHandle	*output;
-	NSString		*fileName;
+	NSString		*fileName = nil;
 	
 	NSString		*lastPathComponent = [[dest lowercaseString] lastPathComponent];
 	NSString		*pathExtension = [lastPathComponent pathExtension];
@@ -235,13 +235,17 @@
 		fileName = [[outputComponents subarrayWithRange:NSMakeRange(i, count-i)] componentsJoinedByString:@" "];
 	}
 	
-	[[NSFileManager defaultManager] removeFileAtPath:dest handler:nil];
-
-	dest = [[dest stringByDeletingLastPathComponent] stringByAppendingPathComponent:fileName];
-
-	//Open the file so Adium can install it and then delete it
-	[[NSWorkspace sharedWorkspace] openTempFile:dest];
-
+	if(fileName){
+		[[NSFileManager defaultManager] removeFileAtPath:dest handler:nil];
+		
+		dest = [[dest stringByDeletingLastPathComponent] stringByAppendingPathComponent:fileName];
+		
+		//Open the file so Adium can install it and then delete it
+		[[NSWorkspace sharedWorkspace] openTempFile:dest];
+	}else{
+		NSLog(@"Installation Error: %@",dest);
+	}
+	
 	[self closeInstaller];
 }
 
