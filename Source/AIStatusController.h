@@ -129,6 +129,7 @@
 - (void)setActiveStatusState:(AIStatus *)state;
 - (AIStatus *)activeStatusState;
 - (NSSet *)allActiveStatusStates;
+- (AIStatusType)activeStatusType;
 
 - (NSString *)descriptionForStateOfStatus:(AIStatus *)statusState;
 - (NSString *)defaultStatusNameForType:(AIStatusType)statusType;
