@@ -18,7 +18,7 @@
 	return([ESGaimGaduGaduAccount class]);
 }
 
-- (AIAccountViewController *)accountView{
+- (AIAccountViewController *)accountViewController{
     return([ESGaimGaduGaduAccountViewController accountViewController]);
 }
 

@@ -142,7 +142,6 @@
 
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject;
 
-- (AIListContact *)_contactWithUID:(NSString *)inUID;
 - (AIListContact *)mainThreadContactWithUID:(NSString *)inUID;
 - (AIChat *)mainThreadChatWithContact:(AIListContact *)contact;
 - (AIChat *)mainThreadChatWithName:(NSString *)name;

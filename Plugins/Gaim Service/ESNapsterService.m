@@ -18,7 +18,7 @@
 	return([ESGaimNapsterAccount class]);
 }
 
-- (AIAccountViewController *)accountView{
+- (AIAccountViewController *)accountViewController{
     return([ESGaimNapsterAccountViewController accountViewController]);
 }
 

@@ -18,7 +18,7 @@
 	return([ESGaimMeanwhileAccount class]);
 }
 
-- (AIAccountViewController *)accountView{
+- (AIAccountViewController *)accountViewController{
     return([ESGaimMeanwhileAccountViewController accountViewController]);
 }
 

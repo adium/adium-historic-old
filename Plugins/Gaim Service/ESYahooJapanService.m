@@ -18,7 +18,7 @@
 	return([ESGaimYahooJapanAccount class]);
 }
 
-- (AIAccountViewController *)accountView{
+- (AIAccountViewController *)accountViewController{
     return([ESGaimYahooAccountViewController accountViewController]);
 }
 

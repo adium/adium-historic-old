@@ -7,6 +7,7 @@
 //
 
 #import "CBGaimAccount.h"
+#import "AIAccount.h"
 
 #define NO_GROUP						@"__NoGroup__"
 #define ACCOUNT_IMAGE_CACHE_PATH		@"~/Library/Caches/Adium"

@@ -17,7 +17,7 @@
 	return([ESGaimZephyrAccount class]);
 }
 
-- (AIAccountViewController *)accountView{
+- (AIAccountViewController *)accountViewController{
     return([ESGaimZephyrAccountViewController accountViewController]);
 }
 

@@ -32,7 +32,7 @@
 	return([ESGaimMSNAccount class]);
 }
 
-- (AIAccountViewController *)accountView{
+- (AIAccountViewController *)accountViewController{
     return([ESGaimMSNAccountViewController accountViewController]);
 }
 

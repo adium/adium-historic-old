@@ -18,7 +18,7 @@
 	return([ESGaimJabberAccount class]);
 }
 
-- (AIAccountViewController *)accountView{
+- (AIAccountViewController *)accountViewController{
     return([ESGaimJabberAccountViewController accountViewController]);
 }
 

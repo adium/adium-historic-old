@@ -18,7 +18,7 @@
 	return([ESGaimTrepiaAccount class]);
 }
 
-- (AIAccountViewController *)accountView{
+- (AIAccountViewController *)accountViewController{
     return([ESGaimTrepiaAccountViewController accountViewController]);
 }
 
