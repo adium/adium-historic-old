@@ -1,0 +1,21 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = JSCEventBezelController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                bezelView = JSCEventBezelView; 
+                bezelWindow = JSCEventBezelWindow; 
+                mainAwayMessage = NSTextField; 
+                mainName = NSTextField; 
+                mainStatus = NSTextField; 
+                queueField = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = JSCEventBezelView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {CLASS = JSCEventBezelWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }
+    ); 
+    IBVersion = 1; 
+}
