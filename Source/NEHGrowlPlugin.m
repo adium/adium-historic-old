@@ -258,7 +258,8 @@
 																			   userInfo:userInfo
 																		 includeSubject:NO];
 
-	NSAssert4(@"Growl notify error: EventID %@, listObject %@, userInfo %@\nGave Title \"%@\" description \"%@\"",
+	NSAssert5(!title && !description),
+			  @"Growl notify error: EventID %@, listObject %@, userInfo %@\nGave Title \"%@\" description \"%@\"",
 			  eventID,
 			  listObject,
 			  userInfo,
