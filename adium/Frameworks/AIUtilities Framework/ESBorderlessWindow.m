@@ -23,7 +23,8 @@
     //Set the background color to clear so that (along with the setOpaque call below) we can see through the parts
     //of the window that we're not drawing into
     [window setBackgroundColor:[NSColor clearColor]];
-    
+    [window setOpaque:NO];
+	
     return window;
 }
 
