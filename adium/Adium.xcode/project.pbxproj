@@ -458,6 +458,7 @@
 				3499F45006309AC80035B468,
 				3499F45106309AC80035B468,
 				4947F5CB0655E85200B791E5,
+				BFEBDBFF0669029800CBF845,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -503,6 +504,7 @@
 				34BD9CD1053146CC000AB133,
 				4B7F78B40597F42400162728,
 				34BD9F2C0531477E000AB133,
+				BFEBDBFE0669029800CBF845,
 				34BD9DAF05314751000AB133,
 				7E6642C10653363A0050E8C8,
 				34BD9DE205314755000AB133,
@@ -534,6 +536,7 @@
 				4BD6720906001B2C0049CAF7,
 				4B7F78BA0597F42D00162728,
 				9EB3C52304F94DB7001D1F74,
+				BFEBDBF90669025600CBF845,
 				4B3717000510D19400A8010A,
 				F50A325A03B5798301A8010A,
 				29B97323FDCFA39411CA2CEA,
@@ -8061,21 +8064,6 @@
 			settings = {
 			};
 		};
-		34F594B20664CEF700F01E8C = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 34F595060664CF1C00F01E8C;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		34F595060664CF1C00F01E8C = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
-		};
 		34F59B760667A33900F01E8C = {
 			children = (
 				34F59B8A0667A38D00F01E8C,
@@ -8906,7 +8894,7 @@
 			children = (
 				6CED9083065B686A00A9C196,
 				4BDC4CC4066227DB00C28445,
-				34F594B20664CEF700F01E8C,
+				BFEBD9770669022300CBF845,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -20254,6 +20242,423 @@
 			path = "Plugins/Single Window Interface/Current Chats List.nib";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		BFEBD9770669022300CBF845 = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = BFEBDBF60669024700CBF845;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		BFEBDBF60669024700CBF845 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
+		};
+		BFEBDBF90669025600CBF845 = {
+			children = (
+				BFEBDC010669029900CBF845,
+				BFEBDC0A066903A600CBF845,
+				BFEBDC0C0669054800CBF845,
+				BFEBDC0D0669054800CBF845,
+				BFEBDC0E0669054900CBF845,
+				BFEBDC0F0669054900CBF845,
+				BFEBDC100669054900CBF845,
+				BFEBDC110669054900CBF845,
+				BFEBDC120669054900CBF845,
+				BFEBDC130669054900CBF845,
+				BFEBDC140669054A00CBF845,
+				BFEBDC150669054A00CBF845,
+				BFEBDC160669054A00CBF845,
+				BFEBDC170669054A00CBF845,
+				BFEBDC180669054A00CBF845,
+			);
+			isa = PBXGroup;
+			name = WebAdium;
+			path = "";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		BFEBDBFA0669029800CBF845 = {
+			buildActionMask = 2147483647;
+			files = (
+				BFEBDC0B066903A700CBF845,
+				BFEBDC190669054A00CBF845,
+				BFEBDC1B0669054A00CBF845,
+				BFEBDC1D0669054A00CBF845,
+				BFEBDC1F0669054A00CBF845,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BFEBDBFB0669029800CBF845 = {
+			buildActionMask = 2147483647;
+			files = (
+				BFEBDC220669054A00CBF845,
+				BFEBDC230669054A00CBF845,
+				BFEBDC240669054A00CBF845,
+				BFEBDC250669054A00CBF845,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BFEBDBFC0669029800CBF845 = {
+			buildActionMask = 2147483647;
+			files = (
+				BFEBDC1A0669054A00CBF845,
+				BFEBDC1C0669054A00CBF845,
+				BFEBDC1E0669054A00CBF845,
+				BFEBDC200669054A00CBF845,
+				BFEBDC210669054A00CBF845,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BFEBDBFD0669029800CBF845 = {
+			buildActionMask = 2147483647;
+			files = (
+				BFEBDC2C066908F700CBF845,
+				BFEBDC26066907CD00CBF845,
+				BFEBDC05066902C400CBF845,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BFEBDBFE0669029800CBF845 = {
+			buildPhases = (
+				BFEBDBFA0669029800CBF845,
+				BFEBDBFB0669029800CBF845,
+				BFEBDBFC0669029800CBF845,
+				BFEBDBFD0669029800CBF845,
+				BFEBDC29066907D900CBF845,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = WebAdium/WebAdium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "WebAdium/WebAdium-Info.plist";
+				INSTALL_PATH = "$(USER_APPS_DIR)";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = WebAdium;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+			};
+			dependencies = (
+				BFEBDC07066902D600CBF845,
+			);
+			isa = PBXNativeTarget;
+			name = WebAdium;
+			productName = WebAdium;
+			productReference = BFEBDBFF0669029800CBF845;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>WebAdium</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.WebAdium</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+	<key>NSMainNibFile</key>
+	<string>MainMenu</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.application";
+		};
+		BFEBDBFF0669029800CBF845 = {
+			explicitFileType = wrapper.application;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = WebAdium.app;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		BFEBDC010669029900CBF845 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "WebAdium-Info.plist";
+			path = "WebAdium/WebAdium-Info.plist";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		BFEBDC05066902C400CBF845 = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFEBDC06066902D600CBF845 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		BFEBDC07066902D600CBF845 = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = BFEBDC06066902D600CBF845;
+		};
+		BFEBDC0A066903A600CBF845 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = WebAdium.pch;
+			path = WebAdium/WebAdium.pch;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		BFEBDC0B066903A700CBF845 = {
+			fileRef = BFEBDC0A066903A600CBF845;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFEBDC0C0669054800CBF845 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CSWebAdium.h;
+			path = WebAdium/CSWebAdium.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BFEBDC0D0669054800CBF845 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CSWebAdium.m;
+			path = WebAdium/CSWebAdium.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BFEBDC0E0669054900CBF845 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CSWebTabViewItem.h;
+			path = WebAdium/CSWebTabViewItem.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BFEBDC0F0669054900CBF845 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CSWebTabViewItem.m;
+			path = WebAdium/CSWebTabViewItem.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BFEBDC100669054900CBF845 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CSWebViewController.h;
+			path = WebAdium/CSWebViewController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BFEBDC110669054900CBF845 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CSWebViewController.m;
+			path = WebAdium/CSWebViewController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BFEBDC120669054900CBF845 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CSWebWindowController.h;
+			path = WebAdium/CSWebWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BFEBDC130669054900CBF845 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CSWebWindowController.m;
+			path = WebAdium/CSWebWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BFEBDC140669054A00CBF845 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = main.m;
+			path = WebAdium/main.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BFEBDC150669054A00CBF845 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.icns;
+			name = WebAdium.icns;
+			path = WebAdium/WebAdium.icns;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BFEBDC160669054A00CBF845 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = WebAdium.nib;
+			path = WebAdium/WebAdium.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BFEBDC170669054A00CBF845 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = WebAdiumView.nib;
+			path = WebAdium/WebAdiumView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BFEBDC180669054A00CBF845 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = WebWindow.nib;
+			path = WebAdium/WebWindow.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		BFEBDC190669054A00CBF845 = {
+			fileRef = BFEBDC0C0669054800CBF845;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFEBDC1A0669054A00CBF845 = {
+			fileRef = BFEBDC0D0669054800CBF845;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFEBDC1B0669054A00CBF845 = {
+			fileRef = BFEBDC0E0669054900CBF845;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFEBDC1C0669054A00CBF845 = {
+			fileRef = BFEBDC0F0669054900CBF845;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFEBDC1D0669054A00CBF845 = {
+			fileRef = BFEBDC100669054900CBF845;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFEBDC1E0669054A00CBF845 = {
+			fileRef = BFEBDC110669054900CBF845;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFEBDC1F0669054A00CBF845 = {
+			fileRef = BFEBDC120669054900CBF845;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFEBDC200669054A00CBF845 = {
+			fileRef = BFEBDC130669054900CBF845;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFEBDC210669054A00CBF845 = {
+			fileRef = BFEBDC140669054A00CBF845;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFEBDC220669054A00CBF845 = {
+			fileRef = BFEBDC150669054A00CBF845;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFEBDC230669054A00CBF845 = {
+			fileRef = BFEBDC160669054A00CBF845;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFEBDC240669054A00CBF845 = {
+			fileRef = BFEBDC170669054A00CBF845;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFEBDC250669054A00CBF845 = {
+			fileRef = BFEBDC180669054A00CBF845;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFEBDC26066907CD00CBF845 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFEBDC29066907D900CBF845 = {
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				BFEBDC2A066907E600CBF845,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BFEBDC2A066907E600CBF845 = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BFEBDC2C066908F700CBF845 = {
+			fileRef = 9C103FAE057127A500F3C158;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 //BF0
 //BF1
