@@ -19,14 +19,15 @@
 
 @interface AIContactInfoWindowController : AIWindowController {
     IBOutlet	NSScrollView	*scrollView_contents;
-    IBOutlet	NSView		*view_noContact;
-    IBOutlet	NSView		*view_contact;
+    IBOutlet	NSView			*view_noContact;
+    IBOutlet	NSView			*view_contact;
     
-    AIPreferenceCategory	*mainCategory;
-    
-    BOOL                        changeWithSelectionChanges;
+    AIPreferenceCategory		*mainCategory;
+
+	AIListObject				*displayedObject;
 }
 
 + (AIContactInfoWindowController *)contactInfoWindowControllerWithCategory:(AIPreferenceCategory *)inCategory;
-- (void)ignoreSelectionChanges:(BOOL)inValue;
+- (void)configureForListObject:(AIListObject *)inObject;
+
 @end

@@ -143,10 +143,10 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     BOOL valid = YES;
 
     if(menuItem == viewContactLogsMenuItem){
-        AIListContact	*selectedContact = [[adium contactController] selectedContact];
+        AIListObject	*selectedObject = [[adium contactController] selectedListObject];
 
-        if(selectedContact && [selectedContact isKindOfClass:[AIListContact class]]){
-            [viewContactLogsMenuItem setTitle:[NSString stringWithFormat:@"View %@'s Logs",[selectedContact displayName]]];
+        if(selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
+            [viewContactLogsMenuItem setTitle:[NSString stringWithFormat:@"View %@'s Logs",[selectedObject displayName]]];
         }else{
             [viewContactLogsMenuItem setTitle:@"View Contact's Logs"];
             valid = NO;
@@ -162,8 +162,8 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 //Show the log viewer, displaying the selected contact's logs
 - (void)showLogViewerToSelectedContact:(id)sender
 {
-    AIListContact   *selectedContact = [[adium contactController] selectedContact];
-    [AILogViewerWindowController openForContact:selectedContact plugin:self];
+    AIListObject   *selectedObject = [[adium contactController] selectedListObject];
+    [AILogViewerWindowController openForContact:selectedObject plugin:self];
 }
 
 //Show the log viewer, displaying the selected contact's logs

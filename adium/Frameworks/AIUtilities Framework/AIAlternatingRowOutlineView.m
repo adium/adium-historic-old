@@ -102,8 +102,6 @@
 - (void)setDataSource:(id)aSource
 {
     [super setDataSource:aSource];
-
-    _dataSourceDeleteRow = [aSource respondsToSelector:@selector(outlineView:deleteRow:)];
 }
 
 //Filter keydowns looking for the delete key (to delete the current selection)
@@ -208,6 +206,24 @@
         }
     }
     
+}
+
+- (void)reloadItem:(id)item reloadChildren:(BOOL)reloadChildren
+{
+	id	selectedItem;
+	int	selectedRow;
+
+	//Remember the currently selected item
+	selectedItem = [self itemAtRow:[self selectedRow]];
+
+	//Reload
+	[super reloadItem:item reloadChildren:reloadChildren];
+
+	//Restore (if possible) the previously selected object
+	selectedRow = [self rowForItem:selectedItem];
+	if(selectedRow != NSNotFound){
+		[self selectRow:selectedRow byExtendingSelection:NO];
+	}
 }
 
 

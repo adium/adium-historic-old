@@ -394,26 +394,16 @@
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {    
-    AIListObject	*selectedObject = nil;
-    NSOutlineView	*outlineView = [notification object];
-    int			selectedRow;
-
-    //Get the selected object
-    selectedRow = [outlineView selectedRow];
-    if(selectedRow >= 0 && selectedRow < [outlineView numberOfRows]){    
-        selectedObject = [outlineView itemAtRow:selectedRow];
-    }
-
     //Post a 'contact list selection changed' notification on the interface center
-    if(selectedObject){
-        NSDictionary	*notificationDict = [NSDictionary dictionaryWithObjectsAndKeys:selectedObject, @"Object", nil];
-        [[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged object:outlineView userInfo:notificationDict];
-    
-    }else{
-        [[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged object:outlineView userInfo:nil];
-    }
-    
+	//If we post this notification immediately, our outline view may not yet be key, and contact controller
+	//will return nil for 'selectedListObject'.  If we wait until we're back in the main run loop, the
+	//outline view will be set as key for certain, and everything will work as expected.
+	[self performSelector:@selector(_delayedNotify) withObject:nil afterDelay:0.0001];
 }
+- (void)_delayedNotify{
+	[[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged object:nil];
+}
+
 
 - (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
 {
@@ -457,7 +447,7 @@
         [NSNumber numberWithInt:Context_Contact_Action],
         [NSNumber numberWithInt:Context_Contact_NegativeAction],
         [NSNumber numberWithInt:Context_Contact_Additions], nil]
-                                                    forContact:[contactListView contact]]);
+                                                    forContact:[contactListView listObject]]);
 }
 
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayOutlineCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item

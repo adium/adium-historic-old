@@ -16,7 +16,7 @@
     NSTimer             *timer;
 }
 
-+ (id)showInfoWindowForContact:(AIListContact *)inContact;
++ (id)showInfoWindowForContact:(AIListObject *)inContact;
 + (void)closeTextProfileWindow;
 - (void)configureWindowForContact:(AIListContact *)inContact;
 - (void)displayInfo:(NSAttributedString *)infoString;

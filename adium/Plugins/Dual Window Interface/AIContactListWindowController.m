@@ -124,12 +124,6 @@
     }
 }
 
-//Called when the user selects a new contact object
-- (void)contactSelectionChanged:(NSNotification *)notification
-{
-    //AIListObject	*object = [[notification userInfo] objectForKey:@"Object"];
-}
-
 //Configure auto-resizing
 - (void)_configureAutoResizing
 {
@@ -338,9 +332,6 @@
     //[[scrollView_contactList verticalScroller] setControlSize:NSSmallControlSize];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contactListDesiredSizeChanged:) name:AIViewDesiredSizeDidChangeNotification object:contactListView];
-    
-    //Register for the selection notification
-    [[adium notificationCenter] addObserver:self selector:@selector(contactSelectionChanged:) name:Interface_ContactSelectionChanged object:contactListView];
     
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];

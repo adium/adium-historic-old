@@ -17,5 +17,6 @@
 + (void)promptForNewContactOnWindow:(NSWindow *)parentWindow;
 - (IBAction)cancel:(id)sender;
 - (IBAction)addContact:(id)sender;
+- (IBAction)closeWindow:(id)sender;
 
 @end

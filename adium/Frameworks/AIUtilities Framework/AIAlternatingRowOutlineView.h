@@ -14,11 +14,8 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface AIAlternatingRowOutlineView : NSOutlineView {
-
     BOOL	drawsAlternatingRows;
     NSColor	*alternatingRowColor;
-
-    BOOL	_dataSourceDeleteRow;
 
     BOOL	needsReload;
 }

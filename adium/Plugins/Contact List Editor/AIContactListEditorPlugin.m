@@ -89,7 +89,7 @@
 //
 - (IBAction)deleteSelection:(id)sender
 {
-	NSLog(@"Don't delete %@, that's your friend!",[[[adium contactController] selectedContact] displayName]);
+	NSLog(@"Don't delete %@, that's your friend!",[[[adium contactController] selectedListObject] displayName]);
 //	AIListObject	*object = [[adium contactController] selectedContact];
 //	
 //	if(object){

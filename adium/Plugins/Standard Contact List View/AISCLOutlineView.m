@@ -321,8 +321,8 @@
 
 
 //Contact menu ---------------------------------------------------------------
-//Return the selected countact (to auto-configure the contact menu)
-- (AIListContact *)contact
+//Return the selected object (to auto-configure the contact menu)
+- (AIListObject *)listObject
 {
     int selectedRow = [self selectedRow];
 

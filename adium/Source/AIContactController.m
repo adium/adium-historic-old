@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.91 2004/01/18 17:33:32 adamiser Exp $
+// $Id: AIContactController.m,v 1.92 2004/01/20 14:52:13 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -46,8 +46,8 @@
 @end
 
 //Used to suppress compiler warnings
-@interface NSObject (_RESPONDS_TO_CONTACT)
-- (AIListContact *)contact;
+@interface NSObject (_RESPONDS_TO_LIST_OBJECT)
+- (AIListObject *)listObject;
 @end
 
 
@@ -326,12 +326,6 @@
 //Show info for the selected contact
 - (IBAction)showContactInfo:(id)sender
 {
-    [self showInfoForContact:[self selectedContact]];
-}
-
-//Show the info window for a contact
-- (void)showInfoForContact:(AIListContact *)inContact
-{
     [[AIContactInfoWindowController contactInfoWindowControllerWithCategory:contactInfoCategory] showWindow:nil];
 }
 
@@ -350,20 +344,20 @@
 
 //Selected contact ------------------------------------------------
 //Returns the "selected"(represented) contact (By finding the first responder that returns a contact)
-- (AIListContact *)selectedContact
+- (AIListObject *)selectedListObject
 {
-    NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+    NSResponder	*responder = [[[NSApplication sharedApplication] mainWindow] firstResponder];
 
     //Check the first responder
-    if([responder respondsToSelector:@selector(contact)]){
-        return([responder contact]);
+    if([responder respondsToSelector:@selector(listObject)]){
+        return([responder listObject]);
     }
 
     //Search the responder chain
     do{
         responder = [responder nextResponder];
-        if([responder respondsToSelector:@selector(contact)]){
-            return([responder contact]);
+        if([responder respondsToSelector:@selector(listObject)]){
+            return([responder listObject]);
         }
         
     } while(responder != nil);

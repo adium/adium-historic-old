@@ -55,11 +55,10 @@
 {
     BOOL valid = YES;
     if(menuItem == editContactAlertsMenuItem) {
+        AIListObject	*selectedObject = [[adium contactController] selectedListObject];
 
-        AIListContact	*selectedContact = [[adium contactController] selectedContact];
-
-        if(selectedContact){
-            [editContactAlertsMenuItem setTitle:[NSString stringWithFormat:@"Edit %@'s Alerts",[selectedContact displayName]]];
+        if(selectedObject){
+            [editContactAlertsMenuItem setTitle:[NSString stringWithFormat:@"Edit %@'s Alerts",[selectedObject displayName]]];
         }else{
             [editContactAlertsMenuItem setTitle:@"Edit Contact's Alerts"];
             valid = NO;
@@ -72,7 +71,7 @@
 
 - (IBAction)editContactAlerts:(id)sender
 {
-    [ESContactAlertsWindowController showContactAlertsWindowForObject:[[adium contactController] selectedContact]];
+    [ESContactAlertsWindowController showContactAlertsWindowForObject:[[adium contactController] selectedListObject]];
 }
 
 - (IBAction)editContextContactAlerts:(id)sender

@@ -83,8 +83,6 @@
 - (void)setDataSource:(id)aSource
 {
     [super setDataSource:aSource];
-
-    _dataSourceDeleteRow = [aSource respondsToSelector:@selector(tableView:deleteRow:)];
 }
 
 //Filter keydowns looking for the delete key (to delete the current selection)
@@ -98,7 +96,9 @@
 
     //Check if 'delete' was pressed
     if(pressedChar == NSDeleteFunctionKey || pressedChar == 127){ //Delete
-        [[self dataSource] tableViewDeleteSelectedRows:self]; //Delete the selection
+        if([[self dataSource] respondsToSelector:@selector(tableViewDeleteSelectedRows:)]){
+			[[self dataSource] tableViewDeleteSelectedRows:self]; //Delete the selection
+		}
     }else{
         [super keyDown:theEvent]; //Pass the key event on
     }
