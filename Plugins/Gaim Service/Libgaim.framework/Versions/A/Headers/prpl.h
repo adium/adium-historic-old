@@ -91,9 +91,18 @@ typedef struct {
 /* This #define exists just to make it easier to fill out the buddy icon field in he prpl info struct for protocols that couldn't care less. */
 #define NO_BUDDY_ICONS {NULL, 0, 0, 0, 0, 0}
 
-#include <libgaim/blist.h>
-#include <libgaim/proxy.h>
-#include <libgaim/plugin.h>
+#include "blist.h"
+#include "proxy.h"
+#include "plugin.h"
+
+struct proto_chat_entry {
+	char *label;
+	char *identifier;
+	gboolean is_int;
+	int min;
+	int max;
+	gboolean secret;
+};
 
 /**
  * Protocol options
@@ -219,6 +228,7 @@ struct _GaimPluginProtocolInfo
 
 	GList *(*blist_node_menu)(GaimBlistNode *node);
 	GList *(*chat_info)(GaimConnection *);
+	GHashTable *(*chat_info_defaults)(GaimConnection *, const char *chat_name);
 
 	/* All the server-related functions */
 	void (*login)(GaimAccount *);
@@ -242,7 +252,7 @@ struct _GaimPluginProtocolInfo
 	void (*rem_permit)(GaimConnection *, const char *name);
 	void (*rem_deny)(GaimConnection *, const char *name);
 	void (*set_permit_deny)(GaimConnection *);
-	void (*warn)(GaimConnection *, const char *who, int anonymous);
+	void (*warn)(GaimConnection *, const char *who, gboolean anonymous);
 	void (*join_chat)(GaimConnection *, GHashTable *components);
 	void (*reject_chat)(GaimConnection *, GHashTable *components);
 	void (*chat_invite)(GaimConnection *, int id,
@@ -306,8 +316,8 @@ struct _GaimPluginProtocolInfo
 
 /* It's not like we're going to run out of integers for this version
    number, but we only want to really change it once per release. */
-/* GAIM_PRPL_API_VERSION last changed for version: 0.80 */
-#define GAIM_PRPL_API_VERSION 6
+/* GAIM_PRPL_API_VERSION last changed for version: 0.82 */
+#define GAIM_PRPL_API_VERSION 7
 
 #ifdef __cplusplus
 extern "C" {

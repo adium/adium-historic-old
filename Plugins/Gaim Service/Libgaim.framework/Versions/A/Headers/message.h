@@ -23,7 +23,7 @@
 #define _GAIM_JABBER_MESSAGE_H_
 
 #include "jabber.h"
-#include <libgaim/xmlnode.h>
+#include "xmlnode.h"
 
 typedef struct _JabberMessage {
 	JabberStream *js;

@@ -24,29 +24,29 @@
 #ifndef _MSN_H_
 #define _MSN_H_
 
-#include <libgaim/internal.h>
+#include "internal.h"
 
-#include <libgaim/account.h>
-#include <libgaim/accountopt.h>
-#include <libgaim/blist.h>
-#include <libgaim/connection.h>
-#include <libgaim/conversation.h>
-#include <libgaim/debug.h>
-#include <libgaim/ft.h>
-#include <libgaim/md5.h>
-#include <libgaim/notify.h>
-#include <libgaim/privacy.h>
-#include <libgaim/proxy.h>
-#include <libgaim/prpl.h>
-#include <libgaim/request.h>
-#include <libgaim/sha.h>
-#include <libgaim/sslconn.h>
-#include <libgaim/util.h>
-
+#include "account.h"
+#include "accountopt.h"
+#include "blist.h"
+#include "connection.h"
+#include "conversation.h"
+#include "debug.h"
+#include "md5.h"
+#include "notify.h"
+#include "privacy.h"
+#include "proxy.h"
+#include "prpl.h"
+#include "request.h"
 #include "servconn.h"
+#include "sha.h"
+#include "sslconn.h"
+#include "util.h"
+
+#include "ft.h"
 
 /* XXX */
-#include <libgaim/gaim.h>
+#include "gaim.h"
 
 #define MSN_BUF_LEN 8192
 
@@ -115,9 +115,9 @@ typedef enum
 	 (MSN_CLIENT_ID_RESERVED_2 <<  8) | \
 	 (MSN_CLIENT_ID_CAPABILITIES))
 
-void msn_request_buddy_icon(GaimConnection *gc, const char *who);
+//**Adium
+GaimXfer *msn_xfer_new(GaimConnection *gc, char *who);
+void msn_set_friendly_name(GaimConnection *gc, const char *entry);
+
 
 #endif /* _MSN_H_ */
-
-void msn_set_friendly_name(GaimConnection *gc, const char *entry);
-GaimXfer *msn_xfer_new(GaimConnection *gc, char *who);

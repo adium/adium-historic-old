@@ -27,8 +27,8 @@
 
 #include <glib/glist.h>
 #include <gmodule.h>
-#include <libgaim/signals.h>
-#include <libgaim/value.h>
+#include "signals.h"
+#include "value.h"
 
 typedef struct _GaimPlugin           GaimPlugin;
 typedef struct _GaimPluginInfo       GaimPluginInfo;
@@ -39,7 +39,7 @@ typedef struct _GaimPluginAction     GaimPluginAction;
 
 typedef int GaimPluginPriority; /**< Plugin priority. */
 
-#include <libgaim/pluginpref.h>
+#include "pluginpref.h"
 
 /**
  * Plugin types.

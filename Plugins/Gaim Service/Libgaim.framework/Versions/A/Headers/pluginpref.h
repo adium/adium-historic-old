@@ -23,8 +23,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#ifndef _PLUGIN_PREF_H_
-#define _PLUGIN_PREF_H_
+#ifndef _GAIM_PLUGINPREF_H_
+#define _GAIM_PLUGINPREF_H_
 
 typedef struct _GaimPluginPrefFrame		GaimPluginPrefFrame;
 typedef struct _GaimPluginPref			GaimPluginPref;
@@ -36,7 +36,7 @@ typedef enum {
 } GaimPluginPrefType;
 
 #include <glib.h>
-#include <libgaim/prefs.h>
+#include "prefs.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -215,10 +215,26 @@ void gaim_plugin_pref_set_max_length(GaimPluginPref *pref, unsigned int max_leng
  */
 unsigned int gaim_plugin_pref_get_max_length(GaimPluginPref *pref);
 
+/**
+ * Sets the masking of a string plugin pref
+ *
+ * @param pref   The plugin pref
+ * @param masked The value to set
+ */
+void gaim_plugin_pref_set_masked(GaimPluginPref *pref, gboolean mask);
+
+/**
+ * Gets the masking of a string plugin pref
+ *
+ * @param pref The plugin pref
+ * @return The masking
+ */
+gboolean gaim_plugin_pref_get_masked(GaimPluginPref *pref);
+
 /*@}*/
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _PLUGIN_PREF_H_ */
+#endif /* _GAIM_PLUGINPREF_H_ */

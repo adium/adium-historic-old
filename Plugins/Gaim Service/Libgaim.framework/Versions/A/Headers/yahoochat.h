@@ -44,8 +44,11 @@ void yahoo_process_chat_goto(GaimConnection *gc, struct yahoo_packet *pkt);
 void yahoo_c_leave(GaimConnection *gc, int id);
 int yahoo_c_send(GaimConnection *gc, int id, const char *what);
 GList *yahoo_c_info(GaimConnection *gc);
+GHashTable *yahoo_c_info_defaults(GaimConnection *gc, const char *chat_name);
 void yahoo_c_join(GaimConnection *gc, GHashTable *data);
 void yahoo_c_invite(GaimConnection *gc, int id, const char *msg, const char *name);
+
+void yahoo_conf_leave(struct yahoo_data *yd, const char *room, const char *dn, GList *who);
 
 void yahoo_chat_goto(GaimConnection *gc, const char *name);
 

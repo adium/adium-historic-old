@@ -24,7 +24,15 @@
 #import "ESGaimRequestActionWindowController.h"
 #import "ESGaimNotifyEmailWindowController.h"
 
-#include "CBGaimOscarAccount.h"
+#import "CBGaimOscarAccount.h"
+
+//For MSN user icons
+#include <libgaim/session.h>
+#include <libgaim/userlist.h>
+#include <libgaim/user.h>
+
+//Jabber registration
+#include <libgaim/jabber.h>
 
 #define ACCOUNT_IMAGE_CACHE_PATH		@"~/Library/Caches/Adium"
 #define MESSAGE_IMAGE_CACHE_NAME		@"Image_%@_%i"
@@ -52,6 +60,10 @@ NSMutableDictionary *chatDict = nil;
 static guint				sourceId = nil;		//The next source key; continuously incrementing
 static NSMutableDictionary  *sourceInfoDict = nil;
 static NDRunLoopMessenger   *runLoopMessenger = nil;
+
+void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
+void gaim_xfer_choose_file_cancel_cb(void *user_data, const char *filename);
+int gaim_xfer_choose_file(GaimXfer *xfer);
 
 @implementation SLGaimCocoaAdapter
 
@@ -183,6 +195,7 @@ static AIChat* imChatLookupFromConv(GaimConversation *conv)
 		//First, find the GaimBuddy with whom we are conversing
 		buddy = gaim_find_buddy(conv->account, conv->name);
 		if (!buddy) {
+			GaimDebug (@"imChatLookupFromConv: Creating %s %s",conv->account->username,conv->name);
 			//No gaim_buddy corresponding to the conv->name is on our list, so create one
 			buddy = gaim_buddy_new(conv->account, conv->name, NULL);	//create a GaimBuddy
 			group = gaim_find_group(_(GAIM_ORPHANS_GROUP_NAME));		//get the GaimGroup
@@ -532,7 +545,7 @@ static void adiumGaimBlistRequestAddBuddy(GaimAccount *account, const char *user
 									 withObject:[NSString stringWithUTF8String:username]];
 }
 
-static void adiumGaimBlistRequestAddChat(GaimAccount *account, GaimGroup *group, const char *alias)
+static void adiumGaimBlistRequestAddChat(GaimAccount *account, GaimGroup *group, const char *alias, const char *name)
 {
     NSLog(@"adiumGaimBlistRequestAddChat");
 }
@@ -804,7 +817,7 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 	}
 }
 
-static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user)
+static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user, gboolean new_arrival)
 {
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
 			NSLog(@"adiumGaimConvChatAddUser: CHAT: add %s",user);
@@ -1336,276 +1349,129 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
     int		    i;
 	
     NSString	    *titleString = (title ? [NSString stringWithUTF8String:title] : @"");
-    NSString	    *msg = [NSString stringWithFormat:@"%s%s%s",
-		(primary ? primary : ""),
-		((primary && secondary) ? "\n\n" : ""),
-		(secondary ? secondary : "")];
-    
-    NSMutableArray  *buttonNamesArray = [NSMutableArray arrayWithCapacity:actionCount];
-    GCallback 	    *callBacks = g_new0(GCallback, actionCount);
+	NSString		*primaryString = (primary ?  [NSString stringWithUTF8String:primary] : nil);
+
+	if (primaryString && ([primaryString rangeOfString: @"wants to send you"].location != NSNotFound)){
+		//Redirect a "wants to send you" action request to our file choosing method so we handle it as a normal file transfer
+		gaim_xfer_choose_file((GaimXfer *)userData);
+		
+    }else{
+		NSString	    *msg = [NSString stringWithFormat:@"%s%s%s",
+			(primary ? primary : ""),
+			((primary && secondary) ? "\n\n" : ""),
+			(secondary ? secondary : "")];
+		
+		NSMutableArray  *buttonNamesArray = [NSMutableArray arrayWithCapacity:actionCount];
+		GCallback 	    *callBacks = g_new0(GCallback, actionCount);
     	
-    //Generate the actions names and callbacks into useable forms
-    for (i = 0; i < actionCount; i += 1) {
-		//Get the name - XXX evands:need to localize!
-		[buttonNamesArray addObject:[NSString stringWithUTF8String:(va_arg(actions, char *))]];
+		//Generate the actions names and callbacks into useable forms
+		for (i = 0; i < actionCount; i += 1) {
+			//Get the name - XXX evands:need to localize!
+			[buttonNamesArray addObject:[NSString stringWithUTF8String:(va_arg(actions, char *))]];
+			
+			//Get the callback for that name
+			callBacks[i] = va_arg(actions, GCallback);
+		}
 		
-		//Get the callback for that name
-		callBacks[i] = va_arg(actions, GCallback);
-    }
-    
-    //Make default_action the last one
-    if (default_action != -1 && (default_action < actionCount)){
-		GCallback tempCallBack = callBacks[actionCount-1];
-		callBacks[actionCount-1] = callBacks[default_action];
-		callBacks[default_action] = tempCallBack;
+		//Make default_action the last one
+		if (default_action != -1 && (default_action < actionCount)){
+			GCallback tempCallBack = callBacks[actionCount-1];
+			callBacks[actionCount-1] = callBacks[default_action];
+			callBacks[default_action] = tempCallBack;
+			
+			[buttonNamesArray exchangeObjectAtIndex:default_action withObjectAtIndex:(actionCount-1)];
+		}
 		
-		[buttonNamesArray exchangeObjectAtIndex:default_action withObjectAtIndex:(actionCount-1)];
-    }
-	
-	NSDictionary	*infoDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:actionCount],@"Count",
-							buttonNamesArray,@"Button Names",
-							[NSValue valueWithPointer:callBacks],@"callBacks",
-							[NSValue valueWithPointer:userData],@"userData",
-							titleString,@"Title String",
-							msg,@"Message",nil];
-	
-	[ESGaimRequestActionWindowController performSelectorOnMainThread:@selector(showActionWindowWithDict:)
-														  withObject:infoDict
-													   waitUntilDone:YES];
+		NSDictionary	*infoDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:actionCount],@"Count",
+			buttonNamesArray,@"Button Names",
+			[NSValue valueWithPointer:callBacks],@"callBacks",
+			[NSValue valueWithPointer:userData],@"userData",
+			titleString,@"Title String",
+			msg,@"Message",nil];
+		
+		[ESGaimRequestActionWindowController performSelectorOnMainThread:@selector(showActionWindowWithDict:)
+															  withObject:infoDict
+														   waitUntilDone:YES];
+	}
     return(nil);
 }
 
 static void *adiumGaimRequestFields(const char *title, const char *primary, const char *secondary, GaimRequestFields *fields, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb,void *userData)
 {
-#if 0	
-	int		    i;
+	NSString *titleString = (title ?  [[NSString stringWithUTF8String:title] lowercaseString] : nil);
 	
-    NSString	    *titleString = (title ? [NSString stringWithUTF8String:title] : @"");
-    NSString	    *msg = [NSString stringWithFormat:@"%s%s%s",
-		(primary ? primary : ""),
-		((primary && secondary) ? "\n\n" : ""),
-		(secondary ? secondary : "")];
-	
-	//Begin code from Gaim
-	GaimGtkRequestData *data;
-	GtkSizeGroup *sg;
-	GList *gl, *fl;
-	GaimRequestFieldGroup *group;
-	GaimRequestField *field;
-	char *label_text;
-	int total_fields = 0;
-
-	for (gl = gaim_request_fields_get_groups(fields); gl != NULL;
-			gl = gl->next)
-		total_fields += g_list_length(gaim_request_field_group_get_fields(gl->data));
-
-	for (gl = gaim_request_fields_get_groups(fields);
-		 gl != NULL;
-		 gl = gl->next)
-	{
-		GList *field_list;
-		size_t field_count = 0;
-		size_t cols = 1;
-		size_t rows;
-		size_t col_num;
-		size_t row_num = 0;
-
-		group      = gl->data;
-		field_list = gaim_request_field_group_get_fields(group);
-
-		field_count = g_list_length(field_list);
-
-		rows = field_count;
-
-		col_num = 0;
-
-		for (fl = field_list; fl != NULL; fl = fl->next)
-		{
-			GaimRequestFieldType type;
-
-			field = (GaimRequestField *)fl->data;
-
-			type = gaim_request_field_get_type(field);
-
-			if (type == GAIM_REQUEST_FIELD_LABEL)
-			{
-				if (col_num > 0)
-					rows++;
-
-				rows++;
-			}
-			else if (type == GAIM_REQUEST_FIELD_STRING &&
-					 gaim_request_field_string_is_multiline(field))
-			{
-				if (col_num > 0)
-					rows++;
-
-				rows += 2;
-			}
-
-			col_num++;
-
-			if (col_num >= cols)
-				col_num = 0;
-		}
-
-		for (row_num = 0, fl = field_list;
-			 row_num < rows && fl != NULL;
-			 row_num++)
-		{
-			for (col_num = 0;
-				 col_num < cols && fl != NULL;
-				 col_num++, fl = fl->next)
-			{
-				size_t col_offset = col_num * 2;
+    if ([titleString rangeOfString: @"new jabber"].location != NSNotFound) {
+		/* Jabber registration request */
+		GList					*gl, *fl, *field_list;
+		GaimRequestField		*field;
+		GaimRequestFieldGroup	*group;
+		JabberStream			*js = (JabberStream *)userData;
+		
+		for (gl = gaim_request_fields_get_groups(fields);
+			 gl != NULL;
+			 gl = gl->next) {
+			
+			group = gl->data;
+			field_list = gaim_request_field_group_get_fields(group);
+			
+			for (fl = field_list; fl != NULL; fl = fl->next) {
 				GaimRequestFieldType type;
-				GtkWidget *widget = NULL;
-
-				field = fl->data;
-
-				if (!gaim_request_field_is_visible(field)) {
-					col_num--;
-					continue;
-				}
-
+				
+				field = (GaimRequestField *)fl->data;
 				type = gaim_request_field_get_type(field);
-
-				if (type != GAIM_REQUEST_FIELD_BOOLEAN &&
-				    gaim_request_field_get_label(field))
-				{
-					char *text;
-
-					text = g_strdup_printf("%s:",
-						gaim_request_field_get_label(field));
-
-					label = gtk_label_new(NULL);
-					gtk_label_set_markup_with_mnemonic(GTK_LABEL(label), text);
-					g_free(text);
-
-					gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-
-					gtk_size_group_add_widget(sg, label);
-
-					if (type == GAIM_REQUEST_FIELD_LABEL ||
-						(type == GAIM_REQUEST_FIELD_STRING &&
-						 gaim_request_field_string_is_multiline(field)))
-					{
-						if(col_num > 0)
-							row_num++;
-
-						gtk_table_attach_defaults(GTK_TABLE(table), label,
-												  0, 2 * cols,
-												  row_num, row_num + 1);
-
-						row_num++;
-						col_num=cols;
+				if (type == GAIM_REQUEST_FIELD_STRING) {
+					/* process a string field, see if we know the information for this field */
+					if (strcasecmp("username", gaim_request_field_get_label(field)) == 0){
+//						gaim_request_field_string_set_value(field, gaim_account_get_username([target account]));
+					}else if (strcasecmp("password", gaim_request_field_get_label(field)) == 0){
+//						gaim_request_field_string_set_value(field, gaim_account_get_password([target account]));
 					}
-					else
-					{
-						gtk_table_attach_defaults(GTK_TABLE(table), label,
-												  col_offset, col_offset + 1,
-												  row_num, row_num + 1);
-					}
-
-					gtk_widget_show(label);
 				}
-
-				if (type == GAIM_REQUEST_FIELD_STRING)
-					widget = create_string_field(field);
-				else if (type == GAIM_REQUEST_FIELD_INTEGER)
-					widget = create_int_field(field);
-				else if (type == GAIM_REQUEST_FIELD_BOOLEAN)
-					widget = create_bool_field(field);
-				else if (type == GAIM_REQUEST_FIELD_CHOICE)
-					widget = create_choice_field(field);
-				else if (type == GAIM_REQUEST_FIELD_LIST)
-					widget = create_list_field(field);
-				else if (type == GAIM_REQUEST_FIELD_ACCOUNT)
-					widget = create_account_field(field);
-				else
-					continue;
-
-				if (type == GAIM_REQUEST_FIELD_STRING &&
-					gaim_request_field_string_is_multiline(field))
-				{
-					gtk_table_attach(GTK_TABLE(table), widget,
-									 0, 2 * cols,
-									 row_num, row_num + 1,
-									 GTK_FILL | GTK_EXPAND,
-									 GTK_FILL | GTK_EXPAND,
-									 5, 0);
-				}
-				else if (type != GAIM_REQUEST_FIELD_BOOLEAN)
-				{
-					gtk_table_attach(GTK_TABLE(table), widget,
-									 col_offset + 1, col_offset + 2,
-									 row_num, row_num + 1,
-									 GTK_FILL | GTK_EXPAND,
-									 GTK_FILL | GTK_EXPAND,
-									 5, 0);
-				}
-				else
-				{
-					gtk_table_attach(GTK_TABLE(table), widget,
-									 col_offset, col_offset + 1,
-									 row_num, row_num + 1,
-									 GTK_FILL | GTK_EXPAND,
-									 GTK_FILL | GTK_EXPAND,
-									 5, 0);
-				}
-
-				gtk_widget_show(widget);
-
-				field->ui_data = widget;
 			}
+			
 		}
+		((GaimRequestFieldsCb)okCb)(userData, fields);
 	}
-
-	g_object_unref(sg);
-
-	/* Button box. */
-	bbox = gtk_hbutton_box_new();
-	gtk_box_set_spacing(GTK_BOX(bbox), 6);
-	gtk_button_box_set_layout(GTK_BUTTON_BOX(bbox), GTK_BUTTONBOX_END);
-	gtk_box_pack_end(GTK_BOX(vbox), bbox, FALSE, TRUE, 0);
-	gtk_widget_show(bbox);
-
-	/* Cancel button */
-	button = gtk_button_new_from_stock(text_to_stock(cancel_text));
-	gtk_box_pack_start(GTK_BOX(bbox), button, FALSE, FALSE, 0);
-	gtk_widget_show(button);
-
-	g_signal_connect(G_OBJECT(button), "clicked",
-					 G_CALLBACK(multifield_cancel_cb), data);
-
-	GTK_WIDGET_SET_FLAGS(button, GTK_CAN_DEFAULT);
-
-	/* OK button */
-	button = gtk_button_new_from_stock(text_to_stock(ok_text));
-	gtk_box_pack_start(GTK_BOX(bbox), button, FALSE, FALSE, 0);
-	gtk_widget_show(button);
-
-	data->ok_button = button;
-
-	GTK_WIDGET_SET_FLAGS(button, GTK_CAN_DEFAULT);
-	gtk_window_set_default(GTK_WINDOW(win), button);
-
-	g_signal_connect(G_OBJECT(button), "clicked",
-					 G_CALLBACK(multifield_ok_cb), data);
-
-	if (!gaim_request_fields_all_required_filled(fields))
-		gtk_widget_set_sensitive(button, FALSE);
-
-	gtk_widget_show(win);
-
-	return data;
-#endif
-    return(nil);
+    
+	return(nil);
 }
 
 static void *adiumGaimRequestFile(const char *title, const char *filename, gboolean savedialog, GCallback ok_cb, GCallback cancel_cb,void *user_data)
 {
-	NSLog(@"adiumGaimRequestFile");
+	GaimXfer *xfer = (GaimXfer *)user_data;
+	GaimXferType xferType = gaim_xfer_get_type(xfer);
+	if (xfer) {
+	    if (xferType == GAIM_XFER_RECEIVE) {
+			NSLog(@"File request: %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
+			
+			ESFileTransfer  *fileTransfer;
+			NSString		*destinationUID = [NSString stringWithUTF8String:(xfer->who)];
+			
+			//Ask the account for an ESFileTransfer* object
+			fileTransfer = [accountLookup(xfer->account) newFileTransferObjectWith:destinationUID];
+			
+			//Configure the new object for the transfer
+			[fileTransfer setRemoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
+			[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
+			[fileTransfer setSize: gaim_xfer_get_size(xfer)];
+			
+			xfer->ui_data = [fileTransfer retain];
+			
+			//Tell the account that we are ready to request the reception
+			[accountLookup(xfer->account) mainPerformSelector:@selector(requestReceiveOfFileTransfer:)
+												   withObject:fileTransfer];
+
+	    } else if (xferType == GAIM_XFER_SEND) {
+			if (xfer->local_filename != NULL && xfer->filename != NULL){
+				gaim_xfer_choose_file_ok_cb(xfer, xfer->local_filename);
+			}else{
+				gaim_xfer_choose_file_cancel_cb(xfer, xfer->local_filename);
+				[myself displayFileSendError];
+			}
+	    }
+		
+	}
+    
 	return(nil);
 }
 
@@ -1638,38 +1504,6 @@ static void adiumGaimDestroy(GaimXfer *xfer)
 										   withObject:fileTransfer];
 	
 	xfer->ui_data = nil;
-}
-
-#warning file transfer is now broken, fix before 0.64 - adiumGaimRequestXfer no longer is part of the GaimXferUiOps
-static void adiumGaimRequestXfer(GaimXfer *xfer)
-{
-    GaimXferType xferType = gaim_xfer_get_type(xfer);
-    if (xferType == GAIM_XFER_RECEIVE) {
-		NSLog(@"File request: %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
-        
-		ESFileTransfer  *fileTransfer;
-		NSString		*destinationUID = [NSString stringWithUTF8String:(xfer->who)];
-		
-		//Ask the account for an ESFileTransfer* object
-		fileTransfer = [accountLookup(xfer->account) newFileTransferObjectWith:destinationUID];
-		
-		//Configure the new object for the transfer
-		[fileTransfer setRemoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
-		[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
-		xfer->ui_data = [fileTransfer retain];
-		
-		//Tell the account that we are ready to request the reception
-        [accountLookup(xfer->account) mainPerformSelector:@selector(requestReceiveOfFileTransfer:)
-											   withObject:fileTransfer];
-		
-    } else if (xferType == GAIM_XFER_SEND) {
-		if (xfer->local_filename == nil){
-			[myself displayFileSendError];
-		}else{
-			NSLog(@"Beginning send of %s",xfer->local_filename);
-			gaim_xfer_request_accepted(xfer, xfer->local_filename);
-		}
-	}
 }
 
 - (void)displayFileSendError
@@ -1847,7 +1681,10 @@ guint adium_input_add(int fd, GaimInputCondition condition,
     // Build the CFSocket-style callback flags to use from the gaim ones
     CFOptionFlags callBackTypes = 0;
     if ((condition & GAIM_INPUT_READ ) != 0) callBackTypes |= kCFSocketReadCallBack;
-    if ((condition & GAIM_INPUT_WRITE) != 0) callBackTypes |= kCFSocketWriteCallBack | kCFSocketConnectCallBack;
+    if ((condition & GAIM_INPUT_WRITE) != 0) callBackTypes |= kCFSocketWriteCallBack;
+	
+	if ([NSApp isOnTigerOrBetter]) callBackTypes |= kCFSocketConnectCallBack;
+	
 //	if ((condition & GAIM_INPUT_CONNECT) != 0) callBackTypes |= kCFSocketConnectCallBack;
 	
     // And likewise the entire CFSocket
@@ -2163,6 +2000,8 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	if (performAdd){
 		//Add the buddy locally to libgaim and then to the serverside list
 		if(!buddy){
+			GaimDebug (@"gaimThreadAddUID: Creating %s %s",account->username,buddyUID);
+
 			buddy = gaim_buddy_new(account, buddyUID, NULL);
 		}
 		gaim_blist_add_buddy(buddy, NULL, group, NULL);
@@ -2475,7 +2314,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 - (oneway void)gaimThreadXferRequestAccepted:(NSValue *)xferValue withFileName:(NSString *)xferFileName
 {
 	GaimXfer	*xfer = [xferValue pointerValue];
-	gaim_xfer_request_accepted(xfer, [xferFileName UTF8String]);
+	gaim_xfer_choose_file_ok_cb(xfer, [xferFileName UTF8String]);
 }
 - (oneway void)xferRequestRejected:(GaimXfer *)xfer
 {
@@ -2538,12 +2377,21 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 				  withObject:inUID
 				  withObject:adiumAccount];
 }
+#warning This may no longer be needed. Check if Gaim is now updating MSN icons automagically.
 - (oneway void)gaimThreadMSNRequestBuddyIconFor:(NSString *)inUID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (gaim_account_is_connected(account)){
 		
-		msn_request_buddy_icon(account->gc, [inUID UTF8String]);
+		MsnSession *session;
+		MsnUserList *userlist;
+		MsnUser *user;
+		
+		if ((session = account->gc->proto_data) &&
+			(userlist = session->userlist) &&
+			(user = msn_userlist_find_user(userlist, [inUID UTF8String]))){
+			msn_queue_buddy_icon_request(user);
+		}
 	}
 }
 

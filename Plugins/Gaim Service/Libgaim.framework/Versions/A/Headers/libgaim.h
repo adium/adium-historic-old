@@ -5,7 +5,6 @@
 #include "libgaim/debug.h"
 #include "libgaim/ft.h"
 #include "libgaim/imgstore.h"
-#include "libgaim/multi.h"
 #include "libgaim/notify.h"
 #include "libgaim/plugin.h"
 #include "libgaim/pounce.h"

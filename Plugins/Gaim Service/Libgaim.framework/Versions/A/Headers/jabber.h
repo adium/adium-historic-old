@@ -23,15 +23,15 @@
 #define _GAIM_JABBER_H_
 
 #include <glib.h>
-#include <libgaim/connection.h>
-#include <libgaim/roomlist.h>
-#include <libgaim/sslconn.h>
+#include "connection.h"
+#include "roomlist.h"
+#include "sslconn.h"
 
 #include "jutil.h"
-#include <libgaim/xmlnode.h>
+#include "xmlnode.h"
 
 //Adium
-#include <libgaim/account.h>
+#include "account.h"
 
 typedef enum {
 	JABBER_CAP_NONE           = 0,

@@ -22,11 +22,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#ifndef _GAIM_BLIST_H_
+#define _GAIM_BLIST_H_
 
 /* I can't believe I let ChipX86 inspire me to write good code. -Sean */
-
-#ifndef _BLIST_H_
-#define _BLIST_H_
 
 #include <glib.h>
 
@@ -41,8 +40,8 @@ typedef struct _GaimGroup GaimGroup;
 typedef struct _GaimContact GaimContact;
 typedef struct _GaimBuddy GaimBuddy;
 
-#include <libgaim/account.h>
-#include <libgaim/buddyicon.h>
+#include "account.h"
+#include "buddyicon.h"
 
 /**************************************************************************/
 /* Enumerations                                                           */
@@ -75,6 +74,14 @@ typedef enum
 		((b)->present == GAIM_BUDDY_ONLINE || \
 		 (b)->present == GAIM_BUDDY_SIGNING_ON))
 
+typedef enum
+{
+	GAIM_BLIST_NODE_FLAG_NO_SAVE = 1,	/**< node should not be saved with the buddy list */
+} GaimBlistNodeFlags;
+
+#define GAIM_BLIST_NODE_HAS_FLAG(b, f) ((b)->flags & (f))
+#define GAIM_BLIST_NODE_SHOULD_SAVE(b) (! GAIM_BLIST_NODE_HAS_FLAG(b, GAIM_BLIST_NODE_FLAG_NO_SAVE))
+
 
 /**************************************************************************/
 /* Data Structures                                                        */
@@ -91,6 +98,7 @@ struct _GaimBlistNode {
 	GaimBlistNode *child;               /**< The child of this node         */
 	GHashTable *settings;               /**< per-node settings              */
 	void          *ui_data;             /**< The UI can put data here.      */
+	GaimBlistNodeFlags flags;           /**< The buddy flags                */
 };
 
 /**
@@ -109,8 +117,8 @@ struct _GaimBuddy {
 	int uc;                                 /**< This is a cryptic bitmask that makes sense only to the prpl.  This will get changed */
 	void *proto_data;                       /**< This allows the prpl to associate whatever data it wants with a buddy */
 	GaimBuddyIcon *icon;                    /**< The buddy icon. */
-	GaimAccount *account;           /**< the account this buddy belongs to */
-	guint timer;							/**< The timer handle. */
+	GaimAccount *account;           	/**< the account this buddy belongs to */
+	guint timer;				/**< The timer handle. */
 };
 
 /**
@@ -181,7 +189,7 @@ struct _GaimBlistUiOps
 	void (*request_add_buddy)(GaimAccount *account, const char *username,
 							  const char *group, const char *alias);
 	void (*request_add_chat)(GaimAccount *account, GaimGroup *group, 
-							 const char *alias);
+							 const char *alias, const char *name);
 	void (*request_add_group)(void);
 };
 
@@ -494,6 +502,17 @@ void gaim_contact_set_alias(GaimContact *contact, const char *alias);
 const char *gaim_contact_get_alias(GaimContact *contact);
 
 /**
+ * Determines whether an account owns any buddies in a given contact
+ *
+ * @param contact  The contact to search through.
+ * @param account  The account.
+ *
+ * @return TRUE if there are any buddies from account in the contact, or FALSE otherwise.
+ */
+gboolean gaim_contact_on_account(GaimContact *contact, GaimAccount *account);
+
+
+/**
  * Removes a buddy from the buddy list and frees the memory allocated to it.
  *
  * @param buddy   The buddy to be removed
@@ -732,7 +751,7 @@ void gaim_blist_request_add_buddy(GaimAccount *account, const char *username,
  * @param alias   The optional alias for the chat.
  */
 void gaim_blist_request_add_chat(GaimAccount *account, GaimGroup *group,
-								 const char *alias);
+								 const char *alias, const char *name);
 
 /**
  * Requests from the user information needed to add a group to the
@@ -878,4 +897,4 @@ void gaim_blist_uninit(void);
 }
 #endif
 
-#endif /* _BLIST_H_ */
+#endif /* _GAIM_BLIST_H_ */

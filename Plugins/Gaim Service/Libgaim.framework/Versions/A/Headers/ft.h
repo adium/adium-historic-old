@@ -30,7 +30,7 @@
 /**************************************************************************/
 typedef struct _GaimXfer GaimXfer;
 
-#include <libgaim/account.h>
+#include "account.h"
 
 /**
  * Types of file transfers.

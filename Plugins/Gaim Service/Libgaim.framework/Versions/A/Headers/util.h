@@ -30,7 +30,7 @@
 
 #include <stdio.h>
 
-#include <libgaim/account.h>
+#include "account.h"
 
 #ifdef __cplusplus
 extern "C" {

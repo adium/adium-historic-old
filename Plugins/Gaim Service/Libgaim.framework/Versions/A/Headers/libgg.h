@@ -233,7 +233,7 @@ enum {
 	GG_EVENT_CONN_SUCCESS,
 	GG_EVENT_STATUS60,		/* kto¶ zmieni³ stan w GG 6.0 */
 	GG_EVENT_NOTIFY60,		/* kto¶ siê pojawi³ w GG 6.0 */
-	GG_EVENT_USERLIST,		/* odpowied¼ listy kontaktów w GG 6.0 */
+	GG_EVENT_USERLIST		/* odpowied¼ listy kontaktów w GG 6.0 */
 };
 
 /*
@@ -532,8 +532,6 @@ __attribute__ ((packed))
 #define GG_STATUS_BLOCKED 0x0006		/* zablokowany */
 
 #define GG_STATUS_FRIENDS_MASK 0x8000		/* tylko dla znajomych (4.6) */
-
-#define GG_STATUS_DESCR_MAXSIZE 70
 
 #define GG_STATUS_DESCR_MAXSIZE 70
 

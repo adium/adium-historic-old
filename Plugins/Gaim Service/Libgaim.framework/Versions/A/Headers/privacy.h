@@ -25,7 +25,7 @@
 #ifndef _GAIM_PRIVACY_H_
 #define _GAIM_PRIVACY_H_
 
-#include <libgaim/account.h>
+#include "account.h"
 
 /**
  * Privacy data types.
