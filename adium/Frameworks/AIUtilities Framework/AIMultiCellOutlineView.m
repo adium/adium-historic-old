@@ -38,6 +38,7 @@
 	entriesInCache = 0;
 	contentRowHeight = 0;
 	groupRowHeight = 0;
+	totalHeight = 0;
 }
 
 - (void)dealloc
@@ -59,7 +60,10 @@
 	groupRowHeight = [groupCell cellSize].height;
 	[self resetRowHeightCache];
 }
-
+#warning hmm
+- (id)groupCell{
+	return(groupCell);
+}
 
 //
 - (void)mouseDown:(NSEvent *)theEvent
@@ -78,6 +82,7 @@
 		[super mouseDown:theEvent];
 	}
 }
+
 
 //Variable row heights -------------------------------------------------------------------------------------------------
 #pragma mark Variable row heights
@@ -142,6 +147,12 @@
 	}
 }
 
+- (int)totalHeight
+{
+	[self updateRowHeightCache];
+	return(totalHeight);
+}
+
 
 //Row height invalidation ----------------------------------------------------------------------------------------------
 #pragma mark Row height invalidation
@@ -167,7 +178,7 @@
 	[self resetRowHeightCache];
 }
 - (void)itemDidCollapse:(NSNotification *)notification{
-	[super itemDidCollapse:notification];
+ 	[super itemDidCollapse:notification];
 	[self resetRowHeightCache];
 }
 

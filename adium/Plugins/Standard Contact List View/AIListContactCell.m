@@ -14,7 +14,7 @@
 
 
 
-#define ICON_TEXT_PADDING		3
+#define ICON_TEXT_PADDING		2
 #define CONTACT_FONT 			[NSFont systemFontOfSize:11]
 
 #define EXTENDED_STATUS_FONT	[NSFont systemFontOfSize:9]
@@ -22,6 +22,8 @@
 
 #define NAME_STATUS_PAD			6
 
+#define STATUS_ICON_LEFT_PAD			2
+#define STATUS_ICON_RIGHT_PAD			2
 
 //Copy
 - (id)copyWithZone:(NSZone *)zone
@@ -89,7 +91,16 @@
 //	return([super bottomPadding] + 1);
 //}
 - (int)leftPadding{
-	return([super leftPadding] + 4);
+	
+	if((statusIconsVisible && statusIconPosition == LIST_POSITION_FAR_LEFT) ||
+	   (statusIconsVisible && statusIconPosition == LIST_POSITION_LEFT) ||
+	   (serviceIconsVisible && serviceIconPosition == LIST_POSITION_FAR_LEFT )||
+	   (serviceIconsVisible && serviceIconPosition == LIST_POSITION_LEFT) ||
+	   (userIconVisible && userIconPosition == LIST_POSITION_LEFT)){
+		return([super leftPadding] + 2);
+	}else{
+		return([super leftPadding] + [[controlView groupCell] flippyIndent]);
+	}
 }
 - (int)rightPadding{
 	return([super rightPadding] + 4);
@@ -218,7 +229,6 @@
 	NSAttributedString *statusString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[NSDictionary dictionaryWithObject:EXTENDED_STATUS_FONT forKey:NSFontAttributeName]] autorelease];
 	int		statusHeight = [statusString heightWithWidth:1e7];
 	
-	NSLog(@"%i %i",nameHeight,statusHeight);
 	return(nameHeight + statusHeight - HULK_CRUSH_FACTOR <= rect.size.height);
 }
 
@@ -295,10 +305,15 @@
 - (NSRect)drawStatusIconInRect:(NSRect)rect onLeft:(BOOL)onLeft
 {
 	if(statusIconsVisible){
+		if(onLeft)
+		rect.origin.x += STATUS_ICON_LEFT_PAD;
+		rect.size.width -= STATUS_ICON_LEFT_PAD;
 		rect = [self drawImage:[self statusImage]
 						atSize:NSMakeSize(0, 0)
 						inRect:rect
 						onLeft:onLeft];
+		rect.origin.x += STATUS_ICON_RIGHT_PAD;
+		rect.size.width -= STATUS_ICON_RIGHT_PAD;
 	}
 	return(rect);
 }
@@ -319,6 +334,7 @@
 - (NSRect)drawUserExtendedStatusInRect:(NSRect)rect drawUnder:(BOOL)drawUnder
 {
 	if(extendedStatusVisible){
+		if(drawUnder || [self textAlignment] != NSCenterTextAlignment){
 		NSString 	*string = [[listObject statusObjectForKey:@"StatusMessage"] string];
 		NSRange 	glyphRange;
 		
@@ -331,7 +347,7 @@
 				rect.origin.y += halfHeight;
 				rect.size.height -= halfHeight;
 			}else{
-				rect.origin.x += NAME_STATUS_PAD;
+				if([self textAlignment] == NSLeftTextAlignment) rect.origin.x += NAME_STATUS_PAD;
 				rect.size.width -= NAME_STATUS_PAD;
 			}
 			
@@ -366,12 +382,35 @@
 
 				
 				
+
 				
-				int half = (rect.size.height - statusHeight) / 2.0;
-				[extStatus drawInRect:NSMakeRect(rect.origin.x,
-												 rect.origin.y + half,
-												 rect.size.width,
-												 rect.size.height - half)];
+				//Alignment
+				NSSize		nameSize = [extStatus size];
+				NSRect		drawRect = rect;
+
+				if(nameSize.width > drawRect.size.width) nameSize = rect.size;
+				
+				switch([self textAlignment]){
+					case NSCenterTextAlignment:
+						drawRect.origin.x += (drawRect.size.width - nameSize.width) / 2.0;
+						break;
+					case NSRightTextAlignment:
+						drawRect.origin.x += (drawRect.size.width - nameSize.width);
+						break;
+					default:
+						break;
+				}
+				
+				
+				
+				
+				
+				
+				int half = (drawRect.size.height - statusHeight) / 2.0;
+				[extStatus drawInRect:NSMakeRect(drawRect.origin.x,
+												 drawRect.origin.y + half,
+												 drawRect.size.width,
+												 drawRect.size.height - half)];
 	
 //				[textStorage setAttributedString:extStatus];
 //				glyphRange = [layoutManager glyphRangeForBoundingRect:NSMakeRect(0,0,rect.size.width,10) inTextContainer:textContainer];
@@ -382,6 +421,8 @@
 			if(drawUnder){
 				rect.origin.y -= halfHeight;
 			}
+		}
+		
 		}
 	}
 	return(rect);
@@ -398,12 +439,12 @@
 	//Adjust
 	if(isOnLeft){
 		drawRect = NSMakeRect(rect.origin.x,
-							  rect.origin.y + (rect.size.height - size.height) / 2.0,
+							  rect.origin.y + (int)((rect.size.height - size.height) / 2.0),
 							  size.width,
 							  size.height);
 	}else{
 		drawRect = NSMakeRect(rect.origin.x + rect.size.width - size.width,
-							  rect.origin.y + (rect.size.height - size.height) / 2.0,
+							  rect.origin.y + (int)((rect.size.height - size.height) / 2.0),
 							  size.width,
 							  size.height);
 	}

@@ -127,11 +127,7 @@
 	//
     [colorWell_background setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor]];
     [colorWell_grid setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor]];	
-	[checkBox_drawGrid setState:[[preferenceDict objectForKey:KEY_LIST_THEME_GRID_ENABLED] boolValue]];
 	[slider_backgroundFade setFloatValue:[[preferenceDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue]];
-
-	//
-	[slider_windowTransparency setFloatValue:([[preferenceDict objectForKey:KEY_LIST_THEME_WINDOW_TRANSPARENCY] floatValue] * 100.0)];
 	
 	[self updateSliderValues];
 	[self configureControlDimming];
@@ -297,16 +293,6 @@
                                               group:PREF_GROUP_LIST_THEME];
 		[self updateSliderValues];
 		
-    }else if(sender == checkBox_drawGrid){
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_LIST_THEME_GRID_ENABLED
-                                              group:PREF_GROUP_LIST_THEME];
-	
-    }else if(sender == slider_windowTransparency){
-        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:([sender floatValue] / 100.0)]
-                                             forKey:KEY_LIST_THEME_WINDOW_TRANSPARENCY
-                                              group:PREF_GROUP_LIST_THEME];
-		[self updateSliderValues];
 	}		
 	
 	[self configureControlDimming];
@@ -330,7 +316,6 @@
 - (void)updateSliderValues
 {
 	[textField_backgroundFade setStringValue:[NSString stringWithFormat:@"%i%%", (int)([slider_backgroundFade floatValue] * 100.0)]];
-	[textField_windowTransparency setStringValue:[NSString stringWithFormat:@"%i%%", (int)[slider_windowTransparency floatValue]]];
 }
 
 //Configure control dimming
@@ -359,10 +344,6 @@
 	//Background image
 	[button_setBackgroundImage setEnabled:[checkBox_useBackgroundImage state]];
 	[textField_backgroundImagePath setEnabled:[checkBox_useBackgroundImage state]];
-	
-	//Gridding
-	[colorWell_grid setEnabled:[checkBox_drawGrid state]];
-	
 }
 
 @end

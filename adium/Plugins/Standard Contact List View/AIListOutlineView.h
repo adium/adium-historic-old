@@ -49,7 +49,7 @@
 
 	NSImage		*backgroundImage;
 	float 		backgroundFade;
-//	BOOL		drawsBackground;
+	BOOL		drawsBackground;
 	
 	NSColor		*backgroundColor;
 	

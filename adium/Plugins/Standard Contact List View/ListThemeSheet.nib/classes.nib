@@ -7,7 +7,6 @@
             OUTLETS = {
                 "button_setBackgroundImage" = NSButton; 
                 "checkBox_away" = NSButton; 
-                "checkBox_drawGrid" = NSButton; 
                 "checkBox_idle" = NSButton; 
                 "checkBox_idleAndAway" = NSButton; 
                 "checkBox_offline" = NSButton; 
@@ -38,10 +37,8 @@
                 "colorWell_unviewedContent" = NSColorWell; 
                 "colorWell_unviewedContentLabel" = NSColorWell; 
                 "slider_backgroundFade" = NSSlider; 
-                "slider_windowTransparency" = NSSlider; 
                 "textField_backgroundFade" = NSTextField; 
                 "textField_backgroundImagePath" = NSTextField; 
-                "textField_windowTransparency" = NSTextField; 
             }; 
             SUPERCLASS = AIWindowController; 
         }, 

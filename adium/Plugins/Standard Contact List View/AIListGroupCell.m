@@ -91,4 +91,14 @@
 	[self drawDisplayNameWithFrame:rect];
 }
 
+- (int)flippyIndent
+{
+	if([self textAlignment] != NSCenterTextAlignment){
+		NSSize size = [self cellSize];
+		return(size.height*.4 + size.height*.2 + FLIPPY_TEXT_PADDING);
+	}else{
+		return(0);
+	}
+}
+
 @end

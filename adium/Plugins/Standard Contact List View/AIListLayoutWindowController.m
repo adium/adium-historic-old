@@ -104,15 +104,17 @@
 	[slider_contactSpacing setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
 	[slider_groupTopSpacing setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
 	[slider_groupBottomSpacing setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_BOTTOM_SPACING] intValue]];
+	[slider_windowTransparency setFloatValue:([[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue] * 100.0)];
 	[self updateSliderValues];
 
 	[checkBox_userIconVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
 	[checkBox_extendedStatusVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
 	[checkBox_statusIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue]];
-	[checkBox_serviceIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS] boolValue]];
-	
+	[checkBox_serviceIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS] boolValue]];	
 	[checkBox_windowHasShadow setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
-
+	[checkBox_drawGrid setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_GRID_ENABLED] boolValue]];
+	[checkBox_verticalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue]];
+	
 	[self configureControlDimming];
 }
 
@@ -208,6 +210,21 @@
 											 forKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED
 											  group:PREF_GROUP_LIST_LAYOUT];
 		
+    }else if(sender == checkBox_drawGrid){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LIST_LAYOUT_GRID_ENABLED
+                                              group:PREF_GROUP_LIST_LAYOUT];
+		
+    }else if(sender == checkBox_verticalAutosizing){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE
+                                              group:PREF_GROUP_LIST_LAYOUT];
+		
+    }else if(sender == slider_windowTransparency){
+        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:([sender floatValue] / 100.0)]
+                                             forKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY
+                                              group:PREF_GROUP_LIST_LAYOUT];
+		[self updateSliderValues];
 	}
 }
 
@@ -220,6 +237,7 @@
 	[textField_contactSpacing setStringValue:[NSString stringWithFormat:@"%ipx",[slider_contactSpacing intValue]]];
 	[textField_groupTopSpacing setStringValue:[NSString stringWithFormat:@"%ipx",[slider_groupTopSpacing intValue]]];
 	[textField_groupBottomSpacing setStringValue:[NSString stringWithFormat:@"%ipx",[slider_groupBottomSpacing intValue]]];
+	[textField_windowTransparency setStringValue:[NSString stringWithFormat:@"%i%%", (int)[slider_windowTransparency floatValue]]];
 }
 
 //Configure control dimming
