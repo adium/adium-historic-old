@@ -15,6 +15,7 @@
 
 - (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1;
 - (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 waitUntilDone:(BOOL)flag;
+- (id)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 returnValue:(BOOL)flag;
 
 - (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2;
 - (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 waitUntilDone:(BOOL)flag;
