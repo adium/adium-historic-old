@@ -286,19 +286,17 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 				[view_Keys setPanes:[self _panesInCategory:AIPref_Keys]];
 				break;
             case 9:
-			{
                 [outlineView_advanced reloadData];
 				
                 //Select the previously selected row
 				int row = [[[adium preferenceController] preferenceForKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW
 																	group:PREF_GROUP_WINDOW_POSITIONS] intValue];
 				if(row < 0 || row >= [outlineView_advanced numberOfRows]) row = 1;
-				
+					
 				if([self outlineView:outlineView_advanced shouldSelectItem:[outlineView_advanced itemAtRow:row]]){
 					[outlineView_advanced selectRow:row byExtendingSelection:NO];
 				}
 				break;
-			}
 			case 88:
 				[view_FileTransfer setPanes:[self _panesInCategory:AIPref_FileTransfer]];
 				break;
@@ -335,7 +333,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		case 8: return([view_Keys desiredHeight]); break;
 		case 9: return(ADVANCED_PANE_HEIGHT); break;
 		case 88: return([view_FileTransfer desiredHeight]); break;
-		case 99:return([view_Events desiredHeight]); break;
+		case 99: return([view_Events desiredHeight]); break;
 		default: return(0); break;
 	}
 }
