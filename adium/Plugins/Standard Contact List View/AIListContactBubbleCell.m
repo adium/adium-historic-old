@@ -15,6 +15,13 @@
 
 @implementation AIListContactBubbleCell
 
+//Copy
+- (id)copyWithZone:(NSZone *)zone
+{
+	id newCell = [super copyWithZone:zone];
+	return(newCell);
+}
+
 //Add padding for our bubble
 - (NSSize)cellSize
 {
@@ -48,27 +55,47 @@
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
 	NSColor			*labelColor = [self labelColor];
-	
+	if(drewSelection) {
+		drewSelection = NO;
+		return;
+	}
 	//Draw our label
 	if(labelColor){
-		NSRect		labelRect = [self bubbleRectForFrame:rect];
-		
 		//Retrieve the label and shift it into position
-		NSBezierPath *pillPath = [NSBezierPath bezierPathWithRoundedRect:labelRect];
+		NSBezierPath *pillPath = [NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:rect]];
 		
 		//Fill the label
 		[labelColor set];
 		[pillPath fill];
 		
 		//Outline the label
-		if([self isHighlighted]){
-			[pillPath setLineWidth:1.0];
-			[[NSColor selectedControlColor] set];
-			[pillPath stroke];
-		}
+//		if([self isHighlighted]){
+//			[pillPath setLineWidth:1.0];
+//			[[NSColor selectedControlColor] set];
+//			[pillPath stroke];
+//		}
 	}
 }
 
+//Draw
+- (void)drawSelectionWithFrame:(NSRect)cellFrame
+{
+	[self drawBackgroundWithFrame:cellFrame];
+	
+	NSRect rect = [self bubbleRectForFrame:cellFrame];
+	
+	rect = NSInsetRect(rect,1,1);
+	
+	NSLog(@"_drawHighlightWithFrame");
+	NSBezierPath *pillPath = [NSBezierPath bezierPathWithRoundedRect:rect];
+
+	[pillPath setLineWidth:2.0];
+	[[NSColor alternateSelectedControlColor] set];
+	[pillPath stroke];
+	
+	drewSelection = YES;
+}
+	
 //
 - (NSRect)bubbleRectForFrame:(NSRect)rect
 {

@@ -187,6 +187,7 @@
 //Close the contact list window
 - (BOOL)windowShouldClose:(id)sender
 {
+	NSLog(@"should close");
     //Stop observing
     [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -268,8 +269,22 @@
 			groupCell = [[AIListGroupMockieCell alloc] init];	
 			contentCell = [[AIListContactMockieCell alloc] init];
 		}else{
-			Class	cellClass;
+			Class			cellClass;
+			LIST_CELL_STYLE	contactCellStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_CELL_STYLE] intValue];
+
+			//Disallow standard and brick for pillows
+			if(windowStyle == WINDOW_STYLE_PILLOWS &&
+			   (contactCellStyle == CELL_STYLE_STANDARD || contactCellStyle == CELL_STYLE_BRICK)){
+				contactCellStyle = CELL_STYLE_BUBBLE;
+			}
 			
+			//Disallow bubble and bubble to fit for mockie
+			if(windowStyle == WINDOW_STYLE_MOCKIE &&
+			   (contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT)){
+				contactCellStyle = CELL_STYLE_STANDARD;
+			}
+			
+			//
 			switch([[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_CELL_STYLE] intValue]){
 				case CELL_STYLE_STANDARD: 	cellClass = [AIListGroupCell class]; break;
 				case CELL_STYLE_BRICK: 		cellClass = [AIListGroupGradientCell class]; break;
@@ -278,7 +293,7 @@
 			}
 			groupCell = [[cellClass alloc] init];	
 			
-			switch([[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_CELL_STYLE] intValue]){
+			switch(contactCellStyle){
 				case CELL_STYLE_STANDARD: 	cellClass = [AIListContactCell class]; break;
 				case CELL_STYLE_BRICK: 		cellClass = [AIListContactBrickCell class]; break;
 				case CELL_STYLE_BUBBLE: 	cellClass = [AIListContactBubbleCell class]; break;
@@ -288,7 +303,7 @@
 		}
 		[contactListView setGroupCell:groupCell];
 		[contactListView setContentCell:contentCell];
-		
+
 		//Alignment
 		[contentCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue]];
 		[groupCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue]];
@@ -321,9 +336,15 @@
 		//Mockie special cases
 		if(windowStyle == WINDOW_STYLE_MOCKIE){
 			[groupCell setTopSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
-			[contentCell setBackgroundOpacity:backgroundAlpha];
 		}
-		[contactListView setDrawsBackground:(windowStyle != WINDOW_STYLE_MOCKIE)];
+		
+		//Background
+		if(windowStyle == WINDOW_STYLE_MOCKIE || windowStyle == WINDOW_STYLE_PILLOWS){
+			[contentCell setBackgroundOpacity:backgroundAlpha];
+			[contactListView setDrawsBackground:NO];
+		}else{
+			[contactListView setDrawsBackground:YES];
+		}
 
 		//Shadow
 		[[self window] setHasShadow:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
@@ -366,9 +387,15 @@
 	[contactListView setBackgroundFade:([[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_FADE] floatValue] * backgroundAlpha)];
 	[contactListView setBackgroundColor:[[[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor] colorWithAlphaComponent:backgroundAlpha]];
 	[contactListView setAlternatingRowColor:[[[themeDict objectForKey:KEY_LIST_THEME_GRID_COLOR] representedColor] colorWithAlphaComponent:backgroundAlpha]];
-	[contactListView setDrawsAlternatingRows:(windowStyle == WINDOW_STYLE_MOCKIE ? NO : [[layoutDict objectForKey:KEY_LIST_LAYOUT_GRID_ENABLED] boolValue])];
-	if(windowStyle == WINDOW_STYLE_MOCKIE) backgroundAlpha = 0.0;
 
+	//Mockie and pillow special cases
+	if(windowStyle == WINDOW_STYLE_MOCKIE || windowStyle == WINDOW_STYLE_PILLOWS){
+		backgroundAlpha = 0.0;
+		[contactListView setDrawsAlternatingRows:NO];
+	}else{
+		[contactListView setDrawsAlternatingRows:(backgroundAlpha == 0.0 ? NO : [[layoutDict objectForKey:KEY_LIST_LAYOUT_GRID_ENABLED] boolValue])];
+	}
+	
 	//Transparency.  Bye bye CPU cycles, I'll miss you!
 	[[self window] setOpaque:(backgroundAlpha == 1.0)];
 	[contactListView setUpdateShadowsWhileDrawing:(backgroundAlpha < 0.8)];
@@ -777,6 +804,22 @@
 {
 	[(AIListCell *)cell setListObject:item];
 	[(AIListCell *)cell setControlView:outlineView];
+	
+//	
+//	int	icons = [iconArray count];
+//    int	columns = [tableView numberOfColumns];
+//    int index;
+//	
+//    index = (row * columns) + [tableView indexOfTableColumn:tableColumn];
+//	
+//	
+//	
+//    if(index >= 0 && index < icons && (index == selectedIconIndex)){
+//        [cell setHighlighted:YES];
+//    }else{
+//        [cell setHighlighted:NO];
+//    }
+	
 }
 
 //
@@ -788,6 +831,9 @@
 //
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {    
+	//Reftesh
+	[contactListView setNeedsDisplay:YES];
+	
     //Post a 'contact list selection changed' notification on the interface center
 	//If we post this notification immediately, our outline view may not yet be key, and contact controller
 	//will return nil for 'selectedListObject'.  If we wait until we're back in the main run loop, the

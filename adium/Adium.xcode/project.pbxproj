@@ -5237,6 +5237,7 @@
 				6EC1684E06C170A000F9FAD3,
 				4B3E885A06C2611300ABEA43,
 				C45F7F6506C75E210056B1F2,
+				4BF5264606CA736900CDBCEB,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5560,6 +5561,10 @@
 				4BA62DB906C51297001D6B3C,
 				4BA62DBA06C51298001D6B3C,
 				C45F7F6706C75E210056B1F2,
+				4BF5246806CA6E8E00CDBCEB,
+				4BF5246906CA6E8E00CDBCEB,
+				4BF5246A06CA6E8E00CDBCEB,
+				4BF5246B06CA6E8E00CDBCEB,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5885,6 +5890,7 @@
 				6EC1684F06C170A000F9FAD3,
 				4B3E885B06C2611300ABEA43,
 				C45F7F6606C75E210056B1F2,
+				4BF5264706CA736900CDBCEB,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11278,6 +11284,12 @@
 				4B3E885806C2611300ABEA43,
 				4B3E885906C2611300ABEA43,
 				4B25362C06BECC8F003498D4,
+				4BF5264406CA736900CDBCEB,
+				4BF5264506CA736900CDBCEB,
+				4BF5246406CA6E8D00CDBCEB,
+				4BF5246506CA6E8D00CDBCEB,
+				4BF5246606CA6E8D00CDBCEB,
+				4BF5246706CA6E8D00CDBCEB,
 			);
 			isa = PBXGroup;
 			name = Prefs;
@@ -19251,6 +19263,92 @@
 			path = "Plugins/Auto Linking/AIAutoLinkingPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BF5246406CA6E8D00CDBCEB = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "style-borderless.png";
+			path = "Plugins/Standard Contact List View/style-borderless.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF5246506CA6E8D00CDBCEB = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "style-mockie.png";
+			path = "Plugins/Standard Contact List View/style-mockie.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF5246606CA6E8D00CDBCEB = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "style-pillows.png";
+			path = "Plugins/Standard Contact List View/style-pillows.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF5246706CA6E8D00CDBCEB = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "style-standard.png";
+			path = "Plugins/Standard Contact List View/style-standard.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF5246806CA6E8E00CDBCEB = {
+			fileRef = 4BF5246406CA6E8D00CDBCEB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF5246906CA6E8E00CDBCEB = {
+			fileRef = 4BF5246506CA6E8D00CDBCEB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF5246A06CA6E8E00CDBCEB = {
+			fileRef = 4BF5246606CA6E8D00CDBCEB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF5246B06CA6E8E00CDBCEB = {
+			fileRef = 4BF5246706CA6E8D00CDBCEB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF5264406CA736900CDBCEB = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIListThemePreviewCell.h;
+			path = "Plugins/Standard Contact List View/AIListThemePreviewCell.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF5264506CA736900CDBCEB = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIListThemePreviewCell.m;
+			path = "Plugins/Standard Contact List View/AIListThemePreviewCell.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF5264606CA736900CDBCEB = {
+			fileRef = 4BF5264406CA736900CDBCEB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF5264706CA736900CDBCEB = {
+			fileRef = 4BF5264506CA736900CDBCEB;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BF5BA10042F3CB200A8010A = {
 			fileEncoding = 30;

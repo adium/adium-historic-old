@@ -98,10 +98,10 @@
 - (void)showContactListAndBringToFront:(BOOL)bringToFront
 {
     if(!contactListWindowController){ //Load the window
-		if(windowStyle == WINDOW_STYLE_MOCKIE || windowStyle == WINDOW_STYLE_BORDERLESS){
-			contactListWindowController = [[AIBorderlessListWindowController listWindowController] retain];
-		}else{
+		if(windowStyle == WINDOW_STYLE_STANDARD){
 			contactListWindowController = [[AIStandardListWindowController listWindowController] retain];
+		}else{
+			contactListWindowController = [[AIBorderlessListWindowController listWindowController] retain];
 		}
     }
 

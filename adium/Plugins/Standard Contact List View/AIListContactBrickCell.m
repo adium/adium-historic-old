@@ -11,6 +11,13 @@
 
 @implementation AIListContactBrickCell
 
+//Copy
+- (id)copyWithZone:(NSZone *)zone
+{
+	id newCell = [super copyWithZone:zone];
+	return(newCell);
+}
+
 //No need to the grid if we have a status color to draw
 - (BOOL)drawGridBehindCell
 {

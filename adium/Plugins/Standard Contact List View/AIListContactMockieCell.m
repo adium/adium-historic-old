@@ -11,6 +11,13 @@
 
 @implementation AIListContactMockieCell
 
+//Copy
+- (id)copyWithZone:(NSZone *)zone
+{
+	id newCell = [super copyWithZone:zone];
+	return(newCell);
+}
+
 //Draw the background of our cell
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {

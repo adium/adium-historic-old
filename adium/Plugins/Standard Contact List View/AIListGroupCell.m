@@ -15,8 +15,7 @@
 //Copy
 - (id)copyWithZone:(NSZone *)zone
 {
-	AIListGroupCell	*newCell = [[AIListGroupCell alloc] init];
-	[newCell setListObject:listObject];
+	id newCell = [super copyWithZone:zone];
 	return(newCell);
 }
 

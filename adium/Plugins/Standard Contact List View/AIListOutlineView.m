@@ -119,12 +119,14 @@
 //Restore the selection
 - (void)windowBecameMain:(NSNotification *)notification
 {
+	[self setNeedsDisplay:YES];
 	NSLog(@"Unhide selection");
 }
 
 //Hide the selection
 - (void)windowResignedMain:(NSNotification *)notification
 {
+	[self setNeedsDisplay:YES];
 	NSLog(@"Hide selection");
 }
 
@@ -343,6 +345,93 @@
 //	return([image autorelease]);
 //}
 
+	
+	
+	
+	//We do custom highlight management when putting the label around the contact only
+	- (void)highlightSelectionInClipRect:(NSRect)clipRect
+	{
+		if([[self window] isMainWindow]){
+			NSIndexSet *indices = [self selectedRowIndexes];
+			unsigned int bufSize = [indices count];
+			unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
+			unsigned int i;
+			NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
+			[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
+			
+			for(i = 0; i < bufSize; i++) {
+				unsigned int startIndex = buf[i];
+				unsigned int endIndex = startIndex;
+				
+				//Process the selected rows in clumps
+#warning merging
+				/*while(i < bufSize-1 && buf[i+1] == endIndex + 1){
+					i++;
+					endIndex++;
+				}*/
+				
+				NSLog(@"select from %i to %i",startIndex,endIndex);
+				
+				NSRect selectRect;
+				if(startIndex == endIndex){
+					selectRect = [self rectOfRow:startIndex];
+				}else{
+					selectRect = NSUnionRect([self rectOfRow:startIndex],[self rectOfRow:endIndex]);
+				}
+				
+				//Draw the gradient
+				AIGradient *gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
+				[gradient drawInRect:selectRect];
+				
+				//Draw a line at the light side, to make it look a lot cleaner
+				selectRect.size.height = 1;
+				[[NSColor alternateSelectedControlColor] set];
+				NSRectFillUsingOperation(selectRect, NSCompositeSourceOver);
+				
+				
+				//
+			}
+			
+			free(buf);
+		}
+		
+		
+		
+		
+		
+		
+//		
+//		
+//		
+//		
+//		
+//		NSIndexSet	*indexSet = [self selectedRowIndexes];
+//		
+//		- (NSIndexSet *)selectedRowIndexes;
+//
+//		
+//		
+//		
+//		NSLog(@"%i x %i",(int)clipRect.size.width,(int)clipRect.size.height);
+//		
+//		
+//		
+		
+		
+		
+		
+		//		NSLog(@"highlightSelectionInClipRect");
+////		if (!labelAroundContactOnly) {
+//			[super highlightSelectionInClipRect:clipRect];
+//		}
+		
+	}
+	
+	
+	
+	
+	
+	
 	
 	
 

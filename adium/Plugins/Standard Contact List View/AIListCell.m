@@ -52,7 +52,7 @@
 //Copy
 - (id)copyWithZone:(NSZone *)zone
 {
-	AIListCell	*newCell = [[AIListCell alloc] init];
+	id newCell = [super copyWithZone:zone];
 	[newCell setListObject:listObject];
 	return(newCell);
 }
@@ -207,6 +207,25 @@
 
 		[self drawContentWithFrame:cellFrame];
 	}
+}
+
+- (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+{
+//	[super _drawHighlightWithFrame:cellFrame inView:controlView];
+	
+	//Cell spacing
+	cellFrame.origin.y += [self topSpacing];
+	cellFrame.size.height -= [self bottomSpacing] + [self topSpacing];
+	cellFrame.origin.x += [self leftSpacing];
+	cellFrame.size.width -= [self rightSpacing] + [self leftSpacing];
+	
+	[self drawSelectionWithFrame:cellFrame];
+}
+
+//Draw Selection
+- (void)drawSelectionWithFrame:(NSRect)rect
+{
+	
 }
 	
 //Draw the background of our cell

@@ -7,13 +7,22 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {spawnLayout = id; spawnTheme = id; }; 
+            ACTIONS = {
+                deleteLayout = id; 
+                deleteTheme = id; 
+                editLayout = id; 
+                editTheme = id; 
+                spawnLayout = id; 
+                spawnTheme = id; 
+            }; 
             CLASS = AICLPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_layoutDelete" = NSButton; 
+                "button_layoutEdit" = NSButton; 
                 "button_setFont" = NSButton; 
                 "button_themeDelete" = NSButton; 
+                "button_themeEdit" = NSButton; 
                 "checkBox_alternatingGrid" = NSButton; 
                 "checkBox_showLabels" = NSButton; 
                 "checkBox_tooltips" = NSButton; 

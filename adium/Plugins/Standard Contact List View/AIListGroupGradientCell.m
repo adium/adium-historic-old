@@ -14,11 +14,9 @@
 //Copy
 - (id)copyWithZone:(NSZone *)zone
 {
-	AIListGroupGradientCell	*newCell = [[AIListGroupGradientCell alloc] init];
-	[newCell setListObject:listObject];
+	id newCell = [super copyWithZone:zone];
 	return(newCell);
 }
-
 
 
 - (void)setBackgroundColor:(NSColor *)inBackgroundColor gradientColor:(NSColor *)inGradientColor
