@@ -124,29 +124,38 @@
 		NSRect	rowRect;
 		int		rowHeight;
 		BOOL	coloredRow;
-		int		numberOfColumns, numberOfRows;
+		int		numberOfRows;
 
 		//Setup
 		numberOfRows = [self numberOfRows];
-		numberOfColumns = [self numberOfColumns];
 		rowHeight = [self rowHeight];// + [self intercellSpacing].height;
 		if(numberOfRows == 0){
 			rowRect = NSMakeRect(0,0,rect.size.width,rowHeight);
 			coloredRow = YES;        
-		}else{
-			rowRect = NSMakeRect(0, NSMaxY([self rectOfRow:numberOfRows-1])/* - [self intercellSpacing].height*/, rect.size.width, rowHeight);
-			coloredRow = !(numberOfRows % 2);        
-		}
-		
-		//Draw the grid
-		while(rowRect.origin.y < rect.origin.y + rect.size.height && rowHeight > 0){
-			[self _drawRowInRect:rowRect colored:coloredRow selected:NO];
 			
-			//Move to the next row
-			coloredRow = !coloredRow;
-			rowRect.origin.y += rowHeight;            
-		}
-		
+			//Draw the grid
+			while(rowRect.origin.y < rect.origin.y + rect.size.height && rowHeight > 0){
+				[self _drawRowInRect:rowRect colored:coloredRow selected:NO];
+				
+				//Move to the next row
+				coloredRow = !coloredRow;
+				rowRect.origin.y += rowHeight;            
+			}
+			
+		}else{
+			int	i;
+			
+			coloredRow = !(numberOfRows % 2);        
+
+			for(i = 0; i < numberOfRows; i++){
+				rowRect = [self rectOfRow:i];
+				[self _drawRowInRect:rowRect colored:coloredRow selected:NO];
+				
+				//Move to the next row
+				coloredRow = !coloredRow;				
+			}
+		}		
+
 		if([self drawsGrid]){
 			[self _drawGridInClipRect:rect];
 		}

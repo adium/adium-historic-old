@@ -12,35 +12,32 @@
 
 @implementation BZGenericViewCell
 
-- init
+- (id)init
 {
-	return [super initImageCell:nil];
+	return([super initImageCell:nil]);
 }
 
-- copyWithZone:(NSZone *)zone
+- (void)setEmbeddedView:(NSView *)inView
 {
-	return [super copyWithZone:zone];
-}
-
-- (void)dealloc
-{
-	[super dealloc];
-}
-
-- (void)setObjectValue:(id <NSCopying>)object
-{
-	[super setObjectValue:object];
+	embeddedView = inView;
 }
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-	NSView *embeddedView = [self objectValue];
-
-	if([embeddedView superview] == nil) {
-		[controlView addSubview:embeddedView];
+	if([embeddedView respondsToSelector:@selector(setIsHighlighted:)]){
+		[embeddedView setIsHighlighted:[self isHighlighted]];
 	}
 
-	[embeddedView setFrame:cellFrame];
+	if([embeddedView superview] != controlView) {
+		[controlView addSubview:embeddedView];
+	}
+	
+	[embeddedView setFrame:cellFrame];	
+}
+
+- (BOOL)drawGridBehindCell
+{
+	return(YES);
 }
 
 @end
