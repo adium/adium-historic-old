@@ -9,11 +9,11 @@
 #import "NEHGrowlPlugin.h"
 #import <Growl-WithInstaller/Growl.h>
 
+//#define GROWL_DEBUG TRUE
+
 #define PREF_GROUP_EVENT_BEZEL              @"Event Bezel"
 #define KEY_EVENT_BEZEL_SHOW_AWAY           AILocalizedString(@"Show While Away",nil)
 #define GROWL_ALERT							AILocalizedString(@"Display Growl Notification",nil)
-
-#define GROWL_DEBUG TRUE
  
 #define GROWL_INSTALLATION_WINDOW_TITLE AILocalizedString(@"Growl Installation Recommended", "Growl installation window title")
 #define GROWL_UPDATE_WINDOW_TITLE AILocalizedString(@"Growl Update Available", "Growl update window title")
