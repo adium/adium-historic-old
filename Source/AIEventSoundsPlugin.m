@@ -123,7 +123,7 @@
  *
  *  Play the sound for this alert when the alert is selected
  */
-- (void)didSelectAlert:(NSDictionary *)alert
+- (void)performPreviewForAlert:(NSDictionary *)alert
 {
 	NSString	*soundPath = [[[alert objectForKey:KEY_ACTION_DETAILS] objectForKey:KEY_ALERT_SOUND_PATH] stringByExpandingBundlePath];
 	[[adium soundController] playSoundAtPath:soundPath];

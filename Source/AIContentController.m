@@ -1507,4 +1507,11 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	return([encryptionMenu autorelease]);
 }
 
+- (NSImage *)imageForEventID:(NSString *)eventID
+{
+	static NSImage	*eventImage = nil;
+	if(!eventImage) eventImage = [[NSImage imageNamed:@"message" forClass:[self class]] retain];
+	return eventImage;
+}
+
 @end
