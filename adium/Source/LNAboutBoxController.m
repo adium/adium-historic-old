@@ -89,7 +89,7 @@ LNAboutBoxController *sharedInstance = nil;
     [paragraphStyle setAlignment:NSCenterTextAlignment]; 
 
     attributes = [NSDictionary dictionaryWithObjectsAndKeys:ADIUM_SITE_LINK, NSLinkAttributeName,
-        [NSFont /*cachedF*/fontWithName:@"Lucida Grande" size:14], NSFontAttributeName,
+        [NSFont cachedFontWithName:@"Lucida Grande" size:14], NSFontAttributeName,
         paragraphStyle, NSParagraphStyleAttributeName,
         [NSNumber numberWithInt:1], NSUnderlineStyleAttributeName, nil];
 
@@ -98,7 +98,7 @@ LNAboutBoxController *sharedInstance = nil;
     [[linkTextView_siteLink enclosingScrollView] setDrawsBackground:NO];
     [linkTextView_siteLink setDrawsBackground:NO];
     [linkTextView_siteLink setEditable:NO];
-    //[[linkTextView_siteLink textStorage] setAttributedString:siteLink];
+    [[linkTextView_siteLink textStorage] setAttributedString:siteLink];
     [linkTextView_siteLink resetCursorRects];
 
     [siteLink release];
