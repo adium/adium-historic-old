@@ -146,6 +146,7 @@
     [prefixIncoming release]; prefixIncoming = nil;
     [prefixOutgoing release]; prefixOutgoing = nil;
     [timeStampFormat release]; timeStampFormat = nil;
+    [timeStampFormatter release]; timeStampFormatter = nil;
     [colorIncoming release]; colorIncoming = nil;
     [colorIncomingBorder release]; colorIncomingBorder = nil;
     [colorIncomingDivider release]; colorIncomingDivider = nil;

@@ -13,18 +13,18 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import "AILinkTrackingController.h"
-#import "AIFlexibleLink.h"
-#import "AICursorAdditions.h"
-#import "AITooltipUtilities.h"
-
 /*
  Add link tracking support to a view/cell.
-
+ 
  - Create an instance of AILinkTracking
  - Call resetCursorRectsInView:visibleRect: in response to resetCursorRects for your view
  - Call setContentString when your content changes
  */
+
+#import "AILinkTrackingController.h"
+#import "AIFlexibleLink.h"
+#import "AICursorAdditions.h"
+#import "AITooltipUtilities.h"
 
 @interface AILinkTrackingController (PRIVATE)
 - (id)initForView:(NSView *)inControlView withTextStorage:(NSTextStorage *)inTextStorage layoutManager:(NSLayoutManager *)inLayoutManager textContainer:(NSTextContainer *)inTextContainer;
@@ -37,14 +37,14 @@
 BOOL _mouseInRects(NSPoint aPoint, NSRectArray someRects, int arraySize, BOOL flipped);
 NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
-
 @implementation AILinkTrackingController
-
+//Create a link tracking controller for any view
 + (id)linkTrackingControllerForView:(NSView *)inControlView withTextStorage:(NSTextStorage *)inTextStorage layoutManager:(NSLayoutManager *)inLayoutManager textContainer:(NSTextContainer *)inTextContainer
 {
     return([[[self alloc] initForView:inControlView withTextStorage:inTextStorage layoutManager:inLayoutManager textContainer:inTextContainer] autorelease]);
 }
 
+//Create a tracking controller for a text view
 + (id)linkTrackingControllerForTextView:(NSTextView *)inTextView
 {
     return([[[self alloc] initForView:inTextView withTextStorage:[inTextView textStorage] layoutManager:[inTextView layoutManager] textContainer:[inTextView textContainer]] autorelease]);
@@ -63,14 +63,11 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     }
 }
 
-
+//Toggle display of tooltips
 - (void)setShowTooltip:(BOOL)inShowTooltip
 {
-
     showTooltip = inShowTooltip;
-
 }
-
 
 //Called when the mouse enters the link
 - (void)mouseEntered:(NSEvent *)theEvent
@@ -83,7 +80,6 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     location = [controlView convertPoint:location toView:nil];
     location = [[theEvent window] convertBaseToScreen:location];
 
-
     //Ignore the mouse entry if our view is hidden, or our window is non-main
     if([window isMainWindow] && [controlView canDraw]){
         [self _setMouseOverLink:link
@@ -95,7 +91,6 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 - (void)mouseExited:(NSEvent *)theEvent
 {
     [self _setMouseOverLink:NO atPoint:NSMakePoint(0,0)];
-
 }
 
 //Handle a mouse down.  Returns NO if the mouse down event should continue to be processed
@@ -205,10 +200,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     return(success);
 }
 
-
-
-//Private ---------------------------------------------------------------------------------
-//init
+//Init
 - (id)initForView:(NSView *)inControlView withTextStorage:(NSTextStorage *)inTextStorage layoutManager:(NSLayoutManager *)inLayoutManager textContainer:(NSTextContainer *)inTextContainer
 {
     //
@@ -217,6 +209,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     mouseOverLink = NO;
     hoveredLink = nil;
     hoveredString = nil;
+    showTooltip = YES;
 
     //
     controlView = inControlView;
@@ -227,6 +220,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     return(self);
 }
 
+//Dealloc
 - (void)dealloc
 {
     [self _endCursorTracking];
@@ -322,7 +316,6 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 {
     if(inHoveredLink != nil && mouseOverLink == NO){
         //Keep track of the hovered link/string
-
         mouseOverLink = YES;
 
         [[NSCursor handPointCursor] set]; //Set link cursor
@@ -330,9 +323,6 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
         if(showTooltip){
             [hoveredLink release]; hoveredLink = [inHoveredLink retain];
             [hoveredString release]; hoveredString = [[NSString stringWithFormat:@"%@", [hoveredLink url]] retain];
-
-//        inPoint.y += [inHoveredLink trackingRect].size.height + 3; //Offset the tooltip down a bit
-//        inPoint.x -= 9; //And to the left a bit
 
             [AITooltipUtilities showTooltipWithString:hoveredString onWindow:nil atPoint:inPoint orientation:TooltipAbove]; //Show tooltip
         }
@@ -366,6 +356,7 @@ BOOL _mouseInRects(NSPoint aPoint, NSRectArray someRects, int arraySize, BOOL fl
     return(NO);
 }
 
+//Copy rects
 NSRectArray _copyRectArray(NSRectArray someRects, int arraySize)
 {
     NSRectArray		newArray;

@@ -60,7 +60,7 @@ static	AITooltipOrientation	tooltipOrientation;
 
 + (void)showTooltipWithTitle:(NSAttributedString *)inTitle body:(NSAttributedString *)inBody image:(NSImage *)inImage imageOnRight:(BOOL)inImageOnRight onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation
 {    
-   if(inTitle || inBody || inImage){ //If passed something to display
+   if((inTitle && [inTitle length]) || (inBody && [inBody length]) || inImage){ //If passed something to display
        BOOL	newLocation = (!NSEqualPoints(inPoint,tooltipPoint) || tooltipOrientation != inOrientation);
        BOOL     needToCreateTooltip = (!tooltipTitle && !tooltipBody && !tooltipImage);
        

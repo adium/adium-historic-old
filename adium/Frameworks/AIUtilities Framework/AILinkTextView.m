@@ -13,20 +13,20 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+/*
+ A text view that supports link tracking and clicking
+ */
+
 #import "AILinkTextView.h"
 #import "AILinkTrackingController.h"
-
-/*
-    A text view that supports link tracking and clicking
- */
 
 @interface AILinkTextView (PRIVATE)
 - (void)_init;
 @end
 
-
 @implementation AILinkTextView
 
+//Init
 - (id)initWithFrame:(NSRect)frame
 {
     [super initWithFrame:frame];
@@ -35,6 +35,7 @@
     return(self);
 }
 
+//Init from nib
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     [super initWithCoder:aDecoder];
@@ -43,6 +44,7 @@
     return(self);
 }
 
+//Common init
 - (void)_init
 {
     linkTrackingController = [[AILinkTrackingController linkTrackingControllerForTextView:self] retain];
@@ -50,6 +52,7 @@
     [[self window] resetCursorRects];
 }
 
+//Dealloc
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -58,6 +61,7 @@
     [super dealloc];
 }
 
+//Pass clicks to the link tracking controller
 - (void)mouseDown:(NSEvent*)theEvent
 {
     if(![linkTrackingController handleMouseDown:theEvent withOffset:NSMakePoint(0,0)]){
@@ -65,11 +69,13 @@
     }    
 }
 
+//Reset tracking when our frame is changed
 - (void)frameDidChange:(NSNotification *)notification
 {
     [[self window] resetCursorRects];
 }
 
+//Reset cursor tracking
 - (void)resetCursorRects
 {
     NSPoint	containerOrigin;
@@ -87,6 +93,12 @@
     if(newWindow == nil){ //pass an empty visible rect to end any tracking
         [linkTrackingController trackLinksInRect:NSMakeRect(0,0,0,0) withOffset:NSMakePoint(0,0)];
     }
+}
+
+//Toggle display of tooltips
+- (void)setShowTooltip:(BOOL)inShowTooltip
+{
+    [linkTrackingController setShowTooltip:inShowTooltip];
 }
 
 @end

@@ -19,4 +19,6 @@
     AILinkTrackingController		*linkTrackingController;
 }
 
+- (void)setShowTooltip:(BOOL)inShowTooltip;
+
 @end
