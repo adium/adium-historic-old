@@ -3,7 +3,7 @@
  * File:        AWEzvXMLStream.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvXMLStream.m,v 1.4 2004/07/14 05:19:13 proton Exp $
+ * CVS tag:     $Id: AWEzvXMLStream.m,v 1.5 2004/07/16 10:32:35 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -117,7 +117,7 @@ void xml_char_data	(void *userData,
     
     if ([data length] == 0) {
         if (connection != nil)
-	    [[aNotification object] autorelease];
+           [[aNotification object] autorelease];
         connection = nil;
         [delegate XMLConnectionClosed];
     }
@@ -125,7 +125,7 @@ void xml_char_data	(void *userData,
     status = XML_Parse(parser, [data bytes], [data length], [data length] == 0 ? 1 : 0);
     
     if (connection != nil)
-	[[aNotification object] waitForDataInBackgroundAndNotify];
+       [[aNotification object] waitForDataInBackgroundAndNotify];
 }
 
 - (void)dataAvailable:(NSNotification *)aNotification {
@@ -167,7 +167,7 @@ void xml_char_data	(void *userData,
     
     [nodeStack push:node];
     
-    if (([nodeName compare:@"stream:stream"] == NSOrderedSame) && !negotiated) {
+    if (([nodeName isEqualToString:@"stream:stream"]) && !negotiated) {
         if (initiator) {
             negotiated = 1;
         } else {
@@ -191,9 +191,9 @@ void xml_char_data	(void *userData,
     
     node = [nodeStack top];
     
-    if (node != nil && [[node name] compare:nodeName] == NSOrderedSame) {
+    if (node != nil && [[node name] isEqualToString:nodeName]) {
         [nodeStack pop];
-    } else if ([[node name] compare:@"stream:stream"] == NSOrderedSame) {
+    } else if ([[node name] isEqualToString:@"stream:stream"]) {
 	// Wow, end of connection!
 	[self sendString:@"</stream:stream>"];
 	[connection closeFile];
@@ -244,7 +244,7 @@ void xml_char_data	(void *userData,
     NSMutableArray	*array;
     
     CFXMLNodeRef	xmlNode;
-    CFXMLElementInfo	AWEzvXMLElementInfo;
+    CFXMLElementInfo	xmlElementInfo;
     CFXMLTreeRef	xmlTree;
     NSData		*data;
 
@@ -268,12 +268,12 @@ void xml_char_data	(void *userData,
 	[array insertObject:@"to" atIndex:0];
     
     /* and make an element info structure */
-    AWEzvXMLElementInfo.attributes = (CFDictionaryRef)[[dict copy] autorelease];
-    AWEzvXMLElementInfo.attributeOrder = (CFArrayRef)[[array copy] autorelease];
-    AWEzvXMLElementInfo.isEmpty = YES;
+    xmlElementInfo.attributes = (CFDictionaryRef)[[dict copy] autorelease];
+    xmlElementInfo.attributeOrder = (CFArrayRef)[[array copy] autorelease];
+    xmlElementInfo.isEmpty = YES;
     
     /* create node and tree, then convert to XML text */
-    xmlNode = CFXMLNodeCreate(NULL, kCFXMLNodeTypeElement, (CFStringRef)string, &AWEzvXMLElementInfo, kCFXMLNodeCurrentVersion);
+    xmlNode = CFXMLNodeCreate(NULL, kCFXMLNodeTypeElement, (CFStringRef)string, &xmlElementInfo, kCFXMLNodeCurrentVersion);
     xmlTree = CFXMLTreeCreateWithNode(NULL, xmlNode);
     (CFDataRef)data = CFXMLTreeCreateXMLData(NULL, xmlTree);
     

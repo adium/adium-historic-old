@@ -3,7 +3,7 @@
  * File:        AWEzvContactPrivate.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactPrivate.m,v 1.4 2004/07/14 05:19:13 proton Exp $
+ * CVS tag:     $Id: AWEzvContactPrivate.m,v 1.5 2004/07/16 10:32:35 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -64,7 +64,7 @@
 
 - (void) setIdleSinceDate:(NSDate *) idleSince {
     if (idleSince != _idleSinceDate)
-	[_idleSinceDate release];
+       [_idleSinceDate release];
     _idleSinceDate = [idleSince retain];
 }
 
@@ -161,12 +161,12 @@
     NSString	    *html = nil;
 
     /* parse incoming message */
-    if (([root type] == AWEzvXMLElement) && ([[root name] compare:@"message"] == NSOrderedSame)) {
-        if (([[root attributes] objectForKey:@"type"] != nil) && ([(NSString *)[[root attributes] objectForKey:@"type"] compare:@"chat"] == NSOrderedSame)) {
+    if (([root type] == AWEzvXMLElement) && ([[root name] isEqualToString:@"message"])) {
+        if (([[root attributes] objectForKey:@"type"] != nil) && ([(NSString *)[[root attributes] objectForKey:@"type"] isEqualToString:@"chat"])) {
             NSEnumerator	*objs = [[root children] objectEnumerator];
             
             while ((node = [objs nextObject])) {
-                if (([node type] == AWEzvXMLElement) && ([[node name] compare:@"body"] == NSOrderedSame)) {
+                if (([node type] == AWEzvXMLElement) && ([[node name] isEqualToString:@"body"])) {
                     NSEnumerator	*childs = [[node children] objectEnumerator];
                         
                     while ((node = [childs nextObject])) {
@@ -176,11 +176,11 @@
                     }
                 }
                 
-                if (([node type] == AWEzvXMLElement) && ([[node name] compare:@"html"] == NSOrderedSame)) {
+                if (([node type] == AWEzvXMLElement) && ([[node name] isEqualToString:@"html"])) {
                     html = [node xmlString];
                 }
 		
-		if (([node type] == AWEzvXMLElement) && ([[node name] compare:@"x"] == NSOrderedSame)) {
+		if (([node type] == AWEzvXMLElement) && ([[node name] isEqualToString:@"x"])) {
 		    [self XMLCheckForEvent:node];
 		}
             }
@@ -189,12 +189,12 @@
             NSEnumerator	*objs = [[root children] objectEnumerator];
             
             while ((node = [objs nextObject])) {
-                if (([node type] == AWEzvXMLElement) && ([[node name] compare:@"x"] == NSOrderedSame)) {
+                if (([node type] == AWEzvXMLElement) && ([[node name] isEqualToString:@"x"])) {
                     [self XMLCheckForEvent:node];
 		}
             }
         }
-
+	
 	/* if we've got a message then we can send it to the client to display */
 	if ([plaintext length] > 0)
 	    [[[[self manager] client] client] user:self sentMessage:plaintext withHtml:html];
@@ -209,8 +209,8 @@
 
     /* check for events in jabber stream */
     while ((key = [objs nextObject])) {
-        if (([key compare:@"xmlns"] == NSOrderedSame) && 
-            ([(NSString *)[[node attributes] objectForKey:key] compare:@"jabber:x:event"] == NSOrderedSame)) {
+        if (([key isEqualToString:@"xmlns"]) && 
+            ([(NSString *)[[node attributes] objectForKey:key] isEqualToString:@"jabber:x:event"])) {
             eventFlag = 1;
         }
     }
@@ -222,12 +222,13 @@
        for now */
     objs = [[node children] objectEnumerator];
     while ((obj = [objs nextObject])) {
-        if ([[obj name] compare:@"composing"] == NSOrderedSame) {
+        if ([[obj name] isEqualToString:@"composing"]) {
             [[[[self manager] client] client] user:self typingNotification:AWEzvIsTyping];
 	    return;
         }
 	[[[[self manager] client] client] user:self typingNotification:AWEzvNotTyping];
     }
+
 }
 
 - (void) XMLConnectionClosed {
