@@ -374,8 +374,8 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 #pragma mark Outline view delegate
 - (void)outlineViewDeleteSelectedRows:(NSOutlineView *)inOutlineView
 {
-	unsigned	row = [inOutlineView selectedRow];
-	BOOL		didDelete = NO;
+	int		row = [inOutlineView selectedRow];
+	BOOL	didDelete = NO;
 	if(row != -1){
 		ESFileTransferProgressRow	*progressRow = [inOutlineView itemAtRow:row];
 		if([[progressRow fileTransfer] isStopped]){
@@ -387,6 +387,16 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	//If they tried to delete a row that isn't finished, or we got here with no valid selection, sound the system beep
 	if(!didDelete)
 		NSBeep();
+}
+
+- (void)outlineViewSelectionIsChanging:(NSNotification *)notification
+{
+	NSOutlineView	*inOutlineView = [notification object];
+	
+	int	row = [inOutlineView selectedRow];
+	if(row != -1){
+		[inOutlineView setNeedsDisplayInRect:[inOutlineView rectOfRow:row]];
+	}
 }
 
 - (NSMenu *)outlineView:(NSOutlineView *)inOutlineView menuForEvent:(NSEvent *)inEvent
