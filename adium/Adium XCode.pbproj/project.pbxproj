@@ -482,7 +482,6 @@
 				F50A325A03B5798301A8010A,
 				29B97323FDCFA39411CA2CEA,
 				19C28FACFE9D520D11CA2CBB,
-				520FE3A805BE1FC6002D063D,
 			);
 			isa = PBXGroup;
 			name = CocAIMe2;
@@ -9631,6 +9630,7 @@
 				3419FE1A0531585600C68BA3,
 				3419FE1B0531585600C68BA3,
 				3419FE1C0531585600C68BA3,
+				520FE47505BE2984002D063D,
 				3419FE1D0531585600C68BA3,
 				3419FE1E0531585600C68BA3,
 			);
@@ -23318,7 +23318,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = text.plist.xml;
 			name = "AdiumGames-Info.plist";
-			path = "/Users/nelson/Code/adium/AdiumGames-Info.plist";
+			path = "/Users/nelson/Code/adium/Plists/AdiumGames-Info.plist";
 			refType = 0;
 			sourceTree = "<absolute>";
 		};
@@ -23390,6 +23390,7 @@
 		};
 		520FE3B305BE206D002D063D = {
 			children = (
+				520FE3A805BE1FC6002D063D,
 				520FE3A905BE2065002D063D,
 				520FE3AA05BE2065002D063D,
 				520FE3AB05BE2065002D063D,
@@ -23460,6 +23461,12 @@
 			isa = PBXTargetDependency;
 			target = 520FE3A005BE1FC5002D063D;
 			targetProxy = 520FE46F05BE2494002D063D;
+		};
+		520FE47505BE2984002D063D = {
+			fileRef = 52AEBD6105ABA95700B19C56;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		5233D6A705B606FA00E9A4EC = {
 			children = (
