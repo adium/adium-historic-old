@@ -73,9 +73,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	
 	//Select the category
 	switch(inCategory){
-		case AIPref_ContactList: tabIdentifier = 1; break;
-		case AIPref_Messages: tabIdentifier = 2; break;
-		case AIPref_General: tabIdentifier = 3;
+		case AIPref_General: tabIdentifier = 1;
+		case AIPref_ContactList: tabIdentifier = 2; break;
+		case AIPref_Messages: tabIdentifier = 3; break;
 		case AIPref_Status_Away:
 		case AIPref_Status_Idle: tabIdentifier = 4; break;
 		case AIPref_Events: tabIdentifier = 5; break;
@@ -261,15 +261,15 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     
     if(tabView == tabView_category){
         switch(identifier){
-            case 1:
+			case 1:
+				[view_General setPanes:[self _panesInCategory:AIPref_General]];
+			break;
+            case 2:
                 [view_ContactList setPanes:[self _panesInCategory:AIPref_ContactList]];
             break;
-            case 2:
+            case 3:
                 [view_Messages setPanes:[self _panesInCategory:AIPref_Messages]];
             break;
-			case 3:
-				[view_General setPanes:[self _panesInCategory:AIPref_General]];
-				break;
 			case 4:
 				[view_Status_Away setPanes:[self _panesInCategory:AIPref_Status_Away]];
                 [view_Status_Idle setPanes:[self _panesInCategory:AIPref_Status_Idle]];
@@ -318,9 +318,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 - (int)tabView:(NSTabView *)tabView heightForTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	switch([[tabViewItem identifier] intValue]){
-		case 1: return([view_ContactList desiredHeight]); break;
-		case 2: return([view_Messages desiredHeight]); break;
-		case 3: return([view_General desiredHeight]); break;
+		case 1: return([view_General desiredHeight]); break;
+		case 2: return([view_ContactList desiredHeight]); break;
+		case 3: return([view_Messages desiredHeight]); break;
 		case 4: return([AIModularPaneCategoryView heightForTabView:tabView_status]); break;
 		case 5: return([view_Events desiredHeight]); break;
 		case 6: return([view_Dock desiredHeight]); break;
