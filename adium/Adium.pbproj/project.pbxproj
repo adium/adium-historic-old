@@ -750,32 +750,6 @@
 			settings = {
 			};
 		};
-		11CAC005049B7312003EAEC5 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			name = AIContentWarning.h;
-			path = "Frameworks/Adium Framework/AIContentWarning.h";
-			refType = 4;
-		};
-		11CAC006049B7312003EAEC5 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			name = AIContentWarning.m;
-			path = "Frameworks/Adium Framework/AIContentWarning.m";
-			refType = 4;
-		};
-		11CAC007049B7312003EAEC5 = {
-			fileRef = 11CAC005049B7312003EAEC5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		11CAC008049B7312003EAEC5 = {
-			fileRef = 11CAC006049B7312003EAEC5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		11F2C7FB047ACDC50021C483 = {
 			isa = PBXFileReference;
 			name = ContactStatusColoringPrefs.nib;
@@ -10743,8 +10717,6 @@
 				4BFC5408043E509A00A8010A,
 				4BDC17720493C90E00A8010A,
 				4BDC17730493C90E00A8010A,
-				11CAC005049B7312003EAEC5,
-				11CAC006049B7312003EAEC5,
 			);
 			isa = PBXGroup;
 			name = Content;
@@ -11365,7 +11337,6 @@
 				4BFC5409043E509A00A8010A,
 				4B82AB790457178E00A8010A,
 				4BDC17740493C90E00A8010A,
-				11CAC007049B7312003EAEC5,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11397,7 +11368,6 @@
 				4BFC540A043E509A00A8010A,
 				4B82AB7A0457178E00A8010A,
 				4BDC17750493C90E00A8010A,
-				11CAC008049B7312003EAEC5,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
