@@ -331,7 +331,11 @@
 		if([[account statusObjectForKey:@"Online"] boolValue]) online++;
 	}
 	
-	[textField_overview setStringValue:[NSString stringWithFormat:AILocalizedString(@"%i accounts, %i online", "Overview of total and online accounts"), [accountArray count], online]];
+	if([accountArray count] == 0 && online == 0){
+		[textField_overview setStringValue:AILocalizedString(@"Click the + to add a new account","Instructions on how to add an account when none are present")];
+	}else{
+		[textField_overview setStringValue:[NSString stringWithFormat:AILocalizedString(@"%i accounts, %i online","Overview of total and online accounts"), [accountArray count], online]];
+	}
 }
 
 /*!
