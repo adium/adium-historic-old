@@ -495,7 +495,7 @@
         [cell setAlternateImage:newAlternateImage];
         [cell setImage:newImage];
 
-        [cell setImagePosition:NSImageAbove];
+        [cell setImagePosition:NSImageOnly];
     }
 } 
 

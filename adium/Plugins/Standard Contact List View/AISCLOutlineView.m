@@ -509,14 +509,34 @@
 - (void)mouseDown:(NSEvent *)theEvent
 {
 	if([[self window] isBorderless] && [theEvent cmdKey]){
+		//Wait for the next event
+		NSEvent *nextEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask)
+														untilDate:[NSDate distantFuture]
+														   inMode:NSEventTrackingRunLoopMode
+														  dequeue:NO];
+
 		//Quick hack to hide any active tooltips
 		if([[self delegate] respondsToSelector:@selector(_endTrackingMouse)])
 			[[self delegate] performSelector:@selector(_endTrackingMouse)];
-		//Pass along the event
-		[[self window] mouseDown:theEvent];
+		
+		//Pass along the event (either to ourself or our window, depending on what it is)
+		if([nextEvent type] == NSLeftMouseUp){
+			[super mouseDown:theEvent];   
+			[super mouseUp:nextEvent];   
+		}else if([nextEvent type] == NSLeftMouseDraggedMask){
+			[[self window] mouseDown:theEvent];
+			[[self window] mouseDragged:theEvent];
+		}else{
+			[[self window] mouseDown:theEvent];
+		}
 	}else{
         [super mouseDown:theEvent];   
 	}
+}
+- (void)mouseUp:(NSEvent *)theEvent
+{
+	dragging=NO;
+	[super mouseUp:theEvent];
 }
 - (void)mouseDragged:(NSEvent *)theEvent
 {
