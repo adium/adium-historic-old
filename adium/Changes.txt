@@ -7,6 +7,7 @@ Version 0.53 (4/  /2004)
 - Added support for custom link titles (Edit->Add Link)
 - Added support for message sending via aim:goim URLs
 - Added support for placing contact list below all other windows
+- Added support for deleting emoticon packs
 - Added an 'add contact' menu item for message tabs
 - Added the ability to cancel connecting accounts
 - Added hourly level preferences for message history
@@ -25,10 +26,12 @@ Version 0.53 (4/  /2004)
 - Improved appearance of source list gradients
 - Improved error handling for all services
 - Improved detection of URLs for autolinking
+- Improved behavior when reconnecting accounts
 - Cleaned up alert interface in preparation for upcoming changes to 'Get Info' window.
 - Cleaned up address book integration advanced preferences
 - Cleaned up sound preferences
-- Fixed an MSN crash [libgaim]
+- Cleaned up contact list name display format preferences - moved to the View menu
+- Fixed several MSN crashes [libgaim]
 - Fixed a crash when arranging away messages
 - Fixed odd behavior and crashes in Alert window
 - Fixed an issue with dropping text on message tabs
@@ -42,7 +45,7 @@ Version 0.53 (4/  /2004)
 - Performance and launch time improvements
 - Themes and sounds can be put in more places now - specifically, all three Library/Application Support folders (Home/L/AS/Adium 2.0, /L/AS/Adium 2.0, and /Network/L/AS/Adium 2.0). You can already do this with scripts.
 - Scripts (and themes and sounds) in the Adium application bundle no longer override those in the Application Support folders.
-				
+
 Version 0.52 (4/16/2004)
 - Message windows now display a customizable number of lines from the previous conversation when opened
 - Added proxy connect options to Yahoo! accounts
