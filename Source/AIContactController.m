@@ -1507,9 +1507,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	}
 }
 
+#warning What about a .mac account with the serviceID "AIM" because it is coming from the address book?
 - (NSArray *)allContactsWithService:(NSString *)inServiceID UID:(NSString *)inUID
 {	
-	NSString		*internalObjectID = [AIListContact internalUniqueObjectIDForService:inUID serviceID:inServiceID];
+	NSString		*internalObjectID = [AIListObject internalObjectIDForServiceID:inServiceID UID:inUID];
 	NSMutableArray  *returnContactArray = nil;
 	
 	NSEnumerator	*enumerator;
