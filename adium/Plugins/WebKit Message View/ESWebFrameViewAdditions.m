@@ -7,26 +7,19 @@
 
 #import "ESWebFrameViewAdditions.h"
 
-
 @implementation WebFrameView (ESWebFrameViewAdditions)
 
-- (void)setAllowsHorizontalScrolling:(BOOL)inAllow
+//WebDynamicScrollBarsView is a subclass of NSScrollView
+- (WebDynamicScrollBarsView *)frameScrollView
 {
-	[[_private frameScrollView] setAllowsHorizontalScrolling:inAllow];
+	return [_private frameScrollView];
 }
 
 @end
 
-
-//ESWebFrameViewPrivateHack poses as WebFrameViewPrivate to let us access its protected variables
+//ESWebFrameViewPrivateHack lets us access WebFrameViewPrivate's protected variables
 @implementation WebFrameViewPrivate (ESWebFrameViewPrivateHack)
-/*
-+ (void)load
-{
-	//Pose as WebFrameViewPrivate to add our own 
-    [self poseAsClass:[WebFrameViewPrivate class]];
-}
-*/
+
 //frameScrollView is normally protected; add an accesssor to it
 - (WebDynamicScrollBarsView *)frameScrollView
 {
