@@ -7,6 +7,11 @@ while(<STDIN>) {
     $input .= $_;
 }
 
-system('/usr/bin/perl', '/cvsroot/adium/CVSROOT/ciabot.pl', @ARGV, "< $input");
+print "Running CIA";
+my $output = `/usr/bin/perl /cvsroot/adium/CVSROOT/ciabot.pl @ARGV < $input`;
+print $output;
 
-system('/usr/bin/perl', '/cvsroot/adium/CVSROOT/cia_mailbucket.pl', @ARGV, "< $input");
+print "Mailing RSS";
+$output = `/usr/bin/perl /cvsroot/adium/CVSROOT/cia_mailbucket.pl @ARGV < $input`;
+
+print $output;
