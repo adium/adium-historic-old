@@ -185,4 +185,9 @@
 	return NO;
 }
 
+- (BOOL)canRegisterNewAccounts
+{
+	return NO;
+}
+
 @end
