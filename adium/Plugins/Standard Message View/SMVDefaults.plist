@@ -2,53 +2,53 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Prefix Font</key>
-	<string>LucidaGrande-Bold,11</string>
-	<key>Show Time Stamps</key>
-	<true/>
-        <key>Show AM-PM</key>
-        <false/>
 	<key>Combine Messages</key>
+	<true/>
+	<key>Combine Messeages HeadIndent</key>
+	<real>25</real>
+	<key>GridLine Darkness</key>
+	<real>0.10000000000000001</real>
+	<key>Hide Duplicate Prefixes</key>
 	<true/>
 	<key>Hide Duplicate Times</key>
 	<true/>
-	<key>Show icons</key>
-	<true/>
-	<key>Show Prefix</key>
-	<true/>
-	<key>Hide Duplicate Prefixes</key>
+	<key>Ignore Background Color</key>
 	<true/>
 	<key>Ignore Text Color</key>
 	<true/>
-	<key>Ignore Background Color</key>
-	<true/>
+	<key>Incoming Prefix Color</key>
+	<string>0,32,127</string>
+	<key>Incoming Prefix Color Name</key>
+	<string>Blue</string>
+	<key>Incoming Prefix Light Color</key>
+	<string>64,112,255</string>
+	<key>Outgoing Alias</key>
+	<string></string>
+	<key>Outgoing Prefix Color</key>
+	<string>0,127,0</string>
+	<key>Outgoing Prefix Color Name</key>
+	<string>Green</string>
+	<key>Outgoing Prefix Light Color</key>
+	<string>64,255,64</string>
+	<key>Prefix Font</key>
+	<string>LucidaGrande-Bold,11</string>
+	<key>Prefix Incoming</key>
+	<string>%a%r</string>
+	<key>Prefix Outgoing</key>
+	<string>%a%r</string>
+	<key>Sender Gradient Darkness</key>
+	<real>0.14999999999999999</real>
+	<key>Show AM-PM</key>
+	<false/>
 	<key>Show GridLines</key>
+	<true/>
+	<key>Show Prefix</key>
 	<true/>
 	<key>Show Sender Gradient</key>
 	<false/>
-	<key>Incoming Prefix Color Name</key>
-	<string>Blue</string>   
-	<key>Incoming Prefix Color</key>
-	<string>0,32,127</string>   
-	<key>Incoming Prefix Light Color</key>
-	<string>64,112,255</string>   
-        <key>Outgoing Alias</key>
-        <string></string>
-	<key>Outgoing Prefix Color Name</key>
-	<string>Green</string>   
-	<key>Outgoing Prefix Color</key>
-	<string>0,127,0</string>   
-	<key>Outgoing Prefix Light Color</key>
-	<string>64,255,64</string>   
-	<key>GridLine Darkness</key>
-	<real>0.1</real>
-	<key>Sender Gradient Darkness</key>
-	<real>0.15</real>
-        <key>Prefix Incoming</key>
-        <string>%a %r</string>
-        <key>Prefix Outgoing</key>
-        <string>%a %r</string>
-        <key>Combine Messeages HeadIndent</key>
-        <real>25.0</real>
- </dict>
+	<key>Show Time Stamps</key>
+	<true/>
+	<key>Show icons</key>
+	<true/>
+</dict>
 </plist>
