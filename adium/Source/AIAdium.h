@@ -812,7 +812,7 @@ typedef enum {
 - (void)updateOwner:(id <ESContactAlerts>)inOwner toArray:(NSArray *)eventActionArray forObject:(AIListObject *)inObject;
 - (void)updateOwner:(id <ESContactAlerts>)inOwner toRow:(int)row;
 //list object observer
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent;
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
 @end
 
 
