@@ -19310,6 +19310,7 @@
 		4B539C4305EFD35400E5921A = {
 			buildActionMask = 2147483647;
 			files = (
+				4B539F3805EFE51500E5921A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19520,6 +19521,21 @@
 			isa = PBXTargetDependency;
 			target = 34BD9DE205314755000AB133;
 			targetProxy = 4B539C6105EFDD9F00E5921A;
+		};
+		4B539F3705EFE51500E5921A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.html;
+			name = template.html;
+			path = "Plugins/WebKit Message View/template.html";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B539F3805EFE51500E5921A = {
+			fileRef = 4B539F3705EFE51500E5921A;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B54D1020502865F00A8010A = {
 			fileEncoding = 4;
@@ -25525,6 +25541,7 @@
 				4B539C4C05EFD6CD00E5921A,
 				4B539C5105EFD6FA00E5921A,
 				4B539C5205EFD6FB00E5921A,
+				4B539F3705EFE51500E5921A,
 			);
 			isa = PBXGroup;
 			name = "WebKit Message View";
