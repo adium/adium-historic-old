@@ -8,4 +8,5 @@
 }
 
 + (void)parseBookmarksfromString:(NSString *)inString forOwner:(id)owner andMenu:(NSMenu *)BookmarksMenu;
++ (NSString *)simplyReplaceHTMLCodes:(NSString *)inString;
 @end

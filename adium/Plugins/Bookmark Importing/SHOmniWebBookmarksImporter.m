@@ -5,12 +5,15 @@
 //  Created by Stephen Holt on Mon May 31 2004.
 
 #import "SHOmniWebBookmarksImporter.h"
+#import "SHMozillaCommonParser.h"
 
 #define OW45_BOOKMARKS_PATH  @"~/Library/Application Support/OmniWeb/Bookmarks.html"
 #define OW5_BOOKMARKS_PATH  @"~/Library/Application Support/OmniWeb 5/Favorites.html"
 
 #define OW45_ROOT_MENU_TITLE AILocalizedString(@"OmniWeb 4.5",nil)
 #define OW5_ROOT_MENU_TITLE AILocalizedString(@"OmniWeb 5",nil)
+
+@class SHMozillaCommonParser;
 
 @interface SHOmniWebBookmarksImporter(PRIVATE)
 - (void)parseBookmarksFile:(NSString *)inString;
@@ -122,7 +125,7 @@ DeclareString(ltSign)
 
             if(omniTitleString){
                 // decode html stuff
-                omniTitleString = [[AIHTMLDecoder decodeHTML:omniTitleString] string];
+                omniTitleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:omniTitleString];
             }
             
             omniBookmarksSupermenu = omniBookmarksMenu;
@@ -145,7 +148,7 @@ DeclareString(ltSign)
             
             if(omniTitleString){
                 // decode html stuff
-                omniTitleString = [[AIHTMLDecoder decodeHTML:omniTitleString] string];
+                omniTitleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:omniTitleString];
             }
 
             SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]

@@ -22,16 +22,25 @@ DeclareString(Aclose)
 DeclareString(DLclose)
 DeclareString(ltSign)
 
-+ (void)parseBookmarksfromString:(NSString *)inString forOwner:(id)owner andMenu:(NSMenu *)bookmarksMenu
+DeclareString(bSemicolon)
+DeclareString(bTagCharStartString)
+DeclareString(bAmpersand)
+DeclareString(bAmpersandHTML)
+DeclareString(bGreaterThan)
+DeclareString(bGreaterThanHTML)
+DeclareString(bLessThan)
+DeclareString(bLessThanHTML)
+DeclareString(bQuote)
+DeclareString(bQuoteHTML)
+DeclareString(bSpace)
+DeclareString(bSpaceHTML)
+DeclareString(bApostrophe)
+DeclareString(bApostropheHTML)
+DeclareString(bMdash)
+DeclareString(bMdashHTML)
+
++ (void)load
 {
-    NSMenu      *bookmarksSupermenu = bookmarksMenu;
-    NSMenu      *topMenu = bookmarksMenu;
-    NSScanner   *linkScanner = [NSScanner scannerWithString:inString];
-    NSString    *titleString, *urlString;
-    NSString    *untitledString = @"untitled";
-    
-    unsigned int stringLength = [inString length];
-    
     InitString(gtSign,@">")
     InitString(Hclose,@"</H")
     InitString(Hopen,@"H3 ")
@@ -42,6 +51,35 @@ DeclareString(ltSign)
     InitString(Aclose,@"</A")
     InitString(DLclose,@"/DL>")
     InitString(ltSign,@"<")
+    
+    InitString(bSemicolon,@";")
+    InitString(bTagCharStartString,@"&")
+    InitString(bAmpersand,@"&")
+    InitString(bAmpersandHTML,@"AMP")
+    InitString(bGreaterThan,@">")
+    InitString(bGreaterThanHTML,@"GT")
+    InitString(bLessThan,@"<")
+    InitString(bLessThanHTML,@"LT")
+    InitString(bQuote,@"\"")
+    InitString(bQuoteHTML,@"QUOT")
+    InitString(bSpace,@" ")
+    InitString(bSpaceHTML,@"NBSP")
+    InitString(bApostrophe,@"'")
+    InitString(bApostropheHTML,@"APOS")
+    InitString(bMdash,@"-");
+    InitString(bMdashHTML,@"MDASH");
+}
+
++ (void)parseBookmarksfromString:(NSString *)inString forOwner:(id)owner andMenu:(NSMenu *)bookmarksMenu
+{
+    NSMenu      *bookmarksSupermenu = bookmarksMenu;
+    NSMenu      *topMenu = bookmarksMenu;
+    NSScanner   *linkScanner = [NSScanner scannerWithString:inString];
+    NSString    *titleString, *urlString;
+    NSString    *untitledString = @"untitled";
+    
+    unsigned int stringLength = [inString length];
+    
     
     NSCharacterSet  *quotesSet = [NSCharacterSet characterSetWithCharactersInString:@"'\""];
     
@@ -56,7 +94,7 @@ DeclareString(ltSign)
 
             if(titleString){
                 // decode html stuff
-                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
+                titleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:titleString];
             }
             
             bookmarksSupermenu = bookmarksMenu;
@@ -79,7 +117,7 @@ DeclareString(ltSign)
 
             if(titleString){
                 // decode html stuff
-                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
+                titleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:titleString];
             }
             
             SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]
@@ -104,6 +142,56 @@ DeclareString(ltSign)
             if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
         }
     }
+}
+        
++ (NSString *)simplyReplaceHTMLCodes:(NSString *)inString
+{
+    NSString        *tokenString,*blahString,*tagOpen;
+    NSScanner       *scanner;
+    NSCharacterSet  *tagCharStart,*charEnd;
+    NSMutableString *newString;
+    BOOL             validTag;
+    
+    tagCharStart = [NSCharacterSet characterSetWithCharactersInString:bTagCharStartString];
+    charEnd = [NSCharacterSet characterSetWithCharactersInString:bSemicolon];
+    scanner = [NSScanner scannerWithString:inString];
+    newString = [[NSMutableString alloc] init];
+    [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
+    
+    while(![scanner isAtEnd]){
+        if([scanner scanUpToCharactersFromSet:tagCharStart intoString:&blahString]){
+            [newString appendString:blahString];
+        }
+        
+        if([scanner scanCharactersFromSet:tagCharStart intoString:&tagOpen]){
+            unsigned int scanLoc = [scanner scanLocation];
+            if(validTag = [scanner scanUpToCharactersFromSet:charEnd intoString:&tokenString]){
+                if(NSOrderedSame == [tokenString caseInsensitiveCompare:bAmpersandHTML]){
+                    [newString appendString:bAmpersand];
+                }else if(NSOrderedSame == [tokenString caseInsensitiveCompare:bGreaterThanHTML]){
+                    [newString appendString:bGreaterThan];
+                }else if(NSOrderedSame == [tokenString caseInsensitiveCompare:bLessThanHTML]){
+                    [newString appendString:bLessThan];
+                }else if(NSOrderedSame == [tokenString caseInsensitiveCompare:bQuoteHTML]){
+                    [newString appendString:bQuote];
+                }else if(NSOrderedSame == [tokenString caseInsensitiveCompare:bSpaceHTML]){
+                    [newString appendString:bSpace];
+                }else if(NSOrderedSame == [tokenString caseInsensitiveCompare:bApostropheHTML]){
+                    [newString appendString:bApostrophe];
+                }else if(NSOrderedSame == [tokenString caseInsensitiveCompare:bMdashHTML]){
+                    [newString appendString:bMdash];
+                }
+                
+                if(validTag){
+                    [scanner scanCharactersFromSet:charEnd intoString:nil];
+                }else{
+                    [newString appendString:bAmpersand];
+                    [scanner setScanLocation:scanLoc];
+                }
+            }
+        }
+    }
+    return newString;
 }
 
 @end
