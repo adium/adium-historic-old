@@ -15,8 +15,12 @@
  */
 
 #import "AIStandardListWindowController.h"
+#import "AIAccountController.h"
+#import "AIContactController.h"
 #import "AIStatusController.h"
 #import "AIToolbarController.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIListObject.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 
@@ -64,13 +68,21 @@
 	//Update the selections in our state menu when the active state changes
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(activeStateChanged:)
-									   name:AIActiveStatusStateChangedNotification
-									 object:nil];
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(activeStateChanged:)
 									   name:AIStatusStateArrayChangedNotification
 									 object:nil];
 	[self activeStateChanged:nil];
+	
+	[[adium contactController] registerListObjectObserver:self];
+}
+
+/*
+ * @brief Window should close?
+ */
+- (BOOL)windowShouldClose:(id)sender
+{
+	[[adium contactController] unregisterListObjectObserver:self];
+	
+	return [super windowShouldClose:sender];
 }
 
 /*
@@ -114,13 +126,34 @@
  */
 - (void)activeStateChanged:(NSNotification *)notification
 {
-	int	index = [popUp_state indexOfItemWithRepresentedObject:[[adium statusController] activeStatusState]];
-	
-	if(index >= 0 && index < [popUp_state numberOfItems]){
-		[popUp_state selectItemAtIndex:index];
+	AIStatus	*activeStatusState = [[adium statusController] activeStatusState];
+	if([[adium accountController] oneOrMoreConnectedAccounts]){
+		int	index = [popUp_state indexOfItemWithRepresentedObject:activeStatusState];
+		
+		if(index >= 0 && index < [popUp_state numberOfItems]){
+			//A saved state is active
+			[popUp_state selectItemAtIndex:index];
+		}else{
+			//A custom state is active
+			[popUp_state selectItemAtIndex:[popUp_state indexOfItemWithTag:[activeStatusState statusType]]];
+		}
 	}else{
-		[popUp_state selectItem:[popUp_state lastItem]];
+		//Offline
+		[popUp_state selectItemAtIndex:[popUp_state indexOfItemWithTag:AIOfflineStatusType]];		
 	}
+}
+
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
+{
+	if([inObject isKindOfClass:[AIAccount class]]){
+		if([inModifiedKeys containsObject:@"Online"] ||
+		   [inModifiedKeys containsObject:@"StatusState"]){
+			
+			[self activeStateChanged:nil];
+		}
+	}
+    
+    return(nil);
 }
 
 

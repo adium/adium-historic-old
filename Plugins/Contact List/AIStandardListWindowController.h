@@ -16,9 +16,9 @@
 
 #import "AIListWindowController.h"
 
-@protocol StateMenuPlugin;
+@protocol AIListObjectObserver, StateMenuPlugin;
 
-@interface AIStandardListWindowController : AIListWindowController<StateMenuPlugin> {
+@interface AIStandardListWindowController : AIListWindowController<AIListObjectObserver, StateMenuPlugin> {
 	NSDictionary		*toolbarItems;
 
 	IBOutlet		NSPopUpButton	*popUp_state;
