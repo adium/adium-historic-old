@@ -10,7 +10,7 @@
 #define USER_ICON_CACHE_PATH		[@"~/Library/Caches/Adium" stringByExpandingTildeInPath]
 
 @interface ESUserIconHandlingPlugin (PRIVATE)
-- (BOOL)_cacheUserIcon:(NSImage *)inImage forObject:(AIListObject *)inObject;
+- (BOOL)_cacheUserIconData:(NSData *)inData forObject:(AIListObject *)inObject;
 - (NSString *)_cachedImagePathForObject:(AIListObject *)inObject;
 @end
 
@@ -66,9 +66,14 @@
 		NSImage				*userIcon = [userIconDisplayArray objectValue];
 
 		if (userIcon == statusUserIcon){
+			//Cache using the raw data if possible, otherwise create a TIFF representation to cache
+			//Note: TIFF supports transparency but not animation
+			NSData  *userIconData = [inObject statusObjectForKey:@"UserIconData"];
+			
+			[self _cacheUserIconData:(userIconData ? userIconData : [userIcon TIFFRepresentation]) forObject:inObject];
+			
 			[[adium contactController] listObjectAttributesChanged:inObject
 													  modifiedKeys:[NSArray arrayWithObject:@"UserIcon"]];
-			[self _cacheUserIcon:userIcon forObject:inObject];
 		}
 	}
 	
@@ -86,8 +91,9 @@
 		NSImage *ownedUserIcon = [userIconDisplayArray objectWithOwner:self];
 		
 		//If the new user icon is not the same as the one we set in updateListObject: (either cached or not), update the cache
-		if (userIcon != ownedUserIcon)
-			[self _cacheUserIcon:userIcon forObject:inObject];
+		if (userIcon != ownedUserIcon){
+			[self _cacheUserIconData:[userIcon TIFFRepresentation] forObject:inObject];
+		}
 	}
 }
 
@@ -117,15 +123,13 @@
 */
 
 
-- (BOOL)_cacheUserIcon:(NSImage *)inImage forObject:(AIListObject *)inObject
+- (BOOL)_cacheUserIconData:(NSData *)inData forObject:(AIListObject *)inObject
 {
 	BOOL		success;
 	NSString	*cachedImagePath = [self _cachedImagePathForObject:inObject];
-	
-	//Evan: Note that animatation is going to be stripped in the caching process... not sure how to handle this, since
-	//the NSImage GIF handling is horrible.
-	success = ([[inImage TIFFRepresentation] writeToFile:cachedImagePath
-											  atomically:YES]);
+
+	success = ([inData writeToFile:cachedImagePath
+						atomically:YES]);
 	if (success){
 		[inObject setStatusObject:cachedImagePath 
 						   forKey:@"UserIconPath"
