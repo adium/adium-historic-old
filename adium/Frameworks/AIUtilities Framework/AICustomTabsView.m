@@ -468,13 +468,18 @@ static  AICustomTabCell	*dragTabCell;
 	} else if ([type isEqualToString:TAB_CELL_IDENTIFIER]) { //got a tab
             hoverSize = [[sender draggedImage] size]; //want to know how much space to allow for the hover
 	    [self setFocusedForDrag:YES];
-            operation = NSDragOperationPrivate;
+//            if (![tabCellArray containsObject:dragTabCell] ) {  //did not find the tab in our array
+//                operation = NSDragOperationCopy;
+//            } else {
+                operation = NSDragOperationPrivate;
+//            }
 	}
     }
     
     //pass along to the windowController, as well
-    if ( [[[self window] windowController] respondsToSelector:@selector(draggingEntered:)]){
+    if ([[[self window] windowController] respondsToSelector:@selector(draggingEntered:)]){
         [[[self window] windowController] draggingEntered:sender];
+//        operation = NSDragOperationCopy;
     }
     
     return(operation);
@@ -531,9 +536,13 @@ static  AICustomTabCell	*dragTabCell;
 	    }
 
 	    if(foundIndex != -1){ //OperationPrivate if finding an index was sucessful
-		operation = NSDragOperationPrivate;
-	    }
-//            else NSLog(@"Operation none!");
+
+//                if (![tabCellArray containsObject:dragTabCell] ) {  //did not find the tab in our array
+//                    operation = NSDragOperationCopy;
+//                } else {
+                    operation = NSDragOperationPrivate;
+//                }
+            }
 	}
     }
     
@@ -667,6 +676,15 @@ static  AICustomTabCell	*dragTabCell;
         //Reset the cursor tracking just to be safe
         [self _stopTrackingCursor];
         [self _startTrackingCursor];
+    }
+}
+
+- (unsigned int)draggingSourceOperationMaskForLocal:(BOOL)isLocal
+{
+    if (isLocal) {
+        return NSDragOperationEvery; 
+    } else {
+        return NSDragOperationNone;
     }
 }
 
