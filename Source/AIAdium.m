@@ -594,7 +594,7 @@
 	NSNumber	*currentVersionNumber;
 	NSDictionary	*versionUpgradeDict = nil;
 	
-	currentVersionString = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+	currentVersionString = [[[NSBundle mainBundle] infoDictionary] objectForKey:kCFBundleVersionKey];
 	lastLaunchedVersionString = [[self preferenceController] preferenceForKey:KEY_LAST_VERSION_LAUNCHED
 																		group:PREF_GROUP_GENERAL];	
 	// ##### BETA ONLY
