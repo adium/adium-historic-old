@@ -434,8 +434,10 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	AIStatus	*statusState = [self defaultInitialStatusState];
 
 	//Apply the state to our accounts without notifying
+	[[adium contactController] delayListObjectNotifications];
 	[[[adium accountController] accountArray] makeObjectsPerformSelector:@selector(setInitialStatusStateIfNeeded:)
 															  withObject:statusState];
+	[[adium contactController] endListObjectNotificationsDelay];
 }
 
 /*!
@@ -455,12 +457,12 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		AIStatus			*statusState, *bestStatusState = nil;;
 		NSNumber			*count;
 		int					highestCount = 0;
-		BOOL				noAccountsAreOnline = ![[adium accountController] oneOrMoreConnectedAccounts];
+		BOOL				noAccountsAreOnline = ![[adium accountController] oneOrMoreConnectedOrConnectingAccounts];
 		
 		while(account = [enumerator nextObject]){
 			if([account online] || noAccountsAreOnline){
 				statusState = [account statusState];
-
+				
 				if(count = [statusCountDict objectForKey:statusState])
 					count = [NSNumber numberWithInt:([count intValue]+1)];
 				else
@@ -476,15 +478,45 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 			int thisCount = [[statusCountDict objectForKey:statusState] intValue];
 			if(thisCount > highestCount){
 				bestStatusState = statusState;
+				highestCount = thisCount;
 			}
 		}
-		
+
 		_activeStatusState = [bestStatusState retain];
 	}
 	
 	return(_activeStatusState);
 }
 
+- (AIStatusType)activeStatusType
+{
+	NSEnumerator		*enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	AIAccount			*account;
+	int					statusTypeCount[STATUS_TYPES_COUNT];
+	AIStatusType		activeStatusType;
+	unsigned			highestCount = 0;
+	
+	unsigned i;
+	for(i = 0 ; i < STATUS_TYPES_COUNT ; i++){
+		statusTypeCount[i] = 0;
+	}
+	
+	while(account = [enumerator nextObject]){
+		if([account online] || [account integerStatusObjectForKey:@"Connecting"]){
+			statusTypeCount[[[account statusState] statusType]]++;
+		}
+	}
+
+	for(i = 0 ; i < STATUS_TYPES_COUNT ; i++){
+		if(statusTypeCount[i] > highestCount){
+			activeStatusType = i;
+			highestCount = statusTypeCount[i];
+		}
+	}
+
+	return activeStatusType;
+}
+	
 - (NSSet *)allActiveStatusStates
 {
 	if(!_allActiveStatusStates){
@@ -1145,19 +1177,26 @@ int _statusArraySort(id objectA, id objectB, void *context)
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	/* Track the accounts we should connect when setting to an online state.  Our goal is to be able to reconnect
-	 * the most recently connected account if accounts are disconnected one-by-one.  If accounts are disconnected
-	 * all at once via the global Offline menu item, we want to restore all of the previously connected accounts when
-	 * reconnecting, so we check to see if we are disconnecting via that menu item with the
-	 * isProcessingSelectedGlobalOffline BOOL. */
-	if(!isProcessingSelectedGlobalOffline && [key isEqualToString:@"Online"]){
-		if([[object preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
-			[accountsToConnect addObject:object];
-		}else{
-			if([accountsToConnect count] > 1){
-			   [accountsToConnect removeObject:object];
+	if([key isEqualToString:@"Online"]){
+		/* Track the accounts we should connect when setting to an online state.  Our goal is to be able to reconnect
+		* the most recently connected account if accounts are disconnected one-by-one.  If accounts are disconnected
+		* all at once via the global Offline menu item, we want to restore all of the previously connected accounts when
+		* reconnecting, so we check to see if we are disconnecting via that menu item with the
+		* isProcessingSelectedGlobalOffline BOOL. */
+		if(!isProcessingSelectedGlobalOffline){
+			if([[object preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
+				[accountsToConnect addObject:object];
+			}else{
+				if([accountsToConnect count] > 1){
+					[accountsToConnect removeObject:object];
+				}
 			}
 		}
+
+		//Clear these caches now. Observers which get called before we do when an account actually connects
+		//will want to get a fresh value.
+		[_activeStatusState release]; _activeStatusState = nil;
+		[_allActiveStatusStates release]; _allActiveStatusStates = nil;
 	}
 }	
 
