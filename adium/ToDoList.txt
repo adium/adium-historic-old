@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.86 2004/05/02 05:25:02 adamiser Exp $
+$Id: ToDoList.txt,v 1.87 2004/05/02 20:00:27 evands Exp $
 
 
 Legend
@@ -13,15 +13,17 @@ If you are working on something big and it may take a while, please tag it with 
 -------------------------------------------------------------------------------------------------------
 Bugs
 -------------------------------------------------------------------------------------------------------
+* Don't spawn new windows when we're hidden, doing so will unhide us (Show the windows next time we're unhidden)
+* Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
 * User icons are still getting flipped (Icons from AIM, apparently)
 * When typing in a username into Preferences : Accounts, updating the title on the left prevents me from typing briefly.  like, if i type "65745" and then pause and then start typing again, it's busy thinking about what is just typed.
    - (Adam: This is probably the keychain access, I'm not sure we can speed this up)
+   - (Evan: We shouldn't need to write to the keychain when the uid changes now since we're using the uniqueObjectID. Maybe an observer doing something dumb?)
 
 * Only one password request dialog is allowed at a time.  This limitation causes issues for users with multiple accounts who don't save passwords.
 * Our 'new message' toolbar button is gooooone gone gone gone gone
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
 * Multi-user chat (MSN) - sent messages appear twice.
-* MSN freezes in glib (g_ascii_strncasecmp) when sending a &
 
 Applescripts:
 * Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
@@ -307,6 +309,8 @@ ced preference panes.
 = Tooltip code does not like the multiple-desktop apps, or users who press cmd-H with the cursor over the contact list
 = Tooltip code can crash if the listobject disappears out from under it, somehow. http://www.visualdistortion.org/crash/view.jsp?crash=8128
 = Message history 'date' timestamps are not using localized time strings
+= GROUP DRAGGING IS BROKEN.  Try it :)
+= MSN freezes in glib (g_ascii_strncasecmp) when sending a &
 
 Features & Changes:
 = Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
