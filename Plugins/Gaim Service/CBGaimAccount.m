@@ -1575,21 +1575,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	AILog(@"************ %@ CONNECTED ***********",[self UID]);
 	
-    //We are now online
-    [self setStatusObject:nil forKey:@"Connecting" notify:NO];
-    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
-	[self setStatusObject:nil forKey:@"ConnectionProgressString" notify:NO];
-	[self setStatusObject:nil forKey:@"ConnectionProgressPercent" notify:NO];	
-
-	//Apply any changes
-	[self notifyOfChangedStatusSilently:NO];
-	
-	//Update our status and idle status
-	[self updateStatusForKey:@"StatusState"];
-	[self updateStatusForKey:@"IdleSince"];
+	[self accountDidConnect];
 	
     //Silence updates
-	AILog(@"%@: Silencing for 18",self);
     [self silenceAllContactUpdatesForInterval:18.0];
 	[[adium contactController] delayListObjectNotificationsUntilInactivity];
 	
