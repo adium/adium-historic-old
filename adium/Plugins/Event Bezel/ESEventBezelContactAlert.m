@@ -17,7 +17,7 @@
                                            target:self
                                            action:@selector(selectedAlert:)
                                     keyEquivalent:@""] autorelease];
-    [menuItem setRepresentedObject:CONTACT_ALERT_IDENTIFIER];
+    [menuItem setRepresentedObject:BEZEL_CONTACT_ALERT_IDENTIFIER];
     
     return (menuItem);
 }

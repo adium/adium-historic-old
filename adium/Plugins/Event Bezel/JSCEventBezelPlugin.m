@@ -299,7 +299,7 @@
 
 - (NSString *)identifier
 {
-    return CONTACT_ALERT_IDENTIFIER;
+    return BEZEL_CONTACT_ALERT_IDENTIFIER;
 }
 
 - (ESContactAlert *)contactAlert
