@@ -64,7 +64,7 @@
 
 - (oneway void)OSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount;
 - (oneway void)OSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount;
-- (oneway void)OSCARSetAvailableMessageTo:(NSString *)availableHTML onAccount:(id)adiumAccount;
+- (oneway void)OSCARSetAvailableMessageTo:(NSString *)availablePlaintext onAccount:(id)adiumAccount;
 
 - (oneway void)doRequestInputCbValue:(NSValue *)callBackValue withUserDataValue:(NSValue *)userDataValue inputString:(NSString *)string;
 - (oneway void)doRequestActionCbValue:(NSValue *)callBackValue withUserDataValue:(NSValue *)userDataValue callBackIndex:(NSNumber *)callBackIndexNumber;

@@ -1770,7 +1770,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		//Encode the status message if we still have one
 		encodedStatusMessage = (statusMessage ? 
-								[self encodedAttributedString:statusMessage forListObject:nil]  :
+								[self encodedAttributedString:statusMessage
+											forGaimStatusType:gaimStatusType]  :
 								nil);
 		
 		[self setStatusState:statusState withGaimStatusType:gaimStatusType andMessage:encodedStatusMessage];
@@ -1828,7 +1829,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
  */
 - (void)setStatusState:(AIStatus *)statusState withGaimStatusType:(const char *)gaimStatusType andMessage:(NSString *)statusMessage
 {
-	NSLog(@"Setting %@ with %s and %@",statusState,gaimStatusType,statusMessage);
 	[gaimThread setGaimStatusType:gaimStatusType 
 					  withMessage:statusMessage
 						onAccount:self];
@@ -2059,7 +2059,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 /* Secure messaging */
-#pragma mark Secure message
+#pragma mark Secure Messaging
 - (void)requestSecureMessaging:(BOOL)inSecureMessaging
 						inChat:(AIChat *)inChat
 {
@@ -2137,6 +2137,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject contentMessage:(AIContentMessage *)contentMessage
 {
 	return [self encodedAttributedString:inAttributedString forListObject:inListObject];
+}
+
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forGaimStatusType:(const char *)gaimStatusType
+{
+	return [self encodedAttributedString:inAttributedString forListObject:nil];	
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key

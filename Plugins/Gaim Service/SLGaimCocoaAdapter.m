@@ -1351,8 +1351,12 @@ NSMutableDictionary* get_chatDict(void)
 									  onAccount:adiumAccount];
 }
 
-
-- (oneway void)gaimThreadOSCARSetAvailableMessageTo:(NSString *)availableHTML onAccount:(id)adiumAccount
+/*
+ * @brief Set the OSCAR available message
+ *
+ * @param availablePlaintext A plain text available message (not HTML)
+ */
+- (oneway void)gaimThreadOSCARSetAvailableMessageTo:(NSString *)availablePlaintext onAccount:(id)adiumAccount
 {
 	GaimAccount		*account;
 	GaimConnection	*gc;
@@ -1361,14 +1365,15 @@ NSMutableDictionary* get_chatDict(void)
 	if((account = accountLookupFromAdiumAccount(adiumAccount)) &&
 	   (gc = gaim_account_get_connection(account)) &&
 	   (od = gc->proto_data)){
-		aim_srv_setavailmsg(od->sess, (char *)[availableHTML UTF8String]);
+	 	aim_locate_setprofile(od->sess, NULL, NULL, 0, NULL, "", 0);
+		aim_srv_setavailmsg(od->sess, (char *)[availablePlaintext UTF8String]);
 	}
 }
 
 //Only for OSCAR
-- (oneway void)OSCARSetAvailableMessageTo:(NSString *)availableHTML onAccount:(id)adiumAccount
+- (oneway void)OSCARSetAvailableMessageTo:(NSString *)availablePlaintext onAccount:(id)adiumAccount
 {
-	[gaimThreadProxy gaimThreadOSCARSetAvailableMessageTo:availableHTML
+	[gaimThreadProxy gaimThreadOSCARSetAvailableMessageTo:availablePlaintext
 												onAccount:adiumAccount];	
 }
 

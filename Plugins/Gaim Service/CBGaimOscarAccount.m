@@ -15,9 +15,10 @@
 #define DELAYED_UPDATE_INTERVAL		1.0
 
 @interface CBGaimOscarAccount (PRIVATE)
--(NSString *)serversideCommentForContact:(AIListContact *)theContact;
--(NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding;
--(NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString;
+- (NSString *)serversideCommentForContact:(AIListContact *)theContact;
+- (NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding;
+- (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString;
+- (void)setFormattedUID;
 @end
 
 @implementation CBGaimOscarAccount
@@ -295,11 +296,22 @@ static BOOL didInitOscar = NO;
 	return KEY_OSCAR_PORT;
 }
 
+/*
+ * @brief We are connected.
+ */
 - (oneway void)accountConnectionConnected
 {
-	NSString	*formattedUID;
-	
 	[super accountConnectionConnected];
+
+	[self setFormattedUID];
+}
+
+/*
+ * @brief Set the spacing and capitilization of our formatted UID serverside
+ */
+- (void)setFormattedUID
+{
+	NSString	*formattedUID;
 
 	//Set our capitilization properly if necessary
 	formattedUID = [self formattedUID];
@@ -330,15 +342,35 @@ static BOOL didInitOscar = NO;
  */
 - (void)setStatusState:(AIStatus *)statusState withGaimStatusType:(const char *)gaimStatusType andMessage:(NSString *)statusMessage
 {
-	//Check against supported property keys so this isn't done for ICQ
+	/* Check against supported property keys so this isn't done for ICQ */
 	if([[self supportedPropertyKeys] containsObject:@"AvailableMessage"] &&
-	   (strcmp(gaimStatusType, "Available"))){
+	   (!strcmp(gaimStatusType, "Available"))){
+		/*
+		 * As of gaim 1.x, setting an available message in OSCAR requires a special call, not the normal
+		 * serv_set_away() call. */
+	
+		//Set the available message, or clear it.  This also brings us back from away if necessary.
 		[[self gaimThread] OSCARSetAvailableMessageTo:statusMessage onAccount:self];
 
 		//Now set invisibility
 		[self setAccountInvisibleTo:[statusState invisible]];
-	}else{
+
+	}else{		
 		[super setStatusState:statusState withGaimStatusType:gaimStatusType andMessage:statusMessage];
+	}
+}
+
+/*
+ * @brief Encode an attributed string for a status type
+ *
+ * Away messages are HTML encoded.  Available messages are plaintext.
+ */
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forGaimStatusType:(const char *)gaimStatusType
+{
+	if(!strcmp(gaimStatusType, "Available")){
+		return([inAttributedString string]);
+	}else{
+		return([self encodedAttributedString:inAttributedString forListObject:nil]);
 	}
 }
 
