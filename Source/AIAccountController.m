@@ -1430,7 +1430,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	while((account = [enumerator nextObject])){    
 		
 		NSMenu			*accountSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
-		BOOL			addedItems = NO;
+		BOOL			addedStatusItems = NO;
 		
 		//Add status items if we have more than one account
 		if(accountArrayCount > 1){
@@ -1459,7 +1459,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 				
 				//Add to our menu
 				[accountSubmenu addItem:accountMenuItem];
-				addedItems = YES;
+				addedStatusItems = YES;
 			}
 		}
 		
@@ -1468,31 +1468,53 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 			NSArray	*accountActionMenuItems = [account accountActionMenuItems];
 			
 			//Only proceed if we got at least one menu item
-			if([accountActionMenuItems count]){
-				//Add a separator as necessary
-				if(addedItems) [accountSubmenu addItem:[NSMenuItem separatorItem]];
+			if(accountActionMenuItems && [accountActionMenuItems count]){
+				if(addedStatusItems){
+					/* If we have status items, add these actions in an "Actions" submenu */
+
+					NSMenu			*actionsSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
+					NSEnumerator	*enumerator;
+					NSMenuItem		*menuItem, *actionsSubmenuItem;
+					
+					//Add a separator
+					[accountSubmenu addItem:[NSMenuItem separatorItem]];
+					
+					//Now add each item to the submenu
+					enumerator = [accountActionMenuItems objectEnumerator];
+					while(menuItem = [enumerator nextObject]){
+						[actionsSubmenu addItem:menuItem];
+					}
+					
+					//Create the submenu's parent item
+					actionsSubmenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Actions",nil)
+																							   target:self
+																							   action:@selector(dummyAction:)
+																						keyEquivalent:@""] autorelease];
+					[actionsSubmenuItem setSubmenu:actionsSubmenu];
+					
+					//Add it to our account submenu
+					[accountSubmenu addItem:actionsSubmenuItem];
+
+				}else{
+					/* If we have don't status items, add these actions to the menu directly */
 				
-				NSMenu			*actionsSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
-				NSEnumerator	*enumerator;
-				NSMenuItem		*menuItem, *actionsSubmenuItem;
-				
-				enumerator = [accountActionMenuItems objectEnumerator];
-				while(menuItem = [enumerator nextObject]){
-					[actionsSubmenu addItem:menuItem];
-				}
-				
-				actionsSubmenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Actions",nil)
-																						   target:self
-																						   action:@selector(dummyAction:)
-																					keyEquivalent:@""] autorelease];
-				[actionsSubmenuItem setSubmenu:actionsSubmenu];
-				
-				[accountSubmenu addItem:actionsSubmenuItem];
+					NSEnumerator	*enumerator;
+					NSMenuItem		*menuItem;
+					
+					//Add each item to the menu
+					enumerator = [accountActionMenuItems objectEnumerator];
+					while(menuItem = [enumerator nextObject]){
+						[accountSubmenu addItem:menuItem];
+					}
+				}				
 			}
 		}
 		
-		[temporaryMenuDict setObject:accountSubmenu
-							  forKey:[account internalObjectID]];
+		if([accountSubmenu numberOfItems] > 0){
+			[temporaryMenuDict setObject:accountSubmenu
+								  forKey:[account internalObjectID]];
+			
+		}
 	}
 	
 	//Enumerate all arrays of menu items (for all plugins)
@@ -1505,13 +1527,17 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		//will be for a distinct AIAccount).
 		while(accountMenuItem = [accountMenuItemEnumerator nextObject]){
 			AIAccount	*account = [accountMenuItem representedObject];
-			NSMenu		*accountSubmenu = [[[temporaryMenuDict objectForKey:[account internalObjectID]] copy] autorelease];
+			NSMenu		*generatedAccountSubmenu;
 			
-			//Tell the status controller to update these items as necessary
-			[[adium statusController] plugin:self didAddMenuItems:[accountSubmenu itemArray]];
-			
-			//Set the submenu
-			[accountMenuItem setSubmenu:accountSubmenu];
+			if(generatedAccountSubmenu = [temporaryMenuDict objectForKey:[account internalObjectID]]){
+				NSMenu		*accountSubmenu = [[generatedAccountSubmenu copy] autorelease];
+				
+				//Tell the status controller to update these items as necessary
+				[[adium statusController] plugin:self didAddMenuItems:[accountSubmenu itemArray]];
+				
+				//Set the submenu
+				[accountMenuItem setSubmenu:accountSubmenu];
+			}
 		}
 	}
 	
