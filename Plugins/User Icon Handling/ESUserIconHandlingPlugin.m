@@ -8,8 +8,6 @@
 
 #import "ESUserIconHandlingPlugin.h"
 
-#define USER_ICON_CACHE_PATH		[@"~/Library/Caches/Adium" stringByExpandingTildeInPath]
-
 @interface ESUserIconHandlingPlugin (PRIVATE)
 - (BOOL)cacheAndSetUserIconFromPreferenceForListObject:(AIListObject *)inObject;
 - (BOOL)_cacheUserIconData:(NSData *)inData forObject:(AIListObject *)inObject;
@@ -22,9 +20,6 @@
 
 - (void)installPlugin
 {
-	//Ensure our user icon cache path exists
-	[[NSFileManager defaultManager] createDirectoriesForPath:USER_ICON_CACHE_PATH];
-	
 	//Register our observers
     [[adium contactController] registerListObjectObserver:self];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_USERICONS];
@@ -38,7 +33,14 @@
 												 name:NSToolbarWillAddItemNotification
 											   object:nil];
 	toolbarItem = nil;
-	[self registerToolbarItem];	
+	[self registerToolbarItem];
+}
+
+- (void)dealloc
+{
+	[toolbarItem release]; toolbarItem = nil;
+
+	[super dealloc];
 }
 
 - (void)uninstallPlugin
@@ -221,7 +223,7 @@
 
 - (NSString *)_cachedImagePathForObject:(AIListObject *)inObject
 {
-	return ([USER_ICON_CACHE_PATH stringByAppendingPathComponent:[inObject internalObjectID]]);
+	return [[adium cachesPath] stringByAppendingPathComponent:[inObject internalObjectID]];
 }
 
 #pragma mark Toolbar Item
