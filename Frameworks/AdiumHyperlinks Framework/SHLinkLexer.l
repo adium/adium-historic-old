@@ -52,20 +52,21 @@ yahooIMSpec	ymsgr:sendim\?.+
 
 file:\/\/\/.*		    {SHStringOffset += SHleng; return SH_FILE_VALID;}
 
-https?:\/\/	|
-ftp:\/\/	|
-ssh:\/\/        |
-telnet:\/\/	|
-rts?p:\/\/	|
-irc:\/\/	|
-nntp:\/\/       |
-cifs:\/\/	|
-smb:\/\/	|
-hydra:\/\/	|
-itms:\/\/	|
-see:\/\/        |
-afp:\/\/	|
-rdar:\/\/       |
+https?:\/\/		|
+ftp:\/\/		|
+ssh:\/\/		|
+telnet:\/\/		|
+rts?p:\/\/		|
+irc:\/\/		|
+nntp:\/\/		|
+cifs:\/\/		|
+smb:\/\/		|
+hydra:\/\/		|
+itms:\/\/		|
+see:\/\/		|
+afp:\/\/		|
+rdar:\/\/		|
+svn(\+ssh)?:\/\/	|
 gopher:\/\/		    {SHStringOffset += SHleng; SHValidShift = SHleng; BEGIN CANONICAL;}
 
 mailto:{mailSpecifier}      {SHStringOffset += SHleng; return SH_MAILTO_VALID;}
