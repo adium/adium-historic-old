@@ -41,23 +41,26 @@ static CBGaimServicePlugin  *servicePluginInstance;
 	[self _initGaim];
 
     //Install the services
-	OscarService		= [[CBOscarService alloc] initWithService:self];
-	GaduGaduService		= [[ESGaduGaduService alloc] initWithService:self];
-	MSNService			= [[ESMSNService alloc] initWithService:self];
-	NapsterService		= [[ESNapsterService alloc] initWithService:self];
-	NovellService		= [[ESNovellService alloc] initWithService:self];
-	JabberService		= [[ESJabberService alloc] initWithService:self];
-//	TrepiaService		= [[ESTrepiaService alloc] initWithService:self];
-	YahooService		= [[ESYahooService alloc] initWithService:self];
-	YahooJapanService	= [[ESYahooJapanService alloc] initWithService:self];
-	MeanwhileService	= [[ESMeanwhileService alloc] initWithService:self];
-	ZephyrService		= [[ESZephyrService alloc] initWithService:self];
+	AIMService			= [[ESAIMService alloc] init];
+	ICQService			= [[ESICQService alloc] init];
+	DotMacService		= [[ESDotMacService alloc] init];
+	GaduGaduService		= [[ESGaduGaduService alloc] init];
+	MSNService			= [[ESMSNService alloc] init];
+	NapsterService		= [[ESNapsterService alloc] init];
+	NovellService		= [[ESNovellService alloc] init];
+	JabberService		= [[ESJabberService alloc] init];
+//	TrepiaService		= [[ESTrepiaService alloc] init];
+	YahooService		= [[ESYahooService alloc] init];
+	YahooJapanService	= [[ESYahooJapanService alloc] init];
+	MeanwhileService	= [[ESMeanwhileService alloc] init];
+	ZephyrService		= [[ESZephyrService alloc] init];
 }
 
 - (void)uninstallPlugin
 {
-	//Services
-	[OscarService release]; OscarService = nil;
+	[AIMService release]; AIMService = nil;
+	[ICQService release]; ICQService = nil;
+	[DotMacService release]; DotMacService = nil;
 	[GaduGaduService release]; GaduGaduService = nil;
 	[JabberService release]; JabberService = nil;
 	[NapsterService release]; NapsterService = nil;
