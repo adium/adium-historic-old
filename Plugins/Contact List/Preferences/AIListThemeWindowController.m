@@ -159,7 +159,6 @@
 	
 	//Groups
 	[colorWell_groupText setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR] representedColor]];
-	[colorWell_groupTextInverted setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_TEXT_COLOR_INVERTED] representedColor]];
 	[colorWell_groupBackground setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND] representedColor]];
 	[colorWell_groupBackgroundGradient setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT] representedColor]];
 	[colorWell_groupShadow setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR] representedColor]];
@@ -384,12 +383,6 @@
     }else if(sender == colorWell_groupBackgroundGradient){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT
-                                              group:PREF_GROUP_LIST_THEME];
-		[preview_groupInverted setNeedsDisplay:YES];
-		
-    }else if(sender == colorWell_groupTextInverted){
-        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
-                                             forKey:KEY_LIST_THEME_GROUP_TEXT_COLOR_INVERTED
                                               group:PREF_GROUP_LIST_THEME];
 		[preview_groupInverted setNeedsDisplay:YES];
 		

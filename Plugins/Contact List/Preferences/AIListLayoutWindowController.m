@@ -368,14 +368,7 @@
 	[textField_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];
 	
 	//Contact style
-	BOOL	enableNormal = (windowStyle != WINDOW_STYLE_PILLOWS);
-	BOOL	enableBubble = (windowStyle != WINDOW_STYLE_MOCKIE);
-	[[[popUp_contactCellStyle menu] itemWithTag:CELL_STYLE_STANDARD] setEnabled:enableNormal];
-	[[[popUp_contactCellStyle menu] itemWithTag:CELL_STYLE_BRICK] setEnabled:enableNormal];
-	[[[popUp_contactCellStyle menu] itemWithTag:CELL_STYLE_BUBBLE] setEnabled:enableBubble];
-	[[[popUp_contactCellStyle menu] itemWithTag:CELL_STYLE_BUBBLE_FIT] setEnabled:enableBubble];
-	
-	if (windowStyle == WINDOW_STYLE_STANDARD/* || windowStyle == WINDOW_STYLE_BORDERLESS*/){
+	if(windowStyle == WINDOW_STYLE_STANDARD){
 		//In standard mode, disable the horizontal autosizing slider if horiztonal autosizing is off
 		[textField_horizontalWidthText setStringValue:AILocalizedString(@"Maximum width:",nil)];
 		[slider_horizontalWidth setEnabled:horizontalAutosize];
