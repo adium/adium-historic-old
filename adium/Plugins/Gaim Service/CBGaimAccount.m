@@ -1135,9 +1135,16 @@
             }
             [self setStatusObject:idleSince forKey:@"IdleSince" notify:YES];
         }
-        else if ([key compare:@"AwayMessage"] == 0) {
-			NSAttributedString	*awayMessage = [NSAttributedString stringWithData:[self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]];
-            [self setAwayMessage:awayMessage];
+        else if ([key compare:@"AwayMessage"] == 0){
+			NSAttributedString	*awayMessage = nil;
+			NSData				*awayData;
+						
+			if(awayData = [self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]){
+				awayMessage = [NSAttributedString stringWithData:awayData];
+			}
+			NSLog(@"%@, %@, %i",awayData, awayMessage, (awayMessage != nil));
+			
+			[self setAwayMessage:awayMessage];
 			[self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:NO];
 			[self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
         }
