@@ -22,6 +22,7 @@
 - (NSString *)stringByTruncatingTailToWidth:(float)inWidth;
 - (NSString *)stringByEncodingURLEscapes;
 - (NSString *)stringByDecodingURLEscapes;
+- (NSString *)safeFilenameString;
 //- (BOOL)isURLEncoded;
 
 @end
