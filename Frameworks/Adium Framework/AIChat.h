@@ -28,6 +28,16 @@ typedef enum {
 	AIChatClosedWindow
 } AIChatUpdateType;
 
+
+//Chat errors should be indicated by setting a status object on this key 
+//with an NSNumber of the appropriate error type as its object
+#define	KEY_CHAT_ERROR			@"Chat Error"
+
+typedef enum {
+	AIChatUnknownError = 0,
+	AIChatUserNotAvailable,
+} AIChatErrorType;
+
 @interface AIChat : ESObjectWithStatus <AIContainingObject> {
     AIAccount			*account;
 	NSDate				*dateOpened;
