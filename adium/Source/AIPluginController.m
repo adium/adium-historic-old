@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.56 2004/05/03 09:34:20 ramoth4 Exp $
+//$Id: AIPluginController.m,v 1.57 2004/05/08 20:00:02 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -93,7 +93,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin;
 	[self loadPluginWithClass:[AISCLViewPlugin class]];
 	[self loadPluginWithClass:[AISendingKeyPreferencesPlugin class]];
 	[self loadPluginWithClass:[AISpellCheckingPlugin class]];
-//	[self loadPluginWithClass:[AIStandardToolbarItemsPlugin class]];
+	[self loadPluginWithClass:[AIStandardToolbarItemsPlugin class]];
 	[self loadPluginWithClass:[AIStatusChangedMessagesPlugin class]];
 	[self loadPluginWithClass:[AITextForcingPlugin class]];
 	[self loadPluginWithClass:[AITextToolbarItemsPlugin class]];

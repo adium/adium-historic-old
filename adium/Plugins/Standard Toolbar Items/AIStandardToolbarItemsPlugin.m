@@ -20,87 +20,18 @@
 
 - (void)installPlugin
 {
-    //Space
-/*    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"Space"];
-    [toolbarItem setView:[AIFramedMiniToolbarButton framedMiniToolbarButtonWithImage:[NSImage imageNamed:@"space" forClass:[self class]] forToolbarItem:toolbarItem]];
-    [toolbarItem setTarget:nil];
-    [toolbarItem setAction:nil];
-    [toolbarItem setToolTip:@""];
-    [toolbarItem setEnabled:YES];
-    [toolbarItem setPaletteLabel:@"Space"];
-    [toolbarItem setAllowsDuplicatesInToolbar:YES];
-    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
-
-    //Flexible Space
-    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"FlexibleSpace"];
-    [toolbarItem setView:[AIFramedMiniToolbarButton framedMiniToolbarButtonWithImage:[NSImage imageNamed:@"space" forClass:[self class]] forToolbarItem:toolbarItem]];
-    [toolbarItem setTarget:nil];
-    [toolbarItem setAction:nil];
-    [toolbarItem setToolTip:@""];
-    [toolbarItem setEnabled:YES];
-    [toolbarItem setPaletteLabel:@"Flexible Space"];
-    [toolbarItem setFlexibleWidth:YES];
-    [toolbarItem setAllowsDuplicatesInToolbar:YES];
-    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
-*/
-    //Divider
-/*    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"Divider"];
-    [toolbarItem setImage:[NSImage imageNamed:@"divider" forClass:[self class]]];
-    [toolbarItem setTarget:nil];
-    [toolbarItem setAction:nil];
-    [toolbarItem setToolTip:@""];
-    [toolbarItem setEnabled:YES];
-    [toolbarItem setPaletteLabel:@"Separator"];
-    [toolbarItem setAllowsDuplicatesInToolbar:YES];
-    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
-*/
-
-    
     //New Message
-    NSToolbarItem   *toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"NewMessage"
-									   label:@"Message"
-								    paletteLabel:@"Message"
-									 toolTip:@"Message"
-									  target:self
-								 settingSelector:@selector(setImage:)
-								     itemContent:[NSImage imageNamed:@"message" forClass:[self class]]
-									  action:@selector(newMessage:)
-									    menu:nil];
+    NSToolbarItem   *toolbarItem = 
+	[AIToolbarUtilities toolbarItemWithIdentifier:@"NewMessage"
+											label:@"Message"
+									 paletteLabel:@"Message"
+										  toolTip:@"Message"
+										   target:self
+								  settingSelector:@selector(setImage:)
+									  itemContent:[NSImage imageNamed:@"message" forClass:[self class]]
+										   action:@selector(newMessage:)
+											 menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
-
-    //Close Message
-/*    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"CloseMessage"];
-    [toolbarItem setImage:[NSImage imageNamed:@"close" forClass:[self class]]];
-    [toolbarItem setTarget:self];
-    [toolbarItem setAction:@selector(closeMessage:)];
-    [toolbarItem setEnabled:YES];
-    [toolbarItem setToolTip:@"Close message"];
-    [toolbarItem setPaletteLabel:@"Close message"];
-    [toolbarItem setDelegate:self];
-    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
-*/
-    //Send Message
-/*    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"SendMessage"];
-    [toolbarItem setImage:[NSImage imageNamed:@"message" forClass:[self class]]];
-    [toolbarItem setTarget:self];
-    [toolbarItem setAction:@selector(sendMessage:)];
-    [toolbarItem setEnabled:YES];
-    [toolbarItem setToolTip:@"Send message"];
-    [toolbarItem setPaletteLabel:@"Send message"];
-    [toolbarItem setDelegate:self];
-    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
-
-    //Send Message (button)
-    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"SendMessageButton"];
-    [toolbarItem setImage:[NSImage imageNamed:@"sendButton" forClass:[self class]]];
-    [toolbarItem setTarget:self];
-    [toolbarItem setAction:@selector(sendMessage:)];
-    [toolbarItem setEnabled:YES];
-    [toolbarItem setToolTip:@"Send message"];
-    [toolbarItem setPaletteLabel:@"Send message (button)"];
-    [toolbarItem setDelegate:self];
-    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
-*/
 }
 
 - (void)uninstallPlugin
@@ -108,8 +39,7 @@
     //unregister items
 }
 
-#if 0
-- (IBAction)newMessage:(AIMiniToolbarItem *)toolbarItem
+- (IBAction)newMessage:(NSToolbarItem *)toolbarItem
 {
     AIListObject	*object = [[adium contactController] selectedListObject];
 
@@ -120,53 +50,4 @@
 	
 }
 
-- (IBAction)sendMessage:(AIMiniToolbarItem *)toolbarItem
-{
-    NSDictionary	*objects = [toolbarItem configurationObjects];
-    AIChat		*chat = [objects objectForKey:@"Chat"];
-
-    if(chat){
-        [[adium notificationCenter] postNotificationName:Interface_SendEnteredMessage object:chat userInfo:nil];
-    }
-}
-
-- (IBAction)closeMessage:(AIMiniToolbarItem *)toolbarItem
-{
-    NSDictionary	*objects = [toolbarItem configurationObjects];
-    AIChat		*chat = [objects objectForKey:@"Chat"];
-
-    if(chat){
-        [[adium interfaceController] closeChat:chat];
-    }
-}
-
-- (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
-{
-    NSString	*identifier = [inToolbarItem identifier];
-    BOOL	enabled = YES;
-
-    if([identifier compare:@"NewMessage"] == 0){
-        AIListObject		*object = [inObjects objectForKey:@"ContactObject"];
-        NSText<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
-
-        enabled = (object && [object isKindOfClass:[AIListContact class]] && !text);
-
-    }else if([identifier compare:@"SendMessage"] == 0 || [identifier compare:@"SendMessageButton"] == 0){
-        AIListObject		*object = [inObjects objectForKey:@"ContactObject"];
-        NSText<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
-
-        enabled = (text && [text availableForSending] && object && [object isKindOfClass:[AIListObject class]]);
-
-    }
-
-    [inToolbarItem setEnabled:enabled];
-    return(enabled);
-}
-
-#endif
 @end
-
-
-
-
-

@@ -111,7 +111,7 @@
     
     //Restore the window position
     savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME];
-    if(savedFrame) {
+    if(savedFrame){
 		[[self window] setFrame:NSRectFromString(savedFrame) display:YES];
 	}
 	

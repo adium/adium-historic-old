@@ -15,7 +15,7 @@
 
 @protocol AIMiniToolbarItemDelegate;
 
-@interface AIStandardToolbarItemsPlugin : AIPlugin <AIMiniToolbarItemDelegate> {
+@interface AIStandardToolbarItemsPlugin : AIPlugin {
 
 }
 
