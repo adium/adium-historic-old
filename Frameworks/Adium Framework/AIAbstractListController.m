@@ -114,7 +114,7 @@
 }
 
 //Double click in outline view
-- (IBAction)performDefaultActionOnSelectedItem:(id)sender
+- (IBAction)performDefaultActionOnSelectedItem:(NSOutlineView *)sender
 {
     AIListObject	*selectedObject = [sender itemAtRow:[sender selectedRow]];
 	[delegate performDefaultActionOnSelectedObject:selectedObject sender:sender];
