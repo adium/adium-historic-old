@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
-#import "AICheckboxList.h"
 
 @class AIAdium;
 @class AIEmoticonsPlugin;
@@ -34,7 +33,6 @@
     IBOutlet NSTableView	*table_packList;
     IBOutlet NSTextView		*text_packInfo;
     IBOutlet NSTableView	*table_curEmoticons;
-    //IBOutlet AICheckboxList	*checkList_packList;
 }
 
 + (AIEmoticonPreferences *)emoticonPreferencesWithOwner:(id)inOwner plugin:(AIEmoticonsPlugin *)pluginSet;

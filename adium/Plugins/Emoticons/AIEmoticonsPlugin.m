@@ -15,6 +15,7 @@
 
 #import "AIEmoticonsPlugin.h"
 #import "AIEmoticon.h"
+#import "AIEmoticonPack.h"
 #import "AIEmoticonPreferences.h"
 #import "AIAdium.h"
 #import <AIUtilities/AIUtilities.h>
@@ -98,23 +99,20 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_EMOTICONS] == 0){
 
-	replaceEmoticons = [[[owner preferenceController] preferenceForKey:@"Enable" group:PREF_GROUP_EMOTICONS object:nil] intValue] == NSOnState;
-
-	// Update pack prefs in cached list
-	NSEnumerator		*enumerator = [cachedPacks objectEnumerator];
-	NSMutableDictionary	*packDict = nil;
-	NSString		*changedKey = [[notification userInfo] objectForKey:@"Key"];
-	NSString		*packKey = nil;
-
-	while (packDict = [enumerator nextObject]){
-	    packKey = [NSString stringWithFormat:@"%@_pack_%@", [packDict objectForKey:KEY_EMOTICON_PACK_SOURCE], [packDict objectForKey:KEY_EMOTICON_PACK_TITLE]];
-
-	    if ([packKey compare:changedKey] == 0){
-		NSMutableDictionary *prefDict =	[[owner preferenceController] preferenceForKey:packKey group:PREF_GROUP_EMOTICONS object:nil];
-
-		[packDict setObject:prefDict forKey:KEY_EMOTICON_PACK_PREFS];
-	    }
-	}
+        replaceEmoticons = [[[owner preferenceController] preferenceForKey:@"Enable" group:PREF_GROUP_EMOTICONS object:nil] intValue] == NSOnState;
+    
+        // Update pack prefs in cached list
+        NSEnumerator		*enumerator = [cachedPacks objectEnumerator];
+        //NSMutableDictionary	*packDict = nil;
+        AIEmoticonPack		*pack = nil;
+        NSString			*changedKey = [[notification userInfo] objectForKey:@"Key"];
+    
+        while (pack = [enumerator nextObject]){
+            if ([[pack preferencesKey] isEqualToString:changedKey]){
+                [pack loadPreferences];
+                [self loadEmoticonsFromPacks];
+            }
+        }
     }
 }
 
@@ -309,7 +307,8 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context);
 - (void)orderEmoticonArray
 {
     // Sort master list
-    [emoticons sortUsingFunction:sortByTextRepresentationLength context:nil];
+    //[emoticons sortUsingFunction:sortByTextRepresentationLength context:nil];
+        // Only the dictionary lists need to be ordered.  This array is not used for actual conversions anymore.
     
     // Sort indexed sublists
     NSEnumerator	*enumerator = [indexedEmoticons objectEnumerator];
@@ -356,51 +355,34 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context)
     if (!reload){
 	
         NSEnumerator	*enumerator = [cachedPacks objectEnumerator];
-        NSDictionary	*pack = nil;
-	BOOL		isFolder = NO;
+        AIEmoticonPack	*pack = nil;
+        BOOL		isFolder = NO;
 
         while (pack = [enumerator nextObject]){
 	    
-            if ([[NSFileManager defaultManager] fileExistsAtPath:[pack objectForKey:KEY_EMOTICON_PACK_PATH] isDirectory:&isFolder]){
+            if ([[NSFileManager defaultManager] fileExistsAtPath:[pack path] isDirectory:&isFolder]){
 
                 if (!isFolder){
                     reload = TRUE;
-		}
+                }
             }else{
                 reload = TRUE;
-	    }
+            }
         }
     }
 
     // Reload if requested
     if ([cachedPacks count] == 0 || reload){
-	[cachedPacks removeAllObjects];
-
-	//Scan internal packs
-	path = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_EMOTICONS] stringByExpandingTildeInPath];
-	[self _scanEmoticonPacksFromPath:path intoArray:cachedPacks tagKey:@"bundle"];
-
-	//Scan user packs
-	// Note: we should call AIAdium..., but that doesn't work, so I'm getting the info "directly" FIX
-	path = [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath]/*[AIAdium applicationSupportDirectory]*/ stringByAppendingPathComponent:PATH_EMOTICONS];
-	[self _scanEmoticonPacksFromPath:path intoArray:cachedPacks tagKey:@"addons"];
-	
-    }else{
-	// Make sure prefs are up-to-date (Done for each emoticon-pack upon pref-change
-	/*
-	NSEnumerator		*enumerator = [cachedPacks objectEnumerator];
-	NSMutableDictionary	*packDict = nil;
-	NSString		*packKey = nil;
-	NSMutableDictionary	*prefDict = nil;
-	
-	while (packDict = [enumerator nextObject]){
-	    packKey = [NSString stringWithFormat:@"%@_pack_%@", [packDict objectForKey:KEY_EMOTICON_PACK_SOURCE], [packDict objectForKey:KEY_EMOTICON_PACK_TITLE]];
-
-	    prefDict = [[owner preferenceController] preferenceForKey:packKey group:PREF_GROUP_EMOTICONS object:nil];
-
-	    [packDict setObject:prefDict forKey:KEY_EMOTICON_PACK_PREFS];
-	}
-	*/
+        [cachedPacks removeAllObjects];
+    
+        //Scan internal packs
+        path = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:PATH_INTERNAL_EMOTICONS] stringByExpandingTildeInPath];
+        [self _scanEmoticonPacksFromPath:path intoArray:cachedPacks tagKey:@"bundle"];
+    
+        //Scan user packs
+        // Note: we should call AIAdium..., but that doesn't work, so I'm getting the info "directly" FIX
+        path = [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath]/*[AIAdium applicationSupportDirectory]*/ stringByAppendingPathComponent:PATH_EMOTICONS];
+        [self _scanEmoticonPacksFromPath:path intoArray:cachedPacks tagKey:@"addons"];
     }
 
     [emoticonPackArray addObjectsFromArray:cachedPacks];
@@ -409,7 +391,6 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context)
 - (BOOL)loadEmoticonsFromPacks
 {
     BOOL		foundGoodPack = TRUE;
-    NSString		*path = nil;
     NSMutableArray	*emoticonPackArray;
 
     //Setup
@@ -422,67 +403,82 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context)
     //Load the appropriate emoticons from the appropriate paths
     //(Right now, just load everything from the first pack)
     if ([emoticonPackArray count] < 1)
-	foundGoodPack = FALSE;
+        foundGoodPack = FALSE;
 
     if (foundGoodPack){
-	int o;
-	
-	for (o = 0; o < [emoticonPackArray count]; o++) {
-	    NSDictionary	*smileyPack = [emoticonPackArray objectAtIndex:o];
-	    NSArray		*smileyList = [smileyPack objectForKey:KEY_EMOTICON_PACK_CONTENTS];
-
-	    //NSString		*packKey = [NSString stringWithFormat:@"%@_pack_%@", [smileyPack objectForKey:KEY_EMOTICON_PACK_SOURCE], [smileyPack objectForKey:KEY_EMOTICON_PACK_TITLE]];
-	    NSDictionary	*prefDict = [smileyPack objectForKey:KEY_EMOTICON_PACK_PREFS];//[[owner preferenceController] preferenceForKey:packKey group:PREF_GROUP_EMOTICONS object:nil];
-
-	    if (/*o == 0*/[[prefDict objectForKey:@"inUse"] intValue] && prefDict){
-		int		i;
-		BOOL		smileyGood;
-		NSMutableString	*emoText = nil;
-		NSRange		charRange;
-		NSCharacterSet	*newlineSet = [NSCharacterSet characterSetWithCharactersInString:@"\n"];
-		//NSArray	*fakeSeparation = nil;
-
-		for (i = 0; i < [smileyList count]; i++){
-		    path = [smileyList objectAtIndex:i];
-
-		    // Check that files are present
-		    smileyGood = TRUE;
-		    
-		    if (![[NSFileManager defaultManager] fileExistsAtPath:[path stringByAppendingPathComponent:@"TextEquivalents.txt"]])
-			smileyGood = FALSE;
-
-		    if (![[NSFileManager defaultManager] fileExistsAtPath:[path stringByAppendingPathComponent:@"Emoticon.tiff"]]){
-			
-			smileyGood = FALSE;
-		    }
-
-		    if (smileyGood){
-			// Load text
-			emoText = [NSMutableString stringWithContentsOfFile:[path stringByAppendingPathComponent:@"TextEquivalents.txt"]];
-
-			// Check string for UNIX or Windows line end encoding, repairing if needed.
-			charRange = [emoText rangeOfCharacterFromSet:newlineSet];
-
-			while (charRange.length != 0){
-			    [emoText replaceCharactersInRange:charRange withString:@"\r"];
-			    charRange = [emoText rangeOfCharacterFromSet:newlineSet];
-			}
-
-			// Make the emoticon object, add it to the master list
-			[self addEmoticonsWithPath:[path stringByAppendingPathComponent:@"Emoticon.tiff"] andReturnDelimitedString:emoText];
-		    }else{
-			NSLog (@"Incomplete emoticon, lacking files: %@", path);
-		    }
-		}
-	    }
-	}
+        //int o;
+        NSEnumerator	*enumerator = [emoticonPackArray objectEnumerator];
+        AIEmoticonPack	*smileyPack = nil;
+        
+        //for (o = 0; o < [emoticonPackArray count]; o++) {
+        while(smileyPack = [enumerator nextObject]) {
+            int	packState = [smileyPack isEnabled];
+            if (packState != NSOffState) {
+                [smileyPack verifyEmoticons];
+                NSEnumerator	*emoEnumerator = [smileyPack emoticonEnumerator];
+                id				emoID = nil;
+                
+                while (emoID = [emoEnumerator nextObject]) {
+                    BOOL	useEmo = TRUE;
+                    
+                    if (packState == NSMixedState) 
+                        useEmo = [smileyPack emoticonEnabled:emoID];
+                    
+                    if (useEmo)
+                        [self addEmoticonsWithPath:[smileyPack emoticonImagePath:emoID] andReturnDelimitedString:[smileyPack emoticonEnabledTextRepresentationsReturnDelimited:emoID]];
+                }
+            }
+            /*NSArray			*smileyList = [smileyPack objectForKey:KEY_EMOTICON_PACK_CONTENTS];
+    
+            //NSString		*packKey = [NSString stringWithFormat:@"%@_pack_%@", [smileyPack objectForKey:KEY_EMOTICON_PACK_SOURCE], [smileyPack objectForKey:KEY_EMOTICON_PACK_TITLE]];
+            NSDictionary	*prefDict = [smileyPack objectForKey:KEY_EMOTICON_PACK_PREFS];//[[owner preferenceController] preferenceForKey:packKey group:PREF_GROUP_EMOTICONS object:nil];
+    
+            if ([[prefDict objectForKey:@"inUse"] intValue] && prefDict){
+                int		i;
+                BOOL		smileyGood;
+                NSMutableString	*emoText = nil;
+                NSRange		charRange;
+                NSCharacterSet	*newlineSet = [NSCharacterSet characterSetWithCharactersInString:@"\n"];
+                //NSArray	*fakeSeparation = nil;
+        
+                for (i = 0; i < [smileyList count]; i++){
+                    path = [smileyList objectAtIndex:i];
+        
+                    // Check that files are present
+                    smileyGood = TRUE;
+                    
+                    if (![[NSFileManager defaultManager] fileExistsAtPath:[path stringByAppendingPathComponent:@"TextEquivalents.txt"]])
+                        smileyGood = FALSE;
+        
+                    if (![[NSFileManager defaultManager] fileExistsAtPath:[path stringByAppendingPathComponent:@"Emoticon.tiff"]])
+                        smileyGood = FALSE;
+        
+                    if (smileyGood){
+                    // Load text
+                    emoText = [NSMutableString stringWithContentsOfFile:[path stringByAppendingPathComponent:@"TextEquivalents.txt"]];
+        
+                    // Check string for UNIX or Windows line end encoding, repairing if needed.
+                    charRange = [emoText rangeOfCharacterFromSet:newlineSet];
+        
+                    while (charRange.length != 0){
+                        [emoText replaceCharactersInRange:charRange withString:@"\r"];
+                        charRange = [emoText rangeOfCharacterFromSet:newlineSet];
+                    }
+        
+                    // Make the emoticon object, add it to the master list
+                    [self addEmoticonsWithPath:[path stringByAppendingPathComponent:@"Emoticon.tiff"] andReturnDelimitedString:emoText];
+                    }else{
+                    NSLog (@"Incomplete emoticon, lacking files: %@", path);
+                    }
+                }
+            }*/
+        }
     }
 
     [emoticonPackArray release];
 
     if (!foundGoodPack){
-	[self installDefaultEmoticons];	// use the bundled graphics if not emoticon pack could be found
-
+        [self installDefaultEmoticons];	// use the bundled graphics if no emoticon pack could be found
     }
     
     [self orderEmoticonArray];
@@ -517,13 +513,12 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context)
             [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDirectory];
 
             if(isDirectory){
-		// Load the emoticonPack	//
-		NSMutableArray	*heldEmoticons = [[[NSMutableArray alloc] init] autorelease];
-		NSMutableDictionary	*prefDict = nil;
-
-		title = [file stringByDeletingPathExtension];
-
-		[self _scanEmoticonsFromPath:fullPath intoArray:heldEmoticons];
+                // Load the emoticonPack	//
+                NSMutableArray	*heldEmoticons = [[[NSMutableArray alloc] init] autorelease];
+        
+                title = [file stringByDeletingPathExtension];
+        
+                [self _scanEmoticonsFromPath:fullPath intoArray:heldEmoticons];
 
                 // Get ReadMe, if available
                 NSAttributedString* about = nil;
@@ -536,29 +531,20 @@ int sortByTextRepresentationLength(id objectA, id objectB, void *context)
                 }else if ([[NSFileManager defaultManager] fileExistsAtPath:[fullPath stringByAppendingPathComponent:@"ReadMe.html"]]){
                     if ([NSURL fileURLWithPath:[fullPath stringByAppendingPathComponent:@"ReadMe.html"]]){
                         about = [[NSAttributedString alloc] initWithURL:[NSURL fileURLWithPath:[fullPath stringByAppendingPathComponent:@"ReadMe.html"]] documentAttributes:nil];
-		    }
+                }
 		    
                 }else if ([[NSFileManager defaultManager] fileExistsAtPath:[fullPath stringByAppendingPathComponent:@"ReadMe.txt"]]){
                     if ([NSURL fileURLWithPath:[fullPath stringByAppendingPathComponent:@"ReadMe.txt"]])
                         about = [[NSAttributedString alloc] initWithURL:[NSURL fileURLWithPath:[fullPath stringByAppendingPathComponent:@"ReadMe.txt"]] documentAttributes:nil];
                 }
 
-		// Get pref dictionary
-		NSString *packKey = [NSString stringWithFormat:@"%@_pack_%@", source, title];
 
-		prefDict = [[owner preferenceController] preferenceForKey:packKey group:PREF_GROUP_EMOTICONS object:nil];
-
-		if (prefDict == nil){
-		    // Make pref dictionary
-		    prefDict = [NSMutableDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:NSOffState], @"inUse", nil];
-		    [[owner preferenceController] setPreference:prefDict forKey:packKey group:PREF_GROUP_EMOTICONS];
-		}
-
-		[emoticonPackArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:title,  KEY_EMOTICON_PACK_TITLE, fullPath, KEY_EMOTICON_PACK_PATH, [NSArray arrayWithArray:heldEmoticons], KEY_EMOTICON_PACK_CONTENTS, source, KEY_EMOTICON_PACK_SOURCE, prefDict, KEY_EMOTICON_PACK_PREFS, about, KEY_EMOTICON_PACK_ABOUT, nil]];
-
-		if ([heldEmoticons count] > 0){
-		    foundGoodPack = TRUE;
-		}
+                //[emoticonPackArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:title,  KEY_EMOTICON_PACK_TITLE, fullPath, KEY_EMOTICON_PACK_PATH, [NSArray arrayWithArray:heldEmoticons], KEY_EMOTICON_PACK_CONTENTS, source, KEY_EMOTICON_PACK_SOURCE, prefDict, KEY_EMOTICON_PACK_PREFS, about, KEY_EMOTICON_PACK_ABOUT, nil]];
+                [emoticonPackArray addObject:[[[AIEmoticonPack alloc] initWithOwner:owner title:title path:fullPath sourceID:source emoticons:heldEmoticons about:about] autorelease]];
+        
+                if ([heldEmoticons count] > 0){
+                    foundGoodPack = TRUE;
+                }
 
             }else{
                 NSLog (@"File \"EmoticonPack\" found.  Valid EmoticonPacks are directories.");
