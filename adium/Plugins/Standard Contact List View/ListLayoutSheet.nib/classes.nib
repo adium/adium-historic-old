@@ -24,12 +24,14 @@
                 "popUp_userIconPosition" = NSPopUpButton; 
                 "popUp_windowStyle" = NSPopUpButton; 
                 "slider_contactLeftIndent" = NSSlider; 
+                "slider_contactRightIndent" = NSSlider; 
                 "slider_contactSpacing" = NSSlider; 
                 "slider_groupBottomSpacing" = NSSlider; 
                 "slider_groupTopSpacing" = NSSlider; 
                 "slider_userIconSize" = NSSlider; 
                 "slider_windowTransparency" = NSSlider; 
                 "textField_contactLeftIndent" = NSTextField; 
+                "textField_contactRightIndent" = NSTextField; 
                 "textField_contactSpacing" = NSTextField; 
                 "textField_groupBottomSpacing" = NSTextField; 
                 "textField_groupTopSpacing" = NSTextField; 
