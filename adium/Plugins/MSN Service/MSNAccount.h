@@ -28,15 +28,16 @@
     NSString		*password;		// Current signed on password
     NSString		*friendlyName;		// Current Friendly name
     
-    NSMutableDictionary	*handleDict;		// Dict of all our handles.
+    NSMutableDictionary	*handleDict;	   // Dict of all our handles.
     NSMutableDictionary *switchBoardDict;  // Dict containing SB Sockets and their AIHandles
+    NSMutableArray	*messageArray; 	   // Dict of messages waiting for an ACK or NAK message
 }
-/*
+
 //AIAccount_Content
 // Send a message object to its destination
 - (BOOL)sendContentObject:(AIContentObject *)object;
 // Returns YES if the contact is available for receiving content of the specified type
-- (BOOL)availableForSendingContentType:(NSString *)inType toHandle:(AIHandle *)inHandle;
+- (BOOL)availableForSendingContentType:(NSString *)inType toChat:(AIChat *)inChat;
 
 //AIAccount_Handles
 // Returns a dictionary of AIHandles available on this account
