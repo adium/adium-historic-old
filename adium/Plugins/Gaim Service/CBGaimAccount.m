@@ -1522,7 +1522,7 @@
 		gaim_proxy_info_set_username(proxy_info, (char *)[proxyUserName UTF8String]);
 		gaim_proxy_info_set_password(proxy_info, (char *)[proxyPassword UTF8String]);
 		
-		NSLog(@"Systemwide proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
+		if (GAIM_DEBUG) NSLog(@"Systemwide proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
 		
 		[self continueConnectWithConfiguredProxy];
 		
@@ -1560,7 +1560,7 @@
 													 selector:@selector(gotProxyServerPassword:)];
 		}else{
 			
-			NSLog(@"Adium proxy settings: %i %s:%i",proxy_info->type,proxy_info->host,proxy_info->port);
+			if (GAIM_DEBUG) NSLog(@"Adium proxy settings: %i %s:%i",proxy_info->type,proxy_info->host,proxy_info->port);
 			[self continueConnectWithConfiguredProxy];
 		}
 	}
