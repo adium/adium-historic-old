@@ -10,7 +10,8 @@
 #import "SHLinkFavoritesPreferences.h"
 #import "SHAutoValidatingTextView.h"
 
-#define EDIT_LINK_TITLE         AILocalizedString(@"Add/Edit Link...",nil)
+#define ADD_LINK_TITLE         AILocalizedString(@"Add Link...",nil)
+#define EDIT_LINK_TITLE         AILocalizedString(@"Edit Link...",nil)
 
 @implementation SHLinkManagementPlugin
 
@@ -46,12 +47,27 @@
 //
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	//Update the menu item title to reflect its action
-	
-	
-	//Disable the menu item if a text field is not key
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-	return(responder && [responder isKindOfClass:[NSText class]]);
+	NSLog(@"%@",responder);
+	if(responder && [responder isKindOfClass:[NSTextView class]]){
+		NSString	*title = ADD_LINK_TITLE;
+		
+		//Update the menu item's title to reflect the current action
+		if([[(NSTextView *)responder textStorage] length] && [(NSTextView *)responder selectedRange].location != NSNotFound){
+			NSRange selectionRange = [(NSTextView *)responder selectedRange];
+			id		selectedLink = [[(NSTextView *)responder textStorage] attribute:NSLinkAttributeName
+																			atIndex:selectionRange.location
+																	 effectiveRange:&selectionRange];
+			if(selectedLink) title = EDIT_LINK_TITLE;
+		}
+		[menuItem setTitle:title];
+
+		return(YES);
+	}else{
+		//Disable the menu item if a text field is not key
+		return(NO);
+	}
+	
 }
 
 //
