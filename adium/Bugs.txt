@@ -43,8 +43,6 @@
 	Also (unrelated), links do not have the expected coloration when inserted into
 	a text view in Jaguar.  They do not appear as blue and underlined.
 
-- China shop, man.  :)
-
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
 //------------------------------------------------------------------------------------
