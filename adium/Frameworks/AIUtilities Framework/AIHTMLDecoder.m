@@ -130,11 +130,11 @@ DeclareString(TagCharStartString);
     if(encodeFullString){
         return([self encodeHTML:inMessage headers:YES fontTags:YES includingColorTags:YES closeFontTags:YES
 					  styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES imagesPath:nil 
-			  attachmentsAsText:YES]);
+			  attachmentsAsText:YES simpleTagsOnly:NO]);
     }else{
         return([self encodeHTML:inMessage headers:NO fontTags:NO includingColorTags:NO closeFontTags:NO 
 					  styleTags:YES closeStyleTagsOnFontChange:NO encodeNonASCII:NO imagesPath:nil
-			  attachmentsAsText:YES]);
+			  attachmentsAsText:YES simpleTagsOnly:NO]);
     }
 }
 
@@ -145,7 +145,8 @@ DeclareString(TagCharStartString);
 // styleTags: YES to include B/I/U tags
 // closeStyleTagsOnFontChange: YES to close and re-insert style tags when opening a new font tag
 // encodeNonASCII: YES to encode non-ASCII characters as their HTML equivalents
-+ (NSString *)encodeHTML:(NSAttributedString *)inMessage headers:(BOOL)includeHeaders fontTags:(BOOL)includeFontTags includingColorTags:(BOOL)includeColorTags closeFontTags:(BOOL)closeFontTags styleTags:(BOOL)includeStyleTags closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange encodeNonASCII:(BOOL)encodeNonASCII imagesPath:(NSString *)imagesPath attachmentsAsText:(BOOL)attachmentsAsText
+// simpleTagsOnly: YES to separate out FONT tags and include only the most basic HTML elements
++ (NSString *)encodeHTML:(NSAttributedString *)inMessage headers:(BOOL)includeHeaders fontTags:(BOOL)includeFontTags includingColorTags:(BOOL)includeColorTags closeFontTags:(BOOL)closeFontTags styleTags:(BOOL)includeStyleTags closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange encodeNonASCII:(BOOL)encodeNonASCII imagesPath:(NSString *)imagesPath attachmentsAsText:(BOOL)attachmentsAsText simpleTagsOnly:(BOOL)simpleOnly
 {
     NSFontManager	*fontManager = [NSFontManager sharedFontManager];
     NSRange			searchRange;
@@ -208,39 +209,55 @@ DeclareString(TagCharStartString);
             if(closeFontTags && openFontTag){
                 [string appendString:CloseFontTag];
             }
-            openFontTag = YES;
-            [string appendString:OpenFontTag];
+			if (!simpleOnly){
+				openFontTag = YES;
+			}
+			
+			if (!simpleOnly){
+				[string appendString:OpenFontTag];
+			}
 
             //Family
             if([familyName caseInsensitiveCompare:currentFamily] != 0){
-                int langNum = 0; 
-        
-                //(traits | NSNonStandardCharacterSetFontMask) seems to be the proper test... but it is true for all fonts!
-                //NSMacOSRomanStringEncoding seems to be the encoding of all standard Roman fonts... and langNum="11" seems to make the others send properly.
-                //It serves us well here.  Once non-AIM HTML is coming through, this will probably need to be an option in the function call.
-                if ([font mostCompatibleStringEncoding] != NSMacOSRomanStringEncoding) {
-                    langNum = 11;
-                }   
                 
-                [string appendString:[NSString stringWithFormat:@" FACE=\"%@\" LANG=\"%i\"",familyName,langNum]];
-
+				if (simpleOnly){
+					[string appendString:[NSString stringWithFormat:@"<FONT FACE=\"%@\">",familyName]];
+				}else{
+					int langNum = 0; 
+					
+					//(traits | NSNonStandardCharacterSetFontMask) seems to be the proper test... but it is true for all fonts!
+					//NSMacOSRomanStringEncoding seems to be the encoding of all standard Roman fonts... and langNum="11" seems to make the others send properly.
+					//It serves us well here.  Once non-AIM HTML is coming through, this will probably need to be an option in the function call.
+					if ([font mostCompatibleStringEncoding] != NSMacOSRomanStringEncoding) {
+						langNum = 11;
+					}   
+					
+					[string appendString:[NSString stringWithFormat:@" FACE=\"%@\" LANG=\"%i\"",familyName,langNum]];
+				}
                 [currentFamily release]; currentFamily = [familyName retain];
             }
 
             //Size
-            if(pointSize != currentSize){
+            if((pointSize != currentSize) && !simpleOnly){
                 [string appendString:[NSString stringWithFormat:SizeTag, (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
                 currentSize = pointSize;
+				
             }
 
             //Color
             if(includeColorTags && ([color compare:currentColor] || (currentColor && !color))){
-                [string appendString:[NSString stringWithFormat:@" COLOR=\"#%@\"",color]];
+				if (simpleOnly){
+					[string appendString:[NSString stringWithFormat:@"<FONT COLOR=\"#%@\">",color]];	
+				}else{
+					[string appendString:[NSString stringWithFormat:@" COLOR=\"#%@\"",color]];
+				}
                 [currentColor release]; currentColor = [color retain];
             }
 
-            //Close the font tag
-            [string appendString:GreaterThan];
+            //Close the font tag if necessary
+			if (!simpleOnly){
+				[string appendString:GreaterThan];
+			}
         }
 
         //Style (Bold, italic, underline)
@@ -262,8 +279,10 @@ DeclareString(TagCharStartString);
 			
             [string appendString:@"<a href=\""];
 			[string appendString:linkString];
-            [string appendString:@"\" title=\""];
-			[string appendString:linkString];
+			if (!simpleOnly){
+				[string appendString:@"\" title=\""];
+				[string appendString:linkString];
+			}
             [string appendString:@"\">"];
         }
 
