@@ -237,14 +237,21 @@
 // This is called to provide an image when the delegate is first set and
 // following selectionChanged messages to the controller.
 // The junk on the end seems to be the selector name for the method itself
-- (NSImage *) displayImageInPicker: junk
+- (NSImage *)displayImageInPicker: junk
 {
-	return [self image];
+	NSImage	*theImage = nil;
+	
+	//Give the delegate an opportunity to supply an image which differs from the NSImageView's image
+	if (delegate && [delegate respondsToSelector:@selector(imageForImageViewWithImagePicker:)]){
+		theImage = [delegate imageForImageViewWithImagePicker:self];
+	}
+	
+	return (theImage ? theImage : [self image]);
 }
 
 // This is called to give a title for the picker. It is called as above.
 // Note that you must not return nil or the window gets upset
-- (NSString *) displayTitleInPicker: junk
+- (NSString *)displayTitleInPicker: junk
 {
 	return (title ? title : AILocalizedString(@"Image Picker",nil));
 }
