@@ -17,9 +17,20 @@
 
 @implementation SHMSIEBookmarksImporter
 
-static NSMenu   *msieBookmarksMenu;
-static NSMenu   *msieBookmarksSupermenu;
-static NSMenu   *msieTopMenu;
+static NSMenu   *msieBookmarksMenu = nil;
+static NSMenu   *msieBookmarksSupermenu = nil;
+static NSMenu   *msieTopMenu = nil;
+
+DeclareString(gtSign)
+DeclareString(Hclose)
+DeclareString(Hopen)
+DeclareString(Aopen)
+DeclareString(hrefStr)
+DeclareString(closeQuote)
+DeclareString(closeLink)
+DeclareString(Aclose)
+DeclareString(DLclose)
+DeclareString(ltSign)
 
 #pragma mark protocol methods
 + (id)newInstanceOfImporter
@@ -79,16 +90,16 @@ static NSMenu   *msieTopMenu;
     
     unsigned int        stringLength = [inString length];
     
-    static NSString     *gtSign = @">";
-    static NSString     *Hclose = @"</H";
-    static NSString     *Hopen = @"H3 ";
-    static NSString     *Aopen = @"A ";
-    static NSString     *hrefStr = @"HREF=\"";
-    static NSString     *closeQuote = @"\"";
-    static NSString     *closeLink = @"\">";
-    static NSString     *Aclose = @"</A";
-    static NSString     *DLclose = @"/DL>";
-    static NSString     *ltSign = @"<";
+    InitString(gtSign,@">")
+    InitString(Hclose,@"</H")
+    InitString(Hopen,@"H3 ")
+    InitString(Aopen,@"A ")
+    InitString(hrefStr,@"HREF=\"")
+    InitString(closeQuote,@"\"")
+    InitString(closeLink,@"\">")
+    InitString(Aclose,@"</A")
+    InitString(DLclose,@"/DL>")
+    InitString(ltSign,@"<")
     
     while(![linkScanner isAtEnd]){
         if((stringLength - [linkScanner scanLocation]) < 4){
