@@ -72,7 +72,7 @@
 
 	UInt8 *pathbuf = malloc(PATH_MAX);
 	if(pathbuf != NULL) {
-		OSStatus err = FSRefMakePath(inObject, pathbuf, PATH_MAX);
+		OSStatus err = FSRefMakePath(object, pathbuf, PATH_MAX);
 
 		if(err == noErr) {
 			path = [(NSString *)CFStringCreateWithCString(kCFAllocatorDefault, pathbuf, kCFStringEncodingUTF8) autorelease];

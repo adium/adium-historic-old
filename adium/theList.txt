@@ -50,7 +50,6 @@ WebKit Message View:
     
 Message Window:
 	+ Insert/Edit link menu item, accompanying link entry panel, edit link context menu
-	+ Tab scrubbing.  If control is held when mousing over a tab, select that tab
 	+ Open new windows behind the frontmost window (When not opening in tabs)
 	+ Insert emoticon menu item, contextual menu item
 	+ Tab-complete usernames in messages and chat
@@ -240,4 +239,4 @@ Features & Changes:
 = Make source list display all available emoticon packs
 = Add checkboxes in source list to enable/disable packs
 = Add support for the scrolling / paging keys in the WebKit View
-
+= Tab scrubbing.  If control is held when mousing over a tab, select that tab
