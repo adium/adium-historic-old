@@ -93,6 +93,9 @@
 	[status->statusDict release];
 	status->statusDict = [statusDict mutableCopy];
 
+	//Clear the unique ID for this new status, since it should not share our ID.
+	[status->statusDict removeObjectForKey:STATUS_UNIQUE_ID];
+		
 	return status;
 }
 
@@ -445,11 +448,34 @@
 	NSNumber	*uniqueStatusID = [statusDict objectForKey:STATUS_UNIQUE_ID];
 	if(!uniqueStatusID){
 		uniqueStatusID = [[adium statusController] nextUniqueStatusID];
-		[statusDict setObject:uniqueStatusID
-					   forKey:STATUS_UNIQUE_ID];
+		[self setUniqueStatusID:uniqueStatusID];
 	}
 	
 	return uniqueStatusID;
+}
+
+/*!
+ * @brief Return the unique status ID for this status as an integer
+ *
+ * The unique ID will not be assigned if necessary. -1 is returned if no unique ID has been assigned previously.
+ */
+- (int)preexistingUniqueStatusID
+{
+	NSNumber	*uniqueStatusID = [statusDict objectForKey:STATUS_UNIQUE_ID];
+
+	return(uniqueStatusID ? [uniqueStatusID intValue] : -1);
+}
+
+- (void)setUniqueStatusID:(NSNumber *)inUniqueStatusID
+{
+	if(inUniqueStatusID){
+		[statusDict setObject:inUniqueStatusID
+					   forKey:STATUS_UNIQUE_ID];		
+	}else{
+		[statusDict removeObjectForKey:STATUS_UNIQUE_ID];
+	}
+	
+	[[adium statusController] statusStateDidSetUniqueStatusID];
 }
 
 - (NSString *)description
