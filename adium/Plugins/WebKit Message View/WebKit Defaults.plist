@@ -6,5 +6,9 @@
 	<string>Smooth Operator</string>
 	<key>Show User Icons</key>
 	<true/>
+	<key>DefaultFontFamily</key>
+	<string>Lucida Grande</string>
+	<key>DefaultFontSize</key>
+	<integer>10</integer>
 </dict>
 </plist>

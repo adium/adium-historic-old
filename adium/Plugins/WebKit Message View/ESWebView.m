@@ -13,6 +13,19 @@
 
 @implementation ESWebView
 
+- (void)setFontFamily:(NSString *)familyName
+{
+	[[self preferences] setStandardFontFamily:familyName];
+	[[self preferences] setFixedFontFamily:familyName];
+	[[self preferences] setSerifFontFamily:familyName];
+	[[self preferences] setSansSerifFontFamily:familyName];
+}
+
+- (NSString *)fontFamily
+{
+	return [[self preferences] standardFontFamily];
+}
+
 //Key/Paste Forwarding ---------------------------------------------------------------------------------
 //When the user attempts to type into the table view, we push the keystroke to the next responder,
 //and make it key.  This isn't required, but convienent behavior since one will never want to type

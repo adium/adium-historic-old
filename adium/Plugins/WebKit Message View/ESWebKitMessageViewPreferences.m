@@ -11,13 +11,16 @@
 #define PREVIEW_FILE	@"Preview"
 
 @interface ESWebKitMessageViewPreferences (PRIVATE)
-- (void)_buildTimeStampMenu;
-- (void)_buildTimeStampMenu_AddFormat:(NSString *)format;
-- (NSMenu *)_stylesMenu;
 - (void)updatePreview;
 - (void) _loadPreviewFromStylePath:(NSString *)inStylePath;
 - (void)_createListObjectsFromDict:(NSDictionary *)previewDict withLoadedPreviewDirectory:(NSString *)loadedPreviewDirectory;
 - (void)processNewContent;
+- (NSMenu *)_stylesMenu;
+- (void)_buildFontMenus;
+- (NSMenu *)_fontMenu;
+- (NSMenu *)_fontSizeMenu;
+- (void)_buildTimeStampMenu;
+- (void)_buildTimeStampMenu_AddFormat:(NSString *)format;
 @end
 
 @implementation ESWebKitMessageViewPreferences
@@ -45,7 +48,8 @@
 	[preview setUIDelegate:self];
 	[preview setMaintainsBackForwardList:NO];
 	
-    [self _buildTimeStampMenu];
+	[self _buildTimeStampMenu];
+	[self _buildFontMenus];
 	[popUp_styles setMenu:[self _stylesMenu]];
 	
 	{
@@ -58,7 +62,7 @@
 			[popUp_timeStamps selectItem:[popUp_timeStamps lastItem]];
 		}
 	}
-	
+
 	[self updatePreview];
 }
 
@@ -68,6 +72,7 @@
     [[adium notificationCenter] removeObserver:self];
 	[previewListObjectsDict release]; previewListObjectsDict = nil;
 }
+
 
 #pragma mark Changing preferences
 //Save changed preference
@@ -82,6 +87,15 @@
         [[adium preferenceController] setPreference:[[popUp_timeStamps selectedItem] representedObject]
                                              forKey:KEY_WEBKIT_TIME_STAMP_FORMAT
                                               group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	}else if (sender == popUp_font){
+		[preview setFontFamily:[[popUp_font selectedItem] representedObject]];
+		
+	}else if (sender == popUp_fontSize){
+		[[preview preferences] setDefaultFontSize:[[popUp_fontSize selectedItem] tag]];
+		
+	}else if (sender == popUp_minimumFontSize){
+		[[preview preferences] setMinimumFontSize:[[popUp_minimumFontSize selectedItem] tag]];
+		
 	}
 	
 	[self updatePreview];
@@ -108,10 +122,58 @@
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	}
 	
-	[self updatePreview];	
+	[self updatePreview];
 }
 
 #pragma mark Menus
+- (void)_buildFontMenus
+{
+	[popUp_font setMenu:[self _fontMenu]];	
+	[popUp_fontSize setMenu:[self _fontSizeMenu]];
+	[popUp_minimumFontSize setMenu:[self _fontSizeMenu]];
+}
+
+-(NSMenu *)_fontMenu
+{
+	NSMenu			*menu = [[[NSMenu alloc] init] autorelease];
+	NSMenuItem		*menuItem;
+	
+	NSArray			*availableFamilies = [[[NSFontManager sharedFontManager] availableFontFamilies] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+	NSEnumerator	*enumerator = [availableFamilies objectEnumerator];
+	NSString		*fontFamilyName;
+	
+	while (fontFamilyName = [enumerator nextObject]){
+		menuItem = [[[NSMenuItem alloc] initWithTitle:fontFamilyName 
+											   target:nil
+											   action:nil
+										keyEquivalent:@""] autorelease];
+		[menuItem setRepresentedObject:fontFamilyName];
+		[menu addItem:menuItem];
+	}
+	
+	return menu;
+}
+
+-(NSMenu *)_fontSizeMenu
+{
+	NSMenu			*menu = [[[NSMenu alloc] init] autorelease];
+	NSMenuItem		*menuItem;
+	
+	int sizes[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,18,20,22,24,36,48,64,72,96};
+	int loopCounter;
+	
+	for (loopCounter = 0; loopCounter < 23; loopCounter++){
+		menuItem = [[[NSMenuItem alloc] initWithTitle:[[NSNumber numberWithInt:sizes[loopCounter]] stringValue]
+											   target:nil
+											   action:nil
+										keyEquivalent:@""] autorelease];
+		[menuItem setTag:sizes[loopCounter]];
+		[menu addItem:menuItem];
+	}
+	
+	return menu;
+}
+
 //Build the time stamp selection menu
 - (void)_buildTimeStampMenu
 {
@@ -208,30 +270,41 @@
 	return menu;
 }
 
+- (void)_updatePopupMenuSelections
+{
+	[popUp_font selectItemWithTitle:[preview fontFamily]];
+	[popUp_fontSize selectItemAtIndex:[[popUp_fontSize menu] indexOfItemWithTag:[[preview preferences] defaultFontSize]]];
+	[popUp_minimumFontSize selectItemAtIndex:[[popUp_minimumFontSize menu] indexOfItemWithTag:[[preview preferences] minimumFontSize]]];
+}
+
 #pragma mark Preview WebView
 - (void)updatePreview
 {
 	NSString	*basePath, *headerHTML, *footerHTML, *templateHTML;
-	NSString	*desiredStyle, *desiredVariant, *CSS;
+	NSString	*styleName, *desiredVariant, *CSS;
 	NSBundle	*style;
 	
 	//We aren't ready for that kind of commitment yet...
 	webViewIsReady = NO;
 	
 	//Load the style as per preferences
-	desiredStyle = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
-																		 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	styleName = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
+														 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	[stylePath release];
-	style = [plugin messageStyleBundleWithName:desiredStyle];
+	style = [plugin messageStyleBundleWithName:styleName];
 	
 	//If the preferred style is unavailable, load Smooth Operator
 	if (!style){
-		desiredStyle = @"Smooth Operator";
-		style = [plugin messageStyleBundleWithName:desiredStyle];
+		styleName = AILocalizedString(@"Smooth Operator","Smooth Operator message style name. Make sure this matches the localized Smooth Operator style bundle's name!");
+		style = [plugin messageStyleBundleWithName:styleName];
 	}
+
+	[plugin loadPreferencesForWebView:preview withStyleNamed:styleName];
+	[self _updatePopupMenuSelections];
+	
 	stylePath = [[style resourcePath] retain];
 	
-	desiredVariant = [[adium preferenceController] preferenceForKey:[plugin keyForDesiredVariantOfStyle:desiredStyle]
+	desiredVariant = [[adium preferenceController] preferenceForKey:[plugin keyForDesiredVariantOfStyle:styleName]
 																		   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];			
 	if (desiredVariant){
 		CSS = [[NSString stringWithFormat:@"Variants/%@.css",desiredVariant] retain];
@@ -246,7 +319,7 @@
 	//Load the template, and fill it up
 	templateHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
 	templateHTML = [NSString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];
-    	
+
 	//Feed it to the webview
 	[[preview mainFrame] loadHTMLString:templateHTML baseURL:nil];
 	
@@ -293,7 +366,7 @@
 		if([type isEqualToString:CONTENT_MESSAGE_TYPE]) {
 			//Create message content object
 			NSAttributedString  *message =[NSAttributedString stringWithData:[messageDict objectForKey:@"Message"]];
-			
+//			NSAttributedString *message = [[[NSAttributedString alloc] initWithString:@"Hello, I love you, won't you tell me your name?"] autorelease];
 			BOOL				outgoing = [[messageDict objectForKey:@"Outgoing"] boolValue];
 			NSString			*from = [messageDict objectForKey:@"From"];
 			NSString			*to = [messageDict objectForKey:@"To"];

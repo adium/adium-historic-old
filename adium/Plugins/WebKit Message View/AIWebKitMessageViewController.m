@@ -100,29 +100,25 @@
 		
 		//Release the old preference cache
 		[self _flushPreferenceCache];
-		
-		[[[adium preferenceController] preferenceForKey:KEY_WEBKIT_SHOW_USER_ICONS
-												  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue];
-		
-		
+
 		//Style and Variant preferences
 		{
-			NSString	*desiredStyle, *desiredVariant, *CSS;
+			NSString	*styleName, *desiredVariant, *CSS;
 			NSBundle	*style;
 			
-			desiredStyle = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
+			styleName = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
 																	group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-			style = [plugin messageStyleBundleWithName:desiredStyle];
+			style = [plugin messageStyleBundleWithName:styleName];
 			
 			//If the preferred style is unavailable, load Smooth Operator
 			if (!style){
-				desiredStyle = @"Smooth Operator";
-				style = [plugin messageStyleBundleWithName:desiredStyle];
+				styleName = AILocalizedString(@"Smooth Operator","Smooth Operator message style name. Make sure this matches the localized Smooth Operator style bundle's name!");
+				style = [plugin messageStyleBundleWithName:styleName];
 			}
 			
 			stylePath = [[style resourcePath] retain];
 				
-			desiredVariant = [[adium preferenceController] preferenceForKey:[plugin keyForDesiredVariantOfStyle:desiredStyle]
+			desiredVariant = [[adium preferenceController] preferenceForKey:[plugin keyForDesiredVariantOfStyle:styleName]
 																	  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];			
 			CSS = (desiredVariant ? [NSString stringWithFormat:@"Variants/%@.css",desiredVariant] : @"main.css");
 			
@@ -135,6 +131,8 @@
 			}else{
 				NSString	*basePath, *headerHTML, *footerHTML, *templateHTML;
 				
+				[plugin loadPreferencesForWebView:webView withStyleNamed:styleName];
+					
 				basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];	
 				headerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Header.html"]];
 				footerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Footer.html"]];

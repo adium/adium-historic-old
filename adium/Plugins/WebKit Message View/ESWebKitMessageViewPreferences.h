@@ -8,7 +8,7 @@
 #import "ESWebView.h"
 
 @interface ESWebKitMessageViewPreferences : AIPreferencePane {
-	IBOutlet	WebView			*preview;
+	IBOutlet	ESWebView		*preview;
 	BOOL						webViewIsReady;
 		
 	IBOutlet	NSPopUpButton   *popUp_styles;
