@@ -109,9 +109,12 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context)
 //Edit existing alert
 - (IBAction)editAlert:(id)sender
 {
-	NSDictionary	*alert = [alertArray objectAtIndex:[tableView_actions selectedRow]];
-
-	[CSNewContactAlertWindowController editAlert:alert forListObject:listObject onWindow:[[self view] window] notifyingTarget:self userInfo:alert];
+	int	selectedRow = [tableView_actions selectedRow];
+	if(selectedRow >= 0 && selectedRow < [tableView_actions numberOfRows]){
+		NSDictionary	*alert = [alertArray objectAtIndex:selectedRow];
+		
+		[CSNewContactAlertWindowController editAlert:alert forListObject:listObject onWindow:[[self view] window] notifyingTarget:self userInfo:alert];
+	}
 }
 
 //Delete an alert
