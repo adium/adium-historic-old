@@ -243,24 +243,34 @@ static AILogViewerWindowController *sharedLogViewerInstance = nil;
         
     [resultsLock lock];
     if(row >= 0 && row < [selectedLogArray count]){
-        theLog = [selectedLogArray objectAtIndex:row];
+        theLog = [[selectedLogArray objectAtIndex:row] retain];
     }
     [selectedLogArray removeObjectAtIndex:row]; 
     [resultsLock unlock];
     
     [[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];
-    
-    // visible updating
+	
+    //Visible updating
     [self updateProgressDisplay];
     [tableView_results reloadData];   
     [textView_content setString:@""];
-    // invisible fix0ring... rebuild the 'global' log indexes
+    
+	//Update the log index
+	SKIndexRef		logSearchIndex = [plugin logContentIndex];
+	SKDocumentRef document = SKDocumentCreate((CFStringRef)@"file", NULL, (CFStringRef)[theLog path]);
+	SKIndexRemoveDocument(logSearchIndex, document);
+	CFRelease(document);
+	SKIndexFlush(logSearchIndex);
+
+	//Rebuild the 'global' log indexes
     [availableLogArray removeAllObjects];
     [toArray removeAllObjects]; //note: even if there are no logs, the name will remain [bug or feature?]
     [toServiceArray removeAllObjects];
     [fromArray removeAllObjects];
     [fromServiceArray removeAllObjects];
     [self initLogFiltering];
+				
+	[theLog release];
 }
 
 //Close the window
