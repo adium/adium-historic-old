@@ -21,13 +21,37 @@
 - (void)installPlugin
 {
     //Install our tooltip entry
-    [[owner interfaceController] registerContactListTooltipEntry:self];
+    [[owner interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
 }
 
 //Tooltip entry ---------------------------------------------------------------------------------------
-- (NSString *)label
+- (NSString *)labelForObject:(AIListObject *)inObject
 {
-    return(@"Away");
+    NSString	*entry = nil;
+    
+    if([inObject isKindOfClass:[AIListContact class]]){
+        BOOL 			away;
+        NSAttributedString 	*statusMessage = nil;
+        AIMutableOwnerArray	*ownerArray;
+        
+        //Get the away state
+        away = [[(AIListContact *)inObject statusArrayForKey:@"Away"] greatestIntegerValue];
+        
+        //Get the status message
+        ownerArray = [(AIListContact *)inObject statusArrayForKey:@"StatusMessage"];
+        if([ownerArray count] != 0){
+            statusMessage = [ownerArray objectAtIndex:0];
+        }
+        
+        //Return the correct string
+        if(statusMessage != nil && [statusMessage length] != 0){
+            entry = @"Away Message";
+        }else if(away){
+            entry = @"Away";
+        }
+    }
+    
+    return(entry);
 }
 
 - (NSString *)entryForObject:(AIListObject *)inObject

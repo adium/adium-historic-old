@@ -265,7 +265,7 @@ typedef enum {
 @end
 
 @protocol AIContactListTooltipEntry <NSObject>
-- (NSString *)label;
+- (NSString *)labelForObject:(AIListObject *)inObject;
 - (NSString *)entryForObject:(AIListObject *)inObject;
 @end
 
@@ -459,6 +459,7 @@ typedef enum {
     NSMutableArray		*messageViewArray;
     NSMutableArray		*interfaceArray;
     NSMutableArray		*contactListTooltipEntryArray;
+    NSMutableArray              *contactListTooltipSecondaryEntryArray;
 
     NSMutableArray		*flashObserverArray;
     NSTimer			*flashTimer;
@@ -502,7 +503,7 @@ typedef enum {
 
 //Tooltips
 - (void)showTooltipForListObject:(AIListObject *)object atPoint:(NSPoint)point;
-- (void)registerContactListTooltipEntry:(id <AIContactListTooltipEntry>)inEntry;
+- (void)registerContactListTooltipEntry:(id <AIContactListTooltipEntry>)inEntry secondaryEntry:(BOOL)isSecondary;
 
 //Custom pasting
 - (IBAction)paste:(id)sender;

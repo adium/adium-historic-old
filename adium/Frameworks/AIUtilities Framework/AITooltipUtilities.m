@@ -17,8 +17,11 @@
 #import "AITooltipUtilities.h"
 #import "AIAttributedStringAdditions.h"
 
-#define TOOLTIP_MAX_WIDTH	400
-#define TOOLTIP_INSET           3.0
+#define TOOLTIP_MAX_WIDTH           1000
+#define TOOLTIP_INSET               3.0
+#define TOOLTIP_TITLE_BODY_MARGIN   16.0
+#define IMAGE_DIMENSION             48.0
+
 @interface AITooltipUtilities (PRIVATE)
 + (void)_createTooltip;
 + (void)_closeTooltip;
@@ -36,6 +39,7 @@ static  ESStaticView            *view_tooltipImage;
 static	NSAttributedString      *tooltipBody;
 static	NSAttributedString      *tooltipTitle;
 static  NSImage                 *tooltipImage;
+static  NSSize                  imageSize;
 static  BOOL                    imageOnRight;
 static	NSPoint			tooltipPoint;
 static	AITooltipOrientation	tooltipOrientation;
@@ -93,6 +97,11 @@ static	AITooltipOrientation	tooltipOrientation;
             tooltipImage = [inImage retain];
             imageOnRight = inImageOnRight;
             [view_tooltipImage setImage:tooltipImage];
+            if (tooltipImage) {
+                imageSize = NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION);
+            } else {
+                imageSize = NSMakeSize(0,0);
+            }
             
             [self _sizeTooltip];
         } else if(newLocation){
@@ -177,7 +186,9 @@ static	AITooltipOrientation	tooltipOrientation;
     NSRect	tooltipBodyRect;
     NSRect      tooltipWindowRect;
     
-    if (tooltipTitle && [tooltipTitle length]) {
+    BOOL hasTitle = tooltipTitle && [tooltipTitle length];
+    BOOL hasBody = tooltipBody && [tooltipBody length];
+    if (hasTitle) {
         //Make sure we're not wrapping by default
         [[textView_tooltipTitle textContainer] setContainerSize:NSMakeSize(10000000.0,10000000.0)];
         //Set up the tooltip's bounds
@@ -187,7 +198,7 @@ static	AITooltipOrientation	tooltipOrientation;
         tooltipTitleRect = NSMakeRect(0,0,0,0);
     }
     
-    if (tooltipBody && [tooltipBody length]) {
+    if (hasBody) {
         //Make sure we're not wrapping by default
         [[textView_tooltipBody textContainer] setContainerSize:NSMakeSize(10000000.0,10000000.0)];
         //Set up the tooltip's bounds
@@ -199,14 +210,14 @@ static	AITooltipOrientation	tooltipOrientation;
     
     //Limit the tooltip width - recalculate the height for the new (maxiumum) width as necessary
     if(tooltipBodyRect.size.width > TOOLTIP_MAX_WIDTH || tooltipTitleRect.size.width > TOOLTIP_MAX_WIDTH){
-        if (tooltipTitle) {
+        if (hasTitle) {
             [[textView_tooltipTitle textContainer] setContainerSize:NSMakeSize(TOOLTIP_MAX_WIDTH,10000000.0)];
             [[textView_tooltipTitle layoutManager] glyphRangeForTextContainer:[textView_tooltipTitle textContainer]]; //void - need to force it to lay out the glyphs for an accurate measurement
             tooltipTitleRect = [[textView_tooltipTitle layoutManager] usedRectForTextContainer:[textView_tooltipTitle textContainer]];
         } else {
             tooltipTitleRect = NSMakeRect(0,0,0,0);
         }
-        if (tooltipBody) {
+        if (hasBody) {
             [[textView_tooltipBody textContainer] setContainerSize:NSMakeSize(TOOLTIP_MAX_WIDTH,10000000.0)];
             [[textView_tooltipBody layoutManager] glyphRangeForTextContainer:[textView_tooltipBody textContainer]]; //void - need to force it to lay out the glyphs for an accurate measurement
             tooltipBodyRect = [[textView_tooltipBody layoutManager] usedRectForTextContainer:[textView_tooltipBody textContainer]];
@@ -215,41 +226,46 @@ static	AITooltipOrientation	tooltipOrientation;
         }
     }
 
+    float titleAndBodyMargin = (hasTitle && hasBody) ? TOOLTIP_TITLE_BODY_MARGIN : 0;
     //width is the greater of the body and title widths
     float windowWidth = TOOLTIP_INSET*2 + ((tooltipBodyRect.size.width > tooltipTitleRect.size.width) ? tooltipBodyRect.size.width : tooltipTitleRect.size.width);
-    float windowHeight = TOOLTIP_INSET*2 + (tooltipTitleRect.size.height + tooltipBodyRect.size.height);
+    float windowHeight = titleAndBodyMargin + TOOLTIP_INSET*2 + (tooltipTitleRect.size.height + tooltipBodyRect.size.height);
     
     //Set the textView's origin 
-    tooltipTitleRect.origin =  NSMakePoint(windowWidth/2 - tooltipTitleRect.size.width/2,TOOLTIP_INSET + tooltipBodyRect.size.height);
+//  tooltipTitleRect.origin =  NSMakePoint(windowWidth/2 - tooltipTitleRect.size.width/2,TOOLTIP_INSET + tooltipBodyRect.size.height); //center the title
+    tooltipTitleRect.origin =  NSMakePoint(TOOLTIP_INSET,titleAndBodyMargin + TOOLTIP_INSET + tooltipBodyRect.size.height); //left
     tooltipBodyRect.origin =  NSMakePoint(TOOLTIP_INSET, TOOLTIP_INSET);
     
     if (tooltipImage) {
-        NSSize imageSize = [tooltipImage size];
         //if the image isn't going to fit without overlapping the title, expand the window's width
-        if (imageSize.width + tooltipTitleRect.size.width + TOOLTIP_INSET*3 > windowWidth) {
-            windowWidth = imageSize.width + tooltipTitleRect.size.width + (TOOLTIP_INSET*3);   
+        float neededWidth = imageSize.width + tooltipTitleRect.size.width + (TOOLTIP_INSET*3);
+        if (neededWidth > windowWidth) {
+            windowWidth = neededWidth;   
         }
         //The image should not overlap the body of the tooltip, so increase the window height (the body has an origin at the bottom-left so will move with the window)
-        if (imageSize.height > tooltipTitleRect.size.height) {
-            windowHeight = imageSize.height + tooltipBodyRect.size.height + (TOOLTIP_INSET*3);
+        if (IMAGE_DIMENSION > tooltipTitleRect.size.height) {
+            windowHeight = titleAndBodyMargin + imageSize.height + tooltipBodyRect.size.height + TOOLTIP_INSET*2;
         }
         
         if(imageOnRight) {
             //recenter the title to be between the left of the window and the left of the image
-            tooltipTitleRect.origin = NSMakePoint(((windowWidth - imageSize.width - tooltipTitleRect.size.width)/2 - TOOLTIP_INSET),tooltipBodyRect.size.height + TOOLTIP_INSET + (imageSize.height)/2 - tooltipTitleRect.size.height/2);
-            [view_tooltipImage setFrame:NSMakeRect(windowWidth - imageSize.width - TOOLTIP_INSET,windowHeight - imageSize.height - TOOLTIP_INSET,imageSize.width,imageSize.height)];
+            //tooltipTitleRect.origin = NSMakePoint(((windowWidth - imageSize.width - tooltipTitleRect.size.width)/2 - TOOLTIP_INSET),tooltipBodyRect.size.height + TOOLTIP_INSET + (imageSize.height)/2 - tooltipTitleRect.size.height/2);
+            tooltipTitleRect.origin = NSMakePoint(TOOLTIP_INSET,windowHeight - (imageSize.height)/2 - tooltipTitleRect.size.height/2);
+            [view_tooltipImage setFrameOrigin:NSMakePoint(windowWidth - imageSize.width - TOOLTIP_INSET,windowHeight - imageSize.height - TOOLTIP_INSET)];
         } else {
             //recenter the title to be between the right of the image and the right of the window
-            tooltipTitleRect.origin = NSMakePoint(((windowWidth + imageSize.width - tooltipTitleRect.size.width)/2 + TOOLTIP_INSET),tooltipBodyRect.size.height + TOOLTIP_INSET + (imageSize.height)/2 - tooltipTitleRect.size.height/2);
-            [view_tooltipImage setFrame:NSMakeRect(TOOLTIP_INSET,windowHeight - imageSize.height - TOOLTIP_INSET,imageSize.width,imageSize.height)];   
+            //tooltipTitleRect.origin = NSMakePoint(((windowWidth + imageSize.width - tooltipTitleRect.size.width)/2 + TOOLTIP_INSET),tooltipBodyRect.size.height + TOOLTIP_INSET + (imageSize.height)/2 - tooltipTitleRect.size.height/2);
+//            tooltipTitleRect.origin = NSMakePoint((imageSize.width + TOOLTIP_INSET * 2),tooltipBodyRect.size.height + TOOLTIP_INSET*2 + (imageSize.height)/2 - tooltipTitleRect.size.height/2);
+            tooltipTitleRect.origin = NSMakePoint((imageSize.width + TOOLTIP_INSET * 2),windowHeight - (imageSize.height)/2 - tooltipTitleRect.size.height/2);
+            [view_tooltipImage setFrameOrigin:NSMakePoint(TOOLTIP_INSET,windowHeight - imageSize.height - TOOLTIP_INSET)];
         }
-    } else {
-        [view_tooltipImage setFrame:NSMakeRect(0,0,0,0)];   
     }
 
+    [view_tooltipImage setFrameSize:imageSize];
+    
     //Apply the new frames for the text views
-    [textView_tooltipTitle setFrame:tooltipTitleRect];
-    [textView_tooltipBody setFrame:tooltipBodyRect];
+    [textView_tooltipTitle  setFrame:tooltipTitleRect];
+    [textView_tooltipBody   setFrame:tooltipBodyRect];
     
     [textView_tooltipTitle  setNeedsDisplay:YES];
     [textView_tooltipBody   setNeedsDisplay:YES];
@@ -262,6 +278,17 @@ static	AITooltipOrientation	tooltipOrientation;
     
     //Apply the frame change
     [tooltipWindow setFrame:tooltipWindowRect display:YES];
+    
+    //Draw the dividing line
+    if (titleAndBodyMargin) {
+        [[tooltipWindow contentView] lockFocus];
+       // [[[NSColor lightGrayColor] colorWithAlphaComponent:.5] set];
+        [[NSColor lightGrayColor] set];
+        [NSBezierPath setDefaultLineWidth:1];
+        [NSBezierPath strokeLineFromPoint:NSMakePoint(TOOLTIP_INSET,titleAndBodyMargin/2 + tooltipBodyRect.size.height + 1)
+                                  toPoint:NSMakePoint(windowWidth - TOOLTIP_INSET,titleAndBodyMargin/2 + tooltipBodyRect.size.height + 1)];
+        [[tooltipWindow contentView] unlockFocus];
+    }
     
     //Ensure the tip is visible
     if(![tooltipWindow isVisible]){

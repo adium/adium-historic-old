@@ -63,10 +63,10 @@ typedef enum
 
 + (NSString *)stringForTimeIntervalSinceDate:(NSDate *)inDate
 {
-    return ([self stringForTimeIntervalSinceDate:inDate abbreviated:NO]);
+    return ([self stringForTimeIntervalSinceDate:inDate showingSeconds:YES abbreviated:NO]);
 }
 
-+ (NSString *)stringForTimeIntervalSinceDate:(NSDate *)inDate abbreviated:(BOOL)abbreviate
++ (NSString *)stringForTimeIntervalSinceDate:(NSDate *)inDate showingSeconds:(BOOL)showSeconds abbreviated:(BOOL)abbreviate;
 {
     NSMutableString *theString = [[NSMutableString alloc] init];
     
@@ -89,19 +89,27 @@ typedef enum
             [theString appendString:[NSString stringWithFormat:@"%ih ",hours,hours==1 ? @"":@"s"]];
         if (minutes)
             [theString appendString:[NSString stringWithFormat:@"%im ",minutes,minutes==1 ? @"":@"s"]];
-        if (seconds)
+        if (showSeconds && seconds)
             [theString appendString:[NSString stringWithFormat:@"%is ",(int)seconds,seconds==1 ? @"":@"s"]];
+        
+        //Return the string without the final space
+        if ([theString length])
+            return ([theString substringToIndex:([theString length]-1)]);
     } else {
         if (days)
-            [theString appendString:[NSString stringWithFormat:@"%i day%@ ",days,days==1 ? @"":@"s"]];
+            [theString appendString:[NSString stringWithFormat:@"%i day%@, ",days,days==1 ? @"":@"s"]];
         if (hours)
-            [theString appendString:[NSString stringWithFormat:@"%i hour%@ ",hours,hours==1 ? @"":@"s"]];
+            [theString appendString:[NSString stringWithFormat:@"%i hour%@, ",hours,hours==1 ? @"":@"s"]];
         if (minutes)
-            [theString appendString:[NSString stringWithFormat:@"%i minute%@ ",minutes,minutes==1 ? @"":@"s"]];
-        if (seconds)
-            [theString appendString:[NSString stringWithFormat:@"%i second%@ ",(int)seconds,seconds==1 ? @"":@"s"]];
+            [theString appendString:[NSString stringWithFormat:@"%i minute%@, ",minutes,minutes==1 ? @"":@"s"]];
+        if (showSeconds && seconds)
+            [theString appendString:[NSString stringWithFormat:@"%i second%@, ",(int)seconds,seconds==1 ? @"":@"s"]];
+        
+        //Return the string without the final comma and space
+        if ([theString length])
+            return ([theString substringToIndex:([theString length]-2)]);
     }
-    //Return the string without the final space
-    return ([theString substringToIndex:([theString length]-1)]);
+    
+    return theString;
 }
 @end
