@@ -31,7 +31,7 @@ ccTLD		(ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|az|ba|bb|bd|be|bf|bg|bh|
 sTLD		(com|edu|gov|int|mil|net|org|biz|info|name|pro)
 uTLD		(aero|coop|museum)
 
-domains		({ccTLD}|{sTLD}|{uTLD}|arpa)
+domains		({ccTLD}|{sTLD}|{uTLD}|arpa|local)
 urlSpecifier	([^@\/\.][^\/\.]*\.)+{domains}(:[0-9]+)?(\/.*)?
 ipURL		([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]+)?(\/.*)?
 mailSpecifier	[^:\/]+\@.+\.{domains}
