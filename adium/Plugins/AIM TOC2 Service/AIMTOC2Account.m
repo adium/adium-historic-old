@@ -66,6 +66,7 @@ static char *hash_password(const char * const password);
 - (void)AIM_SetStatus;
 - (void)AIM_GetProfile:(NSString *)handleUID;
 - (void)AIM_GetStatus:(NSString *)handleUID;
+- (void)AIM_SendWarning:(NSString *)handleUID anonymous:(BOOL)anonymous;
 - (NSString *)extractStringFrom:(NSString *)searchString between:(NSString *)stringA and:(NSString *)stringB;
 - (NSString *)validCopyOfString:(NSString *)inString;
 - (void)connect;
@@ -565,7 +566,7 @@ static char *hash_password(const char * const password);
                 o = d - a + b + 71665152;
 
 //                message = [NSString stringWithFormat:@"toc2_signon login.oscar.aol.com 5190 %@ %s english TIC:AIMM 160 %lu",[screenName compactedString],hash_password([password cString]),o];
-                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.66 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
+                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.67 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
 
                 [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 
@@ -1464,6 +1465,17 @@ static char *hash_password(const char * const password);
     NSString	*message;
 
     message = [NSString stringWithFormat:@"toc_get_info %@",handleUID];
+
+    //Send the message
+    [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
+
+}
+
+- (void)AIM_SendWarning:(NSString *)handleUID anonymous:(BOOL)anonymous
+{
+    NSString	*message;
+
+    message = [NSString stringWithFormat:@"toc_evil %@ %@",handleUID, (anonymous ? @"anon" : @"norm")];
 
     //Send the message
     [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];

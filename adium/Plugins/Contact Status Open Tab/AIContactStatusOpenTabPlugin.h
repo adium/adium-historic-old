@@ -20,7 +20,6 @@
 @interface AIContactStatusOpenTabPlugin : AIPlugin {
 }
 
-- (void)applyOpenTabStatusOnContact:(AIListContact *)inContact;
-- (void)clearOpenTabStatusOnContact:(AIListContact *)inContact;
+- (void)updateOpenTabStatusOnContact:(AIListContact *)inContact withStatus:(BOOL)inStatus;
 
 @end

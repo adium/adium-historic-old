@@ -251,10 +251,6 @@
 			path = Warning.AdiumPlugin;
 			refType = 3;
 		};
-		113B3034049A8A9C00DDEB92 = {
-			isa = PBXTargetDependency;
-			target = 113B3024049A8A6B00DDEB92;
-		};
 		113B3039049A8AE200DDEB92 = {
 			children = (
 				113B303A049A8B1D00DDEB92,
@@ -788,6 +784,181 @@
 			isa = PBXTargetDependency;
 			target = 11B487980498CEFC003CE6DB;
 		};
+		11B96D81049AF85900C6304D = {
+			children = (
+				11B96D97049AF8FB00C6304D,
+				11B96D98049AF8FB00C6304D,
+			);
+			isa = PBXGroup;
+			name = "Contact Warning Level";
+			refType = 4;
+		};
+		11B96D82049AF87D00C6304D = {
+			buildPhases = (
+				11B96D85049AF87D00C6304D,
+				11B96D88049AF87D00C6304D,
+				11B96D8A049AF87D00C6304D,
+				11B96D8D049AF87D00C6304D,
+				11B96D91049AF87D00C6304D,
+			);
+			buildSettings = {
+				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Contact Warning Level";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				11B96D83049AF87D00C6304D,
+				11B96D84049AF87D00C6304D,
+			);
+			isa = PBXBundleTarget;
+			name = "Contact Warning Level";
+			productInstallPath = /Adium.app/Contents/PlugIns/;
+			productName = IdleAwayManualSort;
+			productReference = 11B96D92049AF87D00C6304D;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Contact Warning Level</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIContactWarningLevelPlugin</string>
+</dict>
+</plist>
+";
+		};
+		11B96D83049AF87D00C6304D = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		11B96D84049AF87D00C6304D = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		11B96D85049AF87D00C6304D = {
+			buildActionMask = 2147483647;
+			files = (
+				11B96D99049AF8FB00C6304D,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		11B96D88049AF87D00C6304D = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		11B96D8A049AF87D00C6304D = {
+			buildActionMask = 2147483647;
+			files = (
+				11B96D9A049AF8FB00C6304D,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		11B96D8D049AF87D00C6304D = {
+			buildActionMask = 2147483647;
+			files = (
+				11B96D8E049AF87D00C6304D,
+				11B96D8F049AF87D00C6304D,
+				11B96D90049AF87D00C6304D,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		11B96D8E049AF87D00C6304D = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		11B96D8F049AF87D00C6304D = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		11B96D90049AF87D00C6304D = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		11B96D91049AF87D00C6304D = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		11B96D92049AF87D00C6304D = {
+			isa = PBXBundleReference;
+			path = "Contact Warning Level.AdiumPlugin";
+			refType = 3;
+		};
+		11B96D93049AF8BD00C6304D = {
+			isa = PBXTargetDependency;
+			target = 11B96D82049AF87D00C6304D;
+		};
+		11B96D96049AF8E100C6304D = {
+			fileRef = 11B96D92049AF87D00C6304D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		11B96D97049AF8FB00C6304D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIContactWarningLevelPlugin.h;
+			path = "Plugins/Contact Warning Level/AIContactWarningLevelPlugin.h";
+			refType = 4;
+		};
+		11B96D98049AF8FB00C6304D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIContactWarningLevelPlugin.m;
+			path = "Plugins/Contact Warning Level/AIContactWarningLevelPlugin.m";
+			refType = 4;
+		};
+		11B96D99049AF8FB00C6304D = {
+			fileRef = 11B96D97049AF8FB00C6304D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		11B96D9A049AF8FB00C6304D = {
+			fileRef = 11B96D98049AF8FB00C6304D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		11F2C7FB047ACDC50021C483 = {
 			isa = PBXFileReference;
 			name = ContactStatusColoringPrefs.nib;
@@ -887,6 +1058,7 @@
 				F53B4A6B04991CB601803884,
 				4BF48142049A804500A8010A,
 				113B3033049A8A6B00DDEB92,
+				11B96D92049AF87D00C6304D,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -962,6 +1134,7 @@
 				11B487980498CEFC003CE6DB,
 				F53B4A6A04991CB601803884,
 				113B3024049A8A6B00DDEB92,
+				11B96D82049AF87D00C6304D,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -1069,7 +1242,7 @@
 				11B487C00498E698003CE6DB,
 				F53B4AFC04995BE001803884,
 				4BF48143049A804500A8010A,
-				113B3034049A8A9C00DDEB92,
+				11B96D93049AF8BD00C6304D,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -2126,6 +2299,7 @@
 				4B28907503C1D14200A8010A,
 				4BD7D0CA04620D7C00A8010A,
 				4BD7D0CB04620D8800A8010A,
+				11B96D81049AF85900C6304D,
 				F5BD46C402D0786601A8010A,
 				F53B9AC502CD12AB01A8010A,
 				F5370C9202D76F1F01A8010A,
@@ -3323,6 +3497,7 @@
 				4B55411E044DF01600A8010A,
 				114A79BA0470C433001F3502,
 				11B487B30498D44C003CE6DB,
+				11B96D96049AF8E100C6304D,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
