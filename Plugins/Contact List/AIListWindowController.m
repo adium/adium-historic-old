@@ -93,10 +93,11 @@
 	
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
+	[[self window] useOptimizedDrawing:YES];
 
 	minWindowSize = [[self window] minSize];
 	[contactListController setMinWindowSize:minWindowSize];
-	    
+
     //Watch for resolution and screen configuration changes
     [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
 														   selector:@selector(screenParametersChanged:) 
