@@ -111,7 +111,7 @@
     if([self hasPrefix:BUNDLE_STRING]){
         return [[[[NSBundle mainBundle] bundlePath] stringByExpandingTildeInPath] stringByAppendingString:[self substringFromIndex:[BUNDLE_STRING length]]];
     }else{
-        return [[self retain] autorelease];
+        return [[self copy] autorelease];
     }
 }
 
@@ -123,7 +123,7 @@
     if([self hasPrefix:bundlePath]){
         return [BUNDLE_STRING stringByAppendingString:[self substringFromIndex:[bundlePath length]]];
     }else{
-        return [[self retain] autorelease];
+        return [[self copy] autorelease];
     }
 }
 
@@ -147,7 +147,7 @@
 		returnString = [[self substringToIndex:length-1] stringByAppendingString:[NSString stringWithUTF8String:"\xE2\x80\xA6"]];
 	} else {
 		//We don't need to truncate, so don't append an ellipsis
-		returnString = [[self retain] autorelease];
+		returnString = [[self copy] autorelease];
 	}
 	
 	return (returnString);
@@ -446,7 +446,7 @@
 
 - (NSString *)stringByUnescapingFromHTML
 {
-	if([self length] == 0) return [[self retain] autorelease]; //avoids various RangeExceptions.
+	if([self length] == 0) return [[self copy] autorelease]; //avoids various RangeExceptions.
 	
 	static NSString *ampersand = @"&", *semicolon = @";";
 	
