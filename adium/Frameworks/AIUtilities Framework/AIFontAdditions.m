@@ -33,7 +33,7 @@
 
     sizeDict = [fontDict objectForKey:fontName];
     if(!sizeDict){
-        sizeDict = [[NSMutableDictionary alloc] init];
+        sizeDict = [NSMutableDictionary dictionary];
         [fontDict setObject:sizeDict forKey:fontName];
     }
 

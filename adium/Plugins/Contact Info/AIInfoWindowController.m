@@ -206,7 +206,8 @@ static AIInfoWindowController *sharedInstance = nil;
             [statusString addAttribute:NSParagraphStyleAttributeName value:indentStyle range:NSMakeRange(firstLineRange.length, [statusString length] - firstLineRange.length)];
             [indentStyle release];
             
-            [infoString appendAttributedString:[statusString addAttributes:valueAttributes range:NSMakeRange(0,[statusString length])]];
+            [statusString addAttributes:valueAttributes range:NSMakeRange(0,[statusString length])];
+            [infoString appendAttributedString:statusString];
             [statusString release];
         } else {
             [infoString appendString:@"Yes" withAttributes:valueAttributes];
@@ -265,7 +266,8 @@ static AIInfoWindowController *sharedInstance = nil;
             [textProfileString addAttribute:NSParagraphStyleAttributeName value:indentStyle range:NSMakeRange(firstLineRange.length, [textProfileString length] - firstLineRange.length)];
             [indentStyle release];
             
-            [infoString appendAttributedString:[textProfileString addAttributes:valueAttributes range:NSMakeRange(0,[textProfileString length])]];
+            [textProfileString addAttributes:valueAttributes range:NSMakeRange(0,[textProfileString length])];
+            [infoString appendAttributedString:textProfileString];
             [textProfileString release];
         }
     }
