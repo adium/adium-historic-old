@@ -1,4 +1,4 @@
-Legend
+The Legend Will Never Die
 + Change or Addition
 - Removal
 # Debatable (ASK and debate before doing!)
@@ -53,7 +53,8 @@ Other:
 	+ Create a plugin to hide the AIM "Your screen name is now signed in 2 locations" messages
 	+ '--insensitive' flag in AIEmoticon (to be placed in the TextEquivalents.txt file) that allows emoticons' text equivalents to be case-insensitive (without applying this nature globally to all emoticons).
 		Colin: Didn't Mac-arena do this already?
-	+ "New message..." dialog should search for all contacts, and then after that offer the protocols from where you can talk to the buddy found. The way it works now seems a bit rare, as you have to select the protocol first, and maybe you just don't remember or something and you type the name (address book for example) of your buddy just to see it doesn't work.
+	+ "New message..." dialog should search for all contacts, and then after that offer the protocols from where you can talk to the buddy found. The way it works now seems a bit rare, as you have to select the protocol first, and maybe you just don't rememb
+er or something and you type the name (address book for example) of your buddy just to see it doesn't work.
 	+ Add preferences to disable 'Fast User Switching' auto-away, and to customize the message. [Colin]
 	+ Create a plugin to parse sed expressions, similar to the tex plugin.
 	+ Add export option to log viewer
@@ -196,7 +197,8 @@ File Transfer:
     progress feedback, etc.
 
 Deferring of initial message:
-   Don't pop up a message window if one doesn't already exist.  Use some kind of dock indicator / list indicator.  Double click on list or dock menu item would display the message.  If a window is already open, new messages would create a tab as normal.  We could associate this option with the state system for some pretty cool behavior.
+   Don't pop up a message window if one doesn't already exist.  Use some kind of dock indicator / list indicator.  Double click on list or dock menu item would display the message.  If a window is already open, new messages would create a tab as normal.  
+We could associate this option with the state system for some pretty cool behavior.
 
 Importing/Exporting: [Brandon]
 
@@ -260,6 +262,7 @@ Tabs Issues:
 //-------------------------------------------------------------------------------------------------------
 * Stop contact list from auto-resizing under the dock
 	It does not auto-resize under the dock EXCEPT for at the edges, by design, since many people use a dock which does not extend to the edges of the screen and would like the contact list to reach down there.  So far as I can tell there's no way to know how
+
  wide the dock is; only how tall it is.
 
 * Don't overwrite user specified icons in the address book.  Only overwrite iChat placed icons (and store ours such that iChat will overwrite them) 
