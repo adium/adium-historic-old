@@ -12,7 +12,8 @@
 - (void)updateSelf;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (ABPerson *)searchForObject:(AIListObject *)inObject;
-- (ABPerson *)_searchForScreenName:(NSString *)name withService:(NSString *)service;
+- (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID;
+- (void)rebuildAddressBookDict;
 @end
 
 @implementation ESAddressBookIntegrationPlugin
@@ -20,7 +21,8 @@
 - (void)installPlugin
 {
     meTag = -1;
-    
+    addressBookDict = nil;
+	
     //Register ourself as a handle observer
     [[adium contactController] registerListObjectObserver:self];
 	
@@ -31,11 +33,12 @@
     advancedPreferences = [[ESAddressBookIntegrationAdvancedPreferences preferencePane] retain];
 	
     //Services dictionary
-    propertyDict = [[NSDictionary dictionaryWithObjectsAndKeys:kABAIMInstantProperty,@"AIM",
+    serviceDict = [[NSDictionary dictionaryWithObjectsAndKeys:kABAIMInstantProperty,@"AIM",
 								kABJabberInstantProperty,@"Jabber",
 								kABMSNInstantProperty,@"MSN",
 								kABYahooInstantProperty,@"Yahoo!",
 								kABICQInstantProperty,@"ICQ",nil] retain];
+	[self rebuildAddressBookDict];
 	
     //Tracking dictionary for asynchronous image loads
     trackingDict = [[NSMutableDictionary alloc] init];
@@ -61,7 +64,7 @@
     [[adium contactController] unregisterListObjectObserver:self];
     [[adium notificationCenter] removeObserver:self];
     
-    [propertyDict release];
+    [serviceDict release];
     [trackingDict release];
 	//    [sharedAddressBook release];
 }
@@ -150,17 +153,7 @@
     }
 }
 
-- (void)addressBookChanged:(NSNotification *)notification
-{
-    [self updateAllContacts];
-}
-
-//Update all existing contacts
-- (void)updateAllContacts
-{
-	[[adium contactController] updateAllListObjectsForObserver:self];
-    [self updateSelf];
-}
+#pragma mark Image data
 
 //Called when the address book completes an asynchronous image lookup
 - (void)consumeImageData:(NSData *)inData forTag:(int)tag
@@ -196,6 +189,51 @@
 	}
 }
 
+#pragma mark Searching
+- (ABPerson *)searchForObject:(AIListObject *)inObject
+{
+	ABPerson		*person = nil;
+	NSString		*UID = [inObject UID];
+	NSString		*serviceID = [inObject serviceID];
+	
+	person = [self _searchForUID:UID serviceID:serviceID];
+	
+	//If we don't find anything yet and inObject is an AIM account, try again using the ICQ property
+	if (!person && [serviceID isEqualToString:@"AIM"]){
+		person = [self _searchForUID:UID serviceID:@"ICQ"];
+	}
+	
+	return person;
+}
+- (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID
+{
+	ABPerson		*person = nil;
+	NSDictionary *dict = [addressBookDict objectForKey:serviceID];
+	
+	if (dict){
+		NSString *uniqueID = [dict objectForKey:[UID compactedString]];
+		if (uniqueID){
+			person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:uniqueID];
+		}
+	}
+	
+	return person;
+}
+
+#pragma mark Address book changed
+- (void)addressBookChanged:(NSNotification *)notification
+{
+	[self rebuildAddressBookDict];
+    [self updateAllContacts];
+}
+
+//Update all existing contacts
+- (void)updateAllContacts
+{
+	[[adium contactController] updateAllListObjectsForObserver:self];
+    [self updateSelf];
+}
+
 - (void)updateSelf
 {
     NS_DURING 
@@ -204,73 +242,49 @@
         if (me = [[ABAddressBook sharedAddressBook] me]) {
             meTag = [me beginLoadingImageDataForClient:self];
         }
-		NS_HANDLER
-			NSLog(@"ABIntegration: Caught %@: %@", [localException name], [localException reason]);
-		NS_ENDHANDLER
+	NS_HANDLER
+		NSLog(@"ABIntegration: Caught %@: %@", [localException name], [localException reason]);
+	NS_ENDHANDLER
 }
 
-- (ABPerson *)searchForObject:(AIListObject *)inObject
+#pragma mark Address book caching
+- (void)rebuildAddressBookDict
 {
-	ABPerson			*person = nil;
-    NSString            *property = [propertyDict objectForKey:[inObject serviceID]];
-    if (property) {
-        NSString		*screenName = [inObject formattedUID];
-		
-        //search for the screen name as we have it stored (case insensitive)
-        person = [self _searchForScreenName:screenName withService:property];
-		
-        //If we don't find anything yet and inObject is an AIM account, try again using the ICQ property
-        if (!person && [property isEqualToString:kABAIMInstantProperty]) {
-            person = [self _searchForScreenName:screenName withService:kABICQInstantProperty];
-        }
-    }
-    
-    return person;
-}
+	[addressBookDict release];
+	addressBookDict = [[NSMutableDictionary alloc] init];
 
-- (ABPerson *)_searchForScreenName:(NSString *)name withService:(NSString *)service
-{
-	NSEnumerator	*enumerator, *componentEnumerator;
-	NSMutableArray  *searchElementsArray = [NSMutableArray array];
-	NSString		*component, *compactedName;
+	NSEnumerator	*peopleEnumerator = [[[ABAddressBook sharedAddressBook] people] objectEnumerator];
+	ABPerson		*person;
+	NSArray			*allServiceKeys = [serviceDict allKeys];
 	
-	ABPerson		*resultPerson, *person = nil;
-	ABSearchElement *searchElement;
-	
-	//Build an array of ABSearchElement objects, one for each word in the name
-	componentEnumerator = [[name componentsSeparatedByString:@" "] objectEnumerator];
-	while ((component = [componentEnumerator nextObject])){
-		[searchElementsArray addObject:[ABPerson searchElementForProperty:service 
-																	label:nil 
-																	  key:nil 
-																	value:component 
-															   comparison:kABContainsSubStringCaseInsensitive]];
-	}
-	
-	//AND the search elements together
-	if ([searchElementsArray count] > 1){
-		searchElement = [ABSearchElement searchElementForConjunction:kABSearchAnd children:searchElementsArray];
-	}else{
-		searchElement = [searchElementsArray objectAtIndex:0];
-	}
-	
-	//Now look through the results of searching with searchElement for the right ABPerson
-	compactedName = [name compactedString];
+	while (person = [peopleEnumerator nextObject]){
 		
-	enumerator = [[[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElement] objectEnumerator];
-	while(resultPerson = [enumerator nextObject]){
-		//A person may have multiple names; iterate through them
-		ABMultiValue	*names = [resultPerson valueForProperty:service];
-		int				nameCount = [names count];
-		int				i;
-		for (i=0 ; i<nameCount ; i++){
-			if ([[[names valueAtIndex:i] compactedString] isEqualToString:compactedName]){
-				person = resultPerson;
-				i = nameCount;
+		NSEnumerator	*servicesEnumerator = [allServiceKeys objectEnumerator];
+		NSString		*serviceID;
+		
+		while (serviceID = [servicesEnumerator nextObject]){
+			NSMutableDictionary  *dict = [addressBookDict objectForKey:serviceID];
+			if (!dict){
+				dict = [[[NSMutableDictionary alloc] init] autorelease];
+				[addressBookDict setObject:dict forKey:serviceID];
+			}
+			
+			NSString *addressBookKey = [serviceDict objectForKey:serviceID];
+			
+			//An ABPerson may have multiple names; iterate through them
+			ABMultiValue	*names = [person valueForProperty:addressBookKey];
+			int				nameCount = [names count];
+			int				i;
+			for (i=0 ; i<nameCount ; i++){
+				[dict setObject:[person uniqueId] forKey:[[names valueAtIndex:i] compactedString]];
+			}
+			
+			//Evan: Metacontact something here?
+			if (nameCount > 1){
+					//got a record with multiple names
 			}
 		}
 	}
-	
-	return person;
 }
+
 @end
