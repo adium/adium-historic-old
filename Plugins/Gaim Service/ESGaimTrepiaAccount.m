@@ -35,13 +35,13 @@ static BOOL didInitTrepia = NO;
 	switch (step)
 	{
 		case 0:
-			return AILocalizedString(@"Connecting",nil);
+			return NSLocalizedString(@"Connecting",nil);
 			break;
 		case 1:
-			return AILocalizedString(@"Logging in",nil);
+			return NSLocalizedString(@"Logging in",nil);
 			break;
 		case 2:
-			return AILocalizedString(@"Retrieving buddy list",nil);
+			return NSLocalizedString(@"Retrieving buddy list",nil);
 			break;
 	}
 	return nil;

@@ -25,7 +25,7 @@
     return(AIPref_Advanced_ContactList);
 }
 - (NSString *)label{
-    return(AILocalizedString(@"Address Book",nil));
+    return(NSLocalizedString(@"Address Book",nil));
 }
 - (NSString *)nibName{
     return(@"AddressBookPrefs");

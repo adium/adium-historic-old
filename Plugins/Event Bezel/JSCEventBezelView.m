@@ -12,7 +12,7 @@
 #define BORDER_RADIUS				20.0
 #define IMAGE_DIMENSION             48.0
 
-#define ELIPSIS_STRING				AILocalizedString(@"...",nil)
+#define ELIPSIS_STRING				NSLocalizedString(@"...",nil)
 
 @implementation JSCEventBezelView
 

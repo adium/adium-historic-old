@@ -18,8 +18,8 @@
 #import "ESEventSoundAlertDetailPane.h"
 
 #define EVENT_SOUNDS_DEFAULT_PREFS	@"EventSoundDefaults"
-#define EVENT_SOUNDS_ALERT_SHORT	AILocalizedString(@"Play a sound",nil)
-#define EVENT_SOUNDS_ALERT_LONG		AILocalizedString(@"Play the sound \"%@\"",nil)
+#define EVENT_SOUNDS_ALERT_SHORT	NSLocalizedString(@"Play a sound",nil)
+#define EVENT_SOUNDS_ALERT_LONG		NSLocalizedString(@"Play the sound \"%@\"",nil)
 
 @interface AIEventSoundsPlugin (PRIVATE)
 - (void)eventNotification:(NSNotification *)notification;

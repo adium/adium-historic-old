@@ -30,18 +30,18 @@ static NSDictionary		*presetStatusesDictionary = nil;
 {
 	if (!presetStatusesDictionary){
 		presetStatusesDictionary = [[NSDictionary dictionaryWithObjectsAndKeys:
-			AILocalizedString(@"Be Right Back",nil),	[NSNumber numberWithInt:YAHOO_STATUS_BRB],
-			AILocalizedString(@"Busy",nil),				[NSNumber numberWithInt:YAHOO_STATUS_BUSY],
-			AILocalizedString(@"Not At Home",nil),		[NSNumber numberWithInt:YAHOO_STATUS_NOTATHOME],
-			AILocalizedString(@"Not At My Desk",nil),   [NSNumber numberWithInt:YAHOO_STATUS_NOTATDESK],
-			AILocalizedString(@"Not In The Office",nil),[NSNumber numberWithInt:YAHOO_STATUS_NOTINOFFICE],
-			AILocalizedString(@"On The Phone",nil),		[NSNumber numberWithInt:YAHOO_STATUS_ONPHONE],
-			AILocalizedString(@"On Vacation",nil),		[NSNumber numberWithInt:YAHOO_STATUS_ONVACATION],
-			AILocalizedString(@"Out To Lunch",nil),		[NSNumber numberWithInt:YAHOO_STATUS_OUTTOLUNCH],
-			AILocalizedString(@"Stepped Out",nil),		[NSNumber numberWithInt:YAHOO_STATUS_STEPPEDOUT],
-			AILocalizedString(@"Invisible",nil),		[NSNumber numberWithInt:YAHOO_STATUS_INVISIBLE],
-			AILocalizedString(@"Idle",nil),				[NSNumber numberWithInt:YAHOO_STATUS_IDLE],
-			AILocalizedString(@"Offline",nil),			[NSNumber numberWithInt:YAHOO_STATUS_OFFLINE],nil] retain];
+			NSLocalizedString(@"Be Right Back",nil),	[NSNumber numberWithInt:YAHOO_STATUS_BRB],
+			NSLocalizedString(@"Busy",nil),				[NSNumber numberWithInt:YAHOO_STATUS_BUSY],
+			NSLocalizedString(@"Not At Home",nil),		[NSNumber numberWithInt:YAHOO_STATUS_NOTATHOME],
+			NSLocalizedString(@"Not At My Desk",nil),   [NSNumber numberWithInt:YAHOO_STATUS_NOTATDESK],
+			NSLocalizedString(@"Not In The Office",nil),[NSNumber numberWithInt:YAHOO_STATUS_NOTINOFFICE],
+			NSLocalizedString(@"On The Phone",nil),		[NSNumber numberWithInt:YAHOO_STATUS_ONPHONE],
+			NSLocalizedString(@"On Vacation",nil),		[NSNumber numberWithInt:YAHOO_STATUS_ONVACATION],
+			NSLocalizedString(@"Out To Lunch",nil),		[NSNumber numberWithInt:YAHOO_STATUS_OUTTOLUNCH],
+			NSLocalizedString(@"Stepped Out",nil),		[NSNumber numberWithInt:YAHOO_STATUS_STEPPEDOUT],
+			NSLocalizedString(@"Invisible",nil),		[NSNumber numberWithInt:YAHOO_STATUS_INVISIBLE],
+			NSLocalizedString(@"Idle",nil),				[NSNumber numberWithInt:YAHOO_STATUS_IDLE],
+			NSLocalizedString(@"Offline",nil),			[NSNumber numberWithInt:YAHOO_STATUS_OFFLINE],nil] retain];
 	}
 }
 
@@ -51,7 +51,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	switch (step)
 	{
 		case 0:
-			return AILocalizedString(@"Connecting",nil);
+			return NSLocalizedString(@"Connecting",nil);
 			break;
 	}
 	return nil;

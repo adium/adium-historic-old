@@ -22,7 +22,7 @@
 #define	EMOTICON_PREF_NIB               @""
 #define	EMOTICON_PACK_DRAG_TYPE         @"AIEmoticonPack"
 #define EMOTICON_MIN_ROW_HEIGHT         17
-#define EMOTICON_PACKS_TOOLTIP          AILocalizedString(@"Reorder emoticon packs by dragging. Packs get used based on the order from top to bottom.",nil)
+#define EMOTICON_PACKS_TOOLTIP          NSLocalizedString(@"Reorder emoticon packs by dragging. Packs get used based on the order from top to bottom.",nil)
 @interface AIEmoticonPreferences (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureEmoticonListForSelection;
@@ -36,7 +36,7 @@
     return(AIPref_Emoticons);
 }
 - (NSString *)label{
-    return(AILocalizedString(@"Emoticons","Emoticons/Smilies"));
+    return(NSLocalizedString(@"Emoticons","Emoticons/Smilies"));
 }
 - (NSString *)nibName{
     return(@"EmoticonPrefs");

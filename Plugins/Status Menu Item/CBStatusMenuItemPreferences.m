@@ -18,7 +18,7 @@
 }
 - (NSString *)label
 {
-    return(AILocalizedString(@"Status Menu Item",nil));
+    return(NSLocalizedString(@"Status Menu Item",nil));
 }
 - (NSString *)nibName
 {

@@ -19,13 +19,13 @@
 #define KEY_SORT_ORDER				@"Status:Sort Order"
 #define KEY_RESOLVE_BY_LAST_NAME	@"Status:Resolve Alphabetically By Last Name"
 
-#define AVAILABLE					AILocalizedString(@"Available",nil)
-#define AWAY						AILocalizedString(@"Away",nil)
-#define IDLE						AILocalizedString(@"Idle",nil)
-#define AWAY_AND_IDLE				AILocalizedString(@"Away and Idle",nil)
-#define UNAVAILABLE					AILocalizedString(@"Unavailable",nil)
-#define OTHER_UNAVAILABLE			AILocalizedString(@"Other Unavailable",nil)		
-#define ONLINE						AILocalizedString(@"Online",nil)		
+#define AVAILABLE					NSLocalizedString(@"Available",nil)
+#define AWAY						NSLocalizedString(@"Away",nil)
+#define IDLE						NSLocalizedString(@"Idle",nil)
+#define AWAY_AND_IDLE				NSLocalizedString(@"Away and Idle",nil)
+#define UNAVAILABLE					NSLocalizedString(@"Unavailable",nil)
+#define OTHER_UNAVAILABLE			NSLocalizedString(@"Other Unavailable",nil)		
+#define ONLINE						NSLocalizedString(@"Online",nil)		
 
 #define STATUS_DRAG_TYPE			@"Status Sort"
 #define MAX_SORT_ORDER_DIMENSION	6
@@ -153,7 +153,7 @@ DeclareString(sOnline)
     return(@"by Status");
 }
 - (NSString *)displayName{
-    return(AILocalizedString(@"by Status","Sort Contacts... <by Status>"));
+    return(NSLocalizedString(@"by Status","Sort Contacts... <by Status>"));
 }
 - (NSArray *)statusKeysRequiringResort{
 	return([NSArray arrayWithObjects:sOnline,sIdle,sAway,nil]);
@@ -165,10 +165,10 @@ DeclareString(sOnline)
 //Configuration
 #pragma mark Configuration
 - (NSString *)configureSortMenuItemTitle{ 
-	return(AILocalizedString(@"Configure Status Sort...",nil));
+	return(NSLocalizedString(@"Configure Status Sort...",nil));
 }
 - (NSString *)configureSortWindowTitle{
-	return(AILocalizedString(@"Configure Status Sort",nil));	
+	return(NSLocalizedString(@"Configure Status Sort",nil));	
 }
 - (NSString *)configureNibName{
 	return @"StatusSortConfiguration";

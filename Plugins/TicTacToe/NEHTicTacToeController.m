@@ -24,15 +24,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define TTT_NIB @"TicTacToeBoard"
 
-#define PLAY_FIRST			AILocalizedString(@"(You will play first)","")
-#define PLAY_SECOND			AILocalizedString(@"(You will play second)","")
-#define YOU_WIN				AILocalizedString(@"You win!","")
-#define YOU_LOSE			AILocalizedString(@"You lost...","")
-#define TIE					AILocalizedString(@"It's a Tie!","Message when the game ends in a tie")
+#define PLAY_FIRST			NSLocalizedString(@"(You will play first)","")
+#define PLAY_SECOND			NSLocalizedString(@"(You will play second)","")
+#define YOU_WIN				NSLocalizedString(@"You win!","")
+#define YOU_LOSE			NSLocalizedString(@"You lost...","")
+#define TIE					NSLocalizedString(@"It's a Tie!","Message when the game ends in a tie")
 
-#define STATE_NO_GAME		AILocalizedString(@"No game.","Status message when there is no game in progress")
-#define STATE_YOUR_TURN		AILocalizedString(@"Your turn.","")
-#define STATE_THEIR_TURN	AILocalizedString(@"Waiting for opponent","Status message when it is the other player's turn")
+#define STATE_NO_GAME		NSLocalizedString(@"No game.","Status message when there is no game in progress")
+#define STATE_YOUR_TURN		NSLocalizedString(@"Your turn.","")
+#define STATE_THEIR_TURN	NSLocalizedString(@"Waiting for opponent","Status message when it is the other player's turn")
 
 @implementation NEHTicTacToeController
 

@@ -15,7 +15,7 @@
     return(AIPref_Advanced_Messages);
 }
 - (NSString *)label{
-    return(AILocalizedString(@"Display Options","Message Display Options advanced preferences label"));
+    return(NSLocalizedString(@"Display Options","Message Display Options advanced preferences label"));
 }
 - (NSString *)nibName{
     return(@"WebKitAdvancedPreferencesView");

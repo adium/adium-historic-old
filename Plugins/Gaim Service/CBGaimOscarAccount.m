@@ -228,22 +228,22 @@ static BOOL didInitOscar = NO;
 	switch (step)
 	{
 		case 0:
-			return AILocalizedString(@"Connecting",nil);
+			return NSLocalizedString(@"Connecting",nil);
 			break;
 		case 1:
-			return AILocalizedString(@"Screen name sent",nil);
+			return NSLocalizedString(@"Screen name sent",nil);
 			break;
 		case 2:
-			return AILocalizedString(@"Password sent",nil);
+			return NSLocalizedString(@"Password sent",nil);
 			break;			
 		case 3:
-			return AILocalizedString(@"Received authorization",nil);
+			return NSLocalizedString(@"Received authorization",nil);
 			break;
 		case 4:
-			return AILocalizedString(@"Connection established",nil);
+			return NSLocalizedString(@"Connection established",nil);
 			break;
 		case 5:
-			return AILocalizedString(@"Finalizing connection",nil);
+			return NSLocalizedString(@"Finalizing connection",nil);
 			break;
 	}
 	return nil;

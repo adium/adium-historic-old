@@ -24,8 +24,8 @@
 #define KEY_FLAT_CONTACTS			@"FlatContacts"			//Contact storage
 #define KEY_FLAT_METACONTACTS		@"FlatMetaContacts"		//Metacontact objectID storage
 
-#define VIEW_CONTACTS_INFO  		AILocalizedString(@"View Contact's Info",nil)
-#define VIEW_INFO	    			AILocalizedString(@"View Info",nil)
+#define VIEW_CONTACTS_INFO  		NSLocalizedString(@"View Contact's Info",nil)
+#define VIEW_INFO	    			NSLocalizedString(@"View Info",nil)
 #define ALTERNATE_GET_INFO_MASK		(NSCommandKeyMask | NSShiftKeyMask | NSAlternateKeyMask)
 
 #define UPDATE_CLUMP_INTERVAL		1.0

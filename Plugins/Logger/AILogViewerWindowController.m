@@ -32,14 +32,14 @@
 #define LOG_CONTENT_SEARCH_MAX_RESULTS		10000	//Max results allowed from a search
 #define LOG_RESULT_CLUMP_SIZE				10		//Number of logs to fetch at a time
 
-#define SEARCH_MENU			AILocalizedString(@"Search Menu",nil)
-#define FROM				AILocalizedString(@"From",nil)
-#define TO					AILocalizedString(@"To",nil)
-#define DATE				AILocalizedString(@"Date",nil)
-#define CONTENT				AILocalizedString(@"Content",nil)
+#define SEARCH_MENU			NSLocalizedString(@"Search Menu",nil)
+#define FROM				NSLocalizedString(@"From",nil)
+#define TO					NSLocalizedString(@"To",nil)
+#define DATE				NSLocalizedString(@"Date",nil)
+#define CONTENT				NSLocalizedString(@"Content",nil)
 
-#define HIDE_EMOTICONS				AILocalizedString(@"Hide Emoticons",nil)
-#define SHOW_EMOTICONS				AILocalizedString(@"Show Emoticons",nil)
+#define HIDE_EMOTICONS				NSLocalizedString(@"Hide Emoticons",nil)
+#define SHOW_EMOTICONS				NSLocalizedString(@"Show Emoticons",nil)
 
 #define IMAGE_EMOTICONS_OFF			@"emoticonsOff"
 #define IMAGE_EMOTICONS_ON			@"emoticonsOn"

@@ -18,11 +18,11 @@
 #import "AIInterfaceController.h"
 #import "AIStandardListWindowController.h"
 
-#define CLOSE_CHAT_MENU_TITLE			AILocalizedString(@"Close Chat","Title for the close chat menu item")
-#define CLOSE_MENU_TITLE				AILocalizedString(@"Close","Title for the close menu item")
+#define CLOSE_CHAT_MENU_TITLE			NSLocalizedString(@"Close Chat","Title for the close chat menu item")
+#define CLOSE_MENU_TITLE				NSLocalizedString(@"Close","Title for the close menu item")
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"
-#define ERROR_MESSAGE_WINDOW_TITLE		AILocalizedString(@"Adium : Error","Error message window title")
+#define ERROR_MESSAGE_WINDOW_TITLE		NSLocalizedString(@"Adium : Error","Error message window title")
 #define LABEL_ENTRY_SPACING				4.0
 #define DISPLAY_IMAGE_ON_RIGHT			NO
 
@@ -30,8 +30,8 @@
 #define KEY_FORMATTING_FONT				@"Default Font"
 
 
-#define CONTACT_LIST_WINDOW_MENU_TITLE  AILocalizedString(@"Contact List","Title for the contact list menu item")
-#define MESSAGES_WINDOW_MENU_TITLE		AILocalizedString(@"Messages","Title for the messages window menu item")
+#define CONTACT_LIST_WINDOW_MENU_TITLE  NSLocalizedString(@"Contact List","Title for the contact list menu item")
+#define MESSAGES_WINDOW_MENU_TITLE		NSLocalizedString(@"Messages","Title for the messages window menu item")
 
 @interface AIInterfaceController (PRIVATE)
 - (void)_resetOpenChatsCache;

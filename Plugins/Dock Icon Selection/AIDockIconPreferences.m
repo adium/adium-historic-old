@@ -43,7 +43,7 @@
     return(AIPref_Dock);
 }
 - (NSString *)label{
-    return(AILocalizedString(@"Dock Icon", nil));
+    return(NSLocalizedString(@"Dock Icon", nil));
 }
 - (NSString *)nibName{
     return(@"IconSelectionPrefs");
@@ -417,16 +417,16 @@
 	
 	//Deleting the default would be messy.  Just don't let it happen.
 	if (![name isEqualToString:DEFAULT_DOCK_ICON_NAME]){
-		NSBeginAlertSheet(AILocalizedString(@"Delete Dock Icon",nil),
-						  AILocalizedString(@"Delete",nil),
-						  AILocalizedString(@"Cancel",nil),
+		NSBeginAlertSheet(NSLocalizedString(@"Delete Dock Icon",nil),
+						  NSLocalizedString(@"Delete",nil),
+						  NSLocalizedString(@"Cancel",nil),
 						  @"",
 						  [[self view] window], 
 						  self, 
 						  @selector(trashConfirmSheetDidEnd:returnCode:contextInfo:), /* Did end selector */
 						  nil,  /* Did dismiss selector */
 						  selectedIconPath, /* Context Info */
-						  AILocalizedString(@"Are you sure you want to delete the %@ Dock Icon? It will be moved to the Trash.",nil), name);
+						  NSLocalizedString(@"Are you sure you want to delete the %@ Dock Icon? It will be moved to the Trash.",nil), name);
 	}
 }
 

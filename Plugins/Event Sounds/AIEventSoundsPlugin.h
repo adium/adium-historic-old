@@ -29,8 +29,8 @@
 
 #define SOUND_MENU_ICON_SIZE		16
 
-#define OTHER_ELLIPSIS				AILocalizedString(@"Other...",nil)
-#define OTHER						AILocalizedString(@"Other",nil)
+#define OTHER_ELLIPSIS				NSLocalizedString(@"Other...",nil)
+#define OTHER						NSLocalizedString(@"Other",nil)
 
 @class AIEventSoundPreferences;
 

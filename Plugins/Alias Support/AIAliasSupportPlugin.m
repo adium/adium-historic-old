@@ -21,11 +21,11 @@
 #define ALIASES_DEFAULT_PREFS		@"Alias Defaults"
 #define DISPLAYFORMAT_DEFAULT_PREFS	@"Display Format Defaults"
 
-#define CONTACT_NAME_MENU_TITLE		AILocalizedString(@"Contact Name Format",nil)
-#define ALIAS						AILocalizedString(@"Alias",nil)
-#define ALIAS_SCREENNAME			AILocalizedString(@"Alias (Screen Name)",nil)
-#define SCREENNAME_ALIAS			AILocalizedString(@"Screen Name (Alias)",nil)
-#define SCREENNAME					AILocalizedString(@"Screen Name",nil)
+#define CONTACT_NAME_MENU_TITLE		NSLocalizedString(@"Contact Name Format",nil)
+#define ALIAS						NSLocalizedString(@"Alias",nil)
+#define ALIAS_SCREENNAME			NSLocalizedString(@"Alias (Screen Name)",nil)
+#define SCREENNAME_ALIAS			NSLocalizedString(@"Screen Name (Alias)",nil)
+#define SCREENNAME					NSLocalizedString(@"Screen Name",nil)
 
 @interface AIAliasSupportPlugin (PRIVATE)
 - (NSArray *)_applyAlias:(NSString *)inAlias toObject:(AIListObject *)inObject notify:(BOOL)notify;

@@ -47,7 +47,7 @@ static  BOOL	sortByLastName;
     return(@"Alphabetical");
 }
 - (NSString *)displayName{
-    return(AILocalizedString(@"Alphabetically","Sort Contacts... <Alphabetically>"));
+    return(NSLocalizedString(@"Alphabetically","Sort Contacts... <Alphabetically>"));
 }
 - (NSArray *)statusKeysRequiringResort{
 	return(nil);
@@ -59,10 +59,10 @@ static  BOOL	sortByLastName;
 #pragma mark Configuration
 //Configuration
 - (NSString *)configureSortMenuItemTitle{ 
-	return(AILocalizedString(@"Configure Alphabetical Sort...",nil));
+	return(NSLocalizedString(@"Configure Alphabetical Sort...",nil));
 }
 - (NSString *)configureSortWindowTitle{
-	return(AILocalizedString(@"Configure Alphabetical Sort",nil));	
+	return(NSLocalizedString(@"Configure Alphabetical Sort",nil));	
 }
 - (NSString *)configureNibName{
 	return @"AlphabeticalSortConfiguration";

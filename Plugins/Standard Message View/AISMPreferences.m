@@ -16,7 +16,7 @@
 #import "AISMPreferences.h"
 #import "AISMViewPlugin.h"
 
-#define CUSTOM_MESSAGE_STYLE_STRING AILocalizedString(@"Custom...","Title of the Custom Message Style popup menu item")
+#define CUSTOM_MESSAGE_STYLE_STRING NSLocalizedString(@"Custom...","Title of the Custom Message Style popup menu item")
 
 @interface AISMPreferences (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;

@@ -8,7 +8,7 @@
 #import "CPFVersionChecker.h"
 #import "ESVersionCheckerWindowController.h"
 
-#define VERSION_CHECKER_TITLE		AILocalizedString(@"Check for Updates...",nil)
+#define VERSION_CHECKER_TITLE		NSLocalizedString(@"Check for Updates...",nil)
 #define VERSION_PLIST_URL			@"http://www.adiumx.com/version.plist"
 #define VERSION_PLIST_KEY			@"adium-version"
 

@@ -9,8 +9,8 @@
 #import "AIChatCyclingPlugin.h"
 #import "AIChatCyclingPreferences.h"
 
-#define PREVIOUS_MESSAGE_MENU_TITLE		AILocalizedString(@"Previous Chat",nil)
-#define NEXT_MESSAGE_MENU_TITLE			AILocalizedString(@"Next Chat",nil)
+#define PREVIOUS_MESSAGE_MENU_TITLE		NSLocalizedString(@"Previous Chat",nil)
+#define NEXT_MESSAGE_MENU_TITLE			NSLocalizedString(@"Next Chat",nil)
 
 @interface AIChatCyclingPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;

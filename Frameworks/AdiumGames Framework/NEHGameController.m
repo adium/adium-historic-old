@@ -8,21 +8,21 @@
 #import "NEHGameController.h"
 #import "NEHGamePlugin.h"
 
-#define INVITE_CANCELLED			AILocalizedString(@"Invite cancelled","")
-#define INVITE_CANCELLED_MESSAGE	AILocalizedString(@"The invitation was cancelled.","")
-#define INVITE_REJECTED				AILocalizedString(@"Invite rejected","")
-#define INVITE_REJECTED_MESSAGE		AILocalizedString(@"The invitation was turned down.","")
-#define GAME_ENDED			AILocalizedString(@"Game ended","")
-#define GAME_ENDED_MESSAGE	AILocalizedString(@"Your opponent cancelled the game.","")
-#define TIMEOUT				AILocalizedString(@"Invitation timed out.","")
-#define TIMEOUT_MESSAGE		AILocalizedString(@"The invitation timed out. The other player most likely is not using the appropriate plugin.","")
-#define END_GAME			AILocalizedString(@"End game?","")
-#define END_GAME_MESSAGE	AILocalizedString(@"Are you sure you want to end the game?","")
+#define INVITE_CANCELLED			NSLocalizedString(@"Invite cancelled","")
+#define INVITE_CANCELLED_MESSAGE	NSLocalizedString(@"The invitation was cancelled.","")
+#define INVITE_REJECTED				NSLocalizedString(@"Invite rejected","")
+#define INVITE_REJECTED_MESSAGE		NSLocalizedString(@"The invitation was turned down.","")
+#define GAME_ENDED			NSLocalizedString(@"Game ended","")
+#define GAME_ENDED_MESSAGE	NSLocalizedString(@"Your opponent cancelled the game.","")
+#define TIMEOUT				NSLocalizedString(@"Invitation timed out.","")
+#define TIMEOUT_MESSAGE		NSLocalizedString(@"The invitation timed out. The other player most likely is not using the appropriate plugin.","")
+#define END_GAME			NSLocalizedString(@"End game?","")
+#define END_GAME_MESSAGE	NSLocalizedString(@"Are you sure you want to end the game?","")
 
-#define GAME_OVER			AILocalizedString(@"Game Over","Title for game end pane")
-#define YOU_WIN				AILocalizedString(@"You win!","")
-#define YOU_LOSE			AILocalizedString(@"You lost...","")
-#define TIE					AILocalizedString(@"It's a Tie!","Message when the game ends in a tie")
+#define GAME_OVER			NSLocalizedString(@"Game Over","Title for game end pane")
+#define YOU_WIN				NSLocalizedString(@"You win!","")
+#define YOU_LOSE			NSLocalizedString(@"You lost...","")
+#define TIE					NSLocalizedString(@"It's a Tie!","Message when the game ends in a tie")
 
 #define TIMEOUT_SECONDS		60
 

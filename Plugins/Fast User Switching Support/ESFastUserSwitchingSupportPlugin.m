@@ -7,7 +7,7 @@
 
 #import "ESFastUserSwitchingSupportPlugin.h"
 
-#define FAST_USER_SWITCH_AWAY_STRING AILocalizedString(@"I have switched logged in users. Someone else may be using the computer.","Fast user switching away message")
+#define FAST_USER_SWITCH_AWAY_STRING NSLocalizedString(@"I have switched logged in users. Someone else may be using the computer.","Fast user switching away message")
 
 @implementation ESFastUserSwitchingSupportPlugin
 - (void)installPlugin

@@ -8,11 +8,11 @@
 #import "NEHGamePlugin.h"
 #import "NEHGameController.h"
 
-#define MENU_INVITE		AILocalizedString(@"Invite to play game","Contextual menu item to invite someone to a game.")
-#define MENU_NEWGAME	AILocalizedString(@"New Game","File Menu Item.")
+#define MENU_INVITE		NSLocalizedString(@"Invite to play game","Contextual menu item to invite someone to a game.")
+#define MENU_NEWGAME	NSLocalizedString(@"New Game","File Menu Item.")
 
-#define CONTACT_NOT_FOUND			AILocalizedString(@"Contact Not Found","")
-#define CONTACT_NOT_FOUND_MESSAGE   AILocalizedString(@"Unable to find contact '%@'","")
+#define CONTACT_NOT_FOUND			NSLocalizedString(@"Contact Not Found","")
+#define CONTACT_NOT_FOUND_MESSAGE   NSLocalizedString(@"Unable to find contact '%@'","")
 
 @implementation NEHGamePlugin
 
