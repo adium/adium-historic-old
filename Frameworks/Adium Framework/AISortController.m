@@ -41,6 +41,8 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	[statusKeysRequiringResort release];
 	[attributeKeysRequiringResort release];
 	
+	[configureView release]; configureView = nil;
+	
 	[super dealloc];
 }
 
