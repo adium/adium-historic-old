@@ -237,8 +237,7 @@ static NSData *OWKCGetItemAttribute(KCItemRef item, KCItemAttr attrTag)
 			NSString    *server = nil;
 			
 			data = OWKCGetItemAttribute(item, kSecLabelItemAttr);
-			if(data) {
-//				server = [NSString stringWithCString:[data bytes] length:[data length]];
+			if(data && [data bytes]) {
 				server = [NSString stringWithUTF8String:[data bytes]];
 			}
 			
@@ -247,14 +246,15 @@ static NSData *OWKCGetItemAttribute(KCItemRef item, KCItemAttr attrTag)
 				NSString    *password;
 				
 				data = OWKCGetItemAttribute(item, kSecAccountItemAttr);
-				if(data){
-//					username = [NSString stringWithCString:[data bytes] length:[data length]];
+				if(data && [data bytes]){
 					username = [NSString stringWithUTF8String:[data bytes]];
 				}else{
 					username = @"";
 				}
 				
-				if(SecKeychainItemCopyContent(item, NULL, NULL, &length, &itemData) == noErr) {
+				if((SecKeychainItemCopyContent(item, NULL, NULL, &length, &itemData) == noErr) &&
+				   (itemData) && 
+				   (length > 0)){
 					password = [NSString stringWithCString:itemData length:length];
 					SecKeychainItemFreeContent(NULL, itemData);
 				} else {
