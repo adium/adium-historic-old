@@ -79,7 +79,6 @@
 
 - (id)statusObjectForKey:(NSString *)key;
 - (int)integerStatusObjectForKey:(NSString *)key;
-- (double)doubleStatusObjectForKey:(NSString *)key;
 - (NSDate *)earliestDateStatusObjectForKey:(NSString *)key;
 - (NSNumber *)numberStatusObjectForKey:(NSString *)key;
 
