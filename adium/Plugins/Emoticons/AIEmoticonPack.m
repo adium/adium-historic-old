@@ -82,6 +82,7 @@
     if(!emoticonArray){
         NSDirectoryEnumerator   *enumerator;
         NSString                *fileName;
+        NSFileManager           *mgr = [NSFileManager defaultManager];
         
         //
         emoticonArray = [[NSMutableArray alloc] init];
@@ -96,9 +97,9 @@
                 NSString        *fullPath = [path stringByAppendingPathComponent:fileName];
                 BOOL            isDirectory;
                 
-                //Ensure that this is a folder
-                [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDirectory];
-                if(isDirectory){                    
+                //Ensure that this is a folder and that it is non-empty
+                [mgr fileExistsAtPath:fullPath isDirectory:&isDirectory];
+                if(isDirectory && [[mgr enumeratorAtPath:fullPath] nextObject]) {
                     [emoticonArray addObject:[AIEmoticon emoticonFromPath:fullPath]];
                 }
             }

@@ -413,9 +413,10 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
             NSString        *fullPath = [inPath stringByAppendingPathComponent:file];
 			AIEmoticonPack  *pack = [AIEmoticonPack emoticonPackFromPath:fullPath];
 			
-			[emoticonPackArray addObject:pack];
-			[pack setDisabledEmoticons:[self disabledEmoticonsInPack:pack]];
-			
+			if([[pack emoticons] count]) {
+				[emoticonPackArray addObject:pack];
+				[pack setDisabledEmoticons:[self disabledEmoticonsInPack:pack]];
+			}
         }
     }
     
