@@ -128,6 +128,7 @@ typedef enum {
 #define Contact_ListChanged					@"Contact_ListChanged"
 #define Contact_SortSelectorListChanged				@"Contact_SortSelectorListChanged"
 
+
 #define Contact_UpdateStatus					@"Contact_UpdateStatus"
 //Whenever possible, accounts should keep their contact's status up to date.  However, sometimes this ideal situation cannot be achieved, and the account needs to be told when 'more expensive' status keys are required so it can fetch them.  This notification instructs the accounts to do just that.  It is currently used for profiles, but may be used for more information in the future.
 
@@ -143,6 +144,7 @@ typedef enum {
 #define Content_DidSendContent					@"Content_DidSendContent"
 #define Content_WillReceiveContent				@"Content_WillReceiveContent"
 #define Content_DidReceiveContent				@"Content_DidReceiveContent"
+#define Content_ChatStatusChanged				@"Content_ChatStatusChanged"
 #define Preference_GroupChanged					@"Preference_GroupChanged"
 #define Preference_WindowWillOpen				@"Preference_WindowWillOpen"
 #define Preference_WindowDidClose				@"Preference_WindowDidClose"

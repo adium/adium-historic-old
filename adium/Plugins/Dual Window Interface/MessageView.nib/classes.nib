@@ -14,8 +14,10 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 interface = id; 
-                "scrollView_messages" = NSScrollView; 
+                "scrollView_messages" = AIAutoScrollView; 
                 "scrollView_outgoingView" = NSScrollView; 
+                "scrollView_userList" = AIAutoScrollView; 
+                "tableView_userList" = NSTableView; 
                 "textView_outgoing" = AISendingTextView; 
                 "toolbar_bottom" = AIMiniToolbar; 
                 "view_contents" = NSView; 
