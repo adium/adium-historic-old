@@ -34,6 +34,7 @@
 - (int)indexOfObject:(id)targetObject inArray:(NSMutableArray *)array;
 - (void)configureView;
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification;
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIAwayMessagePreferences
@@ -55,7 +56,7 @@
     //Get the selected group    
 
     //Create the new away entry
-    newAwayString = [[[NSAttributedString alloc] initWithString:AWAY_NEW_MESSAGE_STRING attributes:[NSDictionary dictionaryWithObjectsAndKeys:nil]] autorelease];
+    newAwayString = [[[NSAttributedString alloc] initWithString:AWAY_NEW_MESSAGE_STRING attributes:defaultAttributes] autorelease];
     newAwayDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Away",@"Type",newAwayString,@"Message",nil];
     
     //Add the new away
@@ -127,10 +128,11 @@
     awayMessageArray = nil;
     displayedMessage = nil;
     dragItem = nil;
+	defaultAttributes = nil;
     
     //Register our preference pane
     [[adium preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Status_Away withDelegate:self label:AWAY_MESSAGES_PREF_TITLE]];
-
+	
     return(self);
 }
 
@@ -173,6 +175,10 @@
     [scrollView_awayText setAutoHideScrollBar:YES];
     [scrollView_awayText setAutoScrollToBottom:NO];
 
+	//Observe preference changes
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
+	
     //Load our aways
     [self loadAwayMessages];
 }
@@ -215,6 +221,33 @@
 }
 
 //Private ----------------------------------------------------
+
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_FORMATTING] == 0){
+        NSDictionary		*prefDict;
+        NSColor			*textColor;
+        NSColor			*backgroundColor;
+        NSColor			*subBackgroundColor;
+        NSFont			*font;
+        
+        //Get the prefs
+        prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
+        font = [[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont];
+        textColor = [[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor];
+        backgroundColor = [[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor];
+        subBackgroundColor = [[prefDict objectForKey:KEY_FORMATTING_SUBBACKGROUND_COLOR] representedColor];
+        
+        [defaultAttributes release];
+        //Setup the attributes
+        if(!subBackgroundColor){
+            defaultAttributes = [[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, nil] retain];
+        }else{
+            defaultAttributes = [[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, subBackgroundColor, NSBackgroundColorAttributeName, nil] retain];
+        }
+    }
+}
+
 //Recursively load the away messages, rebuilding the structure with mutable objects
 - (NSMutableArray *)_loadAwaysFromArray:(NSArray *)array
 {

@@ -15,19 +15,27 @@
 
 @class AIAlternatingRowOutlineView;
 
+#define PREF_GROUP_FORMATTING			@"Formatting"
+#define KEY_FORMATTING_FONT			@"Default Font"
+#define KEY_FORMATTING_TEXT_COLOR		@"Default Text Color"
+#define KEY_FORMATTING_BACKGROUND_COLOR		@"Default Background Color"
+#define KEY_FORMATTING_SUBBACKGROUND_COLOR	@"Default SubBackground Color"
+
 @interface AIAwayMessagePreferences : AIObject {
     IBOutlet	NSView				*view_prefView;
     IBOutlet	AIAlternatingRowOutlineView	*outlineView_aways;
     IBOutlet	NSButton			*button_delete;
     IBOutlet	NSTextView			*textView_message;
     IBOutlet	NSTextView			*textView_autoresponse;
-    IBOutlet	AIAutoScrollView		*scrollView_awayList;
-    IBOutlet	AIAutoScrollView		*scrollView_awayText;
+    IBOutlet	AIAutoScrollView	*scrollView_awayList;
+    IBOutlet	AIAutoScrollView	*scrollView_awayText;
 
-    NSMutableArray				*awayMessageArray;
+    NSMutableArray					*awayMessageArray;
     NSMutableDictionary				*displayedMessage;
 
     NSMutableDictionary				*dragItem;
+	
+	NSDictionary					*defaultAttributes;
 }
 
 + (AIAwayMessagePreferences *)awayMessagePreferences;
