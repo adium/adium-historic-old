@@ -64,10 +64,12 @@
 //Preference view is closing
 - (void)viewWillClose
 {
+	[contactAlertsViewController viewWillClose];
+	[contactAlertsViewController release]; contactAlertsViewController = nil;
+
 	[[adium preferenceController] unregisterPreferenceObserver:self];
     [[adium notificationCenter] removeObserver:self];
 }
-
 
 //Called when the preferences change, update our preference display
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
