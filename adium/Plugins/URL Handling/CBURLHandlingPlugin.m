@@ -9,6 +9,7 @@
 #import "CBURLHandlingPlugin.h"
 
 @interface CBURLHandlingPlugin(PRIVATE)
+- (void)setHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst;
 - (void)_openChatToContactWithName:(NSString *)name onService:(NSString *)serviceIdentifier withMessage:(NSString *)body;
 @end
 
@@ -19,11 +20,40 @@
     /* TODO:
         * Prompt the user to change Adium to be the protocol handler for aim:// and/or yahoo:// if we aren't already. Give them the option to agree, disagree, or disagree and never be asked again. 
     */
+	ICInstance ICInst;
+	OSErr Err;
 
+	//Start Internet Config, passing it Adium's creator code
+	Err = ICStart(&ICInst, 'AdiM');
+	
+	//Configure the protocols we want.  Note that this file needs to remain in MacRoman encoding for that ¥ (command-8)
+	//to be recognized properly.
+	[self setHelperAppForKey:"\pHelper¥aim" withInstance:ICInst];
+	[self setHelperAppForKey:"\pHelper¥ymsgr" withInstance:ICInst];
+	
     [[NSAppleEventManager sharedAppleEventManager] setEventHandler:self 
                                                        andSelector:@selector(handleURLEvent:withReplyEvent:)
                                                      forEventClass:kInternetEventClass
                                                         andEventID:kAEGetURL];
+}
+
+- (void)setHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst
+{
+	OSErr Err;
+	ICAppSpec Spec;
+	ICAttr Junk;
+	long TheSize;
+
+	TheSize = sizeof(Spec);
+	// Get the current aim helper app, to fill the Spec and TheSize variables
+	Err = ICGetPref(ICInst, key, &Junk, &Spec, &TheSize);
+
+	//Set the name and creator codes
+	Spec.name[0] = sprintf((char *) &Spec.name[1], "Adium.app");
+	Spec.fCreator = 'AdIM';
+
+	//Set the helper app to Adium
+	Err = ICSetPref(ICInst, key, Junk, &Spec, TheSize);
 }
 
 - (void)handleURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
