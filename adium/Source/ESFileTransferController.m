@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 12 2003.
-//  $Id: ESFileTransferController.m,v 1.13 2004/06/24 17:22:54 evands Exp $
+//  $Id: ESFileTransferController.m,v 1.14 2004/07/02 03:02:29 evands Exp $
 
 #import "ESFileTransferController.h"
 
@@ -28,6 +28,11 @@
 												  keyEquivalent:@""];
 	[[owner menuController] addContextualMenuItem:sendFileContextMenuItem toLocation:Context_Contact_Action];
 	
+	//Register the events we generate
+	[[owner contactAlertsController] registerEventID:FILE_TRANSFER_REQUEST withHandler:self globalOnly:YES];
+	[[owner contactAlertsController] registerEventID:FILE_TRANSFER_BEGAN withHandler:self globalOnly:YES];
+	[[owner contactAlertsController] registerEventID:FILE_TRANSFER_CANCELED withHandler:self globalOnly:YES];
+	[[owner contactAlertsController] registerEventID:FILE_TRANSFER_COMPLETE withHandler:self globalOnly:YES];
 }
 
 - (void)closeController
@@ -37,11 +42,15 @@
 
 - (void)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	NSSavePanel *savePanel = [NSSavePanel savePanel];	
-	NSString	*defaultName = [fileTransfer remoteFilename];
-
+	NSSavePanel		*savePanel = [NSSavePanel savePanel];	
+	NSString		*defaultName = [fileTransfer remoteFilename];
+	
 	[savePanel setTitle:[NSString stringWithFormat:@"Receive File from %@",[[fileTransfer contact] displayName]]];
 
+	[[owner notificationCenter] postNotificationName:FILE_TRANSFER_REQUEST
+											  object:fileTransfer 
+											userInfo:nil];
+	
 	if ([savePanel runModalForDirectory:nil file:defaultName] == NSFileHandlingPanelOKButton) {
 		[fileTransfer setLocalFilename:[savePanel filename]];
 		[(AIAccount<AIAccount_Files> *)[fileTransfer account] acceptFileTransferRequest:fileTransfer];
@@ -82,13 +91,26 @@
 - (void)beganFileTransfer:(ESFileTransfer *)fileTransfer
 {
     NSLog(@"began a file transfer...");
+	[[owner notificationCenter] postNotificationName:FILE_TRANSFER_BEGAN
+											  object:fileTransfer 
+											userInfo:nil];	
 }
 
 - (void)transferCanceled:(ESFileTransfer *)fileTransfer
 {
     NSLog(@"canceled a file transfer...");
+	[[owner notificationCenter] postNotificationName:FILE_TRANSFER_CANCELED
+											  object:fileTransfer 
+											userInfo:nil];		
 }
 
+- (void)transferComplete:(ESFileTransfer *)fileTransfer
+{
+	NSLog(@"Halleluyah, Jafar! Transfer complete.");
+	[[owner notificationCenter] postNotificationName:FILE_TRANSFER_COMPLETE
+											  object:fileTransfer 
+											userInfo:nil];
+}
 //Menu or context menu item for sending a file was selected - possible only when a listContact is selected
 - (IBAction)menuSendFile:(id)sender
 {
@@ -149,5 +171,50 @@
 	
     return(listContact != nil);
 }
+
+- (NSString *)shortDescriptionForEventID:(NSString *)eventID { return @""; }
+
+- (NSString *)globalShortDescriptionForEventID:(NSString *)eventID
+{
+	NSString	*description;
+	
+	if([eventID isEqualToString:FILE_TRANSFER_REQUEST]){
+		description = AILocalizedString(@"File Transfer Request",nil);
+	}else if([eventID isEqualToString:FILE_TRANSFER_BEGAN]){
+		description = AILocalizedString(@"File Transfer Began",nil);
+	}else if([eventID isEqualToString:FILE_TRANSFER_CANCELED]){
+		description = AILocalizedString(@"File Transfer Canceled",nil);
+	}else if([eventID isEqualToString:FILE_TRANSFER_COMPLETE]){
+		description = AILocalizedString(@"File Transfer Complete",nil);
+	}else{		
+		description = @"";	
+	}
+	
+	return(description);
+}
+
+//Evan: This exists because old X(tras) relied upon matching the description of event IDs, and I don't feel like making
+//a converter for old packs.  If anyone wants to fix this situation, please feel free :)
+- (NSString *)englishGlobalShortDescriptionForEventID:(NSString *)eventID
+{
+	NSString	*description;
+	
+	if([eventID isEqualToString:FILE_TRANSFER_REQUEST]){
+		description = @"File Transfer Request";
+	}else if([eventID isEqualToString:FILE_TRANSFER_BEGAN]){
+		description = @"File Transfer Began";
+	}else if([eventID isEqualToString:FILE_TRANSFER_CANCELED]){
+		description = @"File Transfer Canceled";
+	}else if([eventID isEqualToString:FILE_TRANSFER_COMPLETE]){
+		description = @"File Transfer Complete";
+	}else{		
+		description = @"";	
+	}
+	
+	return(description);
+}
+
+- (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject { return @""; }
+
 
 @end
