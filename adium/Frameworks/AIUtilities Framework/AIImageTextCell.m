@@ -68,8 +68,7 @@
     highlightColor = [self highlightColorWithFrame:cellFrame inView:controlView];
     highlighted = [self isHighlighted];
     if(highlighted) {
-        [highlightColor set];
-        NSRectFill(cellFrame);
+        [self _drawHighlightWithFrame:cellFrame inView:controlView];
     }
 
     //Draw the cell's image

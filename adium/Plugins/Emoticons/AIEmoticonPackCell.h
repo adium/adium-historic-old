@@ -14,7 +14,7 @@
 \------------------------------------------------------------------------------------------------------ */
 
 
-@interface AIEmoticonPackCell : NSCell {
+@interface AIEmoticonPackCell : AIGradientCell {
 
 }
 

@@ -40,6 +40,7 @@
 #import "AIFlexibleTableView.h"
 #import "AIFontAdditions.h"
 #import "AIGradient.h"
+#import "AIGradientCell.h"
 #import "AIHTMLDecoder.h"
 #import "AIImageTextCell.h"
 #import "AIImageUtilities.h"

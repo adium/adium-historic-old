@@ -93,4 +93,9 @@
     }
 }
 
+- (BOOL)drawsGradientHighlight
+{
+	return YES;
+}
+
 @end
