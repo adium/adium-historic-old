@@ -59,6 +59,8 @@
     preferenceDict = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING] retain];
     [self configureView];
 
+    [[owner notificationCenter] addObserver:self selector:@selector(configureView) name:Contact_SortSelectorListChanged object:nil];
+
     return(self);
 }
 

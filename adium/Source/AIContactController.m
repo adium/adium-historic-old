@@ -44,8 +44,6 @@
 //init
 - (void)initController
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adiumLaunchComplete:) name:Adium_LaunchComplete object:nil];
-
     //
     handleObserverArray = [[NSMutableArray alloc] init];
     sortControllerArray = [[NSMutableArray alloc] init];
@@ -380,6 +378,7 @@
        [[self activeSortController] shouldSortForModifiedAttributeKeys:modifiedAttributeKeys])){
 
         [self sortContactGroup:[inHandle containingGroup] mode:AISortGroupAndSuperGroups];
+        [[owner notificationCenter] postNotificationName:Contact_ListChanged object:nil];
     }
 
     //Post a 'status' changed message, signaling that the object's status has changed.
@@ -419,6 +418,7 @@
 - (void)registerContactSortController:(id <AIContactSortController>)inController
 {
     [sortControllerArray addObject:inController];
+    [[owner notificationCenter] postNotificationName:Contact_SortSelectorListChanged object:nil userInfo:nil];
 }
 - (NSArray *)sortControllerArray{
     return(sortControllerArray);

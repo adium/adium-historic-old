@@ -40,7 +40,7 @@
 
     //Create the attributed string
     attributes = [NSDictionary dictionaryWithObjectsAndKeys:inTextColor, NSForegroundColorAttributeName, inFont, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
-    attributedString = [[NSAttributedString alloc] initWithString:inString attributes:attributes];
+    attributedString = [[[NSAttributedString alloc] initWithString:inString attributes:attributes] autorelease];
 
     //Build the cell
     cell = [AIFlexibleTableTextCell cellWithAttributedString:attributedString];
