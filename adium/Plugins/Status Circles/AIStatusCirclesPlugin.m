@@ -19,11 +19,18 @@
 #import "AIStatusCircle.h"
 #import "AIAdium.h"
 
+@interface AIStatusCirclesPlugin (PRIVATE)
+- (void)addToFlashArray:(AIContactHandle *)inHandle;
+- (void)removeFromFlashArray:(AIContactHandle *)inHandle;
+@end
+
 @implementation AIStatusCirclesPlugin
 
 - (void)installPlugin
 {
     [[owner contactController] registerHandleObserver:self];
+
+    flashingContactArray = [[NSMutableArray alloc] init];
 }
 
 - (void)uninstallPlugin
@@ -39,7 +46,7 @@
 - (NSArray *)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys
 {
     NSArray		*modifiedAttributes = nil;
-    
+
     if(	inModifiedKeys == nil || 
         [inModifiedKeys containsObject:@"Away"] || 
         [inModifiedKeys containsObject:@"Idle"] || 
@@ -48,11 +55,19 @@
         [inModifiedKeys containsObject:@"UnviewedContent"] ||
         [inModifiedKeys containsObject:@"UnrespondedContent"]){
 
+        AIMutableOwnerArray	*iconArray;
         AIStatusCircle		*statusCircle;
         NSColor			*circleColor;
-        AIMutableOwnerArray	*iconArray = [inHandle displayArrayForKey:@"Left View"];
-        int			away, idle, warning, online;
-        int			unviewedContent, unrespondedContent;
+        int			away, idle, warning, online, unviewedContent, unrespondedContent;
+        
+        //Get the status circle
+        iconArray = [inHandle displayArrayForKey:@"Left View"];
+        statusCircle = [iconArray objectWithOwner:self];
+        if(!statusCircle){
+            statusCircle = [AIStatusCircle statusCircle];
+            [statusCircle setFlashColor:[NSColor orangeColor]];
+            [iconArray addObject:statusCircle withOwner:self];
+        }
 
         //Get all the values
         away = [[inHandle statusArrayForKey:@"Away"] greatestIntegerValue];
@@ -62,13 +77,8 @@
         unviewedContent = [[inHandle statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
         unrespondedContent = [[inHandle statusArrayForKey:@"UnrespondedContent"] greatestIntegerValue];
         
-        //Remove our current ailments
-        [iconArray removeObjectsWithOwner:self];
-
-        //Get the circle color
-        if(unviewedContent){
-            circleColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(178.0/255.0) blue:(0.0/255.0) alpha:1.0];
-        }else if(!online){
+        //Set the circle color
+        if(!online){
             circleColor = [NSColor colorWithCalibratedRed:(178.0/255.0) green:(0.0/255.0) blue:(0.0/255.0) alpha:1.0];
         }else if(idle && away){
             circleColor = [NSColor colorWithCalibratedRed:(229.0/255.0) green:(229.0/255.0) blue:(153.0/255.0) alpha:1.0];
@@ -79,15 +89,73 @@
         }else{
             circleColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1.0];
         }
-        
-        //Create and set the circle
-        statusCircle = [AIStatusCircle statusCircleWithColor:circleColor
-                                                         dot:(BOOL)unrespondedContent];
-        [iconArray addObject:statusCircle withOwner:self];
+        [statusCircle setColor:circleColor];
+
+        //Set the circle state
+        if(!unviewedContent){
+            [statusCircle setState:(unrespondedContent ? AICircleDot : AICircleNormal)];
+        }else{
+            [statusCircle setState:[[owner interfaceController] flashState]];
+        }
+
         modifiedAttributes = [NSArray arrayWithObject:@"Left View"];
     }
 
+    //Update our flash array (To reflect unviewed content)
+    if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"UnviewedContent"]){
+        int unviewedContent = [[inHandle statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
+        
+        if(unviewedContent && ![flashingContactArray containsObject:inHandle]){ //Start flashing
+            [self addToFlashArray:inHandle];
+        }else if(!unviewedContent && [flashingContactArray containsObject:inHandle]){ //Stop flashing
+            [self removeFromFlashArray:inHandle];
+        }
+    }
+
     return(modifiedAttributes);
+}
+
+//Flash all handles with unviewed content
+- (void)flash:(int)value
+{
+    NSEnumerator	*enumerator;
+    AIContactHandle	*handle;
+    AIStatusCircle	*statusCircle;
+
+    enumerator = [flashingContactArray objectEnumerator];
+    while((handle = [enumerator nextObject])){
+        //Set the status circle to the correct state
+        statusCircle = [[handle displayArrayForKey:@"Left View"] objectWithOwner:self];
+        [statusCircle setState:((value % 2) ? AICircleFlashA: AICircleFlashB)];
+
+        //Force a redraw
+        [[owner notificationCenter] postNotificationName:Contact_AttributesChanged object:handle userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Left View"] forKey:@"Keys"]];
+    }
+}
+
+//Add a handle to the flash array
+- (void)addToFlashArray:(AIContactHandle *)inHandle
+{
+    //Ensure that we're observing the flashing
+    if([flashingContactArray count] == 0){
+        [[owner interfaceController] registerFlashObserver:self];
+    }
+
+    //Add the contact to our flash array
+    [flashingContactArray addObject:inHandle];
+    [self flash:[[owner interfaceController] flashState]];
+}
+
+//Remove a handle from the flash array
+- (void)removeFromFlashArray:(AIContactHandle *)inHandle
+{
+    //Remove the contact from our flash array
+    [flashingContactArray removeObject:inHandle];
+
+    //If we have no more flashing contacts, stop observing the flashes
+    if([flashingContactArray count] == 0){
+        [[owner interfaceController] unregisterFlashObserver:self];
+    }    
 }
 
 @end

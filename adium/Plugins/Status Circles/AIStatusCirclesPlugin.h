@@ -17,8 +17,8 @@
 
 @class AIStatusCircle;
 
-@interface AIStatusCirclesPlugin : AIPlugin {
-
+@interface AIStatusCirclesPlugin : AIPlugin <AIFlashObserver> {
+    NSMutableArray	*flashingContactArray;
 }
 
 @end

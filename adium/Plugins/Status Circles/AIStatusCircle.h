@@ -17,13 +17,25 @@
 
 @protocol AIHandleLeftView;
 
+typedef enum {
+    AICircleNormal,
+    AICircleDot,
+    AICircleFlashA,
+    AICircleFlashB
+} AICircleState;
+
 @interface AIStatusCircle : NSObject <AIHandleLeftView> {
-    NSColor	*color;
-    BOOL	dot;
+    NSColor		*color;
+    NSColor		*flashColor;
+    AICircleState	state;
 }
 
-+ (id)statusCircleWithColor:(NSColor *)inColor dot:(BOOL)inDot;
-- (id)initWithColor:(NSColor *)inColor dot:(BOOL)inDot;
++ (id)statusCircle;
+
+- (void)setState:(AICircleState)inState;
+- (void)setColor:(NSColor *)inColor;
+- (void)setFlashColor:(NSColor *)inColor;
+
 - (void)drawInRect:(NSRect)inRect;
 - (int)widthForHeight:(int)inHeight;
 
