@@ -19,7 +19,7 @@
 }
 
 //Configure for the action
-- (void)configureForActionDetails:(NSDictionary *)inDetails
+- (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)listObject
 {
 	NSString *alertText = [inDetails objectForKey:KEY_ALERT_TEXT];
 	if(alertText){
