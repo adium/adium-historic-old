@@ -600,10 +600,12 @@ static id<GaimThread> gaimThread = nil;
 	switch (updateType){
 		case AIChatTimedOut:
 			key = KEY_CHAT_TIMED_OUT;
+			NSLog(@"The conversation with %@ timed out.",[[chat listObject] formattedUID]);
 			break;
 			
 		case AIChatClosedWindow:
 			key = KEY_CHAT_CLOSED_WINDOW;
+			NSLog(@"%@ left the conversation.",[[chat listObject] formattedUID]);
 			break;
 	}
 	
