@@ -118,7 +118,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     [self _configureSourceView];
     
     //Install our window toolbar and generate our collections
-    [self installToolbar];
+//    [self installToolbar];
     [self collectionArrayChanged:nil];
 }
 
@@ -136,6 +136,12 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     [outlineView_contactList setDrawsGrid:YES];
     [outlineView_contactList setGridColor:[NSColor colorWithCalibratedRed:(217.0/255.0) green:(217.0/255.0) blue:(217.0/255.0) alpha:0.7]];
 
+    //
+    [button_newHandle setImage:[AIImageUtilities imageNamed:@"addHandle" forClass:[self class]]];
+    [button_newGroup setImage:[AIImageUtilities imageNamed:@"addGroup" forClass:[self class]]];
+    [button_newHandle setTitle:@""];
+    [button_newGroup setTitle:@""];
+    
     //Listen to contact dragging
     [outlineView_contactList registerForDraggedTypes:[NSArray arrayWithObject:@"AIContactObjects"]];
 
@@ -351,7 +357,9 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    return(@""); //Ignored by our cell
+    AIEditorCollection	*collection = [[plugin collectionsArray] objectAtIndex:row];
+
+    return([collection name]); //Ignored by our cell
 }
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
