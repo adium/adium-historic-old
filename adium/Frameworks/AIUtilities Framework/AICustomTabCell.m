@@ -18,8 +18,6 @@
 #import "AIImageUtilities.h"
 #import "AICursorAdditions.h"
 
-#define ALLOW_CLOSING_INACTIVE_TABS     NO      //Make this a pref eventually
-
 @interface AICustomTabCell (PRIVATE)
 - (id)initForTabViewItem:(NSTabViewItem *)inTabViewItem;
 @end
@@ -106,6 +104,13 @@ static NSImage		*tabCloseFrontRollover = nil;
     }
 }
 
+//Can the user close inactive tabs?
+- (void)setAllowsInactiveTabClosing:(BOOL)inValue
+{
+    allowsInactiveTabClosing = inValue;
+}
+
+
 
 // Private ---------------------------------------------------------------------
 //init
@@ -136,6 +141,7 @@ static NSImage		*tabCloseFrontRollover = nil;
     
     //init
     tabViewItem = inTabViewItem;
+    allowsInactiveTabClosing = NO;
     trackingClose = NO;
     hoveringClose = NO;
     selected = NO;
@@ -273,7 +279,7 @@ static NSImage		*tabCloseFrontRollover = nil;
     NSView          *view = [eventData objectForKey:@"view"];
 
     //Set ourself (or our close button) has hovered
-    if((ALLOW_CLOSING_INACTIVE_TABS || selected) && [[eventData objectForKey:@"close"] boolValue]){
+    if((allowsInactiveTabClosing || selected) && [[eventData objectForKey:@"close"] boolValue]){
         hoveringClose = YES;
         [view setNeedsDisplayInRect:offsetCloseButtonRect];
     }else{
@@ -290,7 +296,7 @@ static NSImage		*tabCloseFrontRollover = nil;
     NSView          *view = [eventData objectForKey:@"view"];
 
     //Set ourself (or our close button) has not hovered
-    if((ALLOW_CLOSING_INACTIVE_TABS || selected) && [[eventData objectForKey:@"close"] boolValue]){
+    if((allowsInactiveTabClosing || selected) && [[eventData objectForKey:@"close"] boolValue]){
         hoveringClose = NO;
         [view setNeedsDisplayInRect:offsetCloseButtonRect];
     }else{
@@ -306,7 +312,7 @@ static NSImage		*tabCloseFrontRollover = nil;
     NSPoint	clickLocation = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
     NSRect	offsetCloseButtonRect = NSOffsetRect(closeButtonRect, cellFrame.origin.x, cellFrame.origin.y);
     
-    if((ALLOW_CLOSING_INACTIVE_TABS || selected) && /*[[tabViewItem tabView] numberOfTabViewItems] != 1 &&*/ NSPointInRect(clickLocation, offsetCloseButtonRect)){
+    if((allowsInactiveTabClosing || selected) && /*[[tabViewItem tabView] numberOfTabViewItems] != 1 &&*/ NSPointInRect(clickLocation, offsetCloseButtonRect)){
         //Track the close button
         [self trackMouse:theEvent
                   inRect:offsetCloseButtonRect

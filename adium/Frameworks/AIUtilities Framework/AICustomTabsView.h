@@ -34,6 +34,7 @@
     NSMutableArray	*tabCellArray;
     AICustomTabCell	*selectedCustomTabCell;
     BOOL                removingLastTabHidesWindow;
+    BOOL		allowsInactiveTabClosing;
     
     //Images
     NSImage		*tabDivider;
@@ -55,6 +56,8 @@
 - (id <AICustomTabsViewDelegate>)delegate;
 - (void)setRemovingLastTabHidesWindow:(BOOL)inValue;
 - (BOOL)removingLastTabHidesWindow;
+- (void)setAllowsInactiveTabClosing:(BOOL)inValue;
+- (BOOL)allowsInactiveTabClosing;
 
 @end
 

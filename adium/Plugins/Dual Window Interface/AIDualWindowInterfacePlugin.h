@@ -21,6 +21,7 @@
 #define KEY_ALWAYS_CREATE_NEW_WINDOWS 		@"Always Create New Windows"
 #define KEY_USE_LAST_WINDOW			@"Use Last Window"
 #define KEY_AUTOHIDE_TABBAR			@"Autohide Tab Bar"
+#define KEY_ENABLE_INACTIVE_TAB_CLOSE		@"Enable Inactive Tab Close"
 #define KEY_DUAL_MESSAGE_WINDOW_FRAME           @"Dual Message Window Frame"
 
 #define TAB_CELL_IDENTIFIER                     @"Tab Cell Identifier"
