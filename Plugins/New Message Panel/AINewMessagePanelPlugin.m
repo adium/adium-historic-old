@@ -6,7 +6,7 @@
 //
 
 #import "AINewMessagePanelPlugin.h"
-#import "AINewMessagePrompt.h"
+#import "AINewMessagePromptController.h"
 
 @implementation AINewMessagePanelPlugin
 
@@ -23,7 +23,7 @@
 //Initiate a chat
 - (IBAction)newMessage:(id)sender
 {
-	[AINewMessagePrompt newMessagePrompt];
+	[AINewMessagePromptController newPrompt];
 }
 
 @end

@@ -13,14 +13,10 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface AINewMessagePrompt : AIWindowController {    
-    IBOutlet	AICompletingTextField	*textField_handle;
-    IBOutlet	NSPopUpButton			*popUp_service;
-}
+#import "AIAccountPlusFieldPromptController.h"
 
-+ (void)newMessagePrompt;
-+ (void)closeSharedInstance;
-- (IBAction)closeWindow:(id)sender;
-- (IBAction)newMessage:(id)sender;
+@interface AINewMessagePromptController : AIAccountPlusFieldPromptController {    
+
+}
 
 @end
