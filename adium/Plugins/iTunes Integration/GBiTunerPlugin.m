@@ -73,7 +73,7 @@
     }
 }
 
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
 {
     NSMutableAttributedString   *mesg = nil;
 
@@ -86,7 +86,9 @@
 		while (pattern = [enumerator nextObject]){
             //if the original string contained this pattern
             if([originalAttributedString rangeOfString:pattern].location != NSNotFound){
+
 				if(!mesg) mesg = [[inAttributedString mutableCopy] autorelease];   
+
                 [mesg replaceOccurrencesOfString:pattern 
                                       withString:[self hashLookup:pattern] 
                                          options:NSLiteralSearch 

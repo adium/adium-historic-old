@@ -158,7 +158,7 @@ static NSMenu			* menu_Games;
 	}
 }
 
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inobj
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inobj listObjectContext:(AIListObject *)inListObject
 {
 	NSString * str = [inAttributedString string];
 	NSRange start = [str rangeOfString:prefixString];

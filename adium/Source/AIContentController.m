@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.46 2004/01/25 00:17:00 evands Exp $
+// $Id: AIContentController.m,v 1.47 2004/01/27 17:53:03 evands Exp $
 
 #import "AIContentController.h"
 
@@ -205,16 +205,17 @@
 }
 
 //Return an attributed string which is the result of passing inString through both outgoing and display filters
-- (NSAttributedString *)fullyFilteredAttributedString:(NSAttributedString *)inString
+- (NSAttributedString *)fullyFilteredAttributedString:(NSAttributedString *)inString listObjectContext:(AIListObject *)inListObject
 {
-    return [self filteredAttributedString:[self filteredAttributedString:inString isOutgoing:YES] isOutgoing:NO];
+    return [self filteredAttributedString:[self filteredAttributedString:inString listObjectContext:inListObject isOutgoing:YES] listObjectContext:inListObject isOutgoing:NO];
 }
 
 //Return an attributed string which is the result of passing inString through the specified filter (outgoing or diplay)
-- (NSAttributedString *)filteredAttributedString:(NSAttributedString *)inString isOutgoing:(BOOL)isOutgoing
+- (NSAttributedString *)filteredAttributedString:(NSAttributedString *)inString listObjectContext:(AIListObject *)inListObject isOutgoing:(BOOL)isOutgoing
 {
     return ([self _filterAttributedString:inString
                          forContentObject:nil
+						 listObjectContext:inListObject
                          usingFilterArray:(isOutgoing ? 
                                            outgoingContentFilterArray : displayingContentFilterArray)]);
 }
@@ -222,7 +223,7 @@
 // Send the specified attributed string and possibly a contentObject through the specified filters, returning the modified
 // string if one is generated (or the original string if one is not).  Filters get the contentObject and can modify it,
 // but should not expect its "message" member to be accurate.
-- (NSAttributedString *)_filterAttributedString:(NSAttributedString *)inString forContentObject:(AIContentObject *)inObject usingFilterArray:(NSArray *)inArray
+- (NSAttributedString *)_filterAttributedString:(NSAttributedString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject usingFilterArray:(NSArray *)inArray
 {
     NSEnumerator                *enumerator;
     id<AIContentFilter>         filter;
@@ -231,7 +232,7 @@
     if (inString){
         enumerator = [inArray objectEnumerator];
         while((filter = [enumerator nextObject])){
-            filteredString = [filter filterAttributedString:filteredString forContentObject:inObject];
+            filteredString = [filter filterAttributedString:filteredString forContentObject:inObject listObjectContext:inListObject];
         }
     }
     
@@ -245,11 +246,13 @@
         //AIContentMessages have an attributed string for a message
         [(AIContentMessage *)inObject setMessage:[self _filterAttributedString:[(AIContentMessage *)inObject message]
                                                               forContentObject:inObject
+															  listObjectContext:nil
                                                               usingFilterArray:inArray]];
     } else if  ([[inObject type] isEqualToString:CONTENT_STATUS_TYPE]){
 		//AIContentStatus have a string for a message
         [(AIContentStatus *)inObject setMessage:[[self _filterAttributedString:[[[NSAttributedString alloc] initWithString:[(AIContentStatus *)inObject message]] autorelease]
                                                               forContentObject:inObject
+															  listObjectContext:nil
                                                               usingFilterArray:inArray] string]];
 	} else {
         [self _filterAttributedString:nil

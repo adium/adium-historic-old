@@ -194,7 +194,7 @@ static AIInfoWindowController *sharedInstance = nil;
         }
         
         if (status) {
-            NSMutableAttributedString   *statusString = [[[adium contentController] fullyFilteredAttributedString:status] mutableCopy];
+            NSMutableAttributedString   *statusString = [[[adium contentController] fullyFilteredAttributedString:status listObjectContext:inObject] mutableCopy];
             NSMutableParagraphStyle     *indentStyle;
             
             NSRange                     firstLineRange = [[statusString string] lineRangeForRange:NSMakeRange(0,0)];
@@ -254,7 +254,7 @@ static AIInfoWindowController *sharedInstance = nil;
         //Only show the profile is one exists
         if (textProfile && [textProfile length]) {
             [infoString appendString:@"\r\r\tProfile:\t" withAttributes:labelAttributes];
-            NSMutableAttributedString   *textProfileString = [[[adium contentController] fullyFilteredAttributedString:textProfile] mutableCopy];
+            NSMutableAttributedString   *textProfileString = [[[adium contentController] fullyFilteredAttributedString:textProfile listObjectContext:inObject] mutableCopy];
             NSMutableParagraphStyle     *indentStyle;
             
             NSRange                     firstLineRange = [[textProfileString string] lineRangeForRange:NSMakeRange(0,0)];

@@ -12,6 +12,6 @@
     NSDictionary *hash;
 }
 
-- (NSString *)hashLookup:(NSString *)pattern contentMessage:(AIContentObject *)content;
+- (NSString *)hashLookup:(NSString *)pattern contentMessage:(AIContentObject *)content listObject:(AIListObject *)listObject;
 
 @end

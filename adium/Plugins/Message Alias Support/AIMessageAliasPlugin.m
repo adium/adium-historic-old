@@ -32,7 +32,7 @@
 	[hash release]; hash=nil;
 }
 
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
 {
     NSMutableAttributedString   *mesg = nil;
     if (inAttributedString){
@@ -52,7 +52,7 @@
 				NSLog(@"%@ -> %@",pattern,[hash objectForKey:pattern]);
                 //if key is a var go find out what the replacement text should be
                 if([(replaceWith = [hash objectForKey:pattern]) isEqualToString:@"$var$"]){
-                    replaceWith = [self hashLookup:pattern contentMessage:inObject];
+                    replaceWith = [self hashLookup:pattern contentMessage:inObject listObject:inListObject];
                 }
                 
                 [mesg replaceOccurrencesOfString:pattern 
@@ -66,9 +66,8 @@
 }
 
 
-- (NSString*)hashLookup:(NSString*)pattern contentMessage:(AIContentObject *)content
+- (NSString*)hashLookup:(NSString*)pattern contentMessage:(AIContentObject *)content listObject:(AIListObject *)listObject
 {
-	NSLog(@"%@ in %@",pattern,content);
     if([pattern isEqualToString:@"%a"]){
 		if (content) {
 			//Use the destination if possible, otherwise rely on the listObject of the associated chat
@@ -82,6 +81,20 @@
 				if (contact) {
 					return [contact displayName];
 				}
+			}
+		} else if (listObject) {
+			AIAccount *account = nil;
+			
+		
+			if ([listObject isKindOfClass:[AIAccount class]]) {
+				account = (AIAccount *)listObject;
+			} else if ([listObject isKindOfClass:[AIListContact class]]) {
+				//if no content was passed but a AIListContact was, substitute the display name of the best account connected to that list object
+				account = [[adium accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:listObject];
+			}
+			
+			if (account) {
+				return [account displayName];
 			}
 		}
     } else if([pattern isEqualToString:@"%n"]) {
@@ -98,10 +111,28 @@
 					return [contact UID];
 				}
 			}
+		} else if (listObject) {
+			AIAccount *account = nil;
+
+			if ([listObject isKindOfClass:[AIAccount class]]) {
+				account = (AIAccount *)listObject;
+			} else if ([listObject isKindOfClass:[AIListContact class]]) {
+				//if no content was passed but a AIListContact was, substitute the display name of the best account connected to that list object
+				account = [[adium accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:listObject];
+			}
+			
+			if (account) {
+				return [account displayName];
+			}
 		}
     } else if([pattern isEqualToString:@"%m"]) {
 		if (content) {
 			return [[content source] displayName]; 	
+		} else if (listObject) {
+			if ([listObject isKindOfClass:[AIListContact class]]) {
+				//if no content was passed by but a AIListContact context was, substitute the display name of the list object
+				return [listObject displayName];
+			}
 		}
     } else if([pattern isEqualToString:@"%t"]) {
 		NSCalendarDate  *timestamp = [NSCalendarDate calendarDate];

@@ -37,7 +37,7 @@ static NSString *linkDetailString[] = { //Anything matching these keys is linked
 	[[adium contentController] unregisterIncomingContentFilter:self];
 }
 
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
 {
     NSMutableAttributedString   *replacementMessage = nil;
     if (inAttributedString) {

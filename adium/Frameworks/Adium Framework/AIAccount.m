@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.37 2004/01/20 18:01:23 adamiser Exp $
+// $Id: AIAccount.m,v 1.38 2004/01/27 17:52:59 evands Exp $
 
 #import "AIAccount.h"
 
@@ -178,6 +178,7 @@
 {
     BOOL refreshPeriodically;
     NSAttributedString  *filteredMessage = [[adium contentController] filteredAttributedString:status
+																			 listObjectContext:self
                                                                                     isOutgoing:YES];
     //refresh periodically if the filtered string is different from the original one
     refreshPeriodically = (status && (![[status string] isEqualToString:[filteredMessage string]]));
@@ -202,6 +203,7 @@
     NSString        *key;
     while (key = [keyEnumerator nextObject]){
         NSAttributedString *filteredMessage = [[adium contentController] filteredAttributedString:[refreshDict objectForKey:key]
+																				listObjectContext:self
                                                                                    isOutgoing:YES];
         [self setAttributedStatusString:filteredMessage forKey:key];
     }
