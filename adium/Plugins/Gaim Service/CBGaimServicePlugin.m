@@ -36,7 +36,6 @@ NSMutableDictionary *_accountDict;
 static CBGaimAccount* accountLookup(GaimAccount *acct)
 {
     CBGaimAccount *ret = (CBGaimAccount*) [_accountDict objectForKey:[NSValue valueWithPointer:acct]];
-//    NSLog(@"Looking up GaimAccount 0x%x returned %@", acct, ret);
     return ret;
 }
 
