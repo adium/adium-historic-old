@@ -384,6 +384,13 @@
 			);
 			hasScannedForEncodings = 1;
 			isa = PBXProject;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				Spanish,
+			);
 			mainGroup = 29B97314FDCFA39411CA2CEA;
 			projectDirPath = "";
 			targets = (
@@ -22549,6 +22556,112 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		6C24111F05849D1A00CECFC3 = {
+			children = (
+				6C24112005849D1A00CECFC3,
+				6C24112205849D3C00CECFC3,
+			);
+			isa = PBXVariantGroup;
+			name = Localizable.strings;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C24112005849D1A00CECFC3 = {
+			expectedFileType = text.plist.strings;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = English;
+			path = "Plugins/Event Bezel/English.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C24112105849D1A00CECFC3 = {
+			fileRef = 6C24111F05849D1A00CECFC3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C24112205849D3C00CECFC3 = {
+			expectedFileType = text.plist.strings;
+			isa = PBXFileReference;
+			name = Spanish;
+			path = "Plugins/Event Bezel/Spanish.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C24112705849D7900CECFC3 = {
+			children = (
+				6C60B14905605A3500CAD137,
+				6C24112905849D9B00CECFC3,
+			);
+			isa = PBXVariantGroup;
+			name = EventBezel.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C24112805849D7900CECFC3 = {
+			fileRef = 6C24112705849D7900CECFC3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C24112905849D9B00CECFC3 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = Spanish;
+			path = "Plugins/Event Bezel/Spanish.lproj/EventBezel.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C24112A05849DBB00CECFC3 = {
+			children = (
+				6C60B14A05605A3500CAD137,
+				6C24112C05849DDA00CECFC3,
+			);
+			isa = PBXVariantGroup;
+			name = EventBezelPrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C24112B05849DBC00CECFC3 = {
+			fileRef = 6C24112A05849DBB00CECFC3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C24112C05849DDA00CECFC3 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = Spanish;
+			path = "Plugins/Event Bezel/Spanish.lproj/EventBezelPrefs.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C24112D05849DF400CECFC3 = {
+			children = (
+				6CC851C10574B314008A5F66,
+				6C24112F05849E1100CECFC3,
+			);
+			isa = PBXVariantGroup;
+			name = ContactEventBezel.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C24112E05849DF400CECFC3 = {
+			fileRef = 6C24112D05849DF400CECFC3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C24112F05849E1100CECFC3 = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = Spanish;
+			path = "Plugins/Event Bezel/Spanish.lproj/ContactEventBezel.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		6C271CE30561719200057D9C = {
 			expectedFileType = image.png;
 			isa = PBXFileReference;
@@ -22656,14 +22769,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				6C60B15605605A3800CAD137,
-				6C60B15705605A3800CAD137,
-				6C60B15805605A3800CAD137,
+				6C24112805849D7900CECFC3,
+				6C24112B05849DBC00CECFC3,
 				6C60B15905605A3800CAD137,
 				6C271CE50561719200057D9C,
 				6C271CE60561719200057D9C,
 				6C271CEB056177CA00057D9C,
 				6C0FFB2305723F1B00E75F79,
-				6CC851C20574B315008A5F66,
+				6C24112E05849DF400CECFC3,
+				6C24112105849D1A00CECFC3,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -22804,11 +22918,12 @@
 				6C271CE40561719200057D9C,
 				6C60B14805605A3500CAD137,
 				6C0FFB2205723F1B00E75F79,
-				6CC851C10574B314008A5F66,
-				6C60B14905605A3500CAD137,
-				6C60B14A05605A3500CAD137,
+				6C24112D05849DF400CECFC3,
+				6C24112705849D7900CECFC3,
+				6C24112A05849DBB00CECFC3,
 				6CF4266F0577635B00F27FAA,
 				6CF426700577635B00F27FAA,
+				6C24111F05849D1A00CECFC3,
 				6C60B14B05605A3600CAD137,
 				6C60B14C05605A3600CAD137,
 				6C60B14D05605A3600CAD137,
@@ -22837,16 +22952,16 @@
 		6C60B14905605A3500CAD137 = {
 			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
-			name = EventBezel.nib;
-			path = "Plugins/Event Bezel/EventBezel.nib";
+			name = English;
+			path = "Plugins/Event Bezel/English.lproj/EventBezel.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		6C60B14A05605A3500CAD137 = {
 			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
-			name = EventBezelPrefs.nib;
-			path = "Plugins/Event Bezel/EventBezelPrefs.nib";
+			name = English;
+			path = "Plugins/Event Bezel/English.lproj/EventBezelPrefs.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -22951,18 +23066,6 @@
 		};
 		6C60B15605605A3800CAD137 = {
 			fileRef = 6C60B14805605A3500CAD137;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6C60B15705605A3800CAD137 = {
-			fileRef = 6C60B14905605A3500CAD137;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6C60B15805605A3800CAD137 = {
-			fileRef = 6C60B14A05605A3500CAD137;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -23150,16 +23253,10 @@
 		6CC851C10574B314008A5F66 = {
 			expectedFileType = wrapper.nib;
 			isa = PBXFileReference;
-			name = ContactEventBezel.nib;
-			path = "Plugins/Event Bezel/ContactEventBezel.nib";
+			name = English;
+			path = "Plugins/Event Bezel/English.lproj/ContactEventBezel.nib";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		6CC851C20574B315008A5F66 = {
-			fileRef = 6CC851C10574B314008A5F66;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		6CF426650577622300F27FAA = {
 			expectedFileType = wrapper.nib;

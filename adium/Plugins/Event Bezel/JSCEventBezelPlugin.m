@@ -208,7 +208,7 @@
         }
         
         if ([notificationName isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
-            tempEvent = @"is now online";
+            tempEvent = AILocalizedString(@"is now online",nil);
             if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
                 [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor]];
                 [ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
@@ -216,7 +216,7 @@
                 [ebc setBuddyIconLabelColor: nil];
             }
         } else if ([notificationName isEqualToString: CONTACT_STATUS_ONLINE_NO]) {
-            tempEvent = @"has gone offline";
+            tempEvent = AILocalizedString(@"has gone offline",nil);
             if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
                 [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor]];
                 [ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
@@ -224,7 +224,7 @@
                 [ebc setBuddyIconLabelColor: nil];
             }
         } else if ([notificationName isEqualToString: CONTACT_STATUS_AWAY_YES]) {
-            tempEvent = @"has gone away";
+            tempEvent = AILocalizedString(@"has gone away",nil);
             if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
                 [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
                 [ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
@@ -232,7 +232,7 @@
                 [ebc setBuddyIconLabelColor: nil];
             }
         } else if ([notificationName isEqualToString: CONTACT_STATUS_AWAY_NO]) {
-            tempEvent = @"is available";
+            tempEvent = AILocalizedString(@"is available",nil);
             if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
                 [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
                 [ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
@@ -240,7 +240,7 @@
                 [ebc setBuddyIconLabelColor: nil];
             }
         } else if ([notificationName isEqualToString: CONTACT_STATUS_IDLE_YES]) {
-            tempEvent = @"is idle";
+            tempEvent = AILocalizedString(@"is idle",nil);
             if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
                 [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_COLOR] representedColor]];
                 [ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
@@ -248,7 +248,7 @@
                 [ebc setBuddyIconLabelColor: nil];
             }
         } else if ([notificationName isEqualToString: CONTACT_STATUS_IDLE_NO]) {
-            tempEvent = @"is no longer idle";
+            tempEvent = AILocalizedString(@"is no longer idle",nil);
             if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
                 [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor]];
                 [ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
@@ -256,7 +256,7 @@
                 [ebc setBuddyIconLabelColor: nil];
             }
         } else if ([notificationName isEqualToString: Content_FirstContentRecieved]) {
-            tempEvent = @"says";
+            tempEvent = AILocalizedString(@"says",nil);
             if ([ebc useBuddyIconLabel] || [ebc useBuddyNameLabel]) {
                 [ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor]];
                 [ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
