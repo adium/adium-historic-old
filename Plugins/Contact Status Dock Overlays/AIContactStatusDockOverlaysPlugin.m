@@ -62,6 +62,11 @@
 	//Register as a chat observer (for unviewed content)
 	[[adium contentController] registerChatObserver:self];
 	
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(chatClosed:)
+									   name:Chat_WillClose
+									 object:nil];
+	
     //Prefs
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
 	
@@ -173,6 +178,15 @@
 	[inObject setStatusObject:nil
 					   forKey:@"DockOverlayRemoveTimer"
 					   notify:NotifyNever];
+	
+	[self _setOverlay];
+}
+
+- (void)chatClosed:(NSNotification *)notification
+{
+	AIChat	*chat = [notification object];
+	
+	[overlayObjectsArray removeObjectIdenticalTo:chat];
 	
 	[self _setOverlay];
 }
