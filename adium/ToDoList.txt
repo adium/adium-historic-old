@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.55 2004/04/17 05:21:30 adamiser Exp $
+$Id: ToDoList.txt,v 1.56 2004/04/17 06:40:47 ramoth4 Exp $
 
 Legend
 + Change or Addition
@@ -89,7 +89,7 @@ WebKit Message View:
 Message Window:
 	+ Insert/Edit link menu item, accompanying link entry panel, edit link context menu
 	+ Open new windows behind the frontmost window (When not opening in tabs) [Colin]
-        I don't know quite what to do here. I'd like some guideance. <<< I never got any guidence, dammit! :P
+        I don't know quite what to do here. I'd like some guideance. <<< I never got any guidence, dammit! :P <<< Still lacking guidence here. We need to have a group chat about this...
 	+ Insert emoticon menu item, contextual menu item [Brian]
             // Brian: if you want to work on it before I get back to it I'll send the files, just needs insert functionality and some clean-up (namely dynamism)
 	+ Tab-complete usernames in messages and chat
@@ -109,8 +109,7 @@ Other:
 	+ '--insensitive' flag in AIEmoticon (to be placed in the TextEquivalents.txt file) that allows emoticons' text equivalents to be case-insensitive (without applying this nature globally to all emoticons).
 		Colin: Didn't Mac-arena do this already?
     	+ "New message..." dialog should search for all contacts, and then after that offer the protocols from where you can talk to the buddy found. The way it works now seems a bit rare, as you have to select the protocol first, and maybe you just don't remember or something and you type the name (address book for example) of your buddy just to see it doesn't work.
-	+ Add preferences to disable 'Fast User Switching' auto-away, and to customize the message.
-
+	+ Add preferences to disable 'Fast User Switching' auto-away, and to customize the message. [Colin]
 
 -------------------------------------------------------------------------------------------------------
 Big Stuff
