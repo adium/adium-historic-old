@@ -113,7 +113,6 @@
 {
 	return ([[statusCacheDict objectForKey:key] objectValue]);
 }
-#warning Adam: Legacy.  Use 'numberStatusObjectForKey'
 - (int)integerStatusObjectForKey:(NSString *)key
 {
 	AIMutableOwnerArray *array = [statusCacheDict objectForKey:key];
