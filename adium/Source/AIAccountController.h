@@ -14,9 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.14 $
- * $Date: 2004/03/18 15:41:58 $
- * $Author: dchoby98 $
+ * $Revision: 1.15 $
+ * $Date: 2004/03/20 13:23:53 $
+ * $Author: adamiser $
  **/
 
 #define Account_ListChanged 					@"Account_ListChanged"
@@ -71,7 +71,6 @@
 - (NSMenu *)menuOfAccountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject withTarget:(id)target;	
 
 //Connection convenience methods
-- (void)saveAutoConnectStatus;
 - (void)autoConnectAccounts;
 - (void)connectAllAccounts;
 - (void)disconnectAllAccounts;

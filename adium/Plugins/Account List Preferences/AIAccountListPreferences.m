@@ -21,9 +21,6 @@
 #define	ACCOUNT_CONNECTING_BUTTON_TITLE		AILocaliedString(@"Connecting…",nil)						//Menu item title
 #define	ACCOUNT_DISCONNECTING_BUTTON_TITLE	AILocalizedString(@"Disconnecting…",nil)					//Menu item title
 
-#define PREF_GROUP_ACCOUNTS					@"Accounts"
-#define KEY_AUTOCONNECT						@"Autoconnect"
-
 @interface AIAccountListPreferences (PRIVATE)
 - (void)configureViewForAccount:(AIAccount *)inAccount;
 - (void)configureViewForService:(id <AIServiceController>)inService;
@@ -103,7 +100,7 @@
 	//Fill in the account's name and auto-connect status
 	NSString	*formattedUID = [inAccount preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS];
 	[textField_accountName setStringValue:(formattedUID && [formattedUID length] ? formattedUID : [inAccount UID])];
-    [button_autoConnect setState:[[[adium preferenceController] preferenceForKey:KEY_AUTOCONNECT group:PREF_GROUP_ACCOUNTS] boolValue]];
+	[button_autoConnect setState:[[inAccount preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]];
 }
 
 //Configure the account preferences for a service.  This determines which controls are loaded and the allowed values
@@ -232,11 +229,11 @@
 //User toggled the autoconnect preference
 - (IBAction)toggleAutoConnect:(id)sender
 {
-	BOOL			autoConnect = [sender state];
+	BOOL		autoConnect = [sender state];
 	
-	[[adium preferenceController] setPreference:[NSNumber numberWithBool:autoConnect]
-										 forKey:KEY_AUTOCONNECT 
-										  group:PREF_GROUP_ACCOUNTS];
+	[configuredForAccount setPreference:[NSNumber numberWithBool:autoConnect]
+								 forKey:@"AutoConnect"
+								  group:GROUP_ACCOUNT_STATUS];
 }
 
 //Disable controls for account that are connected
@@ -244,6 +241,7 @@
 {
 	[popupMenu_serviceList setEnabled:(configuredForAccount && ![[configuredForAccount statusObjectForKey:@"Online"] boolValue])];
 	[textField_accountName setEnabled:(configuredForAccount && ![[configuredForAccount statusObjectForKey:@"Online"] boolValue])];
+	[button_autoConnect setEnabled:(configuredForAccount != nil)];
 	[button_deleteAccount setEnabled:([accountArray count] > 1 && configuredForAccount &&
 									  ![[configuredForAccount statusObjectForKey:@"Online"] boolValue])];
 }
