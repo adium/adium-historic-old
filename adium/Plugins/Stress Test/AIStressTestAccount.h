@@ -13,6 +13,5 @@
 }
 - (void)echo:(NSString *)string;
 - (void)_echo:(NSString *)string;
-- (AIChat *)chatForContact:(AIListContact *)inContact;
 
 @end
