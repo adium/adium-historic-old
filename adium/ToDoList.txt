@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.106 2004/05/08 10:37:46 eevyl Exp $
+$Id: ToDoList.txt,v 1.107 2004/05/08 19:54:51 adamiser Exp $
 
 
 Legend
@@ -15,7 +15,7 @@ Bugs
 -------------------------------------------------------------------------------------------------------
 * "Custom..." sound option is not working.
 * We are not processing HTML that arrives over an ICQ connection.  Some clients (such as iChat) send HTML over ICQ.
-
+* If you uncheck the "play user interface feedback sounds" in System preferences, and disable the "Use Custom Volume" checkbox in Adium, no sounds are played
 * Don't spawn new windows when we're hidden, doing so will unhide us (Show the windows next time we're unhidden)
 * Shift-command-left does not work as expected, according to http://www.visualdistortion.org/crash/view.jsp?crash=7722
 * User icons are still getting flipped (Icons from AIM, apparently)
@@ -24,6 +24,11 @@ Bugs
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
 * Multi-user chat (MSN) - sent messages appear twice.
 * Update checker reporting a new version when non exists? (possibly a caching error?)
+* Some webstyles clip long lines, others show a scrollbar.  We should be consistent with our behavior if possible (Adam votes scrollbar)
+* Message formatting is reset after each message sent (was this an intentional change?)
+* Links with %n's in them beep when clicked (Set a %n link in your profile using AOLIM)
+* Linking plugin auto-links some characters it shouldn't.. such as *'s and >'s (When placed at the end of an address)
+* Smooth operator and Elisha webkit styles incorrectly display multi-line status messages.
 
 Applescripts:
 * Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
@@ -37,7 +42,8 @@ Contact List:
 * Adding a contact with no groups defined crashes adium.
 * Adding a group makes the contact list window reappear.
 * Auto-resizing is no longer correctly sticking to the bottom of the screen?
-* Offline contacts are not always displaying
+* Offline contacts are not always displaying (Show them, disconnect, and then re-connect.  They are gone)
+* Orphans group  (Hey, the behavior is strange, so I'd consider this a bug)
 
 -------------------------------------------------------------------------------------------------------
 Unconfirmed bugs
@@ -62,7 +68,9 @@ Unconfirmed bugs
 * Changing timezone doesn't update time stamps immediately (I'm not surprised, but this would be cool)
 * Messages with invalid looking HTML <tags> received via jabber (from ICQ user over transport), the invalid tags are being eaten? (Our HTML decoder isn't eating them, is libgaim?) 
 * We aren't fetching the display names of ICQ users, some icq users, when over AIM? (They still show up in the info, apparently)
-
+* text to speech not working ?
+* Dragging buddies on MSN account not working
+* Contact screennames aren't appearing for all contacts when using ICQ
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
@@ -72,10 +80,12 @@ Contacts:
 	+ Add area for typing contact notes to inspector, display notes in tooltip [Brian] 
                 // notes in, tooltips spacing funky [tooltips off] Evan: tooltip indentation sucks right now.  I'll fix it next week.
 	+ Add keyboard shortcut for the 'add contact' menu item
-
+	+ Pass our aliases to libgaim so they get uploaded to the server?
 
 Alerts:
 	+ Allow user to have more control over what is spoken by the announcer plugin
+	+ Display time stamps in the panel alert
+	+ Support the %escapes in alert text (such as %n to speak the contact's name)
 
 Contact List: 
 	- Remove contact list font preference.  Hook this up to cmd-T
@@ -85,6 +95,7 @@ Contact List:
 	
 Accounts:
 	+ Auto-complete aliases in log viewer
+	+ Add 'Priority' field to jabber advanced preferences
 
 Message Window:
 	+ Open new windows behind the frontmost window (When not opening in tabs) [Colin]
@@ -109,7 +120,8 @@ Other:
 	+ Add export option to log viewer
 	+ Fetch yahoo profiles from http://profiles.yahoo.com/[BUDDYNAME] for the info window (libgaim doesn't do this for us?)
 	+ Jabber links, support xmpp:user@host/resource or xmpp:user@host  
-    + Don't spawn new windows when we're hidden, instead que them and open the windows next time we're unhidden
+    	+ Don't spawn new windows when we're hidden, instead que them and open the windows next time we're unhidden
+	+ Display new mail notices for the accounts that support it.  This is bloat - but some people expect it.
 
 -------------------------------------------------------------------------------------------------------
 Big Stuff
