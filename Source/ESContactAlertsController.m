@@ -179,7 +179,9 @@ DeclareString(KeyOneTimeAlert);
 	//If we don't have an object, we use the preference controller to get the global alerts
 	preferenceSource = listObject;
 	if (!preferenceSource) preferenceSource = [owner preferenceController];
-	
+
+	// AILog(@"appendEventsForObject: %@ eventID: %@ toArray: %@",preferenceSource,eventID,events);
+
 	//Add events for this object (replacing any inherited from the containing object so that this object takes precendence)
 	newEvents = [[preferenceSource preferenceForKey:KEY_CONTACT_ALERTS
 											  group:PREF_GROUP_CONTACT_ALERTS
@@ -193,11 +195,11 @@ DeclareString(KeyOneTimeAlert);
 	//Get all events from the contanining object if we have an object
 	if(listObject){
 		//If listObject doesn't have a containingObject, this will pass nil
-		[self appendEventsForObject:[listObject containingObject]
-							eventID:eventID
-							toArray:events];
+		events = [self appendEventsForObject:[listObject containingObject]
+									 eventID:eventID
+									 toArray:events];
 	}
-	
+
 	return(events);
 }
 
