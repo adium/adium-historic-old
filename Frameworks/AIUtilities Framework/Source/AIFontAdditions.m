@@ -73,7 +73,7 @@
 }
 
 //Returns an attributed string containing this font.  Useful for saving & restoring fonts to preferences/plists
-- (NSAttributedString *)stringRepresentation
+- (NSString *)stringRepresentation
 {
     return([NSString stringWithFormat:@"%@,%i",[self fontName],(int)[self pointSize]]);
 }
