@@ -28,14 +28,14 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 
 + (void)initialize
 {
-	int i, j;
-
-	[super initialize];
-	
-	//Allocate our service icon cache
-	for(i = 0; i < NUMBER_OF_SERVICE_ICON_TYPES; i++){
-		for(j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++){
-			serviceIcons[i][j] = [[NSMutableDictionary alloc] init];
+	if(self == [AIServiceIcons class]){
+		int i, j;
+		
+		//Allocate our service icon cache
+		for(i = 0; i < NUMBER_OF_SERVICE_ICON_TYPES; i++){
+			for(j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++){
+				serviceIcons[i][j] = [[NSMutableDictionary alloc] init];
+			}
 		}
 	}
 }
