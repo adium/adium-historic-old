@@ -33,6 +33,8 @@ Alerts:
 Contact List: 
 	- Remove contact list font preference.  Hook this up to cmd-T
 	- Remove the advanced option for vertical resizing, since this is already covered in the main preferences.
+	* Renaming doesn't work at the moment.
+	* Alias doesn't stick on quit. This is needed for those services that don't support certain characters.
 	
 Accounts:
 	+ Allow user to cancel connecting of accounts
