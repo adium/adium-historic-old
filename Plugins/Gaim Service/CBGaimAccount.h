@@ -80,6 +80,9 @@
 - (void)setAccountUserImage:(NSImage *)image;
 - (void)setAccountIdleSinceTo:(NSDate *)idleSince;
 - (void)setAccountAwayTo:(NSAttributedString *)awayMessage;
+- (void)setAccountInvisibleTo:(BOOL)isInvisible;
+- (void)performSetAccountAvailableTo:(NSString *)availableHTML;
+
 - (void)setAccountProfileTo:(NSAttributedString *)profile;
 
 - (BOOL)shouldSetAliasesServerside;

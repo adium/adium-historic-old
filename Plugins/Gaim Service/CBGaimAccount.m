@@ -1742,7 +1742,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			}			
 		}else if([key isEqualToString:@"Invisible"]){
 			BOOL	isInvisible = [[self preferenceForKey:@"Invisible" group:GROUP_ACCOUNT_STATUS] boolValue];
-			[self setAccountInvisibileTo:isInvisible];
+			[self setAccountInvisibleTo:isInvisible];
 		}
 	}
 }

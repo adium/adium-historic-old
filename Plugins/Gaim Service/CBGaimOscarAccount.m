@@ -326,7 +326,7 @@ static BOOL didInitOscar = NO;
 #pragma mark Status
 - (void)performSetAccountAvailableTo:(NSString *)availableHTML
 {
-	[gaimThread OSCARSetAvailableMessageTo:availableHTML onAccount:self];	
+	[[self gaimThread] OSCARSetAvailableMessageTo:availableHTML onAccount:self];	
 }
 
 #pragma mark Buddy updates
