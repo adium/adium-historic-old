@@ -22,7 +22,7 @@
     IBOutlet	NSTextField	*textField_version;
     IBOutlet	NSTextView	*textView_credits;
 
-    NSMutableArray      *avatarArray;
+    //NSMutableArray      *avatarArray;
     NSString 		*buildNumber, *buildDate;
     int			numberOfDuckClicks, numberOfBuildFieldClicks;
     BOOL		previousKeyWasOption;

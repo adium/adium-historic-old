@@ -6211,16 +6211,6 @@
 			settings = {
 			};
 		};
-		348B18120530CB7B00FF26A8 = {
-			expectedFileType = folder;
-			fallbackIsa = PBXFileReference;
-			includeInIndex = 1;
-			isa = PBXFolderReference;
-			name = Avatars;
-			path = Source/Avatars;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		348E4ED9053667A40021E541 = {
 			expectedFileType = sourcecode.c.objc;
 			fileEncoding = 30;
@@ -8275,7 +8265,6 @@
 				34BD9D3E053146CC000AB133,
 				34BD9D3F053146CC000AB133,
 				34BD9D40053146CC000AB133,
-				34BD9D41053146CC000AB133,
 				4B03DDF40533AC59002B2CA3,
 				348E556B053A188C0021E541,
 				34E8FA34054D9CE8008BB262,
@@ -8434,12 +8423,6 @@
 		};
 		34BD9D40053146CC000AB133 = {
 			fileRef = D3DA2E3C052E657C00A8010B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9D41053146CC000AB133 = {
-			fileRef = 348B18120530CB7B00FF26A8;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -8659,16 +8642,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
-				34BD9D63053146CC000AB133,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9D63053146CC000AB133 = {
-			fileRef = 348B18120530CB7B00FF26A8;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34BD9D64053146CC000AB133 = {
 			buildActionMask = 2147483647;
@@ -26155,7 +26131,7 @@
 			productType = "com.apple.product-type.bundle";
 		};
 		B72537BC058C4577004BA969 = {
-			expectedFileType = wrapper.cfbundle;
+			expectedFileType = folder;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = "Latex Plugin.AdiumPlugin";
@@ -26715,7 +26691,6 @@
 		};
 		F50A325A03B5798301A8010A = {
 			children = (
-				348B18120530CB7B00FF26A8,
 				4B24A2330482B34B00A8010A,
 				4BB5809603E86BF600A8010A,
 				4BB5809E03E86BF600A8010A,
