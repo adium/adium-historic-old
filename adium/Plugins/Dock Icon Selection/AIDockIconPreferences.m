@@ -414,6 +414,11 @@
 {
     if(returnCode == NSOKButton)
     {
+		//We are deleting the currently selected icon, so reset to the default
+		[[adium preferenceController] setPreference:DEFAULT_DOCK_ICON_NAME
+											 forKey:KEY_ACTIVE_DOCK_ICON 
+											  group:PREF_GROUP_GENERAL];		
+		
 		//We don't want to try loading a new image after we trash the dock icon folder
 		[self _stopAnimating];
 		
@@ -422,11 +427,6 @@
 
 		//Rebuild the icon array
 		[self _buildIconArray];
-
-		//We are deleting the currently selected icon, so reset to the default
-		[[adium preferenceController] setPreference:DEFAULT_DOCK_ICON_NAME
-											 forKey:KEY_ACTIVE_DOCK_ICON 
-											  group:PREF_GROUP_GENERAL];		
     }
 }
 // ----- end trashiness -------
