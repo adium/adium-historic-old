@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.166 2004/08/04 08:13:58 evands Exp $
+// $Id: AIContactController.m,v 1.167 2004/08/05 03:37:27 dchoby98 Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -901,11 +901,11 @@ DeclareString(UID);
 	
 	// If service is nil, get ALL contained contacts
 	if( !service ) {
-		NSArray		*contactArray = [inContact containedObjects];
+		NSArray		*contactArray = [inContact listContacts];
 		[self _addMenuItemsFromArray:contactArray toMenu:contactMenu withImage:nil target:target includeOffline:includeOffline];
 		
 	}else{
-		NSDictionary	*serviceDict = [inContact dictionaryOfServicesAndContainedObjects];
+		NSDictionary	*serviceDict = [inContact dictionaryOfServicesAndListContacts];
 		NSArray			*contactArray = [serviceDict objectForKey:service];
 		NSImage			*serviceImage = [[[[owner accountController] serviceControllerWithIdentifier:service] handleServiceType] menuImage];
 		
@@ -955,6 +955,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	}
 	
 	[contactMenu addItem:[NSMenuItem separatorItem]];
+
 }
 
 - (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact withTarget:(id)target
