@@ -18,6 +18,7 @@ typedef enum {
     
     NSMutableArray          *accountMenuItemsArray;
     NSMutableArray          *unviewedObjectsArray;
+	NSMutableArray			*openChatsArray;
     
     BOOL                    needsUpdate;
 	
