@@ -7,7 +7,7 @@
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
-            ACTIONS = {deleteAwayMessage = id; importiChatAways = id; newAwayMessage = id; }; 
+            ACTIONS = {deleteAwayMessage = id; newAwayMessage = id; }; 
             CLASS = AIAwayMessagePreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {

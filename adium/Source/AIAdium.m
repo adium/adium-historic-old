@@ -281,6 +281,10 @@
 	[NSApp terminate:nil];
 }
 
+- (IBAction)launchJeeves:(id)sender
+{
+    [[NSWorkspace sharedWorkspace] launchApplication:PATH_TO_IMPORTER];
+}
 
 //Crash Reporter -------------------------------------------------------------------------------------------------------
 #pragma mark Crash Reporter

@@ -42,17 +42,17 @@
     IBOutlet	AIMenuController				*menuController;
     IBOutlet	AILoginController				*loginController;
     IBOutlet	AIAccountController				*accountController;
-    IBOutlet	AIInterfaceController			*interfaceController;
+    IBOutlet	AIInterfaceController                           *interfaceController;
     IBOutlet	AIContactController				*contactController;
     IBOutlet	AIContentController				*contentController;
     IBOutlet	AIPluginController				*pluginController;
-    IBOutlet	AIPreferenceController			*preferenceController;
+    IBOutlet	AIPreferenceController                          *preferenceController;
     IBOutlet	AIToolbarController				*toolbarController;
     IBOutlet	AISoundController				*soundController;
     IBOutlet	AIDockController				*dockController;
-    IBOutlet    ESFileTransferController		*fileTransferController;
-    IBOutlet    ESContactAlertsController		*contactAlertsController;
-	IBOutlet	ESApplescriptabilityController  *applescriptabilityController;
+    IBOutlet    ESFileTransferController                        *fileTransferController;
+    IBOutlet    ESContactAlertsController                       *contactAlertsController;
+    IBOutlet	ESApplescriptabilityController                  *applescriptabilityController;
 //    IBOutlet    BZActivityWindowController  *activityWindowController;
     
     NSNotificationCenter                    *notificationCenter;
@@ -91,6 +91,7 @@
 - (IBAction)showForums:(id)sender;
 - (IBAction)showXtras:(id)sender;
 - (IBAction)confirmQuit:(id)sender;
+- (IBAction)launchJeeves:(id)sender;
 
 //create a resource folder in the Library/Application\ Support/Adium\ 2.0 folder.
 //pass it the name of the folder (e.g. @"Scripts").
@@ -114,9 +115,10 @@
 @end
 
 //Crash Reporter
-#define PATH_TO_CRASH_REPORTER  [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"/Contents/Resources/Adium Crash Reporter.app"] stringByExpandingTildeInPath]
-#define EXCEPTIONS_PATH		[@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
-#define CRASHES_PATH		[@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
+#define PATH_TO_IMPORTER              [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"/Contents/Resources/Adium 1.6 Pref Importer.app"] stringByExpandingTildeInPath]
+#define PATH_TO_CRASH_REPORTER        [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"/Contents/Resources/Adium Crash Reporter.app"] stringByExpandingTildeInPath]
+#define EXCEPTIONS_PATH               [@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
+#define CRASHES_PATH                  [@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
 
 //Webkit-- Controls whether Webkit or SMV plugins work
 #define USE_WEBKIT_PLUGIN		TRUE
