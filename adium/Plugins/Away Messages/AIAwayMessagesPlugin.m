@@ -82,6 +82,7 @@
 - (IBAction)enterAwayMessage:(id)sender
 {
     [[AIEnterAwayWindowController enterAwayWindowController] showWindow:nil];
+	[NSApp activateIgnoringOtherApps:YES]; //Bring ourself forward - needed when called by the dock menu
 }
 
 //Called by the away menu, sets the selected away (sender)
