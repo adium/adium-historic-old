@@ -290,18 +290,20 @@
 #pragma mark Searching
 - (ABPerson *)searchForObject:(AIListObject *)inObject
 {
-	ABPerson		*person = nil;
-	NSString		*UID = [inObject UID];
-	NSString		*serviceID = [inObject serviceID];
+	return([self _searchForUID:[inObject UID] serviceID:[[inObject service] serviceID]]);
 	
-	person = [self _searchForUID:UID serviceID:serviceID];
+//	ABPerson		*person = nil;
+//	NSString		*UID = [inObject UID];
+//	NSString		*serviceID = [inObject serviceID];
+	
+//	person = [self _searchForUID:UID serviceID:serviceID];
 	
 	//If we don't find anything yet and inObject is an AIM account, try again using the ICQ property
-	if (!person && [serviceID isEqualToString:@"AIM"]){
-		person = [self _searchForUID:UID serviceID:@"ICQ"];
-	}
+//	if (!person && [serviceID isEqualToString:@"AIM"]){
+//		person = [self _searchForUID:UID serviceID:@"ICQ"];
+//	}
 	
-	return person;
+//	return person;
 }
 - (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID
 {
@@ -357,7 +359,7 @@
 				NSString		*myDisplayName = [self nameForPerson:me];
 				
 				//Check for each service the address book supports
-				while (serviceID = [servicesEnumerator nextObject]){
+				while(serviceID = [servicesEnumerator nextObject]){
 					NSString		*addressBookKey = [serviceDict objectForKey:serviceID];
 					NSEnumerator	*accountsArray = [[[adium accountController] accountsWithServiceID:serviceID] objectEnumerator];
 					AIAccount		*account;
