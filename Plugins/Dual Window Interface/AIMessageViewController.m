@@ -399,7 +399,8 @@
 	[alertDict removeObjectForKey:@"TEMP-ListObject"];
 	
 	[[adium contactAlertsController] addAlert:alertDict 
-								 toListObject:listObject];
+								 toListObject:listObject
+							 setAsNewDefaults:NO];
 	[listObject release];
 }
 
