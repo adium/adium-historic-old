@@ -26,8 +26,6 @@
 	BOOL					visible;				//Visibility of this object
 	
 	//Manual ordering
-    float					orderIndex;				//Manual order index within orderIndexGroup
-	AIListGroup				*orderIndexGroup;		//Group we're currently in.  NIL if located in multiple groups
 	AIMutableOwnerArray		*multipleOrderIndex;	//Used when we're in more than one group
 	
 	//
@@ -49,6 +47,7 @@
 //Grouping
 - (NSArray *)containingGroups;
 - (float)orderIndexForGroup:(AIListGroup *)inGroup;
+- (AIMutableOwnerArray *)orderIndexArray;
 
 //Display
 - (NSString *)serverDisplayName;

@@ -32,9 +32,7 @@
     UID = [inUID retain];
     serviceID = [inServiceID retain];
 
-	orderIndex = 0;
-	orderIndexGroup = nil;
-	multipleOrderIndex = nil;
+	multipleOrderIndex = [[AIMutableOwnerArray alloc] init];
 	delayedStatusTimers = nil;
 	
 	visible = YES;
@@ -61,6 +59,7 @@
 	[delayedStatusTimers release];
 	
 	//
+	[multipleOrderIndex release];
     [displayDictionary release];
     [containingGroups release];
     [statusDictionary release];
@@ -130,41 +129,24 @@
 //Returns our desired placement within a group
 - (float)orderIndexForGroup:(AIListGroup *)inGroup
 {
-	if(orderIndexGroup == inGroup){
-		return(orderIndex);
-	}else if(multipleOrderIndex){
-		return([[multipleOrderIndex objectWithOwner:inGroup] floatValue]);
-	}else{
-		return(0);
-	}
+	NSNumber	*index = [multipleOrderIndex objectWithOwner:inGroup];
+	return(index ? [index floatValue] : 0);
 }
 
 //Alter the placement of this object in a group (PRIVATE: These are for AIListGroup ONLY)
 - (void)setOrderIndex:(float)inIndex forGroup:(AIListGroup *)inGroup
 {
 	if(inIndex != 0){ //Add
-		if((orderIndexGroup == nil && multipleOrderIndex == nil) || orderIndexGroup == inGroup){
-			//This is our first grouping, or an update to the existing grouping
-			orderIndex = inIndex;
-			orderIndexGroup = inGroup;
-		}else{
-			if(multipleOrderIndex == nil){
-				//This is a new group, giving us two groups total
-				multipleOrderIndex = [[AIMutableOwnerArray alloc] init];
-				[multipleOrderIndex setObject:[NSNumber numberWithFloat:orderIndex] withOwner:orderIndexGroup];
-				[multipleOrderIndex setObject:[NSNumber numberWithFloat:inIndex] withOwner:inGroup];
-				orderIndex = 0;
-				orderIndexGroup = nil;
-				
-			}else{
-				//This is an update or addition to the existing multiple groups
-				[multipleOrderIndex setObject:[NSNumber numberWithFloat:inIndex] withOwner:inGroup];
-				
-			}
-		}
+		[multipleOrderIndex setObject:[NSNumber numberWithFloat:inIndex] withOwner:inGroup];
 	}else{ //Remove
-		//Whoops, can't do that yet :)
+		[multipleOrderIndex setObject:nil withOwner:inGroup];
 	}
+}
+
+//Private: Access to the ordering array (For contact controlller / saving)
+- (AIMutableOwnerArray *)orderIndexArray
+{
+	return(multipleOrderIndex);
 }
 
 //Alter the local grouping for this object (PRIVATE: These are for AIListGroup ONLY)
@@ -440,6 +422,16 @@
     }else{
         outName = [self serverDisplayName];
     }
+	
+#warning ## Temporary: Display object index ##
+//	NSEnumerator *e = [multipleOrderIndex objectEnumerator];
+//	NSNumber	*n;
+//	outName = [outName stringByAppendingString:@" ["];
+//	while(n = [e nextObject]){
+//		outName = [outName stringByAppendingString:[NSString stringWithFormat:@"%0.2f",[n floatValue]]];
+//	}
+//	outName = [outName stringByAppendingString:@"]"];
+	
 
     return(outName);
 }
