@@ -1,10 +1,10 @@
 body {
 	background: #E6E9F2;
+	font: 11px "Lucida Grande";
 }
 
 .incoming .buddyicon {
 	background: rgba(255,0,1,0.2);
-	border: 1px solid #ff0001;
 }
 
 .incoming .sender {
@@ -25,7 +25,7 @@ body {
 }
 
 .incoming .time_consecutive + p {
-	border-top: 1px dashed #FF0001;
+	border-top: 1px solid rgba(255,0,1,0.4);
 }
 
 .incoming a:hover {
@@ -35,7 +35,6 @@ body {
 
 .outgoing .buddyicon {
 	background: rgba(0,45,255,0.2);
-	border: 1px solid #002cff;
 }
 
 .outgoing .sender {
@@ -57,16 +56,11 @@ body {
 }
 
 .outgoing .time_consecutive + p {
-	border-top: 1px dashed #002cff;
+	border-top: 1px solid rgba(0,45,255,0.4);
 }
 
 .outgoing a:hover
 {
 	background: #002CFF;
 	color: white;
-}
-
-.context + .actual {
-	border-top: 4px dashed rgba(0,0,0,0.1);
-	padding-top: 5px;
 }

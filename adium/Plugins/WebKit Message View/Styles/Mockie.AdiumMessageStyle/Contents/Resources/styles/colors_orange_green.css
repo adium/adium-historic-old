@@ -4,7 +4,6 @@ body {
 
 .incoming .buddyicon {
 	background: rgba(255,124,0,0.2);
-	border: 1px solid #ff7c00;
 }
 
 .incoming .sender {
@@ -25,7 +24,7 @@ body {
 }
 
 .incoming .time_consecutive + p {
-	border-top: 1px dashed #FF7C00;
+	border-top: 1px solid rgba(255,124,0,0.4);
 }
 
 .incoming a:hover {
@@ -35,7 +34,6 @@ body {
 
 .outgoing .buddyicon {
 	background: rgba(102,204,50,0.2);
-	border: 1px solid #66cc32;
 }
 
 .outgoing .sender {
@@ -57,21 +55,11 @@ body {
 }
 
 .outgoing .time_consecutive + p {
-	border-top: 1px dashed #66CC32;
+	border-top: 1px solid rgba(102,204,50,0.4);
 }
 
 .outgoing a:hover
 {
 	background: #66CC32;
 	color: white;
-}
-
-.context .message {
-	background: none;
-	color: gray;
-}
-
-.context + .actual {
-	border-top: 4px dashed rgba(0,0,0,0.1);
-	padding-top: 5px;
 }
