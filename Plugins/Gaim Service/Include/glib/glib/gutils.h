@@ -39,6 +39,7 @@ G_BEGIN_DECLS
  */
 #define G_DIR_SEPARATOR '\\'
 #define G_DIR_SEPARATOR_S "\\"
+#define G_IS_DIR_SEPARATOR(c) ((c) == G_DIR_SEPARATOR || (c) == '/')
 #define G_SEARCHPATH_SEPARATOR ';'
 #define G_SEARCHPATH_SEPARATOR_S ";"
 
@@ -48,6 +49,7 @@ G_BEGIN_DECLS
 
 #define G_DIR_SEPARATOR '/'
 #define G_DIR_SEPARATOR_S "/"
+#define G_IS_DIR_SEPARATOR(c) ((c) == G_DIR_SEPARATOR)
 #define G_SEARCHPATH_SEPARATOR ':'
 #define G_SEARCHPATH_SEPARATOR_S ":"
 
@@ -69,21 +71,14 @@ G_BEGIN_DECLS
 /* inlining hassle. for compilers that don't allow the `inline' keyword,
  * mostly because of strict ANSI C compliance or dumbness, we try to fall
  * back to either `__inline__' or `__inline'.
- * we define G_CAN_INLINE, if the compiler seems to be actually
- * *capable* to do function inlining, in which case inline function bodys
- * do make sense. we also define G_INLINE_FUNC to properly export the
- * function prototypes if no inlining can be performed.
+ * G_CAN_INLINE is defined in glibconfig.h if the compiler seems to be 
+ * actually *capable* to do function inlining, in which case inline 
+ * function bodies do make sense. we also define G_INLINE_FUNC to properly 
+ * export the function prototypes if no inlining can be performed.
  * inline function bodies have to be special cased with G_CAN_INLINE and a
  * .c file specific macro to allow one compiled instance with extern linkage
  * of the functions by defining G_IMPLEMENT_INLINES and the .c file macro.
  */
-#ifdef G_IMPLEMENT_INLINES
-#  define G_INLINE_FUNC extern
-#  undef  G_CAN_INLINE
-#endif
-#ifndef G_INLINE_FUNC
-#  define G_CAN_INLINE 1
-#endif
 #if defined (G_HAVE_INLINE) && defined (__GNUC__) && defined (__STRICT_ANSI__)
 #  undef inline
 #  define inline __inline__
@@ -95,24 +90,27 @@ G_BEGIN_DECLS
 #    define inline __inline
 #  else /* !inline && !__inline__ && !__inline */
 #    define inline  /* don't inline, then */
-#    ifndef G_INLINE_FUNC
-#      undef G_CAN_INLINE
-#    endif
 #  endif
 #endif
-#ifndef G_INLINE_FUNC
-#  if defined (__GNUC__) && defined (__OPTIMIZE__)
-#    define G_INLINE_FUNC extern inline
-#  elif defined (G_CAN_INLINE) && !defined (__GNUC__)
-#    define G_INLINE_FUNC static inline
-#  else /* can't inline */
-#    define G_INLINE_FUNC extern
-#    undef G_CAN_INLINE
-#  endif
+#ifdef G_IMPLEMENT_INLINES
+#  define G_INLINE_FUNC
+#elif defined (__GNUC__) 
+#  define G_INLINE_FUNC extern inline
+#elif defined (G_CAN_INLINE) 
+#  define G_INLINE_FUNC static inline
+#else /* can't inline */
+#  define G_INLINE_FUNC
 #endif /* !G_INLINE_FUNC */
 
 /* Retrive static string info
  */
+#ifdef G_OS_WIN32
+#define g_get_user_name g_get_user_name_utf8
+#define g_get_real_name g_get_real_name_utf8
+#define g_get_home_dir g_get_home_dir_utf8
+#define g_get_tmp_dir g_get_tmp_dir_utf8
+#endif
+
 G_CONST_RETURN gchar* g_get_user_name        (void);
 G_CONST_RETURN gchar* g_get_real_name        (void);
 G_CONST_RETURN gchar* g_get_home_dir         (void);
@@ -122,6 +120,13 @@ void                  g_set_prgname          (const gchar *prgname);
 G_CONST_RETURN gchar* g_get_application_name (void);
 void                  g_set_application_name (const gchar *application_name);
 
+G_CONST_RETURN gchar*    g_get_user_data_dir      (void);
+G_CONST_RETURN gchar*    g_get_user_config_dir    (void);
+G_CONST_RETURN gchar*    g_get_user_cache_dir     (void);
+G_CONST_RETURN gchar* G_CONST_RETURN * g_get_system_data_dirs   (void);
+G_CONST_RETURN gchar* G_CONST_RETURN * g_get_system_config_dirs (void);
+
+G_CONST_RETURN gchar* G_CONST_RETURN * g_get_language_names (void);
 
 typedef struct _GDebugKey	GDebugKey;
 struct _GDebugKey
@@ -162,20 +167,27 @@ G_CONST_RETURN gchar* g_basename           (const gchar *file_name);
 
 #endif /* G_DISABLE_DEPRECATED */
 
+#ifdef G_OS_WIN32
+#define g_get_current_dir g_get_current_dir_utf8
+#endif
+
 /* The returned strings are newly allocated with g_malloc() */
 gchar*                g_get_current_dir    (void);
-gchar*                g_path_get_basename  (const gchar *file_name);
-gchar*                g_path_get_dirname   (const gchar *file_name);
-
+gchar*                g_path_get_basename  (const gchar *file_name) G_GNUC_MALLOC;
+gchar*                g_path_get_dirname   (const gchar *file_name) G_GNUC_MALLOC;
 
 /* Set the pointer at the specified location to NULL */
 void                  g_nullify_pointer    (gpointer    *nullify_location);
 
-/* Get the codeset for the current locale */
-/* gchar * g_get_codeset    (void); */
-
 /* return the environment string for the variable. The returned memory
  * must not be freed. */
+#ifdef G_OS_WIN32
+#define g_getenv g_getenv_utf8
+#define g_setenv g_setenv_utf8
+#define g_unsetenv g_unsetenv_utf8
+#define g_find_program_in_path g_find_program_in_path_utf8
+#endif
+
 G_CONST_RETURN gchar* g_getenv             (const gchar *variable);
 gboolean              g_setenv             (const gchar *variable,
 					    const gchar *value,
@@ -327,6 +339,10 @@ GLIB_VAR const guint glib_minor_version;
 GLIB_VAR const guint glib_micro_version;
 GLIB_VAR const guint glib_interface_age;
 GLIB_VAR const guint glib_binary_age;
+
+const gchar * glib_check_version (guint required_major,
+                                  guint required_minor,
+                                  guint required_micro);
 
 #define GLIB_CHECK_VERSION(major,minor,micro)    \
     (GLIB_MAJOR_VERSION > (major) || \
