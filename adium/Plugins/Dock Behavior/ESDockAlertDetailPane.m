@@ -25,7 +25,7 @@
 }
 
 //Configure for the action
-- (void)configureForActionDetails:(NSDictionary *)inDetails
+- (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)listObject
 {
 	int behaviorIndex = [popUp_actionDetails indexOfItemWithRepresentedObject:[inDetails objectForKey:KEY_DOCK_BEHAVIOR_TYPE]];
 	if(behaviorIndex >= 0 && behaviorIndex < [popUp_actionDetails numberOfItems]){
