@@ -78,6 +78,7 @@ typedef enum {
 										listObject:(AIListObject *)listObject
 										  userInfo:(id)userInfo
 									includeSubject:(BOOL)includeSubject;
+- (BOOL)isMessageEvent:(NSString *)eventID;
 
 //Actions
 - (void)registerActionID:(NSString *)actionID withHandler:(id <AIActionHandler>)handler;
