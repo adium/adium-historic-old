@@ -3,13 +3,12 @@
 //  Adium
 //
 //  Created by David Clark on Sun Jul 18 2004
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "DCJoinChatPanelPlugin.h"
 #import "DCJoinChatWindowController.h"
 
-#define JOIN_CHAT_MENU_ITEM		AILocalizedString(@"Join Chat...",nil)
+#define JOIN_CHAT_MENU_ITEM		AILocalizedString(@"Join Group Chat...",nil)
 
 @implementation DCJoinChatPanelPlugin
 
