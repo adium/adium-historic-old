@@ -111,7 +111,12 @@
 													errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.",nil)]];
 		
 		//Password
-		[self updatePasswordField];
+		NSString	*savedPassword = [[adium accountController] passwordForAccount:account];
+		if(savedPassword && [savedPassword length] != 0){
+			[textField_password setStringValue:savedPassword];
+		}else{
+			[textField_password setStringValue:@""];
+		}
 		
 		//User alias (display name)
 		NSString *alias = [[[account preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
@@ -178,32 +183,10 @@
 	
 }
 
-
-//Update password field as UID changes
+//For subclasses
 - (IBAction)changedPreference:(id)sender
 {
-	if(sender == textField_accountUID){
-		if(![[account UID] isEqualToString:[sender stringValue]]){
-			[self updatePasswordField];
-		}
-	}
-}
-
-//Update password field
-- (void)updatePasswordField
-{
-    NSString		*savedPassword = nil;
-	NSString		*accountUID = [textField_accountUID stringValue];
-	
-#warning XXX - This isnt right, we need to passwordForUID-Service, because we dont have an account instance matching the UID that is entered here -ai
-	if(accountUID && [accountUID length]){
-		savedPassword = [[adium accountController] passwordForAccount:account];
-	}
-	if(savedPassword && [savedPassword length] != 0){
-		[textField_password setStringValue:savedPassword];
-	}else{
-		[textField_password setStringValue:@""];
-	}
+	//Empty
 }
 
 @end
