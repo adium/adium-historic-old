@@ -127,7 +127,7 @@ static AINewMessagePrompt *sharedNewMessageInstance = nil;
 	[textField_handle setMinStringLength:2];
 	
     //Configure the handle type menu
-    [popUp_service setMenu:[[adium accountController] menuOfAccountsWithTarget:self]];
+    [popUp_service setMenu:[[adium accountController] menuOfAccountsWithTarget:self includeOffline:NO]];
 
     //Select the last used account / Available online account
 	AIAccount   *preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
