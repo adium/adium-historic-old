@@ -19,6 +19,10 @@
 #import "AIMenuController.h"
 #import "AIPreferenceController.h"
 #import "ESContactSortConfigurationWindowController.h"
+#import "AIAlphabeticalSort.h"
+#import "ESStatusSort.h"
+#import "AIManualSort.h"
+
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <Adium/AISortController.h>
@@ -94,8 +98,8 @@
 	NSString					*identifier;
 	
 	//
-	identifier = [[[adium preferenceController] preferenceForKey:KEY_CURRENT_SORT_MODE_IDENTIFIER
-														   group:PREF_GROUP_CONTACT_SORTING];
+	identifier = [[adium preferenceController] preferenceForKey:KEY_CURRENT_SORT_MODE_IDENTIFIER
+														  group:PREF_GROUP_CONTACT_SORTING];
 	
 	//
 	enumerator = [[[adium contactController] sortControllerArray] objectEnumerator];
