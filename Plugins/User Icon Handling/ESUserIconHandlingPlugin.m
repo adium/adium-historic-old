@@ -257,7 +257,7 @@
 	[toolbarItem setMaxSize:NSMakeSize(32,32)];
 	[button setToolbarItem:toolbarItem];
 
-    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"MessageWindow"];
 }
 
 //After the toolbar has added the item we can set up the submenus
@@ -266,21 +266,7 @@
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
 	
 	if(!notification || ([[item itemIdentifier] isEqualToString:@"UserIcon"])){
-		NSLog(@"usericon handling got %@",item);
 		[toolbarItem setEnabled:YES];
-		
-		/*
-		NSMenu		*menu = [[[bookmarkRootMenuItem submenu] copy] autorelease];
-		
-		//Add menu to view
-		[[item view] setMenu:menu];
-		
-		//Add menu to toolbar item (for text mode)
-		NSMenuItem	*mItem = [[[NSMenuItem alloc] init] autorelease];
-		[mItem setSubmenu:menu];
-		[mItem setTitle:[menu title]];
-		[item setMenuFormRepresentation:mItem];
-		 */
 	}
 }
 
