@@ -15,6 +15,8 @@
 
 #import "AIOutlineView.h"
 
+#define DEFAULT_GROUPED_TYPING_INTERVAL 0.5
+
 @interface AIOutlineView (PRIVATE)
 - (void)_initOutlineView;
 @end
@@ -37,7 +39,14 @@
 
 - (void)_initOutlineView
 {
+	lastKeypressTick = 0;
+	currentInputString = nil;
+}
 
+- (void)dealloc
+{
+	[currentInputString release]; currentInputString = nil;
+	[super dealloc];
 }
 
 //Allow our delegate to specify context menus
@@ -48,6 +57,24 @@
     }else{
         return(nil);
     }
+}
+
+//Process a pressed alphanumeric character. This should only be called if the delegate responds to outlineView:userDidTypeString:
+- (void)_userPressedCharacter:(unichar)pressedChar
+{
+	UInt32				keypressTick = TickCount();	
+	
+	//If more than GROUPED_TYPING_INTERVAL has passed since the last input, clear the input string and start over
+	if(((keypressTick - lastKeypressTick) / 60.0) > DEFAULT_GROUPED_TYPING_INTERVAL) {
+		[currentInputString release]; 
+		currentInputString = [[NSMutableString alloc] init];
+	}
+	
+	[currentInputString appendString:[NSString stringWithCharacters:&pressedChar length:1]];
+	
+	[[self delegate] outlineView:self userDidTypeString:currentInputString];
+	
+	lastKeypressTick = keypressTick;
 }
 
 //Navigate outline view with the keyboard, send select actions to delegate
@@ -85,7 +112,11 @@
 				[self expandItem:object];
             }
 			
-        }else{
+        }else if((isalnum(pressedChar)) && 
+				 ([[self delegate] respondsToSelector:@selector(outlineView:userDidTypeString:)])){
+			[self _userPressedCharacter:pressedChar];
+
+		}else{
 			[super keyDown:theEvent];
 		}
 	}else{
