@@ -37,7 +37,7 @@
     advancedPreferences = [[AILoggerAdvancedPreferences preferencePaneWithOwner:owner] retain];
 
     //Install the log viewer menu item
-    logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@"l"] autorelease];
+    logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Log Viewer" target:self action:@selector(showLogViewerToSelectedContact:) keyEquivalent:@"l"] autorelease];
     [[owner menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
 
     //Install the 'view logs' menu item
@@ -181,17 +181,18 @@
 }
 
 //Show the log viewer window
-- (void)showLogViewer:(id)sender
+/*- (void)showLogViewer:(id)sender
 {
     [[AILogViewerWindowController logViewerWindowControllerWithOwner:owner] showWindow:nil];
-}
+}*/
 
 //Show the log viewer, displaying the selected contact's logs
 - (void)showLogViewerToSelectedContact:(id)sender
 {
+    AIListContact   *selectedContact = [[owner contactController] selectedContact];
+    
     [[AILogViewerWindowController logViewerWindowControllerWithOwner:owner] showWindow:nil];
-    [[AILogViewerWindowController logViewerWindowControllerWithOwner:owner] showLogsForContact:[[owner contactController] selectedContact]];
-    NSLog(@"%@", [[owner contactController] selectedContact]);
+    [[AILogViewerWindowController logViewerWindowControllerWithOwner:owner] showLogsForContact:selectedContact];
 }
 
 //Show the log viewer, displaying the selected contact's logs
