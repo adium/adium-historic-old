@@ -21,6 +21,7 @@
             }; 
             SUPERCLASS = NSObject; 
         }, 
+        {CLASS = ESTextViewWithPlaceholder; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 

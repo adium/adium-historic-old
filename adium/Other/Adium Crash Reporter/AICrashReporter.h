@@ -14,7 +14,7 @@
     IBOutlet	NSTextField                 *textField_emailAddress;
     IBOutlet	NSTextField                 *textField_accountIM;
     IBOutlet	NSTextField                 *textField_description;
-    IBOutlet	NSTextView                  *textView_details;
+    IBOutlet	ESTextViewWithPlaceholder   *textView_details;
     IBOutlet	NSProgressIndicator         *progress_sending;
     
     IBOutlet	NSPanel                     *panel_privacySheet;
