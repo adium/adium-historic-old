@@ -85,4 +85,6 @@ typedef enum {
 - (AIStateMutabilityType)mutabilityType;
 - (void)setMutabilityType:(AIStateMutabilityType)mutabilityType;
 
++ (NSImage *)statusIconForStatusType:(AIStatusType)inStatusType;
+
 @end

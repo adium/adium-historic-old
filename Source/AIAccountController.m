@@ -1373,7 +1373,9 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     if([inObject isKindOfClass:[AIAccount class]] && 
 		([inModifiedKeys containsObject:@"Online"] ||
 		 [inModifiedKeys containsObject:@"Connecting"] ||
-		 [inModifiedKeys containsObject:@"Disconnecting"])){
+		 [inModifiedKeys containsObject:@"Disconnecting"] ||
+		 [inModifiedKeys containsObject:@"IdleSince"] ||
+		 [inModifiedKeys containsObject:@"StatusState"])){
 		
 		//Enumerate all arrays of menu items (for all plugins)
 		NSEnumerator			*enumerator = [accountMenuItemArraysDict objectEnumerator];
