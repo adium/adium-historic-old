@@ -23,5 +23,10 @@
     return([self tabViewItemAtIndex:[self indexOfTabViewItemWithIdentifier:identifier]]);
 }
 
+- (int)indexOfSelectedTabViewItem
+{
+	return([self indexOfTabViewItem:[self selectedTabViewItem]]);
+}
+
 
 @end
