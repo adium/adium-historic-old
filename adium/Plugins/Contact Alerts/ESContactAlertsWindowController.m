@@ -442,11 +442,11 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     }
 }
 
-- (IBAction) switchToContact:(id) sender
+- (IBAction)switchToContact:(id) ender
 {
     [sharedInstance configureWindowforObject:[sender representedObject]];
 }
-- (void)testSelectedEvent
+- (void)testSelectedEvent:(id)sender
 {
     //action to take when action is double-clicked in the window
 }
