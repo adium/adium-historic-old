@@ -5,8 +5,8 @@
             CLASS = AIListLayoutWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "checkBox_drawGrid" = NSButton; 
                 "checkBox_extendedStatusVisible" = NSButton; 
+                "checkBox_horizontalAutosizing" = NSButton; 
                 "checkBox_serviceIconsVisible" = NSButton; 
                 "checkBox_statusIconsVisible" = NSButton; 
                 "checkBox_userIconVisible" = NSButton; 

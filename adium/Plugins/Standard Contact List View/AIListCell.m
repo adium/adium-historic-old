@@ -128,6 +128,11 @@
 	return(NSMakeSize(0, [self topSpacing] + [self topPadding] + [self bottomPadding] + [self bottomSpacing]));
 }
 
+- (int)cellWidth
+{
+	return([self leftSpacing] + [self leftPadding] + [self rightPadding] + [self rightSpacing]);
+}
+
 //User-defined spacing offsets.  A cell may adjust these values to to obtain a more desirable default. 
 //These are offsets, they may be negative!  Spacing is the distance between cells (Spacing gaps are not filled).
 - (void)setSplitVerticalSpacing:(int)inSpacing{

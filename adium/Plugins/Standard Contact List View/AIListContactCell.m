@@ -66,6 +66,36 @@
 	}
 }
 
+- (int)cellWidth
+{
+	int		width = [super cellWidth];
+	
+	//Name
+	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[self labelString]
+																	   attributes:[self labelAttributes]];
+	width += [displayName size].width;
+	
+	//User icon
+	if(userIconVisible){
+		width += userIconSize;
+		if(userIconPosition == IMAGE_POSITION_LEFT) width += ICON_TEXT_PADDING;
+	}	
+	
+	//Status icon
+	if(statusIconsVisible){
+		width += [[self statusImage] size].width;
+		if(statusIconPosition != IMAGE_POSITION_LOWER_LEFT && statusIconPosition != IMAGE_POSITION_LOWER_RIGHT)
+			width += STATUS_ICON_LEFT_PAD + STATUS_ICON_RIGHT_PAD;
+	}
+
+	//Service icon
+	if(serviceIconsVisible){
+		width += [[self serviceImage] size].width;
+	}
+	
+	return(width + 1);
+}
+
 
 //Status Text ----------------------------------------------------------------------------------------------------------
 #pragma mark Status Text

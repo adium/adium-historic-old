@@ -152,6 +152,7 @@
 	[checkBox_serviceIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS] boolValue]];	
 	[checkBox_windowHasShadow setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
 	[checkBox_verticalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue]];
+	[checkBox_horizontalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue]];
 	
 	[fontField_contact setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_FONT] representedFont]];
 	[fontField_status setFont:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_FONT] representedFont]];
@@ -257,6 +258,11 @@
                                              forKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE
                                               group:PREF_GROUP_LIST_LAYOUT];
 		
+    }else if(sender == checkBox_horizontalAutosizing){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE
+                                              group:PREF_GROUP_LIST_LAYOUT];
+			
     }else if(sender == slider_windowTransparency){
         [[adium preferenceController] setPreference:[NSNumber numberWithFloat:([sender floatValue] / 100.0)]
                                              forKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY

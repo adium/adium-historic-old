@@ -260,7 +260,7 @@ DeclareString(FormattedUID);
     id					value = nil;
 	NSMutableDictionary	*prefDict = [[adium preferenceController] cachedObjectPrefsForKey:[self uniqueObjectID]
 																					 path:[self pathToPreferences]];
-    
+
     //Get our value for the preference
     value = [prefDict objectForKey:inKey];
     

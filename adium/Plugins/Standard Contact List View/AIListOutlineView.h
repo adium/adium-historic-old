@@ -63,6 +63,8 @@
 
 - (void)setDelegate:(id)delegate;
 - (void)setRowHeightFromDataCellOfColumn:(NSTableColumn *)column;
+- (int)desiredHeight;
+- (int)desiredWidth;
 
 //Frame and superview tracking
 - (void)viewWillMoveToSuperview:(NSView *)newSuperview;

@@ -34,6 +34,7 @@
 #define KEY_LIST_LAYOUT_WINDOW_SHADOWED			@"Window Shadowed"
 
 #define KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE		@"Vertical Autosizing"
+#define KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE		@"Horizontal Autosizing"
 #define KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY		@"Window Transparency"
 
 #define KEY_LIST_LAYOUT_CONTACT_FONT			@"Contact Font"
@@ -84,6 +85,7 @@ typedef enum {
 	IBOutlet		NSButton			*checkBox_serviceIconsVisible;
 	IBOutlet		NSButton			*checkBox_windowHasShadow;
 	IBOutlet		NSButton			*checkBox_verticalAutosizing;
+	IBOutlet		NSButton			*checkBox_horizontalAutosizing;
 
 	IBOutlet		NSSlider			*slider_userIconSize;
 	IBOutlet		NSTextField			*textField_userIconSize;

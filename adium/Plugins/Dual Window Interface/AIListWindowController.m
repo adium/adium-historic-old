@@ -73,7 +73,7 @@
 - (void)centerWindowOnMainScreenIfNeeded:(NSNotification *)notification;
 - (void)windowDidLoad;
 - (BOOL)windowShouldClose:(id)sender;
-- (NSRect)_desiredWindowFrame;
+- (NSRect)_desiredWindowFrameUsingDesiredWidth:(BOOL)useDesiredWidth desiredHeight:(BOOL)useDesiredHeight;
 - (void)_configureAutoResizing;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureToolbar;
@@ -256,8 +256,9 @@
 
 		//
 		autoResizeVertically = [[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
-		autoResizeHorizontally = NO;
-        [self _configureAutoResizing];
+		autoResizeHorizontally = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
+		[[self window] setShowsResizeIndicator:!(autoResizeVertically && autoResizeHorizontally)];
+		[self contactListDesiredSizeChanged:nil];
 		
 		//Group Cell
 		[groupCell release];
@@ -511,66 +512,26 @@
 
 //Resizing And Positioning ---------------------------------------------------------------------------------------------
 #pragma mark Resizing And Positioning
-//Configure auto-resizing
-- (void)_configureAutoResizing
-{
-    //Hide the resize indicator if all sizing is being controlled programatically
-    [[self window] setShowsResizeIndicator:!(autoResizeVertically && autoResizeHorizontally)];
-    
-    //Configure the maximum and minimum sizes
-    NSRect  currentFrame = [[self window] frame];
-    NSSize targetMin = minWindowSize;
-    NSSize targetMax = NSMakeSize(10000, 10000);
-    
-    if(autoResizeHorizontally){
-        targetMin.width = currentFrame.size.width;
-        targetMax.width = currentFrame.size.width;
-    }
-    if(autoResizeVertically){
-        targetMin.height = currentFrame.size.height;
-        targetMax.height = currentFrame.size.height;
-    }
-    
-    [[self window] setMinSize:targetMin];
-    [[self window] setMaxSize:targetMax];
-
-	//Update the size as necessary
-	[self contactListDesiredSizeChanged:nil];
-}
-
 //Dynamically resize the contact list
 - (void)contactListDesiredSizeChanged:(NSNotification *)notification
 {
     if(autoResizeVertically || autoResizeHorizontally){
-        NSRect	desiredFrame = [self _desiredWindowFrame];
-        if((desiredFrame.size.width != 0) && (desiredFrame.size.height != 0)){
-			NSRect  newFrame = desiredFrame;
-			NSRect  oldFrame = [[self window] frame];
+		NSRect  currentFrame = [[self window] frame];
+        NSRect	desiredFrame = [self _desiredWindowFrameUsingDesiredWidth:autoResizeHorizontally
+															desiredHeight:autoResizeVertically];
+
+		if(!NSEqualRects(currentFrame, desiredFrame)){
+
+			NSRect	newFrame = NSMakeRect((autoResizeHorizontally ? desiredFrame.origin.x : currentFrame.origin.x),
+										  (autoResizeHorizontally ? desiredFrame.origin.y : currentFrame.origin.y),
+										  (autoResizeVertically ? desiredFrame.size.width : currentFrame.size.width),
+										  (autoResizeVertically ? desiredFrame.size.height : currentFrame.size.height));
 			
-			if(!NSEqualRects(oldFrame, newFrame)){
-				NSSize targetMin = minWindowSize;
-				NSSize targetMax = NSMakeSize(10000, 10000);
-				if(autoResizeHorizontally) {    
-					targetMin.width = newFrame.size.width;
-					targetMax.width = newFrame.size.width;
-				}else{
-					newFrame.size.width = oldFrame.size.width; //no horizontal resize so use old width
-					newFrame.origin.x = oldFrame.origin.x;
-				}
-				
-				if(autoResizeVertically){
-					targetMin.height = newFrame.size.height;  
-					targetMax.height = newFrame.size.height;  
-				}else{
-					newFrame.size.height = oldFrame.size.height; //no vertical resize so use old height
-					newFrame.origin.y = oldFrame.origin.y;
-				}
-				
-				//Resize the window
-				[[self window] setFrame:newFrame display:YES animate:NO];
-				[[self window] setMinSize:targetMin];
-				[[self window] setMaxSize:targetMax];
-			}
+			[[self window] setFrame:newFrame display:YES animate:NO];
+			[[self window] setMinSize:NSMakeSize((autoResizeHorizontally ? newFrame.size.width : minWindowSize.width),
+												 (autoResizeVertically ? newFrame.size.height : minWindowSize.height))];
+			[[self window] setMaxSize:NSMakeSize((autoResizeHorizontally ? newFrame.size.width : 10000),
+												 (autoResizeVertically ? newFrame.size.height : 10000))];
 		}
     }
 }
@@ -578,35 +539,48 @@
 //Size for window zoom
 - (NSRect)windowWillUseStandardFrame:(NSWindow *)sender defaultFrame:(NSRect)defaultFrame
 {
-    return([self _desiredWindowFrame]);
+    return([self _desiredWindowFrameUsingDesiredWidth:YES desiredHeight:YES]);
 }
 
 //Desired frame of our window
-- (NSRect)_desiredWindowFrame
+- (NSRect)_desiredWindowFrameUsingDesiredWidth:(BOOL)useDesiredWidth desiredHeight:(BOOL)useDesiredHeight
 {
 	NSRect      windowFrame = [[self window] frame];
 	NSRect		viewFrame = [scrollView_contactList frame];
-	NSSize		desiredViewSize = [contactListView desiredSize];
 	NSRect		screenFrame = [[[self window] screen] visibleFrame];
-	NSRect		newWindowFrame = NSMakeRect(0, 0, windowFrame.size.width, windowFrame.size.height);
+	NSRect		newWindowFrame = windowFrame;//NSMakeRect(windowFrame, 0, windowFrame.size.width, windowFrame.size.height);
 	
-	//Subtract the current size of the view from our frame
-	//newWindowSize.width -= viewFrame.size.width;
-	newWindowFrame.size.height -= viewFrame.size.height;
-	
-	//Now, figure out how big the view wants to be and add that to our frame
-	//newWindowSize.width += desiredViewSize.width;
-	newWindowFrame.size.height += desiredViewSize.height;
-	
-	//If the window is not near the bottom edge of the screen, keep its titlebar in place
-	if(windowFrame.origin.y > screenFrame.origin.y + EDGE_CATCH_Y ||
-	   windowFrame.origin.y + windowFrame.size.height + EDGE_CATCH_Y > screenFrame.origin.y + screenFrame.size.height){
-		newWindowFrame.origin.y = windowFrame.origin.y + (windowFrame.size.height - newWindowFrame.size.height);
-	}else{
-		newWindowFrame.origin.y = windowFrame.origin.y;
+	//Height
+	if(useDesiredHeight){
+		//Subtract the current size of the view from our frame
+		//newWindowSize.width -= viewFrame.size.width;
+		newWindowFrame.size.height -= viewFrame.size.height;
+		
+		//Now, figure out how big the view wants to be and add that to our frame
+		//newWindowSize.width += desiredViewSize.width;
+		newWindowFrame.size.height += [contactListView desiredHeight];
+		
+		//If the window is not near the bottom edge of the screen, keep its titlebar in place
+		if(windowFrame.origin.y > screenFrame.origin.y + EDGE_CATCH_Y ||
+		   windowFrame.origin.y + windowFrame.size.height + EDGE_CATCH_Y > screenFrame.origin.y + screenFrame.size.height){
+			newWindowFrame.origin.y = windowFrame.origin.y + (windowFrame.size.height - newWindowFrame.size.height);
+		}else{
+			newWindowFrame.origin.y = windowFrame.origin.y;
+		}
+		newWindowFrame.origin.x = windowFrame.origin.x;
 	}
-	newWindowFrame.origin.x = windowFrame.origin.x;
 	
+	//Width
+	if(useDesiredWidth){
+		//Subtract the current size of the view from our frame
+		//newWindowSize.width -= viewFrame.size.width;
+		newWindowFrame.size.width -= viewFrame.size.width;
+		
+		//Now, figure out how big the view wants to be and add that to our frame
+		//newWindowSize.width += desiredViewSize.width;
+		newWindowFrame.size.width += [contactListView desiredWidth];
+	}
+
 	//And adjust if we've fallen off the screen
 	//windowFrame = NSIntersectionRect(windowFrame, visibleScreenFrame);
 	
