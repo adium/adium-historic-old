@@ -1490,6 +1490,36 @@
 			settings = {
 			};
 		};
+		3433565D07936F9C00C84B15 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = GrowlPresets.plist;
+			path = "Plugins/Global Events Preferences/GrowlPresets.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3433667407948C1400C84B15 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist;
+			name = GrowlDefaults.plist;
+			path = "Plugins/Global Events Preferences/GrowlDefaults.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3433667507948C1400C84B15 = {
+			fileRef = 3433667407948C1400C84B15;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3433673307949E2200C84B15 = {
+			fileRef = 3433565D07936F9C00C84B15;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3439FD8C05794B4500B2E449 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -3332,6 +3362,8 @@
 				4BA5325D050FC5E800A8010A,
 				4B68D3880463330600A8010A,
 				4B791B2C05350BA20000969C,
+				3433667407948C1400C84B15,
+				3433565D07936F9C00C84B15,
 				34539E9B077BD09500A83891,
 				346BA3630774C35400628F06,
 			);
@@ -6698,6 +6730,8 @@
 				3452AA0B07891DFC00C3C494,
 				344F4A4A078DDC9100226DFC,
 				344F4A4C078DDC9500226DFC,
+				3433667507948C1400C84B15,
+				3433673307949E2200C84B15,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
