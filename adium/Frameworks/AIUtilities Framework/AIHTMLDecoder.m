@@ -218,7 +218,7 @@ DeclareString(TagCharStartString);
 			}
 
             //Family
-            if([familyName caseInsensitiveCompare:currentFamily] != 0){
+            if([familyName caseInsensitiveCompare:currentFamily] != 0 || closeFontTags){
                 
 				if (simpleOnly){
 					[string appendString:[NSString stringWithFormat:@"<FONT FACE=\"%@\">",familyName]];
@@ -238,14 +238,14 @@ DeclareString(TagCharStartString);
             }
 
             //Size
-            if((pointSize != currentSize) && !simpleOnly){
+            if(((pointSize != currentSize) && !simpleOnly) || closeFontTags){
                 [string appendString:[NSString stringWithFormat:SizeTag, (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
                 currentSize = pointSize;
 				
             }
 
             //Color
-            if(includeColorTags && ([color compare:currentColor] || (currentColor && !color))){
+            if((includeColorTags && ([color compare:currentColor] || (currentColor && !color))) || closeFontTags){
 				if (simpleOnly){
 					[string appendString:[NSString stringWithFormat:@"<FONT COLOR=\"#%@\">",color]];	
 				}else{
