@@ -1588,24 +1588,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34486BB706D1DF0400DA778C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AITableViewPopUpButtonCell.h;
-			path = "Frameworks/AIUtilities Framework/AITableViewPopUpButtonCell.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34486BB806D1DF0400DA778C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AITableViewPopUpButtonCell.m;
-			path = "Frameworks/AIUtilities Framework/AITableViewPopUpButtonCell.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34486BB906D1DF0400DA778C = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -3411,21 +3393,6 @@
 			settings = {
 			};
 		};
-		34486CB706D1DF0400DA778C = {
-			fileRef = 34486BB706D1DF0400DA778C;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
-		34486CB806D1DF0400DA778C = {
-			fileRef = 34486BB806D1DF0400DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34486CB906D1DF0400DA778C = {
 			fileRef = 34486BB906D1DF0400DA778C;
 			isa = PBXBuildFile;
@@ -4855,7 +4822,6 @@
 		};
 		4BD1EEF006D2608000B3975E = {
 			children = (
-				4BD1EFC806D266B600B3975E,
 				4BD1EFC206D2669700B3975E,
 				4BD1EFC506D2669F00B3975E,
 			);
@@ -5099,17 +5065,6 @@
 			);
 			isa = PBXGroup;
 			name = "Text view observing return & enter";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BD1EFC806D266B600B3975E = {
-			children = (
-				34486BB706D1DF0400DA778C,
-				34486BB806D1DF0400DA778C,
-			);
-			isa = PBXGroup;
-			name = "Small tableview popups with icons";
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
@@ -5646,7 +5601,6 @@
 				34486CB006D1DF0400DA778C,
 				34486CB206D1DF0400DA778C,
 				34486CB406D1DF0400DA778C,
-				34486CB706D1DF0400DA778C,
 				34486CB906D1DF0400DA778C,
 				34486CBD06D1DF0400DA778C,
 				34486CBF06D1DF0400DA778C,
@@ -5811,7 +5765,6 @@
 				34486CB106D1DF0400DA778C,
 				34486CB306D1DF0400DA778C,
 				34486CB606D1DF0400DA778C,
-				34486CB806D1DF0400DA778C,
 				34486CBA06D1DF0400DA778C,
 				34486CBE06D1DF0400DA778C,
 				34486CC006D1DF0400DA778C,
