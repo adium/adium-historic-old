@@ -11,7 +11,6 @@
 #import <AIUtilities/AIUtilities.h>
 #import <Cocoa/Cocoa.h>
 #import "ESAnnouncerPreferences.h"
-#import "SUSpeaker.h"
 
 
 #define PREF_GROUP_SOUNDS	@"Sounds"

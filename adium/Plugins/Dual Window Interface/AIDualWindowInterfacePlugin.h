@@ -47,11 +47,12 @@
     AIContactListWindowController 	*contactListWindowController;
     id <AIInterfaceContainer>		activeContainer;
 
-    //
-
+    //messageWindow stuff
     NSMutableArray			*messageWindowControllerArray;
     int					activeWindowControllerIndex;
-    //
+    BOOL				alwaysCreateNewWindows;
+    
+    //Preferences
     AIDualWindowPreferences		*preferenceController;
 }
 
