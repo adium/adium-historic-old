@@ -3777,13 +3777,12 @@
 			children = (
 				346E640D051533C0003B2F21,
 				346E640E051533C0003B2F21,
-				346E641405157B14003B2F21,
-				346E641505157B14003B2F21,
-				34ADDFFF05158D4B003B2F21,
-				34F77079052B72F7004616D4,
 				4BAA1B450632EE2700D8B92C,
 				4BAA1B460632EE2700D8B92C,
 				6CF4266B057762CC00F27FAA,
+				34C68B580778FC6300EB423C,
+				34C68B590778FC6400EB423C,
+				34C68B650778FCB800EB423C,
 				4BAA1B440632EE2700D8B92C,
 				34ADE00205159186003B2F21,
 			);
@@ -3808,24 +3807,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = ESAnnouncerPlugin.m;
 			path = Plugins/Announcer/ESAnnouncerPlugin.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		346E641405157B14003B2F21 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESAnnouncerPreferences.h;
-			path = Plugins/Announcer/ESAnnouncerPreferences.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		346E641505157B14003B2F21 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESAnnouncerPreferences.m;
-			path = Plugins/Announcer/ESAnnouncerPreferences.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -5679,14 +5660,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34ADDFFF05158D4B003B2F21 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = AnnouncerPrefs.nib;
-			path = Plugins/Announcer/AnnouncerPrefs.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34ADE00205159186003B2F21 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -6177,7 +6150,6 @@
 				4BD6754C06001E1A0049CAF7,
 				4BD6754F06001E1C0049CAF7,
 				4BD6755506001E270049CAF7,
-				4BD6755706001E270049CAF7,
 				4BD6756006001E2E0049CAF7,
 				4BD6756C06001E340049CAF7,
 				4BD6756E06001E360049CAF7,
@@ -6279,6 +6251,9 @@
 				4B95957A076E072C0090C905,
 				346BA33E0774C27400628F06,
 				346BA3440774C2D200628F06,
+				34C68B250778FA1300EB423C,
+				34C68B2B0778FA5C00EB423C,
+				34C68B5A0778FC6400EB423C,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6419,9 +6394,7 @@
 				4BD6753F06001E150049CAF7,
 				4BD6754E06001E1C0049CAF7,
 				4BD6755106001E1D0049CAF7,
-				4BD6755B06001E290049CAF7,
 				4BD6755C06001E2A0049CAF7,
-				4BD6755F06001E2C0049CAF7,
 				4BD6756806001E310049CAF7,
 				4BD6757006001E370049CAF7,
 				4BD6757F06001E410049CAF7,
@@ -6594,6 +6567,8 @@
 				4BC5A5DF0764F75B0080ECF7,
 				4B959573076E072C0090C905,
 				346BA3640774C35500628F06,
+				34C68B400778FAB500EB423C,
+				34C68B660778FCB900EB423C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6758,7 +6733,6 @@
 				4BD6754D06001E1A0049CAF7,
 				4BD6755006001E1D0049CAF7,
 				4BD6755606001E270049CAF7,
-				4BD6755806001E280049CAF7,
 				4BD6756106001E2E0049CAF7,
 				4BD6756D06001E350049CAF7,
 				4BD6756F06001E360049CAF7,
@@ -6860,6 +6834,9 @@
 				4B95957B076E072C0090C905,
 				346BA33F0774C27400628F06,
 				346BA3450774C2D200628F06,
+				34C68B260778FA1300EB423C,
+				34C68B2C0778FA5C00EB423C,
+				34C68B5B0778FC6400EB423C,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8167,6 +8144,137 @@
 			settings = {
 			};
 		};
+		34C68B1C0778F9C200EB423C = {
+			children = (
+				34C68B230778FA1300EB423C,
+				34C68B240778FA1300EB423C,
+				34C68B290778FA5C00EB423C,
+				34C68B2A0778FA5C00EB423C,
+				34C68B3F0778FAB500EB423C,
+			);
+			isa = PBXGroup;
+			name = "General Preferences";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C68B230778FA1300EB423C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGeneralPreferencesPlugin.h;
+			path = "Plugins/General Preferences/ESGeneralPreferencesPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C68B240778FA1300EB423C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGeneralPreferencesPlugin.m;
+			path = "Plugins/General Preferences/ESGeneralPreferencesPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C68B250778FA1300EB423C = {
+			fileRef = 34C68B230778FA1300EB423C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C68B260778FA1300EB423C = {
+			fileRef = 34C68B240778FA1300EB423C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C68B290778FA5C00EB423C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGeneralPreferences.h;
+			path = "Plugins/General Preferences/ESGeneralPreferences.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C68B2A0778FA5C00EB423C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGeneralPreferences.m;
+			path = "Plugins/General Preferences/ESGeneralPreferences.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C68B2B0778FA5C00EB423C = {
+			fileRef = 34C68B290778FA5C00EB423C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C68B2C0778FA5C00EB423C = {
+			fileRef = 34C68B2A0778FA5C00EB423C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C68B3F0778FAB500EB423C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = GeneralPreferences.nib;
+			path = "Plugins/General Preferences/GeneralPreferences.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C68B400778FAB500EB423C = {
+			fileRef = 34C68B3F0778FAB500EB423C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C68B580778FC6300EB423C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESAnnouncerSpeakEventAlertDetailPane.h;
+			path = Plugins/Announcer/ESAnnouncerSpeakEventAlertDetailPane.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C68B590778FC6400EB423C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESAnnouncerSpeakEventAlertDetailPane.m;
+			path = Plugins/Announcer/ESAnnouncerSpeakEventAlertDetailPane.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C68B5A0778FC6400EB423C = {
+			fileRef = 34C68B580778FC6300EB423C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C68B5B0778FC6400EB423C = {
+			fileRef = 34C68B590778FC6400EB423C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C68B650778FCB800EB423C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = AnnouncerSpeakEventContactAlert.nib;
+			path = Plugins/Announcer/AnnouncerSpeakEventContactAlert.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C68B660778FCB900EB423C = {
+			fileRef = 34C68B650778FCB800EB423C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34CDB7AE0571D67800D50469 = {
 			children = (
 				4BE9200A03DED0E500A8010A,
@@ -9231,14 +9339,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		34F77079052B72F7004616D4 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ContactAnnouncer.nib;
-			path = Plugins/Announcer/ContactAnnouncer.nib;
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		34F8A7FA05A8927F00577775 = {
 			children = (
@@ -11949,6 +12049,7 @@
 		};
 		4B4F5B23042D636700A8010A = {
 			children = (
+				34C68B1C0778F9C200EB423C,
 				4B9A683D06AEB41C0010BF69,
 				4B2E560406A33D85008866CF,
 				4BD388C306B5899E000A346A,
@@ -14261,8 +14362,8 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
-			name = ESAnnouncerAlertDetailPane.h;
-			path = Plugins/Announcer/ESAnnouncerAlertDetailPane.h;
+			name = ESAnnouncerSpeakTextAlertDetailPane.h;
+			path = Plugins/Announcer/ESAnnouncerSpeakTextAlertDetailPane.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -14270,8 +14371,8 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
-			name = ESAnnouncerAlertDetailPane.m;
-			path = Plugins/Announcer/ESAnnouncerAlertDetailPane.m;
+			name = ESAnnouncerSpeakTextAlertDetailPane.m;
+			path = Plugins/Announcer/ESAnnouncerSpeakTextAlertDetailPane.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -16791,24 +16892,6 @@
 			settings = {
 			};
 		};
-		4BD6755706001E270049CAF7 = {
-			fileRef = 346E641405157B14003B2F21;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6755806001E280049CAF7 = {
-			fileRef = 346E641505157B14003B2F21;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6755B06001E290049CAF7 = {
-			fileRef = 34F77079052B72F7004616D4;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6755C06001E2A0049CAF7 = {
 			fileRef = 6CF4266B057762CC00F27FAA;
 			isa = PBXBuildFile;
@@ -16817,12 +16900,6 @@
 		};
 		4BD6755D06001E2B0049CAF7 = {
 			fileRef = 34ADE00205159186003B2F21;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6755F06001E2C0049CAF7 = {
-			fileRef = 34ADDFFF05158D4B003B2F21;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -18420,8 +18497,8 @@
 		6CF4266B057762CC00F27FAA = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = AnnouncerContactAlert.nib;
-			path = Plugins/Announcer/AnnouncerContactAlert.nib;
+			name = AnnouncerSpeakTextContactAlert.nib;
+			path = Plugins/Announcer/AnnouncerSpeakTextContactAlert.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};

@@ -26,9 +26,6 @@
 
     NSString					*lastSenderString;
     
-    BOOL                        speakTime;
-    BOOL                        speakSender;
-
     //Contact Editor view
     IBOutlet	NSView			*view_contactAnnouncerInfoView;
     IBOutlet	NSPopUpButton	*popUp_voice;

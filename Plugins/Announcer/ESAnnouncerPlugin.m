@@ -6,7 +6,8 @@
 //
 
 #import "ESAnnouncerPlugin.h"
-#import "ESAnnouncerAlertDetailPane.h"
+#import "ESAnnouncerSpeakTextAlertDetailPane.h"
+#import "ESAnnouncerSpeakEventAlertDetailPane.h"
 
 #define	CONTACT_ANNOUNCER_NIB		@"ContactAnnouncer"		//Filename of the announcer info view
 #define ANNOUNCER_ALERT_SHORT		AILocalizedString(@"Speak Specific Text",nil)
@@ -29,10 +30,6 @@
 	[[adium contactAlertsController] registerActionID:CONTACT_ALERT_SPEAK_EVENT_IDENTIFIER
 										  withHandler:self];
     
-    //Setup our preferences
-    preferences = [[ESAnnouncerPreferences preferencePane] retain];
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ANNOUNCER_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_ANNOUNCER];
-
     //Install the contact info view
 /*
 	[NSBundle loadNibNamed:CONTACT_ANNOUNCER_NIB owner:self];
@@ -41,10 +38,6 @@
     [popUp_voice addItemsWithTitles:[[adium soundController] voices]];
  */
     lastSenderString = nil;
-	
-    //Observer preference changes
-	[[adium preferenceController] registerPreferenceObserver:self 
-													forGroup:PREF_GROUP_ANNOUNCER];
 }
 
 - (void)uninstallPlugin
@@ -52,14 +45,6 @@
     //Uninstall our contact alert
 //    [[adium contactAlertsController] unregisterContactAlertProvider:self];
     
-}
-
-//Called when the preferences change, reregister for the notifications
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
-{
-	speakTime = [[prefDict objectForKey:KEY_ANNOUNCER_TIME] boolValue];
-	speakSender = [[prefDict objectForKey:KEY_ANNOUNCER_SENDER] boolValue];
 }
 
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
@@ -143,9 +128,9 @@
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
 	if([actionID isEqualToString:CONTACT_ALERT_SPEAK_TEXT_IDENTIFIER]){
-		return([ESAnnouncerAlertDetailPane actionDetailsPane]);
+		return([ESAnnouncerSpeakTextAlertDetailPane actionDetailsPane]);
 	}else{ /*Speak Event*/
-		return(/*[ESAnnouncerEventAlertDetailPane actionDetailsPane]*/nil);
+		return([ESAnnouncerSpeakEventAlertDetailPane actionDetailsPane]);
 	}
 }
 
@@ -153,6 +138,9 @@
 {
 	NSString			*textToSpeak = nil;
 	NSString			*timeFormat;
+
+	BOOL				speakTime = [[details objectForKey:KEY_ANNOUNCER_TIME] boolValue];
+	BOOL				speakSender = [[details objectForKey:KEY_ANNOUNCER_SENDER] boolValue];
 	
 	timeFormat = (speakTime ?
 				  [NSDateFormatter localizedDateFormatStringShowingSeconds:YES showingAMorPM:NO] :
