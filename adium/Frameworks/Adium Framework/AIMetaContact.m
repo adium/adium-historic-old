@@ -167,12 +167,58 @@
 		}
 		
 		_preferredContact = preferredContact;
-
-		//All sorts of things may have changed when we switch preferred contacts, so request a resort.
-//		[[adium contactController] sortListObject:self];
 	}
 	
 	return _preferredContact;
+}
+
+- (AIListContact *)preferredContactWithServiceID:(NSString *)inServiceID
+{
+	AIListContact   *returnContact = nil;
+	
+	if (_preferredContact && [[_preferredContact serviceID] isEqualToString:inServiceID]){
+		//First try to use our preferredContact
+		returnContact = _preferredContact;
+		
+	}else{
+		AIListContact   *thisContact;
+		unsigned		index;
+		unsigned		count = [containedObjects count];
+		
+		//Search for an available contact
+		for (index = 0; index < count; index++){
+			thisContact = [containedObjects objectAtIndex:index];
+			if (([[thisContact serviceID] isEqualToString:inServiceID]) &&
+				([thisContact statusSummary] == AIAvailableStatus)){
+				returnContact = thisContact;
+				break;
+			}
+		}			
+		
+		//If no available contacts, find the first online contact
+		if (!returnContact){
+			for (index = 0; index < count; index++){
+				thisContact = [containedObjects objectAtIndex:index];
+				if (([thisContact online]) && 
+					([[thisContact serviceID] isEqualToString:inServiceID])){
+					returnContact = thisContact;
+					break;
+				}
+			}
+		}
+
+		if (!returnContact){
+			for (index = 0; index < count; index++){
+				thisContact = [containedObjects objectAtIndex:index];
+				if ([[thisContact serviceID] isEqualToString:inServiceID]){
+					returnContact = thisContact;
+					break;
+				}
+			}
+		}
+	}
+
+	return (returnContact);
 }
 
 - (BOOL)containsOnlyOneUniqueContact
