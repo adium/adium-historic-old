@@ -60,10 +60,12 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {initiateMessage = id; paste = id; pasteFormatted = id; }; 
+            ACTIONS = {initiateMessage = id; paste = id; pasteFormatted = id; toggleFontTrait = id; }; 
             CLASS = AIInterfaceController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "menuItem_bold" = NSMenuItem; 
+                "menuItem_italic" = NSMenuItem; 
                 "menuItem_paste" = NSMenuItem; 
                 "menuItem_pasteFormatted" = NSMenuItem; 
                 owner = AIAdium; 
