@@ -31,7 +31,7 @@
                           description:@"AIM, AOL, and .Mac"
                           image:[AIImageUtilities imageNamed:@"LilYellowDuck" forClass:[self class]]
                           caseSensitive:NO
-                          allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789"]] retain];
+                          allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
     //the character sets are different because this code can't see @mac.com names...
     
     //Load and retain our preferences
