@@ -23,12 +23,12 @@
 
 #import "ESGaimRequestWindowController.h"
 #import "ESGaimRequestActionWindowController.h"
+#import "ESGaimNotifyEmailWindowController.h"
 
 @interface SLGaimCocoaAdapter (PRIVATE)
 - (void)callTimerFunc:(NSTimer*)timer;
 - (void)initLibGaim;
 @end
-
 
 /*
  * A pointer to the single instance of this class active in the application.
@@ -43,7 +43,7 @@ NSMutableDictionary *accountDict = nil;
 //NSMutableDictionary *contactDict = nil;
 NSMutableDictionary *chatDict = nil;
 
-//Event loop stsatic variables
+//Event loop static variables
 static guint				sourceId = nil;		//The next source key; continuously incrementing
 static NSMutableDictionary  *sourceInfoDict = nil;
 static NDRunLoopMessenger   *runLoopMessenger = nil;
@@ -106,7 +106,7 @@ static NDRunLoopMessenger   *runLoopMessenger = nil;
 #pragma mark Gaim wrapper
 
 /*
- * Finds an NSConnection* for a GaimAccount*.
+ * Finds an NSObject<AdiumGaimDO>* for a GaimAccount*.
  */
 
 static NSObject<AdiumGaimDO> *accountLookup(GaimAccount *acct)
@@ -846,23 +846,24 @@ static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, c
 {
     //Values passed can be null
     NSLog(@"adiumGaimNotifyMessage: %s: %s, %s", title, primary, secondary);
-	[myself handleNotifyMessageOfType:type withTitle:title primary:primary secondary:secondary];
-
-    return(nil);
-}
-
-static void *adiumGaimNotifyEmail(const char *subject, const char *from, const char *to, const char *url, GCallback cb,void *userData)
-{
-    //Values passed can be null
-    NSLog(@"adiumGaimNotifyEmail");
-    return(nil);
+	return ([myself handleNotifyMessageOfType:type withTitle:title primary:primary secondary:secondary]);
 }
 
 static void *adiumGaimNotifyEmails(size_t count, gboolean detailed, const char **subjects, const char **froms, const char **tos, const char **urls, GCallback cb,void *userData)
 {
     //Values passed can be null
     NSLog(@"adiumGaimNotifyEmails");
-    return(nil);
+	return ([myself handleNotifyEmails:count detailed:detailed subjects:subjects froms:froms tos:tos urls:urls]);
+}
+
+static void *adiumGaimNotifyEmail(const char *subject, const char *from, const char *to, const char *url, GCallback cb,void *userData)
+{
+	return adiumGaimNotifyEmails(1, TRUE,
+								 (subject == NULL ? NULL : &subject),
+								 (from    == NULL ? NULL : &from),
+								 (to      == NULL ? NULL : &to),
+								 (url     == NULL ? NULL : &url),
+								 cb, userData);
 }
 
 static void *adiumGaimNotifyFormatted(const char *title, const char *primary, const char *secondary, const char *text, GCallback cb,void *userData)
@@ -873,7 +874,11 @@ static void *adiumGaimNotifyFormatted(const char *title, const char *primary, co
 
 static void *adiumGaimNotifyUri(const char *uri)
 {
-    NSLog(@"adiumGaimNotifyUri");
+	NSLog(@"Notify uri: %s",uri);
+	
+	NSURL   *notifyURI = [NSURL URLWithString:uri];
+	[[NSWorkspace shareworkspace] openURL:notifyURI];
+
     return(nil);
 }
 
@@ -891,7 +896,7 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
     adiumGaimNotifyClose
 };
 
-- (void)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
+- (void *)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
 {
     NSString *primaryString = [NSString stringWithUTF8String:primary];
 	NSString *secondaryString = secondary ? [NSString stringWithUTF8String:secondary] : nil;
@@ -960,6 +965,94 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 										  withObject:([errorMessage length] ? errorMessage : primaryString)
 										  withObject:([description length] ? description : ([secondaryString length] ? secondaryString : @"") )
 										  withObject:titleString];
+	
+	return nil;
+}
+
+- (void *)handleNotifyEmails:(size_t)count detailed:(BOOL)detailed subjects:(const char **)subjects froms:(const char **)froms tos:(const char **)tos urls:(const char **)urls
+{
+	NSFontManager				*fontManager = [NSFontManager sharedFontManager];
+	NSFont						*messageFont = [NSFont messageFontOfSize:11];
+	NSMutableParagraphStyle		*centeredParagraphStyle;
+	NSMutableAttributedString   *message;
+	
+	centeredParagraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+	[centeredParagraphStyle setAlignment:NSCenterTextAlignment];
+	message = [[[NSMutableAttributedString alloc] init] autorelease];
+	
+	//Title
+	NSString		*title;
+	NSFont			*titleFont;
+	NSDictionary	*titleAttributes;
+	
+	title = AILocalizedString(@"You have mail!\n",nil);
+	titleFont = [fontManager convertFont:[NSFont messageFontOfSize:12]
+							 toHaveTrait:NSBoldFontMask];
+	titleAttributes = [NSDictionary dictionaryWithObjectsAndKeys:titleFont,NSFontAttributeName,
+		centeredParagraphStyle,NSParagraphStyleAttributeName,nil];
+	
+	[message appendAttributedString:[[[NSAttributedString alloc] initWithString:title
+																	 attributes:titleAttributes] autorelease]];
+	
+	//Message
+	NSString		*numberMessage;
+	NSDictionary	*numberMessageAttributes;
+	
+	numberMessage = ((count == 1) ? 
+					 [NSString stringWithFormat:AILocalizedString(@"%s has 1 new message.",nil), *tos] :
+					 [NSString stringWithFormat:AILocalizedString(@"%s has %i new messages.",nil), *tos,count]);
+	numberMessageAttributes = [NSDictionary dictionaryWithObjectsAndKeys:messageFont,NSFontAttributeName,
+		centeredParagraphStyle,NSParagraphStyleAttributeName,nil];
+	
+	[message appendAttributedString:[[[NSAttributedString alloc] initWithString:numberMessage
+																	 attributes:numberMessageAttributes] autorelease]];
+	
+	if (count == 1){
+		BOOL	haveFroms = (froms != NULL);
+		BOOL	haveSubjects = (subjects != NULL);
+		
+		if (haveFroms || haveSubjects){
+			NSFont			*fieldFont;
+			NSDictionary	*fieldAttributed, *infoAttributed;
+			
+			fieldFont =  [fontManager convertFont:messageFont
+									  toHaveTrait:NSBoldFontMask];
+			fieldAttributed = [NSDictionary dictionaryWithObjectsAndKeys:fieldFont,NSFontAttributeName,nil];
+			infoAttributed = [NSDictionary dictionaryWithObjectsAndKeys:messageFont,NSFontAttributeName,nil];
+			
+			//Skip a line
+			[[message mutableString] appendString:@"\n\n"];
+			
+			if (haveFroms){
+				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:AILocalizedString(@"From: ",nil)
+																				 attributes:fieldAttributed] autorelease]];
+				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(*froms)]
+																				 attributes:infoAttributed] autorelease]];
+			}
+			if (haveFroms && haveSubjects){
+				[[message mutableString] appendString:@"\n"];
+			}
+			if (haveSubjects){
+				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:AILocalizedString(@"Subject: ",nil)
+																				 attributes:fieldAttributed] autorelease]];
+				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(*subjects)]
+																				 attributes:infoAttributed] autorelease]];				
+			}
+		}
+	}
+	
+	NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:title,@"Title",
+		message,@"Message",nil];
+	
+	if (urls != NULL){
+		[infoDict setObject:[NSString stringWithUTF8String:urls[0]] forKey:@"URL"];
+	}
+	
+	[ESGaimNotifyEmailWindowController mainPerformSelector:@selector(showNotifyEmailWindowWithMessage:URL:)
+														withObject:message
+													   withObject:(urls ? [NSString stringWithUTF8String:urls[0]] : nil)];
+	
+	return(nil);
 }
 
 #pragma mark Request
