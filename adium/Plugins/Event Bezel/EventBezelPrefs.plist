@@ -24,5 +24,7 @@
         <true/>
         <key>Show Color Labels</key>
         <true/>
+        <key>Duration</key>
+        <integer>3</integer>
 </dict>
 </plist>

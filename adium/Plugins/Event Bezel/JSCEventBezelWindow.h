@@ -8,8 +8,9 @@
 
 
 @interface JSCEventBezelWindow : NSWindow {
-    NSTimer *fadeTimer, *displayTimer;
-    BOOL fadingOut;
+    NSTimer     *fadeTimer, *displayTimer;
+    BOOL        fadingOut;
+    int         displayDuration;
 }
 
 - (NSTimer *)fadeTimer;
@@ -18,4 +19,6 @@
 - (void)setDisplayTimer:(NSTimer *)timer;
 - (BOOL)fadingOut;
 - (void)setFadingOut:(BOOL)newFade;
+- (int)displayDuration;
+- (void)setDisplayDuration:(int)newDuration;
 @end

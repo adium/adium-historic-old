@@ -45,6 +45,7 @@
     [checkBox_firstMessage setEnabled: [checkBox_showBezel state]];
     [checkBox_imageBadges setEnabled: [checkBox_showBezel state]];
     [checkBox_colorLabels setEnabled: [checkBox_showBezel state]];
+    [slider_duration setEnabled: [checkBox_showBezel state]];
 }
 
 - (IBAction)changePosition:(id)sender
@@ -120,6 +121,13 @@
 
 }
 
+- (IBAction)changeDuration:(id)sender
+{
+    [[owner preferenceController] setPreference: [NSNumber numberWithInt: [slider_duration intValue]]
+                                         forKey: KEY_EVENT_BEZEL_DURATION
+                                          group: PREF_GROUP_EVENT_BEZEL];
+}
+
 //Configure the preference view
 - (void)viewDidLoad
 {
@@ -129,6 +137,8 @@
     [checkBox_showBezel setState:[[preferenceDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue]];
     
     [popUp_position selectItemAtIndex: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_POSITION] intValue]];
+    
+    [slider_duration setIntValue: [[preferenceDict objectForKey: KEY_EVENT_BEZEL_DURATION] intValue]];
     
     [checkBox_online setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_ONLINE] boolValue]];
     [checkBox_offline setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_OFFLINE] boolValue]];
@@ -151,6 +161,8 @@
     [checkBox_idle setEnabled: [checkBox_showBezel state]];
     [checkBox_firstMessage setEnabled: [checkBox_showBezel state]];
     [checkBox_imageBadges setEnabled: [checkBox_showBezel state]];
-    [checkBox_colorLabels setEnabled: [checkBox_showBezel state]];}
+    [checkBox_colorLabels setEnabled: [checkBox_showBezel state]];
+    [slider_duration setEnabled: [checkBox_showBezel state]];
+}
 
 @end

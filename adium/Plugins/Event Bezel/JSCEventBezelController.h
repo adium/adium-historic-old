@@ -14,7 +14,7 @@
     IBOutlet JSCEventBezelView      *bezelView;
     AIAdium                         *owner;
     
-    int                             bezelPosition;
+    int                             bezelPosition, bezelDuration;
     BOOL                            imageBadges;
 }
 
@@ -27,6 +27,8 @@ withMessage:(NSString *)message;
 
 - (int)bezelPosition;
 - (void)setBezelPosition:(int)newPosition;
+- (int)bezelDuration;
+- (void)setBezelDuration:(int)newDuration;
 - (void)setBuddyIconLabelColor:(NSColor *)newColor;
 - (void)setImageBadges:(BOOL)b;
 
