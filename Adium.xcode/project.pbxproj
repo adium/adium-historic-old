@@ -3628,6 +3628,7 @@
 				343EAB8306EF857F001CDAFF,
 				346E640C05153395003B2F21,
 				34E385FF068FAA5100303451,
+				4B18A51F0459F89300A8010A,
 				4BAA1B3F0632EDDE00D8B92C,
 				9EB7C05703D52AFA00415B22,
 				F5AAD085039BA0D301A8010A,
@@ -13640,7 +13641,7 @@
 				4BB826B504C8876C00A8010A,
 			);
 			isa = PBXGroup;
-			name = "Contact Status Dock Overlays";
+			name = "Contact and Chat Dock Overlays";
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
@@ -14188,7 +14189,6 @@
 		};
 		4B4F5B25042D637700A8010A = {
 			children = (
-				4B18A51F0459F89300A8010A,
 			);
 			isa = PBXGroup;
 			name = Contacts;
