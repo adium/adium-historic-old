@@ -90,6 +90,8 @@ static ESFileTransferPreferences *preferences;
 
 - (void)dealloc
 {
+	[super dealloc];
+	
 	[safeFileExtensions release]; safeFileExtensions = nil;
 	[fileTransferArray release]; fileTransferArray = nil;
 
