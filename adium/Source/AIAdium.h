@@ -90,7 +90,7 @@
 //only those pathnames that exist are returned.
 //you can pass nil as the name to get all the Adium application-support folders
 //  that exist.
-//example: say you call [adium aSPFN:@"Scripts"], and there's a Scripts folder
+//example: say you call [adium resourcePathsForName:@"Scripts"], and there's a Scripts folder
 //  in ~/L/AS/Adium\ 2.0 and in /L/AS/Adium\ 2.0, but not /N/L/AS/Adium\ 2.0.
 //the array you get back will be { @"/Users/you/L/AS/Adium 2.0/Scripts",
 //  @"/L/AS/Adium 2.0/Scripts" }.
@@ -105,6 +105,10 @@
 
 //Localization
 #define AILocalizedString(key, comment) [[NSBundle bundleForClass: [self class]] localizedStringForKey: (key) value:@"" table:nil]
+
+//Static strings
+#define DeclareString(var)			static NSString * (var) = nil;
+#define InitString(var,string)		if (! (var) ) (var) = [(string) retain];
 
 //Adium events
 #define KEY_EVENT_DISPLAY_NAME		@"DisplayName"
