@@ -21,11 +21,13 @@
 [HIGH]
 Messages & Chat
   - Initial messages from invisible contacts sometimes don't open new message windows
-  - Intermittent crash when closing a group chat, particularly via MSN
+    (Adam: I cannot reproduce this with invisible contacts on Yahoo.  Are people still
+     getting this with our newest AIChat leakage cleanup?  If so, how?)
 
 Meta Contacts
   - To/From bar in messages can get into a weird infinite loop when multiple possible source
-	and target accounts/contacts exist on the same serviceClass
+	and target accounts/contacts exist on the same serviceClass (Adam: was this the result
+	of another bug which has since been fixed?  I cannot reproduce this)
   - MetaContact ordering does not always restore properly
   - Away message is output multiple times when an open chat's contact goes away
 	and that contact is within a metaContact (Adam: I'm not seeing this)
