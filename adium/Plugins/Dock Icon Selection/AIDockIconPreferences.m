@@ -119,11 +119,11 @@
     NSDictionary	*descriptionDict, *stateDict;
     NSString		*title, *creator;
     NSEnumerator	*previewEnumerator, *stateEnumerator;
-    NSArray		*stateArray;
+    NSArray			*stateArray;
     NSString		*state;
-    NSArray		*previewArray;
-    
-	if (selectedIconIndex != -1) {
+    NSArray			*previewArray;
+    		
+	if (selectedIconIndex >= 0 && selectedIconIndex < [iconArray count]) {
 		int oldIndex = selectedIconIndex;
 		
 		//Set selectedIconIndex to -1 and stop animating so the state doesn't change after we've restored it
@@ -186,7 +186,7 @@
 
     //Redisplay
     [tableView_icons display];
-    [self animate:nil];
+    //[self animate:nil];
 }
 
 //Start animating
@@ -230,54 +230,58 @@
 	[[matrix_iconPreview selectedCell] setImage:[stateToAnimate image]];
 	
 	//Redisplay now.
-	[tableView_icons display];
+	[tableView_icons setNeedsDisplay:YES];
 }
 
 - (void)stateChange:(NSTimer *)timer
 {
-	if (!previewToAnimateEnumerator)
-		previewToAnimateEnumerator = [[previewStateArray objectEnumerator] retain];
-
-	AIIconState *newStateToAnimate = [previewToAnimateEnumerator nextObject];
-	
-	//If we reached the end, make a new enumerator and start again
-	if (!newStateToAnimate) {
-		[previewToAnimateEnumerator release];
-		previewToAnimateEnumerator = [[previewStateArray objectEnumerator] retain];
+	if (selectedIconIndex >= 0 && selectedIconIndex < [iconArray count]) {
 		
-		newStateToAnimate = [previewToAnimateEnumerator nextObject];
-	}
-	
-	[stateToAnimate release]; stateToAnimate = [newStateToAnimate retain];
-
-	if (selectedIconIndex != -1) {
+		//Create an objectEnumerator if needed
+		if (!previewToAnimateEnumerator)
+			previewToAnimateEnumerator = [[previewStateArray objectEnumerator] retain];
+		
+		//Get the next state from the enumerator
+		AIIconState *newStateToAnimate = [previewToAnimateEnumerator nextObject];
+		
+		//If we reached the end, make a new enumerator and start again
+		if (!newStateToAnimate) {
+			[previewToAnimateEnumerator release];
+			previewToAnimateEnumerator = [[previewStateArray objectEnumerator] retain];
+			
+			newStateToAnimate = [previewToAnimateEnumerator nextObject];
+		}
+		
+		//Set stateToAnimate to the new state
+		[stateToAnimate release]; stateToAnimate = [newStateToAnimate retain];
+		
+		//Update the icon array
 		[[iconArray objectAtIndex:selectedIconIndex] setObject:stateToAnimate
 														forKey:@"State"];
-	}
-
-	//Set the image to the new state
-	[[matrix_iconPreview selectedCell] setImage:[stateToAnimate image]];
-	
-	//Update our view
-	[tableView_icons setNeedsDisplay:YES];
-	
-	if (animationTimer) {
-		[animationTimer invalidate];
-        [animationTimer release];
-        animationTimer = nil;
-	}
-	if ([stateToAnimate animated]) {
-		//Start the flash timer
-		animationTimer = [[NSTimer scheduledTimerWithTimeInterval:[stateToAnimate animationDelay]
-														   target:self
-														 selector:@selector(animate:)
-														 userInfo:nil
-														  repeats:YES] retain];
 		
-		//Move to the first frame of animation
-		//			[self animateIcon:animationTimer]; //Set the icon and move to the next frame
+		//Set the image to the new state
+		[[matrix_iconPreview selectedCell] setImage:[stateToAnimate image]];
+		
+		//Update our view
+		[tableView_icons setNeedsDisplay:YES];
+		
+		//Destroy any current animation timer
+		if (animationTimer) {
+			[animationTimer invalidate];
+			[animationTimer release];
+			animationTimer = nil;
+		}
+		//Start an animation timer for this frame if needed
+		if ([stateToAnimate animated]) {
+			animationTimer = [[NSTimer scheduledTimerWithTimeInterval:[stateToAnimate animationDelay]
+															   target:self
+															 selector:@selector(animate:)
+															 userInfo:nil
+															  repeats:YES] retain];
+		}
 	}
 }
+
 //User selected an icon in the table view
 - (void)selectIcon:(id)sender
 {
