@@ -133,6 +133,8 @@
 
 - (void)dealloc
 {
+	[super dealloc];
+	
     [contentController closeController];
 }
 
