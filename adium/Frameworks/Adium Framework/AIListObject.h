@@ -51,7 +51,6 @@
 - (float)orderIndex;
 
 //Display
-- (NSString *)serverDisplayName;
 - (NSString *)formattedUID;
 - (NSString *)displayName;
 - (NSString *)longDisplayName;

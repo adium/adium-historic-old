@@ -356,37 +356,30 @@
 //Display Name Convenience Methods -------------------------------------------------------------------------------------
 #pragma mark Display Name Convenience Methods
 /*
- A list object basically has 4 different variations of display.
+ A list object basically has 5 different variations of display.
 
  - UID, the base UID of the contact "aiser123"
- - ServerDisplayName, formating or alteration of the UID provided by the account code "AIser 123"
+ - formattedUID, formating or alteration of the UID provided by the account code "AIser 123"
  - DisplayName, short formatted name provided by plugins "Adam Iser"
  - LongDisplayName, long formatted name provided by plugins "Adam Iser (AIser 123)"
 
  A value will always be returned by these methods, so if there is no long display name present it will fall back to
- display name, serverDisplayName, and finally UID (which is guaranteed to be present).  Use whichever one seems best
+ display name, formattedUID, and finally UID (which is guaranteed to be present).  Use whichever one seems best
  suited for what is being displayed.
  */
 
-//Server display name, specified by server
-- (NSString *)serverDisplayName
-{
-    NSString	*outName = [self statusObjectForKey:@"Display Name"];
-    return(outName ? outName : UID);
-}
-
-//Server-formatted UID if present, otherwise the serverDisplayName
+//Server-formatted UID if present, otherwise the UID
 - (NSString *)formattedUID
 {
-    NSString	*outName = [self statusObjectForKey:@"Display UID"];	
-    return(outName ? outName : [self serverDisplayName]);	
+    NSString	*outName = [self statusObjectForKey:@"Fromatted UID"];	
+    return(outName ? outName : UID);	
 }
 
 //Display name, influenced by plugins
 - (NSString *)displayName
 {
     NSString	*outName = [[self displayArrayForKey:@"Display Name"] objectValue];
-    return(outName ? outName : [self serverDisplayName]);
+    return(outName ? outName : [self formattedUID]);
 }
 
 //Long display name, influenced by plugins
