@@ -83,6 +83,8 @@
 #import <AIUtilities/AIVideoCapture.h>
 #import <AIUtilities/AIViewAdditions.h>
 #import <AIUtilities/AIWindowAdditions.h>
+#import <AIUtilities/AIWiredData.h>
+#import <AIUtilities/AIWiredString.h>
 #import <AIUtilities/BZContextImageBridge.h>
 #import <AIUtilities/BZFontManagerAdditions.h>
 #import <AIUtilities/BZGenericViewCell.h>
