@@ -73,7 +73,7 @@
     [newItem setLabel:[item label]];
     [newItem setPaletteLabel:[item paletteLabel]];
     if([item view] != NULL){
-        [newItem setView:[item view]];
+        [newItem setView:[[[item view] copy] autorelease]];
     }else{
         [newItem setImage:[item image]];
     }
@@ -88,6 +88,10 @@
     if([newItem view] != NULL){
         [newItem setMinSize:[[item view] bounds].size];
         [newItem setMaxSize:[[item view] bounds].size];
+		
+		if([[newItem view] respondsToSelector:@selector(setToolbarItem:)]){
+			[[newItem view] setToolbarItem:newItem];
+		}
     }
 
     return newItem;
