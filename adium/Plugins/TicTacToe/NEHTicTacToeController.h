@@ -18,29 +18,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #import "NEHTicTacToeBoard.h"
-
-typedef enum {  State_None,
-				State_InviteSent, 
-				State_InviteReceived,
-				State_Negotiation,
-				State_Playing,
-				State_GameOver,
-				} GameState;
+#import <AdiumGames/NEHGameController.h>
 				
 @class AIWindowController, AIListContact, AIAccount, AICompletingTextField;
 
-@interface NEHTicTacToeController : AIWindowController
+@interface NEHTicTacToeController : NEHGameController
 {
     IBOutlet NSMatrix		* squares;
 	IBOutlet NSTextField	* status;
 	IBOutlet NSButton		* endGame;
 	
-	IBOutlet NSPanel		* sheet_acceptInvite;
 	IBOutlet NSTextField	* textField_remoteContact;
 	IBOutlet NSImageView	* imageView_acceptPlayAs;
 	IBOutlet NSTextField	* textField_acceptMove;
 	
-	IBOutlet NSPanel		* sheet_inviteSent;
 	IBOutlet NSImageView	* imageView_sentPlayAs;
 	IBOutlet NSTextField	* textField_sentMove;
 	
@@ -49,43 +40,26 @@ typedef enum {  State_None,
 	IBOutlet NEHTicTacToeBoard	* board;
 	
 	Player					player;
-	AIListContact			* contact_OtherPlayer;
-	AIAccount				* account_Player;
-	
-	GameState				state;
-	NSTimer					* timeout;
 }
 
-- (id)init;
-- (void)handleInvitation:(NSString *)msg account:(AIAccount*)account contact:(AIListContact*)contact;
-- (void)sendInvitation:(Player)inPlayer account:(AIAccount*)account contact:(AIListContact*)contact;
+- (id)initWithPlugin:(NEHGamePlugin*)inPlugin;
 
-- (void)updateTitle;
-
-- (NSImage*) loadImage: (NSString*)name;
-
-- (IBAction)move:(id)sender;
-- (IBAction)endGame:(id)sender;
-
-- (IBAction)acceptInvite:(id)sender;
-- (IBAction)rejectInvite:(id)sender;
-
-- (IBAction)retractInvite:(id)sender;
-
-- (IBAction)selectAccount: (id)sender;
-
-- (void)inviteTimedOut: (NSTimer*) timer;
-
-- (void)reset;
-- (void)clearBoard;
-- (void)beginGame;
-- (void)updateStatus;
-- (BOOL)move:(Player)p atRow:(int)row atColumn:(int)col;
-
-- (void)sendMessage:(NSString*)msg ofType:(NSString*)type;
-- (void)sendMessage:(NSString*)msg ofType:(NSString*)type toContact:(AIListContact*)to fromAccount:(AIAccount*)from inChat:(AIChat*)chat;
 - (void)handleMessage:(NSString*)msg ofType:(NSString*)type;
 
-- (void)cleanup;
-- (void)end:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+- (void)beginNewGame;
+- (void)gameDidEnd;
+
+- (void)didSendInvitation:(int)playAs;
+- (void)didReceiveInvitation:(int)playAs;
+
+- (NSString*)nibName;
+
+- (NSString*)firstPlayerName;
+- (NSString*)secondPlayerName;
+
+- (void)reset;
+- (NSImage*) loadImage:(NSString*)name;
+- (void)updateStatus;
+- (BOOL)move:(Player)p atRow:(int)row atColumn:(int)col;
+- (void)clearBoard;
 @end

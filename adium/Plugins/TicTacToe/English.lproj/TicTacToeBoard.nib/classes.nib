@@ -7,16 +7,15 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {acceptInvite = id; endGame = id; rejectInvite = id; retractInvite = id; }; 
+            CLASS = NEHGameController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"sheet_acceptInvite" = NSPanel; "sheet_inviteSent" = NSPanel; }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
         {CLASS = NEHTicTacToeBoard; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {
-                acceptInvite = id; 
-                endGame = id; 
-                move = id; 
-                rejectInvite = id; 
-                retractInvite = id; 
-                selectAccount = id; 
-            }; 
             CLASS = NEHTicTacToeController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -24,15 +23,13 @@
                 endGame = NSButton; 
                 "imageView_acceptPlayAs" = NSImageView; 
                 "imageView_sentPlayAs" = NSImageView; 
-                "sheet_acceptInvite" = NSPanel; 
-                "sheet_inviteSent" = NSPanel; 
                 squares = NSMatrix; 
                 status = NSTextField; 
                 "textField_acceptMove" = NSTextField; 
                 "textField_remoteContact" = NSTextField; 
                 "textField_sentMove" = NSTextField; 
             }; 
-            SUPERCLASS = AIWindowController; 
+            SUPERCLASS = NEHGameController; 
         }
     ); 
     IBVersion = 1; 
