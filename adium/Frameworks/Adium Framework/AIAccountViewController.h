@@ -32,5 +32,6 @@
 - (NSArray *)loadAuxiliaryTabsFromTabView:(NSTabView *)inTabView;
 - (NSString *)nibName;
 - (NSArray *)auxiliaryTabs;
+- (void)saveFieldsImmediately;
 
 @end
