@@ -64,7 +64,7 @@
 		  bookmarkString,
 		  path,
 		  fox9,
-		  [self booksmarksExist],
+		  [self bookmarksExist],
 		  fileProps);
     return [SHMozillaCommonParser parseBookmarksfromString:bookmarkString];
 }
