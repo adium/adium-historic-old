@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.92 2004/07/27 16:40:09 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.93 2004/07/27 19:16:40 evands Exp $
 
 #import "AIInterfaceController.h"
 #import "AIStandardListWindowController.h"
@@ -243,7 +243,7 @@
 	
 	//Determine the correct container for this chat
 	if(groupChatsByContactGroup){
-		AIListGroup	*group = [[inChat listObject] containingGroup];
+		AIListGroup	*group = [[inChat listObject] containingObject];
 		containerID = (group ? [group displayName] : @"Chat"); 
 	}else{
 		//Open new chats into the first container (if not available, create a new one)
@@ -305,16 +305,15 @@
 	[self chatOrderDidChange];
 }
 
-//Set the active chat window
-- (void)setActiveChat:(AIChat *)inChat
-{
-	[interfacePlugin setActiveChat:inChat];
-}
-
 //Active chat
 - (AIChat *)activeChat
 {
 	return(activeChat);
+}
+//Set the active chat window
+- (void)setActiveChat:(AIChat *)inChat
+{
+	[interfacePlugin setActiveChat:inChat];
 }
 
 //Returns an array of open chats (cached, so call as frequently as desired)
@@ -910,7 +909,7 @@
     }
     
     if ([object isKindOfClass:[AIListGroup class]]){
-        [titleString appendString:[NSString stringWithFormat:@" (%i/%i)",[(AIListGroup *)object visibleCount],[(AIListGroup *)object count]] 
+        [titleString appendString:[NSString stringWithFormat:@" (%i/%i)",[(AIListGroup *)object visibleCount],[(AIListGroup *)object containedObjectsCount]] 
                    withAttributes:titleDict];
     }
     
