@@ -1,57 +1,200 @@
-/* To utilize custom message view backgrounds, uncomment the following block
-   You can replace the 'background:' value with either a hex color value (#ffffff), a color keyword (red), or an rgb value (rgb(255,0,0))
-   If you more adventurous you can even place an image in the background.
-   For more information on using custom backgrounds, refer to the following document: http://www.westciv.com/style_master/academy/css_tutorial/properties/background.html */
-
-#Chat .incoming .message { background: #e5f2ff }
-#Chat .outgoing .message { background: #e6ffea }
-
 #Chat {
 	overflow: hidden;
 }
 
-#Chat .context .message { background: #FFF;color: gray; }
+#Chat .context .message {
+	background: #FFF;
+	color: gray;
+}
 
-body { margin: 0px 3px 0px 3px }
-	.chatbox { margin: 6px 0 6px 0;}
+body {
+	margin: 0px 3px 0px 3px;
+}
 
-		.buddyicon { margin: 3px 0 0; float: left }
-		.name { margin: -3px 0 2px 36px; font: 11px "Lucida Grande"; font-weight: bold }
-			.incoming .name { color: #00207F }
-			.outgoing .name { color: #007f00 }
+.chatbox {
+	margin: 6px 0 6px 0;
+}
 
-			.name span { margin: 1px 0 0; float: right; font: 10px "Helvetica"; font-weight: normal; color: #666 }
+.buddyicon {
+	margin: 3px 0 0;
+	float: left;
+}
 
-		.message { margin: 0 0 0 35px; padding: 3px 6px; position: relative }
+.name {
+	margin: -3px 0px 2px 36px;
+	font: 11px "Lucida Grande";
+	font-weight: bold;
+	height: 13px;
+}
 
-            .status_message { text-align: center; font: 11px Helvetica, sans-serif; color: gray;
- }
+.incoming .name {
+	color: #00207F;
+}
 
-			.message p { margin: 0; overflow: hidden }
-			.message p.additional { margin: 2px 0 0; padding: 2px 0 0; border-style: solid; border-width: 1px 0 0 }
-				.incoming p.additional { border-color: #b7cee6 }
-				.outgoing p.additional { border-color: #b8e6bf }
+.outgoing .name {
+	color: #007f00;
+}
 
-			.incoming .message { background: #e5f2ff }
-			.outgoing .message { background: #e6ffea }
+.timestamp {
+	float: right;
+	font: 10px "Helvetica";
+	font-weight: normal;
+	color: #666;
+	display: inline;
+	margin: 1px 0 0 0px;
+}
 
-				.r { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background-repeat: no-repeat }
-					.tb { top: 0; right: 9px; bottom: 0; left: 9px; border-style: solid; border-width: 1px 0 }
-						.incoming .tb { border-color: #6b8fb3 }
-						.outgoing .tb { border-color: #6bb377 }
-					.lr { top: 8px; right: 0; bottom: 8px; left: 0; border-style: solid; border-width: 0 1px }
-						.incoming .lr { border-color: #6b8fb3 }
-						.outgoing .lr { border-color: #6bb377 }
+.timestamp.additional {
+	display: none;
+}
 
-					.tl { top: 0; right: 5px; bottom: 3px; left: 0; background-position: top left }
-						.incoming .tl { background-image: url(incoming/tl.gif) }
-						.outgoing .tl { background-image: url(outgoing/tl.gif) }
-					.tr { top: 0; right: 0; bottom: 3px; left: 5px; background-position: top right }
-						.incoming .tr { background-image: url(incoming/tr.gif) }
-						.outgoing .tr { background-image: url(outgoing/tr.gif) }
-					.bl { top: 3px; right: 5px; bottom: 0; left: 0; background-position: bottom left }
-						.incoming .bl { background-image: url(incoming/bl.gif) }
-						.outgoing .bl { background-image: url(outgoing/bl.gif) }
-					.br { top: 3px; right: 0; bottom: 0; left: 5px; background-position: bottom right }
-						.incoming .br { background-image: url(incoming/br.gif) }
-						.outgoing .br { background-image: url(outgoing/br.gif) }
+.message {
+	margin: 0 0 0 35px;
+	padding: 3px 6px;
+	position: relative;
+}
+
+.status_message {
+	text-align: center;
+	font: 11px Helvetica, sans-serif;
+	color: gray;
+}
+
+.message p {
+	margin: 0;
+	overflow: hidden;
+}
+
+.message p.additional {
+	margin: 2px 0 0;
+	padding: 2px 0 0;
+	border-style: solid;
+	border-width: 1px 0 0;
+}
+
+.incoming p.additional {
+	border-color: #b7cee6;
+}
+
+.outgoing p.additional {
+	border-color: #b8e6bf;
+}
+
+.incoming .message {
+	background: #e5f2ff;
+}
+
+.outgoing .message {
+	background: #e6ffea;
+}
+
+/*<group=Borders>*/
+
+.r {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-repeat: no-repeat;
+}
+
+.tb {
+	top: 0;
+	right: 9px;
+	bottom: 0;
+	left: 9px;
+	border-style: solid;
+	border-width: 1px 0;
+}
+
+.incoming .tb {
+	border-color: #6b8fb3;
+}
+
+.outgoing .tb {
+	border-color: #6bb377;
+}
+
+.lr {
+	top: 8px;
+	right: 0;
+	bottom: 8px;
+	left: 0;
+	border-style: solid;
+	border-width: 0 1px;
+}
+
+.incoming .lr {
+	border-color: #6b8fb3;
+}
+
+.outgoing .lr {
+	border-color: #6bb377;
+}
+
+.tl {
+	top: 0;
+	right: 5px;
+	bottom: 3px;
+	left: 0;
+	background-position: top left;
+}
+
+.incoming .tl {
+	background-image: url(incoming/tl.gif);
+}
+
+.outgoing .tl {
+	background-image: url(outgoing/tl.gif);
+}
+
+.tr {
+	top: 0;
+	right: 0;
+	bottom: 3px;
+	left: 5px;
+	background-position: top right;
+}
+
+.incoming .tr {
+	background-image: url(incoming/tr.gif);
+}
+
+.outgoing .tr {
+	background-image: url(outgoing/tr.gif);
+}
+
+.bl {
+	top: 3px;
+	right: 5px;
+	bottom: 0;
+	left: 0;
+	background-position: bottom left;
+}
+
+.incoming .bl {
+	background-image: url(incoming/bl.gif);
+}
+
+.outgoing .bl {
+	background-image: url(outgoing/bl.gif);
+}
+
+.br {
+	top: 3px;
+	right: 0;
+	bottom: 0;
+	left: 5px;
+	background-position: bottom right;
+}
+
+.incoming .br {
+	background-image: url(incoming/br.gif);
+}
+
+.outgoing .br {
+	background-image: url(outgoing/br.gif);
+}
+	
+/*</group>*/
