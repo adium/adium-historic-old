@@ -28,6 +28,7 @@ Bugs
 * Window content is drawing 2 pixels to the left when dragging tabs
 * Prevent cmd-delete from working in the message window
 * Mousekeys to move tabs causes a crash: http://www.visualdistortion.org/crash/view.jsp?crash=5930
+* Contact list display format preference not applying correctly on launch
 
 # Give address book icons higher priority than server-side icons
 	This is not a bug. It's desired behavior by a lot of people :P
