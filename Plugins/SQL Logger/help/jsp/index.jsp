@@ -1,66 +1,55 @@
 <%@ page import = 'java.sql.*' %>
-<%@ page import = 'javax.sql.*' %>
-<%@ page import = 'javax.naming.*' %>
 <%@ page import = 'java.util.ArrayList' %>
 <%@ page import = 'java.util.StringTokenizer' %>
 <%@ page import = 'java.util.regex.Pattern' %>
 <%@ page import = 'java.util.regex.Matcher' %>
 <%@ page import = 'java.net.URLEncoder' %>
 <%@ page import = 'org.slamb.axamol.library.*' %>
-<%@ page import = 'java.io.File' %>
 <%@ page import = 'java.util.Map' %>
 <%@ page import = 'java.util.HashMap' %>
 <%@ page import = 'sqllogger.*' %>
+<%@ page import = 'java.util.Enumeration' %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/index.jsp $-->
-<!--$Rev: 922 $ $Date$ -->
+<!--$Rev: 936 $ $Date$ -->
 
 <%
-Context env = (Context) new InitialContext().lookup("java:comp/env/");
-DataSource source = (DataSource) env.lookup("jdbc/postgresql");
-Connection conn = source.getConnection();
 
-String dateStart, dateFinish, from_sn, to_sn, contains_sn, hl, service;
+if(Update.versionCheck((Connection) request.getAttribute("conn")))
+    Update.updateDB((Connection) request.getAttribute("conn"));
+
+LibraryConnection lc = (LibraryConnection) request.getAttribute("lc-standard");
+
 boolean showDisplay = true;
 boolean showMeta = false;
 
 Date today = new Date(System.currentTimeMillis());
-int chat_id = 0;
-int meta_id = 0;
-int message_id = 0;
-int bTime = 15;
-int aTime = 45;
+int item_id = Util.checkInt(request.getParameter("item_id"));
+int meta_id = Util.checkInt(request.getParameter("meta_id"));
+int message_id = Util.checkInt(request.getParameter("message_id"));
 
-String formURL = new String("saveForm.jsp?action=saveChat.jsp");
+String formURL = new String("saveForm.jsp?action=save.jsp&type=chat");
 
-dateFinish = Util.checkNull(request.getParameter("finish"));
-dateStart = Util.checkNull(request.getParameter("start"));
-from_sn = Util.checkNull(request.getParameter("from"), false);
-to_sn = Util.checkNull(request.getParameter("to"), false);
-contains_sn = Util.checkNull(request.getParameter("contains"), false);
-String screenDisplayMeta = Util.checkNull(request.getParameter("screen_or_display"));
-hl = Util.checkNull(request.getParameter("hl"));
-service = Util.checkNull(request.getParameter("service"));
-meta_id = Util.checkInt(request.getParameter("meta_id"));
-bTime = Util.checkInt(request.getParameter("time"), 10);
-aTime = Util.checkInt(request.getParameter("time"), 45);
+Enumeration e = request.getParameterNames();
+HashMap h = new HashMap();
+
+while(e.hasMoreElements()) {
+    String key = (String) e.nextElement();
+    String value = Util.checkNull(request.getParameter(key));
+    h.put(key, value);
+
+    if(value != null) {
+        formURL += "&" + key + "=" + value;
+    }
+}
 
 ArrayList hlWords = new ArrayList();
+String hl = (String) h.get("hl");
 
 String title = new String("");
 String notes = new String("");
-
-chat_id = Util.checkInt(request.getParameter("chat_id"));
-
-formURL += "&amp;dateFinish=" + Util.safeString(dateFinish);
-formURL += "&amp;dateStart=" + Util.safeString(dateStart, today.toString());
-formURL += "&amp;sender=" + Util.safeString(from_sn);
-formURL += "&amp;recipient=" + Util.safeString(to_sn);
-formURL += "&amp;single_sn=" + Util.safeString(contains_sn);
-formURL += "&amp;service=" + service;
-formURL += "&amp;meta_id=" + meta_id;
 
 if (hl != null) {
     hl = hl.trim();
@@ -70,6 +59,7 @@ if (hl != null) {
     }
 }
 
+String screenDisplayMeta = (String) h.get("screen_or_display");
 if(screenDisplayMeta != null && screenDisplayMeta.equals("screen")) {
     showDisplay = false;
 } else if (screenDisplayMeta != null && screenDisplayMeta.equals("meta")) {
@@ -87,29 +77,23 @@ String hlColor[] = {"#ff6","#a0ffff", "#9f9", "#f99", "#f69"};
 ResultSet rset = null;
 ResultSet noteSet = null;
 
-File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
-
-LibraryConnection lc = new LibraryConnection(queryFile, conn);
 Map paramMap = new HashMap();
 
 try {
 
-   if(chat_id != 0) {
+   if(item_id != 0) {
 
-        paramMap.put("chat_id", new Integer(chat_id));
+        paramMap.put("item_id", new Integer(item_id));
 
-        rset = lc.executeQuery("saved_chat", paramMap);
+        rset = lc.executeQuery("saved_fields", paramMap);
 
-        if(rset != null && rset.next()) {
-            from_sn = rset.getString("sent_sn");
-            to_sn = rset.getString("received_sn");
-            contains_sn = rset.getString("single_sn");
-            dateFinish = rset.getString("date_finish");
-            dateStart = rset.getString("date_start");
+        while(rset.next()) {
             title = rset.getString("title");
             notes = rset.getString("notes");
-            meta_id = rset.getInt("meta_id");
-            if(meta_id != 0) {
+
+            h.put(rset.getString("field_name"), rset.getString("value"));
+
+            if( h.get("meta_id") != null && !((String)h.get("meta_id")).equals("0")) {
                 showMeta = true;
                 showDisplay = false;
             }
@@ -119,15 +103,16 @@ try {
     }
 
     if(message_id != 0) {
-        paramMap.put("afterTime", new Integer(aTime));
-        paramMap.put("beforeTime", new Integer(bTime));
+
+        paramMap.put("afterTime", new Integer(Util.checkInt((String) h.get("aTime"), 45)));
+        paramMap.put("beforeTime", new Integer(Util.checkInt((String) h.get("bTime"), 15)));
         paramMap.put("message_id", new Integer(message_id));
 
         rset = lc.executeQuery("message_times", paramMap);
 
         if(rset.next()) {
-            dateStart = rset.getString("start");
-            dateFinish = rset.getString("finish");
+            h.put("dateStart", rset.getString("start"));
+            h.put("dateFinish",  rset.getString("finish"));
         }
     }
 
@@ -183,9 +168,10 @@ try {
         out.println("</div>\n");
         out.println("<div class=\"boxThinBottom\"></div>\n");
     }
+
     boolean unconstrained = false;
 
-    if(dateStart != null && dateFinish == null) unconstrained = true;
+    if(h.get("dateStart") != null && h.get("dateFinish") == null) unconstrained = true;
 
     if(unconstrained) {
         out.print("<div align=\"center\"><i>Limited to 250 " +
@@ -197,29 +183,29 @@ try {
     out.println("<div class=\"boxThinContent\">");
 
     try {
-        paramMap.put("startDate", dateStart);
-        paramMap.put("endDate", dateFinish);
+        paramMap.put("startDate", h.get("dateStart"));
+        paramMap.put("endDate", h.get("dateFinish"));
 
         rset = lc.executeQuery("date_range_users", paramMap);
 
         while(rset.next()) {
             out.print("<p>" +
-                "<a href=\"index.jsp?start=" + Util.safeString(dateStart) +
-                "&finish=" + Util.safeString(dateFinish) + "&service=" +
+                "<a href=\"index.jsp?dateStart=" + Util.safeString((String) h.get("dateStart")) +
+                "&dateFinish=" + Util.safeString((String) h.get("dateFinish")) + "&service=" +
                 rset.getString("service") + "\">" +
                 "<img src=\"images/services/" +
                 rset.getString("service").toLowerCase() +
                 ".png\" width=\"12\" height=\"12\" /></a> " +
-                "<a href=\"index.jsp?start=" + Util.safeString(dateStart) +
-                "&finish=" + Util.safeString(dateFinish) + "&contains=" +
+                "<a href=\"index.jsp?dateStart=" + Util.safeString((String) h.get("dateStart")) +
+                "&dateFinish=" + Util.safeString((String) h.get("dateFinish")) + "&contains=" +
                 rset.getString("username") + "\">"+
                 rset.getString("username") + "</a></p>\n");
         }
 
-        out.print("<a href=\"index.jsp?start=" + Util.safeString(dateStart) +
-            "&finish=" + Util.safeString(dateFinish) + "\"><i>All</i></a>");
-    } catch (SQLException e) {
-        out.print("<span style=\"color: red\">" + e.getMessage() + "</span>");
+        out.print("<a href=\"index.jsp?dateStart=" + Util.safeString((String) h.get("dateStart")) +
+            "&finish=" + Util.safeString((String) h.get("dateFinish")) + "\"><i>All</i></a>");
+    } catch (SQLException err) {
+        out.print("<span style=\"color: red\">" + err.getMessage() + "</span>");
     }
 
     out.println("</div>\n");
@@ -229,10 +215,11 @@ try {
     out.println("<div class=\"boxThinTop\"></div>\n");
     out.println("<div class=\"boxThinContent\">");
 
-    rset = lc.executeQuery("saved_chats_list", paramMap);
+    paramMap.put("type", "chat");
+    rset = lc.executeQuery("saved_items_list", paramMap);
 
     while(rset.next()) {
-        out.println("<p><a href=\"index.jsp?chat_id=" + rset.getInt("chat_id") +
+        out.println("<p><a href=\"index.jsp?item_id=" + rset.getInt("item_id") +
             "\">" + rset.getString("title") + "</a></p>");
     }
     out.println("<p></p>");
@@ -254,10 +241,10 @@ try {
 %>
 
                 <p><a href="#"
-                onClick="window.open('urls.jsp?start=<%=Util.safeString(dateStart, today.toString()) %>&finish=<%= Util.safeString(dateFinish) %>', 'Save Chat', 'width=640,height=480')">Recent Links</a></p>
+                onClick="window.open('urls.jsp?start=<%=Util.safeString((String) h.get("dateStart"), today.toString()) %>&finish=<%= Util.safeString((String) h.get("dateFinish")) %>', 'Save Chat', 'width=640,height=480')">Recent Links</a></p>
 
                 <p><a href="#"
-                onClick="window.open('simpleViewer.jsp?start=<%= Util.safeString(dateStart, today.toString()) %>&finish=<%= Util.safeString(dateFinish) %>&from=<%= URLEncoder.encode(Util.safeString(from_sn), "UTF-8")  %>&to=<%= URLEncoder.encode(Util.safeString(to_sn), "UTF-8")  %>&contains=<%= URLEncoder.encode(Util.safeString(contains_sn), "UTF-8") %>&screen_or_display=<%= screenDisplayMeta %>&meta_id=<%=meta_id%>&chat_id=<%=chat_id%>', 'Save Chat', 'width=640,height=480')">Simple Message View</a></p>
+                onClick="window.open('simpleViewer.jsp?start=<%= Util.safeString((String) h.get("dateStart"), today.toString()) %>&finish=<%= Util.safeString((String) h.get("dateFinish")) %>&from=<%= URLEncoder.encode(Util.safeString((String) h.get("sender")), "UTF-8")  %>&to=<%= URLEncoder.encode(Util.safeString((String) h.get("recipient")), "UTF-8")  %>&contains=<%= URLEncoder.encode(Util.safeString((String) h.get("contains")), "UTF-8") %>&screen_or_display=<%= screenDisplayMeta %>&meta_id=<%=meta_id%>&item_id=<%=item_id%>', 'Save Chat', 'width=640,height=480')">Simple Message View</a></p>
 <%
     out.println("</div>\n");
     out.println("<div class=\"boxThinBottom\"></div>\n");
@@ -274,14 +261,14 @@ try {
                     <td align="right">
                         <label for="from">Sent SN: </label></td>
                     <td>
-                        <input type="text" name="from"
-                            value="<%= Util.safeString(from_sn) %>" id="from" />
+                        <input type="text" name="sender"
+                            value="<%= Util.safeString((String) h.get("sender")) %>" id="from" />
                     </td>
                 </tr>
                 <tr>
                 <tr>
                     <td align="right"><label for="to">Received SN: </label></td>
-                    <td><input type="text" name="to" value="<%= Util.safeString(to_sn) %>" id="to" />
+                    <td><input type="text" name="recipient" value="<%= Util.safeString((String) h.get("recipient")) %>" id="to" />
                     </td>
                 </tr>
                 <tr>
@@ -290,7 +277,7 @@ try {
                     </td>
                     <td>
                         <input type="text" name="contains"
-                            value="<%= Util.safeString(contains_sn)  %>"
+                            value="<%= Util.safeString((String) h.get("contains"))  %>"
                             id = "contains" />
                     </td>
                 </tr>
@@ -308,7 +295,7 @@ try {
     while(rset.next()) {
         out.print("<option value=\"" + rset.getString("service") + "\"" );
         out.print(Util.compare(rset.getString("service"),
-                    service, " selected=\"selected\""));
+                    (String) h.get("service"), " selected=\"selected\""));
         out.print(">" + rset.getString("service") + "</option>\n");
     }
 %>
@@ -321,7 +308,7 @@ try {
                     </td>
                     <td>
                         <select name="meta_id">
-                            <option value=\"0\">Choose One</option>
+                            <option value="0">Choose One</option>
 <%
 
     rset = lc.executeQuery("meta_contacts", paramMap);
@@ -339,8 +326,8 @@ try {
                 </tr>
                 <tr>
                     <td align="right"><label for="start_date">Date Range: </label></td>
-                <td><input type="text" name="start" value="<%=
-                Util.safeString(dateStart, today.toString() + " 00:00:00\"")
+                <td><input type="text" name="dateStart" value="<%=
+                Util.safeString((String) h.get("dateStart"), today.toString() + " 00:00:00\"")
                 %>" id="start_date" />
                 <a href="javascript:show_calendar('control.start');"
                     onmouseover="window.status='Date Picker';return true;"
@@ -348,8 +335,8 @@ try {
                 <img src="images/calicon.jpg" border=0></a>
 
                 <label for="finish_date">&nbsp;--&nbsp;</label>
-                <input type="text" name="finish"
-                        value="<%= Util.safeString(dateFinish) %>"
+                <input type="text" name="dateFinish"
+                        value="<%= Util.safeString((String) h.get("dateFinish")) %>"
                         id="finish_date" />
                 <a href="javascript:show_calendar('control.finish');"
                     onmouseover="window.status='Date Picker';return true;"
@@ -389,12 +376,12 @@ try {
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
-    paramMap.put("startDate", dateStart);
-    paramMap.put("endDate", dateFinish);
-    paramMap.put("sendSN", from_sn);
-    paramMap.put("recSN", to_sn);
-    paramMap.put("containsSN", contains_sn);
-    paramMap.put("service", service);
+    paramMap.put("startDate", (String) h.get("dateStart"));
+    paramMap.put("endDate", (String) h.get("dateFinish"));
+    paramMap.put("sendSN", (String) h.get("sender"));
+    paramMap.put("recSN", (String) h.get("recipient"));
+    paramMap.put("containsSN", (String) h.get("contains"));
+    paramMap.put("service", (String) h.get("service"));
     paramMap.put("meta_id", new Integer(meta_id));
 
     if(unconstrained) paramMap.put("limit", new Integer(250));
@@ -521,8 +508,8 @@ try {
             out.print("<a href=\"index.jsp?from=" +
             rset.getString("sender_sn") +
             "&to=" + rset.getString("recipient_sn") +
-            "&start=" + Util.safeString(dateStart) +
-            "&finish=" + Util.safeString(dateFinish) + "#" +
+            "&dateStart=" + Util.safeString((String) h.get("dateStart")) +
+            "&dateFinish=" + Util.safeString((String) h.get("dateFinish")) + "#" +
             rset.getInt("message_id") + "\" ");
 
             out.print("title=\"" + rset.getString("sender_sn") + "\">");
@@ -537,14 +524,14 @@ try {
             }
             out.print("</span></a>\n");
 
-            if(to_sn == null || from_sn == null) {
+            if(h.get("recipient") == null || h.get("sender") == null) {
                 out.println("&rarr;");
 
                 out.println("<a href=\"index.jsp?from=" +
                 rset.getString("sender_sn") +
                     "&to=" + rset.getString("recipient_sn") +
-                    "&start=" + Util.safeString(dateStart) +
-                    "&finish=" + Util.safeString(dateFinish) +
+                    "&dateStart=" + Util.safeString((String) h.get("dateStart")) +
+                    "&dateFinish" + Util.safeString((String) h.get("dateFinish")) +
                     "#" + rset.getInt("message_id") +
                     "\" title=\"" + rset.getString("recipient_sn") + "\">");
 
@@ -602,11 +589,8 @@ try {
 
         out.println("</div>\n");
     }
-} catch (SQLException e) {
-    out.print("<br /><span style=\"color: red\">" + e.getMessage() + "</span>");
-} finally {
-    lc.close();
-    conn.close();
+} catch (SQLException err) {
+    out.print("<br /><span style=\"color: red\">" + err.getMessage() + "</span>");
 }
 %>
                 </div>

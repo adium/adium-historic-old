@@ -1,21 +1,13 @@
 <%@ page import = 'java.sql.*' %>
-<%@ page import = 'javax.naming.*' %>
-<%@ page import = 'javax.sql.*' %>
 <%@ page import = 'java.util.Map' %>
 <%@ page import = 'java.util.HashMap' %>
 <%@ page import = 'java.io.File' %>
 <%@ page import = 'org.slamb.axamol.library.*' %>
 
 <%
-Context env = (Context) new InitialContext().lookup("java:comp/env/");
-DataSource source = (DataSource) env.lookup("jdbc/postgresql");
-Connection conn = source.getConnection();
-
 ResultSet rset = null;
 
-File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
-
-LibraryConnection lc = new LibraryConnection(queryFile, conn);
+LibraryConnection lc = (LibraryConnection) request.getAttribute("lc-standard");
 Map params = new HashMap();
 
 try {
@@ -63,7 +55,5 @@ try {
 <%
 } catch (SQLException e) {
     out.println("<br />" + e.getMessage());
-} finally {
-    conn.close();
 }
 %>

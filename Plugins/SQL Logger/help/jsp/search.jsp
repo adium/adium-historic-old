@@ -1,61 +1,32 @@
 <%@ page import = 'java.sql.*' %>
-<%@ page import = 'javax.sql.*' %>
-<%@ page import = 'javax.naming.*' %>
 <%@ page import = 'java.util.List' %>
 <%@ page import = 'java.util.ArrayList' %>
 <%@ page import = 'java.util.Map' %>
 <%@ page import = 'java.util.HashMap' %>
 <%@ page import = 'org.slamb.axamol.library.*' %>
-<%@ page import = 'java.io.File' %>
+<%@ page import = 'sqllogger.*' %>
+<%@ page import = 'java.util.Enumeration' %>
 
 <%
-Context env = (Context) new InitialContext().lookup("java:comp/env/");
-DataSource source = (DataSource) env.lookup("jdbc/postgresql");
-Connection conn = source.getConnection();
+String searchFormURL = new String("saveForm.jsp?action=save.jsp&type=search");
+int item_id = 0;
 
-String searchFormURL = new String("saveForm.jsp?action=saveSearch.jsp");
-int search_id = 0;
-String date_start, date_finish;
+item_id = Util.checkInt(request.getParameter("item_id"));
 
-try {
-    search_id = Integer.parseInt(request.getParameter("search_id"));
-} catch (NumberFormatException e) {
-    search_id = 0;
+Enumeration e = request.getParameterNames();
+HashMap h = new HashMap();
+
+while(e.hasMoreElements()) {
+    String key = (String) e.nextElement();
+    String value = Util.checkNull(request.getParameter(key));
+    h.put(key, value);
+
+    if(value != null) {
+        searchFormURL += "&" + key + "=" + value;
+    }
 }
 
-String sender = request.getParameter("sender");
-if (sender != null && sender.equals("")) {
-    sender = null;
-} else if (sender != null) {
-    searchFormURL += "&amp;sender=" + sender;
-}
-
-String recipient = request.getParameter("recipient");
-if (recipient != null && recipient.equals("")) {
-    recipient = null;
-} else if (recipient != null) {
-    searchFormURL += "&amp;recipient=" + recipient;
-}
-
-String searchString = request.getParameter("search");
-if (searchString == null || searchString.equals("")) {
-    searchString = null;
-} else {
-    searchFormURL += "&amp;searchString=" + searchString;
-}
-
-String service = request.getParameter("service");
-if (service == null || service.equals("0")) {
-    service = null;
-} else {
-    searchFormURL += "&amp;service=" + service;
-}
-
-String orderBy = request.getParameter("order_by");
-
-if (orderBy != null && orderBy.equals("")) {
-    orderBy = null;
-}
+String orderBy = Util.checkNull(request.getParameter("order_by"));
 
 String ascDesc = request.getParameter("asc_desc");
 if(orderBy != null){
@@ -63,52 +34,40 @@ if(orderBy != null){
     searchFormURL += "&amp;orderBy=" + orderBy;
 }
 
-date_finish = request.getParameter("finish");
-if(date_finish != null && date_finish.equals("")) {
-    date_finish = null;
-} else {
-    searchFormURL += "&amp;date_finish=" + date_finish;
-}
-
-date_start = request.getParameter("start");
-if(date_start != null && date_start.equals("")) {
-    date_start = null;
-} else {
-    searchFormURL += "&amp;date_start=" + date_start;
-}
-
 String title = new String();
 String notes = new String();
 
 ResultSet rset = null;
-SQLWarning warning = null;
 
 long beginTime = 0;
 long queryTime = 0;
 
 String searchKey = new String();
 
-searchKey = searchString;
+searchKey = (String) h.get("search");
 
-File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
-LibraryConnection lc = new LibraryConnection(queryFile, conn);
+LibraryConnection lc = (LibraryConnection) request.getAttribute("lc-standard");;
 Map params = new HashMap();
 
 try {
-if(search_id != 0) {
-        params.put("search_id", new Integer(search_id));
+if(item_id != 0) {
+        params.put("item_id", new Integer(item_id));
 
-        rset = lc.executeQuery("saved_search", params);
+        rset = lc.executeQuery("saved_fields", params);
 
-        if(rset != null && rset.next()) {
+        while(rset.next()) {
             title = rset.getString("title");
             notes = rset.getString("notes");
-            sender = rset.getString("sender");
-            recipient = rset.getString("recipient");
-            searchString = rset.getString("searchstring");
-            date_start = rset.getString("date_start");
-            date_finish = rset.getString("date_finish");
-            orderBy = rset.getString("orderby");
+
+            h.put(rset.getString("field_name"), rset.getString("value"));
+
+            orderBy = (String) h.get("order_by");
+
+            ascDesc = (String) h.get("asc_desc");
+
+            if(orderBy != null){
+                orderBy += (String) h.get("ascDesc");
+            }
         }
     } else {
         title = "Search";
@@ -180,12 +139,12 @@ if(search_id != 0) {
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
 <%
-
-    rset = lc.executeQuery("saved_searches_list", params);
+    params.put("type", "search");
+    rset = lc.executeQuery("saved_items_list", params);
 
     while(rset.next()) {
-        out.println("<p><a href=\"search.jsp?search_id=" +
-            rset.getString("search_id") + "\">" + rset.getString("title") +
+        out.println("<p><a href=\"search.jsp?item_id=" +
+            rset.getString("item_id") + "\">" + rset.getString("title") +
             "</a></p>");
     }
 %>
@@ -209,10 +168,8 @@ if(search_id != 0) {
                             <td>
                                 <input type="text" name="search"
                         <%
-                        if (searchString != null)
-                            out.print("value=\"" +
-                                searchString.replaceAll("\"","&quot;") +
-                                "\"");
+                        if ((String) h.get("search") != null)
+                            out.print("value=\"" + ((String) h.get("search")).replaceAll("\"","&quot;") + "\"");
                         %> id="searchstring" />
                             </td>
                             <td rowspan="3">
@@ -261,8 +218,8 @@ if(search_id != 0) {
                                 <label for="sender">Sender: </label>
                             </td>
                             <td><input type="text" name="sender"
-                        <% if (sender != null)
-                            out.print("value=\"" + sender + "\""); %> id="sender" />
+                        <% if (h.get("sender") != null)
+                            out.print("value=\"" + (String) h.get("sender") + "\""); %> id="sender" />
                             </td>
                         </tr>
                         <tr>
@@ -271,8 +228,8 @@ if(search_id != 0) {
                             </td>
                             <td>
                                 <input type="text" name="recipient"
-                        <% if (recipient != null)
-                            out.print("value=\"" + recipient + "\""); %> id="recipient" />
+                        <% if (h.get("recipient") != null)
+                            out.print("value=\"" + (String) h.get("recipient") + "\""); %> id="recipient" />
                             </td>
                         </tr>
                         <tr>
@@ -281,13 +238,13 @@ if(search_id != 0) {
                             </td>
                             <td>
                                 <select name="service" id="service">
-                                    <option value="0">Choose One</option>
+                                    <option value="null">Choose One</option>
 <%
 
     rset = lc.executeQuery("distinct_services", params);
     while(rset.next()) {
         out.print("<option value=\"" + rset.getString("service") + "\"" );
-        if(rset.getString("service").equals(service)) {
+        if(rset.getString("service").equals((String) h.get("service"))) {
             out.print(" selected=\"selected\"");
         }
         out.print(">" + rset.getString("service") + "</option>\n");
@@ -302,8 +259,8 @@ if(search_id != 0) {
                             </td>
                             <td colspan="2">
                                 <input type="text" name="start" <%
-                                    if (date_start != null)
-                                        out.print("value=\"" + date_start +
+                                    if ((String) h.get("start") != null)
+                                        out.print("value=\"" + (String) h.get("start") +
                                         "\"");
                                 %> id="start_date" />
                                 <a
@@ -317,8 +274,8 @@ if(search_id != 0) {
                                         &nbsp;--&nbsp;
                                     </label>
                                     <input type="text" name="finish" <%
-                                        if (date_finish != null)
-                                            out.print("value=\"" + date_finish + "\"");
+                                        if ((String) h.get("finish") != null)
+                                            out.print("value=\"" + (String) h.get("finish") + "\"");
                                     %> id="finish_date" />
                                     <a
 
@@ -338,14 +295,14 @@ if(search_id != 0) {
                 </div>
                 <div class="boxWideBottom"></div>
 <%
-    if(searchString != null) {
+    if((String) h.get("search") != null) {
 %>
 
                 <h1>Search Results</h1>
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
-        searchKey = searchString;
+        searchKey = (String) h.get("search");
         List exactMatch = new ArrayList();
         int quoteMatch = 1;
 
@@ -357,7 +314,7 @@ if(search_id != 0) {
             out.print("For a non-case-sensitive, faster query, "+
             "install the tsearch2 module.</i></div>");
 
-            params.put("search", searchString);
+            params.put("search", (String) h.get("search"));
 
             // If the user has installed a tsearch, transform the search string
         } else {
@@ -398,17 +355,17 @@ if(search_id != 0) {
             params.put("search", searchKey);
         }
 
-        params.put("sender", sender);
-        params.put("recipient", recipient);
-        params.put("dateStart", date_start);
-        params.put("dateFinish", date_finish);
-        params.put("service", service);
+        params.put("sender", (String) h.get("sender"));
+        params.put("recipient", (String) h.get("recipient"));
+        params.put("dateStart", (String) h.get("start"));
+        params.put("dateFinish", (String) h.get("finish"));
+        params.put("service", (String) h.get("service"));
 
         beginTime = System.currentTimeMillis();
         try {
             rset = lc.executeQuery(searchType, params, orderBy);
-        } catch (SQLException e) {
-            out.println("<span style=\"color:red\">" + e.getMessage() +
+        } catch (SQLException err) {
+            out.println("<span style=\"color:red\">" + err.getMessage() +
                 "</span>");
         }
         queryTime = System.currentTimeMillis() - beginTime;
@@ -422,13 +379,6 @@ if(search_id != 0) {
         out.print("<br />");
 
             while(rset != null && rset.next()) {
-                warning = rset.getWarnings();
-                if(warning != null) {
-                    out.print("<br />" + warning.getMessage());
-                    while(warning.getNextWarning() != null) {
-                        out.print("<br />" + warning.getMessage());
-                    }
-                }
 
                 String messageContent = rset.getString("message");
                 messageContent = messageContent.replaceAll("\n", "<br>");
@@ -472,21 +422,6 @@ if(search_id != 0) {
 
         } else if (rset != null && !rset.isBeforeFirst()) {
             out.print("<div align=\"center\"><i>No results found.</i>");
-            warning = conn.getWarnings();
-            if(warning != null) {
-                out.print("<br />" + warning.getMessage());
-                while(warning.getNextWarning() != null) {
-                    out.print("<br>" + warning.getMessage());
-                }
-            }
-
-            warning = rset.getWarnings();
-            if(warning != null) {
-                out.print("<br />" + warning.getMessage());
-                while(warning.getNextWarning() != null) {
-                    out.print("<br />" + warning.getMessage());
-                }
-            }
 
             out.print("</div>");
         }
@@ -496,11 +431,8 @@ if(search_id != 0) {
 <%
     }
 
-} catch (SQLException e) {
-    out.print("<br />" + e.getMessage() + "<br>");
-} finally {
-    lc.close();
-    conn.close();
+} catch (SQLException err) {
+    out.print("<br />" + err.getMessage() + "<br>");
 }
 %>
         </div>

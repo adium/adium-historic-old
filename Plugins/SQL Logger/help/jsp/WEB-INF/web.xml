@@ -4,6 +4,7 @@
     "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
 
 <web-app>
-<system-property javax.xml.parsers.SAXParserFactory=
-  "org.apache.xerces.jaxp.SAXParserFactoryImpl"/>
+  <listener>
+    <listener-class>sqllogger.ConnectionManager</listener-class>
+  </listener>
 </web-app>

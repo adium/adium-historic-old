@@ -1,8 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <%@ page import = 'java.sql.*' %>
-<%@ page import = 'javax.naming.*' %>
-<%@ page import = 'javax.sql.*' %>
 <%@ page import = 'java.net.URLEncoder' %>
 <%@ page import = 'java.io.File' %>
 <%@ page import = 'org.slamb.axamol.library.*' %>
@@ -11,12 +9,10 @@
 <%@ page import = 'sqllogger.*' %>
 
 <%
-Context env = (Context) new InitialContext().lookup("java:comp/env/");
-DataSource source = (DataSource) env.lookup("jdbc/postgresql");
-Connection conn = source.getConnection();
+Connection conn = (Connection) request.getAttribute("conn");
 
 String query = Util.checkNull(request.getParameter("query"));
-int query_id;
+int item_id;
 
 PreparedStatement pstmt = null;
 ResultSet rset = null;
@@ -25,27 +21,25 @@ ResultSetMetaData rsmd = null;
 String formURL = new String("action=saveQuery.jsp&query=" +
     query);
 
-query_id = Util.checkInt(request.getParameter("query_id"));
+item_id = Util.checkInt(request.getParameter("item_id"));
 
 String notes = new String();
 String title = new String();
 
-File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
-
-LibraryConnection lc = new LibraryConnection(queryFile, conn);
+LibraryConnection lc = (LibraryConnection) request.getAttribute("lc-standard");
 Map params = new HashMap();
 
 try {
 
-    if(query_id != 0) {
+    if(item_id != 0) {
 
-        params.put("query_id", new Integer(query_id));
-        rset = lc.executeQuery("saved_query", params);
+        params.put("item_id", new Integer(item_id));
+        rset = lc.executeQuery("saved_fields", params);
 
         while(rset.next()) {
             title = rset.getString("title");
             notes = rset.getString("notes");
-            query = rset.getString("query_text");
+            query = rset.getString("value");
         }
     }
 %>
@@ -85,11 +79,12 @@ try {
                     <div class="boxThinContent">
 <%
 
-    rset = lc.executeQuery("saved_queries_list", params);
+    params.put("type", "query");
+    rset = lc.executeQuery("saved_items_list", params);
 
     while(rset.next()) {
-        out.println("<p><a href=\"query.jsp?query_id=" +
-            rset.getString("query_id") + "\" title=\"" +
+        out.println("<p><a href=\"query.jsp?item_id=" +
+            rset.getString("item_id") + "\" title=\"" +
             rset.getString("notes") + "\">" + rset.getString("title") +
             "</a></p>");
     }
@@ -115,7 +110,7 @@ try {
                         <span style="float: right">
 <%
 if(query != null)
-    out.println("<p><a href=\"#\" onClick=\"window.open('saveForm.jsp?action=saveQuery.jsp&query=" + URLEncoder.encode(Util.safeString(query), "UTF-8") +
+    out.println("<p><a href=\"#\" onClick=\"window.open('saveForm.jsp?action=save.jsp&type=query&query=" + URLEncoder.encode(Util.safeString(query), "UTF-8") +
         "', 'Save Query', 'width=275,height=225')\">Save Query</a></p>");
 %>
                         </span>
@@ -222,8 +217,6 @@ if(query != null)
 
 } catch (SQLException e) {
     out.println("<span style=\"color:red\">" + e.getMessage() + "</span>");
-} finally {
-    conn.close();
 }
 %>
                     </div>

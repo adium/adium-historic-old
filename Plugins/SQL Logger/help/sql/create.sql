@@ -44,12 +44,12 @@ primary key (sender_id, recipient_id)
 
  -- Createe a few commonly used indexes
  \echo indexes
-create index im_sender_recipient on im.messages(sender_id, recipient_id);
+create index im_sender_recipient on im.messages (sender_id, recipient_id);
 create index im_msg_date_sender_recipient on
    im.messages (message_date, sender_id, recipient_id);
-create index im_recipient on im.messages(recipient_id);
-create index im_display_user on im.user_display_name(user_id);
-create index im_message_date on im.messages(message_date);
+create index im_recipient on im.messages (recipient_id);
+create index display_user_effdat on im.user_display_name (user_id, effdate);
+create index im_message_date on im.messages (message_date);
 
  -- message_v contains the message, sender and recipient screennames, and
  -- sender/recipient display names
@@ -254,51 +254,7 @@ user_id         int references im.users (user_id) not null,
 preferred       boolean default false
 );
 
- -- saved_searches and saved_chats are used by the JSPs to label
- -- conversations.  Simply save the parameters, so they behave like a
- -- smart folder.  If data is added that fits the criteria, it will show up.
-
- -- used to save the search results
-\echo table saved_searches
-create table im.saved_searches (
-search_id       serial primary key,
-title           text,
-notes           text,
-sender          text,
-recipient       text,
-searchString    text,
-orderBy         text,
-date_start      timestamp,
-date_finish     timestamp,
-date_added      timestamp default now()
-);
-
- -- used to save the chat settings
-\echo table saved_chats
-create table im.saved_chats (
-chat_id         serial primary key,
-title           text,
-notes           text,
-sent_sn         text,
-received_sn     text,
-single_sn       text,
-meta_id         int references im.meta_container(meta_id),
-date_start      timestamp,
-date_finish     timestamp,
-date_added      timestamp default now()
-);
-
- -- used to save queries
-\echo table saved_queries
-create table im.saved_queries (
-query_id        serial primary key,
-title           text,
-notes           text,
-query_text      text,
-date_added      timestamp default now()
-);
-
- -- saves a note and links it to a message id
+-- saves a note and links it to a message id
 \echo table message_notes
 create table im.message_notes (
 message_id      int references im.messages(message_id),
@@ -306,7 +262,6 @@ title           text not null,
 notes           text not null,
 date_added      timestamp default now()
 );
-
 
  -- the master table for the extensible metadata system.
  -- saved names of categories (URL, location, etc)
@@ -354,10 +309,35 @@ from    im.meta_container
         natural join im.information_keys
 where   delete = false);
 
+ -- saved_items is used by the JSPs to label
+ -- conversations.  Simply save the parameters, so they behave like a
+ -- smart folder.  If data is added that fits the criteria, it will show up.
+
+\echo table saved_items
+create table im.saved_items (
+item_id         serial primary key,
+title           text not null,
+notes           text,
+item_type       text,
+date_added      timestamp default now()
+);
+
+\echo table saved_fields
+create table im.saved_fields (
+item_id         int references im.saved_items(item_id) not null,
+field_name      text,
+value           text
+);
+
 -- Insert the default queries into the saved queries
 \echo saved queries inserts
-INSERT INTO im.saved_queries (title, notes, query_text)
-VALUES ('Word Frequency', 'Shows the frequency of a selected word.', 'select s.username as sender,
+
+insert into im.saved_items (item_id, title, notes, item_type)
+values (1, 'Word Frequency',
+'Shows the frequency of a selected word.', 'query');
+
+INSERT INTO im.saved_fields (item_id, field_name, value)
+VALUES (1, 'query_text', 'select s.username as sender,
         r.username as recipient,
         count(*)
 from    messages,
@@ -371,7 +351,14 @@ group by s.username, r.username
 having count(*) > 1
 order by count(*) desc');
 
-INSERT INTO im.saved_queries (title, notes, query_text) VALUES ('Proximity Search', 'Search for two words within x minutes of each other.', 'select message_id,
+INSERT INTO im.saved_items (item_id, title, notes, item_type)
+VALUES (2, 'Proximity Search',
+    'Search for two words within x minutes of each other.',
+    'query');
+
+insert into im.saved_fields (item_id, field_name, value)
+values (2, 'query_text',
+'select message_id,
           s.username as sender,
           r.username as recipient,
           message_date,
@@ -395,12 +382,19 @@ where s.user_id = sender_id
              and   b.message_date <
                          a.message_date + ''5 minutes''::interval)');
 
-INSERT INTO im.saved_queries (title, notes, query_text) VALUES ('Contact Info', 'Retrieve the contact info for a person.', 'select username,
+INSERT INTO im.saved_items (item_id, title, notes, item_type)
+VALUES (3, 'Contact Info', 'Retrieve the contact info for a person.',
+    'query');
+
+insert into im.saved_fields (item_id, field_name, value) values
+(3, 'query_text', 'select username,
           key_name,
           value
 from   users natural join contact_information
           natural join information_keys
 where username = ''fetchgreebledonx''');
+
+select setval('saved_items_item_id_seq', 3);
 
 --statuses
 \echo table status

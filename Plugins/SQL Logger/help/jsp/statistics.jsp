@@ -1,22 +1,17 @@
 <%@ page import = 'java.sql.*' %>
-<%@ page import = 'javax.sql.*' %>
-<%@ page import = 'javax.naming.*' %>
 <%@ page import = 'java.util.Vector' %>
 <%@ page import = 'java.util.Map' %>
 <%@ page import = 'java.util.HashMap' %>
 <%@ page import = 'org.slamb.axamol.library.*' %>
-<%@ page import = 'java.io.File' %>
 <%@ page import = 'sqllogger.*' %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/statistics.jsp $-->
-<!--$Rev: 922 $ $Date$ -->
+<!--$Rev: 930 $ $Date$ -->
 
 <%
-Context env = (Context) new InitialContext().lookup("java:comp/env/");
-DataSource source = (DataSource) env.lookup("jdbc/postgresql");
-Connection conn = source.getConnection();
+
 int sender, meta_id;
 String sender_sn = new String();
 String senderDisplay = new String();
@@ -44,11 +39,9 @@ ResultSet rset = null;
 ResultSet totals = null;
 ResultSetMetaData rsmd = null;
 
-File queryFile = new File(session.getServletContext().getRealPath("queries/standard.xml"));
-File statQueries = new File(session.getServletContext().getRealPath("queries/stats.xml"));
 
-LibraryConnection lc = new LibraryConnection(queryFile, conn);
-LibraryConnection stats = new LibraryConnection(statQueries, conn);
+LibraryConnection lc = (LibraryConnection) request.getAttribute("lc-standard");
+LibraryConnection stats = (LibraryConnection) request.getAttribute("lc-stats");
 
 Map params = new HashMap();
 
@@ -458,10 +451,6 @@ for(int yrCnt = 0; yrCnt < years; yrCnt++) {
 <%
 } catch (SQLException e) {
     out.print("<br />" + e.getMessage());
-} finally {
-    lc.close();
-    stats.close();
-    conn.close();
 }
 %>
 </body>
