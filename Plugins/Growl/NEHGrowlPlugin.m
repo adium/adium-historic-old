@@ -19,14 +19,14 @@
 {
 	//Set up the events
 	events = [[NSDictionary alloc] initWithObjectsAndKeys:
-				@"Adium-ContactOnline", CONTACT_STATUS_ONLINE_YES,
-				@"Adium-ContactOffline", CONTACT_STATUS_ONLINE_NO,
-				@"Adium-ContactAway", CONTACT_STATUS_AWAY_YES,
-				@"Adium-ContactUnaway", CONTACT_STATUS_AWAY_NO,
-				@"Adium-ContactIdle", CONTACT_STATUS_IDLE_YES,
-				@"Adium-ContactUnidle", CONTACT_STATUS_IDLE_NO,
-				@"Adium-NewMessage", Content_FirstContentRecieved,
-				@"Adium-MessageWhileHidden", Content_DidReceiveContent,
+				@"Contact Signed On", CONTACT_STATUS_ONLINE_YES,
+				@"Contact Signed Off", CONTACT_STATUS_ONLINE_NO,
+				@"Contact Went Away", CONTACT_STATUS_AWAY_YES,
+				@"Contact Is Available", CONTACT_STATUS_AWAY_NO,
+				@"Contact Went Idle", CONTACT_STATUS_IDLE_YES,
+				@"Contact Is No Longer Idle", CONTACT_STATUS_IDLE_NO,
+				@"New Message Received", Content_FirstContentRecieved,
+				@"Message Received while hidden", Content_DidReceiveContent,
 				nil];
 	
 	//Launch Growl if needed
