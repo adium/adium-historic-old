@@ -6,7 +6,10 @@
 //
 
 #import "ESSendMessageContactAlertPlugin.h"
-//#import "ESSendMessageContactAlert.h"
+#import "ESSendMessageAlertDetailPane.h"
+
+#define SEND_MESSAGE_ALERT_SHORT	@"Send a message to %a"
+#define SEND_MESSAGE_ALERT_LONG		@"Send a message to %a"
 
 @interface ESSendMessageContactAlertPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -16,28 +19,36 @@
 - (void)installPlugin
 {
     //Install our contact alert
-//	[[adium contactAlertsController] registerActionID:@"SendMessage" withHandler:self];
+	[[adium contactAlertsController] registerActionID:@"SendMessage" withHandler:self];
     
     attributes = nil;
     
     //Observe preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self preferencesChanged:nil];
+//    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+//    [self preferencesChanged:nil];
 }
 
+
+//Send Message Alert -----------------------------------------------------------------------------------------------------
+#pragma mark Send Message Alert
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-	return(@"Send a message to %a");
+	return(SEND_MESSAGE_ALERT_SHORT);
 }
 
 - (NSString *)longDescriptionForActionID:(NSString *)actionID
 {
-	return(@"Send a message to %a");
+	return(SEND_MESSAGE_ALERT_LONG);
 }
 
 - (NSImage *)imageForActionID:(NSString *)actionID
 {
 	return([NSImage imageNamed:@"MessageAlert" forClass:[self class]]);
+}
+
+- (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
+{
+	return([ESSendMessageAlertDetailPane actionDetailsPane]);
 }
 
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details
@@ -69,31 +80,31 @@
     [super dealloc];
 }
 
-- (void)preferencesChanged:(NSNotification *)notification
-{
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_FORMATTING] == 0){
-        NSDictionary		*prefDict;
-        NSColor			*textColor;
-        NSColor			*backgroundColor;
-        NSColor			*subBackgroundColor;
-        NSFont			*font;
-        
-        //Get the prefs
-        prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
-        font = [[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont];
-        textColor = [[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor];
-        backgroundColor = [[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor];
-        subBackgroundColor = [[prefDict objectForKey:KEY_FORMATTING_SUBBACKGROUND_COLOR] representedColor];
-        
-        [attributes release];
-        //Setup the attributes
-        if(!subBackgroundColor){
-            attributes = [[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, nil] retain];
-        }else{
-            attributes = [[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, subBackgroundColor, NSBackgroundColorAttributeName, nil] retain];
-        }
-    }
-}
+//- (void)preferencesChanged:(NSNotification *)notification
+//{
+//    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_FORMATTING] == 0){
+//        NSDictionary		*prefDict;
+//        NSColor			*textColor;
+//        NSColor			*backgroundColor;
+//        NSColor			*subBackgroundColor;
+//        NSFont			*font;
+//        
+//        //Get the prefs
+//        prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
+//        font = [[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont];
+//        textColor = [[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor];
+//        backgroundColor = [[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor];
+//        subBackgroundColor = [[prefDict objectForKey:KEY_FORMATTING_SUBBACKGROUND_COLOR] representedColor];
+//        
+//        [attributes release];
+//        //Setup the attributes
+//        if(!subBackgroundColor){
+//            attributes = [[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, nil] retain];
+//        }else{
+//            attributes = [[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, subBackgroundColor, NSBackgroundColorAttributeName, nil] retain];
+//        }
+//    }
+//}
 //*****
 //ESContactAlertProvider
 //*****

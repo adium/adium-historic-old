@@ -195,10 +195,10 @@ static AIListObject				*activeListObject = nil;
     }
     
     //Idle Since
-    double idle = [[activeListObject numberStatusObjectForKey:@"Idle"] doubleValue];
+    int idle = [[activeListObject numberStatusObjectForKey:@"Idle"] intValue];
     if(idle != 0){
         int	hours = (int)(idle / 60);
-        int	minutes = (int)((int)idle % 60);
+        int	minutes = (int)(idle % 60);
 
         [infoString appendString:@"\r\r\tIdle:\t" withAttributes:labelAttributes];
 

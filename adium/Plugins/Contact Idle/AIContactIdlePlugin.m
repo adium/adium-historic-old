@@ -102,8 +102,9 @@
     NSDate	*idleSince = [inObject statusObjectForKey:@"IdleSince"];
     
     if(idleSince){ //Set the handle's 'idle' value
-        double	idle = -[idleSince timeIntervalSinceNow] / 60.0;
-		[inObject setStatusObject:[NSNumber numberWithDouble:idle]
+		NSLog(@"%@ has an IdleSince",[inObject displayName]);
+        int	idle = -[idleSince timeIntervalSinceNow] / 60.0;
+		[inObject setStatusObject:[NSNumber numberWithInt:idle]
 						   forKey:@"Idle"
 						   notify:NO];
         
@@ -121,7 +122,7 @@
 //Tooltip entry ---------------------------------------------------------------------------------
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    double 		idle = [[inObject numberStatusObjectForKey:@"Idle"] doubleValue];
+    int 		idle = [[inObject numberStatusObjectForKey:@"Idle"] intValue];
     NSString	*entry = nil;
 	
     if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)
@@ -135,7 +136,7 @@
 
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-    double 				idle = [[inObject numberStatusObjectForKey:@"Idle"] doubleValue];
+    int 				idle = [[inObject numberStatusObjectForKey:@"Idle"] intValue];
     NSAttributedString	*entry = nil;
 	
     if(idle > 599400){ //Cap idle at 999 Hours (999*60*60 seconds)

@@ -120,7 +120,7 @@
 {
     NSColor			*color = nil, *invertedColor = nil, *labelColor = nil;
     int				unviewedContent, away;
-    double			idle;
+    int				idle;
 
     //Prefetch the value for unviewed content, we need it multiple times below
     unviewedContent = [inObject integerStatusObjectForKey:@"UnviewedContent"];
@@ -161,7 +161,7 @@
     if(!color){
         //Prefetch these values, we need them multiple times below
         away = [inObject integerStatusObjectForKey:@"Away"];
-        idle = [[inObject numberStatusObjectForKey:@"Idle"] doubleValue];
+        idle = [[inObject numberStatusObjectForKey:@"Idle"] intValue];
 
         //Idle And Away, Away, or Idle
         if(idleAndAwayEnabled && away && idle != 0){

@@ -71,10 +71,10 @@
     if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Idle"]){
         AIMutableOwnerArray	*viewArray;
         AIIdleView		*idleView = nil;
-        double			idle;
+        int				idle;
 		
         //Set the correct idle time
-        idle = [[inObject numberStatusObjectForKey:@"Idle"] doubleValue];
+        idle = [[inObject numberStatusObjectForKey:@"Idle"] intValue];
 		
         if(displayIdleOnLeft){
 			viewArray = [inObject displayArrayForKey:@"Left View"];
