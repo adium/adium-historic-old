@@ -19,18 +19,26 @@
 
 @implementation AIActionDetailsPane
 
-//Return a new action details pane
+/*
+ * @brief Return a new action details pane
+*/
 + (AIActionDetailsPane *)actionDetailsPane
 {
     return([[[self alloc] init] autorelease]);
 }
 
-//Return a new preference pane, passing plugin
+/*
+ * @brief Return a new action details pane, passing plugin
+ * @param inPlugin The plugin associated with this pane
+ */
 + (AIActionDetailsPane *)actionDetailsPaneForPlugin:(id)inPlugin
 {
     return([[[self alloc] initForPlugin:inPlugin] autorelease]);
 }
 
+/*
+ * @brief Called by subclasses when the header should be updated
+ */
 - (void)detailsForHeaderChanged
 {
    [[adium notificationCenter] postNotificationName:CONTACT_ALERTS_DETAILS_FOR_HEADER_CHANGED
@@ -38,20 +46,42 @@
 }
 
 //For subclasses -------------------------------------------------------------------------------
-//Called only when the pane is displayed a result of its action being selected
+
+/*!
+ * @brief Called only when the pane is displayed a result of its action being selected
+ *
+ * @param inDetails A previously created details dicionary, or nil if none exists
+ * @param inObject The object for which to configure
+ */
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
 {
 	
 }
 
-//Called whenever the event changes.  Most subclasses will have no no need for this method;
-//it should only be used for custom handling of particular events, and only with good reason.
+/*
+ * @brief Configure for an event
+ *
+ * Called whenever the event changes.  Most subclasses will have no no need for this method;
+ * it should only be used for custom handling of particular events, and only with good reason.
+ *
+ * Example: Some options in the Speak Event action are only relevant to message-related events.
+ *
+ * @param eventID The event ID
+ * @param inObject The object for which to configure
+ */
 - (void)configureForEventID:(NSString *)eventID listObject:(AIListObject *)inObject
 {
 	
 }
 
-//
+/*!
+ * @brief Return the details associated with this action
+ *
+ * This will be called automatically when an action is to be saved.  It should generated and return
+ * an <tt>NSDictionary</tt> which will subsequently be passed when executing or editing this action.
+ *
+ * @result The details dictionary.  It must be plist-encodable.
+ */
 - (NSDictionary *)actionDetails
 {
 	return(nil);
