@@ -9,6 +9,7 @@
 - Message formatting [Adam]
 - MSN preferences to Accounts Options
 - Typing preferences to Accounts Privacy
+- Emoticon pack list gets all funky when the scrollbar is showing
 
 [Accounts]
 - Window should save its size/position
