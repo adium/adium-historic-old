@@ -5814,6 +5814,8 @@
 				4B0148D10733D0EA001A4C57,
 				4B0149070733D3A5001A4C57,
 				4B935E690733E4ED00C23FC6,
+				34F102320734499700890D3B,
+				34F1023C073449D500890D3B,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6126,6 +6128,7 @@
 				34FC6D7107318F6600801C83,
 				9E6A9BF70732CB500032C9F6,
 				9E6A9BF80732CB500032C9F6,
+				34F1022F0734499700890D3B,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6404,6 +6407,8 @@
 				4B0148D20733D0EA001A4C57,
 				4B0149080733D3A5001A4C57,
 				4B935E6A0733E4ED00C23FC6,
+				34F1022E0734499700890D3B,
+				34F1023B073449D500890D3B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7997,6 +8002,80 @@
 		};
 		34F101E807342B5B00890D3B = {
 			fileRef = 34F101E307342B4D00890D3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F102290734499600890D3B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = NSString_UUID.m;
+			path = "Plugins/URL Handling/NSString_UUID.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F1022A0734499600890D3B = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = XtraProgressWindow.nib;
+			path = "Plugins/URL Handling/XtraProgressWindow.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F1022D0734499700890D3B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = NSString_UUID.h;
+			path = "Plugins/URL Handling/NSString_UUID.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F1022E0734499700890D3B = {
+			fileRef = 34F102290734499600890D3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F1022F0734499700890D3B = {
+			fileRef = 34F1022A0734499600890D3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F102320734499700890D3B = {
+			fileRef = 34F1022D0734499700890D3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F10239073449D500890D3B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = XtrasInstaller.m;
+			path = "Plugins/URL Handling/XtrasInstaller.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F1023A073449D500890D3B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = XtrasInstaller.h;
+			path = "Plugins/URL Handling/XtrasInstaller.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F1023B073449D500890D3B = {
+			fileRef = 34F10239073449D500890D3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F1023C073449D500890D3B = {
+			fileRef = 34F1023A073449D500890D3B;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -19966,6 +20045,11 @@
 			children = (
 				9E6417050613C55C006AF387,
 				9E6417060613C55C006AF387,
+				34F1023A073449D500890D3B,
+				34F10239073449D500890D3B,
+				34F1022D0734499700890D3B,
+				34F102290734499600890D3B,
+				34F1022A0734499600890D3B,
 			);
 			isa = PBXGroup;
 			name = "URL Handling";
