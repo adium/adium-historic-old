@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/statistics.jsp $-->
-<!--$Rev: 897 $ $Date$ -->
+<!--$Rev: 898 $ $Date$ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -34,11 +34,19 @@ try {
 
 loginUsers = Boolean.valueOf(request.getParameter("login")).booleanValue();
 
+int totalStats[][] = new int[2][3];
+double sentAve = 0;
+double recAve = 0;
+
+int max = 0;
+int years = 0;
+
+int monthArray[][] = new int[10][14];
+
 PreparedStatement pstmt = null;
 Statement stmt = null;
 ResultSet rset = null;
 ResultSet totals = null;
-ResultSet year = null;
 ResultSetMetaData rsmd = null;
 try {
 
@@ -46,12 +54,12 @@ try {
 
     if(sender != 0) {
         pstmt = conn.prepareStatement("select username as username, "+
-        " display_name as display_name, lower(service) as service  from " +
-        " im.users natural join im.user_display_name udn " +
-        " where user_id = ?"+
-        " and not exists " +
-        " (select 'x' from im.user_display_name " +
-        " where effdate > udn.effdate and user_id = users.user_id)");
+            " display_name as display_name, lower(service) as service  from " +
+            " im.users natural join im.user_display_name udn " +
+            " where user_id = ?"+
+            " and not exists " +
+            " (select 'x' from im.user_display_name " +
+            " where effdate > udn.effdate and user_id = users.user_id)");
         pstmt.setInt(1, sender);
         rset = pstmt.executeQuery();
         rset.next();
@@ -130,35 +138,102 @@ try {
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
 <%
-        if(sender != 0) {
-            pstmt = conn.prepareStatement("select distinct " +
-            " to_char(date_trunc('month', message_date), 'Mon, YYYY') " +
-            " as date, date_trunc('month', message_date) as full_date " +
-            " from messages where sender_id = ? order by full_date");
+        pstmt = conn.prepareStatement("select date_part('month', message_date) " +
+                " as month, date_part('year', message_date) as year, " +
+                " count(*) as count, " +
+                " to_char(date_trunc('month', message_date), 'Mon, YYYY') " +
+                " as date, date_trunc('month', message_date) as full_date, " +
+                " sender_id = ? as is_sender " +
+                " from messages where sender_id = ? or " +
+                " recipient_id = ? group by date_part('month', message_date), " +
+                " to_char(date_trunc('month', message_date), 'Mon, YYYY'), " +
+                " date_trunc('month', message_date), " +
+                " date_part('year', message_date), sender_id = ?  order by full_date");
 
-            pstmt.setInt(1, sender);
-        }
+        pstmt.setInt(1, sender);
+        pstmt.setInt(2, sender);
+        pstmt.setInt(3, sender);
+        pstmt.setInt(4, sender);
 
         if(meta_id != 0) {
-            pstmt = conn.prepareStatement("select distinct " +
-            " to_char(date_trunc('month', message_date), 'Mon, YYYY') " +
-            " as date, date_trunc('month', message_date) as full_date " +
-            " from messages, meta_contact where sender_id = user_id "+
-            " and meta_id = ? order by full_date");
+            pstmt = conn.prepareStatement("select date_part('month', message_date) " +
+                    " as month, date_part('year', message_date) as year, " +
+                    " to_char(date_trunc('month', message_date), 'Mon, YYYY') " +
+                    " as date, date_trunc('month', message_date) as full_date, " +
+                    " count(*) as count, sender_id = user_id as is_sender " +
+                    " from im.messages, im.meta_contact " +
+                    " where (sender_id = user_id or " +
+                    " recipient_id = user_id) and meta_id = ? " +
+                    " group by date_part('month', message_date), " +
+                    " to_char(date_trunc('month', message_date), 'Mon, YYYY'), " +
+                    " date_trunc('month', message_date), " +
+                    " date_part('year', message_date), sender_id = user_id " +
+                    " order by full_date");
 
             pstmt.setInt(1, meta_id);
+
         }
 
-        rset = pstmt.executeQuery();
+        totals = pstmt.executeQuery();
 
-        while(rset.next()) {
-            out.print("<p><a href=\"details.jsp?" +
-            "&meta_id=" + meta_id +
-            "&sender_id=" + sender +
-            "&date=" + rset.getString("full_date") + "\">");
-            out.print(rset.getString("date") + "</a></p>");
+        String prev = new String();
+
+        for(int i = 0; i < 2; i++) {
+            for( int j = 0; j < 3; j++) {
+                totalStats[i][j] = 0;
+            }
         }
 
+        for(int i = 0; i < 10; i++) {
+            for(int j = 0; j < 14; j++) {
+                monthArray[i][j] = 0;
+            }
+        }
+
+
+        while(totals.next()) {
+            if(!prev.equals(totals.getString("date"))) {
+                out.println("<p><a href=\"details.jsp?" +
+                        "&meta_id=" + meta_id +
+                        "&sender_id=" + sender +
+                        "&date=" + totals.getString("full_date") + "\">");
+                out.print(totals.getString("date") + "</a></p>");
+                prev = totals.getString("date");
+            }
+
+            if(totals.getBoolean("is_sender")) {
+
+                totalStats[0][0] += totals.getInt("count");
+                totalStats[0][1]++;
+                sentAve = (double)totalStats[0][0] /
+                    totalStats[0][1];
+
+            } else {
+
+                totalStats[1][0] += totals.getInt("count");
+                totalStats[1][1]++;
+                recAve = (double) totalStats[1][0] /
+                    totalStats[1][1];
+            }
+
+            boolean found = false;
+            if(totals.getInt("count") > max) max = totals.getInt("count");
+
+            for(int i = 0; i < years && !found; i++) {
+                if(monthArray[i][0] == totals.getInt("year")) {
+                    found = true;
+                    monthArray[i][totals.getInt("month")] = totals.getInt("count");
+                    monthArray[i][13] += totals.getInt("count");
+                }
+            }
+
+            if(!found) {
+                monthArray[years][0] = totals.getInt("year");
+                monthArray[years][totals.getInt("month")] = totals.getInt("count");
+                monthArray[years++][13] += totals.getInt("count");
+            }
+
+        }
 %>
                 </div>
                 <div class="boxThinBottom"></div>
@@ -236,92 +311,21 @@ try {
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
-    pstmt = conn.prepareStatement("select " +
-        " count(*) as total_sent, "+
-        " min(length(message)) as min_sent_length, " +
-        " max(length(message)) as max_sent_length, " +
-        " trunc(avg(length(message)),2) as avg_sent_length " +
-        " from im.messages " +
-        " where sender_id = ? " +
-        " group by sender_id " +
-        " union all " +
-        " select " +
-        " count(*) as total_sent, " +
-        " min(length(message)) as min_sent_length, " +
-        " max(length(message)) as max_sent_length, " +
-        " trunc(avg(length(message)),2) as avg_sent_length " +
-        " from im.messages " +
-        " where recipient_id =  ? " +
-        " group by recipient_id ");
 
-    pstmt.setInt(1, sender);
-    pstmt.setInt(2, sender);
+out.print("Total Messages Sent: " +
+        totalStats[0][0] + "<br>");
+total_messages += totalStats[0][0];
 
-    if(meta_id != 0) {
+out.print("Average Sent per Month: " + (int)sentAve + " <br /><br />");
 
-        pstmt = conn.prepareStatement("select " +
-            " count(*) as total_sent, "+
-            " min(length(message)) as min_sent_length, " +
-            " max(length(message)) as max_sent_length, " +
-            " trunc(avg(length(message)),2) as avg_sent_length " +
-            " from im.messages, im.meta_contact " +
-            " where sender_id = user_id " +
-            " and meta_id = ? " +
-            " union all " +
-            " select " +
-            " count(*) as total_sent, " +
-            " min(length(message)) as min_sent_length, " +
-            " max(length(message)) as max_sent_length, " +
-            " trunc(avg(length(message)),2) as avg_sent_length " +
-            " from im.messages, im.meta_contact " +
-            " where recipient_id =  user_id " +
-            " and meta_id = ? ");
+out.print("Total Messages Received: " +
+        totalStats[1][0] + "<br />");
+total_messages += totalStats[1][0];
 
-        pstmt.setInt(1, meta_id);
-        pstmt.setInt(2, meta_id);
+out.println("Average Received per Month: " + (int)recAve + "<br />");
 
-    }
+out.println("<br />Total Messages Sent/Received: " + total_messages + "<br /><br/>");
 
-    totals = pstmt.executeQuery();
-
-    /*
-    out.println("<pre>");
-    while(totals.next()) {
-        out.println(totals.getString(1));
-    }
-
-    out.println("</pre>");
-    */
-
-    if(totals.next()) {
-
-        out.print("Total Messages Sent: " +
-            totals.getString("total_sent") + "<br>");
-        total_messages += totals.getInt("total_sent");
-
-        out.print("Minimum sent length: " + totals.getString("min_sent_length") +
-        "<br>");
-        out.print("Average Sent Length: " +
-            totals.getString("avg_sent_length") +
-            "<br>");
-
-        out.print("Maximum Sent Length: " +
-            totals.getString("max_sent_length") +
-            "<br /><br />");
-
-        totals.next();
-
-        out.print("Total Messages Received: " +
-        totals.getString("total_sent") + "<br />");
-        total_messages += totals.getInt("total_sent");
-
-        out.println("Mimimum Received Length: " + totals.getString("min_sent_length") + "<br />");
-        out.println("Average Received Length: " + totals.getString("avg_sent_length") + "<br />");
-        out.println("Maximum Received Length: " + totals.getString("max_sent_length") + "<br />");
-
-        out.println("<br />Total Messages Sent/Received: " + total_messages + "<br /><br/>");
-
-    }
 %>
                 </div>
                 <div class="boxWideBottom"></div>
@@ -331,119 +335,45 @@ try {
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
 <%
-    pstmt = conn.prepareStatement("select date_part('month', message_date) " +
-    " as month, date_part('year', message_date) as year, count(*) as count " +
-    " from messages where sender_id = ? or " +
-    " recipient_id = ? group by date_part('month', message_date), " +
-    " date_part('year', message_date) order by year");
 
-    pstmt.setInt(1, sender);
-    pstmt.setInt(2, sender);
+double maxDistance = max * 1.25;
 
-    if(meta_id != 0) {
-        pstmt = conn.prepareStatement("select date_part('month', message_date) " +
-        " as month, date_part('year', message_date) as year, " +
-        " count(*) as count " +
-        " from im.messages, im.meta_contact " +
-        " where (sender_id = user_id or " +
-        " recipient_id = user_id) and meta_id = ? " +
-        " group by date_part('month', message_date), " +
-        " date_part('year', message_date) order by year");
-
-        pstmt.setInt(1, meta_id);
-    }
-
-    year = pstmt.executeQuery();
-
-    int monthArray[][] = new int[10][14];
-
-    for(int i = 0; i < 10; i++) {
-        for(int j = 0; j < 14; j++) {
-            monthArray[i][j] = 0;
-        }
-    }
-
-    int max = 0;
-    int years = 0;
-    boolean found = false;
-    while(year.next()) {
-        found = false;
-        if(year.getInt("count") > max) max = year.getInt("count");
-
-        for(int i = 0; i < years && !found; i++) {
-            if(monthArray[i][0] == year.getInt("year")) {
-                found = true;
-                monthArray[i][year.getInt("month")] = year.getInt("count");
-                monthArray[i][13] += year.getInt("count");
-            }
-        }
-
-        if(!found) {
-            monthArray[years][0] = year.getInt("year");
-            monthArray[years][year.getInt("month")] = year.getInt("count");
-            monthArray[years++][13] += year.getInt("count");
-        }
-    }
-
-    double maxDistance = max * 1.25;
-
-    for(int yrCnt = 0; yrCnt < years; yrCnt++) {
-        out.print("<br />\n");
-        out.println("<b>" + monthArray[yrCnt][0] + "</b> (" +
+for(int yrCnt = 0; yrCnt < years; yrCnt++) {
+    out.print("<br />\n");
+    out.println("<b>" + monthArray[yrCnt][0] + "</b> (" +
             monthArray[yrCnt][13] + ")<br />");
-        out.println("<table height=\"250\" width=\"350\"" +
+    out.println("<table height=\"250\" width=\"350\"" +
             " cellspacing=\"0\"><tr>");
 
-        for(int i = 1; i < 13; i++) {
-            double height = monthArray[yrCnt][i] / maxDistance * 225;
-            if (height < 1 && height != 0) height = 1;
-            out.println("<td valign=\"bottom\" rowspan=\"13\"" +
-                    " background=\"images/gridline2.gif\">"+
-                    "<img src=\"images/bar2.gif\" width = \"15\" height=\"" +
-                    (int)height + "\"></td>");
-        }
+    for(int i = 1; i < 13; i++) {
+        double height = monthArray[yrCnt][i] / maxDistance * 225;
+        if (height < 1 && height != 0) height = 1;
+        out.println("<td valign=\"bottom\" rowspan=\"13\"" +
+                " background=\"images/gridline2.gif\">"+
+                "<img src=\"images/bar2.gif\" width = \"15\" height=\"" +
+                (int)height + "\"></td>");
+    }
 
-        out.println("</tr>");
+    out.println("</tr>");
 
-        String months[] = {"", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
-            "Aug", "Sep", "Oct", "Nov", "Dec"};
-        for(int i = 1; i < 13; i++) {
-            out.println("<tr><td align=\"right\">" + months[i] + ":</td><td "+
+    String months[] = {"", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
+        "Aug", "Sep", "Oct", "Nov", "Dec"};
+    for(int i = 1; i < 13; i++) {
+        out.println("<tr><td align=\"right\">" + months[i] + ":</td><td "+
                 " align=\"left\"> " + monthArray[yrCnt][i] +
                 "</td></tr>");
-        }
-
-        out.println("<tr>");
-        for(int i = 1; i < 13; i++) {
-            out.println("<td align=\"center\">" + i + "</td>");
-        }
-        out.println("</tr></table>");
     }
+
+    out.println("<tr>");
+    for(int i = 1; i < 13; i++) {
+        out.println("<td align=\"center\">" + i + "</td>");
+    }
+    out.println("</tr></table>");
+}
 %>
                 </div>
                 <div class="boxWideBottom"></div>
-<%
-/*
-%>
-                <h1>Messages Sent/Received by Hour</h1>
-                <div class="boxWideTop"></div>
-                <div class="boxWideContent">
-<%
-    pstmt = conn.prepareStatement("select date_part('hour', message_date), sender_id = ? as sent, count(*) from messages where sender_id = ? or recipient_id = ? group by date_part('hour', message_date), sender_id = ?");
 
-    for(int i = 1; i <= 4; i++) {
-        pstmt.setInt(1, sender);
-    }
-
-    rset = pstmt.executeQuery();
-
-
-%>
-                </div>
-                <div class="boxWideBottom"></div>
-<%
-*/
-%>
                 <h1>Most Popular Messages</h1>
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
@@ -502,7 +432,6 @@ try {
             " and message_date > smv.message_date - '10 minutes'::interval) "+
         " and (sender_id = ? or recipient_id = ?) "+
         " group by sender_sn, recipient_sn, message "+
-        " having count(*) > 1 " +
         " order by count(*) desc limit 20");
 
     pstmt.setInt(1, sender);
@@ -522,7 +451,6 @@ try {
             " and (sender_id = user_id or recipient_id = user_id) " +
             " and meta_id = ? " +
             " group by sender_sn, recipient_sn, message " +
-            " having count(*) > 1 " +
             " order by count(*) desc limit 20");
 
         pstmt.setInt(1, meta_id);
@@ -567,7 +495,6 @@ try {
 
     if(meta_id != 0) {
         pstmt = conn.prepareStatement("select (select username from users where user_id = user_statistics.sender_id) as username, sum(num_messages), (select message from messages where sender_id = user_statistics.sender_id order by random() limit 1) as message from users natural join meta_contact, user_statistics where (user_id = sender_id or user_id = recipient_id) and meta_id = ? group by username, user_id, sender_id order by sum desc, username limit 20");
-
 
         pstmt.setInt(1, meta_id);
     }
