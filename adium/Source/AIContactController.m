@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.112 2004/03/06 18:36:32 adamiser Exp $
+// $Id: AIContactController.m,v 1.113 2004/03/10 16:51:37 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -430,7 +430,7 @@
 - (void)_performDelayedUpdates:(NSTimer *)timer
 {
     //If updates have been delayed, we process them.  If not, we turn off the delayed update timer.
-	if(delayedStatusChanges || delayedAttributeChanges || delayedContentChanges){
+	if(delayedUpdateTimer && (delayedStatusChanges || delayedAttributeChanges || delayedContentChanges)){
 		//Send out global attribute & status changed notifications (to cover any delayed updates)
 		if(delayedAttributeChanges){
 			[[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:nil];
