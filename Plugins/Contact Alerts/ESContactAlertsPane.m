@@ -37,10 +37,12 @@ int alertAlphabeticalSort(id objectA, id objectB, void *context);
 	[tableView_actions setDrawsAlternatingRows:YES];
     [tableView_actions setTarget:self];
     [tableView_actions setDoubleAction:@selector(editAlert:)];
-	actionsCell = [[[AIImageTextCell alloc] init] autorelease];
+	
+	actionsCell = [[AIImageTextCell alloc] init];
     [actionsCell setFont:[NSFont systemFontOfSize:12]];
 	[actionsCell setIgnoresFocus:YES];
 	[[tableView_actions tableColumnWithIdentifier:@"description"] setDataCell:actionsCell];
+	[actionsCell release];
 	
 	//
 	[button_edit setTitle:@"Edit"];
