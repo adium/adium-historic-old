@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 716 $ $Date: 2004/05/04 22:57:23 $ -->
+<!--$Rev: 719 $ $Date: 2004/05/05 16:26:41 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -49,8 +49,8 @@ try {
         rset = pstmt.executeQuery();
         rset.next();
         
-        title = rset.getString("username") + " (" + 
-            rset.getString("display_name") + ")";
+        title = rset.getString("display_name") + " (" + 
+            rset.getString("username") + ")";
 
         sender_sn = rset.getString("username");
         senderDisplay = rset.getString("display_name");

@@ -46,40 +46,6 @@ form {
 
 /*<group=buttonbar>*/
 
-#buttoncontainer ul {
-    list-style-type: none;
-    text-align: center;
-    overflow: hidden;
-}
-
-#buttoncontainer ul li {
-    border-top: 1px solid #C0C0C0;
-    border-right: 2px dashed #c0c0c0;
-    border-bottom: 1px solid #C0C0C0;
-    border-left: 1px solid #C0C0C0;
-}
-
-#buttoncontainer ul .download {
-    background: url(../images/downloadpackage.png) no-repeat 30px 10px #FFE4C9;
-}
-
-#buttoncontainer ul .xtras {
-    background: url(../images/xtras.png) no-repeat 15px 10px;
-}
-
-#buttoncontainer ul .lastItem {
-    border-left: none;
-    border-right: 1px solid #C0C0C0;
-}
-
-#buttoncontainer ul li a {
-    font-size: 11px;
-    font-weight: bold;
-}
-
-#buttoncontainer ul li a:hover {
-    background-color: white;
-}
 
 /*</group>*/
 

@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 697 $ $Date: 2004/05/04 21:29:54 $ -->
+<!--$Rev: 697 $ $Date: 2004/05/05 16:26:41 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -136,7 +136,7 @@ try {
         out.println("</table>");
         out.println("</div>");
 
-        metaStmt = conn.prepareStatement("select user_id, service, username, display_name from adium.users natural join adium.meta_contact natural join adium.user_display_name udn where meta_id = ? and not exists (select 'x' from adium.user_display_name where effdate > udn.effdate and user_id = users.user_id)");
+        metaStmt = conn.prepareStatement("select user_id, service, scramble(username) as username, display_name from adium.users natural join adium.meta_contact natural join adium.user_display_name udn where meta_id = ? and not exists (select 'x' from adium.user_display_name where effdate > udn.effdate and user_id = users.user_id)");
         
         metaStmt.setInt(1, rset.getInt("meta_id"));
         
