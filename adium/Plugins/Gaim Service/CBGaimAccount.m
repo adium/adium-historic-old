@@ -641,16 +641,21 @@
 #warning All opened chats assumed valid until a better system for doing this reliably is figured out.
 	[[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
 
+	//This is potentially problematic
+	AIListObject *listObject = [chat listObject];
+	NSAssert(listObject != nil, @"ListObject for the chat is nil, unfortunately.");
+	
 	//Associate our chat with the libgaim conversation
 	if(![[chat statusDictionary] objectForKey:@"GaimConv"]){
-		GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_IM, account, [[[chat listObject] UID] UTF8String]);
-
+		GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_IM, account, [[listObject UID] UTF8String]);
+		NSAssert(conv != nil, @"gaim_conversation_new returned nil");
+		
 		conv->ui_data = chat;
 		[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
 	}
 	
 	//Track
-	[chatDict setObject:chat forKey:[[chat listObject] UID]];
+	[chatDict setObject:chat forKey:[listObject UID]];
 
 	return(YES);
 }
