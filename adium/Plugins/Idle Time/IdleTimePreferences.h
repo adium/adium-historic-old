@@ -14,8 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 
-@interface IdleTimePreferences : AIObject {    
-    IBOutlet	NSView			*view_prefView;
+@interface IdleTimePreferences : AIPreferencePane {    
     IBOutlet	NSButton		*checkBox_enableIdle;
     IBOutlet	NSTextField		*textField_idleMinutes;
     IBOutlet	NSStepper		*stepper_idleMinutes;
@@ -24,12 +23,8 @@
 	IBOutlet	NSTextField		*textField_autoAwayMinutes;
 	IBOutlet	NSStepper		*stepper_autoAwayMinutes;
 	
-	NSMutableArray			*awayMessageArray;
+	NSMutableArray				*awayMessageArray;
 	
 }
-
-+ (IdleTimePreferences *)idleTimePreferences;
-- (IBAction)changePreference:(id)sender;
-- (IBAction)changeAwayPreference:(id)sender;
 
 @end

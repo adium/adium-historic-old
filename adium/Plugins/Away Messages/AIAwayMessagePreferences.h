@@ -15,22 +15,19 @@
 
 @class AIAlternatingRowOutlineView;
 
-@interface AIAwayMessagePreferences : AIObject {
-    IBOutlet	NSView				*view_prefView;
+@interface AIAwayMessagePreferences : AIPreferencePane {
     IBOutlet	AIAlternatingRowOutlineView	*outlineView_aways;
-    IBOutlet	NSButton			*button_delete;
-    IBOutlet	NSTextView			*textView_message;
-    IBOutlet	NSTextView			*textView_autoresponse;
-    IBOutlet	AIAutoScrollView	*scrollView_awayList;
-    IBOutlet	AIAutoScrollView	*scrollView_awayText;
+    IBOutlet	NSButton					*button_delete;
+    IBOutlet	NSTextView					*textView_message;
+    IBOutlet	NSTextView					*textView_autoresponse;
+    IBOutlet	AIAutoScrollView			*scrollView_awayList;
+    IBOutlet	AIAutoScrollView			*scrollView_awayText;
 
     NSMutableArray					*awayMessageArray;
     NSMutableDictionary				*displayedMessage;
-
     NSMutableDictionary				*dragItem;
 }
 
-+ (AIAwayMessagePreferences *)awayMessagePreferences;
 - (IBAction)deleteAwayMessage:(id)sender;
 - (IBAction)newAwayMessage:(id)sender;
 

@@ -24,28 +24,11 @@
 
 @interface AIPreferencePane : AIModularPane {    
 	NSMutableDictionary *restoreDict;		// Dictionary of restorable defaults and their groups
-
-    
-	IBOutlet	NSView			*view_containerView;    //### TRANSITION ONLY, will be removed
-    IBOutlet	NSView			*view_containerSubView; //### TRANSITION ONLY, will be removed
-    IBOutlet	NSTextField		*textField_title;       //### TRANSITION ONLY, will be removed
-    id					delegate;           			//### TRANSITION ONLY, will be removed
-    PREFERENCE_CATEGORY category;           			//### TRANSITION ONLY, will be removed
-    NSString			*label;             			//### TRANSITION ONLY, will be removed
-    NSView				*preferenceView;    			//### TRANSITION ONLY, will be removed
-    BOOL				isUpdated;          			//### TRANSITION ONLY, will be removed
 }
 
 + (AIPreferencePane *)preferencePane;
 + (AIPreferencePane *)preferencePaneForPlugin:(id)inPlugin;
 - (PREFERENCE_CATEGORY)category;
 - (NSDictionary *)restorablePreferences;
-
-//Will be removed, transition only
-//### TRANSITION ONLY, will be removed//### TRANSITION ONLY, will be removed//### TRANSITION ONLY, will be removed
-+ (AIPreferencePane *)preferencePaneInCategory:(PREFERENCE_CATEGORY)inCategory withDelegate:(id)inDelegate label:(NSString *)inLabel;
-- (PREFERENCE_CATEGORY)category;
-- (NSView *)viewWithContainer:(BOOL)includeContainer;
-- (BOOL)isUpdated;
 
 @end

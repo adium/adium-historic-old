@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.42 2004/05/23 17:33:50 adamiser Exp $
+// $Id: AIPreferenceWindowController.m,v 1.43 2004/05/23 19:16:44 adamiser Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -310,7 +310,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     //Add their views
     enumerator = [paneArray objectEnumerator];
     while(pane = [enumerator nextObject]){
-        NSView	*paneView = ([pane isUpdated] ? [pane view] : [pane viewWithContainer:includeContainers]);
+        NSView	*paneView = [pane view];
         
         //Add the view
         if([paneView superview] != inView){
