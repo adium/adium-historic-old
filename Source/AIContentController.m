@@ -143,6 +143,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 		[textEntryFilterArray addObject:inFilter];
 	}
 }
+
 - (void)unregisterTextEntryFilter:(id)inFilter
 {
 	[textEntryContentFilterArray removeObject:inFilter];
@@ -793,7 +794,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 - (void)registerChatObserver:(id <AIChatObserver>)inObserver
 {
 	//Add the observer
-    [chatObserverArray addObject:inObserver];
+    [chatObserverArray addObject:[NSValue valueWithNonretainedObject:inObserver]];
 	
     //Let the new observer process all existing chats
 	[self updateAllChatsForObserver:inObserver];
@@ -801,7 +802,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 
 - (void)unregisterChatObserver:(id <AIChatObserver>)inObserver
 {
-    [chatObserverArray removeObject:inObserver];
+    [chatObserverArray removeObject:[NSValue valueWithNonretainedObject:inObserver]];
 }
 
 - (void)chatStatusChanged:(AIChat *)inChat modifiedStatusKeys:(NSSet *)inModifiedKeys silent:(BOOL)silent
@@ -840,15 +841,17 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 //Notify observers of a status change.  Returns the modified attribute keys
 - (NSSet *)_informObserversOfChatStatusChange:(AIChat *)inChat withKeys:(NSSet *)modifiedKeys silent:(BOOL)silent
 {
-	NSMutableSet				*attrChange = nil;
-	NSEnumerator				*enumerator;
-    id <AIChatObserver>	observer;
+	NSMutableSet	*attrChange = nil;
+	NSEnumerator	*enumerator;
+	NSValue			*observerValue;
 
 	//Let our observers know
 	enumerator = [chatObserverArray objectEnumerator];
-	while((observer = [enumerator nextObject])){
-		NSSet	*newKeys;
+	while((observerValue = [enumerator nextObject])){
+		id <AIChatObserver>	observer;
+		NSSet				*newKeys;
 		
+		observer = [observerValue nonretainedObjectValue];
 		if(newKeys = [observer updateChat:inChat keys:modifiedKeys silent:silent]){
 			if (!attrChange) attrChange = [NSMutableSet set];
 			[attrChange unionSet:newKeys];
@@ -1088,13 +1091,11 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
     [[inChat account] closeChat:inChat];
     [[adium notificationCenter] postNotificationName:Chat_WillClose object:inChat userInfo:nil];
 
+	//Remove the chat's content (it retains the chat, so this must be done separately)
+	[inChat removeAllContent];
+
     //Remove the chat
     [chatArray removeObject:inChat];
-
-	AILog(@"closeChat: %@ so now %@ (%i)",inChat,chatArray,[chatArray containsObjectIdenticalTo:inChat]);
-
-    //Remove all content from the chat
-    [inChat removeAllContent];
 
     return(YES);
 }
