@@ -14,11 +14,13 @@
 {
     [super initWithService:inService];
     
+	NSImage *image = [NSImage imageNamed:@"meanwhile" forClass:[self class]];
+		
     //Create our handle service type
 	//A sametime UID may need to be in the form "uid=C'\awef@@+ +3 ou=fuEWJGhw67_ efWEf ..." I'm serious.
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Sametime"
                                                       description:@"Lotus Sametime"
-                                                            image:nil
+                                                            image:image
                                                     caseSensitive:YES
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@.,_-()='/ "]
 												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]

@@ -14,10 +14,12 @@
 {
     [super initWithService:inService];
     
+	NSImage *image = [NSImage imageNamed:@"yahoo" forClass:[self class]];
+	
     //Create our handle service type
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Yahoo!"
                                                       description:@"Yahoo!"
-                                                            image:nil
+                                                            image:image
                                                     caseSensitive:NO
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-"]
 												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
