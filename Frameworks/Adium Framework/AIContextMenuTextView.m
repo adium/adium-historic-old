@@ -42,13 +42,20 @@
 - (void)textDidChange:(NSNotification *)notification
 {
     if((0 == [self selectedRange].location) && (0 == [self selectedRange].length)){ //remove attributes if we're changing text at (0,0)
-        NSMutableDictionary *textAttribs = [[[NSMutableDictionary alloc] initWithDictionary:[self typingAttributes]] autorelease];
-        if([textAttribs objectForKey:NSLinkAttributeName]){ // but only if we currently have a link there.
+		NSDictionary		*currentTextAttribs = [self typingAttributes];
+		
+        if([currentTextAttribs objectForKey:NSLinkAttributeName]){ // but only if we currently have a link there.
+			NSMutableDictionary *textAttribs;
+			
+			textAttribs = [[self typingAttributes] mutableCopy];
+
             [textAttribs removeObjectsForKeys:[NSArray arrayWithObjects:NSLinkAttributeName, //the link
                                                                         NSUnderlineStyleAttributeName, //the line
                                                                         NSForegroundColorAttributeName, //the blue
                                                                         nil]]; //the myth
             [self setTypingAttributes:textAttribs];
+
+			[textAttribs release];
         }
     }
 }
