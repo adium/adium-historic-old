@@ -33,6 +33,7 @@
     return self;
 }
 
+//Warning this should be @"AIM" but there are too many preferences relying upon AIM-LIBGAIM right now to worry about it
 - (NSString *)identifier
 {
     return(@"AIM-LIBGAIM");
