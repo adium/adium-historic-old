@@ -119,13 +119,7 @@
 //Returns the image for this emoticon (cached)
 - (NSImage *)image
 {
-	NSLog(@"Emoticon %@ image",self);
-	if(!_cachedImage){
-		NSLog(@"   Loading & Caching");
-        _cachedImage = [[NSImage alloc] initWithContentsOfFile:[self _pathToEmoticonImage]];
-    }
-
-    return(_cachedImage);
+    return([[[NSImage alloc] initWithContentsOfFile:[self _pathToEmoticonImage]] autorelease]);
 }
 
 //Returns an attributed string containing this emoticon
