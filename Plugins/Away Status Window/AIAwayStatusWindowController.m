@@ -69,18 +69,18 @@ AIAwayStatusWindowController	*sharedAwayStatusInstance = nil;
     [super dealloc];
 }
 
+//
+- (NSString *)adiumFrameAutosaveName
+{
+	return(KEY_AWAY_STATUS_WINDOW_FRAME);
+}
+
 //Setup the window after it had loaded
 - (void)windowDidLoad
 {
-    NSString	*savedFrame;
-	
-    //Restore the window position
-    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_AWAY_STATUS_WINDOW_FRAME];
-    if(savedFrame){
-        [[self window] setFrameFromString:savedFrame];
-    }
-    
-    //Observe preference changes
+	[super windowDidLoad];
+
+	//Observe preference changes
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
     
@@ -104,11 +104,8 @@ AIAwayStatusWindowController	*sharedAwayStatusInstance = nil;
 //Do some housekeeping before closing the away status window
 - (BOOL)windowShouldClose:(id)sender
 {
-    //Save the window position
-    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
-                                         forKey:KEY_AWAY_STATUS_WINDOW_FRAME
-                                          group:PREF_GROUP_WINDOW_POSITIONS];
-    
+	[super windowShouldClose:sender];
+	
     //Clean up and release the shared instance
     [[adium notificationCenter] removeObserver:self];    
 	[awayTimer invalidate];
