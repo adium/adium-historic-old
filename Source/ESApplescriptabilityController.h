@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 
 @interface ESApplescriptabilityController : NSObject {
-    IBOutlet	AIAdium			*owner;
+    IBOutlet	AIAdium			*adium;
 
 }
 

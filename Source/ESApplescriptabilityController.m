@@ -25,51 +25,51 @@
 #pragma mark Convenience
 - (NSArray *)accounts
 {
-	return ([[owner accountController] accountArray]);
+	return ([[adium accountController] accountArray]);
 }
 - (NSArray *)contacts
 {
-	return ([[owner contactController] allContactsInGroup:nil
+	return ([[adium contactController] allContactsInGroup:nil
 												subgroups:YES
 												onAccount:nil]);
 }
 - (NSArray *)chats
 {
-	return ([[owner contentController] chatArray]);
+	return ([[adium contentController] chatArray]);
 }
 
 #pragma mark Attributes
 - (NSTimeInterval)myIdleTime
 {
-	NSDate  *idleSince = [[owner preferenceController] preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+	NSDate  *idleSince = [[adium preferenceController] preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 	return (-[idleSince timeIntervalSinceNow]);
 }
 - (void)setMyIdleTime:(NSTimeInterval)timeInterval
 {
-	[[owner notificationCenter] postNotificationName:Adium_RequestSetManualIdleTime	
+	[[adium notificationCenter] postNotificationName:Adium_RequestSetManualIdleTime	
 											  object:(timeInterval ? [NSNumber numberWithDouble:timeInterval] : nil)
 											userInfo:nil];
 }
 
 - (NSData *)defaultImageData
 {
-	return ([[owner preferenceController] preferenceForKey:KEY_USER_ICON 
+	return ([[adium preferenceController] preferenceForKey:KEY_USER_ICON 
 													 group:GROUP_ACCOUNT_STATUS]);
 			
 }
 - (void)setDefaultImageData:(NSData *)newDefaultImageData
 {
-	[[owner preferenceController] setPreference:newDefaultImageData
+	[[adium preferenceController] setPreference:newDefaultImageData
 										 forKey:KEY_USER_ICON 
 										  group:GROUP_ACCOUNT_STATUS];	
 }
 
 - (AIStatusSummary)myStatus
 {
-	if ([[owner accountController] oneOrMoreConnectedAccounts]){
+	if ([[adium accountController] oneOrMoreConnectedAccounts]){
 		
 		//Of course, it's AIM-centric to assume that an AwayMessage = "I am away"... but pending a status rewrite, this'll work.
-		if ([[owner preferenceController] preferenceForKey:@"AwayMessage"
+		if ([[adium preferenceController] preferenceForKey:@"AwayMessage"
 													 group:GROUP_ACCOUNT_STATUS]){
 			if ([self myIdleTime]){
 				return AIAwayAndIdleStatus;
@@ -92,13 +92,13 @@
 - (void)setMyStatus:(AIStatusSummary)newStatus
 {
 	if (newStatus == AIAvailableStatus){
-		[[owner preferenceController] setPreference:nil forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
+		[[adium preferenceController] setPreference:nil forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
 	}
 }
 
 - (NSString *)myStatusMessage
 {
-	return [[[[owner preferenceController] preferenceForKey:@"AwayMessage"
+	return [[[[adium preferenceController] preferenceForKey:@"AwayMessage"
 													  group:GROUP_ACCOUNT_STATUS] attributedString] string];
 }
 - (void)setMyStatusMessage:(NSString *)statusMessage
@@ -107,14 +107,14 @@
 	NSData  *attributedStatusMessage = [[AIHTMLDecoder decodeHTML:statusMessage] dataRepresentation];
 
 	//Set the away
-    [[owner preferenceController] setPreference:attributedStatusMessage forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
-    [[owner preferenceController] setPreference:nil forKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
+    [[adium preferenceController] setPreference:attributedStatusMessage forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
+    [[adium preferenceController] setPreference:nil forKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
 	
 }
 
 #pragma mark Controller convenience
 - (AIInterfaceController *)interfaceController{
-    return([owner interfaceController]);
+    return([adium interfaceController]);
 }
 
 
@@ -126,14 +126,14 @@
 	AIListContact   *contact;
 	AIChat			*chat = nil;
 
-	contact = [[owner contactController] preferredContactWithUID:UID
+	contact = [[adium contactController] preferredContactWithUID:UID
 													andServiceID:serviceID 
 										   forSendingContentType:CONTENT_MESSAGE_TYPE];
 
 	if(contact){
 		//Open the chat and set it as active
-		chat = [[owner contentController] openChatWithContact:contact];
-		[[owner interfaceController] setActiveChat:chat];
+		chat = [[adium contentController] openChatWithContact:contact];
+		[[adium interfaceController] setActiveChat:chat];
 	}
 	
 	return chat;

@@ -14,7 +14,7 @@ Adium, Copyright 2001-2004, Adam Iser
  */
 
 @interface AICorePluginLoader : NSObject {
-    IBOutlet	AIAdium		*owner;
+    IBOutlet	AIAdium		*adium;
     NSMutableArray			*pluginArray;
 }
 
