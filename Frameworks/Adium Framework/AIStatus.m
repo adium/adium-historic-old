@@ -104,6 +104,9 @@
  */
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
+	//Ensure we have a unique status ID before encoding
+	[self uniqueStatusID];
+	
 	if([encoder allowsKeyedCoding]){
         [encoder encodeObject:statusDict forKey:@"AIStatusDict"];
 
