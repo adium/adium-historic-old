@@ -613,29 +613,28 @@
 															  action:@selector(previousMessage:)
 													   keyEquivalent:leftKey];
         [[adium menuController] addMenuItem:menuItem_previousMessage toLocation:LOC_Window_Commands];
-		
+
+		menuItem_shiftPreviousMessage = [[NSMenuItem alloc] initWithTitle:PREVIOUS_MESSAGE_MENU_TITLE 
+																   target:self 
+																   action:@selector(previousMessage:)
+															keyEquivalent:leftKey];
+        [menuItem_shiftPreviousMessage setKeyEquivalentModifierMask:NSCommandKeyMask|NSShiftKeyMask];
+        [[adium menuController] addMenuItem:menuItem_shiftPreviousMessage toLocation:LOC_Window_Commands];
+        [menuItem_shiftPreviousMessage setAlternate:YES];
+
         menuItem_nextMessage = [[NSMenuItem alloc] initWithTitle:NEXT_MESSAGE_MENU_TITLE 
 														  target:self
 														  action:@selector(nextMessage:)
 												   keyEquivalent:rightKey];
         [[adium menuController] addMenuItem:menuItem_nextMessage toLocation:LOC_Window_Commands];
         
-        //two hidden menuitmes for shift arrowkeys
-        menuItem_shiftPreviousMessage = [[NSMenuItem alloc] initWithTitle:@"super secret hidden switch left" 
-															  target:self 
-															  action:@selector(previousMessage:)
-													   keyEquivalent:leftKey];
-        [menuItem_shiftPreviousMessage setKeyEquivalentModifierMask:NSCommandKeyMask|NSShiftKeyMask];
-        [[adium menuController] addMenuItem:menuItem_shiftPreviousMessage toLocation:LOC_Window_Commands];
-        [menuItem_shiftPreviousMessage setHidden:YES];
-
-        menuItem_shiftNextMessage = [[NSMenuItem alloc] initWithTitle:@"super secret hidden switch right" 
-														  target:self
+        menuItem_shiftNextMessage = [[NSMenuItem alloc] initWithTitle:NEXT_MESSAGE_MENU_TITLE
+															   target:self
 														  action:@selector(nextMessage:)
 												   keyEquivalent:rightKey];
         [menuItem_shiftNextMessage setKeyEquivalentModifierMask:NSCommandKeyMask|NSShiftKeyMask];
         [[adium menuController] addMenuItem:menuItem_shiftNextMessage toLocation:LOC_Window_Commands];
-        [menuItem_shiftNextMessage setHidden:YES];
+        [menuItem_shiftNextMessage setAlternate:YES];
         
     }
 	
@@ -778,10 +777,13 @@
 //remove our menu items
 - (void)removeMenuItems
 {
-	
     [[adium menuController] removeMenuItem:menuItem_closeTab];
+	
     [[adium menuController] removeMenuItem:menuItem_nextMessage];
+	[[adium menuController] removeMenuItem:menuItem_shiftNextMessage];
+	
     [[adium menuController] removeMenuItem:menuItem_previousMessage];
+	[[adium menuController] removeMenuItem:menuItem_shiftPreviousMessage];
 }
 
 //Updates the 'check' icon so it's next to the active window
@@ -846,13 +848,11 @@
 		
         enabled = (messageWindow && [[messageWindow messageContainerArray] count] > 1);
 		
-    }else if(menuItem == menuItem_nextMessage){
+    }else if((menuItem == menuItem_nextMessage) || (menuItem == menuItem_shiftNextMessage) ||
+			 (menuItem == menuItem_previousMessage) || (menuItem == menuItem_shiftPreviousMessage){
         if(![messageWindowControllerArray count]) enabled = NO;
 		
-    }else if(menuItem == menuItem_previousMessage){
-        if(![messageWindowControllerArray count]) enabled = NO;
-		
-    }else if (menuItem == menuItem_openInNewWindow || menuItem == menuItem_openInPrimaryWindow){
+    }    }else if (menuItem == menuItem_openInNewWindow || menuItem == menuItem_openInPrimaryWindow){
 		AIListObject *contactualMenuContact = [[adium menuController] contactualMenuContact];
 		
 		enabled = (contactualMenuContact && [contactualMenuContact isKindOfClass:[AIListContact class]]);
