@@ -69,7 +69,7 @@ Minor Changes
 + Display 'New Account' in account list for accounts without a UID
 = Add a 'None' soundset  
 + iTunes %_status script should display "Not Playing" when iTunes isn't open
-+ Change window cycling menu items to 'Previous Chat' 'Next Chat'
+= Change window cycling menu items to 'Previous Chat' 'Next Chat'
 + Allow cmd-shift-left/right to cycle tabs in addition to cmd left/right
 + Add customizable hotkey to bring Adium to the foreground
 How is this possible? - we can set global hotkeys, no?
