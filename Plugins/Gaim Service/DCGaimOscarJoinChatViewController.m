@@ -116,8 +116,8 @@
 	int					count = [contactArray count];
 	
 	NSLog(@"#### 3 contacts = %@",contactArray);
-	AIListContact *newContact = [[adium contactController] contactWithService:[[account service] identifier] 
-																	accountID:[account uniqueObjectID] 
+	AIListContact *newContact = [[adium contactController] contactWithService:[account service] 
+																	  account:account 
 																		  UID:[[contactArray objectAtIndex:i] compactedString]];
 	NSLog(@"#### inviteUsers: (%d/%d) inviting %@",i,0,[contactArray objectAtIndex:i]);
 	[chat inviteListContact:newContact withMessage:[textField_inviteMessage stringValue]];
