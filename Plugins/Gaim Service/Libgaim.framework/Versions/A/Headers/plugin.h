@@ -59,8 +59,7 @@ typedef enum
 
 #define GAIM_PLUGIN_FLAG_INVISIBLE 0x01
 
-#define GAIM_PLUGIN_API_VERSION 4
-#define GAIM_LOADER_API_VERSION 2
+#define GAIM_PLUGIN_MAGIC 5 /* once we hit 6.0.0, I think we can remove this */
 
 /**
  * Detailed information about a plugin.
@@ -69,7 +68,9 @@ typedef enum
  */
 struct _GaimPluginInfo
 {
-	unsigned int api_version;
+	unsigned int magic;
+	unsigned int major_version;
+	unsigned int minor_version;
 	GaimPluginType type;
 	char *ui_requirement;
 	unsigned long flags;
@@ -99,8 +100,6 @@ struct _GaimPluginInfo
  */
 struct _GaimPluginLoaderInfo
 {
-	unsigned int api_version;
-
 	GList *exts;
 
 	gboolean (*probe)(GaimPlugin *plugin);
@@ -173,6 +172,7 @@ struct _GaimPluginAction {
 		GaimPlugin *plugin = gaim_plugin_new(TRUE, NULL); \
 		plugin->info = &(plugininfo); \
 		initfunc((plugin)); \
+		gaim_plugin_load((plugin)); \
 		return gaim_plugin_register(plugin); \
 	}
 #else /* GAIM_PLUGINS  && !GAIM_STATIC_PRPL */

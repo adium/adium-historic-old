@@ -263,9 +263,9 @@ void gaim_blist_update_buddy_status(GaimBuddy *buddy, int status);
  * Updates a buddy's presence.
  *
  * @param buddy    The buddy whose presence has changed
- * @param presence The new presence
+ * @param online   If the buddy is now online
  */
-void gaim_blist_update_buddy_presence(GaimBuddy *buddy, int presence);
+void gaim_blist_update_buddy_presence(GaimBuddy *buddy, gboolean online);
 
 /**
  * Updates a buddy's signon time.
@@ -749,6 +749,7 @@ void gaim_blist_request_add_buddy(GaimAccount *account, const char *username,
  * @param account The account the buddy is added to.
  * @param group   The optional group to add the chat to.
  * @param alias   The optional alias for the chat.
+ * @param name    The required chat name.
  */
 void gaim_blist_request_add_chat(GaimAccount *account, GaimGroup *group,
 								 const char *alias, const char *name);
