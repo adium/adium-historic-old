@@ -79,7 +79,6 @@
 	[checkBox_checkMail setState:[[inAccount preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]];
 	
 	// icon junk
-	[imageView_userIcon setImageFrameStyle:NSImageFramePhoto];
 	if(data = [inAccount preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
 		NSImage *image;
 		
