@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.22 2004/04/07 14:20:30 adamiser Exp $
+$Id: ToDoList.txt,v 1.23 2004/04/07 14:58:11 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -182,6 +182,9 @@ Event integration:
     Shift control of sound playing and dock bouncing to the event controller, keeping the existing preferences
     as a front to hidden events in the event system.  To reduce duplicate code and provide better behavior
     for custom sound and bounce settings that would otherwise conflict.
+
+Deferring of initial message:
+   Don't pop up a message window if one doesn't already exist.  Use some kind of dock indicator / list indicator.  Double click on list or dock menu item would display the message.  If a window is already open, new messages would create a tab as normal.  We could associate this option with the state system for some pretty cool behavior.
 
 
 -------------------------------------------------------------------------------------------------------
