@@ -203,7 +203,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
                     if(textLength != 0){ //Invalid emoticon files may let empty text equivalents sneak in
                         //If there is not enough room in the string for this text, we can skip it
                         if(currentLocation + textLength <= messageStringLength){
-                            if([messageString compare:text options:0 range:NSMakeRange(currentLocation, textLength)] == 0){
+                            if([messageString compare:text options:0 range:NSMakeRange(currentLocation, textLength)] == NSOrderedSame){
                                 //Ignore emoticons within links
                                 if([inMessage attribute:NSLinkAttributeName atIndex:currentLocation effectiveRange:nil] == nil){
 									if (!candidateEmoticons){
