@@ -1204,6 +1204,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Configure libgaim's proxy settings using the current system values
 - (void)configureAccountProxyNotifyingTarget:(id)target selector:(SEL)selector
 {
+	NSLog(@"configureAccountProxyNotifyingTarget");
 	GaimProxyInfo		*proxy_info;
 	GaimProxyType		gaimAccountProxyType;
 	
@@ -1228,7 +1229,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	if (proxyType == Gaim_Proxy_None){
 		//No proxy
 		gaim_proxy_info_set_type(proxy_info, GAIM_PROXY_NONE);
-		
+		GaimDebug (@"Connecting with no proxy.");
 		[invocation invoke];
 		
 	}else if ((proxyType == Gaim_Proxy_Default_SOCKS5) || 
@@ -1251,8 +1252,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				adiumProxyType = Proxy_SOCKS4;
 		}
 		
+		GaimDebug (@"Loading proxy dictionary.");
+		
 		if((systemProxySettingsDictionary = [ESSystemNetworkDefaults systemProxySettingsDictionaryForType:adiumProxyType])) {
-			
+
+			GaimDebug (@"Retrieved %@",systemProxySettingsDictionary);
+
 			host = [systemProxySettingsDictionary objectForKey:@"Host"];
 			port = [[systemProxySettingsDictionary objectForKey:@"Port"] intValue];
 			
@@ -1303,7 +1308,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		gaim_proxy_info_set_host(proxy_info, (char *)[host UTF8String]);
 		gaim_proxy_info_set_port(proxy_info, port);
 		
-		//If we need to authenticate, request the password and finish setting up the proxy in gotProxyServerPassword:
+		//If we need to authenticate, request the password and finish setting up the proxy in gotProxyServerPassword:context:
 		proxyUserName = [self preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
 		if (proxyUserName && [proxyUserName length]){
 			gaim_proxy_info_set_username(proxy_info, (char *)[proxyUserName UTF8String]);
@@ -1311,7 +1316,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			[[adium accountController] passwordForProxyServer:host 
 													 userName:proxyUserName 
 											  notifyingTarget:self 
-													 selector:@selector(gotProxyServerPassword:)
+													 selector:@selector(gotProxyServerPassword:context:)
 													  context:invocation];
 		}else{
 			
