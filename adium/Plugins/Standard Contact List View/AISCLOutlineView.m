@@ -616,13 +616,7 @@ float			yOffset = 0;
 	
 	//Offset the drag image (Remember: The system centers it by default, so this is an offset from center)
 	NSPoint clickLocation = [self convertPoint:[dragEvent locationInWindow] fromView:nil];
-	
-#warning Evan to Adam: Here is the dragImageOffset
-	//Not right
-//	float dragImageOffsetY = ((yOffset - (rowRect.size.height + [self intercellSpacing].height))/2.0) + (([self frameOfCellAtColumn:0 row:firstRow].origin.y / 2.0) - clickLocation.y);
-	
-	//Not right but close
-	*dragImageOffset = NSMakePoint((rowRect.size.width / 2.0) - clickLocation.x, -(([self frameOfCellAtColumn:0 row:firstRow].origin.y) - clickLocation.y));
+	dragImageOffset->x = (rowRect.size.width / 2.0) - clickLocation.x;
 	
 	return([image autorelease]);
 }
