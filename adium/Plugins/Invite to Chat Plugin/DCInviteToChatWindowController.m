@@ -23,7 +23,7 @@
 static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 
 //Create a new invite to chat window
-+ (void)inviteToChatWindowForChat:(AIChat *)inChat contact:(AIListObject *)inContact service:(NSString *)inService
++ (void)inviteToChatWindowForChat:(AIChat *)inChat contact:(AIListContact *)inContact service:(NSString *)inService
 {
 	
     if(!sharedInviteToChatInstance){
