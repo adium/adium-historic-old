@@ -776,7 +776,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  */
 - (IBAction)selectCustomState:(id)sender
 {
-	[AIEditStateWindowController editCustomState:/*[self activeStatusState]*/nil
+	[AIEditStateWindowController editCustomState:[self activeStatusState]
 										onWindow:nil
 								 notifyingTarget:self];
 }
