@@ -6195,6 +6195,66 @@
 			isa = PBXBuildStyle;
 			name = RC;
 		};
+		34498CA505EEF31200D5816E = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = Adium.AdiumSoundset;
+			path = Sounds/Adium.AdiumSoundset;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34498CA605EEF31300D5816E = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = AIM.AdiumSoundset;
+			path = Sounds/AIM.AdiumSoundset;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34498CA705EEF31300D5816E = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = iChat.AdiumSoundset;
+			path = Sounds/iChat.AdiumSoundset;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34498CA805EEF31300D5816E = {
+			fileRef = 34498CA505EEF31200D5816E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34498CA905EEF31300D5816E = {
+			fileRef = 34498CA605EEF31300D5816E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34498CAA05EEF31300D5816E = {
+			fileRef = 34498CA705EEF31300D5816E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34498DC405EEF52100D5816E = {
+			fileRef = 34498CA505EEF31200D5816E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34498DC505EEF52100D5816E = {
+			fileRef = 34498CA605EEF31300D5816E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34498DC605EEF52100D5816E = {
+			fileRef = 34498CA705EEF31300D5816E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		344AB29D0579125C00384CEE = {
 			fileRef = 342DC47505783AF0000E1D83;
 			isa = PBXBuildFile;
@@ -9368,6 +9428,9 @@
 				34254F4805EC0C3400F11AD7,
 				34254F4A05EC0C3D00F11AD7,
 				34254F4C05EC0C4300F11AD7,
+				34498CA805EEF31300D5816E,
+				34498CA905EEF31300D5816E,
+				34498CAA05EEF31300D5816E,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9754,30 +9817,12 @@
 			dstPath = Sounds;
 			dstSubfolderSpec = 7;
 			files = (
-				34BD9D67053146CC000AB133,
-				34BD9D68053146CC000AB133,
-				34BD9D69053146CC000AB133,
+				34498DC405EEF52100D5816E,
+				34498DC505EEF52100D5816E,
+				34498DC605EEF52100D5816E,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9D67053146CC000AB133 = {
-			fileRef = 4BB5809603E86BF600A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9D68053146CC000AB133 = {
-			fileRef = 4BB5809E03E86BF600A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9D69053146CC000AB133 = {
-			fileRef = 4BB580A803E86BF600A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34BD9D6A053146CC000AB133 = {
 			buildActionMask = 2147483647;
@@ -17576,7 +17621,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Create symlinks to the iChat sounds\n#\ncd $SYMROOT\ncd Adium.app/Contents/Resources/Sounds/iChat/\n\necho \"Symlinking iChat sounds...\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Logged In.aiff\" \"Connected.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Buddy Logging In.aiff\" \"Contact Signed On.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Buddy Logging Out.aiff\" \"Contact Signed Off.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Invitation.aiff\" \"Message Received (New).aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Received Message.aiff\" \"Message Received.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Sent Message.aiff\" \"Message Sent.aiff\"\necho \"Done\"";
+			shellScript = "# Create symlinks to the iChat sounds\n#\ncd $SYMROOT\ncd Adium.app/Contents/Resources/Sounds/iChat.AdiumSoundset/\n\necho \"Symlinking iChat sounds...\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Logged In.aiff\" \"Connected.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Buddy Logging In.aiff\" \"Contact Signed On.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Buddy Logging Out.aiff\" \"Contact Signed Off.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Invitation.aiff\" \"Message Received (New).aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Received Message.aiff\" \"Message Received.aiff\"\nln -fhs \"/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources/Sent Message.aiff\" \"Message Sent.aiff\"\necho \"Done\"";
 		};
 		4B03DDF30533AC59002B2CA3 = {
 			isa = PBXFileReference;
@@ -21685,36 +21730,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AITooltipUtilities.m;
 			path = "Frameworks/AIUtilities Framework/AITooltipUtilities.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BB5809603E86BF600A8010A = {
-			fallbackIsa = PBXFileReference;
-			includeInIndex = 1;
-			isa = PBXFolderReference;
-			lastKnownFileType = folder;
-			name = Adium;
-			path = Sounds/Adium;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BB5809E03E86BF600A8010A = {
-			fallbackIsa = PBXFileReference;
-			includeInIndex = 1;
-			isa = PBXFolderReference;
-			lastKnownFileType = folder;
-			name = Aquatech;
-			path = Sounds/Aquatech;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BB580A803E86BF600A8010A = {
-			fallbackIsa = PBXFileReference;
-			includeInIndex = 1;
-			isa = PBXFolderReference;
-			lastKnownFileType = folder;
-			name = iChat;
-			path = Sounds/iChat;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -28588,9 +28603,9 @@
 		F50A325A03B5798301A8010A = {
 			children = (
 				4B24A2330482B34B00A8010A,
-				4BB5809603E86BF600A8010A,
-				4BB5809E03E86BF600A8010A,
-				4BB580A803E86BF600A8010A,
+				34498CA505EEF31200D5816E,
+				34498CA605EEF31300D5816E,
+				34498CA705EEF31300D5816E,
 				4BF715C00503AFD200A8010A,
 				F552078B033F727F01A8010A,
 				34254F4305EC0C2700F11AD7,
