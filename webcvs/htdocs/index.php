@@ -78,7 +78,6 @@
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
                     <?php include('scripts/blogfilter.php'); ?>
-                    asdaksdajk das jsj fsif jsidfj isd fjisdfs dfiAdium is not endorsed by or affiliated with <a class="hidden" href="http://www.aol.com">America Online, Inc.</a> The marks AOL and AIM are registered trademarks of America Online, Inc. Adium is not endorsed by or affiliated with <a class="hidden" href="http://www.aol.com">America Online, Inc.</a> The marks AOL and AIM are registered trademarks of America Online, Inc. Adium is not endorsed by or affiliated with <a class="hidden" href="http://www.aol.com">America Online, Inc.</a> The marks AOL and AIM are registered trademarks of America Online, Inc.
                 </div>
                 <div class="boxWideBottom"></div>
             </div>
