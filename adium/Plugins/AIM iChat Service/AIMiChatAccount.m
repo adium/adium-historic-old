@@ -45,7 +45,7 @@ extern void* objc_getClass(const char *name);
 
     //Get the AIM Service
     services = [FZDaemon allServices];
-    AIMService = [[[FZDaemon allServices] objectAtIndex:1] retain];
+    AIMService = [[[FZDaemon allServices] objectAtIndex:0] retain];
 	
 	NSLog (@"Number of services: %i", [services count]);
 
@@ -122,8 +122,8 @@ extern void* objc_getClass(const char *name);
         id		chat;
         id		messageObject;
 
-        //message = [AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message]];
-		message = [NSString stringWithFormat:@"<html><body ichatballooncolor=\"#F4DE1F\" ichattextcolor=\"#000000\"><font ABSZ=\"12\" color=\"#000000\" face=\"Helvetica\">%@</font></body></html>", [[(AIContentMessage *) object message] string]];
+        message = [AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message]];
+		//message = [NSString stringWithFormat:@"<html><body ichatballooncolor=\"#F4DE1F\" ichattextcolor=\"#000000\"><font ABSZ=\"12\" color=\"#000000\" face=\"Helvetica\">%@</font></body></html>", [[(AIContentMessage *) object message] string]];
 
         //Create a chat & send the message
         //(I guess I could cache these chats)
