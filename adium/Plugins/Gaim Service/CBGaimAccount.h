@@ -32,7 +32,10 @@
 @interface CBGaimAccount : AIAccount <AIAccount_Handles>
 {
     NSMutableDictionary	*handleDict;
+    NSString *screenName;
 }
+
+- (const char*)protocolPlugin;
 
 //accountBlist methods
 - (void)accountBlistNewNode:(GaimBlistNode *)node;
