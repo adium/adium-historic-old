@@ -6,41 +6,42 @@
 //
 
 /*!
-@class BZContextImageBridge
-@abstract Used to translate between Quartz and NSImage.
-@discussion 
-	Quick-start for <tt>BZContextImageBridge</tt>:
-
-1. Create a bridge.
-	BZContextImageBridge *bridge = [BZContextImageBridge bridgeWithSize:NSMakeSize(42.0f, 10.0f)];
-
-2. Obtain the context. The context is retained for you (see below).
-	CGContextRef context = [bridge context];
-
-3. Draw into the context. (note: it is a bitmap context, so you cannot use PDF functions on it.)
-
-4. Call image. If you call image more than once, the image will not be re-created (although, since the image uses the same backing store as the context, this should not be a problem).
-	NSImage *image = [bridge image];
-
-You can obtain greater control over the bridge by initing it using initWithSize:bitsPerComponent:componentsPerPixel:hasAlpha:.
-
-If you use bridgeWithSize:, the bridge is autoreleased.
-
-The <u>Icon Services interfaces</u> gives you a nice Cocoa interface for drawing icons in the context.
-They come in full and abstracted flavours.
-
-Summary of methods (without types):
-wrapping GetIconRef:
-  getIconWithType:
-  getIconWithType:creator:
-wrapping other GetIconRef functions:
-  [future expansion]
-wrapping PlotIconRefInContext:
-	plotIcon:inRect:
-	plotIcon:inRect:alignment:transform:labelNSColor:flags:
-	plotIcon:inRect:alignment:transform:labelIndex:flags:
-	plotIcon:inRect:alignment:transform:labelRGBColor:flags:
-For more information, read the Icon Services documentation. They all return the status code returned from the Carbon calls on which these methods are based.
+ * @class BZContextImageBridge
+ * @brief Used to translate between Quartz and NSImage.
+ *
+ * Quick-start for <tt>BZContextImageBridge</tt>:
+ * 
+ * 1. Create a bridge.
+ * 	BZContextImageBridge *bridge = [BZContextImageBridge bridgeWithSize:NSMakeSize(42.0f, 10.0f)];
+ * 
+ * 2. Obtain the context. The context is retained for you (see below).
+ * 	CGContextRef context = [bridge context];
+ * 
+ * 3. Draw into the context. (note: it is a bitmap context, so you cannot use PDF functions on it.)
+ * 
+ * 4. Call image. If you call image more than once, the image will not be re-created (although, since the image uses the same backing store as the context, this should not be a problem).
+ * 	NSImage *image = [bridge image];
+ * 
+ * You can obtain greater control over the bridge by initing it using initWithSize:bitsPerComponent:componentsPerPixel:hasAlpha:.
+ * 
+ * If you use bridgeWithSize:, the bridge is autoreleased.
+ * 
+ * The <tt>Icon Services</tt> interfaces gives you a nice Cocoa interface for drawing icons in the context.
+ * They come in full and abstracted flavours.
+ * 
+ * Summary of Icon Services methods (without types):
+ * - wrapping GetIconRef:
+ *   getIconWithType:
+ *   getIconWithType:creator:
+ * - wrapping other GetIconRef functions:
+ *   [future expansion]
+ * - wrapping PlotIconRefInContext:
+ *   plotIcon:inRect:
+ *   plotIcon:inRect:alignment:transform:labelNSColor:flags:
+ *   plotIcon:inRect:alignment:transform:labelIndex:flags:
+ *   plotIcon:inRect:alignment:transform:labelRGBColor:flags:
+ * 
+ * For more information, read the Icon Services documentation. They all return the status code returned from the Carbon calls on which these methods are based.<br>
 */
 
 @interface BZContextImageBridge : NSObject
@@ -59,15 +60,14 @@ For more information, read the Icon Services documentation. They all return the 
 - (id)initWithSize:(NSSize)size;
 
 /*!
-	@method initWithSize:bitsPerComponent:componentsPerPixel:hasAlpha:
-	@abstract Init the BZContextImageBridge with custom settings
-	@discussion
-		If hasAlpha is true, include that in componentsPerPixel. if it is false, subtract it from componentsPerPixel. IOW:
-			hasAlpha	componentsPerPixel	result
-			YES			4U					RGBA
-			NO			3U					RGB
-	@result  A <tt>BZContextImageBridge</tt> object
-*/
+ * @brief Init a <tt>BZContextImageBridge</tt> with higher granulity of control
+ * 
+ *	If hasAlpha is true, include that in componentsPerPixel. if it is false, subtract it from componentsPerPixel. IOW:<br>
+ * 			hasAlpha	componentsPerPixel	result<br>
+ * 			YES			4U					RGBA<br>
+ * 			NO			3U					RGB<br>
+ * @return  A <tt>BZContextImageBridge</tt> object
+ */
 - (id)initWithSize:(NSSize)size bitsPerComponent:(unsigned)bpc componentsPerPixel:(unsigned)cpp hasAlpha:(BOOL)hasAlpha;
 
 //convenience.

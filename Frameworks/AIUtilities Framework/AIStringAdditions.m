@@ -51,7 +51,7 @@
 
 /* compactedString
 *   returns the string in all lowercase without spaces
-*/
+ */
 - (NSString *)compactedString
 {
 	NSMutableString 	*outName;

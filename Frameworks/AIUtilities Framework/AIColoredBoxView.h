@@ -14,20 +14,21 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /*!
-	@class AIColoredBoxView
-	@abstract View which draws filled with a particular color
-	@discussion View which draws, simply filling its bounds with a particular color.
-*/
+ * @class AIColoredBoxView
+ * @brief View which draws filled with a particular color
+ *
+ * View which draws, simply filling its bounds with a particular color.
+ */
 @interface AIColoredBoxView : NSView {
     NSColor 	*color;
 }
 
 /*!
-	@method setColor:
-	@abstract Set the color of the view
-	@discussion Set the <tt>NSColor</tt> to draw in the view
-	@param inColor An <tt>NSColor</tt>
-*/ 
+ * @brief Set the color of the view
+ *
+ * Set the <tt>NSColor</tt> to draw in the view
+ * @param inColor An <tt>NSColor</tt>
+ */ 
 - (void)setColor:(NSColor *)inColor;
 
 @end

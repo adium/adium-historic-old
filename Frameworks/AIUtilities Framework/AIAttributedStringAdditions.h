@@ -14,140 +14,145 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /*!
-	@category NSMutableAttributedString(AIAppleScriptAdditions)
-	@abstract Additions to NSMutableAttributedString
-	@discussion These methods add string replacement, <tt>NSData</tt> conversion, color adjustment, and more.
-*/
+ * @category NSMutableAttributedString(AIAppleScriptAdditions)
+ * @brief Additions to NSMutableAttributedString
+ *
+ * These methods add string replacement, <tt>NSData</tt> conversion, color adjustment, and more.
+ */
 @interface NSMutableAttributedString (AIAttributedStringAdditions)
 /*!
-	@method appendString:withAttributes:
-	@abstract Append a string and set its attributes
-	@discussion Appends <b>aString</b>, setting its attributes to <b>attributes</b>
-	@param aString The string to append
-	@param attributes The attributes to use
-*/
+ * @brief Append a string and set its attributes
+ *
+ * Appends <b>aString</b>, setting its attributes to <b>attributes</b>
+ * @param aString The string to append
+ * @param attributes The attributes to use
+ */
 - (void)appendString:(NSString *)aString withAttributes:(NSDictionary *)attributes;
 
 /*!
-	@method replaceOccurrencesOfString:withString:options:range:
-	@abstract Find and replace on an attributed string
-	@discussion Operation is identical to <tt>NSMutableString</tt>'s method of the same name.  The replacement string has the attributes of the string it replaced.
-	@param target The string to search for
-	@param replacement The string with which to replace <b>target</b>
-	@param options Search options, as with NSMutableString's method
-	@param range The range in which to search
-	@result Returns the number of replacements made
-*/
+ * @brief Find and replace on an attributed string
+ *
+ * Operation is identical to <tt>NSMutableString</tt>'s method of the same name.  The replacement string has the attributes of the string it replaced.
+ * @param target The string to search for
+ * @param replacement The string with which to replace <b>target</b>
+ * @param options Search options, as with NSMutableString's method
+ * @param range The range in which to search
+ * @return Returns the number of replacements made
+ */
 - (unsigned int)replaceOccurrencesOfString:(NSString *)target withString:(NSString*)replacement options:(unsigned)opts range:(NSRange)searchRange;
 
 /*!
-	@method replaceOccurrencesOfString:withString:attributes:options:range:
-	@abstract Find and replace on an attributed string setting the attributes of the replacements
-	@discussion Operation is identical to <tt>NSMutableString</tt>'s method of the same name.  The replacement string has the specified attributes.
-	@param target The string to search for
-	@param replacement The string with which to replace <b>target</b>
-	@param attributes The attributes to apply to <b>replacement</b> for each replacement
-	@param options Search options, as with NSMutableString's method
-	@param range The range in which to search
-	@result Returns the number of replacements made
-*/
+ * @brief Find and replace on an attributed string setting the attributes of the replacements
+ *
+ * Operation is identical to <tt>NSMutableString</tt>'s method of the same name.  The replacement string has the specified attributes.
+ * @param target The string to search for
+ * @param replacement The string with which to replace <b>target</b>
+ * @param attributes The attributes to apply to <b>replacement</b> for each replacement
+ * @param options Search options, as with NSMutableString's method
+ * @param range The range in which to search
+ * @return Returns the number of replacements made
+ */
 - (unsigned int)replaceOccurrencesOfString:(NSString *)target withString:(NSString*)replacement attributes:(NSDictionary*)attributes options:(unsigned)opts range:(NSRange)searchRange;
 
 /*!
-	@method adjustColorsToShowOnBackground
-	@abstract Apply color adjustments for a background
-	@discussion Adjust all colors in the attributed string so they are visible on the specified background
-	@param backgroundColor The background color
-*/
+ * @brief Apply color adjustments for a background
+ *
+ * Adjust all colors in the attributed string so they are visible on the specified background
+ * @param backgroundColor The background color
+ */
 - (void)adjustColorsToShowOnBackground:(NSColor *)backgroundColor;
 
 /*!
-	@method adjustColorsToShowOnBackground
-	@abstract Apply color adjustments for a background
-	@discussion Adjust all colors in the attributed string so they are visible on the background, adjusting brightness in a manner proportional to the original background
-	@param backgroundColor The background color
-*/
+ * @brief Apply color adjustments for a background
+ *
+ * Adjust all colors in the attributed string so they are visible on the background, adjusting brightness in a manner proportional to the original background
+ * @param backgroundColor The background color
+ */
 - (void)adjustColorsToShowOnBackgroundRelativeToOriginalBackground:(NSColor *)backgroundColor;
 
 /*!
-	@method convertNSURLtoString
-	@abstract Convert NSURLs in the attributed string to strings
-	@discussion Convert any <tt>NSURL</tt> objects attached to an attributed string to their absoluteString equivalents
-	@result YES if any changes were made; NO if none were needed
-*/
+ * @brief Convert NSURLs in the attributed string to strings
+ *
+ * Convert any <tt>NSURL</tt> objects attached to an attributed string to their absoluteString equivalents
+ * @return YES if any changes were made; NO if none were needed
+ */
 - (BOOL)convertNSURLtoString;
 
 /*!
-	@method addFormattingForLinks
-	@abstract Apply link appearance attributes where appropriate
-	@discussion Sets color and underline attributes for any areas with NSLinkAttributeName set
-*/
+ * @brief Apply link appearance attributes where appropriate
+ *
+ * Sets color and underline attributes for any areas with NSLinkAttributeName set
+ */
 - (void)addFormattingForLinks;			
 @end
 
 /*!
-	@category NSData(AIAppleScriptAdditions)
-	@abstract Adds the ability to obtain an <tt>NSAttributedString</tt> from data.
-	@discussion This category on <tt>NSData</tt> complements a method in the NSAttributedString(AIAttributedStringAdditions) category.
-*/
+ * @category NSData(AIAppleScriptAdditions)
+ * @brief Adds the ability to obtain an <tt>NSAttributedString</tt> from data.
+ *
+ * This category on <tt>NSData</tt> complements a method in the NSAttributedString(AIAttributedStringAdditions) category.
+ */
 @interface NSData (AIAttributedStringAdditions)
+
 /*!
-	@method attributedString
-	@abstract Return an <tt>NSAttributedString</tt> from this data
-	@discussion Return an <tt>NSAttributedString</tt> from this data. The data should have been created via -[NSAttributedString dataRepresentation].
-	@result An <tt>NSAttributedString</tt>
-*/
+ * @brief Return an <tt>NSAttributedString</tt> from this data
+ *
+ * Return an <tt>NSAttributedString</tt> from this data. The data should have been created via -[NSAttributedString dataRepresentation].
+ * @return An <tt>NSAttributedString</tt>
+ */
 - (NSAttributedString *)attributedString;
 @end
 
 @interface NSAttributedString (AIAttributedStringAdditions)
 /*!
-	@method stringHeightForAttributes:
-	@abstract Determine the height needed to display an NSAttributedString with certain attributes
-	@discussion Returns the height which a string with <b>attributes</b> will require for drawing purposes
-	@param attributes An <tt>NSDictionary</tt> of attributes
-	@result The needed height, as a float
-*/
+ * @brief Determine the height needed to display an NSAttributedString with certain attributes
+ *
+ * Returns the height which a string with <b>attributes</b> will require for drawing purposes
+ * @param attributes An <tt>NSDictionary</tt> of attributes
+ * @return The needed height, as a float
+ */
 + (float)stringHeightForAttributes:(NSDictionary *)attributes;
 
 /*!
-	@method heightWithWidth:
-	@abstract Determine the height needed for display at a width
-	@discussion Returns the height need to display at the passed width
-	@param width The available width for display
-	@result The needed height, as a float
-*/
+ * @brief Determine the height needed for display at a width
+ *
+ * Returns the height need to display at the passed width
+ * @param width The available width for display
+ * @return The needed height, as a float
+ */
 - (float)heightWithWidth:(float)width;
 
 /*!
-	@method dataRepresentation
-	@abstract Encode to <tt>NSData</tt>
-	@discussion Archives the <tt>NSAttributedString</tt> and returns <tt>NSData</tt> suitable for storage
-	@result The attributed string represented as <tt>NSData</tt>
-*/
+ * @brief Encode to <tt>NSData</tt>
+ *
+ * Archives the <tt>NSAttributedString</tt> and returns <tt>NSData</tt> suitable for storage
+ * @return The attributed string represented as <tt>NSData</tt>
+ */
 - (NSData *)dataRepresentation;
+
 /*!
-	@method stringWithData:
-	@abstract Obtain an <tt>NSAttributedString</tt> from encoded data
-	@discussion Retrieves an <tt>NSAttributedString</tt> from <tt>NSData</tt> created with -[NSAttributedString dataRepresentation]
-	@result The decoded <tt>NSAttributedString</tt>
-*/
+ * @brief Obtain an <tt>NSAttributedString</tt> from encoded data
+ *
+ * Retrieves an <tt>NSAttributedString</tt> from <tt>NSData</tt> created with -[NSAttributedString dataRepresentation]
+ * @param The source <tt>NSData</tt>
+ * @return The decoded <tt>NSAttributedString</tt>
+ */
 + (NSAttributedString *)stringWithData:(NSData *)inData;
 
 /*
-	@method safeString
-	@abstract Generate an NSAttributedString without attachments
-	@discussion Generate an NSAttributedString without attachments by substituting their string value if possible (if the attachment responds to @selector(string)) and, if not, substituting a characterstic string.
-	@result An <tt>NSAttributedString</tt> without attachments; it may be identical to the original object.
-*/
+ * @brief Generate an NSAttributedString without attachments
+ *
+ * Generate an NSAttributedString without attachments by substituting their string value if possible (if the attachment responds to @selector(string)) and, if not, substituting a characterstic string.
+ * @return An <tt>NSAttributedString</tt> without attachments; it may be identical to the original object.
+ */
 - (NSAttributedString *)safeString;
 
 /*!
-	@method stringByAddingFormattingForLinks
-	@abstract Create a new NSAttributedString, apply link appearance attributes where appropriate
-	@discussion Sets color and underline attributes for any areas with NSLinkAttributeName set and returns the resulting <tt>NSAttributedString</tt>
-	@result A formatted <tt>NSAttributedString</tt>
-*/
+ * @brief Create a new NSAttributedString, apply link appearance attributes where appropriate
+ *
+ * Sets color and underline attributes for any areas with NSLinkAttributeName set and returns the resulting <tt>NSAttributedString</tt>
+ * @return A formatted <tt>NSAttributedString</tt>
+ */
 - (NSAttributedString *)stringByAddingFormattingForLinks;
 
 + (NSAttributedString *)stringWithString:(NSString *)inString;

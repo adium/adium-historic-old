@@ -15,9 +15,10 @@
  */
 
 /*!
-@class QTSoundFilePlayer
-@abstract Sound playing with volume control and output device selection
-@discussion QTSoundFilePlayer takes a path to an audio file, and plays it through the desired audio output.  It uses QuickTime to decode the file, but plays the samples using CoreAudio. It also uses a buffering scheme to avoid dropouts in the audio playback.
+ * @class QTSoundFilePlayer
+ * @brief Sound playing with volume control and output device selection
+ * 
+ * QTSoundFilePlayer takes a path to an audio file, and plays it through the desired audio output.  It uses QuickTime to decode the file, but plays the samples using CoreAudio. It also uses a buffering scheme to avoid dropouts in the audio playback.
 */
 
 #import <Foundation/Foundation.h>

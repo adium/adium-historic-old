@@ -14,10 +14,11 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /*!
-	@class AITableViewPopUpButtonCell
-	@abstract
-    @discussion
-*/
+ * @class AITableViewPopUpButtonCell 
+ * @brief
+ * 
+ *
+ */
 
 @interface AITableViewPopUpButtonCell : NSPopUpButtonCell {
 

@@ -8,6 +8,7 @@
 
 #import "ESFlexibleToolbarItem.h"
 
+#warning should have delegate protocol
 
 @implementation ESFlexibleToolbarItem
 

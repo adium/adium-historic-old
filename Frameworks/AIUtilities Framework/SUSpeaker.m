@@ -72,7 +72,7 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
 
 //---Pitch
 /* "Sets the pitch. Pitch is given in Hertz and should be comprised between 80 and 500, depending on the voice.
-Note that extreme value can make your app crash..." */
+Note that extreme value can make your app crash..."  */
 -(void)setPitch:(float)pitch
 {
     int fixedPitch;

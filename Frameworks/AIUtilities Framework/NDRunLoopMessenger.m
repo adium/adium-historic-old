@@ -78,7 +78,7 @@ struct message
 
 /*
  * init
- */
+  */
 - (id)init
 {
 	if( self = [super init] )
@@ -111,7 +111,7 @@ struct message
 
 /*
  * registerNotificationObservers
- */
+  */
 - (void)registerNotificationObservers
 {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(threadWillExit:) name:NSThreadWillExitNotification object:nil];
@@ -120,7 +120,7 @@ struct message
 
 /*
  * dealloc
- */
+  */
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -141,7 +141,7 @@ struct message
 }
 /*
  * threadWillExit:
- */
+  */
 - (void)threadWillExit:(NSNotification *)notification
 {
 	NSThread		* thread = [notification object];
@@ -158,7 +158,7 @@ struct message
 
 /*
  * portDidBecomeInvalid:
- */
+  */
 - (void)portDidBecomeInvalid:(NSNotification *)notification
 {
 	if( [notification object] == port )
@@ -173,7 +173,7 @@ struct message
 
 /*
  * target:performSelector:
- */
+  */
 - (void)target:(id)aTarget performSelector:(SEL)aSelector
 {
 	[self target:aTarget performSelector:aSelector withResult:NO];
@@ -181,7 +181,7 @@ struct message
 
 /*
  * target:selector:withObject:
- */
+  */
 - (void)target:(id)aTarget performSelector:(SEL)aSelector withObject:(id)anObject
 {
 	[self target:aTarget performSelector:aSelector withObject:anObject withResult:NO];
@@ -189,7 +189,7 @@ struct message
 
 /*
  * target:performSelector:withObject:withObject:
- */
+  */
 - (void)target:(id)aTarget performSelector:(SEL)aSelector withObject:(id)anObject withObject:(id)anotherObject
 {
 	[self target:aTarget performSelector:aSelector withObject:anObject withObject:anotherObject withResult:NO];
@@ -249,7 +249,7 @@ struct message
 
 /*
  * target:performSelector:withResult:
- */
+  */
 - (id)target:(id)aTarget performSelector:(SEL)aSelector withResult:(BOOL)aFlag
 {
 	NSInvocation		* theInvocation;
@@ -269,7 +269,7 @@ struct message
 
 /*
  * target:performSelector:withObject:withResult:
- */
+  */
 - (id)target:(id)aTarget performSelector:(SEL)aSelector withObject:(id)anObject withResult:(BOOL)aFlag
 {
 	NSInvocation		* theInvocation;
@@ -290,7 +290,7 @@ struct message
 
 /*
  * target:performSelector:withObject:withObject:withResult:
- */
+  */
 - (id)target:(id)aTarget performSelector:(SEL)aSelector withObject:(id)anObject withObject:(id)anotherObject withResult:(BOOL)aFlag
 {
 	NSInvocation		* theInvocation;
@@ -312,7 +312,7 @@ struct message
 
 /*
  * target:performSelector:withObject:withObject:withObject:withResult:
- */
+  */
 - (id)target:(id)aTarget performSelector:(SEL)aSelector withObject:(id)anObject withObject:(id)anotherObject withObject:(id)aThirdObject withResult:(BOOL)aFlag
 {
 	NSInvocation		* theInvocation;
@@ -378,7 +378,7 @@ struct message
 
 /*
  * messageInvocation:
- */
+  */
 - (void)postNotification:(NSNotification *)aNotification
 {
 	NSInvocation		* theInvocation;
@@ -393,7 +393,7 @@ struct message
 
 /*
  * messageInvocation:object:
- */
+  */
 - (void)postNotificationName:(NSString *)aNotificationName object:(id)anObject
 {
 	[self postNotification:[NSNotification notificationWithName:aNotificationName object:anObject]];
@@ -401,7 +401,7 @@ struct message
 
 /*
  * postNotificationName:object:userInfo:
- */
+  */
 - (void)postNotificationName:(NSString *)aNotificationName object:(id)anObject userInfo:(NSDictionary *)aUserInfo
 {
 	[self postNotification:[NSNotification notificationWithName:aNotificationName object:anObject userInfo:aUserInfo]];
@@ -409,7 +409,7 @@ struct message
 
 /*
  * messageInvocation:
- */
+  */
 - (void)messageInvocation:(NSInvocation *)anInvocation withResult:(BOOL)aResultFlag
 {
 	struct message		* theMessage;
@@ -434,7 +434,7 @@ struct message
 
 /*
  * target:
- */
+  */
 - (id)target:(id)aTarget;
 {
 	return [[[NDRunLoopMessengerForwardingProxy alloc] _initWithTarget:aTarget withOwner:self withResult:NO] autorelease];
@@ -442,7 +442,7 @@ struct message
 
 /*
  * target:withResult:
- */
+  */
 - (id)target:(id)aTarget withResult:(BOOL)aResultFlag;
 {
 	return [[[NDRunLoopMessengerForwardingProxy alloc] _initWithTarget:aTarget withOwner:self withResult:aResultFlag] autorelease];
@@ -450,7 +450,7 @@ struct message
 
 /*
  * handlePortMessage:
- */
+  */
 - (void)handlePortMessage:(NSPortMessage *)aPortMessage
 {
 	struct message 	* theMessage;
@@ -475,7 +475,7 @@ struct message
 
 /*
  * createPortForRunLoop:
- */
+  */
 - (void)createPortForRunLoop:(NSRunLoop *)aRunLoop
 {
 	port = [NSPort port];
@@ -485,7 +485,7 @@ struct message
 
 /*
  * sendData
- */
+  */
 - (void)sendData:(NSData *)aData
 {
 	NSPortMessage		* thePortMessage;
@@ -563,7 +563,7 @@ struct message
 
 /*
  * _initWithTarget:withOwner:withResult:
- */
+  */
 - (id)_initWithTarget:(id)aTarget withOwner:(NDRunLoopMessenger *)anOwner withResult:(BOOL)aFlag
 {
 	if( aTarget && anOwner )
@@ -583,7 +583,7 @@ struct message
 
 /*
  * dealloc
- */
+  */
 - (void)dealloc
 {
 	[targetObject release];
@@ -594,7 +594,7 @@ struct message
 
 /*
  * forwardInvocation:
- */
+  */
 - (void)forwardInvocation:(NSInvocation *)anInvocation
 {
 	[anInvocation setTarget:targetObject];
@@ -603,7 +603,7 @@ struct message
 
 /*
  * methodSignatureForSelector:
- */
+  */
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector
 {
 	return [[targetObject class] instanceMethodSignatureForSelector:aSelector];

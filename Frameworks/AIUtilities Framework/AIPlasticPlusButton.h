@@ -8,10 +8,11 @@
 #import "AIPlasticButton.h"
 
 /*!
-	@class AIPlasticMinusButton
-	@abstract "Plastic" Aqua plus (+) button
-	@discussion "Plastic" Aqua plus (+) button
-*/
+ * @class AIPlasticPlusButton
+ * @brief "Plastic" Aqua plus (+) button
+ *
+ * "Plastic" Aqua plus (+) button
+ */
 @interface AIPlasticPlusButton : AIPlasticButton {
 
 }

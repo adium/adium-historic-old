@@ -14,10 +14,11 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /*!
-	@class AIVerticallyCenteredTextCell
-	@abstract Simple NSCell which draws its text centered vertically
-	@discussion Simple <tt>NSCell</tt> which draws its text centered vertically
-*/
+ * @class AIVerticallyCenteredTextCell
+ * @brief Simple NSCell which draws its text centered vertically
+ *
+ * Simple <tt>NSCell</tt> which draws its text centered vertically
+ */
 @interface AIVerticallyCenteredTextCell : NSCell {
 
 }

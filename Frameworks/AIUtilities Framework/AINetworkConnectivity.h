@@ -10,19 +10,21 @@
 #define	AINetwork_ConnectivityChanged	@"AINetwork_ConnectivityChanged"
 
 /*!
-@class AINetworkConnectivity
-@abstract Class to notify of changes in Internet availability.
-@discussion <tt>AINetworkConnectivity</tt> posts a notification, <tt>AINetwork_ConnectivityChanged</tt>, on the default NSNotificationCenter when it detects that Internet network connectivity has changed.  The object of this notification is an <tt>NSNumber</tt> which has a boolValue of <b>YES</b> if the Internet is now available or <b>NO</b> if the Internet is no longer available.
+ * @class AINetworkConnectivity
+ * @brief Class to notify of changes in Internet availability.
+ * 
+ * <tt>AINetworkConnectivity</tt> posts a notification, <tt>AINetwork_ConnectivityChanged</tt>, on the default NSNotificationCenter when it detects that Internet network connectivity has changed.  The object of this notification is an <tt>NSNumber</tt> which has a boolValue of <b>YES</b> if the Internet is now available or <b>NO</b> if the Internet is no longer available.
 */
 @interface AINetworkConnectivity : NSObject {
 
 }
 
 /*!
-	@method networkIsReachable
-	@abstract Report on current network connectivity
-	@discussion This method provides a means for checking the current network connectivity.  It will return the same result as the last <tt>AINetwork_ConnectivityChanged</tt> notification did.  The notification should be relied upon whenever possible; this method exists primarily to assist in debugging.
-	@result YES if the network is reachable; NO if it is not
+ networkIsReachable
+ * @brief Report on current network connectivity
+ *
+ * This method provides a means for checking the current network connectivity.  It will return the same result as the last <tt>AINetwork_ConnectivityChanged</tt> notification did.  The notification should be relied upon whenever possible; this method exists primarily to assist in debugging.
+ * @return YES if the network is reachable; NO if it is not
  */
 + (BOOL)networkIsReachable;
 
