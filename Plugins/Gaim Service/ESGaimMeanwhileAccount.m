@@ -114,6 +114,19 @@
 	return statusMessage;
 }
 
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
+{
+	BOOL shouldReconnect = YES;
+	
+	if (disconnectionError){
+		if ([disconnectionError rangeOfString:@"Incorrect Username/Password"].location != NSNotFound) {
+			[[adium accountController] forgetPasswordForAccount:self];
+		}
+	}
+
+	return shouldReconnect;
+}
+
 #pragma mark Status
 /*!
  * @brief Return the gaim status type to be used for a status
