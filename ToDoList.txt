@@ -12,10 +12,12 @@
 
 [Accounts]
 - Jabber account registration
+- Changing personal settings (profile, display name, whatever) disconnects the account.
+- If you connect, change a server setting, disconnect, then reconnect, we still use the old server setting.
+	Specifically seen this with Jabber, switching from one jabber server to another.
 
 [Growl]
 - Growl sticky support [Colin]
-- Import Growl.framework from Growl .60 final [Evan]
 
 [Contacts]
 - Investigate Add Contact safety
@@ -27,9 +29,8 @@
   - Add option to remove flashing unviewed content on the contact list
   - Add option to prevent dock icon animations
 
-[Other]
-- Something is seriously slowing down our connection process. Shark it and fix. [Evan]
-- The iChat status icon pack's "text entered" state is inconsistent with the rest (pencil vs. chat bubble)
+[Group chat]
+- Duplicate send/receive bug needs fixing
 
 [Menu Items]
 - Block/Unblock as a single menu item [Colin]
@@ -39,6 +40,10 @@
 - Make OTR dialogs non-modal
 - Fingerprint management? (advanced)
 - Global and per-contact OTR policy settings
+
+[Other]
+- Something is seriously slowing down our connection process. Shark it and fix. [Evan]
+- The iChat status icon pack's "text entered" state is inconsistent with the rest (pencil vs. chat bubble)
 
 //-------------------------------------------------------------------------------------------------------
 // Possible Thoughts
