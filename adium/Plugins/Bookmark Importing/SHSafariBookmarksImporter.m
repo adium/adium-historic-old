@@ -105,12 +105,14 @@ DeclareString(bookmarkDictContent)
         while(linkDict = [enumerator nextObject]){
             if([[linkDict objectForKey:safariDictTypeKey] isEqualToString:safariDictTypeLeaf]){
                 //We found a link
-				[array addObject:[self hyperlinkForSafariBookmark:linkDict]];
+				NSDictionary	*linkDict = [self hyperlinkForSafariBookmark:linkDict];
+				if(linkDict) [array addObject:linkDict];
 				
 			}else if([[linkDict objectForKey:safariDictTypeKey] isEqualToString:safariDictTypeList]){
 				//We found an array of links
-				[array addObject:[self menuDictWithTitle:[linkDict objectForKey:safariDictTitle]
-											   menuItems:[self drillPropertyList:[linkDict objectForKey:safariDictChild]]]];
+				NSDictionary	*menuDict = [self menuDictWithTitle:[linkDict objectForKey:safariDictTitle]
+														  menuItems:[self drillPropertyList:[linkDict objectForKey:safariDictChild]]];
+				if(menuDict) [array addObject:menuDict];
             }
         }
 	}
@@ -121,6 +123,7 @@ DeclareString(bookmarkDictContent)
 //Menu
 - (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
+	if(!inTitle || !inMenuItems) return(nil);
 	return([NSDictionary dictionaryWithObjectsAndKeys:inTitle, bookmarkDictTitle, inMenuItems, bookmarkDictContent, nil]);
 }
 
@@ -128,7 +131,10 @@ DeclareString(bookmarkDictContent)
 - (NSDictionary *)hyperlinkForSafariBookmark:(NSDictionary *)inDict
 {
 	NSString	*title = [[inDict objectForKey:safariDictURIDict] objectForKey:safariDictURITitle];
-    return([[[SHMarkedHyperlink alloc] initWithString:[inDict objectForKey:safariURLString]
+	NSString	*url = [inDict objectForKey:safariURLString];
+	
+	if(!title || !url) return(nil);
+	return([[[SHMarkedHyperlink alloc] initWithString:url
 								 withValidationStatus:SH_URL_VALID
 										 parentString:title
 											 andRange:NSMakeRange(0,[title length])] autorelease]);
