@@ -13,7 +13,7 @@
 <a href="index.html" class="sidebar">Home</a><br><a href="http://www.visualdistortion.org/sqllogger/screenshots.jsp" class="offsides">Screenshots</a><br><a href="install.html" class="sidebar">Installation</a><br><a href="technical.html" class="sidebar">Technical
               Details</a><br><a href="performance.html" class="sidebar">Maintenance/Performance</a><br><a href="changes.txt" class="offsides">Changelog</a><br><a href="http://www.visualdistortion.org/sqllogger/sqllogger.tar.gz" class="offsides"><b>JSP/HTML package</b></a><br><h4>Adium</h4>
 <a href="http://www.adiumx.com/" class="offsides">Adium</a><br><a href="http://forums.adiumx.com" class="offsides">Adium
-                Forums</a><br><a href="http://planet.adiumx.com" class="offsides">Planet Adium</a><br><a href="http://cia.navi.cx/stats/project/adium/" class="offsides">CVS Changes</a><br><a href="http://www.visualdistortion.org/sqllogger/adium-sql.tar.gz" class="offsides"><b>Adium Plugin (.63)</b></a><br><a href="http://www.visualdistortion.org/sqllogger/SQL_Logger_70.tar.gz" class="offsides"><b>Adium Plugin (.70)</b></a><br><h4>Fire</h4>
+                Forums</a><br><a href="http://planet.adiumx.com" class="offsides">Planet Adium</a><br><a href="http://cia.navi.cx/stats/project/adium/" class="offsides">SVN Changes</a><br><a href="http://www.visualdistortion.org/sqllogger/adium-sql.tar.gz" class="offsides"><b>Adium Plugin (.63)</b></a><br><a href="http://www.visualdistortion.org/sqllogger/SQL_Logger_70.tar.gz" class="offsides"><b>Adium Plugin (.70)</b></a><br><h4>Fire</h4>
 <a href="http://fire.sourceforge.net" class="offsides">Fire</a><br><h4>PostgreSQL</h4>
 <a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.4/interactive/index.html" class="offsides">PgSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a><br><h4>Visual Distortion</h4>
 <a href="http://www.visualdistortion.org/" class="offsides">Visual Distortion Home</a>
@@ -22,7 +22,7 @@
 <div align="center">
       <h2>Schema Information</h2>
       <a href="images/schema.png">
-        <img src="images/schema-mini.png" border="0">
+        <img src="images/schema-mini.png" border="0" width="450" height="311">
       </a>
     </div>
 <h3 style="background-color: #ccf">users</h3>
@@ -87,10 +87,13 @@
       so that as many users can be included in each meta contact as you want.
       It also contains a &quot;preferred&quot; contact, in the cases where one user is
       in multiple meta-contacts (so the viewer knows which to use).</p>
-<h3 style="background-color: #c8c">saved_chats/saved_searches</h3>
-<p>saved_chats and saved_searches exist so the viewer and search page can
-      save their results.  They have copies of the same fields that the viewer
-      and search pages have.</p>
+<h3 style="background-color: #c8c">saved_items</h3>
+<p>saved items stores the name of saved forms.  It currently stores
+      queries, chats, and searches.</p>
+<h3>saved_fields</h3>
+<p>saved_fields stores a list of key-value pairs for the values of the
+      saved form.  For example, there is one row for start_date, one row for
+      end_date, etc</p>
 <h3 style="background-color: #ccc">simple_message_v/message_v</h3>
 <p>The created view is used for all of the message viewing.  It contains
       message_id, message, message_date, the screenames from users
@@ -110,6 +113,12 @@
       user_display_name.  Updates or deletes on message_v silently
       fail, and are best performed by operating directly on the underlying
       tables.</p>
+<h3>Queries</h3>
+<p>It is possible to see the queries being run by the JSP pages.  You can
+      see generic queries used by all the JSP pages at <a href="queries/standard.html">standard.html</a>, queries relating to
+      the statistics at <a href="queries/stats.html">stats.html</a> and update
+      and insert queries at <a href="queries/update.html">update.html</a>.
+    </p>
 </div>
 <div id="footer">SQL Logger Technical Details<br><a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a>
 </div>
