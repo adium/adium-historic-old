@@ -9,7 +9,7 @@
 #import "aim.h"
 
 #warning change this to your SN to connect :-)
-#define SCREEN_NAME "tekjew invisible"
+#define SCREEN_NAME "tekjew"
 
 //From oscar.c
 struct oscar_data {
@@ -110,7 +110,17 @@ struct oscar_data {
     //General updates
     [super accountBlistUpdate:list withNode:node];
     
+    if (node) {
+        [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(_delayedBlistUpdate:) userInfo:[NSValue valueWithPointer:node] repeats:NO];
+    }
+}
+
+- (void)_delayedBlistUpdate:(NSTimer *)inTimer
+{
+    GaimBlistNode * node = [[inTimer userInfo] pointerValue];
+
     //AIM-specific updates
+    
     if(node)
     {
         //extract the GaimBuddy from whatever we were passed
@@ -125,36 +135,35 @@ struct oscar_data {
         NSMutableArray *modifiedKeys = [NSMutableArray array];
         AIHandle *theHandle = (AIHandle *)node->ui_data;
         NSMutableDictionary * statusDict = [theHandle statusDictionary];
-        
+        NSLog(@"delayed for %@",[statusDict objectForKey:@"Display Name"]);
         if (online) {
             struct oscar_data *od = gc->proto_data;
             //            struct buddyinfo *bi = g_hash_table_lookup(od->buddyinfo, gaim_normalize(buddy->name));
             aim_userinfo_t *userinfo = aim_locate_finduserinfo(od->sess, buddy->name);
             
-            NSNumber * isAway = [statusDict objectForKey:@"Away"];
             if (userinfo != NULL) {
                 //Update the away message and status if the contact is away (userinfo->flags & AIM_FLAG_AWAY)
                 //EDS - optimize by keeping track of the string forms separately and comparing them rather than encoding/decoding html
                 if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away_len > 0) && (userinfo->away != NULL) && (userinfo->away_encoding != NULL)) {
+                    NSLog(@"%s",userinfo->away);
                     gchar *away_utf8 = oscar_encoding_to_utf8(userinfo->away_encoding, userinfo->away, userinfo->away_len);
                     if (away_utf8 != NULL) {
                         NSString * awayMessageString = [NSString stringWithUTF8String:away_utf8];
-                        if (!isAway || ![isAway boolValue]) {
-                                [statusDict setObject:[NSNumber numberWithBool:YES] forKey:@"Away"];
-                                [modifiedKeys addObject:@"Away"];
-                            }
-                            NSAttributedString * statusMsgDecoded = [AIHTMLDecoder decodeHTML:awayMessageString];
-                            if (![statusMsgDecoded isEqualToAttributedString:[statusDict objectForKey:@"StatusMessage"]]) {
-                                [statusDict setObject:statusMsgDecoded forKey:@"StatusMessage"];
-                                [modifiedKeys addObject:@"StatusMessage"];
-                            }
+                        NSAttributedString * statusMsgDecoded = [AIHTMLDecoder decodeHTML:awayMessageString];
+          //              NSLog(@"away msg: %@",statusMsgDecoded);
+                        if (![statusMsgDecoded isEqualToAttributedString:[statusDict objectForKey:@"StatusMessage"]]) {
+                            [statusDict setObject:statusMsgDecoded forKey:@"StatusMessage"];
+                            [modifiedKeys addObject:@"StatusMessage"];
+                            [statusDict setObject:[NSNumber numberWithBool:YES] forKey:@"Away"];
+                            [modifiedKeys addObject:@"Away"];
+                        }
                     }
-                }else{ //remove any away message and status
-                    if (!isAway || [isAway boolValue]) {
-                        [statusDict setObject:[NSNumber numberWithBool:NO] forKey:@"Away"];
-                        [modifiedKeys addObject:@"Away"];
+                }else{ //remove any away message
+                    if ([statusDict objectForKey:@"StatusMessage"]) {
                         [statusDict removeObjectForKey:@"StatusMessage"];
                         [modifiedKeys addObject:@"StatusMessage"];
+                        [statusDict setObject:[NSNumber numberWithBool:NO] forKey:@"Away"];
+                        [modifiedKeys addObject:@"Away"];
                     }
                 }
                 
@@ -184,14 +193,11 @@ struct oscar_data {
         {
             //NSLog(@"Changed %@", modifiedKeys);
             
-            //tell the contact controller, silencing if necessary
+            //tell the contact controller
             [[owner contactController] handleStatusChanged:theHandle
                                         modifiedStatusKeys:modifiedKeys
                                                    delayed:NO
-                                                    silent:online
-                ? (gaim_connection_get_state(gaim_account_get_connection(buddy->account)) == GAIM_CONNECTING)
-                : (buddy->present != GAIM_BUDDY_SIGNING_OFF)];
-            //the silencing code does -not- work. I either need to change the way gaim works, or get someone to change it. 
+                                                    silent:NO];
         }
     }
 }
