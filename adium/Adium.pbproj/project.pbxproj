@@ -1037,6 +1037,7 @@
 				F5793944033E74E401A8010A,
 				F570A61703704F6601A8010A,
 				F5793953033E74E401A8010A,
+				4BBB05E403CB161100A8010A,
 			);
 			isa = PBXGroup;
 			name = Headers;
@@ -1207,6 +1208,32 @@
 		};
 		4BACB70403C8CB5E00A8010A = {
 			fileRef = 4BACB70203C8CB5E00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BBB05E403CB161100A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AISystemTabRendering.h;
+			path = "Frameworks/AIUtilities Framework/AISystemTabRendering.h";
+			refType = 4;
+		};
+		4BBB05E503CB161100A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AISystemTabRendering.m;
+			path = "Frameworks/AIUtilities Framework/AISystemTabRendering.m";
+			refType = 4;
+		};
+		4BBB05E603CB161100A8010A = {
+			fileRef = 4BBB05E403CB161100A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BBB05E703CB161100A8010A = {
+			fileRef = 4BBB05E503CB161100A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2779,6 +2806,7 @@
 				4BBC8E4D03BA0DB900A8010A,
 				4BEF84CF03BE41C700A8010A,
 				4B7764C203C3F4B600A8010A,
+				4BBB05E603CB161100A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2846,6 +2874,7 @@
 				F55596B703B784C801A8010A,
 				4BBC8E4E03BA0DB900A8010A,
 				4BEF84D003BE41C700A8010A,
+				4BBB05E703CB161100A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3528,6 +3557,7 @@
 			children = (
 				F570A5A803704BED01A8010A,
 				F570A5A603704BED01A8010A,
+				4BBB05E503CB161100A8010A,
 			);
 			isa = PBXGroup;
 			name = "Custom Tabs";
