@@ -320,10 +320,13 @@ int HTMLEquivalentForFontSize(int fontSize)
                         
                     }else if ([chunkString caseInsensitiveCompare:@"LT"] == 0){
                         [attrString appendString:@"<" withAttributes:[textAttributes dictionary]];
-                        
+
                     }else if ([chunkString caseInsensitiveCompare:@"AMP"] == 0){
                         [attrString appendString:@"&" withAttributes:[textAttributes dictionary]];
-                        
+
+                    }else if ([chunkString caseInsensitiveCompare:@"QUOT"] == 0){
+                        [attrString appendString:@"\"" withAttributes:[textAttributes dictionary]];
+
                     }else if ([chunkString caseInsensitiveCompare:@"NBSP"] == 0){
                         [attrString appendString:@"Ê" withAttributes:[textAttributes dictionary]];
                         
