@@ -129,10 +129,10 @@
 			}
 			
 			//Restore the user's email address and account if they've entered it previously
-			if(emailAddress = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_CRASH_EMAIL_ADDRESS]){
+			if((emailAddress = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_CRASH_EMAIL_ADDRESS])){
 				[textField_emailAddress setStringValue:emailAddress];
 			}
-			if(aimAccount = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_CRASH_AIM_ACCOUNT]){
+			if((aimAccount = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_CRASH_AIM_ACCOUNT])){
 				[textField_accountIM setStringValue:aimAccount];
 			}
 			
@@ -228,7 +228,7 @@
     
     //Compact the fields of the report into a long URL string
     enumerator = [[crashReport allKeys] objectEnumerator];
-    while(key = [enumerator nextObject]){
+    while((key = [enumerator nextObject])){
         if([reportString length] != 0) [reportString appendString:@"&"];
         [reportString appendFormat:@"%@=%@", key, [[crashReport objectForKey:key] stringByEncodingURLEscapes]];
     }
@@ -303,7 +303,7 @@
 {
     //Grab the info from our buildnum script
     char *path, unixDate[256], num[256],whoami[256];
-    if(path = (char *)[[[[NSBundle mainBundle] resourcePath] stringByAppendingString:@"/../../../buildnum"] fileSystemRepresentation])
+    if((path = (char *)[[[[NSBundle mainBundle] resourcePath] stringByAppendingString:@"/../../../buildnum"] fileSystemRepresentation]))
     {
         FILE *f = fopen(path, "r");
         fscanf(f, "%s | %s | %s", num, unixDate, whoami);

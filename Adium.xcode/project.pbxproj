@@ -16642,10 +16642,11 @@
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
 				INSTALL_PATH = "$(USER_APPS_DIR)";
-				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
 				PRODUCT_NAME = "Adium Crash Reporter";
+				WARNING_CFLAGS = "-Wall";
 			};
 			dependencies = (
+				DA021E4C0802FD9C00D5EBAE,
 			);
 			isa = PBXNativeTarget;
 			name = "Adium Crash Reporter";
@@ -23015,6 +23016,18 @@
 			isa = PBXTargetDependency;
 			name = "AIUtilities (from AIUtilities.framework.xcode)";
 			targetProxy = DA021DDC0802FA1200D5EBAE;
+		};
+		DA021E4B0802FD9C00D5EBAE = {
+			containerPortal = 3448717006D1E57700DA778C;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = AIUtilities;
+		};
+		DA021E4C0802FD9C00D5EBAE = {
+			isa = PBXTargetDependency;
+			name = "AIUtilities (from AIUtilities.framework.xcode)";
+			targetProxy = DA021E4B0802FD9C00D5EBAE;
 		};
 //DA0
 //DA1
