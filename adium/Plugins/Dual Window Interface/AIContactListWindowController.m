@@ -17,19 +17,19 @@
 #import "AIDualWindowInterfacePlugin.h"
 #import "AIStatusSelectionView.h"
 
-#define CONTACT_LIST_WINDOW_NIB			@"ContactListWindow"		//Filename of the contact list window nib
-#define CONTACT_LIST_WINDOW_TRANSPARENT_NIB     @"ContactListWindowTransparent" //Filename of the minimalist transparent version
-#define CONTACT_LIST_TOOLBAR			@"ContactList"			//ID of the contact list toolbar
+#define CONTACT_LIST_WINDOW_NIB				@"ContactListWindow"		//Filename of the contact list window nib
+#define CONTACT_LIST_WINDOW_TRANSPARENT_NIB @"ContactListWindowTransparent" //Filename of the minimalist transparent version
+#define CONTACT_LIST_TOOLBAR				@"ContactList"			//ID of the contact list toolbar
 #define	KEY_DUAL_CONTACT_LIST_WINDOW_FRAME	@"Dual Contact List Frame"
-#define TOOLBAR_CONTACT_LIST			@"ContactList"			//Toolbar identifier
+#define TOOLBAR_CONTACT_LIST				@"ContactList"			//Toolbar identifier
 
-#define EDGE_CATCH_X 			10
-#define EDGE_CATCH_Y 			40
+#define EDGE_CATCH_X				10
+#define EDGE_CATCH_Y				40
 #define SCROLL_VIEW_PADDING_X		2
 #define SCROLL_VIEW_PADDING_Y		2
 
-#define PREF_GROUP_CONTACT_LIST			@"Contact List"
-#define KEY_CLWH_ALWAYS_ON_TOP			@"Always on Top"
+#define PREF_GROUP_CONTACT_LIST		@"Contact List"
+#define KEY_CLWH_ALWAYS_ON_TOP		@"Always on Top"
 #define KEY_CLWH_HIDE				@"Hide While in Background"
 
 
@@ -106,6 +106,13 @@
     if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0)){
 	//Handle window ordering
 	NSDictionary * prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+		
+	/*
+	 Use:
+	 [[self window] setLevel:(NSNormalWindowLevel-1)];
+	 to put the window below all other windows.
+	*/
+		
 	if ([[prefDict objectForKey:KEY_CLWH_ALWAYS_ON_TOP] boolValue]) {
 	    [[self window] setLevel:NSFloatingWindowLevel]; //always on top
 	} else {
