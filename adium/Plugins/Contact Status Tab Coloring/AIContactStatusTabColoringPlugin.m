@@ -42,17 +42,23 @@
     idleAndAwayColor = nil;
 
     //Setup our preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TAB_COLORING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TAB_COLORING_DEFAULT_PREFS
+																		forClass:[self class]] 
+										  forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
     preferences = [[AIContactStatusTabColoringPreferences preferencePane] retain];
     
     //Register themable preferences
-    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:TAB_STATUS_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];    
+    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:TAB_STATUS_THEMABLE_PREFS 
+																  forClass:[self class]] 
+											  forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];    
 
     //Observe list object changes
     [[adium contactController] registerListObjectObserver:self];
 
     //Observe preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged
+									 object:nil];
     [self preferencesChanged:nil];
 }
 
@@ -153,7 +159,10 @@
             [self _applyColorToObject:object];
             
             //Force a redraw
-            [[adium notificationCenter] postNotificationName:ListObject_AttributesChanged object:object userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Tab Text Color"] forKey:@"Keys"]];
+            [[adium notificationCenter] postNotificationName:ListObject_AttributesChanged 
+													  object:object
+													userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Tab Text Color"]
+																						 forKey:@"Keys"]];
         }
     }
 }
