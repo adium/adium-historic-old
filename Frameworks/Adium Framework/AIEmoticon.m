@@ -16,7 +16,7 @@
 #import "AIEmoticon.h"
 
 @interface AIEmoticon (PRIVATE)
-- (AIEmoticon *)initWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName;
+- (AIEmoticon *)initWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName pack:(AIEmoticonPack *)inPack;
 - (NSString *)_stringWithMacEndlines:(NSString *)inString;
 - (void)setTextEquivalents:(NSArray *)inArray;
 - (void)setCachedString:(NSAttributedString *)inString image:(NSImage *)inImage;
@@ -26,20 +26,22 @@
 @implementation AIEmoticon
 
 //Create a new emoticon
-+ (id)emoticonWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName
++ (id)emoticonWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName pack:(AIEmoticonPack *)inPack
 {
-    return([[[self alloc] initWithIconPath:inPath equivalents:inTextEquivalents name:inName] autorelease]);
+    return([[[self alloc] initWithIconPath:inPath equivalents:inTextEquivalents name:inName pack:inPack] autorelease]);
 }
 
 //Init
-- (AIEmoticon *)initWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName
+- (AIEmoticon *)initWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName pack:(AIEmoticonPack *)inPack
 {
-    [super init];
-    path = [inPath retain];
-	name = [inName retain];
-    textEquivalents = [inTextEquivalents retain];
-    _cachedAttributedString = nil;
-    
+    if (self = [super init]){
+		path = [inPath retain];
+		name = [inName retain];
+		textEquivalents = [inTextEquivalents retain];
+		pack = [(NSObject *)inPack retain];
+		_cachedAttributedString = nil;
+    }
+
     return(self);
 }
 
@@ -49,6 +51,7 @@
     [path release];
 	[name release];
     [textEquivalents release];
+	[(NSObject *)pack release];
     [_cachedAttributedString release];
     [_cachedImage release];
 
