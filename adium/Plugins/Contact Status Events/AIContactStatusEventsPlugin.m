@@ -133,7 +133,7 @@
 	//Ignore accounts.
 	//Ignore meta contact children since the actual meta contact provides a better event.
 	if((![inObject isKindOfClass:[AIAccount class]]) &&		//Ignore accounts
-	   (![[inObject containedObject] isKindOfClass:[AIMetaContact class]])){	
+	   (![[inObject containingObject] isKindOfClass:[AIMetaContact class]])){	
 		
 		if([modifiedKeys containsObject:@"Online"]){
 			if([self updateCache:onlineCache
