@@ -6552,6 +6552,15 @@
 				E0831EBA0785D82300F4888E,
 				E0831EBB0785D82300F4888E,
 				E0831EBC0785D82300F4888E,
+				E03E2FEC0785F02E007E75C3,
+				E03E2FED0785F02E007E75C3,
+				E03E2FEE0785F02E007E75C3,
+				E03E2FEF0785F02E007E75C3,
+				E03E2FF00785F02E007E75C3,
+				E03E2FF10785F02E007E75C3,
+				E03E2FF20785F02E007E75C3,
+				E03E2FF30785F02E007E75C3,
+				E03E2FF40785F02E007E75C3,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20161,6 +20170,15 @@
 				E0831EAE0785D82200F4888E,
 				E0831EAF0785D82200F4888E,
 				E0831EB00785D82300F4888E,
+				E03E2FE30785F02C007E75C3,
+				E03E2FE40785F02C007E75C3,
+				E03E2FE50785F02D007E75C3,
+				E03E2FE60785F02D007E75C3,
+				E03E2FE70785F02D007E75C3,
+				E03E2FE80785F02D007E75C3,
+				E03E2FE90785F02D007E75C3,
+				E03E2FEA0785F02D007E75C3,
+				E03E2FEB0785F02E007E75C3,
 			);
 			isa = PBXGroup;
 			name = Icons;
@@ -21780,6 +21798,132 @@
 //E02
 //E03
 //E04
+		E03E2FE30785F02C007E75C3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = pref1.png;
+			path = Source/icons/pref1.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E03E2FE40785F02C007E75C3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = pref2.png;
+			path = Source/icons/pref2.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E03E2FE50785F02D007E75C3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = pref3.png;
+			path = Source/icons/pref3.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E03E2FE60785F02D007E75C3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = pref4.png;
+			path = Source/icons/pref4.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E03E2FE70785F02D007E75C3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = pref5.png;
+			path = Source/icons/pref5.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E03E2FE80785F02D007E75C3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = pref6.png;
+			path = Source/icons/pref6.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E03E2FE90785F02D007E75C3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = pref7.png;
+			path = Source/icons/pref7.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E03E2FEA0785F02D007E75C3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = pref8.png;
+			path = Source/icons/pref8.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E03E2FEB0785F02E007E75C3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = pref9.png;
+			path = Source/icons/pref9.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		E03E2FEC0785F02E007E75C3 = {
+			fileRef = E03E2FE30785F02C007E75C3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E03E2FED0785F02E007E75C3 = {
+			fileRef = E03E2FE40785F02C007E75C3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E03E2FEE0785F02E007E75C3 = {
+			fileRef = E03E2FE50785F02D007E75C3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E03E2FEF0785F02E007E75C3 = {
+			fileRef = E03E2FE60785F02D007E75C3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E03E2FF00785F02E007E75C3 = {
+			fileRef = E03E2FE70785F02D007E75C3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E03E2FF10785F02E007E75C3 = {
+			fileRef = E03E2FE80785F02D007E75C3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E03E2FF20785F02E007E75C3 = {
+			fileRef = E03E2FE90785F02D007E75C3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E03E2FF30785F02E007E75C3 = {
+			fileRef = E03E2FEA0785F02D007E75C3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		E03E2FF40785F02E007E75C3 = {
+			fileRef = E03E2FEB0785F02E007E75C3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		E0831EA50785D82100F4888E = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
