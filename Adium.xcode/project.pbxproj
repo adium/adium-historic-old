@@ -5,6 +5,50 @@
 	};
 	objectVersion = 39;
 	objects = {
+		0701A04707D30D80007369FB = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CBGrowlAlertDetailPane.h;
+			path = Plugins/Growl/CBGrowlAlertDetailPane.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0701A04807D30D81007369FB = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CBGrowlAlertDetailPane.m;
+			path = Plugins/Growl/CBGrowlAlertDetailPane.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0701A04907D30D81007369FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = GrowlAlert.nib;
+			path = Plugins/Growl/GrowlAlert.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0701A04A07D30D81007369FB = {
+			fileRef = 0701A04707D30D80007369FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		0701A04B07D30D81007369FB = {
+			fileRef = 0701A04807D30D81007369FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		0701A04C07D30D81007369FB = {
+			fileRef = 0701A04907D30D81007369FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		074DDB5C07CB413F0033AFF7 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -7007,6 +7051,7 @@
 				4B08399407D2350D0034A001,
 				3428328807D2643F004F01C9,
 				3428328A07D2643F004F01C9,
+				0701A04A07D30D81007369FB,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7309,6 +7354,7 @@
 				342838EE07D2D004004F01C9,
 				3428392507D2D013004F01C9,
 				4BB5B78207D2DC4900CFE06F,
+				0701A04C07D30D81007369FB,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7501,6 +7547,7 @@
 				4B08399507D2350D0034A001,
 				3428328907D2643F004F01C9,
 				3428328B07D2643F004F01C9,
+				0701A04B07D30D81007369FB,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19155,6 +19202,9 @@
 		52C623DE06697AFA0006C387 = {
 			children = (
 				6CFB75BC06F5957D00091DC9,
+				0701A04907D30D81007369FB,
+				0701A04707D30D80007369FB,
+				0701A04807D30D81007369FB,
 				52C623E206697B3B0006C387,
 				52C623E306697B3B0006C387,
 				34E9F1F10790BF5400662E8E,
