@@ -16,6 +16,11 @@
 
 //#pragma mark Subclassed from DCJoinChatViewController
 
+- (NSString *)nibName
+{
+	return @"DCGaimOscarJoinChatView";
+}
+
 - (id)init
 {
 	[super init];
@@ -71,11 +76,6 @@
 		NSLog(@"Error: No room specified.");
 	}
 
-}
-
-- (NSString *)nibName
-{
-	return @"DCGaimOscarJoinChatView";
 }
 
 //Entered text is changing
