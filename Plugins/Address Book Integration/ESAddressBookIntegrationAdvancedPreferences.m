@@ -57,7 +57,6 @@
 	[checkBox_syncAutomatic setTitle:AILocalizedString(@"Overwrite Address Book images with contacts' icons",nil)];
 	[checkBox_metaContacts setTitle:AILocalizedString(@"Consolidate contacts listed in the card",nil)];	
 
-	
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
     
 	[checkBox_enableImport setState:[[prefDict objectForKey:KEY_AB_ENABLE_IMPORT] boolValue]];	
