@@ -657,16 +657,16 @@
 	    [messageCell setFrameBackgroundColor:colorIncoming borderColor:colorIncomingBorder dividerColor:colorIncomingDivider];
 	}else{
 	    [messageCell setFrameBackgroundColor:bodyColor
-				     borderColor:[bodyColor adjustHue:0.0 saturation:+0.3 brightness:-0.3]
-				    dividerColor:[bodyColor adjustHue:0.0 saturation:+0.1 brightness:-0.1]];
+								 borderColor:[bodyColor darkenAndAdjustSaturationBy:0.3]
+								dividerColor:[bodyColor darkenAndAdjustSaturationBy:0.1]];
 	}
     }else{
 	if(!bodyColor || [bodyColor equalToRGBColor:[NSColor whiteColor]]){
 	    [messageCell setFrameBackgroundColor:colorOutgoing borderColor:colorOutgoingBorder dividerColor:colorOutgoingDivider];
 	}else{
 	    [messageCell setFrameBackgroundColor:bodyColor
-                              borderColor:[bodyColor adjustHue:0.0 saturation:+0.3 brightness:-0.3]
-                             dividerColor:[bodyColor adjustHue:0.0 saturation:+0.1 brightness:-0.1]];
+								 borderColor:[bodyColor darkenAndAdjustSaturationBy:0.3]
+								dividerColor:[bodyColor darkenAndAdjustSaturationBy:0.1]];
 	}
     }
     
