@@ -99,7 +99,7 @@ static BOOL didInitMSN = NO;
 					  encodeNonASCII:NO
 						  imagesPath:nil
 				   attachmentsAsText:YES
-						  simpleTagsOnly:YES]);
+					  simpleTagsOnly:YES]);
 }
 
 #pragma mark Status

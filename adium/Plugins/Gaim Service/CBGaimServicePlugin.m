@@ -99,8 +99,6 @@ static CBGaimServicePlugin  *servicePluginInstance;
     [YahooService release]; YahooService = nil;
 	[YahooJapanService release]; YahooJapanService = nil;
 	[NovellService release]; NovellService = nil;
-
-	[kitConnection release]; kitConnection = nil;
 }
 
 #pragma mark AccountDict Methods

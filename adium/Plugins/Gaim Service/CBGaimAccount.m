@@ -628,72 +628,8 @@ static id<GaimThread> gaimThread = nil;
 #warning All opened chats assumed valid until a better system for doing this reliably is figured out.
 	[[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
 	
-	NSString	*chatDictKey;
-	
-	//This is potentially problematic
-	AIListObject *listObject = [chat listObject];
-
-	//If a listObject is set for the chat, then it is an IM; otherwise, it is a multiuser chat
-	if (listObject) {
-		chatDictKey = [listObject uniqueObjectID];
-		
-	}else{
-		//If we opened a chat (rather than having it opened for us via accepting an invitation), we need to create
-		//the gaim structures for that chat
-#warning Wrong.
-			const char *name = [[chat name] UTF8String];
-			
-			//Look for an existing gaimChat (for now, it had better exist already!)
-			GaimChat *gaimChat = gaim_blist_find_chat ([self gaimAccount], name);
-			if (!gaimChat){
-				NSLog(@"gotta create a chat");
-				GHashTable *components;
-				GList *tmp;
-				GaimGroup *group;
-				const char *group_name = _("Chats");
-				
-				
-				//The below is not even close to right.
-				components = g_hash_table_new_full(g_str_hash, g_str_equal,
-												   g_free, g_free);
-				
-				/*
-				 g_hash_table_replace(components,
-									  g_strdup(g_object_get_data(tmp->data, "identifier")),
-									  g_strdup_printf("%d",
-													  gtk_spin_button_get_value_as_int(tmp->data)));
-				 */
-				
-				gaimChat = gaim_chat_new(account,
-										 name,
-										 components);
-				
-				if ((group = gaim_find_group(group_name)) == NULL)
-				{
-					group = gaim_group_new(group_name);
-					gaim_blist_add_group(group, NULL);
-				}
-				
-				if (gaimChat != NULL)
-				{
-					gaim_blist_add_chat(gaimChat, group, NULL);
-					gaim_blist_save();
-				}
-				
-				//Associate our chat with the libgaim conversation
-				NSLog(@"associating the gaimconv");
-				GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_CHAT, account, name);
-				NSAssert(conv != nil, @"openChat: GAIM_CONV_CHAT: gaim_conversation_new returned nil");
-				
-				//				[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
-				conv->ui_data = [chat retain];
-			}
-			
-			chatDictKey = [chat name];
-	}	
-	
 	//Track
-	[chatDict setObject:chat forKey:chatDictKey];
+	[chatDict setObject:chat forKey:[chat uniqueChatID]];
 
 	//Inform gaim that we have opened this chat
 	[gaimThread openChat:chat];
@@ -712,13 +648,9 @@ static id<GaimThread> gaimThread = nil;
 	if (listObject){
 		NSAssert([listObject uniqueObjectID] != nil,@"closeChat: [listObject uniqueObjectID] was nil");
 		[self setTypingFlagOfContact:(AIListContact *)listObject to:NO];
-		[chatDict removeObjectForKey:[listObject uniqueObjectID]];
-	}else{
-		NSString	*name = [chat name];
-		if (name){
-			[chatDict removeObjectForKey:[chat name]];
-		}
-	}
+	}		
+	
+	[chatDict removeObjectForKey:[chat uniqueChatID]];
 	
     return YES;
 }
@@ -780,7 +712,6 @@ static id<GaimThread> gaimThread = nil;
 			}
 			
 			sent = YES;			
-			//				[chatDict setObject:chat forKey:[listObject uniqueObjectID]];                
 
 		}else if([[object type] compare:CONTENT_TYPING_TYPE] == 0){
 			AIContentTyping *contentTyping = (AIContentTyping*)object;
@@ -1218,17 +1149,6 @@ static id<GaimThread> gaimThread = nil;
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
     
-/*    //Clear out the GaimConv pointers in the chat statusDictionaries, as they no longer have meaning
-    AIChat *chat;
-    enumerator = [chatDict objectEnumerator];
-    while (chat = [enumerator nextObject]) {
-		[self closeChat:chat];
-		[[chat statusDictionary] removeObjectForKey:@"GaimConv"];
-    }       
-    
-    //Remove our chat dictionary
-//    [chatDict release]; chatDict = [[NSMutableDictionary alloc] init];
-*/
     //If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
 	//connectionIsSuicidal == TRUE when Gaim thinks we shouldn't attempt a reconnect.
     if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
@@ -1671,6 +1591,7 @@ static id<GaimThread> gaimThread = nil;
 //
 - (void)_setInstantMessagesWithContact:(AIListContact *)contact enabled:(BOOL)enable
 {
+	//The contact's uniqueObjectID and the chat's uniqueChatID will be the same in a one-on-one conversation
 	AIChat *chat = [chatDict objectForKey:[contact uniqueObjectID]];
 	if(chat){
 		//Enable/disable the chat

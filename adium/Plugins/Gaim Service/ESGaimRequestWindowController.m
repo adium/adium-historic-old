@@ -42,7 +42,7 @@
 	NSRect  oldFrame, newFrame;
 	float   changeInTextHeight = 0;
 	
-	//Ensure the window is loaded;
+	//Ensure the window is loaded
 	[self window];
 	
 	//Buttons
