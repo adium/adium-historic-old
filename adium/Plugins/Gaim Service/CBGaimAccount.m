@@ -583,19 +583,19 @@
 }
 
 #pragma mark GaimConversation User Lists
-- (void)accountConvAddedUser:(const char *)user inConversation:(GaimConverastion *)conv
+- (void)accountConvAddedUser:(const char *)user inConversation:(GaimConversation *)conv
 {
 	NSLog(@"added user %s in conversation %s (%@)",user,conv->name,conv->ui_data);
 }
-- (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConverastion *)conv
+- (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConversation *)conv
 {
 	NSLog(@"added a whole list!");
 }
-- (void)accountConvRemovedUser:(const char *)user inConversation:(GaimConverastion *)conv
+- (void)accountConvRemovedUser:(const char *)user inConversation:(GaimConversation *)conv
 {
 	NSLog(@"removed user %s in conversation %s (%@)",user,conv->name,conv->ui_data);	
 }
-- (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConverastion *)conv
+- (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConversation *)conv
 {
 	NSLog(@"removed a whole list!");
 }

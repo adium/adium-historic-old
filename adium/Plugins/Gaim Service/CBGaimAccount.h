@@ -36,10 +36,10 @@
 - (void)accountConvUpdated:(GaimConversation*)conv type:(GaimConvUpdateType)type;
 - (void)accountConvReceivedIM:(const char*)message inConversation:(GaimConversation*)conv withFlags:(GaimMessageFlags)flags atTime:(time_t)mtime;
 - (void)accountConvReceivedChatMessage:(const char*)message inConversation:(GaimConversation*)conv from:(const char *)source withFlags:(GaimMessageFlags)flags atTime:(time_t)mtime;
-- (void)accountConvAddedUser:(const char *)user inConversation:(GaimConverastion *)conv;
-- (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConverastion *)conv;
-- (void)accountConvRemovedUser:(const char *)user inConversation:(GaimConverastion *)conv;
-- (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConverastion *)conv;
+- (void)accountConvAddedUser:(const char *)user inConversation:(GaimConversation *)conv;
+- (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConversation *)conv;
+- (void)accountConvRemovedUser:(const char *)user inConversation:(GaimConversation *)conv;
+- (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConversation *)conv;
 
 //accountXfer methods
 - (void)accountXferRequestFileReceiveWithXfer:(GaimXfer *)xfer;
