@@ -39,13 +39,13 @@
     <key>Idle Label Color</key>
     <string>234,234,234</string>
     <key>Signed Off Label Color</key>
-    <string>199,54,42</string>
+    <string>198,55,43</string>
     <key>Signed On Label Color</key>
-    <string>91,187,99</string>
+    <string>43,198,56</string>
     <key>Typing Label Color</key>
-    <string>255,145,71</string>
+    <string>43,157,198</string>
     <key>Unviewed Content Label Color</key>
-    <string>0,144,197</string>
+    <string>43,69,198</string>
     <key>Online Label Color</key>
     <string>0,0,255</string>
     <key>Idle And Away Label Color</key>

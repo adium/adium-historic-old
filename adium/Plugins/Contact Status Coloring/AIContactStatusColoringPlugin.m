@@ -19,17 +19,18 @@
 #import "AIContactStatusColoringPreferences.h"
 
 @interface AIContactStatusColoringPlugin (PRIVATE)
-- (void)applyColorToObject:(AIListObject *)inObject;
 - (void)addToFlashArray:(AIListObject *)inObject;
 - (void)removeFromFlashArray:(AIListObject *)inObject;
 - (void)preferencesChanged:(NSNotification *)notification;
+- (void)_applyColorToObject:(AIListObject *)inObject;
 @end
 
 @implementation AIContactStatusColoringPlugin
 
 - (void)installPlugin
 {
-    //init (We cache all the colors to make things faster)
+    //init
+    flashingListObjectArray = [[NSMutableArray alloc] init];
     awayColor = nil;
     idleColor = nil;
     signedOffColor = nil;
@@ -38,7 +39,6 @@
     unviewedContentColor = nil;
     onlineColor = nil;
     idleAndAwayColor = nil;
-
     awayInvertedColor = nil;
     idleInvertedColor = nil;
     signedOffInvertedColor = nil;
@@ -47,7 +47,6 @@
     unviewedContentInvertedColor = nil;
     onlineInvertedColor = nil;
     idleAndAwayInvertedColor = nil;
-
     awayLabelColor = nil;
     idleLabelColor = nil;
     signedOffLabelColor = nil;
@@ -59,41 +58,36 @@
 
     alpha = 100.0;
 
-    //Register our default preferences
+    //Setup our preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_STATUS_COLORING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
-    [self preferencesChanged:nil];
-
-    //Our preference view
     preferences = [[AIContactStatusColoringPreferences contactStatusColoringPreferencesWithOwner:owner] retain];
+
+    //Observe list object changes
     [[owner contactController] registerListObjectObserver:self];
 
-    //Observe
+    //Observe preference changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
 
-    flashingListObjectArray = [[NSMutableArray alloc] init];
 }
 
-- (void)uninstallPlugin
-{
-    //[[owner contactController] unregisterHandleObserver:self];
-}
-
+//
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
 {
     NSArray		*modifiedAttributes = nil;
 
-    if(	inModifiedKeys == nil || 
+    if(	inModifiedKeys == nil ||
+        [inModifiedKeys containsObject:@"Typing"] ||
+        [inModifiedKeys containsObject:@"UnviewedContent"] || 
         [inModifiedKeys containsObject:@"Away"] ||
         [inModifiedKeys containsObject:@"Idle"] ||
         [inModifiedKeys containsObject:@"Online"] ||
         [inModifiedKeys containsObject:@"Signed On"] || 
-        [inModifiedKeys containsObject:@"Signed Off"] || 
-        [inModifiedKeys containsObject:@"Typing"] || 
-        [inModifiedKeys containsObject:@"UnviewedContent"]){
+        [inModifiedKeys containsObject:@"Signed Off"]){
 
         //Update the handle's text color
-        [self applyColorToObject:inObject];
-        modifiedAttributes = [NSArray arrayWithObjects:@"Text Color", @"Inverted Text Color", @"Label Color", @"Tab Color", nil];
+        [self _applyColorToObject:inObject];
+        modifiedAttributes = [NSArray arrayWithObjects:@"Text Color", @"Inverted Text Color", @"Label Color", nil];
     }
 
     //Update our flash array
@@ -110,71 +104,79 @@
     return(modifiedAttributes);
 }
 
-//Applies the correct text color to the passed contact
-- (void)applyColorToObject:(AIListObject *)inObject
-{
-    AIMutableOwnerArray		*textColorArray = [inObject displayArrayForKey:@"Text Color"];
-    AIMutableOwnerArray		*invertedColorArray = [inObject displayArrayForKey:@"Inverted Text Color"];
-    AIMutableOwnerArray		*statusLabelColorArray = [inObject displayArrayForKey:@"Label Color"];
-    AIMutableOwnerArray		*tabBackColorArray = [inObject displayArrayForKey:@"Tab Color"];
-    int				away, online, unviewedContent, signedOn, signedOff, typing;
-    double			idle;
-    NSColor			*color = nil, *invertedColor = nil, *tabBackColor = nil, *labelColor = nil;
 
-    //Get all the values
-    away = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
-    idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
-    online = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
-    signedOn = [[inObject statusArrayForKey:@"Signed On"] greatestIntegerValue];
-    signedOff = [[inObject statusArrayForKey:@"Signed Off"] greatestIntegerValue];
-    typing = [[inObject statusArrayForKey:@"Typing"] greatestIntegerValue];
+//Applies the correct color to the passed object
+- (void)_applyColorToObject:(AIListObject *)inObject
+{
+    NSColor			*color = nil, *invertedColor = nil, *labelColor = nil;
+    int				unviewedContent, away;
+    double			idle;
+
+    //Prefetch the value for unviewed content, we need it multiple times below
     unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
 
-    //Determine the correct color
-    if(unviewedContentEnabled && unviewedContent && !([[owner interfaceController] flashState] % 2)){
-	color = unviewedContentColor;
-	invertedColor = unviewedContentInvertedColor;
-        labelColor = unviewedContentLabelColor;
-    }else if(signedOffEnabled && (signedOff || !online) && (!unviewedContentEnabled || !unviewedContent)){
-	color = signedOffColor;
-	invertedColor = signedOffInvertedColor;
-        labelColor = signedOffLabelColor;
-    }else if(signedOnEnabled && signedOn && (!unviewedContentEnabled || !unviewedContent)){
-	color = signedOnColor;
-	invertedColor = signedOnInvertedColor;
-        labelColor = signedOnLabelColor;
-    }else if(typingEnabled && typing && (!unviewedContentEnabled || !unviewedContent)){
-	color = typingColor;
-	invertedColor = typingInvertedColor;
-        labelColor = typingLabelColor;
-    }else if(idleAndAwayEnabled && away && idle != 0){
-        color = idleAndAwayColor;
-        invertedColor = idleAndAwayInvertedColor;
-        labelColor = idleAndAwayLabelColor;
-    }else if(awayEnabled && away){
-        color = awayColor;
-        invertedColor = awayInvertedColor;
-        labelColor = awayLabelColor;
-    }else if(idleEnabled && idle != 0){
-	color = idleColor;
-	invertedColor = idleInvertedColor;
-        labelColor = idleLabelColor;
-    }else if(onlineEnabled){
+    //Unviewed content
+    if(!color && (unviewedContentEnabled && unviewedContent)){
+        if(/*!unviewedFlashEnabled || */!([[owner interfaceController] flashState] % 2)){
+            color = unviewedContentColor;
+            invertedColor = unviewedContentInvertedColor;
+            labelColor = unviewedContentLabelColor;
+        }
+    }
+
+    //Signed off, signed on, or typing (These do not show if there is unviewed content)
+    if(!color && (!unviewedContentEnabled || !unviewedContent)){
+        if(signedOffEnabled && ([[inObject statusArrayForKey:@"Signed Off"] greatestIntegerValue] ||
+                                ![[inObject statusArrayForKey:@"Online"] greatestIntegerValue])){
+            color = signedOffColor;
+            invertedColor = signedOffInvertedColor;
+            labelColor = signedOffLabelColor;
+            
+        }else if(signedOnEnabled && [[inObject statusArrayForKey:@"Signed On"] greatestIntegerValue]){
+            color = signedOnColor;
+            invertedColor = signedOnInvertedColor;
+            labelColor = signedOnLabelColor;
+            
+        }else if(typingEnabled && [[inObject statusArrayForKey:@"Typing"] greatestIntegerValue]){
+            color = typingColor;
+            invertedColor = typingInvertedColor;
+            labelColor = typingLabelColor;
+            
+        }
+    }
+
+    if(!color){
+        //Prefetch these values, we need them multiple times below
+        away = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
+        idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
+
+        //Idle And Away, Away, or Idle
+        if(idleAndAwayEnabled && away && idle != 0){
+            color = idleAndAwayColor;
+            invertedColor = idleAndAwayInvertedColor;
+            labelColor = idleAndAwayLabelColor;
+        }else if(awayEnabled && away){
+            color = awayColor;
+            invertedColor = awayInvertedColor;
+            labelColor = awayLabelColor;
+        }else if(idleEnabled && idle != 0){
+            color = idleColor;
+            invertedColor = idleInvertedColor;
+            labelColor = idleLabelColor;
+        }
+    }
+
+    //Online
+    if(!color && onlineEnabled){
         color = onlineColor;
         invertedColor = onlineInvertedColor;
         labelColor = onlineLabelColor;
     }
-    
-    //Tab Color
-    if(unviewedContent && !([[owner interfaceController] flashState] % 2)){
-        tabBackColor = [NSColor colorWithCalibratedWhite:0.0 alpha:0.15];
-    }
-    
-    //Add the new color
-    [textColorArray setObject:color withOwner:self];
-    [invertedColorArray setObject:invertedColor withOwner:self];
-    [statusLabelColorArray setObject:labelColor withOwner:self];
-    [tabBackColorArray setObject:tabBackColor withOwner:self];
+
+    //Apply the color
+    [[inObject displayArrayForKey:@"Text Color"] setObject:color withOwner:self];
+    [[inObject displayArrayForKey:@"Inverted Text Color"] setObject:invertedColor withOwner:self];
+    [[inObject displayArrayForKey:@"Label Color"] setObject:labelColor withOwner:self];
 }
 
 //Flash all handles with unviewed content
@@ -185,10 +187,10 @@
 
     enumerator = [flashingListObjectArray objectEnumerator];
     while((object = [enumerator nextObject])){
-        [self applyColorToObject:object];
+        [self _applyColorToObject:object];
         
         //Force a redraw
-        [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:object userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObjects:@"Text Color", @"Label Color", @"Inverted Text Color", @"Tab Color", nil] forKey:@"Keys"]];
+        [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:object userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObjects:@"Text Color", @"Label Color", @"Inverted Text Color", nil] forKey:@"Keys"]];
     }
 }
 
@@ -217,21 +219,52 @@
     }
 }
 
+//
 - (void)preferencesChanged:(NSNotification *)notification
 {
     //Optimize this...
     if(notification == nil ||  [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0){
-        	NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
-    alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
+        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+
+        alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
         if (!alpha) alpha = 100.0; //we don't like invisible stuff.
     }
     
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_STATUS_COLORING] == 0){
 	NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+        NSEnumerator	*enumerator;
+        AIListObject	*object;
 
 	//Release the old values..
+        [signedOffColor release];
+        [signedOnColor release];
+        [awayColor release];
+        [idleColor release];
+        [typingColor release];
+        [unviewedContentColor release];
+        [onlineColor release];
+        [idleAndAwayColor release];
+
+        [signedOffInvertedColor release];
+        [signedOnInvertedColor release];
+        [awayInvertedColor release];
+        [idleInvertedColor release];
+        [typingInvertedColor release];
+        [unviewedContentInvertedColor release];
+        [onlineInvertedColor release];
+        [idleAndAwayInvertedColor release];
+
+        [awayLabelColor release];
+        [idleLabelColor release];
+        [signedOffLabelColor release];
+        [signedOnLabelColor release];
+        [typingLabelColor release];
+        [unviewedContentLabelColor release];
+        [onlineLabelColor release];
+        [idleAndAwayLabelColor release];
+        
 	//Cache the preference values
-	signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
+        signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
         signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
         awayColor = [[[prefDict objectForKey:KEY_AWAY_COLOR] representedColor] retain];
         idleColor = [[[prefDict objectForKey:KEY_IDLE_COLOR] representedColor] retain];
@@ -239,12 +272,12 @@
         unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
         onlineColor = [[[prefDict objectForKey:KEY_ONLINE_COLOR] representedColor] retain];
         idleAndAwayColor = [[[prefDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor] retain];
- 
-	signedOffInvertedColor = [[signedOffColor colorWithInvertedLuminance] retain];
-	signedOnInvertedColor = [[signedOnColor colorWithInvertedLuminance] retain];
-	awayInvertedColor = [[awayColor colorWithInvertedLuminance] retain];
-	idleInvertedColor = [[idleColor colorWithInvertedLuminance] retain];
-	typingInvertedColor = [[typingColor colorWithInvertedLuminance] retain];
+
+        signedOffInvertedColor = [[signedOffColor colorWithInvertedLuminance] retain];
+        signedOnInvertedColor = [[signedOnColor colorWithInvertedLuminance] retain];
+        awayInvertedColor = [[awayColor colorWithInvertedLuminance] retain];
+        idleInvertedColor = [[idleColor colorWithInvertedLuminance] retain];
+        typingInvertedColor = [[typingColor colorWithInvertedLuminance] retain];
         unviewedContentInvertedColor = [[unviewedContentColor colorWithInvertedLuminance] retain];
         onlineInvertedColor = [[onlineColor colorWithInvertedLuminance] retain];
         idleAndAwayInvertedColor = [[idleAndAwayColor colorWithInvertedLuminance] retain];
@@ -267,13 +300,9 @@
         unviewedContentEnabled = [[prefDict objectForKey:KEY_UNVIEWED_ENABLED] boolValue];
         onlineEnabled = [[prefDict objectForKey:KEY_ONLINE_ENABLED] boolValue];
         idleAndAwayEnabled = [[prefDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue];
-            
-        //        
-        NSEnumerator		*enumerator;
-	AIListObject		*object;
 
+        //Force each contact to update (Messy)
 	enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
-
 	while((object = [enumerator nextObject])){
             [[owner contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil delayed:YES silent:YES] delayed:YES];
 	}
