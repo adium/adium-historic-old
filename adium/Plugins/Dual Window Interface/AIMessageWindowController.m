@@ -24,9 +24,6 @@
 #define	MESSAGE_WINDOW_NIB		@"MessageWindow"		//Filename of the message window nib
 #define KEY_DUAL_MESSAGE_WINDOW_FRAME	@"Dual Message Window Frame"
 
-
-#define TABS_HEIGHT_CHANGE	12
-
 //The tabbed window that contains messages
 @interface NSWindow (UNDOCUMENTED) //Handy undocumented window method
 - (void)setBottomCornerRounded:(BOOL)rounded;
@@ -232,6 +229,9 @@
 
 - (void)customTabViewDidChangeNumberOfTabViewItems:(AICustomTabsView *)TabView
 {
+
+#define TABS_HEIGHT_CHANGE	18
+    
     NSSize newSize = [TabView frame].size;
     
     if (([tabView_messages numberOfTabViewItems] == 1) && tabIsShowing) {
@@ -243,9 +243,8 @@
 	newFrame.origin.y -= TABS_HEIGHT_CHANGE;
 	[tabView_messages setFrame:newFrame];
 
-	[[self window] setTitle:[NSString stringWithFormat:@"Adium : %@",
-	    [[[[[[self messageContainerArray] objectAtIndex:0] messageViewController] chat] listObject] displayName]]];
-	
+	[[self window] setTitle:[NSString stringWithFormat:@"Adium : %@", [[[[[[self messageContainerArray] objectAtIndex:0] messageViewController] chat] listObject] displayName]]];
+
 	[[self window] display];
 
 	tabIsShowing = NO;
@@ -259,6 +258,7 @@
 	[tabView_messages setFrame:newFrame];
 
 	[[self window] setTitle:@"Adium : Messages"];
+		
 	[[self window] display];
 
 	tabIsShowing = YES;
