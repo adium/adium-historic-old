@@ -14,10 +14,9 @@
  * where you initialize the gaim core and gaim will be its events
  * from Cocoa.
  **/
-@interface SLGaimCocoaAdapter {
+@interface SLGaimCocoaAdapter : NSObject {
 }
 
-- (void)callTimerFunc:(id)obj;
-- (void)callIOFunc:(id)obj;
+- (id)init;
 
 @end
