@@ -19,6 +19,7 @@
 #import "AITooltipUtilities.h"
 #import "AILinkTrackingController.h"
 #import "AITextAttachmentExtension.h"
+#import "AIAttributedStringAdditions.h"
 
 #define FRACTIONAL_PADDING 1.0
 #define	EDITOR_X_INSET	-6
@@ -290,16 +291,18 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     BOOL	handled = NO;
     unsigned int	glyphIndex;
     unsigned int	charIndex;
+    float			glyphFraction;
     
     //Find clicked char index
     NSPoint mouseLoc = [tableView convertPoint:[theEvent locationInWindow] fromView:nil];
     mouseLoc.x += offset.width;
     mouseLoc.y += offset.height;
     
-    glyphIndex = [layoutManager glyphIndexForPoint:mouseLoc inTextContainer:textContainer fractionOfDistanceThroughGlyph:nil];
+    glyphIndex = [layoutManager glyphIndexForPoint:mouseLoc inTextContainer:textContainer fractionOfDistanceThroughGlyph:&glyphFraction];
     charIndex = [layoutManager characterIndexForGlyphAtIndex:glyphIndex];
     
-    if(charIndex >= 0 && charIndex < [textStorage length]){
+    if(charIndex >= 0 && charIndex < [textStorage length]  && (glyphFraction != 1.0/* && glyphFraction != 0.0*/)){	// Make sure click actually landed on
+                                        // the character and not past it
         // Check for emoticons to turn into text
         if ([[textStorage string] characterAtIndex:charIndex] == NSAttachmentCharacter){
             NSString	*repStr = [[textStorage attribute:NSAttachmentAttributeName atIndex:charIndex effectiveRange:nil] string];
@@ -308,12 +311,26 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
                 NSMutableAttributedString	*repAttStr = [[NSMutableAttributedString alloc] initWithString:repStr];
                 //NSAttributedString			*origStr = [[textStorage attributedSubstringFromRange:NSMakeRange(charIndex,1)] retain];
                 AITextAttachmentExtension		*origSmiley = [textStorage attribute:NSAttachmentAttributeName atIndex:charIndex effectiveRange:nil];
+                NSMutableDictionary				*attributes = [[textStorage attributesAtIndex:charIndex effectiveRange:nil] mutableCopy];
                 
                 //NSLog (@"Saving image string, whose text is %@", [origStr string]);
                 
+                unsigned int	tempIndex = charIndex;
+                NSColor			*tempColor = nil;
                 
+                while ((tempColor = [textStorage attribute:NSForegroundColorAttributeName atIndex: --tempIndex effectiveRange:nil]) == nil && tempIndex != 0)	{}
+                if (tempColor)
+                    [attributes		setObject:tempColor forKey:NSForegroundColorAttributeName];
+                [attributes		setObject:origSmiley forKey:@"IKHiddenAttachment"];
+                // Add unique ID attribute so that ranges remain distinct
+                [attributes		setObject:[NSNumber numberWithInt:charIndex * mouseLoc.x] forKey:@"IKHiddenAttachmentUniq"];
+                [attributes		removeObjectForKey:NSAttachmentAttributeName];
+                
+                [repAttStr addAttributes:attributes range:NSMakeRange(0,[repAttStr length])];
                 // Add attribute holding original string with attachment
-                [repAttStr addAttribute:@"IKHiddenAttachment" value:origSmiley range:NSMakeRange(0,[repAttStr length])];
+                //[repAttStr addAttribute:@"IKHiddenAttachment" value:origSmiley range:NSMakeRange(0,[repAttStr length])];
+                // Add unique ID attribute so that ranges remain distinct
+                //[repAttStr addAttribute:@"IKHiddenAttachmentUniq" value:[NSNumber numberWithInt:charIndex * mouseLoc.x] range:NSMakeRange(0,[repAttStr length])];
                 
                 // Insert string
                 [textStorage replaceCharactersInRange:NSMakeRange(charIndex,1) withAttributedString:repAttStr];
@@ -323,7 +340,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
             
         // Check for smily text to turn back into emoticons
         } else if ([textStorage attribute:@"IKHiddenAttachment" atIndex:charIndex effectiveRange:nil]) {
-            NSLog (@"MouseDown: Found attachment text to replace w/ attachment");
+            //NSLog (@"MouseDown: Found attachment text to replace w/ attachment");
             // Find what to replace with what
             NSRange		replaceRange;
             
@@ -345,12 +362,15 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     
     if (handled){
     	glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
-        [tableView setNeedsDisplay:TRUE];
+        //[tableView setNeedsDisplay:TRUE];
+        [tableView resizeCellHeight:self];
     }
     
-    return(handled);
+    return(FALSE);	// Returning TRUE gets in the way of selections, making
+                    // copying difficult
 }
 
-
+// locationForGlyphAtIndex... lineFragmentUsedRectForGlyphAtIndex?...boundingRectForGlyphRange?
+//invalidateDisplayRangeForGlyphRange
 @end
 
