@@ -5,30 +5,22 @@
             CLASS = AIAccountViewController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                account = id; 
+                "checkBox_checkMail" = NSButton; 
+                "textField_accountUID" = NSTextField; 
+                "textField_accountUIDLabel" = NSTextField; 
+                "textField_alias" = NSTextField; 
+                "textField_connectHost" = NSTextField; 
+                "textField_connectPort" = NSTextField; 
                 "textField_password" = NSTextField; 
-                "view_accountView" = NSView; 
                 "view_auxiliaryTabView" = NSTabView; 
+                "view_options" = NSView; 
+                "view_profile" = NSView; 
+                "view_setup" = NSView; 
             }; 
             SUPERCLASS = AIObject; 
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            ACTIONS = {changedConnectionPreference = id; }; 
-            CLASS = ESGaimAccountViewController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                "menu_proxy" = NSPopUpButton; 
-                "textField_alias" = NSTextField; 
-                "textField_hostName" = NSTextField; 
-                "textField_portNumber" = NSTextField; 
-                "textField_proxyHostName" = NSTextField; 
-                "textField_proxyPassword" = NSSecureTextField; 
-                "textField_proxyPortNumber" = NSTextField; 
-                "textField_proxyUserName" = NSTextField; 
-            }; 
-            SUPERCLASS = AIAccountViewController; 
-        }, 
+        {CLASS = ESDelayedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
         {
             CLASS = ESGaimJabberAccountViewController; 
             LANGUAGE = ObjC; 
@@ -39,7 +31,7 @@
                 "textField_connectServer" = NSTextField; 
                 "textField_resource" = NSTextField; 
             }; 
-            SUPERCLASS = ESGaimAccountViewController; 
+            SUPERCLASS = AIAccountViewController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
