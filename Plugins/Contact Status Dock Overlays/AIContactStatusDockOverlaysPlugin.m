@@ -128,11 +128,12 @@
 	BOOL isMessageEvent = [[adium contactAlertsController] isMessageEvent:eventID];
 	
 	if(isMessageEvent){
-		AIChat	*inChat = [userInfo objectForKey:@"AIChat"];
+		AIChat	*chat;
 
-		if((inChat != [[adium interfaceController] activeChat]) &&
-		   (![overlayObjectsArray containsObjectIdenticalTo:inChat])){
-			[overlayObjectsArray addObject:inChat];
+		if((chat = [userInfo objectForKey:@"AIChat"]) &&
+		   (chat != [[adium interfaceController] activeChat]) &&
+		   (![overlayObjectsArray containsObjectIdenticalTo:chat])){
+			[overlayObjectsArray addObject:chat];
 			
 			//Wait until the next run loop so this event is done processing (and our unviewed content count is right)
 			[self performSelector:@selector(_setOverlay)
@@ -142,7 +143,7 @@
 			/* The chat observer method is responsible for removing this overlay later */
 		}
 
-	}else{
+	}else if(listObject){
 		NSTimer	*removeTimer;
 		
 		//Clear any current timer for this object o ahve its overlay removed
