@@ -92,7 +92,10 @@
 				(currentUID && (![currentUID isEqualToString:newUID] || ![currentService isEqualToString:newService]))){
 				
 				containsOnlyOneUniqueContact = NO;
-
+				
+				//We're no longer positive of our preferredContact, so clear the cache
+				_preferredContact = nil;
+			
 				if ([containingObject isKindOfClass:[AIMetaContact class]]){
 					[(AIMetaContact *)containingObject containedMetaContact:self
 									  didChangeContainsOnlyOneUniqueContact:containsOnlyOneUniqueContact];
@@ -164,6 +167,9 @@
 		}
 		
 		_preferredContact = preferredContact;
+
+		//All sorts of things may have changed when we switch preferred contacts, so request a resort.
+//		[[adium contactController] sortListObject:self];
 	}
 	
 	return _preferredContact;
@@ -201,7 +207,7 @@
 	//It now contains only one contact, but currently think we are not unique
 	//
 	//then we need to redetermine our uniqueness.
-	NSLog(@"%i: %@ changed to %i",containsOnlyOneUniqueContact,containedMetaContact,inContainsOnlyOneUniqueContact);
+//	NSLog(@"%i: %@ changed to %i",containsOnlyOneUniqueContact,containedMetaContact,inContainsOnlyOneUniqueContact);
 	if (inContainsOnlyOneUniqueContact != containsOnlyOneUniqueContact){
 		[self _determineIfWeShouldAppearToContainOnlyOneContact];
 	}
@@ -235,7 +241,7 @@
 			thisContactServiceID = [thisContact displayServiceID];
 			
 			if ([thisContact online]){
-				NSLog(@"%@ is online (%@)",thisContact,thisContactFormattedUID);
+//				NSLog(@"%@ is online (%@)",thisContact,thisContactFormattedUID);
 				//If this contact has no formattedUID, it isn't unique, so break
 				if (!thisContactFormattedUID)
 					break;
@@ -244,17 +250,17 @@
 				if (!formattedUIDToMatch){
 					formattedUIDToMatch = thisContactFormattedUID;
 					serviceIDToMatch = thisContactServiceID;
-					NSLog(@"ONLINE: Going to match %@",formattedUIDToMatch);
+//					NSLog(@"ONLINE: Going to match %@",formattedUIDToMatch);
 				}else{
 					//Otherwise, compare this contact to our target
 					if ((![thisContactFormattedUID isEqualToString:formattedUIDToMatch]) ||
 						(![thisContactServiceID isEqualToString:serviceIDToMatch])){
-						NSLog(@"%@ doesn't match %@ so breaking",thisContactFormattedUID,thisContactServiceID);
+//						NSLog(@"%@ doesn't match %@ so breaking",thisContactFormattedUID,thisContactServiceID);
 						break;
 					}
 				}
 			}else{
-				NSLog(@"%@ is offline",thisContact);
+//				NSLog(@"%@ is offline",thisContact);
 				//If we're not searching for a match, we haven't found an online contact yet
 				if (!formattedUIDToMatch){
 					//If we don't have a set of data for an offline contact to match yet,
@@ -263,7 +269,7 @@
 					if (!offline_formattedUIDToMatch){
 						offline_formattedUIDToMatch = thisContactFormattedUID;
 						offline_serviceIDToMatch = thisContactServiceID;
-						NSLog(@"OFFLINE: Going to match %@",offline_formattedUIDToMatch);
+//						NSLog(@"OFFLINE: Going to match %@",offline_formattedUIDToMatch);
 
 					}else{
 						//Otherwise, compare this contact to our target
@@ -285,11 +291,13 @@
 		 If we made it all the way through the loop, and we were looking at online contacts
 		 (and hence formattedUIDToMatch != nil), all our contacts have the same formattedUID
 		 */
-		NSLog(@"i: %i, count: %i, formattedUIDToMatch: %@, was %i",i,count,formattedUIDToMatch,containsOnlyOneUniqueContact);
+//		NSLog(@"i: %i, count: %i, formattedUIDToMatch: %@, was %i",i,count,formattedUIDToMatch,containsOnlyOneUniqueContact);
 		if ((i == count) && formattedUIDToMatch){
 			containsOnlyOneUniqueContact = YES;
-			NSLog(@"Now 1");
+		}else{
+			containsOnlyOneUniqueContact = NO;	
 		}
+//		NSLog(@"Now %i",containsOnlyOneUniqueContact);
 		
 	}else{
 		
@@ -300,6 +308,9 @@
 			containsOnlyOneUniqueContact = YES;
 		}
 	}	
+	
+	//Clear our preferred contact so the next call to it will update the preferred contact
+	_preferredContact = nil;
 }
 
 
@@ -308,25 +319,25 @@
 //Update our status cache as object we contain change status
 - (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
 {
-	//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
-	if([self _cacheStatusValue:value forObject:inObject key:key notify:notify]){
-		[super object:self didSetStatusObject:value forKey:key notify:notify];
-	}
-	
 	//Clear our cached _preferredContact if a contained object's online, away, or idle status changed
 	{
 		//If the online status of a contained object changed, we should also check if our one-contact-only
 		//in terms of online contacts has changed
 		if ([key isEqualToString:@"Online"]){
-			_preferredContact = nil;
+//			NSLog(@"%@ is %@",[inObject formattedUID],([value boolValue] ? @"** Online" : @"== Offline"));
 			[self _determineIfWeShouldAppearToContainOnlyOneContact];
 		}
 		
 		if([key isEqualToString:@"Away"] ||
 		   [key isEqualToString:@"IdleSince"]){
-			
+//			NSLog(@"%@: Clear preferred contact",self);
 			_preferredContact = nil;
 		}
+	}
+//	NSLog(@"%@: %@ set %@ for %@ (%i)",self,inObject,value,key,notify);
+	//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
+	if([self _cacheStatusValue:value forObject:inObject key:key notify:notify]){
+		[super object:self didSetStatusObject:value forKey:key notify:notify];
 	}
 }
 
@@ -487,18 +498,6 @@
 	newObjectValue = [array objectValue];
 
 	if (newObjectValue != previousObjectValue){
-		
-		//If notify, send out the notification now; otherwise, add it to changedStatusKeys for later notification
-		if (notify){
-			[[adium contactController] listObjectStatusChanged:self
-											modifiedStatusKeys:[NSArray arrayWithObject:key]
-														silent:NO];
-		}else{
-			//AIListObject will handle sending out these notifications later for us.
-			if(!changedStatusKeys) changedStatusKeys = [[NSMutableArray alloc] init];
-			[changedStatusKeys addObject:key];
-		}
-		
 		changed = YES;
 	}
 	
@@ -588,7 +587,8 @@
 
 - (NSString *)longDisplayName
 {
-	return [[super longDisplayName] stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]];
+    NSString	*outName = [[self displayArrayForKey:@"Long Display Name"] objectValue];
+    return(outName ? [outName stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]] : [self displayName]);
 }
 
 @end
