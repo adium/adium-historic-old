@@ -12,6 +12,7 @@
 
 - (void)configureForAccount:(AIAccount *)inAccount
 {
+	[super configureForAccount:inAccount];
 }
 
 - (NSString *)nibName

@@ -7,6 +7,7 @@
 #import "ESYahooService.h"
 #import "ESGaimYahooAccount.h"
 #import "ESGaimYahooAccountViewController.h"
+#import "DCGaimYahooJoinChatViewController.h"
 
 @implementation ESYahooService
 
@@ -55,7 +56,7 @@
 
 - (DCJoinChatViewController *)joinChatView
 {
-	return([DCJoinChatViewController joinChatView]);
+	return([DCGaimYahooJoinChatViewController joinChatView]);
 }
 
 
