@@ -30,6 +30,11 @@
 - Need to check whether ~/L/AS/Adium 2.0/Contact List/ exists before trying to save
 	contact list themes there.
 - Regular Window: Opacity doesn't work (window is setOpaque:YES)
+- Vertical resizing really screws up once the scrollbar becomes visible.  The list will
+    not correctly resize when opening/closing groups, and will jump randomly up and down
+    on the screen.
+- The background of either the outlineView, scrollView, or window is not going
+    transparent in 10.2.
 
 [MetaContacts]
 - Unchecking the address book consolidate contacts option has no effect
@@ -49,8 +54,6 @@
 - Initial messages from invisible contacts sometimes don't open new message windows
 - Autoaway after Idle is broken
 
-[Will not do]
-- Create default layouts & styles for the contact list preferences
 
 //------------------------------------------------------------------------------------
 // Bugs - Adium
