@@ -15,14 +15,17 @@
 	BOOL		statusIconsVisible;
 	BOOL		serviceIconsVisible;
 	int			userIconSize;
-	
+	int			statusFontHeight;
+
 	BOOL		userIconPosition;
 	BOOL		statusIconPosition;
 	BOOL		serviceIconPosition;
 	
 	float		backgroundOpacity;
 
-	NSFont		*statusFont;
+	NSFont			*statusFont;
+
+	NSDictionary	*_statusAttributes;
 }
 
 - (void)drawContentWithFrame:(NSRect)rect;
