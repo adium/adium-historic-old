@@ -11,8 +11,16 @@
 
 @interface NSObject (RunLoopMessenger)
 - (void)mainPerformSelector:(SEL)aSelector;
+- (void)mainPerformSelector:(SEL)aSelector waitUntilDone:(BOOL)flag;
+
 - (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1;
+- (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 waitUntilDone:(BOOL)flag;
+
 - (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2;
+- (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 waitUntilDone:(BOOL)flag;
+
 - (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 withObject:(id)argument3;
+- (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 withObject:(id)argument3 waitUntilDone:(BOOL)flag;
+
 - (void)handleInvocation:(NSInvocation *)anInvocation;
 @end
