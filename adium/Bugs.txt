@@ -7,7 +7,7 @@
 - Status messages have '{}' appended to them in Jaguar.
 - [MSN] Crash moving contacts between groups
 - [ICQ] Displaying raw HTML (Messages sent from iChat)
-
+- Mockie message style rendering incorrectly in very wide windows
 //------------------------------------------------------------------------------------
 // Bugs - Adium
 //------------------------------------------------------------------------------------
@@ -65,7 +65,7 @@
 // Bugs - Resources
 //------------------------------------------------------------------------------------
 - Webkit styles rendering incorrectly in very wide windows
-	The two included styles with problems are Smooth Operator and Mockie
+	The two included styles with problems are Smooth Operator
 
 - Webkit styles must support multi-line status messages
 	The included style with problems is Smooth Operator 

@@ -10,8 +10,12 @@ body {
 	background: rgba(0,45,255,0.2);
 }
 
-.incoming .sender {
+.incoming .topleft {
 	background: no-repeat url(../images/blue/topleft.png);
+}
+
+.incoming .sender {
+	background: #002CFF;
 }
 
 .incoming .time_initial
@@ -42,8 +46,12 @@ body {
 	background: rgba(255,0,1,0.2);
 }
 
-.outgoing .sender {
+.outgoing .topleft {
 	background: no-repeat url(../images/red/topleft.png);
+}
+
+.outgoing .sender {
+	background: #FF0001;
 }
 
 .outgoing .time_initial

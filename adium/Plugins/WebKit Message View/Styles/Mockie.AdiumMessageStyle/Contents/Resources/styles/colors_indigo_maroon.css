@@ -10,8 +10,12 @@ body {
 	background: rgba(75,93,178,0.2);
 }
 
-.incoming .sender {
+.incoming .topleft {
 	background: no-repeat url(../images/indigo/topleft.png);
+}
+
+.incoming .sender {
+	background: #4b5db2;
 }
 
 .incoming .time_initial
@@ -42,8 +46,12 @@ body {
 	background: rgba(177,74,75,0.2);
 }
 
-.outgoing .sender {
+.outgoing .topleft {
 	background: no-repeat url(../images/maroon/topleft.png);
+}
+
+.outgoing .sender {
+	background: #b14a4b;
 }
 
 .outgoing .time_initial
