@@ -2,7 +2,7 @@
 
 # Jeffrey Melloy <jmelloy@visualdistortion.org>
 # $URL: http://svn.visualdistortion.org/repos/projects/adium/parser-2.pl $
-# $Rev: 556 $ $Date: 2004/01/20 05:34:09 $
+# $Rev: 557 $ $Date: 2004/01/21 01:12:08 $
 #
 # Script will parse Adium logs >= 2.0 and put them in postgresql table.
 # Table is created with "adium.sql"
@@ -16,7 +16,7 @@ use strict;
 use CGI qw(-no_debug escapeHTML);
 
 my $vacuum = 1;
-my $verbose = 0;
+my $verbose = 1;
 my $quiet = 0;
 my $debug = 0;
 
@@ -109,6 +109,7 @@ foreach my $outer_user (glob '*') {
                             $message = $_;
                         }
 
+                        $message =~ s/\\/\\\\/g;
                         $message =~ s/\'/\\\'/g;
 
                         my $timestamp = $date . " " . $time;
@@ -155,6 +156,7 @@ foreach my $outer_user (glob '*') {
                             $message = "&lt;" . $message . "&gt;";
                         }
 
+                        $message =~ s/\\/\\\\/g;
                         $message =~ s/\'/\\\'/g;
 
                         if ($sender eq $sentName) {
@@ -198,7 +200,7 @@ foreach my $outer_user (glob '*') {
 print OUT "insert into adium.user_display_name (user_id, display_name,
 effdate) select user_id, username, '-infinity' from users where not exists
 (select 'x' from user_display_name where user_display_name.user_id =
-users.user_id and user_display_name.effdate = '-infinity')\n";
+users.user_id and user_display_name.effdate = '-infinity');\n";
 
 if ($vacuum) {
     print OUT "vacuum analyze;\n";
