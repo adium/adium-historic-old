@@ -619,10 +619,7 @@ void Adium_HandleSignal(int i){
 	currentVersionNumber = [NSNumber numberWithFloat:currentVersion];
 	
 	lastLaunchedVersion = [lastLaunchedVersionString floatValue];	
-	
-	NSLog(@"Last version: %@ %f",lastLaunchedVersionString,lastLaunchedVersion);
-	NSLog(@"Loading Adium X v. %@ %f",currentVersionString,currentVersion);
-	
+
 	if (!lastLaunchedVersion || !currentVersion || currentVersion > lastLaunchedVersion){
 		
 		if (lastLaunchedVersion){
