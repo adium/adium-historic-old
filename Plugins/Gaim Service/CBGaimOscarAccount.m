@@ -756,25 +756,21 @@ aim_srv_setavailmsg(od->sess, text);
 			char		*comment;
 			OscarData   *od;
 			
-			if (g = gaim_find_buddys_group(buddy)){
+			if ((g = gaim_find_buddys_group(buddy)) &&
+				(od = account->gc->proto_data) &&
+				(comment = aim_ssi_getcomment(od->sess->ssi.local, g->name, buddy->name))){
+				gchar		*comment_utf8;
 				
-				od = account->gc->proto_data;
-				
-				comment = aim_ssi_getcomment(od->sess->ssi.local, g->name, buddy->name);
-				if (comment){
-					gchar		*comment_utf8;
-					
-					comment_utf8 = gaim_utf8_try_convert(comment);
-					serversideComment = [NSString stringWithUTF8String:comment_utf8];
-					g_free(comment_utf8);
-				}
+				comment_utf8 = gaim_utf8_try_convert(comment);
+				serversideComment = [NSString stringWithUTF8String:comment_utf8];
+				g_free(comment_utf8);
 				
 				free(comment);
 			}
 		}
 	}
 	
-	return serversideComment;
+	return(serversideComment);
 }
 - (void)preferencesChanged:(NSNotification *)notification
 {
