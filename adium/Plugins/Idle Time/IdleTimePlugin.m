@@ -107,7 +107,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 //An idle preference has changed
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_IDLE_TIME] == 0){
+    if(notification == nil || 
+	   [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_IDLE_TIME] == 0){
+		
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME];
 	
         //Store the new values locally
@@ -115,7 +117,13 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
         idleThreshold = [[prefDict objectForKey:KEY_IDLE_TIME_IDLE_MINUTES] intValue] * 60; //convert to seconds
 		autoAwayEnabled = [[prefDict objectForKey:KEY_AUTO_AWAY_ENABLED] boolValue];
 		autoAwayThreshold = [[prefDict objectForKey:KEY_AUTO_AWAY_IDLE_MINUTES] intValue] * 60; //also convert this to seconds
-		autoAwayMessageIndex = [[prefDict objectForKey:KEY_AUTO_AWAY_MESSAGE_INDEX] intValue];
+		
+		NSNumber *autoAwayMessageIndexNumber = [prefDict objectForKey:KEY_AUTO_AWAY_MESSAGE_INDEX];
+		if (autoAwayMessageIndexNumber){
+			autoAwayMessageIndex = [autoAwayMessageIndexNumber intValue];
+		}else{
+			autoAwayMessageIndex = -1;	
+		}
 
         //Reset our idle state (We don't reset if idle, since that would clear the idle status)
         if(idleState == AINotIdle){
@@ -210,12 +218,22 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
         break;
 		case AIAutoAway:
 		{
-			NSArray *awaysArray = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
-			NSDictionary	*awayDict = [awaysArray objectAtIndex:autoAwayMessageIndex];
-			NSAttributedString  *awayMessage = [awayDict objectForKey:@"Message"];
-			NSAttributedString  *awayAutoResponse = [awayDict objectForKey:@"Autoresponse"];
-			[[adium preferenceController] setPreference:awayMessage forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
-			[[adium preferenceController] setPreference:awayAutoResponse forKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
+			//Load the array of away messages
+			NSArray				*awaysArray = [[adium preferenceController] preferenceForKey:KEY_SAVED_AWAYS
+																					   group:PREF_GROUP_AWAY_MESSAGES];
+			if (autoAwayMessageIndex >= 0 && (autoAwayMessageIndex < [awaysArray count])){
+				//If the autoAwayMessageIndex corresponds to a valid away message, set us as away
+				NSDictionary		*awayDict = [awaysArray objectAtIndex:autoAwayMessageIndex];
+				NSAttributedString  *awayMessage = [awayDict objectForKey:@"Message"];
+				NSAttributedString  *awayAutoResponse = [awayDict objectForKey:@"Autoresponse"];
+				
+				[[adium preferenceController] setPreference:awayMessage
+													 forKey:@"AwayMessage"
+													  group:GROUP_ACCOUNT_STATUS];
+				[[adium preferenceController] setPreference:awayAutoResponse
+													 forKey:@"Autoresponse" 
+													  group:GROUP_ACCOUNT_STATUS];
+			}
 			
 			//Timer gets killed when we set Auto Away.  If we're already idle, set autoIdleTimer, otherwise set notIdleTimer
 			[idleTimer invalidate]; [idleTimer release];
