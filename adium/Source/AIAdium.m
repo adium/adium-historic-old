@@ -195,6 +195,7 @@
     [preferenceController initController]; //should init first to allow other controllers access to their prefs
     [toolbarController initController];
     [menuController initController];
+	[contactAlertsController initController];
     [soundController initController];
     [accountController initController];
 	[contactController initController];
@@ -202,7 +203,6 @@
     [interfaceController initController];
     [dockController initController];
     [fileTransferController initController];
-    [contactAlertsController initController];
 //    [activityWindowController initController];
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
 

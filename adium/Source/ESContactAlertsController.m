@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.29 2004/07/04 21:09:46 evands Exp $
+//  $Id: ESContactAlertsController.m,v 1.30 2004/07/05 20:13:13 evands Exp $
 
 
 #import "ESContactAlertsController.h"
@@ -122,7 +122,7 @@ DeclareString(KeyOneTimeAlert);
 {
 	NSDictionary	*dict = [self appendEventsForObject:listObject toDictionary:nil];
 	NSArray			*alerts = [dict objectForKey:eventID];
-	
+
 	if(alerts && [alerts count]){
 		NSEnumerator	*enumerator = [alerts objectEnumerator];
 		NSDictionary	*alert;
@@ -132,6 +132,7 @@ DeclareString(KeyOneTimeAlert);
 			NSString				*actionID = [alert objectForKey:KeyActionID];
 			NSDictionary			*actionDetails = [alert objectForKey:KeyActionDetails];
 			id <AIActionHandler>	actionHandler = [actionHandlers objectForKey:actionID];		
+			
 			[actionHandler performActionID:actionID
 							 forListObject:listObject
 							   withDetails:actionDetails 
@@ -148,12 +149,13 @@ DeclareString(KeyOneTimeAlert);
 //
 - (NSMutableDictionary *)appendEventsForObject:(AIListObject *)listObject toDictionary:(NSMutableDictionary *)events
 {
-	//Get all events from the contanining object
-	AIListObject	*enclosingGroup = [listObject containingGroup];
-	if(enclosingGroup){
-		events = [self appendEventsForObject:enclosingGroup toDictionary:events];
+	//Get all events from the contanining object if we have an object
+	if(listObject){
+		//If listObject doesn't have a containingGroup, this will pass nil
+		events = [self appendEventsForObject:[listObject containingGroup] toDictionary:events];
 	}
 	
+	//If we don't have an object, we use the preference controller to get the global alerts
 	id  preferenceSource = listObject;
 	if (!preferenceSource) preferenceSource = [owner preferenceController];
 	
