@@ -16,10 +16,9 @@
 @class AIListObject, AISCLOutlineView;
 
 @interface AIListCell : NSCell {
+	NSView			*controlView;
     AIListObject	*listObject;
     BOOL			isGroup;
-	
-	NSView			*controlView;
 	
 	NSTextAlignment	textAlignment;
 	
@@ -32,53 +31,55 @@
 	int				rightPadding;
 	int				leftSpacing;
 	int				rightSpacing;
-
-//	NSTextStorage 	*textStorage;
-//	NSLayoutManager	*layoutManager;
-//	NSTextContainer	*textContainer;
 	
 	NSFont			*font;
-	
-	
-	
 	NSImage			*genericUserIcon;
 }
 
 - (void)setListObject:(AIListObject *)inObject;
+- (BOOL)isGroup;
 - (void)setControlView:(NSView *)inControlView;
 
+//Display options 
+- (void)setFont:(NSFont *)inFont;
+- (NSFont *)font;
 - (void)setTextAlignment:(NSTextAlignment)inAlignment;
 - (NSTextAlignment)textAlignment;
 
-//
-- (void)setStatusFont:(NSFont *)inFont;
-- (NSFont *)statusFont;
-
-//
+//Cell sizing and padding
+- (NSSize)cellSize;
+- (void)setSplitVerticalSpacing:(int)inSpacing;
+- (void)setTopSpacing:(int)inSpacing;
+- (int)topSpacing;
+- (void)setBottomSpacing:(int)inSpacing;
+- (int)bottomSpacing;
+- (void)setLeftSpacing:(int)inSpacing;
+- (int)leftSpacing;
+- (void)setRightSpacing:(int)inSpacing;
+- (int)rightSpacing;
 - (void)setSplitVerticalPadding:(int)inPadding;
 - (void)setTopPadding:(int)inPadding;
 - (void)setBottomPadding:(int)inPadding;
-- (void)setLeftPadding:(int)inPadding;
-- (void)setRightPadding:(int)inPadding;
-
-//Sizing and Display
-- (NSSize)cellSize;
-- (int)topSpacing;
-- (int)bottomSpacing;
 - (int)topPadding;
 - (int)bottomPadding;
+- (void)setLeftPadding:(int)inPadding;
 - (int)leftPadding;
+- (void)setRightPadding:(int)inPadding;
 - (int)rightPadding;
-
-//
+	
+//Drawing
+- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
+- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
+- (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
 - (void)drawSelectionWithFrame:(NSRect)rect;
-- (NSRect)drawDisplayNameWithFrame:(NSRect)rect;
-
-//
-- (void)setSplitVerticalSpacing:(int)inSpacing;
-- (void)setTopSpacing:(int)inSpacing;
-- (void)setBottomSpacing:(int)inSpacing;
-- (void)setLeftSpacing:(int)inSpacing;
-- (void)setRightSpacing:(int)inSpacing;
+- (void)drawBackgroundWithFrame:(NSRect)rect;
+- (void)drawContentWithFrame:(NSRect)rect;
+- (NSRect)drawDisplayNameWithFrame:(NSRect)inRect;
+- (NSString *)labelString;
+- (NSDictionary *)labelAttributes;
+- (NSDictionary *)additionalLabelAttributes;
+- (NSColor *)textColor;
+- (BOOL)isSelectionInverted;
+- (BOOL)drawGridBehindCell;
 
 @end

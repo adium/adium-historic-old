@@ -15,9 +15,6 @@
 
 #import "AIListCell.h"
 
-@interface AIListCell (PRIVATE)
-@end
-
 @implementation AIListCell
 
 //Init
@@ -36,17 +33,7 @@
 	
 	font = [[NSFont systemFontOfSize:12] retain];
 	
-	//Set up our custom text system.
-	//Using drawAtPoint: places our text at a seemingly random vertical alignment, so we do the text drawing at a
-	//slightly lower level to avoid this.
-//	textStorage = [[NSTextStorage alloc] init];
-//	layoutManager = [[NSLayoutManager alloc] init];
-//	textContainer = [[NSTextContainer alloc] init];
-//	[layoutManager addTextContainer:textContainer];
-//	[textStorage addLayoutManager:layoutManager];
-//	[textContainer setLineFragmentPadding:0.0];
-	
-    return self;
+    return(self);
 }
 
 //Copy
@@ -60,13 +47,8 @@
 //Dealloc
 - (void)dealloc
 {
-//	[textContainer release];
-//	[layoutManager release];
-//	[textStorage release];
 	[genericUserIcon release];
 	[font release];
-	
-	
 	[super dealloc];
 }
 
@@ -76,6 +58,9 @@
     listObject = inObject;
     isGroup = [listObject isKindOfClass:[AIListGroup class]];
 }
+- (BOOL)isGroup{
+	return(isGroup);
+}
 
 //Set our control view (Better than passing this around like crazy)
 - (void)setControlView:(NSView *)inControlView
@@ -83,16 +68,10 @@
 	controlView = inControlView;
 }
 
-//Text alignment
-- (void)setTextAlignment:(NSTextAlignment)inAlignment
-{
-	textAlignment = inAlignment; 
-}
-- (NSTextAlignment)textAlignment{
-	return(textAlignment);
-}
 
-//
+//Display options ------------------------------------------------------------------------------------------------------
+#pragma mark Display options
+//Font used to display label
 - (void)setFont:(NSFont *)inFont
 {
 	if(inFont && inFont != font){
@@ -104,15 +83,19 @@
 	return(font);
 }
 
-//Does this cell need the grid draw behind it?
-- (BOOL)drawGridBehindCell
+//Alignment of label text
+- (void)setTextAlignment:(NSTextAlignment)inAlignment
 {
-	return(YES);
+	textAlignment = inAlignment;
+}
+- (NSTextAlignment)textAlignment{
+	return(textAlignment);
 }
 
 
-//Sizing and Display ---------------------------------------------------------------------------------------------------
-//
+//Cell sizing and padding ----------------------------------------------------------------------------------------------
+#pragma mark Cell sizing and padding
+//Default cell size just contains our padding and spacing
 - (NSSize)cellSize
 {
 	return(NSMakeSize(0, [self topSpacing] + [self topPadding] + [self bottomPadding] + [self bottomSpacing]));
@@ -167,7 +150,6 @@
 - (int)bottomPadding{
 	return(bottomPadding);
 }
-
 - (void)setLeftPadding:(int)inPadding{
 	leftPadding = inPadding;
 }
@@ -185,10 +167,10 @@
 //Drawing --------------------------------------------------------------------------------------------------------------
 #pragma mark Drawing
 //
-- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView{
-    [self drawInteriorWithFrame:cellFrame inView:controlView];
+- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)inControlView{
+    [self drawInteriorWithFrame:cellFrame inView:inControlView];
 }
-- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)inControlView
 {	
 	if(listObject){
 		//Cell spacing
@@ -209,10 +191,9 @@
 	}
 }
 
-- (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+//Custom highlighting (This is a private cell method we're overriding that handles selection drawing)
+- (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)inControlView
 {
-//	[super _drawHighlightWithFrame:cellFrame inView:controlView];
-	
 	//Cell spacing
 	cellFrame.origin.y += [self topSpacing];
 	cellFrame.size.height -= [self bottomSpacing] + [self topSpacing];
@@ -225,7 +206,7 @@
 //Draw Selection
 - (void)drawSelectionWithFrame:(NSRect)rect
 {
-	
+	//
 }
 	
 //Draw the background of our cell
@@ -242,8 +223,9 @@
 
 //Draw our display name
 - (NSRect)drawDisplayNameWithFrame:(NSRect)inRect
-{	
-	NSAttributedString	*displayName = [self displayNameStringWithAttributes:YES];
+{
+	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[self labelString]
+																	   attributes:[self labelAttributes]];
 	NSSize				nameSize = [displayName size];
 	NSRect				rect = inRect;
 	
@@ -263,99 +245,69 @@
 
 	//Draw (centered vertical)
 	int half = (rect.size.height - nameSize.height) / 2.0;
-
 	[displayName drawInRect:NSMakeRect(rect.origin.x,
 									   rect.origin.y + half,
 									   rect.size.width,
-									   nameSize.height/*rect.size.height - half*/)];
-	
-	
+									   nameSize.height)];
+	[displayName release];
+
+	//Adjust the drawing rect
 	switch([self textAlignment]){
-		case NSCenterTextAlignment:
-			//How to handle this case?
-		break;
 		case NSRightTextAlignment:
 			inRect.size.width -= nameSize.width;
 		break;
-		default:
+		case NSLeftTextAlignment:
 			inRect.origin.x += nameSize.width;
 			inRect.size.width -= nameSize.width;
 		break;
+		default:
+		break;
 	}
+	
 	
 	return(inRect);
-	
-	
-//	[[self displayNameStringWithAttributes:YES] drawInRect:rect];
-//	[textStorage setAttributedString:[self displayNameStringWithAttributes:YES]];
-//	NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
-//	NSRect	glyphRect = [layoutManager boundingRectForGlyphRange:glyphRange inTextContainer:textContainer];
-//
-//	//Alignment
-//	switch([self textAlignment]){
-//		case NSCenterTextAlignment:
-//			rect.origin.x += (rect.size.width - glyphRect.size.width) / 2.0;
-//		break;
-//		case NSRightTextAlignment:
-//			rect.origin.x += (rect.size.width - glyphRect.size.width);
-//		break;
-//		default:
-//		break;
-//	}
-//
-//	[layoutManager drawGlyphsForGlyphRange:glyphRange
-//								   atPoint:NSMakePoint(rect.origin.x,
-//													   rect.origin.y + (rect.size.height - glyphRect.size.height) / 2.0)];
 }
 
-//Returns our display name string.  If the string is only for sizing, passing NO will skip applying non-size changing
-//attributes, giving a bit of a speed boost
-- (NSAttributedString *)displayNameStringWithAttributes:(BOOL)applyAttributes
+//Display string for our list object
+- (NSString *)labelString
 {
-	NSFont				*font = [self font];//(isGroup ? [NSFont boldSystemFontOfSize:12] : nil);//[controlView groupFont] : [controlView font]);
-	NSString 			*displayString;
-	NSDictionary		*attributes;
-	
-	//Apply left and right text attachments
 	NSString *leftText = [[listObject displayArrayForKey:@"Left Text"] objectValue];
 	NSString *rightText = [[listObject displayArrayForKey:@"Right Text"] objectValue];
-
-	if(leftText || rightText){
-		displayString = (NSString *)[NSMutableString string];
-
-		//Combine left text, the object name, and right text
-		if(leftText) [(NSMutableString *)displayString appendString:leftText];
-		[(NSMutableString *)displayString appendString:[listObject longDisplayName]];
-		if(rightText) [(NSMutableString *)displayString appendString:rightText];
-		
-	}else{
-		displayString = [listObject longDisplayName];
-	}
-		
-	//Add the display attributes
-	if(applyAttributes){
-		NSDictionary		*additionalAttributes = [self displayNameAttributes];
-		NSColor				*textColor = [self textColor];
-		NSParagraphStyle	*paragraphStyle;
-		
-		//Attributes
-		paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment lineBreakMode:NSLineBreakByTruncatingTail/*NSLineBreakByClipping*/];
-		attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-			textColor, NSForegroundColorAttributeName,
-			paragraphStyle, NSParagraphStyleAttributeName,
-			font, NSFontAttributeName,
-			nil];
-		if(additionalAttributes) [attributes addEntriesFromDictionary:additionalAttributes];
-		
-	}else{
-		attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
-	}
 	
-	return([[[NSAttributedString alloc] initWithString:displayString attributes:attributes] autorelease]);
+	if(!leftText && !rightText){
+		return([listObject longDisplayName]);
+	}else{
+		NSMutableString	*labelString = [NSMutableString string];
+		
+		//Combine left text, the object name, and right text
+		if(leftText) [labelString appendString:leftText];
+		[labelString appendString:[listObject longDisplayName]];
+		if(rightText) [labelString appendString:rightText];
+		
+		return(labelString);
+	}
 }
 
-//Additional attributes for the display name
-- (NSDictionary *)displayNameAttributes
+//Attributes for displaying the label string
+- (NSDictionary *)labelAttributes
+{
+	NSMutableDictionary	*labelAttributes;
+	NSDictionary		*additionalAttributes = [self additionalLabelAttributes];
+	NSParagraphStyle	*paragraphStyle = [NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
+																 lineBreakMode:NSLineBreakByTruncatingTail];
+	
+	labelAttributes = [[NSMutableDictionary dictionaryWithObjectsAndKeys:
+		[self textColor], NSForegroundColorAttributeName,
+		paragraphStyle, NSParagraphStyleAttributeName,
+		[self font], NSFontAttributeName,
+		nil] retain];
+	if(additionalAttributes) [labelAttributes addEntriesFromDictionary:additionalAttributes];
+	
+	return(labelAttributes);
+}
+
+//Additional attributes to apply to our label string (For Sub-Classes)
+- (NSDictionary *)additionalLabelAttributes
 {
 	return(nil);
 }
@@ -370,10 +322,18 @@
 	}
 }
 
-//Should our selection be drawn inverted?
+//YES if our selection should be drawn inverted
 - (BOOL)isSelectionInverted
 {
-	return([self isHighlighted] && [[controlView window] isKeyWindow] && [[controlView window] firstResponder] == controlView);
+	return([self isHighlighted] &&
+		   [[controlView window] isKeyWindow] &&
+		   [[controlView window] firstResponder] == controlView);
+}
+
+//YES if a grid would be visible behind this cell (needs to be drawn)
+- (BOOL)drawGridBehindCell
+{
+	return(YES);
 }
 
 @end

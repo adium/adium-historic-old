@@ -10,10 +10,7 @@
 
 #import "AIListLayoutWindowController.h"
 
-#define FONT_HEIGHT_STRING	@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-
-@implementation AIListContactCell
+#define FONT_HEIGHT_STRING		@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
 #define ICON_TEXT_PADDING		3
@@ -24,6 +21,10 @@
 
 #define STATUS_ICON_LEFT_PAD			2
 #define STATUS_ICON_RIGHT_PAD			3
+
+
+@implementation AIListContactCell
+
 
 //Copy
 - (id)copyWithZone:(NSZone *)zone
@@ -47,6 +48,70 @@
 	[statusFont release];
 	[super dealloc];
 }
+
+
+
+
+
+
+//Cell sizing and padding ----------------------------------------------------------------------------------------------
+//
+- (NSSize)cellSize
+{
+	NSSize	size = [super cellSize];
+	
+	if(userIconVisible){
+		return(NSMakeSize(0, size.height + userIconSize));
+	}else{
+		
+#warning I hate OS X font sizing ... cache this
+		
+		NSAttributedString *		attrString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[NSDictionary dictionaryWithObject:[self font] forKey:NSFontAttributeName]] autorelease];
+		int		textHeight = [attrString heightWithWidth:1e7];
+		
+		return(NSMakeSize(0, /*(int)([[self font] boundingRectForFont].size.height)*/ size.height + textHeight));
+	}
+}
+
+//Padding.  Gives our cell a bit of edge padding so the user icon and name do not touch the sides
+//- (int)topPadding{
+//	return([super topPadding] + 1);
+//}
+//- (int)bottomPadding{
+//	return([super bottomPadding] + 1);
+//}
+- (int)leftPadding{
+	
+	if([self padToFlippy]){
+		int leftPad = [super leftPadding];
+		int flippy = [[controlView groupCell] flippyIndent];
+		
+		NSLog(@"%i + %i = %i",leftPad, flippy, leftPad + flippy);
+#warning flippy indent already has the padding, so it is being applied twice
+		return(leftPad + flippy);
+	}else{
+		return([super leftPadding] + 1);
+	}
+}
+- (int)rightPadding{
+	return([super rightPadding] + 3);
+}
+
+- (BOOL)padToFlippy{
+	return((!statusIconsVisible || statusIconPosition != LIST_POSITION_FAR_LEFT) &&
+		   (!statusIconsVisible || statusIconPosition != LIST_POSITION_LEFT) &&
+		   (!serviceIconsVisible || serviceIconPosition != LIST_POSITION_FAR_LEFT ) &&
+		   (!serviceIconsVisible || serviceIconPosition != LIST_POSITION_LEFT) &&
+		   (!userIconVisible || userIconPosition != LIST_POSITION_LEFT));
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -134,55 +199,6 @@
 }
 
 
-
-- (NSSize)cellSize
-{
-	NSSize	size = [super cellSize];
-	
-	if(userIconVisible){
-		return(NSMakeSize(0, size.height + userIconSize));
-	}else{
-		
-#warning I hate OS X font sizing ... cache this
-		
-		NSAttributedString *		attrString = [[[NSAttributedString alloc] initWithString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" attributes:[NSDictionary dictionaryWithObject:[self font] forKey:NSFontAttributeName]] autorelease];
-		int		textHeight = [attrString heightWithWidth:1e7];
-		
-		return(NSMakeSize(0, /*(int)([[self font] boundingRectForFont].size.height)*/ size.height + textHeight));
-	}
-}
-
-//Padding.  Gives our cell a bit of edge padding so the user icon and name do not touch the sides
-//- (int)topPadding{
-//	return([super topPadding] + 1);
-//}
-//- (int)bottomPadding{
-//	return([super bottomPadding] + 1);
-//}
-- (int)leftPadding{
-	
-	if([self padToFlippy]){
-		int leftPad = [super leftPadding];
-		int flippy = [[controlView groupCell] flippyIndent];
-		
-		NSLog(@"%i + %i = %i",leftPad, flippy, leftPad + flippy);
-#warning flippy indent already has the padding, so it is being applied twice
-		return(leftPad + flippy);
-	}else{
-		return([super leftPadding] + 1);
-	}
-}
-- (int)rightPadding{
-	return([super rightPadding] + 3);
-}
-
-- (BOOL)padToFlippy{
-	return((!statusIconsVisible || statusIconPosition != LIST_POSITION_FAR_LEFT) &&
-		   (!statusIconsVisible || statusIconPosition != LIST_POSITION_LEFT) &&
-		   (!serviceIconsVisible || serviceIconPosition != LIST_POSITION_FAR_LEFT ) &&
-		   (!serviceIconsVisible || serviceIconPosition != LIST_POSITION_LEFT) &&
-		   (!userIconVisible || userIconPosition != LIST_POSITION_LEFT));
-}
 
 
 //Draw using our contact's status color

@@ -18,7 +18,7 @@
 	return(newCell);
 }
 
-
+//
 - (void)setBackgroundColor:(NSColor *)inBackgroundColor gradientColor:(NSColor *)inGradientColor
 {
 	if(inBackgroundColor != backgroundColor){
@@ -30,15 +30,6 @@
 		gradientColor = [inGradientColor retain];
 	}
 }
-
-
-
-
-
-
-
-
-
 
 //
 - (NSColor *)flippyColor
@@ -66,7 +57,7 @@
 }
 
 //Shadow our text to make it prettier
-- (NSDictionary *)displayNameAttributes
+- (NSDictionary *)additionalLabelAttributes
 {
 	NSShadow	*shadow = [[[NSShadow alloc] init] autorelease];
 	
