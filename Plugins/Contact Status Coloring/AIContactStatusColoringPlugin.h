@@ -62,6 +62,9 @@
 	
     float		alpha;
 	BOOL		offlineImageFading;
+	
+	NSMutableDictionary	*opacityUpdateDict;
+	NSTimer				*opacityUpdateTimer;
 }
 
 @end
