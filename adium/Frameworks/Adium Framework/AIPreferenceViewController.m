@@ -22,6 +22,7 @@
 - (NSString *)name;
 - (NSView *)view;
 - (NSString *)categoryName;
+- (IBAction)restoreDefaults:(id)sender;
 @end
 
 @implementation AIPreferenceViewController
@@ -60,6 +61,13 @@
     return(delegate);
 }
 
+// Restore this categories' defaults
+- (IBAction)restoreDefaults:(id)sender
+{
+	// NSLog(@"---- Restore Defaults in AIPreferenceViewController");
+	
+	
+}
 
 //Compare to another category view (for sorting on the preference window)
 - (NSComparisonResult)compare:(AIPreferenceViewController *)inView
@@ -111,7 +119,10 @@
     
     desiredHeight = [view_containerView frame].size.height;
     [textField_title setStringValue:name];
-    
+	
+	//Make the Restore Defaults button active (FIXME)
+	// [button_restoreDefaults setEnabled:YES];
+	
     return(self);
 }
 

@@ -132,19 +132,27 @@ static NSImage *pushIndicatorImage = nil;
 
     // Catch control here to stop it from being "page up/down"
     if( ([theEvent modifierFlags] & NSControlKeyMask) && ([theEvent type] == NSKeyDown) ) {
-      switch(theChar)
-	{
-	case NSUpArrowFunctionKey:
-	  [self _popContent];
-	  result = YES;
-	  break;
-
-	case NSDownArrowFunctionKey:
-	  [self _pushContent];
-	  result = YES;
-	}
+		
+		switch(theChar)
+		{
+			case NSUpArrowFunctionKey:
+				[self _popContent];
+				result = YES;
+				break;
+				
+			case NSDownArrowFunctionKey:
+				
+				// Is it Control-Option-Down? Then show the push menu
+				if( [theEvent modifierFlags] & NSAlternateKeyMask ) {
+					[self _pushClicked];
+				} else {
+					[self _pushContent];
+				}
+				result = YES;
+		}
+		
     }
-
+	
     return(result);
 }
 
@@ -335,11 +343,13 @@ static NSImage *pushIndicatorImage = nil;
 // Pop. Called by menu items. Their index into the push array is stored in the 'tag'
 - (void)_popItem:(id)sender
 {
-	[self setAttributedString:[pushArray objectAtIndex:[sender tag]]];
-	[self setSelectedRange:NSMakeRange([[self textStorage] length], 0)]; //selection to end
-	[pushArray removeObjectAtIndex:[sender tag]];
-	if([pushArray count] == 0){
-		[self _setPushIndicatorVisible:NO];
+	if([pushArray count]){
+		[self setAttributedString:[pushArray objectAtIndex:[sender tag]]];
+		[self setSelectedRange:NSMakeRange([[self textStorage] length], 0)]; //selection to end
+		[pushArray removeObjectAtIndex:[sender tag]];
+		if([pushArray count] == 0){
+			[self _setPushIndicatorVisible:NO];
+		}
 	}
 }
 
@@ -430,49 +440,51 @@ static NSImage *pushIndicatorImage = nil;
 	NSMenu		*menu = [[NSMenu alloc] initWithTitle:@"push menu"];
 	NSMenuItem  *menuItem;
 	
-	[menu setAutoenablesItems:NO];
-	
-	// Construct a menu containing all pushed messages
-	int i;
-	for(i = 0; i < [pushArray count]; i++) {
-		NSString *temp = [[pushArray objectAtIndex:i] string];
-		if(temp) {
-			menuItem = [[[NSMenuItem alloc] initWithTitle:temp
-												   target:self
-												   action:@selector(_popItem:)
-											keyEquivalent:@""] autorelease];
-			
-			// Set the tag -- this identifies the message's index later
-			[menuItem setTag:i];
-
-			[menuItem setEnabled:YES];
-			[menu addItem:menuItem];
-		}
-	}
-
-	// Add the Autopop item
-    [menu addItem:[NSMenuItem separatorItem]];
-	menuItem = [[[NSMenuItem alloc] initWithTitle:@"Autopop Messages"
-										   target:self
-										   action:@selector(_toggleAutopop:)
-									keyEquivalent:@""] autorelease];
-	int theState = ([[prefDict objectForKey:KEY_AUTOPOP] boolValue] ? NSOnState : NSOffState);
-	
-	[menuItem setState:theState];
-	[menu addItem:menuItem];
-	
-	// Generate a fake event to send to the contextual menu so it knows where to appear
-	NSEvent *newEvent = [NSEvent mouseEventWithType:NSLeftMouseDown 
-										   location:[indicator frame].origin
-									  modifierFlags:0
-										  timestamp:nil
-									   windowNumber:[[indicator window] windowNumber]
-											context:nil
-										eventNumber:0
-										 clickCount:0
-										   pressure:0.0];
+	if([pushArray count]){
+		[menu setAutoenablesItems:NO];
 		
-	[NSMenu popUpContextMenu:menu withEvent:newEvent forView:indicator];
+		// Construct a menu containing all pushed messages
+		int i;
+		for(i = 0; i < [pushArray count]; i++) {
+			NSString *temp = [[pushArray objectAtIndex:i] string];
+			if(temp) {
+				menuItem = [[[NSMenuItem alloc] initWithTitle:temp
+													   target:self
+													   action:@selector(_popItem:)
+												keyEquivalent:@""] autorelease];
+				
+				// Set the tag -- this identifies the message's index later
+				[menuItem setTag:i];
+				
+				[menuItem setEnabled:YES];
+				[menu addItem:menuItem];
+			}
+		}
+		
+		// Add the Autopop item
+		[menu addItem:[NSMenuItem separatorItem]];
+		menuItem = [[[NSMenuItem alloc] initWithTitle:@"Autopop Messages"
+											   target:self
+											   action:@selector(_toggleAutopop:)
+										keyEquivalent:@""] autorelease];
+		int theState = ([[prefDict objectForKey:KEY_AUTOPOP] boolValue] ? NSOnState : NSOffState);
+		
+		[menuItem setState:theState];
+		[menu addItem:menuItem];
+		
+		// Generate a fake event to send to the contextual menu so it knows where to appear
+		NSEvent *newEvent = [NSEvent mouseEventWithType:NSLeftMouseDown 
+											   location:[indicator frame].origin
+										  modifierFlags:0
+											  timestamp:nil
+										   windowNumber:[[indicator window] windowNumber]
+												context:nil
+											eventNumber:0
+											 clickCount:0
+											   pressure:0.0];
+		
+		[NSMenu popUpContextMenu:menu withEvent:newEvent forView:indicator];
+	}
 }
 
 // Always enable all of the push menu items
