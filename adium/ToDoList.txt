@@ -133,12 +133,9 @@ Documentation
 		+ Creating webkit themes
 		+ Address book integration
 
-Activity Window [boredzo]
+Activity Window
 Will sort of resemble Safari's. Entries in the window only reflect progress of items; actions are performed from the toolbar.
-* Toolbar items are stuck in disabled state
-+ Get Show Completed working
-+ Get Filter field working
-	+ ...including under Jaguar (need to create it programmatically in that event, since IB Services on Jaguar won't unarchive it)
+= Done! [boredzo]
 		
 //-------------------------------------------------------------------------------------------------------
 // Areas that require more thought before implementing
