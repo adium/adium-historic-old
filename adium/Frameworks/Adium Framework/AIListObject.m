@@ -22,11 +22,27 @@
 
 @implementation AIListObject
 
+DeclareString(ObjectStatusCache);
+DeclareString(DisplayName);
+DeclareString(LongDisplayName);
+DeclareString(Key);
+DeclareString(Group);
+DeclareString(DisplayServiceID);
+DeclareString(FormattedUID);
+
 //Init
 - (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID
 {
     [super init];
 
+	InitString(ObjectStatusCache,@"Object Status Cache");
+	InitString(DisplayName,@"Display Name");
+	InitString(LongDisplayName,@"Long Display Name");
+	InitString(Key,@"Key");
+	InitString(Group,@"Group");
+	InitString(DisplayServiceID,@"DisplayServiceID");
+	InitString(FormattedUID,@"FormattedUID");
+	
     displayDictionary = [[NSMutableDictionary alloc] init];
     containingGroup = nil;
     UID = [inUID retain];	
@@ -39,12 +55,12 @@
     statusDictionary = [[NSMutableDictionary alloc] init];
     changedStatusKeys = [[NSMutableArray alloc] init];
 	
-	NSString *formattedUID = [self preferenceForKey:KEY_FORMATTED_UID 
-											  group:PREF_GROUP_OBJECT_STATUS_CACHE 
+	NSString *formattedUID = [self preferenceForKey:FormattedUID 
+											  group:ObjectStatusCache 
 							  ignoreInheritedValues:YES];
 	if (formattedUID){
 		[self setStatusObject:formattedUID
-					   forKey:KEY_FORMATTED_UID
+					   forKey:FormattedUID
 					   notify:NO];
 	}
 	
@@ -195,7 +211,7 @@
 														  target:self
 														selector:@selector(_applyDelayedStatus:)
 														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-															key, @"Key",
+															key, Key,
 															value, @"Value",
 															nil]
 														 repeats:NO];
@@ -205,7 +221,7 @@
 {
 	NSDictionary	*infoDict = [inTimer userInfo];
 	id				object = [infoDict objectForKey:@"Value"];
-	NSString		*key = [infoDict objectForKey:@"Key"];
+	NSString		*key = [infoDict objectForKey:Key];
 	
 	[self setStatusObject:object forKey:key notify:YES];
 
@@ -257,14 +273,12 @@
     return([statusDictionary objectForKey:key]);
 }
 
-
-
 //Subclasses may choose to override these
 - (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key
 {
 	if (inObject == self) {
-		if ([key isEqualToString:KEY_FORMATTED_UID]){
-			[self setPreference:value forKey:key group:PREF_GROUP_OBJECT_STATUS_CACHE];
+		if ([key isEqualToString:FormattedUID]){
+			[self setPreference:value forKey:key group:ObjectStatusCache];
 		}
 	}
 }
@@ -293,7 +307,7 @@
     //Broadcast a preference changed notification
     [[adium notificationCenter] postNotificationName:Preference_GroupChanged
 											  object:self
-											userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
+											userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,Group,inKey,Key,nil]];
 }
 
 //Retrieve a preference value (with the option of ignoring inherited values)
@@ -392,27 +406,27 @@
 //Server-formatted UID if present, otherwise the UID
 - (NSString *)formattedUID
 {
-	NSString  *outName = [self statusObjectForKey:KEY_FORMATTED_UID];
+	NSString  *outName = [self statusObjectForKey:FormattedUID];
     return(outName ? outName : UID);	
 }
 
 //Display name, influenced by plugins
 - (NSString *)displayName
 {
-    NSString	*outName = [[self displayArrayForKey:@"Display Name"] objectValue];
+    NSString	*outName = [[self displayArrayForKey:DisplayName] objectValue];
     return(outName ? outName : [self formattedUID]);
 }
 
 //Long display name, influenced by plugins
 - (NSString *)longDisplayName
 {
-    NSString	*outName = [[self displayArrayForKey:@"Long Display Name"] objectValue];
+    NSString	*outName = [[self displayArrayForKey:LongDisplayName] objectValue];
     return(outName ? outName : [self displayName]);
 }
 
 - (NSString *)displayServiceID
 {
-	NSString  *outName = [self statusObjectForKey:KEY_DISPLAY_SERVICE_ID];
+	NSString  *outName = [self statusObjectForKey:DisplayServiceID];
 	return (outName ? outName : serviceID);
 }
 

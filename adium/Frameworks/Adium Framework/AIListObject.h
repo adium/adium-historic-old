@@ -13,10 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#define PREF_GROUP_OBJECT_STATUS_CACHE  @"Object Status Cache"
-#define KEY_FORMATTED_UID				@"FormattedUID"
-#define KEY_DISPLAY_SERVICE_ID			@"DisplayServiceID"
-
 @class AIMutableOwnerArray, AIListGroup;
 
 @interface AIListObject : AIObject {
