@@ -95,14 +95,14 @@
 		
 		static NSDictionary	*schemeToServiceDict = nil;
 		if(!schemeToServiceDict){
-			schemeToServiceDict = [[NSDictionary dictionaryWithObjectsAndKeys:
+			schemeToServiceDict = [[NSDictionary alloc] initWithObjectsAndKeys:
 				@"AIM", @"aim",
 				@"Yahoo!", @"ymsgr",
-				@"Yahoo!", @"yahoo"
+				@"Yahoo!", @"yahoo",
 				@"Jabber", @"jabber",
 				@"ICQ", @"icq",
 				@"MSN", @"msn",
-				nil] retain];
+				nil];
 		}
 		
 		if(![[url resourceSpecifier] hasPrefix:@"//"]){
