@@ -319,13 +319,7 @@ DeclareString(UID);
 															  repeats:YES] retain];
     }else{
 		//Reset the timer
-		[delayedUpdateTimer invalidate]; [delayedUpdateTimer release]; delayedUpdateTimer = nil;
-		
-		delayedUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:UPDATE_CLUMP_INTERVAL 
-															   target:self
-															 selector:@selector(_performDelayedUpdates:) 
-															 userInfo:nil 
-															  repeats:YES] retain];
+		[delayedUpdateTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:UPDATE_CLUMP_INTERVAL]];
 	}
 }
 
