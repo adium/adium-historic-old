@@ -30,6 +30,9 @@
 -(void)switchHandler:(NSNotification*) notification;
 @end
 
+extern NSString *NSWorkspaceSessionDidBecomeActiveNotification __attribute__((weak_import));
+extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((weak_import));
+
 /*!
  * @class ESFastUserSwitchingSupportPlugin
  * @brief Handle Fast User Switching with a changed status and sound muting
