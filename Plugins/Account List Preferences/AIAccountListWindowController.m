@@ -48,6 +48,11 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     [super dealloc];
 }
 
+- (NSString *)adiumFrameAutosaveName
+{
+	return(@"AIAccountListWindow");
+}
+
 //Configure
 - (void)windowDidLoad
 {
