@@ -164,7 +164,7 @@
 
     //Draw the title
     destRect = NSMakeRect(rect.origin.x + leftCapWidth - TAB_LABEL_INSET,
-                          rect.origin.y + 3 + ((rect.size.height - labelSize.height) / 2.0), //center it vertically
+                          rect.origin.y + 3 + (int)((rect.size.height - labelSize.height) / 2.0), //center it vertically
                           labelSize.width,
                           labelSize.height);
     [tabViewItem drawLabel:NO inRect:destRect];

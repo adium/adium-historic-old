@@ -104,7 +104,7 @@
 - (void)drawLabel:(BOOL)shouldTruncateLabel inRect:(NSRect)labelRect
 {
     AIMutableOwnerArray	*leftViewArray;
-    
+
     //Draw icon
     leftViewArray = [[messageView contact] displayArrayForKey:@"Tab Left View"];
 
@@ -160,6 +160,11 @@
 
             size.width += [handler widthForHeight:LEFT_VIEW_HEIGHT computeMax:NO] + LEFT_VIEW_PADDING;
         }
+    }
+
+    //Make sure we return an even integer width
+    if(size.width != (int)size.width){
+        size.width = (int)size.width + 1;
     }
 
     return(size);
