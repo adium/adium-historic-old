@@ -18,6 +18,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_incoming" = NSButton; 
+                "checkBox_messageText" = NSButton; 
                 "checkBox_outgoing" = NSButton; 
                 "checkBox_sender" = NSButton; 
                 "checkBox_status" = NSButton; 

@@ -13,5 +13,7 @@
 	    <false/>
 	<key>Speak Sender</key>
 	    <true/>
+        <key>Speak Message Text</key>
+            <true/>
 </dict>
 </plist>

@@ -12,6 +12,7 @@
 #define PREF_GROUP_ANNOUNCER	@"Announcer"
 #define KEY_ANNOUNCER_OUTGOING	@"Speak Outgoing"
 #define KEY_ANNOUNCER_INCOMING 	@"Speak Incoming"
+#define KEY_ANNOUNCER_MESSAGETEXT @"Speak Message Text"
 #define KEY_ANNOUNCER_STATUS	@"Speak Status"
 #define KEY_ANNOUNCER_TIME	@"Speak Time"
 #define KEY_ANNOUNCER_SENDER	@"Speak Sender"
@@ -30,6 +31,7 @@
     BOOL                        speakIncoming;
     BOOL                        speakOutgoing;
     BOOL                        speakMessages;
+    BOOL                        speakMessageText;
     BOOL                        speakStatus;
     BOOL                        speakTime;
     BOOL                        speakSender;

@@ -55,7 +55,8 @@
 	speakOutgoing = [[dict objectForKey:KEY_ANNOUNCER_OUTGOING] boolValue];
 	speakIncoming = [[dict objectForKey:KEY_ANNOUNCER_INCOMING] boolValue];
 	speakMessages = speakOutgoing || speakIncoming;
-
+        
+        speakMessageText = [[dict objectForKey:KEY_ANNOUNCER_MESSAGETEXT] boolValue];
 	speakStatus = [[dict objectForKey:KEY_ANNOUNCER_STATUS] boolValue];
 
 	speakTime = [[dict objectForKey:KEY_ANNOUNCER_TIME] boolValue];
@@ -133,8 +134,10 @@
 		if (newParagraph) {
 		    [theMessage appendFormat:@" [[pmod +1; pbas +1]]"];
 		}
-		
-		[theMessage appendFormat:@" %@",message];
+                
+                if (speakMessageText) {
+                    [theMessage appendFormat:@" %@",message];
+                }
 	    }
 	}
     }
