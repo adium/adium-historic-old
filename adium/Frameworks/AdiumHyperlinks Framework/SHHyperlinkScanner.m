@@ -76,7 +76,7 @@
     
     //scan upto the next whitespace char so that we don't unnecessarity confuse flex
     // otherwise we end up validating urls that look like this "http://www.adiumx.com/ <--cool"
-    NSScanner *preScanner = [[NSScanner alloc] initWithString:inString];
+    NSScanner *preScanner = [[[NSScanner alloc] initWithString:inString] autorelease];
     [preScanner setScanLocation:location];
     while([preScanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&scanString]){
         SHStringOffset = [preScanner scanLocation] - [scanString length];
@@ -99,10 +99,10 @@
             }
             
             //make a marked link
-            SHMarkedHyperlink *markedLink = [[SHMarkedHyperlink alloc] initWithString:newURL
+            SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:newURL
                                                                  withValidationStatus:validStatus
                                                                          parentString:inString
-                                                                             andRange:urlRange];
+                                                                             andRange:urlRange] autorelease];
             return markedLink;
         }
         
@@ -154,7 +154,9 @@
     
     while(markedLink = [enumerator nextObject]){
         NSRange linkRange = [markedLink range];
-        [newString addAttribute:NSLinkAttributeName value:[[markedLink URL] retain] range:linkRange];
+        if([markedLink URL]){
+            [newString addAttribute:NSLinkAttributeName value:[[markedLink URL] retain] range:linkRange];
+        }
     }
     
     return newString;

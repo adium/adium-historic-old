@@ -23,9 +23,9 @@
 
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
 {
-    SHHyperlinkScanner          *scanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
+    SHHyperlinkScanner          *scanner = [[[SHHyperlinkScanner alloc] initWithStrictChecking:NO] autorelease];
     NSMutableAttributedString   *replacementMessage = [[[NSMutableAttributedString alloc] initWithAttributedString:[scanner linkifyString:inAttributedString]] autorelease];
-        return (replacementMessage ? replacementMessage : inAttributedString);
+    return (replacementMessage);
 }
 
 
