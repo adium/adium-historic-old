@@ -57,27 +57,27 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 		float	horizontalShift = 0;
 		
 		//Add
-		oldFrame = [button_add frame];
-		[button_add setTitle:AILocalizedString(@"Add Event",nil)];
-		[button_add sizeToFit];
-		newFrame = [button_add frame];
-		if(newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
-		newFrame.origin.x = oldFrame.origin.x;
-		[button_add setFrame:newFrame];
-		horizontalShift += newFrame.size.width - oldFrame.size.width;
-		
-		//Remove, to the right of Add
-		oldFrame = [button_delete frame];
-		[button_delete setTitle:AILocalizedString(@"Remove Event",nil)];
-		[button_delete sizeToFit];
-		newFrame = [button_delete frame];
-		if(newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
-		newFrame.origin.x = oldFrame.origin.x + horizontalShift;
-		[button_delete setFrame:newFrame];
+//		oldFrame = [button_add frame];
+//		[button_add setTitle:AILocalizedString(@"Add Event",nil)];
+//		[button_add sizeToFit];
+//		newFrame = [button_add frame];
+//		if(newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
+//		newFrame.origin.x = oldFrame.origin.x;
+//		[button_add setFrame:newFrame];
+//		horizontalShift += newFrame.size.width - oldFrame.size.width;
+//		
+//		//Remove, to the right of Add
+//		oldFrame = [button_delete frame];
+//		[button_delete setTitle:AILocalizedString(@"Remove Event",nil)];
+//		[button_delete sizeToFit];
+//		newFrame = [button_delete frame];
+//		if(newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
+//		newFrame.origin.x = oldFrame.origin.x + horizontalShift;
+//		[button_delete setFrame:newFrame];
 		
 		//Edit, right justified and far enough away from Remove that it can't conceivably overlap
 		oldFrame = [button_edit frame];
-		[button_edit setTitle:AILocalizedString(@"Edit Event...",nil)];
+		[button_edit setTitle:AILocalizedString(@"Edit",nil)];
 		[button_edit sizeToFit];
 		newFrame = [button_edit frame];
 		if(newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
