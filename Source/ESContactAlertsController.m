@@ -40,7 +40,7 @@ DeclareString(KeyOneTimeAlert);
 - (void)closeController
 {
 	[globalOnlyEventHandlers release]; globalOnlyEventHandlers = nil;
-	[eventHandlers release]; eventHandlers = ni;
+	[eventHandlers release]; eventHandlers = nil;
 	[actionHandlers release]; actionHandlers = nil;
 }
 
