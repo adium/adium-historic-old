@@ -82,7 +82,7 @@
     }
 	
 	//Remove our typing timer
-	[self _removeTypingTimerForChat:chat];
+	[self _removeTypingTimer:[chat statusObjectForKey:ENTERED_TEXT_TIMER] forChat:chat];
 }
 
 /*
@@ -212,7 +212,7 @@
 {
 	AIChat  *chat = [inTimer userInfo];
 	[self _sendTypingState:AIEnteredText toChat:chat];
-	[self _removeTypingTimerForChat:chat];
+	[self _removeTypingTimer:[chat statusObjectForKey:ENTERED_TEXT_TIMER] forChat:chat];
 }
 
 
