@@ -34,8 +34,15 @@
 #define	ANNOUNCER_EVENT_ALERT_SHORT	AILocalizedString(@"Speak Event","short phrase for the contact alert which speaks the event")
 #define	ANNOUNCER_EVENT_ALERT_LONG	AILocalizedString(@"Speak the event aloud","short phrase for the contact alert which speaks the event")
 
+/*
+ * @class ESAnnouncerPlugin
+ * @brief Component which provides Speak Event and Speak Text actions
+ */
 @implementation ESAnnouncerPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
     //Install our contact alerts
@@ -51,15 +58,10 @@
     lastSenderString = nil;
 }
 
-- (void)uninstallPlugin
-{
-    //Uninstall our contact alert
-//    [[adium contactAlertsController] unregisterContactAlertProvider:self];
-    
-}
-
-//Speak Text Alert -----------------------------------------------------------------------------------------------------
-#pragma mark Speak Text Alert
+/*!
+ * @brief Short description
+ * @result A short localized description of the action
+ */
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
 	if([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]){
@@ -69,6 +71,10 @@
 	}
 }
 
+/*!
+ * @brief Long description
+ * @result A longer localized description of the action which should take into account the details dictionary as appropraite.
+ */
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
 	if([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]){		
@@ -84,11 +90,18 @@
 	}
 }
 
+/*!
+ * @brief Image
+ */
 - (NSImage *)imageForActionID:(NSString *)actionID
 {
 	return([NSImage imageNamed:@"AnnouncerAlert" forClass:[self class]]);
 }
 
+/*!
+ * @brief Details pane
+ * @result An <tt>AIModularPane</tt> to use for configuring this action, or nil if no configuration is possible.
+ */
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
 	if([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]){
@@ -98,6 +111,15 @@
 	}
 }
 
+/*!
+ * @brief Perform an action
+ *
+ * @param actionID The ID of the action to perform
+ * @param listObject The listObject associated with the event triggering the action. It may be nil
+ * @param details If set by the details pane when the action was created, the details dictionary for this particular action
+ * @param eventID The eventID which triggered this action
+ * @param userInfo Additional information associated with the event; userInfo's type will vary with the actionID.
+ */
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
 	NSString			*textToSpeak = nil;
@@ -221,13 +243,17 @@
 	}
 }
 
+/*!
+ * @brief Allow multiple actions?
+ *
+ * If this method returns YES, every one of this action associated with the triggering event will be executed.
+ * If this method returns NO, only the first will be.
+ *
+ * These are sound-based actions, so only allow one.
+ */
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
 {
-	if([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]){
-		return(YES);
-	}else{ /*Speak Event*/
-		return(NO);
-	}
+	return(NO);
 }
 
 @end
