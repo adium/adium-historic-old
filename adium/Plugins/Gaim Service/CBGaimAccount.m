@@ -304,6 +304,29 @@ static id<GaimThread> gaimThread = nil;
 	}
 }
 
+- (oneway void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString
+{
+	NSString *oldUserInfoString = [theContact statusObjectForKey:@"TextProfileString"];
+	
+	if (userInfoString && [userInfoString length]) {
+		if (![userInfoString isEqualToString:oldUserInfoString]) {
+			
+			[theContact setStatusObject:userInfoString
+								 forKey:@"TextProfileString" 
+								 notify:NO];
+			[theContact setStatusObject:[AIHTMLDecoder decodeHTML:userInfoString]
+								 forKey:@"TextProfile" 
+								 notify:NO];
+		}
+	} else if (oldUserInfoString) {
+		[theContact setStatusObject:nil forKey:@"TextProfileString" notify:NO];
+		[theContact setStatusObject:nil forKey:@"TextProfile" notify:NO];	
+	}	
+	
+	//Apply any changes
+	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+}
+
 - (oneway void)removeContact:(AIListContact *)theContact
 {
 	if(theContact){
