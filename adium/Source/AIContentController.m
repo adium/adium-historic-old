@@ -13,6 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+// $Id: AIContentController.m,v 1.34 2003/12/08 06:31:06 jmelloy Exp $
+
 #import "AIContentController.h"
 
 @implementation AIContentController
