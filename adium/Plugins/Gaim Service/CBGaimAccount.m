@@ -51,13 +51,13 @@
 
 - (void)accountNewBuddy:(GaimBuddy*)buddy
 {
-	NSLog(@"accountNewBuddy (%s)", buddy->name);
+	//NSLog(@"accountNewBuddy (%s)", buddy->name);
     [self createHandleAssociatingWithBuddy:buddy];
 }
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {
-	NSLog(@"accountUpdateBuddy (%s)", buddy->name);
+	//NSLog(@"accountUpdateBuddy (%s)", buddy->name);
     int                     online;
     NSMutableDictionary     *statusDict;
     NSMutableArray          *modifiedKeys = [NSMutableArray array];
@@ -190,7 +190,7 @@
 
 - (void)accountRemoveBuddy:(GaimBuddy*)buddy
 {
-	NSLog(@"accountRemoveBuddy (%s)", buddy->name);
+	//NSLog(@"accountRemoveBuddy (%s)", buddy->name);
 
     //stored the key as a compactedString originally
     [handleDict removeObjectForKey:[[NSString stringWithFormat:@"%s", buddy->name] compactedString]];
@@ -870,6 +870,7 @@
 	//Set password and connect
 	gaim_account_set_password(account, [password UTF8String]);
 	gc = gaim_account_connect(account);
+	NSLog(@"Got a gc of %i",gc);
 }
 
 //Configure libgaim's proxy settings using the current system values
@@ -977,7 +978,8 @@
 	[self silenceAllHandleUpdatesForInterval:18.0];
 
 	//Set our initial status after a short delay (To allow libgaim to finish connecting)
-    [self performSelector:@selector(updateAllStatusKeys) withObject:nil afterDelay:1];
+	[self updateAllStatusKeys];
+#warning    [self performSelector:@selector(updateAllStatusKeys) withObject:nil afterDelay:1];
 }
 
 //Reset the libgaim account, causing it to forget all saved information
@@ -989,6 +991,7 @@
     [(CBGaimServicePlugin *)service removeAccount:account];
     gaim_accounts_delete(account); account = NULL;
     gc = NULL;
+	NSLog(@"cleared our gc");
 
 	//Recreate a fresh version of the account
     account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
@@ -1083,7 +1086,11 @@
 - (void)setAccountAwayTo:(NSAttributedString *)awayMessage
 {
     char	*awayHTML = nil;
-
+	if(!gc){
+		NSLog(@"Connectiong state: NO GC!");
+	}else{
+		NSLog(@"Connection state:%i",gc->state);
+	}
 	//Convert the away message to HTML, and pass it to libgaim
 	if(awayMessage){
         awayHTML = (char *)[[AIHTMLDecoder encodeHTML:awayMessage
