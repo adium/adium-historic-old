@@ -137,7 +137,7 @@ static NSMenu       *eContextualMenu = nil;
 
 -(void)insertEmoticon:(id)sender
 {
-    NSString *emoString;
+    NSString *emoString = nil;
     // Actually, since sender can be a menu item or a button, it'd be better to look up the name in the emoticon pack's emoticons array,
     // then get the emoticon itself and ask IT for the textEquivalents, instead of asking an id sender :P
     if([emoticonPacks count] == 1)
@@ -147,7 +147,7 @@ static NSMenu       *eContextualMenu = nil;
     }
     else if([emoticonPacks count] > 1)
     {
-        AIEmoticonPack *selectedPack;
+        AIEmoticonPack *selectedPack = nil;
         AIEmoticon *selectedEmoticon;
         id object;
         NSEnumerator *menuEnum = [[eMenu itemArray] objectEnumerator];
@@ -158,11 +158,13 @@ static NSMenu       *eContextualMenu = nil;
                 selectedPack = [emoticonPacks objectAtIndex:[[eMenu itemArray] indexOfObject:object]];
             }
         }
-        selectedEmoticon = [[selectedPack emoticons] objectAtIndex:[[sender menu] indexOfItem:sender]];
-        emoString = [[selectedEmoticon textEquivalents] objectAtIndex:0];
+		if (selectedPack) {
+			selectedEmoticon = [[selectedPack emoticons] objectAtIndex:[[sender menu] indexOfItem:sender]];
+			emoString = [[selectedEmoticon textEquivalents] objectAtIndex:0];
+		}
     }
     NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-    if([responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]){
+    if(emoString && [responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]){
         [responder insertText:emoString];
     }
 }
