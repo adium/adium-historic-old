@@ -36,7 +36,7 @@ There are quite a few steps involved in creating a plugin:\
 \pard\pardeftab720\li1080\ql\qnatural
 
 \f1\b0 \cf0 - In the XCode side bar, under targets, select your plugin from the list\
-- Ctrl+click, and then get info. Click on the builds tab. Then click on 'Standard Build' in the drawer. Locate 'Wrapper extension' in the 'Standard Build Settings' column, then add 'AdiumPLugin' to the 'Value' field that corresponds on the right.\
+- Ctrl+click, and then get info. Click on the builds tab. Then click on 'Common Settings' in the drawer. Locate 'Wrapper extension' in the 'Standard Build Settings' column, then add 'AdiumPLugin' to the 'Value' field that corresponds on the right.\
 - Move to the 'Properties' tab in the get info inspector. Under the 'Principal Class' field, add 'AI<PluginName>Plugin'. You can replace AI with your initials if you like.\
 \pard\pardeftab720\li360\ql\qnatural
 
@@ -122,7 +122,7 @@ The AI<Plugin Name>Class you create will serve as the main class and initializer
 
 \fs24 \cf0 \
 \pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardeftab720\ql\qnatural
-\cf0 The install plugin method is called as your plugin loads.  This is where you want to use Adium\'d5s core controllers to perform your task, or register code to perform the task later.  Subclasses of AIPlugin automatically inherit the variable \'d4owner\'d5, which is a reference to the main AIAdium class.\
+\cf0 The install plugin method is called as your plugin loads.  This is where you want to use Adium\'d5s core controllers to perform your task, or register code to perform the task later.  Subclasses of AIPlugin automatically inherit the variable \'d4adium\'d5, which is a reference to the main AIAdium class.\
 \
 Owner can be used to access all the Adium core controllers.  ( [owner menuController], [owner accountController], etc)\
 \
