@@ -96,6 +96,11 @@
 	[contactListView reloadData];
 }
 
+- (AIListObject <AIContainingObject> *)contactListRoot
+{
+	return contactList;
+}
+
 - (void)setHideRoot:(BOOL)inHideRoot
 {
 	hideRoot = inHideRoot;
