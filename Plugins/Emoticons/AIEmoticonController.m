@@ -19,6 +19,7 @@
 #import "AIEmoticon.h"
 #import "AIEmoticonPack.h"
 #import "AIEmoticonPreferences.h"
+#import "AIPreferenceController.h"
 #import "AIContentController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 
