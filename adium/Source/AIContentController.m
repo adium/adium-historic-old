@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.77 2004/06/07 06:54:14 evands Exp $
+// $Id: AIContentController.m,v 1.78 2004/06/07 16:25:48 evands Exp $
 
 #import "AIContentController.h"
 
@@ -249,10 +249,7 @@
 													  context:inObject]];
         }
 		
-		//Post the Chat_DidOpen notification BEFORE anything displays
-		#warning dchoby98: Another bad place to put Chat_DidOpen
 		if([inObject trackContent] && [[chat contentObjectArray] count] <= 1) {
-			[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
 			shouldBeFirstMessage = YES;
 		}
 
@@ -381,13 +378,6 @@
 	AIChat	*chat = [self chatWithContact:inContact initialStatus:nil];
 	if(chat) [[owner interfaceController] openChat:chat]; 
 
-	#warning dchoby98: Is there a better place to post the Chat_DidOpen notification?
-	
-	// Only post Chat_DidOpen if it is a NEW chat
-	if( [[chat contentObjectArray] count] <= 1 ) {
-		[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
-	}
-	
 	return(chat);	
 }
 
@@ -436,11 +426,14 @@
 			[chat addParticipatingListObject:inContact];
 			[chatArray addObject:chat];
 
-			//Inform the account of its creation
-			if(![(AIAccount<AIAccount_Content> *)account openChat:chat]){
+			//Inform the account of its creation and post a notification if successful
+			if([(AIAccount<AIAccount_Content> *)account openChat:chat]){
+				[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
+			}else{
 				[chatArray removeObject:chat];
 				chat = nil;
 			}
+			
 			
 		}
 	}
@@ -456,14 +449,15 @@
 		//Create a new chat
 		chat = [AIChat chatForAccount:account initialStatusDictionary:initialStatus];
 		[chat setName:inName];
+		[chatArray addObject:chat];
 		
-		//Inform the account of its creation
-		if(![(AIAccount<AIAccount_Content> *)account openChat:chat]){
+		//Inform the account of its creation and post a notification if successful
+		if([(AIAccount<AIAccount_Content> *)account openChat:chat]){
+			[[owner notificationCenter] postNotificationName:Chat_DidOpen object:chat userInfo:nil];
+		}else{
+			[chatArray removeObject:chat];
 			chat = nil;
 		}
-		
-		if (chat)
-			[chatArray addObject:chat];
 	}
 
 	return(chat);
