@@ -227,9 +227,13 @@ Adium, Copyright 2001-2004, Adam Iser
 		NSEnumerator    *enumerator = [delayedNotificationGroups objectEnumerator];
 		NSString        *group;
 		
+		[[adium contactController] delayListObjectNotifications];
+
 		while(group = [enumerator nextObject]){
 			[self informObserversOfChangedKey:nil inGroup:group object:nil];
 		}
+
+		[[adium contactController] endListObjectNotificationsDelay];
 		
 		[delayedNotificationGroups removeAllObjects];
     }
