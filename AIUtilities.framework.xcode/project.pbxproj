@@ -4394,6 +4394,49 @@
 			settings = {
 			};
 		};
+		34D1838D075FC20E0075A380 = {
+			children = (
+				34D18390075FC2390075A380,
+				34D18391075FC2390075A380,
+			);
+			isa = PBXGroup;
+			name = "Button with rollover delegate action";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D18390075FC2390075A380 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIRolloverButton.h;
+			path = "Frameworks/AIUtilities Framework/AIRolloverButton.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D18391075FC2390075A380 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIRolloverButton.m;
+			path = "Frameworks/AIUtilities Framework/AIRolloverButton.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34D18392075FC2390075A380 = {
+			fileRef = 34D18390075FC2390075A380;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		34D18393075FC2390075A380 = {
+			fileRef = 34D18391075FC2390075A380;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34E46928075681AE004C3A42 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -4822,6 +4865,7 @@
 		4BD1EFA506D264AC00B3975E = {
 			children = (
 				4BD1EFB106D2653E00B3975E,
+				34D1838D075FC20E0075A380,
 				4BD1EF3306D2631E00B3975E,
 				4BD1F5A706D28BE600B3975E,
 				4BD1F2D806D2699D00B3975E,
@@ -5528,6 +5572,7 @@
 				34A2EBEF073B3BCD0042C391,
 				34E4692A075681AE004C3A42,
 				4B6DDA4F075A8879002E0BF4,
+				34D18392075FC2390075A380,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5684,6 +5729,7 @@
 				34A2EBEE073B3BCD0042C391,
 				34E4692B075681AE004C3A42,
 				4B6DDA50075A8879002E0BF4,
+				34D18393075FC2390075A380,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
