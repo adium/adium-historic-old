@@ -406,7 +406,7 @@ aim_srv_setavailmsg(od->sess, text);
 		desiredEncoding = NSASCIIStringEncoding;
 	}
 	
-	return [[[[NSString alloc] initWithBytes:bytes length:length encoding:desiredEncoding] autorelease];
+	return [[[NSString alloc] initWithBytes:bytes length:length encoding:desiredEncoding] autorelease];
 }
 
 @end
