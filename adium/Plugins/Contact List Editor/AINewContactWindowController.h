@@ -16,7 +16,7 @@
 #define PREF_GROUP_ADD_CONTACT  @"Add Contact"
 #define KEY_ADD_CONTACT_TO		@"Add Contacts to account"
 
-@interface AINewContactWindowController : AIWindowController {
+@interface AINewContactWindowController : AIWindowController <AIListObjectObserver> {
 	IBOutlet	NSPopUpButton		*popUp_contactType;
 	IBOutlet	NSPopUpButton		*popUp_targetGroup;
 	IBOutlet	NSTextField			*textField_contactName;
