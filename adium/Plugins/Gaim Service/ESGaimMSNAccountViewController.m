@@ -41,13 +41,13 @@
 }
 
 - (IBAction)changedConnectionPreference:(id)sender
-{
-	[super changedConnectionPreference:sender];
-	
+{	
 	if (sender == checkBox_HTTPConnectMethod){
 		[account setPreference:[NSNumber numberWithBool:[sender state]] 
-						forKey:@"MSN:HTTP Connect Method"
+						forKey:KEY_MSN_HTTP_CONNECT_METHOD
 						 group:GROUP_ACCOUNT_STATUS];
+	}else{
+		[super changedConnectionPreference:sender];		
 	}
 }
 

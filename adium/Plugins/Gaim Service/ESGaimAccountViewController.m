@@ -58,10 +58,11 @@
 	proxyUserName = [theAccount preferenceForKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
 	[textField_proxyUserName setStringValue:(proxyUserName ? proxyUserName : @"")];
 
-	
-	proxyPassword = [[adium accountController] passwordForProxyServer:proxyHostName
-															 userName:proxyUserName];
-	[textField_proxyPassword setStringValue:(proxyPassword ? proxyPassword : @"")];
+	if (proxyHostName && proxyUserName){
+		proxyPassword = [[adium accountController] passwordForProxyServer:proxyHostName
+																 userName:proxyUserName];
+		[textField_proxyPassword setStringValue:(proxyPassword ? proxyPassword : @"")];
+	}
 	
 	[self configureConnectionControlDimming];
 }
@@ -97,40 +98,14 @@
 	NSTextField *sender = [aNotification object];
 	if (sender == textField_hostName){
 		NSString *hostName = [textField_hostName stringValue];
-		if ([hostName length]){
-			[account setPreference:hostName
-							forKey:[account hostKey]
-							 group:GROUP_ACCOUNT_STATUS];
-		}else{
-			[account setPreference:nil
-							forKey:[account hostKey]
-							 group:GROUP_ACCOUNT_STATUS];
-			
-			//Access the host name so we can redisplay the default value if applicable
-			hostName = [(CBGaimAccount *)account host];
-			
-			if (hostName){
-				[textField_hostName setStringValue:hostName];
-			}
-		}
+		[account setPreference:([hostName length] ? hostName : nil)
+						forKey:[account hostKey]
+						 group:GROUP_ACCOUNT_STATUS];	
 		
 	}else if (sender == textField_portNumber){
-		if ([[sender stringValue] length]){
-			[account setPreference:[NSNumber numberWithInt:[sender intValue]]
-							forKey:[account portKey]
-							 group:GROUP_ACCOUNT_STATUS];
-		}else{
-			[account setPreference:nil
-							forKey:[account portKey]
-							 group:GROUP_ACCOUNT_STATUS];
-			
-			//Set the port number so we can redisplay the default value if needed
-			int port = [(CBGaimAccount *)account port];
-			
-			if (port){
-				[textField_portNumber setIntValue:port];
-			}
-		}
+		[account setPreference:([[sender stringValue] length] ? [NSNumber numberWithInt:[sender intValue]] : nil)
+						forKey:[account portKey]
+						 group:GROUP_ACCOUNT_STATUS];
 		
 	}else if (sender == textField_proxyHostName){
 		[account setPreference:[sender stringValue]
@@ -147,7 +122,7 @@
 		[account setPreference:userName
 						forKey:KEY_ACCOUNT_GAIM_PROXY_USERNAME
 						 group:GROUP_ACCOUNT_STATUS];
-				
+		
 		//Update the password field
 		[textField_proxyPassword setStringValue:@""];
 		[textField_proxyPassword setEnabled:(userName && [userName length])];
@@ -161,7 +136,22 @@
 		[[adium accountController] setPassword:[textField_proxyPassword stringValue]
 								forProxyServer:[textField_proxyHostName stringValue]
 									  userName:[textField_proxyUserName stringValue]];
+	}else if (sender == textField_hostName){
+		//Access the host name so we can redisplay the default value if applicable
+		NSString * hostName = [(CBGaimAccount *)account host];
+		
+		if (hostName){
+			[textField_hostName setStringValue:hostName];
+		}
+	}else if (sender == textField_portNumber){
+		//Set the port number so we can redisplay the default value if needed
+		int port = [(CBGaimAccount *)account port];
+		
+		if (port){
+			[textField_portNumber setIntValue:port];
+		}
 	}
+	
 }
 
 - (void)changeProxyType:(id)sender

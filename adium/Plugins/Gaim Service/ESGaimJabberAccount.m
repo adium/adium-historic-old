@@ -7,14 +7,73 @@
 #import "ESGaimJabberAccountViewController.h"
 #import "ESGaimJabberAccount.h"
 
-#define KEY_JABBER_HOST @"Jabber:Host"
-#define KEY_JABBER_PORT @"Jabber:Port"
-
 @implementation ESGaimJabberAccount
 
 - (const char*)protocolPlugin
 {
     return "prpl-jabber";
+}
+
+#define KEY_JABBER_RESOURCE			@"Jabber:Resource"
+#define KEY_JABBER_ALLOW_PLAINTEXT  @"Jabber:Allow Plaintext Authentication"
+
+- (void)initAccount
+{
+	[super initAccount];
+	bareUID = nil;
+}
+- (void)dealloc
+{
+	[bareUID release];
+	[super dealloc];
+}
+
+- (void)createNewGaimAccount
+{
+	NSString	*connectServer, *resource, *server, *userNameWithHost = nil, *completeUserName = nil;
+	BOOL		forceOldSSL, useTLS, allowPlaintext, serverAppended, resourceAppended;
+	
+	[super createNewGaimAccount];
+	
+	//'Connect via' server (nil by default)
+	connectServer = [self preferenceForKey:KEY_JABBER_CONNECT_SERVER group:GROUP_ACCOUNT_STATUS];
+	if (connectServer){
+		gaim_account_set_string(account, "connect_server", [connectServer UTF8String]);
+	}
+	
+	//Force old SSL usage? (off by default)
+	forceOldSSL = [[self preferenceForKey:KEY_JABBER_FORCE_OLD_SSL group:GROUP_ACCOUNT_STATUS] boolValue];
+	gaim_account_set_bool(account, "old_ssl", forceOldSSL);
+
+	//Allow TLS useage? (on by default)
+	useTLS = [[self preferenceForKey:KEY_JABBER_USE_TLS group:GROUP_ACCOUNT_STATUS] boolValue];
+	gaim_account_set_bool(account, "use_tls", useTLS);
+
+	//Allow plaintext authorization over an unencrypted connection? Gaim will prompt if this is NO and is needed.
+	allowPlaintext = [[self preferenceForKey:KEY_JABBER_ALLOW_PLAINTEXT group:GROUP_ACCOUNT_STATUS] boolValue];
+	gaim_account_set_bool(account, "auth_plain_in_clear", allowPlaintext);
+		
+	//Gaim stores the username in the format username@server/resource.  We need to pass it a username in this format
+	//createNewGaimAccount gets called on every connect, so we need to make sure we don't append the information more
+	//than once.  Also, if the user puts the uesrname in username@server format, which is common for Jabber, we should
+	//handle this gracefully, ignoring the server preference entirely.
+
+	serverAppended = ([UID rangeOfString:@"@"].location != NSNotFound);
+
+	if (!serverAppended){
+		server = [self host];
+		userNameWithHost = [NSString stringWithFormat:@"%@@%@",UID,server];
+		[UID release]; UID = userNameWithHost;
+	}
+	
+
+	resourceAppended = ([UID rangeOfString:@"/"].location != NSNotFound);
+	if (!resourceAppended){
+		resource = [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
+		completeUserName = [NSString stringWithFormat:@"%@/%@",UID,resource];
+	}
+	
+	gaim_account_set_username(account, [UID UTF8String]);
 }
 
 - (NSString *)unknownGroupName {
