@@ -28,8 +28,6 @@ List and Tabs
 
 Insert Link sheet
   - Multiple sheets can be invoked at the same time (needs to be modal sheet)
-  - Tabs in the URL field, when deleted, still make it think it has incorrectly
-    formatted URLs (just tab a few times, delete, and it'll still insert)
 
 Other
   - Dock icon does not appear to be saved for some users while Adium is closed
