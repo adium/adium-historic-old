@@ -21,6 +21,7 @@
 # You should be able to drop the adiumLogs folder into ~/Library/Application
 # Support/Users/YOU/Logs/.
 
+use Time::Local;
 use warnings;
 use strict;
 
@@ -67,6 +68,7 @@ close(FILE);
 for (my $i = 0; $i < @input; $i++) {
     my ($chatname, $sender, $date, $time, $message);
     my ($day, $month, $year);
+    my ($hh, $mm, $ss, $modTime);
     
     $_ = $input[$i];
     
@@ -119,4 +121,8 @@ for (my $i = 0; $i < @input; $i++) {
         print "Bad record found at line $i.  Logged in $base_out/bad.\n";
     }
     close OUT;
+    
+    ($hh, $mm, $ss) = $time =~ /(\d+):(\d+):(\d+)/;
+    $modTime = timelocal($ss, $mm, $hh, $day, $month - 1, $year);
+    utime time, $modTime, $outfile;
 }
