@@ -183,7 +183,7 @@
 
 - (IBAction)confirmQuit:(id)sender
 {
-    if([[contentController chatArray] count] > 0)
+/*    if([[contentController chatArray] count] > 0)
     {
         if(NSRunCriticalAlertPanel(@"Quit Adium?", @"You have open conversations, do you want to quit Adium? ", @"Quit", @"Cancel", nil) == NSAlertDefaultReturn)
         {
@@ -191,9 +191,9 @@
         }
     }
     else
-    {
+    {*/
         [NSApp terminate:nil];
-    }
+//    }
 }
 
 @end
