@@ -19,12 +19,14 @@
 
 - (void)installPlugin
 {
+    NSDictionary    *preferenceDict;
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:EVENT_BEZEL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_EVENT_BEZEL];
 
     //Our preference view
     preferences = [[JSCEventBezelPreferences preferencePaneWithOwner:owner] retain];
-    
+
+    // Setup the controller
     ebc = [JSCEventBezelController eventBezelControllerForOwner:self];
     
     [[owner notificationCenter] addObserver:self
@@ -74,16 +76,33 @@
     NSEnumerator    *accountEnumerator;
     AIAccount       *account;
     BOOL            isFirstMessage = NO;
+    BOOL            showBezel = NO;
     NSDictionary    *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
     
-    if ([[notification name] isEqualToString: Content_FirstContentRecieved]) {
-        contact = [[[notification object] participatingListObjects] objectAtIndex:0];
-        isFirstMessage = YES;
-    } else {
-        contact = [notification object];
+    if ([[preferenceDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue]) {
+        if ([[notification name] isEqualToString: Content_FirstContentRecieved]) {
+            showBezel = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue];
+            contact = [[[notification object] participatingListObjects] objectAtIndex:0];
+            isFirstMessage = YES;
+        } else {
+            if ([[notification name] isEqualToString: CONTACT_STATUS_ONLINE_YES]) {
+                showBezel = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_ONLINE] boolValue];
+            } else if ([[notification name] isEqualToString: CONTACT_STATUS_ONLINE_NO]) {
+                showBezel = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_OFFLINE] boolValue];
+            } else if ([[notification name] isEqualToString: CONTACT_STATUS_AWAY_YES]) {
+                showBezel = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_AWAY] boolValue];
+            } else if ([[notification name] isEqualToString: CONTACT_STATUS_AWAY_NO]) {
+                showBezel = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_AVAILABLE] boolValue];
+            } else if ([[notification name] isEqualToString: CONTACT_STATUS_IDLE_YES]) {
+                showBezel = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IDLE] boolValue];
+            } else if ([[notification name] isEqualToString: CONTACT_STATUS_IDLE_NO]) {
+                showBezel = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_NO_IDLE] boolValue];
+            }
+            contact = [notification object];
+        }
     }
     
-    if ([[preferenceDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue]) {
+    if (showBezel) {
         accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
         while ((account = [accountEnumerator nextObject])) {
             AIHandle    *contactHandle;
@@ -92,6 +111,7 @@
                 NSImage                     *tempBuddyIcon = nil;
                 NSString                    *tempContactName = nil;
                 NSString                    *statusMessage = nil;
+                int                         currentPosition, prefPosition;
                 
                 ownerArray = [contact statusArrayForKey:@"BuddyImage"];
                 if(ownerArray && [ownerArray count]) {
@@ -237,11 +257,17 @@
                     }*/
                 }
                 
+                // Realculate bezel position, if needed
+                currentPosition = [ebc bezelPosition];
+                prefPosition = [[preferenceDict objectForKey:KEY_EVENT_BEZEL_POSITION] intValue];
+                if (currentPosition != prefPosition) {
+                    [ebc setBezelPosition: prefPosition];
+                }
+                
                 [ebc showBezelWithContact: tempContactName
                                 withImage: tempBuddyIcon
                                  forEvent: [notification name]
-                              withMessage: statusMessage
-                              atPosition: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_POSITION] intValue]];
+                              withMessage: statusMessage];
             }
         }
     }

@@ -15,6 +15,13 @@
 #define KEY_SHOW_EVENT_BEZEL                @"Show Event Bezel"
 #define KEY_EVENT_BEZEL_POSITION            @"Event Bezel Position"
 #define KEY_EVENT_BEZEL_BUDDY_NAME_FORMAT   @"Buddy Name Format"
+#define KEY_EVENT_BEZEL_ONLINE              @"Display if Online"
+#define KEY_EVENT_BEZEL_OFFLINE             @"Display if Offline"
+#define KEY_EVENT_BEZEL_AVAILABLE           @"Display if Available"
+#define KEY_EVENT_BEZEL_AWAY                @"Display if Away"
+#define KEY_EVENT_BEZEL_NO_IDLE             @"Display if no Longer Idle"
+#define KEY_EVENT_BEZEL_IDLE                @"Display if Idle"
+#define KEY_EVENT_BEZEL_FIRST_MESSAGE       @"Display if First Message"
 
 @class JSCEventBezelPreferences;
 

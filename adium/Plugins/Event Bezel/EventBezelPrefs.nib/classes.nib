@@ -15,10 +15,34 @@
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {changeBuddyNameFormat = id; changePosition = id; toggleShowBezel = id; }; 
+            CLASS = JSCEventBezelController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {bezelView = JSCEventBezelView; bezelWindow = JSCEventBezelWindow; }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {
+                changeBuddyNameFormat = id; 
+                changePosition = id; 
+                toggleAvailable = id; 
+                toggleAway = id; 
+                toggleFirstMessage = id; 
+                toggleIdle = id; 
+                toggleNoIdle = id; 
+                toggleOffline = id; 
+                toggleOnline = id; 
+                toggleShowBezel = id; 
+            }; 
             CLASS = JSCEventBezelPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "checkBox_available" = NSButton; 
+                "checkBox_away" = NSButton; 
+                "checkBox_firstMessage" = NSButton; 
+                "checkBox_idle" = NSButton; 
+                "checkBox_noIdle" = NSButton; 
+                "checkBox_offline" = NSButton; 
+                "checkBox_online" = NSButton; 
                 "checkBox_showBezel" = NSButton; 
                 "popUp_buddyNameFormat" = NSPopUpButton; 
                 "popUp_position" = NSPopUpButton; 
