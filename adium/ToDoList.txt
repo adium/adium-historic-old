@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.120 2004/05/12 12:00:40 eevyl Exp $
+$Id: ToDoList.txt,v 1.121 2004/05/12 20:31:38 jmelloy Exp $
 
 
 Legend
@@ -29,6 +29,7 @@ Bugs
 * Linking plugin auto-links some characters it shouldn't.. such as *'s and >'s (When placed at the end of an address)
 * Smooth operator and Elisha webkit styles incorrectly display multi-line status messages.
 * Emoticon packs flip upside down when you select them.  (The emoticon menu is causing them to flip, so only enabled packs will be flipped.  No amount of flipping and unflipping within the emoticon pack cell seems to make things correct)
+* AIM chats are logging with both loggers as having a title of (null)
 
 Applescripts:
 * Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
