@@ -28,8 +28,8 @@ static AINewMessagePrompt *sharedInstance = nil;
 {
     if(!sharedInstance){
         sharedInstance = [[self alloc] initWithWindowNibName:NEW_MESSAGE_PROMPT_NIB owner:inOwner];
-        [[sharedInstance window] makeKeyAndOrderFront:nil];
     }
+    [[sharedInstance window] makeKeyAndOrderFront:nil];
 }
 
 + (void)closeSharedInstance
@@ -134,6 +134,8 @@ static AINewMessagePrompt *sharedInstance = nil;
 
         [[popUp_service menu] addItem:menuItem];
     }
+
+    [[self window] center]; //Center the window
 }
 
 - (BOOL)shouldCascadeWindows
