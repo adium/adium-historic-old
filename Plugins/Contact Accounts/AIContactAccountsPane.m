@@ -72,7 +72,7 @@
 {
 	//Get the new accounts
 	[accounts release];
-	accounts = [[[adium accountController] accountsWithServiceID:[listObject serviceID]] retain];
+	accounts = [[[adium accountController] accountsWithService:[listObject service]] retain];
 	
 	//Refresh our table
 	[tableView_accounts reloadData];
@@ -131,8 +131,8 @@
 {
 	NSString		*identifier = [tableColumn identifier];
 	AIAccount		*account = [accounts objectAtIndex:row];
-	AIListContact	*existing = [[adium contactController] existingContactWithService:[listObject serviceID]
-																			accountID:[account uniqueObjectID]
+	AIListContact	*existing = [[adium contactController] existingContactWithService:[listObject service]
+																			  account:account
 																				  UID:[listObject UID]];
 	BOOL			accountOnline = ([account integerStatusObjectForKey:@"Online"]);
 	
@@ -179,8 +179,8 @@
 		if(menuIndex >= 0 && menuIndex < [menu numberOfItems]){
 			AIListGroup	*group = [[menu itemAtIndex:menuIndex] representedObject];
 			
-			exactContact = [[adium contactController] existingContactWithService:[listObject serviceID]
-																	   accountID:[account uniqueObjectID]
+			exactContact = [[adium contactController] existingContactWithService:[listObject service]
+																		 account:account
 																			 UID:[listObject UID]];
 			
 			if (group){
@@ -190,8 +190,8 @@
 						[[adium contactController] moveContact:exactContact toGroup:group];
 					}else{  //Add contact
 						if (!exactContact){
-							exactContact = [[adium contactController] contactWithService:[listObject serviceID]
-																			   accountID:[account uniqueObjectID]
+							exactContact = [[adium contactController] contactWithService:[listObject service]
+																				 account:account
 																					 UID:[listObject UID]];
 						}
 						
