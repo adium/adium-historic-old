@@ -148,7 +148,7 @@
 	[contentDict setObject:[content type] forKey:@"Type"];
 	
 	objectID = [listContact internalUniqueObjectID];
-	accountNumber = [NSNumber numberWithInt:[[chat account] accountNumber]];
+	accountNumber = [[chat account] uniqueObjectID];
 	
 	// Outgoing or incoming?
 	if ([content isOutgoing]){
@@ -220,10 +220,10 @@
 					// The other person is always the one we're chatting with right now
 					if( [[messageDict objectForKey:@"Outgoing"] boolValue] ) {
 						dest = [chat listObject];
-						source = [[adium accountController] accountWithAccountNumber:[from intValue]];
+						source = [[adium accountController] accountWithInternalObjectID:from];
 					} else {
 						source = [chat listObject];
-						dest = [[adium accountController] accountWithAccountNumber:[to intValue]];
+						dest = [[adium accountController] accountWithInternalObjectID:to];
 					}
 
 					// Make the message response if all is well
