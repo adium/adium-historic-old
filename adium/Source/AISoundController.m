@@ -32,6 +32,7 @@
 #define RATE				@"Rate"
 
 @interface AISoundController (PRIVATE)
+- (void)_quicktimePlaySound:(NSString *)inPath;
 - (void)_scanSoundSetsFromPath:(NSString *)soundFolderPath intoArray:(NSMutableArray *)soundSetArray;
 - (void)_addSet:(NSString *)inSet withSounds:(NSArray *)inSounds toArray:(NSMutableArray *)inArray;
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -44,8 +45,10 @@
 - (void)initController
 {
     soundCacheDict = [[NSMutableDictionary alloc] init];
+    soundCacheArray = [[NSMutableArray alloc] init];
     activeSoundThreads = 0;
     soundLock = [[NSLock alloc] init];
+    soundThreadActive = NO;
 
 #ifdef MAC_OS_X_VERSION_10_0
     voiceArray = [[SUSpeaker voiceNames] retain];  //voiceArray will be in the same order that speaker expects
@@ -71,6 +74,8 @@
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 
+    //
+    EnterMovies();
 }
 
 //close
@@ -104,6 +109,7 @@
 
 
 //Private ------------------------------------------------------------------------
+//
 - (void)playSoundNamed:(NSString *)inName
 {
     NSString	*path;
@@ -124,76 +130,105 @@
     [self playSoundAtPath:path];
 }
 
+//Play a sound
 - (void)playSoundAtPath:(NSString *)inPath
 {
     if(!muteSounds){
-        //If the user is specifying a custom volume, we must use quicktime to play our sounds.
         if(useCustomVolume && customVolume != 0){
-            NSMovie	*movie;
-            
-            //Search for this sound in our cache
-            movie = [soundCacheDict objectForKey:inPath];
-            if(!movie){ //If the sound is not cached, load it
-                //If the cache is full, empty it
-                if([soundCacheDict count] >= MAX_QT_CACHED_SOUNDS){
-                    [soundCacheDict removeAllObjects];
-                }
-                
-                movie = [[[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:inPath] byReference:YES] autorelease];
-                [soundCacheDict setObject:movie forKey:inPath];
-            }else{
-                StopMovie([movie QTMovie]);
-                GoToBeginningOfMovie([movie QTMovie]); //Reset to the begining of the sound
-            }
-    
-            //Set the volume & play sound
-            SetMovieVolume([movie QTMovie], customVolume);
-            StartMovie([movie QTMovie]);
-            
-        }else if(!useCustomVolume){ //Otherwise, we can use NSSound
-    //     if(activeSoundThreads < MAX_THREAD_SOUNDS){
-                //Detach a thead to play the sound
+	    //If the user is specifying a custom volume, we must use quicktime to play our sounds.
+	    [self _quicktimePlaySound:inPath];
+
+        }else if(!useCustomVolume){ 
+	    //Otherwise, we can use NSSound
+	    if(!soundThreadActive){ //Don't bother spawning another thread if one is already waiting
                 [NSThread detachNewThreadSelector:@selector(_threadPlaySound:) toTarget:self withObject:inPath];
-                activeSoundThreads++;
-    //     }else{
-    //         NSLog(@"Too many sounds playing, skipping %@",[inPath lastPathComponent]);
-    //     }
+	    }
         }
     }    
 }
 
+//Play a sound using quicktime.
+// - Quicktime cannot be threaded to avoid blocking while sound hardware wakes up
+// - Quicktime is slow
+// + Quicktime offers volume contorl
+// + Quicktime can play almost anything
+// - Must cache manually
+- (void)_quicktimePlaySound:(NSString *)inPath
+{
+    NSMovie	*movie;
+
+    //Search for this sound in our cache
+    movie = [soundCacheDict objectForKey:inPath];
+
+    //If the sound is not cached, load it
+    if(!movie){
+	//If the cache is full, remove the less recently used cached sound
+	if([soundCacheDict count] >= MAX_QT_CACHED_SOUNDS){
+	    [soundCacheDict removeObjectForKey:[soundCacheArray lastObject]];
+	    [soundCacheArray removeLastObject];
+	}
+	
+	//Load and cache the sound
+	movie = [[[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:inPath] byReference:YES] autorelease];
+	[soundCacheDict setObject:movie forKey:inPath];
+	[soundCacheArray insertObject:inPath atIndex:0];
+
+    }else{
+	//Reset the cached sound back to the beginning
+	StopMovie([movie QTMovie]);
+	GoToBeginningOfMovie([movie QTMovie]);
+	
+	//Move this sound to the front of the cache (This will naturally move lesser used sounds to the back for removal)
+	[soundCacheArray removeObject:inPath];
+	[soundCacheArray insertObject:inPath atIndex:0];
+    }
+
+    //Set the volume and play sound
+    SetMovieVolume([movie QTMovie], customVolume);
+    StartMovie([movie QTMovie]);
+}
+
 //Play a sound using NSSound.  Meant to be detached as a new thread.
+// + NSSound can be threaded to avoid blocking Adium while the sound hardware wakes up
+// + NSSound is fast
+// - NSSound does not offer volume control
+// - NSSound only plays a few formats
+// + Cached by the system
 - (void)_threadPlaySound:(NSString *)inPath
 {
     NSAutoreleasePool 	*pool = [[NSAutoreleasePool alloc] init];
     NSSound		*sound;
 
+    //Lock to avoid trying to play two sounds at once from two different threads.
+    soundThreadActive = YES;
+    [soundLock lock];
+
     //Load the sound (The system apparently caches these)
     sound = [[NSSound alloc] initWithContentsOfFile:inPath byReference:YES];
-
+    [sound setDelegate:self];
 
     //Play the sound
-//I'm getting crashes within [sound play], and I believe they're caused by more than one of these threads calling play simultaneously.  I'm not sure if this lock will have any effect on the crash, but it's worth a try.  Unfortunately it's very difficult to reproduce.
-[soundLock lock];
     [sound play];
 
-    //When run on a laptop using battery power, the play method may block while the audio hardware warms up.  If it blocks, the sound WILL NOT PLAY after the block ends.  To get around this, we check to make sure the sound is playing, and if it isn't - we call the play method again.
+    //When run on a laptop using battery power, the play method may block while the audio
+    //hardware warms up.  If it blocks, the sound WILL NOT PLAY after the block ends.
+    //To get around this, we check to make sure the sound is playing, and if it isn't
+    //we call the play method again.
     if(![sound isPlaying]){
         [sound play];
     }
-[soundLock unlock];
 
-    //We keep this thread active until the sound finishes playing, so we can accurately update the activeSoundThread count when it is complete
-    while([sound isPlaying]){ //Check every second for sound completion
-        [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:SOUND_SLEEP_INTERVAL]];
-    }
-    activeSoundThreads--;    
-
-    //Release the sound
-    [sound release];
-    
-    //Release the autorelease pool
+    //Unlock and cleanup
+    [soundLock unlock];
+    soundThreadActive = NO;
     [pool release];
+}
+
+//NSSound finished playing callback
+- (void)sound:(NSSound *)sound didFinishPlaying:(BOOL)aBool
+{
+    //Clean up the sound
+    [sound release];
 }
 
 //
