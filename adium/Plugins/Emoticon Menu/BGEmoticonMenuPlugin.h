@@ -27,8 +27,7 @@
     NSPopUpButton *menuButton;
     NSToolbarItem *toolbarItem;
 }
--(NSMenu *)eMenu;
 -(NSMenu *)buildMenu:(AIEmoticonPack*)incomingPack;
 //-(NSToolbarItem *)toolbarItem;
--(void)buildToolbarItem;
+//-(void)buildToolbarItem;
 @end

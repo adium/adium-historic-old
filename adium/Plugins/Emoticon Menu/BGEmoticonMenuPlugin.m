@@ -24,27 +24,20 @@
 //some static declarations to make things easier. Only need to add to menus once.
 static NSMenuItem   *quickMenuItem = nil;
 static NSMenuItem   *quickContextualMenuItem = nil;
-static NSMenu       *eMenu = nil;
-static NSMenu       *eContextualMenu = nil;
 
 - (void)installPlugin
 {
     //init the menues and menuItems
     quickMenuItem = [[NSMenuItem alloc] initWithTitle:@"Insert Emoticon" target:self action:@selector(dummyTarget:) keyEquivalent:@""];
     quickContextualMenuItem = [[NSMenuItem alloc] initWithTitle:@"Insert Emoticon" target:self action:nil keyEquivalent:@""];
-    eMenu = [[NSMenu alloc] initWithTitle:@""];
-    eContextualMenu = [[NSMenu alloc] initWithTitle:@""];
-    
-    // configure emoticon menues
-    [self configureEmoticonSupport];
-    
-    [quickMenuItem setSubmenu:eMenu];
-    [quickContextualMenuItem setSubmenu:eContextualMenu];
-    
+
     //add the items to their menus.
     [[adium menuController] addContextualMenuItem:quickContextualMenuItem toLocation:Context_TextView_EmoticonAction];    
     [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Edit_Additions];
-    
+
+    // configure emoticon menues
+    [self configureEmoticonSupport];
+
     //Observe prefs    
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 }
@@ -58,56 +51,65 @@ static NSMenu       *eContextualMenu = nil;
 
 - (void)configureEmoticonSupport
 {
-    [quickMenuItem setEnabled:YES];
-    [quickContextualMenuItem setEnabled:YES];
-    [eMenu removeAllItems];
-    [eContextualMenu removeAllItems];
-    
+	int numberOfEmoticonPacks;
+	
     // load active emoticons and create menu
     emoticonPacks = [[adium contentController] emoticonPacks];
-    if(emoticonPacks != nil && [emoticonPacks count] > 1){
-        id object;
-        int locTrack = 0;
-        NSEnumerator *packEnum = [emoticonPacks objectEnumerator];
-       // eMenu = [[NSMenu alloc] initWithTitle:@""];
-        while(object = [packEnum nextObject]){
-            // read out each pack, iterate it and add its contents to its menu, then add it to its menu item
-            NSMenuItem *packItem = [[NSMenuItem alloc] initWithTitle:[object name] action:nil keyEquivalent:@""];
-
-            [packItem setTag:locTrack];
-            [packItem setSubmenu:[self buildMenu:object]]; 
+	if(emoticonPacks && (numberOfEmoticonPacks = [emoticonPacks count])){
+		
+		NSMenu			*eMenu;
+		//Enable the root menu items
+		[quickMenuItem setEnabled:YES];
+		[quickContextualMenuItem setEnabled:YES];
+		
+		if(numberOfEmoticonPacks == 1){
+			//The submenu is just the menu for the lone emoticon pack
+			eMenu = [self buildMenu:[emoticonPacks objectAtIndex:0]];
+		
+		}else{
+			NSEnumerator	*packEnum = [emoticonPacks objectEnumerator];
+			AIEmoticonPack  *pack;
+			int				locTrack = 0;
 			
-            [eMenu addItem:packItem];
-            [eContextualMenu addItem:[[packItem copy] autorelease]];
-			[packItem release];
-			
-			locTrack++;
-        }
-        // create a menu item for the menu to attach to
-        //[quickMenuItem setSubmenu:eMenu];
-        //[quickContextualMenuItem setSubmenu:eContextualMenu];
-    }else if([emoticonPacks count] == 1){
-        eMenu = [self buildMenu:[emoticonPacks objectAtIndex:0]];
-        eContextualMenu = [self buildMenu:[emoticonPacks objectAtIndex:0]];
-        [quickMenuItem setSubmenu:eMenu];
-        [quickContextualMenuItem setSubmenu:eContextualMenu];
+			eMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+			[eMenu setMenuChangedMessagesEnabled:NO];
+			while(pack = [packEnum nextObject]){
+				// read out each pack, iterate it and add its contents to its menu, then add it to its menu item
+				NSMenuItem *packItem = [[NSMenuItem alloc] initWithTitle:[pack name] action:nil keyEquivalent:@""];
+				
+				[packItem setTag:locTrack];
+				[packItem setSubmenu:[self buildMenu:pack]]; 
+				
+				[eMenu addItem:packItem];
+				[packItem release];
+				
+				locTrack++;
+			}
+			[eMenu setMenuChangedMessagesEnabled:NO];
+		}
+		
+		//Set the submenus to the menu we just created
+		[quickMenuItem setSubmenu:eMenu];
+		[quickContextualMenuItem setSubmenu:[[eMenu copy] autorelease]];
+		
+		//[self _buildToolbarItemWithMenu:[[eMenu copy] autorelease]];
     }else{
+		//No emoticon packs, so disable the root menu items
         [quickMenuItem setEnabled:NO];
         [quickContextualMenuItem setEnabled:NO];
     }
-    [[adium notificationCenter] postNotificationName:Menu_didChange object:quickMenuItem userInfo:nil];
-    [[adium notificationCenter] postNotificationName:Menu_didChange object:quickContextualMenuItem userInfo:nil];
 }
 
-- (void)buildToolbarItem
+/*
+- (void)_buildToolbarItemWithMenu:(NSMenu *)eMenu
 {   
     // add to popup button
     [menuButton setMenu:eMenu];
 
     // Set up the standard properties 
-    [toolbarItem setLabel: @"Emoticons"];
-    [toolbarItem setPaletteLabel: @"Emoticon Menu"];
-    [toolbarItem setToolTip: @"Menu to insert emoticons"];
+    [toolbarItem setLabel:AILocalizedString(@"Emoticons",nil)];
+    [toolbarItem setPaletteLabel:AILocalizedString(@"Emoticon Menu",nil)];
+    [toolbarItem setToolTip:AILocalizedString(@"Menu to insert emoticons",nil)];
     
     // Use a custom view, a popup button, for the toolbar item
     [toolbarItem setView: menuButton];
@@ -118,12 +120,16 @@ static NSMenu       *eContextualMenu = nil;
     [toolbarMenu setTitle: [toolbarItem label]];
     [toolbarItem setMenuFormRepresentation: toolbarMenu];
 }
+*/
 
 - (NSMenu *)buildMenu:(AIEmoticonPack *)incomingPack
 {
-    NSEnumerator *emoteEnum = [[incomingPack emoticons] objectEnumerator];
-    AIEmoticon *anEmoticon;
-    NSMenu *packMenu = [[NSMenu alloc] initWithTitle:@""];
+    NSEnumerator	*emoteEnum = [[incomingPack emoticons] objectEnumerator];
+    AIEmoticon		*anEmoticon;
+    NSMenu			*packMenu = [[NSMenu alloc] initWithTitle:@""];
+	
+	[packMenu setMenuChangedMessagesEnabled:NO];
+	
     // loop through each emoticon and add a menu item for each
     while(anEmoticon = [emoteEnum nextObject]){
         if([anEmoticon isEnabled] == YES){
@@ -141,7 +147,10 @@ static NSMenu       *eContextualMenu = nil;
 			
 			[newItem release];
         }
-    }    
+    }
+    
+	[packMenu setMenuChangedMessagesEnabled:YES];
+	
     return([packMenu autorelease]);
 }
 
@@ -176,11 +185,6 @@ static NSMenu       *eContextualMenu = nil;
         }
 }
 
--(NSMenu *)eMenu
-{
-    return eMenu;
-}
-
 -(NSToolbarItem *)toolbarItem
 {
     return toolbarItem;
@@ -193,8 +197,6 @@ static NSMenu       *eContextualMenu = nil;
 
 -(void)dealloc
 {
-    [emoticonPacks release];
-    [eMenu release];
 }
 
 @end
