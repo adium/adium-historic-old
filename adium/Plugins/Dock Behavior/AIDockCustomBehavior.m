@@ -153,7 +153,7 @@ AIDockCustomBehavior	*sharedInstance = nil;
     NSMutableDictionary	*eventDict;
 
     //Add the new event
-    eventDict = [[NSMutableDictionary alloc] init];
+    eventDict = [NSMutableDictionary dictionary];
     [eventDict setObject:[sender representedObject] forKey:KEY_DOCK_EVENT_NOTIFICATION];
     [eventDict setObject:[NSNumber numberWithInt:0] forKey:KEY_DOCK_EVENT_BEHAVIOR];
     [behaviorArray addObject:eventDict];
