@@ -28,7 +28,7 @@
 - (void)_addContentMessage:(AIContentMessage *)content;
 - (void)_addContentMessageRow:(AIFlexibleTableRow *)row;
 - (void)_addContentStatus:(AIContentStatus *)content;
-- (void)_addContentObjectToQueue:(AIContentObject *)content;
+- (void)_addContentObjectToThreadQueue:(AIContentObject *)content;
 - (void)_addQueuedContent;
 - (NSArray *)_rowsForAddingContentObject:(AIContentObject *)content;
 - (NSArray *)_rowsForAddingContentMessage:(AIContentMessage *)content;
@@ -68,9 +68,10 @@
     [super init];
     
     rebuilding = NO;
-    
+    lockContentThreadQueue = NO;
+	
     chat = [inChat retain];
-    contentQueue = [[NSMutableArray alloc] init];
+    contentThreadQueue = [[NSMutableArray alloc] init];
     previousRow = nil;
     
     //Cache our icons (temp?)
@@ -103,7 +104,7 @@
     [self _flushPreferenceCache];
 
     //
-	[contentQueue release];
+	[contentThreadQueue release];
     [messageView release];
     [chat release];
     [iconIncoming release];
@@ -163,8 +164,9 @@
         incomingLightSourceColor = [[[prefDict objectForKey:KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR] representedColor] retain];
         prefixFont = [[[prefDict objectForKey:KEY_SMV_PREFIX_FONT] representedFont] retain];        
         
-        //Reset all content objects
-        [self rebuildMessageViewForContent];
+        //Reset all content objects if a preference actually changed
+		if (notification)
+			[self rebuildMessageViewForContent];
     }
 }
 
@@ -251,17 +253,21 @@
         [self _rebuildMessageViewForContentThread];
     }
     
-    while ([contentQueue count] && !abandonRebuilding) {
-        
-        NSEnumerator    *enumerator = [contentQueue objectEnumerator];
-        int             processedContentNumber = [contentQueue count];
+	
+    while ([contentThreadQueue count] && !abandonRebuilding) {
+
+		//Lock the contentThreadQueue, make an array of its objects, clear out contentThreadQueue, then unlock it
+		lockContentThreadQueue = YES;
+		NSArray *secondaryThreadContentThreadQueue = [NSArray arrayWithArray:contentThreadQueue];
+		[contentThreadQueue removeAllObjects];
+		lockContentThreadQueue = NO;
+		
+        NSEnumerator    *enumerator = [secondaryThreadContentThreadQueue objectEnumerator];
         AIContentObject *content;
         
         while ( (content = [enumerator nextObject]) && !abandonRebuilding) {
             [self performSelectorOnMainThread:@selector(_addContentObject:) withObject:content waitUntilDone:YES];
         }
-        
-        [contentQueue removeObjectsInRange:NSMakeRange(0,processedContentNumber)];
     }
     
     rebuilding = NO;
@@ -292,10 +298,13 @@
     [messageView addRow:row]; 
 }
                              
-//queue a content object for later addition to the view
-- (void)_addContentObjectToQueue:(AIContentObject *)content
+//queue a content object for later addition to the view when the thread is done rebuilding
+- (void)_addContentObjectToThreadQueue:(AIContentObject *)content
 {
-    [contentQueue addObject:content];
+	//Pause execution until lockContentThreadQueue=NO... which should be quite soon now.
+	while (lockContentThreadQueue);
+	
+    [contentThreadQueue addObject:content];
 }
 
 //Return our message view
@@ -319,7 +328,7 @@
     if (!rebuilding)
         [self _addContentObject:content];
     else
-        [self _addContentObjectToQueue:content];
+        [self _addContentObjectToThreadQueue:content];
 }
 
 //Add rows for a content object

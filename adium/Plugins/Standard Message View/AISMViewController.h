@@ -52,10 +52,12 @@
     BOOL                        showUserIcons;
     float                       headIndent;
     
+	//Threads are a lot like George W. Bush in that they are the devil.
     BOOL                        rebuilding;
     BOOL                        restartRebuilding;
     BOOL                        abandonRebuilding;
-    NSMutableArray              *contentQueue;
+	BOOL						lockContentThreadQueue;
+    NSMutableArray              *contentThreadQueue;
 }
 
 + (AISMViewController *)messageViewControllerForChat:(AIChat *)inChat;
