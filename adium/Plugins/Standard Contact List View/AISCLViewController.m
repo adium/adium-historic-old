@@ -111,17 +111,21 @@
 //Reload the contact list
 - (void)contactListChanged:(NSNotification *)notification
 {
-#warning not using/sending this
-    //Fetch the new contact list
-    [contactList release]; contactList = [[[adium contactController] contactList] retain];
+	id		object = [notification object];
 
-    //Redisplay and resize
-    [contactListView reloadData];
+	//Redisplay and resize
+	if(!object || object == contactList){
+		[contactList release]; contactList = [[[adium contactController] contactList] retain];
+		[contactListView reloadData];
+		[contactListView performFullRecalculation];
+	}else{
+		[contactListView reloadItem:object reloadChildren:YES];
+		[contactListView updateHorizontalSizeForObject:object];
+	}
     
-    [contactListView performFullRecalculation];
-    
-    [[contactListView window] compatibleInvalidateShadow];
-    [[contactListView window] display];
+#warning Adam: These are slow, we dont want to do them unless absolutely necessary
+//    [[contactListView window] compatibleInvalidateShadow];
+//    [[contactListView window] display];
 }
 
 //Reload the contact list (if updates aren't delayed)

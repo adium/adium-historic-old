@@ -30,6 +30,7 @@
 
 - (void)compatibleInvalidateShadow
 {
+	NSLog(@"Invalidate Shadow");
     if ([NSApp isOnJaguarOrBetter])
         [self invalidateShadow];
     else {

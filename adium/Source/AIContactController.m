@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.72 2004/01/09 18:17:28 adamiser Exp $
+// $Id: AIContactController.m,v 1.73 2004/01/09 18:35:09 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -224,7 +224,7 @@
 			AIListGroup *oldGroup = [self groupWithUID:oldGroupName];
 
 			[oldGroup removeObject:inObject];
-			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged object:oldGroup];
+			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged object:inObject];
 		}
 	}
 	
@@ -243,8 +243,8 @@
 		if(![group containsObject:inObject]){
 			[group addObject:inObject];
 			
-			//Post a list content changed notification for the contaning group
-			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged object:group];
+			//Post a list content changed notification for the object
+			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged object:inObject];
 		}
 	}
 }
