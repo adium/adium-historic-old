@@ -422,7 +422,7 @@ DeclareString(UID);
 				
 				//If we found a metaContact to which we should add, do it.
 				if (metaContact){
-					[self addListObject:inObject toMetaContact:metaContact];
+					[self addListObject:inObject toMetaContact:metaContact saving:NO];
 					performedGrouping = YES;
 				}
 				
@@ -563,6 +563,7 @@ DeclareString(UID);
 //Returns a metaContact with the specified object ID.  Pass nil to create a new, unique metaContact
 - (AIMetaContact *)metaContactWithObjectID:(NSNumber *)inObjectID
 {	
+	NSString		*metaContactDictKey;
 	AIMetaContact   *metaContact;
 	BOOL			shouldRestoreContacts = YES;
 	
@@ -582,11 +583,13 @@ DeclareString(UID);
 	
 	//Look for a metacontact with this object ID.  If none is found, create one
 	//and add its contained contacts to it.
-	metaContact = [metaContactDict objectForKey:[inObjectID stringValue]];
+	metaContactDictKey = [AIMetaContact internalObjectIDFromObjectID:inObjectID];
+	
+	metaContact = [metaContactDict objectForKey:metaContactDictKey];
 	if (!metaContact){
 		metaContact = [[[AIMetaContact alloc] initWithObjectID:inObjectID] autorelease];
-		[metaContactDict setObject:metaContact forKey:[inObjectID stringValue]];
-		
+		[metaContactDict setObject:metaContact forKey:metaContactDictKey];
+
 		if (shouldRestoreContacts){
 			[self _restoreContactsToMetaContact:metaContact];
 		}
@@ -616,7 +619,6 @@ DeclareString(UID);
 			NSEnumerator	*contactEnumerator;
 			contactEnumerator = [[self allContactsWithService:[containedContact objectForKey:ServiceID]
 														  UID:[containedContact objectForKey:UID]] objectEnumerator];
-			
 			while (listContact = [contactEnumerator nextObject]){
 				[self _performAddListObject:listContact toMetaContact:metaContact];
 			}
@@ -627,12 +629,12 @@ DeclareString(UID);
 
 //Add a list object to a meta contact, setting preferences and such 
 //so the association is lasting across program launches.
-- (void)addListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact
+- (void)addListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact saving:(BOOL)shouldSave
 {
 	AIMetaContact		*oldMetaContact;
 	
 	//Obtain any metaContact this listObject is current within, so we can remove it later
-	oldMetaContact = [contactToMetaContactLookupDict objectForKey:[listObject internalUniqueObjectID]];
+	oldMetaContact = [contactToMetaContactLookupDict objectForKey:[listObject internalObjectID]];
 	
 	if ([self _performAddListObject:listObject toMetaContact:metaContact]){
 		NSDictionary		*containedContactDict;
@@ -698,8 +700,8 @@ DeclareString(UID);
 
 	//AIMetaContact will handle reassigning the list object's grouping to being itself
 	if (success = [metaContact addObject:listObject]){
-		[contactToMetaContactLookupDict setObject:metaContact forKey:[listObject internalUniqueObjectID]];
-				
+		[contactToMetaContactLookupDict setObject:metaContact forKey:[listObject internalObjectID]];
+
 		//Remove the object from its previous containing group
 		if (localGroup){
 			[localGroup removeObject:listObject];
@@ -803,14 +805,13 @@ DeclareString(UID);
 																		   UID:[UIDsArray objectAtIndex:i]]];
 	}
 
-	return([self groupListContacts:contactsToGroupArray]);
+	return([self groupListContacts:contactsToGroupArray saving:NO]);
 }
 
 //Group an NSArray of AIListContacts, returning the meta contact into which they are added.
 //This will reuse an existing metacontact (for one of the contacts in the array) if possible.
-- (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray
+- (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray saving:(BOOL)shouldSave
 {
-//	NSLog(@"groupListcontacts: Grouping %@",contactsToGroupArray);
 	NSEnumerator	*enumerator;
 	AIListContact   *listContact;
 	AIMetaContact   *metaContact = nil;
@@ -823,17 +824,19 @@ DeclareString(UID);
 	//demands in terms of the search but a better behavior overall.
 	enumerator = [contactsToGroupArray objectEnumerator];
 	while ((listContact = [enumerator nextObject]) && (metaContact == nil)){
-		metaContact = [contactToMetaContactLookupDict objectForKey:[listContact internalUniqueObjectID]];
+		metaContact = [contactToMetaContactLookupDict objectForKey:[listContact internalObjectID]];
 	}
 	
 	//Create a new MetaContact is we didn't find one.
-	if (!metaContact) metaContact = [self metaContactWithObjectID:nil];
+	if (!metaContact) {
+		metaContact = [self metaContactWithObjectID:nil];
+	}
 	
 	//Add all these contacts to our MetaContact (some may already be present,
 	//but that's fine, as nothing will happen).
 	enumerator = [contactsToGroupArray objectEnumerator];
 	while (listContact = [enumerator nextObject]){
-		[self addListObject:listContact toMetaContact:metaContact];
+		[self addListObject:listContact toMetaContact:metaContact saving:shouldSave];
 	}
 	
 	return(metaContact);
@@ -950,7 +953,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		if ([contact online] || includeOffline){
 			
 			if (!serviceImage){
-				menuServiceImage = [[[owner accountController] firstServiceTypeWithServiceID:[contact serviceID]] menuImage];
+				menuServiceImage = [[contact service] menuImage];
 			}
 			
 			NSMenuItem *tempItem = [[NSMenuItem alloc] initWithTitle:[contact formattedUID]
@@ -1507,25 +1510,23 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	}
 }
 
-#warning What about a .mac account with the serviceID "AIM" because it is coming from the address book?
 - (NSArray *)allContactsWithService:(NSString *)inServiceID UID:(NSString *)inUID
 {	
-	NSString		*internalObjectID = [AIListObject internalObjectIDForServiceID:inServiceID UID:inUID];
-	NSMutableArray  *returnContactArray = nil;
-	
+	AIService		*service;
 	NSEnumerator	*enumerator;
-	AIListObject	*listObject;
+	AIAccount		*account;
+	NSMutableArray  *returnContactArray = [NSMutableArray array];
 
-	//Contact
-	enumerator = [contactDict objectEnumerator];
-	while(listObject = [enumerator nextObject]){
-		if([[listObject internalObjectID] isEqualToString:internalObjectID]){
-			
-			if (!returnContactArray) returnContactArray = [NSMutableArray array];
-			[returnContactArray addObject:listObject];
-		}
-	}
+	service = [[owner accountController] firstServiceWithServiceID:inServiceID];
 	
+	enumerator = [[[owner accountController] accountsWithServiceClassOfService:service] objectEnumerator];
+	
+	while(account = [enumerator nextObject]){
+		[returnContactArray addObject:[self contactWithService:service
+													   account:account
+														   UID:inUID]];
+	}
+
 	return (returnContactArray);
 }
 
