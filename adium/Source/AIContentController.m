@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContentController.m,v 1.54 2004/03/05 23:50:33 adamiser Exp $
+// $Id: AIContentController.m,v 1.55 2004/03/16 03:38:16 evands Exp $
 
 #import "AIContentController.h"
 
@@ -441,7 +441,7 @@
 - (AIChat *)chatWithContact:(AIListContact *)inContact initialStatus:(NSDictionary *)initialStatus
 {
 	NSEnumerator	*enumerator;
-	AIChat			*chat;
+	AIChat			*chat = nil;
 	
 	//If we're dealing with a meta contact, open a chat with the preferred contact for this meta contact
 	//It's a good idea for the caller to pick the preferred contact for us, since they know the content type
@@ -471,15 +471,14 @@
 	}
 	if(!chat){
 		
-		//evands - this is returning nil when the stress test Command listobject gets here.
 		AIAccount *account = [[owner accountController] accountWithObjectID:[inContact accountID]];
 	
 		if([account conformsToProtocol:@protocol(AIAccount_Content)]){
 			//Create a new chat
-			chat = [AIChat chatForAccount:account];
+			chat = [AIChat chatForAccount:account initialStatusDictionary:initialStatus];
 			[chat addParticipatingListObject:inContact];
 			
-			//Inform the account of it's creation
+			//Inform the account of its creation
 			if(![(AIAccount<AIAccount_Content> *)account openChat:chat]){
 				chat = nil;
 			}
@@ -489,6 +488,27 @@
 		}
 	}
 	
+	return(chat);
+}
+
+- (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account initialStatus:(NSDictionary *)initialStatus
+{
+	AIChat			*chat = nil;
+	
+	if([account conformsToProtocol:@protocol(AIAccount_Content)]){
+		//Create a new chat
+		chat = [AIChat chatForAccount:account initialStatusDictionary:initialStatus];
+		[chat setName:inName];
+		
+		//Inform the account of its creation
+		if(![(AIAccount<AIAccount_Content> *)account openChat:chat]){
+			chat = nil;
+		}
+		
+		if (chat)
+			[chatArray addObject:chat];
+	}
+
 	return(chat);
 }
 
