@@ -65,7 +65,7 @@
     //Install the contact info view
     [NSBundle loadNibNamed:CONTACT_BEZEL_NIB owner:self];
 //    contactView = [[AIPreferenceViewController controllerWithName:@"Event Bezel" categoryName:@"None" view:view_contactBezelInfoView delegate:self] retain];
-#warning    [[adium contactController] addContactInfoView:contactView];
+//    [[adium contactController] addContactInfoView:contactView];
     
     
     //Install our contact alert
