@@ -16,8 +16,8 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.31 $
- * $Date: 2003/12/17 07:02:50 $
+ * $Revision: 1.32 $
+ * $Date: 2003/12/22 06:28:01 $
  * $Author: jmelloy $
  *
  */
@@ -29,7 +29,7 @@
 
 @interface AISQLLoggerPlugin (PRIVATE)
 - (void)_addMessage:(NSAttributedString *)message dest:(NSString *)destName source:(NSString *)sourceName sendDisplay:(NSString *)sendDisp destDisplay:(NSString *)destDisp sendServe:(NSString *)s_service recServe:(NSString *)r_service;
-
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AISQLLoggerPlugin
@@ -37,22 +37,59 @@
 - (void)installPlugin
 {
     NSMenuItem	*logViewerMenuItem;
-    //Observe content sending and receiving
-    [[adium notificationCenter] addObserver:self selector:@selector(adiumSentOrReceivedContent:) name:Content_ContentObjectAdded object:nil];
-
+	NSString	*connInfo;
+	id			tmp;
+	
+	//Initially observe some stuff.
+	[[adium notificationCenter] addObserver:self selector:@selector(adiumSentOrReceivedContent:) name:Content_ContentObjectAdded object:nil];
+	
     //Install some prefs.
-
-    //advancedPreferences = [[JMSQLLoggerAdvancedPreferences preferencePane] retain];
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SQL_LOGGING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SQL_LOGGING];
+    advancedPreferences = [[JMSQLLoggerAdvancedPreferences preferencePane] retain];
     
     //Install Menu item
     logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"SQL Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@""] autorelease];
     [[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
-
-    conn = PQconnectdb("");
+	
+	//Watch for pref changes
+	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+	[self preferencesChanged:nil];
+	
+	connInfo = [NSString stringWithFormat:@"host=\'%@\' port=\'%@\' user=\'%@\' password=\'%@\' dbname=\'%@\' sslmode=\'prefer\'", 
+						(tmp = url) ? tmp: @"", (tmp = port) ? tmp: @"", (tmp = username) ? tmp: NSUserName(), 
+				   (tmp = password) ? tmp: @"", (tmp = database) ? tmp: NSUserName()];
+	
+    conn = PQconnectdb([connInfo cString]);
     if (PQstatus(conn) == CONNECTION_BAD)
     {
         NSString *error =  [NSString stringWithCString:PQerrorMessage(conn)];
         [[adium interfaceController] handleErrorMessage:@"Connection to database failed." withDescription:error];
+    }
+}
+
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if(notification == nil || [PREF_GROUP_SQL_LOGGING compare:[[notification userInfo] objectForKey:@"Group"]] == 0){
+        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SQL_LOGGING];
+		bool			newLogValue;
+		
+		newLogValue = [[preferenceDict objectForKey:KEY_SQL_LOGGER_ENABLE] boolValue];
+		username = [preferenceDict objectForKey:KEY_SQL_USERNAME];
+		url = [preferenceDict objectForKey:KEY_SQL_URL];
+		port = [preferenceDict objectForKey:KEY_SQL_PORT];
+		database = [preferenceDict objectForKey:KEY_SQL_DATABASE];
+		password = [preferenceDict objectForKey:KEY_SQL_PASSWORD];
+		
+		if(newLogValue != observingContent){
+			observingContent = newLogValue;
+
+			if(!observingContent){ //Stop Logging
+				[[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
+
+			}else{ //Start Logging
+				[[adium notificationCenter] addObserver:self selector:@selector(adiumSentOrReceivedContent:) name:Content_ContentObjectAdded object:nil];		
+			}
+		}
     }
 }
 

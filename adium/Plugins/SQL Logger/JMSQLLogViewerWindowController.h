@@ -14,9 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /*
- * $Revision: 1.4 $
- * $Date: 2003/12/15 03:24:57 $
- * $Author: adamiser $
+ * $Revision: 1.5 $
+ * $Date: 2003/12/22 06:28:01 $
+ * $Author: jmelloy $
  */
 
 #import "libpq-fe.h"
@@ -34,6 +34,12 @@
     NSTableColumn	*selectedColumn;
     BOOL		sortDirection;
 
+	NSString	*username;
+	NSString	*url;
+	NSString	*port;
+	NSString	*database;
+	NSString	*password;	
+	
     PGconn		*conn;
 }
 
