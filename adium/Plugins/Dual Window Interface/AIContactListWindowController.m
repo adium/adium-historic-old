@@ -113,7 +113,7 @@
     if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0)){
         NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
         autoResizeVertically = [[prefDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue];
-        autoResizeHorizontal = [[prefDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
+        autoResizeHorizontally = [[prefDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
 
         [self _configureAutoResizing];
     }
@@ -131,22 +131,34 @@
 //Configure auto-resizing
 - (void)_configureAutoResizing
 {
-    [[self window] setShowsResizeIndicator:!(autoResizeVertically && autoResizeHorizontal)];
+    //Hide the resize indicator if all sizing is being controlled programatically
+    [[self window] setShowsResizeIndicator:!(autoResizeVertically && autoResizeHorizontally)];
     
-    if (!(autoResizeVertically || autoResizeHorizontal)) {
-        NSSize targetMin = minWindowSize;
-        NSSize targetMax = NSMakeSize(10000, 10000);
-        [[self window] setMinSize:targetMin];
-        [[self window] setMaxSize:targetMax];
+    //Configure the maximum and minimum sizes
+    NSRect  currentFrame = [[self window] frame];
+    NSSize targetMin = minWindowSize;
+    NSSize targetMax = NSMakeSize(10000, 10000);
+    
+    if (autoResizeHorizontally) {
+        targetMin.width = currentFrame.size.width;
+        targetMax.width = currentFrame.size.width;
+    }
+    if (autoResizeVertically) {
+        targetMin.height = currentFrame.size.height;
+        targetMax.height = currentFrame.size.height;
     }
     
+    [[self window] setMinSize:targetMin];
+    [[self window] setMaxSize:targetMax];
+    
+    //Update the size as necessary
     [self contactListDesiredSizeChanged:nil];
 }
 
 //Dynamically resize the contact list
 - (void)contactListDesiredSizeChanged:(NSNotification *)notification
 {
-    if(autoResizeVertically || autoResizeHorizontal){
+    if(autoResizeVertically || autoResizeHorizontally){
         NSRect	desiredFrame = [self _desiredWindowFrame];
         NSRect  newFrame = desiredFrame;
         NSRect  oldFrame = [[self window] frame];
@@ -154,7 +166,7 @@
         if (!NSEqualRects(oldFrame, newFrame)) {
             NSSize targetMin = minWindowSize;
             NSSize targetMax = NSMakeSize(10000, 10000);
-            if (autoResizeHorizontal) {    
+            if (autoResizeHorizontally) {    
                 targetMin.width = newFrame.size.width;
                 targetMax.width = newFrame.size.width;
             } else {
@@ -219,7 +231,7 @@
         NSRect	screenFrame = [[[self window] screen] visibleFrame];
 
         //Calculate desired width and height
-        if(autoResizeHorizontal){
+        if(autoResizeHorizontally){
             newFrame.size.width = desiredSize.width + contactViewPadding.width + SCROLL_VIEW_PADDING_X;
         }else{
             newFrame.size.width = currentFrame.size.width;
@@ -229,7 +241,7 @@
         //Adjust the Y Origin
         if(newFrame.size.height > screenFrame.size.height){
             newFrame.size.height = screenFrame.size.height; //Max Height
-            if(autoResizeHorizontal){
+            if(autoResizeHorizontally){
                 newFrame.size.width += 16; //Factor scrollbar into width
             }
         }
@@ -240,7 +252,7 @@
         }
 
         //Adjust the X Origin
-        if(autoResizeHorizontal){
+        if(autoResizeHorizontally){
             if((currentFrame.origin.x + currentFrame.size.width) + EDGE_CATCH_X > (screenFrame.origin.x + screenFrame.size.width)){
                 newFrame.origin.x = currentFrame.origin.x + (currentFrame.size.width - newFrame.size.width); //Expand Left
             }else{

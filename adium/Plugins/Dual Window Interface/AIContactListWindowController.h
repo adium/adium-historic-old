@@ -35,7 +35,7 @@
 
     NSSize				minWindowSize;
     BOOL				autoResizeVertically;
-    BOOL				autoResizeHorizontal;
+    BOOL				autoResizeHorizontally;
 }
 
 + (AIContactListWindowController *)contactListWindowControllerForInterface:(id <AIContainerInterface>)inInterface owner:(id)inOwner;
