@@ -172,6 +172,9 @@
                     <p><span class="faqQuestion">How do I get developer access to the Adium CVS?</span><br />
                     The best way to get developer access is to send us several good patches.  It is also helpful to keep in contact with us via IM or in #adium on irc.freenode.net.</p>
                     
+                    <p><span class="faqQuestion">How do I fix a libgaim/libgaim error when building Adium?</span><br />
+                    Delete the &quot;Libgaim.framework&quot; folder in Plugins/Gaim Service/, and then update your source with <b>cvs update -Pd</b>.</p>                    
+                    
                 </div>
                 <div class="boxWideBottom"></div>
 
