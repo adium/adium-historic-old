@@ -206,7 +206,7 @@
 //Draw alternating colors
 - (void)drawRow:(int)row clipRect:(NSRect)rect
 {
-    [self _drawRowInRect:[self rectOfRow:row] colored:(!(row % 2) && row != [self selectedRow]) selected:(row == [self selectedRow])];
+    [self _drawRowInRect:[self rectOfRow:row] colored:(!(row % 2) && ![self isRowSelected:row]) selected:(row == [self selectedRow])];
 
     [super drawRow:row clipRect:rect];
 }
@@ -228,8 +228,8 @@
         //Move across the columns one at a time, drawing their background color
         for(column = 0; column < numberOfColumns; column++){
             NSRect	segmentRect = NSIntersectionRect( rect, [self rectOfColumn:column]);
-            
-            //Draw the correct column/row color
+
+            //Draw the row background
             if(!selected){
                 if( (NSLocationInRange(column,range)) && ((firstColumnColored && !(column % 2)) || (!firstColumnColored && (column % 2))) ){
                     if(!colored){
@@ -247,16 +247,20 @@
         }
         
     }else if(drawsAlternatingRows){ //Draw alternating rows in the outline view
-        NSRect		segmentRect = rect;
+        //Draw the row background
+        if(colored && !selected){
+            NSRect	segmentRect = rect;
 
-        if(colored && !selected){            
             segmentRect.origin.x = 0;
             segmentRect.size.width = [self frame].size.width;
-            
+
             [alternatingRowColor set];
             [NSBezierPath fillRect:segmentRect];
         }
+
     }
 }
+
+
 
 @end
