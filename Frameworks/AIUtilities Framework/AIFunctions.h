@@ -14,3 +14,5 @@
  \------------------------------------------------------------------------------------------------------ */
 
 BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow);
+
+void AIWipeMemory(void *buf, size_t len);

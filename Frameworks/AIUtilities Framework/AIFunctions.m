@@ -15,7 +15,8 @@
 
 #import "AIFunctions.h"
 
-BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow) {
+BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow)
+{
 	if(in < 0x10000) {
 		if(outHigh) *outHigh = 0;
 		if(outLow)  *outLow  = in;
@@ -43,5 +44,16 @@ BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow) {
 		}
 
 		return YES;
+	}
+}
+
+//this uses the algorithm employed by Darwin 7.x's rm(1).
+void AIWipeMemory(void *buf, size_t len)
+{
+	char *buf_char = buf;
+	for(unsigned long i = 0; i < len; ++i) {
+		buf_char[i] = 0xff;
+		buf_char[i] = 0x00;
+		buf_char[i] = 0xff;
 	}
 }
