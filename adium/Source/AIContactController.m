@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.92 2004/01/20 14:52:13 adamiser Exp $
+// $Id: AIContactController.m,v 1.93 2004/01/20 19:23:23 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -597,7 +597,7 @@
 			}
 			
 			if([objectsOnAccount count]){
-				[(AIAccount<AIAccount_List> *)account removeListObjects:objectsOnAccount];
+				[(AIAccount<AIAccount_List> *)account removeContacts:objectsOnAccount];
 			}
 		}
 	}
