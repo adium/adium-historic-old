@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.52 2004/06/03 23:17:07 adamiser Exp $
+// $Id: AIPreferenceWindowController.m,v 1.53 2004/06/04 15:23:49 adamiser Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -169,7 +169,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
-    NSString        *savedFrame;
     int             selectedTab;
     NSTabViewItem   *tabViewItem;
 

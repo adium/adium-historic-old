@@ -109,18 +109,21 @@ static id<GaimThread> gaimThread = nil;
 
 - (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias
 {
-	
-	if ([[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]) {
-		if (![gaimAlias isEqualToString:[theContact formattedUID]]){
+	//Remove any display name we'd previosly placed
+	[[theContact displayArrayForKey:@"Display Name"] setObject:nil withOwner:self];
+
+	//Insert the new display name
+	if([[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]){
+		if(![gaimAlias isEqualToString:[theContact formattedUID]]){
 			[theContact setStatusObject:gaimAlias
 								 forKey:@"FormattedUID"
 								 notify:NO];
-			
+
 			//Apply any changes
 			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 		}
-	} else {
-		if (![gaimAlias isEqualToString:[theContact statusObjectForKey:@"Server Display Name"]]){
+	}else{
+		if(![gaimAlias isEqualToString:[theContact statusObjectForKey:@"Server Display Name"]]){
 			//Set the server display name status object as the full display name
 			[theContact setStatusObject:gaimAlias
 								 forKey:@"Server Display Name"
@@ -130,14 +133,23 @@ static id<GaimThread> gaimThread = nil;
 			[[theContact displayArrayForKey:@"Display Name"] setObject:[gaimAlias stringWithEllipsisByTruncatingToLength:25]
 															 withOwner:self
 														 priorityLevel:Lowest_Priority];
-			//Notify
-			[[adium contactController] listObjectAttributesChanged:theContact
-													  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
 			
 			//Apply any changes
 			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 		}
 	}
+
+	//Notify of display name changes
+	[[adium contactController] listObjectAttributesChanged:theContact
+											  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
+	
+#warning There must be a cleaner way to do this alias stuff!  This works for now :)
+	//Request an alias change
+	[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+											  object:theContact
+											userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+																				 forKey:@"Notify"]];
+	
 }
 
 - (oneway void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
