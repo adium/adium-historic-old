@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.65 2004/05/25 03:54:26 dchoby98 Exp $
+//$Id: AIPluginController.m,v 1.66 2004/05/25 06:18:11 earthmkii Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -129,7 +129,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmotico
 	[self loadPluginWithClass:[AIContactStatusEventsPlugin class]];
 //	[self loadPluginWithClass:[SHOutputDeviceControlPlugin class]]; //Crash on launch = 1
         [self loadPluginWithClass:[SHLinkManagementPlugin class]];
-//  [self loadPluginWithClass:[SHBookmarksImporterPlugin class]];
+        [self loadPluginWithClass:[SHBookmarksImporterPlugin class]];
 //	[self loadPluginWithClass:[AISMViewPlugin class]];
 //	[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
 #endif
