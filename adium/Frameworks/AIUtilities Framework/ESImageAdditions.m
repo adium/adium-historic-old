@@ -9,6 +9,10 @@
 #import "ESImageAdditions.h"
 #import "pxmLib.h"
 
+#define RESOURCE_ID_CLOSE_BUTTON_AQUA       10212
+#define RESOURCE_ID_CLOSE_BUTTON_GRAPHITE   10191
+#define RESOURCE_TYPE_CLOSE_BUTTON	    'pxm#'
+
 @implementation NSImage (ESImageAdditions)
 
 - (NSData *)JPEGRepresentation
@@ -155,7 +159,7 @@
 }
 
 //Returns the current theme's miniature panel close button
-+ (NSImage *)systemCloseButtonImageForState:(AICloseButtonState)state
++ (NSImage *)systemCloseButtonImageForState:(AICloseButtonState)state controlTint:(NSControlTint)inTint
 {
     NSString    *theFilePath = @"/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/Resources/Extras.rsrc";
     FSRef       ref;
@@ -167,11 +171,18 @@
 	Handle		resource;
 	pxmRef		pixmap;
 	GWorldPtr       gWorld;
+	int		resourceID;
+	
+	if(inTint == NSBlueControlTint){
+	    resourceID = RESOURCE_ID_CLOSE_BUTTON_AQUA;
+	}else{ //inTint == NSGraphiteControlTint
+	    resourceID = RESOURCE_ID_CLOSE_BUTTON_GRAPHITE;
+	}
 	
 	//Extract the close button's pxm# resource for the close button
 	FSGetDataForkName(&forkName);
 	FSOpenResourceFile(&ref, forkName.length, forkName.unicode, fsRdPerm, &refNum);
-	resource = GetResource('pxm#',201);
+	resource = GetResource(RESOURCE_TYPE_CLOSE_BUTTON,resourceID);
 	
 	//Use the Sprocket pxm# code to extract the correct close button image
 	HLock(resource);

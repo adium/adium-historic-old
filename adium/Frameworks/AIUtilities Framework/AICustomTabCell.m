@@ -144,6 +144,8 @@ static NSImage		*tabCloseFrontRollover = nil;
 	    tabCloseFrontRollover = [[AIImageUtilities imageNamed:@"TabClose_Front_Rollover" forClass:[self class]] retain];
 	
 	}else{
+	    NSControlTint	tint = [NSColor currentControlTintSupportingJag];
+
 	    tabFrontLeft = [[AIImageUtilities imageNamed:@"Aqua_Tab_Left" forClass:[self class]] retain];
 	    tabFrontMiddle = [[AIImageUtilities imageNamed:@"Aqua_Tab_Middle" forClass:[self class]] retain];
 	    tabFrontRight = [[AIImageUtilities imageNamed:@"Aqua_Tab_Right" forClass:[self class]] retain];
@@ -151,11 +153,11 @@ static NSImage		*tabCloseFrontRollover = nil;
 	    tabBackLeft = [[AIImageUtilities imageNamed:@"Aqua_TabMask_Left" forClass:[self class]] retain];
 	    tabBackRight = [[AIImageUtilities imageNamed:@"Aqua_TabMask_Right" forClass:[self class]] retain];
 	    tabBackMiddle = [[AIImageUtilities imageNamed:@"Aqua_TabMask_Middle" forClass:[self class]] retain];
-
-	    tabCloseFront = [[NSImage systemCloseButtonImageForState:AIButtonHovered] retain];
-	    tabCloseBack = [[NSImage systemCloseButtonImageForState:AIButtonDisabled] retain];
-	    tabCloseFrontPressed = [[NSImage systemCloseButtonImageForState:AIButtonPressed] retain];
-	    tabCloseFrontRollover = [[NSImage systemCloseButtonImageForState:AIButtonHovered] retain];
+	    
+	    tabCloseFront = [[NSImage systemCloseButtonImageForState:AIButtonActive controlTint:tint] retain];
+	    tabCloseBack = [[NSImage systemCloseButtonImageForState:AIButtonDisabled controlTint:tint] retain];
+	    tabCloseFrontPressed = [[NSImage systemCloseButtonImageForState:AIButtonPressed controlTint:tint] retain];
+	    tabCloseFrontRollover = [[NSImage systemCloseButtonImageForState:AIButtonHovered controlTint:tint] retain];
 	}
 	
         haveLoadedImages = YES;
