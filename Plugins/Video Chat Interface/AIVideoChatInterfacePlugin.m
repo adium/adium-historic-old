@@ -47,7 +47,7 @@
 
 - (void)openSelfVideo:(id)sender
 {
-	[[AILocalVideoWindowController showLocalVideoWindow] showWindow:nil];
+	[AILocalVideoWindowController showLocalVideoWindow];
 }
 
 //- (void)videoChatDidOpen:(NSNotification *)notification
