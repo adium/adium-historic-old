@@ -49,7 +49,7 @@
 	//Account details view
 	accountViewController = [[service accountViewController] retain];
 
-	NSView	*accountView = [accountViewController connectionView];
+	NSView	*accountView = [accountViewController setupView];
 	float 	accountViewHeight = [accountView frame].size.height;
 	
     [view_accountDetails removeAllSubviews];
