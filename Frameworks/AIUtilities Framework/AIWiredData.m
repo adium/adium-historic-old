@@ -175,18 +175,18 @@
 {
 	register unsigned int H = 0;
 	register unsigned rem = length;
-	register const char *bytes_ = bytes;
+	register const char *bytes = buffer;
 	while(rem > 3) {
-		MULLE_ELF_STEP(bytes_[length - rem]);
-		MULLE_ELF_STEP(bytes_[length - rem + 1]);
-		MULLE_ELF_STEP(bytes_[length - rem + 2]);
-		MULLE_ELF_STEP(bytes_[length - rem + 3]);
+		MULLE_ELF_STEP(bytes[length - rem]);
+		MULLE_ELF_STEP(bytes[length - rem + 1]);
+		MULLE_ELF_STEP(bytes[length - rem + 2]);
+		MULLE_ELF_STEP(bytes[length - rem + 3]);
 		rem -= 4;
 	}
 	switch (rem) {
-		case 3:  MULLE_ELF_STEP(bytes_[length - 3]);
-		case 2:  MULLE_ELF_STEP(bytes_[length - 2]);
-		case 1:  MULLE_ELF_STEP(bytes_[length - 1]);
+		case 3:  MULLE_ELF_STEP(bytes[length - 3]);
+		case 2:  MULLE_ELF_STEP(bytes[length - 2]);
+		case 1:  MULLE_ELF_STEP(bytes[length - 1]);
 		case 0:  ;
 	}
 	return H;
