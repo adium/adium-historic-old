@@ -374,7 +374,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Supply menu items
 - (NSArray *)menuItemsForEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)inOffset
 {
-    NSMutableArray *menuItemArray = nil;
+    NSArray *menuItemArray = nil;
 
     if(containsLinks){
         //Get link menu items if appropriate
