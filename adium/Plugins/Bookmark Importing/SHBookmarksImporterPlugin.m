@@ -20,9 +20,10 @@
 
 static NSMenuItem   *bookmarkRootMenuItem;
 static NSMenuItem   *bookmarkRootContextualMenuItem;
-//static NSMenuItem   *firstMenuItem;
-//static NSMenu       *firstSubmenu;
-//static NSMenu       *bookmarkSets;
+static NSMenuItem   *firstMenuItem;
+static NSMenu       *firstSubmenu;
+static NSMenu       *bookmarkSets;
+
 - (void)installPlugin
 {
     importerArray = [[[NSMutableArray alloc] init] autorelease];
@@ -92,19 +93,19 @@ static NSMenuItem   *bookmarkRootContextualMenuItem;
     [bookmarkRootContextualMenuItem setRepresentedObject:self];
     
     // create a new menu
-    NSMenu  *bookmarkSets = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+   /* NSMenu  * */ bookmarkSets = [[[NSMenu alloc] initWithTitle:@""] autorelease];
     
     // iterate through each importer, and build a menu if it's bookmark file exists
     while(importer = [enumerator nextObject]){
         if([importer bookmarksExist]){
-            NSMenuItem  *firstMenuItem = [[[NSMenuItem alloc] initWithTitle:[importer menuTitle]
+            /*NSMenuItem  * */firstMenuItem = [[[NSMenuItem alloc] initWithTitle:[importer menuTitle]
                                                               target:self
                                                               action:nil
                                                        keyEquivalent:@""] autorelease];
             [firstMenuItem setRepresentedObject:importer];
             [bookmarkSets addItem:firstMenuItem];
 
-            NSMenu  *firstSubmenu = [self buildBookmarkMenuFor:firstMenuItem];
+           /* NSMenu  * */firstSubmenu = [self buildBookmarkMenuFor:firstMenuItem];
             [firstMenuItem setSubmenu:firstSubmenu];
         }
     }
@@ -125,18 +126,24 @@ static NSMenuItem   *bookmarkRootContextualMenuItem;
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-
-        // if for each active importer (actually in the menu) update it's items if it's changed sice the last time
-        if([[menuItem representedObject] conformsToProtocol:@protocol(SHBookmarkImporter)]){
-            if([(id<SHBookmarkImporter>)[menuItem representedObject] bookmarksUpdated]){
-//                [menuItem setSubmenu:[self buildBookmarkMenuFor:menuItem];
-//                if([[menuItem menu] isEqualTo:[bookmarkRootMenuItem submenu]]){
-//                }
-                NSString *menuTitle = [menuItem title];
-                NSMenu  *replaceMenu = [self buildBookmarkMenuFor:menuItem];
-                [[[bookmarkRootMenuItem submenu] itemWithTitle:menuTitle] setSubmenu:replaceMenu];
-                [[[bookmarkRootContextualMenuItem submenu] itemWithTitle:menuTitle] setSubmenu:[[replaceMenu copy] autorelease]];
+    NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+        
+        
+    if([[[bookmarkRootMenuItem submenu] itemArray] count]){
+            NSEnumerator *enumerator = [[[bookmarkRootMenuItem submenu] itemArray] objectEnumerator];
+            NSMenuItem *object;
+            NSMenu  *newMenu = nil;
+            while(object = [enumerator nextObject]){
+                if([[object representedObject] conformsToProtocol:@protocol(SHBookmarkImporter)]){
+                    if([[object representedObject] bookmarksUpdated]){
+                        // the menu needs to be changed (bookmarks file mod. date changed)
+                        // so remove the items, rebuild the menu, then reinstall it
+                        [[object submenu] removeAllItems];
+                        newMenu = [self buildBookmarkMenuFor:object];
+                        [object setSubmenu:newMenu];
+                        [bookmarkRootContextualMenuItem setSubmenu:[[[bookmarkRootMenuItem submenu] copy] autorelease]];
+                    }
+                }
             }
         }
         
