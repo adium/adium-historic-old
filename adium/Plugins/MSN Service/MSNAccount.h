@@ -32,12 +32,16 @@
     NSMutableDictionary *switchBoardDict;  // Dict containing SB Sockets and their AIHandles
     NSMutableArray	*messageArray; 	   // Dict of messages waiting for an ACK or NAK message
 }
-
+/*
 //AIAccount_Content
 // Send a message object to its destination
 - (BOOL)sendContentObject:(AIContentObject *)object;
 // Returns YES if the contact is available for receiving content of the specified type
 - (BOOL)availableForSendingContentType:(NSString *)inType toChat:(AIChat *)inChat;
+// Opens a new AIChat
+- (BOOL)openChat:(AIChat *)inChat;
+// Closes an AIChat
+- (BOOL)closeChat:(AIChat *)inChat;
 
 //AIAccount_Handles
 // Returns a dictionary of AIHandles available on this account
@@ -56,7 +60,7 @@
 // Remove a group
 - (BOOL)removeServerGroup:(NSString *)inGroup;
 // Rename a group
-- (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName;
+- (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName;*/
 
 /*AIAccount_Groups
 // Add a group to this account
