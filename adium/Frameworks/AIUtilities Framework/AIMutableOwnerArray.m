@@ -24,6 +24,9 @@
  
 	Floating point priority levels can be used to dictate the ordering of objects in the array.  Lower numbers have
  	higher priority.
+ 
+	Delegate method:
+		- (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner
 */
 
 #import "AIMutableOwnerArray.h"
@@ -46,6 +49,7 @@
     ownerArray = nil;
     priorityArray = nil;
 	valueIsSortedToFront = NO;
+	delegate = nil;
 	
     return(self);
 }
@@ -53,6 +57,8 @@
 //Dealloc
 - (void)dealloc
 {
+	delegate = nil;
+	
     [self _destroyArrays];
     [super dealloc];
 }
@@ -109,6 +115,10 @@
         [priorityArray addObject:[NSNumber numberWithFloat:priority]];
 	}
 
+	if (delegate && [delegate respondsToSelector:@selector(mutableOwnerArray:didSetObject:withOwner:)]){
+		[delegate mutableOwnerArray:self didSetObject:anObject withOwner:inOwner];
+	}
+		
 	//Our array may no longer have the return value sorted to the front, clear this flag so it can be sorted again
 	valueIsSortedToFront = NO;
 }
@@ -155,7 +165,7 @@
 	return 0;
 }
 
-//Returns the greatest double value
+//Returns the greatest int value
 - (int)intValue
 {
 	int count;
@@ -356,4 +366,14 @@
     [priorityArray release]; priorityArray = nil;
 }
 
+//Delegation -----------------------------------------------------------------------------------------
+#pragma mark Delegation
+- (void)setDelegate:(id)inDelegate
+{
+	delegate = inDelegate;
+}
+- (id)delegate
+{
+	return(delegate);
+}
 @end
