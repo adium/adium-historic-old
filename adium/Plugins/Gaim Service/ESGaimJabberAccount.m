@@ -28,7 +28,7 @@
 - (void)createNewGaimAccount
 {
 	NSString	*connectServer, *resource, *server, *userNameWithHost = nil, *completeUserName = nil;
-	BOOL		forceOldSSL, useTLS, allowPlaintext, serverAppended, resourceAppended;
+	BOOL		forceOldSSL, useTLS, allowPlaintext, serverAppendedToUID, resourceAppended;
 	
 	[super createNewGaimAccount];
 	
@@ -49,28 +49,37 @@
 	//Allow plaintext authorization over an unencrypted connection? Gaim will prompt if this is NO and is needed.
 	allowPlaintext = [[self preferenceForKey:KEY_JABBER_ALLOW_PLAINTEXT group:GROUP_ACCOUNT_STATUS] boolValue];
 	gaim_account_set_bool(account, "auth_plain_in_clear", allowPlaintext);
-		
+
 	//Gaim stores the username in the format username@server/resource.  We need to pass it a username in this format
 	//createNewGaimAccount gets called on every connect, so we need to make sure we don't append the information more
-	//than once.  Also, if the user puts the uesrname in username@server format, which is common for Jabber, we should
+	//than once.
+	//If the user puts the uesrname in username@server format, which is common for Jabber, we should
 	//handle this gracefully, ignoring the server preference entirely.
-
-	serverAppended = ([UID rangeOfString:@"@"].location != NSNotFound);
-
-	if (!serverAppended){
-		server = [self host];
-		userNameWithHost = [NSString stringWithFormat:@"%@@%@",UID,server];
-		[UID release]; UID = [userNameWithHost retain];
-	}
+	serverAppendedToUID = ([UID rangeOfString:@"@"].location != NSNotFound);
 	
-	resourceAppended = ([UID rangeOfString:@"/"].location != NSNotFound);
-	if (!resourceAppended){
-		resource = [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
-		completeUserName = [NSString stringWithFormat:@"%@/%@",UID,resource];
+	if (serverAppendedToUID){
+		userNameWithHost = UID;
+	}else{
+		userNameWithHost = [NSString stringWithFormat:@"%@@%@",UID,[self host]];
 	}
+
+	resource = [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
+	completeUserName = [NSString stringWithFormat:@"%@/%@",userNameWithHost,resource];
 	
-	gaim_account_set_username(account, [UID UTF8String]);
+	gaim_account_set_username(account, [completeUserName UTF8String]);
 }
+
+
+//Make sure the server is appended if something attempts to access the formattedUID
+- (NSString *)formattedUID
+{
+	if ([UID rangeOfString:@"@"].location != NSNotFound){
+		return UID;
+	}else{
+		return ([NSString stringWithFormat:@"%@@%@",UID,[self host]]);
+	}
+}
+
 
 - (NSString *)unknownGroupName {
     return (AILocalizedString(@"Roster","Roster - the Jabber default group"));
@@ -110,6 +119,14 @@
 - (NSString *)portKey
 {
 	return KEY_JABBER_PORT;
+}
+
+- (void)accountConnectionConnected
+{
+	JabberStream *js = gc->proto_data;
+	jabber_roster_request(js);
+	
+	[super accountConnectionConnected];
 }
 
 

@@ -54,10 +54,12 @@
 			
 	}else if (sender == textField_resource){
 		//Access the host name so we can redisplay the default value if applicable
-		NSString *resource = [[adium preferenceController] preferenceForKey:KEY_JABBER_RESOURCE
-																	  group:GROUP_ACCOUNT_STATUS];
-		if (resource){
-			[textField_resource setStringValue:resource];
+		if (![[textField_resource stringValue] length]){
+			NSString *resource = [[adium preferenceController] preferenceForKey:KEY_JABBER_RESOURCE
+																		  group:GROUP_ACCOUNT_STATUS];
+			if (resource){
+				[textField_resource setStringValue:resource];
+			}
 		}
 		
 	}else{

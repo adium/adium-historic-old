@@ -105,13 +105,21 @@
 	//Create the contact if necessary
     //if(!theContact) theContact = [self contactAssociatedWithBuddy:buddy];
 
-		
+	
+#warning Evan: This was me hacking away.  It does not fix the stupid jabber buddy signon problems.
+	//Make sure we know the online status of this buddy
+	if (buddy->present != GAIM_BUDDY_OFFLINE){
+		[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_SIGNON];
+	}else{
+		[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_SIGNOFF];	
+	}
+	
     //Group changes - gaim buddies start off in no group, so this is an important update for us
     if(theContact && ![theContact remoteGroupName]){
 	//	NSLog(@"checking the group");
         GaimGroup *g = gaim_find_buddys_group(buddy);
 		if(g && g->name){
-		//	NSLog(@"found group %s",g->name);
+			NSLog(@"found group %s",g->name);
 		    NSString *groupName = [NSString stringWithUTF8String:g->name];
 			if(groupName && [groupName length] != 0){
 				[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
@@ -120,23 +128,15 @@
 			}
         }
     }
-	
-#warning Evan: This was me hacking away.  It does not fix the stupid jabber buddy signon problems.
-	//Make sure we know the online status of this buddy
-	if (GAIM_BUDDY_IS_ONLINE(buddy)){
-		[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_SIGNON];
-	}else{
-		[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_SIGNOFF];	
-	}
-	
+
 	//Leave here until MSN and other protocols are patched to send a signal when the alias changes, or gaim itself is.
 	//gaimAlias - this may be either a distinct name ("Friendly Name" for example) or a formatted UID
 	{
 		NSString *gaimAlias = [NSString stringWithUTF8String:gaim_get_buddy_alias(buddy)];
 		if ([[gaimAlias compactedString] isEqualToString:[theContact UID]]) {
-			if (![[theContact statusObjectForKey:@"FormattedUID"] isEqualToString:gaimAlias]) {
+			if (![[theContact statusObjectForKey:KEY_FORMATTED_UID] isEqualToString:gaimAlias]) {
 				[theContact setStatusObject:gaimAlias
-									 forKey:@"FormattedUID"
+									 forKey:KEY_FORMATTED_UID
 									 notify:NO];
 			}
 		} else {
