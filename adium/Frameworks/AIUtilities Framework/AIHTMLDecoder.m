@@ -484,7 +484,8 @@ int HTMLEquivalentForFontSize(int fontSize)
 						//We ignore stuff inside the HTML tag, but don't want to see the end of it
                         [scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
                     }else if([chunkString caseInsensitiveCompare:CloseHTML] == 0){
-                        //ignore
+                        //We are done
+						break;
 
                     //PRE -- ignore attributes for logViewer
                     }else if([chunkString caseInsensitiveCompare:@"PRE"] == 0 ||

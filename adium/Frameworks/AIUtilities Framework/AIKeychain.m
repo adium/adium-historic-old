@@ -112,7 +112,7 @@ SecAccessRef createAccess(NSString *accessLabel)
 		{ kSecAccountItemAttr, strlen(accountUTF8String), (void *)accountUTF8String },
 		{ kSecServiceItemAttr, strlen(serviceUTF8String), (void *)serviceUTF8String } };
 		
-		const SecKeychainAttributeList attributes = { sizeof(attrs) / sizeof(attrs[0]), attrs };
+		SecKeychainAttributeList attributes = { sizeof(attrs) / sizeof(attrs[0]), attrs };
 
 		ret = SecKeychainItemCreateFromContent(kSecGenericPasswordItemClass,
 											   &attributes,
