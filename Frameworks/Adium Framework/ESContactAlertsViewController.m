@@ -228,10 +228,21 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context)
 //Enable / disable controls as the user's selection changes
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
-	BOOL	validSelection = ([tableView_actions selectedRow] >= 0 && [tableView_actions selectedRow] < [alertArray count]);
+	unsigned	row = [tableView_actions selectedRow];
+	BOOL		validSelection = ((row >= 0) && (row < [alertArray count]));
 	
 	[button_delete setEnabled:validSelection];
 	[button_edit setEnabled:validSelection];
+
+	if(validSelection){
+		NSDictionary				*alert = [alertArray objectAtIndex:row];
+		NSString					*actionID = [alert objectForKey:KEY_ACTION_ID];
+		NSObject<AIActionHandler>	*actionHandler = [[[adium contactAlertsController] actionHandlers] objectForKey:actionID];
+
+		if([actionHandler respondsToSelector:@selector(didSelectAlert:)]){
+			[actionHandler didSelectAlert:alert];
+		}
+	}
 }
 
 //Delete the selection

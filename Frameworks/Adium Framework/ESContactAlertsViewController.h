@@ -55,3 +55,7 @@
 					   deletedAlert:(NSDictionary *)deletedAlert;
 
 @end
+
+@interface NSObject (AIActionHandlerOptionalMethods)
+- (void)didSelectAlert:(NSDictionary *)alert;
+@end
