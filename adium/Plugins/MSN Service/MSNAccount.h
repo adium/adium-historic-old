@@ -16,8 +16,6 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-//typedef enum CONN_STATE { DS, NS, SB };
-
 @class AISocket, AIGroup;
 
 @interface MSNAccount : AIAccount <AIAccount_Content, AIAccount_Handles>
@@ -31,7 +29,7 @@
     NSString		*friendlyName;		// Current Friendly name
     
     NSMutableDictionary	*handleDict;		// Dict of all our handles.
-    NSMutableDictionary *chatSocketDict;
+    NSMutableDictionary *switchBoardDict;  // Dict containing SB Sockets and their AIHandles
 }
 /*
 //AIAccount_Content

@@ -95,11 +95,12 @@
         //Return the correct bytes from the buffer
         *outData = readBuffer;
         allDataAvailable = YES;
-		
+        
 		//Remove the bytes from the read buffer (if desired)
 		if(allDataAvailable && remove){
 			[self removeDataBytes:inLength];
 		}
+
     }else{ // This data hasn't arrived yet (or has only partially arrived)
 
         if([self readyForReceiving]){
