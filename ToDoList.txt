@@ -35,20 +35,25 @@
 - Block/Unblock as a single menu item [Colin]
 - Block/Unblock should change titles dynamically
 
+[OTR]
+- Make OTR dialogs non-modal
+- Fingerprint management? (advanced)
+- Global and per-contact OTR policy settings
 
 //-------------------------------------------------------------------------------------------------------
 // Possible Thoughts
 //-------------------------------------------------------------------------------------------------------
-//Auto-completion
-  Tab auto-completion in the message window [Evan: How would one insert a tab with this implemented?]
-	- Contact names (Mainly for multi-user chat)
-
 //Fast User Switching
   The fast user switching plugin needs to provide advanced preferences for
 	- Enabling or disabling the feature
 	- Changing the status message used when switched
   [Steve: Must these go in the 'advanced' pane?  Can't we find a better home for them?
    Seems the 'status' pane makes sense - maybe a set up not unlike auto-idle? It serves a similar purpose.]
+
+
+//Auto-completion
+  Tab auto-completion in the message window [Evan: How would one insert a tab with this implemented?]
+	- Contact names (Mainly for multi-user chat)
 
 //Kill Plugins
   Refactoring is fun, refactoring is scary, refactoring could greatly simplify our code
@@ -61,10 +66,6 @@
   - Enforce a larger minimum width for tabs
   - Use a chevron to display tabs that don't fit on the tab bar (like safari)
   - New close button graphic
-	
-//Sorting Improvements
-  - Improve status sorting defaults [Evan: What's wrong with the current ones?]
-  - Simplify custom sort window by removing duplicate/redundant options [Evan: What options are duplicate/redundant?]
  
 //Formatted messages
   Some users like formatted and colored messages, other want messages to look
@@ -155,7 +156,6 @@
   Allow the user to easily block/unblock users by name, or users on their list.  Provide a way for them to see
   all blocked names and add/remove from the list.  Ignore the AIM specific block 'modes'.
 	- Add block and unblock menu items which prompt for the service and name
-	- Add block / unblock contextual menu items
 	- Add "Block contacts not on my list" to AIM account preferences
         
 //Sound Preferences
