@@ -77,6 +77,7 @@
     return(messageView);
 }
 
+
 //Message View Delegate ----------------------------------------------------------------------
 //
 - (void)chatParticipatingListObjectsChanged:(NSNotification *)notification
@@ -108,14 +109,11 @@
     //AIListObject	*listObject = [notification object];
     NSArray		*keys = [[notification userInfo] objectForKey:@"Keys"];
 
-    //We only need to redraw if the text color has changed
-    if(keys == nil || /*[keys containsObject:@"Tab Color"] ||*/ [keys containsObject:@"Tab Text Color"]){
-        //This should really be optimized and cleaned up.  Right now we're assuming the tab view's delegate is our custom tabs, and telling them to display - obviously not the best solution, but good enough for now.
-        //[self setColor:[[listObject displayArrayForKey:@"Tab Color"] averageColor]];
-
-        [[[self tabView] delegate] redisplayTabForTabViewItem:self];
-    }
-
+	//Redraw if the icon has changed
+	if(keys == nil || [keys containsObject:@"Tab Icon"]){
+		[[[self tabView] delegate] redisplayTabForTabViewItem:self];
+	}
+	
     //If the list object's display name changed, we resize the tabs
     if(keys == nil || [keys containsObject:@"Display Name"]){
         //This should really be looked at and possibly a better method found.  This works and causes an automatic update to each open tab.  But it feels like a hack.  There is probably a more elegant method.  Something like [[[self tabView] delegate] redraw];  I guess that's what this causes to happen, but the indirectness bugs me. - obviously not the best solution, but good enough for now.
@@ -156,53 +154,8 @@
     [messageView makeTextEntryViewFirstResponder];
 }
 
-//Drawing
-- (void)drawLabel:(BOOL)shouldTruncateLabel inRect:(NSRect)labelRect
-{
-    BOOL		texturedWindow = [[[self tabView] window] isTextured];
-    AIListObject	*listObject = [[messageView chat] listObject];
-    NSColor		*textColor = nil;
-    BOOL		selected;
-    
-    //Disable sub-pixel rendering.  It looks horrible with embossed text
-    CGContextSetShouldSmoothFonts([[NSGraphicsContext currentContext] graphicsPort], 0);
-
-    //
-    selected = ([[self tabView] selectedTabViewItem] == self);
-    textColor = [[listObject displayArrayForKey:@"Tab Text Color"] objectValue];
-    if(!textColor) textColor = (texturedWindow ? [NSColor colorWithCalibratedWhite:0.16 alpha:1.0] : [NSColor controlTextColor]);
-	
-    //Emboss the name (Textured window only)
-    if(texturedWindow){
-		if([textColor colorIsDark]){
-			[[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
-                                    drawInRect:NSOffsetRect(labelRect, 0, -1)];
-		}else{
-			[[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.0 alpha:0.4]]
-                                    drawInRect:NSOffsetRect(labelRect, 0, -1)];
-		}
-    }
-	
-    [[self attributedLabelStringWithColor:textColor] drawInRect:labelRect];
-}
-
-- (NSSize)sizeOfLabel:(BOOL)computeMin
-{
-    NSSize		size = [[self attributedLabelStringWithColor:[NSColor blackColor]] size]; //Name width
-
-    //Padding
-    size.width += LABEL_SIDE_PAD * 2;
-
-    //Make sure we return an even integer width
-    if(size.width != (int)size.width){
-        size.width = (int)size.width + 1;
-    }
-
-    return(size);
-}
-
 //
-- (NSString *)labelString
+- (NSString *)label
 {
     AIChat			*chat = [messageView chat];
     NSString		*displayName;
@@ -215,27 +168,115 @@
     }
 }
 
-//
-- (NSAttributedString *)attributedLabelStringWithColor:(NSColor *)textColor
+//Our icon is the status of this contact
+- (NSImage *)icon
 {
-    BOOL					texturedWindow = [[[self tabView] window] isTextured];
-    NSFont					*font = (texturedWindow ? [NSFont boldSystemFontOfSize:11] : [NSFont systemFontOfSize:11]);
-    NSAttributedString      *displayName;
-    NSParagraphStyle	    *paragraphStyle;
-
-    //Paragraph Style (Turn off clipping by word)
-    paragraphStyle = [NSParagraphStyle styleWithAlignment:NSCenterTextAlignment lineBreakMode:NSLineBreakByClipping];
-
-    //Name
-    displayName = [[NSAttributedString alloc] initWithString:[self labelString] attributes:
-	[NSDictionary dictionaryWithObjectsAndKeys:
-	    font, NSFontAttributeName,
-	    paragraphStyle, NSParagraphStyleAttributeName,
-	    textColor, NSForegroundColorAttributeName,
-	    nil]];
-
-    return([displayName autorelease]);
+	return([[[[messageView chat] listObject] displayArrayForKey:@"Tab Icon"] objectValue]);
 }
 
 
+
+//
+//
+//
+//
+//
+//
+//
+////Drawing
+//- (void)drawLabel:(BOOL)shouldTruncateLabel inRect:(NSRect)labelRect
+//{
+//    BOOL			texturedWindow = [[[self tabView] window] isTextured];
+//    AIListObject	*listObject = [[messageView chat] listObject];
+//    NSColor			*textColor = nil;
+//    BOOL			selected;
+//    
+//	//Icon
+//	NSString *iconName;
+//	
+//	if([listObject statusObjectForKey:@"Away"]){
+//		iconName = @"tab-away";
+//	}else if([listObject statusObjectForKey:@"IdleSince"]){
+//		iconName = @"tab-idle";
+//	}else{
+//		iconName = @"tab-available";
+//	}
+//	
+//	NSImage	*icon = [NSImage imageNamed:iconName forClass:[self class]];
+//	NSRect	iconRect = labelRect;
+//	iconRect.size.width = [icon size].width;
+//	iconRect.origin.y -= 1;
+//	[icon drawInRect:iconRect
+//			fromRect:NSMakeRect(0,0,iconRect.size.width,iconRect.size.height)
+//		   operation:NSCompositeSourceOver
+//			fraction:1.0];
+//
+//	labelRect.size.width -= iconRect.size.width;
+//	labelRect.origin.x += iconRect.size.width;
+//	
+//	
+//    //Disable sub-pixel rendering.  It looks horrible with embossed text
+//	if(texturedWindow) CGContextSetShouldSmoothFonts([[NSGraphicsContext currentContext] graphicsPort], 0);
+//
+//    //
+//    selected = ([[self tabView] selectedTabViewItem] == self);
+//    textColor = [[listObject displayArrayForKey:@"Tab Text Color"] objectValue];
+//    if(!textColor) textColor = (texturedWindow ? [NSColor colorWithCalibratedWhite:0.16 alpha:1.0] : [NSColor controlTextColor]);
+//	
+//    //Emboss the name (Textured window only)
+//    if(texturedWindow){
+//		if([textColor colorIsDark]){
+//			[[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
+//                                    drawInRect:NSOffsetRect(labelRect, 0, -1)];
+//		}else{
+//			[[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.0 alpha:0.4]]
+//                                    drawInRect:NSOffsetRect(labelRect, 0, -1)];
+//		}
+//    }
+//	
+//    [[self attributedLabelStringWithColor:textColor] drawInRect:labelRect];
+//}
+//
+//- (NSSize)sizeOfLabel:(BOOL)computeMin
+//{
+//    NSSize		size = [[self attributedLabelStringWithColor:[NSColor blackColor]] size]; //Name width
+//
+//    //Padding
+//    size.width += LABEL_SIDE_PAD * 2;
+//
+//	//Icon
+//	NSImage	*icon = [NSImage imageNamed:@"tab-available" forClass:[self class]];
+//	size.width += [icon size].width;
+//	
+//    //Make sure we return an even integer width
+//    if(size.width != (int)size.width){
+//        size.width = (int)size.width + 1;
+//    }
+//
+//    return(size);
+//}
+//
+////
+//- (NSAttributedString *)attributedLabelStringWithColor:(NSColor *)textColor
+//{
+//    BOOL					texturedWindow = [[[self tabView] window] isTextured];
+//    NSFont					*font = (texturedWindow ? [NSFont boldSystemFontOfSize:11] : [NSFont systemFontOfSize:11]);
+//    NSAttributedString      *displayName;
+//    NSParagraphStyle	    *paragraphStyle;
+//
+//    //Paragraph Style (Turn off clipping by word)
+//    paragraphStyle = [NSParagraphStyle styleWithAlignment:NSCenterTextAlignment lineBreakMode:NSLineBreakByClipping];
+//
+//    //Name
+//    displayName = [[NSAttributedString alloc] initWithString:[self labelString] attributes:
+//	[NSDictionary dictionaryWithObjectsAndKeys:
+//	    font, NSFontAttributeName,
+//	    paragraphStyle, NSParagraphStyleAttributeName,
+//	    textColor, NSForegroundColorAttributeName,
+//	    nil]];
+//
+//    return([displayName autorelease]);
+//}
+//
+//
 @end

@@ -870,7 +870,7 @@
 				tabViewEnumerator = [[messageWindowController messageContainerArray] objectEnumerator];
 				while((tabViewItem = [tabViewEnumerator nextObject])){
 					NSString		*windowKeyString;
-					NSString		*tabViewItemTitle = [NSString stringWithFormat:@"   %@",[tabViewItem labelString]];
+					NSString		*tabViewItemTitle = [NSString stringWithFormat:@"   %@",[tabViewItem label]];
 					
 					//Prepare a key equivalent for the controller
 					if(windowKey < 10){
