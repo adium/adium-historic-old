@@ -13,7 +13,7 @@
 
 - (void)drawRect:(NSRect)rect
 {
-	NSDictionary		*attributes;
+	NSMutableDictionary	*attributes;
 	NSAttributedString	*sample;
 	id					shadow = nil;
 		
@@ -37,12 +37,13 @@
 	}
 
 	//Text
-	attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+	attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 		[NSFont systemFontOfSize:12], NSFontAttributeName,
 		[NSParagraphStyle styleWithAlignment:NSCenterTextAlignment], NSParagraphStyleAttributeName,
 		[textColor color], NSForegroundColorAttributeName,
-		shadow, NSShadowAttributeName, //If we don't have a shadow, it will be nil. Don't put any attributes below shadow
 		nil];
+	if(shadow) [attributes setObject:shadow forKey:NSShadowAttributeName];
+	
 	sample = [[[NSAttributedString alloc] initWithString:@"Sample Text" attributes:attributes] autorelease];
 	int	sampleHeight = [sample size].height;
 	
