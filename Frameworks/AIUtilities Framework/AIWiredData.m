@@ -20,6 +20,7 @@
 //
 
 #import "AIWiredData.h"
+#import "AIFunctions.h"
 #include <string.h>
 #include <sys/errno.h>
 #include <sys/types.h>
@@ -59,6 +60,12 @@
 			[self release];
 			self = nil;
 		}
+		int mlock_retval = mlock(backing, length);
+		if(mlock < 0) {
+			NSLog(@"in AIWiredData: mlock returned %i: %s", mlock_retval, strerror(errno));
+			[self release];
+			self = nil;
+		}
 	}
 	return self;
 }
@@ -88,6 +95,7 @@
 }
 
 - (void)dealloc {
+	AIWipeMemory(backing, length);
 	munlock(backing, length);
 	free(backing);
 	[super dealloc];
@@ -174,7 +182,7 @@
 - (unsigned)hash
 {
 	register unsigned int H = 0;
-	register unsigned rem = length;
+	register unsigned rem = MIN(length, 16);
 	register const char *bytes = backing;
 	while(rem > 3) {
 		MULLE_ELF_STEP(bytes[length - rem]);
