@@ -5,10 +5,14 @@
 //  Created by Colin Barrett on Thu Nov 27 2003.
 //
 
-@interface CBStatusMenuItemController : AIObject <AccountMenuPlugin>
+@interface CBStatusMenuItemController : AIObject <AccountMenuPlugin, AIListObjectObserver>
 {
     NSStatusItem    *statusItem;
     NSMenu          *theMenu;
+    
+    NSMutableArray  *unviewedObjectsArray;
+    BOOL			unviewedState;
+
 }
 
 + (CBStatusMenuItemController *)statusMenuItemController;
@@ -21,4 +25,7 @@
 //Twiddle visibility
 - (void)showStatusItem;
 - (void)hideStatusItem;
+
+//Contact Observer
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
 @end
