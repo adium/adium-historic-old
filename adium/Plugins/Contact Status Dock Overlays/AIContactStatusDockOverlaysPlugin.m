@@ -54,6 +54,7 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
+/*
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:@"Contact Status Coloring"] == 0){
         NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:@"Contact Status Coloring"];
 
@@ -67,6 +68,7 @@
         backUnviewedContentColor = [[[prefDict objectForKey:@"Unviewed Content Label Color"] representedColor] retain];
 
     }
+ */
     
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DOCK_OVERLAYS] == 0){
         NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DOCK_OVERLAYS];
@@ -202,6 +204,22 @@
         [image lockFocus];
 
         //Get our colors
+        if(!([[contact statusArrayForKey:@"UnviewedContent"] greatestIntegerValue] && flash)){
+            backColor = [[contact displayArrayForKey:@"Label Color"] averageColor];
+            textColor = [[contact displayArrayForKey:@"Text Color"] averageColor];
+        }
+
+	NSLog(@"%@",[contact UIDAndServiceID]);
+	if(!backColor){
+	    NSLog(@"no backColor");
+	    backColor = [NSColor whiteColor];
+	}
+	if(!textColor){
+	    NSLog(@"no whiteColor");
+	    textColor = [NSColor blackColor];
+	}
+	NSLog(@"%@::%@\r\r",backColor,textColor);
+/*
         if([[contact statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]){ //Unviewed
             if(flash){
                 backColor = [NSColor whiteColor];
@@ -219,6 +237,7 @@
             textColor = signedOffColor;
 
         }
+ */
 
         //Lighten/Darken the back color slightly
         if([backColor colorIsDark]){

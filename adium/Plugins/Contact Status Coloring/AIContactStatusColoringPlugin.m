@@ -112,9 +112,9 @@
 //Applies the correct text color to the passed contact
 - (void)applyColorToObject:(AIListObject *)inObject
 {
-    AIMutableOwnerArray		*colorArray = [inObject displayArrayForKey:@"Text Color"];
+    AIMutableOwnerArray		*textColorArray = [inObject displayArrayForKey:@"Text Color"];
     AIMutableOwnerArray		*invertedColorArray = [inObject displayArrayForKey:@"Inverted Text Color"];
-    AIMutableOwnerArray		*labelColorArray = [inObject displayArrayForKey:@"Status Color"];
+    AIMutableOwnerArray		*statusLabelColorArray = [inObject displayArrayForKey:@"Label Color"];
     AIMutableOwnerArray		*tabBackColorArray = [inObject displayArrayForKey:@"Tab Color"];
     int				away, online, unviewedContent, signedOn, signedOff, typing, openTab;
     double			idle;
@@ -159,10 +159,6 @@
 	color = idleColor;
 	invertedColor = idleInvertedColor;
         labelColor = idleLabelColor;
-    }else if(openTabEnabled && openTab){
-        color = openTabColor;
-        invertedColor = openTabInvertedColor;
-        labelColor = openTabLabelColor;
     }else if(onlineEnabled){
         color = onlineColor;
         invertedColor = onlineInvertedColor;
@@ -175,9 +171,9 @@
     }
     
     //Add the new color
-    [colorArray setObject:color withOwner:self];
+    [textColorArray setObject:color withOwner:self];
     [invertedColorArray setObject:invertedColor withOwner:self];
-    [labelColorArray setObject:labelColor withOwner:self];
+    [statusLabelColorArray setObject:labelColor withOwner:self];
     [tabBackColorArray setObject:tabBackColor withOwner:self];
 }
 
@@ -236,7 +232,6 @@
 	typingColor = [[[prefDict objectForKey:KEY_TYPING_COLOR] representedColor] retain];
         unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
         onlineColor = [[[prefDict objectForKey:KEY_ONLINE_COLOR] representedColor] retain];
-        openTabColor = [[[prefDict objectForKey:KEY_OPEN_TAB_COLOR] representedColor] retain];
         idleAndAwayColor = [[[prefDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor] retain];
  
 	signedOffInvertedColor = [[signedOffColor colorWithInvertedLuminance] retain];
@@ -246,7 +241,6 @@
 	typingInvertedColor = [[typingColor colorWithInvertedLuminance] retain];
         unviewedContentInvertedColor = [[unviewedContentColor colorWithInvertedLuminance] retain];
         onlineInvertedColor = [[onlineColor colorWithInvertedLuminance] retain];
-        openTabInvertedColor = [[openTabColor colorWithInvertedLuminance] retain];
         idleAndAwayInvertedColor = [[idleAndAwayColor colorWithInvertedLuminance] retain];
 
         awayLabelColor = [[[prefDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor] retain];
@@ -256,7 +250,6 @@
         typingLabelColor = [[[prefDict objectForKey:KEY_LABEL_TYPING_COLOR] representedColor] retain];
         unviewedContentLabelColor = [[[prefDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor] retain];
         onlineLabelColor = [[[prefDict objectForKey:KEY_LABEL_ONLINE_COLOR] representedColor] retain];
-        openTabLabelColor = [[[prefDict objectForKey:KEY_LABEL_OPEN_TAB_COLOR] representedColor] retain];
         idleAndAwayLabelColor = [[[prefDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColor] retain];
 
         //
@@ -267,7 +260,6 @@
         typingEnabled = [[prefDict objectForKey:KEY_TYPING_ENABLED] boolValue];
         unviewedContentEnabled = [[prefDict objectForKey:KEY_UNVIEWED_ENABLED] boolValue];
         onlineEnabled = [[prefDict objectForKey:KEY_ONLINE_ENABLED] boolValue];
-        openTabEnabled = [[prefDict objectForKey:KEY_OPEN_TAB_ENABLED] boolValue];
         idleAndAwayEnabled = [[prefDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue];
             
         //        

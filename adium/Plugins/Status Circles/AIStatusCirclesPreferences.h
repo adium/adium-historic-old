@@ -22,24 +22,11 @@
 
     IBOutlet	NSView			*view_prefView;
 
-    IBOutlet	NSButton		*checkBox_displayBackgroundStatusBar;
     IBOutlet	NSButton		*checkBox_displayStatusCircle;
     IBOutlet	NSButton		*checkBox_displayStatusCircleOnLeft;
     IBOutlet	NSButton		*checkBox_displayStatusCircleOnRight;
     IBOutlet	NSButton		*checkBox_displayIdle;
     IBOutlet	NSColorWell		*colorWell_idleColor;
-	
-/*
-    IBOutlet	NSColorWell		*colorWell_away;
-    IBOutlet	NSColorWell		*colorWell_idle;
-    IBOutlet	NSColorWell		*colorWell_idleAway;
-    IBOutlet	NSColorWell		*colorWell_online;
-    IBOutlet	NSColorWell		*colorWell_openTab;
-    IBOutlet	NSColorWell		*colorWell_signedOff;
-    IBOutlet	NSColorWell		*colorWell_signedOn;
-    IBOutlet	NSColorWell		*colorWell_unviewedContent;
-    IBOutlet	NSColorWell		*colorWell_warning;
-*/
 }
 
 + (AIStatusCirclesPreferences *)statusCirclesPreferencesWithOwner:(id)inOwner;

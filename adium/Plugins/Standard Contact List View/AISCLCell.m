@@ -125,7 +125,7 @@
 
     //Background Color (If this cell is selected, we don't display the background color)
     if((![self isHighlighted] || ![[controlView window] isKeyWindow] || [[controlView window] firstResponder] != controlView) && [(AISCLOutlineView *)controlView showLabels]){
-        backgroundColor = [[listObject displayArrayForKey:@"Background Color"] averageColor];
+        backgroundColor = [[listObject displayArrayForKey:@"Label Color"] averageColor];
     }
 
     //Background

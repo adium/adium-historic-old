@@ -50,10 +50,6 @@
     IBOutlet	NSColorWell	*colorWell_online;
     IBOutlet	NSColorWell	*colorWell_onlineLabel;
 
-    IBOutlet	NSButton	*checkBox_openTab;
-    IBOutlet	NSColorWell	*colorWell_openTab;
-    IBOutlet	NSColorWell	*colorWell_openTabLabel;
-
     IBOutlet	NSButton	*checkBox_idleAndAway;
     IBOutlet	NSColorWell	*colorWell_idleAndAway;
     IBOutlet	NSColorWell	*colorWell_idleAndAwayLabel;

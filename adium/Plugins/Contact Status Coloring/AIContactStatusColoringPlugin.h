@@ -64,7 +64,6 @@
     BOOL		typingEnabled;
     BOOL		unviewedContentEnabled;
     BOOL		onlineEnabled;
-    BOOL		openTabEnabled;
     BOOL		idleAndAwayEnabled;
     
     NSColor		*awayColor;
@@ -74,7 +73,6 @@
     NSColor		*typingColor;
     NSColor		*unviewedContentColor;
     NSColor		*onlineColor;
-    NSColor		*openTabColor;
     NSColor		*idleAndAwayColor;
     
     NSColor		*awayInvertedColor;
@@ -84,7 +82,6 @@
     NSColor		*typingInvertedColor;
     NSColor		*unviewedContentInvertedColor;
     NSColor		*onlineInvertedColor;
-    NSColor		*openTabInvertedColor;
     NSColor		*idleAndAwayInvertedColor;
 
     NSColor		*awayLabelColor;
@@ -94,7 +91,6 @@
     NSColor		*typingLabelColor;
     NSColor		*unviewedContentLabelColor;
     NSColor		*onlineLabelColor;
-    NSColor		*openTabLabelColor;
     NSColor		*idleAndAwayLabelColor;
     
 }

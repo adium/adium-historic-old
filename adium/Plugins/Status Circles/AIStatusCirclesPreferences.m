@@ -37,12 +37,7 @@
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
-    if(sender == checkBox_displayBackgroundStatusBar){
-	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-					     forKey:KEY_DISPLAY_BACKGROUND_STATUS_BAR
-					      group:PREF_GROUP_STATUS_CIRCLES];
-	
-    }else if(sender == checkBox_displayStatusCircle){
+    if(sender == checkBox_displayStatusCircle){
 	[[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 					     forKey:KEY_DISPLAY_STATUS_CIRCLE
 					      group:PREF_GROUP_STATUS_CIRCLES];
@@ -68,61 +63,7 @@
         [[owner preferenceController] setPreference:[[colorWell_idleColor color] stringRepresentation]
                                              forKey:KEY_IDLE_TIME_COLOR
                                               group:PREF_GROUP_STATUS_CIRCLES];
-
     }
-
-/*
-    if(sender == colorWell_signedOff){
-        [[owner preferenceController] setPreference:[[colorWell_signedOff color] stringRepresentation]
-                                             forKey:KEY_SIGNED_OFF_COLOR
-                                              group:PREF_GROUP_STATUS_CIRCLES];
-
-    }else if(sender == colorWell_signedOn){
-        [[owner preferenceController] setPreference:[[colorWell_signedOn color] stringRepresentation]
-                                             forKey:KEY_SIGNED_ON_COLOR
-                                              group:PREF_GROUP_STATUS_CIRCLES];
-
-    }else if(sender == colorWell_online){
-        [[owner preferenceController] setPreference:[[colorWell_online color] stringRepresentation]
-                                             forKey:KEY_ONLINE_COLOR
-                                              group:PREF_GROUP_STATUS_CIRCLES];
-
-    }else if(sender == colorWell_away){
-        [[owner preferenceController] setPreference:[[colorWell_away color] stringRepresentation]
-                                             forKey:KEY_AWAY_COLOR
-                                              group:PREF_GROUP_STATUS_CIRCLES];
-
-    }else if(sender == colorWell_idle){
-        [[owner preferenceController] setPreference:[[colorWell_idle color] stringRepresentation]
-                                             forKey:KEY_IDLE_COLOR
-                                              group:PREF_GROUP_STATUS_CIRCLES];
-
-    }else if(sender == colorWell_idleAway){
-        [[owner preferenceController] setPreference:[[colorWell_idleAway color] stringRepresentation]
-                                             forKey:KEY_IDLE_AWAY_COLOR
-                                              group:PREF_GROUP_STATUS_CIRCLES];
-
-    }else if(sender == colorWell_openTab){
-        [[owner preferenceController] setPreference:[[colorWell_openTab color] stringRepresentation]
-                                             forKey:KEY_OPEN_TAB_COLOR
-                                              group:PREF_GROUP_STATUS_CIRCLES];
-
-    }else if(sender == colorWell_unviewedContent){
-        [[owner preferenceController] setPreference:[[colorWell_unviewedContent color] stringRepresentation]
-                                             forKey:KEY_UNVIEWED_COLOR
-                                              group:PREF_GROUP_STATUS_CIRCLES];
-
-    }else if(sender == colorWell_warning){
-        [[owner preferenceController] setPreference:[[colorWell_warning color] stringRepresentation]
-                                             forKey:KEY_WARNING_COLOR
-                                              group:PREF_GROUP_STATUS_CIRCLES];
-
-    }else if(sender == checkBox_displayIdle){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_DISPLAY_IDLE_TIME
-                                              group:PREF_GROUP_STATUS_CIRCLES];
-    }
- */
 }
 
 //Private ---------------------------------------------------------------------------
@@ -165,7 +106,6 @@
 {
     NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STATUS_CIRCLES];
 
-    [checkBox_displayBackgroundStatusBar setState:[[preferenceDict objectForKey:KEY_DISPLAY_BACKGROUND_STATUS_BAR] boolValue]];
     [checkBox_displayStatusCircle setState:[[preferenceDict objectForKey:KEY_DISPLAY_STATUS_CIRCLE] boolValue]];
     [checkBox_displayStatusCircleOnLeft setState:[[preferenceDict objectForKey:KEY_DISPLAY_STATUS_CIRCLE_ON_LEFT] boolValue]];
     [checkBox_displayStatusCircleOnRight setState:![[preferenceDict objectForKey:KEY_DISPLAY_STATUS_CIRCLE_ON_LEFT] boolValue]];
@@ -173,18 +113,6 @@
     [colorWell_idleColor setColor:[[preferenceDict objectForKey:KEY_IDLE_TIME_COLOR] representedColor]];
 
     [self configureControlDimming];
-	
-/*
-    [colorWell_away setColor:[[preferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
-    [colorWell_idle setColor:[[preferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];
-    [colorWell_idleAway setColor:[[preferenceDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor]];
-    [colorWell_online setColor:[[preferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
-    [colorWell_openTab setColor:[[preferenceDict objectForKey:KEY_OPEN_TAB_COLOR] representedColor]];
-    [colorWell_signedOff setColor:[[preferenceDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor]];
-    [colorWell_signedOn setColor:[[preferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
-    [colorWell_unviewedContent setColor:[[preferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
-    [colorWell_warning setColor:[[preferenceDict objectForKey:KEY_WARNING_COLOR] representedColor]];
-*/
 }
 //Enable/disable controls that are available/unavailable
 - (void)configureControlDimming
