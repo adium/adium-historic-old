@@ -58,4 +58,5 @@
 #import "AIStringFormatter.h"
 #import "AITableViewAdditions.h"
 #import "AIURLLoader.h"
+#import "AITooltipUtilities.h"
 

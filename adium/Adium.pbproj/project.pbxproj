@@ -1298,18 +1298,6 @@
 			settings = {
 			};
 		};
-		4B30ADFE0442290600A8010A = {
-			isa = PBXFileReference;
-			name = HandPointCursor.tiff;
-			path = "/Users/adamiser/Code/Released/Adium/Version 1.6.2c/Adium/Images/HandPointCursor.tiff";
-			refType = 0;
-		};
-		4B30ADFF0442290600A8010A = {
-			fileRef = 4B30ADFE0442290600A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B30AE080442680000A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -3493,6 +3481,32 @@
 			settings = {
 			};
 		};
+		4BB2C23A044605CE00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AITooltipUtilities.h;
+			path = "Frameworks/AIUtilities Framework/AITooltipUtilities.h";
+			refType = 4;
+		};
+		4BB2C23B044605CE00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AITooltipUtilities.m;
+			path = "Frameworks/AIUtilities Framework/AITooltipUtilities.m";
+			refType = 4;
+		};
+		4BB2C23C044605CE00A8010A = {
+			fileRef = 4BB2C23A044605CE00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BB2C23D044605CE00A8010A = {
+			fileRef = 4BB2C23B044605CE00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BB5809603E86BF600A8010A = {
 			includeInIndex = 1;
 			isa = PBXFolderReference;
@@ -5100,6 +5114,18 @@
 		};
 		4BF5BA37042F3D1600A8010A = {
 			fileRef = 4BF5BA36042F3D1600A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BFAB3D00446600C00A8010A = {
+			isa = PBXFileReference;
+			name = HandPointCursor.tiff;
+			path = "Frameworks/AIUtilities Framework/Images/HandPointCursor.tiff";
+			refType = 4;
+		};
+		4BFAB3D10446600C00A8010A = {
+			fileRef = 4BFAB3D00446600C00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -6731,6 +6757,7 @@
 				4BF5BA24042F3CE200A8010A,
 				4B30ADFC044228BA00A8010A,
 				4B30AE0A0442680000A8010A,
+				4BB2C23C044605CE00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6755,7 +6782,7 @@
 				F5CC42460386D8F901A8010A,
 				F5CC42470386D8F901A8010A,
 				F5A70E7F0392657D01A8010A,
-				4B30ADFF0442290600A8010A,
+				4BFAB3D10446600C00A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6812,6 +6839,7 @@
 				4BF5BA25042F3CE200A8010A,
 				4B30ADFD044228BA00A8010A,
 				4B30AE0B0442680000A8010A,
+				4BB2C23D044605CE00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7533,6 +7561,8 @@
 			children = (
 				F5793950033E74E401A8010A,
 				F5793951033E74E401A8010A,
+				4BB2C23A044605CE00A8010A,
+				4BB2C23B044605CE00A8010A,
 			);
 			isa = PBXGroup;
 			name = Interface;
@@ -7541,7 +7571,7 @@
 		};
 		F549EF15036B10F701A8010A = {
 			children = (
-				4B30ADFE0442290600A8010A,
+				4BFAB3D00446600C00A8010A,
 				F570A5E803704DEA01A8010A,
 				F570A5E503704DEA01A8010A,
 				F570A5EF03704E4C01A8010A,

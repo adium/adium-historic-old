@@ -10,6 +10,7 @@
 #import "AIFlexibleTableView.h"
 #import "AICursorAdditions.h"
 #import "AIFlexibleLink.h"
+#import "AITooltipUtilities.h"
 
 #define FRACTIONAL_PADDING 1.0
 #define	EDITOR_X_INSET	-6
@@ -327,7 +328,7 @@
     }
 
     return(YES);
-}    
+}
 
 //Builds an array of links within our text content
 - (void)_buildLinkArray
@@ -378,13 +379,18 @@
 //Called when the mouse enters a link rect
 - (void)mouseEntered:(NSEvent *)theEvent
 {
+    NSPoint	point = [[theEvent window] convertBaseToScreen:[theEvent locationInWindow]];
+    NSString	*url = [[theEvent userData] url];
+    
     [[NSCursor handPointCursor] set]; //Set the link cursor
+    [AITooltipUtilities showTooltipWithString:[NSString stringWithFormat:@"%@", url] onWindow:nil atPoint:point];
 }
 
 //Called when the mouse leaves a link rect
 - (void)mouseExited:(NSEvent *)theEvent
 {
     [[NSCursor arrowCursor] set]; //Restore the regular cursor
+    [AITooltipUtilities showTooltipWithString:nil onWindow:nil atPoint:NSMakePoint(0,0)];
 }
 
 @end
