@@ -38,7 +38,8 @@
     [statusDictionary release];
     [contentObjectArray release];
     [participatingListObjects release];
-    
+  	[dateOpened release]; 
+  
     [super dealloc];
 }
 
