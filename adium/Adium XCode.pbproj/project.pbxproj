@@ -172,6 +172,7 @@
 			);
 			isa = PBXGroup;
 			name = "Contact Warning Level";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -343,6 +344,7 @@
 				52AEBD6105ABA95700B19C56,
 				3419F45B05314C5A00C68BA3,
 				3419F47005314C6900C68BA3,
+				3479A8A105DCA0F900998B3D,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -399,6 +401,7 @@
 				BF380C3005A8FF9000A74E9F,
 				34BD9FD1053147A6000AB133,
 				34BD9FF1053147AE000AB133,
+				3479A8A005DCA0F900998B3D,
 				9E57136205B2146200283CAD,
 				34BDA001053147B4000AB133,
 				34BDA011053147B9000AB133,
@@ -6824,6 +6827,215 @@
 			settings = {
 			};
 		};
+		3479A83B05DC9F2400998B3D = {
+			children = (
+				3479A8AF05DCA15400998B3D,
+				6C05CA1505492EE70088ECBF,
+				4B6688F804A60CC300A8010A,
+				11B96D81049AF85900C6304D,
+			);
+			isa = PBXGroup;
+			name = "Tooltips-Dedicated Plugins";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3479A89B05DCA0F900998B3D = {
+			buildActionMask = 2147483647;
+			files = (
+				3479A8B705DCA18300998B3D,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3479A89C05DCA0F900998B3D = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3479A89D05DCA0F900998B3D = {
+			buildActionMask = 2147483647;
+			files = (
+				3479A8B805DCA18300998B3D,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3479A89F05DCA0F900998B3D = {
+			buildActionMask = 2147483647;
+			files = (
+				3479A8F505DCA25400998B3D,
+				3479A8F605DCA25400998B3D,
+				3479A94005DCA3C700998B3D,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3479A8A005DCA0F900998B3D = {
+			buildPhases = (
+				3479A89B05DCA0F900998B3D,
+				3479A89C05DCA0F900998B3D,
+				3479A89D05DCA0F900998B3D,
+				3479A89F05DCA0F900998B3D,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = "Plists/Contact Client.plist";
+				PRODUCT_NAME = "Contact Client";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				3479A90905DCA29200998B3D,
+				3479A90B05DCA29400998B3D,
+			);
+			isa = PBXNativeTarget;
+			name = "Contact Client";
+			productName = "Contact Client";
+			productReference = 3479A8A105DCA0F900998B3D;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Contact Client</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.Contact_Client</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+	<key>CSResourcesFileMapped</key>
+	<string>yes</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		3479A8A105DCA0F900998B3D = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "Contact Client.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3479A8AF05DCA15400998B3D = {
+			children = (
+				3479A8B505DCA18200998B3D,
+				3479A8B605DCA18200998B3D,
+			);
+			isa = PBXGroup;
+			name = "Contact Client";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3479A8B505DCA18200998B3D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESContactClientPlugin.h;
+			path = "Plugins/Contact Client/ESContactClientPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3479A8B605DCA18200998B3D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESContactClientPlugin.m;
+			path = "Plugins/Contact Client/ESContactClientPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3479A8B705DCA18300998B3D = {
+			fileRef = 3479A8B505DCA18200998B3D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3479A8B805DCA18300998B3D = {
+			fileRef = 3479A8B605DCA18200998B3D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3479A8F505DCA25400998B3D = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3479A8F605DCA25400998B3D = {
+			fileRef = 34BD9E9305314755000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3479A90805DCA29200998B3D = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		3479A90905DCA29200998B3D = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133;
+			targetProxy = 3479A90805DCA29200998B3D;
+		};
+		3479A90A05DCA29400998B3D = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DE205314755000AB133;
+			remoteInfo = AIUtilities.Framework;
+		};
+		3479A90B05DCA29400998B3D = {
+			isa = PBXTargetDependency;
+			target = 34BD9DE205314755000AB133;
+			targetProxy = 3479A90A05DCA29400998B3D;
+		};
+		3479A91605DCA2CE00998B3D = {
+			fileRef = 3479A8A105DCA0F900998B3D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3479A91A05DCA2E800998B3D = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 3479A8A005DCA0F900998B3D;
+			remoteInfo = "Contact Client";
+		};
+		3479A91B05DCA2E800998B3D = {
+			isa = PBXTargetDependency;
+			target = 3479A8A005DCA0F900998B3D;
+			targetProxy = 3479A91A05DCA2E800998B3D;
+		};
+		3479A94005DCA3C700998B3D = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3481DDE405704EEC00CD38D6 = {
 			explicitFileType = wrapper.cfbundle;
 			includeInIndex = 0;
@@ -8580,6 +8792,7 @@
 				BF380D9D05A94B2300A74E9F,
 				34BD9CDF053146CC000AB133,
 				34BD9CE0053146CC000AB133,
+				3479A91B05DCA2E800998B3D,
 				9EBAC6AD05B22B4D00A98ADC,
 				34BD9CE1053146CC000AB133,
 				34BD9CE2053146CC000AB133,
@@ -9561,6 +9774,7 @@
 				BF380DAF05A94B8400A74E9F,
 				3419FDEF0531585600C68BA3,
 				3419FDF00531585600C68BA3,
+				3479A91605DCA2CE00998B3D,
 				9EBAC78205B230AF00A98ADC,
 				3419FDF10531585600C68BA3,
 				3419FDF20531585600C68BA3,
@@ -17865,15 +18079,13 @@
 				34878F710518289B003B2F21,
 				4BAE85A40498194200A8010A,
 				4BD7D0CB04620D8800A8010A,
-				6C05CA1505492EE70088ECBF,
-				4B6688F804A60CC300A8010A,
 				4B0E342E04C4677700A8010A,
 				4B5D67D3050CF56700A8010A,
-				11B96D81049AF85900C6304D,
 				4B31E8E104C4712F00A8010A,
 				F53B9AC502CD12AB01A8010A,
 				F5370C9202D76F1F01A8010A,
 				D3376B2C052BBC2900A8010B,
+				3479A83B05DC9F2400998B3D,
 			);
 			isa = PBXGroup;
 			name = Attributes;
@@ -24438,6 +24650,7 @@
 			);
 			isa = PBXGroup;
 			name = "Contact Online For";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
