@@ -562,7 +562,7 @@ static id<GaimThread> gaimThread = nil;
 
 - (void)_receivedMessage:(NSString *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date
 {		
-	if ((flags & GAIM_MESSAGE_IMAGES) != 0) {
+	if ([message rangeOfString:@"<IMG ID=\"" options:NSCaseInsensitiveSearch].location != NSNotFound) {
 		message = [self _processGaimImagesInString:message];
 	}
 	
@@ -868,7 +868,7 @@ static id<GaimThread> gaimThread = nil;
     [fileTransfer setPercentDone:[percent floatValue] bytesSent:[bytesSent floatValue]];
 }
 
-//The remote side canceled the transfer, the fool.  Tell the fileTransferController then destroy the xfer
+//The remote side canceled the transfer, the fool.  Tell the fileTransferController
 - (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer
 {
     [[adium fileTransferController] transferCanceled:fileTransfer];
@@ -1581,7 +1581,7 @@ static id<GaimThread> gaimThread = nil;
 	NSScanner			*scanner;
     NSString			*chunkString = nil;
     NSMutableString		*newString;
-	
+	NSString			*targetString = @"<IMG ID=\"";
     int imageID;
 	
     //set up
@@ -1596,11 +1596,11 @@ static id<GaimThread> gaimThread = nil;
     while(![scanner isAtEnd]){
 		
 		//Find the beginning of a gaim IMG ID tag
-		if ([scanner scanUpToString:@"<IMG ID=\"" intoString:&chunkString]) {
+		if ([scanner scanUpToString:targetString intoString:&chunkString]) {
 			[newString appendString:chunkString];
 		}
 		
-		if ([scanner scanString:@"<IMG ID=\"" intoString:nil]) {
+		if ([scanner scanString:targetString intoString:nil]) {
 			
 			//Get the image ID from the tag
 			[scanner scanInt:&imageID];
