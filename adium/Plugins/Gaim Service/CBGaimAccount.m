@@ -78,7 +78,7 @@
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {	
-//	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s",buddy->name);
+	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s",buddy->name);
     
     /*int                     online;*/
 	
@@ -101,10 +101,37 @@
 			}
         }
     }
-	 
-
+	
+	//Leave here until MSN and other protocols are patched to send a signal when the alias changes, or gaim itself is.
+	//gaimAlias - this may be either a distinct name ("Friendly Name" for example) or a formatted UID
+	{
+		NSString *gaimAlias = [NSString stringWithUTF8String:gaim_get_buddy_alias(buddy)];
+		if ([[gaimAlias compactedString] isEqualToString:[theContact UID]]) {
+			if (![[theContact statusObjectForKey:@"Formatted UID"] isEqualToString:gaimAlias]) {
+				[theContact setStatusObject:gaimAlias
+									 forKey:@"Formatted UID"
+									 notify:NO];
+			}
+		} else {
+			if (![[theContact statusObjectForKey:@"Server Display Name"] isEqualToString:gaimAlias]) {
+				//Set the server display name status object as the full display name
+				[theContact setStatusObject:gaimAlias
+									 forKey:@"Server Display Name"
+									 notify:NO];
+				
+				//Set a 20-characters-or-less version as the lowest priority display name
+				[[theContact displayArrayForKey:@"Display Name"] setObject:[gaimAlias stringWithEllipsisByTruncatingToLength:20]
+																 withOwner:self
+															 priorityLevel:Lowest_Priority];
+				//notify
+				[[adium contactController] listObjectAttributesChanged:self
+														  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
+			}
+		}
+	}
+	
     //Apply any changes
-//	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent)event
@@ -135,19 +162,34 @@
 					[theContact setStatusObject:nil forKey:@"Signed On" afterDelay:15];
 				}
 				
+				/*
 				//gaimAlias - this may be either a distinct name ("Friendly Name" for example) or a formatted UID
 				{
 					NSString *gaimAlias = [NSString stringWithUTF8String:gaim_get_buddy_alias(buddy)];
 					if ([[gaimAlias compactedString] isEqualToString:[theContact UID]]) {
-						[theContact setStatusObject:gaimAlias
-											 forKey:@"Formatted UID"
-											 notify:NO];
+						if (![[theContact statusObjectForKey:@"Formatted UID"] isEqualToString:gaimAlias]) {
+							[theContact setStatusObject:gaimAlias
+												 forKey:@"Formatted UID"
+												 notify:NO];
+						}
 					} else {
-						[theContact setStatusObject:gaimAlias
-											 forKey:@"Server Display Name"
-											 notify:NO];	
+						if (![[theContact statusObjectForKey:@"Server Display Name"] isEqualToString:gaimAlias]) {
+							//Set the server display name status object as the full display name
+							[theContact setStatusObject:gaimAlias
+												 forKey:@"Server Display Name"
+												 notify:NO];
+							
+							//Set a 20-characters-or-less version as the lowest priority display name
+							[[theContact displayArrayForKey:@"Display Name"] setObject:[gaimAlias stringWithEllipsisByTruncatingToLength:20]
+																			 withOwner:self
+																		 priorityLevel:Lowest_Priority];
+							//notify
+							[[adium contactController] listObjectAttributesChanged:self
+																	  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
+						}
 					}
 				}
+				 */
 			}
 		}   break;
 		case GAIM_BUDDY_SIGNOFF:
