@@ -27,14 +27,12 @@ static NSString *linkDetailString[] = { //Anything matching these keys is linked
 - (void)installPlugin
 {
     //Register our content filter
-    [[adium contentController] registerOutgoingContentFilter:self];
-    [[adium contentController] registerIncomingContentFilter:self];
+	[[adium contentController] registerDisplayingContentFilter:self];
 }
 
 - (void)uninstallPlugin
 {
-	[[adium contentController] unregisterOutgoingContentFilter:self];
-	[[adium contentController] unregisterIncomingContentFilter:self];
+	[[adium contentController] unregisterDisplayingContentFilter:self];
 }
 
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
