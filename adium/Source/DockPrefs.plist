@@ -3,7 +3,6 @@
 <plist version="1.0">
 <dict>
 	<key>Dock Icon</key>
-	<real>Adiumy Green</real>
-
+	<string>Adiumy Green</string>
 </dict>
 </plist>

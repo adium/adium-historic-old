@@ -44,7 +44,7 @@
         if([[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]){
             //If this is the first contact with unviewed content, animate the dock
             if(unviewedState == nil){
-                unviewedState = [[owner dockController] setIconStateNamed:@"Alert"];
+                unviewedState = [[[owner dockController] setIconStateNamed:@"Alert"] retain];
             }
 
             [unviewedObjectsArray addObject:inObject];
@@ -56,7 +56,7 @@
                 //If there are no more contacts with unviewed content, stop animating the dock
                 if([unviewedObjectsArray count] == 0 && unviewedState != nil){
                     [[owner dockController] removeIconState:unviewedState];
-                    unviewedState = nil;
+                    [unviewedState release]; unviewedState = nil;
                 }
             }
         }
