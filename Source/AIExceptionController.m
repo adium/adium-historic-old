@@ -78,6 +78,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 - (void)raise
 {
 	if(!catchExceptions){
+		NSLog(@"%@", @"Exception-catching is off");
 		[super raise];
 	}else{
 		NSString	*theReason = [self reason];
@@ -97,7 +98,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		   (!theName) || //Harmless
 		   [safeExceptionNames containsObject:theName])
 		{
-			
+			NSLog(@"%@", @"Harmless 1");
 			[super raise];
 			
 		}else{
@@ -108,7 +109,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			   [backtrace rangeOfString:@"-[NSFontPanel setPanelFont:isMultiple:] (in AppKit)"].location != NSNotFound ||
 			   [backtrace rangeOfString:@"-[NSScrollView(NSScrollViewAccessibility) accessibilityChildrenAttribute]"].location != NSNotFound)
 			{
-
+				NSLog(@"%@", @"Harmless 2");
 				[super raise];
 				
 			}else{
@@ -135,7 +136,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 {
 	NSDictionary    *dict = [self userInfo];
 	NSString        *stackTrace = nil;
-	
+
 	//Turn the nonsense of memory addresses into a human-readable backtrace complete with line numbers
 	if(dict && (stackTrace = [dict objectForKey:NSStackTraceKey])) {
 		NSString			*processedStackTrace;
@@ -143,12 +144,12 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		
 		//We use two command line apps to decode our exception
 		str = [NSString stringWithFormat:@"%s -p %d %@ | tail -n +3 | head -n +%d | %s | cat -n",
-			[[[NSBundle mainBundle] pathForResource:@"atos" ofType:nil] fileSystemRepresentation], //atos arg 0
+			[[[[NSBundle mainBundle] pathForResource:@"atos" ofType:nil] stringByEscapingForShell] fileSystemRepresentation], //atos arg 0
 			[[NSProcessInfo processInfo] processIdentifier], //atos arg 2 (argument to -p)
 			stackTrace, //atos arg 3..inf
 			([[stackTrace componentsSeparatedByString:@"  "] count] - 4), //head arg 3
-			[[[NSBundle mainBundle] pathForResource:@"c++filt" ofType:nil] fileSystemRepresentation]]; //c++filt arg 0
-		
+			[[[[NSBundle mainBundle] pathForResource:@"c++filt" ofType:nil] stringByEscapingForShell] fileSystemRepresentation]]; //c++filt arg 0	
+
 		FILE *file = popen( [str UTF8String], "r" );
 		NSMutableData *data = [[NSMutableData alloc] init];
 
