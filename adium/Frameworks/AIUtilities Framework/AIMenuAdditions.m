@@ -101,5 +101,16 @@ extern MenuRef _NSGetCarbonMenu(NSMenu *);
     //
     return(attributes & kMenuItemAttrDynamic);
 }
+@end
 
+@implementation NSMenu (AIMenuAdditions)
+//Swap two menu items
++ (void)swapMenuItem:(NSMenuItem *)existingItem with:(NSMenuItem *)newItem
+{
+    NSMenu	*containingMenu = [existingItem menu];
+    int		menuItemIndex = [containingMenu indexOfItem:existingItem];
+    
+    [containingMenu removeItem:existingItem];
+    [containingMenu insertItem:newItem atIndex:menuItemIndex];
+}
 @end
