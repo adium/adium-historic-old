@@ -223,11 +223,9 @@
         }
     
     }else{
-        NSDictionary	*notificationDict;
-
         //Open a new message with the contact
-        notificationDict = [NSDictionary dictionaryWithObjectsAndKeys:selectedObject, @"To", nil];
-        [[owner notificationCenter] postNotificationName:Interface_InitiateMessage object:nil userInfo:notificationDict];
+        AIChat	*chat = [[owner contentController] openChatOnAccount:nil withListObject:selectedObject];
+        [[owner interfaceController] setActiveChat:chat];
     }
 }
 

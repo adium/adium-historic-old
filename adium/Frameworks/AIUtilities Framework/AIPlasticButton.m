@@ -70,7 +70,7 @@
     sourceRect = NSMakeRect(0, 0, [middle size].width, [middle size].height);
     destRect = NSMakeRect(frame.origin.x + capWidth, frame.origin.y + frame.size.height, sourceRect.size.width, sourceRect.size.height);
 
-    while(destRect.origin.x < middleRight && destRect.size.width != 0){
+    while(destRect.origin.x < middleRight && (int)destRect.size.width > 0){
         //Crop
         if((destRect.origin.x + destRect.size.width) > middleRight){
             sourceRect.size.width -= (destRect.origin.x + destRect.size.width) - middleRight;

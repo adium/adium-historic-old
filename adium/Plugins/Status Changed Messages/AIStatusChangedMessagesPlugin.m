@@ -79,7 +79,7 @@
 }
 
 
-//Post a status message on all activa chats for this object
+//Post a status message on all active chats for this object
 - (void)statusMessage:(NSString *)message forObject:(AIListObject *)object
 {
     NSEnumerator	*enumerator;
@@ -91,7 +91,7 @@
 
         //Create our content object
         content = [AIContentStatus statusInChat:chat
-                                     withSource:[chat object]
+                                     withSource:object
                                     destination:[chat account]
                                            date:[NSDate date]
                                         message:[NSString stringWithFormat:message,[object displayName]]];

@@ -18,15 +18,18 @@
 #import <Adium/Adium.h>
 #import <AIUtilities/AIUtilities.h>
 
-#define LEFT_VIEW_PADDING 	2
-#define LEFT_VIEW_HEIGHT 	13
-#define LEFT_MARGIN		0
+#define BACK_CELL_LEFT_INDENT	-1
+#define BACK_CELL_RIGHT_INDENT	3
+#define LABEL_SIDE_PAD		0
 
 @interface AIMessageTabViewItem (PRIVATE)
 - (id)initWithMessageView:(AIMessageViewController *)inMessageView owner:(id)inOwner;
 - (void)drawLabel:(BOOL)shouldTruncateLabel inRect:(NSRect)labelRect;
 - (NSSize)sizeOfLabel:(BOOL)computeMin;
 - (NSAttributedString *)attributedLabelStringWithColor:(NSColor *)textColor;
+- (void)chatParticipatingListObjectsChanged:(NSNotification *)notification;
+- (void)_observeListObjectAttributes:(AIListObject *)inListObject;
+- (void)chatStatusChanged:(NSNotification *)notification;
 @end
 
 @implementation AIMessageTabViewItem
@@ -46,9 +49,10 @@
     owner = [inOwner retain];
     color = nil;
 
-    //Observer
-    [[owner notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) name:ListObject_AttributesChanged object:[inMessageView listObject]];
-    
+    //Configure ourself for the message view
+    [messageView setDelegate:self];
+    [self messageViewController:messageView chatChangedTo:[messageView chat]];
+
     //Set our contents
     [self setView:[messageView view]];
     
@@ -65,59 +69,102 @@
     [super dealloc];
 }
 
-//Redisplay the modified object
-- (void)listObjectAttributesChanged:(NSNotification *)notification
-{
-    NSArray	*keys = [[notification userInfo] objectForKey:@"Keys"];
-
-    //We only need to redraw if the text color has changed
-    if([keys containsObject:@"Tab Color"]){
-        //This should really be optimized and cleaned up.  Right now we're assuming the tab view's delegate is our custom tabs, and telling them to display - obviously not the best solution, but good enough for now.
-        [self setColor:[[[messageView listObject] displayArrayForKey:@"Tab Color"] averageColor]];
-        [[[self tabView] delegate] setNeedsDisplay:YES];
-    }
-
-    //If the display name changed, we resize the tabs
-    if([keys containsObject:@"Display Name"]){
-        //This should really be looked at and possibly a better method found.  This works and causes an automatic update to each open tab.  But it feels like a hack.  There is probably a more elegant method.  Something like [[[self tabView] delegate] redraw];  I guess that's what this causes to happen, but the indirectness bugs me. - obviously not the best solution, but good enough for now.
-        [[[self tabView] delegate] tabViewDidChangeNumberOfTabViewItems:[self tabView]];
-    }    
-}
-
-//Make this container active
-- (void)makeActive:(id)sender
-{
-    NSTabView	*tabView = [self tabView];
-    NSWindow	*window	= [tabView window];
-    
-    if([tabView selectedTabViewItem] != self){
-        [tabView selectTabViewItem:self]; //Select our tab
-    }
-
-    if(![window isKeyWindow]){
-        [window makeKeyAndOrderFront:nil]; //Bring our window to the front        
-    }
-}
-
-//Called when our tab is selected
-- (void)tabViewItemWasSelected
-{
-    //Ensure our entry view is first responder
-    [messageView makeTextEntryViewFirstResponder];
-}
-
 //Access to our message view controller
 - (AIMessageViewController *)messageViewController
 {
     return(messageView);
 }
 
-- (BOOL)tabShouldClose:(id)sender
+//Our tab tinting color
+- (void)setColor:(NSColor *)inColor
 {
-    //Close down our message view
-    [messageView closeMessageView];
+    if(color != inColor){
+        [color release];
+        color = [inColor retain];
+    }
+}
+- (NSColor *)color{
+    return(color);
+}
+
+//Message View Delegate ----------------------------------------------------------------------
+- (void)messageViewController:(AIMessageViewController *)inMessageView chatChangedTo:(AIChat *)chat
+{
+    //Observe the chat status
+    [[owner notificationCenter] removeObserver:self name:Content_ChatStatusChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(chatStatusChanged:) name:Content_ChatStatusChanged object:chat];
+    [self chatStatusChanged:nil];
+
+    //Observe the chat's participating list objects
+    [[owner notificationCenter] removeObserver:self name:Content_ChatParticipatingListObjectsChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:) name:Content_ChatParticipatingListObjectsChanged object:chat];
+    [self _observeListObjectAttributes:[chat listObject]];
+
+}
+
+//
+- (void)chatParticipatingListObjectsChanged:(NSNotification *)notification
+{
+    [self _observeListObjectAttributes:[[notification object] listObject]];
+}
+
+//
+- (void)_observeListObjectAttributes:(AIListObject *)inListObject
+{    
+    //Observe it's primary list object's status
+    [[owner notificationCenter] removeObserver:self name:ListObject_AttributesChanged object:nil];
+    if(inListObject){
+        [[owner notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) name:ListObject_AttributesChanged object:inListObject];
+    }
+}
+
+//
+- (void)chatStatusChanged:(NSNotification *)notification
+{
+    NSArray	*keys = [[notification userInfo] objectForKey:@"Keys"];
     
-    return(YES);
+    //If the display name changed, we resize the tabs
+    if(notification == nil || [keys containsObject:@"DisplayName"]){
+        //This should really be looked at and possibly a better method found.  This works and causes an automatic update to each open tab.  But it feels like a hack.  There is probably a more elegant method.  Something like [[[self tabView] delegate] redraw];  I guess that's what this causes to happen, but the indirectness bugs me. - obviously not the best solution, but good enough for now.
+        [[[self tabView] delegate] tabViewDidChangeNumberOfTabViewItems:[self tabView]];
+    }    
+}
+
+//
+- (void)listObjectAttributesChanged:(NSNotification *)notification
+{
+    AIListObject	*listObject = [notification object];
+    NSArray		*keys = [[notification userInfo] objectForKey:@"Keys"];
+
+    //We only need to redraw if the text color has changed
+    if([keys containsObject:@"Tab Color"] || [keys containsObject:@"Text Color"] || [keys containsObject:@"Label Color"]){
+        //This should really be optimized and cleaned up.  Right now we're assuming the tab view's delegate is our custom tabs, and telling them to display - obviously not the best solution, but good enough for now.
+        [self setColor:[[listObject displayArrayForKey:@"Tab Color"] averageColor]];
+        [[[self tabView] delegate] setNeedsDisplay:YES];
+    }
+
+    //If the list object's display name changed, we resize the tabs
+    if([keys containsObject:@"Display Name"]){
+        //This should really be looked at and possibly a better method found.  This works and causes an automatic update to each open tab.  But it feels like a hack.  There is probably a more elegant method.  Something like [[[self tabView] delegate] redraw];  I guess that's what this causes to happen, but the indirectness bugs me. - obviously not the best solution, but good enough for now.
+        [[[self tabView] delegate] tabViewDidChangeNumberOfTabViewItems:[self tabView]];
+    }
+}
+
+
+//Interface Container ----------------------------------------------------------------------
+//Make this container active
+- (void)makeActive:(id)sender
+{
+    NSTabView	*tabView = [self tabView];
+    NSWindow	*window	= [tabView window];
+
+    if([tabView selectedTabViewItem] != self){
+        [tabView selectTabViewItem:self]; //Select our tab
+    }
+
+    if(![window isKeyWindow]){
+        [window makeKeyAndOrderFront:nil]; //Bring our window to the front
+    }
 }
 
 //Close this container
@@ -126,21 +173,35 @@
     [[self tabView] removeTabViewItem:self];
 }
 
-#define BACK_CELL_LEFT_INDENT	-1 //6
-#define BACK_CELL_RIGHT_INDENT	3 //10
 
-#define LABEL_SIDE_PAD		0 //5
+
+//Tab view item  ----------------------------------------------------------------------
+//Called when our tab is selected
+- (void)tabViewItemWasSelected
+{
+    //Ensure our entry view is first responder
+    [messageView makeTextEntryViewFirstResponder];
+}
+
+//Close our tab
+- (BOOL)tabShouldClose:(id)sender
+{
+    //Close down our message view
+    [messageView closeMessageView];
+
+    return(YES);
+}
 
 //Drawing
 - (void)drawLabel:(BOOL)shouldTruncateLabel inRect:(NSRect)labelRect
 {
-/*    AIListObject		*listObject = [messageView listObject];
+    AIListObject		*listObject = [[messageView chat] listObject];
     NSColor			*backgroundColor = nil;
     BOOL 			selected;
 
     //
     selected = ([[self tabView] selectedTabViewItem] == self);
-    backgroundColor = [[listObject displayArrayForKey:@"Background Color"] averageColor];
+    backgroundColor = [[listObject displayArrayForKey:@"Label Color"] averageColor];
 
     if(selected){
         labelRect.origin.y += 1;
@@ -201,30 +262,20 @@
         textRect.size.width -= LABEL_SIDE_PAD*2;
         textRect.origin.x += LABEL_SIDE_PAD;
 
-            //Draw name
-            [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
-                                  drawInRect:NSOffsetRect(textRect, 0, -1)];
-            [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.16 alpha:1.0]]
-                                  drawInRect:textRect];
-      //  }
+        //Draw name
+        [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
+                                drawInRect:NSOffsetRect(textRect, 0, -1)];
+        [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.16 alpha:1.0]]
+                                drawInRect:textRect];
         
     }
-
-    //Draw name
-    [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
-                            drawInRect:NSOffsetRect(labelRect, 0, -1)];
-    [[self attributedLabelStringWithColor:[[[listObject displayArrayForKey:@"Text Color"] averageColor] darkenBy:0.6]]
-                            drawInRect:labelRect];
-*/
-
-    
-
+/*
     //Draw name
     [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
                                     drawInRect:NSOffsetRect(labelRect, 0, -1)];
     [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.16 alpha:1.0]]
                                     drawInRect:labelRect];
-
+*/
 }
 
 - (NSSize)sizeOfLabel:(BOOL)computeMin
@@ -239,20 +290,25 @@
         size.width = (int)size.width + 1;
     }
 
-
     return(size);
 }
 
 //
 - (NSString *)labelString
 {
-    return([[messageView listObject] displayName]);
+    AIChat		*chat = [messageView chat];
+    NSString		*displayName;
+
+    if(displayName = [[chat statusDictionary] objectForKey:@"DisplayName"]){
+        return(displayName);
+    }else{
+        return([[chat listObject] displayName]);
+    }
 }
 
 //
 - (NSAttributedString *)attributedLabelStringWithColor:(NSColor *)textColor
 {
-    AIListObject		*object = [messageView listObject];
     NSFont			*font = [NSFont boldSystemFontOfSize:11];
     NSAttributedString		*displayName;
     NSMutableParagraphStyle	*paragraphStyle;
@@ -262,21 +318,10 @@
     [paragraphStyle setLineBreakMode:NSLineBreakByClipping];
 
     //Name
-    displayName = [[NSAttributedString alloc] initWithString:[object displayName] attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, nil]];
+    displayName = [[NSAttributedString alloc] initWithString:[self labelString] attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, nil]];
 
     return([displayName autorelease]);
 }
 
-//
-- (void)setColor:(NSColor *)inColor
-{
-    if(color != inColor){
-        [color release];
-        color = [inColor retain];
-    }
-}
-- (NSColor *)color{
-    return(color);
-}
 
 @end

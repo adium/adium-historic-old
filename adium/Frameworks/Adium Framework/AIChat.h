@@ -8,23 +8,30 @@
 
 #import <Foundation/Foundation.h>
 
-@class AIAccount, AIContentObject, AIListObject;
+@class AIAccount, AIContentObject, AIListObject, AIAdium;
 
 @interface AIChat : NSObject {
+    AIAdium		*owner;
     AIAccount		*account;
-    AIListObject	*object;
     NSMutableDictionary *statusDictionary;
     NSMutableArray	*contentObjectArray;
+    NSMutableArray	*participatingListObjects;
 }
 
-+ (id)chatForAccount:(AIAccount *)inAccount object:(AIListObject *)inObject;
++ (id)chatWithOwner:(id)inOwner forAccount:(AIAccount *)inAccount;
 - (NSMutableDictionary *)statusDictionary;
 - (AIAccount *)account;
-- (AIListObject *)object;
+
+- (NSArray *)participatingListObjects;
+- (void)addParticipatingListObject:(AIListObject *)inObject;
+- (void)removeParticipatingListObject:(AIListObject *)inObject;
+- (AIListObject *)listObject;
 
 - (NSArray *)contentObjectArray;
+- (void)setContentArray:(NSArray *)inContentArray;
 - (void)addContentObject:(AIContentObject *)inObject;
 - (void)appendContentArray:(NSArray *)inContent;
 - (void)removeAllContent;
+
 
 @end

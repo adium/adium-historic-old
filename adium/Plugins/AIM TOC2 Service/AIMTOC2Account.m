@@ -22,6 +22,7 @@
 #import "AIMTOC2StringAdditions.h"
 #import "AIMTOC2AccountViewController.h"
 #import "AIMTOC2ServicePlugin.h"
+#import "AIMTOC2ChatInviteWindowController.h"
 
 #define	AIM_ERRORS_FILE		@"AIMErrors"	//Filename of the AIM Errors plist
 #define MESSAGE_QUE_DELAY	2.0		//Delay before sending contact list changes to the server
@@ -93,6 +94,8 @@
 - (void)loadProfileFromURL:(NSString *)inURL;
 - (void)resetPingTimer;
 - (void)_AIMHandleMessageInFromUID:(NSString *)name rawMessage:(NSString *)rawMessage;
+- (AIChat *)_openChatWithHandle:(AIHandle *)handle;
+- (void)_setInstantMessagesWithHandle:(AIHandle *)inHandle enabled:(BOOL)enable;
 @end
 
 @implementation AIMTOC2Account
@@ -107,6 +110,7 @@
     outQue = [[NSMutableArray alloc] init];
     handleDict = [[NSMutableDictionary alloc] init];
     chatDict = [[NSMutableDictionary alloc] init];
+    chatRoomDict = [[NSMutableDictionary alloc] init];
     silenceUpdateArray = [[NSMutableArray alloc] init];
     
     pingTimer = nil;
@@ -297,9 +301,10 @@
 // Send a content object
 - (BOOL)sendContentObject:(AIContentObject *)object
 {
-    BOOL	sent = NO;
+    NSString	*chatRoomID;
     NSString	*message;
     AIHandle	*handle;
+    BOOL	sent = NO;
 
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){
 
@@ -312,17 +317,19 @@
 
         if([message length] <= AIM_PACKET_MAX_LENGTH){ //Ensure the message isn't too long
 
-            if([[object destination] isKindOfClass:[AIListChat class]]){ //Chat
-                [self AIM_SendChatEnc:message toChat:[[object destination] UID]];
-                
+            if(chatRoomID = [[[object chat] statusDictionary] objectForKey:@"TOC_ChatRoomID"]){ //Chat
+                [self AIM_SendChatEnc:message toChat:chatRoomID];
+
             }else{ //Message
-                handle = [[object destination] handleForAccount:self];
+                AIListContact	*listObject = (AIListContact *)[[object chat] listObject];
+                
+                handle = [listObject handleForAccount:self];
                 if(!handle){
-                    handle = [self addHandleWithUID:[[[object destination] UID] compactedString] serverGroup:nil temporary:YES];
+                    handle = [self addHandleWithUID:[[listObject UID] compactedString] serverGroup:nil temporary:YES];
                 }
 
                 [self AIM_SendMessageEnc:message toHandle:[handle UID]];
-                
+
             }
             
             sent = YES;
@@ -335,92 +342,133 @@
     }else if([[object type] compare:CONTENT_TYPING_TYPE] == 0){
         BOOL	typing;
 
-        //Get the handle for receiving this content
-        handle = [[object destination] handleForAccount:self];
-        typing = [(AIContentTyping *)object typing];
+        if(![[[object chat] statusDictionary] objectForKey:@"TOC_ChatRoomID"]){ //Message
+            AIListContact	*listObject = (AIListContact *)[[object chat] listObject];
 
-        //Send the typing client event
-        if(handle){
-            [self AIM_SendClientEvent:(typing ? 2 : 0) toHandle:[handle UID]];
-            sent = YES;
-	    
+            //Get the handle for receiving this content
+            handle = [listObject handleForAccount:self];
+            typing = [(AIContentTyping *)object typing];
+
+            //Send the typing client event
+            if(handle){
+                [self AIM_SendClientEvent:(typing ? 2 : 0) toHandle:[handle UID]];
+                sent = YES;
+            }
         }
-	
+
     }    
     return(sent);
 }
 
-// Return YES if we're available for sending the specified content
-- (BOOL)availableForSendingContentType:(NSString *)inType toChat:(AIChat *)inChat
+//Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
+- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
-    AIListObject 	*listObject = [inChat object];
-    BOOL 		available = NO;
+    BOOL 	available = NO;
+    BOOL	weAreOnline = ([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
 
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
-        //If we are online
-        if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE){
-            if(!inChat || !listObject){
-                available = YES;
+        if(weAreOnline){
+            if(inListObject == nil){ 
+                available = YES; //If we're online, we're most likely available to message this object
 
             }else{
-                if([listObject isKindOfClass:[AIListContact class]]){
-                    AIHandle	*handle = [(AIListContact *)listObject handleForAccount:self];
+                if([inListObject isKindOfClass:[AIListContact class]]){
+                    AIHandle	*handle = [(AIListContact *)inListObject handleForAccount:self];
 
-                    if(![[handleDict allValues] containsObject:handle] || [[[handle statusDictionary] objectForKey:@"Online"] intValue]){
-                        available = YES;
+                    if(handle && [[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
+                        available = YES; //This handle is online and on our list
+
                     }
-                    
-                }else if([listObject isKindOfClass:[AIListChat class]]){
-                    AIChat	*chat = [chatDict objectForKey:[listObject UID]];
-
-                    if(!chat || [[listObject statusArrayForKey:@"Online"] greatestIntegerValue]){
-                        available = YES;
-                    }
-
                 }
             }
         }
     }
-
+        
     return(available);
 }
 
-//
-- (BOOL)openChat:(AIChat *)inChat
+//Initiate a new chat
+- (AIChat *)openChatWithListObject:(AIListObject *)inListObject
 {
-    AIListObject	*object = [inChat object];
+    AIHandle		*handle;
+    AIChat		*chat = nil;
 
-    //We only use AIChats for chat rooms at the moment
-    if([object isKindOfClass:[AIListChat class]]){
-        //Keep track of the chat
-        [chatDict setObject:inChat forKey:[object UID]];
+    if([inListObject isKindOfClass:[AIListContact class]]){        
+        //Get our handle for this contact
+        handle = [(AIListContact *)inListObject handleForAccount:self];
+        if(!handle){
+            handle = [self addHandleWithUID:[[inListObject UID] compactedString] serverGroup:nil temporary:YES];
+        }
+        chat = [self _openChatWithHandle:handle];
     }
-    
-    return(YES);
+
+    return(chat);
 }
+
+- (AIChat *)_openChatWithHandle:(AIHandle *)handle
+{
+    AIChat	*chat;
+
+    //Create chat
+    if(!(chat = [chatDict objectForKey:[handle UID]])){
+        AIListContact	*containingContact = [handle containingContact];
+        BOOL		handleIsOnline;
+
+        //Create the chat
+        chat = [AIChat chatWithOwner:owner forAccount:self];
+
+        //Set the chat participants
+        [chat addParticipatingListObject:containingContact];
+
+        //Correctly enable/disable the chat
+        handleIsOnline = [[[handle statusDictionary] objectForKey:@"Online"] boolValue];
+        [[chat statusDictionary] setObject:[NSNumber numberWithBool:handleIsOnline] forKey:@"Enabled"];
+
+        //
+        [chatDict setObject:chat forKey:[handle UID]];
+        [[owner contentController] noteChat:chat forAccount:self];
+    }
+
+    return(chat);
+}
+
+
+
+
 
 //Close a chat instance
 - (BOOL)closeChat:(AIChat *)inChat
 {
-    AIListObject	*object = [inChat object];
+    NSEnumerator	*enumerator;
+    NSString		*key;
+    NSString		*chatRoomID;
+    NSMutableDictionary	*containingDict;
 
-    if([object isKindOfClass:[AIListChat class]]){ //This chat belongs to a chat room
-        //Leave the chat room
-        [self AIM_LeaveChat:[object UID]];
+    //Leave the chat room
+    chatRoomID = [[inChat statusDictionary] objectForKey:@"TOC_ChatRoomID"];
+    if(chatRoomID){
+        [self AIM_LeaveChat:chatRoomID];
+    }
 
-        //Remove it from our chat dict
-        [chatDict removeObjectForKey:[object UID]];
+    //If this chat belongs to a temporary handle, we want to remove the temporary handle from our list.
+    if(!chatRoomID){
+        AIHandle	*handle = [(AIListContact *)[inChat listObject] handleForAccount:self];
 
-    }else if([object isKindOfClass:[AIListContact class]]){ //Chat belongs to a handle
-        AIHandle	*handle = [(AIListContact *)object handleForAccount:self];
-
-        //If this chat belongs to a temporary handle, we want to remove the temporary handle from our list.
         if([handle temporary]){
             [self removeHandleWithUID:[handle UID]];
         }
-        
     }
 
+    //Remove the chat from our tracking dict
+    containingDict = (chatRoomID ? chatRoomDict : chatDict);
+    enumerator = [[containingDict allKeys] objectEnumerator];
+    while(key = [enumerator nextObject]){
+        if([containingDict objectForKey:key] == inChat){
+            [containingDict removeObjectForKey:key];
+            break;
+        }
+    }
+    
     return(YES); //Success
 }
 
@@ -825,7 +873,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.83 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.84 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -914,11 +962,8 @@
     NSString		*chatName = [inCommand TOCStringArgumentAtIndex:1];
     NSString		*chatID = [inCommand TOCStringArgumentAtIndex:2];
     NSString		*handleName = [inCommand TOCStringArgumentAtIndex:3];
-    NSString		*inviteMessage = [inCommand nonBreakingTOCStringArgumentAtIndex:4];
+    //NSString		*inviteMessage = [inCommand nonBreakingTOCStringArgumentAtIndex:4];
     AIHandle		*handle;
-    NSString		*message;
-
-    NSLog(@"%@ invites you to %@ (\"%@\" %@), accepting", handleName, chatName, inviteMessage, chatID);
 
     //Get the inviting handle (creating a stranger if necessary)
     handle = [handleDict objectForKey:[handleName compactedString]];
@@ -926,28 +971,42 @@
         handle = [self addHandleWithUID:[handleName compactedString] serverGroup:nil temporary:YES];
     }
 
-    //Auto-accept the invitation for now
-    message = [NSString stringWithFormat:@"toc_chat_accept %@",chatID];
-    [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
+    //Display the chat invite
+    [[AIMTOC2ChatInviteWindowController chatInviteFrom:handle forChatID:chatID name:chatName account:self] showWindow:nil];
+}
 
+- (void)acceptInvitationForChatID:(NSString *)chatID
+{
+    NSString	*message = [NSString stringWithFormat:@"toc_chat_accept %@",chatID];
+    [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
+}
+
+- (void)declineInvitationForChatID:(NSString *)chatID
+{
+    //I don't know of a chat decline command.  We just ignore the invitation at the moment.
 }
 
 - (void)AIM_HandleChatJoin:(NSString *)inCommand
 {
     NSString		*chatID = [inCommand TOCStringArgumentAtIndex:1];
     NSString		*chatName = [inCommand TOCStringArgumentAtIndex:2];
-    AIListContact	*chatObject;
+    AIChat		*chat;
 
-    //Create an AIListChat for this chat
-    chatObject = [[AIListChat alloc] initWithUID:chatID serviceID:@"AIM"];
+    //Create an AIChat for this chat room
+    chat = [AIChat chatWithOwner:owner forAccount:self];
+    [[chat statusDictionary] setObject:chatID forKey:@"TOC_ChatRoomID"];
 
-    //Flag it as online and set the correct display name
-    [[chatObject statusArrayForKey:@"Display Name"] setObject:chatName withOwner:chatObject];
-    [[chatObject statusArrayForKey:@"Online"] setObject:[NSNumber numberWithBool:YES] withOwner:chatObject];
-    [[owner contactController] listObjectStatusChanged:chatObject modifiedStatusKeys:[NSArray arrayWithObjects:@"Display Name", @"Online", nil] delayed:NO silent:YES];
-
-    //Force open a chat window
-    [[owner notificationCenter] postNotificationName:Interface_InitiateMessage object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:chatObject, @"To", self, @"From", /*chat, @"Chat",*/ nil]];
+    //Chat set participants and status
+    [[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"AlwaysShowUserList"];
+    [[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"DisallowAccountSwitching"];
+    [[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
+    [[chat statusDictionary] setObject:chatName forKey:@"DisplayName"];
+    
+    
+    //
+    [chatRoomDict setObject:chat forKey:chatID];
+    [[owner contentController] noteChat:chat forAccount:self];
+    [[owner interfaceController] setActiveChat:chat];
 }
 
 //
@@ -965,12 +1024,9 @@
     NSEnumerator	*enumerator;
     NSString		*userName;
     AIChat		*chat;
-    NSMutableArray	*userList;
 
     //Get the chat
-    chat = [chatDict objectForKey:chatID];
-    userList = [[chat statusDictionary] objectForKey:@"User List"];
-    if(!userList) userList = [NSMutableArray array];
+    chat = [chatRoomDict objectForKey:chatID];
     
     //Add/remove users    
     enumerator = [userArray objectEnumerator];
@@ -981,20 +1037,18 @@
         handle = [handleDict objectForKey:[userName compactedString]];
         if(!handle){
             handle = [self addHandleWithUID:[userName compactedString] serverGroup:nil temporary:YES];
-            NSLog(@"%@ is new: containingContact:%@", userName, [handle containingContact]);
         }
 
-        //Add/remove them
+        //Add/remove list object
         if(entering){
-            [userList addObject:[handle containingContact]];
+            [chat addParticipatingListObject:[handle containingContact]];
         }else{
-            [userList removeObject:[handle containingContact]];
+            [chat removeParticipatingListObject:[handle containingContact]];
         }
     }
 
-    //Save the user list and notify
-    [[chat statusDictionary] setObject:userList forKey:@"User List"];
-    [[owner notificationCenter] postNotificationName:Content_ChatStatusChanged object:chat userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"User List"] forKey:@"Keys"]];
+    //Notify
+    [[owner notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:chat userInfo:nil];
 }
 
 - (void)AIM_HandleEncChatIn:(NSString *)inCommand
@@ -1008,7 +1062,6 @@
     AIChat 		*chat;
     
     if([[screenName compactedString] compare:[senderName compactedString]] != 0){ //Ignore echoed messages
-
         //Get the sending handle (creating a stranger if necessary)
         senderHandle = [handleDict objectForKey:[senderName compactedString]];
         if(!senderHandle){
@@ -1016,8 +1069,7 @@
         }
 
         //Get the chat
-        chat = [chatDict objectForKey:chatID];
-        if(chat){
+        if(chat = [chatRoomDict objectForKey:chatID]){
             //Create a content object for the message
             messageText = [AIHTMLDecoder decodeHTML:rawMessage];
             messageObject = [AIContentMessage messageInChat:chat
@@ -1066,7 +1118,8 @@
 {
     AIHandle		*handle;
     AIContentMessage	*messageObject;
-
+    AIChat		*chat;
+    
     //Ensure a handle exists (creating a stranger if necessary)
     handle = [handleDict objectForKey:[name compactedString]];
     if(!handle){
@@ -1076,25 +1129,45 @@
     //Clear the 'typing' flag
     [self setTypingFlagOfHandle:handle to:NO];
 
+    //Open a chat for this handle
+    chat = [self _openChatWithHandle:handle];
+    
     //Ensure this handle is 'online'.  If we receive a message from someone offline, it's best to assume that their offline status is incorrect, and flag them as online so the user can respond to their messages.
     if(![[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
         [[handle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
         [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:NO silent:YES];
-        
-        //    [[owner contactController] setHoldContactListUpdates:YES];
-        //[contactListGeneration handle:inHandle addedToAccount:inAccount];
-        //    [[owner contactController] setHoldContactListUpdates:NO];
-        
-
     }
-
+    
     //Add a content object for the message
-    messageObject = [AIContentMessage messageInChat:[[owner contentController] chatWithListObject:[handle containingContact] onAccount:self]
+    messageObject = [AIContentMessage messageInChat:chat
                                          withSource:[handle containingContact]
                                         destination:self
                                                date:nil
                                             message:[AIHTMLDecoder decodeHTML:rawMessage]];
     [[owner contentController] addIncomingContentObject:messageObject];
+}
+
+//
+- (void)_setInstantMessagesWithHandle:(AIHandle *)inHandle enabled:(BOOL)enable
+{
+    NSEnumerator	*enumerator;
+    AIChat		*chat;
+    AIListContact	*contact = [inHandle containingContact];
+
+    //Search for any chats with this contact
+    enumerator = [[chatDict allValues] objectEnumerator];
+    while(chat = [enumerator nextObject]){
+        if([chat listObject] == contact){
+            //Enable/disable the chat
+            [[chat statusDictionary] setObject:[NSNumber numberWithBool:enable] forKey:@"Enabled"];
+
+            //Notify
+            [[owner notificationCenter] postNotificationName:Content_ChatStatusChanged object:chat userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Enabled"] forKey:@"Keys"]];
+
+            //Exit early
+            break;
+        }
+    }
 }
 
 
@@ -1126,6 +1199,9 @@
         if(storedValue == nil || online != [storedValue intValue]){
             [handleStatusDict setObject:[NSNumber numberWithInt:online] forKey:@"Online"];
             [alteredStatusKeys addObject:@"Online"];
+
+            //Enable/disable any instant messages with this handle
+            [self _setInstantMessagesWithHandle:handle enabled:online];
         }
 
         //Warning
@@ -1229,14 +1305,36 @@
             NSString	*handleKey = [contactName compactedString];
             AIHandle	*handle = [[handleDict objectForKey:handleKey] retain];
 
-            //If the handle is not temporary, we remove it from our local handle dict
+            //If the handle is not temporary we remove it from our local handle dict
             if(![handle temporary]){
                 [handleDict removeObjectForKey:handleKey];
                 [[owner contactController] handle:handle removedFromAccount:self];
             }
 
-            //If the handle was temporary, we handle this error silently.
-            if([handle temporary]) displayError = NO;
+            //If the handle was temporary
+            if([handle temporary]){
+                AIChat	*chat;
+                NSLog(@"Contact list is full, unable to track stranger: %@",contactName);
+
+                //Display the contact list is full status note
+                if(chat = [chatDict objectForKey:handleKey]){
+                    AIContentStatus	*content;
+                    
+                    //Create our content object
+                    content = [AIContentStatus statusInChat:chat
+                                                 withSource:[handle containingContact]
+                                                destination:self
+                                                       date:[NSDate date]
+                                                    message:[NSString stringWithFormat:@"Your contact list is full.\rAdium is unable to track the status of '%@'.", contactName]];
+                    [[owner contentController] addIncomingContentObject:content];
+                }                    
+                
+                //Ask the server for an update to this handle's status, since we're unable to track it on our contact list.
+                [self AIM_GetStatus:[handle UID]];
+                
+                //Handle this error silently.
+                displayError = NO;
+            }
 
             [handle release];
         }
@@ -1748,6 +1846,8 @@
     [preferencesDict release];
     [socket release];
     [messageDelayTimer release];
+    [chatDict release];
+    [chatRoomDict release];
 
     [super dealloc];
 }
@@ -1755,7 +1855,7 @@
 - (void)setTypingFlagOfHandle:(AIHandle *)handle to:(BOOL)typing
 {
     BOOL currentValue = [[[handle statusDictionary] objectForKey:@"Typing"] boolValue];
-    
+
     if((typing && !currentValue) || (!typing && currentValue)){
         [[handle statusDictionary] setObject:[NSNumber numberWithBool:typing] forKey:@"Typing"];
         [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:YES silent:NO];

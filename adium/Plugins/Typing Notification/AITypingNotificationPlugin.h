@@ -13,7 +13,6 @@
 
 @interface AITypingNotificationPlugin : AIPlugin <AITextEntryFilter> {
     NSMutableDictionary		*typingDict;
-    NSMutableDictionary		*messagedDict;
 }
 
 @end

@@ -209,16 +209,12 @@
             textColor = [[contact displayArrayForKey:@"Text Color"] averageColor];
         }
 
-	NSLog(@"%@",[contact UIDAndServiceID]);
 	if(!backColor){
-	    NSLog(@"no backColor");
 	    backColor = [NSColor whiteColor];
 	}
 	if(!textColor){
-	    NSLog(@"no whiteColor");
 	    textColor = [NSColor blackColor];
 	}
-	NSLog(@"%@::%@\r\r",backColor,textColor);
 /*
         if([[contact statusArrayForKey:@"UnviewedContent"] greatestIntegerValue]){ //Unviewed
             if(flash){

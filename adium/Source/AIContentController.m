@@ -27,7 +27,7 @@
     incomingContentFilterArray = [[NSMutableArray alloc] init];
     displayingContentFilterArray = [[NSMutableArray alloc] init];
     textEntryFilterArray = [[NSMutableArray alloc] init];
-    chatDict = [[NSMutableDictionary alloc] init];
+    chatArray = [[NSMutableArray alloc] init];
 
     [owner registerEventNotification:Content_DidReceiveContent displayName:@"Message Received"];
     [owner registerEventNotification:Content_DidSendContent displayName:@"Message Sent"];
@@ -41,7 +41,7 @@
 //dealloc
 - (void)dealloc
 {
-    [chatDict release];
+    [chatArray release];
     [outgoingContentFilterArray release];
     [incomingContentFilterArray release];
     [textEntryFilterArray release];
@@ -124,7 +124,6 @@
 {
     AIChat		*chat = [inObject chat];
     AIListObject 	*object = [inObject source];
-    AIListObject	*chatObject = [chat object];
     BOOL		trackContent = [inObject trackContent];	//Adium should track this content
     BOOL		filterContent = [inObject filterContent]; //Adium should filter this content
     BOOL		displayContent = [inObject displayContent]; //Adium should filter this content
@@ -147,17 +146,12 @@
             
         }
 
+        //Add/Display the object
         if(displayContent){
-            //Add the object
 	    [self displayContentObject:inObject];
-            //[chat addContentObject:inObject];
         }
 
         if(trackContent){
-            //Set 'UnrespondedContent' to YES  (This could be done by a seperate plugin, but I'm not sure that's necessary)
-            [[chatObject statusArrayForKey:@"UnrespondedContent"] setObject:[NSNumber numberWithBool:YES] withOwner:chatObject];
-            [[owner contactController] listObjectStatusChanged:chatObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"] delayed:NO silent:NO];
-    
             //Did receive content
             [[owner notificationCenter] postNotificationName:Content_DidReceiveContent object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
         }
@@ -168,49 +162,41 @@
 - (BOOL)sendContentObject:(AIContentObject *)inObject
 {
     AIChat		*chat = [inObject chat];
-    AIListObject 	*listObject = [inObject destination];
-    AIListObject	*chatObject = [chat object];
     BOOL		sent = NO;
     BOOL		trackContent = [inObject trackContent];	//Adium should track this content
     BOOL		filterContent = [inObject filterContent]; //Adium should filter this content
     BOOL		displayContent = [inObject displayContent]; //Adium should filter this content
     
-    if(listObject){
-        //Will send content
+    //Will send content
+    if(trackContent){
+        [[owner notificationCenter] postNotificationName:Content_WillSendContent object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+    }
+
+    //Filter the content object
+    if(filterContent){
+        NSEnumerator	*enumerator;
+        id<AIContentFilter>	filter;
+        
+        enumerator = [outgoingContentFilterArray objectEnumerator];
+        while((filter = [enumerator nextObject])){
+            [filter filterContentObject:inObject];
+        }
+    }
+
+    //Send the object
+    if([(AIAccount <AIAccount_Content> *)[inObject source] sendContentObject:inObject]){
+        if(displayContent){
+            //Add the object
+            [self displayContentObject:inObject];
+            //[chat addContentObject:inObject];
+        }
+
         if(trackContent){
-            [[owner notificationCenter] postNotificationName:Content_WillSendContent object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+            //Did send content
+            [[owner notificationCenter] postNotificationName:Content_DidSendContent object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
         }
 
-        //Filter the content object
-        if(filterContent){
-            NSEnumerator	*enumerator;
-            id<AIContentFilter>	filter;
-            
-            enumerator = [outgoingContentFilterArray objectEnumerator];
-            while((filter = [enumerator nextObject])){
-                [filter filterContentObject:inObject];
-            }
-        }
-    
-        //Send the object
-        if([(AIAccount <AIAccount_Content> *)[inObject source] sendContentObject:inObject]){
-            if(displayContent){
-                //Add the object
-		[self displayContentObject:inObject];
-                //[chat addContentObject:inObject];
-            }
-
-            if(trackContent){
-                //Set 'UnrespondedContent' to NO  (This could be done by a seperate plugin, but I'm not sure that's necessary)
-                [[chatObject statusArrayForKey:@"UnrespondedContent"] setObject:[NSNumber numberWithBool:NO] withOwner:chatObject];
-                [[owner contactController] listObjectStatusChanged:chatObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"] delayed:NO silent:NO];
-
-                //Did send content
-                [[owner notificationCenter] postNotificationName:Content_DidSendContent object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
-            }
-
-            sent = YES;
-        }
+        sent = YES;
     }
 
     return(sent);
@@ -219,34 +205,31 @@
 - (void)displayContentObject:(AIContentObject *)inObject
 {
     AIChat		*chat = [inObject chat];
-    AIListObject 	*listObject = [inObject destination];
     BOOL		filterContent = [inObject filterContent]; //Adium should filter this content
 
-    if(listObject){
-        //Filter the content object
-        if(filterContent){
-            NSEnumerator	*enumerator;
-            id<AIContentFilter>	filter;
+    //Filter the content object
+    if(filterContent){
+        NSEnumerator	*enumerator;
+        id<AIContentFilter>	filter;
 
-            enumerator = [displayingContentFilterArray objectEnumerator];
-            while((filter = [enumerator nextObject])){
-                [filter filterContentObject:inObject];
-            }
+        enumerator = [displayingContentFilterArray objectEnumerator];
+        while((filter = [enumerator nextObject])){
+            [filter filterContentObject:inObject];
         }
-	
-	//Add the object
-	[chat addContentObject:inObject];
-
-	//Content object added
-	[[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
     }
+    
+    //Add the object
+    [chat addContentObject:inObject];
+
+    //Content object added
+    [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 }
 
 //Is an account/chat available for sending content?
-- (BOOL)availableForSendingContentType:(NSString *)inType toChat:(AIChat *)inChat onAccount:(AIAccount *)inAccount
+- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject onAccount:(AIAccount *)inAccount 
 {
     if([inAccount conformsToProtocol:@protocol(AIAccount_Content)]){
-        return([(AIAccount <AIAccount_Content> *)inAccount availableForSendingContentType:inType toChat:inChat]);
+        return([(AIAccount <AIAccount_Content> *)inAccount availableForSendingContentType:inType toListObject:inListObject]);
     }else{
         return(NO);
     }
@@ -254,61 +237,81 @@
 
 
 //Chats -------------------------------------------------------------------------------------------------
-//Create/return a chat
-- (AIChat *)chatWithListObject:(AIListObject *)inObject onAccount:(AIAccount *)inAccount
+//Open a chat on the specified account, or returns an existing chat
+- (AIChat *)openChatOnAccount:(AIAccount *)inAccount withListObject:(AIListObject *)inListObject
 {
-    NSString	*key = [NSString stringWithFormat:@"(%@)%@",[inAccount accountID],[inObject UIDAndServiceID]];
-    AIChat	*chat;
+    NSEnumerator	*enumerator;
+    AIChat		*chat;
+    
+    //Search for an existing chat
+    enumerator = [chatArray objectEnumerator];
+    while(chat = [enumerator nextObject]){
+        if([chat listObject] == inListObject) break;
+    }
 
-    //Check for existing chat
-    chat = [chatDict objectForKey:key];
-    if(!chat && inAccount != nil){
-        //Create the chat
-        chat = [AIChat chatForAccount:inAccount object:inObject];
-        [chatDict setObject:chat forKey:key];
+    if(!chat){
+        //If no account is passed, use the default
+        if(!inAccount){
+            inAccount = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:inListObject];
+        }
 
-        //Notify account that it was created
-        [(AIAccount<AIAccount_Content> *)inAccount openChat:chat];
+        //Instruct the account to open the new chat
+        chat = [(id <AIAccount_Content>)inAccount openChatWithListObject:inListObject];
+
+    }else{
+        //Have the interface re-open this chat
+        [[owner interfaceController] openChat:chat];    
+
     }
 
     return(chat);
 }
 
-//Returns all chats w/ the object
-- (NSArray *)allChatsWithListObject:(AIListObject *)inObject
+//Note a chat (Called by account code only, after creating a chat)
+- (void)noteChat:(AIChat *)inChat forAccount:(AIAccount *)inAccount
 {
-    NSEnumerator	*enumerator;
-    AIChat		*chat;
-    NSMutableArray	*chatArray = [NSMutableArray array];
+    //Track the chat
+    [chatArray addObject:inChat];    
 
-    enumerator = [[chatDict allValues] objectEnumerator];
-    while((chat = [enumerator nextObject])){
-        if([chat object] == inObject){
-            [chatArray addObject:chat];
-        }
-    }
-
-    return(chatArray);
+    //Have the interface open this chat
+    [[owner interfaceController] openChat:inChat];    
 }
 
 //Close a chat
 - (BOOL)closeChat:(AIChat *)inChat
 {
-    AIListObject	*chatObject = [inChat object];
-    NSString		*key = [NSString stringWithFormat:@"(%@)%@",[[inChat account] accountID],[[inChat object] UIDAndServiceID]];
-
-    //Set 'UnrespondedContent' to NO  (This could be done by a seperate plugin, but I'm not sure that's necessary)
-    [[chatObject statusArrayForKey:@"UnrespondedContent"] setObject:[NSNumber numberWithBool:NO] withOwner:chatObject];
-    [[owner contactController] listObjectStatusChanged:chatObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnrespondedContent"] delayed:NO silent:NO];
-
     //Notify the account, and remove the chat
     [(AIAccount<AIAccount_Content> *)[inChat account] closeChat:inChat];
-    [chatDict removeObjectForKey:key];
+    [chatArray removeObject:inChat];
 
     //Remove all content from the chat
     [inChat removeAllContent];
 
     return(YES);
+}
+
+//Returns all chats w/ the object
+- (NSArray *)allChatsWithListObject:(AIListObject *)inObject
+{
+    NSMutableArray	*foundChats = [NSMutableArray array];
+    NSEnumerator	*chatEnumerator;
+    AIChat		*chat;
+
+    chatEnumerator = [chatArray objectEnumerator];
+    while((chat = [chatEnumerator nextObject])){
+        NSEnumerator	*objectEnumerator;
+        AIListObject	*object;
+
+        objectEnumerator = [[chat participatingListObjects] objectEnumerator];
+        while((object = [objectEnumerator nextObject])){
+            if(object == inObject){
+                [foundChats addObject:chat];
+            }
+
+        }
+    }
+
+    return(foundChats);
 }
 
 @end

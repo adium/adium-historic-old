@@ -58,6 +58,8 @@
 - (void)_registerModuleForClass:(Class)inClass;
 - (void)silenceAllHandleUpdatesForInterval:(NSTimeInterval)interval;
 - (void)_endSilenceAllUpdates;
+- (AIChat *)_openChatWithHandle:(AIHandle *)handle;
+- (void)_setInstantMessagesWithHandle:(AIHandle *)inHandle enabled:(BOOL)enable;
 @end
 
 @implementation AIOscarAccount
@@ -68,6 +70,7 @@
 {    
     //Init
     handleDict = [[NSMutableDictionary alloc] init];
+    chatDict = [[NSMutableDictionary alloc] init];
     moduleDict = [[NSMutableDictionary alloc] init];
     connectionArray = [[NSMutableArray alloc] init];
     iconRequestArray = [[NSMutableArray alloc] init];
@@ -384,6 +387,9 @@
         if(storedValue == nil || online != [storedValue intValue]){
             [handleStatusDict setObject:[NSNumber numberWithInt:online] forKey:@"Online"];
             [alteredStatusKeys addObject:@"Online"];
+
+            //Enable/disable any instant messages with this handle
+            [self _setInstantMessagesWithHandle:handle enabled:online];
         }
 
         //Idle time
@@ -467,6 +473,7 @@
 {
     AIHandle		*handle;
     AIContentMessage	*messageObject;
+    AIChat		*chat;
 
     //Ensure a handle exists (creating a stranger if necessary)
     handle = [handleDict objectForKey:[name compactedString]];
@@ -477,6 +484,9 @@
     //Clear the 'typing' flag
     //[self setTypingFlagOfHandle:handle to:NO];
 
+    //Get chat
+    chat = [self _openChatWithHandle:handle];
+    
     //Ensure this handle is 'online'.  If we receive a message from someone offline, it's best to assume that their offline status is incorrect, and flag them as online so the user can respond to their messages.
     if(![[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
         [[handle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
@@ -484,7 +494,7 @@
     }
 
     //Add a content object for the message
-    messageObject = [AIContentMessage messageInChat:[[owner contentController] chatWithListObject:[handle containingContact] onAccount:self]
+    messageObject = [AIContentMessage messageInChat:chat
                                          withSource:[handle containingContact]
                                         destination:self
                                                date:nil
@@ -587,48 +597,46 @@
 // Send a content object
 - (BOOL)sendContentObject:(AIContentObject *)object
 {
-    BOOL	sent = NO;
-    NSString	*message;
-    AIHandle	*handle;
+    BOOL		sent = NO;
+    NSString		*message;
+    AIListContact	*listObject;
+    AIHandle		*handle;
 
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){
         //Convert the message to HTML
         message = [AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message] encodeFullString:YES];
 
-        if([[object destination] isKindOfClass:[AIListChat class]]){ //Chat
-            
-            
-        }else{ //Message
-            //Get the destination handle
-            handle = [[object destination] handleForAccount:self];
-            if(!handle){
-                handle = [self addHandleWithUID:[[[object destination] UID] compactedString] serverGroup:nil temporary:YES];
-            }
-
-            //We want to advertise our icon and request their icon on the first message sent
-            NSMutableDictionary	*handleStatusDict = [handle statusDictionary];
-            BOOL		advertiseIcon = NO;
-            BOOL		requestIcon = NO;
-            
-            if(![[handleStatusDict objectForKey:@"Oscar_AdvertisedIcon"] boolValue]){
-                advertiseIcon = YES;
-                requestIcon = YES;
-                [handleStatusDict setObject:[NSNumber numberWithBool:YES] forKey:@"Oscar_AdvertisedIcon"];
-            }
-
-            //Message
-            [(AIOscarMessage *)[self moduleForFamily:0x0004] sendMessage:message
-                                                               toContact:[handle UID]
-                                                           advertiseIcon:advertiseIcon
-                                                             requestIcon:requestIcon];
+        //Get the destination handle
+        listObject = (AIListContact *)[[object chat] listObject];
+        handle = [listObject handleForAccount:self];
+        if(!handle){
+            handle = [self addHandleWithUID:[[listObject UID] compactedString] serverGroup:nil temporary:YES];
         }
 
+        //We want to advertise our icon and request their icon on the first message sent
+        NSMutableDictionary	*handleStatusDict = [handle statusDictionary];
+        BOOL		advertiseIcon = NO;
+        BOOL		requestIcon = NO;
+        
+        if(![[handleStatusDict objectForKey:@"Oscar_AdvertisedIcon"] boolValue]){
+            advertiseIcon = YES;
+            requestIcon = YES;
+            [handleStatusDict setObject:[NSNumber numberWithBool:YES] forKey:@"Oscar_AdvertisedIcon"];
+        }
+
+        //Message
+        [(AIOscarMessage *)[self moduleForFamily:0x0004] sendMessage:message
+                                                           toContact:[handle UID]
+                                                       advertiseIcon:advertiseIcon
+                                                         requestIcon:requestIcon];
+        
         sent = YES;
 
 
     }else if([[object type] compare:CONTENT_TYPING_TYPE] == 0){
         //Get the handle for receiving this content
-        handle = [[object destination] handleForAccount:self];
+        listObject = (AIListContact *)[[object chat] listObject];
+        handle = [listObject handleForAccount:self];
 
         //Send the typing event
         if(handle){
@@ -641,22 +649,118 @@
     return(sent);
 }
 
-// Return YES if we're available for sending the specified content
-- (BOOL)availableForSendingContentType:(NSString *)inType toChat:(AIChat *)inChat
+//Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
+- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
-    return(YES);
+    BOOL 	available = NO;
+    BOOL	weAreOnline = ([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
+
+    if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
+        if(weAreOnline){
+            if(inListObject == nil){
+                available = YES; //If we're online, we're most likely available to message this object
+
+            }else{
+                if([inListObject isKindOfClass:[AIListContact class]]){
+                    AIHandle	*handle = [(AIListContact *)inListObject handleForAccount:self];
+
+                    if(handle && [[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
+                        available = YES; //This handle is online and on our list
+                    }
+                }
+            }
+        }
+    }
+
+    return(available);
+}
+
+//Initiate a new chat
+- (AIChat *)openChatWithListObject:(AIListObject *)inListObject
+{
+    AIHandle		*handle;
+    AIChat		*chat = nil;
+
+    if([inListObject isKindOfClass:[AIListContact class]]){
+        //Get our handle for this contact
+        handle = [(AIListContact *)inListObject handleForAccount:self];
+        if(!handle){
+            handle = [self addHandleWithUID:[[inListObject UID] compactedString] serverGroup:nil temporary:YES];
+        }
+        chat = [self _openChatWithHandle:handle];
+    }
+
+    return(chat);
 }
 
 //
-- (BOOL)openChat:(AIChat *)inChat
+- (AIChat *)_openChatWithHandle:(AIHandle *)handle
 {
-    return(YES);
+    AIChat	*chat;
+
+    //Create chat
+    if(!(chat = [chatDict objectForKey:[handle UID]])){
+        AIListContact	*containingContact = [handle containingContact];
+        BOOL		handleIsOnline;
+
+        //Create the chat
+        chat = [AIChat chatWithOwner:owner forAccount:self];
+
+        //Set the chat participants
+        [chat addParticipatingListObject:containingContact];
+        
+        //Correctly enable/disable the chat
+        handleIsOnline = [[[handle statusDictionary] objectForKey:@"Online"] boolValue];
+        [[chat statusDictionary] setObject:[NSNumber numberWithBool:handleIsOnline] forKey:@"Enabled"];
+        
+        //
+        [chatDict setObject:chat forKey:[handle UID]];
+        [[owner contentController] noteChat:chat forAccount:self];
+    }
+
+    return(chat);
 }
+
 
 //Close a chat instance
 - (BOOL)closeChat:(AIChat *)inChat
 {
-    return(YES);
+    NSEnumerator	*enumerator;
+    NSString		*key;
+
+    //Remove the chat from our tracking dict
+    enumerator = [[chatDict allKeys] objectEnumerator];
+    while(key = [enumerator nextObject]){
+        if([chatDict objectForKey:key] == inChat){
+            [chatDict removeObjectForKey:key];
+            break;
+        }
+    }
+
+    return(YES); //Success
+}
+
+//
+- (void)_setInstantMessagesWithHandle:(AIHandle *)inHandle enabled:(BOOL)enable
+{
+    NSEnumerator	*enumerator;
+    AIChat		*chat;
+    AIListContact	*contact = [inHandle containingContact];
+
+    //Search for any chats with this contact
+    enumerator = [[chatDict allValues] objectEnumerator];
+    while(chat = [enumerator nextObject]){
+        if([chat listObject] == contact){
+            //Enable/disable the chat
+            [[chat statusDictionary] setObject:[NSNumber numberWithBool:enable] forKey:@"Enabled"];
+
+            //Notify
+            [[owner notificationCenter] postNotificationName:Content_ChatStatusChanged object:chat userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Enabled"] forKey:@"Keys"]];
+
+            //Exit early
+            break;
+        }
+    }
 }
 
 

@@ -64,7 +64,7 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
         lastItem = [locationArray objectAtIndex:i];
         curItem = lastItem;
         NSMenu	   *targetMenu = [[locationArray objectAtIndex:i] menu]; 
-        int			curCount = 1, ind = [targetMenu indexOfItem:topItem] + 1, count = [targetMenu indexOfItem:lastItem] - [targetMenu indexOfItem:topItem];
+        //int		curCount = 1, ind = [targetMenu indexOfItem:topItem] + 1, count = [targetMenu indexOfItem:lastItem] - [targetMenu indexOfItem:topItem];
         
         if (lastItem == nilMenuItem)
             continue;

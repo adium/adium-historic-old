@@ -321,7 +321,7 @@
                                                                       object:inObject];
 
         if(accountID && (account = [self accountWithID:accountID])){
-            if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil]){
+            if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]){
                 return(account);
             }
         }
@@ -331,21 +331,17 @@
     // Next, the last account used to message someone is picked, as long as it is available for sending content
     NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[inObject serviceID]];
     if(lastAccountID && (account = [self accountWithID:lastAccountID])){
-        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil]){
+        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]){
             return(account);
         }
     }
 
-    // First available account that can see the handle -- (only applies to contacts)
+    // First available account that can see the object
     // If this is the first message opened in this session, the first account with the contact on it's contact list is choosen
-    if(inObject && [inObject isKindOfClass:[AIListContact class]]){
+    {
         enumerator = [accountArray objectEnumerator];
         while((account = [enumerator nextObject])){
-            AIHandle	*handle = [(AIListContact *)inObject handleForAccount:account];
-
-            if(handle &&
-               [[handle serviceID] compare:[[[account service] handleServiceType] identifier]] == 0 &&
-               [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil]){
+            if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:inObject]){
                 return(account);
             }
         }        
@@ -357,8 +353,8 @@
     while((account = [enumerator nextObject])){
         AIHandle	*handle = [(AIListContact *)inObject handleForAccount:account];
 
-        if((!handle || [[handle serviceID] compare:[[[account service] handleServiceType] identifier]] == 0) && 
-           [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:nil]){
+        if((!handle || [[handle serviceID] compare:[[[account service] handleServiceType] identifier]] == 0) &&
+           [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]){
             return(account);
         }
     }
@@ -421,23 +417,24 @@
 }
 
 
-
-
 // Internal ----------------------------------------------------------------
 //Watch outgoing content, remembering the user's choice of source account
 - (void)didSendContent:(NSNotification *)notification
 {
-    AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
-    AIListObject	*destObject = [contentObject destination];
-    AIAccount		*sourceAccount = (AIAccount *)[contentObject source];
+    AIChat		*chat = [notification object];
+    AIListObject	*destObject = [chat listObject];
 
-    [[owner preferenceController] setPreference:[sourceAccount accountID]
-                                         forKey:KEY_PREFERRED_SOURCE_ACCOUNT
-                                          group:PREF_GROUP_PREFERRED_ACCOUNTS
-                                         object:destObject];
+    if(chat && destObject){
+        AIContentObject		*contentObject = [[notification userInfo] objectForKey:@"Object"];
+        AIAccount		*sourceAccount = (AIAccount *)[contentObject source];
 
-    [lastAccountIDToSendContent setObject:[sourceAccount accountID] forKey:[destObject serviceID]];
-    
+        [[owner preferenceController] setPreference:[sourceAccount accountID]
+                                             forKey:KEY_PREFERRED_SOURCE_ACCOUNT
+                                              group:PREF_GROUP_PREFERRED_ACCOUNTS
+                                             object:destObject];
+
+        [lastAccountIDToSendContent setObject:[sourceAccount accountID] forKey:[destObject serviceID]];
+    }
 }
 
 //automatically connect to accounts flagged with an auto connect property

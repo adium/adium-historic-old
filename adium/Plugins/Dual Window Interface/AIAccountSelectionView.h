@@ -15,12 +15,12 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAdium, AIAccount, AIListContact;
+@class AIAdium, AIAccount, AIListObject;
 
 @protocol AIAccountSelectionViewDelegate <NSObject>
 - (void)setAccount:(AIAccount *)inAccount;
 - (AIAccount *)account;
-- (AIListContact *)contact;
+- (AIListObject *)listObject;
 @end
 
 @interface AIAccountSelectionView : NSView {

@@ -43,7 +43,6 @@
     flashState = 0;
     
     [owner registerEventNotification:Interface_ErrorMessageReceived displayName:@"Error"];
-    [owner registerEventNotification:Interface_InitiateMessage displayName:@"Initiate Message"];
 }
 
 - (void)closeController
@@ -72,12 +71,28 @@
 }
 
 
-//Called by the 'new message' menu, initiates a message
+//Interface chat opening and closing
 - (IBAction)initiateMessage:(id)sender
 {
-    //initiate message with a nil Handle, the interface should prompt for a handle
-    [[owner notificationCenter] postNotificationName:Interface_InitiateMessage object:nil userInfo:nil];
+    [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] initiateNewMessage];
 }
+
+- (void)openChat:(AIChat *)inChat
+{
+    [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] openChat:inChat];
+}
+
+- (void)closeChat:(AIChat *)inChat
+{
+    [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] closeChat:inChat];
+}
+
+- (void)setActiveChat:(AIChat *)inChat
+{
+    [(id <AIInterfaceController>)[interfaceArray objectAtIndex:0] setActiveChat:inChat];
+}
+
+
 
 // Registers code to handle the interface
 - (void)registerInterfaceController:(id <AIInterfaceController>)inController

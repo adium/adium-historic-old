@@ -361,7 +361,7 @@
 
 - (void)setEnabled:(BOOL)enabled
 {
-    int	curState = [self isEnabled];
+    //int	curState = [self isEnabled];
     
     if (enabled == TRUE)
     {
