@@ -23,7 +23,7 @@
     NSString		*UIDAndServiceID;
     NSString		*serverGroup;
     AIAccount		*account;
-    float		index;
+    //float		index;
     BOOL		temporary;
 
     AIListContact	*containingContact;

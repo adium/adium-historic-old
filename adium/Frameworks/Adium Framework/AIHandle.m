@@ -56,7 +56,21 @@
     [super dealloc];
 }
 
-
+- (id)copyWithZone:(NSZone *)zone
+{
+    AIHandle *newItem = [[AIHandle alloc] 
+        initWithServiceID:[self serviceID] 
+        UID:[self UID]
+        serverGroup:[self serverGroup]
+        temporary:[self temporary]
+        forAccount:[self account]];
+    
+    [newItem setContainingContact:[self containingContact]];
+    
+    [[newItem statusDictionary] setDictionary:[self statusDictionary]];
+    
+    return newItem;
+}
 
 //Identifying information
 - (NSString *)UID

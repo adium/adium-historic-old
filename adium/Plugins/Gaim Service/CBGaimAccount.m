@@ -16,6 +16,7 @@
 
 //don't change this
 #define PROTOCOL "prpl-oscar"
+#define NO_GROUP @"__NoGroup__"
 
 @implementation CBGaimAccount
 
@@ -33,7 +34,7 @@
         AIHandle *theHandle = [AIHandle 
             handleWithServiceID:[[service handleServiceType] identifier]
             UID:[NSString stringWithCString:buddy->name]
-            serverGroup:@"Libgaim!"
+            serverGroup:NO_GROUP
             temporary:NO
             forAccount:self];
             
@@ -41,7 +42,7 @@
         
         node->ui_data = [theHandle retain];
     
-        [[owner contactController] handlesChangedForAccount:self];
+        //[[owner contactController] handlesChangedForAccount:self];
     }
 }
 
@@ -59,37 +60,86 @@
         if(GAIM_BUDDY_IS_ONLINE(buddy))
         {
             NSLog(@"Online");
+            NSMutableArray *modifiedKeys = [NSMutableArray array];
             AIHandle *theHandle = (AIHandle *)node->ui_data;
             
-            [[theHandle statusDictionary] 
-                setObject:[NSNumber numberWithInt:1] 
-                forKey:@"Online"];
+            if([[[theHandle statusDictionary] objectForKey:@"Online"] intValue] != 1)
+            {
+                [[theHandle statusDictionary]
+                    setObject:[NSNumber numberWithInt:1] 
+                    forKey:@"Online"];
+                [modifiedKeys addObject:@"Online"];
+            }
             
-            if(buddy->server_alias) //if there is a server alias
+            //if there is a server alias, and it's different
+            if(buddy->server_alias 
+            && strcmp([[[theHandle statusDictionary] objectForKey:@"Display Name"] cString], buddy->server_alias))
+            {
                 [[theHandle statusDictionary] 
                     setObject:[NSString stringWithCString:buddy->server_alias]
                     forKey:@"Display Name"];
+                [modifiedKeys addObject:@"Display Name"];
+            }
             
-            [[owner contactController] handleStatusChanged:theHandle
-                modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", @"Display Name",nil]
-                delayed:NO
-                silent:(gaim_connection_get_state(gaim_account_get_connection(buddy->account)) 
-                    != GAIM_CONNECTING)];
+            GaimGroup *g = gaim_find_buddys_group(buddy);
+            if(g && strcmp([[theHandle serverGroup] cString], g->name))
+            {
+                [[owner contactController] handle:[theHandle copy] removedFromAccount:self];
+                NSLog(@"Changed to group %s", g->name);
+                [theHandle setServerGroup:[NSString stringWithCString:g->name]];
+                [[owner contactController] handle:theHandle addedToAccount:self];
+            }
+            
+                        
+            if([modifiedKeys count] > 0)
+            {
+                NSLog(@"Changed %@", modifiedKeys);
+                
+                [[owner contactController] handleStatusChanged:theHandle
+                    modifiedStatusKeys:modifiedKeys
+                    delayed:NO
+                    silent:(gaim_connection_get_state(gaim_account_get_connection(buddy->account)) 
+                        != GAIM_CONNECTING)];
+            }
+            else
+                NSLog(@"Nothing Changed");
         }
         else
         {
-            //NSLog(@"Offline");
+            NSLog(@"Offline");
             
+            NSMutableArray *modifiedKeys = [NSMutableArray array];
             AIHandle *theHandle = (AIHandle *)node->ui_data;
             
-            [[theHandle statusDictionary] 
-                setObject:[NSNumber numberWithInt:0] 
-                forKey:@"Online"];
+            if([[[theHandle statusDictionary] objectForKey:@"Online"] intValue] != 0)
+            {
+                [[theHandle statusDictionary] 
+                    setObject:[NSNumber numberWithInt:0] 
+                    forKey:@"Online"];
+                [modifiedKeys addObject:@"Online"];
+            }
             
-            [[owner contactController] handleStatusChanged:theHandle
-                modifiedStatusKeys:[NSArray arrayWithObjects:@"Online", nil]
-                delayed:NO
-                silent:(buddy->present != GAIM_BUDDY_SIGNING_OFF)];
+            GaimGroup *g = gaim_find_buddys_group(buddy);
+            if(g && strcmp([[theHandle serverGroup] cString], g->name))
+            {
+                [[owner contactController] handle:[theHandle copy] removedFromAccount:self];
+                NSLog(@"Changed to group %s", g->name);
+                [theHandle setServerGroup:[NSString stringWithCString:g->name]];
+                [[owner contactController] handle:theHandle addedToAccount:self];
+            }
+
+            
+            if([modifiedKeys count] > 0)
+            {
+                NSLog(@"Changed %@", modifiedKeys);
+                
+                [[owner contactController] handleStatusChanged:theHandle
+                    modifiedStatusKeys:modifiedKeys
+                    delayed:NO
+                    silent:(buddy->present != GAIM_BUDDY_SIGNING_OFF)];
+            }
+            else
+                NSLog(@"Nothing Changed");
         }
     }
 }

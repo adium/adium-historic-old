@@ -116,7 +116,9 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
     {
         id theAccount;
         if(GAIM_BLIST_NODE_IS_BUDDY(node))
+        {
             theAccount = [(AIHandle *)node->ui_data account];
+        }
         else if(GAIM_BLIST_NODE_IS_CONTACT(node))
         {
             GaimBlistNode *n = (GaimBlistNode *)((GaimContact *)node)->priority;
@@ -139,7 +141,9 @@ static void adiumGaimBlistRemove(GaimBuddyList *list, GaimBlistNode *node)
     {
         id theAccount;
         if(GAIM_BLIST_NODE_IS_BUDDY(node))
+        {
             theAccount = [(AIHandle *)node->ui_data account];
+        }
         else if(GAIM_BLIST_NODE_IS_CONTACT(node))
         {
             GaimBlistNode *n = (GaimBlistNode *)((GaimContact *)node)->priority;
@@ -153,10 +157,14 @@ static void adiumGaimBlistRemove(GaimBuddyList *list, GaimBlistNode *node)
         }
         
         if([theAccount respondsToSelector:@selector(accountBlistRemove:withNode:)])
+        {
             [theAccount accountBlistRemove:list withNode:node];
-        
-        //[node->ui_data release];
-        node->ui_data = NULL;
+        }
+        else
+        {
+            //[node->ui_data release];
+            node->ui_data = NULL;
+        }
     }
 }
 
