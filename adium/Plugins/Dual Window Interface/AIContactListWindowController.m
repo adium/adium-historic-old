@@ -382,14 +382,14 @@
 }
 
 //
-- (void)windowDidBecomeMain:(NSNotification *)notification
+- (void)windowDidBecomeKey:(NSNotification *)notification
 {
     [interface containerDidBecomeActive:self];
     [[adium notificationCenter] postNotificationName:Interface_ContactListDidBecomeMain object:self];
 }
 
 //
-- (void)windowDidResignMain:(NSNotification *)notification
+- (void)windowDidResignKey:(NSNotification *)notification
 {
     [interface containerDidBecomeActive:nil];
     [[adium notificationCenter] postNotificationName:Interface_ContactListDidResignMain object:self];
