@@ -311,10 +311,10 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     BOOL 	below = (dest.x == 1e7 && dest.y == 1e7);
     int		startIndex = (above ? 0 : [self _characterIndexAtPoint:source fractionOffset:0.5]);
     int		stopIndex = (below ? 1e7 : [self _characterIndexAtPoint:dest fractionOffset:0.5]);
-
+	
     if(selectMode == 2){ //Extend to words
         startIndex = [textStorage doubleClickAtIndex:startIndex].location;
-        stopIndex = NSMaxRange([textStorage doubleClickAtIndex:stopIndex]);
+        stopIndex = (below ? 1e7 : NSMaxRange([textStorage doubleClickAtIndex:stopIndex]));
 
     }else if(selectMode == 3){ //Extend to cells
         startIndex = 0;
