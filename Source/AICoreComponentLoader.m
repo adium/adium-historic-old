@@ -35,13 +35,10 @@ AIAwayMessagesPlugin,
 AIAwayStatusWindowPlugin,
 AIChatConsolidationPlugin,
 AIChatCyclingPlugin,
-AIContactAccountsPlugin,
 AIContactAwayPlugin,
 AIContactIdlePlugin,
 AIContactListEditorPlugin,
 AIContactOnlineSincePlugin,
-AIContactProfilePlugin,
-AIContactSettingsPlugin,
 AIContactSortSelectionPlugin,
 AIContactStatusColoringPlugin,
 AIContactStatusDockOverlaysPlugin,
@@ -134,13 +131,10 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[AIAutoReplyPlugin class]];
 	[self _loadComponentClass:[AIChatConsolidationPlugin class]];
 	[self _loadComponentClass:[AIChatCyclingPlugin class]];
-	[self _loadComponentClass:[AIContactAccountsPlugin class]];
 	[self _loadComponentClass:[AIContactAwayPlugin class]];
 	[self _loadComponentClass:[AIContactIdlePlugin class]];
 	[self _loadComponentClass:[AIContactListEditorPlugin class]];
 	[self _loadComponentClass:[AIContactOnlineSincePlugin class]];
-	[self _loadComponentClass:[AIContactProfilePlugin class]];
-	[self _loadComponentClass:[AIContactSettingsPlugin class]];
 	[self _loadComponentClass:[AIContactSortSelectionPlugin class]];
 	[self _loadComponentClass:[AIContactStatusColoringPlugin class]];
 	[self _loadComponentClass:[AIContactStatusDockOverlaysPlugin class]];
