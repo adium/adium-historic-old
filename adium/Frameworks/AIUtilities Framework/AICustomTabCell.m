@@ -58,6 +58,9 @@ static NSImage		*tabCloseFrontPressed = nil;
 {
     selected = inSelected;
 }
+- (BOOL)isSelected{
+    return(selected);
+}
 
 - (void)setHighlighted:(BOOL)inHighlighted
 {
@@ -216,9 +219,9 @@ static NSImage		*tabCloseFrontPressed = nil;
     
     //Draw the title
     destRect = NSMakeRect(rect.origin.x,
-                          rect.origin.y + (int)((rect.size.height - labelSize.height) / 2.0), //center it vertically
-                          rect.size.width,
-                          labelSize.height);
+                            rect.origin.y + (int)((rect.size.height - labelSize.height) / 2.0), //center it vertically
+                            rect.size.width,
+                            labelSize.height);
     [tabViewItem drawLabel:YES inRect:destRect];
 
 }

@@ -19,7 +19,7 @@
 #define AIMessageWindow_ControllerOrderChanged 		@"AIMessageWindow_ControllerOrderChanged"
 #define AIMessageWindow_SelectedControllerChanged 	@"AIMessageWindow_SelectedControllerChanged"
 
-@class AIAdium, AIMessageSendingTextView, AIMiniToolbar, AIMessageViewController, AICustomTabsView;
+@class AIAdium, AIMessageSendingTextView, AIMiniToolbar, AIMessageViewController, AICustomTabsView, AIDualWindowInterfacePlugin;
 @protocol AIContainerInterface, AIInterfaceContainer;
 
 @interface AIMessageWindowController : NSWindowController {
@@ -28,15 +28,11 @@
 
     AIAdium			*owner;
     BOOL			windowIsClosing;
-    id <AIContainerInterface> 	interface;
-
-    NSMutableDictionary		*toolbarItems;
+    AIDualWindowInterfacePlugin<AIContainerInterface> 	*interface;
 
     BOOL                        supressHiding;
     BOOL			tabIsShowing;
-    BOOL                        tabBarResizing;
     BOOL			autohide_tabBar;
-    BOOL                        shouldHideOnDragExit;
     float			tabHeight;
 }
 
@@ -55,6 +51,4 @@
 - (void)selectFirstTabViewItemContainer;
 - (void)selectLastTabViewItemContainer;
 - (NSTabViewItem <AIInterfaceContainer> *)containerForChat:(AIChat *)inChat;
-- (void)supressTabBarHiding:(BOOL)supress;
-- (void)draggingExited:(id <NSDraggingInfo>)sender;
 @end

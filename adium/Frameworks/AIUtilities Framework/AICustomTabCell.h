@@ -35,6 +35,7 @@
 
 + (id)customTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
 - (void)setSelected:(BOOL)inSelected;
+- (BOOL)isSelected;
 - (NSTabViewItem *)tabViewItem;
 - (NSSize)size;
 - (NSComparisonResult)compareWidth:(AICustomTabCell *)tab;

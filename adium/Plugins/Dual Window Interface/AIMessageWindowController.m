@@ -21,8 +21,10 @@
 #import "AIMessageViewController.h"
 #import "AIAdium.h"
 
-#define	MESSAGE_WINDOW_NIB		@"MessageWindow"		//Filename of the message window nib
-#define TAB_BAR_FPS                     30.0
+#define AIMessageTabDragCompleteNotification    @"AIMessageTabDragCompleteNotification"
+#define	MESSAGE_WINDOW_NIB                      @"MessageWindow"		//Filename of the message window nib
+#define TAB_BAR_FPS                             20.0
+#define TAB_BAR_STEP                            0.2
 
 //The tabbed window that contains messages
 @interface NSWindow (UNDOCUMENTED) //Handy undocumented window method
@@ -38,9 +40,10 @@
 - (void)installToolbar;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_updateWindowTitle;
-- (void)_updateTabBarVisibility;
-- (BOOL)resizeTabBar;
-- (void)smoothlyResizeTabBar;
+- (void)updateTabBarVisibilityAndAnimate:(BOOL)animate;
+- (void)_resizeTabBarTimer:(NSTimer *)inTimer;
+- (BOOL)_resizeTabBarAbsolute:(BOOL)absolute;
+- (void)_supressTabBarHiding:(BOOL)supress;
 @end
 
 @implementation AIMessageWindowController
@@ -204,16 +207,17 @@
                                              forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
                                             group:PREF_GROUP_WINDOW_POSITIONS
                                              object:[[[(AIMessageTabViewItem *)inTabViewItem messageViewController] chat] listObject]];
+
         //close the window (unless we're already closing)
-        if (!windowIsClosing) {
-        [self closeWindow:nil];
+        if(!windowIsClosing){
+            [self closeWindow:nil];
         }
     }
 }
 
 //Private -----------------------------------------------------------------------------
 //init
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner interface:(id <AIContainerInterface>)inInterface
+- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner interface:(AIDualWindowInterfacePlugin<AIContainerInterface> *)inInterface
 {
     NSParameterAssert(windowNibName != nil && [windowNibName length] != 0);
 
@@ -221,19 +225,16 @@
     interface = [inInterface retain];
     windowIsClosing = NO;
     tabIsShowing = YES;
-    shouldHideOnDragExit = NO;
     supressHiding = NO;
     
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    
+    [[owner notificationCenter] addObserver:self selector:@selector(messageTabDragCompleteNotification:) name:AIMessageTabDragCompleteNotification object:nil];
+
     [self preferencesChanged:nil];
     
     [super initWithWindowNibName:windowNibName owner:self];
     [self window];	//Load our window
-  
-    [tabView_customTabs setOwner:owner]; //must be done after the nib loads
-    
-    
+      
     //register as a drag observer:
     [[self window] registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
 
@@ -243,6 +244,9 @@
 //dealloc
 - (void)dealloc
 {
+    //During a drag, the tabs will not get deallocated on occasion, so we must make sure that we are no longer set as their delegate
+    [tabView_customTabs setDelegate:nil];
+        
     [owner release];
     [interface release];
 
@@ -252,6 +256,9 @@
 //Setup our window before it is displayed
 - (void)windowDidLoad
 {
+    //Remember the initial tab height
+    tabHeight = [tabView_customTabs frame].size.height;
+
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
 
@@ -262,9 +269,6 @@
 
     [[self window] setBottomCornerRounded:NO]; //Sneaky lil private method
     [[self window] useOptimizedDrawing:YES]; //should be set to YES unless subviews overlap... we should be good to go.  check the docs on this for more info.
-
-    //Remember the intiial tab height
-    tabHeight = [tabView_customTabs frame].size.height;
 }
 
 //called as the window closes
@@ -308,9 +312,20 @@
 
         autohide_tabBar = [[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
 
-        [self _updateTabBarVisibility];
+        [self updateTabBarVisibilityAndAnimate:(notification != nil)];
     }
 }
+
+//Update our window title
+- (void)_updateWindowTitle
+{
+    if([tabView_messages numberOfTabViewItems] == 1){
+        [[self window] setTitle:[NSString stringWithFormat:@"Adium : %@", [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] labelString]]];
+    }else{
+        [[self window] setTitle:@"Adium : Messages"];
+    }
+}
+
 
 //
 - (NSMenu *)customTabView:(AICustomTabsView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem
@@ -346,10 +361,9 @@
 }
 
 //
-- (void)customTabViewDidChangeNumberOfTabViewItems:(AICustomTabsView *)TabView
-{
-    if (!supressHiding)
-        [self _updateTabBarVisibility];
+- (void)customTabViewDidChangeNumberOfTabViewItems:(AICustomTabsView *)tabView
+{       
+    [self updateTabBarVisibilityAndAnimate:([[tabView window] isVisible])];
     [self _updateWindowTitle];
 }
 
@@ -360,6 +374,16 @@
     [interface containerOrderDidChange];
 }
 
+- (void)customTabView:(AICustomTabsView *)tabView didMoveTabViewItem:(NSTabViewItem *)tabViewItem toCustomTabView:(AICustomTabsView *)destTabView index:(int)index screenPoint:(NSPoint)point
+{
+    [[owner notificationCenter] postNotificationName:AIMessageTabDragCompleteNotification object:nil];
+
+    [interface transferMessageTabContainer:tabViewItem
+                                  toWindow:[[destTabView window] windowController]
+                                   atIndex:index
+                         withTabBarAtPoint:point];
+}
+
 //
 - (void)customTabView:(AICustomTabsView *)tabView shouldCloseTabViewItem:(NSTabViewItem *)tabViewItem
 {
@@ -367,152 +391,129 @@
     [[owner interfaceController] closeChat:[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat]];
 }
 
-//Update our window title
-- (void)_updateWindowTitle
+//
+- (NSArray *)customTabViewAcceptableDragTypes:(AICustomTabsView *)tabView
 {
-    if([tabView_messages numberOfTabViewItems] == 1){
-        [[self window] setTitle:[NSString stringWithFormat:@"Adium : %@", [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] labelString]]];
-    }else{
-        [[self window] setTitle:@"Adium : Messages"];
-    }
+    return([NSArray arrayWithObject:NSRTFPboardType]);
 }
 
-//Hide/show our tab bar
-- (void)_updateTabBarVisibility
+//
+- (BOOL)customTabView:(AICustomTabsView *)tabView didAcceptDragPasteboard:(NSPasteboard *)pasteboard onTabViewItem:(NSTabViewItem *)tabViewItem
 {
-    if(autohide_tabBar && ([tabView_messages numberOfTabViewItems] == 1) && tabIsShowing){
-        tabIsShowing = NO;
-        [self smoothlyResizeTabBar];
+    NSString    *type = [pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSRTFPboardType,TAB_CELL_IDENTIFIER,nil]];
 
-    }else if((([tabView_messages numberOfTabViewItems] == 2) || !autohide_tabBar) && !tabIsShowing) {
-        tabIsShowing = YES;
-        [self smoothlyResizeTabBar];
+    if([type isEqualToString:NSRTFPboardType]){ //got RTF data
+        [[(AIMessageTabViewItem *)tabViewItem messageViewController] addToTextEntryView:[NSAttributedString stringWithData:[pasteboard dataForType:NSRTFPboardType]]];
+        return(YES);
     }
+    
+    return(NO);
 }
 
-- (void)smoothlyResizeTabBar
+
+
+//Tab Bar Visibility --------------------------------------------------------------------------------------------------
+//Update the visibility of our tab bar (Tab bar is visible if autohide is off, or if there are 2 or more tabs present)
+- (void)updateTabBarVisibilityAndAnimate:(BOOL)animate
+{
+    if(tabView_messages != nil){    //Ignore if our tabs haven't loaded yet
+        BOOL    shouldShowTabs = (supressHiding || !autohide_tabBar || ([tabView_customTabs numberOfTabViewItems] > 1) );
+
+        if(shouldShowTabs != tabIsShowing){
+            tabIsShowing = shouldShowTabs;
+            
+            if(animate){
+                [self _resizeTabBarTimer:nil];
+            }else{
+                [self _resizeTabBarAbsolute:YES];
+            }
+        }
+    }    
+}
+
+//Smoothly resize the tab bar (Calls itself with a timer until the tabbar is correctly positioned)
+- (void)_resizeTabBarTimer:(NSTimer *)inTimer
 {
     //If the tab bar isn't at the right height, we set ourself to adjust it again
-    if(![self resizeTabBar]){
-        [NSTimer scheduledTimerWithTimeInterval:(1.0/TAB_BAR_FPS) target:self selector:@selector(smoothlyResizeTabBar) userInfo:nil repeats:NO];
+    if(inTimer == nil || ![self _resizeTabBarAbsolute:NO]){ //Do nothing when called from outside a timer.  This prevents the tabs from jumping when set from show to hide, and back rapidly.
+        [NSTimer scheduledTimerWithTimeInterval:(1.0/TAB_BAR_FPS) target:self selector:@selector(_resizeTabBarTimer:) userInfo:nil repeats:NO];
     }
 }
 
-- (BOOL)resizeTabBar
+//Resize the tab bar towards it's desired height
+- (BOOL)_resizeTabBarAbsolute:(BOOL)absolute
 {   
-    NSSize              tabSize;
+    NSSize              tabSize = [tabView_customTabs frame].size;
+    double              destHeight;
     NSRect              newFrame;
-    tabSize = [tabView_customTabs frame].size;
+
+    //Determine the desired height
+    destHeight = (tabIsShowing ? tabHeight : 0);
     
-    if (!tabIsShowing) { //tab bar moving toward being hidden
-        if (tabSize.height > 0) {
-            int distance = tabSize.height * 0.6;
-            if (distance < 1) distance = 1;
+    //Move the tab view's height towards this desired height
+    int distance = (destHeight - tabSize.height) * TAB_BAR_STEP;
+    if(absolute || (distance > -1 && distance < 1)) distance = destHeight - tabSize.height;
 
-            tabSize.height -= distance;
-            [tabView_customTabs setFrameSize:tabSize];
-            
-            //Adjust other views
-            newFrame = [tabView_messages frame];
-            newFrame.size.height += distance;
-            newFrame.origin.y -= distance;
-            [tabView_messages setFrame:newFrame];
-            
-            [[self window] display];
-            return NO;
-        } else {
-            return YES;   
-        }
-    } else { //tab bar moving toward being shown
-        
-        if (tabSize.height < tabHeight) {
-            int distance = (tabHeight - tabSize.height) * 0.6;
-            if (distance < 1) distance = 1;
-            
-            //Restore tabs to the correct height
-            tabSize.height += distance;
-            [tabView_customTabs setFrameSize:tabSize];
-            
-            //Adjust other views
-            newFrame = [tabView_messages frame];
-            newFrame.size.height -= distance;
-            newFrame.origin.y += distance;
-            [tabView_messages setFrame:newFrame];
-            
-            [[self window] display];
-            return NO;
-        } else {
-            return YES;
-        }
-    }
+    tabSize.height += distance;
+    [tabView_customTabs setFrameSize:tabSize];
+    
+    //Adjust other views
+    newFrame = [tabView_messages frame];
+    newFrame.size.height -= distance;
+    newFrame.origin.y += distance;
+    [tabView_messages setFrame:newFrame];
+    [[self window] display];
+    
+    //Return YES when the desired height is reached
+    return(tabSize.height == destHeight);
 }
 
-- (void)supressTabBarHiding:(BOOL)supress
+
+//Tab Bar Hiding Suppression ----------------------------------------------------------------------------------------------------
+//Make sure auto-hide suppression is off after a drag completes
+- (void)messageTabDragCompleteNotification:(NSNotification *)notification
 {
-    supressHiding = supress;
-    if (!supress)
-        [self _updateTabBarVisibility];
+    [self _supressTabBarHiding:NO];
 }
 
-//---Drag tracking to show/hide the tab bar as necessary
+//Drag entered, enable suppression
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
     NSString 		*type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
     NSDragOperation	operation = NSDragOperationNone;
-    if (type) {
-        if (!tabIsShowing) {
-            shouldHideOnDragExit = YES;
-            tabIsShowing = YES;
-            [self smoothlyResizeTabBar];
-        }
+
+    if(sender == nil || type){
+        //Show the tab bar
+        [self _supressTabBarHiding:YES];
+        
+        //Bring our window to the front
         if(![[self window] isKeyWindow]){
-            [[self window] makeKeyAndOrderFront:nil]; //Bring our window to the front
+            [[self window] makeKeyAndOrderFront:nil];
         }
         
         operation = NSDragOperationPrivate;
     }
-                
+
     return (operation);
 }
 
+//Drag exited, disable suppression
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
     NSString 		*type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
-    if(type){
-        //The tab bar will take over and result in a draggingExited: coming to us here if the mouse is over the tab bar
-        //so we need to be sure the drag is not inside the tab bar before hiding it
 
-        float x = [sender draggingLocation].x;
-        float y = [sender draggingLocation].y;
-        NSSize size = [[self window] frame].size;
-        BOOL mouseInside = (y > 0) && (y < size.height) && (x > 0) && (x < size.width);
-        
-        if (!mouseInside && shouldHideOnDragExit) {
-            shouldHideOnDragExit = NO;
-            [self _updateTabBarVisibility]; //will take our tab bar visibility back to how it was before the drag
-        }
+    if(sender == nil || type){
+        //Hide the tab bar
+        [self _supressTabBarHiding:NO];
     }
 }
 
-//---Dragging destination methods
-
-//Return YES for acceptance
-- (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
+//Temporarily suppress bar hiding
+- (void)_supressTabBarHiding:(BOOL)supress
 {
-    return(YES);
+    supressHiding = supress;
+    [self updateTabBarVisibilityAndAnimate:YES];
 }
 
-- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
-{
-    [tabView_customTabs acceptDropInMessageView];  
-    return(YES);
-}
-
-//---Used in the view controller to pass the message along to the tabs when a drop occurs
-- (void)tellCustomTabsToTransfer
-{
-    [tabView_customTabs acceptDropInMessageView];   
-    [self _updateTabBarVisibility];
-}
 @end
 

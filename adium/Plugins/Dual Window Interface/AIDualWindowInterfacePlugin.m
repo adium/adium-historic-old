@@ -1,17 +1,17 @@
 /*-------------------------------------------------------------------------------------------------------*\
 | Adium, Copyright (C) 2001-2003, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
-					      \---------------------------------------------------------------------------------------------------------/
-					      | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
-					      | General Public License as published by the Free Software Foundation; either version 2 of the License,
-					      | or (at your option) any later version.
-					      |
-					      | This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
-					      | the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
-					      | Public License for more details.
-					      |
-					      | You should have received a copy of the GNU General Public License along with this program; if not,
-					      | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-					      \------------------------------------------------------------------------------------------------------ */
+\---------------------------------------------------------------------------------------------------------/
+| This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+| General Public License as published by the Free Software Foundation; either version 2 of the License,
+| or (at your option) any later version.
+|
+| This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+| the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+| Public License for more details.
+|
+| You should have received a copy of the GNU General Public License along with this program; if not,
+| write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+\------------------------------------------------------------------------------------------------------ */
 
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
@@ -138,6 +138,57 @@
         //Cache the window spawning preferences
 	alwaysCreateNewWindows = [[preferenceDict objectForKey:KEY_ALWAYS_CREATE_NEW_WINDOWS] boolValue];
 	useLastWindow = [[preferenceDict objectForKey:KEY_USE_LAST_WINDOW] boolValue];
+    }
+}
+
+//A tab was moved from one window to another
+- (void)transferMessageTabContainer:(id)tabViewItem toWindow:(id)newMessageWindow atIndex:(int)index withTabBarAtPoint:(NSPoint)screenPoint
+{
+    AIMessageWindowController 	*oldMessageWindow;
+    
+    //Transfer container from one one window to another
+    oldMessageWindow = [self _messageWindowForContainer:(AIMessageTabViewItem *)tabViewItem];
+    if(oldMessageWindow != newMessageWindow){
+        //Get the frame of the source window (We must do this before removing the tab, since removing a tab may destroy the source window)
+        NSRect  oldMessageWindowFrame = [[oldMessageWindow window] frame];
+        
+        //Remove the tab
+        [tabViewItem retain];
+        [oldMessageWindow removeTabViewItemContainer:(AIMessageTabViewItem *)tabViewItem];
+        
+        if(!newMessageWindow) {
+            //Set the new preference for window location _after_ closing the tab
+            //so we don't get overriden if it was the last tab.
+            NSString        *savedFrame = nil;
+            NSRect          newFrame;
+            
+            //If a spawn point wasn't specified, we want to use the saved frame's width and height (if one has been saved)
+            if(screenPoint.x == -1 || screenPoint.y == -1){
+                savedFrame = [[owner preferenceController] preferenceForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME 
+                                                                    group:PREF_GROUP_WINDOW_POSITIONS 
+                                                                    object:[[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject]];
+            }
+            if(savedFrame){
+                newFrame = NSRectFromString(savedFrame);
+                
+            }else{ //Default to the width of the source message window, and the drop point
+                newFrame.size.width = oldMessageWindowFrame.size.width;
+                newFrame.size.height = oldMessageWindowFrame.size.height;   
+                newFrame.origin = screenPoint;
+    
+            }
+            
+            //Create a new window, set the frame, and save it
+            newMessageWindow = [self _createMessageWindow];
+            [[newMessageWindow window] setFrame:newFrame display:NO];
+            [[owner preferenceController] setPreference:[[newMessageWindow window] stringWithSavedFrame]
+                                                    forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
+                                                    group:PREF_GROUP_WINDOW_POSITIONS
+                                                    object:[[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject]];
+        }
+        
+        [(AIMessageWindowController *)newMessageWindow addTabViewItemContainer:(AIMessageTabViewItem *)tabViewItem atIndex:index];
+        [tabViewItem release];
     }
 }
 
@@ -778,53 +829,7 @@
 //Transfers an existing chat to the specified message window
 - (void)_transferMessageTabContainer:(AIMessageTabViewItem *)tabViewItem toWindow:(AIMessageWindowController *)newMessageWindow
 {
-    [self transferMessageTabContainer:tabViewItem toWindow:newMessageWindow atIndex:-1 withTabBarAtPoint:NSMakePoint(0,0)];
-}
-
-//Transfers an existing chat to the specified message window at a specified index (-1 for a simple addition)
-- (void)transferMessageTabContainer:(id)tabViewItem toWindow:(id)newMessageWindow atIndex:(int)index withTabBarAtPoint:(NSPoint)screenPoint
-{
-    AIMessageWindowController 	*oldMessageWindow;
-    
-    //Create a new window if nil was passed
-    if(!newMessageWindow) {
-        newMessageWindow = [self _createMessageWindow];
-     }   
-    
-    //Transfer container from one one window to another
-    oldMessageWindow = [self _messageWindowForContainer:(AIMessageTabViewItem *)tabViewItem];
-    if(oldMessageWindow != newMessageWindow){
-        [tabViewItem retain];
-        [oldMessageWindow removeTabViewItemContainer:(AIMessageTabViewItem *)tabViewItem];
-        
-        //Set the new preference for window location _after_ closing the tab
-        //so we don't get overriden if it was the last tab.
-        if ( !(screenPoint.x == 0 && screenPoint.y == 0) ) {
-            NSString	*savedFrame;
-            NSRect 	newFrame;
-            
-            //We want to use the saved frame's width and height (if one has been saved)
-            savedFrame = [[owner preferenceController] preferenceForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME 
-                                                                  group:PREF_GROUP_WINDOW_POSITIONS 
-                                                                 object:[[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject]];
-            if(savedFrame){
-                newFrame.size.width = NSRectFromString(savedFrame).size.width;
-                newFrame.size.height = NSRectFromString(savedFrame).size.height;      
-            }else{ //Default to the width of the source message window
-                newFrame.size.width = [[oldMessageWindow window] frame].size.width;
-                newFrame.size.height = [[oldMessageWindow window] frame].size.height;   
-            }
-            newFrame.origin = screenPoint;
-            [[newMessageWindow window] setFrame:newFrame display:NO];
-            [[owner preferenceController] setPreference:[[newMessageWindow window] stringWithSavedFrame]
-                                                 forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
-                                                  group:PREF_GROUP_WINDOW_POSITIONS
-                                                 object:[[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject]];
-        }        
-        
-        [(AIMessageWindowController *)newMessageWindow addTabViewItemContainer:(AIMessageTabViewItem *)tabViewItem atIndex:index];
-        [tabViewItem release];
-    }
+    [self transferMessageTabContainer:tabViewItem toWindow:newMessageWindow atIndex:-1 withTabBarAtPoint:NSMakePoint(-1,-1)];
 }
 
 //Returns the message window housing the specified container

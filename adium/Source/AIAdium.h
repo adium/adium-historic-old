@@ -257,7 +257,6 @@ typedef enum {
 - (void)openChat:(AIChat *)inChat;
 - (void)closeChat:(AIChat *)inChat;
 - (void)setActiveChat:(AIChat *)inChat;
-- (void)transferMessageTabContainer:(id)tabViewItem toWindow:(id)newMessageWindow atIndex:(int)index withTabBarAtPoint:(NSPoint)screenPoint;
 @end
 
 @protocol AIFlashObserver <NSObject>
@@ -490,7 +489,6 @@ typedef enum {
 - (void)openChat:(AIChat *)inChat;
 - (void)closeChat:(AIChat *)inChat;
 - (void)setActiveChat:(AIChat *)inChat;
-- (void)transferMessageTabContainer:(id)tabViewItem toWindow:(id)newMessageWindow atIndex:(int)index withTabBarAtPoint:(NSPoint)screenPoint;
 
 //Error messages
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc;
