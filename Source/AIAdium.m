@@ -206,6 +206,7 @@
     [preferenceController initController]; //should init first to allow other controllers access to their prefs
     [toolbarController initController];
     [menuController initController];
+	[debugController initController]; //should init after the menuController to add its menu item if needed
 	[contactAlertsController initController];
     [soundController initController];
     [accountController initController];
