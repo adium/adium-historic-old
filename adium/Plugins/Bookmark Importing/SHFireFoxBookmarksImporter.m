@@ -97,7 +97,12 @@ static NSMenu   *firefoxTopMenu;
             [linkScanner scanUpToString:@">" intoString:nil];
             [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
             [linkScanner scanUpToString:@"</H" intoString:&titleString];
-                
+
+            if(titleString){
+                //if we have a title string, decode any html stuff in it.
+                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
+            }
+            
             firefixBookmarksSupermenu = firefoxBookmarksMenu;
             firefoxBookmarksMenu = [[[NSMenu alloc] initWithTitle:titleString? titleString : @"untitled"] autorelease];
         
@@ -116,6 +121,11 @@ static NSMenu   *firefoxTopMenu;
             [linkScanner scanUpToString:@"\">" intoString:nil];
             [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
             [linkScanner scanUpToString:@"</A" intoString:&titleString];
+            
+            if(titleString){
+                // decode html stuff
+                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
+            }
                 
             SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:urlString
                                                                   withValidationStatus:SH_URL_VALID

@@ -97,7 +97,12 @@ static NSMenu   *mozillaTopMenu;
             [linkScanner scanUpToString:@">" intoString:nil];
             [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
             [linkScanner scanUpToString:@"</H" intoString:&titleString];
-                
+
+            if(titleString){
+                // decode html stuff
+                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
+            }
+            
             mozillaBookmarksSupermenu = mozillaBookmarksMenu;
             mozillaBookmarksMenu = [[[NSMenu alloc] initWithTitle:titleString? titleString : @"untitled"] autorelease];
         
@@ -116,7 +121,12 @@ static NSMenu   *mozillaTopMenu;
             [linkScanner scanUpToString:@"\">" intoString:nil];
             [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
             [linkScanner scanUpToString:@"</A" intoString:&titleString];
-                
+
+            if(titleString){
+                // decode html stuff
+                titleString = [[AIHTMLDecoder decodeHTML:titleString] string];
+            }
+            
             SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]
                                                                   withValidationStatus:SH_URL_VALID
                                                                           parentString:titleString? titleString : urlString
