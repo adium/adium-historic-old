@@ -31,8 +31,6 @@
 
 - (void)installPlugin
 {
-    NSMenuItem	*logViewerMenuItem;
-
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGER_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LOGGING];
 
@@ -41,9 +39,14 @@
     [[owner notificationCenter] addObserver:self selector:@selector(adiumReceivedContent:) name:Content_DidReceiveContent object:nil];
 
     //Install the log viewer menu item
-    logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@"L"] autorelease];
+    logViewerMenuItem = [[NSMenuItem alloc] initWithTitle:@"Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@"l"];
     [[owner menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxilary];
 
+    //Install the 'view logs' menu item
+    viewContactLogsMenuItem = [[NSMenuItem alloc] initWithTitle:@"View Contact's Logs" target:self action:@selector(showLogViewerToSelectedContact:) keyEquivalent:@"L"];
+    [[owner menuController] addMenuItem:viewContactLogsMenuItem toLocation:LOC_Contact_Action];
+    
+    
     //Create a logs directory
     logBasePath = [[[[[owner loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath] retain];
     [AIFileUtilities createDirectory:logBasePath];
@@ -56,6 +59,24 @@
                                              forKey:KEY_HAS_IMPORTED_16_LOGS
                                               group:PREF_GROUP_LOGGING];
     }
+}
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+    BOOL valid = YES;
+
+    if(menuItem == viewContactLogsMenuItem){
+        AIListContact	*selectedContact = [[owner contactController] selectedContact];
+
+        if(selectedContact){
+            [viewContactLogsMenuItem setTitle:[NSString stringWithFormat:@"View %@'s Logs",[selectedContact displayName]]];
+        }else{
+            [viewContactLogsMenuItem setTitle:@"View Contact's Logs"];
+            valid = NO;
+        }
+    }
+
+    return(valid);
 }
 
 //Content was sent
@@ -104,6 +125,18 @@
 - (void)showLogViewer:(id)sender
 {
     [[AILogViewerWindowController logViewerWindowControllerWithOwner:owner] showWindow:nil];
+}
+
+//Show the log viewer, displaying the selected contact's logs
+- (void)showLogViewerToSelectedContact:(id)sender
+{
+    AIListContact	*selectedContact = [[owner contactController] selectedContact];
+    
+    [[AILogViewerWindowController logViewerWindowControllerWithOwner:owner] showWindow:nil];
+
+    if(selectedContact){
+        [[AILogViewerWindowController logViewerWindowControllerWithOwner:owner] showLogsForContact:selectedContact];
+    }
 }
 
 //Add a message to the specified log file
