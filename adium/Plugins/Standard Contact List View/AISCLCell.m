@@ -106,7 +106,8 @@
 	cellSize.width += TEMPORARY_PADDING_CORRECTION;
 	
 	//Get the size needed to display our name
-	displayNameSize = [[self displayNameStringWithAttributes:NO inView:controlView] size];
+	NSAttributedString  *displayNameString = [self displayNameStringWithAttributes:NO inView:controlView];
+	displayNameSize = (displayNameString ? [displayNameString size] : NSMakeSize(0,0));
     cellSize.width += displayNameSize.width;
     cellSize.height += displayNameSize.height;
 
@@ -170,7 +171,7 @@
 		attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
 	}
 	
-	return([[[NSAttributedString alloc] initWithString:displayString attributes:attributes] autorelease]);
+	return((displayString ? [[[NSAttributedString alloc] initWithString:displayString attributes:attributes] autorelease] : nil));
 }
 
 //Text Color (If this cell is selected, use the inverted color, or white)
