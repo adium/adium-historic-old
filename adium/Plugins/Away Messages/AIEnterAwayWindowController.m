@@ -193,6 +193,7 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     [textView_awayMessage setTarget:self action:@selector(setAwayMessage:)];
     [textView_awayMessage setSendOnReturn:NO]; //Pref for these later :)
     [textView_awayMessage setSendOnEnter:YES]; //
+	[textView_awayMessage setPushPop:NO];
     [textView_awayMessage setDelegate:self];
     loaded_message = NO;
 
