@@ -463,13 +463,13 @@ DeclareString(FormattedUID);
 {
 	if ([[self numberStatusObjectForKey:@"Online"] boolValue]){
 		if ([[self numberStatusObjectForKey:@"Away" fromAnyContainedObject:NO] boolValue]){
-			if ([self statusObjectForKey:@"IdleSince" fromAnyContainedObject:NO]){
+			if ([self integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO] != 0){
 				return AIAwayAndIdleStatus;
 			}else{
 				return AIAwayStatus;
 			}
 			
-		}else if ([self statusObjectForKey:@"IdleSince" fromAnyContainedObject:NO]){
+		}else if (([self statusObjectForKey:@"Idle" fromAnyContainedObject:NO]) != 0){
 			return AIIdleStatus;
 			
 		}else{
