@@ -1,10 +1,12 @@
 				Adium X Version History
 				-----------------------
 
-Version 0.60 (6/14/2004)
+Version 0.60 (6/16/2004)
 - Added script for inserting an iTunes link for the playing song
+- Info window now shows to which accounts a contact has been added
 - Bookmark menu now only shows bookmarks for the default web browser
 - New format for emoticon packs (old packs will be upgraded automatically)
+- New format for scripts to improve launch time (old scripts will no longer work)
 - Improvements to contact alerts
 - Improvements to goim://, ymsgr:// link support
 - Fixed issue with display of consecutive messages
