@@ -1,0 +1,60 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {
+                confirmQuit = id; 
+                reportABug = id; 
+                sendFeedback = id; 
+                showAboutBox = id; 
+                showForums = id; 
+                showHelp = id; 
+            }; 
+            CLASS = AIAdium; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                accountController = AIAccountController; 
+                activityWindowController = BZActivityWindowController; 
+                contactAlertsController = ESContactAlertsController; 
+                contactController = AIContactController; 
+                contentController = AIContentController; 
+                dockController = AIDockController; 
+                fileTransferController = ESFileTransferController; 
+                interfaceController = AIInterfaceController; 
+                loginController = AILoginController; 
+                menuController = AIMenuController; 
+                pluginController = AIPluginController; 
+                preferenceController = AIPreferenceController; 
+                soundController = AISoundController; 
+                toolbarController = AIToolbarController; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {spawn = id; }; 
+            CLASS = BZActivityWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {owner = AIAdium; table = NSTableView; }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = BZGenericViewCell; LANGUAGE = ObjC; SUPERCLASS = NSCell; }, 
+        {CLASS = BZGenericViewCell1; LANGUAGE = ObjC; SUPERCLASS = NSTableColumn; }, 
+        {
+            CLASS = BZProgressView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {progressBar = NSProgressIndicator; statusField = NSTextField; }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {CLASS = DummyTracker; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSArray; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSMutableArray; LANGUAGE = ObjC; SUPERCLASS = NSArray; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }, 
+        {
+            ACTIONS = {runCustomizationPalette = id; }; 
+            CLASS = NSToolbar; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
