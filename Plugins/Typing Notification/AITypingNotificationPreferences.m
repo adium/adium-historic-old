@@ -21,6 +21,9 @@
 - (NSString *)nibName{
     return(@"TypingPrefs");
 }
+- (NSImage *)image{
+	return([NSImage imageNamed:@"TypingPrefs" forClass:[self class]]);
+}
 
 //Configure the preference view
 - (void)viewDidLoad

@@ -15,6 +15,7 @@
 
 #import "AITextForcingPreferences.h"
 #import "AITextForcingPlugin.h"
+#import "AIPreferenceWindowController.h"
 
 @interface AITextForcingPreferences (PRIVATE)
 - (void)changeFont:(id)sender;
@@ -31,6 +32,9 @@
 }
 - (NSString *)nibName{
     return(@"TextForcingPrefs");
+}
+- (NSImage *)image{
+	return([NSImage imageNamed:@"pref-messages" forClass:[AIPreferenceWindowController class]]);
 }
 
 - (NSDictionary *)restorablePreferences
