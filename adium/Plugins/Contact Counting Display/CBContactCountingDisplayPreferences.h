@@ -7,7 +7,11 @@
 //
 
 @interface CBContactCountingDisplayPreferences : AIObject {
-
+	IBOutlet	NSView		*view_prefView;
+	IBOutlet	NSButton	*checkBox_visibleContacts;
+	IBOutlet	NSButton	*checkBox_allContacts;
 }
++ (CBContactCountingDisplayPreferences *)contactCountingDisplayPreferences;
+- (IBAction)changePreference:(id)sender;
 
 @end
