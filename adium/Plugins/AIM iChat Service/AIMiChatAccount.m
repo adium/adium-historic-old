@@ -358,7 +358,13 @@ extern void* objc_getClass(const char *name);
 //    NSLog(@"Woot: directIMRequestFrom (%@, %@)",from,invitation);
 }
 - (oneway void)service:(id)service invitedToChat:(id)chat isChatRoom:(char)isRoom invitation:(id)invitation{
-//    NSLog(@"Woot: invitedToChat (%@, %i, %@)",chat,isRoom,invitation);
+    if(!isRoom){
+        //Forward new messages to the message recieve code
+        [self service:service chat:chat messageReceived:invitation];
+
+    }else{
+//        NSLog(@"Woot: invitedToChat (%@, %i, %@)",chat,isRoom,invitation);
+    }    
 }
 - (oneway void)service:(id)service youAreDesignatedNotifier:(char)notifier{
 //    NSLog(@"Woot: youAreDesignatedNotifier (%i)",(int)notifier);
