@@ -715,9 +715,9 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     
     //Typing preference!
     gaim_prefs_set_bool("/core/conversations/im/send_typing", TRUE);
-        
+
 	[self configureSignals];
-		
+
     //Install the libgaim event loop timer
     [NSTimer scheduledTimerWithTimeInterval:GAIM_EVENTLOOP_INTERVAL 
                                      target:self
@@ -730,7 +730,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     YahooService = [[[ESYahooService alloc] initWithService:self] retain]; 
     GaduGaduService = [[[ESGaduGaduService alloc] initWithService:self] retain];
     NapsterService = [[[ESNapsterService alloc] initWithService:self] retain];
-    JabberService = [[[ESJabberService alloc] initWithService:self] retain];
+    JabberService = nil /*[[[ESJabberService alloc] initWithService:self] retain]*/;
     
 }
 
