@@ -207,7 +207,6 @@ typedef enum {
 //Message View
 - (void)registerMessageViewPlugin:(id <AIMessageViewPlugin>)inPlugin;
 - (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat;
-- (DCMessageViewType)preferredMessageView;
 
 //Error Display
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc;
