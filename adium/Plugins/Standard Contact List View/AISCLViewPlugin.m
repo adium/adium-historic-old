@@ -14,46 +14,28 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AISCLViewPlugin.h"
-#import "AISCLCell.h"
-#import "AISCLOutlineView.h"
 #import "AICLPreferences.h"
-#import "ESCLViewAdvancedPreferences.h"
-#import "ESCLViewLabelsAdvancedPrefs.h"
-#import "AISCLViewController.h"
 #import "AIStandardListWindowController.h"
 #import "AIBorderlessListWindowController.h"
-#import "AIContactListAdvancedPrefs.h"
-
 #import "AIListLayoutWindowController.h"
-
+#import "AIListThemeWindowController.h"
 
 @interface AISCLViewPlugin (PRIVATE)
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AISCLViewPlugin
-
-#define LABELS_THEMABLE_PREFS   @"Labels Themable Prefs"
-#define SCL_THEMABLE_PREFS      @"SCL Themable Prefs"
 
 - (void)installPlugin
 {
     [[adium interfaceController] registerContactListController:self];
 
 	[adium createResourcePathForName:LIST_LAYOUT_FOLDER];
-//	[adium createResourcePathForName:LIST_THEME_FOLDER];
+	[adium createResourcePathForName:LIST_THEME_FOLDER];
 
     //Register our default preferences and install our preference views
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
-    
-    //Register themable preferences
-    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:LABELS_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
-    [[adium preferenceController] registerThemableKeys:[NSArray arrayNamed:SCL_THEMABLE_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
-    
+//    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
     preferences = [[AICLPreferences preferencePane] retain];
-//    preferencesGroup = [[AICLGroupPreferences preferencePane] retain];
-//    preferencesAdvanced = [[ESCLViewAdvancedPreferences preferencePane] retain];
-//    preferencesLabelsAdvanced = [[ESCLViewLabelsAdvancedPrefs preferencePane] retain];
-//	[[AIContactListAdvancedPrefs preferencePane] retain];
 
 	//Observe list closing
 	[[adium notificationCenter] addObserver:self
@@ -61,7 +43,7 @@
 									   name:Interface_ContactListDidClose
 									 object:nil];
 	
-    //Observe preference changes
+    //Observe window style changes
     [[adium notificationCenter] addObserver:self
 								   selector:@selector(preferencesChanged:)
 									   name:Preference_GroupChanged
@@ -70,31 +52,28 @@
 }
 
 
-//Preferences have changed
+//Refresh the contact list window when the window style changes
 - (void)preferencesChanged:(NSNotification *)notification
 {
 	NSString	*group = [[notification userInfo] objectForKey:@"Group"];
-
     if(notification == nil || [group isEqualToString:PREF_GROUP_LIST_LAYOUT]){
 		NSString	*key = [[notification userInfo] objectForKey:@"Key"];
-		if(notification == nil || !key || [key isEqualToString:KEY_LIST_LAYOUT_WINDOW_STYLE]){
 
+		if(notification == nil || !key || [key isEqualToString:KEY_LIST_LAYOUT_WINDOW_STYLE]){
 			windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
 																	group:PREF_GROUP_LIST_LAYOUT] intValue];
 			if(contactListWindowController){
 				[self closeContactList];
 				[self showContactListAndBringToFront:NO];
 			}
-
 		}
 	}
 }
 
 
-
 //Contact List Controller ----------------------------------------------------------------------------------------------
 #pragma mark Contact List Controller
-//
+//Show contact list
 - (void)showContactListAndBringToFront:(BOOL)bringToFront
 {
     if(!contactListWindowController){ //Load the window
@@ -108,11 +87,13 @@
 	[contactListWindowController showWindowInFront:bringToFront];
 }
 
+//Returns YES if the contact list is visible and in front
 - (BOOL)contactListIsVisibleAndMain
 {
 	return(contactListWindowController && [[contactListWindowController window] isMainWindow]);
 }
 
+//Close contact list
 - (void)closeContactList
 {
     if(contactListWindowController){
@@ -128,8 +109,5 @@
 	contactListWindowController = nil;
 }
 
-
 @end
-
-
 

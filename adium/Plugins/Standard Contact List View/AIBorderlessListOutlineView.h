@@ -6,9 +6,9 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
-#import "AIStandardListOutlineView.h"
+#import "AIListOutlineView.h"
 
-@interface AIBorderlessListOutlineView : AIStandardListOutlineView {
+@interface AIBorderlessListOutlineView : AIListOutlineView {
 
 }
 

@@ -46,7 +46,7 @@
 //Configures our view for the current preferences
 - (void)viewDidLoad
 {
-    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
+//    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 	
 	currentLayoutName = [@"Default" retain];
 	currentThemeName = [@"Default" retain];
@@ -104,77 +104,20 @@
 	[dataCell setDrawsGradientHighlight:YES];
 	[[tableView_theme tableColumnWithIdentifier:@"preview"] setDataCell:dataCell];
 	
-	
 	//
     [tableView_layout setTarget:self];
 	[tableView_layout setDoubleAction:@selector(editLayout:)];
     [tableView_theme setTarget:self];
 	[tableView_theme setDoubleAction:@selector(editTheme:)];
-	
-	
-	//Display
-    [self showFont:[[preferenceDict objectForKey:KEY_SCL_FONT] representedFont] inField:textField_fontName];
-    [colorWell_contact setColor:[[preferenceDict objectForKey:KEY_SCL_CONTACT_COLOR] representedColor]];
-    [colorWell_background setColor:[[preferenceDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColor]];
-    [checkBox_showLabels setState:[[preferenceDict objectForKey:KEY_SCL_SHOW_LABELS] boolValue]];
-	
-    //Grid
-    [checkBox_alternatingGrid setState:[[preferenceDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue]];
-    [colorWell_grid setColor:[[preferenceDict objectForKey:KEY_SCL_GRID_COLOR] representedColor]];	
-	
 }
 
 //Preference view is closing
 - (void)viewWillClose
 {
-	if([colorWell_contact isActive]) [colorWell_contact deactivate];
-	if([colorWell_background isActive]) [colorWell_background deactivate];
-	if([colorWell_grid isActive]) [colorWell_grid deactivate];
+
 }
 
-//Called in response to all preference controls, applies new settings
-- (IBAction)changePreference:(id)sender
-{
-    if(sender == button_setFont){
-        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
-        NSFontManager	*fontManager = [NSFontManager sharedFontManager];
-        NSFont		*contactListFont = [[preferenceDict objectForKey:KEY_SCL_FONT] representedFont];
-
-        //In order for the font panel to work, we must be set as the window's delegate
-        [[textField_fontName window] setDelegate:self];
-
-        //Setup and show the font panel
-        [[textField_fontName window] makeFirstResponder:[textField_fontName window]];
-        [fontManager setSelectedFont:contactListFont isMultiple:NO];
-        [fontManager orderFrontFontPanel:self];
-        
-    }else if(sender == checkBox_alternatingGrid){
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_SCL_ALTERNATING_GRID
-                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
-
-    }else if(sender == checkBox_showLabels){
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_SCL_SHOW_LABELS
-                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
-
-    }else if(sender == colorWell_contact){
-        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
-                                             forKey:KEY_SCL_CONTACT_COLOR
-                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
-
-    }else if(sender == colorWell_grid){
-        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
-                                             forKey:KEY_SCL_GRID_COLOR
-                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
-        
-    }else if(sender == colorWell_background){
-        [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
-                                             forKey:KEY_SCL_BACKGROUND_COLOR
-                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];    
-	}
-}
-
+//Installed xtras have changed
 - (void)xtrasChanged:(NSNotification *)notification
 {
 	if(notification == nil || [[notification object] caseInsensitiveCompare:LIST_LAYOUT_EXTENSION] == 0){
@@ -184,39 +127,18 @@
 	}
 }
 
-//Called in response to a font panel change
-- (void)changeFont:(id)sender
-{
-    NSFontManager	*fontManager = [NSFontManager sharedFontManager];
-    NSFont		*contactListFont = [fontManager convertFont:[fontManager selectedFont]];
-    
-    //Update the displayed font string & preferences
-    [self showFont:contactListFont inField:textField_fontName];
-    [[adium preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_SCL_FONT group:PREF_GROUP_CONTACT_LIST_DISPLAY];
-}
 
-//Display the name of a font in our text field
-- (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField
-{
-    if(inFont){
-        [inTextField setStringValue:[NSString stringWithFormat:@"%@ %g", [inFont fontName], [inFont pointSize]]];
-    }else{
-        [inTextField setStringValue:@""];
-    }
-}
-
-#warning newLayout
-- (IBAction)spawnLayout:(id)sender
-{
+//New Layout. Theme
+- (IBAction)spawnLayout:(id)sender{
 	[AIListLayoutWindowController listLayoutOnWindow:[[self view] window]
 											withName:[NSString stringWithFormat:@"%@ Copy",currentLayoutName]];
 }
-
-- (IBAction)spawnTheme:(id)sender
-{
+- (IBAction)spawnTheme:(id)sender{
 	[AIListThemeWindowController listThemeOnWindow:[[self view] window]
 										  withName:[NSString stringWithFormat:@"%@ Copy",currentThemeName]];
 }
+
+//New
 
 - (IBAction)editTheme:(id)sender
 {

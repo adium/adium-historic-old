@@ -92,7 +92,7 @@
 - (id)init
 {	
     [super initWithWindowNibName:[self nibName]];
-	NSLog(@"%@ initWithWindowNibName",self);
+	NSLog(@"%@ initWithWindowNibName:%@",self,[self nibName]);
     return(self);
 }
 
@@ -826,10 +826,7 @@
 //
 - (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
 {
-    NSMutableArray      *contactArray = [[adium contactController] allContactsInGroup:item subgroups:YES onAccount:nil];
-
     [item setExpanded:state];
-#warning ###	[contactListView updateHorizontalSizeForObjects:contactArray]; 
 }
 
 //
@@ -870,32 +867,6 @@
     return([[adium menuController] contextualMenuWithLocations:locationsArray
 												 forListObject:listObject]);
 }
-
-- (void)outlineView:(NSOutlineView *)outlineView willDisplayOutlineCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
-{
-/*	float	capHeight = [[contactListView groupFont] capHeight];
-	NSImage	*image, *altImage;
-	
-	//The triangle can only get so big before it starts to get clipped, so we restrict it's size as necessary
-	if(capHeight > MAX_DISCLOSURE_HEIGHT) capHeight = MAX_DISCLOSURE_HEIGHT;
-
-	//Apply this new size to the images
-	image = [cell image];
-	altImage = [cell alternateImage];
-	
-	//Resize the iamges
-	[image setScalesWhenResized:YES];
-	[image setSize:NSMakeSize(capHeight, capHeight)];
-	[altImage setScalesWhenResized:YES];
-	[altImage setSize:NSMakeSize(capHeight, capHeight)];
-
-	//Set them back and center
-	[cell setAlternateImage:altImage];
-	[cell setImage:image];
-	[cell setImagePosition:NSImageOnly];
-	[cell setHighlightsBy:NSContentsCellMask];*/
-} 
-
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
 {
@@ -967,27 +938,15 @@
     return(YES);
 }
 
-
 - (void)outlineViewItemDidExpand:(NSNotification *)notification
 {
 	[self contactListDesiredSizeChanged:nil];
-//	[self performSelector:@selector(contactListDesiredSizeChanged:) withObject:nil afterDelay:0.000001];
-//    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification
-//														object:contactListView];
 }
 
 - (void)outlineViewItemDidCollapse:(NSNotification *)notification
 {
 	[self contactListDesiredSizeChanged:nil];
-//	[self performSelector:@selector(contactListDesiredSizeChanged:) withObject:nil afterDelay:0.000001];
-//    [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification
-//														object:contactListView];
 }
-	
-
-
-
-
 
 
 //Tooltip --------------------------------------------------------------------------------------------------------------
