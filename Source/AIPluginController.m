@@ -45,12 +45,12 @@ AIVolumeControlPlugin, BGThemesPlugin, CBActionSupportPlugin, CBContactCountingD
 CBStatusMenuItemPlugin, CBURLHandlingPlugin, CSDisconnectAllPlugin, DCMessageContextDisplayPlugin, ESAddressBookIntegrationPlugin,
 ESAnnouncerPlugin, ESContactAlertsPlugin, ESContactClientPlugin, ESContactListWindowHandlingPlugin, AIExtendedStatusPlugin,
 ESFastUserSwitchingSupportPlugin, ESOpenMessageWindowContactAlertPlugin, ESSendMessageContactAlertPlugin,
-ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessagePlugin, AIContactProfilePlugin,
+ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBApplescriptFiltersPlugin, IdleMessagePlugin, AIContactProfilePlugin,
 JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin, AIContactSettingsPlugin,
 AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, AIContactStatusEventsPlugin,
 SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmoticonMenuPlugin, BGContactNotesPlugin, SHBookmarksImporterPlugin,
 ESMessageEvents, ESAccountEvents, ESSafariLinkToolbarItemPlugin, DCJoinChatPanelPlugin, DCInviteToChatPlugin,
-ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin;
+ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptContactAlertPlugin;
 
 #ifdef ALL_IN_ONE
 @class AIWebKitMessageViewPlugin, CBGaimServicePlugin, NEHTicTacToePlugin;
@@ -134,7 +134,7 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin;
 	[self loadPluginWithClass:[ESContactServersideDisplayName class]];
 	[self loadPluginWithClass:[ESStatusSortPlugin class]];
 	[self loadPluginWithClass:[ESUserIconHandlingPlugin class]];
-	[self loadPluginWithClass:[GBiTunerPlugin class]];
+	[self loadPluginWithClass:[GBApplescriptFiltersPlugin class]];
 	[self loadPluginWithClass:[IdleMessagePlugin class]];
 	[self loadPluginWithClass:[JSCEventBezelPlugin class]];
 	[self loadPluginWithClass:[LNStatusIconsPlugin class]];
@@ -150,6 +150,7 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin;
 	[self loadPluginWithClass:[ESAccountNetworkConnectivityPlugin class]];
 	[self loadPluginWithClass:[ESMetaContactContentsPlugin class]];
 	[self loadPluginWithClass:[AIExtendedStatusPlugin class]];
+	[self loadPluginWithClass:[ESApplescriptContactAlertPlugin class]];
 	
 	//	[self loadPluginWithClass:[AISMViewPlugin class]];
 #endif
