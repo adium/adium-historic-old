@@ -1351,7 +1351,7 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 		NSString	*targetUserName =  [parts objectAtIndex:0];
 		NSString	*reason = ([parts count] > 1 ? [parts objectAtIndex:1] : AILocalizedString(@"(No reason given)",nil));
 		
-		errorMessage = [NSString stringWithFormat:AILocalizedString(@"%@ denied authorization:",nil),targetUserName];
+		errorMessage = [NSString stringWithFormat:AILocalizedString(@"%@ denied authorization:","User deined authorization; the next line has an explanation."),targetUserName];
 		description = reason;
 
     }else if ([primaryString rangeOfString: @"Authorization Granted"].location != NSNotFound){
