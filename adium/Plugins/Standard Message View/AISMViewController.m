@@ -16,6 +16,8 @@
 #import "AISMViewController.h"
 #import "AISMViewPlugin.h"
 
+#define ICON_SIZE 32.0
+
 @interface AISMViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat owner:(id)inOwner;
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -114,8 +116,8 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] == 0){
+
         NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-        
         //Release the old preference cache
 	[self _flushPreferenceCache];
 
@@ -196,15 +198,15 @@
     } else {
         restartRebuilding = NO;
         abandonRebuilding = NO;
+        
+        //lock the addition of rows down with rebuilding=YES
+        rebuilding = YES;
         [NSThread detachNewThreadSelector:@selector(_rebuildMessageViewForContentThread) toTarget:self withObject:nil];
     }
 }
 
 -(void)_rebuildMessageViewForContentThread
 {
-    //lock the addition of rows down with rebuilding=YES
-    rebuilding = YES;
-
     AIContentObject    *content;
     NSMutableArray      *rowArray = [[NSMutableArray alloc] init];
     AIFlexibleTableRow  *row;
@@ -346,6 +348,7 @@
 - (void)_addContentMessage:(AIContentMessage *)content
 {
     NSArray             *rowArray = [[self _rowsForAddingContentMessage:content] retain];
+    
     NSEnumerator        *enumerator = [rowArray objectEnumerator];
     AIFlexibleTableRow  *row;
     
@@ -419,7 +422,8 @@
 - (void)_addContentStatus:(AIContentStatus *)content
 {
     //Add the status change
-    [messageView addRow:[self _rowForAddingContentStatus:content]];
+    AIFlexibleTableRow *row = [self _rowForAddingContentStatus:content];
+    [messageView addRow:row];
 }
 
 - (AIFlexibleTableRow *)_rowForAddingContentStatus:(AIContentStatus *)content
@@ -531,9 +535,9 @@
     
     //Create the spanning image cell
     imageCell = [AIFlexibleTableImageCell cellWithImage:userImage];
-    [imageCell setPaddingLeft:1 top:6 right:2 bottom:1];
+    [imageCell setPaddingLeft:3 top:6 right:3 bottom:1];
     [imageCell setBackgroundColor:[NSColor whiteColor]];
-    [imageCell setDesiredFrameSize:NSMakeSize(28.0,28.0)];
+    [imageCell setDesiredFrameSize:NSMakeSize(ICON_SIZE,ICON_SIZE)];
     if(span) [imageCell setRowSpan:2];
 
     return(imageCell);
