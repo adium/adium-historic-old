@@ -53,8 +53,8 @@
 
         //create the payload
         NSString *payload = [NSString stringWithFormat:
-            @"MIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n%@",
-            message];
+            @"MIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n%s",
+            [message UTF8String]];
             
         if(sbSocket && [sbSocket isValid])//there's already an SB session
         {

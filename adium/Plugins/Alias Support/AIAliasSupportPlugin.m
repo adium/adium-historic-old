@@ -66,13 +66,16 @@
 
 - (IBAction)setAlias:(id)sender
 {
-    NSString	*alias = [textField_alias stringValue];
+    if(![[textField_alias stringValue] isEqual:@""])
+    {
+        NSString	*alias = [textField_alias stringValue];
+        
+        //Apply
+        [self _applyAlias:alias toObject:activeListObject delayed:NO];
     
-    //Apply
-    [self _applyAlias:alias toObject:activeListObject delayed:NO];
-
-    //Save the alias
-    [[owner preferenceController] setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES object:activeListObject];
+        //Save the alias
+        [[owner preferenceController] setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES object:activeListObject];
+    }
 }
 
 - (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject
@@ -173,7 +176,7 @@
                                             withService:inServiceID
                                                     UID:inUID];
 
-    if(contact){
+    if(contact && ![value isEqual:@""]){
         //Apply the alias
         [self _applyAlias:value toObject:contact delayed:NO];
 

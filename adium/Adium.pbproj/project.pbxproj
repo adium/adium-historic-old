@@ -853,6 +853,7 @@
 				F5F8471404C70B8A01A80106,
 				4B55411C044DF01600A8010A,
 				4BCFC91804E930D300A8010A,
+				9EB3C52A04F94DD5001D1F74,
 				4BC8AFDD04FD3C2800A8010A,
 			);
 			isa = PBXGroup;
@@ -937,6 +938,7 @@
 				4B5B15280493BFB100A8010A,
 				F5F846F604C7020601A80106,
 				4B55411B044DF01600A8010A,
+				9EB3C52904F94DD5001D1F74,
 				4BC8AFDC04FD3C2800A8010A,
 			);
 		};
@@ -949,6 +951,7 @@
 				F5BF8A6002C7D2F401A8010A,
 				4B4F5B2C042D642500A8010A,
 				F5B53FBB0333AB5C01A8010A,
+				9EB3C52204F94D96001D1F74,
 				F50A325A03B5798301A8010A,
 				29B97323FDCFA39411CA2CEA,
 				19C28FACFE9D520D11CA2CBB,
@@ -12728,6 +12731,181 @@
 		};
 		9EA81D64044A611A00415B22 = {
 			fileRef = 9EA81D62044A611A00415B22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EB3C52204F94D96001D1F74 = {
+			children = (
+				9EB3C52304F94DB7001D1F74,
+			);
+			isa = PBXGroup;
+			path = Other;
+			refType = 4;
+		};
+		9EB3C52304F94DB7001D1F74 = {
+			children = (
+				9EB3C52E04F94F24001D1F74,
+				9EB3C53304F94FAE001D1F74,
+				9EB3C53404F94FAE001D1F74,
+				9EB3C52C04F94E84001D1F74,
+			);
+			isa = PBXGroup;
+			path = "Adium 1.6 Pref Importer";
+			refType = 4;
+		};
+		9EB3C52404F94DD5001D1F74 = {
+			buildActionMask = 2147483647;
+			files = (
+				9EB3C53504F94FAE001D1F74,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9EB3C52504F94DD5001D1F74 = {
+			buildActionMask = 2147483647;
+			files = (
+				9EB3C52F04F94F24001D1F74,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9EB3C52604F94DD5001D1F74 = {
+			buildActionMask = 2147483647;
+			files = (
+				9EB3C52D04F94E84001D1F74,
+				9EB3C53604F94FAE001D1F74,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9EB3C52704F94DD5001D1F74 = {
+			buildActionMask = 2147483647;
+			files = (
+				9EB3C53004F94F76001D1F74,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9EB3C52804F94DD5001D1F74 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9EB3C52904F94DD5001D1F74 = {
+			buildPhases = (
+				9EB3C52404F94DD5001D1F74,
+				9EB3C52504F94DD5001D1F74,
+				9EB3C52604F94DD5001D1F74,
+				9EB3C52704F94DD5001D1F74,
+				9EB3C52804F94DD5001D1F74,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Adium 1.6 Pref Importer";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = app;
+			};
+			dependencies = (
+			);
+			isa = PBXApplicationTarget;
+			name = "Adium 1.6 Pref Importer";
+			productInstallPath = "$(USER_APPS_DIR)";
+			productName = "Adium 1.6 Pref Importer";
+			productReference = 9EB3C52A04F94DD5001D1F74;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSMainNibFile</key>
+	<string>MainMenu.nib</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+</dict>
+</plist>
+";
+		};
+		9EB3C52A04F94DD5001D1F74 = {
+			isa = PBXApplicationReference;
+			path = "Adium 1.6 Pref Importer.app";
+			refType = 3;
+		};
+		9EB3C52C04F94E84001D1F74 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = main.m;
+			refType = 4;
+		};
+		9EB3C52D04F94E84001D1F74 = {
+			fileRef = 9EB3C52C04F94E84001D1F74;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EB3C52E04F94F24001D1F74 = {
+			isa = PBXFileReference;
+			path = MainMenu.nib;
+			refType = 4;
+		};
+		9EB3C52F04F94F24001D1F74 = {
+			fileRef = 9EB3C52E04F94F24001D1F74;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EB3C53004F94F76001D1F74 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EB3C53304F94FAE001D1F74 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = CBOldPrefsImporterAppController.h;
+			refType = 4;
+		};
+		9EB3C53404F94FAE001D1F74 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = CBOldPrefsImporterAppController.m;
+			refType = 4;
+		};
+		9EB3C53504F94FAE001D1F74 = {
+			fileRef = 9EB3C53304F94FAE001D1F74;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9EB3C53604F94FAE001D1F74 = {
+			fileRef = 9EB3C53404F94FAE001D1F74;
 			isa = PBXBuildFile;
 			settings = {
 			};
