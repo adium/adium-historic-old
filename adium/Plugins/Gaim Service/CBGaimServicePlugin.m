@@ -51,11 +51,6 @@ static CBGaimServicePlugin  *servicePluginInstance;
 						   withObject:nil];
 }
 
-- (void)setGaimThread:(id)gaimThread
-{
-	
-}
-
 #pragma mark Plugin Installation
 //  Plugin Installation ------------------------------------------------------------------------------------------------
 

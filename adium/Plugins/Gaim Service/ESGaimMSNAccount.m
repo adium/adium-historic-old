@@ -123,8 +123,8 @@ static BOOL didInitMSN = NO;
 -(void)_setFriendlyNameTo:(NSString *)inAlias
 {
 #warning we should ignore this set if it hasnt changed...
- 	if (gc && account) 
- 		msn_set_friendly_name(gc,[inAlias UTF8String]);
+ 	if (gaim_account_is_connected(account)) 
+ 		msn_set_friendly_name(account->gc, [inAlias UTF8String]);
 }
 
 //Update all our status keys

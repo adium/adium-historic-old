@@ -5,11 +5,7 @@
 //  Created by Colin Barrett on Sun Oct 19 2003.
 //
 
-//evands note: may want to use a mutableOwnerArray inside chat statusDictionary properties
-//so that we can have multiple gaim accounts in the same chat.
-
 #import "CBGaimAccount.h"
-#import "CBGaimServicePlugin.h"
 #import "GaimService.h"
 
 #define NO_GROUP						@"__NoGroup__"
@@ -57,14 +53,6 @@
 static BOOL didInitSSL = NO;
 
 static id<GaimThread> gaimThread = nil;
-
-+ (void)setGaimThread:(SLGaimCocoaAdapter *)sender
-{
-	NSLog(@"## setGaimThread: ",[sender description]);
-	gaimThread = [sender retain];
-}
-
-
 
 // The GaimAccount currently associated with this Adium account
 - (GaimAccount*)gaimAccount
@@ -342,10 +330,9 @@ static id<GaimThread> gaimThread = nil;
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact
 {	
     //Request profile
-    if(gc && 
-	   gaim_account_is_connected(account) && 
+    if (gaim_account_is_connected(account) && 
 	   ([[inContact statusObjectForKey:@"Online"] boolValue])){
-		serv_get_info(gc, [[inContact UID] UTF8String]);
+		serv_get_info(account->gc, [[inContact UID] UTF8String]);
     }
 }
 
@@ -625,7 +612,7 @@ static id<GaimThread> gaimThread = nil;
 {
     BOOL            sent = NO;
 	
-	if (gc && account && gaim_account_is_connected(account)) {
+	if (gaim_account_is_connected(account)) {
 		if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0) {
 			AIContentMessage	*contentMessage = (AIContentMessage*)object;
 			AIChat				*chat = [contentMessage chat];
@@ -638,7 +625,7 @@ static id<GaimThread> gaimThread = nil;
 			GaimConvImFlags		flags = ([contentMessage isAutoreply] ? GAIM_CONV_IM_AUTO_RESP : 0);
 			
 			//If this connection doesn't support new lines, send all lines before newlines as separate messages
-			if (gc && (gc->flags & GAIM_CONNECTION_NO_NEWLINES)) {
+			if (account->gc->flags & GAIM_CONNECTION_NO_NEWLINES) {
 				NSRange		endlineRange;
 				NSRange		returnRange;
 				
@@ -916,7 +903,7 @@ static id<GaimThread> gaimThread = nil;
 }
 
 //Account Connectivity -------------------------------------------------------------------------------------------------
-#pragma mark Account Connectivity
+#pragma mark Connect
 //Connect this account (Our password should be in the instance variable 'password' all ready for us)
 - (void)connect
 {
@@ -942,12 +929,29 @@ static id<GaimThread> gaimThread = nil;
 
 	[gaimThread connectAccount:self];
 
-/*	while (!gc){
-		gc = gaim_account_get_connection(account);
-		//if (!gc) NSLog(@"no gc, retrying");
+	if (GAIM_DEBUG) NSLog(@"Adium: Connect: %@ done initiating connection %x.",[self UID], account->gc);
+}
+
+
+- (void)configureGaimAccount
+{
+	NSString	*hostName;
+	int			portNumber;
+	
+	//Host (server)
+	hostName = [self host];
+	if (hostName && [hostName length]){
+		gaim_account_set_string(account, "server", [hostName UTF8String]);
 	}
-*/
-	if (GAIM_DEBUG) NSLog(@"Adium: Connect: %@ done initiating connection %x.",[self UID], gc);
+	
+	//Port
+	portNumber = [self port];
+	if (portNumber){
+		gaim_account_set_int(account, "port", portNumber);
+	}
+	
+	//E-mail checking
+	gaim_account_set_check_mail(account, [self shouldCheckMail]);
 }
 
 //Configure libgaim's proxy settings using the current system values
@@ -1063,34 +1067,82 @@ static id<GaimThread> gaimThread = nil;
 	}
 }
 
+//Sublcasses should override to provide a string for each progress step
+- (NSString *)connectionStringForStep:(int)step { return nil; };
+
+//Our account has connected
+- (oneway void)accountConnectionConnected
+{
+    //We are now online
+    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO];
+    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
+	[self setStatusObject:nil forKey:@"ConnectionProgressString" notify:NO];
+	[self setStatusObject:nil forKey:@"ConnectionProgressPercent" notify:NO];	
+
+	//Apply any changes
+	[self notifyOfChangedStatusSilently:NO];
+	
+    //Silence updates
+    [self silenceAllHandleUpdatesForInterval:18.0];
+	[[adium contactController] delayListObjectNotificationsUntilInactivity];
+
+    //Set our initial status
+	[self updateAllStatusKeys];
+
+    //Reset reconnection attempts
+    reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
+
+	//Clear any previous disconnection error
+	[lastDisconnectionError release]; lastDisconnectionError = nil;
+}
+
+- (oneway void)accountConnectionProgressStep:(NSNumber *)step percentDone:(NSNumber *)connectionProgressPrecent
+{
+	NSString	*connectionProgressString = [self connectionStringForStep:[step intValue]];
+
+	[self setStatusObject:connectionProgressString forKey:@"ConnectionProgressString" notify:NO];
+	[self setStatusObject:connectionProgressPrecent forKey:@"ConnectionProgressPercent" notify:NO];	
+
+	//Apply any changes
+	[self notifyOfChangedStatusSilently:NO];
+}
+
+
+- (void)createNewGaimAccount
+{
+	//Create a fresh version of the account
+    account = gaim_account_new([UID UTF8String], [self protocolPlugin]);
+	
+	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
+	
+    gaim_accounts_add(account);
+	
+	if (!gaimThread){
+		gaimThread = [[SLGaimCocoaAdapter sharedInstance] retain];
+	}
+	
+	[gaimThread addAdiumAccount:self];
+	   
+	[(GaimService *)service addAccount:self forGaimAccountPointer:account];	
+	
+	[self configureGaimAccount];
+}
+
+#pragma mark Disconnect
+
 //Disconnect this account
 - (void)disconnect
 {
     //We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
 	[[adium contactController] delayListObjectNotificationsUntilInactivity];
-
+	
     //Tell libgaim to disconnect
     if(gaim_account_is_connected(account)){
 		[gaimThread disconnectAccount:self];
     }
 }
 
-- (NSString *)host{
-	NSString *hostKey = [self hostKey];
-	return (hostKey ? [self preferenceForKey:hostKey group:GROUP_ACCOUNT_STATUS] : nil); 
-}
-- (int)port{ 
-	NSString *portKey = [self portKey];
-	return (portKey ? [[self preferenceForKey:portKey group:GROUP_ACCOUNT_STATUS] intValue] : nil); 
-}
-
-- (NSString *)hostKey { return nil; };
-- (NSString *)portKey { return nil; };
-
-/*****************************/
-/* accountConnection methods */
-/*****************************/
 //Our account was disconnected, report the error
 - (oneway void)accountConnectionReportDisconnect:(NSString *)text
 {
@@ -1103,7 +1155,7 @@ static id<GaimThread> gaimThread = nil;
 	AIListContact	*contact;
 	
 	while (contact = [enumerator nextObject]){
-
+		
 		[contact setRemoteGroupName:nil];
 		[self removeAllStatusFlagsFromContact:contact];
 	}
@@ -1119,21 +1171,27 @@ static id<GaimThread> gaimThread = nil;
                                     withDescription:connectionNotice];	
 }
 
-//Our account has disconnected (called automatically by gaimServicePlugin)
+//Our account has disconnected
 - (oneway void)accountConnectionDisconnected
 {
+	NSLog(@"Disconnected (last error was %@)",lastDisconnectionError);
 	NSEnumerator    *enumerator;
-	BOOL			connectionIsSuicidal = (gc ? gc->wants_to_die : NO);
+	BOOL			connectionIsSuicidal = (account->gc ? account->gc->wants_to_die : NO);
 	
     //We are now offline
-	[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
-	[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
-	[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
-
-	//We no longer have a connection
-	gc = NULL;
+	[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:NO];
+	[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO];
+	[self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:NO];
 	
-    //If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
+	//Clear status objects which don't make sense for a disconnected account
+	[self setStatusObject:nil forKey:@"StatusMessage" notify:NO];
+	[self setStatusObject:nil forKey:@"Away" notify:NO];
+	[self setStatusObject:nil forKey:@"TextProfile" notify:NO];
+	
+	//Apply any changes
+	[self notifyOfChangedStatusSilently:NO];
+	
+	//If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
 	//connectionIsSuicidal == TRUE when Gaim thinks we shouldn't attempt a reconnect.
 	if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]/* && lastDisconnectionError*/){
 		if (reconnectAttemptsRemaining && 
@@ -1158,95 +1216,6 @@ static id<GaimThread> gaimThread = nil;
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
 {
 	return YES;
-}
-
-
-//Our account has connected (called automatically by gaimServicePlugin)
-- (oneway void)accountConnectionConnected
-{
-    //We are now online
-    [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO];
-    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
-	[self setStatusObject:nil forKey:@"ConnectionProgressString" notify:NO];
-	[self setStatusObject:nil forKey:@"ConnectionProgressPercent" notify:NO];	
-
-	gc = gaim_account_get_connection(account);
-	
-	//Apply any changes
-	[self notifyOfChangedStatusSilently:NO];
-	
-    //Silence updates
-    [self silenceAllHandleUpdatesForInterval:18.0];
-	[[adium contactController] delayListObjectNotificationsUntilInactivity];
-
-    //Set our initial status
-    [self updateAllStatusKeys];
-
-    //Reset reconnection attempts
-    reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
-
-	//Clear any previous disconnection error
-	[lastDisconnectionError release]; lastDisconnectionError = nil;
-}
-
-- (oneway void)accountConnectionProgressStep:(NSNumber *)step percentDone:(NSNumber *)connectionProgressPrecent
-{
-	NSString	*connectionProgressString = [self connectionStringForStep:[step intValue]];
-
-	[self setStatusObject:connectionProgressString forKey:@"ConnectionProgressString" notify:NO];
-	[self setStatusObject:connectionProgressPrecent forKey:@"ConnectionProgressPercent" notify:NO];	
-
-	//Apply any changes
-	[self notifyOfChangedStatusSilently:NO];
-}
-
-//Sublcasses should override to provide a string for each progress step
-- (NSString *)connectionStringForStep:(int)step { return nil; };
-
-- (void)createNewGaimAccount
-{
-	//Create a fresh version of the account
-    account = gaim_account_new([UID UTF8String], [self protocolPlugin]);
-	
-	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
-
-    gaim_accounts_add(account);
-	
-	if (!gaimThread){
-		gaimThread = [[SLGaimCocoaAdapter sharedInstance] retain];
-	}
-	
-	[gaimThread addAdiumAccount:self];
-	   
-	[(GaimService *)service addAccount:self forGaimAccountPointer:account];	
-
-	[self configureGaimAccount];
-}
-
-- (void)configureGaimAccount
-{
-	NSString	*hostName;
-	int			portNumber;
-	
-	//Host (server)
-	hostName = [self host];
-	if (hostName && [hostName length]){
-		gaim_account_set_string(account, "server", [hostName UTF8String]);
-	}
-	
-	//Port
-	portNumber = [self port];
-	if (portNumber){
-		gaim_account_set_int(account, "port", portNumber);
-	}
-	
-	//E-mail checking
-	gaim_account_set_check_mail(account, [self shouldCheckMail]);
-}
-
-- (BOOL)shouldCheckMail
-{
-	return ([[self preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]); 
 }
 
 //Account Status ------------------------------------------------------------------------------------------------------
@@ -1277,10 +1246,14 @@ static id<GaimThread> gaimThread = nil;
 //Update all our status keys
 - (void)updateAllStatusKeys
 {
-    [self updateStatusForKey:@"IdleSince"];
     [self updateStatusForKey:@"TextProfile"];
     [self updateStatusForKey:@"AwayMessage"];
     [self updateStatusForKey:@"UserIcon"];
+	
+	//We use updateAllStatusKeys when we first connect; AIM won't accept an idle time immediately upon connecting, so delay a bit before setting it
+	[self performSelector:@selector(updateStatusForKey:)
+			   withObject:@"IdleSince"
+			   afterDelay:2.0];
 }
 
 //Update our status
@@ -1316,8 +1289,11 @@ static id<GaimThread> gaimThread = nil;
 {
 	//Even if we're setting a non-zero idle time, set it to zero first.
 	//Some clients ignore idle time changes unless it moves to/from 0.
-	serv_set_idle(gc, 0);
-	if(idle) serv_set_idle(gc, idle);
+	NSLog(@"setting to %i",idle);
+	if (gaim_account_is_connected(account)){
+		serv_set_idle(account->gc, 0);
+		if(idle) serv_set_idle(account->gc, idle);
+	}
 
 	//We are now idle
 	[self setStatusObject:(idle ? [NSDate dateWithTimeIntervalSinceNow:-idle] : nil)
@@ -1333,9 +1309,10 @@ static id<GaimThread> gaimThread = nil;
 		if(awayMessage){
 			awayHTML = (char *)[[self encodedAttributedString:awayMessage forListObject:nil] UTF8String];
 		}
-		if (gc && account) {
+
+		if (gaim_account_is_connected(account)) {
 			//Status Changes: We could use "Invisible" instead of GAIM_AWAY_CUSTOM for invisibility...
-			serv_set_away(gc, GAIM_AWAY_CUSTOM, awayHTML);
+			serv_set_away(account->gc, GAIM_AWAY_CUSTOM, awayHTML);
 		}
 		
 		//We are now away
@@ -1353,8 +1330,10 @@ static id<GaimThread> gaimThread = nil;
 		if(profile){
 			profileHTML = (char *)[[self encodedAttributedString:profile forListObject:nil] UTF8String];
 		}
-		if (gc && account)
-			serv_set_info(gc, profileHTML);
+		
+		if (gaim_account_is_connected(account)){
+			serv_set_info(account->gc, profileHTML);
+		}
 		
 		if (GAIM_DEBUG) NSLog(@"updating profile to %@",[profile string]);
 		
@@ -1405,8 +1384,6 @@ static id<GaimThread> gaimThread = nil;
 	
 	//We will create a gaimAccount the first time we attempt to connect
 	account = NULL;
-	//gc will be set once we are connecting
-    gc = NULL;
     	
     //ensure our user icon cache path exists
 	[[NSFileManager defaultManager] createDirectoriesForPath:[ACCOUNT_IMAGE_CACHE_PATH stringByExpandingTildeInPath]];
@@ -1450,7 +1427,7 @@ static id<GaimThread> gaimThread = nil;
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
-	if (gc->flags & GAIM_CONNECTION_HTML){
+	if (account->gc->flags & GAIM_CONNECTION_HTML){
 		return([AIHTMLDecoder encodeHTML:inAttributedString
 								 headers:YES
 								fontTags:YES
@@ -1485,7 +1462,7 @@ static id<GaimThread> gaimThread = nil;
 		if ([listObject isKindOfClass:[AIListContact class]] && 
 			[[(AIListContact *)listObject accountID] isEqualToString:[self uniqueObjectID]]){
 			
-			if (gc){
+			if (gaim_account_is_connected(account)){
 				const char  *uidUTF8String = [[listObject UID] UTF8String];
 				GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
 				
@@ -1659,6 +1636,23 @@ static id<GaimThread> gaimThread = nil;
 																			   UID:inUID];
 	
 	return contact;
+}
+
+- (NSString *)host{
+	NSString *hostKey = [self hostKey];
+	return (hostKey ? [self preferenceForKey:hostKey group:GROUP_ACCOUNT_STATUS] : nil); 
+}
+- (int)port{ 
+	NSString *portKey = [self portKey];
+	return (portKey ? [[self preferenceForKey:portKey group:GROUP_ACCOUNT_STATUS] intValue] : nil); 
+}
+
+- (NSString *)hostKey { return nil; };
+- (NSString *)portKey { return nil; };
+
+- (BOOL)shouldCheckMail
+{
+	return ([[self preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS] boolValue]); 
 }
 
 @end

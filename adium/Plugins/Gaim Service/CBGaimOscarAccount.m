@@ -171,66 +171,6 @@ static BOOL didInitOscar = NO;
 	}
 }
 
-- (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString
-{
-	NSDictionary		*imgArguments;
-	NSScanner			*scanner;
-    NSCharacterSet		*tagCharStart, *tagEnd, *absoluteTagEnd;
-    NSString			*chunkString;
-	NSMutableString		*processedString;
-	
-    tagCharStart = [NSCharacterSet characterSetWithCharactersInString:@"<"];
-    tagEnd = [NSCharacterSet characterSetWithCharactersInString:@" >"];
-    absoluteTagEnd = [NSCharacterSet characterSetWithCharactersInString:@">"];
-	
-    scanner = [NSScanner scannerWithString:inString];
-	[scanner setCaseSensitive:NO];
-    [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
-	
-	processedString = [[NSMutableString alloc] init];
-	
-    //Parse the HTML
-    while(![scanner isAtEnd]){
-        //Find an HTML IMG tag
-        if([scanner scanUpToString:@"<img" intoString:&chunkString]){
-            [processedString appendString:chunkString];
-        }
-		
-        //Process the tag
-        if([scanner scanCharactersFromSet:tagCharStart intoString:nil]){ //If a tag wasn't found, we don't process.
-//            unsigned scanLocation = [scanner scanLocation]; //Remember our location (if this is an invalid tag we'll need to move back)
-			
-			//Get the tag itself
-			if([scanner scanUpToCharactersFromSet:tagEnd intoString:&chunkString]){
-				
-				if([chunkString caseInsensitiveCompare:@"IMG"] == 0){
-					if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
-
-						//Load the src image
-						NSDictionary	*imgArguments = [AIHTMLDecoder parseArguments:chunkString];
-						NSString		*source = [imgArguments objectForKey:@"src"];
-						NSString		*alt = [imgArguments objectForKey:@"alt"];
-						
-						NSData			*imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:source]];
-
-						//Store the src image's data gaimside
-						int				imgstore = gaim_imgstore_add([imageData bytes], [imageData length], (alt ? [alt UTF8String] : [source UTF8String]));
-						
-						NSString		*newTag = [NSString stringWithFormat:@"<IMG ID=\"%i\">",imgstore];
-						[processedString appendString:newTag];
-					}
-				}
-				
-				if (![scanner isAtEnd]){
-					[scanner setScanLocation:[scanner scanLocation]+1];
-				}
-			}
-		}
-	}
-	
-	return ([processedString autorelease]);
-}
-
 //Override _contactWithUID to mark mobile and ICQ users as such via the displayServiceID
 - (AIListContact *)_contactWithUID:(NSString *)sourceUID
 {
@@ -262,22 +202,25 @@ static BOOL didInitOscar = NO;
 	return contact;
 }
 
+
+#pragma mark Account Connection
+
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
 {
 	BOOL shouldAttemptReconnect = YES;
-	
+
 	if (disconnectionError) {
 		if ([disconnectionError rangeOfString:@"Incorrect nickname or password."].location != NSNotFound) {
 			[[adium accountController] forgetPasswordForAccount:self];
 		}else if ([disconnectionError rangeOfString:@"signed on with this screen name at another location"].location != NSNotFound) {
 			shouldAttemptReconnect = NO;
+		}else if ([disconnectionError rangeOfString:@"too frequently"].location != NSNotFound) {
+			shouldAttemptReconnect = NO;	
 		}
 	}
 	
 	return shouldAttemptReconnect;
 }
-
-#pragma mark Account Connection
 
 - (NSString *)connectionStringForStep:(int)step
 {
@@ -361,8 +304,8 @@ static BOOL didInitOscar = NO;
 	
 	const char				*buddyName = [[theContact UID] UTF8String];
 	
-	if (gc &&
-		(od = gc->proto_data) &&
+	if (gaim_account_is_connected(account) &&
+		(od = account->gc->proto_data) &&
 		(userinfo = aim_locate_finduserinfo(od->sess, buddyName))){
 	
 		bi = g_hash_table_lookup(od->buddyinfo, buddyName);
@@ -416,8 +359,8 @@ static BOOL didInitOscar = NO;
 	aim_userinfo_t		*userinfo;
 	GaimBuddy			*buddy;
 
-	if (gc &&
-		(od = gc->proto_data) &&
+	if (gaim_account_is_connected(account) &&
+		(od = account->gc->proto_data) &&
 		(userinfo = aim_locate_finduserinfo(od->sess, [[theContact UID] UTF8String]))){
 			
 		//Update the profile if necessary - length must be greater than one since we get "" with info_len 1
@@ -458,8 +401,8 @@ static BOOL didInitOscar = NO;
 	aim_userinfo_t		*userinfo;
 	GaimBuddy			*buddy;
 	
-	if (gc &&
-		(od = gc->proto_data) && 
+	if (gaim_account_is_connected(account) &&
+		(od = account->gc->proto_data) && 
 		(userinfo = aim_locate_finduserinfo(od->sess, [[theContact UID] UTF8String]))){
 	
 	/*
@@ -543,6 +486,7 @@ static BOOL didInitOscar = NO;
 	}
 }
 
+#pragma mark DirectIM (IM Image)
 //We are now connected via DirectIM to theContact
 - (void)directIMConnected:(AIListContact *)theContact
 {
@@ -553,6 +497,68 @@ static BOOL didInitOscar = NO;
 {
 	NSLog(@"Direct IM Disconnected: %@",[theContact UID]);	
 }
+
+- (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString
+{
+	NSDictionary		*imgArguments;
+	NSScanner			*scanner;
+    NSCharacterSet		*tagCharStart, *tagEnd, *absoluteTagEnd;
+    NSString			*chunkString;
+	NSMutableString		*processedString;
+	
+    tagCharStart = [NSCharacterSet characterSetWithCharactersInString:@"<"];
+    tagEnd = [NSCharacterSet characterSetWithCharactersInString:@" >"];
+    absoluteTagEnd = [NSCharacterSet characterSetWithCharactersInString:@">"];
+	
+    scanner = [NSScanner scannerWithString:inString];
+	[scanner setCaseSensitive:NO];
+    [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
+	
+	processedString = [[NSMutableString alloc] init];
+	
+    //Parse the HTML
+    while(![scanner isAtEnd]){
+        //Find an HTML IMG tag
+        if([scanner scanUpToString:@"<img" intoString:&chunkString]){
+            [processedString appendString:chunkString];
+        }
+		
+        //Process the tag
+        if([scanner scanCharactersFromSet:tagCharStart intoString:nil]){ //If a tag wasn't found, we don't process.
+																		 //            unsigned scanLocation = [scanner scanLocation]; //Remember our location (if this is an invalid tag we'll need to move back)
+			
+			//Get the tag itself
+			if([scanner scanUpToCharactersFromSet:tagEnd intoString:&chunkString]){
+				
+				if([chunkString caseInsensitiveCompare:@"IMG"] == 0){
+					if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
+						
+						//Load the src image
+						NSDictionary	*imgArguments = [AIHTMLDecoder parseArguments:chunkString];
+						NSString		*source = [imgArguments objectForKey:@"src"];
+						NSString		*alt = [imgArguments objectForKey:@"alt"];
+						
+						NSData			*imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:source]];
+						
+						//Store the src image's data gaimside
+						int				imgstore = gaim_imgstore_add([imageData bytes], [imageData length], (alt ? [alt UTF8String] : [source UTF8String]));
+						
+						NSString		*newTag = [NSString stringWithFormat:@"<IMG ID=\"%i\">",imgstore];
+						[processedString appendString:newTag];
+					}
+				}
+				
+				if (![scanner isAtEnd]){
+					[scanner setScanLocation:[scanner scanLocation]+1];
+				}
+			}
+		}
+	}
+	
+	return ([processedString autorelease]);
+}
+
+#pragma mark Delayed updates
 
 - (void)gotGroupForContact:(AIListContact *)theContact
 {
@@ -624,9 +630,13 @@ aim_srv_setavailmsg(od->sess, text);
 
 - (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
+	if (gaim_account_is_connected(account)){
+		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
+		
+		return oscar_xfer_new(account->gc,destsn);
+	}
 	
-	return oscar_xfer_new(gc,destsn);
+	return nil;
 }
 
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
@@ -647,8 +657,8 @@ aim_srv_setavailmsg(od->sess, text);
 	aim_userinfo_t		*userinfo;
 	GaimBuddy			*buddy;
 	
-	if (gc &&
-		(od = gc->proto_data) &&
+	if (gaim_account_is_connected(account) &&
+		(od = account->gc->proto_data) &&
 		(userinfo = aim_locate_finduserinfo(od->sess, [[inListObject UID] UTF8String]))){
 		
 		return (userinfo->capabilities & AIM_CAPS_SENDFILE);
@@ -674,7 +684,7 @@ aim_srv_setavailmsg(od->sess, text);
 {	
 	NSString *serversideComment = nil;
 	
-	if (gc){
+	if (gaim_account_is_connected(account)){
 		const char  *uidUTF8String = [[theContact UID] UTF8String];
 		GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
 		GaimGroup   *g;
@@ -684,7 +694,7 @@ aim_srv_setavailmsg(od->sess, text);
 		if (!(g = gaim_find_buddys_group(buddy)))
 			return nil;
 
-		od = gc->proto_data;
+		od = account->gc->proto_data;
 
 		comment = aim_ssi_getcomment(od->sess->ssi.local, g->name, buddy->name);
 		if (comment){
@@ -713,7 +723,7 @@ aim_srv_setavailmsg(od->sess, text);
 		if ([listObject isKindOfClass:[AIListContact class]] && 
 			[[(AIListContact *)listObject accountID] isEqualToString:[self uniqueObjectID]]){
 			
-			if (gc){
+			if (gaim_account_is_connected(account)){
 				const char  *uidUTF8String = [[listObject UID] UTF8String];
 				GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
 				
@@ -725,7 +735,7 @@ aim_srv_setavailmsg(od->sess, text);
 					OscarData   *od;
 					const char  *comment;
 					
-					if ((g = gaim_find_buddys_group(buddy)) && (od = gc->proto_data)){
+					if ((g = gaim_find_buddys_group(buddy)) && (od = account->gc->proto_data)){
 						comment = [[listObject preferenceForKey:@"Notes" 
 														  group:PREF_GROUP_NOTES
 										  ignoreInheritedValues:YES] UTF8String];
