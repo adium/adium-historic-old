@@ -28,7 +28,6 @@
 {
     NSString			*entry = nil;
     NSAttributedString 	*statusMessage = nil;
-    AIMutableOwnerArray	*ownerArray;
     BOOL				away;
     
     //Get the away state
