@@ -24,7 +24,7 @@
 {
 	AIListLayoutWindowController	*listLayoutWindow = [[self alloc] initWithWindowNibName:@"ListLayoutSheet"
 																				   withName:inName];
-#warning load here!?  or in the main pref file?
+
 	if(parentWindow){
 		[NSApp beginSheet:[listLayoutWindow window]
 		   modalForWindow:parentWindow
@@ -332,7 +332,6 @@
 - (void)configureControlDimming
 {
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
-	LIST_CELL_STYLE	contactCellStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_CELL_STYLE] intValue];
 	BOOL			windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 	
 	//
@@ -342,7 +341,6 @@
 	
 	//Disable the style selectors when in mockie mode
 	[popUp_groupCellStyle setEnabled:(windowStyle != WINDOW_STYLE_MOCKIE)];
-//	[popUp_contactCellStyle setEnabled:(windowStyle != WINDOW_STYLE_MOCKIE)];
 
 	//Disable group spacing when not using mockie
 	[slider_groupTopSpacing setEnabled:(windowStyle == WINDOW_STYLE_MOCKIE)];

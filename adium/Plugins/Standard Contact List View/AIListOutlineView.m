@@ -95,8 +95,8 @@
 	
 	//Enumerate all rows, find the widest one
 	for(row = 0; row < [self numberOfRows]; row++){
-		id		item = [self itemAtRow:row];
-		id		cell = ([self isExpandable:item] ? groupCell : contentCell);
+		id				item = [self itemAtRow:row];
+		AIListCell		*cell = ([self isExpandable:item] ? groupCell : contentCell);
 		
 		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
 		int	width = [cell cellWidth];
@@ -190,7 +190,5 @@
 	if(updateShadowsWhileDrawing) [[self window] compatibleInvalidateShadow];
 }
 
-	
-	
 @end
 

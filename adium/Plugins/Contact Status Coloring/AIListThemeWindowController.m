@@ -178,7 +178,6 @@
 
 - (void)preferenceChanged:(id)sender
 {
-#warning LOOK AT THIS GLUE CODE... KILL ME NOW! ... 10.2 USERS BETTER SUCK UP FOR THIS ONE! :D
     if(sender == colorWell_away){
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_AWAY_COLOR

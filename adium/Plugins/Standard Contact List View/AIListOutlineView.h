@@ -14,46 +14,12 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface AIListOutlineView : AIMultiCellOutlineView <ContactListOutlineView> {    
-//    NSTrackingRectTag   trackingRectTag;	//Tracing rect for the whole outline view
-//    int					oldSelection;		//Holds the selection when it's hidden
-//    BOOL				editing;			//YES when the list is in edit mode... (temp)
-//
-//    BOOL			showLabels;
-//    BOOL			labelAroundContactOnly;
-//    float			labelOpacity;
-//    BOOL			outlineLabels;
-//	BOOL			useGradient;
-//	BOOL			updateShadowsWhileDrawing;
-//	
-//	BOOL			dragging;
-//	
-//    NSFont			*font;
-//    NSFont			*groupFont;
-//    NSColor			*color;
-//    NSColor			*invertedColor;
-//    NSColor			*groupColor;
-//    NSColor			*invertedGroupColor;
-//    NSColor			*outlineGroupColor;
-//    NSColor			*labelGroupColor;
-//    
-//    float			spacing;
-//    
-//    float			desiredWidth[3];
-//    AIListObject	*hadMax[3];
-//    
-//    NSCell			*selectedItem;
-	
-	//Selection hiding
-//	int					lastSelectedRow;
 	BOOL updateShadowsWhileDrawing;	
 }
 
 - (void)setDelegate:(id)delegate;
 - (int)desiredHeight;
 - (int)desiredWidth;
-
-//Frame and superview tracking
-- (void)viewDidMoveToSuperview;
 
 //Selection Hiding
 - (void)configureSelectionHidingForNewSuperview:(NSView *)newSuperview;

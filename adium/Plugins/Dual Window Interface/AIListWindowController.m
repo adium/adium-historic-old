@@ -248,7 +248,6 @@
 		NSDictionary	*layoutDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
 
 		NSString		*imagePath = [themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH];
-		float			backgroundAlpha	= [[layoutDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue];
 		
 		//Background Image
 		if(imagePath && [imagePath length] && [[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]){
@@ -509,11 +508,10 @@
 - (void)contactListChanged:(NSNotification *)notification
 {
 	id		object = [notification object];
+
 	//Redisplay and resize
 	if(!object || object == contactList){
-		
 		[self setContactListRoot:[[adium contactController] contactList]];
-#warning ###		[contactListView _performFullRecalculation];
 	}else{
 		NSDictionary	*userInfo = [notification userInfo];
 		AIListGroup		*containingGroup = [userInfo objectForKey:@"ContainingGroup"];
@@ -521,15 +519,11 @@
 		if(!containingGroup || containingGroup == contactList){
 			//Reload the whole tree if the containing group is our root
 			[contactListView reloadData];
-#warning ###			[contactListView _performFullRecalculation];
 		}else{
 			//We need to reload the contaning group since this notification is posted when adding and removing objects.
 			//Reloading the actual object that changed will produce no results since it may not be on the list.
 			[contactListView reloadItem:containingGroup reloadChildren:YES];
 		}
-		
-		//Factor the width of this item into our total
-#warning ###		[contactListView updateHorizontalSizeForObject:object];
 	}
 	
 	[self contactListDesiredSizeChanged:nil];
@@ -542,7 +536,6 @@
 	
 	if(!object || (object == contactList)){ //Treat a nil object as equivalent to the contact list
 		[contactListView reloadData];
-#warning ###		[contactListView _performFullRecalculation];
 	}else{
 		if([object containingObject]) [contactListView reloadItem:[object containingObject] reloadChildren:YES];
 	}

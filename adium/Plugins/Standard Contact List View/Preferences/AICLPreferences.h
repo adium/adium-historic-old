@@ -39,6 +39,7 @@
 	NSImage		*layoutPillows;
 }
 
++ (BOOL)createSetFromPreferenceGroup:(NSString *)preferenceGroup withName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder;
 + (BOOL)deleteSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder;
 - (IBAction)spawnLayout:(id)sender;
 - (IBAction)spawnTheme:(id)sender;

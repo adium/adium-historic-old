@@ -127,7 +127,7 @@ typedef enum {
 
 @interface AIAbstractListWindowController : AIWindowController {
     IBOutlet	AIAutoScrollView		*scrollView_contactList;
-    IBOutlet	AIMultiCellOutlineView	*contactListView;
+    IBOutlet	AIListOutlineView		*contactListView;
 	
 	AISmoothTooltipTracker				*tooltipTracker;
 	
