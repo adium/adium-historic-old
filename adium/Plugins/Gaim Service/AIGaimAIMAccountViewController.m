@@ -61,11 +61,6 @@
     [account setPreference:[[textView_textProfile textStorage] dataRepresentation] forKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
 }
 
--(NSString *)validScreenNameCharacters
-{
-    return ([[super validScreenNameCharacters] stringByAppendingString:@" @"]);
-}
-
 -(NSString *)auxiliaryGaimAccountViewTabsNib
 {
     return AIM_AUXILIARY_NIB;

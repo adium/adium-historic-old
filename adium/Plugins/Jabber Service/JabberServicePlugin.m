@@ -5,12 +5,13 @@
 
 - (void)installPlugin
 {
-        handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Jabber"
-                          description:@"Jabber Service"
-                          image:[AIImageUtilities imageNamed:@"LilYellowDuck" forClass:[self class]]
-                          caseSensitive:NO
-                          allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
-                          
+	handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Jabber"
+													  description:@"Jabber Service"
+															image:[AIImageUtilities imageNamed:@"LilYellowDuck" forClass:[self class]]
+													caseSensitive:NO
+												allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]
+													allowedLength:129] retain];
+	
         //[[owner accountController] registerService:self];
 }
 

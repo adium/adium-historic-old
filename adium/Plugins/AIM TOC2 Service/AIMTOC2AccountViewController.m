@@ -30,13 +30,6 @@
 	//Configure the standard controls
 	[super configureViewAfterLoad];
 	
-	//Restrict the account name field to valid characters and length
-    [textField_accountName setFormatter:
-		[AIStringFormatter stringFormatterAllowingCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789 "]
-													  length:16
-											   caseSensitive:NO
-												errorMessage:@"You user name must be 16 characters or less, contain only letters and numbers, and must start with a letter."]];
-
     //Fill in our host & port
     [textField_host setStringValue:[account preferenceForKey:AIM_TOC2_KEY_HOST group:GROUP_ACCOUNT_STATUS]];
     [textField_port setStringValue:[account preferenceForKey:AIM_TOC2_KEY_PORT group:GROUP_ACCOUNT_STATUS]];

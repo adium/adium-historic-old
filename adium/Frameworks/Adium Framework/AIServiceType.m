@@ -18,15 +18,24 @@
 // the reason for this class is that there may be multiple instances of AIService that are compatable... so only the service types need to match.  More than one AIService can return the same service type if they are compatable.
 
 @interface AIServiceType (PRIVATE)
-- (id)initWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage caseSensitive:(BOOL)inCaseSensitive allowedCharacters:(NSCharacterSet *)inAllowedCharacters;
+- (id)initWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage
+		   caseSensitive:(BOOL)inCaseSensitive allowedCharacters:(NSCharacterSet *)inAllowedCharacters
+		   allowedLength:(int)inAllowedLength;
 @end
 
 @implementation AIServiceType
 
 //Create a new service type
-+ (id)serviceTypeWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage caseSensitive:(BOOL)inCaseSensitive allowedCharacters:(NSCharacterSet *)inAllowedCharacters
++ (id)serviceTypeWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage
+				  caseSensitive:(BOOL)inCaseSensitive allowedCharacters:(NSCharacterSet *)inAllowedCharacters
+				  allowedLength:(int)inAllowedLength
 {
-    return([[[self alloc] initWithIdentifier:inIdentifier description:inDescription image:inImage caseSensitive:inCaseSensitive allowedCharacters:inAllowedCharacters] autorelease]);
+    return([[[self alloc] initWithIdentifier:inIdentifier
+								 description:inDescription
+									   image:inImage
+							   caseSensitive:inCaseSensitive
+						   allowedCharacters:inAllowedCharacters
+							   allowedLength:inAllowedLength] autorelease]);
 }
 
 - (NSString *)identifier{
@@ -44,6 +53,11 @@
 - (NSCharacterSet *)allowedCharacters
 {
     return(allowedCharacters);
+}
+
+- (int)allowedLength
+{
+    return(allowedLength);
 }
 
 - (BOOL)caseSensitive
@@ -96,7 +110,9 @@
 
 
 //Private ---------------------------------------------------------------------------
-- (id)initWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage caseSensitive:(BOOL)inCaseSensitive allowedCharacters:(NSCharacterSet *)inAllowedCharacters
+- (id)initWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage
+		   caseSensitive:(BOOL)inCaseSensitive allowedCharacters:(NSCharacterSet *)inAllowedCharacters
+		   allowedLength:(int)inAllowedLength
 {
     [super init];
 
@@ -105,6 +121,7 @@
     image = [inImage retain];
     caseSensitive = inCaseSensitive;
     allowedCharacters = [inAllowedCharacters retain];
+	allowedLength = inAllowedLength;
 
     return(self);
 }

@@ -19,7 +19,8 @@
                                                       description:@"Jabber c/o Libgaim"
                                                             image:nil
                                                     caseSensitive:NO
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@"]] retain];
+                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@ "]
+													allowedLength:129] retain];
     
     //Register this service
     [[adium accountController] registerService:self];
