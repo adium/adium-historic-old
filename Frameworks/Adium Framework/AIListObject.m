@@ -65,7 +65,6 @@ DeclareString(FormattedUID);
 			orderIndex = storedOrderIndex;
 		}else{
 			[self setOrderIndex:[[adium contactController] nextOrderIndex]];
-			NSLog(@"%@: was %f, now is %f",self,INFINITY,orderIndex);
 		}
 	}else{
 		[self setOrderIndex:[[adium contactController] nextOrderIndex]];
@@ -77,9 +76,10 @@ DeclareString(FormattedUID);
 - (void)dealloc
 {	
 	//
-	[UID release];
-	[internalObjectID release];
-
+	[UID release]; UID = nil;
+	[internalObjectID release]; internalObjectID = nil;
+	[containingObject release]; containigObject = nil;
+	
     [super dealloc];
 }
 
@@ -157,7 +157,8 @@ DeclareString(FormattedUID);
 //Set the local grouping for this object (PRIVATE: These are for AIListGroup ONLY)
 - (void)setContainingObject:(AIListObject <AIContainingObject> *)inGroup
 {
-	containingObject = inGroup;
+	[containingObject release];
+	containingObject = [inGroup retain];
 	
 #if 0
 	BOOL hadContainingObject = (containingObject != nil);
