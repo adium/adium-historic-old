@@ -37,7 +37,7 @@
 		oldFrame = originalFrame;
 	}
 	
-	//Set to inStringValue, then sizeToFit
+	//Set to inTitle, then sizeToFit
 	[super setTitle:inTitle];
 	
 	[self _handleSizingWithOldFrame:oldFrame stringValue:inTitle];
