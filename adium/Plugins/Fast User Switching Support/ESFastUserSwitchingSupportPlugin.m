@@ -46,14 +46,14 @@
             [[adium preferenceController] setPreference:[away dataRepresentation] 
 												 forKey:@"AwayMessage"
 												  group:GROUP_ACCOUNT_STATUS];
-            [[adium preferenceController] setPreference:[away dataRepresentation] forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
 //			[[adium preferenceController] setPreference:[away dataRepresentation] forKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
 			[away release];
             setAwayThroughFastUserSwitch = YES;
         }
 		
 		//Set a temporary mute if none already exists
-		NSNumber *oldTempMute = [[adium preferenceController] preferenceForKey:KEY_SOUND_TEMPORARY_MUTE group:PREF_GROUP_GENERAL];
+		NSNumber *oldTempMute = [[adium preferenceController] preferenceForKey:KEY_SOUND_TEMPORARY_MUTE
+																		 group:PREF_GROUP_GENERAL];
 		if (!oldTempMute || ![oldTempMute boolValue]) {
 			[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES] 
 												 forKey:KEY_SOUND_TEMPORARY_MUTE
