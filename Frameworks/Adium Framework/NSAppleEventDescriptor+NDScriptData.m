@@ -17,8 +17,6 @@ NSString		* NDAppleEventDescriptorCoercionError = @"AppleEventDescriptorCoercion
 static BOOL aeDescForObjectSpecifier( AEDesc * aDesc, NSScriptObjectSpecifier * specifier );
 static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSAppleEventDescriptor * descriptor );
 
-@class		NDFourCharCodeValue;
-
 /*
  * class implementation NSAppleEventDescriptor (NDScriptData)
  */
