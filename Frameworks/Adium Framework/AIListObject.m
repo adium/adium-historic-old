@@ -153,6 +153,7 @@ DeclareString(FormattedUID);
 	
 	containingObject = inGroup;
 	
+#if 0
 	if (!hadContainingObject){
 		//When we get our first containing object, our ordering information is appropriate
 		[containingObject listObject:self didSetOrderIndex:orderIndex];
@@ -163,6 +164,11 @@ DeclareString(FormattedUID);
 
 		[containingObject listObject:self didSetOrderIndex:orderIndex];
 	}
+#else
+	//Always set the current orderIndex in the containingObject.  The above block may be clearing data after a 
+	//disconnect/reconnect cycle?
+	[containingObject listObject:self didSetOrderIndex:orderIndex];
+#endif
 }
 
 //Returns the group this contact is ultimately within, traversing any other containing objects to find it
@@ -472,7 +478,7 @@ DeclareString(FormattedUID);
 		}
 	}else{
 		//We don't know the status of an stranger who isn't showing up as online
-		if ([[self numberStatusObjectForKey:@"Stranger" fromAnyContainedObject:NO] boolValue]){
+		if ([self isStranger]){
 			return AIUnknownStatus;
 			
 		}else{
@@ -480,7 +486,11 @@ DeclareString(FormattedUID);
 			
 		}
 	}
-	
+}
+
+//A standard listObject is never a stranger
+- (BOOL)isStranger{
+	return NO;
 }
 
 - (NSString *)statusMessage

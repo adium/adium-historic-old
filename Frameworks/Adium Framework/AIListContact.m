@@ -81,18 +81,23 @@
 //Set the desired group for this contact.  Pass nil to indicate this object is no longer listed.
 - (void)setRemoteGroupName:(NSString *)inName
 {
-	if(inName != remoteGroupName){
-		[remoteGroupName release];
-		remoteGroupName = [inName retain];
-
-		[[adium contactController] listObjectRemoteGroupingChanged:self];
-	}
+	//Autorelease so we don't have to worry about whether (remoteGroupName == inName) or not
+	[remoteGroupName autorelease];
+	remoteGroupName = [inName retain];
+	
+	[[adium contactController] listObjectRemoteGroupingChanged:self];
 }
 
 //The current desired group of this contact
 - (NSString *)remoteGroupName
 {
 	return(remoteGroupName);
+}
+
+//A listContact is a stranger if it has a nil remoteGroupName
+- (BOOL)isStranger
+{
+	return([self integerStatusObjectForKey:@"Stranger"]);
 }
 
 
