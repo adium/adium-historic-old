@@ -660,6 +660,33 @@
 	}
 }
 
+- (void)renameGroup:(AIListGroup *)inGroup to:(NSString *)newName
+{
+//    GaimGroup *group = gaim_find_group([[self _mapOutgoingGroupName:[inGroup UID]] UTF8String]);
+//	NSLog(@"Rename '%@' to '%@'  (%i)",[self _mapOutgoingGroupName:[inGroup UID]],newName,group);
+//	//If we don't have a group with this name, just ignore the rename request
+//    if(group){
+//		//Rename server-side
+#warning I dont think we are doing everything necessary gaim-side to rename this group.  With this code, we can move a group once - but any additional attempts to move it will fail (Gaim returns nil when we try to find the group the second time)
+//        serv_rename_group(gc, group, [newName UTF8String]);
+//		
+//		//We must then manually remove the old group from the local gaim list
+//        gaim_blist_remove_group(group);
+//		
+//		//We must also update the remote grouping of all our contacts in that group
+//		NSEnumerator	*enumerator = [inGroup objectEnumerator];
+//		AIListObject	*object;
+//		
+//		while(object = [enumerator nextObject]){
+//			if([object isKindOfClass:[AIListContact class]] &&
+//			   [[(AIListContact *)object accountUID] compare:[self UID]] == 0){
+//				[(AIListContact *)object setRemoteGroupName:newName];
+//			}
+//		}
+//		
+//	}
+}
+
 
 //- (BOOL)moveHandleWithUID:(NSString *)inUID toGroup:(NSString *)inGroup
 //{

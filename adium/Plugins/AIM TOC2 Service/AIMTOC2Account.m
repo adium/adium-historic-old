@@ -159,6 +159,11 @@
 	[self addContacts:objects toGroup:group];
 }
 
+- (void)renameGroup:(AIListGroup *)inGroup to:(NSString *)newName
+{
+	//Ignore for now.  Our TOC2 renaming code has the potential of destruction and I'd rather not include it
+}
+
 // Return YES if the contact list is editable
 - (BOOL)contactListEditable
 {
@@ -759,7 +764,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.120 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.121 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
