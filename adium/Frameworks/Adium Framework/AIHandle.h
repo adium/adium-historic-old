@@ -14,6 +14,7 @@
 @interface AIHandle : NSObject {
     NSString		*UID;
     NSString		*serviceID;
+    NSString		*UIDAndServiceID;
     NSString		*serverGroup;
     AIAccount		*account;
     float		index;
@@ -31,6 +32,7 @@
 //Identifying information
 - (NSString *)UID;
 - (NSString *)serviceID;
+- (NSString *)UIDAndServiceID;
 - (NSString *)serverGroup;
 - (BOOL)temporary;
 

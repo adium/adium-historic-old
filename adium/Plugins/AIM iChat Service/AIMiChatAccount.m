@@ -19,6 +19,10 @@
 #import <AIUtilities/AIUtilities.h>
 #import "InstantMessageFramework.h"
 
+#define SIGN_ON_MAX_WAIT	5.0		//Max amount of time to wait for first sign on packet
+#define SIGN_ON_UPKEEP_INTERVAL	1.0		//Max wait before sign up updates
+
+
 //
 extern void* objc_getClass(const char *name);
 //
@@ -240,6 +244,8 @@ extern void* objc_getClass(const char *name);
 {
     NSEnumerator	*enumerator;
     AIHandle		*handle;
+
+//    NSLog(@"loginStatusChanged %i message:%@ reason:%i",inStatus,inMessage,inReason);
     
     switch(inStatus){
         case 0: //Offline
@@ -293,7 +299,7 @@ extern void* objc_getClass(const char *name);
             numberOfSignOnUpdates = 0;
             processingSignOnUpdates = YES;
             waitingForFirstUpdate = YES;
-            [NSTimer scheduledTimerWithTimeInterval:(5.0) //5 Seconds max
+            [NSTimer scheduledTimerWithTimeInterval:(SIGN_ON_MAX_WAIT) //5 Seconds max
                                              target:self
                                            selector:@selector(firstSignOnUpdateReceived)
                                            userInfo:nil
@@ -318,8 +324,8 @@ extern void* objc_getClass(const char *name);
             [self waitForLastSignOnUpdate:nil];
         }else{
             NSLog(@"First update received");
-            //Check every 0.2 seconds for additional updates
-            [NSTimer scheduledTimerWithTimeInterval:(1.0)
+            //Check every X seconds for additional updates
+            [NSTimer scheduledTimerWithTimeInterval:(SIGN_ON_UPKEEP_INTERVAL)
                                             target:self
                                         selector:@selector(waitForLastSignOnUpdate:)
                                         userInfo:nil

@@ -44,18 +44,30 @@
 
 - (void)removeHandle:(AIHandle *)inHandle
 {
-/*    NSEnumerator	*enumerator;
+    NSEnumerator	*enumerator;
     AIMutableOwnerArray	*array;
     
     //Remove all the status values this handle applied to us
     enumerator = [[statusDictionary allValues] objectEnumerator];
     while((array = [enumerator nextObject])){
         [array setObject:nil withOwner:inHandle];
-    }*/
+    }
 
     //remove it
     [inHandle setContainingContact:nil];
     [handleArray removeObject:inHandle];
+}
+
+- (void)removeAllHandles
+{
+    NSEnumerator	*enumerator;
+    AIHandle		*handle;
+
+    //Remove all handles
+    enumerator = [handleArray objectEnumerator];
+    while((handle = [enumerator nextObject])){
+        [self removeHandle:handle];
+    }
 }
 
 
