@@ -1428,6 +1428,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		gaim_account_set_int(account, "port", portNumber);
 	}
 	
+	/*
+	 XXX: This is a hack for 0.8. Since we don't have a full privacy UI yet, we automatically set our privacy setting to
+	 the best one to use.
+	*/
+	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
+	serv_set_permit_deny(gaim_account_get_connection(account));
+	
 	//E-mail checking
 	gaim_account_set_check_mail(account, [[self shouldCheckMail] boolValue]);
 	
