@@ -25,7 +25,7 @@
 	backgroundImage = [inImage retain];
 	[backgroundImage setFlipped:YES];
 
-	[[self superview] setCopiesOnScroll:(backgroundImage != nil)];
+	[[self superview] setCopiesOnScroll:(!backgroundImage)];
 	[self setNeedsDisplay:YES];
 }
 
@@ -33,7 +33,7 @@
 - (void)viewWillMoveToSuperview:(NSView *)newSuperview
 {
 	[super viewWillMoveToSuperview:newSuperview];
-	[(NSClipView *)newSuperview setCopiesOnScroll:(backgroundImage != nil)];
+	[(NSClipView *)newSuperview setCopiesOnScroll:(!backgroundImage)];
 }
 
 //
