@@ -9,7 +9,7 @@
     IBOutlet	NSTextField	*textField_buildDate;
     IBOutlet	AILinkTextView	*linkTextView_siteLink;
 
-
+    NSMutableArray      *avatarArray;
     AIAdium		*owner;
     int			numberOfDuckClicks;
 
