@@ -17839,7 +17839,6 @@
 			children = (
 				343C89B005704DEC005E0632,
 				4B28907503C1D14200A8010A,
-				BF380C2805A8FF6F00A74E9F,
 				F5148D9404C8B3BF018B6CC7,
 				4BD7D0CA04620D7C00A8010A,
 				9E57141405B2168100283CAD,
@@ -25379,59 +25378,6 @@
 			settings = {
 			};
 		};
-		6E7D361705D041B000F69A3C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CSCheckmarkPlugin.h;
-			path = Plugins/Checkmark/CSCheckmarkPlugin.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6E7D361805D041B000F69A3C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CSCheckmarkPlugin.m;
-			path = Plugins/Checkmark/CSCheckmarkPlugin.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6E7D361905D041B100F69A3C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CSCheckmarkPreferences.h;
-			path = Plugins/Checkmark/CSCheckmarkPreferences.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6E7D361A05D041B100F69A3C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CSCheckmarkPreferences.m;
-			path = Plugins/Checkmark/CSCheckmarkPreferences.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6E7D362405D043AD00F69A3C = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = CheckmarkPreferences.nib;
-			path = Plugins/Checkmark/CheckmarkPreferences.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6E7D362905D043EF00F69A3C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
-			name = CheckmarkDefaults.plist;
-			path = Plugins/Checkmark/CheckmarkDefaults.plist;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		6E97F12F04A94C0100472FFF = {
 			children = (
 				6E97F13D04A94C5400472FFF,
@@ -28130,29 +28076,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		BF380C2805A8FF6F00A74E9F = {
-			children = (
-				6E7D362905D043EF00F69A3C,
-				BF380C3205A8FF9200A74E9F,
-				6E7D361705D041B000F69A3C,
-				6E7D361805D041B000F69A3C,
-				6E7D361905D041B100F69A3C,
-				6E7D361A05D041B100F69A3C,
-				6E7D362405D043AD00F69A3C,
-			);
-			isa = PBXGroup;
-			name = Checkmark;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BF380C3205A8FF9200A74E9F = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
-			name = Checkmark.plist;
-			path = Plists/Checkmark.plist;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
 		};
 		BF5D5E5805A38AA2001426E0 = {
 			fileRef = 4BCFEF4C03F59F2800A8010A;

@@ -87,6 +87,7 @@
 		}
 		
         idleView = [viewArray objectWithOwner:self];
+
         if(displayIdleTime && idle != 0){
             //Add an idle view if one doesn't exist
             if(!idleView){
