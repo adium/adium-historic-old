@@ -14,7 +14,7 @@
 \------------------------------------------------------------------------------------------------------ */
 
 //$Id$
-#import "AIPluginController.h"
+#import "AICorePluginLoader.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
 #define DIRECTORY_EXTERNAL_PLUGINS		@"/PlugIns"				//Path to the external plugins
@@ -24,34 +24,11 @@
 #define SMV_PLUGIN						@"Standard Message View.AdiumPlugin"
 #define CONFIRMED_PLUGINS				@"Confirmed Plugins"
 
-@interface AIPluginController (PRIVATE)
+@interface AICorePluginLoader (PRIVATE)
 - (void)unloadPlugins;
 - (void)loadPluginsFromPath:(NSString *)pluginPath confirmLoading:(BOOL)confirmLoading;
 - (void)loadPluginWithClass:(Class)inClass;
 @end
-
-@class AIAccountListPreferencesPlugin, AIAccountMenuAccessPlugin, AIAliasSupportPlugin, AIAlphabeticalSortPlugin,
-AIAutoLinkingPlugin, AIAwayMessagesPlugin, AIAwayStatusWindowPlugin, AIContactAwayPlugin, AIContactIdlePlugin,
-/*AIContactInfoPlugin,*/ AIContactListEditorPlugin, AIContactOnlineSincePlugin, AIContactSortSelectionPlugin,
-AIContactStatusColoringPlugin, AIContactStatusDockOverlaysPlugin, AIContactStatusTabColoringPlugin, AIChatCyclingPlugin,
-AIContactWarningLevelPlugin, AIDefaultFormattingPlugin, AIDockAccountStatusPlugin, AIDockBehaviorPlugin,
-AIDockIconSelectionPlugin, AIDockUnviewedContentPlugin, AIDualWindowInterfacePlugin, AIEmoticonsPlugin,
-AIEventSoundsPlugin, AIGroupedAwayByIdleSortPlugin, AIGroupedIdleAwaySortPlugin, AIIdleAwayManualSortPlugin,
-AIIdleAwaySortPlugin, AIIdleSortPlugin, AILaTeXPlugin, AILoggerPlugin,
-AIManualSortPlugin, AIMessageAliasPlugin, AIMessageViewSelectionPlugin, AIOfflineContactHidingPlugin, AIPlugin,
-AISCLViewPlugin, AISendingKeyPreferencesPlugin, AISpellCheckingPlugin, AITabStatusIconsPlugin, AIChatConsolidationPlugin,
-AIStandardToolbarItemsPlugin, AIStatusChangedMessagesPlugin, AIStatusCirclesPlugin, AINewMessagePanelPlugin,
-AITextForcingPlugin, AITextToolbarItemsPlugin, AITypingNotificationPlugin, AIContactAccountsPlugin,
-AIVolumeControlPlugin, BGThemesPlugin, CBActionSupportPlugin, CBContactCountingDisplayPlugin,
-CBStatusMenuItemPlugin, CBURLHandlingPlugin, CSDisconnectAllPlugin, DCMessageContextDisplayPlugin, ESAddressBookIntegrationPlugin,
-ESAnnouncerPlugin, ESContactAlertsPlugin, ESContactClientPlugin, ESContactListWindowHandlingPlugin, AIExtendedStatusPlugin,
-ESFastUserSwitchingSupportPlugin, ESOpenMessageWindowContactAlertPlugin, ESSendMessageContactAlertPlugin,
-ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBApplescriptFiltersPlugin, IdleMessagePlugin, AIContactProfilePlugin,
-JSCEventBezelPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin, AIContactSettingsPlugin,
-AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, AIContactStatusEventsPlugin,
-SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmoticonMenuPlugin, BGContactNotesPlugin, SHBookmarksImporterPlugin,
-ESMessageEvents, ESAccountEvents, ESSafariLinkToolbarItemPlugin, DCJoinChatPanelPlugin, DCInviteToChatPlugin, AIServiceIconPreferencesPlugin,
-ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptContactAlertPlugin, ESFileTransferMessagesPlugin;
 
 #ifdef ALL_IN_ONE
 @class AIWebKitMessageViewPlugin, CBGaimServicePlugin, NEHTicTacToePlugin;
@@ -61,17 +38,8 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptCo
 //init
 - (void)initController
 {
-	
     pluginArray = [[NSMutableArray alloc] init];
 
-#ifdef ADIUM_COMPONENTS
-	
-	//	[self loadPluginWithClass:[AISMViewPlugin class]];
-
-	// Check for the preferred message view; bail if there is none
-	[[owner interfaceController] preferredMessageView];
-#endif
-	
 	[[owner notificationCenter] addObserver:self 
 								   selector:@selector(adiumVersionWillBeUpgraded:) 
 									   name:Adium_VersionWillBeUpgraded
@@ -80,20 +48,10 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptCo
 
 - (void)finishIniting
 {
-#ifdef ADIUM_COMPONENTS
-	#ifdef ALL_IN_ONE
-		[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
-		[self loadPluginWithClass:[CBGaimServicePlugin class]];
-		[self loadPluginWithClass:[NEHTicTacToePlugin class]];
-	#endif
-#endif
-		
-#ifndef ALL_IN_ONE
 	[self loadPluginsFromPath:[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath]
 			   confirmLoading:NO];
 	[self loadPluginsFromPath:[[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:DIRECTORY_EXTERNAL_PLUGINS] stringByExpandingTildeInPath] 
 			   confirmLoading:YES];
-#endif
 }
 
 - (void)adiumVersionWillBeUpgraded:(NSNotification *)notification
