@@ -18,11 +18,11 @@
 #import "AIEmoticonPack.h"
 #import "AIEmoticonPreferences.h"
 
-#define EMOTICON_DEFAULT_PREFS			@"EmoticonDefaults"
-#define PATH_EMOTICONS				@"/Emoticons"
-#define PATH_INTERNAL_EMOTICONS			@"/Contents/Resources/Emoticons/"
-#define EMOTICON_PACK_PATH_EXTENSION1		@"emoticonPack"		//Legacy
-#define EMOTICON_PACK_PATH_EXTENSION2		@"AdiumEmoticonset"
+#define EMOTICON_DEFAULT_PREFS				@"EmoticonDefaults"
+#define PATH_EMOTICONS						@"/Emoticons"
+#define PATH_INTERNAL_EMOTICONS				@"/Contents/Resources/Emoticons/"
+#define EMOTICON_PACK_PATH_EXTENSION		@"emoticonPack"
+#define ADIUM_EMOTICON_SET_PATH_EXTENSION   @"AdiumEmoticonset"
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"
 
 @interface AIEmoticonsPlugin (PRIVATE)
@@ -384,26 +384,23 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 - (NSArray *)_emoticonsPacksAvailableAtPath:(NSString *)inPath
 {
     NSMutableArray          *emoticonPackArray = [NSMutableArray array];
-    NSDirectoryEnumerator   *enumerator;
+    NSEnumerator			*enumerator;
     NSString                *file;
 	
     //Scan the directory
-    enumerator = [[NSFileManager defaultManager] enumeratorAtPath:inPath];
-    while((file = [enumerator nextObject])){        
+    enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:inPath] objectEnumerator];
+    while((file = [enumerator nextObject])){
+		
         if([[file lastPathComponent] characterAtIndex:0] != '.' &&                              //Ignore invisible files
-           ([[file pathExtension] caseInsensitiveCompare:EMOTICON_PACK_PATH_EXTENSION1] == 0 ||
-			[[file pathExtension] caseInsensitiveCompare:EMOTICON_PACK_PATH_EXTENSION2] == 0)){    //Only accept emoticon packs
+				(([[file pathExtension] caseInsensitiveCompare:EMOTICON_PACK_PATH_EXTENSION] == 0) ||   //Only accept emoticon packs
+				 ([[file pathExtension] caseInsensitiveCompare:ADIUM_EMOTICON_SET_PATH_EXTENSION] == 0))){    
+
             NSString        *fullPath = [inPath stringByAppendingPathComponent:file];
-            BOOL            isDirectory;
-            
-            //Ensure that this is a folder
-            [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDirectory];
-            if(isDirectory){
-                AIEmoticonPack  *pack = [AIEmoticonPack emoticonPackFromPath:fullPath];
-                
-                [emoticonPackArray addObject:pack];
-                [pack setDisabledEmoticons:[self disabledEmoticonsInPack:pack]];
-            }
+			AIEmoticonPack  *pack = [AIEmoticonPack emoticonPackFromPath:fullPath];
+			
+			[emoticonPackArray addObject:pack];
+			[pack setDisabledEmoticons:[self disabledEmoticonsInPack:pack]];
+			
         }
     }
     
