@@ -6254,6 +6254,10 @@
 				34B9BD3C0640629E0097AF93,
 				34B9BD3D0640629E0097AF93,
 				34B9BD3E0640629E0097AF93,
+				4BEA835F068B7D68007DCC70,
+				4BEA8360068B7D68007DCC70,
+				4BEA8361068B7D68007DCC70,
+				4BEA8362068B7D68007DCC70,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17168,6 +17172,62 @@
 			settings = {
 			};
 		};
+		4BEA835B068B7D68007DCC70 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = aquaTabClose.tif;
+			path = "Frameworks/AIUtilities Framework/Images/aquaTabClose.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BEA835C068B7D68007DCC70 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = aquaTabCloseBack.tif;
+			path = "Frameworks/AIUtilities Framework/Images/aquaTabCloseBack.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BEA835D068B7D68007DCC70 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = aquaTabClosePressed.tif;
+			path = "Frameworks/AIUtilities Framework/Images/aquaTabClosePressed.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BEA835E068B7D68007DCC70 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = aquaTabCloseRollover.tif;
+			path = "Frameworks/AIUtilities Framework/Images/aquaTabCloseRollover.tif";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BEA835F068B7D68007DCC70 = {
+			fileRef = 4BEA835B068B7D68007DCC70;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BEA8360068B7D68007DCC70 = {
+			fileRef = 4BEA835C068B7D68007DCC70;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BEA8361068B7D68007DCC70 = {
+			fileRef = 4BEA835D068B7D68007DCC70;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BEA8362068B7D68007DCC70 = {
+			fileRef = 4BEA835E068B7D68007DCC70;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BED5A5303C34F1E00A8010A = {
 			children = (
 				4BED5A5F03C34FFE00A8010A,
@@ -22567,6 +22627,10 @@
 				34B9BD190640629E0097AF93,
 				34B9BD1B0640629E0097AF93,
 				34B9BD240640629E0097AF93,
+				4BEA835B068B7D68007DCC70,
+				4BEA835C068B7D68007DCC70,
+				4BEA835D068B7D68007DCC70,
+				4BEA835E068B7D68007DCC70,
 				34B9BD120640629D0097AF93,
 				34B9BD1D0640629E0097AF93,
 				34B9BD1A0640629E0097AF93,
