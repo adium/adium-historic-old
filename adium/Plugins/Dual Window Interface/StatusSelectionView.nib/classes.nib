@@ -1,6 +1,5 @@
 {
     IBClasses = (
-        {CLASS = AIBrushedPopUpButton; LANGUAGE = ObjC; SUPERCLASS = NSPopUpButton; }, 
         {
             ACTIONS = {selectNewStatus = id; }; 
             CLASS = AIStatusSelectionView; 
@@ -8,7 +7,6 @@
             OUTLETS = {"popUp_status" = NSPopUpButton; "view_contents" = NSView; }; 
             SUPERCLASS = NSView; 
         }, 
-        {CLASS = CBEmbossedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 
