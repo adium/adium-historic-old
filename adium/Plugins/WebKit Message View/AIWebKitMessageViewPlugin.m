@@ -366,9 +366,10 @@
 					
 					NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
 					
+					NSDateFormatter	*dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:timeFormat 
+																			 allowNaturalLanguage:NO] autorelease];
 					[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
-											withString:[[[NSDateFormatter alloc] initWithDateFormat:timeFormat 
-																			   allowNaturalLanguage:NO] stringForObjectValue:date]];
+											withString:[dateFormatter stringForObjectValue:date]];
 					
 				}
 			}
