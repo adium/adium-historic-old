@@ -49,6 +49,14 @@
 }
 
 /*!
+ * @brief Setup the window before it is displayed
+ */
+- (void)windowDidLoad
+{
+	[[self window] center];
+}
+
+/*!
  * @brief Called as the user list edit sheet closes, dismisses the sheet
  */
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
