@@ -227,20 +227,19 @@
 #pragma mark Drawing
 //Focus ring drawing code by Nicholas Riley, posted on cocoadev and available at:
 //http://cocoa.mamasam.com/COCOADEV/2002/03/2/29535.php
-
 - (BOOL)needsDisplay
 {
 	NSResponder *resp = nil;
 	NSWindow	*window = [self window];
 	
-	if ([window isKeyWindow]) {
+	if([window isKeyWindow]){
 		resp = [window firstResponder];
-		if (resp == lastResp){
-			return [super needsDisplay];
+		if(resp == lastResp){
+			return([super needsDisplay]);
 		}
 		
-	} else if (lastResp == nil) {
-		return [super needsDisplay];
+	}else if(lastResp == nil){
+		return([super needsDisplay]);
 		
 	}
 	
@@ -250,27 +249,17 @@
 	lastResp = resp;
 	
 	[self setKeyboardFocusRingNeedsDisplayInRect:[self bounds]];
-	return YES;
+	return(YES);
 }
 
-- (void)drawRect:(NSRect)rect {
+//Draw a focus ring around our view
+- (void)drawRect:(NSRect)rect
+{
+	[super drawRect:rect];
 	
-	NSImageFrameStyle oldImageFrameStyle = [self imageFrameStyle];
-	
-	//Suppress the image frame when drawing the focus ring
-	if (shouldDrawFocusRing){
-		[self setImageFrameStyle:NSImageFrameNone];
-	}
-	
-	[super drawRect: rect];
-	
-	if (shouldDrawFocusRing) {
-		//Draw the focus ring
+	if(shouldDrawFocusRing){
 		NSSetFocusRingStyle(NSFocusRingOnly);
 		NSRectFill(rect);
-		
-		//Restore the old frame style
-		[self setImageFrameStyle:oldImageFrameStyle];
 	}
 } 
 
