@@ -261,7 +261,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Return the active services (services for which there is an account).  These are used for contact creation and determining if
 //the service of accounts and contacts should be presented to the user.
 //Simultaneously determine if any active service can 
-- (NSArray *)activeServices
+//If includeCompatible is YES, services not being used but in the same service class as one that is will be included
+- (NSArray *)activeServicesIncludingCompatibleServices:(BOOL)includeCompatible
 {
 	if(!_cachedActiveServices){
 		NSMutableArray	*serviceArray = [NSMutableArray array];
@@ -270,17 +271,23 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 		//Build an array of all currently used services
 		while(account = [enumerator nextObject]){
-			NSEnumerator	*serviceEnumerator;
-			AIService		*accountService;
-			
-			//Add all services that are of the same class as the user's account (So, all compatible services)
-			serviceEnumerator = [[self servicesWithServiceClass:[[account service] serviceClass]] objectEnumerator];
-			while(accountService = [serviceEnumerator nextObject]){
-				//Prevent any service from going in twice
-				if(![serviceArray containsObject:accountService]){
-					[serviceArray addObject:accountService];
+			if(includeCompatible){
+				NSEnumerator	*serviceEnumerator;
+				AIService		*accountService;
+				
+				//Add all services that are of the same class as the user's account (So, all compatible services)
+				serviceEnumerator = [[self servicesWithServiceClass:[[account service] serviceClass]] objectEnumerator];
+				while(accountService = [serviceEnumerator nextObject]){
+					//Prevent any service from going in twice
+					if(![serviceArray containsObject:accountService]){
+						[serviceArray addObject:accountService];
+					}
+					
 				}
-
+			}else{
+				if(![serviceArray containsObject:[account service]]){
+					[serviceArray addObject:[account service]];
+				}
 			}
 		}
 		
@@ -344,7 +351,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	//Prepare our menu
 	NSMenu *menu = [[NSMenu alloc] init];
 
-	serviceArray = (activeServicesOnly ? [self activeServices] : [self availableServices]);
+	serviceArray = (activeServicesOnly ? [self activeServicesIncludingCompatibleServices:YES] : [self availableServices]);
 	
 	//Divide our menu into sections.  This helps separate less important services from the others (sorry guys!)
 	for(importance = AIServicePrimary; importance <= AIServiceUnsupported; importance++){
@@ -772,7 +779,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	AIAccount		*account;
 	
 	//We don't show service types unless the user is using multiple services
-	BOOL 	multipleServices = ([[self activeServices] count] > 1);
+	BOOL 	multipleServices = ([[self activeServicesIncludingCompatibleServices:NO] count] > 1);
 	
     //Insert a menu item for each available account
     enumerator = [accountArray objectEnumerator];
