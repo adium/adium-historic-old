@@ -127,4 +127,26 @@ extern MenuRef _NSGetCarbonMenu(NSMenu *);
     [containingMenu insertItem:newItem atIndex:menuItemIndex];
 }
 
+//Alternate menu items are supposed to 'collapse into' their primary item, showing only one menu item
+//However, when the menu updates, they uncollapse; removing and readding both the primary and the alternate items
+//makes them recollapse.
++ (void)updateAlternateMenuItem:(NSMenuItem *)alternateItem
+{
+    NSMenu		*containingMenu = [alternateItem menu];
+    int			menuItemIndex = [containingMenu indexOfItem:alternateItem];
+    NSMenuItem  *primaryItem = [containingMenu itemAtIndex:(menuItemIndex-1)];
+	
+	//Remove the primary item and readd it
+	[primaryItem retain];
+	[containingMenu removeItemAtIndex:(menuItemIndex-1)];
+	[containingMenu insertItem:primaryItem atIndex:(menuItemIndex-1)];
+	[primaryItem release];
+	
+	//Remove the alternate item and readd it
+	[alternateItem retain];
+    [containingMenu removeItemAtIndex:menuItemIndex];
+    [containingMenu insertItem:alternateItem atIndex:menuItemIndex];
+	[alternateItem release];
+}
+
 @end
