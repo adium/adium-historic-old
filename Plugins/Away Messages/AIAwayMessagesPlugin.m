@@ -380,11 +380,18 @@
             
         }else if([type isEqualToString:@"Away"]){
             NSString		*away = [awayDict objectForKey:@"Title"];
+            NSRange  trimRange;
+            NSRange  fullRange = NSMakeRange(0, 0);
             if (!away) //no title was found
                 away = [[NSAttributedString stringWithData:[awayDict objectForKey:@"Message"]] string];
             NSMenuItem		*menuItem;
             
             //Cap the away menu title (so they're not incredibly long)
+			away = [away stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+			trimRange = [away lineRangeForRange:fullRange];
+			if ( !NSEqualRanges(trimRange, NSMakeRange(0, [away length]-1)) ) {
+				away = [away substringWithRange:trimRange];
+			}
             if([away length] > MENU_AWAY_DISPLAY_LENGTH){
                 away = [[away substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:ELIPSIS_STRING];
             }

@@ -378,6 +378,7 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
 
 - (NSMenu *)savedAwaysMenu
 {
+
     NSMenu		*savedAwaysMenu = [[NSMenu alloc] init];
     NSMenuItem		*menuItem;
     
@@ -394,15 +395,27 @@ AIEnterAwayWindowController	*sharedEnterAwayInstance = nil;
     NSDictionary *dict;
     while (dict = [enumerator nextObject])
     {
+   		#warning much of this code is duplicated in AIAwayMessagesPlugin.m, could they be combined somehow?
         NSString * title = [dict objectForKey:@"Title"];
         if (title) {
+			NSRange  fullRange = NSMakeRange(0, 0);
+			title = [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+			NSRange  trimRange = [title lineRangeForRange:fullRange];
+			if ( !NSEqualRanges(trimRange, NSMakeRange(0, [title length]-1)) ) {
+				title = [title substringWithRange:trimRange];
+			}
 			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
 																			 target:self
 																			 action:@selector(loadSavedAway:)
 																	  keyEquivalent:@""] autorelease];
 		} else {
 			NSString * message = [[dict objectForKey:@"Message"] string];
-			
+			NSRange  fullRange = NSMakeRange(0, 0);
+			message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+			NSRange  trimRange = [message lineRangeForRange:fullRange];
+			if ( !NSEqualRanges(trimRange, NSMakeRange(0, [message length]-1)) ) {
+				message = [message substringWithRange:trimRange];
+			}
 			//Cap the away menu title (so they're not incredibly long)
 			if([message length] > MENU_AWAY_DISPLAY_LENGTH){
 				message = [[message substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:ELIPSIS_STRING];
