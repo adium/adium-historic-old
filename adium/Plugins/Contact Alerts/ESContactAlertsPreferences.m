@@ -26,7 +26,7 @@
 @end
 
 extern int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, void *context);
-int alphabeticalSort(id objectA, id objectB, void *context);
+int contactAlerts_alphabeticalSort(id objectA, id objectB, void *context);
 
 @implementation ESContactAlertsPreferences
 + (ESContactAlertsPreferences *)contactAlertsPreferences
@@ -535,7 +535,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     //action to take when action is double-clicked in the window
 }
 
-int alphabeticalSort(id objectA, id objectB, void *context)
+int contactAlerts_alphabeticalSort(id objectA, id objectB, void *context)
 {
     BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
     BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
