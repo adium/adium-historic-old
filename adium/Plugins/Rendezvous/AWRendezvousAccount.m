@@ -230,11 +230,23 @@
 {
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == NSOrderedSame) {
 	NSString	*message = [[(AIContentMessage *)object message] string];
+	NSString        *htmlMessage = [AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message]
+                                                         headers:NO
+                                                        fontTags:YES
+                                              includingColorTags:YES
+                                                   closeFontTags:YES
+                                                       styleTags:YES
+                                      closeStyleTagsOnFontChange:YES
+                                                  encodeNonASCII:YES
+                                                      imagesPath:nil
+                                               attachmentsAsText:NO
+                                                  simpleTagsOnly:NO];
+
 	AIChat		*chat = [(AIContentMessage *)object chat];
 	AIListObject    *listObject = [chat listObject];
 	NSString	*to = [listObject UID];
 
-	[libezv sendMessage:message to:to withHtml:message];
+	[libezv sendMessage:message to:to withHtml:htmlMessage];
     } else if([[object type] compare:CONTENT_TYPING_TYPE] == NSOrderedSame) {
 	AIContentTyping *contentTyping = (AIContentTyping*)object;
 	AIChat		*chat = [contentTyping chat];

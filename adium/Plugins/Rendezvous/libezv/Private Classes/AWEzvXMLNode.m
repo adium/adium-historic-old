@@ -3,7 +3,7 @@
  * File:        AWEzvXMLNode.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvXMLNode.m,v 1.1 2004/05/15 18:47:09 evands Exp $
+ * CVS tag:     $Id: AWEzvXMLNode.m,v 1.2 2004/05/16 07:10:36 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -92,6 +92,8 @@
         [string replaceOccurrencesOfString:@">" withString:@"&gt;" 
     options:0 range:NSMakeRange(0, [string length])];
         return [[string copy] autorelease];
+    } else if (type == XMLRaw) {
+	return [[name copy] autorelease];
     }
     
     string = [NSMutableString stringWithString:@"<"];
