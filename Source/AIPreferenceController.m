@@ -256,23 +256,20 @@
 //Set a preference value
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName
 {
-    NSMutableDictionary	*prefDict;
-    
-    //Load the preferences
-    prefDict = [self loadPreferenceGroup:groupName];
+    NSMutableDictionary	*prefDict = [self loadPreferenceGroup:groupName];
 	
-    //Set and save the new value
+    //Set the new value
     if(value != nil){
         [prefDict setObject:value forKey:inKey];
     }else{
         [prefDict removeObjectForKey:inKey];
     }
-    [self savePreferences:prefDict forGroup:groupName];
 	
-	if (preferenceChangeDelays > 0) {
+	//Save and broadcast a group changed notification (Deferring if pref changes are delayed)
+	if(preferenceChangeDelays > 0){
         [delayedNotificationGroups addObject:groupName];
-    } else {
-        //Broadcast a group changed notification
+    }else{
+		[self savePreferences:prefDict forGroup:groupName];
         [[owner notificationCenter] postNotificationName:Preference_GroupChanged
 												  object:nil
 												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",inKey,@"Key",nil]];
@@ -283,20 +280,24 @@
 //This should be used like [lockFocus] / [unlockFocus] around groups of preference changes
 - (void)delayPreferenceChangedNotifications:(BOOL)inDelay
 {
-	if (inDelay){
+	if(inDelay){
 		preferenceChangeDelays++;
 	}else{
 		preferenceChangeDelays--;
 	}
 	
-    if (!preferenceChangeDelays) {
-            NSEnumerator    *enumerator = [delayedNotificationGroups objectEnumerator];
-            NSString        *groupName;
-            while (groupName = [enumerator nextObject])
-                [[owner notificationCenter] postNotificationName:Preference_GroupChanged
-														  object:nil
-														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",nil]];
-            [delayedNotificationGroups removeAllObjects];
+	//If changes are no longer delayed, save and notify of all preferences modified while delayed
+    if(!preferenceChangeDelays){
+		NSEnumerator    *enumerator = [delayedNotificationGroups objectEnumerator];
+		NSString        *groupName;
+		
+		while(groupName = [enumerator nextObject]){
+			[self savePreferences:[self loadPreferenceGroup:groupName] forGroup:groupName];
+			[[owner notificationCenter] postNotificationName:Preference_GroupChanged
+													  object:nil
+													userInfo:[NSDictionary dictionaryWithObjectsAndKeys:groupName,@"Group",nil]];
+		}
+		[delayedNotificationGroups removeAllObjects];
     }
 }
 
