@@ -357,6 +357,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
         //Strip any attributes we don't want to return
         [selectedString removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange(0,[selectedString length])]; //Background color
+        [selectedString removeAttribute:NSParagraphStyleAttributeName range:NSMakeRange(0,[selectedString length])]; //evands: Paragraph style - some style settings like Centered cause a crash
 
         //Add a return character
         [selectedString appendString:@"\r" withAttributes:[selectedString attributesAtIndex:([selectedString length]-1) effectiveRange:nil]];

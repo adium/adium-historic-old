@@ -581,7 +581,7 @@ int HTMLEquivalentForFontSize(int fontSize)
     NSEnumerator 	*enumerator;
     NSString		*arg;
     NSAttributedString  *attachString;
-    NSFileWrapper       *fileWrapper;
+    NSFileWrapper       *fileWrapper = nil;
     AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
     
     enumerator = [[inArgs allKeys] objectEnumerator];
