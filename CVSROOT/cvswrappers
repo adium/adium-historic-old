@@ -38,3 +38,4 @@
 *.a -k 'b'      # Static libraries
 *.dylib -k 'b'  # Dynamic (linking) libraries
 *.so -k 'b'     # Shared (loadable) objects
+*.framework -k 'b' # Frameworks
