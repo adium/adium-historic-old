@@ -130,7 +130,8 @@ static AIListObject				*activeListObject = nil;
             
         //Create the formatters
         dayFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%m/%d/%y" allowNaturalLanguage:YES] autorelease];
-        timeFormatter = [[[NSDateFormatter alloc] initWithDateFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES]
+        timeFormatter = [[[NSDateFormatter alloc] initWithDateFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO
+																												showingAMorPM:YES]
 												allowNaturalLanguage:YES] autorelease];
         
         //Get day & time strings
@@ -226,7 +227,8 @@ static AIListObject				*activeListObject = nil;
 	NSAttributedString 	*textProfile = [activeListObject statusObjectForKey:@"TextProfile"];
     if(textProfile && [textProfile length]){
 		[infoString appendString:@"\r\r\tProfile:\t" withAttributes:labelAttributes];
-		NSMutableAttributedString   *textProfileString = [[[adium contentController] fullyFilteredAttributedString:textProfile listObjectContext:activeListObject] mutableCopy];
+		NSMutableAttributedString   *textProfileString = [[[adium contentController] fullyFilteredAttributedString:textProfile 
+																								 listObjectContext:activeListObject] mutableCopy];
 		NSMutableParagraphStyle     *indentStyle;
 		
 		NSRange                     firstLineRange = [[textProfileString string] lineRangeForRange:NSMakeRange(0,0)];
@@ -267,7 +269,10 @@ static AIListObject				*activeListObject = nil;
         [textView_contactProfile resetCursorRects]; //Why must I call this manually?
 
         //Set the background color
-        backgroundColor = [infoString attribute:AIBodyColorAttributeName atIndex:0 longestEffectiveRange:nil inRange:NSMakeRange(0,[infoString length])];
+        backgroundColor = [infoString attribute:AIBodyColorAttributeName
+										atIndex:0 
+						  longestEffectiveRange:nil 
+										inRange:NSMakeRange(0,[infoString length])];
         [textView_contactProfile setBackgroundColor:(backgroundColor ? backgroundColor : [NSColor whiteColor])];
 
     }
