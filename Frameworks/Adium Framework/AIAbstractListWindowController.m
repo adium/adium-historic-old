@@ -171,6 +171,11 @@
 		[groupCell setTopSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
 	}
 	
+	//Turn off row highlighting for bubbles
+	if(contactCellStyle == CELL_STYLE_BUBBLE || contactCellStyle == CELL_STYLE_BUBBLE_FIT){
+		[contactListView setDrawsSelectedRowHighlight:NO];
+	}
+	
 	//Background
 	if([contentCell respondsToSelector:@selector(setBackgroundOpacity:)]){
 		[contentCell setBackgroundOpacity:backgroundAlpha];
