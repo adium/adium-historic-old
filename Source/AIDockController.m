@@ -20,7 +20,7 @@
 #define DOCK_DEFAULT_PREFS			@"DockPrefs"
 #define ICON_DISPLAY_DELAY			0.1
 
-#define LAST_ICON_UPDATE_VERSION	@"Last Icon Update Version"
+#define LAST_ICON_UPDATE_VERSION	@"Adium:Last Icon Update Version"
 
 #define CONTINUOUS_BOUNCE_INTERVAL  0
 #define SINGLE_BOUNCE_INTERVAL		999
@@ -44,7 +44,7 @@
 - (void)setIcon:(NSImage *)icon forFile:(NSString *)file options:(int)options;
 @end
 #endif
-						
+
 @implementation AIDockController
  
 //init and close
