@@ -222,7 +222,6 @@
 	if([self rowForItem:inObject] == -1){ //We don't cache hidden objects
 		for(j=0; j < 3; j++){ //check left, middle, and right
 			if(hadMax[j] == inObject){ //if this object was the largest in terms of j before but is now hidden, then we need to search for the now-largest
-				NSLog(@"Perofrming full %i",j);
 				[self _performFullRecalculationFor:j];
 				changed = YES;
 			}
@@ -232,7 +231,6 @@
 		for(j=0 ; j < 3; j++){  //check left, middle, and right
 			cellSizeArray = [cell cellSizeArrayForBounds:NSMakeRect(0,0,0,[self rowHeight]) inView:self];
 			cellWidth = [[cellSizeArray objectAtIndex:j] floatValue];
-			NSLog(@"%@ %i %f ; *** %@ %f",[inObject UID],j,cellWidth,[hadMax[j] UID],desiredWidth[j]);
 			if(cellWidth > desiredWidth[j]) {
 				desiredWidth[j] = cellWidth;
 				hadMax[j] = inObject;
