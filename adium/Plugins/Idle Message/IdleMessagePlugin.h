@@ -24,6 +24,8 @@
 
 @interface IdleMessagePlugin : AIPlugin {
     IdleMessagePreferences 	*preferences;
+
+    NSMutableArray		*receivedIdleMessage;
 }
 
 - (void)installPlugin;
