@@ -36,7 +36,6 @@
 - Block/Unblock as a single menu item [Colin]
 - Block/Unblock should change titles dynamically
 - Invite to Chat should change titles dynamically
-- Change Configure Sort and Sort Options to "Configure Sorting" and "Sorting Options"
 
 
 //-------------------------------------------------------------------------------------------------------
