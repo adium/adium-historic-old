@@ -210,11 +210,14 @@
 //    [activityWindowController initController];
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
 
-	//
-    [contactController finishIniting];
-    [preferenceController finishIniting];
-    [interfaceController finishIniting];
+	/*
+	 Account controller should finish initing before the contact controller so accounts and services are available
+	 for contact creation
+	 */
     [accountController finishIniting];
+	[contactController finishIniting];
+    [interfaceController finishIniting];
+    [preferenceController finishIniting];
 	
 	//Open the preferences if we were unable to because application:openFile: was called before we got here
 	[self openAppropriatePreferencesIfNeeded];

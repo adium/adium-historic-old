@@ -247,7 +247,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Returns the specified service controller
 - (AIService *)serviceWithUniqueID:(NSString *)identifier
 {
-	NSLog(@"availableServiceDict:%@",availableServiceDict);
     return([availableServiceDict objectForKey:identifier]);
 }
 
@@ -262,6 +261,19 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	}
 	
 	return(service);
+}
+
+- (NSArray *)servicesWithServiceClass:(NSString *)serviceClass
+{
+	NSEnumerator	*enumerator = [availableServiceDict objectEnumerator];
+	AIService		*service;
+	NSMutableArray	*servicesArray = [NSMutableArray array];
+		
+	while(service = [enumerator nextObject]){
+		if([[service serviceClass] isEqualToString:serviceClass]) [servicesArray addObject:service];
+	}
+	
+	return(servicesArray);
 }
 
 //Register service code
@@ -333,6 +345,38 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     
     return(array);
 }
+
+//Searches the account list for accounts with the specified service's serviceClass
+//This could use other methods but that would require alloc'ing significantly more NSArrays, so we consolidate
+//for efficiency.
+- (NSArray *)accountsWithServiceClassOfService:(AIService *)service
+{
+	NSMutableArray	*accountsArray = [NSMutableArray array];
+	NSString		*serviceClass = [service serviceClass];	
+	NSEnumerator	*enumerator = [availableServiceDict objectEnumerator];
+    AIService		*aService;
+	
+	//Enumerate all available services
+	while(aService = [enumerator nextObject]){
+		//Find matching serviceClasses
+		if([[aService serviceClass] isEqualToString:serviceClass]){
+			
+			//Find matching accounts
+			NSEnumerator	*enumerator = [accountArray objectEnumerator];
+			AIAccount		*account;
+			
+			while((account = [enumerator nextObject])){
+				if ([account service] == aService){
+					[accountsArray addObject:account];
+				}
+			}
+		}
+	}
+	
+	return(accountsArray);
+}
+
+
 
 - (AIAccount *)firstAccountWithService:(AIService *)service
 {
