@@ -132,14 +132,6 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
     }
 }
 
-//Configure our 'set idle' toolbar item
-- (BOOL)configureToolbarItem:(AIMiniToolbarItem *)inToolbarItem forObjects:(NSDictionary *)inObjects
-{
-    return(YES);
-}
-
-
-
 //Idle Control -----------------------------------------------------------------------------------
 /*There are 4 states of idle:
     Normal (Not Idle):  [On load, 'remove idle' is selected]
