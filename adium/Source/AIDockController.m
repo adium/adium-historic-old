@@ -28,17 +28,25 @@
 //init and close
 - (void)initController
 {
-    NSString *familyPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Default Icon Family.adiumIconFamily"];
+    NSString 	*familyPath;
+
+    //init
     currentTimer = nil;
+
+    //Set the default icon
+    familyPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Default Icon Family.adiumIconFamily"];
     [self setIconFamily:[AIIconFamily iconFamilyFromFolder:familyPath]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate:) name:NSApplicationWillTerminateNotification object:nil];
+
+    //Observe
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillBecomeActive:) name:NSApplicationWillBecomeActiveNotification object:nil];
 }
 
 - (void)closeController
 {
-
+    //Set the icon to closed
+    [self setAppIcon:[iconFamily closedImage]];
 }
+
 
 //icon family methods
 - (AIIconFamily *)currentIconFamily
@@ -170,11 +178,6 @@
 - (void)resetAppIcon:(NSTimer *)timer
 {
     [self setAppIcon:[iconFamily openedImage]];
-}
-
-- (void)appWillTerminate:(NSNotification *)notification
-{
-    [self setAppIcon:[iconFamily closedImage]];
 }
 
 - (void)appWillBecomeActive:(NSNotification *)notification

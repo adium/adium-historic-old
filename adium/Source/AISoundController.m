@@ -37,6 +37,9 @@
 {
 //    soundCacheDict = [[NSMutableDictionary alloc] init];
 
+    //Create a custom sounds directory ~/Library/Application Support/Adium 2.0/Sounds
+    [AIFileUtilities createDirectory:[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PATH_SOUNDS]];
+    
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SOUND_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SPELLING];
 
