@@ -28,6 +28,8 @@
 
 @implementation AIMetaContact
 
+int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *context);
+
 //init
 - (id)initWithObjectID:(NSNumber *)inObjectID
 {
@@ -838,6 +840,12 @@
 	}else if (inOrderIndex < smallestOrder){
 		smallestOrder = inOrderIndex;
 	}
+	
+	[containedObjects sortUsingFunction:containedContactSort context:nil];
+
+	//We're no longer positive of our preferredContact, so clear the cache
+	_preferredContact = nil;
+	[_listContacts release]; _listContacts = nil;
 }
 
 - (float)smallestOrder
@@ -848,6 +856,21 @@
 - (float)largestOrder
 {
 	return largestOrder;
+}
+
+//Sort contained contacts
+int containedContactSort(AIListObject *objectA, AIListObject *objectB, void *context)
+{
+	float orderIndexA = [objectA orderIndex];
+	float orderIndexB = [objectB orderIndex];
+	
+	if(orderIndexA > orderIndexB){
+		return(NSOrderedDescending);
+	}else if (orderIndexA < orderIndexB){
+		return(NSOrderedAscending);
+	}else{
+		return([[objectA internalObjectID] caseInsensitiveCompare:[objectB internalObjectID]]);
+	}
 }
 
 //Visibility -----------------------------------------------------------------------------------------------------------
