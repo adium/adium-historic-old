@@ -10,6 +10,7 @@
 
 #define ADD_LINK_TITLE			AILocalizedString(@"Add Link...",nil)
 #define EDIT_LINK_TITLE			AILocalizedString(@"Edit Link...",nil)
+#define RM_LINK_TITLE                   AILocalizedString(@"Remove Link",nil)
 
 @interface SHLinkManagementPlugin (PRIVATE)
 - (BOOL)textViewSelectionIsLink:(NSTextView *)textView;
@@ -36,6 +37,20 @@
 															  keyEquivalent:@""] autorelease];
     [[adium menuController] addContextualMenuItem:menuItem toLocation:Context_TextView_Edit];
     [self registerToolbarItem];
+    
+    //remove link menu item
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:RM_LINK_TITLE
+																	 target:self
+																	 action:@selector(removeFormattedLink:)
+															  keyEquivalent:@""] autorelease];
+    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Edit_Additions];
+    
+    //rm link context
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:RM_LINK_TITLE
+																	 target:self
+																	 action:@selector(removeFormattedLink:)
+															  keyEquivalent:@""] autorelease];
+    [[adium menuController] addContextualMenuItem:menuItem toLocation:Context_TextView_Edit];
 }
 
 - (void)uninstallPlugin
@@ -48,10 +63,15 @@
 {
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 	if(responder && [responder isKindOfClass:[NSTextView class]]){
-		//Update the menu item's title to reflect the current action
+            if([[menuItem title] isEqualToString:RM_LINK_TITLE]){
+                // only make remove link menu item active if slection is a link.
+                return [self textViewSelectionIsLink:(NSTextView *)responder];
+            }else{
+                //Update the menu item's title to reflect the current action
 		[menuItem setTitle:([self textViewSelectionIsLink:(NSTextView *)responder] ? EDIT_LINK_TITLE : ADD_LINK_TITLE)];
 
 		return [(NSTextView *)responder isEditable];
+            }
 	}else{
 		return(NO); //Disable the menu item if a text field is not key
 	}
@@ -64,11 +84,34 @@
 	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
     NSResponder *responder = [keyWindow firstResponder];
 	
-    if([responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]){
+    if([responder isKindOfClass:[NSTextView class]] &&
+       ![[[(NSTextView *)responder window] title] isEqualToString:@"Link Editor"] &&
+       [(NSTextView *)responder isEditable]){
 		[SHLinkEditorWindowController showLinkEditorForTextView:(NSTextView *)responder
 													   onWindow:keyWindow
 												  showFavorites:YES
 												notifyingTarget:nil];
+    }
+}
+
+- (IBAction)removeFormattedLink:(id)sender
+{
+    NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
+    NSResponder *responder = [keyWindow firstResponder];
+    NSTextView  *textView = nil;
+    id		 selectedLink = nil;
+    
+    if([responder isKindOfClass:[NSTextView class]]){
+        textView = (NSTextView *)responder;
+        if([[textView textStorage] length] &&
+	   [textView selectedRange].location != NSNotFound &&
+	   [textView selectedRange].location != [[textView textStorage] length]){
+		NSRange selectionRange = [textView selectedRange];
+		selectedLink = [[textView textStorage] attribute:NSLinkAttributeName
+												 atIndex:selectionRange.location
+										  effectiveRange:&selectionRange];
+            [[textView textStorage] removeAttribute:NSLinkAttributeName range:selectionRange];
+        }
     }
 }
 
