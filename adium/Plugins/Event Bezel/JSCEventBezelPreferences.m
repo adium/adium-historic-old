@@ -105,8 +105,10 @@
 
 - (void)viewShouldClose
 {
+    [[owner notificationCenter] removeObserver:self];
     viewIsLoaded = NO;   
 }
+
 //Configure the preference view
 - (void)preferencesChanged:(NSNotification *)notification
 {
