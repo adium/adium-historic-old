@@ -30,8 +30,12 @@
 	//to be recognized properly.
 	[self setHelperAppForKey:"\pHelper¥aim" withInstance:ICInst];
 	[self setHelperAppForKey:"\pHelper¥ymsgr" withInstance:ICInst];
-        [self setHelperAppForKey:"\pHelper¥xmpp" withInstance:ICInst];
-	
+	[self setHelperAppForKey:"\pHelper¥xmpp" withInstance:ICInst];
+/*
+	[self setHelperAppForKey:"\pHelper¥jabber" withInstance:ICInst];
+	[self setHelperAppForKey:"\pHelper¥icq" withInstance:ICInst];
+	[self setHelperAppForKey:"\pHelper¥msn" withInstance:ICInst];
+*/	
     [[NSAppleEventManager sharedAppleEventManager] setEventHandler:self 
                                                        andSelector:@selector(handleURLEvent:withReplyEvent:)
                                                      forEventClass:kInternetEventClass
@@ -77,6 +81,7 @@
         if([[url scheme] isEqualToString:@"aim"]){
             if([[url host] caseInsensitiveCompare:@"goim"] == NSOrderedSame){
 				NSString *name = [[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] compactedString];
+				NSLog(@"Got %@",name);
 				if (name){
 					[self _openChatToContactWithName:name
 										   onService:@"AIM" 
@@ -101,7 +106,34 @@
             [self _openChatToContactWithName:name
                                                 onService:@"Jabber"
                                                 withMessage:nil];
-        }
+        }else if ([[url scheme] isEqualToString:@"jabber"]){
+			//Not an official URL scheme, used for internal applescript and such communication
+			NSString *name = [[url queryArgumentForKey:@"openChatToScreenname"] compactedString];
+			
+			if (name){
+				[self _openChatToContactWithName:name
+									   onService:@"Jabber"
+									 withMessage:nil];
+			}
+		}else if ([[url scheme] isEqualToString:@"icq"]){
+			//Not an official URL scheme, used for internal applescript and such communication
+			NSString *name = [[[url queryArgumentForKey:@"openChatToScreenname"] stringByDecodingURLEscapes] compactedString];
+			
+			if (name){
+				[self _openChatToContactWithName:name
+									   onService:@"ICQ"
+									 withMessage:nil];
+			}
+		}else if ([[url scheme] isEqualToString:@"msn"]){
+			//Not an official URL scheme, used for internal applescript and such communication
+			NSString *name = [[url queryArgumentForKey:@"openChatToScreenname"] compactedString];
+			
+			if (name){
+				[self _openChatToContactWithName:name
+									   onService:@"MSN"
+									 withMessage:nil];
+			}
+		}
     }
 }
 
