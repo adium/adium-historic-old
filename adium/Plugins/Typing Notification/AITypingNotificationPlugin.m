@@ -9,13 +9,15 @@
 #import <Adium/Adium.h>
 
 @interface AITypingNotificationPlugin (PRIVATE)
-- (void)_sendTyping:(BOOL)typing toChat:(AIChat *)chat;
+- (void)_sendTypingState:(AITypingState)typingState toChat:(AIChat *)chat;
 - (void)_processTypingInView:(NSText<AITextEntryView> *)inTextEntryView;
 @end
 
-#define CAN_RECEIVE_TYPING	@"CanReceiveTyping"
-#define WE_ARE_TYPING		@"WeAreTyping"
+#define CAN_RECEIVE_TYPING		@"CanReceiveTyping"
+#define WE_ARE_TYPING			@"WeAreTyping"
 
+#define ENTERED_TEXT_TIMER		@"EnteredTextTimer"
+#define ENTERED_TEXT_INTERVAL   3.0
 @implementation AITypingNotificationPlugin
 
 - (void)installPlugin
@@ -56,17 +58,49 @@
 
 - (void)_processTypingInView:(NSText<AITextEntryView> *)inTextEntryView
 {
-    AIChat		*chat = [inTextEntryView chat];
+    AIChat				*chat = [inTextEntryView chat];
+	NSMutableDictionary *statusDictionary = [chat statusDictionary];
+	
+    if(chat && [statusDictionary objectForKey:CAN_RECEIVE_TYPING] != nil){
+		NSNumber		*previousTypingNumber = [statusDictionary objectForKey:WE_ARE_TYPING];
+		AITypingState   previousTypingState = (previousTypingNumber ? [previousTypingNumber intValue] : AINotTyping);
+		AITypingState   currentTypingState;
+		NSTimer			*enteredTextTimer;
 
-    if(chat && [[chat statusDictionary] objectForKey:CAN_RECEIVE_TYPING] != nil){
-        BOOL    previousTyping = [[[chat statusDictionary] objectForKey:WE_ARE_TYPING] boolValue];
-        BOOL    currentTyping = ([[inTextEntryView attributedString] length] != 0);
-        
-        if(previousTyping != currentTyping) [self _sendTyping:currentTyping toChat:chat];
+		//Invalidate any timer currently watching this chat for switching it to entered text
+		if (enteredTextTimer = [statusDictionary objectForKey:ENTERED_TEXT_TIMER]){
+			[enteredTextTimer invalidate];
+		}
+		
+	     
+		//Determine if this change indicated the user was typing or indicated the user had no longer entered text
+		if ([[inTextEntryView attributedString] length] != 0){
+			//The text just changed, and the length is non-zero; the user is therefore typing
+			currentTypingState = AITyping;
+			
+			//Schedule the switchover to "Entered Text" after ENTERED_TEXT_INTERVAL
+			enteredTextTimer = [NSTimer scheduledTimerWithTimeInterval:ENTERED_TEXT_INTERVAL
+																target:self
+															  selector:@selector(_switchToEnteredText:)
+															  userInfo:chat
+															   repeats:NO];
+			//Keep track of the timer object for early invalidation if necessary
+			[statusDictionary setObject:enteredTextTimer forKey:ENTERED_TEXT_TIMER];
+
+			
+		}else{
+			//The text just changed, and the length is zero; the user is therefore not typing and has not entered text
+			currentTypingState = AINotTyping;
+		}
+		
+		//We don't want to send the same typing value more than once
+        if(previousTypingState != currentTypingState) {
+			[self _sendTypingState:currentTypingState toChat:chat];
+		}
     }    
 }
 
-- (void)_sendTyping:(BOOL)typing toChat:(AIChat *)chat
+- (void)_sendTypingState:(AITypingState)typingState toChat:(AIChat *)chat
 {
     AIAccount		*account = [chat account];
     AIContentTyping	*contentObject;
@@ -75,17 +109,23 @@
     contentObject = [AIContentTyping typingContentInChat:chat
                                               withSource:account
                                              destination:nil
-                                                  typing:typing];
+											 typingState:typingState];
     [[adium contentController] sendContentObject:contentObject];
     
     //Remember the state
-    if(typing){ //Add 'typing' for this contact
-        [[chat statusDictionary] setObject:[NSNumber numberWithBool:1] forKey:WE_ARE_TYPING];
+    if(typingState != AINotTyping){ //Add 'typing' for this contact
+        [[chat statusDictionary] setObject:[NSNumber numberWithInt:typingState] forKey:WE_ARE_TYPING];
 
     }else{ //Remove 'typing' for this contact
         [[chat statusDictionary] removeObjectForKey:WE_ARE_TYPING];
 
     }
+}
+
+- (void)_switchToEnteredText:(NSTimer *)inTimer
+{
+	AIChat  *chat = [inTimer userInfo];
+	[self _sendTypingState:AIEnteredText toChat:chat];
 }
 
 - (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
@@ -98,8 +138,8 @@
     AIChat	*chat = [inTextEntryView chat];
 
     //Send a 'not-typing' message to this contact
-    if([[[chat statusDictionary] objectForKey:WE_ARE_TYPING] boolValue] && [[chat statusDictionary] objectForKey:CAN_RECEIVE_TYPING] != nil){
-        [self _sendTyping:NO toChat:chat];
+    if(([[[chat statusDictionary] objectForKey:WE_ARE_TYPING] intValue] != AINotTyping) && [[chat statusDictionary] objectForKey:CAN_RECEIVE_TYPING] != nil){
+        [self _sendTypingState:AINotTyping toChat:chat];
     }
 
     //We could choose to de-clear the contact for typing notifications here as well
