@@ -39,8 +39,6 @@
 - (void)drawGradientWithFirstColor:(NSColor*)color1 secondColor:(NSColor*)color2 inRect:(NSRect)rect;
 - (void)drawGradientWithFirstColor:(NSColor*)color1 secondColor:(NSColor*)color2 withOpacity:(float)inOpacity inBezierPath:(NSBezierPath*)inPath;
 - (NSAttributedString *)displayNameStringWithAttributes:(BOOL)applyAttributes inView:(AISCLOutlineView *)controlView;
-- (NSBezierPath *)bezierPathLabelOfSize:(NSSize)backgroundSize;
-- (NSBezierPath *)bezierPathLabelWithRect:(NSRect)bounds;
 - (float)displayViews:(NSArray *)viewArray inRect:(NSRect)drawRect onLeft:(BOOL)onLeft;
 - (float)labelEdgePaddingRequiredForLabelOfSize:(NSSize)backgroundSize;
 - (NSColor *)textColorInView:(AISCLOutlineView *)controlView;
@@ -265,7 +263,7 @@
 			}
 			
 			//Retrieve the label and shift it into position
-			pillPath = [self bezierPathLabelWithRect:labelRect];
+			pillPath = [NSBezierPath bezierPathWithRoundedRect:labelRect];
 			
 			//Fill the label
 			if(![outlineView useGradient]){
@@ -369,44 +367,6 @@
 - (float)labelEdgePaddingRequiredForLabelOfSize:(NSSize)backgroundSize
 {
 	return(backgroundSize.height / LABEL_PADDING_REDUCTION);  
-}
-
-//Returns a bezier path for our label
-- (NSBezierPath *)bezierPathLabelWithRect:(NSRect)bounds
-{
-	int 			innerLeft, innerRight, innerTop, innerBottom;
-	float 			centerY, circleRadius;
-	NSBezierPath	*pillPath;
-    
-	//Calculate some points
-	circleRadius = bounds.size.height / 2.0;
-	innerTop = bounds.origin.y;
-	innerBottom = bounds.origin.y + bounds.size.height;
-	centerY = (innerTop + innerBottom) / 2.0;
-
-	//Conpensate for our rounded caps
-	innerLeft = bounds.origin.x + circleRadius;
-	innerRight = (bounds.origin.x + bounds.size.width) - circleRadius;
-
-	//Create the subpath
-	pillPath = [NSBezierPath bezierPath];
-	[pillPath moveToPoint: NSMakePoint(innerLeft, innerTop)];
-
-	[pillPath appendBezierPathWithArcWithCenter:NSMakePoint(innerRight, centerY)
-										 radius:circleRadius
-									 startAngle:270
-									   endAngle:90
-									  clockwise:NO];
-
-	[pillPath appendBezierPathWithArcWithCenter:NSMakePoint(innerLeft, centerY)
-										 radius:circleRadius
-									 startAngle:90
-									   endAngle:270
-									  clockwise:NO];
-	
-	[pillPath closePath];
-
-	return(pillPath);
 }
 
 //Private NSCell method which needs to be overridden to do custom highlighting properly, regardless of the false claims of the documentation.
