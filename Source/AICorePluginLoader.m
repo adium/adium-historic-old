@@ -1,19 +1,26 @@
-/*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2004, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
-\---------------------------------------------------------------------------------------------------------/
-| This program is free software; you can redistribute it and/or modify it under the terms of the GNU
-| General Public License as published by the Free Software Foundation; either version 2 of the License,
-| or (at your option) any later version.
-|
-| This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
-| the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
-| Public License for more details.
-|
-| You should have received a copy of the GNU General Public License along with this program; if not,
-| write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-\------------------------------------------------------------------------------------------------------ */
+/* 
+Adium, Copyright 2001-2004, Adam Iser
+ 
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ General Public License as published by the Free Software Foundation; either version 2 of the License,
+ or (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License along with this program; if not,
+ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
-//$Id$
+/*
+ Core - Plugin Loader
+ 
+ Loads external plugins (Including plugins stored within our application bundle).  Also responsible for warning the
+ user of old or incompatable plugins.
+
+ */
+
 #import "AICorePluginLoader.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -25,14 +32,8 @@
 #define CONFIRMED_PLUGINS				@"Confirmed Plugins"
 
 @interface AICorePluginLoader (PRIVATE)
-- (void)unloadPlugins;
 - (void)loadPluginsFromPath:(NSString *)pluginPath confirmLoading:(BOOL)confirmLoading;
-- (void)loadPluginWithClass:(Class)inClass;
 @end
-
-#ifdef ALL_IN_ONE
-@class AIWebKitMessageViewPlugin, CBGaimServicePlugin, NEHTicTacToePlugin;
-#endif
 
 @implementation AIPluginController
 
@@ -45,6 +46,7 @@
 								   selector:@selector(adiumVersionWillBeUpgraded:) 
 									   name:Adium_VersionWillBeUpgraded
 									 object:nil];
+	[owner createResourcePathForName:EXTERNAL_PLUGIN_FOLDER];
 }
 
 //
@@ -63,38 +65,25 @@
 	}
 }
 
-- (void)adiumVersionWillBeUpgraded:(NSNotification *)notification
-{
-	//When the version is upgraded, re-request confirmation for external plugins.
-	[[NSUserDefaults standardUserDefaults] removeObjectForKey:CONFIRMED_PLUGINS];
-	
-	[[owner notificationCenter] removeObserver:self
-										  name:Adium_VersionWillBeUpgraded
-										object:nil];
-}
-
-//close
+//Give all external plugins a chance to close
 - (void)closeController
 {
-    [self unloadPlugins]; //Uninstall all the plugins
-}
-
-- (void)dealloc
-{
-    [pluginArray release]; pluginArray = nil;
-
-    [super dealloc];
+    NSEnumerator	*enumerator = [pluginArray objectEnumerator];
+    AIPlugin		*plugin;
+	
+    while((plugin = [enumerator nextObject])){
+        [plugin uninstallPlugin];
+    }
+	
+    [pluginArray release];
+	pluginArray = nil;
 }
 
 //Load all the plugins
 - (void)loadPluginsFromPath:(NSString *)pluginPath confirmLoading:(BOOL)confirmLoading
 {
-    NSArray		*pluginList;
+    NSArray		*pluginList = [[NSFileManager defaultManager] directoryContentsAtPath:pluginPath];
     int			loop;
-
-	//Get the directory listing of plugins
-    [[NSFileManager defaultManager] createDirectoriesForPath:pluginPath];
-	pluginList = [[NSFileManager defaultManager] directoryContentsAtPath:pluginPath];
 
 	for(loop = 0;loop < [pluginList count];loop++){
 	    NSString 		*pluginName;
@@ -102,7 +91,7 @@
 	    AIPlugin		*plugin = nil;
 
 	    pluginName = [pluginList objectAtIndex:loop];
-	    //NSLog (@"Loading plugin: \"%@\"", pluginName);
+
 	    if([[pluginName pathExtension] caseInsensitiveCompare:EXTENSION_ADIUM_PLUGIN] == 0){
 
 			//
@@ -212,18 +201,6 @@
 	}
 }
 
-//Unload all the plugins
-- (void)unloadPlugins
-{
-    NSEnumerator	*enumerator;
-    AIPlugin		*plugin;
-	
-    enumerator = [pluginArray objectEnumerator];
-    while((plugin = [enumerator nextObject])){
-        [plugin uninstallPlugin];
-    }
-	
-}
 
 // Returns YES if the named plugin exists. Does not imply that the plugin actually loaded or is functioning.
 - (BOOL)pluginEnabled:(NSString *)pluginName
@@ -237,6 +214,12 @@
 //	
 //	AILog(@"#### %@ enabled: in %d, out %d",pluginName,inBundle,inExternal);
 	return(YES/*inBundle || inExternal*/);	
+}
+
+//When the user upgrades to a new version, re-request confirmation of external plugins.
+- (void)adiumVersionWillBeUpgraded:(NSNotification *)notification
+{
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:CONFIRMED_PLUGINS];
 }
 
 @end
