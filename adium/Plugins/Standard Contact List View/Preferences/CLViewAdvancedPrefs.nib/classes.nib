@@ -37,6 +37,7 @@
             CLASS = ESCLViewAdvancedPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "checkBox_tooltips" = NSButton; 
                 "checkbox_borderless" = NSButton; 
                 "checkbox_outlineGroups" = NSButton; 
                 "checkbox_shadows" = NSButton; 

@@ -50,7 +50,7 @@
     [colorWell_contact setColor:[[preferenceDict objectForKey:KEY_SCL_CONTACT_COLOR] representedColor]];
     [colorWell_background setColor:[[preferenceDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColor]];
     [checkBox_showLabels setState:[[preferenceDict objectForKey:KEY_SCL_SHOW_LABELS] boolValue]];
-    
+	
     //Grid
     [checkBox_alternatingGrid setState:[[preferenceDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue]];
     [colorWell_grid setColor:[[preferenceDict objectForKey:KEY_SCL_GRID_COLOR] representedColor]];	
@@ -104,8 +104,7 @@
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_BACKGROUND_COLOR
                                               group:PREF_GROUP_CONTACT_LIST_DISPLAY];    
-
-    }
+	}
 }
 
 //Called in response to a font panel change

@@ -19,6 +19,7 @@
     IBOutlet	NSTextField		*textField_fontName;
     IBOutlet	NSButton		*checkBox_alternatingGrid;
     IBOutlet	NSButton		*checkBox_showLabels;
+	IBOutlet	NSButton		*checkBox_tooltips;
     IBOutlet	NSColorWell		*colorWell_contact;
     IBOutlet	NSColorWell		*colorWell_background;
     IBOutlet	NSColorWell		*colorWell_grid;

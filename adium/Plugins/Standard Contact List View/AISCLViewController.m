@@ -227,7 +227,7 @@
         BOOL		alternatingGrid = [[prefDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue];
         BOOL		customGroupColor = [[prefDict objectForKey:KEY_SCL_CUSTOM_GROUP_COLOR] boolValue];
         BOOL		boldGroups = [[prefDict objectForKey:KEY_SCL_BOLD_GROUPS] boolValue];
-        
+        		
         BOOL		showLabels = [[prefDict objectForKey:KEY_SCL_SHOW_LABELS] boolValue];
         BOOL		labelAroundContactOnly = [[prefDict objectForKey:KEY_SCL_LABEL_AROUND_CONTACT] boolValue];
         BOOL		outlineLabels = [[prefDict objectForKey:KEY_SCL_OUTLINE_LABELS] boolValue];
@@ -243,7 +243,8 @@
         
         float		alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
 		
-				
+		tooltipShouldDisplay = [[prefDict objectForKey:KEY_SCL_SHOW_TOOLTIPS] boolValue];
+
         //Contact and group fonts
         NSFont  *font = [[prefDict objectForKey:KEY_SCL_FONT] representedFont];
 		NSFont	*boldFont = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSBoldFontMask];
@@ -739,7 +740,7 @@
 - (void)mouseMovementTimer:(NSTimer *)inTimer
 {
 	NSPoint mouseLocation = [NSEvent mouseLocation];
-	if (NSPointInRect(mouseLocation,[[contactListView window] frame])){
+	if (tooltipShouldDisplay && NSPointInRect(mouseLocation,[[contactListView window] frame])){
 		//tooltipCount is used for delaying the appearence of tooltips.  We reset it to 0 when the mouse moves.  When
 		//the mouse is left still tooltipCount will eventually grow greater than TOOL_TIP_DELAY, and we will begin
 		//displaying the tooltips
