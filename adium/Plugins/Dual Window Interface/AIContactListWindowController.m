@@ -192,6 +192,16 @@
 		
         [self _configureAutoResizing];
     }
+
+    if([(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]){
+		if([(NSString *)[[notification userInfo] objectForKey:@"Key"] isEqualToString:KEY_SCL_BORDERLESS]){
+			[self retain];
+			[[adium interfaceController] closeContactList:nil];
+			[[adium interfaceController] showContactList:nil];
+			[self autorelease];
+		}
+	}
+
 }
 
 

@@ -661,13 +661,17 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 			
 			dragCell = [self tabAtPoint:lastClickLocation];
 			if(dragCell){
+				[self retain];
 				[dragCell retain];
+					
 				[self stopCursorTracking];
 				[[AICustomTabDragging sharedInstance] dragTabCell:dragCell
 											   fromCustomTabsView:self 
 														withEvent:theEvent 
 														selectTab:(![NSEvent cmdKey])];
+				
 				[dragCell release]; dragCell = nil;
+				[self autorelease];
 			}
 		}
 		
