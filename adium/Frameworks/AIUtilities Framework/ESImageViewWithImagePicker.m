@@ -183,6 +183,7 @@
 		}
 		[pickerController selectionChanged];
 		[[pickerController window] makeKeyAndOrderFront: nil];
+		NSLog(@"%@",[pickerController window]);
 	}
 }
 
@@ -192,20 +193,31 @@
 	//Update the NSImageView
 	[self setImage:image];
 	
-	//Inform the delegate
-	if (delegate && [delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]){
-		[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
-					   withObject:self
-					   withObject:image];
+	if (useNSImagePickerController)
+	{
+		//Inform the delegate
+		if (delegate && [delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]){
+			[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
+						   withObject:self
+						   withObject:image];
+		}
+		
+		//Add the image to the list of recent images
+		Class ipRecentPictureClass = NSClassFromString(@"NSIPRecentPicture"); //HACK so we don't crash on launch in 10.2
+		id recentPicture = [[[ipRecentPictureClass alloc] initWithOriginalImage:image] autorelease];
+		[recentPicture setCurrent];
+		[ipRecentPictureClass _saveChanges]; //Saves to ~/Library/Images/iChat Recent Pictures... but whatever, it works.
+
+		//Picker controller is closing
+		[pickerController release]; pickerController = nil;
 	}
-	
-	//Picker controller is closing
-	[pickerController release]; pickerController = nil;
 }
 
 // This is called if the user cancels an image selection
 - (void)imagePickerCanceled: (id) sender
 {
+	[[pickerController window] close];
+
 	//Picker controller is closing
 	[pickerController release]; pickerController = nil;
 }

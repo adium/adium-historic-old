@@ -15,8 +15,7 @@
    *                 ****** USE AT YOUR OWN RISK !!!! ******
  
    * Refers to parts of file:  /System/Library/Frameworks/AddressBook.framework/AddressBook and
-   *  .../AddressBook.framework/ImagePickerQTParts.bundle/Contents/MacOS/ 
- ImagePickerQTParts
+   *  .../AddressBook.framework/ImagePickerQTParts.bundle/Contents/MacOS/ImagePickerQTParts
    */
 
 #import <AppKit/AppKit.h>
@@ -41,13 +40,47 @@
 @end
 
 
+@interface NSIPRecentPicture:NSObject
+{
+    NSString *_originalImageName;
+    NSImage *_originalImage;
+    struct _NSRect _crop;
+    NSData *_smallIconData;
+}
+
++ pictureDirPath;
++ (int)maxRecents;
++ _infoFilePath;
++ (char)purgeExtras;
++ (void)_saveChanges;
++ recentPictures;
++ recentSmallIcons;
++ currentPicture;
++ (void)noCurrentPicture;
++ (void)removeAllButCurrent;
+- initWithOriginalImage:fp8 crop:(struct _NSRect)fp12 smallIcon:fp28;
+- initWithOriginalImage:fp8;
+- initWithInfo:fp8;
+- (void)dealloc;
+- _infoToSave;
+- originalImagePath;
+- originalImage;
+- croppedImage;
+- smallIcon;
+- (struct _NSRect)crop;
+- (void)setCrop:(struct _NSRect)fp8 smallIcon:fp24;
+- (void)_removePermanently;
+- (void)setCurrent;
+
+@end
+
 @interface NSImagePickerController:NSWindowController
 {
 	@private
 	id _imageView;
-	id *_layerSuperview;
+	id _layerSuperview;
 	NSSlider *_slider;
-	id *_recentMenu;
+	id _recentMenu;
 	NSButton *_cameraButton;
 	NSButton *_smallerButton;
 	NSButton *_largerButton;
@@ -59,7 +92,7 @@
 	struct _NSSize _minSize;
 	struct _NSSize _maxSize;
 	float _defaultSliderPos;
-	id *_recentPicture;
+	NSIPRecentPicture *_recentPicture;
 	char _changed;
 	char _changesAccepted;
 	char _takingPicture;
@@ -92,7 +125,7 @@
 - (void)setDelegate: anObject;
 
 	// Notify the controller that the selection for which we are setting the image
-	// has changed.  This causes the delegate to be asked for a new image and title
+	// has changed. This causes the delegate to be asked for a new image and title
 - (void)selectionChanged;
 
 
@@ -129,8 +162,8 @@
 - (void)sendCancelToOwner;
 
 	// Handles information pertaining to the recent pictures list
-- (void)setRecentPicture:fp8;
-- recentPicture;
+- (void)setRecentPicture:(NSIPRecentPicture *)ipRecentPicture;
+- (NSIPRecentPicture *)recentPicture;
 
 - (void)setViewImage:(NSSize)fp8;
 
