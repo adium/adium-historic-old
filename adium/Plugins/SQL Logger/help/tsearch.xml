@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<page>
+  <title>Installing the PostgreSQL tsearch contrib module</title>
+  <body>
+    <p>Installing the tsearch module for Adium/PostgreSQL is not very difficult.
+    These instructions assume you've either compiled it from source or
+    installed the package by Mark Liyanage.</p>
+    <p>The first thing to do is download the source from postgresql's website.
+    Get it from <a
+      href="http://www.postgresql.org/mirrors-ftp.html" class="offsite">http://www.postgresql.org/mirrors-ftp.html</a>.
+    Download the full version.  (About 10 megs.)  Unpack it with Stuffit
+    Expander or the command line.  Open up a Terminal window, and change into
+    the newly created "postgresql-7.3.2" directory.
+    To install any module, it needs to know where the original is stored.
+    Type </p>
+    <div class="tutorialcode">
+      <pre>./configure --without-readline</pre>
+    </div>
+    
+    <p>If you've installed Postgres using Fink, or have it in a nonstandard
+    location, you can add flags to tell the configure script where postgres
+    is.
+    The configure script should chug through for a few minutes, and then complete
+    successfully.
+    Then type </p>
+    <div class="tutorialcode">
+      <pre>cd contrib/tsearch</pre>
+    </div>
+    
+    <p>There are directions in the README file.
+      Type the following:</p>
+    <div class="tutorialcode">
+      <pre>make
+sudo make install
+psql <i>USERNAME</i> &lt; tsearch.sql</pre>
+    </div>
+    
+    <p>That's all it takes to install the module itself.
+    It's pretty simple to check that it's installed properly.
+    Type:</p>
+    <div class="tutorialcode">
+      <pre>psql
+\dT txtidx</pre>
+    </div>
+    <p>You should see something that looks like this:</p>
+    <div class="tutorialcode">
+      <pre>      List of data types
+ Schema |  Name  | Description 
+--------+--------+-------------
+ public | txtidx | 
+(1 row)</pre>
+    </div>
+    <p>If you do not see that, make sure your search path is set up correctly,
+    and includes "public"</p>
+    <p>To prepare the Adium message table to use tsearch indexing:
+    Switch directories into wherever you downloaded the tarball from my site.
+    In the "sql" folder, there's a script called "tsearch.sql".
+    Run it by typing </p>
+    <div class="tutorialcode">
+      <pre>psql &lt; tsearch.sql</pre>
+    </div>
+    <p>Tsearch indexing adds new datatypes to the table.  The first sql script adds them, and the second one specifically adds to the messages table, and creates an index on it.  If there are a lot of messages in this table, creating the index can take a few minutes to run.</p>
+    <p>tsearch also has a slightly different search syntax.
+    Before instaling this module, you would run a search by typing:</p>
+    <div class="tutorialcode">
+      <pre>select * from messages where message ~ 'search string';</pre>
+    </div>
+    <p>This would work, but will get very slow as table size increases.
+    With a properly set up tsearch module, you can search like this:</p>
+    <div class="tutorialcode">
+      <pre>select * from messages where message_idx ## 'search&amp;string';</pre>
+    </div>
+    <p>This method offers quite a bit more flexibility, because you can do
+    AND, OR, and NOT searches.  You can string them together in any way you
+    choose, and it respects parentheses.</p>
+    <div class="tutorialcode">
+      <pre>select * from messages where message_idx ## 'search&amp;string'; 
+  -- search AND string
+select * from messages where message_idx ## 'search|string'; 
+  --search OR string
+select * from messages where message_idx ## 'search&amp;!string'; 
+  -- search AND NOT string
+  select * from messages where message_idx ## 'search&amp;string&amp;(carnival&amp;clowns)';
+  -- search AND string AND BOTH carnival AND clowns</pre>
+    </div>
+    <p>search.jsp will check to see if the tsearch module is properly
+      installed, and use the slow form of a query if it isn't.</p>
+    <p>If the tsearch module is installed, boolean logic (AND/OR/NOT)
+    will work, and phrases in quotation marks will act as you would expect.
+    If a phrase is in quotation marks, regular expressions will work to the
+    extent PostgreSQL supports them.  ("^searchphrase" looks for the word
+    "searchphrase" at the beginning, "searchphrase$ looks for it at the end,
+    etc).  Check the PostgreSQL documentation for more info.</p>
+    <p>If the tsearch module is not installed, the regular expressions will
+    work all the time.  The AND/OR/NOT boolean logic will not.</p>
+</body>
+</page>
+
