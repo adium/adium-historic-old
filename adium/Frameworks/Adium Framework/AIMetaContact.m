@@ -127,7 +127,7 @@
 }
 - (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key
 {
-	return([[statusCacheDict objectForKey:key] string]);
+	return([[[statusCacheDict objectForKey:key] objectValue] string]);
 }
 
 //Sorting --------------------------------------------------------------------------------------------------------------
