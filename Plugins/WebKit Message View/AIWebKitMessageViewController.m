@@ -644,10 +644,6 @@ DeclareString(AppendNextMessage);
 		//Display the content
 		[self _processContentObject:content];
 
-		//Remember the last content inserted (Used mainly for combining consecutive messages)
-		[previousContent release];
-		previousContent = [content retain];
-
 		//Remove the content we just displayed from the queue
 		if ([newContent count]){
 			[newContent removeObjectAtIndex:0];
@@ -697,6 +693,7 @@ DeclareString(AppendNextMessage);
 											 withType:@"date_separator"];
 		//Add the date header
 		[self _addContentStatus:dateSeparator similar:NO];
+		[previousContent release]; previousContent = [dateSeparator retain];
 	}
 	
 	//Should we merge consecutive messages?
@@ -709,6 +706,7 @@ DeclareString(AppendNextMessage);
 	}else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
 		[self _addContentStatus:(AIContentStatus *)content similar:contentIsSimilar];
 	}
+	[previousContent release]; previousContent = [content retain];
 }
 
 //Append a content message
