@@ -399,5 +399,71 @@ Adium, Copyright 2001-2004, Adam Iser
 	}
 }
 
+//Default download locaiton --------------------------------------------------------------------------------------------
+#pragma mark Default download location
+- (NSString *) userPreferredDownloadFolder
+{
+	OSStatus		err = noErr;
+	ICInstance		inst = NULL;
+	ICFileSpec		folder;
+	unsigned long	length = kICFileSpecHeaderSize;
+	FSRef			ref;
+	unsigned char	path[1024];
+	
+	memset( path, 0, 1024 ); //clear path's memory range
+	
+	if( ( err = ICStart( &inst, 'AdiM' ) ) != noErr )
+		goto finish;
+	
+	ICGetPref( inst, kICDownloadFolder, NULL, &folder, &length );
+	ICStop( inst );
+	
+	if( ( err = FSpMakeFSRef( &folder.fss, &ref ) ) != noErr )
+		goto finish;
+	
+	if( ( err = FSRefMakePath( &ref, path, 1024 ) ) != noErr )
+		goto finish;
+	
+finish:
+		if( ! strlen( path ) )
+			return [@"~/Desktop" stringByExpandingTildeInPath];
+	
+	return [NSString stringWithUTF8String:path];
+}
+
+- (void)setUserPreferredDownloadFolder:(NSString *)path {
+	OSStatus		err = noErr;
+	ICInstance		inst = NULL;
+	ICFileSpec		*dir = NULL;
+	FSRef			ref;
+	AliasHandle		alias;
+	unsigned long	length = 0;
+	
+	if( ( err = FSPathMakeRef( [path UTF8String], &ref, NULL ) ) != noErr )
+		return;
+	
+	if( ( err = FSNewAliasMinimal( &ref, &alias ) ) != noErr )
+ 		return;
+	
+	length = ( kICFileSpecHeaderSize + GetHandleSize( (Handle) alias ) );
+	dir = malloc( length );
+	memset( dir, 0, length );
+	
+	if( ( err = FSGetCatalogInfo( &ref, kFSCatInfoNone, NULL, NULL, &dir -> fss, NULL ) ) != noErr )
+		return;
+	
+	memcpy( &dir -> alias, *alias, length - kICFileSpecHeaderSize );
+	
+	if( ( err = ICStart( &inst, 'AdiM' ) ) != noErr )
+		return;
+	
+	ICSetPref( inst, kICDownloadFolder, NULL, dir, length );
+	ICStop( inst );
+	
+	free( dir );
+	DisposeHandle( (Handle) alias );
+}
+
+
 @end
 

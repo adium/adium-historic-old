@@ -89,5 +89,6 @@ typedef enum {
 
 - (void)cancel;
 - (void)reveal;
+- (void)openFile;
 
 @end

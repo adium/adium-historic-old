@@ -87,6 +87,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		case AIPref_Advanced_Status:
 		case AIPref_Advanced_Service:
 		case AIPref_Advanced_Other: tabIdentifier = 9; break;
+		case AIPref_FileTransfer: tabIdentifier = 88; break;
 		default: tabIdentifier = 1; break;
 	}
 	tabViewItem = [tabView_category tabViewItemWithIdentifier:[NSString stringWithFormat:@"%i",tabIdentifier]];
@@ -169,8 +170,10 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 {
     int             selectedTab;
     NSTabViewItem   *tabViewItem;
+	
+	[super windowDidLoad];
 
-    //
+	//
     [outlineView_advanced setIndentationPerLevel:10];
     [coloredBox_advancedTitle setColor:[NSColor colorWithCalibratedWhite:0.0 alpha:0.15]];
  
@@ -182,11 +185,14 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     [self tabView:tabView_category willSelectTabViewItem:tabViewItem];
     [tabView_category selectTabViewItem:tabViewItem];    
 
-	//Enable the "Restore Defaults" Button
+ 	//Enable the "Restore Defaults" Button
 	[button_restoreDefaults setEnabled:YES];
 	
+	//Hide the toolbar toggle button, since this window needs a toolbar to be functional
+	[[[self window] standardWindowButton:NSWindowToolbarButton] setFrame:NSMakeRect(0,0,0,0)];
+
     //Center the window
-	[[self window] center];
+	[[self window] betterCenter];
 }
 
 //prevent the system from moving our window around
@@ -227,12 +233,21 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     while(pane = [enumerator nextObject]){
         [pane closeView];
     }
-    
+	
+	[super windowShouldClose:sender];
+
     //autorelease the shared instance
     [sharedPreferenceInstance autorelease]; sharedPreferenceInstance = nil;
 
     return(YES);
 }
+
+/*
+- (NSString *)adiumFrameAutosaveName
+{
+	return(@"PreferencesWindow");
+}
+*/
 
 //
 - (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
@@ -245,7 +260,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     if(tabView == tabView_category){
         switch(identifier){
             case 1:
-                [view_Accounts setPanes:[self _panesInCategory:AIPref_Accounts]];
+//                [view_Accounts setPanes:[self _panesInCategory:AIPref_Accounts]];
             break;
             case 2:
                 [view_ContactList setPanes:[self _panesInCategory:AIPref_ContactList]];
@@ -281,6 +296,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 					[outlineView_advanced selectRow:row byExtendingSelection:NO];
 				}
             break;
+			case 88:
+				[view_FileTransfer setPanes:[self _panesInCategory:AIPref_FileTransfer]];
+				break;
         }
 
 		//Update the selected toolbar item (10.3 or higher)
@@ -301,7 +319,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 - (int)tabView:(NSTabView *)tabView heightForTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	switch([[tabViewItem identifier] intValue]){
-		case 1: return([view_Accounts desiredHeight]); break;
+//		case 1: return([view_Accounts desiredHeight]); break;
 		case 2: return([view_ContactList desiredHeight]); break;
 		case 3: return([view_Messages desiredHeight]); break;
 		case 4: return([AIModularPaneCategoryView heightForTabView:tabView_status]); break;
@@ -310,6 +328,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		case 7: return([view_Emoticons desiredHeight]); break;
 		case 8: return([view_Keys desiredHeight]); break;
 		case 9: return(ADVANCED_PANE_HEIGHT); break;
+		case 88: return([view_FileTransfer desiredHeight]); break;
 		default: return(0); break;
 	}
 }
@@ -389,7 +408,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
             [loadedPanes addObject:pane];
         }
     }
-    
+
     //Alphabetize them
     [paneArray sortUsingSelector:@selector(compare:)];
     
