@@ -35,6 +35,7 @@ function RandomActionShot($numberOfShots)
     $thumbsDir = "images/actionthumbs";
     $picturesDir = "images/actionshots";
     $availablePics = getDirList($picturesDir);
+    $chosenPics = array();
 
     //Try and choose $numberOfShots pictures
     while($numberOfShots > 0){
