@@ -91,21 +91,31 @@
 			[trackingDict setObject:inObject forKey:[NSNumber numberWithInt:tag]];
 			
 			//Load the name if appropriate
+			AIMutableOwnerArray *displayNameArray = [inObject displayArrayForKey:@"Display Name"];
+		
 			if (enableImport) {
-				NSString *displayName = [self nameForPerson:person];
+				NSString			*displayName = [self nameForPerson:person];
 				
 				//Apply the values 
-				NSString *oldValue = [[inObject displayArrayForKey:@"Display Name"] objectWithOwner:self];
+				NSString *oldValue = [displayNameArray objectWithOwner:self];
 				if (!oldValue || [oldValue isEqualToString:displayName]) {
-					[[inObject displayArrayForKey:@"Display Name"] setObject:displayName withOwner:self];
+					[displayNameArray setObject:displayName withOwner:self];
 					modifiedAttributes = [NSArray arrayWithObject:@"Display Name"];
 				}
 			} else {
 				//Clear any stored value
-				if ([[inObject displayArrayForKey:@"Display Name"] objectWithOwner:self]) {
-					[[inObject displayArrayForKey:@"Display Name"] setObject:nil withOwner:self];
+				if ([displayNameArray objectWithOwner:self]) {
+					[displayNameArray setObject:nil withOwner:self];
 					modifiedAttributes = [NSArray arrayWithObject:@"Display Name"];
 				}
+			}
+			
+			//If we changed anything, request an update of the alias / long display name
+			if (modifiedAttributes){
+				[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+														  object:inObject
+														userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:silent]
+																							 forKey:@"Notify"]];
 			}
 		}
 		
