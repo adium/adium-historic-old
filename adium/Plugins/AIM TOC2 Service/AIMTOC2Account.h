@@ -15,7 +15,7 @@
 
 @class AISocket, AIGroup, AIMTOC2AccountViewController;
 
-@interface AIMTOC2Account : AIAccount <AIAccount_Content, NSURLHandleClient> {
+@interface AIMTOC2Account : AIAccount <AIAccount_Content, AIAccount_List, NSURLHandleClient> {
     IBOutlet		NSTextView	*textView_trafficWatchDEBUG;
     IBOutlet		NSTextField	*textField_trafficSendDEBUG;
     
