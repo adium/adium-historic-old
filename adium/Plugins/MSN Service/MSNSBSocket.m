@@ -36,7 +36,7 @@
     return (sock);
 }
 
-//returns true if this is a "chat" (and we should display a list of people)
+//returns NO if this is a "chat" (and we should display a list of people)
 - (BOOL)isChat
 {
     return ([participantsDict count] >= 2);
@@ -60,14 +60,14 @@
 
                 if([command isEqualToString:@"MSG"]) //this needs to be outsourced to another part of the function, because we have to read in the payload length.
                 {
-                    receivingPayload = TRUE;
+                    receivingPayload = YESYES;
                     [tempInfoDict setObject:[NSNumber numberWithInt:[[message lastObject] intValue]] forKey:@"LoadLength"];
                     [tempInfoDict setObject:[NSString stringWithCString:[theData bytes] length:[theData length]-2] forKey:@"CmdString"];
                 }
                 else if([command isEqualToString:@"ANS"])
                 {
                     NSLog (@"ANS OK command received (OK assumed)");
-                    sendMessages = TRUE;
+                    sendMessages = YES;
                 }
                 else if([command isEqualToString:@"JOI"])
                 {
@@ -114,7 +114,7 @@
             unsigned short loadLength = [[tempInfoDict objectForKey:@"LoadLength"] intValue];
 
             if([socket getData:&theData ofLength:loadLength remove:YES])
-            {	// AISocket will cache the data and return FALSE until it has retrieved the entire payload
+            {	// AISocket will cache the data and return NO until it has retrieved the entire payload
                 NSLog (@"Received payload of length %d. Payload:\n%@", loadLength, [NSString stringWithCString:[theData bytes] length:[theData length]]);
                 NSArray *message = [[tempInfoDict objectForKey:@"CmdString"] componentsSeparatedByString:@" "];
                 NSString *command = [message objectAtIndex:0];
@@ -172,7 +172,7 @@
                 //go back to reading
                 [tempInfoDict removeObjectForKey:@"CmdString"];
                 [tempInfoDict removeObjectForKey:@"LoadLength"];
-                receivingPayload = FALSE;
+                receivingPayload = NO;
             }
         }
 
@@ -183,17 +183,17 @@
         while (curCommand < [packetsToSend count]){
             NSString	*sendMe = [packetsToSend objectAtIndex:curCommand];
             NSString	*commandBeingSent = nil;
-            BOOL		sendIt = TRUE;
+            BOOL		sendIt = YES;
 
             // Check to see if we should send this
             if ([sendMe length] >= 3) {
                 commandBeingSent = [sendMe substringToIndex:3];
 
-                if (sendMessages == FALSE) {
+                if (sendMessages == NO) {
                     if ([commandBeingSent isEqualToString:@"MSG"])
-                        sendIt = FALSE;
+                        sendIt = NO;
                     /*else if ([commandBeingSent isEqualToString:@"ANS"]))
-                        sendMessages = TRUE;*/	// Should wait for OK
+                        sendMessages = YES;*/	// Should wait for OK
                 }
             }
 
@@ -204,7 +204,7 @@
                 // improperly.
                 //[packetsToSend removeObjectAtIndex:curCommand]
                 [packetsToSend addObject:@"OUT"];
-                sendIt = FALSE;
+                sendIt = NO;
                 NSLog (@"Move 'OUT' to end of queue. (should only happen once)");
             }
 
@@ -274,8 +274,8 @@
     participantsDict = [[NSMutableDictionary alloc] init];
     packetsToSend = [[NSMutableArray alloc] init];
     tempInfoDict = [[NSMutableDictionary alloc] init];
-    sendMessages = FALSE;
-    receivingPayload = FALSE;
+    sendMessages = NO;
+    receivingPayload = NO;
     
     return self;
 }
@@ -292,7 +292,7 @@
             fName = @"";
         [participantsDict	setObject:fName forKey:handle];
             // We might attach info later, but right now, I can't think of any.
-        sendMessages = TRUE;
+        sendMessages = YES;
     }
 }
 
@@ -302,7 +302,7 @@
         [participantsDict	removeObjectForKey:handle];
             // We might attach info later, but right now, I can't think of any.
         if ([participantsDict count] == 0) {
-            sendMessages = FALSE;
+            sendMessages = NO;
             [self sendPacket:@"OUT"];
         }
     }
