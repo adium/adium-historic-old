@@ -43,19 +43,22 @@
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if([[[adium preferenceController] preferenceForKey:KEY_STATUS_MENU_ITEM_ENABLED group:PREF_GROUP_STATUS_MENU_ITEM] boolValue]){
-        //If it hasn't been created yet, create it. Otherwise, tell it to show itself.
-        if(!itemController){
-            itemController = [CBStatusMenuItemController statusMenuItemController];
-        }else{
-            [itemController showStatusItem];
-        }
-    }else{
-        //if it exists, tell it to hide itself
-        if(itemController){
-            [itemController hideStatusItem];
-        }
-    }
+	if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_STATUS_MENU_ITEM]){
+		NSLog(@"prefs changed %@",notification);		
+		if([[[adium preferenceController] preferenceForKey:KEY_STATUS_MENU_ITEM_ENABLED group:PREF_GROUP_STATUS_MENU_ITEM] boolValue]){
+			//If it hasn't been created yet, create it. Otherwise, tell it to show itself.
+			if(!itemController){
+				itemController = [CBStatusMenuItemController statusMenuItemController];
+			}else{
+				[itemController showStatusItem];
+			}
+		}else{
+			//if it exists, tell it to hide itself
+			if(itemController){
+				[itemController hideStatusItem];
+			}
+		}
+	}
 }
 
 @end
