@@ -16,10 +16,6 @@
 
 #import <Adium/AIPlugin.h>
 
-#define ITUNER_DEFAULT_PREFS           @"iTunesIntegrationPrefs"
-#define PREF_GROUP_ITUNER              @"iTunes Integration"
-#define SCRIPTS_MENU_NAME              @"Insert Script"
-
 @class NDComponentInstance;
 @protocol AIContentFilter, NDAppleScriptObjectSendEvent, NDAppleScriptObjectActive;
 
