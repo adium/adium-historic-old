@@ -18,6 +18,7 @@
 #define USER_ICON_CACHE_PATH    @"~/Library/Caches/Adium"
 #define USER_ICON_CACHE_NAME    @"UserIcon_%@"
 
+#define AUTO_RECONNECT_DELAY	2.0	//Delay in seconds
 
 @interface CBGaimAccount (PRIVATE)
 - (AIChat*)_openChatWithHandle:(AIHandle*)handle andConversation:(GaimConversation*)conv;
@@ -27,6 +28,7 @@
 - (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer;
 - (void)connect;
 - (void)disconnect;
+- (void)autoReconnectAfterDelay:(int)delay;
 - (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle;
 - (NSString *)_userIconCachePath;
 - (void)setTypingFlagOfHandle:(AIHandle *)handle to:(BOOL)typing;
@@ -312,13 +314,14 @@
     handleDict = [[NSMutableDictionary alloc] init];
     chatDict = [[NSMutableDictionary alloc] init];
     filesToSendArray = [[NSMutableArray alloc] init];
-    
+
     //create an initial gaim account
     account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
     gaim_accounts_add(account);
     gc = NULL;
     NSLog(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
     signonTimer = nil;
+    password = nil;
     
     //ensure our user icon cache path exists
     [AIFileUtilities createDirectory:[USER_ICON_CACHE_PATH stringByExpandingTildeInPath]];
@@ -843,19 +846,6 @@
     [[adium contactController] handlesChangedForAccount:self];
 }
 
-- (void)accountConnectionDisconnected
-{
-    [[adium accountController] 
-        setProperty:[NSNumber numberWithInt:STATUS_OFFLINE]
-             forKey:@"Status" account:self];
-    
-    if (signonTimer != nil) {
-        [signonTimer invalidate];
-        [signonTimer release];
-        signonTimer = nil;
-    }
-}
-
 //connecting / disconnecting
 - (void)connect
 {
@@ -868,13 +858,17 @@
 {
     if(inPassword && [inPassword length] != 0)
     {
+        if(password != inPassword){
+            [password release]; password = [inPassword copy];
+        }
+        
         //now we start to connect
         [[adium accountController] 
             setProperty:[NSNumber numberWithInt:STATUS_CONNECTING]
                  forKey:@"Status" account:self];
         
         //setup the account, get things ready
-        gaim_account_set_password(account, [inPassword UTF8String]);
+        gaim_account_set_password(account, [password UTF8String]);
         
         //configure at sign on time so we get the latest settings from the system
         if ([(CBGaimServicePlugin *)service configureGaimProxySettings]) {
@@ -909,7 +903,6 @@
             gaim_account_set_proxy_info(account,proxy_info);
         }
         //NSLog(@"%i %s %i %s %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username,proxy_info->password);
-        //NSLog(@"%i %i",gaim_proxy_info_get_type(proxy_info) == GAIM_PROXY_NONE,gaim_proxy_info_get_type(proxy_info) == GAIM_PROXY_SOCKS5);
         
         gc = gaim_account_connect(account);
     }
@@ -960,6 +953,57 @@
     account = gaim_account_new([[self UID] UTF8String], [self protocolPlugin]);
     gaim_accounts_add(account);
     [(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
+}
+
+//Called automatically by gaimServicePlugin whenever we disconnected for any reason
+- (void)accountConnectionDisconnected
+{
+    ACCOUNT_STATUS status = [[[adium accountController] propertyForKey:@"Status" account:self] intValue];
+    
+    [[adium accountController] 
+        setProperty:[NSNumber numberWithInt:STATUS_OFFLINE]
+             forKey:@"Status" account:self];
+    
+    if (signonTimer != nil) {
+        [signonTimer invalidate];
+        [signonTimer release];
+        signonTimer = nil;
+    }
+    
+    //If adium's status for the account was Online, we were disconnected unexpectedly
+    if (status == STATUS_ONLINE) {
+        //clean up
+        [self disconnect];
+        //reconnect
+        [self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
+    }
+}
+
+// Auto-Reconnect -------------------------------------------------------------------------------------
+//Attempts to auto-reconnect (after an X second delay)
+- (void)autoReconnectAfterDelay:(int)delay
+{
+    //Install a timer to autoreconnect after a delay
+    [NSTimer scheduledTimerWithTimeInterval:delay
+                                     target:self
+                                   selector:@selector(autoReconnectTimer:)
+                                   userInfo:nil
+                                    repeats:NO];
+    
+    NSLog(@"Auto-Reconnect in %i seconds",delay);
+}
+
+//
+- (void)autoReconnectTimer:(NSTimer *)inTimer
+{
+    //If we're still offline, continue with the reconnect
+    if([[[adium accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_OFFLINE){
+        
+        NSLog(@"Attempting Auto-Reconnect");
+        
+        //Instead of calling connect, we directly call the second phase of connecting, passing it the user's password.  This prevents users who don't keychain passwords from having to enter them for a reconnect.
+        [self finishConnect:password];
+    }
 }
 
 /*****************************************************/
