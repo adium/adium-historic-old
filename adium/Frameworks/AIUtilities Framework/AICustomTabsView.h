@@ -15,36 +15,43 @@
 
 #import <Cocoa/Cocoa.h>
 
-#define AITabView_DidChangeOrderOfItems		@"AITabView_DidChangeOrderOfItems"
-#define AITabView_DidChangeSelectedItem		@"AITabView_DidChangeSelectedItem"
-#define AITabView_DidChangeNumberOfItems	@"AITabView_DidChangeNumberOfItems"
+@class AICustomTabCell, AICustomTabsView;
 
-@class AICustomTab;
+@protocol AICustomTabsViewDelegate <NSObject>
+- (void)customTabView:(AICustomTabsView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;
+- (void)customTabView:(AICustomTabsView *)tabView shouldCloseTabViewItem:(NSTabViewItem *)tabViewItem;
+- (void)customTabViewDidChangeNumberOfTabViewItems:(AICustomTabsView *)TabView;
+- (void)customTabViewDidChangeOrderOfTabViewItems:(AICustomTabsView *)TabView;
+- (NSMenu *)customTabView:(AICustomTabsView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem;
+@end
 
 @interface AICustomTabsView : NSView {
     IBOutlet	NSTabView	*tabView;
 
-    NSMutableArray	*tabArray;
-    AICustomTab		*selectedCustomTab;
+    NSMutableArray	*tabCellArray;
+    AICustomTabCell	*selectedCustomTabCell;
 
     //Images
-    NSImage		*tabBackground;
     NSImage		*tabDivider;
-    
+
     //Dragging
     NSImage		*dragImage;
     NSSize		dragInitialOffset;	//Offset of the cursor on the drag image
-    AICustomTab		*dragTab;
+    AICustomTabCell	*dragTabCell;
 
+    BOOL		draggingATabCell;
     BOOL		tabHasBeenDragged;
     BOOL		viewsRearranging;	//YES if our views are currently animating/rearranging
 
     int			tabXOrigin;
 
+    NSPoint		lastClickLocation;
+
+    //Delegate
+    id <AICustomTabsViewDelegate>	delegate;
 }
 
-- (void)beginDragOfTab:(AICustomTab *)inTab fromOffset:(NSSize)inOffset;
-- (void)updateDragAtOffset:(int)inOffset;
-- (BOOL)concludeDrag;
+- (void)removeTabViewItem:(NSTabViewItem *)tabViewItem;
 
 @end
+

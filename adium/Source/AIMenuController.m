@@ -15,6 +15,7 @@
 
 #import "AIMenuController.h"
 #import <AIUtilities/AIUtilities.h>
+#import <Adium/Adium.h>
 
 @interface AIMenuController (PRIVATE)
 @end
@@ -37,6 +38,7 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
     //Set up our contextual menu stuff
     contextualMenu = [[NSMenu alloc] init];
     contextualMenuItemDict = [[NSMutableDictionary alloc] init];
+    contactualMenuContact = nil;
 }
 
 //close
@@ -47,7 +49,8 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
 
 - (void)dealloc
 {
-    [locationArray release]; locationArray = nil;
+    [locationArray release];
+    [contactualMenuContact release];
 
     [super dealloc];
 }
@@ -139,7 +142,7 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
 }
 
 //Pass an array of NSNumbers corresponding to the desired contextual menu locations
-- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray
+- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forContact:(AIListContact *)inContact
 {
     NSEnumerator	*enumerator;
     NSNumber		*location;
@@ -149,6 +152,10 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
     
     //Remove all items from the existing menu
     [contextualMenu removeAllItems];
+
+    //Remember what our menu is configured for
+    [contactualMenuContact release];
+    contactualMenuContact = [inContact retain];
 
     //Process each specified location
     enumerator = [inLocationArray objectEnumerator];
@@ -169,6 +176,11 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  9,  10,11,12,  14,15,16,  17
     }
 
     return(contextualMenu);
+}
+
+- (AIListContact *)contactualMenuContact
+{
+    return(contactualMenuContact);
 }
 
 

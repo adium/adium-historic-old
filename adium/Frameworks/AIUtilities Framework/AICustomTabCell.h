@@ -16,44 +16,40 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface AISystemTabRendering : NSObject {
+@interface AICustomTabCell : NSCell {
+    //Images
+    NSImage		*tabBackLeft;
+    NSImage		*tabBackMiddle;
+    NSImage		*tabBackRight;
+    NSImage		*tabFrontLeft;
+    NSImage		*tabFrontMiddle;
+    NSImage		*tabFrontRight;
+    NSImage		*tabCloseFront;
+    NSImage		*tabCloseFrontPressed;
     
+    //Properties
+    BOOL		selected;
+    BOOL		depressed;
+    BOOL		dragging;
+
+    NSRect		closeButtonRect;
+    BOOL		trackingClose;
+    BOOL		hoveringClose;
+    
+    NSTrackingRectTag	trackingRectTag;
+    NSTabViewItem	*tabViewItem;
+    NSSize		oldSize;
+
+    NSRect		frame;
 }
 
-+ (NSImage *)tabFrontLeft;
-+ (NSImage *)tabFrontMiddle;
-+ (NSImage *)tabFrontRight;
-
-+ (NSImage *)tabBackLeft;
-+ (NSImage *)tabBackMiddle;
-+ (NSImage *)tabBackRight;
-
-+ (NSImage *)tabPushLeft;
-+ (NSImage *)tabPushMiddle;
-+ (NSImage *)tabPushRight;
-
-+ (NSImage *)tabBackground;
-
-@end
-
-@interface AIFakeTabView : NSTabView {
-
-}
-
-@end
-
-@interface AIFakeTabViewItem : NSTabViewItem {
-    NSTabState		tabState;
-}
-
-- (void)setState:(NSTabState)inTabState;
-
-@end
-
-@interface AIFakeWindow : NSWindow {
-    BOOL		isKey;
-}
-
-- (void)setIsKey:(BOOL)inIsKey;
++ (id)customTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
+- (void)setSelected:(BOOL)inSelected;
+- (NSTabViewItem *)tabViewItem;
+- (NSSize)size;
+- (NSComparisonResult)compareWidth:(AICustomTabCell *)tab;
+- (void)setFrame:(NSRect)inFrame;
+- (NSRect)frame;
+- (BOOL)willTrackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView;
 
 @end

@@ -317,7 +317,12 @@
     [self _endTrackingMouse];
 
     //Return the context menu
-    return([[owner menuController] contextualMenuWithLocations:[NSArray arrayWithObjects: [NSNumber numberWithInt:Context_Contact_Manage], [NSNumber numberWithInt:Context_Contact_Action], [NSNumber numberWithInt:Context_Contact_NegativeAction], [NSNumber numberWithInt:Context_Contact_Additions], nil]]);
+    return([[owner menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
+        [NSNumber numberWithInt:Context_Contact_Manage],
+        [NSNumber numberWithInt:Context_Contact_Action],
+        [NSNumber numberWithInt:Context_Contact_NegativeAction],
+        [NSNumber numberWithInt:Context_Contact_Additions], nil]
+                                                    forContact:[contactListView contact]]);
 }
 
 

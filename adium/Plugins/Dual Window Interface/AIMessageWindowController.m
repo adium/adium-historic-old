@@ -148,10 +148,6 @@
 //    [[self window] setShowsResizeIndicator:NO];
     [[self window] setBottomCornerRounded:NO]; //Sneaky lil private method
 
-
-    //observe
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabViewDidChangeOrderOfItems:) name:AITabView_DidChangeOrderOfItems object:tabView_messages];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabViewDidChangeSelectedItem:) name:AITabView_DidChangeSelectedItem object:tabView_messages];
 }
 
 //called as the window closes
@@ -197,24 +193,54 @@
 }
 
 
-//Notifications ---------------------------------------------------------------
-//We relay these notifications from the tab view to the interface
-- (void)tabViewDidChangeOrderOfItems:(NSNotification *)notification
+//Tabs Delegate ---------------------------------------------------------------
+- (NSMenu *)customTabView:(AICustomTabsView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem
 {
+    AIListObject	*selectedContact = [[(AIMessageTabViewItem *)tabViewItem messageViewController] listObject];
+
+    if([selectedContact isKindOfClass:[AIListContact class]]){
+        return([[owner menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
+            [NSNumber numberWithInt:Context_Contact_Manage],
+            [NSNumber numberWithInt:Context_Contact_Action],
+            [NSNumber numberWithInt:Context_Contact_NegativeAction],
+            [NSNumber numberWithInt:Context_Contact_Additions], nil]
+                                                        forContact:(AIListContact *)selectedContact]);
+        
+    }else{
+        return(nil);
+        
+    }
+    
+}
+
+- (void)customTabView:(AICustomTabsView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
+{
+    if(tabViewItem != nil){
+        [(AIMessageTabViewItem *)tabViewItem tabViewItemWasSelected]; //Let the tab know it was selected
+
+        if([[self window] isMainWindow]){ //If our window is main, set the newly selected container as active
+            [interface containerDidBecomeActive:(AIMessageTabViewItem *)tabViewItem];
+        }
+    }
+}
+
+- (void)customTabViewDidChangeNumberOfTabViewItems:(AICustomTabsView *)TabView
+{
+    //Ignored?
+}
+
+- (void)customTabViewDidChangeOrderOfTabViewItems:(AICustomTabsView *)TabView
+{
+    //Refresh interface menus
     [interface containerOrderDidChange];
 }
 
-- (void)tabViewDidChangeSelectedItem:(NSNotification *)notification
+- (void)customTabView:(AICustomTabsView *)tabView shouldCloseTabViewItem:(NSTabViewItem *)tabViewItem
 {
-    id <AIInterfaceContainer>	container = [[notification userInfo] objectForKey:@"TabViewItem"];
-
-    if(container != nil){
-        [(AIMessageTabViewItem *)container tabViewItemWasSelected]; //Let the tab know it was selected
-
-        if([[self window] isMainWindow]){ //If our window is main, set the newly selected container as active
-            [interface containerDidBecomeActive:container];
-        }
-    }
+    //Close the message tab
+    [[owner notificationCenter] postNotificationName:Interface_CloseMessage
+                                              object:[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat]
+                                            userInfo:nil];
 }
 
 @end

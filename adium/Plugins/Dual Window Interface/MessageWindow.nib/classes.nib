@@ -4,7 +4,7 @@
         {
             CLASS = AICustomTabsView; 
             LANGUAGE = ObjC; 
-            OUTLETS = {tabView = NSTabView; }; 
+            OUTLETS = {delegate = id; tabView = NSTabView; }; 
             SUPERCLASS = NSView; 
         }, 
         {
@@ -16,7 +16,7 @@
             ACTIONS = {closeWindow = id; }; 
             CLASS = AIMessageWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"image_test" = NSImageView; interface = id; "tabView_messages" = NSTabView; }; 
+            OUTLETS = {interface = id; "tabView_messages" = NSTabView; }; 
             SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = AIMiniToolbar; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
