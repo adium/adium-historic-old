@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 12 2003.
-//  $Id: ESFileTransferController.m,v 1.14 2004/07/02 03:02:29 evands Exp $
+//  $Id: ESFileTransferController.m,v 1.15 2004/07/09 22:52:18 evands Exp $
 
 #import "ESFileTransferController.h"
 
@@ -47,9 +47,9 @@
 	
 	[savePanel setTitle:[NSString stringWithFormat:@"Receive File from %@",[[fileTransfer contact] displayName]]];
 
-	[[owner notificationCenter] postNotificationName:FILE_TRANSFER_REQUEST
-											  object:fileTransfer 
-											userInfo:nil];
+	[[owner contactAlertsController] generateEvent:FILE_TRANSFER_REQUEST
+											object:[fileTransfer contact] 
+										  userInfo:fileTransfer];
 	
 	if ([savePanel runModalForDirectory:nil file:defaultName] == NSFileHandlingPanelOKButton) {
 		[fileTransfer setLocalFilename:[savePanel filename]];
@@ -91,25 +91,25 @@
 - (void)beganFileTransfer:(ESFileTransfer *)fileTransfer
 {
     NSLog(@"began a file transfer...");
-	[[owner notificationCenter] postNotificationName:FILE_TRANSFER_BEGAN
-											  object:fileTransfer 
-											userInfo:nil];	
+	[[owner contactAlertsController] generateEvent:FILE_TRANSFER_BEGAN
+											object:[fileTransfer contact] 
+										  userInfo:fileTransfer];
 }
 
 - (void)transferCanceled:(ESFileTransfer *)fileTransfer
 {
-    NSLog(@"canceled a file transfer...");
-	[[owner notificationCenter] postNotificationName:FILE_TRANSFER_CANCELED
-											  object:fileTransfer 
-											userInfo:nil];		
+    NSLog(@"canceled a file transfer...");	
+	[[owner contactAlertsController] generateEvent:FILE_TRANSFER_CANCELED
+											object:[fileTransfer contact] 
+										  userInfo:fileTransfer];
 }
 
 - (void)transferComplete:(ESFileTransfer *)fileTransfer
 {
 	NSLog(@"Halleluyah, Jafar! Transfer complete.");
-	[[owner notificationCenter] postNotificationName:FILE_TRANSFER_COMPLETE
-											  object:fileTransfer 
-											userInfo:nil];
+	[[owner contactAlertsController] generateEvent:FILE_TRANSFER_COMPLETE
+											object:[fileTransfer contact] 
+										  userInfo:fileTransfer];
 }
 //Menu or context menu item for sending a file was selected - possible only when a listContact is selected
 - (IBAction)menuSendFile:(id)sender
