@@ -7,14 +7,11 @@
 
 #import "CBStatusMenuItemController.h"
 
-//@interface CBStatusMenuItemController (PRIVATE)
-//- (void)preferencesChanged:(NSNotification *)notification;
-//- (void)accountsChanged:(NSNotification *)notification;
-//- (void)contactsChanged:(NSNotification *)notification;
-//- (IBAction)toggleConnection:(id)sender;
-//- (IBAction)messageContact:(id)sender;
-//- (void)buildMenu;
-//@end
+@interface CBStatusMenuItemController (PRIVATE)
+- (void)accountsChanged:(NSNotification *)notification;
+- (void)buildMenu;
+- (void)selectAccount:(id)sender;
+@end
 
 @implementation CBStatusMenuItemController
 
@@ -22,11 +19,90 @@ CBStatusMenuItemController *sharedStatusMenuInstance = nil;
 
 + (CBStatusMenuItemController *)statusMenuItemController
 {
+    //Standard singelton stuff.
     if (!sharedStatusMenuInstance) {
-//		sharedStatusMenuInstance = [[self alloc] init];
+		sharedStatusMenuInstance = [[self alloc] init];
     }
     return (sharedStatusMenuInstance);
 }
+
+
+- (id)init
+{
+    if(self = [super init]){
+        //Create and set up the Status Item.
+        statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength] retain];
+        [statusItem setHighlightMode:YES];
+        [statusItem setImage:[NSImage imageNamed:@"adium.png" forClass:[self class]]];
+        if([NSApp isOnPantherOrBetter]){
+            [statusItem setAlternateImage:[NSImage imageNamed:@"adiumHighlight.png" forClass:[self class]]];
+        }
+        
+        //Create and install the menu
+        theMenu = [[NSMenu alloc] init];
+        [statusItem setMenu:theMenu];
+        
+        //Install our observers
+        [[adium notificationCenter] addObserver:self selector:@selector(accountsChanged:) name:Account_ListChanged object:nil];
+        //[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+        
+        //Build the menu!
+        [self buildMenu];
+    }
+    
+    return self;
+}
+
+- (void)dealloc
+{
+    //Remove our observers
+    //[[adium notificationCenter] removeObserver:self];
+    
+    //Release our objects
+//    [statusItem release]; /* XXX: Crash!*/
+    [theMenu release];
+        
+    //To the superclass!
+    [super dealloc];
+}
+
+- (void)accountsChanged:(NSNotification *)notification
+{
+    [self buildMenu];
+}
+
+- (void)buildMenu
+{
+    NSMenu          *newMenu;
+    NSArray         *accountMenuItems;
+    NSEnumerator    *numer;
+    NSMenuItem      *menuItem;
+    
+    newMenu = [[NSMenu alloc] init];
+    accountMenuItems = [[adium accountController] menuItemsForAccountsWithTarget:self];
+    numer = [accountMenuItems objectEnumerator];
+    menuItem = nil;
+    
+    //Add each account item to our menu
+    while(menuItem = [numer nextObject]){
+        NSLog(@"%@", menuItem);
+        [newMenu addItem:menuItem];
+    }
+    
+    //Remove the old one
+    [statusItem setMenu:nil];
+    [theMenu release];
+    
+    //This is our menu now!
+    theMenu = newMenu;
+    [statusItem setMenu:theMenu];
+}
+
+- (void)selectAccount:(id)sender
+{
+    
+}
+
 
 //- (id)init
 //{

@@ -7,13 +7,10 @@
 
 @interface CBStatusMenuItemController : AIObject
 {
-//    NSStatusItem    *statusItem;
-//    NSMenu          *theMenu;
-//    
-//    NSMutableArray  *accountsMenuItems;
-//    NSMutableDictionary  *groupsMenuItems;
+    NSStatusItem    *statusItem;
+    NSMenu          *theMenu;
 }
 
-//+ (CBStatusMenuItemController *)statusMenuItemController;
++ (CBStatusMenuItemController *)statusMenuItemController;
 
 @end
