@@ -57,6 +57,7 @@
 - (NSString *)longDisplayName;
 - (NSString *)displayServiceID;
 - (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey;
+- (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey create:(BOOL)create;
 
 //Prefs
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;
