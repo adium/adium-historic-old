@@ -24,7 +24,7 @@
 
 - (void)installPlugin
 {
-#warning I've disabled the LaTeX plugin for now, please update it.
+#warning I disabled the LaTeX plugin for now, please update it.
     /*
      - Update to use the new AITextAttachmentExtensions to correct logging, and stop assertions.
      - Update as a Displaying Content Filter
