@@ -50,16 +50,16 @@
 
 
 
-#define CONTACTS_USE_MOCKIE_CELL YES
-#define CONTACTS_USE_BUBBLE_CELL YES
+#define CONTACTS_USE_MOCKIE_CELL NO
+#define CONTACTS_USE_BUBBLE_CELL NO
 
-#define GROUPS_USE_MOCKIE_CELL		YES 
+#define GROUPS_USE_MOCKIE_CELL		NO 
 #define GROUPS_USE_GRADIENT_CELL	YES
-#define DRAW_ALTERNATING_GRID	NO
+#define DRAW_ALTERNATING_GRID	YES
 #define ALTERNATING_GRID_COLOR	[NSColor colorWithCalibratedRed:0.926 green:0.949 blue:0.992 alpha:1.0]
 
-#define BACKGROUND_ALPHA		0.0
-#define BACKGROUND_COLOR		[NSColor colorWithCalibratedRed:0.7 green:0.8 blue:0.9 alpha:BACKGROUND_ALPHA]
+#define BACKGROUND_ALPHA		1.0
+#define BACKGROUND_COLOR		[NSColor colorWithCalibratedRed:1.0 green:1.0 blue:1.0 alpha:BACKGROUND_ALPHA]
 
 
 @interface AIListWindowController (PRIVATE)
