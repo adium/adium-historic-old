@@ -26,6 +26,10 @@
 #define	AIM_ERRORS_FILE		@"AIMErrors"	//Filename of the AIM Errors plist
 #define MESSAGE_QUE_DELAY	2.0		//Delay before sending contact list changes to the server
 
+#define AUTO_RECONNECT_DELAY_PING_FAILURE	2.0	//Delay in seconds
+#define AUTO_RECONNECT_DELAY_SOCKET_DROP	2.0	//Delay in seconds
+#define AUTO_RECONNECT_DELAY_CONNECT_ERROR	5.0	//Delay in seconds
+
 static char *hash_password(const char * const password);
 
 @interface AIMTOC2Account (PRIVATE)
@@ -56,6 +60,8 @@ static char *hash_password(const char * const password);
 - (void)disconnect;
 - (void)updateContactStatus:(NSNotification *)notification;
 - (void)pingFailure:(NSTimer *)inTimer;
+- (void)autoReconnectAfterDelay:(int)delay;
+- (void)autoReconnectTimer:(NSTimer *)inTimer;
 @end
 
 @implementation AIMTOC2Account
@@ -70,6 +76,8 @@ static char *hash_password(const char * const password);
     outQue = [[NSMutableArray alloc] init];
 
     pingTimer = nil;
+    screenName = nil;
+    password = nil;
     
     //Delayed handle modification
     deleteDict = [[NSMutableDictionary alloc] init];
@@ -320,6 +328,9 @@ static char *hash_password(const char * const password);
 //Dealloc
 - (void)dealloc
 {
+    [screenName release];
+    [password release];
+
     [outQue release];
     [screenName release];
     [password release];
@@ -350,8 +361,14 @@ static char *hash_password(const char * const password);
 
         //Setup and init
         socket = [[AISocket socketWithHost:host port:port] retain];
-        screenName = [[propertiesDict objectForKey:@"Handle"] copy];
-        password = [inPassword copy];
+        if(screenName != [propertiesDict objectForKey:@"Handle"]){
+            [screenName release];
+            screenName = [[propertiesDict objectForKey:@"Handle"] copy];
+        }
+        if(password != inPassword){
+            [password release];
+            password = [inPassword copy];
+        }
 
         pingInterval = nil;
         firstPing = nil;
@@ -384,9 +401,6 @@ static char *hash_password(const char * const password);
     }
 
     //Clean up and close down
-    [screenName release]; screenName = nil;
-    [password release]; password = nil;
-
     [socket release]; socket = nil;
 
     [pingTimer invalidate];
@@ -419,6 +433,7 @@ static char *hash_password(const char * const password);
 
     if(![socket isValid]){
         [self disconnect];
+        [self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY_SOCKET_DROP];
         return;
     }
     
@@ -513,7 +528,9 @@ static char *hash_password(const char * const password);
                     [packet dataByte:2] != 0 ||
                     [packet dataByte:3] != 1){
                     NSLog(@"ADIUM_ERROR:Invalid Server Version");
-                    [self disconnect]; return;
+                    [self disconnect];
+                    [self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY_CONNECT_ERROR];
+                    return;
                 }
     
                 //Start the sequence generators
@@ -1045,6 +1062,8 @@ static char *hash_password(const char * const password);
             //We multiply the ping interval by 2.2 to allow the ping time to arrive late (and to prevent disconnect if a single ping is lost).  The closer the scale is to 1, the more sensitive the ping will become.  The further away from 1, the longer it will take to realize a ping failure.  With a ping of 50 seconds, 2.2 would disconnect us 110 seconds after the latest ping, so anywhere between 60 and 170 seconds after the connection is lost.  This is responsive enough to prove useful, but lax enough to handle fairly extreme lag (and even the loss of a ping packet).
             pingInterval *= 2.2;
 
+            NSLog(@"Server supports ping (%i)",(int)pingInterval);
+
             //Install a timer to auto-disconnect after the ping interval
             pingTimer = [[NSTimer scheduledTimerWithTimeInterval:pingInterval target:self selector:@selector(pingFailure:) userInfo:nil repeats:NO] retain];
         }
@@ -1057,6 +1076,7 @@ static char *hash_password(const char * const password);
     NSLog(@"Server's ping not recieved, disconnecting.");
 
     [self disconnect];
+    [self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY_PING_FAILURE];
 }
 
 
@@ -1203,6 +1223,32 @@ static char *hash_password(const char * const password) {
     }
 
     return(string);
+}
+
+//Attempts to auto-reconnect (after an X second delay)
+- (void)autoReconnectAfterDelay:(int)delay
+{
+    //Install a timer to autoreconnect after a delay
+    [NSTimer scheduledTimerWithTimeInterval:delay
+                                     target:self
+                                   selector:@selector(autoReconnectTimer:)
+                                   userInfo:nil
+                                    repeats:NO];
+
+    NSLog(@"Auto-Reconnect in %i seconds",delay);
+}
+
+//
+- (void)autoReconnectTimer:(NSTimer *)inTimer
+{
+    //If we're still offline, continue with the reconnect
+    if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_OFFLINE){
+
+        NSLog(@"Attempting Auto-Reconnect");
+
+        //Instead of calling connect, we directly call the second phase of connecting, passing it the user's password.  This prevents users who don't keychain passwords from having to enter them for a reconnect.
+        [self finishConnect:password];
+    }
 }
 
 
