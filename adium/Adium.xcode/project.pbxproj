@@ -8061,6 +8061,77 @@
 			settings = {
 			};
 		};
+		34F594B20664CEF700F01E8C = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 34F595060664CF1C00F01E8C;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34F595060664CF1C00F01E8C = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
+		};
+		34F59B760667A33900F01E8C = {
+			children = (
+				34F59B8A0667A38D00F01E8C,
+				34F59B8B0667A38D00F01E8C,
+				34F59BFD0667A99300F01E8C,
+			);
+			isa = PBXGroup;
+			name = "Notify UI";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F59B8A0667A38D00F01E8C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimNotifyEmailWindowController.h;
+			path = "Plugins/Gaim Service/ESGaimNotifyEmailWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F59B8B0667A38D00F01E8C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimNotifyEmailWindowController.m;
+			path = "Plugins/Gaim Service/ESGaimNotifyEmailWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F59B8C0667A38D00F01E8C = {
+			fileRef = 34F59B8A0667A38D00F01E8C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F59B8D0667A38D00F01E8C = {
+			fileRef = 34F59B8B0667A38D00F01E8C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F59BFD0667A99300F01E8C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = GaimNotifyEmailWindow.nib;
+			path = "Plugins/Gaim Service/GaimNotifyEmailWindow.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F59BFE0667A99300F01E8C = {
+			fileRef = 34F59BFD0667A99300F01E8C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34F77075052B72C4004616D4 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -8835,7 +8906,7 @@
 			children = (
 				6CED9083065B686A00A9C196,
 				4BDC4CC4066227DB00C28445,
-				C4FB7DA5066322E000C493F8,
+				34F594B20664CEF700F01E8C,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -12002,6 +12073,7 @@
 				34E3C8A70638D50F00AA3EF7,
 				341E886B0648FF1B00E0C828,
 				4B090DD0065CD50D00FF0528,
+				34F59B8C0667A38D00F01E8C,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12022,6 +12094,7 @@
 				3460EF7C06458C2C0099922D,
 				3460EF8006458C3C0099922D,
 				341E886D0648FF1B00E0C828,
+				34F59BFE0667A99300F01E8C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12063,6 +12136,7 @@
 				34E3C8A80638D50F00AA3EF7,
 				341E886C0648FF1B00E0C828,
 				4B090DCF065CD50D00FF0528,
+				34F59B8D0667A38D00F01E8C,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12155,6 +12229,7 @@
 				34327BD6060D2FE6003D7AD9,
 				34415880059F8F050019246B,
 				3441587A059F8EFC0019246B,
+				34F59B760667A33900F01E8C,
 				34C2CF8F0633405C0018E5D2,
 				34C2CFE6063340780018E5D2,
 			);
@@ -20403,21 +20478,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		C4FB7DA5066322E000C493F8 = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = C4FB7FF9066322F300C493F8;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C4FB7FF9066322F300C493F8 = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
 		};
 //C40
 //C41
