@@ -21,6 +21,7 @@
 	id  TrepiaService;
     id  YahooService;
 	id  YahooJapanService;
+	id	ZephyrService;
 }
 
 @end

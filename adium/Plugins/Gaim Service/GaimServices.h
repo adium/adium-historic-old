@@ -14,3 +14,4 @@
 #import "ESMSNService.h"
 #import "ESYahooService.h"
 #import "ESYahooJapanService.h"
+#import "ESZephyrService.h"
