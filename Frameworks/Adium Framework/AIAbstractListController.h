@@ -158,6 +158,8 @@ typedef enum {
 - (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate;
 
 - (void)setContactListRoot:(AIListObject *)newContactListRoot;
+- (AIListObject <AIContainingObject> *)contactListRoot;
+
 - (void)setHideRoot:(BOOL)inHideRoot;
 - (IBAction)performDefaultActionOnSelectedItem:(id)sender;
 
