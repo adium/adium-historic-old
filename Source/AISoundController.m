@@ -28,6 +28,8 @@
 #define PITCH						@"Pitch"
 #define RATE						@"Rate"
 
+#define	SOUND_CACHE_CLEANUP_INTERVAL	60.0
+
 @interface AISoundController (PRIVATE)
 - (void)_removeSystemAlertIDs;
 - (void)_coreAudioPlaySound:(NSString *)inPath;
@@ -37,6 +39,8 @@
 - (void)speakNext;
 - (void)initDefaultVoiceIfNecessary;
 - (void)_stopSpeakingNow;
+
+- (void)uncacheLastPlayer;
 @end
 
 @implementation AISoundController
@@ -45,12 +49,9 @@
 {
     soundCacheDict = [[NSMutableDictionary alloc] init];
     soundCacheArray = [[NSMutableArray alloc] init];
-    activeSoundThreads = 0;
-    soundLock = [[NSLock alloc] init];
-    soundThreadActive = NO;
-    systemSoundIDDict = [[NSMutableDictionary alloc] init];
+	soundCacheCleanupTimer = nil;
 
-    voiceArray = [[SUSpeaker voiceNames] retain];  //voiceArray will be in the same order that speaker expects
+    voiceArray = [[SUSpeaker voiceNames] retain];  //voiceArray will be in the same order that SUSpeaker expects
     speechArray = [[NSMutableArray alloc] init];
     resetNextTime = NO;
     speaking = NO;
@@ -203,14 +204,9 @@
 	
     //If the sound is not cached, load it
     if(!justCrushAlot){
-		//If the cache is full, remove the less recently used cached sound
+		//If the cache is full, remove the least recently used cached sound
 		if([soundCacheDict count] >= MAX_CACHED_SOUNDS){
-			NSString			*lastCachedPath = [soundCacheArray lastObject];
-			QTSoundFilePlayer   *gangstaPlaya = [soundCacheDict objectForKey:lastCachedPath];
-			
-			[gangstaPlaya stop];
-			[soundCacheDict removeObjectForKey:lastCachedPath];
-			[soundCacheArray removeLastObject];
+			[self uncacheLastPlayer];
 		}
 		
 		//Load and cache the sound
@@ -249,8 +245,40 @@
 		//reset the playback position and it will start playing there in the next run loop.
 		[justCrushAlot play];
     }
+	
+	if (!soundCacheCleanupTimer){
+		soundCacheCleanupTimer = [[NSTimer scheduledTimerWithTimeInterval:SOUND_CACHE_CLEANUP_INTERVAL
+																   target:self
+																 selector:@selector(soundCacheCleanup:)
+																 userInfo:nil
+																  repeats:YES] retain];
+	}else{
+		[soundCacheCleanupTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:SOUND_CACHE_CLEANUP_INTERVAL]];
+	}
 }
 
+//If sounds are cached when this fires, dealloc the one used least recently;
+//If none are cached, stop the timer that got us here.
+- (void)soundCacheCleanup:(NSTimer *)inTimer
+{
+	if ([soundCacheArray count]){
+		[self uncacheLastPlayer];
+	}else{
+		[soundCacheCleanupTimer invalidate]; [soundCacheCleanupTimer release]; soundCacheCleanupTimer = nil;
+	}
+}
+
+- (void)uncacheLastPlayer
+{
+	NSString			*lastCachedPath = [soundCacheArray lastObject];
+	QTSoundFilePlayer   *gangstaPlaya = [soundCacheDict objectForKey:lastCachedPath];
+	
+	if (![gangstaPlaya isPlaying]){
+		[gangstaPlaya stop];
+		[soundCacheDict removeObjectForKey:lastCachedPath];
+		[soundCacheArray removeLastObject];	
+	}
+}
 
 //NSSound - Not used --------------------------------------------------------------------------------------------------------------
 /*
