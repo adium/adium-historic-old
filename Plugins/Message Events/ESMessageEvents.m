@@ -54,6 +54,10 @@
 					message = [NSString stringWithFormat:AILocalizedString(@"Could not send because %@ is not available.",nil),[listObject formattedUID]];
 					break;
 				
+				case AIChatUserIsBlocked:
+					message = [NSString stringWithFormat:AILocalizedString(@"Could not send because %@ is blocked.",nil),[listObject formattedUID]];
+					break;
+
 				case AIChatMessageSendingTooLarge:
 					message = AILocalizedString(@"Could not send the last message because it was too large.",nil);
 					break;
