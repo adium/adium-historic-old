@@ -817,6 +817,12 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 						//Make sure the tag closes, since it may have a <BR /> which stopped the scanner at the space, not the >
 						[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
 
+						/* Skip any newlines following an HTML line break; if we have one we want to ignore the other.
+						 * This is generally unnecessary; it is a hack around a winAIM bug where 
+						 * newlines are sent as "<BR>\n\r" */
+						[scanner scanCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n\r"] 
+											intoString:nil];
+
 					//Bold
 					}else if([chunkString caseInsensitiveCompare:B] == NSOrderedSame){
 						[textAttributes enableTrait:NSBoldFontMask];
