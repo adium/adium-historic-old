@@ -21,8 +21,9 @@
 
 @implementation SHCaminoBookmarksImporter
 
-static NSMenu   *bookmarksMenu;
-static NSMenu   *bookmarksSupermenu;
+static NSMenu   *caminoBookmarksMenu;
+static NSMenu   *caminoBookmarksSupermenu;
+static NSMenu   *caminoTopMenu;
 
 + (id)newInstanceOfImporter
 {
@@ -42,9 +43,9 @@ static NSMenu   *bookmarksSupermenu;
     NSDictionary    *bookmarkDict = [NSDictionary dictionaryWithContentsOfFile:[CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath]];
     
     // remove our root menu, if it exists
-    if(bookmarksMenu){
-        [bookmarksMenu removeAllItems];
-        [bookmarksMenu release];
+    if(caminoBookmarksMenu){
+        [caminoBookmarksMenu removeAllItems];
+        [caminoBookmarksMenu release];
     }
     
     // store the modification date for future reference
@@ -52,11 +53,12 @@ static NSMenu   *bookmarksSupermenu;
     NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath] traverseLink:YES];
     lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
     
-    bookmarksMenu = [[[NSMenu alloc] initWithTitle:CAMINO_ROOT_MENU_TITLE] autorelease];
-    bookmarksSupermenu = bookmarksMenu;
+    caminoBookmarksMenu = [[[NSMenu alloc] initWithTitle:CAMINO_ROOT_MENU_TITLE] autorelease];
+    caminoBookmarksSupermenu = caminoBookmarksMenu;
+    caminoTopMenu = caminoBookmarksMenu;
     [self drillPropertyList:bookmarkDict];
     
-    return bookmarksMenu;
+    return caminoBookmarksMenu;
 }
 
 -(BOOL)bookmarksExist
@@ -94,23 +96,23 @@ static NSMenu   *bookmarksSupermenu;
                 [self menuItemFromDict:outObject];
             }else{
                 // if outObject is a list, then get the array it contains, then push the menu down.
-                bookmarksSupermenu = bookmarksMenu;
-                bookmarksMenu = [[NSMenu alloc] initWithTitle:[(NSDictionary *)outObject objectForKey:CAMINO_DICT_TITLE_KEY]];
+                caminoBookmarksSupermenu = caminoBookmarksMenu;
+                caminoBookmarksMenu = [[[NSMenu alloc] initWithTitle:[(NSDictionary *)outObject objectForKey:CAMINO_DICT_TITLE_KEY]] autorelease];
                 
-                NSMenuItem *caminoSubmenuItem = [[NSMenuItem alloc] initWithTitle:[bookmarksMenu title]
+                NSMenuItem *caminoSubmenuItem = [[[NSMenuItem alloc] initWithTitle:[caminoBookmarksMenu title]
                                                                             target:owner
                                                                             action:nil
-                                                                     keyEquivalent:@""];
-                [bookmarksSupermenu addItem:[caminoSubmenuItem retain]];
-                [bookmarksSupermenu setSubmenu:[bookmarksMenu retain] forItem:caminoSubmenuItem];
+                                                                     keyEquivalent:@""] autorelease];
+                [caminoBookmarksSupermenu addItem:[caminoSubmenuItem retain]];
+                [caminoBookmarksSupermenu setSubmenu:[caminoBookmarksMenu retain] forItem:caminoSubmenuItem];
                 [self drillPropertyList:outObject];
             }
         }
         
-        if([bookmarksSupermenu isKindOfClass:[NSMenu class]]){
+        if([caminoBookmarksMenu isNotEqualTo:caminoTopMenu]){
             //so long as the supermenu exists, pop it up.
-            bookmarksMenu = bookmarksSupermenu;
-            bookmarksSupermenu = [bookmarksSupermenu supermenu];
+            caminoBookmarksMenu = caminoBookmarksSupermenu;
+            caminoBookmarksSupermenu = [caminoBookmarksSupermenu supermenu];
         }
     }
 }
@@ -122,7 +124,7 @@ static NSMenu   *bookmarksSupermenu;
                                                                   parentString:[inDict objectForKey:CAMINO_DICT_TITLE_KEY]
                                                                       andRange:NSMakeRange(0,[(NSString *)[inDict objectForKey:CAMINO_DICT_TITLE_KEY] length])] autorelease];
     
-    [bookmarksMenu addItemWithTitle:[inDict objectForKey:CAMINO_DICT_TITLE_KEY]
+    [caminoBookmarksMenu addItemWithTitle:[inDict objectForKey:CAMINO_DICT_TITLE_KEY]
                                   target:owner
                                   action:@selector(injectBookmarkFrom:)
                            keyEquivalent:@""

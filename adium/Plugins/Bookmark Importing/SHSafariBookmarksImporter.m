@@ -26,8 +26,9 @@
 
 @implementation SHSafariBookmarksImporter
 
-static NSMenu   *bookmarksMenu;
-static NSMenu   *bookmarksSupermenu;
+static NSMenu   *safariBookmarksMenu;
+static NSMenu   *safariBookmarksSupermenu;
+static NSMenu   *safariTopMenu;
 
 + (id)newInstanceOfImporter
 {
@@ -46,20 +47,21 @@ static NSMenu   *bookmarksSupermenu;
     owner = inObject;
     NSDictionary    *bookmarkDict = [NSDictionary dictionaryWithContentsOfFile:[SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath]];
     
-    if(bookmarksMenu){
-        [bookmarksMenu removeAllItems];
-        [bookmarksMenu release];
+    if(safariBookmarksMenu){
+        [safariBookmarksMenu removeAllItems];
+        [safariBookmarksMenu release];
     }
     
     if (lastModDate) [lastModDate release];
     NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath] traverseLink:YES];
     lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
     
-    bookmarksMenu = [[[NSMenu alloc] initWithTitle:SAFARI_ROOT_MENU_TITLE] autorelease];
-    bookmarksSupermenu = bookmarksMenu;
+    safariBookmarksMenu = [[[NSMenu alloc] initWithTitle:SAFARI_ROOT_MENU_TITLE] autorelease];
+    safariBookmarksSupermenu = safariBookmarksMenu;
+    safariTopMenu = safariBookmarksMenu;
     [self drillPropertyList:bookmarkDict];
         
-    return bookmarksMenu;
+    return safariBookmarksMenu;
 }
 
 -(BOOL)bookmarksExist
@@ -97,23 +99,23 @@ static NSMenu   *bookmarksSupermenu;
                 [self menuItemFromDict:outObject];
             }else if([[(NSDictionary *)outObject objectForKey:SAFARI_DICT_TYPE_KEY] isEqualToString:SAFARI_DICT_TYPE_LIST]){
                 // if outObject is a list, then get the array it contains, then push the menu down.
-                bookmarksSupermenu = bookmarksMenu;
-                bookmarksMenu = [[NSMenu alloc] initWithTitle:[(NSDictionary *)outObject objectForKey:SAFARI_DICT_TITLE]];
+                safariBookmarksSupermenu = safariBookmarksMenu;
+                safariBookmarksMenu = [[[NSMenu alloc] initWithTitle:[(NSDictionary *)outObject objectForKey:SAFARI_DICT_TITLE]] autorelease];
                 
-                NSMenuItem *safariSubMenuItem = [[NSMenuItem alloc] initWithTitle:[bookmarksMenu title]
+                NSMenuItem *safariSubMenuItem = [[[NSMenuItem alloc] initWithTitle:[safariBookmarksMenu title]
                                                                             target:owner
                                                                             action:nil
-                                                                     keyEquivalent:@""];
-                [bookmarksSupermenu addItem:[safariSubMenuItem retain]];
-                [bookmarksSupermenu setSubmenu:[bookmarksMenu retain] forItem:safariSubMenuItem];
+                                                                     keyEquivalent:@""] autorelease];
+                [safariBookmarksSupermenu addItem:[safariSubMenuItem retain]];
+                [safariBookmarksSupermenu setSubmenu:[safariBookmarksMenu retain] forItem:safariSubMenuItem];
                 [self drillPropertyList:outObject];
             }
         }
         
-        if([bookmarksSupermenu isKindOfClass:[NSMenu class]]){
+        if([safariBookmarksMenu isNotEqualTo:safariTopMenu]){
             //so long as the supermenu exists, pop it up.
-            bookmarksMenu = bookmarksSupermenu;
-            bookmarksSupermenu = [bookmarksSupermenu supermenu];
+            safariBookmarksMenu = safariBookmarksSupermenu;
+            safariBookmarksSupermenu = [safariBookmarksSupermenu supermenu];
         }
     }
 }
@@ -128,7 +130,7 @@ static NSMenu   *bookmarksSupermenu;
                                                                   parentString:[URIDict objectForKey:SAFARI_DICT_URI_TITLE]
                                                                       andRange:NSMakeRange(0,[(NSString *)[URIDict objectForKey:SAFARI_DICT_URI_TITLE] length])] autorelease];
     
-    [bookmarksMenu addItemWithTitle:[URIDict objectForKey:SAFARI_DICT_URI_TITLE]
+    [safariBookmarksMenu addItemWithTitle:[URIDict objectForKey:SAFARI_DICT_URI_TITLE]
                                   target:owner
                                   action:@selector(injectBookmarkFrom:)
                            keyEquivalent:@""
