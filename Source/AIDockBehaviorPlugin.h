@@ -16,13 +16,7 @@
 
 #import <Adium/AIPlugin.h>
 
-#define PREF_GROUP_DOCK_BEHAVIOR			@"DockBehavior"
-
-#define KEY_EVENT_DOCK_BEHAVIOR				@"Behavior"
-#define	KEY_EVENT_DOCK_EVENT_ID				@"Notification"
-
 #define KEY_DOCK_BEHAVIOR_TYPE				@"BehaviorType"
-
 #define DOCK_BEHAVIOR_ALERT_IDENTIFIER		@"BounceDockIcon"
 
 @protocol AIActionHandler;
