@@ -19,10 +19,9 @@
 #define VERSION_CHECKER_DEFAULTS	@"VersionChecker Defaults"
 
 @interface CPFVersionChecker (PRIVATE)
-- (void)_requestVersionThread;
+- (void)_requestVersionDict;
 - (void)_versionReceived:(NSDictionary *)versionDict;
 - (NSDate *)dateOfThisBuild;
-- (NSDate *)dateOfLatestBuild;
 @end
 
 @implementation CPFVersionChecker
@@ -51,7 +50,7 @@
 	//Check for an update now
 	[self automaticCheckForNewVersion:nil];
 	
-	//Check for updates again every 24 hours (60 seconds * 60 minutes * 24 hours)
+	//Check for updates again every X hours (60 seconds * 60 minutes * X hours)
 	timer = [[NSTimer scheduledTimerWithTimeInterval:(60 * 60 * (BETA_RELEASE ? BETA_VERSION_CHECK_INTERVAL : VERSION_CHECK_INTERVAL))
 											  target:self
 											selector:@selector(automaticCheckForNewVersion:)
@@ -72,7 +71,7 @@
 {
 	checkingManually = YES;
 	checkWhenConnectionBecomesAvailable = NO;
-	[NSThread detachNewThreadSelector:@selector(_requestVersionThread) toTarget:self withObject:nil];
+	[self _requestVersionDict];
 }
 
 //Check for a new release of Adium without notifying the user on a false result.
@@ -87,7 +86,7 @@
 			//If the network is available, check for updates now
 			checkingManually = NO;
 			checkWhenConnectionBecomesAvailable = NO;
-			[NSThread detachNewThreadSelector:@selector(_requestVersionThread) toTarget:self withObject:nil];
+			[self _requestVersionDict];
 		}else{
 			//If the network is not available, check when it becomes available
 			checkWhenConnectionBecomesAvailable = YES;
@@ -101,22 +100,6 @@
 	if(checkWhenConnectionBecomesAvailable && [[notification object] intValue]){
 		[self automaticCheckForNewVersion:nil];
 	}
-}
-
-//Thread Request a version
-//The URL load (dateOfLatestBuild) can block, so we do it in a separate thread.  Once the URL load is finished we pass
-//control back to the main thread and display the appropriate panel
-- (void)_requestVersionThread
-{
-	NSAutoreleasePool	*pool = [[NSAutoreleasePool alloc] init];
-	NSString			*dateOfLatestBuild;
-	
-	dateOfLatestBuild = [self dateOfLatestBuild];
-
-	[self performSelectorOnMainThread:@selector(_versionReceived:)
-						   withObject:dateOfLatestBuild
-						waitUntilDone:YES];
-	[pool release];
 }
 
 //Version received
@@ -189,10 +172,28 @@
 	return(nil);
 }
 
-//Returns the date of the most recent Adium build (contacts adiumx.com, may block)
-- (NSDate *)dateOfLatestBuild
+//Returns the date of the most recent Adium build (contacts adiumx.com asynchronously)
+- (void)_requestVersionDict
 {
-	return([NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:VERSION_PLIST_URL]]);
+	[[NSURL URLWithString:VERSION_PLIST_URL] loadResourceDataNotifyingClient:self usingCache:NO];
 }
 
+//The versionDict was downloaded succesfully
+- (void)URLResourceDidFinishLoading:(NSURL *)sender
+{
+	NSDictionary	*versionDict;
+
+	versionDict = [NSPropertyListSerialization propertyListFromData:[sender resourceDataUsingCache:YES]
+												   mutabilityOption:NSPropertyListImmutable
+															 format:nil
+												   errorDescription:nil];
+
+	[self _versionReceived:versionDict];
+}
+
+//The versionDict could not be loaded
+- (void)URLResourceDidCancelLoading:(NSURL *)sender
+{
+	[self _versionReceived:nil];
+}
 @end
