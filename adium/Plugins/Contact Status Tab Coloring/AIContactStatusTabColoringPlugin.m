@@ -52,7 +52,7 @@
 }
 
 //
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     NSArray		*modifiedAttributes = nil;
 
@@ -181,20 +181,20 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_STATUS_COLORING] == 0){
-	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
         NSEnumerator	*enumerator;
-	AIListObject	*object;
-
-	//Release the old values..
-	//Cache the new colors
-	[signedOffColor release];	signedOffColor = [[[prefDict objectForKey:KEY_TAB_SIGNED_OFF_COLOR] representedColor] retain];
+		AIListObject	*object;
+		
+		//Release the old values..
+		//Cache the new colors
+		[signedOffColor release];	signedOffColor = [[[prefDict objectForKey:KEY_TAB_SIGNED_OFF_COLOR] representedColor] retain];
         [signedOnColor release];	signedOnColor = [[[prefDict objectForKey:KEY_TAB_SIGNED_ON_COLOR] representedColor] retain];
         [awayColor release];		awayColor = [[[prefDict objectForKey:KEY_TAB_AWAY_COLOR] representedColor] retain];
         [idleColor release];		idleColor = [[[prefDict objectForKey:KEY_TAB_IDLE_COLOR] representedColor] retain];
         [typingColor release];		typingColor = [[[prefDict objectForKey:KEY_TAB_TYPING_COLOR] representedColor] retain];
         [unviewedContentColor release];	unviewedContentColor = [[[prefDict objectForKey:KEY_TAB_UNVIEWED_COLOR] representedColor] retain];
         [idleAndAwayColor release];	idleAndAwayColor = [[[prefDict objectForKey:KEY_TAB_IDLE_AWAY_COLOR] representedColor] retain];
- 
+		
         //Cache which states are enabled
         awayEnabled = [[prefDict objectForKey:KEY_TAB_AWAY_ENABLED] boolValue];
         idleEnabled = [[prefDict objectForKey:KEY_TAB_IDLE_ENABLED] boolValue];
@@ -204,12 +204,12 @@
         unviewedContentEnabled = [[prefDict objectForKey:KEY_TAB_UNVIEWED_ENABLED] boolValue];
         idleAndAwayEnabled = [[prefDict objectForKey:KEY_TAB_IDLE_AWAY_ENABLED] boolValue];
         unviewedFlashEnabled = [[prefDict objectForKey:KEY_TAB_UNVIEWED_FLASH_ENABLED] boolValue];
-            
+		
         //Force each contact to update (Messy)
-	enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
-	while((object = [enumerator nextObject])){
-            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil delayed:YES silent:YES] delayed:YES];
-	}
+		enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+		while((object = [enumerator nextObject])){
+            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil silent:YES]];
+		}
     }
 }
 

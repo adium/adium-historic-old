@@ -788,7 +788,7 @@
     [ownerArray setObject:[NSNumber numberWithInt:(currentUnviewed+1)] withOwner:inObject];
 
     //
-    [[adium contactController] listObjectStatusChanged:inObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"] delayed:NO silent:NO];
+    [[adium contactController] listObjectStatusChanged:inObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"] silent:NO];
 }
 
 //Clear unviewed content
@@ -804,7 +804,7 @@
 
         if([[ownerArray objectWithOwner:listObject] intValue]){
             [ownerArray setObject:[NSNumber numberWithInt:0] withOwner:listObject];
-            [[adium contactController] listObjectStatusChanged:listObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"] delayed:NO silent:NO];
+            [[adium contactController] listObjectStatusChanged:listObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"] silent:NO];
         }
     }
 }
