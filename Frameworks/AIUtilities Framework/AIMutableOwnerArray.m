@@ -331,6 +331,14 @@
     return(nil);
 }
 
+- (float)priorityOfObjectWithOwner:(id)inOwner
+{
+	if (ownerArray && contentArray){
+        int	index = [ownerArray indexOfObject:inOwner];
+		if (index != NSNotFound) return([[priorityArray objectAtIndex:index] floatValue]);
+	}
+}
+
 //Return a value enumerator
 - (NSEnumerator *)objectEnumerator
 {

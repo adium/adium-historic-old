@@ -48,6 +48,7 @@
 - (NSDate *)date;
 - (id)objectWithOwner:(id)inOwner;
 - (id)ownerWithObject:(id)inObject;
+- (float)priorityOfObjectWithOwner:(id)inOwner;
 - (NSEnumerator *)objectEnumerator;
 - (NSArray *)allValues;
 - (unsigned)count;
