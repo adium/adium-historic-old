@@ -83,34 +83,38 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_GENERAL] == 0){
-        NSDictionary 		*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
-        NSMutableDictionary	*newAvailableIconStateDict;
-        NSString		*iconPath;
+        NSString	*key = [[notification userInfo] objectForKey:@"Key"];
         
-        //Load the new icon pack
-        iconPath = [self _pathOfIconPackWithName:[preferenceDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
-        if(iconPath){
-            if(newAvailableIconStateDict = [[self iconPackAtPath:iconPath] retain]){
-                [availableIconStateDict release]; availableIconStateDict = newAvailableIconStateDict;
+        if(notification == nil || (key && [key compare:KEY_ACTIVE_DOCK_ICON] == 0)){
+            NSDictionary        *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+            NSMutableDictionary	*newAvailableIconStateDict;
+            NSString		*iconPath;
+            
+            //Load the new icon pack
+            iconPath = [self _pathOfIconPackWithName:[preferenceDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
+            if(iconPath){
+                if(newAvailableIconStateDict = [[self iconPackAtPath:iconPath] retain]){
+                    [availableIconStateDict release]; availableIconStateDict = newAvailableIconStateDict;
+                }
             }
+    
+            //Change the Adium application icon to this new icon
+            if(notification != nil){
+                NSString		*icnsPath = [[NSBundle mainBundle] pathForResource:@"Adium" ofType:@"icns"];
+                IconFamily		*iconFamily;
+                NSImage		*image;
+    
+                image = [[[availableIconStateDict objectForKey:@"State"] objectForKey:@"Base"] image];
+                if(image){
+                    //Create and save a new .icns file for the base icon state image
+                    iconFamily = [IconFamily iconFamilyWithThumbnailsOfImage:image usingImageInterpolation:NSImageInterpolationLow];
+                    [iconFamily writeToFile:icnsPath];
+                }            
+            }
+    
+            //Recomposite the icon
+            [self _setNeedsDisplay];
         }
-
-        //Change the Adium application icon to this new icon
-        if(notification != nil){
-            NSString		*icnsPath = [[NSBundle mainBundle] pathForResource:@"Adium" ofType:@"icns"];
-            IconFamily		*iconFamily;
-            NSImage		*image;
-
-            image = [[[availableIconStateDict objectForKey:@"State"] objectForKey:@"Base"] image];
-            if(image){
-                //Create and save a new .icns file for the base icon state image
-                iconFamily = [IconFamily iconFamilyWithThumbnailsOfImage:image usingImageInterpolation:NSImageInterpolationLow];
-                [iconFamily writeToFile:icnsPath];
-            }            
-        }
-
-        //Recomposite the icon
-        [self _setNeedsDisplay];
     }
 }
 

@@ -19,118 +19,40 @@
 #import "AIDockIconPreferences.h"
 #import "AIDockIconSelectionPlugin.h"
 
-#define DOCK_ICON_SELECTION_PREF_NIB	@"IconSelectionPrefs"	//Name of preference nib
-#define DOCK_ICON_SELECTION_PREF_TITLE	@"Dock Icon"		//Title of the preference view
-
 #define PREF_GROUP_DOCK_ICON		@"Dock Icon"
 
-
 @interface AIDockIconPreferences (PRIVATE)
-- (id)initWithOwner:(id)inOwner;
 - (void)configureForSelectedIcon:(NSDictionary *)iconDict;
-- (void)preferencesChanged:(NSNotification *)notification;
-- (void)configureView;
 - (void)_buildIconArray;
 - (NSDictionary *)_iconInArrayNamed:(NSString *)name;
 - (void)setupPreferenceView;
 - (void)animate:(NSTimer *)timer;
 - (void)_startAnimating;
 - (void)_stopAnimating;
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIDockIconPreferences
 
-+ (AIDockIconPreferences *)dockIconPreferencesWithOwner:(id)inOwner
-{
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+//Preference pane properties
+- (PREFERENCE_CATEGORY)category{
+    return(AIPref_Dock_Icon);
 }
-
-//init
-- (id)initWithOwner:(id)inOwner
-{
-    //Init
-    [super init];
-    owner = [inOwner retain];
-    cycle = 0;
-    animationTimer = nil;
-
-    //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Dock_Icon withDelegate:self label:DOCK_ICON_SELECTION_PREF_TITLE]];
-    
-    return(self);
+- (NSString *)label{
+    return(@"Dock Icon");
 }
-
-//User selected an icon in the table view
-- (void)selectIcon:(id)sender
-{
-    int	clickedColumn, clickedRow, index;
-    int	columns = [tableView_icons numberOfColumns];
-    int	icons = [iconArray count];
-
-    //Get the clicked cell
-    clickedColumn = [tableView_icons clickedColumn];
-    clickedRow = [tableView_icons clickedRow];
-    index = (clickedRow * columns) + clickedColumn;
-
-    if(index >= 0 && index < icons){
-        NSDictionary	*iconDict = [iconArray objectAtIndex:index];
-        NSString	*iconPath = [iconDict objectForKey:@"Path"];
-        NSString	*iconName;
-
-        //Set the new icon in preferences
-        iconName = [[iconPath lastPathComponent] stringByDeletingPathExtension];
-        [[owner preferenceController] setPreference:iconName forKey:KEY_ACTIVE_DOCK_ICON group:PREF_GROUP_GENERAL];
-
-        //Set the selected icon
-        [self configureForSelectedIcon:[iconArray objectAtIndex:index]];        
-    }
-}
-
-//Return the view for our preference pane
-- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    //Load our preference view nib
-    if(!view_prefView){
-        //Load and configure our view
-        [NSBundle loadNibNamed:DOCK_ICON_SELECTION_PREF_NIB owner:self];
-        [self configureView];
-
-        //Load our icons
-        [self _buildIconArray];
-
-        //Observe preference changes
-        [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-        [self preferencesChanged:nil];
-
-        //Start animating
-        [self _startAnimating];
-    }
-
-    return(view_prefView);
-}
-
-//Clean up our preference pane
-- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    //Cleanup our icons
-    [iconArray release]; iconArray = nil;
-
-    //Clean up our view
-    [view_prefView release]; view_prefView = nil;
-    [previewStateArray release]; previewStateArray = nil;
-
-    //Stop animating
-    [self _stopAnimating];
-
-    //
-    [[owner notificationCenter] removeObserver:self];
+- (NSString *)nibName{
+    return(@"IconSelectionPrefs");
 }
 
 //Setup our preference view
-- (void)configureView
+- (void)viewDidLoad
 {
     NSEnumerator	*enumerator;
     NSTableColumn	*column;
+
+    cycle = 0;
+    animationTimer = nil;
 
     //Configure the table view
     [tableView_icons setIntercellSpacing:NSMakeSize(4,2)];
@@ -145,6 +67,29 @@
 
         [column setDataCell:cell];
     }
+    
+    //Load our icons
+    [self _buildIconArray];
+    
+    //Observe preference changes
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
+    
+    //Start animating
+    [self _startAnimating];
+}
+
+//Preference view is closing
+- (void)viewWillClose
+{
+    [iconArray release]; iconArray = nil;
+    [previewStateArray release]; previewStateArray = nil;
+    
+    //Stop animating
+    [self _stopAnimating];
+    
+    //
+    [[owner notificationCenter] removeObserver:self];
 }
 
 //Preferences have changed
@@ -179,22 +124,6 @@
         animationTimer = nil;
     }
 }
-
-//
-/*- (void)preferenceWindowWillOpen:(NSNotification *)notification
-{
-}
-
-//
-- (void)preferenceWindowDidClose:(NSNotification *)notification
-{
-    //Stop animating
-    if(animationTimer){
-        [animationTimer invalidate];
-        [animationTimer release];
-        animationTimer = nil;
-    }
-}*/
 
 //Configures our view for the passed icon being selected
 - (void)configureForSelectedIcon:(NSDictionary *)iconDict
@@ -289,6 +218,32 @@
         //Redisplay
         [matrix_iconPreview setNeedsDisplay:YES];
         
+    }
+}
+
+//User selected an icon in the table view
+- (void)selectIcon:(id)sender
+{
+    int	clickedColumn, clickedRow, index;
+    int	columns = [tableView_icons numberOfColumns];
+    int	icons = [iconArray count];
+    
+    //Get the clicked cell
+    clickedColumn = [tableView_icons clickedColumn];
+    clickedRow = [tableView_icons clickedRow];
+    index = (clickedRow * columns) + clickedColumn;
+    
+    if(index >= 0 && index < icons){
+        NSDictionary	*iconDict = [iconArray objectAtIndex:index];
+        NSString	*iconPath = [iconDict objectForKey:@"Path"];
+        NSString	*iconName;
+        
+        //Set the new icon in preferences
+        iconName = [[iconPath lastPathComponent] stringByDeletingPathExtension];
+        [[owner preferenceController] setPreference:iconName forKey:KEY_ACTIVE_DOCK_ICON group:PREF_GROUP_GENERAL];
+        
+        //Set the selected icon
+        [self configureForSelectedIcon:[iconArray objectAtIndex:index]];        
     }
 }
 
