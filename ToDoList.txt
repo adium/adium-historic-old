@@ -10,13 +10,6 @@ If you want to leave a comment, please put your <name> on them too.
 //-------------------------------------------------------------------------------------------------------
 // Minor Changes
 //-------------------------------------------------------------------------------------------------------
-Contacts:
-	= Add area for typing contact notes to inspector, display notes in tooltip [Brian] 
-            // core functionality is done, now I'm adding AB syncing, and possibly AIM Buddy Note sycing
-	+ Allow for users to communicate with smart philophers, such as Plato or Aristotle. A 
-		user's friends may be boring, so we should enhance the current experience.  Also, provide friends
-		as needed.
-
 Alerts:
 	+ Allow user to have more control over what is spoken by the announcer plugin
 	+ Display time stamps in the panel alert
@@ -25,7 +18,6 @@ Alerts:
 Contact List: 
     + Add toolbar item for setting status (goes with the state system?)
 	+ Add Action menu toolbar item, ala Xcode or Mail.
-	- Remove contact list font preference.  Hook this up to cmd-T
 	* Renaming doesn't work at the moment.
 	
 Accounts:
@@ -33,13 +25,6 @@ Accounts:
 	+ Add 'Priority' field to jabber advanced preferences
 
 Message Window:
-	+ Need a way to allow tabs to be rearranged (within the same tab bar) even when 
-	  dragging between windows isn't permitted (i.e. when group-based sorting is enabled), and vice-versa.
-		<comment> Currently, tabs can be dragged to new windows but 
-			  not rearranged when name-based sorting is on, but dragging 
-			  is right out when group-based sorting is on.
-	= Insert emoticon menu item, contextual menu item [Brian]
-            // this can now be deemed done... although it should now be Insert Emoticon button/menu ala iChat/MSN/AIM in message view
 	+ Tab-complete usernames in messages and chat
 		<tick> Do we really need to tab complete in a message? I can see in a chat, but not in a 1-to-1 message...
 	+ Make 'save as' menu item work
@@ -63,14 +48,7 @@ er or something and you type the name (address book for example) of your buddy j
                         I'd be willing to tinker away with this, but I'm horribly unfamiliar with the protocol code & libgaim.  If someone wants to go through it with me at some point, that'd be awesome.
                 [/Steve]
 	+ Symlink the iChat emoticons much like we symlink the iChat sounds
-
-Contact alerts:
-	+ Add icons (16x16) to event types, and display them in the event list (still needed on some.  make the ESContactAlert subclasses respond to -icon)
-	+ Menu has "all contacts in ___" items, and "all contacts" item (?)
 	
-Dock contextual menu:
-	+ Make the menu controller capable of handling putting dock menu items in certain categories, or something; at present
-		it is only possible to add it to the dock, resulting in a really disorderly menu.
 
 //-------------------------------------------------------------------------------------------------------
 // Big Stuff
@@ -89,10 +67,7 @@ Toolbar Items:
         + Show Color Panel
         + Send File
         + User Icon
-        + Bookmarks
         + Scripts
-        = Emoticon
-        + Add Link
 
 		<tick> Moved from areas that require more thought as toolbar buttons seem to cover this:
 
@@ -120,16 +95,6 @@ Event Notifications (the feature formerly known as Event Bezel):
 	This will be replaced with Growl.
 	+ Implement Growl App Bridge.framework
 	+ Build in a way to install plugin if user requests to use notifications
-
-/*	+ Give the contact alert a nice icon.
-	+ Give the notification window a close widget to quick-dismish the event, if it is the last one close the thing entirely. Maybe if clicking it with option 	hold down should close all queued events altogether.
-	+ Give the notification window a mail dock icon like badge to show the total number of recent events to be shown on it
-	+ Add small pretty protocol icons (we need nice icons for this)
-	# Add status icons (the desired thing should be to use the same ones as the ones in the forthcoming new contact list)
-	# Give the notification window a titlebar, and allow it to be repositioned while visible.
-	not sure about adding a titlebar to it [Jorge]
-*/
-
 
 Contact Blocking: [Colin]
     	Allow the user to easily block/unblock users by name, or users on their list.  Provide a way for them to see
