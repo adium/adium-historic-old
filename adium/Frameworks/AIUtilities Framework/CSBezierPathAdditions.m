@@ -47,7 +47,7 @@
                                  startAngle:90
                                    endAngle:180
                                   clockwise:NO];
-    [path lineToPoint:NSMakePoint(topLeft.x, topLeft.y - radius)];
+    [path lineToPoint:NSMakePoint(topLeft.x, topLeft.y + radius)];
 
     return [[path retain] autorelease];
 }
