@@ -8678,8 +8678,8 @@
 		4947F5EA0655E90C00B791E5 = {
 			children = (
 				6CED9083065B686A00A9C196,
-				4BBEF2B2065E431C001D9ADD,
-				4BBEF2B3065E431C001D9ADD,
+				4B7FC81B065EFB4C0043819C,
+				4B7FC81C065EFB4D0043819C,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -12325,6 +12325,36 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B7FC81B065EFB4C0043819C = {
+			fileType = "compiled.mach-o.dylib";
+			isa = PBXReferenceProxy;
+			path = libezv.dylib;
+			refType = 3;
+			remoteRef = 4B7FCAA1065EFB6E0043819C;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B7FC81C065EFB4D0043819C = {
+			fileType = archive.ar;
+			isa = PBXReferenceProxy;
+			path = libezv.a;
+			refType = 3;
+			remoteRef = 4B7FCAA2065EFB6E0043819C;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B7FCAA1065EFB6E0043819C = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
+			remoteInfo = libezv;
+		};
+		4B7FCAA2065EFB6E0043819C = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
+			remoteInfo = "libezv (Static)";
+		};
 		4B81631203D1C24E00A8010A = {
 			children = (
 				4B81631E03D1C2A600A8010A,
@@ -13402,36 +13432,6 @@
 			path = "Plugins/Contact List Editor/AddContact.nib";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4BBEF2B2065E431C001D9ADD = {
-			fileType = "compiled.mach-o.dylib";
-			isa = PBXReferenceProxy;
-			path = libezv.dylib;
-			refType = 3;
-			remoteRef = 4BBEF540065E433D001D9ADD;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4BBEF2B3065E431C001D9ADD = {
-			fileType = archive.ar;
-			isa = PBXReferenceProxy;
-			path = libezv.a;
-			refType = 3;
-			remoteRef = 4BBEF541065E433D001D9ADD;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4BBEF540065E433D001D9ADD = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
-		};
-		4BBEF541065E433D001D9ADD = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
 		};
 		4BC02D310452C69100A8010A = {
 			fileEncoding = 4;

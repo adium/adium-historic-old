@@ -49,9 +49,6 @@
     errorDesc = [userInfo objectForKey:@"Description"];
     windowTitle = [userInfo objectForKey:@"Window Title"];
 
-    //Log to console
-    NSLog([NSString stringWithFormat:@"%@: %@ (%@)",windowTitle,errorTitle,errorDesc]);
-
     //Display an alert
     [[ErrorMessageWindowController errorMessageWindowController] displayError:errorTitle withDescription:errorDesc withTitle:windowTitle];
 }
