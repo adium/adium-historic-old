@@ -77,7 +77,7 @@
 
 	if( (FSResolveAliasFile ( &theRef, YES, &theIsTargetFolder, &theWasAliased ) == noErr) )
 	{
-		theResolvedAlias = (theWasAliased) ? [NSURL URLWithFSRef:&theRef] : nil;
+		theResolvedAlias = (theWasAliased) ? [NSURL URLWithFSRef:&theRef] : self;
 	}
 
 	return theResolvedAlias;

@@ -79,17 +79,27 @@
 /*
  * +stringWithPascalString:encoding:
  */
-+ (NSString *)stringWithPascalString:(ConstStr255Param )aPStr
++ (NSString *)stringWithPascalString:(const ConstStr255Param )aPStr
 {
 	return (NSString*)CFStringCreateWithPascalString( kCFAllocatorDefault, aPStr, kCFStringEncodingMacRomanLatin1 );
 }
 
 /*
- * -pascalString:length:
+ * -getPascalString:length:
  */
-- (BOOL)pascalString:(StringPtr)aBuffer length:(short)aLength
+- (BOOL)getPascalString:(StringPtr)aBuffer length:(short)aLength
 {
 	return CFStringGetPascalString( (CFStringRef)self, aBuffer, aLength, kCFStringEncodingMacRomanLatin1) != 0;
+}
+
+/*
+ * -pascalString
+ */
+- (const char *)pascalString
+{
+	const unsigned int	kPascalStringLen = 256;
+	NSMutableData		* theData = [NSMutableData dataWithCapacity:kPascalStringLen];
+	return [self getPascalString:(StringPtr)[theData mutableBytes] length:kPascalStringLen] ? [theData bytes] : NULL;
 }
 
 /*
@@ -103,6 +113,84 @@
 	CFStringTrimWhitespace( theString );
 
 	return (NSMutableString *)theString;
+}
+
+/*
+ * -finderInfoFlags:type:creator:
+ */
+- (BOOL)finderInfoFlags:(UInt16*)aFlags type:(OSType*)aType creator:(OSType*)aCreator
+{
+	FSSpec			theFSSpec;
+	struct FInfo	theInfo;
+
+	if( [self getFSSpec:&theFSSpec] && FSpGetFInfo( &theFSSpec, &theInfo) == noErr )
+	{
+		if( aFlags ) *aFlags = theInfo.fdFlags;
+		if( aType ) *aType = theInfo.fdType;
+		if( aCreator ) *aCreator = theInfo.fdCreator;
+
+		return YES;
+	}
+	else
+		return NO;
+}
+
+/*
+ * -finderLocation
+ */
+- (NSPoint)finderLocation
+{
+	FSSpec			theFSSpec;
+	struct FInfo	theInfo;
+	NSPoint			thePoint = NSMakePoint( 0, 0 );
+
+	if( [self getFSSpec:&theFSSpec] && FSpGetFInfo( &theFSSpec, &theInfo) == noErr )
+	{
+		thePoint = NSMakePoint(theInfo.fdLocation.h, theInfo.fdLocation.v );
+	}
+
+	return thePoint;
+}
+
+/*
+ * -setFinderInfoFlags:mask:type:creator:
+ */
+- (BOOL)setFinderInfoFlags:(UInt16)aFlags mask:(UInt16)aMask type:(OSType)aType creator:(OSType)aCreator
+{
+	BOOL				theResult = NO;
+	FSSpec			theFSSpec;
+	struct FInfo	theInfo = { 0 };
+
+	if( [self getFSSpec:&theFSSpec] && FSpGetFInfo( &theFSSpec, &theInfo) == noErr )
+	{
+		theInfo.fdFlags = (aFlags & aMask) | (theInfo.fdFlags & !aMask);
+		theInfo.fdType = aType;
+		theInfo.fdCreator = aCreator;
+
+		theResult = FSpSetFInfo( &theFSSpec, &theInfo) == noErr;
+	}
+
+	return theResult;
+}
+
+/*
+ * -setFinderLocation:
+ */
+- (BOOL)setFinderLocation:(NSPoint)aLocation
+{
+	BOOL				theResult = NO;
+	FSSpec			theFSSpec;
+	struct FInfo	theInfo = { 0 };
+
+	if( [self getFSSpec:&theFSSpec] && FSpGetFInfo( &theFSSpec, &theInfo) == noErr )
+	{
+		theInfo.fdLocation.h = aLocation.x;
+		theInfo.fdLocation.v = aLocation.y;
+
+		theResult = FSpSetFInfo( &theFSSpec, &theInfo) == noErr;
+	}
+
+	return theResult;
 }
 
 @end

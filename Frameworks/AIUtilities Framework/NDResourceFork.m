@@ -190,7 +190,7 @@ BOOL operateOnResourceUsingFunction( short int afileRef, ResType aType, NSString
 		{
 			Str255			thePName;
 
-			[aName pascalString:(StringPtr)thePName length:sizeof(thePName)];
+			[aName getPascalString:(StringPtr)thePName length:sizeof(thePName)];
 			
 			HLock( theResHandle );
 			AddResource( theResHandle, aType, anId, thePName );
@@ -345,7 +345,7 @@ BOOL operateOnResourceUsingFunction( short int afileRef, ResType aType, NSString
 	{
 		Str255		thePName;
 	
-		if( aResHandle && [aName pascalString:(StringPtr)thePName length:sizeof(thePName)] )
+		if( aResHandle && [aName getPascalString:(StringPtr)thePName length:sizeof(thePName)] )
 		{
 			GetResInfo( aResHandle, &anId, &aType, thePName );
 			return noErr ==  ResError( );
@@ -463,9 +463,9 @@ BOOL operateOnResourceUsingFunction( short int afileRef, ResType aType, NSString
 
 	UseResFile( afileRef );    		// set this resource to be current
 
-	if( noErr ==  ResError( ) && ((aName && [aName pascalString:(StringPtr)thePName length:sizeof(thePName)]) || !aName ))
+	if( noErr ==  ResError( ) && ((aName && [aName getPascalString:(StringPtr)thePName length:sizeof(thePName)]) || !aName ))
 	{
-		if( aName && [aName pascalString:(StringPtr)thePName length:sizeof(thePName)] )
+		if( aName && [aName getPascalString:(StringPtr)thePName length:sizeof(thePName)] )
 			theResHandle = Get1NamedResource( aType, thePName );
 		else if( !aName )
 			theResHandle = Get1Resource( aType, anId );			
