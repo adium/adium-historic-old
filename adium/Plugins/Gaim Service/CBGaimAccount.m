@@ -83,22 +83,6 @@
 	//Create the contact if necessary
     if(!theContact) theContact = [self contactAssociatedWithBuddy:buddy];
 
-    //Display Name - use the serverside buddy_alias if present
-    {
-        char *alias = (char *)gaim_get_buddy_alias(buddy);
-		char *disp_name = (char *)[[theContact statusObjectForKey:@"Display Name" withOwner:self] UTF8String];
-        if(!disp_name) disp_name = "";
-		
-        if(alias && strcmp(disp_name, alias)){
-            [theContact setStatusObject:[NSString stringWithUTF8String:alias]
-							  withOwner:self
-								 forKey:@"Display Name"
-								 notify:NO];
-        }
-    }
-	
-
-    
     //Group changes - gaim buddies start off in no group, so this is an important update for us
     if(![theContact remoteGroupNameForAccount:self]){
         GaimGroup *g = gaim_find_buddys_group(buddy);
@@ -144,6 +128,20 @@
 					[theContact setStatusObject:[NSNumber numberWithBool:YES] withOwner:self forKey:@"Signed On" notify:NO];
 					[theContact setStatusObject:nil withOwner:self forKey:@"Signed Off" notify:NO];
 					[theContact setStatusObject:nil withOwner:self forKey:@"Signed On" afterDelay:15];
+				}
+				
+				//Display Name - use the serverside buddy_alias if present
+				{
+					char *alias = (char *)gaim_get_buddy_alias(buddy);
+					char *disp_name = (char *)[[theContact statusObjectForKey:@"Display Name" withOwner:self] UTF8String];
+					if(!disp_name) disp_name = "";
+					
+					if(alias && strcmp(disp_name, alias)){
+						[theContact setStatusObject:[NSString stringWithUTF8String:alias]
+										  withOwner:self
+											 forKey:@"Display Name"
+											 notify:NO];
+					}
 				}
 				
 			}
@@ -735,14 +733,17 @@
 - (AIListContact *)contactAssociatedWithBuddy:(GaimBuddy *)buddy
 {
 	AIListContact	*contact;
-	
+	NSString		*UID = [NSString stringWithUTF8String:(buddy->name)];
 	//Get our contact
 	contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-														UID:[[NSString stringWithUTF8String:(buddy->name)] compactedString]];
+														UID:[UID compactedString]];
 	
     //Associate the handle with ui_data and the buddy with our statusDictionary
     buddy->node.ui_data = [contact retain];
-    [contact setStatusObject:[NSValue valueWithPointer:buddy] withOwner:self forKey:@"GaimBuddy" notify:YES];
+    [contact setStatusObject:[NSValue valueWithPointer:buddy] withOwner:self forKey:@"GaimBuddy" notify:NO];
+	
+	NSLog(@"%@ %@",UID,[UID compactedString]);
+	[contact setStatusObject:UID withOwner:self forKey:@"Server Display Name" notify:NO];
 	
 	return(contact);
 }

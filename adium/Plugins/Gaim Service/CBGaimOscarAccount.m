@@ -160,7 +160,7 @@ struct buddyinfo {
 						
 						//Available status message
 						statusMsgString = [NSString stringWithUTF8String:(bi->availmsg)];
-						NSLog(@"available messsage: %@",statusMsgString);
+
 					} else if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away_len > 0) && 
 							   (userinfo->away != NULL) && (userinfo->away_encoding != NULL)) {
 						
@@ -171,6 +171,8 @@ struct buddyinfo {
 							g_free(away_utf8);
 						}
 					}
+					
+					if (GAIM_DEBUG) NSLog(@"Status message for %s: %@",buddy->name,statusMsgString);
 					
 					//Update the status message if necessary
 					if (statusMsgString && [statusMsgString length]) {
