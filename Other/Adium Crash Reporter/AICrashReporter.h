@@ -27,7 +27,8 @@
     IBOutlet	NSTextField                 *textField_description;
     IBOutlet	ESTextViewWithPlaceholder   *textView_details;
     IBOutlet	NSProgressIndicator         *progress_sending;
-    
+    IBOutlet	NSButton					*button_close;
+	
     IBOutlet	NSPanel                     *panel_privacySheet;
     IBOutlet	NSTextView                  *textView_crashLog;
     

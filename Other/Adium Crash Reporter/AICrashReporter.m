@@ -64,8 +64,6 @@
     [textView_details setPlaceholder:[textView_details string]];
     
     //Search for an exception log
-  //  NSFileManager *manager = [[[NSFileManager alloc] init]retain];
-//    if ([manager fileExistsAtPath:EXCEPTIONS_PATH]){
     if([[NSFileManager defaultManager] fileExistsAtPath:EXCEPTIONS_PATH]){
         [self reportCrashForLogAtPath:EXCEPTIONS_PATH];
     }else{  
@@ -85,6 +83,10 @@
                                        userInfo:nil
                                         repeats:YES];
     }
+	
+	if([progress_sending respondsToSelector:@selector(setHidden:)]){
+		[progress_sending setHidden:YES];
+	}
 }
 
 //Actively tries to kill Apple's "Report this crash" dialog
@@ -234,7 +236,17 @@
         if([reportString length] != 0) [reportString appendString:@"&"];
         [reportString appendFormat:@"%@=%@", key, [[crashReport objectForKey:key] stringByEncodingURLEscapes]];
     }
-    
+
+	//Hide the button, even on 10.2
+	[button_close setFrame:NSZeroRect];
+
+	//Dipslay immediately since we need it for this run loop.
+	[[button_close superview] display];
+	
+	if([progress_sending respondsToSelector:@selector(setHidden:)]){
+		[progress_sending setHidden:NO];
+	}
+	
     //
     while(!data || [data length] == 0){
         NSError 			*error;
