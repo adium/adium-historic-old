@@ -21,6 +21,7 @@
 #define	ACCOUNT_CONNECTING_BUTTON_TITLE		AILocaliedString(@"Connecting…",nil)						//Menu item title
 #define	ACCOUNT_DISCONNECTING_BUTTON_TITLE	AILocalizedString(@"Disconnecting…",nil)					//Menu item title
 
+
 @interface AIAccountListPreferences (PRIVATE)
 - (void)buildServicePopup;
 - (void)configureViewForAccount:(AIAccount *)inAccount;
@@ -372,7 +373,8 @@
 //Return the account description or image
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    return([[accountArray objectAtIndex:row] formattedUID]);
+	NSString *formattedUID = [[accountArray objectAtIndex:row] formattedUID];
+    return([formattedUID length] ? formattedUID : NEW_ACCOUNT_DISPLAY_TEXT);
 }
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row

@@ -25,7 +25,7 @@
                 "scrollView_accountList" = AIAutoScrollView; 
                 "tabView_auxiliary" = NSTabView; 
                 "tableView_accountList" = AIAlternatingRowTableView; 
-                "textField_accountName" = NSTextField; 
+                "textField_accountName" = ESDelayedTextField; 
                 "view_accountDetails" = NSView; 
                 "view_accountPreferences" = NSView; 
             }; 
