@@ -155,7 +155,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	int previouslySelectedCategory = [[[adium preferenceController] preferenceForKey:KEY_PREFERENCE_SELECTED_CATEGORY
 																			   group:PREF_GROUP_WINDOW_POSITIONS] intValue];
 	[self selectCategory:(((previouslySelectedCategory > 0) && (previouslySelectedCategory < [viewArray count])) ?
-						  previouslySelectedCategroy :
+						  previouslySelectedCategory :
 						  0)];
 }
 
