@@ -303,39 +303,55 @@
     if([[textView_outgoing attributedString] length] != 0){ //If message length is 0, don't send
         AIContentMessage			*message;
 		NSMutableAttributedString	*outgoingAttributedString = [[[textView_outgoing textStorage] copy] autorelease];
-
+		AIListObject				*listObject = [chat listObject];
+		
 		if (!sendMessagesToOfflineContact &&
 			![chat name] &&
-			![[chat listObject] online] &&
-			![[chat listObject] isStranger]){
+			![listObject online] &&
+			![listObject isStranger]){
 			
 			//Contact is offline.  Ask how the user wants to handle the situation.
-			[CSMessageToOfflineContactWindowController showSheetInWindow:[view_contents window] forMessageViewController:self];
+			[CSMessageToOfflineContactWindowController showSheetInWindow:[view_contents window]
+												forMessageViewController:self];
 			
 		} else {
+			AIAccount	*account = [chat account];
+			
 			//Send the message
-			[[adium notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:chat userInfo:nil];
+			[[adium notificationCenter] postNotificationName:Interface_WillSendEnteredMessage
+													  object:chat
+													userInfo:nil];
 			
 			message = [AIContentMessage messageInChat:chat
-										   withSource:[chat account]
+										   withSource:account
 										  destination:nil //meaningless, since we get better info from the AIChat
 												 date:nil //created for us by AIContentMessage
 											  message:outgoingAttributedString
 											autoreply:NO];
 			
 			if([[adium contentController] sendContentObject:message]){
-				//Let the account handle clearing the typing notification if necessary for cleaner interaction between
-				//the not-typing state and the message-received state viewed on the other side
-				[chat setStatusObject:[NSNumber numberWithBool:YES] 
-							   forKey:@"SuppressTypingNotificationChanges"
-							   notify:NotifyNever];
-				[[adium notificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:chat userInfo:nil];
+				BOOL	suppressTypingNotificationChangesAfterSend = [account suppressTypingNotificationChangesAfterSendForListObject:listObject];
+
+				if(suppressTypingNotificationChangesAfterSend){
+					//Let the account handle clearing the typing notification if necessary for cleaner interaction between
+					//the not-typing state and the message-received state viewed on the other side
+
+					[chat setStatusObject:[NSNumber numberWithBool:YES] 
+								   forKey:@"SuppressTypingNotificationChanges"
+								   notify:NotifyNever];
+				}
 				
-				//On the next run loop (after we are finished processing all events from the keystroke or click which
-				//led to sendMessage:) clear the suppression flag
-				[self performSelector:@selector(endSuppressChatTypingNotificationChanges)
-						   withObject:nil
-						   afterDelay:0.00000001];
+				[[adium notificationCenter] postNotificationName:Interface_DidSendEnteredMessage 
+														  object:chat
+														userInfo:nil];
+				
+				if(suppressTypingNotificationChangesAfterSend){
+					//On the next run loop (after we are finished processing all events from the keystroke or click which
+					//led to sendMessage:) clear the suppression flag
+					[self performSelector:@selector(endSuppressChatTypingNotificationChanges)
+							   withObject:nil
+							   afterDelay:0.00000001];
+				}
 			}
 		}
     }
