@@ -43,15 +43,13 @@ static CBGaimAccount* accountLookup(GaimAccount *acct)
 // Debug ------------------------------------------------------------------------------------------------------
 static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, const char *format, va_list args)
 {
-    if (GAIM_DEBUG) {
-		gchar *arg_s = g_strdup_vprintf(format, args); //NSLog sometimes chokes on the passed args, so we'll use vprintf
-		
-		//Log error
-		if(!category) category = "general"; //Category can be nil
-		NSLog(@"(Debug: %s) %s", category, arg_s);
-		
-		g_free(arg_s);
-    }
+	gchar *arg_s = g_strdup_vprintf(format, args); //NSLog sometimes chokes on the passed args, so we'll use vprintf
+	
+	//Log error
+	if(!category) category = "general"; //Category can be nil
+	NSLog(@"(Debug: %s) %s", category, arg_s);
+	
+	g_free(arg_s);
 }
 
 static GaimDebugUiOps adiumGaimDebugOps = {
@@ -793,7 +791,9 @@ static void adiumGaimPrefsInit(void)
 
 static void adiumGaimCoreDebugInit(void)
 {
+#if (GAIM_DEBUG)
     gaim_debug_set_ui_ops(&adiumGaimDebugOps);
+#endif
 }
 
 static void adiumGaimCoreUiInit(void)
