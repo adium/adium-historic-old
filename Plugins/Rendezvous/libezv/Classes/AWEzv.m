@@ -88,7 +88,16 @@
 }
 
 - (void) setIdleTime:(NSDate *)date {
-    idleTime = [date retain];
+	if (idleTime)
+		[idleTime release];
+	
+	if (!date) {
+		idleTime = nil;
+		status = AWEzvOnline;
+	} else {
+		idleTime = [date retain];
+		status = AWEzvIdle;
+	}
     [manager updatedStatus];
 }
 
@@ -103,8 +112,8 @@
     NSBitmapImageRep    *img; 
     
     if (contactImage == nil) {
-	[manager setImageData: nil];
-	return;
+		[manager setImageData: nil];
+		return;
     }
         
     img = [NSBitmapImageRep imageRepWithData: [contactImage TIFFRepresentation]];
