@@ -37,7 +37,7 @@
     return(AIPref_Dock);
 }
 - (NSString *)label{
-    return(AILocalizedString(@"Dock Icon", nil))
+    return(AILocalizedString(@"Dock Icon", nil));
 }
 - (NSString *)nibName{
     return(@"IconSelectionPrefs");
