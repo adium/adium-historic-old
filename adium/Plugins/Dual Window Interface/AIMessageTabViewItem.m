@@ -63,7 +63,7 @@
 - (void)dealloc
 {
     [messageView release];
-    [[owner notificationCenter] removeObserver:self name:ListObject_AttributesChanged object:nil];
+    [[owner notificationCenter] removeObserver:self];
     [owner release];
     
     [super dealloc];

@@ -54,43 +54,40 @@
 
 - (void)filterContentObject:(AIContentObject *)inObject
 {
-    if([[inObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        AIContentMessage		*contentMessage = (AIContentMessage *)inObject;
-        NSMutableAttributedString	*message = [[contentMessage message] mutableCopy];
-
-//        NSLog(@"Filter \"%@\"",[message string]);    
-
-        //Optimize this...
-
-        if(forceFont){
-            [message addAttribute:NSFontAttributeName value:force_desiredFont range:NSMakeRange(0, [message length])];
-            [contentMessage setMessage:message];
+    if(forceFont || forceText || forceBackground){
+        if([[inObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
+            AIContentMessage		*contentMessage = (AIContentMessage *)inObject;
+            NSMutableAttributedString	*message = [[[contentMessage message] mutableCopy] autorelease];
+            
+            if(forceFont){
+                [message addAttribute:NSFontAttributeName value:force_desiredFont range:NSMakeRange(0, [message length])];
+                [contentMessage setMessage:message];
+            }
+            if(forceText){
+                [message addAttribute:NSForegroundColorAttributeName value:force_desiredTextColor range:NSMakeRange(0, [message length])];
+                [contentMessage setMessage:message];
+            }
+            if(forceBackground){
+                //Add the forced body color
+                [message addAttribute:AIBodyColorAttributeName value:force_desiredBackgroundColor range:NSMakeRange(0, [message length])];
+                //Remove any 'sub-background' colors
+                [message removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange(0, [message length])];
+    
+                [contentMessage setMessage:message];
+            }
         }
-        if(forceText){
-            [message addAttribute:NSForegroundColorAttributeName value:force_desiredTextColor range:NSMakeRange(0, [message length])];
-            [contentMessage setMessage:message];
-        }
-        if(forceBackground){
-            //Add the forced body color
-            [message addAttribute:AIBodyColorAttributeName value:force_desiredBackgroundColor range:NSMakeRange(0, [message length])];
-            //Remove any 'sub-background' colors
-            [message removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange(0, [message length])];
-
-            [contentMessage setMessage:message];
-        }
-        
     }
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    //Optimize this...
-
     if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_TEXT_FORCING] == 0){
         NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_TEXT_FORCING];
 
         //Release the old values..
-
+        [force_desiredFont release]; force_desiredFont = nil;
+        [force_desiredTextColor release]; force_desiredTextColor = nil;
+        [force_desiredBackgroundColor release]; force_desiredBackgroundColor = nil;
 
         //Cache the preference values
         forceFont = [[prefDict objectForKey:KEY_FORCE_FONT] boolValue];
