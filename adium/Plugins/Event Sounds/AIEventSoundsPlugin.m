@@ -18,8 +18,8 @@
 #import "ESEventSoundAlertDetailPane.h"
 
 #define EVENT_SOUNDS_DEFAULT_PREFS	@"EventSoundDefaults"
-#define EVENT_SOUNDS_ALERT_SHORT	@"Play a sound"
-#define EVENT_SOUNDS_ALERT_LONG		@"Play the sound \"%@\""
+#define EVENT_SOUNDS_ALERT_SHORT	AILocalizedString(@"Play a sound",nil)
+#define EVENT_SOUNDS_ALERT_LONG		AILocalizedString(@"Play the sound \"%@\"",nil)
 
 @interface AIEventSoundsPlugin (PRIVATE)
 - (void)eventNotification:(NSNotification *)notification;
@@ -103,14 +103,6 @@
             [[adium contactAlertsController] addGlobalAlert:soundAlert];
         }
     }
-}
-
-#warning No longer being used; mute while away currently broken
-- (void)eventNotification:(NSNotification *)notification
-{
-    NSDictionary    *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
-    if (!([[preferenceDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue] && [[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]))
-        [[adium soundController] playSoundAtPath:[soundPathDict objectForKey:[notification name]]];
 }
 
 //Loads various info from a sound set file
