@@ -81,6 +81,7 @@
     [[adium notificationCenter] removeObserver:self];
 
 	[tabViewItemImage release]; tabViewItemImage = nil;
+
     [messageViewController release]; messageViewController = nil;
 	[container release]; container = nil;
 
