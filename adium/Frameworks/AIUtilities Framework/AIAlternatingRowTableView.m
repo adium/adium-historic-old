@@ -12,6 +12,7 @@
 @interface AIAlternatingRowTableView (PRIVATE)
 - (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected;
 - (void)_init;
+- (void)tableViewDeleteSelectedRows:(NSTableView *)tableView;
 @end
 
 
@@ -63,6 +64,33 @@
         [self setNeedsDisplay:YES];
     }
 }
+
+
+// Delete key ---------------------------------------------------------------------
+- (void)setDataSource:(id)aSource
+{
+    [super setDataSource:aSource];
+
+    _dataSourceDeleteRow = [aSource respondsToSelector:@selector(tableView:deleteRow:)];
+}
+
+//Filter keydowns looking for the delete key (to delete the current selection)
+- (void)keyDown:(NSEvent *)theEvent
+{
+    NSString	*charString = [theEvent charactersIgnoringModifiers];
+    unichar	pressedChar = 0;
+
+    //Get the pressed character
+    if([charString length] == 1) pressedChar = [charString characterAtIndex:0];
+
+    //Check if 'delete' was pressed
+    if(pressedChar == NSDeleteFunctionKey || pressedChar == 127){ //Delete
+        [[self dataSource] tableViewDeleteSelectedRows:self]; //Delete the selection
+    }else{
+        [super keyDown:theEvent]; //Pass the key event on
+    }
+}
+
 
 
 // Scrolling ----------------------------------------------------------------------

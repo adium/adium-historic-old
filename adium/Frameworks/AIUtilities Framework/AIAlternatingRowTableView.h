@@ -13,6 +13,7 @@
     BOOL	drawsAlternatingRows;
     NSColor	*alternatingRowColor;
 
+    BOOL	_dataSourceDeleteRow;
 }
 
 - (void)setDrawsAlternatingRows:(BOOL)flag;

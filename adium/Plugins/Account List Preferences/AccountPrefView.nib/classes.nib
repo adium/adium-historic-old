@@ -52,6 +52,11 @@
             SUPERCLASS = NSObject; 
         }, 
         {
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
+        {
             CLASS = AIMTOC2Service; 
             LANGUAGE = ObjC; 
             OUTLETS = {"view_preferences" = NSView; }; 

@@ -230,6 +230,12 @@
     }
 }
 
+//
+- (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
+{
+    [self deleteAccount:nil]; //Delete them
+}
+
 // return the number of accounts
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {

@@ -280,6 +280,12 @@
 
 //TableView datasource --------------------------------------------------------
 //
+- (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
+{
+    [self deleteEvent:nil]; //Delete them
+}
+
+//
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
     return([behaviorArray count]);
