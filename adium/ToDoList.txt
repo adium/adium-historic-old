@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.65 2004/04/20 14:11:43 adamiser Exp $
+$Id: ToDoList.txt,v 1.66 2004/04/20 14:44:28 adamiser Exp $
 
 Legend
 + Change or Addition
@@ -236,6 +236,8 @@ Contact List import/export:
    Import/export code is not fun. 
 
 Sorting:  Allow a 'minor' sort option like iChat?  (iChat uses the last selected as the subsort).  Not sure if this would be useful.
+
+Magnetic Windows:  Use Fire's 'solution' of sliding them to screen edges after a drag.
 
 
 -------------------------------------------------------------------------------------------------------
