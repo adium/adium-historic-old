@@ -21,7 +21,7 @@
 
 #define ADIUM_UPDATE_URL			@"http://download.adiumx.com/"
 #define ADIUM_UPDATE_BETA_URL		@"http://beta.adiumx.com/"
-#define UPDATE_PROMPT				AILocalizedString(@"Adium was updated on %@. Your copy is %@old.  Would you like to update?", nil)
+#define UPDATE_PROMPT				AILocalizedString(@"Adium was updated on %@. Your copy is %@ old.  Would you like to update?", nil)
 
 #define VERSION_AVAILABLE_NIB		@"VersionAvailable"
 #define VERSION_UPTODATE_NIB		@"VersionUpToDate"
