@@ -6,6 +6,7 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
+#import "CSBezierPathAdditions.h"
 #import "IKTableImageCell.h"
 
 @implementation IKTableImageCell
@@ -15,7 +16,7 @@
     //Highlight
     if([self isHighlighted]){
         [[NSColor alternateSelectedControlColor] set];
-        [NSBezierPath fillRect:cellFrame];
+        [[NSBezierPath bezierPathWithRect:cellFrame roundedBy:4] fill];
     }
 
     //Draw our interior
