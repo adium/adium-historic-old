@@ -160,7 +160,6 @@
 	[self configureDetailsPane];
 }
 
-#warning DetailsView -> DetailView
 //Save changes made in the details pane
 - (void)saveDetailsPaneChanges
 {
