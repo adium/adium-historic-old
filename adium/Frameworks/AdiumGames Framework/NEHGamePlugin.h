@@ -33,22 +33,22 @@
 #define				TAG_CHOOSE_PLAYER   2
 
 @interface NEHGamePlugin : AIPlugin <AIContentFilter> {
-	NSMenuItem				* menuItem_game;
+	NSMenuItem						*menuItem_game;
 	
 	//This dictionary maps [account uniqueObjectID] => 
 	//{NSDictionary of [contact uniqueObjectID] =>  NEHGameController*}
-	NSMutableDictionary		* gamesForAccounts;
+	NSMutableDictionary				*gamesForAccounts;
 	
-	IBOutlet NSWindow		* window_newGame;
-	IBOutlet AICompletingTextField	* textField_handle;
-	IBOutlet NSPopUpButton  * popUp_account;
-	IBOutlet NSMatrix		* radio_playAs;
+	IBOutlet NSWindow				*window_newGame;
+	IBOutlet AICompletingTextField	*textField_handle;
+	IBOutlet NSPopUpButton			*popUp_account;
+	IBOutlet NSMatrix				*radio_playAs;
 	
-	NSWindowController		* windowController;
+	NSWindowController				*windowController;
 	
 	//This is of the form "[<Short Game Name>/", just to avoid recreating that
 	//every time we try to parse an incoming message
-	NSString * prefixString;
+	NSString						*prefixString;
 }
 
 - (void)endGameWith:(AIListContact*)contact fromAccount:(AIAccount*)account;
@@ -63,6 +63,10 @@
 //appropriate class
 - (NEHGameController*)newController;
 - (NSString*)nibName;
+
+//This should be called before performing operations which could initiate a game
+//(i.e. it is unsure if the window has been opened before)
+- (void)ensureGameNibIsLoaded;
 
 //The long name is used in menus, and so on
 - (NSString*)gameLongName;
