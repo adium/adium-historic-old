@@ -626,10 +626,10 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 {
     //If there are event pending, iterate through one event
     if(gaim_core_mainloop_events_pending()){
-        gaim_core_mainloop_iteration();
+		gaim_core_mainloop_iteration();
 
         //We also have this method, which will iterate through all events.
-        //gaim_core_mainloop_finish_events()
+        //gaim_core_mainloop_finish_events();
     }
 }
 

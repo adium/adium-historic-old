@@ -146,7 +146,7 @@
 		if([inObject isVisible]) [self _setVisibleCount:visibleCount-1];
 		
 		//Remove the object
-		[inObject removeContainingGroup:nil];
+		[inObject removeContainingGroup:self];
 		[inObject setOrderIndex:0 forGroup:self];
 		[objectArray removeObject:inObject];
 		
