@@ -25,6 +25,8 @@
     NSMenu			*menu_awaySubmenu;
 
     BOOL			menuConfiguredForAway;
+
+    NSMutableArray		*receivedAwayMessage;
 }
 
 - (void)installPlugin;
