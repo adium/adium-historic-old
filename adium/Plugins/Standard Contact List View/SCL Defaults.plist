@@ -20,5 +20,7 @@
 	<false/>
 	<key>Bold Groups</key>
 	<true/>
+	<key>Show Labels</key>
+	<true/>
 </dict>
 </plist>

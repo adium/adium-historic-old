@@ -65,6 +65,11 @@
                                              forKey:KEY_SCL_ALTERNATING_GRID
                                               group:PREF_GROUP_CONTACT_LIST];
 
+    }else if(sender == checkBox_showLabels){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_SCL_SHOW_LABELS
+                                              group:PREF_GROUP_CONTACT_LIST];
+
     }else if(sender == colorWell_group){
         [[owner preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_SCL_GROUP_COLOR
@@ -161,6 +166,13 @@
     }
 }
 
+//Clean up our preference pane
+- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    [view_prefViewGeneral release]; view_prefViewGeneral = nil;
+    [view_prefViewGroups release]; view_prefViewGroups = nil;
+}
+
 //Display the name of a font in our text field
 - (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField
 {
@@ -188,7 +200,8 @@
     [self showFont:[[preferenceDict objectForKey:KEY_SCL_FONT] representedFont] inField:textField_fontName];
     [colorWell_contact setColor:[[preferenceDict objectForKey:KEY_SCL_CONTACT_COLOR] representedColor]];
     [colorWell_background setColor:[[preferenceDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColor]];
-
+    [checkBox_showLabels setState:[[preferenceDict objectForKey:KEY_SCL_SHOW_LABELS] boolValue]];
+    
     //Grid
     [checkBox_alternatingGrid setState:[[preferenceDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue]];
     [colorWell_grid setColor:[[preferenceDict objectForKey:KEY_SCL_GRID_COLOR] representedColor]];

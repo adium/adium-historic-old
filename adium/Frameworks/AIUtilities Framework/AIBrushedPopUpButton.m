@@ -9,10 +9,11 @@
 #import "AIBrushedPopUpButton.h"
 #import <AIUtilities/AIUtilities.h>
 
-#define TRIANGLE_PADDING_X 	3
+#define TRIANGLE_PADDING_X 	2
 #define TRIANGLE_OFFSET_Y 	4
 #define LABEL_OFFSET_Y 		0
 #define BACK_OFFSET_Y		0
+#define LABEL_INSET_SMALL	3
 
 @interface AIBrushedPopUpButton (PRIVATE)
 - (void)stopTrackingCursor;
@@ -114,7 +115,8 @@
     frame = [self frame];
     [[self superview] setNeedsDisplayInRect:frame];
     
-    frame.size.width = [title sizeWithAttributes:textAttributes].width + TRIANGLE_PADDING_X + [popUpTriangle size].width + [popUpRolloverCaps size].width;
+    frame.size.width = [title sizeWithAttributes:textAttributes].width - (LABEL_INSET_SMALL * 2) + TRIANGLE_PADDING_X + [popUpTriangle size].width + [popUpRolloverCaps size].width;
+    
     [self setFrame:frame];
 }
 
@@ -169,7 +171,7 @@
     capHeight = [caps size].height;
     labelSize = [title sizeWithAttributes:textAttributes];
     centeredLabelY = ((capHeight - labelSize.height) / 2.0);
-    contentRight = capWidth + labelSize.width + TRIANGLE_PADDING_X + [triangle size].width;
+    contentRight = capWidth + labelSize.width - (LABEL_INSET_SMALL * 2) + TRIANGLE_PADDING_X + [triangle size].width;
     
     //Draw the backgound
     if(mouseIn){
@@ -200,11 +202,11 @@
     }
 
     //Draw the embossed title
-    [title drawAtPoint:NSMakePoint(frame.origin.x + capWidth, frame.origin.y + frame.size.height - labelSize.height - centeredLabelY) withAttributes:bezelAttributes];
-    [title drawAtPoint:NSMakePoint(frame.origin.x + capWidth, frame.origin.y + frame.size.height - labelSize.height - centeredLabelY - 1) withAttributes:textAttributes];
+    [title drawAtPoint:NSMakePoint(frame.origin.x + capWidth - LABEL_INSET_SMALL, frame.origin.y + frame.size.height - labelSize.height - centeredLabelY) withAttributes:bezelAttributes];
+    [title drawAtPoint:NSMakePoint(frame.origin.x + capWidth - LABEL_INSET_SMALL, frame.origin.y + frame.size.height - labelSize.height - centeredLabelY - 1) withAttributes:textAttributes];
 
     //Draw the triangle
-    [triangle compositeToPoint:NSMakePoint(frame.origin.x + capWidth + labelSize.width + TRIANGLE_PADDING_X, frame.origin.y + frame.size.height - TRIANGLE_OFFSET_Y) operation:NSCompositeSourceOver];
+    [triangle compositeToPoint:NSMakePoint(frame.origin.x + capWidth + labelSize.width - LABEL_INSET_SMALL + TRIANGLE_PADDING_X, frame.origin.y + frame.size.height - TRIANGLE_OFFSET_Y) operation:NSCompositeSourceOver];
 }
 
 - (void)resetCursorRects

@@ -213,6 +213,15 @@
     }
 }
 
+//Clean up our preference pane
+- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    [view_prefixes release]; view_prefixes = nil;
+    [view_timeStamps release]; view_timeStamps = nil;
+    [view_gridding release]; view_gridding = nil;
+    [view_alias release]; view_alias = nil;
+}
+
 //Display the font name in our text field
 - (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField
 {

@@ -20,7 +20,7 @@
 
 @interface NSObject(AIPreferencePaneDelegate)
 - (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane;
-- (void)preferencePane:(AIPreferencePane *)preferencePane closeView:(NSView *)view;
+- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane;
 - (void)restoreDefaultsForPreferencePane:(AIPreferencePane *)preferencePane;
 @end
 
@@ -29,18 +29,16 @@
     IBOutlet	NSView			*view_containerSubView;
     IBOutlet	NSTextField		*textField_title;
 
-    NSView			*preferenceView;
-//    NSBundle			*bundle;
-//    NSString			*nibName;
     id				delegate;
     PREFERENCE_CATEGORY		category;
-
     NSString			*label;
+    NSView			*preferenceView;
 }
 
 + (AIPreferencePane *)preferencePaneInCategory:(PREFERENCE_CATEGORY)inCategory withDelegate:(id)inDelegate label:(NSString *)inLabel;
 - (PREFERENCE_CATEGORY)category;
 - (NSString *)label;
 - (NSView *)view;
+- (void)closeView;
 
 @end

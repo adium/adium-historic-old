@@ -34,6 +34,8 @@
 - (NSDictionary *)_iconInArrayNamed:(NSString *)name;
 - (void)setupPreferenceView;
 - (void)animate:(NSTimer *)timer;
+- (void)_startAnimating;
+- (void)_stopAnimating;
 @end
 
 @implementation AIDockIconPreferences
@@ -94,9 +96,26 @@
 
         //Configure our view
         [self configureView];
+
+        //Start animating
+        [self _startAnimating];
     }
 
     return(view_prefView);
+}
+
+//Clean up our preference pane
+- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    NSLog(@"Close");
+    [view_prefView release]; view_prefView = nil;
+
+    //Stop animating
+    [self _stopAnimating];
+
+    //
+    [[owner notificationCenter] removeObserver:self];
+    [previewStateArray release]; previewStateArray = nil;
 }
 
 //Setup our preference view
@@ -119,11 +138,6 @@
         [column setDataCell:cell];
     }
 
-    //Start animating
-    if(!animationTimer){
-        animationTimer = [[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(animate:) userInfo:nil repeats:YES] retain];
-    }
-
     //Observe preference changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
@@ -142,6 +156,23 @@
         iconDict = [self _iconInArrayNamed:iconName];
         [self configureForSelectedIcon:iconDict];
         
+    }
+}
+
+//Start animating
+- (void)_startAnimating
+{
+    if(!animationTimer){
+        animationTimer = [[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(animate:) userInfo:nil repeats:YES] retain];
+    }
+}
+
+- (void)_stopAnimating
+{
+    if(animationTimer){
+        [animationTimer invalidate];
+        [animationTimer release];
+        animationTimer = nil;
     }
 }
 
@@ -207,7 +238,11 @@
         tempArray = [NSMutableArray array];
         stateEnumerator = [stateArray objectEnumerator];
         while((state = [stateEnumerator nextObject])){
-            [tempArray addObject:[stateDict objectForKey:state]];
+            id	tempState = [stateDict objectForKey:state];
+
+            if(tempState){
+                [tempArray addObject:tempState];
+            }
         }
 
         //Generate the preview icon state, and add it to our preview state array

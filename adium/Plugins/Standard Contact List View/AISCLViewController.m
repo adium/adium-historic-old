@@ -151,6 +151,7 @@
         BOOL		alternatingGrid = [[prefDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue];
         BOOL		customGroupColor = [[prefDict objectForKey:KEY_SCL_CUSTOM_GROUP_COLOR] boolValue];
         BOOL		boldGroups = [[prefDict objectForKey:KEY_SCL_BOLD_GROUPS] boolValue];
+        BOOL		showLabels = [[prefDict objectForKey:KEY_SCL_SHOW_LABELS] boolValue];
         NSFont		*boldFont = nil;
         
         //Fonts
@@ -161,6 +162,7 @@
         [contactListView setGroupFont:(boldFont ? boldFont : font)];
 
         //Colors
+        [contactListView setShowLabels:showLabels];
         [contactListView setColor:color];
         [contactListView setGroupColor:(customGroupColor ? groupColor : color)];
         [contactListView setBackgroundColor:backgroundColor];

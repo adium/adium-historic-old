@@ -60,6 +60,13 @@
     return(view_preferences);
 }
 
+//Clean up our preference pane
+- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    [view_preferences release]; view_preferences = nil;
+
+}
+
 //Configure our preference view
 - (void)configureView
 {

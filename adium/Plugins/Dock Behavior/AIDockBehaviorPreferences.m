@@ -124,6 +124,16 @@
     return(view_prefView);
 }
 
+//Clean up our preference pane
+- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    [view_prefView release]; view_prefView = nil;
+
+    //
+    [[owner notificationCenter] removeObserver:self];
+    [behaviorArray release]; behaviorArray = nil;
+}
+
 //configure our view
 - (void)configureView
 {
@@ -136,7 +146,7 @@
     [popUp_behaviorSet setMenu:[self behaviorSetMenu]];
 
     //Configure the 'Behavior' table column
-    dataCell = [[AITableViewPopUpButtonCell alloc] init];
+    dataCell = [[[AITableViewPopUpButtonCell alloc] init] autorelease];
     [dataCell setMenu:[self behaviorListMenu]];
     [dataCell setControlSize:NSSmallControlSize];
     [dataCell setFont:[NSFont menuFontOfSize:11]];

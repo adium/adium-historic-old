@@ -56,6 +56,7 @@
 - (void)dealloc
 {
     [alternatingRowColor release];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [super dealloc];
 }
