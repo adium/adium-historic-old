@@ -646,7 +646,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     NSParameterAssert(accountArray != nil);
 
 	[inAccount retain]; //Don't let the account dealloc until we have a chance to notify everyone that it's gone
-	[inAccount disconnect];
+	[inAccount willBeDeleted];
 	[accountArray removeObject:inAccount];
 	if (shouldSave){
 		[self saveAccounts];
@@ -674,35 +674,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     //Delete the old account
     [self deleteAccount:inAccount save:YES];
     
-    return(newAccount);
-}
-
-//Change the UID of an existing account
-- (AIAccount *)changeUIDOfAccount:(AIAccount *)inAccount to:(NSString *)inUID
-{
-#warning XXX - I hate this.  Account code should be smart enough to handle a UID change. -ai
-	//[inAccount setUID:inUID]; anyone?
-	
-	//Add an account with the new UID
-	AIAccount	*newAccount = [self createAccountWithService:[inAccount service]
-														 UID:inUID
-											internalObjectID:[inAccount internalObjectID]];
-
-	[newAccount setPreference:[[inAccount service] filterUID:inUID removeIgnoredCharacters:NO]
-					   forKey:@"FormattedUID"
-						group:GROUP_ACCOUNT_STATUS];
-	
-	int oldAccountIndex = [accountArray indexOfObject:inAccount];
-	//The old accout should be in the accountArray, but sanity checking never hurt anyone
-	if (oldAccountIndex != NSNotFound) {
-		[self insertAccount:newAccount atIndex:oldAccountIndex save:NO];
-		
-		//Delete the old account
-		[self deleteAccount:inAccount save:YES];
-	}else{
-		[self insertAccount:newAccount atIndex:-1 save:YES];
-	}
-	
     return(newAccount);
 }
 

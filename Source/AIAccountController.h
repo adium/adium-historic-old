@@ -109,7 +109,6 @@ typedef enum
 - (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index save:(BOOL)shouldSave;
 - (void)deleteAccount:(AIAccount *)inAccount save:(BOOL)shouldSave;
 - (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(id <AIServiceController>)inService;
-- (AIAccount *)changeUIDOfAccount:(AIAccount *)inAccount to:(NSString *)inUID;
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
 
 //AccountMenuPlugin
