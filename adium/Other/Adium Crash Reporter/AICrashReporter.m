@@ -8,12 +8,12 @@
 #import <AIUtilities/AIUtilities.h>
 #import "AICrashReporter.h"
 
-#define CRASH_REPORT_URL	@"http://www.visualdistortion.org/crash/post.jsp"
-#define EXCEPTIONS_PATH		[@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
-#define CRASHES_PATH		[@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
+#define CRASH_REPORT_URL				@"http://www.visualdistortion.org/crash/post.jsp"
+#define EXCEPTIONS_PATH					[@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
+#define CRASHES_PATH					[@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
 
-#define KEY_CRASH_EMAIL_ADDRESS		@"AdiumCrashReporterEmailAddress"
-#define KEY_CRASH_AIM_ACCOUNT		@"AdiumCrashReporterAIMAccount"
+#define KEY_CRASH_EMAIL_ADDRESS			@"AdiumCrashReporterEmailAddress"
+#define KEY_CRASH_AIM_ACCOUNT			@"AdiumCrashReporterAIMAccount"
 
 #define CRASH_REPORT_SLAY_ATTEMPTS		100
 #define CRASH_REPORT_SLAY_INTERVAL		0.1
@@ -76,18 +76,19 @@
 - (void)appleCrashReportSlayer:(NSTimer *)inTimer
 {
 	static int 		countdown = CRASH_REPORT_SLAY_ATTEMPTS;
-
+	
 	//Kill the notification app if it's open
 	if(countdown-- == 0 || ![[slayerScript executeAndReturnError:nil] booleanValue]){
 		[inTimer invalidate];
 	}
 }
 
+#pragma mark Crash log loading
 //Waits for a crash log to be written
 - (void)delayedCrashLogDiscovery:(NSTimer *)inTimer
 {
 	static int 		countdown = CRASH_LOG_WAIT_ATTEMPTS;
-
+	
 	//Kill the notification app if it's open
 	if(countdown-- == 0 || [self reportCrashForLogAtPath:CRASHES_PATH]){
 		[inTimer invalidate];
@@ -126,7 +127,7 @@
 			[textView_details setSelectedRange:NSMakeRange(0, [[textView_details textStorage] length])
 									  affinity:NSSelectionAffinityUpstream
 								stillSelecting:NO];
-
+			
 			//Open our window
 			[window_MainWindow makeKeyAndOrderFront:nil];
 			
@@ -137,23 +138,14 @@
 	return(NO);
 }
 
-//Save some of the information for next time on quit
-- (BOOL)windowShouldClose:(id)sender
-{
-    //Remember the user's email address, account name
-    [[NSUserDefaults standardUserDefaults] setObject:[textField_emailAddress stringValue]
-                                              forKey:KEY_CRASH_EMAIL_ADDRESS];	
-    [[NSUserDefaults standardUserDefaults] setObject:[textField_accountIM stringValue]
-                                              forKey:KEY_CRASH_AIM_ACCOUNT];	
-    
-    return(YES);
-}
-
+#pragma mark Privacy Details
 //Display privacy information sheet
 - (IBAction)showPrivacyDetails:(id)sender
 {
-    NSDictionary		*attributes = [NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:11] forKey:NSFontAttributeName];
-    NSAttributedString	*attrLogString = [[[NSAttributedString alloc] initWithString:crashLog attributes:attributes] autorelease];
+    NSDictionary		*attributes = [NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:11]
+																  forKey:NSFontAttributeName];
+    NSAttributedString	*attrLogString = [[[NSAttributedString alloc] initWithString:crashLog
+																		  attributes:attributes] autorelease];
     
     //Fill in crash log
     [[textView_crashLog textStorage] setAttributedString:attrLogString];
@@ -173,13 +165,15 @@
     [NSApp endSheet:panel_privacySheet returnCode:0];
 }
 
+#pragma mark Report sending
 //User wants to send the report
 - (IBAction)send:(id)sender
 {
-    if([[textField_emailAddress stringValue] isEqualToString:@""] && [[textField_accountIM stringValue] isEqualToString:@""]){
+    if([[textField_emailAddress stringValue] isEqualToString:@""] &&
+	   [[textField_accountIM stringValue] isEqualToString:@""]){
         NSBeginCriticalAlertSheet(AILocalizedString(@"Contact Information Required",nil),
-				  AILocalizedString(@"OK",nil), nil, nil, window_MainWindow, nil, nil, nil, NULL,
-				  AILocalizedString(@"Please provide either your email address or AIM name incase we need to contact you for additional information (or to suggest a solution).",nil));
+								  AILocalizedString(@"OK",nil), nil, nil, window_MainWindow, nil, nil, nil, NULL,
+								  AILocalizedString(@"Please provide either your email address or AIM name in case we need to contact you for additional information (or to suggest a solution).",nil));
     }else{
         NSString	*shortDescription = [textField_description stringValue];
         
@@ -260,12 +254,26 @@
     }
 }
 
+#pragma mark Closing behavior
+//Save some of the information for next time on quit
+- (BOOL)windowShouldClose:(id)sender
+{
+    //Remember the user's email address, account name
+    [[NSUserDefaults standardUserDefaults] setObject:[textField_emailAddress stringValue]
+                                              forKey:KEY_CRASH_EMAIL_ADDRESS];	
+    [[NSUserDefaults standardUserDefaults] setObject:[textField_accountIM stringValue]
+                                              forKey:KEY_CRASH_AIM_ACCOUNT];	
+    
+    return(YES);
+}
+
 //Terminate if our window is closed
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
 {
     return YES;
 }
 
+#pragma mark Build information
 //Load the current build date and our cryptic, non-sequential build number ;)
 - (void)_loadBuildInformation
 {
@@ -276,27 +284,29 @@
         FILE *f = fopen(path, "r");
         fscanf(f, "%s | %s | %s", num, unixDate, whoami);
         fclose(f);
-	
+		
         if(*num){
             buildNumber = [[NSString stringWithFormat:@"%s", num] retain];
-	}
-	
-	if(*unixDate){
-	    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%m-%d" allowNaturalLanguage:NO] autorelease];
+		}
+		
+		if(*unixDate){
+			NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%m-%d" 
+																	 allowNaturalLanguage:NO] autorelease];
             NSDate	    *date;
-	    
-	    date = [NSDate dateWithTimeIntervalSince1970:[[NSString stringWithCString:unixDate] doubleValue]];
+			
+			date = [NSDate dateWithTimeIntervalSince1970:[[NSString stringWithCString:unixDate] doubleValue]];
             buildDate = [[dateFormatter stringForObjectValue:date] retain];
-	}
-	
-	if (*whoami){
-	    buildUser = [[NSString stringWithFormat:@"%s", whoami] retain];
-	    if ([buildUser isEqualToString:@"adamiser"] || [buildUser isEqualToString:@"evands"] || 
-		[buildUser isEqualToString:@"jmelloy"]){
-		buildUser = nil;
-	    }
-	    
-	}
+		}
+		
+		if (*whoami){
+			buildUser = [[NSString stringWithFormat:@"%s", whoami] retain];
+			if ([buildUser isEqualToString:@"adamiser"] || 
+				[buildUser isEqualToString:@"evands"] || 
+				[buildUser isEqualToString:@"jmelloy"]){
+				buildUser = nil;
+			}
+			
+		}
     }
     
     //Default to empty strings if something goes wrong
