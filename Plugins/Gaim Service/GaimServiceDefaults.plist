@@ -7,6 +7,9 @@
 	<key>Oscar:Port</key>
 	<integer>5190</integer>
 	
+	<key>ICQ:Encoding</key>
+	<string>ISO-8859-1</string>
+	
 	<key>MSN:Host</key>
 	<string>messenger.hotmail.com</string>
 	<key>MSN:Port</key>

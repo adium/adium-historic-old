@@ -48,8 +48,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	BOOL		forceOldSSL, useTLS, allowPlaintext;
 	
 	//'Connect via' server (nil by default)
-	connectServer = [self preferenceForKey:KEY_JABBER_CONNECT_SERVER group:GROUP_ACCOUNT_STATUS];
-	if (connectServer){
+	if ((connectServer = [self preferenceForKey:KEY_JABBER_CONNECT_SERVER group:GROUP_ACCOUNT_STATUS])){
 		gaim_account_set_string(account, "connect_server", [connectServer UTF8String]);
 	}
 	

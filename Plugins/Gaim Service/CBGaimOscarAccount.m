@@ -12,13 +12,6 @@
 
 #define DELAYED_UPDATE_INTERVAL		1.0
 
-static NSString *ICQServiceID = nil;
-static NSImage  *ICQImage = nil;
-static NSImage  *ICQMenuImage = nil;
-static NSImage  *ICQOnlineMenuImage = nil;
-static NSImage  *ICQConnectingMenuImage = nil;
-static NSImage  *ICQOfflineMenuImage = nil;
-
 @interface CBGaimOscarAccount (PRIVATE)
 -(NSString *)serversideCommentForContact:(AIListContact *)theContact;
 -(NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding;
@@ -42,39 +35,7 @@ static BOOL didInitOscar = NO;
 - (void)initAccount
 {
 	[super initAccount];
-	
-	accountIsICQ = NO;
-	image = nil;
-	menuImage = nil;
-	onlineMenuImage = nil;
-	connectingMenuImage = nil;
-	offlineMenuImage = nil;
-				
-	if ([UID length]){
-		char firstCharacter = [UID characterAtIndex:0];
-		if (firstCharacter >= '0' && firstCharacter <= '9') {
-			if (!ICQServiceID) ICQServiceID = [@"ICQ" retain];
-			if (!ICQImage){
-				ICQImage = [[NSImage imageNamed:@"icq" forClass:[self class]] retain];
-				ICQMenuImage = [[ICQImage imageByScalingToSize:NSMakeSize(16,16)] retain];
-				
-				//Online is the same as the menuImage
-				ICQOnlineMenuImage = [ICQMenuImage retain];
-				ICQConnectingMenuImage = [[ICQMenuImage imageByFadingToFraction:CONNECTING_MENU_IMAGE_FRACTION] retain];				
-				ICQOfflineMenuImage = [[ICQMenuImage imageByFadingToFraction:OFFLINE_MENU_IMAGE_FRACTION] retain];
-			}
-			
-			[self setStatusObject:ICQServiceID forKey:@"DisplayServiceID" notify:YES];
-			image = ICQImage;
-			menuImage = ICQMenuImage;
-			onlineMenuImage = ICQOnlineMenuImage;
-			connectingMenuImage = ICQConnectingMenuImage;
-			offlineMenuImage = ICQOfflineMenuImage;
-			
-			accountIsICQ = YES;
-		}
-	}
-	
+
 	arrayOfContactsForDelayedUpdates = nil;
 	delayedSignonUpdateTimer = nil;
 }
@@ -97,7 +58,7 @@ static BOOL didInitOscar = NO;
 	    nonHTMLUser = ((firstCharacter >= '0' && firstCharacter <= '9') || firstCharacter == '+');
 	}
 	
-	if (nonHTMLUser || accountIsICQ){
+	if (nonHTMLUser){
 		returnString = [inAttributedString string];
 	}else{
 		returnString = [AIHTMLDecoder encodeHTML:inAttributedString
@@ -118,99 +79,93 @@ static BOOL didInitOscar = NO;
 }
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject contentMessage:(AIContentMessage *)contentMessage
-{	
-	if (accountIsICQ){
-		//As an ICQ account we should always send plain text, so no more complex checking is needed
-		return ([inAttributedString string]);
+{		
+	if(inListObject){
+		BOOL		nonHTMLUser = NO;
+		char		firstCharacter = [[inListObject UID] characterAtIndex:0];
+		nonHTMLUser = ((firstCharacter >= '0' && firstCharacter <= '9') || firstCharacter == '+');
 		
-	}else{		
-		if(inListObject){
-			BOOL		nonHTMLUser = NO;
-			char		firstCharacter = [[inListObject UID] characterAtIndex:0];
-			nonHTMLUser = ((firstCharacter >= '0' && firstCharacter <= '9') || firstCharacter == '+');
+		if (nonHTMLUser){
+			//We don't want to send HTML to ICQ users, or mobile phone users
+			return ([inAttributedString string]);
 			
-			if (nonHTMLUser){
-				//We don't want to send HTML to ICQ users, or mobile phone users
-				return ([inAttributedString string]);
+		}else{
+			if (GAIM_DEBUG){
+				//We have a list object and are sending both to and from an AIM account; encode to HTML and look for outgoing images
+				NSString	*returnString;
 				
-			}else{
-				if (GAIM_DEBUG){
-					//We have a list object and are sending both to and from an AIM account; encode to HTML and look for outgoing images
-					NSString	*returnString;
+				returnString = [AIHTMLDecoder encodeHTML:inAttributedString
+												 headers:YES
+												fontTags:YES
+									  includingColorTags:YES
+										   closeFontTags:YES
+											   styleTags:YES
+							  closeStyleTagsOnFontChange:NO
+										  encodeNonASCII:NO
+											  imagesPath:@"/tmp"
+									   attachmentsAsText:NO
+						  attachmentImagesOnlyForSending:YES
+										  simpleTagsOnly:NO];
+				
+				if ([returnString rangeOfString:@"<IMG " options:NSCaseInsensitiveSearch].location != NSNotFound){
+					//There's an image... we need to see about a Direct Connect, aborting the send attempt if none is established 
+					//and sending after it is if one is established
+					NSLog(@"No Direct Connect for you! Come back two year!");
 					
-					returnString = [AIHTMLDecoder encodeHTML:inAttributedString
-													 headers:YES
-													fontTags:YES
-										  includingColorTags:YES
-											   closeFontTags:YES
-												   styleTags:YES
-								  closeStyleTagsOnFontChange:NO
-											  encodeNonASCII:NO
-												  imagesPath:@"/tmp"
-										   attachmentsAsText:NO
-							  attachmentImagesOnlyForSending:YES
-											  simpleTagsOnly:NO];
+					//Check for a oscar_direct_im (dim) currently open
+					struct oscar_direct_im  *dim;
+					const char				*who = [[inListObject UID] UTF8String];
 					
-					if ([returnString rangeOfString:@"<IMG " options:NSCaseInsensitiveSearch].location != NSNotFound){
-						//There's an image... we need to see about a Direct Connect, aborting the send attempt if none is established 
-						//and sending after it is if one is established
-						NSLog(@"No Direct Connect for you! Come back two year!");
+					dim = (struct oscar_direct_im  *)oscar_find_direct_im(account->gc, who);
+					
+					if (dim && (dim->connected)){
+						//We have a connected dim already; process the string and keep the modified copy
+						returnString = [self stringByProcessingImgTagsForDirectIM:returnString];
 						
-						//Check for a oscar_direct_im (dim) currently open
-						struct oscar_direct_im  *dim;
-						const char				*who = [[inListObject UID] UTF8String];
-
-						dim = (struct oscar_direct_im  *)oscar_find_direct_im(account->gc, who);
+					}else{
+						//Either no dim, or the dim we have is no longer conected (oscar_direct_im_initiate_immediately will reconnect it)
+						oscar_direct_im_initiate_immediately(account->gc, who);
 						
-						if (dim && (dim->connected)){
-							//We have a connected dim already; process the string and keep the modified copy
-							returnString = [self stringByProcessingImgTagsForDirectIM:returnString];
-							
-						}else{
-							//Either no dim, or the dim we have is no longer conected (oscar_direct_im_initiate_immediately will reconnect it)
-							oscar_direct_im_initiate_immediately(account->gc, who);
-							
-							//Add this content message to the sending queue for this contact to be sent once a connection is established
-							//XXX
-							
-							//Return nil for now to indicate that the message should not be sent
-							returnString = nil;
-						}
+						//Add this content message to the sending queue for this contact to be sent once a connection is established
+						//XXX
+						
+						//Return nil for now to indicate that the message should not be sent
+						returnString = nil;
 					}
-					
-					return (returnString);
-					
-				} else {
-#warning DirectIM is not ready for prime time.  Temporary.
-					return([AIHTMLDecoder encodeHTML:inAttributedString
-													 headers:YES
-													fontTags:YES
-										  includingColorTags:YES
-											   closeFontTags:NO
-												   styleTags:YES
-								  closeStyleTagsOnFontChange:NO
-											  encodeNonASCII:NO
-												  imagesPath:nil
-										   attachmentsAsText:YES
-							  attachmentImagesOnlyForSending:YES
-											  simpleTagsOnly:NO]);
 				}
+				
+				return (returnString);
+				
+			} else {
+#warning DirectIM is not ready for prime time.  Temporary.
+				return([AIHTMLDecoder encodeHTML:inAttributedString
+										 headers:YES
+										fontTags:YES
+							  includingColorTags:YES
+								   closeFontTags:NO
+									   styleTags:YES
+					  closeStyleTagsOnFontChange:NO
+								  encodeNonASCII:NO
+									  imagesPath:nil
+							   attachmentsAsText:YES
+				  attachmentImagesOnlyForSending:YES
+								  simpleTagsOnly:NO]);
 			}
-			
-		}else{ //Send HTML when signed in as an AIM account and we don't know what sort of user we are sending to (most likely multiuser chat)
-			return ([AIHTMLDecoder encodeHTML:inAttributedString
-									  headers:YES
-									 fontTags:YES
-						   includingColorTags:YES
-								closeFontTags:NO
-									styleTags:YES
-				   closeStyleTagsOnFontChange:NO
-							   encodeNonASCII:NO
-								   imagesPath:nil
-							attachmentsAsText:YES
-			   attachmentImagesOnlyForSending:YES
-							   simpleTagsOnly:NO]);
 		}
+		
+	}else{ //Send HTML when signed in as an AIM account and we don't know what sort of user we are sending to (most likely multiuser chat)
+		return ([AIHTMLDecoder encodeHTML:inAttributedString
+								  headers:YES
+								 fontTags:YES
+					   includingColorTags:YES
+							closeFontTags:NO
+								styleTags:YES
+			   closeStyleTagsOnFontChange:NO
+						   encodeNonASCII:NO
+							   imagesPath:nil
+						attachmentsAsText:YES
+		   attachmentImagesOnlyForSending:YES
+						   simpleTagsOnly:NO]);
 	}
 }
 
@@ -235,8 +190,7 @@ static BOOL didInitOscar = NO;
 		}else{
 			contactServiceID = @"libgaim-oscar-AIM";
 		}
-		
-		
+
 		contactService = [[adium accountController] serviceWithUniqueID:contactServiceID];
 
 		NSLog(@"%@ -> %@",contactServiceID,contactService);
@@ -546,11 +500,16 @@ static BOOL didInitOscar = NO;
 
 - (oneway void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString
 {
-	//For AIM, we get profiles by themselves and don't want this userInfo with all its fields.
-	//For ICQ, however, this userInfo is just what the doctor ordered.
-	if (accountIsICQ){
+	//For AIM, we get profiles by themselves and don't want this userInfo with all its fields, so
+	//we override this method to prevent the information from reaching the rest of Adium.
+	if ([self useGaimUserInfo]){
 		[super updateUserInfo:theContact withData:userInfoString];
 	}
+}
+
+- (BOOL)useGaimUserInfo
+{
+	return NO;
 }
 
 #pragma mark Group Chat

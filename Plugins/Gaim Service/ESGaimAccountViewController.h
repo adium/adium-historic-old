@@ -23,5 +23,6 @@
 }
 
 - (IBAction)changedConnectionPreference:(id)sender;
+- (void)controlTextDidChange:(NSNotification *)aNotification;
 
 @end
