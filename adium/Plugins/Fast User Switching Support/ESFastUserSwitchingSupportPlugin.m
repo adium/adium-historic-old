@@ -7,7 +7,7 @@
 
 #import "ESFastUserSwitchingSupportPlugin.h"
 
-#define FAST_USER_SWITCH_AWAY_STRING @"Someone else is using my computer right now."
+#define FAST_USER_SWITCH_AWAY_STRING @"I have switched logged in users. Someone else may be using the computer."
 
 @implementation ESFastUserSwitchingSupportPlugin
 - (void)installPlugin
