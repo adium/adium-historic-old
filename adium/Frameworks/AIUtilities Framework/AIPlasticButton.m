@@ -21,6 +21,10 @@
 {
     [super initWithFrame:frameRect];
 
+    //Default title and image
+    [self setTitle:@""];
+    [self setImage:nil];
+    
     //Load images
     plasticCaps = [[AIImageUtilities imageNamed:@"PlasticButtonNormal_Caps" forClass:[self class]] retain];
     plasticMiddle = [[AIImageUtilities imageNamed:@"PlasticButtonNormal_Middle" forClass:[self class]] retain];
@@ -116,8 +120,8 @@
         NSSize	size = [[self image] size];
         NSRect	centeredRect;
 
-        centeredRect = NSMakeRect(frame.origin.x + ((frame.size.width - size.width) / 2.0) + IMAGE_OFFSET_X,
-                                  frame.origin.y + ((capHeight - size.height) / 2.0) + IMAGE_OFFSET_Y,
+        centeredRect = NSMakeRect(frame.origin.x + (int)((frame.size.width - size.width) / 2.0) + IMAGE_OFFSET_X,
+                                  frame.origin.y + (int)((capHeight - size.height) / 2.0) + IMAGE_OFFSET_Y,
                                   size.width,
                                   size.height);
 

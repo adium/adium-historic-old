@@ -43,7 +43,6 @@
     [super init];
     owner = [inOwner retain];
     chat = [inChat retain];
-    outgoingAlias = nil;
 
     //Get pref values
     [self preferencesChanged:nil];
@@ -86,7 +85,6 @@
     [timeStampFormat release];
     [prefixIncoming release];
     [prefixOutgoing release];
-    [outgoingAlias release];
 
     //
     [senderCol release];
@@ -112,7 +110,6 @@
         [timeStampFormat release];
         [prefixIncoming release];
         [prefixOutgoing release];
-        [outgoingAlias release];
         
         //Cache the new preferences
         outgoingSourceColor = [[[prefDict objectForKey:KEY_SMV_OUTGOING_PREFIX_COLOR] representedColor] retain];
@@ -141,8 +138,6 @@
         gridDarkness = [[prefDict objectForKey:KEY_SMV_GRID_DARKNESS] floatValue];
         senderGradientDarkness = [[prefDict objectForKey:KEY_SMV_SENDER_GRADIENT_DARKNESS] floatValue];
 //        senderGradientLightness = [[prefDict objectForKey:KEY_SMV_SENDER_GRADIENT_LIGHTNESS] floatValue];
-
-        outgoingAlias = [[prefDict objectForKey:KEY_SMV_OUTGOING_ALIAS] retain];
         
         [messageView reloadData];
     }
@@ -301,15 +296,11 @@
     }
 
     //Get the sender string
-    if(outgoing && outgoingAlias != nil && [outgoingAlias length] != 0){
-        senderString = outgoingAlias;
-    }
-    if(!senderString){
-        if(outgoing){
-            senderString = [(AIAccount *)messageSource accountDescription];
-        }else{
-            senderString = [(AIListContact *)messageSource displayName];
-        }
+    if(outgoing){
+        senderString = [[owner accountController] propertyForKey:@"FullName" account:(AIAccount *)messageSource];
+        if(!senderString || [senderString length] == 0) senderString = [(AIAccount *)messageSource accountDescription];
+    }else{
+        senderString = [(AIListContact *)messageSource displayName];
     }
     
     //Create the cell

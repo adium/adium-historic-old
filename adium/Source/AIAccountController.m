@@ -56,12 +56,10 @@
 - (void)initController
 {
     availableServiceArray = [[NSMutableArray alloc] init];
-    accountArray = [[NSMutableArray alloc] init];
+    accountArray = nil;
     lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];
     sleepingOnlineAccounts = nil;
-    
-    [owner registerEventNotification:Account_StatusChanged displayName:@"Account Status Changed"];
-    
+
     //Register our default preferences
     accountStatusDict = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_ACCOUNT_STATUS] objectForKey:KEY_ACCOUNT_STATUS] mutableCopy];
     if(!accountStatusDict) accountStatusDict = [[NSMutableDictionary alloc] init];
@@ -84,12 +82,12 @@
     //Process each account, looking for any that are online
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
-        if([[account supportedStatusKeys] containsObject:@"Online"] && [[account statusObjectForKey:@"Online"] boolValue]){
+        if([[account supportedPropertyKeys] containsObject:@"Online"] && [[account propertyForKey:@"Online"] boolValue]){
             //Remember that this account was online
             [sleepingOnlineAccounts addObject:account];
             
             //Disconnect it
-            [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:account];
+            [self setProperty:[NSNumber numberWithBool:NO] forKey:@"Online" account:account];
         }
     }
 }
@@ -104,7 +102,7 @@
     enumerator = [sleepingOnlineAccounts objectEnumerator];
     while((account = [enumerator nextObject])){
         //Connect it
-        [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:account];
+        [self setProperty:[NSNumber numberWithBool:YES] forKey:@"Online" account:account];
     }
 
     //Cleanup
@@ -149,9 +147,6 @@
     [self loadAccounts];
     [self accountListChanged];
 
-    //Observe the newly loaded account list
-    [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
-
     //Observe content (for accountForSendingContentToHandle)
     [[owner notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
     
@@ -192,8 +187,6 @@
 // Returns the account array
 - (NSArray *)accountArray
 {
-    NSParameterAssert(accountArray != nil);
-
     return(accountArray);
 }
 
@@ -219,7 +212,7 @@
     AIAccount	*newAccount;
 
     //Change the service type
-    [[inAccount properties] setObject:[inService identifier] forKey:ACCOUNT_TYPE];
+    [self setProperty:[inService identifier] forKey:ACCOUNT_TYPE account:inAccount];
     
     //Open the account again
     newAccount = [self accountOfType:[inService identifier] withProperties:[inAccount properties]];
@@ -252,7 +245,23 @@
     return(destIndex);
 }
 
-//fetch a saved password
+//Save an account password
+- (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount
+{
+    if(inPassword){
+        [AIKeychain putPasswordInKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount UIDAndServiceID]] account:[inAccount UIDAndServiceID] password:inPassword];
+    }
+}
+
+//Fetches a saved account password (returns nil if no password is saved)
+- (NSString *)passwordForAccount:(AIAccount *)inAccount
+{
+    NSString	*password = [AIKeychain getPasswordFromKeychainForService:[NSString stringWithFormat:@"Adium.%@",[inAccount UIDAndServiceID]] account:[inAccount UIDAndServiceID]];
+
+    return(password);
+}
+
+//Fetches a saved account password (Prompts the user to enter if no password is saved)
 - (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector
 {
     NSString	*password;
@@ -365,7 +374,7 @@
 }
 
 
-- (void)setStatusObject:(id)inValue forKey:(NSString *)key account:(AIAccount *)inAccount
+- (void)setProperty:(id)inValue forKey:(NSString *)key account:(AIAccount *)inAccount
 {
     if(inAccount == nil){ //Set the value globally
         NSEnumerator	*enumerator;
@@ -374,7 +383,7 @@
         //Notify all accounts that support this key
         enumerator = [accountArray objectEnumerator];
         while((account = [enumerator nextObject])){
-            if([[account supportedStatusKeys] containsObject:key]){
+            if([[account supportedPropertyKeys] containsObject:key]){
                 [account statusForKey:key willChangeTo:inValue];
             }
         }
@@ -388,24 +397,28 @@
 
     }else{ //Set the value for a specific account
         //Notify the account
-        if([[inAccount supportedStatusKeys] containsObject:key]){
+        if([[inAccount supportedPropertyKeys] containsObject:key]){
             [inAccount statusForKey:key willChangeTo:inValue];
         }
         
         //Set the value
-        [inAccount setStatusObject:inValue forKey:key];
+        [inAccount setProperty:inValue forKey:key];
     }
 
-    [[owner notificationCenter] postNotificationName:Account_StatusChanged object:inAccount userInfo:[NSDictionary dictionaryWithObject:key forKey:@"Key"]];
+    //Save the accounts
+    [self saveAccounts];
+
+    //Post a properties changed notification
+    [[owner notificationCenter] postNotificationName:Account_PropertiesChanged object:inAccount userInfo:[NSDictionary dictionaryWithObject:key forKey:@"Key"]];
 }
 
-- (id)statusObjectForKey:(NSString *)key account:(AIAccount *)inAccount
+- (id)propertyForKey:(NSString *)key account:(AIAccount *)inAccount
 {
     id	value = nil;
     
     //Attempt to find an account specific value
     if(inAccount){
-        value = [inAccount statusObjectForKey:key];
+        value = [inAccount propertyForKey:key];
     }
 
     //Find a global value
@@ -445,10 +458,8 @@
     
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
-        NSDictionary	*properties = [account properties];
-
-        if([[account supportedStatusKeys] containsObject:@"Online"] && [[properties objectForKey:@"AutoConnect"] boolValue]){
-            [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:account];
+        if([[account supportedPropertyKeys] containsObject:@"Online"] && [[account propertyForKey:@"AutoConnect"] boolValue]){
+            [self setProperty:[NSNumber numberWithBool:YES] forKey:@"Online" account:account];
         }
     }
 }
@@ -461,16 +472,10 @@
 
     enumerator = [accountArray objectEnumerator];
     while((account = [enumerator nextObject])){
-        if([[account supportedStatusKeys] containsObject:@"Online"]){
-            [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:account];
+        if([[account supportedPropertyKeys] containsObject:@"Online"]){
+            [self setProperty:[NSNumber numberWithBool:NO] forKey:@"Online" account:account];
         }
     }
-}
-
-- (void)accountPropertiesChanged:(NSNotification *)notification
-{
-    //Save the changes
-    [self saveAccounts];
 }
 
 //Call after making changes to the account list
@@ -488,9 +493,7 @@
 {
     NSArray		*savedAccountArray;
     int			loop;
-
-    if(accountArray) [accountArray release];
-    accountArray = [[NSMutableArray alloc] init];
+    NSMutableArray	*tempArray = [NSMutableArray array];
     
     //Create an instance of every saved account
     savedAccountArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_ACCOUNTS] objectForKey:ACCOUNT_LIST];
@@ -510,15 +513,20 @@
         //Create the connection and add it to our array
         newAccount = [self accountOfType:serviceType withProperties:propertyDict];
         if(newAccount){
-            [accountArray addObject:newAccount];
+            [tempArray addObject:newAccount];
         }
     }
+
+    if(accountArray) [accountArray release];
+    accountArray = [tempArray retain];
 }
 
 //Save the account list
 - (void)saveAccounts
 {
-    [self saveAccounts:accountArray];
+    if(accountArray){
+        [self saveAccounts:accountArray];
+    }
 }
 
 //Saves an array of AIAccounts in dictionary form

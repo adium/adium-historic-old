@@ -70,26 +70,26 @@ typedef enum {
     id <AIServiceController>	service;
 
     NSMutableDictionary		*propertiesDict;
-    NSMutableDictionary		*statusDict;
 }
 
 - (id)initWithProperties:(NSDictionary *)inProperties service:(id <AIServiceController>)inService owner:(id)inOwner;
-- (NSMutableDictionary *)properties;
+- (void)setProperty:(id)inValue forKey:(NSString *)key;
+- (id)propertyForKey:(NSString *)key;
+- (NSDictionary *)defaultProperties;
+- (NSDictionary *)properties;
 - (id <AIServiceController>)service;
-- (id)statusObjectForKey:(NSString *)key;
-- (void)setStatusObject:(id)inValue forKey:(NSString *)key;
 
 //Methods that should be subclassed
 - (void)initAccount; 				//Init anything relating to the account
 - (id <AIAccountViewController>)accountView;	//Return a view controller for the connection window
 
-- (NSString *)accountID; 		//Specific to THIS account plugin, and the user's account name
-- (NSString *)UID;			//The user's account name
-- (NSString *)serviceID;		//The service ID (shared by any account code accessing this service)
-- (NSString *)UIDAndServiceID; 		//ServiceID.UID
-- (NSString *)accountDescription;	//Return a readable description of this account's username
+- (NSString *)accountID; 			//Specific to THIS account plugin, and the user's account name
+- (NSString *)UID;				//The user's account name
+- (NSString *)serviceID;			//The service ID (shared by any account code accessing this service)
+- (NSString *)UIDAndServiceID; 			//ServiceID.UID
+- (NSString *)accountDescription;		//Return a readable description of this account's username
 
-- (NSArray *)supportedStatusKeys;		//Return an array of supported status keys
+- (NSArray *)supportedPropertyKeys;		//Return an array of supported status keys
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue;	//The account's status should change
 
 @end

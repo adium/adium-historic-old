@@ -27,7 +27,7 @@
 - (void)updateMenu;
 - (void)_appendAwaysFromArray:(NSArray *)awayArray toMenu:(NSMenu *)awayMenu;
 - (void)accountListChanged:(NSNotification *)notification;
-- (void)accountStatusChanged:(NSNotification *)notification;
+- (void)accountPropertiesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIStatusSelectionView
@@ -43,8 +43,8 @@
 
     //Observe account status changed notification
     [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:nil];
-    [self accountStatusChanged:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
+    [self accountPropertiesChanged:nil];
     
     return(self);
 }
@@ -139,10 +139,10 @@
     
     if(representedObject){ //Away
         NSAttributedString	*awayMessage = [representedObject objectForKey:@"Message"];
-        [[owner accountController] setStatusObject:awayMessage forKey:@"AwayMessage" account:nil];
+        [[owner accountController] setProperty:awayMessage forKey:@"AwayMessage" account:nil];
 
     }else if([title compare:STATUS_NAME_AVAILABLE] == 0){ //Available
-        [[owner accountController] setStatusObject:nil forKey:@"AwayMessage" account:nil];
+        [[owner accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
         NSLog(@"available");
         
     }else if([title compare:STATUS_NAME_OFFLINE] == 0){ //Offline
@@ -190,7 +190,7 @@
     //Get the number of accounts that are online, or connecting
     enumerator = [[[owner accountController] accountArray] objectEnumerator];
     while((account = [enumerator nextObject])){
-        int status = [[account statusObjectForKey:@"Status"] intValue];
+        int status = [[account propertyForKey:@"Status"] intValue];
 
         if(status == STATUS_ONLINE){
             onlineAccounts++;
@@ -200,7 +200,7 @@
     }
 
     //Get the current away message
-    awayMessageData = [[owner accountController] statusObjectForKey:@"AwayMessage" account:nil];
+    awayMessageData = [[owner accountController] propertyForKey:@"AwayMessage" account:nil];
     if(awayMessageData){
         //Determine the selected away message's menu item index
         enumerator = [[[popUp_status menu] itemArray] objectEnumerator];
@@ -219,7 +219,9 @@
         selectedMenuItem = nil;
 
     }else if(onlineAccounts && awayMessageData){ //Away
-        selectedMenuItem = [[popUp_status menu] itemAtIndex:awayMessageIndex];
+        if(awayMessageIndex > 0 && awayMessageIndex < [[popUp_status menu] numberOfItems]){
+            selectedMenuItem = [[popUp_status menu] itemAtIndex:awayMessageIndex];
+        }
         
     }else if(onlineAccounts){ //Online
         selectedMenuItem = [[popUp_status menu] itemWithTitle:STATUS_NAME_AVAILABLE];
@@ -249,7 +251,7 @@
     [self updateMenu];
 }
 
-- (void)accountStatusChanged:(NSNotification *)notification
+- (void)accountPropertiesChanged:(NSNotification *)notification
 {
     [self updateMenu];
 }

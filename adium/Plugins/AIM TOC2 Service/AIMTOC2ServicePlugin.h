@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import <Cocoa/Cocoa.h>
-#import <AIAdium.h>
+#import <Adium/Adium.h>
 
 //Strings
 #define AIM_TOC2_PREFERENCE_VIEW	@"AIMTOCPreferenceView"
@@ -22,26 +22,23 @@
 
 //File Names
 #define AIM_TOC2_DEFAULT_PREFS 		@"Default Preferences"
-#define AIM_TOC2_PREFS 			@"AIM(TOC2)"
 
-//Preference Keys
-#define AIM_TOC2_KEY_HOST		@"host"
-#define AIM_TOC2_KEY_PORT		@"port"
+//Account property keys
+#define AIM_TOC2_KEY_USERNAME		@"Handle"
+#define AIM_TOC2_KEY_HOST		@"Host"
+#define AIM_TOC2_KEY_PORT		@"Port"
+#define AIM_TOC2_KEY_PROFILE 		@"TextProfile"
 
 @class AIServiceType;
 
 @interface AIMTOC2ServicePlugin : AIPlugin <AIServiceController> {
     IBOutlet 	NSView		*view_preferences;
     
-    //Preferences
-    IBOutlet	NSTextField	*textField_host;
-    IBOutlet	NSTextField	*textField_port;
 
     AIServiceType		*handleServiceType;
 }
 
 - (id)accountWithProperties:(NSDictionary *)inProperties owner:(id)inOwner;
 - (AIServiceType *)handleServiceType;
-- (IBAction)preferenceChanged:(id)sender;
 
 @end

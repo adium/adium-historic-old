@@ -52,10 +52,6 @@
 
 - (BOOL)getObjectValue:(id *)obj forString:(NSString *)string errorDescription:(NSString **)error
 {
-    if(![*obj isKindOfClass:[NSString class]]){
-        return(NO);
-    }
-
     *obj = string;
     return(YES);
 }
@@ -88,7 +84,7 @@
             NSBeep();
         }
     }
-    
+
     return(valid);
 }
 
@@ -101,15 +97,6 @@
 }
 
 @end
-
-
-
-
-
-
-
-
-
 
 
 

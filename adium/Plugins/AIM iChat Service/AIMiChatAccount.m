@@ -58,8 +58,8 @@ extern void* objc_getClass(const char *name);
     [AIMService addListener:self signature:@"com.apple.iChat" capabilities:15];
 
     //Clear the online state flag - this account should always load as offline (online state is not restored)
-    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
-    [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
+    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
+    [[owner accountController] setProperty:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
 }
 
 - (NSView *)accountView{
@@ -91,7 +91,7 @@ extern void* objc_getClass(const char *name);
 
 - (BOOL)contactListEditable
 {
-    return([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
+    return([[[owner accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
 }
 
 - (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
@@ -220,7 +220,7 @@ extern void* objc_getClass(const char *name);
 
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
         //If we are online
-        if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE){
+        if([[[owner accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE){
             if(!inChat || !inListObject){
                 available = YES;
 
@@ -252,14 +252,14 @@ extern void* objc_getClass(const char *name);
 
 
 // AIAccount_Status --------------------------------------------------------------------------------
-- (NSArray *)supportedStatusKeys
+- (NSArray *)supportedPropertyKeys
 {
     return([NSArray arrayWithObjects:@"Online", @"AwayMessage", @"IdleSince", nil]);
 }
 
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
-    ACCOUNT_STATUS 	status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
+    ACCOUNT_STATUS 	status = [[[owner accountController] propertyForKey:@"Status" account:self] intValue];
 
     if([key compare:@"Online"] == 0){
         if([inValue boolValue]){ //Connect
@@ -345,8 +345,8 @@ extern void* objc_getClass(const char *name);
             
             //Clean up and close down
             [screenName release]; screenName = nil;
-            [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
-            [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
+            [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
+            [[owner accountController] setProperty:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
         break;
 
         case 1: //Error
@@ -354,11 +354,11 @@ extern void* objc_getClass(const char *name);
         break;
 
         case 2: //Disconnecting
-            [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
+            [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
         break;
             
         case 3: //Connecting
-            [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
+            [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
 
             //Hold onto the account name
             [screenName release];
@@ -367,8 +367,8 @@ extern void* objc_getClass(const char *name);
         break;
 
         case 4: //Online
-            [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
-            [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
+            [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
+            [[owner accountController] setProperty:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
 
             //
             [self silenceAllHandleUpdatesForInterval:SIGN_ON_EVENT_DURATION];

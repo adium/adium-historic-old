@@ -40,8 +40,6 @@
     NSMutableDictionary	*addDict;		// A dictionary of handles waiting to be added
     NSTimer		*messageDelayTimer;	// Timer that drives the delayed handle updating
     
-    NSDictionary	*preferencesDict;	// Our preferences dictionary
-
     NSMutableDictionary	*handleDict;		// A dictionary of all available handles
     NSMutableDictionary	*chatDict;		// AIChats for instant messages
     NSMutableDictionary	*chatRoomDict;		// AIChats for chat rooms

@@ -18,10 +18,12 @@
 
 @interface AIImageTextCell : NSCell {
     NSFont 	*font;
-
+    NSString	*subString;
+    
 }
 
 - (void)setFont:(NSFont *)obj;
 - (NSFont *)font;
+- (void)setSubString:(NSString *)inSubString;
 
 @end

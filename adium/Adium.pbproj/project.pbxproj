@@ -846,7 +846,6 @@
 				4BDDCA08041104ED00A8010A,
 				B7AE6657046578640051E914,
 				4BBAEE9E03DD7DAB00A8010A,
-				4B71CD5503CBCA7E00A8010A,
 				F5D2FB7D03B6643B01A8010A,
 				4B5B15290493BFB100A8010A,
 				F5F846F704C7020601A80106,
@@ -933,7 +932,6 @@
 				F59F9A89032BE6B101A8010A,
 				F501BB1303882A2901A8010A,
 				4BBAEE9D03DD7DAB00A8010A,
-				4B71CD5403CBCA7E00A8010A,
 				F5D2FB7C03B6643B01A8010A,
 				4B5B15280493BFB100A8010A,
 				F5F846F604C7020601A80106,
@@ -1052,7 +1050,6 @@
 				4B64792B03DB613700A8010A,
 				4B64792F03DB613700A8010A,
 				4BBAEE9F03DD7DAB00A8010A,
-				4B64793703DB613700A8010A,
 				4B64793303DB613700A8010A,
 				4B5B152A0493BFB100A8010A,
 				F5F8478D04C7135801A80106,
@@ -1167,8 +1164,8 @@
 				4BF290CB03F9FE8D00A8010A,
 				4BDF17250450CBDE00A8010A,
 				4B24A26B0482B34B00A8010A,
-				4BAE56E804CC5FCC00A8010A,
 				4BC8AFEF04FD4BF000A8010A,
+				4BAC8C8E05012AD900A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2243,7 +2240,6 @@
 				4BE8E5390483B59800A8010A,
 				F50F253F03B042BC01A80202,
 				6E97F12F04A94C0100472FFF,
-				4B71CD4E03CBCA2600A8010A,
 			);
 			isa = PBXGroup;
 			name = Attributes;
@@ -3721,6 +3717,30 @@
 			settings = {
 			};
 		};
+		4B34BA8D04FE4D8900A8010A = {
+			isa = PBXFileReference;
+			name = minus.tiff;
+			path = "Plugins/Account List Preferences/minus.tiff";
+			refType = 4;
+		};
+		4B34BA8E04FE4D8900A8010A = {
+			isa = PBXFileReference;
+			name = plus.tiff;
+			path = "Plugins/Account List Preferences/plus.tiff";
+			refType = 4;
+		};
+		4B34BA8F04FE4D8900A8010A = {
+			fileRef = 4B34BA8D04FE4D8900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B34BA9004FE4D8900A8010A = {
+			fileRef = 4B34BA8E04FE4D8900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B36704F04702E0300FDA82E = {
 			isa = PBXFileReference;
 			name = AccountLarge.tiff;
@@ -3902,7 +3922,6 @@
 				4B0473C2043E443A00A8010A,
 				1138BF2304E7CDBC00A758A3,
 				4BBAEEA003DD7DAB00A8010A,
-				4B40E1DE03DB5B9600A8010A,
 				4B40E1DA03DB5B9600A8010A,
 				4B5B152B0493BFB100A8010A,
 				F5F8471A04C70B8A01A80106,
@@ -4009,12 +4028,6 @@
 		};
 		4B40E1DD03DB5B9600A8010A = {
 			fileRef = 9C8C7F9D03CBA08400267226;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B40E1DE03DB5B9600A8010A = {
-			fileRef = 4B71CD5503CBCA7E00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -4786,44 +4799,6 @@
 			path = "";
 			refType = 4;
 		};
-		4B53714903CEF16D00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			name = AITextProfilePreferences.h;
-			path = "Plugins/Text Profiles/AITextProfilePreferences.h";
-			refType = 4;
-		};
-		4B53714A03CEF16D00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			name = AITextProfilePreferences.m;
-			path = "Plugins/Text Profiles/AITextProfilePreferences.m";
-			refType = 4;
-		};
-		4B53714B03CEF16D00A8010A = {
-			fileRef = 4B53714903CEF16D00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B53714C03CEF16D00A8010A = {
-			fileRef = 4B53714A03CEF16D00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B53714D03CEF61200A8010A = {
-			isa = PBXFileReference;
-			name = TextProfilePrefs.nib;
-			path = "Plugins/Text Profiles/TextProfilePrefs.nib";
-			refType = 4;
-		};
-		4B53714E03CEF61200A8010A = {
-			fileRef = 4B53714D03CEF61200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B554115044DEFEF00A8010A = {
 			children = (
 				4B55411F044DF04B00A8010A,
@@ -5275,10 +5250,6 @@
 		4B64793603DB613700A8010A = {
 			isa = PBXTargetDependency;
 			target = 9C8C7F9C03CBA08400267226;
-		};
-		4B64793703DB613700A8010A = {
-			isa = PBXTargetDependency;
-			target = 4B71CD5403CBCA7E00A8010A;
 		};
 		4B64793803DB613700A8010A = {
 			isa = PBXTargetDependency;
@@ -5796,174 +5767,6 @@
 		};
 		4B70F29403D1D13800A8010A = {
 			fileRef = 4B70F29203D1D13800A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B71CD4E03CBCA2600A8010A = {
-			children = (
-				4B71CD5A03CBCAE200A8010A,
-				4B71CD5B03CBCAE200A8010A,
-				4B53714903CEF16D00A8010A,
-				4B53714A03CEF16D00A8010A,
-				4B53714D03CEF61200A8010A,
-			);
-			isa = PBXGroup;
-			name = "Text Profiles";
-			path = "";
-			refType = 4;
-		};
-		4B71CD4F03CBCA7E00A8010A = {
-			buildActionMask = 2147483647;
-			files = (
-				4B71CD5C03CBCAE200A8010A,
-				4B53714B03CEF16D00A8010A,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B71CD5003CBCA7E00A8010A = {
-			buildActionMask = 2147483647;
-			files = (
-				4B53714E03CEF61200A8010A,
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B71CD5103CBCA7E00A8010A = {
-			buildActionMask = 2147483647;
-			files = (
-				4B71CD5D03CBCAE200A8010A,
-				4B53714C03CEF16D00A8010A,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B71CD5203CBCA7E00A8010A = {
-			buildActionMask = 2147483647;
-			files = (
-				4B71CD6103CBCAF100A8010A,
-				4B71CD6203CBCAF100A8010A,
-				4BF1F0C403D86DC100A8010A,
-				4BF1F0C503D86DC200A8010A,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B71CD5303CBCA7E00A8010A = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B71CD5403CBCA7E00A8010A = {
-			buildPhases = (
-				4B71CD4F03CBCA7E00A8010A,
-				4B71CD5003CBCA7E00A8010A,
-				4B71CD5103CBCA7E00A8010A,
-				4B71CD5203CBCA7E00A8010A,
-				4B71CD5303CBCA7E00A8010A,
-			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "";
-				INSTALL_PATH = /Adium.app/Contents/PlugIns/;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "Text Profiles";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				4B71CD5903CBCAB600A8010A,
-				4B71CD5803CBCAB400A8010A,
-			);
-			isa = PBXBundleTarget;
-			name = "Text Profiles";
-			productInstallPath = /Adium.app/Contents/PlugIns/;
-			productName = "Text Profiles";
-			productReference = 4B71CD5503CBCA7E00A8010A;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string></string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string></string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string></string>
-	<key>CFBundlePackageType</key>
-	<string>BNDL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>0.0.1d1</string>
-	<key>NSPrincipalClass</key>
-	<string>AITextProfilesPlugin</string>
-</dict>
-</plist>
-";
-		};
-		4B71CD5503CBCA7E00A8010A = {
-			isa = PBXBundleReference;
-			path = "Text Profiles.AdiumPlugin";
-			refType = 3;
-		};
-		4B71CD5803CBCAB400A8010A = {
-			isa = PBXTargetDependency;
-			target = F53B9A0602CCED6401A8010A;
-		};
-		4B71CD5903CBCAB600A8010A = {
-			isa = PBXTargetDependency;
-			target = F53B9A0E02CCED8B01A8010A;
-		};
-		4B71CD5A03CBCAE200A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			name = AITextProfilesPlugin.h;
-			path = "Plugins/Text Profiles/AITextProfilesPlugin.h";
-			refType = 4;
-		};
-		4B71CD5B03CBCAE200A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			name = AITextProfilesPlugin.m;
-			path = "Plugins/Text Profiles/AITextProfilesPlugin.m";
-			refType = 4;
-		};
-		4B71CD5C03CBCAE200A8010A = {
-			fileRef = 4B71CD5A03CBCAE200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B71CD5D03CBCAE200A8010A = {
-			fileRef = 4B71CD5B03CBCAE200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B71CD6103CBCAF100A8010A = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B71CD6203CBCAF100A8010A = {
-			fileRef = F531836F019E40BB01A80165;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -7368,6 +7171,24 @@
 			settings = {
 			};
 		};
+		4BAC8C8C05011FF300A8010A = {
+			isa = PBXFileReference;
+			name = DefaultIcon.tiff;
+			path = "Plugins/Account List Preferences/DefaultIcon.tiff";
+			refType = 4;
+		};
+		4BAC8C8D05011FF300A8010A = {
+			fileRef = 4BAC8C8C05011FF300A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAC8C8E05012AD900A8010A = {
+			fileRef = 4BAE56E704CC5FCC00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BAC8E9C0448412300A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -7425,12 +7246,6 @@
 			name = Placeholder.tiff;
 			path = Source/Placeholder.tiff;
 			refType = 4;
-		};
-		4BAE56E804CC5FCC00A8010A = {
-			fileRef = 4BAE56E704CC5FCC00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4BAE85A40498194200A8010A = {
 			children = (
@@ -11071,18 +10886,6 @@
 			};
 		};
 		4BF1F0C303D86DBF00A8010A = {
-			fileRef = F53B9A0702CCED6401A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BF1F0C403D86DC100A8010A = {
-			fileRef = F53B9A0F02CCED8B01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BF1F0C503D86DC200A8010A = {
 			fileRef = F53B9A0702CCED6401A8010A;
 			isa = PBXBuildFile;
 			settings = {
@@ -15541,7 +15344,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F59DB3C4033EA90801A8010A,
-				F59DB3D0033EA90801A8010A,
 				F59DB3D1033EA90801A8010A,
 				F59DB3D3033EA90801A8010A,
 				F5C8B7730358631001A8010A,
@@ -16273,26 +16075,6 @@
 			settings = {
 			};
 		};
-		F55B413803AB895501A8010A = {
-			isa = PBXFileReference;
-			name = AccountPrefEditSheet.nib;
-			path = "Plugins/Account List Preferences/AccountPrefEditSheet.nib";
-			refType = 4;
-		};
-		F55B413903AB895501A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AIAccountListEditSheetController.h;
-			path = "Plugins/Account List Preferences/AIAccountListEditSheetController.h";
-			refType = 4;
-		};
-		F55B413A03AB895501A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			name = AIAccountListEditSheetController.m;
-			path = "Plugins/Account List Preferences/AIAccountListEditSheetController.m";
-			refType = 4;
-		};
 		F55B413B03AB895501A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -16306,24 +16088,6 @@
 			name = AIAccountListPreferencesPlugin.m;
 			path = "Plugins/Account List Preferences/AIAccountListPreferencesPlugin.m";
 			refType = 4;
-		};
-		F55B413D03AB895501A8010A = {
-			fileRef = F55B413803AB895501A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F55B413E03AB895501A8010A = {
-			fileRef = F55B413903AB895501A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F55B413F03AB895501A8010A = {
-			fileRef = F55B413A03AB895501A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		F55B414003AB895501A8010A = {
 			fileRef = F55B413B03AB895501A8010A;
@@ -18516,12 +18280,6 @@
 			path = "Plugins/AIM TOC2 Service/AIMTOC2StringAdditions.m";
 			refType = 4;
 		};
-		F59DB3C0033EA90801A8010A = {
-			isa = PBXFileReference;
-			name = AIMTOCPreferenceView.nib;
-			path = "Plugins/AIM TOC2 Service/AIMTOCPreferenceView.nib";
-			refType = 4;
-		};
 		F59DB3C1033EA90801A8010A = {
 			isa = PBXFileReference;
 			name = LilYellowDuck.tif;
@@ -18584,12 +18342,6 @@
 		};
 		F59DB3CF033EA90801A8010A = {
 			fileRef = F59DB3BF033EA90801A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		F59DB3D0033EA90801A8010A = {
-			fileRef = F59DB3C0033EA90801A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -19208,10 +18960,10 @@
 			children = (
 				F55B413B03AB895501A8010A,
 				F55B413C03AB895501A8010A,
-				F55B413903AB895501A8010A,
-				F55B413A03AB895501A8010A,
-				F55B413803AB895501A8010A,
 				F55B414203AB897201A8010A,
+				4BAC8C8C05011FF300A8010A,
+				4B34BA8D04FE4D8900A8010A,
+				4B34BA8E04FE4D8900A8010A,
 			);
 			isa = PBXGroup;
 			name = "Account List Preferences";
@@ -19221,7 +18973,6 @@
 		F5B53FC10333AFB501A8010A = {
 			buildActionMask = 2147483647;
 			files = (
-				F55B413E03AB895501A8010A,
 				F55B414003AB895501A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
@@ -19230,11 +18981,13 @@
 		F5B53FC20333AFB501A8010A = {
 			buildActionMask = 2147483647;
 			files = (
-				F55B413D03AB895501A8010A,
 				F55B414303AB897201A8010A,
 				F5519B2903AC3EB501A8010A,
 				F5519B2B03AC3EB701A8010A,
 				F5519B2D03AC3EB801A8010A,
+				4B34BA8F04FE4D8900A8010A,
+				4B34BA9004FE4D8900A8010A,
+				4BAC8C8D05011FF300A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19242,7 +18995,6 @@
 		F5B53FC30333AFB501A8010A = {
 			buildActionMask = 2147483647;
 			files = (
-				F55B413F03AB895501A8010A,
 				F55B414103AB895501A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
@@ -19538,8 +19290,8 @@
 		F5C8B7720358631001A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			name = "Default Preferences.plist";
-			path = "Plugins/AIM TOC2 Service/Default Preferences.plist";
+			name = TOC2Defaults.plist;
+			path = "Plugins/AIM TOC2 Service/TOC2Defaults.plist";
 			refType = 4;
 		};
 		F5C8B7730358631001A8010A = {
@@ -19551,7 +19303,6 @@
 		F5C8B7740358632101A8010A = {
 			children = (
 				F59DB3B4033EA90801A8010A,
-				F59DB3C0033EA90801A8010A,
 				4BF2B70B048A82E900A8010A,
 				4B001BFF04F105B800A8010A,
 			);

@@ -21,7 +21,7 @@
 #import "AIAwayStatusWindowPreferences.h"
 
 @interface AIAwayStatusWindowPlugin (PRIVATE)
-- (void)accountStatusChanged:(NSNotification *)notification;
+- (void)accountPropertiesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIAwayStatusWindowPlugin
@@ -35,22 +35,21 @@
     preferences = [[AIAwayStatusWindowPreferences awayStatusWindowPreferencesWithOwner:owner] retain];
 
     //Observe
-    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:nil];
-//    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
 
     //Open an away status window if we woke up away
-    if([[owner accountController] statusObjectForKey:@"AwayMessage" account:nil]) {
+    if([[owner accountController] propertyForKey:@"AwayMessage" account:nil]) {
         // Get an away status window
         [AIAwayStatusWindowController awayStatusWindowControllerForOwner:owner];
         // Tell it to update in case we were already away
         [AIAwayStatusWindowController updateAwayStatusWindow];
     }    
 
-    [self accountStatusChanged:nil];
+    [self accountPropertiesChanged:nil];
 }
 
 //Update our away window when the away status changes
-- (void)accountStatusChanged:(NSNotification *)notification
+- (void)accountPropertiesChanged:(NSNotification *)notification
 {
     if(notification == nil || [notification object] == nil){ //We ignore account-specific status changes
         NSString	*modifiedKey = [[notification userInfo] objectForKey:@"Key"];

@@ -30,7 +30,7 @@
 
 + (id)accountViewForOwner:(id)inOwner account:(id)inAccount;
 - (NSView *)view;
-- (void)saveChanges;
+- (IBAction)saveChanges:(id)sender;
 - (void)configureViewAfterLoad;
 
 @end

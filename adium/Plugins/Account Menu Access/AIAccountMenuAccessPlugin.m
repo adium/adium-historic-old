@@ -39,7 +39,6 @@
 {
     [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_PropertiesChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:nil];
     
     accountMenuArray = [[NSMutableArray alloc] init];
     [self buildAccountMenus];
@@ -101,10 +100,10 @@
     }
 
     if(targetMenuItem){
-        if([[account supportedStatusKeys] containsObject:@"Online"]){
+        if([[account supportedPropertyKeys] containsObject:@"Online"]){
             //Update the 'connect / disconnect' menu item
             connectToggleItem = [[targetMenuItem submenu] itemAtIndex:0];
-            switch([[[owner accountController] statusObjectForKey:@"Status" account:account] intValue]){
+            switch([[[owner accountController] propertyForKey:@"Status" account:account] intValue]){
                 case STATUS_OFFLINE:
                     [targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Offline" forClass:[self class]]];
                     [connectToggleItem setTitle:ACCOUNT_CONNECT_MENU_TITLE];
@@ -133,7 +132,7 @@
             
             //Auto-connect
             autoConnectItem = [[targetMenuItem submenu] itemWithTitle:ACCOUNT_AUTO_CONNECT_MENU_TITLE];
-            if([[[account properties] objectForKey:@"AutoConnect"] boolValue]){
+            if([[[owner accountController] propertyForKey:@"AutoConnect" account:account] boolValue]){
                 [autoConnectItem setState:NSOnState];
             }else{
                 [autoConnectItem setState:NSOffState];
@@ -149,11 +148,12 @@
     
     //Get the current auto connect status
     account = [sender representedObject];
-    autoConnect = [[[account properties] objectForKey:@"AutoConnect"] boolValue];
+    autoConnect = [[[owner accountController] propertyForKey:@"AutoConnect" account:account] boolValue];
 
     //Switch it
-    [[account properties] setObject:[NSNumber numberWithBool:!autoConnect] forKey:@"AutoConnect"];
-    [[owner notificationCenter] postNotificationName:Account_PropertiesChanged object:account userInfo:nil];    
+    [[owner accountController] setProperty:[NSNumber numberWithBool:!autoConnect]
+                                    forKey:@"AutoConnect"
+                                   account:account];
 }
 
 //Togle the connection of the selected account (called by the connect/disconnnect menu item)
@@ -163,11 +163,11 @@
     AIAccount			*targetAccount = [sender representedObject];
 
     //Toggle the connection
-    if([[targetAccount supportedStatusKeys] containsObject:@"Online"]){
-        if([[[owner accountController] statusObjectForKey:@"Online" account:targetAccount] boolValue]){
-            [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:targetAccount];
+    if([[targetAccount supportedPropertyKeys] containsObject:@"Online"]){
+        if([[[owner accountController] propertyForKey:@"Online" account:targetAccount] boolValue]){
+            [[owner accountController] setProperty:[NSNumber numberWithBool:NO] forKey:@"Online" account:targetAccount];
         }else{
-            [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:targetAccount];
+            [[owner accountController] setProperty:[NSNumber numberWithBool:YES] forKey:@"Online" account:targetAccount];
         }
     }
 }

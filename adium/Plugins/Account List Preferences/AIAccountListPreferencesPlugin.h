@@ -15,31 +15,36 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAccountController, AIAccount;
+@class AIAccountController, AIAccount, AIAutoScrollView;
 
 @interface AIAccountListPreferencesPlugin : AIPlugin {
-    IBOutlet		NSView		*view_accountPreferences;
-    IBOutlet		NSTableView	*tableView_accountList;
-    IBOutlet		NSScrollView	*scrollView_accountList;
-    IBOutlet		NSButton	*button_editAccount;
-    IBOutlet		NSButton	*button_deleteAccount;
-    IBOutlet		NSButton	*button_toggleAccount;
+    IBOutlet		NSView				*view_accountPreferences;
+    IBOutlet		AIAlternatingRowTableView	*tableView_accountList;
+    IBOutlet		AIAutoScrollView		*scrollView_accountList;
+    IBOutlet		NSButton			*button_newAccount;
+    IBOutlet		NSButton			*button_deleteAccount;
+    IBOutlet		NSPopUpButton			*popupMenu_serviceList;
+    IBOutlet		NSView				*view_accountDetails;
+    IBOutlet		NSButton			*button_autoConnect;
+    IBOutlet		NSTabView			*tabView_auxilary;
 
-    NSMutableDictionary	*toolbarItems;
+    NSMutableDictionary			*toolbarItems;
 
-    NSArray		*serviceArray;
-    BOOL		accountDetailsVisible;	//YES if the details view is visible
-    NSSize		accountViewPadding;	//The amount of space around the custom account view
+    AIAccount				*selectedAccount;
+    id <AIAccountViewController>	accountViewController;
 
-    NSSize		accountListPadding;
-    NSArray		*accountArray;
-    AIAccount		*tempDragAccount;
+    NSArray				*serviceArray;
+    BOOL				accountDetailsVisible;	//YES if the details view is visible
+    NSSize				accountViewPadding;	//The amount of space around the custom account view
+
+    NSSize				accountListPadding;
+    NSArray				*accountArray;
+    AIAccount				*tempDragAccount;
 }
 
 - (IBAction)deleteAccount:(id)sender;
 - (IBAction)newAccount:(id)sender;
-- (IBAction)toggleConnection:(id)sender;
-- (IBAction)editAccount:(id)sender;
-- (void)editAccountCreatingNew:(BOOL)newo;
+- (IBAction)selectServiceType:(id)sender;
+- (IBAction)toggleAutoConnect:(id)sender;
 
 @end

@@ -24,19 +24,52 @@
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-    NSString		*stringValue = [self stringValue];
-    NSDictionary	*attributes = [NSDictionary dictionaryWithObjectsAndKeys:nil];
-    int			stringHeight;
-    
-    //Calculate the centered rect
-    stringHeight = [stringValue sizeWithAttributes:attributes].height;
-    if(stringHeight < cellFrame.size.height){
-        cellFrame.origin.y += (cellFrame.size.height - stringHeight) / 2.0;
+    NSFont	*font = [self font];
+    NSString	*title = [self stringValue];
+    NSColor 	*highlightColor;
+    BOOL 	highlighted;
+
+    highlightColor = [self highlightColorWithFrame:cellFrame inView:controlView];
+    highlighted = [self isHighlighted];
+    if(highlighted) {
+        [highlightColor set];
+        NSRectFill(cellFrame);
     }
 
-    //Draw the string
-    [stringValue drawInRect:cellFrame withAttributes:attributes];
-}
+    //Draw the cell's text
+    if(title != nil){
+        NSDictionary		*attributes;
+        int			stringHeight;
+        NSColor			*textColor;
 
+        // If we are highlighted AND are drawing with the alternate color, then we want to draw our text with the alternate text color.
+        // For any other case, we should draw using our normal text color.
+        if(highlighted && [highlightColor isEqual:[NSColor alternateSelectedControlColor]]){
+            textColor = [NSColor alternateSelectedControlTextColor]; //Draw the text inverted
+        }else{
+            if([self isEnabled]){
+                textColor = [NSColor controlTextColor]; //Draw the text regular
+            }else{
+                textColor = [NSColor grayColor]; //Draw the text disabled
+            }
+        }
+
+        //
+        if(font){
+            attributes = [NSDictionary dictionaryWithObjectsAndKeys:font,NSFontAttributeName,textColor,NSForegroundColorAttributeName,nil];
+        }else{
+            attributes = [NSDictionary dictionaryWithObjectsAndKeys:textColor,NSForegroundColorAttributeName,nil];
+        }
+
+        //Calculate the centered rect
+        stringHeight = [title sizeWithAttributes:attributes].height;
+        if(stringHeight < cellFrame.size.height){
+            cellFrame.origin.y += (cellFrame.size.height - stringHeight) / 2.0;
+        }
+
+        //Draw the string
+        [title drawInRect:cellFrame withAttributes:attributes];
+    }
+}
 
 @end

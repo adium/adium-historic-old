@@ -90,10 +90,6 @@
     [self _registerModuleForClass:[AIOscarSSI class]];
     [self _registerModuleForClass:[AIOscarICQ class]];
     [self _registerModuleForClass:[AIOscarIcon class]];
-
-    //Clear the online state.  'Auto-Connect' values are used, not the previous online state.
-    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
-    [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];    
 }
 
 // Return a view for the connection window
@@ -605,7 +601,7 @@
 - (BOOL)contactListEditable
 {
     //return(NO);
-    return([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
+    return([[[owner accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
 }
 
 // Return a dictionary of our handles
@@ -676,7 +672,7 @@
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
     BOOL 	available = NO;
-    BOOL	weAreOnline = ([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
+    BOOL	weAreOnline = ([[[owner accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
 
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
         if(weAreOnline){
@@ -791,7 +787,7 @@
 
 //AIAccount_Status --------------------------------------------------------------------------------
 //Returns an array of the status keys we support
-- (NSArray *)supportedStatusKeys
+- (NSArray *)supportedPropertyKeys
 {
     return([NSArray arrayWithObjects:@"Online", @"IdleSince", @"IdleManuallySet", @"TextProfile", @"AwayMessage", nil]);
 }
@@ -799,7 +795,7 @@
 //Respond to account status changes
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
-    ACCOUNT_STATUS	status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
+    ACCOUNT_STATUS	status = [[[owner accountController] propertyForKey:@"Status" account:self] intValue];
     //Online/Offline
     if([key compare:@"Online"] == 0){
         if([inValue boolValue]){
@@ -812,7 +808,7 @@
     //Ignore the following keys unless we're online
     if(status == STATUS_ONLINE){
         if([key compare:@"IdleSince"] == 0){
-            NSDate	*oldIdle = [[owner accountController] statusObjectForKey:@"IdleSince" account:self];
+            NSDate	*oldIdle = [[owner accountController] propertyForKey:@"IdleSince" account:self];
             NSDate	*newIdle = inValue;
     
             //If an idle time is already set, we unidle, then re-idle to the new value.
@@ -871,7 +867,7 @@
 
     if(inPassword && [inPassword length] != 0){
         //Set our status as connecting
-        [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
+        [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
 
         //Remember the account name and password
         if(userName != [propertiesDict objectForKey:@"Handle"]){
@@ -908,7 +904,7 @@
 //    AIHandle		*handle;
 
     //Set our status as disconnecting
-    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
+    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
 
     //Flush all our handle status flags
 /*    enumerator = [[handleDict allValues] objectEnumerator];
@@ -929,8 +925,8 @@
     [updateTimer release]; updateTimer = nil;*/
 
     //Set our status as offline
-    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
-    [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
+    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
+    [[owner accountController] setProperty:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
 }
 
 //
@@ -990,8 +986,8 @@
     
     //Profile and away message
     if(mainConnection){ //Only for the main connection
-        NSAttributedString	*profile = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"TextProfile" account:self]];
-        NSAttributedString	*away = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"AwayMessage" account:self]];
+        NSAttributedString	*profile = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"TextProfile" account:self]];
+        NSAttributedString	*away = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"AwayMessage" account:self]];
 
         [infoModule setProfile:(profile ? [AIHTMLDecoder encodeHTML:profile encodeFullString:YES] : @"")
                    awayMessage:(away ? [AIHTMLDecoder encodeHTML:away encodeFullString:YES] : @"")
@@ -1004,7 +1000,7 @@
 
     //Idle time
     if(mainConnection){ //Only for the main connection
-        NSDate	*idle = [[owner accountController] statusObjectForKey:@"IdleSince" account:self];
+        NSDate	*idle = [[owner accountController] propertyForKey:@"IdleSince" account:self];
         [serviceModule setIdleTime:(idle ? (-[idle timeIntervalSinceNow]) : 0)];
     }
 
@@ -1013,7 +1009,7 @@
 
     //
     if(mainConnection){ //Only for the main connection
-        [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self]; //Set our status as online
+        [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self]; //Set our status as online
     }    
 }
 

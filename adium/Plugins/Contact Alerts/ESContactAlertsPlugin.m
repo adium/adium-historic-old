@@ -128,7 +128,7 @@
                     }
                 }
                 if (success) { //we're good so far...
-                    if (!onlyWhileActive || (![[owner accountController] statusObjectForKey:@"IdleSince" account:account] && ![[owner accountController] statusObjectForKey:@"AwayMessage" account:account])) {
+                    if (!onlyWhileActive || (![[owner accountController] propertyForKey:@"IdleSince" account:account] && ![[owner accountController] propertyForKey:@"AwayMessage" account:account])) {
                         if ([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) {
                             AIChat	*chat = [[owner contentController] openChatOnAccount:account withListObject:contact];
 
@@ -163,7 +163,7 @@
             }
 
             else { //use Only While Active in a global sense from here on out
-                if (!onlyWhileActive || (![[owner accountController] statusObjectForKey:@"IdleSince" account:nil] && ![[owner accountController] statusObjectForKey:@"AwayMessage" account:nil])) {
+                if (!onlyWhileActive || (![[owner accountController] propertyForKey:@"IdleSince" account:nil] && ![[owner accountController] propertyForKey:@"AwayMessage" account:nil])) {
                     if ([action compare:@"Sound"] == 0) {
                         if (details != nil && [details length] != 0) {
                             [[owner soundController] playSoundAtPath:details]; //Play the sound
@@ -194,7 +194,7 @@
                         NSDictionary * detailsDict = [actionDict objectForKey:KEY_EVENT_DETAILS_DICT];
                         AIAccount * account = [[owner accountController] accountWithID:details];
                         success = YES;
-                        if ([[account statusObjectForKey:@"Status"] intValue] == STATUS_OFFLINE) { //desired account not available
+                        if ([[account propertyForKey:@"Status"] intValue] == STATUS_OFFLINE) { //desired account not available
                             success = NO; //as of now, we can't open our window
                             if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) { //use another account if necessary pref
                                 account = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:inObject];

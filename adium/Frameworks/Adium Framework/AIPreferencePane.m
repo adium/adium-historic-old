@@ -41,8 +41,6 @@
     label = [inLabel retain];
     preferenceView = nil;
 
-//    NSLog(@"Init Preference Pane (%@, %i)",delegate, category);
-
     //
 
     return(self);
@@ -73,32 +71,36 @@
     return([label caseInsensitiveCompare:[inPane label]]);
 }
 
-- (NSView *)view
+- (NSView *)viewWithContainer:(BOOL)includeContainer
 {
     //Setup the view
     if(!view_containerView && [delegate respondsToSelector:@selector(viewForPreferencePane:)]){
         //Get the preference view from our delegate
         preferenceView = [[delegate viewForPreferencePane:self] retain];
 
-        //Load the container view from our nib
-        [NSBundle loadNibNamed:PREFERENCE_VIEW_NIB owner:self];
+        if(includeContainer){
+            //Load the container view from our nib
+            [NSBundle loadNibNamed:PREFERENCE_VIEW_NIB owner:self];
 
-        //Configure the view
-        [preferenceView setAutoresizingMask:NSViewNotSizable];
-        {
-            NSRect	containerFrame = [view_containerView frame];
+            //Configure the view
+            [preferenceView setAutoresizingMask:NSViewNotSizable];
+            {
+                NSRect	containerFrame = [view_containerView frame];
 
-            //Make the container view the correct height to fit the new preference view
-            containerFrame.size.height -= [view_containerSubView frame].size.height;
-            containerFrame.size.height += [preferenceView frame].size.height;
-            [view_containerView setFrame:containerFrame];
+                //Make the container view the correct height to fit the new preference view
+                containerFrame.size.height -= [view_containerSubView frame].size.height;
+                containerFrame.size.height += [preferenceView frame].size.height;
+                [view_containerView setFrame:containerFrame];
 
-            //Add the preference view to the container
-            [view_containerSubView addSubview:preferenceView];
-            [preferenceView setFrameOrigin:NSMakePoint(0,0)];
+                //Add the preference view to the container
+                [view_containerSubView addSubview:preferenceView];
+                [preferenceView setFrameOrigin:NSMakePoint(0,0)];
 
-            //Set the label
-            [textField_title setStringValue:label];
+                //Set the label
+                [textField_title setStringValue:label];
+            }
+        }else{
+            view_containerView = [preferenceView retain];
         }
     }
     
@@ -114,75 +116,7 @@
 
     [preferenceView release]; preferenceView = nil;
     [view_containerView release]; view_containerView = nil;
-//    [view_containerSubView release]; view_containerSubView = nil;
 }
-
-
-
-/*
-- (id)initWithName:(NSString *)inName categoryName:(NSString *)inCategoryName view:(NSView *)preferenceView delegate:(id <AIPreferenceViewControllerDelegate>)inDelegate
-{
-    [super init];
-    
-    name = [inName retain];
-    categoryName = [inCategoryName retain];
-    delegate = [inDelegate retain];
-    
-    //Load the container view from our nib
-    if(![NSBundle loadNibNamed:PREFERENCE_VIEW_NIB owner:self]){
-        NSLog(@"couldn't load preference view nib");
-    }
-
-    //Configure the view
-    [preferenceView setAutoresizingMask:NSViewNotSizable];
-    {
-        NSRect	containerFrame = [view_containerView frame];
- 
-        //Set our colored box to a sexy blue
-        //[view_coloredBox setColor:[NSColor colorWithCalibratedRed:(66.0/255.0) green:(132.0/255.0) blue:(217.0/255.0) alpha:0.4]];
-        
-        //Make the container view the correct height to fit the new preference view
-        containerFrame.size.height -= [view_containerSubView frame].size.height;
-        containerFrame.size.height += [preferenceView frame].size.height;
-        [view_containerView setFrame:containerFrame];
-
-        //Add the preference view to the container
-        [view_containerSubView addSubview:preferenceView];
-        [preferenceView setFrameOrigin:NSMakePoint(0,0)];
-    }
-    
-    desiredHeight = [view_containerView frame].size.height;
-    [textField_title setStringValue:name];
-    
-    return(self);
-}*/
-
-/*- (int)desiredHeight{
-return(desiredHeight);
-}*/
-
-/*- (id <AIPreferenceViewControllerDelegate>)delegate{
-return(delegate);
-}*/
-
-
-
-//Configure for an object
-/*- (void)configureForObject:(id)inObject
-{
-    if(delegate){
-        [delegate configurePreferenceViewController:self forObject:inObject];
-    }
-}*/
-
-
-//Create a new preference view controller (with delegate)
-/*+ (AIPreferenceViewController *)controllerWithName:(NSString *)inName categoryName:(NSString *)inCategoryName view:(NSView *)inView delegate:(id <AIPreferenceViewControllerDelegate>)inDelegate
-{
-    return([[[self alloc] initWithName:inName categoryName:inCategoryName view:inView delegate:inDelegate] autorelease]);
-}*/
-
-
 
 @end
 

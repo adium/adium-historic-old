@@ -23,13 +23,22 @@
     AIAdium		*owner;
     AIMTOC2Account	*account;
 
+    NSArray		*auxilaryTabs;
+
     IBOutlet		NSView			*view_accountView;
     IBOutlet		NSTextField		*textField_handle;
+    IBOutlet		NSTextField		*textField_password;
+    IBOutlet		NSTextField		*textField_fullName;
+    IBOutlet		NSTabView		*view_auxilaryTabView;
+    IBOutlet		NSTextField		*textField_host;
+    IBOutlet		NSTextField		*textField_port;
+    IBOutlet		NSTextView		*textView_textProfile;
 }
 
 + (id)accountViewForOwner:(id)inOwner account:(id)inAccount;
 - (NSView *)view;
-- (void)saveChanges;
 - (void)configureViewAfterLoad;
+- (IBAction)userNameChanged:(id)sender;
+- (IBAction)preferenceChanged:(id)sender;
 
 @end

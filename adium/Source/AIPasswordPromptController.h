@@ -32,5 +32,6 @@
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
 - (IBAction)closeWindow:(id)sender;
+- (IBAction)togglePasswordSaved:(id)sender;
 
 @end

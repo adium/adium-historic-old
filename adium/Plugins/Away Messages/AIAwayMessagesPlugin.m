@@ -28,7 +28,7 @@
 #define MENU_AWAY_DISPLAY_LENGTH		30
 
 @interface AIAwayMessagesPlugin (PRIVATE)
-- (void)accountStatusChanged:(NSNotification *)notification;
+- (void)accountPropertiesChanged:(NSNotification *)notification;
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem;
 - (void)installAwayMenu;
 - (BOOL)shouldConfigureForAway;
@@ -55,10 +55,10 @@
     [self installAwayMenu];
 
     //Observe
-    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
-    [self accountStatusChanged:nil];
+    [self accountPropertiesChanged:nil];
 }
 
 //Display the enter away message window
@@ -73,18 +73,18 @@
     NSDictionary	*awayDict = [sender representedObject];
     NSAttributedString	*awayMessage = [awayDict objectForKey:@"Message"];
 
-    [[owner accountController] setStatusObject:awayMessage forKey:@"AwayMessage" account:nil];
+    [[owner accountController] setProperty:awayMessage forKey:@"AwayMessage" account:nil];
 }
 
 //Remove the active away message
 - (IBAction)removeAwayMessage:(id)sender
 {
     //Remove the away status flag	
-    [[owner accountController] setStatusObject:nil forKey:@"AwayMessage" account:nil];
+    [[owner accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
 }
 
 //Update our menu when the away status changes
-- (void)accountStatusChanged:(NSNotification *)notification
+- (void)accountPropertiesChanged:(NSNotification *)notification
 {
     if(notification == nil || [notification object] == nil){ //We ignore account-specific status changes
         NSString	*modifiedKey = [[notification userInfo] objectForKey:@"Key"];
@@ -97,7 +97,7 @@
             //Remove existing content sent/received observer, and install new (if away)
             [[owner notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
             [[owner notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
-            if([[owner accountController] statusObjectForKey:@"AwayMessage" account:nil] != nil){
+            if([[owner accountController] propertyForKey:@"AwayMessage" account:nil] != nil){
                 [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
                 [[owner notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
             }
@@ -112,7 +112,7 @@
 - (void)didReceiveContent:(NSNotification *)notification
 {
     AIContentObject 	*contentObject = [[notification userInfo] objectForKey:@"Object"];
-    NSAttributedString	*awayMessage = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"AwayMessage" account:nil]];
+    NSAttributedString	*awayMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"AwayMessage" account:nil]];
     
     //If the user received a message, send our away message to them
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
@@ -194,7 +194,7 @@
 //Is the user currently away?
 - (BOOL)shouldConfigureForAway
 {
-    return(([[owner accountController] statusObjectForKey:@"AwayMessage" account:nil] != nil) && ![NSEvent optionKey]);
+    return(([[owner accountController] propertyForKey:@"AwayMessage" account:nil] != nil) && ![NSEvent optionKey]);
 }
 
 //Update our menu if the away list changes

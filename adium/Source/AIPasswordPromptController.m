@@ -78,7 +78,7 @@ AIPasswordPromptController	*controller = nil;
 
     //    
     [textField_account setStringValue:[account accountDescription]];
-    [checkBox_savePassword setState:[[[account properties] objectForKey:@"SavedPassword"] boolValue]];
+    [checkBox_savePassword setState:[[[owner accountController] propertyForKey:@"SavedPassword" account:account] boolValue]];
 }
 
 - (IBAction)cancel:(id)sender
@@ -94,13 +94,21 @@ AIPasswordPromptController	*controller = nil;
     BOOL	savePassword = [checkBox_savePassword state];
 
     //save password?
-    if(savePassword){
-        [AIKeychain putPasswordInKeychainForService:[NSString stringWithFormat:@"Adium.%@",[account UIDAndServiceID]] account:[account UIDAndServiceID] password:password];
+    if(savePassword && password && [password length]){
+        [[owner accountController] setPassword:password forAccount:account];
     }
 
     //close up and notify our caller
     [self closeWindow:nil];    
     [target performSelector:selector withObject:password];
+}
+
+- (IBAction)togglePasswordSaved:(id)sender
+{
+    if([sender state] == NSOffState){
+        //Forget any saved passwords
+        [[owner accountController] forgetPasswordForAccount:account];
+    }
 }
 
 - (void)textDidChange:(NSNotification *)notification

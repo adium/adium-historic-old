@@ -40,12 +40,18 @@
     return(view_accountView);
 }
 
-//Save the changed properties
-- (void)saveChanges
+//
+- (NSArray *)auxilaryTabs
 {
-    //Save and broadcast a properties changed message
-    [[account properties] setObject:[textField_handle stringValue] forKey:@"Handle"];
-    [[owner notificationCenter] postNotificationName:Account_PropertiesChanged object:self userInfo:nil];
+    return(nil);
+}
+
+//Save the changed properties
+- (IBAction)saveChanges:(id)sender
+{
+    [[owner accountController] setProperty:[textField_handle stringValue]
+                                    forKey:@"Handle"
+                                   account:account];
 }
 
 //
@@ -73,7 +79,7 @@
         NSLog(@"couldn't load account view bundle");
     }
 
-    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:account];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_PropertiesChanged object:account];
 
     //Configure the account name field
     [textField_handle setFormatter:[AIStringFormatter stringFormatterAllowingCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@. "] length:16 caseSensitive:NO errorMessage:@"You account name must be 16 characters or less, contain only letters and numbers, and must start with a letter."]];
@@ -84,7 +90,7 @@
 //
 - (void)dealloc
 {
-    [[owner notificationCenter] removeObserver:self name:Account_StatusChanged object:account];
+    [[owner notificationCenter] removeObserver:self name:Account_PropertiesChanged object:account];
 
     //Cleanup our nib
     [view_accountView release];
@@ -98,7 +104,7 @@
 //
 - (void)accountStatusChanged:(NSNotification *)notification
 {
-    BOOL	isOnline = [[[owner accountController] statusObjectForKey:@"Online" account:account] boolValue];
+    BOOL	isOnline = [[[owner accountController] propertyForKey:@"Online" account:account] boolValue];
 
     //Dim unavailable controls
     [textField_handle setEnabled:isOnline];
@@ -110,7 +116,7 @@
     NSString		*savedScreenName;
 
     //ScreenName
-    savedScreenName = [[account properties] objectForKey:@"Handle"];
+    savedScreenName = [[owner accountController] propertyForKey:@"Handle" account:account];
     if(savedScreenName != nil && [savedScreenName length] != 0){
         [textField_handle setStringValue:savedScreenName];
     }else{

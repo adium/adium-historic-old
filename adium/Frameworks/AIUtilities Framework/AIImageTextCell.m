@@ -27,6 +27,7 @@
     [super init];
 
     font = nil;
+    subString = nil;
     
     return(self);
 }
@@ -47,6 +48,14 @@
 }
 - (NSFont *)font{
     return(font);
+}
+
+- (void)setSubString:(NSString *)inSubString
+{
+    if(subString != inSubString){
+        [subString release];
+        subString = [inSubString retain];
+    }
 }
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
@@ -72,37 +81,41 @@
         destPoint.y += cellFrame.size.height;
         destPoint.x += 2;
         cellFrame.size.width -= size.width + 4;
-        cellFrame.origin.x += size.width + 4;
+        cellFrame.origin.x += size.width + 5;
 
+        //Center image vertically
+        if(size.height < cellFrame.size.height){
+            destPoint.y -= (cellFrame.size.height - size.height) / 2.0;
+        }
+        
         [image compositeToPoint:destPoint operation:NSCompositeSourceOver];
     }
     
     //Draw the cell's text
     if(title != nil){
+        NSColor			*textColor;
         NSDictionary		*attributes;
         int			stringHeight;
-        
-        // If we are highlighted AND are drawing with the alternate color, then we want to draw our text with the alternate text color.
-        // For any other case, we should draw using our normal text color.
-	if(highlighted && [highlightColor isEqual:[NSColor alternateSelectedControlColor]]){
-            //Draw the text inverted
-            if(font){
-                attributes = [NSDictionary dictionaryWithObjectsAndKeys:font,NSFontAttributeName,[NSColor alternateSelectedControlTextColor],NSForegroundColorAttributeName,nil];
-            }else{
-                attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSColor alternateSelectedControlTextColor],NSForegroundColorAttributeName,nil];
-            }
-            
+
+        //Determine the correct text color
+        if(highlighted && [highlightColor isEqual:[NSColor alternateSelectedControlColor]]){
+            textColor = [NSColor alternateSelectedControlTextColor]; //Draw the text inverted
         }else{
-            //Draw the text regular
             if([self isEnabled]){
-                if(font){
-                    attributes = [NSDictionary dictionaryWithObjectsAndKeys:font,NSFontAttributeName,nil];
-                }else{
-                    attributes = [NSDictionary dictionaryWithObjectsAndKeys:nil];
-                }
+                textColor = [NSColor controlTextColor]; //Draw the text regular
             }else{
-                attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSColor grayColor],NSForegroundColorAttributeName,font,NSFontAttributeName,nil];
+                textColor = [NSColor grayColor]; //Draw the text disabled
             }
+        }
+
+        //Adjust if a substring is present
+        if(subString) cellFrame.size.height /= 2;
+
+        //
+        if(font){
+            attributes = [NSDictionary dictionaryWithObjectsAndKeys:font,NSFontAttributeName,textColor,NSForegroundColorAttributeName,nil];
+        }else{
+            attributes = [NSDictionary dictionaryWithObjectsAndKeys:textColor,NSForegroundColorAttributeName,nil];
         }
 
         //Calculate the centered rect
@@ -113,6 +126,25 @@
         
         //Draw the string
         [title drawInRect:cellFrame withAttributes:attributes];
+
+        //Draw the substring
+        if(subString){
+            //Determine the correct text color
+            if(highlighted && [highlightColor isEqual:[NSColor alternateSelectedControlColor]]){
+                textColor = [NSColor colorWithCalibratedWhite:0.8 alpha:1.0]; //Draw the text inverted
+            }else{
+                if([self isEnabled]){
+                    textColor = [NSColor colorWithCalibratedWhite:0.4 alpha:1.0]; //Draw the text regular
+                }else{
+                    textColor = [NSColor colorWithCalibratedWhite:0.8 alpha:1.0]; //Draw the text disabled
+                }
+            }
+            
+            cellFrame.origin.y += (cellFrame.size.height);
+
+            attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont systemFontOfSize:10], NSFontAttributeName, textColor, NSForegroundColorAttributeName, nil];
+            [subString drawInRect:cellFrame withAttributes:attributes];
+        }
     }
 }
 

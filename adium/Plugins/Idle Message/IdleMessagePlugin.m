@@ -36,7 +36,7 @@
     preferences = [[IdleMessagePreferences idleMessagePreferencesWithOwner:owner] retain];
 
     // Observe
-    [[owner notificationCenter] addObserver:self selector:@selector(accountIdleStatusChanged:) name:Account_StatusChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountIdleStatusChanged:) name:Account_PropertiesChanged object:nil];
     
 }
 
@@ -55,7 +55,7 @@
                 //Remove existing content sent/received observer, and install new (if away)
                 [[owner notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
                 [[owner notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
-                if([[owner accountController] statusObjectForKey:@"IdleSince" account:nil] != nil){
+                if([[owner accountController] propertyForKey:@"IdleSince" account:nil] != nil){
                     [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
                     [[owner notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
                 }
@@ -74,14 +74,14 @@
 {
     AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"Object"];
     // TEMPORARY!!!
-    NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"IdleMessage" account:nil]];
-    //NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"AwayMessage" account:nil]];
+    NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"IdleMessage" account:nil]];
+    //NSAttributedString	*idleMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"AwayMessage" account:nil]];
 
     //If the user received a message, send our idle message to them
     if([[contentObject type] compare:CONTENT_MESSAGE_TYPE] == 0){
         if(idleMessage && [idleMessage length] != 0){
             // Only send if there's no away message up!
-            if([[owner accountController] statusObjectForKey:@"AwayMessage" account:nil] == nil) {
+            if([[owner accountController] propertyForKey:@"AwayMessage" account:nil] == nil) {
                 AIListContact	*contact = [contentObject source];
 
                 //Create and send an idle bounce message (If the sender hasn't received one already)

@@ -46,7 +46,6 @@
     [self generateEditorListArray];
 
     //Observe our account's changes
-    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:account];
     [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:account];
     [[owner notificationCenter] addObserver:self selector:@selector(accountHandlesChanged:) name:Account_HandlesChanged object:account];
     

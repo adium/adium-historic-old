@@ -129,7 +129,7 @@
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
     BOOL 	available = NO;
-    BOOL	weAreOnline = ([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
+    BOOL	weAreOnline = ([[[owner accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
 
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
         if(weAreOnline){
@@ -242,7 +242,7 @@
 // Returns a dictionary of AIHandles available on this account
 - (NSDictionary *)availableHandles //return nil if no contacts/list available
 {
-    int	status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
+    int	status = [[[owner accountController] propertyForKey:@"Status" account:self] intValue];
     
     if(status == STATUS_ONLINE || status == STATUS_CONNECTING)
     {
@@ -310,9 +310,6 @@
     password = nil;
     friendlyName = nil;
       
-    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
-    [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
-
     chatDict = [[NSMutableDictionary alloc] init];
     handleDict = [[NSMutableDictionary alloc] init];
         switchBoardDict = [[NSMutableDictionary alloc] init];
@@ -359,14 +356,14 @@
     return [propertiesDict objectForKey:@"Email"];
 }
 
-- (NSArray *)supportedStatusKeys
+- (NSArray *)supportedPropertyKeys
 {
     return([NSArray arrayWithObjects:@"Online", @"Offline", @"Hidden", @"Busy", @"Idle", @"Be Right Back", @"Away", @"On The Phone", @"Out to Lunch", @"Typing", nil]);
 }
 
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
-    ACCOUNT_STATUS status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
+    ACCOUNT_STATUS status = [[[owner accountController] propertyForKey:@"Status" account:self] intValue];
         
     if([key compare:@"Online"] == 0)
     {
@@ -401,7 +398,7 @@
 {
     if(inPassword && [inPassword length] != 0)
     {
-        [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
+        [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
         
         if(email != [propertiesDict objectForKey:@"Email"])
         {
@@ -771,7 +768,7 @@
                     
             default:
                 [[owner accountController] 
-                    setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE]
+                    setProperty:[NSNumber numberWithInt:STATUS_ONLINE]
                         forKey:@"Status" account:self];
                 break;
         }
@@ -780,7 +777,7 @@
     {
         //NSLog (@"Socket found to be invalid");
         
-        [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] 			forKey:@"Status" account:self];
+        [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_OFFLINE] 			forKey:@"Status" account:self];
 		
 		[socket release];
 		socket = nil;
@@ -1047,7 +1044,7 @@
     else //socket is dead
     {
         NSLog (@"NS Socket found to be invalid");
-        [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] 			forKey:@"Status" account:self];
+        [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_OFFLINE] 			forKey:@"Status" account:self];
 		
 		[socket release];
 		socket = nil;
@@ -1056,7 +1053,7 @@
 
 - (void)update:(NSTimer *)timer
 {
-    ACCOUNT_STATUS status = [[[owner accountController] statusObjectForKey:@"Status" account:self] intValue];
+    ACCOUNT_STATUS status = [[[owner accountController] propertyForKey:@"Status" account:self] intValue];
 	
     switch (status)
 	{
@@ -1108,7 +1105,7 @@
     //AIHandle		*handle;
     
     // Set status as disconnecting
-    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_DISCONNECTING]
+    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING]
         forKey:@"Status" account:self];
     
     // Tell server we're going out
@@ -1137,7 +1134,7 @@
     [stepTimer invalidate];	stepTimer = nil;
     
     // Set status as offline
-    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE]
+    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_OFFLINE]
         forKey:@"Status" account:self];
 }
 

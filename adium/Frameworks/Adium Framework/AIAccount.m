@@ -30,19 +30,19 @@
 {
     [super init];
 
-    NSParameterAssert(inProperties != nil);
-
     //Retain our owner
     owner = [inOwner retain];
     service = [inService retain];
 
-    //Retain the properties dictionary
-    propertiesDict = [inProperties mutableCopy];
-
-    //Load the account's status properties
-    statusDict = [[propertiesDict objectForKey:@"Status"] mutableCopy];
-    if(!statusDict) statusDict = [[NSMutableDictionary alloc] init];
-    [propertiesDict setObject:statusDict forKey:@"Status"];
+    //Load the account's default properties, then apply the passed properties (overwriting any defaults)
+    if(!(propertiesDict = [[self defaultProperties] mutableCopy])){
+        propertiesDict = [[NSMutableDictionary alloc] init];
+    }
+    [propertiesDict addEntriesFromDictionary:inProperties];
+    
+    //Clear the online state.  'Auto-Connect' values are used, not the previous online state.
+    [propertiesDict setObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status"];
+    [propertiesDict setObject:[NSNumber numberWithBool:NO] forKey:@"Online"];
 
     //Init the account
     [self initAccount];
@@ -57,23 +57,28 @@
 }
 
 //Return the properties dictionary for this connection
-- (NSMutableDictionary *)properties
+- (NSDictionary *)properties
 {
     return(propertiesDict);
 }
 
-//Set a status value
-- (void)setStatusObject:(id)inValue forKey:(NSString *)key
+//Return the default properties for this account
+- (NSDictionary *)defaultProperties
 {
-    [statusDict setObject:inValue forKey:key];
+    return(nil);
+}
+
+//Set a status value
+- (void)setProperty:(id)inValue forKey:(NSString *)key
+{
+    [propertiesDict setObject:inValue forKey:key];
 }
 
 //Retrieve a status value
-- (id)statusObjectForKey:(NSString *)key
+- (id)propertyForKey:(NSString *)key
 {
-    return([statusDict objectForKey:key]);
+    return([propertiesDict objectForKey:key]);
 }
-
 
 //Dealloc
 - (void)dealloc
@@ -94,6 +99,6 @@
 - (NSString *)UIDAndServiceID{return(nil);}; 	//ServiceID.UID
 - (NSString *)accountDescription{return(nil);};
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue{};
-- (NSArray *)supportedStatusKeys{return([NSArray array]);}
+- (NSArray *)supportedPropertyKeys{return([NSArray array]);}
 
 @end

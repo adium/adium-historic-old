@@ -170,7 +170,7 @@ int HTMLEquivalentForFontSize(int fontSize);
         //escape sequence.
         int i;
         for(i = 0; i < [chunk length]; i++) {
-            char currentChar = [chunk characterAtIndex:i];
+            unichar currentChar = [chunk characterAtIndex:i];
             if(currentChar > 127) {
                 [string appendFormat:@"&#%d;", currentChar];
             } else if(currentChar == '\r' || currentChar == '\n'){
