@@ -72,7 +72,7 @@
 {
 	//Get the new accounts
 	[accounts release];
-	accounts = [[[adium accountController] accountsWithService:[listObject service]] retain];
+	accounts = [[[adium accountController] accountsWithServiceClassOfService:[listObject service]] retain];
 	
 	//Refresh our table
 	[tableView_accounts reloadData];
