@@ -18,13 +18,14 @@
 #import "AIAppearancePreferencesPlugin.h"
 #import "AIDockController.h"
 #import "AIDockIconSelectionSheet.h"
+#import "AIListLayoutWindowController.h"
+#import "AIListThemeWindowController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <Adium/AIIconState.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
-#import "AIListLayoutWindowController.h"
-#import "AIListThemeWindowController.h"
 
 
 #warning crosslink
@@ -35,6 +36,8 @@
 - (NSMenu *)_dockIconMenu;
 - (NSMenu *)_statusIconsMenu;
 - (NSMenu *)_serviceIconsMenu;
+- (NSMenu *)_listLayoutMenu;
+- (NSMenu *)_colorThemeMenu;
 - (NSMenu *)_iconPackMenuForPacks:(NSArray *)packs class:(Class)iconClass;
 - (NSArray *)_allPacksWithExtension:(NSString *)extension inFolder:(NSString *)inFolder;
 - (void)_addWindowStyleOption:(NSString *)option withTag:(int)tag toMenu:(NSMenu *)menu;
