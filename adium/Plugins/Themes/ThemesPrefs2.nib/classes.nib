@@ -5,6 +5,7 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = NSTableView; 
         }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {changePreference = id; }; 
             CLASS = AIPreferencePane; 
@@ -28,7 +29,7 @@
                 table = AIAlternatingRowTableView; 
                 themesPlugin = id; 
             }; 
-            SUPERCLASS = NSView; 
+            SUPERCLASS = AIObject; 
         }, 
         {
             ACTIONS = {applyTheme = id; removeTheme = id; }; 

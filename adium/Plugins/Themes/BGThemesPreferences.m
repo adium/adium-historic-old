@@ -8,6 +8,7 @@
 
 #import "BGThemesPreferences.h"
 #import "BGThemesPlugin.h"
+#import "BGThemeManageView.h"
 
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"
 #define THEME_PATH  [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:@"Themes"]

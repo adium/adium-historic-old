@@ -19,7 +19,7 @@
     [table setDrawsAlternatingRows:YES];
     [table setTarget:self];
     [table setDoubleAction:@selector(showPreview:)];   
-    [[adium notificationCenter] addObserver:self selector:@selector(themesChanged:) name:Themes_Changed object:nil];
+    [[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self selector:@selector(themesChanged:) name:Themes_Changed object:nil];
     [table reloadData];
 }
 
