@@ -1,0 +1,33 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIContactStatusColoringPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "colorWell_away" = NSColorWell; 
+                "colorWell_awayInverted" = NSColorWell; 
+                "colorWell_idle" = NSColorWell; 
+                "colorWell_idleAway" = NSColorWell; 
+                "colorWell_idleAwayInverted" = NSColorWell; 
+                "colorWell_idleInverted" = NSColorWell; 
+                "colorWell_online" = NSColorWell; 
+                "colorWell_onlineInverted" = NSColorWell; 
+                "colorWell_openTab" = NSColorWell; 
+                "colorWell_openTabInverted" = NSColorWell; 
+                "colorWell_signedOff" = NSColorWell; 
+                "colorWell_signedOffInverted" = NSColorWell; 
+                "colorWell_signedOn" = NSColorWell; 
+                "colorWell_signedOnInverted" = NSColorWell; 
+                "colorWell_unviewedContent" = NSColorWell; 
+                "colorWell_unviewedContentInverted" = NSColorWell; 
+                "colorWell_warning" = NSColorWell; 
+                "colorWell_warningInverted" = NSColorWell; 
+                "view_prefView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
