@@ -13,6 +13,9 @@
                 "popUp_contactTextAlignment" = NSPopUpButton; 
                 "popUp_groupStyle" = NSPopUpButton; 
                 "popUp_groupTextAlignment" = NSPopUpButton; 
+                "popUp_serviceIconPosition" = NSPopUpButton; 
+                "popUp_statusIconPosition" = NSPopUpButton; 
+                "popUp_userIconPosition" = NSPopUpButton; 
                 "popUp_windowStyle" = NSPopUpButton; 
                 "slider_userIconSize" = NSSlider; 
                 "textField_userIconSize" = NSTextField; 

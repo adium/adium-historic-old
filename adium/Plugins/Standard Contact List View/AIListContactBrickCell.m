@@ -17,14 +17,6 @@
 	return([self labelColor] == nil);
 }
 
-//Default to more edge padding
-- (int)topPadding{
-	return([super topPadding] + 2);
-}
-- (int)bottomPadding{
-	return([super bottomPadding] + 2);
-}
-
 //Draw the background of our cell
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
