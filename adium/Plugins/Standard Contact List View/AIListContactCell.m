@@ -287,18 +287,17 @@
 {
 	NSRect	rect = inRect;
 	if(userIconVisible){
-		NSImage *image = [self userIconImage];
-		[image setFlipped:![image isFlipped]];
+		NSImage *image = [self userIconImageOfSize:NSMakeSize(userIconSize, userIconSize)];
+		
 		rect = [image drawInRect:rect
 						  atSize:NSMakeSize(userIconSize, userIconSize)
 						position:position];
-		[image setFlipped:![image isFlipped]];
 		if(position == IMAGE_POSITION_LEFT) rect.origin.x += ICON_TEXT_PADDING;
 		
 		//Badges
-		NSRect	drawRect = [[self userIconImage] rectForDrawingInRect:inRect
-																atSize:NSMakeSize(userIconSize, userIconSize)
-															  position:position];
+		NSRect	drawRect = [image rectForDrawingInRect:inRect
+												atSize:NSMakeSize(userIconSize, userIconSize)
+											  position:position];
 		if(statusIconPosition == LIST_POSITION_BADGE_LEFT)
 			[self drawStatusIconInRect:drawRect position:IMAGE_POSITION_LOWER_LEFT];
 		if(statusIconPosition == LIST_POSITION_BADGE_RIGHT)
@@ -425,12 +424,15 @@
 }
 
 //Contact user image
-- (NSImage *)userIconImage
+- (NSImage *)userIconImageOfSize:(NSSize)inSize
 {
-	NSImage	*image = [listObject userIcon];
+	NSImage	*image = [listObject cachedListUserIconOfSize:inSize];
 	
 	if(!image){
-		if(!genericUserIcon) genericUserIcon = [[NSImage imageNamed:@"DefaultIcon" forClass:[self class]] retain];
+		if(!genericUserIcon){
+			genericUserIcon = [[NSImage imageNamed:@"DefaultIcon" forClass:[self class]] retain];
+			[genericUserIcon setFlipped:YES];
+		}
 		image = genericUserIcon;
 	}
 	
