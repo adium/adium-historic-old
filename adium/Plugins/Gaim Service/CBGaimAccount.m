@@ -27,6 +27,7 @@
 - (void)disconnect;
 - (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle;
 - (NSString *)_userIconCachePath;
+- (void)setTypingFlagOfHandle:(AIHandle *)handle to:(BOOL)typing;
 @end
 
 @implementation CBGaimAccount

@@ -489,6 +489,33 @@ static GaimXferUiOps adiumGaimFileTrasnferOps = {
     adiumGaimCancelRemote
 };
 
+// Privacy ------------------------------------------------------------------------------------------------------
+
+static void adiumGaimPermitAdded(GaimAccount *account, const char *name)
+{
+    
+}
+static void adiumGaimPermitRemoved(GaimAccount *account, const char *name)
+{
+    
+}
+static void adiumGaimDenyAdded(GaimAccount *account, const char *name)
+{
+    
+}
+static void adiumGaimDenyRemoved(GaimAccount *account, const char *name)
+{
+    
+}
+
+static GaimPrivacyUiOps adiumGaimPrivacyOps = {
+    adiumGaimPermitAdded,
+    adiumGaimPermitRemoved,
+    adiumGaimDenyAdded,
+    adiumGaimDenyRemoved
+};
+
+
 // Core ------------------------------------------------------------------------------------------------------
 static void adiumGaimPrefsInit(void)
 {
@@ -512,6 +539,7 @@ static void adiumGaimCoreUiInit(void)
     gaim_notify_set_ui_ops(&adiumGaimNotifyOps);
     gaim_request_set_ui_ops(&adiumGaimRequestOps);
     gaim_xfers_set_ui_ops(&adiumGaimFileTrasnferOps);
+    gaim_privacy_set_ui_ops (&adiumGaimPrivacyOps);
 }
 
 static void adiumGaimCoreQuit(void)
@@ -555,6 +583,9 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     //Setup the buddy list
     gaim_set_blist(gaim_blist_new());
     //gaim_blist_load();
+    
+    //Privacy
+    gaim_privacy_init();
     
     /* Proxy */
     gaim_proxy_init();
