@@ -8,6 +8,7 @@
 #import "ESJabberService.h"
 #import "ESGaimJabberAccount.h"
 #import "ESGaimJabberAccountViewController.h"
+#import "DCGaimJabberJoinChatViewController.h"
 
 @implementation ESJabberService
 
@@ -54,7 +55,7 @@
 
 - (DCJoinChatViewController *)joinChatView
 {
-	return([DCJoinChatViewController joinChatView]);
+	return([DCGaimJabberJoinChatViewController joinChatView]);
 }
 
 @end

@@ -9,6 +9,7 @@
 #import "ESMSNService.h"
 #import "ESGaimMSNAccount.h"
 #import "ESGaimMSNAccountViewController.h"
+#import "DCGaimMSNJoinChatViewController.h"
 
 @implementation ESMSNService
 
@@ -57,7 +58,7 @@
 
 - (DCJoinChatViewController *)joinChatView
 {
-	return([DCJoinChatViewController joinChatView]);
+	return([DCGaimMSNJoinChatViewController joinChatView]);
 }
 
 

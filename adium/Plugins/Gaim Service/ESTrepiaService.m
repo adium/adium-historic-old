@@ -8,6 +8,7 @@
 #import "ESTrepiaService.h"
 #import "ESGaimTrepiaAccount.h"
 #import "ESGaimTrepiaAccountViewController.h"
+#import "DCGaimTrepiaJoinChatViewController.h"
 
 @implementation ESTrepiaService
 
@@ -53,7 +54,7 @@
 
 - (DCJoinChatViewController *)joinChatView
 {
-	return([DCJoinChatViewController joinChatView]);
+	return([DCGaimTrepiaJoinChatViewController joinChatView]);
 }
 
 

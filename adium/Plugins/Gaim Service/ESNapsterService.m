@@ -8,6 +8,7 @@
 #import "ESNapsterService.h"
 #import "ESGaimNapsterAccount.h"
 #import "ESGaimNapsterAccountViewController.h"
+#import "DCGaimNapsterJoinChatViewController.h"
 
 @implementation ESNapsterService
 
@@ -55,7 +56,7 @@
 
 - (DCJoinChatViewController *)joinChatView
 {
-	return([DCJoinChatViewController joinChatView]);
+	return([DCGaimNapsterJoinChatViewController joinChatView]);
 }
 
 

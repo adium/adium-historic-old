@@ -7,6 +7,7 @@
 #import "ESMeanwhileService.h"
 #import "ESGaimMeanwhileAccount.h"
 #import "ESGaimMeanwhileAccountViewController.h"
+#import "DCGaimMeanwhileJoinChatViewController.h"
 
 @implementation ESMeanwhileService
 
@@ -55,7 +56,7 @@
 
 - (DCJoinChatViewController *)joinChatView
 {
-	return([DCJoinChatViewController joinChatView]);
+	return([DCGaimMeanwhileJoinChatViewController joinChatView]);
 }
 
 

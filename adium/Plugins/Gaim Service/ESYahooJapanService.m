@@ -9,6 +9,7 @@
 #import "ESYahooJapanService.h"
 #import "ESGaimYahooJapanAccount.h"
 #import "ESGaimYahooAccountViewController.h"
+#import "DCGaimYahooJoinChatViewController.h"
 
 @implementation ESYahooJapanService
 
@@ -51,11 +52,9 @@
     return([ESGaimYahooAccountViewController accountView]);
 }
 
-
 - (DCJoinChatViewController *)joinChatView
 {
-	return([DCJoinChatViewController joinChatView]);
+	return([DCGaimYahooJoinChatViewController joinChatView]);
 }
-
 
 @end
