@@ -1,6 +1,5 @@
 <%@ page import = 'java.sql.*' %>
 <%@ page import = 'javax.sql.*' %>
-<%@ page import = 'java.util.ArrayList' %>
 <%@ page import = 'javax.naming.*' %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
@@ -24,7 +23,7 @@ loginUsers = Boolean.valueOf(request.getParameter("login")).booleanValue();
 %>
 <html>
     <head>
-        <title>SQL Logger: Defrag Statistics</title>
+        <title>SQLLogger: Defrag Statistics</title>
     </head>
     <body>
     <%
