@@ -42,6 +42,7 @@
 #define KEY_LIST_LAYOUT_GROUP_FONT				@"Group Font"
 
 #define KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT		@"Contact Left Indent"
+#define KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT	@"Contact Right Indent"
 
 
 typedef enum {
@@ -98,6 +99,8 @@ typedef enum {
 	IBOutlet		NSTextField			*textField_windowTransparency;
 	IBOutlet		NSSlider			*slider_contactLeftIndent;
 	IBOutlet		NSTextField			*textField_contactLeftIndent;
+	IBOutlet		NSSlider			*slider_contactRightIndent;
+	IBOutlet		NSTextField			*textField_contactRightIndent;
 	
 	IBOutlet		JVFontPreviewField	*fontField_contact;	
 	IBOutlet		JVFontPreviewField	*fontField_status;	
