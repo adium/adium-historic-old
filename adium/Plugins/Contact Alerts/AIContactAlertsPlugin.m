@@ -27,7 +27,7 @@
     [[owner menuController] addMenuItem:editContactAlertsMenuItem toLocation:LOC_Contact_Action];
 
     //Add our 'contact alerts' contextual menu item
-    contactAlertsContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"Edit Alerts" target:self action:@selector(editContextContactInfo:) keyEquivalent:@""];
+    contactAlertsContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"Edit Alerts" target:self action:@selector(editContextContactAlerts:) keyEquivalent:@""];
     [[owner menuController] addContextualMenuItem:contactAlertsContextMenuItem toLocation:Context_Contact_Manage];
 
     //Add our 'contact alerts' toolbar item
