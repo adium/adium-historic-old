@@ -125,8 +125,6 @@
 	    circleColor = signedOffColor;
         }else if(signedOn){
 	    circleColor = signedOnColor;
-        }else if(openTab){
-            circleColor = openTabColor;
         }else if(idle != 0 && away){
 	    circleColor = idleAwayColor;
         }else if(idle != 0){
@@ -135,6 +133,8 @@
 	    circleColor = awayColor;
         }else if(warning){
 	    circleColor = warningColor;
+        }else if(openTab){
+            circleColor = openTabColor;
         }else if(online){	// this should be the last 'if' before the final 'else'
 	    circleColor = onlineColor;
         }else{

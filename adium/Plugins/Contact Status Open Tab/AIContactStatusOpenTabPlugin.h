@@ -13,26 +13,16 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
+#import <AIUtilities/AIUtilities.h>
+#import "AIAdium.h"
 
-#define PREF_GROUP_DOCK_BEHAVIOR			@"DockBehavior"
+@protocol AIContactObserver;
 
-#define KEY_DOCK_CUSTOM_BEHAVIOR			@"Custom Behavior"
-#define KEY_DOCK_BEHAVIOR_SETS				@"Dock Behavior Sets"
-#define KEY_DOCK_ACTIVE_BEHAVIOR_SET			@"Active Behavior Set"
-
-#define KEY_DOCK_EVENT_BEHAVIOR				@"Behavior"
-#define	KEY_DOCK_EVENT_NOTIFICATION			@"Notification"
-
-@class AIDockBehaviorPreferences;
-
-@interface AIDockBehaviorPlugin : AIPlugin {
-    AIDockBehaviorPreferences 	*preferences;
-
-    NSMutableDictionary		*behaviorDict;
+@interface AIContactStatusOpenTabPlugin : AIPlugin {
 }
 
-- (void)installPlugin;
+- (void)applyOpenTabStatusOnContact:(AIListContact *)inContact;
+- (void)clearOpenTabStatusOnContact:(AIListContact *)inContact;
 
 @end

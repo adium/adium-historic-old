@@ -401,6 +401,180 @@
 			settings = {
 			};
 		};
+		11B487810498C792003CE6DB = {
+			children = (
+				11B4878D0498CA62003CE6DB,
+				11B4878E0498CA62003CE6DB,
+			);
+			isa = PBXGroup;
+			name = "Open Tab Status";
+			refType = 4;
+		};
+		11B4878D0498CA62003CE6DB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIContactStatusOpenTabPlugin.h;
+			path = "Plugins/Contact Status Open Tab/AIContactStatusOpenTabPlugin.h";
+			refType = 4;
+		};
+		11B4878E0498CA62003CE6DB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIContactStatusOpenTabPlugin.m;
+			path = "Plugins/Contact Status Open Tab/AIContactStatusOpenTabPlugin.m";
+			refType = 4;
+		};
+		11B487980498CEFC003CE6DB = {
+			buildPhases = (
+				11B4879B0498CEFC003CE6DB,
+				11B4879F0498CEFC003CE6DB,
+				11B487A30498CEFC003CE6DB,
+				11B487A70498CEFC003CE6DB,
+				11B487AB0498CEFC003CE6DB,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Contact Status Open Tab";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				11B487990498CEFC003CE6DB,
+				11B4879A0498CEFC003CE6DB,
+			);
+			isa = PBXBundleTarget;
+			name = "Contact Status Open Tab";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Away Status Window";
+			productReference = 11B487AC0498CEFC003CE6DB;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Contact Status Open Tab</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIContactStatusOpenTabPlugin</string>
+</dict>
+</plist>
+";
+		};
+		11B487990498CEFC003CE6DB = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		11B4879A0498CEFC003CE6DB = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		11B4879B0498CEFC003CE6DB = {
+			buildActionMask = 2147483647;
+			files = (
+				11B487AE0498CFBE003CE6DB,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		11B4879F0498CEFC003CE6DB = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		11B487A30498CEFC003CE6DB = {
+			buildActionMask = 2147483647;
+			files = (
+				11B487AD0498CFBD003CE6DB,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		11B487A70498CEFC003CE6DB = {
+			buildActionMask = 2147483647;
+			files = (
+				11B487A80498CEFC003CE6DB,
+				11B487A90498CEFC003CE6DB,
+				11B487B00498D35A003CE6DB,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		11B487A80498CEFC003CE6DB = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		11B487A90498CEFC003CE6DB = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		11B487AB0498CEFC003CE6DB = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		11B487AC0498CEFC003CE6DB = {
+			isa = PBXBundleReference;
+			path = "Contact Status Open Tab.AdiumPlugin";
+			refType = 3;
+		};
+		11B487AD0498CFBD003CE6DB = {
+			fileRef = 11B4878E0498CA62003CE6DB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		11B487AE0498CFBE003CE6DB = {
+			fileRef = 11B4878D0498CA62003CE6DB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		11B487B00498D35A003CE6DB = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		11B487B30498D44C003CE6DB = {
+			fileRef = 11B487AC0498CEFC003CE6DB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		11B487C00498E698003CE6DB = {
+			isa = PBXTargetDependency;
+			target = 11B487980498CEFC003CE6DB;
+		};
 		11F2C7FB047ACDC50021C483 = {
 			isa = PBXFileReference;
 			name = ContactStatusColoringPrefs.nib;
@@ -496,6 +670,7 @@
 				4BE8E5400483B5A900A8010A,
 				4B5B15290493BFB100A8010A,
 				4BAE85AB0498195800A8010A,
+				11B487AC0498CEFC003CE6DB,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -567,6 +742,7 @@
 				4B304911047FBD8200A8010A,
 				4BC2C6E70480540A00A8010A,
 				4BE8E53F0483B5A900A8010A,
+				11B487980498CEFC003CE6DB,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -671,6 +847,7 @@
 				4BE8E5410483B5A900A8010A,
 				4B5B152A0493BFB100A8010A,
 				4BAE85AC0498195800A8010A,
+				11B487C00498E698003CE6DB,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -1829,6 +2006,7 @@
 		};
 		4B1332410459BF1F00A8010A = {
 			children = (
+				11B487810498C792003CE6DB,
 				4B5B15220493BF9A00A8010A,
 				4B6D0E43047D490700A8010A,
 				4BBAEE9703DD7D8900A8010A,
@@ -2918,6 +3096,7 @@
 				4B0473C2043E443A00A8010A,
 				4B55411E044DF01600A8010A,
 				114A79BA0470C433001F3502,
+				11B487B30498D44C003CE6DB,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
