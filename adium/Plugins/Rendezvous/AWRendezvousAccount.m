@@ -248,6 +248,7 @@
 // Send a content object
 - (BOOL)sendContentObject:(AIContentObject *)object
 {
+    BOOL sent = NO;
     if([[object type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
 		NSString	*message = [[(AIContentMessage *)object message] string];
 		NSString	*htmlMessage = [AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message]
@@ -270,6 +271,7 @@
 		[libezv sendMessage:message 
 						 to:to 
 				   withHtml:htmlMessage];
+		sent = YES;
 		
     } else if([[object type] isEqualToString:CONTENT_TYPING_TYPE]) {
 		AIContentTyping *contentTyping = (AIContentTyping*)object;
@@ -279,7 +281,9 @@
 		
 		[libezv sendTypingNotification:(([contentTyping typingState] == AITyping) ? AWEzvIsTyping : AWEzvNotTyping)
 									to:to];
+		sent = YES;
     }
+    return sent;
 }
 
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
