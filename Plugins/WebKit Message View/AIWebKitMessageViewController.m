@@ -1145,9 +1145,12 @@ DeclareString(AppendNextMessage);
 		[listener use];
     } else {
 		NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
-		#warning security risk we should look here for file:// URLs so we do not automagically open applications
-		// Do as iChat does, open the container folder instead
-		[[NSWorkspace sharedWorkspace] openURL:url];
+		
+		//Ignore file URLs, but open anything else
+		if(![url isFileURL]){
+			[[NSWorkspace sharedWorkspace] openURL:url];
+		}
+		
 		[listener ignore];
     }
 }
