@@ -55,8 +55,6 @@
 
 - (void)_initAlternatingRowOutlineView
 {
-	[super _init];
-	
     drawsAlternatingRows = NO;
 	drawsBackground = YES;
 	hidesSelectionWhenNotMain = NO;
