@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.112 2004/05/09 06:07:10 jmelloy Exp $
+$Id: ToDoList.txt,v 1.113 2004/05/09 08:28:22 eevyl Exp $
 
 
 Legend
@@ -176,6 +176,7 @@ Status badges:
 	+ Allow user to select icon sets (packaged in a bundle) in preferences
 
 Event Notifications (the feature formerly known as Event Bezel:
+    + Detect when the bezel is displaying with no position info (from autoSaveFrameName) and put it in a default position like the old bezel "default" one.
     + Hook the thing into the new alert system. Give it a nice icon for it too.
     + Give the notification window a close widget to quick-dismish the event, if it is the last one close the thing entirely. Maybe if clicking it with option hold down should close all queued events altogether.
     + Give the notification window a mail dock icon like badge to show the total number of recent events to be shown on it
