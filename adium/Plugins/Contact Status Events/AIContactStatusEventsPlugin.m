@@ -62,12 +62,15 @@
 {
     int		timeInterval = 15;//time interval that the status should remain
 
+    // make sure the event is from a contact and not from an account
+    if (![inObject isKindOfClass: [AIAccount class]]) {
+
     if([inModifiedKeys containsObject:@"Online"]){ //Sign on/off
         BOOL	newStatus = [[inObject statusArrayForKey:@"Online"] greatestIntegerValue];
         NSNumber	*oldStatusNumber = [onlineDict objectForKey:[inObject UIDAndServiceID]];
         BOOL	oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
 
-       // NSLog(@"%@ Online changed from %i to %i (Holding Updates: %i)",[inObject displayName],oldStatus,newStatus,[[adium contactController] holdContactListUpdates]);
+        //NSLog(@"%@ Online changed from %i to %i",[inObject displayName],oldStatus,newStatus);
 
         if(oldStatusNumber == nil || newStatus != oldStatus){
             //Save the new status
@@ -135,7 +138,9 @@
             
         }
     }
-
+    
+    } // end of check for account change
+    
     return(nil);
 }
 
