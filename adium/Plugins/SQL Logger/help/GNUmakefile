@@ -1,9 +1,9 @@
-HTML_FILES := index.html resin.html technical.html tsearch.html \
-	      performance.html quick_install.html
+HTML_FILES := index.html technical.html \
+	      performance.html install.html
 
 deploy: $(HTML_FILES)
 
-clean: 
+clean:
 	rm -f $(HTML_FILES)
 
 $(HTML_FILES): transform.xsl

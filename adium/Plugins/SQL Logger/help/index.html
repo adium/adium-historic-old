@@ -1,254 +1,85 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
-<html>
+<html xmlns:xalan="http://xml.apache.org/xslt">
 <head>
-<meta content="text/html; charset=ascii" http-equiv="Content-Type">
-<title>Adium SQL Logging Instructions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=ascii">
+<title>SQL Logger</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
 <body><div id="container">
-<div id="banner"><h2 class="titlebar">Adium SQL Logging Instructions</h2></div>
+<div id="banner"><h2 class="titlebar">SQL Logger</h2></div>
 <div id="sidebar-a">
 <h4>SQL Logger<br>
 </h4>
-<a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a><br><a href="tsearch.html" class="sidebar">TSearch Installation</a><br><a href="resin.html" class="sidebar">Resin Installation</a><br><a href="technical.html" class="sidebar">Technical
-              Details</a><br><a href="performance.html" class="sidebar">Performance/Maintenance</a><br><a href="quick_install.html" class="sidebar">Quick Install
-              Notes</a><br><h4>Adium</h4>
+<a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/sqllogger/screenshots.jsp" class="offsides">Screenshots</a><br><a href="install.html" class="sidebar">Installation</a><br><a href="technical.html" class="sidebar">Technical
+              Details</a><br><a href="performance.html" class="sidebar">Maintenance/Performance</a><br><a href="changes.txt" class="offsides">Changelog</a><br><a href="http://www.visualdistortion.org/sqllogger/sqllogger.tar.gz" class="offsides">JSP/HTML package</a><br><h4>Adium</h4>
 <a href="http://www.adiumx.com/" class="offsides">Adium</a><br><a href="http://forums.adiumx.com" class="offsides">Adium
-                Forums</a><br><a href="http://planet.adiumx.com" class="offsides">Planet Adium</a><br><a href="http://cia.navi.cx/stats/project/adium/" class="offsides">CVS Changes</a><br><h4>PostgreSQL</h4>
-<a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.3/interactive/index.html" class="offsides">PSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a><br><h4>Visual Distortion</h4>
-<a href="http://www.visualdistortion.org/" class="offsides">Visual Distortion Home</a><br><a href="http://www.visualdistortion.org/guestbook.jsp" class="offsides">Guestbook</a><br><a href="http://www.visualdistortion.org/pictures/" class="offsides">Pictures</a><br><a href="http://www.visualdistortion.org/films/" class="offsides">Films</a><br><a href="http://www.visualdistortion.org/music/" class="offsides">Music</a>
+                Forums</a><br><a href="http://planet.adiumx.com" class="offsides">Planet Adium</a><br><a href="http://cia.navi.cx/stats/project/adium/" class="offsides">CVS Changes</a><br><a href="http://www.visualdistortion.org/sqllogger/adium-sql.tar.gz" class="offsides">Adium Plugin</a><br><h4>Fire</h4>
+<a href="http://fire.sourceforge.net" class="offsides">Fire</a><br><h4>PostgreSQL</h4>
+<a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.3/interactive/index.html" class="offsides">PgSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a><br><h4>Visual Distortion</h4>
+<a href="http://www.visualdistortion.org/" class="offsides">Visual Distortion Home</a>
 </div>
 <div id="content">
-<p>SQL Logging implements logging from the Mac OS X instant messaging
-      program Adium directly into a PostgreSQL database.  It consists of a
-      plugin for Adium, a web-interface for the logs written in JSP, and HTML
+<p>SQL Logging implements logging from instant messenger clients into a PostgreSQL database.  It consists of a
+      plugin, a web-interface for the logs written in JSP, and HTML
       documentation.</p>
-<p>SQL Logging  offers several advantages:</p>
+<p>SQL Logging  offers several advantages over normal methods:</p>
 <ul>
-      <li>Searching is very, very quick.</li>
-      <li>Exceptionally detailed statistics.</li>
-      <li>Very easy to view logs between certain time periods.</li>
-      <li>Can see multiple concurrent conversations, or only one</li>
-      <li>Other goodness.</li>
+      <li>Extremely fast boolean searching</li>
+      <li>Exceptionally detailed statistics</li>
+      <li>Very easy to view logs between certain time periods</li>
+      <li>Easy to view simultaneous conversations</li>
+      <li>Meta-contacts</li>
+      <li>Extensible contact information stored for each contact</li>
     </ul>
-<div class="important">If you are compiling from source with Panther,
-      PostgreSQL 7.3 will not work.  PostgreSQL 7.4
-      will work, however.</div>
-<div class="important">Make sure you check out the Quick Install
-      instructions <a href="quick_install.html">here.</a>
-</div>
-<p>To install this, a few things are required.
-    Setup, however, is not that bad.
-    At the base level, all that is required is PostgreSQL (duh).
-    It can be installed from source, via fink, or by a package.</p>
-<p>I would recommend a package by Mark Liyanage.<br>
-    You can find information and installation instructions at <a href="http://www.entropy.ch/software/macosx/postgresql/" class="offsite">http://www.entropy.ch/software/macosx/postgresql/</a>.
-  This website has an OS X-style installer, includes the Java driver, and has a package for starting
-  PostgreSQL up at startup.</p>
-<p>There is also a set of installation instructions for installing
-    PostgreSQL from source at <a href="http://developer.apple.com/internet/macosx/postgres.html" class="offsite">http://developer.apple.com/internet/macosx/postgres.html</a>.
-    That tutorial is very good.  It covers installing PostgreSQL from source, shows
-  how to use PostgreSQL with Perl (not necessary for this),
-  Java (necessary for the JSP viewers to work), and PHP (not necessary
-  for this).  It also covers how to administer the database using phpPgAdmin, an
-  administration program with a web interface.</p>
-<p>After you have PostgreSQL set up, create a user with your username.
-      This needs to be done as the postgres user.
-      (<code>su&#160;-&#160;postgres</code>)</p>
-<div class="tutorialcode">
-      <pre>createuser <i>username</i></pre>
-</div>
-<p>Then create a database with your username, as yourself
-      (<code>su&#160;-&#160;<i>username</i></code>):</p>
-<div class="tutorialcode">
-      <pre>createdb <i>username</i></pre>
-</div>
-<p>If you get errors relating to <code>createuser: command not
-        found</code>, then the problem may be that you do not have your path
-      set up.  Try <code>/usr/local/bin/createuser</code> (or
-      <code>/sw/bin/createuser</code>) instead</p>
-<p>After a database is created, you should be able to connect to it by
-    simply typing <code>psql</code>.
-    To log information, Adium will expect to have a certain setup in the
-    database.  Get the following package (this is also included in the
-    Adium source): <a href="im-sql.tar.gz">im-sql.tar.gz</a>.  After using Stuffit Expander or
-    the command line to unpack it, there should these files inside:
-    <div class="filelist">
-      <h4>Setup files:</h4>
-      <dl>
-        <dt>sql/create.sql</dt>
-        <dd>main database setup script
-        [<a href="http://www.visualdistortion.org/adium/changes/sql/create.sql.txt" class="offsite">Changes</a>]</dd>
-      <dt>sql/tsearch.sql</dt>
-      <dd>setup for fast searching
-        [<a href="http://www.visualdistortion.org/adium/changes/sql/tsearch.sql.txt" class="offsite">Changes</a>]</dd>
-      <dt>sql/update.sql</dt>
-      <dd>updates database to newest schema
-          [<a href="http://www.visualdistortion.org/adium/changes/sql/update.sql.txt" class="offsite">Changes</a>]</dd>
-      </dl>
-        <h4>Web Viewing Pages</h4>
-      <dl>
-        <dt>jsp/index.jsp</dt>
-        <dd>main message viewer
-          [<a href="http://www.visualdistortion.org/adium/changes/jsp/index.jsp.txt" class="offsite">Changes</a>]</dd>
-        <dt>jsp/search.jsp</dt>
-        <dd>searching tool
-          [<a href="http://www.visualdistortion.org/adium/changes/jsp/search.jsp.txt" class="offsite">Changes</a>]</dd>
-        <dt>jsp/statistics.jsp</dt>
-        <dd>user statistics
-          [<a href="http://www.visualdistortion.org/adium/changes/jsp/statistics.jsp.txt" class="offsite">Changes</a>]</dd>
-        <dt>jsp/users.jsp</dt>
-        <dd>Set Login Users/Update User Information
-          [<a href="http://www.visualdistortion.org/adium/changes/jsp/users.jsp.txt" class="offsite">Changes</a>]</dd>
-        <dt>jsp/meta.jsp</dt>
-        <dd>Set Meta-Contacts for Users
-          [<a href="http://www.visualdistortion.org/adium/changes/jsp/meta.jsp.txt" class="offsite">Changes</a>]</dd>
-
-        <dt>jsp/details.jsp</dt>
-        <dd>monthly statistics
-            [<a href="http://www.visualdistortion.org/adium/changes/jsp/details.jsp.txt" class="offsite">Changes</a>]</dd>
-          <dt>jsp/others</dt>
-          <dd>Miscellaneous JSP support files</dd>
-        </dl>
-        <h4>Useful Perl Scripts</h4>
-        <dl>
-        <dt>parser.pl</dt>
-          <dd>script to import Adium logs &lt;= 1.6.x
-          [<a href="http://www.visualdistortion.org/adium/changes/parser.pl.txt" class="offsite">Changes</a>]</dd>
-        <dt>parser-2.pl</dt>
-        <dd>script to import logs &gt;= 2.0
-          [<a href="http://www.visualdistortion.org/adium/changes/parser-2.pl.txt" class="offsite">Changes</a>]</dd>
-        <dt>restore.pl</dt>
-        <dd>returns original log files to pristine state
-          [<a href="http://www.visualdistortion.org/adium/changes/restore.pl.txt" class="offsite">Changes</a>]</dd>
-      </dl>
-        <h4>These HTML/XML pages:</h4>
-        <dl>
-        <dt>index</dt>
-        <dd>this page
-          [<a href="http://www.visualdistortion.org/adium/changes/index.xml.txt" class="offsite">XML Changes</a>]</dd>
-        <dt>resin</dt>
-        <dd>JSP setup instructions)
-          [<a href="http://www.visualdistortion.org/adium/changes/resin.xml.txt" class="offsite">XML Changes</a>]</dd>
-        <dt>tsearch</dt>
-        <dd>tsearch setup instructions
-            [<a href="http://www.visualdistortion.org/adium/changes/tsearch.xml.txt" class="offsite">XML Changes</a>]</dd>
-          <dt>technical</dt>
-          <dd>technical details/detailed parser instructions
-            [<a href="http://www.visualdistortion.org/adium/changes/technical.xml.txt" class="offsite">XML Changes</a>]</dd>
-          <dt>transform.xslt</dt>
-          <dd>XSLT stylesheet to transform XML to HTML
-            [<a href="http://www.visualdistortion.org/adium/changes/transform.xsl.txt" class="offsite">Changes</a>]</dd>
-        </dl>
-      </div>
-    </p>
-<p>The JSP files will allow you to view logs through a web interface.  These
-    can be used locally and from the world-wide web.</p>
-<p>The SQL files are a language that tells the database what type of
-    information to store and tables to create.  They are split into two files:
-    the file called &quot;create.sql&quot; will create the default table
-    layout.  tsearch.sql will enable it to use a module called &quot;tsearch&quot;,
-    which allows for very, very fast searching.  It requires slightly more
-    setup, which is why it has been split into a different file.</p>
-<p>To create the table needed for message logging, open a terminal window
-    and switch to the directory that contains the files you just downloaded.
-    (If you don't know how to do that, I would suggest <a href="http://www.macdevcenter.com/pub/a/mac/2002/12/06/terminal_osx.html" class="offsite">this
-      series of articles</a>).  Type:</p>
-<div class="tutorialcode"><pre>psql &lt; create.sql
-createlang plpgsql
-psql &lt; functions.sql</pre></div>
-<p>You
-    should get messages like TABLE CREATED.  To ensure that it worked, type
-    <code>psql</code>.  Then you will be connected to the database.  You
-    should see something like this:</p>
-<div class="tutorialcode"><pre>Welcome to psql 7.3, the PostgreSQL interactive terminal.
-
-Type:  \copyright for distribution terms
-       \h for help with SQL commands
-       \? for help on internal slash commands
-       \g or terminate with semicolon to execute query
-       \q to quit
-
-jmelloy=#</pre></div>
-<p>To see the table you just created, you need to alter your search
-  path.</p>
-<div class="tutorialcode">
-    <pre>alter user <i>username</i> set search_path=adium,public;</pre>
-</div>
-<p>After typing that, you should see the confirmation message <code>ALTER
-      USER</code>. That changes only new instances of your user, so either
-    quit psql (<code>\q</code>) and start again, or type <code>set search_path=adium,public;</code>.  After doing either of those, type &quot;\d&quot; and you should see something like this:</p>
-<div class="tutorialcode"><pre>jmelloy=# \d
-                   List of relations
- Schema |           Name           |   Type   |  Owner
---------+--------------------------+----------+---------
- adium  | message_simple_v         | view     | jmelloy
- adium  | message_v                | view     | jmelloy
- adium  | messages                 | table    | jmelloy
- adium  | messages_message_id_seq  | sequence | jmelloy
- adium  | user_display_name        | table    | jmelloy
- adium  | user_statistics          | table    | jmelloy
- adium  | users                    | table    | jmelloy
- adium  | users_user_id_seq        | sequence | jmelloy
-      (8 rows)</pre></div>
-<p>The users table is very simple, a column for screenname, and an id.  The
-  messages table stores all the messages themselves, and a reference to the
-  users table.  User_display_name stores aliases and display names with
-  history.  Message_v contains a combination of everything: the message, the
-  screenname who sent it, and their display name at the time the message was
-  sent.  Message_v is complicated and slightly slow.  simple_message_v is very
-bare-bones: the sending and receiving screennames, the message, and a date.</p>
-<p>At this point, you're ready to use the plugin.
-  You can run <code>parser.pl</code> to insert all of your old logs into the
-  database.
-  To run the script, a few modules are needed for your Perl installation.
-  The first one is called &quot;DBI&quot; (DataBase Interface) and the second &quot;DBD-PG&quot;
-  (DataBase Driver-PostgreSQL).  Both can be gotten from fink or CPAN.
-  The fink modules are called dbi-pm and dbd-pg-pm (in unstable).  More
-  information on installation and use can be found in <a href="technical.html#parser.pl">Technical Details</a>.
-  Run it by typing <code>./parser.pl</code>.
-  It should automatically find all of your logs, but you may need to edit the
-  paths.
-  As it stands, it will run over every screenname who logged into your computer.
-  In future versions, it will be able to specify a specific user.
+<table>
+      <tr>
+        <td>
+<img src="http://www.visualdistortion.org/sqllogger/screenshots/notes-th.png" alt="Notes" width="200" height="174">
+        </td>
+        <td>
+          <ul>
+            <li>Easily display multiple simultaneous conversations</li>
+            <li>View with screennames, display names, and meta-contacts</li>
+            <li>Make notes on individual messages</li>
+            <li>Color-coding makes it easy to determine who said what</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <img src="http://www.visualdistortion.org/sqllogger/screenshots/search-th.png" alt="Search" width="200" height="174">
+        </td>
+        <td>
+          <ul>
+            <li>Search with boolean searches</li>
+            <li>Sort by name, date, or rank</li>
+            <li>Quickly jump to conversation, with words highlighted</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <img src="http://www.visualdistortion.org/sqllogger/screenshots/stats-th.png" alt="Stats" width="200" height="174">
+        </td>
+        <td>
+          <ul>
+            <li>View statistics related to individual users or meta-contacts</li>
+            <li>View detailed statistics for a particular user over a
+              month</li>
+            <li>Determine how frequently you speak with someone</li>
+            <li>See when you speak with someone</li>
+            <li>Show popular conversation starters and random quotes.</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+<p>Installation details and screenshots are in the sidebar to the left.</p>
+<p>A package containing installation details and the JSP files can be
+      downloaded at <a href="http://www.visualdistortion.org/sqllogger/sqllogger.tar.gz">
+        http://www.visualdistortion.org/sqllogger/sqllogger.tar.gz</a>
 </p>
-<div class="important">If you wish to run <code>parser-2.pl</code> you do not
-  need to install DBI and DBD::Pg</div>
-<p>Download the newest source of Adium
-    2.0 from CVS, and compile it.  Instructions for downloading through
-    anonymous CVS access can be found <a href="http://sourceforge.net/cvs/?group_id=67507" class="offsite">here</a>.  To compile, open &quot;Adium.pbproj&quot; and hit the
-    &quot;Build&quot; button in the top left.
-    Switch the target to &quot;SQL Logger&quot; (it should start at &quot;Adium&quot;) and hit
-  &quot;Build&quot;.  Move the newly created &quot;SQL
-  Logger.AdiumPlugin&quot; to <code>~/Library/Application Support/Adium
-    2.0/Plugins&quot;</code>.  That should be all it takes to install it.
-  Alternately, you can download a compiled binary from <a href="http://adium.sourceforge.net" class="offsite">http://adium.sourceforge.net</a>.  Currently, the binary
-  is updated approximately daily.
-  </p>
-<p>You can also download a compiled plugin here: <a href="http://www.visualdistortion.org/adium/sql-logger.tar.gz" class="offsite">sql-logger.tar.gz</a>, uncompress it, and drop it
-  in the Adium application as discussed above.  This will not work without
-  PostgreSQL installed on your system, and the proper database setup.</p>
-<p>If you would like to log to another machine or require a password, there
-    is a preference pane.</p>
-<p>To check that either parser.pl worked correctly, and/or it's correctly
-  logging, type <code>psql</code>.  To view messages:</p>
-<div class="tutorialcode">
-    <pre>select * from im.message_v order by message_date desc limit 5;</pre>
-  </div>
-<p>You should see the last five messages you sent/received.  To search for
-  messages, you can do </p>
-<div class="tutorialcode">
-    <pre>select * from im.message_v where message ~ '<i>search string</i>';</pre>
-  </div>
-<p>This interface is kind of a pain, and searching can
-  be made faster.</p>
-<p>To make searching faster, it is best to install the <i>tsearch</i> module.
-  To make the interface suck less, I've written a web-interface in JSP.  It
-  uses a JSP engine (Resin or Tomcat).  I use Resin.  Instructions are in the
-  sidebar on the left.
-  </p>
 </div>
-<div id="footer">Adium SQL Logging Instructions<br><a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a>
+<div id="footer">SQL Logger<br><a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a>
 </div>
 </div></body>
 </html>

@@ -1,78 +1,97 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
-<html>
+<html xmlns:xalan="http://xml.apache.org/xslt">
 <head>
-<meta content="text/html; charset=ascii" http-equiv="Content-Type">
-<title>Adium SQL Logger Technical Details</title>
+<meta http-equiv="Content-Type" content="text/html; charset=ascii">
+<title>SQL Logger Technical Details</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
 <body><div id="container">
-<div id="banner"><h2 class="titlebar">Adium SQL Logger Technical Details</h2></div>
+<div id="banner"><h2 class="titlebar">SQL Logger Technical Details</h2></div>
 <div id="sidebar-a">
 <h4>SQL Logger<br>
 </h4>
-<a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a><br><a href="tsearch.html" class="sidebar">TSearch Installation</a><br><a href="resin.html" class="sidebar">Resin Installation</a><br><a href="technical.html" class="sidebar">Technical
-              Details</a><br><a href="performance.html" class="sidebar">Performance/Maintenance</a><br><a href="quick_install.html" class="sidebar">Quick Install
-              Notes</a><br><h4>Adium</h4>
+<a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/sqllogger/screenshots.jsp" class="offsides">Screenshots</a><br><a href="install.html" class="sidebar">Installation</a><br><a href="technical.html" class="sidebar">Technical
+              Details</a><br><a href="performance.html" class="sidebar">Maintenance/Performance</a><br><a href="changes.txt" class="offsides">Changelog</a><br><a href="http://www.visualdistortion.org/sqllogger/sqllogger.tar.gz" class="offsides">JSP/HTML package</a><br><h4>Adium</h4>
 <a href="http://www.adiumx.com/" class="offsides">Adium</a><br><a href="http://forums.adiumx.com" class="offsides">Adium
-                Forums</a><br><a href="http://planet.adiumx.com" class="offsides">Planet Adium</a><br><a href="http://cia.navi.cx/stats/project/adium/" class="offsides">CVS Changes</a><br><h4>PostgreSQL</h4>
-<a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.3/interactive/index.html" class="offsides">PSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a><br><h4>Visual Distortion</h4>
-<a href="http://www.visualdistortion.org/" class="offsides">Visual Distortion Home</a><br><a href="http://www.visualdistortion.org/guestbook.jsp" class="offsides">Guestbook</a><br><a href="http://www.visualdistortion.org/pictures/" class="offsides">Pictures</a><br><a href="http://www.visualdistortion.org/films/" class="offsides">Films</a><br><a href="http://www.visualdistortion.org/music/" class="offsides">Music</a>
+                Forums</a><br><a href="http://planet.adiumx.com" class="offsides">Planet Adium</a><br><a href="http://cia.navi.cx/stats/project/adium/" class="offsides">CVS Changes</a><br><a href="http://www.visualdistortion.org/sqllogger/adium-sql.tar.gz" class="offsides">Adium Plugin</a><br><h4>Fire</h4>
+<a href="http://fire.sourceforge.net" class="offsides">Fire</a><br><h4>PostgreSQL</h4>
+<a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.3/interactive/index.html" class="offsides">PgSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a><br><h4>Visual Distortion</h4>
+<a href="http://www.visualdistortion.org/" class="offsides">Visual Distortion Home</a>
 </div>
 <div id="content">
-<p>This page describes a few more technical details of the Adium SQL Logging
-    Plugin.</p>
 <div align="center">
-      <a href="#im.sql">im.sql</a> | 
-      <a href="#tsearch.sql">tsearch.sql</a> | 
-      <a href="#parser.pl">parser.pl/parser-2.pl</a>
+      <h2>Schema Information</h2>
+      <a href="images/schema.png">
+        <img src="images/schema-mini.png" border="0">
+      </a>
     </div>
-<a name="im.sql"><h2>im.sql</h2></a><p>The file <code>im.sql</code> contains instructions for setting up a
-    database schema for use with Adium's SQL Logging. 
-    Running the file creates the adium schema, two tables and one
-    view.</p>
-<h3>users</h3>
+<h3 style="background-color: #ccf">users</h3>
 <p>The first table that is created is <code>users</code>.  It is very
     simple, storing only a username, a service, and a code, user_id.  Everyone
     who sends or receives a message will have an entry in
     <code>users</code>.</p>
-<h3>messages</h3>
-<p>The second table, messages, contains the basis for the plugin: the
-    messages.  Named <code>messages</code>, it has a sequenced field for each
-    message (message_id), the message itself (message), the message date and
-    time (message_date), and two references to users (sender_id,
-    recipient_id).  If you have tsearch indexing setup, it contains another
-    field (message_idx).</p>
-<h3>user_display_name</h3>
+<h3 style="background-color: #ccf">user_display_name</h3>
 <p>The user_display_name table is quite simple.  It has a user_id field,
       which references <code>users.user_id</code>, a text field (display_name)
       and a date (effdate).  This table is used for storing Aliases and
       Display Names.  It stores them by date to get the most clear picture of
       someone whose display name/alias changes often.</p>
-<p>Adium makes no distinction between an alias that you set, and a
-      server-side display name.  So it will record either their server-side
-      name, or your alias for them.</p>
 <p>As an example, let's say I'm talking to my friend Colin (user_id 100) on MSN.
-      He has recently changed his MSN name to <i>Colin Rocks!  He's so cool!  
+      He has recently changed his MSN name to <i>Colin Rocks!  He's so cool!
         He's so good at everything!</i>
       When he IMs me at 6:15, a row is inserted into user_display_name with
       his name and the date (6:15).  We talk for a bit.
       Since this name is annoying, I set his alias to <i>Colin</i> at 6:30.
       Nothing changes in the database, since I haven't IMed him yet.
-      At 6:45, I IM him.  
-      User_display_name now has a row with the following values: 
+      At 6:45, I IM him.
+      User_display_name now has a row with the following values:
       Colin / 6:45.</p>
 <p>So now, doing a select on user_display_name, this is what I see:</p>
 <div class="tutorialcode"><pre>select * from user_display_name where user_id = 100;
  user_id  | display_name  | effdate
  100      | Colin Rocks!  | 6:15
  100      | Colin         | 6:45</pre></div>
-<h3>user_statistics</h3>
+<h3 style="background-color: #ccf">user_statistics</h3>
 <p>User statistics keeps a running total of messages sent and received.
       It stores a sender_id, a recipient_id, the total messages, and the date
       of the last
       message sent.  This table is primarily for speed, but not a lot does
       anything with it.</p>
-<h3>message_v</h3>
+<h3 style="background-color: #ff9">messages</h3>
+<p>The second table, messages, contains the basis for the plugin: the
+    messages.  Named <code>messages</code>, it has a sequenced field for each
+    message (message_id), the message itself (message), the message date and
+    time (message_date), and two references to users (sender_id,
+    recipient_id).  If you have tsearch indexing setup, it contains another
+    field (idxfti).</p>
+<h3 style="background-color: #ff9">message_notes</h3>
+<p>Message notes can be used to add notes to yourself on a message.  It
+      references a message_id, and contains a title, the note itself, and the
+      date it was added.</p>
+<h3 style="background-color: #ee5858">information_keys</h3>
+<p>The SQL Logger has extensible meta-data, which means that you can
+      choose to store any information  you want about a certain contact.  What
+      you want to store (URL, Location, Website, Address, etc) are all stored
+      in information_keys.</p>
+<h3 style="background-color: #ee5858">contact_information</h3>
+<p>The information about each contact is actually stored in
+      contact_information.  It contains a field referencing information_keys,
+      to determine which key is being stored, a user_id, a meta_id, and the
+      value.  It can store something about either a user or a
+      meta-contact.</p>
+<h3 style="background-color: #80ee80">meta_container</h3>
+<p>meta_container stores the names of your meta-contacts.  It has a
+      meta_id is the unique identifier for the meta-contact.</p>
+<h3 style="background-color: #80ee80">meta_contact</h3>
+<p>meta_contact is very simple.  It contains only a meta_id and a user_id,
+      so that as many users can be included in each meta contact as you want.
+      It also contains a "preferred" contact, in the cases where one user is
+      in multiple meta-contacts (so the viewer knows which to use).</p>
+<h3 style="background-color: #c8c">saved_chats/saved_searches</h3>
+<p>saved_chats and saved_searches exist so the viewer and search page can
+      save their results.  They have copies of the same fields that the viewer
+      and search pages have.</p>
+<h3 style="background-color: #ccc">simple_message_v/message_v</h3>
 <p>The created view is used for all of the message viewing.  It contains
       message_id, message, message_date, the screenames from users
       (sender_sn, sender_service, recipient_sn, recipient_service), and the
@@ -91,170 +110,8 @@
       user_display_name.  Updates or deletes on message_v silently
       fail, and are best performed by operating directly on the underlying
       tables.</p>
-<a name="tsearch.sql"><h2>tsearch.sql</h2></a><p>tsearch indexing requires a special method and index type to do it's
-      magic.  It uses a column message_idx, where it stores a list
-      of all the words used in the IM in their &quot;base form&quot;.  Storing in a base
-      form allows it to do stemming.  (Searching for 'kicking' will return
-      'kicking', 'kick', 'kicks', etc).  It uses a GiST index to track these
-      terms down very quickly, which I REALLY don't understand.  But it does
-      work very well.</p>
-<p>tsearch.sql does only four things, but requires that the tsearch module
-      be installed to work.</p>
-<ol>
-     <li>Adds the column message_idx to messages.</li>
-     <li>Sets message_idx to the transformed version for all messages
-       currently in the table.</li>
-     <li>Creates a GiST index on message_idx.</li>
-     <li>Creates a trigger on messages which fires when inserting or updating
-       a record.  This trigger converts the text in message to text in
-       message_idx.</li>
-    </ol>
-<p>This script can take a while to run.  The two steps that take time are
-      the update to everything in the table, and creating the index.  Creating
-      the index can take 10-15 minutes or more, depending on how much data
-      there is in your table.</p>
-<a name="parser.pl"><h2>parser.pl</h2></a><div class="important">
-<code>parser-2.pl</code> does not require DBI and
-      DBD::Pg</div>
-<p>
-<code>Parser.pl</code> reads through all 
-      of your Adium logs and
-      inserts the messages into the database.</p>
-<p>The Perl scripts require a few modules for talking to the database.  It
-      requires <code>DBI</code> and <code>DBD::Pg</code>.  DBI is a standard
-      database-independant perl module.  You can download it with either CPAN
-      or fink. (<a href="http://fink.sourceforge.net" class="offsite">http://fink.sourceforge.net</a>)</p>
-<p>To install them via CPAN:</p>
-<div class="tutorialcode">
-<pre>sudo perl -MCPAN -e 'install DBI'</pre>
-    </div>
-<p>If this is your first time running CPAN, it will ask a few questions.
-    The defaults are fine.  Or simply tell it you do not want to manually
-    configure.</p>
-<p>Now it's time to install DBD::Pg.  It's quite possible that if you have
-    trouble this will be the longest step of the process.  Thanks to evands
-    for being a guinea pig on this one.</p>
-<p>DBD::Pg has a test where it attempts to connect to a working
-    PostgreSQL installation.  If you're installing PostgreSQL 7.4, this will
-    currently fail entirely.  (Using DBD::Pg 1.22)</p>
-<p>There are a few environmental variables that need to be set to allow the
-    compile process to find the various libraries PostgreSQL installs.
-    Set the following:</p>
-<div class="tutorialcode">
-    <pre>setenv POSTGRES_INCLUDE=/usr/local/pgsql/include
-      setenv POSTGRES_LIB=&quot;/usr/local/pgsql/lib -lssl -lcrypto&quot;
-setenv DBI_DSN=DBI:Pg:dbname=<i>username</i>
-setenv DBI_USER=<i>username</i>
-setenv DBI_PASS=<i>password</i></pre>
 </div>
-<p>If you are running Bash as your shell or using Panther:</p>
-<div class="tutorialcode">
-  <pre>export POSTGRES_INCLUDE=/usr/local/pgsql/include
-export POSTGRES_LIB=&quot;/usr/local/pgsql/lib -lssl -lcrypto&quot;
-export DBI_DSN=DBI:Pg:dbname=<i>username</i>
-export DBI_USER=<i>username</i>
-export DBI_PASS=<i>password</i></pre>
-</div>
-<br><div class="important">Capitalization is very important for the DBI_DSN
-      environmental variable!</div>
-<p>If you run it now, you will probably see errors relating to <code>ranlib</code> or
-    <code>libpq.a</code>.  Just run the following command preemptively:</p>
-<div class="tutorialcode">
-<pre>sudo ranlib /usr/local/pgsql/lib/libpq.a</pre>
-  </div>
-<p>After running that, install DBD::Pg:</p>
-<div class="tutorialcode">
-<pre>sudo perl -MCPAN -e 'install DBD::Pg'</pre>
-  </div>
-<p>If you're installing PostgreSQL 7.4 and DBD::Pg 1.22, the make test WILL
-    fail.  If you are sure you have the environmental variables
-    POSTGRES_INCLUDE and POSTGRES_LIB set correctly, you can force an install.</p>
-<div class="tutorialcode"><pre>sudo perl -MCPAN -e shell 'force install DBD::Pg'</pre></div>
-<p>If you want to install via fink, the packages are called &quot;dbi-pm&quot; and
-    &quot;dbd-pg-pg&quot; [unstable]</p>
-<p>
-<code>parser.pl</code> will look in <code>~/Library/Application
-      Support/Adium/Users</code> for all of the Adium 1.6 logs.  When it's
-    there, it will iterate over every folder [users who logged in] and
-    everyone they talked to.</p>
-<p>
-<code>parser-2.pl</code> looks in <code>~/Library/Application
-      Support/Adium 2.0/</code>.
-    As it's iterating over conversations, it gleans the service
-    used from the name of the folder (AIM.fetchgreebledonx).</p>
-<p>Both scripts insert messages into message_v.  The parser scripts will
-    capture status changing incidents (idle, away, etc), but the SQL Logger
-    plugin will not.</p>
-<p>Both scripts will rename the log files they insert, so if there is a
-    problem the script can be run multiple times.  Adium has no problem
-    reading the renamed log files.</p>
-<p>It may not pass on the first time through.  If you have malformed logs,
-    or a few weird messages, it will die.  Simple correct the log, or move it
-    out of the way.  It particularly has trouble with copy and pasted
-    logs and IMs.</p>
-<p>
-<code>restore.pl</code> simply undoes the 
-    renaming, so they go back to the standard Adium filenames.  Requires no
-    additional modules.</p>
-<h4>Troubleshooting</h4>
-<ul>
-      <li>About half a dozen of my logs were encoded incorrectly.  I have no
-        idea what caused this, or if it's a common problem.  My solution was
-        to move the logs out and try again.</li>
-      <li>If the database is Unicode-encoded, it will be very picky about
-        inserting characters it doesn't know into it.  Since Adium doesn't log
-        as Unicode, this could cause some problems.</li>
-      <li>If you are getting undefined errors like this:
-        <pre>dyld: perl Undefined symbols:
-          _BIO_free
-          _BIO_new_mem_buf
-          _DH_check
-          _DH_generate_parameters
-          _DH_size
-          _ERR_get_error
-          _ERR_reason_error_string
-          _EVP_PKEY_free
-          _PEM_read_DHparams
-          _PEM_read_PrivateKey
-          _PEM_read_X509
-          _PEM_read_bio_DHparams
-          _SSL_CTX_ctrl
-          _SSL_CTX_free
-          _SSL_CTX_load_verify_locations
-          _SSL_CTX_new
-          _SSL_CTX_set_tmp_dh_callback
-          _SSL_CTX_set_verify
-          _SSL_CTX_set_verify_depth
-          _SSL_connect
-          _SSL_free
-          _SSL_get_error
-          _SSL_get_ex_data
-          _SSL_get_peer_certificate
-          _SSL_library_init
-          _SSL_load_error_strings
-          _SSL_new
-          _SSL_pending
-          _SSL_read
-          _SSL_set_ex_data
-          _SSL_set_fd
-          _SSL_shutdown
-          _SSL_write
-          _TLSv1_method
-          _X509_NAME_get_text_by_NID
-          _X509_NAME_oneline
-          _X509_check_private_key
-          _X509_free
-          _X509_get_subject_name</pre>
-        This is caused by not including <b>-lssl -lcrypto</b> in the library path as you
-        compiled DBD::Pg.</li>
-      <li>If you get an error like this:
-        <pre>dyld: perl Undefined symbols:
-          _is_utf8_string
-          Trace/BPT trap</pre>You may need to upgrade Perl, unfortunately.
-        There are directions for installing Perl 5.8.0 at <a href="http://developer.apple.com/internet/macosx/perl.html" class="offsite">http://developer.apple.com/internet/macosx/perl.html</a>.</li>
-    </ul>
-</div>
-<div id="footer">Adium SQL Logger Technical Details<br><a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a>
+<div id="footer">SQL Logger Technical Details<br><a href="mailto:jmelloy@visualdistortion.org">jmelloy@visualdistortion.org</a>
 </div>
 </div></body>
 </html>
