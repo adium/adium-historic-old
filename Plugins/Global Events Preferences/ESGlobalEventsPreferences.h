@@ -16,8 +16,8 @@
 
 #import <Adium/AIPreferencePane.h>
 
-#define OTHER_ELLIPSIS				AILocalizedString(@"Other...",nil)
 #define OTHER						AILocalizedString(@"Other",nil)
+#define OTHER_ELLIPSIS				[OTHER stringByAppendingString:[NSString ellipsis]]
 #define SOUND_MENU_ICON_SIZE		16
 
 @class ESContactAlertsViewController;
