@@ -7,7 +7,51 @@
 #import "GaimCommon.h"
 #import "SLGaimCocoaAdapter.h"
 
-@interface CBGaimAccount : AIAccount <AIAccount_List, AIAccount_Content, AIAccount_Privacy>
+@protocol AdiumGaimDO
+- (oneway void)accountConnectionConnected;
+- (oneway void)accountConnectionReportDisconnect:(NSString *)text;
+- (oneway void)accountConnectionNotice:(const char*)text;
+- (oneway void)accountConnectionDisconnected;
+- (oneway void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count withText:(const char *)text;
+
+- (oneway void)newContact:(AIListContact *)theContact;
+- (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName;
+- (oneway void)updateContact:(AIListContact *)theContact;
+- (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias;
+- (oneway void)updateContact:(AIListContact *)theContact forEvent:(GaimBuddyEvent)event;
+- (oneway void)updateSignon:(AIListContact *)theContact withData:(void *)data;
+- (oneway void)updateSignoff:(AIListContact *)theContact withData:(void *)data;
+- (oneway void)updateSignonTime:(AIListContact *)theContact withData:(NSDate *)signonDate;
+- (oneway void)updateWentAway:(AIListContact *)theContact withData:(void *)data;
+- (oneway void)updateAwayReturn:(AIListContact *)theContact withData:(void *)data;
+- (oneway void)updateIdle:(AIListContact *)theContact withData:(NSDate *)idleSinceDate;
+- (oneway void)updateEvil:(AIListContact *)theContact withData:(NSNumber *)evilNumber;
+- (oneway void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData;
+- (oneway void)removeContact:(AIListContact *)theContact;
+
+- (oneway void)destroyMultiChat:(AIChat *)chat;
+- (oneway void)destroyIMChat:(AIChat *)chat;
+- (oneway void)addChat:(AIChat *)chat;
+- (oneway void)typingUpdateForIMChat:(AIChat *)chat typing:(BOOL)typing;
+- (oneway void)updateForChat:(AIChat *)chat type:(GaimConvUpdateType)type;
+- (oneway void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
+- (oneway void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
+- (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat;
+- (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat;
+
+- (oneway void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID;
+- (oneway void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID;
+
+- (oneway void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer;
+- (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(float)percent bytesSent:(float)bytesSent;
+- (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer;
+- (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer;
+
+- (AIChat *)chatWithName:(NSString *)name;
+
+@end
+
+@interface CBGaimAccount : AIAccount <AIAccount_List, AIAccount_Content, AIAccount_Privacy,AdiumGaimDO>
 {     
     NSMutableDictionary *chatDict;
 
@@ -25,12 +69,11 @@
 	NSMutableArray		*permittedContactsArray;
 	NSMutableArray		*deniedContactsArray;
 	
-	SLGaimCocoaAdapter	*gaimThread;
+//	SLGaimCocoaAdapter	*gaimThread;
 }
 
 - (const char*)protocolPlugin;
 - (GaimAccount*)gaimAccount;
-- (void)setGaimThread:(SLGaimCocoaAdapter *)sender;
 
 - (void)initAccount;
 - (void)initSSL;
@@ -80,45 +123,45 @@
 - (void)setAccountProfileTo:(NSAttributedString *)profile;
 
 #pragma mark Gaim callback handling methods
+- (oneway void)accountConnectionConnected;
+- (oneway void)accountConnectionReportDisconnect:(NSString *)text;
+- (oneway void)accountConnectionNotice:(const char*)text;
+- (oneway void)accountConnectionDisconnected;
+- (oneway void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count withText:(const char *)text;
 
-	//accountConnection
-- (void)accountConnectionNotice:(const char*)text;
-- (void)accountConnectionReportDisconnect:(const char*)text;
-- (void)accountConnectionDisconnected;
-- (void)accountConnectionConnected;
-- (void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count withText:(const char *)text;
+- (oneway void)newContact:(AIListContact *)theContact;
+- (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName;
+- (oneway void)updateContact:(AIListContact *)theContact;
+- (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias;
+- (oneway void)updateContact:(AIListContact *)theContact forEvent:(GaimBuddyEvent)event;
+- (oneway void)updateSignon:(AIListContact *)theContact withData:(void *)data;
+- (oneway void)updateSignoff:(AIListContact *)theContact withData:(void *)data;
+- (oneway void)updateSignonTime:(AIListContact *)theContact withData:(NSDate *)signonDate;
+- (oneway void)updateWentAway:(AIListContact *)theContact withData:(void *)data;
+- (oneway void)updateAwayReturn:(AIListContact *)theContact withData:(void *)data;
+- (oneway void)updateIdle:(AIListContact *)theContact withData:(NSDate *)idleSinceDate;
+- (oneway void)updateEvil:(AIListContact *)theContact withData:(NSNumber *)evilNumber;
+- (oneway void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData;
+- (oneway void)removeContact:(AIListContact *)theContact;
 
-	//accountBlist
-- (void)accountNewBuddy:(NSValue *)buddyValue;
-- (void)accountUpdateBuddy:(NSValue *)buddyValue;
-- (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent)event;
-- (void)accountRemoveBuddy:(NSValue *)buddyValue;
+- (oneway void)destroyMultiChat:(AIChat *)chat;
+- (oneway void)destroyIMChat:(AIChat *)chat;
+- (oneway void)addChat:(AIChat *)chat;
+- (oneway void)typingUpdateForIMChat:(AIChat *)chat typing:(BOOL)typing;
+- (oneway void)updateForChat:(AIChat *)chat type:(GaimConvUpdateType)type;
+- (oneway void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
+- (oneway void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
+- (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat;
+- (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat;
 
-	//accountConv
-- (void)accountConvDestroy:(GaimConversation*)conv;
-- (void)accountConvUpdated:(GaimConversation*)conv type:(GaimConvUpdateType)type;
-//- (void)accountConvReceivedIM:(const char*)message inConversation:(GaimConversation*)conv withFlags:(GaimMessageFlags)flags atTime:(time_t)mtime;
-//- (void)accountConvReceivedChatMessage:(const char*)message inConversation:(GaimConversation*)conv from:(const char *)source withFlags:(GaimMessageFlags)flags atTime:(time_t)mtime;
-- (void)receivedIM:(NSDictionary *)messageDict;
-- (void)receivedChatMessage:(NSDictionary *)messageDict;
-- (void)accountConvAddedUser:(const char *)user inConversation:(GaimConversation *)conv;
-- (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConversation *)conv;
-- (void)accountConvRemovedUser:(const char *)user inConversation:(GaimConversation *)conv;
-- (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConversation *)conv;
-- (void)addChatConversation:(GaimConversation*)conv;
+- (oneway void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID;
+- (oneway void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID;
 
-	//accountXfer
-- (void)accountXferRequestFileReceiveWithXfer:(GaimXfer *)xfer;
-- (void)accountXferUpdateProgress:(GaimXfer *)xfer percent:(float)percent;
-- (void)accountXferCanceledRemotely:(GaimXfer *)xfer;
-- (void)accountXferDestroy:(GaimXfer *)xfer;
+- (oneway void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer;
+- (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(float)percent bytesSent:(float)bytesSent;
+- (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer;
+- (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer;
 
-	//accountPrivacy
--(void)accountPrivacyList:(PRIVACY_TYPE)type added:(const char *)name;
--(void)accountPrivacyList:(PRIVACY_TYPE)type removed:(const char *)name;
-
-
--(void)performDisconnect;
--(void)performConnect;
+- (AIChat *)chatWithName:(NSString *)name;
 
 @end

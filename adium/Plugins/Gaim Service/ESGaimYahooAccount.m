@@ -116,46 +116,36 @@ static NSDictionary		*presetStatusesDictionary = nil;
 
 
 #pragma mark Status Messages
-- (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent) event
+- (void)updateContact:(AIListContact *)theContact forEvent:(GaimBuddyEvent) event
 {
-	[super accountUpdateBuddy:buddy forEvent:event];
+	[super updateContact:theContact forEvent:event];
 	
-	AIListContact	*theContact;
-	if (buddy != nil) {
-		//Get the node's ui_data
-		theContact = (AIListContact *)buddy->node.ui_data;
-		if (theContact /*&& GAIM_BUDDY_IS_ONLINE(buddy)*/){
-			SEL updateSelector = nil;
-			switch (event){
-				//case GAIM_BUDDY_SIGNON:
-				case GAIM_BUDDY_STATUS_MESSAGE:
-				//case GAIM_BUDDY_AWAY:
-				//case GAIM_BUDDY_AWAY_RETURN:
-				//case GAIM_BUDDY_MISCELLANEOUS:{ //handle status messages
-				{
-					updateSelector = @selector(updateStatusMessage:);
-					break;
-				}
-			}
-			
-			if (updateSelector){
-				[self performSelectorOnMainThread:updateSelector
-									   withObject:theContact
-									waitUntilDone:NO];
-			}
+	SEL updateSelector = nil;
+	
+	switch (event){
+		case GAIM_BUDDY_STATUS_MESSAGE: {
+			updateSelector = @selector(updateStatusMessage:);
+			break;
 		}
 	}
+	
+	if (updateSelector){
+		[self performSelectorOnMainThread:updateSelector
+							   withObject:theContact
+							waitUntilDone:NO];
+	}
 }
+
 - (void)updateStatusMessage:(AIListContact *)theContact
 {
 	struct yahoo_data   *od;
 	struct yahoo_friend *userInfo;
 	GaimBuddy			*buddy;
-	
-	buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];
+
+	const char				*buddyName = [[theContact UID] UTF8String];
 	
 	if ((od = gc->proto_data) &&
-		(userInfo = g_hash_table_lookup(od->friends, gaim_normalize(buddy->account, buddy->name)))) {
+		(userInfo = g_hash_table_lookup(od->friends, buddyName))) {
 		
 		NSString		*statusMsgString = nil;
 		NSString		*oldStatusMsgString = [theContact statusObjectForKey:@"StatusMessageString"];

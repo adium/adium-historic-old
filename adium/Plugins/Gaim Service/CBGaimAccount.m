@@ -36,7 +36,7 @@
 - (AIListContact *)_contactAssociatedWithBuddy:(GaimBuddy *)buddy usingUID:(NSString *)contactUID;
 - (NSString *)displayServiceIDForUID:(NSString *)aUID;
 
-- (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy;
+//- (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy;
 - (void)removeAllStatusFlagsFromContact:(AIListContact *)contact;
 - (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing;
 - (void)_updateAway:(AIListContact *)theContact toAway:(BOOL)newAway;
@@ -56,6 +56,16 @@
 @implementation CBGaimAccount
 
 static BOOL didInitSSL = NO;
+
+static NSDistantObject<GaimThread> *gaimThread = nil;
+
++ (void)setGaimThread:(SLGaimCocoaAdapter *)sender
+{
+	NSLog(@"## setGaimThread: ",[sender description]);
+	gaimThread = [sender retain];
+}
+
+
 
 // The GaimAccount currently associated with this Adium account
 - (GaimAccount*)gaimAccount
@@ -79,128 +89,74 @@ static BOOL didInitSSL = NO;
 
 // Buddies and Contacts ------------------------------------------------------------------------------------------------
 #pragma mark Buddies and Contacts
-- (void)accountNewBuddy:(NSValue *)buddyValue
+/*- (void)accountNewBuddy:(NSValue *)buddyValue
 {
 	[self contactAssociatedWithBuddy:[buddyValue pointerValue]]; //Create a contact and hook it to this buddy
-}
+}*/
 
-- (void)accountUpdateBuddy:(NSValue *)buddyValue
-{	
-//	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s",buddy->name);
-    GaimBuddy *buddy = [buddyValue pointerValue];
-	
-    AIListContact           *theContact;
-	
-    //Get the node's ui_data
-    if ((theContact = (AIListContact *)buddy->node.ui_data)){
-		//Create the contact if necessary
-		//if(!theContact) theContact = [self contactAssociatedWithBuddy:buddy];
-		
-		//Group changes - gaim buddies start off in no group, so this is an important update for us
-		if(![theContact remoteGroupName]){
-			GaimGroup *g = gaim_find_buddys_group(buddy);
-			if(g && g->name){
-				NSString *groupName = [NSString stringWithUTF8String:g->name];
-				if(groupName && [groupName length] != 0){
-					[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
-				}else{
-					[theContact setRemoteGroupName:[self _mapIncomingGroupName:nil]];
-				}
-			}
-		}
-		
-		//Leave here until MSN and other protocols are patched to send a signal when the alias changes, or gaim itself is.
-		//gaimAlias - this may be either a distinct name ("Friendly Name" for example) or a formatted UID
-		{
-			NSString *gaimAlias = [NSString stringWithUTF8String:gaim_get_buddy_alias(buddy)];
-			if ([[gaimAlias compactedString] isEqualToString:[theContact UID]]) {
-				if (![[theContact statusObjectForKey:@"FormattedUID"] isEqualToString:gaimAlias]) {
-					[theContact setStatusObject:gaimAlias
-										 forKey:@"FormattedUID"
-										 notify:NO];
-				}
-			} else {
-				if (![[theContact statusObjectForKey:@"Server Display Name"] isEqualToString:gaimAlias]) {
-					//Set the server display name status object as the full display name
-					[theContact setStatusObject:gaimAlias
-										 forKey:@"Server Display Name"
-										 notify:NO];
-					
-					//Set a 20-characters-or-less version as the lowest priority display name
-					[[theContact displayArrayForKey:@"Display Name"] setObject:[gaimAlias stringWithEllipsisByTruncatingToLength:20]
-																	 withOwner:self
-																 priorityLevel:Lowest_Priority];
-					//notify
-					[[adium contactController] listObjectAttributesChanged:theContact
-															  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
-				}
-			}
-		}
-		
-		//Apply any changes
-		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-	}
-}
-
-- (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent)event
+- (oneway void)newContact:(AIListContact *)theContact
 {
-//	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s forEvent: %i",buddy->name,event);
-    AIListContact           *theContact;
 	
-    //Get the node's ui_data
-    theContact = (AIListContact *)buddy->node.ui_data;
-	
-	//Create the contact if necessary
-    if(!theContact) theContact = [self contactAssociatedWithBuddy:buddy];
+}
 
-	SEL updateSelector = nil;
-	switch(event){
-		case GAIM_BUDDY_SIGNON: {
-			updateSelector = @selector(updateSignon:);
-			break;
+- (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName
+{
+	if(groupName && [groupName length] != 0){
+		[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
+	}else{
+		[theContact setRemoteGroupName:[self _mapIncomingGroupName:nil]];
+	}
+}
+
+- (oneway void)updateContact:(AIListContact *)theContact
+{
+//	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s",buddy->name);
+//    GaimBuddy *buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];
+	
+	//Leave here until MSN and other protocols are patched to send a signal when the alias changes, or gaim itself is.
+	//gaimAlias - this may be either a distinct name ("Friendly Name" for example) or a formatted UID
+}
+
+
+- (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias
+{
+	if ([[gaimAlias compactedString] isEqualToString:[theContact UID]]) {
+		if (![[theContact statusObjectForKey:@"FormattedUID"] isEqualToString:gaimAlias]) {
+			[theContact setStatusObject:[[gaimAlias copy] autorelease]
+								 forKey:@"FormattedUID"
+								 notify:NO];
 		}
-		case GAIM_BUDDY_SIGNOFF: {
-			updateSelector = @selector(updateSignoff:);
-			break;
-		}
-		case GAIM_BUDDY_SIGNON_TIME: {
-			updateSelector = @selector(updateSignonTime:);
-			break;
-		}
-		case GAIM_BUDDY_AWAY:{
-			updateSelector = @selector(updateWentAway:);
-			break;
-		}
-		case GAIM_BUDDY_AWAY_RETURN: {
-			updateSelector = @selector(updateAwayReturn:);
-			break;
-		}
-		case GAIM_BUDDY_IDLE:
-		case GAIM_BUDDY_IDLE_RETURN: {
-			updateSelector = @selector(updateIdle:);
-			break;
-		}
-		case GAIM_BUDDY_EVIL: {
-			updateSelector = @selector(updateEvil:);
-			break;
-		}
-		case GAIM_BUDDY_ICON: {
-			updateSelector = @selector(updateIcon:);
-			break;
+	} else {
+		if (![[theContact statusObjectForKey:@"Server Display Name"] isEqualToString:gaimAlias]) {
+			//Set the server display name status object as the full display name
+			[theContact setStatusObject:[[gaimAlias copy] autorelease]
+								 forKey:@"Server Display Name"
+								 notify:NO];
+			
+			//Set a 20-characters-or-less version as the lowest priority display name
+			[[theContact displayArrayForKey:@"Display Name"] setObject:[gaimAlias stringWithEllipsisByTruncatingToLength:20]
+															 withOwner:self
+														 priorityLevel:Lowest_Priority];
+			//notify
+			[[adium contactController] listObjectAttributesChanged:theContact
+													  modifiedKeys:[NSArray arrayWithObject:@"Display Name"]];
 		}
 	}
 
-	if (updateSelector){
-		[self performSelectorOnMainThread:updateSelector
-							   withObject:theContact
-							waitUntilDone:NO];
-	}
+	//Apply any changes
+	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+}
+
+- (oneway void)updateContact:(AIListContact *)theContact forEvent:(GaimBuddyEvent)event
+{
+
 }		
 
 
 //Signed online
-- (void)updateSignon:(AIListContact *)theContact
+- (oneway void)updateSignon:(AIListContact *)theContact withData:(void *)data
 {
+	NSLog(@"sign on %@!",[theContact UID]);
 	NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
 	if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != YES)){
 		[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
@@ -217,7 +173,7 @@ static BOOL didInitSSL = NO;
 	}
 }
 //Signed offline
-- (void)updateSignoff:(AIListContact *)theContact
+- (oneway void)updateSignoff:(AIListContact *)theContact withData:(void *)data
 {
 	NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
 	if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != NO)){
@@ -235,12 +191,11 @@ static BOOL didInitSSL = NO;
 	}
 }
 //Signon Time
-- (void)updateSignonTime:(AIListContact *)theContact
+- (oneway void)updateSignonTime:(AIListContact *)theContact withData:(NSDate *)signonDate
 {
-	GaimBuddy		*buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];
-	if (buddy->signon != 0) {
+	if (signonDate) {
 		//Set the signon time
-		[theContact setStatusObject:[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->signon]
+		[theContact setStatusObject:[[signonDate copy] autorelease]
 							 forKey:@"Signon Date"
 							 notify:NO];
 		
@@ -250,11 +205,11 @@ static BOOL didInitSSL = NO;
 }
 
 //Away and away return
-- (void)updateWentAway:(AIListContact *)theContact
+- (oneway void)updateWentAway:(AIListContact *)theContact withData:(void *)data
 {
 	[self _updateAway:theContact toAway:YES];
 }
-- (void)updateAwayReturn:(AIListContact *)theContact
+- (oneway void)updateAwayReturn:(AIListContact *)theContact withData:(void *)data
 {
 	[self _updateAway:theContact toAway:NO];
 }
@@ -270,89 +225,73 @@ static BOOL didInitSSL = NO;
 }
 
 //Idletime
-- (void)updateIdle:(AIListContact *)theContact
+- (oneway void)updateIdle:(AIListContact *)theContact withData:(NSDate *)idleSinceDate
 {
-	GaimBuddy		*buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];
-	NSDate *idleDate = [theContact statusObjectForKey:@"IdleSince"];
-	int currentIdle = buddy->idle;
-	//NSLog(@"buddy->idle %i",currentIdle);
+	NSDate *currentIdleDate = [theContact statusObjectForKey:@"IdleSince"];
 	
-	if(currentIdle != (int)([idleDate timeIntervalSince1970])){
-		//If there is an idle time, or if there was one before, then update
-		if ((buddy->idle > 0) || idleDate) {
-			[theContact setStatusObject:((currentIdle > 0) ? [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)currentIdle] : nil)
-								 forKey:@"IdleSince"
-								 notify:NO];
-			
-			//Apply any changes
-			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-		}
-	}
-}
-
-//Evil level (warning level)
-- (void)updateEvil:(AIListContact *)theContact
-{
-	GaimBuddy		*buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];
-	
-	//Set the warning level or clear it if it's now 0.
-	int evil = buddy->evil;
-	NSNumber *currentWarningLevel = [theContact statusObjectForKey:@"Warning"];
-	if (evil > 0){
-		if (!currentWarningLevel || ([currentWarningLevel intValue] != evil)) {
-			[theContact setStatusObject:[NSNumber numberWithInt:evil]
-								 forKey:@"Warning"
-								 notify:NO];
-		}
-	}else{
-		if (currentWarningLevel) {
-			[theContact setStatusObject:nil
-								 forKey:@"Warning" 
-								 notify:NO];   
-		}
-	}
-	
-	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-}   
-
-//Buddy Icon
-- (void)updateIcon:(AIListContact *)theContact
-{
-	GaimBuddy		*buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];
-	
-	GaimBuddyIcon *buddyIcon = gaim_buddy_get_icon(buddy);
-	if(buddyIcon && (buddyIcon != [[theContact statusObjectForKey:@"BuddyImagePointer"] pointerValue])) {                            
-		//save this for convenience
-		[theContact setStatusObject:[NSValue valueWithPointer:buddyIcon]
-							 forKey:@"BuddyImagePointer"
-							 notify:NO];
+	if ((idleSinceDate && !currentIdleDate) ||
+		(!idleSinceDate && currentIdleDate) ||
+		([idleSinceDate compare:currentIdleDate] != 0)){
 		
-		//set the buddy image
-		NSImage *image = [[[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_buddy_icon_get_data(buddyIcon, &(buddyIcon->len))
-																	   length:buddyIcon->len]] autorelease];
-		[theContact setStatusObject:image forKey:@"UserIcon" notify:NO];
+		[theContact setStatusObject:[[idleSinceDate copy] autorelease]
+							 forKey:@"IdleSince"
+							 notify:NO];
 		
 		//Apply any changes
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
 }
 
-- (void)accountRemoveBuddy:(NSValue *)buddyValue
+//Evil level (warning level)
+- (oneway void)updateEvil:(AIListContact *)theContact withData:(NSNumber *)evilNumber
 {
-	GaimBuddy		*buddy = [buddyValue pointerValue];
-	if(GAIM_DEBUG) NSLog(@"accountRemoveBuddy: %s",buddy->name);
-	AIListContact	*theContact = (AIListContact *)buddy->node.ui_data;
-	
-    if(theContact){
-		[theContact setRemoteGroupName:nil];
-		[self removeAllStatusFlagsFromContact:theContact];
+	//Set the warning level or clear it if it's now 0.
+	int evil = [evilNumber intValue];
+	NSNumber *currentWarningLevel = [theContact statusObjectForKey:@"Warning"];
 
-		[theContact release];
-        buddy->node.ui_data = NULL;
-    }
+	if (evil > 0){
+		if (!currentWarningLevel || ([currentWarningLevel intValue] != evil)) {
+			[theContact setStatusObject:[[evilNumber copy] autorelease]
+								 forKey:@"Warning"
+								 notify:NO];
+			//Apply any changes
+			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+		}
+	}else{
+		if (currentWarningLevel) {
+			[theContact setStatusObject:nil
+								 forKey:@"Warning" 
+								 notify:NO];
+			//Apply any changes
+			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+
+		}
+	}
+}   
+
+//Buddy Icon
+- (oneway void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData
+{
+	NSImage *userIcon = [[NSImage alloc] initWithData:userIconData];
+#warning XXX copy?
+	[theContact setStatusObject:[[userIcon copy] autorelease] forKey:@"UserIcon" notify:NO];
+	[userIcon release];
+	
+	//Apply any changes
+	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
+- (oneway void)removeContact:(AIListContact *)theContact
+{
+	if(theContact){
+		[theContact setRemoteGroupName:nil];
+		[self removeAllStatusFlagsFromContact:theContact];
+		
+		[theContact release];
+	}
+}
+
+/*
 - (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy
 {	
 	//Set their online/available state
@@ -369,6 +308,7 @@ static BOOL didInitSSL = NO;
 	[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_ICON];
 	[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_MISCELLANEOUS];	
 }
+*/
 
 - (AIListContact *)contactAssociatedWithBuddy:(GaimBuddy *)buddy
 {
@@ -385,7 +325,7 @@ static BOOL didInitSSL = NO;
 	//If a name was available for the GaimBuddy, create a contact
 	if (contactUID){
 		//Get our contact
-		contact = [self _mainThreadContactWithUID:[contactUID compactedString]];
+		contact = [self _contactWithUID:[contactUID compactedString]];
 			
 		//Evan: temporary asserts
 		NSAssert ([[service handleServiceType] identifier] != nil,@"contactAssociatedWithBuddy: [[service handleServiceType] identifier] was nil");
@@ -394,7 +334,7 @@ static BOOL didInitSSL = NO;
 		
 		//Associate the handle with ui_data and the buddy with our statusDictionary
 		buddy->node.ui_data = [contact retain];
-		[contact setStatusObject:[NSValue valueWithPointer:buddy] forKey:@"GaimBuddy" notify:NO];
+//		[contact setStatusObject:[NSValue valueWithPointer:buddy] forKey:@"GaimBuddy" notify:NO];
 	}
 	
 	return(contact);
@@ -410,6 +350,11 @@ static BOOL didInitSSL = NO;
 																		 accountID:[self uniqueObjectID]
 																			   UID:sourceUID];
 	return contact;
+}
+
+- (oneway void)testLog
+{
+	NSLog(@"TEST!!!");
 }
 
 //To allow root level buddies on protocols which don't support them, we map any buddies in a group
@@ -458,10 +403,7 @@ static BOOL didInitSSL = NO;
 		NSString	*groupName = [self _mapOutgoingGroupName:[object remoteGroupName]];
 
 		//Have the gaim thread perform the serverside actions
-		[gaimThread makeAccount:self
-				performSelector:@selector(performRemoveUID:fromGroup:)
-					 withObject:[object UID]
-					 withObject:groupName];
+		[gaimThread removeUID:[object UID] onAccount:self fromGroup:groupName];
 		
 		[object setStatusObject:nil forKey:@"GaimBuddy" notify:NO];
 		
@@ -529,6 +471,7 @@ static BOOL didInitSSL = NO;
 			//			NSString	*oldGroupName = [self _mapOutgoingGroupName:[listObject remoteGroupName]];
 			
 			//Tell the gaim thread to perform the serverside operation
+#warning XXX - moveListObjects:change
 			[gaimThread makeAccount:self 
 					performSelector:@selector(performMoveUID:toGroup:)
 						 withObject:[listObject UID]
@@ -564,6 +507,7 @@ static BOOL didInitSSL = NO;
 - (void)renameGroup:(AIListGroup *)inGroup to:(NSString *)newName
 {
 	//Tell the gaim thread to perform the serverside operation
+	#warning XXX - renameGroup:change
 	[gaimThread makeAccount:self 
 			performSelector:@selector(performRenameGroup:to:)
 				 withObject:inGroup
@@ -604,144 +548,79 @@ static BOOL didInitSSL = NO;
 
 // GaimConversations ---------------------------------------------------------------------------------------------------
 #pragma mark GaimConversations
-- (void)accountConvDestroy:(GaimConversation*)conv
+- (oneway void)destroyMultiChat:(AIChat *)chat
 {
-    AIChat *chat = (AIChat*) conv->ui_data;
-    if (chat) {
-        AIListObject *listObject = [chat listObject];
-        if(listObject){
-			[self setTypingFlagOfContact:(AIListContact *)listObject to:NO];
-		}
-
-		[chat release]; conv->ui_data = nil;
-    }
+	[chat release];
+}
+- (oneway void)destroyIMChat:(AIChat *)chat
+{
+	AIListObject *listObject = [chat listObject];
+	if(listObject){
+		[self setTypingFlagOfContact:(AIListContact *)listObject to:NO];
+	}
+	[chat release];
 }
 
-- (void)addChatConversation:(GaimConversation*)conv
+- (oneway void)addChat:(AIChat *)chat
 {
-	AIChat *chat = (AIChat*) conv->ui_data;
-	
-	//We expect !chat
-	if (!chat){
-		chat = [[adium contentController] chatWithName:[NSString stringWithUTF8String:conv->name]
-											 onAccount:self
-										 initialStatus:[NSDictionary dictionaryWithObject:[NSValue valueWithPointer:conv]
-																				   forKey:@"GaimConv"]];
-		conv->ui_data = [chat retain];
-	}
-	
 	//Open the chat
 	[[adium interfaceController] openChat:chat];
 }
-
-- (void)accountConvUpdated:(GaimConversation*)conv type:(GaimConvUpdateType)type
+/*
+- (AIChat *)chatWithListContact:(AIListContact *)listContact
 {
-    AIChat		*chat = (AIChat*) conv->ui_data;
-	switch (gaim_conversation_get_type(conv)) {
-		case GAIM_CONV_IM:
-		{
-			GaimConvIm  *im = gaim_conversation_get_im_data(conv);
-			//We don't do anything yet with updates for conversations that aren't IM conversations 
-			if (chat && im) {
-				AIListContact *listContact = (AIListContact*) [chat listObject];
-				NSAssert(listContact != nil, @"Conversation with no one?");
-				
-				switch (type) {
-					case GAIM_CONV_UPDATE_TYPING:
-						[self setTypingFlagOfContact:listContact to:(gaim_conv_im_get_typing_state(im) == GAIM_TYPING)];
-						break;
-					case GAIM_CONV_UPDATE_AWAY:
-						//If the conversation update is UPDATE_AWAY, it seems to suppress the typing state being updated
-						//Reset gaim's typing tracking, then update to receive a GAIM_CONV_UPDATE_TYPING message
-						gaim_conv_im_set_typing_state(im, GAIM_NOT_TYPING);
-						gaim_conv_im_update_typing(im);
-						break;
-					default:
-					break;
-				}
-			}
-			break;
-		}
-		case GAIM_CONV_CHAT:
-		{
-			break;
-		}
-	}
+	// Need to start a new chat, associating with the GaimConversation
+	AIChat *chat;
+	
+	chat = [[adium contentController] chatWithContact:sourceContact
+										initialStatus:nil];
+	return chat;
+}
+*/
+
+- (AIChat *)chatWithName:(NSString *)name
+{
+	AIChat *chat;
+	
+	chat = [[adium contentController] chatWithName:name
+										 onAccount:self
+									 initialStatus:nil];
+	
+	return chat;
 }
 
-- (void)receivedIM:(NSDictionary *)messageDict
+//Typing update in an IM
+- (oneway void)typingUpdateForIMChat:(AIChat *)chat typing:(BOOL)typing
 {
-	NSValue					*convValue = [messageDict objectForKey:@"GaimConversation"];
-	GaimConversation		*conv = [convValue pointerValue];
-	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
-	
-	AIChat					*chat = (AIChat*) conv->ui_data;
-	AIListContact			*sourceContact;
-	GaimConversationType	convType;
-	
+	AIListContact *listContact = (AIListContact*) [chat listObject];
+	NSAssert(listContact != nil, @"Conversation with no one?");
+	[self setTypingFlagOfContact:listContact to:typing];
+}
 
+//Multiuser chat update
+- (oneway void)updateForChat:(AIChat *)chat type:(GaimConvUpdateType)type
+{
+	
+}
+
+- (oneway void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
+{
+	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
+	AIListContact			*sourceContact;
+	
 	if ((flags & GAIM_MESSAGE_SEND) != 0) {
         // gaim is telling us that our message was sent successfully. Some day, we should avoid claiming it was
 		// until we get this notification.
         return;
     }
-	
-	
+
 	sourceContact = (AIListContact*) [chat listObject];
-	
-	if (!chat) {
-		//No chat is associated with the IM conversation
-		
-		if (!sourceContact) {
-			//No sourceContact is available yet
-			GaimBuddy 	*buddy;
-			GaimGroup   *group;
-							
-			buddy = gaim_find_buddy(account, conv->name);
-			if (!buddy) {
-				//No gaim_buddy corresponding to the conv->name is on our list, so create one
-				
-				buddy = gaim_buddy_new(account, conv->name, NULL);  //create a GaimBuddy
-				group = gaim_find_group(_("Orphans"));				//get the GaimGroup
-				if (!group) {										//if the group doesn't exist yet
-					group = gaim_group_new(_("Orphans"));           //create the GaimGroup
-					gaim_blist_add_group(group, NULL);              //add it gaimside
-				}
-				gaim_blist_add_buddy(buddy, NULL, group, NULL);     //add the buddy to the gaimside list
-				
-#warning Must add to serverside list to get status updates.  Need to remove when the chat closes or the account disconnects. Possibly want to use some sort of hidden Adium group for this.
-				serv_add_buddy(gc, buddy->name, group);				//add it to the serverside list
-				
-				//Add it to Adium's list
-				//[object setRemoteGroupName:[inGroup UID]]; //Use the non-mapped group name locally
-			}
-			NSAssert(buddy != nil, @"buddy was nil");
-			
-			sourceContact = [self contactAssociatedWithBuddy:buddy];
-			//If creating a contact from the buddy failed, create a contact using the conversation name
-			if (!sourceContact){
-				sourceContact = [self contactAssociatedWithConversation:conv withBuddy:buddy];
-			}
-			
-			NSAssert(sourceContact != nil, @"accountConvReceivedIM: sourceContact was nil after both tries.");
-		}
-				
-		// Need to start a new chat, associating with the GaimConversation
-		chat = [[adium contentController] chatWithContact:sourceContact
-											initialStatus:[NSDictionary dictionaryWithObject:convValue
-																					  forKey:@"GaimConv"]];		
-		//Associate the GaimConversation with the AIChat
-		conv->ui_data = [chat retain];
-		
-	}else{
-		NSAssert(sourceContact != nil, @"Existing chat yet no existing handle?");
-	}
 	
 	//Clear the typing flag of the listContact
 	[self setTypingFlagOfContact:sourceContact to:NO];
 	
 	if (GAIM_DEBUG) NSLog(@"Received %@ from %@",[messageDict objectForKey:@"Message"],[sourceContact UID]);
-		
+
 	[self _receivedMessage:[messageDict objectForKey:@"Message"]
 					inChat:chat 
 		   fromListContact:sourceContact 
@@ -749,16 +628,11 @@ static BOOL didInitSSL = NO;
 					  date:[messageDict objectForKey:@"Date"]];
 }
 
-- (void)receivedChatMessage:(NSDictionary *)messageDict
+- (oneway void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
 {	
-	NSValue					*convValue = [messageDict objectForKey:@"GaimConversation"];
-	GaimConversation		*conv = [convValue pointerValue];
-	
 	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
-	AIListContact			*sourceContact = [self _mainThreadContactWithUID:[[messageDict objectForKey:@"Source"] compactedString]];
+	AIListContact			*sourceContact = [self _contactWithUID:[[messageDict objectForKey:@"Source"] compactedString]];
 
-	AIChat					*chat = (AIChat*) conv->ui_data;
-	
 	if ((flags & GAIM_MESSAGE_SEND) != 0) {
 		/*
 		 * TODO
@@ -769,15 +643,7 @@ static BOOL didInitSSL = NO;
 		return;
 	}
 	
-	if (!chat){
-		chat = [[adium contentController] chatWithName:[NSString stringWithUTF8String:conv->name]
-											 onAccount:self
-										 initialStatus:[NSDictionary dictionaryWithObject:convValue
-																				   forKey:@"GaimConv"]];
-		conv->ui_data = [chat retain];
-	}
-
-	if (GAIM_DEBUG) NSLog(@"Chat: Received %@ from %@ in %s",[messageDict objectForKey:@"Message"],[sourceContact UID],conv->name);
+	if (GAIM_DEBUG) NSLog(@"Chat: Received %@ from %@ in %s",[messageDict objectForKey:@"Message"],[sourceContact UID],[chat name]);
 		
 	[self _receivedMessage:[messageDict objectForKey:@"Message"]
 					inChat:chat 
@@ -809,39 +675,32 @@ static BOOL didInitSSL = NO;
 }
 
 #pragma mark GaimConversation User Lists
-- (void)accountConvAddedUser:(const char *)user inConversation:(GaimConversation *)conv
+- (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat
 {
-	AIChat			*chat;
-	AIListContact   *contact;
-	
-	chat = (AIChat *)conv->ui_data;
 	if (chat){
-		NSString	*contactName = [NSString stringWithUTF8String:user];
-		contact = [self _mainThreadContactWithUID:[contactName compactedString]];
-
+		AIListContact *contact = [self _contactWithUID:[contactName compactedString]];
+		
 		[contact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
 		[chat addParticipatingListObject:contact];
-	}
-	NSLog(@"added user %s in conversation %s (%@)",user,conv->name,conv->ui_data);
+		
+		NSLog(@"added user %@ in conversation %@",contactName,[chat name]);
+	}	
 }
 - (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConversation *)conv
 {
 	NSLog(@"added a whole list!");
 }
-- (void)accountConvRemovedUser:(const char *)user inConversation:(GaimConversation *)conv
+- (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
 {
-	AIChat			*chat;
-	AIListContact   *contact;
-	
-	chat = (AIChat *)conv->ui_data;
 	if (chat){
-		NSString	*contactName = [NSString stringWithUTF8String:user];
-		contact = [[adium contactController] existingContactWithService:[[service handleServiceType] identifier]
-													  accountID:[self uniqueObjectID]
-															UID:[contactName compactedString]];
+		AIListContact *contact = [[adium contactController] existingContactWithService:[[service handleServiceType] identifier]
+															  accountID:[self uniqueObjectID]
+																	UID:[contactName compactedString]];
+		
 		[chat removeParticipatingListObject:contact];
-	}
-	NSLog(@"removed user %s in conversation %s (%@)",user,conv->name,conv->ui_data);
+		
+	NSLog(@"removed user %@ in conversation %@",contactName,[chat name]);
+	}	
 }
 - (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConversation *)conv
 {
@@ -862,7 +721,7 @@ static BOOL didInitSSL = NO;
 	//If a listObject is set for the chat, then it is an IM; otherwise, it is a multiuser chat
 	if (listObject) {
 		//Associate our chat with the libgaim conversation
-		if(![[chat statusDictionary] objectForKey:@"GaimConv"]){
+	/*	if(![[chat statusDictionary] objectForKey:@"GaimConv"]){
 			
 			//Evan: Temporary asserts
 			NSAssert (listObject != nil, @"openChat: listObject was nil");
@@ -873,11 +732,13 @@ static BOOL didInitSSL = NO;
 			NSAssert(conv != nil, @"openChat: GAIM_CONV_IM: gaim_conversation_new returned nil");
 			
 			conv->ui_data = [chat retain];
-			[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
+//			[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
 		}
-		
+
+				*/		
 		//Track
 		[chatDict setObject:chat forKey:[listObject uniqueObjectID]];
+		
 	}else{
 		//If we opened a chat (rather than having it opened for us via accepting an invitation), we need to create
 		//the gaim structures for that chat
@@ -927,7 +788,7 @@ static BOOL didInitSSL = NO;
 				GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_CHAT, account, name);
 				NSAssert(conv != nil, @"openChat: GAIM_CONV_CHAT: gaim_conversation_new returned nil");
 				
-				[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
+//				[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
 				conv->ui_data = [chat retain];
 			}
 		}
@@ -941,10 +802,12 @@ static BOOL didInitSSL = NO;
 
 - (BOOL)closeChat:(AIChat*)chat
 {
-    GaimConversation *conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
+#warning XXX
+/*    GaimConversation *conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
     if (conv){
         gaim_conversation_destroy(conv);
 	}
+	*/
 	
     [[chat statusDictionary] removeObjectForKey:@"GaimConv"];
 	
@@ -963,6 +826,12 @@ static BOOL didInitSSL = NO;
     return YES;
 }
 
+- (AIChat *)chatWithContact:(AIListContact *)contact
+{
+	return [[adium contentController] chatWithContact:contact
+										initialStatus:nil];
+}
+
 
 /*********************/
 /* AIAccount_Content */
@@ -976,121 +845,53 @@ static BOOL didInitSSL = NO;
 		if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0) {
 			AIContentMessage	*contentMessage = (AIContentMessage*)object;
 			AIChat				*chat = [contentMessage chat];
-			
-			//***NOTE: listObject is probably the wrong thing to use here - won't that mess up multiuser chats?
-			AIListObject		*listObject = [chat listObject];
-			GaimConversation	*conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
-			
-			//create a new conv if necessary - this happens, for example, if an existing chat is suddenly our responsibility
-			//whereas it previously belonged to another account
-			if (conv == NULL) {
-				const char			*destination = [[listObject UID] UTF8String];
-				
-				//***NOTE: need to check if the chat is an IM or a CHAT and handle accordingly
-				conv = gaim_conversation_new(GAIM_CONV_IM, account, destination);
-				
-				//associate the AIChat with the gaim conv
-				conv->ui_data = [chat retain];
-				[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
-				
-				[chatDict setObject:chat forKey:[listObject uniqueObjectID]];                
-			}
-
 			NSAttributedString  *message = [contentMessage message];
 			NSString			*encodedMessage;
 			
-			switch (gaim_conversation_get_type(conv)) {				
-				case GAIM_CONV_IM:
-				{
-					GaimConvIm			*im = gaim_conversation_get_im_data(conv);
-					GaimConvImFlags		flags = ([contentMessage autoreply] ? GAIM_CONV_IM_AUTO_RESP : 0);
-					
-					//If this connection doesn't support new lines, send all lines before newlines as separate messages
-					if (gc && (gc->flags & GAIM_CONNECTION_NO_NEWLINES)) {
-						NSRange		endlineRange;
-						NSRange		returnRange;
-						
-						while (((endlineRange = [[message string] rangeOfString:@"\n"]).location) != NSNotFound ||
-							   ((returnRange = [[message string] rangeOfString:@"\r"]).location) != NSNotFound){
-							
-							//Use whichever endline character is found first
-							NSRange				operativeRange = (endlineRange.location < returnRange.location) ? endlineRange : returnRange;
-							
-							if (operativeRange.location > 0){
-								NSAttributedString  *thisPart;
-
-								thisPart = [message attributedSubstringFromRange:NSMakeRange(0,operativeRange.location-1)];
-								encodedMessage = [self encodedAttributedString:thisPart forListObject:listObject];								
-								gaim_conv_im_send_with_flags(im,[encodedMessage UTF8String],flags);
-							}
-							
-							message = [message attributedSubstringFromRange:NSMakeRange(operativeRange.location+operativeRange.length,[[message string] length]-operativeRange.location)];
-						}
-						
-					}
-					
-					if ([message length]){
-						encodedMessage = [self encodedAttributedString:message forListObject:listObject];								
-						gaim_conv_im_send_with_flags(im,[encodedMessage UTF8String],flags);
-					}
-
-					sent = YES;
-					break;
-				}
-				case GAIM_CONV_CHAT:
-				{
-					GaimConvChat	*gaimChat = gaim_conversation_get_chat_data(conv);
-					
-					//If this connection doesn't support new lines, send all lines before newlines as separate messages
-					if (gc && (gc->flags & GAIM_CONNECTION_NO_NEWLINES)) {
-						NSRange				endlineRange;
-						NSRange				returnRange;
-						NSString			*encodedMessage;
-						
-						while (((endlineRange = [[message string] rangeOfString:@"\n"]).location) != NSNotFound ||
-							   ((returnRange = [[message string] rangeOfString:@"\r"]).location) != NSNotFound){
-
-							//Use whichever endline character is found first
-							NSRange				operativeRange = (endlineRange.location < returnRange.location) ? endlineRange : returnRange;
-
-							if (operativeRange.location > 0){
-								NSAttributedString  *thisPart;
-								
-								thisPart = [message attributedSubstringFromRange:NSMakeRange(0,operativeRange.location-1)];
-								encodedMessage = [self encodedAttributedString:thisPart forListObject:listObject];								
-								gaim_conv_chat_send(gaimChat,[encodedMessage UTF8String]);
-							}
-							
-							message = [message attributedSubstringFromRange:NSMakeRange(operativeRange.location+operativeRange.length,[[message string] length]-operativeRange.location)];
-						}
-					}
-					
-					if ([message length]){
-						encodedMessage = [self encodedAttributedString:message forListObject:listObject];								
-						gaim_conv_chat_send(gaimChat,[encodedMessage UTF8String]);	
-					}
-					
-					sent = YES;
-					break;
-				}
-			}
-		}else if([[object type] compare:CONTENT_TYPING_TYPE] == 0){
-			AIContentTyping *ct = (AIContentTyping*)object;
-			AIChat *chat = [ct chat];
-			GaimConversation *conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
+			//Grab the list object (which may be null if this isn't a chat with a particular listObject)
+			AIListObject		*listObject = [chat listObject];
+			//Use GaimConvImFlags for now; multiuser chats will end up ignoring this
+			GaimConvImFlags		flags = ([contentMessage autoreply] ? GAIM_CONV_IM_AUTO_RESP : 0);
 			
-			if(conv){
-			/*	
-				[controller sendTypingWithGC:gaim_conversation_get_gc(conv)
-										name:gaim_conversation_get_name(conv)
-									   state:([ct typing] ? GAIM_TYPING : GAIM_NOT_TYPING)];
-*/
-				serv_send_typing(gaim_conversation_get_gc(conv),
-								 gaim_conversation_get_name(conv),
-								 ([ct typing] ? GAIM_TYPING : GAIM_NOT_TYPING));
+			//If this connection doesn't support new lines, send all lines before newlines as separate messages
+			if (gc && (gc->flags & GAIM_CONNECTION_NO_NEWLINES)) {
+				NSRange		endlineRange;
+				NSRange		returnRange;
+				
+				while (((endlineRange = [[message string] rangeOfString:@"\n"]).location) != NSNotFound ||
+					   ((returnRange = [[message string] rangeOfString:@"\r"]).location) != NSNotFound){
+					
+					//Use whichever endline character is found first
+					NSRange				operativeRange = (endlineRange.location < returnRange.location) ? endlineRange : returnRange;
+					
+					if (operativeRange.location > 0){
+						NSAttributedString  *thisPart;
+						
+						thisPart = [message attributedSubstringFromRange:NSMakeRange(0,operativeRange.location-1)];
+						encodedMessage = [self encodedAttributedString:thisPart forListObject:listObject];								
+						[gaimThread sendMessage:encodedMessage fromAccount:self inChat:chat withFlags:flags];
+					}
+					
+					message = [message attributedSubstringFromRange:NSMakeRange(operativeRange.location+operativeRange.length,[[message string] length]-operativeRange.location)];
+				}
+				
+			}
+			
+			if ([message length]){
+				encodedMessage = [self encodedAttributedString:message forListObject:listObject];
+				[gaimThread sendMessage:encodedMessage fromAccount:self inChat:chat withFlags:flags];
+			}
+			
+			sent = YES;			
+			//				[chatDict setObject:chat forKey:[listObject uniqueObjectID]];                
+
+		}else if([[object type] compare:CONTENT_TYPING_TYPE] == 0){
+			AIContentTyping *contentTyping = (AIContentTyping*)object;
+			AIChat *chat = [contentTyping chat];
+			
+			[gaimThread sendTyping:[contentTyping typing] inChat:chat];
 
 				sent = YES;
-			}
 		}
 	}
     return sent;
@@ -1138,18 +939,16 @@ static BOOL didInitSSL = NO;
 	return (type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray);
 }
 
--(void)accountPrivacyList:(PRIVACY_TYPE)type added:(const char *)name
+-(oneway void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID
 {
 	//Get our contact
-	NSString		*sourceUID = [NSString stringWithUTF8String:name];
-	AIListContact   *contact = [self _mainThreadContactWithUID:[sourceUID compactedString]];
+	AIListContact   *contact = [self _contactWithUID:[sourceUID compactedString]];
 	
 	[(type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray) addObject:contact];
 }
--(void)accountPrivacyList:(PRIVACY_TYPE)type removed:(const char *)name
+-(oneway void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID
 {
 	//Get our contact, which must already exist for us to care about its removal
-	NSString		*sourceUID = [NSString stringWithUTF8String:name];	
 	AIListContact   *contact = [[adium contactController] existingContactWithService:[[service handleServiceType] identifier]
 																		   accountID:[self uniqueObjectID]
 																				 UID:[sourceUID compactedString]];
@@ -1166,6 +965,7 @@ static BOOL didInitSSL = NO;
 #pragma mark File Transfer
 
 //Create a protocol-specific xfer object, set it up as requested, and begin sending
+#warning Wrong
 - (void)_beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
 	GaimXfer *xfer = [self newOutgoingXferForFileTransfer:fileTransfer];
@@ -1185,9 +985,8 @@ static BOOL didInitSSL = NO;
 		gaim_xfer_request(xfer);
 		
 		//tell the fileTransferController to display appropriately
-		[[adium fileTransferController] performSelectorOnMainThread:@selector(beganFileTransfer:)
-														 withObject:fileTransfer
-													  waitUntilDone:YES];
+		[[adium fileTransferController] beganFileTransfer:fileTransfer];
+		
 	}
 }
 //By default, protocols can not create GaimXfer objects
@@ -1198,13 +997,9 @@ static BOOL didInitSSL = NO;
 
 //The account requested that we received a file.
 //Set up the ESFileTransfer and query the fileTransferController for a save location
-- (void)accountXferRequestFileReceiveWithXfer:(GaimXfer *)xfer
+- (oneway void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
     NSLog(@"file transfer request received");
-    ESFileTransfer * fileTransfer = [[self createFileTransferObjectForXfer:xfer] retain];
-    
-    [fileTransfer setRemoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
-    
     [[adium fileTransferController] receiveRequestForFileTransfer:fileTransfer];
 }
 
@@ -1238,40 +1033,32 @@ static BOOL didInitSSL = NO;
 }
 */
 
-//Create an ESFileTransfer object from an xfer, associating the xfer with the object and the object with the xfer
-- (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer
+//Create an ESFileTransfer object from an xfer
+- (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID
 {
-    //****
-	NSString		*sourceUID = [NSString stringWithUTF8String:(xfer->who)];
-	AIListContact   *contact = [self _mainThreadContactWithUID:[sourceUID compactedString]];
-	
+	AIListContact   *contact = [self _contactWithUID:[destinationUID compactedString]];
 	
     ESFileTransfer * fileTransfer = [ESFileTransfer fileTransferWithContact:contact forAccount:self]; 
 
-    [fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
-    xfer->ui_data = [fileTransfer retain];
-    
     return fileTransfer;
 }
 
 //Update an ESFileTransfer object progress
-- (void)accountXferUpdateProgress:(GaimXfer *)xfer percent:(float)percent
+- (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(float)percent bytesSent:(float)bytesSent
 {
 	NSLog(@"File Transfer: %f%% complete",percent);
-    [(ESFileTransfer *)(xfer->ui_data) setPercentDone:percent bytesSent:(xfer->bytes_sent)];
+    [fileTransfer setPercentDone:percent bytesSent:bytesSent];
 }
 
 //The remote side canceled the transfer, the fool.  Tell the fileTransferController then destroy the xfer
-- (void)accountXferCanceledRemotely:(GaimXfer *)xfer
+- (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer
 {
-    [[adium fileTransferController] transferCanceled:(ESFileTransfer *)(xfer->ui_data)];
-//    gaim_xfer_destroy(xfer);
+    [[adium fileTransferController] transferCanceled:fileTransfer];
 }
 
-- (void)accountXferDestroy:(GaimXfer *)xfer
+- (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	[(ESFileTransfer *)xfer->ui_data release];
-	xfer->ui_data = nil;
+	[fileTransfer release];
 }
 
 //Accept a send or receive ESFileTransfer object, beginning the transfer.
@@ -1332,13 +1119,17 @@ static BOOL didInitSSL = NO;
 	gaim_account_set_password(account, [password UTF8String]);
 
 	if (GAIM_DEBUG) NSLog(@"Adium: Connect: Initiating connection.");
-	[gaimThread makeAccount:(id)self performSelector:@selector(performConnect)];
-	if (GAIM_DEBUG) NSLog(@"Adium: Connect: Done initiating connection.");
-}
+//	[gaimThread makeAccount:(id)self performSelector:@selector(performConnect)];
+	[gaimThread connectAccount:self];
+	NSLog(@"finished connect");
+	while (!gc){
+		gc = gaim_account_get_connection(account);
+		NSLog(@"GOT gc %x",gc);
+	}
+	
+	//	gc = gaim_account_connect(account);	
 
-- (void)performConnect
-{
-	gc = gaim_account_connect(account);	
+	if (GAIM_DEBUG) NSLog(@"Adium: Connect: Done initiating connection %x.",gc);
 }
 
 //Configure libgaim's proxy settings using the current system values
@@ -1463,12 +1254,8 @@ static BOOL didInitSSL = NO;
 
     //Tell libgaim to disconnect
     if(gaim_account_is_connected(account)){
-		[gaimThread makeAccount:self performSelector:@selector(performDisconnect)];
+		[gaimThread disconnectAccount:self];
     }
-}
-- (void)performDisconnect
-{
-	gaim_account_disconnect(account);
 }
 
 - (NSString *)host{
@@ -1487,7 +1274,7 @@ static BOOL didInitSSL = NO;
 /* accountConnection methods */
 /*****************************/
 //Our account was disconnected, report the error
-- (void)accountConnectionReportDisconnect:(const char*)text
+- (oneway void)accountConnectionReportDisconnect:(NSString *)text
 {
 	//We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
@@ -1512,18 +1299,18 @@ static BOOL didInitSSL = NO;
 	
 	[[adium contactController] endListObjectNotificationDelay];
 	
-	[lastDisconnectionError release]; lastDisconnectionError = [[NSString stringWithUTF8String:text] retain];
+	[lastDisconnectionError release]; lastDisconnectionError = [text retain];
 
-	[self accountConnectionDisconnected];
+//	[self accountConnectionDisconnected];
 }
-- (void)accountConnectionNotice:(const char*)text
+- (oneway void)accountConnectionNotice:(const char*)text
 {
     [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Connection Notice",[self UID],[self serviceID]]
                                     withDescription:[NSString stringWithUTF8String:text]];	
 }
 
 //Our account has disconnected (called automatically by gaimServicePlugin)
-- (void)accountConnectionDisconnected
+- (oneway void)accountConnectionDisconnected
 {
     NSEnumerator    *enumerator;
     BOOL			connectionIsSuicidal = (gc ? gc->wants_to_die : NO);
@@ -1578,13 +1365,7 @@ static BOOL didInitSSL = NO;
 
 
 //Our account has connected (called automatically by gaimServicePlugin)
-- (void)accountConnectionConnected
-{
-	[self performSelectorOnMainThread:@selector(_accountConnectionConnected)
-						   withObject:nil
-						waitUntilDone:YES];
-}
-- (void)_accountConnectionConnected
+- (oneway void)accountConnectionConnected
 {
     //We are now online
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:NO];
@@ -1609,7 +1390,7 @@ static BOOL didInitSSL = NO;
 	[lastDisconnectionError release]; lastDisconnectionError = nil;
 }
 
-- (void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count withText:(const char *)text
+- (oneway void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count withText:(const char *)text
 {
 	NSString	*connectionProgressString = [self connectionStringForStep:step];
 	NSNumber	*connectionProgressPrecent = [NSNumber numberWithFloat:((float)step/(float)(step_count-1))];
@@ -1631,32 +1412,76 @@ static BOOL didInitSSL = NO;
 //	gaimThread = [[NSConnection rootProxyForConnectionWithRegisteredName:@"GaimThread"
 //																	host:nil] retain];
 //  [gaimThread setProtocolForProxy:@protocol(GaimThread)];
-	{
-		NSPort 			*port1 = [NSPort port];
-		NSPort 			*port2 = [NSPort port];
-		NSConnection 	*kitConnection = [[NSConnection alloc] initWithReceivePort:port1 sendPort:port2];
-
-		[kitConnection setRootObject:self];
-		[SLGaimCocoaAdapter connectToAccountWithPorts:[NSArray arrayWithObjects:port2, port1, nil]];
-	}
-	
 	
 	//Create a fresh version of the account
     account = gaim_account_new([UID UTF8String], [self protocolPlugin]);
-    
-	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
 	
+	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
+
     gaim_accounts_add(account);
+	
+#warning Not quite right yet
+	{
+		NSPort 			*port1 = [NSPort port];
+		NSPort 			*port2 = [NSPort port];
+		//NSConnection 	*kitConnection = [[NSConnection alloc] initWithReceivePort:port1 sendPort:port2];
+/*		NSConnection	*kitConnection= [NSConnection rootProxyForConnectionWithRegisteredName:@"GaimThread"
+																						  host:nil];*/
+		if (!gaimThread){
+			gaimThread = [[NSConnection rootProxyForConnectionWithRegisteredName:@"GaimThread"
+																			host:nil] retain];
+			[gaimThread setProtocolForProxy:@protocol(GaimThread)];
+		}
+		
+		//[kitConnection enableMultipleThreads];
+		NSLog(@"1");
+		//[kitConnection setRootObject:self];
+				NSLog(@"2");
+	//			NSLog(@"%@",[[kitConnection  rootProxy] description]);
+//		[[kitConnection rootProxy] connectToAccountWithPorts:[NSArray arrayWithObjects:port2, port1, nil]];
+		//		[SLGaimCocoaAdapter connectToAccountWithPorts:[NSArray arrayWithObjects:port2, port1, nil]];
+				
+				NSLog(@"3");
+	//	gaimThread = [[kitConnection rootProxy] retain];
+				NSLog(@"4");
+				
+				NSPort 			*port3 = [NSPort port];
+				NSPort 			*port4 = [NSPort port];
+				
+		NSConnection *ourConnection = [[NSConnection connectionWithReceivePort:port3 sendPort:port4] retain];
+		[ourConnection enableMultipleThreads];
+		[ourConnection setRootObject:self];
+		NSArray *portArray = [NSArray arrayWithObjects:port4, port3, nil];
+		
+//		NSValue *theValue = [NSValue value:&account withObjCType:@encode(void *)];
+//	NSValue *theValue = [NSValue valueWithPointer:&account];
+			NSValue *theValue = [NSValue valueWithPointer:account];
+//			NSLog(@"CBGAIMACCOUNT addPortArray %x %@",account,portArray);
+//			GaimAccount **testAccount = [theValue pointerValue];
+//					NSLog(@"made value %x",*testAccount);
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"AddAccount"
+											  object:theValue
+												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:portArray,@"portArray",
+													self,@"adiumAccount",nil]];
+
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"ThreadTest"
+															object:nil
+														  userInfo:nil];
+		NSLog(@"5");
+//		[gaimThread addPortArray:portArray forAccountValue:theValue];
+		
+//		NSConnection	*incomingConnection = [[NSConnection connectionWithReceivePort:port4 sendPort:port3] retain] ;
+//		[incomingConnection enableMultipleThreads];
+		//[incomingConnection setRootObject:self];
+				NSLog(@"5");
+	//			NSLog(@"setting %@",incomingConnection);
+	//	account->ui_data = [[NSValue valueWithPointer:incomingConnection] retain];
+	}
+
 	   
 	[(GaimService *)service addAccount:self forGaimAccountPointer:account];	
-
+		NSLog(@"7");
 	[self configureGaimAccountForConnect];
-}
-
-- (void)setGaimThread:(SLGaimCocoaAdapter *)sender
-{
-	NSLog(@"## setGaimThread: ",[sender description]);
-	gaimThread = [sender retain];
 }
 
 
