@@ -16,7 +16,8 @@
 #import "AIListWindowController.h"
 #import "AIStatusSelectionView.h"
 #import "AIListOutlineView.h"
-#import "AIListCell.h"
+#import "AIListGroupGradientCell.h"
+#import "AIListContactCell.h"
 
 #define CONTACT_LIST_WINDOW_NIB				@"ContactListWindow"		//Filename of the contact list window nib
 #define CONTACT_LIST_WINDOW_TRANSPARENT_NIB @"ContactListWindowTransparent" //Filename of the minimalist transparent version
@@ -83,12 +84,6 @@
     return(@"");    
 }
 
-//Our contact list cell
-- (AIListCell *)outlineViewDataCell
-{
-	return([[AIListCell alloc] init]);
-}
-
 //Setup the window after it has loaded
 - (void)windowDidLoad
 {
@@ -117,6 +112,12 @@
     //Configure the contact list view
 	tooltipTracker = [[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList withDelegate:self] retain];
 	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
+	[contactListView setContentCell:[[AIListContactCell alloc] init]];
+	[contactListView setGroupCell:[[AIListGroupGradientCell alloc] init]];	
+
+#warning grr
+	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[AIListContactCell alloc] init]];	
+
     [scrollView_contactList setAutoScrollToBottom:NO];
     [scrollView_contactList setAutoHideScrollBar:YES];
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -477,7 +478,7 @@
 		[contactListView reloadData];
 #warning ###		[contactListView _performFullRecalculation];
 	}else{
-		if([object containingGroup]) [contactListView reloadItem:[object containingGroup] reloadChildren:YES];
+		if([object containingObject]) [contactListView reloadItem:[object containingObject] reloadChildren:YES];
 	}
 }
 
@@ -517,12 +518,6 @@
 }
 
 //
-- (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForColumn:(NSTableColumn *)column
-{
-	return([self outlineViewDataCell]);
-}
-
-//
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
     if([item isKindOfClass:[AIListGroup class]]){
@@ -545,6 +540,7 @@
 //Before one of our cells gets told to draw, we need to make sure it knows what contact it's drawing for.
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
+	NSLog(@"cell:%@",cell);
 	[(AIListCell *)cell setListObject:item];
 }
 
@@ -669,16 +665,16 @@
 			//Disallow dragging groups into or onto other objects
 			if(item != nil){
 				if([item isKindOfClass:[AIListGroup class]]){
-					[outlineView setDropItem:nil dropChildIndex:[[item containingGroup] indexOfObject:item]];
+					[outlineView setDropItem:nil dropChildIndex:[[item containingObject] indexOfObject:item]];
 				}else{
-					[outlineView setDropItem:nil dropChildIndex:[[[item containingGroup] containingGroup] indexOfObject:[item containingGroup]]];
+					[outlineView setDropItem:nil dropChildIndex:[[[item containingObject] containingObject] indexOfObject:[item containingObject]]];
 				}
 			}
 			
 		}else{
 			//Disallow dragging contacts onto anything besides a group
 			if(index == -1 && ![item isKindOfClass:[AIListGroup class]]){
-				[outlineView setDropItem:[item containingGroup] dropChildIndex:[[item containingGroup] indexOfObject:item]];
+				[outlineView setDropItem:[item containingObject] dropChildIndex:[[item containingObject] indexOfObject:item]];
 			}
 			
 		}
@@ -720,9 +716,13 @@
 	NSPoint			viewPoint = [contactListView convertPoint:[[self window] convertScreenToBase:screenPoint] fromView:nil];
 	AIListObject	*hoveredObject = [contactListView itemAtRow:[contactListView rowAtPoint:viewPoint]];
 	
-	[[adium interfaceController] showTooltipForListObject:hoveredObject
-											atScreenPoint:screenPoint
-												 onWindow:[self window]];
+	if([hoveredObject isKindOfClass:[AIListContact class]]){
+		[[adium interfaceController] showTooltipForListObject:hoveredObject
+												atScreenPoint:screenPoint
+													 onWindow:[self window]];
+	}else{
+		[self hideTooltip];
+	}
 }
 
 //Hide tooltip

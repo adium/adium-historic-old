@@ -90,7 +90,8 @@
 @end
 
 @interface NSObject (AIStandardListOutlineViewDelegate)
-- (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForColumn:(NSTableColumn *)column;
+- (NSCell *)outlineViewDataCellForContent:(NSOutlineView *)outlineView;
+- (NSCell *)outlineViewDataCellForGroup:(NSOutlineView *)outlineView;
 @end
 
 

@@ -135,7 +135,7 @@
 {
 	NSPoint mouseLocation = [NSEvent mouseLocation];
 
-	if(NSPointInRect(mouseLocation, [view frame])){
+	if(NSPointInRect([[view window] convertScreenToBase:mouseLocation], [view frame])){
 		//tooltipCount is used for delaying the appearence of tooltips.  We reset it to 0 when the mouse moves.  When
 		//the mouse is left still tooltipCount will eventually grow greater than TOOL_TIP_DELAY, and we will begin
 		//displaying the tooltips

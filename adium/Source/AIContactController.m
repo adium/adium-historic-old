@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.158 2004/07/27 18:50:06 evands Exp $
+// $Id: AIContactController.m,v 1.159 2004/07/28 14:21:27 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -1124,7 +1124,7 @@ DeclareString(UID);
 		delayedContactChanges++;
 	}else{
 		AIListObject		*group = [inObject containingObject];
-
+		
 		//Sort the groups containing this object
 		[group sortListObject:inObject sortController:activeSortController];
 		[[owner notificationCenter] postNotificationName:Contact_OrderChanged object:inObject];

@@ -99,21 +99,53 @@
 
 
 //Sizing and Display ---------------------------------------------------------------------------------------------------
-//Cell heights for the multi-cell outline view
-- (int)cellHeightForGroup
+- (NSSize)cellSize
 {
-	return(GROUP_CELL_HEIGHT);
-}
-- (int)cellHeightForContent
-{
-	return(CONTENT_CELL_HEIGHT);
+	return(NSMakeSize(0, 30));
 }
 
-//Draw frame
-- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
-{
+//Drawing
+- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView{
     [self drawInteriorWithFrame:cellFrame inView:controlView];
 }
+- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+{	
+	[self drawBackgroundWithFrame:cellFrame inView:controlView];
+	[self drawContentWithFrame:cellFrame inView:controlView];
+}
+	
+//Draw the background of our cell
+- (void)drawBackgroundWithFrame:(NSRect)rect inView:(NSView *)controlView
+{
+	//
+	
+	
+	
+}
+
+//Draw content of our cell
+- (void)drawContentWithFrame:(NSRect)rect inView:(NSView *)controlView
+{
+	[self drawDisplayNameWithFrame:rect inView:controlView];
+}
+
+//Draw our display name
+- (void)drawDisplayNameWithFrame:(NSRect)rect inView:(NSView *)controlView
+{	
+	[textStorage setAttributedString:[self displayNameStringWithAttributes:YES inView:controlView]];
+	NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
+	NSRect	glyphRect = [layoutManager boundingRectForGlyphRange:glyphRange inTextContainer:textContainer];
+	[layoutManager drawGlyphsForGlyphRange:glyphRange
+								   atPoint:NSMakePoint(rect.origin.x,
+													   rect.origin.y + (rect.size.height - glyphRect.size.height) / 2.0)];
+}
+
+
+
+
+
+/*
+
 
 //Draw contents
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
@@ -123,7 +155,7 @@
     NSBezierPath		*pillPath = nil;
 	
 	
-	if(isGroup) [self drawGroupBackgroundInRect:cellFrame];
+	[self drawBackgroundInRect:cellFrame];
 	
 	if(isGroup){
 		//flippy triangle, bah
@@ -159,7 +191,7 @@
 	
 	
 	NSAttributedString	*extStatus = [listObject statusObjectForKey:@"StatusMessage"];
-	if(!isGroup /*extStatus*/){
+	if(!isGroup extStatus){
 		NSRect	statusRect = cellFrame;
 		
 		
@@ -224,104 +256,15 @@
 	}
 	
 	//Draw all Right Views
-	[self displayViews:[[listObject displayArrayForKey:@"Right View"] allValues]
-				inRect:cellFrame
-				onLeft:NO];
+//	[self displayViews:[[listObject displayArrayForKey:@"Right View"] allValues]
+//				inRect:cellFrame
+//				onLeft:NO];
 }
 
 
-- (void)drawGroupBackgroundInRect:(NSRect)inRect
-{
-	AIGradient	*gradient = [AIGradient gradientWithFirstColor:[NSColor colorWithCalibratedRed:0.542 green:0.726 blue:1.0 alpha:1.0]
-												   secondColor:[NSColor colorWithCalibratedRed:0.416 green:0.660 blue:1.0 alpha:1.0]
-													 direction:AIVertical];
-	[gradient drawInRect:inRect];
-}
+*/
 
 
-
-
-
-
-
-
-//User Icon ------------------------------------------------------------------------------------------------------------
-//Draw the user icon
-- (void)drawUserIconInRect:(NSRect)inRect
-{
-	NSImage	*image = [[listObject displayArrayForKey:KEY_USER_ICON] objectValue];
-	if(!image) image = [self genericUserIcon];
-	
-	if(image){
-		[image setFlipped:YES];
-		[image drawInRect:inRect
-				 fromRect:NSMakeRect(0,0,[image size].width,[image size].height)
-				operation:NSCompositeSourceOver
-				 fraction:1.0];
-		[image setFlipped:NO];
-	}
-}
-
-//Returns a generic image for users without an icon
-- (NSImage *)genericUserIcon
-{
-	if(!genericUserIcon){
-		genericUserIcon = [[NSImage imageNamed:@"Placeholder" forClass:[self class]] retain];
-	}
-	
-	return(genericUserIcon);
-}
-
-
-//User Name ------------------------------------------------------------------------------------------------------------
-//
-- (void)drawUserNameInRect:(NSRect)inRect
-{
-	
-}
-
-
-//User Extended Status -------------------------------------------------------------------------------------------------
-//
-- (void)drawUserExtendedStatusInRect:(NSRect)inRect
-{
-	
-}
-
-
-//User Status Badge ----------------------------------------------------------------------------------------------------
-//
-- (void)drawUserStatusBadgeInRect:(NSRect)inRect
-{
-	NSString	*statusName;
-	NSImage 	*statusImage;
-	
-	//Get the status image
-#warning Make this the responsibility of a plugin, just take an image from some display array from within here
-//	if(![listObject integerStatusObjectForKey:@"Online"]){
-//		statusName = @"status-offline";
-//	}else if([listObject doubleStatusObjectForKey:@"Idle"]){
-//		statusName = @"status-idle";
-//	}else if([listObject doubleStatusObjectForKey:@"Away"]){
-//		statusName = @"status-away";
-//	}else{
-//		statusName = @"status-available";
-//	}
-//	statusImage = [NSImage imageNamed:statusName forClass:[self class]];
-	statusImage = [[listObject displayArrayForKey:@"Tab Status Icon"] objectValue];
-	[statusImage setFlipped:YES];
-
-	//Draw the image centered in the badge rect
-	NSSize	imageSize = [statusImage size];
-	NSRect	centeredRect = NSMakeRect(inRect.origin.x + (inRect.size.width - imageSize.width) / 2.0,
-									  inRect.origin.y + (inRect.size.height - imageSize.height) / 2.0,
-									  imageSize.width,
-									  imageSize.height);
-	[statusImage drawInRect:centeredRect
-				   fromRect:NSMakeRect(0,0,imageSize.width,imageSize.height)
-				  operation:NSCompositeSourceOver
-				   fraction:1.0];
-}
 
 
 
@@ -417,47 +360,47 @@
 
 
 //Calculates sizing and displays the views.  Pass a 0 width rect to skip drawing.
-- (float)displayViews:(NSArray *)viewArray inRect:(NSRect)drawRect onLeft:(BOOL)onLeft
-{
-	float					width = 0;
-	NSEnumerator			*enumerator;
-	id <AIListObjectView>	sideView;
-	
-	if(viewArray && [viewArray count]){
-		//Padding goes first for right aligned icons
-		if(!onLeft) width += VIEW_PADDING;
-		
-		//Size and draw all the contained views
-		enumerator = [viewArray objectEnumerator];
-		while(sideView = [enumerator nextObject]){
-			float		viewWidth = [sideView widthForHeight:drawRect.size.height];
-            NSRect		viewRect;
-			
-			//If a zero width rect is passed, skip any drawing
-			if(drawRect.size.width != 0){
-				//Create a destination rect for the icon
-				viewRect = drawRect;
-				viewRect.size.width = viewWidth;
-				if(!onLeft) viewRect.origin.x = drawRect.origin.x + drawRect.size.width - viewRect.size.width; //Right align
-				
-				//Draw the icon
-				[sideView drawInRect:viewRect];
-				
-				//Subtract the drawn area from the remaining rect
-				drawRect.size.width -= (viewRect.size.width + VIEW_INNER_PADDING);
-				if(onLeft) drawRect.origin.x += (viewRect.size.width + VIEW_INNER_PADDING); //Move right
-			}
-
-			//Factor the width of this view into our total
-			width += viewWidth + VIEW_INNER_PADDING;
-		}		
-
-		//Padding goes last for left aligned icons
-		if(onLeft) width += VIEW_PADDING;
-	}
-	
-	return(width);
-}
+//- (float)displayViews:(NSArray *)viewArray inRect:(NSRect)drawRect onLeft:(BOOL)onLeft
+//{
+//	float					width = 0;
+//	NSEnumerator			*enumerator;
+//	id <AIListObjectView>	sideView;
+//	
+//	if(viewArray && [viewArray count]){
+//		//Padding goes first for right aligned icons
+//		if(!onLeft) width += VIEW_PADDING;
+//		
+//		//Size and draw all the contained views
+//		enumerator = [viewArray objectEnumerator];
+//		while(sideView = [enumerator nextObject]){
+//			float		viewWidth = [sideView widthForHeight:drawRect.size.height];
+//            NSRect		viewRect;
+//			
+//			//If a zero width rect is passed, skip any drawing
+//			if(drawRect.size.width != 0){
+//				//Create a destination rect for the icon
+//				viewRect = drawRect;
+//				viewRect.size.width = viewWidth;
+//				if(!onLeft) viewRect.origin.x = drawRect.origin.x + drawRect.size.width - viewRect.size.width; //Right align
+//				
+//				//Draw the icon
+//				[sideView drawInRect:viewRect];
+//				
+//				//Subtract the drawn area from the remaining rect
+//				drawRect.size.width -= (viewRect.size.width + VIEW_INNER_PADDING);
+//				if(onLeft) drawRect.origin.x += (viewRect.size.width + VIEW_INNER_PADDING); //Move right
+//			}
+//
+//			//Factor the width of this view into our total
+//			width += viewWidth + VIEW_INNER_PADDING;
+//		}		
+//
+//		//Padding goes last for left aligned icons
+//		if(onLeft) width += VIEW_PADDING;
+//	}
+//	
+//	return(width);
+//}
 
 //Returns the padding required for the caps of our label
 //- (float)labelEdgePaddingRequiredForLabelOfSize:(NSSize)backgroundSize

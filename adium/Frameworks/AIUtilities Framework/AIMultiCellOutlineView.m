@@ -36,27 +36,28 @@
 	rowOriginCache = nil;
 	cacheSize = 2;
 	entriesInCache = 0;
-
-	contentRowHeight = [self rowHeight];
-	groupRowHeight = [self rowHeight];
+	contentRowHeight = 0;
+	groupRowHeight = 0;
 }
 
-- (void)setContentRowHeight:(float)rowHeight{
-	contentRowHeight = rowHeight;
+- (void)dealloc
+{
+	[contentCell release];
+	[groupCell release];
+	[super dealloc];
+}
+
+- (void)setContentCell:(id)cell{
+	[contentCell release]; contentCell = [cell retain];
+	contentRowHeight = [contentCell cellSize].height;
 	[self resetRowHeightCache];
 }
 
-- (void)setGroupRowHeight:(float)rowHeight{
-	groupRowHeight = rowHeight;
+- (void)setGroupCell:(id)cell{
+	[groupCell release]; groupCell = [cell retain];
+	groupRowHeight = [groupCell cellSize].height;
 	[self resetRowHeightCache];
 }
-
-//- (void)setRowHeight:(float)rowHeight{
-//	contentRowHeight = rowHeight;
-//	groupRowHeight = rowHeight;
-//	[super setRowHeight:rowHeight];
-//	[self resetRowHeightCache];
-//}
 
 
 //Variable row heights -------------------------------------------------------------------------------------------------
@@ -104,6 +105,15 @@
 	}while(row < entriesInCache && rowOriginCache[row++] <= rect.origin.y + rect.size.height);
 	
 	return(range);
+}
+
+- (void)drawRow:(int)row clipRect:(NSRect)rect
+{
+	id		item = [self itemAtRow:row];
+	id		cell = ([self isExpandable:item] ? groupCell : contentCell);
+
+	[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
+	[cell drawWithFrame:[self frameOfCellAtColumn:0 row:row] inView:self];
 }
 
 
