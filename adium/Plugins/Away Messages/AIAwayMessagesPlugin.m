@@ -20,10 +20,10 @@
 #define AWAY_SPELLING_DEFAULT_PREFS		@"AwaySpellingDefaults"
 
 #define AWAY_MESSAGE_MENU_TITLE			AILocalizedString(@"Set Away Message",nil)
-#define AWAY_MESSAGE_MENU_TITLE_SHORT           AILocalizedString(@"Set Away",nil)
-#define	REMOVE_AWAY_MESSAGE_MENU_TITLE		AILocalizedString(@"Remove Away Message",nil)
-#define	CUSTOM_AWAY_MESSAGE_MENU_TITLE		AILocalizedString(@"Custom Message…",nil)
-#define AWAY_MENU_HOTKEY			@"y"
+#define AWAY_MESSAGE_MENU_TITLE_SHORT   AILocalizedString(@"Set Away",nil)
+#define	REMOVE_AWAY_MESSAGE_MENU_TITLE  AILocalizedString(@"Remove Away Message",nil)
+#define	CUSTOM_AWAY_MESSAGE_MENU_TITLE  AILocalizedString(@"Custom Message…",nil)
+#define AWAY_MENU_HOTKEY				@"y"
 
 @interface AIAwayMessagesPlugin (PRIVATE)
 - (void)accountPropertiesChanged:(NSNotification *)notification;
@@ -242,7 +242,7 @@
 {
     if (![NSApp isOnPantherOrBetter]) {
         //JAGUAR: It would be much better to update the menu in response to option being pressed, but I do not know
-	//of an easy way to do this :(
+		//of an easy way to do this :(
         [self _updateMenusToReflectAwayState:[self shouldConfigureForAway]]; //Update the away message menu
     }
     return(YES);
@@ -261,13 +261,15 @@
     NSString    *group = [[notification userInfo] objectForKey:@"Group"];
     NSString    *key = [[notification userInfo] objectForKey:@"Key"];
     
-    if(notification == nil || [group compare:PREF_GROUP_AWAY_MESSAGES] == 0){
+    if(notification == nil || [group isEqualToString:PREF_GROUP_AWAY_MESSAGES]){
 		//Rebuild the away menu
 		if([key compare:KEY_SAVED_AWAYS] == 0){
 			[self _updateAwaySubmenus];
 		}
 		
-    }else if(notification == nil || ([group compare:GROUP_ACCOUNT_STATUS] == 0 && [notification object] == nil)){
+    }
+	
+	if(notification == nil || ([group isEqualToString:GROUP_ACCOUNT_STATUS] && [notification object] == nil)){
 		if(!key || [key compare:@"AwayMessage"] == 0){
 			//Update our away menus
 			[self _updateMenusToReflectAwayState:[self shouldConfigureForAway]];
