@@ -8,14 +8,14 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 459 $ $Date: 2003/10/23 21:10:16 $ -->
+<!--$Rev: 473 $ $Date: 2003/11/09 06:56:53 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 String afterDate, beforeDate, from_sn, to_sn, contains_sn, hl;
-boolean showDisplay = true, showForm = false, showConcurrentUsers = false;
+boolean showDisplay = true, showForm = false, showConcurrentUsers = false, simpleViewStyle = false;
 
 Date today = new Date(System.currentTimeMillis());
 
@@ -25,6 +25,7 @@ from_sn = request.getParameter("from");
 to_sn = request.getParameter("to");
 contains_sn = request.getParameter("contains");
 String screennameDisplay = request.getParameter("screen_or_display");
+String viewStyle = request.getParameter("viewstyle");
 
 showForm = Boolean.valueOf(request.getParameter("form")).booleanValue();
 
@@ -54,6 +55,12 @@ if (screennameDisplay == null || screennameDisplay.equals("display")) {
     showDisplay = true;
 } else {
     showDisplay = false;
+}
+
+if (viewStyle != null && viewStyle.equals("simple")) {
+    simpleViewStyle = true;
+} else {
+    simpleViewStyle = false;
 }
 
 if (hl != null && hl.equals("")) {
@@ -127,6 +134,15 @@ String hlColor[] = {"#ff6","#a0ffff", "#9f9", "#f99", "#f69"};
                             value="display" id="disp" <% if (showDisplay)
                             out.print("checked=\"true\""); %> />
                                 <label for="disp">Show Alias/Display Name</label>
+                        </td>
+                        <td>
+                            <input type="radio" name="viewstyle" value="simple"
+                              id="simple" <% if (simpleViewStyle) out.print("checked=\"true\""); %> />
+                            <label for="simple">Simple View</label>
+                            <br />
+                            <input type="radio" name="viewstyle"
+                              value="complex" id="complex" <% if (!simpleViewStyle) out.print("checked=\"true\""); %> />
+                            <label for="complex">Complex View</label>
                         </td>
                     </tr>
                 </table>
@@ -265,6 +281,7 @@ try {
     rset = pstmt.executeQuery();
     
     /*
+     * Used to print query plans.
     out.println("<pre>");
     while(rset.next()) {
         out.println(rset.getString(1));
@@ -289,9 +306,10 @@ try {
     while (rset.next()) {
         if(!rset.getDate("message_date").equals(currentDate)) {
             currentDate = rset.getDate("message_date");
-            out.print("<tr><td></td>");
+            out.print("<tr>");
+            out.print("<td></td>");
             out.print("<td align=\"center\" bgcolor=\"teal\"" +
-            " background=\"images/transp-change.png\">");
+            " background=\"images/transp-change.png\" width=\"150\">");
             out.print("<font color=\"white\">" + currentDate.toString());
             out.print("</font></td>");
             out.print("</tr>");
@@ -341,8 +359,7 @@ try {
                 sb.append(m.group(2) + "</b>" + m.group(3));
                 oldIndex = m.end();
             }
-            sb.append(message.substring(oldIndex, 
-            message.length()));
+            sb.append(message.substring(oldIndex, message.length()));
 
             message = sb.toString();
         }
@@ -356,17 +373,23 @@ try {
         out.print("<td valign=\"top\" align=\"left\" bgcolor=\"" +
         cellColor + "\" id=\"" + rset.getInt("message_id") + "\">");
 
+        if(simpleViewStyle) {
+            out.print(rset.getTime("message_date") + " ");
+        }
+        
         out.print("<a href=\"index.jsp?from=" +
         rset.getString("sender_sn") + 
         "&to=" + rset.getString("recipient_sn") + 
         "&after=" + afterDate +
         "&before=" + beforeDate + "#" + rset.getInt("message_id") + "\" ");
+        
         if(!showDisplay) {
             out.print("title=\"" + rset.getString("sender_sn"));
         } else {
             out.print("title=\"" + rset.getString("sender_display"));
         }
         out.print("\">");
+        
         out.print("<font color=\"" + sent_color + "\">");
         if(showDisplay) {
             out.print(rset.getString("sender_display"));
@@ -385,14 +408,16 @@ try {
             }
             out.print("</font>");
         }
-        out.print("</td>");
-        out.print("<td valign=\"top\" align=\"right\" bgcolor=\"" + cellColor
-        + "\" width=\"150\">");
-        out.print(rset.getTime("message_date"));
-        out.print("</td>\n");
-
-        out.print("</tr><tr>");
-        out.print("<td colspan=\"2\" bgcolor=\"" + cellColor + "\">" + message + "</td>\n");
+        if(!simpleViewStyle) {
+            out.print("</td>");
+            out.print("<td valign=\"top\" align=\"right\" bgcolor=\"" + 
+                cellColor + "\" width=\"150\">");
+            out.print(rset.getTime("message_date"));
+            out.print("</td>\n");
+            out.print("</tr><tr>");
+            out.print("<td colspan=\"2\" bgcolor=\"" + cellColor + "\">");
+        }
+        out.print(" " + message + "</td>\n");
 
         out.print("</tr>\n");
     }
