@@ -20,27 +20,24 @@
     AIListGroup			*contactList;
     AISCLOutlineView	*contactListView;
 
-    NSTrackingRectTag	tooltipTrackingTag;
-    BOOL				trackingMouseMovedEvents;
-    
-    BOOL                isBorderless;
-    
     BOOL                horizontalResizingEnabled;
-    
-    NSTimer 			*tooltipTimer;
-	NSTimer				*tooltipMouseLocationTimer;
-    int 				tooltipCount;
 	NSPoint				lastMouseLocation;
+    
+	NSTimer				*tooltipMouseLocationTimer;
+	NSPoint				tooltipLocation;
+    NSTrackingRectTag	tooltipTrackingTag;        
+    int 				tooltipCount;
 
 	BOOL				inDrag;
 	NSArray				*dragItems;
-    
 }
 
 + (AISCLViewController *)contactListViewController;
 - (IBAction)performDefaultActionOnSelectedContact:(id)sender;
 - (NSView *)contactListView;
 - (void)view:(NSView *)inView didMoveToSuperview:(NSView *)inSuperview;
+- (void)view:(NSView *)inView willMoveToSuperview:(NSView *)inSuperview;
 - (NSMenu *)outlineView:(NSOutlineView *)outlineView menuForEvent:(NSEvent *)theEvent;
+- (void)hideTooltip;
 
 @end
