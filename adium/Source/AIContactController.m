@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.71 2004/01/09 13:31:31 adamiser Exp $
+// $Id: AIContactController.m,v 1.72 2004/01/09 18:17:28 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -192,11 +192,10 @@
 // Delayed: Delays sorting and redrawing to prevent redundancy when making a large number of changes
 - (void)delayListObjectNotifications
 {
-#warning (Intentional) Event delays are disabled for now, pending an investigation of their usefulness :)
-//    if(!delayedUpdateTimer){
-//			updatesAreDelayed = YES;
-//        	delayedUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:UPDATE_CLUMP_INTERVAL target:self selector:@selector(_performDelayedUpdates:) userInfo:nil repeats:YES] retain];
-//    }
+    if(!delayedUpdateTimer){
+		updatesAreDelayed = YES;
+		delayedUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:UPDATE_CLUMP_INTERVAL target:self selector:@selector(_performDelayedUpdates:) userInfo:nil repeats:YES] retain];
+    }
 }
 
 //Remote grouping of a list object has changed
@@ -410,13 +409,17 @@
 //Sort an individual object
 - (void)sortListObject:(AIListObject *)inObject
 {
-	NSEnumerator	*enumerator = [[inObject containingGroups] objectEnumerator];
-	AIListGroup		*group;
-	
-	//Sort all the groups containing this object
-	while(group = [enumerator nextObject]){		
-		[group sortListObject:inObject sortController:activeSortController];
-		[[owner notificationCenter] postNotificationName:Contact_OrderChanged object:group];
+	if(updatesAreDelayed){
+		delayedStatusChanges++;
+	}else{
+		NSEnumerator	*enumerator = [[inObject containingGroups] objectEnumerator];
+		AIListGroup		*group;
+		
+		//Sort all the groups containing this object
+		while(group = [enumerator nextObject]){
+			[group sortListObject:inObject sortController:activeSortController];
+			[[owner notificationCenter] postNotificationName:Contact_OrderChanged object:group];
+		}
 	}
 }
 

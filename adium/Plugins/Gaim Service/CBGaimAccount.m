@@ -43,11 +43,6 @@
 // Subclasses must override this
 - (const char*)protocolPlugin { return NULL; }
 
-
-#warning remove gets called on disconnect for all the buddies
-#warning we end up w/ negative group counts
-
-
 //
 - (void)_setInstantMessagesWithContact:(AIListContact *)contact enabled:(BOOL)enable
 {
@@ -63,8 +58,6 @@
 												[NSArray arrayWithObject:@"Enabled"] forKey:@"Keys"]];            
 	}
 }
-	
-    
 
 
 /************************/
@@ -782,11 +775,14 @@
 {
     //We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
+	[[adium contactController] delayListObjectNotifications];
+
     //Tell libgaim to disconnect
     if(gaim_account_is_connected(account)){
         gaim_account_disconnect(account); 
     }
 }
+
 /*****************************/
 /* accountConnection methods */
 /*****************************/
@@ -847,6 +843,7 @@
     
     //Silence updates
     [self silenceAllHandleUpdatesForInterval:18.0];
+	[[adium contactController] delayListObjectNotifications];
     
     //Set our initial status
     [self updateAllStatusKeys];

@@ -531,10 +531,11 @@
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
 	
     //Flush all our handle status flags
+	[[adium contactController] delayListObjectNotifications];
 #warning Adam: This is dreadfully inefficient.  Is there a faster solution to disconnecting?
     enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
     while((contact = [enumerator nextObject])){
-        [self removeAllStatusFlagsFromContact:contact];
+		[self removeAllStatusFlagsFromContact:contact];
 		[contact setRemoteGroupName:nil forAccount:self];
     }
 	
@@ -736,7 +737,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.108 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.109 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1631,6 +1632,7 @@
 	while(key = [enumerator nextObject]){
 		[contact setStatusObject:nil withOwner:self forKey:key notify:NO];
 	}
+	[contact notifyOfChangedStatusSilently:YES];
 }
 
 // Dealloc

@@ -39,14 +39,19 @@
 //Pass nil to indicate an account no longer owns this object
 - (void)setRemoteGroupName:(NSString *)groupName forAccount:(AIAccount *)inAccount
 {
-	NSString	*oldGroup = [[remoteGroups objectWithOwner:inAccount] retain];
-	
-	//Change it here
-	[remoteGroups setObject:groupName withOwner:inAccount];
-	
-	//Tell core it changed
-	[[adium contactController] listObjectRemoteGroupingChanged:self oldGroupName:oldGroup];
-	[oldGroup release];
+	NSString	*oldGroup = [remoteGroups objectWithOwner:inAccount];
+
+	if(groupName != nil || oldGroup != nil){ //If both are nil, we can skip this operation
+		[oldGroup retain];
+
+		//Change it here
+		[remoteGroups setObject:groupName withOwner:inAccount];
+		
+		//Tell core it changed
+		[[adium contactController] listObjectRemoteGroupingChanged:self oldGroupName:oldGroup];
+
+		[oldGroup release];
+	}
 }
 
 - (NSString *)remoteGroupNameForAccount:(AIAccount *)inAccount

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.45 2004/01/08 21:19:50 adamiser Exp $
+// $Id: AIAccountController.m,v 1.46 2004/01/09 18:17:28 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -406,64 +406,6 @@
     return(destIndex);
 }
 
-
-//User Icons -------------------------------------------------------------------------------------------------------
-#pragma mark User Icons
-//User icon methods
-//- (void)setUserIcon:(NSImage *)inImage forAccount:(AIAccount *)account
-//{
-//#warning ** Doing icons with custom code, we should try to do them with the regular code **
-///*    if([[account supportedPropertyKeys] containsObject:@"UserIcon"]){
-//        [account statusForKey:@"UserIcon" willChangeTo:inImage];
-//    }*/
-//}
-    
-//- (void)setDefaultUserIcon:(NSImage *)inImage
-//{
-///*    //keep track of the image
-//    [defaultUserIcon release]; defaultUserIcon = nil;
-//    defaultUserIcon = [inImage retain];
-//    
-//    //cache the image to a file
-//    if (defaultUserIcon) {
-//        [defaultUserIconFilename release];
-//        defaultUserIconFilename = [[self _defaultIconCachePath] retain];
-//        NSData      *iconData = [defaultUserIcon JPEGRepresentation];
-//        
-//        [iconData writeToFile:defaultUserIconFilename atomically:YES];
-//    } else {
-//        defaultUserIconFilename = nil;       
-//    }
-//    
-//    NSEnumerator	*enumerator;
-//    AIAccount           *account;
-//    
-//    //Notify all accounts that support DefaultBuddyImage so they can inform their servers
-//    enumerator = [accountArray objectEnumerator];
-//    while((account = [enumerator nextObject])){
-//        //Tell concerned accounts about the NSImage
-//        if([[account supportedPropertyKeys] containsObject:@"DefaultUserIcon"]){
-//            [account statusForKey:@"DefaultUserIcon" willChangeTo:defaultUserIcon];
-//        }
-//        //Tell concerned accounts about the filename
-//        if([[account supportedPropertyKeys] containsObject:@"DefaultUserIconFilename"]){
-//            [account statusForKey:@"DefaultUserIconFilename" willChangeTo:defaultUserIconFilename];
-//        }
-//    }*/
-//}
-//- (NSImage *)defaultUserIcon
-//{
-//    return defaultUserIcon;   
-//}
-//- (NSString *)defaultUserIconFilename
-//{
-//    return defaultUserIconFilename;
-//}
-//- (NSString *)_defaultIconCachePath
-//{
-//    return([[DEFAULT_ICON_CACHE_PATH stringByAppendingPathComponent:@"UserIcon_Default"] stringByExpandingTildeInPath]);
-//}
-    
 
 //Preferred source account memory --------------------------------------------------------------------------------------
 #pragma mark Preferred Source Accounts
