@@ -13,14 +13,16 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /** 
- * $Revision: 1.42 $
- *  $Date: 2004/07/28 02:47:06 $
+ * $Revision: 1.43 $
+ *  $Date: 2004/08/02 07:06:07 $
  *  $Author#
  *
  **/
 
 //First, as other objects are generally subclasses of AIObject
 #import "AIObject.h"
+
+#import "ESObjectWithStatus.h"
 
 #import "AIAccount.h"
 #import "AIAccountViewController.h"
