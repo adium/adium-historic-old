@@ -10,4 +10,6 @@
 	NSMenuItem  *editBlockList;
 }
 
+- (IBAction)blockContact:(id)sender;
+- (IBAction)blockContextContact:(id)sender;
 @end

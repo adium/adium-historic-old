@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.55 2004/04/29 04:28:48 evands Exp $
+//$Id: AIPluginController.m,v 1.56 2004/05/03 09:34:20 ramoth4 Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -48,7 +48,7 @@ ESFastUserSwitchingSupportPlugin, ESOpenMessageWindowContactAlertPlugin, ESSendM
 ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessagePlugin,
 JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin,
 AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersionChecker, AIContactStatusEventsPlugin,
-SHOutputDeviceControlPlugin, SHLinkManagementPlugin;
+SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin;
 
 @implementation AIPluginController
 //init
@@ -99,16 +99,17 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin;
 	[self loadPluginWithClass:[AITextToolbarItemsPlugin class]];
 	[self loadPluginWithClass:[AITypingNotificationPlugin class]];
 	[self loadPluginWithClass:[AIVolumeControlPlugin class]];
-	[self loadPluginWithClass:[CPFVersionChecker class]];
 	[self loadPluginWithClass:[BGThemesPlugin class]];
 	[self loadPluginWithClass:[CBActionSupportPlugin class]];
 	[self loadPluginWithClass:[CBContactCountingDisplayPlugin class]];
     [self loadPluginWithClass:[CBURLHandlingPlugin class]];
+    [self loadPluginWithClass:[CPFVersionChecker class]];
 	[self loadPluginWithClass:[CSDisconnectAllPlugin class]];
 	[self loadPluginWithClass:[DCMessageContextDisplayPlugin class]];
 	[self loadPluginWithClass:[ErrorMessageHandlerPlugin class]];
 	[self loadPluginWithClass:[ESAddressBookIntegrationPlugin class]];
 	[self loadPluginWithClass:[ESAnnouncerPlugin class]];
+    [self loadPluginWithClass:[ESBlockingPlugin class]];
 	[self loadPluginWithClass:[ESContactAlertsPlugin class]];
 	[self loadPluginWithClass:[ESContactClientPlugin class]];
 	[self loadPluginWithClass:[ESContactListWindowHandlingPlugin class]];

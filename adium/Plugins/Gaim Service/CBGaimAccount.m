@@ -1452,8 +1452,10 @@ static BOOL didInitSSL = NO;
 {
 	//Create a fresh version of the account
     account = gaim_account_new([UID UTF8String], [self protocolPlugin]);
+    
+	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
 	
-	gaim_accounts_add(account);
+    gaim_accounts_add(account);
 	   
 	[(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
 	
