@@ -37,13 +37,6 @@
 	return self;
 }
 
-- (void)dealloc
-{	
-	[self fireImmediately];
-	
-	[super dealloc];
-}
-
 - (void)fireImmediately
 {
     if(delayedChangesTimer){
