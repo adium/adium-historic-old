@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Classes</key>
+	<dict>
+		<key>AIAccount</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>image</key>
+				<dict>
+					<key>Description</key>
+					<string>An image representing this account's service.</string>
+					<key>Name</key>
+					<string>service image</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>A messaging account. Accounts inherit all capabilities of list objects.</string>
+			<key>Name</key>
+			<string>account</string>
+			<key>PluralName</key>
+			<string>accounts</string>
+		</dict>
+		<key>AIChat</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>chatImage</key>
+				<dict>
+					<key>Description</key>
+					<string>An image representing this chat.</string>
+					<key>Name</key>
+					<string>chat image</string>
+				</dict>
+				<key>dateOpened</key>
+				<dict>
+					<key>Description</key>
+					<string>The date this chat was opened.</string>
+					<key>Name</key>
+					<string>date opened</string>
+				</dict>
+				<key>listObject</key>
+				<dict>
+					<key>Description</key>
+					<string>The contact with which this chat is taking place.  If the chat is with multiple contacts, this will be NULL.</string>
+					<key>Name</key>
+					<string>contact</string>
+				</dict>
+				<key>name</key>
+				<dict>
+					<key>Description</key>
+					<string>The name of this chat (for a one-on-one chat, this is the same as the contact's display name.</string>
+					<key>Name</key>
+					<string>chat name</string>
+				</dict>
+				<key>uniqueChatID</key>
+				<dict>
+					<key>Description</key>
+					<string>A unique identifier for this chat.</string>
+					<key>Name</key>
+					<string>ID</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>A chat.</string>
+			<key>Name</key>
+			<string>chat</string>
+			<key>PluralName</key>
+			<string>chats</string>
+			<key>SupportedCommands</key>
+			<dict>
+				<key>AdiumSuite.Send</key>
+				<string>sendScriptCommand:</string>
+			</dict>
+			<key>ToManyRelationships</key>
+			<dict>
+				<key>participatingListObjects</key>
+				<dict>
+					<key>Description</key>
+					<string>All contacts participating in this chat.</string>
+					<key>Name</key>
+					<string>participating contacts</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>AIContentMessage</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>isAutoreply</key>
+				<dict>
+					<key>Description</key>
+					<string>Is this message an automatic reply?</string>
+					<key>Name</key>
+					<string>is autoreply</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>A content object containing a message to or from a chat. Inherits from content.</string>
+			<key>Name</key>
+			<string>content message</string>
+			<key>PluralName</key>
+			<string>content messages</string>
+		</dict>
+		<key>AIContentObject</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>chat</key>
+				<dict>
+					<key>Description</key>
+					<string>The chat in which this content resides.</string>
+					<key>Name</key>
+					<string>content chat</string>
+				</dict>
+				<key>date</key>
+				<dict>
+					<key>Description</key>
+					<string>The date this content was received.</string>
+					<key>Name</key>
+					<string>content date</string>
+				</dict>
+				<key>destination</key>
+				<dict>
+					<key>Description</key>
+					<string>The destination of this content.</string>
+					<key>Name</key>
+					<string>destination</string>
+				</dict>
+				<key>displayContent</key>
+				<dict>
+					<key>Description</key>
+					<string>Should this message be displayed in its chat?</string>
+					<key>Name</key>
+					<string>should display</string>
+				</dict>
+				<key>filterContent</key>
+				<dict>
+					<key>Description</key>
+					<string>Should this message be filtered by message filters?</string>
+					<key>Name</key>
+					<string>should filter</string>
+				</dict>
+				<key>isOutgoing</key>
+				<dict>
+					<key>Description</key>
+					<string>Is this content outgoing?.</string>
+					<key>Name</key>
+					<string>is outgoing</string>
+				</dict>
+				<key>messageHTML</key>
+				<dict>
+					<key>Description</key>
+					<string>The message of this content, in HTML.</string>
+					<key>Name</key>
+					<string>HTML message</string>
+				</dict>
+				<key>messageString</key>
+				<dict>
+					<key>Description</key>
+					<string>The message of this content, in plain text (losing all formatting and embedded information).</string>
+					<key>Name</key>
+					<string>plainText message</string>
+				</dict>
+				<key>sendContent</key>
+				<dict>
+					<key>Description</key>
+					<string>Should this message be sent? This is relevant only if it isOutgoing is TRUE.</string>
+					<key>Name</key>
+					<string>should send</string>
+				</dict>
+				<key>source</key>
+				<dict>
+					<key>Description</key>
+					<string>The source of this content.</string>
+					<key>Name</key>
+					<string>source</string>
+				</dict>
+				<key>trackContent</key>
+				<dict>
+					<key>Description</key>
+					<string>Should this message be tracked? For example, should Adium alert the user if it has not been viewed?</string>
+					<key>Name</key>
+					<string>should track</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>A basic unit of content.</string>
+			<key>Name</key>
+			<string>content</string>
+			<key>PluralName</key>
+			<string>contents</string>
+		</dict>
+		<key>AIInterfaceController</key>
+		<dict>
+			<key>Description</key>
+			<string>The interfaceController, which manages the interface presented to the user.</string>
+			<key>Name</key>
+			<string>interface controller</string>
+			<key>PluralName</key>
+			<string>interface controllers</string>
+			<key>Attributes</key>
+			<dict>
+				<key>activeChat</key>
+				<dict>
+					<key>Description</key>
+					<string>The activeChat - that is, the one which is foremost and has focus.</string>
+					<key>Name</key>
+					<string>active chat</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>AIListContact</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>account</key>
+				<dict>
+					<key>Description</key>
+					<string>The account on which this contact resides.</string>
+					<key>Name</key>
+					<string>owning account</string>
+				</dict>
+				<key>visible</key>
+				<dict>
+					<key>Description</key>
+					<string>Is this contact visible in the contact list?</string>
+					<key>Name</key>
+					<string>visible</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>A contact (buddy).  Contacts inherit all capabilities of list objects.</string>
+			<key>Name</key>
+			<string>contact</string>
+			<key>PluralName</key>
+			<string>contacts</string>
+		</dict>
+		<key>AIListObject</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>displayName</key>
+				<dict>
+					<key>Description</key>
+					<string>The name, potentially specified by the user or via the address book, to display for this object.</string>
+					<key>Name</key>
+					<string>display name</string>
+				</dict>
+				<key>displayServiceID</key>
+				<dict>
+					<key>Description</key>
+					<string>Service (such as AIM, ICQ, or MSN) of this object.</string>
+					<key>Name</key>
+					<string>serviceID</string>
+				</dict>
+				<key>formattedUID</key>
+				<dict>
+					<key>Description</key>
+					<string>UID (screenname, user ID, nick) of this object.</string>
+					<key>Name</key>
+					<string>UID</string>
+				</dict>
+				<key>idleTime</key>
+				<dict>
+					<key>Description</key>
+					<string>Time in seconds this contact or account has been idle.</string>
+					<key>Name</key>
+					<string>idle time</string>
+				</dict>
+				<key>longDisplayName</key>
+				<dict>
+					<key>Description</key>
+					<string>A possibly longer form of the name to display for this object, which has no length restrictions and may include the UID of this object.</string>
+					<key>Name</key>
+					<string>long display name</string>
+				</dict>
+				<key>notes</key>
+				<dict>
+					<key>Description</key>
+					<string>Notes on this object.</string>
+					<key>Name</key>
+					<string>notes</string>
+				</dict>
+				<key>statusSummary</key>
+				<dict>
+					<key>Description</key>
+					<string>The status of this contact or account.</string>
+					<key>Name</key>
+					<string>status</string>
+				</dict>
+				<key>statusMessage</key>
+				<dict>
+					<key>Description</key>
+					<string>A message describing the status of this contact or account ('away message' in AIM terminology).</string>
+					<key>Name</key>
+					<string>status message</string>
+				</dict>
+				<key>uniqueObjectID</key>
+				<dict>
+					<key>Description</key>
+					<string>A unique identifier for this object.</string>
+					<key>Name</key>
+					<string>ID</string>
+				</dict>
+				<key>userIcon</key>
+				<dict>
+					<key>Description</key>
+					<string>An image for this contact or account.</string>
+					<key>Name</key>
+					<string>image</string>
+				</dict>
+				<key>online</key>
+				<dict>
+					<key>Description</key>
+					<string>Is this account or contact online?.</string>
+					<key>Name</key>
+					<string>online</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>A contact or account.</string>
+			<key>Name</key>
+			<string>list object</string>
+			<key>PluralName</key>
+			<string>list objects</string>
+		</dict>
+		<key>ESApplescriptabilityController</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>defaultImageData</key>
+				<dict>
+					<key>Description</key>
+					<string>The default image used for my accounts' user images if no other is specified.</string>
+					<key>Name</key>
+					<string>default image</string>
+				</dict>
+				<key>interfaceController</key>
+				<dict>
+					<key>Description</key>
+					<string>The interfaceController, which manages the interface presented to the user.</string>
+					<key>Name</key>
+					<string>interfaceController</string>
+				</dict>
+				<key>myIdleTime</key>
+				<dict>
+					<key>Description</key>
+					<string>The amount of time that I have been idle.</string>
+					<key>Name</key>
+					<string>my idle time</string>
+				</dict>
+				<key>myStatus</key>
+				<dict>
+					<key>Description</key>
+					<string>My status on all accounts.</string>
+					<key>Name</key>
+					<string>my status</string>
+				</dict>
+				<key>myStatusMessage</key>
+				<dict>
+					<key>Description</key>
+					<string>My status message on all accounts.</string>
+					<key>Name</key>
+					<string>my status message</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Lowest-level Applescript bridge to the Adium application, and the default subcontainer.</string>
+			<key>Name</key>
+			<string>Adium controller</string>
+			<key>PluralName</key>
+			<string>Adium controllers</string>
+			<key>ToManyRelationships</key>
+			<dict>
+				<key>accounts</key>
+				<dict>
+					<key>Description</key>
+					<string>All accounts.</string>
+					<key>Name</key>
+					<string>accounts</string>
+				</dict>
+				<key>chats</key>
+				<dict>
+					<key>Description</key>
+					<string>All chats.</string>
+					<key>Name</key>
+					<string>chats</string>
+				</dict>
+				<key>contacts</key>
+				<dict>
+					<key>Description</key>
+					<string>All contacts for all connected accounts.</string>
+					<key>Name</key>
+					<string>contacts</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>NSApplication</key>
+		<dict>
+			<key>Description</key>
+			<string>The Adium X application. To access controllers besides the default subcontainer, put "the first" before the controller name even though there is only one.</string>
+			<key>Name</key>
+			<string>application</string>
+			<key>PluralName</key>
+			<string>applications</string>
+			<key>ToOneRelationships</key>
+			<dict>
+				<key>applescriptabilityController</key>
+				<dict>
+					<key>Description</key>
+					<string>Default subcontainer - automatically accessed when sending messages to the Adium application.</string>
+					<key>Name</key>
+					<string>Adium controller</string>
+				</dict>
+				<key>interfaceController</key>
+				<dict>
+					<key>Description</key>
+					<string>The interfaceController, which manages the interface presented to the user.</string>
+					<key>Name</key>
+					<string>interface controller</string>
+				</dict>
+			</dict>
+		</dict>
+	</dict>
+	<key>Commands</key>
+	<dict>
+		<key>Connect</key>
+		<dict>
+			<key>Description</key>
+			<string>Request that an account connect to its service. If the account password is not in the keychain the user will be prompted to enter one.</string>
+			<key>Name</key>
+			<string>connect</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>an account</string>
+			</dict>
+		</dict>
+		<key>Disconnect</key>
+		<dict>
+			<key>Description</key>
+			<string>Disconnect an account, or all accounts if no account is specified.</string>
+			<key>Name</key>
+			<string>disconnect</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>an account</string>
+			</dict>
+		</dict>
+		<key>Send</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>account</key>
+				<dict>
+					<key>Description</key>
+					<string>An account with which to originate the message (if no account is specified, the best available account will be automatically determined).</string>
+					<key>Name</key>
+					<string>on account</string>
+				</dict>
+				<key>autoreply</key>
+				<dict>
+					<key>Description</key>
+					<string>YES if the message should be tagged as an autoreply (if supported by the service - valid only if sending a textual message).</string>
+					<key>Name</key>
+					<string>autoreply</string>
+				</dict>
+				<key>filePath</key>
+				<dict>
+					<key>Description</key>
+					<string>Full path to a file to send.  Sending of directories is not supported at this time.</string>
+					<key>Name</key>
+					<string>file</string>
+				</dict>
+				<key>message</key>
+				<dict>
+					<key>Description</key>
+					<string>The message to send, which may be HTML-encoded.</string>
+					<key>Name</key>
+					<string>message</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>Send a message or file.</string>
+			<key>Name</key>
+			<string>send</string>
+			<key>UnnamedArgument</key>
+			<dict>
+				<key>Description</key>
+				<string>a contact or chat to which to send</string>
+			</dict>
+		</dict>
+	</dict>
+	<key>Description</key>
+	<string>commands and classes for Adium scripting.</string>
+	<key>Enumerations</key>
+	<dict>
+		<key>AIStatusSummary</key>
+		<dict>
+			<key>Available</key>
+			<dict>
+				<key>Name</key>
+				<string>available</string>
+			</dict>
+			<key>Away</key>
+			<dict>
+				<key>Name</key>
+				<string>away</string>
+			</dict>
+			<key>Away and Idle</key>
+			<dict>
+				<key>Name</key>
+				<string>away and idle</string>
+			</dict>
+			<key>Idle</key>
+			<dict>
+				<key>Name</key>
+				<string>idle</string>
+			</dict>
+			<key>Offline</key>
+			<dict>
+				<key>Name</key>
+				<string>offline</string>
+			</dict>
+			<key>Unknown</key>
+			<dict>
+				<key>Name</key>
+				<string>unknown</string>
+			</dict>
+		</dict>
+		<key>ConnectionStatus</key>
+		<dict>
+			<key>Connected</key>
+			<dict>
+				<key>Name</key>
+				<string>connected</string>
+			</dict>
+			<key>Connecting</key>
+			<dict>
+				<key>Name</key>
+				<string>connecting</string>
+			</dict>
+			<key>Disconnected</key>
+			<dict>
+				<key>Name</key>
+				<string>disconnected</string>
+			</dict>
+			<key>Disconnecting</key>
+			<dict>
+				<key>Name</key>
+				<string>disconnecting</string>
+			</dict>
+		</dict>
+	</dict>
+	<key>Name</key>
+	<string>Adium Suite</string>
+</dict>
+</plist>
