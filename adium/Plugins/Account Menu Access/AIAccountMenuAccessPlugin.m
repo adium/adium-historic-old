@@ -57,6 +57,7 @@
     [accountMenuArray release];
     
     //Stop observing/receiving notifications
+    [[adium contactController] unregisterListObjectObserver:self];
     [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
