@@ -159,7 +159,6 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     int currentRow = [instance currentRow];
     if (currentRow != -1)
     {
-        [tableView_actions deselectRow:currentRow];
 	[instance deleteEventAction:nil];
 	[tableView_actions reloadData];
 	if (currentRow < [instance count]){
@@ -266,6 +265,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotfication
 {
     int row = [tableView_actions selectedRow];
+
     [instance currentRowIs:row]; //tell the instance which row is selected
 
     if (row != -1) //a row is selected
