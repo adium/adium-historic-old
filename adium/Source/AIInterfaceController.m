@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.90 2004/07/21 18:26:31 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.91 2004/07/22 13:59:21 adamiser Exp $
 
 #import "AIInterfaceController.h"
 #import "AIContactListWindowController.h"
@@ -147,6 +147,7 @@
 		[[owner notificationCenter] removeObserver:self name:Contact_OrderChanged object:nil];
 
 		//Update prefs
+		tabbedChatting = [[prefDict objectForKey:KEY_TABBED_CHATTING] boolValue];
 		groupChatsByContactGroup = [[prefDict objectForKey:KEY_GROUP_CHATS_BY_GROUP] boolValue];
 		arrangeChats = [[prefDict objectForKey:KEY_SORT_CHATS] boolValue];
 
@@ -252,7 +253,17 @@
 			containerID = @"Messages";
 		}
 	}
+	
+#warning Temporary setup for multiple windows
+	if(!tabbedChatting){
+		if([inChat listObject]){
+			containerID = [[inChat listObject] uniqueObjectID];
+		}else{
+			containerID = [inChat name];
+		}
+	}
 
+	
 	//Determine the correct placement for this chat within the container
 	if(arrangeChats){
 		index = [self indexForInsertingChat:inChat intoContainerWithID:containerID];

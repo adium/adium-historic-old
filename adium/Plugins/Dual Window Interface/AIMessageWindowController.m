@@ -117,7 +117,7 @@
 - (void)windowDidLoad
 {
     //Restore window position
-    NSString *savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:[self _frameSaveKey]];
+    NSString *savedFrame = [[adium preferenceController] preferenceForKey:[self _frameSaveKey] group:PREF_GROUP_WINDOW_POSITIONS];
     if(savedFrame) [[self window] setFrameFromString:savedFrame];
 	NSLog(@"load (%@) %@", [self _frameSaveKey], savedFrame);
     //Remember the initial tab height
@@ -142,7 +142,8 @@
 }
 - (BOOL)shouldCascadeWindows
 {
-	return(NO);
+	//Cascade if we have no frame
+	return([[adium preferenceController] preferenceForKey:[self _frameSaveKey] group:PREF_GROUP_WINDOW_POSITIONS] == nil);
 }
 
 //
@@ -201,7 +202,7 @@
 //
 - (void)preferencesChanged:(NSNotification *)notification
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]) {
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]){
         NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 				
 		alwaysShowTabs = ![[preferenceDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
@@ -211,6 +212,11 @@
 		[self updateTabBarVisibilityAndAnimate:(notification != nil)];
 		[self _updateWindowTitleAndIcon];
     }
+	
+#warning Temporary setup for multiple windows
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_INTERFACE]){
+		if(![[[adium preferenceController] preferenceForKey:KEY_TABBED_CHATTING group:PREF_GROUP_INTERFACE] boolValue]) alwaysShowTabs = NO;
+	}
 }
 
 - (void)updateIconForTabViewItem:(AIMessageTabViewItem *)tabViewItem
@@ -330,8 +336,8 @@
 //Update our window title
 - (void)_updateWindowTitleAndIcon
 {
-	NSString				*title;
-	AIMessageTabViewItem	*label = [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] label];
+	NSString	*label = [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] label];
+	NSString	*title;
 	
 	//Window Title
     if([tabView_messages numberOfTabViewItems] == 1){

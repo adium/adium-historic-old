@@ -140,6 +140,7 @@
 	
 	AIChat	*activeChat;
 	
+	BOOL	tabbedChatting;
 	
 	
 	
