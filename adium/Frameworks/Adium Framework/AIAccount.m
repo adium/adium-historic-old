@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.69 2004/07/22 16:46:17 adamiser Exp $
+// $Id: AIAccount.m,v 1.70 2004/07/27 18:49:46 evands Exp $
 
 #import "AIAccount.h"
 
@@ -256,7 +256,8 @@
 				
             }
         }else{
-            if(areOnline && ![[self statusObjectForKey:@"Disconnecting"] boolValue]){
+            if((areOnline || ([[self statusObjectForKey:@"Connecting"] boolValue])) && 
+			   (![[self statusObjectForKey:@"Disconnecting"] boolValue])){
                 //Disconnect
                 [self disconnect];
             }
@@ -478,6 +479,34 @@
 {
 	[silenceAllContactUpdatesTimer release]; silenceAllContactUpdatesTimer = nil;
     silentAndDelayed = NO;
+}
+
+#pragma mark Key-Value Pairing
+- (NSData *)userIcon
+{
+	return([self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]);	
+}
+- (void)setUserIcon:(NSData *)inData
+{
+	[self setPreference:inData
+				 forKey:KEY_USER_ICON
+				  group:GROUP_ACCOUNT_STATUS];
+}
+
+- (NSArray *)contacts
+{
+	return ([[adium contactController] allContactsInGroup:nil
+												subgroups:YES
+												onAccount:self]);
+}
+
+#pragma mark Applescript Commands
+- (void)connectScriptCommand:(NSScriptCommand *)command {
+	[self setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];	
+}
+
+- (void)disconnectScriptCommand:(NSScriptCommand *)command {
+	[self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];	
 }
 
 @end
