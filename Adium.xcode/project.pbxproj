@@ -11298,7 +11298,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "## Fix Growl-WithInstaller.framework symlinks\n\ncd \"$SRCROOT/Frameworks/Growl-WithInstaller.framework\"\necho $PWD\n\n#current\nif [ '!' -d Versions/Current ]; then\n\tmkdir Versions/Current\nfi\n\nln -sf ../../Versions/A/Headers Versions/Current/Headers\nln -sf ../../Versions/A/Growl-WithInstaller Versions/Current/Growl-WithInstaller\nln -sf ../../Versions/A/Resources Versions/Current/Resources\n\n#Root\nif ([ -d Headers ]); then\n\trm -rf Headers\nfi\nln -sf Versions/Current/Headers Headers\n\nln -sf Versions/Current/Growl-WithInstaller Growl-WithInstaller\n\nif ([ -d Resources ]); then\n\trm -rf Resources\nfi\nln -sf Versions/Current/Resources Resources\n";
+			shellScript = "## Fix Growl-WithInstaller.framework symlinks\n\n#Versions\ncd \"$SRCROOT/Frameworks/Growl-WithInstaller.framework\"\nif ([ -e Versions/Current ]); then\n\trm -rf Versions/Current\nfi\n\ncd Versions\nln -sf $FRAMEWORK_VERSION Current\ncd \"$OLDPWD\"\n\n#Root\nln -sf Versions/Current/Headers   Headers\nln -sf Versions/Current/Growl-WithInstaller   Growl-WithInstaller\nln -sf Versions/Current/Resources Resources\n";
 		};
 		34EF54A107CE8E4700A685F1 = {
 			isa = PBXFileReference;
