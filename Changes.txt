@@ -16,6 +16,8 @@ Version 0.72
 - (Jabber) Fixed issue with messages appearing gray.
 - (Jabber) Fixed issue with % in Jabber IDs
 - (Rendezvous) Improved behavior when changing IPs or locations
+- (MSN) Fixed a new sporadic crash
+- Updated to libgaim 1.0.3
 
 Version 0.71 (11/01/2004)
 - Fixed issues with "Systemwide HTTP/SOCKS4/SOCKS5" proxy settings 
