@@ -87,11 +87,6 @@ static	NSImage						*adiumRedHighlightImage = nil;
         [statusItem setMenu:theMenu];
         [theMenu setDelegate:self];
 
-		if([statusItem respondsToSelector:@selector(setDoubleAction:)]){
-			[statusItem setTarget:self];
-			[statusItem setDoubleAction:@selector(activateAdium:)];
-		}
-
         //Setup for unviewed content catching
         accountMenuItemsArray = [[NSMutableArray alloc] init];
         unviewedObjectsArray = [[NSMutableArray alloc] init];
