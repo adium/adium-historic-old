@@ -27,23 +27,15 @@
             OUTLETS = {
                 "checkBox_available" = NSButton; 
                 "checkBox_away" = NSButton; 
-                "checkBox_colorLabels" = NSButton; 
-                "checkBox_fadeIn" = NSButton; 
-                "checkBox_fadeOut" = NSButton; 
                 "checkBox_firstMessage" = NSButton; 
                 "checkBox_idle" = NSButton; 
-                "checkBox_imageBadges" = NSButton; 
                 "checkBox_includeText" = NSButton; 
-                "checkBox_nameLabels" = NSButton; 
                 "checkBox_noIdle" = NSButton; 
                 "checkBox_offline" = NSButton; 
                 "checkBox_online" = NSButton; 
                 "checkBox_showAway" = NSButton; 
                 "checkBox_showBezel" = NSButton; 
                 "checkBox_showHidden" = NSButton; 
-                "popUp_background" = NSPopUpButton; 
-                "popUp_position" = NSPopUpButton; 
-                "popUp_size" = NSPopUpButton; 
                 "slider_duration" = NSSlider; 
             }; 
             SUPERCLASS = AIPreferencePane; 

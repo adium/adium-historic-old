@@ -8,18 +8,18 @@
 
 #import "JSCEventBezelWindow.h"
 
+@interface JSCEventBezelWindow (PRIVATE)
+- (void)stopTimer;
+@end
+
 @implementation JSCEventBezelWindow
 
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag
 {
-    NSWindow *result = [super initWithContentRect:contentRect styleMask:NSBorderlessWindowMask  backing:NSBackingStoreBuffered defer:NO];
+    NSWindow *result = [super initWithContentRect:contentRect styleMask:NSBorderlessWindowMask  backing:NSBackingStoreBuffered defer:flag];
     
-    fadingOut = NO;
-    fadingIn = NO;
-    doFadeIn = NO;
-    doFadeOut = YES;
-    appWasHidden = NO;
-    
+    onScreen = NO;
+    [self setFadeTimer:nil];
     displayDuration = 3;
     
     return result;
@@ -32,61 +32,42 @@
 
 - (void)showBezelWindow
 {
-    if (doFadeIn && !fadingOut) {
-        [self setAlphaValue:0.0];
-        [self setFadingOut:NO];
-        [self setFadingIn:YES];
-        [self setFadeTimer: [NSTimer scheduledTimerWithTimeInterval:0.05
-                                                             target:self
-                                                           selector:@selector(fadeIn:)
-                                                           userInfo:nil
-                                                            repeats:YES]];
-    } else {
-        [self setAlphaValue:1.0];
-        [self startTimer];
-    }
+	[self setAlphaValue:1.0];
+	[self startTimer];
 }
 
 - (void)startTimer;
 {
-    [self setFadingOut:YES];
-    [self setFadingIn:NO];
-    [self setFadeTimer:nil];
+    [self setOnScreen:YES];
+	[self setFadeTimer: nil];
     [self setDisplayTimer: [NSTimer scheduledTimerWithTimeInterval:displayDuration
                                                          target:self
-                                                       selector:@selector(endDisplay:)
+                                                       selector:@selector(willEndDisplay:)
                                                        userInfo:nil
                                                         repeats:NO]];
 }
 
-- (void)endDisplay:(NSTimer *)timer
+- (void)stopTimer
 {
-    if (doFadeOut) {
-        [self setFadeTimer: [NSTimer scheduledTimerWithTimeInterval:0.05
-                                                            target:self
-                                                          selector:@selector(fadeOut:)
-                                                          userInfo:nil
-                                                           repeats:YES]];
-    } else {
-        [self setFadingOut:NO];
-        if (appWasHidden) {
-            [NSApp hide:self];
-        }
-        [self close];
-    }
+	[self setFadeTimer: nil];
+	[self setDisplayTimer: nil];
 }
 
-// Called repeatedly after the window is show
-- (void)fadeIn:(NSTimer *)timer
+- (void)willEndDisplay:(NSTimer *)timer
 {
-    if ([self alphaValue]<1.0) {
-        [self setAlphaValue: [self alphaValue]+0.1];
-    }
-    if ([self alphaValue]>=1.0) {
-        [self setFadeTimer:nil];
-        [self setFadingIn:NO];
-        [self startTimer];
-    }
+	NSNotificationCenter *nc;
+	nc = [NSNotificationCenter defaultCenter];
+	[nc postNotificationName:@"JSCEventBezelWindowEndTimer" object:nil];
+}
+
+- (void)endDisplay;
+{
+	[self setOnScreen:NO];
+	[self setFadeTimer: [NSTimer scheduledTimerWithTimeInterval:0.05
+														target:self
+													  selector:@selector(fadeOut:)
+													  userInfo:nil
+													   repeats:YES]];
 }
 
 // Called repeatedly after the window is shown
@@ -97,10 +78,6 @@
     }
     if ([self alphaValue]<=0.0) {
         [self setFadeTimer:nil];
-        [self setFadingOut:NO];
-        if (appWasHidden) {
-            [NSApp hide:self];
-        }
         [self close];
     }
 }
@@ -132,24 +109,14 @@
     displayTimer = timer;
 }
 
-- (BOOL)fadingOut
+- (BOOL)onScreen
 {
-    return fadingOut;
+    return onScreen;
 }
 
-- (void)setFadingOut:(BOOL)newFade
+- (void)setOnScreen:(BOOL)newFade
 {
-    fadingOut = newFade;
-}
-
-- (BOOL)fadingIn
-{
-    return fadingIn;
-}
-
-- (void)setFadingIn:(BOOL)newFade
-{
-    fadingIn = newFade;
+    onScreen = newFade;
 }
 
 - (int)displayDuration
@@ -162,34 +129,19 @@
     displayDuration = newDuration;
 }
 
-- (BOOL)doFadeOut
+- (void)mouseUp:(NSEvent *)theEvent
 {
-    return doFadeOut;
+	[self startTimer];
+	[super mouseUp: theEvent];
 }
 
-- (void)setDoFadeOut:(BOOL)b
+- (void)mouseDown:(NSEvent *)theEvent
 {
-    doFadeOut = b;
-}
-
-- (BOOL)doFadeIn
-{
-    return doFadeIn;
-}
-
-- (void)setDoFadeIn:(BOOL)b
-{
-    doFadeIn = b;
-}
-
-- (BOOL)appWasHidden
-{
-    return appWasHidden;
-}
-
-- (void)setAppWasHidden:(BOOL)b
-{
-    appWasHidden = b;
+	if ([self displayTimer]) {
+		[self setAlphaValue:1.0];
+		[self stopTimer];
+	}
+	[super mouseDown: theEvent];
 }
 
 @end

@@ -1,11 +1,16 @@
 {
     IBClasses = (
+        {
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             CLASS = JSCEventBezelController; 
             LANGUAGE = ObjC; 
             OUTLETS = {bezelView = JSCEventBezelView; bezelWindow = JSCEventBezelWindow; }; 
-            SUPERCLASS = NSWindowController; 
+            SUPERCLASS = AIWindowController; 
         }, 
         {CLASS = JSCEventBezelView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {CLASS = JSCEventBezelWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }
