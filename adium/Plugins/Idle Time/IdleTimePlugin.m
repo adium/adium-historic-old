@@ -347,16 +347,12 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 //User selected the idle menu
 - (void)selectIdleMenu:(id)sender
 {
-    NSLog(@"set idle state");
-    if(idleState != AINotIdle){ //Remove Idle
-        [self setIdleState:AINotIdle];
-        
-    }else if([NSEvent optionKey]){ //Set custom idle...
+    if([NSEvent optionKey]){ //Set custom idle...
         [self showManualIdleWindow:nil];
-
+    }else if(idleState != AINotIdle){ //Remove Idle
+        [self setIdleState:AINotIdle];
     }else{ //Set idle
         [self setIdleState:AIDelayedManualIdle];
-        
     }
 }
 
