@@ -112,9 +112,9 @@
 	button = [[[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)] autorelease];
 	[button setImage:[NSImage imageNamed:@"bookmarkToolbar" forClass:[self class]]];
 	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:@"InsertBookmark"
-														   label:@"Bookmarks"
-													paletteLabel:@"Insert Bookmark"
-														 toolTip:@"Insert Bookmark"
+														   label:AILocalizedString(@"Bookmarks",nil)
+													paletteLabel:AILocalizedString(@"Insert Bookmark",nil)
+														 toolTip:AILocalizedString(@"Insert Bookmark",nil)
 														  target:self
 												 settingSelector:@selector(setView:)
 													 itemContent:button
@@ -201,43 +201,58 @@
 //bookmarks and then pass them over to another method on the main thread for menu building/inserting.
 - (void)buildBookmarkMenuThread
 {
-		updatingMenu = YES;
-		NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
-		NSEnumerator		*enumerator = [[importer availableBookmarks] objectEnumerator];
-		id					object;
-		Class				NSDictionaryClass = [NSDictionary class];
-		Class				SHMarkedHyperlinkClass = [SHMarkedHyperlink class];
-		
-		NSMenu				*menuItemSubmenu = [[[NSMenu alloc] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
-		NSMenu				*contextualMenuItemSubmenu = [[[NSMenu alloc] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
-		[menuItemSubmenu setMenuChangedMessagesEnabled:NO];
-		[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:NO];
-		
-		while(object = [enumerator nextObject]){
-			if([object isKindOfClass:NSDictionaryClass]){
-				[self insertBookmarks:object intoMenu:menuItemSubmenu];
-				[self insertBookmarks:object intoMenu:contextualMenuItemSubmenu];
-				
-			}else if([object isKindOfClass:SHMarkedHyperlinkClass]){
-				[self insertMenuItemForBookmark:object intoMenu:menuItemSubmenu];
-				[self insertMenuItemForBookmark:object intoMenu:contextualMenuItemSubmenu];
-				
-			}	
-		}
-		
-		[bookmarkRootMenuItem performSelectorOnMainThread:@selector(setSubmenu:)
-											   withObject:menuItemSubmenu
-											waitUntilDone:YES];
-		[bookmarkRootContextualMenuItem performSelectorOnMainThread:@selector(setSubmenu:)
-														 withObject:contextualMenuItemSubmenu
-													  waitUntilDone:YES];
-		
-		[menuItemSubmenu setMenuChangedMessagesEnabled:YES];
-		[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:YES];
-		
-		[pool release];
-		
-		updatingMenu = NO;
+	updatingMenu = YES;
+	
+	NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
+	NSEnumerator		*enumerator = [[importer availableBookmarks] objectEnumerator];
+	id					object;
+	Class				NSDictionaryClass = [NSDictionary class];
+	Class				SHMarkedHyperlinkClass = [SHMarkedHyperlink class];
+	
+	NSMenu				*menuItemSubmenu = [[[NSMenu alloc] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
+	NSMenu				*contextualMenuItemSubmenu = [[[NSMenu alloc] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
+	[menuItemSubmenu setMenuChangedMessagesEnabled:NO];
+	[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:NO];
+	
+	while(object = [enumerator nextObject]){
+		if([object isKindOfClass:NSDictionaryClass]){
+			[self insertBookmarks:object intoMenu:menuItemSubmenu];
+			[self insertBookmarks:object intoMenu:contextualMenuItemSubmenu];
+			
+		}else if([object isKindOfClass:SHMarkedHyperlinkClass]){
+			[self insertMenuItemForBookmark:object intoMenu:menuItemSubmenu];
+			[self insertMenuItemForBookmark:object intoMenu:contextualMenuItemSubmenu];
+			
+		}	
+	}
+	
+	[self mainPerformSelector:@selector(gotMenuItemSubmenu:contextualMenuItemSubmenu:)
+				   withObject:menuItemSubmenu
+				   withObject:contextualMenuItemSubmenu];
+	
+	[pool release];
+}
+
+//Called by the thread when the submenu NSMenu items have been generated
+- (void)gotMenuItemSubmenu:(NSMenu *)menuItemSubmenu contextualMenuItemSubmenu:(NSMenu *)contextualMenuItemSubmenu
+{
+	//Apply on the next run loop to avoid threadlocking
+	[self performSelector:@selector(doSetOfMenuItemSubmenu:contextualMenuItemSubmenu:)
+			   withObject:menuItemSubmenu
+			   withObject:contextualMenuItemSubmenu
+			   afterDelay:0.0001];
+}
+
+//Called after a delay by the main thread to actually perform our setting
+- (void)doSetOfMenuItemSubmenu:(NSMenu *)menuItemSubmenu contextualMenuItemSubmenu:(NSMenu *)contextualMenuItemSubmenu
+{
+	[bookmarkRootMenuItem setSubmenu:menuItemSubmenu];
+	[bookmarkRootContextualMenuItem setSubmenu:contextualMenuItemSubmenu];
+	
+	[menuItemSubmenu setMenuChangedMessagesEnabled:YES];
+	[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:YES];
+
+	updatingMenu = NO;
 }
 
 //Insert a bookmark (or an array of bookmarks) into the menu
