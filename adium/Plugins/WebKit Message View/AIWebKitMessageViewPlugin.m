@@ -140,7 +140,7 @@ DeclareString(AppendNextMessage);
 				style = [NSBundle bundleWithPath:[resourcePath stringByAppendingPathComponent:filePath]];
 				if(style){
 					NSString	*styleName = [style name];
-					if(styleName && [styleName length]) [styleDictionary setObject:style forKey:[style name]];
+					if(styleName && [styleName length]) [styleDictionary setObject:style forKey:styleName];
 				}
             }
         }
@@ -394,8 +394,9 @@ DeclareString(AppendNextMessage);
 	NSRange	range;
 	
 	do{
-		range = [inString rangeOfString:@"chatName"];
+		range = [inString rangeOfString:@"%chatName%"];
 		if(range.location != NSNotFound){
+			NSLog(@"%i %i",range.location,range.length);
 			[inString replaceCharactersInRange:range
 									withString:[chat name]];
 			
@@ -403,7 +404,7 @@ DeclareString(AppendNextMessage);
 	} while(range.location != NSNotFound);
 	
 	do{
-		range = [inString rangeOfString:@"incomingIconPath"];
+		range = [inString rangeOfString:@"%incomingIconPath%"];
 		if(range.location != NSNotFound){
 			AIListObject	*listObject = [chat listObject];
 			NSString		*iconPath = nil;
