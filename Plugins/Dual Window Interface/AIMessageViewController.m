@@ -141,7 +141,7 @@
  * @brief Deallocate
  */
 - (void)dealloc
-{    
+{   
     //Close the message entry text view
     [[adium contentController] willCloseTextEntryView:textView_outgoing];
 	
@@ -164,6 +164,7 @@
 	
 	//This is the controller for the actual view (not self, despite the naming oddness)
     [messageViewController release];
+	[userListController release];
 	[controllerView_messages release];
 	
     [super dealloc];
@@ -177,6 +178,8 @@
  */
 //XXX - The name of this method implies tabView, while this class isn't related to tab views. -ai
 //XXX - The user list controller should clean up tracking when removed from its parent view, why do we have to special case for it here? -ai
+//XXX - This is called when dragging tabs, not just when tabs are CLOSING, so deallocating anything from this method,
+//      even though the method name says WillClose, is a very bad idea.
 - (void)tabViewItemWillClose
 {
 	//Store our minimum height for the text entry area, and minimim width for the user list
@@ -186,9 +189,6 @@
 	[[adium preferenceController] setPreference:[NSNumber numberWithInt:userListMinWidth]
 										 forKey:KEY_ENTRY_USER_LIST_MIN_WIDTH
 										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-	
-	//Release the userListController to let it invalidate its tracking views before closing the window
-	[userListController release]; userListController = nil;
 }
 
 /*!
