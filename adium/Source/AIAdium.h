@@ -27,7 +27,13 @@
 #import "AISoundController.h"
 #import "AIToolbarController.h"
 
-@class AISortController, AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferencePane, AIMenuController, AILoginWindowController, AIAccountWindowController, AIAccount, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIDockController, AIHandle, AIListContact, AIListGroup, AIListObject, AIIconState, AIContactListGeneration, AIChat, AIContentObject, ESFileTransferController, ESFileTransfer, ESContactAlertsController, ESContactAlert, AIMutableOwnerArray;
+@class  AISortController, AILoginController, AIAccountController, AIInterfaceController, AIContactController, 
+		AIPluginController, AIPreferenceController, AIPreferencePane, AIMenuController, AILoginWindowController,
+		AIAccountWindowController, AIAccount, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView,
+		AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, 
+		AIPreferenceViewController, AISoundController, AIDockController, AIHandle, AIListContact, AIListGroup,
+		AIListObject, AIIconState, AIContactListGeneration, AIChat, AIContentObject, ESFileTransferController, 
+		ESFileTransfer, ESContactAlertsController, ESContactAlert, AIMutableOwnerArray;
 @class SUSpeaker;
 
 @interface AIAdium : NSObject {

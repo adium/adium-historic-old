@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.33 2004/03/25 04:10:47 adamiser Exp $
+//$Id: AIPluginController.m,v 1.34 2004/03/25 06:06:55 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -121,6 +121,7 @@ AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersi
 	[self loadPluginWithClass:[JSCEventBezelPlugin class]];
 	[self loadPluginWithClass:[LNStatusIconsPlugin class]];
 	[self loadPluginWithClass:[SAContactOnlineForPlugin class]];
+
 //  [self loadPluginWithClass:[AISMViewPlugin class]];
 //	[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
 #endif
@@ -147,8 +148,12 @@ AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersi
 {
 	id	object = [inClass newInstanceOfPlugin];
 	
-	NSAssert(object, @"Failed to load integrated component");
-	[pluginArray addObject:object];
+	if (object){
+		[pluginArray addObject:object];
+	}else{
+		NSString *failureNotice = [NSString stringWithFormat:@"Failed to load integrated component %@",NSStringFromClass(inClass)];
+		NSAssert(object,failureNotice);
+	}
 }
 
 //Load all the plugins
