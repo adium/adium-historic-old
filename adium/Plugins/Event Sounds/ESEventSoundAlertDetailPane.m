@@ -142,7 +142,7 @@
             beginSheetForDirectory:nil
                               file:nil
                              types:[NSSound soundUnfilteredFileTypes] //allow all the sounds NSSound understands
-                    modalForWindow:nil
+                    modalForWindow:[view window]
                      modalDelegate:self
                     didEndSelector:@selector(concludeOtherPanel:returnCode:contextInfo:)
                        contextInfo:nil];  
