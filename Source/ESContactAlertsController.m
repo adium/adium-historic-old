@@ -397,26 +397,33 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 //Returns an array of all the alerts of a given list object
 - (NSArray *)alertsForListObject:(AIListObject *)listObject
 {
+	return([self alertsForListObject:listObject withActionID:nil]);
+}
+
+- (NSArray *)alertsForListObject:(AIListObject *)listObject withActionID:(NSString *)actionID
+{
 	NSDictionary	*contactAlerts = [[adium preferenceController] preferenceForKey:KEY_CONTACT_ALERTS
 																			  group:PREF_GROUP_CONTACT_ALERTS
 														  objectIgnoringInheritance:listObject];
 	NSMutableArray	*alertArray = [NSMutableArray array];
 	NSEnumerator	*groupEnumerator;
-	NSString		*alertID;
+	NSString		*eventID;
 	
 	//Flatten the alert dict into an array
 	groupEnumerator = [contactAlerts keyEnumerator];
-	while(alertID = [groupEnumerator nextObject]){
+	while(eventID = [groupEnumerator nextObject]){
 		NSEnumerator	*alertEnumerator;
 		NSDictionary	*alert;
 		
-		alertEnumerator = [[contactAlerts objectForKey:alertID] objectEnumerator];
+		alertEnumerator = [[contactAlerts objectForKey:eventID] objectEnumerator];
 		while(alert = [alertEnumerator nextObject]){
-			[alertArray addObject:alert];
+			if(!actionID || [actionID isEqualToString:[alert objectForKey:KeyActionID]]){
+				[alertArray addObject:alert];
+			}
 		}
 	}	
 	
-	return(alertArray);
+	return(alertArray);	
 }
 
 //Add an alert (passed as a dictionary) to a list object
