@@ -75,7 +75,7 @@
     BOOL				away;
 	
     //Get the away state
-    away = [inObject integerStatusObjectForKey:@"Away"];
+    away = [inObject integerStatusObjectForKey:@"Away" fromAnyContainedObject:NO];
 	
     //Get the status message
     statusMessage = [inObject statusObjectForKey:@"StatusMessage"];

@@ -427,8 +427,8 @@ int statusSort(id objectA, id objectB, BOOL groups)
 		
 	}else{
 		//Always sort offline contacts to the bottom
-		BOOL onlineA = ([[objectA numberStatusObjectForKey:sOnline] boolValue]);
-		BOOL onlineB = ([[objectB numberStatusObjectForKey:sOnline] boolValue]);
+		BOOL onlineA = ([[objectA numberStatusObjectForKey:sOnline fromAnyContainedObject:NO] boolValue]);
+		BOOL onlineB = ([[objectB numberStatusObjectForKey:sOnline fromAnyContainedObject:NO] boolValue]);
 		if (!onlineB && onlineA){
 			return NSOrderedAscending;
 		}else if (!onlineA && onlineB){
@@ -446,11 +446,11 @@ int statusSort(id objectA, id objectB, BOOL groups)
 			int				objectCounter;
 			
 			//Get the away state and idle times now rather than potentially doing each twice below
-			away[0] = [objectA integerStatusObjectForKey:sAway];
-			away[1] = [objectB integerStatusObjectForKey:sAway];
+			away[0] = [objectA integerStatusObjectForKey:sAway fromAnyContainedObject:NO];
+			away[1] = [objectB integerStatusObjectForKey:sAway fromAnyContainedObject:NO];
 			
-			idle[0] = [objectA integerStatusObjectForKey:sIdle];
-			idle[1] = [objectB integerStatusObjectForKey:sIdle];
+			idle[0] = [objectA integerStatusObjectForKey:sIdle fromAnyContainedObject:NO];
+			idle[1] = [objectB integerStatusObjectForKey:sIdle fromAnyContainedObject:NO];
 
 			for (objectCounter = 0; objectCounter < 2; objectCounter++){
 				sortIndex[objectCounter] = 999;

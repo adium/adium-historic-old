@@ -160,8 +160,8 @@
 
     if(!color){
         //Prefetch these values, we need them multiple times below
-        away = [inObject integerStatusObjectForKey:@"Away"];
-        idle = [[inObject numberStatusObjectForKey:@"Idle"] intValue];
+        away = [inObject integerStatusObjectForKey:@"Away" fromAnyContainedObject:NO];
+        idle = [inObject integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO];
 
         //Idle And Away, Away, or Idle
         if(idleAndAwayEnabled && away && idle != 0){

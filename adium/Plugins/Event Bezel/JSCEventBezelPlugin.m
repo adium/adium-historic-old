@@ -212,7 +212,7 @@
 				}
 			}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_YES]){
 				tempEvent = AILocalizedString(@"is idle",nil);
-				if ([[contact statusObjectForKey:@"Away"] boolValue]) {
+				if ([contact integerStatusObjectForKey:@"Away" fromAnyContainedObject:NO]) {
 					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_IDLE_AWAY_COLOR] representedColor]];
 					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor]];
 				} else {
@@ -221,7 +221,7 @@
 				}
 			}else if([notificationName isEqualToString: CONTACT_STATUS_IDLE_NO]){
 				tempEvent = AILocalizedString(@"is no longer idle",nil);
-				if ([[contact statusObjectForKey:@"Away"] boolValue]) {
+				if ([contact integerStatusObjectForKey:@"Away" fromAnyContainedObject:NO]) {
 					[ebc setBuddyIconLabelColor: [[colorPreferenceDict objectForKey:KEY_LABEL_AWAY_COLOR] representedColor]];
 					[ebc setBuddyNameLabelColor: [[colorPreferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
 				} else {
