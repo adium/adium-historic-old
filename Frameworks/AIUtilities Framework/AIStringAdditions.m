@@ -148,6 +148,7 @@
 	//create a translation table for fast substitution.
 	static UniChar table[USHRT_MAX + 1];
 	static BOOL tableInitialized = NO;
+	NSString *result;
 	if(!tableInitialized) {
 		for(register unsigned i = 0; i <= USHRT_MAX; ++i) {
 			table[i] = i;
@@ -168,7 +169,6 @@
 		//there are characters here; translate them.
 		NSRange range = { 0, length };
 		UniChar *buf = malloc(length * sizeof(UniChar));
-		NSString *result;
 		if(!buf) {
 			//can't malloc the memory - see if NSMutableString can do it
 			NSMutableString *string = [self mutableCopy];
