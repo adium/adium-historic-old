@@ -369,7 +369,7 @@
         [tabView_messages setFrame:newFrame];
 
         //Refresh
-        [[self window] setViewsNeedDisplay:YES];
+        [[self window] display];
 
     }else if((([tabView_messages numberOfTabViewItems] == 2) || !autohide_tabBar) && !tabIsShowing) {
         //Restore tabs to the correct height
@@ -385,7 +385,7 @@
         [tabView_messages setFrame:newFrame];
 
         //Refresh
-        [[self window] setViewsNeedDisplay:YES];
+        [[self window] display];
     }
 }
 
