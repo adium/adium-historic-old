@@ -27,7 +27,9 @@
     [[adium contentController] registerTextEntryFilter:self];
 
     //Observe preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) 
+									   name:Preference_GroupChanged 
+									 object:nil];
     [self preferencesChanged:nil];
 }
 
@@ -47,7 +49,9 @@
         BOOL	currentEnabled = [(NSTextView *)inTextEntryView isContinuousSpellCheckingEnabled];
 
         if(currentEnabled != spellEnabled){
-            [[adium preferenceController] setPreference:[NSNumber numberWithBool:currentEnabled] forKey:KEY_SPELL_CHECKING group:PREF_GROUP_SPELLING];
+            [[adium preferenceController] setPreference:[NSNumber numberWithBool:currentEnabled]
+												 forKey:KEY_SPELL_CHECKING
+												  group:PREF_GROUP_SPELLING];
         }
     }
 }
