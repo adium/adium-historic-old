@@ -84,4 +84,8 @@ typedef enum {
 - (AIStatusMutabilityType)mutabilityType;
 - (void)setMutabilityType:(AIStatusMutabilityType)mutabilityType;
 
+- (NSNumber *)uniqueStatusID;
+- (int)preexistingUniqueStatusID;
+- (void)setUniqueStatusID:(NSNumber *)inUniqueStatusID;
+
 @end
