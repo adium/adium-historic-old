@@ -11,11 +11,7 @@
 #import <Adium/Adium.h>
 #import "AIAdium.h"
 
-#warning change this to your username to connect :)
-#define SCREEN_NAME "otsku"
-
 //don't change this
-#define PROTOCOL "prpl-oscar"
 #define NO_GROUP @"__NoGroup__"
 
 @implementation CBGaimAccount
@@ -33,7 +29,7 @@
         
         //create the handle, group-less for now
         AIHandle *theHandle = [AIHandle 
-            handleWithServiceID:@"AIM"/*[[service handleServiceType] identifier]*/
+            handleWithServiceID:[self serviceID]
             UID:[[NSString stringWithUTF8String:buddy->name] compactedString]
             serverGroup:NO_GROUP
             temporary:NO
@@ -194,109 +190,15 @@
         nil]);
 }
 
-- (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
-{
-    NSLog(@"gaim: statusForKey: %@ willChangeTo: %@", key, inValue);
-    ACCOUNT_STATUS status = [[[owner accountController] propertyForKey:@"Status" account:self] intValue];
-        
-    if([key compare:@"Online"] == 0)
-    {
-        if([inValue boolValue]) //Connect
-        { 
-            if(status == STATUS_OFFLINE)
-            {                
-                //get password
-                [[owner accountController] passwordForAccount:self 
-                    notifyingTarget:self selector:@selector(finishConnect:)];
-            }
-        }
-        else //Disconnect
-        {
-            if(status == STATUS_ONLINE)
-            {
-                //we're signing off, give us a minute.
-                [[owner accountController] 
-                    setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING]
-                    forKey:@"Status" account:self];
-                
-                //delete the account, sign everybody off
-                GaimAccount *account;
-                if(account = gaim_accounts_find(SCREEN_NAME, PROTOCOL))
-                {
-                    gaim_account_disconnect(account);
-                    gaim_accounts_delete(account);
-                }
-                
-                //done
-                [[owner accountController] 
-                    setProperty:[NSNumber numberWithInt:STATUS_OFFLINE]
-                    forKey:@"Status" account:self];
-            }
-        }
-    }
-}
-
-- (void)finishConnect:(NSString *)inPassword
-{
-    if(inPassword && [inPassword length] != 0)
-    {
-        //now we start to connect
-        [[owner accountController] 
-            setProperty:[NSNumber numberWithInt:STATUS_CONNECTING]
-            forKey:@"Status" account:self];
-
-        //setup the account, get things ready
-        GaimAccount *testAccount = gaim_account_new(SCREEN_NAME, PROTOCOL);
-        gaim_account_set_password(testAccount, [inPassword cString]);
-        
-        //this is a bit of a hack, but it will do for now
-        GaimConnection *conn =  gaim_account_connect(testAccount);
-        if(gaim_connection_get_state(conn) != GAIM_DISCONNECTED) //if we're not disconneted, signed on!
-        {
-            gaim_accounts_add(testAccount);
-            
-            [[owner accountController]
-                setProperty:[NSNumber numberWithInt:STATUS_ONLINE]
-                forKey:@"Status" account:self];
-        }
-        else //aw nuts, something must have happened.
-        {
-            [[owner accountController] 
-                    setProperty:[NSNumber numberWithInt:STATUS_OFFLINE]
-                    forKey:@"Status" account:self];
-        }
-    }
-}
-
-- (NSDictionary *)defaultProperties
-{
-    return([NSDictionary dictionary]);
-}
-
-- (id <AIAccountViewController>)accountView{
-    return(nil);
-}
-
-- (NSString *)accountID{
-    return([NSString stringWithFormat:@"%s.%s", PROTOCOL, SCREEN_NAME]);
-}
-
-- (NSString *)UID{
-    return([NSString stringWithUTF8String:SCREEN_NAME]);
-}
-    
-- (NSString *)serviceID{
-    return([NSString stringWithUTF8String:PROTOCOL]);
-}
-
-- (NSString *)UIDAndServiceID{
-    return([NSString stringWithFormat:@"%s.%s", PROTOCOL, SCREEN_NAME]);
-}
-
-- (NSString *)accountDescription
-{
-    return(@"LIBGAIM! :D");
-}
+//subclasseds override these
+- (NSDictionary *)defaultProperties { return([NSDictionary dictionary]); }
+- (id <AIAccountViewController>)accountView{ return(nil); }
+- (NSString *)accountID { return nil; }
+- (NSString *)UID { return nil; }
+- (NSString *)serviceID { return nil; }
+- (NSString *)UIDAndServiceID { return nil; }
+- (NSString *)accountDescription { return nil; }
+- (void)statusForKey:(NSString *)key willChangeTo:(id)inValue { };
 
 /*********************/
 /* AIAccount_Handles */
