@@ -24,23 +24,14 @@ Adium, Copyright 2001-2005, Adam Iser
 
 //Preference Categories
 typedef enum {
-    AIPref_Accounts = 0, 
+	AIPref_General = 0,
     AIPref_ContactList,
     AIPref_Messages,
-    AIPref_Status_Away,
-    AIPref_Status_Idle,
-    AIPref_Dock,
-    AIPref_Sound,
-    AIPref_Emoticons,    
-    AIPref_Keys,
-    AIPref_Advanced_ContactList,
-    AIPref_Advanced_Messages,
-    AIPref_Advanced_Status,
-    AIPref_Advanced_Service,
-    AIPref_Advanced_Other,
-	AIPref_FileTransfer,
 	AIPref_Events,
-	AIPref_General
+    AIPref_Dock,
+    AIPref_Emoticons,    
+	AIPref_FileTransfer,
+    AIPref_Advanced
 } PREFERENCE_CATEGORY;
 
 @class AIPreferencePane, AIAdium;
