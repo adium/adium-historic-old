@@ -117,8 +117,7 @@
 					 operation:NSCompositeSourceOver
 					  fraction:1.0];
 
-    [mainAttributes setObject:[[NSFontManager sharedFontManager] 
-        convertFont:[NSFont systemFontOfSize:buddyNameFontSize] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];
+    [mainAttributes setObject:[NSFont boldSystemFontOfSize:buddyNameFontSize] forKey:NSFontAttributeName];
     buddyNameSize = [mainBuddyName sizeWithAttributes: mainAttributes];
     
 	minFontSize = NO;
@@ -131,8 +130,7 @@
 			buddyNameFontSize -= 1.0;
 			accumulator += 0.5;
 		}
-		[mainAttributes setObject:[[NSFontManager sharedFontManager] 
-			convertFont:[NSFont systemFontOfSize:buddyNameFontSize] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];
+		[mainAttributes setObject:[NSFont boldSystemFontOfSize:buddyNameFontSize] forKey:NSFontAttributeName];
 		buddyNameSize = [mainBuddyName sizeWithAttributes: mainAttributes];
     }
 	buddyNameRect.origin.y += ceil(accumulator);
@@ -142,8 +140,10 @@
     
     buddyNameRect.size.height = buddyNameSize.height;
     
-	[mainAttributes setObject: buddyNameLabelColor forKey:NSForegroundColorAttributeName];
-	[mainStatusAttributes setObject: buddyNameLabelColor forKey:NSForegroundColorAttributeName];
+	if(buddyNameLabelColor){
+		[mainAttributes setObject: buddyNameLabelColor forKey:NSForegroundColorAttributeName];
+		[mainStatusAttributes setObject: buddyNameLabelColor forKey:NSForegroundColorAttributeName];
+	}
 	
     [mainBuddyName drawInRect: buddyNameRect withAttributes: mainAttributes];
         
