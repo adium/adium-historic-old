@@ -1,0 +1,14 @@
+{
+    IBClasses = (
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = CSCheckmarkPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"checkBox_displayCheckmark" = NSButton; "view_prefView" = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
