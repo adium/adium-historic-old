@@ -63,7 +63,6 @@
 - (NSString *)displayServiceIDForUID:(NSString *)aUID;
 
 //- (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy;
-- (void)removeAllStatusFlagsFromContact:(AIListContact *)contact silently:(BOOL)silent;
 - (void)setTypingFlagOfChat:(AIChat *)inChat to:(NSNumber *)typingState;
 - (void)_updateAway:(AIListContact *)theContact toAway:(BOOL)newAway;
 
@@ -278,7 +277,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		}
 
 		//Will also apply any changes applied above, so no need to call notifyOfChangedStatusSilently 
-		[self removeAllStatusFlagsFromContact:theContact silently:silentAndDelayed];
+		[self removeStatusObjectsFromContact:theContact silently:silentAndDelayed];
 	}
 }
 
@@ -1617,7 +1616,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	AILog(@"************ %@ CONNECTED ***********",[self UID]);
 	
-	[self accountDidConnect];
+	[self didConnect];
 	
     //Silence updates
     [self silenceAllContactUpdatesForInterval:18.0];
@@ -1658,11 +1657,15 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 #pragma mark Disconnect
 
-//Disconnect this account
+/*
+ * @brief Disconnect this account
+ */
 - (void)disconnect
 {
-    //We are disconnecting
 	if ([self online] || [self integerStatusObjectForKey:@"Connecting"]){
+		//As per AIAccount's documentation, call super's implementation
+		[super disconnect];
+
 		[self setStatusObject:nil forKey:@"Connecting" notify:NO];
 		[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
 		[[adium contactController] delayListObjectNotificationsUntilInactivity];
@@ -1692,27 +1695,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
                                     withDescription:connectionNotice];
 }
 
-/*!
- * @brief Remove all contacts owned by this account and clear their status objects set by this account
- */
-- (void)removeAllContacts
-{
-	NSEnumerator    *enumerator;
-	AIListContact	*contact;
-
-	[[adium contactController] delayListObjectNotifications];
-	
-	//Clear status flags on all contacts for this account, and set their remote group to nil
-	enumerator = [[[adium contactController] allContactsInGroup:nil
-													  subgroups:YES 
-													  onAccount:self] objectEnumerator];
-	while(contact = [enumerator nextObject]){
-		[contact setRemoteGroupName:nil];
-		[self removeAllStatusFlagsFromContact:contact silently:YES];
-	}
-	
-	[[adium contactController] endListObjectNotificationsDelay];
-}
 
 /*
  * @brief Our account has disconnected
@@ -1730,9 +1712,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	//Clear status objects which don't make sense for a disconnected account
 	[self setStatusObject:nil forKey:@"TextProfile" notify:NO];
-	
-	//Remove all our contacts
-	[self removeAllContacts];
 	
 	//Apply any changes
 	[self notifyOfChangedStatusSilently:NO];
@@ -1756,6 +1735,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
 		}
 	}
+	
+	//Report that we disconnected
+	[self didDisconnect];
 }
 
 //By default, always attempt to reconnect.  Subclasses may override this to manage reconnect behavior.
@@ -2349,20 +2331,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
     [super dealloc];
 }
 
-/*!
- * @brief The account will be deleted
- *
- * The default implemented disconnects the account.  Subclasses should call super's implementation.
- */
-- (void)willBeDeleted
-{
-	//Call super to disconnect us.
-	[super willBeDeleted];
-	
-	//Remove our contacts immediately.
-	[self removeAllContacts];
-}
-
 - (NSString *)unknownGroupName {
     return (@"Unknown");
 }
@@ -2422,31 +2390,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 /* Account private methods */
 /***************************/
 #pragma mark Private
-// Removes all the possible status flags from the passed contact
-- (void)removeAllStatusFlagsFromContact:(AIListContact *)theContact silently:(BOOL)silent
-{
-	NSEnumerator	*enumerator = [[self contactStatusFlags] objectEnumerator];
-	NSString		*key;
-
-	while(key = [enumerator nextObject]){
-		[theContact setStatusObject:nil forKey:key notify:NotifyLater];
-	}
-	
-	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silent];
-}
-
-- (NSSet *)contactStatusFlags
-{
-	static NSSet *contactStatusFlagsArray = nil;
-	
-	if (!contactStatusFlagsArray)
-		contactStatusFlagsArray = [[NSSet alloc] initWithObjects:@"Online",@"Warning",@"IdleSince",
-			@"Signon Date",@"StatusName",@"StatusType",@"StatusMessage",@"Client",nil];
-	
-	return contactStatusFlagsArray;
-}
-
 - (void)setTypingFlagOfChat:(AIChat *)chat to:(NSNumber *)typingStateNumber
 {
     NSNumber *currentValue = [chat statusObjectForKey:KEY_TYPING];

@@ -897,7 +897,7 @@ NSMutableDictionary* get_chatDict(void)
 	GaimAccount *account;
 	GaimGroup 	*group;
 	GaimBuddy	*buddy;
-	char		*buddyUTF8String;
+	const char	*buddyUTF8String;
 	const char	*groupUTF8String;
 	BOOL		needToAddServerside = NO;
 
