@@ -8454,6 +8454,7 @@
 				4BBEC8BA0563E7CD0013C8F7,
 				4BCB9B5F0567FF5D001D3559,
 				34536751059BA8EE00A83D9E,
+				34F2BD25059CF8070005B238,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8827,6 +8828,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
+				34F2BD28059CF8C40005B238,
 				34536769059BA91E00A83D9E,
 				4BC8AAB0059A2D5500F940E1,
 			);
@@ -16759,6 +16761,35 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		34F2BD24059CF8070005B238 = {
+			isa = PBXFileReference;
+			lastKnownFileType = "compiled.mach-o.executable";
+			path = "c++filt";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2BD25059CF8070005B238 = {
+			fileRef = 34F2BD24059CF8070005B238;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2BD28059CF8C40005B238 = {
+			fileRef = 34F2BD24059CF8070005B238;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2BD2E059CF8E70005B238 = {
+			children = (
+				34F2BD24059CF8070005B238,
+				34536750059BA8ED00A83D9E,
+			);
+			isa = PBXGroup;
+			name = "UNIX tools";
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		34F77075052B72C4004616D4 = {
 			fileEncoding = 30;
@@ -25569,7 +25600,7 @@
 				F59DB6AD033EB74801A8010A,
 				6C1CC23105415D5700B64925,
 				6C1CC23205415D5700B64925,
-				34536750059BA8ED00A83D9E,
+				34F2BD2E059CF8E70005B238,
 				9EB3C52304F94DB7001D1F74,
 			);
 			isa = PBXGroup;
