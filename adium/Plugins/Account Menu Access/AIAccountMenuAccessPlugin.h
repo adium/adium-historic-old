@@ -15,6 +15,10 @@
 
 @interface AIAccountMenuAccessPlugin : AIPlugin <AIListObjectObserver> {
     NSMutableArray		*accountMenuArray;
+	
+	NSImage				*image_Online;
+	NSImage				*image_Connecting;
+	NSImage				*image_Offline;
 }
 
 @end
