@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.86 2004/01/17 18:21:30 adamiser Exp $
+// $Id: AIContactController.m,v 1.87 2004/01/17 18:57:19 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -229,7 +229,7 @@
 	    }else{ 
 			//The contact should no longer be in this group
 			[localGroup removeObject:inObject];
-			NSLog(@"Grouping:  Removed %@ from %@",[inObject displayName],[localGroup displayName]);
+
 			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged
 																			 object:inObject
 																		   userInfo:[NSDictionary dictionaryWithObject:localGroup forKey:@"ContainingGroup"]];
@@ -245,7 +245,7 @@
 			//The contact needs to be added to this group
 			localGroup = [self groupWithUID:remoteGroupName createInGroup:contactList];
 			[localGroup addObject:inObject];
-			NSLog(@"Grouping:  Added %@ to %@",[inObject displayName],remoteGroupName);
+
 			if(!updatesAreDelayed) [[owner notificationCenter] postNotificationName:Contact_ListChanged 
 																			 object:inObject
 																		   userInfo:[NSDictionary dictionaryWithObject:localGroup forKey:@"ContainingGroup"]];

@@ -223,9 +223,7 @@
     }
     address = inet_ntoa(*((struct in_addr *)hostEnt->h_addr));
     hostIP = [[NSString alloc] initWithCString:address]; //Remember our host IP
-    hostPort = port;
-    
-    NSLog(@"%@",hostIP);
+    hostPort = port;    
     
     //Create the socket
     theSocket = socket(AF_INET, SOCK_STREAM, 0);
