@@ -372,7 +372,11 @@ void Adium_HandleSignal(int i){
 		fileDescription = AILocalizedString(@"emoticon set",nil);
 		prefsButton = AILocalizedString(@"Open Emoticon Prefs",nil);
 		prefsCategory = AIPref_Emoticons;
-
+	} else if ([extension caseInsensitiveCompare:@"AdiumScripts"] == NSOrderedSame) {
+		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Scripts"];
+		requiresRestart = YES;
+		fileDescription = AILocalizedString(@"AppleScript set",nil);
+		
 	} else if ([extension caseInsensitiveCompare:@"AdiumMessageStyle"] == NSOrderedSame){
 		if ([NSApp isOnPantherOrBetter]){
 			destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Message Styles"];
