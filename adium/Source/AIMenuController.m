@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIMenuController.m,v 1.21 2004/01/20 15:17:20 adamiser Exp $
+// $Id: AIMenuController.m,v 1.22 2004/02/07 19:34:32 evands Exp $
 
 #import "AIMenuController.h"
 
@@ -133,27 +133,27 @@ static int menuArrayOffset[] = {0,1,  2,3,4,5,6,7,  8,9,  10,11,12,  13,14,15,16
     
     //Offset
     location = menuArrayOffset[location];
-
+	
     //Find the menu item (or the closest one above it)
     destination = location;
     menuItem = [locationArray objectAtIndex:destination];
     if([menuItem isKindOfClass:[NSMenuItem class]]){
-	while(menuItem == nilMenuItem){
-	    destination--;
-	    menuItem = [locationArray objectAtIndex:destination];
-	}
-	targetMenu = [menuItem menu];
-	targetIndex = [targetMenu indexOfItem:menuItem];
-
-	//Insert the new item and a divider (if necessary)
-	if(location != destination){
-	    [targetMenu insertItem:[NSMenuItem separatorItem] atIndex:targetIndex+1];
-	    targetIndex++;
-	}
-	[targetMenu insertItem:newItem atIndex:targetIndex+1];
+		while(menuItem == nilMenuItem){
+			destination--;
+			menuItem = [locationArray objectAtIndex:destination];
+		}
+		targetMenu = [menuItem menu];
+		targetIndex = [targetMenu indexOfItem:menuItem];
+		
+		//Insert the new item and a divider (if necessary)
+		if(location != destination){
+			[targetMenu insertItem:[NSMenuItem separatorItem] atIndex:targetIndex+1];
+			targetIndex++;
+		}
+		[targetMenu insertItem:newItem atIndex:targetIndex+1];
     }else{
-	//If it's attached to an NSMenu (and not an NSMenuItem), insert at the top of the menu
-	[(NSMenu *)menuItem addItem:newItem];
+		//If it's attached to an NSMenu (and not an NSMenuItem), insert at the top of the menu
+		[(NSMenu *)menuItem addItem:newItem];
     }
     
     //update the location array
