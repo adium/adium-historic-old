@@ -73,9 +73,11 @@
 //Once Adium has finished launching, detach our bookmark thread and start building the menu
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
-	[NSThread detachNewThreadSelector:@selector(buildBookmarkMenuThread)
-							 toTarget:self
-						   withObject:nil];
+	if (!updatingMenu){
+		[NSThread detachNewThreadSelector:@selector(buildBookmarkMenuThread)
+								 toTarget:self
+							   withObject:nil];
+	}
 }
 
 - (void)toolbarWillAddItem:(NSNotification *)notification
@@ -197,11 +199,12 @@
 //bookmarks and then pass them over to another method on the main thread for menu building/inserting.
 - (void)buildBookmarkMenuThread
 {
-	if(!updatingMenu){
 		updatingMenu = YES;
 		NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
 		NSEnumerator		*enumerator = [[importer availableBookmarks] objectEnumerator];
 		id					object;
+		Class				NSDictionaryClass = [NSDictionary class];
+		Class				SHMarkedHyperlinkClass = [SHMarkedHyperlink class];
 		
 		NSMenu				*menuItemSubmenu = [[[NSMenu alloc] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
 		NSMenu				*contextualMenuItemSubmenu = [[[NSMenu alloc] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
@@ -209,14 +212,14 @@
 		[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:NO];
 		
 		while(object = [enumerator nextObject]){
-			if([object isKindOfClass:[NSDictionary class]]){
+			if([object isKindOfClass:NSDictionaryClass]){
 				[self insertBookmarks:object intoMenu:menuItemSubmenu];
 				[self insertBookmarks:object intoMenu:contextualMenuItemSubmenu];
 				
-			}else if([object isKindOfClass:[SHMarkedHyperlink class]]){
+			}else if([object isKindOfClass:SHMarkedHyperlinkClass]){
 				[self insertMenuItemForBookmark:object intoMenu:menuItemSubmenu];
 				[self insertMenuItemForBookmark:object intoMenu:contextualMenuItemSubmenu];
-
+				
 			}	
 		}
 		
@@ -231,8 +234,8 @@
 		[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:YES];
 		
 		[pool release];
+		
 		updatingMenu = NO;
-	}
 }
 
 //Insert a bookmark (or an array of bookmarks) into the menu
@@ -282,9 +285,11 @@
 {
 	if(sender == bookmarkRootMenuItem || sender == bookmarkRootContextualMenuItem){
 		//Does the bookmark menu need an update?
-		if([importer bookmarksUpdated]){
+		if(([importer bookmarksUpdated]) &&
+		   (!updatingMenu)){
 			[bookmarkRootMenuItem setSubmenu:nil];
 			[bookmarkRootContextualMenuItem setSubmenu:nil];
+			
 			[NSThread detachNewThreadSelector:@selector(buildBookmarkMenuThread)
 									 toTarget:self
 								   withObject:nil];
@@ -293,6 +298,7 @@
 		//We only care to disable the main menu item (The rest are hidden within it, and do not matter)
 		NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 		return(responder && [responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]);
+		
 	}else{
 		return(YES);
 	}
