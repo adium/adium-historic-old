@@ -145,7 +145,7 @@ static void adiumGaimBlistRemove(GaimBuddyList *list, GaimBlistNode *node)
         GaimBuddy *buddy = (GaimBuddy*) node;
 		[accountLookup(buddy->account) performSelectorOnMainThread:@selector(accountRemoveBuddy:)
 														withObject:[NSValue valueWithPointer:buddy]
-													 waitUntilDone:NO];
+													 waitUntilDone:YES];
     }
 }
 
@@ -550,7 +550,7 @@ static void *adiumGaimRequestInput(const char *title, const char *primary, const
 	
 	[ESGaimRequestWindowController performSelectorOnMainThread:@selector(showInputWindowWithDict:)
 													withObject:infoDict
-												 waitUntilDone:NO];
+												 waitUntilDone:YES];
 
     return(nil);
 }
@@ -609,7 +609,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 	
 	[ESGaimRequestActionWindowController performSelectorOnMainThread:@selector(showActionWindowWithDict:)
 														  withObject:infoDict
-													   waitUntilDone:NO];
+													   waitUntilDone:YES];
     return(nil);
 }
 
@@ -847,25 +847,6 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 
 - (void)_initGaim
 {	
-	//Handle libgaim events with the Cocoa event loop
-	NSArray *portArray;
-	NSPort  *port1,*port2;
-	port1 = [NSPort port];
-    port2 = [NSPort port];
-    kitConnection = [[NSConnection alloc] initWithReceivePort:port1
-													 sendPort:port2];
-    [kitConnection setRootObject:self];
-	
-    /* Ports switched here. */
-    portArray = [NSArray arrayWithObjects:port2, port1, nil];
-
-	[NSThread detachNewThreadSelector:@selector(_initThreadedGaim:)
-							 toTarget:self
-						   withObject:portArray];
-}	
-	
-- (void)_initThreadedGaim:(NSArray *)portArray
-{
 	//Register ourself as libgaim's UI handler
 	gaim_core_set_ui_ops(&adiumGaimCoreOps);
 	if(!gaim_core_init("Adium")) {
@@ -889,8 +870,27 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     gaim_prefs_set_bool("/core/conversations/im/send_typing", TRUE);
 	
 	//Configure signals for receiving gaim events
-	[self configureSignals];	
+	[self configureSignals];
+	
+	//Handle libgaim events with the Cocoa event loop
+	NSArray *portArray;
+	NSPort  *port1,*port2;
+	port1 = [NSPort port];
+    port2 = [NSPort port];
+    kitConnection = [[NSConnection alloc] initWithReceivePort:port1
+													 sendPort:port2];
+    [kitConnection setRootObject:self];
+	
+    /* Ports switched here. */
+    portArray = [NSArray arrayWithObjects:port2, port1, nil];
 
+	[NSThread detachNewThreadSelector:@selector(_initThreadedGaim:)
+							 toTarget:self
+						   withObject:portArray];
+}	
+	
+- (void)_initThreadedGaim:(NSArray *)portArray
+{
 	[SLGaimCocoaAdapter createThreadedGaimCocoaAdapter:portArray];
 }
 
