@@ -23,7 +23,6 @@ typedef enum
 								   allowNaturalLanguage:NO] autorelease]);
 }
 
-
 + (NSString *)localizedDateFormatStringShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm
 {
     static NSString 	*cache[4] = {nil,nil,nil,nil}; //Cache for the 4 combinations of date string

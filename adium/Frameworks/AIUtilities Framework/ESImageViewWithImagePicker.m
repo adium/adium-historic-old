@@ -13,7 +13,7 @@
 	- Drag and drop into and out of the image well, with delegate notification
  	- Notifcation to the delegate of user's attempt to delete the image
 
- Note: ESImageViewWithImagePicker requires Panther or better.
+ Note: ESImageViewWithImagePicker requires Panther or better for the Address book-style image picker to work.
  */
 
 @interface ESImageViewWithImagePicker (PRIVATE)
@@ -191,4 +191,38 @@
 {
 	return (title ? title : AILocalizedString(@"Image Picker",nil));
 }
+
+// Drawing ------------------------------------------------------------------------
+#pragma mark Drawing
+//Focus ring drawing code by Nicholas Riley, posted on cocoadev and available at:
+//http://cocoa.mamasam.com/COCOADEV/2002/03/2/29535.php
+
+- (BOOL)needsDisplay
+{
+	NSResponder *resp = nil;
+	if ([[self window] isKeyWindow]) {
+		resp = [[self window] firstResponder];
+		if (resp == lastResp) return [super needsDisplay];
+	} else if (lastResp == nil) {
+		return [super needsDisplay];
+	}
+	
+	shouldDrawFocusRing = (resp != nil &&
+						   [resp isKindOfClass: [NSView class]] &&
+						   [(NSView *)resp isDescendantOf: self]); // [sic]
+	lastResp = resp;
+	
+	[self setKeyboardFocusRingNeedsDisplayInRect: [self bounds]];
+	return YES;
+}
+
+- (void)drawRect:(NSRect)rect {
+	[super drawRect: rect];
+	
+	if (shouldDrawFocusRing) {
+		NSSetFocusRingStyle(NSFocusRingOnly);
+		NSRectFill(rect);
+	}
+} 
+
 @end
