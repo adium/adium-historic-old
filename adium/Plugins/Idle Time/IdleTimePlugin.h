@@ -19,12 +19,21 @@
 #define PREF_GROUP_IDLE_TIME		@"Idle"
 #define KEY_IDLE_TIME_ENABLED		@"Idle Enabled"
 #define KEY_IDLE_TIME_IDLE_MINUTES	@"Threshold"
+#define KEY_AUTO_AWAY_ENABLED		@"Auto Away Enabled"
+#define KEY_AUTO_AWAY_IDLE_MINUTES	@"Auto Away Threshold"
+#define KEY_AUTO_AWAY_MESSAGE_INDEX @"Auto Away Message Index"
+
+#define PREF_GROUP_AWAY_MESSAGES    @"Away Messages"
+#define KEY_SAVED_AWAYS				@"Saved Away Messages"
+
+#define MENU_AWAY_DISPLAY_LENGTH		30
 
 typedef enum {
     AINotIdle = 0,
     AIAutoIdle,
     AIManualIdle,
-    AIDelayedManualIdle
+    AIDelayedManualIdle,
+	AIAutoAway
 } AIIdleState;
 
 typedef enum {
@@ -44,6 +53,11 @@ typedef enum {
 
     BOOL		idleEnabled;
     double		idleThreshold;
+	
+	BOOL		autoAwayEnabled;
+	double		autoAwayThreshold;
+	
+	double		autoAwayMessageIndex;
 
     NSMenuItem		*menuItem_setIdle;
     NSMenuItem		*menuItem_removeIdle;

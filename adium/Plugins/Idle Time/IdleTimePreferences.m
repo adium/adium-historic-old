@@ -22,6 +22,9 @@
 @interface IdleTimePreferences (PRIVATE)
 - (void)configureView;
 - (void)configureControlDimming;
+- (void)loadAwayMessages;
+- (NSMutableArray *)_loadAwaysFromArray:(NSArray *)array;
+- (NSMenu *)savedAwaysMenu;
 @end
 
 @implementation IdleTimePreferences
@@ -45,9 +48,26 @@
                                              forKey:KEY_IDLE_TIME_IDLE_MINUTES
                                               group:PREF_GROUP_IDLE_TIME];
 
+    }else if(sender == checkBox_enableAutoAway){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_AUTO_AWAY_ENABLED
+                                              group:PREF_GROUP_IDLE_TIME];
+        [self configureControlDimming];
+
+    }else if(sender == textField_autoAwayMinutes){
+        [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
+                                             forKey:KEY_AUTO_AWAY_IDLE_MINUTES
+                                              group:PREF_GROUP_IDLE_TIME];
+
     }
 }
 
+- (IBAction)changeAwayPreference:(id)sender
+{
+    [[adium preferenceController] setPreference:[NSNumber numberWithInt:[popUp_title indexOfSelectedItem]]
+										 forKey:KEY_AUTO_AWAY_MESSAGE_INDEX
+										 group:PREF_GROUP_IDLE_TIME];
+}
 
 //Private ---------------------------------------------------------------------------
 //init
@@ -90,8 +110,16 @@
     //Idle
     [checkBox_enableIdle setState:[[preferenceDict objectForKey:KEY_IDLE_TIME_ENABLED] boolValue]];
     [textField_idleMinutes setIntValue:[[preferenceDict objectForKey:KEY_IDLE_TIME_IDLE_MINUTES] intValue]];
+    [checkBox_enableAutoAway setState:[[preferenceDict objectForKey:KEY_AUTO_AWAY_ENABLED] boolValue]];
+    [textField_autoAwayMinutes setIntValue:[[preferenceDict objectForKey:KEY_AUTO_AWAY_IDLE_MINUTES] intValue]];
+	
 
     //
+	
+	[popUp_title setMenu:[self savedAwaysMenu]];
+	[popUp_title selectItemAtIndex:[[preferenceDict objectForKey:KEY_AUTO_AWAY_MESSAGE_INDEX] intValue]];
+	
+	
     [self configureControlDimming];
 }
 
@@ -100,6 +128,99 @@
 {
     [textField_idleMinutes setEnabled:[checkBox_enableIdle state]];
     [stepper_idleMinutes setEnabled:[checkBox_enableIdle state]];
+	[textField_autoAwayMinutes setEnabled:[checkBox_enableAutoAway state]];
+	[stepper_autoAwayMinutes setEnabled:[checkBox_enableAutoAway state]];
+	[popUp_title setEnabled:[checkBox_enableAutoAway state]];
 }
+
+//Recursively load the away messages, rebuilding the structure with mutable objects
+- (NSMutableArray *)_loadAwaysFromArray:(NSArray *)array
+{
+    NSEnumerator	*enumerator;
+    NSDictionary	*dict;
+    NSMutableArray	*mutableArray = [[NSMutableArray alloc] init];
+
+    enumerator = [array objectEnumerator];
+    while((dict = [enumerator nextObject])){
+        NSString	*type = [dict objectForKey:@"Type"];
+
+        if([type compare:@"Group"] == 0){
+            [mutableArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
+                @"Group", @"Type",
+                [self _loadAwaysFromArray:[dict objectForKey:@"Contents"]], @"Contents",
+                [dict objectForKey:@"Name"], @"Name",
+                nil]];
+
+        }else if([type compare:@"Away"] == 0){
+            [mutableArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
+                @"Away", @"Type",
+                [NSAttributedString stringWithData:[dict objectForKey:@"Message"]], @"Message",
+                [dict objectForKey:@"Title"], @"Title",
+                nil]];
+
+        }
+    }
+
+    return(mutableArray);
+}
+
+//Load the away messages
+- (void)loadAwayMessages
+{
+    NSArray	*tempArray;
+
+    //Release any existing away array
+    [awayMessageArray release];
+
+    //Load the saved away messages
+    tempArray = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
+    if(tempArray){
+        //Load the aways
+        awayMessageArray = [self _loadAwaysFromArray:tempArray];
+
+    }else{
+        //If no aways exist, create an empty array
+        awayMessageArray = [[NSMutableArray alloc] init];
+    }
+
+}
+
+- (NSMenu *)savedAwaysMenu
+{
+    NSMenu		*savedAwaysMenu = [[NSMenu alloc] init];
+    NSMenuItem  *menuItem;
+    
+    [self loadAwayMessages]; //load the away messages into awayMessageArray
+
+    NSEnumerator *enumerator = [awayMessageArray objectEnumerator];
+    NSDictionary *dict;
+    while(dict = [enumerator nextObject]){
+        NSString * title = [dict objectForKey:@"Title"];
+        if(title){
+	    menuItem = [[[NSMenuItem alloc] initWithTitle:title
+                                                target:self
+                                                action:@selector(changeAwayPreference:)
+                                         keyEquivalent:@""] autorelease];
+        }else{
+            NSString * message = [[dict objectForKey:@"Message"] string];
+
+            //Cap the away menu title (so they're not incredibly long)
+            if([message length] > MENU_AWAY_DISPLAY_LENGTH){
+                message = [[message substringToIndex:MENU_AWAY_DISPLAY_LENGTH] stringByAppendingString:@"…"];
+            }
+            
+            menuItem = [[[NSMenuItem alloc] initWithTitle:message
+                                                   target:self
+                                                   action:@selector(loadSavedAway:)
+                                            keyEquivalent:@""] autorelease];
+        }
+        [menuItem setRepresentedObject:dict];
+        [menuItem setEnabled:YES];
+        [savedAwaysMenu addItem:menuItem];
+        [savedAwaysMenu setAutoenablesItems:NO];
+    }
+    return savedAwaysMenu;
+}
+
     
 @end

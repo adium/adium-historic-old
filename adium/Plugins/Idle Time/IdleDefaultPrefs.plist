@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Auto Away Enabled</key>
+	<false/>
+	<key>Auto Away Message Index</key>
+	<integer>0</integer>
+	<key>Auto Away Threshold</key>
+	<integer>10</integer>
 	<key>Idle Enabled</key>
 	<true/>
 	<key>Threshold</key>

@@ -19,17 +19,17 @@
 
 @interface IdleTimeWindowController : NSWindowController
 {
-    AIIdleTimePlugin		*plugin;
+    AIIdleTimePlugin            *plugin;
 
-    IBOutlet 	NSPopUpButton 	*popUp_Accounts;
-    IBOutlet	NSButton	*checkBox_SetManually;
-    IBOutlet	NSTextField	*textField_IdleDays;
-    IBOutlet	NSTextField	*textField_IdleHours;
-    IBOutlet	NSTextField	*textField_IdleMinutes;
-    IBOutlet	NSStepper	*stepper_IdleDays;
-    IBOutlet	NSStepper	*stepper_IdleHours;
-    IBOutlet	NSStepper	*stepper_IdleMinutes;
-    IBOutlet	NSButton	*button_Apply;
+    IBOutlet 	NSPopUpButton   *popUp_Accounts;
+    IBOutlet	NSButton        *checkBox_SetManually;
+    IBOutlet	NSTextField     *textField_IdleDays;
+    IBOutlet	NSTextField     *textField_IdleHours;
+    IBOutlet	NSTextField     *textField_IdleMinutes;
+    IBOutlet	NSStepper       *stepper_IdleDays;
+    IBOutlet	NSStepper       *stepper_IdleHours;
+    IBOutlet	NSStepper       *stepper_IdleMinutes;
+    IBOutlet	NSButton        *button_Apply;
 }
 
 + (id)idleTimeWindowControllerForPlugin:(AIIdleTimePlugin *)inPlugin;
