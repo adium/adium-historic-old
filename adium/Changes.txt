@@ -32,7 +32,7 @@ Version 0.57
 - Updated allowed characters / lengths for several protocols
 - Fixed a bug causing auto-scroll to always happen on receiving messages
 - Added overflow scrollbars to all the message styles
-- Tab sorting menu items (no prefs yet)
+- Added the ability to sort tabs
 - Fixed a bug with scripts being recognized in other peoples profiles
 - Fixed bug sending wrong text color out.. green text
 - added delete contact menu item
