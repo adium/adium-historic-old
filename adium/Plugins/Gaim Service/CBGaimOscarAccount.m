@@ -357,7 +357,7 @@ struct buddyinfo {
 	
 	//Associate the fileTransfer and the xfer with each other
 	[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
-    xfer->ui_data = fileTransfer;
+    xfer->ui_data = [fileTransfer retain];
 	
 	//Set the filename
 	//gaim_xfer_set_local_filename(xfer, filename);
