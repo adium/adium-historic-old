@@ -72,13 +72,47 @@
 	}else if([eventID isEqualToString:ACCOUNT_DISCONNECTED]){
 		description = AILocalizedString(@"When you disconnect",nil);
 	}else if([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]){
-		description = AILocalizedString(@"When you receive a New eMail notification",nil);
+		description = AILocalizedString(@"When you receive a new email notification",nil);
+	}
+	
+	return(description);
+}
+
+- (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
+										listObject:(AIListObject *)listObject
+										  userInfo:(id)userInfo
+									includeSubject:(BOOL)includeSubject
+{
+	NSString	*description = nil;
+	
+	if(includeSubject){
+		NSString	*format = nil;
+		if([eventID isEqualToString:ACCOUNT_CONNECTED]){
+			format = AILocalizedString(@"%@ connected",nil);
+		}else if([eventID isEqualToString:ACCOUNT_DISCONNECTED]){
+			format = AILocalizedString(@"%@ disconnected",nil);
+		}else if([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]){
+			format = AILocalizedString(@"%@ received new email",nil);
+		}
+		
+		if(format){
+			description = [NSString stringWithFormat:format,[listObject displayName]];
+		}
+	}else{
+		if([eventID isEqualToString:ACCOUNT_CONNECTED]){
+			description = AILocalizedString(@"connected",nil);
+		}else if([eventID isEqualToString:ACCOUNT_DISCONNECTED]){
+			description = AILocalizedString(@"disconnected",nil);
+		}else if([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]){
+			description = AILocalizedString(@"received new email",nil);
+		}
 	}
 	
 	return(description);
 }
 
 
+#pragma mark Aggregation and event generation
 //
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
