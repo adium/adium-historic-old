@@ -6,7 +6,8 @@
 
 #import "SHBookmarksImporterPlugin.h"
 
-#define ROOT_MENU_TITLE     AILocalizedString(@"Bookmarks",nil)
+#define ROOT_MENU_TITLE     		AILocalizedString(@"Bookmarks",nil)
+#define BOOKMARK_MENU_TITLE     	AILocalizedString(@"Bookmark",nil)
 
 @interface SHBookmarksImporterPlugin(PRIVATE)
 - (Class)importerClassForDefaultBrowser;
@@ -202,8 +203,8 @@
 		NSEnumerator		*enumerator = [[importer availableBookmarks] objectEnumerator];
 		id					object;
 		
-		NSMenu				*menuItemSubmenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-		NSMenu				*contextualMenuItemSubmenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+		NSMenu				*menuItemSubmenu = [[[NSMenu alloc] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
+		NSMenu				*contextualMenuItemSubmenu = [[[NSMenu alloc] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
 		[menuItemSubmenu setMenuChangedMessagesEnabled:NO];
 		[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:NO];
 		
