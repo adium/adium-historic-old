@@ -1,6 +1,6 @@
 				Adium X Version History
 				-----------------------
-Version 0.55
+Version 0.55 (5/8/2004)
 - Fixed a crash when connecting to a Yahoo account with privacy settings enabled
 - Fixed formatting when sending messages to oneself via MSN
 - Fixed a crash when editing links that are in the view at load time
