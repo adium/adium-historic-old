@@ -22,11 +22,8 @@
 	contextualMenu = [[super defaultMenu] copy];
 	
 	//Retrieve the items which should be added to the bottom of the default menu
-	NSMenu  *adiumMenu = [[[AIObject sharedAdiumInstance] menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
-		[NSNumber numberWithInt:Context_TextView_LinkAction],
-		[NSNumber numberWithInt:Context_TextView_General],
-		[NSNumber numberWithInt:Context_TextView_EmoticonAction], nil]
-																						  forTextView:self];
+	NSMenu  *adiumMenu = [[[AIObject sharedAdiumInstance] menuController] contextualMenuWithLocations:[NSArray arrayWithObject:
+		[NSNumber numberWithInt:Context_TextView_Edit]] forTextView:self];
 	itemsArray = [adiumMenu itemArray];
 	
 	if([itemsArray count] > 0) {

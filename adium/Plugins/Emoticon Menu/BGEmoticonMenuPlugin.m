@@ -32,7 +32,7 @@
 	needToRebuildMenus = YES;
 	
     //add the items to their menus.
-    [[adium menuController] addContextualMenuItem:quickContextualMenuItem toLocation:Context_TextView_EmoticonAction];    
+    [[adium menuController] addContextualMenuItem:quickContextualMenuItem toLocation:Context_TextView_Edit];    
     [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Edit_Additions];
 
 	
