@@ -43,7 +43,7 @@
         signonDate = [[(AIListContact *)inObject statusArrayForKey:@"Signon Date"] earliestDate];
         
         if(signonDate){
-            return([NSDateFormatter stringForTimeIntervalSinceDate:signonDate]);
+            return([NSDateFormatter stringForTimeIntervalSinceDate:signonDate showingSeconds:NO abbreviated:NO]);
         }
     }
 

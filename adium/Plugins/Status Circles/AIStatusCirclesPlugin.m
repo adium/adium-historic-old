@@ -218,6 +218,9 @@
 	NSEnumerator		*enumerator;
 	AIListObject		*object;
 
+        [AIStatusCircle shouldDisplayIdleTime:displayIdleTime];
+        [AIStatusCircle setIsOnLeft:displayStatusCircleOnLeft];
+        
 	enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
 
 	while(object = [enumerator nextObject]){

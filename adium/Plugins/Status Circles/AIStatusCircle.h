@@ -43,6 +43,8 @@ typedef enum {
 }
 
 + (id)statusCircle;
++ (void)shouldDisplayIdleTime:(BOOL)displayIdleTime;
++ (void)setIsOnLeft:(BOOL)inIsOnLeft;
 
 - (void)setState:(AICircleState)inState;
 - (void)setColor:(NSColor *)inColor;

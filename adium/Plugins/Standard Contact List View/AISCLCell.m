@@ -50,7 +50,7 @@
     leftViewArray = [listObject displayArrayForKey:@"Left View"];
     if(leftViewArray && [leftViewArray count]){
         //Indent into the margin to save space
-        cellSize.width += LEFT_MARGIN;
+        cellSize.width -= LEFT_MARGIN;
         
         //Left aligned icon
         for(loop = 0;loop < [leftViewArray count];loop++){
@@ -71,6 +71,9 @@
     //Calculate all right views
     rightViewArray = [listObject displayArrayForKey:@"Right View"];
     if(rightViewArray && [rightViewArray count]){//Right aligned icon(s)
+        //Move the first rightView item RIGHT_VIEW_PADDING away from the center
+        cellSize.width += RIGHT_VIEW_PADDING;
+        
         for(loop = 0;loop < [rightViewArray count];loop++){
             id <AIListObjectLeftView>	handler = [rightViewArray objectAtIndex:loop];
             
@@ -89,15 +92,6 @@
     NSSize		displayNameSize;
     NSSize		cellSize = NSMakeSize(CELL_SIZE_ADJUST_X, 0);
     NSMutableArray      *cellSizeArray = [[NSMutableArray alloc] init];
-    
-    if(isGroup){ //move text away from flippy triangle
-        cellSize.width += GROUP_PADDING;
-    }else{ //Negate indentation
-        cellSize.width += INDENTATION_OFFSET;
-    }
-
-    //Pad the right side of our view
-    cellSize.width += RIGHT_MARGIN;
 
     //Text Font
     font = [(AISCLOutlineView *)controlView font];
@@ -105,6 +99,16 @@
     //Add Bold for Groups
     if(isGroup){
 	font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSBoldFontMask];
+    }
+    
+    
+    if(isGroup){ //move text away from flippy triangle
+        cellSize.width += INDENTATION_OFFSET + 4;
+    }else{ //Negate indentation
+        cellSize.width += INDENTATION_OFFSET;
+        
+        //Pad the right side of our view
+        cellSize.width += RIGHT_MARGIN;
     }
     
     //string
@@ -130,9 +134,6 @@
     displayNameSize = [displayName size];
     cellSize.width += displayNameSize.width;
     cellSize.height += displayNameSize.height;
-    
-    //Pad the right side of our view
- //   cellSize.width -= RIGHT_MARGIN;
     
     int height = cellSize.height;
     
