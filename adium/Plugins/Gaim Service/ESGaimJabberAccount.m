@@ -14,6 +14,12 @@
     return "prpl-jabber";
 }
 
+- (void)createNewGaimAccount
+{
+    [super createNewGaimAccount];
+//    gaim_account_set_string(account,"connect_server","jabber.carter.to");
+}
+
 - (id <AIAccountViewController>)accountView
 {
     return([ESGaimJabberAccountViewController accountViewForAccount:self]);
