@@ -16,8 +16,6 @@
 #import "AIListObject.h"
 #import "AIListGroup.h"
 
-#define DISPLAY_ORDERING	FALSE
-
 @interface AIListObject (PRIVATE)
 - (NSMutableArray *)_recursivePreferencesForKey:(NSString *)inKey group:(NSString *)groupName;
 @end
@@ -30,7 +28,6 @@
     [super init];
 
     displayDictionary = [[NSMutableDictionary alloc] init];
-	statusArrayDictionary = [[NSMutableDictionary alloc] init];
     containingGroup = nil;
     UID = [inUID retain];
     serviceID = [inServiceID retain];
@@ -202,10 +199,6 @@
 	
 	[self setStatusObject:object forKey:key notify:YES];
 
-	//Inform our containing group about the new status object value
-	if (containingGroup)
-		[containingGroup listObject:self didSetStatusObject:object forKey:key];
-	
 	[delayedStatusTimers removeObject:inTimer];
 	if([delayedStatusTimers count] == 0){
 		[delayedStatusTimers release]; delayedStatusTimers = nil;
@@ -229,6 +222,12 @@
 }
 
 //Quickly retrieve a status key for this object
+- (NSEnumerator	*)statusKeyEnumerator
+{
+	return([statusDictionary keyEnumerator]);
+}
+
+
 - (id)statusObjectForKey:(NSString *)key
 {
     return([statusDictionary objectForKey:key]);

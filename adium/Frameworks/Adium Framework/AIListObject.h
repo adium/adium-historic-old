@@ -23,7 +23,6 @@
 	//Status and display
     NSMutableDictionary		*displayDictionary;		//A dictionary of values affecting this object's display
     NSMutableDictionary		*statusDictionary;
-	NSMutableDictionary		*statusArrayDictionary;
     NSMutableArray			*changedStatusKeys;		//Status keys that have changed since the last notification
 	NSMutableArray			*delayedStatusTimers;
 
@@ -33,6 +32,9 @@
 	
 	//
 }
+
+- (NSEnumerator *)statusKeyEnumerator;
+
 
 //
 - (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID;

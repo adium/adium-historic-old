@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.104 2004/02/26 16:42:45 eevyl Exp $
+// $Id: AIContactController.m,v 1.105 2004/02/27 01:09:27 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -41,7 +41,7 @@
 - (void)loadContactList;
 - (void)saveContactList;
 - (NSArray *)_informObserversOfObjectStatusChange:(AIListObject *)inObject withKeys:(NSArray *)modifiedKeys silent:(BOOL)silent;
-- (void)_informObserversOfObjectCreation:(AIListObject *)inObject;
+- (void)_updateAllAttributesOfObject:(AIListObject *)inObject;
 - (id)_performSelectorOnFirstAvailableResponder:(SEL)selector;
 
 - (NSArray *)_arrayRepresentationOfListObjects:(NSArray *)listObjects;
@@ -323,7 +323,7 @@
 				
 			}else{
 				//Update the meta contact's attributes
-				[self _informObserversOfObjectCreation:localGroup];
+				[self _updateAllAttributesOfObject:localGroup];
 				
 			}
 		}else{
@@ -347,12 +347,15 @@
 				//If the existing object is a meta contact, we place our new one inside it.
 				[(AIMetaContact *)existingObject addObject:inObject];
 
+				//Update the meta contact's attributes
+				[self _updateAllAttributesOfObject:existingObject];
+
 			}else{
 				//If the existing object is not a meta contact, we will create one and place both the existing object
 				//and the new object within it
 				metaContact = [[[AIMetaContact alloc] initWithUID:[inObject UID] serviceID:[inObject serviceID]] autorelease];
 				[metaContact addObject:inObject];
-				
+
 				//Place existing contact within it
 				[existingObject retain];
 				
@@ -362,12 +365,15 @@
 				[metaContact addObject:(AIListContact *)existingObject];
 				
 				[existingObject release];
-				
-				//Allow observers to process the new meta contact (And apply their attributes to it)
-				[self _informObserversOfObjectCreation:metaContact];
+
+				//Update the meta contact's attributes
+				[self _updateAllAttributesOfObject:existingObject];
+
+				//Add the new meta contact to our list
 				[localGroup addObject:metaContact];
 				[self _listChangedGroup:localGroup object:metaContact];
 			}
+			
 		}else{
 			//If no similar objects exist, we add this contact directly to the list
 			[localGroup addObject:inObject];
@@ -689,8 +695,8 @@
 	return(attrChange);
 }
 
-//Notifies observers that an object was created
-- (void)_informObserversOfObjectCreation:(AIListObject *)inObject
+//Command all observers to apply their attributes to an object
+- (void)_updateAllAttributesOfObject:(AIListObject *)inObject
 {
 	NSEnumerator				*enumerator = [contactObserverArray objectEnumerator];
     id <AIListObjectObserver>	observer;
@@ -699,6 +705,7 @@
 		[observer updateListObject:inObject keys:nil silent:YES];
 	}
 }
+
 
 
 //Contact List ---------------------------------------------------------------------------------------------------------
@@ -771,7 +778,7 @@
 			[contact setOrderIndex:largestOrder];
 			
 			//Add
-			[self _informObserversOfObjectCreation:contact];
+			[self _updateAllAttributesOfObject:contact];
 			[contactDict setObject:contact forKey:key];
 		}
 	}
@@ -819,7 +826,7 @@
 			[group setOrderIndex:largestOrder];
 			
 			//add
-			[self _informObserversOfObjectCreation:group];
+			[self _updateAllAttributesOfObject:group];
 			[groupDict setObject:group forKey:groupUID];
 			
 			//Add to target group
