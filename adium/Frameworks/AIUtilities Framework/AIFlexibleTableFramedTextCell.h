@@ -46,5 +46,6 @@
 - (void)setDrawSides:(BOOL)inDrawSides;
 
 - (void)setFrameBackgroundColor:(NSColor *)inBubbleColor borderColor:(NSColor *)inBorderColor dividerColor:(NSColor *)inDividerColor;
+- (void)setFrameBackgroundColor:(NSColor *)inBubbleColor;
 
 @end

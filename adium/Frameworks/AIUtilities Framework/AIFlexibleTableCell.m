@@ -58,6 +58,10 @@
         [backgroundColor release]; backgroundColor = [inColor retain];
     }
 }
+- (NSColor *)contentBackgroundColor
+{
+	return backgroundColor;
+}
 
 //Set and get the row this cell is in
 - (void)setTableRow:(AIFlexibleTableRow *)inRow

@@ -45,6 +45,7 @@
 - (void)setBackgroundColor:(NSColor *)inColor;
 - (void)setPaddingLeft:(int)inLeft top:(int)inTop right:(int)inRight bottom:(int)inBottom;
 - (void)setOpacity:(float)inOpacity;
+- (NSColor *)contentBackgroundColor;
 
 //Access
 - (NSSize)paddingInset;

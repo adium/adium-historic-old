@@ -131,6 +131,22 @@
     [self _updateColorsWithAlpha];
 }
 
+- (void)setFrameBackgroundColor:(NSColor *)inBubbleColor
+{
+	if(bubbleColorOpaque != inBubbleColor){
+        [bubbleColorOpaque release];
+        bubbleColorOpaque = [inBubbleColor retain];
+		
+		[bubbleColor release];
+		bubbleColor = [[bubbleColorOpaque colorWithAlphaComponent:opacity] retain];
+    }
+}
+
+- (NSColor *)contentBackgroundColor
+{
+	return bubbleColor;
+}
+
 - (void)setOpacity:(float)inOpacity
 {
     //Update the opacity
