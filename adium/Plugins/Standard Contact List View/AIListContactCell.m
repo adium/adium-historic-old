@@ -22,7 +22,7 @@
 #define STATUS_ICON_ON_LEFT		NO
 #define CONTACT_FONT 			[NSFont systemFontOfSize:11]
 
-#define SHOW_EXTENDED_STATUS	NO
+#define SHOW_EXTENDED_STATUS	YES
 #define EXTENDED_STATUS_FONT	[NSFont systemFontOfSize:9]
 #define EXTENDED_STATUS_COLOR	[NSColor grayColor]
 
