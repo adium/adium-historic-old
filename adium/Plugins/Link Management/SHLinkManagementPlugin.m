@@ -10,8 +10,8 @@
 #import "SHLinkFavoritesPreferences.h"
 #import "SHAutoValidatingTextView.h"
 
-#define ADD_LINK_TITLE         AILocalizedString(@"Add Link...",nil)
-#define EDIT_LINK_TITLE         AILocalizedString(@"Edit Link...",nil)
+#define ADD_LINK_TITLE			AILocalizedString(@"Add Link...",nil)
+#define EDIT_LINK_TITLE			AILocalizedString(@"Edit Link...",nil)
 
 @implementation SHLinkManagementPlugin
 
@@ -44,11 +44,10 @@
 	
 }
 
-//
+//Update our add/edit link menu item
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-	NSLog(@"%@",responder);
 	if(responder && [responder isKindOfClass:[NSTextView class]]){
 		NSString	*title = ADD_LINK_TITLE;
 		
@@ -64,21 +63,19 @@
 
 		return(YES);
 	}else{
-		//Disable the menu item if a text field is not key
-		return(NO);
+		return(NO); //Disable the menu item if a text field is not key
 	}
 	
 }
 
-//
+//Add or edit a link
 - (IBAction)editFormattedLink:(id)sender
 {
-    //edit existing link/text
     NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
     if([responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]){
         if([(NSTextView *)responder selectedRange].length != 0) {
             [[SHLinkEditorWindowController alloc] initEditLinkWindowControllerWithResponder:responder];
-        }else{ //if nothing selected, add link.
+        }else{ //if nothing selected, add link
             [[SHLinkEditorWindowController alloc] initAddLinkWindowControllerWithResponder:responder];
         }
     }
