@@ -16,11 +16,12 @@
 
 + (SLGaimCocoaAdapter *)sharedInstance;
 - (void)addAdiumAccount:(id)adiumAccount;
-- (oneway void)sendEncodedMessage:(NSString *)encodedMessage
-				  originalMessage:(NSString *)originalMessage 
-					  fromAccount:(id)sourceAccount
-						   inChat:(AIChat *)chat
-						withFlags:(int)flags;
+- (BOOL)sendEncodedMessage:(NSString *)encodedMessage
+		   originalMessage:(NSString *)originalMessage 
+			   fromAccount:(id)sourceAccount
+					inChat:(AIChat *)chat
+				 withFlags:(int)flags;
+
 - (oneway void)sendTyping:(AITypingState)typingState inChat:(AIChat *)chat;
 
 - (oneway void)addUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName;

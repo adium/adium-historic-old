@@ -186,6 +186,18 @@
 					type = @"missed-localTooEvil";
 
 					break;
+				
+				case AIChatCommandFailed:
+					message = AILocalizedString(@"Command failed.",nil);
+					type = @"command-failed";
+					
+					break;
+				
+				case AIChatInvalidNumberOfArguments:
+					message = AILocalizedString(@"Incorrect number of command argments.",nil);
+					type = @"command-incorrect-arguments";
+					
+					break;
 			}
 			
 		}else if ([inChat integerStatusObjectForKey:KEY_CHAT_CLOSED_WINDOW] && listObject){

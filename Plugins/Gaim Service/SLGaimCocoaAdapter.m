@@ -44,6 +44,7 @@
 - (void)callTimerFunc:(NSTimer*)timer;
 - (void)initLibGaim;
 - (NSString *)_messageImageCachePathForID:(int)imageID forAdiumAccount:(NSObject<AdiumGaimDO> *)adiumAccount;
+- (BOOL)attemptGaimCommandOnMessage:(NSString *)originalMessage fromAccount:(AIAccount *)sourceAccount inChat:(AIChat *)chat;
 @end
 
 /*
@@ -821,45 +822,51 @@ static void adiumGaimConvDestroy(GaimConversation *conv)
 
 static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-	NSDictionary	*messageDict;
-	NSString		*messageString;
-
-	messageString = [NSString stringWithUTF8String:message];
-	
-	messageDict = [NSDictionary dictionaryWithObjectsAndKeys:[AIHTMLDecoder decodeHTML:messageString],@"AttributedMessage",
-		[NSString stringWithUTF8String:who],@"Source",
-		[NSNumber numberWithInt:flags],@"GaimMessageFlags",
-		[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
-
-	[accountLookup(conv->account) mainPerformSelector:@selector(receivedMultiChatMessage:inChat:)
-										   withObject:messageDict
-										   withObject:chatLookupFromConv(conv)];
+	//We only care about this if it does not have the GAIM_MESSAGE_SEND flag, which is set if Gaim is sending a sent message back to us
+	if((flags & GAIM_MESSAGE_SEND) == 0){
+		NSDictionary	*messageDict;
+		NSString		*messageString;
+		
+		messageString = [NSString stringWithUTF8String:message];
+		
+		messageDict = [NSDictionary dictionaryWithObjectsAndKeys:[AIHTMLDecoder decodeHTML:messageString],@"AttributedMessage",
+			[NSString stringWithUTF8String:who],@"Source",
+			[NSNumber numberWithInt:flags],@"GaimMessageFlags",
+			[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
+		
+		[accountLookup(conv->account) mainPerformSelector:@selector(receivedMultiChatMessage:inChat:)
+											   withObject:messageDict
+											   withObject:chatLookupFromConv(conv)];
+	}
 }
 
 static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
-	NSDictionary			*messageDict;
-	NSObject<AdiumGaimDO>	*adiumAccount = accountLookup(conv->account);
-	NSString				*messageString;
-	AIChat					*chat;
-	
-	messageString = [NSString stringWithUTF8String:message];
-	chat = imChatLookupFromConv(conv);
-	
-	GaimDebug (@"adiumGaimConvWriteIm: Received %@ from %@",messageString,[[chat listObject] UID]);
-
-	//Process any gaim imgstore references into real HTML tags pointing to real images
-	if ([messageString rangeOfString:@"<IMG ID=\"" options:NSCaseInsensitiveSearch].location != NSNotFound) {
-		messageString = [myself _processGaimImagesInString:messageString forAdiumAccount:adiumAccount];
+	//We only care about this if it does not have the GAIM_MESSAGE_SEND flag, which is set if Gaim is sending a sent message back to us
+	if((flags & GAIM_MESSAGE_SEND) == 0){
+		NSDictionary			*messageDict;
+		NSObject<AdiumGaimDO>	*adiumAccount = accountLookup(conv->account);
+		NSString				*messageString;
+		AIChat					*chat;
+		
+		messageString = [NSString stringWithUTF8String:message];
+		chat = imChatLookupFromConv(conv);
+		
+		GaimDebug (@"adiumGaimConvWriteIm: Received %@ from %@",messageString,[[chat listObject] UID]);
+		
+		//Process any gaim imgstore references into real HTML tags pointing to real images
+		if ([messageString rangeOfString:@"<IMG ID=\"" options:NSCaseInsensitiveSearch].location != NSNotFound) {
+			messageString = [myself _processGaimImagesInString:messageString forAdiumAccount:adiumAccount];
+		}
+		
+		messageDict = [NSDictionary dictionaryWithObjectsAndKeys:[AIHTMLDecoder decodeHTML:messageString],@"AttributedMessage",
+			[NSNumber numberWithInt:flags],@"GaimMessageFlags",
+			[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
+		
+		[adiumAccount mainPerformSelector:@selector(receivedIMChatMessage:inChat:)
+							   withObject:messageDict
+							   withObject:chat];
 	}
-
-	messageDict = [NSDictionary dictionaryWithObjectsAndKeys:[AIHTMLDecoder decodeHTML:messageString],@"AttributedMessage",
-		[NSNumber numberWithInt:flags],@"GaimMessageFlags",
-		[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
-	
-	[adiumAccount mainPerformSelector:@selector(receivedIMChatMessage:inChat:)
-						   withObject:messageDict
-						   withObject:chat];
 }
 
 static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
@@ -925,6 +932,12 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 						errorType = AIChatMessageReceivingMissedLocalIsTooEvil;
 						
 					}
+					
+				}else if([messageString isEqualToString:@"Command failed"]){
+					errorType = AIChatCommandFailed;
+					
+				}else if([messageString isEqualToString:@"Wrong number of arguments"]){
+					errorType = AIChatInvalidNumberOfArguments;
 					
 				}else if([messageString rangeOfString:@"transfer"].location != NSNotFound){
 					//Ignore the transfer errors; we will handle them locally
@@ -1122,6 +1135,8 @@ static void adiumGaimConvWindowSwitchConv(GaimConvWindow *win, unsigned int inde
 
 static void adiumGaimConvWindowAddConv(GaimConvWindow *win, GaimConversation *conv)
 {
+	GaimDebug (@"adiumGaimConvWindowAddConv");
+	
 	//Pass chats along to the account
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
 
@@ -1134,6 +1149,7 @@ static void adiumGaimConvWindowAddConv(GaimConvWindow *win, GaimConversation *co
 
 static void adiumGaimConvWindowRemoveConv(GaimConvWindow *win, GaimConversation *conv)
 {
+	GaimDebug (@"adiumGaimConvWindowRemoveConv");
 }
 
 static void adiumGaimConvWindowMoveConv(GaimConvWindow *win, GaimConversation *conv, unsigned int newIndex)
@@ -2067,28 +2083,14 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	gaim_account_register(accountLookupFromAdiumAccount(adiumAccount));
 }
 
-- (oneway void)sendEncodedMessage:(NSString *)encodedMessage
+//Returns YES if the message was sent (and should therefore be displayed).  Returns NO if it was not sent or was otherwise used.
+- (BOOL)sendEncodedMessage:(NSString *)encodedMessage
 				  originalMessage:(NSString *)originalMessage 
 					  fromAccount:(id)sourceAccount
 						   inChat:(AIChat *)chat
 						withFlags:(int)flags
 {
-	[runLoopMessenger target:self 
-			 performSelector:@selector(gaimThreadSendEncodedMessage:originalMessage:fromAccount:inChat:withFlags:) 
-				  withObject:encodedMessage
-				  withObject:originalMessage
-				  withObject:sourceAccount
-				  withObject:chat
-				  withObject:[NSNumber numberWithInt:flags]];
-}
-- (oneway void)gaimThreadSendEncodedMessage:(NSString *)encodedMessage
-							originalMessage:(NSString *)originalMessage
-								fromAccount:(id)sourceAccount
-									 inChat:(AIChat *)chat
-								  withFlags:(NSNumber *)flags
-{
-	BOOL				shouldSendMessage = YES;
-	GaimConversation	*conv = convLookupFromChat(chat,sourceAccount);
+	BOOL sendMessage = YES;
 	
 	if ([originalMessage hasPrefix:@"/"]){
 		/* If a content object makes it this far and still has a "/", Adium hasn't treated it as a command or
@@ -2096,71 +2098,152 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 		XXX - do we want to not-eat non-commands, checking to see if Gaim handled the command and, if not,
 		sending it anyways? */
 		
-		GaimCmdStatus		status;
-		char				*markup, *error;
-		const char			*cmd;
-		
-		cmd = [originalMessage UTF8String];
-		
-		//cmd+1 will be the cmd without the leading character, which should be "/"
-		markup = gaim_escape_html(cmd+1);
-		status = gaim_cmd_do_command(conv, cmd+1, markup, &error);
-		AILog(@"Command status is %i",status);
-		g_free(markup);
-
-		switch (status) {
-			case GAIM_CMD_STATUS_OK:
-				shouldSendMessage = NO;
-				break;
-			case GAIM_CMD_STATUS_NOT_FOUND:
-				//			gaim_notify_error(gaim_account_get_connection(conv->account),"Command not found",cmd,NULL);
-				break;
-			case GAIM_CMD_STATUS_WRONG_ARGS:			
-				shouldSendMessage = NO;
-				gaim_notify_error(gaim_account_get_connection(conv->account),"Wrong number of arguments",cmd,NULL);
-				break;
-			case GAIM_CMD_STATUS_FAILED:
-				shouldSendMessage = NO;
-				gaim_notify_error(gaim_account_get_connection(conv->account),"Command failed",cmd,NULL);
-				break;
-			case GAIM_CMD_STATUS_WRONG_TYPE:
-				
-				//XXX Do we want to error on this or pretend there was no command?
-				shouldSendMessage = NO;
-				if(gaim_conversation_get_type(conv) == GAIM_CONV_IM){
-					gaim_notify_error(gaim_account_get_connection(conv->account),"Attempted to use Chat command in IM",cmd,NULL);
-				}else{
-					gaim_notify_error(gaim_account_get_connection(conv->account),"Attempted to use IM command in Chat",cmd,NULL);
-				}
-				break;
-			case GAIM_CMD_STATUS_WRONG_PRPL:
-				//XXX Do we want to error on this or pretend there was no command?
-				shouldSendMessage = NO;
-				gaim_notify_error(gaim_account_get_connection(conv->account),"Command not for this protocol",cmd,NULL);
-				break;
-		}		
+		sendMessage = [self attemptGaimCommandOnMessage:originalMessage
+											fromAccount:sourceAccount
+												 inChat:chat];
 	}
+
+	if(sendMessage){
+		[runLoopMessenger target:self 
+				 performSelector:@selector(gaimThreadSendEncodedMessage:originalMessage:fromAccount:inChat:withFlags:) 
+					  withObject:encodedMessage
+					  withObject:originalMessage
+					  withObject:sourceAccount
+					  withObject:chat
+					  withObject:[NSNumber numberWithInt:flags]];
+	}
+
+	return(sendMessage);
+}
+
+//Called with a potential gaimCommand as originalMessage.  Uses gaim_cmd_check_command() [added to libgaim] to determine
+//if the cmd is potentially a valid gaim command.  Returns YES if the message should be sent (it was not a command) or
+//NO if the message should not be sent (it was a command and already executed as such on the proper thread).
+- (BOOL)attemptGaimCommandOnMessage:(NSString *)originalMessage fromAccount:(AIAccount *)sourceAccount inChat:(AIChat *)chat
+{
+	GaimConversation	*conv = convLookupFromChat(chat, sourceAccount);
+	GaimCmdStatus		status;
+	char				*markup, *error;
+	const char			*cmd;
+	BOOL				sendMessage = YES;
 	
-	if(shouldSendMessage){
-		const char *encodedMessageUTF8String;
-		
-		if(encodedMessageUTF8String = [encodedMessage UTF8String]){
-			switch (gaim_conversation_get_type(conv)) {				
-				case GAIM_CONV_IM: {
-					GaimConvIm			*im = gaim_conversation_get_im_data(conv);
-					gaim_conv_im_send_with_flags(im,encodedMessageUTF8String,[flags intValue]);
-					break;
-				}
-					
-				case GAIM_CONV_CHAT: {
-					GaimConvChat	*gaimChat = gaim_conversation_get_chat_data(conv);
-					gaim_conv_chat_send(gaimChat,encodedMessageUTF8String);
-					break;
-				}
-			}
-		}else{
-			GaimDebug (@"*** Error encoding %@ to UTF8",encodedMessage);
+	cmd = [originalMessage UTF8String];
+	
+	//cmd+1 will be the cmd without the leading character, which should be "/"
+	markup = gaim_escape_html(cmd+1);
+	status = gaim_cmd_check_command(conv, cmd+1, markup, &error);
+	AILog(@"Command status is %i",status);
+	g_free(markup);
+	
+	switch (status) {
+		case GAIM_CMD_STATUS_OK:
+			sendMessage = NO;
+			//We're good to go (the arguments may be wrong, or it may fail, but it is an account-appropriate command);
+			//perform the command on the gaim thread.
+			[runLoopMessenger target:self 
+					 performSelector:@selector(gaimThreadDoCommand:fromAccount:inChat:) 
+						  withObject:originalMessage
+						  withObject:sourceAccount
+						  withObject:chat];
+			
+			break;
+		case GAIM_CMD_STATUS_WRONG_ARGS:			
+		{
+			sendMessage = NO;
+			
+			gaim_conv_present_error(conv->name, conv->account, "Wrong number of arguments");
+			
+			break;
 		}
+		case GAIM_CMD_STATUS_WRONG_TYPE:
+		{
+			//XXX Do we want to error on this or pretend there was no command?
+			sendMessage = NO;
+			if(gaim_conversation_get_type(conv) == GAIM_CONV_IM){
+				gaim_notify_error(gaim_account_get_connection(conv->account),"Attempted to use Chat command in IM",cmd,NULL);
+			}else{
+				gaim_notify_error(gaim_account_get_connection(conv->account),"Attempted to use IM command in Chat",cmd,NULL);
+			}
+		}
+		case GAIM_CMD_STATUS_FAILED:
+			/* We will never receive this from gaim_cmd_check_command() */
+			break;
+		case GAIM_CMD_STATUS_NOT_FOUND:
+		case GAIM_CMD_STATUS_WRONG_PRPL:
+			/* Ignore this command and let the message send; the user probably doesn't even know what they typed is a command */
+			break;
+	}		
+	
+	return(sendMessage);
+}
+
+//Called on the gaim thread, actually performs the specified command (it should have already been tested by 
+//attemptGaimCommandOnMessage:... above.
+- (oneway void)gaimThreadDoCommand:(NSString *)originalMessage
+					   fromAccount:(id)sourceAccount
+							inChat:(AIChat *)chat
+{
+	GaimConversation	*conv = convLookupFromChat(chat, sourceAccount);
+	GaimCmdStatus		status;
+	char				*markup, *error;
+	const char			*cmd;
+	
+	cmd = [originalMessage UTF8String];
+	
+	//cmd+1 will be the cmd without the leading character, which should be "/"
+	markup = gaim_escape_html(cmd+1);
+	status = gaim_cmd_do_command(conv, cmd+1, markup, &error);
+	
+	//The only error status which is possible now is either 
+	switch (status) {
+		case GAIM_CMD_STATUS_FAILED:
+		{
+			gaim_conv_present_error(conv->name, conv->account, "Command failed");
+
+			break;
+		}	
+		case GAIM_CMD_STATUS_WRONG_ARGS:
+		{
+			gaim_conv_present_error(conv->name, conv->account, "Wrong number of arguments");
+			
+			break;
+		}
+		case GAIM_CMD_STATUS_OK:
+		/* All these statuses are taken care of by gaim_cmd_check_command */
+		case GAIM_CMD_STATUS_NOT_FOUND:
+		case GAIM_CMD_STATUS_WRONG_TYPE:
+		case GAIM_CMD_STATUS_WRONG_PRPL:
+			break;
+	}
+}
+	
+
+- (oneway void)gaimThreadSendEncodedMessage:(NSString *)encodedMessage
+							originalMessage:(NSString *)originalMessage
+								fromAccount:(id)sourceAccount
+									 inChat:(AIChat *)chat
+								  withFlags:(NSNumber *)flags
+{	
+	const char *encodedMessageUTF8String;
+	
+	if(encodedMessageUTF8String = [encodedMessage UTF8String]){
+		GaimConversation	*conv = convLookupFromChat(chat,sourceAccount);
+		
+		switch (gaim_conversation_get_type(conv)) {				
+			case GAIM_CONV_IM: {
+				GaimConvIm			*im = gaim_conversation_get_im_data(conv);
+				gaim_conv_im_send_with_flags(im,encodedMessageUTF8String,[flags intValue]);
+				break;
+			}
+				
+			case GAIM_CONV_CHAT: {
+				GaimConvChat	*gaimChat = gaim_conversation_get_chat_data(conv);
+				gaim_conv_chat_send(gaimChat,encodedMessageUTF8String);
+				break;
+			}
+		}
+	}else{
+		GaimDebug (@"*** Error encoding %@ to UTF8",encodedMessage);
 	}
 }
 
