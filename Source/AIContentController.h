@@ -103,7 +103,7 @@ typedef enum {
 }
 
 //Chats
-- (NSArray *)allChatsWithListObject:(AIListObject *)inObject;
+- (NSArray *)allChatsWithContact:(AIListContact *)inContact;
 - (AIChat *)openChatWithContact:(AIListContact *)inContact;
 - (AIChat *)chatWithContact:(AIListContact *)inContact;
 - (AIChat *)existingChatWithContact:(AIListContact *)inContact;
@@ -128,7 +128,7 @@ typedef enum {
 - (void)clearUnviewedContentOfChat:(AIChat *)inChat;
 
 //Sending / Receiving content
-- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject onAccount:(AIAccount *)inAccount;
+- (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount;
 - (void)receiveContentObject:(AIContentObject *)inObject;
 - (BOOL)sendContentObject:(AIContentObject *)inObject;
 - (void)displayContentObject:(AIContentObject *)inObject;
