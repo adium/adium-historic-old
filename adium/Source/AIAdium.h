@@ -60,6 +60,9 @@
     NSArray                                 *appSupportPaths;
 
     BOOL                                    completedApplicationLoad;
+	PREFERENCE_CATEGORY						prefsCategory;
+	NSString								*advancedPrefsName;
+	
 }
 
 + (NSString *)applicationSupportDirectory;

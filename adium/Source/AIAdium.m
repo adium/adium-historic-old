@@ -54,6 +54,7 @@
 @interface AIAdium (PRIVATE)
 - (void)configureCrashReporter;
 - (void)completeLogin;
+- (void)openAppropriatePreferencesIfNeeded;
 @end
 
 @implementation AIAdium
@@ -151,14 +152,9 @@
     notificationCenter = nil;
     eventNotifications = [[NSMutableDictionary alloc] init];
     completedApplicationLoad = NO;
-
-/*
-}
-
-//Adium has finished launching
-- (void)applicationDidFinishLaunching:(NSNotification *)notification
-{
-	*/
+	advancedPrefsName = nil;
+	prefsCategory = -1;
+				
 	//Display the license agreement
 //	NSNumber	*viewedLicense = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_USER_VIEWED_LICENSE];
 //	if(!viewedLicense || [viewedLicense intValue] < 1){
@@ -194,13 +190,17 @@
     //sent when write() or similar function calls fail due to a broken pipe in the network connection
     signal(SIGPIPE, SIG_IGN);
 
-    //Load and init the components
+    completedApplicationLoad = YES;
+}
+
+//Adium has finished launching
+- (void)applicationDidFinishLaunching:(NSNotification *)notification
+{
+	//Begin loading and initing the components
     [loginController initController];
     
     //Begin Login
     [loginController requestUserNotifyingTarget:self selector:@selector(completeLogin)];
-    
-    completedApplicationLoad = YES;
 }
 
 //Forward a re-open message to the interface controller
@@ -218,24 +218,23 @@
     [menuController initController];
     [soundController initController];
     [accountController initController];
-    [contactController initController];
+	[contactController initController];
     [contentController initController];
     [interfaceController initController];
     [dockController initController];
     [fileTransferController initController];
     [contactAlertsController initController];
-//	[NSBundle loadNibNamed:@"ActivityWindow" owner:self];
 //    [activityWindowController initController];
-	
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
-	
+
 	//
     [contactController finishIniting];
     [preferenceController finishIniting];
     [interfaceController finishIniting];
     [accountController finishIniting];
-    
-    [[self notificationCenter] postNotificationName:Adium_PluginsDidFinishLoading object:nil];
+	
+	//Open the preferences if we were unable to because application:openFile: was called before we got here
+	[self openAppropriatePreferencesIfNeeded];
 }
 
 //Give all the controllers a chance to close down
@@ -334,11 +333,13 @@ void Adium_HandleSignal(int i){
     NSString			*extension = [filename pathExtension];
     NSString			*destination = nil;
 	NSString			*errorMessage = nil;
-    NSString			*fileDescription = nil, *prefsButton = nil, *advancedPrefsName = nil;
+    NSString			*fileDescription = nil, *prefsButton = nil;
 	BOOL				success = NO, requiresRestart = NO;
 	int					buttonPressed;
-	PREFERENCE_CATEGORY prefsCategory = -1;
-    
+	
+	prefsCategory = -1;
+    [advancedPrefsName release]; advancedPrefsName = nil;
+	
     //Specify a file extension and a human-readable description of what the files of this type do
     if ([extension caseInsensitiveCompare:@"AdiumPlugin"] == NSOrderedSame){
         destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Plugins"];
@@ -352,7 +353,7 @@ void Adium_HandleSignal(int i){
         fileDescription = AILocalizedString(@"Adium theme",nil);
 		prefsButton = AILocalizedString(@"Open Theme Prefs",nil);
 		prefsCategory = AIPref_Advanced_Other;
-		advancedPrefsName = @"Themes";
+		advancedPrefsName = [@"Themes" retain];
 		
     } else if ([extension caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Dock Icons"];
@@ -374,6 +375,7 @@ void Adium_HandleSignal(int i){
 		fileDescription = AILocalizedString(@"emoticon set",nil);
 		prefsButton = AILocalizedString(@"Open Emoticon Prefs",nil);
 		prefsCategory = AIPref_Emoticons;
+		
 	} else if ([extension caseInsensitiveCompare:@"AdiumScripts"] == NSOrderedSame) {
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Scripts"];
 		requiresRestart = YES;
@@ -447,17 +449,8 @@ void Adium_HandleSignal(int i){
         buttonPressed = NSRunInformationalAlertPanel(alertTitle,alertMsg,nil,prefsButton,nil);
 		
 		// User clicked the "open prefs" button
-		if( buttonPressed == NSAlertAlternateReturn ) {
-			switch( prefsCategory ) {
-				case AIPref_Advanced_Messages:
-				case AIPref_Advanced_ContactList:
-				case AIPref_Advanced_Status:
-				case AIPref_Advanced_Other:
-					[preferenceController openPreferencesToAdvancedPane:advancedPrefsName inCategory:prefsCategory];
-					break;
-				default:
-					[preferenceController openPreferencesToCategory:prefsCategory];
-			}
+		if( buttonPressed == NSAlertAlternateReturn && completedApplicationLoad) {
+				[self openAppropriatePreferencesIfNeeded];
 		}
     }else{
 		if (!errorMessage){
@@ -470,6 +463,25 @@ void Adium_HandleSignal(int i){
 	}
 
     return success;
+}
+
+- (void)openAppropriatePreferencesIfNeeded
+{
+	if (prefsCategory != -1){
+		switch( prefsCategory ) {
+			case AIPref_Advanced_Messages:
+			case AIPref_Advanced_ContactList:
+			case AIPref_Advanced_Status:
+			case AIPref_Advanced_Other:
+				[preferenceController openPreferencesToAdvancedPane:advancedPrefsName inCategory:prefsCategory];
+				[advancedPrefsName release]; advancedPrefsName = nil;
+				break;
+			default:
+				[preferenceController openPreferencesToCategory:prefsCategory];
+		}
+		
+		prefsCategory = -1;
+	}
 }
 
 //create a resource folder in the Library/Application\ Support/Adium\ 2.0 folder.
