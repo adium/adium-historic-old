@@ -8,7 +8,6 @@
 #import "ESContactAlertsPlugin.h"
 #import "ESContactAlertsWindowController.h"
 #import "ESContactAlertsPreferences.h"
-#import "AIContactStatusEventsPlugin.h"
 
 #define EDIT_CONTACTS_ALERTS    AILocalizedString(@"Edit Contact's Alerts",nil)
 #define EDIT_ALERTS		AILocalizedString(@"Edit Alerts",nil)
