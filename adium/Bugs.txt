@@ -3,6 +3,8 @@
 //------------------------------------------------------------------------------------
 - Emoticon menu inserts the wrong emoticons if some are disabled
 - 'Combine Consecutive Messages', when disabled, causes messages to nest within eathocher
+- Crashes/freezes on new messages
+- Text force settings not applying on launch
 - Links with custom titles are not persistent under Jaguar
 
 //------------------------------------------------------------------------------------
