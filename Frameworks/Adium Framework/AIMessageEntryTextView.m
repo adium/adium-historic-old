@@ -65,8 +65,11 @@ static NSImage *pushIndicatorImage = nil;
     [self setDrawsBackground:YES];
     _desiredSizeCached = NSMakeSize(0,0);
 
-	if([self respondsToSelector:@selector(setAllowsUndo:)]){
+	if([self respondsToSelector:@selector(setAllowsUndo:)]) {
 		[self setAllowsUndo:YES];
+	}
+	if([self respondsToSelector:@selector(setAllowsDocumentBackgroundColorChange:)]) {
+		[self setAllowsDocumentBackgroundColorChange:YES;
 	}
 
 	[self setImportsGraphics:YES];
