@@ -93,13 +93,11 @@
 
 - (void)dealloc
 {
-    [toolbarItem release];
-
     [super dealloc];
 }
 
 - (void)setToolbarItem:(AIMiniToolbarItem *)inToolbarItem{
-    toolbarItem = [inToolbarItem retain];
+    toolbarItem = inToolbarItem;
 }
 - (AIMiniToolbarItem *)toolbarItem{
     return(toolbarItem);
