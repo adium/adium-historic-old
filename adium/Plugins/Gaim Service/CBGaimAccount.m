@@ -400,6 +400,18 @@
             listContact = [self contactAssociatedWithBuddy:buddy];
         }
 		
+#warning this assertion is firing almost randomly.  I had two instances of Adium connect on the same account name, and
+#warning an incoming message caused the one instance to assert here, but the other instance was fine...
+
+#warning If no serviceID or UID is passed up there ^^ , listContact will be nil and trigger this assertion
+#warning ... so, if buddy is nil or buddy->name is nil or 0 length, we wont get a UID, wont get a list contact, and then will assert below
+		
+#warning is this how were supposed to handle incoming stranger messages?  By looking up a buddy from conv->name ?
+		
+		/*
+		 (serviceID && [serviceID length] && UID && [UID length])
+		*/
+		
 		NSAssert(listContact != nil, @"contactAssociatedWithBuddy must have failed?");
         // Need to start a new chat, associating with the gaim conv
         chat = [[adium contentController] chatWithContact:listContact
