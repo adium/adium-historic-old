@@ -220,9 +220,9 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 
 		return(YES);
 	}else{
-		NSRunAlertPanel(@"Error Saving Theme",
-						@"Unable to write file %@ to %@",
-						@"OK",
+		NSRunAlertPanel(AILocalizedString(@"Error Saving Theme",nil),
+						AILocalizedString(@"Unable to write file %@ to %@",nil),
+						AILocalizedString(@"OK",nil),
 						nil,
 						nil,
 						fileName,
@@ -234,15 +234,13 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 //Delete a layout or theme set
 + (BOOL)deleteSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder
 {
-	NSString		*path = nil;
-	NSDictionary	*setDict;
 	BOOL			success;
 	
-		NSString	*destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
-		NSString	*fileName = [setName stringByAppendingPathExtension:extension];
-		path = [destFolder stringByAppendingPathComponent:fileName];
+	NSString	*destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
+	NSString	*fileName = [setName stringByAppendingPathExtension:extension];
 	
-	success = [[NSFileManager defaultManager] removeFileAtPath:path handler:nil];
+	success = [[NSFileManager defaultManager] removeFileAtPath:[destFolder stringByAppendingPathComponent:fileName]
+													   handler:nil];
 	
 	//The availability of an xtras just changed, since we deleted it... post a notification so we can update
 	[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
@@ -253,11 +251,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 //
 + (BOOL)renameSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder toName:(NSString *)newName
 {
-	NSString		*path = nil;
-	NSDictionary	*setDict;
 	BOOL			success;
-	
-	path = [setDict objectForKey:@"path"];
 	
 	NSString	*destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
 	NSString	*fileName = [setName stringByAppendingPathExtension:extension];
@@ -276,12 +270,9 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 //
 + (BOOL)duplicateSetWithName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder newName:(NSString *)newName
 {
-	NSString		*path = nil;
 	NSDictionary	*setDict;
 	BOOL			success;
 	
-	path = [setDict objectForKey:@"path"];
-
 	//Duplicate the set
 	NSString	*destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
 	NSString	*fileName = [setName stringByAppendingPathExtension:extension];
