@@ -47,6 +47,19 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	}
 }
 
+- (NSSet *)supportedPropertyKeys
+{
+	static NSSet *supportedPropertyKeys = nil;
+	
+	if (!supportedPropertyKeys)
+		supportedPropertyKeys = [[[NSMutableSet alloc] initWithObjects:
+			@"Available",
+			@"Invisible",
+			nil] unionSet:[super supportedPropertyKeys]];
+	
+	return supportedPropertyKeys;
+}
+
 #pragma mark Connection
 - (NSString *)connectionStringForStep:(int)step
 {
@@ -82,6 +95,12 @@ static NSDictionary		*presetStatusesDictionary = nil;
 - (NSString *)portKey
 {
 	return KEY_YAHOO_PORT;
+}
+
+#pragma mark Status
+- (void)performSetAccountAvailableTo:(NSString *)availableHTML
+{
+	[gaimThread setAvailableMessageTo:availableHTML onAccount:self];	
 }
 
 #pragma mark Encoding

@@ -91,6 +91,19 @@ static BOOL didInitOscar = NO;
 	[super dealloc];
 }
 
+- (NSSet *)supportedPropertyKeys
+{
+	static NSSet *supportedPropertyKeys = nil;
+	
+	if (!supportedPropertyKeys)
+		supportedPropertyKeys = [[[NSMutableSet alloc] initWithObjects:
+			@"Available",
+			@"Invisible",
+			nil] unionSet:[super supportedPropertyKeys]];
+	
+	return supportedPropertyKeys;
+}
+
 - (BOOL)shouldSetAliasesServerside
 {
 	return(YES);
@@ -308,6 +321,12 @@ static BOOL didInitOscar = NO;
 								withObject:self
 								afterDelay:5.0];
 	}
+}
+
+#pragma mark Status
+- (void)performSetAccountAvailableTo:(NSString *)availableHTML
+{
+	[gaimThread OSCARSetAvailableMessageTo:availableHTML onAccount:self];	
 }
 
 #pragma mark Buddy updates

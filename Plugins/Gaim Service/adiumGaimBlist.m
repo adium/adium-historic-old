@@ -28,18 +28,16 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 	if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
 		GaimBuddy *buddy = (GaimBuddy*)node;
 		
-		AIListContact *theContact = contactLookupFromBuddy(buddy);
-		
-		//Group changes - gaim buddies start off in no group, so this is an important update for us
+		AIListContact	*theContact = contactLookupFromBuddy(buddy);
+		NSString		*remoteGroupName = [theContact remoteGroupName];
+		GaimGroup		*g = gaim_find_buddys_group(buddy);
+		NSString		*groupName = ((g && g->name) ? [NSString stringWithUTF8String:g->name] : nil);
+
+		//Group changes, including the initial notification of the group
 		//We also use this opportunity to check the contact's name against its formattedUID
-		if(![theContact remoteGroupName]){
-			GaimGroup	*g = gaim_find_buddys_group(buddy);
-			NSString	*groupName;
+		if(!remoteGroupName || ![remoteGroupName isEqualToString:groupName]){
 			NSString	*contactName;
-			
-			groupName = ((g && g->name) ?
-						 [NSString stringWithUTF8String:g->name] :
-						 nil);
+
 			contactName = [NSString stringWithUTF8String:buddy->name];
 			
 			[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toGroupName:contactName:)

@@ -1684,24 +1684,21 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Account Status ------------------------------------------------------------------------------------------------------
 #pragma mark Account Status
 //Status keys this account supports
-- (NSArray *)supportedPropertyKeys
+- (NSSet *)supportedPropertyKeys
 {
-	static NSArray *supportedPropertyKeys = nil;
+	static NSSet *supportedPropertyKeys = nil;
 	
 	if (!supportedPropertyKeys)
-		supportedPropertyKeys = [[NSArray alloc] initWithObjects:
-        @"Display Name",
-        @"Online",
-        @"Offline",
-        @"IdleSince",
-        @"IdleManuallySet",
-        KEY_USER_ICON,
-        @"Away",
-        @"AwayMessage",
-        @"TextProfile",
-        KEY_USER_ICON,
-        @"DefaultUserIconFilename",
-        nil];
+		supportedPropertyKeys = [[[NSMutableSet alloc] initWithObjects:
+			@"Online",
+			@"Offline",
+			@"IdleSince",
+			@"IdleManuallySet",
+			@"Away",
+			@"AwayMessage",
+			@"TextProfile",
+			@"DefaultUserIconFilename",
+			nil] unionSet:[super supportedPropertyKeys]];
 	
 	return supportedPropertyKeys;
 }
@@ -1722,6 +1719,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		}else if([key isEqualToString:@"AwayMessage"]){
 			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountAwayTo:)];
 			
+		}else if([key isEqualToString:@"Available"]){
+				[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountAvailableTo:)];
+				
 		}else if([key isEqualToString:@"TextProfile"]){
 			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountProfileTo:)];
 			
@@ -1740,6 +1740,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				[gaimThread setCheckMail:[self shouldCheckMail]
 							  forAccount:self];
 			}			
+		}else if([key isEqualToString:@"Invisible"]){
+			BOOL	isInvisible = [[self preferenceForKey:@"Invisible" group:GROUP_ACCOUNT_STATUS] boolValue];
+			[self setAccountInvisibileTo:isInvisible];
 		}
 	}
 }
@@ -1771,6 +1774,42 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		[self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:YES];
 		[self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
 	}
+}
+
+- (void)setAccountAvailableMessageTo:(NSAttributedString *)availableMessage
+{
+#warning If the current away message and new available message are the same I think this messes up
+	if(!availableMessage || ![[availableMessage string] isEqualToString:[[self statusObjectForKey:@"StatusMessage"] string]]){
+		NSString	*availableHTML = nil;
+		
+		//Convert the available message to HTML, and pass it to libgaim
+		if(availableMessage){
+			availableHTML = [self encodedAttributedString:availableMessage forListObject:nil];
+		}
+		
+		//Set the away serverside
+		[self performSetAccountAvailableTo:availableHTML];
+		
+		//We are now away
+		//		[self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:YES];
+		[self setStatusObject:availableMessage forKey:@"StatusMessage" notify:YES];
+	}
+}
+
+- (void)performSetAccountAvailableTo:(NSString *)availableHTML
+{
+
+	NSLog(@"blah, can't do it");
+}
+
+
+- (void)setAccountInvisibleTo:(BOOL)isInvisible
+{
+	if(isInvisible != [[self statusObjectForKey:@"Invisible"] boolValue]){
+		[gaimThread setInvisible:isInvisible onAccount:self];
+	}
+	
+#warning Evan: We lose away/available messages when going to and from invisible.  Will want to re-set these after changing I think.
 }
 
 //Set the profile, then invoke the passed invocation to return control to the target/selector specified
