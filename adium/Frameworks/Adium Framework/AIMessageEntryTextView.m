@@ -525,7 +525,6 @@ static NSImage *pushIndicatorImage = nil;
 
 #pragma mark Contextual Menus
 // disabled until post .53
-#ifdef USE_TEXTVIEW_CONTEXTMENUS
 + (NSMenu *)defaultMenu
 {
     NSMenu          *superClassMenu = [[NSTextView defaultMenu] copy];
@@ -570,5 +569,4 @@ static NSImage *pushIndicatorImage = nil;
     }
     return superClassMenu; //return the menu
 }
-#endif
 @end

@@ -74,10 +74,8 @@ typedef enum {
     AIListContact                       *contactualMenuContact;
     
     //disabled until post .53
-#ifdef USE_TEXTVIEW_CONTEXTMENUS
     NSMenu                              *textViewContextualMenu;
     NSTextView                          *contextualMenu_TextView;
-#endif
     
     NSMutableArray                      *locationArray;
     BOOL                                 isTracking;
@@ -93,10 +91,8 @@ typedef enum {
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forListObject:(AIListObject *)inObject;
 - (AIListContact *)contactualMenuContact;
 
-#ifdef USE_TEXTVIEW_CONTEXTMENUS
 - (NSTextView *)contextualMenuTextView;
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forTextView:(NSTextView *)inObject;
-#endif
 
 //Control over the italics menu item
 - (void)removeItalicsKeyEquivalent;
