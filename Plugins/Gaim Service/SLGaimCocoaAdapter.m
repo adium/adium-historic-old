@@ -999,7 +999,21 @@ static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user, g
 
 static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *users)
 {
-//	[accountLookup(conv->account) accountConvAddedUsers:users inConversation:conv];
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
+		NSMutableArray	*usersArray = [NSMutableArray array];
+
+		GList *l;
+		for (l = users; l != NULL; l = l->next) {
+			[usersArray addObject:[NSString stringWithUTF8String:(char *)l->data]];
+		}
+
+		[accountLookup(conv->account) mainPerformSelector:@selector(addUsersArray:toChat:)
+											   withObject:usersArray
+											   withObject:existingChatLookupFromConv(conv)];
+
+	}else{
+		GaimDebug (@"adiumGaimConvChatAddUsers: IM");
+	}
 }
 
 static void adiumGaimConvChatRenameUser(GaimConversation *conv, const char *oldName, const char *newName)
@@ -1010,8 +1024,6 @@ static void adiumGaimConvChatRenameUser(GaimConversation *conv, const char *oldN
 static void adiumGaimConvChatRemoveUser(GaimConversation *conv, const char *user)
 {
  	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
-		GaimDebug (@"adiumGaimConvChatRemoveUser: CHAT: remove %s",user);
-
 		[accountLookup(conv->account) mainPerformSelector:@selector(removeUser:fromChat:)
 											   withObject:[NSString stringWithUTF8String:gaim_normalize(conv->account, user)]
 											   withObject:existingChatLookupFromConv(conv)];
@@ -1023,7 +1035,21 @@ static void adiumGaimConvChatRemoveUser(GaimConversation *conv, const char *user
 
 static void adiumGaimConvChatRemoveUsers(GaimConversation *conv, GList *users)
 {
-//	[accountLookup(conv->account) accountConvRemovedUsers:users inConversation:conv];
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
+		NSMutableArray	*usersArray = [NSMutableArray array];
+		
+		GList *l;
+		for (l = users; l != NULL; l = l->next) {
+			[usersArray addObject:[NSString stringWithUTF8String:gaim_normalize(conv->account, (char *)l->data)]];
+		}
+		
+		[accountLookup(conv->account) mainPerformSelector:@selector(removeUsersArray:fromChat:)
+											   withObject:usersArray
+											   withObject:existingChatLookupFromConv(conv)];
+		
+	}else{
+		GaimDebug (@"adiumGaimConvChatRemoveUser: IM");
+	}
 }
 
 static void adiumGaimConvSetTitle(GaimConversation *conv, const char *title)
@@ -2219,7 +2245,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	/* Why use Gaim's accounts and blist list when we have the information locally?
 	 *		- Faster account connection: Gaim doesn't have to recreate the local list
 	 *		- Privacy/blocking support depends on the accounts and blist files existing
-	 *		- Using Gaim's own buddy icon caching (which depends both files) allows us to avoid
+	 *		- Using Gaim's own buddy icon caching (which depends on both files) allows us to avoid
 	 *			re-requesting icons we already have locally on some protocols such as AIM.
 	 */
 	//Load the accounts list
