@@ -28,9 +28,7 @@
 - (void)configureView;
 - (void)changeFont:(id)sender;
 - (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField;
-//- (void)showOpacityPercent;
 - (void)configureControlDimming;
-- (void)configureBoldCheckboxAndWarning;
 @end
 
 @implementation AICLPreferences
@@ -40,10 +38,79 @@
     return([[[self alloc] init] autorelease]);
 }
 
+//init
+- (id)init
+{
+    //Init
+    [super init];
+	
+    //Register our preference panes
+    generalPane = [AIPreferencePane preferencePaneInCategory:AIPref_ContactList_General withDelegate:self label:CL_PREF_GENERAL_TITLE];
+    [[adium preferenceController] addPreferencePane:generalPane];
+	
+    groupsPane = [AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Groups withDelegate:self label:CL_PREF_GROUPS_TITLE];
+    [[adium preferenceController] addPreferencePane:groupsPane];
+	
+    
+    return(self);    
+}
+
+//Return the view for our preference pane
+- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    //Load our preference view nib
+    if(!view_prefViewGeneral){
+        [NSBundle loadNibNamed:CL_PREF_NIB owner:self];
+		
+        //Configure our view
+        [self configureView];
+    }
+	
+    if(preferencePane == generalPane){
+        return(view_prefViewGeneral);
+    }else{
+        return(view_prefViewGroups);
+    }
+}
+
+//Clean up our preference pane
+- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    [view_prefViewGeneral release]; view_prefViewGeneral = nil;
+    [view_prefViewGroups release]; view_prefViewGroups = nil;
+}
+
+//Configure our view for the current preferences
+- (void)configureView
+{
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
+	
+    //Display
+    [self showFont:[[preferenceDict objectForKey:KEY_SCL_FONT] representedFont] inField:textField_fontName];
+    [colorWell_contact setColor:[[preferenceDict objectForKey:KEY_SCL_CONTACT_COLOR] representedColor]];
+    [colorWell_background setColor:[[preferenceDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColor]];
+    [checkBox_showLabels setState:[[preferenceDict objectForKey:KEY_SCL_SHOW_LABELS] boolValue]];
+    
+    //Grid
+    [checkBox_alternatingGrid setState:[[preferenceDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue]];
+    [colorWell_grid setColor:[[preferenceDict objectForKey:KEY_SCL_GRID_COLOR] representedColor]];
+	
+    //Groups
+    [checkBox_customGroupColor setState:[[preferenceDict objectForKey:KEY_SCL_CUSTOM_GROUP_COLOR] boolValue]];
+    [colorWell_group setColor:[[preferenceDict objectForKey:KEY_SCL_GROUP_COLOR] representedColor]];
+	
+    [self configureControlDimming];
+}
+
+//Enable/disable controls that are available/unavailable
+- (void)configureControlDimming
+{
+    [colorWell_group setEnabled:[checkBox_customGroupColor state]];
+}
+
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
-
     if(sender == button_setFont){
         NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
         NSFontManager	*fontManager = [NSFontManager sharedFontManager];
@@ -87,19 +154,6 @@
                                              forKey:KEY_SCL_BACKGROUND_COLOR
                                               group:PREF_GROUP_CONTACT_LIST_DISPLAY];    
 
-/*    }else if(sender == slider_opacity){
-        float	opacity = (100.0 - [sender floatValue]) * 0.01;
-        
-        [self showOpacityPercent];
-        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:opacity]
-                                             forKey:KEY_SCL_OPACITY
-                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
-        */
-    }else if(sender == checkBox_boldGroups){
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_SCL_BOLD_GROUPS
-                                              group:PREF_GROUP_CONTACT_LIST_DISPLAY];
-
     }else if(sender == checkBox_customGroupColor){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SCL_CUSTOM_GROUP_COLOR
@@ -111,11 +165,8 @@
                                              forKey:KEY_SCL_GROUP_COLOR
                                               group:PREF_GROUP_CONTACT_LIST_DISPLAY];
     }
-    
 }
 
-
-//Private ---------------------------------------------------------------------------
 //Called in response to a font panel change
 - (void)changeFont:(id)sender
 {
@@ -126,50 +177,6 @@
     //Update the displayed font string & preferences
     [self showFont:contactListFont inField:textField_fontName];
     [[adium preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_SCL_FONT group:PREF_GROUP_CONTACT_LIST_DISPLAY];
-
-    [self configureBoldCheckboxAndWarning];
-}
-
-//init
-- (id)init
-{
-    //Init
-    [super init];
-
-    //Register our preference panes
-    generalPane = [AIPreferencePane preferencePaneInCategory:AIPref_ContactList_General withDelegate:self label:CL_PREF_GENERAL_TITLE];
-    [[adium preferenceController] addPreferencePane:generalPane];
-
-    groupsPane = [AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Groups withDelegate:self label:CL_PREF_GROUPS_TITLE];
-    [[adium preferenceController] addPreferencePane:groupsPane];
-
-    
-    return(self);    
-}
-
-//Return the view for our preference pane
-- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    //Load our preference view nib
-    if(!view_prefViewGeneral){
-        [NSBundle loadNibNamed:CL_PREF_NIB owner:self];
-
-        //Configure our view
-        [self configureView];
-    }
-
-    if(preferencePane == generalPane){
-        return(view_prefViewGeneral);
-    }else{
-        return(view_prefViewGroups);
-    }
-}
-
-//Clean up our preference pane
-- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    [view_prefViewGeneral release]; view_prefViewGeneral = nil;
-    [view_prefViewGroups release]; view_prefViewGroups = nil;
 }
 
 //Display the name of a font in our text field
@@ -179,71 +186,6 @@
         [inTextField setStringValue:[NSString stringWithFormat:@"%@ %g", [inFont fontName], [inFont pointSize]]];
     }else{
         [inTextField setStringValue:@""];
-    }
-}
-
-//Display the current opacity percent
-/*- (void)showOpacityPercent
-{
-    float	opacity = [slider_opacity floatValue];
-
-    [textField_opacityPercent setStringValue:[NSString stringWithFormat:@"%i",(int)opacity]];
-}*/
-
-//Configure our view for the current preferences
-- (void)configureView
-{
-    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
-
-    //Display
-    [self showFont:[[preferenceDict objectForKey:KEY_SCL_FONT] representedFont] inField:textField_fontName];
-    [colorWell_contact setColor:[[preferenceDict objectForKey:KEY_SCL_CONTACT_COLOR] representedColor]];
-    [colorWell_background setColor:[[preferenceDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColor]];
-    [checkBox_showLabels setState:[[preferenceDict objectForKey:KEY_SCL_SHOW_LABELS] boolValue]];
-    
-    //Grid
-    [checkBox_alternatingGrid setState:[[preferenceDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue]];
-    [colorWell_grid setColor:[[preferenceDict objectForKey:KEY_SCL_GRID_COLOR] representedColor]];
-
-    //Groups
-    [checkBox_boldGroups setState:[[preferenceDict objectForKey:KEY_SCL_BOLD_GROUPS] boolValue]];
-    [checkBox_customGroupColor setState:[[preferenceDict objectForKey:KEY_SCL_CUSTOM_GROUP_COLOR] boolValue]];
-    [colorWell_group setColor:[[preferenceDict objectForKey:KEY_SCL_GROUP_COLOR] representedColor]];
-
-    [self configureControlDimming];
-}
-
-//Enable/disable controls that are available/unavailable
-- (void)configureControlDimming
-{
-    [colorWell_group setEnabled:[checkBox_customGroupColor state]];
-    
-    [self configureBoldCheckboxAndWarning];
-}
-
-//Enable/disable the groups in bold checkbox and warning
-- (void)configureBoldCheckboxAndWarning
-{
-    //Disable the Show Groups In Bold button if the font doesn't support it
-    NSFontManager   *fontManager = [NSFontManager sharedFontManager];
-    NSFont          *contactListFont = [[[adium preferenceController] preferenceForKey:KEY_SCL_FONT group:PREF_GROUP_CONTACT_LIST_DISPLAY] representedFont];
-    BOOL            canNotBeBold = ((contactListFont == [fontManager convertFont:contactListFont toHaveTrait:NSBoldFontMask]) && (contactListFont == [fontManager convertFont:contactListFont toHaveTrait:NSUnboldFontMask]));
-        
-    if(contactListFont)
-    {
-		NSString *warningString = [NSString stringWithFormat:@"Warning: %@ does not have a bold variant.", [contactListFont fontName]];
-		
-        [checkBox_boldGroups setEnabled:!canNotBeBold];
-		if([textField_noBoldWarning respondsToSelector:@selector(setHidden:)]){
-			[textField_noBoldWarning setStringValue:warningString];
-			[textField_noBoldWarning setHidden:!canNotBeBold];
-		} else { //JAGUAR
-			if (canNotBeBold){
-				[textField_noBoldWarning setStringValue:warningString];				
-			} else {
-				[textField_noBoldWarning setStringValue:@""];	
-			}
-		}
     }
 }
 
