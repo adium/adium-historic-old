@@ -20,11 +20,10 @@
 {        
 	themes = nil;
 	
-    [self buildThemesList];
     [table setDrawsAlternatingRows:YES];
     [table setTarget:self];
     [table setDoubleAction:@selector(applyTheme:)];
-    [table reloadData];	
+    [self buildThemesList];
     [[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self selector:@selector(themesChanged:) name:Themes_Changed object:nil];
 }
 
@@ -52,7 +51,7 @@
     themeCount = [tempThemesList count];
     [themes release]; themes = tempThemesList;  // sync cleaned themes list to global variable
     [self configureControlDimming];
-
+	[table reloadData];
 }
 
 - (int)numberOfRowsInTableView:(NSTableView *)tableView

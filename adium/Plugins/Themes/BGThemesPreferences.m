@@ -47,14 +47,22 @@
 
 -(IBAction)createTheme:(id)sender
 {
-    [createWindow makeKeyAndOrderFront:createWindow];
+	[NSApp beginSheet:createWindow
+	   modalForWindow:[view window]
+		modalDelegate:nil
+	   didEndSelector:nil
+		  contextInfo:nil];
+	
+    [NSApp runModalForWindow:createWindow];
+	[NSApp endSheet:createWindow];
+	[createWindow orderOut:self];
 }
 
 -(IBAction)createAction:(id)sender
 {
     if([sender tag] == 0)
     {
-        [createWindow orderOut:createWindow];
+		[NSApp stopModal];
     }
     if([sender tag] == 1)
     {
@@ -70,7 +78,7 @@
         [nameField setObjectValue:@""];
         [authorField setObjectValue:@""];
         [versionField setObjectValue:@""];
-        [createWindow orderOut:createWindow];
+        [NSApp stopModal];
     }
 }
 
