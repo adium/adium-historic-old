@@ -84,6 +84,8 @@
 	[self buildContactTypeMenu];
 	[self buildGroupMenu];
 
+	[self configureNameAndService];
+	
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(accountListChanged:)
 									   name:Account_ListChanged
@@ -91,8 +93,6 @@
 
 	[[adium contactController] registerListObjectObserver:self];
 
-	[self configureNameAndService];
-	
 	[[self window] center];
 }
 
@@ -182,6 +182,8 @@
 //Build the menu of contact service types
 - (void)buildContactTypeMenu
 {
+	NSMenuItem	*selectedItem;
+	
 	[popUp_contactType setMenu:[[adium accountController] menuOfServicesWithTarget:self 
 																activeServicesOnly:YES
 																   longDescription:NO]];
@@ -190,7 +192,11 @@
 	//when we call update.
 	[[popUp_contactType menu] update];
 	
-	[self selectFirstValidServiceType];
+	//If there is no selection or the current selection is now disabled, select the first valid service type
+	if (!(selectedItem = (NSMenuItem *)[popUp_contactType selectedItem]) ||
+		(![selectedItem isEnabled])){
+		[self selectFirstValidServiceType];
+	}
 }
 
 - (void)selectFirstValidServiceType
