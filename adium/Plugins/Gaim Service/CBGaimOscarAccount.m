@@ -196,7 +196,14 @@ struct oscar_data {
     [super rejectFileReceiveRequest:fileTransfer];    
 }
 
-
+-(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type
+{
+    return [super addListObject:inObject toPrivacyList:type];
+}
+-(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type
+{
+    return [super removeListObject:inObject fromPrivacyList:type]; 
+}
 /*
 //Creates the oscar xfer object, the ESFileTransfer object, and informs
 - (void)initiateSendOfFile:(NSString *)filename toContact:(AIListContact *)inContact
