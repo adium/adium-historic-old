@@ -116,7 +116,7 @@
 	//	}else{
 	previewFilePath = [[NSBundle bundleForClass:[self class]] pathForResource:PREVIEW_FILE ofType:@"plist"];
 	previewDict = [[[NSDictionary alloc] initWithContentsOfFile:previewFilePath] autorelease];
-	previewPath = [[previewFilePath stringByDeletingLastPathComponent] retain];
+	previewPath = [previewFilePath stringByDeletingLastPathComponent];
 	//	}
 	[self _fillContentOfChat:previewChat withDictionary:previewDict fromPath:previewPath];
 	
