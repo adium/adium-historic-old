@@ -369,7 +369,7 @@
     [[owner preferenceController] setPreference:[sourceAccount accountID]
                                          forKey:KEY_PREFERRED_SOURCE_ACCOUNT
                                           group:PREF_GROUP_ACCOUNTS
-                                         object:destContact];
+                                        contact:destContact];
 
     [lastAccountIDToSendContent release];
     lastAccountIDToSendContent = [[sourceAccount accountID] retain];
