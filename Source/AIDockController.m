@@ -249,7 +249,7 @@
 			if([imageName hasPrefix:DOCK_ICON_INTERNAL_PATH]){
 				//Special hack for all the incorrectly made icon packs we have floating around out there :P
 				imageName = [imageName substringFromIndex:[DOCK_ICON_INTERNAL_PATH length]];
-				imagePath = [NSString stringWithFormat:@"%@/Adiumy Icons/Shared Images/%@",[[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS] stringByExpandingTildeInPath], imageName];
+				imagePath = [NSString stringWithFormat:@"%@/Shared Images/%@",[[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS] stringByExpandingTildeInPath], imageName];
 			}else{
 				imagePath = [folderPath stringByAppendingPathComponent:imageName];
 			}
