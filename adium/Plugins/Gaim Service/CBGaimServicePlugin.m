@@ -562,7 +562,7 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
 
 #pragma mark Request
 // Request ------------------------------------------------------------------------------------------------------
-static void *adiumGaimRequestInput(const char *title, const char *primary, const char *secondary, const char *defaultValue, gboolean multiline, gboolean masked, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb, void *userData)
+static void *adiumGaimRequestInput(const char *title, const char *primary, const char *secondary, const char *defaultValue, gboolean multiline, gboolean masked, gchar *hint,const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb, void *userData)
 {
 	/*
 	 Multiline should be a paragraph-sized box; otherwise, a single line will suffice.
