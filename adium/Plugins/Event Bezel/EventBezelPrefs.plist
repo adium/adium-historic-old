@@ -21,7 +21,7 @@
         <key>Display if First Message</key>
         <true/>
         <key>Show Image Badges</key>
-        <true/>
+        <false/>
         <key>Show Color Labels</key>
         <true/>
         <key>Duration</key>
