@@ -439,7 +439,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 - (AIAccount *)accountWithInternalObjectID:(NSString *)objectID
 {
     NSEnumerator	*enumerator = [accountArray objectEnumerator];
-    AIAccount		*account;
+    AIAccount		*account = nil;
 	
 	//XXX - Temporary Upgrade code for account internalObjectIDs stored as NSNumbers 0.7x -> 0.8 -ai
 	if(![objectID isKindOfClass:[NSString class]]){
