@@ -180,7 +180,7 @@
 {
     if([[contentController chatArray] count] > 0)
     {
-        if(NSRunCriticalAlertPanel(@"Really Really Really Quit Adium?", @"You have open conversations, are you totally, completely, absolutely sure you really want to quit Adium? ", @"Quit", @"Cancel", nil) == NSAlertDefaultReturn)
+        if(NSRunCriticalAlertPanel(@"Quit Adium?", @"You have open conversations, do you want to quit Adium? ", @"Quit", @"Cancel", nil) == NSAlertDefaultReturn)
         {
             [NSApp terminate:nil];
         }
