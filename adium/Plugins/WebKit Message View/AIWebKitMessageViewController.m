@@ -271,6 +271,20 @@
 		if(range.location != NSNotFound) {
 			[inString replaceCharactersInRange:range withString:[(AIContentStatus *)content status]];
 		}
+		
+		//Replaces %time{x}% with a timestamp formatted like x (using NSDateFormatter)
+		range = [inString rangeOfString:@"%time{"];
+        if(range.location != NSNotFound) {
+			NSRange endRange;
+			endRange = [inString rangeOfString:@"}%"];
+			if(endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
+				
+				NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
+				
+				[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:[[[NSDateFormatter alloc] initWithDateFormat:timeFormat allowNaturalLanguage:NO] stringForObjectValue:[(AIContentMessage *)content date]]];
+				
+			}
+        }
 	}
 	
 	return(inString);
