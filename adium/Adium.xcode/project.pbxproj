@@ -3242,6 +3242,42 @@
 			settings = {
 			};
 		};
+		3495ACE2068C738700EB5380 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESSystemNetworkDefaults.h;
+			path = "Frameworks/AIUtilities Framework/ESSystemNetworkDefaults.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3495ACE3068C738700EB5380 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESSystemNetworkDefaults.m;
+			path = "Frameworks/AIUtilities Framework/ESSystemNetworkDefaults.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3495ACE4068C738700EB5380 = {
+			fileRef = 3495ACE2068C738700EB5380;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3495ACE5068C738700EB5380 = {
+			fileRef = 3495ACE3068C738700EB5380;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3495AD18068C746100EB5380 = {
+			fileRef = 34E839050583207E00F2AADB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34989146064C47F20095598E = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -5896,6 +5932,7 @@
 				07CE0D490661E12A00C50929,
 				4BDC4F27066229D700C28445,
 				34D13A9406744689001F9B98,
+				3495ACE4068C738700EB5380,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6352,6 +6389,7 @@
 				07CE0D480661E12A00C50929,
 				4BDC4F26066229D700C28445,
 				34D13A9506744689001F9B98,
+				3495ACE5068C738700EB5380,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6682,6 +6720,7 @@
 				34B5EBEB0658A600007B9A56,
 				34BD9E8E05314755000AB133,
 				34BD9E8F05314755000AB133,
+				3495AD18068C746100EB5380,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7874,12 +7913,6 @@
 			path = /System/Library/Frameworks/SystemConfiguration.framework;
 			refType = 0;
 			sourceTree = "<absolute>";
-		};
-		34E839060583207E00F2AADB = {
-			fileRef = 34E839050583207E00F2AADB;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34E83B0A05832B4300F2AADB = {
 			isa = PBXFileReference;
@@ -12518,7 +12551,6 @@
 				344ECA4506209C2D007256C6,
 				6C3E0730054471CD00A4AE2E,
 				6C3E0731054471E400A4AE2E,
-				34E839060583207E00F2AADB,
 				4BDF2C92061E376C00EA75C5,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -22556,6 +22588,8 @@
 			children = (
 				F579394E033E74E401A8010A,
 				F579394F033E74E401A8010A,
+				3495ACE2068C738700EB5380,
+				3495ACE3068C738700EB5380,
 			);
 			isa = PBXGroup;
 			name = Networking;
