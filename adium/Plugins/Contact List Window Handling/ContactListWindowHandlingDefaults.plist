@@ -2,9 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Always on Top</key>
-	    <false/>
+	<key>Contact Window Position</key>
+    <integer>0</integer>
 	<key>Hide While in Background</key>
-	    <false/>
+    <false/>
 </dict>
 </plist>

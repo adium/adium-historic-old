@@ -2,25 +2,28 @@
     IBClasses = (
         {
             ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
             CLASS = AIPreferencePane; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 delegate = id; 
                 "textField_title" = NSTextField; 
-                view = NSView; 
                 "view_containerSubView" = NSView; 
                 "view_containerView" = NSView; 
             }; 
-            SUPERCLASS = NSObject; 
+            SUPERCLASS = AIModularPane; 
         }, 
         {
+            ACTIONS = {changePreference = id; }; 
             CLASS = ESContactListWindowHandlingPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {
-                "checkBox_alwaysOnTop" = NSButton; 
-                "checkBox_hide" = NSButton; 
-                "view_prefView" = NSView; 
-            }; 
+            OUTLETS = {"checkBox_hide" = NSButton; "window_position_menu" = NSPopUpButton; }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 

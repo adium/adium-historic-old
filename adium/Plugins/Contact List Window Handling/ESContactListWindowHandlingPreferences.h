@@ -6,13 +6,10 @@
 //
 
 @interface ESContactListWindowHandlingPreferences : AIPreferencePane {
-    IBOutlet	NSView		*view_prefView;
-
-    IBOutlet	NSButton	*checkBox_alwaysOnTop;
-    IBOutlet	NSButton	*checkBox_hide;
+	IBOutlet	NSPopUpButton   *window_position_menu;
+    IBOutlet	NSButton		*checkBox_hide;
 }
 
-//+ (ESContactListWindowHandlingPreferences *)contactListWindowHandlingPreferences;
 - (IBAction)changePreference:(id)sender;
 
 @end
