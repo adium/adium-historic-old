@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.117 2004/03/21 04:57:35 adamiser Exp $
+// $Id: AIContactController.m,v 1.118 2004/03/21 18:59:28 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -770,12 +770,17 @@
 - (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup onAccount:(AIAccount *)inAccount
 {
 	NSMutableArray	*contactArray = [NSMutableArray array];
-	NSEnumerator	*enumerator = [inGroup objectEnumerator];
+	NSEnumerator	*enumerator;
     AIListObject	*object;
 	
+	if (inGroup == nil) inGroup = contactList;  //Passing nil scans the entire contact list
+	
+	enumerator = [inGroup objectEnumerator];
+	
     while((object = [enumerator nextObject])){
-        if([object isMemberOfClass:[AIMetaContact class]]){
+        if([object isMemberOfClass:[AIMetaContact class]] || [object isMemberOfClass:[AIListGroup class]]){
 			[contactArray addObjectsFromArray:[self allContactsInGroup:(AIListGroup *)object onAccount:inAccount]];
+			
 		}else if([object isMemberOfClass:[AIListContact class]]){
 			if([[(AIListContact *)object serviceID] compare:[inAccount serviceID]] == 0 &&
 			   [[(AIListContact *)object accountID] compare:[inAccount uniqueObjectID]] == 0){
