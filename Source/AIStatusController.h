@@ -77,6 +77,8 @@
 #define STATUS_NAME_INVISIBLE				@"Invisible"
 #define STATUS_DESCRIPTION_INVISIBLE		AILocalizedString(@"Invisible",nil)
 
+#define STATUS_NAME_OFFLINE					@"Offline"
+
 //Current version state ID string
 #define STATE_SAVED_STATE					@"State"
 

@@ -21,6 +21,7 @@
 #import "AIStatusController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import <Adium/AIStatusIcons.h>
@@ -344,9 +345,6 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 {
 	NSEnumerator	*statusDictEnumerator = [statusDicts objectEnumerator];
 	NSDictionary	*statusDict;
-	NSImage			*image = [[[AIStatusIcons statusIconForStatusID:((type == AIAvailableStatusType) ? @"available" : @"away")
-															   type:AIStatusIconList
-														  direction:AIIconNormal] copy] autorelease];
 
 	//Enumerate the status dicts
 	while(statusDict = [statusDictEnumerator nextObject]){
@@ -358,10 +356,19 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		 * exist.
 		 */
 		if(![alreadyAddedTitles containsObject:title]){
-			NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
-																						  target:target
-																						  action:@selector(selectStatus:)
-																				   keyEquivalent:@""] autorelease];
+			NSImage		*image;
+			NSMenuItem	*menuItem;
+			
+			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
+																			 target:target
+																			 action:@selector(selectStatus:)
+																	  keyEquivalent:@""] autorelease];
+			
+			image = [[[AIStatusIcons statusIconForStatusName:[statusDict objectForKey:KEY_STATUS_NAME]
+												  statusType:type
+													iconType:AIStatusIconList
+												   direction:AIIconNormal] copy] autorelease];
+
 			[menuItem setRepresentedObject:statusDict];
 			[menuItem setImage:image];
 			[menuItem setEnabled:YES];
@@ -413,8 +420,11 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		case AIAwayStatusType:
 			return STATUS_NAME_AWAY;
 			break;
+		case AIInvisibleStatusType:
+			return STATUS_NAME_INVISIBLE;
+			break;
 		case AIOfflineStatusType:
-			return nil;
+			return STATUS_NAME_OFFLINE;
 			break;
 	}	
 	
@@ -585,7 +595,12 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	
 	while(account = [enumerator nextObject]){
 		if([account online] || [account integerStatusObjectForKey:@"Connecting"]){
-			statusTypeCount[[[account statusState] statusType]]++;
+			AIStatusType statusType = [[account statusState] statusType];
+			
+			//pretend that invisible is away for this purpose, as it's a type of unavailable state
+			if(statusType == AIInvisibleStatusType) statusType = AIAwayStatusType;
+			
+			statusTypeCount[statusType]++;
 		}
 	}
 
@@ -693,8 +708,8 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 				AIStatus	*statusState;
 				
 				//Extract the away message information from this old record
-				NSData		*statusMessage = [state objectForKey:OLD_STATE_AWAY];
-				NSData		*autoReplyMessage = [state objectForKey:OLD_STATE_AUTO_REPLY];
+				NSData		*statusMessageData = [state objectForKey:OLD_STATE_AWAY];
+				NSData		*autoReplyMessageData = [state objectForKey:OLD_STATE_AUTO_REPLY];
 				NSString	*title = [state objectForKey:OLD_STATE_TITLE];
 				
 				//Create an AIStatus from this information
@@ -707,14 +722,14 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 				[statusState setStatusName:STATUS_NAME_AWAY];				
 
 				//Set the status message (which is just the away message)
-				[statusState setStatusMessageData:statusMessage];
+				[statusState setStatusMessage:[NSAttributedString stringWithData:statusMessageData]];
 
 				//It has an auto reply
 				[statusState setHasAutoReply:YES];
 
-				if(autoReplyMessage){
+				if(autoReplyMessageData){
 					//Use the custom auto reply if it was set
-					[statusState setAutoReplyData:autoReplyMessage];
+					[statusState setAutoReply:[NSAttributedString stringWithData:autoReplyMessageData]];
 				}else{
 					//If no autoReplyMesssage, use the status message
 					[statusState setAutoReplyIsStatusMessage:YES];
@@ -1082,7 +1097,11 @@ int _statusArraySort(id objectA, id objectB, void *context)
 												  target:self
 												  action:@selector(selectCustomState:)
 										   keyEquivalent:@""];
-			[menuItem setImage:[[[AIStatus statusIconForStatusType:currentStatusType] copy] autorelease]];
+			
+			[menuItem setImage:[[[AIStatusIcons statusIconForStatusName:nil
+															 statusType:currentStatusType
+															   iconType:AIStatusIconList
+															  direction:AIIconNormal] copy] autorelease]];
 			[menuItem setTag:currentStatusType];
 			[menuItemArray addObject:menuItem];
 
@@ -1111,7 +1130,10 @@ int _statusArraySort(id objectA, id objectB, void *context)
 										  target:self
 										  action:@selector(selectCustomState:)
 								   keyEquivalent:@""];
-	[menuItem setImage:[[[AIStatus statusIconForStatusType:currentStatusType] copy] autorelease]];
+	[menuItem setImage:[[[AIStatusIcons statusIconForStatusName:nil
+													 statusType:currentStatusType
+													   iconType:AIStatusIconList
+													  direction:AIIconNormal] copy] autorelease]];
 	[menuItem setTag:currentStatusType];
 	[menuItemArray addObject:menuItem];
 
@@ -1122,12 +1144,13 @@ int _statusArraySort(id objectA, id objectB, void *context)
 										  target:self
 										  action:@selector(selectOffline:)
 								   keyEquivalent:@""];
-	[menuItem setImage:[[[AIStatusIcons statusIconForStatusID:@"offline"
-														 type:AIStatusIconList
-													direction:AIIconNormal] copy] autorelease]];
+	[menuItem setImage:[[[AIStatusIcons statusIconForStatusName:nil
+													 statusType:AIOfflineStatusType
+													   iconType:AIStatusIconList
+													  direction:AIIconNormal] copy] autorelease]];
 	[menuItem setTag:AIOfflineStatusType];
 	[menuItemArray addObject:menuItem];
-
+	
 	//Now that we are done creating the menu items, tell the plugin about them
 	[stateMenuPlugin addStateMenuItems:menuItemArray];
 
