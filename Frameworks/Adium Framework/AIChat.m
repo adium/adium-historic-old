@@ -45,7 +45,7 @@ static int nextChatNumber = 0;
 
 - (id)initForAccount:(AIAccount *)inAccount
 {
-    [super init];
+    self = [super init];
 	AILog(@"[%@ initForAccount]",self);
 
 	name = nil;
@@ -56,13 +56,17 @@ static int nextChatNumber = 0;
 	uniqueChatID = nil;
 	isOpen = NO;
 	expanded = YES;
-	
+
     return(self);
 }
 
+/*
+ * @brief Deallocate
+ */
 - (void)dealloc
 {
 	AILog(@"[%@ dealloc]",self);
+
     [account release];
     [contentObjectArray release];
     [participatingListObjects release];
