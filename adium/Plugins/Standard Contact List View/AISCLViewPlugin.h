@@ -16,15 +16,17 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/Adium.h>
 
-@class AIContactGroup;
+@class AIContactGroup, AICLPreferences;
 @protocol AIContactListViewController;
 
 @interface AISCLViewPlugin : AIPlugin <AIContactListViewController> {
 
     AIContactGroup	*contactList;
+    AICLPreferences	*preferences;
     NSMutableArray	*SCLViewArray;
 }
 
 - (IBAction)performDefaultActionOnSelectedContact:(id)sender;
+- (void)prefsChanged: (NSNotification *)notification; // temporary until i figure out what notification to send
 
 @end

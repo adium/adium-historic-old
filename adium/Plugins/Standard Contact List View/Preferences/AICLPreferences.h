@@ -35,10 +35,13 @@
     id	gridColorLabel;
 
     AIPreferenceController*     preferenceController;
+    AIPlugin	*parentPlugin;
 }
 - (void) initialize: (id) foo;
 
 - (void) fontPopUps: (id) sender;
 - (void) gridOptions: (id) sender;
 - (void) colorAndOpacity: (id) sender;
+
+- (void) setCLController: (id) foo;
 @end

@@ -18,6 +18,7 @@
 #import "AISCLCell.h"
 #import "AISCLOutlineView.h"
 #import "AIAdium.h"
+#import "AICLPreferences.h"
 
 @implementation AISCLViewPlugin
 
@@ -26,7 +27,14 @@
     SCLViewArray = [[NSMutableArray alloc] init];
 
     //Register ourself as an available contact list view
-    [[owner interfaceController] registerContactListViewController:self];
+    [[owner interfaceController] registerContactListViewController: self];
+    preferences = [[AICLPreferences alloc] init];
+    [preferences setCLController: self];
+    //Install the preference view
+    [NSBundle loadNibNamed: @"AICLPrefView" owner:preferences];
+
+    [preferences initialize: [owner preferenceController]];
+
 }
 
 - (void)dealloc
@@ -83,6 +91,36 @@
     }
 }
 
+- (void)prefsChanged: (NSNotification *)notification
+{
+    NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
+    AISCLOutlineView	*SCLView;
+
+    NSDictionary *dict = [[owner preferenceController] preferencesForGroup: CL_PREFERENCE_GROUP];
+    while((SCLView = [enumerator nextObject])) {
+        NSFont *font = [NSFont fontWithName:[NSString stringWithFormat:@"%@-%@",
+            [[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"FONT"],
+            [[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"FACE"]]
+                                       size: [[[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"SIZE"] intValue]];
+            
+        
+        [SCLView setFont:font];
+        [SCLView setRowHeight:[font defaultLineHeightForFont]];
+        
+        [SCLView setBackgroundColor: [NSColor colorWithCalibratedRed:[[[dict objectForKey: CL_BACKGROUND_COLOR] objectForKey:@"RED"] floatValue]
+                                                               green:[[[dict objectForKey: CL_BACKGROUND_COLOR] objectForKey:@"GREEN"] floatValue]
+                                                                blue:[[[dict objectForKey: CL_BACKGROUND_COLOR] objectForKey:@"BLUE"] floatValue]
+                                                               alpha:[[dict objectForKey: CL_OPACITY] floatValue]]];
+
+        [SCLView setDrawsAlternatingRows: [[dict objectForKey: CL_ALTERNATING_GRID] boolValue]];
+
+        [SCLView setAlternatingRowColor: [NSColor colorWithCalibratedRed:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"RED"] floatValue]
+                                                                   green:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"GREEN"] floatValue]
+                                                                    blue:[[[dict objectForKey: CL_GRID_COLOR] objectForKey:@"BLUE"] floatValue]
+                                                                   alpha:[[dict objectForKey: CL_OPACITY] floatValue]]];
+        [SCLView setNeedsDisplay:YES];
+    }    
+}
 /*- (void)itemDidExpandOrCollapse:(NSNotification *)notification
 {
 //    [self desiresNewSize];
