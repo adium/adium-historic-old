@@ -26,7 +26,6 @@
     
 	NSTextView					*textView;
 	id							target;
-	NSMutableArray				*favoritesDict;
 }
 
 + (void)showLinkEditorForTextView:(NSTextView *)inTextView onWindow:(NSWindow *)parentWindow showFavorites:(BOOL)showFavorites notifyingTarget:(id)inTarget;
@@ -37,5 +36,4 @@
 - (IBAction)acceptURL:(id)sender;
 - (IBAction)selectFavoriteURL:(id)sender;
 
-- (void)favoritesChanged:(NSNotification *)notification;
 @end
