@@ -117,6 +117,15 @@
  */
 - (id)objectWithOwner:(id)inOwner;
 
+/*! 
+ * @brief Retrieve priority by owner
+ *
+ * Retrieve the priority of the object within the <tt>AIMutableOwnerArray</tt> owned by the specified owner.
+ * @param inOwner An owner
+ * @return  Returns the priority of the object owned by <i>inOwner</i>, or 0 if no object is owned by the owner.
+ */
+- (float)priorityOfObjectWithOwner:(id)inOwner;
+
 /*!
  * @brief Retrieve owner by object
  *
@@ -126,14 +135,14 @@
  */
 - (id)ownerWithObject:(id)anObject;
 
-/*!
- * @brief Retrieve priority by owner
+/*! 
+ * @brief Retrieve priority by object
  *
- * Retrieve the priority of the object within the <tt>AIMutableOwnerArray</tt> owned by the specified owner.
- * @param inOwner An owner
- * @return  Returns the priority of the object owned by <i>inOwner</i>.
+ * Retrieve the priority of an object within the <tt>AIMutableOwnerArray</tt>.
+ * @param inObject An object
+ * @return Returns the priority of the object, or 0 if the object is not in the array.
  */
-- (float)priorityOfObjectWithOwner:(id)inOwner;
+- (float)priorityOfObject:(id)inObject
 
 /*!
  * @brief Retrive enumerator for objects
