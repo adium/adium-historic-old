@@ -72,9 +72,9 @@ typedef enum {
 
 //Preference Categories
 #define PREFERENCE_CATEGORY_CONNECTIONS	@"Connections"
-#define PREFERENCE_CATEGORY_INTERFACE		@"Interface"
-#define PREFERENCE_CATEGORY_STATUS		@"Status"
-#define PREFERENCE_CATEGORY_OTHER		@"Other"
+#define PREFERENCE_CATEGORY_INTERFACE	@"Interface"
+#define PREFERENCE_CATEGORY_STATUS	@"Status"
+#define PREFERENCE_CATEGORY_OTHER	@"Other"
 
 //Preference groups
 #define PREF_GROUP_GENERAL 		@"General"
@@ -95,6 +95,7 @@ typedef enum {
 #define Account_ListChanged 					@"Account_ListChanged"
 #define Account_PropertiesChanged				@"Account_PropertiesChanged"
 #define Account_StatusChanged					@"Account_StatusChanged"
+#define Account_HandlesChanged					@"Account_HandlesChanged"
 #define Contact_AttributesChanged				@"Contact_AttributesChanged"
 #define Contact_StatusChanged					@"Contact_StatusChanged"
 #define Contact_OrderChanged					@"Contact_OrderChanged"

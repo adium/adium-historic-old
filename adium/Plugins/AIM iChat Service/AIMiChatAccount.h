@@ -34,6 +34,7 @@
     BOOL		isOnline;
 
     BOOL		processingSignOnUpdates;
+    BOOL		waitingForFirstUpdate;
     int			numberOfSignOnUpdates;
 }
 

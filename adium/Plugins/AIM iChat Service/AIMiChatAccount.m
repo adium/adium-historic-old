@@ -27,6 +27,8 @@ extern void* objc_getClass(const char *name);
 - (void)removeAllStatusFlagsFromHandle:(AIContactHandle *)handle;
 - (NSArray *)applyProperties:(NSDictionary *)inProperties toHandle:(AIHandle *)inHandle;
 - (void)handle:(AIHandle *)inHandle isIdle:(BOOL)inIdle;
+- (void)firstSignOnUpdateReceived;
+- (void)waitForLastSignOnUpdate:(NSTimer *)inTimer;
 @end
 
 @implementation AIMiChatAccount
@@ -262,22 +264,21 @@ extern void* objc_getClass(const char *name);
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
             [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
 
-
-            numberOfSignOnUpdates = 0;
-            processingSignOnUpdates = YES;
-
-    //        [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(temp:) userInfo:nil repeats:NO];
-            
             //Hold onto the account name
             if(screenName) [screenName release];
                 screenName = [[AIMService loginID] copy];
 
-            //Check every 0.2 seconds for additional updates
-            [NSTimer scheduledTimerWithTimeInterval:(0.2)
+            
+            //Adium waits for the first sign on update, and then checks for aditional updates every .2 seconds.  When the stream of updates stops, the account can be assumed online, and contact list updates resumed.
+            //If no updates are receiced for 5 seconds, we assume 'no available contacts' and resume contact list updates.
+            numberOfSignOnUpdates = 0;
+            processingSignOnUpdates = YES;
+            waitingForFirstUpdate = YES;
+            [NSTimer scheduledTimerWithTimeInterval:(5.0) //5 Seconds max
                                              target:self
-                                           selector:@selector(waitForLastSignOnUpdate:)
+                                           selector:@selector(firstSignOnUpdateReceived)
                                            userInfo:nil
-                                            repeats:YES];
+                                            repeats:NO];
 
         break;
 
@@ -287,28 +288,42 @@ extern void* objc_getClass(const char *name);
     }
 }
 
+- (void)firstSignOnUpdateReceived
+{
+    if(waitingForFirstUpdate){
+        waitingForFirstUpdate = NO;
+    
+        if(numberOfSignOnUpdates == 0){
+            NSLog(@"No updates received");
+            //No available contacts after 5 seconds, assume noone is online and resume contact list updates
+            [self waitForLastSignOnUpdate:nil];
+        }else{
+            NSLog(@"First update received");
+            //Check every 0.2 seconds for additional updates
+            [NSTimer scheduledTimerWithTimeInterval:(1.0)
+                                            target:self
+                                        selector:@selector(waitForLastSignOnUpdate:)
+                                        userInfo:nil
+                                            repeats:YES];
+        }
+    }
+}
+
 - (void)waitForLastSignOnUpdate:(NSTimer *)inTimer
 {
     if(numberOfSignOnUpdates == 0){
         NSLog(@"Done.");
+        processingSignOnUpdates = NO;
         //No updates received, sign on is complete
         [inTimer invalidate]; //Stop this timer
-        [[owner contactController] handlesChangedForAccount:self]; //
         [[owner contactController] setHoldContactListUpdates:NO]; //Resume contact list updates
-
+        [[owner contactController] handlesChangedForAccount:self]; //
     }else{
         NSLog(@"Connecting... (%i)",(int)numberOfSignOnUpdates);
         numberOfSignOnUpdates = 0;
     }
 }
 
-/*- (void)temp:(NSTimer *)timer
-{
-    NSLog(@"tmp unhold");
-    
-    processingSignOnUpdates = NO;
-
-}*/
 
 - (oneway void)service:(id)inService chat:(id)chat messageReceived:(id)inMessage
 {
@@ -349,7 +364,9 @@ extern void* objc_getClass(const char *name);
         AIHandle	*handle;
         NSArray		*modifiedStatusKeys;
 
-        if(processingSignOnUpdates) numberOfSignOnUpdates++; //Keep track of updates during signon
+        //Sign on update monitoring
+        if(processingSignOnUpdates) numberOfSignOnUpdates++;
+        if(waitingForFirstUpdate) [self firstSignOnUpdateReceived];
         
         //Get the handle
         handle = [handleDict objectForKey:compactedName];
@@ -367,7 +384,6 @@ extern void* objc_getClass(const char *name);
             if(!processingSignOnUpdates){
                 [[owner contactController] handle:handle addedToAccount:self];
             }
-
         }
 
         //Apply the properties, and inform the contact controller of any changes

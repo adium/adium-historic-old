@@ -92,6 +92,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     //Install observers
     [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_StatusChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_HandlesChanged object:nil];
 
     //Load our images
     folderImage = [[AIImageUtilities imageNamed:@"Folder" forClass:[self class]] retain];

@@ -741,8 +741,8 @@ static char *hash_password(const char * const password);
     NSMutableArray	*alteredStatusKeys;
 
     //Sign on update monitoring
-    if([[owner contactController] holdContactListUpdates]) numberOfSignOnUpdates++;
-    if(processingSignOnUpdates) [self firstSignOnUpdateReceived];
+    if(processingSignOnUpdates) numberOfSignOnUpdates++;
+    if(waitingForFirstUpdate) [self firstSignOnUpdateReceived];
     
     //Get the handle
     handle = [handleDict objectForKey:compactedName];
@@ -968,6 +968,7 @@ static char *hash_password(const char * const password);
 
     //Adium waits for the first sign on update, and then checks for aditional updates every .2 seconds.  When the stream of updates stops, the account can be assumed online, and contact list updates resumed.
     //If no updates are receiced for 5 seconds, we assume 'no available contacts' and resume contact list updates.
+    waitingForFirstUpdate = YES;
     processingSignOnUpdates = YES;
     numberOfSignOnUpdates = 0;
     [NSTimer scheduledTimerWithTimeInterval:(5.0) //5 Seconds max
@@ -979,20 +980,22 @@ static char *hash_password(const char * const password);
 
 - (void)firstSignOnUpdateReceived
 {
-    processingSignOnUpdates = NO;
+    if(waitingForFirstUpdate){
+        waitingForFirstUpdate = NO;
 
-    if(numberOfSignOnUpdates == 0){
-        NSLog(@"No updates received");
-        //No available contacts after 5 seconds, assume noone is online and resume contact list updates
-        [[owner contactController] setHoldContactListUpdates:NO]; //Resume contact list updates
-    }else{
-        NSLog(@"First update received");
-        //Check every 0.2 seconds for additional updates
-        [NSTimer scheduledTimerWithTimeInterval:(0.2)
-                                         target:self
-                                       selector:@selector(waitForLastSignOnUpdate:)
-                                       userInfo:nil
-                                        repeats:YES];
+        if(numberOfSignOnUpdates == 0){
+            NSLog(@"No updates received");
+            //No available contacts after 5 seconds, assume noone is online and resume contact list updates
+            [self waitForLastSignOnUpdate:nil];
+        }else{
+            NSLog(@"First update received");
+            //Check every 0.2 seconds for additional updates
+            [NSTimer scheduledTimerWithTimeInterval:(0.2)
+                                             target:self
+                                           selector:@selector(waitForLastSignOnUpdate:)
+                                           userInfo:nil
+                                            repeats:YES];
+        }
     }
 }
 
@@ -1003,6 +1006,7 @@ static char *hash_password(const char * const password);
         //No updates received, sign on is complete
         [inTimer invalidate]; //Stop this timer
         [[owner contactController] setHoldContactListUpdates:NO]; //Resume contact list updates
+        processingSignOnUpdates = NO;
     }else{
         NSLog(@"Connecting... (%i)",(int)numberOfSignOnUpdates);
         numberOfSignOnUpdates = 0;
