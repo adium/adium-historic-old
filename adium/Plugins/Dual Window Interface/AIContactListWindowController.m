@@ -81,6 +81,7 @@
     [super initWithWindowNibName:(borderless ? CONTACT_LIST_WINDOW_TRANSPARENT_NIB : CONTACT_LIST_WINDOW_NIB)];
         
     interface = [inInterface retain];
+	toolbarItems = nil;
 
     //Observe preference changes
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
@@ -96,6 +97,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [interface release];
+	[toolbarItems release];
         
     [super dealloc];
 }
