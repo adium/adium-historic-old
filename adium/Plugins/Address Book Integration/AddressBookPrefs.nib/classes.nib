@@ -19,14 +19,13 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_enableImport" = NSButton; 
+                "checkBox_preferABImages" = NSButton; 
                 "checkBox_syncAutomatic" = NSButton; 
                 "checkBox_useABImages" = NSButton; 
                 "checkBox_useNickName" = NSButton; 
                 "format_menu" = NSPopUpButton; 
                 "format_textField" = NSTextField; 
                 "matrix_imagePriority" = NSMatrix; 
-                "radio_dontPreferABImages" = NSButtonCell; 
-                "radio_preferABImages" = NSButtonCell; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
