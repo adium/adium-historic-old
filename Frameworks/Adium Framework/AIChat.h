@@ -34,6 +34,8 @@
 #define	KEY_CHAT_TIMED_OUT		@"Timed Out"
 #define KEY_CHAT_CLOSED_WINDOW	@"Closed Window"
 
+#define KEY_TEMP_SUPPRESS_TYPING_NOTIFICATIONS	@"SuppressTypingNotificationChanges"
+
 typedef enum {
 	AIChatTimedOut = 0,
 	AIChatClosedWindow
@@ -87,6 +89,8 @@ typedef enum {
 	NSString			*uniqueChatID;
 	
 	BOOL				expanded;			//Exanded/Collapsed state of this object
+	
+	BOOL				enableTypingNotifications;
 }
 
 + (id)chatForAccount:(AIAccount *)inAccount;
@@ -123,6 +127,8 @@ typedef enum {
 
 - (NSImage *)chatImage;
 - (NSImage *)chatMenuImage;
+
+- (BOOL)sendTypingNotifications;
 
 - (void)setSecurityDetails:(NSDictionary *)securityDetails;
 - (NSDictionary *)securityDetails;

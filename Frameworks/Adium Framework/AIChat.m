@@ -25,8 +25,11 @@
 
 #import "AIContactController.h"
 #import "AIContentController.h"
+#import "AIPreferenceController.h"
 
 #import <AIUtilities/AIArrayAdditions.h>
+
+#define KEY_DISABLE_TYPING_NOTIFICATIONS		@"Disable Typing Notifications"
 
 @interface AIChat (PRIVATE)
 - (id)initForAccount:(AIAccount *)inAccount;
@@ -57,6 +60,9 @@ static int nextChatNumber = 0;
 	isOpen = NO;
 	expanded = YES;
 
+	//Observe preferences changes for typing enable/disable
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
+
     return(self);
 }
 
@@ -72,7 +78,8 @@ static int nextChatNumber = 0;
     [participatingListObjects release];
   	[dateOpened release]; 
 	[uniqueChatID release]; uniqueChatID = nil;
-	
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+
     [super dealloc];
 }
 
@@ -103,7 +110,16 @@ static int nextChatNumber = 0;
 	return(chatMenuImage);
 }
 
-    
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	if((!object || (object == account)) &&
+	   (!key || [key isEqualToString:KEY_DISABLE_TYPING_NOTIFICATIONS])){
+		enableTypingNotifications = ![[account preferenceForKey:KEY_DISABLE_TYPING_NOTIFICATIONS
+														  group:GROUP_ACCOUNT_STATUS] boolValue];
+	}
+}
+
 //Associated Account ---------------------------------------------------------------------------------------------------
 #pragma mark Associated Account
 - (AIAccount *)account
@@ -120,6 +136,10 @@ static int nextChatNumber = 0;
 		//The uniqueChatID may depend upon the account, so clear it
 		[self clearUniqueChatID];
 		[[adium notificationCenter] postNotificationName:Chat_SourceChanged object:self]; //Notify
+		
+		//Update our typing notifications pref immediately
+		enableTypingNotifications = ![[account preferenceForKey:KEY_DISABLE_TYPING_NOTIFICATIONS
+														  group:GROUP_ACCOUNT_STATUS] boolValue];
 	}
 }
 
@@ -497,6 +517,18 @@ static int nextChatNumber = 0;
 - (float)smallestOrder { return(0); }
 - (float)largestOrder { return(1E10); }
 - (void)listObject:(AIListObject *)listObject didSetOrderIndex:(float)inOrderIndex {};
+
+#pragma mark Typing notifications
+- (BOOL)sendTypingNotifications
+{
+	return(enableTypingNotifications && ![self integerStatusObjectForKey:KEY_TEMP_SUPPRESS_TYPING_NOTIFICATIONS]);
+}
+ 
+#pragma mark Comparison
+- (BOOL)isEqual:(AIChat *)inChat
+{
+	return (inChat == self);
+}
 
 #pragma mark Debugging
 - (NSString *)description
