@@ -107,6 +107,7 @@ static BOOL didInitMSN = NO;
 						   styleTags:YES
 		  closeStyleTagsOnFontChange:YES
 					  encodeNonASCII:NO
+						encodeSpaces:NO
 						  imagesPath:nil
 				   attachmentsAsText:YES
 	  attachmentImagesOnlyForSending:NO

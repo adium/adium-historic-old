@@ -975,7 +975,8 @@ DeclareString(AppendNextMessage);
 																		closeFontTags:YES
 																			styleTags:YES
 														   closeStyleTagsOnFontChange:YES
-																	   encodeNonASCII:YES 
+																	   encodeNonASCII:YES
+																		 encodeSpaces:YES
 																		   imagesPath:@"/tmp"
 																	attachmentsAsText:NO
 													   attachmentImagesOnlyForSending:NO

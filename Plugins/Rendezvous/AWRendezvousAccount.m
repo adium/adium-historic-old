@@ -262,6 +262,7 @@
 														   styleTags:YES
 										  closeStyleTagsOnFontChange:YES
 													  encodeNonASCII:YES
+														encodeSpaces:NO
 														  imagesPath:nil
 												   attachmentsAsText:YES
 									  attachmentImagesOnlyForSending:NO

@@ -101,6 +101,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 						   styleTags:YES
 		  closeStyleTagsOnFontChange:YES
 					  encodeNonASCII:NO
+						encodeSpaces:NO
 						  imagesPath:nil
 				   attachmentsAsText:YES
 	  attachmentImagesOnlyForSending:YES

@@ -182,7 +182,8 @@
 																		   fontTags:NO
 																 includingColorTags:NO  closeFontTags:NO 
 																		  styleTags:YES closeStyleTagsOnFontChange:NO 
-																	 encodeNonASCII:YES imagesPath:nil
+																	 encodeNonASCII:YES encodeSpaces:YES
+																		 imagesPath:nil
 																  attachmentsAsText:YES attachmentImagesOnlyForSending:NO
 																	 simpleTagsOnly:NO]];
 	
