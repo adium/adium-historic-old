@@ -155,7 +155,6 @@
 		NSEnumerator		*enumerator = [[importer availableBookmarks] objectEnumerator];
 		id					object;
 		
-		NSLog(@"Start building bookmark menu");
 		while(object = [enumerator nextObject]){
 			if([object isKindOfClass:[NSDictionary class]]){
 				[self performSelectorOnMainThread:@selector(insertBookmarks:)
@@ -167,7 +166,7 @@
 									waitUntilDone:YES];
 			}	
 		}
-		NSLog(@"end building bookmark menu");
+
 		[pool release];
 		updatingMenu = NO;
 	}
