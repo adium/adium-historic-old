@@ -51,32 +51,10 @@
     return(caseSensitive);
 }
 
-//Compare this service type to another
-/*- (NSComparisonResult)compare:(AIServiceType *)inService
-{
-    return([identifier compare:[inService identifier]]);
-}*/
-
-//Compare one UID to another
-- (NSComparisonResult)compareUID:(NSString *)UIDA to:(NSString *)UIDB
-{
-    NSComparisonResult result;
-
-    if(caseSensitive){
-        result = [UIDA compare:UIDB];
-    }else{
-        result = [UIDA caseInsensitiveCompare:UIDB];
-    }
-
-    return(result);
-}
-
 
 //UID's are ONLY filtered when creating handles, and when renaming handles.
 //When changing ownership of a handle, a filter is not necessary, since all the accounts should have the same service types and requirements.
 //When account code retrieves handles from the contact list, filtering is NOT done.  It is up to the account to ensure it passes UID's in the proper format for it's service type.
-
-
 //Filter UID's only when the user has entered or mucked with them in some way... UID's TO and FROM account code SHOULD ALWAYS BE VALID.
 
 //Filters a UID for invalid characters (assuming it belongs to this service type)

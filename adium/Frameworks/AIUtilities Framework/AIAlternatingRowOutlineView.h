@@ -21,6 +21,8 @@
     NSColor	*alternatingRowColor;
 
     BOOL	_dataSourceDeleteRow;
+
+    BOOL	needsReload;
 }
 
 - (void)_init;

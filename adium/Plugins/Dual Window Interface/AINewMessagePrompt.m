@@ -66,7 +66,7 @@ static AINewMessagePrompt *sharedInstance = nil;
     UID = [serviceType filterUID:[textField_handle stringValue]];
         
     //Find the contact
-    contact = [[owner contactController] contactInGroup:nil withService:serviceType UID:UID];
+    contact = [[owner contactController] contactInGroup:nil withService:[serviceType identifier] UID:UID];
 
     //If one does not exist, we need to create it as a temporary handle
     if(!contact){

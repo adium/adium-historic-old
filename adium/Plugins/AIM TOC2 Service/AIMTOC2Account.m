@@ -56,6 +56,7 @@ static char *hash_password(const char * const password);
 - (void)AIM_SendMessage:(NSString *)inMessage toHandle:(NSString *)handleUID;
 - (void)AIM_SetIdle:(double)inSeconds;
 - (void)AIM_SetProfile:(NSString *)profile;
+- (void)AIM_SetNick:(NSString *)nick;
 - (void)AIM_SetAway:(NSString *)away;
 - (void)AIM_SetStatus;
 - (void)AIM_GetProfile:(NSString *)handleUID;
@@ -111,6 +112,12 @@ static char *hash_password(const char * const password);
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
     [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
     //Option 1 is very neat, but is more annoying than helpful - so we'll stick with 2 for now :)
+
+
+    //Traffic watch debug window
+    if([NSEvent controlKey]){
+        [NSBundle loadNibNamed:@"TrafficWatch" owner:self];
+    }
 }
 
 // Return a view for the connection window
@@ -406,6 +413,12 @@ static char *hash_password(const char * const password);
             [password release]; password = [inPassword copy];
         }
 
+        //Debug window
+        if(textView_trafficWatchDEBUG){
+            [[textView_trafficWatchDEBUG window] setTitle:screenName];
+            [[textView_trafficWatchDEBUG window] makeKeyAndOrderFront:nil];
+        }
+
         //Init our socket and start connecting
         socket = [[AISocket socketWithHost:host port:port] retain];
         connectionPhase = 1;
@@ -553,7 +566,14 @@ static char *hash_password(const char * const password);
                 NSString		*message = [packet string];
                 NSString		*command = [message TOCStringArgumentAtIndex:0];
 
-//                NSLog(@"(%@)<- %@",screenName,[packet string]);
+                if(textView_trafficWatchDEBUG){
+                    [[textView_trafficWatchDEBUG textStorage] appendString:@"<- "
+                                                            withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont labelFontOfSize:11],NSFontAttributeName,[NSColor blackColor],NSForegroundColorAttributeName,nil]];
+                    [[textView_trafficWatchDEBUG textStorage] appendString:[NSString stringWithFormat:@"%@",[packet string]]
+                                                            withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont labelFontOfSize:11],NSFontAttributeName,[NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.4 alpha:1.0],NSForegroundColorAttributeName,nil]];
+                    [[textView_trafficWatchDEBUG textStorage] appendString:@"\r" withAttributes:[NSDictionary dictionary]];
+                    [textView_trafficWatchDEBUG scrollRangeToVisible:NSMakeRange([[textView_trafficWatchDEBUG textStorage] length],0)];
+                }
 
                 if([command compare:@"SIGN_ON"] == 0){
                     [self AIM_HandleSignOn:message];
@@ -621,7 +641,15 @@ static char *hash_password(const char * const password);
             NSLog(@"Attempted to send invalid packet (Too large, %i)",[packet length]);
         }
 
-//        NSLog(@"(%@)-> %@",screenName,[[outQue objectAtIndex:0] string]);
+        if(textView_trafficWatchDEBUG){
+            [[textView_trafficWatchDEBUG textStorage] appendString:@"-> "
+                                                    withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont labelFontOfSize:11],NSFontAttributeName,[NSColor blackColor],NSForegroundColorAttributeName,nil]];
+            [[textView_trafficWatchDEBUG textStorage] appendString:[NSString stringWithFormat:@"%@",[[outQue objectAtIndex:0] string]]
+                                                    withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont labelFontOfSize:11],NSFontAttributeName,[NSColor colorWithCalibratedRed:0.0 green:0.4 blue:0.0 alpha:1.0],NSForegroundColorAttributeName,nil]];
+            [[textView_trafficWatchDEBUG textStorage] appendString:@"\r" withAttributes:[NSDictionary dictionary]];
+            [textView_trafficWatchDEBUG scrollRangeToVisible:NSMakeRange([[textView_trafficWatchDEBUG textStorage] length],0)];
+        }
+        
         [outQue removeObjectAtIndex:0];
     }
 }
@@ -957,10 +985,16 @@ static char *hash_password(const char * const password);
 
 - (void)AIM_HandleNick:(NSString *)message
 {
-    if([screenName compare:[message TOCStringArgumentAtIndex:1]] != 0){
+/*    if([screenName compare:[message TOCStringArgumentAtIndex:1]] != 0){
         NSString *message = [NSString stringWithFormat:@"toc_format_nickname \"%@\"",screenName];
         [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
-    }
+    }*/
+}
+
+- (void)AIM_SetNick:(NSString *)nick
+{
+    NSString *message = [NSString stringWithFormat:@"toc_format_nickname \"%@\"",nick];
+    [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 }
 
 - (void)AIM_HandleSignOn:(NSString *)message
@@ -1081,13 +1115,13 @@ static char *hash_password(const char * const password);
     if(waitingForFirstUpdate){
         waitingForFirstUpdate = NO;
 
-        NSLog(@"firstSignOnUpdateReceived");
+        NSLog(@"%@ firstSignOnUpdateReceived",[self accountDescription]);
 
         if(numberOfSignOnUpdates == 0){
             //No available contacts after 5 seconds, assume noone is online and resume contact list updates
             [self waitForLastSignOnUpdate:nil];
         }else{
-            //Check every 0.2 seconds for additional updates
+            //Check every X seconds for additional updates
             [NSTimer scheduledTimerWithTimeInterval:(SIGN_ON_UPKEEP_INTERVAL)
                                              target:self
                                            selector:@selector(waitForLastSignOnUpdate:)
@@ -1100,14 +1134,14 @@ static char *hash_password(const char * const password);
 - (void)waitForLastSignOnUpdate:(NSTimer *)inTimer
 {
     if(numberOfSignOnUpdates == 0){
-        NSLog(@"sign on is complete");
+        NSLog(@"%@ sign on is complete",[self accountDescription]);
 
         //No updates received, sign on is complete
         [inTimer invalidate]; //Stop this timer
         [[owner contactController] setHoldContactListUpdates:NO]; //Resume contact list updates
         processingSignOnUpdates = NO;
     }else{
-        NSLog(@" .. (%i)",numberOfSignOnUpdates);
+        NSLog(@"%@ .. (%i)",[self accountDescription],numberOfSignOnUpdates);
         numberOfSignOnUpdates = 0;
     }
 }
@@ -1272,6 +1306,8 @@ static char *hash_password(const char * const password);
     if(away){
         [self AIM_SetAway:[AIHTMLDecoder encodeHTML:away encodeFullString:YES]];
     }
+
+    [self AIM_SetNick:screenName];
 }
 
 // Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1380,13 +1416,11 @@ static char *hash_password(const char * const password) {
     [addDict release];
     [deleteDict release];
     [preferencesDict release];
-    [accountViewController release];
     [socket release];
     [messageDelayTimer release];
 
     [super dealloc];
 }
-
 
 @end
 

@@ -17,7 +17,6 @@
 #import "AIEditorAllContactsCollection.h"
 #import "AIEditorListHandle.h"
 #import "AIEditorListGroup.h"
-#import "AIEditorListObject.h"
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
 #import "AIAdium.h"
@@ -25,16 +24,16 @@
 
 @interface AIEditorAllContactsCollection (PRIVATE)
 - (id)initWithOwner:(id)inOwner plugin:(id)inPlugin;
-- (AIEditorListGroup *)generateEditorListGroup;
-- (void)_processCollectionGroup:(AIEditorListGroup *)collectionGroup intoEditorGroup:(AIEditorListGroup *)editorGroup;
-- (AIEditorListHandle *)_handleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group;
-- (AIEditorListGroup *)_groupNamed:(NSString *)name;
+- (void)generateEditorListGroup;
+- (void)_positionHandle:(AIEditorListHandle *)handle atIndex:(int)index inGroup:(AIEditorListGroup *)group;
+- (void)_positionGroup:(AIEditorListGroup *)group atIndex:(int)index;
+- (void)allCollectionsPerformSelector:(SEL)selector onObject:(id)listObject withObject:(id)object;
 @end
 
 
 @implementation AIEditorAllContactsCollection
 
-//Return a collection for all contacts
+ //Return a collection for all contacts
 + (AIEditorAllContactsCollection *)allContactsCollectionWithOwner:(id)inOwner plugin:(id)inPlugin
 {
     return([[[self alloc] initWithOwner:inOwner plugin:inPlugin] autorelease]);
@@ -43,11 +42,10 @@
 //init
 - (id)initWithOwner:(id)inOwner plugin:(id)inPlugin
 {
-    [super init];
+    [super initWithOwner:inOwner];
 
     plugin = [inPlugin retain];
-    owner = [inOwner retain];
-    list = nil;
+    sortMode = AISortByIndex;
 
     [[owner notificationCenter] addObserver:self selector:@selector(collectionAddedObject:) name:Editor_AddedObjectToCollection object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(collectionRemovedObject:) name:Editor_RemovedObjectFromCollection object:nil];
@@ -64,324 +62,287 @@
     [[owner notificationCenter] removeObserver:self];
 
     //Cleanup
-    [owner release];
     [plugin release];
-    [list release];
     
     [super dealloc];
 }
 
-//Return our text description
 - (NSString *)name{
-    return(@"Adium Contact List");
+    return(@"All Available Contacts"); //Return our text description
 }
-
-//Does our list contain the handle?
-- (BOOL)containsHandleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
-{
-    if([self _handleNamed:UID inGroup:list]){
-        return(YES);
-    }else{
-        return(NO);
-    }
-}
-
-- (AIEditorListHandle *)handleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
-{
-    return([self _handleNamed:UID inGroup:list]);
-}
-
-- (AIEditorListGroup *)groupWithUID:(NSString *)UID
-{
-    return([self _groupNamed:UID]);
-}
-
-
-- (NSString *)subLabel{
-    return(@"All Avaliable Contacts");
-}
-
 - (NSString *)collectionDescription{
-    return(@"Adium Contact List");
+    return(@"All Available Contacts");
 }
-
 - (BOOL)showOwnershipColumns{
     return(YES);
 }
 - (BOOL)showCustomEditorColumns{
     return(YES);
 }
-
-- (BOOL)includeInOwnershipColumn
-{
+- (BOOL)showIndexColumn{
+    return(YES);
+}
+- (BOOL)includeInOwnershipColumn{
+    return(NO);
+}
+- (NSString *)UID{
+    return(@"AdiumContactList"); //Return a unique identifier
+}
+- (NSString *)serviceID{
+    return(@"");
+}
+- (NSImage *)icon{
+    return([AIImageUtilities imageNamed:@"AllContacts" forClass:[self class]]); //Return our icon description
+}
+- (BOOL)enabled{
+    return(YES); //Return YES if this collection is enabled
+}
+- (BOOL)editable{
     return(NO);
 }
 
-//Return a unique identifier
-- (NSString *)UID{
-    return(@"AdiumContactList");
-}
 
-- (NSString *)serviceID
+
+
+
+//Add the group to our account
+- (void)_addGroup:(AIEditorListGroup *)group
 {
-    return(@"");
+    NSEnumerator		*enumerator;
+    AIEditorCollection		*collection;
+
+    //Add the object to all available collections (for now)
+    enumerator = [[plugin collectionsArray] objectEnumerator];
+    while((collection = [enumerator nextObject])){
+        if([collection includeInOwnershipColumn] && [collection enabled]){
+            [collection addGroupNamed:[group UID] temporary:[group temporary]];
+        }
+    }
+
+    //Setup its index
+    [self _positionGroup:group atIndex:[list count]];
+    [super _addGroup:group];
 }
 
-//Return our icon description
-- (NSImage *)icon{
-    return([AIImageUtilities imageNamed:@"AllContacts" forClass:[self class]]);
-}
-
-//Return YES if this collection is enabled
-- (BOOL)enabled{
-    return(YES);
-}
-
-//Return an Editor List Group containing everything in this collection
-- (AIEditorListGroup *)list{
-    return(list);
-}
-
-//Add an object to the collection
-- (void)addObject:(AIEditorListObject *)inObject
+//
+- (void)_moveGroup:(AIEditorListGroup *)group toIndex:(int)index
 {
-    if([inObject isKindOfClass:[AIEditorListHandle class]]){
-        NSString		*groupName = [[inObject containingGroup] UID];
-        BOOL			serviceIDSet = NO;
-        NSEnumerator		*enumerator;
-        id <AIEditorCollection>	collection;
+    //Setup its index
+    [self _positionGroup:group atIndex:index];
+    [super _moveGroup:group toIndex:index];
+}
 
-        //Add the object to all available collections (for now)
-        enumerator = [[plugin collectionsArray] objectEnumerator];
-        while((collection = [enumerator nextObject])){
-            if([collection includeInOwnershipColumn] && [collection enabled]){
-                AIEditorListGroup	*group;
-                
-                //Correctly set the object's service ID (for now)
-                if(!serviceIDSet){
-                    AIServiceType	*serviceType = [[owner accountController] serviceTypeWithID:[collection serviceID]];
-                    
-                    [(AIEditorListHandle *)inObject setServiceID:[serviceType identifier]];	//Set the correct serviceID
-                    [inObject setUID:[serviceType filterUID:[inObject UID]]];			//Correctly filter the UID
-                    serviceIDSet = YES;
-                }
-                
-                //Get a local instance of the containing group
-                group = [plugin groupNamed:groupName onCollection:collection];
-                if(!group){ //If the group doesn't exist, create it
-                    group = [plugin createGroupNamed:groupName onCollection:collection temporary:NO];
+//
+- (void)_addHandle:(AIEditorListHandle *)handle toGroup:(AIEditorListGroup *)group index:(int)index
+{
+    NSEnumerator		*enumerator;
+    AIEditorCollection		*collection;
+    AIEditorListGroup		*localGroup;
+
+    //
+    enumerator = [[plugin collectionsArray] objectEnumerator];
+    while((collection = [enumerator nextObject])){
+        if([collection includeInOwnershipColumn] && [collection enabled]){
+            localGroup = [collection groupWithUID:[group UID]];
+            if(!localGroup){
+                localGroup = [collection addGroupNamed:[group UID] temporary:NO];
+            }
+
+            [collection addHandleNamed:[handle UID] inGroup:localGroup index:-1 temporary:[handle temporary]];
+        }
+    }
+
+    //
+    [self _positionHandle:handle atIndex:index inGroup:group];
+    [super _addHandle:handle toGroup:group index:index];
+}
+
+//
+- (void)_moveHandle:(AIEditorListHandle *)handle toGroup:(AIEditorListGroup *)group index:(int)index
+{
+    NSEnumerator		*enumerator;
+    AIEditorCollection		*collection;
+    AIEditorListHandle		*localHandle;
+    AIEditorListGroup		*localGroup;
+
+    //
+    enumerator = [[plugin collectionsArray] objectEnumerator];
+    while((collection = [enumerator nextObject])){
+        if([collection includeInOwnershipColumn] && [collection enabled]){
+
+            if(localHandle = [collection handleWithUID:[handle UID]]){
+                localGroup = [collection groupWithUID:[group UID]];
+                if(!localGroup){
+                    localGroup = [collection addGroupNamed:[group UID] temporary:NO];
                 }
 
-                //Add the handle to this collection
-                [plugin createHandleNamed:[inObject UID] inGroup:group onCollection:collection temporary:NO];
+                [collection moveHandle:localHandle toGroup:localGroup index:-1];
             }
         }
     }
+
+    //
+    [self _positionHandle:handle atIndex:index inGroup:group];
+    [super _moveHandle:handle toGroup:group index:index];
 }
 
-//Delete an object from the collection
-- (void)deleteObject:(AIEditorListObject *)inObject
+
+//These functions are similar enough that I can combine them to reduce all the redundant code
+//Rename on the account
+- (void)_renameGroup:(AIEditorListGroup *)group to:(NSString *)name
 {
-    BOOL			isGroup = [inObject isKindOfClass:[AIEditorListGroup class]];
+    [self allCollectionsPerformSelector:@selector(renameGroup:to:) onObject:group withObject:name];
+    [super _renameGroup:group to:name];
+}
+
+//Delete from the account
+- (void)_deleteGroup:(AIEditorListGroup *)group
+{
+    [self allCollectionsPerformSelector:@selector(deleteGroup:) onObject:group withObject:nil];
+    [super _deleteGroup:group];
+}
+
+
+//
+- (void)_deleteHandle:(AIEditorListHandle *)handle
+{
+    [self allCollectionsPerformSelector:@selector(deleteHandle:) onObject:handle withObject:nil];
+    [super _deleteHandle:handle];
+}
+
+//
+- (void)_renameHandle:(AIEditorListHandle *)handle to:(NSString *)name
+{
+    [self allCollectionsPerformSelector:@selector(renameHandle:to:) onObject:handle withObject:name];
+    [super _renameHandle:handle to:name];
+}
+
+
+//..prevent all that redundant code
+- (void)allCollectionsPerformSelector:(SEL)selector onObject:(id)listObject withObject:(id)object
+{
     NSEnumerator		*enumerator;
-    id <AIEditorCollection>	collection;
+    AIEditorCollection		*collection;
+    AIEditorListGroup		*localGroup;
+    AIEditorListHandle		*localHandle;
+    BOOL			isGroup;
+
+    //Determine what the object is
+    isGroup = [listObject isKindOfClass:[AIEditorListGroup class]];
     
-    //Delete the object from all owning collections
+    //
     enumerator = [[plugin collectionsArray] objectEnumerator];
     while((collection = [enumerator nextObject])){
         if([collection includeInOwnershipColumn] && [collection enabled]){
-            AIEditorListObject	*object;
-
-            //Get the instance of the object on this collection
-            if(!isGroup){
-                object = [plugin handleNamed:[inObject UID] onCollection:collection];
-            }else{
-                object = [plugin groupNamed:[inObject UID] onCollection:collection];
-            }
-
-            //Remove the object
-            if(object){
-                [plugin deleteObject:object fromCollection:collection];
+            if(isGroup && (localGroup = [collection groupWithUID:[listObject UID]])){
+                [collection performSelector:selector withObject:localGroup withObject:object];
+            }else if(!isGroup && (localHandle = [collection handleWithUID:[listObject UID]])){
+                [collection performSelector:selector withObject:localHandle withObject:object];
             }
         }
     }
 }
 
-//Rename an existing object
-- (void)renameObject:(AIEditorListObject *)inObject to:(NSString *)newName
+//Used internally.  Correctly sets a contact's order index for the desired position
+- (void)_positionHandle:(AIEditorListHandle *)handle atIndex:(int)index inGroup:(AIEditorListGroup *)group
 {
-    BOOL			isGroup = [inObject isKindOfClass:[AIEditorListGroup class]];
-    NSEnumerator		*enumerator;
-    id <AIEditorCollection>	collection;
+    float	orderIndex;
 
-    //Rename the object on all owning collections
-    enumerator = [[plugin collectionsArray] objectEnumerator];
-    while((collection = [enumerator nextObject])){
-        if([collection includeInOwnershipColumn] && [collection enabled]){
-            AIEditorListObject	*object;
+    if([group count] == 0){ //If the group is empty, use the group's index as a starting point (anything would work here)
+        orderIndex = [group orderIndex];
 
-            //Get the instance of the object on this collection
-            if(!isGroup){
-                object = [plugin handleNamed:[inObject UID] onCollection:collection];
-            }else{
-                object = [plugin groupNamed:[inObject UID] onCollection:collection];
-            }
+    }else if(index == [group count]){ //When placing at the bottom of a group, we place 1 below the current bottom
+        orderIndex = [[group handleAtIndex:index-1] orderIndex] + 2;
 
-            //Rename the object
-            if(object){
-                [plugin renameObject:object onCollection:collection to:newName];
-            }
-        }
+    }else{ //Otherwise, we place at the current index (which will push any existing handles down)
+        orderIndex = [[group handleAtIndex:index] orderIndex];
+
     }
+
+    //Set the new index
+    orderIndex = [[owner contactController] setOrderIndexOfContactWithServiceID:nil UID:[handle UID] to:orderIndex];
+    [handle setOrderIndex:orderIndex];
 }
 
-//Move an existing object
-- (void)moveObject:(AIEditorListObject *)inObject toGroup:(AIEditorListGroup *)inGroup
+//Used internally.  Correctly sets a group's order index for the desired position
+- (void)_positionGroup:(AIEditorListGroup *)group atIndex:(int)index
 {
-    NSString			*groupName = [inGroup UID];
-    NSEnumerator		*enumerator;
-    id <AIEditorCollection>	collection;
-    AIEditorListHandle		*handle;
-    AIEditorListGroup		*group;
+    float	orderIndex;
 
-    if([inObject isKindOfClass:[AIEditorListHandle class]]){
+    if([list count] == 0){ //If there are no groups, use 1 as a starting point (Anything would work here)
+        orderIndex = 1;
 
-        //Move the Handle on all owning collections
-        enumerator = [[plugin collectionsArray] objectEnumerator];
-        while((collection = [enumerator nextObject])){
-            if([collection includeInOwnershipColumn] && [collection enabled]){
-                //Get the instance of the handle on this collection
-                handle = [plugin handleNamed:[inObject UID] onCollection:collection];
+    }else if(index == [list count]){ //When placing at the bottom, we place 1 below the current bottom
+        orderIndex = [[list objectAtIndex:index-1] orderIndex] + 2;
 
-                //Get a local instance of the containing group
-                group = [plugin groupNamed:groupName onCollection:collection];
-                if(!group){ //If the group doesn't exist, create it
-                    group = [plugin createGroupNamed:groupName onCollection:collection temporary:NO];
-                }
+    }else{ //Otherwise, we place at the current index (which will push any existing group down)
+        orderIndex = [[list objectAtIndex:index] orderIndex];
 
-                //Move the handle
-                if(handle){
-                    [plugin moveObject:handle fromCollection:collection toGroup:group collection:collection];
-                }
-            }
-        }
-
-        //Move the handle on our list (to avoid regeneration of our editor list group)
-        handle = [plugin handleNamed:[inObject UID] onCollection:self];
-        group = [plugin groupNamed:groupName onCollection:self];
-
-        [handle retain];
-        [[handle containingGroup] removeObject:handle];
-        [group addObject:handle];
-        [handle release];
     }
 
+    //Set the new index
+    orderIndex = [[owner contactController] setOrderIndexOfGroupWithUID:[group UID] to:orderIndex];
+    [group setOrderIndex:orderIndex];
 }
-
 
 //Creates and returns the editor list (editor groups and handles)
-- (AIEditorListGroup *)generateEditorListGroup
+- (void)generateEditorListGroup
 {
-    AIEditorListGroup		*editorGroup;
-    NSEnumerator		*enumerator;
-    id <AIEditorCollection>	collection;
-    
-    //Create the editor group
-    editorGroup = [[[AIEditorListGroup alloc] initWithUID:@"" temporary:NO] autorelease];
+    NSEnumerator		*enumerator, *groupEnumerator, *handleEnumerator;
+    AIEditorListGroup		*group, *localGroup;
+    AIEditorListHandle		*handle, *localHandle;
+    AIEditorCollection		*collection;
+    NSString			*groupUID, *handleUID;
 
-    //Process the ownership enabled collections' groups
+    //Create the group array
+    [list release];
+    list = [[NSMutableArray alloc] init];
+
+    //Process all the ownership enabled collections
     enumerator = [[plugin collectionsArray] objectEnumerator];
     while((collection = [enumerator nextObject])){
         if([collection includeInOwnershipColumn] && [collection enabled]){
-            [self _processCollectionGroup:[collection list] intoEditorGroup:editorGroup];
-        }
-    }
+            //Process all groups
+            groupEnumerator = [[collection list] objectEnumerator];
+            while((group = [groupEnumerator nextObject])){
+                
+                //Create the group locally (if necessary)
+                groupUID = [group UID];
+                localGroup = [self groupWithUID:groupUID];
+                if(!localGroup){
+                    localGroup = [[[AIEditorListGroup alloc] initWithUID:groupUID temporary:NO] autorelease];
+                    [localGroup setOrderIndex:[[owner contactController] orderIndexOfKey:groupUID]];
+                    [list addObject:localGroup];
+                }
+                
+                //Process all handles
+                handleEnumerator = [group handleEnumerator];
+                while((handle = [handleEnumerator nextObject])){
 
-    return(editorGroup);
-}
-
-- (void)_processCollectionGroup:(AIEditorListGroup *)collectionGroup intoEditorGroup:(AIEditorListGroup *)editorGroup
-{
-    NSEnumerator	*enumerator;
-    AIEditorListObject	*object;
-    
-    enumerator = [collectionGroup objectEnumerator];
-    while((object = [enumerator nextObject])){
-        if([object isKindOfClass:[AIEditorListGroup class]]){
-            AIEditorListGroup	*newGroup = nil;
-            
-            //Create the group (if necessary) and process its contents
-            newGroup = (AIEditorListGroup *)[editorGroup objectNamed:[object UID] isGroup:YES];
-            if(!newGroup){
-                newGroup = [[[AIEditorListGroup alloc] initWithUID:[object UID] temporary:NO] autorelease];
-                [editorGroup addObject:newGroup];
-            }
-            [self _processCollectionGroup:(AIEditorListGroup *)object intoEditorGroup:newGroup];
-
-        }else if([object isKindOfClass:[AIEditorListHandle class]]){
-            AIEditorListHandle	*newHandle;
-
-            //Create the handle and add it to the group (if necessary)
-            if(![editorGroup objectNamed:[object UID] isGroup:NO]){
-                newHandle = [[[AIEditorListHandle alloc] initWithServiceID:[(AIEditorListHandle *)object serviceID] UID:[object UID] temporary:NO] autorelease];
-                [editorGroup addObject:newHandle];
-            }
-            
-        }
-    }    
-}
-
-//Recursively scan for a handle on our list
-- (AIEditorListHandle *)_handleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group
-{
-    NSEnumerator	*enumerator;
-    AIEditorListObject	*object;
-
-    //Scan all objects in this group
-    enumerator = [group objectEnumerator];
-    while(object = [enumerator nextObject]){
-        if([object isKindOfClass:[AIEditorListHandle class]]){ //Compare the handle names
-            if([name compare:[object UID]] == 0){
-                return((AIEditorListHandle *)object);
-            }
-
-        }else if([object isKindOfClass:[AIEditorListGroup class]]){ //Scan the subgroup
-            if((object = [self _handleNamed:name inGroup:(AIEditorListGroup *)object])){
-                return((AIEditorListHandle *)object);
+                    //Create the handle and add it to the group (if necessary)
+                    handleUID = [handle UID];
+                    localHandle = [localGroup handleNamed:handleUID];
+                    if(!localHandle){
+                        localHandle = [[[AIEditorListHandle alloc] initWithUID:handleUID temporary:NO] autorelease];
+                        [localHandle setOrderIndex:[[owner contactController] orderIndexOfKey:[NSString stringWithFormat:@"%@.%@",[collection serviceID],[handle UID]]]];
+                        [localGroup addHandle:localHandle];
+                    }
+                }
             }
         }
     }
 
-    return(nil);
+    [self sortUsingMode:[self sortMode]];
 }
-
-//Scan for a group on our list
-- (AIEditorListGroup *)_groupNamed:(NSString *)name
-{
-    NSEnumerator	*enumerator;
-    AIEditorListGroup	*group;
-
-    //Look for this group
-    enumerator = [list objectEnumerator];
-    while(group = [enumerator nextObject]){
-        if([name caseInsensitiveCompare:[group UID]] == 0){
-            return(group);
-        }
-    }
-
-    return(nil);
-}
-
 
 //A collection's content has changed
 - (void)collectionContentChanged:(NSNotification *)notification
 {
-    id <AIEditorCollection>	collection = [notification object];
+    AIEditorCollection	*collection = [notification object];
 
     if([collection includeInOwnershipColumn] && collection != self){        
         //Rebuild our content list
-        [list release];
-        list = [[self generateEditorListGroup] retain];
+        [self generateEditorListGroup];
 
         //Let the contact list know our handles changed
         [[owner notificationCenter] postNotificationName:Editor_CollectionContentChanged object:self];
@@ -391,8 +352,7 @@
 - (void)collectionArrayChanged:(NSNotification *)notification
 {
     //Rebuild our content list
-    [list release];
-    list = [[self generateEditorListGroup] retain];
+    [self generateEditorListGroup];
 
     //Let the contact list know our handles changed
     [[owner notificationCenter] postNotificationName:Editor_CollectionContentChanged object:self];
@@ -400,54 +360,62 @@
 
 - (void)collectionAddedObject:(NSNotification *)notification
 {
-    id <AIEditorCollection>	collection = [notification object];
-    AIEditorListHandle		*object = [[notification userInfo] objectForKey:@"Object"];
-    BOOL			isGroup = [object isKindOfClass:[AIEditorListGroup class]];
+    AIEditorCollection		*collection = [notification object];
+    AIEditorListHandle		*handle = [[notification userInfo] objectForKey:@"Object"];
+    BOOL			isGroup = [handle isKindOfClass:[AIEditorListGroup class]];
 
-    if([collection includeInOwnershipColumn] && collection != self){
-        
-        //If object isn't already on our list
-        if(!isGroup && ![self containsHandleWithUID:[object UID] serviceID:[collection serviceID]]){
-            //Rebuild our list (It'd be faster to just add the new handle here, however)
-            [list release];
-            list = [[self generateEditorListGroup] retain];
+    if(!controlledChanges){
+        NSLog(@"collectionAddedObject:%@",[handle UID]);
+        if([collection includeInOwnershipColumn] && collection != self){
+            
+            //If object isn't already on our list
+            if(!isGroup && ![self containsHandleWithUID:[handle UID]]){
+                //Rebuild our list (It'd be faster to just add the new handle here, however)
+                [self generateEditorListGroup];
+            }
         }
     }
 }
 
 - (void)collectionRemovedObject:(NSNotification *)notification
 {
-    id <AIEditorCollection>	collection = [notification object];
-    AIEditorListHandle		*handle = [[notification userInfo] objectForKey:@"Object"];
+    AIEditorCollection	*collection = [notification object];
+    AIEditorListHandle	*handle = [[notification userInfo] objectForKey:@"Object"];
+
+    if(!controlledChanges){
+        NSLog(@"collectionRemovedObject:%@",[handle UID]);
     
-    if([collection includeInOwnershipColumn] && collection != self){
-        NSString	*serviceID = [collection serviceID];
-        NSString	*handleUID = [handle UID];
-        NSEnumerator	*enumerator;
-
-        //Scan all the collections
-        enumerator = [[plugin collectionsArray] objectEnumerator];
-        while((collection = [enumerator nextObject]) && (![collection includeInOwnershipColumn] || ![collection containsHandleWithUID:handleUID serviceID:serviceID]));
-
-        //If the object is no longer owned by any of the collections, remove it from our list
-        if(!collection){
-            AIEditorListHandle	*ourHandle;
-
-            //Remove the handle from our list
-            ourHandle = [self _handleNamed:handleUID inGroup:list];
-            [[ourHandle containingGroup] removeObject:ourHandle];
-
-            //Let the contact list editor know our handles changed
-            [[owner notificationCenter] postNotificationName:Editor_CollectionContentChanged object:self];
+        if([collection includeInOwnershipColumn] && collection != self){
+            NSString	*handleUID = [handle UID];
+            NSEnumerator	*enumerator;
+    
+            //Scan all the collections
+            enumerator = [[plugin collectionsArray] objectEnumerator];
+            while((collection = [enumerator nextObject]) && (![collection includeInOwnershipColumn] || ![collection containsHandleWithUID:handleUID]));
+    
+            //If the object is no longer owned by any of the collections, remove it from our list
+            if(!collection){
+                AIEditorListHandle	*ourHandle;
+    
+                //Remove the handle from our list
+                ourHandle = [self handleWithUID:handleUID];
+                [[ourHandle containingGroup] removeHandle:ourHandle];
+    
+                //Let the contact list editor know our handles changed
+                [[owner notificationCenter] postNotificationName:Editor_CollectionContentChanged object:self];
+            }
         }
     }
 }
 
 - (void)collectionRenamedObject:(NSNotification *)notification
 {
-    //Rebuild our list (for now)
-    [list release];
-    list = [[self generateEditorListGroup] retain];
+    if(!controlledChanges){
+        NSLog(@"collectionRenamedObject");
+    
+        //Rebuild our list (for now)
+        [self generateEditorListGroup];
+    }
 }
 
 

@@ -1,0 +1,19 @@
+{
+    IBClasses = (
+        {
+            CLASS = AIAccount; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {service = id; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {
+            CLASS = AIMTOC2Account; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"textView_trafficWatchDEBUG" = NSTextView; }; 
+            SUPERCLASS = AIAccount; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

@@ -167,12 +167,11 @@
 {
     NSString		*serverGroup = [handle serverGroup];
     NSString		*handleUID = [handle UID];
-    AIServiceType	*serviceType = [[owner accountController] serviceTypeWithID:[handle serviceID]];
     AIListContact	*contact;
     BOOL		updateList = NO;
     
     //Does a contact for this handle already exist on our list?
-    contact = [[owner contactController] contactInGroup:contactList withService:serviceType UID:handleUID serverGroup:nil];
+    contact = [[owner contactController] contactInGroup:contactList withService:[handle serviceID] UID:handleUID serverGroup:nil];
     if(contact){ //If it does
         NSString	*groupName;
 
@@ -202,8 +201,9 @@
 
         }else{ //If it doesn't
             //create a new contact
-            contact = [[AIListContact alloc] initWithUID:handleUID serviceID:[serviceType identifier]];
-            [[owner contactController] _setOrderIndexOfContact:contact];
+            contact = [[AIListContact alloc] initWithUID:handleUID serviceID:[handle serviceID]];
+            [contact setOrderIndex:[[owner contactController] orderIndexOfContact:contact]];
+
             [[self _getGroupNamed:serverGroup] addObject:contact];
 
             //Add our handle
@@ -236,6 +236,7 @@
         }else{ //If it doesn't
             //Create the group
             group = [[[AIListGroup alloc] initWithUID:serverGroup] autorelease];
+            [group setOrderIndex:[[owner contactController] orderIndexOfGroup:group]];
 
             [self _correctlyExpandCollapseGroup:group];		//Correctly set the group as expanded or collapsed
             [contactList addObject:group];			//Add the group to our contact list

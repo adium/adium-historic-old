@@ -31,8 +31,6 @@
 - (NSImage *)image;
 - (NSCharacterSet *)allowedCharacters;
 - (BOOL)caseSensitive;
-//- (NSComparisonResult)compare:(AIServiceType *)inService;
 - (NSString *)filterUID:(NSString *)inUID;
-- (NSComparisonResult)compareUID:(NSString *)UIDA to:(NSString *)UIDB;
 
 @end

@@ -68,17 +68,8 @@ int manualSort(id objectA, id objectB, void *context)
             return(NSOrderedAscending);
         }else if(!groupA && groupB){ //Groups to the bottom
             return(NSOrderedDescending);
-        }else if(!groupA && !groupB){ //Contacts in manual order
-            if([(AIListContact *)objectA index] > [(AIListContact *)objectB index]){
-                return(NSOrderedDescending);
-            }else{
-                return(NSOrderedAscending);
-            }
-
-        }else{ //Groups in manual order
-            AIListGroup	*group = [objectA containingGroup];
-
-            if([group indexOfObject:objectA] > [group indexOfObject:objectB]){
+        }else{ //Contacts and Groups in manual order
+            if([objectA orderIndex] > [objectB orderIndex]){
                 return(NSOrderedDescending);
             }else{
                 return(NSOrderedAscending);

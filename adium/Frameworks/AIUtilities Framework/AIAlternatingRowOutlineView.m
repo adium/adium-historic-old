@@ -16,9 +16,12 @@
 /*
  A subclass of outline view that adds:
 
- - Alternating row
+ - Alternating rows
  - Delete key filtering
  - Expand / Collapse state control
+ - A vertical column grid
+ - Fixes a reload data crash
+
  */
 
 #import "AIAlternatingRowOutlineView.h"
@@ -27,6 +30,7 @@
 - (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected;
 - (void)_init;
 - (void)outlineViewDeleteSelectedRows:(NSTableView *)tableView;
+- (void)_drawGridInClipRect:(NSRect)rect;
 @end
 
 @implementation AIAlternatingRowOutlineView
@@ -143,42 +147,62 @@
     }
 }
 
+- (void)_reloadData
+{
+    if(needsReload){
+        [self reloadData];
+    }
+}
+
 - (void)reloadData
 {
     id	selectedItem;
     int	selectedRow;
-    
-    //Remember the currently selected item
-    selectedItem = [self itemAtRow:[self selectedRow]];
 
-    //Reload
-    [super reloadData];
+    /* This code is to correct what I consider a bug with NSOutlineView.
+        - Basically, if reloadData is called from 'outlineView:setObjectValue:forTableColumn:byItem:' while the last row is edited in a way that will reduce the # of rows in the table view, things will crash within system code.
+        - This crash is evident in many versions of Adium.  When renaming the last contact on the contact list to the name of a contact who already exists on the list, Adium will delete the original contact, reducing the # of rows in the outline view in the midst of the cell editing, causing the crash.
+        - The fix is to delay reloading until editing of the last row is complete.  As an added benefit, we skip the delayed reloading if the outline view had been reloaded since the edit, and the reload is no longer necessary.
+    */
+    if([self numberOfRows] != 0 && ([self editedRow] == [self numberOfRows] - 1) && !needsReload){
+        needsReload = YES;
+        [self performSelector:@selector(_reloadData) withObject:nil afterDelay:0.0001];
 
-    //After reloading data, we correctly expand/collaps all groups
-    if([[self delegate] respondsToSelector:@selector(outlineView:expandStateOfItem:)]){
-        NSObject <AICollapseExpand> 	*delegate = [self delegate];
-        int 	numberOfRows = [delegate outlineView:self numberOfChildrenOfItem:nil];
-        int 	row;
+    }else{
+        needsReload = NO;
 
-        //go through all items
-        for(row = 0; row < numberOfRows; row++){
-            id item = [delegate outlineView:self child:row ofItem:nil];
+        //Remember the currently selected item
+        selectedItem = [self itemAtRow:[self selectedRow]];
 
-            //If the item is expandable, correctly expand/collapse it
-            if([delegate outlineView:self isItemExpandable:item]){
-                if([delegate outlineView:self expandStateOfItem:item]){
-                    [self expandItem:item];
-                }else{
-                    [self collapseItem:item];
+        //Reload
+        [super reloadData];
+
+        //After reloading data, we correctly expand/collaps all groups
+        if([[self delegate] respondsToSelector:@selector(outlineView:expandStateOfItem:)]){
+            NSObject <AICollapseExpand> 	*delegate = [self delegate];
+            int 	numberOfRows = [delegate outlineView:self numberOfChildrenOfItem:nil];
+            int 	row;
+
+            //go through all items
+            for(row = 0; row < numberOfRows; row++){
+                id item = [delegate outlineView:self child:row ofItem:nil];
+
+                //If the item is expandable, correctly expand/collapse it
+                if([delegate outlineView:self isItemExpandable:item]){
+                    if([delegate outlineView:self expandStateOfItem:item]){
+                        [self expandItem:item];
+                    }else{
+                        [self collapseItem:item];
+                    }
                 }
             }
         }
-    }
 
-    //Restore (if possible) the previously selected object
-    selectedRow = [self rowForItem:selectedItem];
-    if(selectedRow != NSNotFound){
-        [self selectRow:selectedRow byExtendingSelection:NO];
+        //Restore (if possible) the previously selected object
+        selectedRow = [self rowForItem:selectedItem];
+        if(selectedRow != NSNotFound){
+            [self selectRow:selectedRow byExtendingSelection:NO];
+        }
     }
     
 }
@@ -217,6 +241,10 @@
         coloredRow = !coloredRow;
         rowRect.origin.y += rowHeight;            
     }
+
+    if([self drawsGrid]){
+        [self _drawGridInClipRect:rect];
+    }
 }
 
 //Draw alternating colors
@@ -242,5 +270,31 @@
         }
     }
 }
+
+- (void)drawGridInClipRect:(NSRect)rect
+{
+    //We do our grid drawing later
+}
+
+- (void)_drawGridInClipRect:(NSRect)rect
+{
+    NSEnumerator	*enumerator;
+    NSTableColumn	*column;
+    float		xPos = 0.5;
+    int			intercellWidth = [self intercellSpacing].width;
+    
+    [[self gridColor] set];
+    [NSBezierPath setDefaultLineWidth:1.0];
+
+    enumerator = [[self tableColumns] objectEnumerator];
+    while((column = [enumerator nextObject])){
+        xPos += [column width] + intercellWidth;
+
+        [NSBezierPath strokeLineFromPoint:NSMakePoint(xPos, rect.origin.y)
+                                  toPoint:NSMakePoint(xPos, rect.origin.y + rect.size.height)];
+    }
+}
+
+
 
 @end

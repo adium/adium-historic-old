@@ -25,4 +25,6 @@
 - (void)closeController;
 - (void)addMessageObject:(AIMessageObject *)inObject toHandle:(AIContactHandle *)inHandle;
 - (IBAction)showContactListEditor:(id)sender;
+- (void)loadContactOrdering;
+- (void)saveContactOrdering;
 @end

@@ -223,7 +223,7 @@
     return(availableServiceArray);
 }
 
-- (AIServiceType *)serviceTypeWithID:(NSString *)inServiceID
+/*- (AIServiceType *)serviceTypeWithID:(NSString *)inServiceID
 {
     NSEnumerator		*enumerator;
     id <AIServiceController>	service;
@@ -238,7 +238,7 @@
     }
 
     return(nil);
-}
+}*/
 
 //Register service code
 - (void)registerService:(id <AIServiceController>)inService

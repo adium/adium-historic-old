@@ -18,20 +18,11 @@
 #import "AIEditorListGroup.h"
 #import "AIEditorListHandle.h"
 
-@interface AIEditorImportCollection : NSObject <AIEditorCollection>
+@interface AIEditorImportCollection : AIEditorCollection
 {
-    AIEditorListGroup			*list;
     NSString				*path;
 }
 
-+ (AIEditorImportCollection *)editorCollectionWithPath:(NSString *)inPath;
-- (NSString *)name;
-- (NSImage *)icon;
-- (BOOL)enabled;
-- (AIEditorListGroup *)list;
-//these functions are ignored (they are empty)
-- (void)addObject:(AIEditorListObject *)inObject;
-- (void)deleteObject:(AIEditorListObject *)inObject;
-- (void)renameObject:(AIEditorListObject *)inObject to:(NSString *)newName;
-- (void)moveObject:(AIEditorListObject *)inObject toGroup:(AIEditorListGroup *)inGroup;
++ (AIEditorImportCollection *)editorCollectionWithPath:(NSString *)inPath owner:(id)inOwner;
+
 @end

@@ -467,7 +467,7 @@ int HTMLEquivalentForFontSize(int fontSize)
     NSMutableDictionary	*argDict;
     NSScanner		*scanner;
     NSCharacterSet	*equalsSet, *quoteSet, *spaceSet;
-    NSString		*key, *value;
+    NSString		*key = nil, *value = nil;
 
     //Setup
     equalsSet = [NSCharacterSet characterSetWithCharactersInString:@"="];
@@ -477,20 +477,24 @@ int HTMLEquivalentForFontSize(int fontSize)
     argDict = [[NSMutableDictionary alloc] init];
     
     while(![scanner isAtEnd]){
+        BOOL	validKey, validValue;
+        
         //Find a tag
-        [scanner scanUpToCharactersFromSet:equalsSet intoString:&key];
+        validKey = [scanner scanUpToCharactersFromSet:equalsSet intoString:&key];
         [scanner scanCharactersFromSet:equalsSet intoString:nil];
         
         //check for quotes
         if([scanner scanCharactersFromSet:quoteSet intoString:nil]){
-            [scanner scanUpToCharactersFromSet:quoteSet intoString:&value];
+            validValue = [scanner scanUpToCharactersFromSet:quoteSet intoString:&value];
             [scanner scanCharactersFromSet:quoteSet intoString:nil];           
         }else{
-            [scanner scanUpToCharactersFromSet:spaceSet intoString:&value];
+            validValue = [scanner scanUpToCharactersFromSet:spaceSet intoString:&value];
         }
 
         //Store in dict
-        [argDict setObject:value forKey:key];
+        if(validValue && value != nil && [value length] != 0 && validKey && key != nil && [key length] != 0){ //Watch out for invalid & empty tags
+            [argDict setObject:value forKey:key];
+        }
     }
     
     return([argDict autorelease]);
