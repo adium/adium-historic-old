@@ -63,6 +63,7 @@
 #import "AIMenuAdditions.h"
 #import "AIMutableOwnerArray.h"
 #import "NEHMutableStringAdditions.h"
+#import "CBObjectAdditions.h"
 #import "AIParagraphStyleAdditions.h"
 #import "AIPlasticButton.h"
 #import "AIPopUpButtonAdditions.h"
