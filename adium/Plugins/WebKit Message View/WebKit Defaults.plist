@@ -3,12 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>Message Style</key>
-	<string>Smooth Operator</string>
+	<string>Mockie</string>
 	<key>Show User Icons</key>
 	<true/>
 	<key>DefaultFontFamily</key>
 	<string>Lucida Grande</string>
 	<key>DefaultFontSize</key>
-	<integer>10</integer>
+	<integer>11</integer>
 </dict>
 </plist>
