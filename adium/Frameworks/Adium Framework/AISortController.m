@@ -75,9 +75,11 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	int				index = 0;
 
 	if(alwaysSortGroupsToTop){
-		while((object = [enumerator nextObject]) && basicGroupVisibilitySort(inObject, object, sortFunction) == NSOrderedDescending) index++;
+		while((object = [enumerator nextObject]) && 
+			  basicGroupVisibilitySort(inObject, object, sortFunction) == NSOrderedDescending) index++;
 	}else{
-		while((object = [enumerator nextObject]) && basicVisibilitySort(inObject, object, sortFunction) == NSOrderedDescending) index++;
+		while((object = [enumerator nextObject]) && 
+			  basicVisibilitySort(inObject, object, sortFunction) == NSOrderedDescending) index++;
 	}
 	
 	return(index);
