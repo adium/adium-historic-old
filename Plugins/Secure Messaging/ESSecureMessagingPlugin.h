@@ -23,6 +23,7 @@
 typedef enum {
 	AISecureMessagingMenu_Toggle = 1,
 	AISecureMessagingMenu_ShowDetails,
+	AISecureMessagingMenu_Options,
 	AISecureMessagingMenu_ShowAbout
 } AISecureMessagingMenuTag;
 
