@@ -1490,8 +1490,7 @@
 - (void)accountConnectionProgressStep:(size_t)step of:(size_t)step_count withText:(const char *)text
 {
 	[self setStatusObject:[self connectionStringForStep:step] forKey:@"ConnectionProgressString" notify:NO];
-	[self setStatusObject:[NSNumber numberWithFloat:(step/step_count)] forKey:@"ConnectionProgressPercent" notify:NO];	
-
+	[self setStatusObject:[NSNumber numberWithFloat:((float)step/(float)(step_count-1))] forKey:@"ConnectionProgressPercent" notify:NO];	
 	[self notifyOfChangedStatusSilently:NO];
 }
 

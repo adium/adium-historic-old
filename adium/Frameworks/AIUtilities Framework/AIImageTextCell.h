@@ -14,9 +14,8 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface AIImageTextCell : AIGradientCell {
-    NSFont 	*font;
+    NSFont 		*font;
     NSString	*subString;
-    
 }
 
 - (void)setFont:(NSFont *)obj;

@@ -22,6 +22,7 @@
 
 @implementation AIImageTextCell
 
+//Init
 - (id)init
 {
     [super init];
@@ -32,13 +33,25 @@
     return(self);
 }
 
+//Dealloc
 - (void)dealloc
 {
     [font release];
+	[subString release];
 
     [super dealloc];
 }
 
+//Copy
+- (id)copyWithZone:(NSZone *)zone
+{
+	AIImageTextCell	*newCell = [[AIImageTextCell alloc] init];
+	[newCell setFont:font];
+	[newCell setSubString:subString];
+	return(newCell);
+}
+
+//Font used to display our text
 - (void)setFont:(NSFont *)obj
 {
     if(font != obj){
@@ -50,6 +63,7 @@
     return(font);
 }
 
+//Substring (Displayed in gray below our main string)
 - (void)setSubString:(NSString *)inSubString
 {
     if(subString != inSubString){
@@ -58,6 +72,7 @@
     }
 }
 
+//Draw
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
     NSString	*title = [self objectValue];

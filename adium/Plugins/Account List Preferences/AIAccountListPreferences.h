@@ -16,6 +16,11 @@
 @class AIAccountController, AIAccount, AIAutoScrollView;
 
 @interface AIAccountListPreferences : AIPreferencePane <AIListObjectObserver> {
+	//Account status
+	IBOutlet		NSTextField					*textField_status;
+	IBOutlet		NSProgressIndicator			*progress_status;
+	IBOutlet		NSButton					*button_toggleConnect;
+	
 	//Account preferences
     IBOutlet		NSTabView					*tabView_auxiliary;
     IBOutlet		NSView						*view_accountDetails;
@@ -45,5 +50,6 @@
 - (IBAction)selectServiceType:(id)sender;
 - (IBAction)toggleAutoConnect:(id)sender;
 - (IBAction)changeUIDField:(id)sender;
+- (IBAction)toggleConnectStatus:(id)sender;
 
 @end

@@ -12,7 +12,6 @@
 
 - (void)setDrawsGradientHighlight:(BOOL)inDrawsGradient;
 - (BOOL)drawsGradientHighlight;
-
 - (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView; //stops warnings.
 
 @end

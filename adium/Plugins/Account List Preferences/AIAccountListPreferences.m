@@ -27,6 +27,7 @@
 - (void)_addCustomViewAndTabsForController:(AIAccountViewController *)inControler;
 - (void)_removeCustomViewAndTabs;
 - (void)enableDisableControls;
+- (void)updateAccountConnectionProgress;
 - (void)configureAccountList;
 - (void)accountListChanged:(NSNotification *)notification;
 - (void)_configureResponderChain:(NSTimer *)inTimer;
@@ -100,6 +101,7 @@
 	configuredForAccount = inAccount;
 	[accountViewController configureForAccount:inAccount];
 	[self enableDisableControls];
+	[self updateAccountConnectionProgress];
 
 	//Fill in the account's name and auto-connect status
 	NSString	*formattedUID = [inAccount preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS];
@@ -194,7 +196,6 @@
 	}
 }
 
-
 //Remove any existing custom views
 - (void)_removeCustomViewAndTabs
 {
@@ -226,8 +227,18 @@
 - (IBAction)changeUIDField:(id)sender
 {
 	NSString *newUID = [textField_accountName stringValue];
-	if (![[configuredForAccount UID] isEqualToString:newUID])
+	if(![[configuredForAccount UID] isEqualToString:newUID])
 		[[adium accountController] changeUIDOfAccount:configuredForAccount to:newUID];	
+}
+
+//
+- (IBAction)toggleConnectStatus:(id)sender
+{	
+	BOOL	goOnline = (![[configuredForAccount statusObjectForKey:@"Online"] boolValue] &&
+						![[configuredForAccount statusObjectForKey:@"Connecting"] boolValue] &&
+						![[configuredForAccount statusObjectForKey:@"Disconnecting"] boolValue]);
+	
+    [configuredForAccount setPreference:[NSNumber numberWithBool:goOnline] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 }
 
 //User toggled the autoconnect preference
@@ -243,19 +254,74 @@
 //Disable controls for account that are connected
 - (void)enableDisableControls
 {
-	[popupMenu_serviceList setEnabled:(configuredForAccount && ![[configuredForAccount statusObjectForKey:@"Online"] boolValue])];
-	[textField_accountName setEnabled:(configuredForAccount && ![[configuredForAccount statusObjectForKey:@"Online"] boolValue])];
+	BOOL	accountEditable = (![[configuredForAccount statusObjectForKey:@"Online"] boolValue] &&
+							   ![[configuredForAccount statusObjectForKey:@"Connecting"] boolValue] &&
+							   ![[configuredForAccount statusObjectForKey:@"Disconnecting"] boolValue]);
+	
+	[popupMenu_serviceList setEnabled:(configuredForAccount && accountEditable)];
+	[textField_accountName setEnabled:(configuredForAccount && accountEditable)];
 	[button_autoConnect setEnabled:(configuredForAccount != nil)];
-	[button_deleteAccount setEnabled:([accountArray count] > 1 && configuredForAccount &&
-									  ![[configuredForAccount statusObjectForKey:@"Online"] boolValue])];
+	[button_deleteAccount setEnabled:([accountArray count] > 1 && configuredForAccount && accountEditable)];
+}
+
+//Update status string and bar
+- (void)updateAccountConnectionProgress
+{
+	BOOL	accountBusy = ([[configuredForAccount statusObjectForKey:@"Connecting"] boolValue] ||
+						   [[configuredForAccount statusObjectForKey:@"Disconnecting"] boolValue]);
+
+	//Update the status string and progree bar
+	if(!accountBusy){
+		[textField_status setStringValue:@""];
+		[progress_status setDoubleValue:0.0];
+		if([progress_status respondsToSelector:@selector(setHidden:)]) [progress_status setHidden:YES];
+
+	}else{
+		NSString	*status = [configuredForAccount statusObjectForKey:@"ConnectionProgressString"];
+		[textField_status setStringValue:(status ? status : @"")];
+		[progress_status setDoubleValue:[[configuredForAccount statusObjectForKey:@"ConnectionProgressPercent"] floatValue]];
+		if([progress_status respondsToSelector:@selector(setHidden:)]) [progress_status setHidden:NO];
+		
+	}
+
+	//Force the controls to display
+	//[textField_status setNeedsDisplay:YES];
+	//[progress_status  setNeedsDisplay:YES];
+	
+	//Update the 'connect' button's title to match it's action
+	if([[configuredForAccount statusObjectForKey:@"Online"] boolValue]){
+		[button_toggleConnect setTitle:@"Disconnect"];
+	}else if([[configuredForAccount statusObjectForKey:@"Connecting"] boolValue] ||
+			 [[configuredForAccount statusObjectForKey:@"Disconnecting"] boolValue]){
+		[button_toggleConnect setTitle:@"Cancel"];
+	}else{
+		[button_toggleConnect setTitle:@"Connect"];
+	}
 }
 
 //Account status changed.  Disable the service menu and user name field for connected accounts
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
-    if(inObject == configuredForAccount && [inModifiedKeys containsObject:@"Online"]){
-		[self enableDisableControls];
-    }
+	if([inObject isKindOfClass:[AIAccount class]]){
+		if([inModifiedKeys containsObject:@"Online"] ||
+		   [inModifiedKeys containsObject:@"Connecting"] ||
+		   [inModifiedKeys containsObject:@"Disconnecting"] ||
+		   [inModifiedKeys containsObject:@"ConnectionProgressString"] ||
+		   [inModifiedKeys containsObject:@"ConnectionProgressPercent"]){
+			
+			//Refresh this account in our list if it's status has changed
+			int accountRow = [accountArray indexOfObject:inObject];
+			if(accountRow >= 0 && accountRow < [accountArray count]){
+				[tableView_accountList setNeedsDisplayInRect:[tableView_accountList rectOfRow:accountRow]];
+			}
+
+			//If this account is the one we're displaying, update our control availability and progress display
+			if(inObject == configuredForAccount){		
+				[self enableDisableControls];
+				[self updateAccountConnectionProgress];
+			}			
+		}
+	}
     
     return(nil);
 }
@@ -399,9 +465,19 @@
 {
     AIAccount   *account = [accountArray objectAtIndex:row];
     NSImage		*image = [AIImageUtilities imageNamed:@"DefaultAccountIcon" forClass:[self class]];
+	NSString	*status = nil;
 	
-    [cell setImage:image];
-    [cell setSubString:[account serviceID]];
+	//Update the 'connect' button's title to match it's action
+	if([[account statusObjectForKey:@"Online"] boolValue]){
+		status = @"Online";
+	}else if([[account statusObjectForKey:@"Connecting"] boolValue]){
+		status = @"Connecting";
+	}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
+		status = @"Disconnecting";
+	}
+	
+	[cell setImage:image];
+	[cell setSubString:(status ? [NSString stringWithFormat:@"%@ - %@", [account serviceID], status] : [account serviceID])];
 	[cell setDrawsGradientHighlight:YES];
 }
 
