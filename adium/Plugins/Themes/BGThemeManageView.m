@@ -8,7 +8,8 @@
 #import "BGThemesPlugin.h"
 
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"
-#define THEME_PATH  [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:@"Themes"]
+#define THEME_FOLDER_NAME @"Themes"
+#define THEME_PATH  [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:THEME_FOLDER_NAME]
 
 @interface BGThemeManageView (PRIVATE)
 - (void)configureControlDimming;
@@ -40,27 +41,37 @@
 
 -(void)buildThemesList
 {
-    NSMutableArray *tempThemesList = [[[NSFileManager defaultManager] subpathsAtPath:THEME_PATH] mutableCopy];
-    NSEnumerator *tempEnum = [tempThemesList objectEnumerator];
-    NSString *object;
-	
-    while(object = [tempEnum nextObject]) {
-		
-        if([object hasPrefix:@"."]) { // remove hidden files from the list
-            [tempThemesList removeObject:object];
-        }
+    NSMutableArray     *tempThemesList = [NSMutableArray arrayWithCapacity:0];
+
+    if(defaultThemePath){
+        [tempThemesList addObject:defaultThemePath];
     }
+
+    NSFileManager      *mgr            = [NSFileManager defaultManager];
+    NSArray            *resourcesPaths = [[AIObject sharedAdiumInstance] resourcePathsForName:THEME_FOLDER_NAME];
+    NSEnumerator       *tempEnum       = [resourcesPaths objectEnumerator];
+    NSString           *curPath;
+    NSAutoreleasePool  *pool           = [[NSAutoreleasePool alloc] init];
+    while(curPath = [tempEnum nextObject]) {
+        NSMutableArray *subpaths       = [[[mgr subpathsAtPath:curPath] mutableCopy] autorelease];
+        NSEnumerator   *themeEnum      = [subpaths objectEnumerator];
 	
-	// HERE
-	if(defaultThemePath){
-		[tempThemesList insertObject:defaultThemePath atIndex:0];
-	}
-	
+        while(curPath = [themeEnum nextObject]) {
+            if([curPath hasPrefix:@"."]) {
+                //remove hidden files from the list
+                [subpaths removeObject:curPath];
+            }
+        }
+
+        [tempThemesList addObjectsFromArray:subpaths];
+    }
+    [pool release];
+
     themeCount = [tempThemesList count];
-    [themes release]; themes = tempThemesList;  // sync cleaned themes list to global variable
+    [themes release]; themes = [tempThemesList retain];  // sync cleaned themes list to global variable
     [self configureControlDimming];
-	
-	[table reloadData];
+
+    [table reloadData];
 }
 
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
