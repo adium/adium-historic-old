@@ -13,32 +13,35 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /** 
- * $Revision: 1.28 $
- *  $Date: 2003/12/15 03:24:44 $
+ * $Revision: 1.29 $
+ *  $Date: 2003/12/16 19:54:16 $
  *  $Author#
  *
  **/
 
+//First, as other objects are generally subclasses of AIObject
 #import "AIObject.h"
-#import "AIWindowController.h"
+
 #import "AIAccount.h"
-#import "AIPreferencePane.h"
-#import "AIPlugin.h"
-#import "AIServiceType.h"
-#import "AIContentObject.h"
+#import "AIChat.h"
+#import "ESContactAlert.h"
 #import "AIContentMessage.h"
-#import "AIPreferenceCategory.h"
-#import "AISendingTextView.h"
-#import "AIIconState.h"
+#import "AIContentObject.h"
+#import "AIContentStatus.h"
+#import "AIContentTyping.h"
+#import "AIEmoticon.h"
+#import "AIException.h"
+#import "ESFileTransfer.h"
+#import "AIFlippedCategoryView.h"
 #import "AIHandle.h"
+#import "AIIconState.h"
 #import "AIListContact.h"
 #import "AIListGroup.h"
 #import "AIListObject.h"
-#import "AIContentStatus.h"
-#import "AIContentTyping.h"
-#import "AIChat.h"
+#import "AIPlugin.h"
+#import "AIPreferenceCategory.h"
+#import "AIPreferencePane.h"
 #import "AIPreferenceViewController.h"
-#import "AIFlippedCategoryView.h"
-#import "ESFileTransfer.h"
-#import "ESContactAlert.h"
-
+#import "AISendingTextView.h"
+#import "AIServiceType.h"
+#import "AIWindowController.h"
