@@ -145,6 +145,7 @@ typedef enum {
 //Methods that might be subclassed
 - (BOOL)requiresPassword;
 - (BOOL)disconnectOnFastUserSwitch;
+- (BOOL)shouldSendAutoresponsesWhileAway;
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
 
 - (AIListContact *)_contactWithUID:(NSString *)sourceUID;
