@@ -158,7 +158,7 @@
 			
 			[[adium contentController] displayStatusMessage:message
 													 ofType:@"encryption"
-													 inchat:inChat];
+													 inChat:inChat];
 		}
 	}
 	
