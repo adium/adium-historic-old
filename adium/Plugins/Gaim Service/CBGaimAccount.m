@@ -3,10 +3,9 @@
 //  Adium
 //
 //  Created by Colin Barrett on Sun Oct 19 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-//evands note: may want to use a mutableOnwerArray inside chat statusDictionary properties so that we can have multiple gaim accounts in the same chat.
+//evands note: may want to use a mutableOwnerArray inside chat statusDictionary properties so that we can have multiple gaim accounts in the same chat.
 
 #import "CBGaimAccount.h"
 #import "CBGaimServicePlugin.h"
@@ -166,6 +165,8 @@
 			
             //BuddyImagePointer is just for us, shh, keep it secret ;)
             [modifiedKeys addObject:@"UserIcon"];
+            
+            NSLog(@"%s: gaim image set",buddy->name);
         }
     }     
     
@@ -229,38 +230,40 @@
 {
     AIChat *chat = (AIChat*) conv->ui_data;
     GaimConvIm *im = gaim_conversation_get_im_data(conv);
-    NSAssert(im != nil, @"We only do IM conversations");
-    NSAssert(chat != nil, @"Conversation update with no AIChat");
-    AIListContact *listContact = (AIListContact*) [chat listObject];
-    NSAssert(listContact != nil, @"Conversation with no one?");
-    AIHandle *handle = [listContact handleForAccount:self];
-    if (!handle) {
-        handle = [self addHandleWithUID:[[listContact UID] compactedString]
-                            serverGroup:[[listContact containingGroup] UID]
-                              temporary:YES];
-    }
-    NSAssert(handle != nil, @"listContact without handle");
-    switch (type) {
-        case GAIM_CONV_UPDATE_TYPING:
-		{
-			[self setTypingFlagOfHandle:handle to:(gaim_conv_im_get_typing_state(im) == GAIM_TYPING)];
-		}
-            break;
-        case GAIM_CONV_UPDATE_AWAY:
-		{
-            //If the conversation update is UPDATE_AWAY, it seems to suppress the typing state being updated
-            //Reset gaim's typing tracking, then update to receive a GAIM_CONV_UPDATE_TYPING message
-            gaim_conv_im_set_typing_state(im, GAIM_NOT_TYPING);
-            gaim_conv_im_update_typing(im);
-		}
-            break;
-        default:
-        {
-            NSNumber *typing=[[handle statusDictionary] objectForKey:@"Typing"];
-            if (typing && [typing boolValue])
-                NSLog(@"handle %@ is typing and got a nontyping update of type %i",[listContact displayName],type);
+    //We don't do anything yet with updates for conversations that aren't IM conversations 
+    if (im) {
+        NSAssert(chat != nil, @"Conversation update with no AIChat");
+        AIListContact *listContact = (AIListContact*) [chat listObject];
+        NSAssert(listContact != nil, @"Conversation with no one?");
+        AIHandle *handle = [listContact handleForAccount:self];
+        if (!handle) {
+            handle = [self addHandleWithUID:[[listContact UID] compactedString]
+                                serverGroup:[[listContact containingGroup] UID]
+                                  temporary:YES];
         }
-            break;
+        NSAssert(handle != nil, @"listContact without handle");
+        switch (type) {
+            case GAIM_CONV_UPDATE_TYPING:
+            {
+                [self setTypingFlagOfHandle:handle to:(gaim_conv_im_get_typing_state(im) == GAIM_TYPING)];
+            }
+                break;
+            case GAIM_CONV_UPDATE_AWAY:
+            {
+                //If the conversation update is UPDATE_AWAY, it seems to suppress the typing state being updated
+                //Reset gaim's typing tracking, then update to receive a GAIM_CONV_UPDATE_TYPING message
+                gaim_conv_im_set_typing_state(im, GAIM_NOT_TYPING);
+                gaim_conv_im_update_typing(im);
+            }
+                break;
+            default:
+            {
+                NSNumber *typing=[[handle statusDictionary] objectForKey:@"Typing"];
+                if (typing && [typing boolValue])
+                    NSLog(@"handle %@ is typing and got a nontyping update of type %i",[listContact displayName],type);
+            }
+                break;
+        }
     }
 }
 
