@@ -11,7 +11,7 @@
 #define KEY_MSN_PORT	@"MSN:Port"
 
 @interface ESGaimMSNAccount (PRIVATE)
--(void)_setFriendlyNameTo:(NSString *)inAlias;
+-(void)_setFriendlyNameTo:(NSAttributedString *)inAlias;
 @end
 
 @implementation ESGaimMSNAccount
@@ -131,22 +131,23 @@ static BOOL didInitMSN = NO;
 
 		if([key isEqualToString:@"FullNameAttr"]){
 			
-			NSString	*friendlyName = [[self autoRefreshingOutgoingContentForStatusKey:key] string];
-			
-			if (!friendlyName || ![friendlyName isEqualToString:currentFriendlyName]){
-				[self _setFriendlyNameTo:friendlyName];
-			}
+			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(_setFriendlyNameTo:)];
 		}
 	}
 }
 
--(void)_setFriendlyNameTo:(NSString *)inAlias
+-(void)_setFriendlyNameTo:(NSAttributedString *)attributedFriendlyName
 {
- 	if (gaim_account_is_connected(account)){
-		GaimDebug (@"Updating FullNameAttr to %@",inAlias);
-
- 		msn_set_friendly_name(account->gc, [inAlias UTF8String]);
-		[currentFriendlyName release]; currentFriendlyName = [inAlias retain];
+	NSString	*friendlyName = [attributedFriendlyName string];
+	
+	if (!friendlyName || ![friendlyName isEqualToString:currentFriendlyName]){
+		
+		if (gaim_account_is_connected(account)){
+			GaimDebug (@"Updating FullNameAttr to %@",friendlyName);
+			
+			msn_set_friendly_name(account->gc, [friendlyName UTF8String]);
+			[currentFriendlyName release]; currentFriendlyName = [friendlyName retain];
+		}
 	}
 }
 
