@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.125 2004/04/22 02:28:26 adamiser Exp $
+// $Id: AIContactController.m,v 1.126 2004/04/22 13:57:45 evands Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -51,7 +51,8 @@
 - (NSArray *)_arrayRepresentationOfListObjects:(NSArray *)listObjects;
 - (NSDictionary *)_compressedOrderingOfObject:(AIListObject *)inObject;
 - (void)_applyCompressedOrdering:(NSDictionary *)orderDict toObject:(AIListObject *)inObject;
-- (void)_loadListObjectsFromArray:(NSArray *)array;
+- (void)_loadContactsFromArray:(NSArray *)array;
+- (void)_loadGroupsFromArray:(NSArray *)array;
 
 - (void)_listChangedGroup:(AIListGroup *)group object:(AIListObject *)object;
 
@@ -64,7 +65,6 @@
 @interface NSObject (_RESPONDS_TO_LIST_OBJECT)
 - (AIListObject *)listObject;
 @end
-
 
 @implementation AIContactController
 
@@ -105,13 +105,13 @@
 //finish initing
 - (void)finishIniting
 {
-	[self loadContactList];
+//	[self loadContactList];
 }
 
 //close
 - (void)closeController
 {
-	[self saveContactList];
+//	[self saveContactList];
 }
 
 //dealloc
@@ -131,10 +131,10 @@
 - (void)loadContactList
 {	
 	//We must load all the groups before loading contacts for the ordering system to work correctly.
-	[self _loadListObjectsFromArray:[[owner preferenceController] preferenceForKey:KEY_FLAT_GROUPS
-																			 group:PREF_GROUP_CONTACT_LIST]];
-	[self _loadListObjectsFromArray:[[owner preferenceController] preferenceForKey:KEY_FLAT_CONTACTS
-																			 group:PREF_GROUP_CONTACT_LIST]];
+	[self _loadGroupsFromArray:[[owner preferenceController] preferenceForKey:KEY_FLAT_GROUPS
+																		group:PREF_GROUP_CONTACT_LIST]];
+	[self _loadContactsFromArray:[[owner preferenceController] preferenceForKey:KEY_FLAT_CONTACTS
+																		  group:PREF_GROUP_CONTACT_LIST]];
 }
 
 //Save the contact list
@@ -156,30 +156,26 @@
 //}
 
 //List objects from flattened array
-- (void)_loadListObjectsFromArray:(NSArray *)array
+- (void)_loadContactsFromArray:(NSArray *)array
 {
 	NSEnumerator	*enumerator = [array objectEnumerator];;
 	NSDictionary	*infoDict;
 	
+	NSString	*serviceID = @"serviceID";
+	NSString	*accountID = @"accountID";
+	NSString	*UID = @"UID";
+	NSString	*Ordering = @"Ordering";
+	
 	while(infoDict = [enumerator nextObject]){
-		NSString		*type = [infoDict objectForKey:@"Type"];
 		AIListObject	*object = nil;
 		
 		//Object
-		if([type compare:@"Contact"] == 0){
-			object = [self contactWithService:[infoDict objectForKey:@"ServiceID"]
-									accountID:[infoDict objectForKey:@"AccountID"]
-										  UID:[infoDict objectForKey:@"UID"]];
-			
-		}else if([type compare:@"Group"] == 0){
-			object = [self groupWithUID:[infoDict objectForKey:@"UID"]];
-			[(AIListGroup *)object setExpanded:[[infoDict objectForKey:@"Expanded"] boolValue]];
-
-		}
-		
+		object = [self contactWithService:[infoDict objectForKey:serviceID]
+								accountID:[infoDict objectForKey:accountID]
+									  UID:[infoDict objectForKey:UID]];
 		//Ordering
 		if(object){
-			float orderIndex = [[infoDict objectForKey:@"Ordering"] floatValue];
+			float orderIndex = [[infoDict objectForKey:Ordering] floatValue];
 			
 			if(orderIndex > largestOrder) largestOrder = orderIndex;
 			if(orderIndex < smallestOrder) smallestOrder = orderIndex;
@@ -189,6 +185,33 @@
 	}
 }
 
+//List objects from flattened array
+- (void)_loadGroupsFromArray:(NSArray *)array
+{
+	NSEnumerator	*enumerator = [array objectEnumerator];;
+	NSDictionary	*infoDict;
+	
+	NSString	*UID = @"UID";
+	NSString	*Expanded = @"Expanded";
+	NSString	*Ordering = @"Ordering";
+	
+	while(infoDict = [enumerator nextObject]){
+		AIListObject	*object = nil;
+		
+		object = [self groupWithUID:[infoDict objectForKey:UID]];
+		[(AIListGroup *)object setExpanded:[[infoDict objectForKey:Expanded] boolValue]];
+		
+		//Ordering
+			float orderIndex = [[infoDict objectForKey:Ordering] floatValue];
+			
+			if(orderIndex > largestOrder) largestOrder = orderIndex;
+			if(orderIndex < smallestOrder) smallestOrder = orderIndex;
+			
+			[object setOrderIndex:orderIndex];
+	}
+}
+
+
 //Flattened array of the contact list content
 - (NSArray *)_arrayRepresentationOfListObjects:(NSArray *)listObjects
 {
@@ -196,24 +219,34 @@
 	NSEnumerator	*enumerator = [listObjects objectEnumerator];;
 	AIListObject	*object;
 	
+	
+	//Create temporary strings outside the loop
+	NSString	*Contact = @"Contact";
+	NSString	*Group = @"Group";
+	NSString	*Type = @"Type";
+	NSString	*ServiceID = @"ServiceID";
+	NSString	*AccountID = @"AccountID";
+	NSString	*UID = @"UID";
+	NSString	*Ordering = @"Ordering";
+	NSString	*Expanded = @"Expanded";
+	
 	while(object = [enumerator nextObject]){
 		if([object isKindOfClass:[AIListContact class]]){
 			[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-				@"Contact", @"Type",
-				[object UID], @"UID",
-				[(AIListContact *)object accountID], @"AccountID",
-				[object serviceID], @"ServiceID",
-				[NSNumber numberWithFloat:[object orderIndex]], @"Ordering",
+				Contact, Type,
+				[object UID], UID,
+				[(AIListContact *)object accountID], AccountID,
+				[object serviceID], ServiceID,
+				[NSNumber numberWithFloat:[object orderIndex]], Ordering,
 				nil]];
 			
 		}else if([object isKindOfClass:[AIListGroup class]]){
 			[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-				@"Group", @"Type",
-				[object UID], @"UID",
-				[NSNumber numberWithBool:[(AIListGroup *)object isExpanded]], @"Expanded",
-				[NSNumber numberWithFloat:[object orderIndex]], @"Ordering",
+				Group, Type,
+				[object UID], UID,
+				[NSNumber numberWithBool:[(AIListGroup *)object isExpanded]], Expanded,
+				[NSNumber numberWithFloat:[object orderIndex]], Ordering,
 				nil]];
-			
 		}
 	}
 	
@@ -670,8 +703,9 @@
 #warning Adam: Legacy.  This is moving back into a plugin and the event controller will be in charge.
 	if (![inObject isKindOfClass: [AIAccount class]]) {
 
-		if([modifiedKeys containsObject:@"Online"]){ //Sign on/off
-			BOOL		newStatus = [inObject integerStatusObjectForKey:@"Online"];
+		NSString	*Online = @"Online";
+		if([modifiedKeys containsObject:Online]){ //Sign on/off
+			BOOL		newStatus = [[inObject numberStatusObjectForKey:Online] boolValue];
 			NSNumber	*oldStatusNumber = [onlineDict objectForKey:[inObject uniqueObjectID]];
 			BOOL		oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
 
@@ -687,7 +721,7 @@
 		}
 
 		if([modifiedKeys containsObject:@"Away"]){ //Away / Unaway
-			BOOL		newStatus = [inObject integerStatusObjectForKey:@"Away"];
+			BOOL		newStatus = [[inObject numberStatusObjectForKey:@"Away"] boolValue];
 			NSNumber	*oldStatusNumber = [awayDict objectForKey:[inObject uniqueObjectID]];
 			BOOL		oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
 			
@@ -863,13 +897,13 @@
 	//Contact
 	enumerator = [contactDict objectEnumerator];
 	while(listObject = [enumerator nextObject]){
-		if([[listObject uniqueObjectID] compare:uniqueID] == 0) return(listObject);
+		if([[listObject uniqueObjectID] isEqualToString:uniqueID]) return(listObject);
 	}
 		
 	//Group
 	enumerator = [groupDict objectEnumerator];
 	while(listObject = [enumerator nextObject]){
-		if([[listObject uniqueObjectID] compare:uniqueID] == 0) return(listObject);
+		if([[listObject uniqueObjectID] isEqualToString:uniqueID]) return(listObject);
 	}
 	
 	return(nil);
@@ -912,6 +946,18 @@
  	}
 	
 	return(returnContact);
+}
+
+- (AIListContact *)preferredContactWithUID:(NSString *)UID andServiceID:(NSString *)serviceID forSendingContentType:(NSString *)inType
+{
+	AIListObject	*tempListObject = [[AIListObject alloc] initWithUID:UID serviceID:serviceID];
+	AIAccount		*account = [[owner accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE 
+																				   toListObject:tempListObject];
+	[tempListObject release];
+	
+	return ([self contactWithService:serviceID
+						   accountID:[account uniqueObjectID]
+								 UID:UID]);
 }
 
 //Retrieve a group from the contact list (Creating if necessary)
