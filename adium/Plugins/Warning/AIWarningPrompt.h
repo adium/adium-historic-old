@@ -21,7 +21,7 @@
     AIAdium	*owner;
     
     IBOutlet	AICompletingTextField	*textField_handle;
-    IBOutlet	NSPopUpButton		*popUp_service;
+    IBOutlet	NSPopUpButton		*popUp_account;
 }
 
 + (void)warningPromptWithOwner:(id)inOwner;

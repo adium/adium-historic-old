@@ -62,7 +62,7 @@ static AIWarningPrompt *sharedInstance = nil;
     NSString		*UID;
 
     //Get the service type and UID
-    serviceType = [[popUp_service selectedItem] representedObject];
+    serviceType = [[popUp_account selectedItem] representedObject];
     UID = [serviceType filterUID:[textField_handle stringValue]];
         
     //Find the contact
@@ -122,7 +122,7 @@ static AIWarningPrompt *sharedInstance = nil;
     NSEnumerator		*enumerator;
     AIListContact		*contact;
     id <AIServiceController>	service;
-    NSMenu			*menu = [popUp_service menu];
+    NSMenu			*menu = [popUp_account menu];
     
     //Configure the auto-complete view
     enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
@@ -131,7 +131,7 @@ static AIWarningPrompt *sharedInstance = nil;
     }
 
     //Configure the handle type menu
-    [popUp_service removeAllItems];
+    [popUp_account removeAllItems];
 
     //Insert a menu item for each available service type
     enumerator = [[[owner accountController] availableServiceArray] objectEnumerator];
@@ -153,7 +153,7 @@ static AIWarningPrompt *sharedInstance = nil;
             menuItem = [[NSMenuItem alloc] initWithTitle:[serviceType description] target:self action:@selector(selectService:) keyEquivalent:@""];
             [menuItem setRepresentedObject:serviceType];
 
-            [[popUp_service menu] addItem:menuItem];
+            [[popUp_account menu] addItem:menuItem];
         }
     }
 
