@@ -91,8 +91,6 @@
     //If we have a custom view, we *have* to set the min/max size - otherwise, it'll default to 0,0 and the custom
     //view won't show up at all!  This doesn't affect toolbar items with images, however.
     if([newItem view] != NULL){
-		NSLog(@"min: %i %i",(int)[item minSize].width, (int)[item minSize].height);
-		NSLog(@"max: %i %i",(int)[item maxSize].width, (int)[item maxSize].height);
         [newItem setMinSize:[item minSize]/*[[item view] bounds].size*/];
         [newItem setMaxSize:[item maxSize]/*[[item view] bounds].size*/];
 		
