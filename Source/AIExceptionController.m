@@ -101,6 +101,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		   [theReason rangeOfString:@"NSWindow: -_newFirstResponderAfterResigining"].location != NSNotFound || //NSAssert within system code, harmless
 		   [theReason rangeOfString:@"-patternImage not defined"].location != NSNotFound || //Painters Color Picker throws an exception during the normal course of operation.  Don't you hate that?
 		   [theReason rangeOfString:@"Failed to set font"].location != NSNotFound || //Corrupt fonts
+		   [theReason rangeOfString:@"Delete invalid attribute range"].location != NSNotFound || //NSAttributedString's initWithCoder can throw this
 		   (!theName) || //Harmless
 		   [safeExceptionNames containsObject:theName])
 		{
