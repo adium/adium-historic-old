@@ -26,6 +26,7 @@
 - Horizontal sizing doesn't work properly
 - Selected cells need to draw with inverted text
 - *Window loss - completely offscreen due to vertical autoresizing... manually trash window positions.plist & mess around to return (single monitor, etc.) -  [Evan]
+- Manual ordering is most likely screwed up, because I've turned off loading of old contacts on launch :)
 
 [Other]
 - Metacontact drawer in get info crashes upon dragging
