@@ -10,7 +10,6 @@
 3 - Get updated plastics view for bundling
 3 - Implement jabber account registration from the account prefs
 3 - Message views are ignoring variant specific info.plist keys
-3 - Several window frames are not saving (esp preferences) - check for center and super calls
 3 - Check idle time defaults; add formatters for the time fields for Custom Status and Status preferences to force them to whole numbers
 2 - Account online checkboxes have incorrect state after canceling a password prompt
 2 - Allow meta-contact creation without holding option, add a confirmation sheet
