@@ -335,6 +335,7 @@
 				3419F36505314BAB00C68BA3,
 				3419F37305314BB500C68BA3,
 				3419F38105314BBF00C68BA3,
+				344AB6ED0579231800384CEE,
 				3419F39305314BCA00C68BA3,
 				3419F3A505314BD400C68BA3,
 				3419F3B305314BE000C68BA3,
@@ -356,7 +357,6 @@
 				9E87CDF105748FFA001CB886,
 				9E87CF580574909B001CB886,
 				342DC47505783AF0000E1D83,
-				344AB2A50579128A00384CEE,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -5384,18 +5384,20 @@
 			);
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_PREFIX_HEADER = Adium.pch;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INFOPLIST_FILE = "Open Message Window Contact Alert-Info.plist";
-				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				INFOPLIST_FILE = "Plists/Open Message Window Contact Alert.plist";
+				INSTALL_PATH = "";
 				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
+				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = "Open Message Window Contact Alert";
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
 			);
@@ -5433,12 +5435,13 @@
 			productType = "com.apple.product-type.bundle";
 		};
 		344AB2A50579128A00384CEE = {
-			expectedFileType = wrapper.cfbundle;
+			expectedFileType = "wrapper.plug-in";
 			includeInIndex = 0;
 			isa = PBXFileReference;
-			path = "Open Message Window Contact Alert.bundle";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
+			name = "Open Message Window Contact Alert.bundle";
+			path = "/Users/evands/adium/build/Open Message Window Contact Alert.bundle";
+			refType = 0;
+			sourceTree = "<absolute>";
 		};
 		344AB2AD057912A300384CEE = {
 			fileRef = 34BD9DE105314751000AB133;
@@ -5555,6 +5558,38 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		344AB6ED0579231800384CEE = {
+			expectedFileType = folder;
+			isa = PBXFileReference;
+			name = "Open Message Window Contact Alert.AdiumPlugin";
+			path = "build/Open Message Window Contact Alert.AdiumPlugin";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344AB6F80579231800384CEE = {
+			fileRef = 344AB6ED0579231800384CEE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344AB7260579237600384CEE = {
+			fileRef = 344AB6ED0579231800384CEE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		344AB73E0579258A00384CEE = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 344AB2A40579128A00384CEE;
+			remoteInfo = "Open Message Window Contact Alert";
+		};
+		344AB73F0579258A00384CEE = {
+			isa = PBXTargetDependency;
+			target = 344AB2A40579128A00384CEE;
+			targetProxy = 344AB73E0579258A00384CEE;
 		};
 		344EE90D05744F5F000F342B = {
 			buildActionMask = 2147483647;
@@ -7559,7 +7594,9 @@
 				34BD9D0B053146CC000AB133,
 				34BD9D0C053146CC000AB133,
 				34BD9CFD053146CC000AB133,
+				344AB73F0579258A00384CEE,
 				34BD9CFE053146CC000AB133,
+				342DC48305783B1F000E1D83,
 				34BD9CFF053146CC000AB133,
 				34BD9D00053146CC000AB133,
 				34BD9D01053146CC000AB133,
@@ -7567,14 +7604,13 @@
 				34BD9D02053146CC000AB133,
 				34BD9D03053146CC000AB133,
 				34BD9D04053146CC000AB133,
+				9E87CF61057491C4001CB886,
 				34BD9D0D053146CC000AB133,
 				34BD9D05053146CC000AB133,
 				34BD9D06053146CC000AB133,
 				34BD9D07053146CC000AB133,
 				34BD9D08053146CC000AB133,
 				9C1040650571281200F3C158,
-				9E87CF61057491C4001CB886,
-				342DC48305783B1F000E1D83,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
@@ -8074,6 +8110,7 @@
 				4BCB9B5F0567FF5D001D3559,
 				343C89AA05704D8E005E0632,
 				344EE953057456BE000F342B,
+				344AB6F80579231800384CEE,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8564,6 +8601,7 @@
 				3419FE0F0531585600C68BA3,
 				3419FE100531585600C68BA3,
 				3419FE110531585600C68BA3,
+				344AB7260579237600384CEE,
 				3419FE120531585600C68BA3,
 				344AB29D0579125C00384CEE,
 				3419FE130531585600C68BA3,
