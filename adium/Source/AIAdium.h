@@ -276,15 +276,6 @@ typedef enum {
 - (void)configureViewAfterLoad;
 @end
 
-@protocol AIListSortController <NSObject>
-- (NSString *)identifier;
-- (NSString *)description;
-- (NSString *)displayName;
-- (void)sortListObjects:(NSMutableArray *)inObjects;
-- (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys;
-- (BOOL)shouldSortForModifiedAttributeKeys:(NSArray *)inModifiedKeys;
-@end
-
 @protocol AIInterfaceController <NSObject>
 - (void)openInterface;
 - (void)closeInterface;

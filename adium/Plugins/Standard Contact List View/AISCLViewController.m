@@ -126,11 +126,19 @@
 //Reload the contact list (if updates aren't delayed)
 - (void)contactOrderChanged:(NSNotification *)notification
 {
-    [contactListView reloadData]; //Redisplay
+	id		object = [notification object];
+	
+	if(!object || object == contactList){
+		[contactListView reloadData];
+	}else{
+		[contactListView reloadItem:object reloadChildren:YES];
+	}
+	
     [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:contactListView];
 
-    [[contactListView window] compatibleInvalidateShadow];
-    [[contactListView window] display];
+#warning These are slow, we dont want to do them unless absolutely necessary
+	//[[contactListView window] compatibleInvalidateShadow];
+	//[[contactListView window] display];
 }
 
 //Redisplay the modified object (Attribute change)

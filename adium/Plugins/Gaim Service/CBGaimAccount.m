@@ -26,10 +26,10 @@
 - (void)connect;
 - (void)disconnect;
 - (NSString *)_userIconCachePath;
-
-
 - (void)associateContact:(AIListContact *)contact withBuddy:(GaimBuddy *)buddy;
-
+- (void)removeAllStatusFlagsFromContact:(AIListContact *)contact;
+- (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing;
+- (AIChat*)_openChatWithContact:(AIListContact *)contact andConversation:(GaimConversation*)conv;
 @end
 
 @implementation CBGaimAccount
@@ -65,7 +65,7 @@
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {
-	NSLog(@"accountUpdateBuddy (%s)", buddy->name);
+	NSLog(@"accountUpdateBuddy (%s) (%i)", buddy->name, silentAndDelayed);
     int                     online;
 //    NSMutableDictionary     *statusDict;
 //    NSMutableArray          *modifiedKeys = [NSMutableArray array];
@@ -227,19 +227,16 @@
 
 - (void)accountRemoveBuddy:(GaimBuddy*)buddy
 {
-	NSLog(@"accountRemoveBuddy (%s)", buddy->name);
+	AIListContact	*theContact = (AIListContact *)buddy->node.ui_data ;
 
-    //stored the key as a compactedString originally
-    [handleDict removeObjectForKey:[[NSString stringWithFormat:@"%s", buddy->name] compactedString]];
+	NSLog(@"accountRemoveBuddy (%s)", buddy->name);
 	
-    if (buddy->node.ui_data != NULL) {
-        [(AIHandle *)buddy->node.ui_data release];
-        buddy->node.ui_data = NULL;
+    if(theContact){
+		[theContact setRemoteGroupName:nil forAccount:self];
+		[self removeAllStatusFlagsFromContact:theContact];
 		
-		//Ignore these while disconnecting
-		if(![[self statusObjectForKey:@"Disconnecting"] boolValue]){
-            [[adium contactController] handlesChangedForAccount:self];
-		}
+		[theContact release];
+        buddy->node.ui_data = NULL;
     }
 }
 
@@ -252,10 +249,7 @@
     AIChat *chat = (AIChat*) conv->ui_data;
     if (chat) {
         AIListContact *listContact = (AIListContact*) [chat listObject];
-        AIHandle *handle = [listContact handleForAccount:self];
-        if (handle) {
-            [self setTypingFlagOfHandle:handle to:NO];
-        }
+        if(listContact) [self setTypingFlagOfContact:listContact to:NO];
     }
 }
 
@@ -266,36 +260,35 @@
     //We don't do anything yet with updates for conversations that aren't IM conversations 
     if (im) {
         NSAssert(chat != nil, @"Conversation update with no AIChat");
+		
         AIListContact *listContact = (AIListContact*) [chat listObject];
         NSAssert(listContact != nil, @"Conversation with no one?");
-        AIHandle *handle = [listContact handleForAccount:self];
-        if (!handle) {
-            handle = [self addHandleWithUID:[[listContact UID] compactedString]
-                                serverGroup:[[listContact containingGroup] UID]
-                                  temporary:YES];
-        }
-        NSAssert(handle != nil, @"listContact without handle");
+		
+//        AIHandle *handle = [listContact handleForAccount:self];
+//        if (!handle) {
+//            handle = [self addHandleWithUID:[[listContact UID] compactedString]
+//                                serverGroup:[[listContact containingGroup] UID]
+//                                  temporary:YES];
+//        }
+//        NSAssert(handle != nil, @"listContact without handle");
+		
         switch (type) {
             case GAIM_CONV_UPDATE_TYPING:
-            {
-                [self setTypingFlagOfHandle:handle to:(gaim_conv_im_get_typing_state(im) == GAIM_TYPING)];
-            }
-                break;
+                [self setTypingFlagOfContact:listContact to:(gaim_conv_im_get_typing_state(im) == GAIM_TYPING)];
+			break;
             case GAIM_CONV_UPDATE_AWAY:
-            {
                 //If the conversation update is UPDATE_AWAY, it seems to suppress the typing state being updated
                 //Reset gaim's typing tracking, then update to receive a GAIM_CONV_UPDATE_TYPING message
                 gaim_conv_im_set_typing_state(im, GAIM_NOT_TYPING);
                 gaim_conv_im_update_typing(im);
-            }
-                break;
+			break;
             default:
-            {
-                NSNumber *typing=[[handle statusDictionary] objectForKey:@"Typing"];
-                if (typing && [typing boolValue])
-                    NSLog(@"handle %@ is typing and got a nontyping update of type %i",[listContact displayName],type);
-            }
-                break;
+//            {
+//                NSNumber *typing=[[handle statusDictionary] objectForKey:@"Typing"];
+//                if (typing && [typing boolValue])
+//                    NSLog(@"handle %@ is typing and got a nontyping update of type %i",[listContact displayName],type);
+//            }
+			break;
         }
     }
 }
@@ -303,7 +296,7 @@
 - (void)accountConvReceivedIM:(const char*)message inConversation:(GaimConversation*)conv withFlags:(GaimMessageFlags)flags atTime: (time_t)mtime
 {
     if (GAIM_DEBUG) {
-	NSLog(@"Received %s from %s",message,conv->name);
+		NSLog(@"Received %s from %s",message,conv->name);
     }
     
     if ((flags & GAIM_MESSAGE_SEND) != 0) {
@@ -315,37 +308,43 @@
          */
         return;
     }
-    AIChat *chat = (AIChat*) conv->ui_data;
-    NSString *uid = [NSString stringWithUTF8String: conv->name];
+	
+    AIChat 			*chat = (AIChat*) conv->ui_data;
+	AIListContact 	*listContact = (AIListContact*) [chat listObject];
+//	NSString 	*uid = [NSString stringWithUTF8String: conv->name];
+    
 	//    AIChat *chat = [chatDict objectForKey:uid];
     
-    AIHandle *handle = [handleDict objectForKey:[uid compactedString]];    
+//    AIHandle *handle = [handleDict objectForKey:[uid compactedString]];    
     if (chat == nil) {
-        if (handle == nil) {
-            GaimBuddy *buddy = gaim_find_buddy(account,conv->name);
-            if (buddy != NULL) {
-                //use the buddy's information gaimside to create the needed Adium handle
-                handle = [self createHandleAssociatingWithBuddy:buddy];
-            } else {
-                handle = [self addHandleWithUID:[uid compactedString]
-                                    serverGroup:nil
-                                      temporary:YES];
-            }
+        if (listContact == nil) {
+            GaimBuddy 	*buddy = gaim_find_buddy(account, conv->name);
+//            if (buddy != NULL) {
+                //use the buddy's information gaimside to create the needed Adium contact
+				listContact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+																		UID:[NSString stringWithUTF8String: conv->name]];
+				[self associateContact:listContact withBuddy:buddy];
+				
+//            } else {
+//                handle = [self addHandleWithUID:[uid compactedString]
+//                                    serverGroup:nil
+//                                      temporary:YES];
+//            }
         }
         // Need to start a new chat
-        chat = [self _openChatWithHandle:handle andConversation:conv];
+        chat = [self _openChatWithContact:listContact andConversation:conv];
     } else  {
         //JABBER MESSAGES ARE RECEIVED AND FAIL AT THIS ASSERTION
-        NSAssert(handle != nil, @"Existing chat yet no existing handle?");
+        NSAssert(listContact != nil, @"Existing chat yet no existing handle?");
     }
     
     //clear the typing flag
-    [self setTypingFlagOfHandle:handle to:NO];
+    [self setTypingFlagOfContact:listContact to:NO];
     
     NSAttributedString *body = [AIHTMLDecoder decodeHTML:[NSString stringWithUTF8String: message]];
     AIContentMessage *messageObject =
         [AIContentMessage messageInChat:chat
-                             withSource:[handle containingContact]
+                             withSource:listContact
                             destination:self
                                    date:[NSDate dateWithTimeIntervalSince1970: mtime]
                                 message:body
@@ -359,7 +358,7 @@
 #pragma mark AIAccount Subclassed Methods
 - (void)initAccount
 {
-    handleDict = [[NSMutableDictionary alloc] init];
+//    handleDict = [[NSMutableDictionary alloc] init];
     chatDict = [[NSMutableDictionary alloc] init];
     filesToSendArray = [[NSMutableArray alloc] init];
 
@@ -379,7 +378,7 @@
     [(CBGaimServicePlugin *)service removeAccount:account];
     
     [chatDict release];
-    [handleDict release];
+//    [handleDict release];
     [filesToSendArray release];
 
     [super dealloc];
@@ -436,46 +435,29 @@
 //If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
-    BOOL 	available = NO;
-    BOOL	weAreOnline = ([inType compare:CONTENT_MESSAGE_TYPE] == 0 &&
-                               [[self statusObjectForKey:@"Online"] boolValue]);
-    
+    BOOL	weAreOnline = [[self statusObjectForKey:@"Online"] boolValue];
+	
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
-        if(weAreOnline){
-            if(inListObject == nil){ 
-                available = YES; //If we're online, we're most likely available to message this object
-            }else{
-                if([inListObject isKindOfClass:[AIListContact class]]){
-                    AIHandle	*handle = [(AIListContact *)inListObject handleForAccount:self];
-                    
-                    if(handle && [[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
-                        available = YES; //This handle is online and on our list
-                    }
-                }
-            }
+        if(weAreOnline && (inListObject == nil || [[inListObject statusObjectForKey:@"Online" withOwner:self] boolValue])){ 
+			return(YES);
         }
     }
-    return(available);
+	
+    return(NO);
 }
 
 - (AIChat*)openChatWithListObject:(AIListObject*)inListObject
 {
-    AIHandle *handle;
-    AIChat *chat = nil;
+    AIChat		*chat = nil;
 	
-    if ([inListObject isKindOfClass:[AIListContact class]]) {
-        handle = [(AIListContact*)inListObject handleForAccount:self];
-        if (!handle) {
-            handle = [self addHandleWithUID:[[inListObject UID] compactedString]
-                                serverGroup:nil
-                                  temporary:YES];
-        }
-        chat = [self _openChatWithHandle:handle andConversation:NULL];
+    if([inListObject isKindOfClass:[AIListContact class]]){        
+        chat = [self _openChatWithContact:(AIListContact *)inListObject andConversation:NULL];
     }
-    return chat;
+	
+    return(chat);
 }
 
-- (AIChat*)_openChatWithHandle:(AIHandle*)handle andConversation:(GaimConversation*)conv
+- (AIChat*)_openChatWithContact:(AIListContact *)contact andConversation:(GaimConversation*)conv
 {
     AIChat *chat;
 	
@@ -483,7 +465,7 @@
 	//    if(!(chat = [chatDict objectForKey:[handle UID]])){
     if(!conv || !(chat = conv->ui_data)){
         chat = [AIChat chatForAccount:self];
-        AIListContact   *contact = [handle containingContact];
+//        AIListContact   *contact = [handle containingContact];
         
         [chat addParticipatingListObject:contact];
 		
@@ -492,13 +474,13 @@
         [[chat statusDictionary] setObject:[NSNumber numberWithBool:handleIsOnline] forKey:@"Enabled"];
         
         if (conv == NULL) {
-            conv = gaim_conversation_new(GAIM_CONV_IM, account, [[handle UID] UTF8String]);
+            conv = gaim_conversation_new(GAIM_CONV_IM, account, [[contact UID] UTF8String]);
         }
         
         //associate the AIChat with the gaim conv
         conv->ui_data = chat;
         [[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
-        [chatDict setObject:chat forKey:[handle UID]];
+        [chatDict setObject:chat forKey:[contact UID]];
         [[adium contentController] noteChat:chat forAccount:self];
     } 
     return chat;
@@ -506,10 +488,10 @@
 
 - (BOOL)closeChat:(AIChat*)inChat
 {
-    AIHandle *handle = [(AIListContact*)[inChat listObject] handleForAccount:self];
-    if ([handle temporary]) {
-        [self removeHandleWithUID:[handle UID]];
-    }
+//    AIHandle *handle = [(AIListContact*)[inChat listObject] handleForAccount:self];
+//    if ([handle temporary]) {
+//        [self removeHandleWithUID:[handle UID]];
+//    }
     GaimConversation *conv = (GaimConversation*) [[[inChat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
     if (conv)
         gaim_conversation_destroy(conv);
@@ -523,138 +505,138 @@
 /*********************/
 #pragma mark Handles
 // Returns a dictionary of AIHandles available on this account
-- (NSDictionary *)availableHandles //return nil if no contacts/list available
-{
-    if([[self statusObjectForKey:@"Online"] boolValue] || [[self statusObjectForKey:@"Connecting"] boolValue]){
-        return(handleDict);
-    }else{
-        return(nil);
-    }
-}
-// Returns YES if the list is editable
-- (BOOL)contactListEditable
-{
-    return YES;
-}
-
-// Add a handle to this account
-- (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
-{
-    AIHandle	*handle;
-    
-    if(inTemporary) inGroup = @"__Strangers";    
-    if(!inGroup) inGroup = @"Unknown";
-    
-    //Check to see if the handle already exists, and remove the duplicate if it does
-    if(handle = [handleDict objectForKey:inUID]){
-        [self removeHandleWithUID:inUID]; //Remove the handle
-    }
-    
-    //Create the handle
-    handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] identifier] 
-                                       UID:inUID 
-                               serverGroup:inGroup 
-                                 temporary:inTemporary 
-                                forAccount:self];
-    NSString    *handleUID = [handle UID];
-    NSString    *handleServerGroup = [handle serverGroup];
-    
-    //Add the handle
-	[handleDict setObject:handle forKey:[handle UID]];                  //Add it locally
-	
-    GaimGroup *group = gaim_find_group([handleServerGroup UTF8String]); //get the GaimGroup
-    if (group == NULL) {                                                //if the group doesn't exist yet
-        group = gaim_group_new([handleServerGroup UTF8String]);         //create the GaimGroup
-        gaim_blist_add_group(group, NULL);                              //add it gaimside (server will add as needed)
-    }
-    
-    GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]);     //verify the buddy does not already exist
-    if (buddy == NULL) {                                                //should always be null
-        buddy = gaim_buddy_new(account, [handleUID UTF8String], NULL);  //create a GaimBuddy
-    }
-	
-    gaim_blist_add_buddy(buddy, NULL, group, NULL);                     //add the buddy to the gaimside list
-    serv_add_buddy(gc,[handleUID UTF8String],group);                    //and add the buddy serverside
-	
-    //From TOC2
-    //[self silenceUpdateFromHandle:handle]; //Silence the server's initial update command
-    
-    //Update the contact list
-    [[adium contactController] handle:handle addedToAccount:self];
-	
-    return(handle);
-}
-
-// Remove a handle from this account
-- (BOOL)removeHandleWithUID:(NSString *)inUID
-{
-    AIHandle	*handle;
-    if(handle = [handleDict objectForKey:inUID]){
-        GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]);
-        
-        serv_remove_buddy(gc,[inUID UTF8String],[[handle serverGroup] UTF8String]); //remove it from the list serverside
-        gaim_blist_remove_buddy(buddy);                                             //remove it gaimside
-        
-        return YES;
-    } else 
-        return NO;
-}
-
-// Add a group to this account
-- (BOOL)addServerGroup:(NSString *)inGroup
-{
-    GaimGroup *group = gaim_group_new([inGroup UTF8String]);    //create the GaimGroup
-    gaim_blist_add_group(group,NULL);                           //add it gaimside (server will make it as needed)
-                                                                
-    //    NSLog(@"added group %@",inGroup);
-    return NO;
-}
-// Remove a group
-- (BOOL)removeServerGroup:(NSString *)inGroup
-{
-    serv_remove_group(gc,[inGroup UTF8String]);             //remove it from the list serverside
-    
-    GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
-    gaim_blist_remove_group(group);                         //remove it gaimside
-															
-        NSLog(@"remove group %@",inGroup);
-    return YES;
-}
-// Rename a group
-- (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName
-{
-    GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
-    if (group != NULL) {                                        //if we find the GaimGroup
-        NSLog(@"serv_rename_group(%@,%@)",inGroup,newName);
-        serv_rename_group(gc, group, [newName UTF8String]);     //rename
-        NSLog(@"gaim_blist_remove_group(%@)",inGroup);
-        gaim_blist_remove_group(group);                         //remove the old one gaimside
-        return YES;
-    } else
-        return NO;
-}
-
-- (BOOL)moveHandleWithUID:(NSString *)inUID toGroup:(NSString *)inGroup
-{
-    AIHandle	*handle;
-    if(handle = [handleDict objectForKey:inUID]){
-        GaimGroup *oldGroup = gaim_find_group([[handle serverGroup] UTF8String]);   //get the GaimGroup        
-        GaimGroup *newGroup = gaim_find_group([inGroup UTF8String]);                //get the GaimGroup
-        if (newGroup == NULL) {                                                        //if the group doesn't exist yet
-                                                                                                                                                                
-            //           NSLog(@"Creating a new group");
-            newGroup = gaim_group_new([inGroup UTF8String]);                           //create the GaimGroup
-        }
-        
-        GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]);
-        if (buddy != NULL) {
-            serv_move_buddy(buddy,oldGroup,newGroup);
-        } else {
-            return NO;
-        }
-    }
-    return NO;
-}
+//- (NSDictionary *)availableHandles //return nil if no contacts/list available
+//{
+//    if([[self statusObjectForKey:@"Online"] boolValue] || [[self statusObjectForKey:@"Connecting"] boolValue]){
+//        return(handleDict);
+//    }else{
+//        return(nil);
+//    }
+//}
+//// Returns YES if the list is editable
+//- (BOOL)contactListEditable
+//{
+//    return YES;
+//}
+//
+//// Add a handle to this account
+//- (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
+//{
+//    AIHandle	*handle;
+//    
+//    if(inTemporary) inGroup = @"__Strangers";    
+//    if(!inGroup) inGroup = @"Unknown";
+//    
+//    //Check to see if the handle already exists, and remove the duplicate if it does
+//    if(handle = [handleDict objectForKey:inUID]){
+//        [self removeHandleWithUID:inUID]; //Remove the handle
+//    }
+//    
+//    //Create the handle
+//    handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] identifier] 
+//                                       UID:inUID 
+//                               serverGroup:inGroup 
+//                                 temporary:inTemporary 
+//                                forAccount:self];
+//    NSString    *handleUID = [handle UID];
+//    NSString    *handleServerGroup = [handle serverGroup];
+//    
+//    //Add the handle
+//	[handleDict setObject:handle forKey:[handle UID]];                  //Add it locally
+//	
+//    GaimGroup *group = gaim_find_group([handleServerGroup UTF8String]); //get the GaimGroup
+//    if (group == NULL) {                                                //if the group doesn't exist yet
+//        group = gaim_group_new([handleServerGroup UTF8String]);         //create the GaimGroup
+//        gaim_blist_add_group(group, NULL);                              //add it gaimside (server will add as needed)
+//    }
+//    
+//    GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]);     //verify the buddy does not already exist
+//    if (buddy == NULL) {                                                //should always be null
+//        buddy = gaim_buddy_new(account, [handleUID UTF8String], NULL);  //create a GaimBuddy
+//    }
+//	
+//    gaim_blist_add_buddy(buddy, NULL, group, NULL);                     //add the buddy to the gaimside list
+//    serv_add_buddy(gc,[handleUID UTF8String],group);                    //and add the buddy serverside
+//	
+//    //From TOC2
+//    //[self silenceUpdateFromHandle:handle]; //Silence the server's initial update command
+//    
+//    //Update the contact list
+//    [[adium contactController] handle:handle addedToAccount:self];
+//	
+//    return(handle);
+//}
+//
+//// Remove a handle from this account
+//- (BOOL)removeHandleWithUID:(NSString *)inUID
+//{
+//    AIHandle	*handle;
+//    if(handle = [handleDict objectForKey:inUID]){
+//        GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]);
+//        
+//        serv_remove_buddy(gc,[inUID UTF8String],[[handle serverGroup] UTF8String]); //remove it from the list serverside
+//        gaim_blist_remove_buddy(buddy);                                             //remove it gaimside
+//        
+//        return YES;
+//    } else 
+//        return NO;
+//}
+//
+//// Add a group to this account
+//- (BOOL)addServerGroup:(NSString *)inGroup
+//{
+//    GaimGroup *group = gaim_group_new([inGroup UTF8String]);    //create the GaimGroup
+//    gaim_blist_add_group(group,NULL);                           //add it gaimside (server will make it as needed)
+//                                                                
+//    //    NSLog(@"added group %@",inGroup);
+//    return NO;
+//}
+//// Remove a group
+//- (BOOL)removeServerGroup:(NSString *)inGroup
+//{
+//    serv_remove_group(gc,[inGroup UTF8String]);             //remove it from the list serverside
+//    
+//    GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
+//    gaim_blist_remove_group(group);                         //remove it gaimside
+//															
+//        NSLog(@"remove group %@",inGroup);
+//    return YES;
+//}
+//// Rename a group
+//- (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName
+//{
+//    GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
+//    if (group != NULL) {                                        //if we find the GaimGroup
+//        NSLog(@"serv_rename_group(%@,%@)",inGroup,newName);
+//        serv_rename_group(gc, group, [newName UTF8String]);     //rename
+//        NSLog(@"gaim_blist_remove_group(%@)",inGroup);
+//        gaim_blist_remove_group(group);                         //remove the old one gaimside
+//        return YES;
+//    } else
+//        return NO;
+//}
+//
+//- (BOOL)moveHandleWithUID:(NSString *)inUID toGroup:(NSString *)inGroup
+//{
+//    AIHandle	*handle;
+//    if(handle = [handleDict objectForKey:inUID]){
+//        GaimGroup *oldGroup = gaim_find_group([[handle serverGroup] UTF8String]);   //get the GaimGroup        
+//        GaimGroup *newGroup = gaim_find_group([inGroup UTF8String]);                //get the GaimGroup
+//        if (newGroup == NULL) {                                                        //if the group doesn't exist yet
+//                                                                                                                                                                
+//            //           NSLog(@"Creating a new group");
+//            newGroup = gaim_group_new([inGroup UTF8String]);                           //create the GaimGroup
+//        }
+//        
+//        GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]);
+//        if (buddy != NULL) {
+//            serv_move_buddy(buddy,oldGroup,newGroup);
+//        } else {
+//            return NO;
+//        }
+//    }
+//    return NO;
+//}
 
 - (void)associateContact:(AIListContact *)contact withBuddy:(GaimBuddy *)buddy
 {
@@ -814,25 +796,24 @@
 /* Account private methods */
 /***************************/
 #pragma mark Private
-// Removes all the possible status flags (that are valid on the calling account) from the passed handle
-- (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle
+// Removes all the possible status flags from the passed contact
+- (void)removeAllStatusFlagsFromContact:(AIListContact *)contact
 {
-    NSArray * keyArray = [self supportedPropertyKeys];
-    [[handle statusDictionary] removeObjectsForKeys:keyArray];
-    [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray delayed:YES silent:YES];
+    NSArray			*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"IdleSince",@"Signon Date",@"Away",@"Client",@"TextProfile",nil];
+	NSEnumerator	*enumerator = [keyArray objectEnumerator];
+	NSString		*key;
+	
+	while(key = [enumerator nextObject]){
+		[contact setStatusObject:nil withOwner:self forKey:key notify:NO];
+	}
 }
 
-- (void)setTypingFlagOfHandle:(AIHandle *)handle to:(BOOL)typing
+- (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing
 {
-    BOOL currentValue = [[[handle statusDictionary] objectForKey:@"Typing"] boolValue];
-    
-    if((typing && !currentValue) || (!typing && currentValue)){
-        [[handle statusDictionary] setObject:[NSNumber numberWithBool:typing] 
-                                      forKey:@"Typing"];
-        [[adium contactController] handleStatusChanged:handle 
-                                    modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] 
-                                               delayed:YES 
-                                                silent:NO];
+    BOOL currentValue = [[contact statusObjectForKey:@"Typing" withOwner:self] boolValue];
+	
+    if(typing != currentValue){
+		[contact setStatusObject:[NSNumber numberWithBool:typing] withOwner:self forKey:[NSArray arrayWithObject:@"Typing"] notify:YES];
     }
 }
 
@@ -970,6 +951,7 @@
     
     //Silence updates
     [self silenceAllHandleUpdatesForInterval:18.0];
+	NSLog(@"SILENCE!");
     
     //Set our initial status
     [self updateAllStatusKeys];

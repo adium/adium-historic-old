@@ -162,6 +162,7 @@ void Adium_HandleSignal(int i){
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
 
     //
+    [contactController finishIniting];
     [preferenceController finishIniting];
     [interfaceController finishIniting];
     [accountController finishIniting];
