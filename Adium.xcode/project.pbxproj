@@ -13,15 +13,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		07CEA2910770DFD100BDA33C = {
-			fileRef = 4BBF41ED066119A8001D31E1;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
 //070
 //071
 //072
@@ -1464,6 +1455,7 @@
 		};
 		34306FE3076F53F60025102A = {
 			children = (
+				346BA3330774C21300628F06,
 				34E385FF068FAA5100303451,
 				343EAB8306EF857F001CDAFF,
 				F5148D9404C8B3BF018B6CC7,
@@ -1471,6 +1463,7 @@
 				F5AAD085039BA0D301A8010A,
 				52C623DE06697AFA0006C387,
 				34E38235068F7F0300303451,
+				9EB7C05703D52AFA00415B22,
 				344AB2B4057912C500384CEE,
 				342DC48A05783B8D000E1D83,
 			);
@@ -3264,6 +3257,96 @@
 		};
 		3461621706FB482D009181D8 = {
 			fileRef = 3461621306FB482D009181D8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		346BA3330774C21300628F06 = {
+			children = (
+				346BA33C0774C27400628F06,
+				346BA33D0774C27400628F06,
+				346BA3420774C2D200628F06,
+				346BA3430774C2D200628F06,
+				4BA5325D050FC5E800A8010A,
+				4B68D3880463330600A8010A,
+				4B791B2C05350BA20000969C,
+				346BA3630774C35400628F06,
+			);
+			isa = PBXGroup;
+			name = "Global Events Preferences";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		346BA33C0774C27400628F06 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGlobalEventsPreferencesPlugin.h;
+			path = "Plugins/Global Events Preferences/ESGlobalEventsPreferencesPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		346BA33D0774C27400628F06 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGlobalEventsPreferencesPlugin.m;
+			path = "Plugins/Global Events Preferences/ESGlobalEventsPreferencesPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		346BA33E0774C27400628F06 = {
+			fileRef = 346BA33C0774C27400628F06;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		346BA33F0774C27400628F06 = {
+			fileRef = 346BA33D0774C27400628F06;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		346BA3420774C2D200628F06 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGlobalEventsPreferences.h;
+			path = "Plugins/Global Events Preferences/ESGlobalEventsPreferences.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		346BA3430774C2D200628F06 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGlobalEventsPreferences.m;
+			path = "Plugins/Global Events Preferences/ESGlobalEventsPreferences.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		346BA3440774C2D200628F06 = {
+			fileRef = 346BA3420774C2D200628F06;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		346BA3450774C2D200628F06 = {
+			fileRef = 346BA3430774C2D200628F06;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		346BA3630774C35400628F06 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = GlobalEventsPreferences.nib;
+			path = "Plugins/Global Events Preferences/GlobalEventsPreferences.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		346BA3640774C35500628F06 = {
+			fileRef = 346BA3630774C35400628F06;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -5750,10 +5833,10 @@
 		};
 		34B70349076EDB410016E8BA = {
 			children = (
-				34B7033D076EDB370016E8BA,
 				34B7033E076EDB370016E8BA,
-				34B7033F076EDB370016E8BA,
+				34B7033D076EDB370016E8BA,
 				34B70340076EDB370016E8BA,
+				34B7033F076EDB370016E8BA,
 				34B70341076EDB370016E8BA,
 			);
 			isa = PBXGroup;
@@ -6057,8 +6140,6 @@
 				4BD6744406001D430049CAF7,
 				4BD6744606001D440049CAF7,
 				4BD6744A06001D4A0049CAF7,
-				4BD6744C06001D4A0049CAF7,
-				4BD6744F06001D4C0049CAF7,
 				4BD6745706001D5E0049CAF7,
 				4BD6745906001D5F0049CAF7,
 				4BD6745D06001D730049CAF7,
@@ -6081,8 +6162,6 @@
 				4BD6755506001E270049CAF7,
 				4BD6755706001E270049CAF7,
 				4BD6756006001E2E0049CAF7,
-				4BD6756206001E2F0049CAF7,
-				4BD6756506001E300049CAF7,
 				4BD6756C06001E340049CAF7,
 				4BD6756E06001E360049CAF7,
 				4BD6757B06001E3F0049CAF7,
@@ -6186,6 +6265,8 @@
 				4B959576076E072C0090C905,
 				4B959578076E072C0090C905,
 				4B95957A076E072C0090C905,
+				346BA33E0774C27400628F06,
+				346BA3440774C2D200628F06,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6315,8 +6396,6 @@
 				4BD6743506001D210049CAF7,
 				4BD6743C06001D300049CAF7,
 				4BD6744806001D460049CAF7,
-				4BD6744E06001D4B0049CAF7,
-				4BD6745106001D4C0049CAF7,
 				4BD6745206001D4D0049CAF7,
 				4BD6746606001D770049CAF7,
 				4BD6746F06001D810049CAF7,
@@ -6331,8 +6410,6 @@
 				4BD6755B06001E290049CAF7,
 				4BD6755C06001E2A0049CAF7,
 				4BD6755F06001E2C0049CAF7,
-				4BD6756406001E300049CAF7,
-				4BD6756706001E310049CAF7,
 				4BD6756806001E310049CAF7,
 				4BD6757006001E370049CAF7,
 				4BD6757F06001E410049CAF7,
@@ -6460,6 +6537,7 @@
 				344C0D4A06B6D61B00DA7200,
 				344C0D4D06B6D62600DA7200,
 				C45F7F6706C75E210056B1F2,
+				9E23E9E306CC506A00D3C897,
 				4BF98DCD06D149EE00E8781D,
 				340F47EC06DA41DB0072E2FA,
 				340F47ED06DA41DD0072E2FA,
@@ -6509,6 +6587,7 @@
 				34D183C0075FC6ED0075A380,
 				4BC5A5DF0764F75B0080ECF7,
 				4B959573076E072C0090C905,
+				346BA3640774C35500628F06,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6653,8 +6732,6 @@
 				4BD6744506001D430049CAF7,
 				4BD6744706001D450049CAF7,
 				4BD6744B06001D4A0049CAF7,
-				4BD6744D06001D4B0049CAF7,
-				4BD6745006001D4C0049CAF7,
 				4BD6745806001D5E0049CAF7,
 				4BD6745A06001D5F0049CAF7,
 				4BD6745E06001D740049CAF7,
@@ -6677,8 +6754,6 @@
 				4BD6755606001E270049CAF7,
 				4BD6755806001E280049CAF7,
 				4BD6756106001E2E0049CAF7,
-				4BD6756306001E2F0049CAF7,
-				4BD6756606001E300049CAF7,
 				4BD6756D06001E350049CAF7,
 				4BD6756F06001E360049CAF7,
 				4BD6757C06001E400049CAF7,
@@ -6782,6 +6857,8 @@
 				4B959577076E072C0090C905,
 				4B959579076E072C0090C905,
 				4B95957B076E072C0090C905,
+				346BA33F0774C27400628F06,
+				346BA3450774C2D200628F06,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7055,7 +7132,6 @@
 				34E829840766B0FE00EFB3BC,
 				34B70343076EDB370016E8BA,
 				34B70345076EDB370016E8BA,
-				07CEA2910770DFD100BDA33C,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11865,7 +11941,6 @@
 				4B2E560406A33D85008866CF,
 				4BD388C306B5899E000A346A,
 				4B0E342E04C4677700A8010A,
-				9EB7C05703D52AFA00415B22,
 				4B30490B047FBD6A00A8010A,
 				40AC0EEA03B5BEDB00A80202,
 				6C60B147056059ED00CAD137,
@@ -12482,9 +12557,9 @@
 		4B68D3880463330600A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
+			lastKnownFileType = text.xml;
 			name = DockBehaviorDefaults.plist;
-			path = "Plugins/Dock Behavior/DockBehaviorDefaults.plist";
+			path = "Plugins/Global Events Preferences/DockBehaviorDefaults.plist";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -12698,64 +12773,12 @@
 			target = 4B7F278205440C0800CDFC90;
 			targetProxy = 4B7845EB059B50820048A8BA;
 		};
-		4B791A230534C4130000969C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIEventSoundCustom.h;
-			path = "Plugins/Event Sounds/AIEventSoundCustom.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B791A240534C4130000969C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIEventSoundCustom.m;
-			path = "Plugins/Event Sounds/AIEventSoundCustom.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B791A270534C4290000969C = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = EventSoundCustomPanel.nib;
-			path = "Plugins/Event Sounds/EventSoundCustomPanel.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B791AF505350B930000969C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIDockCustomBehavior.h;
-			path = "Plugins/Dock Behavior/AIDockCustomBehavior.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B791AF605350B930000969C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIDockCustomBehavior.m;
-			path = "Plugins/Dock Behavior/AIDockCustomBehavior.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B791AF705350B930000969C = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = DockBehaviorCustom.nib;
-			path = "Plugins/Dock Behavior/DockBehaviorCustom.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B791B2C05350BA20000969C = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
+			lastKnownFileType = text.xml;
 			name = DockBehaviorPresets.plist;
-			path = "Plugins/Dock Behavior/DockBehaviorPresets.plist";
+			path = "Plugins/Global Events Preferences/DockBehaviorPresets.plist";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -13991,9 +14014,9 @@
 		4BA5325D050FC5E800A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
+			lastKnownFileType = text.xml;
 			name = EventSoundDefaults.plist;
-			path = "Plugins/Event Sounds/EventSoundDefaults.plist";
+			path = "Plugins/Global Events Preferences/EventSoundDefaults.plist";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -14676,32 +14699,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		4BB17E6F03E4633D00A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = EventSoundPrefs.nib;
-			path = "Plugins/Event Sounds/EventSoundPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BB17E7103E4636400A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIEventSoundPreferences.h;
-			path = "Plugins/Event Sounds/AIEventSoundPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BB17E7203E4636400A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIEventSoundPreferences.m;
-			path = "Plugins/Event Sounds/AIEventSoundPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		4BB1BE5505BADB4700E0C9D2 = {
 			fileEncoding = 30;
@@ -16445,42 +16442,6 @@
 			settings = {
 			};
 		};
-		4BD6744C06001D4A0049CAF7 = {
-			fileRef = 9CDF247703E8CBAA000001C9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6744D06001D4B0049CAF7 = {
-			fileRef = 9CDF247903E8CBBC000001C9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6744E06001D4B0049CAF7 = {
-			fileRef = 9CDF247B03E8CBC6000001C9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6744F06001D4C0049CAF7 = {
-			fileRef = 4B791AF505350B930000969C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6745006001D4C0049CAF7 = {
-			fileRef = 4B791AF605350B930000969C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6745106001D4C0049CAF7 = {
-			fileRef = 4B791AF705350B930000969C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6745206001D4D0049CAF7 = {
 			fileRef = 6CF4266D0577631E00F27FAA;
 			isa = PBXBuildFile;
@@ -16867,42 +16828,6 @@
 		};
 		4BD6756106001E2E0049CAF7 = {
 			fileRef = F55B40FA03AB877E01A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6756206001E2F0049CAF7 = {
-			fileRef = 4BB17E7103E4636400A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6756306001E2F0049CAF7 = {
-			fileRef = 4BB17E7203E4636400A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6756406001E300049CAF7 = {
-			fileRef = 4BB17E6F03E4633D00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6756506001E300049CAF7 = {
-			fileRef = 4B791A230534C4130000969C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6756606001E300049CAF7 = {
-			fileRef = 4B791A240534C4130000969C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6756706001E310049CAF7 = {
-			fileRef = 4B791A270534C4290000969C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -20579,32 +20504,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		9CDF247703E8CBAA000001C9 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIDockBehaviorPreferences.h;
-			path = "Plugins/Dock Behavior/AIDockBehaviorPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9CDF247903E8CBBC000001C9 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIDockBehaviorPreferences.m;
-			path = "Plugins/Dock Behavior/AIDockBehaviorPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9CDF247B03E8CBC6000001C9 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = DockBehaviorPreferences.nib;
-			path = "Plugins/Dock Behavior/DockBehaviorPreferences.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 //9C0
 //9C1
 //9C2
@@ -20715,6 +20614,20 @@
 		};
 		9E217B7C06A74CA8002A3F27 = {
 			fileRef = 9E217B7806A74CA7002A3F27;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9E23E9E206CC506A00D3C897 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = unviewedContent.png;
+			path = "Plugins/Status Menu Item/unviewedContent.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		9E23E9E306CC506A00D3C897 = {
+			fileRef = 9E23E9E206CC506A00D3C897;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -20869,6 +20782,7 @@
 				6C0FD8C20578D47B00D70FEB,
 				9E28FDE506ADB30D0041553E,
 				9E28FDE606ADB30D0041553E,
+				9E23E9E206CC506A00D3C897,
 				9E217B7706A74CA7002A3F27,
 				9E791D9405768B7A00547562,
 				9E791D9505768B7A00547562,
@@ -21029,21 +20943,13 @@
 			children = (
 				9EB7C05803D52BA200415B22,
 				9EB7C05903D52BA200415B22,
-				9CDF247703E8CBAA000001C9,
-				9CDF247903E8CBBC000001C9,
-				9CDF247B03E8CBC6000001C9,
-				4B791AF505350B930000969C,
-				4B791AF605350B930000969C,
-				4B791AF705350B930000969C,
 				4BAA1B4B0632EEB800D8B92C,
 				4BAA1B4C0632EEB800D8B92C,
 				6CF4266D0577631E00F27FAA,
 				4BAA1B4A0632EEB800D8B92C,
-				4B68D3880463330600A8010A,
-				4B791B2C05350BA20000969C,
 			);
 			isa = PBXGroup;
-			name = "Dock Behavior";
+			name = "Dock Behavior Contact Alert";
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
@@ -23187,18 +23093,11 @@
 			children = (
 				F55B40F803AB877401A8010A,
 				F55B40FA03AB877E01A8010A,
-				4BB17E7103E4636400A8010A,
-				4BB17E7203E4636400A8010A,
-				4BB17E6F03E4633D00A8010A,
-				4B791A230534C4130000969C,
-				4B791A240534C4130000969C,
-				4B791A270534C4290000969C,
 				4BAA1B580632EFB000D8B92C,
 				4BAA1B590632EFB100D8B92C,
 				6CF4267F0577643B00F27FAA,
 				349DDD1F0640672800542726,
 				4BAA1B5A0632EFB100D8B92C,
-				4BA5325D050FC5E800A8010A,
 			);
 			isa = PBXGroup;
 			name = "Event Sounds";
