@@ -45,12 +45,16 @@
 	totalHeight = 0;
 	drawHighlightOnlyWhenMain = NO;
 	drawsSelectedRowHighlight = YES;
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpand:) name:NSOutlineViewItemDidExpandNotification object:self];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidCollapse:) name:NSOutlineViewItemDidCollapseNotification object:self];
 }
 
 - (void)dealloc
 {
 	[contentCell release];
 	[groupCell release];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[super dealloc];
 }
@@ -260,11 +264,9 @@
 
 //On expand/collapse
 - (void)itemDidExpand:(NSNotification *)notification{
-	[super itemDidExpand:notification];
 	[self resetRowHeightCache];
 }
 - (void)itemDidCollapse:(NSNotification *)notification{
- 	[super itemDidCollapse:notification];
 	[self resetRowHeightCache];
 }
 
