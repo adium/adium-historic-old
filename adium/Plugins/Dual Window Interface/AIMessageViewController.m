@@ -301,8 +301,7 @@
 
             superFrame.size.height -= ACCOUNTS_VIEW_HEIGHT;
         }else{
-            [view_account setFrameOrigin:NSMakePoint(1000,0)];
-            #warning really big # constant?  i need to hide this view a better way
+            [view_account setFrameOrigin:NSMakePoint(5000,0)]; //hide the view by moving it out of the window
         }
 
         //Handle
