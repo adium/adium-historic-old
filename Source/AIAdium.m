@@ -592,12 +592,24 @@ void Adium_HandleSignal(int i){
 	// ##### BETA ONLY
 #if BETA_RELEASE
 	//Friendly reminder that we are running with the beta flag on
-	NSString	*spaces = [@"" stringByPaddingToLength:([currentVersionString length] / 2)
-											withString:@" "
-									   startingAtIndex:0];
+	NSString	*spaces1, *spaces2;
+	unsigned	length = [currentVersionString length];
 	
-	NSLog(@"####     %@THIS IS A BETA RELEASE!%@     ####",spaces,spaces);
-	NSLog(@"#### Loading Adium X BETA Release v.%@ ####",currentVersionString);
+	spaces1 = [@"" stringByPaddingToLength:(length / 2)
+								withString:@" "
+						   startingAtIndex:0];	
+	if (length % 2 == 0){
+		//An even length is one space too much
+		spaces2 = [@"" stringByPaddingToLength:(length / 2) - 1
+									withString:@" "
+							   startingAtIndex:0];			
+	}else{
+		//An odd length is okay
+		spaces2 = spaces1;
+	}
+	
+	NSLog(@"####     %@THIS IS A BETA RELEASE!%@     ####",spaces1,spaces2);
+	NSLog(@"#### Loading Adium X BETA Release v%@ ####",currentVersionString);
 
 	currentVersionString = [self processBetaVersionString:currentVersionString];
 	lastLaunchedVersionString = [self processBetaVersionString:lastLaunchedVersionString];
