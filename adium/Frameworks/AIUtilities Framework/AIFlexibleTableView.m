@@ -251,19 +251,36 @@
 - (void)_dragSelectedContentWithEvent:(NSEvent *)theEvent
 {
     NSPoint		location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+
+    NSImage             *image;
+    NSImage             *dragImage;
     NSSize 		dragOffset = NSMakeSize(0.0, 0.0);
+    NSSize              dragSize;
+    
     NSPasteboard 	*pboard;
     NSAttributedString 	*copyString = [self _selectedString];
-
+    
     //Put the text to drag on our pasteboard
     pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
     [pboard declareTypes:[NSArray arrayWithObject:NSRTFPboardType] owner:self];
     [pboard setData:[copyString RTFFromRange:NSMakeRange(0,[copyString length]) documentAttributes:nil] forType:NSRTFPboardType];
 
     //Create a temporary drag image
-    NSImage *dragImage = [AIImageUtilities imageNamed:@"Clipping" forClass:[self class]];
-    [[self superview] dragImage:dragImage at:location offset:dragOffset event:theEvent pasteboard:pboard source:self slideBack:YES];
+    dragSize = [copyString size];       
+    image = [[NSImage alloc] initWithSize:dragSize];
+    dragImage = [[NSImage alloc] initWithSize:dragSize]; 
     
+    [image lockFocus];
+    [copyString drawInRect:NSMakeRect(0, 0,[self frame].size.width,[self frame].size.height)];
+    [image unlockFocus];
+    
+    [dragImage lockFocus];
+    [image dissolveToPoint:NSMakePoint(0,0) fraction:0.8]; //20% transparent
+    [dragImage unlockFocus];
+    
+    location.y += ([dragImage size].height / 2.0);
+//    location.x -= ([dragImage size].width / 2.0);
+    [[self superview] dragImage:dragImage at:location offset:dragOffset event:theEvent pasteboard:pboard source:self slideBack:YES];
 }
 
 //
@@ -554,7 +571,10 @@
         }
     }
 
-    //
+    //Each row appends a carriage return.  Remove the last one.
+    int length = [[selectedString string] length];
+    [selectedString deleteCharactersInRange:NSMakeRange(length-1,1)];
+    
     return(selectedString);
 }
 
