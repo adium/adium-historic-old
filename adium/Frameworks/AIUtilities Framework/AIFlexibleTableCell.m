@@ -37,6 +37,9 @@
     leftPadding = 0;
     rowSpan = 1;
     
+    opacity = 1.0;
+    isOpaque = YES;
+    
     return(self);
 }
 
@@ -66,6 +69,12 @@
     return(tableRow);
 }
 
+- (void)setOpacity:(float)inOpacity
+{
+    opacity = inOpacity;
+    if (opacity != 1.0)
+        isOpaque = NO;
+}
 
 //Padding ------------------------------------------------------------------------------
 //Set side padding

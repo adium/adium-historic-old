@@ -21,6 +21,10 @@
     BOOL	drawBottom;
     BOOL        drawSides;
     
+    NSColor 	*borderColorOpaque;
+    NSColor	*bubbleColorOpaque;
+    NSColor	*dividerColorOpaque;
+    
     NSColor 	*borderColor;
     NSColor	*bubbleColor;
     NSColor	*dividerColor;
