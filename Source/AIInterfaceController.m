@@ -78,9 +78,9 @@
 	windowMenuArray = nil;
 	
     //Observe content so we can open chats as necessary
-    [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) 
+    [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) 
 									   name:Content_DidReceiveContent object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:)
+    [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:)
 									   name:Content_FirstContentRecieved object:nil];
 
 }
@@ -106,11 +106,7 @@
 	[menuController addMenuItem:[[item copy] autorelease] toLocation:LOC_Dock_Status];
 
 	//Observe preference changes
-	[[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:)
-									   name:Preference_GroupChanged
-									 object:nil];
-	[self preferencesChanged:nil];
-
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_INTERFACE];
 }
 
 - (void)closeController
@@ -147,29 +143,26 @@
 }
 
 //Preferences changed
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-	if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_INTERFACE]){
-		NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_INTERFACE];
-
-		//
-		[[owner notificationCenter] removeObserver:self name:Contact_OrderChanged object:nil];
-
-		//Update prefs
-		tabbedChatting = [[prefDict objectForKey:KEY_TABBED_CHATTING] boolValue];
-		groupChatsByContactGroup = [[prefDict objectForKey:KEY_GROUP_CHATS_BY_GROUP] boolValue];
-		arrangeChats = [[prefDict objectForKey:KEY_SORT_CHATS] boolValue];
-
-		//Observe contact order changes if auto-arranging is enabled
-		if(arrangeChats){
-			[[owner notificationCenter] addObserver:self 
-										   selector:@selector(contactOrderChanged:)
-											   name:Contact_OrderChanged 
-											 object:nil];
-			[self contactOrderChanged:nil];
-		}
-		[[owner notificationCenter] postNotificationName:Interface_TabArrangingPreferenceChanged object:nil];
+	//
+	[[adium notificationCenter] removeObserver:self name:Contact_OrderChanged object:nil];
+	
+	//Update prefs
+	tabbedChatting = [[prefDict objectForKey:KEY_TABBED_CHATTING] boolValue];
+	groupChatsByContactGroup = [[prefDict objectForKey:KEY_GROUP_CHATS_BY_GROUP] boolValue];
+	arrangeChats = [[prefDict objectForKey:KEY_SORT_CHATS] boolValue];
+	
+	//Observe contact order changes if auto-arranging is enabled
+	if(arrangeChats){
+		[[adium notificationCenter] addObserver:self 
+									   selector:@selector(contactOrderChanged:)
+										   name:Contact_OrderChanged 
+										 object:nil];
+		[self contactOrderChanged:nil];
 	}
+	[[adium notificationCenter] postNotificationName:Interface_TabArrangingPreferenceChanged object:nil];
 }
 
 //Handle a reopen/dock icon click
@@ -183,7 +176,7 @@
 		[self showContactList:nil];
 	}else{
 		//If windows are open, try switching to a chat with unviewed content
-		if(![[owner contentController] switchToMostRecentUnviewedContent]){
+		if(![[adium contentController] switchToMostRecentUnviewedContent]){
 			NSEnumerator    *enumerator;
 			NSWindow	    *window, *targetWindow = nil;
 			BOOL	    	unMinimizedWindows = 0;
@@ -253,7 +246,7 @@
 	
 	//Determine the correct container for this chat
 	if(groupChatsByContactGroup){
-		AIListObject	*group = [[[owner contactController] parentContactForListObject:[inChat listObject]] containingObject];
+		AIListObject	*group = [[[adium contactController] parentContactForListObject:[inChat listObject]] containingObject];
 		containerID = (group ? [group displayName] : @"Chat"); 
 	}else{
 		//Open new chats into the first container (if not available, create a new one)
@@ -284,7 +277,7 @@
 		[inChat setIsOpen:YES];
 		
 		//Post the notification last, so observers receive a chat whose isOpen flag is yes.
-		[[owner notificationCenter] postNotificationName:Chat_DidOpen object:inChat userInfo:nil];
+		[[adium notificationCenter] postNotificationName:Chat_DidOpen object:inChat userInfo:nil];
 	}
 }
 
@@ -422,7 +415,7 @@
 //Clear the unviewed content count of the chat.  This is done when chats are made active or closed.
 - (void)clearUnviewedContentOfChat:(AIChat *)inChat
 {
-	[[owner contentController] clearUnviewedContentOfChat:inChat];
+	[[adium contentController] clearUnviewedContentOfChat:inChat];
 }
 
 //Content was received, increase the unviewed content count of the chat (if it's not currently active)
@@ -431,7 +424,7 @@
 	AIChat		*chat = [notification object];
 	
 	if(chat != activeChat){
-		[[owner contentController] increaseUnviewedContentOfChat:chat];
+		[[adium contentController] increaseUnviewedContentOfChat:chat];
 	}
 }
 
@@ -474,7 +467,7 @@
 //
 - (void)_resortAllChats
 {
-	AISortController	*sortController = [[owner contactController] activeSortController];
+	AISortController	*sortController = [[adium contactController] activeSortController];
 	NSEnumerator		*containerEnumerator = [[interfacePlugin openContainers] objectEnumerator];
 	NSString			*containerID;
 	
@@ -508,7 +501,7 @@
 
 - (int)indexForInsertingChat:(AIChat *)chat intoContainerWithID:(NSString *)containerID
 {
-	AISortController	*sortController = [[owner contactController] activeSortController];
+	AISortController	*sortController = [[adium contactController] activeSortController];
 
 	return([sortController indexForInserting:[chat listObject]
 								 intoObjects:[self _listObjectsForChatsInContainerWithID:containerID]]);
@@ -735,7 +728,7 @@
     
     //Post a notification that an error was recieved
     errorDict = [NSDictionary dictionaryWithObjectsAndKeys:inTitle,@"Title",inDesc,@"Description",inWindowTitle,@"Window Title",nil];
-    [[owner notificationCenter] postNotificationName:Interface_ShouldDisplayErrorMessage object:nil userInfo:errorDict];
+    [[adium notificationCenter] postNotificationName:Interface_ShouldDisplayErrorMessage object:nil userInfo:errorDict];
 }
 
 
@@ -1109,7 +1102,7 @@
             fullLength = NSMakeRange(0, [entryString length]);
 		
         //Run the entry through the filters and add it to tipString
-		entryString = [[[[owner contentController] filterAttributedString:entryString
+		entryString = [[[[adium contentController] filterAttributedString:entryString
 														usingFilterType:AIFilterDisplay
 															  direction:AIFilterIncoming
 																context:object] mutableCopy] autorelease];
