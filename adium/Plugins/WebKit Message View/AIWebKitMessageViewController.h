@@ -4,20 +4,19 @@
 #import "ESWebView.h"
 
 @interface AIWebKitMessageViewController : AIObject <AIMessageViewController> {
-	ESWebView			*webView;
+	ESWebView					*webView;
+	NSString					*stylePath;
 	
-	BOOL				webViewIsReady;
+	BOOL						webViewIsReady;
+
+	AIContentObject				*previousContent;
+	NSMutableArray				*newContent;
+	NSTimer						*newContentTimer;
 	
-    NSMutableString		*timeStampFormat;
-    NSDateFormatter		*timeStampFormatter;
-	NSDateFormatter		*timeStampFormatterMinutesSeconds;
-	
-	AIContentObject		*previousContent;
-	NSMutableArray		*newContent;
-	NSTimer				*newContentTimer;
+	AIWebKitMessageViewPlugin   *plugin;
 	
 }
 
-+ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat;
++ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
 
 @end

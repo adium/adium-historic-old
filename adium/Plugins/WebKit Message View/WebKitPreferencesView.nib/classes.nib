@@ -1,0 +1,47 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = AIPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
+            }; 
+            SUPERCLASS = AIModularPane; 
+        }, 
+        {
+            ACTIONS = {changePreference = id; }; 
+            CLASS = ESWebKitMessageViewPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_showUserIcons" = NSButton; 
+                "popUp_font" = NSPopUpButton; 
+                "popUp_fontSize" = NSPopUpButton; 
+                "popUp_minimumFontSize" = NSPopUpButton; 
+                "popUp_styles" = NSPopUpButton; 
+                "popUp_timeStamps" = NSPopUpButton; 
+                preview = WebView; 
+            }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {chooseFontWithFontPanel = id; selectFont = id; }; 
+            CLASS = JVFontPreviewField; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTextField; 
+        }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}
