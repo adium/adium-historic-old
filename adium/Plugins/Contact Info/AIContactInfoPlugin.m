@@ -22,13 +22,14 @@
 
 - (void)installPlugin
 {
-    //Install the Get Info menu item
-    viewContactInfoMenuItem = [[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_INFO target:self action:@selector(showContactInfo:) keyEquivalent:@"i"];
-    [viewContactInfoMenuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSShiftKeyMask)];
-    [[adium menuController] addMenuItem:viewContactInfoMenuItem toLocation:LOC_Contact_Manage];
-    
-    //Install the alternate Get Info menu item which will let us mangle the shortcut as desired
-    if ([NSApp isOnPantherOrBetter]) {
+    //Install the Get Info menu item for non-Panther users
+	if(![NSApp isOnPantherOrBetter]) {
+		viewContactInfoMenuItem = [[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_INFO target:self action:@selector(showContactInfo:) keyEquivalent:@"i"];
+		[viewContactInfoMenuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSShiftKeyMask)];
+		[[adium menuController] addMenuItem:viewContactInfoMenuItem toLocation:LOC_Contact_Manage];
+    } else {
+		//Install the alternate Get Info menu item which will let us mangle the shortcut as desired
+		
         viewContactInfoMenuItem_alternate = [[NSMenuItem alloc] initWithTitle:VIEW_CONTACTS_INFO target:self action:@selector(showContactInfo:) keyEquivalent:@"i"];
         [viewContactInfoMenuItem_alternate setKeyEquivalentModifierMask:ALTERNATE_GET_INFO_MASK];
         [viewContactInfoMenuItem_alternate setAlternate:YES];
