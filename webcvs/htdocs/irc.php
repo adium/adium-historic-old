@@ -64,7 +64,7 @@
 					<p>What's up with that? I thought Adium was a multiprotocol client for the masses?!</p>
                     <p>Here is why.</p>
                     <p>Adium currently can't do IRC. If you want more information, please go to the following forum post:</p>
-                    <p><a href="http://www.funmac.com/showthread.php?t=7032&highlight=IRC+Adium">IRC in Adium</a></p>
+                    <p><a href="http://www.funmac.com/showthread.php?t=7032&amp;highlight=IRC+Adium">IRC in Adium</a></p>
                 </div>
                 <div class="boxThinBottom"></div>
                 
