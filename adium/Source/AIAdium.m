@@ -25,6 +25,7 @@
 #import "AIPreferenceController.h"
 #import "AIMenuController.h"
 #import "AIDockController.h"
+#import "LNAboutBoxController.h"
 #import <AIUtilities/AIUtilities.h>
 
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"	//Path to Adium's application support preferences
@@ -165,10 +166,13 @@
 
 - (IBAction)showAboutBox:(id)sender
 {
-     [NSApp orderFrontStandardAboutPanelWithOptions:
+
+    [[LNAboutBoxController aboutBoxControllerForOwner:self] showWindow:nil];
+
+     /*[NSApp orderFrontStandardAboutPanelWithOptions:
         [NSDictionary dictionaryWithObject:
             [NSString stringWithFormat:@"2.0 - %s", __DATE__] 
-        forKey:@"Version"]];
+        forKey:@"Version"]];*/
 }
 
 - (IBAction)confirmQuit:(id)sender
