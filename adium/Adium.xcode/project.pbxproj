@@ -6311,6 +6311,7 @@
 				6C4C9A2706A43137001861A6,
 				4BF000B406B5488900C32219,
 				4BF000B806B5492A00C32219,
+				4BA0E3E806B6BD86001750FC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6774,6 +6775,7 @@
 				6C4C9A2806A43137001861A6,
 				4BF000B506B5488900C32219,
 				4BF000B906B5492A00C32219,
+				4BA0E3E906B6BD86001750FC,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14113,6 +14115,36 @@
 		};
 		4BA0E3E106B6BBDF001750FC = {
 			fileRef = 4BA0E3DF06B6BBDF001750FC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA0E3E606B6BD86001750FC = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AISmoothTooltipTracker.h;
+			path = "Frameworks/AIUtilities Framework/AISmoothTooltipTracker.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BA0E3E706B6BD86001750FC = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AISmoothTooltipTracker.m;
+			path = "Frameworks/AIUtilities Framework/AISmoothTooltipTracker.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BA0E3E806B6BD86001750FC = {
+			fileRef = 4BA0E3E606B6BD86001750FC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BA0E3E906B6BD86001750FC = {
+			fileRef = 4BA0E3E706B6BD86001750FC;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -23936,6 +23968,8 @@
 				07CE0D430661E12900C50929,
 				07CE0D440661E12A00C50929,
 				07CE0D450661E12A00C50929,
+				4BA0E3E606B6BD86001750FC,
+				4BA0E3E706B6BD86001750FC,
 				F5793950033E74E401A8010A,
 				F5793951033E74E401A8010A,
 				4BB2C23A044605CE00A8010A,

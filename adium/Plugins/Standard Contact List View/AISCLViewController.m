@@ -19,8 +19,6 @@
 #import "AISCLViewPlugin.h"
 #import "AIListCell.h"
 
-#define TOOL_TIP_CHECK_INTERVAL				45.0	//Check for mouse X times a second
-#define TOOL_TIP_DELAY						25.0	//Number of check intervals of no movement before a tip is displayed
 
 #define MAX_DISCLOSURE_HEIGHT				13		//Max height/width for our disclosure triangles
 

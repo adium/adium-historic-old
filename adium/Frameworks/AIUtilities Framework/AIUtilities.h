@@ -72,6 +72,7 @@
 #import "AISendingTextView.h"
 #import "AISleepNotification.h"
 #import "AISmartStepper.h"
+#import "AISmoothTooltipTracker.h"
 #import "AISocket.h"
 #import "AIStringAdditions.h"
 #import "NSString+CarbonFSSpecCreation.h"

@@ -42,14 +42,7 @@
     AIListGroup			*contactList;
 	
     BOOL                horizontalResizingEnabled;
-	NSPoint				lastMouseLocation;
     
-	NSTimer				*tooltipMouseLocationTimer;
-	NSPoint				tooltipLocation;
-    NSTrackingRectTag	tooltipTrackingTag;
-    int 				tooltipCount;
-	BOOL				tooltipShouldDisplay;
-	BOOL				windowHidesOnDeactivate;
 	
 	BOOL				inDrag;
 	NSArray				*dragItems;
