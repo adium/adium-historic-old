@@ -43,8 +43,15 @@
 	NSString		*destUniqueID = [details objectForKey:KEY_MESSAGE_SEND_TO];
 	AIListContact	*contact = nil;
 
-	if(destUniqueID) contact = (AIListContact *)[[adium contactController] existingListObjectWithUniqueID:destUniqueID];
-	return([NSString stringWithFormat:SEND_MESSAGE_ALERT_LONG, [contact displayName], messageText]);
+	if(destUniqueID){
+		contact = (AIListContact *)[[adium contactController] existingListObjectWithUniqueID:destUniqueID];
+	}
+	
+	if(contact && messageText){
+		return([NSString stringWithFormat:SEND_MESSAGE_ALERT_LONG, [contact displayName], messageText]);
+	}else{
+		return(SEND_MESSAGE_ALERT_SHORT);		
+	}
 }
 
 - (NSImage *)imageForActionID:(NSString *)actionID
