@@ -5,6 +5,17 @@ Version 0.80 (13/-3/2525)
 - Achieved world domination
 - Obtained tasty sandwiches
 
+Version 0.76
+- Fixed a crash on load in OS X 10.2.0 through 10.2.6 without Safari
+- Fixed a crash on quit in OS X 10.2.x
+- Fixed a crash in the Emoticons preferences
+- Fixed a crash when loading the Messages preferences in certain situations
+- Fixed a crash related to corrupt font files
+- Improved Novell GroupWise connection handling to handle invalid password and 'logged on from another workstation' errors
+
+Version 0.75.1 (1/24/2005)
+- Fixed a crash when joining a group chat
+
 Version 0.75
 - Fixed a crash on launch
 - Fixed a longstanding crash when accessing stored passwords
