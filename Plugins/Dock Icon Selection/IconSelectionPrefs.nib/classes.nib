@@ -6,15 +6,17 @@
             SUPERCLASS = NSTableView; 
         }, 
         {
+            ACTIONS = {resize = id; }; 
             CLASS = AIDockIconPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {
-                "matrix_iconPreview" = NSMatrix; 
-                "tableView_icons" = NSTableView; 
-                "textField_creator" = NSTextField; 
-                "textField_title" = NSTextField; 
-            }; 
+            OUTLETS = {"imageGridView_icons" = AIImageGridView; "tableView_icons" = NSTableView; }; 
             SUPERCLASS = AIPreferencePane; 
+        }, 
+        {
+            CLASS = AIImageGridView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSView; 
         }, 
         {
             ACTIONS = {changePreference = id; }; 

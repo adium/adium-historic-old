@@ -6185,7 +6185,6 @@
 				4BD6756B06001E320049CAF7,
 				4BD6757006001E370049CAF7,
 				4BD6757F06001E410049CAF7,
-				4BD6758006001E410049CAF7,
 				4BD6758506001E450049CAF7,
 				4BD6758806001E460049CAF7,
 				4BD6759706001E510049CAF7,
@@ -11260,7 +11259,6 @@
 				4B30491E047FBED400A8010A,
 				4B30491F047FBED400A8010A,
 				4BDD982D047FC48B00A8010A,
-				4B33401104815A0600A8010A,
 			);
 			isa = PBXGroup;
 			name = "Dock Icon Selection";
@@ -11363,15 +11361,6 @@
 			lastKnownFileType = text.plist;
 			name = DockPrefs.plist;
 			path = Source/DockPrefs.plist;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B33401104815A0600A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = IconPreviewList.plist;
-			path = "Plugins/Dock Icon Selection/IconPreviewList.plist";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -16491,12 +16480,6 @@
 		};
 		4BD6757F06001E410049CAF7 = {
 			fileRef = 4BDD982D047FC48B00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6758006001E410049CAF7 = {
-			fileRef = 4B33401104815A0600A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
