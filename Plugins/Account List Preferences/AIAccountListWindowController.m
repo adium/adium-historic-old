@@ -231,7 +231,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	[responderChainTimer release];
 	responderChainTimer = nil;
 	
-#warning hack	if([view canDraw]){
+//	if([view canDraw]){
 		NSView	*accountView = [accountViewController view];
 		
 		//Name field goes to first control in account view
